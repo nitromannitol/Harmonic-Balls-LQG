@@ -295,14 +295,21 @@ theorem continuous_laplacian_of_contDiff {φ : ℂ → ℝ} (hφ : ContDiff ℝ 
   rw [he]
   exact (h 1).add (h Complex.I)
 
-theorem hasCompactSupport_laplacian {φ : ℂ → ℝ} (hc : HasCompactSupport φ) : HasCompactSupport (Δ φ) := by
-  refine hc.mono' fun y hy => ?_
+theorem support_laplacian_subset (φ : ℂ → ℝ) : Function.support (Δ φ) ⊆ tsupport φ := by
+  intro y hy
   by_contra hy'
   apply hy
   have h0 : φ =ᶠ[𝓝 y] (0 : ℂ → ℝ) := notMem_tsupport_iff_eventuallyEq.1 hy'
   rw [(InnerProductSpace.laplacian_congr_nhds h0).eq_of_nhds,
     InnerProductSpace.laplacian_eq_iteratedFDeriv_complexPlane]
   simp
+
+/-- The Laplacian does not enlarge supports: `tsupport (Δφ) ⊆ tsupport φ`. -/
+theorem tsupport_laplacian_subset (φ : ℂ → ℝ) : tsupport (Δ φ) ⊆ tsupport φ :=
+  closure_minimal (support_laplacian_subset φ) (isClosed_tsupport φ)
+
+theorem hasCompactSupport_laplacian {φ : ℂ → ℝ} (hc : HasCompactSupport φ) : HasCompactSupport (Δ φ) :=
+  hc.mono' (support_laplacian_subset φ)
 
 theorem abs_half_log_le {r ε : ℝ} (hr : 0 < r) (hε0 : 0 < ε) (hε1 : ε ≤ 1) :
     |1 / 2 * Real.log (r ^ 2 + ε ^ 2)| ≤ |Real.log r| + Real.log (r ^ 2 + 1) := by
