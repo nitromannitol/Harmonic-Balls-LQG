@@ -98,8 +98,9 @@ for a fixed conformal map); Sheffield-Wang 2016 (*Field-measure correspondence i
 surely commutes with all conformal maps simultaneously*, arXiv:1605.06171), Theorem 1.1 (a.s. convergence as
 `ε → 0`) and Theorem 1.4 (p. 3; all conformal maps simultaneously).
 
-Scope: only complex affine maps, which is how the paper uses Fact 2.1 IV (rescalings, lines 904-916 and 2164). For a general conformal `φ : Ũ → U` the field
-`h ∘ φ` lives on `Ũ` and its circle averages are not circle averages of `h`, so they are not expressible through the
+Scope: only complex affine maps, which is how the paper uses Fact 2.1 IV (rescalings, lines 904-916 and 2164).
+For a general conformal `φ : Ũ → U` the field `h ∘ φ` lives on `Ũ` and its circle averages are not circle
+averages of `h`, so they are not expressible through the
 interface of `Defs/GFF.lean`. -/
 def LQGMeasureCoordChange (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ μ : Ω → Measure ℂ,
