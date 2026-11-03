@@ -1,8 +1,7 @@
 import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Defs.Obstacle
-import HarmonicBalls.Defs.Brownian
-import HarmonicBalls.Draft.Section11
+import HarmonicBalls.Defs.Annuli
 
 /-!
 # Section 8: statements of Proposition 8.1 and Lemmas 8.2, 8.3
@@ -22,19 +21,15 @@ probability space.
 
 ## Good and very good annuli (Section 6.2, lines 1105-1161)
 
-`Draft/Section6.lean` does not exist yet; the good annulus event `E_r(z; a, b)`, the size `M_ρ(x₀)` and the very
-good annulus event `Ē_ρ(x₀; N₀, a, b, C₁^±, C₂^±, C₃)` are defined here, as deterministic predicates of the measure
-`μ` (the conditioning on `h` in eq:good-annulus-harmonic, line 1120, fixes `μ = μ_h`; the Brownian motion is
-independent of `h`). `SG_ρ(x₀)` is `annulusGreenPotentialSup μ x₀ (ρ/4) (2ρ)` of `Draft/Section11.lean`. These
-definitions are shared with Sections 6 and 11 and belong in a `Defs` file.
+The good annulus event `IsGoodAnnulus`, the size `annulusBallMassSize` (`M_ρ`), `annulusGreenPotentialSup` (`SG`), the
+very good annulus event `IsVeryGoodAnnulus`, the annulus-ball comparison `AnnulusBallComparison` (`G_n(z; m)`) and the
+count `veryGoodComparableScaleCount` of eq:mu_h-doubling are deterministic predicates of the measure `μ`, shared with
+Sections 6 and 11, in `HarmonicBalls/Defs/Annuli.lean` (with the reading of the slip at line 1120 and Issues D10, G21).
 
 ## Corrections and readings
 
-* eq:good-annulus-harmonic (line 1120): as printed, "`𝓑^u` exits `𝔸_{3r,5r}(z)` before exiting `Y`" is impossible
-  for `Y ⊆ 𝔸_{3r,5r}(z)`, so the printed event always holds. The intended event (slip at 1120, `GRAPH.md`; cf.
-  lines 1090-1091) is `{τ_𝔸 ≤ τ_Y}`: the Brownian motion stays in `Y` until it exits the annulus.
 * `β⁻` in `M_ρ` (eq:alternate-size, line 1129) is "the" lower exponent of Lemma 2.4, which allows any
-  `β⁻ > (2+γ)²/2`. It is a parameter of the definitions and the statements hold for each such `β⁻` (Issue D10).
+  `β⁻ > (2+γ)²/2`. The statements hold for each such `β⁻` (Issue D10).
 * Parameter interface of Lemmas 8.2 and 8.3 (Issue G28). As printed, "there exist `m` and parameters" is one
   existential block. Proposition 8.1 needs one tuple valid for Lemma 6.11 as well, with `C₃` fixed before `b`
   (Lemma 6.11 holds for every `C₃` with `b = b(γ, C₃)`, Issue G18) and `N₀` arbitrarily large (caption at
@@ -48,63 +43,6 @@ namespace HarmonicBalls
 
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-
-/-! ## Good and very good annuli (Section 6.2) -/
-
-open MarkovProcess in
-/-- The *good annulus* event `E_r(z) = E_r(z; a, b)` (eq:good-annulus-harmonic, lines 1115-1123), for the measure
-`μ = μ_h`: for each Borel set `Y ⊆ 𝔸_{3r,5r}(z)` with `μ(Y) ≤ a μ(𝔸_{3r,5r}(z))` and each `u ∈ ∂B_{4r}(z)`, standard
-planar Brownian motion `𝓑^u` stays in `Y` until it exits `𝔸_{3r,5r}(z)` (`τ_𝔸 ≤ τ_Y`, the corrected reading of
-the slip at line 1120, see the module docstring) with probability at most `b`. The supremum over `u` of line 1120 is
-the bound for every `u`; the probability is the outer measure, so no measurability of the event is presumed. -/
-def IsGoodAnnulus (μ : Measure ℂ) (r : ℝ) (z : ℂ) (a b : ℝ) : Prop :=
-  ∀ Y : Set ℂ, MeasurableSet Y → Y ⊆ annulus z (3 * r) (5 * r) →
-    μ Y ≤ ENNReal.ofReal a * μ (annulus z (3 * r) (5 * r)) →
-    ∀ u ∈ sphere z (4 * r),
-      planarBrownianMotion u
-          {p | ContinuousPath.exitTime (annulus z (3 * r) (5 * r)) p ≤ ContinuousPath.exitTime Y p} ≤
-        ENNReal.ofReal b
-
-/-- The size `M_ρ(x₀)` (eq:alternate-size, line 1129):
-`inf_{z ∈ 𝔸_{ρ/2,ρ}(x₀)} inf_{r ∈ (0, ρ/4)} μ(B_r(z)) / (r/ρ)^{β⁻}`, in `[0, ∞]`. -/
-noncomputable def annulusBallMassSize (μ : Measure ℂ) (βminus ρ : ℝ) (x₀ : ℂ) : ℝ≥0∞ :=
-  ⨅ z ∈ annulus x₀ (ρ / 2) ρ, ⨅ r ∈ Ioo 0 (ρ / 4), μ (ball z r) / ENNReal.ofReal ((r / ρ) ^ βminus)
-
-/-- The *very good annulus* event `Ē_ρ(x₀) = Ē_ρ(x₀; N₀, a, b, C₁^±, C₂^±, C₃)` (lines 1144-1157), for the measure
-`μ = μ_h` and the exponent `β⁻` of `M_ρ`:
-* (VG-i) `C₁⁻ ≤ M_ρ(x₀) / μ(𝔸_{ρ/4,2ρ}(x₀)) ≤ C₁⁺`;
-* (VG-ii) `C₂⁻ ≤ SG_ρ(x₀) / μ(𝔸_{ρ/4,2ρ}(x₀)) ≤ C₂⁺`, with `SG_ρ(x₀)` of eq:alternate-size-2 (line 1134);
-* (VG-iii) for each `ε ∈ {2^{-n}}_{n ≥ N₀}` and each `z ∈ (ερ/100) ℤ² ∩ 𝔸_{ρ/2,ρ}(x₀)` there are at least
-  `C₃ log₇ ε^{-1/2}` radii `r ∈ [ερ, ε^{1/2} ρ] ∩ {ρ 7^{-k}}_{k ≥ 1}` for which `E_r(z; a, b)` occurs.
-
-The ratios are taken in `[0, ∞]` (`x / 0 = ∞` for `x ≠ 0`, `0 / 0 = 0`), so (VG-i) and (VG-ii) fail when
-`μ(𝔸_{ρ/4,2ρ}(x₀)) = 0` and the size is finite. The lattice `(ερ/100) ℤ²` is not centred at `x₀`, as printed
-(Issue G21). -/
-def IsVeryGoodAnnulus (μ : Measure ℂ) (βminus ρ : ℝ) (x₀ : ℂ) (N₀ : ℕ) (a b C₁m C₁p C₂m C₂p C₃ : ℝ) : Prop :=
-  annulusBallMassSize μ βminus ρ x₀ / μ (annulus x₀ (ρ / 4) (2 * ρ)) ∈
-      Icc (ENNReal.ofReal C₁m) (ENNReal.ofReal C₁p) ∧
-    annulusGreenPotentialSup μ x₀ (ρ / 4) (2 * ρ) / μ (annulus x₀ (ρ / 4) (2 * ρ)) ∈
-      Icc (ENNReal.ofReal C₂m) (ENNReal.ofReal C₂p) ∧
-    ∀ n : ℕ, N₀ ≤ n → ∀ z ∈ annulus x₀ (ρ / 2) ρ,
-      (∃ j k : ℤ, z = ((dyadicScale n * ρ / 100 : ℝ) : ℂ) * ((j : ℂ) + (k : ℂ) * Complex.I)) →
-      C₃ * Real.logb 7 (dyadicScale n ^ (-(1 / 2 : ℝ))) ≤
-        ({r : ℝ | r ∈ Icc (dyadicScale n * ρ) (Real.sqrt (dyadicScale n) * ρ) ∧
-          (∃ k : ℕ, 1 ≤ k ∧ r = ρ * (7 : ℝ)⁻¹ ^ k) ∧ IsGoodAnnulus μ r z a b}.ncard : ℝ)
-
-/-! ## The annulus-ball comparison and the count of eq:mu_h-doubling -/
-
-/-- The *annulus-ball comparison* event `G_n(z) = G_n(z; m)` (eq:annulus-ball-comparison, line 2140):
-`μ(𝔸_{2^{-n-1},2^{-n}}(z)) ≥ m μ(B_{2^{-n}}(z))`. -/
-def AnnulusBallComparison (μ : Measure ℂ) (n : ℕ) (z : ℂ) (m : ℝ) : Prop :=
-  ENNReal.ofReal m * μ (ball z (dyadicScale n)) ≤ μ (annulus z (dyadicScale (n + 1)) (dyadicScale n))
-
-/-- The count `#{n ∈ [N+1, 2N] ∩ ℤ : Ē_n(z) and G_n(z) occur}` of eq:mu_h-doubling (line 2155), where
-`Ē_n(z) := Ē_{2^{-n}}(z)` (eq:very-good-annuli-event, line 2146) and `G_n(z) = G_n(z; m)`. -/
-noncomputable def veryGoodComparableScaleCount (μ : Measure ℂ) (βminus : ℝ) (z : ℂ) (N₀ : ℕ)
-    (a b C₁m C₁p C₂m C₂p C₃ m : ℝ) (N : ℕ) : ℕ :=
-  {n : ℕ | n ∈ Icc (N + 1) (2 * N) ∧
-    IsVeryGoodAnnulus μ βminus (dyadicScale n) z N₀ a b C₁m C₁p C₂m C₂p C₃ ∧
-    AnnulusBallComparison μ n z m}.ncard
 
 /-! ## Statements -/
 
@@ -165,27 +103,5 @@ def OriginManyGoodScalesStmt : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ᵐ ω ∂P, ∀ᶠ N : ℕ in atTop,
     (1 - ζ) * (N : ℝ) ≤ veryGoodComparableScaleCount (μ ω) βminus 0 N₀ a b C₁m C₁p C₂m C₂p C₃ m N
-
-/-! ## Sanity lemmas -/
-
-/-- The annulus-ball comparison with `m = 0` always holds. -/
-theorem annulusBallComparison_zero (μ : Measure ℂ) (n : ℕ) (z : ℂ) : AnnulusBallComparison μ n z 0 := by
-  simp [AnnulusBallComparison]
-
-/-- The good annulus event with `b ≥ 1` always holds (probabilities are at most one). -/
-theorem isGoodAnnulus_of_one_le (μ : Measure ℂ) (r : ℝ) (z : ℂ) (a : ℝ) {b : ℝ} (hb : 1 ≤ b) :
-    IsGoodAnnulus μ r z a b := by
-  unfold IsGoodAnnulus
-  intro Y _ _ _ u _
-  calc planarBrownianMotion u _ ≤ 1 := prob_le_one
-    _ ≤ ENNReal.ofReal b := by simpa using ENNReal.ofReal_le_ofReal hb
-
-/-- The count of eq:mu_h-doubling is at most `N`, the number of integers in `[N+1, 2N]`. -/
-theorem veryGoodComparableScaleCount_le (μ : Measure ℂ) (βminus : ℝ) (z : ℂ) (N₀ : ℕ)
-    (a b C₁m C₁p C₂m C₂p C₃ m : ℝ) (N : ℕ) :
-    veryGoodComparableScaleCount μ βminus z N₀ a b C₁m C₁p C₂m C₂p C₃ m N ≤ N := by
-  calc veryGoodComparableScaleCount μ βminus z N₀ a b C₁m C₁p C₂m C₂p C₃ m N
-      ≤ (Icc (N + 1) (2 * N)).ncard := Set.ncard_le_ncard (fun n hn => hn.1) (Set.finite_Icc _ _)
-    _ = N := by rw [Set.ncard_eq_toFinset_card', Set.toFinset_Icc, Nat.card_Icc]; omega
 
 end HarmonicBalls

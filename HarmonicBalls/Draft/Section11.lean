@@ -3,6 +3,7 @@ import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Defs.Green
 import HarmonicBalls.Defs.Geometry
+import HarmonicBalls.Defs.Annuli
 import HarmonicBalls.Draft.Section1
 
 /-!
@@ -24,9 +25,9 @@ Lemmas 11.15-11.17 of its proof are in the case `α₀ = 0` (line 3137). "With p
 
 ## Objects defined here
 
-* `annulusGreenPotentialSup μ x₀ a b` is `SG_{a,b}(x₀)` (eq:alternate-size-2-full, line 1140; `SG_ρ(x₀) = SG_{ρ/4,2ρ}`,
-  eq:alternate-size-2, line 1134): the supremum over `x ∈ 𝔸_{a,b}(x₀)` of the Green potential in `B_b(x₀)` of
-  `μ|_{𝔸_{a,b}(x₀)}`, valued in `[0, ∞]`. It is not yet in `Defs`; it should move there if Section 5/6 drafts use it.
+* `annulusGreenPotentialSup μ x₀ a b` is `SG_{a,b}(x₀)` (eq:alternate-size-2-full, line 1140), defined in
+  `HarmonicBalls/Defs/Annuli.lean` with the other annulus objects shared with Sections 6 and 8; Section 11 uses
+  `SG_{3r,6r}(z)`.
 * `coneMassEvent` is `G̃_r(z; M, 𝒬)` (eq:mu-h-wild, line 2793), `pinchPointEvent` is `Ĝ_r(z; M)`
   (eq:pinch-point-event, line 3124), `internalDiam` is `diam^δ_h` (line 3252), `pinchFirstEvent`, `pinchSecondEvent`,
   `pinchThirdEvent` are `Ẽ₁`, `Ẽ₂(M)`, `Ẽ₃` (eq:first-event, eq:second-event, eq:third-event, lines 3257-3273), and
@@ -63,15 +64,6 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
 /-! ## Objects of Section 11 -/
-
-/-- `SG_{a,b}(x₀)` (eq:alternate-size-2-full, line 1140, with `a = s₁ρ`, `b = s₂ρ`): the supremum over
-`x ∈ 𝔸_{a,b}(x₀)` of `∫_{𝔸_{a,b}(x₀)} G_{B_b(x₀)}(x, y) dμ(y)`, in `[0, ∞]`. The quantity `SG_ρ(x₀)` of
-eq:alternate-size-2 (line 1134) is `annulusGreenPotentialSup μ x₀ (ρ/4) (2ρ)`; Section 11 uses `SG_{3r,6r}(z)`. On the
-diagonal the integrand is the paper's value `G(x, x) = +∞` (the junk value of `greenFunction` is not used); for
-`μ = μ_h`, which has no atoms, the diagonal does not contribute. -/
-noncomputable def annulusGreenPotentialSup (μ : Measure ℂ) (x₀ : ℂ) (a b : ℝ) : ℝ≥0∞ :=
-  ⨆ x ∈ annulus x₀ a b, ∫⁻ y in annulus x₀ a b,
-    (if y = x then ∞ else ENNReal.ofReal (greenFunction (ball x₀ b) x y)) ∂μ
 
 /-- The event `G̃_r(z) = G̃_r(z; M, 𝒬)` (eq:mu-h-wild, line 2793):
 `μ_h(𝔸_{r,2r}(z) ∩ 𝒬(z)) ≥ M × SG_{3r,6r}(z)`. `G̃_n(z) := G̃_{2^{-n}}(z)` (line 2799). -/
