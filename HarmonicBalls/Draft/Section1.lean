@@ -127,7 +127,7 @@ def HarmonicBallNoveltyStmt : Prop :=
       ¬ IsLipschitzDomain (Λ ω t) ∧ ∀ (w : ℂ) (s : ℝ), Λ ω t ≠ lqgMetricBall (D ω) w s) ∧
     ∀ t : ℝ, 0 < t → ∀ C ∈ connectedComponentsIn (closure (Λ ω t))ᶜ, IsSimpleLoop (frontier C)
 
-/-- Proposition 1.3 (prop:locally-determined, line 179). For each fixed `t > 0` and `x ∈ ℂ`, the closed LQG harmonic
+/-- Proposition 1.3 (prop:locally-determined, line 179). For each fixed `t ≥ 0` and `x ∈ ℂ`, the closed LQG harmonic
 ball `closure Λ_t(x)` is a local set for `h` (Schramm-Sheffield, *A contour line of the continuum Gaussian free
 field*, PTRF 157 (2013), Lemma 3.9): for each deterministic open set `U ⊆ ℂ`, the event
 `{closure Λ_t(x) ⊆ U}` is measurable with respect to `σ(h|_U)`.
@@ -136,15 +136,20 @@ field*, PTRF 157 (2013), Lemma 3.9): for each deterministic open set `U ⊆ ℂ`
 surely is a family of harmonic balls centred at `x` satisfying the conditions of Theorem 1.1
 (`IsHarmonicBallFamily`; see the module docstring). Measurability with respect to `σ(h|_U)` (`fieldSigmaAlgebra`) is
 up to a `P`-null set: the event is almost surely equal to a `σ(h|_U)`-measurable event (the family itself is only
-determined up to a null set). The paper prints `t ≥ 0` (line 180), but `Λ_0(x)` is not defined (the family is
-indexed by `t > 0`); the statement is for `t > 0`. Corrections applied: [C6], [C7] through
-`IsHarmonicBallFamily`. -/
+determined up to a null set).
+
+The statement is for `t ≥ 0`, as printed (line 180). The family of Theorem 1.1 is indexed by `t > 0` (line 153), so the
+closed harmonic ball at `t = 0` is read as the point `{x}`, the limit of the family at `t = 0` (Theorem 1.1(b),
+line 157: `⋂_{t>0} Λ_t(x) = {x}`; for the closures, eq:contains-origin, line 826); this is a reading, not a correction
+(ESCALATIONS E21, operator E20(3)). At `t = 0` the event `{{x} ⊆ U}` is deterministic. Corrections applied: [C6],
+[C7] through `IsHarmonicBallFamily`. -/
 def HarmonicBallLocalSetStmt : Prop :=
   ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ (x : ℂ) (Λ : Ω → ℝ → Set ℂ), (∀ᵐ ω ∂P, IsHarmonicBallFamily (μ ω) (Λ ω) x) →
-  ∀ t : ℝ, 0 < t → ∀ U : Set ℂ, IsOpen U →
-    ∃ E : Set Ω, MeasurableSet[fieldSigmaAlgebra α₀ hC U] E ∧ {ω | closure (Λ ω t) ⊆ U} =ᵐ[P] E
+  ∀ t : ℝ, 0 ≤ t → ∀ U : Set ℂ, IsOpen U →
+    ∃ E : Set Ω, MeasurableSet[fieldSigmaAlgebra α₀ hC U] E ∧
+      {ω | (if t = 0 then {x} else closure (Λ ω t)) ⊆ U} =ᵐ[P] E
 
 end HarmonicBalls
