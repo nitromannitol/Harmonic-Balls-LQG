@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.Sec6.HarnackType
 import HarmonicBalls.Proofs.Sec6.Prevalence
 import HarmonicBalls.Proofs.Sec6.HarnackIteration
 import HarmonicBalls.Proofs.Sec6.GreenMono
+import HarmonicBalls.Proofs.Sec6.LowMass
 import HarmonicBalls.Draft.Section3
 
 /-!
@@ -17,6 +18,8 @@ import HarmonicBalls.Draft.Section3
 * `harnackTypeComponentStmt_of_inputs`, `harnackTypeEstimateStmt_of_inputs`: Propositions 6.2 and 6.1 from
   step S-SubRange for very good annuli, `LQGMeasureExistence` and `LQGMeasureWeylScaling` (α₀ = 0), Lemmas 3.2, 6.8,
   6.10 and 6.13.
+* `harnackTypeEstimateStmt_of_steps`, `harnackTypeComponentStmt_of_steps`: the same with Lemma 6.13 replaced by its
+  two steps (`lowMassSmallOdometerStmt_of_steps`): `GoodAnnulusOdometerDecayStep`, `ComponentOdometerDiscMaxStep`.
 -/
 
 namespace HarmonicBalls
@@ -124,5 +127,27 @@ theorem harnackTypeEstimateStmt_of_inputs (hsub : VeryGoodAnnuliSubRangeStep.{u}
     (h610 : OdometerBoundByAnnulusMassStmt.{u}) (h613 : LowMassSmallOdometerStmt.{u}) :
     HarnackTypeEstimateStmt.{u} :=
   harnackTypeEstimateStmt_of_component (harnackTypeComponentStmt_of_inputs hsub hex hW h32 h68 h610 h613)
+
+/-- **Proposition 6.2** with Lemma 6.13 from its steps (`GoodAnnulusOdometerDecayStep`, `ComponentOdometerDiscMaxStep`). -/
+theorem harnackTypeComponentStmt_of_steps (hsub : VeryGoodAnnuliSubRangeStep.{u})
+    (hex : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (h32 : ClusterOpenLaplacianStmt.{u}) (h68 : AnnulusMassBoundByOdometerStmt.{u})
+    (h610 : OdometerBoundByAnnulusMassStmt.{u}) (hdec : GoodAnnulusOdometerDecayStep.{u})
+    (hdisc : ComponentOdometerDiscMaxStep.{u}) : HarnackTypeComponentStmt.{u} :=
+  harnackTypeComponentStmt_of_inputs hsub hex hW h32 h68 h610 (lowMassSmallOdometerStmt_of_steps hdec hdisc)
+
+/-- **Proposition 6.1** with Lemma 6.13 from its steps. -/
+theorem harnackTypeEstimateStmt_of_steps (hsub : VeryGoodAnnuliSubRangeStep.{u})
+    (hex : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (h32 : ClusterOpenLaplacianStmt.{u}) (h68 : AnnulusMassBoundByOdometerStmt.{u})
+    (h610 : OdometerBoundByAnnulusMassStmt.{u}) (hdec : GoodAnnulusOdometerDecayStep.{u})
+    (hdisc : ComponentOdometerDiscMaxStep.{u}) : HarnackTypeEstimateStmt.{u} :=
+  harnackTypeEstimateStmt_of_component (harnackTypeComponentStmt_of_steps hsub hex hW h32 h68 h610 hdec hdisc)
 
 end HarmonicBalls
