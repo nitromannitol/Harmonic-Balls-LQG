@@ -51,8 +51,13 @@ the shared ones and the copy of `IsVeryGoodAnnulus` differed only in the packagi
 * eq:good-annulus-harmonic (line 1120, GRAPH slip list): "`𝓑^u` exits `𝔸_{3r,5r}(z)` before exiting `Y`" is
   impossible for `Y ⊆ 𝔸` (so the printed event always holds); the intended event (lines 1090-1091) is
   `τ_𝔸 ≤ τ_Y`: `𝓑^u` stays in `Y` until it exits the annulus.
-* Constants and `α₀`, `β⁻` (GRAPH G19(iii), D10). `α₀` and the exponent `β⁻ > (2+γ)²/2` of `M_ρ` are global
-  parameters, quantified with `γ` before the constants, which may depend on them. A constant uniform in `α₀` is false
+* Constants and `α₀`, `β⁻` (GRAPH G19(iii), D10; operator E31, 2026-11-03 04:20 and fix (4) of 04:45). The statements
+  follow the PRINTED quantifier order. In Propositions 6.1, 6.2 and Lemmas 6.3, 6.6 the constants printed as depending
+  only on `γ` (and the listed parameters: `α(γ)`, `a(b, γ)`, `C^±(a, γ)`, `N₁(b, γ)`) are chosen before `α₀` and before
+  the probability space; in Lemma 6.6 the exponent `β⁻ > (2+γ)²/2` of `M_ρ` is quantified with `γ` before them (the
+  paper treats it as a function of `γ`, line 1911: "`b` depends only on `γ` (through `β⁻`)"). These `α₀`-uniform forms
+  are true by localization (operator verdict on E22, 2026-11-03 04:35; docs/campaign/cex/AlphaUniformity.md §3). In the other statements of this section `α₀` and `β⁻` are quantified with `γ` before the constants, which may
+  depend on them; for Lemma 6.4 ([C25]) and Lemma 6.7 ([C26]) this is required. A constant uniform in `α₀` is false
   already for Lemma 6.4: at `z = 0` (admissible, `dist(𝔸_{3r,5r}(0), 0) = 3r`) and `α₀ → -∞`, the density
   `|x|^{-γα₀}` puts all but a vanishing fraction of `μ_h(𝔸_{3r,5r}(0))` in `𝔸_{4.9r,5r}(0)`, while `Y = 𝔸_{3r,4.9r}(0)`
   is crossed (inner circle first) with probability `log(4.9/4)/log(4.9/3) > 0.4`.
@@ -192,13 +197,14 @@ open Section6
 `c > 0` such that with polynomially high probability as `ε → 0`, each `x₀ ∈ (B_{1+ε} \ B_{10√ε}) ∩ (ε/100) ℤ²` has
 at least `c log ε^{-1/2}` radii `ρ ∈ [ε, ε^{1/2}] ∩ {8^{-n}}_{n ∈ ℕ}` for which `Ē_ρ(x₀)` occurs.
 
-Readings: `t` unbound at line 1067, read "for all `t > 0`" (line 1053); `α` may depend on `α₀` (module docstring);
+Readings: `t` unbound at line 1067, read "for all `t > 0`" (line 1053); `α = α(γ)` is chosen before `α₀`, as printed
+(E31, module docstring);
 the events are arbitrary subsets of `Ω` (outer probability in `PolyHighProb`); the implication is required for every
 sample point of the event (equivalent to almost every, the events being existential). -/
 def HarnackTypeEstimateStmt : Prop :=
   ∃ c : ℝ, 0 < c ∧
-  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ∃ α : ℝ, 0 < α ∧
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∃ α : ℝ, 0 < α ∧ ∀ α₀ : ℝ, α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∃ E : ℝ → ℂ → Set Ω,
@@ -218,11 +224,11 @@ def HarnackTypeEstimateStmt : Prop :=
 
 "The setting of Proposition 6.1" is made explicit: `α`, the events and their prevalence are those of Proposition
 6.1, restated here (GRAPH 6.2), so this statement implies `HarnackTypeEstimateStmt` (line 1083). `t` and `z` are
-read as in Proposition 6.1. -/
+read as in Proposition 6.1; `α = α(γ)` is chosen before `α₀`, as printed (E31), as in Lemma 10.1. -/
 def HarnackTypeComponentStmt : Prop :=
   ∃ c : ℝ, 0 < c ∧
-  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ∃ α : ℝ, 0 < α ∧
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∃ α : ℝ, 0 < α ∧ ∀ α₀ : ℝ, α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∃ E : ℝ → ℂ → Set Ω,
@@ -242,12 +248,12 @@ such that with polynomially high probability as `ε → 0`, each `z ∈ (B_{1+ε
 `c log₇ ε^{-1/2}` radii `r ∈ [ε, ε^{1/2}] ∩ {7^{-n}}_{n ∈ ℕ}` for which `E_r(z; a, b)` occurs.
 
 `a ∈ (0,1)` (the parameter range of eq:good-annulus-harmonic, line 1116; stronger than the printed `a > 0`, and
-equivalent since `E_r(z; a, b)` is monotone in `a`). Stated for every `α₀ < Q`, including `α₀ = 0` (used in Lemma 6.7,
-line 1361). -/
+equivalent since `E_r(z; a, b)` is monotone in `a`). `a = a(b, γ)` is chosen before `α₀`, as printed (E31, module
+docstring). Stated for every `α₀ < Q`, including `α₀ = 0` (used in Lemma 6.7, line 1361). -/
 def ManyGoodAnnuliStmt : Prop :=
   ∃ c : ℝ, 0 < c ∧
-  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ∀ b ∈ Ioo (0 : ℝ) 1, ∃ a ∈ Ioo (0 : ℝ) 1,
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∀ b ∈ Ioo (0 : ℝ) 1, ∃ a ∈ Ioo (0 : ℝ) 1, ∀ α₀ : ℝ, α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   PolyHighProb P fun ε => {ω | ∀ z ∈ prevalenceGrid ε,
@@ -297,15 +303,16 @@ def AnnulusIterationStmt : Prop :=
 probability as `ε → 0`, each `x₀ ∈ (B_{1+ε} \ B_{10√ε}) ∩ (ε/100) ℤ²` has at least `c log₈ ε^{-1/2}` radii
 `ρ ∈ [ε, ε^{1/2}] ∩ {8^{-n}}_{n ∈ ℕ}` for which `Ē_ρ(x₀; N₀, a, b, C₁^±, C₂^±, C₃)` occurs.
 
-`a ∈ (0,1)` (parameter range of the very good event, line 1145). The constants may depend on `α₀` and `β⁻`
-(module docstring). -/
+`a ∈ (0,1)` (parameter range of the very good event, line 1145). The constants `a, C₁^±, C₂^±, N₁` are chosen
+before `α₀`, as printed (E31, module docstring); they may depend on `β⁻`, which is quantified with `γ` before them
+(line 1911: the paper's constants depend on `γ` "through `β⁻`"). -/
 def ManyVeryGoodAnnuliStmt : Prop :=
   ∃ c C₃ : ℝ, 0 < c ∧ 0 < C₃ ∧
-  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
   ∀ βminus : ℝ, (2 + γ) ^ 2 / 2 < βminus →
   ∀ b ∈ Ioo (0 : ℝ) 1, ∃ a ∈ Ioo (0 : ℝ) 1,
   ∃ C₁m C₁p C₂m C₂p : ℝ, 0 < C₁m ∧ 0 < C₁p ∧ 0 < C₂m ∧ 0 < C₂p ∧
-  ∃ N₁ : ℕ, 1 ≤ N₁ ∧ ∀ N₀ : ℕ, N₁ ≤ N₀ →
+  ∃ N₁ : ℕ, 1 ≤ N₁ ∧ ∀ N₀ : ℕ, N₁ ≤ N₀ → ∀ α₀ : ℝ, α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   PolyHighProb P fun ε => {ω | ∀ x₀ ∈ prevalenceGrid ε,
