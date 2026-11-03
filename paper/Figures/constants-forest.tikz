@@ -1,0 +1,24 @@
+
+\begin{forest}
+	[	{\hyperref[lemma:very-good-annuli]{$C_3$}}, name = C3, fill = lightgray
+	[ 
+	{\hyperref[eq:choice-of-b]{$b$}}, name = b, fill = lightgray
+		[{\hyperref[lemma:very-good-annuli]{$a$}}, name = srca, fill = lightgray]  
+		 { \draw (.west) node[left]{Lem. \ref{lemma:very-good-annuli}}; }
+		[{\hyperref[lemma:very-good-annuli]{$C^{\pm}_1$}}, name = srcc, fill = lightgray]
+		[{\hyperref[lemma:very-good-annuli]{$C^{\pm}_2$}}, fill = lightgray,
+			[{\hyperref[eq:choice-of-N1]{$N_1 \leq N_0$}}, fill = lightgray, name = N
+				[{\hyperref[eq:choice-of-alpha]{$\alpha$}}, name = tgt, fill = lightgray] { \draw (.east) node[right]{Eqn. \eqref{eq:choice-of-alpha}}; }
+			] 	{ \draw (.east) node[right]{Eqn. \eqref{eq:choice-of-N1}}; }
+		]  
+		[	{\hyperref[eq:small-odometer-implies-low-mass]{$C_4$}}, name = C4, fill = lightgray, no edge]
+		{ \draw (.east) node[right]{Eqn. \eqref{eq:small-odometer-implies-low-mass}}; }
+	]{ \draw (.west) node[left]{Eqn. \eqref{eq:choice-of-b}}; } 	
+	]
+	\draw[-] (srcc) to[out=south,in=north west] (tgt);
+	\draw[-] (srca) to[out=south,in=west] (tgt);
+	\draw[-] (srca) to[out=south,in=west] (N);
+	\draw[-] (srcc) to[out=south,in=north] (N);
+	\draw[-] (C4) to[out=south,in=north] (N);
+	{ \draw (.west) node[left]{Lem. \ref{lemma:very-good-annuli}}; }
+\end{forest}
