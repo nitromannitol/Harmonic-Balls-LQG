@@ -23,21 +23,26 @@ Deterministic constants are chosen before the probability space. The results sta
 hold on one event of probability one for all `z`, `t` and all annuli, the event of Lemmas 3.1-3.2 on which their
 proofs run (GRAPH.md, entries 6.8-6.13).
 
-## Objects defined here (namespace `HarmonicBalls.Section6`)
+## Objects used from `Defs/Annuli.lean` (namespace `HarmonicBalls`)
 
 * `IsGoodAnnulus μ r z a b`: the good annulus event `E_r(z; a, b)` (eq:good-annulus-harmonic, lines 1115-1123);
 * `annulusBallMassSize μ β⁻ ρ x₀`: the size `M_ρ(x₀)` (eq:alternate-size, line 1129); `SG_ρ(x₀; s₁, s₂)`
-  (eq:alternate-size-2(-full), lines 1134, 1140) is `annulusGreenPotentialSup μ x₀ (s₁ρ) (s₂ρ)` of
-  `Draft/Section11.lean`;
-* `VeryGoodCriterionThree`, `IsVeryGoodAnnulus`: (VG-iii) and the very good annulus event
-  `Ē_ρ(x₀; N₀, a, b, C₁^±, C₂^±, C₃)` (lines 1144-1157);
+  (eq:alternate-size-2(-full), lines 1134, 1140) is `annulusGreenPotentialSup μ x₀ (s₁ρ) (s₂ρ)`;
+* `IsVeryGoodAnnulus`: the very good annulus event `Ē_ρ(x₀; N₀, a, b, C₁^±, C₂^±, C₃)` (lines 1144-1157).
+
+These are shared with Sections 7, 8 and 11. Earlier versions of this file carried copies in namespace
+`HarmonicBalls.Section6`; the copies of `IsGoodAnnulus` and `annulusBallMassSize` were definitionally equal (`rfl`) to
+the shared ones and the copy of `IsVeryGoodAnnulus` differed only in the packaging of (VG-iii), see
+`Section6.isVeryGoodAnnulus_iff`.
+
+## Objects defined here (namespace `HarmonicBalls.Section6`)
+
+* `scaledLattice`, `VeryGoodCriterionThree`: the lattice `δ ℤ²` and criterion (VG-iii) of the very good annulus event;
+  `isVeryGoodAnnulus_iff` splits `IsVeryGoodAnnulus` into (VG-i), (VG-ii) and `VeryGoodCriterionThree`;
 * `fieldSigmaAlgebraModConst`, `IsFieldMeasurableModConst`: `σ(h|_U)` modulo additive constant (lines 1123, 1263;
   GRAPH D9);
 * `shellWidth`, `shellRadius`, `shellOuterRadius`, `shellScale`, `shell`: the shell decomposition of Lemma 6.12;
 * `odometerExt`: the odometer with its paper value `+∞` at the pole, valued in `[0, ∞]`.
-
-`Draft/Section8.lean` (in progress) defines the same good/very good objects in namespace `HarmonicBalls`; they belong
-in a `Defs` file shared by Sections 6, 8 and 11.
 
 ## Corrections and readings
 
@@ -80,30 +85,18 @@ open scoped ENNReal Pointwise
 
 namespace Section6
 
-/-! ## Good and very good annuli (Section 6.1, lines 1105-1161) -/
+/-! ## Good and very good annuli (Section 6.1, lines 1105-1161)
 
-/-- The *good annulus* event `E_r(z) = E_r(z; a, b)` (eq:good-annulus-harmonic, lines 1115-1123), for the measure
-`μ = μ_h`: for each Borel set `Y ⊆ 𝔸_{3r,5r}(z)` with `μ(Y) ≤ a μ(𝔸_{3r,5r}(z))` and each `u ∈ ∂B_{4r}(z)`, standard
-planar Brownian motion `𝓑^u` (independent of `h`, so the conditioning on `h` fixes `μ`) stays in `Y` until it exits
-`𝔸_{3r,5r}(z)` (`τ_𝔸 ≤ τ_Y`, the corrected reading of the slip at line 1120) with probability at most `b`. The
-probability is the outer measure (exit times of Borel sets are only universally measurable). -/
-def IsGoodAnnulus (μ : Measure ℂ) (r : ℝ) (z : ℂ) (a b : ℝ) : Prop :=
-  ∀ Y : Set ℂ, MeasurableSet Y → Y ⊆ annulus z (3 * r) (5 * r) →
-    μ Y ≤ ENNReal.ofReal a * μ (annulus z (3 * r) (5 * r)) →
-    ∀ u ∈ sphere z (4 * r),
-      planarBrownianMotion u
-          {p | ContinuousPath.exitTime (annulus z (3 * r) (5 * r)) p ≤ ContinuousPath.exitTime Y p} ≤
-        ENNReal.ofReal b
-
-/-- The size `M_ρ(x₀)` (eq:alternate-size, line 1129):
-`inf_{z ∈ 𝔸_{ρ/2,ρ}(x₀)} inf_{r ∈ (0, ρ/4)} μ(B_r(z)) / (r/ρ)^{β⁻}`, in `[0, ∞]`; `β⁻` is the lower exponent of
-Lemma 2.4 (lemma:volume-growth), a parameter. -/
-noncomputable def annulusBallMassSize (μ : Measure ℂ) (βminus ρ : ℝ) (x₀ : ℂ) : ℝ≥0∞ :=
-  ⨅ z ∈ annulus x₀ (ρ / 2) ρ, ⨅ r ∈ Ioo 0 (ρ / 4), μ (ball z r) / ENNReal.ofReal ((r / ρ) ^ βminus)
+The good annulus event `IsGoodAnnulus`, the size `annulusBallMassSize` and the very good annulus event
+`IsVeryGoodAnnulus` are those of `Defs/Annuli.lean`. -/
 
 /-- The scaled lattice `δ ℤ² = {δ (j + k i) : j, k ∈ ℤ}` (lines 1157, 1172). -/
 def scaledLattice (δ : ℝ) : Set ℂ :=
   {w | ∃ j k : ℤ, w = (δ : ℂ) * ((j : ℂ) + (k : ℂ) * Complex.I)}
+
+theorem mem_scaledLattice {δ : ℝ} {w : ℂ} :
+    w ∈ scaledLattice δ ↔ ∃ j k : ℤ, w = (δ : ℂ) * ((j : ℂ) + (k : ℂ) * Complex.I) :=
+  Iff.rfl
 
 /-- Criterion (VG-iii) (line 1157): for each `ε ∈ {2^{-n}}_{n ≥ N₀}` and each `w ∈ (ερ/100) ℤ² ∩ 𝔸_{ρ/2,ρ}(x₀)`
 there are at least `C₃ log₇ ε^{-1/2}` radii `r ∈ [ερ, ε^{1/2} ρ] ∩ {ρ 7^{-k}}_{k ≥ 1}` for which `E_r(w; a, b)`
@@ -114,18 +107,26 @@ def VeryGoodCriterionThree (μ : Measure ℂ) (ρ : ℝ) (x₀ : ℂ) (N₀ : �
       ({r : ℝ | r ∈ Icc (dyadicScale n * ρ) (Real.sqrt (dyadicScale n) * ρ) ∧
         (∃ k : ℕ, 1 ≤ k ∧ r = ρ * (7 : ℝ)⁻¹ ^ k) ∧ IsGoodAnnulus μ r w a b}.ncard : ℝ)
 
-/-- The *very good annulus* event `Ē_ρ(x₀) = Ē_ρ(x₀; N₀, a, b, C₁^±, C₂^±, C₃)` (lines 1144-1157), for `μ = μ_h`:
+/-- The very good annulus event `Ē_ρ(x₀) = Ē_ρ(x₀; N₀, a, b, C₁^±, C₂^±, C₃)` of `Defs/Annuli.lean` (lines 1144-1157),
+split into its three criteria, for `μ = μ_h`:
 * (VG-i) `C₁⁻ ≤ M_ρ(x₀) / μ(𝔸_{ρ/4,2ρ}(x₀)) ≤ C₁⁺`;
 * (VG-ii) `C₂⁻ ≤ SG_ρ(x₀) / μ(𝔸_{ρ/4,2ρ}(x₀)) ≤ C₂⁺`, `SG_ρ(x₀) = annulusGreenPotentialSup μ x₀ (ρ/4) (2ρ)`
   (eq:alternate-size-2, line 1134);
 * (VG-iii) `VeryGoodCriterionThree`.
 Ratios are in `[0, ∞]`; (VG-i) forces `0 < μ(𝔸_{ρ/4,2ρ}(x₀)) < ∞` and `0 < M_ρ(x₀) < ∞`. -/
-def IsVeryGoodAnnulus (μ : Measure ℂ) (βminus ρ : ℝ) (x₀ : ℂ) (N₀ : ℕ) (a b C₁m C₁p C₂m C₂p C₃ : ℝ) : Prop :=
-  annulusBallMassSize μ βminus ρ x₀ / μ (annulus x₀ (ρ / 4) (2 * ρ)) ∈
-      Icc (ENNReal.ofReal C₁m) (ENNReal.ofReal C₁p) ∧
-    annulusGreenPotentialSup μ x₀ (ρ / 4) (2 * ρ) / μ (annulus x₀ (ρ / 4) (2 * ρ)) ∈
-      Icc (ENNReal.ofReal C₂m) (ENNReal.ofReal C₂p) ∧
-    VeryGoodCriterionThree μ ρ x₀ N₀ a b C₃
+theorem isVeryGoodAnnulus_iff (μ : Measure ℂ) (βminus ρ : ℝ) (x₀ : ℂ) (N₀ : ℕ) (a b C₁m C₁p C₂m C₂p C₃ : ℝ) :
+    IsVeryGoodAnnulus μ βminus ρ x₀ N₀ a b C₁m C₁p C₂m C₂p C₃ ↔
+      annulusBallMassSize μ βminus ρ x₀ / μ (annulus x₀ (ρ / 4) (2 * ρ)) ∈
+          Icc (ENNReal.ofReal C₁m) (ENNReal.ofReal C₁p) ∧
+        annulusGreenPotentialSup μ x₀ (ρ / 4) (2 * ρ) / μ (annulus x₀ (ρ / 4) (2 * ρ)) ∈
+          Icc (ENNReal.ofReal C₂m) (ENNReal.ofReal C₂p) ∧
+        VeryGoodCriterionThree μ ρ x₀ N₀ a b C₃ := by
+  unfold IsVeryGoodAnnulus VeryGoodCriterionThree
+  constructor
+  · rintro ⟨h1, h2, h3⟩
+    exact ⟨h1, h2, fun n hn w hw => h3 n hn w hw.2 hw.1⟩
+  · rintro ⟨h1, h2, h3⟩
+    exact ⟨h1, h2, fun n hn z hz hl => h3 n hn z ⟨hl, hz⟩⟩
 
 /-- The grid `(B_{1+ε} \ B_{10 √ε}) ∩ (ε/100) ℤ²` of Lemmas 6.3, 6.6 and Proposition 6.1 (lines 1068, 1172, 1298). -/
 def prevalenceGrid (ε : ℝ) : Set ℂ :=
@@ -469,13 +470,6 @@ def LowMassSmallOdometerStmt : Prop :=
 /-! ## Sanity lemmas -/
 
 namespace Section6
-
-/-- The good annulus event with `b ≥ 1` always holds (probabilities are at most one). -/
-theorem isGoodAnnulus_of_one_le (μ : Measure ℂ) (r : ℝ) (z : ℂ) (a : ℝ) {b : ℝ} (hb : 1 ≤ b) :
-    IsGoodAnnulus μ r z a b := by
-  intro Y _ _ _ u _
-  calc planarBrownianMotion u _ ≤ 1 := prob_le_one
-    _ ≤ ENNReal.ofReal b := by simpa using ENNReal.ofReal_le_ofReal hb
 
 /-- (VG-iii) holds vacuously for `C₃ ≤ 0`: `log₇ ε^{-1/2} ≥ 0` for `ε = 2^{-n} ≤ 1`. -/
 theorem veryGoodCriterionThree_of_nonpos (μ : Measure ℂ) (ρ : ℝ) (x₀ : ℂ) (N₀ : ℕ) (a b : ℝ) {C₃ : ℝ}

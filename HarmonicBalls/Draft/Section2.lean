@@ -149,7 +149,11 @@ from `x` for the field `h(ω)` (a.s. for all `x`). Almost surely, for every smoo
 
 The paper's statement omits "almost surely" (GRAPH.md, Prop. 2.5); the a.s. event is taken uniform in `O` and `f`,
 as the proof (from the a.s. volume growth bound I2) gives. Junk values: `greenFunction O x x = 0` is irrelevant since
-`μ_h` has no atoms, and `q = 0` on `∂O`, where `G_O(x,·) = 0`. -/
+`μ_h` has no atoms, and `q = 0` on `∂O`, where `G_O(x,·) = 0`.
+
+The LBM clause is a quoted result whose cited sources do not cover the scope the paper needs [NCS1]: it is drafted as
+printed and not consumed. The paper consumes only the Green clause, stated without LBM as `GreenPotentialHolderStmt`
+(operator decision E26). -/
 def GreenPotentialLiouvilleHolderStmt : Prop :=
   ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -164,6 +168,49 @@ def GreenPotentialLiouvilleHolderStmt : Prop :=
       ∃ C r : ℝ≥0, 0 < r ∧
         HolderOnWith C r (fun x => ∫ y in O, greenFunction O x y * f y ∂(μ ω)) (closure O)
 
+/-- Proposition 2.5 (prop:lbm-exit-time, line 524), Green-potential clause. Almost surely, for every smooth bounded
+open set `O` and every `f ∈ L^∞(closure O)` (essentially bounded with respect to `μ_h` on `closure O`), the Green
+potential `q(x) = ∫_O G_O(x,y) f(y) μ_h(dy)` is finite (the integral converges absolutely) for every `x ∈ closure O`
+and is Hölder continuous on `closure O`.
+
+This is the second clause of `GreenPotentialLiouvilleHolderStmt`, stated without Liouville Brownian motion (the clause
+does not involve it). It is the only part of Proposition 2.5 that the paper consumes: Prop 4.1 (line 710), Lemma 4.2
+(line 732), Section 6 (line 1138), Appendix A property 1 of `q` (line 3543); GRAPH.md entry 2.5; operator decision
+E26. The LBM clause of Proposition 2.5 and Proposition 2.6 are quoted results whose cited sources do not cover the
+scope the paper needs (Berestycki 2015, Thm 1.2, is annealed and for one start; Garban-Rhodes-Vargas 2016, Thm 2.7,
+is for the massive whole-plane GFF; Kigami 2019, Thm 13.1, does not identify its process with LBM) [NCS1]. They stay
+drafted as printed and unconsumed. `greenPotentialLiouvilleHolderStmt_green` derives this statement from the printed
+one. The a.s. event is uniform in `O` and `f`; junk values as in `GreenPotentialLiouvilleHolderStmt`. -/
+def GreenPotentialHolderStmt : Prop :=
+  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ᵐ ω ∂P, ∀ O : Set ℂ, IsSmoothBoundedOpen O →
+    ∀ f : ℂ → ℝ, MemLp f ⊤ ((μ ω).restrict (closure O)) →
+      (∀ x ∈ closure O, IntegrableOn (fun y => greenFunction O x y * f y) O (μ ω)) ∧
+      ∃ C r : ℝ≥0, 0 < r ∧
+        HolderOnWith C r (fun x => ∫ y in O, greenFunction O x y * f y ∂(μ ω)) (closure O)
+
+universe u
+
+/-- The printed Proposition 2.5 implies its Green-potential clause `GreenPotentialHolderStmt`, given, for each field,
+an LQG clock `F ω x` of planar Brownian motion from every start `x` (almost surely): the premise of the printed
+statement. The clock premise cannot be dropped: `GreenPotentialLiouvilleHolderStmt` quantifies over clocks `F` and
+says nothing about `μ_h` when no clock exists. The LQG clock from all starts simultaneously is Garban-Rhodes-Vargas
+2016, Thm 2.7, for the massive whole-plane GFF, outside the scope the paper needs [NCS1]; it is not an input of the
+proof, which consumes `GreenPotentialHolderStmt` directly. -/
+theorem greenPotentialLiouvilleHolderStmt_green (h : GreenPotentialLiouvilleHolderStmt.{u})
+    (hclock : ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+        (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+      ∃ F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ,
+        ∀ᵐ ω ∂P, ∀ x : ℂ, IsLQGClock planarBrownianMotion γ (fieldCircleAverage α₀ (hcirc ω)) x (F ω x)) :
+    GreenPotentialHolderStmt.{u} := by
+  intro γ α₀ hγ hγ2 hα Ω _ P hC hcirc μ hGFF hLQG
+  obtain ⟨F, hF⟩ := hclock γ α₀ hγ hγ2 hα Ω P hC hcirc μ hGFF hLQG
+  filter_upwards [h γ α₀ hγ hγ2 hα Ω P hC hcirc μ hGFF hLQG F hF] with ω hω
+  exact fun O hO => (hω O hO).2
+
 /-! ### Proposition 2.6: the heat kernel of reflected LBM in a square -/
 
 /-- Proposition 2.6 (prop:lbm-continuity, line 554), with correction [C5]. Let `K = closedSquare a L` (`L > 0`) and
@@ -174,7 +221,10 @@ kernel with [C5]), is finite (real-valued), jointly continuous on `(0,∞) × K 
 
 "A square" is read as a closed axis-parallel square, as for all squares of the paper (e.g. line 1223, the dyadic
 squares of Section 11) and for the unit square of Kigami 2019; reflected Brownian motion in a square is the folded
-planar Brownian motion of HarmonicBalls/Defs/LBM.lean. -/
+planar Brownian motion of HarmonicBalls/Defs/LBM.lean.
+
+A quoted result whose cited source does not cover the scope the paper needs [NCS1]: drafted as printed and not
+consumed (Lemma 6.4 is proved without it, docs/campaign/E19-route-b.md §1.3). -/
 def ReflectedLBMHeatKernelStmt : Prop :=
   ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
