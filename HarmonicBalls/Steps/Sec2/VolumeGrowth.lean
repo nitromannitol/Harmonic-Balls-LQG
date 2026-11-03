@@ -239,4 +239,47 @@ theorem lqgMeasureFullSupportStmt_of_volumeGrowth (h : LQGVolumeGrowthAllScalesS
     _ ≤ μ ω (ball x (min δ r₀ / 2)) := h1
     _ ≤ μ ω U := measure_mono ((ball_subset_ball (hlt.le.trans (min_le_left _ _))).trans hδU)
 
+/-! ### Carving of `LiouvilleBallMassBoundStep`
+
+The steps below concern the field `h^ℂ` (`α₀ = 0`) and its LQG measure `μ₀ = μ_{h^ℂ}` on the same probability
+space, and the comparison `μ_h = |x|^{-γα₀} μ₀` off the origin. With `G = γQ` and `T = γ(Q-α₀) = G - γα₀`, for
+`|z| ≍ t ∈ [δ^{1-ζ}, 1]` they give `μ_h(B_δ(z)) ≍ t^T (δ/t)^{β±₀}`, an exponent between `T` and `β±₀`. For
+`|z| ≲ δ^{1-ζ}` the upper bound sums the shells `{2^{-j-1} ≤ |x| < 2^{-j}}` (`μ_h({0}) = 0`), and the lower bound
+uses a ball `B_{δ/4}(w) ⊆ B_δ(z)` with `|w| ≥ δ/2` at the scale `t ≍ δ^{1-ζ}`. -/
+
+/-- Step (multiscale ball bound for `h^ℂ` around the origin; BG20, Lemma A.1, scale invariance on the annuli
+around `0`). Let `μ₀` be the γ-LQG measure of the whole-plane GFF `h^ℂ` (`α₀ = 0`). For `R > 0`,
+`β⁺₀ ∈ (0, (2-γ)²/2)`, `β⁻₀ > (2+γ)²/2` and `ζ ∈ (0, 1)`, with polynomially high probability as `δ → 0`: for every
+`t ∈ [δ^{1-ζ}, 1]` and every `z ∈ closedBall 0 (R t)`,
+`t^{γQ} (δ/t)^{β⁻₀} δ^ζ ≤ μ₀(B_δ(z)) ≤ t^{γQ} (δ/t)^{β⁺₀} δ^{-ζ}`.
+
+Here `μ₀(t A) = t^{γQ} e^{γ h^ℂ_t(0)} μ_{h^{(t)}}(A)` with `h^{(t)} = h^ℂ(t ·) - h^ℂ_t(0)` a whole-plane GFF
+(`WholePlaneGFFAffineInvariance`, `LQGMeasureCoordChange`). `h^ℂ_t(0)` is centred Gaussian with variance
+`log (1/t)`, and Ding-Gwynne Lemma 3.8 (`WholePlaneLQGBallMassBounds`) applies to the rescaled fields uniformly in
+the dyadic scale `t = 2^{-k}` through the mixture field on `ℕ × Ω`. At `t = 1` the bound is the global bound
+`δ^{β⁻₀+ζ} ≤ μ₀(B_δ(z)) ≤ δ^{β⁺₀-ζ}` on `closedBall 0 R`. -/
+def WholePlaneScaledBallMassStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ₀ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ₀ →
+  ∀ R : ℝ, 0 < R → ∀ βplus βminus ζ : ℝ, 0 < βplus → βplus < (2 - γ) ^ 2 / 2 → (2 + γ) ^ 2 / 2 < βminus →
+    0 < ζ → ζ < 1 →
+    PolyHighProb P fun δ => {ω | ∀ t : ℝ, δ ^ (1 - ζ) ≤ t → t ≤ 1 → ∀ z ∈ closedBall (0 : ℂ) (R * t),
+      ENNReal.ofReal (t ^ (γ * lqgQ γ) * (δ / t) ^ βminus * δ ^ ζ) ≤ μ₀ ω (ball z δ) ∧
+        μ₀ ω (ball z δ) ≤ ENNReal.ofReal (t ^ (γ * lqgQ γ) * (δ / t) ^ βplus * δ ^ (-ζ))}
+
+/-- Step (the log singularity off the origin; Weyl scaling, Fact 2.1 III). If `μ` is the γ-LQG measure of
+`h = h^ℂ - α₀ log |·|` and `μ₀` that of `h^ℂ`, on the same probability space, then a.s.
+`μ_h = |x|^{-γα₀} μ₀` on `ℂ \ {0}`. Proof route: `LQGMeasureWeylScaling` for `μ₀` with the continuous function
+`f_η = -α₀ log max(|·|, η)`, whose circle averages agree with those of `-α₀ log |·|` on circles in
+`{|x| > η}` (mean value property of `log |·|`), and the uniqueness of vague limits on the open set
+`{|x| > η}`; then `η = 1/n → 0`. -/
+def SingularWeightStep : Prop :=
+  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ μ₀ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+    IsLQGMeasureOfField P γ 0 hcirc μ₀ →
+    ∀ᵐ ω ∂P, (μ ω).restrict {0}ᶜ =
+      ((μ₀ ω).withDensity fun x => ENNReal.ofReal (‖x‖ ^ (-(γ * α₀)))).restrict {0}ᶜ
+
 end HarmonicBalls
