@@ -8,9 +8,9 @@ Bou-Rabee and Gwynne, *Harmonic balls in Liouville quantum gravity* (arXiv:2208.
 * Section 3.1 (subsec:obstacle-def, lines 579-604): for a measure `μ` (the paper's `μ_h`), a radius `r > 0`, a pole
   `z ∈ B_r` and a mass `t > 0`, the supersolutions `S_{B_r;z}(t)`, the least supersolution `v_{B_r;z}(t)`, the
   cluster `Λ_{B_r;z}(t)` and the odometer `u_{B_r;z}(t)`.
-* Appendix A (sec:obstacle-appendix, lines 3520-3583): the volume growth condition (eq:volume-growth), the potential
+* Appendix A (sec:obstacle-appendix, lines 3522-3583): the volume growth condition (eq:volume-growth), the potential
   `q_{B_R}`, the obstacle `β_t`, the shifted supersolutions `S̃(t)`, the least superharmonic majorant `ṽ_t`, the
-  odometer `v_t = ṽ_t - β_t` and the non-coincidence set `Λ_t`. The paper takes `R = 1` and pole `0` (line 3546); we
+  odometer `v_t = ṽ_t - β_t` and the non-coincidence set `Λ_t`. The paper takes `R = 1` and pole `0` (line 3547); we
   keep a general radius `R` (Lemma A.6, lemma:appendix-cluster-compatibility, line 3851, uses `B_s`, `s ≤ R`) and a
   general pole `z` (the Section 3 lemmas are stated for every `z ∈ B_r`); the paper's objects are the case `z = 0`.
 
@@ -32,10 +32,10 @@ of the Green function, so the constraint there is `w ≥ 0`, as in the paper.
 
 ## Paper typos followed in corrected form (ESCALATIONS E2, E3)
 
-* eq:volume-growth (line 3525) prints `r^{β⁻} ≤ μ(B_r(z)) ≤ r^{β⁻}`; we use the upper exponent `β⁺`, as in
-  Lemma 2.4 (lemma:volume-growth, eq:ball-volume, line 501), from which the condition is derived (line 3528).
-* eq:limit-odometer (line 601) prints `v + t G_{B_r;z}(0,·)`; we use the pole `z`, as required by Lemma 3.2
-  (`Δu = -t δ_z + ...`, line 627). `G_{B_r;z}(z,x)` in eq:non-co-set (line 595) is `G_{B_r}(z,x)`.
+* eq:volume-growth (line 3526) prints `r^{β⁻} ≤ μ(B_r(z)) ≤ r^{β⁻}`; we use the upper exponent `β⁺`, as in
+  Lemma 2.4 (lemma:volume-growth, eq:ball-volume, line 500), from which the condition is derived (line 3529).
+* eq:limit-odometer (line 596) prints `v + t G_{B_r;z}(0,·)`; we use the pole `z`, as required by Lemma 3.2
+  (`Δu = -t δ_z + ...`, line 635). `G_{B_r;z}(z,x)` in eq:non-co-set (line 592) is `G_{B_r}(z,x)`.
 -/
 
 namespace HarmonicBalls
@@ -44,7 +44,7 @@ open MeasureTheory Metric
 
 /-! ## Section 3.1: the obstacle problem with Green function obstacle -/
 
-/-- The set of *supersolutions* `S_{B_r;z}(t)` (eq:super-solutions, line 582): functions `w` continuous on the closed
+/-- The set of *supersolutions* `S_{B_r;z}(t)` (eq:super-solutions, line 583): functions `w` continuous on the closed
 ball `closedBall 0 r` with `Δw ≤ μ` in `B_r` (distributional sense, `LaplacianLE`) lying above the obstacle
 `-t G_{B_r}(z,·)` on the closed ball. The constraint is imposed off the pole, where the paper's obstacle is `-∞`. The
 values of `w` outside the closed ball are irrelevant to the paper's set `C(\overline{B_r})` and unconstrained here. -/
@@ -52,25 +52,25 @@ def supersolutions (μ : Measure ℂ) (r : ℝ) (z : ℂ) (t : ℝ) : Set (ℂ �
   {w | ContinuousOn w (closedBall 0 r) ∧ LaplacianLE w μ (ball 0 r) ∧
     ∀ x ∈ closedBall (0 : ℂ) r, x ≠ z → -t * greenFunction (ball 0 r) z x ≤ w x}
 
-/-- The *least supersolution* `v_{B_r;z}(t)` (eq:least-super-solution, line 589): the pointwise infimum of the
+/-- The *least supersolution* `v_{B_r;z}(t)` (eq:least-super-solution, line 588): the pointwise infimum of the
 supersolutions, `x ↦ inf {w x | w ∈ S_{B_r;z}(t)}`.
 
 Junk behaviour of `sInf` on `ℝ`: it returns `0` when the set of values is empty or not bounded below. For `x` in the
 closed ball with `x ≠ z` the values are bounded below by the obstacle (`bddBelow_supersolutions`), so `sInf` is the
-true infimum. At the pole the paper's infimum may a priori be `-∞`; Lemma 3.1 (lemma:basic-properties, line 612)
+true infimum. At the pole the paper's infimum may a priori be `-∞`; Lemma 3.1 (lemma:basic-properties, line 621)
 asserts it is finite, i.e. that the set of values is bounded below. Outside the closed ball the values of
 supersolutions are unconstrained and the infimum is meaningless. -/
 noncomputable def leastSupersolution (μ : Measure ℂ) (r : ℝ) (z : ℂ) (t : ℝ) (x : ℂ) : ℝ :=
   sInf ((fun w : ℂ → ℝ => w x) '' supersolutions μ r z t)
 
-/-- The *cluster* `Λ_{B_r;z}(t)` (eq:non-co-set, line 595): the points of `B_r` where the least supersolution lies
+/-- The *cluster* `Λ_{B_r;z}(t)` (eq:non-co-set, line 592): the points of `B_r` where the least supersolution lies
 strictly above the obstacle, `{x ∈ B_r : v_{B_r;z}(t)(x) > -t G_{B_r}(z,x)}`. The pole `z` belongs to it since the
 paper's obstacle is `-∞` there. -/
 def cluster (μ : Measure ℂ) (r : ℝ) (z : ℂ) (t : ℝ) : Set ℂ :=
   {x ∈ ball (0 : ℂ) r |
     x = z ∨ -t * greenFunction (ball 0 r) z x < leastSupersolution μ r z t x}
 
-/-- The *odometer* `u_{B_r;z}(t) = v_{B_r;z}(t) + t G_{B_r}(z,·)` (eq:limit-odometer, line 601, with the pole `z` in
+/-- The *odometer* `u_{B_r;z}(t) = v_{B_r;z}(t) + t G_{B_r}(z,·)` (eq:limit-odometer, line 596, with the pole `z` in
 place of the printed `0`, ESCALATIONS E3). At the pole it takes the junk value `v_{B_r;z}(t)(z)`; the paper's value is
 `+∞`. -/
 noncomputable def odometer (μ : Measure ℂ) (r : ℝ) (z : ℂ) (t : ℝ) (x : ℂ) : ℝ :=
@@ -78,16 +78,16 @@ noncomputable def odometer (μ : Measure ℂ) (r : ℝ) (z : ℂ) (t : ℝ) (x :
 
 /-! ## Appendix A: the shifted obstacle problem -/
 
-/-- The *volume growth condition* (eq:volume-growth, line 3525) on `B_R`: the exponents `β⁻, β⁺` are positive and,
+/-- The *volume growth condition* (eq:volume-growth, line 3526) on `B_R`: the exponents `β⁻, β⁺` are positive and,
 for all sufficiently small `r > 0` and all `z ∈ B_R`, `r^{β⁻} ≤ μ(B_r(z)) ≤ r^{β⁺}`. The printed upper bound
-`r^{β⁻}` is a typo for `r^{β⁺}` (ESCALATIONS E2; cf. eq:ball-volume, line 501). The paper also assumes `μ` Radon
-(line 3523); on `ℂ` this is `IsLocallyFiniteMeasure μ`, a separate hypothesis of the statements. -/
+`r^{β⁻}` is a typo for `r^{β⁺}` (ESCALATIONS E2; cf. eq:ball-volume, line 500). The paper also assumes `μ` Radon
+(line 3525); on `ℂ` this is `IsLocallyFiniteMeasure μ`, a separate hypothesis of the statements. -/
 def VolumeGrowth (μ : Measure ℂ) (R βminus βplus : ℝ) : Prop :=
   0 < βminus ∧ 0 < βplus ∧
     ∃ r₀ > 0, ∀ r, 0 < r → r < r₀ → ∀ z ∈ ball (0 : ℂ) R,
       ENNReal.ofReal (r ^ βminus) ≤ μ (ball z r) ∧ μ (ball z r) ≤ ENNReal.ofReal (r ^ βplus)
 
-/-- The potential `q_{B_R}(x) = ∫_{B_R} G_{B_R}(y,x) μ(dy)` (eq:expected-exit-time, line 3531), with the integrand
+/-- The potential `q_{B_R}(x) = ∫_{B_R} G_{B_R}(y,x) μ(dy)` (eq:expected-exit-time, line 3532), with the integrand
 `G_{B_R}(y,·)` as printed. It equals `greenPotential (ball 0 R) μ x` by the symmetry of the Green function (not yet a
 theorem). Junk value `0` when `y ↦ G_{B_R}(y,x)` is not `μ`-integrable on `B_R`; if `μ` has an atom at `x`, the
 diagonal junk value of `greenFunction` enters (the volume growth condition excludes atoms). For `μ` Lebesgue measure,
@@ -95,32 +95,32 @@ diagonal junk value of `greenFunction` enters (the volume growth condition exclu
 noncomputable def greenPotentialBall (μ : Measure ℂ) (R : ℝ) (x : ℂ) : ℝ :=
   ∫ y in ball (0 : ℂ) R, greenFunction (ball 0 R) y x ∂μ
 
-/-- The *obstacle* `β_t = -t G_{B_R}(z,·) + q_{B_R}` (eq:obstacle, line 3552, where `R = 1` and `z = 0`). At the pole
+/-- The *obstacle* `β_t = -t G_{B_R}(z,·) + q_{B_R}` (eq:obstacle, line 3551, where `R = 1` and `z = 0`). At the pole
 the paper's value is `-∞` (the printed codomain `ℝ ∪ {∞}` should read `ℝ ∪ {-∞}`); here the junk value is
 `q_{B_R}(z)`, and the constraints below are imposed off the pole. -/
 noncomputable def obstacle (μ : Measure ℂ) (R : ℝ) (z : ℂ) (t : ℝ) (x : ℂ) : ℝ :=
   -t * greenFunction (ball 0 R) z x + greenPotentialBall μ R x
 
-/-- The set of *(shifted) supersolutions* `S̃(t)` (eq:shifted-supersolutions, line 3557, where `R = 1`, `z = 0`):
+/-- The set of *(shifted) supersolutions* `S̃(t)` (eq:shifted-supersolutions, line 3556, where `R = 1`, `z = 0`):
 functions `w` continuous on `closedBall 0 R`, superharmonic in `B_R` in the distributional sense (`Δw ≤ 0`), lying
 above the obstacle `β_t` on the closed ball off the pole. -/
 def shiftedSupersolutions (μ : Measure ℂ) (R : ℝ) (z : ℂ) (t : ℝ) : Set (ℂ → ℝ) :=
   {w | ContinuousOn w (closedBall 0 R) ∧ LaplacianLE w 0 (ball 0 R) ∧
     ∀ x ∈ closedBall (0 : ℂ) R, x ≠ z → obstacle μ R z t x ≤ w x}
 
-/-- The *least supersolution* or *least superharmonic majorant* `ṽ_t` (eq:appendix-least-supersolution, line 3565):
+/-- The *least supersolution* or *least superharmonic majorant* `ṽ_t` (eq:appendix-least-supersolution, line 3563):
 the pointwise infimum of `S̃(t)`. Same junk behaviour of `sInf` as `leastSupersolution`: the true infimum on the
 closed ball off the pole (`bddBelow_shiftedSupersolutions`); finiteness at the pole is part of Lemma A.1
 (lemma:appendix-basic-properties, line 3589). -/
 noncomputable def shiftedLeastSupersolution (μ : Measure ℂ) (R : ℝ) (z : ℂ) (t : ℝ) (x : ℂ) : ℝ :=
   sInf ((fun w : ℂ → ℝ => w x) '' shiftedSupersolutions μ R z t)
 
-/-- The *odometer* `v_t = ṽ_t - β_t` of the shifted problem (eq:appendix-limit-odometer, line 3570). At the pole it
+/-- The *odometer* `v_t = ṽ_t - β_t` of the shifted problem (eq:appendix-limit-odometer, line 3567). At the pole it
 takes the junk value `ṽ_t(z) - q_{B_R}(z)`; the paper's value is `+∞`. -/
 noncomputable def shiftedOdometer (μ : Measure ℂ) (R : ℝ) (z : ℂ) (t : ℝ) (x : ℂ) : ℝ :=
   shiftedLeastSupersolution μ R z t x - obstacle μ R z t x
 
-/-- The *non-coincidence set* `Λ_t = {x ∈ B_R : ṽ_t(x) > β_t(x)}` (eq:appendix-non-co-set, line 3576). The pole
+/-- The *non-coincidence set* `Λ_t = {x ∈ B_R : ṽ_t(x) > β_t(x)}` (eq:appendix-non-co-set, line 3572). The pole
 belongs to it since the paper's obstacle is `-∞` there. -/
 def nonCoincidenceSet (μ : Measure ℂ) (R : ℝ) (z : ℂ) (t : ℝ) : Set ℂ :=
   {x ∈ ball (0 : ℂ) R | x = z ∨ obstacle μ R z t x < shiftedLeastSupersolution μ R z t x}
@@ -131,7 +131,7 @@ section Sanity
 
 variable {μ : Measure ℂ} {r t : ℝ} {z x : ℂ}
 
-/-- `0 ∈ S_{B_r;z}(t)` for `t ≥ 0` (line 603: "`S_{B_r;z}(t)` is non-empty as it contains the zero function"). -/
+/-- `0 ∈ S_{B_r;z}(t)` for `t ≥ 0` (line 599: "`S_{B_r;z}(t)` is non-empty as it contains the zero function"). -/
 theorem zero_mem_supersolutions (μ : Measure ℂ) (r : ℝ) (z : ℂ) (ht : 0 ≤ t) : (0 : ℂ → ℝ) ∈ supersolutions μ r z t :=
   ⟨continuous_zero.continuousOn, laplacianLE_zero μ _, fun x _ _ => by
     simpa using mul_nonneg ht (greenFunction_nonneg isBounded_ball z x)⟩
@@ -201,8 +201,8 @@ theorem obstacle_le_greenPotentialBall (μ : Measure ℂ) (R : ℝ) (z : ℂ) (h
   unfold obstacle
   linarith
 
-/-- `q_{B_R} ∈ S̃(t)` (line 3573), granted the potential-theoretic facts "continuous on the closed ball" and
-"superharmonic in `B_R`" (properties 1 and 2 of `q_{B_R}`, lines 3537-3540); the obstacle constraint is
+/-- `q_{B_R} ∈ S̃(t)` (line 3570), granted the potential-theoretic facts "continuous on the closed ball" and
+"superharmonic in `B_R`" (properties 1 and 2 of `q_{B_R}`, lines 3538-3539); the obstacle constraint is
 `obstacle_le_greenPotentialBall`. -/
 theorem greenPotentialBall_mem_shiftedSupersolutions {R : ℝ} (ht : 0 ≤ t)
     (hcont : ContinuousOn (greenPotentialBall μ R) (closedBall 0 R))
