@@ -1,65 +1,140 @@
-# Source dependency graph: Sections 1-5, 9 and Appendix A
+# Source dependency graph: all numbered results of arXiv:2208.11795
 
-Scope: every numbered result of Sections 1-5, 9 and Appendix A of arXiv:2208.11795. Sections 6-8 and 10-11 come in the
-next task (inventory-graph-2); their results appear here only as providers or consumers. Numbering, labels and
-`draft_name`s: `docs/campaign/INVENTORY.tsv`.
+Scope: every numbered item of arXiv:2208.11795: Sections 1-11 and Appendix A, 77 items including the 2 Facts and 6
+Definitions. Numbering, labels and `draft_name`s: `docs/campaign/INVENTORY.tsv`. The final sections give the literature inputs and
+a topological order of all results.
 
 Conventions. Line numbers refer to `paper/lqg_harmonic_ball-corrected.tex`, which is still identical to the arXiv
 source (no `% CORRECTION` yet). For each result:
 - **Proof**: where the proof is printed.
 - **Uses**: the numbered results and displayed equations the printed proof uses.
-- **Lit**: literature facts, with the bbl keys resolved below.
+- **Lit**: literature facts. Keys and verification status: section "Literature inputs".
 - **Consumed by**: the `\ref` occurrences, given as consumer (line). These come from a script that maps each reference
   to its enclosing statement or proof. Uses found by reading but not referenced are marked *implicit*.
-- **Issues**: references to the list at the end. Issues are labelled F (printed statement false or not established),
+- **Issues**: references to the list "Issues". Issues are labelled F (printed statement false or not established),
   G (gap in the proof, statement plausibly true) or S (slip or typo).
-
-## Bibliography keys used (resolved in `paper/lqg_harmonic_ball.bbl`)
-
-| key | reference | used for |
-|---|---|---|
-| DS11 `duplantier2011liouville` | Duplantier-Sheffield, LQG and KPZ, Invent. Math. 185 (2011) | Prop 2.1 (conformal covariance), Sec 3.1 (circle averages, BM) |
-| SW16 `sheffield2016field` | Sheffield-Wang, field-measure correspondence commutes with all conformal maps (arXiv) | Fact 2.1 IV for all maps simultaneously |
-| DDDF20 `ding2020tightness`; DFGPS20 `dubedat2020weak`; GM21 `gwynne2021existence` | LQG metric: tightness, weak metrics, existence and uniqueness | Fact 2.2 (no theorem numbers printed) |
-| BG20 `berestycki2020random` | Berestycki-Gwynne, random walks on mated-CRT maps and LBM, CMP | Lemma A.1 there, adapted for Lemma 2.4 |
-| Pon16 `ponce2016elliptic` | Ponce, Elliptic PDEs, measures and capacities, EMS Tracts 23 | Sec 16.2 / remark after Prop 13.5 (Campanato estimates); Prop 7.3 (weak normal derivative); Lemma 12.15 |
-| Kig19 `kigami2019` | Kigami, Time changes of the Brownian motion, Mem. AMS 259 (2019) | Thm 13.1 (heat kernel), used for Prop 2.6 |
-| AG01 `armitage2000classical` | Armitage-Gardiner, Classical potential theory | Thm 3.7.5 (lsc regularisation of an infimum of superharmonic functions), Thm 3.2.2 (characterisation of subharmonicity), Thm 4.3.8 (Laplacian of a potential), Sec 4 (Riesz decomposition) |
-| SS13b `shahgholian2013harmonic`; Sak84 `sakai1984solutions` | Shahgholian-Sjodin 2013; Sakai 1984/85 | Thm 2.1 of SS13b, cited for Lemma 9.1 |
-| Sak82 `sakai2006quadrature` | Sakai, Quadrature domains, LNM 934 | Thm 10.13 (model for the proof of Prop 5.6 only) |
-| SS13a `ss-contour` | Schramm-Sheffield, contour line of the continuum GFF, PTRF 157 | Lemma 3.9 (terminology "local set" in Prop 1.3) |
-| GM20b `gwynne2020local` | Gwynne-Miller, Local metrics of the GFF, Ann. Inst. Fourier 70 | Lemma 6.5. The paper prints no number; believed to be Lemma 3.1 there, unverified |
-| Var17 `vargas2017lecture` | Vargas, lecture notes, Sec 2.1.1 | normalisation h^C_1(0)=0 of eq:cov-kernel |
+- **Deps**: the numbered results the proof uses, direct and implicit, read off Proof and Uses. The section "Topological order" is
+  computed from these lines. Literature facts and unnumbered nodes (D, I) are not listed there.
+- Definitions (10.2-10.4, 11.1, 11.3, 11.4) have Content, Lean and Used by bullets instead.
 
 ## Shared unnumbered definitions (nodes used by many results)
 
 - D1 harmonic ball, eq:harmonic-ball (78-81), with the enlarged test class eq:harmonic-fns (139-146). See F1.
 - D2 polynomially high probability (338-339): P[E^r] >= 1 - O(r^p) for some p>0. Annulus A_{r1,r2}(z), eq:annulus (333).
 - D3 the field: h = h^C - alpha0 log|.|, eq:gff (382); Q, eq:Q (374); law invariances eq:gff-scaling (368) and
-  eq:h-coordinate-change (386, derived from eq:gff-scaling; it holds with the alpha0 term because the circle average of log|.| is log r).
-- D4 the obstacle problem on B_r: supersolutions eq:super-solutions (583), least supersolution lambda, eq:least-super-solution (588),
-  cluster Lambda, eq:non-co-set (592), odometer v, eq:limit-odometer (596-597; see S1).
+  eq:h-coordinate-change (386, derived from eq:gff-scaling; it holds with the alpha0 term because the circle average of log|.| is
+  log r).
+- D4 the obstacle problem on B_r: supersolutions eq:super-solutions (583), least supersolution lambda, eq:least-super-solution
+  (588), cluster Lambda, eq:non-co-set (592), odometer v, eq:limit-odometer (596-597; see S1).
 - D5 subharmonic ball, eq:subharmonic-ball (742) with test functions eq:sub-harmonic-potential (746-751).
 - D6 regularised cluster Lambda-hat = int(closure Lambda), eq:regular-cluster (846).
 - D7 Appendix: volume growth eq:volume-growth (3526; S1), Green potential q_{B_R} eq:expected-exit-time (3532) with properties 1-4
-  (3537-3541), obstacle beta_t eq:obstacle (3551), shifted supersolutions eq:shifted-supersolutions (3556), f_t eq:lsc-leastsuperharmonic (3594).
+  (3537-3541), obstacle beta_t eq:obstacle (3551), shifted supersolutions eq:shifted-supersolutions (3556), f_t
+  eq:lsc-leastsuperharmonic (3594).
 - D8 reflected LBM heat kernel, eq:defining-property-of-kernel (546-547; S1).
+- D9 **sigma-algebra of h|_U modulo additive constant** (1123, 1263, 1279). Not in Defs, which has only sigma(h|_U). One
+  option: the sigma-algebra generated by (h, phi), phi in C_c^infty(U), integral of phi = 0. Needed by Lemma 6.5 (External),
+  the proofs of Lemmas 6.3 and 6.6, and Section 8 (Lemma 8.3).
+- D10 **good and very good annuli**.
+  - Good annulus event E_r(z; a, b), eq:good-annulus-harmonic (1117-1123). See the slip at 1120 for the intended event.
+  - Size functionals. M_rho(x0), eq:alternate-size (1129); SG_rho(x0), eq:alternate-size-2 (1134); the aspect-ratio version
+    SG_rho(x0; s1, s2), eq:alternate-size-2-full (1140).
+  - beta^- in M_rho is "the" lower exponent of Lemma 2.4, but Lemma 2.4 allows any beta^- > (2+gamma)^2/2. One value must be
+    fixed, since b in Lemma 6.11 depends on it (1909-1911).
+  - Very good annulus event E-bar_rho(x0; N_0, a, b, C^pm_1, C^pm_2, C_3), (VG-i)-(VG-iii) (1144-1157). The lattice in (VG-iii)
+    is (eps rho/100)Z^2, not centred at x0 (G21).
+  - Structural properties used in Section 8 (very good event and doubling event). The very good event E-bar_rho(x0) (1144-1161) is
+    defined by (VG-i)-(VG-iii), using the sizes M_rho (eq:alternate-size, 1129) and S^G_rho (eq:alternate-size-2, 1134). Further:
+    E-bar_n(z) := E-bar_{2^{-n}}(z) (eq:very-good-annuli-event, 2146) and G_n(z; m) (eq:annulus-ball-comparison, 2140). Section 8
+    uses three structural properties that are never stated.
+    - (a) Locality: E-bar_rho(x0) and G_n are in sigma(h|_{B_{2 rho}(x0)}) (eq:doubling-locality, 2216). (VG-i) and (VG-ii) use
+      mu_h on B_{2 rho}(x0). (VG-iii) needs the good-annulus event E_r(z; a, b) (1115-1125) to be determined by h on B_{Cr}(z);
+      the Section 6 entries should check this.
+    - (b) Invariance under h -> h + c (all criteria are ratios).
+    - (c) Covariance under x -> x0 + rho x, h -> h(x0 + rho .) + Q log rho. Here M_rho is homogeneous, and the 2D Green function
+      satisfies G_{B_{2 rho}(x0)}(x0 + rho x, x0 + rho y) = G_{B_2}(x, y).
+    - Used by Lemma 8.3 (stationarity, tail measurability), Lemma 8.2 (locality, translation), and the template uses in Lemmas
+      11.7 and 11.13.
+- D11 **gamma-Liouville Brownian motion** (GRV16): planar BM time-changed by the PCAF of e^{gamma h}, defined
+  simultaneously for all starting points. Also its reflected version in a square K (Kigami; 1223, Prop 2.6). Not in Defs. Used by
+  Prop 2.5 (expected exit time), Prop 2.6, Lemma 6.4.
+- D12 **Crossing** (2582-2583): a set X crosses A_{s1,s2}(z) if closure(X) meets both boundary B_{s1}(z) and boundary
+  B_{s2}(z). Lemma 10.1 (2500-2502) uses it for the connected components of Lambda cap B_{2rho}(w). The annulus is open,
+  eq:annulus (333). Used by Lemmas 10.1 and 10.5 and Prop 10.6.
+- D13 Cone-wild event G~_r(z;M,Q), eq:mu-h-wild (2793), and G~_n := G~_{2^-n} (2797). It is in sigma(h|_{A_{r,6r}(z)})
+  and invariant under adding constants. Used by Lemmas 11.5, 11.7, 11.8; Lemma 11.13 (through 11.7).
+- D14 (proposed, for the repair G37) Hitting time tau(z) := inf{t : z in closure Lambda-hat_t}. It is lsc, and
+  tau_* mu_h = Leb.
+- D15 **Pinch configuration and events of Sec 11.3.**
+  - Sets (3097-3099, 3236-3238; Figure fig:pinch-point): U, V, W are concentric balls in A_{1,2} with U ⋐ V ⋐ W ⋐ T;
+    Q' ⋐ Q subset A_{4,5} \ closure T; T is a "keyhole" subset of A_{1,5} with boundary B_5 subset boundary T.
+    A_r(z) := rA + z (3101). delta0 is fixed by eq:metric-delta0-choice (3241-3246).
+  - Events: G-hat_r(z; M), eq:pinch-point-event (3124-3130), with G-hat_n := G-hat_{2^{-n}}; diam^delta_h (3252);
+    E~1, E~2(M), E~3 (eq:first-event, eq:second-event, eq:third-event, 3257-3274).
+  - The sets are given only by a figure; a Lean version must choose explicit sets. Properties actually used: T open and
+    connected; T subset A_{1,5}; boundary B_5 subset boundary T; U subset T; T not contained in B_{3delta0}(W) (chain in 11.12);
+    Q' non-empty.
+  - SG_{3r,6r}(z) in G-hat and in Lemma 11.6 is eq:alternate-size-2-full with (s1,s2) = (3,6) and rho = r: the macro \SGrho is
+    called with two indices, while 2772 points to eq:alternate-size-2. It depends only on mu_h on A_{3r,6r}(z) and is linear in
+    mu_h.
 
 ## Implicit inputs (used without a number)
 
-- I1 **Full support of mu_h**: a.s. mu_h(U)>0 for every non-empty open U. The paper states it informally at lines 134-135. It is used in
-  the repair of Prop 4.1 (G3), in Prop 5.6 (mu_h(B)>0, 2465-2470), Lemma 9.3 Step 3 (2382-2383), Lemma 9.4 (2399-2408) and the repair of G7.
-  It is not among the items of Fact 2.1. Derivable from the lower bound of Lemma 2.4 (Borel-Cantelli over dyadic eps) plus
-  scaling (eq:h-coordinate-change, Fact 2.1 III-IV), or a GMC literature fact (would need an External).
+- I1 **Full support of mu_h**: a.s. mu_h(U)>0 for every non-empty open U. The paper states it informally at lines 134-135. It is
+  used in the repair of Prop 4.1 (G3), in Prop 5.6 (mu_h(B)>0, 2465-2470), Lemma 9.3 Step 3 (2382-2383), Lemma 9.4 (2399-2408) and
+  the repair of G7. It is not among the items of Fact 2.1. Derivable from the lower bound of Lemma 2.4 (Borel-Cantelli over dyadic
+  eps) plus scaling (eq:h-coordinate-change, Fact 2.1 III-IV), or a GMC literature fact (would need an External).
 - I2 **A.s. volume growth for all small r and all z in B_R** (eq:volume-growth). The paper says it "follows from Lemma 2.4 and the
   scaling properties" (3529-3530). This needs Borel-Cantelli over dyadic scales and monotonicity in r. Used by all of App A,
   by Prop 2.5 and by Lemma 4.2.
-- I3 t -> h^C_{e^t}(0) has a continuous modification that is a standard BM (DS11 Sec 3.1). Used in the proof of Thm 5.5 (995-1004).
+- I3 t -> h^C_{e^t}(0) has a continuous modification that is a standard BM (DS11 Sec 3.1). Used in the proof of Thm 5.5
+  (995-1004).
 - I4 Classical potential theory: minimum principle and strong maximum principle; the Poisson integral on discs; Weyl's lemma
   (a continuous function with distributional Laplacian <= 0 is superharmonic); symmetry G(x,y)=G(y,x); the 2D dilation
   invariance of the distributional Laplacian, used in Lemma 5.7. AG01 is cited for some of these.
-- I5 **Lewy-Stampacchia inequality / inverse maximum principle** (e.g. Dupaigne-Ponce 2004; Pon16). It is **not cited**, yet needed
-  for nu >= 0 in Lemma 3.2 (G1).
+- I5 **Lewy-Stampacchia inequality / inverse maximum principle** (e.g. Dupaigne-Ponce 2004; Pon16). Not cited, and not
+  needed: nu >= 0 (G1) follows from the subharmonic gluing I7.
+  - Sections 6-8: the maximum principle (6.8, 6.9, 6.11, 6.13), Harnack's inequality for nonnegative harmonic functions on annuli
+    with scale-invariant constant (6.10), Weyl's lemma (6.10), Laplacian of a Green potential (6.8, 6.10; AG01 Thm 4.3.8).
+- I6 **LBM is a time change of planar BM** with a continuous, strictly increasing clock. So events that depend only on the
+  order of exits ("exits A before exiting Y") have the same conditional probability for LBM and for standard BM. Used in Lemma 6.4
+  Step 2: E_r is defined with standard BM (1122), but the proof works with LBM (1223-1250).
+- I7 **Subharmonic gluing for the odometer.** If U is open, z not in U, and Lambda-hat is a union of connected components of
+  Lambda^z_t cap U, then v^z_t 1_{Lambda-hat} is continuous and subharmonic on U, with Laplacian mu_h on Lambda-hat. Proof
+  (1418-1421): v >= 0 is continuous off z (Lemma 3.1, Prop 2.3), Delta v = mu_h on Lambda (Lemma 3.2), and v = 0 at relative
+  boundary points of Lambda-hat; local sub-mean-value characterisation (AG01 Thm 3.2.2, cited at 3672). Proved once (Lemma 6.8),
+  reused at 1776, 1806 and 1877. Candidate for a separate Lean lemma. With U = B_1 \ {z} and Lambda-hat = Lambda it repairs G1.
+- I8 **Kakutani.** For an open set D and a Borel part F of its boundary, x -> P[B^x exits D through F] is harmonic in D
+  and tends to 1_F at regular boundary points. Used in Lemma 6.9 (1471-1476). Classical (Port-Stone; Moerters-Peres Thm 3.8);
+  check MarkovProcess for exit distributions.
+- I9 **mu_h has no atoms a.s.** (in particular mu_h({0}) = 0). Used in Lemma 8.2 (2225-2226) to pass from |.|^{alpha0 gamma}
+  mu_h to mu_h. It follows from the upper bound of Lemma 2.4 together with I2.
+- I10 **Riemann mapping theorem** (2660; also implicit in Pom92). Mathlib has only private partial steps:
+  Mathlib/Analysis/Complex/RiemannMapping.lean:21-31 (main theorem not merged). It needs an External, or a route that avoids
+  conformal maps.
+- I11 **Plane and continuum topology**, used without citation. Mathlib has none of these (grep: no Jordan curve theorem,
+  no boundary bumping, no convergence continua).
+  - Boundary bumping (2646): each component of X cap closure(B_s(p)) meets boundary B_s(p), for a continuum X not inside the
+    ball (Nadler, Continuum Theory, Thm 5.4/5.6).
+  - Convergence-continuum theorem: needed to repair 2646-2649 (Nadler Thm 5.12), together with "locally connected <=>
+    connected im kleinen at every point".
+  - Every component of the complement of a continuum is simply connected in the Riemann sphere (2586, 2660).
+  - A loop with non-zero winding number about y separates y from infinity (2670-2676).
+  - Mobius inversion x -> 1/(x - z), sending the unbounded component to a bounded one.
+- I12 Plane topology: a closed square does not separate a domain. Used for V\S2 in Prop 11.9 (3061) and for G in
+  Lemma 11.10 (3024).
+- I13 Measurability: the set of t in eq:mass-times, and the events built from sup of D_h over uncountable sets (handled
+  by continuity of D_h). Mathlib has Suslin's theorem `AnalyticSet.measurableSet_of_compl`
+  (Mathlib/MeasureTheory/Constructions/Polish/Basic.lean:524) and `AnalyticSet.image_of_continuousOn` (:229). There is no
+  "analytic sets are universally measurable" (grep UniversallyMeasurable: none); use Lusin instead.
+- I14 **LQG measure and metric of a field defined only on an open set**, used in Lemma 11.16 (3409-3448).
+  - Needed: Weyl scaling for a function continuous only on an open set (h0 = h - varphi on W, with varphi harmonic on W), and
+    mu_{h0}, D_{h0}(.,.; B_{delta0}(V)) for the zero-boundary GFF h0.
+  - Facts 2.1-2.2 state Weyl scaling only for continuous f : C -> R (408-409, 443-446). Derivable: extend varphi restricted to
+    closure B_{delta0}(V) continuously to C, then use locality.
+  - Also needed: locality of internal metrics on closed sets. E~1 uses D_h(.,.; (B_{2delta0}(Q cup W))^c), but Fact 2.2 III is
+    stated for open U. Derivable, since the lengths of paths in K agree with those for the internal metric of any open
+    neighbourhood of K.
 
 ## Section 1
 
@@ -67,53 +142,77 @@ source (no `% CORRECTION` yet). For each result:
 - Proof: no proof environment. Assembled at 863-878 and 977: existence from Thm 5.5, uniqueness from Prop 5.6.
 - Uses: Thm 5.5, Prop 5.6; D1, D6.
 - Lit: none directly.
-- Consumed by: Thm 1.2 (171); the phrase "conditions of Theorem 1.1" in Prop 5.4 (855), Thm 5.5 (865), Prop 5.6 (875) and Sec 9 (2278, 2392, 2410).
-- Issues: F1 (the literal test class makes the theorem false), G7 (left Hausdorff-continuity is never proved), S1 (Lambda_t(x) at 156).
+- Consumed by: Thm 1.2 (171); the phrase "conditions of Theorem 1.1" in Prop 5.4 (855), Thm 5.5 (865), Prop 5.6 (875) and Sec 9
+  (2278, 2392, 2410).
+- Issues: F1 (the literal test class makes the theorem false), G7 (left Hausdorff-continuity is never proved), S1 (Lambda_t(x) at
+  156).
+- Deps: 5.5, 5.6
 
 ### 1.2 Theorem (theorem:harmonic-balls-properties, 170): HarmonicBallNoveltyStmt
-- Proof: no proof environment. The outline (306-314) assembles it from Prop 10.7 (Jordan boundaries, with Lemma 10.1),
-  Prop 11.2 (not Lipschitz, via Lemma 11.5) and Prop 11.11 (not LQG-metric balls). The detailed graph is in the next task.
-- Uses: Props 10.6-10.7, 11.2, 11.11; Thm 1.1 (statement).
+- Proof: no proof environment. The outline (306-317) assembles it. Throughout, Lambda_t(0) of Thm 1.1 is Lambda-hat_t(0) of
+  Thm 5.5, by the uniqueness of Prop 5.6.
+  - Jordan boundaries (173-174), for every t > 0: Prop 10.7 at z = 0. "Jordan curve" means simple loop (Def 10.2).
+  - Not a Lipschitz domain (Def 11.1), for Lebesgue-a.e. t: Prop 11.2.
+  - Not an LQG-metric ball, for Lebesgue-a.e. t: Prop 11.11 (no `
+ef`; outline 316-317). Intersect the a.s. events of
+    Props 11.2 and 11.11 and take the union of their Lebesgue-null sets of t.
+  - Scope: every alpha0 < Q (132, 373). The centre of the metric ball is not specified; the proof covers any centre.
+- Uses: Thm 1.1 (the family), Thm 5.5, Prop 5.6, Prop 10.7, Prop 11.2, Prop 11.11; Defs 10.2, 11.1.
+- Lit: none directly.
 - Consumed by: none.
-
+- Issues: through Prop 10.7: F7, G32-G36. Through Props 11.2 and 11.11: G37 (the reduction from Lebesgue-a.e. t to
+  mu_h-a.e. boundary points). G41 and G42: Lemma 11.13 is not established as printed, hence neither is Prop 11.11, nor the
+  metric-ball clause. G40 (D_h with the alpha0 log singularity). In Lean "Lebesgue-a.e. t" is `∀ᵐ t ∂volume`, so the
+  measurability point of G37 matters.
+- Deps: 1.1, 5.5, 5.6, 10.2, 10.7, 11.1, 11.2, 11.11
 ### 1.3 Prop (prop:locally-determined, 179): HarmonicBallLocalSetStmt
 - Proof: 1031-1042.
-- Uses: Lemma 5.8 (1037), giving eq:cluster-coincides (1038); Fact 2.1 II locality (1036). If z is not in U the event is null. Reduction
-  to bounded U by exhaustion: the closure is compact, so {closure Lambda-hat subset U} = union_n {closure Lambda-hat subset U_n}.
+- Uses: Lemma 5.8 (1037), giving eq:cluster-coincides (1038); Fact 2.1 II locality (1036). If z is not in U the event is null.
+  Reduction to bounded U by exhaustion: the closure is compact, so {closure Lambda-hat subset U} = union_n {closure Lambda-hat
+  subset U_n}.
 - Lit: SS13a Lemma 3.9 is cited for terminology only. The Lean statement should be the "i.e." clause (180-181).
 - Consumed by: none (only text, 810 and 1014).
 - Issues: G9 (Lemma 5.8 for arbitrary U; smooth U_n suffice here), S1 (t >= 0 at 180, but Lambda_0 is undefined).
+- Deps: 2.1, 5.8
 
 ## Section 2
 
 ### 2.1 Fact (fact:lqg-measure, 401): LiouvilleMeasureFactStmt
 - Proof: cited (418-420). Items I-III are "immediate from" eq:measure-lim (DS11/SW16 construction). Item IV is DS11 Prop 2.1 for a
   fixed map and SW16 for all maps simultaneously.
-- Consumed by: Lemma 5.7 (916, items III-IV), Prop 1.3 (1036, item II), Lemma 6.4 (1204, 1220), Lemma 6.7 (1327), Lemma 8.3 (2164),
-  Lemma 8.2 (2215), Lemma 11.8 (2863), Lemma 11.10 (3001), Lemma 11.16 (3416); implicitly App A (3530, scaling) and I1/I2.
+- Consumed by: Lemma 5.7 (916, items III-IV), Prop 1.3 (1036, item II), Lemma 6.4 (1204, 1220), Lemma 6.7 (1327), Lemma 8.3
+  (2164), Lemma 8.2 (2215), Lemma 11.8 (2863), Lemma 11.10 (3001), Lemma 11.16 (3416); implicitly App A (3530, scaling) and I1/I2.
 - Lean: External. Cut it into its four items so that each proof takes only what it uses.
+- Deps: none (numbered)
 
 ### 2.2 Fact (fact:lqg-metric, 432): LQGMetricFactStmt
-- Proof: cited (455-456): DDDF20, DFGPS20, GM21. The paper prints no theorem numbers. The definition of xi uses d_gamma (gp-kpz Cor 1.7).
+- Proof: cited (455-456): DDDF20, DFGPS20, GM21. The paper prints no theorem numbers. The definition of xi uses d_gamma (gp-kpz
+  Cor 1.7).
 - Consumed by: Lemma 11.15 (3363), Lemma 11.16 (3416); Sec 11 metric-ball arguments. Not used in Sections 1-5, 9 or A.
 - Issues: S1 ("z in C" for z in the complex plane, 448).
+- Deps: none (numbered)
 
 ### 2.3 Prop (prop:green-properties, 480): GreenFunctionBallStmt
-- Proof: none ("standard properties", 479). The explicit formula G_{B_R}(x,y) = (2 pi)^{-1} log(|R^2 - conj(x) y| / (R |x-y|)) gives all four items.
+- Proof: none ("standard properties", 479). The explicit formula G_{B_R}(x,y) = (2 pi)^{-1} log(|R^2 - conj(x) y| / (R |x-y|))
+  gives all four items.
 - Consumed by: Lemma 4.3 (765). Implicitly: Lemma A.6 (Delta G = -delta at 3873), Lemma 9.1 (superharmonicity of G at 2297),
   App A property 3 of q (3540), Prop 4.1, Lemma 5.7 (G_{B_k}(kz,kx) = G_{B_1}(z,x) at 920).
 - Lean: paper-owned, standard. Check whether EllipticRegularityLean already provides the Green function of the ball.
+- Deps: none (numbered)
 
 ### 2.4 Lemma (lemma:volume-growth, 497): LiouvilleVolumeGrowthStmt
 - Proof: 509-515. For eq:ball-volume the proof says "exactly the same argument as [BG20, Lemma A.1]" and gives no other proof.
-  eq:ann-volume is derived from eq:ball-volume via B_{(r2-r1)eps/4}(z + (r1+r2)eps/2 e_1) subset A_{r1 eps,r2 eps}(z) subset B_{r2 eps}(z).
+  eq:ann-volume is derived from eq:ball-volume via B_{(r2-r1)eps/4}(z + (r1+r2)eps/2 e_1) subset A_{r1 eps,r2 eps}(z) subset B_{r2
+  eps}(z).
 - Lit: BG20 Lemma A.1.
 - Consumed by: Prop 2.5 (534-535), Prop 2.6 (558), Sec 6 text (1128, 1132), Lemma 6.7 (1353), Lemma 6.13 statement (1715),
   Prop 7.1 (1983, 1985), Prop 7.2 statement (2027) and proof (2033), App A via I2 (3529).
 - Issues:
   - F2: the printed exponent range is false at z=0 for alpha0 > 2 or alpha0 < -2.
   - G10: an a.s. version for all scales is needed downstream.
-  - Minor: in eq:ann-volume the centre z + ((r1+r2)/2) eps e_1 may leave B_1, where eq:ball-volume says nothing; use B_2 by scaling.
+  - Minor: in eq:ann-volume the centre z + ((r1+r2)/2) eps e_1 may leave B_1, where eq:ball-volume says nothing; use B_2 by
+    scaling.
+- Deps: 2.1
 
 ### 2.5 Prop (prop:lbm-exit-time, 524): GreenPotentialLiouvilleHolderStmt
 - Proof: 533-537, a sketch. Finiteness from Lemma 2.4; Hoelder continuity from the Campanato-to-Hoelder embedding (Pon16 Sec 16.2,
@@ -124,6 +223,7 @@ source (no `% CORRECTION` yet). For each result:
   - G10: needs I2, i.e. an a.s. statement for all small r and all centres in closure(O). Lemma 2.4 covers only B_1.
   - The statement omits "a.s." and the measure of the L^infty space (mu_h).
   - G4: Lemma 4.2 needs a quantitative version (Hoelder seminorm <= C(h,O) ||f||_infty), which the statement does not give.
+- Deps: 2.4
 
 ### 2.6 Prop (prop:lbm-continuity, 554): ReflectedLBMHeatKernelStmt
 - Proof: 557-561. Kig19 Thm 13.1 with input Lemma 2.4, plus "a scaling argument" from the unit square to any square.
@@ -131,6 +231,7 @@ source (no `% CORRECTION` yet). For each result:
 - Consumed by: Lemma 6.4 (1234) only.
 - Issues: S1 at 547. `p^K_t(x,y) dy` must be `p^K_t(x,y) mu_h|_K(dy)`: mu_h is singular w.r.t. Lebesgue measure, so the law of the
   LBM at time t has no Lebesgue density with a positive continuous kernel. The kernel is relative to the speed measure mu_h.
+- Deps: 2.4, 2.5
 
 ## Section 3 (statements only; proofs in Appendix A)
 
@@ -141,28 +242,35 @@ The appendix proves everything for a deterministic Radon measure mu satisfying e
 - Proof: Lemma A.1 (3587-3589), via lambda = s~ - q (Delta lambda = Delta s~ + mu <= mu).
 - Uses: A.1, D7, I2.
 - Consumed by: Prop 4.1 (701), Lemma 5.7 (916). Implicitly: Props 9.2 and 4.1 (minimality of lambda).
+- Deps: 2.4, A.1
 
 ### 3.2 Lemma (lemma:non-coincidence-open-harmonic, 627): ClusterOpenLaplacianStmt
 - Proof: Lemmas A.1 and A.2 (3650-3651).
-- Uses: A.1, A.2. The decomposition with nu also needs I5 (not cited).
+- Uses: A.1, A.2. nu >= 0 in the decomposition is not proved; repair by I7 (G1).
 - Consumed by: Lemma 4.2 (731), Lemma 4.3 (765), Lemma 6.8 (1411, 1423), Lemma 6.9 (1478), Lemma 6.10 (1528), Lemma 10.1 (2515),
   Lemma 10.5 (2611), Prop 10.6 (2677).
-- Issues: G1. nu <= mu_h follows from superharmonicity. nu >= 0 is asserted but never proved.
+- Issues: G1. nu <= mu_h follows from superharmonicity. nu >= 0 is asserted but never proved; short repair in G1 (via I7).
+- Deps: 2.4, A.1, A.2
 
 ### 3.3 Lemma (lemma:monotonicity, 644): ClusterMonotoneStmt
 - Proof: Lemma A.3 (3730).
-- Consumed by: Prop 7.1 (1991), Prop 7.2 (2059), proof of Props 5.1-5.2 (2113); implicitly Prop 5.6 (eq:cluster-monotonicity, 2423).
-- Issues: S1 (the superscript drops ";z", 645).
+- Consumed by: Prop 7.1 (1991), Prop 7.2 (2059), proof of Props 5.1-5.2 (2113); implicitly Prop 5.6 (eq:cluster-monotonicity,
+  2423).
+- Issues: S1 (the superscript drops ";z", 645). The use at 1991 (Prop 7.1) is only monotonicity of mu_h under inclusion.
+- Deps: 2.4, A.3
 
 ### 3.4 Lemma (lemma:conservation-of-mass, 649): ClusterConservationOfMassStmt
 - Proof: Lemmas A.4 and A.5 (3769).
 - Consumed by: Prop 4.1 (712), Lemma 4.3 (765), Prop 7.1 (1992, 2000), Prop 7.2 (2058, 2086). Implicitly: Lemma 4.2 (lambda=0 on
   the boundary of B_1), Prop 5.4 (mu_h(Lambda-hat)=t), Prop 9.2 (2323).
-- Issues: S1 (mu for mu_h at 651); G1 (the first claim mu_h(Lambda) <= t uses nu >= 0).
+- Issues: S1 (mu for mu_h at 651); G1 (the first claim mu_h(Lambda) <= t uses nu >= 0); G29 (Prop 7.2 uses the equality case
+  without mu_h(boundary Lambda) = 0).
+- Deps: 2.4, A.4, A.5
 
 ### 3.5 Lemma (lemma:cluster-compatibility, 657): ClusterCompatibilityStmt
 - Proof: Lemma A.6 (3832).
 - Consumed by: Thm 5.5 proof (968), Lemma 5.8 proof (1024); Sec 5 text (861, 1016-1017).
+- Deps: 2.4, A.6
 
 ## Section 4
 
@@ -176,42 +284,54 @@ The appendix proves everything for a deterministic Radon measure mu satisfying e
   remark only).
 - Issues: G3 (the t^+ step does not follow from Lemma 3.4 as stated); S1 (t log|x-z| in place of -t G_{B_1}(z,x) at 704-708;
   eps depends on z).
+- Deps: 2.5, 3.1, 3.4
 
 ### 4.2 Lemma (odometer:cont, 721): LeastSupersolutionHolderStmt
-- Proof: 730-733. lambda^z_t is minus the G_{B_1}-potential of sigma = mu_h|_Lambda + nu|_{boundary Lambda}, which has density in [0,1]
-  w.r.t. mu_h (Lemma 3.2), and lambda=0 on the boundary of B_1 (Lemma 3.4). Then apply Prop 2.5.
+- Proof: 730-733. lambda^z_t is minus the G_{B_1}-potential of sigma = mu_h|_Lambda + nu|_{boundary Lambda}, which has density in
+  [0,1] w.r.t. mu_h (Lemma 3.2), and lambda=0 on the boundary of B_1 (Lemma 3.4). Then apply Prop 2.5.
 - Uses: Lemma 3.2 (731), Prop 2.5 (732), Lemma 3.4 (implicit).
-- Consumed by: no `\ref` anywhere in the paper. Implicit uses in Sections 6-7 go to the next task.
+- Consumed by: no `\ref` anywhere in the paper. Implicitly: Lemma 11.6 (subharmonicity of v on B_R, G38). Not used in
+  Sections 6-8, where continuity of v comes from Lemma 3.1.
 - Issues: F3 (alpha must depend on alpha0); G4 (C uniform in t and z needs a quantitative Prop 2.5); G1.
+- Deps: 2.5, 3.2, 3.4
 
 ### 4.3 Lemma (lemma:harmonic-ball, 755): ClusterSubharmonicBallStmt
 - Proof: 764-789.
 - Uses:
-  - Lemmas 3.4 and 3.2 and Prop 2.3 (765), giving eq:v-characterization (766-771) with nu=0 because mu_h(boundary)=0 and nu <= mu_h.
+  - Lemmas 3.4 and 3.2 and Prop 2.3 (765), giving eq:v-characterization (766-771) with nu=0 because mu_h(boundary)=0 and nu <=
+    mu_h.
   - Integration by parts on a smooth Lambda' with closure(Lambda) subset Lambda' subset O, giving the mean value for harmonic q.
   - Fubini, and the Riesz decomposition (AG01 Sec 4, 761).
 - Consumed by: Prop 5.4 text (850); Thm 5.5 ("each cluster is a subharmonic ball"); the outline (290).
 - Issues: G5 (integration restricted to Lambda; "v(z)" at 785); F1 (the remark at 753 is false for the literal test class).
+- Deps: 2.3, 3.2, 3.4
 
 ## Section 5
 
 ### 5.1 Prop (prop:upper-bound, 815): ClusterUpperBoundStmt
-- Proof: 2101-2102, "immediately" from Prop 7.1. Polynomially high probability as T->0 gives existence of T a.s., since the events increase as T decreases.
+- Proof: 2101-2102, "immediately" from Prop 7.1. Polynomially high probability as T->0 gives existence of T a.s., since the events
+  increase as T decreases.
 - Consumed by: Prop 5.4 text (849-850); Thm 5.5 through Prop 5.4.
+- Issues: G26 (inherited from Prop 7.1).
+- Deps: 7.1
 
 ### 5.2 Prop (prop:continuity, 824): ClusterContinuityStmt
 - Proof: 2101-2114.
   - eq:continuity (831) from Prop 7.2 (2104).
-  - eq:contains-origin (826): Prop 7.1 with Borel-Cantelli over r_n = 2^{-n} (2108-2111), Prop 4.1 (2107) and Lemma 3.3 (2113).
+  - eq:contains-origin (826): Prop 7.1 over r_n = 2^{-n} (2108-2111; called Borel-Cantelli, but only a countable intersection of
+    the a.s. events of Prop 7.1 is used), Prop 4.1 (2107) and Lemma 3.3 (2113).
 - Consumed by: Prop 5.4 text (849-850). Implicitly: Prop 5.6 (repair G8) and Thm 1.1(b).
-- Issues: G12 (scope); S1 ("+ B_eps(z)" at 832 should be "+ B_eps").
+- Issues: G12 (scope); G26, G27, G29 (inherited from Props 7.1, 7.2); S1 ("+ B_eps(z)" at 832 should be "+ B_eps").
+- Deps: 3.3, 4.1, 7.1, 7.2
 
 ### 5.3 Prop (prop:boundary-measure, 836): ClusterBoundaryMeasureZeroStmt
 - Proof: Section 8, Prop 8.1 (2122-2127). No `\ref` links them.
 - Consumed by: Prop 5.4 text (849-850); Prop 9.2 (implicitly, through mu_h(Lambda-hat)=t).
 - Issues: S1. "closure subset B_r(z)" with r free (837) must read "subset B_1", as Prop 8.1 states at 2124.
-  - Read as "for all r", it would claim mu_h(boundary Lambda^z_t)=0 for clusters touching the boundary of B_1, which Section 8 does not prove.
+  - Read as "for all r", it would claim mu_h(boundary Lambda^z_t)=0 for clusters touching the boundary of B_1, which Section 8
+    does not prove.
   - Read as "for some r", the hypothesis is vacuous.
+- Deps: 8.1
 
 ### 5.4 Prop (prop:conditional, 853): RegularizedClusterHarmonicBallsStmt
 - Proof: the paragraph 846-851.
@@ -221,17 +341,19 @@ The appendix proves everything for a deterministic Radon measure mu satisfying e
     at the exit time meets the boundary).
 - Consumed by: Thm 5.5 proof (952).
 - Issues: F4 (T unbound or uniform in z; free binder r).
+- Deps: 3.2, 3.4, 4.1, 4.3, 5.1, 5.2, 5.3, 7.2
 
 ### 5.5 Theorem (theorem:full-theorem-minus-uniqueness, 863): ExistenceHarmonicBallsStmt
 - Proof: Sec 5.3, 951-1009.
   - Construction: Lemma 5.7 plus Prop 5.4 and a union bound give, for each k, the clusters Lambda^{B_k;kx}_t for t < A_k T^{(k)}.
     The family is defined piecewise in k (961-966); compatibility comes from Lemma 3.5 (968-970).
-  - Unboundedness of the times, eq:strictly-increasing-times (974): T^{(k)} has the law of T^{(1)} (Lemma 5.7); reverse Fatou gives
-    eq:positive-io (987); A_k -> infinity, eq:geometric-bm (991), via I3.
+  - Unboundedness of the times, eq:strictly-increasing-times (974): T^{(k)} has the law of T^{(1)} (Lemma 5.7); reverse Fatou
+    gives eq:positive-io (987); A_k -> infinity, eq:geometric-bm (991), via I3.
   - Uniqueness is deferred to Prop 5.6 (977).
 - Consumed by: Thm 1.1 (870), Prop 5.6 statement (873), Lemma 5.8 (1024), Lemma 9.3 (2343), Prop 10.7 (2691), Lemma 11.6 (2782),
   Prop 11.2 (2943).
 - Issues: G6 (four sub-points); G7.
+- Deps: 3.5, 5.4, 5.7
 
 ### 5.6 Prop (prop:uniqueness, 872): UniquenessHarmonicBallsStmt
 - Proof: Sec 9, 2415-2473, after Sak82 Thm 10.13 (inspiration only).
@@ -242,53 +364,814 @@ The appendix proves everything for a deterministic Radon measure mu satisfying e
   - I1 (mu_h(B) > 0).
 - Consumed by: Thm 1.1 (871, 977).
 - Issues: G8 (the step at 2432-2434; "origin" for z at 2422).
+- Deps: 3.3, 3.5, 5.5, 9.3, 9.4
 
 ### 5.7 Lemma (lemma:scale-invariance-flow, 885): ClusterScaleInvarianceStmt
-- Proof: 890-933. Pathwise identity Lambda^z_t[h'] = k^{-1} Lambda^{B_k;kz}_{A_k t}[h] with h' = h(k.) - h_k(0), and h' has the law of h
-  (eq:h-coordinate-change).
-- Uses: Lemma 3.1 (916); Fact 2.1 III (Weyl, with the random constant f = -h_k(0) - Q log k) and IV (dilation); G_{B_k}(kz,kx) = G_{B_1}(z,x); I4.
+- Proof: 890-933. Pathwise identity Lambda^z_t[h'] = k^{-1} Lambda^{B_k;kz}_{A_k t}[h] with h' = h(k.) - h_k(0), and h' has the
+  law of h (eq:h-coordinate-change).
+- Uses: Lemma 3.1 (916); Fact 2.1 III (Weyl, with the random constant f = -h_k(0) - Q log k) and IV (dilation); G_{B_k}(kz,kx) =
+  G_{B_1}(z,x); I4.
 - Consumed by: Thm 5.5 proof (952, 980), Prop 10.7 (2690).
 - Issues: G11; S1 (G_{B_{rk}(z)} at 922; "A_k^{-1} mu_h(k.)" at 918 means the pushforward under x -> x/k).
+- Deps: 2.1, 3.1
 
 ### 5.8 Lemma (lemma:strong-compatibility, 1019): ClusterStrongCompatibilityStmt
 - Proof: 1023-1025, "immediate from the proof of Lemma 3.5 together with Theorem 5.5", using the extension to any bounded open U
   claimed at 1016-1017.
 - Consumed by: Prop 1.3 (1037).
 - Issues: G9; no "a.s." in the statement.
+- Deps: 3.5, 5.5
+
+## Section 6 (Harnack-type estimate)
+
+### 6.1 Prop (prop:harnack-type-property, 1065): HarnackTypeEstimateStmt
+- Proof: 1593-1595, "combine Lemma 6.6 and Lemma 6.11", with the constants chosen as in fig:constant-dependencies (1579-1588).
+  - First claim: from Prop 6.2 by the reduction at 1083-1085. Each component of Lambda^z_t cap B_rho(x0) has at most the annulus
+    mass of Lambda^z_t, and a point of Lambda^z_t cap B_{rho/2}(x0) lies in one of the components.
+  - "Moreover" claim: Lemma 6.6 verbatim (c log_8 eps^{-1/2} there, c log eps^{-1/2} here: change c).
+  - Order of constants. C_3 is universal (Lemma 6.3 through Lemma 6.6). Then b = b(gamma, C_3) (proof of Lemma 6.11, 1909-1911).
+    Then a = a(b, gamma) and C^pm_1, C^pm_2 (Lemma 6.6), then N_1, any N_0 >= N_1, and alpha = alpha(a, N_0, gamma, C^-_1)
+    (Lemma 6.11). See G18.
+- Uses: Prop 6.2 (first claim), Lemma 6.6, Lemma 6.11; D4.
+- Lit: none. JLS12 `jerison2012logarithmic` and DCLYY13 `duminil2013containing` (1088-1089) are inspiration only.
+- Consumed by: Prop 7.1 proof (1969, 1970, 1996), Prop 7.2 proof (2031, 2032, 2072, 2078), Lemma 10.1 proof (2505, 2510);
+  text 294, 1958. These consumers use only the two printed properties: the deterministic implication, and prevalence w.p.h.p.
+  (with Borel-Cantelli over dyadic eps at 2505). Lemma 8.3 needs the inner structure of E-bar and the freedom to take N_0 large,
+  so it uses Lemma 6.7 (2175) and, *implicitly*, Lemma 6.11 directly.
+- Issues: S (t is unbound at 1067; "for all t > 0" is meant, cf. 1053); G18; alpha also depends on alpha0 (G19(iii), cf. F3).
+  Lean: alpha and the events E-bar are existential. The first claim is deterministic ("purely deterministic", 1597), but the
+  cluster is defined only on the a.s. event where mu_h is Radon with eq:volume-growth (D4, I2). So state it on an a.s. event.
+- Deps: 6.2, 6.6, 6.11
+
+### 6.2 Prop (prop:harnack-type-stronger-property, 1078): HarnackTypeComponentStmt
+- Proof: 1593-1595, jointly with Prop 6.1. It is Lemma 6.11 for the parameters fixed through Lemma 6.6
+  (fig:constant-dependencies).
+- Uses: Lemma 6.11 (the conclusion verbatim, including closure(B_{rho/2}(x0))); Lemma 6.6 (the same events must also satisfy
+  the prevalence claim of Prop 6.1); D4.
+- Lit: none.
+- Consumed by: Prop 6.1, first claim (1083-1085); Lemma 10.1 statement (2499) and proof (2519); text 1103, 1584 (Section 10
+  needs this component version).
+- Issues: S. z and t are bound only through "the setting of Prop 6.1" ("for each z in B_1"; t unbound, read "for all t > 0").
+  Lean: state 6.2 with its own existential alpha and E-bar, including the prevalence clause of 6.1. Then 6.1 is a corollary, and
+  the cross-reference "setting of Prop 6.1" creates no cycle. G18.
+- Deps: 6.6, 6.11
+
+#### Proof of Props 6.1 and 6.2 (1593-1596)
+- Proof: 1593-1596, one line: "Combine Lemma 6.6 and Lemma 6.11", with the order of constants in Figure fig:constant-dependencies
+  (1580-1589). The order is: C3 universal (Lemma 6.6/6.7), then b = b(gamma, C3) (eq:choice-of-b, 1916), then a = a(b,gamma),
+  C1^pm, C2^pm (Lemma 6.6), then N0 := max(N1 of Lemma 6.6 (b,gamma), N1 of Lemma 6.11 (a,gamma,C1^-,C2^+)), then
+  alpha = alpha(a,N0,gamma,C1^-) (eq:choice-of-alpha, 1859). E-bar_rho(x0) := E-bar_rho(x0; N0,a,b,C1^pm,C2^pm,C3).
+  - Prop 6.2 is Lemma 6.11 with these constants. The first claim of Prop 6.1 follows from Prop 6.2 by 1084-1086 (each component
+    of Lambda cap B_rho(x0) inherits the mass bound). The "Moreover" claim is Lemma 6.6 (c log_8 vs c log only renames c).
+- Uses: Lemma 6.6 (hence Lemma 6.7), Lemma 6.11 (hence Lemmas 6.8, 6.10, 6.12, 6.13).
+- Lit: none.
+- Issues: G18 (the two "universal C3" must coincide; as printed both are existential). Via Lemma 6.11: G22, G23,
+  G25, and the constant slips at 1859, 1899, 1916. Prop 8.1 (2231, 2253; caption 1587-1588) uses Lemma 6.11 with N0
+  large directly, not Prop 6.1, so the corrected quantifier form of Lemma 6.11 is what Section 8 needs.
+
+### 6.3 Lemma (lemma:good-annuli, 1169): ManyGoodAnnuliStmt
+- Proof: 1278-1290.
+  - E_r(z) depends only on mu_h restricted to A_{3r,5r}(z) (Fact 2.1 II) and is invariant under multiplying that measure by a
+    constant (Fact 2.1 III). So it is determined by h|_{A_{3r,5r}(z)} modulo additive constant (D9; measurability: G16).
+  - Lemma 6.5 with K = floor(log_7 eps^{-1/2}) and radii r_k in [eps, eps^{1/2}] cap {7^{-n}}.
+    - Hypotheses: A_{3r,5r} = A_{s1 R, s2 R} with R = 7r, s1 = 3/7, s2 = 5/7, and r_{k+1}/r_k = 1/7 <= s1. Extend the finite
+      sequence by smaller 7^{-n}, as Lemma 6.5 takes a sequence indexed by N.
+    - Universal alpha, beta: alpha = 6 log 7 gives C e^{-alpha K} = O(eps^3).
+    - The annuli are centred at z, not 0. *Implicit*: translation invariance of h^C modulo constants (eq:gff-scaling); the
+      deterministic term -alpha0 log|.| leaves sigma-algebras modulo constants unchanged.
+  - Lemma 6.4 at that universal p gives a = a(b, gamma) for every z outside B_{10r}, since then dist(A_{3r,5r}(z), 0) >= 5r >=
+    r/100.
+  - Union bound over the O(eps^{-2}) points of (eps/100)Z^2 cap B_{1+eps}: failure probability O(eps).
+- Uses: Lemma 6.4, Lemma 6.5; Fact 2.1 II-III; eq:gff-scaling (translation, implicit); eq:good-annulus-harmonic; D9, D10.
+- Lit: none directly (GM20b through Lemma 6.5).
+- Consumed by: Lemma 6.7 proof (1361), for (VG-iii) at rho = 1, x0 = 0 and alpha0 = 0, summed over eps = 2^{-n}, n >= N_0;
+  Lemma 6.6 proof (1371, "identical" argument); text 1176-1177, 1303.
+- Issues: G16; the slip at 1120 (as printed, the event of eq:good-annulus-harmonic is empty); G21 (6.7 needs other lattice
+  offsets). Lean: Lemma 6.7 applies this lemma to h^C (alpha0 = 0), so state it for every alpha0, including 0.
+- Deps: 2.1, 6.4, 6.5
+
+### 6.4 Lemma (lemma:annulus-hit, 1185): GoodAnnulusProbabilityStmt
+- Proof: 1192-1256.
+  - Step 1 (1197-1216): reduction to alpha0 = 0 by Weyl scaling (Fact 2.1 III with f = -alpha0 log|.|, continuous on the
+    annulus). See G19.
+  - Step 2 (1219-1255): alpha0 = 0.
+    - P[E_r(z)] does not depend on (r, z). Uses: E_r(z) is determined by h mod constants (Fact 2.1 III), the law invariance
+      eq:gff-scaling, the coordinate change of Fact 2.1 IV, and scale/translation invariance of planar BM. So take (r, z) = (1,
+      0).
+    - Reflected gamma-LBM in the square K of side 100 centred at 0 (1223). It agrees with LBM until exiting A_{3,5}(0)
+      (G20). Hitting-order events are the same for LBM and standard BM (time change, I6).
+    - GRV16 Prop 2.19 (continuity in u of the conditional law of the stopped LBM) and compactness of the circle boundary(B_4)
+      give a random T > 0 with eq:annulus-hit-time. *Implicit*: a Dini argument. u -> P^u[tau_A <= T | h] is upper
+      semicontinuous by the Portmanteau theorem, since {tau_A <= T} is closed in path space, and it decreases to 0 as T -> 0.
+    - Prop 2.6: p^K_T is finite and continuous on boundary(B_4) x closure(B_5). This gives C(h) with eq:heat-kernel-max, and
+      then eq:heat-kernel-int: P[B^u_T in Y | h] <= C mu_h(Y).
+    - Since {tau_A <= tau_Y} is contained in {tau_A <= T} union {B_T in Y}, E_1(0) holds with the random
+      a = (b/2)[C mu_h(A_{3,5}(0))]^{-1} > 0. A deterministic a with probability >= p follows.
+- Uses: Fact 2.1 III-IV; Prop 2.6; eq:gff-scaling; D8 (the heat kernel is a density w.r.t. mu_h; slip at 547); D11, I6;
+  mu_h(A_{3,5}(0)) < infinity.
+- Lit: GRV16 `garban2016liouville` Prop 2.19 (1225), extended through GRV16 Section 9 to "the massless GFF in a finite domain"
+  (1226). See G20.
+- Consumed by: Lemma 6.3 proof (1289); Lemma 6.7 proof (1318, 1340, 1350; Steps 1-2 reused); text 1090, 1178.
+- Issues: G19 (Step 1: reversed implication, so as printed a := (C_2/C_1) a' >= a' can exceed 1, against a in (0,1)); G20;
+  G16; the slip at 1120.
+- Deps: 2.1, 2.6
+
+### 6.5 Lemma (lemma:annulus-iterate, 1262): AnnulusIterationStmt
+- Proof: none (cited). Line 1259: "See [Lemma 3.1]{gwynne2020local} for a slightly more general statement". The number is
+  printed, so Lemma 6.5 is a special case of GM20b Lemma 3.1. The INVENTORY kind "no theorem number printed" is wrong.
+  - GM20b is stated for the whole-plane GFF h^C. h = h^C - alpha0 log|.| differs from it by a deterministic function, so
+    "measurable w.r.t. h|_A modulo additive constant" is the same sigma-algebra for h and h^C. The transfer is immediate.
+- Uses: none in the paper.
+- Lit: GM20b `gwynne2020local` Lemma 3.1 (1259).
+- Consumed by: Lemma 6.3 proof (1282; annuli centred at z, not 0, via translation invariance of h^C); Lemma 6.6 proof (1375,
+  in commented-out text; the printed proof says "identical"); text 1179.
+- Issues: G17 (the annuli in Lemma 6.6 violate the spacing hypothesis r_{k+1}/r_k <= s_1). Lean: External. It needs
+  D9 (sigma-algebra of the field on an open set modulo additive constants). Event measurability is a hypothesis: G16.
+- Deps: none (numbered); cited, GM20b Lemma 3.1
+
+### 6.6 Lemma (lemma:very-good-annuli, 1296): ManyVeryGoodAnnuliStmt
+- Proof: 1370-1385, "given Lemma 6.7, the argument is identical to the proof of Lemma 6.3". The intended argument is the
+  commented-out text at 1372-1383.
+  - E-bar_rho(x0) is determined by h|_{A_{rho/4,2rho}(x0)} modulo constants. Check:
+    - (VG-i) uses balls B_r(z), z in A_{rho/2,rho}(x0), r < rho/4, all inside A_{rho/4,5rho/4}(x0).
+    - (VG-iii) uses annuli A_{3r,5r}(z) with r <= 2^{-N_0/2} rho; they lie in A_{rho/4,2rho}(x0) once N_0 >= 9.
+    - The ratios in (VG-i) and (VG-ii) are invariant under adding constants.
+  - Lemma 6.5 with K = floor(log_8 eps^{-1/2}) and rho in {8^{-n}} (but see G17).
+  - Lemma 6.7 at the universal p of Lemma 6.5. Its hypothesis holds: dist(A_{rho/4,2rho}(x0), 0) >= 8 sqrt(eps) >= rho/100 for
+    |x0| >= 10 sqrt(eps) and rho <= sqrt(eps).
+  - Union bound over the grid.
+- Uses: Lemma 6.5, Lemma 6.7; Fact 2.1 II-III; eq:gff-scaling (translation); D9, D10.
+- Lit: none directly.
+- Consumed by: Props 6.1-6.2 proof (1594).
+- Issues: G17; G16; G18 (C_3). The constant dependences a = a(b, gamma), C^pm = C^pm(a, gamma), N_1(b, gamma) are
+  consistent with Lemma 6.7 at the universal p.
+- Deps: 2.1, 6.5, 6.7
+
+### 6.7 Lemma (lemma:very-good-annuli-hit, 1307): VeryGoodAnnulusProbabilityStmt
+- Proof: 1317-1365.
+  - Step 1 (1321-1345): reduction to alpha0 = 0.
+    - (VG-i) and (VG-ii) by Weyl-scaling bounds on the ratios. The directions are correct here: C^-_1 := A_1 C^-,
+      C^+_1 := A_2 C^+.
+    - (VG-iii) by Step 1 of Lemma 6.4, so it inherits G19.
+  - Step 2 (1348-1364).
+    - Reduce to (rho, x0) = (1, 0) "as in Step 2 of Lemma 6.4". See G21.
+    - M_1(0) is in (0, infinity) by Lemma 2.4 (in fact by I2).
+    - mu_h(A_{1/4,2}(0)) is in (0, infinity); positivity at one fixed open set uses I1.
+    - SG_1(0) is in (0, infinity) by Prop 2.5 with O = B_2 and f = 1_A.
+    - C^pm_1, C^pm_2 by tightness.
+    - (VG-iii) holds for N_0 large by Lemma 6.3 applied to h^C (alpha0 = 0) at rho = 1, summed over eps = 2^{-n}, n >= N_0.
+    - Union bound.
+- Uses: Lemma 2.4, Prop 2.5, Lemma 6.3, Lemma 6.4 (Steps 1-2); Fact 2.1 III-IV; eq:gff-scaling; eq:alternate-size,
+  eq:alternate-size-2; I1, I2; D10.
+- Lit: none directly.
+- Consumed by: Lemma 6.6 proof (1371, 1381); Lemma 8.3 proof (2175: E-bar_n(0), centred at 0, with p = 1 - zeta/8; the
+  hypothesis holds there since dist(A_{rho/4,2rho}(0), 0) = rho/4 >= rho/100).
+- Issues: G21; G19(iii) (A_1, A_2 at 1327 depend on alpha0 too); G16; G18. Also the remarks at 1135 and 1141:
+  - 1135: "a.s. 0 < M_rho(x0) < infinity for each rho in (0,1) and x0 in C". M > 0 needs I2. It fails when 0 is in the
+    closure of A_{rho/2,rho}(x0) and the exponent at 0 exceeds beta^- (alpha0 negative enough; cf. F2). Harmless, since (VG-i)
+    then fails.
+  - 1141: SG < infinity holds simultaneously for all (rho, x0) by domain monotonicity G_{B_{2rho}(x0)} <= G_{B_R}. Positivity
+    needs I1.
+- Deps: 2.1, 2.4, 2.5, 6.3, 6.4
+
+### 6.8 Lemma (lemma:odometer-annuli, 1389): AnnulusMassBoundByOdometerStmt
+- Proof: 1400-1452.
+  - Covering and pigeonhole: a ball B_{2 c2 r}(x) compactly inside A_{s1 r,s4 r}(w) with
+    mu_h(B_{c2 r}(x) cap Lambda-hat) >= c1 mu_h(A_{s2 r,s3 r}(w) cap Lambda-hat), eq:ball-lower-bound-mass (1405).
+  - eq:laplacian-of-indicator (1412): Delta(v 1_{Lambda-hat}) = mu_h on Lambda-hat, 0 off its closure, >= 0 on its relative
+    boundary. Argument (1418-1421): v >= 0 is continuous off z and vanishes on the relative boundary of Lambda-hat, so v
+    1_{Lambda-hat} satisfies the sub-mean-value inequality there (gluing, I7).
+  - u = G_{B_{2c2 r}(x)}-potential of mu_h|_{Lambda-hat}; u + v 1_{Lambda-hat} is subharmonic; maximum principle with u = 0 on
+    the boundary circle; lower bound u(x) >= c1 inf_{B_{1/2}} G_{B_1}(0,.) mu_h(...) by scaling of the Green function.
+- Uses: Lemma 3.2 (1411, 1423: Delta v = mu_h on the open set Lambda-hat; no nu needed). Implicit: Lemma 3.1 (continuity of
+  lambda, hence of v off z); Prop 2.3 (dilation invariance, positivity of G_{B_1}(0,.) on B_{1/2}); Prop 2.5 (u finite and
+  continuous up to the boundary of every ball B_{2c2 r}(x), u = 0 there; all balls simultaneously, cf. G10); AG01 Thm 4.3.8 (Delta
+  u = -mu); I4 (maximum principle, local characterisation of subharmonicity). Lemma 4.2 is not used (continuity suffices).
+- Lit: AG01 (implicit, see Uses).
+- Consumed by: Lemma 6.13 proof (1776, argument reused: v 1_{Lambda-tilde} subharmonic), Lemma 6.11 proof (1841, 1843, 1853, as
+  eq:small-odometer-implies-low-mass with (s1,s2,s3,s4) = (1,3,5,7)), Lemma 11.6 proof (2776, 2783); text 1095, 1617.
+- Issues: S (the C of the proof, 1449, is the reciprocal of the C of the statement). Holds on the a.s. event of Lemmas 3.1-3.2;
+  no "a.s." printed.
+- Deps: 2.3, 2.5, 3.1, 3.2
+
+### 6.9 Lemma (lemma:harmonic-odometer-comparison, 1459): OdometerHarmonicMeasureBoundStmt
+- Proof: 1469-1508. f_A(x) = P[B^x exits A before hitting A \ Lambda | h] solves eq:expression-for-fA (1471); v solves
+  eq:expression-for-odometer (1479) by Lemma 3.2; v - (sup v) f_A is subharmonic on Lambda^x_t, <= 0 on its boundary; maximum
+  principle; then f_A = the probability with Lambda^x_t in place of Lambda, as no path in A joins Lambda^x_t to the other
+  components.
+- Uses: Lemma 3.2 (1478: Delta v = mu_h >= 0 on Lambda). Implicit: Lemma 3.1 and Prop 2.3 (v continuous on closure(B_1) \ {z},
+  v = 0 on A cap boundary Lambda); Kakutani (f_A harmonic in A cap Lambda, I8); I4 (maximum principle).
+- Lit: none cited.
+- Consumed by: Lemma 6.13 proof (1767, with A = A_{3r1,5r1}(w)); text 1095, 1611.
+- Issues: G24 (boundary values of f_A for irregular A; consumers use annuli only). Holds on the a.s. event of Lemmas 3.1-3.2.
+- Deps: 2.3, 3.1, 3.2
+
+### 6.10 Lemma (lemma:odometer-bound-lqg-mass, 1512): OdometerBoundByAnnulusMassStmt
+- Proof: 1521-1563. lambda := Delta v on the annulus (clash with the least supersolution lambda, S). q = G_{B_{s4
+  rho}(x0)}-potential of lambda|_{annulus}, so q <= S_rho(x0;s1,s4) (eq:q-inequality, 1530) because lambda <= mu_h; g = v + q is
+  harmonic and >= 0; Harnack (eq:g-harnack-step, 1544) between A_{s2' rho,s3' rho} and A_{s2 rho,s3 rho}; evaluate at a zero z0 of
+  v.
+- Uses: Lemma 3.2 (1528). It needs 0 <= lambda <= mu_h on B_1 \ {z}: the upper bound is nu <= mu_h; the lower bound (q >= 0,
+  g >= 0, "positive function" 1524) is nu >= 0, i.e. G1, which has the short repair recorded under Issues. Implicit: Lemma 3.1
+  (continuity of v; v(z0) = 0 off Lambda); Prop 2.3 (G >= 0, scaling); Prop 2.5 (q finite); AG01 Thm 4.3.8 (Delta q = -lambda);
+  I4 (Weyl's lemma for g, Harnack inequality for nonnegative harmonic functions on an annulus, constant scale-invariant).
+- Lit: AG01 (implicit).
+- Consumed by: Lemma 6.11 proof (1898, with (s1,s2,s3,s4) = (1/4,1/2,1,2), see G22), Lemma 11.6 proof (2776, 2785); text 1619.
+- Issues: G1 (repair below); S (1529 drops "(x0)"; 1545-1557 reuse z as a dummy variable). Holds on the a.s. event of Lemmas
+  3.1-3.2.
+- Deps: 2.3, 2.5, 3.1, 3.2
+
+### 6.11 Lemma (lemma:very-good-annuli-satisfy-harnack-type-estimate, 1567): VeryGoodAnnulusHarnackTypeStmt
+- Proof: 1828-1953, deterministic given h. Shell decomposition (Lemma 6.12). Induction on j of eq:step-4-induct-mass (1867, mass
+  of Lambda-tilde in small annuli <= K_j) and eq:step-4-induct-odometer (1872, sup of v <= K_j / (C4 v 1)).
+  - Base case (1887-1931): (VG-i) and the choice of alpha give the j = 0 mass bound; Lemma 6.10 bounds v on A_{rho/2,rho} by
+    c S_rho <= c C2^+ M_rho / C1^-; Lemma 6.13 with b, N1 chosen in eq:choice-of-b (1916), eq:choice-of-N1 (1921).
+  - Inductive step (1934-1952): Lemma 6.8 as eq:small-odometer-implies-low-mass (1848) turns the odometer bound into the mass
+    bound; Lemma 6.13 gives the next odometer bound.
+  - Conclusion (1876-1883): K_j -> 0, so v = 0 on Lambda-tilde cap boundary B_{d^+_infty}(x0); v 1_{Lambda-tilde} subharmonic in
+    B_rho(x0) (z not in B_rho(x0)) and the maximum principle give v = 0 on Lambda-tilde cap closure(B_{rho/2}(x0)), hence empty.
+- Uses: Lemmas 6.8 (1841, 1843, 1853), 6.10 (1898), 6.12 (1840), 6.13 (1841, 1853, 1862, 1902, 1940); Lemma 2.4 (exponent beta^-
+  only, in M_rho, K_j and b). Implicit: Lemmas 3.1-3.2 (through the gluing I7, 1877); (VG-i) gives 0 < M_rho < infinity, so
+  K_j -> 0 and mu_h(A_{rho/2,rho}(x0)) > 0. I1 is not needed once E-bar_rho(x0) occurs.
+- Lit: none.
+- Consumed by: proof of Props 6.1-6.2 (1594), Prop 8.1 proof (2231, 2253; with N0 large, caption 1587-1588); text 1600, 1627,
+  1708, 1816.
+- Issues: G22 (base case applies Lemma 6.10 on A_{rho/4,2rho}(x0), outside the hypothesis); G18 (C3 must be a given
+  constant, not an existential one); G23 (via Lemma 6.13: N0 must also be large depending on C3); G25 (proof runs with
+  components of Lambda cap A_{rho/2,rho} instead of Lambda cap B_rho); S at 1859, 1899, 1916 (constants), 1842, 1895, 1935.
+  Formalisation: state as "for every C3 > 0 there is b = b(gamma,C3) in (0,1) such that for all C1^pm, C2^pm, a there is
+  N1(a,gamma,C1^-,C2^+,C3) >= 200 and for all N0 >= N1 an alpha(a,N0,gamma,C1^-,C3) in (0,1) ...", on the a.s. event of Lemmas
+  3.1-3.2.
+- Deps: 2.3, 2.4, 3.1, 3.2, 6.8, 6.10, 6.12, 6.13
+
+### 6.12 Lemma (lemma:shell-decomposition, 1636): ShellDecompositionStmt
+- Proof: 1675-1700, elementary arithmetic. d_infty = (3/4 - 32 * 2^{-50} / (1 - 2^{-1/4})) rho > rho/2.
+  eq:contained-in-annulus and eq:sparse-shells: d_j - d_{j+1} = 32 l_j > 9 l_j + l_{j+1}. eq:annulus-contained-in-ball: for
+  N0 >= 106, l_j + 8 eps_j^{1/2} rho <= 2 l_j (the proof shows 2 l_j, more than the claimed 4 l_j).
+- Uses: none (deterministic geometry; rho in (0,1) and x0 in B_1 are not used).
+- Lit: none.
+- Consumed by: Lemma 6.13 statement (1712), Lemma 6.11 proof (1840); text 1604.
+- Issues: S (1679: 8 * 2^{-100} should be 8 * 2^{-50}; the inequality still holds).
+- Deps: none
+
+### 6.13 Lemma (lemma:low-mass-implies-small-odometer, 1710): LowMassSmallOdometerStmt
+- Proof: 1725-1810.
+  - Step 1 (1745-1755): (VG-iii) at eps_j = 2^{-(N0+j)} and the grid points w of S_j give radii r_1 > ... > r_N; the definition of
+    M_rho (ball B_{eps_j rho}(w + 4 r e1) inside A_{3r,5r}(w)) turns the hypothesis <= K_j into mu_h(Y) <= a mu_h(A_{3r,5r}(w)).
+  - Step 2 (1757-1786): Lemma 6.9 on A_{3r1,5r1}(w) and eq:good-annulus-harmonic give the factor b; v 1_{Lambda-tilde} is
+    subharmonic ("same argument as Lemma 6.8", 1776); maximum principle on B_{4r1}(w).
+  - Step 3 (1788-1808): iterate N - 1 times; maximum principle in B_{r_N}(w); S_j separates A_{rho/2,d^+_{j+1}} from the
+    boundary of B_rho(x0), and the maximum principle for v 1_{Lambda-tilde} on B_{d_j}(x0) (1806-1808).
+- Uses: Lemma 6.9 (1767), Lemma 6.12 (1712), proof of Lemma 6.8 (1776, gluing I7); Lemma 2.4 (beta^- in K_j, 1714); (VG-iii)
+  and eq:good-annulus-harmonic. Implicit: Lemmas 3.1-3.2 (continuity of v; sup over closure(Lambda^x) equals sup over Lambda^x).
+- Lit: none.
+- Consumed by: Lemma 6.11 proof (1841, 1853, 1862, 1902, 1940); text 1606.
+- Issues: F6 (hypothesis "annulus not containing z" is too weak; false for z = x0); G23 (exponent C' C3 (N0+j) needs
+  N0 large depending on C3); S at 1713/1718, 1741, 1746-1753, 1766, 1772.
+- Deps: 2.4, 3.1, 3.2, 6.8, 6.9, 6.12
+
+## Section 7 (upper bound and continuity)
+
+### 7.1 Prop (prop:upper-bound-polynomially-high-prob, 1961): ClusterUpperBoundPolyHighProbStmt
+- Proof: 1968-2006. The statement is for z in B_{1/2} (1964).
+  - Prop 6.1, second claim, at scale eps < 2^{-20} r^2: every grid point x in (B_{1+eps} \ B_{10 sqrt eps}) cap (eps/100)Z^2 has
+    a very good radius rho_x in [eps, eps^{1/2}] cap {8^{-n}}.
+  - A subfamily X covers the circle boundary B_{r/2}(z) by the balls B_{rho_x/2}(x) (eq:cover-inner-ball, 1981), and its annuli
+    lie compactly in B_1 \ B_{r/4}(z) (1977). This fails near the origin: see G26.
+  - Lemma 2.4 gives eq:upper-bound-annuli (1987): mu_h(A_{rho_x/2,rho_x}(x)) >= rho_x^{2 beta^-}. Implicitly this needs a union
+    bound over the O(log 1/eps) scales 8^{-n}/4 and a ball of radius rho_x/4 with centre in B_1 inside each annulus, since Lemma
+    2.4 is stated for a single scale.
+  - With T = alpha eps^{2 beta^-}: mu_h(Lambda cap A) <= mu_h(Lambda^z_t) <= t <= T <= alpha mu_h(A) (1989-1995), using the first
+    claim of Lemma 3.4. The cited "Lemma 3.3" (1991) is only monotonicity of mu_h under inclusion.
+  - The first claim of Prop 6.1 gives Lambda cap B_{rho_x/2}(x) = empty, so v^z_t = 0 on an open neighbourhood of the circle
+    boundary B_{r/2}(z).
+  - Maximum principle (2000-2003): v = 0 on the boundary of B_1 (Lemma 3.4), and v is continuous on closure(B_1) \ {z} (Lemma 3.1:
+    lambda is in C(closure B_1); G_{B_1}(z,.) vanishes on the boundary). "Subharmonic away from B_{r/2}(z)" needs nu >= 0 (G1).
+    That step can avoid G1: on each component W of Lambda \ closure(B_{r/2}(z)) one has Delta v = mu_h >= 0 (Lemma 3.2; nu lives
+    on the boundary of Lambda), and v = 0 on the boundary of W. Hence W is empty.
+  - eq:non-co-set gives Lambda^z_t subset B_{r/2}(z) (2004). The stated closure inclusion follows because Lambda misses the open
+    neighbourhood of the boundary circle (unstated).
+- Uses: Prop 6.1 (both claims; 1969, 1970, 1997), Lemma 2.4 (1984), Lemma 3.3 (1991), Lemma 3.4 (1992, 2000). Implicit: Lemma 3.1
+  (continuity of lambda), Lemma 3.2 (Lambda open, Delta v on Lambda), D4.
+- Lit: none.
+- Consumed by: proof of Props 5.1-5.2 (2102, 2105, 2108); text 2012, 2019.
+- Issues: G26 (cover near the origin); G1 (mu_h(Lambda) <= t); F2 (inherits the corrected range of beta^-; the balls used stay at
+  distance >= 9 sqrt(eps) from 0); S 1991, S 2004.
+- Deps: 2.4, 3.1, 3.2, 3.3, 3.4, 6.1
+
+### 7.2 Prop (prop:continuity-of-clusters, 2021): ClusterTimeContinuityStmt
+- Proof: 2030-2095.
+  - Prop 6.1, second claim, and Lemma 2.4 (eq:volume-growth-lower-bound, 2034) at delta = 2^{-n}. Borel-Cantelli gives a random
+    M_0 such that both hold for all n >= M_0 (2037).
+  - Prop 4.1 (first claim) gives B_{eps_0}(z) subset Lambda^z_t (2043). After enlarging M_0 (depending on eps_0 and on
+    dist(Lambda^z_t, boundary of B_1)) one gets eq:boundary-inside (2046). Then the shell (Lambda+B_{4 sqrt delta}) \
+    (Lambda+B_{3 sqrt delta}) is covered as in eq:cover-continuous (2050) and eq:cover-in-complement (2054). The cover fails near
+    the origin: see G27.
+  - Mass (2057-2066): mu_h(Lambda^z_t) = t is attributed to Lemma 3.4 (2058), but the equality case needs mu_h(boundary Lambda) =
+    0: see G29. Together with mu_h(Lambda_{t+eps}) <= t+eps (G1) and Lemma 3.3 this gives eq:expand-cluster-mass.
+  - eps = alpha delta^{2 beta^-} (2069). Prop 6.1, first claim, gives Lambda_{t+eps} cap B_{rho_x/2}(x) = empty (2078), hence
+    eq:zero-on-shell.
+  - Maximum principle as in Prop 7.1 (2083-2087), with the same remark on G1. It gives Lambda_{t+eps} compactly inside
+    Lambda_t + B_{4 sqrt delta}.
+  - Only dyadic delta are treated (2094). For general eps take the dyadic delta with alpha (delta/2)^{2 beta^-} < eps <=
+    alpha delta^{2 beta^-} and use Lemma 3.3. This gives C = 4 sqrt(2) alpha^{-1/(4 beta^-)}, which depends on alpha =
+    alpha(gamma) as well as on beta^-.
+- Uses: Prop 6.1 (2031, 2032, 2069, 2076), Lemma 2.4 (2033), Prop 4.1 (2043), Lemma 3.4 (2058, 2086), Lemma 3.3 (2059). Implicit:
+  Lemma 3.1, Lemma 3.2, Prop 8.1 (needed at 2058, G29).
+- Lit: Borel-Cantelli (Mathlib `MeasureTheory.measure_limsup_atTop_eq_zero`, OuterMeasure/BorelCantelli.lean:62).
+- Consumed by: proof of Props 5.1-5.2 (2104, eq:continuity); text 299. Implicitly: Prop 5.4 (through Prop 5.2) and Thm 1.1(b).
+- Issues: G27, G29, G1, G7 (right-continuity only), G12 (scope Lambda compactly in B_1), F2 (the beta^- of the statement is
+  the exponent of Lemma 2.4); S 2022-2026 (quantifiers and C), S 2025 (+ B_delta(z), already listed).
+- Deps: 2.4, 3.1, 3.2, 3.3, 3.4, 4.1, 6.1, 8.1
+
+## Section 8 (boundary has measure zero)
+
+### 8.1 Prop (prop:boundary-measure-zero, 2122): BoundaryMeasureZeroOfCompactClusterStmt
+- Proof: 2230-2274. The strategy is stated at 2128-2149.
+  - Parameter choice (2231-2236). Lemma 6.11 holds componentwise; it passes to the whole cluster as in the remark after Prop 6.2
+    (1083-1084), which gives eq:good-annulus-implies-harnack (2235) with one alpha. Lemma 8.2 is applied with zeta = 1/2 and gives
+    one m. This needs the parameter interface of G28.
+  - eq:density-0 (Mat95 Cor 2.14) is applied to X = boundary of Lambda (eq:density-0-apply0, 2241). Lambda is open (Lemma 3.2,
+    2243), so Lambda has density 0 at mu_h-a.e. boundary point (eq:density-0-apply). This gives eq:density-theorem-apply (2251).
+  - Lemma 8.2: for mu_h-a.e. w there are infinitely many n with E-bar_n(w) and G_n(w) (2255). The chain 2257-2260 has a slip
+    (S 2260). It yields mu_h(Lambda cap A_{2^{-n-1},2^{-n}}(w)) <= alpha mu_h(A_{2^{-n-1},2^{-n}}(w)), hence
+    Lambda cap B_{2^{-n-1}}(w) = empty, which contradicts w being a boundary point.
+  - The hypothesis closure(B_{2^{-n}}(w)) subset B_1 \ {z} holds for large n: w lies in B_1 because closure(Lambda) does, and w !=
+    z because B_eps(z) subset Lambda (Prop 4.1, implicit).
+  - The null sets of eq:density-0 and Lemma 8.2 do not depend on (t, z). So the statement holds simultaneously for all t, z.
+- Uses: Lemma 6.11 (2231), Lemma 8.2 (2232, 2238, 2255), Lemma 3.2 (openness, implicit at 2243), eq:density-0. Implicit: Prop 4.1
+  (z not on the boundary), Fact 2.1 (mu_h Radon), the remark after Prop 6.2 (component to cluster).
+- Lit: Mat95 Cor 2.14 (Lebesgue density theorem for Radon measures). Mathlib has it as `Besicovitch.ae_tendsto_measure_inter_div`
+  (MeasureTheory/Covering/Besicovitch.lean:1105), stated for closed balls. No External is needed.
+- Consumed by: no `\ref` in any proof (text 300, 1587, 2137). It is the proof of Prop 5.3 (S 837 in the list: "B_r(z)" should be
+  B_1). Implicitly: Prop 7.2 (2058, G29), Prop 9.2 (G15), Prop 5.4 (through Prop 5.3), and every use of the equality case of
+  Lemma 3.4 or of nu = 0 (630-633 text). Sections 10-11 uses are left to those entries.
+- Issues: G28; S 2124 (t unbound); S 2260 (right side).
+- Deps: 2.1, 3.2, 4.1, 6.11, 8.2
+
+### 8.2 Lemma (lemma:mu_h-doubling-and-harnack, 2151): TypicalPointManyGoodScalesStmt
+- Proof: 2209-2227.
+  - Weyl scaling (Fact 2.1): mu_{h^C} = |.|^{alpha0 gamma} mu_h (2211). Z is sampled from the normalised mu_{h^C}|_{B_1}; this
+    needs 0 < mu_{h^C}(B_1) < infinity (I1).
+  - DMS21 Lemma A.10 (2213): (h, Z) is mutually absolutely continuous with respect to (h~, Z~). Here Z~ is Lebesgue-uniform on
+    B_1, independent of h, and h~ = h - gamma log|. - Z~| + gamma log max(|.|,1), modulo additive constants. The h on the right is
+    an independent copy of the field with singularity alpha0 at 0; the cited statement is about h^C.
+  - Locality eq:doubling-locality (2216): needs D10(a) and Fact 2.1 (locality).
+  - Absolute continuity on B_r(Z~), r < |Z~| (MS17 Prop 2.9, 2219). The added function -alpha0 log|.| + gamma log max(|.|,1) is
+    smooth there for r < min(|Z~|, 1-|Z~|); across the unit circle it is only Lipschitz. Only small r matter, since the conclusion
+    is a tail event at Z~.
+  - Lemma 8.3 with alpha0 = gamma (2220), plus translation invariance modulo constants, gives eq:mu_h-doubling-reweight (2223).
+    This needs G30 and D10(c).
+  - Return by absolute continuity (2225). The law of Z is equivalent to mu_h|_{B_1}, since the density |z|^{alpha0 gamma} is in
+    (0, infinity) off 0 and mu_h({0}) = 0 (I9). Fubini then gives mu_h-a.e. z; joint measurability of the good set in (h, z) is
+    unstated.
+- Uses: Lemma 8.3 (2220), Fact 2.1 (2211, 2216), D3, D10. Implicit: I1, I9.
+- Lit: DMS21 Lemma A.10, MS17 Prop 2.9, DS11 Sec 3.3 (2158, motivation only).
+- Consumed by: Prop 8.1 (2232, 2238, 2255). Lemma 11.7 proof (2876, 2885: "nearly identical", the same argument with a
+  positive-probability event). Text 2158, 2801.
+- Issues: G28 (parameters and N_0 flexibility), G30 (alpha0 = gamma instantiation).
+- Deps: 2.1, 8.3
+
+### 8.3 Lemma (lemma:doubling-alpha, 2160): OriginManyGoodScalesStmt
+- Proof: 2163-2207.
+  - Scale invariance (eq:h-coordinate-change, Fact 2.1 coordinate change, 2164): the law of the ratio
+    mu_h(A_{2^{-n-1},2^{-n}}(0)) / mu_h(B_{2^{-n}}(0)) does not depend on n.
+  - The ratio is a.s. in (0,1]: positivity needs I1, and finiteness of mu_h(B_1(0)) needs alpha0 < Q. Choose m with
+    P[G_n] >= 1 - zeta/8 (eq:doubling-prob, 2173).
+  - Lemma 6.7 at x0 = 0 with p = 1 - zeta/8 (2177). Its hypothesis dist(A_{rho/4,2rho}(0), {0}) = rho/4 >= rho/100 holds. This
+    gives eq:harnack-prob; a union bound gives eq:doubling-and-harnack-prob (q >= 1 - zeta/4).
+  - Stationarity of (1_{G_n cap E-bar_n})_n (2184): needs D10(b),(c).
+  - Birkhoff's pointwise ergodic theorem (2187) gives a.s. and L^1 convergence of the Cesaro means. The limit is measurable for
+    the intersection over eps > 0 of sigma(h|_{B_eps(0)}), by D10(a). That sigma-algebra is trivial (DMS21 Lemma 7.2 analogue,
+    G31), so the limit equals q.
+  - Cesaro means on [N+1, 2N] tend to 2q - q = q >= 1 - zeta/2 (2203).
+- Uses: Lemma 6.7 (2177), Fact 2.1 (2165), D3 (eq:h-coordinate-change), D10. Implicit: I1.
+- Lit: Birkhoff pointwise ergodic theorem (uncited). It is not in Mathlib, which has only Birkhoff sums
+  (Mathlib/Dynamics/BirkhoffSum/) and the mean ergodic theorem (Analysis/InnerProductSpace/MeanErgodic.lean:47). DMS21 Lemma 7.2:
+  tail triviality, printed for a free-boundary GFF only.
+- Consumed by: Lemma 8.2 (2220, with alpha0 = gamma); Lemma 11.7 proof (2879: "carry out the proof of Lemma 8.3" with Lemma 11.8
+  in place of eq:doubling-and-harnack-prob); Lemma 11.13 proof (3151, "similar argument"). The proof is used as a template three
+  times. Suggested Lean factorisation: for events E_n in sigma(h|_{B_{2^{-n+1}}(0)}), invariant under additive constants and
+  scale-covariant, a.s. (1/N) #{n <= N : E_n} -> P[E_0].
+- Issues: G30, G31; S 2170 (m = m(alpha, zeta, gamma)).
+- Deps: 2.1, 6.7
 
 ## Section 9
 
 ### 9.1 Lemma (lemma:obstacle-comp, 2285): ObstacleComparisonStmt
 - Proof: 2295-2313. The proof is complete, so no External is needed: kind is "cited" in the inventory, but Lean can prove it.
-  - (1): -G_{B_R}(.,x) is in the subharmonic test class (nu = -delta_x, O = B_R, which contains closure(A)); then use symmetry of G.
+  - (1): -G_{B_R}(.,x) is in the subharmonic test class (nu = -delta_x, O = B_R, which contains closure(A)); then use symmetry of
+    G.
   - (2): G_{B_R}(.,x) for x in B_R \ A is in the class eq:harmonic-fns (nu = delta_x supported in O \ A). This needs the enlarged
     class when x is on the boundary of A.
 - Lit: SS13b Thm 2.1; Sak84.
 - Uses: D1, D5, Prop 2.3 (implicit), I4 (symmetry).
 - Consumed by: Prop 9.2 (2321), Lemma 9.3 (2351, 2367).
 - Issues: G13 ("strictly contained" lacks "in B_R" at 2286; the test function takes the value -infinity at x).
+- Deps: 2.3
 
 ### 9.2 Prop (prop:sub-harmonic-ball-uniqueness, 2316): SubharmonicBallUniquenessStmt
 - Proof: 2320-2324.
-  - Lemma 9.1(1) and (2) (2321): for (2), a subharmonic ball satisfies equality for G_{B_R}(.,x), x not in A, by taking nu = +-delta_x.
+  - Lemma 9.1(1) and (2) (2321): for (2), a subharmonic ball satisfies equality for G_{B_R}(.,x), x not in A, by taking nu =
+    +-delta_x.
   - f - t G_{B_R}(z,.) lies in S^{B_R;z}_t, using Prop 2.5 for continuity; minimality of lambda gives f >= v.
 - Consumed by: none ("We do not use Proposition 9.2", 2327).
 - Issues: F5 (the conclusion is stronger than what the proof shows); G15.
+- Deps: 2.5, 9.1, 3.4 (implicit), 8.1 (implicit, G15)
 
 ### 9.3 Lemma (lemma:contains-boundary, 2336): HarmonicBallBoundarySubsetStmt
 - Proof: 2340-2383.
-  - Enlarge R so that Lambda-hat_t(z) is compactly inside B_R; Thm 5.5 (2343) identifies Lambda-hat_t(z) with the regularised cluster
-    in B_R, a subharmonic ball of mass t.
-  - Auxiliary u, eq:auxiallary-function (2345). Step 1: u >= 0, by Lemma 9.1(2) for A, Lemma 9.1(1) for Lambda-hat, and the minimum principle on A.
+  - Enlarge R so that Lambda-hat_t(z) is compactly inside B_R; Thm 5.5 (2343) identifies Lambda-hat_t(z) with the regularised
+    cluster in B_R, a subharmonic ball of mass t.
+  - Auxiliary u, eq:auxiallary-function (2345). Step 1: u >= 0, by Lemma 9.1(2) for A, Lemma 9.1(1) for Lambda-hat, and the
+    minimum principle on A.
   - Step 2: u = 0 off both sets, by Lemma 9.1(2) for both. Step 3: the strong minimum principle and I1.
 - Uses: Lemma 9.1, Thm 5.5, Prop 2.5 (continuity of u, implicit), I1, I4.
 - Consumed by: Prop 5.6 (2426).
 - Issues: none beyond F1. Under the corrected test class, A is compactly inside B_R, so O = B_R is admissible.
+- Deps: 2.5, 5.5, 9.1
 
 ### 9.4 Lemma (lemma:regular-open-ae, 2394): RegularOpenEqOfAEEqStmt
 - Proof: 2399-2409, a topological argument plus I1. Only the regularity of Y is needed to get X \ Y empty.
 - Consumed by: Prop 5.6 (2417).
 - Issues: none. This is pure measure topology: a deterministic lemma for any measure of full support.
+- Deps: none (numbered)
+
+## Section 10 (boundary curves)
+
+### 10.1 Lemma (lemma:cannot-cross, 2496): ClusterBoundedCrossingsStmt
+- Proof: 2504-2544.
+  - Prop 6.1 (second part) and Borel-Cantelli over eps = 2^{-n} (2505-2507). A.s., for n >= M_0, every grid point
+    x0 in (B_{1+eps} \ B_{10 sqrt eps}) cap (eps/100) Z^2 has some rho in [eps, eps^{1/2}] with E-bar_rho(x0).
+  - Choose a grid point x0 with |x0 - w| < eps/50. Then eq:annulus-grid-contains (2513) gives B_rho(x0) subset B_{2rho}(w).
+    *Implicit*: B_{rho/3}(w) subset B_{rho/2}(x0).
+  - The contrapositive of Prop 6.2 is eq:harnack-contrapositive (2520). Every crossing component of Lambda cap B_{2rho}(w) has
+    mass > alpha mu_h(A_{rho/2,rho}(x0)) in A_{rho/2,rho}(x0), by eq:harnack-type-contrapositive-consequence (2531). The
+    components are disjoint, so there are at most K = ceil(1/alpha) of them (2539-2542). If mu_h(A_{rho/2,rho}(x0)) = 0,
+    Prop 6.2 directly gives no crossing at all.
+- Uses: Prop 6.1, second part (2505); Prop 6.2 (2519); Lemma 3.2 (open and connected, 2515); Prop 4.1 (z in Lambda, 2515);
+  local finiteness of mu_h (Fact 2.1); D2 (Borel-Cantelli from polynomially high probability); D4; D12 (crossing).
+  - Prop 6.2 is needed simultaneously for all t > 0 and z in B_1 on one a.s. event.
+- Lit: none.
+- Consumed by: Prop 10.6 (2636, 2657), Prop 10.7 (2690); text 307, 2489, 2581, 2583.
+- Issues: G32 (Prop 6.2 hypotheses never checked: w near the boundary of B_1, centre z near w; eps not dyadic;
+  form of the contrapositive). S: "z in C" (2498).
+- Deps: 6.1, 6.2, 3.2, 4.1, 2.1
+
+### 10.2 Definition (2550): -
+- Content: a loop (arc) is the image of a continuous map from the unit circle T (from an arc of T). It is a simple loop
+  (simple arc) if the map is also injective. "Jordan curve" in Thm 1.2 means simple loop.
+- Lean: Mathlib has no simple-closed-curve or Jordan-curve predicate (grep "Jordan curve", "simple closed curve": no hits).
+  - Suggested: Gamma = Set.range phi with phi : Circle -> C continuous (`Circle`, Mathlib/Analysis/Complex/Circle.lean:54),
+    plus `Function.Injective phi` for "simple". Equivalently `Topology.IsEmbedding phi`
+    (Mathlib/Topology/Defs/Induced.lean:147), because Circle is compact and C is Hausdorff.
+  - `AddCircle` (Mathlib/Topology/Instances/AddCircle/Defs.lean:189) is an alternative parametrisation.
+  - A simple arc: phi continuous and injective on [0,1] (unitInterval).
+- Used by: Lemma 10.5 (simple arcs, 2597-2603), Prop 10.6, Prop 10.7, Thm 1.2 (Jordan part).
+- Issues: S, cosmetic. The arc parameters alpha <= zeta <= beta at 2552 clash with the Harnack exponent alpha of Lemma 10.1.
+
+### 10.3 Definition (2560): -
+- Content: X subset C is locally connected if every relative neighbourhood of each x in X contains a connected relative
+  neighbourhood of x.
+- Lean: `LocallyConnectedSpace X` on the subtype (Mathlib/Topology/Connected/LocallyConnected.lean:35).
+  `locallyConnectedSpace_iff_connected_subsets` (same file:100) is the printed form verbatim:
+  forall x, forall U in nhds x, exists V in nhds x, IsPreconnected V and V subset U.
+- Used by: Def 10.4; Prop 10.6, Step 1 (2635-2657) and Step 2 (2661).
+
+### 10.4 Definition (2566): -
+- Content: for A compact, connected and locally connected, a point a in A is a cut point if A \ {a} is not connected.
+- Lean: no Mathlib notion (grep CutPoint: no hits). Suggested: `not (IsPreconnected (A \ {a}))`.
+  Do not use `IsConnected`: it includes non-emptiness, so A = {a} would make a a cut point.
+- Used by: Prop 10.6, Step 2 (2663-2680). The Lean route can avoid cut points altogether (fix of G35).
+
+### 10.5 Lemma (lemma:crossing-connected, 2585): CrossingComponentContainsClusterCrossingStmt
+- Proof: 2591-2618 (Figure fig:crossing-argument).
+  - The filling C' of a crossing component C of U^c cap A is claimed to be a topological rectangle, with two sides on the circles
+    and two sides in Gamma (2593-2595).
+  - Poincare-Miranda dichotomy (Kul97, 2597-2598): either a simple arc in Lambda cap C' joins the circles, or a simple arc in
+    Lambda^c cap C' joins the two Gamma-sides.
+  - The second case is refuted. The arc P is a crosscut of int(U^c), which splits it into G_0 and G_1 (Pom92 Prop 2.12, 2605).
+    Both G_j are claimed to meet Lambda (2609-2611), contradicting connectedness (2612-2617).
+- Uses: Lemma 3.2 (connected, 2612); D12 (crossing, 2582-2583); Def 10.2 (simple arcs).
+- Lit: Kul97 (Poincare-Miranda, 2598); Pom92 Prop 2.12 (2605).
+- Consumed by: Prop 10.6 (2653); text 2575.
+- Issues: G33. S at 2586: "simply connected component of closure(Lambda)^c". The unbounded component is simply connected
+  only in the Riemann sphere, and every bounded component is automatically simply connected because closure(Lambda) is connected.
+- Deps: 3.2, 10.2
+
+### 10.6 Prop (prop:boundary-simple-loop, 2622): ComplementComponentBoundarySimpleLoopStmt
+- Proof: 2626-2681.
+  - Reduction (2632): Gamma = boundary U is a simple loop if Gamma is locally connected and has no cut points. This is cited as
+    "Caratheodory's theorem" (Pom92 Thm 2.6) but in fact combines Pom92 Thm 2.1, Prop 2.5 and Thm 2.6.
+  - Step 1 (2635-2657). If Gamma is not locally connected, then U^c is not either (Pom92 Thm 2.1, 2639).
+    - Boundary bumping (2646) is claimed to give, for all small rho, infinitely many components of U^c cap B_{2rho}(p) that
+      cross A_{rho/3,2rho}(p) (2648-2651).
+    - Lemma 10.5 (2653) gives each of them a crossing component of Lambda cap A. This contradicts Lemma 10.1 (2657).
+  - Step 2 (2660-2680). Take a Riemann map psi : B_1 -> U; it extends continuously to closure(B_1) (Pom92 Thm 2.1, 2661).
+    - A cut point a has #psi^{-1}(a) >= 2, and the components of Gamma \ {a} are the psi(I) (Pom92 Prop 2.5, 2663).
+    - Homotopy in the sphere minus {centre, y} (2670-2674): one of psi(closure I), psi(closure J) separates Lambda from U.
+      This contradicts that points of psi(J) are accumulation points of both (2676-2679).
+- Uses: Lemma 10.1 (2636, 2657); Lemma 10.5 (2653); Lemma 3.2 (connected, 2677); Defs 10.2-10.4.
+  - *Implicit*: Prop 4.1. The centre z lies in Lambda, so Gamma is at positive distance from it. This is needed by the
+    repaired Lemma 10.1.
+  - *Implicit*: I10 (Riemann mapping, 2660); I11 (boundary bumping 2646, separation by winding number 2670-2676).
+- Lit: Pom92 Thm 2.6 (2632), Thm 2.1 (2639, 2661), Prop 2.5 (2663).
+- Consumed by: text 308 only. *Implicit*: Prop 10.7, whose proof cites Lemma 10.1 but needs this proposition; Thm 1.2 through
+  10.7.
+- Issues: F7 ("B_1 \ closure(Lambda)": false for the outer component); G34 (Step 1); G35 (Step 2).
+  S at 2641, 2651/2657, 2664, 2670-2677.
+- Deps: 10.1, 10.5, 3.2, 4.1, 10.2, 10.3, 10.4
+
+### 10.7 Prop (prop:boundary-simple-loop-full-cluster, 2684): HarmonicBallComplementBoundaryJordanStmt
+- Proof: 2689-2691, one sentence: "Lemma 5.7 together with Lemma 10.1, a union bound, and the relation between Lambda-hat_t and
+  {Lambda^{B_r}_t} given in Theorem 5.5". The intended route:
+  - Lambda-hat_t(z) is bounded by Thm 1.1(b) (via Thm 5.5), so Lambda-hat_t(z) Subset B_s for some s.
+  - Thm 5.5 gives Lambda-hat_t(z) = int(closure Lambda^{B_r;z}_t) for r >= s. Hence closure(Lambda-hat_t(z)) =
+    closure(Lambda^{B_r;z}_t), because closure(int(closure X)) = closure X for X open (Lemma 3.2). So the complementary
+    components coincide, and Lambda^{B_r;z}_t Subset B_r for r > s.
+  - Lemma 5.7 rescales B_r-clusters into B_1-clusters of h' = h(r.) - h_r(0), which has the law of h. Apply Prop 10.6
+    (C-version, see F7) to h' for each integer r, then take a union over r.
+- Uses: Lemma 5.7 (2690), Lemma 10.1 (2690), Thm 5.5 (2691). *Implicit*: Prop 10.6 (needed, not cited); Lemma 3.2 (open);
+  Thm 1.1(b) (bounded).
+- Lit: none.
+- Consumed by: no \ref. *Implicit*: Thm 1.2, Jordan part (outline 306-309).
+- Issues: G36; F7 (the unbounded component needs the C \ closure version of Prop 10.6); G11 (laws of families).
+- Deps: 5.5, 5.7, 10.1, 10.6, 3.2, 1.1
+
+## Section 11 (novelty: not Lipschitz, not LQG-metric balls)
+
+### 11.1 Definition (def:lipschitz, 2712): -
+- Content: a non-empty connected open A is a Lipschitz domain if every x0 in boundary A has r > 0 and a Lipschitz f: R -> R with,
+  after a rigid change of axes, A cap B_r(x0) = {z in B_r(x0) : Im z > f(Re z)}. The display at 2718 writes U for A (slip).
+- Lean: no counterpart (grep LipschitzDomain|ConeCondition over Mathlib, .lake/packages, HarmonicBalls: none). Build it from
+  `LipschitzWith` (Mathlib/Topology/EMetricSpace/Lipschitz.lean:60), `IsConnected` (Mathlib/Topology/Connected/Basic.lean:55),
+  `frontier`, and a rigid motion `ℂ ≃ₗᵢ[ℝ] ℂ` about x0.
+- Used by: Prop 11.2 (statement; proof 2951: in rotated coordinates the cones {Im w > L|Re w|} and {Im w < -L|Re w|} with
+  R = r give the cone condition); Thm 1.2 (statement).
+
+### 11.2 Prop (prop:not-balls, 2724): HarmonicBallNotLipschitzStmt
+- Statement: a.s., Lambda-hat_t is not a Lipschitz domain for Lebesgue-a.e. t > 0. Here `\regcluster{}{t}` (empty superscript)
+  is Lambda-hat_t(0) of Thm 5.5.
+- Proof: 2932-2952.
+  - eq:mass-times (2934): mu_h({z : z in boundary Lambda-hat_t for some t in A}) = Leb(A) for measurable A. Intervals come from
+    mu_h(closure Lambda-hat_b \ Lambda-hat_a) = b - a (Thm 5.5); general A by "the standard machine" (2937, 2944). See G37.
+  - Apply this to A = {t : the cone condition holds at every point of boundary Lambda-hat_t}, with Lemma 11.5.
+  - Lipschitz domain => cone condition at every boundary point (2951, "easily"; correct).
+- Uses: Lemma 11.5; Thm 5.5 (mu_h(Lambda-hat_t) = t, mu_h(boundary) = 0, monotonicity in t); Defs 11.1, 11.4. Implicitly
+  (repair): right-continuity of t -> closure Lambda-hat_t (Prop 5.2 via Thm 5.5) and Prop 5.3.
+- Lit: none.
+- Consumed by: Thm 1.2 (outline 311-314); Prop 11.11 proof (3215: "by the exact same argument as in the beginning of the proof of
+  Prop 11.2", i.e. eq:mass-times).
+- Issues: G37.
+- Deps: 11.1, 11.4, 11.5, 5.5, 5.3, 5.2
+
+### 11.3 Definition (-, 2730): -
+- Content: a cone is Q = {c v + d w : c, d > 0} (non-empty, open, proper; extremal directions v, w), and complements of cones
+  are cones. Q(z) := Q + z. Cones are dilation invariant (2734).
+- Lean: Mathlib `ConvexCone` (Mathlib/Geometry/Convex/Cone/Basic.lean:60) is algebraic (no openness). Suggest the explicit open
+  sector {c • v + d • w | 0 < c, 0 < d} with v, w R-linearly independent. Drop the complements: every reflex sector contains a
+  convex one, so the cone condition is unchanged (see slip 2731).
+- Used by: Def 11.4, eq:mu-h-wild (2793), Lemmas 11.5, 11.7, 11.8.
+
+### 11.4 Definition (def:cone-condition, 2737): -
+- Content: for a domain A and z in boundary A, the interior (exterior) cone condition at z means: there are R > 0 and a cone Q
+  with Q(z) cap B_R(z) subset A (subset A^c). The cone condition is both.
+- Lean: none in Mathlib. Define it for open sets: connectedness is never used.
+- Used by: Lemma 11.5 (statement; proof 2916-2924), Prop 11.2 (2948-2951).
+
+### 11.5 Lemma (lemma:no-exterior-cone-condition, 2754): NoConeConditionStmt
+- Statement: a.s., for mu_h-a.e. z in C and every t > 0 with z in boundary Lambda-hat_t, Lambda-hat_t fails the cone
+  condition at z. The null set does not depend on t.
+  - The label says "exterior", but the conclusion is "not (interior and exterior)". The proof uses the interior cone in
+    full; the exterior cone only supplies a point of Lambda-hat_t^c in A_{4r,5r}(z).
+- Proof: 2897-2925.
+  - Take M = 2C, with C from Lemma 11.6. Lemma 11.7 for the countably many rational cones, then for all cones by
+    inclusion (slip 2902: the inclusion is reversed).
+  - For large n with G~_n(z;M,Q), r = 2^-n: the interior cone gives mu_h(A_{r,2r}(z) cap Lambda-hat_t) >= M SG_{3r,6r}(z)
+    > C SG_{3r,6r}(z). Strictness needs SG > 0.
+  - The contrapositive of Lemma 11.6 then gives A_{4r,5r}(z) subset Lambda-hat_t. The exterior cone contradicts this.
+- Uses: Lemma 11.6, Lemma 11.7, Defs 11.3-11.4. Implicitly: 0 < SG < infinity (1137, from Prop 2.5 and I1);
+  mu_h({0}) = 0 (so z != 0).
+- Lit: none.
+- Consumed by: Prop 11.2 (2951); outline (313); text 3212 (Prop 11.11 copies the strategy).
+- Issues: slips 2902, 2906, 2912.
+- Deps: 11.3, 11.4, 11.6, 11.7, 2.5, 2.1
+
+### 11.6 Lemma (lemma:harmonic-comparison-chain, 2764): AnnulusMassBoundByHarmonicChainStmt
+- Statement: there is a universal C such that for r > 0 and z with 0 not in closure B_{10r}(z): if
+  A_{4r,5r}(z) cap Lambda-hat_t^c is non-empty, then mu_h(A_{r,2r}(z) cap Lambda-hat_t) <= C SG_{3r,6r}(z).
+  - t is free and "a.s." is missing; read "a.s., for all t, r, z".
+  - SG_{3r,6r}(z) is eq:alternate-size-2-full with (rho, s1, s4) = (r, 3, 6). The reference to eq:alternate-size-2 at 2772
+    is a slip.
+- Proof: 2775-2788, a four-step chain:
+  - Thm 5.5: Lambda-hat_t = int(closure Lambda^{B_R;0}_t) for all large R, so Lambda^{B_R}_t subset Lambda-hat_t.
+    The a.e. equality (2780) also needs mu_h(boundary Lambda^{B_R}_t) = 0 (Prop 5.3 scaled; implicit).
+  - Lemma 6.8 with (0.5, 1, 2, 4); the centre 0 is not in A_{0.5r,4r}(z).
+  - Maximum principle on B_{4r}(z): v^{B_R}_t is subharmonic on B_{10r}(z) (2784). This needs Lemma 3.2 (Delta v =
+    mu_h|_Lambda + nu off 0, with nu >= 0, G1) and upper semicontinuity (Lemma 4.2 on B_R).
+  - Lemma 6.10 with (3, 4, 5, 6). Its hypothesis Lambda^c cap A_{4r,5r}(z) != empty follows from Lambda subset Lambda-hat.
+    Passing from the circle boundary B_{4r}(z) to the open annulus A_{4r,5r}(z) uses lower semicontinuity of v.
+  - Lemmas 6.8 and 6.10 are used on B_R "verbatim" (2777). R must also satisfy A_{0.5r,6r}(z) subset B_R.
+- Uses: Thm 5.5, Lemma 6.8, Lemma 6.10. Implicitly: Lemma 3.2 (with G1), Lemma 4.2, Prop 5.3 (8.1) scaled to B_R.
+- Lit: none.
+- Consumed by: Lemma 11.5 (2898, 2906), Prop 11.11 proof (3218, 3229); outline (311).
+- Issues: G38; G1; slip 2772.
+- Deps: 5.5, 6.8, 6.10, 3.2, 4.2, 5.3
+
+### 11.7 Lemma (lemma:mu_h-bad-and-harnack, 2802): ManyConeBadScalesStmt
+- Statement: for a cone Q and M > 0 there is delta = delta(M) in (0,1) such that a.s., for mu_h-a.e. z in C and each large N
+  (depending on z), #{n in [N+1,2N] : G~_n(z;M,Q)} >= delta N.
+  - delta depends on (M, Q, gamma) (slip 2803).
+  - G~_r(z;M,Q) = {mu_h(A_{r,2r}(z) cap Q(z)) >= M SG_{3r,6r}(z)} (eq:mu-h-wild, 2793) is in sigma(h|_{A_{r,6r}(z)}) and is
+    invariant under h -> h + c.
+- Proof: 2875-2891, by reference to Section 8.
+  - At z = 0: rerun the proof of Lemma 8.3 with Lemma 11.8 in place of eq:doubling-and-harnack-prob. Ingredients:
+    stationarity from eq:h-coordinate-change, the Birkhoff ergodic theorem, tail triviality (DMS21 Lemma 7.2 "similar").
+    The limit frequency is q = P[G~_n(0)] >= p_M, so delta = p_M/2.
+  - Lemma 8.3 does not use Lemma 6.5, so the small probability p_M is harmless. Lemma 6.5 would need p close to 1.
+  - Then transfer to mu_h-a.e. z in B_1 by the proof of Lemma 8.2: rooted measure (DMS21 Lemma A.10); the origin case with
+    alpha0 = gamma; absolute continuity near the root; locality (G~_n(z) in sigma(h|_{B_{6*2^-n}(z)}) replaces
+    eq:doubling-locality).
+  - Finally pass to all of C by scaling: cones are dilation invariant, and the dyadic shift changes the count by O(1).
+- Uses: Lemma 11.8; Lemmas 8.2 and 8.3 (their proofs); Fact 2.1 (Weyl scaling, coordinate change, locality);
+  eq:h-coordinate-change.
+- Lit: DMS21 Lemmas 7.2 and A.10, through Lemmas 8.2-8.3 (see the Section 8 entries).
+- Consumed by: Lemma 11.5 (2901); Lemma 11.13 proof (3153).
+- Issues: inherits the issues of Lemmas 8.2-8.3 (proof by reference); slip 2803.
+- Deps: 11.8, 8.2, 8.3, 2.1
+
+### 11.8 Lemma (lemma:positive-probability, 2809): ConeBadEventProbabilityStmt
+- Statement: for a cone Q and M > 0 there is p_M in (0,1) with P[G~_n(z;M,Q)] >= p_M for all z with
+  dist(A_{2^-n, 6*2^-n}(z), {0}) > 2^-n/100 and all n >= N(z). N(z) is undefined and superfluous (slip 2810).
+- Proof: 2821-2872.
+  - Step 1 (alpha0 = 0). G~ is invariant under adding constants, so eq:gff-scaling reduces to r = 1, z = 0. The bump phi
+    equals gamma^-1 log(M C2/C1) on A_{1,2} and 0 off A_{0.5,2.5}; it vanishes on A_{3,6}, so SG is unchanged. Then Weyl
+    scaling and MS17 Prop 2.9.
+  - eq:l-and-r-bounds (2843) needs mu_h(A_{1,2} cap Q) > 0 a.s. (I1) and SG_{3,6} < infinity a.s. (Prop 2.5, 1137).
+  - Step 2 (alpha0 < Q). mu_h = |.|^{-gamma alpha0} mu_{h^C}. On A_{r,6r}(z) with dist > r/100, max|x|/min|x| <= 1201.
+    So C = 1201^{-gamma|alpha0|}, not universal (slip 2865). Apply Step 1 to h^C with M/C.
+- Uses: Fact 2.1 (Weyl scaling, locality); eq:gff, eq:gff-scaling; Prop 2.5 (SG finite); I1.
+- Lit: MS17 Prop 2.9 (2850).
+- Consumed by: Lemma 11.7 (2879).
+- Issues: slips 2810, 2836, 2865. If M C2/C1 < 1 the "non-negative" bump is negative: harmless, Weyl scaling holds for any sign.
+- Deps: 2.1, 2.5
+
+### 11.9 Prop (prop:mass-diam-gen, 2959): SmallMetricDiameterLargeMassStmt
+- Statement: let U subset V subset W be bounded connected open sets with closure V subset W and W cap boundary B_1 = empty.
+  For C > eps > 0, with positive probability, sup_{u,v in V} D_h(u,v;W) <= eps and mu_h(U) >= C.
+- Proof: 3051-3080.
+  - Dyadic S1 subset int S2, S2 subset U; Lemma 11.10 with eps/2.
+  - An open O with closure(V\S2) subset O and closure O subset W\S1 (3057-3059; correct since S1 subset int S2).
+  - A deterministic A bounding the D_h(.,.;O)-diameter of V\S2 (3061). This uses Fact 2.2 I and the connectedness of V\S2:
+    true (a closed square does not separate a domain), unproved in print; alternatively take O connected.
+  - Subtract (phi/xi) log(2A/eps), with phi = 1 on O and 0 off W\S1, hence 0 on S1 and on boundary B_1. Then Weyl scaling.
+  - Triangle inequality through a point of boundary S2 cap closure(V\S2): eps/2 + eps/2, correct here. It extends the O-bound to
+    closure(V\S2) by continuity of D_h(.,.;O). Finally MS17 Prop 2.9.
+- Uses: Lemma 11.10; Fact 2.1 (Weyl scaling); Fact 2.2 (I, III, and II implicitly); eq:internal-metric.
+- Lit: MS17 Prop 2.9 (3078).
+- Consumed by: no proof cites it, only the outline (318) and text 2967-2969. Lemma 11.16 (3428) uses Lemma 11.10 directly (via
+  eq:use-gff-markov and MS16 Prop 3.4). Candidate "unused".
+- Issues: G40; slip 3067.
+- Deps: 11.10, 2.1, 2.2
+
+### 11.10 Lemma (lemma:mass-diam, 2979): SmallMetricDiameterLargeMassSquareStmt
+- Statement: for closed dyadic squares S1 subset S2 with S2 cap boundary B_1 = empty and C > eps > 0, with positive
+  probability, sup_{u,v in S2} D_h(u,v;S2) <= eps and mu_h(S1) >= C.
+  - The internal metric is on a closed set; eq:internal-metric (427) is stated for open U, but the same formula is meant.
+- Proof: 2986-3048.
+  - P[mu_h(S1) >= 4C] > 0 by a bump on S1 and absolute continuity (2999-3007; I1 for mu_h(S1) > 0). phi must vanish on
+    boundary B_1, which is possible since S1 cap boundary B_1 = empty.
+  - The maximum over S in S_N of the D_h(.,.;S-hat cap S2)-diameter of S-hat cap S2 tends to 0 in probability (DFGPS20
+    Lemma 3.19 with a union bound over about 4^N squares, 3011-3015). The cited tail must beat the union bound.
+  - Pigeonhole over the four parity classes S_N^i (3017-3020). G = S2 \ union S-hat is connected (3022-3024, asserted; true,
+    since the S-hat are 3*2^{-N-2} apart).
+  - The D_h(.,.;closure G)-diameter is a.s. finite (DFGPS20 Lemma 3.9, 3026).
+  - Subtract (phi/xi) log(2A/eps), with phi = 1 on closure G and 0 on boundary B_1 and on the squares S (3029-3036). Then
+    Weyl scaling, the triangle inequality (3041, see G39) and MS17 Prop 2.9 (3047).
+- Uses: Fact 2.1 (Weyl scaling); Fact 2.2 (I length metric, III Weyl scaling); I1; eq:internal-metric.
+- Lit: DFGPS20 Lemma 3.19 (3012) and Lemma 3.9 (3026); MS17 Prop 2.9 (3047, and implicitly 3005).
+- Consumed by: Prop 11.9 (3052, 3066); Lemma 11.16 proof (3428).
+- Issues: G39; G40; slips 3000, 3017, 3022.
+- Deps: 2.1, 2.2
+
+### 11.11 Prop (prop:not-metric-balls, 3091): HarmonicBallNotMetricBallStmt
+- Proof: 3214-3253.
+  - Reduction (3215-3216), "exact same argument as in the beginning of the proof of Prop 11.2" (eq:mass-times, 2934-2945): it
+    suffices that a.s., for mu_h-a.e. z, no Lambda-hat_t equals an LQG metric ball with z on its boundary. See G37.
+  - M = C, the universal constant of Lemma 11.6 (3218). For z where Lemma 11.13 holds, take n large with G-hat_n(z; C) and
+    0 not in B_{10r}(z), r = 2^{-n} (3220-3222).
+  - Lemma 11.14 (3223): Q'_r(z) subset B^c and U_r(z) subset T_r(z) subset B, so
+    mu_h(A_{r,2r}(z) cap B) > C SG_{3r,6r}(z), eq:not-metric-balls-mass (3225-3227).
+  - Contrapositive of Lemma 11.6, eq:large-mass-implies-full-2 (3229-3232): if B = Lambda-hat_t then A_{4r,5r}(z) subset
+    Lambda-hat_t, which contradicts Q'_r(z) subset A_{4r,5r}(z) cap B^c (Q' non-empty).
+- Uses: Lemma 11.13, Lemma 11.14, Lemma 11.6; the argument of Prop 11.2 (eq:mass-times, through Thm 5.5: mu_h(Lambda-hat_t) = t,
+  and the right-continuity of Prop 5.2); Fact 2.2; D6, D15.
+- Lit: none directly. GM20a is cited only in the caption of Figure fig:geodesic-decomp (3206): "not needed for our proofs".
+- Consumed by: Thm 1.2 (*implicit*, outline 316-317; no `\ref`). Thm 1.2 (171-172) takes the intersection of the a.s. events of
+  Prop 11.2 and Prop 11.11 and the union of their two Lebesgue-null exceptional t-sets. "Lambda_t(0) constructed in Theorem 1.1"
+  is the regularised cluster Lambda-hat_t of Thm 5.5 (D6).
+- Issues: G41, G42, G37. Scope (alpha0): Thm 1.2 and Prop 11.11 are stated for every alpha0 < Q (132, 373),
+  but Lemma 11.12 is proved for alpha0 = 0 only, and Lemma 11.13 needs the case alpha0 = gamma (G41). So the alpha0 = 0
+  restriction matches neither the scope of Prop 11.11 nor what its proof needs.
+  Centre: Prop 11.11 and Thm 1.2 say "an LQG-metric ball", but Lemma 11.14 and the proof treat only B_u(0; D_h). The proof extends
+  verbatim to every centre w: run Lemma 11.14 with 0 replaced by w, assuming w not in B_{10r}(z). Since z in boundary B_u(w)
+  forces z != w, a large n works, and the good set of z from Lemma 11.13 does not depend on w. For Lean: quantify over all centres
+  w in C and all radii u > 0, with open balls (Lambda-hat_t is open).
+- Deps: 2.2, 5.2, 5.5, 11.2, 11.6, 11.13, 11.14 (5.2, 5.5, 11.2: argument of the proof of Prop 11.2 reused)
+
+### 11.12 Lemma (lemma:mu_h-pinch-positive-probability, 3136): PinchEventPositiveProbabilityStmt
+- Proof: 3291-3321. By Lemma 11.17 it suffices to prove the inclusion
+  eq:events-inclusion (3295): E~1 cap E~2(M) cap E~3 subset G-hat_1(0; M).
+  - First inequality of G-hat: the first inequality of E~1, and internal metric >= D_h (3300-3303).
+  - Second inequality: the triangle inequality across the circles boundary B_{delta0}, B_{2 delta0}, B_{3 delta0}, then
+    eq:ball-inclusion (3306-3319). Here T subset (T \ B_{3delta0}(W)) cup V cup (B_{3delta0}(W) \ V). These three pieces are
+    pairwise disjoint, so the bound diam(T) <= sum of the three diameters needs a chain through shared closure points. Those are
+    points of T cap boundary B_{3delta0}(W) and of boundary V, so the step needs T to be connected and not inside B_{3delta0}(W).
+    This is *implicit*.
+  - Third inequality: the second inequality of E~2(M).
+- Uses: Lemma 11.17 (and through it Lemmas 11.16, 11.15); Fact 2.2 (internal metrics, continuity); D15.
+- Lit: none.
+- Consumed by: Lemma 11.13 proof (3151).
+- Issues: G41 (alpha0 = 0 only); G42 (with local G-hat, E~1 must be cut down to B_6); slips at 3137, 3306, 3316.
+  The proofs of 11.12 and 11.15-11.17 never use alpha0 = 0.
+- Deps: 2.2, 11.17
+
+### 11.13 Lemma (lemma:mu_h-pinch-bad, 3144): ManyPinchScalesStmt
+- Proof: 3150-3154, by reference only.
+  - At z = 0, by "an argument similar to the proof of Lemma 8.3" (2163-2207). The sequence (1_{G-hat_n(0)})_n is stationary, by
+    eq:h-coordinate-change and Facts 2.1-2.2: under coordinate change and constants, the three inequalities of G-hat are
+    homogeneous, and SG is linear in mu_h. Then Birkhoff's theorem and tail triviality (the DMS21 Lemma 7.2 analogue) give the
+    a.s. limit P[G-hat_1(0)] > 0 (Lemma 11.12). Take delta = P/2.
+  - To mu_h-a.e. z, by "the exact same argument outlined in the proof of Lemma 11.7" (2875-2893), that is, the proof of
+    Lemma 8.2 (2209-2227): the rooted measure (DMS21 Lemma A.10), locality as in eq:doubling-locality, absolute continuity
+    near Z~ (MS17 Prop 2.9), and the origin statement **with alpha0 = gamma** (2219). Scaling then extends B_1 to C.
+- Uses: Lemma 11.12; the arguments of Lemmas 8.3, 8.2 and 11.7; Facts 2.1-2.2 (coordinate change, Weyl scaling, locality);
+  D3 (eq:h-coordinate-change); D15.
+- Lit: DMS21 Lemma 7.2 (tail triviality; through 8.3, 2192); DMS21 Lemma A.10 (rooted measure; through 8.2, 2213);
+  MS17 Prop 2.9 (through 8.2, 2219); Birkhoff ergodic theorem (2188, standard).
+- Consumed by: Prop 11.11 proof (3218, 3220).
+- Issues: G41, G42. The statement is for the general field (any alpha0 < Q), for mu_h-a.e. z in C.
+- Deps: 2.1, 2.2, 8.2, 8.3, 11.7, 11.12 (8.2, 8.3, 11.7: proofs reused by reference)
+
+### 11.14 Lemma (lemma:geometric-event-consequence, 3160): PinchEventMetricBallConsequenceStmt
+- Proof: 3165-3201. Deterministic, given the a.s. properties of D_h (Fact 2.2).
+  - z in boundary B_u gives D_h(0,z) = u (B_u is open, and D_h is continuous).
+  - Step 1 (3171-3183). Take a geodesic from 0 to closure Q'_r(z); it exists by BBI01 Cor 2.5.20, as recalled at 459-462. It
+    crosses boundary B_{5r}(z) at q1 and then boundary Q_r(z) at q2, and reaches Q' at q3. The first inequality of G-hat and the
+    triangle inequality give D_h(0, Q'_r(z)) > u.
+  - Step 2 (3185-3200). Take z1 in boundary B_{5r}(z) on a geodesic from 0 to z. Since boundary B_{5r}(z) subset boundary T_r(z),
+    z1 lies in closure T_r(z), and the sup over T_r(z) extends to its closure by continuity (*implicit*). The second inequality
+    of G-hat gives D_h(0,y) < u for y in T_r(z).
+- Uses: Fact 2.2 (length metric, geodesics, continuity); D15. M plays no role.
+- Lit: BBI01 Cor 2.5.20 (indirectly, through 462).
+- Consumed by: Prop 11.11 proof (3223).
+- Issues: none in the statement. With the fix of G42 (internal metrics of B_{6r}(z) in G-hat) the proof is unchanged,
+  because internal metrics dominate D_h.
+- Deps: 2.2
+
+### 11.15 Lemma (lemma:first-event-proof, 3277): PinchFirstEventPositiveStmt
+- Proof: 3326-3385, by adding a bump function.
+  - eq:stuff-finite (3330-3339) has positive probability: four a.s. positive, finite quantities. D_h(0, boundary B_{delta0/2})
+    in (0, infinity) needs only alpha0 < Q.
+  - h~ = h + (phi1/xi) log(K1 K2) + (phi2/xi) log K2, with K1 = 2C2/C1 v 1 and K2 = 2C4/C3 v 1. By Weyl scaling (Fact 2.2),
+    E~1 holds for h~: eq:first-event-pf1, eq:weyl-scaling-leak, eq:first-event-pf2 (3360-3381). This uses phi1 + phi2 = 0 on
+    B_{delta0}(T) and phi1 = 0 off B_{2delta0}(Q cup W).
+  - MS17 Prop 2.9 (3383): h and h~ are mutually absolutely continuous modulo additive constant, and E~1 is invariant under
+    adding constants.
+- Uses: Fact 2.2 (Weyl scaling, locality, positivity and finiteness of distances); D15.
+- Lit: MS17 Prop 2.9.
+- Consumed by: Lemma 11.16 (*implicit*, 3399: "P[E~1] > 0").
+- Issues: slips at 3362-3363 and 3368. alpha0 = 0 is not used.
+- Deps: 2.2
+
+### 11.16 Lemma (lemma:second-event-proof, 3281): PinchSecondEventPositiveStmt
+- Proof: 3391-3449, via the domain Markov property.
+  - MS17 Prop 2.8 (3392): h = h0 + varphi on W, with h0 a zero-boundary GFF on W, varphi harmonic on W, and the two independent.
+    The term -alpha0 log|.| is harmonic on W, since 0 is not in W.
+  - eq:stuff-finite-2 (3401-3406) holds with positive probability jointly with E~1 (Lemma 11.15, *implicit* at 3399).
+  - Locality (Facts 2.1-2.2, 3416-3421): E~1 and eq:stuff-finite-2 depend on h off B_{2delta0}(W), while
+    eq:large-mass-low-diam (3410-3414) depends on h0|_{B_{delta0}(V)} and varphi.
+  - MS16 Prop 3.4 (3425): the conditional law of h|_{B_{delta0}(V)} given h|_{W^c} is mutually absolutely continuous to the
+    marginal law. Together with "Lemma 11.10" (3428; Prop 11.9 is needed) this gives positive conditional probability.
+  - By Weyl scaling, eq:large-mass-low-diam cap eq:stuff-finite-2 subset E~2(M) (3436-3448).
+- Uses: Lemma 11.15 (*implicit*); Lemma 11.10 as printed (Prop 11.9 needed); Facts 2.1-2.2 (locality, Weyl scaling);
+  Prop 2.5 (*implicit*: SG is finite and positive, 1140); D15, I14.
+- Lit: MS17 Prop 2.8; MS16 Prop 3.4.
+- Consumed by: Lemma 11.17 proof (3464).
+- Issues: G43; slips at 3420, 3421, 3428, 3441, 3446.
+- Deps: 2.1, 2.2, 2.5, 11.9, 11.15
+
+### 11.17 Lemma (lemma:third-event-proof, 3285): PinchThirdEventPositiveStmt
+- Proof: 3456-3514, by a bump function that lowers the metric around B_{3delta0}(W) \ V.
+  - eq:stuff-finite-3 (3467-3472) holds with positive probability jointly with E~1 cap E~2(M) (Lemma 11.16).
+  - h~ = h + (phi/xi) log(C2/C1 ^ 1). By Weyl scaling, E~3 holds for h~ (3477-3483).
+  - E~1 and E~2(M) survive (3485-3513): the metric only decreases, and phi = 0 on closure B_{2delta0}, closure Q, U and A_{3,6}.
+  - MS17 Prop 2.9 (3486), and the events are invariant under adding constants.
+- Uses: Lemma 11.16; Facts 2.1-2.2 (Weyl scaling, locality); D15.
+- Lit: MS17 Prop 2.9.
+- Consumed by: Lemma 11.12 proof (3293).
+- Issues: G44; slip at 3488.
+- Deps: 2.1, 2.2, 11.16
 
 ## Appendix A (deterministic: a Radon measure mu with eq:volume-growth)
 
@@ -305,6 +1188,7 @@ Properties of q_{B_R} (3537-3541):
   - Step 3, continuity: Poisson modification on B_delta(x0) and the super-mean-value property.
 - Consumed by: Lemma 3.1 (3588), Lemma A.2 (3666); implicitly Lemmas A.3 and A.6.
 - Issues: G2 (Step 3 fails at x0 = 0, where beta_t = -infinity).
+- Deps: none (numbered)
 
 ### A.2 Lemma (lemma:appendix-non-coincedence-open-harmonic, 3652): ObstacleNonCoincidenceHarmonicStmt
 - Proof: 3656-3725.
@@ -314,16 +1198,19 @@ Properties of q_{B_R} (3537-3541):
     implicitly, for the part of the boundary on the circle.
 - Consumed by: Lemma 3.2 (3651), Lemma A.5 (3795).
 - Issues: G1 (it proves only Delta s~ = 0 on Lambda; the nu-decomposition used later does not follow).
+- Deps: A.1, A.4
 
 ### A.3 Lemma (lemma:appendix-monotonicity, 3731): ObstacleMonotoneStmt
 - Proof: 3734-3765. s~ := s~_{t2} + (t2 - t1) G(0,.) is a competitor for t1.
 - Consumed by: Lemma 3.3 (3730).
-- Issues: minor gap. s~ has a +infinity pole at 0, so it is not in S~_{t1} (a subset of the continuous functions on the closed disc),
-  contrary to 3763. It is admissible in eq:lsc-leastsuperharmonic, and f_t = s~_t by Lemma A.1, so the argument survives.
+- Issues: minor gap. s~ has a +infinity pole at 0, so it is not in S~_{t1} (a subset of the continuous functions on the closed
+  disc), contrary to 3763. It is admissible in eq:lsc-leastsuperharmonic, and f_t = s~_t by Lemma A.1, so the argument survives.
+- Deps: A.1
 
 ### A.4 Lemma (lemma:appendix-zero-boundary, 3772): ObstacleOdometerZeroBoundaryStmt
 - Proof: 3776-3784 (the line that carries the argument is 3777). On the circle, s~ is squeezed between beta_t = 0 and q = 0.
 - Consumed by: Lemma A.5 (3795), Lemma 3.4; implicitly Lemmas A.2 and A.6.
+- Deps: none (numbered)
 
 ### A.5 Lemma (lemma:appendix-conservation-of-mass, 3788): ObstacleConservationOfMassStmt
 - Proof: 3792-3828.
@@ -331,33 +1218,38 @@ Properties of q_{B_R} (3537-3541):
   - Weak normal derivative: Pon16 Prop 7.3, eq:weak-integration-by-parts (3806).
   - Sign of the normal derivative: Pon16 Lemma 12.15.
   - The normal derivative is classical and zero when closure(Lambda) is inside B_1.
-- Consumed by: Lemma 3.4 (3769). The intermediate identity t = mu(Lambda) + nu(boundary Lambda) (3822-3825) is needed in the repair of Prop 4.1 (G3).
+- Consumed by: Lemma 3.4 (3769). The intermediate identity t = mu(Lambda) + nu(boundary Lambda) (3822-3825) is needed in the
+  repair of Prop 4.1 (G3).
 - Issues: G1 (mu(Lambda) <= t uses nu >= 0); S1 (mu_h for mu at 3790).
+- Deps: A.2, A.4
 
 ### A.6 Lemma (lemma:appendix-cluster-compatibility, 3851): ObstacleCompatibilityStmt
 - Proof: 3856-3895.
-  - eq:monotonicity-domains (3862): v^{B_{r1}} <= v^{B_{r2}}, via the competitor w-hat. G_{r1}(0,.) - G_{r2}(0,.) is constant, so w-hat is continuous.
+  - eq:monotonicity-domains (3862): v^{B_{r1}} <= v^{B_{r2}}, via the competitor w-hat. G_{r1}(0,.) - G_{r2}(0,.) is constant, so
+    w-hat is continuous.
   - Reverse inequality: v^{B_R} - v^{B_{s1}} is subharmonic on Lambda^{B_R} (uses nu <= mu only) and <= 0 on its boundary.
 - Uses: eq:laplacian-of-v-general (3840), Prop 2.3 (Delta G = -delta), the maximum principle.
 - Consumed by: Lemma 3.5 (3832), Lemma 5.8 (by extension).
 - Issues: none of substance. The off-centre version (z instead of 0) is "verbatim".
+- Deps: 2.3, A.1, A.4
 
 ## Issues
 
 ### F: printed statement false or not established as printed
 
-- **F1. Test class of Thm 1.1, 139-146 ("for some O with Lambda(z) subset closure(O)").** The class admits an O with a slit inside Lambda.
-  Take O = B_R \ S with S a closed segment in Lambda \ {z}, y in O \ closure(Lambda), and f2 = G_O(.,y), which lies in the
+- **F1. Test class of Thm 1.1, 139-146 ("for some O with Lambda(z) subset closure(O)").** The class admits an O with a slit inside
+  Lambda. Take O = B_R \ S with S a closed segment in Lambda \ {z}, y in O \ closure(Lambda), and f2 = G_O(.,y), which lies in the
   class H~_O(Lambda).
   - The odometer identity t G(z,.) - G mu|_Lambda = v (Lemma 4.3) gives t f2(z) - int_Lambda f2 dmu_h = int_S v dsigma, where
     sigma = -Delta f2|_S <= 0 is non-zero (f2 > 0 on O and f2 = 0 on S). Also v > 0 on Lambda.
   - So the quantity is < 0: the mean-value property fails. With the literal class no cluster is a harmonic ball, and existence in
     Thm 1.1 is false. The same holds already for Lebesgue measure and a disc.
   - The remark at 753-754 ("the same as eq:sub-harmonic-potential with nu|_Lambda = 0") is also false for such O.
-  - Fix: require closure(Lambda(z)) subset O, as at 749 ("O ... containing a neighborhood of the closure"), and nu of compact support
-    in O. Sec 9 only uses O = B_R with A compactly inside B_R (2302-2309, 2351), so uniqueness survives.
+  - Fix: require closure(Lambda(z)) subset O, as at 749 ("O ... containing a neighborhood of the closure"), and nu of compact
+    support in O. Sec 9 only uses O = B_R with A compactly inside B_R (2302-2309, 2351), so uniqueness survives.
 - **F2. Lemma 2.4 exponent range (498).** Exact scaling (Fact 2.1 III-IV, eq:h-coordinate-change) gives
-  mu_h(B_eps(0)) = eps^{gamma(Q-alpha0)} e^{gamma h^C_eps(0)} mu_{h~}(B_1), with h~ of the law of h and h^C_eps(0) ~ N(0, log 1/eps).
+  mu_h(B_eps(0)) = eps^{gamma(Q-alpha0)} e^{gamma h^C_eps(0)} mu_{h~}(B_1), with h~ of the law of h and h^C_eps(0) ~ N(0, log
+  1/eps).
   - So log mu_h(B_eps(0)) / log eps -> gamma(Q-alpha0) in probability.
   - Since gamma(Q-alpha0) < (2-gamma)^2/2 iff alpha0 > 2, and gamma(Q-alpha0) > (2+gamma)^2/2 iff alpha0 < -2, the upper bound
     (resp. lower bound) of eq:ball-volume fails at z=0 with probability -> 1 for every beta+ in (gamma(Q-alpha0), (2-gamma)^2/2)
@@ -365,39 +1257,70 @@ Properties of q_{B_R} (3537-3541):
   - The Oct-15 pointer proposes beta+ < min{(2-gamma)^2/2, gamma(Q-alpha0)} and beta- > max{(2+gamma)^2/2, gamma(Q-alpha0)}.
     That is consistent at z=0, but uniformity near 0 is not re-derived here.
   - Every downstream beta± inherits the change: Lemma 4.2, Sec 6, Prop 7.2 (2027) and App A.
-- **F3. Lemma 4.2, "alpha = alpha(gamma)" (717, 722).** The exponent cannot be uniform in alpha0. Near 0, lambda is minus a potential
-  of mu_h, and its oscillation on B_r(0) is at least about mu_h(B_{r/2}(0)), which is roughly r^{gamma(Q-alpha0)} by F2. So the Hoelder
-  exponent is at most gamma(Q-alpha0), which tends to 0 as alpha0 rises to Q. This is a heuristic, not a full proof.
-  Fix: alpha = alpha(gamma, alpha0) > 0.
+- **F3. Lemma 4.2, "alpha = alpha(gamma)" (717, 722).** The exponent cannot be uniform in alpha0. Near 0, lambda is minus a
+  potential of mu_h, and its oscillation on B_r(0) is at least about mu_h(B_{r/2}(0)), which is roughly r^{gamma(Q-alpha0)} by F2.
+  So the Hoelder exponent is at most gamma(Q-alpha0), which tends to 0 as alpha0 rises to Q. This is a heuristic, not a full
+  proof. Fix: alpha = alpha(gamma, alpha0) > 0.
 - **F4. Prop 5.4 (853-856).** "for all r > 0" binds nothing, and T is unbound.
-  - If T is the uniform T of Prop 5.1, the statement makes the exit time inf{t : closure(Lambda^z_t) meets the boundary of B_1} equal
-    to T for every z in B_{1/2}. That is false in the deterministic analogue (Lebesgue measure: the exit time is pi(1-|z|)^2) and is
-    not proved for mu_h.
+  - If T is the uniform T of Prop 5.1, the statement makes the exit time inf{t : closure(Lambda^z_t) meets the boundary of B_1}
+    equal to T for every z in B_{1/2}. That is false in the deterministic analogue (Lebesgue measure: the exit time is
+    pi(1-|z|)^2) and is not proved for mu_h.
   - If T = T(z), the statement is fine, but the proof of Thm 5.5 (952-958) uses a T^{(k)} uniform over centres. See G6.
-- **F5. Prop 9.2 (2317).** The proof (2320-2323) gives only Lambda^{B_R;z}_t subset A, not int(closure(Lambda^{B_R;z}_t)) subset A.
+- **F5. Prop 9.2 (2317).** The proof (2320-2323) gives only Lambda^{B_R;z}_t subset A, not int(closure(Lambda^{B_R;z}_t)) subset
+  A.
   - With A = Lambda^{B_R;z}_t itself (a subharmonic ball by Lemma 4.3 when it is compactly inside B_R and mu_h(boundary)=0), the
     printed claim forces Lambda = int(closure Lambda), which the paper never proves.
   - Fix: conclude Lambda^{B_R;z}_t subset A, or assume A = int(closure A). The result is unused (2327).
+- **F6. Lemma 6.13 (1710-1712): "an annulus A_{rho/2,rho}(x0) not containing z" is too weak.**
+  - The proof uses that v 1_{Lambda-tilde} is subharmonic on B_rho(x0) (1777, 1806-1808; max principle on B_{d_j}(x0)). This fails
+    if z is in B_{rho/2}(x0): Delta v has the atom -t delta_z.
+  - Counterexample: z = x0, (VG-iii) occurs (positive probability, Lemma 6.7), and t slightly above
+    tau = inf{t : Lambda_t not inside B_{rho/2}(z)}. Then Lambda-tilde = Lambda_t (connected, Lemma 3.2), and
+    Lambda_t \ B_{rho/2}(z) is a non-empty thin collar inside A_{rho/2,d^+_{j+1}}(x0). By the continuity of clusters (Props 5.2,
+    7.2) and mu_h(boundary B_{rho/2}) = 0, its mass is <= K_j in every annulus, so the hypothesis holds.
+  - Both suprema in eq:low-mass-small-odometer are then taken over the same set. They are positive and finite, and the factor
+    b^{C' C3 (N0+j)} < 1 forces them to vanish. This contradicts v > 0 on Lambda_t.
+  - Also, Lemma 6.9 needs A_{3r,5r}(w) subset B_1, which the printed hypothesis does not give.
+  - Fix: assume closure(B_rho(x0)) subset B_1 \ {z}, as in the only consumer, Lemma 6.11 (1574). With it, the printed proof works.
+
+- **F7. Prop 10.6 (2623-2624): "each of the connected components of B_1 \ closure(Lambda_t(z)) has a boundary that is a
+  simple loop".**
+  - Since closure(Lambda) subset B_1, the outer component U_out of B_1 \ closure(Lambda) has boundary containing all of
+    boundary B_1 and also a point of boundary Lambda. These are disjoint non-empty compact sets, so boundary U_out is
+    disconnected and not a simple loop. The printed statement is false for every t and z in its scope.
+  - The proof (2627) works instead with the components of closure(Lambda)^c = C \ closure(Lambda).
+  - Fix: "C \ closure(Lambda_t(z))". The bounded components agree with those of the printed statement (they lie in the convex
+    hull of closure(Lambda), inside B_1). The unbounded component is exactly what Prop 10.7 needs (unbounded component of
+    C \ closure(Lambda-hat_t)).
+  - For that component, every step must be done in the Riemann sphere: Lemma 10.5's "simply connected", the map
+    psi : B_1 -> U at 2660, and Pom92 (stated for bounded domains). Apply x -> 1/(x - z).
 
 ### G: proof gaps (statement plausibly true)
 
-- **G1 (central).** nu >= 0 in Lemma 3.2 (630-633), eq:laplacian-of-v (3797-3803) and eq:laplacian-of-v-general (3840-3846).
-  - Lemmas A.1 and A.2 give only Delta s~ <= 0 on B_1 and Delta s~ = 0 on Lambda. Hence nu = (Delta s~ + mu)|_{boundary Lambda} <= mu.
-  - nu >= 0 is the Lewy-Stampacchia bound Delta s~ >= -mu on B_1 \ {0}. Neither it nor the inverse maximum principle is cited (I5),
-    and "this together with Lemma A.1 implies Lemma 3.2" (3650-3651) skips it.
+- **G1. nu >= 0 in Lemma 3.2 (630-633), eq:laplacian-of-v (3797-3803) and eq:laplacian-of-v-general (3840-3846).** The printed
+  proofs skip it. It has a short repair that uses only the paper's own argument at 1418-1421 (found while checking Lemma 6.10).
+  - Lemmas A.1 and A.2 give only Delta s~ <= 0 on B_1 and Delta s~ = 0 on Lambda. "This together with Lemma A.1 implies
+    Lemma 3.2" (3650-3651) does not give nu = (Delta s~ + mu)|_{boundary Lambda} >= 0, i.e. Delta s~ >= -mu on B_1 \ {0}.
   - It is used for mu(Lambda) <= t (3821, 3827) and for |density| <= 1 in Lemma 4.2.
-  - Missing ingredient, to be supplied as a paper-owned proof or a proposed External: for a continuous obstacle psi with
-    Delta psi = t delta_0 - mu, the least superharmonic majorant s~ satisfies -mu <= Delta s~ on B_1 \ {0}.
+  - Repair (I7 with U = B_1 \ {z} and Lambda-hat = Lambda).
+    - The odometer v >= 0 is continuous on closure(B_1) \ {z} (Lemma A.1 / Lemma 3.1), Lambda = {v > 0}, and
+      Delta v = mu on Lambda \ {z} (Lemma A.2). So v is subharmonic on Lambda \ {z}.
+    - Where v = 0 the sub-mean-value inequality holds trivially, since v >= 0.
+    - By the local characterisation of subharmonicity (AG01 Thm 3.2.2, cited at 3672), v is subharmonic on B_1 \ {z}.
+    - Hence Delta v = Delta s~ + mu >= 0 there, and nu = (Delta v)|_{boundary Lambda} >= 0.
+    - The Lewy-Stampacchia input I5 is not needed. The same argument works for the general measure mu of Appendix A.
 - **G2. Lemma A.1 Step 3 (3626-3628).** "beta_t(x) + eps/2 >= beta_t(y) for all x,y in B_delta(x0)" is false at x0 = 0, where
   beta_t(0) = -infinity. Fix: on B_delta(0), beta_t <= sup q + (t/2pi) log delta < 0 <= f_t (Step 1), so the Poisson
   modification stays admissible.
-- **G3. Prop 4.1, last claim (711-712).** Lemma 3.4's equality case requires mu_h(boundary Lambda) = 0, which is not available. Fix:
-  if closure(Lambda) is inside B_1, the identity from the proof of A.5 (3822-3825) gives t = mu_h(Lambda) + nu(boundary Lambda), so
-  t <= mu_h(closure Lambda) < mu_h(B_1) by I1. Hence t >= t^+ = mu_h(B_1) forces closure(Lambda) to meet the boundary of B_1.
-- **G4. Lemma 4.2 (730-733).** A constant C uniform in t and z needs a quantitative Prop 2.5: Hoelder seminorm <= C(h) ||f||_infty.
+- **G3. Prop 4.1, last claim (711-712).** Lemma 3.4's equality case requires mu_h(boundary Lambda) = 0, which is not available.
+  Fix: if closure(Lambda) is inside B_1, the identity from the proof of A.5 (3822-3825) gives t = mu_h(Lambda) + nu(boundary
+  Lambda), so t <= mu_h(closure Lambda) < mu_h(B_1) by I1. Hence t >= t^+ = mu_h(B_1) forces closure(Lambda) to meet the boundary
+  of B_1.
+- **G4. Lemma 4.2 (730-733).** A constant C uniform in t and z needs a quantitative Prop 2.5: Hoelder seminorm <= C(h)
+  ||f||_infty.
 - **G5. Lemma 4.3 proof (781-786).** The proof replaces int_O G_O(.,x) dnu(x) by an integral over Lambda.
-  - For nu charging O \ Lambda one needs t G_O(z,.) - int_Lambda G_O(y,.) mu_h(dy) = v on all of O (v extended by 0). Both sides have
-    Laplacian -t delta_z + mu_h|_Lambda and vanish on the boundary of O, since closure(Lambda) is inside O.
+  - For nu charging O \ Lambda one needs t G_O(z,.) - int_Lambda G_O(y,.) mu_h(dy) = v on all of O (v extended by 0). Both sides
+    have Laplacian -t delta_z + mu_h|_Lambda and vanish on the boundary of O, since closure(Lambda) is inside O.
   - Then int v dnu <= 0 because v = 0 off Lambda.
   - "v(z) dnu(x)" at 785 should be v(x); "Delta q(z)" at 776 should be Delta q(x).
 - **G6. Thm 5.5 proof.**
@@ -405,29 +1328,378 @@ Properties of q_{B_R} (3537-3541):
   - (b) "compactly embedded in closure(B_{k/2})" (957) is unjustified; scaling Prop 5.1 gives B_k.
   - (c) "the times A_k T^{(k)} are increasing in k" (968) and "using that T^{(k)} is increasing in k" (1004-1005) are unjustified:
     T^{(k)} is a lower bound uniform over centres, built from the rescaled field. Fix: use the exit times
-    tau_k(z) = sup{t : closure(Lambda^{B_k;z}_t) subset B_k}. These are non-decreasing in k by Lemma 3.5, and tau_k(z) >= A_k T^{(k)}
-    for z in B_{k/2}. Then limsup_k A_k T^{(k)} = infinity a.s. (from eq:positive-io and A_k -> infinity) is enough.
-  - (d) The drift of the geometric BM (1003) omits alpha0: A_{e^t} = exp(gamma((Q - alpha0) t + B_t)). A_k -> infinity still holds since alpha0 < Q.
-- **G7. Thm 1.1(b), "increase continuously in t (in the Hausdorff topology)" (157).** Props 5.2 and 7.2 give right-continuity only.
-  Left-continuity is never stated. Short repair: if x is in Lambda_t but not in closure(union_{s<t} Lambda_s), a small ball around x
-  has positive mass (I1) and misses that union, contradicting mu_h(Lambda_t) = t = lim mu_h(Lambda_s).
+    tau_k(z) = sup{t : closure(Lambda^{B_k;z}_t) subset B_k}. These are non-decreasing in k by Lemma 3.5, and tau_k(z) >= A_k
+    T^{(k)} for z in B_{k/2}. Then limsup_k A_k T^{(k)} = infinity a.s. (from eq:positive-io and A_k -> infinity) is enough.
+  - (d) The drift of the geometric BM (1003) omits alpha0: A_{e^t} = exp(gamma((Q - alpha0) t + B_t)). A_k -> infinity still holds
+    since alpha0 < Q.
+- **G7. Thm 1.1(b), "increase continuously in t (in the Hausdorff topology)" (157).** Props 5.2 and 7.2 give right-continuity
+  only. Left-continuity is never stated. Short repair: if x is in Lambda_t but not in closure(union_{s<t} Lambda_s), a small ball
+  around x has positive mass (I1) and misses that union, contradicting mu_h(Lambda_t) = t = lim mu_h(Lambda_s).
 - **G8. Prop 5.6 proof (2432-2434).** "As the family {A_t} continuously decreases to {z}": hypothesis (b) only gives
   cap_t A_t = {z} for open sets, which does not yield B subset complement of A_{s0}. Fix:
-  - The boundary of A_s lies in closure(Lambda-hat_s(z)) (Lemma 9.3), which is inside B_delta(z) for small s (Prop 5.2 scaled, or Thm 5.5).
+  - The boundary of A_s lies in closure(Lambda-hat_s(z)) (Lemma 9.3), which is inside B_delta(z) for small s (Prop 5.2 scaled, or
+    Thm 5.5).
   - The complement of closure(B_delta(z)) is connected and A_s is bounded, so A_s is inside closure(B_delta(z)).
-- **G9. Lemma 5.8 (1016-1025).** "extend essentially verbatim to ... any bounded open set": for irregular U, G_U and q_U need not be
-  continuous up to the boundary, and the class S^U (continuous functions on closure U) and the Appendix boundary arguments (A.4,
-  A.5) use the ball. Fix: state Lemma 5.8 for smooth (or regular) bounded U. Prop 1.3 then follows by exhausting U with smooth U_n.
-- **G10. Prop 2.5 and App A instantiation.** "Finiteness follows immediately from Lemma 2.4" (534), and "this follows from Lemma 2.4 and
-  the scaling properties" (3529-3530). Both need I2: an a.s., all-scales, all-centres version on closure(O) or B_R, obtained by
-  Borel-Cantelli over dyadic scales and eq:h-coordinate-change. Not written.
-- **G11. Lemma 5.7.** "The laws of the families coincide" needs a measurable structure on families of sets (e.g. Hausdorff metric on
-  closures, or the families as functions of h). The pathwise identity is what is actually used.
-- **G12. Prop 5.2 scope.** It is stated for every t > 0, but the cited Prop 7.2 (2104) needs Lambda^z_t compactly inside B_1. For later t
-  (after the cluster touches the boundary of B_1) continuity is unproved. Only t < T is used downstream.
-- **G13. Lemma 9.1 (2286).** "a domain strictly contained" lacks "in B_R". The subharmonic test function -G_{B_R}(.,x) takes the value
-  -infinity, whereas eq:sub-harmonic-potential asks for real values (746).
+- **G9. Lemma 5.8 (1016-1025).** "extend essentially verbatim to ... any bounded open set": for irregular U, G_U and q_U need not
+  be continuous up to the boundary, and the class S^U (continuous functions on closure U) and the Appendix boundary arguments
+  (A.4, A.5) use the ball. Fix: state Lemma 5.8 for smooth (or regular) bounded U. Prop 1.3 then follows by exhausting U with
+  smooth U_n.
+- **G10. Prop 2.5 and App A instantiation.** "Finiteness follows immediately from Lemma 2.4" (534), and "this follows from Lemma
+  2.4 and the scaling properties" (3529-3530). Both need I2: an a.s., all-scales, all-centres version on closure(O) or B_R,
+  obtained by Borel-Cantelli over dyadic scales and eq:h-coordinate-change. Not written.
+- **G11. Lemma 5.7.** "The laws of the families coincide" needs a measurable structure on families of sets (e.g. Hausdorff metric
+  on closures, or the families as functions of h). The pathwise identity is what is actually used.
+- **G12. Prop 5.2 scope.** It is stated for every t > 0, but the cited Prop 7.2 (2104) needs Lambda^z_t compactly inside B_1. For
+  later t (after the cluster touches the boundary of B_1) continuity is unproved. Only t < T is used downstream.
+- **G13. Lemma 9.1 (2286).** "a domain strictly contained" lacks "in B_R". The subharmonic test function -G_{B_R}(.,x) takes the
+  value -infinity, whereas eq:sub-harmonic-potential asks for real values (746).
 - **G15. Prop 9.2 proof (2323).** mu_h(Lambda-hat^{B_R;z}_t) = t needs Prop 8.1 scaled to B_R and Lemma 3.4. Neither is cited.
+- **G16. Measurability of E_r(z) and E-bar_rho(x0) (1117-1123, 1157).**
+  - The problem. E_r(z) quantifies over all Borel Y in A = A_{3r,5r}(z) with mu_h(Y) <= a mu_h(A), an uncountable family. The
+    paper asserts E_r(z) in sigma(h|_A) (1123) but never shows it. Lemma 6.5 needs measurable events, and Lemmas 6.3, 6.4, 6.6
+    and 6.7 compute probabilities. In Mathlib, P of a non-measurable set is an outer measure.
+  - Fix. Let phi(Y) := sup_u P[B^u stays in Y until it exits A], u on the circle boundary(B_{4r}(z)). It is deterministic
+    (standard BM, independent of h) and monotone in Y.
+    - Outer regularity of mu_h: inf{mu_h(Y) : Y Borel, phi(Y) > b} equals the infimum over open Y in A.
+    - Inner approximation of an open Y by interiors of finite unions of dyadic squares: tau_{Y_n} increases to tau_Y, by
+      compactness of path segments. So a countable family suffices.
+    - With the convention "every open Y in A with mu_h(Y) < a mu_h(A) has phi(Y) <= b", the event is {I >= a mu_h(A)} for a
+      measurable I. It lies in sigma(h|_A modulo constants), and the proof of Lemma 6.4 still applies.
+  - Downstream, the sets Y have the form (component of the cluster) cap (annulus), which are open (Lemma 3.2). The uses in Lemmas
+    6.9, 6.11 and 6.13 take Y a union of components of Lambda cap (ball or annulus), open by Lemma 3.2; check this in the Lean
+    statements.
+
+- **G17. Lemma 6.6 proof (1370-1383): spacing hypothesis of Lemma 6.5.**
+  - The problem. With rho in {8^{-n}}, consecutive annuli A_{rho/4,2rho}(x0) touch: 2 rho_{k+1} = rho_k/4. Writing them as
+    A_{s1 R, s2 R} forces s2/s1 = 8. With s2 < 1 this gives s1 < 1/8 = rho_{k+1}/rho_k, against the hypothesis
+    r_{k+1}/r_k <= s1 of Lemma 6.5 (1263). Lemma 6.5 cannot be applied as claimed.
+  - Fix. Apply Lemma 6.5 to even and odd n separately (spacing 1/64 <= s1 = 1/16, s2 = 1/2), or to every second n. Only c
+    changes. Lemma 6.3 is fine: with ratio 1/7 and aspect 5/3, take s1 = 3/7, s2 = 5/7.
+
+- **G18. Quantifier on C_3 in the combination for Props 6.1-6.2 (1593-1595).**
+  - The problem. Lemma 6.6 (and 6.7) produce "a universal C_3" (from c of Lemma 6.3). Lemma 6.11 as stated asserts "there exists
+    a universal C_3 and b = b(gamma)" (1569). The two existential C_3 need not match. (VG-iii) is monotone in C_3, so the
+    combination needs C_3(6.6) >= C_3(6.11).
+  - Fix. The proof of Lemma 6.11 takes C_3 as given (1830) and sets b := 2^{-2 beta^-/((C' C_3) v 1)} (1909). So Lemma 6.11
+    holds for every C_3 > 0 with b = b(gamma, C_3). State it that way. The C_3 of Lemma 6.6 does not depend on b, so the order
+    C_3 -> b -> a, C^pm -> N_1 -> N_0 -> alpha is consistent.
+  - Same issue, from Lemma 6.11: The quantifier on C3 in Lemma 6.11 (1568), and the assembly at 1594.
+    - Lemma 6.11 is printed as "there exists a universal C3 and b = b(gamma)". Its proof takes C3 > 0 as given (1830) and
+      defines b from it (eq:choice-of-b, 1916).
+    - Lemmas 6.6/6.7 produce their own universal C3. (VG-iii) is monotone in C3 (a larger C3 is a stronger event).
+    - So "combine Lemma 6.6 and Lemma 6.11" needs C3(6.6) >= C3(6.11), which the existential statements do not give.
+    - Fix: state Lemmas 6.11 and 6.13 for every C3 > 0, with b = b(gamma, C3) and N1 depending also on C3. The proof gives this
+      form. Prop 8.1 (2231, 2253) relies on the same form.
+
+- **G19. Step 1 of Lemma 6.4 (1203-1215), reused in Lemma 6.7 Step 1 for (VG-iii) (1344-1345).**
+  - (i) The implication at 1211-1213 is in the wrong direction. E_r(z; a, b)[h] requires every Y with small mu_h-ratio to have
+    small mu_{h^C}-ratio. The correct choice is a := (C_1/C_2) a', not (C_2/C_1) a'. As printed a >= a' and may exceed 1, while
+    the lemma claims a in (0,1).
+  - (ii) The factor |z|^{-alpha0 gamma} at 1206-1210 is meaningless for |z| <~ r. For example z = 0 is admissible, since
+    dist(A_{3r,5r}(0), 0) = 3r. Use instead the ratio sup/inf of |x|^{-alpha0 gamma} over the annulus, which is at most
+    1500^{|alpha0| gamma} under the hypothesis dist >= r/100.
+  - (iii) The constants C_1, C_2 (1205) and A_1, A_2 (1327) depend on alpha0 as well as gamma. So a = a(b, p, gamma, alpha0),
+    and the same holds for every constant downstream (alpha of Prop 6.1, cf. F3). The statements are true after these repairs.
+
+- **G20. Lemma 6.4 Step 2: scope of the LBM inputs (1223-1229).**
+  - GRV16 Prop 2.19 is for the whole-plane massive GFF, and the paper invokes GRV16 Sec 9 for "the massless GFF in a finite
+    domain". The field here is the normalised whole-plane GFF h^C near A_{3,5}(0), which is neither of these. The bridge is not
+    stated: Markov decomposition of h^C on K into a zero-boundary GFF plus an independent harmonic function, and Weyl scaling on
+    compact subsets.
+  - "Ordinary LBM and reflected LBM coincide until the first exit from A_{3,5}(0)" identifies GRV's LBM with Kigami's reflected
+    LBM (Prop 2.6) up to that exit. This needs both to be time changes of (reflected) BM by the same PCAF; this is not argued.
+  - The uniformity in u (the existence of T) needs the Dini/Portmanteau step recorded in the entry.
+  - Lean: an External with exact scope. For h^C, a.s., for every bounded open U, the law of LBM started at u and stopped on
+    exiting U is weakly continuous in u in U, and it agrees in law with the reflected LBM of a square containing closure(U), up to
+    that exit.
+
+- **G21. Lemma 6.7 Step 2 (1349-1350, 1361): reduction to (rho, x0) = (1, 0).**
+  - The lattice (eps rho/100)Z^2 in (VG-iii) is not centred at x0. So E-bar_rho(x0) is not the image of E-bar_1(0) under
+    w -> rho w + x0, and P[E-bar_rho(x0)] may depend on the offset x0/rho modulo (eps/100)Z^2.
+  - Fix. Prove the (1, 0) case for every lattice offset. The union bound of Lemma 6.3 holds uniformly over any family of
+    O(eps^{-2}) centres in B_{1+eps} minus B_{10 sqrt(eps)}, so state Lemma 6.3 for every translate of the lattice. Alternatively,
+    define (VG-iii) with the lattice x0 + (eps rho/100)Z^2.
+  - Downstream (Lemmas 6.11 and 6.13) uses only that the grid is (eps rho/100)-dense in A_{rho/2,rho}(x0). Check this; if so,
+    either fix is harmless.
+
+- **G22. Lemma 6.11 base case (1898-1900).** "By Lemma 6.10, sup_{A_{rho/2,rho}(x0)} v <= c S_rho(x0)" uses S_rho(x0) =
+  S_rho(x0;1/4,2) (eq:alternate-size-2), i.e. Lemma 6.10 with s4 = 2. That needs A_{rho/4,2rho}(x0) subset B_1 \ {z}, while the
+  hypothesis is only closure(B_rho(x0)) subset B_1 \ {z}.
+  - As printed the inequality is false when dist(z, B_rho(x0)) -> 0 with x0, rho fixed: v >= lambda + t G(z,.) blows up near z,
+    and the right side does not depend on z.
+  - Fix:
+    - apply Lemma 6.10 with (s1,s2,s3,s4) = (1/4,1/2,7/8,1). Only sup v over Lambda-tilde cap A_{rho/2,d^+_0}, with
+      d^+_0 < 7rho/8, is used, and S_rho(x0;1/4,1) <= S_rho(x0) by domain monotonicity of G (Prop 2.3).
+    - The zero of v in A_{rho/2,7rho/8}: if that annulus were inside Lambda, then Lambda-tilde would contain B_{rho/8}(y) with
+      |y-x0| = 11rho/16, so mu_h(Lambda-tilde cap A_{rho/2,rho}) >= 8^{-beta^-} M_rho >= 8^{-beta^-} C1^- mu_h(A_{rho/2,rho}).
+      This exceeds alpha mu_h(A_{rho/2,rho}) for the corrected alpha = a 2^{-N0 beta^-} (C1^- ^ 1) once N0 >= 3.
+    - This also replaces the step "A cap Lambda-tilde^c nonempty" (1895), which is the wrong set for Lemma 6.10.
+
+- **G23. Lemma 6.13 exponent (1717, 1741, 1808-1809).**
+  - (VG-iii) gives at least C3 log_7 eps_j^{-1/2} radii, and Step 3 gives the factor b^{N-1}.
+  - b^{N-1} <= b^{C' C3 (N0+j)} with C' universal needs N - 1 >= C' C3 (N0+j). This fails when C3 log_7 2^{(N0+j)/2} < 2, where
+    N <= 1 and the factor is 1. N0 >= 200 does not exclude this for small C3.
+  - Fix: N := ceil(C3 log_7 eps_j^{-1/2}), C' = ln 2 / (4 ln 7), and N0 >= max(200, 12/C3). Lemma 6.11 can afford this, since
+    N1 may depend on the universal C3.
+
+- **G24. Lemma 6.9 for a general open A (1459-1508).** "f_A = 1 on boundary A cap Lambda" (1474) holds only at regular
+  boundary points of A, so the maximum-principle argument is incomplete for irregular A.
+  - The statement remains true. Optional stopping for the bounded submartingale v(B_{s ^ tau}), tau the exit time of Lambda^x_t,
+    gives v(x) <= E[v(B_tau)] <= (sup v) P[B_tau in boundary A]. Alternatively use the extended maximum principle (irregular
+    points are polar, Kellogg).
+  - The only consumer, Lemma 6.13, uses annuli, where all boundary points are regular.
+
+- **G25. Component mismatch in the proofs of Lemmas 6.11 and 6.13 (1772, 1834-1836, 1842).** The statements take
+  Lambda-tilde to be a connected component of Lambda cap B_rho(x0), with conclusion Lambda-tilde cap closure(B_{rho/2}(x0)) empty.
+  - The proof of Lemma 6.11 switches to "a connected component of Lambda cap A_{rho/2,rho}(x0) with closure meeting the boundary
+    of B_rho(x0)", with goal "Lambda-tilde cap boundary B_{rho/2}(x0) empty". 1772 says the same.
+  - For an annulus component, the final step (1877: v 1_{Lambda-tilde} subharmonic in B_rho(x0)) is false: v > 0 at points of
+    Lambda on the circle of radius rho/2.
+  - Fix: read every Lambda-tilde as the statement's ball component. Every step then goes through: Lemma 6.8 applies since
+    Lambda-tilde cap A_{r,7r}(w) is a union of components of Lambda cap A_{r,7r}(w), and the j = 0 mass bound is the hypothesis.
+
+- **G26. Prop 7.1, cover of the circle boundary B_{r/2}(z) near the origin (1975-1981).** The grid of Prop 6.1 excludes
+  B_{10 sqrt eps}(0), and rho_x <= sqrt(eps). So the balls B_{rho_x/2}(x) do not reach B_{9.5 sqrt eps}(0). For z in B_{1/2} with
+  | |z| - r/2 | < 9 sqrt(eps), the circle meets that disc and eq:cover-inner-ball fails. The event must hold for all z at once,
+  with eps fixed. Fix:
+  - For each z choose r' in [r/4 + r/2^9, r/2 - r/2^9] with |r' - |z|| >= r/32. This is possible: the interval has length > r/8,
+    the excluded set has length r/16, and 11 sqrt(eps) < r/32.
+  - Cover the circle boundary B_{r'}(z) instead. The argument then gives closure(Lambda) subset closure(B_{r'}(z)) subset
+    B_{r/2}(z).
+  The Oct-15 planning flagged the same spot ("origin-crossing confinement cover, 1970-1980").
+
+- **G27. Prop 7.2, cover of the shell near the origin (2046-2054).** eq:boundary-inside keeps the shell away from
+  B_{10 sqrt delta}(z), but the grid of Prop 6.1 excludes B_{10 sqrt delta}(0).
+  - If 0 is in Lambda^z_t or outside closure(Lambda^z_t), the shell avoids B_{10 sqrt delta}(0) for small delta.
+  - If 0 is on the boundary of Lambda^z_t (possible for z != 0), shell points y satisfy only |y| >= dist(y, Lambda) >= 3
+    sqrt(delta). Then eq:cover-continuous fails for every delta.
+  - Fix: apply Prop 6.1 and Lemma 2.4 at delta' = delta/64, so the grid excludes only B_{1.25 sqrt delta}(0) and rho_x <=
+    sqrt(delta)/8. Cover the shell, which avoids B_{3 sqrt delta}(0) whenever 0 is in closure(Lambda), and set eps = alpha
+    delta'^{2 beta^-}. Only C changes.
+  The Oct-15 planning flagged the "collar" at 2032-2065.
+
+- **G28. Parameter interface of Lemmas 6.7, 6.11, 8.2, 8.3 (2231-2236; 1307-1315, 1567-1576, 1588-1590, 2151-2162).**
+  - Prop 8.1 needs one parameter tuple valid for both Lemma 6.11 and Lemma 8.2, chosen in this order: C_3 (universal, from Lemmas
+    6.3/6.7, 1361), b = b(gamma, C_3) (the proof of 6.11 takes C_3 as given, 1830, 1909-1911), a and C^pm (Lemma 6.7/8.3 with
+    p = 1 - zeta/8), N_0 >= max(N_1 of 6.7, N_1 of 6.11), alpha (6.11), m (8.3).
+  - As printed, Lemmas 6.7 and 6.11 each assert their own "universal C_3" (separate existentials). Lemmas 8.2 and 8.3 assert
+    "there exist m and parameters", i.e. an existential N_0. Yet Prop 8.1 needs N_0 arbitrarily large, a flexibility that the
+    caption at 1588-1590 reserves for exactly this use.
+  - Fix for the Lean statements: Lemma 6.11 for every C_3 > 0 with b = b(gamma, C_3); Lemma 6.7 with C_3 fixed before b; Lemmas
+    8.2/8.3 as "for b, zeta there are a, C^pm, N_1 such that for every N_0 >= N_1 there is m".
+  - The same interface is needed in the proof of Prop 6.1 (1593); left to the Section 6 entries.
+
+- **G29. Prop 7.2, premature mass equality (2058).** "As Lambda^z_t is compactly in B_1, by Lemma 3.4 we have
+  mu_h(Lambda^z_t) = t." The equality case of Lemma 3.4 also requires mu_h(boundary Lambda) = 0 (651). That is Prop 8.1, proved
+  later and not cited.
+  - Without it one only gets mu_h(Lambda_{t+eps} cap A) <= eps + nu(boundary Lambda_t). G3's identity t = mu_h(Lambda) +
+    nu(boundary Lambda) does not remove the nu term.
+  - Fix: cite Prop 8.1 (with Lemma 3.4). This is not circular: Prop 8.1 uses Lemmas 6.11, 8.2, 3.2 and Prop 4.1, and nothing from
+    Section 7, provided Section 6 does not use Section 7 (check in the Section 6 entries).
+  - Consequence for the topological order: 8.1 precedes 7.2.
+  The Oct-15 planning flagged "premature mass equality, 2032-2065".
+
+- **G30. Lemma 8.2 applies Lemma 8.3 "with alpha0 = gamma" (2220).** Lemma 8.3, and Lemma 6.7 at x0 = 0 which it uses, must
+  therefore hold for the field with an arbitrary logarithmic exponent at the centre, not only for the global alpha0 of D3. The
+  events E-bar must be computed from that field.
+  - The Lean statements of 8.3 and 6.7 must quantify over the exponent (or at least treat alpha0 = gamma). gamma < Q, so the
+    singularity is integrable.
+  - Lemma 6.7 prints its constants a(b,p,gamma), C^pm and N_1(b,p,gamma) without alpha0-dependence. At x0 = 0 the singularity sits
+    at the centre of the annulus; the Section 6 entries should check whether the constants depend on alpha0.
+  - Lemmas 11.7 and 11.13 repeat the same instantiation (2879, 3151).
+
+- **G31. Tail triviality of the whole-plane GFF at a point (2189-2193).** "The limiting random variable is measurable with
+  respect to the intersection over eps > 0 of sigma(h|_{B_eps(0)}), which is trivial (see DMS21 Lemma 7.2 for ... a free-boundary
+  GFF; the proof for a whole-plane GFF is similar)." The paper does not prove the whole-plane statement, and the source does not
+  print it. A literature input in the exact form is needed:
+  - Name: `WholePlaneGFFTailTrivial`.
+  - Statement: for the whole-plane GFF h^C, every event in the intersection over eps > 0 of sigma((h^C - h^C_eps(0))|_{B_eps(0)})
+    has probability 0 or 1. The modulo-constants version suffices, by D10(b).
+  - Lemma 8.3 also needs Birkhoff's pointwise ergodic theorem, which is uncited and not in Mathlib. It is consumed through Lemma
+    8.3 by Lemmas 8.2, 11.7 and 11.13.
+
+- **G32. Lemma 10.1 (2496-2502; proof 2504-2544): the hypothesis closure(B_rho(x0)) subset B_1 \ {z} of Prop 6.2 is
+  never checked.**
+  - (a) w may lie near boundary B_1. Then x0 is in B_{1+eps} and rho may be as large as eps^{1/2}, so B_rho(x0) need not lie
+    in B_1.
+  - (b) z ranges over all of C after rho is chosen. For |z - x0| < eps, z is in B_rho(x0) for every admissible rho, and
+    Prop 6.2 fails there.
+    - Example: for small t, Lambda_t(z) subset B_{rho/2}(x0) by Prop 7.1. It puts no mass on A_{rho/2,rho}(x0), yet it meets
+      B_{rho/2}(x0).
+    - So for centres near w the printed bound (all z, all w) is not established.
+  - Fix: restrict to w in B_{1-3 sqrt eps} \ B_{20 sqrt eps} and to centres z outside B_{3 sqrt eps}(w). Then B_rho(x0)
+    subset B_{2rho}(w) subset B_{2 sqrt eps}(w), which lies in B_1 \ {z}, compactly.
+    - This suffices for Prop 10.6: there w is in Gamma, which is at positive distance from z (Prop 4.1) and from boundary B_1
+      (closure(Lambda) Subset B_1). So eps may be taken small depending on (t, z).
+  - (c) eq:harnack-contrapositive (2520) has the hypothesis "closure(Lambda~) meets boundary B_{rho/2}(x0)". The contrapositive
+    of Prop 6.2 needs instead "Lambda~ meets closure(B_{rho/2}(x0))". A component inside A_{rho/2,rho}(x0) whose closure
+    touches the inner circle is not covered.
+    - "decomposes into a union of components each of which has closure intersecting both circles" (2528-2530) is false as
+      worded.
+    - Correct argument: B_{rho/3}(w) subset B_{rho/2}(x0), because |x0 - w| < eps/50 <= rho/50. A path in the crossing
+      component gives one component of Lambda cap B_rho(x0) that meets B_{rho/2}(x0), and that suffices.
+  - (d) The proof treats only eps = 2^{-n} (2505), while the statement claims "each small enough eps > 0".
+    - Fix: take eps' = 2^{-n} >= eps and use the c log eps'^{-1/2} good radii in {8^{-k}} given by Prop 6.1. At most one of
+      them lies above eps^{1/2}.
+    - Alternatively, state the lemma for dyadic eps only. Prop 10.6 needs only a sequence eps -> 0.
+
+- **G33. Lemma 10.5 proof (2591-2618) is a sketch.** The statement is plausibly true.
+  - (a) "C' is a topological rectangle with two boundary segments contained in Gamma" (2594-2595) presupposes regularity of
+    Gamma. That regularity is what Prop 10.6, Step 1 is proving. Also, C may wind around A, in which case C' is the whole annulus.
+  - (b) The Poincare-Miranda / hex dichotomy (2597-2598) yields a connected set, not a simple arc, in the closed alternative
+    Lambda^c cap C'. Arcs exist only in the open set Lambda.
+  - (c) Pom92 Prop 2.12 (2605) needs a crosscut P of a simply connected domain G, that is, P subset G with endpoints on
+    boundary G.
+    - int(U^c) is not simply connected in C (U is a bounded hole).
+    - int(U^c) need not be connected: for U = {1 < |x| < 2} \ [1,2), int(U^c) = B_1 cup {|x| > 2}.
+    - P subset Lambda^c cap C' may run along Gamma, outside int(U^c).
+    - The domain should be the component of int(U^c) containing Lambda, taken in the Riemann sphere.
+  - (d) "both G_0 and G_1 must contain points in Lambda" (2609-2611) is asserted "by definition of component" without argument.
+    Points of Gamma are limits of Lambda, but nothing says from which side of P.
+  - Fix: a plane-topology proof (Janiszewski / theta-curve lemma) with I11.
+
+- **G34. Prop 10.6, Step 1 (2638-2657).**
+  - (a) 2648-2649: "otherwise we could take V to be B_eps(z) minus the other components". Then V cap U^c lies in the component
+    C_p of p, but C_p cap B_delta(p) need not be connected: C_p need not be connected im kleinen at p (comb-like C_p).
+    - The conclusion (infinitely many components of U^c cap B_s(p) meet every B_eps(p)) is a standard continuum-theory fact.
+      It needs the convergence-continuum theorem and connected im kleinen <=> locally connected (I11), not the printed
+      argument.
+  - (b) Lemma 10.1 is available only at points p outside B_{20 sqrt eps}, and Gamma may pass through the origin when z != 0.
+    - Fix: the points where the continuum U^c (in the Riemann sphere) fails to be connected im kleinen contain a
+      non-degenerate convergence continuum (Nadler Thm 5.12), so there is a bad point p != 0.
+    - Such points lie on Gamma, since U^c is locally connected at its interior points. Hence they are also at positive
+      distance from z and from boundary B_1, as the fix of G32 requires.
+  - (c) "every component of U^c cap B_{2rho}(p) which crosses A contains a crossing component of U^c cap A" (2652-2655) needs
+    boundary bumping again.
+  - (d) Pom92 Thm 2.1 is stated for bounded domains (see F7 for the unbounded component).
+
+- **G35. Prop 10.6, Step 2 (2660-2680).**
+  - (a) "psi(closure I) cap psi(J) = empty" (2668) is false when #psi^{-1}(a) >= 3: J then contains other preimages of a,
+    so a is in psi(J).
+    - Fix: pick a point of psi(J) \ {a}, which is non-empty because J contains the other arcs of the circle minus
+      psi^{-1}(a). It avoids psi(closure I) = psi(I) cup {a}.
+  - (b) Concluding "Jordan" via Pom92 Thm 2.6 needs the boundary extension of psi to be injective. That is the direction
+    "#psi^{-1}(a) >= 2 => a is a cut point" of Pom92 Prop 2.5, while the proof uses only the converse.
+    - Fix: run the same I/J argument for any two distinct points of psi^{-1}(a). This proves injectivity directly, so cut
+      points and Def 10.4 can be dropped.
+
+- **G36. Prop 10.7 proof (2689-2691).**
+  - It cites Lemma 10.1, but it must apply Prop 10.6 (C-version, F7) to the rescaled clusters.
+  - Lemma 5.7 gives equality in law only for each fixed centre z in B_1, while Prop 10.6 holds a.s. simultaneously for all
+    centres. The transfer needs the pathwise identity Lambda^{z}_t[h'] = k^{-1} Lambda^{B_k;kz}_{A_k t}[h] from the proof of
+    Lemma 5.7 (890-933), jointly in z (G11), with one h' per integer k, and a union over k.
+  - It also needs closure(int closure X) = closure X for X open, and boundedness of Lambda-hat_t(z) (Thm 1.1(b)).
+
+- **G37. eq:mass-times in Prop 11.2 (2934-2945), reused by Prop 11.11 (3215).**
+  - Write E_A := {z : z in boundary Lambda-hat_t for some t in A}. The interval case (2941) claims
+    E_[a,b] = closure(Lambda-hat_b) \ Lambda-hat_a. Only "subset" holds in general.
+  - "Superset" fails at a point z where a hole of Lambda-hat_u shrinks to z as u increases to s, while z is in Lambda-hat_s:
+    z is then never a boundary point. Right-continuity (Prop 5.2) does not exclude this.
+  - "The standard machine ... by approximation" (2937, 2944) is invalid. A -> mu_h(E_A) is not additive: a point can lie on
+    boundary Lambda-hat_t for an interval of t. Also E_A need not be measurable.
+  - Only "E_A mu_h-null => Leb(A) = 0" is needed. Fix with tau of D14:
+    - Right-continuity of t -> closure Lambda-hat_t (Prop 5.2 through Thm 5.5) gives {tau <= b} = closure Lambda-hat_b.
+      This set is closed, so tau is lsc. By Thm 5.5 and Prop 5.3, mu_h(tau <= b) = b, i.e. tau_* mu_h = Leb.
+    - D' := {z : z in Lambda-hat_{tau(z)}} is mu_h-null. Cover it by rational balls B with closure B subset
+      Lambda-hat_{tau(z)}. Each such z has tau(z) = tau_B := inf{t : B subset closure Lambda-hat_t}. So z lies in
+      Lambda-hat_{tau_B} minus the union over u < tau_B of closure Lambda-hat_u, a set of mass tau_B - tau_B = 0.
+    - Off D', z is in boundary Lambda-hat_{tau(z)}. Hence tau^{-1}(A) subset N cup D' (N from Lemma 11.5), and
+      Leb(A) = mu_h(tau^{-1} A) = 0.
+  - Lean `∀ᵐ t` needs outer measure Leb*(A) = 0, and A need not be measurable. Show that tau of the complement of N cup D'
+    contains a sigma-compact set of full measure (Lusin) (I13).
+  - Same issue, in Prop 11.11: Reduction from Lebesgue-a.e. t to mu_h-a.e. boundary point (3215-3216), reusing eq:mass-times
+    (2934-2945, proof of Prop 11.2; the same label should be used there).**
+    - The direction needed is Leb(A) <= mu_h(S(A)), where S(A) := union_{t in A} boundary Lambda-hat_t and
+      A = {t : Lambda-hat_t is an LQG metric ball}. The paper proves the interval identity S([a,b]) = closure(Lambda-hat_b) \
+      Lambda-hat_a and then appeals to the "standard machine" and approximation.
+    - Problem (i): "subset" in the interval identity follows from monotonicity. "Supset" does not: a point of
+      closure(Lambda-hat_b) \ Lambda-hat_a that first enters closure Lambda-hat_s at time s must not lie in the open set
+      Lambda-hat_s. That is a left-continuity property (cf. G7).
+    - Problem (ii): A -> mu_h(S(A)) is not additive, since boundaries for different t can share points. S(A) need not be Borel,
+      so approximation does not extend the identity to measurable A.
+    - Problem (iii): A itself need not be measurable.
+    - Fix route: let tau(z) := inf{t : z in Lambda-hat_t}. Then {tau < c} = union_{s<c} Lambda-hat_s is open with mu_h-mass c,
+      so tau_* mu_h = Leb. Right-continuity (Prop 5.2) puts z in closure Lambda-hat_{tau(z)}. Still to prove:
+      mu_h{z : z in Lambda-hat_{tau(z)}} = 0, so that tau^{-1}(A) subset S(A) up to a null set. Non-measurable A needs an
+      analytic-set argument, or the Lean conclusion should read "the bad set of t is Lebesgue-null (outer measure)".
+
+- **G38. Lemma 11.6 (2764-2788).** t is free and "a.s." is missing. The proof leaves these unjustified:
+  - the "verbatim" extension of Lemmas 6.8 and 6.10 to B_R (2777). R must also satisfy A_{0.5r,6r}(z) subset B_R.
+  - "v subharmonic in B_{10r}(z)" (2784). This needs Lemma 3.2 with nu >= 0 (G1) and continuity on B_R (Lemma 4.2:
+    an implicit consumer of Lemma 4.2, which has no \ref consumer).
+  - mu_h(Lambda-hat_t symmetric-difference Lambda^{B_R}_t) = 0, attributed to Thm 5.5 (2780). It needs
+    mu_h(boundary Lambda^{B_R}_t) = 0 (Prop 5.3 / 8.1 scaled to B_R).
+  - Fix: state the lemma for all t on one a.s. event; use Lemma 5.7 scaling or explicit B_R versions of 6.8/6.10 (both
+    deterministic given volume growth).
+
+- **G39. Lemma 11.10, eqn-shifted-field-weyl (3041-3044).** The diameters of each S-hat cap S2 and of closure G are
+  <= eps/2. For u in S-hat and v in S-hat', the path u -> closure G -> closure G -> v only gives 3 eps/2, not eps.
+  - Fix: use eps/3 in eqn-small-square-diam and log(3A/eps) in the bump.
+  - Take N > n0, so S-hat meets closure G. Otherwise G can be empty (N = n0, S1 = S2), which is harmless. Statement unaffected.
+
+- **G40. D_h for alpha0 != 0 (Prop 11.9, Lemma 11.10; Weyl scaling of D_h at 3036, 3071).** Sec 2 defines D_{h+f}
+  only for continuous f (431).
+  - h = h^C - alpha0 log|.| is not of that form near 0, and Prop 11.9 / Lemma 11.10 allow 0 in W (or in S2).
+  - Fix: either an External (the LQG metric with an alpha-log singularity, alpha < Q, with Weyl scaling and absolute
+    continuity) or the restriction 0 not in closure W / alpha0 = 0.
+  - The alpha0 scope of Section 11.3 is G41.
+
+- **G41. Lemma 11.12 is proved for alpha0 = 0 (3137), but Lemma 11.13 needs alpha0 = gamma.**
+  - The proof of 11.13 (3151-3153) passes from the origin to mu_h-typical points by the argument of Lemma 8.2 (2209-2227). That
+    argument applies the origin statement "with alpha0 = gamma" (2219), because near a mu_h-typical point the field is a GFF plus
+    -gamma log|. - z| (DMS21 Lemma A.10).
+  - G-hat_1(0) involves D_h(0, .) at the singular point (first two inequalities), so the alpha0 = 0 case does not transfer to
+    alpha0 = gamma by absolute continuity. Contrast the annulus events G~ of Lemma 11.8: they avoid the centre, and their proof
+    has an explicit "Step 2: alpha0 in (-infinity, Q)" (2857).
+  - Consequence: as printed, Lemma 11.13, Prop 11.11 and the metric-ball clause of Thm 1.2 are not established for any alpha0.
+    Thm 1.2 and Prop 11.11 are stated for all alpha0 < Q (132, 373).
+  - Fix: state Lemma 11.12 for every alpha0 < Q (at least alpha0 = gamma). The proofs of 11.12 and 11.15-11.17 never use
+    alpha0 = 0. They need: the quantities in eq:stuff-finite, eq:stuff-finite-2, eq:stuff-finite-3 are a.s. in (0, infinity)
+    (D_h(0, boundary B_{delta0/2}) needs alpha0 < Q); -alpha0 log|.| is harmonic on W; the bumps are added to h^C, so MS17
+    Prop 2.9 applies; and Prop 11.9 for the field h with the given alpha0.
+
+- **G42. G-hat_r(z) (3124-3130) is not local.**
+  - The first two inequalities use the global metric: sup_{x in boundary B_{5r}(z)} D_h(z,x) and sup_{x,y in T_r(z)} D_h(x,y).
+    These are not determined by h on any fixed neighbourhood of B_{5r}(z), since geodesics may leave it.
+  - The proof of 11.13 needs locality twice. First, the ergodic limit must be measurable with respect to the tail sigma-algebra
+    of h at 0 (as in the 8.3 argument, 2192-2196). Second, the locality and absolute continuity near Z~ (8.2 argument,
+    eq:doubling-locality, 2215-2220).
+  - Fix: use the internal metric D_h(.,.; B_{6r}(z)) in those two inequalities.
+    - Lemma 11.14 still holds, since internal metrics dominate D_h.
+    - Lemma 11.12 still holds if the first inequality of E~1 uses the internal metric of (B_{2delta0}(Q cup W))^c cap B_6. That
+      set contains boundary B_5, since B_{10delta0}(Q) ⋐ A_{4,5}.
+    - The chain in 11.12 already runs through internal diameters whose domains lie in A_{1,6} (eq:metric-delta0-choice).
+    - The bump argument of 11.15 is unchanged.
+    - D_h(Q'_r, boundary Q_r), D_h(z, boundary B_{5r}(z)), mu_h(U_r) and SG_{3r,6r}(z) are already local.
+
+- **G43. Lemma 11.16 proof (3425-3448).**
+  - (a) It cites Lemma 11.10 (dyadic squares, 3428), but U and V are balls. The right input is Prop 11.9 with
+    (U, V, W') = (U, V, B_{delta0}(V)); W' misses the unit circle by eq:metric-delta0-choice.
+  - (b) eq:large-mass-low-diam concerns h0, with thresholds e^{-xi sup_W varphi} C1 and e^{-gamma inf_U varphi} C2 that depend
+    on the conditioning, while Prop 11.9 concerns h.
+    - Needed: F(a,b) := P[diam^{delta0}_{h0}(V) < a, mu_{h0}(U) > b] > 0 for all a, b > 0. Then independence of h0 and h|_{W^c}
+      gives P[eq:large-mass-low-diam | h|_{W^c}] = F(c1(varphi), c2(varphi)) > 0 a.s.
+    - F > 0 follows from Prop 11.9 by disintegrating h = h0 + varphi over varphi, plus the Cameron-Martin absolute continuity of
+      h0 + f and h0 on B_{delta0}(V) for f harmonic on W (MS16 Prop 3.4 type).
+    - The printed sentence about conditional versus marginal law is a correct ingredient, but it does not address the
+      conditioning-dependent thresholds.
+  - (c) Strictness: E~2 is strict, but eq:large-mass-low-diam and eq:stuff-finite-2 give <= and >= (3441, 3446). Use C1/2 and
+    2C2 instead.
+  - (d) It needs I14.
+
+- **G44. Lemma 11.17 proof, the bump function (3458-3483).**
+  - (a) The factor is inverted. With log(C2/C1 ^ 1), if C2 >= C1 then h~ = h and E~3 is not forced. The needed factor is
+    lambda = C1/(2 C2) ^ 1, so that lambda C2 < C1.
+  - (b) The definition (3461) "0 on (U cup B_{4delta0}(W))^c" does not give phi = 0 on U, because U subset W. Yet phi = 0 on U
+    is used for mu_h~(U) = mu_h(U) (3485, 3512). It should read "0 on U cup B_{4delta0}(W)^c".
+  - (c) The Weyl bound diam^{delta0}_{h~}(B_{3delta0}(W) \ V) <= lambda diam^{delta0}_h needs phi = 1 on the whole
+    internal-metric domain B_{delta0}(B_{3delta0}(W) \ V). That domain reaches into B_{4delta0}(W) \ B_{3delta0}(W), where phi
+    is only known to lie in [0,1].
+    - Fix: phi = 1 on B_{4delta0}(W) \ B_{delta0}(U), and phi = 0 on U cup B_{5delta0}(W)^c. The first set contains the domain,
+      since dist(B_{delta0}(U), V^c) > 9 delta0.
+    - B_{5delta0}(W) avoids closure B_{3delta0}, closure Q and A_{3,6}, because B_{10delta0}(W) ⋐ A_{1,2}.
+  - (d) 3492-3496: the Weyl step "D_h >= e^{-log lambda} sup D_h~" has the factor on the wrong side. The correct statement is
+    D_h~ <= D_h, since phi log lambda <= 0. The conclusion is unaffected.
 
 ### S: slips and typos (fix in the Lean statements)
 
@@ -443,6 +1715,237 @@ Properties of q_{B_R} (3537-3541):
 - 837 (Prop 5.3): B_r(z) should be B_1.
 - 854 (Prop 5.4): free "r > 0".
 - 922: G_{B_{rk}(z)} should be G_{B_k}.
+- 1067 (Prop 6.1) and 1079 (Prop 6.2): t is unbound. Read "for all t > 0" (cf. 1053). In 6.2, z is bound only through "the
+  setting of Prop 6.1".
+- 1120, 1248: "exits A before exiting Y" should be "does not exit Y before exiting A" (the slip at 1120).
+- 1120, 1248 (definition eq:good-annulus-harmonic; fix in Defs):
+  - As printed, "B^u exits A_{3r,5r}(z) before exiting Y" is impossible: Y is a subset of A, so tau_Y <= tau_A. The event is
+    empty and E_r(z) holds for all a, b, which makes Lemmas 6.3 and 6.4 trivial and the uses of eq:good-annulus-harmonic in
+    Lemma 6.13 (1730-1790) unsupported.
+  - Intended (cf. 1090-1091, "cross ... without exiting Y"): P[tau_A <= tau_Y], i.e. B^u stays in Y until it exits A.
+  - The proof of Lemma 6.4 works with this reading: {tau_A <= tau_Y} is contained in {tau_A <= T} union {B_T in Y}.
+- 1128: beta^- must be a fixed choice beta^- > (2+gamma)^2/2 (Lemma 2.4 allows any).
+- 1135: "a.s. 0 < M_rho(x0) < infinity for each x0 in C" needs I2 and can fail when 0 is in the closure of A_{rho/2,rho}(x0)
+  (cf. F2); harmless.
+- 1205, 1327: "depending only on gamma" should be "depending only on gamma and alpha0"; |z|^{-alpha0 gamma} should be replaced
+  by the oscillation ratio (G19).
+- 1211-1215: the implication is reversed; a := (C_1/C_2) a' (G19).
+- 1447-1449 (Lemma 6.8): the C defined in the proof is the reciprocal of the C of the statement.
+- 1528: lambda := Delta v clashes with the least supersolution lambda (eq:least-super-solution); 1529 "A_{s1 rho,s4 rho}" drops
+  (x0); 1545-1557: dummy variable z clashes with the centre z.
+- 1679: 8 * 2^{-100} should be 8 * 2^{-50} (l_0 = rho 2^{-50}); the inequality d^+_j < rho still holds.
+- 1689: the claimed bound 4 l_j is proved as 2 l_j (harmless).
+- 1713, 1718 (Lemma 6.13): sup over "z in B_1" with A_{r,7r}(z): the dummy should be w (cluster centre clash); proof 1730 mixes w
+  and z.
+- 1741: N = floor(C3 log eps_j^{-1/2}) should use log_7, as in (VG-iii) at 1157 (see G23).
+- 1746, 1750-1753: A_{3r,5r}(z), B_{eps_j rho}(z + 4 r e1) should be centred at w.
+- 1766: "exits A_{3r1,5r1}(w) before Lambda^x_t" should read "before hitting A_{3r1,5r1}(w) \ Lambda^x_t".
+- 1772, 1834, 1842: component of Lambda cap A_{rho/2,rho}(x0) should be of Lambda cap B_rho(x0); 1842 also drops "Lambda cap"
+  (G25).
+- 1859 eq:choice-of-alpha: 1/(C1^- v 1) should be (C1^- ^ 1). The step 1891 needs alpha mu_h(A_{rho/2,rho}) <= a 2^{-N0 beta^-}
+  M_rho and (VG-i) gives M_rho >= C1^- mu_h(A_{rho/4,2rho}); the printed factor fails for C1^- < 1.
+- 1895: "A_{rho/2,rho} cap Lambda-tilde^c nonempty" should be Lambda^c (Lemma 6.10 needs a zero of v); see G22.
+- 1899 eq:step-4-odometer-upper-bound: c C2^+ (1/(C1^- v 1)) M_rho should be c C2^+ M_rho / C1^- (by (VG-i), mu_h(A_{rho/4,2rho})
+  <= M_rho / C1^-); eq:choice-of-N1 (1921) and eq:choice-of-b-and-m0 (1926) change accordingly.
+- 1916 eq:choice-of-b: b = 2^{-2 beta^- / ((C' C3) v 1)} gives b^{C' C3 N0} <= 2^{-2 beta^- N0} (first inequality of 1926) only
+  if C' C3 >= 1; take b = 2^{-2 beta^- / (C' C3)}. Then the crude bound b^{C' C3 (N0+j)} <= 2^{-beta^-} of Step 3 holds for N0 >=
+  1.
+- 1935: the suprema in the display drop "Lambda-tilde cap".
+- 1991 (Prop 7.1): "(monotonicity, Lemma 3.3)" means monotonicity of mu_h under inclusion. Lemma 3.3 is not needed.
+- 2004 (Prop 7.1): the proof concludes Lambda subset B_{r/2}(z), while the statement claims closure(Lambda) subset B_{r/2}(z). The
+  closure inclusion follows from the open cover of the boundary circle.
+- 2022-2026 (Prop 7.2): "sufficiently small, depending on t" should read "depending on t, z and h" (the threshold comes from
+  eps_0(t,z), dist(Lambda^z_t, boundary of B_1) and the random M_0). "C = C(beta^-)" should read C = C(gamma, beta^-), since
+  C = 4 sqrt(2) alpha(gamma)^{-1/(4 beta^-)} after the dyadic interpolation.
+- 2025 (Prop 7.2): "+ B_delta(z)" should be + B_delta (already listed).
+- 2108-2111 (proof of Prop 5.2): "Borel-Cantelli" should be a countable intersection of a.s. events.
+- 2124 (Prop 8.1): t is unbound; it should read "for all t > 0 and z in B_1 with ..." (the proof at 2240 says "for every t > 0").
+- 2170 (Lemma 8.3): "m = m(alpha, zeta, gamma)" should be m = m(alpha0, zeta, gamma). m depends only on the law of the ratio.
+- 2213 (Lemma 8.2): in h~ = h - gamma log|. - Z~| + ..., the h is an independent copy of the field (DMS21 Lemma A.10 concerns h^C,
+  with alpha0 log|.| subtracted on both sides).
+- 2260 (Prop 8.1): the right side "alpha mu_h(A_{2^{-n-1},2^{-n}}(w) cap Lambda)" should be "alpha mu_h(A_{2^{-n-1},2^{-n}}(w))".
+  This is the hypothesis of eq:good-annulus-implies-harnack, by G_n(w): m mu_h(B) <= mu_h(A). As printed, the chain is
+  self-referential. The Oct-15 planning flagged the same line.
 - 2422: "origin" should be z.
+- 2498 (Lemma 10.1): "z in C" should be z in B_1. B_1-clusters need a centre in B_1; read "for all t > 0 and z in B_1 with
+  Lambda_t(z) Subset B_1".
+- 2504: "Let t > 0 such that Lambda_t(z) Subset B_1" comes before the Borel-Cantelli choice. M_0 and rho must not depend on
+  (t, z), and they don't.
+- 2520 (eq:harnack-contrapositive): the hypothesis should read "Lambda~_t cap closure(B_{rho/2}(x0)) != empty" (G32 c).
+- 2552 (Def 10.2): the arc parameters alpha, beta clash with the exponent alpha.
+- 2586 (Lemma 10.5): "simply connected" should be read in the Riemann sphere for the unbounded component.
+- 2632: "Caratheodory's theorem [Pom92 Thm 2.6]": the reduction "locally connected and no cut points => Jordan" also uses
+  Thm 2.1 and Prop 2.5.
+- 2641: the point "z in U^c" clashes with the cluster centre z; rename it p.
+- 2651, 2657: "B_{2rho}(x_0)" should be B_{2rho}(z), that is B_{2rho}(p).
+- 2664: phi^{-1}(a) should be psi^{-1}(a).
+- 2670, 2674, 2676, 2677: "0" should be the centre z (Lambda_t(z) need not contain 0), and y is undefined: take y = psi(0) in U.
+- 2718 (Def 11.1): "U cap B_r(x0)" should be A cap B_r(x0).
+- 2731 (Def 11.3): v, w must be R-linearly independent for Q to be open. A complement of an open cone is closed and contains
+  the apex, so "interior cone condition" with it is impossible at z in boundary A. Read: interior of the complement, or drop
+  complements (every reflex sector contains a convex sector).
+- 2764-2770 (Lemma 11.6): free t, no "a.s.".
+- 2772 and 2793: SG_{3r,6r}(z) "as in eq:alternate-size-2" should be eq:alternate-size-2-full with (rho, s1, s4) = (r, 3, 6).
+- 2772 (Lemma 11.6): SG_{3r,6r}(z) "as in eq:alternate-size-2" should be eq:alternate-size-2-full, (s1,s2) = (3,6), rho = r.
+- 2803 (and 2881, 3152): delta = delta(M) should be delta(M, Q, gamma).
+- 2810 (eq:desired-claim): "for all n >= N(z)": N(z) is undefined; the distance condition suffices.
+- 2836: P[G~_1(0)] means scale r = 1, while the abbreviation G~_n = G~_{2^-n} makes G~_1 the scale 1/2.
+- 2865: "universal constant C" should be C(gamma, alpha0) (for example 1201^{-gamma|alpha0|}).
+- 2902: "every cone ... is contained within a cone with rational extremal directions" should be "contains". G~_n(z;M,Q) is
+  increasing in Q, so the stated inclusion goes the wrong way.
+- 2906: B_{10*2^-n}(z) should be its closure (hypothesis of Lemma 11.6).
+- 2912 (eq:mu_h-is-bad): A_{3r,5r}(z) should be A_{r,2r}(z).
+- 3000 and 3067: "phi : [0,1] -> C" should be phi : C -> [0,1]. At 3000 phi must also vanish on boundary B_1, to keep the
+  normalisation h^C_1(0) = 0 for MS17.
+- 3017: "S1 is the union of union_{S in S_n^i} S for i = 1,...,4" means S1 = union_i union_{S in S_N^i} S (n vs N mixed,
+  3017-3020).
+- 3022: "distance at least 2^{-n}" should be 2^{-N}.
+- 3092 (Prop 11.11), 171 (Thm 1.2): the centre of "LQG-metric ball" is unspecified. The proof treats centre 0 and extends to
+  any centre (see the 11.11 entry).
+- 3137 (Lemma 11.12): "P[G~_1(0)] > 0" should be "for each M > 0, P[G-hat_1(0; M)] > 0" (G~ is the cone event of Sec 11.1).
+- 3306 eq:ball-inclusion: "=" should be "subset" (B_{3delta0}(W) need not lie in T).
+- 3316: diam^{delta0}_h(B_{3delta0}(W)) should be diam^{delta0}_h(B_{3delta0}(W) \ V).
+- 3362: D_h~(0, B_{delta0}) >= D_h~(0, B_{delta0/2}) should use boundary B_{delta0} and boundary B_{delta0/2} (the distance
+  from 0 to a ball containing 0 is 0).
+- 3363: the factor 2C4/C3 should be (2C4/C3 v 1).
+- 3368: the reason given is "phi2 has support in (B_{2delta0}(Q cup W))^c". The relevant fact is that phi1 vanishes there,
+  since supp phi1 subset closure B_{delta0}(Q).
+- 3420: "a compact subset of W^c" should be "a closed set at distance >= 2delta0 from W" (it is B_{2delta0}(W)^c, which is
+  unbounded).
+- 3421: "the function \phi" should be \varphi (the harmonic part).
+- 3428: Lemma 11.10 should be Prop 11.9.
+- 3441, 3446: the non-strict inequalities must be strict for E~2.
+- 3461, 3475: the bump function and its factor (G44).
+- 3488: a sentence fragment ("that adding the bump function did not change ...") left over from an edit.
 - 3527: upper exponent beta- should be beta+.
 - 3790 (Lemma A.5): mu_h should be mu.
+
+## Literature inputs
+
+Every literature fact cited in the paper, with the result(s) whose proof uses it. "In source" gives the item found in the cited
+work, with version and page; it was checked online in arXiv versions, and books were not accessible. Check: **V** verified
+against the source text; **P** partly verified (scope differs, or only secondary or table-of-contents evidence); **N** not
+verified (source not accessible). Points L1-L8 follow the table. Bibliography keys resolve in `paper/lqg_harmonic_ball.bbl`.
+A cited fact used in a proof enters Lean only as an explicit hypothesis whose Prop lives in `HarmonicBalls/External`.
+
+### Cited facts
+
+| source (key) | item as cited (line) | in source (version, page) | used for | used in | check |
+|---|---|---|---|---|---|
+| DS11 `duplantier2011liouville` Duplantier-Sheffield, LQG and KPZ, Invent. Math. 185 (2011), arXiv:0808.1560 | Prop 2.1 (418) | Prop 2.1, v2 p.13 | conformal covariance of mu_h | Fact 2.1 IV | P (L4) |
+| DS11 | Sec 3.1 (362, 998) | Sec 3.1, v2 pp.15-18 | circle averages; t -> h_{e^{-t}}(0) is a BM (I3) | eq:cov-kernel, Thm 5.5 | P (L4) |
+| DS11 | Sec 3.3 (2158) | Sec 3.3 "Rooted random measures", v2 pp.22-23 | heuristic: field near a mu_h-typical point | motivation of Lemma 8.2 | P |
+| SW16 `sheffield2016field` Sheffield-Wang (arXiv) | none (399, 418) | not checked | Fact 2.1 IV for all conformal maps simultaneously | Fact 2.1 | not checked |
+| Var17 `vargas2017lecture` Vargas, lecture notes, arXiv:1712.00829 | Sec 2.1.1 (364) | Sec 2.1.1, v1 pp.6-7 | covariance kernel, normalisation h^C_1(0) = 0 | eq:cov-kernel (D3) | V |
+| DDDF20 `ding2020tightness` Ding-Dubedat-Dunlap-Falconet, Publ. IHES | none (420, 455) | Thm 1, v2 pp.3-4 | tightness of LFPP; subsequential limits are length metrics | Fact 2.2 | P (L7) |
+| DFGPS20 `dubedat2020weak` Dubedat-Falconet-Gwynne-Pfeffer-Sun, PTRF 178 (2020) | none (455) | weak LQG metric, Thm 1.2, v2 pp.5-6 | axioms I-III, translation invariance | Fact 2.2 | P (L7) |
+| GM21 `gwynne2021existence` Gwynne-Miller, Invent. Math. | none (420, 455) | strong LQG metric, Axioms I-IV | existence, uniqueness, coordinate change of D_h | Fact 2.2 | V (L7) |
+| GP `gp-kpz` | Cor 1.7 (422) | not checked | d_gamma, in the definition of xi | Fact 2.2 | not checked |
+| BBI01 `bbi-metric-geometry` Burago-Burago-Ivanov, GSM 33 | Cor 2.5.20 (462; recalled 3172) | book not accessible | geodesics in a boundedly compact length space | Fact 2.2, Lemma 11.14 | P (secondary) |
+| BG20 `berestycki2020random` Berestycki-Gwynne, CMP | Lemma A.1 (510) | Lemma A.1, v1 p.65, v2 p.66 | LQG mass of Euclidean balls | Lemma 2.4 | P (L3, F2) |
+| Pon16 `ponce2016elliptic` Ponce, EMS Tracts 23 | Sec 16.2, remark after Prop 13.5 (536) | contents: 16.2 "Holder continuity revisited", p.263 | Morrey bound gives Hoelder potential | Prop 2.5 | P (section title only) |
+| AK16, MRVZ16 `andres2016continuity`, `maillard2016liouville` | none (540) | not checked | context for the LBM heat kernel | none (text) | not checked |
+| Kig19 `kigami2019` Kigami, Mem. AMS 259 | Thm 13.1 (558-559) | not accessible | heat kernel of reflected LBM on a square | Prop 2.6; Lemma 6.4 through 2.6 | N |
+| AG01 `armitage2000classical` Armitage-Gardiner, Classical potential theory | none (761) | Ch. 4 (Riesz decomposition) | Riesz decomposition | Lemma 4.3 | P (chapter only) |
+| AG01 | Thm 4.3.8 (3544) | not accessible | distributional Laplacian of a potential | App A (properties of q); Lemmas 6.8, 6.10 (implicit) | N |
+| AG01 | Thm 3.7.5 (3607, 3613) | not accessible; cited with this number in arXiv:2403.18865 v2 p.29 | lsc regularisation of an infimum of superharmonic functions | Lemma A.1 | P (secondary) |
+| AG01 | Thm 3.2.2 (3672) | not accessible; Sec 3.2 "Criteria for subharmonicity" | local sub-mean-value criterion | Lemma A.2; I7 (Lemmas 6.8-6.13, repair of G1) | N |
+| Pon16 | Prop 7.3 (3804) | not located; 7.1 "Weak normal derivative", p.111 | weak normal derivative | Lemma A.5 | N |
+| Pon16 | Lemma 12.15 (3810) | not located; Ch. 12 "Obstacle problems", pp.181-204 | sign of the weak normal derivative | Lemma A.5 | N (L8) |
+| JLS12, DCLYY13 `jerison2012logarithmic`, `duminil2013containing` | none (1088-1089) | JLS12 Sec 2.1 Lemma 2, p.6; DCLYY13 Thm 1, p.2 | inspiration only | none | V (attribution) |
+| GRV16 `garban2016liouville` Garban-Rhodes-Vargas, Ann. Probab. 44 (2016), arXiv:1301.2876 | Prop 2.19 (1225) | Prop 2.19, v4 p.25 (v3 p.19); the number exists only in v3/v4 | continuity in the starting point of the law of LBM | Lemma 6.4 Step 2; Lemma 6.7 through 6.4 | V (scope: G20) |
+| GRV16 | Section 9 (1226) | no Section 9 in any version; Sec 2.9 (v3/v4) or 3.3 (v1/v2) | extension to the GFF on a bounded domain | Lemma 6.4 | P (L1, G20) |
+| GM20b `gwynne2020local` Gwynne-Miller, Ann. Inst. Fourier 70 (2020), arXiv:1905.00379 | Lemma 3.1 (1259, 1262) | Lemma 3.1, v1/v2 p.9 | near-independence across separated concentric annuli | Lemma 6.5 (which is this lemma); Lemmas 6.3, 6.6 | V |
+| Mat95 `mattila1999geometry` Mattila, Geometry of sets and measures, CUP 1995 | Cor 2.14 (2131) | book not accessible; quoted in arXiv:2111.09379 v3 p.7 | Lebesgue density theorem for a Radon measure | Prop 8.1 | P (secondary) |
+| DMS21 `duplantier2014liouville` Duplantier-Miller-Sheffield, Asterisque 427 (2021), arXiv:1409.7055 | Lemma 7.2 (2192) | Lemma 7.2, v4 p.127 (v3 p.119) | tail triviality, free-boundary GFF on H | Lemma 8.3 (by analogy); Lemmas 11.7, 11.13 by reference | P (G31) |
+| DMS21 | Lemma A.10 (2213) | Lemma A.10, v4 p.184 (v3 p.175) | log singularity at a mu_h-typical point (rooted measure) | Lemma 8.2; Lemmas 11.7, 11.13 by reference | P (L4) |
+| MS17 `miller2017imaginary` Miller-Sheffield, Imaginary geometry IV, PTRF 169 (2017) | Prop 2.9 (2219, 2850, 3047, 3078, 3383, 3486) | Prop 2.9, v2 p.49 (v1 p.51) | h and h + g mutually absolutely continuous (modulo constants), g in the Dirichlet space | 8.2 (2219), 11.8 (2850), 11.10 (3047), 11.9 (3078), 11.15 (3383), 11.17 (3486) | V; P at 2219 (L5) |
+| MS17 | Prop 2.8 (3392) | Prop 2.8, v2 pp.48-49 | Markov property of the whole-plane GFF on a bounded open W | Lemma 11.16 | V |
+| MS16 `miller2016imaginary` Miller-Sheffield, Imaginary geometry I, PTRF 164 (2016) | Prop 3.4 (3425) | Prop 3.4, v2 pp.58-59 (Prop 3.2 in v1) | absolute continuity of conditional laws on subdomains | Lemma 11.16 | V (L6) |
+| SS13b `shahgholian2013harmonic` Shahgholian-Sjodin, Complex Var. Elliptic Equ. 58 (2013) | Thm 2.1 (2285) | Thm 2.1, v1 p.4 | harmonic ball iff its potential vanishes off it (Lebesgue measure) | Lemma 9.1 (the printed proof is self-contained) | V |
+| Sak84 `sakai1984solutions` Sakai, J. Analyse Math. 44 (1984/85) | none (2282, 2285) | not accessible | obstacle problem solutions as Green potentials | Lemma 9.1 (attribution) | N |
+| SS13b | Prop 3.2 (2334) | Prop 3.2, v1 p.5 | harmonic vs subharmonic ball, same centre and size | Lemma 9.3 (model) | V |
+| HS02 `hedenmalm2002hele` Hedenmalm-Shimorin, J. Math. Pures Appl. 81 (2002) | Prop 2.5 (2335) | not accessible | the same, other setting | Lemma 9.3 (model) | N |
+| Gus90 `gustafsson1990onquadraturedomains` Gustafsson, J. Analyse Math. 55 (1990) | Sec 3 (2335) | not accessible | the same | Lemma 9.3 (model) | N |
+| Sak82 `sakai2006quadrature` Sakai, Quadrature domains, LNM 934 (1982) | Thm 10.13 (2411) | not accessible | strong uniqueness of quadrature domains | Prop 5.6 (model only) | N |
+| SS13a `ss-contour` Schramm-Sheffield, PTRF 157 | Lemma 3.9 (Sec 1) | not checked | the term "local set" | Prop 1.3 (terminology) | not checked |
+| Kul97 `poincaremiranda` Kulpa, Amer. Math. Monthly 104 (1997) | none (2598) | not accessible | Poincare-Miranda: crossing dichotomy in a rectangle | Lemma 10.5 | N |
+| Pom92 `pommerenke2013boundary` Pommerenke, Boundary behaviour of conformal maps, Grundlehren 299 | Prop 2.12 (2605) | not accessible | a crosscut splits a simply connected domain into two components | Lemma 10.5 | N |
+| Pom92 | Thm 2.6 (2632) | not accessible | Caratheodory: Jordan boundary iff homeomorphic extension | Prop 10.6 | N |
+| Pom92 | Thm 2.1 (2639, 2661) | not accessible | continuity theorem; local connectedness of the boundary | Prop 10.6 | N |
+| Pom92 | Prop 2.5 (2663) | not accessible | cut points and preimages under the extended Riemann map | Prop 10.6 (G35) | N |
+| Gut16 `gutierrez` Gutierrez, The Monge-Ampere equation, 2nd ed. | Lemma 1.1.6 (2710) | book not accessible; cited with this number (1st ed.) in arXiv:1406.5666 v3 p.7 | convex functions are locally Lipschitz | remark after Def 11.1 | P (secondary) |
+| DFGPS20 | Lemma 3.19 (3012) | Lemma 3.19, v2 p.45 (v1 p.44) | tail bound for internal D_h-diameters of small balls | Lemma 11.10 | V |
+| DFGPS20 | "Lemma 3.9" (3026) | Prop 3.9, v1 p.33, v2 p.34 | finiteness of an internal D_h-diameter | Lemma 11.10 | P (L2) |
+| GM20a `gwynne2020confluence` Gwynne-Miller, Ann. Probab. 48 (2020) | none (3206, figure caption) | Thms 1.3-1.4, v3 p.7 | confluence of geodesics, "not needed for our proofs" | none | V |
+
+### Discrepancies (L)
+
+- L1. GRV16 "Section 9" (1226) does not exist in any version. The extension to the GFF on a bounded domain is only asserted, in
+  Sec 2.9 (v3/v4) or Sec 3.3 (v1/v2). Together with the whole-plane scope (G20), Lemma 6.4 Step 2 needs an External with exact
+  scope.
+- L2. DFGPS20 "Lemma 3.9" (3026) is Prop 3.9. It bounds D_h(.,.; U) for a compact connected K inside an open U, not the internal
+  metric of the closed set closure(G) used at 3026 (compare I14: internal metrics on closed sets).
+- L3. BG20 Lemma A.1 is proved for the gamma-quantum cone (alpha0 = gamma) and z in B_{1-delta}. The paper uses it for every
+  alpha0 < Q and every z in B_1. This agrees with F2: at z = 0 the exponents fail outside -2 <= alpha0 <= 2.
+- L4. DS11 Prop 2.1, Sec 3.1 and Sec 3.3, and DMS21 Lemma A.10, are stated for the zero-boundary (or free-boundary) GFF on a
+  bounded domain. The paper applies them to the whole-plane field with the alpha0 log singularity. The transfer is standard
+  (absolute continuity away from 0, locality), but an External must state the whole-plane form.
+- L5. MS17 Prop 2.9 at 2219 is applied to a difference of log singularities, which has infinite Dirichlet energy. A cutoff to a
+  compactly supported g is needed. The other five uses are bump functions.
+- L6. Version-dependent numbers. MS16 Prop 3.4 is Prop 3.2 in arXiv v1. GRV16 Prop 2.19 and DMS21 Lemmas 7.2 and A.10 carry these
+  numbers only in v3/v4. An External should cite the journal version.
+- L7. Fact 2.2. GM21 gives uniqueness only up to a deterministic multiplicative constant, so a normalisation must be fixed. DDDF20
+  supplies only Axiom I for subsequential limits. The exact coordinate change (Fact 2.2 IV) is in GM21.
+- L8. Pon16 Lemma 12.15 (3810) lies in the chapter on obstacle problems. The use at 3810 is a sign statement on a weak normal
+  derivative, so Ch. 7 may be meant. Check this first when the External for Lemma A.5 is written.
+
+### Uncited inputs used in proofs
+
+| input | used in | Mathlib status (grep-verified) |
+|---|---|---|
+| Birkhoff pointwise ergodic theorem | Lemma 8.3 (2187); Lemmas 11.7, 11.13 by reference | absent; only the mean ergodic theorem, `Mathlib/Analysis/InnerProductSpace/MeanErgodic.lean` |
+| tail triviality of the whole-plane GFF at a point (G31) | Lemma 8.3; Lemmas 11.7, 11.13 | absent; needs an External (proposed name `WholePlaneGFFTailTrivial`) |
+| Kakutani: exit distribution of BM = harmonic measure (I8) | Lemma 6.9 | to check in MarkovProcess |
+| Borel-Cantelli | Prop 7.2 (2037); Prop 5.2 needs only a countable intersection | `MeasureTheory.measure_limsup_atTop_eq_zero`, `Mathlib/MeasureTheory/OuterMeasure/BorelCantelli.lean:62` |
+| Lebesgue density for locally finite measures (cited as Mat95) | Prop 8.1 | `Besicovitch.ae_tendsto_measure_inter_div`, `Mathlib/MeasureTheory/Covering/Besicovitch.lean:1105` |
+| Riemann mapping theorem (I10) | Prop 10.6 | partial only: `Mathlib/Analysis/Complex/RiemannMapping.lean` (lemmas weaker than the theorem) |
+| continuum and plane topology (I11, I12) | Lemma 10.5, Prop 10.6, Prop 11.9, Lemma 11.10 | absent |
+| classical potential theory (I4): maximum principle, Harnack, Weyl, Poisson integral | Sections 3-11 throughout | partly in EllipticRegularityLean (Harnack, maximum principles) |
+| Lewy-Stampacchia (I5) | not needed (G1 repair) | - |
+
+## Topological order
+
+Computed from the Deps lines: level 0 contains the results with no numbered dependency, and a result at level k uses at least one
+result at level k-1 and none at level k or above. Listing the levels in increasing order (numeric order inside a level) gives a
+build order, leaves first. The graph on the 77 items is acyclic. Definitions are leaves.
+
+- Level 0: 2.1, 2.2, 2.3, 6.5, 6.12, 9.4, 10.2, 10.3, 10.4, 11.1, 11.3, 11.4, A.1, A.4
+- Level 1: 2.4, 9.1, 11.10, 11.14, 11.15, A.2, A.3, A.6
+- Level 2: 2.5, 3.1, 3.2, 3.3, 3.5, 11.9, A.5
+- Level 3: 2.6, 3.4, 5.7, 6.8, 6.9, 6.10, 10.5, 11.8, 11.16
+- Level 4: 4.1, 4.2, 4.3, 6.4, 6.13, 11.17
+- Level 5: 6.3, 6.11, 11.12
+- Level 6: 6.7
+- Level 7: 6.6, 8.3
+- Level 8: 6.2, 8.2
+- Level 9: 6.1, 8.1, 11.7
+- Level 10: 5.3, 7.1, 7.2, 9.2, 10.1, 11.13
+- Level 11: 5.1, 5.2, 10.6
+- Level 12: 5.4
+- Level 13: 5.5
+- Level 14: 5.8, 9.3, 11.6
+- Level 15: 1.3, 5.6, 11.5
+- Level 16: 1.1, 11.2
+- Level 17: 10.7, 11.11
+- Level 18: 1.2
+
+Remarks.
+- Prop 8.1 (level 9) precedes Prop 7.2 (level 10): the mass identity mu_h(Lambda_t) = t at 2058 needs Prop 8.1 (G29), and
+  Section 8 does not use Section 7.
+- Section 6 uses only Sections 2-3 and the cited Lemma 6.5 (a leaf). Its root Prop 6.1 is at level 9, through Lemma 6.11
+  (level 5) and Lemma 6.6 (level 7). Sections 7, 8, 10 and 11 build on it.
+- The longest chain runs through Thm 5.5 (level 13) and Prop 5.6 (level 15) to Thm 1.1 (level 16), and on through Prop 10.7 and
+  Prop 11.11 (level 17) to Thm 1.2 (level 18).
+- Weakly used results. Prop 9.2 has no consumer (F5). Lemma 4.2 has no `\ref` and is used only implicitly, by Lemma 11.6.
+  Prop 11.9 has no `\ref` consumer: Lemma 11.16 cites Lemma 11.10 where Prop 11.9 is needed (G43), so 11.16 lists 11.9 in Deps.
