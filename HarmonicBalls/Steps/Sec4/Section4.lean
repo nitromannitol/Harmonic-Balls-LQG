@@ -13,7 +13,7 @@ and the new steps of this directory.
 |---|---|---|
 | Prop 4.1 | `clusterLowerBound_of_steps` | I2, Prop 2.3, Lemmas 3.1, 3.2, 3.4, A.1 general, shift, `GreenPotentialBallContinuousStep`, A.5 Step 3 (G3) |
 | Lemma 4.2 | `leastSupersolutionHolder_of_steps` | I2, Lemmas 3.1, 3.2, 3.4, `GreenRepresentationBallStep`, `GreenPotentialBallHolderStep` (G4) |
-| Lemma 4.3 | `clusterSubharmonicBall_of_steps` | I2, Prop 2.3, Lemmas 3.1, 3.2, 3.4, `ClusterHarmonicQuadratureStep`, `ClusterGreenPotentialIdentityStep` (G5), `GreenFunctionIntegrableAwayFromPoleStep` |
+| Lemma 4.3 | `clusterSubharmonicBall_of_steps` | I2, Prop 2.3, Lemmas 3.1, 3.2, 3.4, `GreenRepresentationBallStep`, `ClusterHarmonicQuadratureStep`, `ClusterGreenPotentialIdentityStep` (G5), `GreenFunctionIntegrableAwayFromPoleStep` |
 
 ## New leaves of this directory
 
@@ -48,7 +48,7 @@ theorem section4_of_steps (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h23 : GreenF
     ClusterLowerBoundStmt.{u} ∧ LeastSupersolutionHolderStmt.{u} ∧ ClusterSubharmonicBallStmt.{u} :=
   ⟨clusterLowerBound_of_steps hI2 h23 h31 h32 h34 hA1 hS hq a53,
     leastSupersolutionHolder_of_steps hI2 h31 h32 h34 hRep hHol,
-    clusterSubharmonicBall_of_steps hI2 h23 h31 h32 h34 hS1 hS2 hS3⟩
+    clusterSubharmonicBall_of_steps hI2 h23 h31 h32 h34 hRep hS1 hS2 hS3⟩
 
 /-- **Section 4 from the leaves.** Proposition 4.1 and Lemmas 4.2-4.3 from the leaves of the carving of Appendix A
 (those of `section3_of_steps`) and the new leaves of this directory. -/

@@ -19,7 +19,7 @@ open scoped ContDiff ENNReal
 /-- **Lemma 4.3, Step 1** (`ClusterHarmonicQuadratureStep`). -/
 theorem clusterHarmonicQuadratureStep_holds : ClusterHarmonicQuadratureStep := by
   intro μ R Λ z t u hU O q hO hΛO hq
-  obtain ⟨-, ht, hΛo, hzΛ, hclR, -, hu0, -, hLap⟩ := hU
+  obtain ⟨-, ht, hΛo, hzΛ, hclR, -, hu0, -, hLap, -⟩ := hU
   have hK : IsCompact (closure Λ) := (isCompact_closedBall 0 R).of_isClosed_subset isClosed_closure
     (hclR.trans ball_subset_closedBall)
   have hV : IsOpen (O ∩ ball (0 : ℂ) R) := hO.inter isOpen_ball
