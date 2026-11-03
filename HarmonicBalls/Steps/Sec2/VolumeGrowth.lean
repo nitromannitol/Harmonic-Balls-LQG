@@ -282,4 +282,49 @@ def SingularWeightStep : Prop :=
     ∀ᵐ ω ∂P, (μ ω).restrict {0}ᶜ =
       ((μ₀ ω).withDensity fun x => ENNReal.ofReal (‖x‖ ^ (-(γ * α₀)))).restrict {0}ᶜ
 
+/-! ### Carving of `WholePlaneScaledBallMassStep`
+
+`μ₀(B_{τr}(τw)) = τ^{γQ} e^{γ h^ℂ_τ(0)} μ^{(k)}(B_r(w))` at the dyadic scale `τ = 2^{-k}`, where `μ^{(k)}` is the
+LQG measure of the whole-plane GFF `h^{(k)} = h^ℂ(τ ·) - h^ℂ_τ(0)`. The two steps below are Ding-Gwynne Lemma 3.8
+for the fields `h^{(k)}` with failure probabilities uniform in `k` up to the factor `(k+1)²`, and the Gaussian
+tail of `h^ℂ_{2^{-k}}(0)` (variance `k log 2`). From them, a union bound over the `O(log 1/δ)` dyadic scales
+`2^{-k} ≥ δ^{1-ζ}` gives `WholePlaneScaledBallMassStep` (`wholePlaneScaledBallMassStep_of_uniform`,
+HarmonicBalls/Proofs/Sec2/ScaledBallMass.lean). -/
+
+/-- The event of Ding-Gwynne Lemma 3.8 for the rescaled field `h^{(k)}` at radius `r`, read off `μ₀`:
+for every `w ∈ closedBall 0 R`,
+`τ^{γQ} e^{γ h^ℂ_τ(0)} r^{β⁻} ≤ μ₀(B_{τr}(τw)) ≤ τ^{γQ} e^{γ h^ℂ_τ(0)} r^{β⁺}` with `τ = 2^{-k}`. -/
+def rescaledBallMassEvent {Ω : Type*} (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ₀ : Ω → Measure ℂ)
+    (R βplus βminus : ℝ) (k : ℕ) (r : ℝ) : Set Ω :=
+  {ω | ∀ w ∈ closedBall (0 : ℂ) R,
+    ENNReal.ofReal (dyadicScale k ^ (γ * lqgQ γ) * Real.exp (γ * hcirc ω (dyadicScale k) 0) * r ^ βminus) ≤
+        μ₀ ω (ball ((dyadicScale k : ℂ) * w) (dyadicScale k * r)) ∧
+      μ₀ ω (ball ((dyadicScale k : ℂ) * w) (dyadicScale k * r)) ≤
+        ENNReal.ofReal (dyadicScale k ^ (γ * lqgQ γ) * Real.exp (γ * hcirc ω (dyadicScale k) 0) * r ^ βplus)}
+
+/-- Step (Ding-Gwynne 2020, Lemma 3.8, for the rescaled fields `h^{(k)} = h^ℂ(2^{-k} ·) - h^ℂ_{2^{-k}}(0)`,
+uniformly in `k`). For `R > 0`, `β⁺ ∈ (0, (2-γ)²/2)` and `β⁻ > (2+γ)²/2` there are `p > 0`, `C` and `r₀ > 0`
+with `P[(rescaledBallMassEvent k r)ᶜ] ≤ C (k+1)² r^p` for all `k` and `r ∈ (0, r₀)`.
+Proof route: every `h^{(k)}` is a whole-plane GFF (`WholePlaneGFFAffineInvariance`) with LQG measure
+`τ^{-γQ} e^{-γ h^ℂ_τ(0)} μ₀(τ ·)` (`LQGMeasureCoordChange`); the mixture `(k, ω) ↦ h^{(k)}(ω)` under
+`∑ₖ wₖ δₖ ⊗ P`, `wₖ ∝ (k+1)⁻²`, is a whole-plane GFF (a mixture of fields with the law of `h^ℂ`), and
+`WholePlaneLQGBallMassBounds` for the mixture composed with an affine map of `𝕊` onto a square containing
+`closedBall 0 R` gives the bound, the additive constant being one Gaussian variable. -/
+def RescaledBallMassUniformStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ₀ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ₀ →
+  ∀ R : ℝ, 0 < R → ∀ βplus βminus : ℝ, 0 < βplus → βplus < (2 - γ) ^ 2 / 2 → (2 + γ) ^ 2 / 2 < βminus →
+    ∃ p : ℝ, 0 < p ∧ ∃ C : ℝ, ∃ r₀ > 0, ∀ k : ℕ, ∀ r : ℝ, 0 < r → r < r₀ →
+      P (rescaledBallMassEvent γ hcirc μ₀ R βplus βminus k r)ᶜ ≤ ENNReal.ofReal (C * ((k : ℝ) + 1) ^ 2 * r ^ p)
+
+/-- Step (Gaussian tail of the circle average at the origin). For the whole-plane GFF normalized by
+`h^ℂ_1(0) = 0`, `h^ℂ_{2^{-k}}(0)` is centred Gaussian with variance `k log 2` (eq:cov-kernel, line 359), so
+`P[|h^ℂ_{2^{-k}}(0)| ≥ L] ≤ 2 exp(-L² / (2 (k+1) log 2))` for `L ≥ 0`. -/
+def CircleAverageDyadicTailStep : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → ∀ k : ℕ, ∀ L : ℝ, 0 ≤ L →
+      P {ω | L ≤ |hcirc ω (dyadicScale k) 0|} ≤
+        ENNReal.ofReal (2 * Real.exp (-(L ^ 2) / (2 * (((k : ℝ) + 1) * Real.log 2))))
+
 end HarmonicBalls
