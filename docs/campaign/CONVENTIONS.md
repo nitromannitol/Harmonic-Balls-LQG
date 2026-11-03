@@ -19,3 +19,9 @@
   explicit hypothesis.
 - Every Defs file ends with small sanity lemmas showing the definitions are not vacuous where cheap (e.g. `0` is a
   supersolution), and has no sorry/axiom.
+- Test functions are `ContDiff ℝ ∞` (NOT `⊤`: in this Mathlib `⊤ : WithTop ℕ∞` is ω, analytic; compactly supported
+  analytic functions vanish). `open scoped ContDiff` makes `ω` a token: do not name sample points `ω` in such files.
+- Corrections in force for drafts: ~/paper-fleets/hb/CORRECTIONS-PROPOSED.md ([C1]-[C6]; C1, C5 provisional).
+- Field interface: `IsWholePlaneGFF P hC hcirc`, field h = h^ℂ - α₀ log|·| (`fieldPairing`, `fieldCircleAverage`), `σ(h|_U)` =
+  `fieldSigmaAlgebra`; μ_h: `IsLQGMeasureOfField P γ α₀ hcirc μ` (assume 0 < γ < 2, α₀ < lqgQ γ). Locality ("measurable w.r.t.
+  σ(h|_U)") = a.s. equal to a fieldSigmaAlgebra-measurable variable.
