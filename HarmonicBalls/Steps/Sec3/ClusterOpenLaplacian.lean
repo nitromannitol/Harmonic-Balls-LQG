@@ -21,7 +21,7 @@ on `B_r`. From Lemma A.2 (line 3652, openness and connectedness of `Λ_t`) and e
 * `ObstacleCompatibilityShiftStep` (Steps/SecA/ObstacleCompatibility.lean) — the substitution.
 * `GreenFunctionBallStmt` (Prop 2.3, Draft/Section2.lean; proved as `greenFunctionBall`, Steps/Sec2, not imported
   here because Proofs/Potential/GreenBall.lean and Steps/SecA/Basic.lean both declare
-  `HarmonicBalls.continuousOn_greenFunction_ball`) — `Δ G_{B_r}(z,·) = -δ_z`, for the identity of `v`.
+  `HarmonicBalls.continuousOn_greenFunction_ball_of_stmt`) — `Δ G_{B_r}(z,·) = -δ_z`, for the identity of `v`.
 * `LQGVolumeGrowthAllScalesStmt` (Input I2) — the a.s. event.
 
 ## The reduction (proved)

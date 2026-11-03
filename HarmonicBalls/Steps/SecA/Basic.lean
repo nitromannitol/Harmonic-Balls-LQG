@@ -43,7 +43,7 @@ Properties 3 (zero boundary values of `q_{B_R}`) and 4 (positivity) of line 3540
 ## Proved glue
 
 `LaplacianLE.congr_eqOn`, `LaplacianLE.mono_set`, `LaplacianGE.of_laplacianLE_neg`,
-`continuousOn_greenFunction_ball` (from Prop 2.3, `GreenFunctionBallStmt`), `continuousOn_obstacle`,
+`continuousOn_greenFunction_ball_of_stmt` (from Prop 2.3, `GreenFunctionBallStmt`), `continuousOn_obstacle`,
 `greenPotentialBall_eq_zero_of_notMem`, `obstacle_eq_zero_of_notMem`.
 -/
 
@@ -162,7 +162,7 @@ theorem LaplacianGE.of_laplacianLE_neg {w : ℂ → ℝ} {U : Set ℂ} (h : Lapl
 
 /-- Continuity of `G_{B_R}(z, ·)` on `closedBall 0 R \ {z}`, from Proposition 2.3 (smoothness off the pole and
 zero boundary values). -/
-theorem continuousOn_greenFunction_ball (h23 : GreenFunctionBallStmt) {R : ℝ} (hR : 0 < R) {z : ℂ}
+theorem continuousOn_greenFunction_ball_of_stmt (h23 : GreenFunctionBallStmt) {R : ℝ} (hR : 0 < R) {z : ℂ}
     (hz : z ∈ ball (0 : ℂ) R) : ContinuousOn (greenFunction (ball 0 R) z) (closedBall 0 R \ {z}) := by
   obtain ⟨-, -, hbd, hsmooth⟩ := h23 R hR z hz
   intro x hx
@@ -198,6 +198,6 @@ theorem obstacle_eq_zero_of_notMem {μ : Measure ℂ} {R t : ℝ} {z x : ℂ} (h
 theorem continuousOn_obstacle (h23 : GreenFunctionBallStmt) {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) {z : ℂ}
     (hz : z ∈ ball (0 : ℂ) R) (hq : ContinuousOn (greenPotentialBall μ R) (closedBall 0 R)) :
     ContinuousOn (obstacle μ R z t) (closedBall 0 R \ {z}) :=
-  (continuousOn_const.mul (continuousOn_greenFunction_ball h23 hR hz)).add (hq.mono sdiff_subset)
+  (continuousOn_const.mul (continuousOn_greenFunction_ball_of_stmt h23 hR hz)).add (hq.mono sdiff_subset)
 
 end HarmonicBalls
