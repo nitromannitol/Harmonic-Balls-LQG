@@ -53,8 +53,10 @@ realisation `μ ω` (its proof, lines 2291-2313, is deterministic).
 
 ## Corrections applied
 
-[C7] (enlarged test class, line 146) through `IsHarmonicBallGen`; [C10] (Proposition 9.2, line 2317: conclude
-`Λ^{B_R;z}_t ⊆ A` for the cluster, not for its regularization; ESCALATIONS E11, docs/campaign/GRAPH.md F5). See
+[C7] (enlarged test class, line 146) through `IsHarmonicBallGen`. Proposition 9.2 is stated AS PRINTED
+(`SubharmonicBallUniquenessStmt`, conclusion for the regularized cluster; PARTIAL, operator decisions of 2026-11-03
+04:35 and 12:40 on [C10] and E33); the [C10] form (`Λ^{B_R;z}_t ⊆ A` for the cluster, what the printed proof shows;
+ESCALATIONS E11, docs/campaign/GRAPH.md F5) is the separate statement `SubharmonicBallUniquenessWeakStmt`. See
 `~/paper-fleets/hb/CORRECTIONS-PROPOSED.md`.
 -/
 
@@ -91,19 +93,36 @@ def ObstacleComparisonStmt : Prop :=
     (IsHarmonicBallGen (μ ω) A z → ∀ x ∈ ball (0 : ℂ) R \ A,
       (μ ω).real A * greenFunction (ball 0 R) x z - ∫ y in A, greenFunction (ball 0 R) x y ∂(μ ω) = 0)
 
-/-- Proposition 9.2 (prop:sub-harmonic-ball-uniqueness, line 2315), with correction [C10]. On an event of
-probability 1: if `A ⋐ B_R` is a subharmonic ball centred at `z ∈ B_R` with `μ_h(A) = t` for some `t, R > 0`, then
-the cluster `Λ^{B_R;z}_t` (eq:non-co-set) is contained in `A`, and `μ_h(A \ Λ^{B_R;z}_t) = 0` for the regularized
-cluster `Λ^{B_R;z}_t = int(closure Λ^{B_R;z}_t)` (eq:regular-cluster).
+/-- Proposition 9.2 (prop:sub-harmonic-ball-uniqueness, line 2315), AS PRINTED. On an event of probability 1: if
+`A ⋐ B_R` is a subharmonic ball centred at `z ∈ B_R` with `μ_h(A) = t` for some `t, R > 0`, then the regularized
+cluster `Λ̂^{B_R;z}_t = int(closure Λ^{B_R;z}_t)` (eq:regular-cluster) is contained in `A` and
+`μ_h(A \ Λ̂^{B_R;z}_t) = 0`.
 
-* [C10] (ESCALATIONS E11, docs/campaign/GRAPH.md F5): the printed first conclusion is
-  `int(closure Λ^{B_R;z}_t) ⊆ A` (line 2317, `\regcluster`). The proof (lines 2320-2323) shows only
-  `Λ^{B_R;z}_t ⊆ A` (`\cluster`, line 2322); with `A = Λ^{B_R;z}_t` the printed claim would force
-  `Λ^{B_R;z}_t = int(closure Λ^{B_R;z}_t)`, which the paper never proves. The second conclusion is as printed.
+* PARTIAL (operator decisions 2026-11-03 04:35 on [C10], 12:40 on E33(a)): the printed first conclusion
+  `int(closure Λ^{B_R;z}_t) ⊆ A` (line 2317, `\regcluster`) is not what the proof shows (lines 2320-2323: only
+  `Λ^{B_R;z}_t ⊆ A`, `\cluster`, line 2322); with `A = Λ^{B_R;z}_t` it would force
+  `Λ^{B_R;z}_t = int(closure Λ^{B_R;z}_t)`, an open regularity property of the cluster which the paper never proves
+  (ESCALATIONS E11, docs/campaign/GRAPH.md F5). The form the proof gives is `SubharmonicBallUniquenessWeakStmt`.
 * The proposition is not used in the paper (line 2327). Its proof also needs `μ_h(Λ^{B_R;z}_t) = t`
   (Lemma 3.4 and Proposition 8.1 scaled to `B_R`, not cited; GRAPH G15).
 * `A ⋐ B_R` is `closure A ⊆ B_R`. -/
 def SubharmonicBallUniquenessStmt : Prop :=
+  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ᵐ ω ∂P, ∀ (A : Set ℂ) (z : ℂ) (t R : ℝ), 0 < t → 0 < R → z ∈ ball (0 : ℂ) R →
+    closure A ⊆ ball (0 : ℂ) R → IsSubharmonicBall (μ ω) A z → μ ω A = ENNReal.ofReal t →
+    regularizedCluster (μ ω) R z t ⊆ A ∧ μ ω (A \ regularizedCluster (μ ω) R z t) = 0
+
+/-- Proposition 9.2, weak form ([C10]; operator decision 2026-11-03 12:40, E33(a)). On an event of probability 1: if
+`A ⋐ B_R` is a subharmonic ball centred at `z ∈ B_R` with `μ_h(A) = t` for some `t, R > 0`, then the cluster
+`Λ^{B_R;z}_t` (eq:non-co-set) is contained in `A`, and `μ_h(A \ Λ̂^{B_R;z}_t) = 0` for the regularized cluster
+`Λ̂^{B_R;z}_t = int(closure Λ^{B_R;z}_t)` (eq:regular-cluster).
+
+This is what the printed proof (lines 2320-2323) shows; the second conclusion is the printed one. Where the cluster is
+open (Lemma 3.2, `ClusterOpenLaplacianStmt`) it is contained in its regularization, so the printed
+`SubharmonicBallUniquenessStmt` implies this statement. It is proved as its own theorem and is unused downstream. -/
+def SubharmonicBallUniquenessWeakStmt : Prop :=
   ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →

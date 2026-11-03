@@ -54,7 +54,8 @@ the shared ones and the copy of `IsVeryGoodAnnulus` differed only in the packagi
 * Constants and `α₀`, `β⁻` (GRAPH G19(iii), D10; operator E31, 2026-11-03 04:20 and fix (4) of 04:45). The statements
   follow the PRINTED quantifier order. In Propositions 6.1, 6.2 and Lemmas 6.3, 6.6 the constants printed as depending
   only on `γ` (and the listed parameters: `α(γ)`, `a(b, γ)`, `C^±(a, γ)`, `N₁(b, γ)`) are chosen before `α₀` and before
-  the probability space; in Lemma 6.6 the exponent `β⁻ > (2+γ)²/2` of `M_ρ` is quantified with `γ` before them (the
+  the probability space; so are `b = b(γ)`, `N₁` and `α` of Lemma 6.11 (operator decision E33(b), 2026-11-03 12:40).
+  In Lemmas 6.6 and 6.11 the exponent `β⁻ > (2+γ)²/2` of `M_ρ` is quantified with `γ` before them (the
   paper treats it as a function of `γ`, line 1911: "`b` depends only on `γ` (through `β⁻`)"). These `α₀`-uniform forms
   are true by localization (operator verdict on E22, 2026-11-03 04:35; docs/campaign/cex/AlphaUniformity.md §3). In the other statements of this section `α₀` and `β⁻` are quantified with `γ` before the constants, which may
   depend on them; for Lemma 6.4 ([C25]) and Lemma 6.7 ([C26]) this is required. A constant uniform in `α₀` is false
@@ -66,7 +67,8 @@ the shared ones and the copy of `IsVeryGoodAnnulus` differed only in the packagi
 * Quantifier on `C₃` (GRAPH G18, G28). Lemma 6.11 prints "there exists a universal `C₃` and `b = b(γ)`"; its proof
   takes `C₃` as given (line 1830) and sets `b` from it (eq:choice-of-b, line 1916), and the assembly with Lemma 6.6
   (line 1594) needs the `C₃` of Lemma 6.6. Lemmas 6.11 and 6.13 are stated for every `C₃ > 0` (stronger than printed),
-  with `b = b(γ, α₀, β⁻, C₃)`. The printed dependences "`N₁` depending only on `a, γ, C₁⁻, C₂⁺`" and "`α` depending
+  with `b = b(γ, β⁻, C₃)` chosen before `α₀` in Lemma 6.11 (printed order, E33(b)) and `b = b(γ, α₀, β⁻, C₃)` in
+  Lemma 6.13. The printed dependences "`N₁` depending only on `a, γ, C₁⁻, C₂⁺`" and "`α` depending
   on `a, N₀, γ, C₁⁻`" are encoded by functions `N₁ a C₁⁻ C₂⁺` and `α a N₀ C₁⁻`.
 * Probabilities of events not shown measurable (GRAPH G16) are outer measures. "`P[E] ≥ p`" (Lemmas 6.4, 6.7) is
   stated as `P[Eᶜ] ≤ 1 - p` (outer measure of the complement), the stronger form, as in `PolyHighProb`.
@@ -404,17 +406,20 @@ with the property: if `ρ ∈ (0,1)`, `x₀ ∈ B_1`, `closure B_ρ(x₀) ⊂ B_
 component of `Λ^z_t ∩ B_ρ(x₀)` with `μ_h(Λ̃_t ∩ 𝔸_{ρ/2,ρ}(x₀)) ≤ α μ_h(𝔸_{ρ/2,ρ}(x₀))`, then
 `Λ̃_t ∩ closure B_{ρ/2}(x₀) = ∅`.
 
-Stated for every `C₃ > 0` with `b = b(γ, α₀, β⁻, C₃)` (GRAPH G18, G28; stronger than the printed existential `C₃`);
+Stated for every `C₃ > 0` with `b = b(γ, β⁻, C₃)` (GRAPH G18, G28; stronger than the printed existential `C₃`);
 `N₁ a C₁⁻ C₂⁺` and `α a N₀ C₁⁻` are functions, encoding the printed dependences; they may also depend on the
-quantities fixed before them (`γ, α₀, β⁻, C₃`; G23 needs `N₁` to depend on `C₃`). One event of probability one
+quantities fixed before them (`γ, β⁻, C₃`; G23 needs `N₁` to depend on `C₃`). As printed, `b`, `N₁` and `α` do not
+depend on `α₀`: they are chosen before `α₀` and the probability space (operator decision E33(b), 2026-11-03 12:40;
+true by localization, E22; `β⁻` is quantified with `γ`, line 1911). One event of probability one
 serves all parameters, `z`, `t` and annuli (the proof is deterministic on the event of Lemmas 3.1-3.2). -/
 def VeryGoodAnnulusHarnackTypeStmt : Prop :=
-  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
   ∀ βminus : ℝ, (2 + γ) ^ 2 / 2 < βminus →
   ∀ C₃ : ℝ, 0 < C₃ → ∃ b ∈ Ioo (0 : ℝ) 1,
   ∃ N₁ : ℝ → ℝ → ℝ → ℕ, ∃ α : ℝ → ℕ → ℝ → ℝ,
     (∀ a ∈ Ioo (0 : ℝ) 1, ∀ C₁m C₂p : ℝ, 0 < C₁m → 0 < C₂p →
       200 ≤ N₁ a C₁m C₂p ∧ ∀ N₀ : ℕ, N₁ a C₁m C₂p ≤ N₀ → α a N₀ C₁m ∈ Ioo (0 : ℝ) 1) ∧
+    ∀ α₀ : ℝ, α₀ < lqgQ γ →
     ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
       (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
     ∀ᵐ ω ∂P, ∀ a ∈ Ioo (0 : ℝ) 1, ∀ C₁m C₁p C₂m C₂p : ℝ, 0 < C₁m → 0 < C₁p → 0 < C₂m → 0 < C₂p →
