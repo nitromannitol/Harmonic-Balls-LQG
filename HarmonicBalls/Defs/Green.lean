@@ -150,7 +150,7 @@ theorem greenPotential_nonneg {O : Set ℂ} (hO : Bornology.IsBounded O) (μ : M
     0 ≤ greenPotential O μ x :=
   integral_nonneg (greenFunction_nonneg hO x)
 
-/-- `G_{B_R}(0,y) = (2π)⁻¹ log (R / |y|)` (cf. the case `x = 0` of the commented formula, line 474). -/
+/-- `G_{B_R}(0,y) = (2π)⁻¹ log (R / |y|)` (cf. the case `x = 0` of the commented formula, line 475). -/
 theorem greenBall_zero_left {R : ℝ} (hR : 0 < R) {y : ℂ} (hy : y ≠ 0) :
     greenBall R 0 y = (2 * Real.pi)⁻¹ * Real.log (R / ‖y‖) := by
   have hy' : ‖y‖ ≠ 0 := norm_ne_zero_iff.2 hy
