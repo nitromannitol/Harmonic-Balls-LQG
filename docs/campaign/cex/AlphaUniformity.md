@@ -1,26 +1,45 @@
-# α₀-uniformity of constants printed as depending on γ (and b) only: E9, E22, E28
+# α₀-uniformity of the constants printed as depending on γ (and b, p) only
 
-Task `alpha-uniformity` (c2). Source: `paper/lqg_harmonic_ball-corrected.tex` (tex line numbers below). Lean drafts:
-`HarmonicBalls/Draft/Section{4,6,10}.lean`. Inputs used: Fact 2.1 (tex 402-414; `Proposed/LQG.lean`: Weyl scaling
-`LQGMeasureWeylScaling` l.88, coordinate change `LQGMeasureCoordChange` l.108, locality l.79), full support I1
-(`LQGMeasureFullSupportStmt`, `Draft/Section2.lean:109`), and the GFF facts of tex 355-389.
+One analysis for the whole family: [C8] (Lemma 4.2, E9), [C25] (Lemma 6.4, E28), [C26] (Lemma 6.7, E30), E22
+(Lemma 10.1) and the constants of Props 6.1-6.2, Lemmas 6.3, 6.6, which `Draft/Section6.lean` now states in the
+printed α₀-uniform order (E31, commit 1d4135b). Tasks `alpha-uniformity` and `alpha-uniformity-r2` (c2). Source:
+`paper/lqg_harmonic_ball-corrected.tex` (tex line numbers below). Lean drafts: `HarmonicBalls/Draft/Section{4,6,10}.lean`.
+Inputs used: Fact 2.1 (tex 402-414; `Proposed/LQG.lean`: Weyl scaling `LQGMeasureWeylScaling`, coordinate change
+`LQGMeasureCoordChange`, locality), full support I1 (`LQGMeasureFullSupportStmt`), and the GFF facts of tex 355-389.
+Two of these are now Lean theorems: the identity μ_h = |x|^{-α₀γ} μ_{h^ℂ} on ℂ \ {0}
+(`singularWeightStep_of_weyl`, `Proofs/Sec2/SingularWeight.lean`) and I1 from the staged literature inputs
+(`lqgMeasureFullSupportStmt_of_literature`, `Proofs/Sec2/Assembly.lean`).
 
 Setting: γ ∈ (0,2) and α₀ ∈ (-∞, Q) are fixed once and for all (tex 373-377), h = h^ℂ - α₀ log|·| (tex 383).
-"Uniform in α₀" means one constant for all α₀ < Q (quantifier order ∃ const ∀ α₀).
+"Uniform in α₀" means one constant for all α₀ < Q (quantifier order ∃ const ∀ α₀). In Section 6 the exponent β⁻ of
+eq:alternate-size (tex 1128-1131) is a fixed number > (2+γ)²/2, quantified with γ in the drafts.
 
 ## Verdicts
 
-| item | printed claim | verdict | decisive step |
-|---|---|---|---|
-| E9, Lemma 4.2 (tex 717, 722) | α = α(γ) | **counterexample** (α₀ ↑ Q). Every admissible exponent satisfies α ≤ γ(Q-α₀). | §1, Steps 2-3: Poisson-Jensen at the singularity + μ_h(B_s(0)) = s^{γ(Q-α₀)} e^{γ h^ℂ_s(0)} M_s |
-| E28, Lemma 6.4 (tex 1186) | a = a(b,p,γ) | **counterexample** (α₀ → -∞), at the admissible (r,z) = (1,0) for b < 0.41, and at (1,10) for every b ∈ (0,1) | §2, Step 3: μ_h = \|x\|^{\|α₀\|γ} μ_{h^ℂ} sends the mass fraction of a set Y with a fixed crossing probability to 0 |
-| E22, Lemma 10.1 (tex 2499) | K = ⌈1/α⌉, α = α(γ) | **not refuted; the paper's proof gives only K(γ,α₀)**. A uniform K follows by localization (§3), conditional on (L4) | §3: one may choose ρ ≤ ε^{3/4} ≪ \|w\|, where the weight \|x\|^{-α₀γ} is flat on B_{2ρ} |
-| downstream | — | **α₀ is fixed throughout; no proof needs uniformity in α₀.** [C8], [C25] lose nothing | §4 |
+| item | printed dependence | verdict | decisive step | tex lines |
+|---|---|---|---|---|
+| [C8], E9: Lemma 4.2 | α = α(γ) | **counterexample** as α₀ ↑ Q. Every admissible exponent satisfies α ≤ γ(Q-α₀) | §1, Steps 2-3: Poisson-Jensen at 0 and μ_h(B_s(0)) = s^{γ(Q-α₀)} e^{γ h^ℂ_s(0)} M_s | 717-727 |
+| [C25], E28: Lemma 6.4 | a = a(b,p,γ) | **counterexample** as α₀ → -∞, at the admissible (r,z) = (1,0) for b < 0.41 and at (1,10) for every b | §2, Step 3: the weight \|x\|^{\|α₀\|γ} sends the mass fraction of a set with a fixed crossing probability to 0 | 1185-1220 |
+| [C26], E30: Lemma 6.7, C₁⁻ | C₁^± = C₁^±(a,γ,p) | **counterexample for C₁⁻** as α₀ → -∞, at the admissible (ρ,x₀) = (1,0) and (1,10), whatever a, C₁⁺, C₂^±, N₁ are. C₁⁺, C₂^± not refuted | §5, Steps 2-3: M_1(0) is read on B_{1/8}(3/4), where the weight is ≤ (7/8)^{\|α₀\|γ}, while μ_h(𝔸_{1/4,2}(0)) ≥ 1.9^{\|α₀\|γ}(…) | 1307-1341, 1128-1131 |
+| E31: Lemma 6.3 | a = a(b,γ), c universal | **true** (printed order); the paper's proof gives only a(b,γ,α₀) | §6.2: α₀ = 0 count on r ∈ [ε, ε^{3/4}] (S-SubRange) + flat weight (S-Flat) + transfer of E_r (S-Transfer) | 1169-1173, 1278-1291 |
+| E31: Lemma 6.6 | a(b,γ); c, C₃ universal; C₁^±, C₂^± (a,γ); N₁(b,γ) | **true** (printed order); the paper's proof gives only α₀-dependent constants | §6.3: as §6.2 with (VG-i)-(VG-iii) | 1296-1299, 1145-1153 |
+| E31: Prop 6.1 | α = α(γ), c universal | **true** (printed order) | §6.4: Lemma 6.6 uniform (§6.3) + Lemma 6.11 deterministic (S-Harnack), α = a 2^{-N₀β⁻}/(C₁⁻ ∨ 1) | 1065-1076, 1567, 1855, 1908, 1913 |
+| E31: Prop 6.2 | α = α(γ) (setting of 6.1) | **true** (printed order) | §6.4: as Prop 6.1, component form of Lemma 6.11 | 1078-1083 |
+| E22: Lemma 10.1 | K = ⌈1/α⌉, α = α(γ) | **true** (printed order); the paper's proof gives only K(γ,α₀): a gap, not a false statement | §3.3 (= §6.5): very good radii ρ ≤ ε^{3/4} ≪ \|x₀\|, where the weight is flat on B_{2ρ}(x₀) | 2496-2545 |
+| downstream | — | **α₀ is fixed throughout; no proof needs uniformity in α₀.** [C8], [C25], [C26] lose nothing | §4 | 373-377 |
 
-Lean status. `LeastSupersolutionHolderStmt` (Section4.lean:116), `GoodAnnulusProbabilityStmt` (Section6.lean:261),
-`HarnackTypeEstimateStmt` (Section6.lean:197) and `VeryGoodAnnulusHarnackTypeStmt` (Section6.lean:403) already have
-the order ∀ α₀ ∃ constant. **`ClusterBoundedCrossingsStmt` (Section10.lean:54) has the uniform order
-`∃ α ∈ (0,1), ∀ α₀ < Q`**, which the drafted Section 6 statements do not give by the paper's proof (§3).
+The pattern. A constant fails to be α₀-uniform exactly when the statement quantifies over all scales at a fixed
+location relative to the singularity: the point 0 itself (Lemma 4.2) or annuli at distance ≍ their radius from 0
+(Lemmas 6.4, 6.7, "for all r (ρ)"). There the weight |x|^{-α₀γ} has oscillation e^{Θ(|α₀|)} on the annulus. The
+multi-scale prevalence statements (Lemmas 6.3, 6.6, Props 6.1-6.2, Lemma 10.1) only need many good scales around each
+x₀ ∉ B_{10√ε}, and one may count only the scales ρ ≤ ε^{3/4} ≪ |x₀|, where the weight is flat (§6). Every
+counterexample needs |α₀| → ∞ or α₀ ↑ Q: on α₀ ∈ [-A, Q) the constants of Lemmas 6.4 and 6.7 are uniform (§2, §5).
+
+Lean status. `LeastSupersolutionHolderStmt` (Section4.lean:116, [C8]), `GoodAnnulusProbabilityStmt` (Section6.lean:270,
+[C25]) and `VeryGoodAnnulusProbabilityStmt` (Section6.lean:331, [C26]) have the order ∀ α₀ ∃ constant, as the
+counterexamples require. `HarnackTypeEstimateStmt` (Section6.lean:206), `HarnackTypeComponentStmt` (:230),
+`ManyGoodAnnuliStmt` (:255), `ManyVeryGoodAnnuliStmt` (:311) and `ClusterBoundedCrossingsStmt` (Section10.lean:57) have
+the printed order ∃ constant ∀ α₀; §6 shows that these are true and names the steps a proof needs beyond the paper's.
 
 ## 1. E9: Lemma 4.2 (odometer:cont, tex 721-727). Counterexample
 
@@ -117,7 +136,7 @@ plus Borel-Cantelli (tex 2505-2507). It then uses Prop 6.2 to give each crossing
 α₀-dependence from the Weyl reductions (tex 1198-1217, 1321-1341; G19(iii)), and §2 shows that dependence is
 genuine for Lemmas 6.4/6.7 as stated "for all r (ρ)". The same computation as §2 refutes an α₀-uniform C₁⁻ in
 Lemma 6.7 at the admissible x₀ = 0 (dist(𝔸_{ρ/4,2ρ}(0), 0) = ρ/4). As α₀ → -∞,
-M^h_1(0)/μ_h(𝔸_{1/4,2}(0)) ≤ (5/(4·1.95))^{|α₀|γ} M^{h^ℂ}_1(0)/μ_{h^ℂ}(𝔸_{1.95,2}(0)) → 0.
+M^h_1(0)/μ_h(𝔸_{1/4,2}(0)) ≤ (5/(4·1.95))^{|α₀|γ} M^{h^ℂ}_1(0)/μ_{h^ℂ}(𝔸_{1.95,2}(0)) → 0 (details: §5).
 So the paper's proof gives only **K = K(γ, α₀)**. This matches the Section 6 drafts (∀ α₀ ∃ α) but not
 `ClusterBoundedCrossingsStmt`, which is drafted with α before α₀.
 
@@ -188,3 +207,138 @@ printed true statement.
 - **Conclusion.** [C8] (α = α(γ,α₀), with necessarily α ≤ γ(Q-α₀)) and [C25] (a = a(b,p,γ,α₀)) lose nothing
   downstream. Both are forced: §1 and §2 are counterexamples to the printed uniformity. For Lemma 10.1, Prop 6.1,
   Lemma 6.3 and Lemma 6.6 the printed uniformity is true (§3.3), but nothing downstream uses it.
+
+## 5. C26 / E30: Lemma 6.7 (lemma:very-good-annuli-hit, tex 1307-1341). Counterexample for C₁⁻
+
+Lemma 6.7: for b, p ∈ (0,1) there are a = a(b,p,γ), C₁^±, C₂^± depending on a, γ, p, a universal C₃ and
+N₁(b,p,γ) with P[Ē_ρ(x₀)] ≥ p for all N₀ ≥ N₁, all ρ > 0 and all x₀ with dist(𝔸_{ρ/4,2ρ}(x₀), 0) ≥ ρ/100. Here
+Ē_ρ(x₀) is (VG-i)-(VG-iii) (tex 1145-1153) and (VG-i) reads C₁⁻ ≤ M_ρ(x₀)/μ_h(𝔸_{ρ/4,2ρ}(x₀)) ≤ C₁⁺, with
+M_ρ(x₀) = inf_{z ∈ 𝔸_{ρ/2,ρ}(x₀)} inf_{r ∈ (0,ρ/4)} μ_h(B_r(z)) (r/ρ)^{-β⁻} (eq:alternate-size, tex 1130).
+
+**Claim.** Fix γ ∈ (0,2), β⁻ > (2+γ)²/2 and p ∈ (0,1). For every C > 0 there is α₀ < 0 with
+P[M_1(0) ≥ C μ_h(𝔸_{1/4,2}(0))] < p. Hence no C₁⁻ chosen before α₀ works in Lemma 6.7, even if a, C₁⁺, C₂^±, N₁
+may depend on α₀. In particular C₁⁻ = C₁⁻(a,γ,p) with a = a(b,p,γ), as printed, is false.
+
+*Step 1 (admissible configuration).* Take ρ = 1 and x₀ = 0. Then dist(𝔸_{1/4,2}(0), 0) = 1/4 ≥ 1/100, so Lemma 6.7
+applies. By (VG-i), Ē_1(0) ⊂ {M_1(0) ≥ C₁⁻ μ_h(𝔸_{1/4,2}(0))}.
+
+*Step 2 (M is an infimum).* The point z₁ := 3/4 lies in 𝔸_{1/2,1}(0), and r₁ := 1/8 ∈ (0, 1/4). Hence
+M_1(0) ≤ μ_h(B_{1/8}(3/4)) · 8^{β⁻}.
+
+*Step 3 (Weyl scaling).* Almost surely μ_h = |x|^{-α₀γ} μ_{h^ℂ} on ℂ \ {0}. This follows from locality and Weyl scaling
+(Fact 2.1 II-III) with the continuous functions -α₀ log max{|·|, η}, η ↓ 0; it is the Lean theorem
+`singularWeightStep_of_weyl`. For α₀ < 0 the weight |x|^{|α₀|γ} is increasing in |x|. On B_{1/8}(3/4) we have
+|x| ≤ 7/8, and on 𝔸_{1.9,2}(0) ⊂ 𝔸_{1/4,2}(0) we have |x| ≥ 1.9. Therefore
+μ_h(B_{1/8}(3/4)) ≤ (7/8)^{|α₀|γ} μ_{h^ℂ}(B_{1/8}(3/4)) and μ_h(𝔸_{1/4,2}(0)) ≥ 1.9^{|α₀|γ} μ_{h^ℂ}(𝔸_{1.9,2}(0)),
+and with Step 2,
+M_1(0)/μ_h(𝔸_{1/4,2}(0)) ≤ 8^{β⁻} (7/15.2)^{|α₀|γ} R₁, where R₁ := μ_{h^ℂ}(B_{1/8}(3/4))/μ_{h^ℂ}(𝔸_{1.9,2}(0)).
+R₁ is a.s. in (0, ∞): the numerator is finite because μ_{h^ℂ} is Radon, and the denominator is positive by full support
+I1 at α₀ = 0, since 𝔸_{1.9,2}(0) is a nonempty open set. The law of R₁ does not depend on α₀: h^ℂ is the same field
+for every α₀.
+
+*Step 4.* Fix C > 0. By Steps 1-3,
+P[M_1(0) ≥ C μ_h(𝔸_{1/4,2}(0))] ≤ P[R₁ ≥ C 8^{-β⁻} (15.2/7)^{|α₀|γ}] → 0 as α₀ → -∞,
+because R₁ < ∞ a.s. and (15.2/7)^{|α₀|γ} → ∞. Choose α₀ < 0 with this probability < p. ∎
+
+Remarks.
+- *Generic location.* The obstruction is not the point 0. Take ρ = 1 and x₀ = 10, which is admissible:
+  dist(𝔸_{1/4,2}(10), 0) = 8. The point z₁ = 9.25 lies in 𝔸_{1/2,1}(10), and B_{1/8}(9.25) ⊂ {|x| ≤ 9.375}. The set
+  U := 𝔸_{1/4,2}(10) ∩ {|x| > 11.9} is nonempty and open. As in Step 3,
+  M_1(10)/μ_h(𝔸_{1/4,2}(10)) ≤ 8^{β⁻} (9.375/11.9)^{|α₀|γ} μ_{h^ℂ}(B_{1/8}(9.25))/μ_{h^ℂ}(U) → 0.
+  So every annulus at distance ≍ ρ from 0 fails as α₀ → -∞. Lemma 6.7 is used at such annuli: at x₀ = 0 in Lemma 8.3
+  (tex 2175-2178, at α₀ = γ), and in the proof of Lemma 6.6 for x₀ with |x₀| ≍ 10√ε and ρ ≍ √ε.
+- *What does hold.* If dist(𝔸_{ρ/4,2ρ}(x₀), 0) ≥ ρ/100, the sets used by (VG-i)-(VG-iii) lie in
+  the closure of 𝔸_{ρ/4,2ρ}(x₀): M_ρ uses B_r(z) ⊂ 𝔸_{ρ/4,5ρ/4}(x₀), and for N₀ ≥ 10 the annuli 𝔸_{3r,5r}(z) of
+  (VG-iii) lie in 𝔸_{ρ/4,2ρ}(x₀). Every point of that annulus has |x| ≥ ρ/100. Since 0 is not in its closure,
+  either |x₀| < ρ/4, and then |x| ≤ 9ρ/4, or |x₀| ≥ 2ρ + ρ/100, and then |x| ∈ [|x₀| - 2ρ, |x₀| + 2ρ], a ratio
+  ≤ 401. So the weight has sup/inf ≤ 401^{|α₀|γ} on these sets, and the Weyl reduction of tex 1321-1341 gives, for α₀ ∈ [-A, Q), the constants
+  C₁⁻ := C₁⁻(0)·401^{-max(A,Q)γ}, C₁⁺ := C₁⁺(0)·401^{max(A,Q)γ} and the same for C₂^±; a as in §2 "What does hold".
+  As α₀ ↑ Q there is no obstruction for Lemma 6.7.
+- *The other constants.* As α₀ → -∞ the ratio in (VG-i) tends to 0 at these configurations, so C₁⁺ is not refuted by
+  this mechanism. The mass of 𝔸_{1/4,2}(0) concentrates in a shell of width O(1/|α₀|) at ∂B_2, where
+  G_{B_2(0)}(x, ·) vanishes. This suggests that C₂⁻ in (VG-ii) is not α₀-uniform either. That is not proved here,
+  and C₁⁻ suffices for [C26].
+- *Consequence for the proof of Lemma 6.6.* That proof combines Lemma 6.7 with Lemma 6.5 at every x₀ ∉ B_{10√ε}
+  and every ρ ∈ [ε, ε^{1/2}], including the pairs with ρ ≍ |x₀|. At those pairs only α₀-dependent constants are
+  available. So the printed proof of Lemma 6.6 gives only α₀-dependent constants. §6.3 repairs this.
+- [C26] (C₁^±, C₂^± = C(a,γ,p,α₀)) is the minimal correction. Downstream α₀ is fixed (§4), and the constants of Lemma
+  6.7 enter only Lemma 6.6 and Lemma 8.3 at fixed α₀, so the order of constants (§4, G28) has no cycle.
+
+## 6. E31: the printed α₀-uniform constants of Lemmas 6.3, 6.6 and Props 6.1, 6.2 are true
+
+The drafts state these results in the printed order (constants before α₀). The paper's proofs give only
+α₀-dependent constants: each goes through Lemma 6.4 or Lemma 6.7 at all scales, and §2 and §5 show that those
+constants genuinely depend on α₀. The printed statements are nevertheless true, by the localization argument of §3.3.
+It is set out here as four named steps (candidate Lean step Props) and then applied to each item.
+
+### 6.1 The four steps
+
+Notation: P₀ := (N₀, a, b, C₁^±, C₂^±, C₃) are the parameters of the α₀ = 0 instance; β⁻ > (2+γ)²/2 is fixed;
+μ₀ := μ_{h^ℂ} and μ := μ_h live on the same probability space (`LQGMeasureExistence` at α₀ = 0).
+
+- **S-Flat (deterministic).** Let |x₀| ≥ 10√ε, ρ ≤ ε^{3/4} and u := 2ρ/|x₀| ≤ ε^{1/4}/5. For x ∈ B̄_{2ρ}(x₀) the
+  weight g(x) := (|x|/|x₀|)^{-α₀γ} satisfies |log g(x)| ≤ |α₀|γ·(-log(1-u)) ≤ 1.25 u|α₀|γ. So
+  sup g/inf g ≤ 2 on B̄_{2ρ}(x₀) once ε ≤ (2 log 2/(|α₀|γ))^4. For the annuli 𝔸_{3r,5r}(z) of Lemma 6.3 with
+  |z| ≥ 10√ε and r ≤ ε^{3/4}, the same computation with u := 5r/|z| ≤ ε^{1/4}/2 gives sup/inf ≤ 2 once
+  ε ≤ (log 2/(1.25|α₀|γ))^4. Both hold for ε ≤ ε₀(α₀,γ) := min{1/40, (log 2/(2|α₀|γ))^4} (the bound
+  -log(1-u) ≤ 1.25u needs u ≤ 1/5).
+- **S-Transfer (deterministic).** Let ν' = g·ν on B̄_{2ρ}(x₀) with sup g/inf g ≤ 2. Then
+  E_r(z; a, b)[ν] ⊂ E_r(z; a/2, b)[ν'] for every annulus 𝔸_{3r,5r}(z) ⊂ B̄_{2ρ}(x₀), and
+  Ē_ρ(x₀; P₀)[ν] ⊂ Ē_ρ(x₀; P₀')[ν'] with P₀' := (N₀, a/2, b, C₁⁻/2, 2C₁⁺, C₂⁻/2, 2C₂⁺, C₃). Reason: E_r and
+  (VG-i)-(VG-iii) use the measure only on B̄_{2ρ}(x₀) (M_ρ on B_{5ρ/4}(x₀), SG_ρ on 𝔸_{ρ/4,2ρ}(x₀), and (VG-iii) on
+  annuli 𝔸_{3r,5r}(z) with z ∈ 𝔸_{ρ/2,ρ}(x₀), r ≤ 2^{-N₀/2}ρ, inside B_{2ρ}(x₀) for N₀ ≥ 5). Each is invariant under
+  ν ↦ λν (tex 1290). Under ν ↦ gν each mass ratio moves by a factor ≤ 2, and the Brownian probabilities do not
+  involve the measure. With S-Flat and the Weyl identity (Lean `singularWeightStep_of_weyl`), this applies to
+  ν = |x₀|^{-α₀γ} μ₀ and ν' = μ on B̄_{2ρ}(x₀) ⊂ ℂ \ {0}.
+- **S-SubRange (α₀ = 0, probabilistic).** For the field h^ℂ: with polynomially high probability as ε → 0, every grid
+  point (tex 1172, 1298) has at least c₀ log ε^{-1} radii in [ε, ε^{3/4}] ∩ {7^{-n}} (resp. {8^{-n}}) at which
+  E_r(z; a, b)[μ₀] (resp. Ē_ρ(x₀; P₀)[μ₀]) occurs, where c₀ > 0 is universal. Proof: the paper's proofs of Lemmas
+  6.3 and 6.6 at α₀ = 0, with K = ⌊(1/4) log₇ ε^{-1}⌋ (resp. log₈) radii instead of ⌊(1/2) log ε^{-1}⌋. At α₀ = 0,
+  Lemmas 6.4 and 6.7 need no Weyl step, and their constants are those of Step 2 of their proofs. Lemma 6.5 (tex
+  1262-1276) has a free exponent α. Choosing α universal and large beats the O(ε^{-2}) union bound, exactly as at tex
+  1282-1291.
+- **S-Harnack (deterministic, = (L4) of §3.3).** Lemma 6.11 (tex 1567) is purely deterministic (tex 1600), uses μ only
+  on B_{2ρ}(x₀), and gives the Harnack-type implication of Props 6.1/6.2 for every very good annulus with parameters
+  P, with α = a 2^{-N₀β⁻}/(C₁⁻ ∨ 1) (eq:choice-of-alpha, tex 1855), provided b = 2^{-2β⁻/((C'C₃)∨1)}
+  (eq:choice-of-b, tex 1908) and N₀ ≥ N₁(a, β⁻, C₁⁻, C₂⁺, C₄, c) (eq:choice-of-N1, tex 1913). C', C₄, c are geometric
+  (Lemmas 6.13, 6.8, 6.10). Nothing in tex 1386-1955 mentions α₀ or the origin.
+
+### 6.2 Lemma 6.3 (a = a(b,γ), c universal)
+
+Let a₀ = a₀(b,γ) and c₀ be the α₀ = 0 constants of S-SubRange. Put a := a₀/2 and c := c₀/2. Fix α₀. For
+ε ≤ ε₀(α₀,γ), on the S-SubRange event, every grid z ∈ B_{1+ε} \ B_{10√ε} has ≥ c₀ log₇ ε^{-1} ≥ c log₇ ε^{-1/2}
+radii r ∈ [ε, ε^{3/4}] ⊂ [ε, ε^{1/2}] with E_r(z; a₀, b)[μ₀]. By S-Flat and S-Transfer, E_r(z; a, b)[μ] occurs at
+these radii. The failure probability is that of S-SubRange, polynomial in ε. The threshold ε₀(α₀,γ) is absorbed by
+`PolyHighProb`, whose r₀ is chosen after α₀ in the draft. So `ManyGoodAnnuliStmt` holds in the printed order.
+
+### 6.3 Lemma 6.6 (a(b,γ); c, C₃ universal; C₁^±, C₂^± depending on a, γ; N₁(b,γ))
+
+The argument is the same with Ē_ρ(x₀) in place of E_r(z). Take a, C₁^±, C₂^±, C₃, N₁ from S-SubRange at α₀ = 0 and
+output P₀' (S-Transfer); N₁ and C₃ are unchanged. For N₀ ≥ N₁ and ε ≤ ε₀(α₀,γ), every grid x₀ ∉ B_{10√ε} has
+≥ c₀ log₈ ε^{-1} radii ρ ∈ [ε, ε^{3/4}] with Ē_ρ(x₀; P₀)[μ₀], hence with Ē_ρ(x₀; P₀')[μ]. So
+`ManyVeryGoodAnnuliStmt` holds in the printed order. (By §5, the printed proof via Lemma 6.7 at all ρ ∈ [ε, ε^{1/2}]
+does not give this.)
+
+### 6.4 Props 6.1 and 6.2 (α = α(γ), c universal)
+
+Fix β⁻ := (2+γ)²/2 + 1 and b from eq:choice-of-b (it depends on β⁻ and the universal C₃, C'). Take the uniform
+constants of §6.3 for this b and set N₀ := max{N₁, N₁(a/2, β⁻, C₁⁻/2, 2C₂⁺, C₄, c)} (eq:choice-of-N1). Define the
+events E_ρ(x₀) := Ē_ρ(x₀; P₀')[μ_h] for all ρ ∈ (0,1) and x₀ ∈ ℂ. S-Harnack gives the deterministic implication of
+Prop 6.1 (resp. the component form of Prop 6.2, tex 1078-1083, from the same Lemma 6.11) with
+α := (a/2) 2^{-N₀β⁻}/((C₁⁻/2) ∨ 1). This depends on γ only. The prevalence clause is §6.3, with c := c₀/2. So
+`HarnackTypeEstimateStmt` and `HarnackTypeComponentStmt` hold in the printed order.
+
+### 6.5 Lemma 10.1 (K = ⌈1/α⌉, α = α(γ))
+
+This is §3.3. Use the very good radii ρ ∈ [ε, ε^{3/4}] from §6.3-6.4 at the point x₀ of tex 2505-2507. With α of §6.4,
+the proof of tex 2505-2545 gives K = ⌈1/α⌉ = K(γ). So `ClusterBoundedCrossingsStmt` holds in the printed order.
+
+### 6.6 What a Lean proof needs beyond the paper
+
+S-Flat and S-Transfer are elementary and deterministic. The Weyl identity they use is proved
+(`Proofs/Sec2/SingularWeight.lean`). S-SubRange is the paper's α₀ = 0 argument on a different range of K scales,
+with no new input. S-Harnack is Lemma 6.11 as drafted (`VeryGoodAnnulusHarnackTypeStmt`, Section6.lean:415) at the
+parameters P₀'. Recommendation: carve Props 6.1-6.2 and Lemmas 6.3, 6.6 as "α₀ = 0 instance on the sub-range" +
+S-Flat + S-Transfer, and register in GRAPH the gap "the printed proofs of 6.3, 6.6, 6.1, 6.2, 10.1 give only
+α₀-dependent constants; repaired by localization (AlphaUniformity.md §6)". The α₀-independent gaps G18, G28, G32
+and the constant slips at tex 1859, 1899, 1916 are unaffected.
