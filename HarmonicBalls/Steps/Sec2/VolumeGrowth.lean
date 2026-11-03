@@ -327,4 +327,14 @@ def CircleAverageDyadicTailStep : Prop :=
       P {ω | L ≤ |hcirc ω (dyadicScale k) 0|} ≤
         ENNReal.ofReal (2 * Real.exp (-(L ^ 2) / (2 * (((k : ℝ) + 1) * Real.log 2))))
 
+/-- Step (a mixture of whole-plane GFFs is a whole-plane GFF). If `(hC k, hcirc k)` is a whole-plane GFF under
+`P` for every `k : ℕ`, and `ν` is a probability measure on `ℕ`, then `(k, ω) ↦ (hC k ω, hcirc k ω)` is a
+whole-plane GFF under `ν ⊗ P`: its finite-dimensional laws are `∑ₖ ν{k}` times the (common, Gaussian) laws of the
+fields `k`, which `IsWholePlaneGFF` determines. This is the device that makes Ding-Gwynne Lemma 3.8 uniform over
+the rescaled fields (`RescaledBallMassUniformStep`). -/
+def WholePlaneGFFMixtureStep : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : ℕ → Ω → (ℂ → ℝ) → ℝ) (hcirc : ℕ → Ω → ℝ → ℂ → ℝ)
+    (ν : Measure ℕ), IsProbabilityMeasure ν → (∀ k, IsWholePlaneGFF P (hC k) (hcirc k)) →
+    IsWholePlaneGFF (ν.prod P) (fun x => hC x.1 x.2) (fun x => hcirc x.1 x.2)
+
 end HarmonicBalls
