@@ -1,11 +1,12 @@
 import HarmonicBalls.Proofs.Sec2.Assembly
 import HarmonicBalls.Proofs.Sec3.OpenLaplacian
 import HarmonicBalls.Proofs.Sec3.ClusterCompatibility
+import HarmonicBalls.Proofs.Sec3.ConservationOfMassLemma
 
 /-!
 # Section 3 from the literature inputs
 
-Lemmas 3.1, 3.2, 3.3 and 3.5 with I2 (`LQGVolumeGrowthAllScalesStmt`) discharged by
+Lemmas 3.1-3.5 with I2 (`LQGVolumeGrowthAllScalesStmt`) discharged by
 `lqgVolumeGrowthAllScalesStmt_of_literature` (Proofs/Sec2/Assembly.lean, worker c2): the results depend only on the
 staged literature inputs Ding-Gwynne 2020, Lemma 3.8 (`WholePlaneLQGBallMassBounds`), the affine invariance of the
 whole-plane GFF (`WholePlaneGFFAffineInvariance`) and Fact 2.1 (`LQGMeasureCoordChange`, `LQGMeasureWeylScaling`,
@@ -46,6 +47,10 @@ theorem clusterOpenLaplacian_of_literature : ClusterOpenLaplacianStmt.{u} :=
 /-- **Lemma 3.3** (lemma:monotonicity) from the staged literature inputs. -/
 theorem clusterMonotone_of_literature : ClusterMonotoneStmt.{u} :=
   clusterMonotone_proved (lqgVolumeGrowthAllScalesStmt_of_literature hDG hAff hCC hW hE hN)
+
+/-- **Lemma 3.4** (lemma:conservation-of-mass, correction C4) from the staged literature inputs. -/
+theorem clusterConservationOfMass_of_literature : ClusterConservationOfMassStmt.{u} :=
+  clusterConservationOfMass_proved (lqgVolumeGrowthAllScalesStmt_of_literature hDG hAff hCC hW hE hN)
 
 /-- **Lemma 3.5** (lemma:cluster-compatibility) from the staged literature inputs. -/
 theorem clusterCompatibility_of_literature : ClusterCompatibilityStmt.{u} :=
