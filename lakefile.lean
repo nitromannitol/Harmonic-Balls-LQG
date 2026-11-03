@@ -13,6 +13,10 @@ require MarkovProcess from git
 require elliptic_regularity from git
   "https://github.com/scottnarmstrong/EllipticRegularityLean" @ "1e29da02bcc6e3c2359a5b8e0559e76d02ec4002"
 
+-- The lean-v4.35 line of Lattice-Probability: LQG, GFF and mated-CRT library adapted from Leonardo Bonanno's lean-formalizations.
+require «lattice-probability» from git
+  "https://github.com/nitromannitol/Lattice-Probability.git" @ "5b8d3e4c4fded6658220adbf893016a07fb82971"
+
 @[default_target]
 lean_lib «HarmonicBalls» where
   globs := #[.andSubmodules `HarmonicBalls]
