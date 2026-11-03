@@ -43,7 +43,7 @@ theorem PolyHighProb.comp_mul (h : PolyHighProb P E) {c : ℝ} (hc : 0 < c) :
   refine ⟨p, hp, C * c ^ p, r₀ / c, div_pos hr₀ hc, fun r hr hrr => ?_⟩
   have hcr : c * r < r₀ := by rwa [lt_div_iff₀ hc, mul_comm] at hrr
   calc P (E (c * r))ᶜ ≤ ENNReal.ofReal (C * (c * r) ^ p) := hE _ (mul_pos hc hr) hcr
-    _ = ENNReal.ofReal (C * c ^ p * r ^ p) := by rw [mul_pow, mul_assoc]
+    _ = ENNReal.ofReal (C * c ^ p * r ^ p) := by rw [Real.mul_rpow hc.le hr.le, mul_assoc]
 
 /-- The intersection of two events of polynomially high probability. -/
 theorem PolyHighProb.inter (hE : PolyHighProb P E) (hF : PolyHighProb P F) :
@@ -55,8 +55,8 @@ theorem PolyHighProb.inter (hE : PolyHighProb P E) (hF : PolyHighProb P F) :
   have hr₀' : r < r₀ := hrr.trans_le ((min_le_left _ _).trans (min_le_left _ _))
   have hs₀' : r < s₀ := hrr.trans_le ((min_le_left _ _).trans (min_le_right _ _))
   have hr1 : r < 1 := hrr.trans_le (min_le_right _ _)
-  have hpr : r ^ p ≤ r ^ min p q := pow_le_pow_of_le_one hr.le hr1.le (min_le_left _ _)
-  have hqr : r ^ q ≤ r ^ min p q := pow_le_pow_of_le_one hr.le hr1.le (min_le_right _ _)
+  have hpr : r ^ p ≤ r ^ min p q := Real.rpow_le_rpow_of_exponent_ge hr hr1.le (min_le_left _ _)
+  have hqr : r ^ q ≤ r ^ min p q := Real.rpow_le_rpow_of_exponent_ge hr hr1.le (min_le_right _ _)
   have hC : C * r ^ p ≤ max C 0 * r ^ min p q :=
     mul_le_mul (le_max_left _ _) hpr (by positivity) (le_max_right _ _)
   have hD : D * r ^ q ≤ max D 0 * r ^ min p q :=
@@ -76,7 +76,7 @@ theorem PolyHighProb.ae_eventually_dyadic (h : PolyHighProb P E) :
     ∀ᵐ ω ∂P, ∀ᶠ k : ℕ in atTop, ω ∈ E ((2 : ℝ)⁻¹ ^ k) := by
   obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := h
   obtain ⟨k₀, hk₀⟩ := exists_pow_lt_of_lt_one hr₀ (by norm_num : (2 : ℝ)⁻¹ < 1)
-  have hq : (2 : ℝ)⁻¹ ^ p < 1 := pow_lt_one₀ (by norm_num) (by norm_num) hp.ne'
+  have hq : (2 : ℝ)⁻¹ ^ p < 1 := Real.rpow_lt_one (by norm_num) (by norm_num) hp
   have hterm : ∀ n : ℕ, P (E ((2 : ℝ)⁻¹ ^ (n + k₀)))ᶜ ≤
       ENNReal.ofReal (max C 0) * ENNReal.ofReal ((2 : ℝ)⁻¹ ^ p) ^ n := by
     intro n
@@ -84,9 +84,8 @@ theorem PolyHighProb.ae_eventually_dyadic (h : PolyHighProb P E) :
     have hlt : (2 : ℝ)⁻¹ ^ (n + k₀) < r₀ :=
       (pow_le_pow_of_le_one (by norm_num) (by norm_num) (Nat.le_add_left k₀ n)).trans_lt hk₀
     have hle : ((2 : ℝ)⁻¹ ^ (n + k₀)) ^ p ≤ ((2 : ℝ)⁻¹ ^ p) ^ n := by
-      rw [← pow_mul, ← pow_mul, mul_comm p n]
-      exact pow_le_pow_of_le_one (by norm_num) (by norm_num)
-        (Nat.mul_le_mul_right p (Nat.le_add_right n k₀))
+      rw [← Real.rpow_pow_comm (by norm_num)]
+      exact pow_le_pow_of_le_one (Real.rpow_nonneg (by norm_num) _) hq.le (Nat.le_add_right n k₀)
     calc P (E ((2 : ℝ)⁻¹ ^ (n + k₀)))ᶜ ≤ ENNReal.ofReal (C * ((2 : ℝ)⁻¹ ^ (n + k₀)) ^ p) :=
           hE _ hpos hlt
       _ ≤ ENNReal.ofReal (max C 0 * ((2 : ℝ)⁻¹ ^ p) ^ n) :=
