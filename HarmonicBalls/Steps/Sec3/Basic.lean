@@ -108,8 +108,9 @@ theorem HasLaplacian.congr_eqOn {w w' : ℂ → ℝ} {μpos μneg : Measure ℂ}
 
 /-! ## Laplacian of `u - t G_{B_r}(z,·)` -/
 
-/-- A function locally integrable on an open `U` pairs integrably with the Laplacian of a test function on `U`. -/
-theorem integrable_mul_laplacian {w : ℂ → ℝ} {U : Set ℂ} (hw : LocallyIntegrableOn w U) {φ : ℂ → ℝ}
+/-- A function locally integrable on an open `U` pairs integrably with the Laplacian of a test function on `U`
+(named `_of_test` to avoid the clash with `integrable_mul_laplacian` of Proofs/SecA/Basic.lean). -/
+theorem integrable_mul_laplacian_of_test {w : ℂ → ℝ} {U : Set ℂ} (hw : LocallyIntegrableOn w U) {φ : ℂ → ℝ}
     (hφ : IsTestFunction U φ) : Integrable (fun x => w x * Δ φ x) := by
   have hK : IsCompact (tsupport φ) := hφ.2.1
   have hwK : IntegrableOn w (tsupport φ) := hw.integrableOn_compact_subset hφ.2.2 hK
@@ -129,8 +130,8 @@ theorem HasLaplacian.sub_const_mul {u G : ℂ → ℝ} {M : Measure ℂ} {U : Se
   obtain ⟨hM, -, hu'⟩ := hu.2 φ hφ
   obtain ⟨-, -, hG'⟩ := hG.2 φ hφ
   refine ⟨hM, integrable_zero_measure, ?_⟩
-  have i1 := integrable_mul_laplacian hu.1 hφ
-  have i2 := (integrable_mul_laplacian hG.1 hφ).const_mul t
+  have i1 := integrable_mul_laplacian_of_test hu.1 hφ
+  have i2 := (integrable_mul_laplacian_of_test hG.1 hφ).const_mul t
   have hfun : (fun x => (u x - t * G x) * Δ φ x) = fun x => u x * Δ φ x - t * (G x * Δ φ x) := by
     funext x; ring
   rw [hfun, integral_sub i1 i2, integral_const_mul, hu', hG', integral_smul_measure, integral_dirac,
