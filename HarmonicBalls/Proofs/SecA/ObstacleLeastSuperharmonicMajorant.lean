@@ -1,5 +1,8 @@
 import HarmonicBalls.Steps.SecA.ObstacleLeastSuperharmonicMajorant
+import HarmonicBalls.Steps.Sec2.GreenFunctionBall
 import HarmonicBalls.Proofs.Potential.DiscPoisson
+import HarmonicBalls.Proofs.Potential.GreenPotentialHolder
+import HarmonicBalls.Proofs.SecA.Basic
 
 /-!
 # Lemma A.1 (lemma:appendix-basic-properties, line 3589): proofs of the steps
@@ -9,17 +12,25 @@ corrected draft of Bou-Rabee and Gwynne, *Harmonic balls in Liouville quantum gr
 admissible class is `superharmonicMajorants μ R z t` (`F`), its pointwise infimum is `lscLeastMajorant μ R z t`
 (`f_t`), and `β_t = obstacle μ R z t`.
 
-The inputs on the Green function of the disc (Prop 2.3, `GreenFunctionBallStmt`) and on the continuity of
-`q_{B_R}` (`GreenPotentialBallContinuousStep`) enter as hypotheses of the `_of` theorems below.
+The `_of` theorems take Prop 2.3 (`GreenFunctionBallStmt`), the continuity of `q_{B_R}`
+(`GreenPotentialBallContinuousStep`) and, for the pole, `ObstacleTendstoAtBotStep` as hypotheses; the `_holds`
+theorems discharge them with `greenFunctionBall` (Steps/Sec2/GreenFunctionBall.lean), `greenPotentialBall_continuousOn`
+(Proofs/Potential/GreenPotentialHolder.lean) and `obstacleTendstoAtBotStep_holds` (Proofs/SecA/Basic.lean).
 
 ## Main results
 
 * `isSuperharmonicOn_lscRegularization` (AG01 Thm 3.7.5, finite-valued form): the lower semicontinuous
   regularization of the infimum of a family of superharmonic functions bounded below by `0` is superharmonic.
-* `obstacleLeastSuperharmonicMajorantStep1_of`: Step 1, by the minimum principle on discs
-  (`nonneg_of_lowerSemicontinuousOn_of_superMean`).
-* `obstacleLeastSuperharmonicMajorantStep2_of`: Step 2, `f_t` equals its lower semicontinuous regularization on
+* `isSuperharmonicOn_poissonModification`: the Poisson modification of a superharmonic function on a disc is
+  superharmonic and lies below it (lines 3634-3640, eq:superharmonic-poisson-inequality).
+* `obstacleLeastSuperharmonicMajorantStep1_holds`: Step 1, minimum principle on `B_R`.
+* `obstacleLeastSuperharmonicMajorantStep2_holds`: Step 2, `f_t` equals its lower semicontinuous regularization on
   `B_R`, which is an admissible majorant.
+* `obstacleLeastSuperharmonicMajorantStep3_holds`: Step 3 off the pole (Poisson modification of `ε + f_t`).
+* `obstacleLeastSuperharmonicMajorantStep4_holds`: Step 3 at the pole, repair of gap G2 (level `L = ε`, since
+  `β_t → -∞` at the pole and `f_t ≥ 0`).
+* `greenPotentialBallContinuousStep_holds`, and `obstacleLeastSuperharmonicMajorantGeneral_of_laplacian`: Lemma A.1
+  (general radius and pole) given only `GreenPotentialBallLaplacianStep`.
 -/
 
 namespace HarmonicBalls
@@ -57,6 +68,110 @@ theorem IsSuperharmonicOn.localSuperMean {U : Set ℂ} (hU : IsOpen U) {g : ℂ 
 theorem isSuperharmonicOn_zero (U : Set ℂ) : IsSuperharmonicOn U (fun _ => (0 : ℝ)) :=
   ⟨lowerSemicontinuousOn_const, fun _ _ _ _ _ =>
     ⟨continuousOn_const.circleIntegrable', by rw [Real.circleAverage_const]⟩⟩
+
+/-- Adding a constant preserves superharmonicity. -/
+theorem IsSuperharmonicOn.const_add {U : Set ℂ} {g : ℂ → ℝ} (h : IsSuperharmonicOn U g) (a : ℝ) :
+    IsSuperharmonicOn U (fun y => a + g y) := by
+  refine ⟨continuousOn_const.lowerSemicontinuousOn.add h.1, fun x hx r hr hsub => ?_⟩
+  obtain ⟨hi, hm⟩ := h.2 x hx r hr hsub
+  have hc : CircleIntegrable (fun _ : ℂ => a) x r := continuousOn_const.circleIntegrable'
+  refine ⟨hc.add hi, ?_⟩
+  rw [Real.circleAverage_fun_add hc hi, Real.circleAverage_const]
+  linarith
+
+/-! ## The Poisson modification (AG01 §3.3; lines 3634-3640) -/
+
+open Classical in
+/-- The **Poisson modification** of `u` on the disc `B_ρ(c)`: the Poisson integral `P_{B_ρ(c)}[u]` in `B_ρ(c)` and
+`u` elsewhere (the function `g` of lines 3634-3640). -/
+noncomputable def poissonModification (u : ℂ → ℝ) (c : ℂ) (ρ : ℝ) (y : ℂ) : ℝ :=
+  if y ∈ ball c ρ then discPoissonIntegral u c ρ y else u y
+
+theorem poissonModification_of_mem {u : ℂ → ℝ} {c y : ℂ} {ρ : ℝ} (hy : y ∈ ball c ρ) :
+    poissonModification u c ρ y = discPoissonIntegral u c ρ y := by
+  simp [poissonModification, hy]
+
+theorem poissonModification_of_notMem {u : ℂ → ℝ} {c y : ℂ} {ρ : ℝ} (hy : y ∉ ball c ρ) :
+    poissonModification u c ρ y = u y := by
+  simp [poissonModification, hy]
+
+/-- **The Poisson modification of a superharmonic function is superharmonic** (AG01 Lemma 3.3.? / the claim
+"`g` is superharmonic in `B_1`", lines 3638-3640), and it lies below `u`
+(eq:superharmonic-poisson-inequality). Lower semicontinuity at `∂B_ρ(c)` follows from the lower boundary limits of
+`P[u]`; the local super-mean-value property holds in `B_ρ(c)` (mean value property of `P[u]`) and off `B_ρ(c)`
+(`P[u] ≤ u`); it is global by `circleAverage_le_of_localSuperMean`. -/
+theorem isSuperharmonicOn_poissonModification {U : Set ℂ} (hU : IsOpen U) {u : ℂ → ℝ}
+    (hu : IsSuperharmonicOn U u) {c : ℂ} {ρ : ℝ} (hρ : 0 < ρ) (hsub : closedBall c ρ ⊆ U) :
+    IsSuperharmonicOn U (poissonModification u c ρ) ∧ ∀ y, poissonModification u c ρ y ≤ u y := by
+  have hcU : c ∈ U := hsub (mem_closedBall_self hρ.le)
+  have hui : CircleIntegrable u c ρ := (hu.2 c hcU ρ hρ hsub).1
+  have hloc := hu.localSuperMean hU
+  have hPle := discPoissonIntegral_le hu.1 hloc hρ hsub hui
+  have hPc := continuousOn_discPoissonIntegral hui
+  have hsphU : sphere c ρ ⊆ U := sphere_subset_closedBall.trans hsub
+  set g := poissonModification u c ρ with hgdef
+  have hgmem : ∀ y ∈ ball c ρ, g y = discPoissonIntegral u c ρ y := fun y hy => poissonModification_of_mem hy
+  have hgnot : ∀ y, y ∉ ball c ρ → g y = u y := fun y hy => poissonModification_of_notMem hy
+  have hgle : ∀ y, g y ≤ u y := fun y => by
+    by_cases hy : y ∈ ball c ρ
+    · rw [hgmem _ hy]; exact hPle y hy
+    · rw [hgnot _ hy]
+  have hlsc : LowerSemicontinuousOn g U := by
+    intro y hy a ha
+    have ha' : a < g y := ha
+    show ∀ᶠ w in 𝓝[U] y, a < g w
+    by_cases hyb : y ∈ ball c ρ
+    · rw [hgmem _ hyb] at ha'
+      have hcont : ContinuousAt (discPoissonIntegral u c ρ) y :=
+        hPc.continuousAt (isOpen_ball.mem_nhds hyb)
+      refine nhdsWithin_le_nhds ?_
+      filter_upwards [hcont.eventually (lt_mem_nhds ha'), isOpen_ball.mem_nhds hyb] with w hw hwb
+      rw [hgmem _ hwb]; exact hw
+    · rw [hgnot _ hyb] at ha'
+      by_cases hyc : y ∈ closedBall c ρ
+      · have hys : y ∈ sphere c ρ := by rw [← closedBall_sdiff_ball]; exact ⟨hyc, hyb⟩
+        have e1 := eventually_lt_discPoissonIntegral hu.1 hρ hsphU hui hys ha'
+        rw [eventually_nhdsWithin_iff] at e1
+        filter_upwards [nhdsWithin_le_nhds e1, hu.1 y hy a ha'] with w hw1 hw2
+        by_cases hwb : w ∈ ball c ρ
+        · rw [hgmem _ hwb]; exact hw1 hwb
+        · rw [hgnot _ hwb]; exact hw2
+      · have hopen : (closedBall c ρ)ᶜ ∈ 𝓝 y := isClosed_closedBall.isOpen_compl.mem_nhds hyc
+        filter_upwards [hu.1 y hy a ha', nhdsWithin_le_nhds hopen] with w hw hwc
+        have hwb : w ∉ ball c ρ := fun h => hwc (ball_subset_closedBall h)
+        rw [hgnot _ hwb]; exact hw
+  have hint : ∀ x r, 0 < r → closedBall x r ⊆ U → CircleIntegrable g x r := by
+    intro x r hr hsubx
+    have hsph : sphere x |r| ⊆ U := by rw [abs_of_pos hr]; exact sphere_subset_closedBall.trans hsubx
+    obtain ⟨w, -, hwmin⟩ := (hlsc.mono hsph).exists_isMinOn
+      (NormedSpace.sphere_nonempty.2 (abs_nonneg r)) (isCompact_sphere x |r|)
+    exact LowerSemicontinuousOn.circleIntegrable_of_le hlsc hsph (fun y hy => hwmin hy) (fun y _ => hgle y)
+      (hu.2 x (hsubx (mem_closedBall_self hr.le)) r hr hsubx).1
+  have hloc' : ∀ x ∈ U, ∃ r₀ > 0, ∀ r ∈ Ioo 0 r₀,
+      CircleIntegrable g x r ∧ Real.circleAverage g x r ≤ g x := by
+    intro x hx
+    obtain ⟨r₁, hr₁, hball⟩ := Metric.isOpen_iff.1 hU x hx
+    by_cases hxb : x ∈ ball c ρ
+    · have hxc : dist x c < ρ := hxb
+      refine ⟨min r₁ (ρ - dist x c), lt_min hr₁ (by linarith), fun r hr => ?_⟩
+      have hr0 : 0 < r := hr.1
+      have hr1 : r < r₁ := lt_of_lt_of_le hr.2 (min_le_left _ _)
+      have hr2 : r < ρ - dist x c := lt_of_lt_of_le hr.2 (min_le_right _ _)
+      have hsubU : closedBall x r ⊆ U := (closedBall_subset_ball hr1).trans hball
+      refine ⟨hint x r hr0 hsubU, ?_⟩
+      have hsub' : closedBall x |r| ⊆ ball c ρ := by
+        rw [abs_of_pos hr0]; exact closedBall_subset_ball' (by linarith)
+      have heq : EqOn g (discPoissonIntegral u c ρ) (sphere x |r|) := fun y hy =>
+        poissonModification_of_mem (hsub' (sphere_subset_closedBall hy))
+      rw [Real.circleAverage_congr_sphere heq, circleAverage_discPoissonIntegral hui hsub', hgmem _ hxb]
+    · refine ⟨r₁, hr₁, fun r hr => ?_⟩
+      have hsubU : closedBall x r ⊆ U := (closedBall_subset_ball hr.2).trans hball
+      obtain ⟨hui', hum⟩ := hu.2 x hx r hr.1 hsubU
+      refine ⟨hint x r hr.1 hsubU, ?_⟩
+      rw [hgnot _ hxb]
+      exact (Real.circleAverage_mono (hint x r hr.1 hsubU) hui' fun y _ => hgle y).trans hum
+  exact ⟨⟨hlsc, fun x hx r hr hsubx => ⟨hint x r hr hsubx,
+    circleAverage_le_of_localSuperMean hlsc hloc' hr hsubx (hint x r hr hsubx)⟩⟩, hgle⟩
 
 /-! ## The lower semicontinuous regularization of an infimum (AG01 Thm 3.7.5) -/
 
@@ -308,5 +423,166 @@ theorem obstacleLeastSuperharmonicMajorantStep2_of (h23 : GreenFunctionBallStmt)
     le_antisymm (lscRegularization_le hf0U hx)
       ((hf_le ĝ hĝF x (ball_subset_closedBall hx)).trans (hĝU hx).symm.le)
   exact hreg.congr hEq
+
+/-! ## Step 3 and its repair at the pole -/
+
+/-- Common facts on `f_t` when the admissible class is nonempty (Step 1 and the definition as an infimum). -/
+theorem lscLeastMajorant_facts (h23 : GreenFunctionBallStmt) (hq : GreenPotentialBallContinuousStep)
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ} (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {z : ℂ} (hz : z ∈ ball (0 : ℂ) R) {t : ℝ} (ht : 0 < t) {g₀ : ℂ → ℝ}
+    (hg₀ : g₀ ∈ superharmonicMajorants μ R z t) :
+    (∀ g ∈ superharmonicMajorants μ R z t, ∀ x ∈ closedBall (0 : ℂ) R, lscLeastMajorant μ R z t x ≤ g x) ∧
+    (∀ x ∈ closedBall (0 : ℂ) R, x ≠ z → obstacle μ R z t x ≤ lscLeastMajorant μ R z t x) ∧
+    (∀ x ∈ closedBall (0 : ℂ) R, 0 ≤ lscLeastMajorant μ R z t x) := by
+  have h1 := obstacleLeastSuperharmonicMajorantStep1_of h23 hq μ hμ R βm βp hR hV z hz t ht
+  have hne : ∀ x, ((fun g : ℂ → ℝ => g x) '' superharmonicMajorants μ R z t).Nonempty := fun x =>
+    ⟨g₀ x, g₀, hg₀, rfl⟩
+  refine ⟨fun g hg x hx => csInf_le ⟨0, ?_⟩ ⟨g, hg, rfl⟩, fun x hx hxz => le_csInf (hne x) ?_,
+    fun x hx => le_csInf (hne x) ?_⟩
+  · rintro _ ⟨g', hg', rfl⟩; exact h1 g' hg' x hx
+  · rintro _ ⟨g', hg', rfl⟩; exact hg'.2 x hx hxz
+  · rintro _ ⟨g', hg', rfl⟩; exact h1 g' hg' x hx
+
+/-- `f_t = 0` if the admissible class is empty (junk value of `sInf ∅`). -/
+theorem lscLeastMajorant_eq_zero_of_empty {μ : Measure ℂ} {R : ℝ} {z : ℂ} {t : ℝ}
+    (hF : superharmonicMajorants μ R z t = ∅) : lscLeastMajorant μ R z t = fun _ => 0 := by
+  ext x; simp [lscLeastMajorant, hF]
+
+/-- **Core of Step 3** (lines 3630-3647): if for every `ε > 0` there is a disc `closedBall x₀ δ ⊆ B_R` and a level `L`
+with `L ≤ ε + f_t` on `∂B_δ(x₀)` and `β_t ≤ L` on `B_δ(x₀) \ {z}`, then `f_t` is upper semicontinuous at `x₀`: the
+Poisson modification `g` of `ε + f_t` on `B_δ(x₀)` is admissible, so `f_t ≤ g`, and `g = P[ε + f_t]` is continuous
+at `x₀` with `g(x₀) ≤ ε + f_t(x₀)`. -/
+theorem upperSemicontinuousAt_lscLeastMajorant_of_poisson {μ : Measure ℂ} {R : ℝ} {z : ℂ} {t : ℝ}
+    (hfle : ∀ g ∈ superharmonicMajorants μ R z t, ∀ x ∈ closedBall (0 : ℂ) R,
+      lscLeastMajorant μ R z t x ≤ g x)
+    (hfobs : ∀ x ∈ closedBall (0 : ℂ) R, x ≠ z → obstacle μ R z t x ≤ lscLeastMajorant μ R z t x)
+    (hfsh : IsSuperharmonicOn (ball 0 R) (lscLeastMajorant μ R z t)) {x₀ : ℂ}
+    (h : ∀ ε > 0, ∃ δ > 0, closedBall x₀ δ ⊆ ball 0 R ∧ ∃ L : ℝ,
+      (∀ ζ ∈ sphere x₀ δ, L ≤ ε + lscLeastMajorant μ R z t ζ) ∧
+      ∀ y ∈ ball x₀ δ, y ≠ z → obstacle μ R z t y ≤ L) :
+    UpperSemicontinuousAt (lscLeastMajorant μ R z t) x₀ := by
+  set f := lscLeastMajorant μ R z t with hfdef
+  intro a ha
+  have ha' : f x₀ < a := ha
+  set ε := (a - f x₀) / 3 with hε
+  have hε0 : 0 < ε := by simp only [ε]; linarith
+  obtain ⟨δ, hδ, hsub, L, hL, hβL⟩ := h ε hε0
+  set u : ℂ → ℝ := fun y => ε + f y with hudef
+  have hu : IsSuperharmonicOn (ball 0 R) u := hfsh.const_add ε
+  have hcU : x₀ ∈ ball (0 : ℂ) R := hsub (mem_closedBall_self hδ.le)
+  have hui : CircleIntegrable u x₀ δ := (hu.2 x₀ hcU δ hδ hsub).1
+  obtain ⟨hgsh, -⟩ := isSuperharmonicOn_poissonModification isOpen_ball hu hδ hsub
+  have hgF : poissonModification u x₀ δ ∈ superharmonicMajorants μ R z t := by
+    refine ⟨hgsh, fun y hy hyz => ?_⟩
+    by_cases hyb : y ∈ ball x₀ δ
+    · rw [poissonModification_of_mem hyb]
+      exact (hβL y hyb hyz).trans (le_discPoissonIntegral hui hyb hL)
+    · rw [poissonModification_of_notMem hyb]
+      have := hfobs y hy hyz
+      show obstacle μ R z t y ≤ ε + f y
+      linarith
+  have hPc : ContinuousAt (discPoissonIntegral u x₀ δ) x₀ :=
+    (continuousOn_discPoissonIntegral hui).continuousAt (isOpen_ball.mem_nhds (mem_ball_self hδ))
+  have hPx₀ : discPoissonIntegral u x₀ δ x₀ ≤ ε + f x₀ :=
+    discPoissonIntegral_le hu.1 (hu.localSuperMean isOpen_ball) hδ hsub hui x₀ (mem_ball_self hδ)
+  filter_upwards [hPc.eventually (gt_mem_nhds (show discPoissonIntegral u x₀ δ x₀ <
+    discPoissonIntegral u x₀ δ x₀ + ε by linarith)), isOpen_ball.mem_nhds (mem_ball_self hδ)] with y hy hyb
+  have h1 : f y ≤ poissonModification u x₀ δ y :=
+    hfle _ hgF y (ball_subset_closedBall (hsub (ball_subset_closedBall hyb)))
+  rw [poissonModification_of_mem hyb] at h1
+  show f y < a
+  linarith
+
+/-- **Lemma A.1, Step 3 off the pole** (lines 3622-3647), given Prop 2.3 and the continuity of `q_{B_R}`. -/
+theorem obstacleLeastSuperharmonicMajorantStep3_of (h23 : GreenFunctionBallStmt)
+    (hq : GreenPotentialBallContinuousStep) : ObstacleLeastSuperharmonicMajorantStep3 := by
+  intro μ hμ R βm βp hR hV z hz t ht x₀ hx₀ hx₀z
+  rcases (superharmonicMajorants μ R z t).eq_empty_or_nonempty with hF | ⟨g₀, hg₀⟩
+  · rw [lscLeastMajorant_eq_zero_of_empty hF]; exact upperSemicontinuousAt_const
+  obtain ⟨hfle, hfobs, -⟩ := lscLeastMajorant_facts h23 hq hμ hR hV hz ht hg₀
+  have hfsh := obstacleLeastSuperharmonicMajorantStep2_of h23 hq μ hμ R βm βp hR hV z hz t ht
+  refine upperSemicontinuousAt_lscLeastMajorant_of_poisson hfle hfobs hfsh fun ε hε => ?_
+  have hβc : ContinuousOn (obstacle μ R z t) (closedBall 0 R \ {z}) :=
+    continuousOn_obstacle h23 hR hz (hq μ hμ R βm βp hR hV)
+  have hnhds : closedBall (0 : ℂ) R \ {z} ∈ 𝓝 x₀ :=
+    mem_of_superset ((isOpen_ball.sdiff isClosed_singleton).mem_nhds ⟨hx₀, hx₀z⟩)
+      (fun y hy => ⟨ball_subset_closedBall hy.1, hy.2⟩)
+  obtain ⟨δ₁, hδ₁, hδ₁β⟩ := Metric.continuousAt_iff.1 (hβc.continuousAt hnhds) (ε / 2) (by positivity)
+  obtain ⟨δ₂, hδ₂, hδ₂sub⟩ := Metric.isOpen_iff.1 (isOpen_ball.sdiff isClosed_singleton) x₀ ⟨hx₀, hx₀z⟩
+  set δ := min (δ₁ / 2) (δ₂ / 2) with hδdef
+  have hδ0 : 0 < δ := by positivity
+  have hδ1 : δ < δ₁ := lt_of_le_of_lt (min_le_left _ _) (by linarith)
+  have hδ2 : δ < δ₂ := lt_of_le_of_lt (min_le_right _ _) (by linarith)
+  have hcb : closedBall x₀ δ ⊆ ball (0 : ℂ) R \ {z} := (closedBall_subset_ball hδ2).trans hδ₂sub
+  refine ⟨δ, hδ0, hcb.trans sdiff_subset, obstacle μ R z t x₀ + ε / 2, fun ζ hζ => ?_, fun y hy _ => ?_⟩
+  · have hζc := hcb (sphere_subset_closedBall hζ)
+    have h1 := hδ₁β (show dist ζ x₀ < δ₁ by rw [mem_sphere] at hζ; linarith)
+    have h2 := hfobs ζ (ball_subset_closedBall hζc.1) hζc.2
+    rw [Real.dist_eq, abs_lt] at h1
+    linarith
+  · have h1 := hδ₁β (show dist y x₀ < δ₁ by rw [mem_ball] at hy; linarith)
+    rw [Real.dist_eq, abs_lt] at h1
+    linarith
+
+/-- **Lemma A.1, Step 3 at the pole** (gap G2), given Prop 2.3, the continuity of `q_{B_R}` and
+`ObstacleTendstoAtBotStep`: near the pole `β_t < ε ≤ ε + f_t`, so the Poisson modification of `ε + f_t` on a small
+disc `B_δ(z)` is admissible with the level `L = ε`. -/
+theorem obstacleLeastSuperharmonicMajorantStep4_of (h23 : GreenFunctionBallStmt)
+    (hq : GreenPotentialBallContinuousStep) (hbot : ObstacleTendstoAtBotStep) :
+    ObstacleLeastSuperharmonicMajorantStep4 := by
+  intro μ hμ R βm βp hR hV z hz t ht
+  rcases (superharmonicMajorants μ R z t).eq_empty_or_nonempty with hF | ⟨g₀, hg₀⟩
+  · rw [lscLeastMajorant_eq_zero_of_empty hF]; exact upperSemicontinuousAt_const
+  obtain ⟨hfle, hfobs, hf0⟩ := lscLeastMajorant_facts h23 hq hμ hR hV hz ht hg₀
+  have hfsh := obstacleLeastSuperharmonicMajorantStep2_of h23 hq μ hμ R βm βp hR hV z hz t ht
+  refine upperSemicontinuousAt_lscLeastMajorant_of_poisson hfle hfobs hfsh fun ε hε => ?_
+  have hev : ∀ᶠ y in 𝓝[≠] z, obstacle μ R z t y < ε :=
+    (hbot μ R z t hR hz ht (hq μ hμ R βm βp hR hV)).eventually (eventually_lt_atBot ε)
+  obtain ⟨δ₁, hδ₁, hδ₁β⟩ := Metric.mem_nhdsWithin_iff.1 hev
+  obtain ⟨δ₂, hδ₂, hδ₂sub⟩ := Metric.isOpen_iff.1 isOpen_ball z hz
+  set δ := min (δ₁ / 2) (δ₂ / 2) with hδdef
+  have hδ0 : 0 < δ := by positivity
+  have hδ1 : δ < δ₁ := lt_of_le_of_lt (min_le_left _ _) (by linarith)
+  have hδ2 : δ < δ₂ := lt_of_le_of_lt (min_le_right _ _) (by linarith)
+  have hcb : closedBall z δ ⊆ ball (0 : ℂ) R := (closedBall_subset_ball hδ2).trans hδ₂sub
+  refine ⟨δ, hδ0, hcb, ε, fun ζ hζ => ?_, fun y hy hyz => ?_⟩
+  · have := hf0 ζ (ball_subset_closedBall (hcb (sphere_subset_closedBall hζ)))
+    linarith
+  · exact (hδ₁β ⟨ball_subset_ball hδ1.le hy, hyz⟩).le
+
+/-! ## The four steps -/
+
+/-- **Shared step `GreenPotentialBallContinuousStep`** (property 1 of `q_{B_R}`, line 3538): continuity of `q_{B_R}`
+on the closed ball, from the Hölder estimate `greenPotentialBall_continuousOn`
+(Proofs/Potential/GreenPotentialHolder.lean). -/
+theorem greenPotentialBallContinuousStep_holds : GreenPotentialBallContinuousStep :=
+  greenPotentialBall_continuousOn
+
+/-- **Lemma A.1, Step 1** (lines 3602-3604). -/
+theorem obstacleLeastSuperharmonicMajorantStep1_holds : ObstacleLeastSuperharmonicMajorantStep1 :=
+  obstacleLeastSuperharmonicMajorantStep1_of greenFunctionBall greenPotentialBallContinuousStep_holds
+
+/-- **Lemma A.1, Step 2** (lines 3606-3620). -/
+theorem obstacleLeastSuperharmonicMajorantStep2_holds : ObstacleLeastSuperharmonicMajorantStep2 :=
+  obstacleLeastSuperharmonicMajorantStep2_of greenFunctionBall greenPotentialBallContinuousStep_holds
+
+/-- **Lemma A.1, Step 3 off the pole** (lines 3622-3647). -/
+theorem obstacleLeastSuperharmonicMajorantStep3_holds : ObstacleLeastSuperharmonicMajorantStep3 :=
+  obstacleLeastSuperharmonicMajorantStep3_of greenFunctionBall greenPotentialBallContinuousStep_holds
+
+/-- **Lemma A.1, Step 3 at the pole** (gap G2). -/
+theorem obstacleLeastSuperharmonicMajorantStep4_holds : ObstacleLeastSuperharmonicMajorantStep4 :=
+  obstacleLeastSuperharmonicMajorantStep4_of greenFunctionBall greenPotentialBallContinuousStep_holds
+    obstacleTendstoAtBotStep_holds
+
+/-- **Lemma A.1, general radius and pole**, given the remaining shared step `GreenPotentialBallLaplacianStep`
+(`Δ q_{B_R} = -μ`, AG01 Thm 4.3.8): all other inputs of `obstacleLeastSuperharmonicMajorantGeneral_of_steps` are
+proved. -/
+theorem obstacleLeastSuperharmonicMajorantGeneral_of_laplacian (hΔq : GreenPotentialBallLaplacianStep) :
+    ObstacleLeastSuperharmonicMajorantGeneral :=
+  obstacleLeastSuperharmonicMajorantGeneral_of_steps superharmonicOfLaplacianLEStep_holds
+    laplacianLEOfSuperharmonicStep_holds greenPotentialBallContinuousStep_holds hΔq
+    obstacleLeastSuperharmonicMajorantStep1_holds obstacleLeastSuperharmonicMajorantStep2_holds
+    obstacleLeastSuperharmonicMajorantStep3_holds obstacleLeastSuperharmonicMajorantStep4_holds
 
 end HarmonicBalls
