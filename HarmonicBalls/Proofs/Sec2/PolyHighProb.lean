@@ -11,7 +11,7 @@ eq:volume-growth, line 3529).
 
 namespace HarmonicBalls
 
-open MeasureTheory Filter Set
+open MeasureTheory Filter Set Topology
 open scoped ENNReal
 
 /-- For `a > 0` and `c > 0`, `ε^a ≤ c` for all small `ε > 0`. -/
@@ -105,5 +105,117 @@ theorem PolyHighProb.ae_eventually_dyadic (h : PolyHighProb P E) :
   have h' := hN (k - k₀) (by omega)
   rw [Nat.sub_add_cancel (by omega : k₀ ≤ k)] at h'
   simpa using h'
+
+/-! ### Small-scale bookkeeping -/
+
+/-- If `b < a`, then `C ε^a ≤ ε^b` for all small `ε > 0`. -/
+theorem eventually_mul_rpow_le (C : ℝ) {a b : ℝ} (hab : b < a) :
+    ∀ᶠ ε in 𝓝[>] (0 : ℝ), C * ε ^ a ≤ ε ^ b := by
+  have hC1 : (0 : ℝ) < max C 0 + 1 := by positivity
+  obtain ⟨r₁, hr₁, h⟩ := exists_pos_forall_rpow_le (sub_pos.2 hab) (inv_pos.2 hC1)
+  filter_upwards [Ioo_mem_nhdsGT hr₁] with ε hε
+  have hε0 : 0 < ε := hε.1
+  have h1 : ε ^ (a - b) ≤ (max C 0 + 1)⁻¹ := h ε hε.1 hε.2
+  have hsplit : ε ^ a = ε ^ (a - b) * ε ^ b := by rw [← Real.rpow_add hε0, sub_add_cancel]
+  have hb : 0 < ε ^ b := Real.rpow_pos_of_pos hε0 _
+  have hab' : 0 < ε ^ (a - b) := Real.rpow_pos_of_pos hε0 _
+  rw [hsplit]
+  calc C * (ε ^ (a - b) * ε ^ b) ≤ (max C 0 + 1) * (ε ^ (a - b) * ε ^ b) := by
+        gcongr; exact (le_max_left C 0).trans (le_add_of_nonneg_right zero_le_one)
+    _ ≤ (max C 0 + 1) * ((max C 0 + 1)⁻¹ * ε ^ b) := by gcongr
+    _ = ε ^ b := by rw [← mul_assoc, mul_inv_cancel₀ hC1.ne', one_mul]
+
+/-- If `a < b` and `c > 0`, then `ε^b ≤ c ε^a` for all small `ε > 0`. -/
+theorem eventually_rpow_le_mul {c : ℝ} (hc : 0 < c) {a b : ℝ} (hab : a < b) :
+    ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε ^ b ≤ c * ε ^ a := by
+  filter_upwards [eventually_mul_rpow_le c⁻¹ hab] with ε hε
+  calc ε ^ b = c * (c⁻¹ * ε ^ b) := by rw [← mul_assoc, mul_inv_cancel₀ hc.ne', one_mul]
+    _ ≤ c * ε ^ a := by gcongr
+
+/-- A property holding at all small scales `r > 0` along `𝓝[>] 0` holds on some interval `(0, r₁)`. -/
+theorem exists_pos_of_eventually_nhdsGT {p : ℝ → Prop} (h : ∀ᶠ r in 𝓝[>] (0 : ℝ), p r) :
+    ∃ r₁ > 0, ∀ r : ℝ, 0 < r → r < r₁ → p r := by
+  obtain ⟨u, hu, hsub⟩ := mem_nhdsGT_iff_exists_Ioo_subset.1 h
+  exact ⟨u, hu, fun r hr hru => hsub ⟨hr, hru⟩⟩
+
+/-- Monotonicity for events compared only at small scales, in filter form. -/
+theorem PolyHighProb.mono_of_eventually (h : PolyHighProb P E)
+    (hEF : ∀ᶠ r in 𝓝[>] (0 : ℝ), E r ⊆ F r) : PolyHighProb P F := by
+  obtain ⟨r₁, hr₁, h'⟩ := exists_pos_of_eventually_nhdsGT hEF
+  exact h.mono_of_small hr₁ h'
+
+/-- Intersecting with an almost sure event does not change the failure probabilities. -/
+theorem PolyHighProb.inter_ae (h : PolyHighProb P E) {W : Set Ω} (hW : ∀ᵐ ω ∂P, ω ∈ W) :
+    PolyHighProb P fun r => E r ∩ W := by
+  obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := h
+  have hW0 : P Wᶜ = 0 := ae_iff.1 hW
+  refine ⟨p, hp, C, r₀, hr₀, fun r hr hrr => ?_⟩
+  rw [compl_inter]
+  calc P ((E r)ᶜ ∪ Wᶜ) ≤ P (E r)ᶜ + P Wᶜ := measure_union_le _ _
+    _ = P (E r)ᶜ := by rw [hW0, add_zero]
+    _ ≤ _ := hE r hr hrr
+
+/-- **Union bound over the dyadic scales below a power of `r`.** If `E` has polynomially high probability, so has
+the event that `E(2^{-j})` holds for every dyadic scale `2^{-j} ≤ c r^a` (`a, c > 0`): the failure probabilities
+`O(2^{-jp})` sum to `O((c r^a)^p)`. -/
+theorem PolyHighProb.dyadic_tail (h : PolyHighProb P E) {a c : ℝ} (ha : 0 < a) (hc : 0 < c) :
+    PolyHighProb P fun r => {ω | ∀ j : ℕ, (2 : ℝ)⁻¹ ^ j ≤ c * r ^ a → ω ∈ E ((2 : ℝ)⁻¹ ^ j)} := by
+  obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := h
+  set q : ℝ := (2 : ℝ)⁻¹ ^ p with hq_def
+  have hq0 : 0 ≤ q := Real.rpow_nonneg (by norm_num) _
+  have hq1 : q < 1 := Real.rpow_lt_one (by norm_num) (by norm_num) hp
+  obtain ⟨r₁, hr₁, hsmall⟩ :=
+    exists_pos_forall_rpow_le ha (div_pos hr₀ (by positivity : (0 : ℝ) < 2 * c))
+  refine ⟨a * p, mul_pos ha hp, max C 0 / (1 - q) * c ^ p, r₁, hr₁, fun r hr hrr => ?_⟩
+  set x : ℝ := c * r ^ a with hx_def
+  have hx0 : 0 < x := mul_pos hc (Real.rpow_pos_of_pos hr _)
+  have hxr₀ : x < r₀ := by
+    have := hsmall r hr hrr
+    calc x ≤ c * (r₀ / (2 * c)) := mul_le_mul_of_nonneg_left this hc.le
+      _ = r₀ / 2 := by field_simp
+      _ < r₀ := by linarith
+  have hex : ∃ j : ℕ, (2 : ℝ)⁻¹ ^ j ≤ x := by
+    obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hx0 (by norm_num : (2 : ℝ)⁻¹ < 1)
+    exact ⟨n, hn.le⟩
+  classical
+  set J := Nat.find hex with hJ
+  have hJx : (2 : ℝ)⁻¹ ^ J ≤ x := Nat.find_spec hex
+  have hsub : {ω | ∀ j : ℕ, (2 : ℝ)⁻¹ ^ j ≤ c * r ^ a → ω ∈ E ((2 : ℝ)⁻¹ ^ j)}ᶜ ⊆
+      ⋃ n : ℕ, (E ((2 : ℝ)⁻¹ ^ (J + n)))ᶜ := by
+    intro ω hω
+    simp only [mem_compl_iff, mem_ofPred_eq, not_forall] at hω
+    obtain ⟨j, hj, hjE⟩ := hω
+    have hJj : J ≤ j := Nat.find_min' hex hj
+    exact mem_iUnion.2 ⟨j - J, by rwa [Nat.add_sub_cancel' hJj]⟩
+  have hterm : ∀ n : ℕ, P (E ((2 : ℝ)⁻¹ ^ (J + n)))ᶜ ≤
+      ENNReal.ofReal (max C 0 * ((2 : ℝ)⁻¹ ^ J) ^ p) * ENNReal.ofReal q ^ n := by
+    intro n
+    have hpos : 0 < (2 : ℝ)⁻¹ ^ (J + n) := by positivity
+    have hlt : (2 : ℝ)⁻¹ ^ (J + n) < r₀ :=
+      ((pow_le_pow_of_le_one (by norm_num) (by norm_num) (Nat.le_add_right J n)).trans hJx).trans_lt hxr₀
+    calc P (E ((2 : ℝ)⁻¹ ^ (J + n)))ᶜ ≤ ENNReal.ofReal (C * ((2 : ℝ)⁻¹ ^ (J + n)) ^ p) := hE _ hpos hlt
+      _ ≤ ENNReal.ofReal (max C 0 * ((2 : ℝ)⁻¹ ^ (J + n)) ^ p) :=
+          ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_right (le_max_left _ _) (by positivity))
+      _ = _ := by
+          rw [← ENNReal.ofReal_pow hq0, ← ENNReal.ofReal_mul (by positivity), pow_add,
+            Real.mul_rpow (by positivity) (by positivity), hq_def, Real.rpow_pow_comm (by norm_num)]
+          ring_nf
+  calc P {ω | ∀ j : ℕ, (2 : ℝ)⁻¹ ^ j ≤ c * r ^ a → ω ∈ E ((2 : ℝ)⁻¹ ^ j)}ᶜ
+      ≤ ∑' n : ℕ, P (E ((2 : ℝ)⁻¹ ^ (J + n)))ᶜ := (measure_mono hsub).trans (measure_iUnion_le _)
+    _ ≤ ∑' n : ℕ, ENNReal.ofReal (max C 0 * ((2 : ℝ)⁻¹ ^ J) ^ p) * ENNReal.ofReal q ^ n :=
+        ENNReal.tsum_le_tsum hterm
+    _ = ENNReal.ofReal (max C 0 * ((2 : ℝ)⁻¹ ^ J) ^ p) * (1 - ENNReal.ofReal q)⁻¹ := by
+        rw [ENNReal.tsum_mul_left, ENNReal.tsum_geometric]
+    _ = ENNReal.ofReal (max C 0 * ((2 : ℝ)⁻¹ ^ J) ^ p / (1 - q)) := by
+        rw [div_eq_mul_inv, ENNReal.ofReal_mul' (q := (1 - q)⁻¹) (inv_nonneg.2 (by linarith)),
+          ENNReal.ofReal_inv_of_pos (by linarith), ENNReal.ofReal_sub _ hq0, ENNReal.ofReal_one]
+    _ ≤ ENNReal.ofReal (max C 0 / (1 - q) * c ^ p * r ^ (a * p)) := by
+        refine ENNReal.ofReal_le_ofReal ?_
+        have hxp : ((2 : ℝ)⁻¹ ^ J) ^ p ≤ x ^ p := Real.rpow_le_rpow (by positivity) hJx hp.le
+        have hxp' : x ^ p = c ^ p * r ^ (a * p) := by
+          rw [hx_def, Real.mul_rpow hc.le (Real.rpow_nonneg hr.le _), ← Real.rpow_mul hr.le]
+        have h1q : 0 < 1 - q := by linarith
+        rw [div_mul_eq_mul_div, div_mul_eq_mul_div, mul_assoc, ← hxp']
+        exact div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hxp (le_max_right _ _)) h1q.le
 
 end HarmonicBalls
