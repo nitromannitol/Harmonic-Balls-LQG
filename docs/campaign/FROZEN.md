@@ -1,12 +1,17 @@
-# FROZEN pending operator approval
+# FROZEN (operator-approved 2026-11-03)
+
 Draft statements of "Harmonic balls in Liouville quantum gravity" (Bou-Rabee, Gwynne; arXiv:2208.11795), frozen at
-commit 1d4135b (fixes (1), (2), (3), (5) in 10a56e3; fix (4) in 1d4135b; operator inbox 2026-11-03 04:45, after the
-statement check ~/paper-checks/hb/review-S.md and the corrections check review-C.md). Paper: paper/lqg_harmonic_ball-corrected.tex;
-corrections [Cn]: ~/paper-fleets/hb/CORRECTIONS-PROPOSED.md (adopted by the operator 04:35: C1-C9, C11-C16, C18-C26; C22 tied to C7).
-From now on a frozen Stmt changes only with an operator decision in inbox.md. 72 statements: the 69 numbered results (Facts
-2.1, 2.2 are literature inputs in HarmonicBalls/Proposed/LQG.lean, not Stmts), the derived inputs I1, I2 and the Green clause
-of Prop 2.5 (E26). The edited Draft files are lc OK; `lb HarmonicBalls` with these statements built every tracked module
-(the only failures were untracked or uncommitted work-in-progress files of other workers).
+commit bd58fe6 and approved by the operator (inbox 2026-11-03 12:40, E33 decisions). History: freeze fixes (1), (2), (3), (5)
+in 10a56e3 and fix (4) in 1d4135b (operator inbox 2026-11-03 04:45, after the statement check ~/paper-checks/hb/review-S.md
+and the corrections check review-C.md); this list first committed as 39147fa (pending approval); E33 decisions in bd58fe6:
+(a) Prop 9.2 `SubharmonicBallUniquenessStmt` reverted to the PRINTED conclusion (PARTIAL) and the [C10] form split off as
+`SubharmonicBallUniquenessWeakStmt`; (b) Lemma 6.11 `VeryGoodAnnulusHarnackTypeStmt` with `b`, `N₁`, `α` chosen before `α₀`,
+as printed. Paper: paper/lqg_harmonic_ball-corrected.tex; corrections [Cn]: ~/paper-fleets/hb/CORRECTIONS-PROPOSED.md
+(adopted by the operator 04:35: C1-C9, C11-C16, C18-C26; C22 tied to C7; C10 only in the weak form of Prop 9.2).
+From now on a frozen Stmt changes only with an operator decision in inbox.md. 73 statements: the 69 numbered results (Facts
+2.1, 2.2 are literature inputs in HarmonicBalls/Proposed/LQG.lean, not Stmts), the derived inputs I1, I2, the Green clause
+of Prop 2.5 (E26) and the weak form of Prop 9.2 (E33(a)). The edited Draft files are lc OK; `lb` of every tracked module
+built at bd58fe6 (the only failures in the session were untracked or uncommitted work-in-progress files of other workers).
 
 | Stmt | result | file:line | corrections applied |
 |---|---|---|---|
@@ -42,28 +47,29 @@ of Prop 2.5 (E26). The edited Draft files are lc OK; `lb HarmonicBalls` with the
 | UniquenessHarmonicBallsStmt | Prop 5.6 | HarmonicBalls/Draft/Section5.lean:206 | [C6], [C7] |
 | ClusterScaleInvarianceStmt | Lemma 5.7 | HarmonicBalls/Draft/Section5.lean:226 | none |
 | ClusterStrongCompatibilityStmt | Lemma 5.8 | HarmonicBalls/Draft/Section5.lean:246 | [C21] |
-| HarnackTypeEstimateStmt | Prop 6.1 | HarmonicBalls/Draft/Section6.lean:204 | freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
-| HarnackTypeComponentStmt | Prop 6.2 | HarmonicBalls/Draft/Section6.lean:228 | freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
-| ManyGoodAnnuliStmt | Lemma 6.3 | HarmonicBalls/Draft/Section6.lean:253 | [C23] (IsGoodAnnulus); freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
-| GoodAnnulusProbabilityStmt | Lemma 6.4 | HarmonicBalls/Draft/Section6.lean:268 | [C23], [C25] |
-| AnnulusIterationStmt | Lemma 6.5 | HarmonicBalls/Draft/Section6.lean:287 | none (literature input, GM20b Lemma 3.1) |
-| ManyVeryGoodAnnuliStmt | Lemma 6.6 | HarmonicBalls/Draft/Section6.lean:309 | [C23] (IsVeryGoodAnnulus); freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
-| VeryGoodAnnulusProbabilityStmt | Lemma 6.7 | HarmonicBalls/Draft/Section6.lean:329 | [C23], [C26] |
-| AnnulusMassBoundByOdometerStmt | Lemma 6.8 | HarmonicBalls/Draft/Section6.lean:350 | none |
-| OdometerHarmonicMeasureBoundStmt | Lemma 6.9 | HarmonicBalls/Draft/Section6.lean:369 | [C24] |
-| OdometerBoundByAnnulusMassStmt | Lemma 6.10 | HarmonicBalls/Draft/Section6.lean:386 | none |
-| VeryGoodAnnulusHarnackTypeStmt | Lemma 6.11 | HarmonicBalls/Draft/Section6.lean:411 | [C23]; every C3 > 0 (G18, G28). OPEN: b after alpha_0, see note 2 |
-| ShellDecompositionStmt | Lemma 6.12 | HarmonicBalls/Draft/Section6.lean:437 | none |
-| LowMassSmallOdometerStmt | Lemma 6.13 | HarmonicBalls/Draft/Section6.lean:457 | [C15], [C23]; every C3 > 0 |
+| HarnackTypeEstimateStmt | Prop 6.1 | HarmonicBalls/Draft/Section6.lean:206 | freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
+| HarnackTypeComponentStmt | Prop 6.2 | HarmonicBalls/Draft/Section6.lean:230 | freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
+| ManyGoodAnnuliStmt | Lemma 6.3 | HarmonicBalls/Draft/Section6.lean:255 | [C23] (IsGoodAnnulus); freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
+| GoodAnnulusProbabilityStmt | Lemma 6.4 | HarmonicBalls/Draft/Section6.lean:270 | [C23], [C25] |
+| AnnulusIterationStmt | Lemma 6.5 | HarmonicBalls/Draft/Section6.lean:289 | none (literature input, GM20b Lemma 3.1) |
+| ManyVeryGoodAnnuliStmt | Lemma 6.6 | HarmonicBalls/Draft/Section6.lean:311 | [C23] (IsVeryGoodAnnulus); freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
+| VeryGoodAnnulusProbabilityStmt | Lemma 6.7 | HarmonicBalls/Draft/Section6.lean:331 | [C23], [C26] |
+| AnnulusMassBoundByOdometerStmt | Lemma 6.8 | HarmonicBalls/Draft/Section6.lean:352 | none |
+| OdometerHarmonicMeasureBoundStmt | Lemma 6.9 | HarmonicBalls/Draft/Section6.lean:371 | [C24] |
+| OdometerBoundByAnnulusMassStmt | Lemma 6.10 | HarmonicBalls/Draft/Section6.lean:388 | none |
+| VeryGoodAnnulusHarnackTypeStmt | Lemma 6.11 | HarmonicBalls/Draft/Section6.lean:415 | [C23]; every C3 > 0 (G18, G28); b = b(γ, β⁻, C₃), N₁, α before α₀, as printed (E33(b), bd58fe6) |
+| ShellDecompositionStmt | Lemma 6.12 | HarmonicBalls/Draft/Section6.lean:442 | none |
+| LowMassSmallOdometerStmt | Lemma 6.13 | HarmonicBalls/Draft/Section6.lean:462 | [C15], [C23]; every C3 > 0 |
 | ClusterUpperBoundPolyHighProbStmt | Prop 7.1 | HarmonicBalls/Draft/Section7.lean:51 | none; PolyHighProb real exponent (d126f1b) |
 | ClusterTimeContinuityStmt | Prop 7.2 | HarmonicBalls/Draft/Section7.lean:70 | [C18], [C1] (range of beta^-) |
 | BoundaryMeasureZeroOfCompactClusterStmt | Prop 8.1 | HarmonicBalls/Draft/Section8.lean:55 | none |
 | TypicalPointManyGoodScalesStmt | Lemma 8.2 | HarmonicBalls/Draft/Section8.lean:74 | [C1] |
 | OriginManyGoodScalesStmt | Lemma 8.3 | HarmonicBalls/Draft/Section8.lean:96 | [C1] |
-| ObstacleComparisonStmt | Lemma 9.1 | HarmonicBalls/Draft/Section9.lean:83 | [C7], [C22] |
-| SubharmonicBallUniquenessStmt | Prop 9.2 | HarmonicBalls/Draft/Section9.lean:106 | [C10]. OPEN: operator 04:35 ruled C10 UNCLEAR (Stmt = printed), see note 1 |
-| HarmonicBallBoundarySubsetStmt | Lemma 9.3 | HarmonicBalls/Draft/Section9.lean:125 | [C7], [C22] |
-| RegularOpenEqOfAEEqStmt | Lemma 9.4 | HarmonicBalls/Draft/Section9.lean:139 | none |
+| ObstacleComparisonStmt | Lemma 9.1 | HarmonicBalls/Draft/Section9.lean:85 | [C7], [C22] |
+| SubharmonicBallUniquenessStmt | Prop 9.2 | HarmonicBalls/Draft/Section9.lean:109 | none: AS PRINTED (regularized cluster ⊆ A); PARTIAL, equivalent to an open regularity property (04:35 verdict on [C10]; E33(a), bd58fe6) |
+| SubharmonicBallUniquenessWeakStmt | Prop 9.2 (weak form) | HarmonicBalls/Draft/Section9.lean:125 | [C10] (cluster ⊆ A, what the printed proof shows); unused downstream (E33(a), bd58fe6) |
+| HarmonicBallBoundarySubsetStmt | Lemma 9.3 | HarmonicBalls/Draft/Section9.lean:144 | [C7], [C22] |
+| RegularOpenEqOfAEEqStmt | Lemma 9.4 | HarmonicBalls/Draft/Section9.lean:158 | none |
 | ClusterBoundedCrossingsStmt | Lemma 10.1 | HarmonicBalls/Draft/Section10.lean:57 | none (alpha = alpha(gamma) before alpha_0, as printed; E22) |
 | CrossingComponentContainsClusterCrossingStmt | Lemma 10.5 | HarmonicBalls/Draft/Section10.lean:81 | freeze fix (1), 10a56e3 |
 | ComplementComponentBoundarySimpleLoopStmt | Prop 10.6 | HarmonicBalls/Draft/Section10.lean:103 | [C16] |
@@ -83,10 +89,7 @@ of Prop 2.5 (E26). The edited Draft files are lc OK; `lb HarmonicBalls` with the
 | PinchSecondEventPositiveStmt | Lemma 11.16 | HarmonicBalls/Draft/Section11.lean:299 | freeze fix (3) inner measure, 10a56e3 |
 | PinchThirdEventPositiveStmt | Lemma 11.17 | HarmonicBalls/Draft/Section11.lean:312 | freeze fix (3) inner measure, 10a56e3 |
 
-Notes (open items for the operator; not changed, not in the fix list of 04:45):
-1. Prop 9.2 `SubharmonicBallUniquenessStmt` still carries [C10] (conclusion `Λ ⊆ A`). The 04:35 verdict on C10 is UNCLEAR:
-   "the Stmt is the PRINTED statement (int(closure Λ) ⊆ A); prove the weaker form as a separate theorem". Not applied (ESCALATIONS E33).
-2. Lemma 6.11 `VeryGoodAnnulusHarnackTypeStmt` chooses `b` after `α₀` (b = b(γ, α₀, β⁻, C₃)); printed b = b(γ), and the 04:35 E22
-   verdict lists 6.11 among the α₀-uniform statements to keep as printed. Fix (4) names only 6.1, 6.2, 6.3, 6.6 (ESCALATIONS E33).
-3. PolyHighProb (Defs/Notation.lean:27) has a real exponent since d126f1b; its users (Lemma 2.4, Props 6.1, 6.2, Lemmas 6.3, 6.6,
+Notes:
+1. Resolved by the operator (E33, 12:40): Prop 9.2 as printed plus the weak [C10] form; Lemma 6.11 in the printed order.
+2. PolyHighProb (Defs/Notation.lean:27) has a real exponent since d126f1b; its users (Lemma 2.4, Props 6.1, 6.2, Lemmas 6.3, 6.6,
    Prop 7.1, and the input WholePlaneLQGBallMassBounds of Proposed/LQG.lean) match line 336 and Ding-Gwynne Lemma 3.8.
