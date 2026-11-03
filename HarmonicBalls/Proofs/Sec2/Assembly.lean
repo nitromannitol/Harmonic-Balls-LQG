@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.Sec2.BallMassReduction
 import HarmonicBalls.Proofs.Sec2.ScaledBallMass
 import HarmonicBalls.Proofs.Sec2.CircleAverageTail
 import HarmonicBalls.Proofs.Sec2.RescaledUniform
+import HarmonicBalls.Proofs.Sec2.MixtureGFF
 
 /-!
 # Lemma 2.4, I2 and I1: assembly
@@ -13,8 +14,10 @@ staged Fact 2.1 inputs `LQGMeasureWeylScaling`, `LQGMeasureExistence` (at `α₀
 (HarmonicBalls/Proposed/LQG.lean). The Gaussian tail `CircleAverageDyadicTailStep` is proved from
 `IsWholePlaneGFF` (`circleAverageDyadicTailStep_holds`). `RescaledBallMassUniformStep` itself follows from
 Ding-Gwynne 2020, Lemma 3.8 (`WholePlaneLQGBallMassBounds`), `WholePlaneGFFAffineInvariance`, `LQGMeasureCoordChange`
-and `WholePlaneGFFMixtureStep` (`rescaledBallMassUniformStep_of_DG`); the second group of theorems below states
-Lemma 2.4, I2 and I1 from these staged literature inputs and the mixture step.
+and `WholePlaneGFFMixtureStep` (`rescaledBallMassUniformStep_of_DG`), and the mixture step is proved
+(`wholePlaneGFFMixtureStep_holds`). The last group of theorems states Lemma 2.4, I2 and I1 from the staged
+literature inputs alone: `WholePlaneLQGBallMassBounds`, `WholePlaneGFFAffineInvariance`, `LQGMeasureCoordChange`,
+`LQGMeasureWeylScaling`, `LQGMeasureExistence` and `LQGMeasureNonatomic`.
 -/
 
 namespace HarmonicBalls
@@ -88,5 +91,39 @@ theorem lqgMeasureFullSupportStmt_of_DG : LQGMeasureFullSupportStmt.{u} :=
   lqgMeasureFullSupportStmt_of_rescaled (rescaledBallMassUniformStep_of_DG hDG hAff hCC hMix) hW hE hN
 
 end FromDG
+
+section FromLiterature
+
+variable
+  (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+  (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+  (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ 0 hC hcirc)
+  (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+  (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+  (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+
+include hDG hAff hCC hW hE hN
+
+/-- **Lemma 2.4** (lemma:volume-growth, with [C1]) from the staged literature inputs: Ding-Gwynne 2020,
+Lemma 3.8, the affine invariance of the whole-plane GFF, and Fact 2.1 I, III, IV with the existence of the LQG
+measure. -/
+theorem liouvilleVolumeGrowthStmt_of_literature : LiouvilleVolumeGrowthStmt.{u} :=
+  liouvilleVolumeGrowthStmt_of_DG hDG hAff hCC wholePlaneGFFMixtureStep_holds hW hE hN
+
+/-- **I2** (eq:volume-growth) from the staged literature inputs. -/
+theorem lqgVolumeGrowthAllScalesStmt_of_literature : LQGVolumeGrowthAllScalesStmt.{u} :=
+  lqgVolumeGrowthAllScalesStmt_of_DG hDG hAff hCC wholePlaneGFFMixtureStep_holds hW hE hN
+
+/-- **I1** (full support of `μ_h`) from the staged literature inputs. -/
+theorem lqgMeasureFullSupportStmt_of_literature : LQGMeasureFullSupportStmt.{u} :=
+  lqgMeasureFullSupportStmt_of_DG hDG hAff hCC wholePlaneGFFMixtureStep_holds hW hE hN
+
+end FromLiterature
 
 end HarmonicBalls
