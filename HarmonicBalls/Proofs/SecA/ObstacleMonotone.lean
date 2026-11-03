@@ -2,7 +2,7 @@ import HarmonicBalls.Steps.SecA.ObstacleMonotone
 import HarmonicBalls.Proofs.SecA.ObstacleNonCoincidenceHarmonic
 
 /-!
-# Lemma A.3: proof of Step 1 (the truncated competitor)
+# Lemma A.3: proof of Step 1 (the truncated competitor) and of Lemma A.3
 
 Proof of `ObstacleMonotoneStep1` of `Steps/SecA/ObstacleMonotone.lean` (lines 3743-3763 with the repair of the pole
 issue, GRAPH.md A.3), for a general radius `R > 0` and pole `z ∈ B_R`. For `0 < t₁ < t₂` the printed competitor
@@ -151,5 +151,17 @@ theorem obstacleMonotoneStep1_of (hA1 : ObstacleLeastSuperharmonicMajorantGenera
     linarith [le_max_left B 0]
   · rw [hwne x hxz]
     exact min_le_left _ _
+
+/-- **Lemma A.3, Step 1.** -/
+theorem obstacleMonotoneStep1_holds : ObstacleMonotoneStep1 :=
+  obstacleMonotoneStep1_of obstacleLeastSuperharmonicMajorantGeneral_holds
+
+/-- **Lemma A.3, general radius and pole** (with the monotonicity of the odometer). -/
+theorem obstacleMonotoneGeneral_holds : ObstacleMonotoneGeneral :=
+  obstacleMonotoneGeneral_of_steps obstacleMonotoneStep1_holds
+
+/-- **Lemma A.3** (lemma:appendix-monotonicity, line 3731) as printed (`R = 1`, pole `0`). -/
+theorem obstacleMonotone_holds : ObstacleMonotoneStmt :=
+  obstacleMonotone_of_steps obstacleMonotoneStep1_holds
 
 end HarmonicBalls

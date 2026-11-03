@@ -23,6 +23,19 @@ of `Steps/SecA/ObstacleNonCoincidenceHarmonic.lean`, for a general radius `R > 0
 
 Both steps are proved from Lemma A.1 (general form, `ObstacleLeastSuperharmonicMajorantGeneral`); Step 3 also uses
 the superharmonicity of `q_{B_R}` (property 2 of `q_{B_R}`, line 3539).
+
+## Lemma A.1 without `GreenPotentialBallLaplacianStep`, and the `_holds` theorems
+
+* `isSuperharmonicOn_greenPotentialBall`: `q_{B_R}` is superharmonic in `B_R` (classical sense) under the volume
+  growth condition: `M(G_{B_R}(y,·); x, r) ≤ G_{B_R}(y,x)` for `y ≠ x` (`G = N(y,·) - h_y`, Jensen's formula), `μ` has
+  no atoms (`VolumeGrowth.measure_singleton`), and Fubini over `[0, 2π] × B_R` with the uniform bound
+  `M(G_{B_R}(y,·); x, r) ≤ (2π)⁻¹ (log (2R²) - log R - log r)`.
+* `obstacleLeastSuperharmonicMajorantGeneral_holds`: the reduction `obstacleLeastSuperharmonicMajorantGeneral_of_steps`
+  used `GreenPotentialBallLaplacianStep` (`Δ q_{B_R} = -μ`) only for `Δ q_{B_R} ≤ 0`, which now follows from the
+  superharmonicity of `q_{B_R}` and `laplacianLEOfSuperharmonicStep_holds`; with the steps of
+  Proofs/SecA/ObstacleLeastSuperharmonicMajorant.lean this proves Lemma A.1 (`obstacleLeastSuperharmonicMajorant_holds`).
+* `obstacleNonCoincidenceHarmonicStep2_holds`, `obstacleNonCoincidenceHarmonicStep3_holds`, and Lemma A.2
+  (`obstacleNonCoincidenceHarmonicGeneral_holds`, `obstacleNonCoincidenceHarmonic_holds`).
 -/
 
 namespace HarmonicBalls
@@ -308,5 +321,319 @@ theorem obstacleNonCoincidenceHarmonicStep3_of (hA1 : ObstacleLeastSuperharmonic
     show v x - β x ≤ Real.circleAverage (fun y => v y - β y) x (r / 2)
     rw [Real.circleAverage_fun_sub hvi hβi]
     linarith
+
+/-! ## Superharmonicity of `q_{B_R}` (property 2 of `q_{B_R}`, line 3539) -/
+
+section GreenPotential
+
+open ComplexConjugate
+
+/-- Off the pole, `G_{B_R}(y,·) = N(y,·) - h_y` on `B_R` (`h_y = greatestHarmonicMinorantBall R y`). -/
+theorem greenFunction_ball_eq_sub {R : ℝ} {y w : ℂ} (hy : y ∈ ball (0 : ℂ) R) (hw : w ∈ ball (0 : ℂ) R)
+    (hyw : y ≠ w) :
+    greenFunction (ball 0 R) y w = newtonKernel y w - greatestHarmonicMinorantBall R y w := by
+  have hR : 0 < R := (norm_nonneg y).trans_lt (mem_ball_zero_iff.1 hy)
+  rw [greenFunction_ball hy hw hyw, ← newtonKernel_sub_greenBall hR hyw
+    (norm_sub_conj_mul_pos hR (mem_ball_zero_iff.1 hy) (mem_ball_zero_iff.1 hw).le).ne']
+  ring
+
+/-- Circle averages of the Newtonian kernel: `M(N(y,·); x, r) ≤ -(2π)⁻¹ log r`, and `≤ N(y,x)` for `y ≠ x`
+(Jensen's formula for a pole inside the circle, the mean value property otherwise). -/
+theorem circleAverage_newtonKernel_le {x y : ℂ} {r : ℝ} (hr : 0 < r) :
+    Real.circleAverage (newtonKernel y) x r ≤ -(2 * Real.pi)⁻¹ * Real.log r ∧
+      (y ≠ x → Real.circleAverage (newtonKernel y) x r ≤ newtonKernel y x) := by
+  have hπ : 0 < (2 * Real.pi)⁻¹ := by positivity
+  by_cases hyx : ‖y - x‖ ≤ r
+  · rw [circleAverage_newtonKernel hr hyx]
+    refine ⟨le_rfl, fun hne => ?_⟩
+    have hpos : 0 < ‖y - x‖ := norm_pos_iff.2 (sub_ne_zero.2 hne)
+    have := Real.log_le_log hpos hyx
+    rw [newtonKernel]
+    nlinarith
+  · rw [not_le] at hyx
+    have hharm : InnerProductSpace.HarmonicOnNhd (newtonKernel y) (closedBall x |r|) := by
+      intro w hw
+      refine harmonicAt_newtonKernel fun hwy => ?_
+      rw [hwy, mem_closedBall, abs_of_pos hr, dist_eq_norm] at hw
+      linarith
+    rw [InnerProductSpace.HarmonicOnNhd.circleAverage_eq hharm]
+    refine ⟨?_, fun _ => le_rfl⟩
+    have := Real.log_le_log hr hyx.le
+    rw [newtonKernel]
+    nlinarith
+
+/-- **Circle averages of `G_{B_R}(y,·)`** over a circle in `B_R`, for a pole `y ∈ B_R`: circle integrable, bounded by
+`-(2π)⁻¹ log r - h_y(x)`, and the super-mean-value inequality `M(G(y,·); x, r) ≤ G(y,x)` for `y ≠ x`. -/
+theorem circleAverage_greenFunction_ball_le {R : ℝ} {x y : ℂ} {r : ℝ} (hr : 0 < r) (hy : y ∈ ball (0 : ℂ) R)
+    (hsub : closedBall x r ⊆ ball 0 R) :
+    CircleIntegrable (greenFunction (ball 0 R) y) x r ∧
+      Real.circleAverage (greenFunction (ball 0 R) y) x r ≤
+        -(2 * Real.pi)⁻¹ * Real.log r - greatestHarmonicMinorantBall R y x ∧
+      (y ≠ x → Real.circleAverage (greenFunction (ball 0 R) y) x r ≤ greenFunction (ball 0 R) y x) := by
+  have hR : 0 < R := (norm_nonneg y).trans_lt (mem_ball_zero_iff.1 hy)
+  have hsph : sphere x |r| ⊆ ball 0 R := by
+    rw [abs_of_pos hr]
+    exact sphere_subset_closedBall.trans hsub
+  have hharm : InnerProductSpace.HarmonicOnNhd (greatestHarmonicMinorantBall R y) (closedBall x |r|) := by
+    intro w hw
+    rw [abs_of_pos hr] at hw
+    exact harmonicAt_greatestHarmonicMinorantBall (norm_pos_iff.1 (norm_sub_conj_mul_pos hR
+      (mem_ball_zero_iff.1 hy) (mem_ball_zero_iff.1 (hsub hw)).le))
+  have hcae : greenFunction (ball 0 R) y =ᶠ[codiscreteWithin (sphere x |r|)]
+      fun w => newtonKernel y w - greatestHarmonicMinorantBall R y w := by
+    show {w | greenFunction (ball 0 R) y w = newtonKernel y w - greatestHarmonicMinorantBall R y w} ∈ _
+    rw [mem_codiscreteWithin]
+    intro p _
+    rw [disjoint_principal_right]
+    have hy' : ({y} : Set ℂ)ᶜ ∈ 𝓝[≠] p := by
+      by_cases hp : p = y
+      · rw [hp]
+        exact self_mem_nhdsWithin
+      · exact mem_nhdsWithin_of_mem_nhds (isOpen_compl_singleton.mem_nhds hp)
+    refine mem_of_superset hy' fun w hw hwS => hwS.2 ?_
+    exact greenFunction_ball_eq_sub hy (hsph hwS.1) (Ne.symm hw)
+  have hNi : CircleIntegrable (newtonKernel y) x r := by
+    have h := (circleIntegrable_log_norm_sub_const (a := y) (c := x) r).const_smul (a := -(2 * Real.pi)⁻¹)
+    refine (circleIntegrable_congr (fun w _ => ?_)).1 h
+    simp [newtonKernel, norm_sub_rev, smul_eq_mul]
+  have hhi : CircleIntegrable (greatestHarmonicMinorantBall R y) x r :=
+    ContinuousOn.circleIntegrable' fun w hw =>
+      (hharm w (sphere_subset_closedBall hw)).1.continuousAt.continuousWithinAt
+  have hGi : CircleIntegrable (greenFunction (ball 0 R) y) x r :=
+    (circleIntegrable_congr_codiscreteWithin hcae).2 (hNi.sub hhi)
+  have havg : Real.circleAverage (greenFunction (ball 0 R) y) x r =
+      Real.circleAverage (newtonKernel y) x r - greatestHarmonicMinorantBall R y x := by
+    rw [Real.circleAverage_congr_codiscreteWithin hcae hr.ne', Real.circleAverage_fun_sub hNi hhi,
+      InnerProductSpace.HarmonicOnNhd.circleAverage_eq hharm]
+  obtain ⟨hN1, hN2⟩ := circleAverage_newtonKernel_le (x := x) (y := y) hr
+  refine ⟨hGi, by rw [havg]; linarith, fun hyx => ?_⟩
+  rw [havg, greenFunction_ball_eq_sub hy (hsub (mem_closedBall_self hr.le)) hyx]
+  linarith [hN2 hyx]
+
+/-- Under the volume growth condition, `μ` has no atoms in `B_R`. -/
+theorem VolumeGrowth.measure_singleton {μ : Measure ℂ} {R βm βp : ℝ} (hV : VolumeGrowth μ R βm βp) {x : ℂ}
+    (hx : x ∈ ball (0 : ℂ) R) : μ {x} = 0 := by
+  obtain ⟨-, hβ, r₀, hr₀, hgr⟩ := hV
+  have hle : ∀ᶠ r in 𝓝[>] (0 : ℝ), μ {x} ≤ ENNReal.ofReal (r ^ βp) := by
+    filter_upwards [Ioo_mem_nhdsGT hr₀] with r hr
+    exact (measure_mono (singleton_subset_iff.2 (mem_ball_self hr.1))).trans (hgr r hr.1 hr.2 x hx).2
+  have ht : Tendsto (fun r : ℝ => ENNReal.ofReal (r ^ βp)) (𝓝[>] 0) (𝓝 0) := by
+    have h0 : Tendsto (fun r : ℝ => r ^ βp) (𝓝 0) (𝓝 0) := by
+      have := (Real.continuousAt_rpow_const 0 βp (Or.inr hβ.le)).tendsto
+      rwa [Real.zero_rpow hβ.ne'] at this
+    simpa using ENNReal.tendsto_ofReal (h0.mono_left nhdsWithin_le_nhds)
+  exact le_antisymm (ge_of_tendsto ht hle) zero_le
+
+/-- **`q_{B_R}` is superharmonic in `B_R`** (property 2 of `q_{B_R}`, line 3539; AG01 Thm 4.3.8 gives
+`Δ q_{B_R} = -μ`, of which only `Δ q_{B_R} ≤ 0` is used in Appendix A). The super-mean-value inequality
+`M(q; x, r) ≤ q(x)` follows from that of `G_{B_R}(y,·)` for `y ≠ x` (`μ` has no atoms) by Fubini; the circle
+averages of `G_{B_R}(y,·)` are bounded uniformly in `y ∈ B_R`. -/
+theorem isSuperharmonicOn_greenPotentialBall {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp) :
+    IsSuperharmonicOn (ball 0 R) (greenPotentialBall μ R) := by
+  classical
+  have := hμ
+  have hqc := greenPotentialBallContinuousStep_holds μ hμ R βm βp hR hV
+  refine ⟨(hqc.mono ball_subset_closedBall).lowerSemicontinuousOn, fun x hx r hr hsub => ?_⟩
+  have hqi : CircleIntegrable (greenPotentialBall μ R) x r :=
+    (hqc.mono ((sphere_subset_closedBall.trans hsub).trans ball_subset_closedBall)).circleIntegrable hr.le
+  refine ⟨hqi, ?_⟩
+  set ν := μ.restrict (ball (0 : ℂ) R) with hνdef
+  have : IsFiniteMeasure ν := isFiniteMeasure_restrict.2 measure_ball_lt_top.ne
+  set G : ℂ → ℂ → ℝ := fun y w => greenFunction (ball (0 : ℂ) R) y w with hGdef
+  set F : ℝ → ℂ → ℝ := fun θ y => G y (circleMap x r θ) with hFdef
+  set I := Ioc (0 : ℝ) (2 * Real.pi) with hIdef
+  have h2π : 0 < 2 * Real.pi := Real.two_pi_pos
+  -- joint measurability of the Green function
+  have hGm : Measurable (fun p : ℂ × ℂ => G p.1 p.2) := by
+    have heq : (fun p : ℂ × ℂ => G p.1 p.2) = fun p =>
+        if p.1 ∈ ball (0 : ℂ) R ∧ p.2 ∈ ball (0 : ℂ) R ∧ p.1 ≠ p.2 then greenBall R p.1 p.2 else 0 := by
+      funext p
+      split_ifs with h
+      · exact greenFunction_ball h.1 h.2.1 h.2.2
+      · show greenFunction (ball 0 R) p.1 p.2 = 0
+        rw [greenFunction, ite_eq_right_iff]
+        exact fun hc => absurd hc h
+    rw [heq]
+    refine Measurable.ite ?_ ?_ measurable_const
+    · exact (measurableSet_ball.preimage measurable_fst).inter
+        ((measurableSet_ball.preimage measurable_snd).inter isClosed_diagonal.measurableSet.compl)
+    · unfold greenBall
+      fun_prop
+  have hFm : Measurable (Function.uncurry F) :=
+    hGm.comp (measurable_snd.prodMk ((continuous_circleMap x r).measurable.comp measurable_fst))
+  have hG0 : ∀ y w, 0 ≤ G y w := fun y w => greenFunction_nonneg isBounded_ball y w
+  -- uniform bound on the circle averages
+  set C := -(2 * Real.pi)⁻¹ * Real.log r + (2 * Real.pi)⁻¹ * (Real.log (2 * R ^ 2) - Real.log R) with hCdef
+  have hbd : ∀ y ∈ ball (0 : ℂ) R, Real.circleAverage (G y) x r ≤ C := by
+    intro y hy
+    have h := (circleAverage_greenFunction_ball_le hr hy hsub).2.1
+    have hx' : ‖x‖ < R := mem_ball_zero_iff.1 hx
+    have hy' : ‖y‖ < R := mem_ball_zero_iff.1 hy
+    have hpos := norm_sub_conj_mul_pos hR hy' hx'.le
+    have hle : ‖(R : ℂ) ^ 2 - conj y * x‖ ≤ 2 * R ^ 2 := by
+      calc ‖(R : ℂ) ^ 2 - conj y * x‖ ≤ ‖(R : ℂ) ^ 2‖ + ‖conj y * x‖ := norm_sub_le _ _
+        _ = R ^ 2 + ‖y‖ * ‖x‖ := by
+          rw [norm_pow, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hR, norm_mul, Complex.norm_conj]
+        _ ≤ 2 * R ^ 2 := by nlinarith [norm_nonneg x, norm_nonneg y]
+    have hlog := Real.log_le_log hpos hle
+    have hπ : 0 < (2 * Real.pi)⁻¹ := by positivity
+    simp only [greatestHarmonicMinorantBall] at h
+    rw [hCdef]
+    nlinarith
+  -- the inner integrals
+  have hFint : ∀ y ∈ ball (0 : ℂ) R, ∫ θ in I, F θ y = 2 * Real.pi * Real.circleAverage (G y) x r := by
+    intro y _
+    rw [Real.circleAverage_def, smul_eq_mul, hIdef, ← intervalIntegral.integral_of_le h2π.le]
+    field_simp
+    rfl
+  have hFiθ : ∀ y ∈ ball (0 : ℂ) R, Integrable (fun θ => F θ y) (volume.restrict I) := by
+    intro y hy
+    have h := (circleAverage_greenFunction_ball_le hr hy hsub).1
+    exact (intervalIntegrable_iff_integrableOn_Ioc_of_le h2π.le).1 h
+  have hmem : ∀ᵐ y ∂ν, y ∈ ball (0 : ℂ) R := ae_restrict_mem measurableSet_ball
+  have hFint_nonneg : ∀ y, 0 ≤ ∫ θ in I, F θ y := fun y => integral_nonneg fun θ => hG0 _ _
+  have hprod : Integrable (Function.uncurry F) ((volume.restrict I).prod ν) := by
+    refine (integrable_prod_iff' hFm.aestronglyMeasurable).2 ⟨?_, ?_⟩
+    · filter_upwards [hmem] with y hy using hFiθ y hy
+    · refine Integrable.of_bound
+        ((hFm.norm.stronglyMeasurable.integral_prod_left' (μ := volume.restrict I)).aestronglyMeasurable)
+        (2 * Real.pi * max C 0) ?_
+      filter_upwards [hmem] with y hy
+      have hn : (fun θ => ‖F θ y‖) = fun θ => F θ y := funext fun θ => Real.norm_of_nonneg (hG0 _ _)
+      show ‖∫ θ, ‖Function.uncurry F (θ, y)‖ ∂(volume.restrict I)‖ ≤ 2 * Real.pi * max C 0
+      simp only [Function.uncurry_apply_pair]
+      rw [hn, Real.norm_of_nonneg (hFint_nonneg y), hFint y hy]
+      exact mul_le_mul_of_nonneg_left ((hbd y hy).trans (le_max_left _ _)) h2π.le
+  -- Fubini
+  have hcA : Real.circleAverage (greenPotentialBall μ R) x r =
+      (2 * Real.pi)⁻¹ * ∫ y, (∫ θ in I, F θ y) ∂ν := by
+    rw [Real.circleAverage_def, smul_eq_mul, intervalIntegral.integral_of_le h2π.le, ← hIdef,
+      ← integral_integral_swap hprod]
+    rfl
+  have hGxi : Integrable (fun y => G y x) ν := by
+    obtain ⟨hI, -⟩ := greenPotential_ball_holderOnWith hR hV (memLp_top_const (1 : ℝ))
+    refine ((hI x (ball_subset_closedBall hx)).congr ?_)
+    filter_upwards with y
+    simp only [mul_one, hGdef]
+    exact greenFunction_ball_comm R x y
+  have hmono : ∫ y, (∫ θ in I, F θ y) ∂ν ≤ ∫ y, 2 * Real.pi * G y x ∂ν := by
+    refine integral_mono_ae hprod.integral_prod_right (hGxi.const_mul _) ?_
+    have hne : ∀ᵐ y ∂ν, y ≠ x := by
+      have h0 : ν {x} = 0 :=
+        le_antisymm ((Measure.restrict_apply_le _ _).trans_eq (hV.measure_singleton hx)) zero_le
+      rw [ae_iff]
+      simpa using h0
+    filter_upwards [hmem, hne] with y hy hyx
+    rw [hFint y hy]
+    exact mul_le_mul_of_nonneg_left ((circleAverage_greenFunction_ball_le hr hy hsub).2.2 hyx) h2π.le
+  rw [hcA]
+  calc (2 * Real.pi)⁻¹ * ∫ y, (∫ θ in I, F θ y) ∂ν ≤ (2 * Real.pi)⁻¹ * ∫ y, 2 * Real.pi * G y x ∂ν :=
+        mul_le_mul_of_nonneg_left hmono (by positivity)
+    _ = greenPotentialBall μ R x := by
+      rw [integral_const_mul]
+      field_simp
+      rfl
+
+end GreenPotential
+
+/-! ## Lemma A.1 (general form) without `GreenPotentialBallLaplacianStep` -/
+
+/-- **Lemma A.1, general radius and pole**, proved: the reduction `obstacleLeastSuperharmonicMajorantGeneral_of_steps`
+uses `GreenPotentialBallLaplacianStep` only through `Δ q_{B_R} ≤ 0`, which follows from
+`isSuperharmonicOn_greenPotentialBall` and the converse of Weyl's lemma. -/
+theorem obstacleLeastSuperharmonicMajorantGeneral_holds : ObstacleLeastSuperharmonicMajorantGeneral := by
+  intro μ hμ R βm βp hR hV z hz t ht
+  have hW := superharmonicOfLaplacianLEStep_holds
+  have hW' := laplacianLEOfSuperharmonicStep_holds
+  have h1 := obstacleLeastSuperharmonicMajorantStep1_holds
+  have h2 := obstacleLeastSuperharmonicMajorantStep2_holds
+  have h3 := obstacleLeastSuperharmonicMajorantStep3_holds
+  have h4 := obstacleLeastSuperharmonicMajorantStep4_holds
+  have hqc : ContinuousOn (greenPotentialBall μ R) (closedBall 0 R) :=
+    greenPotentialBallContinuousStep_holds μ hμ R βm βp hR hV
+  have hqLE : LaplacianLE (greenPotentialBall μ R) 0 (ball 0 R) :=
+    hW' _ _ isOpen_ball (hqc.mono ball_subset_closedBall) (isSuperharmonicOn_greenPotentialBall hμ hR hV)
+  have hbs : ball (0 : ℂ) R ⊆ closedBall 0 R := ball_subset_closedBall
+  have hSA : shiftedSupersolutions μ R z t ⊆ superharmonicMajorants μ R z t := fun w hw =>
+    ⟨hW _ w isOpen_ball (hw.1.mono hbs) hw.2.1, hw.2.2⟩
+  have hqS : greenPotentialBall μ R ∈ shiftedSupersolutions μ R z t :=
+    greenPotentialBall_mem_shiftedSupersolutions ht.le hqc hqLE
+  have hqA := hSA hqS
+  have hg0 := h1 μ hμ R βm βp hR hV z hz t ht
+  have hbdd : ∀ x ∈ closedBall (0 : ℂ) R,
+      BddBelow ((fun g : ℂ → ℝ => g x) '' superharmonicMajorants μ R z t) := fun x hx =>
+    ⟨0, by rintro _ ⟨g, hg, rfl⟩; exact hg0 g hg x hx⟩
+  have hne : ∀ x, ((fun g : ℂ → ℝ => g x) '' superharmonicMajorants μ R z t).Nonempty := fun x =>
+    ⟨_, _, hqA, rfl⟩
+  have hf_le : ∀ g ∈ superharmonicMajorants μ R z t, ∀ x ∈ closedBall (0 : ℂ) R,
+      lscLeastMajorant μ R z t x ≤ g x := fun g hg x hx => csInf_le (hbdd x hx) ⟨g, hg, rfl⟩
+  have hf_nonneg : ∀ x ∈ closedBall (0 : ℂ) R, 0 ≤ lscLeastMajorant μ R z t x := fun x hx =>
+    le_csInf (hne x) (by rintro _ ⟨g, hg, rfl⟩; exact hg0 g hg x hx)
+  have hf_obs : ∀ x ∈ closedBall (0 : ℂ) R, x ≠ z → obstacle μ R z t x ≤ lscLeastMajorant μ R z t x :=
+    fun x hx hxz => le_csInf (hne x) (by rintro _ ⟨g, hg, rfl⟩; exact hg.2 x hx hxz)
+  have hf2 := h2 μ hμ R βm βp hR hV z hz t ht
+  have hfc : ContinuousOn (lscLeastMajorant μ R z t) (closedBall 0 R) := by
+    intro x hx
+    by_cases hxb : x ∈ ball (0 : ℂ) R
+    · have hlsc : LowerSemicontinuousAt (lscLeastMajorant μ R z t) x :=
+        fun y hy => by
+          have := hf2.1 x hxb y hy
+          rwa [nhdsWithin_eq_nhds.2 (isOpen_ball.mem_nhds hxb)] at this
+      have husc : UpperSemicontinuousAt (lscLeastMajorant μ R z t) x := by
+        by_cases hxz : x = z
+        · subst hxz; exact h4 μ hμ R βm βp hR hV x hz t ht
+        · exact h3 μ hμ R βm βp hR hV z hz t ht x hxb hxz
+      exact (continuousAt_iff_lower_upperSemicontinuousAt.2 ⟨hlsc, husc⟩).continuousWithinAt
+    · have hqx : greenPotentialBall μ R x = 0 := greenPotentialBall_eq_zero_of_notMem hxb
+      have hfx : lscLeastMajorant μ R z t x = 0 :=
+        le_antisymm (hqx ▸ hf_le _ hqA x hx) (hf_nonneg x hx)
+      have hqt : Tendsto (greenPotentialBall μ R) (𝓝[closedBall 0 R] x) (𝓝 0) := by
+        have := hqc x hx
+        rwa [ContinuousWithinAt, hqx] at this
+      rw [ContinuousWithinAt, hfx]
+      refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hqt ?_ ?_
+      · filter_upwards [self_mem_nhdsWithin] with y hy using hf_nonneg y hy
+      · filter_upwards [self_mem_nhdsWithin] with y hy using hf_le _ hqA y hy
+  have hfS : lscLeastMajorant μ R z t ∈ shiftedSupersolutions μ R z t :=
+    ⟨hfc, hW' _ _ isOpen_ball (hfc.mono hbs) hf2, hf_obs⟩
+  have hS_bdd : ∀ x ∈ closedBall (0 : ℂ) R,
+      BddBelow ((fun w : ℂ → ℝ => w x) '' shiftedSupersolutions μ R z t) := fun x hx =>
+    (hbdd x hx).mono (image_mono hSA)
+  have heq : EqOn (shiftedLeastSupersolution μ R z t) (lscLeastMajorant μ R z t) (closedBall 0 R) := by
+    intro x hx
+    apply le_antisymm
+    · exact csInf_le (hS_bdd x hx) ⟨_, hfS, rfl⟩
+    · exact csInf_le_csInf (hbdd x hx) ⟨_, _, hfS, rfl⟩ (image_mono hSA)
+  refine ⟨hS_bdd, hfc.congr heq, ⟨hfc.congr heq, ?_, ?_⟩, fun x hx => (heq hx).symm ▸ hf_nonneg x hx, heq⟩
+  · exact hfS.2.1.congr_eqOn measurableSet_ball fun x hx => (heq (hbs hx)).symm
+  · intro x hx hxz
+    rw [heq hx]
+    exact hf_obs x hx hxz
+
+/-- **Lemma A.1** (lemma:appendix-basic-properties, line 3589) as printed (`R = 1`, pole `0`). -/
+theorem obstacleLeastSuperharmonicMajorant_holds : ObstacleLeastSuperharmonicMajorantStmt :=
+  obstacleLeastSuperharmonicMajorant_of_general obstacleLeastSuperharmonicMajorantGeneral_holds
+
+/-! ## Lemma A.2 -/
+
+/-- **Lemma A.2, Step 2.** -/
+theorem obstacleNonCoincidenceHarmonicStep2_holds : ObstacleNonCoincidenceHarmonicStep2 :=
+  obstacleNonCoincidenceHarmonicStep2_of obstacleLeastSuperharmonicMajorantGeneral_holds
+
+/-- **Lemma A.2, Step 3.** -/
+theorem obstacleNonCoincidenceHarmonicStep3_holds : ObstacleNonCoincidenceHarmonicStep3 :=
+  obstacleNonCoincidenceHarmonicStep3_of obstacleLeastSuperharmonicMajorantGeneral_holds
+    fun _ hμ _ _ _ hR hV => isSuperharmonicOn_greenPotentialBall hμ hR hV
+
+/-- **Lemma A.2, general radius and pole.** -/
+theorem obstacleNonCoincidenceHarmonicGeneral_holds : ObstacleNonCoincidenceHarmonicGeneral :=
+  obstacleNonCoincidenceHarmonicGeneral_of_steps obstacleLeastSuperharmonicMajorantGeneral_holds greenFunctionBall
+    laplacianLEOfSuperharmonicStep_holds hasLaplacianOfLaplacianLEGEStep_holds greenPotentialBallContinuousStep_holds
+    obstacleTendstoAtBotStep_holds obstacleNonCoincidenceHarmonicStep2_holds obstacleNonCoincidenceHarmonicStep3_holds
+
+/-- **Lemma A.2** (lemma:appendix-non-coincedence-open-harmonic, line 3652) as printed (`R = 1`, pole `0`). -/
+theorem obstacleNonCoincidenceHarmonic_holds : ObstacleNonCoincidenceHarmonicStmt :=
+  obstacleNonCoincidenceHarmonic_of_general obstacleNonCoincidenceHarmonicGeneral_holds
 
 end HarmonicBalls
