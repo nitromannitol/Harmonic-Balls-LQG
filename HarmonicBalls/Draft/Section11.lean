@@ -20,8 +20,10 @@ As in `Draft/Section1.lean`: each statement quantifies over `0 < γ < 2`, `α₀
 `(Ω, P)`, a whole-plane GFF `h^ℂ` (`IsWholePlaneGFF P hC hcirc`), a random measure `μ` with `μ ω = μ_h`
 (`IsLQGMeasureOfField P γ α₀ hcirc μ`) and, when `D_h` enters, a random function `D` with `D ω = D_h`
 (`IsLQGMetricOfField P γ ξ α₀ hC D`, `ξ` universally quantified as in Theorem 1.2). Lemma 11.12 and the auxiliary
-Lemmas 11.15-11.17 of its proof are in the case `α₀ = 0` (line 3137). "With positive probability" is `0 < P E`
-(outer measure; the events need not be shown measurable).
+Lemmas 11.15-11.17 of its proof are in the case `α₀ = 0` (line 3137). "With positive probability" and the lower bound
+"`P[E] ≥ p`" are in inner-measure form (operator 2026-11-03 04:45, fix (3); as in the rigidity formalization): the event
+`E` contains a measurable event `A` with `0 < P A` (resp. `p ≤ P A`), `∃ A ⊆ E, MeasurableSet A ∧ 0 < P A`. The events
+need not be shown measurable; the outer measure `P E` would give a weaker statement.
 
 ## Objects defined here
 
@@ -179,7 +181,8 @@ def ManyConeBadScalesStmt : Prop :=
 /-- Lemma 11.8 (lemma:positive-probability, line 2809). Let `𝒬` be a cone and `M > 0`. There is `p_M ∈ (0,1)` such
 that `P[G̃_n(z; M, 𝒬)] ≥ p_M` for all `z` with `dist(𝔸_{2^{-n}, 6·2^{-n}}(z), {0}) > 2^{-n}/100` and all `n ≥ N(z)`
 (eq:desired-claim, line 2811). The printed threshold `N(z)` depends on `z` and is otherwise unspecified: it is
-existentially quantified after `z`. -/
+existentially quantified after `z`. The lower bound is in inner-measure form (module docstring): the event contains a
+measurable event of probability at least `p_M`. -/
 def ConeBadEventProbabilityStmt : Prop :=
   ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Q : Set ℂ, IsCone Q → ∀ M : ℝ, 0 < M →
   ∃ p ∈ Ioo (0 : ℝ) 1,
@@ -187,13 +190,14 @@ def ConeBadEventProbabilityStmt : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ z : ℂ, ∃ N : ℕ, ∀ n : ℕ, N ≤ n →
     (2 : ℝ)⁻¹ ^ n / 100 < infDist (0 : ℂ) (annulus z ((2 : ℝ)⁻¹ ^ n) (6 * (2 : ℝ)⁻¹ ^ n)) →
-    ENNReal.ofReal p ≤ P {ω | coneMassEvent (μ ω) Q M ((2 : ℝ)⁻¹ ^ n) z}
+    ∃ A ⊆ {ω | coneMassEvent (μ ω) Q M ((2 : ℝ)⁻¹ ^ n) z}, MeasurableSet A ∧ ENNReal.ofReal p ≤ P A
 
 /-! ## Section 11.2: small diameter and large LQG mass -/
 
 /-- Proposition 11.9 (prop:mass-diam-gen, line 2959). Let `U ⊆ V ⊆ W ⊆ ℂ` be bounded connected open sets with
 `closure V ⊆ W` and `W ∩ ∂B_1(0) = ∅`. For each `C > ε > 0`, with positive probability (eq:mass-diam-gen, line 2962)
-`sup_{u, v ∈ V} D_h(u, v; W) ≤ ε` and `μ_h(U) ≥ C`. -/
+`sup_{u, v ∈ V} D_h(u, v; W) ≤ ε` and `μ_h(U) ≥ C` ("with positive probability" in inner-measure form, module
+docstring). -/
 def SmallMetricDiameterLargeMassStmt : Prop :=
   ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -204,12 +208,12 @@ def SmallMetricDiameterLargeMassStmt : Prop :=
     IsOpen W → IsConnected W → Bornology.IsBounded W →
     U ⊆ V → V ⊆ W → closure V ⊆ W → Disjoint W (sphere 0 1) →
   ∀ C ε : ℝ, 0 < ε → ε < C →
-    0 < P {ω | (∀ u ∈ V, ∀ v ∈ V, internalMetric (D ω) W u v ≤ ENNReal.ofReal ε) ∧
-      ENNReal.ofReal C ≤ μ ω U}
+    ∃ A ⊆ {ω | (∀ u ∈ V, ∀ v ∈ V, internalMetric (D ω) W u v ≤ ENNReal.ofReal ε) ∧
+      ENNReal.ofReal C ≤ μ ω U}, MeasurableSet A ∧ 0 < P A
 
 /-- Lemma 11.10 (lemma:mass-diam, line 2979). Let `S₁ ⊆ S₂` be closed dyadic squares with `S₂ ∩ ∂B_1(0) = ∅`. For
 each `C > ε > 0`, with positive probability (eq:mass-diam, line 2982) `sup_{u, v ∈ S₂} D_h(u, v; S₂) ≤ ε` and
-`μ_h(S₁) ≥ C`. -/
+`μ_h(S₁) ≥ C` ("with positive probability" in inner-measure form, module docstring). -/
 def SmallMetricDiameterLargeMassSquareStmt : Prop :=
   ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -217,8 +221,8 @@ def SmallMetricDiameterLargeMassSquareStmt : Prop :=
     IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
   ∀ S₁ S₂ : Set ℂ, IsClosedDyadicSquare S₁ → IsClosedDyadicSquare S₂ → S₁ ⊆ S₂ → Disjoint S₂ (sphere 0 1) →
   ∀ C ε : ℝ, 0 < ε → ε < C →
-    0 < P {ω | (∀ u ∈ S₂, ∀ v ∈ S₂, internalMetric (D ω) S₂ u v ≤ ENNReal.ofReal ε) ∧
-      ENNReal.ofReal C ≤ μ ω S₁}
+    ∃ A ⊆ {ω | (∀ u ∈ S₂, ∀ v ∈ S₂, internalMetric (D ω) S₂ u v ≤ ENNReal.ofReal ε) ∧
+      ENNReal.ofReal C ≤ μ ω S₁}, MeasurableSet A ∧ 0 < P A
 
 /-! ## Section 11.3: not LQG metric balls -/
 
@@ -237,14 +241,16 @@ case `α₀ = 0`, for each `M > 0`, `P[Ĝ_1(0; M)] > 0`, for a pinch-point confi
 other parameters; the keyhole shape of the figure is not formalized, see the module docstring).
 
 The printed "`P[G̃_1(0)] > 0`" refers to the cone event of eq:mu-h-wild, whose parameters `M`, `𝒬` are not in scope;
-the proof (lines 3291-3321) shows `Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃ ⊆ Ĝ_1(0; M)` and Lemma 11.13 uses `Ĝ`. -/
+the proof (lines 3291-3321) shows `Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃ ⊆ Ĝ_1(0; M)` and Lemma 11.13 uses `Ĝ`. "`P[Ĝ_1(0; M)] > 0`" is in
+inner-measure form (module docstring). -/
 def PinchEventPositiveProbabilityStmt : Prop :=
   ∃ U T Q' Q : Set ℂ, IsPinchPointConfiguration U T Q' Q ∧
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
     IsLQGMeasureOfField P γ 0 hcirc μ → IsLQGMetricOfField P γ ξ 0 hC D →
-  ∀ M : ℝ, 0 < M → 0 < P {ω | pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0}
+  ∀ M : ℝ, 0 < M →
+    ∃ A ⊆ {ω | pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0}, MeasurableSet A ∧ 0 < P A
 
 /-- Lemma 11.13 (lemma:mu_h-pinch-bad, line 3144). For a pinch-point configuration `U, T, Q', Q` (chosen before all
 other parameters): let `M > 0`; there is `δ ∈ (0,1)` such that almost surely, for `μ_h`-a.e. `z ∈ ℂ`, for each large
@@ -278,17 +284,18 @@ def PinchEventMetricBallConsequenceStmt : Prop :=
     rescaledSet Q' r z ⊆ (lqgMetricBall (D ω) 0 u)ᶜ ∧ rescaledSet T r z ⊆ lqgMetricBall (D ω) 0 u
 
 /-- Lemma 11.15 (lemma:first-event-proof, line 3277). In the case `α₀ = 0` (proof of Lemma 11.12), for a
-configuration `T, U, V, W, Q', Q, δ₀` of lines 3237-3247 (chosen before all other parameters): `P[Ẽ₁] > 0`. -/
+configuration `T, U, V, W, Q', Q, δ₀` of lines 3237-3247 (chosen before all other parameters): `P[Ẽ₁] > 0` (inner-measure
+form, module docstring). -/
 def PinchFirstEventPositiveStmt : Prop :=
   ∃ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsPinchPointProofConfiguration U V W T Q' Q δ₀ ∧
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ 0 hC D →
-  0 < P {ω | pinchFirstEvent (D ω) W T Q' Q δ₀}
+  ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ₀}, MeasurableSet A ∧ 0 < P A
 
 /-- Lemma 11.16 (lemma:second-event-proof, line 3281). In the case `α₀ = 0`, for a configuration
 `T, U, V, W, Q', Q, δ₀` of lines 3237-3247 (chosen before all other parameters): for each `M > 0`,
-`P[Ẽ₁ ∩ Ẽ₂(M)] > 0`. -/
+`P[Ẽ₁ ∩ Ẽ₂(M)] > 0` (inner-measure form, module docstring). -/
 def PinchSecondEventPositiveStmt : Prop :=
   ∃ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsPinchPointProofConfiguration U V W T Q' Q δ₀ ∧
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 →
@@ -296,11 +303,12 @@ def PinchSecondEventPositiveStmt : Prop :=
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
     IsLQGMeasureOfField P γ 0 hcirc μ → IsLQGMetricOfField P γ ξ 0 hC D →
   ∀ M : ℝ, 0 < M →
-    0 < P {ω | pinchFirstEvent (D ω) W T Q' Q δ₀ ∧ pinchSecondEvent (μ ω) (D ω) U V δ₀ M}
+    ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ₀ ∧ pinchSecondEvent (μ ω) (D ω) U V δ₀ M},
+      MeasurableSet A ∧ 0 < P A
 
 /-- Lemma 11.17 (lemma:third-event-proof, line 3285). In the case `α₀ = 0`, for a configuration
 `T, U, V, W, Q', Q, δ₀` of lines 3237-3247 (chosen before all other parameters): for each `M > 0`,
-`P[Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃] > 0`. -/
+`P[Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃] > 0` (inner-measure form, module docstring). -/
 def PinchThirdEventPositiveStmt : Prop :=
   ∃ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsPinchPointProofConfiguration U V W T Q' Q δ₀ ∧
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 →
@@ -308,7 +316,7 @@ def PinchThirdEventPositiveStmt : Prop :=
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
     IsLQGMeasureOfField P γ 0 hcirc μ → IsLQGMetricOfField P γ ξ 0 hC D →
   ∀ M : ℝ, 0 < M →
-    0 < P {ω | pinchFirstEvent (D ω) W T Q' Q δ₀ ∧ pinchSecondEvent (μ ω) (D ω) U V δ₀ M ∧
-      pinchThirdEvent (D ω) V W δ₀}
+    ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ₀ ∧ pinchSecondEvent (μ ω) (D ω) U V δ₀ M ∧
+      pinchThirdEvent (D ω) V W δ₀}, MeasurableSet A ∧ 0 < P A
 
 end HarmonicBalls

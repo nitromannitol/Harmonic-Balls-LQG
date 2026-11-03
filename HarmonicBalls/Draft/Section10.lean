@@ -27,7 +27,10 @@ As in `Draft/Section3.lean`: each statement quantifies over `0 < γ < 2`, `α₀
   for every `z`, a harmonic ball family at `z` (`IsHarmonicBallFamily`, Theorem 1.1 with correction [C7]).
 * `A ⋐ B` (line 329) is `closure A ⊆ B`; "crosses" (line 2582) is `CrossesAnnulus`, the crossing components are
   `crossingComponents`, the connected components of a set are `connectedComponentsIn`, "simple loop" is
-  `IsSimpleLoop` (Definition 10.2), "simply connected" is Mathlib's `IsSimplyConnected`.
+  `IsSimpleLoop` (Definition 10.2). "Simply connected" (Lemma 10.5, line 2586) is meant in the Riemann-sphere sense
+  of the paper, "connected with connected complement" (proof of Proposition 10.6, lines 2646 and 2661): for the
+  component `U` of `(closure Λ_t(z))ᶜ` (connected, open) it is `IsConnected Uᶜ`, not Mathlib's planar
+  `IsSimplyConnected` (which fails for the unbounded component, whose fundamental group is `ℤ`).
 
 ## Corrections and readings
 
@@ -64,6 +67,15 @@ eq:annulus, line 333), `t > 0` and `z ∈ B_1` with `Λ_t(z) ⋐ B_1`, and let `
 `(closure Λ_t(z))ᶜ` with `Γ = ∂U ⋐ B_1`. Then every connected component of `Uᶜ ∩ A` which crosses `A` contains a
 connected component of `Λ_t(z) ∩ A` which crosses `A`.
 
+"Simply connected" is the Riemann-sphere sense of the paper (line 2661: "`U` is connected with connected complement,
+so is simply connected"; Step 1 of Proposition 10.6, line 2646: "As `U^c` is connected"): `IsConnected Uᶜ`, the
+complement taken in `ℂ` (for the unbounded component this is simple connectivity of `U ∪ {∞}` in the sphere). It is
+not Mathlib's planar `IsSimplyConnected U`, which excludes the unbounded component of `(closure Λ_t(z))ᶜ` (fundamental
+group `ℤ`), to which Step 1 of Proposition 10.6 applies the lemma (operator 2026-11-03 04:45, fix (1); freeze review
+MISMATCH). Proposition 10.6 applies the lemma to every component: on the event of Lemma 3.2 (`ClusterOpenLaplacianStmt`)
+the cluster is connected, so `K = closure Λ_t(z)` is connected and nonempty, and for each component `U` of `Kᶜ` the
+complement `Uᶜ = K ∪ ⋃ V` (`V` the other components, each with `closure V ⊆ V ∪ K` meeting `K`) is connected.
+
 The printed lemma carries no probability qualifier; it is stated on an event of probability one, on which the
 clusters have the properties of Lemma 3.2 used in the proof. -/
 def CrossingComponentContainsClusterCrossingStmt : Prop :=
@@ -72,7 +84,7 @@ def CrossingComponentContainsClusterCrossingStmt : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ᵐ ω ∂P, ∀ (w : ℂ) (s₁ s₂ : ℝ), 0 < s₁ → s₁ < s₂ → closure (annulus w s₁ s₂) ⊆ ball 0 1 →
     ∀ t : ℝ, 0 < t → ∀ z ∈ ball (0 : ℂ) 1, closure (cluster (μ ω) 1 z t) ⊆ ball 0 1 →
-    ∀ U ∈ connectedComponentsIn (closure (cluster (μ ω) 1 z t))ᶜ, IsSimplyConnected U →
+    ∀ U ∈ connectedComponentsIn (closure (cluster (μ ω) 1 z t))ᶜ, IsConnected Uᶜ →
     closure (frontier U) ⊆ ball 0 1 →
     ∀ C ∈ crossingComponents (Uᶜ ∩ annulus w s₁ s₂) w s₁ s₂,
       ∃ C' ∈ crossingComponents (cluster (μ ω) 1 z t ∩ annulus w s₁ s₂) w s₁ s₂, C' ⊆ C

@@ -16,9 +16,10 @@ of LQG harmonic balls (Theorem 1.1), their novelty and the Jordan boundaries of 
 Each statement quantifies over `0 < γ < 2`, `α₀ < Q = lqgQ γ` (line 373: needed for `μ_h` to be locally finite near
 the origin), a probability space `(Ω, P)`, a whole-plane GFF `h^ℂ` (`IsWholePlaneGFF P hC hcirc`) and a random measure
 `μ` with `μ ω = μ_h` (`IsLQGMeasureOfField P γ α₀ hcirc μ`), where `h = h^ℂ - α₀ log |·|` (eq:gff, line 380).
-"On an event of probability one" is `∀ᵐ ω ∂P`. Theorem 1.2 also quantifies over an LQG metric `D = D_h` of the same
-field (`IsLQGMetricOfField P γ ξ α₀ hC D`), for every Weyl exponent `ξ` for which one exists (GM21 construct them for
-`ξ = γ / d_γ`, eq:xi, line 440; see `HarmonicBalls/Proposed/LQG.lean`).
+"On an event of probability one" is `∀ᵐ ω ∂P`. The metric-ball clause of Theorem 1.2 also quantifies over an LQG
+metric `D = D_h` of the same field (`IsLQGMetricOfField P γ ξ α₀ hC D`), for every Weyl exponent `ξ` for which one
+exists (GM21 construct them for `ξ = γ / d_γ`, eq:xi, line 440; see `HarmonicBalls/Proposed/LQG.lean`); its other
+clauses do not involve the metric and are stated without it.
 
 ## The family of Theorem 1.1
 
@@ -114,18 +115,22 @@ module docstring).
   the argument only uses that the centre lies outside `B_{10r}(z)` for small `r`.
 * Jordan curve: `IsSimpleLoop` (Definition 10.2, line 2553), the image of an injective continuous map from the circle;
   the components are `connectedComponentsIn (closure Λ_t(0))ᶜ` and the boundary of a component is its `frontier`.
+* The LQG-metric hypothesis `IsLQGMetricOfField P γ ξ α₀ hC D` guards only the metric-ball clause (operator
+  2026-11-03 04:45, fix (2)): the Lipschitz clause and the Jordan clause do not involve `D_h` and are stated without
+  it, on one event of probability one. The metric-ball clause holds on an event of probability one for each such `D`.
+  For a fixed metric the two events intersect, so this is the printed single-event statement.
 
 Corrections applied: [C6], [C7] through `IsHarmonicBallFamily`. -/
 def HarmonicBallNoveltyStmt : Prop :=
   ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (μ : Ω → Measure ℂ) (ξ : ℝ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
-    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
+    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂P, IsHarmonicBallFamily (μ ω) (Λ ω) 0) →
-  ∀ᵐ ω ∂P,
-    (∀ᵐ t ∂volume, 0 < t →
-      ¬ IsLipschitzDomain (Λ ω t) ∧ ∀ (w : ℂ) (s : ℝ), Λ ω t ≠ lqgMetricBall (D ω) w s) ∧
-    ∀ t : ℝ, 0 < t → ∀ C ∈ connectedComponentsIn (closure (Λ ω t))ᶜ, IsSimpleLoop (frontier C)
+  (∀ᵐ ω ∂P,
+    (∀ᵐ t ∂volume, 0 < t → ¬ IsLipschitzDomain (Λ ω t)) ∧
+    ∀ t : ℝ, 0 < t → ∀ C ∈ connectedComponentsIn (closure (Λ ω t))ᶜ, IsSimpleLoop (frontier C)) ∧
+  ∀ (ξ : ℝ) (D : Ω → ℂ → ℂ → ℝ), IsLQGMetricOfField P γ ξ α₀ hC D →
+    ∀ᵐ ω ∂P, ∀ᵐ t ∂volume, 0 < t → ∀ (w : ℂ) (s : ℝ), Λ ω t ≠ lqgMetricBall (D ω) w s
 
 /-- Proposition 1.3 (prop:locally-determined, line 179). For each fixed `t ≥ 0` and `x ∈ ℂ`, the closed LQG harmonic
 ball `closure Λ_t(x)` is a local set for `h` (Schramm-Sheffield, *A contour line of the continuum Gaussian free
