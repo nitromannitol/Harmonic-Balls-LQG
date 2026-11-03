@@ -20,10 +20,11 @@ and the new steps of this directory.
 | step | file | paper | difficulty |
 |---|---|---|---|
 | `GreenPotentialBallHolderStep` | GreenPotentialBallHolderStep.lean | Prop 2.5 quantitative (G4) | **proved** (GreenPotentialBallHolder.lean) |
-| `GreenRepresentationBallStep` | LeastSupersolutionHolder.lean | line 732 (implicit; Riesz decomposition) | hard |
-| `ClusterHarmonicQuadratureStep` | ClusterSubharmonicBall.lean | lines 773-779 | medium |
-| `ClusterGreenPotentialIdentityStep` | ClusterSubharmonicBall.lean | lines 781-786 with G5 | hard |
-| `GreenFunctionIntegrableAwayFromPoleStep` | ClusterSubharmonicBall.lean | implicit (ν₁-integrability) | medium |
+| `GreenRepresentationBallStep` | LeastSupersolutionHolder.lean | line 732 (implicit; Riesz decomposition) | **proved** (Proofs/Sec4/GreenRepresentation.lean) |
+| `ClusterHarmonicQuadratureStep` | ClusterSubharmonicBall.lean | lines 773-779 | **proved** (Proofs/Sec4/ClusterSubharmonicBall.lean) |
+| `ClusterGreenPotentialIdentityStep` | ClusterSubharmonicBall.lean | lines 781-786 with G5 | **proved** from the next step and Step 1 (Proofs/Sec4/ClusterGreenIdentity.lean) |
+| `GreenHarmonicCorrectionBalayageStep` | ClusterSubharmonicBall.lean | G5: Green function of a general open set | **proved** (Proofs/Sec4/GreenBalayage.lean, sweeping: Proofs/Sec4/Sweep.lean) |
+| `GreenFunctionIntegrableAwayFromPoleStep` | ClusterSubharmonicBall.lean | implicit (ν₁-integrability) | **proved** (Proofs/Sec4/GreenAwayFromPole.lean) |
 
 G3 (last claim of Prop 4.1) needs no new leaf: it is the equality case of `ObstacleConservationOfMassStep3`
 (Lemma A.5, Step 3), which does not assume `μ_h(∂Λ) = 0`.
