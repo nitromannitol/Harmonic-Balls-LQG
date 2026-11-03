@@ -45,13 +45,18 @@ a measure with `σ(B_R) < ∞` and `w` continuous on `closedBall 0 R`, zero on `
 distributional sense. Then for `x ∈ B_R`, `y ↦ G_{B_R}(x,y)` is `σ`-integrable on `B_R` and
 `w(x) = -∫_{B_R} G_{B_R}(x,y) σ(dy)`.
 
+Re-carved (c1, 2026-11-03): `σ` is dominated on `B_R` by a measure `μ` with the volume growth condition, as in its
+only use (`holder_of_hasLaplacian_le`, where `σ = Δ v^z_t ≤ μ_h`); then `σ(B_R) < ∞` and the Green potential of `σ`
+is continuous with `Δ = -σ` (proved in Proofs/Sec4/GreenRepresentation.lean).
+
 Used implicitly in the proof of Lemma 4.2 (line 732: `v^z_t` is minus the Green potential of its Laplacian).
 Route: `p(x) = ∫_{B_R} G_{B_R}(x,y) σ(dy)` satisfies `Δp = -σ` (Prop 2.3 and Fubini); `w` is subharmonic and
 continuous, hence `p < ∞` wherever `w > -∞`, i.e. everywhere (Riesz decomposition `w = -p + h` with `h` the least
 harmonic majorant of `w`); `h` is the Poisson integral of `w|_{∂B_R} = 0`, so `h = 0`. Atoms of `σ` are excluded by
 the finiteness of `w` (the junk value `G_{B_R}(x,x) = 0` is irrelevant). Difficulty: hard (2-3 rounds). -/
 def GreenRepresentationBallStep : Prop :=
-  ∀ (R : ℝ) (σ : Measure ℂ) (w : ℂ → ℝ), 0 < R → σ (ball (0 : ℂ) R) < ⊤ → ContinuousOn w (closedBall 0 R) →
+  ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
+  ∀ (σ : Measure ℂ) (w : ℂ → ℝ), σ.restrict (ball 0 R) ≤ μ.restrict (ball 0 R) → ContinuousOn w (closedBall 0 R) →
     (∀ x ∈ sphere (0 : ℂ) R, w x = 0) → HasLaplacian w σ 0 (ball 0 R) →
     ∀ x ∈ ball (0 : ℂ) R, IntegrableOn (greenFunction (ball 0 R) x) (ball 0 R) σ ∧
       w x = -∫ y in ball 0 R, greenFunction (ball 0 R) x y ∂σ
@@ -94,7 +99,7 @@ theorem holder_of_hasLaplacian_le (hRep : GreenRepresentationBallStep) (hHol : G
   obtain ⟨-, hD⟩ := hH ρ 1 hρm zero_le_one hρ1
   have h := hD x (ball_subset_closedBall hx) y (ball_subset_closedBall hy)
   rw [mul_one] at h
-  rw [(hRep R σ w hR hσB hw hw0 hLap x hx).2, (hRep R σ w hR hσB hw hw0 hLap y hy).2, hrep x, hrep y,
+  rw [(hRep μ hμ R βm βp hR hV σ w hle hw hw0 hLap x hx).2, (hRep μ hμ R βm βp hR hV σ w hle hw hw0 hLap y hy).2, hrep x, hrep y,
     neg_sub_neg, abs_sub_comm]
   exact h
 
