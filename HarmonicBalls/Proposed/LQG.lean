@@ -17,6 +17,9 @@ line 380), with `γ ∈ (0, 2)` and `α₀ < Q = lqgQ γ`.
 * `LQGMeasureExistence`: existence of `μ_h` (eq:measure-lim, line 396).
 * `LQGMeasureNonatomic`, `LQGMeasureLocality`, `LQGMeasureWeylScaling`, `LQGMeasureCoordChange`:
   Fact 2.1 I-IV (lines 401-416).
+* `WholePlaneLQGBallMassBounds`: LQG mass of Euclidean balls for the whole-plane GFF (Ding-Gwynne 2020, Lemma 3.8),
+  the single published estimate from which Lemma 2.4 and the unnumbered inputs I1 (full support) and I2 (volume
+  growth at all small scales) of HarmonicBalls/Draft/Section2.lean are derived.
 * `LQGMetricExistenceUniqueness`: existence and uniqueness of the γ-LQG metric (lines 418-421, 455).
 * `LQGMetricFieldAxioms`: Fact 2.2 I-IV (lines 432-453) for the metric `D_h` of the field of the paper.
 
@@ -107,6 +110,45 @@ def LQGMeasureCoordChange (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ �
     IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ᵐ ω ∂P, ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ,
       IsLQGLimit γ (fun ε z => fieldCircleAverage α₀ (hcirc ω) (‖a‖ * ε) (a * z + b) + lqgQ γ * Real.log ‖a‖)
         ((μ ω).map fun x => (x - b) / a)
+
+/-! ### The LQG measure of Euclidean balls (base estimate for Lemma 2.4, I1 and I2) -/
+
+/-- **LQG mass of Euclidean balls for the whole-plane GFF.** For the γ-LQG measure `μ` of a whole-plane GFF `h^ℂ`
+normalized so that `h^ℂ_1(0) = 0` (the field of the paper with `α₀ = 0`), for each `β̲ ∈ (0, 2/(2+γ)²)` and each
+`β̄ > 2/(2-γ)²`, with polynomially high probability as `ε → 0` (`PolyHighProb`, the convention of both papers):
+`μ(B_{ε^β̲}(z)) ≥ ε` and `μ(B_{ε^β̄}(z)) ≤ ε` for all `z` in the unit square `𝕊 = [0,1]²`.
+
+Source: J. Ding and E. Gwynne, *The fractal dimension of Liouville quantum gravity: universality, monotonicity, and
+bounds*, Comm. Math. Phys. 374 (2020), arXiv:1807.01072, Lemma 3.8 (p. 25), verbatim (whole-plane case used):
+"Lemma 3.8. Suppose that h is either a whole-plane GFF normalized so that h_1(0) = 0, a zero-boundary GFF on 𝕊(1),
+or one of the white noise fields ĥ or ĥ^tr defined above. For each β̲ ∈ (0, 2/(2+γ)²) and each β̄ > 2/(2−γ)², it
+holds with polynomially high probability as ε → 0 that
+inf_{z∈𝕊} μ_h(B_{ε^β̲}(z)) ≥ ε and sup_{z∈𝕊} μ_h(B_{ε^β̄}(z)) ≤ ε. (3.14)"
+Here `𝕊 = [0,1]²` (loc. cit., Theorem 1.1: "Let 𝕊 = [0,1]² be the unit square"). This is the estimate on which
+Berestycki-Gwynne (arXiv:2003.10320, Lemma A.1, p. 66, eq. (A.2)) build the argument that the paper cites for
+Lemma 2.4 ("exactly the same argument as in [BG20, Lemma A.1]", line 510).
+
+How the paper's unnumbered inputs and Lemma 2.4 follow from this single estimate (none of them is a separate input):
+1. Put `δ = ε^β`: the bounds read `δ^{β⁻} ≤ μ(B_δ(z)) ≤ δ^{β⁺}` on `𝕊` for `β⁻ = 1/β̲ > (2+γ)²/2` and
+   `β⁺ = 1/β̄ < (2-γ)²/2`, with polynomially high probability as `δ → 0`.
+2. By `WholePlaneGFFAffineInvariance` and `LQGMeasureCoordChange`, the same holds on any fixed square, hence on
+   `B_R`: the additive constants `h^ℂ_{|a|}(b)` are Gaussian, so `e^{γ h^ℂ_{|a|}(b)} ∈ [δ^ζ, δ^{-ζ}]` with
+   superpolynomially high probability, absorbed by the slack in the open exponent ranges.
+3. The log singularity `-α₀ log |·|` (Draft/Section2 `LiouvilleVolumeGrowthStmt`, Lemma 2.4 with [C1]): the proof of
+   BG20 Lemma A.1 (scale invariance modulo additive constant on the annuli `B_{e^{-k}} \ B_{e^{-k-1}}`, the coordinate
+   change formula, and a union bound over `k ≤ (1-ζ) log δ⁻¹`), with `-γ log |·|` replaced by `-α₀ log |·|`
+   (`LQGMeasureWeylScaling`, `LQGMeasureLocality` on each annulus); at `|z| ≍ δ^s` the exponent interpolates linearly
+   between `(2∓γ)²/2` (`s = 0`) and `γ(Q-α₀)` (`s = 1`).
+4. I2 (Draft/Section2 `LQGVolumeGrowthAllScalesStmt`): Borel-Cantelli over `δ = 2^{-k}` (the failure probabilities
+   `O(2^{-kp})` are summable), monotonicity of `r ↦ μ(B_r(z))` and the slack in the exponent ranges.
+5. I1 (Draft/Section2 `LQGMeasureFullSupportStmt`): the lower bound of I2, since every nonempty open set contains a
+   ball `B_r(z)` with `z ∈ B_R` and `r` small. -/
+def WholePlaneLQGBallMassBounds (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
+  IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → ∀ μ : Ω → Measure ℂ, IsLQGMeasureOfField P γ 0 hcirc μ →
+    ∀ βlower βupper : ℝ, 0 < βlower → βlower < 2 / (2 + γ) ^ 2 → 2 / (2 - γ) ^ 2 < βupper →
+      PolyHighProb P fun ε => {ω | (∀ z ∈ Icc (0 : ℝ) 1 ×ℂ Icc (0 : ℝ) 1,
+          ENNReal.ofReal ε ≤ μ ω (Metric.ball z (ε ^ βlower))) ∧
+        ∀ z ∈ Icc (0 : ℝ) 1 ×ℂ Icc (0 : ℝ) 1, μ ω (Metric.ball z (ε ^ βupper)) ≤ ENNReal.ofReal ε}
 
 /-! ### The LQG metric: existence, uniqueness and Fact 2.2 -/
 
