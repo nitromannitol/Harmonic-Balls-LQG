@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec6.PotentialRatioMeasurable
+import HarmonicBalls.Proofs.Potential.GreenPositivity
 
 /-!
 # Positivity of potential ratios
@@ -51,6 +52,36 @@ theorem greenPotential_pos_of_pos_off_diagonal
     exact ne_of_gt (hpos y hy.1 (by simpa using hy.2))
   have hmass : 0 < μ (O \ {x}) := by
     rwa [measure_sdiff_null hμx]
+  exact hmass.trans_le (measure_mono hsub)
+
+/-- A Green potential is positive at every point of a bounded open domain if the
+measure has positive mass on open balls, has no atom at that point, and the Green
+kernel is integrable. Only positivity near the pole is needed. -/
+theorem greenPotential_pos_of_ball_mass
+    {O : Set ℂ} (hO : Bornology.IsBounded O) (hopen : IsOpen O)
+    (μ : Measure ℂ) (x : ℂ) (hx : x ∈ O) (hμx : μ {x} = 0)
+    (hμball : ∀ r > 0, 0 < μ (Metric.ball x r))
+    (hint : Integrable (greenFunction O x) μ) :
+    0 < greenPotential O μ x := by
+  obtain ⟨ε, hε, hεO⟩ := Metric.isOpen_iff.mp hopen x hx
+  have hr : 0 < ε / 3 := by positivity
+  have hsub : Metric.ball x (ε / 3) \ {x} ⊆ Function.support (greenFunction O x) := by
+    intro y hy
+    have hyx : y ≠ x := by simpa using hy.2
+    have hyd : dist y x < ε / 3 := hy.1
+    have hclosed : Metric.closedBall y (ε / 3) ⊆ O := by
+      apply Set.Subset.trans _ hεO
+      apply Metric.closedBall_subset_ball'
+      linarith
+    have hnorm : ‖x - y‖ < ε / 3 := by
+      rw [← dist_eq_norm, dist_comm]
+      exact hyd
+    exact (greenFunction_pos hO hr hclosed
+      (norm_pos_iff.mpr (sub_ne_zero.mpr hyx.symm)) hnorm).ne'
+  apply (integral_pos_iff_support_of_nonneg (greenFunction_nonneg hO x) hint).2
+  have hmass : 0 < μ (Metric.ball x (ε / 3) \ {x}) := by
+    rw [measure_sdiff_null hμx]
+    exact hμball _ hr
   exact hmass.trans_le (measure_mono hsub)
 
 end HarmonicBalls.Section6
