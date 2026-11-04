@@ -10,7 +10,7 @@ namespace HarmonicBalls
 open Classical in
 /-- Point avoidance and the staged field/measure invariance inputs give
 stationarity of the joint indicators at positive good-annulus thresholds. -/
-theorem identDistrib_lqg_veryGoodComparable_of_ae_point_avoidance
+theorem identDistrib_lqg_veryGoodComparable_of_unit_point_avoidance
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
