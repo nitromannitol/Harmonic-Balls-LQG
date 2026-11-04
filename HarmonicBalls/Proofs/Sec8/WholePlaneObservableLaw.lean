@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec8.LocalCircleDecoder
+import HarmonicBalls.Proofs.Sec8.LQGUniversalApproximationLaw
 
 /-! # Law of whole-plane GFF observables
 
@@ -38,28 +39,7 @@ theorem IsWholePlaneGFF.map_wholePlaneObservableProc_eq
     {gC : Ξ → (ℂ → ℝ) → ℝ} {gcirc : Ξ → ℝ → ℂ → ℝ}
     (hGFF : IsWholePlaneGFF P hC hcirc) (gGFF : IsWholePlaneGFF Q gC gcirc) :
     P.map (wholePlaneObservableProc hC hcirc) = Q.map (wholePlaneObservableProc gC gcirc) := by
-  let : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
-  let : IsProbabilityMeasure Q := gGFF.isProbabilityMeasure
-  have hfin : ∀ I : Finset GFFObservable.Admissible,
-      (P.map (wholePlaneObservableProc hC hcirc)).map I.restrict =
-      (Q.map (wholePlaneObservableProc gC gcirc)).map I.restrict := by
-    intro I
-    rw [Measure.map_map (Finset.measurable_restrict I) hGFF.measurable_wholePlaneObservableProc,
-      Measure.map_map (Finset.measurable_restrict I) gGFF.measurable_wholePlaneObservableProc]
-    exact QuantumZipper.WedgeRes.map_eq_of_gaussian_vec
-      (U := fun (i : I) ω => i.1.1.eval (hC ω) (hcirc ω))
-      (V := fun (i : I) ω => i.1.1.eval (gC ω) (gcirc ω))
-      (hGFF.isGaussianProcess.hasGaussianLaw I) (gGFF.isGaussianProcess.hasGaussianLaw I)
-      (fun i => (measurable_pi_apply i.1).comp hGFF.measurable_wholePlaneObservableProc)
-      (fun i => (measurable_pi_apply i.1).comp gGFF.measurable_wholePlaneObservableProc)
-      (fun i => (hGFF.isGaussianProcess.hasGaussianLaw_eval i.1).memLp_two)
-      (fun i => (gGFF.isGaussianProcess.hasGaussianLaw_eval i.1).memLp_two)
-      (fun i => hGFF.integral_eq_zero i.1.1 i.1.2)
-      (fun i => gGFF.integral_eq_zero i.1.1 i.1.2)
-      (fun i j => (hGFF.covariance_eq i.1.1 j.1.1 i.1.2 j.1.2).trans
-        (gGFF.covariance_eq i.1.1 j.1.1 i.1.2 j.1.2).symm)
-  exact IsProjectiveLimit.unique (P := fun I => (Q.map (wholePlaneObservableProc gC gcirc)).map I.restrict)
-    hfin (fun _ => rfl)
+  exact (hGFF.identDistrib_observables_across_spaces gGFF).map_eq
 
 /-- A centered-circle decoder chosen under one whole-plane GFF has the same
 pointwise almost-sure interpretation under every other whole-plane GFF. -/
