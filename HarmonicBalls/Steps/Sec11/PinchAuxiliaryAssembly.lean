@@ -1,11 +1,12 @@
 import HarmonicBalls.Steps.Sec11.PinchConstrainedPaths
 import HarmonicBalls.Steps.Sec11.PinchInternalDiam
+import HarmonicBalls.Steps.Sec11.PinchRadialCrossing
 
 /-! # Auxiliary-event assembly for a local pinch point
 
-The additional constrained-path, radial-crossing and geometry hypotheses are
-spelled out: their positivity and validity are not consequences of the printed
-global-event lemma alone.
+The additional constrained-path and geometry hypotheses are spelled out:
+their positivity and validity are not consequences of the printed global-event
+lemma alone.
 -/
 
 namespace HarmonicBalls
@@ -34,15 +35,13 @@ theorem pinchPointEventWithInternalBounds_of_auxiliary_events
     (hAB : (closure (T \ thickening (3 * δ) W) ∩
       closure (thickening (3 * δ) W \ V)).Nonempty)
     (hBC : (closure (thickening (3 * δ) W \ V) ∩ closure V).Nonempty)
-    (hcross : ENNReal.ofReal (setDist D {0} (sphere 0 δ)) +
-        ENNReal.ofReal (setDist D (sphere 0 (2 * δ)) (sphere 0 (3 * δ))) +
-        ENNReal.ofReal (setDist D (sphere 0 δ) (sphere 0 (2 * δ))) ≤
-      ENNReal.ofReal (setDist D {0} (sphere 0 5))) :
+    (hδ : 0 ≤ δ) (hδ5 : 3 * δ ≤ 5) :
     pinchPointEventWithInternalBounds μ D U T Q' Q M 1 0 := by
   have hres (A : Set ℂ) : rescaledSet A 1 0 = A := by simp [rescaledSet]
   have h1 := pinchFirstInternalBound_of_constrained_paths D Q' Q W δ hpaths
   have h2 := pinchSecondInternalBound_of_auxiliary_events hD hnonneg μ U V W T Q' Q δ M
-    hfirst hsecond hthird hclA hclB hclC hsubA hsubB hsubC hAB hBC hcross
+    hfirst hsecond hthird hclA hclB hclC hsubA hsubB hsubC hAB hBC
+    (hD.pinch_radial_crossing hnonneg hδ hδ5)
   simpa only [pinchPointEventWithInternalBounds, mul_one, hres] using ⟨h1, h2, hsecond.2⟩
 
 end HarmonicBalls
