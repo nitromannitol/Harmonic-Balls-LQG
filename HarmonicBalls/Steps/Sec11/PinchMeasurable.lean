@@ -1,5 +1,6 @@
 import HarmonicBalls.Steps.Sec11.InternalMetricMeasurable
 import HarmonicBalls.Steps.Sec11.PinchLocalSetDist
+import Mathlib.MeasureTheory.Measure.NullMeasurable
 
 /-! # Measurability of the strengthened pinch event -/
 
@@ -84,5 +85,101 @@ theorem measurableSet_pinchPointEventWithInternalBounds
   rw [ofReal_setDist_pinch_boundary_eq_internalMetric (hD ω) hconfig z hr,
     ofReal_setDist_center_sphere_eq_internalMetric (hD ω) z hr]
   rfl
+
+/-- The intersection of the pinch event with a measurable set on which the
+random metric is a length metric is measurable. -/
+theorem measurableSet_inter_pinchPointEventWithInternalBounds
+    {Ω : Type*} [MeasurableSpace Ω] {D : Ω → ℂ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q)
+    (M : ℝ) (z : ℂ) {r : ℝ} (hr : 0 < r) {G : Set Ω} (hG : MeasurableSet G)
+    (hD : ∀ ω ∈ G, IsEuclideanLengthMetric (D ω))
+    (hnonneg : ∀ ω ∈ G, ∀ x y, 0 ≤ D ω x y)
+    (hdist : ∀ x ∈ ball z (6 * r), ∀ y ∈ ball z (6 * r),
+      Measurable fun ω => internalMetric (D ω) (ball z (6 * r)) x y)
+    (hgreen : Measurable fun ω => annulusGreenPotentialSup (μ ω) z (3 * r) (6 * r))
+    (hmass : Measurable fun ω => μ ω (rescaledSet U r z)) :
+    MeasurableSet (G ∩ {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M r z}) := by
+  classical
+  let D' : Ω → ℂ → ℂ → ℝ := fun ω => if ω ∈ G then D ω else dist
+  have hD' (ω : Ω) : IsEuclideanLengthMetric (D' ω) := by
+    by_cases hω : ω ∈ G
+    · simpa only [D', ite_eq_left hω] using hD ω hω
+    · simpa only [D', ite_eq_right hω] using isEuclideanLengthMetric_dist
+  have hnonneg' (ω : Ω) (x y : ℂ) : 0 ≤ D' ω x y := by
+    by_cases hω : ω ∈ G
+    · simpa only [D', ite_eq_left hω] using hnonneg ω hω x y
+    · simpa only [D', ite_eq_right hω] using dist_nonneg
+  have hdist' (x : ℂ) (hx : x ∈ ball z (6 * r))
+      (y : ℂ) (hy : y ∈ ball z (6 * r)) :
+      Measurable fun ω => internalMetric (D' ω) (ball z (6 * r)) x y := by
+    have hfun : (fun ω => internalMetric (D' ω) (ball z (6 * r)) x y) =
+        fun ω => if ω ∈ G then internalMetric (D ω) (ball z (6 * r)) x y else
+          internalMetric dist (ball z (6 * r)) x y := by
+      funext ω
+      by_cases hω : ω ∈ G <;> simp only [D', hω, ite_true, ite_false]
+    rw [hfun]
+    exact Measurable.ite hG (hdist x hx y hy) measurable_const
+  have hEvent := measurableSet_pinchPointEventWithInternalBounds hconfig M z hr
+    hD' hnonneg' hdist' hgreen hmass
+  have heq : G ∩ {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M r z} =
+      G ∩ {ω | pinchPointEventWithInternalBounds (μ ω) (D' ω) U T Q' Q M r z} := by
+    ext ω
+    simp only [mem_inter_iff, mem_ofPred_eq]
+    constructor <;> rintro ⟨hω, he⟩ <;> refine ⟨hω, ?_⟩
+    · simpa only [D', ite_eq_left hω] using he
+    · simpa only [D', ite_eq_left hω] using he
+  rw [heq]
+  exact hG.inter hEvent
+
+/-- If the measurable set of length-metric realizations has full measure,
+the strengthened pinch event is null-measurable. -/
+theorem nullMeasurableSet_pinchPointEventWithInternalBounds
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {D : Ω → ℂ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q)
+    (M : ℝ) (z : ℂ) {r : ℝ} (hr : 0 < r) {G : Set Ω} (hG : MeasurableSet G)
+    (hGae : ∀ᵐ ω ∂P, ω ∈ G)
+    (hD : ∀ ω ∈ G, IsEuclideanLengthMetric (D ω))
+    (hnonneg : ∀ ω ∈ G, ∀ x y, 0 ≤ D ω x y)
+    (hdist : ∀ x ∈ ball z (6 * r), ∀ y ∈ ball z (6 * r),
+      Measurable fun ω => internalMetric (D ω) (ball z (6 * r)) x y)
+    (hgreen : Measurable fun ω => annulusGreenPotentialSup (μ ω) z (3 * r) (6 * r))
+    (hmass : Measurable fun ω => μ ω (rescaledSet U r z)) :
+    NullMeasurableSet {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M r z} P := by
+  have hmeas := measurableSet_inter_pinchPointEventWithInternalBounds
+    hconfig M z hr hG hD hnonneg hdist hgreen hmass
+  apply hmeas.nullMeasurableSet.congr
+  filter_upwards [hGae] with ω hω
+  simp only [mem_inter_iff, mem_ofPred_eq, hω, true_and]
+
+/-- Almost-sure length-metric regularity suffices for null measurability;
+the full-measure set need not be given in advance. -/
+theorem nullMeasurableSet_pinchPointEventWithInternalBounds_of_ae
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {D : Ω → ℂ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q)
+    (M : ℝ) (z : ℂ) {r : ℝ} (hr : 0 < r)
+    (hD : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (hdist : ∀ x ∈ ball z (6 * r), ∀ y ∈ ball z (6 * r),
+      Measurable fun ω => internalMetric (D ω) (ball z (6 * r)) x y)
+    (hgreen : Measurable fun ω => annulusGreenPotentialSup (μ ω) z (3 * r) (6 * r))
+    (hmass : Measurable fun ω => μ ω (rescaledSet U r z)) :
+    NullMeasurableSet {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M r z} P := by
+  let H : Set Ω := {ω | IsEuclideanLengthMetric (D ω)}
+  have hH : NullMeasurableSet H P := by
+    apply (nullMeasurableSet_univ (μ := P)).congr
+    filter_upwards [hD] with ω hω
+    simp only [mem_univ, H, mem_ofPred_eq, hω]
+  obtain ⟨G, hsub, hG, hGeq⟩ := hH.exists_measurable_subset_ae_eq
+  have hGae : ∀ᵐ ω ∂P, ω ∈ G := by
+    filter_upwards [hGeq, hD] with ω heq hω
+    exact Eq.mpr heq hω
+  apply nullMeasurableSet_pinchPointEventWithInternalBounds hconfig M z hr hG hGae
+    (fun ω hω => hsub hω) ?_ hdist hgreen hmass
+  intro ω hω x y
+  have hm : IsEuclideanLengthMetric (D ω) := hsub hω
+  have htri := hm.triangle x y x
+  rw [hm.self_eq_zero, hm.symm y x] at htri
+  linarith
 
 end HarmonicBalls
