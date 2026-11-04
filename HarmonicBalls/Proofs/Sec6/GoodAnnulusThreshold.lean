@@ -76,4 +76,42 @@ theorem exists_goodAnnulus_threshold_of_measurable_witness
   by_contra hnot
   exact hbad (isGoodAnnulus_mono_mass hω (le_of_not_gt hnot))
 
+/-- If the countable family of dyadic good-annulus events is measurable, almost-sure existence
+of some positive threshold implies a deterministic threshold with the prescribed probability.
+The measurability hypothesis records the unresolved part of GRAPH G16. -/
+theorem exists_goodAnnulus_threshold_of_measurable_events
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    {μ : Ω → Measure ℂ} {r b : ℝ} {z : ℂ}
+    (hmeas : ∀ n : ℕ, MeasurableSet
+      {ω | IsGoodAnnulus (μ ω) r z ((1 / 2 : ℝ) ^ (n + 1)) b})
+    (hae : ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧ IsGoodAnnulus (μ ω) r z a b)
+    {p : ℝ} (hp : p ∈ Ioo (0 : ℝ) 1) :
+    ∃ a ∈ Ioo (0 : ℝ) 1,
+      P {ω | ¬ IsGoodAnnulus (μ ω) r z a b} ≤ ENNReal.ofReal (1 - p) := by
+  let A : ℕ → Set Ω := fun n => {ω | ¬ IsGoodAnnulus (μ ω) r z ((1 / 2 : ℝ) ^ (n + 1)) b}
+  have hA : ∀ n, MeasurableSet (A n) := fun n => (hmeas n).compl
+  have hanti : Antitone A := by
+    intro m n hmn ω hbad hgood
+    apply hbad
+    apply isGoodAnnulus_mono_mass hgood
+    exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (Nat.add_le_add_right hmn 1)
+  have hi : P (⋂ n, A n) = 0 := by
+    apply measure_mono_null _ (ae_iff.1 hae)
+    intro ω hω hex
+    obtain ⟨a, ha, hgood⟩ := hex
+    have hlim := tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 1 / 2)
+      (by norm_num : (1 / 2 : ℝ) < 1)
+    obtain ⟨n, hn⟩ := eventually_atTop.1 (hlim.eventually (eventually_lt_nhds ha))
+    have hsmall : (1 / 2 : ℝ) ^ (n + 1) < a :=
+      (pow_le_pow_of_le_one (by norm_num) (by norm_num) (Nat.le_succ n)).trans_lt (hn n le_rfl)
+    have hbad : ¬ IsGoodAnnulus (μ ω) r z ((1 / 2 : ℝ) ^ (n + 1)) b := mem_iInter.1 hω n
+    exact hbad (isGoodAnnulus_mono_mass hgood hsmall.le)
+  have hlim := tendsto_measure_iInter_atTop (μ := P)
+    (fun n => (hA n).nullMeasurableSet) hanti ⟨0, measure_ne_top P _⟩
+  rw [hi] at hlim
+  have hδ : 0 < ENNReal.ofReal (1 - p) := ENNReal.ofReal_pos.2 (sub_pos.2 hp.2)
+  obtain ⟨n, hn⟩ := eventually_atTop.1 (hlim.eventually (eventually_lt_nhds hδ))
+  refine ⟨(1 / 2 : ℝ) ^ (n + 1), ⟨by positivity, ?_⟩, (hn n le_rfl).le⟩
+  exact pow_lt_one₀ (by norm_num) (by norm_num) (by omega)
+
 end HarmonicBalls.Section6
