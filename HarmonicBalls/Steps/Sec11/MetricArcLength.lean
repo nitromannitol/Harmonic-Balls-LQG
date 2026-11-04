@@ -12,13 +12,14 @@ private structure ArcLengthPoint where
   val : ℂ
 
 /-- A continuous curve of finite length can be parametrized by metric
-arc length, with its endpoints and total length preserved. -/
-theorem IsEuclideanLengthMetric.exists_lengthParametrized_of_curveLength_lt_top
+arc length, preserving its endpoints, total length and cumulative-length tracking. -/
+theorem IsEuclideanLengthMetric.exists_lengthParametrized_with_tracking
     {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
     {p : ℝ → ℂ} {T : ℝ} (hT : 0 ≤ T) (hp : ContinuousOn p (Icc 0 T))
     (hfinite : curveLength D p 0 T < ∞) :
     ∃ q : ℝ → ℂ, IsLengthParametrized D q (curveLength D p 0 T).toReal ∧
-      q 0 = p 0 ∧ q (curveLength D p 0 T).toReal = p T := by
+      q 0 = p 0 ∧ q (curveLength D p 0 T).toReal = p T ∧
+      ∀ t ∈ Icc 0 T, q (curveLength D p 0 t).toReal = p t := by
   let : MetricSpace ArcLengthPoint := {
     dist := fun x y => D x.val y.val
     dist_self := fun x => hD.self_eq_zero x.val
@@ -73,7 +74,7 @@ theorem IsEuclideanLengthMetric.exists_lengthParametrized_of_curveLength_lt_top
   let q : ℝ → ℂ := fun t => (naturalParameterization r (Icc 0 T) 0 t).val
   have hqcont : ContinuousOn q (Icc 0 R) :=
     hval.comp_continuousOn (HasUnitSpeedOn.lipschitzOnWith_Icc hs).continuousOn
-  refine ⟨q, ⟨ENNReal.toReal_nonneg, hqcont, ?_⟩, ?_, ?_⟩
+  refine ⟨q, ⟨ENNReal.toReal_nonneg, hqcont, ?_⟩, ?_, ?_, ?_⟩
   · intro a b ha hab hb
     have ha' : a ∈ Icc 0 R := ⟨ha, hab.trans hb⟩
     have hb' : b ∈ Icc 0 R := ⟨ha.trans hab, hb⟩
@@ -87,6 +88,27 @@ theorem IsEuclideanLengthMetric.exists_lengthParametrized_of_curveLength_lt_top
   · exact congrArg ArcLengthPoint.val hstart
   · have h := congrArg ArcLengthPoint.val hend
     simpa only [q, r, R, hcurve] using h
+
+  · intro t ht
+    have h := edist_naturalParameterization_eq_zero hrvar.locallyBoundedVariationOn
+      (show (0 : ℝ) ∈ Icc 0 T from ⟨le_rfl, hT⟩) ht
+    rw [variationOnFromTo.eq_of_le r (Icc 0 T) ht.1,
+      inter_eq_right.mpr (Icc_subset_Icc le_rfl ht.2)] at h
+    have heq := edist_eq_zero.mp h
+    have hv := congrArg ArcLengthPoint.val heq
+    simpa only [q, r, hcurve] using hv
+
+/-- A continuous finite-length curve admits a length parametrization with the
+same endpoints and total length. -/
+theorem IsEuclideanLengthMetric.exists_lengthParametrized_of_curveLength_lt_top
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    {p : ℝ → ℂ} {T : ℝ} (hT : 0 ≤ T) (hp : ContinuousOn p (Icc 0 T))
+    (hfinite : curveLength D p 0 T < ∞) :
+    ∃ q : ℝ → ℂ, IsLengthParametrized D q (curveLength D p 0 T).toReal ∧
+      q 0 = p 0 ∧ q (curveLength D p 0 T).toReal = p T := by
+  obtain ⟨q, hq, hq0, hqT, _⟩ :=
+    hD.exists_lengthParametrized_with_tracking hT hp hfinite
+  exact ⟨q, hq, hq0, hqT⟩
 
 /-- Weyl scaling by zero recovers every Euclidean length metric. -/
 theorem IsEuclideanLengthMetric.weylScaling_zero
@@ -121,5 +143,7 @@ theorem IsEuclideanLengthMetric.weylScaling_zero
       exact (hle.trans hP).trans_eq (by simpa using hp.2.2 0 T le_rfl hp.1 le_rfl)
     simpa only [Pi.zero_apply, mul_zero, Real.exp_zero, ENNReal.ofReal_one,
       lintegral_const, one_mul, Measure.restrict_apply_univ, Real.volume_Icc, sub_zero] using hbound
+
+#print axioms IsEuclideanLengthMetric.exists_lengthParametrized_with_tracking
 
 end HarmonicBalls
