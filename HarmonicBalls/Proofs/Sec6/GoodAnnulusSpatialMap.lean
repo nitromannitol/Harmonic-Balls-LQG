@@ -138,4 +138,44 @@ theorem isGoodAnnulus_map_inv_smul_iff
   have h := isGoodAnnulus_map_smul_iff (inv_pos.mpr hk) μ (k * r) (k • z) a b
   simpa only [← mul_assoc, inv_mul_cancel₀ hk.ne', one_mul, smul_smul, one_smul] using h
 
+/-- Translation preserves the good-annulus condition. -/
+theorem isGoodAnnulus_map_add_iff
+    (y : ℂ) (μ : Measure ℂ) (r : ℝ) (z : ℂ) (a b : ℝ) :
+    IsGoodAnnulus (μ.map (fun x : ℂ => x + y)) r (z + y) a b ↔
+      IsGoodAnnulus μ r z a b := by
+  let f : ℂ ≃ₜ ℂ := Homeomorph.addRight y
+  have hpath (x : ℂ) : (planarBrownianMotion x).map (spacetimePathHomeomorph f 1 zero_lt_one) =
+      planarBrownianMotion (f x) := by
+    change (planarBrownianMotion x).map (spacetimePathHomeomorph f 1 zero_lt_one) =
+      planarBrownianMotion (x + y)
+    convert planarBrownianMotion_map_add_from x y using 1
+    congr 1
+    funext ω
+    ext t
+    simp only [spacetimePathHomeomorph_apply, one_mul]
+    rfl
+  have hA : f '' annulus z (3 * r) (5 * r) = annulus (z + y) (3 * r) (5 * r) := by
+    have hm (w : ℂ) : w + y ∈ annulus (z + y) (3 * r) (5 * r) ↔
+        w ∈ annulus z (3 * r) (5 * r) := by
+      simp only [annulus, mem_sdiff, mem_ball, mem_closedBall, dist_eq_norm,
+        add_sub_add_right_eq_sub]
+    ext w
+    constructor
+    · rintro ⟨v, hv, rfl⟩
+      exact (hm v).mpr hv
+    · intro hw
+      refine ⟨w - y, (hm (w - y)).mp ?_, by simp [f]⟩
+      simpa only [sub_add_cancel] using hw
+  have hS : f '' sphere z (4 * r) = sphere (z + y) (4 * r) := by
+    have hm (w : ℂ) : w + y ∈ sphere (z + y) (4 * r) ↔ w ∈ sphere z (4 * r) := by
+      simp only [mem_sphere, dist_eq_norm, add_sub_add_right_eq_sub]
+    ext w
+    constructor
+    · rintro ⟨v, hv, rfl⟩
+      exact (hm v).mpr hv
+    · intro hw
+      refine ⟨w - y, (hm (w - y)).mp ?_, by simp [f]⟩
+      simpa only [sub_add_cancel] using hw
+  exact isGoodAnnulus_map_iff_of_spacetime_law f 1 zero_lt_one hpath μ r r z (z + y) a b hA hS
+
 end HarmonicBalls.Section6

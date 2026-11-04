@@ -149,6 +149,22 @@ theorem planarBrownianMotion_map_add (y : ℂ) :
   rw [hcomp, Measure.map_id] at h
   exact h.symm
 
+/-- Translation carries planar Brownian motion to the translated starting
+point. -/
+theorem planarBrownianMotion_map_add_from (x y : ℂ) :
+    (planarBrownianMotion x).map
+        ((Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight y)) =
+      planarBrownianMotion (x + y) := by
+  rw [← planarBrownianMotion_map_add x,
+    Measure.map_map ((Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight y)).measurable
+      ((Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight x)).measurable,
+    ← planarBrownianMotion_map_add (x + y)]
+  congr 1
+  funext ω
+  ext t
+  change (ω t + x) + y = ω t + (x + y)
+  exact add_assoc _ _ _
+
 /-- Brownian scaling as an identity for the spacetime path homeomorphism. -/
 theorem planarBrownianMotion_map_spacetime_smul
     (x : ℂ) {k : ℝ} (hk : 0 < k) {c : NNReal} (hc : 0 < c)
