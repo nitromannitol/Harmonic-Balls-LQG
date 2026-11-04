@@ -11,15 +11,15 @@ namespace HarmonicBalls
 
 open Metric Set Topology
 
-/-- A path-connected compact set crossing two circles has a component in the
+/-- A closed path-connected set crossing two circles has a component in the
 open annulus which crosses both circles. -/
 theorem IsPathConnected.exists_annular_component_crossing
-    {K : Set ℂ} (hK : IsPathConnected K) (hKcompact : IsCompact K)
+    {K : Set ℂ} (hK : IsPathConnected K) (hKclosed : IsClosed K)
     (w : ℂ) {r R : ℝ} (hrR : r < R) (hcross : CrossesAnnulus K w r R) :
     (crossingComponents (K ∩ annulus w r R) w r R).Nonempty := by
   obtain ⟨⟨p, hp, hpr⟩, ⟨q, hq, hqR⟩⟩ := hcross
-  have hpK : p ∈ K := by simpa only [hKcompact.isClosed.closure_eq] using hp
-  have hqK : q ∈ K := by simpa only [hKcompact.isClosed.closure_eq] using hq
+  have hpK : p ∈ K := by simpa only [hKclosed.closure_eq] using hp
+  have hqK : q ∈ K := by simpa only [hKclosed.closure_eq] using hq
   obtain ⟨γ, hγK⟩ := hK.joinedIn p hpK q hqK
   let f : ℝ → ℝ := fun t => dist (γ.extend t) w
   have hf : Continuous f := γ.continuous_extend.dist continuous_const
