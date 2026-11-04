@@ -16,7 +16,7 @@ open MeasureTheory Metric Set Filter Topology
 universe u
 
 /-- At every nonzero complementary boundary point, sufficiently small scales
-admit a radius for which boundary bumping and Lemma 10.5 bound the number of
+have a radius for which boundary bumping and Lemma 10.5 bound the number of
 complementary crossings. The bound is deterministic and depends only on γ. -/
 theorem ae_boundary_complement_localized_crossings
     (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h6 : HarnackTypeComponentStmt.{u})
