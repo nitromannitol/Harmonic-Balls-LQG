@@ -1,6 +1,5 @@
 import HarmonicBalls.Proofs.Sec11.LQGNormalizedJointLaw
 import HarmonicBalls.Proofs.Sec11.NormalizedSingularMetric
-import HarmonicBalls.Steps.Sec11.CurveConstantFiber
 
 /-! # Joint law under normalized dilation of the singular metric -/
 
@@ -42,15 +41,7 @@ theorem IsWholePlaneGFF.identDistrib_normalizedDilation_singularMetric
           (fun x => -α * Real.log ‖x‖) u v := by
     apply h.ae_normalized_affine_singularMetric_representation hAff 𝔇 h𝔇 hk hD
     · exact Filter.Eventually.of_forall (fun ω u v => rfl)
-    · have hb := (h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc (fun _ _ => 0) h
-        (by intro ω; fun_prop) (by intro x; fun_prop)).ae_isEuclideanLengthMetric
-      filter_upwards [hb] with ω hω
-      have hpair : addFunPairing (hC ω) (fun _ => 0) = hC ω := by
-        funext φ
-        simp [addFunPairing]
-      rw [hpair] at hω
-      intro T p hp
-      exact hω.ae_ne_of_lengthParametrized hp 0
+
   exact h.identDistrib_normalizedPullback_singularMetric hAff hCC hγ hγ₂ hα hμ hk
     𝔇 h𝔇 hD hD' haxioms
 

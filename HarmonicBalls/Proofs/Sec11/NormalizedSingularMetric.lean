@@ -9,8 +9,7 @@ open MeasureTheory Filter Set
 open scoped ENNReal
 
 /-- The singular metric of the normalized affine field is a positive
-multiple of the geometrically dilated original singular metric, provided
-length-parametrized base-metric paths spend zero time at the origin. The
+multiple of the geometrically dilated original singular metric. The
 affine-invariance hypothesis is staged pending source checking. -/
 theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
@@ -26,9 +25,7 @@ theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric
     (hD' : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D' ω (u, v) ∧
       ENNReal.ofReal (D' ω (u, v)) =
         weylScaling (𝔇 (affinePairing hC hcirc (k : ℂ) 0 ω)) ξ
-          (fun x => -α * Real.log ‖x‖) u v)
-    (hzero : ∀ᵐ ω ∂P, ∀ T p, IsLengthParametrized (𝔇 (hC ω)) p T →
-      ∀ᵐ t ∂(volume.restrict (Icc 0 T)), p t ≠ 0) :
+          (fun x => -α * Real.log ‖x‖) u v) :
     ∀ᵐ ω ∂P, ∀ u v, D' ω (u, v) =
       (Real.exp (-ξ * (hcirc ω k 0 + lqgQ γ * Real.log k)) *
         Real.exp (ξ * (α * Real.log k))) * D ω (k • u, k • v) := by
@@ -39,7 +36,7 @@ theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric
     funext φ
     simp [addFunPairing]
   filter_upwards [h.ae_normalized_affine_baseMetric hAff 𝔇 h𝔇 hk,
-    hbase.ae_isEuclideanLengthMetric, hD, hD', hzero] with ω hn hb hd hd' hz
+    hbase.ae_isEuclideanLengthMetric, hD, hD'] with ω hn hb hd hd'
   simp only [hpair] at hb
   intro u v
   let c := Real.exp (-ξ * (hcirc ω k 0 + lqgQ γ * Real.log k))
@@ -49,7 +46,7 @@ theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric
       (fun x y => c * 𝔇 (hC ω) (k • x) (k • y)) := by
     funext x y
     exact hn x y
-  have hscaled := hb.weylScaling_log_const_mul_comp_real_smul ξ α hk hc hz u v
+  have hscaled := hb.weylScaling_log_const_mul_comp_real_smul ξ α hk hc u v
   rw [← heq, ← (hd' u v).2, ← (hd (k • u) (k • v)).2] at hscaled
   have he : ENNReal.ofReal (D' ω (u, v)) =
       ENNReal.ofReal (c * d * D ω (k • u, k • v)) := by
@@ -77,9 +74,7 @@ theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric_representation
         weylScaling (𝔇 (hC ω)) ξ (fun x => -α * Real.log ‖x‖) u v)
     (hD' : ∀ᵐ ω ∂P, ∀ u v, D' ω (u, v) =
       (Real.exp (-ξ * (hcirc ω k 0 + lqgQ γ * Real.log k)) *
-        Real.exp (ξ * (α * Real.log k))) * D ω (k • u, k • v))
-    (hzero : ∀ᵐ ω ∂P, ∀ T p, IsLengthParametrized (𝔇 (hC ω)) p T →
-      ∀ᵐ t ∂(volume.restrict (Icc 0 T)), p t ≠ 0) :
+        Real.exp (ξ * (α * Real.log k))) * D ω (k • u, k • v)) :
     ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D' ω (u, v) ∧
       ENNReal.ofReal (D' ω (u, v)) =
         weylScaling (𝔇 (affinePairing hC hcirc (k : ℂ) 0 ω)) ξ
@@ -91,7 +86,7 @@ theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric_representation
     funext φ
     simp [addFunPairing]
   filter_upwards [h.ae_normalized_affine_baseMetric hAff 𝔇 h𝔇 hk,
-    hbase.ae_isEuclideanLengthMetric, hD, hD', hzero] with ω hn hb hd hd' hz
+    hbase.ae_isEuclideanLengthMetric, hD, hD'] with ω hn hb hd hd'
   simp only [hpair] at hb
   intro u v
   let c := Real.exp (-ξ * (hcirc ω k 0 + lqgQ γ * Real.log k))
@@ -102,7 +97,7 @@ theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric_representation
       (fun x y => c * 𝔇 (hC ω) (k • x) (k • y)) := by
     funext x y
     exact hn x y
-  have hscaled := hb.weylScaling_log_const_mul_comp_real_smul ξ α hk hc hz u v
+  have hscaled := hb.weylScaling_log_const_mul_comp_real_smul ξ α hk hc u v
   rw [← heq, ← (hd (k • u) (k • v)).2] at hscaled
   rw [hd' u v]
   refine ⟨mul_nonneg (mul_nonneg hc.le hdpos) (hd (k • u) (k • v)).1, ?_⟩
