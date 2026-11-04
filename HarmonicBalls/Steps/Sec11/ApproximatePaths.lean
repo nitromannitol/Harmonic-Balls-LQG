@@ -53,4 +53,37 @@ theorem IsEuclideanLengthMetric.ofReal_two_segment_le_pathLength
   rw [ENNReal.ofReal_add (hnonneg w (p.extend t)) (hnonneg (p.extend t) z)]
   simpa only [hD.symm (p.extend t) w, hD.symm z (p.extend t)] using hle
 
+/-- A path's length dominates the sum of distances through two ordered points. -/
+theorem IsEuclideanLengthMetric.ofReal_three_segment_le_pathLength
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    (hnonneg : ∀ x y, 0 ≤ D x y) {w z : ℂ} (p : Path w z)
+    {s t : ℝ} (hs : s ∈ Icc (0 : ℝ) 1) (ht : t ∈ Icc (0 : ℝ) 1) (hst : s ≤ t) :
+    ENNReal.ofReal (D w (p.extend s) + D (p.extend s) (p.extend t) + D (p.extend t) z)
+      ≤ pathLength D p := by
+  let u : ℕ → ℝ := fun n => if n = 0 then 0 else if n = 1 then s else if n = 2 then t else 1
+  have hu : Monotone u := by
+    apply monotone_nat_of_le_succ
+    intro n
+    rcases n with _ | _ | _ | n
+    · simpa [u] using hs.1
+    · simpa [u] using hst
+    · simpa [u] using ht.2
+    · simp [u]
+  have humem : ∀ n, u n ∈ Icc (0 : ℝ) 1 := by
+    intro n
+    rcases n with _ | _ | _ | n
+    · simp [u]
+    · simpa [u] using hs
+    · simpa [u] using ht
+    · simp [u]
+  have hle := le_iSup (fun q : ℕ × {u : ℕ → ℝ // Monotone u ∧ ∀ i, u i ∈ Icc 0 1} =>
+    ∑ i ∈ Finset.range q.1, ENNReal.ofReal (D (p.extend (q.2.1 (i + 1)))
+      (p.extend (q.2.1 i)))) ⟨3, ⟨u, hu, humem⟩⟩
+  change _ ≤ pathLength D p at hle
+  norm_num [u, Finset.sum_range_succ, p.extend_zero, p.extend_one] at hle
+  rw [ENNReal.ofReal_add (add_nonneg (hnonneg w (p.extend s)) (hnonneg (p.extend s) (p.extend t)))
+    (hnonneg (p.extend t) z), ENNReal.ofReal_add (hnonneg w (p.extend s)) (hnonneg (p.extend s) (p.extend t))]
+  simpa only [hD.symm (p.extend s) w, hD.symm (p.extend t) (p.extend s),
+    hD.symm z (p.extend t)] using hle
+
 end HarmonicBalls
