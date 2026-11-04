@@ -55,4 +55,42 @@ theorem ae_frequently_pos_of_equal_lower_tails
         _ = P {ω | X 0 ω < a} := hlaw N a
         _ ≤ δ := hsmall
 
+/-- The event of a positive infinitely-often lower bound is measurable for a sequence of
+measurable random variables. The arbitrary lower bound is reduced to dyadic thresholds. -/
+theorem measurableSet_frequently_pos {Ξ : Type*} [MeasurableSpace Ξ]
+    (X : ℕ → Ξ → ℝ) (hX : ∀ n, Measurable (X n)) :
+    MeasurableSet {x | ∃ a : ℝ, 0 < a ∧ ∀ N : ℕ, ∃ n ≥ N, a ≤ X n x} := by
+  have heq : {x | ∃ a : ℝ, 0 < a ∧ ∀ N : ℕ, ∃ n ≥ N, a ≤ X n x} =
+      ⋃ m : ℕ, ⋂ N : ℕ, ⋃ n : ℕ, ⋃ (_ : N ≤ n), {x | (1 / 2 : ℝ) ^ m ≤ X n x} := by
+    ext x
+    simp only [mem_ofPred_eq, mem_iUnion, mem_iInter]
+    constructor
+    · rintro ⟨a, ha, hf⟩
+      obtain ⟨m, hm⟩ := exists_pow_lt_of_lt_one ha (by norm_num : (1 / 2 : ℝ) < 1)
+      exact ⟨m, fun N => by
+        obtain ⟨n, hn, hxn⟩ := hf N
+        exact ⟨n, hn, hm.le.trans hxn⟩⟩
+    · rintro ⟨m, hm⟩
+      refine ⟨(1 / 2 : ℝ) ^ m, by positivity, fun N => ?_⟩
+      obtain ⟨n, hn, hxn⟩ := hm N
+      exact ⟨n, hn, hxn⟩
+  rw [heq]
+  exact MeasurableSet.iUnion fun m => MeasurableSet.iInter fun N =>
+    MeasurableSet.iUnion fun n => MeasurableSet.iUnion fun _ =>
+      measurableSet_le measurable_const (hX n)
+
+/-- Joint measurability allows the positive recurrence statement to hold simultaneously for
+almost every spatial point, by Fubini's theorem. -/
+theorem ae_ae_frequently_pos_of_equal_lower_tails
+    {Ω Ξ : Type*} [MeasurableSpace Ω] [MeasurableSpace Ξ]
+    (P : Measure Ω) [IsFiniteMeasure P] (ν : Measure Ξ) [SFinite ν]
+    (X : ℕ → Ω × Ξ → ℝ) (hX : ∀ n, Measurable (X n))
+    (hpos : ∀ x, ∀ᵐ ω ∂P, 0 < X 0 (ω, x))
+    (hlaw : ∀ x n a, P {ω | X n (ω, x) < a} = P {ω | X 0 (ω, x) < a}) :
+    ∀ᵐ ω ∂P, ∀ᵐ x ∂ν, ∃ a : ℝ, 0 < a ∧ ∀ N : ℕ, ∃ n ≥ N, a ≤ X n (ω, x) := by
+  apply (Measure.ae_ae_comm (measurableSet_frequently_pos X hX)).2
+  exact Eventually.of_forall fun x =>
+    ae_frequently_pos_of_equal_lower_tails P (fun n ω => X n (ω, x))
+      ((hX 0).comp (measurable_id.prodMk measurable_const)) (hpos x) (hlaw x)
+
 end HarmonicBalls.Section6
