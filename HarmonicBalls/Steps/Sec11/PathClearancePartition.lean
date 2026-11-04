@@ -34,7 +34,7 @@ arbitrarily close in the ambient length metric. -/
 theorem IsEuclideanLengthMetric.exists_short_path_partition
     {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
     {x y : ℂ} (p : Path x y) {ε : ℝ} (hε : 0 < ε) :
-    ∃ (n : ℕ) (u : ℕ → ℝ), Monotone u ∧ (∀ i, u i ∈ Icc (0 : ℝ) 1) ∧
+    ∃ (n : ℕ) (u : ℕ → ℝ), 0 < n ∧ Monotone u ∧ (∀ i, u i ∈ Icc (0 : ℝ) 1) ∧
       u 0 = 0 ∧ u n = 1 ∧ ∀ i < n, D (p.extend (u i)) (p.extend (u (i + 1))) < ε := by
   obtain ⟨δ, hδ, hclose⟩ := hD.path_uniform_distance p hε
   obtain ⟨m, hm⟩ := exists_nat_one_div_lt hδ
@@ -53,7 +53,7 @@ theorem IsEuclideanLengthMetric.exists_short_path_partition
     apply min_eq_left
     apply (div_le_one hn).2
     exact_mod_cast hi
-  refine ⟨n, u, hu, humem, ?_, ?_, ?_⟩
+  refine ⟨n, u, by dsimp [n]; omega, hu, humem, ?_, ?_, ?_⟩
   · simp only [u, Nat.cast_zero, zero_div, min_eq_left (by norm_num : (0 : ℝ) ≤ 1)]
   · rw [hformula n (le_refl _), div_self (ne_of_gt hn)]
   · intro i hi
@@ -71,14 +71,14 @@ whose cost is at most the path length. -/
 theorem IsEuclideanLengthMetric.exists_clearance_chain_of_path
     {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
     {U : Set ℂ} (hU : IsOpen U) {x y : ℂ} (p : Path x y) (hp : ∀ t, p t ∈ U) :
-    ∃ (n : ℕ) (v : ℕ → ℂ), v 0 = x ∧ v n = y ∧
+    ∃ (n : ℕ) (v : ℕ → ℂ), 0 < n ∧ v 0 = x ∧ v n = y ∧
       (∀ i < n, ∃ δ : ℝ, D (v i) (v (i + 1)) < δ ∧
         ∀ z ∉ U, δ ≤ D (v i) z) ∧
       (∑ i ∈ Finset.range n, ENNReal.ofReal (D (v i) (v (i + 1)))) ≤ pathLength D p := by
   obtain ⟨δ, hδ, hclear⟩ := hD.path_uniform_boundary_clearance hU p hp
-  obtain ⟨n, u, hu, humem, hu0, hun, hshort⟩ := hD.exists_short_path_partition p hδ
+  obtain ⟨n, u, hn, hu, humem, hu0, hun, hshort⟩ := hD.exists_short_path_partition p hδ
   let v : ℕ → ℂ := fun i => p.extend (u i)
-  refine ⟨n, v, ?_, ?_, ?_, ?_⟩
+  refine ⟨n, v, hn, ?_, ?_, ?_, ?_⟩
   · simp only [v, hu0, p.extend_zero]
   · simp only [v, hun, p.extend_one]
   · intro i hi
