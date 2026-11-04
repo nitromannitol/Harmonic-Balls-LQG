@@ -138,4 +138,33 @@ theorem ae_eventually_veryGoodComparableScaleCount_of_eventual_germ_measurable
   exact ae_eventually_veryGoodComparableScaleCount_of_trivial_germ P μ βminus z N₀
     a b C₁m C₁p C₂m C₂p C₃ m X L' q ζ germ hgle hL' htrivial hX hXm hlim' hmean hq
 
+open Classical in
+/-- The block-frequency conclusion needs only pointwise almost-sure
+convergence of the averages; no measurable choice of the limit is required. -/
+theorem ae_eventually_veryGoodComparableScaleCount_of_convergence
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (μ : Ω → Measure ℂ) (βminus : ℝ) (z : ℂ) (N₀ : ℕ)
+    (a b C₁m C₁p C₂m C₂p C₃ m : ℝ) (X : ℕ → Ω → ℝ) (q ζ : ℝ)
+    (germ : ℝ → MeasurableSpace Ω) (hgle : ∀ ε, 0 < ε → germ ε ≤ mΩ)
+    (hXgerm : ∀ ε, 0 < ε → ∃ K, ∀ n, K ≤ n →
+      @Measurable Ω ℝ (germ ε) _ (X n))
+    (htrivial : ∀ A : Set Ω, (∀ ε, 0 < ε → MeasurableSet[germ ε] A) →
+      P A = 0 ∨ P A = 1)
+    (hX : ∀ n ω, X n ω = if IsVeryGoodAnnulus (μ ω) βminus (dyadicScale n) z N₀
+      a b C₁m C₁p C₂m C₂p C₃ ∧ AnnulusBallComparison (μ ω) n z m then 1 else 0)
+    (hXm : ∀ n, Measurable (X n))
+    (hlim : ∀ᵐ ω ∂P, ∃ c : ℝ, Tendsto (fun N : ℕ =>
+      (∑ n ∈ Icc 1 N, X n ω) / (N : ℝ)) atTop (𝓝 c))
+    (hmean : ∀ n, ∫ ω, X n ω ∂P = q) (hq : 1 - ζ < q) :
+    ∀ᵐ ω ∂P, ∀ᶠ N : ℕ in atTop, (1 - ζ) * (N : ℝ) ≤
+      veryGoodComparableScaleCount (μ ω) βminus z N₀ a b C₁m C₁p C₂m C₂p C₃ m N := by
+  let L : Ω → ℝ := fun ω => limUnder atTop
+    (fun N : ℕ => (∑ n ∈ Icc 1 N, X n ω) / (N : ℝ))
+  have hlim' : ∀ᵐ ω ∂P, Tendsto (fun N : ℕ => (∑ n ∈ Icc 1 N, X n ω) / (N : ℝ))
+      atTop (𝓝 (L ω)) := by
+    filter_upwards [hlim] with ω hω
+    exact tendsto_nhds_limUnder hω
+  exact ae_eventually_veryGoodComparableScaleCount_of_eventual_germ_measurable P μ βminus z N₀
+    a b C₁m C₁p C₂m C₂p C₃ m X L q ζ germ hgle hXgerm htrivial hX hXm hlim' hmean hq
+
 end HarmonicBalls
