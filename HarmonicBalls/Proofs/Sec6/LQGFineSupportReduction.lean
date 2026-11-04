@@ -126,4 +126,30 @@ theorem ae_exists_goodAnnulus_threshold_of_ae_local_fine_support
     hC0 hCtop hsubmean
   exact ne_top_of_le_ne_top (measure_ball_ne_top (μ := μ ω)) (measure_mono sdiff_subset)
 
+/-- Measurability of the dyadic good-annulus events turns almost-sure
+local fine support into a deterministic threshold of prescribed probability. -/
+theorem exists_goodAnnulus_probability_of_ae_local_fine_support
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (μ : Ω → Measure ℂ) {z : ℂ} {r b : ℝ} (hr : 0 < r) (hb : 0 < b)
+    (hfinite : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω))
+    (hloc : ∀ᵐ ω ∂P, ∀ᵐ x ∂(volume : Measure ℂ), ∀ ε : ℝ, 0 < ε →
+      ∀ E : Set ℂ, MeasurableSet E → (μ ω) (ball x ε \ E) = 0 →
+      ∀ᵐ ω' ∂(planarBrownianMotion x), ContinuousPath.exitTime Eᶜ ω' = 0)
+    {C : ℝ≥0∞} (hC0 : C ≠ 0) (hCtop : C ≠ ∞)
+    (hsubmean : ∀ K : Set ℂ, IsCompact K → ∀ u ∈ sphere z (4 * r),
+      planarBrownianMotion u
+        {ω | ContinuousPath.exitTime (annulus z (3 * r) (5 * r)) ω ≤
+          ContinuousPath.exitTime Kᶜ ω} ≤
+      C * ∫⁻ x in ball u (r / 4), planarBrownianMotion x
+        {ω | ContinuousPath.exitTime (annulus z (3 * r) (5 * r)) ω ≤
+          ContinuousPath.exitTime Kᶜ ω} ∂volume)
+    (hmeas : ∀ n : ℕ, MeasurableSet
+      {ω | IsGoodAnnulus (μ ω) r z ((1 / 2 : ℝ) ^ (n + 1)) b})
+    {p : ℝ} (hp : p ∈ Ioo (0 : ℝ) 1) :
+    ∃ a ∈ Ioo (0 : ℝ) 1,
+      P {ω | ¬ IsGoodAnnulus (μ ω) r z a b} ≤ ENNReal.ofReal (1 - p) := by
+  apply exists_goodAnnulus_threshold_of_measurable_events P hmeas ?_ hp
+  exact ae_exists_goodAnnulus_threshold_of_ae_local_fine_support μ hr hb hfinite hloc
+    hC0 hCtop hsubmean
+
 end HarmonicBalls.Section6
