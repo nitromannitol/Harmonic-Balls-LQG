@@ -1,4 +1,5 @@
 import HarmonicBalls.Defs.Brownian
+import HarmonicBalls.Proofs.Sec6.ExitTimeSpatialMap
 import MarkovProcess.Examples.BrownianMotion
 import MarkovProcess.Path.MeasureIdentification
 import MarkovProcess.FiniteTime.MeasureFiniteRestrictionIdentification
@@ -130,5 +131,42 @@ theorem planarBrownianMotion_map_scaledCenteredPlanarPath
     Complex.real_smul, Complex.ofReal_mul, Complex.ofReal_sub, Complex.ofReal_inv]
   have hx : (x.re : ℂ) + (x.im : ℂ) * Complex.I = x := Complex.re_add_im x
   linear_combination (Real.sqrt c)⁻¹ * hx
+
+/-- A spatial translation carries the planar Brownian law from zero to the
+translated starting point. -/
+theorem planarBrownianMotion_map_add (y : ℂ) :
+    (planarBrownianMotion 0).map
+        ((Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight y)) =
+      planarBrownianMotion y := by
+  let T := (Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight y)
+  have h := congrArg (fun μ : Measure (ContinuousPath ℂ) => μ.map T)
+    (planarBrownianMotion_map_scaledCenteredPlanarPath y (c := 1) one_ne_zero)
+  rw [Measure.map_map T.measurable (continuous_scaledCenteredPlanarPath y 1).measurable] at h
+  have hcomp : T ∘ scaledCenteredPlanarPath y 1 = id := by
+    funext ω
+    ext t
+    simp [T, scaledCenteredPlanarPath, Homeomorph.arrowCongr]
+  rw [hcomp, Measure.map_id] at h
+  exact h.symm
+
+/-- Brownian scaling as an identity for the spacetime path homeomorphism. -/
+theorem planarBrownianMotion_map_spacetime_smul
+    (x : ℂ) {k : ℝ} (hk : 0 < k) {c : NNReal} (hc : 0 < c)
+    (hscale : (Real.sqrt c)⁻¹ = k) :
+    (planarBrownianMotion x).map
+      (spacetimePathHomeomorph (Homeomorph.smulOfNeZero k hk.ne') c hc) =
+      planarBrownianMotion (k • x) := by
+  let T := (Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight (k • x))
+  have h := congrArg (fun μ : Measure (ContinuousPath ℂ) => μ.map T)
+    (planarBrownianMotion_map_scaledCenteredPlanarPath x hc.ne')
+  rw [Measure.map_map T.measurable (continuous_scaledCenteredPlanarPath x c).measurable,
+    planarBrownianMotion_map_add] at h
+  convert h using 1
+  congr 1
+  funext ω
+  ext t
+  simp only [Function.comp_apply, spacetimePathHomeomorph_apply, scaledCenteredPlanarPath, hscale]
+  change k • ω (c * t) = k • (ω (c * t) - x) + k • x
+  rw [smul_sub, sub_add_cancel]
 
 end HarmonicBalls.Section6

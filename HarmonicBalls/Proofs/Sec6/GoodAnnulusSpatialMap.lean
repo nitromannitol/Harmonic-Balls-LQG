@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec6.ExitTimeSpatialMap
+import HarmonicBalls.Proofs.Sec6.BrownianScaling
 import HarmonicBalls.Defs.Annuli
 import Mathlib.Analysis.Normed.Module.Ball.Pointwise
 
@@ -111,6 +112,30 @@ theorem isGoodAnnulus_map_inv_smul_iff_of_spacetime_law
       IsGoodAnnulus μ (k * r) (k • z) a b := by
   have h := isGoodAnnulus_map_smul_iff_of_spacetime_law (inv_pos.mpr hk) c hc hpath
     μ (k * r) (k • z) a b
+  simpa only [← mul_assoc, inv_mul_cancel₀ hk.ne', one_mul, smul_smul, one_smul] using h
+
+/-- Positive dilation preserves the good-annulus condition. -/
+theorem isGoodAnnulus_map_smul_iff
+    {k : ℝ} (hk : 0 < k) (μ : Measure ℂ) (r : ℝ) (z : ℂ) (a b : ℝ) :
+    IsGoodAnnulus (μ.map (fun x : ℂ => k • x)) (k * r) (k • z) a b ↔
+      IsGoodAnnulus μ r z a b := by
+  let c : NNReal := ⟨(k⁻¹) ^ 2, sq_nonneg _⟩
+  have hc : 0 < c := by
+    change (0 : ℝ) < (k⁻¹) ^ 2
+    positivity
+  have hscale : (Real.sqrt c)⁻¹ = k := by
+    change (Real.sqrt ((k⁻¹) ^ 2))⁻¹ = k
+    rw [Real.sqrt_sq (le_of_lt (inv_pos.mpr hk)), inv_inv]
+  apply isGoodAnnulus_map_smul_iff_of_spacetime_law hk c hc
+  intro x
+  exact planarBrownianMotion_map_spacetime_smul x hk hc hscale
+
+/-- Inverse-dilation transport in the form used for good-radius counts. -/
+theorem isGoodAnnulus_map_inv_smul_iff
+    {k : ℝ} (hk : 0 < k) (μ : Measure ℂ) (r : ℝ) (z : ℂ) (a b : ℝ) :
+    IsGoodAnnulus (μ.map (fun x : ℂ => k⁻¹ • x)) r z a b ↔
+      IsGoodAnnulus μ (k * r) (k • z) a b := by
+  have h := isGoodAnnulus_map_smul_iff (inv_pos.mpr hk) μ (k * r) (k • z) a b
   simpa only [← mul_assoc, inv_mul_cancel₀ hk.ne', one_mul, smul_smul, one_smul] using h
 
 end HarmonicBalls.Section6
