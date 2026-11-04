@@ -59,4 +59,17 @@ theorem path_meets_sphere_between {w a z : ℂ} (p : Path w a) {ρ : ℝ}
   obtain ⟨t, ht, heq⟩ := hm hmem
   exact ⟨t, ht, heq⟩
 
+/-- Positive rescaling takes an annulus to the corresponding translated annulus. -/
+theorem rescaledSet_annulus_subset (a b : ℝ) {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    rescaledSet (annulus 0 a b) r z ⊆ annulus z (a * r) (b * r) := by
+  rintro q ⟨x, hx, rfl⟩
+  have hdist : dist ((r : ℂ) * x + z) z = r * ‖x‖ := by
+    simp only [dist_eq_norm, add_sub_cancel_right, norm_mul, Complex.norm_real,
+      Real.norm_eq_abs, abs_of_pos hr]
+  have hx' : ‖x‖ < b ∧ ¬ ‖x‖ ≤ a := by
+    simpa only [annulus, mem_sdiff, Metric.mem_ball, Metric.mem_closedBall, dist_zero_right] using hx
+  change dist ((r : ℂ) * x + z) z < b * r ∧ ¬ dist ((r : ℂ) * x + z) z ≤ a * r
+  rw [hdist]
+  constructor <;> nlinarith
+
 end HarmonicBalls
