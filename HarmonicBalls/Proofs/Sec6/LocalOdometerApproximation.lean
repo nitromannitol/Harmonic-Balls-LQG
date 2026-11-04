@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec6.LocalSubharmonicApproximation
+import HarmonicBalls.Proofs.Sec6.RelativelyCompactExhaustion
 
 /-! # Odometer comparison via local generator approximations -/
 
@@ -104,5 +105,37 @@ theorem odometer_le_harmonicMeasure_of_local_generator_approximation
     hopen hmono hA hAb hDA hqc hqmeas hqnonneg hM' hzero' hbound' hxD happrox
   simpa only [hunion] using hresult
 
+
+/-- Compact-local nonnegative-generator approximations suffice for the
+odometer harmonic-measure comparison on a pole-avoiding domain. -/
+theorem odometer_le_harmonicMeasure_of_compact_local_generator_approximation
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ)
+    {βminus βplus : ℝ} (hV : VolumeGrowth μ 1 βminus βplus)
+    {z : ℂ} (hz : z ∈ ball (0 : ℂ) 1) {t : ℝ} (ht : 0 < t)
+    {A : Set ℂ} (hA : IsOpen A)
+    (hAsub : closure A ⊆ ball (0 : ℂ) 1 \ {z})
+    {x : ℂ} (hx : x ∈ A ∩ cluster μ 1 z t)
+    (happrox : ∀ (V : Set ℂ), IsOpen V → IsCompact (closure V) →
+      closure V ⊆ connectedComponentIn (A ∩ cluster μ 1 z t) x →
+      ∀ ε : ℝ, 0 < ε → ∃ f : isFellerKernelSemigroup_planarHeatSemigroup.c0Semigroup.generatorDomain,
+        (∀ y ∈ closure V, |(closure A).indicator (fun y => max 0 (odometer μ 1 z t y)) y - (f : C₀(ℂ, ℝ)) y| ≤ ε) ∧
+        ∀ y ∈ V, 0 ≤ (isFellerKernelSemigroup_planarHeatSemigroup.c0Semigroup.generator f) y) :
+    odometerExt μ z t x ≤
+      (⨆ y ∈ frontier A ∩ closure (connectedComponentIn (A ∩ cluster μ 1 z t) x),
+        odometerExt μ z t y) *
+        planarBrownianMotion x {ω | ContinuousPath.exitTime A ω ≤
+          hittingTime (A \ connectedComponentIn (A ∩ cluster μ 1 z t) x) ω} := by
+  have hcluster := (cluster_open_laplacian_of_general greenFunctionBall
+    obstacleNonCoincidenceHarmonicGeneral_holds shiftedOdometerLaplacianGeneral_holds
+    obstacleCompatibilityShiftStep_holds hμ zero_lt_one hV hz ht).1
+  have hYopen : IsOpen (connectedComponentIn (A ∩ cluster μ 1 z t) x) :=
+    (hA.inter hcluster).connectedComponentIn
+  obtain ⟨D, hDopen, hDmono, hDcompact, hDnext, hDunion⟩ :=
+    exists_relativelyCompact_open_exhaustion hYopen
+  apply odometer_le_harmonicMeasure_of_local_generator_approximation hμ hV hz ht hA hAsub hx
+    hDopen hDmono hDunion
+  intro n ε hε
+  apply happrox (D n) (hDopen n) (hDcompact n) _ ε hε
+  exact (hDnext n).trans (hDunion ▸ subset_iUnion D (n + 1))
 
 end HarmonicBalls.Section6
