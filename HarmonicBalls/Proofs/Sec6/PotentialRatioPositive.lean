@@ -10,6 +10,7 @@ and boundedness argument; it does not establish these properties of the Green po
 
 namespace HarmonicBalls.Section6
 
+open MeasureTheory
 open scoped ENNReal
 
 /-- A continuous, strictly positive function on a nonempty compact space has positive
@@ -35,5 +36,21 @@ theorem potential_extrema_ratio_pos
       (iSup_le fun t => ENNReal.ofReal_le_ofReal (hTb t))
   exact ENNReal.toReal_pos (ENNReal.div_pos hApos.ne' hBtop).ne'
     (ENNReal.div_ne_top hAtop hBpos.ne')
+
+/-- An integrable Green kernel that is positive off its pole has positive potential
+when the domain has positive mass and the pole carries no atom. -/
+theorem greenPotential_pos_of_pos_off_diagonal
+    {O : Set ℂ} (hO : Bornology.IsBounded O) (μ : Measure ℂ) (x : ℂ)
+    (hμx : μ {x} = 0) (hμO : 0 < μ O)
+    (hint : Integrable (greenFunction O x) μ)
+    (hpos : ∀ y ∈ O, y ≠ x → 0 < greenFunction O x y) :
+    0 < greenPotential O μ x := by
+  apply (integral_pos_iff_support_of_nonneg (greenFunction_nonneg hO x) hint).2
+  have hsub : O \ {x} ⊆ Function.support (greenFunction O x) := by
+    intro y hy
+    exact ne_of_gt (hpos y hy.1 (by simpa using hy.2))
+  have hmass : 0 < μ (O \ {x}) := by
+    rwa [measure_sdiff_null hμx]
+  exact hmass.trans_le (measure_mono hsub)
 
 end HarmonicBalls.Section6
