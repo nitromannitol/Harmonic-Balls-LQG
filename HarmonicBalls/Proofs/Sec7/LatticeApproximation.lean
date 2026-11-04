@@ -107,6 +107,7 @@ theorem closure_subset_ball_of_prevalence_grid
     (hB : IsPreconnected B) (hzB : z ∈ B) (P : ℝ → ℂ → Prop)
     (hgood : ∀ w ∈ prevalenceGrid ε, ∃ ρ ∈ Icc ε (Real.sqrt ε), P ρ w)
     (hlower : ∀ w ∈ prevalenceGrid ε, ∀ ρ ∈ Icc ε (Real.sqrt ε), P ρ w →
+      closedBall w ρ ⊆ ball 0 1 \ {z} →
       μ B ≤ ENNReal.ofReal α * μ (annulus w (ρ / 2) ρ))
     (hharnack : ∀ w ∈ prevalenceGrid ε, ∀ ρ ∈ Icc ε (Real.sqrt ε), P ρ w →
       closedBall w ρ ⊆ ball 0 1 \ {z} →
@@ -120,7 +121,7 @@ theorem closure_subset_ball_of_prevalence_grid
   intro y hyB hyq
   obtain ⟨w, hw, ρ, hρ, hP, hyball, hdomain⟩ := hcover y hyq
   have hmass : μ (B ∩ annulus w (ρ / 2) ρ) ≤ ENNReal.ofReal α * μ (annulus w (ρ / 2) ρ) :=
-    (MeasureTheory.measure_mono inter_subset_left).trans (hlower w hw ρ hρ hP)
+    (MeasureTheory.measure_mono inter_subset_left).trans (hlower w hw ρ hρ hP hdomain)
   have hempty := hharnack w hw ρ hρ hP hdomain hmass
   exact (eq_empty_iff_forall_notMem.1 hempty) y ⟨hyB, hyball⟩
 
