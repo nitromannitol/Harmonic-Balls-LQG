@@ -11,14 +11,14 @@ open scoped ENNReal Topology
 interval outside a set of arbitrarily small measure. -/
 theorem exists_positive_window_of_ae_pos
     {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
-    {X : Ω → ℝ} (hX : Measurable X) (hpos : ∀ᵐ ω ∂P, 0 < X ω)
+    {X : Ω → ℝ} (hX : AEMeasurable X P) (hpos : ∀ᵐ ω ∂P, 0 < X ω)
     {δ : ℝ≥0∞} (hδ : 0 < δ) :
     ∃ lo hi : ℝ, 0 < lo ∧ 0 < hi ∧
       P {ω | X ω ∉ Icc lo hi} ≤ δ := by
   let A : ℕ → Set Ω := fun n => {ω | X ω < 1 / (n + 1 : ℝ) ∨ (n + 1 : ℝ) < X ω}
   have hm (n : ℕ) : NullMeasurableSet (A n) P :=
-    ((measurableSet_lt hX measurable_const).union
-      (measurableSet_lt measurable_const hX)).nullMeasurableSet
+    (nullMeasurableSet_lt hX aemeasurable_const).union
+      (nullMeasurableSet_lt aemeasurable_const hX)
   have ha : Antitone A := by
     intro m n hmn ω hω
     have hden : (m + 1 : ℝ) ≤ (n + 1 : ℝ) := by exact_mod_cast Nat.add_le_add_right hmn 1
@@ -54,7 +54,7 @@ theorem exists_positive_window_of_ae_pos
 deterministic positive finite window with arbitrarily high probability. -/
 theorem exists_ennreal_window_of_ae_pos_ne_top
     {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
-    {X : Ω → ℝ≥0∞} (hX : Measurable X)
+    {X : Ω → ℝ≥0∞} (hX : AEMeasurable X P)
     (hpos : ∀ᵐ ω ∂P, 0 < X ω ∧ X ω ≠ ∞)
     {δ : ℝ≥0∞} (hδ : 0 < δ) :
     ∃ lo hi : ℝ, 0 < lo ∧ 0 < hi ∧
@@ -63,7 +63,7 @@ theorem exists_ennreal_window_of_ae_pos_ne_top
     filter_upwards [hpos] with ω hω
     exact ENNReal.toReal_pos hω.1.ne' hω.2
   obtain ⟨lo, hi, hlo, hhi, hbound⟩ :=
-    exists_positive_window_of_ae_pos P (ENNReal.measurable_toReal.comp hX) hreal hδ
+    exists_positive_window_of_ae_pos P (ENNReal.measurable_toReal.comp_aemeasurable hX) hreal hδ
   refine ⟨lo, hi, hlo, hhi, ?_⟩
   refine (measure_mono_ae ?_).trans hbound
   filter_upwards [hpos] with ω hω hbad
