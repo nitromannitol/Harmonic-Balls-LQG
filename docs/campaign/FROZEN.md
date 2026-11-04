@@ -51,7 +51,7 @@ built at bd58fe6 (the only failures in the session were untracked or uncommitted
 | HarnackTypeComponentStmt | Prop 6.2 | HarmonicBalls/Draft/Section6.lean:230 | freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
 | ManyGoodAnnuliStmt | Lemma 6.3 | HarmonicBalls/Draft/Section6.lean:255 | [C23] (IsGoodAnnulus); freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
 | GoodAnnulusProbabilityStmt | Lemma 6.4 | HarmonicBalls/Draft/Section6.lean:270 | [C23], [C25] |
-| AnnulusIterationStmt | Lemma 6.5 | HarmonicBalls/Draft/Section6.lean:289 | none (literature input, GM20b Lemma 3.1) |
+| AnnulusIterationStmt | Lemma 6.5 | HarmonicBalls/Draft/Section6.lean:289 | proved via Bonanno lmLem3_1a (operator approved E35) |
 | ManyVeryGoodAnnuliStmt | Lemma 6.6 | HarmonicBalls/Draft/Section6.lean:311 | [C23] (IsVeryGoodAnnulus); freeze fix (4) printed order E31, 1d4135b; PolyHighProb real exponent (d126f1b) |
 | VeryGoodAnnulusProbabilityStmt | Lemma 6.7 | HarmonicBalls/Draft/Section6.lean:331 | [C23], [C26] |
 | AnnulusMassBoundByOdometerStmt | Lemma 6.8 | HarmonicBalls/Draft/Section6.lean:352 | none |
