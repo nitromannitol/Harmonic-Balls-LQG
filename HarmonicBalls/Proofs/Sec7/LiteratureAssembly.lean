@@ -4,6 +4,7 @@ import HarmonicBalls.Proofs.Sec3.ConservationOfMassLemma
 import HarmonicBalls.Proofs.Sec6.Section6LiteratureAssembly
 import HarmonicBalls.Proofs.Sec7.ClusterUpperBound
 import HarmonicBalls.Proofs.Sec7.ClusterContinuity
+import HarmonicBalls.Proofs.Sec7.PositiveLocalStopping
 import HarmonicBalls.Proofs.Sec8.ClusterBoundary
 
 /-! # Section 7 from Green-potential regularity and LQG inputs
@@ -15,7 +16,7 @@ The displayed LQG inputs are staged and await source review.
 
 namespace HarmonicBalls
 
-open MeasureTheory
+open MeasureTheory Metric Set Filter
 
 universe u
 
@@ -70,9 +71,31 @@ theorem clusterBoundary_and_timeContinuity_of_literature
   exact ⟨h81, clusterTimeContinuity_of_steps hvolume h32 (clusterMonotone_proved hgrowth)
     (clusterConservationOfMass_proved hgrowth) h61 h81⟩
 
+
+/-- A positive field-local stopping time and stopped family under the same
+inputs, the staged locality input, and an existing regularized family. -/
+theorem exists_positive_fieldLocal_time_and_family_of_literature
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hloc : LQGMeasureLocality P γ α₀ hC hcirc)
+    {Λ : Ω → ℂ → ℝ → Set ℂ}
+    (hΛ : ∀ᵐ ω ∂P, ∀ z, IsRegularizedClusterFamily (μ ω) (Λ ω z) z) :
+    ∃ τ : Ω → Ioi (0 : ℝ), ∃ F : Ω → (ball (0 : ℂ) (1 / 2) → Set ℂ),
+      Measurable[fieldSigmaAlgebra α₀ hC (ball 0 1)] τ ∧
+      Measurable[fieldSigmaAlgebra α₀ hC (ball 0 1)] F ∧
+      ∀ᵐ ω ∂P, ∀ z : ball (0 : ℂ) (1 / 2),
+        closure (Λ ω z (τ ω)) ⊆ ball 0 1 ∧ F ω z = Λ ω z (τ ω) := by
+  exact exists_positive_fieldLocal_time_and_family
+    (lqgVolumeGrowthAllScalesStmt_of_literature hDG hAff hCC hW hE hN)
+    (clusterUpperBoundPolyHighProb_of_literature hholder hDG hAff hCC hW hE hN)
+    hγ hγ2 hα hGFF hμ hloc hΛ
+
 end
 
 #print axioms clusterUpperBoundPolyHighProb_of_literature
 #print axioms clusterBoundary_and_timeContinuity_of_literature
+#print axioms exists_positive_fieldLocal_time_and_family_of_literature
 
 end HarmonicBalls
