@@ -123,4 +123,32 @@ theorem exists_compact_exhaustion_inter_open
       refine mem_iUnion.mpr ⟨max i j, hmono (le_max_left i j) hi, ?_⟩
       exact ⟨⟨x, hx.1⟩, C.subset (le_max_right i j) hj, rfl⟩
 
+
+/-- A full-mass compact family can be localized inside an open domain while its
+Green potentials converge uniformly on a compact subset of the closure. -/
+theorem exists_compact_greenPotential_approximation
+    {μ : Measure ℂ} {O S : Set ℂ} {K : ℕ → Set ℂ}
+    (hopen : IsOpen O) (hbounded : Bornology.IsBounded O)
+    (hS : IsCompact S) (hSO : S ⊆ closure O)
+    (hK : ∀ n, IsCompact (K n)) (hKmono : Monotone K)
+    (hfull : μ (O \ ⋃ n, K n) = 0)
+    (hholder : ∀ f : ℂ → ℝ, MemLp f ⊤ (μ.restrict (closure O)) →
+      (∀ x ∈ closure O, IntegrableOn (fun y => greenFunction O x y * f y) O μ) ∧
+      ∃ C r : ℝ≥0, 0 < r ∧
+        HolderOnWith C r (fun x => ∫ y in O, greenFunction O x y * f y ∂μ) (closure O)) :
+    ∃ L : ℕ → Set ℂ, (∀ n, IsCompact (L n)) ∧ Monotone L ∧
+      (∀ n, L n ⊆ K n ∩ O) ∧ (⋃ n, L n) = O ∩ ⋃ n, K n ∧
+      TendstoUniformlyOn (fun n x => ∫ y in L n, greenFunction O x y ∂μ)
+        (greenPotential O μ) atTop S := by
+  obtain ⟨L, hLc, hLm, hLsub, hLu⟩ := exists_compact_exhaustion_inter_open hopen hK hKmono
+  refine ⟨L, hLc, hLm, hLsub, hLu, ?_⟩
+  apply greenPotential_tendstoUniformlyOn_of_exhaustion hbounded hS hSO
+    (fun n => (hLc n).measurableSet) hLm (fun n => (hLsub n).trans inter_subset_right) ?_ hholder
+  rw [hLu]
+  have heq : O \ (O ∩ ⋃ n, K n) = O \ ⋃ n, K n := by
+    ext y
+    simp
+  rw [heq]
+  exact hfull
+
 end HarmonicBalls.Section6
