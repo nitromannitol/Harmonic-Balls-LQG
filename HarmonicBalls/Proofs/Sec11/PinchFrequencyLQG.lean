@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec11.PinchStationarityLQG
 
 The Section 8 ergodic theorem uses Leonardo Bonanno's LatticeProb
 formalization. The affine, coordinate-change and mixture metric inputs are
-staged; normalized metric locality and path zero occupation are explicit.
+staged; normalized metric locality is explicit.
 -/
 
 namespace HarmonicBalls
@@ -15,7 +15,7 @@ open scoped ENNReal
 
 open Classical in
 /-- Normalized LQG dilation yields the pinch block-frequency estimate at the
-origin, conditional on metric locality and zero occupation. -/
+origin, conditional on metric locality. -/
 theorem IsWholePlaneGFF.ae_internal_pinch_frequency_of_normalizedLQG
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -30,8 +30,6 @@ theorem IsWholePlaneGFF.ae_internal_pinch_frequency_of_normalizedLQG
     (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω (u, v) ∧
       ENNReal.ofReal (D ω (u, v)) =
         weylScaling (𝔇 (hC ω)) ξ (fun x => -α * Real.log ‖x‖) u v)
-    (hzero : ∀ᵐ ω ∂P, ∀ T p, IsLengthParametrized (𝔇 (hC ω)) p T →
-      ∀ᵐ t ∂(volume.restrict (Icc 0 T)), p t ≠ 0)
     (haxioms : LQGMetricFieldAxioms (mixMeasure.prod (P.prod P)) γ ξ α
       (fun x => if x.1 = 0 then hC x.2.1 else
         affinePairing hC hcirc (((2 : ℝ)⁻¹ : ℝ) : ℂ) 0 x.2.2)
@@ -55,7 +53,7 @@ theorem IsWholePlaneGFF.ae_internal_pinch_frequency_of_normalizedLQG
   have hm := h.ae_lengthMetric_of_affine_mixture hAff hγ hγ₂ hα
     (k := (2 : ℝ)⁻¹) (by norm_num) 𝔇 h𝔇 hD haxioms
   have hs := h.identDistrib_pinchIndicators_of_normalizedLQG hAff hCC hγ hγ₂ hα hμ
-    𝔇 h𝔇 hD hzero haxioms hconfig M
+    𝔇 h𝔇 hD haxioms hconfig M
   exact h.ae_internal_pinch_frequency_of_normalized_metric P hμ hfull hm hconfig M
     hmetric hs δ hδ
 

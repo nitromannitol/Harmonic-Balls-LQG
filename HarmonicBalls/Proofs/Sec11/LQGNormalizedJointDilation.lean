@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Sec11.LQGNormalizedJointLaw
 import HarmonicBalls.Proofs.Sec11.NormalizedSingularMetric
+import HarmonicBalls.Steps.Sec11.CurveConstantFiber
 
 /-! # Joint law under normalized dilation of the singular metric -/
 
@@ -13,8 +14,7 @@ noncomputable def normalizedDilationMetric {Ω : Type*} (γ ξ α k : ℝ)
   ⟨fun z => (Real.exp (-ξ * (hcirc ω k 0 + lqgQ γ * Real.log k)) *
     Real.exp (ξ * (α * Real.log k))) * D ω (k • z.1, k • z.2), by fun_prop⟩
 
-/-- Joint scaling of the LQG measure and singular metric, conditional on
-zero occupation of the origin by base-metric paths. The affine invariance,
+/-- Joint scaling of the LQG measure and singular metric. The affine invariance,
 measure coordinate change and mixture metric axioms are staged inputs. -/
 theorem IsWholePlaneGFF.identDistrib_normalizedDilation_singularMetric
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
@@ -30,8 +30,6 @@ theorem IsWholePlaneGFF.identDistrib_normalizedDilation_singularMetric
     (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω (u, v) ∧
       ENNReal.ofReal (D ω (u, v)) =
         weylScaling (𝔇 (hC ω)) ξ (fun x => -α * Real.log ‖x‖) u v)
-    (hzero : ∀ᵐ ω ∂P, ∀ T p, IsLengthParametrized (𝔇 (hC ω)) p T →
-      ∀ᵐ t ∂(volume.restrict (Icc 0 T)), p t ≠ 0)
     (haxioms : LQGMetricFieldAxioms (mixMeasure.prod (P.prod P)) γ ξ α
       (fun x => if x.1 = 0 then hC x.2.1 else affinePairing hC hcirc (k : ℂ) 0 x.2.2)
       (fun x => if x.1 = 0 then hcirc x.2.1 else affineCircle hcirc (k : ℂ) 0 x.2.2)) :
@@ -44,7 +42,15 @@ theorem IsWholePlaneGFF.identDistrib_normalizedDilation_singularMetric
           (fun x => -α * Real.log ‖x‖) u v := by
     apply h.ae_normalized_affine_singularMetric_representation hAff 𝔇 h𝔇 hk hD
     · exact Filter.Eventually.of_forall (fun ω u v => rfl)
-    · exact hzero
+    · have hb := (h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc (fun _ _ => 0) h
+        (by intro ω; fun_prop) (by intro x; fun_prop)).ae_isEuclideanLengthMetric
+      filter_upwards [hb] with ω hω
+      have hpair : addFunPairing (hC ω) (fun _ => 0) = hC ω := by
+        funext φ
+        simp [addFunPairing]
+      rw [hpair] at hω
+      intro T p hp
+      exact hω.ae_ne_of_lengthParametrized hp 0
   exact h.identDistrib_normalizedPullback_singularMetric hAff hCC hγ hγ₂ hα hμ hk
     𝔇 h𝔇 hD hD' haxioms
 

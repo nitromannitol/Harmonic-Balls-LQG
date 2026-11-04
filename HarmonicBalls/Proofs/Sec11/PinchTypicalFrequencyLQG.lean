@@ -30,8 +30,6 @@ theorem IsWholePlaneGFF.ae_ae_pinch_frequency_of_normalizedLQG
     (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω (u, v) ∧
       ENNReal.ofReal (D ω (u, v)) =
         weylScaling (𝔇 (hC ω)) ξ (fun x => -α * Real.log ‖x‖) u v)
-    (hzero : ∀ᵐ ω ∂P, ∀ T p, IsLengthParametrized (𝔇 (hC ω)) p T →
-      ∀ᵐ t ∂(volume.restrict (Icc 0 T)), p t ≠ 0)
     (haxioms : LQGMetricFieldAxioms (mixMeasure.prod (P.prod P)) γ ξ α
       (fun x => if x.1 = 0 then hC x.2.1 else
         affinePairing hC hcirc (((2 : ℝ)⁻¹ : ℝ) : ℂ) 0 x.2.2)
@@ -75,7 +73,7 @@ theorem IsWholePlaneGFF.ae_ae_pinch_frequency_of_normalizedLQG
         pinchPointEvent (μ ω) (fun x y => D ω (x, y)) U T Q V M
           ((2 : ℝ)⁻¹ ^ n) z}.ncard : ℝ) := by
   have hf := h.ae_internal_pinch_frequency_of_normalizedLQG hAff hCC hγ hγ₂ hα hμ
-    hfull 𝔇 h𝔇 hD hzero haxioms hconfig M hmetric δ hδ
+    hfull 𝔇 h𝔇 hD haxioms hconfig M hmetric δ hδ
   exact ae_ae_pinch_block_density_of_recentered_rooted_law P₀ hμ₀ hloc₀ hDmeas hmetric₀
     ν hμν hlocν hmetricν hconfig M δ w hw hpos hfin ρ shift hshift R hrooted
     hac hdom recenter hrec P hcomp heq hf

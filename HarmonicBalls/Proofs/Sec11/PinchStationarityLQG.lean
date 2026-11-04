@@ -60,9 +60,9 @@ theorem IsWholePlaneGFF.ae_lengthMetric_of_affine_mixture
   simpa [H] using hω'.2
 
 open Classical in
-/-- The strengthened pinch indicators are stationary when the base paths
-have zero occupation at the origin. The affine, measure-coordinate and
-mixture metric hypotheses are staged inputs pending source checking. -/
+/-- The strengthened pinch indicators are stationary. The affine,
+measure-coordinate and mixture metric hypotheses are staged inputs pending
+source checking. -/
 theorem IsWholePlaneGFF.identDistrib_pinchIndicators_of_normalizedLQG
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -76,8 +76,6 @@ theorem IsWholePlaneGFF.identDistrib_pinchIndicators_of_normalizedLQG
     (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω (u, v) ∧
       ENNReal.ofReal (D ω (u, v)) =
         weylScaling (𝔇 (hC ω)) ξ (fun x => -α * Real.log ‖x‖) u v)
-    (hzero : ∀ᵐ ω ∂P, ∀ T p, IsLengthParametrized (𝔇 (hC ω)) p T →
-      ∀ᵐ t ∂(volume.restrict (Icc 0 T)), p t ≠ 0)
     (haxioms : LQGMetricFieldAxioms (mixMeasure.prod (P.prod P)) γ ξ α
       (fun x => if x.1 = 0 then hC x.2.1 else
         affinePairing hC hcirc (((2 : ℝ)⁻¹ : ℝ) : ℂ) 0 x.2.2)
@@ -107,7 +105,7 @@ theorem IsWholePlaneGFF.identDistrib_pinchIndicators_of_normalizedLQG
   have hD' : ∀ᵐ ω ∂P, ∀ x y, D' ω (x, y) = c ω * D ω (k • x, k • y) :=
     Filter.Eventually.of_forall fun _ _ _ => rfl
   have hdist := h.identDistrib_normalizedDilation_singularMetric hAff hCC hγ hγ₂ hα hμ hk
-    𝔇 h𝔇 hD hzero haxioms
+    𝔇 h𝔇 hD haxioms
   have hscale : IdentDistrib (fun ω => (μ ω, D ω))
       (fun ω => (a ω • (μ ω).map (fun x : ℂ => (2 : ℝ) • x), D' ω)) P P := by
     simpa only [normalizedPullbackMeasure, a, D', k, inv_inv, ENNReal.ofReal_inv_of_pos (Real.exp_pos _)] using hdist
