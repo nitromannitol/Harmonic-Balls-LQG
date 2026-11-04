@@ -12,7 +12,7 @@ open scoped ENNReal Topology
 namespace HarmonicBalls
 
 /-- Two locally finite random measures, possibly on different probability
-spaces, admit a common continuity ball, generating π-system, and buffered
+spaces, have a common continuity ball, generating π-system, and buffered
 exhaustion. -/
 theorem exists_common_continuity_system_of_ae_locallyFinite
     {Ω Ξ : Type*} [MeasurableSpace Ω] [MeasurableSpace Ξ]
