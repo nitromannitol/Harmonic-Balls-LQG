@@ -118,7 +118,7 @@ theorem cluster_eq_of_restrict_eq_of_volumeGrowth
 
 /-- Locally equal circle averages give the same compactly contained disc
 cluster for the corresponding LQG limits. -/
-theorem IsLQGLimit.cluster_eq_of_compact_containment
+theorem IsLQGLimit.cluster_eq_of_local_circle_averages_of_compact_containment
     {γ : ℝ} {hε hε' : ℝ → ℂ → ℝ} {μ ν : Measure ℂ}
     (hμ : IsLQGLimit γ hε μ) (hν : IsLQGLimit γ hε' ν)
     {U : Set ℂ} (hU : IsOpen U)
