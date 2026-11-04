@@ -125,4 +125,27 @@ theorem measure_exitTime_order_eq_of_spacetime_map
   ext ω
   exact exitTime_le_exitTime_spacetime_iff f hf U V ω (T ω) c hc (hpath ω)
 
+/-- The spacetime transformation induced by a spatial homeomorphism and a
+positive linear change of time is a homeomorphism of continuous-path space. -/
+noncomputable def spacetimePathHomeomorph (f : ℂ ≃ₜ ℂ) (c : NNReal) (hc : 0 < c) :
+    ContinuousPath ℂ ≃ₜ ContinuousPath ℂ :=
+  ((Homeomorph.mulLeft₀ c hc.ne').symm).arrowCongr f
+
+@[simp] theorem spacetimePathHomeomorph_apply (f : ℂ ≃ₜ ℂ) (c : NNReal) (hc : 0 < c)
+    (ω : ContinuousPath ℂ) (t : NNReal) :
+    spacetimePathHomeomorph f c hc ω t = f (ω (c * t)) := by
+  rfl
+
+/-- Exit-order probabilities transfer along a spacetime path homeomorphism
+whenever that homeomorphism transports the path law. -/
+theorem measure_exitTime_order_eq_of_spacetime_homeomorph
+    (f : ℂ ≃ₜ ℂ) (U V : Set ℂ) (c : NNReal) (hc : 0 < c)
+    (μ ν : Measure (ContinuousPath ℂ))
+    (hmap : μ.map (spacetimePathHomeomorph f c hc) = ν) :
+    ν {ω | ContinuousPath.exitTime (f '' U) ω ≤ ContinuousPath.exitTime (f '' V) ω} =
+      μ {ω | ContinuousPath.exitTime U ω ≤ ContinuousPath.exitTime V ω} := by
+  exact measure_exitTime_order_eq_of_spacetime_map ⟨f, f.continuous_toFun⟩ f.injective U V c hc
+    (spacetimePathHomeomorph f c hc) (spacetimePathHomeomorph f c hc).measurableEmbedding
+    (fun ω t => spacetimePathHomeomorph_apply f c hc ω t) μ ν hmap
+
 end HarmonicBalls.Section6
