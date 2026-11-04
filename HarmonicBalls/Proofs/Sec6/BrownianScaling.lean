@@ -4,7 +4,7 @@ import MarkovProcess.Path.MeasureIdentification
 import MarkovProcess.FiniteTime.MeasureFiniteRestrictionIdentification
 import Mathlib.Probability.BrownianMotion.Basic
 
-/-! # Real Brownian scaling
+/-! # Brownian scaling
 
 The centered canonical Brownian motion from MarkovProcess satisfies Mathlib's
 finite-dimensional characterization, so Mathlib's scaling theorem applies.
@@ -90,5 +90,45 @@ theorem brownianMotion_map_scaledCenteredRealPath
     Measurable.of_eval fun _ => ContinuousPath.measurable_coordinateProcess _
   rw [Measure.map_map hI (continuous_scaledCenteredRealPath x c).measurable]
   exact scaled_brownianMotion_finite_dimensional_law x hc I
+
+/-- Recenter, rescale time, and normalize a planar continuous path. -/
+noncomputable def scaledCenteredPlanarPath (x : ℂ) (c : NNReal)
+    (ω : ContinuousPath ℂ) : ContinuousPath ℂ :=
+  ⟨fun t => (Real.sqrt c)⁻¹ • (ω (c * t) - x), by fun_prop⟩
+
+theorem continuous_scaledCenteredPlanarPath (x : ℂ) (c : NNReal) :
+    Continuous (scaledCenteredPlanarPath x c) := by
+  apply ContinuousMap.continuous_of_continuous_uncurry
+  show Continuous (fun q : ContinuousPath ℂ × NNReal =>
+    (Real.sqrt c)⁻¹ • (q.1 (c * q.2) - x))
+  fun_prop
+
+/-- The scaled centered planar Brownian path has standard planar Brownian
+law. -/
+theorem planarBrownianMotion_map_scaledCenteredPlanarPath
+    (x : ℂ) {c : NNReal} (hc : c ≠ 0) :
+    (planarBrownianMotion x).map (scaledCenteredPlanarPath x c) = planarBrownianMotion 0 := by
+  rw [planarBrownianMotion_apply, planarBrownianMotion_apply, Complex.zero_re, Complex.zero_im]
+  have hp : ((brownianMotion x.re).prod (brownianMotion x.im)).map
+      (Prod.map (scaledCenteredRealPath x.re c) (scaledCenteredRealPath x.im c)) =
+      (brownianMotion 0).prod (brownianMotion 0) := by
+    rw [← Measure.map_prod_map _ _ (continuous_scaledCenteredRealPath x.re c).measurable
+      (continuous_scaledCenteredRealPath x.im c).measurable,
+      brownianMotion_map_scaledCenteredRealPath x.re hc,
+      brownianMotion_map_scaledCenteredRealPath x.im hc]
+  rw [← hp]
+  rw [Measure.map_map (continuous_scaledCenteredPlanarPath x c).measurable
+      measurable_complexPathOfReIm,
+    Measure.map_map measurable_complexPathOfReIm
+      ((continuous_scaledCenteredRealPath x.re c).measurable.prodMap
+        (continuous_scaledCenteredRealPath x.im c).measurable)]
+  congr 1
+  funext p
+  ext t
+  simp only [Function.comp_apply, complexPathOfReIm_apply, scaledCenteredPlanarPath,
+    scaledCenteredRealPath, ContinuousMap.coe_mk, Prod.map_fst, Prod.map_snd,
+    Complex.real_smul, Complex.ofReal_mul, Complex.ofReal_sub, Complex.ofReal_inv]
+  have hx : (x.re : ℂ) + (x.im : ℂ) * Complex.I = x := Complex.re_add_im x
+  linear_combination (Real.sqrt c)⁻¹ * hx
 
 end HarmonicBalls.Section6
