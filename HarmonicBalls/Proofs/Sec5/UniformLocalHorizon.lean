@@ -12,7 +12,7 @@ open MeasureTheory Metric Set ProbabilityTheory TopologicalSpace Filter
 /-- A countable-centre coverage property turns Proposition 5.4 into a
 measurable positive horizon simultaneously valid at all centres in `B(0,1/2)`.
 The coverage property and fixed-centre measurability remain explicit. -/
-theorem uniformLocalHorizon_of_countableCentres
+theorem uniformLocalHorizon_specified_of_countableCentres
     {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
     (h : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ2 : γ < 2)
@@ -23,11 +23,14 @@ theorem uniformLocalHorizon_of_countableCentres
     {ι : Type*} [Countable ι] (e : ι → {z // z ∈ ball (0 : ℂ) (1 / 2)})
     (hcover : ∀ᵐ ω ∂P, ∀ (j : {z // z ∈ ball (0 : ℂ) (1 / 2)}) (t : Ioi (0 : ℝ)),
       cluster (μ ω) 1 j t ⊆ closure (⋃ i, cluster (μ ω) 1 (e i) t)) :
-    ∃ H : Ω → ℝ, AEMeasurable H P ∧ ∀ᵐ ω ∂P, 0 < H ω ∧
+    let H : Ω → ℝ := fun ω => realDenseSequenceBallHorizon (3 / 4)
+      (fun i t => cluster (μ ω) 1 (e i) t)
+    AEMeasurable H P ∧ ∀ᵐ ω ∂P, 0 < H ω ∧
       ∀ z ∈ ball (0 : ℂ) (1 / 2),
         SatisfiesHarmonicBallConditionsOn (μ ω) (regularizedCluster (μ ω) 1 z) z (H ω) ∧
         ∀ t ∈ Ioo 0 (H ω), closure (cluster (μ ω) 1 z t) ⊆ ball 0 1 ∧
           μ ω (frontier (cluster (μ ω) 1 z t)) = 0 := by
+  dsimp only
   let H : Ω → ℝ := fun ω => realDenseSequenceBallHorizon (3 / 4)
     (fun i t => cluster (μ ω) 1 (e i) t)
   let e' : ι → {z // z ∈ ball (0 : ℂ) 1} := fun i =>
@@ -37,7 +40,7 @@ theorem uniformLocalHorizon_of_countableCentres
     have hm := aemeasurable_realDenseSequenceBallHorizon_of_tests (Measure.map μ P) (3 / 4)
       (fun ν i t => cluster ν 1 (e i) t) htests
     exact hm.comp_aemeasurable (h.aemeasurable_lqgMeasure hμ)
-  refine ⟨H, hmeas, ?_⟩
+  refine ⟨hmeas, ?_⟩
   filter_upwards [ae_countableCentresHorizon_pos_of_upperBound h hγ hγ2 hα hμ h71 e,
     hcover, h32 γ α₀ hγ hγ2 hα Ω P hC hcirc μ h hμ,
     h33 γ α₀ hγ hγ2 hα Ω P hC hcirc μ h hμ,
@@ -64,5 +67,26 @@ theorem uniformLocalHorizon_of_countableCentres
     (hopen T 1 hT (by norm_num) z hz1).1 hbefore htouch hconditions, ?_⟩
   intro t ht
   exact ⟨hbefore t ht, hnull z hz1 t ht.1 (hbefore t ht)⟩
+
+/-- There is a measurable positive horizon with the uniform local
+cluster properties. -/
+theorem uniformLocalHorizon_of_countableCentres
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (h : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ2 : γ < 2)
+    (hα : α₀ < lqgQ γ) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (h32 : ClusterOpenLaplacianStmt.{u}) (h33 : ClusterMonotoneStmt.{u})
+    (h53 : ClusterBoundaryMeasureZeroStmt.{u}) (h54 : RegularizedClusterHarmonicBallsStmt.{u})
+    (h71 : ClusterUpperBoundPolyHighProbStmt.{u}) (hfam : ClusterFamilyMeasurabilityStep.{u})
+    {ι : Type*} [Countable ι] (e : ι → {z // z ∈ ball (0 : ℂ) (1 / 2)})
+    (hcover : ∀ᵐ ω ∂P, ∀ (j : {z // z ∈ ball (0 : ℂ) (1 / 2)}) (t : Ioi (0 : ℝ)),
+      cluster (μ ω) 1 j t ⊆ closure (⋃ i, cluster (μ ω) 1 (e i) t)) :
+    ∃ H : Ω → ℝ, AEMeasurable H P ∧ ∀ᵐ ω ∂P, 0 < H ω ∧
+      ∀ z ∈ ball (0 : ℂ) (1 / 2),
+        SatisfiesHarmonicBallConditionsOn (μ ω) (regularizedCluster (μ ω) 1 z) z (H ω) ∧
+        ∀ t ∈ Ioo 0 (H ω), closure (cluster (μ ω) 1 z t) ⊆ ball 0 1 ∧
+          μ ω (frontier (cluster (μ ω) 1 z t)) = 0 := by
+  refine ⟨_, uniformLocalHorizon_specified_of_countableCentres h hγ hγ2 hα hμ
+    h32 h33 h53 h54 h71 hfam e hcover⟩
 
 end HarmonicBalls
