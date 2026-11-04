@@ -13,9 +13,8 @@ namespace HarmonicBalls.Section6
 open MeasureTheory Set Filter MarkovProcess Metric
 open scoped ENNReal NNReal Topology
 
-/-- Boundary domination for a nonnegative bounded function whose values stopped
-on leaving an open subdomain form a submartingale. -/
-theorem ofReal_le_boundary_mul_harmonicMeasure_of_submartingale
+/-- Boundary domination from an inequality for the stopped expectation. -/
+theorem ofReal_le_boundary_mul_harmonicMeasure_of_exitExpectation
     {A Y : Set ℂ} (hA : IsOpen A) (hY : IsOpen Y) (hAb : Bornology.IsBounded A)
     (hYA : Y ⊆ A) {q : ℂ → ℝ} (hqmeas : Measurable q)
     (hqnonneg : ∀ y, 0 ≤ q y) {M : ℝ} (hM : ∀ y, ‖q y‖ ≤ M)
@@ -23,15 +22,13 @@ theorem ofReal_le_boundary_mul_harmonicMeasure_of_submartingale
     (hzero : ∀ y ∈ A ∩ frontier Y, q y = 0)
     (hbound : ∀ y ∈ frontier A ∩ closure Y, ENNReal.ofReal (q y) ≤ B)
     {x : ℂ} (hx : x ∈ Y)
-    (ℱ : Filtration ℕ (inferInstance : MeasurableSpace (ContinuousPath ℂ)))
-    (hsub : Submartingale (fun (n : ℕ) (ω : ContinuousPath ℂ) =>
-      q (ω (ContinuousPath.exitTimeTrunc Y n ω))) ℱ (planarBrownianMotion x)) :
+    (hrep : q x ≤ ∫ ω : ContinuousPath ℂ,
+      q (ω ((ContinuousPath.exitTime Y ω).toNNReal)) ∂(planarBrownianMotion x)) :
     ENNReal.ofReal (q x) ≤ B * planarBrownianMotion x
       {ω | ContinuousPath.exitTime A ω ≤ hittingTime (A \ Y) ω} := by
   let E : Set (ContinuousPath ℂ) :=
     {ω | ContinuousPath.exitTime A ω ≤ ContinuousPath.exitTime Y ω}
   have hYb := hAb.subset hYA
-  have hrep := le_integral_exitTime_of_submartingale hY hYb hqmeas hM x ℱ hsub
   have hint := integrable_at_exitTime_of_bounded_measurable hY hYb hqmeas hM x
   have hlin : ENNReal.ofReal (q x) ≤ ∫⁻ ω : ContinuousPath ℂ,
       ENNReal.ofReal (q (ω ((ContinuousPath.exitTime Y ω).toNNReal)))
@@ -63,6 +60,25 @@ theorem ofReal_le_boundary_mul_harmonicMeasure_of_submartingale
     ext ω
     exact exitTime_le_exitTime_iff_le_hittingTime_sdiff ω
   simpa only [heq] using hresult
+
+/-- Boundary domination for a nonnegative bounded function whose values stopped
+on leaving an open subdomain form a submartingale. -/
+theorem ofReal_le_boundary_mul_harmonicMeasure_of_submartingale
+    {A Y : Set ℂ} (hA : IsOpen A) (hY : IsOpen Y) (hAb : Bornology.IsBounded A)
+    (hYA : Y ⊆ A) {q : ℂ → ℝ} (hqmeas : Measurable q)
+    (hqnonneg : ∀ y, 0 ≤ q y) {M : ℝ} (hM : ∀ y, ‖q y‖ ≤ M)
+    {B : ℝ≥0∞}
+    (hzero : ∀ y ∈ A ∩ frontier Y, q y = 0)
+    (hbound : ∀ y ∈ frontier A ∩ closure Y, ENNReal.ofReal (q y) ≤ B)
+    {x : ℂ} (hx : x ∈ Y)
+    (ℱ : Filtration ℕ (inferInstance : MeasurableSpace (ContinuousPath ℂ)))
+    (hsub : Submartingale (fun (n : ℕ) (ω : ContinuousPath ℂ) =>
+      q (ω (ContinuousPath.exitTimeTrunc Y n ω))) ℱ (planarBrownianMotion x)) :
+    ENNReal.ofReal (q x) ≤ B * planarBrownianMotion x
+      {ω | ContinuousPath.exitTime A ω ≤ hittingTime (A \ Y) ω} :=
+  ofReal_le_boundary_mul_harmonicMeasure_of_exitExpectation hA hY hAb hYA hqmeas
+    hqnonneg hM hzero hbound hx
+    (le_integral_exitTime_of_submartingale hY (hAb.subset hYA) hqmeas hM x ℱ hsub)
 
 /-- A pole-avoiding component satisfies the odometer harmonic-measure bound
 whenever its stopped odometer is a submartingale. -/
