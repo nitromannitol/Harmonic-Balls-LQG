@@ -1,0 +1,85 @@
+import HarmonicBalls.Proofs.Sec11.PinchInitialScale
+import HarmonicBalls.Steps.Sec11.InternalPinchFixedPointQuantitative
+import HarmonicBalls.Proofs.Sec8.BirkhoffPort
+
+/-! # Unit-scale positivity and internal pinch density
+
+The pointwise ergodic theorem used through the fixed-point bridge is due to
+Leonardo Bonanno, `LatticeProb.Prob.Birkhoff`. Stationarity and germ
+triviality remain explicit assumptions, as do the staged locality inputs.
+-/
+
+namespace HarmonicBalls
+
+open Set Metric MeasureTheory Filter
+
+open Classical in
+/-- Under stationarity and germ triviality, any rate strictly below the unit-scale
+internal event probability gives fixed-point block density. -/
+theorem ae_internal_pinchBlockDensity_of_unitScale_stationary_lqg_event_of_lt_prob
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ ξ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q)
+    (M : ℝ) (z : ℂ) (hγ : 0 < γ) (hγ₂ : γ < 2) (hα : α₀ < lqgQ γ)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
+    (hmloc : LQGMeasureLocality P γ α₀ hC hcirc)
+    (haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
+    (htrivial : ∀ A : Set Ω,
+      (∀ ε, 0 < ε → MeasurableSet[fieldSigmaAlgebra α₀ hC (ball z ε)] A) →
+      P A = 0 ∨ P A = 1)
+    (hstat : P.map (fun ω n => if pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+        ((2 : ℝ)⁻¹ ^ (n + 1)) z then (1 : ℝ) else 0) =
+      P.map (fun ω n => if pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+        ((2 : ℝ)⁻¹ ^ n) z then (1 : ℝ) else 0))
+    (δ : ℝ) (hδ : δ < (P {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M 1 z}).toReal) :
+    ∀ᵐ ω ∂P, ∀ᶠ N : ℕ in atTop, δ * N ≤
+      ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+        pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) z}.ncard : ℝ) := by
+  obtain ⟨X, hXm, _, hX, _⟩ :=
+    exists_germ_measurable_pinchIndicators hconfig M z hγ hγ₂ hα hgff hμ hD hmloc haxioms
+  have hmap (k : ℕ) : P.map (fun ω n => X (n + k) ω) =
+      P.map (fun ω n => if pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+        ((2 : ℝ)⁻¹ ^ (n + k)) z then (1 : ℝ) else 0) := by
+    apply Measure.map_congr
+    filter_upwards [hX] with ω hω
+    funext n
+    exact hω (n + k)
+  have hsX : P.map (fun ω n => X (n + 1) ω) = P.map (fun ω n => X n ω) := by
+    calc
+      _ = _ := hmap 1
+      _ = _ := hstat
+      _ = _ := by simpa only [add_zero] using (hmap 0).symm
+  obtain ⟨hfirst, htail⟩ := stationary_sequence_first_law_and_tail P X hXm hsX
+  have hstat' : P.map (fun ω n => if pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+        ((2 : ℝ)⁻¹ ^ (n + 2)) z then (1 : ℝ) else 0) =
+      P.map (fun ω n => if pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+        ((2 : ℝ)⁻¹ ^ (n + 1)) z then (1 : ℝ) else 0) := by
+    rwa [hmap 2, hmap 1] at htail
+  have hE (n : ℕ) : P {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+      ((2 : ℝ)⁻¹ ^ n) z} = P (X n ⁻¹' ({1} : Set ℝ)) := by
+    apply measure_congr
+    filter_upwards [hX] with ω hω
+    simp only [mem_preimage, mem_singleton_iff, hω n]
+    split_ifs <;> simp_all
+  have hmeas : P (X 1 ⁻¹' ({1} : Set ℝ)) = P (X 0 ⁻¹' ({1} : Set ℝ)) := by
+    have hh := congrArg (fun Q : Measure ℝ => Q ({1} : Set ℝ)) hfirst
+    rwa [Measure.map_apply (hXm 1) (measurableSet_singleton 1),
+      Measure.map_apply (hXm 0) (measurableSet_singleton 1)] at hh
+  have hδ' : δ < (P {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+      ((2 : ℝ)⁻¹ ^ 1) z}).toReal := by
+    rw [hE 1, hmeas, ← hE 0]
+    simpa only [pow_zero] using hδ
+  let F : Ω → ℕ → ℝ := fun ω n =>
+    if pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M
+      ((2 : ℝ)⁻¹ ^ (n + 1)) z then 1 else 0
+  let : IsFiniteMeasure (P.map F) := P.isFiniteMeasure_map F
+  exact ae_internal_pinchBlockDensity_of_stationary_lqg_event_of_lt_prob hconfig M z
+    hγ hγ₂ hα hgff hμ hD hmloc haxioms htrivial
+    (pointwiseBirkhoff_of_latticeProb _ _ _) hstat' δ hδ' 
+
+
+#print axioms ae_internal_pinchBlockDensity_of_unitScale_stationary_lqg_event_of_lt_prob
+
+end HarmonicBalls
