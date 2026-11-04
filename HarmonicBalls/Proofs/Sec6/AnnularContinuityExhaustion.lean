@@ -19,6 +19,7 @@ theorem IsWholePlaneGFF.exists_ae_lqg_annular_continuity_exhaustion
     (hfront : ∀ᵐ ω ∂P, μ ω (frontier (annulus z r R)) = 0) :
     ∃ E : ℕ → Set ℂ, (∀ n, IsOpen (E n)) ∧ Monotone E ∧
       (⋃ n, E n) = annulus z r R ∧ Bornology.IsBounded (⋃ n, E n) ∧
+      (∀ n, ∃ δ : ℝ, 0 < δ ∧ ∀ x ∈ E n, closedBall x δ ⊆ annulus z r R) ∧
       ∀ᵐ ω ∂P, (∀ n, μ ω (frontier (E n)) = 0) ∧
         μ ω (frontier (⋃ n, E n)) = 0 := by
   let m : ℝ := (r + R) / 2
@@ -56,7 +57,7 @@ theorem IsWholePlaneGFF.exists_ae_lqg_annular_continuity_exhaustion
       have he2 : ∀ᶠ n in atTop, a n < dist w z := halim.eventually (Iio_mem_nhds hw2)
       obtain ⟨n, hn1, hn2⟩ := (he1.and he2).exists
       exact ⟨n, hn1, hn2⟩
-  refine ⟨E, ?_, ?_, hEunion, ?_, ?_⟩
+  refine ⟨E, ?_, ?_, hEunion, ?_, ?_, ?_⟩
   · intro n
     exact isOpen_ball.sdiff isClosed_closedBall
   · intro i j hij w hw
@@ -65,6 +66,27 @@ theorem IsWholePlaneGFF.exists_ae_lqg_annular_continuity_exhaustion
     exact ⟨lt_of_lt_of_le hw1 (hmono hij), not_le.mpr (lt_of_le_of_lt (hanti hij) hw2)⟩
   · rw [hEunion]
     exact (isBounded_ball : Bornology.IsBounded (ball z R)).subset sdiff_subset
+  · intro n
+    let δ := min (a n - r) (R - b n) / 2
+    have hδ : 0 < δ := by
+      dsimp [δ]
+      exact half_pos (lt_min (sub_pos.mpr (halow n)) (sub_pos.mpr (hblt n)))
+    have hδa : δ ≤ (a n - r) / 2 := by
+      dsimp [δ]
+      exact div_le_div_of_nonneg_right (min_le_left _ _) (by norm_num)
+    have hδb : δ ≤ (R - b n) / 2 := by
+      dsimp [δ]
+      exact div_le_div_of_nonneg_right (min_le_right _ _) (by norm_num)
+    refine ⟨δ, hδ, ?_⟩
+    intro x hx y hy
+    have hx1 : dist x z < b n := hx.1
+    have hx2 : a n < dist x z := not_le.mp hx.2
+    have hyx : dist y x ≤ δ := mem_closedBall.mp hy
+    have h1 := dist_triangle y x z
+    have h2 := dist_triangle x y z
+    rw [dist_comm x y] at h2
+    change dist y z < R ∧ ¬ dist y z ≤ r
+    constructor <;> linarith [halow n, hblt n]
   · filter_upwards [hza, hzb, hfront] with ω hzaω hzbω hfω
     refine ⟨?_, hEunion ▸ hfω⟩
     intro n
