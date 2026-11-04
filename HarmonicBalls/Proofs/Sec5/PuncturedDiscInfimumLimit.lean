@@ -35,29 +35,43 @@ theorem leastSupersolutionOn_punctured_disc_eq_obstacle_of_not_mem_cluster
   rw [hG] at hlower ⊢
   linarith
 
-/-- If the puncture lies outside the closure of the disc cluster, the
-punctured-domain infimum approaches the negative full-disc Green obstacle. -/
+/-- If the puncture lies outside the disc cluster, the punctured-domain
+infimum approaches the negative full-disc Green obstacle, including when the
+puncture lies on the cluster boundary. -/
 theorem tendsto_leastSupersolutionOn_punctured_disc_at_inactive_puncture
     {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp t : ℝ} {z a : ℂ}
     (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
     (ha : a ∈ ball (0 : ℂ) R) (hz : z ∈ ball (0 : ℂ) R \ {a})
-    (ht : 0 < t) (hnot : a ∉ closure (cluster μ R z t)) :
+    (ht : 0 < t) (hnot : a ∉ cluster μ R z t) :
     Tendsto (leastSupersolutionOn μ (ball (0 : ℂ) R \ {a}) z t)
       (𝓝[ball (0 : ℂ) R \ {a}] a) (𝓝 (-t * greenFunction (ball 0 R) z a)) := by
-  have haz : a ≠ z := Ne.symm (show z ≠ a by simpa using hz.2)
-  have hnear : ∀ᶠ x in 𝓝[ball (0 : ℂ) R \ {a}] a, x ∉ cluster μ R z t :=
-    ((show ∀ᶠ x in 𝓝 a, x ∉ closure (cluster μ R z t) from
-      (isOpen_compl_iff.mpr isClosed_closure).mem_nhds hnot).filter_mono
-      (nhdsWithin_le_nhds : 𝓝[ball (0 : ℂ) R \ {a}] a ≤ 𝓝 a)).mono
-        (fun _ hx hxc => hx (subset_closure hxc))
-  have hnearz : ∀ᶠ x in 𝓝[ball (0 : ℂ) R \ {a}] a, x ≠ z :=
-    (show ∀ᶠ x in 𝓝 a, x ≠ z from isOpen_compl_singleton.mem_nhds haz).filter_mono
-      (nhdsWithin_le_nhds : 𝓝[ball (0 : ℂ) R \ {a}] a ≤ 𝓝 a)
-  have hlim := (tendsto_greenFunction_punctured_ball_at_puncture ha hz).const_mul (-t)
-  apply Tendsto.congr' _ hlim
-  filter_upwards [self_mem_nhdsWithin, hnearz, hnear] with x hx hxz hxnot
-  exact (leastSupersolutionOn_punctured_disc_eq_obstacle_of_not_mem_cluster
-    hμ hR hV ha hz ht hx hxz hxnot).symm
+  obtain ⟨_, hcont, hw⟩ := leastSupersolution_mem_of_general
+    obstacleLeastSuperharmonicMajorantGeneral_holds obstacleCompatibilityShiftStep_holds
+    hμ hR hV hz.1 ht
+  have hv0 := odometer_eq_zero_of_notMem_cluster ht.le ha hnot
+  have hval : leastSupersolution μ R z t a = -t * greenFunction (ball 0 R) z a := by
+    change leastSupersolution μ R z t a + t * greenFunction (ball 0 R) z a = 0 at hv0
+    linarith
+  have hupper : Tendsto (leastSupersolution μ R z t)
+      (𝓝[ball (0 : ℂ) R \ {a}] a) (𝓝 (-t * greenFunction (ball 0 R) z a)) := by
+    rw [← hval]
+    exact ((hcont a (ball_subset_closedBall ha)).mono
+      (sdiff_subset.trans ball_subset_closedBall))
+  have hlower := (tendsto_greenFunction_punctured_ball_at_puncture ha hz).const_mul (-t)
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hlower hupper
+  · have haz : a ≠ z := Ne.symm (show z ≠ a by simpa using hz.2)
+    filter_upwards [self_mem_nhdsWithin,
+      (show ∀ᶠ x in 𝓝 a, x ≠ z from isOpen_compl_singleton.mem_nhds haz).filter_mono
+        (nhdsWithin_le_nhds : 𝓝[ball (0 : ℂ) R \ {a}] a ≤ 𝓝 a)] with x hx hxz
+    apply le_csInf
+    · exact ⟨_, ⟨0, zero_mem_supersolutionsOn (isBounded_ball.subset sdiff_subset) ht.le, rfl⟩⟩
+    · rintro _ ⟨w, hw, rfl⟩
+      exact hw.2.2 x (subset_closure hx) hxz
+  · have haz : a ≠ z := Ne.symm (show z ≠ a by simpa using hz.2)
+    filter_upwards [self_mem_nhdsWithin,
+      (show ∀ᶠ x in 𝓝 a, x ≠ z from isOpen_compl_singleton.mem_nhds haz).filter_mono
+        (nhdsWithin_le_nhds : 𝓝[ball (0 : ℂ) R \ {a}] a ≤ 𝓝 a)] with x hx hxz
+    exact leastSupersolutionOn_punctured_disc_le_supersolution ha hz hw hx hxz
 
 #print axioms leastSupersolutionOn_punctured_disc_eq_obstacle_of_not_mem_cluster
 #print axioms tendsto_leastSupersolutionOn_punctured_disc_at_inactive_puncture
