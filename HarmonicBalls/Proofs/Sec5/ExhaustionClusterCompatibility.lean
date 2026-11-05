@@ -1,0 +1,79 @@
+import HarmonicBalls.Proofs.Sec5.GreenRegularExhaustion
+import HarmonicBalls.Proofs.Sec5.ExhaustionHorizon
+import HarmonicBalls.Proofs.Sec5.MinimumLaplacianGluing
+
+/-! # Exhaustion comparison for regularized clusters
+
+The Green-function and obstacle arguments use the potential-theoretic
+infrastructure of Leonardo Bonanno.
+-/
+
+namespace HarmonicBalls
+
+open Filter MeasureTheory Metric Set
+open scoped Topology
+
+/-- Every cluster in a relatively compact regular exhaustion is contained in
+ the cluster of the union, even if the union is not Green-regular. -/
+theorem iUnion_clusterOn_subset_of_regular_exhaustion
+    {μ : Measure ℂ} {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n))
+    (hsub : ∀ n, closure (V n) ⊆ U) {z : ℂ} (hz : ∀ n, z ∈ V n)
+    {t : ℝ} (ht : 0 ≤ t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0)) :
+    (⋃ n, clusterOn μ (V n) z t) ⊆ clusterOn μ U z t := by
+  intro x hx
+  obtain ⟨n, hn⟩ := mem_iUnion.mp hx
+  exact clusterOn_subset_of_compactly_contained_regular (hopen n) hU hUb
+    (hsub n) (hz n) ht (hboundary n) hn
+
+/-- If a regularized cluster is compactly contained in the union of an
+increasing regular exhaustion, the closures of the exhausting-domain clusters
+are eventually exactly its closure. -/
+theorem eventually_closure_clusterOn_eq_regularized_of_exhaustion
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hUb : Bornology.IsBounded U)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z : ℂ} (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    {Λ : ℝ → Set ℂ} (hΛ : IsRegularizedClusterFamily μ Λ z)
+    (hcl : closure (Λ t) ⊆ U) :
+    ∀ᶠ n in atTop, closure (Λ t) = closure (clusterOn μ (V n) z t) := by
+  have hcompact : IsCompact (closure (Λ t)) :=
+    isCompact_iff_isClosed_bounded.mpr ⟨isClosed_closure, (hΛ.1.isBounded t ht).closure⟩
+  obtain ⟨N, hN⟩ := HarmonicBalls.IsCompact.subset_monotone_open_iUnion hcompact hopen hmono (hcover ▸ hcl)
+  filter_upwards [eventually_ge_atTop N] with n hn
+  exact regularizedFamily_closure_eq_clusterOn_of_boundary_of_volumeGrowth
+    hμ hvol (hopen n) (hUb.subset (subset_closure.trans (hsub n)))
+    (hz n) ht (hboundary n) hΛ (hN.trans (hmono hn))
+
+/-- Under the regularized-family compact-containment alternative, its closure
+is contained in the limiting-domain cluster closure. The converse is not
+asserted by the exhaustion comparison. -/
+theorem regularized_closure_subset_clusterOn_of_regular_exhaustion
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z : ℂ} (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    {Λ : ℝ → Set ℂ} (hΛ : IsRegularizedClusterFamily μ Λ z)
+    (hcl : closure (Λ t) ⊆ U) :
+    closure (Λ t) ⊆ closure (clusterOn μ U z t) := by
+  obtain ⟨n, hn⟩ := (eventually_closure_clusterOn_eq_regularized_of_exhaustion
+    hμ hvol hUb V hopen hmono hcover hsub hz ht hboundary hΛ hcl).exists
+  rw [hn]
+  exact closure_mono (clusterOn_subset_of_compactly_contained_regular
+    (hopen n) hU hUb (hsub n) (hz n) ht.le (hboundary n))
+
+#print axioms iUnion_clusterOn_subset_of_regular_exhaustion
+#print axioms eventually_closure_clusterOn_eq_regularized_of_exhaustion
+#print axioms regularized_closure_subset_clusterOn_of_regular_exhaustion
+
+end HarmonicBalls
