@@ -66,6 +66,31 @@ theorem ae_cluster_right_continuity_of_closure_eq_radius_two
   exact cluster_right_continuity_of_larger_disc_closure_eq (by norm_num : (1 : ℝ) < 2)
     hz ht.le hclusters hright
 
+
+/-- Equality of the cluster closures in the unit disc and the disc of radius
+two implies Hausdorff continuity at the given positive time. -/
+theorem ae_cluster_hausdorff_continuity_of_closure_eq_radius_two
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h72 : ClusterTimeContinuityStmt.{u})
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) :
+    ∀ᵐ ω ∂P, ∀ z ∈ ball (0 : ℂ) 1, ∀ t : ℝ, 0 < t →
+      closure (cluster (μ ω) 1 z t) = closure (cluster (μ ω) 2 z t) →
+      ∀ ε : ℝ≥0∞, 0 < ε → ∀ᶠ s in 𝓝[Ioi (0 : ℝ)] t,
+        hausdorffEDist (cluster (μ ω) 1 z s) (cluster (μ ω) 1 z t) < ε := by
+  filter_upwards [ae_cluster_right_continuity_of_closure_eq_radius_two hI2 h72 hAff hCC
+    hγ hγ2 hα hGFF hμ,
+    clusterMonotone_proved hI2 γ α₀ hγ hγ2 hα Ω P hC hcirc μ hGFF hμ] with ω hright hmono
+  intro z hz t ht heq
+  exact cluster_hausdorffContinuousWithinAt_of_right_continuity ht
+    (fun s s' hs hss => hmono s s' 1 hs hss (by norm_num) z hz)
+    (hright z hz t ht heq)
+
+#print axioms ae_cluster_hausdorff_continuity_of_closure_eq_radius_two
+
 #print axioms ae_cluster_right_continuity_of_closure_eq_radius_two
 
 end HarmonicBalls
