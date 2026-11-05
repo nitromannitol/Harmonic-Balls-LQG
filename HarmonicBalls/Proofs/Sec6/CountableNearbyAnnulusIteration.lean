@@ -158,6 +158,63 @@ theorem isGoodAnnulus_affineMeasure_translate_at
   simpa only [div_one, sub_eq_add_neg, hx] using
     isGoodAnnulus_map_add_iff (-x) (μ ω) r (x + z) a b
 
+/-- The polynomial count bound permits a different deterministic countable
+family of relative centres at each radius. -/
+theorem exists_radius_dependent_countable_nearby_goodAnnuli_count_tail
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ 0 hcirc μ)
+    {b : ℝ} (hb : 0 < b) (α β : ℝ) (hα : 0 < α) (hβ : β ∈ Ioo (0 : ℝ) 1) :
+    ∃ a ∈ Ioo (0 : ℝ) 1, ∃ C : ℝ, 0 < C ∧
+    ∀ (x : ℂ) (z : ℝ → ℕ → ℂ), (∀ r i, z r i ∈ ball 0 ((1 : ℝ) / 100)) →
+    ∀ s : ℝ, 0 < s → ∀ ε : ℝ, 0 < ε →
+      16 ≤ Real.logb 7 (ε ^ (-1 : ℝ)) →
+      P {ω | ({r : ℝ | r ∈ Icc ε (ε ^ (3 / 4 : ℝ)) ∧
+        (∃ n : ℕ, r = (7 : ℝ)⁻¹ ^ n) ∧
+        ∀ i, IsGoodAnnulus (μ ω) (s * r) (x + (s * r) • z (s * r) i) a b}.ncard : ℝ) <
+        (β / 16) * Real.logb 7 (ε ^ (-1 : ℝ))} ≤
+      ENNReal.ofReal (C * ε ^ (α / (16 * Real.log 7))) := by
+  obtain ⟨p, hp, C, hCpos, hiter⟩ := thick_annulus_subrange_probability α β hα hβ
+  have hδ : 0 < ENNReal.ofReal (1 - p) := ENNReal.ofReal_pos.mpr (by linarith [hp.2])
+  obtain ⟨a, ha, hprob⟩ :=
+    exists_countable_nearby_goodAnnuli_probability_all_radii hgrowth hγ hγ2 h hμ hb hδ
+  refine ⟨a, ha, C, hCpos, ?_⟩
+  intro x z hz s hs ε hε ht
+  let := h.isProbabilityMeasure
+  let ν := affineMeasure γ hcirc μ 1 x
+  have hAff := wholePlaneGFFAffineInvariance_proved P hC hcirc
+  have hrec : IsWholePlaneGFF P (affinePairing hC hcirc 1 x) (affineCircle hcirc 1 x) :=
+    hAff h 1 one_ne_zero x
+  have hν : IsLQGMeasureOfField P γ 0 (affineCircle hcirc 1 x) ν :=
+    isLQGMeasureOfField_translate h hμ x
+  have hprobν (r : ℝ) (hr : 0 < r) :
+      P {ω | ∃ i, ¬ IsGoodAnnulus (ν ω) r (r • z r i) a b} ≤ ENNReal.ofReal (1 - p) := by
+    have hm : MeasurableSet {m : Measure ℂ | ∃ i, ¬ IsGoodAnnulus m r (r • z r i) a b} := by
+      simp only [Set.ofPred_exists]
+      exact MeasurableSet.iUnion fun i => (measurableSet_isGoodAnnulus_of_pos r hr _ a b ha.1).compl
+    have heq := (identDistrib_translateMeasure h hμ hAff x).measure_mem_eq hm
+    change P {ω | ∃ i, ¬ IsGoodAnnulus (μ ω) r (r • z r i) a b} =
+      P {ω | ∃ i, ¬ IsGoodAnnulus (ν ω) r (r • z r i) a b} at heq
+    rw [← heq]
+    exact hprob r hr (z r) (hz r)
+  have htail := hiter Ω P (affinePairing hC hcirc 1 x) (affineCircle hcirc 1 x) hrec s hs
+    (fun ω r => ∀ i, IsGoodAnnulus (ν ω) r (r • z r i) a b)
+    (by
+      intro n
+      have hr : 0 < s * (7 : ℝ)⁻¹ ^ n := mul_pos hs (pow_pos (by norm_num) n)
+      exact isFieldMeasurableModConst_countable_nearby_goodAnnuli hgrowth hγ hγ2 hrec hν hr ha.1 b
+        (fun i => (s * (7 : ℝ)⁻¹ ^ n) • z (s * (7 : ℝ)⁻¹ ^ n) i)
+        (fun i => smul_mem_nearby_ball hr (hz _ i)))
+    (by
+      intro n
+      have hr : 0 < s * (7 : ℝ)⁻¹ ^ n := mul_pos hs (pow_pos (by norm_num) n)
+      apply measure_ge_of_compl_le_ofReal P _ hp.1.le hp.2.le
+      simpa only [Set.compl_ofPred, not_forall] using hprobν _ hr)
+    ε hε ht
+  simpa only [ν, isGoodAnnulus_affineMeasure_translate_at] using htail
+
 /-- The polynomial count bound is uniform in the reference centre. -/
 theorem exists_countable_nearby_goodAnnuli_count_tail_all_centres
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
@@ -175,42 +232,10 @@ theorem exists_countable_nearby_goodAnnuli_count_tail_all_centres
         ∀ i, IsGoodAnnulus (μ ω) (s * r) (x + (s * r) • z i) a b}.ncard : ℝ) <
         (β / 16) * Real.logb 7 (ε ^ (-1 : ℝ))} ≤
       ENNReal.ofReal (C * ε ^ (α / (16 * Real.log 7))) := by
-  obtain ⟨p, hp, C, hCpos, hiter⟩ := thick_annulus_subrange_probability α β hα hβ
-  have hδ : 0 < ENNReal.ofReal (1 - p) := ENNReal.ofReal_pos.mpr (by linarith [hp.2])
-  obtain ⟨a, ha, hprob⟩ :=
-    exists_countable_nearby_goodAnnuli_probability_all_radii hgrowth hγ hγ2 h hμ hb hδ
-  refine ⟨a, ha, C, hCpos, ?_⟩
+  obtain ⟨a, ha, C, hC, htail⟩ :=
+    exists_radius_dependent_countable_nearby_goodAnnuli_count_tail hgrowth hγ hγ2 h hμ hb α β hα hβ
+  refine ⟨a, ha, C, hC, ?_⟩
   intro x z hz s hs ε hε ht
-  let := h.isProbabilityMeasure
-  let ν := affineMeasure γ hcirc μ 1 x
-  have hAff := wholePlaneGFFAffineInvariance_proved P hC hcirc
-  have hrec : IsWholePlaneGFF P (affinePairing hC hcirc 1 x) (affineCircle hcirc 1 x) :=
-    hAff h 1 one_ne_zero x
-  have hν : IsLQGMeasureOfField P γ 0 (affineCircle hcirc 1 x) ν :=
-    isLQGMeasureOfField_translate h hμ x
-  have hprobν (r : ℝ) (hr : 0 < r) :
-      P {ω | ∃ i, ¬ IsGoodAnnulus (ν ω) r (r • z i) a b} ≤ ENNReal.ofReal (1 - p) := by
-    have hm : MeasurableSet {m : Measure ℂ | ∃ i, ¬ IsGoodAnnulus m r (r • z i) a b} := by
-      simp only [Set.ofPred_exists]
-      exact MeasurableSet.iUnion fun i => (measurableSet_isGoodAnnulus_of_pos r hr _ a b ha.1).compl
-    have heq := (identDistrib_translateMeasure h hμ hAff x).measure_mem_eq hm
-    change P {ω | ∃ i, ¬ IsGoodAnnulus (μ ω) r (r • z i) a b} =
-      P {ω | ∃ i, ¬ IsGoodAnnulus (ν ω) r (r • z i) a b} at heq
-    rw [← heq]
-    exact hprob r hr z hz
-  have htail := hiter Ω P (affinePairing hC hcirc 1 x) (affineCircle hcirc 1 x) hrec s hs
-    (fun ω r => ∀ i, IsGoodAnnulus (ν ω) r (r • z i) a b)
-    (by
-      intro n
-      have hr : 0 < s * (7 : ℝ)⁻¹ ^ n := mul_pos hs (pow_pos (by norm_num) n)
-      exact isFieldMeasurableModConst_countable_nearby_goodAnnuli hgrowth hγ hγ2 hrec hν hr ha.1 b
-        (fun i => (s * (7 : ℝ)⁻¹ ^ n) • z i) (fun i => smul_mem_nearby_ball hr (hz i)))
-    (by
-      intro n
-      have hr : 0 < s * (7 : ℝ)⁻¹ ^ n := mul_pos hs (pow_pos (by norm_num) n)
-      apply measure_ge_of_compl_le_ofReal P _ hp.1.le hp.2.le
-      simpa only [Set.compl_ofPred, not_forall] using hprobν _ hr)
-    ε hε ht
-  simpa only [ν, isGoodAnnulus_affineMeasure_translate_at] using htail
+  exact htail x (fun _ => z) (fun _ => hz) s hs ε hε ht
 
 end HarmonicBalls.Section6
