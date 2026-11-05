@@ -75,11 +75,99 @@ theorem tendsto_greenRegular_shifted_obstacle_atBot
 
 #print axioms tendsto_greenRegular_shifted_obstacle_atBot
 
+/-- A continuous superharmonic function on a bounded open domain is
+nonnegative if its boundary values are nonnegative. -/
+theorem IsSuperharmonicOn.nonneg_of_nonneg_boundary
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U) {f : ℂ → ℝ}
+    (hf : IsSuperharmonicOn U f) (hfc : ContinuousOn f (closure U))
+    (hboundary : ∀ x ∈ closure U, x ∉ U → 0 ≤ f x) : ∀ x ∈ U, 0 ≤ f x := by
+  let W := U ∩ f ⁻¹' Iio 0
+  have hWo : IsOpen W := (hfc.mono subset_closure).isOpen_inter_preimage hU isOpen_Iio
+  have hcl : closure W ⊆ closure U := closure_mono inter_subset_left
+  have hWe : W = ∅ := by
+    apply eq_empty_of_pos_of_subMean (f := -f) (hUb.subset inter_subset_left)
+      ((hfc.mono hcl).neg)
+    · intro x hx
+      exact neg_pos.mpr hx.2
+    · intro x hx
+      have hxcl := hcl (frontier_subset_closure hx)
+      by_cases hxU : x ∈ U
+      · have hxW : x ∉ W := by
+          rw [hWo.frontier_eq] at hx
+          exact hx.2
+        have hfx : 0 ≤ f x := le_of_not_gt (fun hh => hxW ⟨hxU, hh⟩)
+        exact neg_nonpos.mpr hfx
+      · exact neg_nonpos.mpr (hboundary x hxcl hxU)
+    · intro x hx
+      obtain ⟨r, hr, hsub⟩ := Metric.isOpen_iff.mp hWo x hx
+      have hsub' : closedBall x (r / 2) ⊆ W :=
+        (closedBall_subset_ball (half_lt_self hr)).trans hsub
+      refine ⟨r / 2, half_pos hr, hsub', ?_⟩
+      have hmean := (hf.2 x hx.1 (r / 2) (half_pos hr)
+        (hsub'.trans inter_subset_left)).2
+      rw [circleAverage_neg_fun, Pi.neg_apply]
+      exact neg_le_neg hmean
+  intro x hx
+  by_contra h
+  have hxW : x ∈ W := ⟨hx, not_le.mp h⟩
+  simp [hWe] at hxW
+
+#print axioms IsSuperharmonicOn.nonneg_of_nonneg_boundary
+
 /-- Nonnegative superharmonic majorants of an obstacle with a distinguished
 pole. No condition is imposed at the pole. -/
 def nonnegativeSuperharmonicMajorants (U : Set ℂ) (z : ℂ) (β : ℂ → ℝ) : Set (ℂ → ℝ) :=
   {g | IsSuperharmonicOn U g ∧ (∀ x ∈ U, 0 ≤ g x) ∧
     ∀ x ∈ closure U, x ≠ z → β x ≤ g x}
+
+/-- The enclosing-disc potential is a nonnegative superharmonic majorant
+of the shifted obstacle. -/
+theorem greenPotentialBall_mem_nonnegativeSuperharmonicMajorants
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hsub : U ⊆ ball (0 : ℂ) R) {z : ℂ} {t : ℝ} (ht : 0 ≤ t) :
+    greenPotentialBall μ R ∈ nonnegativeSuperharmonicMajorants U z
+      (fun x => -t * greenFunction U z x + greenPotentialBall μ R x) := by
+  have hq := isSuperharmonicOn_greenPotentialBall hμ hR hV
+  have hUb := isBounded_ball.subset hsub
+  have hq0 : ∀ x, 0 ≤ greenPotentialBall μ R x := by
+    intro x
+    exact integral_nonneg (fun y => greenFunction_nonneg isBounded_ball y x)
+  refine ⟨⟨hq.1.mono hsub, fun x hx r hr hball => hq.2 x (hsub hx) r hr (hball.trans hsub)⟩,
+    fun x _ => hq0 x, ?_⟩
+  intro x hx hxz
+  have h := mul_nonneg ht (greenFunction_nonneg hUb z x)
+  linarith
+
+/-- Every supersolution becomes a nonnegative superharmonic majorant after
+the enclosing-disc potential shift. -/
+theorem shifted_supersolution_mem_nonnegativeSuperharmonicMajorants
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} {w : ℂ → ℝ}
+    (hw : w ∈ supersolutionsOn μ U z t) :
+    (fun x => w x + greenPotentialBall μ R x) ∈ nonnegativeSuperharmonicMajorants U z
+      (fun x => -t * greenFunction U z x + greenPotentialBall μ R x) := by
+  have hUb := isBounded_ball.subset hsub
+  have hq := enclosingDisc_potential_shift_on_domain hμ hR hV hsub
+  have hc : ContinuousOn (fun x => w x + greenPotentialBall μ R x) (closure U) := hw.1.add hq.1
+  have hL := (laplacianLE_iff_add_potential hμ hq.2).mp hw.2.1
+  have hsh := superharmonicOfLaplacianLEStep_holds U _ hU (hc.mono subset_closure) hL
+  refine ⟨hsh, hsh.nonneg_of_nonneg_boundary hU hUb hc ?_, ?_⟩
+  · intro x hx hxU
+    have hxz : x ≠ z := fun e => hxU (e ▸ hz)
+    have hw0 : 0 ≤ w x := by
+      simpa [greenFunction_of_notMem_right hxU] using hw.2.2 x hx hxz
+    have hq0 : 0 ≤ greenPotentialBall μ R x :=
+      integral_nonneg (fun y => greenFunction_nonneg isBounded_ball y x)
+    exact add_nonneg hw0 hq0
+  · intro x hx hxz
+    dsimp only
+    linarith [hw.2.2 x hx hxz]
+
+#print axioms greenPotentialBall_mem_nonnegativeSuperharmonicMajorants
+#print axioms shifted_supersolution_mem_nonnegativeSuperharmonicMajorants
 
 /-- The pointwise infimum of the nonnegative majorants. -/
 noncomputable def nonnegativeMajorantInf (U : Set ℂ) (z : ℂ) (β : ℂ → ℝ) (x : ℂ) : ℝ :=
@@ -295,6 +383,176 @@ theorem continuousAt_nonnegativeMajorantInf_pole
 #print axioms continuousAt_nonnegativeMajorantInf_of_ne_pole
 #print axioms upperSemicontinuousAt_nonnegativeMajorantInf_of_poisson
 #print axioms isSuperharmonicOn_nonnegativeMajorantInf
+
+/-- The least nonnegative majorant lies between the shifted obstacle and
+the enclosing-disc potential, away from the pole. -/
+theorem nonnegativeMajorantInf_green_bounds
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hsub : U ⊆ ball (0 : ℂ) R) {z : ℂ} {t : ℝ} (ht : 0 ≤ t)
+    {x : ℂ} (hx : x ∈ closure U) (hxz : x ≠ z) :
+    -t * greenFunction U z x + greenPotentialBall μ R x ≤
+        nonnegativeMajorantInf U z (fun x => -t * greenFunction U z x + greenPotentialBall μ R x) x ∧
+      nonnegativeMajorantInf U z (fun x => -t * greenFunction U z x + greenPotentialBall μ R x) x ≤
+        greenPotentialBall μ R x := by
+  let β : ℂ → ℝ := fun x => -t * greenFunction U z x + greenPotentialBall μ R x
+  let F := nonnegativeSuperharmonicMajorants U z β
+  have hq : greenPotentialBall μ R ∈ F :=
+    greenPotentialBall_mem_nonnegativeSuperharmonicMajorants hμ hR hV hsub ht
+  have hbound : BddBelow ((fun g : ℂ → ℝ => g x) '' F) := by
+    refine ⟨β x, ?_⟩
+    rintro _ ⟨g, hg, rfl⟩
+    exact hg.2.2 x hx hxz
+  refine ⟨le_csInf ⟨_, ⟨_, hq, rfl⟩⟩ ?_, csInf_le hbound ⟨_, hq, rfl⟩⟩
+  rintro _ ⟨g, hg, rfl⟩
+  exact hg.2.2 x hx hxz
+
+/-- The least nonnegative majorant has the enclosing-disc potential as its
+continuous boundary value on a Green-regular domain. -/
+theorem continuousOn_nonnegativeMajorantInf_green
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ y ∈ closure U, y ∉ U →
+      Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0)) :
+    ContinuousOn (nonnegativeMajorantInf U z
+      (fun x => -t * greenFunction U z x + greenPotentialBall μ R x)) (closure U) := by
+  let β : ℂ → ℝ := fun x => -t * greenFunction U z x + greenPotentialBall μ R x
+  let f := nonnegativeMajorantInf U z β
+  have hβ : ContinuousOn β (closure U \ {z}) :=
+    continuousOn_greenRegular_shifted_obstacle hμ hR hV hU hsub hz t hboundary
+  have hne : (nonnegativeSuperharmonicMajorants U z β).Nonempty :=
+    ⟨_, greenPotentialBall_mem_nonnegativeSuperharmonicMajorants hμ hR hV hsub ht.le⟩
+  have hβU : ContinuousOn β (U \ {z}) := hβ.mono (sdiff_subset_sdiff_left subset_closure)
+  have hbot : Tendsto β (𝓝[≠] z) atBot :=
+    tendsto_greenRegular_shifted_obstacle_atBot hμ hR hV hU hsub hz ht
+  have hq := (enclosingDisc_potential_shift_on_domain hμ hR hV hsub).1
+  intro x hx
+  by_cases hxU : x ∈ U
+  · by_cases hxz : x = z
+    · subst x
+      exact (continuousAt_nonnegativeMajorantInf_pole hU hz hβU hbot hne).continuousWithinAt
+    · exact (continuousAt_nonnegativeMajorantInf_of_ne_pole hU hβU hne hxU hxz).continuousWithinAt
+  · have hxz : x ≠ z := fun e => hxU (e ▸ hz)
+    have hG : greenFunction U z x = 0 := greenFunction_of_notMem_right hxU z
+    have hbounds := nonnegativeMajorantInf_green_bounds hμ hR hV hsub ht.le hx hxz
+    have hfx : f x = greenPotentialBall μ R x := by
+      dsimp [f, β] at hbounds ⊢
+      rw [hG] at hbounds
+      simp only [mul_zero, zero_add] at hbounds
+      exact le_antisymm hbounds.2 hbounds.1
+    change Tendsto f (𝓝[closure U] x) (𝓝 (f x))
+    rw [hfx]
+    have hβcont : ContinuousWithinAt β (closure U) x :=
+      continuousWithinAt_sdiff_singleton.mp (hβ x ⟨hx, hxz⟩)
+    have hβlim : Tendsto β (𝓝[closure U] x) (𝓝 (greenPotentialBall μ R x)) := by
+      change Tendsto β (𝓝[closure U] x) (𝓝 (β x)) at hβcont
+      simpa [β, hG] using hβcont
+    have hnear : ∀ᶠ y in 𝓝[closure U] x, y ≠ z :=
+      (show ∀ᶠ y in 𝓝 x, y ≠ z from isOpen_compl_singleton.mem_nhds hxz).filter_mono
+        nhdsWithin_le_nhds
+    apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hβlim (hq x hx)
+    · filter_upwards [self_mem_nhdsWithin, hnear] with y hy hyz
+      exact (nonnegativeMajorantInf_green_bounds hμ hR hV hsub ht.le hy hyz).1
+    · filter_upwards [self_mem_nhdsWithin, hnear] with y hy hyz
+      exact (nonnegativeMajorantInf_green_bounds hμ hR hV hsub ht.le hy hyz).2
+
+#print axioms nonnegativeMajorantInf_green_bounds
+#print axioms continuousOn_nonnegativeMajorantInf_green
+
+/-- On a bounded open Green-regular domain, the frozen least supersolution
+is itself admissible. The measure is locally finite and satisfies the
+enclosing-disc volume-growth condition. -/
+theorem leastSupersolutionOn_mem_of_greenRegular
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ y ∈ closure U, y ∉ U →
+      Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0)) :
+    leastSupersolutionOn μ U z t ∈ supersolutionsOn μ U z t := by
+  classical
+  let q := greenPotentialBall μ R
+  let β : ℂ → ℝ := fun x => -t * greenFunction U z x + q x
+  let F := nonnegativeSuperharmonicMajorants U z β
+  let f := nonnegativeMajorantInf U z β
+  let v : ℂ → ℝ := fun x => f x - q x
+  have hUb := isBounded_ball.subset hsub
+  have hq := enclosingDisc_potential_shift_on_domain hμ hR hV hsub
+  have hβ : ContinuousOn β (U \ {z}) :=
+    (continuousOn_greenRegular_shifted_obstacle hμ hR hV hU hsub hz t hboundary).mono
+      (sdiff_subset_sdiff_left subset_closure)
+  have hqF : q ∈ F := greenPotentialBall_mem_nonnegativeSuperharmonicMajorants hμ hR hV hsub ht.le
+  have hfsh : IsSuperharmonicOn U f := isSuperharmonicOn_nonnegativeMajorantInf hU hβ ⟨q, hqF⟩
+  have hfc : ContinuousOn f (closure U) :=
+    continuousOn_nonnegativeMajorantInf_green hμ hR hV hU hsub hz ht hboundary
+  have hfL : LaplacianLE f 0 U :=
+    laplacianLEOfSuperharmonicStep_holds U f hU (hfc.mono subset_closure) hfsh
+  have hvL : LaplacianLE v μ U := by
+    apply (laplacianLE_iff_add_potential hμ hq.2).mpr
+    have heq : (fun x => v x + q x) = f := by
+      funext x
+      dsimp [v]
+      ring
+    simpa only [← heq] using hfL
+  have hv : v ∈ supersolutionsOn μ U z t := by
+    refine ⟨hfc.sub hq.1, hvL, ?_⟩
+    intro x hx hxz
+    have hb := (nonnegativeMajorantInf_green_bounds hμ hR hV hsub ht.le hx hxz).1
+    dsimp [v, f, β, q] at *
+    linarith
+  have hvle : ∀ w ∈ supersolutionsOn μ U z t, ∀ x ∈ closure U, v x ≤ w x := by
+    intro w hw x hx
+    have hwF : (fun x => w x + q x) ∈ F :=
+      shifted_supersolution_mem_nonnegativeSuperharmonicMajorants hμ hR hV hU hsub hz hw
+    have hbdd : BddBelow ((fun g : ℂ → ℝ => g x) '' F) := by
+      by_cases hxz : x = z
+      · subst x
+        refine ⟨0, ?_⟩
+        rintro _ ⟨g, hg, rfl⟩
+        exact hg.2.1 z hz
+      · refine ⟨β x, ?_⟩
+        rintro _ ⟨g, hg, rfl⟩
+        exact hg.2.2 x hx hxz
+    have h := csInf_le hbdd ⟨fun y => w y + q y, hwF, rfl⟩
+    change f x ≤ w x + q x at h
+    dsimp [v]
+    linarith
+  have heq : EqOn (leastSupersolutionOn μ U z t) v (closure U) := by
+    intro x hx
+    have hbdd : BddBelow ((fun w : ℂ → ℝ => w x) '' supersolutionsOn μ U z t) := by
+      refine ⟨v x, ?_⟩
+      rintro _ ⟨w, hw, rfl⟩
+      exact hvle w hw x hx
+    apply le_antisymm
+    · exact csInf_le hbdd ⟨v, hv, rfl⟩
+    · exact le_csInf ⟨v x, v, hv, rfl⟩ (by
+        rintro _ ⟨w, hw, rfl⟩
+        exact hvle w hw x hx)
+  refine ⟨hv.1.congr heq, hv.2.1.congr_eqOn hU.measurableSet ?_, ?_⟩
+  · exact (heq.mono subset_closure).symm
+  · intro x hx hxz
+    rw [heq hx]
+    exact hv.2.2 x hx hxz
+
+#print axioms leastSupersolutionOn_mem_of_greenRegular
+
+/-- Admissibility on a bounded Green-regular domain under all-scale volume
+growth. No compact containment of a cluster is assumed. -/
+theorem leastSupersolutionOn_mem_of_bounded_greenRegular
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hV : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ y ∈ closure U, y ∉ U →
+      Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0)) :
+    leastSupersolutionOn μ U z t ∈ supersolutionsOn μ U z t := by
+  obtain ⟨R, hRsub⟩ := hUb.subset_ball (0 : ℂ)
+  have hR : 0 < R := lt_of_le_of_lt dist_nonneg (mem_ball.mp (hRsub hz))
+  exact leastSupersolutionOn_mem_of_greenRegular hμ hR (hV R hR) hU hRsub hz ht hboundary
+
+#print axioms leastSupersolutionOn_mem_of_bounded_greenRegular
 
 /-- At a Green-regular boundary point, the pointwise infimum attains its
 zero boundary value continuously from the domain, without assuming it is

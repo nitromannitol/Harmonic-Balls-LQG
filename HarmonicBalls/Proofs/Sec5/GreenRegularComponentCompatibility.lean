@@ -1,10 +1,11 @@
 import HarmonicBalls.Proofs.Sec5.ComponentAdmissibility
 import HarmonicBalls.Proofs.Sec5.ComponentMeasureLocality
+import HarmonicBalls.Proofs.Sec5.GreenRegularDomainAdmissibility
 
 /-! # Compatibility for a disc pole component
 
 This restricted consequence uses the potential-theoretic infrastructure of
-Leonardo Bonanno. It leaves general Green-regular components open.
+Leonardo Bonanno. The Green-regular component result keeps the boundary limits explicit.
 -/
 
 namespace HarmonicBalls
@@ -41,6 +42,31 @@ theorem regularizedFamily_strongCompatibility_of_disc_component
     hμ hVc hVb hR (hV R hR) hzV hcomp' ht
   exact regularizedFamily_strongCompatibility_of_component_boundary hU hUb hz ht
     hv hboundary hΛ hopen hcl
+
+/-- Strong compatibility for a Green-regular pole component, with the
+compact containment and openness hypotheses of the comparison theorem. -/
+theorem regularizedFamily_strongCompatibility_of_greenRegular_component
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hV : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ y ∈ closure (connectedComponentIn U z),
+      y ∉ connectedComponentIn U z → Tendsto
+        (greenFunction (connectedComponentIn U z) z)
+        (𝓝[connectedComponentIn U z] y) (𝓝 0))
+    {Λ : ℝ → Set ℂ} (hΛ : IsRegularizedClusterFamily μ Λ z)
+    (hopen : ∀ r : ℝ, 0 < r → IsOpen (cluster μ r z t))
+    (hcl : closure (Λ t) ⊆ U ∨ closure (clusterOn μ U z t) ⊆ U) :
+    closure (Λ t) = closure (clusterOn μ U z t) := by
+  obtain ⟨R, hRsub⟩ := hUb.subset_ball (0 : ℂ)
+  have hR : 0 < R := lt_of_le_of_lt dist_nonneg (mem_ball.mp (hRsub hz))
+  have hv := leastSupersolutionOn_mem_of_greenRegular hμ hR (hV R hR)
+    hU.connectedComponentIn ((connectedComponentIn_subset U z).trans hRsub)
+    (mem_connectedComponentIn hz) ht hboundary
+  exact regularizedFamily_strongCompatibility_of_component_boundary hU hUb hz ht
+    hv hboundary hΛ hopen hcl
+
+#print axioms regularizedFamily_strongCompatibility_of_greenRegular_component
 
 #print axioms regularizedFamily_strongCompatibility_of_disc_component
 
