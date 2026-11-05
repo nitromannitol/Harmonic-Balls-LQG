@@ -23,6 +23,22 @@ theorem tendsto_greenFunction_zero_of_subset_of_boundary_limit
     (Filter.Eventually.of_forall (greenFunction_nonneg (hWb.subset hVW) z))
     (Filter.Eventually.of_forall (Section6.greenFunction_le_of_subset hVW hWb z))
 
+/-- A boundary point of a finite union of discs belongs to the boundary
+circle of at least one disc in the union. -/
+theorem exists_mem_sphere_of_mem_closure_finite_disc_union
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ) {y : ℂ}
+    (hy : y ∈ closure (⋃ i ∈ F, ball (c i) (r i)))
+    (hynot : y ∉ ⋃ i ∈ F, ball (c i) (r i)) :
+    ∃ i ∈ F, y ∈ sphere (c i) (r i) := by
+  rw [F.closure_biUnion] at hy
+  obtain ⟨i, hi, hyi⟩ := mem_iUnion₂.mp hy
+  have hyclosed : dist y (c i) ≤ r i := mem_closedBall.mp (closure_ball_subset_closedBall hyi)
+  have hyoutside : r i ≤ dist y (c i) := by
+    apply le_of_not_gt
+    intro h
+    exact hynot (mem_iUnion₂.mpr ⟨i, hi, mem_ball.mpr h⟩)
+  exact ⟨i, hi, mem_sphere.mpr (le_antisymm hyclosed hyoutside)⟩
+
 /-- A disc has a Green-regular exhaustion containing the prescribed pole. -/
 theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     (hz : z ∈ ball c R) :
@@ -82,6 +98,7 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms exists_mem_sphere_of_mem_closure_finite_disc_union
 #print axioms tendsto_greenFunction_zero_of_subset_of_boundary_limit
 #print axioms exists_greenRegular_exhaustion_ball
 
