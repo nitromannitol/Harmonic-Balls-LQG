@@ -1,4 +1,4 @@
-import HarmonicBalls.Proofs.Sec5.ContactScaledContinuity
+import HarmonicBalls.Proofs.Sec5.MassSaturationContinuity
 
 /-! # Right continuity when disc clusters agree -/
 
@@ -10,9 +10,9 @@ open scoped Pointwise ENNReal Topology
 universe u
 
 /-- A unit-disc cluster is right-continuous at any positive time when it
-agrees with the cluster in the disc of radius two. This criterion does not
-require a first-contact hypothesis. -/
-theorem ae_cluster_right_continuity_of_eq_radius_two
+has the same closure as the cluster in the disc of radius two. This criterion
+does not require a first-contact or full-mass hypothesis. -/
+theorem ae_cluster_right_continuity_of_closure_eq_radius_two
     {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
     (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h72 : ClusterTimeContinuityStmt.{u})
@@ -21,7 +21,7 @@ theorem ae_cluster_right_continuity_of_eq_radius_two
     (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) :
     ∀ᵐ ω ∂P, ∀ z ∈ ball (0 : ℂ) 1, ∀ t : ℝ, 0 < t →
-      cluster (μ ω) 1 z t = cluster (μ ω) 2 z t →
+      closure (cluster (μ ω) 1 z t) = closure (cluster (μ ω) 2 z t) →
       ∀ ε : ℝ, 0 < ε → ∃ δ : ℝ, 0 < δ ∧ ∀ s ∈ Icc t (t + δ),
         closure (cluster (μ ω) 1 z s) ⊆ cluster (μ ω) 1 z t + ball (0 : ℂ) ε := by
   let hC' := affinePairing hC hcirc (2 : ℂ) 0
@@ -57,13 +57,15 @@ theorem ae_cluster_right_continuity_of_eq_radius_two
         (2 : ℝ)⁻¹ • cluster (μ ω) 2 z (A * s) := by
     intro s hs
     simpa [A, smul_smul] using hsc ((2 : ℝ)⁻¹ • z) hz1 s hs
-  have hcontained := cluster_closure_subset_larger_disc_of_eq
-    (by norm_num : (1 : ℝ) < 2) hclusters
+  have hcontained : closure (cluster (μ ω) 2 z t) ⊆ ball 0 2 := by
+    rw [← hclusters]
+    exact (closure_minimal (cluster_subset_ball.trans ball_subset_closedBall)
+      isClosed_closedBall).trans (closedBall_subset_ball (by norm_num))
   have hright := cluster_compact_right_continuity_of_scale (by norm_num : (0 : ℝ) < 2)
     hA ht hsc' (hunit ((2 : ℝ)⁻¹ • z) hz' (t / A) (div_pos ht hA)) hcontained
-  exact cluster_right_continuity_of_larger_disc (by norm_num : (1 : ℝ) < 2)
+  exact cluster_right_continuity_of_larger_disc_closure_eq (by norm_num : (1 : ℝ) < 2)
     hz ht.le hclusters hright
 
-#print axioms ae_cluster_right_continuity_of_eq_radius_two
+#print axioms ae_cluster_right_continuity_of_closure_eq_radius_two
 
 end HarmonicBalls
