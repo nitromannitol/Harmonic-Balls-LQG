@@ -14,7 +14,7 @@ open scoped ENNReal
 
 universe u
 
-/-- Polynomial decay at one mesh absorbs up to `2^n` candidate phases at
+/-- Polynomial decay at one mesh absorbs up to `2^(3*n)` candidate phases at
 mesh `2⁻ⁿ`. The phase sets are deterministic, but the selected phase at
 any mesh may depend arbitrarily on the whole field. -/
 theorem exists_universal_growing_phaseCriterion_probability
@@ -29,14 +29,14 @@ theorem exists_universal_growing_phaseCriterion_probability
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
       IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ →
     ∀ (s : ℝ), 0 < s → ∀ (x : ℂ) (F : ℕ → Finset ℂ),
-      (∀ n, (F n).card ≤ 2 ^ n) →
+      (∀ n, (F n).card ≤ 2 ^ (3 * n)) →
     ∀ (phase : Ω → ℕ → ℂ), (∀ ω n, phase ω n ∈ F n) →
       P {ω | ¬ PhaseVeryGoodCriterionThree (μ ω) s x N a b (1 / 32) (phase ω)} ≤ δ := by
   classical
   obtain ⟨a, ha, D, r₀, hD, hr₀, hscale⟩ :=
     exists_scaled_phase_criterionThree_one_scale_failure_bound hgrowth hγ hγ₂ h₀ hμ₀ hb
   obtain ⟨N₀, hN₀, htail⟩ :=
-    exists_uniform_dyadic_polynomial_tail_bound (p₀ := 3) (C₀ := D) (r₀ := r₀)
+    exists_uniform_dyadic_polynomial_tail_bound (p₀ := 1) (C₀ := D) (r₀ := r₀)
       (by norm_num) hr₀ hδ
   refine ⟨a, ha, N₀, hN₀, ?_⟩
   intro N hN Ω _ P hCfield hcirc μ hgff hμ s hs x phases hcard phase hphase
@@ -49,7 +49,7 @@ theorem exists_universal_growing_phaseCriterion_probability
             IsGoodAnnulus (μ ω) r z a b}.ncard : ℝ)}
   let G : ℕ → Set Ω := fun n => if 9 ≤ n then (⋃ q ∈ phases n, E n q)ᶜ else univ
   have hG : ∀ n : ℕ, (2 : ℝ)⁻¹ ^ n < r₀ →
-      P (G n)ᶜ ≤ ENNReal.ofReal (D * ((2 : ℝ)⁻¹ ^ n) ^ (3 : ℝ)) := by
+      P (G n)ᶜ ≤ ENNReal.ofReal (D * ((2 : ℝ)⁻¹ ^ n) ^ (1 : ℝ)) := by
     intro n hsmall
     by_cases hn : 9 ≤ n
     · have hsum : P (⋃ q ∈ phases n, E n q) ≤
@@ -61,23 +61,23 @@ theorem exists_universal_growing_phaseCriterion_probability
             intro q hq
             exact hscale Ω P hCfield hcirc μ hgff hμ s hs x q n hn (by simpa [dyadicScale] using hsmall)
           _ = _ := by simp
-      have hncast : ((phases n).card : ℝ≥0∞) ≤ ((2 : ℕ) ^ n : ℝ≥0∞) := by exact_mod_cast hcard n
-      have hpow : (((2 : ℕ) ^ n : ℝ≥0∞) * ENNReal.ofReal (D * (dyadicScale n) ^ (4 : ℝ))) =
-          ENNReal.ofReal (D * ((2 : ℝ)⁻¹ ^ n) ^ (3 : ℝ)) := by
+      have hncast : ((phases n).card : ℝ≥0∞) ≤ ((2 : ℕ) ^ (3 * n) : ℝ≥0∞) := by exact_mod_cast hcard n
+      have hpow : (((2 : ℕ) ^ (3 * n) : ℝ≥0∞) * ENNReal.ofReal (D * (dyadicScale n) ^ (4 : ℝ))) =
+          ENNReal.ofReal (D * ((2 : ℝ)⁻¹ ^ n) ^ (1 : ℝ)) := by
         have htwo : 0 < ((2 : ℝ) ^ n) := by positivity
         have heq : (dyadicScale n) = ((2 : ℝ) ^ n)⁻¹ := by simp [dyadicScale, inv_pow]
         rw [heq]
         simp only [inv_pow]
-        rw [show ((2 : ℕ) ^ n : ℝ≥0∞) = ENNReal.ofReal ((2 : ℝ) ^ n) by simp]
+        rw [show ((2 : ℕ) ^ (3 * n) : ℝ≥0∞) = ENNReal.ofReal (((2 : ℝ) ^ n) ^ 3) by simp only [Nat.cast_ofNat]; rw [mul_comm 3 n, pow_mul]; simp]
         rw [← ENNReal.ofReal_mul (by positivity)]
         apply congrArg ENNReal.ofReal
         generalize ht : (2 : ℝ) ^ n = t at *
         rw [show (4 : ℝ) = ((4 : ℕ) : ℝ) by norm_num, Real.rpow_natCast,
-          show (3 : ℝ) = ((3 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
+          show (1 : ℝ) = ((1 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
         all_goals
           calc
-            t * (D * t⁻¹ ^ 4) = D * (t * t⁻¹) * t⁻¹ ^ 3 := by ring
-            _ = D * t⁻¹ ^ 3 := by rw [mul_inv_cancel₀ (ne_of_gt htwo), mul_one]
+            t ^ 3 * (D * t⁻¹ ^ 4) = D * (t * t⁻¹) ^ 3 * t⁻¹ := by ring
+            _ = D * t⁻¹ ^ 1 := by rw [mul_inv_cancel₀ (ne_of_gt htwo)]; simp
       simpa only [G, ite_eq_left hn, compl_compl] using
         hsum.trans (le_trans (by gcongr) (le_of_eq hpow))
     · simp [G, hn]
@@ -113,7 +113,7 @@ theorem exists_universal_singular_growing_phaseCriterion_probability
       LQGMeasureExistence P γ 0 hC hcirc →
     ∀ (s : ℝ), 0 < s → ∀ x : ℂ,
       s / 100 ≤ infDist (0 : ℂ) (annulus x (s / 4) (2 * s)) →
-    ∀ (F : ℕ → Finset ℂ), (∀ n, (F n).card ≤ 2 ^ n) →
+    ∀ (F : ℕ → Finset ℂ), (∀ n, (F n).card ≤ 2 ^ (3 * n)) →
     ∀ (phase : Ω → ℕ → ℂ), (∀ ω n, phase ω n ∈ F n) →
       P {ω | ¬ PhaseVeryGoodCriterionThree (μ ω) s x N
         (a / (((401 : ℝ) ^ |-(γ * α)|) ^ 2)) b (1 / 32) (phase ω)} ≤ δ := by
