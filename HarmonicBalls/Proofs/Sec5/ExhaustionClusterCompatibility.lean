@@ -52,6 +52,51 @@ theorem eventually_closure_clusterOn_eq_regularized_of_exhaustion
     hμ hvol (hopen n) (hUb.subset (subset_closure.trans (hsub n)))
     (hz n) ht (hboundary n) hΛ (hN.trans (hmono hn))
 
+/-- If the regularized cluster is compactly contained in the exhausted
+domain, the clusters of the regular domains eventually equal the cluster
+in any disc containing that domain. -/
+theorem eventually_clusterOn_eq_disc_of_regularized_compact_containment
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ}
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z : ℂ} (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    {Λ : ℝ → Set ℂ} (hΛ : IsRegularizedClusterFamily μ Λ z)
+    (hcl : closure (Λ t) ⊆ U) {r : ℝ} (hr : 0 < r)
+    (hUr : U ⊆ ball (0 : ℂ) r) :
+    (∀ᶠ n in atTop, clusterOn μ (V n) z t = cluster μ r z t) ∧
+      (⋃ n, clusterOn μ (V n) z t) = cluster μ r z t := by
+  have hzU : z ∈ U := hsub 0 (subset_closure (hz 0))
+  have hrepr := hΛ.2.2 t ht r hr (hcl.trans hUr) r le_rfl
+  have hcluster : closure (Λ t) = closure (cluster μ r z t) := by
+    rw [hrepr, closure_regularizedCluster_eq_of_isOpen
+      (isOpen_cluster_of_volumeGrowth hμ hvol ht r hr (hUr hzU))]
+  have hcompact : IsCompact (closure (Λ t)) :=
+    isCompact_iff_isClosed_bounded.mpr ⟨isClosed_closure, (hΛ.1.isBounded t ht).closure⟩
+  obtain ⟨N, hN⟩ := HarmonicBalls.IsCompact.subset_monotone_open_iUnion
+    hcompact hopen hmono (hcover ▸ hcl)
+  have hevent : ∀ᶠ n in atTop, clusterOn μ (V n) z t = cluster μ r z t := by
+    filter_upwards [eventually_ge_atTop N] with n hn
+    exact clusterOn_eq_cluster_of_compact_disc_cluster_of_volumeGrowth
+      hμ (hopen n) hr (hvol r hr) (subset_closure.trans ((hsub n).trans hUr))
+      (hz n) ht (hboundary n) (hcluster ▸ hN.trans (hmono hn))
+  refine ⟨hevent, ?_⟩
+  obtain ⟨M, hM⟩ := eventually_atTop.mp hevent
+  apply subset_antisymm
+  · intro x hx
+    obtain ⟨n, hxn⟩ := mem_iUnion.mp hx
+    have hbounded : Bornology.IsBounded (V (max n M)) :=
+      Metric.isBounded_ball.subset (subset_closure.trans ((hsub (max n M)).trans hUr))
+    have hle := clusterOn_subset_of_nested_regular (μ := μ) (hopen n) (hopen (max n M))
+      hbounded (hmono (le_max_left n M)) (hz n) ht.le (hboundary n) (hboundary (max n M))
+    rw [hM (max n M) (le_max_right n M)] at hle
+    exact hle hxn
+  · intro x hx
+    exact mem_iUnion.mpr ⟨M, (hM M le_rfl).symm ▸ hx⟩
+
 /-- Under the regularized-family compact-containment alternative, its closure
 is contained in the limiting-domain cluster closure. The converse is not
 asserted by the exhaustion comparison. -/
@@ -168,6 +213,7 @@ theorem eventually_clusterOn_eq_punctured_disc_of_compact_containment
 #print axioms eventually_clusterOn_eq_enclosing_disc_of_compact_containment
 #print axioms iUnion_clusterOn_subset_of_regular_exhaustion
 #print axioms eventually_closure_clusterOn_eq_regularized_of_exhaustion
+#print axioms eventually_clusterOn_eq_disc_of_regularized_compact_containment
 #print axioms regularized_closure_subset_clusterOn_of_regular_exhaustion
 
 end HarmonicBalls

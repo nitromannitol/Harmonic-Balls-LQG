@@ -158,6 +158,27 @@ theorem odometerOn_le_of_nested_regular
     exists_green_difference_of_nested_regular hV hU hUb hVU hz hVboundary hUboundary
   exact odometerOn_le_of_green_difference hV hUb hVU hx hxz ht hc hh hG
 
+/-- Clusters increase under inclusion of bounded Green-regular domains. -/
+theorem clusterOn_subset_of_nested_regular
+    {μ : Measure ℂ} {V U : Set ℂ} (hV : IsOpen V) (hU : IsOpen U)
+    (hUb : Bornology.IsBounded U) (hVU : V ⊆ U)
+    {z : ℂ} (hz : z ∈ V) {t : ℝ} (ht : 0 ≤ t)
+    (hVboundary : ∀ y ∈ closure V, y ∉ V →
+      Tendsto (greenFunction V z) (𝓝[V] y) (𝓝 0))
+    (hUboundary : ∀ y ∈ closure U, y ∉ U →
+      Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0)) :
+    clusterOn μ V z t ⊆ clusterOn μ U z t := by
+  intro x hx
+  refine ⟨hVU hx.1, ?_⟩
+  rcases hx.2 with h | h
+  · exact Or.inl h
+  · by_cases hxz : x = z
+    · exact Or.inl hxz
+    · right
+      have hle := odometerOn_le_of_nested_regular (μ := μ) hV hU hUb hVU hz hx.1 hxz
+        ht hVboundary hUboundary
+      linarith
+
 /-- Away from the pole, the obstacle-subtracted infimum is nonnegative. -/
 theorem odometerOn_nonneg {μ : Measure ℂ} {U : Set ℂ}
     (hUb : Bornology.IsBounded U) {z x : ℂ} (hx : x ∈ U) (hxz : x ≠ z)
@@ -216,6 +237,7 @@ theorem exists_tendsto_odometerOn_of_regular_exhaustion
   · exact tendsto_atTop_ciSup hfmono hbounded
 
 #print axioms odometerOn_nonneg
+#print axioms clusterOn_subset_of_nested_regular
 #print axioms exists_tendsto_odometerOn_of_regular_exhaustion
 #print axioms odometerOn_le_of_green_difference
 #print axioms exists_green_difference_of_nested_regular
