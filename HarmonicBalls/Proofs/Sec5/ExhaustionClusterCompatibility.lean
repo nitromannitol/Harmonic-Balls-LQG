@@ -72,6 +72,40 @@ theorem regularized_closure_subset_clusterOn_of_regular_exhaustion
   exact closure_mono (clusterOn_subset_of_compactly_contained_regular
     (hopen n) hU hUb (hsub n) (hz n) ht.le (hboundary n))
 
+/-- If the limiting-domain cluster is compactly contained, the exhausting
+clusters eventually stabilize to the cluster of any fixed enclosing disc.
+This does not identify that stable cluster with the limiting-domain cluster. -/
+theorem eventually_clusterOn_eq_enclosing_disc_of_compact_containment
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z : ℂ} (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    (hcl : closure (clusterOn μ U z t) ⊆ U)
+    {r : ℝ} (hr : U ⊆ ball (0 : ℂ) r) :
+    ∀ᶠ n in atTop, clusterOn μ (V n) z t = cluster μ r z t := by
+  have hclusterb : Bornology.IsBounded (clusterOn μ U z t) :=
+    hUb.subset (fun _ hx => hx.1)
+  have hcompact : IsCompact (closure (clusterOn μ U z t)) :=
+    isCompact_iff_isClosed_bounded.mpr ⟨isClosed_closure, hclusterb.closure⟩
+  obtain ⟨N, hN⟩ := HarmonicBalls.IsCompact.subset_monotone_open_iUnion
+    hcompact hopen hmono (hcover ▸ hcl)
+  filter_upwards [eventually_ge_atTop N] with n hn
+  have hVb : Bornology.IsBounded (V n) :=
+    hUb.subset (subset_closure.trans (hsub n))
+  have hv := leastSupersolutionOn_mem_of_bounded_greenRegular
+    hμ hvol (hopen n) hVb (hz n) ht (hboundary n)
+  have hsmall : closure (clusterOn μ (V n) z t) ⊆ V n :=
+    (closure_mono (clusterOn_subset_of_compactly_contained_regular
+      (hopen n) hU hUb (hsub n) (hz n) ht.le (hboundary n))).trans
+      (hN.trans (hmono hn))
+  exact clusterOn_eq_cluster_of_compact_containment (hopen n)
+    (subset_closure.trans ((hsub n).trans hr)) (hz n) ht hv hsmall
+
+#print axioms eventually_clusterOn_eq_enclosing_disc_of_compact_containment
 #print axioms iUnion_clusterOn_subset_of_regular_exhaustion
 #print axioms eventually_closure_clusterOn_eq_regularized_of_exhaustion
 #print axioms regularized_closure_subset_clusterOn_of_regular_exhaustion
