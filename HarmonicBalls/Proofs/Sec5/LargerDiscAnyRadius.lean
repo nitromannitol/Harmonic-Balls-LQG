@@ -63,5 +63,69 @@ theorem ae_cluster_right_continuity_of_closure_eq_larger_disc
     hz ht.le hclusters hright
 
 
+
+/-- On one full-measure event, equality with any larger-disc closure implies
+right continuity. The larger radius may depend on the field, centre and time. -/
+theorem ae_cluster_right_continuity_of_exists_larger_disc_closure_eq
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h72 : ClusterTimeContinuityStmt.{u})
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) :
+    ∀ᵐ ω ∂P, ∀ z ∈ ball (0 : ℂ) 1, ∀ t : ℝ, 0 < t →
+      (∃ R : ℝ, 1 < R ∧ closure (cluster (μ ω) 1 z t) =
+        closure (cluster (μ ω) R z t)) →
+      ∀ ε : ℝ, 0 < ε → ∃ δ : ℝ, 0 < δ ∧ ∀ s ∈ Icc t (t + δ),
+        closure (cluster (μ ω) 1 z s) ⊆ cluster (μ ω) 1 z t + ball (0 : ℂ) ε := by
+  have hevents : ∀ q : {q : ℚ // 1 < (q : ℝ)},
+      ∀ᵐ ω ∂P, ∀ z ∈ ball (0 : ℂ) 1, ∀ t : ℝ, 0 < t →
+        closure (cluster (μ ω) 1 z t) = closure (cluster (μ ω) (q : ℝ) z t) →
+        ∀ ε : ℝ, 0 < ε → ∃ δ : ℝ, 0 < δ ∧ ∀ s ∈ Icc t (t + δ),
+          closure (cluster (μ ω) 1 z s) ⊆ cluster (μ ω) 1 z t + ball (0 : ℂ) ε := by
+    intro q
+    exact ae_cluster_right_continuity_of_closure_eq_larger_disc q q.property hI2 h72
+      hAff hCC hγ hγ2 hα hGFF hμ
+  filter_upwards [ae_all_iff.mpr hevents] with ω hω
+  intro z hz t ht ⟨R, hR, hEq⟩
+  obtain ⟨q, hq1, hqR⟩ := exists_rat_btwn hR
+  have hzq : z ∈ ball (0 : ℂ) (q : ℝ) := ball_subset_ball hq1.le hz
+  have hEqQ : closure (cluster (μ ω) 1 z t) =
+      closure (cluster (μ ω) (q : ℝ) z t) := by
+    apply Subset.antisymm
+    · exact closure_mono (cluster_subset_cluster_larger_disc hq1 hz ht.le)
+    · rw [hEq]
+      exact closure_mono (cluster_subset_cluster_larger_disc hqR hzq ht.le)
+  exact hω ⟨q, hq1⟩ z hz t ht hEqQ
+
+
+/-- Existence of a larger disc with the same cluster closure implies
+Hausdorff continuity, simultaneously for all centres and positive times. -/
+theorem ae_cluster_hausdorff_continuity_of_exists_larger_disc_closure_eq
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h72 : ClusterTimeContinuityStmt.{u})
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) :
+    ∀ᵐ ω ∂P, ∀ z ∈ ball (0 : ℂ) 1, ∀ t : ℝ, 0 < t →
+      (∃ R : ℝ, 1 < R ∧ closure (cluster (μ ω) 1 z t) =
+        closure (cluster (μ ω) R z t)) →
+      ∀ ε : ℝ≥0∞, 0 < ε → ∀ᶠ s in 𝓝[Ioi (0 : ℝ)] t,
+        hausdorffEDist (cluster (μ ω) 1 z s) (cluster (μ ω) 1 z t) < ε := by
+  filter_upwards [ae_cluster_right_continuity_of_exists_larger_disc_closure_eq hI2 h72 hAff hCC
+    hγ hγ2 hα hGFF hμ,
+    clusterMonotone_proved hI2 γ α₀ hγ hγ2 hα Ω P hC hcirc μ hGFF hμ] with ω hright hmono
+  intro z hz t ht hEq
+  exact cluster_hausdorffContinuousWithinAt_of_right_continuity ht
+    (fun s s' hs hss => hmono s s' 1 hs hss (by norm_num) z hz)
+    (hright z hz t ht hEq)
+
+#print axioms ae_cluster_hausdorff_continuity_of_exists_larger_disc_closure_eq
+
+#print axioms ae_cluster_right_continuity_of_exists_larger_disc_closure_eq
+
 #print axioms ae_cluster_right_continuity_of_closure_eq_larger_disc
 end HarmonicBalls
