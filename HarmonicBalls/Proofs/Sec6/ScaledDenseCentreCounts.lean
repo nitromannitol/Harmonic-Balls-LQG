@@ -1,7 +1,11 @@
 import HarmonicBalls.Proofs.Sec6.RelativeDenseGoodAnnulusCounts
 import HarmonicBalls.Proofs.Sec6.CountableNearbyAnnulusIteration
 
-/-! # Scaled dense families of nearby annulus centres -/
+/-! # Scaled dense families of nearby annulus centres
+
+The countable-centre iteration uses Leonardo Bonanno's proof in
+`LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`.
+-/
 
 namespace HarmonicBalls.Section6
 

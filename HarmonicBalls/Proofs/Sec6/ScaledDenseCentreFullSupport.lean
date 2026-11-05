@@ -1,5 +1,8 @@
 import HarmonicBalls.Proofs.Sec6.ScaledDenseCentreCounts
 
+/-! The countable-centre iteration uses Leonardo Bonanno's proof in
+`LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. -/
+
 /-! # Scaled dense-centre comparison under full support -/
 
 namespace HarmonicBalls.Section6
