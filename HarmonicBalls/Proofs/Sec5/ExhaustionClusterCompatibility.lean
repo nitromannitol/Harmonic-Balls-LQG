@@ -52,6 +52,42 @@ theorem eventually_closure_clusterOn_eq_regularized_of_exhaustion
     hμ hvol (hopen n) (hUb.subset (subset_closure.trans (hsub n)))
     (hz n) ht (hboundary n) hΛ (hN.trans (hmono hn))
 
+/-- A compactly contained disc cluster gives equality of the corresponding
+odometers on a Green-regular subdomain, away from the pole. -/
+theorem odometerOn_eq_disc_of_compact_disc_cluster
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {V : Set ℂ} (hV : IsOpen V)
+    {r βm βp : ℝ} (hr : 0 < r) (hvol : VolumeGrowth μ r βm βp)
+    (hsub : V ⊆ ball (0 : ℂ) r) {z x : ℂ} (hz : z ∈ V) (hx : x ∈ V)
+    (hxz : x ≠ z) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ y ∈ closure V, y ∉ V →
+      Tendsto (greenFunction V z) (𝓝[V] y) (𝓝 0))
+    (hcl : closure (cluster μ r z t) ⊆ V) :
+    leastSupersolutionOn μ V z t x + t * greenFunction V z x =
+      leastSupersolution μ r z t x + t * greenFunction (ball 0 r) z x := by
+  obtain ⟨h, hc, hh, hG⟩ :=
+    exists_continuousOn_green_difference_of_boundary_limits hV hsub hz hboundary
+  have hd := (leastSupersolution_mem_of_general obstacleLeastSuperharmonicMajorantGeneral_holds
+    obstacleCompatibilityShiftStep_holds hμ hr hvol (hsub hz) ht).2.2
+  have hf := shifted_supersolutionOn_of_green_difference hV hsub hd hc hh hG
+  have hupper := leastSupersolutionOn_le_of_mem hf (subset_closure hx) hxz
+  have hlower : leastSupersolution μ r z t x + (-t) * h x ≤
+      leastSupersolutionOn μ V z t x := by
+    unfold leastSupersolutionOn
+    apply le_csInf
+    · exact ⟨_, ⟨_, hf, rfl⟩⟩
+    · rintro _ ⟨v, hv, rfl⟩
+      obtain ⟨w, hw, hwle⟩ := exists_disc_supersolution_le_shift_of_compact_cluster
+        hμ hV hr hsub hz
+        ((greenPotentialBallContinuousStep_holds μ hμ r βm βp hr hvol).mono
+          (hsub.trans ball_subset_closedBall))
+        ((greenPotentialBallLaplacianStep_holds μ hμ r βm βp hr hvol).mono_domain hsub)
+        hc hh hG hd hcl hv
+      have hwlower := leastSupersolution_le hw (ball_subset_closedBall (hsub hx)) hxz
+      have hwupper := hwle x hx
+      linarith
+  have hgreen := hG x (subset_closure hx) hxz
+  nlinarith
+
 /-- If the regularized cluster is compactly contained in the exhausted
 domain, the clusters of the regular domains eventually equal the cluster
 in any disc containing that domain. -/
@@ -96,6 +132,95 @@ theorem eventually_clusterOn_eq_disc_of_regularized_compact_containment
     exact hle hxn
   · intro x hx
     exact mem_iUnion.mpr ⟨M, (hM M le_rfl).symm ▸ hx⟩
+
+/-- Under regularized compact containment, exhausting-domain odometer values
+eventually equal the enclosing-disc odometer at each point away from the pole. -/
+theorem eventually_odometerOn_eq_disc_of_regularized_compact_containment
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z x : ℂ} (hz : ∀ n, z ∈ V n) (hx : x ∈ U) (hxz : x ≠ z)
+    {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    {Λ : ℝ → Set ℂ} (hΛ : IsRegularizedClusterFamily μ Λ z)
+    (hcl : closure (Λ t) ⊆ U) {r : ℝ} (hr : 0 < r)
+    (hUr : U ⊆ ball (0 : ℂ) r) :
+    ∀ᶠ n in atTop,
+      leastSupersolutionOn μ (V n) z t x + t * greenFunction (V n) z x =
+        leastSupersolution μ r z t x + t * greenFunction (ball 0 r) z x := by
+  have hzU : z ∈ U := hsub 0 (subset_closure (hz 0))
+  have hrepr := hΛ.2.2 t ht r hr (hcl.trans hUr) r le_rfl
+  have hcluster : closure (Λ t) = closure (cluster μ r z t) := by
+    rw [hrepr, closure_regularizedCluster_eq_of_isOpen
+      (isOpen_cluster_of_volumeGrowth hμ hvol ht r hr (hUr hzU))]
+  have hcompact : IsCompact (closure (Λ t)) :=
+    isCompact_iff_isClosed_bounded.mpr ⟨isClosed_closure, (hΛ.1.isBounded t ht).closure⟩
+  obtain ⟨N, hN⟩ := HarmonicBalls.IsCompact.subset_monotone_open_iUnion
+    hcompact hopen hmono (hcover ▸ hcl)
+  obtain ⟨M, hM⟩ := mem_iUnion.mp (hcover ▸ hx)
+  filter_upwards [eventually_ge_atTop N, eventually_ge_atTop M] with n hn hm
+  exact odometerOn_eq_disc_of_compact_disc_cluster hμ (hopen n) hr (hvol r hr)
+    (subset_closure.trans ((hsub n).trans hUr)) (hz n) (hmono hm hM) hxz ht
+    (hboundary n) (hcluster ▸ hN.trans (hmono hn))
+
+/-- For a relatively countable deletion from a disc, regularized compact
+containment makes the exhaustion odometers eventually equal the deleted-domain
+odometer at every point away from the pole. -/
+theorem eventually_odometerOn_eq_countable_deleted_disc
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {R : ℝ} (hR : 0 < R) (K : Set ℂ)
+    (hD : IsOpen (ball (0 : ℂ) R \ K)) (hK : (K ∩ ball (0 : ℂ) R).Countable)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = ball (0 : ℂ) R \ K)
+    (hsub : ∀ n, closure (V n) ⊆ ball (0 : ℂ) R \ K)
+    {z x : ℂ} (hz : ∀ n, z ∈ V n) (hx : x ∈ ball (0 : ℂ) R \ K) (hxz : x ≠ z)
+    {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    {Λ : ℝ → Set ℂ} (hΛ : IsRegularizedClusterFamily μ Λ z)
+    (hcl : closure (Λ t) ⊆ ball (0 : ℂ) R \ K) :
+    ∀ᶠ n in atTop,
+      leastSupersolutionOn μ (V n) z t x + t * greenFunction (V n) z x =
+        leastSupersolutionOn μ (ball (0 : ℂ) R \ K) z t x +
+          t * greenFunction (ball (0 : ℂ) R \ K) z x := by
+  have hzD : z ∈ ball (0 : ℂ) R \ K := hsub 0 (subset_closure (hz 0))
+  have hcontain : closure (ball (0 : ℂ) R) ⊆ ball (0 : ℂ) (R + 1) :=
+    (closure_minimal ball_subset_closedBall isClosed_closedBall).trans
+      (closedBall_subset_ball (by linarith))
+  let L := closure (ball (0 : ℂ) R ∩ K)
+  have hDL : ball (0 : ℂ) R \ L = ball (0 : ℂ) R \ K :=
+    sdiff_closure_inter_eq_of_isOpen_sdiff hD
+  have hL : (L ∩ ball (0 : ℂ) R).Countable := by
+    dsimp [L]
+    simpa only [closure_inter_eq_inter_of_isOpen_sdiff hD] using hK
+  have hd := (leastSupersolution_mem_of_general obstacleLeastSuperharmonicMajorantGeneral_holds
+    obstacleCompatibilityShiftStep_holds hμ hR (hvol R hR) hzD.1 ht).2.2
+  have heq : leastSupersolutionOn μ (ball (0 : ℂ) R) z t = leastSupersolution μ R z t := by
+    funext y
+    simp only [leastSupersolutionOn, leastSupersolution, supersolutionsOn_ball μ hR.ne']
+  have hd' : leastSupersolutionOn μ (ball (0 : ℂ) R) z t ∈
+      supersolutionsOn μ (ball (0 : ℂ) R) z t := by
+    rw [heq, supersolutionsOn_ball μ hR.ne']
+    exact hd
+  have hv := leastSupersolutionOn_sdiff_eq_of_local_countable hμ isOpen_ball isBounded_ball
+    hcontain isClosed_closure hL
+    ((greenPotentialBallContinuousStep_holds μ hμ R βm βp hR (hvol R hR)).mono
+      ball_subset_closedBall)
+    (greenPotentialBallLaplacianStep_holds μ hμ R βm βp hR (hvol R hR)) ht.le
+    (show z ∈ ball (0 : ℂ) R \ L from by rwa [hDL]) hd'
+    (show x ∈ ball (0 : ℂ) R \ L from by rwa [hDL]) hxz
+  have hg := greenFunction_sdiff_of_local_countable isOpen_ball
+    (subset_closure.trans hcontain) isClosed_closure hL
+    (show z ∈ ball (0 : ℂ) R \ L from by rwa [hDL])
+    (show x ∈ ball (0 : ℂ) R \ L from by rwa [hDL]) hxz
+  rw [hDL, heq] at hv
+  rw [hDL] at hg
+  simpa only [hv, hg] using
+    (eventually_odometerOn_eq_disc_of_regularized_compact_containment hμ hvol V hopen hmono
+      hcover hsub hz hx hxz ht hboundary hΛ hcl hR sdiff_subset)
 
 /-- Under the regularized-family compact-containment alternative, its closure
 is contained in the limiting-domain cluster closure. The converse is not
@@ -214,6 +339,9 @@ theorem eventually_clusterOn_eq_punctured_disc_of_compact_containment
 #print axioms iUnion_clusterOn_subset_of_regular_exhaustion
 #print axioms eventually_closure_clusterOn_eq_regularized_of_exhaustion
 #print axioms eventually_clusterOn_eq_disc_of_regularized_compact_containment
+#print axioms odometerOn_eq_disc_of_compact_disc_cluster
+#print axioms eventually_odometerOn_eq_disc_of_regularized_compact_containment
+#print axioms eventually_odometerOn_eq_countable_deleted_disc
 #print axioms regularized_closure_subset_clusterOn_of_regular_exhaustion
 
 end HarmonicBalls
