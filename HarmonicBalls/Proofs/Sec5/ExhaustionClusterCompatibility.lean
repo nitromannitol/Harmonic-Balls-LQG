@@ -14,6 +14,125 @@ namespace HarmonicBalls
 open Filter MeasureTheory Metric Set
 open scoped Topology
 
+/-- Any fixed finite sequence of Poisson modifications eventually agrees with
+the sequence on the increasing union of open domains. -/
+theorem eventually_sweep_eq_of_open_exhaustion
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    {U : Set ℂ} (hcover : (⋃ n, V n) = U) (f : ℂ → ℝ) (k : ℕ) :
+    ∀ᶠ n in atTop, sweep (V n) f k = sweep U f k := by
+  classical
+  have hsub (n : ℕ) : V n ⊆ U := by
+    rw [← hcover]
+    exact subset_iUnion V n
+  induction k with
+  | zero => exact Eventually.of_forall fun _ => rfl
+  | succ k ih =>
+    by_cases hd : IsSweepDisc U (sweepCenter k) (sweepRadius k)
+    · obtain ⟨N, hN⟩ := IsCompact.subset_monotone_open_iUnion
+        (isCompact_closedBall _ _) hopen hmono (hcover ▸ hd.2)
+      filter_upwards [ih, eventually_ge_atTop N] with n hn hNn
+      have hd' : IsSweepDisc (V n) (sweepCenter k) (sweepRadius k) :=
+        ⟨hd.1, hN.trans (hmono hNn)⟩
+      rw [sweep_succ, sweep_succ, hn]
+      funext y
+      simp only [discSweep, hd, hd', true_and]
+    · have hd' (n : ℕ) : ¬ IsSweepDisc (V n) (sweepCenter k) (sweepRadius k) :=
+        fun hv => hd ⟨hv.1, hv.2.trans (hsub n)⟩
+      filter_upwards [ih] with n hn
+      rw [sweep_succ, sweep_succ, hn]
+      funext y
+      simp only [discSweep, hd, hd', false_and, ite_false]
+
+/-- The greatest harmonic minorants produced by sweeping converge along an
+increasing open exhaustion, at each point of the union. -/
+theorem tendsto_sweep_limit_of_open_exhaustion
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    {U : Set ℂ} (hU : IsOpen U) (hcover : (⋃ n, V n) = U)
+    {f h₀ : ℂ → ℝ} (hf : ContinuousOn f U) (hm : HasLocalSuperMean U f)
+    (hh₀ : InnerProductSpace.HarmonicOnNhd h₀ U) (h₀f : ∀ x ∈ U, h₀ x ≤ f x)
+    {x : ℂ} (hx : x ∈ U) :
+    Tendsto (fun n => ⨅ k, sweep (V n) f k x) atTop
+      (𝓝 (⨅ k, sweep U f k x)) := by
+  have hsub (n : ℕ) : V n ⊆ U := by
+    rw [← hcover]
+    exact subset_iUnion V n
+  obtain ⟨N, hN⟩ := mem_iUnion.mp (hcover ▸ hx)
+  have hxev : ∀ᶠ n in atTop, x ∈ V n := by
+    filter_upwards [eventually_ge_atTop N] with n hn
+    exact hmono hn hN
+  have hlimU := sweep_limit hU hf hm hh₀ h₀f
+  have hlimV (n : ℕ) := sweep_limit (hopen n) (hf.mono (hsub n))
+    (fun y hy => hm y (hsub n hy)) (hh₀.mono (hsub n))
+    (fun y hy => h₀f y (hsub n hy))
+  have hbdd (n : ℕ) (hxn : x ∈ V n) :
+      BddBelow (range fun k => sweep (V n) f k x) := by
+    refine ⟨h₀ x, ?_⟩
+    rintro _ ⟨k, rfl⟩
+    have h := sweep_mono (hopen n) ((InnerProductSpace.HarmonicOnNhd.continuousOn hh₀).mono (hsub n))
+      (hf.mono (hsub n)) (fun y hy => h₀f y (hsub n hy)) k x hxn
+    rwa [sweep_harmonic (hh₀.mono (hsub n))] at h
+  apply tendsto_order.2
+  constructor
+  · intro a ha
+    filter_upwards [hxev] with n hxn
+    exact ha.trans_le ((hlimV n).2.2.2 _ (hlimU.1.mono (hsub n))
+      (fun y hy => hlimU.2.1 y (hsub n hy)) x hxn)
+  · intro b hb
+    have hev : ∀ᶠ k in atTop, sweep U f k x < b :=
+      (hlimU.2.2.1 x hx).eventually (Iio_mem_nhds hb)
+    obtain ⟨k, hk⟩ := hev.exists
+    filter_upwards [hxev, eventually_sweep_eq_of_open_exhaustion V hopen hmono hcover f k]
+      with n hxn heq
+    have hle := ciInf_le (hbdd n hxn) k
+    rw [heq] at hle
+    exact hle.trans_lt hk
+
+/-- Green functions converge to the Green function of an increasing union of
+bounded open planar domains, at points away from the pole. -/
+theorem tendsto_greenFunction_of_open_exhaustion
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (hcover : (⋃ n, V n) = U) {z x : ℂ} (hz : z ∈ V 0)
+    (hx : x ∈ U) (hxz : x ≠ z) :
+    Tendsto (fun n => greenFunction (V n) z x) atTop (𝓝 (greenFunction U z x)) := by
+  have hsub (n : ℕ) : V n ⊆ U := by
+    rw [← hcover]
+    exact subset_iUnion V n
+  have hzU : z ∈ U := hsub 0 hz
+  obtain ⟨δ, hδ, hδV⟩ := Metric.isOpen_iff.mp (hopen 0) z hz
+  let ε : ℝ := δ / 4
+  have hε : 0 < ε := by dsimp [ε]; positivity
+  have hball : closedBall z (2 * ε) ⊆ V 0 :=
+    (closedBall_subset_ball (by dsimp [ε]; linarith)).trans hδV
+  obtain ⟨R, hR⟩ := hUb.subset_ball z
+  have hminor := isHarmonicMinorant_const_newtonKernelEReal (hR.trans ball_subset_closedBall)
+  have hreg := (isHarmonicMinorant_regularized_iff hε (hball.trans (hsub 0))).1 hminor
+  have hlow : ∀ y ∈ U, -(2 * Real.pi)⁻¹ * Real.log R ≤ regularizedNewtonKernel ε z y := by
+    intro y hy
+    exact EReal.coe_le_coe_iff.mp (hreg.2 y hy)
+  have hf : ContinuousOn (regularizedNewtonKernel ε z) U :=
+    (continuous_regularizedNewtonKernel_right hε z).continuousOn
+  have hm := hasLocalSuperMean_regularizedNewtonKernel hε z U
+  have hconv := tendsto_sweep_limit_of_open_exhaustion V hopen hmono hU hcover
+    hf hm hreg.1 hlow hx
+  have hval {O : Set ℂ} (hO : IsOpen O) (hOU : O ⊆ U)
+      (hballO : closedBall z (2 * ε) ⊆ O) (hzO : z ∈ O) (hxO : x ∈ O) :
+      greenFunction O z x = newtonKernel z x -
+        (⨅ k, sweep O (regularizedNewtonKernel ε z) k x) := by
+    rw [greenFunction, ite_eq_left ⟨hzO, hxO, Ne.symm hxz⟩,
+      greatestHarmonicMinorant_regularized hε hballO,
+      greatestHarmonicMinorant_eq_of_sweep_limit hO (hf.mono hOU)
+        (fun y hy => hm y (hOU hy)) (hreg.1.mono hOU)
+        (fun y hy => hlow y (hOU hy)) x hxO, EReal.toReal_coe]
+  obtain ⟨N, hN⟩ := mem_iUnion.mp (hcover ▸ hx)
+  have hev : (fun n => greenFunction (V n) z x) =ᶠ[atTop]
+      (fun n => newtonKernel z x - (⨅ k, sweep (V n) (regularizedNewtonKernel ε z) k x)) := by
+    filter_upwards [eventually_ge_atTop N] with n hn
+    exact hval (hopen n) (hsub n) (hball.trans (hmono (Nat.zero_le n)))
+      (hmono (Nat.zero_le n) hz) (hmono hn hN)
+  rw [hval hU (Subset.refl U) (hball.trans (hsub 0)) hzU hx]
+  exact (tendsto_const_nhds.sub hconv).congr' hev.symm
+
 /-- Every cluster in a relatively compact regular exhaustion is contained in
  the cluster of the union, even if the union is not Green-regular. -/
 theorem iUnion_clusterOn_subset_of_regular_exhaustion
@@ -147,6 +266,70 @@ theorem odometerOn_gap_le_greenFunction_gap
   have h₂ := leastSupersolutionOn_le_of_regular_subdomain hμ hvol hV hU hUb
     (subset_closure.trans hVU) hz hx hxz ht hboundary
   constructor <;> linarith
+
+/-- The odometers converge pointwise along a relatively compact regular
+exhaustion, without assuming admissibility on the limiting domain. -/
+theorem tendsto_odometerOn_of_regular_exhaustion
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z x : ℂ} (hz : ∀ n, z ∈ V n) (hx : x ∈ U) (hxz : x ≠ z)
+    {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0)) :
+    Tendsto (fun n => leastSupersolutionOn μ (V n) z t x + t * greenFunction (V n) z x)
+      atTop (𝓝 (leastSupersolutionOn μ U z t x + t * greenFunction U z x)) := by
+  let a := leastSupersolutionOn μ U z t x + t * greenFunction U z x
+  have hg := tendsto_greenFunction_of_open_exhaustion V hopen hmono hU hUb hcover (hz 0) hx hxz
+  have hlower : Tendsto (fun n => a - t * (greenFunction U z x - greenFunction (V n) z x))
+      atTop (𝓝 a) := by
+    have h : Tendsto (fun n => a - t * (greenFunction U z x - greenFunction (V n) z x))
+        atTop (𝓝 (a - t * (greenFunction U z x - greenFunction U z x))) :=
+      tendsto_const_nhds.sub (tendsto_const_nhds.mul (tendsto_const_nhds.sub hg))
+    simpa using h
+  obtain ⟨N, hN⟩ := mem_iUnion.mp (hcover ▸ hx)
+  have hb : ∀ᶠ n in atTop,
+      a - t * (greenFunction U z x - greenFunction (V n) z x) ≤
+          leastSupersolutionOn μ (V n) z t x + t * greenFunction (V n) z x ∧
+      leastSupersolutionOn μ (V n) z t x + t * greenFunction (V n) z x ≤ a := by
+    filter_upwards [eventually_ge_atTop N] with n hn
+    have h := odometerOn_gap_le_greenFunction_gap hμ hvol (hopen n) hU hUb (hsub n)
+      (hz n) (hmono hn hN) hxz ht (hboundary n)
+    dsimp [a]
+    constructor <;> linarith [h.1, h.2]
+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le' hlower tendsto_const_nhds
+    (hb.mono fun _ h => h.1) (hb.mono fun _ h => h.2)
+
+/-- The cluster of the union is the increasing union of the clusters of its
+relatively compact regular exhaustion. -/
+theorem iUnion_clusterOn_eq_of_regular_exhaustion
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z : ℂ} (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0)) :
+    (⋃ n, clusterOn μ (V n) z t) = clusterOn μ U z t := by
+  apply Set.Subset.antisymm (iUnion_clusterOn_subset_of_regular_exhaustion hU hUb V hopen hsub hz ht.le hboundary)
+  intro x hx
+  rcases hx with ⟨hxU, hxbranch⟩
+  by_cases hxz : x = z
+  · subst x
+    exact mem_iUnion.mpr ⟨0, hz 0, Or.inl rfl⟩
+  · have hxpos := hxbranch.resolve_left hxz
+    have hv := tendsto_odometerOn_of_regular_exhaustion hμ hvol hU hUb V hopen hmono
+      hcover hsub hz hxU hxz ht hboundary
+    have hp : 0 < leastSupersolutionOn μ U z t x + t * greenFunction U z x := by linarith
+    have hev := hv.eventually (Ioi_mem_nhds hp)
+    obtain ⟨N, hN⟩ := mem_iUnion.mp (hcover ▸ hxU)
+    obtain ⟨n, hn, hnpos⟩ := (hev.and (eventually_ge_atTop N)).exists
+    apply mem_iUnion.mpr
+    refine ⟨n, hmono hnpos hN, Or.inr ?_⟩
+    linarith
 
 /-- If a regularized cluster is compactly contained in the union of an
 increasing regular exhaustion, the closures of the exhausting-domain clusters
@@ -408,8 +591,7 @@ theorem eventually_odometerOn_eq_countable_deleted_disc_of_compact_containment
     hmono hcover hsub hz hx hxz ht hboundary hΛ hΛcl
 
 /-- Under the regularized-family compact-containment alternative, its closure
-is contained in the limiting-domain cluster closure. The converse is not
-asserted by the exhaustion comparison. -/
+is contained in the limiting-domain cluster closure. -/
 theorem regularized_closure_subset_clusterOn_of_regular_exhaustion
     {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
     (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
@@ -429,8 +611,7 @@ theorem regularized_closure_subset_clusterOn_of_regular_exhaustion
     (hopen n) hU hUb (hsub n) (hz n) ht.le (hboundary n))
 
 /-- If the limiting-domain cluster is compactly contained, the exhausting
-clusters eventually stabilize to the cluster of any fixed enclosing disc.
-This does not identify that stable cluster with the limiting-domain cluster. -/
+clusters eventually stabilize to the cluster of any fixed enclosing disc. -/
 theorem eventually_clusterOn_eq_enclosing_disc_of_compact_containment
     {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
     (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
@@ -554,6 +735,73 @@ theorem eventually_clusterOn_eq_punctured_disc_of_compact_containment
     (Set.Countable.mono inter_subset_left (Set.countable_singleton a))
     V hopen hmono hcover hsub hz ht hboundary hcl
 
+/-- Eventual stabilization of closures commutes with an increasing union. -/
+theorem closure_iUnion_eq_of_eventually_closure_eq
+    (A : ℕ → Set ℂ) (hmono : Monotone A) {C : Set ℂ}
+    (hC : ∀ᶠ n in atTop, closure (A n) = C) :
+    closure (⋃ n, A n) = C := by
+  obtain ⟨N, hN⟩ := eventually_atTop.mp hC
+  apply Set.Subset.antisymm
+  · apply closure_minimal _ (hN N le_rfl ▸ isClosed_closure)
+    intro x hx
+    obtain ⟨n, hn⟩ := mem_iUnion.mp hx
+    have hm := hN (max n N) (le_max_right _ _)
+    rw [← hm]
+    exact subset_closure (hmono (le_max_left _ _) hn)
+  · rw [← hN N le_rfl]
+    exact closure_mono (subset_iUnion A N)
+
+/-- Both compact-containment alternatives imply strong compatibility, provided
+the indicated regular exhaustion is available. -/
+theorem regularizedFamily_closure_eq_clusterOn_of_regular_exhaustion
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = U) (hsub : ∀ n, closure (V n) ⊆ U)
+    {z : ℂ} (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    {Λ : ℝ → Set ℂ} (hΛ : IsRegularizedClusterFamily μ Λ z)
+    (hcl : closure (Λ t) ⊆ U ∨ closure (clusterOn μ U z t) ⊆ U) :
+    closure (Λ t) = closure (clusterOn μ U z t) := by
+  have hclusters : Monotone (fun n => clusterOn μ (V n) z t) := by
+    intro n m hnm
+    exact clusterOn_subset_of_nested_regular (hopen n) (hopen m)
+      (hUb.subset (subset_closure.trans (hsub m))) (hmono hnm) (hz n) ht.le
+      (hboundary n) (hboundary m)
+  have hev : ∀ᶠ n in atTop, closure (clusterOn μ (V n) z t) = closure (Λ t) := by
+    rcases hcl with hΛcl | hUcl
+    · exact (eventually_closure_clusterOn_eq_regularized_of_exhaustion
+        hμ hvol hUb V hopen hmono hcover hsub hz ht hboundary hΛ hΛcl).mono
+        (fun _ h => h.symm)
+    · obtain ⟨r₁, hr₁⟩ := hUb.subset_ball (0 : ℂ)
+      obtain ⟨r₂, hr₂⟩ := ((hΛ.1.isBounded t ht).closure).subset_ball (0 : ℂ)
+      let r := max 1 (max r₁ r₂) + 1
+      have hr : 0 < r := by dsimp [r]; linarith [le_max_left (1 : ℝ) (max r₁ r₂)]
+      have hr₁r : r₁ ≤ r := by dsimp [r]; linarith [(le_max_left r₁ r₂).trans (le_max_right (1 : ℝ) (max r₁ r₂))]
+      have hr₂r : r₂ ≤ r := by dsimp [r]; linarith [(le_max_right r₁ r₂).trans (le_max_right (1 : ℝ) (max r₁ r₂))]
+      have hUr : U ⊆ ball (0 : ℂ) r := hr₁.trans (ball_subset_ball hr₁r)
+      have hΛr : closure (Λ t) ⊆ ball (0 : ℂ) r := hr₂.trans (ball_subset_ball hr₂r)
+      have hrepr := hΛ.2.2 t ht r hr hΛr r le_rfl
+      have hzU : z ∈ U := hsub 0 (subset_closure (hz 0))
+      have heq : closure (Λ t) = closure (cluster μ r z t) := by
+        rw [hrepr, closure_regularizedCluster_eq_of_isOpen
+          (isOpen_cluster_of_volumeGrowth hμ hvol ht r hr (hUr hzU))]
+      filter_upwards [eventually_clusterOn_eq_enclosing_disc_of_compact_containment
+        hμ hvol hU hUb V hopen hmono hcover hsub hz ht hboundary hUcl hUr] with n hn
+      rw [hn, ← heq]
+  rw [← iUnion_clusterOn_eq_of_regular_exhaustion hμ hvol hU hUb V hopen hmono
+    hcover hsub hz ht hboundary]
+  exact (closure_iUnion_eq_of_eventually_closure_eq _ hclusters hev).symm
+
+#print axioms eventually_sweep_eq_of_open_exhaustion
+#print axioms tendsto_sweep_limit_of_open_exhaustion
+#print axioms tendsto_greenFunction_of_open_exhaustion
+#print axioms tendsto_odometerOn_of_regular_exhaustion
+#print axioms iUnion_clusterOn_eq_of_regular_exhaustion
+#print axioms closure_iUnion_eq_of_eventually_closure_eq
+#print axioms regularizedFamily_closure_eq_clusterOn_of_regular_exhaustion
 #print axioms eventually_clusterOn_eq_punctured_disc_of_compact_containment
 
 #print axioms eventually_clusterOn_eq_enclosing_disc_of_compact_containment
