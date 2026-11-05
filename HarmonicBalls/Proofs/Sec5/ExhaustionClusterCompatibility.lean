@@ -1,6 +1,7 @@
 import HarmonicBalls.Proofs.Sec5.GreenRegularExhaustion
 import HarmonicBalls.Proofs.Sec5.ExhaustionHorizon
 import HarmonicBalls.Proofs.Sec5.MinimumLaplacianGluing
+import HarmonicBalls.Proofs.Sec5.CountableDiscCompatibility
 
 /-! # Exhaustion comparison for regularized clusters
 
@@ -104,6 +105,65 @@ theorem eventually_clusterOn_eq_enclosing_disc_of_compact_containment
       (hN.trans (hmono hn))
   exact clusterOn_eq_cluster_of_compact_containment (hopen n)
     (subset_closure.trans ((hsub n).trans hr)) (hz n) ht hv hsmall
+
+/-- For a relatively countable deletion from a disc, compact containment of
+its cluster makes the exhaustion clusters eventually equal it as sets. -/
+theorem eventually_clusterOn_eq_countable_deleted_disc_of_compact_containment
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {R : ℝ} (hR : 0 < R) {z : ℂ} (K : Set ℂ)
+    (hD : IsOpen (ball (0 : ℂ) R \ K)) (hK : (K ∩ ball (0 : ℂ) R).Countable)
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = ball (0 : ℂ) R \ K)
+    (hsub : ∀ n, closure (V n) ⊆ ball (0 : ℂ) R \ K)
+    (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    (hcl : closure (clusterOn μ (ball (0 : ℂ) R \ K) z t) ⊆
+      ball (0 : ℂ) R \ K) :
+    ∀ᶠ n in atTop, clusterOn μ (V n) z t =
+      clusterOn μ (ball (0 : ℂ) R \ K) z t := by
+  have hzU := hsub 0 (subset_closure (hz 0))
+  have hclosure := closure_clusterOn_relative_countable_disc_eq hμ hR (hvol R hR) K hD hK hzU ht
+  have hdisj : Disjoint (cluster μ R z t) K := by
+    apply disjoint_left.mpr
+    intro x hx hKx
+    have hxU := hcl (hclosure.symm ▸ subset_closure hx)
+    exact hxU.2 hKx
+  have heq : clusterOn μ (ball (0 : ℂ) R \ K) z t = cluster μ R z t := by
+    rw [clusterOn_relative_countable_disc_eq_sdiff hμ hR (hvol R hR) K hD hK hzU ht]
+    exact sdiff_eq_left.mpr hdisj
+  have hstable := eventually_clusterOn_eq_enclosing_disc_of_compact_containment
+    hμ hvol hD (isBounded_ball.subset sdiff_subset)
+    V hopen hmono hcover hsub hz ht hboundary hcl sdiff_subset
+  filter_upwards [hstable] with n hn
+  exact hn.trans heq.symm
+
+#print axioms eventually_clusterOn_eq_countable_deleted_disc_of_compact_containment
+
+/-- For a punctured disc, compact containment of the limiting cluster makes
+regular exhaustion clusters eventually equal that cluster as sets. The proof
+does not require the punctured-domain infimum to be admissible. -/
+theorem eventually_clusterOn_eq_punctured_disc_of_compact_containment
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hvol : ∀ r : ℝ, 0 < r → VolumeGrowth μ r βm βp)
+    {R : ℝ} (hR : 0 < R) {z a : ℂ}
+    (V : ℕ → Set ℂ) (hopen : ∀ n, IsOpen (V n)) (hmono : Monotone V)
+    (hcover : (⋃ n, V n) = ball (0 : ℂ) R \ {a})
+    (hsub : ∀ n, closure (V n) ⊆ ball (0 : ℂ) R \ {a})
+    (hz : ∀ n, z ∈ V n) {t : ℝ} (ht : 0 < t)
+    (hboundary : ∀ n y, y ∈ closure (V n) → y ∉ V n →
+      Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0))
+    (hcl : closure (clusterOn μ (ball (0 : ℂ) R \ {a}) z t) ⊆
+      ball (0 : ℂ) R \ {a}) :
+    ∀ᶠ n in atTop, clusterOn μ (V n) z t =
+      clusterOn μ (ball (0 : ℂ) R \ {a}) z t := by
+  exact eventually_clusterOn_eq_countable_deleted_disc_of_compact_containment
+    hμ hvol hR {a} (isOpen_ball.sdiff isClosed_singleton)
+    (Set.Countable.mono inter_subset_left (Set.countable_singleton a))
+    V hopen hmono hcover hsub hz ht hboundary hcl
+
+#print axioms eventually_clusterOn_eq_punctured_disc_of_compact_containment
 
 #print axioms eventually_clusterOn_eq_enclosing_disc_of_compact_containment
 #print axioms iUnion_clusterOn_subset_of_regular_exhaustion
