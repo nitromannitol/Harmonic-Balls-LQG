@@ -1,11 +1,12 @@
 import HarmonicBalls.Steps.Sec11.PinchMeasureWeylShift
+import Mathlib.Geometry.Manifold.PartitionOfUnity
 
 /-! # The bump inclusion for the cone mass event -/
 
 namespace HarmonicBalls
 
 open MeasureTheory Metric Set
-open scoped ENNReal
+open scoped ENNReal ContDiff
 
 /-- A bump which is constant on the inner annulus and vanishes on the outer
 annulus multiplies the cone mass and leaves the Green supremum unchanged. -/
@@ -41,6 +42,59 @@ theorem coneMassEvent_of_bump
     _ ≤ ENNReal.ofReal (Real.exp (γ * c)) * C₁ := hheight
     _ ≤ ENNReal.ofReal (Real.exp (γ * c)) * μ S := by gcongr
 
+/-- A smooth nonnegative bump of prescribed height, equal to that height on
+ the inner annulus and zero on the outer annulus. -/
+theorem exists_cone_smooth_bump (z : ℂ) {r c : ℝ} (hr : 0 < r) (hc : 0 ≤ c) :
+    ∃ f : ℂ → ℝ, ContDiff ℝ ∞ f ∧ HasCompactSupport f ∧
+      (∀ x, 0 ≤ f x) ∧ (∀ x ∈ annulus z r (2 * r), f x = c) ∧
+      (∀ x ∈ annulus z (3 * r) (6 * r), f x = 0) := by
+  let S : Set ℂ := ball z (5 * r / 2) \ closedBall z (r / 2)
+  let K : Set ℂ := closedBall z (2 * r) \ ball z r
+  have hS : IsOpen S := isOpen_ball.sdiff isClosed_closedBall
+  have hK : IsClosed K := isClosed_closedBall.sdiff isOpen_ball
+  have hKS : K ⊆ S := by
+    intro x hx
+    have h1 : dist x z ≤ 2 * r := hx.1
+    have h2 : r ≤ dist x z := le_of_not_gt hx.2
+    constructor
+    · change dist x z < 5 * r / 2
+      linarith
+    · change ¬ dist x z ≤ r / 2
+      linarith
+  obtain ⟨ψ, hψ, hψrange, hψsupp, hψone⟩ :=
+    exists_contDiff_support_eq_eq_one_iff (n := (⊤ : ℕ∞)) hS hK hKS
+  have hcompact : HasCompactSupport ψ := by
+    change IsCompact (closure (Function.support ψ))
+    rw [hψsupp]
+    apply isCompact_of_isClosed_isBounded isClosed_closure
+    exact (isBounded_ball.subset (sdiff_subset : S ⊆ ball z (5 * r / 2))).closure
+  refine ⟨fun x => c * ψ x, contDiff_const.mul hψ, hcompact.mul_left, ?_, ?_, ?_⟩
+  · intro x
+    exact mul_nonneg hc (hψrange (mem_range_self x)).1
+  · intro x hx
+    have hxK : x ∈ K := by
+      refine ⟨?_, ?_⟩
+      · exact le_of_lt (show dist x z < 2 * r from hx.1)
+      ·
+        intro hball
+        apply hx.2
+        change dist x z ≤ r
+        exact le_of_lt hball
+    simp [(hψone x).1 hxK]
+  · intro x hx
+    have hxS : x ∉ S := by
+      intro h
+      have h1 : dist x z < 5 * r / 2 := h.1
+      have h2 : 3 * r < dist x z := lt_of_not_ge hx.2
+      linarith
+    have hxzero : ψ x = 0 := by
+      by_contra hn
+      have : x ∈ Function.support ψ := hn
+      rw [hψsupp] at this
+      exact hxS this
+    simp [hxzero]
+
 end HarmonicBalls
 
 #print axioms HarmonicBalls.coneMassEvent_of_bump
+#print axioms HarmonicBalls.exists_cone_smooth_bump
