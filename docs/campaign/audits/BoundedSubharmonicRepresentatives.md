@@ -50,6 +50,8 @@ The complementary result `univ_two_dirac_has_bounded_representative_of_measure_a
 
 `univ_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass` and `univ_dirac_sub_finset_sum_dirac_has_bounded_representative` add one positive whole-plane point source outside the witness disc to the finite-negative-source construction. The positive potential is absorbed into the harmonic correction, so the bounded witness removes that source; the negative source set must still be uncharged by the restricted observation measure. The original function is checked against the full frozen source, support, and pole conditions. General source measures and observation measures charging negative atoms remain unresolved.
 
+`univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal` handles observation measures that may charge some negative source atoms: only the finite subset at which the disc harmonic correction has nonzero diagonal value must be null. At all other source atoms, the whole-plane and corrected disc kernels agree even with the frozen diagonal convention. `univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diagonal` permits an arbitrary observation measure when all the diagonal corrections vanish. These conclusions remain restricted to finite unit point sources and the stated disc geometry; they do not resolve arbitrary source measures or charged atoms with nonzero diagonal corrections.
+
 ## Outstanding proof obligation
 
 The exact target remains

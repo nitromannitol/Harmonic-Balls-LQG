@@ -452,6 +452,27 @@ theorem greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_not_mem
 
 #print axioms greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_not_mem
 
+/-- The finite-source correction also holds at a source whose diagonal
+harmonic correction vanishes. -/
+theorem greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_diagonal
+    {S : Finset ℂ} {R : ℝ} {x : ℂ} (hR : 0 < R)
+    (hS : ∀ a ∈ S, a ∈ ball (0 : ℂ) R) (hx : x ∈ ball (0 : ℂ) R)
+    (hdiag : ∀ a ∈ S, x = a → ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ = R) :
+    greenPotential univ (∑ a ∈ S, Measure.dirac a) x =
+      greenPotential (ball 0 R) (∑ a ∈ S, Measure.dirac a) x +
+        ∑ a ∈ S, greatestHarmonicMinorantBall R a x := by
+  classical
+  rw [greenPotential_finset_sum_dirac, greenPotential_finset_sum_dirac, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro a ha
+  by_cases hxa : x = a
+  · simpa only [add_comm] using
+      greenPotential_univ_dirac_eq_ball_add_harmonic hR (hS a ha) (hdiag a ha hxa) hx
+  · simpa only [add_comm] using
+      greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR (hS a ha) hx hxa
+
+#print axioms greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_diagonal
+
 /-- A finite sum of disc harmonic minorants is harmonic when all sources lie
 inside the disc. -/
 theorem harmonicOnNhd_finset_sum_greatestHarmonicMinorantBall {R : ℝ} (S : Finset ℂ)
@@ -627,6 +648,98 @@ theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative
   exact heq x hx hxS
 
 #print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative
+
+/-- A positive point source outside the disc can be removed; observation measures
+may charge negative source atoms where the diagonal correction vanishes. -/
+theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
+    {μ : Measure ℂ} {Λ : Set ℂ} {z b : ℂ} {R : ℝ} (S : Finset ℂ)
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hzS : z ∉ S) (hS : ∀ a ∈ S, a ∈ ball (0 : ℂ) R)
+    (hb : b ∉ ball (0 : ℂ) R)
+    (hμ : μ.restrict Λ {a | a ∈ S ∧ ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ ≠ R} = 0) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a)) z = g z ∧
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a)) =ᵐ[μ.restrict Λ] g := by
+  classical
+  let ν : Measure ℂ := ∑ a ∈ S, Measure.dirac a
+  let q : ℂ → ℝ := greenPotential univ (Measure.dirac b) -
+    ∑ a ∈ S, greatestHarmonicMinorantBall R a
+  let g := q - greenPotential (ball 0 R) ν
+  have hb_harm : HarmonicOnNhd (greenPotential univ (Measure.dirac b)) (ball 0 R) := by
+    have hqeq : greenPotential univ (Measure.dirac b) = newtonKernel b := by
+      ext x
+      simp only [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+        newtonKernel_comm x b]
+    rw [hqeq]
+    intro x hx
+    apply harmonicAt_newtonKernel
+    intro hxb
+    exact hb (hxb ▸ hx)
+  have hq : HarmonicOnNhd q (ball 0 R) := hb_harm.sub (harmonicOnNhd_finset_sum_greatestHarmonicMinorantBall S hS)
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 R, (↑S : Set ℂ), 0, ν, q, isOpen_ball, isBounded_ball,
+      hΛ, S.finite_toSet.isCompact, ?_, inferInstance, inferInstance, ?_, ?_, ?_, hq,
+      ?_, ?_, ?_⟩
+    · exact hS
+    · simp
+    · simp [ν]
+    · simp
+    · simp [ν, hzS]
+    · exact integrable_finsetSum_measure.mpr (fun _ _ => integrable_dirac enorm_lt_top)
+    · ext x
+      simp [g, greenPotential]
+  have heq : ∀ x ∈ ball (0 : ℂ) R,
+      (∀ a ∈ S, x = a → ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ = R) →
+      (greenPotential univ (Measure.dirac b) - greenPotential univ ν) x = g x := by
+    intro x hx hxdiag
+    simp only [g, q, Pi.sub_apply, Finset.sum_apply]
+    rw [show greenPotential univ ν x = greenPotential (ball 0 R) ν x +
+      ∑ a ∈ S, greatestHarmonicMinorantBall R a x from
+        greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_diagonal hR hS hx hxdiag]
+    ring
+  refine ⟨g, hg, heq z (hΛ (subset_closure hz)) ?_, ?_⟩
+  · intro a ha hza
+    exact (hzS (hza ▸ ha)).elim
+  · have hgood : ∀ᵐ x ∂μ.restrict Λ,
+        x ∉ {a | a ∈ S ∧ ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ ≠ R} := by
+      rw [ae_iff]
+      simpa only [not_not, ofPred_mem_eq] using hμ
+    have hball : ∀ᵐ x ∂μ.restrict Λ, x ∈ ball (0 : ℂ) R :=
+      ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+        (ae_restrict_mem (isOpen_ball.measurableSet))
+    filter_upwards [hball, hgood] with x hx hxgood
+    apply heq x hx
+    intro a ha hxa
+    by_contra hdiag
+    exact hxgood (by simpa [hxa] using ⟨ha, hdiag⟩)
+
+#print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
+
+/-- If each source has zero diagonal correction, the finite-source construction
+works for every observation measure, including measures charging the sources. -/
+theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diagonal
+    {μ : Measure ℂ} {Λ : Set ℂ} {z b : ℂ} {R : ℝ} (S : Finset ℂ)
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hzS : z ∉ S) (hS : ∀ a ∈ S, a ∈ ball (0 : ℂ) R)
+    (hb : b ∉ ball (0 : ℂ) R)
+    (hdiag : ∀ a ∈ S, ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ = R) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a)) z = g z ∧
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a)) =ᵐ[μ.restrict Λ] g := by
+  have hs : {a | a ∈ S ∧ ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ ≠ R} = ∅ := by
+    ext a
+    simp only [mem_ofPred_eq, mem_empty_iff_false, iff_false, not_and]
+    intro ha
+    exact not_not.mpr (hdiag a ha)
+  apply univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
+    S hR hΛ hz hzS hS hb
+  simp [hs]
+
+#print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diagonal
 
 /-- A whole-plane potential with two negative point sources is a test when
 its positive atom is outside the observation set and its negative atoms avoid the pole. -/
