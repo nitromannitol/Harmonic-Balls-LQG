@@ -776,6 +776,116 @@ theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
 
 #print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
 
+/-- Whole-plane potentials of finite positive and negative point sources are
+admissible when positive sources avoid the cluster and negative sources avoid the pole. -/
+theorem univ_finset_sum_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass
+    {Λ : Set ℂ} {z : ℂ} (S T : Finset ℂ) (hzS : z ∉ S)
+    (hT : ∀ b ∈ T, b ∉ Λ) :
+    greenPotential univ (∑ b ∈ T, Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a) ∈
+      subharmonicBallTestClass Λ z := by
+  classical
+  refine ⟨univ, (↑(S ∪ T) : Set ℂ), ∑ b ∈ T, Measure.dirac b,
+    ∑ a ∈ S, Measure.dirac a, 0, isOpen_univ, subset_univ _,
+    (S ∪ T).finite_toSet.isCompact, subset_univ _, inferInstance, inferInstance,
+    ?_, ?_, ?_, harmonicOnNhd_const 0, ?_,
+    integrable_finsetSum_measure.mpr (fun _ _ => integrable_dirac enorm_lt_top), ?_⟩
+  · simp; aesop
+  · simp; aesop
+  · simp [Measure.dirac_apply]
+    exact hT
+  · simp [hzS]
+  · ext x
+    simp
+
+#print axioms univ_finset_sum_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass
+
+/-- A finite positive source outside the disc can be absorbed into the harmonic part. -/
+theorem univ_finset_sum_dirac_sub_finset_sum_dirac_has_bounded_representative
+    {μ : Measure ℂ} {Λ : Set ℂ} {z : ℂ} {R : ℝ} (S T : Finset ℂ)
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hzS : z ∉ S) (hS : ∀ a ∈ S, a ∈ ball (0 : ℂ) R)
+    (hT : ∀ b ∈ T, b ∉ ball (0 : ℂ) R)
+    (hμ : μ.restrict Λ {a | a ∈ S ∧ ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ ≠ R} = 0) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (∑ b ∈ T, Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a)) z = g z ∧
+      (greenPotential univ (∑ b ∈ T, Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a)) =ᵐ[μ.restrict Λ] g := by
+  classical
+  let ν : Measure ℂ := ∑ a ∈ S, Measure.dirac a
+  let q : ℂ → ℝ := greenPotential univ (∑ b ∈ T, Measure.dirac b) -
+    ∑ a ∈ S, greatestHarmonicMinorantBall R a
+  let g := q - greenPotential (ball 0 R) ν
+  have hb_harm : HarmonicOnNhd (greenPotential univ (∑ b ∈ T, Measure.dirac b)) (ball 0 R) := by
+    have heq : greenPotential univ (∑ b ∈ T, Measure.dirac b) =
+        ∑ b ∈ T, greenPotential univ (Measure.dirac b) := by
+      ext x
+      simp [greenPotential_finset_sum_dirac]
+    rw [heq]
+    have hsum : ∀ U : Finset ℂ, (∀ b ∈ U, b ∉ ball (0 : ℂ) R) →
+        HarmonicOnNhd (∑ b ∈ U, greenPotential univ (Measure.dirac b)) (ball 0 R) := by
+      intro U
+      induction U using Finset.induction_on with
+      | empty =>
+        intro _
+        simp only [Finset.sum_empty]
+        change HarmonicOnNhd (fun _ : ℂ => (0 : ℝ)) (ball 0 R)
+        exact harmonicOnNhd_const 0
+      | @insert b U hb ih =>
+        intro hU
+        rw [Finset.sum_insert hb]
+        apply HarmonicOnNhd.add ?_ (ih (fun c hc => hU c (Finset.mem_insert_of_mem hc)))
+        have hqeq : greenPotential univ (Measure.dirac b) = newtonKernel b := by
+          ext x
+          simp only [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+            newtonKernel_comm x b]
+        rw [hqeq]
+        intro x hx
+        apply harmonicAt_newtonKernel
+        intro hxb
+        exact hU b (Finset.mem_insert_self b U) (hxb ▸ hx)
+    exact hsum T hT
+  have hq : HarmonicOnNhd q (ball 0 R) := hb_harm.sub (harmonicOnNhd_finset_sum_greatestHarmonicMinorantBall S hS)
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 R, (↑S : Set ℂ), 0, ν, q, isOpen_ball, isBounded_ball,
+      hΛ, S.finite_toSet.isCompact, ?_, inferInstance, inferInstance, ?_, ?_, ?_, hq,
+      ?_, ?_, ?_⟩
+    · exact hS
+    · simp
+    · simp [ν]
+    · simp
+    · simp [ν, hzS]
+    · exact integrable_finsetSum_measure.mpr (fun _ _ => integrable_dirac enorm_lt_top)
+    · ext x
+      simp [g, greenPotential]
+  have heq : ∀ x ∈ ball (0 : ℂ) R,
+      (∀ a ∈ S, x = a → ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ = R) →
+      (greenPotential univ (∑ b ∈ T, Measure.dirac b) - greenPotential univ ν) x = g x := by
+    intro x hx hxdiag
+    simp only [g, q, Pi.sub_apply, Finset.sum_apply]
+    rw [show greenPotential univ ν x = greenPotential (ball 0 R) ν x +
+      ∑ a ∈ S, greatestHarmonicMinorantBall R a x from
+        greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_diagonal hR hS hx hxdiag]
+    ring
+  refine ⟨g, hg, heq z (hΛ (subset_closure hz)) ?_, ?_⟩
+  · intro a ha hza
+    exact (hzS (hza ▸ ha)).elim
+  · have hgood : ∀ᵐ x ∂μ.restrict Λ,
+        x ∉ {a | a ∈ S ∧ ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ ≠ R} := by
+      rw [ae_iff]
+      simpa only [not_not, ofPred_mem_eq] using hμ
+    have hball : ∀ᵐ x ∂μ.restrict Λ, x ∈ ball (0 : ℂ) R :=
+      ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+        (ae_restrict_mem (isOpen_ball.measurableSet))
+    filter_upwards [hball, hgood] with x hx hxgood
+    apply heq x hx
+    intro a ha hxa
+    by_contra hdiag
+    exact hxgood (by simpa [hxa] using ⟨ha, hdiag⟩)
+
+#print axioms univ_finset_sum_dirac_sub_finset_sum_dirac_has_bounded_representative
+
 /-- If each source has zero diagonal correction, the finite-source construction
 works for every observation measure, including measures charging the sources. -/
 theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diagonal
