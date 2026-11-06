@@ -1,0 +1,11 @@
+# Nested Green-regular domain comparison
+
+The corrected paper's Section 5 discussion (lines 1016–1025) proposes a general-domain extension; Appendix A, lines 3850–3895, provides the disc comparison and compact-containment argument. This deterministic result is a Green-regular-domain contribution, not a proof of numbered Lemma 5.8. G9 and the general-domain construction/source interpretation associated with E46 remain open for irregular boundaries.
+
+For open `U ⊆ V ⊆ ball 0 R`, `z ∈ U`, `R > 0`, `t > 0`, locally finite `μ`, and `VolumeGrowth μ R βm βp`, `nested_greenRegular_cluster_and_odometer_eq` additionally requires the actual zero boundary limits of `greenFunction U z` and `greenFunction V z` along the corresponding domains, and `closure (clusterOn μ V z t) ⊆ U`. Its conclusions are equality of the two clusters and equality on `U \ {z}` of `leastSupersolutionOn + t * greenFunction`.
+
+The imported `GreenRegularExhaustion.lean:125` constructs the continuous-on-`closure U`, harmonic-on-`U` Green difference from both explicit boundary limits, including shared boundary points; its equality with the pointwise Green difference is only asserted off the pole. Lines 147 and 162 prove odometer monotonicity off the pole and cluster inclusion for nonnegative time, respectively, without the measure-growth assumptions. The cluster includes the pole explicitly (`Draft/Section5.lean:114`); the proof of inclusion handles that branch separately. The present proof obtains admissibility from `GreenRegularDomainAdmissibility.lean:467`, identifies the larger cluster with the enclosing-disc cluster using compact containment, and applies the disc compact-containment result to each domain for odometer equality. No candidate admissibility or desired compatibility is assumed.
+
+Green functions are set to zero outside their domains, including boundary points. The boundary-limit hypotheses certify agreement with those values along the domain; no regularity is claimed for an arbitrary open set. The finite diagonal convention is not used to assert odometer equality at the pole.
+
+`lc` and `lb HarmonicBalls.Proofs.Sec5.GreenRegularNestedDomains` pass. `#print axioms nested_greenRegular_cluster_and_odometer_eq` reports only `propext`, `Classical.choice`, and `Quot.sound`. The result introduces no literature input and claims no numbered-result closure.
