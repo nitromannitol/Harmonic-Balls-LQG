@@ -1,11 +1,14 @@
 import Mathlib
 
 /-!
-# Pending pointwise ergodic theorem
+# Pointwise ergodic theorem (Birkhoff)
 
 This proposition records the exact statement of `LatticeProb.ae_tendsto_bAvg`
-from `LatticeProb/Prob/Birkhoff.lean`. It is an explicit hypothesis until the
-pinned LatticeProb module can be built (campaign issue E34).
+from `LatticeProb/Prob/Birkhoff.lean` (Leonardo Bonanno's LatticeProb formalization).
+It was an explicit hypothesis until the pinned LatticeProb module built (campaign
+issue E34). It is discharged by `HarmonicBalls.pointwiseBirkhoff_of_latticeProb`
+(`HarmonicBalls/Proofs/Sec8/BirkhoffPort.lean`); the Prop is kept as the named
+statement used by the Section 11 files.
 -/
 
 namespace HarmonicBalls
