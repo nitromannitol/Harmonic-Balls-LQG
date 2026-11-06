@@ -34,6 +34,10 @@ The file now proves `not_isHarmonicMinorant_univ_newtonKernel`, using the existi
 
 `greenPotential_univ_dirac_zero_eq_unitDisc` proves equality with the unit-disc potential throughout that disc, including at the atom. Hence `univ_dirac_zero_has_bounded_representative` constructs a bounded representative for this one whole-plane test for every observation measure, assuming `closure Λ ⊆ ball 0 1`, `z ∈ Λ`, and `z ≠ 0`. The matching works because the disc's harmonic correction for this centered source vanishes identically; it does not establish the analogous claim for general source measures or other domains.
 
+## A changed-source representative away from the atom
+
+`neg_univ_dirac_mem_bounded_of_source_outside_closure` handles a whole-plane negative Dirac potential at any atom outside the closure of a bounded observation set. The function is harmonic on the complement of the atom, so the bounded witness uses this same function as its harmonic part and both source measures equal zero. Equality holds everywhere, including at the pole, and the sign, support, non-atom and integrability conditions are automatic. This provides a changed-source construction for this restricted case; it does not address an atom in the observation-set closure or general source measures.
+
 ## Outstanding proof obligation
 
 The exact target remains

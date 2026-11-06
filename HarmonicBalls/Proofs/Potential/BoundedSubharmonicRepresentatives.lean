@@ -249,6 +249,30 @@ theorem univ_dirac_zero_has_bounded_representative
 
 #print axioms univ_dirac_zero_has_bounded_representative
 
+/-- Away from the source atom, a whole-plane point potential has a bounded
+witness with zero source measures. The harmonic part itself is unchanged. -/
+theorem neg_univ_dirac_mem_bounded_of_source_outside_closure
+    {Λ : Set ℂ} {z a : ℂ} (hΛ : Bornology.IsBounded Λ)
+    (ha : a ∉ closure Λ) :
+    -greenPotential univ (Measure.dirac a) ∈ boundedSubharmonicBallTestClass Λ z := by
+  have heq : -greenPotential univ (Measure.dirac a) = -(newtonKernel a) := by
+    ext x
+    simp only [Pi.neg_apply, greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+      newtonKernel_comm x a]
+  rw [heq]
+  apply harmonic_mem_boundedSubharmonicBallTestClass hΛ isOpen_compl_singleton
+  · intro x hx
+    simp only [mem_compl_iff, mem_singleton_iff]
+    intro hxa
+    subst x
+    exact ha hx
+  · intro x hx
+    apply HarmonicAt.neg
+    apply harmonicAt_newtonKernel
+    simpa only [mem_compl_iff, mem_singleton_iff] using hx
+
+#print axioms neg_univ_dirac_mem_bounded_of_source_outside_closure
+
 /-- The negative Dirac potential used in the obstruction is an admissible frozen test. -/
 theorem neg_dirac_disc_mem_subharmonicBallTestClass :
     -greenPotential (ball 0 2) (Measure.dirac 0) ∈
