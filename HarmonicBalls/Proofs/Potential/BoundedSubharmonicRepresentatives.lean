@@ -17,6 +17,7 @@ it does not establish them. Leonardo Bonanno contributed to this formalization.
 namespace HarmonicBalls
 
 open MeasureTheory Metric Set InnerProductSpace
+open scoped ENNReal NNReal
 
 /-- For a measurable observation set, requiring representatives for every measure is
 exactly the pointwise representative problem. Counting measure tests every point. -/
@@ -50,6 +51,64 @@ theorem hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous
   exact ⟨g, hg, hz, hμν.ae_eq hae⟩
 
 #print axioms hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous
+
+/-- Multiplying a bounded-domain test by a nonnegative constant preserves its
+source, support and pole conditions. -/
+theorem boundedSubharmonicBallTestClass_smul {Λ : Set ℂ} {z : ℂ} {f : ℂ → ℝ}
+    (hf : f ∈ boundedSubharmonicBallTestClass Λ z) (c : ℝ≥0) :
+    (c : ℝ) • f ∈ boundedSubharmonicBallTestClass Λ z := by
+  obtain ⟨O, K, ν₁, ν₂, q, hO, hOb, hΛ, hK, hKO, hν₁, hν₂,
+    hν₁K, hν₂K, hν₁Λ, hq, hν₂z, hi, hf⟩ := hf
+  let : IsFiniteMeasure ν₁ := hν₁
+  let : IsFiniteMeasure ν₂ := hν₂
+  refine ⟨O, K, (c : ℝ≥0∞) • ν₁, (c : ℝ≥0∞) • ν₂, (c : ℝ) • q,
+    hO, hOb, hΛ, hK, hKO, ν₁.smul_finite (by simp), ν₂.smul_finite (by simp),
+    ?_, ?_, ?_, hq.const_smul, ?_, hi.smul_measure (by simp), ?_⟩
+  · simp [hν₁K]
+  · simp [hν₂K]
+  · simp [hν₁Λ]
+  · simp [hν₂z]
+  · rw [hf]
+    ext x
+    simp [greenPotential, smul_eq_mul, NNReal.smul_def, mul_sub, mul_add]
+
+#print axioms boundedSubharmonicBallTestClass_smul
+
+/-- Nonnegative scaling preserves the frozen class of subharmonic tests. -/
+theorem subharmonicBallTestClass_smul {Λ : Set ℂ} {z : ℂ} {f : ℂ → ℝ}
+    (hf : f ∈ subharmonicBallTestClass Λ z) (c : ℝ≥0) :
+    (c : ℝ) • f ∈ subharmonicBallTestClass Λ z := by
+  obtain ⟨O, K, ν₁, ν₂, q, hO, hΛ, hK, hKO, hν₁, hν₂,
+    hν₁K, hν₂K, hν₁Λ, hq, hν₂z, hi, hf⟩ := hf
+  let : IsFiniteMeasure ν₁ := hν₁
+  let : IsFiniteMeasure ν₂ := hν₂
+  refine ⟨O, K, (c : ℝ≥0∞) • ν₁, (c : ℝ≥0∞) • ν₂, (c : ℝ) • q,
+    hO, hΛ, hK, hKO, ν₁.smul_finite (by simp), ν₂.smul_finite (by simp),
+    ?_, ?_, ?_, hq.const_smul, ?_, hi.smul_measure (by simp), ?_⟩
+  · simp [hν₁K]
+  · simp [hν₂K]
+  · simp [hν₁Λ]
+  · simp [hν₂z]
+  · rw [hf]
+    ext x
+    simp [greenPotential, smul_eq_mul, NNReal.smul_def, mul_sub, mul_add]
+
+#print axioms subharmonicBallTestClass_smul
+
+/-- Nonnegative scaling transports an individual bounded representative, including
+its value at the pole and its almost-everywhere observation values. -/
+theorem boundedSubharmonicRepresentative_smul
+    {μ : Measure ℂ} {Λ : Set ℂ} {z : ℂ} {f g : ℂ → ℝ}
+    (hg : g ∈ boundedSubharmonicBallTestClass Λ z)
+    (hz : f z = g z) (hae : f =ᵐ[μ.restrict Λ] g) (c : ℝ≥0) :
+    ∃ g' ∈ boundedSubharmonicBallTestClass Λ z,
+      ((c : ℝ) • f) z = g' z ∧ (c : ℝ) • f =ᵐ[μ.restrict Λ] g' := by
+  refine ⟨(c : ℝ) • g, boundedSubharmonicBallTestClass_smul hg c, ?_, ?_⟩
+  · simp [hz]
+  · filter_upwards [hae] with x hx
+    simp [hx]
+
+#print axioms boundedSubharmonicRepresentative_smul
 
 /-- A finitely supported observation measure admits bounded representatives for the
 whole frozen test class. The real part of a complex interpolating polynomial agrees
@@ -740,6 +799,25 @@ theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diago
   simp [hs]
 
 #print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diagonal
+
+/-- The finite-source construction also works with any common nonnegative mass. -/
+theorem univ_smul_dirac_sub_finset_sum_dirac_has_bounded_representative
+    {μ : Measure ℂ} {Λ : Set ℂ} {z b : ℂ} {R : ℝ} (S : Finset ℂ) (c : ℝ≥0)
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hzS : z ∉ S) (hS : ∀ a ∈ S, a ∈ ball (0 : ℂ) R)
+    (hb : b ∉ ball (0 : ℂ) R)
+    (hμ : μ.restrict Λ {a | a ∈ S ∧ ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ ≠ R} = 0) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      ((c : ℝ) • (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a))) z = g z ∧
+      (c : ℝ) • (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (∑ a ∈ S, Measure.dirac a)) =ᵐ[μ.restrict Λ] g := by
+  obtain ⟨g, hg, hz', hae⟩ :=
+    univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
+      S hR hΛ hz hzS hS hb hμ
+  exact boundedSubharmonicRepresentative_smul hg hz' hae c
+
+#print axioms univ_smul_dirac_sub_finset_sum_dirac_has_bounded_representative
 
 /-- A whole-plane potential with two negative point sources is a test when
 its positive atom is outside the observation set and its negative atoms avoid the pole. -/

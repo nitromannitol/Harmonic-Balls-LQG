@@ -52,6 +52,10 @@ The complementary result `univ_two_dirac_has_bounded_representative_of_measure_a
 
 `univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal` handles observation measures that may charge some negative source atoms: only the finite subset at which the disc harmonic correction has nonzero diagonal value must be null. At all other source atoms, the whole-plane and corrected disc kernels agree even with the frozen diagonal convention. `univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diagonal` permits an arbitrary observation measure when all the diagonal corrections vanish. These conclusions remain restricted to finite unit point sources and the stated disc geometry; they do not resolve arbitrary source measures or charged atoms with nonzero diagonal corrections.
 
+## Nonnegative scaling of tests and representatives
+
+`subharmonicBallTestClass_smul` and `boundedSubharmonicBallTestClass_smul` prove closure under nonnegative real scaling, including the source support and pole conditions. `boundedSubharmonicRepresentative_smul` transports pole equality and almost-everywhere equality. Applied to the finite-source changed-source construction, `univ_smul_dirac_sub_finset_sum_dirac_has_bounded_representative` permits any common nonnegative mass under the same diagonal and observation-measure conditions. It does not cover independently weighted or general source measures, nor does it settle the full representative property.
+
 ## Outstanding proof obligation
 
 The exact target remains
