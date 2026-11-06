@@ -1,6 +1,7 @@
 import HarmonicBalls.Proofs.Sec5.DiscSupportedBoundary
 import HarmonicBalls.Proofs.Sec5.GreenConnectedComponent
 import HarmonicBalls.Proofs.Sec5.PuncturedDiscContact
+import Mathlib.Geometry.Euclidean.Triangle
 
 /-! # Green boundary comparison
 
@@ -552,6 +553,35 @@ theorem tendsto_greenFunction_zero_of_strict_exterior_disc
     dsimp [b]
     exact sub_pos.mpr (Real.log_lt_log hr (hsupport x hx hxy))
 
+/-- An exterior disc can be shrunk to make its contact with the closure
+strict, and hence gives a Green boundary limit. -/
+theorem tendsto_greenFunction_zero_of_exterior_disc
+    {U : Set ℂ} (hUb : Bornology.IsBounded U) {z y a : ℂ} {r : ℝ}
+    (hz : z ∈ U) (hy : y ∈ closure U) (hyout : y ∉ U)
+    (hr : 0 < r) (hycontact : ‖y - a‖ = r)
+    (hdisjoint : Disjoint U (ball a r)) :
+    Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0) := by
+  have hclosed : closure U ⊆ (ball a r)ᶜ :=
+    closure_minimal (disjoint_left.mp hdisjoint) isOpen_ball.isClosed_compl
+  have hdist : dist y a = r := by simpa [dist_eq_norm] using hycontact
+  have hmid : dist y (midpoint ℝ y a) = r / 2 := by
+    rw [dist_left_midpoint, hdist]
+    norm_num
+    ring
+  apply tendsto_greenFunction_zero_of_strict_exterior_disc (a := midpoint ℝ y a) hUb hz hy hyout
+    (show 0 < r / 2 by linarith) (by simpa only [dist_eq_norm] using hmid)
+  intro x hx hxy
+  have hxa : r ≤ dist x a := by
+    have h := hclosed hx
+    simpa [mem_ball, not_lt] using h
+  have hxypos : 0 < dist x y := dist_pos.mpr hxy
+  have happ := EuclideanGeometry.dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq x y a
+  rw [hdist] at happ
+  have hnonneg := dist_nonneg (x := x) (y := midpoint ℝ y a)
+  have : r / 2 < dist x (midpoint ℝ y a) := by nlinarith
+  simpa [dist_eq_norm] using this
+
+#print axioms tendsto_greenFunction_zero_of_exterior_disc
 #print axioms tendsto_greenFunction_zero_of_strict_exterior_disc
 #print axioms tendsto_greenFunction_zero_of_continuous_harmonic_barrier
 #print axioms tendsto_greenFunction_zero_of_harmonic_barrier
