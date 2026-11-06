@@ -58,6 +58,53 @@ theorem tendsto_greenFunction_zero_of_pole_component_boundary
     filter_upwards [nhdsWithin_le_nhds (isClosed_closure.isOpen_compl.mem_nhds hyC)] with x hx
     exact (greenFunction_of_notMem_right (fun hxC => hx (subset_closure hxC)) z).symm
 
+/-- Adding a disjoint open set does not change the Green function of a
+bounded open set containing the pole. -/
+theorem greenFunction_eq_of_disjoint_open_union_all
+    {V W : Set ℂ} (hV : IsOpen V) (hW : IsOpen W) (hdis : Disjoint V W)
+    (hUb : Bornology.IsBounded (V ∪ W)) {z : ℂ} (hz : z ∈ V) :
+    greenFunction (V ∪ W) z = greenFunction V z := by
+  funext x
+  by_cases hxV : x ∈ V
+  · exact greenFunction_eq_of_disjoint_open_union hV hW hdis hUb hz hxV
+  · by_cases hxW : x ∈ W
+    · rw [greenFunction_eq_zero_of_disjoint_open_components hV hW hdis hUb hz hxW,
+        greenFunction_of_notMem_right hxV]
+    · rw [greenFunction_of_notMem_right (by simp [hxV, hxW]),
+        greenFunction_of_notMem_right hxV]
+
+/-- A disjoint open union inherits Green boundary limits from the member
+containing the pole, with no boundary assumption on the other member. -/
+theorem tendsto_greenFunction_zero_of_disjoint_open_union
+    {V W : Set ℂ} (hV : IsOpen V) (hW : IsOpen W) (hdis : Disjoint V W)
+    (hUb : Bornology.IsBounded (V ∪ W)) {z : ℂ} (hz : z ∈ V)
+    (hregular : ∀ y ∈ closure V, y ∉ V →
+      Tendsto (greenFunction V z) (𝓝[V] y) (𝓝 0))
+    {y : ℂ} (hy : y ∉ V ∪ W) :
+    Tendsto (greenFunction (V ∪ W) z) (𝓝[V ∪ W] y) (𝓝 0) := by
+  rw [greenFunction_eq_of_disjoint_open_union_all hV hW hdis hUb hz]
+  by_cases hyV : y ∈ closure V
+  · exact (tendsto_greenFunction_nhds_of_nhdsWithin
+      (hregular y hyV (fun h => hy (Or.inl h)))).mono_left nhdsWithin_le_nhds
+  · apply tendsto_const_nhds.congr'
+    filter_upwards [nhdsWithin_le_nhds (isClosed_closure.isOpen_compl.mem_nhds hyV)] with x hx
+    exact (greenFunction_of_notMem_right (fun hxV => hx (subset_closure hxV)) z).symm
+
+/-- Adding any bounded open set disjoint from the pole disc preserves Green
+boundary regularity. -/
+theorem tendsto_greenFunction_zero_of_disjoint_union_ball
+    {c z y : ℂ} {r : ℝ} {W : Set ℂ} (hW : IsOpen W)
+    (hdis : Disjoint (ball c r) W) (hWb : Bornology.IsBounded W)
+    (hz : z ∈ ball c r) (hy : y ∉ ball c r ∪ W) :
+    Tendsto (greenFunction (ball c r ∪ W) z) (𝓝[ball c r ∪ W] y) (𝓝 0) := by
+  apply tendsto_greenFunction_zero_of_disjoint_open_union isOpen_ball hW hdis
+    (isBounded_ball.union hWb) hz ?_ hy
+  intro x hx hxout
+  have hxle : dist x c ≤ r := mem_closedBall.mp (closure_ball_subset_closedBall hx)
+  have hxge : r ≤ dist x c := le_of_not_gt (fun h => hxout (mem_ball.mpr h))
+  exact tendsto_greenFunction_zero_of_enclosing_disc hz Subset.rfl
+    (mem_sphere.mpr (le_antisymm hxle hxge))
+
 /-- A boundary point of a finite union of discs belongs to the boundary
 circle of at least one disc in the union. -/
 theorem exists_mem_sphere_of_mem_closure_finite_disc_union
@@ -133,6 +180,9 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms tendsto_greenFunction_zero_of_disjoint_union_ball
+#print axioms greenFunction_eq_of_disjoint_open_union_all
+#print axioms tendsto_greenFunction_zero_of_disjoint_open_union
 #print axioms tendsto_greenFunction_nhds_of_nhdsWithin
 #print axioms tendsto_greenFunction_zero_of_pole_component_boundary
 #print axioms exists_mem_sphere_of_mem_closure_finite_disc_union
