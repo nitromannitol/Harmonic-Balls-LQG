@@ -2,6 +2,7 @@ import HarmonicBalls.Steps.Sec11.ConeThresholds
 import HarmonicBalls.Steps.Sec11.ConeBumpInclusion
 import HarmonicBalls.Proofs.GFF.ConeMassLocalRepresentation
 import HarmonicBalls.Proofs.Sec11.ConeBadEventTransfer
+import HarmonicBalls.Proofs.Sec8.LQGUniversalMeasureLaw
 
 /-! # Positive probability for a unit-scale cone event -/
 
@@ -73,6 +74,31 @@ theorem cone_unit_event_positive
   rw [ENNReal.ofReal_mul (Real.exp_pos _).le] at hreal
   simpa [ENNReal.ofReal_mul hM.le, ENNReal.ofReal_inv_of_pos hnR] using hreal
 
+/-- The probability of the cone event is the same for all realizations
+of a fixed singular whole-plane GFF and its LQG measure. -/
+theorem cone_event_probability_eq_across_spaces
+    {Ω Ω' : Type*} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {P : Measure Ω} {P' : Measure Ω'} {γ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    {hC' : Ω' → (ℂ → ℝ) → ℝ} {hcirc' : Ω' → ℝ → ℂ → ℝ} {μ' : Ω' → Measure ℂ}
+    (hG : IsWholePlaneGFF P hC hcirc) (hG' : IsWholePlaneGFF P' hC' hcirc')
+    (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hμ' : IsLQGMeasureOfField P' γ α₀ hcirc' μ')
+    (Q : Set ℂ) (hQ : IsCone Q) (M r : ℝ) (z : ℂ) :
+    P {ω | coneMassEvent (μ ω) Q M r z} =
+      P' {ω | coneMassEvent (μ' ω) Q M r z} := by
+  have hQm : MeasurableSet Q := by
+    rcases hQ with h | h
+    · exact h.2.1.measurableSet
+    · simpa using h.2.1.measurableSet.compl
+  have hqm : MeasurableSet (annulus z r (2 * r) ∩ coneAt Q z) :=
+    (measurableSet_ball.diff measurableSet_closedBall).inter
+      ((Homeomorph.addRight z).measurableEmbedding.measurableSet_image.mpr hQm)
+  exact (hG.identDistrib_lqgMeasure_across_spaces hG' hμ hμ').measure_mem_eq
+    (measurableSet_coneMassEvent Q M r z hqm)
+
 end HarmonicBalls
 
 #print axioms HarmonicBalls.cone_unit_event_positive
+
+#print axioms HarmonicBalls.cone_event_probability_eq_across_spaces
