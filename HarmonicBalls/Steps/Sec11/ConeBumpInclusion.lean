@@ -94,7 +94,25 @@ theorem exists_cone_smooth_bump (z : ℂ) {r c : ℝ} (hr : 0 < r) (hc : 0 ≤ c
       exact hxS this
     simp [hxzero]
 
+/-- A nonnegative bump height can make a positive lower mass threshold
+ dominate any nonnegative finite Green threshold. -/
+theorem exists_cone_bump_height {γ a b : ℝ} (hγ : 0 < γ) (ha : 0 < a) (hb : 0 ≤ b) :
+    ∃ c : ℝ, 0 ≤ c ∧ b ≤ Real.exp (γ * c) * a := by
+  let t := 1 + b / a
+  have ht : 1 ≤ t := by
+    dsimp [t]
+    have := div_nonneg hb ha.le
+    linarith
+  have htpos : 0 < t := lt_of_lt_of_le zero_lt_one ht
+  refine ⟨Real.log t / γ, div_nonneg (Real.log_nonneg ht) hγ.le, ?_⟩
+  have heq : γ * (Real.log t / γ) = Real.log t := by field_simp
+  rw [heq, Real.exp_log htpos]
+  dsimp [t]
+  have h : b / a * a = b := div_mul_cancel₀ b (ne_of_gt ha)
+  nlinarith
+
 end HarmonicBalls
 
 #print axioms HarmonicBalls.coneMassEvent_of_bump
 #print axioms HarmonicBalls.exists_cone_smooth_bump
+#print axioms HarmonicBalls.exists_cone_bump_height
