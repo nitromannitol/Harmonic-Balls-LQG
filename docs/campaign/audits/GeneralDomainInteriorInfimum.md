@@ -1,42 +1,29 @@
 # Interior regularity of the general-domain infimum
 
-The frozen competitor class requires continuity on `closure U`, and the
-potential-shifted class of all nonnegative superharmonic majorants is larger.
-The existing Green-regular proof establishes equality with that larger envelope
-by proving that its infimum is a continuous competitor on the whole closure.
-That step is unavailable on an arbitrary bounded open domain; punctured-domain
-examples show that closure continuity cannot be assumed.
+`HarmonicBalls.general_domain_interior_infimum_regularity` proves both
+`ContinuousOn (leastSupersolutionOn μ U z t) U` and
+`LaplacianLE (leastSupersolutionOn μ U z t) μ U`, for locally finite `μ`,
+`0 < R`, `VolumeGrowth μ R βm βp`, open `U ⊆ ball 0 R`, `z ∈ U`, and
+`0 < t`. The proof includes the pole and uses the actual frozen competitor
+class. It assumes neither Green boundary regularity nor admissibility or
+closure continuity of the infimum. The theorem concerns interior regularity;
+it does not claim closure continuity or membership in `supersolutionsOn`.
 
-`GeneralDomainInteriorInfimum.lean` proves boundedness below and upper
-semicontinuity at every interior point, including the pole. At any off-pole
-contact point it also proves continuity, using the continuous Green obstacle.
-The actual competitor class is closed under pointwise minima. The lower
-semicontinuous regularization of the shifted frozen infimum is superharmonic,
-is nonnegative on the interior, and dominates the shifted obstacle away from
-the pole. It agrees with the frozen shifted infimum at off-pole contact points.
-A compactly supported Poisson modification is proved to preserve the actual
-competitor class under a constant local barrier. Under that barrier the shifted
-infimum is the pointwise infimum of Poisson integrals; barriers exist at the
-pole and at strict regularized noncontact points. A quantitative lower Harnack
-estimate for these Poisson integrals is also proved. The case where the regularized infimum meets the obstacle may be handled by
-applying the modification to competitors shifted upwards
-by an arbitrarily small constant, and then sending the shift to zero; this
-argument has not yet been formalized.
+The shifted infimum is upper semicontinuous. Its lower semicontinuous
+regularization is a superharmonic majorant of the shifted obstacle. An interior
+Poisson modification preserves the actual competitor class when a constant
+bounds the obstacle above inside a disc and the shifted boundary data below.
+A quantitative Harnack inequality controls these modifications. At the pole,
+the shifted obstacle tends to minus infinity, giving a constant barrier. Away
+from the pole, continuity of the obstacle and lower semicontinuity of the
+regularization give a barrier with any positive error. Adding that error to a
+competitor preserves admissibility; the Poisson modification and Harnack
+inequality yield a lower bound for the original infimum with the same error.
+Sending the error to zero proves lower semicontinuity, hence superharmonicity
+of the actual shifted infimum and the two asserted interior conclusions.
 
-The file proves that lower semicontinuity of the shifted infimum would identify
-it with this regularization. Both desired conclusions then follow from the
-following still-unproved statement:
-
-```lean
-IsSuperharmonicOn U (fun x => leastSupersolutionOn μ U z t x +
-  greenPotentialBall μ R x)
-```
-
-Here the assumptions are `IsLocallyFiniteMeasure μ`, `0 < R`,
-`VolumeGrowth μ R βm βp`, `IsOpen U`, `U ⊆ ball 0 R`, `z ∈ U`, and
-`0 < t`. This is a derived local envelope claim, not a literature input.
-It would follow from a proof of lower semicontinuity of the shifted infimum,
-for example using a local Poisson-modification argument preserving closure
-continuity and the obstacle. No such argument is established here. The present results do not prove
-that claim and do not establish interior continuity at noncontact points or the
-distributional inequality. No source or numbered-result closure is claimed.
+`#print axioms` for the final theorem reports only `propext`,
+`Classical.choice`, and `Quot.sound`. The file credits Leonardo Bonanno for the
+potential-theoretic infrastructure. This local theorem does not claim closure
+of a numbered paper result; the separate source, definition, binder, and
+dependency audits remain necessary for any such claim.

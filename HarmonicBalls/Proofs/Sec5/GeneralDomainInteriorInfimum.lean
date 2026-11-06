@@ -606,6 +606,252 @@ theorem interior_regularity_of_shifted_superharmonic
   apply (laplacianLE_iff_add_potential hμ hq.2).mpr
   exact laplacianLEOfSuperharmonicStep_holds U _ hU hfc hsh
 
+/-- A constant barrier gives continuity of the shifted infimum at the centre
+of a disc, by the Harnack inequality for its Poisson modifications. -/
+theorem continuousAt_shifted_infimum_of_constant_barrier
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 ≤ t) {c : ℂ} {ρ L : ℝ}
+    (hρ : 0 < ρ) (hdisc : closedBall c ρ ⊆ U)
+    (hb : ∀ y ∈ sphere c ρ, L ≤ leastSupersolutionOn μ U z t y + greenPotentialBall μ R y)
+    (ho : ∀ y ∈ ball c ρ, y ≠ z →
+      -t * greenFunction U z y + greenPotentialBall μ R y ≤ L) :
+    ContinuousAt (fun y => leastSupersolutionOn μ U z t y + greenPotentialBall μ R y) c := by
+  let q := greenPotentialBall μ R
+  let f := fun y => leastSupersolutionOn μ U z t y + q y
+  have hcU : c ∈ U := hdisc (mem_closedBall_self hρ.le)
+  have hc := isGLB_poissonIntegrals_shifted_supersolutionsOn hμ hR hV hU hsub hz ht
+    hρ hdisc hb ho (mem_ball_self hρ)
+  let lo := fun y : ℂ => L + ((ρ - ‖y - c‖) / (ρ + ‖y - c‖)) * (f c - L)
+  have hlo : ContinuousAt lo c := by
+    dsimp [lo]
+    fun_prop (disch := positivity)
+  have hloc : lo c = f c := by simp [lo, hρ.ne']
+  have hbound : ∀ y ∈ ball c ρ, lo y ≤ f y := by
+    intro y hy
+    have hg := isGLB_poissonIntegrals_shifted_supersolutionsOn hμ hR hV hU hsub hz ht
+      hρ hdisc hb ho hy
+    apply hg.2
+    rintro _ ⟨w, hw, rfl⟩
+    have hφ : CircleIntegrable (fun y => w y + q y) c ρ :=
+      (show IsSweepDisc U c ρ from ⟨hρ, hdisc⟩).circleIntegrable
+        ((hw.1.mono subset_closure).add
+          ((enclosingDisc_potential_shift_on_domain hμ hR hV hsub).1.mono subset_closure))
+    have hwb : ∀ y ∈ sphere c ρ, L ≤ w y + q y := by
+      intro y hy'
+      have hle := leastSupersolutionOn_le_of_mem_interior hμ hR hV hU hsub hz
+        (hdisc (sphere_subset_closedBall hy')) hw
+      have := hb y hy'
+      dsimp [q] at *
+      linarith
+    have hp := discPoissonIntegral_sub_lower_bound hρ hφ hwb hy
+    have hcenter := hc.1 ⟨w, hw, rfl⟩
+    have hk : 0 ≤ (ρ - ‖y - c‖) / (ρ + ‖y - c‖) := by
+      apply div_nonneg
+      · have := (mem_ball.mp hy); rw [dist_eq_norm] at this; linarith
+      · positivity
+    have hm := mul_le_mul_of_nonneg_left (sub_le_sub_right hcenter L) hk
+    dsimp [lo, f, q] at *
+    linarith
+  have hl : LowerSemicontinuousAt f c := by
+    intro a ha
+    have ha' : a < lo c := by rwa [hloc]
+    filter_upwards [hlo.eventually (Ioi_mem_nhds ha'), isOpen_ball.mem_nhds (mem_ball_self hρ)] with y hy hyb
+    exact hy.trans_le (hbound y hyb)
+  have hu : UpperSemicontinuousAt f c :=
+    (upperSemicontinuousAt_leastSupersolutionOn_interior hμ hR hV hU hsub hz ht hcU).add
+      (((enclosingDisc_potential_shift_on_domain hμ hR hV hsub).1.mono subset_closure).continuousAt
+        (hU.mem_nhds hcU)).upperSemicontinuousAt
+  exact continuousAt_iff_lower_upperSemicontinuousAt.2 ⟨hl, hu⟩
+
+#print axioms continuousAt_shifted_infimum_of_constant_barrier
+
+/-- At every off-pole point the shifted obstacle admits an arbitrarily small
+constant barrier error against the shifted infimum. -/
+theorem exists_approximate_constant_barrier_off_pole
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 ≤ t) {x : ℂ}
+    (hx : x ∈ U) (hxz : x ≠ z) {ε : ℝ} (hε : 0 < ε) :
+    ∃ ρ L : ℝ, 0 < ρ ∧ closedBall x ρ ⊆ U ∧
+      (∀ y ∈ sphere x ρ, L ≤ leastSupersolutionOn μ U z t y + greenPotentialBall μ R y + ε) ∧
+      ∀ y ∈ ball x ρ, y ≠ z → -t * greenFunction U z y + greenPotentialBall μ R y ≤ L := by
+  let f := fun y => leastSupersolutionOn μ U z t y + greenPotentialBall μ R y
+  let β := fun y => -t * greenFunction U z y + greenPotentialBall μ R y
+  let g := lscRegularization U f
+  let L := β x + ε / 2
+  have hβL : β x < L := by dsimp [L]; linarith
+  have hLg : L - ε < g x := by
+    have h := shifted_obstacle_le_lscRegularization_shifted_infimum hμ hR hV hU hsub hz ht hx hxz
+    dsimp [L, β, g, f] at *
+    linarith
+  have hnonneg : ∀ y ∈ U, 0 ≤ f y := fun y hy =>
+    shifted_leastSupersolutionOn_nonneg hμ hR hV hU hsub hz ht hy
+  obtain ⟨h, hh, hG⟩ :=
+    exists_harmonicOnNhd_greenFunction_difference hU (isBounded_ball.subset hsub) hsub hz
+  have hGc : ContinuousAt (greenFunction U z) x := by
+    have hc := ((hh x hx).1.continuousAt).add
+      ((continuousOn_greenFunction_ball (hsub hz)).continuousAt
+        (isOpen_compl_singleton.mem_nhds hxz))
+    apply hc.congr_of_eventuallyEq
+    filter_upwards [hU.mem_nhds hx, isOpen_compl_singleton.mem_nhds hxz] with y hy hyz
+    have he := hG y hy hyz
+    change greenFunction U z y = h y + greenFunction (ball 0 R) z y
+    linarith
+  have hβc : ContinuousAt β x := (hGc.const_mul (-t)).add
+    (((enclosingDisc_potential_shift_on_domain hμ hR hV hsub).1.mono subset_closure).continuousAt
+      (hU.mem_nhds hx))
+  have hg := (isSuperharmonicOn_lscRegularization_shifted_infimum hμ hR hV hU hsub hz ht).1 x hx (L - ε) hLg
+  rw [nhdsWithin_eq_nhds.2 (hU.mem_nhds hx)] at hg
+  have hnear : ∀ᶠ y in 𝓝 x, y ∈ U ∧ β y < L ∧ L - ε < g y := by
+    filter_upwards [hU.mem_nhds hx, hβc.eventually (Iio_mem_nhds hβL), hg] with y hy hby hgy
+    exact ⟨hy, hby, hgy⟩
+  obtain ⟨δ, hδ, hδsub⟩ := Metric.mem_nhds_iff.mp hnear
+  let ρ := δ / 2
+  have hρ : 0 < ρ := by dsimp [ρ]; linarith
+  have hcb : closedBall x ρ ⊆ ball x δ := closedBall_subset_ball (by dsimp [ρ]; linarith)
+  refine ⟨ρ, L, hρ, fun y hy => (hδsub (hcb hy)).1, ?_, ?_⟩
+  · intro y hy
+    have hy' := hδsub (hcb (sphere_subset_closedBall hy))
+    have hle := lscRegularization_le hnonneg hy'.1
+    dsimp [f] at hle
+    linarith [hy'.2.2]
+  · intro y hy _
+    exact (hδsub (hcb (ball_subset_closedBall hy))).2.1.le
+
+#print axioms exists_approximate_constant_barrier_off_pole
+
+/-- The shifted infimum is continuous at the pole. -/
+theorem continuousAt_shifted_infimum_at_pole
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t) :
+    ContinuousAt (fun y => leastSupersolutionOn μ U z t y + greenPotentialBall μ R y) z := by
+  obtain ⟨ρ, L, hρ, hd, hb, ho⟩ := exists_constant_barrier_at_pole hμ hR hV hU hsub hz ht
+  exact continuousAt_shifted_infimum_of_constant_barrier hμ hR hV hU hsub hz ht.le hρ hd hb ho
+
+#print axioms continuousAt_shifted_infimum_at_pole
+
+/-- A nonnegative constant may be added to a supersolution. -/
+theorem supersolutionsOn_add_nonneg_const {μ : Measure ℂ} {U : Set ℂ}
+    (hU : IsOpen U) {z : ℂ} {t ε : ℝ} (hε : 0 ≤ ε)
+    {w : ℂ → ℝ} (hw : w ∈ supersolutionsOn μ U z t) :
+    (fun y => w y + ε) ∈ supersolutionsOn μ U z t := by
+  refine ⟨hw.1.add continuousOn_const, ?_, ?_⟩
+  · have hc := hasLaplacian_zero_of_harmonicOnNhd (U := U) hU (InnerProductSpace.harmonicOnNhd_const (1 : ℝ))
+    simpa only [mul_one] using hw.2.1.add_const_mul_of_hasLaplacian_zero hc ε
+  · intro y hy hyz
+    linarith [hw.2.2 y hy hyz]
+
+/-- An approximate constant barrier gives a Harnack lower bound for the
+actual shifted infimum, with an error equal to the barrier error. -/
+theorem shifted_infimum_lower_bound_of_approximate_barrier
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 ≤ t) {c : ℂ} {ρ L ε : ℝ}
+    (hε : 0 ≤ ε) (hρ : 0 < ρ) (hd : closedBall c ρ ⊆ U)
+    (hb : ∀ y ∈ sphere c ρ, L ≤ leastSupersolutionOn μ U z t y + greenPotentialBall μ R y + ε)
+    (ho : ∀ y ∈ ball c ρ, y ≠ z →
+      -t * greenFunction U z y + greenPotentialBall μ R y ≤ L)
+    {x : ℂ} (hx : x ∈ ball c ρ) :
+    L + ((ρ - ‖x - c‖) / (ρ + ‖x - c‖)) *
+      (leastSupersolutionOn μ U z t c + greenPotentialBall μ R c - L) - ε ≤
+        leastSupersolutionOn μ U z t x + greenPotentialBall μ R x := by
+  let q := greenPotentialBall μ R
+  let f := fun y => leastSupersolutionOn μ U z t y + q y
+  let k := (ρ - ‖x - c‖) / (ρ + ‖x - c‖)
+  have hk : 0 ≤ k := by
+    apply div_nonneg
+    · have := mem_ball.mp hx; rw [dist_eq_norm] at this; linarith
+    · positivity
+  have hxU : x ∈ U := hd (ball_subset_closedBall hx)
+  have hcU : c ∈ U := hd (mem_closedBall_self hρ.le)
+  have hgoal : L + k * (f c - L) - ε - q x ≤ leastSupersolutionOn μ U z t x := by
+    change _ ≤ sInf ((fun w : ℂ → ℝ => w x) '' supersolutionsOn μ U z t)
+    apply le_csInf
+    · exact ⟨0, 0, zero_mem_supersolutionsOn (isBounded_ball.subset hsub) ht, rfl⟩
+    · rintro _ ⟨w, hw, rfl⟩
+      let wε := fun y => w y + ε
+      have hwε : wε ∈ supersolutionsOn μ U z t := supersolutionsOn_add_nonneg_const hU hε hw
+      have hwb : ∀ y ∈ sphere c ρ, L ≤ wε y + q y := by
+        intro y hy
+        have hle := leastSupersolutionOn_le_of_mem_interior hμ hR hV hU hsub hz
+          (hd (sphere_subset_closedBall hy)) hw
+        have := hb y hy
+        dsimp [wε, q] at *
+        linarith
+      obtain ⟨v, hv, hvP⟩ := exists_poisson_modified_supersolutionOn hμ hR hV hU hsub hz
+        hwε hρ hd hwb ho
+      have hcenter := leastSupersolutionOn_le_of_mem_interior hμ hR hV hU hsub hz hcU hv
+      have hcenterP := hvP (mem_ball_self hρ)
+      have hφ : CircleIntegrable (fun y => wε y + q y) c ρ :=
+        (show IsSweepDisc U c ρ from ⟨hρ, hd⟩).circleIntegrable
+          ((hwε.1.mono subset_closure).add
+            ((enclosingDisc_potential_shift_on_domain hμ hR hV hsub).1.mono subset_closure))
+      have hp := discPoissonIntegral_sub_lower_bound hρ hφ hwb hx
+      have hfcenter : f c ≤ discPoissonIntegral (fun y => wε y + q y) c ρ c := by
+        dsimp [f, q] at *
+        linarith
+      have hm := mul_le_mul_of_nonneg_left (sub_le_sub_right hfcenter L) hk
+      have hsh := (shifted_supersolution_mem_nonnegativeSuperharmonicMajorants hμ hR hV hU hsub hz hwε).1
+      have hP := discPoissonIntegral_le hsh.1 (hsh.localSuperMean hU) hρ hd hφ x hx
+      dsimp [f, q, wε, k] at *
+      linarith
+  dsimp [f, q, k] at *
+  linarith
+
+#print axioms shifted_infimum_lower_bound_of_approximate_barrier
+
+/-- The shifted general-domain infimum is lower semicontinuous in the interior. -/
+theorem lowerSemicontinuousOn_shifted_infimum
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t) :
+    LowerSemicontinuousOn (fun y => leastSupersolutionOn μ U z t y + greenPotentialBall μ R y) U := by
+  intro x hx
+  by_cases hxz : x = z
+  · subst x
+    exact (continuousAt_shifted_infimum_at_pole hμ hR hV hU hsub hz ht).lowerSemicontinuousAt.lowerSemicontinuousWithinAt U
+  · intro a ha
+    let f := fun y => leastSupersolutionOn μ U z t y + greenPotentialBall μ R y
+    let ε := (f x - a) / 2
+    have hε : 0 < ε := by dsimp [ε, f]; linarith
+    obtain ⟨ρ, L, hρ, hd, hb, ho⟩ :=
+      exists_approximate_constant_barrier_off_pole hμ hR hV hU hsub hz ht.le hx hxz hε
+    let lo := fun y : ℂ => L + ((ρ - ‖y - x‖) / (ρ + ‖y - x‖)) * (f x - L) - ε
+    have hlo : ContinuousAt lo x := by
+      dsimp [lo]
+      fun_prop (disch := positivity)
+    have hloc : lo x = f x - ε := by simp [lo, hρ.ne']
+    have ha' : a < lo x := by rw [hloc]; dsimp [ε, f]; linarith
+    have he : ∀ᶠ y in 𝓝 x, a < f y := by
+      filter_upwards [hlo.eventually (Ioi_mem_nhds ha'), isOpen_ball.mem_nhds (mem_ball_self hρ)] with y hy hyb
+      have hbound := shifted_infimum_lower_bound_of_approximate_barrier hμ hR hV hU hsub hz ht.le
+        hε.le hρ hd hb ho hyb
+      exact hy.trans_le hbound
+    exact he.filter_mono nhdsWithin_le_nhds
+
+/-- Interior continuity and the distributional Laplacian bound for the
+general-domain least supersolution. -/
+theorem general_domain_interior_infimum_regularity
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t) :
+    ContinuousOn (leastSupersolutionOn μ U z t) U ∧
+      LaplacianLE (leastSupersolutionOn μ U z t) μ U := by
+  apply interior_regularity_of_shifted_superharmonic hμ hR hV hU hsub hz ht.le
+  exact isSuperharmonicOn_shifted_infimum_of_lowerSemicontinuous hμ hR hV hU hsub hz ht.le
+    (lowerSemicontinuousOn_shifted_infimum hμ hR hV hU hsub hz ht)
+
+#print axioms lowerSemicontinuousOn_shifted_infimum
+#print axioms general_domain_interior_infimum_regularity
+
 #print axioms interior_regularity_of_shifted_superharmonic
 
 #print axioms continuousAt_leastSupersolutionOn_of_contact
