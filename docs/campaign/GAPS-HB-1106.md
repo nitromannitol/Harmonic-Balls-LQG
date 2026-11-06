@@ -49,3 +49,61 @@ coneMassEvent η Q M r z ↔
 ```
 
 Here U must contain the cone and Green-potential supports and the normalization is positive and finite; the actual quantifier and approximation conditions are those of `IsWholePlaneGFF.exists_fixedShift_normalizedMass_decoder` and `fixedShift_event_representation_with_insertion`. One must construct the Green supremum's countable measurable encoding, prove the two continuity-set and exhaustion hypotheses for the chosen sets, and then obtain `hE` and `hEp` in `ConeBadEventTransfer.lean:55`. This is a concrete unproved formalization obligation, not yet evidence of an open mathematical research problem. Separately the positivity, bump inclusion, parameter uniformity and frequency argument remain to be proved; the decoder alone does not prove Lemma 11.8.
+
+## Resume verdicts (supersede the earlier cone-representation paragraph)
+
+* **3′, local rooted interface — MINIMAL-CORRECTION, conditional:** the actual
+  replacement is the marked projective-measure domination displayed in §3′
+  above, with actual maps and measurable versions as specified in
+  `audits/LocalRootedComparisonRepair.md`. DMS A.10 directly describes the
+  mass-biased *field modulo constants* with the marked insertion, not that
+  measure-level domination. The equality for this implementation's marked
+  fields/GMC and the local decoder are not yet source-matched. For Lemma 8.2
+  that domination suffices only together with measurable good events and the
+  phase-sensitive reference frequency with matching constants. Props 8.1 and
+  7.2 consume the resulting complete Lemma 8.2 and retain their other stated
+  hypotheses; neither consumes the old global comparison independently.
+* **E18 — OPEN RESEARCH QUESTION:** the printed argument needs repairs, but
+  neither the frozen conclusion nor the stronger joint buffered positivity is
+  proved false. The exact sufficient, not necessary, mathematical proposition
+  is `hA` in `Proofs/Sec11/BufferedPinchCanonicalLaw.lean:35–44`, with one
+  configuration fixed before field parameters and M. Its joint product gap,
+  singular-origin and arbitrary-ξ scope remain unresolved as detailed above.
+  No source justifies classifying the numbered statement itself as FALSE or
+  prescribing a minimal statement correction.
+* **11.8 cone-event representation — CITED as Lean infrastructure, with
+  explicit premises:** `exists_coneMassEvent_countable_encoding` and
+  `IsWholePlaneGFF.exists_enclosing_fixedShift_coneMassEvent_representation`
+  (`Proofs/GFF/ConeMassLocalRepresentation.lean:155,334`, commit 8a4549f)
+  prove the countable Green/cone encoding and a shared pairing-event decoder
+  for the two actual limits, given the displayed cone measurability and
+  enclosure, a smooth fixed shift, and original full support. The latter is
+  available conditionally as `Section6.ae_fullSupport_all_singular_limits`
+  (`Proofs/Sec6/SimultaneousSingularMeasure.lean:155`), using staged measure
+  existence and the scaled-ball mass input; matching those sources and the
+  actual limits in the consumer remains. Thus the earlier claim that this
+  encoding and common continuity/exhaustion system were missing is superseded.
+  This verdict addresses the representation, not an unconditional proof of
+  the numbered 11.8 probability bound.
+
+For the **printed 11.8 proof**, the bump and Weyl estimates need the following
+explicit corrections; neither establishes a false numbered statement. First,
+choose `C₁ > 0` small enough that `C₁ ≤ M C₂` before requiring the prescribed
+bump to be nonnegative (or take its height to be the positive part of the
+printed logarithm). Second, the factor called universal in the second step
+cannot be taken independent of arbitrary α₀ and γ by the displayed Weyl
+comparison. With `a = α₀ * γ`, if the entire annulus A_{r,6r}(z) is at
+positive distance at least `r/100` from 0, then every point of it has modulus
+between `r/100` and `7r`: the upper bound follows because the gap forces
+`|z| < r` or `|z| > 6r`, but the latter case requires using `|z| + 6r` instead
+of `7r`. In both cases a safe bound on the ratio of the largest and smallest
+moduli is 1201: when `|z| < r`, use `7r/(r/100)`; when `|z| > 6r`, use
+`(|z|+6r)/(|z|−6r) ≤ 1201`. Hence the Weyl weight ratio is at least
+`1201^(-|a|)`, uniform in z and r for each fixed α₀, γ. In particular p may
+be chosen after those parameters as in the frozen Lean statement; this
+calculation does not justify a bound uniform over unbounded α₀. The ratio
+argument additionally needs the actual Green functional's positive finite
+values and Weyl monotonicity. The remaining Lean work is positive G, bump
+inclusion, actual-limit/full-support source matching, and affine
+translation/dilation uniformity, not the countable encoding. See
+`audits/ConeFrequencySourcePlan.md` for the separate 11.8 → 11.7 argument.
