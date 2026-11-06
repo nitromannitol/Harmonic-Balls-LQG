@@ -199,6 +199,43 @@ theorem finite_disc_union_eventually_eq_active_circles
   simpa only [hfilter] using
     (finite_union_eventually_eq_union_of_active_closures F (fun i => ball (c i) (r i)) y)
 
+/-- If exactly one disc boundary passes through a point outside a finite
+union, that union locally coincides with this disc. -/
+theorem finite_disc_union_eventually_eq_unique_active_disc
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ) {y : ℂ} {i : ι}
+    (hr : ∀ j ∈ F, 0 < r j)
+    (hy : y ∉ ⋃ j ∈ F, ball (c j) (r j))
+    (hi : i ∈ F) (hyi : y ∈ sphere (c i) (r i))
+    (hunique : ∀ j ∈ F, y ∈ sphere (c j) (r j) → j = i) :
+    ∀ᶠ x in 𝓝 y, x ∈ ⋃ j ∈ F, ball (c j) (r j) ↔ x ∈ ball (c i) (r i) := by
+  have hfilter : F.filter (fun j => y ∈ sphere (c j) (r j)) = {i} := by
+    ext j
+    simp only [Finset.mem_filter, Finset.mem_singleton]
+    constructor
+    · rintro ⟨hj, hyj⟩
+      exact hunique j hj hyj
+    · intro hji
+      subst j
+      exact ⟨hi, hyi⟩
+  simpa only [hfilter, Finset.set_biUnion_singleton] using
+    (finite_disc_union_eventually_eq_active_circles F c r hr hy)
+
+/-- A unique active boundary circle gives a disc neighbourhood on which the
+finite union agrees with the corresponding constituent disc. -/
+theorem exists_ball_inter_finite_disc_union_eq_unique_active_disc
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ) {y : ℂ} {i : ι}
+    (hr : ∀ j ∈ F, 0 < r j)
+    (hy : y ∉ ⋃ j ∈ F, ball (c j) (r j))
+    (hi : i ∈ F) (hyi : y ∈ sphere (c i) (r i))
+    (hunique : ∀ j ∈ F, y ∈ sphere (c j) (r j) → j = i) :
+    ∃ ε > 0, ball y ε ∩ (⋃ j ∈ F, ball (c j) (r j)) =
+      ball y ε ∩ ball (c i) (r i) := by
+  have h := finite_disc_union_eventually_eq_unique_active_disc F c r hr hy hi hyi hunique
+  obtain ⟨ε, hε, hεsub⟩ := Metric.mem_nhds_iff.mp h
+  refine ⟨ε, hε, ?_⟩
+  ext x
+  exact and_congr_right (fun hx => hεsub hx)
+
 /-- A boundary point of a finite union of discs belongs to the boundary
 circle of at least one disc in the union. -/
 theorem exists_mem_sphere_of_mem_closure_finite_disc_union
@@ -274,6 +311,8 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms exists_ball_inter_finite_disc_union_eq_unique_active_disc
+#print axioms finite_disc_union_eventually_eq_unique_active_disc
 #print axioms finite_union_eventually_eq_union_of_active_closures
 #print axioms finite_disc_union_eventually_eq_active_circles
 #print axioms tendsto_greenFunction_zero_of_pairwise_disjoint_finite_discs
