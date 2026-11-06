@@ -340,13 +340,14 @@ theorem no_dirac_harmonic_correction_univ_to_ball {ρ R : ℝ}
 
 #print axioms no_dirac_harmonic_correction_univ_to_ball
 
-/-- On any bounded domain containing the radius-two observation disc, the
+/-- On any bounded domain containing a disc of radius greater than one, the
 unchanged-source correction of the whole-plane Dirac potential cannot be continuous
 at the source atom. -/
 theorem no_bounded_domain_continuousAt_source_correction_for_large_observation
-    {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :
+    {V : Set ℂ} {ρ R : ℝ} (hρ : 0 < ρ) (hR : 1 < R) (hρR : ρ ≤ R)
+    (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) R ⊆ V) :
     ¬ ∃ a : ℂ → ℝ, ContinuousAt a 0 ∧
-      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 ρ),
         greenPotential univ (Measure.dirac 0) x =
           a x + greenPotential V (Measure.dirac 0) x) := by
   classical
@@ -354,17 +355,19 @@ theorem no_bounded_domain_continuousAt_source_correction_for_large_observation
   rw [Measure.restrict_add, ae_add_measure_iff] at hae
   have hzero : a 0 = 0 := by
     have h := hae.2
-    rw [restrict_dirac, ite_eq_left (mem_ball_self (by norm_num : (0 : ℝ) < 2)),
+    rw [restrict_dirac, ite_eq_left (mem_ball_self hρ),
       ae_dirac_eq] at h
     exact dirac_source_correction_at_atom h
-  let c : ℝ := (2 * Real.pi)⁻¹ * Real.log 2
-  have hc : 0 < c := mul_pos (by positivity) (Real.log_pos (by norm_num))
-  have hbound : ∀ᵐ x ∂volume.restrict (ball (0 : ℂ) 2), a x ≤ -c := by
+  let c : ℝ := (2 * Real.pi)⁻¹ * Real.log R
+  have hc : 0 < c := mul_pos (by positivity) (Real.log_pos hR)
+  have hbound : ∀ᵐ x ∂volume.restrict (ball (0 : ℂ) ρ), a x ≤ -c := by
     filter_upwards [hae.1, ae_restrict_mem measurableSet_ball,
       ae_restrict_of_ae (volume.ae_ne (0 : ℂ))] with x hx hxb hx0
-    have hm := Section6.greenFunction_mono hsub hV hxb
-      (mem_ball_self (by norm_num : (0 : ℝ) < 2)) hx0
-    have hb := greenPotential_dirac_zero_ball (by norm_num : (0 : ℝ) < 2) hxb hx0
+    have hxbR : x ∈ ball (0 : ℂ) R := ball_subset_ball hρR hxb
+    have hRpos : 0 < R := lt_trans zero_lt_one hR
+    have hm := Section6.greenFunction_mono hsub hV hxbR
+      (mem_ball_self hRpos) hx0
+    have hb := greenPotential_dirac_zero_ball hRpos hxbR hx0
     simp only [greenPotential, integral_dirac] at hb hx
     simp only [greenFunction_univ_eq_newtonKernel, newtonKernel, sub_zero] at hx
     dsimp [c] at *
@@ -372,9 +375,9 @@ theorem no_bounded_domain_continuousAt_source_correction_for_large_observation
   have hnear : {x | -c < a x} ∈ nhds (0 : ℂ) :=
     ha (Ioi_mem_nhds (by rw [hzero]; linarith))
   obtain ⟨r, hr, hrsub⟩ := Metric.mem_nhds_iff.mp hnear
-  let t := min r 2
-  have ht : 0 < t := lt_min hr (by norm_num)
-  have htsub : ball (0 : ℂ) t ⊆ ball 0 2 := ball_subset_ball (min_le_right _ _)
+  let t := min r ρ
+  have ht : 0 < t := lt_min hr hρ
+  have htsub : ball (0 : ℂ) t ⊆ ball 0 ρ := ball_subset_ball (min_le_right _ _)
   have htnear : ball (0 : ℂ) t ⊆ {x | -c < a x} :=
     (ball_subset_ball (min_le_left _ _)).trans hrsub
   obtain ⟨x, hx, hxa⟩ := Measure.exists_mem_of_measure_ne_zero_of_ae
@@ -393,8 +396,8 @@ theorem no_bounded_domain_continuous_source_correction_for_large_observation
         greenPotential univ (Measure.dirac 0) x =
           a x + greenPotential V (Measure.dirac 0) x) := by
   rintro ⟨a, ha, hae⟩
-  exact no_bounded_domain_continuousAt_source_correction_for_large_observation hV hsub
-    ⟨a, (ha 0 (mem_ball_self (by norm_num : (0 : ℝ) < 2))).continuousAt
+  exact no_bounded_domain_continuousAt_source_correction_for_large_observation
+    (by norm_num) (by norm_num) (by norm_num) hV hsub ⟨a, (ha 0 (mem_ball_self (by norm_num : (0 : ℝ) < 2))).continuousAt
       (isOpen_ball.mem_nhds (mem_ball_self (by norm_num : (0 : ℝ) < 2))), hae⟩
 
 #print axioms no_bounded_domain_continuous_source_correction_for_large_observation
