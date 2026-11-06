@@ -14,6 +14,8 @@ This example occurs within the intended carrier: take `Λ = ball 0 (1/2)`, `z = 
 
 The obstruction also holds for a genuinely unbounded original witness: `no_dirac_harmonic_correction_univ_to_ball` proves that for `O = univ`, the same source and observation measure, and every concentric disc `V = ball 0 R` with `R > 1/2` and `R ≠ 1`, there is no harmonic correction on `V` giving the required almost-everywhere equality. The proof uses the checked whole-plane kernel and the explicit disc formula. This is a precise obstruction to this particular source-preserving localization, not to the target property: radius one does supply a representative in this example.
 
+The representative property is downward closed under absolute continuity of restricted observation measures: `hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous` transfers an existing representative result to any dominated measure. This reduction does not establish the property for the dominating measure.
+
 ## Finitely supported observation measures
 
 `hasBoundedSubharmonicRepresentatives_of_ae_mem_finset` proves the exact representative property for **every** frozen test whenever Λ is bounded and the restricted observation measure is concentrated almost everywhere on a finite set. It uses the real part of a complex Lagrange interpolation polynomial through the observation points and the pole. This proof does not assume anything about the test's original domain or sources. In particular, `hasBoundedSubharmonicRepresentatives_dirac` covers a Dirac observation measure at any point, whether or not it equals the pole. These cases do not resolve general observation measures.

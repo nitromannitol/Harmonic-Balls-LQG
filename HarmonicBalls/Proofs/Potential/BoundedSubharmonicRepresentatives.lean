@@ -16,6 +16,19 @@ namespace HarmonicBalls
 
 open MeasureTheory Metric Set InnerProductSpace
 
+/-- Representatives for a dominating observation measure also work for every
+absolutely continuous observation measure. -/
+theorem hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous
+    {μ ν : Measure ℂ} {Λ : Set ℂ} {z : ℂ}
+    (hμν : μ.restrict Λ ≪ ν.restrict Λ)
+    (hν : HasBoundedSubharmonicRepresentatives ν Λ z) :
+    HasBoundedSubharmonicRepresentatives μ Λ z := by
+  intro f hf
+  obtain ⟨g, hg, hz, hae⟩ := hν f hf
+  exact ⟨g, hg, hz, hμν.ae_eq hae⟩
+
+#print axioms hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous
+
 /-- A finitely supported observation measure admits bounded representatives for the
 whole frozen test class. The real part of a complex interpolating polynomial agrees
 with each test at every observation point and at the pole. -/
