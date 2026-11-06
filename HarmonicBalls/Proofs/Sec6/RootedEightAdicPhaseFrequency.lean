@@ -73,7 +73,9 @@ theorem IsWholePlaneGFF.ae_ae_rooted_eightAdic_frequency_of_singular_phase_bound
   ring
 
 open Classical in
-/-- Eight-adic rooted frequency from same-field regular measure prevalence. -/
+/-- Eight-adic rooted frequency from same-field regular measure prevalence.
+The exceptional field and root sets are common to all admissible block parameters;
+the eventual scale cutoff may depend on the block parameter. -/
 theorem IsWholePlaneGFF.exists_ae_ae_rooted_eightAdic_frequency_of_existing_regular_measure
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
     {Ξ : Type u} [MeasurableSpace Ξ] {P₀ : Measure Ξ} {γ α β : ℝ}
@@ -113,7 +115,7 @@ theorem IsWholePlaneGFF.exists_ae_ae_rooted_eightAdic_frequency_of_existing_regu
     ∃ C₁m C₁p C₂m C₂p : ℝ,
       0 < C₁m ∧ 0 < C₁p ∧ 0 < C₂m ∧ 0 < C₂p ∧
       ∃ N₀ : ℕ, 9 ≤ N₀ ∧ ∃ m ∈ Ioo (0 : ℝ) 1,
-      ∀ N : ℕ, N₀ ≤ N → ∀ᵐ ω ∂P, ∀ᵐ z ∂μ ω, ∀ᶠ K : ℕ in atTop,
+      ∀ᵐ ω ∂P, ∀ᵐ z ∂μ ω, ∀ N : ℕ, N₀ ≤ N → ∀ᶠ K : ℕ in atTop,
         (1 - ζ) * (K : ℝ) ≤
           ({n : ℕ | n ∈ Icc (K+1) (2*K) ∧
             IsVeryGoodAnnulus (μ ω) β ((8 : ℝ)⁻¹ ^ n) z N
@@ -128,12 +130,25 @@ theorem IsWholePlaneGFF.exists_ae_ae_rooted_eightAdic_frequency_of_existing_regu
       P hμ hloc S hPdom hμS hlocS w hw hpos hfin ρ hρ shift hshift R hrooted hac hdom
       F hF hlaw hcenter (ζ := ζ / 3) (by positivity)
   refine ⟨a, ha, c, hc, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p, N₀, hN₀, m, hm, ?_⟩
+  have hall : ∀ᵐ ω ∂P, ∀ N : ℕ, ∀ᵐ z ∂μ ω, N₀ ≤ N →
+      ∀ᶠ K : ℕ in atTop,
+        (1 - ζ / 3) * (K : ℝ) ≤ (veryGoodComparableScaleCount (μ ω) β z N
+          (a / (((401 : ℝ) ^ |-(γ * α)|) ^ 2)) b C₁m C₁p C₂m C₂p c m K : ℝ) := by
+    apply ae_all_iff.mpr
+    intro N
+    by_cases hN : N₀ ≤ N
+    · filter_upwards [hfreq N hN] with ω hω
+      filter_upwards [hω] with z hz
+      exact fun _ => hz
+    · exact Filter.Eventually.of_forall fun _ =>
+        Filter.Eventually.of_forall fun _ h => False.elim (hN h)
+  filter_upwards [hall] with ω hω
+  have hroot := ae_all_iff.mpr hω
+  filter_upwards [hroot] with z hz
   intro N hN
-  filter_upwards [hfreq N hN] with ω hω
-  filter_upwards [hω] with z hz
   have h := Section6.eventually_eightAdic_comparable_block_count_of_dyadic
     (μ ω) β z N (a / (((401 : ℝ) ^ |-(γ * α)|) ^ 2)) b
-    C₁m C₁p C₂m C₂p c m (ζ / 3) hz
+    C₁m C₁p C₂m C₂p c m (ζ / 3) (hz N hN)
   filter_upwards [h] with K hK
   convert hK using 1
   ring
