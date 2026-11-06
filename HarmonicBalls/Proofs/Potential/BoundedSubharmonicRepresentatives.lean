@@ -249,6 +249,70 @@ theorem univ_dirac_zero_has_bounded_representative
 
 #print axioms univ_dirac_zero_has_bounded_representative
 
+/-- The two-source whole-plane function satisfies the frozen test-class conditions. -/
+theorem univ_two_dirac_mem_subharmonicBallTestClass
+    {Λ : Set ℂ} {z a : ℂ} (hz0 : z ≠ 0) (ha : a ∉ Λ) :
+    greenPotential univ (Measure.dirac a) - greenPotential univ (Measure.dirac 0) ∈
+      subharmonicBallTestClass Λ z := by
+  classical
+  refine ⟨univ, {a, 0}, Measure.dirac a, Measure.dirac 0, 0, isOpen_univ,
+    subset_univ _, isCompact_singleton.insert a, subset_univ _,
+    inferInstance, inferInstance, ?_, ?_, ?_, harmonicOnNhd_const 0, ?_,
+    integrable_dirac enorm_lt_top, ?_⟩
+  · simp
+  · simp
+  · simp [Measure.dirac_apply, ha]
+  · simp [hz0]
+  · ext x
+    simp
+
+#print axioms univ_two_dirac_mem_subharmonicBallTestClass
+
+/-- A whole-plane test with a positive point source outside the unit disc and a
+negative point source at its centre has a bounded representative obtained by
+removing the positive source and incorporating it into the harmonic part. -/
+theorem univ_two_dirac_has_bounded_representative
+    {μ : Measure ℂ} {Λ : Set ℂ} {z a : ℂ}
+    (hΛ : closure Λ ⊆ ball (0 : ℂ) 1) (hz : z ∈ Λ) (hz0 : z ≠ 0)
+    (ha : a ∉ ball (0 : ℂ) 1) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac a) - greenPotential univ (Measure.dirac 0)) z = g z ∧
+      (greenPotential univ (Measure.dirac a) - greenPotential univ (Measure.dirac 0))
+        =ᵐ[μ.restrict Λ] g := by
+  classical
+  let q := greenPotential univ (Measure.dirac a)
+  have hqeq : q = newtonKernel a := by
+    ext x
+    simp only [q, greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+      newtonKernel_comm x a]
+  have hq : HarmonicOnNhd q (ball 0 1) := by
+    rw [hqeq]
+    intro x hx
+    apply harmonicAt_newtonKernel
+    intro hxa
+    exact ha (hxa ▸ hx)
+  let g := q - greenPotential (ball 0 1) (Measure.dirac 0)
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 1, {0}, 0, Measure.dirac 0, q, isOpen_ball, isBounded_ball,
+      hΛ, isCompact_singleton, ?_, inferInstance, inferInstance, ?_, ?_, ?_, hq,
+      ?_, integrable_dirac enorm_lt_top, ?_⟩
+    · simp
+    · simp
+    · simp
+    · simp
+    · simp [hz0]
+    · ext x
+      simp [g, greenPotential]
+  refine ⟨g, hg, ?_, ?_⟩
+  · simp only [g, q, Pi.sub_apply]
+    rw [greenPotential_univ_dirac_zero_eq_unitDisc (hΛ (subset_closure hz))]
+  · apply ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+    filter_upwards [ae_restrict_mem (isOpen_ball.measurableSet)] with x hx
+    simp only [g, q, Pi.sub_apply]
+    rw [greenPotential_univ_dirac_zero_eq_unitDisc hx]
+
+#print axioms univ_two_dirac_has_bounded_representative
+
 /-- Away from the source atom, a whole-plane point potential has a bounded
 witness with zero source measures. The harmonic part itself is unchanged. -/
 theorem neg_univ_dirac_mem_bounded_of_source_outside_closure

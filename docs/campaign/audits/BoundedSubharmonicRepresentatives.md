@@ -38,6 +38,8 @@ The file now proves `not_isHarmonicMinorant_univ_newtonKernel`, using the existi
 
 `neg_univ_dirac_mem_bounded_of_source_outside_closure` handles a whole-plane negative Dirac potential at any atom outside the closure of a bounded observation set. The function is harmonic on the complement of the atom, so the bounded witness uses this same function as its harmonic part and both source measures equal zero. Equality holds everywhere, including at the pole, and the sign, support, non-atom and integrability conditions are automatic. This provides a changed-source construction for this restricted case; it does not address an atom in the observation-set closure or general source measures.
 
+`univ_two_dirac_mem_subharmonicBallTestClass` checks the full frozen class for the difference of a positive whole-plane Dirac potential at `a` and a negative one at zero, when `a ∉ Λ` and `z ≠ 0`. `univ_two_dirac_has_bounded_representative` constructs a bounded witness for every observation measure when `closure Λ ⊆ ball 0 1`, `z ∈ Λ`, `z ≠ 0`, and `a ∉ ball 0 1`. It eliminates the positive source and absorbs its potential into the harmonic part; it keeps the negative source at zero in the unit disc, where the two kernels agree even at the atom. The two-source test itself is thus admissible and the construction handles observations at the negative atom. General sources and larger observation sets remain open.
+
 ## Outstanding proof obligation
 
 The exact target remains
