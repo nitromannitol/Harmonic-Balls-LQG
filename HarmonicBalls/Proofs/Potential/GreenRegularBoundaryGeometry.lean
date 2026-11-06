@@ -105,6 +105,46 @@ theorem tendsto_greenFunction_zero_of_disjoint_union_ball
   exact tendsto_greenFunction_zero_of_enclosing_disc hz Subset.rfl
     (mem_sphere.mpr (le_antisymm hxle hxge))
 
+/-- A finite union of discs is Green regular for a pole in a disc disjoint
+from all the other discs. The other discs may intersect one another. -/
+theorem tendsto_greenFunction_zero_of_finite_disc_union_isolated_pole_disc
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ) {i : ι} (hi : i ∈ F)
+    (hdis : ∀ j ∈ F, j ≠ i → Disjoint (ball (c i) (r i)) (ball (c j) (r j)))
+    {z y : ℂ} (hz : z ∈ ball (c i) (r i))
+    (hy : y ∉ ⋃ j ∈ F, ball (c j) (r j)) :
+    Tendsto (greenFunction (⋃ j ∈ F, ball (c j) (r j)) z)
+      (𝓝[⋃ j ∈ F, ball (c j) (r j)] y) (𝓝 0) := by
+  classical
+  let W : Set ℂ := ⋃ j ∈ F.erase i, ball (c j) (r j)
+  have hF : (⋃ j ∈ F, ball (c j) (r j)) = ball (c i) (r i) ∪ W := by
+    rw [← Finset.insert_erase hi, Finset.set_biUnion_insert]
+  have hW : IsOpen W := isOpen_iUnion fun j => isOpen_iUnion fun _ => isOpen_ball
+  have hWb : Bornology.IsBounded W := by
+    exact (Bornology.isBounded_biUnion_finset (F.erase i)).2
+      (fun _ _ => isBounded_ball)
+  have hdisW : Disjoint (ball (c i) (r i)) W := by
+    apply disjoint_iUnion_right.mpr
+    intro j
+    apply disjoint_iUnion_right.mpr
+    intro hj
+    exact hdis j (Finset.mem_of_mem_erase hj) (Finset.ne_of_mem_erase hj)
+  rw [hF] at hy ⊢
+  exact tendsto_greenFunction_zero_of_disjoint_union_ball hW hdisW hWb hz hy
+
+/-- A finite union of pairwise disjoint discs is Green regular at every
+boundary point for every pole in the union. -/
+theorem tendsto_greenFunction_zero_of_pairwise_disjoint_finite_discs
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ)
+    (hdis : ∀ i ∈ F, ∀ j ∈ F, i ≠ j →
+      Disjoint (ball (c i) (r i)) (ball (c j) (r j)))
+    {z y : ℂ} (hz : z ∈ ⋃ i ∈ F, ball (c i) (r i))
+    (hy : y ∉ ⋃ i ∈ F, ball (c i) (r i)) :
+    Tendsto (greenFunction (⋃ i ∈ F, ball (c i) (r i)) z)
+      (𝓝[⋃ i ∈ F, ball (c i) (r i)] y) (𝓝 0) := by
+  obtain ⟨i, hi, hzi⟩ := mem_iUnion₂.mp hz
+  exact tendsto_greenFunction_zero_of_finite_disc_union_isolated_pole_disc F c r hi
+    (fun j hj hji => hdis i hi j hj (Ne.symm hji)) hzi hy
+
 /-- A boundary point of a finite union of discs belongs to the boundary
 circle of at least one disc in the union. -/
 theorem exists_mem_sphere_of_mem_closure_finite_disc_union
@@ -180,6 +220,8 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms tendsto_greenFunction_zero_of_pairwise_disjoint_finite_discs
+#print axioms tendsto_greenFunction_zero_of_finite_disc_union_isolated_pole_disc
 #print axioms tendsto_greenFunction_zero_of_disjoint_union_ball
 #print axioms greenFunction_eq_of_disjoint_open_union_all
 #print axioms tendsto_greenFunction_zero_of_disjoint_open_union
