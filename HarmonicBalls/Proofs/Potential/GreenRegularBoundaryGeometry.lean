@@ -96,6 +96,47 @@ theorem tendsto_greenFunction_zero_of_harmonic_minorant
     rw [greenFunction, ite_eq_left ⟨hz, hx, Ne.symm hxz'⟩]
     linarith
 
+/-- A harmonic minorant bounds the Green function away from the pole. -/
+theorem greenFunction_le_newtonKernel_sub_minorant
+    {U : Set ℂ} {z x : ℂ} (hz : z ∈ U) (hx : x ∈ U) (hxz : x ≠ z)
+    {q : ℂ → ℝ} (hq : IsHarmonicMinorant U (newtonKernelEReal z) q) :
+    greenFunction U z x ≤ newtonKernel z x - q x := by
+  have hlow := hq.le_greatestHarmonicMinorant x
+  have hupp : greatestHarmonicMinorant U (newtonKernelEReal z) x ≤
+      (newtonKernel z x : EReal) := by
+    simpa [newtonKernelEReal, hxz] using
+      greatestHarmonicMinorant_le (u := newtonKernelEReal z) hx
+  have hqbound : q x ≤ (greatestHarmonicMinorant U (newtonKernelEReal z) x).toReal := by
+    have hh := EReal.toReal_le_toReal hlow (EReal.coe_ne_bot _)
+      (ne_top_of_le_ne_top (EReal.coe_ne_top _) hupp)
+    simpa only [EReal.toReal_coe] using hh
+  rw [greenFunction, ite_eq_left ⟨hz, hx, Ne.symm hxz⟩]
+  linarith
+
+/-- Approximate harmonic minorants suffice to establish a Green boundary limit. -/
+theorem tendsto_greenFunction_zero_of_approximating_harmonic_minorants
+    {U : Set ℂ} (hUb : Bornology.IsBounded U) {z y : ℂ} (hz : z ∈ U) (hyz : y ≠ z)
+    (hq : ∀ ε : ℝ, 0 < ε → ∃ q : ℂ → ℝ,
+      IsHarmonicMinorant U (newtonKernelEReal z) q ∧
+      Tendsto q (𝓝[U] y) (𝓝 (newtonKernel z y - ε))) :
+    Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0) := by
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  obtain ⟨q, hminor, hqlim⟩ := hq (ε / 2) (half_pos hε)
+  have hN : Tendsto (newtonKernel z) (𝓝[U] y) (𝓝 (newtonKernel z y)) :=
+    ((harmonicAt_newtonKernel hyz).1.continuousAt.tendsto).mono_left nhdsWithin_le_nhds
+  have hlim : Tendsto (fun x => newtonKernel z x - q x) (𝓝[U] y) (𝓝 (ε / 2)) := by
+    convert hN.sub hqlim using 1; ring
+  have hlt : ∀ᶠ x in 𝓝[U] y, newtonKernel z x - q x < ε :=
+    hlim.eventually (Iio_mem_nhds (by linarith))
+  filter_upwards [hlt, self_mem_nhdsWithin,
+    nhdsWithin_le_nhds (isOpen_compl_singleton.mem_nhds hyz)] with x hx hxU hxz
+  have hxz' : x ≠ z := by simpa using hxz
+  have hG : 0 ≤ greenFunction U z x := greenFunction_nonneg hUb z x
+  have hupper := greenFunction_le_newtonKernel_sub_minorant hz hxU hxz' hminor
+  rw [Real.dist_eq, sub_zero, abs_of_nonneg hG]
+  exact lt_of_le_of_lt hupper hx
+
 /-- The Green function vanishes in a neighbourhood of every point outside
 the closure of the pole component. -/
 theorem greenFunction_eventually_eq_zero_of_not_mem_closure_pole_component
@@ -390,6 +431,8 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms tendsto_greenFunction_zero_of_approximating_harmonic_minorants
+#print axioms greenFunction_le_newtonKernel_sub_minorant
 #print axioms tendsto_greenFunction_zero_of_harmonic_minorant
 #print axioms tendsto_greenFunction_zero_iff_greatestHarmonicMinorant
 #print axioms greenFunction_eventually_eq_zero_of_not_mem_closure_pole_component
