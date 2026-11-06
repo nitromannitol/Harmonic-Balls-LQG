@@ -11,3 +11,41 @@ For every n, `hac` and `hraw` imply that the reference law assigns zero mass to 
 DMS21, *Liouville quantum gravity as a mating of trees*, Lemma A.10, whole-plane paragraph (arXiv:1409.7055v4, PDF p. 184), gives the mass-weighted whole-plane GFF sampling description with insertion −γ log|x−z| + γ log max(|x|,1), modulo constants. The unit-disc, γ ∈ (0,2), zero-integral-observation candidate in `/home/nitro/paper-fleets/hb/INPUT-REQUESTS.md:58` has the correct insertion and is consistent with its marked sampling argument. The source does not directly state that exact Lean equality for arbitrary carriers, circle-average versions, and measurable kernels: the marked cylinder identity and approximation/limit match still require verification. The unnormalized mass-biased bind is not the conditional normalized-root law; positivity and finiteness yield domination, not equality. DMS does not provide an Ω-valued measurable shift or domination on arbitrary extra Ω coordinates, and does not imply the global `hroot`.
 
 The paper compares restrictions near z away from 0, retaining the smooth local term −α₀ log|x| and tracking additive normalization. The local projective-measure formulation in `LocalRootedComparisonRepair.md` is a candidate repair, not a proved replacement or a checked literature input. No downstream theorem is claimed closed by this verdict.
+
+## Round c: consumer verdicts and remaining obligations
+
+### 3′. DMS rooted interface: MINIMAL-CORRECTION (conditional)
+
+The source-level interface is a marked, **observed field** statement, not an ambient-Ω shift: with `B = B₁(0)`, `H` the circle-average-normalized whole-plane GFF, and `λ = μ_H`, the unnormalized law of `(H mod constants, z)` weighted by `λ(dz)` on B is described by Lebesgue z and the field `H − γ log|·−z| + γ log max(|·|,1)` modulo constants. DMS21 Lemma A.10, whole-plane paragraph, PDF p. 184, explicitly gives the field sampling description; the marked cylinder identity and its realization with this repository's approximations remain to be checked, not postulated as an already verified Lean equality. Reweighting by `1/λ(B)` changes the joint law but preserves its null sets when `0 < λ(B) < ∞`. For `h = H − α₀ log|·|`, retain the additional `−α₀ log|·|` on the inserted side. DMS alone does not supply a local GMC decoder or the comparison of the actual measures.
+
+The precise *sufficient replacement*, not asserted as a sourced theorem, is the observable domination in `docs/campaign/audits/LocalRootedComparisonRepair.md:13`: for `D j = {z : 3 r j < |z| ∧ |z| < 1 − 3 r j}`, `r j = 1/(16j)` for positive j, `κ = λ|B/λ(B)`, and the actual normalized, recentered restrictions `O j` and `V j` defined there,
+
+```lean
+Measure.map (O j) ((P ⊗ₘ κ).restrict (Prod.snd ⁻¹' D j)) ≪
+  Measure.map (V j) ((volume.restrict (D j)).prod P)
+```
+
+This Lean-shaped type requires explicit measurable versions, a genuine measurable kernel and positive finite normalization. It must be paired with measurable local frequency predicates and the reference a.e. frequency statement for the **translated lattice phase**, with matching constants. DMS A.10 itself proves neither this type nor those extra premises. `RootedJointObservedFrequency.lean:19` and `RootedUniformPhaseCertificate.lean:23` are conditional infrastructure, not their discharge.
+
+* **Lemma 8.2:** the paper's local transfer works conditional on the displayed domination, measurability and phase-sensitive reference frequency, since only the eventual tail event is transferred and finitely many initial scales are irrelevant. As currently formalized, `TypicalPointLiteratureAssembly.lean:24` calls `typicalPointManyGoodScalesStmt_of_ambientLaw` with the false global hypothesis, so replacing its hypothesis alone does **not** typecheck or prove the lemma; a local consumer must be built and the stated bridges proved. No source-level disproof of the numbered lemma is established.
+* **Proposition 8.1:** `BoundaryTimeLiteratureAssembly.lean` uses Lemma 8.2 as a whole through `clusterBoundary_and_timeContinuity_of_literature`; it does not consume `hcomparison` independently. Once the same frozen `TypicalPointManyGoodScalesStmt` is actually proved, its downstream application needs no global law. The local comparison alone is insufficient to close it.
+* **Proposition 7.2:** the same Section 7 assembly produces `ClusterTimeContinuityStmt` in the same conjunction and likewise has no independent rooted-law use. The other explicit Section 7 hypotheses remain required. This is a dependency audit, not a completed proof of either proposition.
+
+### 1. E18 / Lemma 11.13: OPEN, not a false-result verdict
+
+The requested four-way classification cannot honestly be resolved on the present evidence: neither positivity nor a counterexample is known here. The printed construction needs correction/justification, but its gaps do not establish a minimal correction to the **statement**, and `pinchPointEventWithInternalBounds` is a stronger auxiliary event, not the printed event. Exact evidence and quantifiers are in `docs/campaign/audits/E18PinchSourceCheck.md:8`. In particular the E₁ paths may leave B₆, the common buffered product gap is not established, the third contraction ratio is reversed, and the use of dyadic-square Lemma 11.10 for U,V is not immediate. The frozen statement's arbitrary ξ also exceeds the cited physical-ξ premise unless the axioms enforce it.
+
+An exact sufficient missing Lean proposition is `hA` in `HarmonicBalls/Proofs/Sec11/BufferedPinchCanonicalLaw.lean:35`: for the same fixed proof configuration and each admissible parameter set and M, find `0 < b`, `0 < q ≤ 1` such that the displayed intersection has `0 < P {ω | ...}`. Its conjunction is E₁, E₂(M), the B₆ exit lower bound, `L < q*b`, and `q*C < H`; its exact binder types and formula are the cited declaration, not a claim of a published input. In addition the cited theorem requires its precise `hshiftLaw` and `0 < ξ` hypotheses. Neither the ordinary α₀ = 0 case nor general α₀ < Q (including γ) settles this joint proposition, and an alternative proof of the original numbered statement could avoid this sufficient strengthening. The actual research question is whether this joint proposition, or a different route to the frozen conclusion, follows from the specified metric-field assumptions; no new literature input is staged.
+
+### 2. Lemma 11.8 cone representation: OPEN formal bridge; printed locality not refuted
+
+The assertion at corrected TeX 2792–2796 that the cone event is local to the annulus is consistent with the displayed mass/Green definition and scaling, but the repository does not yet prove the needed joint measurable representation. `FixedShiftCircleLQGRepresentation.lean` supplies a common decoder for the two *actual* limits conditional on the two limit laws, buffered monotone exhaustion, continuity-set hypotheses and positive finite normalizing mass; it does not by itself encode the cone/Green event or discharge these premises. Thus neither FINE-AS-PRINTED nor CITED is established for the full Lean obligation, and no counterexample or necessary correction has been found.
+
+The exact missing representation is: find countable `ι`, buffered measurable `A : ι → Set ℂ` and measurable `C : Set (ι → ℝ)` so that, for each of the original and fixed-smooth-shift actual measures η, almost surely
+
+```lean
+coneMassEvent η Q M r z ↔
+  (fun i => (normalizedRestriction η U (A i)).toReal) ∈ C
+```
+
+Here U must contain the cone and Green-potential supports and the normalization is positive and finite; the actual quantifier and approximation conditions are those of `IsWholePlaneGFF.exists_fixedShift_normalizedMass_decoder` and `fixedShift_event_representation_with_insertion`. One must construct the Green supremum's countable measurable encoding, prove the two continuity-set and exhaustion hypotheses for the chosen sets, and then obtain `hE` and `hEp` in `ConeBadEventTransfer.lean:55`. This is a concrete unproved formalization obligation, not yet evidence of an open mathematical research problem. Separately the positivity, bump inclusion, parameter uniformity and frequency argument remain to be proved; the decoder alone does not prove Lemma 11.8.
