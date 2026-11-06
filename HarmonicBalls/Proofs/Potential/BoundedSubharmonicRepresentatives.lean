@@ -1,6 +1,8 @@
 import HarmonicBalls.Audit.GreenSubharmonicTestClass
 import HarmonicBalls.Proofs.Potential.GreenBall
 import HarmonicBalls.Proofs.Potential.GreenPositivity
+import Mathlib.LinearAlgebra.Lagrange
+import Mathlib.Analysis.Analytic.Polynomial
 
 /-!
 # Bounded witnesses for subharmonic tests
@@ -13,6 +15,45 @@ it does not establish them. Leonardo Bonanno contributed to this formalization.
 namespace HarmonicBalls
 
 open MeasureTheory Metric Set InnerProductSpace
+
+/-- A finitely supported observation measure admits bounded representatives for the
+whole frozen test class. The real part of a complex interpolating polynomial agrees
+with each test at every observation point and at the pole. -/
+theorem hasBoundedSubharmonicRepresentatives_of_ae_mem_finset
+    {μ : Measure ℂ} {Λ : Set ℂ} {z : ℂ} (hΛ : Bornology.IsBounded Λ)
+    (S : Finset ℂ) (hS : ∀ᵐ x ∂μ.restrict Λ, x ∈ S) :
+    HasBoundedSubharmonicRepresentatives μ Λ z := by
+  classical
+  intro f hf
+  let T := insert z S
+  let P : Polynomial ℂ := Lagrange.interpolate T id (fun x => (f x : ℂ))
+  let g : ℂ → ℝ := fun x => (P.eval x).re
+  have hg : HarmonicOnNhd g univ := by
+    intro x hx
+    exact (AnalyticOnNhd.eval_polynomial P x (mem_univ x)).harmonicAt_re
+  have heval : ∀ x ∈ T, g x = f x := by
+    intro x hx
+    have hi : Set.InjOn (id : ℂ → ℂ) T := fun _ _ _ _ h => h
+    have h := Lagrange.eval_interpolate_at_node (fun x => (f x : ℂ)) hi hx
+    simpa only [g, P, id_eq, Complex.ofReal_re] using congrArg Complex.re h
+  refine ⟨g, harmonic_mem_boundedSubharmonicBallTestClass hΛ isOpen_univ
+    (subset_univ _) hg, ?_, ?_⟩
+  · exact (heval z (Finset.mem_insert_self z S)).symm
+  · filter_upwards [hS] with x hx
+    exact (heval x (Finset.mem_insert_of_mem hx)).symm
+
+#print axioms hasBoundedSubharmonicRepresentatives_of_ae_mem_finset
+
+/-- Every test admits a bounded representative when the observation measure is a
+single point mass, independently of the point's location. -/
+theorem hasBoundedSubharmonicRepresentatives_dirac {Λ : Set ℂ} {z x : ℂ}
+    (hΛ : Bornology.IsBounded Λ) :
+    HasBoundedSubharmonicRepresentatives (Measure.dirac x) Λ z := by
+  apply hasBoundedSubharmonicRepresentatives_of_ae_mem_finset hΛ {x}
+  apply ae_restrict_of_ae
+  simp only [ae_dirac_eq, Filter.eventually_pure, Finset.mem_singleton]
+
+#print axioms hasBoundedSubharmonicRepresentatives_dirac
 
 /-- A bounded observation set and a compact source fit in a bounded open subset of
 any given open witness. -/
