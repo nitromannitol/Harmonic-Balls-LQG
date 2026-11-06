@@ -268,6 +268,55 @@ theorem no_dirac_harmonic_correction_on_discs :
     mul_pos (by positivity) (Real.log_pos (by norm_num))
   linarith
 
+/-- Except at radius one, no concentric disc containing the observation disc admits
+an unchanged-Dirac harmonic correction of the whole-plane potential for this measure. -/
+theorem no_dirac_harmonic_correction_univ_to_ball {R : ℝ}
+    (hR : (1 / 2 : ℝ) < R) (hR1 : R ≠ 1) :
+    ¬ ∃ a : ℂ → ℝ, HarmonicOnNhd a (ball 0 R) ∧
+      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (1 / 2 : ℝ)),
+        greenPotential univ (Measure.dirac 0) x =
+          a x + greenPotential (ball 0 R) (Measure.dirac 0) x) := by
+  classical
+  rintro ⟨a, ha, hae⟩
+  rw [Measure.restrict_add, ae_add_measure_iff] at hae
+  have hzero : a 0 = 0 := by
+    have h := hae.2
+    rw [restrict_dirac, ite_eq_left (mem_ball_self (by norm_num : (0 : ℝ) < 1 / 2)),
+      ae_dirac_eq] at h
+    exact dirac_source_correction_at_atom h
+  have hRpos : 0 < R := by linarith
+  have hconstant : ∀ᵐ x ∂volume.restrict (ball (0 : ℂ) (1 / 2 : ℝ)),
+      a x = -((2 * Real.pi)⁻¹ * Real.log R) := by
+    filter_upwards [hae.1, ae_restrict_mem measurableSet_ball,
+      ae_restrict_of_ae (volume.ae_ne (0 : ℂ))] with x hx hxb hx0
+    have hxR : x ∈ ball (0 : ℂ) R := (ball_subset_ball hR.le) hxb
+    rw [greenPotential_dirac_zero_ball hRpos hxR hx0] at hx
+    simp only [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+      newtonKernel, sub_zero] at hx
+    linarith
+  have ha' : ContinuousOn a (ball (0 : ℂ) (1 / 2 : ℝ)) :=
+    ha.continuousOn.mono (ball_subset_ball hR.le)
+  have heq := Measure.eqOn_open_of_ae_eq hconstant isOpen_ball ha' continuousOn_const
+  have h := heq (mem_ball_self (by norm_num : (0 : ℝ) < 1 / 2))
+  rw [hzero] at h
+  have hp : (2 * Real.pi)⁻¹ ≠ 0 := by positivity
+  have hl := Real.log_ne_zero_of_pos_of_ne_one hRpos hR1
+  exact mul_ne_zero hp hl (by linarith)
+
+#print axioms no_dirac_harmonic_correction_univ_to_ball
+
+/-- For a whole-plane point source, replacing the witness by the disc of radius two
+cannot be achieved with an unchanged source and a harmonic correction when the
+observation measure sees both area and the atom. A different bounded witness may work. -/
+theorem no_dirac_harmonic_correction_univ_to_disc :
+    ¬ ∃ a : ℂ → ℝ, HarmonicOnNhd a (ball 0 2) ∧
+      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (1 / 2 : ℝ)),
+        greenPotential univ (Measure.dirac 0) x =
+          a x + greenPotential (ball 0 2) (Measure.dirac 0) x) :=
+  no_dirac_harmonic_correction_univ_to_ball (by norm_num) (by norm_num)
+
+#print axioms no_dirac_harmonic_correction_univ_to_disc
+
 #print axioms no_dirac_harmonic_correction_on_discs
 #print axioms greenPotential_dirac_zero_ball
 #print axioms dirac_source_correction_at_atom
