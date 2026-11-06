@@ -413,6 +413,86 @@ theorem univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
 
 #print axioms univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
 
+/-- The Green potential of two point masses is the sum of their potentials.
+Each point-mass integral is integrable, including on the diagonal. -/
+theorem greenPotential_add_dirac (O : Set ℂ) (a c x : ℂ) :
+    greenPotential O (Measure.dirac a + Measure.dirac c) x =
+      greenPotential O (Measure.dirac a) x + greenPotential O (Measure.dirac c) x := by
+  exact integral_add_measure (integrable_dirac enorm_lt_top) (integrable_dirac enorm_lt_top)
+
+#print axioms greenPotential_add_dirac
+
+/-- A whole-plane test with two negative atoms has a bounded representative for
+observation measures charging neither atom. The positive source outside the disc
+is absorbed into the harmonic part. -/
+theorem univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
+    {μ : Measure ℂ} {Λ : Set ℂ} {z a c b : ℂ} {R : ℝ}
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hza : z ≠ a) (hzc : z ≠ c) (ha : a ∈ ball (0 : ℂ) R)
+    (hc : c ∈ ball (0 : ℂ) R) (hb : b ∉ ball (0 : ℂ) R)
+    (hμa : μ.restrict Λ {a} = 0) (hμc : μ.restrict Λ {c} = 0) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (Measure.dirac a + Measure.dirac c)) z = g z ∧
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (Measure.dirac a + Measure.dirac c)) =ᵐ[μ.restrict Λ] g := by
+  classical
+  let q := greenPotential univ (Measure.dirac b) - greatestHarmonicMinorantBall R a -
+    greatestHarmonicMinorantBall R c
+  have hqeq : greenPotential univ (Measure.dirac b) = newtonKernel b := by
+    ext x
+    simp only [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+      newtonKernel_comm x b]
+  have hq : HarmonicOnNhd q (ball 0 R) := by
+    apply HarmonicOnNhd.sub
+    · apply HarmonicOnNhd.sub
+      · rw [hqeq]
+        intro x hx
+        apply harmonicAt_newtonKernel
+        intro hxb
+        exact hb (hxb ▸ hx)
+      · exact (isHarmonicMinorant_greatestHarmonicMinorantBall ha).1
+    · exact (isHarmonicMinorant_greatestHarmonicMinorantBall hc).1
+  let ν := Measure.dirac a + Measure.dirac c
+  let g := q - greenPotential (ball 0 R) ν
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 R, {a, c}, 0, ν, q, isOpen_ball, isBounded_ball,
+      hΛ, isCompact_singleton.insert a, ?_, inferInstance, inferInstance, ?_, ?_, ?_, hq,
+      ?_, ?_, ?_⟩
+    · intro x hx
+      simp only [mem_insert_iff, mem_singleton_iff] at hx
+      rcases hx with rfl | rfl
+      · exact ha
+      · exact hc
+    · simp
+    · simp [ν]
+    · simp
+    · simp [ν, hza, hzc]
+    · exact (integrable_dirac enorm_lt_top).add_measure (integrable_dirac enorm_lt_top)
+    · ext x
+      simp [g, greenPotential]
+  have heq : ∀ x ∈ ball (0 : ℂ) R, x ≠ a → x ≠ c →
+      (greenPotential univ (Measure.dirac b) - greenPotential univ ν) x = g x := by
+    intro x hx hxa hxc
+    simp only [g, q, Pi.sub_apply, ν, greenPotential_add_dirac]
+    rw [greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR ha hx hxa,
+      greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR hc hx hxc]
+    ring
+  refine ⟨g, hg, heq z (hΛ (subset_closure hz)) hza hzc, ?_⟩
+  have hne_a : ∀ᵐ x ∂μ.restrict Λ, x ≠ a := by
+    rw [ae_iff]
+    simpa only [not_not, ofPred_eq_eq_singleton] using hμa
+  have hne_c : ∀ᵐ x ∂μ.restrict Λ, x ≠ c := by
+    rw [ae_iff]
+    simpa only [not_not, ofPred_eq_eq_singleton] using hμc
+  have hball : ∀ᵐ x ∂μ.restrict Λ, x ∈ ball (0 : ℂ) R :=
+    ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+      (ae_restrict_mem (isOpen_ball.measurableSet))
+  filter_upwards [hball, hne_a, hne_c] with x hx hxa hxc
+  exact heq x hx hxa hxc
+
+#print axioms univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
+
 /-- The construction applies to every observation measure absolutely continuous
 with respect to area measure. -/
 theorem univ_two_dirac_has_bounded_representative_of_ac_volume

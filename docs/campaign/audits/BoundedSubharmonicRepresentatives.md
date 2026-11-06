@@ -44,6 +44,8 @@ The file now proves `not_isHarmonicMinorant_univ_newtonKernel`, using the existi
 
 The complementary result `univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero` removes the zero-diagonal-correction condition if `(μ.restrict Λ) {a} = 0`: the pole is distinct from the negative atom, and the potential correction is applied there and almost everywhere on the observation set. The positive atom is again outside the bounded witness disc and is eliminated. `univ_two_dirac_has_bounded_representative_of_ac_volume` specializes to observation measures absolutely continuous with respect to area. These are proved special cases, not an assumed polar-nullness principle, and they do not handle an observation measure charging the negative atom when its diagonal correction is nonzero.
 
+`univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero` extends the changed-source construction to a positive point source outside the witness disc and two negative point sources inside it. It retains both negative sources, absorbs the positive source and the two disc corrections into the harmonic part, and matches the original function at the pole and almost everywhere when the restricted observation measure gives each negative atom zero mass. The two negative atoms may coincide. This remains a special case and does not settle observations charging either atom or arbitrary source measures.
+
 ## Outstanding proof obligation
 
 The exact target remains
