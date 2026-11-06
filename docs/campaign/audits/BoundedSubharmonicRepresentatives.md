@@ -16,6 +16,10 @@ The obstruction also holds for a genuinely unbounded original witness: `no_dirac
 
 The representative property is downward closed under absolute continuity of restricted observation measures: `hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous` transfers an existing representative result to any dominated measure. This reduction does not establish the property for the dominating measure.
 
+## Universal measures require pointwise representatives
+
+`forall_hasBoundedSubharmonicRepresentatives_iff_pointwise` proves that, for measurable Λ, the property for **every** observation measure is equivalent to choosing, for each frozen test, one bounded-witness test agreeing at the pole and at every point of Λ. The forward direction uses counting measure on ℂ, which is permitted by the unrestricted Lean quantifier and forces pointwise equality; the reverse direction works for every measure. Counting measure is not locally finite on a nonempty open set, so this equivalence concerns the unrestricted audit obligation and does not by itself settle a version limited to LQG measures. It neither proves nor disproves the pointwise representative assertion.
+
 ## Finitely supported observation measures
 
 `hasBoundedSubharmonicRepresentatives_of_ae_mem_finset` proves the exact representative property for **every** frozen test whenever Λ is bounded and the restricted observation measure is concentrated almost everywhere on a finite set. It uses the real part of a complex Lagrange interpolation polynomial through the observation points and the pole. This proof does not assume anything about the test's original domain or sources. In particular, `hasBoundedSubharmonicRepresentatives_dirac` covers a Dirac observation measure at any point, whether or not it equals the pole. These cases do not resolve general observation measures.

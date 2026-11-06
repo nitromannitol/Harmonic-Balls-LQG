@@ -3,6 +3,7 @@ import HarmonicBalls.Proofs.Potential.GreenBall
 import HarmonicBalls.Proofs.Potential.GreenPositivity
 import Mathlib.LinearAlgebra.Lagrange
 import Mathlib.Analysis.Analytic.Polynomial
+import Mathlib.MeasureTheory.Measure.Count
 
 /-!
 # Bounded witnesses for subharmonic tests
@@ -15,6 +16,26 @@ it does not establish them. Leonardo Bonanno contributed to this formalization.
 namespace HarmonicBalls
 
 open MeasureTheory Metric Set InnerProductSpace
+
+/-- For a measurable observation set, requiring representatives for every measure is
+exactly the pointwise representative problem. Counting measure tests every point. -/
+theorem forall_hasBoundedSubharmonicRepresentatives_iff_pointwise
+    {Λ : Set ℂ} {z : ℂ} (hΛ : MeasurableSet Λ) :
+    (∀ μ : Measure ℂ, HasBoundedSubharmonicRepresentatives μ Λ z) ↔
+      ∀ f ∈ subharmonicBallTestClass Λ z,
+        ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+          f z = g z ∧ ∀ x ∈ Λ, f x = g x := by
+  constructor
+  · intro h f hf
+    obtain ⟨g, hg, hz, hae⟩ := h Measure.count f hf
+    refine ⟨g, hg, hz, ?_⟩
+    have hpoint := (Measure.ae_count_iff).1 ((ae_restrict_iff' hΛ).1 hae)
+    exact hpoint
+  · intro h μ f hf
+    obtain ⟨g, hg, hz, hpoint⟩ := h f hf
+    exact ⟨g, hg, hz, ae_restrict_of_forall_mem hΛ hpoint⟩
+
+#print axioms forall_hasBoundedSubharmonicRepresentatives_iff_pointwise
 
 /-- Representatives for a dominating observation measure also work for every
 absolutely continuous observation measure. -/
