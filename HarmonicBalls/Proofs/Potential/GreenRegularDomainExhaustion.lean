@@ -8,7 +8,8 @@ regularity of the resulting domains is a separate question.
 
 namespace HarmonicBalls
 
-open Set Metric
+open Set Metric Filter
+open scoped Topology
 
 /-- An open subset of the plane admits an increasing relatively compact open
 exhaustion containing any prescribed point at every stage. -/
@@ -99,6 +100,30 @@ theorem exists_finite_disc_open_exhaustion {U : Set ℂ} (hU : IsOpen U)
     · simp [F]
     · exact mem_ball_self (hr ⟨z, hz⟩).1
 
+/-- Finite-disc Green boundary limits imply the desired relatively compact
+Green-regular exhaustion. The finite-disc limit is an explicit hypothesis and
+is not proved by this reduction. -/
+theorem exists_greenRegular_exhaustion_of_finite_disc_boundary_limits
+    {U : Set ℂ} (hU : IsOpen U) {z : ℂ} (hz : z ∈ U)
+    (hdisc : ∀ (r : U → ℝ) (F : Finset U),
+      (∀ x, 0 < r x ∧ closedBall (x : ℂ) (r x) ⊆ U) →
+      z ∈ ⋃ x ∈ F, ball (x : ℂ) (r x) →
+      ∀ y ∈ closure (⋃ x ∈ F, ball (x : ℂ) (r x)),
+        y ∉ ⋃ x ∈ F, ball (x : ℂ) (r x) →
+        Tendsto (greenFunction (⋃ x ∈ F, ball (x : ℂ) (r x)) z)
+          (𝓝[⋃ x ∈ F, ball (x : ℂ) (r x)] y) (𝓝 0)) :
+    ∃ V : ℕ → Set ℂ, (∀ n, IsOpen (V n)) ∧ Monotone V ∧
+      (⋃ n, V n) = U ∧ (∀ n, closure (V n) ⊆ U) ∧
+      (∀ n, z ∈ V n) ∧ ∀ n, ∀ y ∈ closure (V n), y ∉ V n →
+        Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0) := by
+  obtain ⟨r, F, hr, _, hopen, hmono, hcover, hcompact, hpole⟩ :=
+    exists_finite_disc_open_exhaustion hU hz
+  refine ⟨fun n => ⋃ x ∈ F n, ball (x : ℂ) (r x), hopen, hmono, hcover,
+    hcompact, hpole, ?_⟩
+  intro n y hy hyout
+  exact hdisc r (F n) hr (hpole n) y hy hyout
+
+#print axioms exists_greenRegular_exhaustion_of_finite_disc_boundary_limits
 #print axioms exists_open_relativelyCompact_exhaustion
 #print axioms exists_finite_disc_open_exhaustion
 
