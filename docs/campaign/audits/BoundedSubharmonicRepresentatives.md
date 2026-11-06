@@ -60,6 +60,17 @@ The complementary result `univ_two_dirac_has_bounded_representative_of_measure_a
 
 ## Outstanding proof obligation
 
+`bounded_representative_of_changed_sources` gives a general transport step for arbitrary
+old and replacement measures, without requiring the two source corrections separately.
+The remaining construction must choose a bounded open `V ⊆ O`, compact `K ⊆ V`,
+finite replacement measures `η₁, η₂` concentrated on `K`, and a function harmonic
+on `V`, with `η₁ Λ = 0`, `η₂ {z} = 0`, and `Integrable (greenFunction V z) η₂`.
+It must establish equality of the old signed potential and the replacement signed
+potential plus the harmonic function at `z` and `μ.restrict Λ`-almost everywhere.
+These are explicit hypotheses of the transport lemma, not established facts or
+literature inputs; in particular the source-preserving counterexamples do not rule
+out this changed-source construction.
+
 The exact target remains
 
 ```lean

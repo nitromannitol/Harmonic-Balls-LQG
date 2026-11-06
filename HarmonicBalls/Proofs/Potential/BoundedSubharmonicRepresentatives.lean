@@ -195,6 +195,37 @@ theorem bounded_representative_of_source_corrections
     rw [hx₁, hx₂]
     ring
 
+/-- Transport a witness using replacement sources and a single harmonic correction
+for the signed potential. The replacement sources must independently satisfy all
+compact-support, sign, and pole conditions, and the correction identity is required
+both at the pole and almost everywhere on the observation set. -/
+theorem bounded_representative_of_changed_sources
+    {μ ν₁ ν₂ η₁ η₂ : Measure ℂ} {Λ O V K : Set ℂ} {z : ℂ}
+    {q a : ℂ → ℝ}
+    (hV : IsOpen V) (hVb : Bornology.IsBounded V) (hVO : V ⊆ O)
+    (hΛV : closure Λ ⊆ V) (hK : IsCompact K) (hKV : K ⊆ V)
+    (hη₁ : IsFiniteMeasure η₁) (hη₂ : IsFiniteMeasure η₂)
+    (h₁ : η₁ Kᶜ = 0) (h₂ : η₂ Kᶜ = 0) (hΛ₁ : η₁ Λ = 0)
+    (hq : HarmonicOnNhd q O) (ha : HarmonicOnNhd a V)
+    (hz : η₂ {z} = 0) (hi : Integrable (greenFunction V z) η₂)
+    (hcorrectz : (greenPotential O ν₁ - greenPotential O ν₂) z =
+      (a + greenPotential V η₁ - greenPotential V η₂) z)
+    (hcorrectae : (greenPotential O ν₁ - greenPotential O ν₂) =ᵐ[μ.restrict Λ]
+      (a + greenPotential V η₁ - greenPotential V η₂)) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (q + greenPotential O ν₁ - greenPotential O ν₂) z = g z ∧
+      (q + greenPotential O ν₁ - greenPotential O ν₂) =ᵐ[μ.restrict Λ] g := by
+  let g := (q + a) + greenPotential V η₁ - greenPotential V η₂
+  refine ⟨g, ⟨V, K, η₁, η₂, q + a, hV, hVb, hΛV, hK, hKV,
+    hη₁, hη₂, h₁, h₂, hΛ₁, (hq.mono hVO).add ha, hz, hi, rfl⟩, ?_, ?_⟩
+  · dsimp [g, Pi.add_apply, Pi.sub_apply] at hcorrectz ⊢
+    linarith
+  · filter_upwards [hcorrectae] with x hx
+    dsimp [g, Pi.add_apply, Pi.sub_apply] at hx ⊢
+    linarith
+
+#print axioms bounded_representative_of_changed_sources
+
 /-- The diagonal convention forces a source-by-source correction for a Dirac mass
     to vanish at its atom, for any two domains. -/
 theorem dirac_source_correction_at_atom {O V : Set ℂ} {x : ℂ} {a : ℂ → ℝ}
