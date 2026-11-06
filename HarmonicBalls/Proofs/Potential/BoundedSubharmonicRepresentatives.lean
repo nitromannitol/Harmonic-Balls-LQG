@@ -1,6 +1,7 @@
 import HarmonicBalls.Audit.GreenSubharmonicTestClass
 import HarmonicBalls.Proofs.Potential.GreenBall
 import HarmonicBalls.Proofs.Potential.GreenPositivity
+import HarmonicBalls.Proofs.Sec6.GreenMono
 import Mathlib.LinearAlgebra.Lagrange
 import Mathlib.Analysis.Analytic.Polynomial
 import Mathlib.MeasureTheory.Measure.Count
@@ -338,6 +339,47 @@ theorem no_dirac_harmonic_correction_univ_to_ball {ρ R : ℝ}
   exact mul_ne_zero hp hl (by linarith)
 
 #print axioms no_dirac_harmonic_correction_univ_to_ball
+
+/-- No bounded domain containing the radius-two observation disc admits an
+unchanged-source harmonic correction for the whole-plane Dirac potential. -/
+theorem no_bounded_domain_source_correction_for_large_observation
+    {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :
+    ¬ ∃ a : ℂ → ℝ, HarmonicOnNhd a V ∧
+      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+        greenPotential univ (Measure.dirac 0) x =
+          a x + greenPotential V (Measure.dirac 0) x) := by
+  classical
+  rintro ⟨a, ha, hae⟩
+  rw [Measure.restrict_add, ae_add_measure_iff] at hae
+  have hzero : a 0 = 0 := by
+    have h := hae.2
+    rw [restrict_dirac, ite_eq_left (mem_ball_self (by norm_num : (0 : ℝ) < 2)),
+      ae_dirac_eq] at h
+    exact dirac_source_correction_at_atom h
+  let c : ℝ := (2 * Real.pi)⁻¹ * Real.log 2
+  have hc : 0 < c := mul_pos (by positivity) (Real.log_pos (by norm_num))
+  have hbound : ∀ᵐ x ∂volume.restrict (ball (0 : ℂ) 2), a x ≤ -c := by
+    filter_upwards [hae.1, ae_restrict_mem measurableSet_ball,
+      ae_restrict_of_ae (volume.ae_ne (0 : ℂ))] with x hx hxb hx0
+    have hm := Section6.greenFunction_mono hsub hV hxb
+      (mem_ball_self (by norm_num : (0 : ℝ) < 2)) hx0
+    have hb := greenPotential_dirac_zero_ball (by norm_num : (0 : ℝ) < 2) hxb hx0
+    simp only [greenPotential, integral_dirac] at hb hx
+    simp only [greenFunction_univ_eq_newtonKernel, newtonKernel, sub_zero] at hx
+    dsimp [c] at *
+    linarith
+  have ha' : ContinuousOn a (ball (0 : ℂ) 2) := ha.continuousOn.mono hsub
+  have heq : (fun x => max (a x) (-c)) =ᵐ[volume.restrict (ball (0 : ℂ) 2)]
+      (fun _ => -c) := by
+    filter_upwards [hbound] with x hx
+    exact max_eq_right hx
+  have hp := Measure.eqOn_open_of_ae_eq heq isOpen_ball (continuous_max.comp_continuousOn (ha'.prodMk continuousOn_const))
+    continuousOn_const (mem_ball_self (by norm_num : (0 : ℝ) < 2))
+  dsimp only at hp
+  rw [hzero, max_eq_left (by linarith : -c ≤ 0)] at hp
+  linarith
+
+#print axioms no_bounded_domain_source_correction_for_large_observation
 
 /-- For the radius-two observation disc, no concentric disc satisfying the actual
 closure-containment condition admits an unchanged-source harmonic correction. -/
