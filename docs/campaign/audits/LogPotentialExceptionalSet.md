@@ -1,22 +1,29 @@
-# Logarithmic potential exceptional set: work in progress
+# Logarithmic potential exceptional set
 
-The E51 logarithmic exceptional-set bridge is **not yet proved**. The results in
-`HarmonicBalls/Proofs/Potential/LogPotentialExceptionalSet.lean` use only the upper
-positive-power volume-growth bound and finiteness on a ball. They establish:
+`ae_logPotential_of_local_upper_growth` in
+`HarmonicBalls/Proofs/Potential/LogPotentialExceptionalSet.lean` proves the
+logarithmic exceptional-set bridge. For locally finite μ, assume that on each
+positive-radius ball μ satisfies a positive-power upper growth bound at small
+radii. If finite ν is concentrated on compact K, then on every ball restriction
+of μ, almost every x has all of the following properties:
 
-* Every singleton has zero mass for the measure restricted to that ball.
-* For any finite positive measure ν, `ν {x} = 0` for almost every x with respect
-  to that bounded restriction, by applying product-measure Fubini to the diagonal.
-* The existing layer-cake Riesz bound gives a uniform integral bound at poles in
-  the closed ball; consequently the negative-power Riesz kernel is integrable
-  against the product of ν restricted to that closed ball and μ restricted to
-  the open ball.
+* `Integrable (newtonKernel x) ν` and `ν {x} = 0`;
+* the positive and negative lower integrals of `newtonKernelEReal x` are finite;
+* their difference, `extendedSignedIntegral`, equals the real Bochner integral.
 
-The product result treats poles and μ-points in the same ball. For a compactly
-supported ν and a smaller bounded μ-restriction, apply growth on a sufficiently
-large common ball and then restrict the μ-factor. The required logarithmic bound,
-product integrability of `newtonKernel`, the almost-everywhere integrability
-conclusion, and the finite extended-real potential identification remain to be
-proved. Neither polar-nullness nor a Green test-class equivalence follows from
-the results above. In particular the real kernel has a finite junk value at the
-diagonal, which is why the independent diagonal result is necessary.
+`ae_logPotential_of_volumeGrowth` gives the same conclusion assuming the
+existing `VolumeGrowth` condition on each positive-radius ball. It uses only its
+upper bound. The proof chooses a common ball containing K and the ball used for
+the μ restriction, applies the existing layer-cake Riesz estimate, obtains a
+uniform bound and then product integrability by Fubini. A bounded-distance
+logarithm estimate gives product integrability of the logarithmic kernel. The
+finite real diagonal value is handled independently: volume growth makes μ
+atomless, and product Fubini removes ν-atoms at μ-almost every point. An explicit
+off-diagonal lower bound on bounded balls is also proved.
+
+This result addresses logarithmic-potential exceptional sets only. It does not
+establish arbitrary polar-nullness, Green-kernel exhaustion convergence,
+bounded-representative equivalence, or closure of E51's separate Green-kernel
+and test-class obligations. The extended signed integral is defined locally as
+the difference of the two nonnegative lower integrals; their finiteness is part
+of the theorem, so the equality involves no indeterminate infinity subtraction.
