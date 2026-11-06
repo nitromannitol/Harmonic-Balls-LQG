@@ -199,6 +199,23 @@ theorem greenPotential_univ_dirac_zero_eq_unitDisc {x : ℂ}
 
 #print axioms greenPotential_univ_dirac_zero_eq_unitDisc
 
+/-- Off the source atom, the disc and whole-plane point potentials differ by
+the harmonic minorant, without a condition on its diagonal value. -/
+theorem greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne
+    {R : ℝ} {a x : ℂ} (hR : 0 < R) (ha : a ∈ ball (0 : ℂ) R)
+    (hx : x ∈ ball (0 : ℂ) R) (hxa : x ≠ a) :
+    greenPotential univ (Measure.dirac a) x =
+      greatestHarmonicMinorantBall R a x + greenPotential (ball 0 R) (Measure.dirac a) x := by
+  have hpos := norm_sub_conj_mul_pos hR (mem_ball_zero_iff.1 ha)
+    (mem_ball_zero_iff.1 hx).le
+  have heq := newtonKernel_sub_greenBall hR (Ne.symm hxa) hpos.ne'
+  rw [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+    newtonKernel_comm x a, greenPotential, integral_dirac, greenFunction_ball_comm,
+    greenFunction_ball ha hx (Ne.symm hxa)]
+  linarith
+
+#print axioms greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne
+
 /-- If the disc's harmonic correction vanishes at the source atom, the
 whole-plane and disc point potentials agree after harmonic correction even at the
 atom, where both kernels use the frozen diagonal value. -/
@@ -341,6 +358,79 @@ theorem univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
     ring
 
 #print axioms univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
+
+/-- A whole-plane two-source test has a bounded representative with its positive
+source removed, when the observation measure does not charge the negative atom. -/
+theorem univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
+    {μ : Measure ℂ} {Λ : Set ℂ} {z a b : ℂ} {R : ℝ}
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hza : z ≠ a) (ha : a ∈ ball (0 : ℂ) R) (hb : b ∉ ball (0 : ℂ) R)
+    (hμ : μ.restrict Λ {a} = 0) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) - greenPotential univ (Measure.dirac a)) z = g z ∧
+      (greenPotential univ (Measure.dirac b) - greenPotential univ (Measure.dirac a))
+        =ᵐ[μ.restrict Λ] g := by
+  classical
+  let q := greenPotential univ (Measure.dirac b) - greatestHarmonicMinorantBall R a
+  have hqeq : greenPotential univ (Measure.dirac b) = newtonKernel b := by
+    ext x
+    simp only [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+      newtonKernel_comm x b]
+  have hq : HarmonicOnNhd q (ball 0 R) := by
+    apply HarmonicOnNhd.sub
+    · rw [hqeq]
+      intro x hx
+      apply harmonicAt_newtonKernel
+      intro hxb
+      exact hb (hxb ▸ hx)
+    · exact (isHarmonicMinorant_greatestHarmonicMinorantBall ha).1
+  let g := q - greenPotential (ball 0 R) (Measure.dirac a)
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 R, {a}, 0, Measure.dirac a, q, isOpen_ball, isBounded_ball,
+      hΛ, isCompact_singleton, ?_, inferInstance, inferInstance, ?_, ?_, ?_, hq,
+      ?_, integrable_dirac enorm_lt_top, ?_⟩
+    · simpa using ha
+    · simp
+    · simp
+    · simp
+    · simp [hza]
+    · ext x
+      simp [g, greenPotential]
+  refine ⟨g, hg, ?_, ?_⟩
+  · simp only [g, q, Pi.sub_apply]
+    rw [greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR ha (hΛ (subset_closure hz)) hza]
+    ring
+  · have hne : ∀ᵐ x ∂μ.restrict Λ, x ≠ a := by
+      rw [ae_iff]
+      simpa only [not_not, ofPred_eq_eq_singleton] using hμ
+    have hball : ∀ᵐ x ∂μ.restrict Λ, x ∈ ball (0 : ℂ) R :=
+      ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+        (ae_restrict_mem (isOpen_ball.measurableSet))
+    filter_upwards [hball, hne] with x hx hxa
+    simp only [g, q, Pi.sub_apply]
+    rw [greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR ha hx hxa]
+    ring
+
+#print axioms univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
+
+/-- The construction applies to every observation measure absolutely continuous
+with respect to area measure. -/
+theorem univ_two_dirac_has_bounded_representative_of_ac_volume
+    {μ : Measure ℂ} {Λ : Set ℂ} {z a b : ℂ} {R : ℝ}
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hza : z ≠ a) (ha : a ∈ ball (0 : ℂ) R) (hb : b ∉ ball (0 : ℂ) R)
+    (hμ : μ ≪ volume) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) - greenPotential univ (Measure.dirac a)) z = g z ∧
+      (greenPotential univ (Measure.dirac b) - greenPotential univ (Measure.dirac a))
+        =ᵐ[μ.restrict Λ] g := by
+  have ha0 : μ {a} = 0 := hμ (measure_singleton a)
+  have hrestrict : μ.restrict Λ {a} = 0 :=
+    le_antisymm (((Measure.restrict_le_self : μ.restrict Λ ≤ μ) {a}).trans_eq ha0) bot_le
+  exact univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
+    hR hΛ hz hza ha hb hrestrict
+
+#print axioms univ_two_dirac_has_bounded_representative_of_ac_volume
 
 /-- For radius two, the diagonal correction vanishes at the real atom √2. -/
 theorem radius_two_sqrt_two_diagonal_correction :

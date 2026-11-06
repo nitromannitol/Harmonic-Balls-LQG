@@ -42,6 +42,8 @@ The file now proves `not_isHarmonicMinorant_univ_newtonKernel`, using the existi
 
 `univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction` extends this construction to a negative atom `a` in `ball 0 R` whenever `‖R² - conj a * a‖ = R`. The explicit disc harmonic minorant then vanishes at `a`, so the frozen diagonal value agrees as well as all off-diagonal values; a positive atom outside the disc is absorbed into the harmonic part. `univ_dirac_sub_dirac_mem_subharmonicBallTestClass` checks membership of the original two-source test. The condition is nonempty beyond the centered unit disc: `radius_two_sqrt_two_diagonal_correction` and `univ_two_dirac_sqrt_two_has_bounded_representative` prove the case `R = 2`, `a = √2`. These results allow arbitrary observation measures, including atoms, but do not settle general source measures or the candidate negative atom at zero in a larger disc.
 
+The complementary result `univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero` removes the zero-diagonal-correction condition if `(μ.restrict Λ) {a} = 0`: the pole is distinct from the negative atom, and the potential correction is applied there and almost everywhere on the observation set. The positive atom is again outside the bounded witness disc and is eliminated. `univ_two_dirac_has_bounded_representative_of_ac_volume` specializes to observation measures absolutely continuous with respect to area. These are proved special cases, not an assumed polar-nullness principle, and they do not handle an observation measure charging the negative atom when its diagonal correction is nonzero.
+
 ## Outstanding proof obligation
 
 The exact target remains
