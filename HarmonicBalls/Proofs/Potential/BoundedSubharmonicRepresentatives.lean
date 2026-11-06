@@ -339,6 +339,26 @@ theorem no_dirac_harmonic_correction_univ_to_ball {ρ R : ℝ}
 
 #print axioms no_dirac_harmonic_correction_univ_to_ball
 
+/-- For the radius-two observation disc, no concentric disc satisfying the actual
+closure-containment condition admits an unchanged-source harmonic correction. -/
+theorem no_concentric_disc_source_correction_for_large_observation :
+    ¬ ∃ (R : ℝ) (a : ℂ → ℝ),
+      closure (ball (0 : ℂ) 2) ⊆ ball 0 R ∧ HarmonicOnNhd a (ball 0 R) ∧
+      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+        greenPotential univ (Measure.dirac 0) x =
+          a x + greenPotential (ball 0 R) (Measure.dirac 0) x) := by
+  rintro ⟨R, a, hcontain, ha, hae⟩
+  have htwo : (2 : ℂ) ∈ closure (ball (0 : ℂ) 2) := by
+    rw [closure_ball (0 : ℂ) (by norm_num : (2 : ℝ) ≠ 0)]
+    simp [Metric.mem_closedBall, dist_zero_right]
+  have hR : (2 : ℝ) < R := by
+    have h := hcontain htwo
+    simpa [Metric.mem_ball, dist_zero_right] using h
+  exact no_dirac_harmonic_correction_univ_to_ball (by norm_num : (0 : ℝ) < 2)
+    hR.le (by linarith) ⟨a, ha, hae⟩
+
+#print axioms no_concentric_disc_source_correction_for_large_observation
+
 /-- For a whole-plane point source, replacing the witness by the disc of radius two
 cannot be achieved with an unchanged source and a harmonic correction when the
 observation measure sees both area and the atom. A different bounded witness may work. -/

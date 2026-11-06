@@ -14,6 +14,8 @@ This example occurs within the intended carrier: take `Λ = ball 0 (1/2)`, `z = 
 
 The obstruction also holds for a genuinely unbounded original witness: `no_dirac_harmonic_correction_univ_to_ball` proves that for `O = univ`, the same source and `μ = volume + dirac 0` restricted to any positive-radius observation disc `ball 0 ρ`, and every concentric disc `V = ball 0 R` with `ρ ≤ R` and `R ≠ 1`, there is no harmonic correction on `V` giving the required almost-everywhere equality. The proof uses the checked whole-plane kernel and the explicit disc formula. This is a precise obstruction to this particular source-preserving localization, not to the target property: radius one does supply a representative in this example.
 
+For the larger observation set `Λ = ball 0 2`, the new theorem `no_concentric_disc_source_correction_for_large_observation` applies the actual closure-containment requirement and rules out **every** concentric disc as a source-preserving harmonic localization. The frozen test itself is admissible, for example at pole `z = 1`, by `neg_univ_dirac_zero_mem_subharmonicBallTestClass`. This does not exclude nonconcentric domains or changed source measures and does not prove failure of bounded representatives.
+
 The representative property is downward closed under absolute continuity of restricted observation measures: `hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous` transfers an existing representative result to any dominated measure. This reduction does not establish the property for the dominating measure.
 
 ## Universal measures require pointwise representatives
