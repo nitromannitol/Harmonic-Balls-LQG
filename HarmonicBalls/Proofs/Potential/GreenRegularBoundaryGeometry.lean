@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Sec5.DiscSupportedBoundary
 import HarmonicBalls.Proofs.Sec5.GreenConnectedComponent
+import HarmonicBalls.Proofs.Sec5.PuncturedDiscContact
 
 /-! # Green boundary comparison
 
@@ -431,6 +432,82 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+/-- Four unit discs centered at the cardinal directions contain the
+punctured unit disc. -/
+theorem punctured_unit_ball_subset_four_discs :
+    ball (0 : ℂ) 1 \ {0} ⊆
+      ball (1 : ℂ) 1 ∪ ball (-1 : ℂ) 1 ∪
+        ball Complex.I 1 ∪ ball (-Complex.I) 1 := by
+  intro x hx
+  have hn : ‖x‖ < 1 := by simpa [mem_ball, dist_eq_norm] using hx.1
+  have hp : 0 < ‖x‖ := norm_pos_iff.mpr (by simpa using hx.2)
+  by_contra hout
+  simp only [mem_union, not_or, mem_ball, not_lt, dist_eq_norm] at hout
+  have h1 : 1 ≤ ‖x - (1 : ℂ)‖ ^ 2 := by nlinarith [norm_nonneg (x - (1 : ℂ))]
+  have h2 : 1 ≤ ‖x - (-1 : ℂ)‖ ^ 2 := by nlinarith [norm_nonneg (x - (-1 : ℂ))]
+  have h3 : 1 ≤ ‖x - Complex.I‖ ^ 2 := by nlinarith [norm_nonneg (x - Complex.I)]
+  have h4 : 1 ≤ ‖x - (-Complex.I)‖ ^ 2 := by nlinarith [norm_nonneg (x - (-Complex.I))]
+  rw [Complex.sq_norm, Complex.normSq_apply] at h1 h2 h3 h4
+  simp only [Complex.sub_re, Complex.sub_im, Complex.one_re, Complex.one_im,
+    Complex.neg_re, Complex.neg_im, Complex.I_re, Complex.I_im] at h1 h2 h3 h4
+  have hsq : ‖x‖ ^ 2 = x.re * x.re + x.im * x.im := by
+    rw [Complex.sq_norm, Complex.normSq_apply]
+  have habs := Complex.norm_le_abs_re_add_abs_im x
+  have hre := abs_le.mpr (show -(‖x‖ ^ 2 / 2) ≤ x.re ∧ x.re ≤ ‖x‖ ^ 2 / 2 by
+    constructor <;> nlinarith)
+  have him := abs_le.mpr (show -(‖x‖ ^ 2 / 2) ≤ x.im ∧ x.im ≤ ‖x‖ ^ 2 / 2 by
+    constructor <;> nlinarith)
+  nlinarith
+
+/-- A bounded domain containing a punctured disc cannot have zero Green
+boundary limit at the puncture. -/
+theorem not_tendsto_greenFunction_zero_of_punctured_ball_subset
+    {V : Set ℂ} {R : ℝ} {z a : ℂ}
+    (hV : Bornology.IsBounded V)
+    (ha : a ∈ ball (0 : ℂ) R) (hz : z ∈ ball (0 : ℂ) R \ {a})
+    (hsub : ball (0 : ℂ) R \ {a} ⊆ V) :
+    ¬ Tendsto (greenFunction V z) (𝓝[V] a) (𝓝 0) := by
+  have hac : a ∈ closure (ball (0 : ℂ) R \ {a}) := by
+    have h := (dense_compl_singleton a).open_subset_closure_inter isOpen_ball ha
+    simpa [sdiff_eq, inter_comm] using h
+  have : (𝓝[ball (0 : ℂ) R \ {a}] a).NeBot := mem_closure_iff_nhdsWithin_neBot.mp hac
+  have hpos := greenFunction_ball_pos hz.1 ha (by simpa using hz.2)
+  intro hlim
+  have hle := Section6.greenFunction_le_of_subset hsub hV z
+  have hlim' := hlim.mono_left (nhdsWithin_mono a hsub)
+  have h := le_of_tendsto_of_tendsto
+    (tendsto_greenFunction_punctured_ball_at_puncture ha hz) hlim'
+    (Filter.Eventually.of_forall hle)
+  linarith
+
+/-- The four-disc union has an irregular boundary point at the origin. -/
+theorem four_disc_union_irregular_boundary :
+    let V : Set ℂ := ball (1 : ℂ) 1 ∪ ball (-1 : ℂ) 1 ∪
+      ball Complex.I 1 ∪ ball (-Complex.I) 1
+    Bornology.IsBounded V ∧ (0 : ℂ) ∈ closure V ∧ (0 : ℂ) ∉ V ∧
+      (1 / 2 : ℂ) ∈ V ∧
+      ¬ Tendsto (greenFunction V (1 / 2 : ℂ)) (𝓝[V] 0) (𝓝 0) := by
+  dsimp only
+  let V : Set ℂ := ball (1 : ℂ) 1 ∪ ball (-1 : ℂ) 1 ∪
+      ball Complex.I 1 ∪ ball (-Complex.I) 1
+  have hV : Bornology.IsBounded V := by
+    dsimp [V]
+    exact ((isBounded_ball.union isBounded_ball).union isBounded_ball).union isBounded_ball
+  have ha : (0 : ℂ) ∈ ball (0 : ℂ) 1 := by simp
+  have hz : (1 / 2 : ℂ) ∈ ball (0 : ℂ) 1 \ {(0 : ℂ)} := by
+    norm_num [mem_ball, dist_eq_norm, Complex.norm_real]
+  have hsub : ball (0 : ℂ) 1 \ {(0 : ℂ)} ⊆ V :=
+    punctured_unit_ball_subset_four_discs
+  have hac : (0 : ℂ) ∈ closure (ball (0 : ℂ) 1 \ {(0 : ℂ)}) := by
+    have h := (dense_compl_singleton (0 : ℂ)).open_subset_closure_inter isOpen_ball ha
+    simpa [sdiff_eq, inter_comm] using h
+  refine ⟨hV, closure_mono hsub hac, ?_, hsub hz, ?_⟩
+  · simp [mem_ball, dist_eq_norm]
+  · exact not_tendsto_greenFunction_zero_of_punctured_ball_subset hV ha hz hsub
+
+#print axioms four_disc_union_irregular_boundary
+#print axioms punctured_unit_ball_subset_four_discs
+#print axioms not_tendsto_greenFunction_zero_of_punctured_ball_subset
 #print axioms tendsto_greenFunction_zero_of_approximating_harmonic_minorants
 #print axioms greenFunction_le_newtonKernel_sub_minorant
 #print axioms tendsto_greenFunction_zero_of_harmonic_minorant
