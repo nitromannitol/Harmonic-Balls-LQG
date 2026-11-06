@@ -1,53 +1,53 @@
 # Fixed smooth shifts: circle and normalized-mass representation
 
-`HarmonicBalls.Proofs.GFF.FixedShiftCircleLQGRepresentation` records partial
-infrastructure for Lemma 11.8; it does not close the representation gap.
-The results use the actual whole-plane GFF joint Gaussian/covariance axioms
-and the annular tests of `LocalCirclePairingApproximation`, not a postulated
-joint circle/pairing law.
+`HarmonicBalls.Proofs.GFF.FixedShiftCircleLQGRepresentation` provides fixed
+deterministic-shift infrastructure for Lemma 11.8. It uses the actual
+whole-plane GFF joint Gaussian and covariance assumptions, local circle
+decoders, and the local Cameron–Martin theorem; no joint circle/pairing law
+or decoder universality is assumed. The imported Cameron–Martin theorem is
+Leonardo Bonanno's work.
 
-* `circleDensityDifference_shift_tendsto` identifies the integral of a
-  continuous deterministic shift against the signed annular densities with
-  the limit `Real.circleAverage g z r - Real.circleAverage g 0 r`.
-* `IsWholePlaneGFF.exists_localPairing_tests_with_shift_limit` supplies the
-  **same** local mean-zero tests for the centered GFF circle in probability
-  and, for every continuous deterministic shift, its centered circle average.
-  The latter is a deterministic limit, and the former is obtained from the
-  actual covariance error.
-* `tendstoInMeasure_normalizedMass_of_fixedShift_approximation` lifts any
-  measurable finite-scale normalized decoder to the actual normalized LQG
-  limit under `IsLQGMeasure`, circle continuity, bounded exhaustion,
-  continuity-set, and nonzero/finite mass hypotheses. It does not infer the
-  LQG limit or the finite-scale decoder.
-* `exists_fixedShift_normalizedMass_decoder_of_common_limits` and
-  `fixedShift_event_representation_of_mass_decoder` turn common finite-scale
-  limits into one measurable decoder and then into the two event
-  representations required by `cone_event_pos_of_smooth_shift`, for events
-  measurable in a countable family of normalized masses. The latter event
-  measurability and sufficiency for the actual cone event remain to be shown.
+`circleDensityDifference_shift_tendsto` proves the deterministic limit of
+the signed annular tests. `IsWholePlaneGFF.exists_localPairing_tests_with_shift_limit`
+constructs a single local test sequence for which the GFF pairing converges
+in probability to the centered circle and the pairing against any continuous
+deterministic shift converges to its centered circle average.
+`decoder_add_shift_of_pairing_law` transfers decoder equality along the local
+pairing-law absolute continuity using this actual approximation sequence.
+`IsWholePlaneGFF.ae_shifted_centeredCircle_decoder_at` applies it to every
+deterministic buffered circle; `IsWholePlaneGFF.ae_ae_shifted_centeredCircle_decoder`
+uses joint measurability and Fubini to obtain the needed sample/center
+almost-everywhere equality. No random-root conclusion is inferred.
 
-The concrete remaining circle step is: for each `r > 0`, buffered measurable
-`E`, and smooth `g`, construct one jointly measurable `D` as in
-`IsWholePlaneGFF.exists_localPairing_centeredCircle_decoder`, such that its
-second evaluation on
-`fun φ => hC ω φ.1.1 + ∫ x, φ.1.1 x * g x` equals, for almost every `ω`
-and volume-almost every `z ∈ E`, the centered circle average of
-`addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g`. The unshifted
-evaluation must also have the existing decoder's equality. Local smooth-shift
-absolute continuity is available from `local_smooth_shift_pairing_law`; it
-concerns pairing laws alone and is not the desired circle-pairing domination.
-The annular limit above is the deterministic ingredient for proving this
-step, not a proof of the joint decoder's translation compatibility.
+`IsWholePlaneGFF.exists_fixedShift_normalizedLQGApprox` constructs one
+measurable family of normalized circle approximations for both the original
+field and its fixed smooth shift. The shift is continuous globally and smooth
+on a ball larger than the local pairing ball; the approximation sets must be
+measurable and buffered there. `IsWholePlaneGFF.exists_fixedShift_normalizedMass_decoder`
+lifts these common approximations to one measurable decoder of countably many
+normalized masses of the **actual** two LQG limits. Its explicit hypotheses
+are `IsLQGMeasureOfField` for the original field, `IsLQGMeasure` for the
+shifted circle process, a bounded monotone buffered exhaustion of the local
+ball, almost-sure continuity-set conditions for both measures, and nonzero
+finite mass on the ball. No staged existence or volume-growth input is
+asserted by the theorem; callers must supply and source-check such inputs if
+used to discharge its hypotheses.
 
-Once that step is established for each dyadic scale, use
-`normalizedRestriction_lqgApprox_eq_of_centered_ae` to obtain the common
-finite-scale normalized decoder, and apply the limit theorem above to both
-actual LQG limits. The insertion `k` in the Section 11 transfer theorem also
-needs explicit compatibility with the chosen local decoder. A countable
-determining family, cone-event measurability in its normalized masses, and
-positive-scaling invariance are still required for the concrete cone event.
-None follows from fixed-test almost-everywhere equalities at random roots.
+`fixedShift_event_representation_with_insertion` turns any measurable event
+in those countably many decoded normalized masses into the two local pairing
+representations required by `cone_event_pos_of_smooth_shift`; it absorbs the
+arbitrary fixed deterministic insertion `k` in that theorem by translating the
+decoder's input. `coneMassEvent_smul_iff` proves the actual cone mass event is
+invariant under any nonzero finite global rescaling of its measure.
 
-No new literature input is asserted. The unresolved step is Lean
-infrastructure; a source-check of staged existence/volume-growth assumptions
-remains required wherever those assumptions are used.
+For h5's final cone-event assembly, the remaining precise obligation is to
+exhibit a countable family `A : ι → Set ℂ` and a measurable set
+`C : Set (ι → ℝ)` such that, for both actual measures almost surely,
+`coneMassEvent μ Q M r z ↔ (fun i => (normalizedRestriction μ U (A i)).toReal) ∈ C`,
+with the relevant cone and Green-potential supports inside `U`, and verify
+the exhaustion/continuity-set/positive-finite-mass hypotheses. The scaling
+lemma above supplies the algebra for passing from the normalized restriction
+to the unnormalized cone event once that locality and measurability are
+proved. The generic representation theorem then supplies both `hE` and `hEp`.
+This file does not claim cone-event measurability, positive probability,
+uniformity in centers or scales, or a numbered-result closure.

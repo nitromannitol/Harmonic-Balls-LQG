@@ -1,6 +1,11 @@
 import HarmonicBalls.Proofs.Sec8.LocalCirclePairingApproximation
 import HarmonicBalls.Proofs.Sec8.LocalNormalizedMassApproximation
 import HarmonicBalls.Proofs.Sec8.CommonApproximationLaw
+import HarmonicBalls.Proofs.Sec8.WholePlaneSmoothShift
+import HarmonicBalls.Proofs.Sec8.CommonCircleApproximation
+import HarmonicBalls.Proofs.Sec6.ContinuousWeylCircleAverage
+import HarmonicBalls.Proofs.Sec8.VeryGoodMeasureScaling
+import HarmonicBalls.Draft.Section11
 
 /-! # Deterministic shifts of local circle approximations
 
@@ -13,6 +18,44 @@ open MeasureTheory ProbabilityTheory Filter Set Metric
 open scoped ENNReal Topology
 
 namespace HarmonicBalls
+
+/-- A decoder already correct for a limit remains correct after a deterministic
+shift of its approximating coordinates when the shifted observation law is
+absolutely continuous. The shifted joint observable law is not assumed. -/
+theorem decoder_add_shift_of_pairing_law
+    {Ω E : Type*} [MeasurableSpace Ω] [MeasurableSpace E]
+    (P : Measure Ω) (X Y : Ω → E) (hX : Measurable X) (hY : Measurable Y)
+    (hAC : P.map Y ≪ P.map X) (D : E → ℝ) (hD : Measurable D)
+    (f : ℕ → E → ℝ) (hf : ∀ n, Measurable (f n))
+    (u : Ω → ℝ) (c : ℝ) (a : ℕ → ℝ) (b : ℝ)
+    (hu : TendstoInMeasure P (fun n ω => f n (X ω)) atTop u)
+    (ha : Tendsto a atTop (𝓝 b))
+    (hshift : ∀ n ω, f n (Y ω) = f n (X ω) + a n)
+    (hDref : ∀ᵐ ω ∂P, D (X ω) = u ω + c) :
+    ∀ᵐ ω ∂P, D (Y ω) = u ω + c + b := by
+  obtain ⟨s, hs, hsP⟩ := hu.exists_seq_tendsto_ae
+  let F : E → ℝ := fun x => limUnder atTop (fun n => f (s n) x)
+  have hF : Measurable F :=
+    (StronglyMeasurable.limUnder (fun n => (hf (s n)).stronglyMeasurable)).measurable
+  let A : Set E := {x | D x = F x + c}
+  have hA : MeasurableSet A := measurableSet_eq_fun hD (hF.add_const c)
+  have href : ∀ᵐ x ∂(P.map X), x ∈ A := by
+    apply (ae_map_iff hX.aemeasurable hA).2
+    filter_upwards [hsP, hDref] with ω hω hDω
+    rw [hDω]
+    change u ω + c = limUnder atTop (fun n => f (s n) (X ω)) + c
+    rw [hω.limUnder_eq]
+  have hshiftA : ∀ᵐ ω ∂P, Y ω ∈ A :=
+    (ae_map_iff hY.aemeasurable hA).1 (hAC.ae_le href)
+  filter_upwards [hsP, hshiftA] with ω hω hωA
+  have hlim : Tendsto (fun n => f (s n) (Y ω)) atTop (𝓝 (u ω + b)) := by
+    have h := hω.add (ha.comp hs.tendsto_atTop)
+    simpa only [hshift, Function.comp_def] using h
+  change D (Y ω) = F (Y ω) + c at hωA
+  rw [hωA]
+  change limUnder atTop (fun n => f (s n) (Y ω)) + c = _
+  rw [hlim.limUnder_eq]
+  ring
 
 /-- Pairing a continuous deterministic shift with the signed annular tests
 converges to the difference of its two circle averages. -/
@@ -89,6 +132,144 @@ theorem IsWholePlaneGFF.exists_localPairing_tests_with_shift_limit
   · intro g hg
     exact circleDensityDifference_shift_tendsto hr hη z hg
 
+/-- Every unshifted local centered-circle decoder also decodes the fixed
+smooth shift at each deterministic buffered circle center. -/
+theorem IsWholePlaneGFF.ae_shifted_centeredCircle_decoder_at
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {α₀ ε R r : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hε : 0 < ε) (hεR : ε < R)
+    {g : ℂ → ℝ} (hg : Continuous g)
+    (hgs : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) g (ball 0 R))
+    (hr : 0 < r) (z : ℂ) (hz : closedBall z r ⊆ ball 0 ε)
+    (D : (Section6.LocalTest (ball 0 ε) → ℝ) → ℂ → ℝ)
+    (hD : Measurable (Function.uncurry D))
+    (hDref : ∀ᵐ ω ∂P, D (Section6.localPairingProc (ball 0 ε) hC ω) z =
+      fieldCircleAverage α₀ (hcirc ω) r z - fieldCircleAverage α₀ (hcirc ω) r 0) :
+    ∀ᵐ ω ∂P, D (fun φ => hC ω φ.1.1 + ∫ x, φ.1.1 x * g x) z =
+      addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g r z -
+        addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g r 0 := by
+  let X := Section6.localPairingProc (ball 0 ε) hC
+  let Y := fun ω (φ : Section6.LocalTest (ball 0 ε)) =>
+    hC ω φ.1.1 + ∫ x, φ.1.1 x * g x
+  have hX : Measurable X := measurable_pi_iff.mpr fun φ =>
+    hGFF.measurable_pairing φ.1.1 (Section6.isTestFunction_of_testC φ.1.1)
+  have hY : Measurable Y := measurable_pi_iff.mpr fun φ =>
+    (hGFF.measurable_pairing φ.1.1 (Section6.isTestFunction_of_testC φ.1.1)).add_const _
+  have hAC : P.map Y ≪ P.map X := by
+    have hh := hGFF.local_smooth_shift_pairing_law hε hεR hgs (fun _ => 0)
+    change P.map (fun ω (φ : Section6.LocalTest (ball 0 ε)) =>
+      hC ω φ.1.1 + ∫ x, φ.1.1 x * g x) ≪
+      P.map (fun ω (φ : Section6.LocalTest (ball 0 ε)) => hC ω φ.1.1)
+    simpa only [add_zero] using hh
+  obtain ⟨φ, hφ, hgφ⟩ := hGFF.exists_localPairing_tests_with_shift_limit hr z hz
+  let c := -α₀ * (Real.circleAverage (fun x : ℂ => Real.log ‖x‖) z r -
+    Real.circleAverage (fun x : ℂ => Real.log ‖x‖) 0 r)
+  have href : ∀ᵐ ω ∂P, D (X ω) z = (hcirc ω r z - hcirc ω r 0) + c := by
+    filter_upwards [hDref] with ω hω
+    simp only [fieldCircleAverage] at hω
+    dsimp [X, c]
+    linarith
+  have hresult := decoder_add_shift_of_pairing_law P X Y hX hY hAC (fun x => D x z)
+    (hD.comp (measurable_id.prodMk measurable_const)) (fun n x => x (φ n))
+    (fun n => measurable_pi_apply (φ n)) (fun ω => hcirc ω r z - hcirc ω r 0) c
+    (fun n => ∫ x, (φ n).1.1 x * g x)
+    (Real.circleAverage g z r - Real.circleAverage g 0 r) hφ (hgφ g hg)
+    (by intro n ω; rfl) href
+  filter_upwards [hresult] with ω hω
+  dsimp [Y, c, addCircleAverage, fieldCircleAverage] at hω ⊢
+  linarith
+
+/-- The same decoder is correct for almost every shifted sample and almost
+every center in a buffered measurable set. -/
+theorem IsWholePlaneGFF.ae_ae_shifted_centeredCircle_decoder
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {α₀ ε R r : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hε : 0 < ε) (hεR : ε < R)
+    {g : ℂ → ℝ} (hg : Continuous g)
+    (hgs : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) g (ball 0 R))
+    (hr : 0 < r) (E : Set ℂ) (hE : MeasurableSet E)
+    (hbuffer : ∀ z ∈ E, closedBall z r ⊆ ball 0 ε)
+    (D : (Section6.LocalTest (ball 0 ε) → ℝ) → ℂ → ℝ)
+    (hD : Measurable (Function.uncurry D))
+    (hDref : ∀ᵐ ω ∂P, ∀ z, closedBall z r ⊆ ball 0 ε →
+      D (Section6.localPairingProc (ball 0 ε) hC ω) z =
+        fieldCircleAverage α₀ (hcirc ω) r z - fieldCircleAverage α₀ (hcirc ω) r 0) :
+    ∀ᵐ ω ∂P, ∀ᵐ z ∂(volume.restrict E),
+      D (fun φ => hC ω φ.1.1 + ∫ x, φ.1.1 x * g x) z =
+        addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g r z -
+          addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g r 0 := by
+  let : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
+  let X := Section6.localPairingProc (ball 0 ε) hC
+  let Y := fun ω (φ : Section6.LocalTest (ball 0 ε)) =>
+    hC ω φ.1.1 + ∫ x, φ.1.1 x * g x
+  have hX : Measurable X := measurable_pi_iff.mpr fun φ =>
+    hGFF.measurable_pairing φ.1.1 (Section6.isTestFunction_of_testC φ.1.1)
+  have hY : Measurable Y := measurable_pi_iff.mpr fun φ =>
+    (hGFF.measurable_pairing φ.1.1 (Section6.isTestFunction_of_testC φ.1.1)).add_const _
+  have hcg : Measurable (fun z => Real.circleAverage g z r) :=
+    ((Section6.continuous_circleAverage_radius_center hg).comp
+      (continuous_const.prodMk continuous_id)).measurable
+  have hm : MeasurableSet {p : Ω × ℂ | D (Y p.1) p.2 =
+      D (X p.1) p.2 + (Real.circleAverage g p.2 r - Real.circleAverage g 0 r)} := by
+    apply measurableSet_eq_fun
+    · exact hD.comp ((hY.comp measurable_fst).prodMk measurable_snd)
+    · exact (hD.comp ((hX.comp measurable_fst).prodMk measurable_snd)).add
+        ((hcg.comp measurable_snd).sub_const _)
+  have hp : ∀ᵐ z ∂(volume.restrict E), ∀ᵐ ω ∂P,
+      D (Y ω) z = D (X ω) z +
+        (Real.circleAverage g z r - Real.circleAverage g 0 r) := by
+    filter_upwards [ae_restrict_mem hE] with z hz
+    have hs := hGFF.ae_shifted_centeredCircle_decoder_at hε hεR hg hgs hr z
+      (hbuffer z hz) D hD (hDref.mono fun _ h => h z (hbuffer z hz))
+    filter_upwards [hs, hDref] with ω hsω hrω
+    have h := hrω z (hbuffer z hz)
+    dsimp [X, Y, addCircleAverage] at hsω h ⊢
+    linarith
+  have hpair := (Measure.ae_ae_comm hm).2 hp
+  filter_upwards [hpair, hDref] with ω hω hdω
+  filter_upwards [hω, ae_restrict_mem hE] with z hz hzin
+  have h := hdω z (hbuffer z hzin)
+  dsimp [X, Y, addCircleAverage] at hz h ⊢
+  linarith
+
+/-- One measurable family realizes the normalized circle approximations for
+both a whole-plane field and its fixed deterministic smooth shift. -/
+theorem IsWholePlaneGFF.exists_fixedShift_normalizedLQGApprox
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ ε R : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hε : 0 < ε) (hεR : ε < R)
+    {g : ℂ → ℝ} (hg : Continuous g)
+    (hgs : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) g (ball 0 R))
+    (E : ℕ → Set ℂ) (hEm : ∀ n, MeasurableSet (E n))
+    (hbuffer : ∀ n z, z ∈ E n → closedBall z (dyadicScale n) ⊆ ball 0 ε) :
+    ∃ F : ℕ → (Section6.LocalTest (ball 0 ε) → ℝ) → Measure ℂ,
+      (∀ n, Measurable (F n)) ∧
+      (∀ᵐ ω ∂P, ∀ n, F n (Section6.localPairingProc (ball 0 ε) hC ω) =
+        normalizedRestriction (lqgApprox γ (fieldCircleAverage α₀ (hcirc ω))
+          (dyadicScale n)) (E n)) ∧
+      ∀ᵐ ω ∂P, ∀ n,
+        F n (fun φ => hC ω φ.1.1 + ∫ x, φ.1.1 x * g x) =
+          normalizedRestriction (lqgApprox γ
+            (addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g)
+            (dyadicScale n)) (E n) := by
+  choose D hDm hDref using fun n =>
+    hGFF.exists_localPairing_centeredCircle_decoder (α₀ := α₀) (ε := ε) (dyadicScale_pos n)
+  have hshift (n : ℕ) := hGFF.ae_ae_shifted_centeredCircle_decoder
+    hε hεR hg hgs (dyadicScale_pos n) (E n) (hEm n) (hbuffer n)
+    (D n) (hDm n) (hDref n)
+  refine ⟨fun n x => normalizedRestriction
+    (volume.withDensity fun z => ENNReal.ofReal (Real.exp (γ * D n x z))) (E n), ?_, ?_, ?_⟩
+  · exact fun n => measurable_normalized_centeredLQGApprox γ (D n) (hDm n) (E n) (hEm n)
+  · filter_upwards [ae_all_iff.mpr hDref] with ω hω n
+    exact (normalizedRestriction_lqgApprox_eq_of_centered_on γ
+      (fieldCircleAverage α₀ (hcirc ω)) (dyadicScale_pos n) 0 (hEm n)
+      (D n (Section6.localPairingProc (ball 0 ε) hC ω))
+      (fun z hz => hω n z (hbuffer n z hz))).symm
+  · filter_upwards [ae_all_iff.mpr hshift] with ω hω n
+    exact (normalizedRestriction_lqgApprox_eq_of_centered_ae γ
+      (addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g) (dyadicScale_pos n) 0
+      (hEm n) (D n (fun φ => hC ω φ.1.1 + ∫ x, φ.1.1 x * g x)) (hω n)).symm
+
 /-- An actual LQG limit and continuity-set exhaustion turn a measurable
 finite-scale decoder into convergence in probability of normalized masses.
 This applies equally to a smooth-shifted circle process. -/
@@ -152,6 +333,65 @@ theorem exists_fixedShift_normalizedMass_decoder_of_common_limits
       (fun i ω => (normalizedRestriction (ν ω) U (A i)).toReal) hμ hν
   exact ⟨fun x i => F i x, Measurable.of_eval hF, hFP, hFQ⟩
 
+/-- The actual LQG limits of a whole-plane field and a fixed smooth shift
+have one measurable decoder on countably many normalized mass observables,
+provided the stated exhaustion sets are continuity sets for both limits. -/
+theorem IsWholePlaneGFF.exists_fixedShift_normalizedMass_decoder
+    {Ω ι : Type*} [MeasurableSpace Ω] [Countable ι] {P : Measure Ω}
+    {γ α₀ ε R : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hε : 0 < ε) (hεR : ε < R)
+    {g : ℂ → ℝ} (hg : Continuous g)
+    (hgs : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) g (ball 0 R))
+    (μ ν : Ω → Measure ℂ)
+    (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hν : IsLQGMeasure P γ
+      (fun ω => addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g) ν)
+    (V : ℕ → Set ℂ) (hVm : ∀ n, MeasurableSet (V n)) (hmono : Monotone V)
+    (hbuffer : ∀ n z, z ∈ V n → closedBall z (dyadicScale n) ⊆ ball 0 ε)
+    (hunion : (⋃ n, V n) = ball 0 ε) (A : ι → Set ℂ) (hAm : ∀ i, MeasurableSet (A i))
+    (hfront : ∀ i, ∀ᵐ ω ∂P, (∀ n,
+      μ ω (frontier (V n)) = 0 ∧ μ ω (frontier (A i ∩ V n)) = 0) ∧
+      μ ω (frontier (⋃ n, V n)) = 0 ∧ μ ω (frontier (A i ∩ ⋃ n, V n)) = 0)
+    (hfront' : ∀ i, ∀ᵐ ω ∂P, (∀ n,
+      ν ω (frontier (V n)) = 0 ∧ ν ω (frontier (A i ∩ V n)) = 0) ∧
+      ν ω (frontier (⋃ n, V n)) = 0 ∧ ν ω (frontier (A i ∩ ⋃ n, V n)) = 0)
+    (hpos : ∀ᵐ ω ∂P, μ ω (⋃ n, V n) ≠ 0 ∧ μ ω (⋃ n, V n) ≠ ∞)
+    (hpos' : ∀ᵐ ω ∂P, ν ω (⋃ n, V n) ≠ 0 ∧ ν ω (⋃ n, V n) ≠ ∞) :
+    ∃ D : (Section6.LocalTest (ball 0 ε) → ℝ) → ι → ℝ, Measurable D ∧
+      (∀ᵐ ω ∂P, ∀ i, D (Section6.localPairingProc (ball 0 ε) hC ω) i =
+        (normalizedRestriction (μ ω) (ball 0 ε) (A i)).toReal) ∧
+      ∀ᵐ ω ∂P, ∀ i, D (fun φ => hC ω φ.1.1 + ∫ x, φ.1.1 x * g x) i =
+        (normalizedRestriction (ν ω) (ball 0 ε) (A i)).toReal := by
+  let : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
+  let X := Section6.localPairingProc (ball 0 ε) hC
+  let Y := fun ω (φ : Section6.LocalTest (ball 0 ε)) =>
+    hC ω φ.1.1 + ∫ x, φ.1.1 x * g x
+  have hX : Measurable X := measurable_pi_iff.mpr fun φ =>
+    hGFF.measurable_pairing φ.1.1 (Section6.isTestFunction_of_testC φ.1.1)
+  have hY : Measurable Y := measurable_pi_iff.mpr fun φ =>
+    (hGFF.measurable_pairing φ.1.1 (Section6.isTestFunction_of_testC φ.1.1)).add_const _
+  have hb : Bornology.IsBounded (⋃ n, V n) := by rw [hunion]; exact isBounded_ball
+  have hc : ∀ᵐ ω ∂P, ∀ n, Continuous (fieldCircleAverage α₀ (hcirc ω) (dyadicScale n)) :=
+    ae_all_iff.mpr fun n => hGFF.ae_continuous_fieldCircleAverage α₀ (dyadicScale_pos n)
+  have hc' : ∀ᵐ ω ∂P, ∀ n, Continuous
+      (addCircleAverage (fieldCircleAverage α₀ (hcirc ω)) g (dyadicScale n)) := by
+    filter_upwards [hc] with ω hω n
+    exact (hω n).add ((Section6.continuous_circleAverage_radius_center hg).comp
+      (continuous_const.prodMk continuous_id))
+  obtain ⟨F, hFm, hF, hF'⟩ := hGFF.exists_fixedShift_normalizedLQGApprox
+    (γ := γ) (α₀ := α₀) hε hεR hg hgs V hVm hbuffer
+  let f : ι → ℕ → (Section6.LocalTest (ball 0 ε) → ℝ) → ℝ :=
+    fun i n x => (F n x (A i)).toReal
+  have hf : ∀ i n, Measurable (f i n) := fun i n =>
+    ENNReal.measurable_toReal.comp ((Measure.measurable_coe (hAm i)).comp (hFm n))
+  apply exists_fixedShift_normalizedMass_decoder_of_common_limits P P X Y f hf μ ν (ball 0 ε) A
+  · intro i
+    exact tendstoInMeasure_normalizedMass_of_fixedShift_approximation P _ μ hμ hc _ V hmono hb
+      hunion (A i) (hAm i) (hfront i) hpos X hX F hFm hF
+  · intro i
+    exact tendstoInMeasure_normalizedMass_of_fixedShift_approximation P _ ν hν hc' _ V hmono hb
+      hunion (A i) (hAm i) (hfront' i) hpos' Y hY F hFm hF'
+
 /-- A measurable event in countably many decoded normalized masses has the
 two almost-sure local pairing representations needed for event transfer. -/
 theorem fixedShift_event_representation_of_mass_decoder
@@ -170,10 +410,60 @@ theorem fixedShift_event_representation_of_mass_decoder
   · filter_upwards [hv] with ω hω
     simp only [Set.mem_preimage, hω]
 
+/-- A deterministic insertion in the local pairing process is absorbed by
+translating the decoder's input. This gives exactly the two event
+representations used by the smooth-shift positivity transfer. -/
+theorem fixedShift_event_representation_with_insertion
+    {Ω Ξ ι κ : Type*} [MeasurableSpace Ω] [MeasurableSpace Ξ]
+    (P : Measure Ω) (Q : Measure Ξ) (X : Ω → κ → ℝ) (Y : Ξ → κ → ℝ)
+    (k : κ → ℝ) (D : (κ → ℝ) → ι → ℝ) (hD : Measurable D)
+    (u : Ω → ι → ℝ) (v : Ξ → ι → ℝ)
+    (hu : ∀ᵐ ω ∂P, D (X ω) = u ω) (hv : ∀ᵐ ω ∂Q, D (Y ω) = v ω)
+    (C : Set (ι → ℝ)) (hC : MeasurableSet C) :
+    ∃ B : Set (κ → ℝ), MeasurableSet B ∧
+      (∀ᵐ ω ∂P, (u ω ∈ C ↔ (fun φ => X ω φ + k φ) ∈ B)) ∧
+      ∀ᵐ ω ∂Q, (v ω ∈ C ↔ (fun φ => Y ω φ + k φ) ∈ B) := by
+  let T : (κ → ℝ) → (κ → ℝ) := fun x φ => x φ - k φ
+  have hT : Measurable T := measurable_pi_iff.mpr fun φ =>
+    (measurable_pi_apply φ).sub_const _
+  refine ⟨(D ∘ T) ⁻¹' C, hD.comp hT hC, ?_, ?_⟩
+  · filter_upwards [hu] with ω hω
+    have heq : T (fun φ => X ω φ + k φ) = X ω := by
+      funext φ
+      simp [T]
+    simp only [Set.mem_preimage, Function.comp_apply, heq, hω]
+  · filter_upwards [hv] with ω hω
+    have heq : T (fun φ => Y ω φ + k φ) = Y ω := by
+      funext φ
+      simp [T]
+    simp only [Set.mem_preimage, Function.comp_apply, heq, hω]
+
+/-- The cone mass event is unchanged by a finite positive global rescaling
+of the measure. -/
+theorem coneMassEvent_smul_iff (μ : Measure ℂ) (Q : Set ℂ) (M r : ℝ) (z : ℂ)
+    {c : ℝ≥0∞} (hc : c ≠ 0) (hct : c ≠ ∞) :
+    coneMassEvent (c • μ) Q M r z ↔ coneMassEvent μ Q M r z := by
+  simp only [coneMassEvent, annulusGreenPotentialSup_smul, Measure.smul_apply, smul_eq_mul]
+  rw [show ENNReal.ofReal M * (c * annulusGreenPotentialSup μ z (3 * r) (6 * r)) =
+    c * (ENNReal.ofReal M * annulusGreenPotentialSup μ z (3 * r) (6 * r)) by ring]
+  constructor
+  · intro h
+    have hi := mul_le_mul_right h c⁻¹
+    simpa only [← mul_assoc, ENNReal.inv_mul_cancel hc hct, one_mul] using hi
+  · intro h
+    exact mul_le_mul_right h c
+
 #print axioms circleDensityDifference_shift_tendsto
+#print axioms decoder_add_shift_of_pairing_law
 #print axioms IsWholePlaneGFF.exists_localPairing_tests_with_shift_limit
+#print axioms IsWholePlaneGFF.ae_shifted_centeredCircle_decoder_at
+#print axioms IsWholePlaneGFF.ae_ae_shifted_centeredCircle_decoder
+#print axioms IsWholePlaneGFF.exists_fixedShift_normalizedLQGApprox
 #print axioms tendstoInMeasure_normalizedMass_of_fixedShift_approximation
 #print axioms exists_fixedShift_normalizedMass_decoder_of_common_limits
+#print axioms IsWholePlaneGFF.exists_fixedShift_normalizedMass_decoder
 #print axioms fixedShift_event_representation_of_mass_decoder
+#print axioms fixedShift_event_representation_with_insertion
+#print axioms coneMassEvent_smul_iff
 
 end HarmonicBalls
