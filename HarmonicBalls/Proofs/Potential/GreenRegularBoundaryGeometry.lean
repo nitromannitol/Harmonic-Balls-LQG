@@ -432,6 +432,130 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+/-- A positive harmonic barrier with a uniform positive lower bound away from
+its zero gives a Green boundary limit. -/
+theorem tendsto_greenFunction_zero_of_harmonic_barrier
+    {U : Set ℂ} (hUb : Bornology.IsBounded U) {z y : ℂ} (hz : z ∈ U)
+    (hyz : y ≠ z) {b : ℂ → ℝ}
+    (hb : InnerProductSpace.HarmonicOnNhd b U)
+    (hbnonneg : ∀ x ∈ U, 0 ≤ b x)
+    (hblim : Tendsto b (𝓝[U] y) (𝓝 0))
+    (hbaway : ∀ δ > 0, ∃ m > 0, ∀ x ∈ U, δ ≤ dist x y → m ≤ b x) :
+    Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0) := by
+  obtain ⟨R, hR⟩ := hUb.subset_closedBall z
+  let L : ℝ := -(2 * Real.pi)⁻¹ * Real.log R
+  have hL : ∀ x ∈ U, x ≠ z → L ≤ newtonKernel z x := by
+    intro x hx hxz
+    have h := (isHarmonicMinorant_const_newtonKernelEReal hR).2 x hx
+    change (L : EReal) ≤ newtonKernelEReal z x at h
+    simpa only [newtonKernelEReal, hxz, ite_false, EReal.coe_le_coe_iff] using h
+  apply tendsto_greenFunction_zero_of_approximating_harmonic_minorants hUb hz hyz
+  intro ε hε
+  have hN : ContinuousAt (newtonKernel z) y :=
+    (harmonicAt_newtonKernel hyz).1.continuousAt
+  have hnear : ∀ᶠ x in 𝓝 y, newtonKernel z y - ε < newtonKernel z x :=
+    hN.eventually (Ioi_mem_nhds (by linarith))
+  obtain ⟨δ, hδ, hδnear⟩ := Metric.eventually_nhds_iff.mp hnear
+  obtain ⟨m, hm, hbfar⟩ := hbaway δ hδ
+  let C : ℝ := max 0 ((newtonKernel z y - ε - L) / m)
+  have hC : 0 ≤ C := le_max_left _ _
+  have hCm : newtonKernel z y - ε - L ≤ C * m := by
+    have h := le_max_right (0 : ℝ) ((newtonKernel z y - ε - L) / m)
+    exact (div_le_iff₀ hm).mp h
+  let q : ℂ → ℝ := fun x => newtonKernel z y - ε - C * b x
+  refine ⟨q, ?_, ?_⟩
+  · refine ⟨?_, ?_⟩
+    · intro x hx
+      exact (InnerProductSpace.harmonicAt_const _).sub ((hb x hx).const_smul (c := C))
+    · intro x hx
+      by_cases hxz : x = z
+      · simp [newtonKernelEReal, hxz]
+      · have hqle : q x ≤ newtonKernel z x := by
+          by_cases hdist : dist x y < δ
+          · have hn := hδnear (mem_ball.mpr hdist)
+            have hmul := mul_nonneg hC (hbnonneg x hx)
+            dsimp [q]
+            linarith
+          · have hm' := hbfar x hx (le_of_not_gt hdist)
+            have hmC := mul_le_mul_of_nonneg_left hm' hC
+            have hn := hL x hx hxz
+            dsimp [q]
+            linarith
+        simpa [newtonKernelEReal, hxz] using hqle
+  · have hlim : Tendsto (fun x => (newtonKernel z y - ε) - C * b x)
+        (𝓝[U] y) (𝓝 ((newtonKernel z y - ε) - C * 0)) :=
+      tendsto_const_nhds.sub (tendsto_const_nhds.mul hblim)
+    simpa [q] using hlim
+
+/-- A harmonic barrier continuous on the compact closure and vanishing only
+at the boundary point yields the uniform separation needed above. -/
+theorem tendsto_greenFunction_zero_of_continuous_harmonic_barrier
+    {U : Set ℂ} (hUb : Bornology.IsBounded U) {z y : ℂ} (hz : z ∈ U)
+    (hy : y ∈ closure U) (hyz : y ≠ z) {b : ℂ → ℝ}
+    (hb : InnerProductSpace.HarmonicOnNhd b U)
+    (hbc : ContinuousOn b (closure U)) (hby : b y = 0)
+    (hbpos : ∀ x ∈ closure U, x ≠ y → 0 < b x) :
+    Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0) := by
+  apply tendsto_greenFunction_zero_of_harmonic_barrier hUb hz hyz hb
+  · intro x hx
+    by_cases hxy : x = y
+    · simp [hxy, hby]
+    · exact (hbpos x (subset_closure hx) hxy).le
+  · rw [← hby]
+    exact (hbc y hy).mono subset_closure
+  · intro δ hδ
+    let K := closure U \ ball y δ
+    have hK : IsCompact K := hUb.isCompact_closure.diff isOpen_ball
+    by_cases hne : K.Nonempty
+    · obtain ⟨w, hw, hmin⟩ := hK.exists_isMinOn hne (hbc.mono sdiff_subset)
+      have hwy : w ≠ y := by
+        intro heq
+        apply hw.2
+        simpa [heq] using (mem_ball_self hδ : y ∈ ball y δ)
+      refine ⟨b w, hbpos w hw.1 hwy, ?_⟩
+      intro x hx hdist
+      apply hmin
+      exact ⟨subset_closure hx, by simpa [mem_ball, not_lt] using hdist⟩
+    · refine ⟨1, zero_lt_one, ?_⟩
+      intro x hx hdist
+      exfalso
+      apply hne
+      exact ⟨x, subset_closure hx, by simpa [mem_ball, not_lt] using hdist⟩
+
+/-- A strictly supporting exterior disc gives Green regularity at its point
+of contact. -/
+theorem tendsto_greenFunction_zero_of_strict_exterior_disc
+    {U : Set ℂ} (hUb : Bornology.IsBounded U) {z y a : ℂ} {r : ℝ}
+    (hz : z ∈ U) (hy : y ∈ closure U) (hyout : y ∉ U)
+    (hr : 0 < r) (hycontact : ‖y - a‖ = r)
+    (hsupport : ∀ x ∈ closure U, x ≠ y → r < ‖x - a‖) :
+    Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0) := by
+  have hyz : y ≠ z := by intro h; exact hyout (h ▸ hz)
+  let b : ℂ → ℝ := fun x => Real.log ‖x - a‖ - Real.log r
+  have hnorm : ∀ x ∈ closure U, 0 < ‖x - a‖ := by
+    intro x hx
+    by_cases hxy : x = y
+    · simpa [hxy, hycontact] using hr
+    · exact hr.trans (hsupport x hx hxy)
+  have hharm : ∀ x ∈ closure U, InnerProductSpace.HarmonicAt b x := by
+    intro x hx
+    have ha : AnalyticAt ℂ (fun w : ℂ => w - a) x := by fun_prop
+    have hn : x - a ≠ 0 := norm_ne_zero_iff.mp (hnorm x hx).ne'
+    exact (ha.harmonicAt_log_norm hn).sub (InnerProductSpace.harmonicAt_const _)
+  apply tendsto_greenFunction_zero_of_continuous_harmonic_barrier hUb hz hy hyz
+  · intro x hx
+    exact hharm x (subset_closure hx)
+  · intro x hx
+    exact (hharm x hx).1.continuousAt.continuousWithinAt
+  · simp [b, hycontact]
+  · intro x hx hxy
+    dsimp [b]
+    exact sub_pos.mpr (Real.log_lt_log hr (hsupport x hx hxy))
+
+#print axioms tendsto_greenFunction_zero_of_strict_exterior_disc
+#print axioms tendsto_greenFunction_zero_of_continuous_harmonic_barrier
+#print axioms tendsto_greenFunction_zero_of_harmonic_barrier
+
 /-- Four unit discs centered at the cardinal directions contain the
 punctured unit disc. -/
 theorem punctured_unit_ball_subset_four_discs :
