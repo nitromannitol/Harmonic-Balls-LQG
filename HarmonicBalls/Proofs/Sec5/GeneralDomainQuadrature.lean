@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec5.GeneralDomainObstacleMass
+import HarmonicBalls.Proofs.Sec6.LaplacianConvolution
 
 /-! # Quadrature for compactly contained general-domain clusters
 
@@ -9,26 +10,23 @@ namespace HarmonicBalls
 open MeasureTheory Metric Set Filter Topology Laplacian InnerProductSpace
 open scoped ContDiff ENNReal
 
-/-- Harmonic quadrature for the actual cluster and frontier obstacle mass. -/
-theorem general_clusterOn_harmonic_quadrature
-    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+/-- Harmonic quadrature for any measure in the odometer decomposition. -/
+theorem general_clusterOn_harmonic_quadrature_of_hasLaplacian
+    {μ ν : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
     (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
     {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
     {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
-    (hcl : closure (clusterOn μ U z t) ⊆ U) :
-    ∃ ν : Measure ℂ, ν ≤ μ ∧
-      HasLaplacian (fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x)
-        (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))
-        (ENNReal.ofReal t • Measure.dirac z) U ∧
-      ∀ (O : Set ℂ) (q : ℂ → ℝ), IsOpen O → closure (clusterOn μ U z t) ⊆ O →
-        HarmonicOnNhd q O →
-        Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
-        ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) = t * q z := by
+    (hcl : closure (clusterOn μ U z t) ⊆ U)
+    (hLap : HasLaplacian
+      (fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x)
+      (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))
+      (ENNReal.ofReal t • Measure.dirac z) U)
+    {O : Set ℂ} {q : ℂ → ℝ} (hO : IsOpen O)
+    (hΛO : closure (clusterOn μ U z t) ⊆ O) (hq : HarmonicOnNhd q O) :
+    Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
+    ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) = t * q z := by
   let Λ := clusterOn μ U z t
   let o := fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x
-  obtain ⟨ν, hν, hLap, -⟩ := general_odometer_mass_of_compact_containment hμ hR hV hU hsub hz ht hcl
-  refine ⟨ν, hν, hLap, ?_⟩
-  intro O q hO hΛO hq
   have hΛo : IsOpen Λ := isOpen_clusterOn_of_volumeGrowth hμ hR hV hU hsub hz ht
   have hzΛ : z ∈ Λ := ⟨hz, Or.inl rfl⟩
   have hK : IsCompact (closure Λ) := (isCompact_closedBall 0 R).of_isClosed_subset isClosed_closure
@@ -82,8 +80,9 @@ theorem general_clusterOn_harmonic_quadrature
     smul_eq_mul, hφK (subset_closure hzΛ), integral_congr_ae hae] at heq
   linarith
 
-/-- Smooth Laplacian-positive tests satisfy quadrature inequality for the obstacle mass. -/
-theorem general_clusterOn_smooth_laplacian_quadrature
+
+/-- Harmonic quadrature for the actual cluster and frontier obstacle mass. -/
+theorem general_clusterOn_harmonic_quadrature
     {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
     (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
     {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
@@ -94,14 +93,33 @@ theorem general_clusterOn_smooth_laplacian_quadrature
         (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))
         (ENNReal.ofReal t • Measure.dirac z) U ∧
       ∀ (O : Set ℂ) (q : ℂ → ℝ), IsOpen O → closure (clusterOn μ U z t) ⊆ O →
-        ContDiffOn ℝ ∞ q O → (∀ x ∈ O, 0 ≤ Δ q x) →
+        HarmonicOnNhd q O →
         Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
-        ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ≥ t * q z := by
-  let Λ := clusterOn μ U z t
-  let o := fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x
+        ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) = t * q z := by
   obtain ⟨ν, hν, hLap, -⟩ := general_odometer_mass_of_compact_containment hμ hR hV hU hsub hz ht hcl
   refine ⟨ν, hν, hLap, ?_⟩
-  intro O q hO hΛO hq hqΔ
+  intro O q hO hΛO hq
+  exact general_clusterOn_harmonic_quadrature_of_hasLaplacian hμ hR hV hU hsub hz ht hcl hLap hO hΛO hq
+
+/-- Smooth quadrature for any measure in the odometer decomposition. -/
+theorem general_clusterOn_smooth_laplacian_quadrature_of_hasLaplacian
+    {μ ν : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hcl : closure (clusterOn μ U z t) ⊆ U)
+    (hLap : HasLaplacian
+      (fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x)
+      (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))
+      (ENNReal.ofReal t • Measure.dirac z) U)
+    {O : Set ℂ} {q : ℂ → ℝ} (hO : IsOpen O)
+    (hΛO : closure (clusterOn μ U z t) ⊆ O)
+    (hq : ContDiffOn ℝ ∞ q O)
+    (hqΔ : ∀ x ∈ closure (clusterOn μ U z t), 0 ≤ Δ q x) :
+    Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
+    t * q z ≤ ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) := by
+  let Λ := clusterOn μ U z t
+  let o := fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x
   have hΛo : IsOpen Λ := isOpen_clusterOn_of_volumeGrowth hμ hR hV hU hsub hz ht
   have hzΛ : z ∈ Λ := ⟨hz, Or.inl rfl⟩
   have hK : IsCompact (closure Λ) := (isCompact_closedBall 0 R).of_isClosed_subset isClosed_closure
@@ -138,7 +156,7 @@ theorem general_clusterOn_smooth_laplacian_quadrature
     by_cases hxΛ : x ∈ Λ
     · rw [hΔφ x (subset_closure hxΛ)]
       have ho := green_obstacle_le_leastSupersolutionOn (μ := μ) hsub ht.le hxΛ.1 hxz
-      exact mul_nonneg (by dsimp [o]; linarith) (hqΔ x (hΛO (subset_closure hxΛ)))
+      exact mul_nonneg (by dsimp [o]; linarith) (hqΔ x (subset_closure hxΛ))
     by_cases hxU : x ∈ U
     · change 0 ≤ (leastSupersolutionOn μ U z t x + t * greenFunction U z x) * Δ φ x
       rw [general_odometer_eq_zero_of_notMem_clusterOn hsub ht.le ⟨hxU, hxΛ⟩, zero_mul]
@@ -156,6 +174,133 @@ theorem general_clusterOn_smooth_laplacian_quadrature
   rw [integral_smul_measure, integral_dirac, ENNReal.toReal_ofReal ht.le,
     smul_eq_mul, hφK (subset_closure hzΛ), integral_congr_ae hae] at heq
   linarith
+
+
+/-- Smooth Laplacian-positive tests satisfy quadrature inequality for the obstacle mass. -/
+theorem general_clusterOn_smooth_laplacian_quadrature
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hcl : closure (clusterOn μ U z t) ⊆ U) :
+    ∃ ν : Measure ℂ, ν ≤ μ ∧
+      HasLaplacian (fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x)
+        (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))
+        (ENNReal.ofReal t • Measure.dirac z) U ∧
+      ∀ (O : Set ℂ) (q : ℂ → ℝ), IsOpen O → closure (clusterOn μ U z t) ⊆ O →
+        ContDiffOn ℝ ∞ q O → (∀ x ∈ O, 0 ≤ Δ q x) →
+        Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
+        ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ≥ t * q z := by
+  obtain ⟨ν, hν, hLap, -⟩ := general_odometer_mass_of_compact_containment hμ hR hV hU hsub hz ht hcl
+  refine ⟨ν, hν, hLap, ?_⟩
+  intro O q hO hΛO hq hqΔ
+  exact general_clusterOn_smooth_laplacian_quadrature_of_hasLaplacian hμ hR hV hU hsub hz ht hcl hLap hO hΛO hq (fun x hx => hqΔ x (hΛO hx))
+
+/-- Continuous subharmonic quadrature for a fixed compactly supported obstacle mass. -/
+theorem general_clusterOn_subharmonic_quadrature_of_hasLaplacian
+    {μ ν : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hcl : closure (clusterOn μ U z t) ⊆ U)
+    (hLap : HasLaplacian
+      (fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x)
+      (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))
+      (ENNReal.ofReal t • Measure.dirac z) U)
+    (hmass : μ (clusterOn μ U z t) + ν (frontier (clusterOn μ U z t)) = ENNReal.ofReal t)
+    {O : Set ℂ} {q : ℂ → ℝ} (hO : IsOpen O)
+    (hΛO : closure (clusterOn μ U z t) ⊆ O)
+    (hq : ContinuousOn q O) (hsubq : IsSubharmonicOn O q) :
+    Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
+    t * q z ≤ ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) := by
+  let Λ := clusterOn μ U z t
+  let K := closure Λ
+  let σ := μ.restrict Λ + ν.restrict (frontier Λ)
+  let _ : IsLocallyFiniteMeasure μ := hμ
+  have hΛo : IsOpen Λ := isOpen_clusterOn_of_volumeGrowth hμ hR hV hU hsub hz ht
+  have hK : IsCompact K := (isCompact_closedBall 0 R).of_isClosed_subset isClosed_closure
+    (hcl.trans (hsub.trans ball_subset_closedBall))
+  have hmem : ∀ᵐ x ∂σ, x ∈ K := by
+    change ∀ᵐ x ∂(μ.restrict Λ + ν.restrict (frontier Λ)), x ∈ closure Λ
+    rw [ae_add_measure_iff]
+    exact ⟨(ae_restrict_mem hΛo.measurableSet).mono (fun _ hx => subset_closure hx),
+      (ae_restrict_mem isClosed_frontier.measurableSet).mono (fun _ hx => frontier_subset_closure hx)⟩
+  have hσK : σ.restrict K = σ := Measure.restrict_eq_self_of_ae_mem hmem
+  have hσmass : σ Set.univ = ENNReal.ofReal t := by simpa [σ] using hmass
+  let _ : IsFiniteMeasure σ := ⟨by rw [hσmass]; exact ENNReal.ofReal_lt_top⟩
+  have hqi : Integrable q σ := by
+    have h := (hq.mono hΛO).integrableOn_compact (μ := σ) hK
+    change Integrable q (σ.restrict K) at h
+    rwa [hσK] at h
+  refine ⟨hqi, ?_⟩
+  apply le_of_forall_pos_le_add
+  intro ε hε
+  let δ := ε / (2 * t + 1)
+  have hδ : 0 < δ := by dsimp [δ]; positivity
+  obtain ⟨f, hf, -, hclose, hfΔ⟩ :=
+    Section6.exists_compactlySupported_smooth_subharmonic_approximation hO hK hΛO hq hsubq hδ
+  have hfquad := general_clusterOn_smooth_laplacian_quadrature_of_hasLaplacian
+    hμ hR hV hU hsub hz ht hcl hLap isOpen_univ (subset_univ _) hf.contDiffOn hfΔ
+  have hfi : Integrable f σ := hfquad.1
+  have hle : (∫ x, f x ∂σ) ≤ ∫ x, (q x + δ) ∂σ := by
+    apply integral_mono_ae hfi (hqi.add (integrable_const δ))
+    filter_upwards [hmem] with x hx
+    have h := (abs_le.mp (hclose x hx)).2
+    change f x ≤ q x + δ
+    linarith
+  rw [integral_add hqi (integrable_const δ), integral_const] at hle
+  have hzK : z ∈ K := subset_closure ⟨hz, Or.inl rfl⟩
+  have hzclose := (abs_le.mp (hclose z hzK)).1
+  have hreal : σ.real Set.univ = t := by simp [measureReal_def, hσmass, ENNReal.toReal_ofReal ht.le]
+  rw [hreal, smul_eq_mul] at hle
+  have hδbound : (2 * t + 1) * δ = ε := by dsimp [δ]; field_simp
+  nlinarith
+
+/-- One actual obstacle mass satisfies both harmonic and subharmonic quadrature. -/
+theorem general_clusterOn_quadrature
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hcl : closure (clusterOn μ U z t) ⊆ U) :
+    ∃ ν : Measure ℂ, ν ≤ μ ∧
+      HasLaplacian (fun x => leastSupersolutionOn μ U z t x + t * greenFunction U z x)
+        (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))
+        (ENNReal.ofReal t • Measure.dirac z) U ∧
+      μ (clusterOn μ U z t) + ν (frontier (clusterOn μ U z t)) = ENNReal.ofReal t ∧
+      (∀ (O : Set ℂ) (q : ℂ → ℝ), IsOpen O → closure (clusterOn μ U z t) ⊆ O →
+        HarmonicOnNhd q O →
+        Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
+        ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) = t * q z) ∧
+      (∀ (O : Set ℂ) (q : ℂ → ℝ), IsOpen O → closure (clusterOn μ U z t) ⊆ O →
+        ContinuousOn q O → IsSubharmonicOn O q →
+        Integrable q (μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t))) ∧
+        t * q z ≤ ∫ x, q x ∂(μ.restrict (clusterOn μ U z t) + ν.restrict (frontier (clusterOn μ U z t)))) := by
+  obtain ⟨ν, hν, hLap, hm⟩ := general_odometer_mass_of_compact_containment hμ hR hV hU hsub hz ht hcl
+  refine ⟨ν, hν, hLap, hm, ?_, ?_⟩
+  · intro O q hO hΛO hq
+    exact general_clusterOn_harmonic_quadrature_of_hasLaplacian hμ hR hV hU hsub hz ht hcl hLap hO hΛO hq
+  · intro O q hO hΛO hq hqsub
+    exact general_clusterOn_subharmonic_quadrature_of_hasLaplacian hμ hR hV hU hsub hz ht hcl hLap hm hO hΛO hq hqsub
+
+/-- Frontier-null clusters satisfy subharmonic quadrature. -/
+theorem general_clusterOn_subharmonic_quadrature_of_frontier_null
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {R βm βp : ℝ}
+    (hR : 0 < R) (hV : VolumeGrowth μ R βm βp)
+    {U : Set ℂ} (hU : IsOpen U) (hsub : U ⊆ ball (0 : ℂ) R)
+    {z : ℂ} (hz : z ∈ U) {t : ℝ} (ht : 0 < t)
+    (hcl : closure (clusterOn μ U z t) ⊆ U)
+    (hfront : μ (frontier (clusterOn μ U z t)) = 0)
+    {O : Set ℂ} {q : ℂ → ℝ} (hO : IsOpen O)
+    (hΛO : closure (clusterOn μ U z t) ⊆ O) (hq : ContinuousOn q O)
+    (hqsub : IsSubharmonicOn O q) :
+    Integrable q (μ.restrict (clusterOn μ U z t)) ∧
+    t * q z ≤ ∫ x, q x ∂μ.restrict (clusterOn μ U z t) := by
+  obtain ⟨ν, hν, -, -, -, hquad⟩ := general_clusterOn_quadrature hμ hR hV hU hsub hz ht hcl
+  have hn : ν (frontier (clusterOn μ U z t)) = 0 :=
+    le_antisymm ((hν _).trans (le_of_eq hfront)) bot_le
+  have hr : ν.restrict (frontier (clusterOn μ U z t)) = 0 := Measure.restrict_eq_zero.mpr hn
+  simpa only [hr, add_zero] using hquad O q hO hΛO hq hqsub
 
 /-- If the frontier is μ-null, the open cluster has the full source mass and
 satisfies harmonic quadrature. -/
@@ -216,6 +361,8 @@ theorem general_clusterOn_harmonic_mean_value_of_frontier_null
   have h := (general_clusterOn_harmonic_quadrature_of_frontier_null hμ hR hV hU hsub hz ht hcl hfront).2 O q hO hΛO hq
   rw [h.2, mul_div_cancel_left₀ _ (ne_of_gt ht)]
 
+#print axioms general_clusterOn_quadrature
+#print axioms general_clusterOn_subharmonic_quadrature_of_frontier_null
 #print axioms general_clusterOn_harmonic_mean_value_of_frontier_null
 #print axioms general_clusterOn_smooth_laplacian_quadrature_of_frontier_null
 #print axioms general_clusterOn_smooth_laplacian_quadrature
