@@ -422,6 +422,122 @@ theorem greenPotential_add_dirac (O : Set ℂ) (a c x : ℂ) :
 
 #print axioms greenPotential_add_dirac
 
+/-- The Green potential of finitely many point masses is the sum of the point
+potentials, including at the diagonal under the frozen convention. -/
+theorem greenPotential_finset_sum_dirac (O : Set ℂ) (S : Finset ℂ) (x : ℂ) :
+    greenPotential O (∑ a ∈ S, Measure.dirac a) x =
+      ∑ a ∈ S, greenPotential O (Measure.dirac a) x := by
+  classical
+  unfold greenPotential
+  rw [integral_finsetSum_measure (fun _ _ => integrable_dirac enorm_lt_top)]
+
+#print axioms greenPotential_finset_sum_dirac
+
+/-- Away from finitely many point sources, the difference between the whole-plane
+and disc potentials is the sum of the disc harmonic corrections. -/
+theorem greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_not_mem
+    {S : Finset ℂ} {R : ℝ} {x : ℂ} (hR : 0 < R)
+    (hS : ∀ a ∈ S, a ∈ ball (0 : ℂ) R) (hx : x ∈ ball (0 : ℂ) R)
+    (hxs : x ∉ S) :
+    greenPotential univ (∑ a ∈ S, Measure.dirac a) x =
+      greenPotential (ball 0 R) (∑ a ∈ S, Measure.dirac a) x +
+        ∑ a ∈ S, greatestHarmonicMinorantBall R a x := by
+  classical
+  rw [greenPotential_finset_sum_dirac, greenPotential_finset_sum_dirac, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro a ha
+  simpa only [add_comm] using
+    greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR (hS a ha) hx
+      (fun h => hxs (h ▸ ha))
+
+#print axioms greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_not_mem
+
+/-- A whole-plane negative potential of finitely many point sources belongs
+to the full test class when the pole avoids those sources. -/
+theorem neg_univ_finset_sum_dirac_mem_subharmonicBallTestClass
+    {Λ : Set ℂ} {z : ℂ} (S : Finset ℂ) (hzS : z ∉ S) :
+    -greenPotential univ (∑ a ∈ S, Measure.dirac a) ∈ subharmonicBallTestClass Λ z := by
+  classical
+  refine ⟨univ, (↑S : Set ℂ), 0, ∑ a ∈ S, Measure.dirac a, 0, isOpen_univ,
+    subset_univ _, S.finite_toSet.isCompact, subset_univ _, inferInstance,
+    inferInstance, ?_, ?_, ?_, harmonicOnNhd_const 0, ?_,
+    integrable_finsetSum_measure.mpr (fun _ _ => integrable_dirac enorm_lt_top), ?_⟩
+  · simp
+  · simp
+  · simp
+  · simp [hzS]
+  · ext x
+    simp [greenPotential]
+
+#print axioms neg_univ_finset_sum_dirac_mem_subharmonicBallTestClass
+
+/-- A whole-plane potential with finitely many negative point sources admits a
+bounded disc representative when the observation measure charges none of the sources. -/
+theorem neg_univ_finset_sum_dirac_has_bounded_representative
+    {μ : Measure ℂ} {Λ : Set ℂ} {z : ℂ} {R : ℝ} (S : Finset ℂ)
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hzS : z ∉ S) (hS : ∀ a ∈ S, a ∈ ball (0 : ℂ) R)
+    (hμ : μ.restrict Λ (↑S : Set ℂ) = 0) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (-greenPotential univ (∑ a ∈ S, Measure.dirac a)) z = g z ∧
+      (-greenPotential univ (∑ a ∈ S, Measure.dirac a)) =ᵐ[μ.restrict Λ] g := by
+  classical
+  let ν : Measure ℂ := ∑ a ∈ S, Measure.dirac a
+  let q : ℂ → ℝ := - ∑ a ∈ S, greatestHarmonicMinorantBall R a
+  let g := q - greenPotential (ball 0 R) ν
+  have hsum : ∀ T : Finset ℂ, (∀ a ∈ T, a ∈ ball (0 : ℂ) R) →
+      HarmonicOnNhd (∑ a ∈ T, greatestHarmonicMinorantBall R a) (ball 0 R) := by
+    intro T
+    induction T using Finset.induction_on with
+    | empty =>
+      intro _
+      simp only [Finset.sum_empty]
+      change HarmonicOnNhd (fun _ : ℂ => (0 : ℝ)) (ball 0 R)
+      exact harmonicOnNhd_const 0
+    | @insert a T ha ih =>
+      intro hT
+      rw [Finset.sum_insert ha]
+      exact ((isHarmonicMinorant_greatestHarmonicMinorantBall
+        (hT a (Finset.mem_insert_self a T))).1).add
+        (ih (fun b hb => hT b (Finset.mem_insert_of_mem hb)))
+  have hq : HarmonicOnNhd q (ball 0 R) := (hsum S hS).neg
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 R, (↑S : Set ℂ), 0, ν, q, isOpen_ball, isBounded_ball,
+      hΛ, S.finite_toSet.isCompact, ?_, inferInstance, inferInstance, ?_, ?_, ?_, hq,
+      ?_, ?_, ?_⟩
+    · exact hS
+    · simp
+    · simp [ν]
+    · simp
+    · simp [ν, hzS]
+    · exact integrable_finsetSum_measure.mpr (fun _ _ => integrable_dirac enorm_lt_top)
+    · ext x
+      simp [g, greenPotential]
+  have heq : ∀ x ∈ ball (0 : ℂ) R, x ∉ S →
+      (-greenPotential univ ν) x = g x := by
+    intro x hx hxS
+    simp only [g, q, Pi.neg_apply, Pi.sub_apply, Finset.sum_apply]
+    rw [show greenPotential univ ν x = greenPotential (ball 0 R) ν x +
+      ∑ a ∈ S, greatestHarmonicMinorantBall R a x from
+        greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_not_mem hR hS hx hxS]
+    ring
+  refine ⟨g, hg, heq z (hΛ (subset_closure hz)) hzS, ?_⟩
+  have hne : ∀ᵐ x ∂μ.restrict Λ, x ∉ S := by
+    rw [ae_iff]
+    simp only [not_not]
+    have hSet : {x : ℂ | x ∈ S} = (↑S : Set ℂ) := by
+      ext x
+      simp
+    rw [hSet]
+    exact hμ
+  have hball : ∀ᵐ x ∂μ.restrict Λ, x ∈ ball (0 : ℂ) R :=
+    ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+      (ae_restrict_mem (isOpen_ball.measurableSet))
+  filter_upwards [hball, hne] with x hx hxS
+  exact heq x hx hxS
+
+#print axioms neg_univ_finset_sum_dirac_has_bounded_representative
+
 /-- A whole-plane potential with two negative point sources is a test when
 its positive atom is outside the observation set and its negative atoms avoid the pole. -/
 theorem univ_dirac_sub_two_dirac_mem_subharmonicBallTestClass

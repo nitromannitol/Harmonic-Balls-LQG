@@ -46,6 +46,8 @@ The complementary result `univ_two_dirac_has_bounded_representative_of_measure_a
 
 `univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero` extends the changed-source construction to a positive point source outside the witness disc and two negative point sources inside it. It retains both negative sources, absorbs the positive source and the two disc corrections into the harmonic part, and matches the original function at the pole and almost everywhere when the restricted observation measure gives each negative atom zero mass. `univ_dirac_sub_two_dirac_mem_subharmonicBallTestClass` also checks that the original potential belongs to the full frozen class, including its source support and pole conditions. `univ_three_dirac_has_bounded_representative_of_ac_volume` specializes the construction to observation measures absolutely continuous with respect to planar area. The two negative atoms may coincide. This remains a special case and does not settle observations charging either atom or arbitrary source measures.
 
+`neg_univ_finset_sum_dirac_mem_subharmonicBallTestClass` verifies the full frozen test for a whole-plane negative potential of any finite set of unit point masses when the pole avoids that set. `neg_univ_finset_sum_dirac_has_bounded_representative` constructs a bounded disc witness when the source set is inside the disc and the restricted observation measure assigns that finite set zero mass. It uses an explicit finite sum of harmonic corrections and checks the pole and support conditions. This covers arbitrarily many negative atoms, but not arbitrary weights or general source measures, and does not handle observation measures charging the sources.
+
 ## Outstanding proof obligation
 
 The exact target remains
