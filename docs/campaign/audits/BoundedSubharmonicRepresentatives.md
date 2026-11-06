@@ -48,6 +48,8 @@ The complementary result `univ_two_dirac_has_bounded_representative_of_measure_a
 
 `neg_univ_finset_sum_dirac_mem_subharmonicBallTestClass` verifies the full frozen test for a whole-plane negative potential of any finite set of unit point masses when the pole avoids that set. `neg_univ_finset_sum_dirac_has_bounded_representative` constructs a bounded disc witness when the source set is inside the disc and the restricted observation measure assigns that finite set zero mass. It uses an explicit finite sum of harmonic corrections and checks the pole and support conditions. This covers arbitrarily many negative atoms, but not arbitrary weights or general source measures, and does not handle observation measures charging the sources.
 
+`univ_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass` and `univ_dirac_sub_finset_sum_dirac_has_bounded_representative` add one positive whole-plane point source outside the witness disc to the finite-negative-source construction. The positive potential is absorbed into the harmonic correction, so the bounded witness removes that source; the negative source set must still be uncharged by the restricted observation measure. The original function is checked against the full frozen source, support, and pole conditions. General source measures and observation measures charging negative atoms remain unresolved.
+
 ## Outstanding proof obligation
 
 The exact target remains
