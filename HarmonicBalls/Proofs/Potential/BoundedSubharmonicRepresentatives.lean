@@ -422,6 +422,27 @@ theorem greenPotential_add_dirac (O : Set ℂ) (a c x : ℂ) :
 
 #print axioms greenPotential_add_dirac
 
+/-- A whole-plane potential with two negative point sources is a test when
+its positive atom is outside the observation set and its negative atoms avoid the pole. -/
+theorem univ_dirac_sub_two_dirac_mem_subharmonicBallTestClass
+    {Λ : Set ℂ} {z a c b : ℂ} (hza : z ≠ a) (hzc : z ≠ c) (hb : b ∉ Λ) :
+    greenPotential univ (Measure.dirac b) -
+        greenPotential univ (Measure.dirac a + Measure.dirac c) ∈
+      subharmonicBallTestClass Λ z := by
+  classical
+  refine ⟨univ, {b, a, c}, Measure.dirac b, Measure.dirac a + Measure.dirac c,
+    0, isOpen_univ, subset_univ _, (isCompact_singleton.insert a).insert b,
+    subset_univ _, inferInstance, inferInstance, ?_, ?_, ?_, harmonicOnNhd_const 0,
+    ?_, (integrable_dirac enorm_lt_top).add_measure (integrable_dirac enorm_lt_top), ?_⟩
+  · simp
+  · simp
+  · simp [Measure.dirac_apply, hb]
+  · simp [hza, hzc]
+  · ext x
+    simp
+
+#print axioms univ_dirac_sub_two_dirac_mem_subharmonicBallTestClass
+
 /-- A whole-plane test with two negative atoms has a bounded representative for
 observation measures charging neither atom. The positive source outside the disc
 is absorbed into the harmonic part. -/
@@ -492,6 +513,30 @@ theorem univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
   exact heq x hx hxa hxc
 
 #print axioms univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
+
+/-- The two-negative-atom construction applies to observation measures absolutely
+continuous with respect to planar area. -/
+theorem univ_three_dirac_has_bounded_representative_of_ac_volume
+    {μ : Measure ℂ} {Λ : Set ℂ} {z a c b : ℂ} {R : ℝ}
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hza : z ≠ a) (hzc : z ≠ c) (ha : a ∈ ball (0 : ℂ) R)
+    (hc : c ∈ ball (0 : ℂ) R) (hb : b ∉ ball (0 : ℂ) R)
+    (hμ : μ ≪ volume) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (Measure.dirac a + Measure.dirac c)) z = g z ∧
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (Measure.dirac a + Measure.dirac c)) =ᵐ[μ.restrict Λ] g := by
+  have hμa : μ.restrict Λ {a} = 0 :=
+    le_antisymm (((Measure.restrict_le_self : μ.restrict Λ ≤ μ) {a}).trans_eq
+      (hμ (measure_singleton a))) bot_le
+  have hμc : μ.restrict Λ {c} = 0 :=
+    le_antisymm (((Measure.restrict_le_self : μ.restrict Λ ≤ μ) {c}).trans_eq
+      (hμ (measure_singleton c))) bot_le
+  exact univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
+    hR hΛ hz hza hzc ha hc hb hμa hμc
+
+#print axioms univ_three_dirac_has_bounded_representative_of_ac_volume
 
 /-- The construction applies to every observation measure absolutely continuous
 with respect to area measure. -/
