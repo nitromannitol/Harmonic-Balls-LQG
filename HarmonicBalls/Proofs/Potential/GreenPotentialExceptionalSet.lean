@@ -247,6 +247,137 @@ theorem ae_greenPotential_sub_of_local_upper_growth {μ ν₁ ν₂ : Measure �
   exact ⟨h₁.2.2.1, h₂.2.2.1,
     greenPotential_sub_eq_lintegral_toReal hOb h₁.2.1 h₂.2.1 h₁.1 h₂.1⟩
 
+/-- The Green kernel is jointly almost-everywhere strongly measurable for
+finite measures, by compact exhaustion of the open domain. -/
+theorem aestronglyMeasurable_greenFunction_prod_of_open {O : Set ℂ}
+    (hO : IsOpen O) {α β : Measure ℂ} [IsFiniteMeasure α] [IsFiniteMeasure β] :
+    AEStronglyMeasurable (Function.uncurry (greenFunction O)) (α.prod β) := by
+  classical
+  let : LocallyCompactSpace O := hO.locallyCompactSpace
+  have hσ : IsSigmaCompact O := isSigmaCompact_iff_sigmaCompactSpace.mpr inferInstance
+  obtain ⟨C, hC, hcover⟩ := hσ
+  have hCU : ∀ n, C n ⊆ O := by
+    intro n x hx
+    rw [← hcover]
+    exact mem_iUnion.mpr ⟨n, hx⟩
+  have hpieces : ∀ n, AEStronglyMeasurable (Function.uncurry (greenFunction O))
+      ((α.prod β).restrict (C n ×ˢ univ)) := by
+    intro n
+    rw [← Measure.restrict_prod_eq_prod_univ]
+    by_cases hn : (C n).Nonempty
+    · obtain ⟨z, hz⟩ := hn
+      apply aestronglyMeasurable_greenFunction_prod_of_compact hO (hC n) (hCU n) hz
+      rw [Measure.restrict_apply (hC n).isClosed.measurableSet.compl]
+      simp
+    · have he : C n = ∅ := Set.not_nonempty_iff_eq_empty.mp hn
+      simp only [he, Measure.restrict_empty, Measure.zero_prod]
+      exact aestronglyMeasurable_zero_measure _
+  have hinside : AEStronglyMeasurable (Function.uncurry (greenFunction O))
+      ((α.prod β).restrict (O ×ˢ univ)) := by
+    have hh := AEStronglyMeasurable.iUnion hpieces
+    have he : (⋃ n, C n ×ˢ (univ : Set ℂ)) = O ×ˢ univ := by
+      ext p
+      simp only [mem_iUnion, mem_prod, mem_univ, and_true]
+      exact ⟨fun ⟨n, hn⟩ => hCU n hn, fun hp => mem_iUnion.mp (hcover.symm ▸ hp)⟩
+    rwa [he] at hh
+  have houtside : AEStronglyMeasurable (Function.uncurry (greenFunction O))
+      ((α.prod β).restrict (Oᶜ ×ˢ univ)) := by
+    apply aestronglyMeasurable_const.congr
+    filter_upwards [ae_restrict_mem (hO.measurableSet.compl.prod MeasurableSet.univ)] with p hp
+    exact (greenFunction_of_notMem_left hp.1 p.2).symm
+  have h := aestronglyMeasurable_union_iff.mpr ⟨hinside, houtside⟩
+  have he : (O ×ˢ (univ : Set ℂ)) ∪ (Oᶜ ×ˢ univ) = univ := by
+    ext p
+    simp only [mem_union, mem_prod, mem_univ, and_true, mem_compl_iff, iff_true]
+    exact Classical.em _
+  rwa [he, Measure.restrict_univ] at h
+
+/-- Product integrability of the Green kernel on an open subdomain of a disc.
+The source is finite and may overlap the observation set. -/
+theorem green_integrable_product_of_upper {μ ν : Measure ℂ} [IsFiniteMeasure ν]
+    {O : Set ℂ} {R r₀ β : ℝ} (hO : IsOpen O)
+    (hsub : O ⊆ ball (0 : ℂ) R) (hR : 0 < R) (hr₀ : 0 < r₀) (hβ : 0 < β)
+    (hup : ∀ r, 0 < r → r < r₀ → ∀ z ∈ ball (0 : ℂ) R,
+      μ (ball z r) ≤ ENNReal.ofReal (r ^ β))
+    (hfin : μ (ball (0 : ℂ) R) ≠ ⊤)
+    (hν : ∀ᵐ y ∂ν, y ∈ closedBall (0 : ℂ) R) :
+    Integrable (Function.uncurry (greenFunction O)) ((μ.restrict (ball 0 R)).prod ν) := by
+  have : IsFiniteMeasure (μ.restrict (ball 0 R)) := isFiniteMeasure_restrict.2 hfin
+  have hi := (green_disc_integrable_product_of_upper (ν := ν) hR hr₀ hβ hup hfin).swap
+  rw [Measure.restrict_eq_self_of_ae_mem hν] at hi
+  have hi' : Integrable (Function.uncurry (greenFunction (ball 0 R)))
+      ((μ.restrict (ball 0 R)).prod ν) := by
+    convert hi using 1
+    funext p
+    exact greenFunction_ball_comm R p.1 p.2
+  have hOb : Bornology.IsBounded O := isBounded_ball.subset hsub
+  apply hi'.mono_nonneg (aestronglyMeasurable_greenFunction_prod_of_open hO)
+    (Filter.Eventually.of_forall fun p => greenFunction_nonneg hOb p.1 p.2)
+  exact Filter.Eventually.of_forall fun p =>
+    Section6.greenFunction_le_of_subset hsub isBounded_ball p.1 p.2
+
+/-- Under local upper growth, the Green kernel is product-integrable on
+every bounded observation restriction against a finite compactly concentrated
+source in a bounded open domain. -/
+theorem green_integrable_product_of_local_upper_growth {μ ν : Measure ℂ}
+    [IsLocallyFiniteMeasure μ] [IsFiniteMeasure ν]
+    (hup : ∀ R : ℝ, 0 < R → ∃ r₀ β : ℝ, 0 < r₀ ∧ 0 < β ∧
+      ∀ r, 0 < r → r < r₀ → ∀ z ∈ ball (0 : ℂ) R,
+        μ (ball z r) ≤ ENNReal.ofReal (r ^ β))
+    {O K : Set ℂ} (hO : IsOpen O) (hOb : Bornology.IsBounded O)
+    (hK : IsCompact K) (hν : ν Kᶜ = 0) (s : ℝ) :
+    Integrable (Function.uncurry (greenFunction O)) ((μ.restrict (ball 0 s)).prod ν) := by
+  obtain ⟨a, ha⟩ := hK.isBounded.subset_closedBall (0 : ℂ)
+  obtain ⟨b, hb⟩ := hOb.subset_closedBall (0 : ℂ)
+  let R := max (max (max s a) b) 1 + 1
+  have hmax : max (max s a) b ≤ max (max (max s a) b) 1 := le_max_left _ _
+  have hsR : s ≤ R := by
+    dsimp [R]
+    have := (le_max_left s a).trans (le_max_left (max s a) b) |>.trans hmax
+    linarith
+  have haR : a ≤ R := by
+    dsimp [R]
+    have := (le_max_right s a).trans (le_max_left (max s a) b) |>.trans hmax
+    linarith
+  have hbR : b < R := by
+    dsimp [R]
+    have := (le_max_right (max s a) b).trans hmax
+    linarith
+  have hR : 0 < R := by
+    dsimp [R]
+    have := le_max_right (max (max s a) b) (1 : ℝ)
+    linarith
+  have hsub : O ⊆ ball (0 : ℂ) R := fun x hx =>
+    (closedBall_subset_ball hbR) (hb hx)
+  have hνR : ∀ᵐ y ∂ν, y ∈ closedBall (0 : ℂ) R := by
+    have hνK : ∀ᵐ y ∂ν, y ∈ K := ae_iff.mpr hν
+    filter_upwards [hνK] with y hy
+    exact closedBall_subset_closedBall haR (ha hy)
+  obtain ⟨r₀, β, hr₀, hβ, hg⟩ := hup R hR
+  have hi := green_integrable_product_of_upper hO hsub hR hr₀ hβ hg
+    (measure_ball_lt_top (μ := μ)).ne hνR
+  exact hi.mono_measure (Measure.prod_mono
+    (Measure.restrict_mono (ball_subset_ball hsR) le_rfl) le_rfl)
+
+/-- The product-integrability result for an arbitrary bounded observation set. -/
+theorem green_integrable_product_restrict_of_local_upper_growth {μ ν : Measure ℂ}
+    [IsLocallyFiniteMeasure μ] [IsFiniteMeasure ν]
+    (hup : ∀ R : ℝ, 0 < R → ∃ r₀ β : ℝ, 0 < r₀ ∧ 0 < β ∧
+      ∀ r, 0 < r → r < r₀ → ∀ z ∈ ball (0 : ℂ) R,
+        μ (ball z r) ≤ ENNReal.ofReal (r ^ β))
+    {O K S : Set ℂ} (hO : IsOpen O) (hOb : Bornology.IsBounded O)
+    (hK : IsCompact K) (hν : ν Kᶜ = 0) (hS : Bornology.IsBounded S) :
+    Integrable (Function.uncurry (greenFunction O)) ((μ.restrict S).prod ν) := by
+  obtain ⟨r, hr⟩ := hS.subset_closedBall (0 : ℂ)
+  have hsub : S ⊆ ball (0 : ℂ) (r + 1) :=
+    hr.trans (closedBall_subset_ball (by linarith))
+  exact (green_integrable_product_of_local_upper_growth hup hO hOb hK hν (r + 1)).mono_measure
+    (Measure.prod_mono (Measure.restrict_mono hsub le_rfl) le_rfl)
+
+#print axioms green_integrable_product_restrict_of_local_upper_growth
+#print axioms green_integrable_product_of_local_upper_growth
+#print axioms green_integrable_product_of_upper
+#print axioms aestronglyMeasurable_greenFunction_prod_of_open
 #print axioms ae_greenPotential_sub_of_local_upper_growth
 #print axioms ae_greenPotential_of_local_upper_growth
 #print axioms ae_greenPotential_of_upper
