@@ -8,7 +8,7 @@ These results use the potential-theoretic infrastructure of Leonardo Bonanno.
 
 namespace HarmonicBalls
 
-open Filter Set Metric
+open Filter Set Metric Classical
 open scoped Topology
 
 /-- A Green boundary limit transfers to a subdomain at a shared boundary
@@ -145,6 +145,60 @@ theorem tendsto_greenFunction_zero_of_pairwise_disjoint_finite_discs
   exact tendsto_greenFunction_zero_of_finite_disc_union_isolated_pole_disc F c r hi
     (fun j hj hji => hdis i hi j hj (Ne.symm hji)) hzi hy
 
+/-- Near a point, a finite union agrees with the union of those members
+whose closures contain the point. -/
+theorem finite_union_eventually_eq_union_of_active_closures
+    {ι : Type*} (F : Finset ι) (A : ι → Set ℂ) (y : ℂ) :
+    ∀ᶠ x in 𝓝 y, x ∈ ⋃ i ∈ F, A i ↔
+      x ∈ ⋃ i ∈ F.filter (fun i => y ∈ closure (A i)), A i := by
+  classical
+  have hevent : ∀ᶠ x in 𝓝 y, ∀ i ∈ F, y ∉ closure (A i) → x ∉ A i := by
+    rw [eventually_all_finset]
+    intro i hi
+    by_cases h : y ∈ closure (A i)
+    · exact Filter.Eventually.of_forall (fun _ h' => (h' h).elim)
+    · filter_upwards [isClosed_closure.isOpen_compl.mem_nhds h] with x hx _ hxA
+      exact hx (subset_closure hxA)
+  filter_upwards [hevent] with x hx
+  constructor
+  · intro hxF
+    obtain ⟨i, hi, hxi⟩ := mem_iUnion₂.mp hxF
+    have hyi : y ∈ closure (A i) := by
+      by_contra hyi
+      exact hx i hi hyi hxi
+    exact mem_iUnion₂.mpr ⟨i, Finset.mem_filter.mpr ⟨hi, hyi⟩, hxi⟩
+  · intro hxF
+    obtain ⟨i, hi, hxi⟩ := mem_iUnion₂.mp hxF
+    exact mem_iUnion₂.mpr ⟨i, (Finset.mem_filter.mp hi).1, hxi⟩
+
+/-- At a boundary point of a finite union of discs, only discs whose boundary
+circles contain that point contribute to the union locally. -/
+theorem finite_disc_union_eventually_eq_active_circles
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ) {y : ℂ}
+    (hr : ∀ i ∈ F, 0 < r i)
+    (hy : y ∉ ⋃ i ∈ F, ball (c i) (r i)) :
+    ∀ᶠ x in 𝓝 y, x ∈ ⋃ i ∈ F, ball (c i) (r i) ↔
+      x ∈ ⋃ i ∈ F.filter (fun i => y ∈ sphere (c i) (r i)), ball (c i) (r i) := by
+  classical
+  have hfilter : F.filter (fun i => y ∈ closure (ball (c i) (r i))) =
+      F.filter (fun i => y ∈ sphere (c i) (r i)) := by
+    apply Finset.filter_congr
+    intro i hi
+    constructor
+    · intro hyclose
+      have hle : dist y (c i) ≤ r i :=
+        mem_closedBall.mp (closure_ball_subset_closedBall hyclose)
+      have hge : r i ≤ dist y (c i) := by
+        apply le_of_not_gt
+        intro hyball
+        exact hy (mem_iUnion₂.mpr ⟨i, hi, mem_ball.mpr hyball⟩)
+      exact mem_sphere.mpr (le_antisymm hle hge)
+    · intro hysphere
+      rw [closure_ball (c i) (hr i hi).ne']
+      exact sphere_subset_closedBall hysphere
+  simpa only [hfilter] using
+    (finite_union_eventually_eq_union_of_active_closures F (fun i => ball (c i) (r i)) y)
+
 /-- A boundary point of a finite union of discs belongs to the boundary
 circle of at least one disc in the union. -/
 theorem exists_mem_sphere_of_mem_closure_finite_disc_union
@@ -220,6 +274,8 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms finite_union_eventually_eq_union_of_active_closures
+#print axioms finite_disc_union_eventually_eq_active_circles
 #print axioms tendsto_greenFunction_zero_of_pairwise_disjoint_finite_discs
 #print axioms tendsto_greenFunction_zero_of_finite_disc_union_isolated_pole_disc
 #print axioms tendsto_greenFunction_zero_of_disjoint_union_ball
