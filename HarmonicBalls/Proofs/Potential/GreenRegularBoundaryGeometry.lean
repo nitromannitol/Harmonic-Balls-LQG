@@ -38,6 +38,27 @@ theorem tendsto_greenFunction_nhds_of_nhdsWithin {U : Set ℂ} {z y : ℂ}
     exact tendsto_sup.2 ⟨hlim, hout⟩
   simpa only [union_compl_self, nhdsWithin_univ] using h
 
+/-- The Green function vanishes in a neighbourhood of every point outside
+the closure of the pole component. -/
+theorem greenFunction_eventually_eq_zero_of_not_mem_closure_pole_component
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z y : ℂ} (hz : z ∈ U) (hy : y ∉ closure (connectedComponentIn U z)) :
+    ∀ᶠ x in 𝓝 y, greenFunction U z x = 0 := by
+  filter_upwards [isClosed_closure.isOpen_compl.mem_nhds hy] with x hx
+  exact greenFunction_eq_zero_of_not_mem_connectedComponentIn hU hUb hz
+    (fun hxC => hx (subset_closure hxC))
+
+/-- No boundary regularity assumption is needed at points outside the closure
+of the pole component. -/
+theorem tendsto_greenFunction_zero_of_not_mem_closure_pole_component
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z y : ℂ} (hz : z ∈ U) (hy : y ∉ closure (connectedComponentIn U z)) :
+    Tendsto (greenFunction U z) (𝓝 y) (𝓝 0) := by
+  apply tendsto_const_nhds.congr'
+  filter_upwards [greenFunction_eventually_eq_zero_of_not_mem_closure_pole_component
+    hU hUb hz hy] with x hx
+  exact hx.symm
+
 /-- Green boundary regularity of the pole component implies the corresponding
 boundary limits for the whole bounded open set. -/
 theorem tendsto_greenFunction_zero_of_pole_component_boundary
@@ -311,6 +332,8 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms greenFunction_eventually_eq_zero_of_not_mem_closure_pole_component
+#print axioms tendsto_greenFunction_zero_of_not_mem_closure_pole_component
 #print axioms exists_ball_inter_finite_disc_union_eq_unique_active_disc
 #print axioms finite_disc_union_eventually_eq_unique_active_disc
 #print axioms finite_union_eventually_eq_union_of_active_closures
