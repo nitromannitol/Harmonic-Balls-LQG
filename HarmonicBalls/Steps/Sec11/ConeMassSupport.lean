@@ -6,6 +6,10 @@ import HarmonicBalls.Proofs.Sec6.SimultaneousSingularMeasure
 
 namespace HarmonicBalls
 
+/-! The cone-probability development uses Leonardo Bonanno's
+Lattice-Probability formalization, including its Cameron-Martin port through
+the local smooth-shift and fixed-shift decoder developments. -/
+
 open MeasureTheory Metric Set Filter
 
 /-- The intersection of a cone and a positive annulus contains a nonempty
