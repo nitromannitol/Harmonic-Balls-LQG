@@ -1,9 +1,10 @@
 import HarmonicBalls.Proofs.Sec6.RelativelyCompactExhaustion
+import HarmonicBalls.Proofs.Potential.GreenRegularBoundaryGeometry
 
 /-! # Relatively compact open exhaustions with a fixed pole
 
-This is the topological part of a Green-regular exhaustion. The boundary
-regularity of the resulting domains is a separate question.
+This constructs relatively compact and Green-regular exhaustions. The Green
+boundary argument uses the potential-theoretic infrastructure of Leonardo Bonanno.
 -/
 
 namespace HarmonicBalls
@@ -123,6 +124,84 @@ theorem exists_greenRegular_exhaustion_of_finite_disc_boundary_limits
   intro n y hy hyout
   exact hdisc r (F n) hr (hpole n) y hy hyout
 
+/-- Every bounded open planar set admits a Green-regular exhaustion
+containing a prescribed pole at every stage. -/
+theorem exists_greenRegular_exhaustion {U : Set ℂ} (hU : IsOpen U)
+    (hUb : Bornology.IsBounded U) {z : ℂ} (hz : z ∈ U) :
+    ∃ V : ℕ → Set ℂ, (∀ n, IsOpen (V n)) ∧ Monotone V ∧
+      (⋃ n, V n) = U ∧ (∀ n, closure (V n) ⊆ U) ∧
+      (∀ n, z ∈ V n) ∧ ∀ n, ∀ y ∈ closure (V n), y ∉ V n →
+        Tendsto (greenFunction (V n) z) (𝓝[V n] y) (𝓝 0) := by
+  classical
+  obtain ⟨D, hDo, hDm, hDc, hDn, hDU⟩ :=
+    Section6.exists_relativelyCompact_open_exhaustion hU
+  have hDsub (n : ℕ) : closure (D n) ⊆ U := by
+    rw [← hDU]
+    exact (hDn n).trans (subset_iUnion D (n + 1))
+  let N (K : Set ℂ) : Set ℂ :=
+    if h : IsCompact K ∧ K ⊆ U then
+      Classical.choose (exists_open_exterior_disc_neighborhood hU hUb h.1 h.2)
+    else ∅
+  have hN (K : Set ℂ) (hK : IsCompact K) (hKU : K ⊆ U) :
+      IsOpen (N K) ∧ K ⊆ N K ∧ closure (N K) ⊆ U ∧
+        ∀ y ∈ closure (N K), y ∉ N K → ∃ a : ℂ, ∃ r : ℝ,
+          0 < r ∧ ‖y - a‖ = r ∧ Disjoint (N K) (ball a r) := by
+    dsimp only [N]
+    rw [dite_eq_left ⟨hK, hKU⟩]
+    exact Classical.choose_spec (exists_open_exterior_disc_neighborhood hU hUb hK hKU)
+  let V : ℕ → Set ℂ := fun n => Nat.rec
+    (N (insert z (closure (D 0))))
+    (fun k prev => N (insert z (closure (D (k + 1)) ∪ closure prev))) n
+  have hprop : ∀ n, IsOpen (V n) ∧ closure (V n) ⊆ U ∧ z ∈ V n ∧
+      closure (D n) ⊆ V n ∧
+      ∀ y ∈ closure (V n), y ∉ V n → ∃ a : ℂ, ∃ r : ℝ,
+        0 < r ∧ ‖y - a‖ = r ∧ Disjoint (V n) (ball a r) := by
+    intro n
+    induction n with
+    | zero =>
+      have hc : IsCompact (insert z (closure (D 0))) := (hDc 0).insert z
+      have hs : insert z (closure (D 0)) ⊆ U := insert_subset hz (hDsub 0)
+      have hn := hN _ hc hs
+      change IsOpen (N _) ∧ closure (N _) ⊆ U ∧ z ∈ N _ ∧
+        closure (D 0) ⊆ N _ ∧ _
+      exact ⟨hn.1, hn.2.2.1, hn.2.1 (mem_insert z _),
+        (subset_insert z _).trans hn.2.1, hn.2.2.2⟩
+    | succ n ih =>
+      have hcV : IsCompact (closure (V n)) :=
+        hUb.isCompact_closure.of_isClosed_subset isClosed_closure (ih.2.1.trans subset_closure)
+      have hc : IsCompact (insert z (closure (D (n + 1)) ∪ closure (V n))) :=
+        ((hDc (n + 1)).union hcV).insert z
+      have hs : insert z (closure (D (n + 1)) ∪ closure (V n)) ⊆ U :=
+        insert_subset hz (union_subset (hDsub (n + 1)) ih.2.1)
+      have hn := hN _ hc hs
+      change IsOpen (N _) ∧ closure (N _) ⊆ U ∧ z ∈ N _ ∧
+        closure (D (n + 1)) ⊆ N _ ∧ _
+      exact ⟨hn.1, hn.2.2.1, hn.2.1 (mem_insert z _),
+        (subset_union_left.trans (subset_insert z _)).trans hn.2.1, hn.2.2.2⟩
+  have hnext (n : ℕ) : closure (V n) ⊆ V (n + 1) := by
+    have hcV : IsCompact (closure (V n)) :=
+      hUb.isCompact_closure.of_isClosed_subset isClosed_closure ((hprop n).2.1.trans subset_closure)
+    have hc : IsCompact (insert z (closure (D (n + 1)) ∪ closure (V n))) :=
+      ((hDc (n + 1)).union hcV).insert z
+    have hs : insert z (closure (D (n + 1)) ∪ closure (V n)) ⊆ U :=
+      insert_subset hz (union_subset (hDsub (n + 1)) (hprop n).2.1)
+    have hn := hN _ hc hs
+    change closure (V n) ⊆ N _
+    exact (subset_union_right.trans (subset_insert z _)).trans hn.2.1
+  refine ⟨V, fun n => (hprop n).1,
+    monotone_nat_of_le_succ (fun n => subset_closure.trans (hnext n)), ?_,
+    fun n => (hprop n).2.1, fun n => (hprop n).2.2.1, ?_⟩
+  · apply Subset.antisymm
+    · exact iUnion_subset fun n => subset_closure.trans (hprop n).2.1
+    · rw [← hDU]
+      exact iUnion_subset fun n => subset_closure.trans ((hprop n).2.2.2.1.trans (subset_iUnion V n))
+  · intro n y hy hyout
+    obtain ⟨a, r, hr, hcontact, hdisj⟩ := (hprop n).2.2.2.2 y hy hyout
+    exact tendsto_greenFunction_zero_of_exterior_disc
+      (hUb.subset (subset_closure.trans (hprop n).2.1)) ((hprop n).2.2.1)
+      hy hyout hr hcontact hdisj
+
+#print axioms exists_greenRegular_exhaustion
 #print axioms exists_greenRegular_exhaustion_of_finite_disc_boundary_limits
 #print axioms exists_open_relativelyCompact_exhaustion
 #print axioms exists_finite_disc_open_exhaustion

@@ -581,6 +581,74 @@ theorem tendsto_greenFunction_zero_of_exterior_disc
   have : r / 2 < dist x (midpoint ℝ y a) := by nlinarith
   simpa [dist_eq_norm] using this
 
+/-- A compact subset of a bounded open set lies in a relatively compact
+open set with an exterior disc at each boundary point. -/
+theorem exists_open_exterior_disc_neighborhood
+    {U K : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    (hK : IsCompact K) (hKU : K ⊆ U) :
+    ∃ V : Set ℂ, IsOpen V ∧ K ⊆ V ∧ closure V ⊆ U ∧
+      ∀ y ∈ closure V, y ∉ V → ∃ a : ℂ, ∃ r : ℝ,
+        0 < r ∧ ‖y - a‖ = r ∧ Disjoint V (ball a r) := by
+  classical
+  obtain ⟨R₀, hR₀⟩ := hUb.subset_ball (0 : ℂ)
+  let R : ℝ := max R₀ 0 + 1
+  have hR : 0 < R := by dsimp [R]; linarith [le_max_right R₀ (0 : ℝ)]
+  have hUR : U ⊆ ball (0 : ℂ) R :=
+    hR₀.trans (ball_subset_ball (by dsimp [R]; linarith [le_max_left R₀ (0 : ℝ)]))
+  let C : Set ℂ := closedBall (0 : ℂ) R \ U
+  have hC : IsCompact C := (isCompact_closedBall (0 : ℂ) R).diff hU
+  have hrad (x : C) : ∃ r : ℝ, 0 < r ∧ Disjoint K (closedBall (x : ℂ) r) := by
+    have hxK : (x : ℂ) ∈ Kᶜ := fun hx => x.property.2 (hKU hx)
+    obtain ⟨ε, hε, hεK⟩ := Metric.isOpen_iff.mp hK.isClosed.isOpen_compl x hxK
+    refine ⟨ε / 2, by linarith, disjoint_left.mpr ?_⟩
+    intro y hyK hyball
+    exact hεK (closedBall_subset_ball (by linarith) hyball) hyK
+  choose r hr using hrad
+  have hcover : C ⊆ ⋃ x : C, ball (x : ℂ) (r x) := by
+    intro x hx
+    exact mem_iUnion.mpr ⟨⟨x, hx⟩, mem_ball_self (hr ⟨x, hx⟩).1⟩
+  obtain ⟨F, hF⟩ := hC.elim_finite_subcover (fun x : C => ball (x : ℂ) (r x))
+    (fun _ => isOpen_ball) hcover
+  let W : Set ℂ := ⋃ x ∈ F, closedBall (x : ℂ) (r x)
+  let V : Set ℂ := ball (0 : ℂ) R \ W
+  have hW : IsClosed W := isClosed_biUnion_finset fun _ _ => isClosed_closedBall
+  have hVK : K ⊆ V := by
+    intro x hx
+    refine ⟨hUR (hKU hx), ?_⟩
+    intro hxW
+    obtain ⟨a, ha, hxa⟩ := mem_iUnion₂.mp hxW
+    exact disjoint_left.mp (hr a).2 hx hxa
+  have havoids (a : C) (ha : a ∈ F) : Disjoint (closure V) (ball (a : ℂ) (r a)) := by
+    apply disjoint_left.mpr
+    intro x hxV hxa
+    have hsub : V ⊆ (ball (a : ℂ) (r a))ᶜ := by
+      intro w hw hwball
+      exact hw.2 (mem_iUnion₂.mpr ⟨a, ha, ball_subset_closedBall hwball⟩)
+    exact (closure_minimal hsub isOpen_ball.isClosed_compl hxV) hxa
+  have hVU : closure V ⊆ U := by
+    intro y hy
+    by_contra hyU
+    have hyR : y ∈ closedBall (0 : ℂ) R :=
+      closure_minimal (show V ⊆ closedBall (0 : ℂ) R from
+        fun _ hx => ball_subset_closedBall hx.1) isClosed_closedBall hy
+    obtain ⟨a, ha, hya⟩ := mem_iUnion₂.mp (hF ⟨hyR, hyU⟩)
+    exact disjoint_left.mp (havoids a ha) hy hya
+  refine ⟨V, isOpen_ball.sdiff hW, hVK, hVU, ?_⟩
+  intro y hy hyout
+  have hyR : y ∈ ball (0 : ℂ) R := hUR (hVU hy)
+  have hyW : y ∈ W := by
+    by_contra h
+    exact hyout ⟨hyR, h⟩
+  obtain ⟨a, ha, hya⟩ := mem_iUnion₂.mp hyW
+  have hn : y ∉ ball (a : ℂ) (r a) := fun h => disjoint_left.mp (havoids a ha) hy h
+  have heq : ‖y - (a : ℂ)‖ = r a := by
+    have hle : dist y (a : ℂ) ≤ r a := mem_closedBall.mp hya
+    have hge : r a ≤ dist y (a : ℂ) := le_of_not_gt (fun h => hn (mem_ball.mpr h))
+    simpa [dist_eq_norm] using le_antisymm hle hge
+  refine ⟨a, r a, (hr a).1, heq, ?_⟩
+  exact (havoids a ha).mono_left subset_closure
+
+#print axioms exists_open_exterior_disc_neighborhood
 #print axioms tendsto_greenFunction_zero_of_exterior_disc
 #print axioms tendsto_greenFunction_zero_of_strict_exterior_disc
 #print axioms tendsto_greenFunction_zero_of_continuous_harmonic_barrier
