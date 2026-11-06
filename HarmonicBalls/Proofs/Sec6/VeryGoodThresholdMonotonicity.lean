@@ -28,6 +28,66 @@ theorem isVeryGoodAnnulus_mono_mass {μ : Measure ℂ} {β ρ a a' b C₁m C₁p
   obtain ⟨k, _, hk⟩ := hr.2.1
   exact ⟨hr.1.1, k, hk⟩
 
+/-- Widening the two size-ratio intervals, lowering the mass and count
+thresholds, and increasing the first lattice level preserves a very-good annulus. -/
+theorem isVeryGoodAnnulus_mono_parameters
+    {μ : Measure ℂ} {β ρ a a' b C₁m C₁p C₂m C₂p C₃ D₁m D₁p D₂m D₂p D₃ : ℝ}
+    {z : ℂ} {N N' : ℕ} (hρ : 0 < ρ) (ha : a' ≤ a)
+    (h₁m : D₁m ≤ C₁m) (h₁p : C₁p ≤ D₁p)
+    (h₂m : D₂m ≤ C₂m) (h₂p : C₂p ≤ D₂p) (h₃ : D₃ ≤ C₃) (hN : N ≤ N')
+    (h : IsVeryGoodAnnulus μ β ρ z N a b C₁m C₁p C₂m C₂p C₃) :
+    IsVeryGoodAnnulus μ β ρ z N' a' b D₁m D₁p D₂m D₂p D₃ := by
+  have h' := isVeryGoodAnnulus_mono_mass hρ ha h
+  refine ⟨⟨(ENNReal.ofReal_le_ofReal h₁m).trans h'.1.1,
+    h'.1.2.trans (ENNReal.ofReal_le_ofReal h₁p)⟩,
+    ⟨(ENNReal.ofReal_le_ofReal h₂m).trans h'.2.1.1,
+    h'.2.1.2.trans (ENNReal.ofReal_le_ofReal h₂p)⟩, ?_⟩
+  intro n hn x hx hlat
+  have hε : dyadicScale n ≤ 1 := by
+    unfold dyadicScale
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  have hlog : 0 ≤ Real.logb 7 (dyadicScale n ^ (-(1 / 2 : ℝ))) :=
+    Real.logb_nonneg (by norm_num) (Real.one_le_rpow_of_pos_of_le_one_of_nonpos
+      (dyadicScale_pos n) hε (by norm_num))
+  exact (mul_le_mul_of_nonneg_right h₃ hlog).trans (h'.2.2 n (hN.trans hn) x hx hlat)
+
+/-- Two very-good annuli have a common choice of parameters, with the
+smaller lower bounds and the larger upper bounds. Their centres and radii may differ. -/
+theorem isVeryGoodAnnulus_common_parameters
+    {μ ν : Measure ℂ} {β ρ σ a a' b C₁m C₁p C₂m C₂p C₃ D₁m D₁p D₂m D₂p D₃ : ℝ}
+    {z w : ℂ} {N N' : ℕ} (hρ : 0 < ρ) (hσ : 0 < σ)
+    (h : IsVeryGoodAnnulus μ β ρ z N a b C₁m C₁p C₂m C₂p C₃)
+    (h' : IsVeryGoodAnnulus ν β σ w N' a' b D₁m D₁p D₂m D₂p D₃) :
+    IsVeryGoodAnnulus μ β ρ z (max N N') (min a a') b
+      (min C₁m D₁m) (max C₁p D₁p) (min C₂m D₂m) (max C₂p D₂p) (min C₃ D₃) ∧
+    IsVeryGoodAnnulus ν β σ w (max N N') (min a a') b
+      (min C₁m D₁m) (max C₁p D₁p) (min C₂m D₂m) (max C₂p D₂p) (min C₃ D₃) := by
+  exact ⟨isVeryGoodAnnulus_mono_parameters hρ (min_le_left _ _) (min_le_left _ _)
+    (le_max_left _ _) (min_le_left _ _) (le_max_left _ _) (min_le_left _ _)
+    (le_max_left _ _) h,
+    isVeryGoodAnnulus_mono_parameters hσ (min_le_right _ _) (min_le_right _ _)
+    (le_max_right _ _) (min_le_right _ _) (le_max_right _ _) (min_le_right _ _)
+    (le_max_right _ _) h'⟩
+
+/-- Relaxing parameters preserves the eight-adic comparable block count.
+This permits a rooted count and a prescribed-grid count to use the same constants. -/
+theorem eightAdic_comparable_count_mono_parameters
+    (μ : Measure ℂ) (β : ℝ) (z : ℂ) (N N' K : ℕ)
+    (a a' b C₁m C₁p C₂m C₂p C₃ m D₁m D₁p D₂m D₂p D₃ m' : ℝ)
+    (ha : a' ≤ a) (h₁m : D₁m ≤ C₁m) (h₁p : C₁p ≤ D₁p)
+    (h₂m : D₂m ≤ C₂m) (h₂p : C₂p ≤ D₂p) (h₃ : D₃ ≤ C₃)
+    (hm : m' ≤ m) (hN : N ≤ N') :
+    ({n : ℕ | n ∈ Icc (K+1) (2*K) ∧
+      IsVeryGoodAnnulus μ β ((8 : ℝ)⁻¹ ^ n) z N a b C₁m C₁p C₂m C₂p C₃ ∧
+      AnnulusBallComparison μ (3*n) z m}.ncard) ≤
+    ({n : ℕ | n ∈ Icc (K+1) (2*K) ∧
+      IsVeryGoodAnnulus μ β ((8 : ℝ)⁻¹ ^ n) z N' a' b D₁m D₁p D₂m D₂p D₃ ∧
+      AnnulusBallComparison μ (3*n) z m'}.ncard) := by
+  refine Set.ncard_le_ncard ?_ ((Set.finite_Icc (K+1) (2*K)).subset (fun _ h => h.1))
+  intro n hn
+  refine ⟨hn.1, isVeryGoodAnnulus_mono_parameters (by positivity) ha h₁m h₁p h₂m h₂p h₃ hN hn.2.1, ?_⟩
+  exact (mul_le_mul_of_nonneg_right (ENNReal.ofReal_le_ofReal hm) zero_le).trans hn.2.2
+
 /-- One positive threshold works for the root/grid good-annulus count and
 the very-good-annulus count at the same prescribed-grid point. The scales
 of the two counts and the scale-dependent displacement remain explicit. -/
