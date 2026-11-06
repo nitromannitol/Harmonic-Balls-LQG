@@ -14,6 +14,15 @@ The actual competitor class is closed under pointwise minima. The lower
 semicontinuous regularization of the shifted frozen infimum is superharmonic,
 is nonnegative on the interior, and dominates the shifted obstacle away from
 the pole. It agrees with the frozen shifted infimum at off-pole contact points.
+A compactly supported Poisson modification is proved to preserve the actual
+competitor class under a constant local barrier. Under that barrier the shifted
+infimum is the pointwise infimum of Poisson integrals; barriers exist at the
+pole and at strict regularized noncontact points. A quantitative lower Harnack
+estimate for these Poisson integrals is also proved. The case where the regularized infimum meets the obstacle may be handled by
+applying the modification to competitors shifted upwards
+by an arbitrarily small constant, and then sending the shift to zero; this
+argument has not yet been formalized.
+
 The file proves that lower semicontinuity of the shifted infimum would identify
 it with this regularization. Both desired conclusions then follow from the
 following still-unproved statement:
