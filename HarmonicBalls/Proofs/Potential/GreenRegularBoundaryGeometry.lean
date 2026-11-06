@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec5.DiscSupportedBoundary
+import HarmonicBalls.Proofs.Sec5.GreenConnectedComponent
 
 /-! # Green boundary comparison
 
@@ -22,6 +23,40 @@ theorem tendsto_greenFunction_zero_of_subset_of_boundary_limit
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hlim'
     (Filter.Eventually.of_forall (greenFunction_nonneg (hWb.subset hVW) z))
     (Filter.Eventually.of_forall (Section6.greenFunction_le_of_subset hVW hWb z))
+
+/-- Since the Green function vanishes outside its domain, a limit within the
+ domain is also an ambient limit. -/
+theorem tendsto_greenFunction_nhds_of_nhdsWithin {U : Set ℂ} {z y : ℂ}
+    (hlim : Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0)) :
+    Tendsto (greenFunction U z) (𝓝 y) (𝓝 0) := by
+  have hout : Tendsto (greenFunction U z) (𝓝[Uᶜ] y) (𝓝 0) := by
+    apply tendsto_const_nhds.congr'
+    filter_upwards [self_mem_nhdsWithin] with x hx
+    exact (greenFunction_of_notMem_right hx z).symm
+  have h : Tendsto (greenFunction U z) (𝓝[U ∪ Uᶜ] y) (𝓝 0) := by
+    rw [nhdsWithin_union]
+    exact tendsto_sup.2 ⟨hlim, hout⟩
+  simpa only [union_compl_self, nhdsWithin_univ] using h
+
+/-- Green boundary regularity of the pole component implies the corresponding
+boundary limits for the whole bounded open set. -/
+theorem tendsto_greenFunction_zero_of_pole_component_boundary
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U) {z : ℂ} (hz : z ∈ U)
+    (hcomponent : ∀ y ∈ closure (connectedComponentIn U z),
+      y ∉ connectedComponentIn U z →
+        Tendsto (greenFunction (connectedComponentIn U z) z)
+          (𝓝[connectedComponentIn U z] y) (𝓝 0))
+    {y : ℂ} (hyU : y ∉ U) :
+    Tendsto (greenFunction U z) (𝓝[U] y) (𝓝 0) := by
+  rw [greenFunction_eq_connectedComponentIn_all hU hUb hz]
+  by_cases hyC : y ∈ closure (connectedComponentIn U z)
+  · have hyout : y ∉ connectedComponentIn U z :=
+      fun hy => hyU (connectedComponentIn_subset U z hy)
+    exact (tendsto_greenFunction_nhds_of_nhdsWithin (hcomponent y hyC hyout)).mono_left
+      nhdsWithin_le_nhds
+  · apply tendsto_const_nhds.congr'
+    filter_upwards [nhdsWithin_le_nhds (isClosed_closure.isOpen_compl.mem_nhds hyC)] with x hx
+    exact (greenFunction_of_notMem_right (fun hxC => hx (subset_closure hxC)) z).symm
 
 /-- A boundary point of a finite union of discs belongs to the boundary
 circle of at least one disc in the union. -/
@@ -98,6 +133,8 @@ theorem exists_greenRegular_exhaustion_ball {c z : ℂ} {R : ℝ}
     exact tendsto_greenFunction_zero_of_enclosing_disc (mem_ball.mpr (hzp n)) Subset.rfl
       (mem_sphere.mpr (le_antisymm hyclosed hynot))
 
+#print axioms tendsto_greenFunction_nhds_of_nhdsWithin
+#print axioms tendsto_greenFunction_zero_of_pole_component_boundary
 #print axioms exists_mem_sphere_of_mem_closure_finite_disc_union
 #print axioms tendsto_greenFunction_zero_of_subset_of_boundary_limit
 #print axioms exists_greenRegular_exhaustion_ball
