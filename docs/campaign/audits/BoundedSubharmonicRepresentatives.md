@@ -12,6 +12,12 @@ At `x = 0`, both potentials are zero by the frozen diagonal convention; the Lean
 
 This example occurs within the intended carrier: take `Λ = ball 0 (1/2)`, `z = 1/4`, positive source zero, negative source `dirac 0`, and `q = 0`. The Lean theorem `neg_dirac_disc_mem_subharmonicBallTestClass` verifies this membership, including that the negative source does not charge `z` and that its old kernel is integrable there. Thus a source-by-source correction with unchanged measure cannot be assumed for arbitrary observation measures. This does **not** refute a representative with different source measures, a different bounded domain, or a correction of the signed difference as a whole. Indeed, this example already has a bounded original witness `O`, so the original test itself is a bounded representative.
 
+## A checked whole-plane representative
+
+The file now proves `not_isHarmonicMinorant_univ_newtonKernel`, using the existing circle-average bound on every disc, and derives `greenFunction_univ_eq_newtonKernel` from the actual frozen definition. No non-Greenian behavior is assumed. `neg_univ_dirac_zero_mem_subharmonicBallTestClass` verifies that the corresponding negative Dirac potential is in the full class when the pole differs from the atom.
+
+`greenPotential_univ_dirac_zero_eq_unitDisc` proves equality with the unit-disc potential throughout that disc, including at the atom. Hence `univ_dirac_zero_has_bounded_representative` constructs a bounded representative for this one whole-plane test for every observation measure, assuming `closure Λ ⊆ ball 0 1`, `z ∈ Λ`, and `z ≠ 0`. The matching works because the disc's harmonic correction for this centered source vanishes identically; it does not establish the analogous claim for general source measures or other domains.
+
 ## Outstanding proof obligation
 
 The exact target remains
@@ -24,4 +30,4 @@ The exact target remains
 
 Its validity is unresolved. A proof must handle arbitrary open `O`, including non-Greenian and disconnected cases, the separate Bochner junk values at nonintegrability points, atoms observed by `μ`, and preservation of negative-source pole integrability. The paper's Riesz-decomposition reference (corrected TeX lines 761–765) concerns the classical potential-theoretic functions and does not by itself supply this frozen real-valued, arbitrary-μ assertion. No polar-nullness or representative assertion has been added as an assumption or staged as a literature input.
 
-The Lean file imports the existing test-class audit and `Proofs/Potential/GreenBall`. Its printed axiom dependencies are `propext`, `Classical.choice`, and `Quot.sound`. The disc obstruction uses `Proofs/Potential/GreenBall.lean:278,296` and is formally proved in the new Lean file. Leonardo Bonanno is credited in the consuming Lean file.
+The Lean file imports the existing test-class audit and `Proofs/Potential/GreenBall` and `Proofs/Potential/GreenPositivity`. Its printed axiom dependencies are `propext`, `Classical.choice`, and `Quot.sound`. The disc obstruction uses `Proofs/Potential/GreenBall.lean:278,296` and is formally proved in the new Lean file. Leonardo Bonanno is credited in the consuming Lean file.

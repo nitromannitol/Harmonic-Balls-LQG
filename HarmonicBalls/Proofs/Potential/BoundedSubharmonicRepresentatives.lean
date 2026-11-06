@@ -1,5 +1,6 @@
 import HarmonicBalls.Audit.GreenSubharmonicTestClass
 import HarmonicBalls.Proofs.Potential.GreenBall
+import HarmonicBalls.Proofs.Potential.GreenPositivity
 
 /-!
 # Bounded witnesses for subharmonic tests
@@ -66,6 +67,32 @@ theorem dirac_source_correction_at_atom {O V : Set ℂ} {x : ℂ} {a : ℂ → �
       a x + greenPotential V (Measure.dirac x) x) : a x = 0 := by
   simpa only [greenPotential_dirac_self, add_zero] using h.symm
 
+/-- The logarithmic kernel has no harmonic minorant on the whole plane. -/
+theorem not_isHarmonicMinorant_univ_newtonKernel (x : ℂ) (h : ℂ → ℝ) :
+    ¬ IsHarmonicMinorant univ (newtonKernelEReal x) h := by
+  intro hh
+  let r : ℝ := Real.exp (-(2 * Real.pi) * (h x - 1))
+  have hr : 0 < r := Real.exp_pos _
+  have hb := hh.le_neg_mul_log_radius hr (subset_univ (closedBall x r)) (by simpa using hr)
+  dsimp [r] at hb
+  rw [Real.log_exp] at hb
+  have hp : (2 * Real.pi) ≠ 0 := by positivity
+  field_simp at hb
+  nlinarith [Real.pi_pos]
+
+/-- The frozen whole-plane kernel is the Newtonian kernel, including its diagonal value. -/
+theorem greenFunction_univ_eq_newtonKernel (x y : ℂ) :
+    greenFunction univ x y = newtonKernel x y := by
+  by_cases hxy : x = y
+  · subst y
+    simp [greenFunction_self, newtonKernel]
+  · have hb : greatestHarmonicMinorant univ (newtonKernelEReal x) y = ⊥ := by
+      simp [greatestHarmonicMinorant, not_isHarmonicMinorant_univ_newtonKernel]
+    simp [greenFunction, hxy, hb]
+
+#print axioms not_isHarmonicMinorant_univ_newtonKernel
+#print axioms greenFunction_univ_eq_newtonKernel
+
 /-- The potential of a point mass at the centre of a disc. -/
 theorem greenPotential_dirac_zero_ball {R : ℝ} (hR : 0 < R) {x : ℂ}
     (hx : x ∈ ball (0 : ℂ) R) (hx0 : x ≠ 0) :
@@ -81,6 +108,70 @@ theorem greenPotential_dirac_zero_ball {R : ℝ} (hR : 0 < R) {x : ℂ}
   rw [Real.log_div (pow_ne_zero 2 hR0) (mul_ne_zero hR0 hxnorm),
     Real.log_pow, Real.log_mul hR0 hxnorm]
   ring
+
+/-- The unit disc reproduces the whole-plane potential of a Dirac mass at its centre,
+including the real-valued diagonal convention. -/
+theorem greenPotential_univ_dirac_zero_eq_unitDisc {x : ℂ}
+    (hx : x ∈ ball (0 : ℂ) 1) :
+    greenPotential univ (Measure.dirac 0) x =
+      greenPotential (ball 0 1) (Measure.dirac 0) x := by
+  by_cases hx0 : x = 0
+  · subst x
+    simp [greenPotential_dirac_self]
+  · rw [greenPotential_dirac_zero_ball (by norm_num) hx hx0]
+    simp [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel, newtonKernel]
+
+#print axioms greenPotential_univ_dirac_zero_eq_unitDisc
+
+/-- The negative whole-plane Dirac potential is a test whenever the pole is distinct
+from the source atom. -/
+theorem neg_univ_dirac_zero_mem_subharmonicBallTestClass {Λ : Set ℂ} {z : ℂ}
+    (hz0 : z ≠ 0) :
+    -greenPotential univ (Measure.dirac 0) ∈ subharmonicBallTestClass Λ z := by
+  classical
+  refine ⟨univ, {0}, 0, Measure.dirac 0, 0, isOpen_univ, subset_univ _,
+    isCompact_singleton, subset_univ _, inferInstance, inferInstance, ?_, ?_, ?_,
+    harmonicOnNhd_const 0, ?_, integrable_dirac enorm_lt_top, ?_⟩
+  · simp
+  · simp
+  · simp
+  · simp [hz0]
+  · ext x
+    simp [greenPotential]
+
+#print axioms neg_univ_dirac_zero_mem_subharmonicBallTestClass
+
+/-- A whole-plane negative Dirac test has a bounded representative for every
+observation measure when the cluster lies strictly inside the unit disc and the pole
+is in the cluster away from the source atom. -/
+theorem univ_dirac_zero_has_bounded_representative
+    {μ : Measure ℂ} {Λ : Set ℂ} {z : ℂ}
+    (hΛ : closure Λ ⊆ ball (0 : ℂ) 1) (hz : z ∈ Λ) (hz0 : z ≠ 0) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (-greenPotential univ (Measure.dirac 0)) z = g z ∧
+      (-greenPotential univ (Measure.dirac 0)) =ᵐ[μ.restrict Λ] g := by
+  classical
+  let g := -greenPotential (ball 0 1) (Measure.dirac 0)
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 1, {0}, 0, Measure.dirac 0, 0, isOpen_ball, isBounded_ball,
+      hΛ, isCompact_singleton, ?_, inferInstance, inferInstance, ?_, ?_, ?_,
+      harmonicOnNhd_const 0, ?_, integrable_dirac enorm_lt_top, ?_⟩
+    · simp
+    · simp
+    · simp
+    · simp
+    · simp [hz0]
+    · ext x
+      simp [g, greenPotential]
+  refine ⟨g, hg, ?_, ?_⟩
+  · simp only [g, Pi.neg_apply]
+    rw [greenPotential_univ_dirac_zero_eq_unitDisc (hΛ (subset_closure hz))]
+  · apply ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+    filter_upwards [ae_restrict_mem (isOpen_ball.measurableSet)] with x hx
+    simp only [g, Pi.neg_apply]
+    rw [greenPotential_univ_dirac_zero_eq_unitDisc hx]
+
+#print axioms univ_dirac_zero_has_bounded_representative
 
 /-- The negative Dirac potential used in the obstruction is an admissible frozen test. -/
 theorem neg_dirac_disc_mem_subharmonicBallTestClass :
