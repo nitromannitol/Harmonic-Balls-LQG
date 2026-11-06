@@ -340,11 +340,12 @@ theorem no_dirac_harmonic_correction_univ_to_ball {ρ R : ℝ}
 
 #print axioms no_dirac_harmonic_correction_univ_to_ball
 
-/-- No bounded domain containing the radius-two observation disc admits an
-unchanged-source harmonic correction for the whole-plane Dirac potential. -/
-theorem no_bounded_domain_source_correction_for_large_observation
+/-- On any bounded domain containing the radius-two observation disc, the
+unchanged-source correction of the whole-plane Dirac potential cannot be continuous
+at the source atom. -/
+theorem no_bounded_domain_continuousAt_source_correction_for_large_observation
     {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :
-    ¬ ∃ a : ℂ → ℝ, HarmonicOnNhd a V ∧
+    ¬ ∃ a : ℂ → ℝ, ContinuousAt a 0 ∧
       (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
         greenPotential univ (Measure.dirac 0) x =
           a x + greenPotential V (Measure.dirac 0) x) := by
@@ -368,18 +369,62 @@ theorem no_bounded_domain_source_correction_for_large_observation
     simp only [greenFunction_univ_eq_newtonKernel, newtonKernel, sub_zero] at hx
     dsimp [c] at *
     linarith
-  have ha' : ContinuousOn a (ball (0 : ℂ) 2) := ha.continuousOn.mono hsub
-  have heq : (fun x => max (a x) (-c)) =ᵐ[volume.restrict (ball (0 : ℂ) 2)]
-      (fun _ => -c) := by
-    filter_upwards [hbound] with x hx
-    exact max_eq_right hx
-  have hp := Measure.eqOn_open_of_ae_eq heq isOpen_ball (continuous_max.comp_continuousOn (ha'.prodMk continuousOn_const))
-    continuousOn_const (mem_ball_self (by norm_num : (0 : ℝ) < 2))
-  dsimp only at hp
-  rw [hzero, max_eq_left (by linarith : -c ≤ 0)] at hp
-  linarith
+  have hnear : {x | -c < a x} ∈ nhds (0 : ℂ) :=
+    ha (Ioi_mem_nhds (by rw [hzero]; linarith))
+  obtain ⟨r, hr, hrsub⟩ := Metric.mem_nhds_iff.mp hnear
+  let t := min r 2
+  have ht : 0 < t := lt_min hr (by norm_num)
+  have htsub : ball (0 : ℂ) t ⊆ ball 0 2 := ball_subset_ball (min_le_right _ _)
+  have htnear : ball (0 : ℂ) t ⊆ {x | -c < a x} :=
+    (ball_subset_ball (min_le_left _ _)).trans hrsub
+  obtain ⟨x, hx, hxa⟩ := Measure.exists_mem_of_measure_ne_zero_of_ae
+    (ne_of_gt (Metric.measure_ball_pos volume (0 : ℂ) ht))
+    (ae_restrict_of_ae_restrict_of_subset htsub hbound)
+  have hxb : -c < a x := htnear hx
+  exact (not_lt_of_ge hxa) hxb
+
+#print axioms no_bounded_domain_continuousAt_source_correction_for_large_observation
+
+/-- In particular, a correction continuous on the observation disc cannot exist. -/
+theorem no_bounded_domain_continuous_source_correction_for_large_observation
+    {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :
+    ¬ ∃ a : ℂ → ℝ, ContinuousOn a (ball 0 2) ∧
+      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+        greenPotential univ (Measure.dirac 0) x =
+          a x + greenPotential V (Measure.dirac 0) x) := by
+  rintro ⟨a, ha, hae⟩
+  exact no_bounded_domain_continuousAt_source_correction_for_large_observation hV hsub
+    ⟨a, (ha 0 (mem_ball_self (by norm_num : (0 : ℝ) < 2))).continuousAt
+      (isOpen_ball.mem_nhds (mem_ball_self (by norm_num : (0 : ℝ) < 2))), hae⟩
+
+#print axioms no_bounded_domain_continuous_source_correction_for_large_observation
+
+/-- No bounded domain containing the radius-two observation disc admits an
+unchanged-source harmonic correction for the whole-plane Dirac potential. -/
+theorem no_bounded_domain_source_correction_for_large_observation
+    {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :
+    ¬ ∃ a : ℂ → ℝ, HarmonicOnNhd a V ∧
+      (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+        greenPotential univ (Measure.dirac 0) x =
+          a x + greenPotential V (Measure.dirac 0) x) := by
+  rintro ⟨a, ha, hae⟩
+  exact no_bounded_domain_continuous_source_correction_for_large_observation hV hsub
+    ⟨a, ha.continuousOn.mono hsub, hae⟩
 
 #print axioms no_bounded_domain_source_correction_for_large_observation
+
+/-- The same obstruction holds when equality is required pointwise on the disc,
+as it is in the universal-measure representative reduction. -/
+theorem no_bounded_domain_pointwise_source_correction_for_large_observation
+    {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :
+    ¬ ∃ a : ℂ → ℝ, ContinuousOn a (ball 0 2) ∧
+      (∀ x ∈ ball (0 : ℂ) 2, greenPotential univ (Measure.dirac 0) x =
+          a x + greenPotential V (Measure.dirac 0) x) := by
+  rintro ⟨a, ha, heq⟩
+  exact no_bounded_domain_continuous_source_correction_for_large_observation hV hsub
+    ⟨a, ha, ae_restrict_of_forall_mem measurableSet_ball heq⟩
+
+#print axioms no_bounded_domain_pointwise_source_correction_for_large_observation
 
 /-- For the radius-two observation disc, no concentric disc satisfying the actual
 closure-containment condition admits an unchanged-source harmonic correction. -/
