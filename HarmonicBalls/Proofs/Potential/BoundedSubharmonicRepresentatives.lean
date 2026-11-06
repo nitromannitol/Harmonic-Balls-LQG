@@ -199,6 +199,29 @@ theorem greenPotential_univ_dirac_zero_eq_unitDisc {x : ℂ}
 
 #print axioms greenPotential_univ_dirac_zero_eq_unitDisc
 
+/-- If the disc's harmonic correction vanishes at the source atom, the
+whole-plane and disc point potentials agree after harmonic correction even at the
+atom, where both kernels use the frozen diagonal value. -/
+theorem greenPotential_univ_dirac_eq_ball_add_harmonic
+    {R : ℝ} {a x : ℂ} (hR : 0 < R) (ha : a ∈ ball (0 : ℂ) R)
+    (hdiag : ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ = R)
+    (hx : x ∈ ball (0 : ℂ) R) :
+    greenPotential univ (Measure.dirac a) x =
+      greatestHarmonicMinorantBall R a x + greenPotential (ball 0 R) (Measure.dirac a) x := by
+  by_cases hxa : x = a
+  · subst x
+    rw [greenPotential_dirac_self, greenPotential_dirac_self]
+    simp [greatestHarmonicMinorantBall, hdiag]
+  · have hpos := norm_sub_conj_mul_pos hR (mem_ball_zero_iff.1 ha)
+      (mem_ball_zero_iff.1 hx).le
+    have heq := newtonKernel_sub_greenBall hR (Ne.symm hxa) hpos.ne'
+    rw [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+      newtonKernel_comm x a, greenPotential, integral_dirac, greenFunction_ball_comm,
+      greenFunction_ball ha hx (Ne.symm hxa)]
+    linarith
+
+#print axioms greenPotential_univ_dirac_eq_ball_add_harmonic
+
 /-- The negative whole-plane Dirac potential is a test whenever the pole is distinct
 from the source atom. -/
 theorem neg_univ_dirac_zero_mem_subharmonicBallTestClass {Λ : Set ℂ} {z : ℂ}
@@ -248,6 +271,107 @@ theorem univ_dirac_zero_has_bounded_representative
     rw [greenPotential_univ_dirac_zero_eq_unitDisc hx]
 
 #print axioms univ_dirac_zero_has_bounded_representative
+
+/-- The difference of two whole-plane point potentials is an admissible test
+when the positive atom is outside the observation set and the negative atom is
+not at the pole. -/
+theorem univ_dirac_sub_dirac_mem_subharmonicBallTestClass
+    {Λ : Set ℂ} {z a b : ℂ} (hza : z ≠ a) (hb : b ∉ Λ) :
+    greenPotential univ (Measure.dirac b) - greenPotential univ (Measure.dirac a) ∈
+      subharmonicBallTestClass Λ z := by
+  classical
+  refine ⟨univ, {b, a}, Measure.dirac b, Measure.dirac a, 0, isOpen_univ,
+    subset_univ _, isCompact_singleton.insert b, subset_univ _,
+    inferInstance, inferInstance, ?_, ?_, ?_, harmonicOnNhd_const 0, ?_,
+    integrable_dirac enorm_lt_top, ?_⟩
+  · simp
+  · simp
+  · simp [Measure.dirac_apply, hb]
+  · simp [hza]
+  · ext x
+    simp
+
+#print axioms univ_dirac_sub_dirac_mem_subharmonicBallTestClass
+
+/-- A whole-plane two-source test has a bounded representative with its positive
+source removed, provided the disc correction vanishes at the negative atom. -/
+theorem univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
+    {μ : Measure ℂ} {Λ : Set ℂ} {z a b : ℂ} {R : ℝ}
+    (hR : 0 < R) (hΛ : closure Λ ⊆ ball (0 : ℂ) R) (hz : z ∈ Λ)
+    (hza : z ≠ a) (ha : a ∈ ball (0 : ℂ) R) (hb : b ∉ ball (0 : ℂ) R)
+    (hdiag : ‖(R : ℂ) ^ 2 - starRingEnd ℂ a * a‖ = R) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) - greenPotential univ (Measure.dirac a)) z = g z ∧
+      (greenPotential univ (Measure.dirac b) - greenPotential univ (Measure.dirac a))
+        =ᵐ[μ.restrict Λ] g := by
+  classical
+  let q := greenPotential univ (Measure.dirac b) - greatestHarmonicMinorantBall R a
+  have hqeq : greenPotential univ (Measure.dirac b) = newtonKernel b := by
+    ext x
+    simp only [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel,
+      newtonKernel_comm x b]
+  have hq : HarmonicOnNhd q (ball 0 R) := by
+    apply HarmonicOnNhd.sub
+    · rw [hqeq]
+      intro x hx
+      apply harmonicAt_newtonKernel
+      intro hxb
+      exact hb (hxb ▸ hx)
+    · exact (isHarmonicMinorant_greatestHarmonicMinorantBall ha).1
+  let g := q - greenPotential (ball 0 R) (Measure.dirac a)
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z := by
+    refine ⟨ball 0 R, {a}, 0, Measure.dirac a, q, isOpen_ball, isBounded_ball,
+      hΛ, isCompact_singleton, ?_, inferInstance, inferInstance, ?_, ?_, ?_, hq,
+      ?_, integrable_dirac enorm_lt_top, ?_⟩
+    · simpa using ha
+    · simp
+    · simp
+    · simp
+    · simp [hza]
+    · ext x
+      simp [g, greenPotential]
+  refine ⟨g, hg, ?_, ?_⟩
+  · simp only [g, q, Pi.sub_apply]
+    rw [greenPotential_univ_dirac_eq_ball_add_harmonic hR ha hdiag (hΛ (subset_closure hz))]
+    ring
+  · apply ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+    filter_upwards [ae_restrict_mem (isOpen_ball.measurableSet)] with x hx
+    simp only [g, q, Pi.sub_apply]
+    rw [greenPotential_univ_dirac_eq_ball_add_harmonic hR ha hdiag hx]
+    ring
+
+#print axioms univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
+
+/-- For radius two, the diagonal correction vanishes at the real atom √2. -/
+theorem radius_two_sqrt_two_diagonal_correction :
+    ‖((2 : ℝ) : ℂ) ^ 2 - starRingEnd ℂ (Real.sqrt 2 : ℂ) * (Real.sqrt 2 : ℂ)‖ = 2 := by
+  have hs : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have heq : starRingEnd ℂ (Real.sqrt 2 : ℂ) * (Real.sqrt 2 : ℂ) = (2 : ℂ) := by
+    simp only [Complex.conj_ofReal, ← pow_two, ← Complex.ofReal_pow, hs, Complex.ofReal_ofNat]
+  rw [heq]
+  norm_num
+
+#print axioms radius_two_sqrt_two_diagonal_correction
+
+/-- A non-centred negative atom at √2 admits the radius-two witness, with the
+positive atom removed and with arbitrary observation measure. -/
+theorem univ_two_dirac_sqrt_two_has_bounded_representative
+    {μ : Measure ℂ} {Λ : Set ℂ} {z b : ℂ}
+    (hΛ : closure Λ ⊆ ball (0 : ℂ) 2) (hz : z ∈ Λ)
+    (hzatom : z ≠ (Real.sqrt 2 : ℂ)) (hb : b ∉ ball (0 : ℂ) 2) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (Measure.dirac (Real.sqrt 2 : ℂ))) z = g z ∧
+      (greenPotential univ (Measure.dirac b) -
+        greenPotential univ (Measure.dirac (Real.sqrt 2 : ℂ))) =ᵐ[μ.restrict Λ] g := by
+  have ha : (Real.sqrt 2 : ℂ) ∈ ball (0 : ℂ) 2 := by
+    rw [mem_ball_zero_iff, Complex.norm_real, Real.norm_eq_abs,
+      abs_of_nonneg (Real.sqrt_nonneg 2)]
+    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num), Real.sqrt_nonneg 2]
+  exact univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
+    (by norm_num) hΛ hz hzatom ha hb radius_two_sqrt_two_diagonal_correction
+
+#print axioms univ_two_dirac_sqrt_two_has_bounded_representative
 
 /-- The two-source whole-plane function satisfies the frozen test-class conditions. -/
 theorem univ_two_dirac_mem_subharmonicBallTestClass

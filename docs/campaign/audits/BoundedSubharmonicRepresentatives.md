@@ -40,6 +40,8 @@ The file now proves `not_isHarmonicMinorant_univ_newtonKernel`, using the existi
 
 `univ_two_dirac_mem_subharmonicBallTestClass` checks the full frozen class for the difference of a positive whole-plane Dirac potential at `a` and a negative one at zero, when `a ∉ Λ` and `z ≠ 0`. `univ_two_dirac_has_bounded_representative` constructs a bounded witness for every observation measure when `closure Λ ⊆ ball 0 1`, `z ∈ Λ`, `z ≠ 0`, and `a ∉ ball 0 1`. It eliminates the positive source and absorbs its potential into the harmonic part; it keeps the negative source at zero in the unit disc, where the two kernels agree even at the atom. The two-source test itself is thus admissible and the construction handles observations at the negative atom. General sources and larger observation sets remain open.
 
+`univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction` extends this construction to a negative atom `a` in `ball 0 R` whenever `‖R² - conj a * a‖ = R`. The explicit disc harmonic minorant then vanishes at `a`, so the frozen diagonal value agrees as well as all off-diagonal values; a positive atom outside the disc is absorbed into the harmonic part. `univ_dirac_sub_dirac_mem_subharmonicBallTestClass` checks membership of the original two-source test. The condition is nonempty beyond the centered unit disc: `radius_two_sqrt_two_diagonal_correction` and `univ_two_dirac_sqrt_two_has_bounded_representative` prove the case `R = 2`, `a = √2`. These results allow arbitrary observation measures, including atoms, but do not settle general source measures or the candidate negative atom at zero in a larger disc.
+
 ## Outstanding proof obligation
 
 The exact target remains
