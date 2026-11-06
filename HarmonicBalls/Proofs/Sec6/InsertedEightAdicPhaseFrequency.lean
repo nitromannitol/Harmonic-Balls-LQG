@@ -77,4 +77,51 @@ theorem exists_inserted_eightAdic_phase_blockFrequency
   push_cast at hcount
   nlinarith
 
+/-- One Haar-full set of phases works simultaneously for every admissible
+value of the criterion-three starting level. -/
+theorem exists_ae_phase_inserted_eightAdic_blockFrequency
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α β : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hβ : (2 + γ) ^ 2 / 2 < β)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ ν : Ω → Measure ℂ}
+    {b : ℝ} (hb : b ∈ Ioo (0 : ℝ) 1)
+    (hh : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hν : IsLQGMeasureOfField P γ 0 hcirc ν)
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC₀ : LQGMeasureCoordChange P γ 0 hC hcirc)
+    (hCCα : LQGMeasureCoordChange P γ α hC hcirc)
+    {ζ : ℝ} (hζ : 0 < ζ) :
+    ∃ c a : ℝ, 0 < c ∧ a ∈ Ioo (0 : ℝ) 1 ∧
+    ∃ C₁m C₁p C₂m C₂p : ℝ,
+      0 < C₁m ∧ 0 < C₁p ∧ 0 < C₂m ∧ 0 < C₂p ∧
+    ∃ N₀ : ℕ, 9 ≤ N₀ ∧ ∃ m ∈ Ioo (0 : ℝ) 1,
+      ∀ᵐ t ∂((volume : Measure PhaseCircle).prod volume),
+      ∀ᵐ ω ∂P, ∀ N : ℕ, N₀ ≤ N →
+        ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+          ({n : ℕ | n ∈ Icc (K + 1) (2 * K) ∧
+            PhaseVeryGoodAnnulus (μ ω) β ((8 : ℝ)⁻¹ ^ n) 0 N
+              (a / (((401 : ℝ) ^ |-(γ * α)|) ^ 2)) b
+              C₁m C₁p C₂m C₂p c (torusPhase t) ∧
+            AnnulusBallComparison (μ ω) (3*n) 0 m}.ncard : ℝ) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, hcount⟩ :=
+    exists_inserted_eightAdic_phase_blockFrequency hgrowth hfull hγ hγ2 hα hβ
+      hb hh hμ hν hAff hCC₀ hCCα hζ
+  refine ⟨c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, ?_⟩
+  have hs (N : ℕ) : ∀ᵐ p ∂(((volume : Measure PhaseCircle).prod volume).prod P),
+      N₀ ≤ N → ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+        ({n : ℕ | n ∈ Icc (K + 1) (2 * K) ∧
+          PhaseVeryGoodAnnulus (μ p.2) β ((8 : ℝ)⁻¹ ^ n) 0 N
+            (a / (((401 : ℝ) ^ |-(γ * α)|) ^ 2)) b
+            C₁m C₁p C₂m C₂p c (torusPhase p.1) ∧
+          AnnulusBallComparison (μ p.2) (3*n) 0 m}.ncard : ℝ) := by
+    by_cases hN : N₀ ≤ N
+    · filter_upwards [hcount N hN] with p hp _
+      exact hp
+    · exact Filter.Eventually.of_forall (fun _ hn => (hN hn).elim)
+  exact Measure.ae_ae_of_ae_prod (ae_all_iff.mpr hs)
+
 end HarmonicBalls.Section6
