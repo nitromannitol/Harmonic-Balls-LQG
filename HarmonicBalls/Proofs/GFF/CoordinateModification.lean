@@ -430,6 +430,196 @@ theorem circleAverage_logPot_unitCircle (φ : LQGMetric.TestC) :
 
 #print axioms circleAverage_logPot_unitCircle
 
+/-- The logarithmic kernel times a test is integrable against Lebesgue measure
+and the circle measure; this justifies exchanging these integrals. -/
+theorem integrable_test_log_circle_prod (φ : LQGMetric.TestC) (z : ℂ) {r : ℝ} (hr : 0 < r) :
+    Integrable (fun p : ℂ × ℂ => φ p.1 * (-Real.log ‖p.2 - p.1‖))
+      (volume.prod (LQGDimension.Coupling.circMeas z r)) := by
+  let μ := LQGDimension.Coupling.circMeas z r
+  let g : ℂ × ℂ → ℝ := fun p => φ p.1 * (-Real.log ‖p.2 - p.1‖)
+  have hm : AEStronglyMeasurable g (volume.prod μ) := by
+    apply Measurable.aestronglyMeasurable
+    exact (φ.continuous.measurable.comp measurable_fst).mul
+      (((Real.measurable_log.comp (measurable_snd.sub measurable_fst).norm)).neg)
+  change Integrable g (volume.prod μ)
+  rw [integrable_prod_iff hm]
+  constructor
+  · filter_upwards with y
+    exact ((LQGDimension.Coupling.integrable_log_norm_sub_circ y z r).neg.const_mul
+      (φ y)).congr (Filter.Eventually.of_forall fun x => by simp only [g, Pi.neg_apply, norm_sub_rev])
+  · let b : ℂ → ℝ := fun y => ‖φ y‖ * (2 * (‖y‖ + ‖z‖ + r) + |Real.log r|)
+    have hbi : Integrable b := by
+      have hc : Continuous b := by
+        dsimp [b]
+        fun_prop
+      exact hc.integrable_of_hasCompactSupport φ.hasCompactSupport.norm.mul_right
+    refine hbi.mono' hm.norm.integral_prod_right' (Filter.Eventually.of_forall fun y => ?_)
+    have hbound := LQGDimension.Coupling.integral_abs_log_le y z hr
+    have hn : 0 ≤ 2 * (‖y‖ + ‖z‖ + r) + |Real.log r| := by positivity
+    have heq : (∫ x, ‖g (y, x)‖ ∂μ) = ‖φ y‖ *
+        (∫ x, |Real.log ‖y - x‖| ∂μ) := by
+      simp only [g, norm_mul, norm_neg, Real.norm_eq_abs, norm_sub_rev, integral_const_mul]
+    rw [Real.norm_eq_abs, abs_of_nonneg (integral_nonneg fun _ => norm_nonneg _), heq]
+    apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
+    linarith [neg_abs_le (Real.log r)]
+
+#print axioms integrable_test_log_circle_prod
+
+/-- The circle average of Leonardo Bonanno's logarithmic potential is
+the negative test integral of the circle logarithmic potential. -/
+theorem circleAverage_logPot_circle (φ : LQGMetric.TestC) (z : ℂ) {r : ℝ} (hr : 0 < r) :
+    Real.circleAverage (LQGMetric.CircleAvg.logPot φ) z r =
+      -∫ y, φ y * LQGMetric.CircleAvg.circLog z r y := by
+  let μ := LQGDimension.Coupling.circMeas z r
+  rw [← LQGDimension.Coupling.integral_circMeas_eq_circleAverage
+    (LQGMetric.CircleAvg.measurable_logPot φ).aestronglyMeasurable]
+  have hs := integral_integral_swap (μ := volume) (ν := μ)
+    (f := fun y x : ℂ => φ y * (-Real.log ‖x - y‖))
+    (integrable_test_log_circle_prod φ z hr)
+  change (∫ x, LQGMetric.CircleAvg.logPot φ x ∂μ) = _
+  calc
+    (∫ x, LQGMetric.CircleAvg.logPot φ x ∂μ) =
+        ∫ x, (∫ y, φ y * (-Real.log ‖x - y‖)) ∂μ := by
+          apply integral_congr_ae
+          filter_upwards with x
+          unfold LQGMetric.CircleAvg.logPot
+          apply integral_congr_ae
+          filter_upwards with y
+          ring
+    _ = ∫ y, (∫ x, φ y * (-Real.log ‖x - y‖) ∂μ) := hs.symm
+    _ = -∫ y, φ y * LQGMetric.CircleAvg.circLog z r y := by
+      rw [← integral_neg]
+      apply integral_congr_ae
+      filter_upwards with y
+      rw [integral_const_mul, integral_neg]
+      change φ y * -(∫ x, Real.log ‖x - y‖ ∂LQGDimension.Coupling.circMeas z r) = _
+      have hm : AEStronglyMeasurable (fun x : ℂ => Real.log ‖x - y‖)
+          (LQGDimension.Coupling.circMeas z r) :=
+        (show Measurable (fun x : ℂ => Real.log ‖x - y‖) from
+          Real.measurable_log.comp (measurable_id.sub measurable_const).norm).aestronglyMeasurable
+      rw [LQGDimension.Coupling.integral_circMeas_eq_circleAverage hm]
+      change φ y * -LQGMetric.CircleAvg.circLog z r y = _
+      ring
+
+#print axioms circleAverage_logPot_circle
+
+/-- The mixed project kernel in terms of the normalized logarithmic potential
+of Leonardo Bonanno's test pairing. -/
+theorem wholePlaneGFFCov_circle_pairing_eq_potential (φ : LQGMetric.TestC)
+    (z : ℂ) (r : ℝ) :
+    wholePlaneGFFCov (.circle r z) (.pairing φ) =
+      Real.circleAverage (fun x => LQGMetric.CircleAvg.logPot φ x +
+        (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) z r +
+      ∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y := by
+  change Real.circleAverage (fun x => ∫ y, φ y * wholePlaneCov x y) z r = _
+  simp_rw [integral_test_mul_wholePlaneCov]
+  let f : ℂ → ℝ := fun x => LQGMetric.CircleAvg.logPot φ x +
+    (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x
+  have hf : Continuous f := (LQGMetric.MarkovGermVer.contDiff_logPot φ).continuous.add
+    (continuous_const.mul (LQGMetric.CircleAvg.continuous_circLog one_ne_zero 0))
+  change Real.circleAverage (fun x => f x +
+    (∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y)) z r = _
+  rw [Real.circleAverage_fun_add hf.continuousOn.circleIntegrable'
+    (continuousOn_const.circleIntegrable'), Real.circleAverage_const]
+
+#print axioms wholePlaneGFFCov_circle_pairing_eq_potential
+
+/-- Uniform potential convergence can be integrated against Leonardo Bonanno's
+mollified circle increments. -/
+theorem tendsto_integral_circDiff_mul_meanZeroApprox_error
+    (φ : LQGMetric.TestC) (z w : ℂ) (r s : ℝ) :
+    Tendsto (fun n => ∫ x, (LQGMetric.CircleAvg.circDiff n z r n w s).1 x *
+      (LQGMetric.CircleAvg.logPot (LQGMetric.MarkovGerm.meanZeroApprox φ n).1 x -
+        (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x))) atTop (𝓝 0) := by
+  have hp := tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 2⁻¹)
+    (by norm_num : (2 : ℝ)⁻¹ < 1)
+  have he : Tendsto (fun n : ℕ => 2 * |∫ y, φ y| * (2 : ℝ)⁻¹ ^ n)
+      atTop (𝓝 0) := by simpa using hp.const_mul (2 * |∫ y, φ y|)
+  refine squeeze_zero_norm (fun n => ?_) he
+  let g : ℂ → ℝ := fun x => LQGMetric.CircleAvg.circBump n z r x +
+    LQGMetric.CircleAvg.circBump n w s x
+  have hg : Integrable g := (LQGMetric.CircleAvg.integrable_testC _).add
+    (LQGMetric.CircleAvg.integrable_testC _)
+  have hgn : ∀ x, 0 ≤ g x := fun x => add_nonneg
+    (LQGMetric.CircleAvg.circBump_nonneg _ _ _ _)
+    (LQGMetric.CircleAvg.circBump_nonneg _ _ _ _)
+  have hb : ∀ x, ‖(LQGMetric.CircleAvg.circDiff n z r n w s).1 x *
+      (LQGMetric.CircleAvg.logPot (LQGMetric.MarkovGerm.meanZeroApprox φ n).1 x -
+        (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x))‖ ≤
+      g x * (|∫ y, φ y| * (2 : ℝ)⁻¹ ^ n) := by
+    intro x
+    rw [norm_mul]
+    apply mul_le_mul _ (by simpa only [Real.norm_eq_abs] using
+      abs_logPot_meanZeroApprox_sub_le φ n x) (norm_nonneg _) (hgn x)
+    change |LQGMetric.CircleAvg.circBump n z r x -
+      LQGMetric.CircleAvg.circBump n w s x| ≤ _
+    refine (abs_sub _ _).trans (le_of_eq ?_)
+    rw [abs_of_nonneg (LQGMetric.CircleAvg.circBump_nonneg _ _ _ _),
+      abs_of_nonneg (LQGMetric.CircleAvg.circBump_nonneg _ _ _ _)]
+  refine (norm_integral_le_of_norm_le (hg.mul_const _) (Eventually.of_forall hb)).trans
+    (le_of_eq ?_)
+  rw [integral_mul_const, show ∫ x, g x = 2 by
+    dsimp [g]
+    rw [integral_add (LQGMetric.CircleAvg.integrable_testC _)
+      (LQGMetric.CircleAvg.integrable_testC _), LQGMetric.CircleAvg.integral_circBump,
+      LQGMetric.CircleAvg.integral_circBump]; norm_num]
+  ring
+
+#print axioms tendsto_integral_circDiff_mul_meanZeroApprox_error
+
+/-- The mixed logarithmic covariances of Leonardo Bonanno's mollified circle
+increments and normalized test approximations converge to the potential formula. -/
+theorem tendsto_logCov_circDiff_meanZeroApprox (φ : LQGMetric.TestC)
+    (z w : ℂ) (r s : ℝ) :
+    Tendsto (fun n => LQGMetric.logCov (LQGMetric.CircleAvg.circDiff n z r n w s).1
+      (LQGMetric.MarkovGerm.meanZeroApprox φ n).1) atTop
+      (𝓝 (Real.circleAverage (fun x => LQGMetric.CircleAvg.logPot φ x +
+        (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) z r -
+        Real.circleAverage (fun x => LQGMetric.CircleAvg.logPot φ x +
+        (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) w s)) := by
+  let f : C(ℂ, ℝ) := ⟨fun x => LQGMetric.CircleAvg.logPot φ x +
+      (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x,
+    (LQGMetric.MarkovGermVer.contDiff_logPot φ).continuous.add
+      (continuous_const.mul (LQGMetric.CircleAvg.continuous_circLog one_ne_zero 0))⟩
+  have hlim := ((LQGMetric.CircleAvg.tendsto_mollAvg_ofCont f r z).sub
+    (LQGMetric.CircleAvg.tendsto_mollAvg_ofCont f s w)).add
+      (tendsto_integral_circDiff_mul_meanZeroApprox_error φ z w r s)
+  simp only [add_zero] at hlim
+  refine hlim.congr fun n => ?_
+  let D := (LQGMetric.CircleAvg.circDiff n z r n w s).1
+  let E := (LQGMetric.MarkovGerm.meanZeroApprox φ n).1
+  let p : C(ℂ, ℝ) := ⟨LQGMetric.CircleAvg.logPot E,
+    (LQGMetric.MarkovGermVer.contDiff_logPot E).continuous⟩
+  have h1 := LQGMetric.CircleAvg.integrable_test_mul D f
+  have h2 := LQGMetric.CircleAvg.integrable_test_mul D p
+  have herr : Integrable (fun x => D x * (p x - f x)) := by
+    have heq : (fun x => D x * (p x - f x)) =
+        (fun x => D x * p x) - (fun x => D x * f x) := by
+      funext x; simp only [Pi.sub_apply]; ring
+    rw [heq]
+    exact h2.sub h1
+  rw [LQGMetric.CircleAvg.logCov_eq_integral_logPot]
+  have hD : (∫ x, D x * f x) =
+      LQGMetric.CircleAvg.mollAvg (LQGMetric.ofCont f) n z r -
+        LQGMetric.CircleAvg.mollAvg (LQGMetric.ofCont f) n w s := by
+    change (∫ x, (LQGMetric.CircleAvg.circBump n z r x -
+      LQGMetric.CircleAvg.circBump n w s x) * f x) = _
+    simp_rw [sub_mul]
+    rw [integral_sub (LQGMetric.CircleAvg.integrable_test_mul _ f)
+      (LQGMetric.CircleAvg.integrable_test_mul _ f),
+      LQGMetric.CircleAvg.integral_circBump_mul, LQGMetric.CircleAvg.integral_circBump_mul]
+  rw [← hD]
+  change (∫ x, D x * f x) + (∫ x, D x * (p x - f x)) = ∫ x, D x * p x
+  rw [← integral_add h1 herr]
+  congr 1
+  funext x
+  change D x * f x + D x * (p x - f x) = D x * p x
+  ring
+
+#print axioms tendsto_logCov_circDiff_meanZeroApprox
+
 /-- The unit-circle normalization term averages to zero in Leonardo Bonanno's
 potential formula. -/
 theorem circleAverage_normalized_logPot_unitCircle (φ : LQGMetric.TestC) :
