@@ -424,6 +424,59 @@ theorem univ_add_circleDensity_has_bounded_representative
 
 #print axioms univ_add_circleDensity_has_bounded_representative
 
+open Classical in
+/-- Adding an integrable source has a different effect at points where the
+original kernel is not integrable: the totalized Bochner integral is zero. -/
+theorem greenPotential_add_integrable_source
+    {O : Set ℂ} {ν σ : Measure ℂ} {x : ℂ}
+    (hσ : Integrable (greenFunction O x) σ) :
+    greenPotential O (ν + σ) x =
+      if Integrable (greenFunction O x) ν then
+        greenPotential O ν x + greenPotential O σ x
+      else 0 := by
+  by_cases hν : Integrable (greenFunction O x) ν
+  · simp only [hν, ↓reduceIte]
+    exact integral_add_measure hν hσ
+  · simp only [hν, ↓reduceIte, greenPotential]
+    exact integral_undef (fun h => hν h.left_of_add_measure)
+
+/-- A source with zero potential at a point can be added without changing
+the totalized potential, even when the original source is not integrable. -/
+theorem greenPotential_add_zero_source
+    {O : Set ℂ} {ν σ : Measure ℂ} {x : ℂ}
+    (hσ : Integrable (greenFunction O x) σ)
+    (hz : greenPotential O σ x = 0) :
+    greenPotential O (ν + σ) x = greenPotential O ν x := by
+  classical
+  rw [greenPotential_add_integrable_source hσ]
+  by_cases hν : Integrable (greenFunction O x) ν
+  · simp [hν, hz]
+  · simp only [hν, ↓reduceIte, greenPotential, integral_undef hν]
+
+/-- A zero-potential added source preserves a bounded representative at the
+pole and almost everywhere, without requiring integrability of the old source
+at any observation point. -/
+theorem neg_greenPotential_add_zero_source_has_bounded_representative
+    {μ ν σ : Measure ℂ} {Λ O : Set ℂ} {p : ℂ}
+    (hσp : Integrable (greenFunction O p) σ)
+    (hσae : ∀ᵐ x ∂μ.restrict Λ, Integrable (greenFunction O x) σ)
+    (hzp : greenPotential O σ p = 0)
+    (hzae : ∀ᵐ x ∂μ.restrict Λ, greenPotential O σ x = 0)
+    (hrep : ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential O ν) p = g p ∧ (-greenPotential O ν) =ᵐ[μ.restrict Λ] g) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential O (ν + σ)) p = g p ∧
+        (-greenPotential O (ν + σ)) =ᵐ[μ.restrict Λ] g := by
+  obtain ⟨g, hg, hgp, hgae⟩ := hrep
+  refine ⟨g, hg, ?_, ?_⟩
+  · simpa only [Pi.neg_apply, greenPotential_add_zero_source hσp hzp] using hgp
+  · filter_upwards [hσae, hzae, hgae] with x hσx hzx hx
+    simpa only [Pi.neg_apply, greenPotential_add_zero_source hσx hzx] using hx
+
+#print axioms greenPotential_add_integrable_source
+#print axioms greenPotential_add_zero_source
+#print axioms neg_greenPotential_add_zero_source_has_bounded_representative
+
 /-- The annular whole-plane potential is a valid frozen test for every pole;
 the source is compactly supported, finite, and non-atomic. -/
 theorem neg_univ_circleDensity_mem_subharmonicBallTestClass

@@ -83,6 +83,18 @@ source, subject to explicit integrability of the original kernel at the pole
 and almost everywhere on the observation set. It does not provide the original
 representative or handle its nonintegrability points.
 
+`greenPotential_add_integrable_source` records the exact totalized-integral
+case split for adding an integrable source: the sum has the usual potential
+when the original kernel is integrable, and is zero otherwise. Consequently,
+`greenPotential_add_zero_source` and
+`neg_greenPotential_add_zero_source_has_bounded_representative` allow a
+zero-potential source to be added while retaining an existing bounded
+representative, without assuming the original kernel is integrable at the
+pole or at observed points. The latter result explicitly requires the added
+source to be integrable and have zero potential at the pole and almost
+everywhere on the observation set; it neither constructs that source nor
+establishes the original representative.
+
 `bounded_representative_of_changed_sources` gives a general transport step for arbitrary
 old and replacement measures, without requiring the two source corrections separately.
 The remaining construction must choose a bounded open `V ⊆ O`, compact `K ⊆ V`,
