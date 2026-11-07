@@ -2,7 +2,10 @@ import HarmonicBalls.Proofs.Sec11.MassDiameterCoreThreshold
 import HarmonicBalls.Proofs.Sec11.MassDiameterCoreWeight
 import HarmonicBalls.Steps.Sec11.WholePlaneWeylShift
 
-/-! # Core shifts retaining an outside event -/
+/-! # Core shifts retaining an outside event
+
+The whole-plane Weyl shift uses Leonardo Bonanno's
+`LatticeProb.Bonanno.LQGMetric.Field.CameronMartin` formalization. -/
 
 namespace HarmonicBalls
 open MeasureTheory Set Metric Filter

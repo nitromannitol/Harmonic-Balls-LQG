@@ -1,7 +1,10 @@
 import HarmonicBalls.Proofs.Sec11.ConditionalAbsoluteMassDiameter
 import HarmonicBalls.Proofs.Sec11.MassDiameterShiftPreservingOutside
 
-/-! # Conditional mass and diameter from core contraction -/
+/-! # Conditional mass and diameter from core contraction
+
+The smooth-shift transfer uses Leonardo Bonanno's
+`LatticeProb.Bonanno.LQGMetric.Field.CameronMartin` formalization. -/
 
 noncomputable section
 open MeasureTheory Filter Set Metric
