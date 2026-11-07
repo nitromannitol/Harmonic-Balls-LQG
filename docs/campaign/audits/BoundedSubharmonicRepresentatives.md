@@ -27,6 +27,14 @@ kernel almost everywhere for `volume + dirac 0` on the observation disc.
 Under those conditions, no matching representative exists. It does not show
 that arbitrary candidate sources have this decomposition or satisfy these
 regularity and integrability conditions, and is not a full counterexample.
+`measure_eq_dirac_add_restrict_compl_of_singleton_eq_one` removes the
+decomposition assumption when the negative source has a unit atom: its
+remaining source is the restriction to the atom's complement. Accordingly,
+`no_changed_source_unit_atom_for_large_observation` applies the obstruction
+directly to such a source; it still assumes continuity of the residual
+potential and almost-everywhere integrability of the full negative kernel.
+Neither the unit mass nor these assumptions have been derived for an
+arbitrary bounded-witness representative.
 
 The representative property is downward closed under absolute continuity of restricted observation measures: `hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous` transfers an existing representative result to any dominated measure. This reduction does not establish the property for the dominating measure.
 

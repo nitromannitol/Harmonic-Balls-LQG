@@ -1750,6 +1750,42 @@ theorem no_changed_source_continuous_residual_for_large_observation
 
 #print axioms no_changed_source_continuous_residual_for_large_observation
 
+/-- A measure with a unit atom splits into that atom and its restriction to
+the complement, without any global finiteness assumption. -/
+theorem measure_eq_dirac_add_restrict_compl_of_singleton_eq_one
+    {ν : Measure ℂ} {a : ℂ} (ha : ν {a} = 1) :
+    ν = Measure.dirac a + ν.restrict {a}ᶜ := by
+  have h := (Measure.restrict_add_restrict_compl (μ := ν) (measurableSet_singleton a)).symm
+  rw [Measure.restrict_singleton, ha, one_smul] at h
+  exact h
+
+/-- The changed-source obstruction applies directly to any negative source
+with a unit atom, provided its atom-free residual potential is continuous and
+the full negative kernel is integrable almost everywhere on the observation
+disc. No source decomposition is assumed. -/
+theorem no_changed_source_unit_atom_for_large_observation
+    {V : Set ℂ} {η₁ η₂ : Measure ℂ} {q : ℂ → ℝ}
+    (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V)
+    (hatom : η₂ {0} = 1) (hq : ContinuousAt q 0)
+    (h₁ : ContinuousAt (greenPotential V η₁) 0)
+    (h₂ : ContinuousAt (greenPotential V (η₂.restrict {0}ᶜ)) 0)
+    (hi : ∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      Integrable (greenFunction V x) η₂) :
+    ¬ (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      -greenPotential univ (Measure.dirac 0) x =
+        q x + greenPotential V η₁ x - greenPotential V η₂ x) := by
+  have hsplit := measure_eq_dirac_add_restrict_compl_of_singleton_eq_one hatom
+  have hirest : ∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      Integrable (greenFunction V x) (η₂.restrict {0}ᶜ) := by
+    filter_upwards [hi] with x hx
+    exact hx.mono_measure Measure.restrict_le_self
+  intro heq
+  apply no_changed_source_continuous_residual_for_large_observation hV hsub hq h₁ h₂ hirest
+  simpa only [← hsplit] using heq
+
+#print axioms measure_eq_dirac_add_restrict_compl_of_singleton_eq_one
+#print axioms no_changed_source_unit_atom_for_large_observation
+
 /-- In particular, a correction continuous on the observation disc cannot exist. -/
 theorem no_bounded_domain_continuous_source_correction_for_large_observation
     {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :
