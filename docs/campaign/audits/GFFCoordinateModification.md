@@ -10,11 +10,11 @@ measurable replacement equal almost surely at each deterministic test.
 `IsWholePlaneGFF.comp_measurePreserving` proves the complete GFF interface
 pulls back along a measure-preserving map, including the mixed observables.
 
-`IsWholePlaneGFF.product_has_non_linear_modification` gives a checked relative
+`IsWholePlaneGFF.product_has_ae_non_linear_modification` gives a checked relative
 counterexample: from **any** project-interface GFF, it constructs a GFF on its
 product with a standard real Gaussian probability space, with identical circle
 averages and pairings that agree at every fixed test almost surely, such that
-there is no almost-sure event of scalar linearity simultaneously at every test.
+at almost every sample there is a test witnessing failure of scalar linearity.
 The counterexample retains all six GFF fields. It requires existence of a
 starting `IsWholePlaneGFF`; the code does not establish that existence.
 Consequently it rules out proving a common samplewise representation from the
@@ -24,13 +24,14 @@ produce an unconditional inhabitant.
 The proof takes a smooth compactly supported nonzero bump φ₀ and the injective
 curve `a r = r • φ₀`. A diagonal spike changes a pairing only at `a t`, where
 t is the independent Gaussian coordinate. Every fixed test changes on at most
-one null t-fiber. If the starting GFF has a common linearity event, the spike
-breaks the relation between `a t` and `a (2t)` almost surely; otherwise the
-starting GFF itself already provides the desired failure. Thus no samplewise
-linearity hypothesis is needed. `diagonalSpike_sections` checks measurability
-of each section; `IsWholePlaneGFF.exists_modification_not_ae_linear` checks
-the case split. The conclusion is the negation of `∀ᵐ ω, ∀ test ...`; it does
-not assert that the event of nonlinearity is measurable or has probability one.
+one null t-fiber. The spike size is chosen as 1 or 2 using the original values at `a t` and
+`a (2t)`, so the scalar relation between them fails whenever t is nonzero,
+regardless of whether the starting pairings were linear. At a fixed test, the
+spike is measurable: on its unique possible t-fiber the two original tests
+are deterministic. `IsWholePlaneGFF.exists_ae_non_linear_modification`
+formalizes this argument, including section measurability. The conclusion is
+`∀ᵐ ω, ∃ test, ...`; it is stronger than the negation of a common linearity
+event and does not require the displayed existential event to be measurable.
 
 The precise invalid exchange is from `∀ φ, ∀ᵐ ω, ...` to `∀ᵐ ω, ∀ φ, ...`.
 `IsWholePlaneGFF.exists_meanZero_distribution_version`
