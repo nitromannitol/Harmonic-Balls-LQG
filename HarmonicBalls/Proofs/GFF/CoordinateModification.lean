@@ -11,6 +11,7 @@ Coordinatewise agreement alone does not assert a common samplewise representatio
 
 noncomputable section
 open MeasureTheory ProbabilityTheory Filter Topology
+open scoped RealInnerProductSpace
 namespace HarmonicBalls
 
 /-- Away from the diagonal, the normalized whole-plane covariance kernel has
@@ -60,6 +61,40 @@ theorem normalizedGFF_allPairings_gaussian
   exact hc.2
 
 #print axioms normalizedGFF_allPairings_gaussian
+
+/-- The covariance of two test pairings of Leonardo Bonanno's normalized GFF
+is the limit of their mean-zero approximations' logarithmic covariances. -/
+theorem normalizedGFF_pairing_covariance_tendsto
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P)
+    (φ ψ : LQGMetric.TestC) :
+    Tendsto (fun n => LQGMetric.logCov
+      (LQGMetric.MarkovGerm.meanZeroApprox φ n).1
+      (LQGMetric.MarkovGerm.meanZeroApprox ψ n).1) atTop
+      (𝓝 (cov[fun ω => h ω φ, fun ω => h ω ψ; P])) := by
+  let U := LQGMetric.MarkovNorm.pairVec hh φ
+  let V := LQGMetric.MarkovNorm.pairVec hh ψ
+  have hcenter : ∫ ω, (U : Ω → ℝ) ω ∂P = 0 := by
+    rw [integral_congr_ae (LQGMetric.MarkovNorm.pairVec_ae hh φ)]
+    exact (normalizedGFF_allPairings_gaussian hh).2 φ
+  have hc : ⟪U, V⟫ = cov[fun ω => h ω φ, fun ω => h ω ψ; P] := by
+    calc
+      ⟪U, V⟫ = cov[(U : Ω → ℝ), (V : Ω → ℝ); P] := by
+        have hu := Lp.memLp U
+        have hv := Lp.memLp V
+        simpa only [Lp.toLp_coeFn] using LQGMetric.MarkovZB.inner_toLp_eq_cov hu hv hcenter
+      _ = _ := LQGMetric.MarkovNorm.cov_congr_ae
+        (LQGMetric.MarkovNorm.pairVec_ae hh φ) (LQGMetric.MarkovNorm.pairVec_ae hh ψ)
+  have ht := (LQGMetric.MarkovNorm.tendsto_pairVec hh φ).inner (𝕜 := ℝ)
+    (LQGMetric.MarkovNorm.tendsto_pairVec hh ψ)
+  rw [hc] at ht
+  refine ht.congr fun n => ?_
+  dsimp only [LQGMetric.MarkovNorm.apxVec]
+  rw [LQGMetric.MarkovZB.inner_toLp_eq_cov _ _
+    (LQGMetric.centered_pairProc hh.1 _)]
+  exact hh.1.covariance_eq _ _
+
+#print axioms normalizedGFF_pairing_covariance_tendsto
 
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
