@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Sec11.PinchWholePlaneSmoothTransfer
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchFirstSecondGrowth
+import HarmonicBalls.Steps.Sec2.VolumeGrowth
 
 /-! # Conditional assembly of the whole-plane pinch event -/
 
@@ -19,7 +20,6 @@ theorem IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_gro
     (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (μ : Ω → Measure ℂ)
     (h𝔇 : IsLQGMetric γ ξ 𝔇) (hgff : IsWholePlaneGFF P hC hcirc)
     (hμ : IsLQGMeasureOfField P γ α hcirc μ)
-    (hfull : ∀ᵐ ω ∂P, ∀ A : Set ℂ, IsOpen A → A.Nonempty → 0 < μ ω A)
     (M : ℝ) (m : MeasurableSpace Ω) (hm : m ≤ m₀) (A : Set Ω)
     (hA : MeasurableSet[m] A)
     (hArep : A =ᵐ[P] {ω | correctedOpenFirstCertificate (𝔇 (hC ω)) W T Q' Q δ})
@@ -34,6 +34,8 @@ theorem IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_gro
         (k : ℝ≥0∞) < μ ω U}).indicator (fun _ => (1 : ℝ)) | m]) ω) :
     0 < P {ω | pinchPointEventWithInternalBounds (μ ω) (𝔇 (hC ω)) U T Q' Q M 1 0} := by
   let : MeasurableSpace Ω := m₀
+  have hfull := lqgMeasureFullSupportStmt_of_volumeGrowth hgrowth γ α hγ hγ₂ hα
+    Ω P hC hcirc μ hgff hμ
   obtain ⟨ψ, hψ, hψint⟩ := IsTestFunction.exists_integral_eq_one
     (isOpen_univ : IsOpen (univ : Set ℂ)) ⟨0, mem_univ _⟩
   exact h.positive_internal_pinch_of_open_first_second hξ P M hC hcirc 𝔇 μ h𝔇 hgff
