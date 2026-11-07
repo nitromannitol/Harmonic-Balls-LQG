@@ -1,0 +1,9 @@
+# LQG Green-potential exceptional sets
+
+`HarmonicBalls.ae_lqg_greenPotential_exceptional_set` is a conditional consequence of `LQGVolumeGrowthAllScalesStmt` (I2), not a new literature input or a numbered-result closure. It applies to the singular LQG measure in `IsLQGMeasureOfField`, for `0 < γ < 2` and `α₀ < Q`. The corrected paper's volume-growth bound is at Lemma 2.4 and Appendix A, equation `eq:volume-growth` (including corrections C1 and C2); the exact quantified I2 predicate is in `Draft/Section2.lean`.
+
+The proof selects half the positive minimum of the two upper-exponent limits, and takes the lower exponent one above the maximum required by I2. For each positive radius, I2 supplies its own positive cutoff. The local finiteness used by the potential theorem comes from the almost-sure `IsLQGLimit` field of the actual LQG measure. These two almost-sure statements give one event before quantifying over open bounded domains, finite compactly concentrated sources, and bounded observation sets.
+
+For each such choice, the restricted LQG measure almost everywhere sees an integrable real kernel, no source atom, a finite extended-kernel potential, and equality between that extended potential and the `ofReal` of the real potential. The two-source clause supplies the finite extended potentials and the signed identity. The null set can depend on all these choices; no common spatial null set or pointwise pole identity is asserted. The proof invokes `ae_greenPotential_of_local_upper_growth` and `ae_greenPotential_sub_of_local_upper_growth`, and transfers from a containing ball to the bounded observation set by measure restriction monotonicity. No bounded-representative assertion is used.
+
+The potential-theoretic infrastructure uses work of Leonardo Bonanno. Printed axioms: `propext`, `Classical.choice`, `Quot.sound`.
