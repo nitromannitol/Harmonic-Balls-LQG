@@ -1,4 +1,4 @@
-import HarmonicBalls.Proofs.Sec11.CorrectedPinchPositiveOpenFirst
+import HarmonicBalls.Proofs.Sec11.CorrectedPinchFirstPositive
 import HarmonicBalls.Proofs.Sec11.PinchSecondConditionalAssembly
 
 /-! # Joint positivity of the first and second pinch certificates -/
@@ -16,7 +16,7 @@ theorem IsCorrectedPinchConfiguration.positive_wholePlane_first_second
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (μ : Ω → Measure ℂ)
     (h𝔇 : IsLQGMetric γ ξ 𝔇) (hgff : IsWholePlaneGFF P hC hcirc)
-    (hconn : IsConnected (T \ thickening (3 * δ) W)) (M : ℝ)
+    (M : ℝ)
     (m : MeasurableSpace Ω) (hm : m ≤ m₀) (A : Set Ω)
     (hA : MeasurableSet[m] A)
     (hArep : A =ᵐ[P] {ω | correctedOpenFirstCertificate (𝔇 (hC ω)) W T Q' Q δ})
@@ -37,7 +37,7 @@ theorem IsCorrectedPinchConfiguration.positive_wholePlane_first_second
   obtain ⟨ψ, hψ, hψint⟩ := IsTestFunction.exists_integral_eq_one
     (isOpen_univ : IsOpen (univ : Set ℂ)) ⟨0, mem_univ _⟩
   have hp := h.positive_wholePlane_open_first hξ P (by simp) γ hC hcirc 𝔇 h𝔇
-    hgff hconn ψ hψ hψint
+    hgff h.outer_piece_isConnected ψ hψ hψint
   have hAp : 0 < P A := by rw [measure_congr hArep]; exact hp
   have hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (𝔇 (hC ω)) := by
     filter_upwards [ae_wholePlane_weylScaling_shift P γ ξ hC hcirc 𝔇 h𝔇 hgff
