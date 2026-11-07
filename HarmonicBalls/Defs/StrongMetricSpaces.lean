@@ -1,4 +1,5 @@
 import HarmonicBalls.Defs.LQGMetric
+import HarmonicBalls.Defs.LQGGraphDistance
 import Mathlib.Analysis.Distribution.Distribution
 
 /-!
@@ -181,5 +182,9 @@ structure SatisfiesStrongMetricAxiomsAtDimension (γ dimension : ℝ)
     (∀ x, Measurable fun ω => f ω x) →
     SatisfiesLQGMetricAxioms P γ (γ / dimension) (extendPlaneMetricMap metric)
       (fun ω => addFunPairing (hC ω) (f ω))
+
+/-- A strong LQG metric at the graph-distance choice of `d_γ`. -/
+def IsStrongLQGMetric (γ : ℝ) (metric : PlaneDistribution → ContinuousPlaneMetric) : Prop :=
+  SatisfiesStrongMetricAxiomsAtDimension γ (lqgGraphDimension γ) metric
 
 end HarmonicBalls
