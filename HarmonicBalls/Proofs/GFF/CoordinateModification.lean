@@ -524,6 +524,82 @@ theorem wholePlaneGFFCov_circle_pairing_eq_potential (φ : LQGMetric.TestC)
 
 #print axioms wholePlaneGFFCov_circle_pairing_eq_potential
 
+/-- The mixed whole-plane kernel is integrable against a test function and a
+circle measure. The diagonal convention is immaterial for this product. -/
+theorem integrable_test_wholePlaneCov_circle_prod (φ : LQGMetric.TestC)
+    (z : ℂ) {r : ℝ} (hr : 0 < r) :
+    Integrable (fun p : ℂ × ℂ => φ p.1 * wholePlaneCov p.1 p.2)
+      (volume.prod (LQGDimension.Coupling.circMeas z r)) := by
+  let μ := LQGDimension.Coupling.circMeas z r
+  let f : C(ℂ, ℝ) := ⟨LQGMetric.CircleAvg.circLog 0 1,
+    LQGMetric.CircleAvg.continuous_circLog one_ne_zero 0⟩
+  have hφ := LQGMetric.CircleAvg.integrable_testC φ
+  have hf : Integrable f μ := by
+    convert LQGDimension.Coupling.integrable_posLog_norm_circ z r using 1
+    funext x
+    change LQGMetric.CircleAvg.circLog 0 1 x = _
+    rw [LQGMetric.CircleAvg.circLog_zero_one, Real.posLog_eq_log_max_one (norm_nonneg _), max_comm]
+  have h1 := integrable_test_log_circle_prod φ z hr
+  have h2 := (LQGMetric.CircleAvg.integrable_test_mul φ f).mul_prod
+    (integrable_const (1 : ℝ) : Integrable (fun _ : ℂ => (1 : ℝ)) μ)
+  have h3 := hφ.mul_prod hf
+  have hi : Integrable (fun p : ℂ × ℂ =>
+      φ p.1 * (-Real.log ‖p.2 - p.1‖) + (φ p.1 * f p.1) * 1 + φ p.1 * f p.2)
+      (volume.prod μ) := (h1.add h2).add h3
+  apply hi.congr
+  have hne : ∀ᵐ p : ℂ × ℂ ∂volume.prod μ, p.1 ≠ p.2 := by
+    have hm : MeasurableSet {p : ℂ × ℂ | p.1 ≠ p.2} :=
+      (isClosed_eq continuous_fst continuous_snd).isOpen_compl.measurableSet
+    apply (Measure.ae_prod_iff_ae_ae hm).2
+    apply (Measure.ae_ae_comm hm).2
+    filter_upwards with x
+    exact Measure.ae_ne volume x
+  filter_upwards [hne] with p hp
+  rw [wholePlaneCov_eq_additive_of_ne hp, ← LQGMetric.CircleAvg.circLog_zero_one p.1,
+    ← LQGMetric.CircleAvg.circLog_zero_one p.2, norm_sub_rev]
+  dsimp [f]
+  ring
+
+#print axioms integrable_test_wholePlaneCov_circle_prod
+
+/-- Exchanging a test pairing and a positive-radius circle average preserves
+the covariance kernel, by Fubini's theorem. -/
+theorem wholePlaneGFFCov_pairing_circle_symm (φ : LQGMetric.TestC)
+    (z : ℂ) {r : ℝ} (hr : 0 < r) :
+    wholePlaneGFFCov (.pairing φ) (.circle r z) =
+      wholePlaneGFFCov (.circle r z) (.pairing φ) := by
+  let μ := LQGDimension.Coupling.circMeas z r
+  have hi := integrable_test_wholePlaneCov_circle_prod φ z hr
+  change (∫ x, φ x * Real.circleAverage (wholePlaneCov x) z r) =
+    Real.circleAverage (fun x => ∫ y, φ y * wholePlaneCov x y) z r
+  have hm (x : ℂ) : AEStronglyMeasurable (wholePlaneCov x) μ := by
+    apply Measurable.aestronglyMeasurable
+    unfold wholePlaneCov
+    fun_prop
+  simp_rw [← LQGDimension.Coupling.integral_circMeas_eq_circleAverage (hm _),
+    ← integral_const_mul]
+  have hs := integral_integral_swap (μ := volume) (ν := μ)
+    (f := fun x y : ℂ => φ x * wholePlaneCov x y) hi
+  rw [hs]
+  have hmeas : AEStronglyMeasurable (fun x => ∫ y, φ y * wholePlaneCov x y) μ := by
+    have h := hi.swap.aestronglyMeasurable.integral_prod_right'
+    convert h using 1
+    ext x
+    congr 1
+    funext y
+    unfold wholePlaneCov
+    simp only [Function.comp_apply, Prod.swap_prod_mk]
+    rw [norm_sub_rev, mul_comm (max ‖x‖ 1) (max ‖y‖ 1)]
+  rw [← LQGDimension.Coupling.integral_circMeas_eq_circleAverage hmeas]
+  apply integral_congr_ae
+  filter_upwards with x
+  apply integral_congr_ae
+  filter_upwards with y
+  unfold wholePlaneCov
+  rw [norm_sub_rev, mul_comm (max ‖y‖ 1) (max ‖x‖ 1)]
+
+#print axioms wholePlaneGFFCov_pairing_circle_symm
+
 /-- Uniform potential convergence can be integrated against Leonardo Bonanno's
 mollified circle increments. -/
 theorem tendsto_integral_circDiff_mul_meanZeroApprox_error
@@ -654,6 +730,29 @@ theorem normalizedGFF_pairing_covariance_eq_project
   ring
 
 #print axioms normalizedGFF_pairing_covariance_eq_project
+
+/-- The L² norm of one successive mollified circle increment has geometric
+rate, using Leonardo Bonanno's variance estimate. -/
+theorem norm_circleAvg_succ_toLp_le
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsWholePlaneGFF h P)
+    (z : ℂ) {r : ℝ} (hr : 0 < r) (n : ℕ) :
+    ‖(LQGMetric.MarkovZB.memLp_pair hh
+      (LQGMetric.CircleAvg.circDiff (n + 1) z r n z r)).toLp _‖ ≤
+      Real.sqrt (4 / r) * Real.sqrt 2⁻¹ ^ n := by
+  let D := LQGMetric.CircleAvg.circDiff (n + 1) z r n z r
+  have hm := LQGMetric.MarkovZB.memLp_pair hh D
+  have hsq : ‖hm.toLp (LQGMetric.pairProc h D)‖ ^ 2 ≤
+      (Real.sqrt (4 / r) * Real.sqrt 2⁻¹ ^ n) ^ 2 := by
+    rw [← real_inner_self_eq_norm_sq, LQGMetric.MarkovZB.inner_toLp_eq_cov _ _
+      (LQGMetric.centered_pairProc hh _)]
+    refine ((hh.covariance_eq _ _).trans_le
+      (LQGMetric.CircleAvg.logCov_circDiff_succ_le hr z n)).trans_eq ?_
+    rw [mul_pow, ← pow_mul, mul_comm n 2, pow_mul,
+      Real.sq_sqrt (by positivity : 0 ≤ 4 / r), Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2⁻¹)]
+  exact (pow_le_pow_iff_left₀ (norm_nonneg _) (by positivity) two_ne_zero).1 hsq
+
+#print axioms norm_circleAvg_succ_toLp_le
 
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
