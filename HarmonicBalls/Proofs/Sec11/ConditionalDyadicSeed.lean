@@ -1,5 +1,5 @@
 import HarmonicBalls.Proofs.Sec11.DyadicIntermediateSeed
-import HarmonicBalls.Proofs.Sec11.ConditionalPositiveIntersection
+import HarmonicBalls.Proofs.Sec11.ConditionalNullIntersection
 
 /-! # Conditional dyadic mass and diameter seeds -/
 
@@ -16,7 +16,7 @@ theorem exists_conditional_mass_tile_seed_after
     (μ : Ω → Measure X) (S : Set X) (C : ℕ → Fin 4 → Set X)
     (E : ℕ → Set Ω) (c : ℝ≥0∞) (N : ℕ)
     (hcover : ∀ n, S ⊆ ⋃ j, C n j)
-    (hH : @MeasurableSet Ω m₀ {ω | (8 : ℝ≥0∞) * c < μ ω S})
+    (hH : @NullMeasurableSet Ω m₀ {ω | (8 : ℝ≥0∞) * c < μ ω S} P)
     (hcond : ∀ᵐ ω ∂P, 0 < (P[({ω | (8 : ℝ≥0∞) * c < μ ω S}).indicator
       (fun _ => (1 : ℝ)) | m]) ω)
     (hfail : Tendsto (fun n => P (E n)ᶜ) atTop (𝓝 0))
@@ -25,7 +25,7 @@ theorem exists_conditional_mass_tile_seed_after
       (2 : ℝ≥0∞) * c < μ ω (C n j)} := by
   let : MeasurableSpace Ω := m₀
   have hp : 0 < P {ω | ω ∈ F ∧ (8 : ℝ≥0∞) * c < μ ω S} := by
-    exact measure_inter_pos_of_condExp_indicator_pos P m hm hF hH hFp hcond
+    exact measure_inter_pos_of_condExp_indicator_pos_nullMeasurable P m hm hF hH hFp hcond
   have he : ∀ᶠ n in atTop, P (E n)ᶜ <
       P {ω | ω ∈ F ∧ (8 : ℝ≥0∞) * c < μ ω S} :=
     (tendsto_order.1 hfail).2 _ hp
@@ -58,7 +58,7 @@ theorem IsWholePlaneGFF.exists_conditional_intermediate_seed
     (hU : IsOpen U) (hsub : closedSquare a L ⊆ U)
     (b : ℕ → ℝ≥0∞) (c d : ℝ≥0∞) (p : ℝ) (hp : 2 < p)
     (e : ℕ → ℝ) (he : Tendsto e atTop (𝓝 0))
-    (hH : @MeasurableSet Ω m₀ {ω | (8 : ℝ≥0∞) * c < μ ω (closedSquare a L)})
+    (hH : @NullMeasurableSet Ω m₀ {ω | (8 : ℝ≥0∞) * c < μ ω (closedSquare a L)} P)
     (hcond : ∀ᵐ ω ∂P, 0 < (P[({ω | (8 : ℝ≥0∞) * c < μ ω (closedSquare a L)}).indicator
       (fun _ => (1 : ℝ)) | m]) ω)
     (hmargin : ∀ᶠ n in atTop, b n < d)
