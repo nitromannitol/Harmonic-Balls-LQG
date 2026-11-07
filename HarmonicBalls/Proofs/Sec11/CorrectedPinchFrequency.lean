@@ -5,6 +5,8 @@ import HarmonicBalls.Steps.Sec11.PinchDyadicWindowShift
 import HarmonicBalls.Steps.Sec11.PinchNormalizedMeasure
 import HarmonicBalls.Proofs.Sec11.BufferedPinchContinuity
 import HarmonicBalls.Proofs.Sec11.WholePlaneMetricLocality
+import HarmonicBalls.Proofs.Sec11.SingularMetricLocalityMoments
+import HarmonicBalls.Proofs.Sec9.AffineInvarianceAssembly
 
 /-! # The corrected pinch block-density reduction
 
@@ -184,6 +186,50 @@ theorem exists_local_internal_pinch_zeroCharge
   exact exists_local_internal_pinch_of_metric_locality P hC hcirc μ D hconfig M
     hgff hμ hfull c G hc hmetric hG hGeq' hpos
 
+/-- At Liouville charge, a finite family of base-metric diameter moments
+gives the local pinch representative and witness. The metric-field axiom is
+staged; the displayed moment condition and event positivity are obligations. -/
+theorem exists_local_internal_pinch_liouvilleCharge_of_diameter_moments
+    {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) {γ ξ : ℝ}
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q) (M : ℝ)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ γ hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < μ ω U)
+    (haxioms : LQGMetricFieldAxioms P γ ξ γ hC hcirc)
+    (hγ : 0 < γ) (hγ₂ : γ < 2) (hξ : 0 < ξ)
+    (hD : IsLQGMetricOfField P γ ξ γ hC D)
+    (hpos : 0 < P {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M 1 0}) :
+    ∃ (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), IsLQGMetric γ ξ 𝔇 ∧
+      ∃ (ε : ℝ) (N : ℕ) (z : ℕ → ℂ), 0 < ε ∧
+        ((∀ i, i ≤ N → (∫⁻ ω, ⨆ x ∈ closedBall (z i) ε,
+          ⨆ y ∈ closedBall (z i) ε,
+            internalMetric (𝔇 (hC ω)) (ball (z i) (2 * ε)) x y ∂P) ≠ ∞) →
+          (∃ E : Set Ω, MeasurableSet[Section6.fieldSigmaAlgebraModConst γ hC (ball 0 7)] E ∧
+            0 < P E ∧ ∀ᵐ ω ∂P, ω ∈ E → pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0) ∧
+          (∃ E ⊆ {ω | pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0}, MeasurableSet E ∧ 0 < P E)) := by
+  have hAff := wholePlaneGFFAffineInvariance_proved P hC hcirc
+  have hγQ := gamma_lt_lqgQ hγ hγ₂
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms P γ ξ γ hC hcirc D
+    haxioms hgff hγ hγ₂ hγQ hD
+  obtain ⟨ψ, hψ, hψint⟩ := IsTestFunction.exists_integral_eq_one
+    (isOpen_ball : IsOpen (ball (0 : ℂ) 7)) ⟨0, mem_ball_self (by norm_num)⟩
+  have hne : (ball (0 : ℂ) 6 \ {0}).Nonempty := by
+    refine ⟨1, ?_⟩
+    norm_num [Metric.mem_ball, dist_eq_norm]
+  have hball : ball (0 : ℂ) (Real.exp (1 - (1 : ℝ))) ⊆ ball 0 6 := by
+    simp only [sub_self, Real.exp_zero]
+    exact ball_subset_ball (by norm_num)
+  obtain ⟨𝔇, h𝔇, ε, N, z, hε, hlocal⟩ :=
+    hgff.exists_modConst_locality_at_liouville_charge hAff haxioms hγ hγ₂ hξ hD
+      1 (by norm_num) (U := ball (0 : ℂ) 7) (V := ball 0 6)
+      isOpen_ball hne (ball_subset_ball (by norm_num)) hball ψ hψ hψint
+  refine ⟨𝔇, h𝔇, ε, N, z, hε, ?_⟩
+  intro hmom
+  obtain ⟨c, G, hc, hG, hGeq⟩ := hlocal hmom
+  exact exists_local_internal_pinch_of_metric_locality P hC hcirc μ D hconfig M
+    hgff hμ hfull c G hc hmetric hG hGeq hpos
+
 /-- Block density for the internal-metric pinch event at one point. -/
 def InternalPinchBlockDensity (μ : Measure ℂ) (D : ℂ → ℂ → ℝ)
     (U T Q' Q : Set ℂ) (M q : ℝ) (z : ℂ) : Prop :=
@@ -294,6 +340,7 @@ theorem correctedManyPinchScales_of_internalBlockDensity
 #print axioms exists_local_internal_pinch_representative_and_original_witness
 #print axioms exists_local_internal_pinch_of_metric_locality
 #print axioms exists_local_internal_pinch_zeroCharge
+#print axioms exists_local_internal_pinch_liouvilleCharge_of_diameter_moments
 #print axioms eventually_shifted_index_block_density
 #print axioms eventually_block_density_of_shifted_event_implication
 #print axioms correctedManyPinchScales_of_internalBlockDensity
