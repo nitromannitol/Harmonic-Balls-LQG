@@ -97,4 +97,59 @@ theorem exists_mass_tile_class_of_conditional_mass_and_common_factor
   exact ⟨n, j, by simpa using hj⟩
 
 #print axioms exists_mass_tile_class_of_conditional_mass_and_common_factor
+
+/-- For the unit-circle normalized whole-plane GFF, the common factor
+`exp (ξ h₁(0))` equals one almost surely, so it has no exceptional tail. -/
+theorem IsWholePlaneGFF.tendsto_all_tiles_failure_of_pinned_circle_factor
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (ξ : ℝ)
+    (ι : ℕ → Type*) [∀ n, Fintype (ι n)]
+    (X : ∀ n, ι n → Ω → ℝ≥0∞) (a : ℕ → ℝ≥0∞) (d : ℝ≥0∞)
+    (hmargin : ∀ n, a n < d)
+    (hsum : Tendsto (fun n => ∑ i : ι n, P {ω |
+      a n * ENNReal.ofReal (Real.exp (ξ * hcirc ω 1 0)) < X n i ω}) atTop (𝓝 0)) :
+    Tendsto (fun n => P {ω | ∀ i : ι n, X n i ω < d}ᶜ) atTop (𝓝 0) := by
+  let R : Ω → ℝ≥0∞ := fun ω => ENNReal.ofReal (Real.exp (ξ * hcirc ω 1 0))
+  have hR : ∀ᵐ ω ∂P, R ω = 1 := by
+    filter_upwards [h.ae_circleAverage_one_zero] with ω hω
+    simp [R, hω]
+  have hz : P {ω | (1 : ℝ≥0∞) < R ω} = 0 := by
+    apply measure_mono_null (t := {ω | R ω ≠ 1})
+    · intro ω hω
+      exact ne_of_gt hω
+    · exact ae_iff.mp hR
+  have ht : Tendsto (fun _ : ℕ => P {ω | (1 : ℝ≥0∞) < R ω}) atTop (𝓝 0) := by
+    simp [hz]
+  apply tendsto_all_tiles_failure_of_common_factor P ι X R a (fun _ => 1) d ?_ ht hsum
+  simpa using hmargin
+
+#print axioms IsWholePlaneGFF.tendsto_all_tiles_failure_of_pinned_circle_factor
+
+/-- A uniform geometric tile-failure bound beats a geometric bound on the
+number of tiles when the product of their rates is less than one. -/
+theorem tendsto_sum_tile_failures_of_geometric_bound
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (ι : ℕ → Type*) [∀ n, Fintype (ι n)] (B : ∀ n, ι n → Set Ω)
+    (A C r q : ℝ≥0∞) (hA : A ≠ ∞) (hC : C ≠ ∞) (hrq : r * q < 1)
+    (hcard : ∀ n, (Fintype.card (ι n) : ℝ≥0∞) ≤ A * r ^ n)
+    (hbound : ∀ n i, P (B n i) ≤ C * q ^ n) :
+    Tendsto (fun n => ∑ i : ι n, P (B n i)) atTop (𝓝 0) := by
+  classical
+  have hlim : Tendsto (fun n : ℕ => (r * q) ^ n * (A * C)) atTop (𝓝 0) := by
+    have h := ENNReal.Tendsto.mul_const (ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one hrq)
+      (Or.inr (ENNReal.mul_ne_top hA hC))
+    simpa using h
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hlim
+    (fun _ => zero_le) ?_
+  intro n
+  calc
+    (∑ i : ι n, P (B n i)) ≤ ∑ _i : ι n, C * q ^ n :=
+      Finset.sum_le_sum fun i _ => hbound n i
+    _ = (Fintype.card (ι n) : ℝ≥0∞) * (C * q ^ n) := by
+      simp [Finset.sum_const, nsmul_eq_mul]
+    _ ≤ (A * r ^ n) * (C * q ^ n) := by gcongr; exact hcard n
+    _ = (r * q) ^ n * (A * C) := by rw [mul_pow]; ac_rfl
+
+#print axioms tendsto_sum_tile_failures_of_geometric_bound
 end HarmonicBalls
