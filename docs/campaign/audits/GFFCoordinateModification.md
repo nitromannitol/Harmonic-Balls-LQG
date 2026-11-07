@@ -56,8 +56,13 @@ by `|∫ φ| · 2⁻ⁿ`. Theorems
 `tendsto_integral_test_mul_meanZeroApprox_error` and
 `tendsto_integral_meanZeroApprox_mul_error` show that this error vanishes
 after integration against a fixed test or another mean-zero approximation;
-the latter uses uniform boundedness of their absolute masses. Identifying the
-remaining limiting integral with the project kernel is still required.
+the latter uses uniform boundedness of their absolute masses.
+`tendsto_integral_meanZeroApprox_mul_continuous` identifies the limit against
+any continuous function. `tendsto_logCov_meanZeroApprox` combines these
+facts, and `normalizedGFF_pairing_covariance_eq_potential` identifies the
+covariance of Bonanno's pairings with the resulting normalized potential
+expression. Identifying it with the project's double-integral kernel is still
+required, including the kernel's diagonal convention.
 `normalizedGFF_pairings_increments_gaussian` also proves the mixed Gaussian
 law of all pairings and positive-radius circle-average increments. It uses
 the almost-sure limit of mollified increments, which are mean-zero test

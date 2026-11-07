@@ -1,5 +1,6 @@
 import HarmonicBalls.Defs.GFF
 import LatticeProb.Bonanno.LQGMetric.Field.MarkovNorm
+import LatticeProb.Bonanno.LQGMetric.Field.MarkovGermVerPot
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgGP
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgKolm
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgBridge
@@ -218,6 +219,85 @@ theorem tendsto_integral_meanZeroApprox_mul_error (ρ φ : LQGMetric.TestC) :
   ring
 
 #print axioms tendsto_integral_meanZeroApprox_mul_error
+
+/-- A mean-zero approximation integrates a continuous function against the
+original test and subtracts its unit-circle average, as in Leonardo Bonanno's
+normalized GFF construction. -/
+theorem tendsto_integral_meanZeroApprox_mul_continuous
+    (ρ : LQGMetric.TestC) (f : C(ℂ, ℝ)) :
+    Tendsto (fun n => ∫ x, (LQGMetric.MarkovGerm.meanZeroApprox ρ n).1 x * f x)
+      atTop (𝓝 ((∫ x, ρ x * f x) -
+        (∫ x, ρ x) * Real.circleAverage f 0 1)) := by
+  have heq : ∀ n, (∫ x, (LQGMetric.MarkovGerm.meanZeroApprox ρ n).1 x * f x) =
+      (∫ x, ρ x * f x) - (∫ x, ρ x) *
+        LQGMetric.CircleAvg.mollAvg (LQGMetric.ofCont f) n 0 1 := by
+    intro n
+    change (∫ x, (ρ x - (∫ y, ρ y) * LQGMetric.CircleAvg.circBump n 0 1 x) * f x) = _
+    simp_rw [sub_mul, mul_assoc]
+    rw [integral_sub (LQGMetric.CircleAvg.integrable_test_mul ρ f)
+      ((LQGMetric.CircleAvg.integrable_test_mul _ f).const_mul _), integral_const_mul,
+      LQGMetric.CircleAvg.integral_circBump_mul]
+  simp_rw [heq]
+  exact tendsto_const_nhds.sub ((LQGMetric.CircleAvg.tendsto_mollAvg_ofCont f 1 0).const_mul _)
+
+#print axioms tendsto_integral_meanZeroApprox_mul_continuous
+
+/-- The logarithmic covariances of Leonardo Bonanno's mean-zero approximations
+converge to the normalized potential expression. -/
+theorem tendsto_logCov_meanZeroApprox (ρ φ : LQGMetric.TestC) :
+    Tendsto (fun n => LQGMetric.logCov (LQGMetric.MarkovGerm.meanZeroApprox ρ n).1
+      (LQGMetric.MarkovGerm.meanZeroApprox φ n).1) atTop
+      (𝓝 ((∫ x, ρ x * (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x)) - (∫ x, ρ x) *
+        Real.circleAverage (fun x => LQGMetric.CircleAvg.logPot φ x +
+          (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) 0 1)) := by
+  let f : C(ℂ, ℝ) := ⟨fun x => LQGMetric.CircleAvg.logPot φ x +
+      (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x,
+    (LQGMetric.MarkovGermVer.contDiff_logPot φ).continuous.add
+      (continuous_const.mul (LQGMetric.CircleAvg.continuous_circLog one_ne_zero 0))⟩
+  have hlim := (tendsto_integral_meanZeroApprox_mul_continuous ρ f).add
+    (tendsto_integral_meanZeroApprox_mul_error ρ φ)
+  simp only [add_zero] at hlim
+  refine hlim.congr fun n => ?_
+  let D := (LQGMetric.MarkovGerm.meanZeroApprox ρ n).1
+  let E := (LQGMetric.MarkovGerm.meanZeroApprox φ n).1
+  let p : C(ℂ, ℝ) := ⟨LQGMetric.CircleAvg.logPot E,
+    (LQGMetric.MarkovGermVer.contDiff_logPot E).continuous⟩
+  have h1 := LQGMetric.CircleAvg.integrable_test_mul D f
+  have h2 := LQGMetric.CircleAvg.integrable_test_mul D p
+  have herror : Integrable (fun x => D x * (p x - f x)) := by
+    have heq : (fun x => D x * (p x - f x)) =
+        (fun x => D x * p x) - (fun x => D x * f x) := by
+      funext x
+      simp only [Pi.sub_apply]
+      ring
+    rw [heq]
+    exact h2.sub h1
+  rw [LQGMetric.CircleAvg.logCov_eq_integral_logPot]
+  change (∫ x, D x * f x) + (∫ x, D x * (p x - f x)) = ∫ x, D x * p x
+  rw [← integral_add h1 herror]
+  congr 1
+  funext x
+  change D x * f x + D x * (p x - f x) = D x * p x
+  ring
+
+#print axioms tendsto_logCov_meanZeroApprox
+
+/-- Test-pairing covariance in Leonardo Bonanno's normalized GFF, expressed
+using a logarithmic potential and the normalizing unit-circle average. -/
+theorem normalizedGFF_pairing_covariance_eq_potential
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P)
+    (ρ φ : LQGMetric.TestC) :
+    cov[fun ω => h ω ρ, fun ω => h ω φ; P] =
+      (∫ x, ρ x * (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x)) - (∫ x, ρ x) *
+        Real.circleAverage (fun x => LQGMetric.CircleAvg.logPot φ x +
+          (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) 0 1 :=
+  tendsto_nhds_unique (normalizedGFF_pairing_covariance_tendsto hh ρ φ)
+    (tendsto_logCov_meanZeroApprox ρ φ)
+
+#print axioms normalizedGFF_pairing_covariance_eq_potential
 
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
