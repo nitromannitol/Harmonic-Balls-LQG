@@ -41,8 +41,15 @@ separately for each mean-zero test, not on a common event.
 Leonardo Bonanno's `GFFExist.exists_normalizedWPGFF` (ExistGFF.lean:85)
 constructs a distribution-valued field with his normalized GFF predicate;
 `CircleAvgKolm.exists_continuous_version_circleAvg` (CircleAvgKolm.lean:175)
-constructs a continuous circle-average version. `Section6.map_pairingProc_eq`
+constructs a continuous circle-average version, and
+`CircleAvg.exists_isGFFCircleAverage_normalized` (CircleAvgBridge.lean:129)
+establishes its circle-only Gaussian law and covariance.
+`normalizedGFF_allPairings_gaussian` proves that Bonanno's normalized field
+has centered jointly Gaussian pairings for all tests, using
+`MarkovNorm.pairVec_mem_gaussSpace` (MarkovNorm.lean:98).
+`Section6.map_pairingProc_eq`
 (AnnulusLawTransfer.lean:96) transfers only mean-zero pairing laws starting
 from an existing project GFF. A direct existence bridge to all six fields of
-this repository's GFF interface, including arbitrary test and mixed circle
-covariances, has not been established here. No numbered-result closure follows.
+this repository's GFF interface, including arbitrary test covariance and the
+joint law and covariance with circle averages, has not been established here.
+No numbered-result closure follows.

@@ -1,4 +1,5 @@
 import HarmonicBalls.Defs.GFF
+import LatticeProb.Bonanno.LQGMetric.Field.MarkovNorm
 
 /-! # Coordinatewise modifications of the whole-plane GFF
 
@@ -8,6 +9,27 @@ Coordinatewise agreement alone does not assert a common samplewise representatio
 noncomputable section
 open MeasureTheory ProbabilityTheory
 namespace HarmonicBalls
+
+/-- All pairings of Leonardo Bonanno's normalized distribution-valued GFF
+are jointly Gaussian and centered, including tests with nonzero integral. -/
+theorem normalizedGFF_allPairings_gaussian
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P) :
+    IsGaussianProcess (fun (φ : LQGMetric.TestC) ω => h ω φ) P ∧
+      ∀ φ : LQGMetric.TestC, ∫ ω, h ω φ ∂P = 0 := by
+  have hgauss := LQGMetric.MarkovGauss.isGaussianProcess_of_mem_gaussSpace
+    (LQGMetric.gaussian_pairProc hh.1) (LQGMetric.centered_pairProc hh.1)
+    (LQGMetric.MarkovZB.memLp_pair hh.1) (LQGMetric.MarkovNorm.pairVec hh)
+    (LQGMetric.MarkovNorm.pairVec_mem_gaussSpace hh)
+  refine ⟨hgauss.congr (LQGMetric.MarkovNorm.pairVec_ae hh), ?_⟩
+  intro φ
+  have hc := LQGMetric.MarkovGauss.isCGauss_of_mem_gaussSpace
+    (LQGMetric.gaussian_pairProc hh.1) (LQGMetric.centered_pairProc hh.1)
+    (LQGMetric.MarkovZB.memLp_pair hh.1) (LQGMetric.MarkovNorm.pairVec_mem_gaussSpace hh φ)
+  rw [← integral_congr_ae (LQGMetric.MarkovNorm.pairVec_ae hh φ)]
+  exact hc.2
+
+#print axioms normalizedGFF_allPairings_gaussian
 
 /-- A measurable coordinatewise modification preserves all six fields of the
 whole-plane GFF specification, with circle averages unchanged. -/
