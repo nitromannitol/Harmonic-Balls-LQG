@@ -41,7 +41,29 @@ theorem exists_lqg_square_diameter_tail_exponent {γ ξ : ℝ}
       p < (ξ * lqgQ γ - s) ^ 2 / (2 * ξ ^ 2) :=
   exists_square_diameter_tail_exponent hξ (two_lt_lqgQ_of_subcritical hγ hγ₂)
 
+/-- The optimizing moment in the weak-metric square-diameter estimate lies
+in its admissible range `0 < t < 4 / (γ ξ)` at subcritical charge. -/
+theorem lqg_square_diameter_optimizing_moment_bounds {γ ξ s : ℝ}
+    (hγ : 0 < γ) (hγ₂ : γ < 2) (hξ : 0 < ξ)
+    (hs : 0 < s) (hsQ : s < ξ * lqgQ γ) :
+    0 < (ξ * lqgQ γ - s) / ξ ^ 2 ∧
+      (ξ * lqgQ γ - s) / ξ ^ 2 < 4 / (γ * ξ) := by
+  have hξ2 : 0 < ξ ^ 2 := sq_pos_of_pos hξ
+  have hγξ : 0 < γ * ξ := mul_pos hγ hξ
+  refine ⟨div_pos (by linarith) hξ2, ?_⟩
+  apply (div_lt_div_iff₀ hξ2 hγξ).2
+  have hγ2 : γ ^ 2 < 4 := by nlinarith
+  have hQ : γ * lqgQ γ < 4 := by
+    unfold lqgQ
+    field_simp
+    nlinarith
+  have hdiff : 0 < 4 - γ * lqgQ γ := by linarith
+  have hproduct := mul_pos (sq_pos_of_pos hξ) hdiff
+  have hpositive : 0 < s * (γ * ξ) := mul_pos hs hγξ
+  nlinarith
+
 #print axioms two_lt_lqgQ_of_subcritical
 #print axioms exists_square_diameter_tail_exponent
 #print axioms exists_lqg_square_diameter_tail_exponent
+#print axioms lqg_square_diameter_optimizing_moment_bounds
 end HarmonicBalls
