@@ -20,8 +20,6 @@ theorem measurable_sequence_shift : Measurable (fun x : ℕ → ℝ => fun n => 
 is equality in law of the whole sequence and its left shift. -/
 theorem ae_tendsto_stationary_average {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) [IsProbabilityMeasure P] (X : ℕ → Ω → ℝ)
-    (hBirkhoff : PointwiseBirkhoff (P.map (fun ω n => X n ω))
-      (fun x n => x (n + 1)) (fun x => x 0))
     (hX : ∀ n, Measurable (X n)) (hInt : Integrable (X 0) P)
     (hstat : P.map (fun ω n => X (n + 1) ω) = P.map (fun ω n => X n ω)) :
     ∀ᵐ ω ∂P, ∃ L : ℝ,
@@ -40,7 +38,7 @@ theorem ae_tendsto_stationary_average {Ω : Type*} [MeasurableSpace Ω]
   have h0 : Integrable (fun x : ℕ → ℝ => x 0) Q := by
     apply (integrable_map_measure heval.aestronglyMeasurable hpath.aemeasurable).2
     exact hInt
-  have hae := hBirkhoff hpres heval h0
+  have hae := pointwiseBirkhoff_of_latticeProb Q shift (fun x => x 0) hpres heval h0
   have hae' : ∀ᵐ ω ∂P, ∃ L : ℝ,
       Tendsto (fun N : ℕ => birkhoffSum shift (fun x => x 0) N (path ω) / N) atTop (𝓝 L) :=
     ae_of_ae_map hpath.aemeasurable hae

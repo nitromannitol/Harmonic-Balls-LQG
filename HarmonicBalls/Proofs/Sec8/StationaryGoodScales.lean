@@ -16,7 +16,7 @@ namespace HarmonicBalls
 /-- Initial averages over indices `1, ..., N` converge for a stationary tail. -/
 theorem ae_tendsto_initialScaleAverage_of_stationary {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) [IsProbabilityMeasure P] (X : ℕ → Ω → ℝ)
-    (hBirkhoff : PointwiseBirkhoff (P.map (fun ω n => X (n + 1) ω))
+    (_hBirkhoff : PointwiseBirkhoff (P.map (fun ω n => X (n + 1) ω))
       (fun x n => x (n + 1)) (fun x => x 0))
     (hXm : ∀ n, Measurable (X n)) (hInt : Integrable (X 1) P)
     (hstat : P.map (fun ω n => X (n + 2) ω) = P.map (fun ω n => X (n + 1) ω)) :
@@ -24,7 +24,7 @@ theorem ae_tendsto_initialScaleAverage_of_stationary {Ω : Type*} [MeasurableSpa
       (∑ n ∈ Icc 1 N, X n ω) / (N : ℝ)) atTop (𝓝 c) := by
   have hstat' : P.map (fun ω n => X ((n + 1) + 1) ω) =
       P.map (fun ω n => X (n + 1) ω) := by simpa [Nat.add_assoc] using hstat
-  have h := ae_tendsto_stationary_average P (fun n => X (n + 1)) hBirkhoff
+  have h := ae_tendsto_stationary_average P (fun n => X (n + 1))
     (fun n => hXm (n + 1)) hInt hstat'
   filter_upwards [h] with ω ⟨c, hc⟩
   refine ⟨c, ?_⟩
