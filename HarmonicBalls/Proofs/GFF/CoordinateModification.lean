@@ -1,5 +1,6 @@
 import HarmonicBalls.Defs.GFF
 import LatticeProb.Bonanno.LQGMetric.Field.MarkovNorm
+import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgGP
 
 /-! # Coordinatewise modifications of the whole-plane GFF
 
@@ -7,7 +8,7 @@ The related distribution-valued construction is due to Leonardo Bonanno.
 Coordinatewise agreement alone does not assert a common samplewise representation. -/
 
 noncomputable section
-open MeasureTheory ProbabilityTheory
+open MeasureTheory ProbabilityTheory Filter Topology
 namespace HarmonicBalls
 
 /-- All pairings of Leonardo Bonanno's normalized distribution-valued GFF
@@ -30,6 +31,90 @@ theorem normalizedGFF_allPairings_gaussian
   exact hc.2
 
 #print axioms normalizedGFF_allPairings_gaussian
+
+/-- The mollified circle-average increments of Leonardo Bonanno's normalized
+GFF are jointly Gaussian with all of its test-function pairings. -/
+theorem normalizedGFF_pairings_mollifiedIncrements_gaussian
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P) (n : ℕ) :
+    IsGaussianProcess (Sum.elim (fun (φ : LQGMetric.TestC) ω => h ω φ)
+      (LQGMetric.CircleAvg.incProcN h n)) P := by
+  let f : LQGMetric.TestC ⊕ LQGMetric.CircleAvg.IncIdx → LQGMetric.TestC :=
+    Sum.elim id (fun p => (LQGMetric.CircleAvg.circDiff n p.1.2 p.1.1 n p.2.2 p.2.1).1)
+  have hg := (normalizedGFF_allPairings_gaussian hh).1.comp_right f
+  refine hg.congr fun p => ?_
+  cases p with
+  | inl φ => exact Filter.Eventually.of_forall fun _ => rfl
+  | inr p =>
+    exact Filter.Eventually.of_forall fun ω =>
+      (LQGMetric.CircleAvg.mollAvg_sub_eq (h ω) n p.1.2 p.1.1 n p.2.2 p.2.1).symm
+
+#print axioms normalizedGFF_pairings_mollifiedIncrements_gaussian
+
+/-- The pairings and circle-average increments of Leonardo Bonanno's normalized
+GFF form one jointly Gaussian process. -/
+theorem normalizedGFF_pairings_increments_gaussian
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P) :
+    IsGaussianProcess (Sum.elim (fun (φ : LQGMetric.TestC) ω => h ω φ)
+      (LQGMetric.CircleAvg.incProc h)) P := by
+  classical
+  let X := Sum.elim (fun (φ : LQGMetric.TestC) ω => h ω φ) (LQGMetric.CircleAvg.incProc h)
+  let Xn := fun n => Sum.elim (fun (φ : LQGMetric.TestC) ω => h ω φ)
+    (LQGMetric.CircleAvg.incProcN h n)
+  have hg : ∀ n, IsGaussianProcess (Xn n) P :=
+    normalizedGFF_pairings_mollifiedIncrements_gaussian hh
+  have hm : ∀ i, Measurable (X i) := by
+    intro i
+    cases i with
+    | inl φ => exact LQGMetric.MarkovGerm.measurable_eval hh.1 φ
+    | inr p => exact LQGMetric.CircleAvg.measurable_cInc hh.1 _ _ _ _
+  have hmean : ∀ n i, ∫ ω, Xn n i ω ∂P = 0 := by
+    intro n i
+    cases i with
+    | inl φ => exact (normalizedGFF_allPairings_gaussian hh).2 φ
+    | inr p => exact LQGMetric.CircleAvg.integral_incProcN hh.1 n p
+  have hlim : ∀ i, ∀ᵐ ω ∂P, Tendsto (fun n => Xn n i ω) atTop (𝓝 (X i ω)) := by
+    intro i
+    cases i with
+    | inl φ => exact Eventually.of_forall fun _ => tendsto_const_nhds
+    | inr p => exact LQGMetric.CircleAvg.ae_tendsto_mInc hh.1 p.1.1.2 p.2.1.2 _ _
+  refine ⟨fun I => ?_⟩
+  let Y : Ω → (I → ℝ) := fun ω => I.restrict (X · ω)
+  have hY : Measurable Y := measurable_pi_iff.mpr fun i => hm i.1
+  refine ⟨hY.aemeasurable, isGaussian_of_map_eq_gaussianReal fun L => ?_⟩
+  rw [AEMeasurable.map_map_of_aemeasurable L.continuous.measurable.aemeasurable hY.aemeasurable]
+  let Yn : ℕ → Ω → (I → ℝ) := fun n ω => I.restrict (Xn n · ω)
+  have hG : ∀ n, HasGaussianLaw (fun ω => L (Yn n ω)) P := fun n =>
+    ((hg n).hasGaussianLaw I).map_fun L
+  have hzero : ∀ n, P[fun ω => L (Yn n ω)] = 0 := by
+    intro n
+    have e : ∀ ω, L (Yn n ω) = ∑ i : I, Yn n ω i * L (fun j => if i = j then 1 else 0) := by
+      intro ω
+      have := LinearMap.pi_apply_eq_sum_univ L.toLinearMap (Yn n ω)
+      simpa [smul_eq_mul] using this
+    simp_rw [e]
+    rw [integral_finsetSum _ fun i _ =>
+      ((((hg n).hasGaussianLaw_eval i.1).integrable).mul_const _)]
+    refine Finset.sum_eq_zero fun i _ => ?_
+    simp [Yn, Finset.restrict, hmean, integral_mul_const]
+  have hmap : ∀ n, P.map (fun ω => L (Yn n ω)) =
+      gaussianReal 0 (Var[fun ω => L (Yn n ω); P]).toNNReal := by
+    intro n
+    rw [(hG n).map_eq_gaussianReal, hzero]
+  have ht : ∀ᵐ ω ∂P, Tendsto (fun n => L (Yn n ω)) atTop (𝓝 (L (Y ω))) := by
+    have hall : ∀ᵐ ω ∂P, ∀ i : I, Tendsto (fun n => Xn n i.1 ω) atTop
+        (𝓝 (X i.1 ω)) := by
+      rw [ae_all_iff]
+      intro i
+      exact hlim i.1
+    filter_upwards [hall] with ω hω
+    exact (L.continuous.tendsto _).comp (tendsto_pi_nhds.mpr hω)
+  obtain ⟨V, -, hV⟩ := LQGMetric.exists_gaussianReal_of_ae_tendsto
+    (fun n => (hG n).aemeasurable) (L.continuous.measurable.comp hY).aemeasurable hmap ht
+  exact ⟨0, V, hV⟩
+
+#print axioms normalizedGFF_pairings_increments_gaussian
 
 /-- A measurable coordinatewise modification preserves all six fields of the
 whole-plane GFF specification, with circle averages unchanged. -/

@@ -47,9 +47,14 @@ establishes its circle-only Gaussian law and covariance.
 `normalizedGFF_allPairings_gaussian` proves that Bonanno's normalized field
 has centered jointly Gaussian pairings for all tests, using
 `MarkovNorm.pairVec_mem_gaussSpace` (MarkovNorm.lean:98).
+`normalizedGFF_pairings_increments_gaussian` also proves the mixed Gaussian
+law of all pairings and positive-radius circle-average increments. It uses
+the almost-sure limit of mollified increments, which are mean-zero test
+pairings, and preserves their joint Gaussian law with all test pairings.
 `Section6.map_pairingProc_eq`
 (AnnulusLawTransfer.lean:96) transfers only mean-zero pairing laws starting
 from an existing project GFF. A direct existence bridge to all six fields of
-this repository's GFF interface, including arbitrary test covariance and the
-joint law and covariance with circle averages, has not been established here.
+this repository's GFF interface, including arbitrary test and mixed circle
+covariances and the transfer to its continuous circle version, has not been
+established here.
 No numbered-result closure follows.
