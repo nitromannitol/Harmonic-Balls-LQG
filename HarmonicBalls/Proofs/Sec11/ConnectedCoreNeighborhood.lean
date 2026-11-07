@@ -73,6 +73,40 @@ theorem dyadic_intermediate_core_neighborhood {N : ℕ} (a : ℂ) (r : ℝ)
     (fun i : {i : Fin N × Fin N // squareParity i = j} => complexGridSquare a r i.1)
     hc hconn hU (sdiff_subset.trans hKU) (fun i => isClosed_complexGridSquare a r i.1) hd
 
+/-- The core contraction can use an outer open neighborhood avoiding both
+the protected squares and an arbitrary closed observation set. -/
+theorem dyadic_intermediate_core_shift_neighborhoods {N : ℕ} (a : ℂ) (r : ℝ)
+    (hr : 0 < r) (j : Fin 4) (K W F : Set ℂ) (hK : IsCompact K)
+    (hW : IsOpen W) (hKW : K ⊆ W) (hF : IsClosed F) (hKF : Disjoint K F)
+    (hHK : ∀ i : {i : Fin N × Fin N // squareParity i = j},
+      complexIntermediateGridSquare a r i.1 ⊆ K)
+    (hconn : IsConnected (K \ ⋃ i : {i : Fin N × Fin N // squareParity i = j},
+      interior (complexIntermediateGridSquare a r i.1))) :
+    ∃ V T : Set ℂ, IsOpen V ∧ IsConnected V ∧
+      (K \ ⋃ i : {i : Fin N × Fin N // squareParity i = j},
+        interior (complexIntermediateGridSquare a r i.1)) ⊆ V ∧
+      IsCompact (closure V) ∧ IsOpen T ∧ closure V ⊆ T ∧ T ⊆ W ∧
+      Disjoint T F ∧ Disjoint T (⋃ i : {i : Fin N × Fin N // squareParity i = j},
+        complexGridSquare a r i.1) := by
+  let S : Set ℂ := ⋃ i : {i : Fin N × Fin N // squareParity i = j},
+    complexGridSquare a r i.1
+  have hSc : IsClosed S := isClosed_iUnion_of_finite
+    (fun i => isClosed_complexGridSquare a r i.1)
+  have hW' : IsOpen (W \ F) := hW.inter hF.isOpen_compl
+  have hKW' : K ⊆ W \ F := by
+    intro x hx
+    exact ⟨hKW hx, fun hxF => disjoint_left.mp hKF hx hxF⟩
+  obtain ⟨V, hVo, hVc, hCV, hVcompact, hVW, hVS⟩ :=
+    dyadic_intermediate_core_neighborhood a r hr j K (W \ F) hK hW' hKW' hHK hconn
+  refine ⟨V, (W \ F) \ S, hVo, hVc, hCV, hVcompact,
+    hW'.inter hSc.isOpen_compl, ?_, ?_, ?_, ?_⟩
+  · intro x hx
+    exact ⟨hVW hx, fun hxS => disjoint_left.mp hVS hxS hx⟩
+  · exact sdiff_subset.trans sdiff_subset
+  · exact disjoint_left.mpr (fun x hx hxF => hx.1.2 hxF)
+  · exact disjoint_left.mpr (fun x hx hxS => hx.2 hxS)
+
 #print axioms exists_connected_precompact_neighborhood_avoiding
 #print axioms dyadic_intermediate_core_neighborhood
+#print axioms dyadic_intermediate_core_shift_neighborhoods
 end HarmonicBalls
