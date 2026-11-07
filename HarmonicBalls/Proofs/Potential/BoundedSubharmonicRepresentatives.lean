@@ -2092,6 +2092,44 @@ theorem no_changed_source_unit_atom_for_large_observation
 #print axioms measure_eq_dirac_add_restrict_compl_of_singleton_eq_one
 #print axioms no_changed_source_unit_atom_for_large_observation
 
+/-- A local Riesz identity forces the negative source atom and its kernel
+integrability, so continuous residual potentials cannot yield a representative
+of the whole-plane negative Dirac potential on the radius-two disc. -/
+theorem no_changed_source_of_local_riesz_for_large_observation
+    {V K : Set ℂ} {η₁ η₂ : Measure ℂ} {q : ℂ → ℝ}
+    (hVopen : IsOpen V) (hV : Bornology.IsBounded V)
+    (hsub : ball (0 : ℂ) 2 ⊆ V)
+    (hK : IsCompact K) (hKV : K ⊆ V)
+    (hη₂ : IsFiniteMeasure η₂) (hη₂K : η₂ Kᶜ = 0)
+    (hq : HarmonicOnNhd q V)
+    (h₁ : ContinuousAt (greenPotential V η₁) 0)
+    (h₂ : ContinuousAt (greenPotential V (η₂.restrict {0}ᶜ)) 0)
+    (hΔ : HasLaplacian (q + greenPotential V η₁ - greenPotential V η₂)
+      (η₂.restrict (ball 0 2)) 0 (ball 0 2)) :
+    ¬ (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      -greenPotential univ (Measure.dirac 0) x =
+        q x + greenPotential V η₁ x - greenPotential V η₂ x) := by
+  let : IsFiniteMeasure η₂ := hη₂
+  intro heq
+  have hvol : -greenPotential univ (Measure.dirac (0 : ℂ)) =ᵐ[
+      volume.restrict (ball 0 (2 : ℝ))]
+      (q + greenPotential V η₁ - greenPotential V η₂) := by
+    rw [Measure.restrict_add, ae_add_measure_iff] at heq
+    exact heq.1
+  have hzero : (0 : ℂ) ∈ ball 0 (2 : ℝ) := mem_ball_self (by norm_num)
+  have hatom := negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
+    isOpen_ball hzero (inferInstance : IsLocallyFiniteMeasure η₂) hΔ hvol
+  have hi : ∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      Integrable (greenFunction V x) η₂ := by
+    filter_upwards [ae_restrict_mem measurableSet_ball] with x hx
+    exact integrable_negative_source_of_ae_dirac_and_hasLaplacian hVopen isOpen_ball
+      hsub hzero hK hKV hη₂ hη₂K hΔ hvol hx
+  have hqc : ContinuousAt q 0 := (hq.continuousOn 0 (hsub hzero)).continuousAt
+    (hVopen.mem_nhds (hsub hzero))
+  exact no_changed_source_unit_atom_for_large_observation hV hsub hatom hqc h₁ h₂ hi heq
+
+#print axioms no_changed_source_of_local_riesz_for_large_observation
+
 /-- In particular, a correction continuous on the observation disc cannot exist. -/
 theorem no_bounded_domain_continuous_source_correction_for_large_observation
     {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :

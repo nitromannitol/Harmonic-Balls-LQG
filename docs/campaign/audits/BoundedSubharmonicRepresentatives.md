@@ -52,6 +52,12 @@ source does not charge the observation set, and
 of the full negative-source Green kernel at every observation point from the
 frozen compact-support and finiteness conditions. These conclusions remain
 conditional on the unproved local Riesz identity.
+`no_changed_source_of_local_riesz_for_large_observation` combines these
+facts into an obstruction for arbitrary finite compactly supported negative
+sources: it derives both the unit atom and kernel integrability rather than
+assuming them. It still explicitly requires the local Riesz identity and
+continuity at zero of the positive potential and the atom-free residual
+negative potential, so it does not yet refute the full representative claim.
 The missing local bridge has conclusion
 `HasLaplacian (q + greenPotential V η₁ - greenPotential V η₂)
   (η₂.restrict Λ) 0 Λ`, under the frozen bounded-witness conditions and
