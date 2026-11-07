@@ -13,14 +13,6 @@ open scoped Topology
 
 namespace HarmonicBalls
 
-/-- LatticeProb's pointwise ergodic theorem discharges the temporary E34
-hypothesis. -/
-theorem pointwiseBirkhoff_of_latticeProb {Ω : Type*} [MeasurableSpace Ω]
-    (P : Measure Ω) [IsFiniteMeasure P] (T : Ω → Ω) (f : Ω → ℝ) :
-    PointwiseBirkhoff P T f := by
-  intro hT hf hi
-  exact LatticeProb.ae_tendsto_bAvg hT hf hi
-
 open Classical in
 /-- The stationary good-scale estimate, with the pointwise ergodic theorem
 provided by LatticeProb. The germ, stationarity, and one-scale estimate remain
