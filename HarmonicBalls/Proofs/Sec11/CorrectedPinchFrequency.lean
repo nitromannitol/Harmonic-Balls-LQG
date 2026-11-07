@@ -4,6 +4,7 @@ import HarmonicBalls.Proofs.Sec11.InternalPinchFrequency
 import HarmonicBalls.Steps.Sec11.PinchDyadicWindowShift
 import HarmonicBalls.Steps.Sec11.PinchNormalizedMeasure
 import HarmonicBalls.Proofs.Sec11.BufferedPinchContinuity
+import HarmonicBalls.Proofs.Sec11.WholePlaneMetricLocality
 
 /-! # The corrected pinch block-density reduction
 
@@ -135,6 +136,54 @@ theorem exists_local_internal_pinch_of_metric_locality
   exact exists_local_internal_pinch_representative_and_original_witness P α hC hcirc μ D
     hconfig M hgff c a G hscale hD hG hGeq hmass hpos
 
+/-- For zero logarithmic charge, normalized metric locality follows from the
+LQG metric definition. Positivity of the internal event and full support
+remain explicit. -/
+theorem exists_local_internal_pinch_zeroCharge
+    {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) {γ ξ : ℝ}
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q) (M : ℝ)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ 0 hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < μ ω U)
+    (hD : IsLQGMetricOfField P γ ξ 0 hC D)
+    (hpos : 0 < P {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M 1 0}) :
+    (∃ E : Set Ω, MeasurableSet[Section6.fieldSigmaAlgebraModConst 0 hC (ball 0 7)] E ∧
+      0 < P E ∧ ∀ᵐ ω ∂P, ω ∈ E → pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0) ∧
+    (∃ E ⊆ {ω | pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0}, MeasurableSet E ∧ 0 < P E) := by
+  obtain ⟨𝔇, h𝔇, hrepr⟩ := hD
+  have hrepr' : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) = weylScaling (𝔇 (hC ω)) ξ 0 u v := by
+    filter_upwards [hrepr] with ω hω u v
+    have hf : (fun x : ℂ => -(0 : ℝ) * Real.log ‖x‖) = 0 := by
+      funext x
+      simp
+    simpa only [hf] using hω u v
+  have hbase := hgff.ae_zeroCharge_metric_eq_base 𝔇 h𝔇 hrepr'
+  have hzero (F : (ℂ → ℝ) → ℝ) : addFunPairing F (fun _ => 0) = F := by
+    funext φ
+    simp [addFunPairing]
+  have hbaseMetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (𝔇 (hC ω)) := by
+    have h := (h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc (fun _ _ => 0) hgff
+      (by intro ω; fun_prop) (by intro x; fun_prop)).ae_isEuclideanLengthMetric
+    simpa only [hzero] using h
+  have hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω) := by
+    filter_upwards [hbase, hbaseMetric] with ω hω hm
+    rw [hω]
+    exact hm
+  obtain ⟨ψ, hψ, hψint⟩ := IsTestFunction.exists_integral_eq_one
+    (isOpen_ball : IsOpen (ball (0 : ℂ) 6)) ⟨0, mem_ball_self (by norm_num)⟩
+  obtain ⟨c, G, hc, hG, hGeq⟩ := hgff.exists_modConst_internal_baseMetric_subset
+    (α := 0) 𝔇 h𝔇 (U := ball (0 : ℂ) 6) (V := ball 0 7) isOpen_ball
+    (ball_subset_ball (by norm_num)) ψ hψ hψint
+  have hGeq' : ∀ᵐ ω ∂P, ∀ x ∈ ball (0 : ℂ) 6, ∀ y ∈ ball (0 : ℂ) 6,
+      internalMetric (fun x y => c ω * D ω x y) (ball 0 6) x y = G ω x y := by
+    filter_upwards [hbase, hGeq] with ω hb hg x hx y hy
+    rw [hb]
+    exact hg x hx y hy
+  exact exists_local_internal_pinch_of_metric_locality P hC hcirc μ D hconfig M
+    hgff hμ hfull c G hc hmetric hG hGeq' hpos
+
 /-- Block density for the internal-metric pinch event at one point. -/
 def InternalPinchBlockDensity (μ : Measure ℂ) (D : ℂ → ℂ → ℝ)
     (U T Q' Q : Set ℂ) (M q : ℝ) (z : ℂ) : Prop :=
@@ -244,6 +293,7 @@ theorem correctedManyPinchScales_of_internalBlockDensity
 #print axioms correctedLocalPinchCertificate_innerWitness
 #print axioms exists_local_internal_pinch_representative_and_original_witness
 #print axioms exists_local_internal_pinch_of_metric_locality
+#print axioms exists_local_internal_pinch_zeroCharge
 #print axioms eventually_shifted_index_block_density
 #print axioms eventually_block_density_of_shifted_event_implication
 #print axioms correctedManyPinchScales_of_internalBlockDensity
