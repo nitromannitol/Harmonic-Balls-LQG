@@ -1,9 +1,12 @@
 import HarmonicBalls.Draft.Section5
+import HarmonicBalls.Proofs.Sec5.RegularizedFamilyHarmonicBridge
 
 /-! # Conditional assembly of Theorem 1.1
 
-The bridge is explicit: the frozen existence statement supplies subharmonic balls,
-while the introduction requires the enlarged harmonic test class.
+The regularized-family bridge derives the enlarged harmonic test class from the
+subharmonic balls supplied by the frozen existence statement. The resulting
+assembly remains conditional on the Section 5 existence and uniqueness statements.
+The potential-theoretic infrastructure uses work of Leonardo Bonanno.
 -/
 
 namespace HarmonicBalls
@@ -33,5 +36,14 @@ theorem existenceUniquenessHarmonicBallsStmt_of_sec5_of_bridge
   exact ⟨Λhat ω z, hbridge (μ ω) (Λhat ω z) z (he z), fun A hA => hu z A hA⟩
 
 #print axioms existenceUniquenessHarmonicBallsStmt_of_sec5_of_bridge
+
+/-- Assemble the introduction's statement from the Section 5 statements. -/
+theorem existenceUniquenessHarmonicBallsStmt_of_sec5
+    (h55 : ExistenceHarmonicBallsStmt.{u}) (h56 : UniquenessHarmonicBallsStmt.{u}) :
+    ExistenceUniquenessHarmonicBallsStmt.{u} :=
+  existenceUniquenessHarmonicBallsStmt_of_sec5_of_bridge h55 h56
+    regularizedClusterFamily_isHarmonicBallFamily
+
+#print axioms existenceUniquenessHarmonicBallsStmt_of_sec5
 
 end HarmonicBalls
