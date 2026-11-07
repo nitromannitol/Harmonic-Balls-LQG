@@ -31,8 +31,7 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     (hKc : IsCompact K) (hK : IsConnected K) (hW : IsOpen W) (hKW : K ⊆ W)
     (hU : IsClosed U) (hKU : Disjoint K U) (hbuffer : W ⊆ thickening δ K)
     (hSW : closedSquare z L ⊆ W)
-    (hHK : ∀ᶠ n in atTop, ∀ (i : Fin (2 ^ n) × Fin (2 ^ n)),
-      complexIntermediateGridSquare z (L / (2 : ℝ) ^ n) i ⊆ K)
+    (hSK : closedSquare z L ⊆ interior K)
     (hm : MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance ≤ m₀)
     (b : ℕ → ℝ≥0∞) (p : ℝ) (hp : 2 < p) (e : ℕ → ℝ) (he : Tendsto e atTop (𝓝 0))
     (hH : @MeasurableSet Ω m₀ {ω | (8 : ℝ≥0∞) * c < μ ω (closedSquare z L)})
@@ -51,6 +50,13 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     (closedSquare z L) K U (IsCompact.reProdIm isCompact_Icc isCompact_Icc).isClosed.measurableSet
     hbounded hbufferS hfront hδ hpin 𝔇 h𝔇 ψ hψ hψint c ha hmargin
   intro F hF hFp
+  have hHK : ∀ᶠ n in atTop, ∀ (i : Fin (2 ^ n) × Fin (2 ^ n)),
+      complexIntermediateGridSquare z (L / (2 : ℝ) ^ n) i ⊆ K := by
+    filter_upwards [complex_enlarged_dyadic_square_eventually_subset_open z L hL
+      isOpen_interior hSK] with n hn i
+    have hr : 0 < L / (2 : ℝ) ^ n := by positivity
+    exact (complexIntermediateGridSquare_subset_open_enlarged z _ hr i).trans
+      ((complexOpenEnlargedGridSquare_subset z _ i).trans ((hn i).trans interior_subset))
   obtain ⟨N, hN⟩ := eventually_atTop.1 (hHK.and
     (complex_enlarged_dyadic_square_eventually_subset_open z L hL hW hSW))
   have hfail := h.tendsto_dyadic_square_diameters_of_power_error ξ
