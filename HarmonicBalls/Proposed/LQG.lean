@@ -42,10 +42,12 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 `h^ℂ_{|a| r}(a z + b) - h^ℂ_{|a|}(b)` is again a whole-plane GFF (`IsWholePlaneGFF` determines the joint law of all
 pairings and circle averages). Source: the law of the whole-plane GFF modulo additive constant is invariant under
 complex affine maps (paper, line 367): Gwynne-Holden-Sun, *Mating of trees for random planar maps and Brownian
-motions* (arXiv:1910.04713), Section 3.2.2, p. 16; Berestycki-Powell, *Gaussian free field and Liouville quantum
+motions* (arXiv:1910.04713v2), Section 3.2.2, p. 16; Berestycki-Powell, *Gaussian free field and Liouville quantum
 gravity* (arXiv:2404.16642v2), Corollary 5.7 and Remark 5.8 (p. 169) with Lemma 6.26 (p. 220). It also follows from
 the covariance kernel (eq:cov-kernel, line 359), `-log |z - w|` being affine invariant up to additive terms, so it
-is expected to be provable from `IsWholePlaneGFF`. -/
+is expected to be provable from `IsWholePlaneGFF`. Each deterministic affine map is treated separately.
+Berestycki-Powell initially uses log coefficient `1/(2π)` and rescales by `√(2π)` for LQG;
+the present kernel already has log coefficient one. -/
 def WholePlaneGFFAffineInvariance (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ,
     IsWholePlaneGFF P
@@ -57,17 +59,19 @@ def WholePlaneGFFAffineInvariance (P : Measure Ω) (hC : Ω → (ℂ → ℝ) �
 /-- **Existence of the γ-LQG measure** `μ_h` of `h = h^ℂ - α₀ log |·|` (eq:measure-lim, line 396): for
 `γ ∈ (0, 2)` and `α₀ < Q`, there is a random measure `μ` with `IsLQGMeasureOfField P γ α₀ hcirc μ`, i.e. a.s. the
 measures `ε^{γ²/2} e^{γ h_ε(z)} dz` converge vaguely along `ε = 2^{-k}` to a Radon measure.
-Source: Duplantier-Sheffield 2011 (*Liouville quantum gravity and KPZ*, Invent. Math. 185, arXiv:0808.1560),
-Proposition 1.1 (p. 5; zero-boundary GFF on a bounded domain, the whole-plane case following by the domain Markov
-property); Berestycki-Powell (arXiv:2404.16642v2), Theorem 2.1 (p. 62). Local finiteness near the log singularity
-uses `α₀ < Q`. -/
+Source: Bou-Rabee-Gwynne (arXiv:2208.11795v3), Section 2.2, p. 9, states existence for this singular
+whole-plane field. Duplantier-Sheffield (arXiv:0808.1560v2), Proposition 1.1, p. 5, and Berestycki-Powell
+(arXiv:2404.16642v2), Theorem 2.1, p. 62, treat bounded-domain Dirichlet fields; transfer near the pole
+requires more than the domain Markov property. Local finiteness near the singularity uses `α₀ < Q`. -/
 def LQGMeasureExistence (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
     ∃ μ : Ω → Measure ℂ, IsLQGMeasureOfField P γ α₀ hcirc μ
 
 /-- **Fact 2.1 I (Radon measure)** (line 404): a.s. `μ_h` is a non-atomic Radon measure. Radon (locally finite)
 is part of `IsLQGMeasureOfField`; this Prop is the non-atomicity. Source: paper, line 418 ("immediate from the
-definition"); Berestycki-Powell (arXiv:2404.16642v2), Theorem 2.1 (p. 62) and Theorem 3.2 (p. 81). -/
+definition"), Fact 2.1 I, p. 9. The assertion holds simultaneously for all points; uniqueness of the locally
+finite vague limit makes the choice of `μ` immaterial. Berestycki-Powell (arXiv:2404.16642v2), Theorems 2.1
+and 3.2 (pp. 62 and 81), require transfer to this whole-plane singular field. -/
 def LQGMeasureNonatomic (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ μ : Ω → Measure ℂ,
     IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ᵐ ω ∂P, ∀ x : ℂ, μ ω {x} = 0
@@ -84,7 +88,8 @@ def LQGMeasureLocality (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → �
 /-- **Fact 2.1 III (Weyl scaling)** (line 406): a.s., `e^{γ f} · μ_h = μ_{h+f}` for every continuous `f : ℂ → ℝ`,
 where `μ_{h+f}` is the vague limit of `ε^{γ²/2} e^{γ (h + f)_ε(z)} dz` along `ε = 2^{-k}` (`addCircleAverage`).
 Source: paper, line 418 ("immediate from the definition"). This is a deterministic consequence of `IsLQGLimit`
-(the circle averages `f_ε` converge to `f` locally uniformly); it is expected to be proved rather than admitted. -/
+(the circle averages `f_ε` converge to `f` locally uniformly); it is expected to be proved rather than admitted.
+All continuous functions share the same almost-sure event, as in Fact 2.1 III, p. 9. -/
 def LQGMeasureWeylScaling (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ μ : Ω → Measure ℂ,
     IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f →
@@ -98,8 +103,9 @@ def LQGMeasureWeylScaling (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ �
 Since the pulled-back approximations at scale `2^{-k}` are those of `h` at scale `|a| 2^{-k}`, the simultaneous
 statement uses a.s. convergence along all `ε → 0`. Source: Duplantier-Sheffield 2011, Proposition 2.1 (p. 13; a.s.
 for a fixed conformal map); Sheffield-Wang 2016 (*Field-measure correspondence in Liouville quantum gravity almost
-surely commutes with all conformal maps simultaneously*, arXiv:1605.06171), Theorem 1.1 (a.s. convergence as
-`ε → 0`) and Theorem 1.4 (p. 3; all conformal maps simultaneously).
+surely commutes with all conformal maps simultaneously*, arXiv:1605.06171v2), Theorem 1.1 (a.s. convergence as
+`ε → 0`) and Theorem 1.4 (p. 3; all conformal maps simultaneously). Sheffield-Wang starts with a bounded-domain
+Dirichlet field; Fact 2.1 IV, p. 9 of Bou-Rabee-Gwynne, is the direct background statement for this singular field.
 
 Scope: only complex affine maps, which is how the paper uses Fact 2.1 IV (rescalings, lines 904-916 and 2164).
 For a general conformal `φ : Ũ → U` the field `h ∘ φ` lives on `Ũ` and its circle averages are not circle
