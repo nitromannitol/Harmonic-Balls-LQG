@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec11.DyadicIntermediateSquare
 /-! # Comparison for dyadic internal-diameter estimates -/
 
 namespace HarmonicBalls
-open Set
+open Set MeasureTheory
 open scoped ENNReal
 
 /-- The common centre of a dyadic square and its intermediate enlargement. -/
@@ -91,10 +91,26 @@ theorem dyadicIntermediateInternalDiameter_le_closedSquareDiameter
   exact (internalMetric_anti (D ω) (complexIntermediateGridSquare_subset_open_enlarged a _ hr i)
     x y).trans (le_iSup_of_le x (le_iSup_of_le hx (le_iSup_of_le y (le_iSup_of_le hy le_rfl))))
 
+/-- A tail bound for the closed-square internal diameter transfers to the
+diameter measured in the larger open square. -/
+theorem dyadicIntermediateInternalDiameter_tail_le
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (D : Ω → ℂ → ℂ → ℝ) (a : ℂ) (L : ℝ) (hL : 0 < L)
+    (n : ℕ) (i : Fin (2 ^ n) × Fin (2 ^ n)) (threshold : Ω → ℝ≥0∞) :
+    P {ω | threshold ω < dyadicIntermediateInternalDiameter D a L n i ω} ≤
+      P {ω | threshold ω <
+        ⨆ x ∈ complexIntermediateGridSquare a (L / (2 : ℝ) ^ n) i,
+          ⨆ y ∈ complexIntermediateGridSquare a (L / (2 : ℝ) ^ n) i,
+            internalMetric (D ω) (complexIntermediateGridSquare a (L / (2 : ℝ) ^ n) i) x y} := by
+  apply measure_mono
+  intro ω hω
+  exact lt_of_lt_of_le hω (dyadicIntermediateInternalDiameter_le_closedSquareDiameter D a L hL n i ω)
+
 #print axioms dyadicIntermediateInternalDiameter_le_closedSquareDiameter
 #print axioms complexIntermediateGridSquare_eq_closedSquare
 #print axioms complexGridCenter_mem_closedSquare
 #print axioms complexIntermediateGridSquare_eq_centered
 #print axioms dyadicGridCenter_mem_closedSquare
 #print axioms metricDiameterTailExponent_gt_two
+#print axioms dyadicIntermediateInternalDiameter_tail_le
 end HarmonicBalls
