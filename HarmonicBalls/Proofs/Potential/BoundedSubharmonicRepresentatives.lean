@@ -1719,6 +1719,37 @@ theorem no_bounded_domain_continuousAt_source_correction_for_large_observation
 
 #print axioms no_bounded_domain_continuousAt_source_correction_for_large_observation
 
+/-- Even after adding arbitrary positive and negative residual sources, a
+bounded-domain witness cannot match the whole-plane point-source potential on
+the large observation disc if both residual potentials are continuous at the
+atom and the negative residual kernel is integrable there almost everywhere. -/
+theorem no_changed_source_continuous_residual_for_large_observation
+    {V : Set ℂ} {η₁ η₂ : Measure ℂ} {q : ℂ → ℝ}
+    (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V)
+    (hq : ContinuousAt q 0)
+    (h₁ : ContinuousAt (greenPotential V η₁) 0)
+    (h₂ : ContinuousAt (greenPotential V η₂) 0)
+    (hi : ∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      Integrable (greenFunction V x) η₂) :
+    ¬ (∀ᵐ x ∂(volume + Measure.dirac (0 : ℂ)).restrict (ball 0 (2 : ℝ)),
+      -greenPotential univ (Measure.dirac 0) x =
+        q x + greenPotential V η₁ x - greenPotential V (Measure.dirac 0 + η₂) x) := by
+  intro heq
+  apply no_bounded_domain_continuousAt_source_correction_for_large_observation (ρ := 2) (R := 2)
+    (by norm_num) (by norm_num) (by norm_num) hV hsub
+  refine ⟨fun x => -q x - greenPotential V η₁ x + greenPotential V η₂ x,
+    (hq.neg.sub h₁).add h₂, ?_⟩
+  filter_upwards [heq, hi] with x hx hix
+  have hd : Integrable (greenFunction V x) (Measure.dirac (0 : ℂ)) :=
+    integrable_dirac enorm_lt_top
+  have hsum : greenPotential V (Measure.dirac (0 : ℂ) + η₂) x =
+      greenPotential V (Measure.dirac 0) x + greenPotential V η₂ x :=
+    integral_add_measure hd hix
+  rw [hsum] at hx
+  linarith
+
+#print axioms no_changed_source_continuous_residual_for_large_observation
+
 /-- In particular, a correction continuous on the observation disc cannot exist. -/
 theorem no_bounded_domain_continuous_source_correction_for_large_observation
     {V : Set ℂ} (hV : Bornology.IsBounded V) (hsub : ball (0 : ℂ) 2 ⊆ V) :

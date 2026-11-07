@@ -18,6 +18,16 @@ For the larger observation set `Λ = ball 0 2`, the new theorem `no_concentric_d
 
 The stronger theorem `no_bounded_domain_continuousAt_source_correction_for_large_observation` rules out unchanged-source localization to **every bounded domain** containing `ball 0 R`, for any `R > 1`, even if the correction is only assumed continuous at the atom and observations are limited to `ball 0 ρ` for any `0 < ρ ≤ R`. Domain monotonicity bounds the new Green potential below by the radius-two disc potential almost everywhere nearby, forcing the correction below a strictly negative constant there; the observed atom forces its value at the atom to be zero. `no_bounded_domain_pointwise_source_correction_for_large_observation` records the obstruction for pointwise equality, connecting it to the universal-measure reduction below. Changing the source measures remains a possible route, so this still does not refute the target.
 
+`no_changed_source_continuous_residual_for_large_observation` extends the
+large-disc obstruction to changed sources: the bounded-domain positive
+source can be arbitrary and its negative source can be `dirac 0 + η₂`.
+The result explicitly assumes continuity at the atom of the harmonic term
+and both residual potentials, and integrability of the negative residual
+kernel almost everywhere for `volume + dirac 0` on the observation disc.
+Under those conditions, no matching representative exists. It does not show
+that arbitrary candidate sources have this decomposition or satisfy these
+regularity and integrability conditions, and is not a full counterexample.
+
 The representative property is downward closed under absolute continuity of restricted observation measures: `hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous` transfers an existing representative result to any dominated measure. This reduction does not establish the property for the dominating measure.
 
 ## Universal measures require pointwise representatives
