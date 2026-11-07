@@ -4,6 +4,7 @@ import LatticeProb.Bonanno.LQGMetric.Field.MarkovGermVerPot
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgGP
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgKolm
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgBridge
+import LatticeProb.Bonanno.LQGMetric.Field.ExistGFF
 
 /-! # Coordinatewise modifications of the whole-plane GFF
 
@@ -995,6 +996,157 @@ theorem normalizedGFF_exists_joint_circle_version
     exact LQGMetric.CircleAvg.covariance_cInc hh.1 hr one_pos hs one_pos z 0 w 0
 
 #print axioms normalizedGFF_exists_joint_circle_version
+
+/-- Leonardo Bonanno's circle-average construction has a coordinatewise
+measurable jointly Gaussian version which is jointly continuous almost surely. -/
+theorem normalizedGFF_exists_measurable_joint_circle_version
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P) :
+    ∃ H : ℝ → ℂ → Ω → ℝ,
+      (∀ r z, Measurable (H r z)) ∧
+      (∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => H p.1 p.2 ω)
+        (Set.Ioi 0 ×ˢ Set.univ)) ∧
+      (∀ r, 0 < r → ∀ z, H r z =ᵐ[P] LQGMetric.CircleAvg.cInc h r z 1 0) ∧
+      IsGaussianProcess (Sum.elim (fun (φ : LQGMetric.TestC) ω => h ω φ)
+        (fun (p : Set.Ioi (0 : ℝ) × ℂ) ω => H p.1 p.2 ω)) P ∧
+      ∀ r s, 0 < r → 0 < s → ∀ z w,
+        cov[H r z, H s w; P] = wholePlaneGFFCov (.circle r z) (.circle s w) := by
+  obtain ⟨Y, hYc, hYZ, hYlim⟩ := QuantumZipper.KolmN.exists_continuous_modification_N
+    (Z := LQGMetric.CircleAvg.kolmProc h)
+    (fun q => (LQGMetric.CircleAvg.measurable_cInc hh.1 _ _ _ _).aemeasurable)
+    (p := 8) (by norm_num) (a := 4) (by norm_num)
+    (LQGMetric.CircleAvg.momentBound_kolmProc hh.1)
+  let qOf : ℝ × ℂ → (Fin 3 → ℝ) := fun p => ![Real.log p.1, p.2.re, p.2.im]
+  let H : ℝ → ℂ → Ω → ℝ := fun r z ω => limUnder atTop fun n =>
+    LQGMetric.CircleAvg.kolmProc h (QuantumZipper.KolmD.rndD n (qOf (r, z))) ω
+  have hHmeas : ∀ r z, Measurable (H r z) := by
+    intro r z
+    exact (StronglyMeasurable.limUnder (fun n =>
+      (LQGMetric.CircleAvg.measurable_cInc hh.1 _ _ _ _).stronglyMeasurable)).measurable
+  have hHae : ∀ r, 0 < r → ∀ z,
+      H r z =ᵐ[P] LQGMetric.CircleAvg.cInc h r z 1 0 := by
+    intro r hr z
+    filter_upwards [hYlim, hYZ (qOf (r, z))] with ω hlim hy
+    have hl := (hlim (qOf (r, z))).limUnder_eq
+    change H r z ω = _
+    rw [show H r z ω = Y (qOf (r, z)) ω from hl]
+    rw [hy]
+    simp only [LQGMetric.CircleAvg.kolmProc, LQGMetric.CircleAvg.parR,
+      LQGMetric.CircleAvg.parZ, qOf]
+    simp [Real.exp_log hr]
+  refine ⟨H, hHmeas, ?_, hHae, ?_, ?_⟩
+  · filter_upwards [hYlim] with ω hlim
+    have hq : ContinuousOn qOf (Set.Ioi 0 ×ˢ Set.univ) := by
+      refine continuousOn_pi.mpr fun i => ?_
+      fin_cases i
+      · exact (Real.continuousOn_log.comp continuous_fst.continuousOn fun p hp =>
+          (ne_of_gt (show (0 : ℝ) < p.1 from hp.1))).congr fun p _ => rfl
+      · exact (Complex.continuous_re.comp continuous_snd).continuousOn
+      · exact (Complex.continuous_im.comp continuous_snd).continuousOn
+    apply ((hYc ω).comp_continuousOn hq).congr
+    intro p hp
+    exact (hlim (qOf p)).limUnder_eq
+  · let f : LQGMetric.TestC ⊕ (Set.Ioi (0 : ℝ) × ℂ) →
+        LQGMetric.TestC ⊕ LQGMetric.CircleAvg.IncIdx :=
+      Sum.elim Sum.inl (fun p => Sum.inr (p, (⟨1, Set.mem_Ioi.mpr one_pos⟩, 0)))
+    have hg := (normalizedGFF_pairings_increments_gaussian hh).comp_right f
+    refine hg.congr fun p => ?_
+    cases p with
+    | inl φ => exact Eventually.of_forall fun _ => rfl
+    | inr p => exact (hHae p.1 p.1.2 p.2).symm
+  · intro r s hr hs z w
+    rw [LQGMetric.CircleAvg.covariance_congr_ae (hHae r hr z) (hHae s hs w),
+      wholePlaneGFFCov_circle_eq_gffCircleCov hs,
+      LQGMetric.CircleAvg.gffCircleCov_eq_incCov hr hs]
+    exact LQGMetric.CircleAvg.covariance_cInc hh.1 hr one_pos hs one_pos z 0 w 0
+
+#print axioms normalizedGFF_exists_measurable_joint_circle_version
+
+/-- Leonardo Bonanno's normalized distribution-valued GFF supplies all six
+fields of the project whole-plane GFF, with the original test pairings. -/
+theorem normalizedGFF_exists_projectGFF
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P) :
+    ∃ (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc ∧
+      (∀ ω (φ : LQGMetric.TestC), hC ω φ = h ω φ) ∧
+      ∀ r, 0 < r → ∀ z, (fun ω => hcirc ω r z) =ᵐ[P]
+        LQGMetric.CircleAvg.cInc h r z 1 0 := by
+  classical
+  obtain ⟨H, hHm, hHc, hHae, hHg, hHcov⟩ :=
+    normalizedGFF_exists_measurable_joint_circle_version hh
+  let hC : Ω → (ℂ → ℝ) → ℝ := fun ω φ =>
+    if hφ : IsTestFunction Set.univ φ then h ω ⟨φ, hφ.1, hφ.2.1, hφ.2.2⟩ else 0
+  have hCeq (ω : Ω) (φ : ℂ → ℝ) (hφ : IsTestFunction Set.univ φ) :
+      hC ω φ = h ω ⟨φ, hφ.1, hφ.2.1, hφ.2.2⟩ := by simp [hC, hφ]
+  let idx : GFFObservable.Admissible → LQGMetric.TestC ⊕ (Set.Ioi (0 : ℝ) × ℂ) :=
+    fun o => by
+      rcases o with ⟨o, ho⟩
+      cases o with
+      | pairing φ => exact Sum.inl ⟨φ, ho.1, ho.2.1, ho.2.2⟩
+      | circle r z => exact Sum.inr (⟨r, ho⟩, z)
+  refine ⟨hC, (fun ω r z => H r z ω), ?_, ?_, hHae⟩
+  · refine ⟨?_, ?_, ?_, ?_, ?_, hHc⟩
+    · intro φ hφ
+      simpa only [hCeq _ φ hφ] using LQGMetric.MarkovGerm.measurable_eval hh.1 ⟨φ, hφ.1, hφ.2.1, hφ.2.2⟩
+    · intro r z hr
+      exact hHm r z
+    · have hg := hHg.comp_right idx
+      refine hg.congr fun o => ?_
+      rcases o with ⟨o, ho⟩
+      cases o with
+      | pairing φ =>
+        filter_upwards with ω
+        exact (hCeq ω φ ho).symm
+      | circle r z => exact Eventually.of_forall fun _ => rfl
+    · intro o ho
+      cases o with
+      | pairing φ =>
+        simp only [GFFObservable.eval, hCeq _ φ ho]
+        exact (normalizedGFF_allPairings_gaussian hh).2 ⟨φ, ho.1, ho.2.1, ho.2.2⟩
+      | circle r z =>
+        change ∫ ω, H r z ω ∂P = 0
+        rw [integral_congr_ae (hHae r ho z)]
+        exact LQGMetric.CircleAvg.integral_cInc hh.1 ho one_pos z 0
+    · intro o o' ho ho'
+      cases o with
+      | pairing φ =>
+        cases o' with
+        | pairing ψ =>
+          simp only [GFFObservable.eval, hCeq _ φ ho, hCeq _ ψ ho']
+          exact normalizedGFF_pairing_covariance_eq_project hh ⟨φ, ho.1, ho.2.1, ho.2.2⟩ ⟨ψ, ho'.1, ho'.2.1, ho'.2.2⟩
+        | circle s w =>
+          simp only [GFFObservable.eval, hCeq _ φ ho]
+          rw [covariance_comm, LQGMetric.CircleAvg.covariance_congr_ae
+            (hHae s ho' w) (Eventually.of_forall fun _ => rfl),
+            normalizedGFF_circleIncrement_pairing_covariance_eq_project hh ⟨φ, ho.1, ho.2.1, ho.2.2⟩ ho' w]
+          exact (wholePlaneGFFCov_pairing_circle_symm ⟨φ, ho.1, ho.2.1, ho.2.2⟩ w ho').symm
+      | circle r z =>
+        cases o' with
+        | pairing ψ =>
+          simp only [GFFObservable.eval, hCeq _ ψ ho']
+          rw [LQGMetric.CircleAvg.covariance_congr_ae
+            (hHae r ho z) (Eventually.of_forall fun _ => rfl)]
+          exact normalizedGFF_circleIncrement_pairing_covariance_eq_project hh ⟨ψ, ho'.1, ho'.2.1, ho'.2.2⟩ ho z
+        | circle s w => exact hHcov r s ho ho' z w
+  · intro ω φ
+    exact hCeq ω φ ⟨φ.contDiff, φ.hasCompactSupport, Set.subset_univ _⟩
+
+#print axioms normalizedGFF_exists_projectGFF
+
+/-- Leonardo Bonanno's normalized whole-plane GFF construction yields a
+probability space carrying the project whole-plane GFF. -/
+theorem exists_projectWholePlaneGFF :
+    ∃ (Ω : Type) (_ : MeasurableSpace Ω) (P : Measure Ω)
+      (_ : IsProbabilityMeasure P) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc := by
+  obtain ⟨Ω, m, P, hP, h, hh⟩ := LQGMetric.GFFExist.exists_normalizedWPGFF
+  let : MeasurableSpace Ω := m
+  let : IsProbabilityMeasure P := hP
+  obtain ⟨hC, hcirc, hg, _, _⟩ := normalizedGFF_exists_projectGFF hh
+  exact ⟨Ω, m, P, hP, hC, hcirc, hg⟩
+
+#print axioms exists_projectWholePlaneGFF
 
 /-- A measurable coordinatewise modification preserves all six fields of the
 whole-plane GFF specification, with circle averages unchanged. -/

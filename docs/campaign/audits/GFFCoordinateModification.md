@@ -15,11 +15,9 @@ counterexample: from **any** project-interface GFF, it constructs a GFF on its
 product with a standard real Gaussian probability space, with identical circle
 averages and pairings that agree at every fixed test almost surely, such that
 at almost every sample there is a test witnessing failure of scalar linearity.
-The counterexample retains all six GFF fields. It requires existence of a
-starting `IsWholePlaneGFF`; the code does not establish that existence.
-Consequently it rules out proving a common samplewise representation from the
-GFF predicate alone whenever that predicate is inhabited, but does not itself
-produce an unconditional inhabitant.
+The counterexample retains all six GFF fields. Its starting GFF can be
+obtained unconditionally from `exists_projectWholePlaneGFF`, so it rules out
+proving a common samplewise representation from the GFF predicate alone.
 
 The proof takes a smooth compactly supported nonzero bump φ₀ and the injective
 curve `a r = r • φ₀`. A diagonal spike changes a pairing only at `a t`, where
@@ -80,9 +78,15 @@ it also has the project-prescribed circle-circle covariance.
 additive logarithmic kernel away from the diagonal, and
 `wholePlaneGFFCov_circle_eq_gffCircleCov` removes the diagonal discrepancy
 under circle smearing using its codiscreteness.
-`Section6.map_pairingProc_eq`
-(AnnulusLawTransfer.lean:96) transfers only mean-zero pairing laws starting
-from an existing project GFF. A direct existence bridge to all six fields of
-this repository's GFF interface, including the mixed test-circle
-covariance, has not been established here.
+`normalizedGFF_circleIncrement_pairing_covariance_eq_project` identifies the
+mixed covariance using convergence in L² of mollified increments and the
+project kernel, including its normalization. The measurable dyadic-limit
+version `normalizedGFF_exists_measurable_joint_circle_version` preserves the
+joint Gaussian law and has almost surely continuous paths.
+`normalizedGFF_exists_projectGFF` assembles all six project fields and
+preserves Bonanno’s test pairings and circle increments at each fixed circle.
+Combining this with Bonanno’s existence theorem gives the unconditional
+`exists_projectWholePlaneGFF`. `Section6.map_pairingProc_eq`
+(AnnulusLawTransfer.lean:96) transfers mean-zero pairing laws starting
+from an existing project GFF.
 No numbered-result closure follows.
