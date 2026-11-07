@@ -25,10 +25,9 @@ theorem IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_variable_core_seed
     (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
     (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ x, ψ x = 1)
     (c : ℝ≥0∞) (ha : 0 ≤ a) (hmargin : a + a < σ)
-    (ι : ℕ → Type*)
     (hseeds : ∀ F : Set Ω,
       MeasurableSet[MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance] F →
-      0 < P F → ∃ (n : ℕ) (S' O O₀ O₁ C : Set ℂ) (H J : ι n → Set ℂ) (A : Set Ω),
+      0 < P F → ∃ (ι : Type) (S' O O₀ O₁ C : Set ℂ) (H J : ι → Set ℂ) (A : Set Ω),
         S' ⊆ S ∧ MeasurableSet S' ∧ A ⊆ F ∧ 0 < P A ∧
         IsOpen O ∧ IsOpen O₀ ∧ IsConnected O₀ ∧ O₀ ⊆ O ∧ IsOpen O₁ ∧
         IsCompact (closure O₀) ∧ closure O₀ ⊆ O₁ ∧ Disjoint O₁ S' ∧ Disjoint O₁ U ∧
@@ -43,7 +42,7 @@ theorem IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_variable_core_seed
   apply h.condExp_absolute_mass_diameter_pos_of_shifts hμ S K U hS hbounded hbufferS
     hfront hδ hpin 𝔇 h𝔇 ψ hψ hψint c (ENNReal.ofReal σ)
   intro F hF hFp
-  obtain ⟨n, S', O, O₀, O₁, C, H, J, A, hsub, hS', hAF, hAp,
+  obtain ⟨ι, S', O, O₀, O₁, C, H, J, A, hsub, hS', hAF, hAp,
     hO, hO₀, hO₀conn, hO₀O, hO₁, hcompact, hO₀O₁, hdisj, houtside,
     hJopen, hJO, hCcompact, hCO₀, hbuffer, hcover, hattach, hA⟩ := hseeds F hF hFp
   obtain ⟨g, hg, _, hgO, hpos⟩ :=
