@@ -31,7 +31,7 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     (hKc : IsCompact K) (hK : IsConnected K) (hW : IsOpen W) (hKW : K ⊆ W)
     (hU : IsClosed U) (hKU : Disjoint K U) (hbuffer : W ⊆ thickening δ K)
     (hSW : closedSquare z L ⊆ W)
-    (hHK : ∀ n (i : Fin (2 ^ n) × Fin (2 ^ n)),
+    (hHK : ∀ᶠ n in atTop, ∀ (i : Fin (2 ^ n) × Fin (2 ^ n)),
       complexIntermediateGridSquare z (L / (2 : ℝ) ^ n) i ⊆ K)
     (hm : MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance ≤ m₀)
     (b : ℕ → ℝ≥0∞) (p : ℝ) (hp : 2 < p) (e : ℕ → ℝ) (he : Tendsto e atTop (𝓝 0))
@@ -51,9 +51,22 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     (closedSquare z L) K U (IsCompact.reProdIm isCompact_Icc isCompact_Icc).isClosed.measurableSet
     hbounded hbufferS hfront hδ hpin 𝔇 h𝔇 ψ hψ hψint c ha hmargin
   intro F hF hFp
-  obtain ⟨n, j, hJ, hpos⟩ := h.exists_conditional_intermediate_seed ξ _ hm μ
-    (fun ω => 𝔇 (hC ω)) z L hL hW hSW b c (ENNReal.ofReal a) p hp e he
-    hH hcond hsmall hbound F hF hFp
+  obtain ⟨N, hN⟩ := eventually_atTop.1 (hHK.and
+    (complex_enlarged_dyadic_square_eventually_subset_open z L hL hW hSW))
+  have hfail := h.tendsto_dyadic_square_diameters_of_power_error ξ
+    (dyadicIntermediateInternalDiameter (fun ω => 𝔇 (hC ω)) z L)
+    b (ENNReal.ofReal a) p hp e he hsmall hbound
+  let : IsProbabilityMeasure P := h.isProbabilityMeasure
+  obtain ⟨n, hn, j, hpos⟩ := exists_conditional_mass_tile_seed_after P _ hm μ
+    (closedSquare z L)
+    (fun n j => squareCoordinates z ⁻¹' gridSquareClass (N := 2 ^ n) (L / 2 ^ n) j)
+    (fun n => {ω | ∀ i, dyadicIntermediateInternalDiameter
+      (fun ω => 𝔇 (hC ω)) z L n i ω < ENNReal.ofReal a}) c N
+    (complex_closed_square_subset_dyadic_classes z L hL) hH hcond hfail F hF hFp
+  have hJ : ∀ i : Fin (2 ^ n) × Fin (2 ^ n),
+      complexOpenEnlargedGridSquare z (L / (2 : ℝ) ^ n) i ⊆ W := by
+    intro i
+    exact (complexOpenEnlargedGridSquare_subset z _ i).trans ((hN n hn).2 i)
   let r : ℝ := L / (2 : ℝ) ^ n
   have hr : 0 < r := by dsimp [r]; positivity
   let ι := {i : Fin (2 ^ n) × Fin (2 ^ n) // squareParity i = j}
@@ -64,14 +77,23 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
   obtain ⟨hCc, _, hcover, hattach, _, V, T, hVo, hVc, hCV, hVcompact,
     hTo, hVT, hTW, hTU, hTS⟩ :=
       dyadic_intermediate_connected_core_geometry z r hr j K W U hKc hK hW hKW hU hKU
-        (fun i => hHK n i.1)
+        (fun i => (hN n hn).1 i.1)
   let A : Set Ω := {ω | ω ∈ F ∧ (∀ i : Fin (2 ^ n) × Fin (2 ^ n), ∀ x ∈
         complexIntermediateGridSquare z r i, ∀ y ∈ complexIntermediateGridSquare z r i,
           internalMetric (𝔇 (hC ω)) (complexOpenEnlargedGridSquare z r i) x y ≤ ENNReal.ofReal a) ∧
         (2 : ℝ≥0∞) * c < μ ω S'}
+  have hpos' : 0 < P A := hpos.trans_le (measure_mono (by
+    intro ω hω
+    refine ⟨hω.1, ?_, hω.2.2⟩
+    intro i x hx y hy
+    have hle : internalMetric (𝔇 (hC ω))
+        (complexOpenEnlargedGridSquare z r i) x y ≤
+        dyadicIntermediateInternalDiameter (fun ω => 𝔇 (hC ω)) z L n i ω := by
+      exact le_iSup_of_le x (le_iSup_of_le hx (le_iSup_of_le y (le_iSup_of_le hy le_rfl)))
+    exact hle.trans (hω.2.1 i).le))
   refine ⟨ι, S', W, V, T, C, H, J, A, (dyadic_class_closed_and_subset z L hL n j).2,
     (dyadic_class_closed_and_subset z L hL n j).1.measurableSet,
-    (fun ω hω => hω.1), hpos, hW, hVo, hVc, ?_, hTo, hVcompact, hVT,
+    (fun ω hω => hω.1), hpos', hW, hVo, hVc, ?_, hTo, hVcompact, hVT,
     hTS, hTU, ?_, ?_, hCc, hCV, hbuffer, hcover, hattach, ?_⟩
   · exact subset_closure.trans (hVT.trans hTW)
   · intro i
