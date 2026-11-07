@@ -68,4 +68,26 @@ theorem IsLiouvilleGraphDimension.unique_of_ae {Ω : Type*} [MeasurableSpace Ω]
   obtain ⟨ω, hω, h'ω⟩ := (h.and h').exists
   exact hω.unique h'ω
 
+/-- A graph-distance dimension shared by every normalized whole-plane GFF realization.
+
+The fixed distinct points `0` and `1` suffice to identify the exponent. -/
+def IsWholePlaneLQGDimension (γ dimension : ℝ) : Prop :=
+  0 < dimension ∧
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
+    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ →
+    ∀ᵐ ω ∂P, IsLiouvilleGraphDimension (μ ω) 0 1 dimension
+
+/-- The graph-distance choice of LQG dimension; the default is used only without a witness. -/
+noncomputable def lqgGraphDimension (γ : ℝ) : ℝ := by
+  classical
+  exact if h : ∃ dimension, IsWholePlaneLQGDimension γ dimension then Classical.choose h else 1
+
+/-- Whenever a graph-distance witness exists, the chosen dimension is a witness. -/
+theorem isWholePlaneLQGDimension_lqgGraphDimension {γ : ℝ}
+    (h : ∃ dimension, IsWholePlaneLQGDimension γ dimension) :
+    IsWholePlaneLQGDimension γ (lqgGraphDimension γ) := by
+  classical
+  simpa only [lqgGraphDimension, dite_eq_left h] using Classical.choose_spec h
+
 end HarmonicBalls
