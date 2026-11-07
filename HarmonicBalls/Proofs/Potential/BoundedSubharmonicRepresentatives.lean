@@ -100,6 +100,20 @@ theorem boundedSubharmonicBallTestClass_smul {Λ : Set ℂ} {z : ℂ} {f : ℂ �
 
 #print axioms boundedSubharmonicBallTestClass_smul
 
+/-- Subtracting a constant preserves bounded-domain subharmonic tests. -/
+theorem boundedSubharmonicBallTestClass_sub_const {Λ : Set ℂ} {z : ℂ} {f : ℂ → ℝ}
+    (hf : f ∈ boundedSubharmonicBallTestClass Λ z) (c : ℝ) :
+    (fun x => f x - c) ∈ boundedSubharmonicBallTestClass Λ z := by
+  obtain ⟨O, K, ν₁, ν₂, q, hO, hOb, hΛ, hK, hKO, hν₁, hν₂,
+    hν₁K, hν₂K, hν₁Λ, hq, hν₂z, hi, hf⟩ := hf
+  refine ⟨O, K, ν₁, ν₂, q - fun _ => c, hO, hOb, hΛ, hK, hKO,
+    hν₁, hν₂, hν₁K, hν₂K, hν₁Λ, hq.sub (harmonicOnNhd_const c), hν₂z, hi, ?_⟩
+  ext x
+  simp only [Pi.sub_apply, hf, Pi.add_apply]
+  ring
+
+#print axioms boundedSubharmonicBallTestClass_sub_const
+
 /-- Nonnegative scaling preserves the frozen class of subharmonic tests. -/
 theorem subharmonicBallTestClass_smul {Λ : Set ℂ} {z : ℂ} {f : ℂ → ℝ}
     (hf : f ∈ subharmonicBallTestClass Λ z) (c : ℝ≥0) :
@@ -317,6 +331,30 @@ theorem greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball
 
 #print axioms greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball
 
+/-- The whole-plane kernel is integrable against a smooth annular density at
+every pole, including poles in the annulus. -/
+theorem integrable_greenFunction_univ_circleDensity
+    {r δ : ℝ} (hr : 0 < r) (hδ : 0 < δ) (z p : ℂ) :
+    Integrable (greenFunction univ p) (volume.withDensity (fun x => ENNReal.ofReal
+      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) := by
+  let density : ℂ → ℝ := fun x =>
+    (∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x
+  have hd : Continuous density := continuous_const.mul (circleDensity_contDiff r δ hδ z).continuous
+  have hn : ∀ x, 0 ≤ density x := fun x =>
+    mul_nonneg (inv_nonneg.mpr (circleDensity_integral_pos hr.le hδ 0).le)
+      (circleDensity_nonneg r δ hδ z x)
+  apply (integrable_withDensity_iff_integrable_smul' hd.measurable.ennreal_ofReal
+    (Filter.Eventually.of_forall fun _ => ENNReal.ofReal_lt_top)).2
+  have h := (integrable_circleDensity_mul_log_norm_sub hr.le hδ z p).const_mul
+    ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * (-(2 * Real.pi)⁻¹))
+  convert h using 1
+  ext x
+  simp only [ENNReal.toReal_ofReal (hn x), smul_eq_mul, greenFunction_univ_eq_newtonKernel,
+    newtonKernel, density, norm_sub_rev]
+  ring
+
+#print axioms integrable_greenFunction_univ_circleDensity
+
 /-- A whole-plane annular source can be removed entirely when the pole and
 observation set lie inside the shell. The observation measure is arbitrary. -/
 theorem univ_circleDensity_has_bounded_representative
@@ -344,6 +382,48 @@ theorem univ_circleDensity_has_bounded_representative
 
 #print axioms univ_circleDensity_has_bounded_representative
 
+/-- An existing representative for an arbitrary negative source survives the
+addition of an annular source surrounding the observations. Integrability of
+the original kernel is required at the pole and almost everywhere, so the
+Bochner integral's nonintegrable values are not silently changed. -/
+theorem univ_add_circleDensity_has_bounded_representative
+    {r δ η : ℝ} (hr : 0 < r) (hδ : 0 < δ) (hwidth : δ ≤ r * η)
+    {μ ν : Measure ℂ} {Λ : Set ℂ} {p z : ℂ}
+    (hΛm : MeasurableSet Λ) (hΛ : ∀ x ∈ Λ, ‖z - x‖ ≤ r - η)
+    (hp : ‖z - p‖ ≤ r - η)
+    (hip : Integrable (greenFunction univ p) ν)
+    (hiae : ∀ᵐ x ∂μ.restrict Λ, Integrable (greenFunction univ x) ν)
+    (hrep : ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential univ ν) p = g p ∧ (-greenPotential univ ν) =ᵐ[μ.restrict Λ] g) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential univ (ν + volume.withDensity (fun x => ENNReal.ofReal
+        ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x)))) p = g p ∧
+      (-greenPotential univ (ν + volume.withDensity (fun x => ENNReal.ofReal
+        ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))))
+          =ᵐ[μ.restrict Λ] g := by
+  let σ := volume.withDensity (fun x => ENNReal.ofReal
+    ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))
+  obtain ⟨g, hg, hgp, hgae⟩ := hrep
+  refine ⟨fun x => g x - greenPotential univ σ z,
+    boundedSubharmonicBallTestClass_sub_const hg _, ?_, ?_⟩
+  · have hsum : greenPotential univ (ν + σ) p =
+        greenPotential univ ν p + greenPotential univ σ p :=
+      integral_add_measure hip (integrable_greenFunction_univ_circleDensity hr hδ z p)
+    simp only [Pi.neg_apply] at hgp ⊢
+    rw [hsum, greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball hr hδ hwidth hp]
+    linarith
+  · have hs : ∀ᵐ x ∂μ.restrict Λ, ‖z - x‖ ≤ r - η :=
+      ae_restrict_of_forall_mem hΛm hΛ
+    filter_upwards [hiae, hgae, hs] with x hix hgx hx
+    have hsum : greenPotential univ (ν + σ) x =
+        greenPotential univ ν x + greenPotential univ σ x :=
+      integral_add_measure hix (integrable_greenFunction_univ_circleDensity hr hδ z x)
+    simp only [Pi.neg_apply] at hgx ⊢
+    rw [hsum, greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball hr hδ hwidth hx]
+    linarith
+
+#print axioms univ_add_circleDensity_has_bounded_representative
+
 /-- The annular whole-plane potential is a valid frozen test for every pole;
 the source is compactly supported, finite, and non-atomic. -/
 theorem neg_univ_circleDensity_mem_subharmonicBallTestClass
@@ -356,9 +436,6 @@ theorem neg_univ_circleDensity_mem_subharmonicBallTestClass
   let ν := volume.withDensity (fun x => ENNReal.ofReal (density x))
   let K := tsupport (circleDensity r δ hδ z)
   have hd : Continuous density := continuous_const.mul (circleDensity_contDiff r δ hδ z).continuous
-  have hn : ∀ x, 0 ≤ density x := fun x =>
-    mul_nonneg (inv_nonneg.mpr (circleDensity_integral_pos hr.le hδ 0).le)
-      (circleDensity_nonneg r δ hδ z x)
   have hdi : Integrable density volume := by
     exact ((circleDensity_contDiff r δ hδ z).continuous.integrable_of_hasCompactSupport
       (circleDensity_hasCompactSupport hr.le hδ z)).const_mul _
@@ -375,15 +452,7 @@ theorem neg_univ_circleDensity_mem_subharmonicBallTestClass
   have hνp : ν {p} = 0 :=
     (withDensity_absolutelyContinuous volume _) (measure_singleton p)
   have hi : Integrable (greenFunction univ p) ν := by
-    apply (integrable_withDensity_iff_integrable_smul' hd.measurable.ennreal_ofReal
-      (Filter.Eventually.of_forall fun _ => ENNReal.ofReal_lt_top)).2
-    have h := (integrable_circleDensity_mul_log_norm_sub hr.le hδ z p).const_mul
-      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * (-(2 * Real.pi)⁻¹))
-    convert h using 1
-    ext x
-    simp only [ENNReal.toReal_ofReal (hn x), smul_eq_mul, greenFunction_univ_eq_newtonKernel,
-      newtonKernel, density, norm_sub_rev]
-    ring
+    exact integrable_greenFunction_univ_circleDensity hr hδ z p
   refine ⟨univ, K, 0, ν, 0, isOpen_univ, subset_univ _, hK, subset_univ _,
     inferInstance, hν, by simp, hνK, by simp, harmonicOnNhd_const 0, hνp, hi, ?_⟩
   change -greenPotential univ ν = (0 : ℂ → ℝ) + greenPotential univ 0 - greenPotential univ ν
@@ -531,6 +600,97 @@ theorem univ_dirac_zero_has_bounded_representative
     rw [greenPotential_univ_dirac_zero_eq_unitDisc hx]
 
 #print axioms univ_dirac_zero_has_bounded_representative
+
+/-- An annular non-atomic source can be removed even when a second negative
+source is an observed atom at the centre of the unit disc. -/
+theorem univ_circleDensity_add_dirac_has_bounded_representative
+    {r δ η : ℝ} (hr : 0 < r) (hδ : 0 < δ) (hwidth : δ ≤ r * η)
+    {μ : Measure ℂ} {Λ : Set ℂ} {p z : ℂ}
+    (hΛ : closure Λ ⊆ ball (0 : ℂ) 1) (hp : p ∈ Λ) (hp0 : p ≠ 0)
+    (hshell : ∀ x ∈ ball (0 : ℂ) 1, ‖z - x‖ ≤ r - η) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential univ ((volume.withDensity (fun x => ENNReal.ofReal
+        ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) +
+        Measure.dirac 0)) p = g p ∧
+      (-greenPotential univ ((volume.withDensity (fun x => ENNReal.ofReal
+        ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) +
+        Measure.dirac 0)) =ᵐ[μ.restrict Λ] g := by
+  let ν := volume.withDensity (fun x => ENNReal.ofReal
+    ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))
+  let q : ℂ → ℝ := fun _ => -greenPotential univ ν z
+  let g := q - greenPotential (ball 0 1) (Measure.dirac 0)
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ p := by
+    refine ⟨ball 0 1, {0}, 0, Measure.dirac 0, q, isOpen_ball, isBounded_ball,
+      hΛ, isCompact_singleton, ?_, inferInstance, inferInstance, ?_, ?_, ?_,
+      harmonicOnNhd_const _, ?_, integrable_dirac enorm_lt_top, ?_⟩
+    · simp
+    · simp
+    · simp
+    · simp
+    · simp [hp0]
+    · ext x
+      simp [g, greenPotential]
+  have heq : ∀ x ∈ ball (0 : ℂ) 1,
+      (-greenPotential univ (ν + Measure.dirac 0)) x = g x := by
+    intro x hx
+    have hsum : greenPotential univ (ν + Measure.dirac 0) x =
+        greenPotential univ ν x + greenPotential univ (Measure.dirac 0) x := by
+      exact integral_add_measure (integrable_greenFunction_univ_circleDensity hr hδ z x)
+        (integrable_dirac enorm_lt_top)
+    simp only [Pi.neg_apply, g, q, Pi.sub_apply]
+    rw [hsum, greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball hr hδ hwidth
+      (hshell x hx), greenPotential_univ_dirac_zero_eq_unitDisc hx]
+    ring
+  refine ⟨g, hg, heq p (hΛ (subset_closure hp)), ?_⟩
+  apply ae_restrict_of_ae_restrict_of_subset (subset_closure.trans hΛ)
+  filter_upwards [ae_restrict_mem isOpen_ball.measurableSet] with x hx
+  exact heq x hx
+
+#print axioms univ_circleDensity_add_dirac_has_bounded_representative
+
+/-- The mixed annular and atomic negative source is an admissible frozen test
+when the pole differs from the atom. -/
+theorem neg_univ_circleDensity_add_dirac_mem_subharmonicBallTestClass
+    {r δ : ℝ} (hr : 0 < r) (hδ : 0 < δ) (z : ℂ) (Λ : Set ℂ) {p : ℂ}
+    (hp0 : p ≠ 0) :
+    -greenPotential univ ((volume.withDensity (fun x => ENNReal.ofReal
+      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) +
+      Measure.dirac 0) ∈ subharmonicBallTestClass Λ p := by
+  let density : ℂ → ℝ := fun x =>
+    (∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x
+  let ν := volume.withDensity (fun x => ENNReal.ofReal (density x))
+  let K := tsupport (circleDensity r δ hδ z)
+  have hd : Continuous density := continuous_const.mul (circleDensity_contDiff r δ hδ z).continuous
+  have hdi : Integrable density volume :=
+    ((circleDensity_contDiff r δ hδ z).continuous.integrable_of_hasCompactSupport
+      (circleDensity_hasCompactSupport hr.le hδ z)).const_mul _
+  let : IsFiniteMeasure ν := isFiniteMeasure_withDensity_ofReal hdi.hasFiniteIntegral
+  have hK : IsCompact K := circleDensity_hasCompactSupport hr.le hδ z
+  have hνK : ν Kᶜ = 0 := by
+    rw [withDensity_apply _ hK.isClosed.measurableSet.compl]
+    apply (lintegral_eq_zero_iff hd.measurable.ennreal_ofReal).2
+    filter_upwards [ae_restrict_mem hK.isClosed.measurableSet.compl] with x hx
+    have hx0 : circleDensity r δ hδ z x = 0 := by
+      by_contra hx'
+      exact hx (subset_closure hx')
+    simp [density, hx0]
+  have hνK' : ν (insert 0 K)ᶜ = 0 :=
+    measure_mono_null (compl_subset_compl.mpr (subset_insert 0 K)) hνK
+  have hνp : ν {p} = 0 :=
+    (withDensity_absolutelyContinuous volume _) (measure_singleton p)
+  refine ⟨univ, insert 0 K, 0, ν + Measure.dirac 0, 0, isOpen_univ,
+    subset_univ _, hK.insert 0, subset_univ _, inferInstance, inferInstance,
+    by simp, ?_, by simp, harmonicOnNhd_const 0, ?_, ?_, ?_⟩
+  · simp [hνK']
+  · simp [hνp, hp0]
+  · exact (integrable_greenFunction_univ_circleDensity hr hδ z p).add_measure
+      (integrable_dirac enorm_lt_top)
+  · change -greenPotential univ (ν + Measure.dirac 0) =
+      (0 : ℂ → ℝ) + greenPotential univ 0 - greenPotential univ (ν + Measure.dirac 0)
+    ext x
+    simp [greenPotential]
+
+#print axioms neg_univ_circleDensity_add_dirac_mem_subharmonicBallTestClass
 
 /-- The difference of two whole-plane point potentials is an admissible test
 when the positive atom is outside the observation set and the negative atom is

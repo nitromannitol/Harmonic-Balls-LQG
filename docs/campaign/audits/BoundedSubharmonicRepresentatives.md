@@ -71,6 +71,18 @@ and uses the constant harmonic representative, for an arbitrary observation
 measure. The shell identity is pointwise, including every observed atom. This
 is a special geometry, not a construction for general sources or domains.
 
+`univ_circleDensity_add_dirac_has_bounded_representative` combines the annular
+source with a negative Dirac source at the centre of the unit disc. The new
+representative removes the annular source but retains the Dirac source, and
+works for arbitrary observation measures, including those charging the atom.
+`neg_univ_circleDensity_add_dirac_mem_subharmonicBallTestClass` checks the
+mixed source against the complete frozen carrier. More generally,
+`univ_add_circleDensity_has_bounded_representative` transports an existing
+representative for an arbitrary negative measure after adding an annular
+source, subject to explicit integrability of the original kernel at the pole
+and almost everywhere on the observation set. It does not provide the original
+representative or handle its nonintegrability points.
+
 `bounded_representative_of_changed_sources` gives a general transport step for arbitrary
 old and replacement measures, without requiring the two source corrections separately.
 The remaining construction must choose a bounded open `V ⊆ O`, compact `K ⊆ V`,
