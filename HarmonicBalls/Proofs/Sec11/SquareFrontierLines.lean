@@ -5,6 +5,14 @@ import HarmonicBalls.Defs.LBM
 namespace HarmonicBalls
 open MeasureTheory Set
 
+/-- An s-finite measure charges at most countably many lines parallel to
+either coordinate axis. -/
+theorem countable_positive_coordinate_lines (μ : Measure ℂ) [SFinite μ] :
+    Set.Countable {t : ℝ | 0 < μ {x : ℂ | x.re = t}} ∧
+      Set.Countable {t : ℝ | 0 < μ {x : ℂ | x.im = t}} := by
+  exact ⟨Measure.countable_meas_level_set_pos Complex.continuous_re.measurable,
+    Measure.countable_meas_level_set_pos Complex.continuous_im.measurable⟩
+
 /-- The boundary of a positive-side square lies on its four supporting lines. -/
 theorem frontier_closedSquare_subset_lines (z : ℂ) {L : ℝ} (hL : 0 ≤ L) :
     frontier (closedSquare z L) ⊆
@@ -30,4 +38,5 @@ theorem measure_frontier_closedSquare_eq_zero (μ : Measure ℂ) (z : ℂ)
   exact measure_union_null (measure_union_null (measure_union_null h₁ h₂) h₃) h₄
 
 #print axioms measure_frontier_closedSquare_eq_zero
+#print axioms countable_positive_coordinate_lines
 end HarmonicBalls
