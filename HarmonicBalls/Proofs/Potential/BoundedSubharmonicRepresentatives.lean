@@ -2,6 +2,7 @@ import HarmonicBalls.Audit.GreenSubharmonicTestClass
 import HarmonicBalls.Proofs.Potential.GreenBall
 import HarmonicBalls.Proofs.Potential.GreenPositivity
 import HarmonicBalls.Proofs.Sec6.GreenMono
+import HarmonicBalls.Proofs.Sec4.GreenAwayFromPole
 import Mathlib.LinearAlgebra.Lagrange
 import Mathlib.Analysis.Analytic.Polynomial
 import Mathlib.MeasureTheory.Measure.Count
@@ -19,6 +20,30 @@ namespace HarmonicBalls
 
 open MeasureTheory Metric Set InnerProductSpace
 open scoped ENNReal NNReal
+
+/-- A finite positive source which vanishes on an open observation set has an
+integrable Green kernel at every point of that set, even for an unbounded
+original domain. -/
+theorem integrable_greenFunction_of_source_null_on_open
+    {O Λ K : Set ℂ} {ν : Measure ℂ} {x : ℂ}
+    (hO : IsOpen O) (hΛ : IsOpen Λ) (hΛO : Λ ⊆ O)
+    (hx : x ∈ Λ) (hK : IsCompact K) (hKO : K ⊆ O)
+    (hν : IsFiniteMeasure ν) (hνK : ν Kᶜ = 0) (hνΛ : ν Λ = 0) :
+    Integrable (greenFunction O x) ν := by
+  obtain ⟨r, hr, hrΛ⟩ := Metric.isOpen_iff.mp hΛ x hx
+  have hνball : ν (ball x r) = 0 := measure_mono_null hrΛ hνΛ
+  have hνK' : ν (K \ ball x r)ᶜ = 0 := by
+    apply measure_eq_zero_iff_ae_notMem.mpr
+    filter_upwards [measure_eq_zero_iff_ae_notMem.mp hνK,
+      measure_eq_zero_iff_ae_notMem.mp hνball] with y hyK hyball
+    simp only [mem_compl_iff, not_not] at hyK
+    simp only [mem_compl_iff, not_not]
+    exact ⟨hyK, hyball⟩
+  exact greenFunctionIntegrableAwayFromPoleStep_holds O (K \ ball x r) x ν hO
+    (hΛO hx) (hK.diff isOpen_ball) (sdiff_subset.trans hKO)
+    (fun h => h.2 (mem_ball_self hr)) hν hνK'
+
+#print axioms integrable_greenFunction_of_source_null_on_open
 
 /-- A smooth annular source has constant logarithmic potential in the disc
 enclosed by its support. This includes all points of the inner disc, not merely

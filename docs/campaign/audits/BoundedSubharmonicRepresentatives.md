@@ -132,6 +132,12 @@ construct the old representative or resolve arbitrary domains and sources.
 
 `bounded_representative_of_changed_sources` gives a general transport step for arbitrary
 old and replacement measures, without requiring the two source corrections separately.
+For an open observation set, `integrable_greenFunction_of_source_null_on_open`
+proves that the original positive-source kernel is integrable at every observation
+point, including the pole, on arbitrary open original domains. It uses the frozen
+source-null condition and compact concentration, not any assumption on the
+observation measure. This does not address negative-source nonintegrability or
+construct the harmonic correction and replacement sources.
 The remaining construction must choose a bounded open `V ⊆ O`, compact `K ⊆ V`,
 finite replacement measures `η₁, η₂` concentrated on `K`, and a function harmonic
 on `V`, with `η₁ Λ = 0`, `η₂ {z} = 0`, and `Integrable (greenFunction V z) η₂`.
