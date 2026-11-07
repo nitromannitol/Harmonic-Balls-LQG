@@ -52,6 +52,29 @@ def IsLiouvilleGraphDimension (μ : Measure ℂ) (z w : ℂ) (dimension : ℝ) :
     (∀ᶠ index : ℕ in atTop, liouvilleGraphDistance μ (dyadicScale index) z w ≠ ⊤) ∧
     Tendsto (liouvilleGraphExponent μ z w) atTop (𝓝 (1 / dimension))
 
+/-- A full positive-scale graph-distance exponent restricts to the dyadic exponent. -/
+theorem isLiouvilleGraphDimension_of_fullScale {μ : Measure ℂ} {z w : ℂ} {dimension : ℝ}
+    (hpos : 0 < dimension)
+    (hlimit : Tendsto (fun ε : ℝ =>
+      Real.log (liouvilleGraphDistance μ ε z w).toNat / Real.log ε⁻¹)
+      (𝓝[>] (0 : ℝ)) (𝓝 (1 / dimension))) :
+    IsLiouvilleGraphDimension μ z w dimension := by
+  have hscale : Tendsto dyadicScale atTop (𝓝[>] (0 : ℝ)) := by
+    apply tendsto_nhdsWithin_iff.2
+    constructor
+    · exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+    · exact Eventually.of_forall dyadicScale_pos
+  have hfinite : ∀ᶠ ε : ℝ in 𝓝[>] (0 : ℝ), liouvilleGraphDistance μ ε z w ≠ ⊤ := by
+    filter_upwards [hlimit.eventually (Ioi_mem_nhds (one_div_pos.mpr hpos))] with ε hε
+    intro htop
+    simp [htop] at hε
+  refine ⟨hpos, hscale.eventually hfinite, ?_⟩
+  have hlog (n : ℕ) : Real.log (dyadicScale n)⁻¹ = (n : ℝ) * Real.log 2 := by
+    simp [dyadicScale, ← inv_pow, Real.log_pow]
+  change Tendsto (fun n : ℕ => Real.log (liouvilleGraphDistance μ (dyadicScale n) z w).toNat /
+    ((n : ℝ) * Real.log 2)) atTop (𝓝 (1 / dimension))
+  simpa only [Function.comp_def, hlog] using hlimit.comp hscale
+
 /-- A given measure and pair of points determine at most one such dimension. -/
 theorem IsLiouvilleGraphDimension.unique {μ : Measure ℂ} {z w : ℂ} {dimension dimension' : ℝ}
     (h : IsLiouvilleGraphDimension μ z w dimension)
