@@ -66,6 +66,16 @@ theorem dyadicGridCenter_mem_closedSquare (a : ℂ) {L : ℝ} (hL : 0 ≤ L)
     field_simp
   rwa [hp] at hc
 
+/-- The small-square diameter estimate has exponent greater than two
+whenever the Hölder exponent lies below `ξ(Q - 2)`. -/
+theorem metricDiameterTailExponent_gt_two {ξ Q s : ℝ} (hξ : 0 < ξ)
+    (hs : s < ξ * (Q - 2)) :
+    2 < (ξ * Q - s) ^ 2 / (2 * ξ ^ 2) := by
+  have hdiff : 2 * ξ < ξ * Q - s := by nlinarith
+  have hden : 0 < 2 * ξ ^ 2 := by positivity
+  apply (lt_div_iff₀ hden).2
+  nlinarith [sq_nonneg (ξ * Q - s - 2 * ξ)]
+
 /-- The internal diameter used for gluing is bounded by the diameter
 measured within the closed intermediate square itself. -/
 theorem dyadicIntermediateInternalDiameter_le_closedSquareDiameter
@@ -86,4 +96,5 @@ theorem dyadicIntermediateInternalDiameter_le_closedSquareDiameter
 #print axioms complexGridCenter_mem_closedSquare
 #print axioms complexIntermediateGridSquare_eq_centered
 #print axioms dyadicGridCenter_mem_closedSquare
+#print axioms metricDiameterTailExponent_gt_two
 end HarmonicBalls
