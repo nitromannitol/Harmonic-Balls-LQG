@@ -3,6 +3,7 @@ import HarmonicBalls.Proofs.Potential.GreenBall
 import HarmonicBalls.Proofs.Potential.GreenPositivity
 import HarmonicBalls.Proofs.Sec6.GreenMono
 import HarmonicBalls.Proofs.Sec4.GreenAwayFromPole
+import HarmonicBalls.Proofs.Sec10.DominatedComponentRiesz
 import Mathlib.LinearAlgebra.Lagrange
 import Mathlib.Analysis.Analytic.Polynomial
 import Mathlib.MeasureTheory.Measure.Count
@@ -20,6 +21,70 @@ namespace HarmonicBalls
 
 open MeasureTheory Metric Set InnerProductSpace
 open scoped ENNReal NNReal
+
+/-- A distributional Laplacian on an open set is unchanged by a
+volume-almost-everywhere modification on that set. -/
+theorem HasLaplacian.congr_ae_restrict_volume
+    {U : Set ℂ} {f g : ℂ → ℝ} {α β : Measure ℂ}
+    (hU : MeasurableSet U) (hf : HasLaplacian f α β U)
+    (hfg : f =ᵐ[volume.restrict U] g) : HasLaplacian g α β U := by
+  refine ⟨hf.1.congr hfg, fun φ hφ => ?_⟩
+  have hfg' := (ae_restrict_iff' hU).1 hfg
+  have heq : (fun x => f x * Laplacian.laplacian φ x) =ᵐ[volume]
+      fun x => g x * Laplacian.laplacian φ x := by
+    filter_upwards [hfg'] with x hx
+    by_cases hxU : x ∈ U
+    · rw [hx hxU]
+    · rw [laplacian_eq_zero_of_notMem_tsupport (fun hx' => hxU (hφ.2.2 hx')),
+        mul_zero, mul_zero]
+  obtain ⟨hα, hβ, he⟩ := hf.2 φ hφ
+  exact ⟨hα, hβ, (integral_congr_ae heq).symm.trans he⟩
+
+/-- A locally finite Riesz measure carried by an open set is uniquely
+determined by the distributional Laplacian there. -/
+theorem rieszMeasure_eq_of_hasLaplacian_ae
+    {U : Set ℂ} {f g : ℂ → ℝ} {ν η : Measure ℂ}
+    (hU : IsOpen U) (hν : IsLocallyFiniteMeasure ν) (hη : IsLocallyFiniteMeasure η)
+    (hνU : ν Uᶜ = 0) (hηU : η Uᶜ = 0)
+    (hf : HasLaplacian f ν 0 U) (hg : HasLaplacian g η 0 U)
+    (hfg : f =ᵐ[volume.restrict U] g) : ν = η := by
+  have hf' := hf.congr_ae_restrict_volume hU.measurableSet hfg
+  exact le_antisymm
+    (measure_le_of_laplacianGE_hasLaplacian hU hη hνU hf'.laplacianGE hg)
+    (measure_le_of_laplacianGE_hasLaplacian hU hν hηU hg.laplacianGE hf')
+
+/-- Agreement with a unit point-source potential forces the local Riesz
+measure of the replacement to have a unit atom at that point. -/
+theorem rieszMeasure_singleton_eq_one_of_hasLaplacian_ae
+    {U : Set ℂ} {f g : ℂ → ℝ} {η : Measure ℂ} {a : ℂ}
+    (hU : IsOpen U) (ha : a ∈ U) (hη : IsLocallyFiniteMeasure η)
+    (hf : HasLaplacian f (Measure.dirac a) 0 U)
+    (hg : HasLaplacian g (η.restrict U) 0 U)
+    (hfg : f =ᵐ[volume.restrict U] g) : η {a} = 1 := by
+  let : IsLocallyFiniteMeasure η := hη
+  have hdirac : Measure.dirac a Uᶜ = 0 := by simp [Measure.dirac_apply, ha]
+  have hrestrict : (η.restrict U) Uᶜ = 0 := by simp [Measure.restrict_apply, hU.measurableSet]
+  have heq : Measure.dirac a = η.restrict U :=
+    rieszMeasure_eq_of_hasLaplacian_ae hU inferInstance inferInstance hdirac hrestrict hf hg hfg
+  have hmass := congrArg (fun ν : Measure ℂ => ν {a}) heq
+  simpa [Measure.restrict_apply, hU.measurableSet,
+    inter_eq_left.mpr (singleton_subset_iff.mpr ha)] using hmass.symm
+
+/-- The negative Newtonian kernel has a unit Dirac Riesz measure on every
+open set, in the distributional sense. -/
+theorem hasLaplacian_neg_newtonKernel (a : ℂ) (U : Set ℂ) :
+    HasLaplacian (-newtonKernel a) (Measure.dirac a) 0 U := by
+  refine ⟨((locallyIntegrable_newtonKernel a).neg).locallyIntegrableOn U,
+    fun φ hφ => ⟨integrable_dirac enorm_lt_top, integrable_zero_measure, ?_⟩⟩
+  simp only [Pi.neg_apply, neg_mul, integral_neg, integral_zero_measure, sub_zero,
+    integral_dirac]
+  rw [integral_newtonKernel_mul_laplacian (hφ.1.of_le (by norm_num)) hφ.2.1]
+  simp
+
+#print axioms HasLaplacian.congr_ae_restrict_volume
+#print axioms rieszMeasure_eq_of_hasLaplacian_ae
+#print axioms rieszMeasure_singleton_eq_one_of_hasLaplacian_ae
+#print axioms hasLaplacian_neg_newtonKernel
 
 /-- A finite positive source which vanishes on an open observation set has an
 integrable Green kernel at every point of that set, even for an unbounded
@@ -323,6 +388,22 @@ theorem greenFunction_univ_eq_newtonKernel (x y : ℂ) :
 
 #print axioms not_isHarmonicMinorant_univ_newtonKernel
 #print axioms greenFunction_univ_eq_newtonKernel
+
+/-- A replacement agreeing almost everywhere with a whole-plane negative
+Dirac potential has a unit Riesz atom if its local distributional Laplacian
+is represented by the restriction of its negative source. -/
+theorem negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
+    {U : Set ℂ} {g : ℂ → ℝ} {η : Measure ℂ} {a : ℂ}
+    (hU : IsOpen U) (ha : a ∈ U) (hη : IsLocallyFiniteMeasure η)
+    (hg : HasLaplacian g (η.restrict U) 0 U)
+    (heq : -greenPotential univ (Measure.dirac a) =ᵐ[volume.restrict U] g) :
+    η {a} = 1 := by
+  apply rieszMeasure_singleton_eq_one_of_hasLaplacian_ae hU ha hη
+    (hasLaplacian_neg_newtonKernel a U) hg
+  filter_upwards [heq] with x hx
+  simpa [greenPotential, greenFunction_univ_eq_newtonKernel, newtonKernel_comm x a] using hx
+
+#print axioms negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
 
 /-- The whole-plane Green potential of a smooth annular source is constant
 inside its inner disc, including pointwise values for arbitrary observers. -/

@@ -36,6 +36,19 @@ potential and almost-everywhere integrability of the full negative kernel.
 Neither the unit mass nor these assumptions have been derived for an
 arbitrary bounded-witness representative.
 
+`negative_source_unit_atom_of_ae_dirac_and_hasLaplacian` now derives unit
+mass for an arbitrary locally finite negative source when the candidate agrees
+with the whole-plane negative Dirac potential volume-almost everywhere on the
+open observation set and its distributional Laplacian there is its restricted
+negative source. The latter Laplacian identity remains an explicit, unproved
+condition for a general frozen witness; deriving it requires handling arbitrary
+Green kernels and the Bochner nonintegrability values. This result does not
+establish residual-potential continuity or a full counterexample.
+The missing local bridge has conclusion
+`HasLaplacian (q + greenPotential V η₁ - greenPotential V η₂)
+  (η₂.restrict Λ) 0 Λ`, under the frozen bounded-witness conditions and
+`IsOpen Λ`; it is not assumed by the frozen class.
+
 The representative property is downward closed under absolute continuity of restricted observation measures: `hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous` transfers an existing representative result to any dominated measure. This reduction does not establish the property for the dominating measure.
 
 ## Universal measures require pointwise representatives
