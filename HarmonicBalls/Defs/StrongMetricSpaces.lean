@@ -242,6 +242,27 @@ theorem continuous_planeDistribution_affine_of_testMap (r : ℝ)
   exact (continuous_planeDistribution_const_smul (r ^ 2)⁻¹).comp
     (continuous_planeDistribution_precomp pull)
 
+/-- Pullback by a nondegenerate affine map is weakly continuous on distributions. -/
+theorem continuous_planeDistribution_affine (r : ℝ) (hr : r ≠ 0) (z : ℂ) :
+    @Continuous PlaneDistribution PlaneDistribution planeDistributionWeakTopology
+      planeDistributionWeakTopology
+      (fun distribution => (r ^ 2)⁻¹ •
+        (affineTestPullbackCLM r hr z).precompCompactConvergenceCLM ℝ distribution) :=
+  continuous_planeDistribution_affine_of_testMap r (affineTestPullbackCLM r hr z)
+
+/-- The affine pullback of a weakly measurable distribution-valued field is measurable. -/
+theorem measurable_planeDistribution_affine {Ω : Type*} [MeasurableSpace Ω]
+    (field : Ω → PlaneDistribution)
+    (hfield : @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology) field)
+    (r : ℝ) (hr : r ≠ 0) (z : ℂ) :
+    @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology)
+      (fun ω => (r ^ 2)⁻¹ •
+        (affineTestPullbackCLM r hr z).precompCompactConvergenceCLM ℝ (field ω)) := by
+  let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
+  let : MeasurableSpace PlaneDistribution := borel PlaneDistribution
+  let : BorelSpace PlaneDistribution := ⟨rfl⟩
+  exact (continuous_planeDistribution_affine r hr z).measurable.comp hfield
+
 /-- Weak-Borel measurable distribution-valued fields have measurable test-function pairings. -/
 theorem measurable_planeDistribution_evaluation {Ω : Type*} [MeasurableSpace Ω]
     (field : Ω → PlaneDistribution)
@@ -330,6 +351,16 @@ theorem extendPlaneMetricMap_add_continuous (metric : PlaneDistribution → Cont
     (z w : ℂ) : extendPlaneMetricMap metric (addFunPairing pairing f) z w =
       (metric (distribution + Distribution.ofFun (⊤ : Opens ℂ) f MeasureTheory.volume ⊤)).1 (z, w) :=
   extendPlaneMetricMap_of_represents metric _ _ (hrep.add_continuous hf) z w
+
+/-- The extended metric evaluates affine pullback and continuous perturbation on the corresponding distribution. -/
+theorem extendPlaneMetricMap_affine_add_continuous (metric : PlaneDistribution → ContinuousPlaneMetric)
+    (pairing : (ℂ → ℝ) → ℝ) (distribution : PlaneDistribution)
+    (hrep : RepresentsPlaneDistribution pairing distribution) (r : ℝ) (hr : r ≠ 0)
+    (z : ℂ) (f : ℂ → ℝ) (hf : Continuous f) (u v : ℂ) :
+    extendPlaneMetricMap metric (addFunPairing (affinePullbackPairing pairing r z) f) u v =
+      (metric ((r ^ 2)⁻¹ • (affineTestPullbackCLM r hr z).precompCompactConvergenceCLM ℝ distribution +
+        Distribution.ofFun (⊤ : Opens ℂ) f MeasureTheory.volume ⊤)).1 (u, v) :=
+  extendPlaneMetricMap_add_continuous metric _ _ (hrep.affine_pullback r hr z) f hf u v
 
 /-- A represented measurable field gives almost-everywhere measurable metric evaluations. -/
 theorem IsMeasurablePlaneMetricMap.aemeasurable_extend_apply
