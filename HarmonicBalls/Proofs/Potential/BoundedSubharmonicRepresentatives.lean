@@ -528,6 +528,29 @@ theorem unitCircleSource_apply_univ (z : ℂ) :
   rw [unitCircleSource, Measure.map_apply (continuous_circleMap z 1).measurable MeasurableSet.univ]
   simp [Real.volume_Ioc]
 
+/-- Angular measure has finite mass and is concentrated on its unit circle. -/
+theorem unitCircleSource_finite_and_concentrated (z : ℂ) :
+    IsFiniteMeasure (unitCircleSource z) ∧ unitCircleSource z (sphere z 1)ᶜ = 0 := by
+  constructor
+  · exact ⟨by rw [unitCircleSource_apply_univ]; exact ENNReal.ofReal_lt_top⟩
+  · rw [unitCircleSource, Measure.map_apply (continuous_circleMap z 1).measurable
+      (isClosed_sphere.measurableSet.compl)]
+    have hempty : circleMap z 1 ⁻¹' (sphere z 1)ᶜ = ∅ := by
+      ext θ
+      simp
+    rw [hempty, measure_empty]
+
+/-- The angular measure does not charge any point in the circle's interior. -/
+theorem unitCircleSource_singleton_eq_zero {z p : ℂ} (hp : ‖p - z‖ < 1) :
+    unitCircleSource z {p} = 0 := by
+  have hpK : p ∈ (sphere z (1 : ℝ))ᶜ := by
+    change p ∉ sphere z (1 : ℝ)
+    intro h
+    rw [mem_sphere, dist_eq_norm] at h
+    linarith
+  exact measure_mono_null (singleton_subset_iff.2 hpK)
+    (unitCircleSource_finite_and_concentrated z).2
+
 /-- The circle source gives an admissible whole-plane negative-source test
 at every pole strictly inside the circle. -/
 theorem neg_univ_unitCircleSource_mem_subharmonicBallTestClass
@@ -535,28 +558,38 @@ theorem neg_univ_unitCircleSource_mem_subharmonicBallTestClass
     -greenPotential univ (unitCircleSource z) ∈ subharmonicBallTestClass Λ p := by
   let K : Set ℂ := sphere z 1
   have hK : IsCompact K := isCompact_sphere z 1
-  have hfinite : IsFiniteMeasure (unitCircleSource z) :=
-    ⟨by rw [unitCircleSource_apply_univ]; exact ENNReal.ofReal_lt_top⟩
-  have hsupport : unitCircleSource z Kᶜ = 0 := by
-    rw [unitCircleSource, Measure.map_apply (continuous_circleMap z 1).measurable
-      hK.measurableSet.compl]
-    have hempty : circleMap z 1 ⁻¹' Kᶜ = ∅ := by
-      ext θ
-      simp only [mem_preimage, mem_compl_iff, mem_empty_iff_false, iff_false]
-      simp [K]
-    rw [hempty, measure_empty]
-  have hpK : p ∈ Kᶜ := by
-    change p ∉ sphere z (1 : ℝ)
-    intro h
-    rw [mem_sphere, dist_eq_norm] at h
-    linarith
-  have hnull : unitCircleSource z {p} = 0 :=
-    measure_mono_null (singleton_subset_iff.2 hpK) hsupport
+  obtain ⟨hfinite, hsupport⟩ := unitCircleSource_finite_and_concentrated z
+  have hnull := unitCircleSource_singleton_eq_zero hp
   refine ⟨univ, K, 0, unitCircleSource z, 0, isOpen_univ, subset_univ _, hK,
     subset_univ _, inferInstance, hfinite, by simp, hsupport, by simp,
     harmonicOnNhd_const 0, hnull, integrable_greenFunction_univ_unitCircleSource hp, ?_⟩
   ext x
   simp [greenPotential]
+
+/-- A compactly supported finite negative source can be augmented by angular
+measure while retaining every frozen source and pole condition. -/
+theorem neg_univ_add_unitCircleSource_mem_subharmonicBallTestClass
+    {ν : Measure ℂ} {K Λ : Set ℂ} {z p : ℂ}
+    (hK : IsCompact K) (hν : IsFiniteMeasure ν) (hνK : ν Kᶜ = 0)
+    (hνp : ν {p} = 0) (hi : Integrable (greenFunction univ p) ν)
+    (hp : ‖p - z‖ < 1) :
+    -greenPotential univ (ν + unitCircleSource z) ∈ subharmonicBallTestClass Λ p := by
+  obtain ⟨hσ, hσK⟩ := unitCircleSource_finite_and_concentrated z
+  let : IsFiniteMeasure ν := hν
+  let : IsFiniteMeasure (unitCircleSource z) := hσ
+  refine ⟨univ, K ∪ sphere z 1, 0, ν + unitCircleSource z, 0, isOpen_univ,
+    subset_univ _, hK.union (isCompact_sphere z 1), subset_univ _, inferInstance,
+    inferInstance, by simp, ?_, by simp, harmonicOnNhd_const 0, ?_,
+    hi.add_measure (integrable_greenFunction_univ_unitCircleSource hp), ?_⟩
+  · rw [Measure.add_apply]
+    have hνzero : ν (K ∪ sphere z 1)ᶜ = 0 :=
+      measure_mono_null (compl_subset_compl.mpr (subset_union_left)) hνK
+    have hσzero : unitCircleSource z (K ∪ sphere z 1)ᶜ = 0 :=
+      measure_mono_null (compl_subset_compl.mpr (subset_union_right)) hσK
+    exact add_eq_zero.mpr ⟨hνzero, hσzero⟩
+  · simp [hνp, unitCircleSource_singleton_eq_zero hp]
+  · ext x
+    simp [greenPotential]
 
 /-- Adding a nonzero unit-circle source preserves an existing representative
 without assuming integrability of the original source on the observation set. -/
@@ -579,7 +612,10 @@ theorem univ_add_unitCircleSource_has_bounded_representative
 #print axioms integrable_greenFunction_univ_unitCircleSource
 #print axioms greenPotential_univ_unitCircleSource_eq_zero
 #print axioms unitCircleSource_apply_univ
+#print axioms unitCircleSource_finite_and_concentrated
+#print axioms unitCircleSource_singleton_eq_zero
 #print axioms neg_univ_unitCircleSource_mem_subharmonicBallTestClass
+#print axioms neg_univ_add_unitCircleSource_mem_subharmonicBallTestClass
 #print axioms univ_add_unitCircleSource_has_bounded_representative
 
 /-- The annular whole-plane potential is a valid frozen test for every pole;

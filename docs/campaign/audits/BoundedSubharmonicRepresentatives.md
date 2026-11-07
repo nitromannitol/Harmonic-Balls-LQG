@@ -122,6 +122,11 @@ source and pole conditions for an interior pole.
 `univ_add_unitCircleSource_has_bounded_representative` adds this nonzero
 source to an arbitrary old negative source with an existing representative,
 without assuming old-source integrability at the pole or observed points.
+`neg_univ_add_unitCircleSource_mem_subharmonicBallTestClass` verifies that
+the combined source satisfies the frozen test-class conditions when the old
+source is finite, compactly supported, has no pole atom, and its Green kernel
+is integrable at the pole. These conditions are needed for carrier membership;
+the representative transport itself does not require old-source integrability.
 The observation set and pole must be inside the unit circle; this does not
 construct the old representative or resolve arbitrary domains and sources.
 
