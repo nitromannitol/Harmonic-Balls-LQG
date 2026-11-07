@@ -96,6 +96,52 @@ theorem normalizedGFF_pairing_covariance_tendsto
 
 #print axioms normalizedGFF_pairing_covariance_tendsto
 
+/-- The unit-circle mollifier's logarithmic potential converges uniformly,
+with the geometric rate in Leonardo Bonanno's circle-average construction. -/
+theorem abs_logPot_unitCircleBump_add_le (n : ℕ) (x : ℂ) :
+    |LQGMetric.CircleAvg.logPot (LQGMetric.CircleAvg.circBump n 0 1) x +
+      LQGMetric.CircleAvg.circLog 0 1 x| ≤ (2 : ℝ)⁻¹ ^ n := by
+  rw [LQGMetric.CircleAvg.logPot_circBump]
+  have h := LQGMetric.CircleAvg.abs_integral_bump_circLog_sub_le one_pos n 0 x
+  rw [div_one] at h
+  rw [show -(∫ t, LQGMetric.bumpTest n 0 t *
+      LQGMetric.CircleAvg.circLog 0 1 (x - t)) + LQGMetric.CircleAvg.circLog 0 1 x =
+      -((∫ t, LQGMetric.bumpTest n 0 t * LQGMetric.CircleAvg.circLog 0 1 (x - t)) -
+        LQGMetric.CircleAvg.circLog 0 1 x) by ring, abs_neg]
+  exact h
+
+#print axioms abs_logPot_unitCircleBump_add_le
+
+/-- The mean-zero approximation has the normalized logarithmic potential,
+up to a uniform geometric error. -/
+theorem abs_logPot_meanZeroApprox_sub_le (φ : LQGMetric.TestC) (n : ℕ) (x : ℂ) :
+    |LQGMetric.CircleAvg.logPot (LQGMetric.MarkovGerm.meanZeroApprox φ n).1 x -
+      (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+        LQGMetric.CircleAvg.circLog 0 1 x)| ≤ |∫ y, φ y| * (2 : ℝ)⁻¹ ^ n := by
+  have hsmul : LQGMetric.CircleAvg.logPot
+      ((∫ y, φ y) • LQGMetric.CircleAvg.circBump n 0 1 : LQGMetric.TestC) x =
+      (∫ y, φ y) * LQGMetric.CircleAvg.logPot
+        (LQGMetric.CircleAvg.circBump n 0 1) x := by
+    unfold LQGMetric.CircleAvg.logPot
+    rw [← integral_const_mul]
+    congr 1
+    funext y
+    change (-Real.log ‖x - y‖) * ((∫ y, φ y) *
+      LQGMetric.CircleAvg.circBump n 0 1 y) = _
+    ring
+  change |LQGMetric.CircleAvg.logPot
+      (⇑(φ - (∫ y, φ y) • LQGMetric.CircleAvg.circBump n 0 1)) x - _| ≤ _
+  rw [LQGMetric.CircleAvg.logPot_sub, hsmul]
+  have heq : LQGMetric.CircleAvg.logPot φ x -
+      (∫ y, φ y) * LQGMetric.CircleAvg.logPot (LQGMetric.CircleAvg.circBump n 0 1) x -
+      (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) =
+      -(∫ y, φ y) * (LQGMetric.CircleAvg.logPot (LQGMetric.CircleAvg.circBump n 0 1) x +
+        LQGMetric.CircleAvg.circLog 0 1 x) := by ring
+  rw [heq, abs_mul, abs_neg]
+  exact mul_le_mul_of_nonneg_left (abs_logPot_unitCircleBump_add_le n x) (abs_nonneg _)
+
+#print axioms abs_logPot_meanZeroApprox_sub_le
+
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
 theorem normalizedGFF_pairings_mollifiedIncrements_gaussian
