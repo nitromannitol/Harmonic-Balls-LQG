@@ -1,0 +1,7 @@
+# Transposed changed-source obstruction
+
+`HarmonicBalls/Proofs/Potential/TransposedChangedSourceObstruction.lean` proves `no_transposed_changed_source_for_large_observation` for any bounded open domain containing the radius-two disc and finite sources carried by that domain, including compactly concentrated sources. The positive source is null on the disc, and the correction is harmonic. The asserted failure of equality is relative to `(volume + dirac 0).restrict (ball 0 2)`.
+
+The kernel is literally `greenFunction V y x`, with source `y` first. The local distributional Laplacian forces the negative source restricted to the observation disc to equal the point mass at zero. Its residual is therefore null on that disc. A uniform source-free kernel bound gives residual integrability, and the existing transposed source-free theorem gives continuity of both residual integrals. Splitting the negative source yields a continuous correction to the fixed-source kernel. Domain monotonicity and the explicit symmetric disc kernel force that correction to be bounded strictly away from zero near the origin; the observation atom and the prescribed zero diagonal force it to vanish at the origin. This is a contradiction.
+
+Only disc-kernel symmetry is used, not general Green reciprocity. The result does not prove the normal-kernel E51 statement or any numbered paper result. The declarations print only `propext`, `Classical.choice`, and `Quot.sound` as axioms. The potential-theoretic infrastructure uses work of Leonardo Bonanno.
