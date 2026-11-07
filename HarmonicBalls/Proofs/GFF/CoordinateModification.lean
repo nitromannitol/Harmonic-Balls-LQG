@@ -357,6 +357,114 @@ theorem wholePlaneGFFCov_pairings_eq_potential (ρ φ : LQGMetric.TestC) :
 
 #print axioms wholePlaneGFFCov_pairings_eq_potential
 
+/-- The logarithmic kernel times a test is integrable against Lebesgue measure
+and the unit-circle measure; this justifies exchanging these integrals. -/
+theorem integrable_test_log_unitCircle_prod (φ : LQGMetric.TestC) :
+    Integrable (fun p : ℂ × ℂ => φ p.1 * (-Real.log ‖p.2 - p.1‖))
+      (volume.prod (LQGDimension.Coupling.circMeas 0 1)) := by
+  let μ := LQGDimension.Coupling.circMeas 0 1
+  let g : ℂ × ℂ → ℝ := fun p => φ p.1 * (-Real.log ‖p.2 - p.1‖)
+  have hm : AEStronglyMeasurable g (volume.prod μ) := by
+    apply Measurable.aestronglyMeasurable
+    exact (φ.continuous.measurable.comp measurable_fst).mul
+      (((Real.measurable_log.comp (measurable_snd.sub measurable_fst).norm)).neg)
+  change Integrable g (volume.prod μ)
+  rw [integrable_prod_iff hm]
+  constructor
+  · filter_upwards with y
+    exact ((LQGDimension.Coupling.integrable_log_norm_sub_circ y 0 1).neg.const_mul
+      (φ y)).congr (Filter.Eventually.of_forall fun x => by simp only [g, Pi.neg_apply, norm_sub_rev])
+  · let b : ℂ → ℝ := fun y => ‖φ y‖ * (2 * (‖y‖ + 1))
+    have hbi : Integrable b := by
+      have hc : Continuous b := by
+        dsimp [b]
+        fun_prop
+      exact hc.integrable_of_hasCompactSupport φ.hasCompactSupport.norm.mul_right
+    refine hbi.mono' hm.norm.integral_prod_right' (Filter.Eventually.of_forall fun y => ?_)
+    have hbound := LQGDimension.Coupling.integral_abs_log_le y 0 (r := 1) one_pos
+    have hn : 0 ≤ 2 * (‖y‖ + 1) := by positivity
+    have heq : (∫ x, ‖g (y, x)‖ ∂μ) = ‖φ y‖ *
+        (∫ x, |Real.log ‖y - x‖| ∂μ) := by
+      simp only [g, norm_mul, norm_neg, Real.norm_eq_abs, norm_sub_rev, integral_const_mul]
+    rw [Real.norm_eq_abs, abs_of_nonneg (integral_nonneg fun _ => norm_nonneg _), heq]
+    apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
+    simpa only [norm_zero, add_zero, Real.log_one, sub_zero] using hbound
+
+#print axioms integrable_test_log_unitCircle_prod
+
+/-- The unit-circle average of Leonardo Bonanno's logarithmic potential is
+the negative test integral of the circle logarithmic potential. -/
+theorem circleAverage_logPot_unitCircle (φ : LQGMetric.TestC) :
+    Real.circleAverage (LQGMetric.CircleAvg.logPot φ) 0 1 =
+      -∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y := by
+  let μ := LQGDimension.Coupling.circMeas 0 1
+  rw [← LQGDimension.Coupling.integral_circMeas_eq_circleAverage
+    (LQGMetric.CircleAvg.measurable_logPot φ).aestronglyMeasurable]
+  have hs := integral_integral_swap (μ := volume) (ν := μ)
+    (f := fun y x : ℂ => φ y * (-Real.log ‖x - y‖))
+    (integrable_test_log_unitCircle_prod φ)
+  change (∫ x, LQGMetric.CircleAvg.logPot φ x ∂μ) = _
+  calc
+    (∫ x, LQGMetric.CircleAvg.logPot φ x ∂μ) =
+        ∫ x, (∫ y, φ y * (-Real.log ‖x - y‖)) ∂μ := by
+          apply integral_congr_ae
+          filter_upwards with x
+          unfold LQGMetric.CircleAvg.logPot
+          apply integral_congr_ae
+          filter_upwards with y
+          ring
+    _ = ∫ y, (∫ x, φ y * (-Real.log ‖x - y‖) ∂μ) := hs.symm
+    _ = -∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y := by
+      rw [← integral_neg]
+      apply integral_congr_ae
+      filter_upwards with y
+      rw [integral_const_mul, integral_neg]
+      change φ y * -(∫ x, Real.log ‖x - y‖ ∂LQGDimension.Coupling.circMeas 0 1) = _
+      have hm : AEStronglyMeasurable (fun x : ℂ => Real.log ‖x - y‖)
+          (LQGDimension.Coupling.circMeas 0 1) :=
+        (show Measurable (fun x : ℂ => Real.log ‖x - y‖) from
+          Real.measurable_log.comp (measurable_id.sub measurable_const).norm).aestronglyMeasurable
+      rw [LQGDimension.Coupling.integral_circMeas_eq_circleAverage hm]
+      change φ y * -LQGMetric.CircleAvg.circLog 0 1 y = _
+      ring
+
+#print axioms circleAverage_logPot_unitCircle
+
+/-- The unit-circle normalization term averages to zero in Leonardo Bonanno's
+potential formula. -/
+theorem circleAverage_normalized_logPot_unitCircle (φ : LQGMetric.TestC) :
+    Real.circleAverage (fun x => LQGMetric.CircleAvg.logPot φ x +
+      (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) 0 1 =
+      -∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y := by
+  have hzero : Real.circleAverage (LQGMetric.CircleAvg.circLog 0 1) 0 1 = 0 := by
+    change LQGMetric.CircleAvg.circCov 0 1 0 1 = 0
+    rw [LQGMetric.CircleAvg.circCov_center 0 one_pos 1 one_pos]
+    simp [Real.posLog_apply]
+  have h1 : CircleIntegrable (LQGMetric.CircleAvg.logPot φ) 0 1 :=
+    (LQGMetric.MarkovGermVer.contDiff_logPot φ).continuous.continuousOn.circleIntegrable'
+  have h2 : CircleIntegrable (fun x => (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x) 0 1 :=
+    (continuous_const.mul (LQGMetric.CircleAvg.continuous_circLog one_ne_zero 0)).continuousOn.circleIntegrable'
+  rw [Real.circleAverage_fun_add h1 h2, circleAverage_logPot_unitCircle]
+  change -_ + Real.circleAverage (fun x => (∫ y, φ y) •
+    LQGMetric.CircleAvg.circLog 0 1 x) 0 1 = _
+  rw [Real.circleAverage_fun_smul, hzero, smul_eq_mul, mul_zero, add_zero]
+
+#print axioms circleAverage_normalized_logPot_unitCircle
+
+/-- Leonardo Bonanno's normalized GFF has exactly the project's test-test
+covariance, including the project's diagonal convention. -/
+theorem normalizedGFF_pairing_covariance_eq_project
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P)
+    (ρ φ : LQGMetric.TestC) :
+    cov[fun ω => h ω ρ, fun ω => h ω φ; P] =
+      wholePlaneGFFCov (.pairing ρ) (.pairing φ) := by
+  rw [normalizedGFF_pairing_covariance_eq_potential hh,
+    wholePlaneGFFCov_pairings_eq_potential, circleAverage_normalized_logPot_unitCircle]
+  ring
+
+#print axioms normalizedGFF_pairing_covariance_eq_project
+
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
 theorem normalizedGFF_pairings_mollifiedIncrements_gaussian

@@ -64,8 +64,10 @@ covariance of Bonanno's pairings with the resulting normalized potential
 expression. `integral_test_mul_wholePlaneCov` removes the diagonal under
 a test-function integral, and `wholePlaneGFFCov_pairings_eq_potential`
 expands the project's test-test covariance in the same potential terms.
-Equating the two expressions still requires the identity relating the
-unit-circle average of the potential to the test's integral against circLog.
+`circleAverage_logPot_unitCircle` proves the required unit-circle identity
+by Fubini, justified by `integrable_test_log_unitCircle_prod` using the
+circle logarithm bound. `normalizedGFF_pairing_covariance_eq_project` now
+identifies Bonanno's test-test covariance with the project kernel.
 `normalizedGFF_pairings_increments_gaussian` also proves the mixed Gaussian
 law of all pairings and positive-radius circle-average increments. It uses
 the almost-sure limit of mollified increments, which are mean-zero test
@@ -81,6 +83,6 @@ under circle smearing using its codiscreteness.
 `Section6.map_pairingProc_eq`
 (AnnulusLawTransfer.lean:96) transfers only mean-zero pairing laws starting
 from an existing project GFF. A direct existence bridge to all six fields of
-this repository's GFF interface, including test-test and mixed test-circle
-covariances, has not been established here.
+this repository's GFF interface, including the mixed test-circle
+covariance, has not been established here.
 No numbered-result closure follows.
