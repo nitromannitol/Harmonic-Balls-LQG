@@ -477,6 +477,111 @@ theorem neg_greenPotential_add_zero_source_has_bounded_representative
 #print axioms greenPotential_add_zero_source
 #print axioms neg_greenPotential_add_zero_source_has_bounded_representative
 
+/-- Angular measure on the unit circle centered at `z`. -/
+noncomputable def unitCircleSource (z : ℂ) : Measure ℂ :=
+  Measure.map (circleMap z 1) (volume.restrict (Ioc 0 (2 * Real.pi)))
+
+/-- The unit-circle source has an integrable whole-plane kernel at every
+point strictly inside the circle. -/
+theorem integrable_greenFunction_univ_unitCircleSource {z x : ℂ} (hx : ‖x - z‖ < 1) :
+    Integrable (greenFunction univ x) (unitCircleSource z) := by
+  have hm : Measurable (newtonKernel x) := by
+    unfold newtonKernel
+    fun_prop
+  have hs : x ∉ sphere z (1 : ℝ) := by
+    intro h
+    rw [mem_sphere, dist_eq_norm] at h
+    linarith
+  have hc : CircleIntegrable (newtonKernel x) z 1 :=
+    (continuousOn_newtonKernel_sphere hs).circleIntegrable (by norm_num)
+  have hi : IntegrableOn (fun θ => newtonKernel x (circleMap z 1 θ))
+      (Ioc 0 (2 * Real.pi)) := by
+    exact (intervalIntegrable_iff_integrableOn_Ioc_of_le (by positivity)).1 hc
+  have heq : greenFunction univ x = newtonKernel x := by
+    funext y
+    exact greenFunction_univ_eq_newtonKernel x y
+  rw [heq]
+  exact (integrable_map_measure hm.aestronglyMeasurable
+    (continuous_circleMap z 1).aemeasurable).2 hi
+
+/-- The whole-plane potential of angular measure on a unit circle vanishes
+pointwise throughout the circle's interior. -/
+theorem greenPotential_univ_unitCircleSource_eq_zero {z x : ℂ} (hx : ‖x - z‖ < 1) :
+    greenPotential univ (unitCircleSource z) x = 0 := by
+  have hm : Measurable (newtonKernel x) := by
+    unfold newtonKernel
+    fun_prop
+  have hc := circleAverage_newtonKernel (x := x) (y := z) (r := 1) (by norm_num) hx.le
+  have hp : (2 * Real.pi : ℝ)⁻¹ ≠ 0 := by positivity
+  rw [Real.circleAverage_def, intervalIntegral.integral_of_le (by positivity)] at hc
+  simp only [Real.log_one, mul_zero, smul_eq_mul] at hc
+  have hz : (∫ θ in Ioc (0 : ℝ) (2 * Real.pi),
+      newtonKernel x (circleMap z 1 θ)) = 0 := (mul_eq_zero.mp hc).resolve_left hp
+  unfold greenPotential unitCircleSource
+  simp_rw [greenFunction_univ_eq_newtonKernel]
+  rw [integral_map (continuous_circleMap z 1).aemeasurable hm.aestronglyMeasurable]
+  exact hz
+
+/-- The unit-circle source has strictly positive finite total mass. -/
+theorem unitCircleSource_apply_univ (z : ℂ) :
+    unitCircleSource z univ = ENNReal.ofReal (2 * Real.pi) := by
+  rw [unitCircleSource, Measure.map_apply (continuous_circleMap z 1).measurable MeasurableSet.univ]
+  simp [Real.volume_Ioc]
+
+/-- The circle source gives an admissible whole-plane negative-source test
+at every pole strictly inside the circle. -/
+theorem neg_univ_unitCircleSource_mem_subharmonicBallTestClass
+    {z p : ℂ} (hp : ‖p - z‖ < 1) (Λ : Set ℂ) :
+    -greenPotential univ (unitCircleSource z) ∈ subharmonicBallTestClass Λ p := by
+  let K : Set ℂ := sphere z 1
+  have hK : IsCompact K := isCompact_sphere z 1
+  have hfinite : IsFiniteMeasure (unitCircleSource z) :=
+    ⟨by rw [unitCircleSource_apply_univ]; exact ENNReal.ofReal_lt_top⟩
+  have hsupport : unitCircleSource z Kᶜ = 0 := by
+    rw [unitCircleSource, Measure.map_apply (continuous_circleMap z 1).measurable
+      hK.measurableSet.compl]
+    have hempty : circleMap z 1 ⁻¹' Kᶜ = ∅ := by
+      ext θ
+      simp only [mem_preimage, mem_compl_iff, mem_empty_iff_false, iff_false]
+      simp [K]
+    rw [hempty, measure_empty]
+  have hpK : p ∈ Kᶜ := by
+    change p ∉ sphere z (1 : ℝ)
+    intro h
+    rw [mem_sphere, dist_eq_norm] at h
+    linarith
+  have hnull : unitCircleSource z {p} = 0 :=
+    measure_mono_null (singleton_subset_iff.2 hpK) hsupport
+  refine ⟨univ, K, 0, unitCircleSource z, 0, isOpen_univ, subset_univ _, hK,
+    subset_univ _, inferInstance, hfinite, by simp, hsupport, by simp,
+    harmonicOnNhd_const 0, hnull, integrable_greenFunction_univ_unitCircleSource hp, ?_⟩
+  ext x
+  simp [greenPotential]
+
+/-- Adding a nonzero unit-circle source preserves an existing representative
+without assuming integrability of the original source on the observation set. -/
+theorem univ_add_unitCircleSource_has_bounded_representative
+    {μ ν : Measure ℂ} {Λ : Set ℂ} {p z : ℂ}
+    (hΛm : MeasurableSet Λ) (hΛ : ∀ x ∈ Λ, ‖x - z‖ < 1) (hp : ‖p - z‖ < 1)
+    (hrep : ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential univ ν) p = g p ∧ (-greenPotential univ ν) =ᵐ[μ.restrict Λ] g) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential univ (ν + unitCircleSource z)) p = g p ∧
+        (-greenPotential univ (ν + unitCircleSource z)) =ᵐ[μ.restrict Λ] g := by
+  apply neg_greenPotential_add_zero_source_has_bounded_representative
+    (integrable_greenFunction_univ_unitCircleSource hp) _
+    (greenPotential_univ_unitCircleSource_eq_zero hp) _ hrep
+  · exact ae_restrict_of_forall_mem hΛm fun x hx =>
+      integrable_greenFunction_univ_unitCircleSource (hΛ x hx)
+  · exact ae_restrict_of_forall_mem hΛm fun x hx =>
+      greenPotential_univ_unitCircleSource_eq_zero (hΛ x hx)
+
+#print axioms integrable_greenFunction_univ_unitCircleSource
+#print axioms greenPotential_univ_unitCircleSource_eq_zero
+#print axioms unitCircleSource_apply_univ
+#print axioms neg_univ_unitCircleSource_mem_subharmonicBallTestClass
+#print axioms univ_add_unitCircleSource_has_bounded_representative
+
 /-- The annular whole-plane potential is a valid frozen test for every pole;
 the source is compactly supported, finite, and non-atomic. -/
 theorem neg_univ_circleDensity_mem_subharmonicBallTestClass

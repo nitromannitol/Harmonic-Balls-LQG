@@ -113,6 +113,18 @@ source to be integrable and have zero potential at the pole and almost
 everywhere on the observation set; it neither constructs that source nor
 establishes the original representative.
 
+The zero-potential hypothesis is non-vacuous: `unitCircleSource` is the
+pushforward of angular measure on a unit circle, with total mass `2π`.
+`greenPotential_univ_unitCircleSource_eq_zero` proves its whole-plane
+potential vanishes at every interior point, and
+`neg_univ_unitCircleSource_mem_subharmonicBallTestClass` checks the frozen
+source and pole conditions for an interior pole.
+`univ_add_unitCircleSource_has_bounded_representative` adds this nonzero
+source to an arbitrary old negative source with an existing representative,
+without assuming old-source integrability at the pole or observed points.
+The observation set and pole must be inside the unit circle; this does not
+construct the old representative or resolve arbitrary domains and sources.
+
 `bounded_representative_of_changed_sources` gives a general transport step for arbitrary
 old and replacement measures, without requiring the two source corrections separately.
 The remaining construction must choose a bounded open `V ⊆ O`, compact `K ⊆ V`,
