@@ -29,7 +29,7 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ x, ψ x = 1)
     (c : ℝ≥0∞) (ha : 0 ≤ a) (hmargin : a + a < σ)
     (hKc : IsCompact K) (hK : IsConnected K) (hW : IsOpen W) (hKW : K ⊆ W)
-    (hU : IsClosed U) (hKU : Disjoint K U) (hbuffer : W ⊆ thickening δ K)
+    (hKU : Disjoint K (closure U)) (hbuffer : W ⊆ thickening δ K)
     (hSW : closedSquare z L ⊆ W)
     (hSK : closedSquare z L ⊆ interior K)
     (hm : MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance ≤ m₀)
@@ -82,7 +82,7 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
   let C := K \ ⋃ i : ι, interior (H i)
   obtain ⟨hCc, _, hcover, hattach, _, V, T, hVo, hVc, hCV, hVcompact,
     hTo, hVT, hTW, hTU, hTS⟩ :=
-      dyadic_intermediate_connected_core_geometry z r hr j K W U hKc hK hW hKW hU hKU
+      dyadic_intermediate_connected_core_geometry z r hr j K W (closure U) hKc hK hW hKW isClosed_closure hKU
         (fun i => (hN n hn).1 i.1)
   let A : Set Ω := {ω | ω ∈ F ∧ (∀ i : Fin (2 ^ n) × Fin (2 ^ n), ∀ x ∈
         complexIntermediateGridSquare z r i, ∀ y ∈ complexIntermediateGridSquare z r i,
@@ -100,7 +100,7 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
   refine ⟨ι, S', W, V, T, C, H, J, A, (dyadic_class_closed_and_subset z L hL n j).2,
     (dyadic_class_closed_and_subset z L hL n j).1.measurableSet,
     (fun ω hω => hω.1), hpos', hW, hVo, hVc, ?_, hTo, hVcompact, hVT,
-    hTS, hTU, ?_, ?_, hCc, hCV, hbuffer, hcover, hattach, ?_⟩
+    hTS, hTU.mono_right subset_closure, ?_, ?_, hCc, hCV, hbuffer, hcover, hattach, ?_⟩
   · exact subset_closure.trans (hVT.trans hTW)
   · intro i
     exact isOpen_complexOpenEnlargedGridSquare z r i.1
