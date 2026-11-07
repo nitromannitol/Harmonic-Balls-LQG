@@ -3,6 +3,7 @@ import HarmonicBalls.Draft.Section6
 import HarmonicBalls.Proofs.Sec11.InternalPinchFrequency
 import HarmonicBalls.Steps.Sec11.PinchDyadicWindowShift
 import HarmonicBalls.Steps.Sec11.PinchNormalizedMeasure
+import HarmonicBalls.Proofs.Sec11.BufferedPinchContinuity
 
 /-! # The corrected pinch block-density reduction
 
@@ -95,6 +96,44 @@ theorem exists_local_internal_pinch_representative_and_original_witness
         simp [hω]
       rw [measure_congr hBA, measure_congr hAeq]
       exact hpos
+
+/-- Full support supplies the normalized local mass data in the preceding
+certificate construction; normalized metric locality and internal-event
+positivity remain explicit. -/
+theorem exists_local_internal_pinch_of_metric_locality
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) {γ α : ℝ}
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q) (M : ℝ)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < μ ω U)
+    (c : Ω → ℝ) (G : Ω → ℂ → ℂ → ℝ≥0∞)
+    (hc : ∀ᵐ ω ∂P, 0 < c ω) (hD : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (hG : ∀ x y, Measurable[Section6.fieldSigmaAlgebraModConst α hC (ball 0 7)]
+      fun ω => G ω x y)
+    (hGeq : ∀ᵐ ω ∂P, ∀ x ∈ ball (0 : ℂ) 6, ∀ y ∈ ball (0 : ℂ) 6,
+      internalMetric (fun x y => c ω * D ω x y) (ball 0 6) x y = G ω x y)
+    (hpos : 0 < P {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M 1 0}) :
+    (∃ E : Set Ω, MeasurableSet[Section6.fieldSigmaAlgebraModConst α hC (ball 0 7)] E ∧
+      0 < P E ∧ ∀ᵐ ω ∂P, ω ∈ E → pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0) ∧
+    (∃ E ⊆ {ω | pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0}, MeasurableSet E ∧ 0 < P E) := by
+  obtain ⟨R, hR, ν, hν, hνeq⟩ :=
+    hgff.exists_modConst_normalized_lqg_masses_between P hμ hfull
+      (by norm_num : (0 : ℝ) ≤ 6) (by norm_num : (6 : ℝ) < 7)
+  let a : Ω → ℝ≥0∞ := fun ω => (μ ω (ball 0 R))⁻¹
+  have hscale : ∀ᵐ ω ∂P, 0 < c ω ∧ a ω ≠ 0 ∧ a ω ≠ ∞ := by
+    filter_upwards [hc, hνeq] with ω hcω hω
+    exact ⟨hcω, hω.1, hω.2.1⟩
+  have hmass : ∀ B : Set ℂ, MeasurableSet B → B ⊆ ball (0 : ℂ) 6 →
+      ∃ Y : Ω → ℝ≥0∞,
+        Measurable[Section6.fieldSigmaAlgebraModConst α hC (ball 0 7)] Y ∧
+        ∀ᵐ ω ∂P, (a ω • μ ω) B = Y ω := by
+    intro B hB hBsub
+    refine ⟨fun ω => ν ω B, (Measure.measurable_coe hB).comp hν, ?_⟩
+    filter_upwards [hνeq] with ω hω
+    exact hω.2.2 B hB (hBsub.trans (ball_subset_ball hR.1.le))
+  exact exists_local_internal_pinch_representative_and_original_witness P α hC hcirc μ D
+    hconfig M hgff c a G hscale hD hG hGeq hmass hpos
 
 /-- Block density for the internal-metric pinch event at one point. -/
 def InternalPinchBlockDensity (μ : Measure ℂ) (D : ℂ → ℂ → ℝ)
@@ -204,6 +243,7 @@ theorem correctedManyPinchScales_of_internalBlockDensity
 #print axioms pinchBlockDensity_of_internal
 #print axioms correctedLocalPinchCertificate_innerWitness
 #print axioms exists_local_internal_pinch_representative_and_original_witness
+#print axioms exists_local_internal_pinch_of_metric_locality
 #print axioms eventually_shifted_index_block_density
 #print axioms eventually_block_density_of_shifted_event_implication
 #print axioms correctedManyPinchScales_of_internalBlockDensity
