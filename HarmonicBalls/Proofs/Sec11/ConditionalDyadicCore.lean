@@ -32,9 +32,7 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     (hKU : Disjoint K (closure U)) (hbuffer : W ⊆ thickening δ K)
     (hSW : closedSquare z L ⊆ W)
     (hSK : closedSquare z L ⊆ interior K)
-    (hm : MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance ≤ m₀)
     (b : ℕ → ℝ≥0∞) (p : ℝ) (hp : 2 < p) (e : ℕ → ℝ) (he : Tendsto e atTop (𝓝 0))
-    (hH : @MeasurableSet Ω m₀ {ω | (8 : ℝ≥0∞) * c < μ ω (closedSquare z L)})
     (hcond : ∀ᵐ ω ∂P, 0 < (P[({ω | (8 : ℝ≥0∞) * c < μ ω (closedSquare z L)}).indicator
       (fun _ => (1 : ℝ)) | MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance]) ω)
     (hsmall : ∀ᶠ n in atTop, b n < ENNReal.ofReal a)
@@ -50,6 +48,15 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     (closedSquare z L) K U (IsCompact.reProdIm isCompact_Icc isCompact_Icc).isClosed.measurableSet
     hbounded hbufferS hfront hδ hpin 𝔇 h𝔇 ψ hψ hψint c ha hmargin
   intro F hF hFp
+  have hm : MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance ≤ m₀ := by
+    apply measurable_iff_comap_le.mp
+    exact measurable_pi_iff.mpr fun φ =>
+      (h.measurable_pairing φ.1 (φ.2.1.mono_set (subset_univ _))).sub_const _
+  have hH : NullMeasurableSet {ω | (8 : ℝ≥0∞) * c < μ ω (closedSquare z L)} P := by
+    apply nullMeasurableSet_lt aemeasurable_const
+    exact (Measure.measurable_coe
+      (IsCompact.reProdIm isCompact_Icc isCompact_Icc).isClosed.measurableSet).comp_aemeasurable
+        (h.aemeasurable_lqgMeasure hμ)
   have hHK : ∀ᶠ n in atTop, ∀ (i : Fin (2 ^ n) × Fin (2 ^ n)),
       complexIntermediateGridSquare z (L / (2 : ℝ) ^ n) i ⊆ K := by
     filter_upwards [complex_enlarged_dyadic_square_eventually_subset_open z L hL
