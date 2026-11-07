@@ -40,6 +40,28 @@ theorem exists_summable_lqg_square_tail {γ ξ : ℝ}
     exists_lqg_square_diameter_tail_exponent hγ hγ₂ hξ
   exact ⟨s, p, hs, hsQ, hp, hpQ, summable_dyadic_square_count_mul_tail hp⟩
 
+/-- The subcritical parameter range permits the small-square diameter
+exponent from the weak-metric estimate and a summable dyadic union bound. -/
+theorem exists_summable_lqg_square_tail_below_holder_exponent {γ ξ : ℝ}
+    (hγ : 0 < γ) (hγ₂ : γ < 2) (hξ : 0 < ξ) :
+    ∃ s p : ℝ, 0 < s ∧ s < ξ * (lqgQ γ - 2) ∧
+      s < ξ * lqgQ γ ∧ 2 < p ∧
+      p < (ξ * lqgQ γ - s) ^ 2 / (2 * ξ ^ 2) ∧
+      Summable (fun n : ℕ => (4 : ℝ) ^ n * (1 / 2 : ℝ) ^ (p * n)) := by
+  have hQ := two_lt_lqgQ_of_subcritical hγ hγ₂
+  let s := ξ * (lqgQ γ - 2) / 2
+  have hs : 0 < s := by dsimp [s]; positivity
+  have hsh : s < ξ * (lqgQ γ - 2) := by dsimp [s]; nlinarith
+  have hsQ : s < ξ * lqgQ γ := by dsimp [s]; nlinarith
+  have hq : 2 < (ξ * lqgQ γ - s) ^ 2 / (2 * ξ ^ 2) :=
+    metricDiameterTailExponent_gt_two hξ hsh
+  let p := (2 + (ξ * lqgQ γ - s) ^ 2 / (2 * ξ ^ 2)) / 2
+  have hp : 2 < p := by dsimp [p]; linarith
+  have hpq : p < (ξ * lqgQ γ - s) ^ 2 / (2 * ξ ^ 2) := by
+    dsimp [p]; linarith
+  exact ⟨s, p, hs, hsh, hsQ, hp, hpq, summable_dyadic_square_count_mul_tail hp⟩
+
 #print axioms exists_summable_lqg_square_tail
+#print axioms exists_summable_lqg_square_tail_below_holder_exponent
 #print axioms summable_dyadic_square_count_mul_tail
 end HarmonicBalls
