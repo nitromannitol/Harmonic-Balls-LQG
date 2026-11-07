@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec11.PinchTailExponent
+import HarmonicBalls.Proofs.Sec11.ClosedSquareDiameterConvergence
 import HarmonicBalls.Steps.Sec11.NormalizedDiameterMoment
 
 /-! # Power-scale moment bounds and diameter tails
@@ -59,6 +60,38 @@ theorem measure_power_threshold_le_of_optimized_moment
   simpa only [heq] using measure_power_threshold_le_of_lintegral_rpow_le P X r s
     (ξ * Q * t - ξ ^ 2 * t ^ 2 / 2 + e) t hr ht hX hmoment
 
+/-- An optimized moment bound for a diameter divided by its positive
+normalization gives the tail with that normalization and the pinned
+unit-circle factor restored. -/
+theorem IsWholePlaneGFF.measure_scaled_power_tail_of_optimized_moment
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (X : Ω → ℝ≥0∞)
+    (c r ξ Q s e : ℝ) (hc : 0 < c) (hr : 0 < r) (hξ : 0 < ξ)
+    (hs : s < ξ * Q)
+    (hX : AEMeasurable (fun ω => (ENNReal.ofReal c)⁻¹ * X ω) P)
+    (hmoment : let t := (ξ * Q - s) / ξ ^ 2
+      (∫⁻ ω, ((ENNReal.ofReal c)⁻¹ * X ω) ^ t ∂P) ≤ ENNReal.ofReal
+        (r ^ (ξ * Q * t - ξ ^ 2 * t ^ 2 / 2 + e))) :
+    P {ω | ENNReal.ofReal (c * r ^ s) *
+      ENNReal.ofReal (Real.exp (ξ * hcirc ω 1 0)) < X ω} ≤
+      ENNReal.ofReal (r ^ ((ξ * Q - s) ^ 2 / (2 * ξ ^ 2) + e)) := by
+  rw [h.measure_tail_with_unit_circle_factor ξ (ENNReal.ofReal (c * r ^ s)) X]
+  have hc0 : ENNReal.ofReal c ≠ 0 := (ENNReal.ofReal_pos.mpr hc).ne'
+  have hct : ENNReal.ofReal c ≠ ∞ := ENNReal.ofReal_ne_top
+  calc
+    _ ≤ P {ω | ENNReal.ofReal (r ^ s) < (ENNReal.ofReal c)⁻¹ * X ω} := by
+      apply measure_mono
+      intro ω hω
+      simp only [Set.mem_ofPred_eq] at hω ⊢
+      apply (ENNReal.mul_lt_mul_iff_left hc0 hct).1
+      rw [mul_comm ((ENNReal.ofReal c)⁻¹ * X ω) (ENNReal.ofReal c), ← mul_assoc,
+        ENNReal.mul_inv_cancel hc0 hct, one_mul]
+      simpa only [ENNReal.ofReal_mul hc.le, mul_comm] using hω
+    _ ≤ _ := measure_power_threshold_le_of_optimized_moment P _ r ξ Q s e hr hξ hs
+      hX hmoment
+
 #print axioms measure_power_threshold_le_of_lintegral_rpow_le
 #print axioms measure_power_threshold_le_of_optimized_moment
+#print axioms IsWholePlaneGFF.measure_scaled_power_tail_of_optimized_moment
 end HarmonicBalls
