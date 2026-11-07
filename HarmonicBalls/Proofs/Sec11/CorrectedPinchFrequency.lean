@@ -94,6 +94,27 @@ theorem eventually_shifted_index_block_density
   rw [hc]
   exact hN
 
+/-- An eventual implication from the shifted source events to target events
+transfers any strictly smaller block-density rate. This is the counting step
+for a dyadic recentering once the corresponding event comparison is proved. -/
+theorem eventually_block_density_of_shifted_event_implication
+    (S T : Set ℕ) [DecidablePred (· ∈ S)] [DecidablePred (· ∈ T)]
+    (k : ℕ) {q q' : ℝ} (hqq : q' < q)
+    (h : ∀ᶠ N : ℕ in atTop,
+      q * N ≤ (((Finset.Icc (N + 1) (2 * N)).filter (· ∈ S)).card : ℝ))
+    (hST : ∀ᶠ n : ℕ in atTop, n + k ∈ S → n ∈ T) :
+    ∀ᶠ N : ℕ in atTop,
+      q' * N ≤ (((Finset.Icc (N + 1) (2 * N)).filter (· ∈ T)).card : ℝ) := by
+  obtain ⟨N₀, hN₀⟩ := Filter.eventually_atTop.1 hST
+  filter_upwards [eventually_shifted_index_block_density S k hqq h,
+    Filter.eventually_ge_atTop N₀] with N hN hbound
+  have hsub : (Finset.Icc (N + 1) (2 * N)).filter (fun n => n + k ∈ S) ⊆
+      (Finset.Icc (N + 1) (2 * N)).filter (· ∈ T) := by
+    intro n hn
+    simp only [Finset.mem_filter, Finset.mem_Icc] at hn ⊢
+    exact ⟨hn.1, hN₀ n (by omega) hn.2⟩
+  exact hN.trans (by exact_mod_cast Finset.card_le_card hsub)
+
 /-- The corrected Lemma 11.13 follows from the typical-point internal block
 density at a fixed corrected geometry and the staged metric-field axiom. -/
 theorem correctedManyPinchScales_of_internalBlockDensity
@@ -128,6 +149,7 @@ theorem correctedManyPinchScales_of_internalBlockDensity
 #print axioms pinchBlockDensity_of_internal
 #print axioms correctedLocalPinchCertificate_innerWitness
 #print axioms eventually_shifted_index_block_density
+#print axioms eventually_block_density_of_shifted_event_implication
 #print axioms correctedManyPinchScales_of_internalBlockDensity
 
 end HarmonicBalls
