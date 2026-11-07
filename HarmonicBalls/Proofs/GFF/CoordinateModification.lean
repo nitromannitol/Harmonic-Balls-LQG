@@ -42,6 +42,44 @@ theorem IsWholePlaneGFF.coordinateModification
             rw [← hω, ← hω', ← hi₁, ← hi₂]
       _ = wholePlaneGFFCov o o' := hh.covariance_eq o o' ho ho'
 
+/-- Pulling back a whole-plane GFF through a measure-preserving map preserves
+its complete joint specification. -/
+theorem IsWholePlaneGFF.comp_measurePreserving
+    {Ω Ω' : Type*} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {P : Measure Ω} {P' : Measure Ω'}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {f : Ω' → Ω}
+    (hf : MeasurePreserving f P' P) :
+    IsWholePlaneGFF P' (fun ω => hC (f ω)) (fun ω => hcirc (f ω)) := by
+  have hm (o : GFFObservable) (ho : o.IsAdmissible) :
+      Measurable (fun ω => o.eval (hC ω) (hcirc ω)) := by
+    cases o with
+    | pairing φ => exact hh.measurable_pairing φ ho
+    | circle r z => exact hh.measurable_circle r z ho
+  refine ⟨fun φ hφ => (hh.measurable_pairing φ hφ).comp hf.measurable,
+    fun r z hr => (hh.measurable_circle r z hr).comp hf.measurable, ?_, ?_, ?_, ?_⟩
+  · constructor
+    intro I
+    let X := fun ω (i : I) => i.1.1.eval (hC ω) (hcirc ω)
+    have hX : Measurable X := measurable_pi_iff.mpr (fun i => hm i.1.1 i.1.2)
+    have hG := hh.isGaussianProcess.hasGaussianLaw I
+    have hmap : P'.map (X ∘ f) = P.map X := by
+      rw [← Measure.map_map hX hf.measurable, hf.map_eq]
+    exact ⟨(hX.comp hf.measurable).aemeasurable, hmap ▸ hG.isGaussian_map⟩
+  · intro o ho
+    have hi := integral_map hf.measurable.aemeasurable (f := fun ω => o.eval (hC ω) (hcirc ω))
+      (by rw [hf.map_eq]; exact (hm o ho).aestronglyMeasurable)
+    rw [hf.map_eq] at hi
+    exact hi.symm.trans (hh.integral_eq_zero o ho)
+  · intro o o' ho ho'
+    have hc := covariance_map_fun (μ := P') (Z := f)
+      (by rw [hf.map_eq]; exact (hm o ho).aestronglyMeasurable)
+      (by rw [hf.map_eq]; exact (hm o' ho').aestronglyMeasurable)
+      hf.measurable.aemeasurable
+    rw [hf.map_eq] at hc
+    exact hc.symm.trans (hh.covariance_eq o o' ho ho')
+  · exact hf.quasiMeasurePreserving.ae hh.ae_continuousOn_circle
+
 /-- A diagonal spike has measurable sections and vanishes almost surely at
     each fixed index when its parameter has no atoms. -/
 theorem diagonalSpike_sections
@@ -120,6 +158,84 @@ theorem IsWholePlaneGFF.exists_diagonal_modification
   simp only [D, hne, ↓reduceIte, add_zero]
   linarith
 
+/-- Given a diffuse parameter on a GFF probability space, some coordinatewise
+modification has no common event of linearity along the specified curve. This
+requires no samplewise regularity of the original pairings. -/
+theorem IsWholePlaneGFF.exists_modification_not_ae_linear
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc)
+    (t : Ω → ℝ) (ht : Measurable t)
+    (hnull : ∀ r, ∀ᵐ ω ∂P, t ω ≠ r)
+    (a : ℝ → (ℂ → ℝ)) (ha : Function.Injective a) :
+    ∃ hC' : Ω → (ℂ → ℝ) → ℝ, IsWholePlaneGFF P hC' hcirc ∧
+      (∀ φ, (fun ω => hC ω φ) =ᵐ[P] (fun ω => hC' ω φ)) ∧
+      ¬ (∀ᵐ ω ∂P, ∀ r, hC' ω (a (2 * r)) = 2 * hC' ω (a r)) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  by_cases hl : ∀ᵐ ω ∂P, ∀ r, hC ω (a (2 * r)) = 2 * hC ω (a r)
+  · have hl' : ∀ᵐ ω ∂P, hC ω (a (2 * t ω)) = 2 * hC ω (a (t ω)) := by
+      filter_upwards [hl] with ω hω
+      exact hω (t ω)
+    obtain ⟨hC', hG, he, hn⟩ := hh.exists_diagonal_modification t ht hnull a ha hl'
+    refine ⟨hC', hG, he, ?_⟩
+    intro hc
+    have hf : ∀ᵐ ω ∂P, False := by
+      filter_upwards [hc, hn] with ω hω hne
+      exact hne (hω (t ω))
+    obtain ⟨_, hfalse⟩ := Filter.Eventually.exists hf
+    exact hfalse
+  · exact ⟨hC, hh, fun _ => Filter.Eventually.of_forall (fun _ => rfl), hl⟩
+
+/-- Every whole-plane GFF admits a product extension with an equal-in-law
+coordinatewise modification whose test-function pairings lack a common
+samplewise scalar-linearity event. -/
+theorem IsWholePlaneGFF.product_has_non_linear_modification
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) :
+    ∃ hC' : Ω × ℝ → (ℂ → ℝ) → ℝ,
+      IsWholePlaneGFF (P.prod (gaussianReal 0 1)) hC' (fun p => hcirc p.1) ∧
+      (∀ φ, (fun p : Ω × ℝ => hC p.1 φ) =ᵐ[P.prod (gaussianReal 0 1)] (fun p => hC' p φ)) ∧
+      ¬ (∀ᵐ p ∂P.prod (gaussianReal 0 1), ∀ φ, IsTestFunction Set.univ φ → ∀ c : ℝ,
+          hC' p (fun z => c * φ z) = c * hC' p φ) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let : NullSingletonClass (gaussianReal 0 1) := nullSingletonClass_gaussianReal (by norm_num)
+  let Q := P.prod (gaussianReal 0 1)
+  have hp : IsWholePlaneGFF Q (fun p => hC p.1) (fun p => hcirc p.1) :=
+    hh.comp_measurePreserving measurePreserving_fst
+  have ht : ∀ r : ℝ, ∀ᵐ p ∂Q, p.2 ≠ r := by
+    intro r
+    have hr : ∀ᵐ x ∂(gaussianReal 0 1), x ≠ r := by
+      apply ae_iff.mpr
+      simpa only [not_not, Set.ofPred_eq_eq_singleton] using (measure_singleton r : gaussianReal 0 1 {r} = 0)
+    exact measurePreserving_snd.quasiMeasurePreserving.ae hr
+  let b : ContDiffBump (0 : ℂ) := ⟨1, 2, by norm_num, by norm_num⟩
+  have hb : b (0 : ℂ) = 1 := b.one_of_mem_closedBall (by simp [b])
+  let a : ℝ → (ℂ → ℝ) := fun r z => r * b z
+  have ha : Function.Injective a := by
+    intro r s h
+    have hz := congrFun h 0
+    simpa only [a, hb, mul_one] using hz
+  have htest (r : ℝ) : IsTestFunction Set.univ (a r) :=
+    ⟨contDiff_const.mul b.contDiff, b.hasCompactSupport.mul_left, Set.subset_univ _⟩
+  obtain ⟨hC', hG, he, hn⟩ := hp.exists_modification_not_ae_linear Prod.snd measurable_snd ht a ha
+  refine ⟨hC', hG, he, ?_⟩
+  intro hl
+  apply hn
+  filter_upwards [hl] with p hlin r
+  have h := hlin (a r) (htest r) 2
+  have heq : (fun z => (2 : ℝ) * a r z) = a (2 * r) := by
+    funext z
+    simp only [a]
+    ring
+  rw [heq] at h
+  exact h
+
+#print axioms IsWholePlaneGFF.product_has_non_linear_modification
+#print axioms IsWholePlaneGFF.comp_measurePreserving
+#print axioms IsWholePlaneGFF.exists_modification_not_ae_linear
 #print axioms IsWholePlaneGFF.exists_diagonal_modification
 #print axioms IsWholePlaneGFF.coordinateModification
 #print axioms diagonalSpike_sections
