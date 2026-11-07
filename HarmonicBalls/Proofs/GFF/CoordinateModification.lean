@@ -754,6 +754,130 @@ theorem norm_circleAvg_succ_toLp_le
 
 #print axioms norm_circleAvg_succ_toLp_le
 
+/-- The L² representative of a mollified circle-average increment in
+Leonardo Bonanno's GFF construction. -/
+noncomputable def circleIncrementApproxVec
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsWholePlaneGFF h P)
+    (r : ℝ) (z : ℂ) (s : ℝ) (w : ℂ) (n : ℕ) : Lp ℝ 2 P :=
+  (LQGMetric.MarkovZB.memLp_pair hh (LQGMetric.CircleAvg.circDiff n z r n w s)).toLp _
+
+/-- The successive L² differences of mollified circle increments have a
+summable geometric bound. -/
+theorem norm_circleIncrementApproxVec_succ_sub_le
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsWholePlaneGFF h P)
+    {r s : ℝ} (hr : 0 < r) (hs : 0 < s) (z w : ℂ) (n : ℕ) :
+    ‖circleIncrementApproxVec hh r z s w (n + 1) -
+      circleIncrementApproxVec hh r z s w n‖ ≤
+        (Real.sqrt (4 / r) + Real.sqrt (4 / s)) * Real.sqrt 2⁻¹ ^ n := by
+  let A := LQGMetric.CircleAvg.circDiff (n + 1) z r n z r
+  let B := LQGMetric.CircleAvg.circDiff (n + 1) w s n w s
+  have ha := LQGMetric.MarkovZB.memLp_pair hh A
+  have hb := LQGMetric.MarkovZB.memLp_pair hh B
+  have heq : circleIncrementApproxVec hh r z s w (n + 1) -
+      circleIncrementApproxVec hh r z s w n =
+        ha.toLp (LQGMetric.pairProc h A) - hb.toLp (LQGMetric.pairProc h B) := by
+    unfold circleIncrementApproxVec
+    rw [← MemLp.toLp_sub, ← MemLp.toLp_sub]
+    apply MemLp.toLp_congr
+    filter_upwards with ω
+    simp only [Pi.sub_apply, LQGMetric.pairProc]
+    rw [← LQGMetric.CircleAvg.mollAvg_sub_eq, ← LQGMetric.CircleAvg.mollAvg_sub_eq,
+      ← LQGMetric.CircleAvg.mollAvg_sub_eq, ← LQGMetric.CircleAvg.mollAvg_sub_eq]
+    ring
+  rw [heq]
+  calc
+    ‖ha.toLp (LQGMetric.pairProc h A) - hb.toLp (LQGMetric.pairProc h B)‖ ≤
+        ‖ha.toLp (LQGMetric.pairProc h A)‖ + ‖hb.toLp (LQGMetric.pairProc h B)‖ :=
+          norm_sub_le _ _
+    _ ≤ Real.sqrt (4 / r) * Real.sqrt 2⁻¹ ^ n +
+        Real.sqrt (4 / s) * Real.sqrt 2⁻¹ ^ n :=
+      add_le_add (norm_circleAvg_succ_toLp_le hh z hr n)
+        (norm_circleAvg_succ_toLp_le hh w hs n)
+    _ = _ := by ring
+
+#print axioms norm_circleIncrementApproxVec_succ_sub_le
+
+/-- Leonardo Bonanno's mollified circle increments converge in L² to a
+representative of the circle-average increment. -/
+theorem exists_tendsto_circleIncrementApproxVec
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsWholePlaneGFF h P)
+    {r s : ℝ} (hr : 0 < r) (hs : 0 < s) (z w : ℂ) :
+    ∃ Y : Lp ℝ 2 P, Tendsto (circleIncrementApproxVec hh r z s w) atTop (𝓝 Y) ∧
+      (Y : Ω → ℝ) =ᵐ[P] LQGMetric.CircleAvg.cInc h r z s w := by
+  have hq : Real.sqrt 2⁻¹ < 1 := (Real.sqrt_lt' one_pos).2 (by norm_num)
+  have hc : CauchySeq (circleIncrementApproxVec hh r z s w) :=
+    cauchySeq_of_le_geometric _ _ hq fun n => by
+      rw [dist_comm, dist_eq_norm]
+      exact norm_circleIncrementApproxVec_succ_sub_le hh hr hs z w n
+  obtain ⟨Y, hY⟩ := cauchySeq_tendsto_of_complete hc
+  refine ⟨Y, hY, ?_⟩
+  let X : ℕ → Ω → ℝ := fun n =>
+    LQGMetric.pairProc h (LQGMetric.CircleAvg.circDiff n z r n w s)
+  have h1 : TendstoInMeasure P X atTop Y :=
+    (tendstoInMeasure_of_tendsto_Lp hY).congr_left fun n =>
+      (LQGMetric.MarkovZB.memLp_pair hh _).coeFn_toLp
+  have h2 : TendstoInMeasure P X atTop (LQGMetric.CircleAvg.cInc h r z s w) := by
+    refine tendstoInMeasure_of_tendsto_ae (fun n => ?_) ?_
+    · exact (LQGMetric.MarkovGerm.measurable_eval hh _).aestronglyMeasurable
+    · filter_upwards [LQGMetric.CircleAvg.ae_tendsto_mInc hh hr hs z w] with ω hω
+      convert hω using 1
+      funext n
+      exact (LQGMetric.CircleAvg.mollAvg_sub_eq (h ω) n z r n w s).symm
+  exact tendstoInMeasure_ae_unique h1 h2
+
+#print axioms exists_tendsto_circleIncrementApproxVec
+
+/-- Mixed covariance of Leonardo Bonanno's circle increment and test pairing,
+obtained as the L² limit of their mean-zero approximations. -/
+theorem normalizedGFF_circleIncrement_pairing_covariance_tendsto
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P)
+    (φ : LQGMetric.TestC) {r s : ℝ} (hr : 0 < r) (hs : 0 < s) (z w : ℂ) :
+    Tendsto (fun n => LQGMetric.logCov (LQGMetric.CircleAvg.circDiff n z r n w s).1
+      (LQGMetric.MarkovGerm.meanZeroApprox φ n).1) atTop
+      (𝓝 (cov[LQGMetric.CircleAvg.cInc h r z s w, fun ω => h ω φ; P])) := by
+  obtain ⟨U, hU, hUae⟩ := exists_tendsto_circleIncrementApproxVec hh.1 hr hs z w
+  let V := LQGMetric.MarkovNorm.pairVec hh φ
+  have hcenter : ∫ ω, (U : Ω → ℝ) ω ∂P = 0 := by
+    rw [integral_congr_ae hUae]
+    exact LQGMetric.CircleAvg.integral_cInc hh.1 hr hs z w
+  have hc : ⟪U, V⟫ =
+      cov[LQGMetric.CircleAvg.cInc h r z s w, fun ω => h ω φ; P] := by
+    calc
+      ⟪U, V⟫ = cov[(U : Ω → ℝ), (V : Ω → ℝ); P] := by
+        simpa only [Lp.toLp_coeFn] using
+          LQGMetric.MarkovZB.inner_toLp_eq_cov (Lp.memLp U) (Lp.memLp V) hcenter
+      _ = _ := LQGMetric.MarkovNorm.cov_congr_ae hUae
+        (LQGMetric.MarkovNorm.pairVec_ae hh φ)
+  have ht := hU.inner (𝕜 := ℝ) (LQGMetric.MarkovNorm.tendsto_pairVec hh φ)
+  rw [hc] at ht
+  refine ht.congr fun n => ?_
+  dsimp only [circleIncrementApproxVec, LQGMetric.MarkovNorm.apxVec]
+  rw [LQGMetric.MarkovZB.inner_toLp_eq_cov _ _ (LQGMetric.centered_pairProc hh.1 _)]
+  exact hh.1.covariance_eq _ _
+
+#print axioms normalizedGFF_circleIncrement_pairing_covariance_tendsto
+
+/-- The mixed covariance of a normalized circle average and a test pairing
+is the project whole-plane covariance kernel. -/
+theorem normalizedGFF_circleIncrement_pairing_covariance_eq_project
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P)
+    (φ : LQGMetric.TestC) {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    cov[LQGMetric.CircleAvg.cInc h r z 1 0, fun ω => h ω φ; P] =
+      wholePlaneGFFCov (.circle r z) (.pairing φ) := by
+  have heq := tendsto_nhds_unique
+    (normalizedGFF_circleIncrement_pairing_covariance_tendsto hh φ hr one_pos z 0)
+    (tendsto_logCov_circDiff_meanZeroApprox φ z 0 r 1)
+  rw [circleAverage_normalized_logPot_unitCircle] at heq
+  rw [wholePlaneGFFCov_circle_pairing_eq_potential]
+  linarith
+
+#print axioms normalizedGFF_circleIncrement_pairing_covariance_eq_project
+
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
 theorem normalizedGFF_pairings_mollifiedIncrements_gaussian
