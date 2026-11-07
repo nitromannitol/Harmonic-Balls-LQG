@@ -83,6 +83,14 @@ noncomputable def lqgGraphDimension (γ : ℝ) : ℝ := by
   classical
   exact if h : ∃ dimension, IsWholePlaneLQGDimension γ dimension then Classical.choose h else 1
 
+/-- The graph-distance choice is positive, including in the default case. -/
+theorem lqgGraphDimension_pos (γ : ℝ) : 0 < lqgGraphDimension γ := by
+  classical
+  unfold lqgGraphDimension
+  split
+  · exact (Classical.choose_spec ‹∃ dimension, IsWholePlaneLQGDimension γ dimension›).1
+  · norm_num
+
 /-- Whenever a graph-distance witness exists, the chosen dimension is a witness. -/
 theorem isWholePlaneLQGDimension_lqgGraphDimension {γ : ℝ}
     (h : ∃ dimension, IsWholePlaneLQGDimension γ dimension) :
