@@ -82,5 +82,49 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch
   exact hpos (fun n => ENNReal.ofReal (c * (3 * L / (2 * (2 : ℝ) ^ n)) ^ s))
     p hp (fun _ => 0) tendsto_const_nhds hsmall htail
 
+/-- A closed-square moment bound suffices for the measurable open-domain
+diameters. No measurability of the closed-square diameter is needed. -/
+theorem IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_closed_moment
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{0})
+    {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (h : IsCorrectedPinchConfiguration U V W T Q' Q δ)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ ξ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hξ : 0 < ξ)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} (hgff : IsWholePlaneGFF P hC hcirc)
+    (hμ : IsLQGMeasureOfField P γ 0 hcirc μ)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (M : ℝ) :
+    ∃ z : ℂ, ∃ L : ℝ, 0 < L ∧ closedSquare z L ⊆ U ∧
+      (∀ᵐ ω ∂P, μ ω (frontier (closedSquare z L)) = 0) ∧
+      ∀ (c s : ℝ), 0 < c → 0 < s → s < ξ * (lqgQ γ - 2) →
+      ∀ (e : ℝ → ℝ), Tendsto e (𝓝[>] 0) (𝓝 0) →
+      (∀ᶠ n in atTop, ∀ i : Fin (2 ^ n) × Fin (2 ^ n),
+        let r := 3 * L / (2 * (2 : ℝ) ^ n)
+        let t := (ξ * lqgQ γ - s) / ξ ^ 2
+        (∫⁻ ω, ((ENNReal.ofReal c)⁻¹ *
+          (⨆ x ∈ complexIntermediateGridSquare z (L / (2 : ℝ) ^ n) i,
+            ⨆ y ∈ complexIntermediateGridSquare z (L / (2 : ℝ) ^ n) i,
+              internalMetric (𝔇 (hC ω))
+                (complexIntermediateGridSquare z (L / (2 : ℝ) ^ n) i) x y)) ^ t ∂P) ≤
+          ENNReal.ofReal (r ^ (ξ * lqgQ γ * t - ξ ^ 2 * t ^ 2 / 2 + e r))) →
+      0 < P {ω | pinchPointEventWithInternalBounds (μ ω) (𝔇 (hC ω)) U T Q' Q M 1 0} := by
+  obtain ⟨z, L, hL, hSU, hfront, hpos⟩ :=
+    h.exists_square_positive_base_internal_pinch_of_open_moment
+      hgrowth hγ hγ2 hξ hgff hμ 𝔇 h𝔇 M
+  refine ⟨z, L, hL, hSU, hfront, ?_⟩
+  intro c s hc hs hsh e he hm
+  apply hpos c s hc hs hsh e he
+  have hsQ : s < ξ * lqgQ γ := by nlinarith
+  have ht : 0 ≤ (ξ * lqgQ γ - s) / ξ ^ 2 :=
+    (div_pos (by linarith) (sq_pos_of_pos hξ)).le
+  filter_upwards [hm] with n hn
+  intro i
+  refine (lintegral_mono fun ω => ENNReal.rpow_le_rpow ?_ ht).trans (hn i)
+  gcongr
+  exact dyadicIntermediateInternalDiameter_le_closedSquareDiameter
+    (fun ω => 𝔇 (hC ω)) z L hL n i ω
+
 #print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_open_moment
+#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_closed_moment
 end HarmonicBalls
