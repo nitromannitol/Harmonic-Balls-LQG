@@ -3,7 +3,10 @@ import HarmonicBalls.Proofs.Sec11.PinchNormalizedObservableTransfer
 import HarmonicBalls.Proofs.Sec11.PinchWeightedReferenceBall
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchOpenThirdShift
 
-/-! # Transfer of the strengthened pinch event under smooth shifts -/
+/-! # Transfer of the strengthened pinch event under smooth shifts
+
+The joint smooth-shift decoder uses Leonardo Bonanno’s
+`LatticeProb.Bonanno.LQGMetric.Field.CameronMartin` formalization. -/
 
 namespace HarmonicBalls
 open MeasureTheory Filter Set Metric

@@ -3,7 +3,10 @@ import HarmonicBalls.Proofs.Sec11.ContinuousBaseMetricShiftDecoder
 import HarmonicBalls.Proofs.Sec11.SingularSmoothShiftPairing
 import HarmonicBalls.Steps.Sec11.WholePlaneWeylShift
 
-/-! Transfer of the first pinch certificate under a smooth field shift. -/
+/-! Transfer of the first pinch certificate under a smooth field shift.
+
+The Cameron–Martin input uses Leonardo Bonanno’s
+`LatticeProb.Bonanno.LQGMetric.Field.CameronMartin` formalization. -/
 
 namespace HarmonicBalls
 open MeasureTheory Filter Set Metric
