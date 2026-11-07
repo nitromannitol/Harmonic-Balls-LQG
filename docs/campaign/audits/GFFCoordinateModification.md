@@ -52,8 +52,12 @@ two pairings as the limit of Bonanno's logarithmic covariances of their
 mean-zero approximations, using the `L²` convergence of those approximations.
 `abs_logPot_meanZeroApprox_sub_le` bounds the difference between the
 approximation’s logarithmic potential and the normalized potential uniformly
-by `|∫ φ| · 2⁻ⁿ`. Passing this estimate through the remaining integrals is
-still needed to identify the test-test covariance with the project kernel.
+by `|∫ φ| · 2⁻ⁿ`. Theorems
+`tendsto_integral_test_mul_meanZeroApprox_error` and
+`tendsto_integral_meanZeroApprox_mul_error` show that this error vanishes
+after integration against a fixed test or another mean-zero approximation;
+the latter uses uniform boundedness of their absolute masses. Identifying the
+remaining limiting integral with the project kernel is still required.
 `normalizedGFF_pairings_increments_gaussian` also proves the mixed Gaussian
 law of all pairings and positive-radius circle-average increments. It uses
 the almost-sure limit of mollified increments, which are mean-zero test

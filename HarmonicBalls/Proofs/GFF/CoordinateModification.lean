@@ -142,6 +142,83 @@ theorem abs_logPot_meanZeroApprox_sub_le (φ : LQGMetric.TestC) (n : ℕ) (x : �
 
 #print axioms abs_logPot_meanZeroApprox_sub_le
 
+/-- Integrating the normalized potential approximation against a fixed test
+function preserves its geometric convergence, in Leonardo Bonanno's construction. -/
+theorem tendsto_integral_test_mul_meanZeroApprox_error (ρ φ : LQGMetric.TestC) :
+    Tendsto (fun n => ∫ x, ρ x *
+      (LQGMetric.CircleAvg.logPot (LQGMetric.MarkovGerm.meanZeroApprox φ n).1 x -
+        (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x))) atTop (𝓝 0) := by
+  have hp := tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 2⁻¹)
+    (by norm_num : (2 : ℝ)⁻¹ < 1)
+  have he : Tendsto (fun n : ℕ => (∫ x, ‖ρ x‖) * |∫ y, φ y| * (2 : ℝ)⁻¹ ^ n)
+      atTop (𝓝 0) := by
+    simpa using hp.const_mul ((∫ x, ‖ρ x‖) * |∫ y, φ y|)
+  refine squeeze_zero_norm (fun n => ?_) he
+  have hb : ∀ x : ℂ, ‖ρ x *
+      (LQGMetric.CircleAvg.logPot (LQGMetric.MarkovGerm.meanZeroApprox φ n).1 x -
+        (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x))‖ ≤
+      ‖ρ x‖ * (|∫ y, φ y| * (2 : ℝ)⁻¹ ^ n) := by
+    intro x
+    rw [norm_mul, Real.norm_eq_abs]
+    exact mul_le_mul_of_nonneg_left (abs_logPot_meanZeroApprox_sub_le φ n x) (abs_nonneg _)
+  have hi : Integrable (fun x : ℂ => ‖ρ x‖ * (|∫ y, φ y| * (2 : ℝ)⁻¹ ^ n)) :=
+    (LQGMetric.CircleAvg.integrable_testC ρ).norm.mul_const _
+  refine (norm_integral_le_of_norm_le hi (Filter.Eventually.of_forall hb)).trans (le_of_eq ?_)
+  rw [integral_mul_const]
+  ring
+
+#print axioms tendsto_integral_test_mul_meanZeroApprox_error
+
+/-- The potential error also vanishes against the changing mean-zero test
+approximations, whose absolute masses are uniformly bounded. -/
+theorem tendsto_integral_meanZeroApprox_mul_error (ρ φ : LQGMetric.TestC) :
+    Tendsto (fun n => ∫ x, (LQGMetric.MarkovGerm.meanZeroApprox ρ n).1 x *
+      (LQGMetric.CircleAvg.logPot (LQGMetric.MarkovGerm.meanZeroApprox φ n).1 x -
+        (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x))) atTop (𝓝 0) := by
+  have hp := tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 2⁻¹)
+    (by norm_num : (2 : ℝ)⁻¹ < 1)
+  have he : Tendsto (fun n : ℕ => ((∫ x, ‖ρ x‖) + |∫ y, ρ y|) *
+      |∫ y, φ y| * (2 : ℝ)⁻¹ ^ n) atTop (𝓝 0) := by
+    simpa using hp.const_mul (((∫ x, ‖ρ x‖) + |∫ y, ρ y|) * |∫ y, φ y|)
+  refine squeeze_zero_norm (fun n => ?_) he
+  let g : ℂ → ℝ := fun x => ‖ρ x‖ + |∫ y, ρ y| * LQGMetric.CircleAvg.circBump n 0 1 x
+  have hg : Integrable g := (LQGMetric.CircleAvg.integrable_testC ρ).norm.add
+    ((LQGMetric.CircleAvg.integrable_testC _).const_mul _)
+  have hgn : ∀ x, 0 ≤ g x := fun x => add_nonneg (norm_nonneg _)
+    (mul_nonneg (abs_nonneg _) (LQGMetric.CircleAvg.circBump_nonneg _ _ _ _))
+  have hbound : ∀ x, ‖(LQGMetric.MarkovGerm.meanZeroApprox ρ n).1 x‖ ≤ g x := by
+    intro x
+    change ‖ρ x - (∫ y, ρ y) * LQGMetric.CircleAvg.circBump n 0 1 x‖ ≤ _
+    refine (norm_sub_le _ _).trans ?_
+    rw [norm_mul]
+    simp only [Real.norm_eq_abs]
+    rw [abs_of_nonneg (LQGMetric.CircleAvg.circBump_nonneg _ _ _ _)]
+    exact le_rfl
+  have hb : ∀ x : ℂ, ‖(LQGMetric.MarkovGerm.meanZeroApprox ρ n).1 x *
+      (LQGMetric.CircleAvg.logPot (LQGMetric.MarkovGerm.meanZeroApprox φ n).1 x -
+        (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+          LQGMetric.CircleAvg.circLog 0 1 x))‖ ≤
+      g x * (|∫ y, φ y| * (2 : ℝ)⁻¹ ^ n) := by
+    intro x
+    rw [norm_mul]
+    exact mul_le_mul (hbound x) (by simpa only [Real.norm_eq_abs] using
+      abs_logPot_meanZeroApprox_sub_le φ n x) (norm_nonneg _) (hgn x)
+  refine (norm_integral_le_of_norm_le (hg.mul_const _) (Filter.Eventually.of_forall hb)).trans
+    (le_of_eq ?_)
+  rw [integral_mul_const, show ∫ x, g x = (∫ x, ‖ρ x‖) + |∫ y, ρ y| by
+    dsimp [g]
+    have hρ : Integrable (fun x => |ρ x|) := by
+      simpa only [Real.norm_eq_abs] using (LQGMetric.CircleAvg.integrable_testC ρ).norm
+    rw [integral_add hρ
+      ((LQGMetric.CircleAvg.integrable_testC _).const_mul _), integral_const_mul,
+      LQGMetric.CircleAvg.integral_circBump, mul_one]]
+  ring
+
+#print axioms tendsto_integral_meanZeroApprox_mul_error
+
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
 theorem normalizedGFF_pairings_mollifiedIncrements_gaussian
