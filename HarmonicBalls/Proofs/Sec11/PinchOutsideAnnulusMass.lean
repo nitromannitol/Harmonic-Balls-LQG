@@ -127,6 +127,43 @@ theorem IsCorrectedPinchConfiguration.exists_outside_green_threshold
   obtain ⟨c, hc, hce⟩ := h.exists_outside_green_annulus_mass hgff hμ hfront
   exact h.exists_outside_green_of_annulus_mass hgff hμ hfront hfinite hpositive M c hc hce
 
+/-- The annular mass decoder supplies the Green threshold in the conditional
+second-pinch argument; the metric separation and interior premises remain
+explicit. -/
+theorem IsCorrectedPinchConfiguration.positive_second_of_outside_green_annulus
+    {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (h : IsCorrectedPinchConfiguration U V W T Q' Q δ)
+    {Ω : Type*} [m₀ : MeasurableSpace Ω] {P : Measure Ω}
+    {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} (hgff : IsWholePlaneGFF P hC hcirc)
+    (hμ : IsLQGMeasureOfField P γ 0 hcirc μ)
+    (hfront : ∀ᵐ ω ∂P, μ ω (frontier (annulus 0 3 6)) = 0)
+    (hfinite : ∀ᵐ ω ∂P, μ ω (annulus 0 3 6) ≠ ∞)
+    (hpositive : ∀ᵐ ω ∂P, 0 < μ ω (annulus 0 3 6))
+    (hm : MeasurableSpace.comap (localModConstPairings 0 hC (closure W)ᶜ)
+      inferInstance ≤ m₀) (A : Set Ω) (D : Ω → ℂ → ℂ → ℝ) (hδ : 0 < δ) (M : ℝ)
+    (a : Ω → ℝ≥0∞)
+    (hA : MeasurableSet[MeasurableSpace.comap (localModConstPairings 0 hC (closure W)ᶜ)
+      inferInstance] A) (hAp : 0 < P A)
+    (ha : @Measurable Ω ℝ≥0∞
+      (MeasurableSpace.comap (localModConstPairings 0 hC (closure W)ᶜ) inferInstance) _ a)
+    (hae : a =ᵐ[P] fun ω => ENNReal.ofReal
+      (setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ))))
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (hgreen : ∀ᵐ ω ∂P, annulusGreenPotentialSup (μ ω) 0 3 6 ≠ ∞)
+    (hinside : ∀ n k : ℕ, 0 < n →
+      @NullMeasurableSet Ω m₀ {ω | internalDiam (D ω) δ V < (n : ℝ≥0∞)⁻¹ ∧
+        (k : ℝ≥0∞) < μ ω U} P ∧
+      ∀ᵐ ω ∂P, 0 < (P[({ω | internalDiam (D ω) δ V < (n : ℝ≥0∞)⁻¹ ∧
+        (k : ℝ≥0∞) < μ ω U}).indicator (fun _ => (1 : ℝ)) |
+          MeasurableSpace.comap (localModConstPairings 0 hC (closure W)ᶜ) inferInstance]) ω) :
+    0 < P {ω | ω ∈ A ∧ pinchSecondEvent (μ ω) (D ω) U V δ M} := by
+  let : IsProbabilityMeasure P := hgff.isProbabilityMeasure
+  obtain ⟨b, hb, hbe⟩ := h.exists_outside_green_threshold hgff hμ hfront hfinite hpositive M
+  exact positive_pinchSecondEvent_of_conditional_null_massDiameter_representatives P _ hm A D μ
+    U V hδ M a b hA hAp ha hb hae hbe hmetric hgreen hinside
+
+#print axioms IsCorrectedPinchConfiguration.positive_second_of_outside_green_annulus
 #print axioms IsCorrectedPinchConfiguration.exists_outside_green_threshold
 #print axioms IsCorrectedPinchConfiguration.exists_outside_green_annulus_mass
 end HarmonicBalls
