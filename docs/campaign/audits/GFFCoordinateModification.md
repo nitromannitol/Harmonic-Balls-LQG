@@ -61,8 +61,11 @@ the latter uses uniform boundedness of their absolute masses.
 any continuous function. `tendsto_logCov_meanZeroApprox` combines these
 facts, and `normalizedGFF_pairing_covariance_eq_potential` identifies the
 covariance of Bonanno's pairings with the resulting normalized potential
-expression. Identifying it with the project's double-integral kernel is still
-required, including the kernel's diagonal convention.
+expression. `integral_test_mul_wholePlaneCov` removes the diagonal under
+a test-function integral, and `wholePlaneGFFCov_pairings_eq_potential`
+expands the project's test-test covariance in the same potential terms.
+Equating the two expressions still requires the identity relating the
+unit-circle average of the potential to the test's integral against circLog.
 `normalizedGFF_pairings_increments_gaussian` also proves the mixed Gaussian
 law of all pairings and positive-radius circle-average increments. It uses
 the almost-sure limit of mollified increments, which are mean-zero test

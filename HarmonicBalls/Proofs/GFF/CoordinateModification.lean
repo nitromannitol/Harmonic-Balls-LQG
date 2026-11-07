@@ -299,6 +299,64 @@ theorem normalizedGFF_pairing_covariance_eq_potential
 
 #print axioms normalizedGFF_pairing_covariance_eq_potential
 
+/-- Integrating the project kernel against a test removes its diagonal junk
+value and yields Leonardo Bonanno's logarithmic potential plus both
+normalization terms. -/
+theorem integral_test_mul_wholePlaneCov (φ : LQGMetric.TestC) (x : ℂ) :
+    (∫ y, φ y * wholePlaneCov x y) =
+      LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+        LQGMetric.CircleAvg.circLog 0 1 x +
+        ∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y := by
+  let f : C(ℂ, ℝ) := ⟨LQGMetric.CircleAvg.circLog 0 1,
+    LQGMetric.CircleAvg.continuous_circLog one_ne_zero 0⟩
+  have hlog := LQGMetric.CircleAvg.integrable_log_mul_test φ x
+  have hconst : Integrable (fun y => LQGMetric.CircleAvg.circLog 0 1 x * φ y) :=
+    (LQGMetric.CircleAvg.integrable_testC φ).const_mul _
+  have hnorm : Integrable (fun y => φ y * f y) :=
+    LQGMetric.CircleAvg.integrable_test_mul φ f
+  have heq : (∫ y, φ y * wholePlaneCov x y) = ∫ y,
+      ((-Real.log ‖x - y‖ * φ y + LQGMetric.CircleAvg.circLog 0 1 x * φ y) +
+        φ y * LQGMetric.CircleAvg.circLog 0 1 y) := by
+    apply integral_congr_ae
+    filter_upwards [Measure.ae_ne volume x] with y hy
+    rw [wholePlaneCov_eq_additive_of_ne (Ne.symm hy),
+      ← LQGMetric.CircleAvg.circLog_zero_one x,
+      ← LQGMetric.CircleAvg.circLog_zero_one y]
+    ring
+  rw [heq]
+  change (∫ y, ((-Real.log ‖x - y‖ * φ y + LQGMetric.CircleAvg.circLog 0 1 x * φ y) +
+    φ y * f y)) = _
+  have hsum : Integrable (fun y => -Real.log ‖x - y‖ * φ y +
+      LQGMetric.CircleAvg.circLog 0 1 x * φ y) := hlog.add hconst
+  rw [integral_add hsum hnorm, integral_add hlog hconst, integral_const_mul]
+  dsimp only [f, LQGMetric.CircleAvg.logPot, ContinuousMap.coe_mk]
+  ring
+
+#print axioms integral_test_mul_wholePlaneCov
+
+/-- Test-test covariance of the project kernel in terms of Leonardo Bonanno's
+logarithmic potential and the two unit-circle normalization terms. -/
+theorem wholePlaneGFFCov_pairings_eq_potential (ρ φ : LQGMetric.TestC) :
+    wholePlaneGFFCov (.pairing ρ) (.pairing φ) =
+      (∫ x, ρ x * (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+        LQGMetric.CircleAvg.circLog 0 1 x)) + (∫ x, ρ x) *
+          (∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y) := by
+  let f : C(ℂ, ℝ) := ⟨fun x => LQGMetric.CircleAvg.logPot φ x +
+      (∫ y, φ y) * LQGMetric.CircleAvg.circLog 0 1 x,
+    (LQGMetric.MarkovGermVer.contDiff_logPot φ).continuous.add
+      (continuous_const.mul (LQGMetric.CircleAvg.continuous_circLog one_ne_zero 0))⟩
+  change (∫ x, ρ x * (∫ y, φ y * wholePlaneCov x y)) = _
+  simp_rw [integral_test_mul_wholePlaneCov]
+  change (∫ x, ρ x * (f x + (∫ y, φ y * LQGMetric.CircleAvg.circLog 0 1 y))) = _
+  simp_rw [mul_add]
+  rw [integral_add (LQGMetric.CircleAvg.integrable_test_mul ρ f)
+    ((LQGMetric.CircleAvg.integrable_testC ρ).mul_const _), integral_mul_const]
+  change (∫ x, ρ x * (LQGMetric.CircleAvg.logPot φ x + (∫ y, φ y) *
+    LQGMetric.CircleAvg.circLog 0 1 x)) + _ = _
+  simp_rw [mul_add]
+
+#print axioms wholePlaneGFFCov_pairings_eq_potential
+
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
 theorem normalizedGFF_pairings_mollifiedIncrements_gaussian
