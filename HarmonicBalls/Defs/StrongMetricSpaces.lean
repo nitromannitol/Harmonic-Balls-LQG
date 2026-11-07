@@ -126,6 +126,50 @@ theorem continuous_planeDistribution_evaluation (test : TestFunction (⊤ : Open
   let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
   exact (continuous_apply test).comp continuous_induced_dom
 
+/-- Precomposition by a continuous test-function map is continuous for weak distributions. -/
+theorem continuous_planeDistribution_precomp
+    (pull : TestFunction (⊤ : Opens ℂ) ℝ ⊤ →L[ℝ] TestFunction (⊤ : Opens ℂ) ℝ ⊤) :
+    @Continuous PlaneDistribution PlaneDistribution planeDistributionWeakTopology
+      planeDistributionWeakTopology (fun distribution => pull.precompCompactConvergenceCLM ℝ distribution) := by
+  let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
+  apply continuous_induced_rng.mpr
+  apply continuous_pi
+  intro test
+  exact continuous_planeDistribution_evaluation (pull test)
+
+/-- A weakly measurable distribution-valued field stays measurable under test precomposition. -/
+theorem measurable_planeDistribution_precomp {Ω : Type*} [MeasurableSpace Ω]
+    (pull : TestFunction (⊤ : Opens ℂ) ℝ ⊤ →L[ℝ] TestFunction (⊤ : Opens ℂ) ℝ ⊤)
+    (field : Ω → PlaneDistribution)
+    (hfield : @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology) field) :
+    @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology)
+      (fun ω => pull.precompCompactConvergenceCLM ℝ (field ω)) := by
+  let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
+  let : MeasurableSpace PlaneDistribution := borel PlaneDistribution
+  let : BorelSpace PlaneDistribution := ⟨rfl⟩
+  exact (continuous_planeDistribution_precomp pull).measurable.comp hfield
+
+/-- Scalar multiplication of a distribution is continuous in the weak topology. -/
+theorem continuous_planeDistribution_const_smul (c : ℝ) :
+    @Continuous PlaneDistribution PlaneDistribution planeDistributionWeakTopology
+      planeDistributionWeakTopology (fun distribution => c • distribution) := by
+  let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
+  apply continuous_induced_rng.mpr
+  apply continuous_pi
+  intro test
+  change Continuous (fun distribution : PlaneDistribution => c * distribution test)
+  exact continuous_const.mul (continuous_planeDistribution_evaluation test)
+
+/-- With a continuous test pullback, the corresponding affine distribution pullback is weakly continuous. -/
+theorem continuous_planeDistribution_affine_of_testMap (r : ℝ)
+    (pull : TestFunction (⊤ : Opens ℂ) ℝ ⊤ →L[ℝ] TestFunction (⊤ : Opens ℂ) ℝ ⊤) :
+    @Continuous PlaneDistribution PlaneDistribution planeDistributionWeakTopology
+      planeDistributionWeakTopology
+      (fun distribution => (r ^ 2)⁻¹ • pull.precompCompactConvergenceCLM ℝ distribution) := by
+  let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
+  exact (continuous_planeDistribution_const_smul (r ^ 2)⁻¹).comp
+    (continuous_planeDistribution_precomp pull)
+
 /-- Weak-Borel measurable distribution-valued fields have measurable test-function pairings. -/
 theorem measurable_planeDistribution_evaluation {Ω : Type*} [MeasurableSpace Ω]
     (field : Ω → PlaneDistribution)
