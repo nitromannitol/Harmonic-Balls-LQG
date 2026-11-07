@@ -8,6 +8,32 @@ namespace HarmonicBalls
 open Metric Set
 open scoped ENNReal
 
+/-- The buffered obstacles stay strictly inside the radius-five ball. In
+particular the entire exterior of that ball is available to a corridor. -/
+theorem IsPinchPointProofConfiguration.obstacle_closures_subset_ball_five
+    {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (h : IsPinchPointProofConfiguration U V W T Q' Q δ) :
+    closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W) ⊆
+      ball (0 : ℂ) 5 := by
+  have hδ : 0 < δ := h.δ₀_mem.1
+  apply union_subset
+  · exact (closure_mono (thickening_mono (by linarith : 2 * δ ≤ 10 * δ) Q)).trans
+      (h.thickening_Q.trans (fun _ hx => hx.1.1))
+  · exact (closure_mono (thickening_mono (by linarith : 2 * δ ≤ 10 * δ) W)).trans
+      (h.thickening_W.trans (fun _ hx => (ball_subset_ball (by norm_num : (2 : ℝ) ≤ 5)) hx.1))
+
+/-- The radius-five sphere is obstacle-free even after taking closures. -/
+theorem IsPinchPointProofConfiguration.sphere_five_avoids_obstacle_closures
+    {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (h : IsPinchPointProofConfiguration U V W T Q' Q δ) :
+    sphere (0 : ℂ) 5 ⊆
+      (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W))ᶜ := by
+  intro x hx hobs
+  have hin := h.obstacle_closures_subset_ball_five hobs
+  rw [mem_ball] at hin
+  rw [mem_sphere] at hx
+  linarith
+
 /-- The corrected corridor is open, and is connected whenever it contains
 the origin. -/
 theorem pinchCorridor_open_connected {W Q : Set ℂ} {δ : ℝ}
@@ -50,5 +76,6 @@ theorem IsCorrectedPinchConfiguration.corridor_internalMetric_lt_top
     le_iSup_of_le y (le_iSup_of_le hy (internalMetric_anti D hsub 0 y))
 
 #print axioms IsCorrectedPinchConfiguration.corridor_internalMetric_lt_top
+#print axioms IsPinchPointProofConfiguration.sphere_five_avoids_obstacle_closures
 
 end HarmonicBalls
