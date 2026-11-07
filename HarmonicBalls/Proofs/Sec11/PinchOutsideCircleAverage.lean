@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Sec11.PinchOutsideRadialCircle
+import HarmonicBalls.Proofs.Sec6.AnnularCircleDensity
 
 /-! # Local circle averages from the outside field
 
@@ -82,5 +83,39 @@ theorem IsCorrectedPinchConfiguration.exists_outside_circle_average
   rw [hlim'.liminf_eq, hRω]
   ring
 
+/-- The local absolute circle averages admit a jointly measurable version on
+an open outside region, provided the reference circle has an outside buffer. -/
+theorem IsCorrectedPinchConfiguration.exists_joint_outside_circle_average
+    {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (h : IsCorrectedPinchConfiguration U V W T Q' Q δ)
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) {r η : ℝ} (hr : 0 < r) (hη : 0 < η)
+    (O : Set ℂ) (hO : IsOpen O) (hOout : O ⊆ (closure W)ᶜ)
+    (a : ℂ) (ha : closedBall a (r + η) ⊆ O) :
+    ∃ d : Ω → ℂ → ℝ, @Measurable (Ω × ℂ) ℝ
+      ((MeasurableSpace.comap (localModConstPairings 0 hC (closure W)ᶜ) inferInstance).prod
+        inferInstance) _ (Function.uncurry d) ∧
+      ∀ᵐ ω ∂P, ∀ z, closedBall z r ⊆ O → d ω z = hcirc ω r z := by
+  have ha' : closedBall a r ⊆ O :=
+    (closedBall_subset_closedBall (by linarith)).trans ha
+  obtain ⟨X, hX, hXe⟩ := h.exists_outside_circle_average hgff hr hη a (ha.trans hOout)
+  obtain ⟨d, hdm, hde⟩ := hgff.exists_joint_annular_centered_circle_version
+    (α₀ := 0) hr O hO a ha'
+  have hdm' : @Measurable (Ω × ℂ) ℝ
+      ((MeasurableSpace.comap (localModConstPairings 0 hC (closure W)ᶜ) inferInstance).prod
+        inferInstance) _ (Function.uncurry d) := by
+    rw [← fieldSigmaAlgebraModConst_eq_comap_localModConstPairings]
+    have hf : @Measurable (Ω × ℂ) Ω
+        ((Section6.fieldSigmaAlgebraModConst 0 hC (closure W)ᶜ).prod inferInstance)
+        (Section6.fieldSigmaAlgebraModConst 0 hC O) Prod.fst :=
+      measurable_fst.mono le_rfl (fieldSigmaAlgebraModConst_mono 0 hC hOout)
+    exact hdm.comp (hf.prodMk measurable_snd)
+  refine ⟨fun ω z => d ω z + X ω, hdm'.add (hX.comp measurable_fst), ?_⟩
+  filter_upwards [hde, hXe] with ω hd hx z hz
+  rw [hd z hz, hx]
+  simp [fieldCircleAverage]
+
+#print axioms IsCorrectedPinchConfiguration.exists_joint_outside_circle_average
 #print axioms IsCorrectedPinchConfiguration.exists_outside_circle_average
 end HarmonicBalls
