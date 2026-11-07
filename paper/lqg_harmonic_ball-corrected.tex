@@ -2769,7 +2769,9 @@
 		\[
 		\mu_h(\A_{r,2 r}(z) \cap {\regcluster{}{t}}) \leq C \times \SGrho{3r, 6r}{z}.
 		\]
-		where $\SGrho{3r, 6r}{z}$ is as in \eqref{eq:alternate-size-2}. 
+		% CORRECTION [C27] Printed: reference to (alternate-size-2); corrected: reference to (alternate-size-2-full).
+		% Reason: the displayed annular potential uses the variable-aspect-ratio definition.
+		where $\SGrho{3r, 6r}{z}$ is as in \eqref{eq:alternate-size-2-full}.
 		
 	\end{lemma}
 	\begin{proof}
@@ -2813,78 +2815,39 @@
 		\end{equation}
 	\end{lemma}
 	
-	
-	
-	
-	
-	
+
+	% CORRECTION [C26] Printed: the bump height log(M C_2/C_1)/gamma is nonnegative and the drift comparison has a universal constant.
+	% Corrected: use a nonnegative bump with height log max{1,2 M C_2/C_1}/gamma and comparison factor 1201^{-gamma |alpha_0|}.
+	% Reason: the printed height can be negative, and the weight comparison depends on alpha_0.
 	\begin{proof}
-		
-		Recall from \eqref{eq:gff} that $h = h^\C - \boldsymbol{\alpha}_0 \log |\cdot|$. 
-		We first show \eqref{eq:desired-claim} in the case $\boldsymbol{\alpha}_0 = 0$, 
-		and then use Weyl scaling to get the general case. 
-		
-		
-		
-		
-		
-		In the following, we write $SG_{3r ,6r}^h(z)$ instead of $\SGrho{3r,6r}{z}$ to indicate the dependence on the underlying field $h$. 
-		Note that $SG^h_{3r ,6r }(z)$ depends only on $h$ restricted to $\A_{3r, 6r}(z)$. 
-		
-		{\it Step 1: $\boldsymbol{\alpha}_0 = 0$.} \\
-		By definition, if $\boldsymbol{\alpha}_0 = 0$ then $h$ is a whole-plane GFF.
-		We have chosen the event $\tilde G_n$ so that it is a.s.\ determined by $h $ viewed modulo additive constant. Hence, by the scale and translation invariance of the law of the whole-plane GFF~\eqref{eq:gff-scaling} it suffices to bound $\P[\tilde G_1(0)]$ from below. This lower bound is achieved via the `adding a bump function' technique. 
-		
-		Since the random variables involved are finite and positive, there are $\gamma$-dependent constants $C_1$ and $C_2$ so that
-		\begin{equation} \label{eq:l-and-r-bounds}
-		\P\left[\mu_h(\A_{1,2} \cap \mathcal Q) \geq C_1 \mbox{ and }  SG^h_{3,6} \leq C_2\right] \geq 1/2.
-		\end{equation}
-		Let $\phi$ be a smooth, non-negative bump function 
-		which is identically equal to $\gamma^{-1} \log \frac{M C_2}{C_1}$ on $\A_{1,2}$ and identically equal to 0 on $\A_{0.5,2.5}^c$. On the event in \eqref{eq:l-and-r-bounds}
-		\begin{align*}
-		\mu_{h+\phi}(\A_{1,2} \cap \mathcal Q) &= M \times \mu_h(\A_{1,2} \cap \mathcal Q) \times  \frac{C_2}{C_1} \qquad \mbox{(by Weyl scaling)} \\
-		&\geq M \times C_2 \qquad \mbox{($\mu_h(\A_{1,2} \cap \mathcal Q) \geq C_1$ by the event)} \\
-		&\geq M \times SG^h_{3,6}  \qquad \mbox{($ C_2 \geq SG^h_{3,6}$ by the event \eqref{eq:l-and-r-bounds})} \\
-		&= M \times SG^{h+\phi}_{3,6} \qquad \mbox{($\phi \equiv 0$ on $\A_{3, 6}$)}.
-		\end{align*}	
-		Since the laws of $h$ and $h+\phi$ are mutually absolutely continuous viewed modulo additive constant~\cite[Proposition 2.9]{miller2017imaginary} this implies
+		Write $g=h^\C$ and $S_f(r,z)=SG^f_{3r,6r}(z)$ for the annular potential computed using the field $f$.
+		First suppose $\boldsymbol\alpha_0=0$. The sector mass $A=\mu_g(\A_{1,2}\cap\mathcal Q)$ is positive a.s., and $B=S_g(1,0)$ is finite a.s. Choose $c_1,c_2>0$ such that $\P[A\ge c_1,\ B\le c_2]\ge1/2$.
+		Let $u$ be a smooth nonnegative function, equal to one on a neighborhood of $\overline{\A}_{1,2}$ and supported in $\A_{1/2,5/2}$, and set
 		\[
-		\P[\tilde G_1(0)] := p_M > 0,
-		\]		
-		completing the proof of Step 1.
-		
-		
-		{\it Step 2: $\boldsymbol{\alpha}_0 \in (-\infty, Q)$.} \\
-		Write $r := 2^{-n}$.
-		In the general case, we fix $z$ and take $n \geq N(z)$ sufficiently large so that 
-		\[
-		\dist(\A_{r, 6 r}(z), \{0\}) > r/100.
+		 a=\gamma^{-1}\log\max\{1,2Mc_2/c_1\}.
 		\]
-		By Weyl scaling, Fact \ref{fact:lqg-measure}, 
+		On the preceding event, Weyl scaling and the support of $u$ give
 		\[
-		\frac{\mu_h(\A_{r,2r}(z) \cap \mathcal Q)}{SG^h_{3r,6r}(z)} \geq C \frac{\mu_{h^\C}(\A_{r,2r}(z) \cap \mathcal Q)}{SG^{h^\C}_{3r,6r}(z)}, \quad \mbox{for a universal constant $C > 0$}. 
+		 \mu_{g+au}(\A_{1,2}\cap\mathcal Q)\ge 2Mc_2\ge 2M S_{g+au}(1,0).
 		\]
-		By Step 1, with probability $p_{M/C}$, 
+		The laws of $g$ and $g+au$, modulo constants, are mutually absolutely continuous by \cite[Proposition 2.9]{miller2017imaginary}; consequently the desired event has positive probability. Translation and scale invariance of the GFF modulo constants, the LQG coordinate-change formula, and Brownian scaling of the Green function give the same lower bound at every center and radius.
+
+		Now let $\boldsymbol\alpha_0<Q$. For $r=2^{-n}$ put $E=\A_{r,6r}(z)$, $m=\inf_E|w|$, and $L=\sup_E|w|$. The stated separation gives $m>r/100$, while $L\le m+12r$, so $L/m\le1201$. Weyl scaling and positivity of the Green function therefore imply
 		\[
-		\frac{\mu_{h^\C}(\A_{r,2r} \cap \mathcal Q)}{SG^{h^\C}_{3r,6r}} \geq M/C,  
+		 \frac{\mu_h(\A_{r,2r}(z)\cap\mathcal Q(z))}{S_h(r,z)}
+		 \ge 1201^{-\gamma|\boldsymbol\alpha_0|}
+		 \frac{\mu_g(\A_{r,2r}(z)\cap\mathcal Q(z))}{S_g(r,z)}.
 		\]
-		completing the proof. 
+		Applying the first case with threshold $1201^{\gamma|\boldsymbol\alpha_0|}M$ proves the claim. The lower bound may depend on the fixed cone and on $\boldsymbol\alpha_0$.
 	\end{proof}
-	
 	This leads to a proof of Lemma \ref{lemma:mu_h-bad-and-harnack}.
 	\begin{proof}[Proof of Lemma \ref{lemma:mu_h-bad-and-harnack}]
-		The proof is nearly identical to that of Lemma \ref{lemma:mu_h-doubling-and-harnack}, the only difference
-		being the event under consideration only has positive probability meaning we get $\delta N$ instead of $(1-\zeta) N$ `good' scales.
-		
-		Specifically, we may carry out the proof of Lemma \ref{lemma:doubling-alpha} and substitute Lemma \ref{lemma:positive-probability}
-		as the bound in \eqref{eq:doubling-and-harnack-prob}. 
-		This shows that there exists $\delta = \delta(M) \in (0,1)$ such that it holds for each large enough $N\in \N$ 
-		\begin{equation} \label{eq:log-singularity-event}
-		\#\left\{ n \in [N+1,2N]\cap \Z   : \mbox{$\tilde G_n(0; M, \mathcal Q)$ occurs} \right\}  \geq \delta N.
-		\end{equation}  
-		Then the argument in the proof of Lemma \ref{lemma:mu_h-doubling-and-harnack} together with 
-		\eqref{eq:log-singularity-event} implies a.s.\ the lemma statement holds for $\mu_h$-a.e.\ $z\in B_1$ and then by scaling
-		for $\mu_h$-a.e.\ $z\in \C$.
+		% CORRECTION [C28] Printed: apply the separated-annulus probability bound directly at the origin and transfer it.
+		% Corrected: establish positive rooted frequency at alpha=gamma by dilation ergodicity and transfer by the rooted-field identity.
+		% Reason: the cited separated-annulus bound alone does not establish the required rooted frequency.
+		For a fixed cone, let $g$ be a whole-plane GFF and set $h^\gamma=g-\gamma\log|\cdot|$. The same bump argument as in the preceding proof, now using that the logarithmic weight on $\A_{1,6}$ has bounded oscillation, shows that $\P[\tilde G_0(0;M,\mathcal Q)]>0$ for $h^\gamma$. Dyadic dilation acts ergodically on the whole-plane GFF modulo constants, and the logarithmic singularity changes only by a constant under dilation. The event is invariant under additive constants. Hence the pointwise ergodic theorem gives a positive limiting frequency $q$ of good scales at the origin, and the frequency in each window $[N+1,2N]$ tends to $q$. Choose any $\delta\in(0,q)$.
+
+		The rooted-field change of measure used in the proof of Lemma \ref{lemma:mu_h-doubling-and-harnack} transfers this property to $\mu_h$-a.e.\ point of $B_1$: conditionally on a marked point $z\ne0$, its local field is a $\gamma$-log-singular GFF plus the smooth drift $-\boldsymbol\alpha_0\log|\cdot|$ and an additive constant. On a sufficiently small disk about $z$, a compactly supported extension of this drift has finite Dirichlet energy, so Gaussian shift absolute continuity transfers the probability-one frequency statement. Finally, dyadic dilations cover $\C$ and change scale indices by only a fixed shift, leaving the limiting frequency unchanged. The density can depend on $M$ and the fixed cone.
 	\end{proof}
 	
 	
@@ -2899,7 +2862,9 @@
 		Condition on $h$ and sample $z$ from $\mu_h$. 
 		
 		By Lemma \ref{lemma:mu_h-bad-and-harnack}, a.s.\ for every cone $\mathcal Q$ with rational extremal directions $v,w$ there exist arbitrarily large $n \in \N$  (depending on $z$ and $\mathcal Q$) for which the event $\tilde G_n(z; M, \mathcal{Q})$ occurs.  
-		Since every cone not equal to all of $\C$ is contained within a cone with rational extremal directions, we get that a.s.\ for \emph{every} cone $\mathcal Q$ there exist arbitrarily large $n \in \N$  (depending on $z$ and $\mathcal Q$) for which the event $\tilde G_n(z; M, \mathcal{Q})$ occurs.  
+		% CORRECTION [C29] Printed: each cone is contained in a rational cone; corrected: each nondegenerate cone contains a rational cone.
+		% Reason: sector mass is monotone in the cone, so the smaller cone's good scales imply the larger cone's.
+		Every nondegenerate cone contains a smaller cone with rational extremal directions. Its sector mass is no larger, so its good scales are also good for the original cone. Taking a countable intersection, this holds simultaneously for every cone, including cones depending on the realization.
 		
 		Suppose $t>0$ is such that $z \in \partial {\regcluster{}{t}}$.
 		and let $\mathcal Q(z)$ be a cone with apex at $z$. Let $n$ be such that $\tilde G_n(z; M, \mathcal{Q})$ holds
@@ -2909,7 +2874,9 @@
 		\end{equation}
 		Since the event $\tilde G_n(z; M, \mathcal{Q})$ occurs with $M = 2C$, 
 		\begin{equation} \label{eq:mu_h-is-bad}
-		\mu_h(A_{3r, 5r}(z) \cap \mathcal{Q}(z)) \geq M \times \SGrho{3r,6r}{z} >  C \times \SGrho{3r,6r}{z}.
+		% CORRECTION [C30] Printed: A_{3r,5r}(z); corrected: A_{r,2r}(z).
+		% Reason: the event controls mass in A_{r,2r}, not in A_{3r,5r}.
+		\mu_h(A_{r, 2r}(z) \cap \mathcal{Q}(z)) \geq M \times \SGrho{3r,6r}{z} >  C \times \SGrho{3r,6r}{z}.
 		\end{equation}
 		
 		We, however, also have the following implications of the cone condition: 
