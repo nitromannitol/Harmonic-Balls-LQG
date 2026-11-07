@@ -2,6 +2,7 @@ import HarmonicBalls.Defs.GFF
 import LatticeProb.Bonanno.LQGMetric.Field.MarkovNorm
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgGP
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgKolm
+import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgBridge
 
 /-! # Coordinatewise modifications of the whole-plane GFF
 
@@ -11,6 +12,33 @@ Coordinatewise agreement alone does not assert a common samplewise representatio
 noncomputable section
 open MeasureTheory ProbabilityTheory Filter Topology
 namespace HarmonicBalls
+
+/-- Away from the diagonal, the normalized whole-plane covariance kernel has
+the additive logarithmic form used for GFF circle averages. -/
+theorem wholePlaneCov_eq_additive_of_ne {z w : ℂ} (hzw : z ≠ w) :
+    wholePlaneCov z w = -Real.log ‖z - w‖ + Real.log (max ‖z‖ 1) +
+      Real.log (max ‖w‖ 1) := by
+  rw [wholePlaneCov, Real.log_div (by positivity) (norm_ne_zero_iff.mpr (sub_ne_zero.mpr hzw)),
+    Real.log_mul (by positivity) (by positivity)]
+  ring
+
+#print axioms wholePlaneCov_eq_additive_of_ne
+
+/-- Circle smearing removes the diagonal discrepancy between the project
+kernel and Leonardo Bonanno's additive logarithmic covariance kernel. -/
+theorem wholePlaneGFFCov_circle_eq_gffCircleCov {r s : ℝ} (hs : 0 < s) (z w : ℂ) :
+    wholePlaneGFFCov (.circle r z) (.circle s w) =
+      LQGDimension.gffCircleCov r z s w := by
+  rw [LQGDimension.Osc37.gffCircleCov_eq_circleAverage]
+  change Real.circleAverage (fun x => Real.circleAverage (wholePlaneCov x) w s) z r = _
+  apply Real.circleAverage_congr_sphere
+  intro x hx
+  apply Real.circleAverage_congr_codiscreteWithin ?_ (ne_of_gt hs)
+  filter_upwards [compl_singleton_mem_codiscreteWithin x] with y hy
+  exact (wholePlaneCov_eq_additive_of_ne (by simpa [eq_comm] using hy) :
+    wholePlaneCov x y = LQGDimension.gffGreen x y)
+
+#print axioms wholePlaneGFFCov_circle_eq_gffCircleCov
 
 /-- All pairings of Leonardo Bonanno's normalized distribution-valued GFF
 are jointly Gaussian and centered, including tests with nonzero integral. -/
@@ -127,9 +155,11 @@ theorem normalizedGFF_exists_joint_circle_version
       (∀ r, 0 < r → ∀ z, (fun ω => H r z ω) =ᵐ[P]
         fun ω => LQGMetric.circleAvg (h ω) r z) ∧
       IsGaussianProcess (Sum.elim (fun (φ : LQGMetric.TestC) ω => h ω φ)
-        (fun (p : Set.Ioi (0 : ℝ) × ℂ) ω => H p.1 p.2 ω)) P := by
+        (fun (p : Set.Ioi (0 : ℝ) × ℂ) ω => H p.1 p.2 ω)) P ∧
+      ∀ r s, 0 < r → 0 < s → ∀ z w,
+        cov[H r z, H s w; P] = wholePlaneGFFCov (.circle r z) (.circle s w) := by
   obtain ⟨H, hcont, hae⟩ := LQGMetric.CircleAvg.exists_continuous_version_circleAvg hh.1
-  refine ⟨H, hcont, ?_, ?_⟩
+  refine ⟨H, hcont, ?_, ?_, ?_⟩
   · intro r hr z
     filter_upwards [hae r hr z, hh.2] with ω hω h0
     rw [hω, h0, sub_zero]
@@ -141,6 +171,11 @@ theorem normalizedGFF_exists_joint_circle_version
     cases p with
     | inl φ => exact Eventually.of_forall fun _ => rfl
     | inr p => exact (hae p.1 p.1.2 p.2).symm
+  · intro r s hr hs z w
+    rw [LQGMetric.CircleAvg.covariance_congr_ae (hae r hr z) (hae s hs w),
+      wholePlaneGFFCov_circle_eq_gffCircleCov hs,
+      LQGMetric.CircleAvg.gffCircleCov_eq_incCov hr hs]
+    exact LQGMetric.CircleAvg.covariance_cInc hh.1 hr one_pos hs one_pos z 0 w 0
 
 #print axioms normalizedGFF_exists_joint_circle_version
 

@@ -53,10 +53,15 @@ the almost-sure limit of mollified increments, which are mean-zero test
 pairings, and preserves their joint Gaussian law with all test pairings.
 `normalizedGFF_exists_joint_circle_version` constructs a jointly continuous
 circle-average version that is jointly Gaussian with all test pairings and
-agrees with Bonanno's circle averages almost surely at every fixed circle.
+agrees with Bonanno's circle averages almost surely at every fixed circle;
+it also has the project-prescribed circle-circle covariance.
+`wholePlaneCov_eq_additive_of_ne` identifies the project kernel with the
+additive logarithmic kernel away from the diagonal, and
+`wholePlaneGFFCov_circle_eq_gffCircleCov` removes the diagonal discrepancy
+under circle smearing using its codiscreteness.
 `Section6.map_pairingProc_eq`
 (AnnulusLawTransfer.lean:96) transfers only mean-zero pairing laws starting
 from an existing project GFF. A direct existence bridge to all six fields of
-this repository's GFF interface, including arbitrary test and mixed circle
+this repository's GFF interface, including test-test and mixed test-circle
 covariances, has not been established here.
 No numbered-result closure follows.
