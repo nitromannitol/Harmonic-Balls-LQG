@@ -44,6 +44,14 @@ negative source. The latter Laplacian identity remains an explicit, unproved
 condition for a general frozen witness; deriving it requires handling arbitrary
 Green kernels and the Bochner nonintegrability values. This result does not
 establish residual-potential continuity or a full counterexample.
+Under the same local Riesz identity, `negative_source_restrict_eq_dirac_of_ae_and_hasLaplacian`
+identifies the entire source restriction, not only the atom. Consequently
+`negative_source_residual_null_of_ae_and_hasLaplacian` proves the residual
+source does not charge the observation set, and
+`integrable_negative_source_of_ae_dirac_and_hasLaplacian` derives integrability
+of the full negative-source Green kernel at every observation point from the
+frozen compact-support and finiteness conditions. These conclusions remain
+conditional on the unproved local Riesz identity.
 The missing local bridge has conclusion
 `HasLaplacian (q + greenPotential V η₁ - greenPotential V η₂)
   (η₂.restrict Λ) 0 Λ`, under the frozen bounded-witness conditions and

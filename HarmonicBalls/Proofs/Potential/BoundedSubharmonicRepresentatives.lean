@@ -405,6 +405,65 @@ theorem negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
 
 #print axioms negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
 
+/-- Under the local Riesz identity, a replacement agreeing almost everywhere
+with the negative Dirac potential has no other negative source mass in the
+observation set. -/
+theorem negative_source_restrict_eq_dirac_of_ae_and_hasLaplacian
+    {U : Set ℂ} {g : ℂ → ℝ} {η : Measure ℂ} {a : ℂ}
+    (hU : IsOpen U) (ha : a ∈ U) (hη : IsLocallyFiniteMeasure η)
+    (hg : HasLaplacian g (η.restrict U) 0 U)
+    (heq : -greenPotential univ (Measure.dirac a) =ᵐ[volume.restrict U] g) :
+    η.restrict U = Measure.dirac a := by
+  let : IsLocallyFiniteMeasure η := hη
+  have hdirac : Measure.dirac a Uᶜ = 0 := by simp [Measure.dirac_apply, ha]
+  have hrestrict : (η.restrict U) Uᶜ = 0 := by simp [Measure.restrict_apply, hU.measurableSet]
+  have hfg : -newtonKernel a =ᵐ[volume.restrict U] g := by
+    filter_upwards [heq] with x hx
+    simpa [greenPotential, greenFunction_univ_eq_newtonKernel, newtonKernel_comm x a] using hx
+  exact (rieszMeasure_eq_of_hasLaplacian_ae hU inferInstance inferInstance hdirac hrestrict
+    (hasLaplacian_neg_newtonKernel a U) hg hfg).symm
+
+/-- The residual source after removing the forced atom does not charge the
+open observation set. -/
+theorem negative_source_residual_null_of_ae_and_hasLaplacian
+    {U : Set ℂ} {g : ℂ → ℝ} {η : Measure ℂ} {a : ℂ}
+    (hU : IsOpen U) (ha : a ∈ U) (hη : IsLocallyFiniteMeasure η)
+    (hg : HasLaplacian g (η.restrict U) 0 U)
+    (heq : -greenPotential univ (Measure.dirac a) =ᵐ[volume.restrict U] g) :
+    (η.restrict {a}ᶜ) U = 0 := by
+  have h := congrArg (fun ν : Measure ℂ => ν {a}ᶜ)
+    (negative_source_restrict_eq_dirac_of_ae_and_hasLaplacian hU ha hη hg heq)
+  simpa [Measure.restrict_apply, hU.measurableSet, inter_comm] using h
+
+/-- Once the local Riesz identity is known, the entire negative-source
+kernel is integrable at every observation point, including its forced atom. -/
+theorem integrable_negative_source_of_ae_dirac_and_hasLaplacian
+    {V U K : Set ℂ} {g : ℂ → ℝ} {η : Measure ℂ} {a : ℂ}
+    (hV : IsOpen V) (hU : IsOpen U) (hUV : U ⊆ V) (ha : a ∈ U)
+    (hK : IsCompact K) (hKV : K ⊆ V) (hη : IsFiniteMeasure η) (hηK : η Kᶜ = 0)
+    (hg : HasLaplacian g (η.restrict U) 0 U)
+    (heq : -greenPotential univ (Measure.dirac a) =ᵐ[volume.restrict U] g)
+    {x : ℂ} (hx : x ∈ U) : Integrable (greenFunction V x) η := by
+  let : IsFiniteMeasure η := hη
+  have hunit := negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
+    hU ha inferInstance hg heq
+  have hnull := negative_source_residual_null_of_ae_and_hasLaplacian
+    hU ha inferInstance hg heq
+  have hrest : Integrable (greenFunction V x) (η.restrict {a}ᶜ) :=
+    integrable_greenFunction_of_source_null_on_open hV hU hUV hx hK hKV inferInstance
+      (le_antisymm ((Measure.restrict_le_self : η.restrict {a}ᶜ ≤ η) Kᶜ |>.trans_eq hηK)
+        bot_le) hnull
+  have hsplit : η = Measure.dirac a + η.restrict {a}ᶜ := by
+    have h := (Measure.restrict_add_restrict_compl (μ := η) (measurableSet_singleton a)).symm
+    rw [Measure.restrict_singleton, hunit, one_smul] at h
+    exact h
+  rw [hsplit]
+  exact (integrable_dirac enorm_lt_top).add_measure hrest
+
+#print axioms negative_source_restrict_eq_dirac_of_ae_and_hasLaplacian
+#print axioms negative_source_residual_null_of_ae_and_hasLaplacian
+#print axioms integrable_negative_source_of_ae_dirac_and_hasLaplacian
+
 /-- The whole-plane Green potential of a smooth annular source is constant
 inside its inner disc, including pointwise values for arbitrary observers. -/
 theorem greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball
