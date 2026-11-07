@@ -51,10 +51,12 @@ has centered jointly Gaussian pairings for all tests, using
 law of all pairings and positive-radius circle-average increments. It uses
 the almost-sure limit of mollified increments, which are mean-zero test
 pairings, and preserves their joint Gaussian law with all test pairings.
+`normalizedGFF_exists_joint_circle_version` constructs a jointly continuous
+circle-average version that is jointly Gaussian with all test pairings and
+agrees with Bonanno's circle averages almost surely at every fixed circle.
 `Section6.map_pairingProc_eq`
 (AnnulusLawTransfer.lean:96) transfers only mean-zero pairing laws starting
 from an existing project GFF. A direct existence bridge to all six fields of
 this repository's GFF interface, including arbitrary test and mixed circle
-covariances and the transfer to its continuous circle version, has not been
-established here.
+covariances, has not been established here.
 No numbered-result closure follows.

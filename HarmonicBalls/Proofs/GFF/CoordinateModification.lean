@@ -1,6 +1,7 @@
 import HarmonicBalls.Defs.GFF
 import LatticeProb.Bonanno.LQGMetric.Field.MarkovNorm
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgGP
+import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgKolm
 
 /-! # Coordinatewise modifications of the whole-plane GFF
 
@@ -115,6 +116,33 @@ theorem normalizedGFF_pairings_increments_gaussian
   exact ⟨0, V, hV⟩
 
 #print axioms normalizedGFF_pairings_increments_gaussian
+
+/-- Leonardo Bonanno's normalized GFF admits a continuous circle-average
+version that is jointly Gaussian with all test-function pairings. -/
+theorem normalizedGFF_exists_joint_circle_version
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsNormalizedWPGFF h P) :
+    ∃ H : ℝ → ℂ → Ω → ℝ,
+      (∀ ω, ContinuousOn (fun p : ℝ × ℂ => H p.1 p.2 ω) (Set.Ioi 0 ×ˢ Set.univ)) ∧
+      (∀ r, 0 < r → ∀ z, (fun ω => H r z ω) =ᵐ[P]
+        fun ω => LQGMetric.circleAvg (h ω) r z) ∧
+      IsGaussianProcess (Sum.elim (fun (φ : LQGMetric.TestC) ω => h ω φ)
+        (fun (p : Set.Ioi (0 : ℝ) × ℂ) ω => H p.1 p.2 ω)) P := by
+  obtain ⟨H, hcont, hae⟩ := LQGMetric.CircleAvg.exists_continuous_version_circleAvg hh.1
+  refine ⟨H, hcont, ?_, ?_⟩
+  · intro r hr z
+    filter_upwards [hae r hr z, hh.2] with ω hω h0
+    rw [hω, h0, sub_zero]
+  · let f : LQGMetric.TestC ⊕ (Set.Ioi (0 : ℝ) × ℂ) →
+        LQGMetric.TestC ⊕ LQGMetric.CircleAvg.IncIdx :=
+      Sum.elim Sum.inl (fun p => Sum.inr (p, (⟨1, Set.mem_Ioi.mpr one_pos⟩, 0)))
+    have hg := (normalizedGFF_pairings_increments_gaussian hh).comp_right f
+    refine hg.congr fun p => ?_
+    cases p with
+    | inl φ => exact Eventually.of_forall fun _ => rfl
+    | inr p => exact (hae p.1 p.1.2 p.2).symm
+
+#print axioms normalizedGFF_exists_joint_circle_version
 
 /-- A measurable coordinatewise modification preserves all six fields of the
 whole-plane GFF specification, with circle averages unchanged. -/
