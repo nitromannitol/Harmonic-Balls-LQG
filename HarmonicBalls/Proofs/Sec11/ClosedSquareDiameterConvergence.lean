@@ -9,6 +9,19 @@ namespace HarmonicBalls
 open MeasureTheory Filter Set Metric
 open scoped ENNReal Topology
 
+/-- Unit-circle normalization removes the circle-average factor from any
+diameter-tail event, simultaneously for arbitrary thresholds and observables. -/
+theorem IsWholePlaneGFF.measure_tail_with_unit_circle_factor
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (ξ : ℝ) (b : ℝ≥0∞)
+    (X : Ω → ℝ≥0∞) :
+    P {ω | b * ENNReal.ofReal (Real.exp (ξ * hcirc ω 1 0)) < X ω} =
+      P {ω | b < X ω} := by
+  apply measure_congr
+  filter_upwards [h.ae_circleAverage_one_zero] with ω hω
+  simp [hω]
+
 /-- A closed-square diameter tail with exponent greater than two implies
 that all enlarged dyadic-tile diameters are simultaneously small in
 probability. The random circle-average normalization is handled jointly. -/
@@ -52,4 +65,5 @@ theorem IsWholePlaneGFF.tendsto_intermediate_diameters_of_closed_square_tail
     simpa [b', b, hn] using ht
 
 #print axioms IsWholePlaneGFF.tendsto_intermediate_diameters_of_closed_square_tail
+#print axioms IsWholePlaneGFF.measure_tail_with_unit_circle_factor
 end HarmonicBalls
