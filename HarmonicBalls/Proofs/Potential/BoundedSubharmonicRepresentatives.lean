@@ -5,6 +5,7 @@ import HarmonicBalls.Proofs.Sec6.GreenMono
 import Mathlib.LinearAlgebra.Lagrange
 import Mathlib.Analysis.Analytic.Polynomial
 import Mathlib.MeasureTheory.Measure.Count
+import HarmonicBalls.Proofs.Sec8.CircleDensityPolarIntegrability
 
 /-!
 # Bounded witnesses for subharmonic tests
@@ -18,6 +19,31 @@ namespace HarmonicBalls
 
 open MeasureTheory Metric Set InnerProductSpace
 open scoped ENNReal NNReal
+
+/-- A smooth annular source has constant logarithmic potential in the disc
+enclosed by its support. This includes all points of the inner disc, not merely
+almost every point for an observation measure. -/
+theorem circleDensity_log_potential_eq_center_of_mem_inner_ball
+    {r δ η : ℝ} (hr : 0 < r) (hδ : 0 < δ) (hwidth : δ ≤ r * η)
+    {z w : ℂ} (hw : ‖z - w‖ ≤ r - η) :
+    (∫ x, (∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x *
+      Real.log ‖x - w‖) =
+    (∫ x, (∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x *
+      Real.log ‖x - z‖) := by
+  rw [integral_normalized_circleDensity_mul_log_norm_sub hr.le hδ,
+    integral_normalized_circleDensity_mul_log_norm_sub hr.le hδ]
+  apply setIntegral_congr_fun measurableSet_Ioi
+  intro ρ hρ
+  have hρpos : 0 < ρ := hρ
+  by_cases hzero : circleDensityRadialWeight r δ hδ ρ = 0
+  · simp only [hzero, zero_mul]
+  · have hnear := circleDensityRadialWeight_support_radius hr hδ hwidth hρpos.le hzero
+    have hbound : ‖z - w‖ ≤ ρ := by
+      rw [abs_lt] at hnear
+      linarith [hnear.1]
+    simp only [max_eq_left hbound, sub_self, norm_zero, max_eq_left hρpos.le]
+
+#print axioms circleDensity_log_potential_eq_center_of_mem_inner_ball
 
 /-- For a measurable observation set, requiring representatives for every measure is
 exactly the pointwise representative problem. Counting measure tests every point. -/
@@ -258,6 +284,133 @@ theorem greenFunction_univ_eq_newtonKernel (x y : ℂ) :
 
 #print axioms not_isHarmonicMinorant_univ_newtonKernel
 #print axioms greenFunction_univ_eq_newtonKernel
+
+/-- The whole-plane Green potential of a smooth annular source is constant
+inside its inner disc, including pointwise values for arbitrary observers. -/
+theorem greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball
+    {r δ η : ℝ} (hr : 0 < r) (hδ : 0 < δ) (hwidth : δ ≤ r * η)
+    {z w : ℂ} (hw : ‖z - w‖ ≤ r - η) :
+    greenPotential univ (volume.withDensity (fun x => ENNReal.ofReal
+      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) w =
+    greenPotential univ (volume.withDensity (fun x => ENNReal.ofReal
+      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) z := by
+  let density : ℂ → ℝ := fun x =>
+    (∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x
+  have hd : Continuous density := continuous_const.mul (circleDensity_contDiff r δ hδ z).continuous
+  have hnonneg : ∀ x, 0 ≤ density x := fun x =>
+    mul_nonneg (inv_nonneg.mpr (circleDensity_integral_pos hr.le hδ 0).le)
+      (circleDensity_nonneg r δ hδ z x)
+  change greenPotential univ (volume.withDensity (fun x => ENNReal.ofReal (density x))) w =
+    greenPotential univ (volume.withDensity (fun x => ENNReal.ofReal (density x))) z
+  simp only [greenPotential, greenFunction_univ_eq_newtonKernel]
+  rw [integral_withDensity_eq_integral_toReal_smul hd.measurable.ennreal_ofReal
+      (Filter.Eventually.of_forall fun _ => ENNReal.ofReal_lt_top) _,
+    integral_withDensity_eq_integral_toReal_smul hd.measurable.ennreal_ofReal
+      (Filter.Eventually.of_forall fun _ => ENNReal.ofReal_lt_top) _]
+  simp only [ENNReal.toReal_ofReal (hnonneg _), smul_eq_mul, newtonKernel]
+  simp_rw [show ∀ x t : ℝ, x * (-(2 * Real.pi)⁻¹ * t) =
+    -(2 * Real.pi)⁻¹ * (x * t) by intros; ring]
+  rw [integral_const_mul, integral_const_mul]
+  congr 1
+  simpa only [norm_sub_rev] using
+    circleDensity_log_potential_eq_center_of_mem_inner_ball hr hδ hwidth hw
+
+#print axioms greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball
+
+/-- A whole-plane annular source can be removed entirely when the pole and
+observation set lie inside the shell. The observation measure is arbitrary. -/
+theorem univ_circleDensity_has_bounded_representative
+    {r δ η : ℝ} (hr : 0 < r) (hδ : 0 < δ) (hwidth : δ ≤ r * η)
+    {Λ : Set ℂ} {z p : ℂ} {μ : Measure ℂ}
+    (hΛb : Bornology.IsBounded Λ) (hΛm : MeasurableSet Λ)
+    (hΛ : ∀ x ∈ Λ, ‖z - x‖ ≤ r - η) (hp : ‖z - p‖ ≤ r - η) :
+    ∃ g ∈ boundedSubharmonicBallTestClass Λ p,
+      (-greenPotential univ (volume.withDensity (fun x => ENNReal.ofReal
+        ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x)))) p = g p ∧
+      (-greenPotential univ (volume.withDensity (fun x => ENNReal.ofReal
+        ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))))
+          =ᵐ[μ.restrict Λ] g := by
+  let ν := volume.withDensity (fun x => ENNReal.ofReal
+    ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))
+  let g : ℂ → ℝ := fun _ => -greenPotential univ ν z
+  refine ⟨g, harmonic_mem_boundedSubharmonicBallTestClass hΛb isOpen_univ
+    (subset_univ _) (harmonicOnNhd_const _), ?_, ?_⟩
+  · change -greenPotential univ ν p = -greenPotential univ ν z
+    rw [greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball hr hδ hwidth hp]
+  · apply ae_restrict_of_forall_mem hΛm
+    intro x hx
+    change -greenPotential univ ν x = -greenPotential univ ν z
+    rw [greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball hr hδ hwidth (hΛ x hx)]
+
+#print axioms univ_circleDensity_has_bounded_representative
+
+/-- The annular whole-plane potential is a valid frozen test for every pole;
+the source is compactly supported, finite, and non-atomic. -/
+theorem neg_univ_circleDensity_mem_subharmonicBallTestClass
+    {r δ : ℝ} (hr : 0 < r) (hδ : 0 < δ) (z : ℂ) (Λ : Set ℂ) (p : ℂ) :
+    -greenPotential univ (volume.withDensity (fun x => ENNReal.ofReal
+      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) ∈
+      subharmonicBallTestClass Λ p := by
+  let density : ℂ → ℝ := fun x =>
+    (∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x
+  let ν := volume.withDensity (fun x => ENNReal.ofReal (density x))
+  let K := tsupport (circleDensity r δ hδ z)
+  have hd : Continuous density := continuous_const.mul (circleDensity_contDiff r δ hδ z).continuous
+  have hn : ∀ x, 0 ≤ density x := fun x =>
+    mul_nonneg (inv_nonneg.mpr (circleDensity_integral_pos hr.le hδ 0).le)
+      (circleDensity_nonneg r δ hδ z x)
+  have hdi : Integrable density volume := by
+    exact ((circleDensity_contDiff r δ hδ z).continuous.integrable_of_hasCompactSupport
+      (circleDensity_hasCompactSupport hr.le hδ z)).const_mul _
+  have hν : IsFiniteMeasure ν := isFiniteMeasure_withDensity_ofReal hdi.hasFiniteIntegral
+  have hK : IsCompact K := circleDensity_hasCompactSupport hr.le hδ z
+  have hνK : ν Kᶜ = 0 := by
+    rw [withDensity_apply _ hK.isClosed.measurableSet.compl]
+    apply (lintegral_eq_zero_iff hd.measurable.ennreal_ofReal).2
+    filter_upwards [ae_restrict_mem hK.isClosed.measurableSet.compl] with x hx
+    have hx0 : circleDensity r δ hδ z x = 0 := by
+      by_contra hx'
+      exact hx (subset_closure hx')
+    simp [density, hx0]
+  have hνp : ν {p} = 0 :=
+    (withDensity_absolutelyContinuous volume _) (measure_singleton p)
+  have hi : Integrable (greenFunction univ p) ν := by
+    apply (integrable_withDensity_iff_integrable_smul' hd.measurable.ennreal_ofReal
+      (Filter.Eventually.of_forall fun _ => ENNReal.ofReal_lt_top)).2
+    have h := (integrable_circleDensity_mul_log_norm_sub hr.le hδ z p).const_mul
+      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * (-(2 * Real.pi)⁻¹))
+    convert h using 1
+    ext x
+    simp only [ENNReal.toReal_ofReal (hn x), smul_eq_mul, greenFunction_univ_eq_newtonKernel,
+      newtonKernel, density, norm_sub_rev]
+    ring
+  refine ⟨univ, K, 0, ν, 0, isOpen_univ, subset_univ _, hK, subset_univ _,
+    inferInstance, hν, by simp, hνK, by simp, harmonicOnNhd_const 0, hνp, hi, ?_⟩
+  change -greenPotential univ ν = (0 : ℂ → ℝ) + greenPotential univ 0 - greenPotential univ ν
+  ext x
+  simp [greenPotential]
+
+#print axioms neg_univ_circleDensity_mem_subharmonicBallTestClass
+
+/-- The annular source used above is a probability measure. -/
+theorem circleDensity_source_isProbabilityMeasure
+    {r δ : ℝ} (hr : 0 < r) (hδ : 0 < δ) (z : ℂ) :
+    IsProbabilityMeasure (volume.withDensity (fun x => ENNReal.ofReal
+      ((∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x))) := by
+  let density : ℂ → ℝ := fun x =>
+    (∫ y, circleDensity r δ hδ 0 y)⁻¹ * circleDensity r δ hδ z x
+  have hi : Integrable density volume :=
+    ((circleDensity_contDiff r δ hδ z).continuous.integrable_of_hasCompactSupport
+      (circleDensity_hasCompactSupport hr.le hδ z)).const_mul _
+  have hn : 0 ≤ᵐ[volume] density := Filter.Eventually.of_forall fun x =>
+    mul_nonneg (inv_nonneg.mpr (circleDensity_integral_pos hr.le hδ 0).le)
+      (circleDensity_nonneg r δ hδ z x)
+  refine ⟨?_⟩
+  rw [withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ,
+    ← ofReal_integral_eq_lintegral_ofReal hi hn]
+  simp only [density, circleDensity_normalized_integral hr.le hδ z, ENNReal.ofReal_one]
+
+#print axioms circleDensity_source_isProbabilityMeasure
 
 /-- The potential of a point mass at the centre of a disc. -/
 theorem greenPotential_dirac_zero_ball {R : ℝ} (hR : 0 < R) {x : ℂ}

@@ -60,6 +60,17 @@ The complementary result `univ_two_dirac_has_bounded_representative_of_measure_a
 
 ## Outstanding proof obligation
 
+For a non-atomic example beyond finite point sources,
+`neg_univ_circleDensity_mem_subharmonicBallTestClass` verifies that a smooth
+normalized annular density gives an admissible whole-plane negative-source test;
+`circleDensity_source_isProbabilityMeasure` checks that this source is nonzero,
+and its absolute continuity with respect to area gives non-atomicity. When the
+pole and measurable bounded observation set lie inside the annulus's inner
+disc, `univ_circleDensity_has_bounded_representative` removes the entire source
+and uses the constant harmonic representative, for an arbitrary observation
+measure. The shell identity is pointwise, including every observed atom. This
+is a special geometry, not a construction for general sources or domains.
+
 `bounded_representative_of_changed_sources` gives a general transport step for arbitrary
 old and replacement measures, without requiring the two source corrections separately.
 The remaining construction must choose a bounded open `V ⊆ O`, compact `K ⊆ V`,
