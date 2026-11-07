@@ -209,6 +209,29 @@ theorem continuous_planeDistribution_precomp
   intro test
   exact continuous_planeDistribution_evaluation (pull test)
 
+/-- Adding a fixed distribution is continuous in the weak topology. -/
+theorem continuous_planeDistribution_add_const (shift : PlaneDistribution) :
+    @Continuous PlaneDistribution PlaneDistribution planeDistributionWeakTopology
+      planeDistributionWeakTopology (fun distribution => distribution + shift) := by
+  let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
+  apply continuous_induced_rng.mpr
+  apply continuous_pi
+  intro test
+  change Continuous (fun distribution : PlaneDistribution => distribution test + shift test)
+  exact (continuous_planeDistribution_evaluation test).add continuous_const
+
+/-- Adding a fixed distribution to a weakly measurable field preserves measurability. -/
+theorem measurable_planeDistribution_add_const {Ω : Type*} [MeasurableSpace Ω]
+    (field : Ω → PlaneDistribution)
+    (hfield : @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology) field)
+    (shift : PlaneDistribution) :
+    @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology)
+      (fun ω => field ω + shift) := by
+  let : TopologicalSpace PlaneDistribution := planeDistributionWeakTopology
+  let : MeasurableSpace PlaneDistribution := borel PlaneDistribution
+  let : BorelSpace PlaneDistribution := ⟨rfl⟩
+  exact (continuous_planeDistribution_add_const shift).measurable.comp hfield
+
 /-- A weakly measurable distribution-valued field stays measurable under test precomposition. -/
 theorem measurable_planeDistribution_precomp {Ω : Type*} [MeasurableSpace Ω]
     (pull : TestFunction (⊤ : Opens ℂ) ℝ ⊤ →L[ℝ] TestFunction (⊤ : Opens ℂ) ℝ ⊤)
@@ -373,6 +396,28 @@ theorem IsMeasurablePlaneMetricMap.aemeasurable_extend_apply
   apply (hmetric.measurable_field_apply field hfield z w).aemeasurable.congr
   filter_upwards [hrep] with ω hω
   exact (extendPlaneMetricMap_of_represents metric _ _ hω z w).symm
+
+/-- On a represented field, affine pullback and a deterministic continuous shift
+have almost-everywhere measurable extended metric evaluations. -/
+theorem IsMeasurablePlaneMetricMap.aemeasurable_extend_affine_add_continuous
+    {Ω : Type*} [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
+    {metric : PlaneDistribution → ContinuousPlaneMetric} (hmetric : IsMeasurablePlaneMetricMap metric)
+    (field : Ω → PlaneDistribution) (pairing : Ω → (ℂ → ℝ) → ℝ)
+    (hfield : @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology) field)
+    (hrep : ∀ᵐ ω ∂P, RepresentsPlaneDistribution (pairing ω) (field ω))
+    (r : ℝ) (hr : r ≠ 0) (z : ℂ) (f : ℂ → ℝ) (hf : Continuous f) (u v : ℂ) :
+    AEMeasurable (fun ω => extendPlaneMetricMap metric
+      (addFunPairing (affinePullbackPairing (pairing ω) r z) f) u v) P := by
+  let shift : PlaneDistribution := Distribution.ofFun (⊤ : Opens ℂ) f MeasureTheory.volume ⊤
+  let transformed : Ω → PlaneDistribution := fun ω =>
+    (r ^ 2)⁻¹ • (affineTestPullbackCLM r hr z).precompCompactConvergenceCLM ℝ (field ω)
+  have ht : @Measurable Ω PlaneDistribution inferInstance (@borel _ planeDistributionWeakTopology)
+      (fun ω => transformed ω + shift) :=
+    measurable_planeDistribution_add_const transformed
+      (measurable_planeDistribution_affine field hfield r hr z) shift
+  apply (hmetric.measurable_field_apply (fun ω => transformed ω + shift) ht u v).aemeasurable.congr
+  filter_upwards [hrep] with ω hω
+  exact (extendPlaneMetricMap_affine_add_continuous metric _ _ hω r hr z f hf u v).symm
 
 /-- Metric axioms on distribution-valued GFFs, parameterized by a candidate dimension.
 
