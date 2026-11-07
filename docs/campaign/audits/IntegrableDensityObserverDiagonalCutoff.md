@@ -1,0 +1,7 @@
+# Integrable-density observer diagonal cutoff
+
+`integrable_density_observer_diagonal_cutoff` establishes product and slice integrability, product L¹ convergence, almost-everywhere observer convergence of the literal source integrals, and observer L¹ convergence for distance cutoffs. The observer is restricted to the bounded open domain and satisfies local upper ball growth; the finite source is almost everywhere in the domain, and the signed density is measurable and source-integrable. No boundedness or nonatomicity assumption is imposed on the density or source.
+
+The mixed integrability proof applies `generalDomain_green_integrable_product_of_local_upper_growth` to the finite measure with density `‖f‖`, transfers it to the original product measure using the with-density product and integrability identities, and uses nonnegativity of the Green kernel. The diagonal value is zero, and away from the diagonal the cutoffs eventually equal one. Dominated convergence and a countable intersection of slice integrability events give the convergence claims. The kernel is in source-observer order. This module does not import the observer-bound module or introduce a literature premise.
+
+This is analytic infrastructure, not closure of a numbered paper result. The potential-theoretic infrastructure uses work of Leonardo Bonanno. The declaration prints only `propext`, `Classical.choice`, and `Quot.sound` as axioms.
