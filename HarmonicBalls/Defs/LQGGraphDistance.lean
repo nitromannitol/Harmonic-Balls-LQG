@@ -90,4 +90,25 @@ theorem isWholePlaneLQGDimension_lqgGraphDimension {γ : ℝ}
   classical
   simpa only [lqgGraphDimension, dite_eq_left h] using Classical.choose_spec h
 
+/-- A single realized LQG measure makes the whole-plane characterization unique. -/
+theorem IsWholePlaneLQGDimension.unique_of_realization {γ dimension dimension' : ℝ}
+    (h : IsWholePlaneLQGDimension γ dimension)
+    (h' : IsWholePlaneLQGDimension γ dimension')
+    (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ 0 hcirc μ) :
+    dimension = dimension' :=
+  IsLiouvilleGraphDimension.unique_of_ae P μ 0 1
+    (h.2 Ω P hC hcirc μ hgff hμ) (h'.2 Ω P hC hcirc μ hgff hμ)
+
+/-- Under a realization, the graph-distance choice equals any characterized dimension. -/
+theorem IsWholePlaneLQGDimension.lqgGraphDimension_eq {γ dimension : ℝ}
+    (h : IsWholePlaneLQGDimension γ dimension)
+    (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ 0 hcirc μ) :
+    lqgGraphDimension γ = dimension :=
+  (isWholePlaneLQGDimension_lqgGraphDimension ⟨dimension, h⟩).unique_of_realization
+    h Ω P hC hcirc μ hgff hμ
+
 end HarmonicBalls
