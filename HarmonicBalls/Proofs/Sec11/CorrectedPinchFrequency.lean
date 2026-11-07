@@ -2,6 +2,7 @@ import HarmonicBalls.Draft.Section11Corrected
 import HarmonicBalls.Draft.Section6
 import HarmonicBalls.Proofs.Sec11.InternalPinchFrequency
 import HarmonicBalls.Steps.Sec11.PinchDyadicWindowShift
+import HarmonicBalls.Steps.Sec11.PinchNormalizedMeasure
 
 /-! # The corrected pinch block-density reduction
 
@@ -40,6 +41,60 @@ theorem correctedLocalPinchCertificate_innerWitness
   exact ⟨E, hsub,
     (Section6.fieldSigmaAlgebraModConst_le α hC _ |>.trans (hgff.fieldSigmaAlgebra_le α _)) E hE,
     hpos⟩
+
+/-- Normalized local metric and mass data yield a positive local representative
+of the internal pinch event. It implies the original event almost surely, and
+also yields an ambient measurable inner witness for the original event. -/
+theorem exists_local_internal_pinch_representative_and_original_witness
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (α : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    {U T Q' Q : Set ℂ} (hconfig : IsPinchPointConfiguration U T Q' Q) (M : ℝ)
+    (hgff : IsWholePlaneGFF P hC hcirc)
+    (c : Ω → ℝ) (a : Ω → ℝ≥0∞) (G : Ω → ℂ → ℂ → ℝ≥0∞)
+    (hscale : ∀ᵐ ω ∂P, 0 < c ω ∧ a ω ≠ 0 ∧ a ω ≠ ∞)
+    (hD : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (hG : ∀ x y, Measurable[Section6.fieldSigmaAlgebraModConst α hC (ball 0 7)]
+      fun ω => G ω x y)
+    (hGeq : ∀ᵐ ω ∂P, ∀ x ∈ ball (0 : ℂ) 6, ∀ y ∈ ball (0 : ℂ) 6,
+      internalMetric (fun x y => c ω * D ω x y) (ball 0 6) x y = G ω x y)
+    (hmass : ∀ B : Set ℂ, MeasurableSet B → B ⊆ ball (0 : ℂ) 6 →
+      ∃ Y : Ω → ℝ≥0∞,
+        Measurable[Section6.fieldSigmaAlgebraModConst α hC (ball 0 7)] Y ∧
+        ∀ᵐ ω ∂P, (a ω • μ ω) B = Y ω)
+    (hpos : 0 < P {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M 1 0}) :
+    (∃ E : Set Ω, MeasurableSet[Section6.fieldSigmaAlgebraModConst α hC (ball 0 7)] E ∧
+      0 < P E ∧ ∀ᵐ ω ∂P, ω ∈ E → pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0) ∧
+    (∃ E ⊆ {ω | pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0}, MeasurableSet E ∧ 0 < P E) := by
+  obtain ⟨E, hEm, hEeq⟩ :=
+    exists_local_pinchEvent_representative_of_normalized_borel_mass hconfig M 0
+      (by norm_num : (0 : ℝ) < 1) c a hscale hD hG
+      (by simpa using hGeq) (by simpa using hmass)
+  have hEamb : MeasurableSet E :=
+    (Section6.fieldSigmaAlgebraModConst_le α hC _ |>.trans (hgff.fieldSigmaAlgebra_le α _)) E hEm
+  have heq : {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M 1 0} =ᵐ[P] E := by
+    filter_upwards [hEeq] with ω hω
+    exact propext hω
+  have hEP : 0 < P E := by rw [← measure_congr heq]; exact hpos
+  have hn : NullMeasurableSet
+      {ω | pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M 1 0} P :=
+    ⟨E, hEamb, heq⟩
+  obtain ⟨A, hAsub, hAm, hAeq⟩ := hn.exists_measurable_subset_ae_eq
+  refine ⟨⟨E, hEm, hEP, ?_⟩, ?_⟩
+  · filter_upwards [hEeq, hD] with ω hω hDω hωE
+    exact pinchPointEvent_of_internalBounds hDω (hω.mpr hωE)
+  · have hnull : ∀ᵐ ω ∂P, ω ∈ A → pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0 := by
+      filter_upwards [hD] with ω hDω hωA
+      exact pinchPointEvent_of_internalBounds hDω (hAsub hωA)
+    obtain ⟨B, hBae, hBm, hBsub⟩ := IsMeasurablyGenerated.exists_measurable_subset hnull
+    refine ⟨A ∩ B, ?_, hAm.inter hBm, ?_⟩
+    · intro ω hω
+      exact hBsub hω.2 hω.1
+    · have hBA : A ∩ B =ᵐ[P] A := by
+        filter_upwards [hBae] with ω hω
+        simp [hω]
+      rw [measure_congr hBA, measure_congr hAeq]
+      exact hpos
 
 /-- Block density for the internal-metric pinch event at one point. -/
 def InternalPinchBlockDensity (μ : Measure ℂ) (D : ℂ → ℂ → ℝ)
@@ -148,6 +203,7 @@ theorem correctedManyPinchScales_of_internalBlockDensity
 
 #print axioms pinchBlockDensity_of_internal
 #print axioms correctedLocalPinchCertificate_innerWitness
+#print axioms exists_local_internal_pinch_representative_and_original_witness
 #print axioms eventually_shifted_index_block_density
 #print axioms eventually_block_density_of_shifted_event_implication
 #print axioms correctedManyPinchScales_of_internalBlockDensity
