@@ -1,0 +1,7 @@
+# Continuous circle affine law audit
+
+- `affineCircleParameter` sends `(r,z)` to `(‖a‖ r, a*z+b)` for `a ≠ 0`; the positive radius follows from `norm_pos_iff` and the input radius.
+- `continuousCircleAffine` subtracts the value at `(‖a‖,b)`. `continuousCircleAffine_one_zero` checks exact normalization at `(1,0)`, and `measurable_continuousCircleAffine` proves measurability by evaluations.
+- `IsWholePlaneGFF.identDistrib_continuousCircleAffine` assumes a measurable continuous version agreeing with the original circle averages at each fixed positive-radius circle. On each finite family, the required almost-everywhere equalities are intersected before applying `IsWholePlaneGFF.identDistrib_circle_family_complex_affine`. Thus it uses joint distributions, not individual marginals. `identDistrib_circle_map_of_evaluations` transfers the full evaluation law to the Borel law on continuous maps using the induced product sigma algebra.
+- `IsWholePlaneGFF.identDistrib_continuousCircleAffine_family` gives the joint law for any indexed family of circles, including all finite families. No additional literature premise is introduced. The continuous circle-average construction is due to Leonardo Bonanno.
+- The local compile's printed axioms for each declaration are exactly `propext`, `Classical.choice`, and `Quot.sound`. The source scan found no `sorry`, `axiom`, `admit`, `native_decide`, or heartbeat override.
