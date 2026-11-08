@@ -20,6 +20,20 @@ unions, `greenFunction_finite_discs_comm_of_disc_component` allows arbitrary
 overlaps outside that disc component. This is a local result and does not
 settle pairs lying in a component formed by crossing discs.
 
+
+`greenFunction_countably_punctured_ball_comm` establishes reciprocity for a
+disc after removal of a closed set countable inside that disc, including all
+diagonal and exterior values. It uses the existing countable-removal theorem
+and handles irregular punctures without assuming a zero boundary limit. This
+result alone does not cover a general finite union of overlapping discs.
+
+Irregular boundary points are a genuine issue for finite-disc unions: the
+proved `four_disc_union_irregular_boundary` in
+`HarmonicBalls/Proofs/Potential/GreenRegularBoundaryGeometry.lean:706` gives
+four overlapping unit discs for which the Green function does not tend to zero
+at the origin. An argument that assumes zero boundary limits everywhere on a
+finite-disc union would therefore exclude an allowed configuration.
+
 `greenFunction_point_reflection` proves covariance under point reflection about
 an arbitrary center, without a boundedness or openness assumption. As a
 consequence, `greenFunction_point_reflection_pair_comm` proves reciprocity

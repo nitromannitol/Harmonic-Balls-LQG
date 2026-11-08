@@ -1,6 +1,7 @@
 import HarmonicBalls.Proofs.Potential.GreenRegularBoundaryGeometry
 import HarmonicBalls.Proofs.Sec6.DiscGreenMass
 import HarmonicBalls.Proofs.Sec6.GreenDilation
+import HarmonicBalls.Proofs.Sec5.LocalCountableDeletion
 
 /-! # Green reciprocity for finite disc families
 
@@ -196,6 +197,25 @@ theorem greenFunction_finite_discs_comm_of_disc_component
   rw [hF]
   exact greenFunction_disjoint_union_ball_comm_of_mem hWo hWb hdis hx y
 
+/-- Removing a closed countable set from a disc preserves Green reciprocity,
+including at deleted points and on the diagonal. The deleted points may be
+irregular boundary points. -/
+theorem greenFunction_countably_punctured_ball_comm
+    {c : ℂ} {r : ℝ} {K : Set ℂ} (hKc : IsClosed K)
+    (hK : (K ∩ ball c r).Countable) (x y : ℂ) :
+    greenFunction (ball c r \ K) x y = greenFunction (ball c r \ K) y x := by
+  by_cases hx : x ∈ ball c r \ K
+  · by_cases hy : y ∈ ball c r \ K
+    · by_cases hxy : x = y
+      · subst y
+        rfl
+      · obtain ⟨R, _, hR⟩ := (isBounded_ball : Bornology.IsBounded (ball c r)).subset_ball_lt 0 (0 : ℂ)
+        rw [greenFunction_sdiff_of_local_countable isOpen_ball hR hKc hK hx hy (Ne.symm hxy),
+          greenFunction_sdiff_of_local_countable isOpen_ball hR hKc hK hy hx hxy,
+          Section6.greenFunction_ball_center_comm]
+    · rw [greenFunction_of_notMem_right hy, greenFunction_of_notMem_left hy]
+  · rw [greenFunction_of_notMem_left hx, greenFunction_of_notMem_right hx]
+
 /-- Simultaneous reflection in the origin preserves the Green kernel of
 an arbitrary planar set, including diagonal and exterior values. -/
 theorem greenFunction_neg (U : Set ℂ) (x y : ℂ) :
@@ -288,6 +308,7 @@ theorem greenFunction_two_congruent_discs_centres_comm (a : ℂ) (r : ℝ) :
 #print axioms greenFunction_laminar_finite_discs_comm
 #print axioms greenFunction_disjoint_union_ball_comm_of_mem
 #print axioms greenFunction_finite_discs_comm_of_disc_component
+#print axioms greenFunction_countably_punctured_ball_comm
 #print axioms greenFunction_neg
 #print axioms greenFunction_neg_pair_comm
 #print axioms greenFunction_point_reflection
