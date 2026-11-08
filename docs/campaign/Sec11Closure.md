@@ -15,6 +15,14 @@ Frozen targets (read-only): `PinchEventPositiveProbabilityStmt` (Lemma 11.12, `H
 - `Proofs/Sec11/Closure/RandomMeasureMeasurable.lean` (round 12): `aemeasurable_of_open_aemeasurable` (a family of finite-on-balls measures with a.e. measurable open-set evaluations is a.e. measurable for the Giry σ-algebra; Dynkin argument on the countable π-system `piQ`), `aemeasurable_lqg_measure_zero_of_locality` (the LQG measure is a.e. measurable from the staged `LQGMeasureLocality`), and `pinchEventPositive_typeZero_of_raw_locality` (the body of Lemma 11.12 at α₀ = 0 with the measurability premise `haem` replaced by the staged locality input `hLocal`).
 - `HarmonicBalls.lean` imports the Closure modules (the import lines are owned by this task). `lc` passes.
 
+## Round 14: F1 and R0 closed; fixed raw positivity without `hfront` and `0 < ξ`
+
+- `Proofs/Sec11/Closure/FixedRawPositiveDerived.lean` (new, round 14): `fixed_raw_positive_null_of_staged_volume_growth_derived`, the type-zero raw positivity of the fixed corrected configuration with `hfront` and `0 < ξ` removed from the premises of `fixed_raw_positive_null_of_staged_volume_growth`. Build OK; axioms propext, Classical.choice, Quot.sound. Credit: Leonardo Bonanno (named in the module docstring for both producers).
+- F1 closed, no new input: `hfront` is `IsWholePlaneGFF.ae_lqgMeasure_frontier_closedSquare_eq_zero` (`Proofs/Sec11/FixedSquareFrontierNull.lean:347`; committed 960d3db and 0474ff2) applied to `hγ hγ₂ hμ fixedSquareCorner fixedSquareSide_pos.le`. The square is deterministic and fixed before `ω`.
+- R0 closed, no new input: `0 < ξ` is `IsLQGMetric.weylExponent_pos h𝔇 hγ` (`Proofs/GFF/MetricXiSign.lean:360`; committed 0cbd0c3), with binders `(h𝔇) (hγ)`.
+- Leftover premises of the fixed raw positivity: `hDG hCC hE` (staged, pending operator source-check); `hdata` (T1), with the applicability of the source metric `𝔇`; `A hA hArep ha hb` (F3); R1 (zero log-charge only: `hμ : IsLQGMeasureOfField P γ 0`); R7 (`Ω : Type`; transport to `Type*` not done). None of these is discharged here.
+- Not claimed: closure of Lemma 11.12 (`PinchEventPositiveProbabilityStmt`) or of any numbered result.
+
 ## Round 13: F2 closed; F1 waits on z3; F3 and O5 reported (not closed)
 
 - F2 (strict `MeasurableSet` clause of `hinside`), closed without new input (commit 39a2b06). `Closure/NullConditionalGrowth.lean`: `IsCorrectedPinchConfiguration.positive_wholePlane_first_second_of_growth_null` and `IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_growth_null`, the growth chains with `hinside` in `NullMeasurableSet`; they consume the existing null-measurable first-second chain `positive_wholePlane_first_second_null` (`Proofs/Sec11/CorrectedPinchFirstSecondNull.lean:12`). `Closure/FixedRawPositiveNull.lean`: `fixed_raw_positive_outside_null` (the clause is discharged by `IsWholePlaneGFF.nullMeasurableSet_mass_internalDiam`, `Proofs/Sec11/ConditionalCoreMeasurability.lean:26`, with `fixedU` open) and `fixed_raw_positive_null_of_staged_volume_growth` (volume growth from the staged `hDG hCC hE`; `hm` from `fixedPinnedSigma_le`). The strict theorems are unchanged. Axioms: propext, Classical.choice, Quot.sound.
@@ -52,10 +60,10 @@ Frozen targets (read-only): `PinchEventPositiveProbabilityStmt` (Lemma 11.12, `H
 
 - hLocal (round 12, replaces `haem`): the staged `LQGMeasureLocality` in its universal form, pending operator source-check (Fact 2.1 II, paper line 405).
 - hdata (T1): `SquareDyadicTailInput`; O2, O3 (analysis and audit), O4 and O5 (Lean). O1 is closed.
-- hfront (F1): `μ_h(∂ closedSquare) = 0` a.s. needs `μ_h ≪ Lebesgue`; no staged Prop states it.
-- hmeasIns (F2): the strict `MeasurableSet` clause of `hinside`; the producer gives `NullMeasurableSet` only (`ConditionalCoreMeasurability.lean:26`). The chain consumers take `MeasurableSet` (`CorrectedPinchFirstSecond.lean:28`, `CorrectedPinchFirstSecondGrowth.lean:30`).
+- hfront (F1): CLOSED in round 14 by `IsWholePlaneGFF.ae_lqgMeasure_frontier_closedSquare_eq_zero` (`FixedSquareFrontierNull.lean:347`) for the fixed square; no `μ ≪ Lebesgue` input is staged or used.
+- hmeasIns (F2): CLOSED in round 13 for the null route (`fixed_raw_positive_outside_null`, `NullConditionalGrowth.lean`; producer `ConditionalCoreMeasurability.lean:26`). The strict-`MeasurableSet` chains (`CorrectedPinchFirstSecond.lean:28`, `CorrectedPinchFirstSecondGrowth.lean:30`) are unchanged.
 - A, hA, hArep, ha, hb (F3): the first event measurable with respect to the pinned σ-algebra.
-- R0 (operator; h1 audits ξ): `ξ > 0`; `RawCanonicalPositiveStmt` quantifies over every `ξ`.
+- R0: CLOSED in round 14 by `IsLQGMetric.weylExponent_pos` (`MetricXiSign.lean:360`, from `0 < γ`); see Round 14.
 - R7 (operator): `IsLQGMetric` axioms over `Ω : Type`; target over `Ω : Type*`.
 - R5: the Audit consumer (`Audit/Section11PinchMetricFieldConsumer.lean:83`) still takes the staged `LQGMetricFieldAxioms`.
 - R1: general-`α` local certificate (`CorrectedPinchFrequency.lean:106`); needed by Lemma 11.13.
