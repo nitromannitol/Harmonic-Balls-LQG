@@ -4,13 +4,13 @@ import HarmonicBalls.Proofs.Sec6.GreenDilation
 import HarmonicBalls.Proofs.Sec5.LocalCountableDeletion
 import HarmonicBalls.Proofs.Sec6.AvoidanceDiscRestart
 import HarmonicBalls.Proofs.Potential.GeneralDomainGreenLaplacian
+import HarmonicBalls.Proofs.Potential.GreenReciprocityExhaustionTransfer
 
 /-! # Green reciprocity for finite disc families
 
 The component and Green-function infrastructure used here incorporates the
 potential-theoretic work of Leonardo Bonanno. This file establishes the
-families whose intersecting discs share a containing disc in the family;
-general overlaps require a further argument.
+reciprocity for arbitrary finite disc families and bounded open domains.
 -/
 
 namespace HarmonicBalls
@@ -777,6 +777,84 @@ theorem hasLaplacian_greenFunction_pole {U : Set ℂ}
   rw [he, integral_add (integrable_mul_laplacian_of_test hd.1 hφ)
     (integrable_mul_laplacian_of_test hhL.1 hφ), hhφ, add_zero]
   exact hdφ
+
+/-- The harmonic correction, viewed as a function of the pole, is a
+harmonic minorant of the Newtonian kernel with its pole at the observation. -/
+theorem isHarmonicMinorant_greenHarmonicCorrection_pole {U : Set ℂ}
+    (hU : IsOpen U) (hUb : Bornology.IsBounded U) {y : ℂ} (hy : y ∈ U) :
+    IsHarmonicMinorant U (newtonKernelEReal y)
+      (fun x => (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal) := by
+  refine ⟨harmonicOnNhd_greenHarmonicCorrection_pole hU hUb hy, ?_⟩
+  intro x hx
+  by_cases hxy : x = y
+  · subst x
+    simp [newtonKernelEReal]
+  · have hg := greenFunction_nonneg hUb x y
+    rw [greenFunction, ite_eq_left ⟨hx, hy, hxy⟩] at hg
+    simp only [newtonKernelEReal, hxy, ite_false, EReal.coe_le_coe_iff]
+    rw [newtonKernel_comm y x]
+    linarith
+
+/-- Maximality of harmonic minorants makes the harmonic correction symmetric. -/
+theorem greenHarmonicCorrection_comm {U : Set ℂ}
+    (hU : IsOpen U) (hUb : Bornology.IsBounded U) {x y : ℂ}
+    (hx : x ∈ U) (hy : y ∈ U) :
+    (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal =
+      (greatestHarmonicMinorant U (newtonKernelEReal y) x).toReal := by
+  have hle : ∀ {a b : ℂ}, a ∈ U → b ∈ U →
+      (greatestHarmonicMinorant U (newtonKernelEReal a) b).toReal ≤
+        (greatestHarmonicMinorant U (newtonKernelEReal b) a).toReal := by
+    intro a b ha hb
+    by_cases hab : a = b
+    · subst a
+      exact le_rfl
+    · have hminor := (isHarmonicMinorant_greenHarmonicCorrection_pole hU hUb hb).le_greatestHarmonicMinorant a
+      have hub : greatestHarmonicMinorant U (newtonKernelEReal b) a ≤
+          (newtonKernel b a : EReal) := by
+        simpa only [newtonKernelEReal, hab, ite_false] using
+          (greatestHarmonicMinorant_le (u := newtonKernelEReal b) ha)
+      have htop := ne_top_of_le_ne_top (EReal.coe_ne_top _) hub
+      have hr := EReal.toReal_le_toReal hminor (EReal.coe_ne_bot _) htop
+      simpa only [EReal.toReal_coe] using hr
+  exact le_antisymm (hle hx hy) (hle hy hx)
+
+/-- Green reciprocity on a bounded open set, obtained from the maximality of
+the two harmonic corrections. -/
+theorem greenFunction_bounded_open_comm_of_harmonic_minorants {U : Set ℂ}
+    (hU : IsOpen U) (hUb : Bornology.IsBounded U) (x y : ℂ) :
+    greenFunction U x y = greenFunction U y x := by
+  by_cases hx : x ∈ U
+  · by_cases hy : y ∈ U
+    · by_cases hxy : x = y
+      · subst y
+        rfl
+      · rw [greenFunction, ite_eq_left ⟨hx, hy, hxy⟩,
+            greenFunction, ite_eq_left ⟨hy, hx, Ne.symm hxy⟩,
+            newtonKernel_comm x y, greenHarmonicCorrection_comm hU hUb hx hy]
+    · rw [greenFunction_of_notMem_right hy, greenFunction_of_notMem_left hy]
+  · rw [greenFunction_of_notMem_left hx, greenFunction_of_notMem_right hx]
+
+/-- Reciprocity on every finite union of discs, including overlaps and
+boundary contact, and with the prescribed diagonal and exterior values. -/
+theorem greenFunction_finite_discs_comm (A : Set ℂ) (r : A → ℝ) (F : Finset A)
+    (_hr : ∀ a ∈ F, 0 < r a) (x y : ℂ) :
+    greenFunction (⋃ a ∈ F, ball (a : ℂ) (r a)) x y =
+      greenFunction (⋃ a ∈ F, ball (a : ℂ) (r a)) y x := by
+  apply greenFunction_bounded_open_comm_of_harmonic_minorants
+  · exact isOpen_iUnion fun a => isOpen_iUnion fun _ => isOpen_ball
+  · exact (Bornology.isBounded_biUnion_finset F).2 (fun _ _ => isBounded_ball)
+
+/-- The finite-disc exhaustion transfers reciprocity to bounded open sets. -/
+theorem greenFunction_bounded_open_comm {U : Set ℂ}
+    (hU : IsOpen U) (hUb : Bornology.IsBounded U) (x y : ℂ) :
+    greenFunction U x y = greenFunction U y x :=
+  greenFunction_reciprocity_of_finite_disc_reciprocity
+    greenFunction_finite_discs_comm hU hUb x y
+
+#print axioms isHarmonicMinorant_greenHarmonicCorrection_pole
+#print axioms greenHarmonicCorrection_comm
+#print axioms greenFunction_finite_discs_comm
+#print axioms greenFunction_bounded_open_comm
 
 #print axioms exists_harmonicOnNhd_greenFunction_transpose_difference
 #print axioms hasLaplacian_greenFunction_pole
