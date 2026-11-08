@@ -61,7 +61,8 @@ theorem circleAverage_wholePlaneNormalization_le {R : ℝ} (hR : 0 ≤ R) {z : �
   exact Real.log_le_log (lt_max_of_lt_right one_pos) (max_le hxn (by linarith))
 
 /-- The variance of a circle average of the whole-plane GFF: `Var h_r(z) = 2 A_r(z) - log r`, where `A_r(z)` is the
-circle average of `log (max |·| 1)` over `∂B_r(z)` (concentric covariance, Duplantier–Sheffield 2011, Section 3.1). -/
+circle average of `log (max |·| 1)` over `∂B_r(z)`, from the concentric covariance
+`wholePlaneGFFCov_concentric_circles_general`. -/
 theorem IsWholePlaneGFF.variance_circleAverage_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hgff : IsWholePlaneGFF P hC hcirc)
     {r : ℝ} (hr : 0 < r) (z : ℂ) :
