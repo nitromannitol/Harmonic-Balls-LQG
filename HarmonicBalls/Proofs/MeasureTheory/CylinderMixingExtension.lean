@@ -2,6 +2,8 @@ import Mathlib.MeasureTheory.Constructions.Cylinders
 import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
 import Mathlib.MeasureTheory.Measure.MeasuredSets
 import Mathlib.MeasureTheory.SetAlgebra
+import Mathlib.MeasureTheory.Function.ContinuousMapDense
+import Mathlib.MeasureTheory.Integral.IntegrableOn
 import Mathlib.Dynamics.Ergodic.MeasurePreserving
 
 /-! # Mixing for coordinate cylinders
@@ -117,6 +119,196 @@ theorem measurable_coordinate_vector {Ω I : Type*} (X : I → Ω → ℝ)
   let _ : MeasurableSpace Ω := coordinateSigma X
   exact Measurable.of_eval fun i => measurable_coordinate X (a i)
 
+/-- Intersecting two events with the same measurable event is non-expansive
+for the symmetric-difference distance in finite measure. -/
+theorem abs_measureReal_inter_sub_le_symmDiff {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsFiniteMeasure P] {A A' B : Set Ω}
+    (hA : MeasurableSet A) (hA' : MeasurableSet A') (hB : MeasurableSet B) :
+    |P.real (A ∩ B) - P.real (A' ∩ B)| ≤ P.real (A ∆ A') := by
+  calc
+    _ ≤ P.real ((A ∩ B) ∆ (A' ∩ B)) :=
+      abs_measureReal_sub_le_measureReal_symmDiff (hA.inter hB).nullMeasurableSet
+        (hA'.inter hB).nullMeasurableSet
+    _ = P.real ((A ∆ A') ∩ B) := by rw [Set.inter_symmDiff_distrib_right]
+    _ ≤ P.real (A ∆ A') := measureReal_mono Set.inter_subset_left
+
+/-- The event correlations of a measure-preserving iterate change by at most
+the sum of the symmetric-difference distances of the two events. -/
+theorem abs_measureReal_inter_preimage_sub_le {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsFiniteMeasure P] {T : Ω → Ω} (hT : MeasurePreserving T P P)
+    {A A' B B' : Set Ω} (hA : MeasurableSet A) (hA' : MeasurableSet A')
+    (hB : MeasurableSet B) (hB' : MeasurableSet B') (n : ℕ) :
+    |P.real (A ∩ (T^[n]) ⁻¹' B) - P.real (A' ∩ (T^[n]) ⁻¹' B')| ≤
+      P.real (A ∆ A') + P.real (B ∆ B') := by
+  have hn := hT.iterate n
+  have h₁ := abs_measureReal_inter_sub_le_symmDiff P hA hA' (hn.measurable hB)
+  have h₂ := abs_measureReal_inter_sub_le_symmDiff P (hn.measurable hB)
+    (hn.measurable hB') hA'
+  rw [← Set.preimage_symmDiff, hn.measureReal_preimage (hB.symmDiff hB').nullMeasurableSet] at h₂
+  calc
+    _ ≤ |P.real (A ∩ (T^[n]) ⁻¹' B) - P.real (A' ∩ (T^[n]) ⁻¹' B)| +
+        |P.real (A' ∩ (T^[n]) ⁻¹' B) - P.real (A' ∩ (T^[n]) ⁻¹' B')| :=
+      abs_sub_le _ _ _
+    _ ≤ P.real (A ∆ A') + P.real (B ∆ B') := by
+      apply add_le_add h₁
+      simpa only [Set.inter_comm] using h₂
+
+/-- Products of probabilities inherit the symmetric-difference bound. -/
+theorem abs_measureReal_mul_sub_le {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] {A A' B B' : Set Ω}
+    (hA : MeasurableSet A) (hA' : MeasurableSet A')
+    (hB : MeasurableSet B) (hB' : MeasurableSet B') :
+    |P.real A * P.real B - P.real A' * P.real B'| ≤
+      P.real (A ∆ A') + P.real (B ∆ B') := by
+  have ha := abs_measureReal_sub_le_measureReal_symmDiff
+    (μ := P) hA.nullMeasurableSet hA'.nullMeasurableSet
+  have hb := abs_measureReal_sub_le_measureReal_symmDiff
+    (μ := P) hB.nullMeasurableSet hB'.nullMeasurableSet
+  have hA0 : 0 ≤ P.real A' := measureReal_nonneg
+  have hA1 : P.real A' ≤ 1 := measureReal_le_one
+  have hB0 : 0 ≤ P.real B := measureReal_nonneg
+  have hB1 : P.real B ≤ 1 := measureReal_le_one
+  calc
+    _ = |(P.real A - P.real A') * P.real B + P.real A' * (P.real B - P.real B')| := by
+      congr 1; ring
+    _ ≤ |(P.real A - P.real A') * P.real B| + |P.real A' * (P.real B - P.real B')| :=
+      abs_add_le _ _
+    _ = |P.real A - P.real A'| * P.real B + P.real A' * |P.real B - P.real B'| := by
+      rw [abs_mul, abs_mul, abs_of_nonneg hA0, abs_of_nonneg hB0]
+    _ ≤ P.real (A ∆ A') + P.real (B ∆ B') := by
+      nlinarith [abs_nonneg (P.real A - P.real A'), abs_nonneg (P.real B - P.real B')]
+
+/-- Mixing on measurable finite cylinders extends to all events in the
+coordinate sigma-algebra. -/
+theorem coordinateSigmaMixing_of_cylinder_events {Ω I : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] (X : I → Ω → ℝ)
+    (hX : ∀ i, Measurable (X i)) (T : Ω → Ω) (hT : MeasurePreserving T P P)
+    (h : ∀ C D : Set (I → ℝ), C ∈ measurableCylinders (fun _ : I => ℝ) →
+      D ∈ measurableCylinders (fun _ : I => ℝ) →
+      Tendsto (fun n : ℕ => P.real (((fun ω i => X i ω) ⁻¹' C) ∩
+        (T^[n]) ⁻¹' ((fun ω i => X i ω) ⁻¹' D))) atTop
+        (𝓝 (P.real ((fun ω i => X i ω) ⁻¹' C) *
+          P.real ((fun ω i => X i ω) ⁻¹' D)))) : coordinateSigmaMixing P X T := by
+  intro A B hA hB
+  have hAm : MeasurableSet A := coordinateSigma_le X hX A hA
+  have hBm : MeasurableSet B := coordinateSigma_le X hX B hB
+  let Y : Ω → I → ℝ := fun ω i => X i ω
+  have hY : Measurable Y := Measurable.of_eval hX
+  apply Metric.tendsto_atTop.mpr
+  intro ε hε
+  have hδ : 0 < ε / 8 := by positivity
+  obtain ⟨C, hC, hCA⟩ := exists_coordinateCylinder_symmDiff_lt P X hX hA
+    (ENNReal.ofReal_pos.mpr hδ)
+  obtain ⟨D, hD, hDB⟩ := exists_coordinateCylinder_symmDiff_lt P X hX hB
+    (ENNReal.ofReal_pos.mpr hδ)
+  have hCA' : P.real (A ∆ (Y ⁻¹' C)) < ε / 8 := by
+    have hh := (ENNReal.toReal_lt_toReal (measure_ne_top P _) ENNReal.ofReal_ne_top).2 hCA
+    simpa only [Measure.real, ENNReal.toReal_ofReal hδ.le, symmDiff_comm, Y] using hh
+  have hDB' : P.real (B ∆ (Y ⁻¹' D)) < ε / 8 := by
+    have hh := (ENNReal.toReal_lt_toReal (measure_ne_top P _) ENNReal.ofReal_ne_top).2 hDB
+    simpa only [Measure.real, ENNReal.toReal_ofReal hδ.le, symmDiff_comm, Y] using hh
+  have hCm : MeasurableSet (Y ⁻¹' C) := hY (MeasurableSet.of_mem_measurableCylinders hC)
+  have hDm : MeasurableSet (Y ⁻¹' D) := hY (MeasurableSet.of_mem_measurableCylinders hD)
+  obtain ⟨N, hN⟩ := Metric.tendsto_atTop.mp (h C D hC hD) (ε / 2) (by positivity)
+  refine ⟨N, fun n hn => ?_⟩
+  have hn := hN n hn
+  rw [Real.dist_eq] at hn ⊢
+  have h₁ := abs_measureReal_inter_preimage_sub_le P hT hAm hCm hBm hDm n
+  have h₂ := abs_measureReal_mul_sub_le P hAm hCm hBm hDm
+  change |P.real (A ∩ (T^[n]) ⁻¹' B) - P.real A * P.real B| < ε
+  calc
+    _ ≤ |P.real (A ∩ (T^[n]) ⁻¹' B) - P.real ((Y ⁻¹' C) ∩ (T^[n]) ⁻¹' (Y ⁻¹' D))| +
+        |P.real ((Y ⁻¹' C) ∩ (T^[n]) ⁻¹' (Y ⁻¹' D)) - P.real (Y ⁻¹' C) * P.real (Y ⁻¹' D)| +
+        |P.real (Y ⁻¹' C) * P.real (Y ⁻¹' D) - P.real A * P.real B| := by
+      linarith [abs_sub_le (P.real (A ∩ (T^[n]) ⁻¹' B))
+        (P.real ((Y ⁻¹' C) ∩ (T^[n]) ⁻¹' (Y ⁻¹' D))) (P.real A * P.real B),
+        abs_sub_le (P.real ((Y ⁻¹' C) ∩ (T^[n]) ⁻¹' (Y ⁻¹' D)))
+        (P.real (Y ⁻¹' C) * P.real (Y ⁻¹' D)) (P.real A * P.real B)]
+    _ < ε := by
+      have h₂' : |P.real (Y ⁻¹' C) * P.real (Y ⁻¹' D) - P.real A * P.real B| ≤
+          P.real (A ∆ (Y ⁻¹' C)) + P.real (B ∆ (Y ⁻¹' D)) := by
+        simpa only [abs_sub_comm] using h₂
+      change |P.real ((Y ⁻¹' C) ∩ (T^[n]) ⁻¹' (Y ⁻¹' D)) -
+        P.real (Y ⁻¹' C) * P.real (Y ⁻¹' D)| < ε / 2 at hn
+      linarith
+
+/-- A measurable event can be approximated in L¹ by bounded continuous
+functions taking values in the unit interval. -/
+theorem exists_unit_boundedContinuous_indicator_approx
+    {α : Type*} [TopologicalSpace α] [NormalSpace α] [SecondCountableTopology α]
+    [MeasurableSpace α] [BorelSpace α] (Q : Measure α) [IsFiniteMeasure Q]
+    [Q.WeaklyRegular] {S : Set α} (hS : MeasurableSet S) {ε : ℝ} (hε : 0 < ε) :
+    ∃ g : BoundedContinuousFunction α ℝ,
+      (∀ x, 0 ≤ g x ∧ g x ≤ 1) ∧
+      (∫ x, ‖S.indicator (fun _ => (1 : ℝ)) x - g x‖ ∂Q) ≤ ε := by
+  let F : α → ℝ := S.indicator (fun _ => (1 : ℝ))
+  have hF : Integrable F Q := (integrable_const (1 : ℝ)).indicator hS
+  obtain ⟨f, hf, _⟩ := hF.exists_boundedContinuous_integral_sub_le hε
+  let g : BoundedContinuousFunction α ℝ := (f ⊔ 0) ⊓ 1
+  have hgb : ∀ x, 0 ≤ g x ∧ g x ≤ 1 := by
+    intro x
+    change 0 ≤ min (max (f x) 0) 1 ∧ min (max (f x) 0) 1 ≤ 1
+    exact ⟨le_min (le_max_right _ _) zero_le_one, min_le_right _ _⟩
+  refine ⟨g, hgb, ?_⟩
+  have hg : Integrable g Q := BoundedContinuousFunction.integrable Q g
+  have hfi : Integrable f Q := BoundedContinuousFunction.integrable Q f
+  calc
+    _ ≤ ∫ x, ‖F x - f x‖ ∂Q := by
+      apply integral_mono (hF.sub hg).norm (hF.sub hfi).norm
+      intro x
+      have hFx : 0 ≤ F x ∧ F x ≤ 1 := by
+        by_cases hx : x ∈ S <;> simp [F, hx]
+      have hclip : min (max (F x) 0) 1 = F x := by
+        rw [max_eq_left hFx.1, min_eq_left hFx.2]
+      have ha := abs_min_sub_min_le_max (max (F x) 0) (1 : ℝ) (max (f x) 0) 1
+      simp only [sub_self, abs_zero, max_eq_left (abs_nonneg (max (F x) 0 - max (f x) 0)), hclip] at ha
+      have hb := abs_max_sub_max_le_abs (F x) (f x) (0 : ℝ)
+      change |F x - min (max (f x) 0) 1| ≤ |F x - f x|
+      exact ha.trans hb
+    _ ≤ ε := hf
+
+/-- Unit-interval products are Lipschitz in each factor. -/
+private theorem abs_mul_sub_mul_le_unit {a b c d : ℝ}
+    (_ha : 0 ≤ a ∧ a ≤ 1) (hb : 0 ≤ b ∧ b ≤ 1)
+    (hc : 0 ≤ c ∧ c ≤ 1) (_hd : 0 ≤ d ∧ d ≤ 1) :
+    |a * b - c * d| ≤ |a - c| + |b - d| := by
+  calc
+    _ = |(a - c) * b + c * (b - d)| := by congr 1; ring
+    _ ≤ |(a - c) * b| + |c * (b - d)| := abs_add_le _ _
+    _ = |a - c| * b + c * |b - d| := by
+      rw [abs_mul, abs_mul, abs_of_nonneg hb.1, abs_of_nonneg hc.1]
+    _ ≤ |a - c| + |b - d| := by
+      nlinarith [abs_nonneg (a - c), abs_nonneg (b - d)]
+
+/-- L¹ approximation controls product expectations for unit-interval functions. -/
+theorem abs_integral_mul_sub_le {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    {u v f g : Ω → ℝ} (hu : Integrable u P) (hv : Integrable v P)
+    (hf : Integrable f P) (hg : Integrable g P)
+    (huv : ∀ ω, 0 ≤ u ω ∧ u ω ≤ 1) (hvv : ∀ ω, 0 ≤ v ω ∧ v ω ≤ 1)
+    (hfv : ∀ ω, 0 ≤ f ω ∧ f ω ≤ 1) (hgv : ∀ ω, 0 ≤ g ω ∧ g ω ≤ 1) :
+    |(∫ ω, u ω * v ω ∂P) - (∫ ω, f ω * g ω ∂P)| ≤
+      (∫ ω, |u ω - f ω| ∂P) + (∫ ω, |v ω - g ω| ∂P) := by
+  have huv' : Integrable (fun ω => u ω * v ω) P := hu.mul_bdd hv.1
+    (Filter.Eventually.of_forall fun ω => by rw [Real.norm_eq_abs, abs_of_nonneg (hvv ω).1]; exact (hvv ω).2)
+  have hfg' : Integrable (fun ω => f ω * g ω) P := hf.mul_bdd hg.1
+    (Filter.Eventually.of_forall fun ω => by rw [Real.norm_eq_abs, abs_of_nonneg (hgv ω).1]; exact (hgv ω).2)
+  have hErr : Integrable (fun ω => |u ω - f ω| + |v ω - g ω|) P :=
+    (hu.sub hf).abs.add (hv.sub hg).abs
+  have hEq : (∫ ω, |u ω - f ω| ∂P) + (∫ ω, |v ω - g ω| ∂P) =
+      ∫ ω, |u ω - f ω| + |v ω - g ω| ∂P := by
+    simpa only [Pi.sub_apply] using (integral_add (hu.sub hf).abs (hv.sub hg).abs).symm
+  rw [← integral_sub huv' hfg', hEq]
+  rw [← Real.norm_eq_abs]
+  exact norm_integral_le_of_norm_le hErr (Filter.Eventually.of_forall fun ω => by
+    rw [Real.norm_eq_abs]
+    exact abs_mul_sub_mul_le_unit (huv ω) (hvv ω) (hfv ω) (hgv ω))
+
+#print axioms abs_integral_mul_sub_le
+#print axioms exists_unit_boundedContinuous_indicator_approx
+#print axioms coordinateSigmaMixing_of_cylinder_events
+#print axioms abs_measureReal_mul_sub_le
+#print axioms abs_measureReal_inter_preimage_sub_le
+#print axioms abs_measureReal_inter_sub_le_symmDiff
 #print axioms exists_coordinateCylinder_symmDiff_lt
 #print axioms exists_measurableCylinder_symmDiff_lt
 #print axioms coordinateSigma_eq_generateFrom_cylinders

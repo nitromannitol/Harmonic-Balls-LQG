@@ -13,8 +13,13 @@ measure by such a pulled-back cylinder; the index type need not be countable.
 The approximation uses Mathlib's set-ring approximation theorem, including
 its finite-measure and covering hypotheses.
 
-Still open: extend the continuous product-expectation limit to indicators of
-finite-dimensional Borel sets using bounded-continuous approximation, then use
-measure preservation and the cylinder approximation to extend to all events.
-The statement itself remains unproved. No GFF shift invariance, law, or
+Proved `coordinateSigmaMixing_of_cylinder_events`: mixing on measurable
+finite cylinders extends to every coordinate event, using uniform
+symmetric-difference estimates and measure preservation of the iterates.
+Also proved L¹ indicator approximation by unit-interval bounded continuous
+functions and an L¹ bound on product expectations.
+
+Still open: use those estimates to extend the continuous product-expectation
+limit to indicators of finite-dimensional Borel sets, and reindex the finite
+cylinder bases. The full target statement itself remains unproved. No GFF shift invariance, law, or
 sigma-algebra generation claim is made here.
