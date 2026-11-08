@@ -1,25 +1,26 @@
-# Gaussian cylinder mixing: partial audit
+# Gaussian cylinder mixing: finite-dimensional audit
 
-The results in `HarmonicBalls/Proofs/GFF/GaussianCylinderMixing.lean` are
-finite-dimensional. They establish convergence in distribution of centered
-Gaussian vectors under entrywise covariance convergence, convergence of their
-bounded continuous expectations, and factorization of product tests once
-convergence to a product-space limit has been established. The last statement
-is conditional on that convergence; it does not assume or establish mixing.
-The file also proves convergence to zero of every fixed bilinear combination of
-the mixed original/dyadic GFF pairings, using the existing covariance-decay
-theorem and integral-zero tests on the dilated side.
+`HarmonicBalls/Proofs/GFF/GaussianCylinderMixing.lean` proves convergence in
+distribution for centered jointly Gaussian blocks whose marginal covariance
+matrices stay fixed and whose mixed covariances tend to zero. The limit uses
+independent copies of the two initial marginal vectors on the product
+probability space. Bounded continuous product tests then have factorized
+limiting expectations.
 
-Remaining: construct the independent Gaussian product limit from the two
-marginal laws; establish covariance convergence to it from fixed marginal
-covariances and vanishing mixed covariances; show the actual original/dilated
-GFF vectors satisfy joint Gaussianity, centering, and marginal covariance
-invariance, and apply the product-test result. No sigma-algebra mixing,
+The GFF specialization proves joint Gaussianity using weighted and recentered
+admissible observables, identifies both marginal covariance matrices, and uses
+`DilationPairingCovarianceDecay` for the mixed terms. Dilated test functions
+are smooth and compactly supported with integral zero; no punctured-support
+condition is used. Both the convergence in distribution and expectation
+factorization are proved for finite vectors. No sigma-algebra mixing,
 ergodicity, covariance-norm density, or numbered-result closure is claimed.
 
-`LatticeProb.Prob.CameronMartin` and
-`LatticeProb.Prob.Scaling.CramerWoldFilter` currently fail to rebuild against
-the installed Mathlib API; the file instead uses Mathlib's variance lemmas,
-the working `LatticeProb.Prob.Scaling.CramerWold`, and a direct bounded-test
+The proof uses Mathlib's variance lemmas and the working
+`LatticeProb.Prob.Scaling.CramerWold` module, with a direct bounded-test
 argument. Leonardo Bonanno's Lattice-Probability development supplies the
-Cramér–Wold bridge.
+Cramér–Wold bridge. `LatticeProb.Prob.CameronMartin` and
+`LatticeProb.Prob.Scaling.CramerWoldFilter` were found to fail rebuilding
+against the installed Mathlib API and are not imported here.
+
+The file's printed axiom dependencies are `propext`, `Classical.choice`, and
+`Quot.sound`; there are no additional literature assumptions.
