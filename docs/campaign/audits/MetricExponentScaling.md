@@ -54,6 +54,10 @@ of a whole-plane GFF plus a continuous function, and every family `c` satisfying
 `η > 0`, eventually as `δ → 0` (filter `𝓝[>] 0`), for all `r > 0`:
 `|log (c (δr) / c r) / log δ - ξ Q| ≤ η`.
 
+The quantifier over `c` is harmless. If two families `c`, `c'` both satisfy the tightness part of Axiom V for one instance,
+then on an event of probability at least `1 - 2ε` both normalized variables lie in `[M⁻¹, M]` and `[M'⁻¹, M']`, so
+`c'_r / c_r ∈ [(MM')⁻¹, MM']` for all `r`, uniformly. Uniformly bounded factors do not change the limit in (1.10).
+
 Null-set quantifier order follows the printed text: Axiom III is `∀ g continuous, ∀ᵐ ω` (not `∀ᵐ ω, ∀ g`), Axiom IV is
 `∀ z, ∀ᵐ ω`, and Axiom II is `∀ U, ∃ G, ∀ᵐ ω`. No simultaneous-representation claim is made.
 
