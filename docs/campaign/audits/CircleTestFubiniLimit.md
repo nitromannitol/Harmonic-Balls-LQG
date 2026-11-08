@@ -60,20 +60,24 @@ Quantifier order: in every instance the test `φ` (with `IsTestFunction univ φ`
    `M · 1_{testEnlargement φ} · |g|` (the common compact support), pointwise limit from the uniform convergence
    `φ_r → φ` (uniform continuity of `φ`, `Metric.uniformContinuous_iff`).
 6. `dmsShift`: `circleAverage_fun_add` with `circleIntegrable_log_norm_sub_const` and the continuous `logMaxOne`;
-   the logarithmic circle average is `circleAverage_log_norm_sub_eq_log_max` (Sec11 `CirclePotential.lean:19`).
+   the logarithmic circle average is `HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max` (Sec11 `CirclePotential.lean:24`).
 
 ## Inputs and imports
 
 - Definitions only from the project: `IsTestFunction` (`Defs/Laplacian.lean:47`), `dmsShift`
   (`Proposed/DuplantierMillerSheffield.lean:34`, definition only; no `Prop` from `Proposed` is used or assumed),
   `logMaxOne` (`RootedShiftProfile.lean:23`), `contDiff_circleAverage_of_contDiff` (`RouteACircleSmooth.lean:73`),
-  `circleAverage_log_norm_sub_eq_log_max` (`CirclePotential.lean:19`), `integrableOn_ball_log_norm` and
+  `HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max` (`CirclePotential.lean:24`), `integrableOn_ball_log_norm` and
   `locallyIntegrable_comp_sub_of_integrableOn_ball` (`Potential/Fundamental.lean:44, 67`).
 - Import closure: 12 `HarmonicBalls` modules, checked by a transitive `^import` walk. No `LatticeProb` module, no
   Sec8 module, and no file in the closure mentions Bonanno. So no Bonanno credit line is required, and the
   `LogInsertionReconstruction.lean` route was not taken.
-- The name clash `circleAverage_log_norm_sub_eq_log_max` (Sec8 `CircleLogPotential.lean:17` vs Sec11
-  `CirclePotential.lean:19`) does not arise: this file imports only the Sec11 declaration.
+- Name collision, resolved. The unqualified last name `circleAverage_log_norm_sub_eq_log_max` was shared by the
+  Section 8 declaration `HarmonicBalls.circleAverage_log_norm_sub_eq_log_max` (`Proofs/Sec8/CircleLogPotential.lean:17`,
+  unchanged) and the Sec11 declaration `HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max`
+  (`Proofs/Sec11/ClosureScales/CirclePotential.lean:24`, in namespace `HarmonicBalls.CirclePotential` since commit
+  2e35bf4). Every citation now uses a qualified name, so the clash no longer arises. This file imports only the Sec11
+  declaration.
 - No hypothesis of the form "the additions satisfy a bound, convergence or integrability" appears anywhere; the
   continuous and logarithmic additions enter only through their own definitions.
 

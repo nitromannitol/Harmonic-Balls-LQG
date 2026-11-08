@@ -45,7 +45,7 @@ Proposed input.
    compact sets comes from `LocallyIntegrable g`.
 3. Substitution `v = c θ - y` (`integral_sub_left_eq_self`), then the second Fubini on the `(θ, y)` product (`hR2`).
 4. Inner averages. For `g = log ‖· - z‖`, `circleAverage (fun u ↦ g (u - y)) w r = log max(r, ‖(y + z) - w‖)` by
-   `HarmonicBalls.circleAverage_log_norm_sub_eq_log_max` (`circleAverage_log_sub`, line 151). For `g = logMaxOne`,
+   `HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max` (Sec11 `CirclePotential.lean:24`; used in the proof of `circleAverage_log_sub`, lines 151-157). For `g = logMaxOne`,
    it equals `circleAverage logMaxOne (w - y) r` (`circleAverage_comp_sub`, line 142), which is continuous in `y` by
    `continuous_circleAverage_logMaxOne` (`continuous_circleAverage_logMaxOne_sub`, line 164).
 5. Limit: approximate identity at `y = 0` for continuous `h` (lines 85-134). It uses continuity of `h` at `0`,

@@ -48,7 +48,7 @@ no convergence, covariance-limit, decoder, representation or E56 hypothesis.
   `|P p - P q| ≤ |p - q| / r`, which gives `|J_e x - P x| ≤ e / r` for all `x` (no compactness needed). This proves the
   claimed convergence; it is not a new claim.
 - "Fubini moves each mollifier onto the potential" is `integral_mul_circleAverage_mollifierAt` followed by
-  `circleAverage_log_sub` (Mathlib mean value identity `circleAverage_log_norm_sub_eq_log_max`).
+  `circleAverage_log_sub` (project mean value identity `HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max`, Sec11 `CirclePotential.lean:24`; not a Mathlib declaration, and distinct from the Section 8 `HarmonicBalls.circleAverage_log_norm_sub_eq_log_max`).
 - The kernel uses the Lean junk value `log 0 = 0` on the diagonal (`Defs/GFF.lean`). It is only seen by the circle
   average in the second variable, where a single point is codiscrete (handled above); the Lebesgue integral in the first
   variable is insensitive to it.
