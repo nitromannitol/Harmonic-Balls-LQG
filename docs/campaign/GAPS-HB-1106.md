@@ -107,3 +107,25 @@ values and Weyl monotonicity. The remaining Lean work is positive G, bump
 inclusion, actual-limit/full-support source matching, and affine
 translation/dilation uniformity, not the countable encoding. See
 `audits/ConeFrequencySourcePlan.md` for the separate 11.8 → 11.7 argument.
+
+
+## Operator no-further-prover policy, 2026-11-08 18:55 UTC (lead applied 19:13 UTC)
+
+The operator's instruction in fleet inbox.md ends further written-proof requests. Formalize existing audited written proofs only. Any WRITTEN-PROOF-NEEDED implication with no audited proof remains its exact named Step hypothesis, with its location, type, consumer and reason recorded here and in PROGRESS. No worker is assigned to invent that proof. The three IDLA prover requests currently running are unavailable until independently audited. Historical requests above are evidence, not authorization to start another prover round.
+
+E56 remains an interface obstruction, not a new background input or an uncovered proof assignment. The exact existing named hypothesis is `RawToProfileStep P gamma hC hcirc c`, defined at `HarmonicBalls/Proofs/Sec11/ClosureScales/PalmStepM.lean:42`:
+
+```lean
+def RawToProfileStep {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (c : Ω → CanonicalProfile) : Prop :=
+  IsWholePlaneGFF P hC hcirc → (∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c ω).1 p = hcirc ω p.1 p.2) →
+    ∃ ρ : ((ℂ → ℝ) → ℝ) → CanonicalProfile,
+      Measurable[pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ] ρ ∧
+      (∀ᵐ ω ∂P, ρ (hC ω) = c ω) ∧
+      ∀ z ∈ ball (0 : ℂ) 1,
+        ∀ᵐ ω ∂P, ρ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) = shiftedProfile γ z (c ω)
+```
+
+It is consumed as `hB` by `palm_omega_of_stepM_stepB` in that file:61 and by `eq_r6_palm_lambda_of_stepM_stepB` in `PalmLambdaMeasurable.lean:94`. Its current full-function conclusion observes arbitrary nonpositive-radius values that its premise does not constrain. The independent-fair-bit counterexample is recorded with evidence in fleet ESCALATIONS.md E56:876. The operator must rule on carrier/restriction and the coded-Palm consumer; no worker is assigned to prove this false universal helper or change frozen files. The source's actual C(J,Real) construction has an audited proof in r10 lines927-950 and1257-1392, so its faithful prerequisites remain eligible work.
+
+Checked at326a1ae: CountableCircleDecoder4202e55 and BorelCircleLimitDecoder326a1ae prove the continuous-code inverse and measurable countable-test-limit decoder on C(J,Real). MollifiedLogCircleLimitd95497e proves the deterministic logarithmic insertion limit for every insertion point. These do not discharge hB. The next two bounded Lean tasks follow the existing audited r10 lines1287-1330: continuous-addition limit and one-circle Gaussian L2 convergence. StepM is separately derived by PalmStepMDMS.lean:32 from explicit staged DMS hU, whose operator source review remains pending. H^-2 reconstruction/raw identification and all metric/rooted/numbered assembly obligations stay open.
