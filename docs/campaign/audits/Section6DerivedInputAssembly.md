@@ -76,10 +76,12 @@ of `harnackTypeComponentStmt_of_inputs` and `harnackTypeEstimateStmt_of_inputs`,
 
 ## Bonanno credit
 
-Two modules of Leonardo Bonanno's `LatticeProb` library lie in the import closure of the new module, through
-`HarmonicBalls/Proofs/Sec6/Assembly.lean`. The header of the module credits him, with the annulus-iteration credit of
-Lemma 6.5 recorded in `Section6FromVolumeGrowth.lean`. The constant closure of the exports reaches none of their
-declarations, so these reductions use none of his results.
+Two modules of Leonardo Bonanno's `LatticeProb` library, `LatticeProb.Prob.MaximalErgodic` and `LatticeProb.Prob.Birkhoff`,
+lie in the import closure of the new module. They enter through `HarmonicBalls/Proofs/Sec6/LQGWeylScaling.lean`, the
+provider of the Weyl premise. Scratch import checks on the build host: `Proofs/Sec6/Assembly.lean` alone reaches 0 of
+these modules, `Proofs/Sec6/LQGWeylScaling.lean` reaches 2, and `Proofs/Sec6/ShellDecomposition.lean` reaches 0. The
+header of the module credits him. The constant closure of the exports reaches none of their declarations, so these
+reductions use none of his results.
 
 ## Written argument
 

@@ -29,11 +29,12 @@ from `shellDecompositionStmt_proved`.
 These are conditional reductions. They are not a closure of Propositions 6.1 or 6.2: the leaves `hsub`, `hex`, `h32`,
 `h68`, `h610` and `h613` remain open.
 
-Credit: two modules of Leonardo Bonanno's `LatticeProb` library lie in the import closure of this module, through
-`HarmonicBalls/Proofs/Sec6/Assembly.lean`. The annulus iteration of Lemma 6.5 uses his proof of the Gwynne–Miller lemma
-in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6` (recorded in `HarmonicBalls/Proofs/Sec6/Section6FromVolumeGrowth.lean`).
-The constant closure of the exports reaches none of the declarations of that library (guard below), so these
-reductions use none of his results.
+Credit: two modules of Leonardo Bonanno's `LatticeProb` library, `LatticeProb.Prob.MaximalErgodic` and
+`LatticeProb.Prob.Birkhoff`, lie in the import closure of this module, through
+`HarmonicBalls/Proofs/Sec6/LQGWeylScaling.lean` (the provider of the Weyl premise). The constant closure of the exports
+reaches none of the declarations of that library (guard below), so these reductions use none of his results. The annulus
+iteration of Lemma 6.5 uses his proof of the Gwynne–Miller lemma in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`
+(recorded in `HarmonicBalls/Proofs/Sec6/Section6FromVolumeGrowth.lean`); that proof is not used here.
 -/
 
 namespace HarmonicBalls
