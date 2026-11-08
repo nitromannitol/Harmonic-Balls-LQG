@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Sec11.ClosureScales.UniversalRealization
 import HarmonicBalls.Proofs.Sec5.GaussianProcessLaw
+import HarmonicBalls.Proofs.GFF.CoordinateModification
 
 /-!
 # Lemma l:r6-transfer, step 5 (lite): the universal law of the circle averages on `J`
@@ -87,5 +88,26 @@ theorem IsWholePlaneGFF.map_circleProfileOnJ_eq
       _ = P₂ ((fun ω => circleProfileOnJ (c₂ ω)) ⁻¹' cylinder s S) := (measure_congr hae₂).symm
   · rw [Measure.map_apply hm₁ MeasurableSet.univ, Measure.map_apply hm₂ MeasurableSet.univ]
     simp
+
+/-- **The universal law `ν` of the circle averages on `J`** (the identity `c_*P = λ` of Lemma l:r6-transfer). A
+whole-plane GFF with `Type` carrier exists (`exists_projectWholePlaneGFF`); its restricted canonical profile has a
+law `ν`. By `IsWholePlaneGFF.map_circleProfileOnJ_eq`, every whole-plane GFF in any universe `u₁` has the same law
+for its restricted canonical profile. -/
+theorem exists_universal_circleProfileLaw :
+    ∃ ν : Measure (↥circleIndexSet → ℝ), IsProbabilityMeasure ν ∧
+      ∀ (Ω : Type u₁) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+        (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c : Ω → CanonicalProfile),
+        IsWholePlaneGFF P hC hcirc → Measurable c →
+        (∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c ω).1 p = hcirc ω p.1 p.2) →
+        P.map (fun ω => circleProfileOnJ (c ω)) = ν := by
+  obtain ⟨Ω₀, m₀, P₀, hP₀, hC₀, hcirc₀, h₀⟩ := exists_projectWholePlaneGFF
+  obtain ⟨c₀, hc₀, hc₀J⟩ := h₀.exists_measurable_canonicalProfile
+  have hm₀ : Measurable fun ω => circleProfileOnJ (c₀ ω) := measurable_circleProfileOnJ.comp hc₀
+  refine ⟨P₀.map (fun ω => circleProfileOnJ (c₀ ω)), ?_, ?_⟩
+  · constructor
+    rw [Measure.map_apply hm₀ MeasurableSet.univ, Set.preimage_univ]
+    exact measure_univ
+  · intro Ω _ P _ hC hcirc c h hc hcJ
+    exact h.map_circleProfileOnJ_eq h₀ hc hc₀ hcJ hc₀J
 
 end HarmonicBalls
