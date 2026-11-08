@@ -11,4 +11,5 @@ import HarmonicBalls.Proofs.Sec11.Closure.MetricBridgeZero
 import HarmonicBalls.Proofs.Sec11.Closure.MetricMeasurableZero
 import HarmonicBalls.Proofs.Sec11.Closure.PinchEventTypeZero
 import HarmonicBalls.Proofs.Sec11.Closure.PinchedSigmaLe
+import HarmonicBalls.Proofs.Sec11.Closure.RandomMeasureMeasurable
 import HarmonicBalls.Proofs.Sec11.Closure.TailNormalization

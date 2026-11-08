@@ -12,13 +12,15 @@ Frozen targets (read-only): `PinchEventPositiveProbabilityStmt` (Lemma 11.12, `H
 - `Proofs/Sec11/Closure/PinchEventTypeZero.lean` (209b0b2): the body of the target at `α₀ = 0` for `Ω : Type`, from `RawCanonicalPositiveStmt` and `haem`.
 - `Proofs/Sec11/Closure/FixedRawPositive.lean` (9e362b2), `FixedRawPositiveStaged.lean` (3a90d59), `PinchedSigmaLe.lean` (fa4ff84): the raw strengthened positivity of the fixed corrected configuration for `ξ > 0`. The volume-growth input is derived from the staged inputs `hDG`, `hCC`, `hE` (`Proofs/Sec9/WeakUniquenessDerivedInputs.lean:53`); the pinned-σ-algebra premise is proved.
 - `Proofs/Sec11/Closure/TailNormalization.lean` (round 11): `ofReal_exp_mul_circleAverage_one_zero_ae` and `squareDyadicTailInput_iff_normalized`. Under `IsWholePlaneGFF` the threshold factor `e^{ξ h^ℂ_1(0)}` is `1` almost surely (`IsWholePlaneGFF.ae_circleAverage_one_zero`, `Defs/GFF.lean:195`), so `SquareDyadicTailInput` is equivalent to its normalized form. This closes obligation O1 in Lean.
-- `HarmonicBalls.lean` imports the 13 `Closure` modules (the import lines are owned by this task). `lc` passes.
+- `Proofs/Sec11/Closure/RandomMeasureMeasurable.lean` (round 12): `aemeasurable_of_open_aemeasurable` (a family of finite-on-balls measures with a.e. measurable open-set evaluations is a.e. measurable for the Giry σ-algebra; Dynkin argument on the countable π-system `piQ`), `aemeasurable_lqg_measure_zero_of_locality` (the LQG measure is a.e. measurable from the staged `LQGMeasureLocality`), and `pinchEventPositive_typeZero_of_raw_locality` (the body of Lemma 11.12 at α₀ = 0 with the measurability premise `haem` replaced by the staged locality input `hLocal`).
+- `HarmonicBalls.lean` imports the Closure modules (the import lines are owned by this task). `lc` passes.
 
-## Round 11: F4 (`haem`) analysis (not closed)
+## Round 12: F4 (`haem`) discharged from the staged locality input
 
-- `haem` (`PinchEventTypeZero.lean:37–38`) asks for `AEMeasurable μ P` as a `Measure ℂ`-valued map. The chain uses it at `PinchEventTypeZero.lean:58`, inside `exists_measurable_pos_subset_pinch` (`PinchInnerPositivity.lean:38`).
-- The repository proves open-set measurability only: `aemeasurable_lqg_measure_open` (`Proofs/Sec6/PotentialRatioAEMeasurable.lean:109`), which uses the staged `LQGMeasureLocality` (`Proposed/LQG.lean:83`).
-- Missing Lean fact: `AEMeasurable μ P` from open-set `AEMeasurable` of `ω ↦ μ ω U` together with almost sure local finiteness. Mathlib gives only `Measure.measurable_of_measurable_coe` (`GiryMonad.lean:55`), which needs all measurable sets. A Dynkin argument on balls plus a countable generation is required. Not started.
+- `haem` (`PinchEventTypeZero.lean:37–38`) asked for `AEMeasurable μ P` for the measure-valued field. Open-set measurability is `HarmonicBalls.Section6.aemeasurable_lqg_measure_open` (`Proofs/Sec6/PotentialRatioAEMeasurable.lean:109`), which uses the staged `LQGMeasureLocality` (`Proposed/LQG.lean:83`, Fact 2.1 II, paper line 405).
+- The gap was the Mathlib σ-algebra on `Measure ℂ`: `Measure.measurable_of_measurable_coe` needs all measurable sets, and open-set measurability does not give them directly. Round 12 proves the extension (Dynkin argument on balls, countable π-system, modification on a measurable set of full measure). No new input is used.
+- Consequence: the new theorem `pinchEventPositive_typeZero_of_raw_locality` takes the universal premise `hLocal : ∀ γ Ω P hC hcirc, LQGMeasureLocality P γ 0 hC hcirc` (the staged input) instead of `haem`. The original `pinchEventPositive_typeZero_of_raw` is unchanged. The staged input is pending operator source-check.
+- `exists_measurable_pos_subset_pinch` (`PinchInnerPositivity.lean`) is owned by y1 and was not edited; the new theorem calls it as before.
 
 ## Round 10: T1 source check and reduction (no Lean change; nothing admitted or staged)
 
@@ -39,8 +41,8 @@ Frozen targets (read-only): `PinchEventPositiveProbabilityStmt` (Lemma 11.12, `H
 
 ## Open premises
 
+- hLocal (round 12, replaces `haem`): the staged `LQGMeasureLocality` in its universal form, pending operator source-check (Fact 2.1 II, paper line 405).
 - hdata (T1): `SquareDyadicTailInput`; O2, O3 (analysis and audit), O4 and O5 (Lean). O1 is closed.
-- haem (F4): `AEMeasurable μ P`; the Dynkin argument above.
 - hfront (F1): `μ_h(∂ closedSquare) = 0` a.s. needs `μ_h ≪ Lebesgue`; no staged Prop states it.
 - hmeasIns (F2): the strict `MeasurableSet` clause of `hinside`; the producer gives `NullMeasurableSet` only (`ConditionalCoreMeasurability.lean:26`). The chain consumers take `MeasurableSet` (`CorrectedPinchFirstSecond.lean:28`, `CorrectedPinchFirstSecondGrowth.lean:30`).
 - A, hA, hArep, ha, hb (F3): the first event measurable with respect to the pinned σ-algebra.
@@ -48,7 +50,7 @@ Frozen targets (read-only): `PinchEventPositiveProbabilityStmt` (Lemma 11.12, `H
 - R7 (operator): `IsLQGMetric` axioms over `Ω : Type`; target over `Ω : Type*`.
 - R5: the Audit consumer (`Audit/Section11PinchMetricFieldConsumer.lean:83`) still takes the staged `LQGMetricFieldAxioms`.
 - R1: general-`α` local certificate (`CorrectedPinchFrequency.lean:106`); needed by Lemma 11.13.
-- Staged Proposed inputs used (pending source-check): `hDG`, `hCC`, `hE` in `Proposed/LQG.lean`, and `LQGMeasureLocality` (through `aemeasurable_lqg_measure_open`).
+- Staged Proposed inputs used (pending source-check): `hDG`, `hCC`, `hE` in `Proposed/LQG.lean`, and `LQGMeasureLocality` (round 12, through `hLocal`).
 
 ## Inputs
 
