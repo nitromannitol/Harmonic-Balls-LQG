@@ -60,4 +60,22 @@ def DMSLemmaA10WholePlane (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ)
           (∫ z in ball (0 : ℂ) 1, ∫ ω, F (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) ∂P)
             / (volume (ball (0 : ℂ) 1)).toReal
 
+/-- **Duplantier-Miller-Sheffield, Lemma A.10, whole-plane clause, unnormalized form** (arXiv:1409.7055v4, Appendix A,
+p. 184, the last paragraph of the statement, with `D` the unit disk). The printed paragraph reads: if `h` is a
+whole-plane GFF with the additive constant fixed so that its average on `∂D` is `0`, then a sample from the law of
+`μ_h(D)dh` can be produced by sampling `h` according to its unweighted law, then picking `z₀ ∈ D` according to Lebesgue
+measure, then adding to `h` the function `z ↦ -γ log|z - z₀| + γ log max(|z|,1)`, and then taking the additive constant
+so that the average of the resulting field on `∂D` is `0`. It is read as unnormalized measures, as in the r10 proof of
+`l:r9-marked` (reports: "These are unnormalized measures: P_g has mass one and d²z is ordinary Lebesgue measure"): the
+measure `μ_h(D) dP(h)` equals the image of Lebesgue measure on `D`, times `P`, under the shift. Its total-mass
+consequence `E[μ_h(B_1)] = π` is eq:r9-total-area of r10 (line 2613). The normalized-ratio form is
+`DMSLemmaA10WholePlane` above. Source check pending (operator). -/
+def DMSLemmaA10WholePlaneUnnormalized {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
+  IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ →
+    ∀ F : ((ℂ → ℝ) → ℝ) → ℝ, Measurable[pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ] F →
+      (∃ C : ℝ, ∀ T, |F T| ≤ C) →
+        ∫ ω, (μ ω (ball 0 1)).toReal * F (hC ω) ∂P
+          = ∫ z in ball (0 : ℂ) 1, ∫ ω, F (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) ∂P ∂volume
+
 end HarmonicBalls
