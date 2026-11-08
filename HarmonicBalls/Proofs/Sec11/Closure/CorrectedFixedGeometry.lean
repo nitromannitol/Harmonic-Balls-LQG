@@ -2,9 +2,9 @@ import HarmonicBalls.Draft.Section11Corrected
 import HarmonicBalls.Proofs.Sec11.Closure.FixedGeometry
 
 /-!
-# Corrected fixed pinch-point configuration (Section 11, draft lines 271–311)
+# Corrected fixed pinch-point configuration (Section 11, r7 lines 640–703)
 
-Written argument: `notes/sec11-proof/sec11-proof.tex`, paragraph "Fixed geometry" (its draft lines 271–311).
+Written argument: `notes/sec11-proof/sec11-proof-r7.tex`, paragraph "Fixed geometry" (r7 lines 640–703).
 `Closure/FixedGeometry.lean` gives the sets `U, T, Q', Q`. This module adds the concentric discs
 `V = B_{.02}(1.5)`, `W = B_{.04}(1.5)` and the scale `δ = 10⁻⁴`, and proves that they form an
 `IsCorrectedPinchConfiguration` (`HarmonicBalls/Draft/Section11Corrected.lean`): the proof-configuration fields
@@ -19,13 +19,13 @@ namespace HarmonicBalls
 
 open Metric Set
 
-/-- `V = B_{.02}(1.5)` (draft line 273). -/
+/-- `V = B_{.02}(1.5)` (r7 lines 640–703). -/
 noncomputable def fixedV : Set ℂ := ball pinchCentreA (1 / 50)
 
-/-- `W = B_{.04}(1.5)` (draft line 273). -/
+/-- `W = B_{.04}(1.5)` (r7 lines 640–703). -/
 noncomputable def fixedW : Set ℂ := ball pinchCentreA (1 / 25)
 
-/-- The scale `δ = d = 10⁻⁴` of the written argument (draft line 273). -/
+/-- The scale `δ = d = 10⁻⁴` of the written argument (r7 lines 640–703). -/
 noncomputable def fixedDelta : ℝ := 1 / 10000
 
 lemma fixedDelta_eq : fixedDelta = 1 / 10000 := rfl
@@ -417,7 +417,7 @@ lemma fixed_thickening_Q :
     (10 * fixedDelta)).trans (fixed_buffer_Q.trans (Set.sdiff_subset_sdiff_right
       (fixed_thickening_mono (subset_closure : fixedT ⊆ closure fixedT) (10 * fixedDelta))))
 
-/-- The corrected fixed pinch-point configuration (draft lines 271–311). -/
+/-- The corrected fixed pinch-point configuration (r7 lines 640–703). -/
 theorem isCorrectedPinchConfiguration_fixed :
     IsCorrectedPinchConfiguration fixedU fixedV fixedW fixedT fixedQ' fixedQ fixedDelta :=
   { toIsPinchPointProofConfiguration :=

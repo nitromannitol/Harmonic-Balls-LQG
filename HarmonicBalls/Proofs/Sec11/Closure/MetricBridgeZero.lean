@@ -1,7 +1,7 @@
 import HarmonicBalls.Proofs.Sec11.WholePlaneMetricLocality
 
 /-!
-# Metric bridge at zero log-charge (Section 11, draft lines 46–269)
+# Metric bridge at zero log-charge (Section 11, r7 lines 64–305)
 
 For a whole-plane GFF `hC` on a probability space `Ω : Type` and an arbitrary metric map `D` satisfying
 `IsLQGMetricOfField P γ ξ 0 hC D` (the γ-LQG metric of the field with `α₀ = 0`, `Defs/LQGMetric.lean`), the

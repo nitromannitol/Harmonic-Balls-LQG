@@ -2,7 +2,7 @@ import HarmonicBalls.Proofs.Sec11.Closure.MassDiameterInside
 import HarmonicBalls.Proofs.Sec11.Closure.CorrectedFixedGeometry
 
 /-!
-# Fixed-geometry instance of the conditional mass-diameter positivity (Section 11, draft lines 376–446)
+# Fixed-geometry instance of the conditional mass-diameter positivity (Section 11, r7 lines 826–936)
 
 `Closure/MassDiameterInside.lean` gives the hypothesis `hinside` of the conditional chain for any square
 `closedSquare z L ⊆ U`, any pinned set `O` with `sphere 0 1 ⊆ O` and `Disjoint (closure V) (closure O)`.

@@ -1,10 +1,9 @@
 import HarmonicBalls.Proofs.Sec11.ConditionalCoreMeasurability
 
 /-!
-# Conditional mass-diameter positivity from dyadic cores (Section 11, draft lines 376–446)
+# Conditional mass-diameter positivity from dyadic cores (Section 11, r7 lines 826–936)
 
-Written argument: `notes/sec11-proof/sec11-proof.tex`, the step "Large mass and small diameter" (draft lines
-376–446, Lemma `l:massdiam`). The hypothesis `hinside` of
+Written argument: `notes/sec11-proof/sec11-proof-r7.tex`, the step "Large mass and small diameter" (r7 lines 826–936, Lemma `l:massdiam`). The hypothesis `hinside` of
 `IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_growth`
 (`Proofs/Sec11/CorrectedPinchConditionalPositive.lean:13`) asks, for every `n > 0` and `k : ℕ`, for the
 conditional positivity of `{internalDiam D_h V < 1/n, k < μ_h(U)}` given the pinned outside σ-algebra.
@@ -29,7 +28,7 @@ open scoped ENNReal
 threshold `a > 0` there are a sequence `b`, an exponent `p > 2` and an error `e → 0` such that the dyadic
 intermediate internal diameters of the square have the tail bound required by
 `IsWholePlaneGFF.condExp_pinch_mass_diameter_pos_of_dyadic_cores`. The tail estimate of the square is the
-input of Pfeffer [P] Prop. 4.6 (arXiv:2104.04020v3) in the written argument (draft lines 138–183). -/
+input of Pfeffer [P] Prop. 4.6 (arXiv:2104.04020v3) in the written argument (r7 line 165). -/
 def SquareDyadicTailInput {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (ξ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
     (z : ℂ) (L : ℝ) : Prop :=

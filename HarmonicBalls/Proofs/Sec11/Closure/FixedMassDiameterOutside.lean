@@ -1,14 +1,14 @@
 import HarmonicBalls.Proofs.Sec11.Closure.FixedMassDiameter
 
 /-!
-# Fixed-geometry instance with the pinned set outside a neighbourhood of `W` (Section 11, draft lines 376–446)
+# Fixed-geometry instance with the pinned set outside a neighbourhood of `W` (Section 11, r7 lines 826–936)
 
 `Closure/FixedMassDiameter.lean` instantiates `hinside_of_square_dyadic_tail` with the pinned set
 `O = B_{6/5}(0)`. The pinned σ-algebra `comap (localModConstPairings 0 hC O)` is the largest one allowed by the
 hypotheses of the dyadic-core producer when `O` is the complement of a neighbourhood of `W = B_{.04}(1.5)`:
 the producer needs only `sphere 0 1 ⊆ O` and `Disjoint (closure V) (closure O)`. This module uses the
 pinned set `O = ℂ \ cl B_{3/100}(3/2)`, which is the field outside a neighbourhood of `W`, as in the written
-argument ("measurable outside `W`", tex lines 490–491; the measurability claim is under review, see F3 in the
+argument ("measurable outside `W`", r7 lines 981–982; the measurability claim is under review, see F3 in the
 status note). The leftover premises are those of `FixedMassDiameter.lean`.
 -/
 

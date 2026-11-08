@@ -2,7 +2,7 @@ import HarmonicBalls.Proofs.Sec11.CorrectedPinchConditionalPositive
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchFirstSecondNull
 
 /-!
-# Conditional growth chain for null-measurable inside events (Section 11, draft lines 447–513)
+# Conditional growth chain for null-measurable inside events (Section 11, r7 lines 937–1037)
 
 The growth chains `IsCorrectedPinchConfiguration.positive_wholePlane_first_second_of_growth`
 (`Proofs/Sec11/CorrectedPinchFirstSecondGrowth.lean:13`) and

@@ -1,7 +1,7 @@
 import HarmonicBalls.Proofs.Sec11.Closure.MetricBridgeZero
 
 /-!
-# Measurable version of the zero-charge metric bridge (Section 11, draft lines 46–269)
+# Measurable version of the zero-charge metric bridge (Section 11, r7 lines 64–305)
 
 For `Ω : Type`, a whole-plane GFF `hC` has pairings `ω ↦ hC ω φ` measurable for every test function `φ`
 (`IsWholePlaneGFF.measurable_pairing`). Hence `hC` is measurable for `distributionMeasurableSpace`, the

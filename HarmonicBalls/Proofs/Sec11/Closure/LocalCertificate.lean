@@ -4,8 +4,8 @@ import HarmonicBalls.Proofs.Sec11.CorrectedPinchFrequency
 /-!
 # Local pinch certificate (Section 11, Lemma 11.12 and the form used by Lemma 11.13)
 
-Written argument: `notes/sec11-proof/sec11-proof.tex`, paragraph "Positive local pinch certificates"
-(its draft lines 447–513). For each exponent `α < lqgQ γ` the event `E(M) = E₁ ∩ E₂(M) ∩ E₃` is local in `B₇` and
+Written argument: `notes/sec11-proof/sec11-proof-r7.tex`, paragraph "Positive local pinch certificates"
+(r7 lines 937–1037). For each exponent `α < lqgQ γ` the event `E(M) = E₁ ∩ E₂(M) ∩ E₃` is local in `B₇` and
 invariant under adding a constant, is contained in the pinch event `Ĝ₁(0; M)`, and has positive probability.
 
 * `Sec11LocalPinchCertificateStmt` states this local-certificate form as a single proposition. It quantifies over
@@ -23,7 +23,7 @@ open MeasureTheory
 
 universe u
 
-/-- The local pinch certificate (written argument, draft lines 447–513), for every exponent `α < lqgQ γ`.
+/-- The local pinch certificate (written argument, r7 lines 937–1037), for every exponent `α < lqgQ γ`.
 There is a pinch-point configuration `U, T, Q', Q`, chosen before all other parameters, such that for all
 `0 < γ < 2`, `ξ`, every probability space carrying a whole-plane GFF `P` with LQG measure `μ` at exponent `α`
 and LQG metric `D` at exponents `(ξ, α)`, and every `M > 0`, there is a set `E` of the field σ-algebra restricted

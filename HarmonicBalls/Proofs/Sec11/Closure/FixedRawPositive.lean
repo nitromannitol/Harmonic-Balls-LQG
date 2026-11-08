@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec11.Closure.CorrectedFixedGeometry
 import HarmonicBalls.Proofs.Sec11.Closure.FixedMassDiameterOutside
 
 /-!
-# Raw strengthened positivity of the fixed corrected configuration (Section 11, draft lines 447–513)
+# Raw strengthened positivity of the fixed corrected configuration (Section 11, r7 lines 937–1037)
 
 The conditional chain `IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_growth`
 (`Proofs/Sec11/CorrectedPinchConditionalPositive.lean:13`) gives the positivity of the strengthened pinch event

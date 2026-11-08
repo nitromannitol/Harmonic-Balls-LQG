@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec11.Closure.MetricMeasurableZero
 import HarmonicBalls.Proofs.Sec11.Closure.FixedGeometry
 
 /-!
-# Lemma 11.12 at zero log-charge for probability spaces in `Type` (Section 11, draft lines 46–269, 447–513)
+# Lemma 11.12 at zero log-charge for probability spaces in `Type` (Section 11, r7 lines 64–305, 937–1037)
 
 The body of `PinchEventPositiveProbabilityStmt` (`HarmonicBalls/Draft/Section11.lean:246`) at `α₀ = 0`, for
 probability spaces `Ω : Type`, is reduced here to one named premise: the raw positivity of the strengthened

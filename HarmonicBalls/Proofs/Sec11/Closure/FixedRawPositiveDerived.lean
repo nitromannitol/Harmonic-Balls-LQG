@@ -27,8 +27,14 @@ Kept explicit, not derived here:
 * `hdata` (T1): the square dyadic tail input `SquareDyadicTailInput`, and the applicability of the source metric `𝔇`
   (`h𝔇`) to it.
 * `A`, `hA`, `hArep`, `ha`, `hb` (F3): the outside certificate premises, measurable with respect to the pinned
-  σ-algebra `fixedPinnedSigma hC`. Their first-exit localization is not claimed here.
-* `hμ : IsLQGMeasureOfField P γ 0 hcirc μ` (R1): zero log-charge only. The general charge is not covered.
+  σ-algebra `fixedPinnedSigma hC` (modulo constants, `FixedRawPositive.lean:30`). Not derived here. r7 asserts their
+  measurability outside W at lines 981–982 of `sec11-proof-r7.tex`. The pinned-σ-algebra argument is not written
+  there: the locality axiom (r7 lines 107–110; `IsLQGMetric.locality`, `Defs/LQGMetric.lean:151`), the exit-distance
+  locality (r7 lines 736–743) and the constant invariance (r7 lines 944–946) are not composed, and `M · S` in `hb`
+  scales by `e^{γc}` under constant shifts. Open: see `docs/campaign/Sec11Closure.md`, Round 15.
+* `hμ : IsLQGMeasureOfField P γ 0 hcirc μ`: the zero log-charge binder of `PinchEventPositiveProbabilityStmt`
+  (`Draft/Section11.lean:246`), the same hypothesis. It is not an open leftover of this target. The general-charge
+  certificate (docs R1, needed for Lemma 11.13) is not used.
 * `Ω : Type` (R7): the carrier is the type zero. Transport to `Type*` is not done here.
 
 The strict measurable clause `hmeasIns` is absent (point F2, closed in `Closure/FixedRawPositiveNull.lean`). This
@@ -44,7 +50,7 @@ open scoped ENNReal
 `Ω : Type`. The fixed-square frontier premise and the sign `0 < ξ` are supplied by the committed producers
 `IsWholePlaneGFF.ae_lqgMeasure_frontier_closedSquare_eq_zero` and `IsLQGMetric.weylExponent_pos`. The premises kept
 explicit are the staged inputs `hDG hCC hE`, the square tail input `hdata` (T1), the GFF `hgff`, the metric `h𝔇`,
-the zero-charge measure `hμ` (R1), and the outside certificate premises `A hA hArep ha hb` (F3). Credit: Leonardo
+the zero-charge measure `hμ`, and the outside certificate premises `A hA hArep ha hb` (F3). Credit: Leonardo
 Bonanno (see the module docstring). -/
 theorem fixed_raw_positive_null_of_staged_volume_growth_derived
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
