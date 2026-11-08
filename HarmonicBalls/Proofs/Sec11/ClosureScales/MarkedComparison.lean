@@ -25,52 +25,52 @@ namespace HarmonicBalls
 
 /-- The cut-off `χ_m(z) = min 1 (max 0 (m (1 - |z|) - 1))`: equal to `1` on `|z| ≤ 1 - 2/m`, to `0` on
 `|z| ≥ 1 - 1/m`, increasing in `m`. -/
-noncomputable def cutoffBall (m : ℕ) (z : ℂ) : ℝ := min 1 (max 0 ((m : ℝ) * (1 - ‖z‖) - 1))
+noncomputable def markedCutoffBall (m : ℕ) (z : ℂ) : ℝ := min 1 (max 0 ((m : ℝ) * (1 - ‖z‖) - 1))
 
-theorem cutoffBall_continuous (m : ℕ) : Continuous (cutoffBall m) := by
-  unfold cutoffBall
+theorem markedCutoffBall_continuous (m : ℕ) : Continuous (markedCutoffBall m) := by
+  unfold markedCutoffBall
   fun_prop
 
-theorem cutoffBall_nonneg (m : ℕ) (z : ℂ) : 0 ≤ cutoffBall m z :=
+theorem markedCutoffBall_nonneg (m : ℕ) (z : ℂ) : 0 ≤ markedCutoffBall m z :=
   le_min zero_le_one (le_max_left _ _)
 
-theorem cutoffBall_le_one (m : ℕ) (z : ℂ) : cutoffBall m z ≤ 1 :=
+theorem markedCutoffBall_le_one (m : ℕ) (z : ℂ) : markedCutoffBall m z ≤ 1 :=
   min_le_left _ _
 
-theorem cutoffBall_eq_zero_of_one_le (m : ℕ) {z : ℂ} (hz : 1 ≤ ‖z‖) : cutoffBall m z = 0 := by
+theorem markedCutoffBall_eq_zero_of_one_le (m : ℕ) {z : ℂ} (hz : 1 ≤ ‖z‖) : markedCutoffBall m z = 0 := by
   have hm : (0 : ℝ) ≤ m := Nat.cast_nonneg m
   have h1 : (m : ℝ) * (1 - ‖z‖) ≤ 0 := by nlinarith
-  unfold cutoffBall
+  unfold markedCutoffBall
   rw [max_eq_left (show (m : ℝ) * (1 - ‖z‖) - 1 ≤ 0 by linarith), min_eq_right zero_le_one]
 
-theorem cutoffBall_eq_zero_of_ge {m : ℕ} (hm : 1 ≤ m) {z : ℂ} (hz : 1 - 1 / (m : ℝ) ≤ ‖z‖) :
-    cutoffBall m z = 0 := by
+theorem markedCutoffBall_eq_zero_of_ge {m : ℕ} (hm : 1 ≤ m) {z : ℂ} (hz : 1 - 1 / (m : ℝ) ≤ ‖z‖) :
+    markedCutoffBall m z = 0 := by
   have hm' : (1 : ℝ) ≤ m := by exact_mod_cast hm
   have hpos : (0 : ℝ) < m := by linarith
   have h1 : (m : ℝ) * (1 - ‖z‖) ≤ 1 := by
     have h2 : 1 - ‖z‖ ≤ 1 / (m : ℝ) := by linarith
     have h3 := mul_le_mul_of_nonneg_left h2 hpos.le
     rwa [mul_one_div_cancel hpos.ne'] at h3
-  unfold cutoffBall
+  unfold markedCutoffBall
   rw [max_eq_left (show (m : ℝ) * (1 - ‖z‖) - 1 ≤ 0 by linarith), min_eq_right zero_le_one]
 
-theorem cutoffBall_eq_one_of_le (m : ℕ) {z : ℂ} (hz : 2 ≤ (m : ℝ) * (1 - ‖z‖)) :
-    cutoffBall m z = 1 := by
-  unfold cutoffBall
+theorem markedCutoffBall_eq_one_of_le (m : ℕ) {z : ℂ} (hz : 2 ≤ (m : ℝ) * (1 - ‖z‖)) :
+    markedCutoffBall m z = 1 := by
+  unfold markedCutoffBall
   rw [min_eq_left (le_max_of_le_right (show (1 : ℝ) ≤ (m : ℝ) * (1 - ‖z‖) - 1 by linarith))]
 
-theorem cutoffBall_monotone (z : ℂ) : Monotone fun m : ℕ => cutoffBall m z := by
+theorem markedCutoffBall_monotone (z : ℂ) : Monotone fun m : ℕ => markedCutoffBall m z := by
   intro m m' hmm
   by_cases hz : 1 ≤ ‖z‖
-  · simp only [cutoffBall_eq_zero_of_one_le m hz, cutoffBall_eq_zero_of_one_le m' hz, le_refl]
+  · simp only [markedCutoffBall_eq_zero_of_one_le m hz, markedCutoffBall_eq_zero_of_one_le m' hz, le_refl]
   · have hz' : ‖z‖ < 1 := not_le.1 hz
     have h : (m : ℝ) * (1 - ‖z‖) ≤ (m' : ℝ) * (1 - ‖z‖) :=
       mul_le_mul_of_nonneg_right (by exact_mod_cast hmm) (by linarith)
-    unfold cutoffBall
+    unfold markedCutoffBall
     exact min_le_min le_rfl (max_le_max le_rfl (by linarith))
 
-theorem tendsto_cutoffBall (z : ℂ) :
-    Tendsto (fun m : ℕ => cutoffBall m z) atTop
+theorem tendsto_markedCutoffBall (z : ℂ) :
+    Tendsto (fun m : ℕ => markedCutoffBall m z) atTop
       (𝓝 ((ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ) z)) := by
   by_cases hz : z ∈ ball (0 : ℂ) 1
   · rw [indicator_of_mem hz, Pi.one_apply]
@@ -80,32 +80,32 @@ theorem tendsto_cutoffBall (z : ℂ) :
     refine Tendsto.congr' ?_ tendsto_const_nhds
     filter_upwards [eventually_ge_atTop N] with m hm
     have h2 : 2 / (1 - ‖z‖) ≤ (m : ℝ) := le_trans hN (by exact_mod_cast hm)
-    exact (cutoffBall_eq_one_of_le m ((div_le_iff₀ hpos).1 h2)).symm
+    exact (markedCutoffBall_eq_one_of_le m ((div_le_iff₀ hpos).1 h2)).symm
   · rw [indicator_of_notMem hz]
     have hz' : 1 ≤ ‖z‖ := by simpa [mem_ball_zero_iff] using hz
-    have hfun : (fun m : ℕ => cutoffBall m z) = fun _ => (0 : ℝ) :=
-      funext fun m => cutoffBall_eq_zero_of_one_le m hz'
+    have hfun : (fun m : ℕ => markedCutoffBall m z) = fun _ => (0 : ℝ) :=
+      funext fun m => markedCutoffBall_eq_zero_of_one_le m hz'
     rw [hfun]
     exact tendsto_const_nhds
 
-theorem cutoffBall_hasCompactSupport (m : ℕ) : HasCompactSupport (cutoffBall m) :=
+theorem markedCutoffBall_hasCompactSupport (m : ℕ) : HasCompactSupport (markedCutoffBall m) :=
   HasCompactSupport.intro (isCompact_closedBall (0 : ℂ) 1) fun _ hz =>
-    cutoffBall_eq_zero_of_one_le m
+    markedCutoffBall_eq_zero_of_one_le m
       (le_of_lt (not_le.1 (fun h => hz (mem_closedBall_zero_iff.2 h))))
 
-theorem cutoffBall_le_indicator (m : ℕ) (z : ℂ) :
-    cutoffBall m z ≤ (ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ) z := by
+theorem markedCutoffBall_le_indicator (m : ℕ) (z : ℂ) :
+    markedCutoffBall m z ≤ (ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ) z := by
   by_cases hz : z ∈ ball (0 : ℂ) 1
   · rw [indicator_of_mem hz, Pi.one_apply]
-    exact cutoffBall_le_one m z
+    exact markedCutoffBall_le_one m z
   · rw [indicator_of_notMem hz]
     have hz' : 1 ≤ ‖z‖ := by simpa [mem_ball_zero_iff] using hz
-    exact le_of_eq (cutoffBall_eq_zero_of_one_le m hz')
+    exact le_of_eq (markedCutoffBall_eq_zero_of_one_le m hz')
 
 /-- The support of `c χ_m - η` lies in `closedBall (1 - 1/m) ∪ tsupport η`, hence in the open unit ball. -/
 theorem tsupport_cutoff_sub_subset {η : ℂ → ℝ} (htsupp : tsupport η ⊆ ball (0 : ℂ) 1) (c : ℝ) {m : ℕ}
-    (hm : 1 ≤ m) : tsupport (fun z => c * cutoffBall m z - η z) ⊆ ball (0 : ℂ) 1 := by
-  have hsub : Function.support (fun z => c * cutoffBall m z - η z) ⊆
+    (hm : 1 ≤ m) : tsupport (fun z => c * markedCutoffBall m z - η z) ⊆ ball (0 : ℂ) 1 := by
+  have hsub : Function.support (fun z => c * markedCutoffBall m z - η z) ⊆
       closedBall (0 : ℂ) (1 - 1 / (m : ℝ)) ∪ tsupport η := by
     intro z hz
     rw [Function.mem_support] at hz
@@ -115,8 +115,8 @@ theorem tsupport_cutoff_sub_subset {η : ℂ → ℝ} (htsupp : tsupport η ⊆ 
       have hη0z : η z = 0 := image_eq_zero_of_notMem_tsupport hzt
       rw [mem_closedBall_zero_iff]
       by_contra hcon
-      have hcz : cutoffBall m z = 0 :=
-        cutoffBall_eq_zero_of_ge hm (le_of_lt (not_le.1 hcon))
+      have hcz : markedCutoffBall m z = 0 :=
+        markedCutoffBall_eq_zero_of_ge hm (le_of_lt (not_le.1 hcon))
       apply hz
       simp [hcz, hη0z]
   have hpos : (0 : ℝ) < 1 / (m : ℝ) := by
@@ -195,28 +195,28 @@ theorem integral_lqgMeasure_le_of_nonneg (γ : ℝ) {Ω : Type*} [MeasurableSpac
   exact (ENNReal.ofReal_le_ofReal_iff (integral_nonneg hη0)).1 hle
 
 /-- The integrals of the cut-offs against a locally finite measure converge to its mass of the unit ball. -/
-theorem tendsto_integral_cutoffBall_of_locallyFinite (μ' : Measure ℂ) [IsLocallyFiniteMeasure μ'] :
-    Tendsto (fun m : ℕ => ∫ z, cutoffBall m z ∂μ') atTop (𝓝 (μ'.real (ball (0 : ℂ) 1))) := by
+theorem tendsto_integral_markedCutoffBall_of_locallyFinite (μ' : Measure ℂ) [IsLocallyFiniteMeasure μ'] :
+    Tendsto (fun m : ℕ => ∫ z, markedCutoffBall m z ∂μ') atTop (𝓝 (μ'.real (ball (0 : ℂ) 1))) := by
   have hF : Integrable ((ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ)) μ' :=
     (integrableOn_const (measure_ball_lt_top).ne).integrable_indicator measurableSet_ball
   have hlim := integral_tendsto_of_tendsto_of_monotone
-    (fun m => (cutoffBall_continuous m).integrable_of_hasCompactSupport (cutoffBall_hasCompactSupport m))
-    hF (ae_of_all _ fun z => cutoffBall_monotone z) (ae_of_all _ fun z => tendsto_cutoffBall z)
+    (fun m => (markedCutoffBall_continuous m).integrable_of_hasCompactSupport (markedCutoffBall_hasCompactSupport m))
+    hF (ae_of_all _ fun z => markedCutoffBall_monotone z) (ae_of_all _ fun z => tendsto_markedCutoffBall z)
   rw [integral_indicator_one measurableSet_ball] at hlim
   exact hlim
 
 /-- The integrals of the cut-offs against Lebesgue measure converge to `π`. -/
-theorem tendsto_integral_cutoffBall_volume :
-    Tendsto (fun m : ℕ => ∫ z, cutoffBall m z ∂(volume : Measure ℂ)) atTop (𝓝 Real.pi) := by
+theorem tendsto_integral_markedCutoffBall_volume :
+    Tendsto (fun m : ℕ => ∫ z, markedCutoffBall m z ∂(volume : Measure ℂ)) atTop (𝓝 Real.pi) := by
   have hint : Integrable ((ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ)) (volume : Measure ℂ) :=
     (integrableOn_const (measure_ball_lt_top).ne).integrable_indicator measurableSet_ball
   have hlim := tendsto_integral_of_dominated_convergence
     ((ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ))
-    (fun m => (cutoffBall_continuous m).aestronglyMeasurable) hint
+    (fun m => (markedCutoffBall_continuous m).aestronglyMeasurable) hint
     (fun m => ae_of_all _ fun z => by
-      rw [Real.norm_eq_abs, abs_of_nonneg (cutoffBall_nonneg m z)]
-      exact cutoffBall_le_indicator m z)
-    (ae_of_all _ fun z => tendsto_cutoffBall z)
+      rw [Real.norm_eq_abs, abs_of_nonneg (markedCutoffBall_nonneg m z)]
+      exact markedCutoffBall_le_indicator m z)
+    (ae_of_all _ fun z => tendsto_markedCutoffBall z)
   rw [integral_indicator_one measurableSet_ball] at hlim
   simpa [Measure.real, Complex.volume_ball, Real.pi_nonneg] using hlim
 
@@ -247,7 +247,7 @@ theorem integral_lqgMeasure_eq_of_nonneg (γ : ℝ) {Ω : Type*} [MeasurableSpac
     have : (0 : ℕ) < m0 := by exact_mod_cast hm0pos
     omega
   -- for `m ≥ m0`, `c χ_m ≥ η` with `c = max c0 0`
-  have hdom : ∀ m : ℕ, m0 ≤ m → ∀ z, η z ≤ max c0 0 * cutoffBall m z := by
+  have hdom : ∀ m : ℕ, m0 ≤ m → ∀ z, η z ≤ max c0 0 * markedCutoffBall m z := by
     intro m hm z
     by_cases hz : ‖z‖ ≤ M
     · have hm' : (m0 : ℝ) ≤ m := by exact_mod_cast hm
@@ -255,14 +255,14 @@ theorem integral_lqgMeasure_eq_of_nonneg (γ : ℝ) {Ω : Type*} [MeasurableSpac
       have h4 : 2 ≤ (m : ℝ) * (1 - M) := (div_le_iff₀ hMpos).1 h3
       have h5 : (m : ℝ) * (1 - M) ≤ (m : ℝ) * (1 - ‖z‖) :=
         mul_le_mul_of_nonneg_left (by linarith) (Nat.cast_nonneg m)
-      rw [cutoffBall_eq_one_of_le (z := z) m (by linarith), mul_one]
+      rw [markedCutoffBall_eq_one_of_le (z := z) m (by linarith), mul_one]
       exact hcη z
     · have hzt : z ∉ tsupport η := fun h => hz (hMsup z h)
       rw [image_eq_zero_of_notMem_tsupport hzt]
-      exact mul_nonneg hc_nonneg (cutoffBall_nonneg m z)
+      exact mul_nonneg hc_nonneg (markedCutoffBall_nonneg m z)
   -- the total mass of the cut-offs: `E μ_g(χ_m) → π` (dominated convergence in ω)
   have hμ' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage 0 (hcirc ω)) (μ ω) := hμ
-  have hQ2 : Tendsto (fun m : ℕ => ∫ ω, ∫ z, cutoffBall m z ∂(μ ω) ∂P) atTop (𝓝 Real.pi) := by
+  have hQ2 : Tendsto (fun m : ℕ => ∫ ω, ∫ z, markedCutoffBall m z ∂(μ ω) ∂P) atTop (𝓝 Real.pi) := by
     have hpi := integral_measure_ball_eq_pi hU hG hμ
     have hbd : Integrable (fun ω => (μ ω (ball (0 : ℂ) 1)).toReal) P := by
       by_contra h
@@ -270,42 +270,42 @@ theorem integral_lqgMeasure_eq_of_nonneg (γ : ℝ) {Ω : Type*} [MeasurableSpac
       linarith [Real.pi_pos]
     rw [← hpi]
     refine tendsto_integral_of_dominated_convergence (fun ω => (μ ω (ball (0 : ℂ) 1)).toReal)
-      (fun m => (aemeasurable_lqgMeasure_test γ hG hμ (cutoffBall_continuous m)
-        (cutoffBall_hasCompactSupport m)).aestronglyMeasurable) hbd ?_ ?_
+      (fun m => (aemeasurable_lqgMeasure_test γ hG hμ (markedCutoffBall_continuous m)
+        (markedCutoffBall_hasCompactSupport m)).aestronglyMeasurable) hbd ?_ ?_
     · intro m
       filter_upwards [hμ'] with ω hω
       have := hω.isLocallyFiniteMeasure
-      have hχi : Integrable (cutoffBall m) (μ ω) :=
-        (cutoffBall_continuous m).integrable_of_hasCompactSupport (cutoffBall_hasCompactSupport m)
+      have hχi : Integrable (markedCutoffBall m) (μ ω) :=
+        (markedCutoffBall_continuous m).integrable_of_hasCompactSupport (markedCutoffBall_hasCompactSupport m)
       have hBi : Integrable ((ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ)) (μ ω) :=
         (integrableOn_const (measure_ball_lt_top).ne).integrable_indicator measurableSet_ball
-      have h1 : 0 ≤ ∫ z, cutoffBall m z ∂(μ ω) := integral_nonneg fun z => cutoffBall_nonneg m z
-      have h2 : ∫ z, cutoffBall m z ∂(μ ω)
+      have h1 : 0 ≤ ∫ z, markedCutoffBall m z ∂(μ ω) := integral_nonneg fun z => markedCutoffBall_nonneg m z
+      have h2 : ∫ z, markedCutoffBall m z ∂(μ ω)
           ≤ ∫ z, (ball (0 : ℂ) 1).indicator (1 : ℂ → ℝ) z ∂(μ ω) :=
-        integral_mono hχi hBi fun z => cutoffBall_le_indicator m z
+        integral_mono hχi hBi fun z => markedCutoffBall_le_indicator m z
       rw [integral_indicator_one measurableSet_ball] at h2
       rw [Real.norm_of_nonneg h1]
       exact h2
     · filter_upwards [hμ'] with ω hω
       have := hω.isLocallyFiniteMeasure
-      exact tendsto_integral_cutoffBall_of_locallyFinite (μ ω)
+      exact tendsto_integral_markedCutoffBall_of_locallyFinite (μ ω)
   -- the Lebesgue total mass of the cut-offs
-  have hQ1 := tendsto_integral_cutoffBall_volume
-  have hlimit : Tendsto (fun m : ℕ => max c0 0 * (∫ ω, ∫ z, cutoffBall m z ∂(μ ω) ∂P)
-      - max c0 0 * (∫ z, cutoffBall m z ∂(volume : Measure ℂ)) + ∫ z, η z ∂(volume : Measure ℂ))
+  have hQ1 := tendsto_integral_markedCutoffBall_volume
+  have hlimit : Tendsto (fun m : ℕ => max c0 0 * (∫ ω, ∫ z, markedCutoffBall m z ∂(μ ω) ∂P)
+      - max c0 0 * (∫ z, markedCutoffBall m z ∂(volume : Measure ℂ)) + ∫ z, η z ∂(volume : Measure ℂ))
       atTop (𝓝 (max c0 0 * Real.pi - max c0 0 * Real.pi + ∫ z, η z ∂(volume : Measure ℂ))) :=
     ((hQ2.const_mul _).sub (hQ1.const_mul _)).add_const _
   rw [sub_self, zero_add] at hlimit
   -- the lower bound for `m ≥ m0`, from Fatou applied to `c χ_m - η ≥ 0`
   have hkey : ∀ m : ℕ, m0 ≤ m →
-      max c0 0 * (∫ ω, ∫ z, cutoffBall m z ∂(μ ω) ∂P)
-        - max c0 0 * (∫ z, cutoffBall m z ∂(volume : Measure ℂ)) + ∫ z, η z ∂(volume : Measure ℂ)
+      max c0 0 * (∫ ω, ∫ z, markedCutoffBall m z ∂(μ ω) ∂P)
+        - max c0 0 * (∫ z, markedCutoffBall m z ∂(volume : Measure ℂ)) + ∫ z, η z ∂(volume : Measure ℂ)
         ≤ ∫ ω, ∫ z, η z ∂(μ ω) ∂P := by
     intro m hm
     have hm1 : 1 ≤ m := le_trans hm0one hm
     obtain ⟨c, hc⟩ : ∃ c : ℝ, c = max c0 0 := ⟨_, rfl⟩
     rw [← hc]
-    obtain ⟨f, hf⟩ : ∃ f : ℂ → ℝ, f = fun z => c * cutoffBall m z - η z := ⟨_, rfl⟩
+    obtain ⟨f, hf⟩ : ∃ f : ℂ → ℝ, f = fun z => c * markedCutoffBall m z - η z := ⟨_, rfl⟩
     have hf0 : ∀ z, 0 ≤ f z := by
       intro z
       have h := hdom m hm z
@@ -314,17 +314,17 @@ theorem integral_lqgMeasure_eq_of_nonneg (γ : ℝ) {Ω : Type*} [MeasurableSpac
       exact sub_nonneg.2 h
     have hfc : Continuous f := by
       rw [hf]
-      exact (continuous_const.mul (cutoffBall_continuous m)).sub hη
+      exact (continuous_const.mul (markedCutoffBall_continuous m)).sub hη
     have hfs : HasCompactSupport f := by
       rw [hf]
-      exact ((cutoffBall_hasCompactSupport m).mul_left).sub hηs
+      exact ((markedCutoffBall_hasCompactSupport m).mul_left).sub hηs
     have hft : tsupport f ⊆ ball (0 : ℂ) 1 := by
       rw [hf]
       exact tsupport_cutoff_sub_subset htsupp c hm1
     have hF := integral_lqgMeasure_le_of_nonneg γ hG hμ hfc hfs hf0 hft
     have hFi := integrable_lqgMeasure_test_of_nonneg γ hG hμ hfc hfs hf0 hft
     have hηi := integrable_lqgMeasure_test_of_nonneg γ hG hμ hη hηs hη0 htsupp
-    have hsplit : (∫ ω, ∫ z, c * cutoffBall m z ∂(μ ω) ∂P)
+    have hsplit : (∫ ω, ∫ z, c * markedCutoffBall m z ∂(μ ω) ∂P)
         = (∫ ω, ∫ z, f z ∂(μ ω) ∂P) + ∫ ω, ∫ z, η z ∂(μ ω) ∂P := by
       rw [← integral_add hFi hηi]
       refine integral_congr_ae ?_
@@ -336,20 +336,20 @@ theorem integral_lqgMeasure_eq_of_nonneg (γ : ℝ) {Ω : Type*} [MeasurableSpac
       congr 1
       funext z
       simp [hf]
-    have hcs : (∫ ω, ∫ z, c * cutoffBall m z ∂(μ ω) ∂P)
-        = c * ∫ ω, ∫ z, cutoffBall m z ∂(μ ω) ∂P := by
+    have hcs : (∫ ω, ∫ z, c * markedCutoffBall m z ∂(μ ω) ∂P)
+        = c * ∫ ω, ∫ z, markedCutoffBall m z ∂(μ ω) ∂P := by
       rw [← integral_const_mul]
       congr 1
       funext ω
       rw [integral_const_mul]
-    have hχc : Integrable (fun z => c * cutoffBall m z) (volume : Measure ℂ) :=
-      ((cutoffBall_continuous m).const_mul c).integrable_of_hasCompactSupport
-        ((cutoffBall_hasCompactSupport m).mul_left)
+    have hχc : Integrable (fun z => c * markedCutoffBall m z) (volume : Measure ℂ) :=
+      ((markedCutoffBall_continuous m).const_mul c).integrable_of_hasCompactSupport
+        ((markedCutoffBall_hasCompactSupport m).mul_left)
     have hηc : Integrable η (volume : Measure ℂ) := hη.integrable_of_hasCompactSupport hηs
     have hlebf : ∫ z, f z ∂(volume : Measure ℂ)
-        = c * ∫ z, cutoffBall m z ∂(volume : Measure ℂ) - ∫ z, η z ∂(volume : Measure ℂ) := by
+        = c * ∫ z, markedCutoffBall m z ∂(volume : Measure ℂ) - ∫ z, η z ∂(volume : Measure ℂ) := by
       rw [hf]
-      show ∫ z, (c * cutoffBall m z - η z) ∂(volume : Measure ℂ) = _
+      show ∫ z, (c * markedCutoffBall m z - η z) ∂(volume : Measure ℂ) = _
       rw [integral_sub hχc hηc, integral_const_mul]
     linarith [hF, hsplit, hcs, hlebf]
   have hlow : ∫ z, η z ∂(volume : Measure ℂ) ≤ ∫ ω, ∫ z, η z ∂(μ ω) ∂P :=
