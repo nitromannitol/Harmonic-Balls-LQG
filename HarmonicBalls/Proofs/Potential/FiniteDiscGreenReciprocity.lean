@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.GreenRegularBoundaryGeometry
 import HarmonicBalls.Proofs.Sec6.DiscGreenMass
+import HarmonicBalls.Proofs.Sec6.GreenDilation
 
 /-! # Green reciprocity for finite disc families
 
@@ -135,9 +136,100 @@ theorem greenFunction_laminar_finite_discs_comm
   · exact Or.inr ⟨j, hj, hs, Subset.rfl⟩
   · exact Or.inr ⟨i, hi, Subset.rfl, hs⟩
 
+/-- Simultaneous reflection in the origin preserves the Green kernel of
+an arbitrary planar set, including diagonal and exterior values. -/
+theorem greenFunction_neg (U : Set ℂ) (x y : ℂ) :
+    greenFunction (Neg.neg '' U) (-x) (-y) = greenFunction U x y := by
+  have hk : (-1 : ℝ) ≠ 0 := by norm_num
+  have hm := Section6.greatestHarmonicMinorant_dilation U (newtonKernelEReal x) hk y
+  have hker : (fun z : ℂ => newtonKernelEReal x ((-1 : ℝ)⁻¹ • z)) =
+      newtonKernelEReal (-x) := by
+    funext z
+    simp only [inv_neg, inv_one, neg_one_smul]
+    have hNz : newtonKernel x (-z) = newtonKernel (-x) z := by
+      unfold newtonKernel
+      rw [show -x - z = -(x - -z) by abel, norm_neg]
+    have he : -z = x ↔ z = -x := by constructor <;> intro h <;> simpa using congrArg Neg.neg h
+    simp only [newtonKernelEReal, he, hNz]
+  rw [hker] at hm
+  simp only [neg_one_smul] at hm
+  have hN : newtonKernel (-x) (-y) = newtonKernel x y := by
+    simpa only [newtonKernel, neg_sub_neg] using
+      congrArg (fun t : ℝ => -(2 * Real.pi)⁻¹ * Real.log t) (norm_sub_rev y x)
+  have hmem (z : ℂ) : -z ∈ Neg.neg '' U ↔ z ∈ U := by
+    constructor
+    · rintro ⟨w, hw, heq⟩
+      have : w = z := neg_injective heq
+      simpa only [this] using hw
+    · intro hz
+      exact ⟨z, hz, rfl⟩
+  unfold greenFunction
+  rw [hmem x, hmem y]
+  simp only [hN, hm]
+  split_ifs with h1 h2 <;> try rfl
+  · exact False.elim (h2 ⟨h1.1, h1.2.1, fun h => h1.2.2 (congrArg Neg.neg h)⟩)
+  · rename_i h2
+    exact False.elim (h1 ⟨h2.1, h2.2.1, fun h => h2.2.2 (neg_injective h)⟩)
+
+/-- On a centrally symmetric set, the Green kernel is reciprocal at a pair
+of points interchanged by reflection in the origin. -/
+theorem greenFunction_neg_pair_comm {U : Set ℂ} (hU : Neg.neg '' U = U) (x : ℂ) :
+    greenFunction U x (-x) = greenFunction U (-x) x := by
+  have h := greenFunction_neg U x (-x)
+  simpa only [hU, neg_neg] using h.symm
+
+/-- The point reflection `z ↦ c - z` preserves the Green kernel when
+applied simultaneously to the domain and both arguments. -/
+theorem greenFunction_point_reflection (U : Set ℂ) (c x y : ℂ) :
+    greenFunction ((fun z : ℂ => c - z) '' U) (c - x) (c - y) =
+      greenFunction U x y := by
+  have hset : (fun z : ℂ => c - z) '' U = (fun z : ℂ => z + c) '' (Neg.neg '' U) := by
+    ext z
+    constructor
+    · rintro ⟨w, hw, rfl⟩
+      exact ⟨-w, ⟨w, hw, rfl⟩, by ring⟩
+    · rintro ⟨v, ⟨w, hw, rfl⟩, rfl⟩
+      exact ⟨w, hw, by ring⟩
+  rw [hset]
+  have h := Section6.greenFunction_translate (Neg.neg '' U) c (-x) (-y)
+  have h' : greenFunction ((fun z : ℂ => z + c) '' (Neg.neg '' U)) (c - x) (c - y) =
+      greenFunction (Neg.neg '' U) (-x) (-y) := by
+    simpa only [sub_eq_add_neg, add_comm] using h
+  exact h'.trans (greenFunction_neg U x y)
+
+/-- Reciprocity for points exchanged by a central symmetry of the domain. -/
+theorem greenFunction_point_reflection_pair_comm {U : Set ℂ} {c : ℂ}
+    (hU : (fun z : ℂ => c - z) '' U = U) (x : ℂ) :
+    greenFunction U x (c - x) = greenFunction U (c - x) x := by
+  have h := greenFunction_point_reflection U c x (c - x)
+  simpa only [hU, sub_sub_cancel] using h.symm
+
+/-- The two centres have reciprocal Green values in the union of two
+congruent discs, even when their boundaries cross. -/
+theorem greenFunction_two_congruent_discs_centres_comm (a : ℂ) (r : ℝ) :
+    greenFunction (ball a r ∪ ball (-a) r) a (-a) =
+      greenFunction (ball a r ∪ ball (-a) r) (-a) a := by
+  have hball (b : ℂ) : Neg.neg '' ball b r = ball (-b) r := by
+    ext z
+    constructor
+    · rintro ⟨w, hw, rfl⟩
+      simpa only [mem_ball, dist_neg_neg] using hw
+    · intro hz
+      refine ⟨-z, ?_, neg_neg z⟩
+      change dist (-z) b < r
+      rw [show dist (-z) b = dist z (-b) by simpa only [neg_neg] using dist_neg_neg z (-b)]
+      exact hz
+  apply greenFunction_neg_pair_comm
+  rw [image_union, hball, hball, neg_neg, union_comm]
+
 #print axioms greenFunction_finite_disc_union_eq_isolated_disc
 #print axioms greenFunction_pairwise_disjoint_finite_discs_comm
 #print axioms greenFunction_finite_discs_comm_of_intersections_contained
 #print axioms greenFunction_laminar_finite_discs_comm
+#print axioms greenFunction_neg
+#print axioms greenFunction_neg_pair_comm
+#print axioms greenFunction_point_reflection
+#print axioms greenFunction_point_reflection_pair_comm
+#print axioms greenFunction_two_congruent_discs_centres_comm
 
 end HarmonicBalls

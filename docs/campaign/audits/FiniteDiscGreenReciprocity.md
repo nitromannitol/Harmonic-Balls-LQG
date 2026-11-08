@@ -12,6 +12,14 @@ families may contain non-nested intersecting discs, but their union is still a
 union of disjoint maximal discs. `greenFunction_laminar_finite_discs_comm`
 covers the special case of disjoint-or-nested pairs.
 
+`greenFunction_point_reflection` proves covariance under point reflection about
+an arbitrary center, without a boundedness or openness assumption. As a
+consequence, `greenFunction_point_reflection_pair_comm` proves reciprocity
+at points exchanged by a central symmetry of the domain. In particular,
+`greenFunction_two_congruent_discs_centres_comm` handles the two centres of
+a congruent-disc union, including crossing outer boundaries. This does not
+establish reciprocity at arbitrary pairs in that union.
+
 This does not establish the finite-disc premise of
 `greenFunction_reciprocity_of_finite_disc_reciprocity`: intersecting discs may
 belong to the same component, so the disjoint-component theorem cannot be
