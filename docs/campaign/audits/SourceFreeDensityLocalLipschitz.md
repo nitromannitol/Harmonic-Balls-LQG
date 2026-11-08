@@ -1,0 +1,7 @@
+# Source-free density Green potentials: local Lipschitz estimate
+
+`HarmonicBalls.sigmaFinite_source_free_density_green_local_lipschitz` applies to a compact `K` in an open source-free set `U` contained in a bounded open planar domain `V`. The sigma-finite measure is carried almost everywhere by `V`. It produces a positive scale `δ` and nonnegative constant `C`, before quantifying over measurable integrable signed densities that vanish almost everywhere on `U`. For every `x ∈ K` and every `y` with `dist y x < δ`, the difference of the actual Bochner integrals is bounded by `C * (∫ |f| dν) * dist y x`. Thus `y` need not belong to `K`, and no convexity or connectedness of `K` is assumed. The source is the first Green-kernel argument; the existing diagonal convention is retained.
+
+The proof chooses a compact closed thickening of `K` inside `U`. Existing source-free harmonicity and the uniform transposed-kernel density bound apply on that thickening. The Poisson formula on a disk centered at `x` and the Herglotz–Riesz kernel give the estimate `4 * dist y x / r` for the kernel's deviation from its center value when `dist y x < r / 2`. Averaging against the boundary values yields the stated Lipschitz bound. No reciprocity, finite total mass of `ν`, or new literature premise is used. The potential-theoretic infrastructure uses work of Leonardo Bonanno.
+
+The standalone Lean check and module build passed. The theorem's printed axioms are `propext`, `Classical.choice`, and `Quot.sound`; the forbidden-code scan is clean.
