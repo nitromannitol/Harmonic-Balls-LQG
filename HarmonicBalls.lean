@@ -1,1 +1,14 @@
 import HarmonicBalls.Basic
+import HarmonicBalls.Proofs.Sec11.Closure.CorrectedFixedGeometry
+import HarmonicBalls.Proofs.Sec11.Closure.FixedGeometry
+import HarmonicBalls.Proofs.Sec11.Closure.FixedMassDiameter
+import HarmonicBalls.Proofs.Sec11.Closure.FixedMassDiameterOutside
+import HarmonicBalls.Proofs.Sec11.Closure.FixedRawPositive
+import HarmonicBalls.Proofs.Sec11.Closure.FixedRawPositiveStaged
+import HarmonicBalls.Proofs.Sec11.Closure.LocalCertificate
+import HarmonicBalls.Proofs.Sec11.Closure.MassDiameterInside
+import HarmonicBalls.Proofs.Sec11.Closure.MetricBridgeZero
+import HarmonicBalls.Proofs.Sec11.Closure.MetricMeasurableZero
+import HarmonicBalls.Proofs.Sec11.Closure.PinchEventTypeZero
+import HarmonicBalls.Proofs.Sec11.Closure.PinchedSigmaLe
+import HarmonicBalls.Proofs.Sec11.Closure.TailNormalization
