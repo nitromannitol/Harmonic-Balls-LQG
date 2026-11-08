@@ -197,6 +197,112 @@ theorem greenFunction_finite_discs_comm_of_disc_component
   rw [hF]
   exact greenFunction_disjoint_union_ball_comm_of_mem hWo hWb hdis hx y
 
+/-- The harmonic correction has the same pole-shift bound as the
+regularized Newtonian kernel, when the regularization discs lie in the domain. -/
+theorem greenHarmonicCorrection_pole_shift_le
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {ε : ℝ} (hε : 0 < ε) {z z' y : ℂ} (hy : y ∈ U)
+    (hz : closedBall z (2 * ε) ⊆ U) (hz' : closedBall z' (2 * ε) ⊆ U) :
+    (greatestHarmonicMinorant U (newtonKernelEReal z') y).toReal -
+      (greatestHarmonicMinorant U (newtonKernelEReal z) y).toReal ≤
+      (2 * Real.pi)⁻¹ * Real.log (1 + ‖z - z'‖ / ε) := by
+  have hzU : z ∈ U := hz (mem_closedBall_self (by positivity))
+  have hz'U : z' ∈ U := hz' (mem_closedBall_self (by positivity))
+  let H : ℂ → ℂ → ℝ := fun x w =>
+    (greatestHarmonicMinorant U (newtonKernelEReal x) w).toReal
+  have hreg (x : ℂ) (hx : closedBall x (2 * ε) ⊆ U) (w : ℂ) (hw : w ∈ U) :
+      H x w ≤ regularizedNewtonKernel ε x w := by
+    have hub : greatestHarmonicMinorant U (newtonKernelEReal x) w ≤
+        (regularizedNewtonKernel ε x w : EReal) := by
+      rw [greatestHarmonicMinorant_regularized hε hx]
+      exact greatestHarmonicMinorant_le hw
+    obtain ⟨R, hR⟩ := hUb.subset_closedBall x
+    have hlb := (isHarmonicMinorant_const_newtonKernelEReal hR).le_greatestHarmonicMinorant w
+    have hb : greatestHarmonicMinorant U (newtonKernelEReal x) w ≠ ⊥ :=
+      ne_bot_of_le_ne_bot (EReal.coe_ne_bot _) hlb
+    exact EReal.toReal_le_toReal hub hb (EReal.coe_ne_top _)
+  let C : ℝ := (2 * Real.pi)⁻¹ * Real.log (1 + ‖z - z'‖ / ε)
+  let q : ℂ → ℝ := fun w => H z' w - C
+  have hq : IsHarmonicMinorant U (newtonKernelEReal z) q := by
+    apply (isHarmonicMinorant_regularized_iff hε hz).2
+    constructor
+    · exact (harmonicOnNhd_greatestHarmonicMinorant_newtonKernel hU hUb hz'U).sub
+        (InnerProductSpace.harmonicOnNhd_const C)
+    · intro w hw
+      change ((H z' w - C : ℝ) : EReal) ≤ (regularizedNewtonKernel ε z w : EReal)
+      rw [EReal.coe_le_coe_iff]
+      have hshift := regularizedNewtonKernel_sub_le hε z z' w
+      have hbound := hreg z' hz' w hw
+      dsimp [C] at *
+      linarith
+  have hlower := hq.le_greatestHarmonicMinorant y
+  have hupper : greatestHarmonicMinorant U (newtonKernelEReal z) y ≤
+      (regularizedNewtonKernel ε z y : EReal) := by
+    rw [greatestHarmonicMinorant_regularized hε hz]
+    exact greatestHarmonicMinorant_le hy
+  have hreal := EReal.toReal_le_toReal hlower (EReal.coe_ne_bot _)
+    (ne_top_of_le_ne_top (EReal.coe_ne_top _) hupper)
+  simp only [EReal.toReal_coe] at hreal
+  change H z' y - H z y ≤ C
+  dsimp [q] at hreal
+  linarith
+
+/-- For a fixed observation point in a bounded open set, the harmonic
+correction is continuous in the pole. This does not use reciprocity. -/
+theorem continuousAt_greenHarmonicCorrection_pole
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z y : ℂ} (hz : z ∈ U) (hy : y ∈ U) :
+    ContinuousAt (fun x => (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal) z := by
+  obtain ⟨δ, hδ, hδU⟩ := Metric.isOpen_iff.mp hU z hz
+  let ε : ℝ := δ / 8
+  have hε : 0 < ε := by dsimp [ε]; positivity
+  have hzball : closedBall z (2 * ε) ⊆ U :=
+    (closedBall_subset_ball (by dsimp [ε]; linarith)).trans hδU
+  have hnear : ∀ x ∈ ball z (δ / 4), closedBall x (2 * ε) ⊆ U := by
+    intro x hx w hw
+    apply hδU
+    rw [mem_ball] at hx ⊢
+    rw [mem_closedBall] at hw
+    have ht := dist_triangle w x z
+    dsimp [ε] at hw
+    linarith
+  let C : ℂ → ℝ := fun x => (2 * Real.pi)⁻¹ * Real.log (1 + ‖z - x‖ / ε)
+  have hC : ContinuousAt C z := by
+    dsimp [C]
+    fun_prop (disch := simp)
+  have hCz : C z = 0 := by simp [C]
+  rw [Metric.continuousAt_iff]
+  intro η hη
+  obtain ⟨κ, hκ, hκC⟩ := Metric.continuousAt_iff.mp hC η hη
+  refine ⟨min κ (δ / 4), lt_min hκ (by positivity), ?_⟩
+  intro x hx
+  have hxball : x ∈ ball z (δ / 4) := mem_ball.mpr (lt_of_lt_of_le hx (min_le_right _ _))
+  have hsmall := hκC (lt_of_lt_of_le hx (min_le_left _ _))
+  rw [hCz, dist_zero_right] at hsmall
+  have h1 := greenHarmonicCorrection_pole_shift_le hU hUb hε hy hzball (hnear x hxball)
+  have h2 := greenHarmonicCorrection_pole_shift_le hU hUb hε hy (hnear x hxball) hzball
+  rw [norm_sub_rev] at h2
+  change _ ≤ C x at h1 h2
+  rw [Real.dist_eq]
+  have hsmall' : C x < η := lt_of_le_of_lt (le_abs_self (C x)) (by simpa only [Real.norm_eq_abs] using hsmall)
+  exact lt_of_le_of_lt (abs_le.mpr ⟨by linarith, h1⟩) hsmall'
+
+/-- For a fixed observation point, the Green function is continuous in the
+pole at interior points away from the diagonal. -/
+theorem continuousAt_greenFunction_pole
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z y : ℂ} (hz : z ∈ U) (hy : y ∈ U) (hzy : z ≠ y) :
+    ContinuousAt (fun x => greenFunction U x y) z := by
+  have hn : ContinuousAt (fun x => newtonKernel x y) z := by
+    have h := (harmonicAt_newtonKernel hzy).1.continuousAt
+    simpa only [newtonKernel_comm] using h
+  have hH := continuousAt_greenHarmonicCorrection_pole hU hUb hz hy
+  apply (hn.sub hH).congr
+  filter_upwards [hU.mem_nhds hz, isOpen_compl_singleton.mem_nhds hzy] with x hx hxy
+  simp only [greenFunction, hx, hy, true_and, mem_compl_iff, mem_singleton_iff] at *
+  rw [ite_eq_left hxy]
+  rfl
+
 /-- Removing a closed countable set from a disc preserves Green reciprocity,
 including at deleted points and on the diagonal. The deleted points may be
 irregular boundary points. -/
@@ -308,6 +414,9 @@ theorem greenFunction_two_congruent_discs_centres_comm (a : ℂ) (r : ℝ) :
 #print axioms greenFunction_laminar_finite_discs_comm
 #print axioms greenFunction_disjoint_union_ball_comm_of_mem
 #print axioms greenFunction_finite_discs_comm_of_disc_component
+#print axioms greenHarmonicCorrection_pole_shift_le
+#print axioms continuousAt_greenHarmonicCorrection_pole
+#print axioms continuousAt_greenFunction_pole
 #print axioms greenFunction_countably_punctured_ball_comm
 #print axioms greenFunction_neg
 #print axioms greenFunction_neg_pair_comm

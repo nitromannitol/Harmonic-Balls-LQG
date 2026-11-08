@@ -21,6 +21,18 @@ overlaps outside that disc component. This is a local result and does not
 settle pairs lying in a component formed by crossing discs.
 
 
+
+`greenHarmonicCorrection_pole_shift_le` transfers the regularized Newtonian
+pole-shift bound to the actual harmonic correction for any bounded open
+domain, uniformly in the observation point. It yields
+`continuousAt_greenHarmonicCorrection_pole` and
+`continuousAt_greenFunction_pole` at interior off-diagonal pairs, without
+assuming reciprocity. Along with the existing harmonicity in the observation
+variable, this means a future proof of almost-everywhere reciprocity can be
+upgraded to pointwise reciprocity by separate continuity (diagonal and
+exterior values are already equal). The almost-everywhere identity and its
+upgrade have not been formalized here.
+
 `greenFunction_countably_punctured_ball_comm` establishes reciprocity for a
 disc after removal of a closed set countable inside that disc, including all
 diagonal and exterior values. It uses the existing countable-removal theorem
