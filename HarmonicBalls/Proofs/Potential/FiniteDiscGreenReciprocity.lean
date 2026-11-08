@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.Potential.GreenRegularBoundaryGeometry
 import HarmonicBalls.Proofs.Sec6.DiscGreenMass
 import HarmonicBalls.Proofs.Sec6.GreenDilation
 import HarmonicBalls.Proofs.Sec5.LocalCountableDeletion
+import HarmonicBalls.Proofs.Sec6.AvoidanceDiscRestart
 
 /-! # Green reciprocity for finite disc families
 
@@ -482,6 +483,157 @@ theorem greenFunction_two_congruent_discs_centres_comm (a : ℂ) (r : ℝ) :
   apply greenFunction_neg_pair_comm
   rw [image_union, hball, hball, neg_neg, union_comm]
 
+/-- The normalized angular measure is finite and supported on the closed disc. -/
+theorem normalizedCircleMeasure_finite_and_supported (c : ℂ) {r : ℝ} (hr : 0 ≤ r) :
+    MeasureTheory.IsFiniteMeasure (Section6.normalizedCircleMeasure c r) ∧
+      Section6.normalizedCircleMeasure c r (closedBall c r)ᶜ = 0 := by
+  open MeasureTheory in
+  constructor
+  · let : IsFiniteMeasure (volume.restrict (Ioc (-Real.pi) Real.pi)) :=
+      isFiniteMeasure_restrict.mpr measure_Ioc_lt_top.ne
+    let : IsFiniteMeasure (ENNReal.ofReal ((2 * Real.pi)⁻¹) •
+        volume.restrict (Ioc (-Real.pi) Real.pi)) :=
+      Measure.smul_finite _ ENNReal.ofReal_ne_top
+    unfold Section6.normalizedCircleMeasure
+    infer_instance
+  · rw [Section6.normalizedCircleMeasure, Measure.map_apply (continuous_circleMap c r).measurable
+      (isClosed_closedBall.measurableSet.compl)]
+    have hempty : circleMap c r ⁻¹' (closedBall c r)ᶜ = ∅ := by
+      ext θ
+      simp only [mem_preimage, mem_compl_iff, mem_empty_iff_false, iff_false, not_not]
+      exact sphere_subset_closedBall (circleMap_mem_sphere c hr θ)
+    rw [hempty, measure_empty]
+
+/-- Integrating a measurable function against normalized angular measure is its
+circle average, including the convention for nonintegrable functions. -/
+theorem integral_normalizedCircleMeasure_of_measurable (c : ℂ) (r : ℝ) {f : ℂ → ℝ}
+    (hf : Measurable f) :
+    (∫ z, f z ∂(Section6.normalizedCircleMeasure c r)) = Real.circleAverage f c r := by
+  open MeasureTheory in
+  rw [Section6.normalizedCircleMeasure, integral_map (continuous_circleMap c r).measurable.aemeasurable
+    hf.aestronglyMeasurable, integral_smul_measure]
+  rw [Real.circleAverage_eq_integral_add (-Real.pi)]
+  have heq := intervalIntegral.integral_comp_add_right
+    (f := fun θ => f (circleMap c r θ)) (a := 0) (b := 2 * Real.pi) (-Real.pi)
+  rw [heq]
+  have hp : 0 + -Real.pi = -Real.pi := by ring
+  have hp' : 2 * Real.pi + -Real.pi = Real.pi := by ring
+  rw [hp, hp', intervalIntegral.integral_of_le (by linarith [Real.pi_pos] : -Real.pi ≤ Real.pi)]
+  simp only [ENNReal.toReal_ofReal (by positivity : 0 ≤ (2 * Real.pi)⁻¹)]
+
+/-- Angular measure and the central point mass have the same regularized
+Newtonian potential sufficiently far from the closed disc. -/
+theorem normalizedCircleMeasure_regularizedNewtonKernel {c w : ℂ} {r ε : ℝ}
+    (hr : 0 ≤ r) (hε : 0 < ε)
+    (hfar : ∀ x ∈ closedBall c r, ε < ‖x - w‖) :
+    (∫ x, regularizedNewtonKernel ε x w ∂(Section6.normalizedCircleMeasure c r)) =
+      regularizedNewtonKernel ε c w := by
+  have hm : Measurable (fun x => regularizedNewtonKernel ε x w) := by
+    exact ((continuous_regularizedNewtonKernel hε).comp (continuous_id.prodMk continuous_const)).measurable
+  rw [integral_normalizedCircleMeasure_of_measurable c r hm]
+  have hc : c ∈ closedBall c r := mem_closedBall_self hr
+  have hw : w ∉ closedBall c r := by
+    intro hw
+    have := hfar w hw
+    simp only [sub_self, norm_zero] at this
+    linarith
+  have hh : InnerProductSpace.HarmonicOnNhd (newtonKernel w) (closedBall c r) := by
+    intro x hx
+    exact harmonicAt_newtonKernel (fun h => hw (h ▸ hx))
+  have heq : Real.circleAverage (fun x => regularizedNewtonKernel ε x w) c r =
+      Real.circleAverage (newtonKernel w) c r := by
+    apply Real.circleAverage_congr_sphere
+    intro x hx
+    change regularizedNewtonKernel ε x w = newtonKernel w x
+    rw [regularizedNewtonKernel_of_le_norm (le_of_lt (hfar x (sphere_subset_closedBall (by simpa only [abs_of_nonneg hr] using hx)))),
+      newtonKernel_comm]
+  have hhavg : Real.circleAverage (newtonKernel w) c r = newtonKernel w c := by
+    apply InnerProductSpace.HarmonicOnNhd.circleAverage_eq
+    simpa only [abs_of_nonneg hr] using hh
+  rw [heq, hhavg, regularizedNewtonKernel_of_le_norm (le_of_lt (hfar c hc)),
+    newtonKernel_comm]
+
+/-- The harmonic correction satisfies the circle mean-value property in its
+pole variable. The thickened closed disc stays inside the open domain. -/
+theorem greenHarmonicCorrection_circleAverage_pole
+    {U : Set ℂ} (hU : IsOpen U) {c y : ℂ} {r ε : ℝ}
+    (hr : 0 ≤ r) (hε : 0 < ε)
+    (hthick : cthickening (3 * ε) (closedBall c r) ⊆ U) (hy : y ∈ U) :
+    Real.circleAverage (fun x =>
+      (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal) c r =
+      (greatestHarmonicMinorant U (newtonKernelEReal c) y).toReal := by
+  open MeasureTheory in
+  have hf := normalizedCircleMeasure_finite_and_supported c hr
+  have hc : c ∈ closedBall c r := mem_closedBall_self hr
+  obtain ⟨H, hH, heq, _, havg⟩ := greenHarmonicCorrectionBalayageStep_holds U
+    (closedBall c r) (Section6.normalizedCircleMeasure c r) c 1 ε hU
+    (isCompact_closedBall c r) hf.1 hf.2 hc hε hthick (by
+      intro w hw
+      simpa only [one_mul] using normalizedCircleMeasure_regularizedNewtonKernel hr hε hw)
+  have hm : Measurable (fun x => H x y) := hH.comp (measurable_id.prodMk measurable_const)
+  have ha := havg y hy
+  rw [integral_normalizedCircleMeasure_of_measurable c r hm, one_mul] at ha
+  calc
+    _ = Real.circleAverage (fun x => H x y) c r := by
+      apply Real.circleAverage_congr_sphere
+      intro x hx
+      exact heq x (sphere_subset_closedBall (by simpa only [abs_of_nonneg hr] using hx)) y hy
+    _ = H c y := ha
+    _ = _ := (heq c hc y hy).symm
+
+/-- Away from the observation point, the Green kernel has the circle
+mean-value property in the pole variable. -/
+theorem greenFunction_circleAverage_pole
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {c y : ℂ} {r ε : ℝ} (hr : 0 ≤ r) (hε : 0 < ε)
+    (hthick : cthickening (3 * ε) (closedBall c r) ⊆ U)
+    (hy : y ∈ U) (hyout : y ∉ closedBall c r) :
+    Real.circleAverage (fun x => greenFunction U x y) c r = greenFunction U c y := by
+  have hsub : closedBall c r ⊆ U := (self_subset_cthickening _).trans hthick
+  have hc : c ∈ closedBall c r := mem_closedBall_self hr
+  have hxy : ∀ x ∈ closedBall c r, x ≠ y := fun x hx h => hyout (h ▸ hx)
+  have hh : InnerProductSpace.HarmonicOnNhd (newtonKernel y) (closedBall c r) :=
+    fun x hx => harmonicAt_newtonKernel (hxy x hx)
+  have hNcont : ContinuousOn (fun x => newtonKernel x y) (sphere c |r|) := by
+    intro x hx
+    have hx' : x ∈ closedBall c r := sphere_subset_closedBall (by simpa only [abs_of_nonneg hr] using hx)
+    have hhx := (harmonicAt_newtonKernel (hxy x hx')).1.continuousAt
+    simpa only [newtonKernel_comm] using hhx.continuousWithinAt
+  have hHcont : ContinuousOn (fun x => (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal)
+      (sphere c |r|) := by
+    intro x hx
+    have hx' : x ∈ closedBall c r := sphere_subset_closedBall (by simpa only [abs_of_nonneg hr] using hx)
+    exact (continuousAt_greenHarmonicCorrection_pole hU hUb (hsub hx') hy).continuousWithinAt
+  have hN : Real.circleAverage (fun x => newtonKernel x y) c r = newtonKernel c y := by
+    have he : (fun x => newtonKernel x y) = newtonKernel y := funext (fun x => newtonKernel_comm x y)
+    rw [he, newtonKernel_comm c y]
+    exact InnerProductSpace.HarmonicOnNhd.circleAverage_eq (by simpa only [abs_of_nonneg hr] using hh)
+  have hH := greenHarmonicCorrection_circleAverage_pole hU hr hε hthick hy
+  have heq : Real.circleAverage (fun x => greenFunction U x y) c r =
+      Real.circleAverage (fun x => newtonKernel x y -
+        (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal) c r := by
+    apply Real.circleAverage_congr_sphere
+    intro x hx
+    have hx' : x ∈ closedBall c r := sphere_subset_closedBall (by simpa only [abs_of_nonneg hr] using hx)
+    change greenFunction U x y = _
+    rw [greenFunction, ite_eq_left ⟨hsub hx', hy, hxy x hx'⟩]
+  have hNi : CircleIntegrable (fun x => newtonKernel x y) c r := by
+    apply ContinuousOn.circleIntegrable hr
+    simpa only [abs_of_nonneg hr] using hNcont
+  have hHi : CircleIntegrable (fun x => (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal) c r := by
+    apply ContinuousOn.circleIntegrable hr
+    simpa only [abs_of_nonneg hr] using hHcont
+  rw [heq]
+  change Real.circleAverage ((fun x => newtonKernel x y) -
+    (fun x => (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal)) c r = _
+  rw [Real.circleAverage_sub hNi hHi, hN, hH, greenFunction,
+    ite_eq_left ⟨hsub hc, hy, hxy c hc⟩]
+
+#print axioms normalizedCircleMeasure_finite_and_supported
+#print axioms integral_normalizedCircleMeasure_of_measurable
+#print axioms normalizedCircleMeasure_regularizedNewtonKernel
+#print axioms greenHarmonicCorrection_circleAverage_pole
+#print axioms greenFunction_circleAverage_pole
 #print axioms greenFunction_finite_disc_union_eq_isolated_disc
 #print axioms greenFunction_pairwise_disjoint_finite_discs_comm
 #print axioms greenFunction_finite_discs_comm_of_intersections_contained

@@ -35,6 +35,18 @@ future almost-everywhere reciprocity proof could use
 exterior values are already equal). The almost-everywhere identity and its
 upgrade have not been formalized here.
 
+`greenHarmonicCorrection_circleAverage_pole` proves the circle mean-value
+property of the harmonic correction in its pole variable on closed discs
+whose positive thickening lies in the open domain. It applies the existing
+balayage identity to normalized angular measure; the required equality of
+regularized Newtonian potentials is proved from the harmonic mean-value
+property away from the disc. `greenFunction_circleAverage_pole` obtains the
+same property for the Green kernel when the observation point is outside the
+disc, for any bounded open domain. Neither result assumes reciprocity. This
+is a source-variable property; reciprocity still requires a duality argument
+or another proof of the missing implication below. No converse mean-value
+characterization of harmonicity was located in the searched APIs.
+
 `greenFunction_countably_punctured_ball_comm` establishes reciprocity for a
 disc after removal of a closed set countable inside that disc, including all
 diagonal and exterior values. It uses the existing countable-removal theorem
