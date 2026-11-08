@@ -13,7 +13,8 @@ recorded in `notes/sec11-claims.md`.
 | Prefix-to-block average (draft 536-552, `2 A_{2N} - A_N`) | PROVED, standard axioms | `Proofs/Sec11/ClosureScales/CertificateBlockDensity.lean` (`tendsto_block_average_of_prefix_average`) |
 | Origin block density for a stationary, germ-trivial family of local certificate events | PROVED, conditional on explicit premises | same file (`frozen_block_density_of_certificate_family`) |
 | Uniform rate `δ` chosen before the probability space | OPEN | draft 554-563 |
-| Transfer from the origin to `μ_ω`-a.e. `z` (rooted laws, marked identity) | OPEN | draft 565-649 |
+| Fubini glue of the marked identity: rooted a.s. statements for a.e. root `z` give `μ_ω`-a.e. `z` a.s. (draft 635-649) | PROVED, conditional on the marked identity (explicit hypothesis, DMS21 Lemma A.10 marked version) | `Proofs/Sec11/ClosureScales/RootedTransferGlue.lean` (`ae_ae_of_marked_identity_of_rooted_null`, commit b648d21) |
+| Rooted transfer for the pinch frequency (rooted laws, recentered observation) | OPEN (needs B1/B2 below) | draft 565-649 |
 | Dyadic extension from `B_1` to `ℂ` | OPEN | draft 649-650 |
 | Prop 11.11 from `ManyPinchScalesStmt` | Existing reduction; waits on the line above | `Proofs/Sec11/StagedResultClosures.lean:79` (`harmonicBallNotMetricBallStmt_of_stagedInputs`) |
 
