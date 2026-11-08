@@ -4,6 +4,7 @@ import Mathlib.MeasureTheory.Measure.MeasuredSets
 import Mathlib.MeasureTheory.SetAlgebra
 import Mathlib.MeasureTheory.Function.ContinuousMapDense
 import Mathlib.MeasureTheory.Integral.IntegrableOn
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 import Mathlib.Dynamics.Ergodic.MeasurePreserving
 
 /-! # Mixing for coordinate cylinders
@@ -303,6 +304,233 @@ theorem abs_integral_mul_sub_le {Ω : Type*} [MeasurableSpace Ω] (P : Measure �
     rw [Real.norm_eq_abs]
     exact abs_mul_sub_mul_le_unit (huv ω) (hvv ω) (hfv ω) (hgv ω))
 
+/-- A measurable function valued in the unit interval is integrable on a finite measure space. -/
+private theorem integrable_of_measurable_unit {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsFiniteMeasure P] {f : Ω → ℝ} (hf : Measurable f)
+    (hbound : ∀ ω, 0 ≤ f ω ∧ f ω ≤ 1) : Integrable f P := by
+  exact integrable_of_le_of_le hf.aestronglyMeasurable
+    (Filter.Eventually.of_forall fun ω => (hbound ω).1)
+    (Filter.Eventually.of_forall fun ω => (hbound ω).2)
+    (integrable_const 0) (integrable_const 1)
+
+/-- The integral of a unit-interval valued measurable function is a probability. -/
+private theorem integral_mem_unit {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] {f : Ω → ℝ} (hf : Measurable f)
+    (hbound : ∀ ω, 0 ≤ f ω ∧ f ω ≤ 1) :
+    0 ≤ ∫ ω, f ω ∂P ∧ (∫ ω, f ω ∂P) ≤ 1 := by
+  refine ⟨integral_nonneg (fun ω => (hbound ω).1), ?_⟩
+  have h := integral_mono (integrable_of_measurable_unit P hf hbound)
+    (integrable_const (1 : ℝ)) (fun ω => (hbound ω).2)
+  simpa only [integral_const, Measure.real, measure_univ, ENNReal.toReal_one, one_smul] using h
+
+/-- Factorization extends to indicators of finite-dimensional Borel sets. -/
+theorem tendsto_indicator_cylinder_product {Ω I : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] (X : I → Ω → ℝ)
+    (hX : ∀ i, Measurable (X i)) (T : Ω → Ω) (hT : MeasurePreserving T P P)
+    (hfact : cylinderFactorization P X T) {m k : ℕ} (a : Fin m → I) (b : Fin k → I)
+    {S : Set (Fin m → ℝ)} {R : Set (Fin k → ℝ)} (hS : MeasurableSet S)
+    (hR : MeasurableSet R) :
+    Tendsto (fun n : ℕ => ∫ ω,
+      S.indicator (fun _ => (1 : ℝ)) (fun i => X (a i) ω) *
+      R.indicator (fun _ => (1 : ℝ)) (fun j => X (b j) ((T^[n]) ω)) ∂P) atTop
+      (𝓝 ((∫ ω, S.indicator (fun _ => (1 : ℝ)) (fun i => X (a i) ω) ∂P) *
+        (∫ ω, R.indicator (fun _ => (1 : ℝ)) (fun j => X (b j) ω) ∂P))) := by
+  let U : Ω → Fin m → ℝ := fun ω i => X (a i) ω
+  let V : Ω → Fin k → ℝ := fun ω i => X (b i) ω
+  have hU : Measurable U := Measurable.of_eval fun i => hX (a i)
+  have hV : Measurable V := Measurable.of_eval fun i => hX (b i)
+  let s : (Fin m → ℝ) → ℝ := S.indicator (fun _ => (1 : ℝ))
+  let r : (Fin k → ℝ) → ℝ := R.indicator (fun _ => (1 : ℝ))
+  have hs : Measurable s := measurable_const.indicator hS
+  have hr : Measurable r := measurable_const.indicator hR
+  have hs1 : ∀ x, 0 ≤ s x ∧ s x ≤ 1 := by
+    intro x
+    by_cases hx : x ∈ S <;> simp [s, hx]
+  have hr1 : ∀ x, 0 ≤ r x ∧ r x ≤ 1 := by
+    intro x
+    by_cases hx : x ∈ R <;> simp [r, hx]
+  apply Metric.tendsto_atTop.mpr
+  intro ε hε
+  have hδ : 0 < ε / 16 := by positivity
+  let Q := P.map U
+  let R' := P.map V
+  let _ : IsFiniteMeasure Q := Measure.isFiniteMeasure_map P U
+  let _ : IsFiniteMeasure R' := Measure.isFiniteMeasure_map P V
+  obtain ⟨f, hf1, hferr⟩ := exists_unit_boundedContinuous_indicator_approx Q hS hδ
+  obtain ⟨g, hg1, hgerr⟩ := exists_unit_boundedContinuous_indicator_approx R' hR hδ
+  let u : Ω → ℝ := s ∘ U
+  let v : Ω → ℝ := r ∘ V
+  let f' : Ω → ℝ := f ∘ U
+  let g' : Ω → ℝ := g ∘ V
+  have hum : Measurable u := hs.comp hU
+  have hvm : Measurable v := hr.comp hV
+  have hfm : Measurable f' := f.continuous.measurable.comp hU
+  have hgm : Measurable g' := g.continuous.measurable.comp hV
+  have hu1 : ∀ ω, 0 ≤ u ω ∧ u ω ≤ 1 := fun ω => hs1 (U ω)
+  have hv1 : ∀ ω, 0 ≤ v ω ∧ v ω ≤ 1 := fun ω => hr1 (V ω)
+  have hf1' : ∀ ω, 0 ≤ f' ω ∧ f' ω ≤ 1 := fun ω => hf1 (U ω)
+  have hg1' : ∀ ω, 0 ≤ g' ω ∧ g' ω ≤ 1 := fun ω => hg1 (V ω)
+  have hui := integrable_of_measurable_unit P hum hu1
+  have hvi := integrable_of_measurable_unit P hvm hv1
+  have hfi := integrable_of_measurable_unit P hfm hf1'
+  have hgi := integrable_of_measurable_unit P hgm hg1'
+  have heU : (∫ ω, |u ω - f' ω| ∂P) ≤ ε / 16 := by
+    have hm : AEStronglyMeasurable (fun x => ‖s x - f x‖) Q :=
+      (hs.sub f.continuous.measurable).norm.aestronglyMeasurable
+    rw [integral_map hU.aemeasurable hm] at hferr
+    simpa only [u, f', s, Function.comp_apply, Real.norm_eq_abs] using hferr
+  have heV : (∫ ω, |v ω - g' ω| ∂P) ≤ ε / 16 := by
+    have hm : AEStronglyMeasurable (fun x => ‖r x - g x‖) R' :=
+      (hr.sub g.continuous.measurable).norm.aestronglyMeasurable
+    rw [integral_map hV.aemeasurable hm] at hgerr
+    simpa only [v, g', r, Function.comp_apply, Real.norm_eq_abs] using hgerr
+  have hdu : |(∫ ω, u ω ∂P) - ∫ ω, f' ω ∂P| ≤ ε / 16 := by
+    rw [← integral_sub hui hfi]
+    exact (abs_integral_le_integral_abs).trans heU
+  have hdv : |(∫ ω, v ω ∂P) - ∫ ω, g' ω ∂P| ≤ ε / 16 := by
+    rw [← integral_sub hvi hgi]
+    exact (abs_integral_le_integral_abs).trans heV
+  have hprod := abs_mul_sub_mul_le_unit (integral_mem_unit P hum hu1)
+    (integral_mem_unit P hvm hv1) (integral_mem_unit P hfm hf1')
+    (integral_mem_unit P hgm hg1')
+  have hprod' : |(∫ ω, u ω ∂P) * (∫ ω, v ω ∂P) -
+      (∫ ω, f' ω ∂P) * (∫ ω, g' ω ∂P)| ≤ ε / 8 := by linarith
+  obtain ⟨N, hN⟩ := Metric.tendsto_atTop.mp (hfact m k a b f g) (ε / 2) (by positivity)
+  refine ⟨N, fun n hn => ?_⟩
+  have hN' := hN n hn
+  rw [Real.dist_eq] at hN' ⊢
+  have hnT := hT.iterate n
+  have hvi' := integrable_of_measurable_unit P (hvm.comp hnT.measurable) (fun ω => hv1 _)
+  have hgi' := integrable_of_measurable_unit P (hgm.comp hnT.measurable) (fun ω => hg1' _)
+  have hdiff : (∫ ω, |v ((T^[n]) ω) - g' ((T^[n]) ω)| ∂P) =
+      ∫ ω, |v ω - g' ω| ∂P := by
+    have hh := integral_map (μ := P) hnT.measurable.aemeasurable (hvm.sub hgm).norm.aestronglyMeasurable
+    rw [hnT.map_eq] at hh
+    simpa only [Pi.sub_apply, Real.norm_eq_abs] using hh.symm
+  have hclose := abs_integral_mul_sub_le P hui hvi' hfi hgi' hu1 (fun ω => hv1 _)
+    hf1' (fun ω => hg1' _)
+  simp only [Function.comp_apply] at hclose
+  rw [hdiff] at hclose
+  change |(∫ ω, u ω * v ((T^[n]) ω) ∂P) - (∫ ω, u ω ∂P) * (∫ ω, v ω ∂P)| < ε
+  change |(∫ ω, f' ω * g' ((T^[n]) ω) ∂P) -
+    (∫ ω, f' ω ∂P) * (∫ ω, g' ω ∂P)| < ε / 2 at hN'
+  have htri := abs_sub_le (∫ ω, u ω * v ((T^[n]) ω) ∂P)
+    (∫ ω, f' ω * g' ((T^[n]) ω) ∂P) ((∫ ω, u ω ∂P) * (∫ ω, v ω ∂P))
+  have htri' := abs_sub_le (∫ ω, f' ω * g' ((T^[n]) ω) ∂P)
+    ((∫ ω, f' ω ∂P) * (∫ ω, g' ω ∂P)) ((∫ ω, u ω ∂P) * (∫ ω, v ω ∂P))
+  rw [abs_sub_comm] at hprod'
+  linarith
+
+/-- Factorization extends to events described by finite coordinate vectors. -/
+theorem tendsto_measure_coordinate_events {Ω I : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] (X : I → Ω → ℝ)
+    (hX : ∀ i, Measurable (X i)) (T : Ω → Ω) (hT : MeasurePreserving T P P)
+    (hfact : cylinderFactorization P X T) {m k : ℕ} (a : Fin m → I) (b : Fin k → I)
+    {S : Set (Fin m → ℝ)} {R : Set (Fin k → ℝ)} (hS : MeasurableSet S)
+    (hR : MeasurableSet R) :
+    Tendsto (fun n : ℕ => P.real (((fun ω i => X (a i) ω) ⁻¹' S) ∩
+      (T^[n]) ⁻¹' ((fun ω i => X (b i) ω) ⁻¹' R))) atTop
+      (𝓝 (P.real ((fun ω i => X (a i) ω) ⁻¹' S) *
+        P.real ((fun ω i => X (b i) ω) ⁻¹' R))) := by
+  let U : Ω → Fin m → ℝ := fun ω i => X (a i) ω
+  let V : Ω → Fin k → ℝ := fun ω i => X (b i) ω
+  let A := U ⁻¹' S
+  let B := V ⁻¹' R
+  have hU : Measurable U := Measurable.of_eval fun i => hX (a i)
+  have hV : Measurable V := Measurable.of_eval fun i => hX (b i)
+  have hA : MeasurableSet A := hU hS
+  have hB : MeasurableSet B := hV hR
+  have h1 : (∫ ω, S.indicator (fun _ => (1 : ℝ)) (U ω) ∂P) = P.real A := by
+    have he : (fun ω => S.indicator (fun _ => (1 : ℝ)) (U ω)) = A.indicator 1 := by
+      funext ω
+      by_cases hx : U ω ∈ S <;> simp [A, hx]
+    rw [he, integral_indicator_one hA]
+  have h2 : (∫ ω, R.indicator (fun _ => (1 : ℝ)) (V ω) ∂P) = P.real B := by
+    have he : (fun ω => R.indicator (fun _ => (1 : ℝ)) (V ω)) = B.indicator 1 := by
+      funext ω
+      by_cases hx : V ω ∈ R <;> simp [B, hx]
+    rw [he, integral_indicator_one hB]
+  have h3 (n : ℕ) : (∫ ω, S.indicator (fun _ => (1 : ℝ)) (U ω) *
+      R.indicator (fun _ => (1 : ℝ)) (V ((T^[n]) ω)) ∂P) =
+      P.real (A ∩ (T^[n]) ⁻¹' B) := by
+    have he : (fun ω => S.indicator (fun _ => (1 : ℝ)) (U ω) *
+        R.indicator (fun _ => (1 : ℝ)) (V ((T^[n]) ω))) =
+        (A ∩ (T^[n]) ⁻¹' B).indicator 1 := by
+      funext ω
+      by_cases hx : U ω ∈ S <;> by_cases hy : V ((T^[n]) ω) ∈ R <;>
+        simp [A, B, hx, hy]
+    rw [he, integral_indicator_one (hA.inter ((hT.iterate n).measurable hB))]
+  have hh := tendsto_indicator_cylinder_product P X hX T hT hfact a b hS hR
+  change Tendsto (fun n : ℕ => ∫ ω, S.indicator (fun _ => (1 : ℝ)) (U ω) *
+    R.indicator (fun _ => (1 : ℝ)) (V ((T^[n]) ω)) ∂P) atTop
+    (𝓝 ((∫ ω, S.indicator (fun _ => (1 : ℝ)) (U ω) ∂P) *
+      (∫ ω, R.indicator (fun _ => (1 : ℝ)) (V ω) ∂P))) at hh
+  simp only [h3, h1, h2] at hh
+  exact hh
+
+/-- A measurable cylinder can be presented using a `Fin m` coordinate list. -/
+theorem measurableCylinder_eq_fin_preimage {I : Type*} {C : Set (I → ℝ)}
+    (hC : C ∈ measurableCylinders (fun _ : I => ℝ)) :
+    ∃ (m : ℕ) (a : Fin m → I) (S : Set (Fin m → ℝ)), MeasurableSet S ∧
+      C = (fun x i => x (a i)) ⁻¹' S := by
+  classical
+  obtain ⟨s, B, hB, rfl⟩ := (mem_measurableCylinders C).mp hC
+  let e : ↥s ≃ Fin (Fintype.card ↥s) := Fintype.equivFin ↥s
+  let a : Fin (Fintype.card ↥s) → I := fun i => (e.symm i).1
+  let F : (Fin (Fintype.card ↥s) → ℝ) → (↥s → ℝ) := fun x i => x (e i)
+  refine ⟨Fintype.card ↥s, a, F ⁻¹' B, ?_, ?_⟩
+  · exact (Measurable.of_eval fun i => measurable_pi_apply (e i)) hB
+  · ext x
+    simp only [mem_cylinder, Set.mem_preimage]
+    have he : s.restrict x = F (fun i => x (a i)) := by
+      funext i
+      simp only [F, a, Finset.restrict, Equiv.symm_apply_apply]
+    rw [he]
+
+/-- The bounded continuous cylinder premise implies mixing for all events in
+the coordinate sigma-algebra. -/
+theorem coordinateSigmaMixing_of_cylinderFactorization {Ω I : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] (X : I → Ω → ℝ)
+    (hX : ∀ i, Measurable (X i)) (T : Ω → Ω) (hT : MeasurePreserving T P P)
+    (hfact : cylinderFactorization P X T) : coordinateSigmaMixing P X T := by
+  apply coordinateSigmaMixing_of_cylinder_events P X hX T hT
+  intro C D hC hD
+  obtain ⟨m, a, S, hS, rfl⟩ := measurableCylinder_eq_fin_preimage hC
+  obtain ⟨k, b, R, hR, rfl⟩ := measurableCylinder_eq_fin_preimage hD
+  simpa only [Set.preimage_preimage, Function.comp_def] using
+    (tendsto_measure_coordinate_events P X hX T hT hfact a b hS hR)
+
+/-- Continuous finite-coordinate factorization implies event mixing in the
+sigma-algebra generated by the coordinates. -/
+theorem tendsto_measure_inter_preimage_iterate_of_cylinderFactorization
+    {Ω I : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (X : I → Ω → ℝ) (hX : ∀ i, Measurable (X i)) (T : Ω → Ω)
+    (hT : MeasurePreserving T P P)
+    (hfact : ∀ (m k : ℕ) (a : Fin m → I) (b : Fin k → I)
+      (f : BoundedContinuousFunction (Fin m → ℝ) ℝ)
+      (g : BoundedContinuousFunction (Fin k → ℝ) ℝ),
+      Tendsto (fun n : ℕ => ∫ ω, f (fun i => X (a i) ω) *
+        g (fun j => X (b j) ((T^[n]) ω)) ∂P) atTop
+        (𝓝 ((∫ ω, f (fun i => X (a i) ω) ∂P) *
+          (∫ ω, g (fun j => X (b j) ω) ∂P))))
+    {A B : Set Ω} (hA : MeasurableSet[coordinateSigma X] A)
+    (hB : MeasurableSet[coordinateSigma X] B) :
+    Tendsto (fun n : ℕ => (P (A ∩ (T^[n]) ⁻¹' B)).toReal) atTop
+      (𝓝 ((P A).toReal * (P B).toReal)) :=
+  coordinateSigmaMixing_of_cylinderFactorization P X hX T hT hfact A B hA hB
+
+/-- Exact formulation of the generic extension. -/
+theorem cylinderMixingExtensionStatement_holds {Ω I : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] (X : I → Ω → ℝ) (T : Ω → Ω) :
+    cylinderMixingExtensionStatement P X T :=
+  fun hX hT hfact => coordinateSigmaMixing_of_cylinderFactorization P X hX T hT hfact
+
+#print axioms tendsto_measure_inter_preimage_iterate_of_cylinderFactorization
+#print axioms cylinderMixingExtensionStatement_holds
+#print axioms coordinateSigmaMixing_of_cylinderFactorization
+#print axioms measurableCylinder_eq_fin_preimage
+#print axioms tendsto_measure_coordinate_events
+#print axioms tendsto_indicator_cylinder_product
 #print axioms abs_integral_mul_sub_le
 #print axioms exists_unit_boundedContinuous_indicator_approx
 #print axioms coordinateSigmaMixing_of_cylinder_events
