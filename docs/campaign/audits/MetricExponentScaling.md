@@ -98,7 +98,11 @@ scratch file outside the repository). Both modules pass `lc` (with `warningAsErr
   scaling `coordChange`, not Pfeffer's Axiom IV alone.
 * **T2, exact normalizers.** Prove `PfefferAxiomVScale P ξ 𝔇 hC hcirc f (fun r => r ^ (ξ * lqgQ γ))` for the LQG metric.
   Audit step 2 says this follows from exact coordinate change and GFF scale invariance, with normalized variables of
-  fixed law. That argument is not yet written in the repository, so it is a target, not a claim.
+  fixed law. That argument is not yet written in the repository, so it is a target, not a claim. The ingredients are:
+  (a) `IsLQGMetric`'s `coordChange` with the constant shift `lqgQ γ · log r`, and Weyl scaling by constants, which give
+  the factor `e^{ξ lqgQ γ log r} = r^{ξ lqgQ γ}`; (b) GFF scale invariance modulo a random constant, which is the Proposed
+  input `WholePlaneGFFAffineInvariance` (`Proposed/LQG.lean:51`, pending source-check); (c) positivity and finiteness of
+  the across and around distances of the normalized field, which the repository does not yet state.
 * **T3, physical parameter correspondence.** Identify the Pfeffer background charge `Q(ξ)` of (1.4) for the Weyl exponent
   `ξ = γ/d_γ` with `lqgQ γ`. The deterministic step (section 3) gives `Q = lqgQ γ` once (1.10) and T1–T2 hold. The
   parameter algebra in `Proofs/GFF/BackgroundChargeParameter.lean` (`gamma_eq_of_lqgQ_eq`, `xi_eq_of_lqgQ_eq_of_mul_lqgQ_eq`)
