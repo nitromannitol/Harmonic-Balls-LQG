@@ -136,6 +136,66 @@ theorem greenFunction_laminar_finite_discs_comm
   · exact Or.inr ⟨j, hj, hs, Subset.rfl⟩
   · exact Or.inr ⟨i, hi, Subset.rfl, hs⟩
 
+/-- A disc component of a bounded open union has reciprocal Green values
+against every point. The other component may have arbitrary geometry. -/
+theorem greenFunction_disjoint_union_ball_comm_of_mem
+    {c x : ℂ} {r : ℝ} {W : Set ℂ} (hW : IsOpen W)
+    (hWb : Bornology.IsBounded W) (hdis : Disjoint (ball c r) W)
+    (hx : x ∈ ball c r) (y : ℂ) :
+    greenFunction (ball c r ∪ W) x y = greenFunction (ball c r ∪ W) y x := by
+  have hUb : Bornology.IsBounded (ball c r ∪ W) := isBounded_ball.union hWb
+  have hxg := congrFun (greenFunction_eq_of_disjoint_open_union_all
+    isOpen_ball hW hdis hUb hx) y
+  by_cases hy : y ∈ ball c r
+  · have hyg := congrFun (greenFunction_eq_of_disjoint_open_union_all
+      isOpen_ball hW hdis hUb hy) x
+    rw [hxg, hyg, Section6.greenFunction_ball_center_comm]
+  · by_cases hyW : y ∈ W
+    · rw [hxg, greenFunction_of_notMem_right hy]
+      have hg := greenFunction_eq_zero_of_disjoint_open_components
+        hW isOpen_ball hdis.symm (by simpa only [union_comm] using hUb) hyW hx
+      simpa only [union_comm] using hg.symm
+    · have hyout : y ∉ ball c r ∪ W := by simp [hy, hyW]
+      rw [greenFunction_of_notMem_right hyout, greenFunction_of_notMem_left hyout]
+
+/-- A finite disc union is reciprocal at every pair with one point in a
+disc containing every disc that meets it. Discs outside this component may
+overlap arbitrarily. -/
+theorem greenFunction_finite_discs_comm_of_disc_component
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ) {i : ι} (hi : i ∈ F)
+    (hcomponent : ∀ j ∈ F, ball (c j) (r j) ⊆ ball (c i) (r i) ∨
+      Disjoint (ball (c i) (r i)) (ball (c j) (r j)))
+    {x : ℂ} (hx : x ∈ ball (c i) (r i)) (y : ℂ) :
+    greenFunction (⋃ j ∈ F, ball (c j) (r j)) x y =
+      greenFunction (⋃ j ∈ F, ball (c j) (r j)) y x := by
+  classical
+  let G := F.filter (fun j => ¬ ball (c j) (r j) ⊆ ball (c i) (r i))
+  let W : Set ℂ := ⋃ j ∈ G, ball (c j) (r j)
+  have hF : (⋃ j ∈ F, ball (c j) (r j)) = ball (c i) (r i) ∪ W := by
+    apply Set.Subset.antisymm
+    · intro z hz
+      obtain ⟨j, hj, hzj⟩ := mem_iUnion₂.mp hz
+      by_cases hs : ball (c j) (r j) ⊆ ball (c i) (r i)
+      · exact Or.inl (hs hzj)
+      · exact Or.inr (mem_iUnion₂.mpr ⟨j, Finset.mem_filter.mpr ⟨hj, hs⟩, hzj⟩)
+    · intro z hz
+      rcases hz with hz | hz
+      · exact mem_iUnion₂.mpr ⟨i, hi, hz⟩
+      · obtain ⟨j, hj, hzj⟩ := mem_iUnion₂.mp hz
+        exact mem_iUnion₂.mpr ⟨j, (Finset.mem_filter.mp hj).1, hzj⟩
+  have hWo : IsOpen W := isOpen_iUnion fun j => isOpen_iUnion fun _ => isOpen_ball
+  have hWb : Bornology.IsBounded W :=
+    (Bornology.isBounded_biUnion_finset G).2 (fun _ _ => isBounded_ball)
+  have hdis : Disjoint (ball (c i) (r i)) W := by
+    apply disjoint_iUnion_right.mpr
+    intro j
+    apply disjoint_iUnion_right.mpr
+    intro hj
+    obtain ⟨hjF, hjnot⟩ := Finset.mem_filter.mp hj
+    exact (hcomponent j hjF).resolve_left hjnot
+  rw [hF]
+  exact greenFunction_disjoint_union_ball_comm_of_mem hWo hWb hdis hx y
+
 /-- Simultaneous reflection in the origin preserves the Green kernel of
 an arbitrary planar set, including diagonal and exterior values. -/
 theorem greenFunction_neg (U : Set ℂ) (x y : ℂ) :
@@ -226,6 +286,8 @@ theorem greenFunction_two_congruent_discs_centres_comm (a : ℂ) (r : ℝ) :
 #print axioms greenFunction_pairwise_disjoint_finite_discs_comm
 #print axioms greenFunction_finite_discs_comm_of_intersections_contained
 #print axioms greenFunction_laminar_finite_discs_comm
+#print axioms greenFunction_disjoint_union_ball_comm_of_mem
+#print axioms greenFunction_finite_discs_comm_of_disc_component
 #print axioms greenFunction_neg
 #print axioms greenFunction_neg_pair_comm
 #print axioms greenFunction_point_reflection
