@@ -5,24 +5,27 @@ Frozen targets (read-only): `PinchEventPositiveProbabilityStmt` (Lemma 11.12, `H
 
 ## Compiled (no sorry; axioms propext, Classical.choice, Quot.sound)
 
-- `Proofs/Sec11/Closure/LocalCertificate.lean` (a2ed68e): `Sec11LocalPinchCertificateStmt` (draft 447–513, all `α < lqgQ γ`); `pinchEventPositiveProbabilityStmt_of_localCertificate` (certificate implies the target at `α₀ = 0`).
-- `Proofs/Sec11/Closure/FixedGeometry.lean` (e2e776d): `isPinchPointConfiguration_fixed`, `exists_isPinchPointConfiguration` (draft 271–311).
-- `Proofs/Sec11/Closure/CorrectedFixedGeometry.lean` (d3badfd): `isCorrectedPinchConfiguration_fixed`, `exists_isCorrectedPinchConfiguration` (`δ = 10⁻⁴`, buffers, corridor).
-- `Proofs/Sec11/Closure/MassDiameterInside.lean` (731abb6): `hinside_of_square_dyadic_tail` (`hinside` for any admissible square and pinned set, from the dyadic-core producer).
-- `Proofs/Sec11/Closure/FixedMassDiameter.lean` (1c9557d): `fixed_hinside_of_square_dyadic_tail` (the instance for the fixed corrected geometry; geometric hypotheses proved).
+- `Proofs/Sec11/Closure/LocalCertificate.lean` (a2ed68e): `Sec11LocalPinchCertificateStmt`; `pinchEventPositiveProbabilityStmt_of_localCertificate`.
+- `Proofs/Sec11/Closure/FixedGeometry.lean` (e2e776d) and `CorrectedFixedGeometry.lean` (d3badfd): the fixed pinch configuration and the corrected fixed configuration (`δ = 10⁻⁴`).
+- `Proofs/Sec11/Closure/MassDiameterInside.lean` (731abb6): `hinside_of_square_dyadic_tail`; `Proofs/Sec11/Closure/FixedMassDiameter.lean` (1c9557d): `fixed_hinside_of_square_dyadic_tail`.
+- `Proofs/Sec11/Closure/MetricBridgeZero.lean` (76bb7bd): at `α₀ = 0`, an arbitrary metric map with `IsLQGMetricOfField` agrees a.s. with the canonical `𝔇 (hC ω)`, and is a Euclidean length metric a.s. (for `Ω : Type`).
+- `Proofs/Sec11/Closure/MetricMeasurableZero.lean` (a99704b): the same bridge in measurable form (`D'` with measurable entries, `D = D'` a.s.).
+
+## Suspected gap (report to operator; no Lean change)
+
+- F3. The first-event quantities `L = D(cl Q', ∂Q)` (written argument, line 316) and `a₀ = D(0, ∂B_d)` (line 320) are full-metric quantities (`D = D_{h^α}`, line 314). The assertion that the quantities of `E₁` are measurable outside `W` (lines 490–491) is not justified by the locality axiom. The chain requires `hA : MeasurableSet[comap (localModConstPairings 0 hC O)] A`. The representative lemma supplies measurability for `comap D` only.
 
 ## Open premises
 
-- T1. `SquareDyadicTailInput` (`Closure/MassDiameterInside.lean`): the square internal-diameter tail. The written argument attributes it to Pfeffer [P] Prop. 4.6 (arXiv:2104.04020v3, draft lines 138–183). Not staged in `Proposed/`.
-- F1. `hfront`: `μ_h(∂ closedSquare) = 0` almost surely. Needs `μ_h ≪ Lebesgue` almost surely; no such lemma in the repository. `Convex.addHaar_frontier` (Mathlib `Analysis/Convex/Measure.lean:35`) closes it once that is available.
-- F2. The measurable clause of `hinside`: the producer gives only `NullMeasurableSet` (`Proofs/Sec11/ConditionalCoreMeasurability.lean:26`), while `hinside` (`Proofs/Sec11/CorrectedPinchConditionalPositive.lean:30`) asks for `MeasurableSet`.
-- F3. The first event measurable with respect to `comap (localModConstPairings 0 hC O)` (`hA`, `ha`, `hb`): not traced for the fixed geometry.
-- R0 (operator decision). The target quantifies over every `ξ : ℝ`. The conditional chain needs `0 < ξ`. `IsLQGMetric` (`Defs/LQGMetric.lean:179`) and `SatisfiesLQGMetricAxioms` (`:146`) have no positivity field. The paper fixes `ξ = γ/d_γ > 0` (eq:xi, line 440).
-- R7 (operator decision, universe). `IsLQGMetric.satisfiesLQGMetricAxioms` quantifies over `Ω : Type`, while the target quantifies over `Ω : Type*`. No law-transfer lemma exists in the repository.
-- R2. `LQGVolumeGrowthAllScalesStmt.{0}` (`Draft/Section2.lean:122`) follows from `LiouvilleBallMassBoundStep` (`Steps/Sec2/VolumeGrowth.lean:69`, paper Lemma 2.4); it supplies `hfull`.
-- R5. Metric bridge (draft lines 46–269): only the staged `LQGMetricFieldAxioms` (`Proposed/LQG.lean:199`).
-- R1. General-`α` local certificate: needs normalized data `c, G` (`CorrectedPinchFrequency.lean:106`).
-- R6. Cameron–Martin steps (draft lines 447–513): covered by the raw chain; not verified against the written argument.
+- T1. `SquareDyadicTailInput` (`Closure/MassDiameterInside.lean`): the square internal-diameter tail, Pfeffer [P] Prop. 4.6 (arXiv:2104.04020v3). Not staged in `Proposed/`.
+- F1. `hfront` (boundary-null square): needs `μ_h ≪ Lebesgue` a.s.; `IsLQGLimit` (`Defs/LQG.lean`) is only Radon plus vague limit.
+- F2. Measurable clause of `hinside`: the producer gives `NullMeasurableSet` only.
+- R0 (operator). The target quantifies over every `ξ : ℝ`; the chain needs `0 < ξ`. No positivity field in `IsLQGMetric` (`Defs/LQGMetric.lean:179`) or `SatisfiesLQGMetricAxioms` (`:146`).
+- R7 (operator, universe). `IsLQGMetric` axioms quantify over `Ω : Type`; the target over `Ω : Type*`. The bridge above is for `Ω : Type` only.
+- R2. `LQGVolumeGrowthAllScalesStmt.{0}` (`Draft/Section2.lean:122`) follows from `LiouvilleBallMassBoundStep` (`Steps/Sec2/VolumeGrowth.lean:69`); supplies `hfull`.
+- R5. The Audit consumer (`Audit/Section11PinchMetricFieldConsumer.lean:83`) still takes the staged `LQGMetricFieldAxioms` (`Proposed/LQG.lean:199`).
+- R1. General-`α` local certificate: needs normalized `c, G` (`CorrectedPinchFrequency.lean:106`).
+- R6. Cameron–Martin steps: not verified against the written argument.
 
 ## Inputs
 
