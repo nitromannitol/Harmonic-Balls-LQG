@@ -3,7 +3,7 @@
 Worker z4, task section6-full-three-input-frozen-export-audit (Round 8).
 Status: builds and guard passes. Source review of the three staged Proposed inputs is PENDING (operator). This is a reduction, not numbered closure.
 
-Credit: Leonardo Bonanno. The annulus iteration (`annulusIterationStmt_proved`) and the Gwynne–Miller lemma route run through his proof in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. LatticeProb reuse rests on the operator approval recorded in the task file (inbox Nov4 08:20 E35).
+Credit: Leonardo Bonanno. The annulus iteration (`annulusIterationStmt_proved`) and the Gwynne–Miller lemma route run through his proof in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. Operator ruling E35 (inbox, 2026-11-04 08:20 UTC, rulings E34-E38) approves `annulusIterationStmt_proved`, built on Bonanno's modules and credited in its docstring. Ruling E34 names the Bonanno, LQG and MatedCRT families as the ported LatticeProb trees; every LatticeProb module reached here is under `LatticeProb.Bonanno`.
 
 ## Artifacts
 
@@ -44,14 +44,14 @@ Every frozen statement has at least one closure producer; the guard prints them 
 
 ## Printed constants and scans
 
-- All fourteen exports print `[propext, Classical.choice, Quot.sound]` (lc log `logs/lc/031714-2026322.log`). The guard throws on any other constant, and the log has no `sorryAx` or `ofReduceBool`.
+- All fourteen exports print `[propext, Classical.choice, Quot.sound]` (lc log `logs/lc/032210-2033527.log`, the final audit run). The guard throws on any other constant, and the log has no `sorryAx` or `ofReduceBool`.
 - Code scan of both Lean files: no `sorry`, `admit`, `native_decide`, `axiom`, `opaque`, `unsafe` or `set_option`.
 - `lb` builds `HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly` and `HarmonicBalls.Audit.Section6FullInputChecks` with no warning naming either module.
 
 ## Closure (guard)
 
 - 1980 HarmonicBalls declarations (3557 theorems) in 331 modules.
-- LatticeProb modules reached: 194, including `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. `annulusIterationStmt_proved` reached: yes.
+- LatticeProb modules reached: 194, all under `LatticeProb.Bonanno` (none outside that family), including `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. `annulusIterationStmt_proved` reached: yes.
 - Producer of the open Lemma 8.2 obligation (`TypicalPointManyGoodScalesStmt`) reached: no. The guard throws if it is.
 - Proposed heads reached, with closure producers:
   - `WholePlaneGFFAffineInvariance`: `wholePlaneGFFAffineInvariance_proved`, `wholePlaneGFFAffineInvariance_univ`.
@@ -65,5 +65,5 @@ Every frozen statement has at least one closure producer; the guard prints them 
 ## Open items
 
 1. Source review of `WholePlaneLQGBallMassBounds`, `LQGMeasureCoordChange` and `LQGMeasureExistence` is pending. They are the only premises of the exports.
-2. The Bonanno route depends on the LatticeProb closure (194 modules). The operator approval recorded in the task file covers this reuse.
+2. The route depends on the LatticeProb closure (194 modules, all under `LatticeProb.Bonanno`). Ruling E35 approves `annulusIterationStmt_proved` as built on Bonanno modules; the reached closure stays within the family E34 names as ported. Whether that is the scope the operator intends is for the operator to confirm.
 3. Nothing here is a new numbered closure claim. The exports are conditional on the three inputs.
