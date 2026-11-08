@@ -3,6 +3,7 @@ import HarmonicBalls.Proofs.Sec6.DiscGreenMass
 import HarmonicBalls.Proofs.Sec6.GreenDilation
 import HarmonicBalls.Proofs.Sec5.LocalCountableDeletion
 import HarmonicBalls.Proofs.Sec6.AvoidanceDiscRestart
+import HarmonicBalls.Proofs.Potential.GeneralDomainGreenLaplacian
 
 /-! # Green reciprocity for finite disc families
 
@@ -720,6 +721,65 @@ theorem harmonicAt_greenFunction_pole
   rw [greenFunction, ite_eq_left ⟨hz, hy, hzy⟩]
   rfl
 
+/-- The difference between the transposed Green sections extends harmonically
+through the diagonal, with value zero there. -/
+theorem exists_harmonicOnNhd_greenFunction_transpose_difference
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {y : ℂ} (hy : y ∈ U) :
+    ∃ h : ℂ → ℝ, InnerProductSpace.HarmonicOnNhd h U ∧ h y = 0 ∧
+      ∀ x ∈ U, greenFunction U x y = greenFunction U y x + h x := by
+  let H : ℂ → ℂ → ℝ := fun z w =>
+    (greatestHarmonicMinorant U (newtonKernelEReal z) w).toReal
+  refine ⟨fun x => H y x - H x y, ?_, by simp, ?_⟩
+  · exact (harmonicOnNhd_greatestHarmonicMinorant_newtonKernel hU hUb hy).sub
+      (harmonicOnNhd_greenHarmonicCorrection_pole hU hUb hy)
+  · intro x hx
+    by_cases hxy : x = y
+    · subst x
+      simp [H]
+    rw [greenFunction, ite_eq_left ⟨hx, hy, hxy⟩,
+      greenFunction, ite_eq_left ⟨hy, hx, Ne.symm hxy⟩, newtonKernel_comm x y]
+    dsimp [H]
+    ring
+
+/-- For a bounded open domain, the Green function has distributional
+Laplacian minus a Dirac mass in the pole variable. -/
+theorem hasLaplacian_greenFunction_pole {U : Set ℂ}
+    (hU : IsOpen U) (hUb : Bornology.IsBounded U) {y : ℂ} (hy : y ∈ U) :
+    HasLaplacian (fun x => greenFunction U x y) 0 (MeasureTheory.Measure.dirac y) U := by
+  open MeasureTheory Laplacian in
+  obtain ⟨h, hh, _, heq⟩ := exists_harmonicOnNhd_greenFunction_transpose_difference hU hUb hy
+  have hd := hasLaplacian_greenFunction_bounded_domain hU hUb hy
+  have hhL := hasLaplacian_zero_of_harmonicOnNhd hU hh
+  have hl : LocallyIntegrableOn (fun x => greenFunction U y x + h x) U := hd.1.add hhL.1
+  have hae : ∀ᵐ x ∂volume.restrict U,
+      greenFunction U y x + h x = greenFunction U x y := by
+    rw [ae_restrict_iff' hU.measurableSet]
+    filter_upwards [] with x hx
+    exact (heq x hx).symm
+  refine ⟨hl.congr hae, fun φ hφ => ?_⟩
+  obtain ⟨h0, hyφ, hdφ⟩ := hd.2 φ hφ
+  have hhφ := (hhL.2 φ hφ).2.2
+  rw [integral_zero_measure, sub_zero] at hhφ
+  have hi : ∫ x, greenFunction U x y * Δ φ x =
+      ∫ x, (greenFunction U y x + h x) * Δ φ x := by
+    apply integral_congr_ae
+    filter_upwards [] with x
+    by_cases hx : x ∈ U
+    · rw [heq x hx]
+    · rw [laplacian_eq_zero_of_notMem_tsupport (fun h => hx (hφ.2.2 h)), mul_zero, mul_zero]
+  refine ⟨h0, hyφ, ?_⟩
+  rw [hi]
+  have he : (fun x => (greenFunction U y x + h x) * Δ φ x) =
+      fun x => greenFunction U y x * Δ φ x + h x * Δ φ x := by
+    funext x
+    ring
+  rw [he, integral_add (integrable_mul_laplacian_of_test hd.1 hφ)
+    (integrable_mul_laplacian_of_test hhL.1 hφ), hhφ, add_zero]
+  exact hdφ
+
+#print axioms exists_harmonicOnNhd_greenFunction_transpose_difference
+#print axioms hasLaplacian_greenFunction_pole
 #print axioms harmonicOnNhd_of_localSuperMean_both
 #print axioms harmonicOnNhd_of_circleAverage_eq
 #print axioms harmonicOnNhd_greenHarmonicCorrection_pole

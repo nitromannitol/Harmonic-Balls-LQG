@@ -51,6 +51,16 @@ variable throughout a bounded open domain, and `harmonicAt_greenFunction_pole`
 proves it for the Green kernel off the diagonal. Reciprocity still requires a
 duality argument or another proof of the missing implication below.
 
+`exists_harmonicOnNhd_greenFunction_transpose_difference` proves that, with
+one variable fixed, the difference of the transposed Green sections is
+harmonic throughout the bounded open domain and is zero at the diagonal; the
+identity holds there as well as off the diagonal. Combining this with the
+existing fixed-pole identity gives `hasLaplacian_greenFunction_pole`: the
+pole-variable distributional Laplacian is minus the Dirac mass. These results
+preserve the actual zero diagonal convention. They do not imply the harmonic
+difference is identically zero; that requires additional boundary or duality
+information.
+
 `greenFunction_countably_punctured_ball_comm` establishes reciprocity for a
 disc after removal of a closed set countable inside that disc, including all
 diagonal and exterior values. It uses the existing countable-removal theorem
