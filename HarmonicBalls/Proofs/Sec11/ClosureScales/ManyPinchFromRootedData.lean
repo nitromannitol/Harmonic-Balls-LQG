@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.TypicalBlockDensityFromOrigin
 import HarmonicBalls.Proofs.Sec11.Closure.FixedGeometry
 import HarmonicBalls.Proofs.Sec11.InternalPinchFrequency
 import HarmonicBalls.Steps.Sec11.PinchMetricMeasure
+import HarmonicBalls.Proofs.Sec11.StagedResultClosures
 
 /-!
 # Lemma 11.13 (`ManyPinchScalesStmt`) from the rooted data step (draft lines 515-649)
@@ -139,6 +140,32 @@ theorem manyPinchScalesStmt_of_rootedDataStep
   rw [hωeq] at hω
   exact hω
 
+/-- Proposition 11.11 (`HarmonicBallNotMetricBallStmt`) from the rooted data step (Lemma 11.13 via
+`manyPinchScalesStmt_of_rootedDataStep`) and the staged inputs of `harmonicBallNotMetricBallStmt_of_stagedInputs`.
+The same staged hypotheses as in that reduction are passed explicitly; the step `PinchRootedDataStep` is open. -/
+theorem harmonicBallNotMetricBallStmt_of_rootedDataStep
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (h8 : BoundaryMeasureZeroOfCompactClusterStmt.{u})
+    (h61 : HarnackTypeEstimateStmt.{u})
+    (hmetricAxioms : ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+        (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
+    (hstep : PinchRootedDataStep.{u}) : HarmonicBallNotMetricBallStmt.{u} :=
+  harmonicBallNotMetricBallStmt_of_stagedInputs hDG hAff hCC hW hE hN h8 h61
+    (manyPinchScalesStmt_of_rootedDataStep hmetricAxioms hstep) hmetricAxioms
+
 end HarmonicBalls
+#print axioms HarmonicBalls.harmonicBallNotMetricBallStmt_of_rootedDataStep
 
 #print axioms HarmonicBalls.manyPinchScalesStmt_of_rootedDataStep
