@@ -29,10 +29,10 @@ This is compilation evidence only. It is not closure of Lemmas 3.1-3.5; no froze
 existing export is edited. The guards at the end check the printed dependencies, the binder shapes of the exports,
 and the constant closure of the two providers.
 
-Credit: Leonardo Bonanno's LatticeProb library is in the import closure of this module, reached through
-`HarmonicBalls/Proofs/Sec9/AffineInvarianceAssembly.lean`. The constant closures of the two providers reach none of his
-declarations (guard below), and the import closure of `HarmonicBalls/Proofs/Sec3/Assembly.lean` contains none of his
-modules, so no declaration of his is used by the five exports.
+Credit: the LatticeProb library of Leonardo Bonanno is in the import closure of this module, reached through
+`HarmonicBalls/Proofs/Sec9/AffineInvarianceAssembly.lean`. The constant closures of the two providers reach no
+declaration of that library (guard below), and the import closure of `HarmonicBalls/Proofs/Sec3/Assembly.lean` contains
+none of its modules, so the five exports use no declaration of that library.
 -/
 
 namespace HarmonicBalls

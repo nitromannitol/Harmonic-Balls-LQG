@@ -58,7 +58,7 @@ Log of the final `lc` run: `logs/lc/005510-1724997.log`; `lb` build: `logs/lb/00
 
 ## Attribution
 
-- Leonardo Bonanno is credited in the module docstring. His LatticeProb library is in the import closure of the new file, through `Proofs/Sec9/AffineInvarianceAssembly.lean`. The constant closure of the five exports contains none of his declarations: the two providers reach none, and the Section 3 assembly's import closure contains none of his modules.
+- Leonardo Bonanno is credited in the module docstring. The LatticeProb library of Leonardo Bonanno is in the import closure of the new file, through `Proofs/Sec9/AffineInvarianceAssembly.lean`. The constant closure of the five exports contains no declaration of that library: the two providers reach none, and the Section 3 assembly's import closure contains none of its modules.
 - Gap for the operator (not owned by this task, not edited): `Proofs/Sec9/AffineInvarianceAssembly.lean` and `Proofs/Sec6/LQGWeylScaling.lean` import LatticeProb modules and do not name Bonanno (no hit for `Bonanno` in either file). The repository names him in 683 files, so these two files may need the same line.
 
 ## Open
