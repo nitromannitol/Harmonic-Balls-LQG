@@ -468,7 +468,8 @@ theorem circleAverage_dmsShift (γ : ℝ) (z w : ℂ) {r : ℝ} (hr : 0 < r) :
     funext y
     rw [dmsShift, logMaxOne, max_comm ‖y‖ 1]
   rw [hfun, Real.circleAverage_fun_add hlog' hmax, circleAverage_const_mul_fun,
-    circleAverage_const_mul_fun, circleAverage_log_norm_sub_eq_log_max hr, norm_sub_rev z w]
+    circleAverage_const_mul_fun,
+    HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max hr, norm_sub_rev z w]
 
 /-- **Instance: `dmsShift γ z` against a fixed test.** -/
 theorem tendsto_integral_dmsShift_circleAverage_mul (φ : ℂ → ℝ) (hφ : IsTestFunction univ φ)

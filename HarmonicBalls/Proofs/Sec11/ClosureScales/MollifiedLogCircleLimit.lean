@@ -154,7 +154,7 @@ lemma circleAverage_log_sub (y z w : ℂ) {r : ℝ} (hr : 0 < r) :
     funext u
     rw [sub_sub]
   rw [hfun]
-  exact circleAverage_log_norm_sub_eq_log_max hr
+  exact HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max hr
 
 lemma continuous_log_max_sub (w z : ℂ) {r : ℝ} (hr : 0 < r) :
     Continuous fun y : ℂ => Real.log (max r ‖(y + z) - w‖) := by

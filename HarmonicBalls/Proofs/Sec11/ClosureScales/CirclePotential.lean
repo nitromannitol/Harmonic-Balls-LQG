@@ -7,13 +7,18 @@ For `r > 0` and `a, c ∈ ℂ`, the average of `log ‖· - a‖` over the circl
 (Armitage-Gardiner, potential theory on the plane). It is the circle-average identity behind the log-insertion limit
 of the circle-code step (r10 `l:r9-circle-code`, proof). It follows from Mathlib's unit-circle identity
 `circleAverage_log_norm_sub_const_eq_posLog` by rescaling, and an almost-everywhere replacement at the single
-point where the rescaled integrand is singular. -/
+point where the rescaled integrand is singular.
+
+The declaration is stated in the namespace `HarmonicBalls.CirclePotential`, so its full name
+`HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max` is distinct from the Section 8 declaration
+`HarmonicBalls.circleAverage_log_norm_sub_eq_log_max` (`Proofs/Sec8/CircleLogPotential.lean`). That declaration takes the
+centre and the point as explicit arguments `(z x)`; this one takes them as implicit arguments `{c a}`. -/
 
 noncomputable section
 
 open Metric Set Filter Topology
 
-namespace HarmonicBalls
+namespace HarmonicBalls.CirclePotential
 
 /-- The circle average of `log ‖· - a‖` over the circle of centre `c` and radius `r > 0` is `log max(r, ‖a - c‖)`. -/
 theorem circleAverage_log_norm_sub_eq_log_max {c a : ℂ} {r : ℝ} (hr : 0 < r) :
@@ -66,6 +71,6 @@ theorem circleAverage_log_norm_sub_eq_log_max {c a : ℂ} {r : ℝ} (hr : 0 < r)
         sub_nonpos.2 (Real.log_le_log hpos h))]
       ring
 
-end HarmonicBalls
+end HarmonicBalls.CirclePotential
 
 end

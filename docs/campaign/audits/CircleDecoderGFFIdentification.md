@@ -1,9 +1,12 @@
 # Audit: CircleDecoderGFFIdentification (task sec11-circle-decoder-gff-identification)
 
-Module: `HarmonicBalls/Proofs/Sec11/ClosureScales/CircleDecoderGFFIdentification.lean` (new, 146 lines).
+Module: `HarmonicBalls/Proofs/Sec11/ClosureScales/CircleDecoderGFFIdentification.lean` (new, 149 lines; round 34: rename, see Checks).
 Source: r10 written proof, `notes/sec11-proof/sec11-proof-r10.tex` lines 1313-1350 (the Borel decoder on the conull
-event, the continuous addition, the logarithmic insertion). Audited in `AUDIT-r9.md` 931-998 and reaffirmed in
-`AUDIT-r10.md` 110.
+event, the continuous addition, the logarithmic insertion). Audited at the ROUND-9 TEX ranges `l:r9-circle-code`, lines
+1313-1350 of that file (sub-ranges as recorded in `BorelCircleLimitDecoder.md`, `MollifiedContinuousCircleLimit.md` and
+`MollifiedLogCircleLimit.md`). The former citation `AUDIT-r9.md` 931-998 was a Markdown line range of a 157-line file and
+is withdrawn. Reaffirmed in `AUDIT-r10.md` 110; that line reference could not be re-located in `~/paper-fleets/hb` or
+`~/fleet` in round 34.
 
 ## Scope
 
@@ -58,13 +61,17 @@ so sample-dependent `u` and `z` are covered by the same event.
 
 ## Reuse and deviations (read these)
 
-- `PalmDMSConstant.circleAverage_dmsShift_unit` is NOT imported. Importing `PalmDMSConstant` together with
-  `CountableMollifiedCircleConvergence` makes Lean reject the file: `HarmonicBalls.circleAverage_log_norm_sub_eq_log_max`
-  is declared twice, in `Proofs/Sec8/CircleLogPotential.lean:17` (imported by `PalmDMSConstant`) and in
-  `Proofs/Sec11/ClosureScales/CirclePotential.lean:19` (imported by the countable-scales module). The two statements
-  differ in argument order. The new module repeats the 14-line proof privately against the `CirclePotential` version.
-  OPERATOR RULING NEEDED: one of the two declarations must be renamed or removed. Until then the unit-circle lemma
-  exists twice (the private copy here and `PalmDMSConstant.circleAverage_dmsShift_unit`).
+- `PalmDMSConstant.circleAverage_dmsShift_unit` is NOT imported, to keep this import closure light (21 modules).
+  Collision account: before task `sec11-circle-palm-helper-import-integration` (HEAD 07bad1f and earlier), importing
+  `PalmDMSConstant` together with `CountableMollifiedCircleConvergence` was rejected by Lean, because
+  `HarmonicBalls.circleAverage_log_norm_sub_eq_log_max` was declared twice: in `Proofs/Sec8/CircleLogPotential.lean:17`
+  (imported by `PalmDMSConstant`) and in `Proofs/Sec11/ClosureScales/CirclePotential.lean:19` (imported by the
+  countable-scales module). The Section 8 declaration takes the centre and point as explicit `(z x)`, the Section 11
+  one as implicit `{c a}`. Resolved by moving the Section 11 declaration into the namespace
+  `HarmonicBalls.CirclePotential` (same type and proof; the Section 8 declaration and its consumers are unchanged);
+  the combined-import check is `docs/campaign/audits/Sec11CirclePalmImportChecks.md`. The unit-circle lemma is still
+  repeated privately here against the `CirclePotential` version, now only to keep the import closure light; `PalmDMSConstant`
+  is still not added. No operator ruling is needed for this rename.
 - `dmsShift`, `dmsConstant`, `dmsShiftedPairing` (`Proposed/DuplantierMillerSheffield.lean:34,39,44`) are used as
   definitions only. No proposition of that file is used.
 - No literature input, no new hypothesis, no admission. The hypotheses are only `IsLiteralMollifier rho`,
@@ -84,3 +91,7 @@ line is required. The header records this and the reason for the omitted import.
 - Raw scan `sorry|axiom|admit|native_decide|maxHeartbeats|set_option`: 0 hits.
 - Comment-aware scan (block and line comments removed) for the same tokens plus `extern|implemented_by|unsafe`: 0 hits.
 - `#print axioms HarmonicBalls.circleCompatDecoder_gff_identification`: `[propext, Classical.choice, Quot.sound]`.
+- Round 34 (task `sec11-circle-palm-helper-import-integration`, after the rename of the Section 11 helper): `lc` CHECK OK
+  for `CirclePotential`, `MollifiedLogCircleLimit`, `CircleTestFubiniLimit` and this module (only the helper qualification
+  at line 51 changed here; the decoder identification statement and proof are unchanged). Combined-import check:
+  `docs/campaign/audits/Sec11CirclePalmImportChecks.md`.

@@ -17,10 +17,11 @@ Setting, fixed before any probability space: a literal mollifier `rho` (`IsLiter
 type `I` and a dense family `q : I → CircleDomain`. The scales are `countableCircleScale hρ q` and the decoder is
 `circleCompatDecoder rho q (countableCircleScale hρ q)`.
 
-Imports. `PalmDMSConstant` is not imported: together with `CountableMollifiedCircleConvergence` it makes Lean report the
-duplicate declaration `HarmonicBalls.circleAverage_log_norm_sub_eq_log_max` (from `Proofs/Sec8/CircleLogPotential.lean`
-and `Proofs/Sec11/ClosureScales/CirclePotential.lean`). Its unit-circle lemma is therefore repeated privately below
-(`circleAverage_dmsShift_unit_sec11`) against the `CirclePotential` version. The import closure contains no
+Imports. `PalmDMSConstant` is not imported, to keep this import closure light. The Section 11 helper is
+`HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max`, not the Section 8 declaration
+`HarmonicBalls.circleAverage_log_norm_sub_eq_log_max` (`Proofs/Sec8/CircleLogPotential.lean`), so the two names do not
+clash (checked by `HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean`). Its unit-circle lemma is repeated privately
+below (`circleAverage_dmsShift_unit_sec11`) against the `CirclePotential` version. The import closure contains no
 `LatticeProb` module, so no Lattice-Probability credit is consumed here. The definitions `dmsShift`, `dmsConstant` and
 `dmsShiftedPairing` of `Proposed.DuplantierMillerSheffield` are used as definitions only.
 -/
@@ -30,7 +31,8 @@ namespace HarmonicBalls
 open MeasureTheory Filter Topology
 
 /-- The unit-circle average of the DMS shift vanishes for `‖z‖ ≤ 1`. This is `PalmDMSConstant.circleAverage_dmsShift_unit`
-with the `CirclePotential` convention of `circleAverage_log_norm_sub_eq_log_max`; it is private to avoid the name clash. -/
+with the argument order of `HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max`; it is private so
+that this file need not import `PalmDMSConstant`. -/
 private theorem circleAverage_dmsShift_unit_sec11 (γ : ℝ) {z : ℂ} (hz : ‖z‖ ≤ 1) :
     Real.circleAverage (dmsShift γ z) 0 1 = 0 := by
   have h1 : Real.circleAverage (dmsShift γ z) 0 1 =
@@ -48,7 +50,8 @@ private theorem circleAverage_dmsShift_unit_sec11 (γ : ℝ) {z : ℂ} (hz : ‖
   have hmax : max (1 : ℝ) ‖z - 0‖ = 1 := by
     rw [sub_zero]
     exact max_eq_left hz
-  rw [h1, h2, circleAverage_log_norm_sub_eq_log_max one_pos, hmax, Real.log_one, smul_zero]
+  rw [h1, h2, HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max one_pos, hmax,
+    Real.log_one, smul_zero]
 
 /-- **Identification of the named decoder on a whole-plane GFF** (r10 lines 1313-1350).
 
