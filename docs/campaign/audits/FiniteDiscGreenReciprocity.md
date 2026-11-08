@@ -42,10 +42,14 @@ balayage identity to normalized angular measure; the required equality of
 regularized Newtonian potentials is proved from the harmonic mean-value
 property away from the disc. `greenFunction_circleAverage_pole` obtains the
 same property for the Green kernel when the observation point is outside the
-disc, for any bounded open domain. Neither result assumes reciprocity. This
-is a source-variable property; reciprocity still requires a duality argument
-or another proof of the missing implication below. No converse mean-value
-characterization of harmonicity was located in the searched APIs.
+disc, for any bounded open domain. Neither result assumes reciprocity. The
+converse mean-value characterization is now proved as
+`harmonicOnNhd_of_circleAverage_eq`, using the existing disc-sweeping Poisson
+inequality for the function and its negative. Consequently
+`harmonicOnNhd_greenHarmonicCorrection_pole` proves harmonicity in the pole
+variable throughout a bounded open domain, and `harmonicAt_greenFunction_pole`
+proves it for the Green kernel off the diagonal. Reciprocity still requires a
+duality argument or another proof of the missing implication below.
 
 `greenFunction_countably_punctured_ball_comm` establishes reciprocity for a
 disc after removal of a closed set countable inside that disc, including all

@@ -629,6 +629,101 @@ theorem greenFunction_circleAverage_pole
   rw [Real.circleAverage_sub hNi hHi, hN, hH, greenFunction,
     ite_eq_left ⟨hsub hc, hy, hxy c hc⟩]
 
+/-- A continuous function is harmonic when it and its negative both satisfy
+the local super-mean-value property. -/
+theorem harmonicOnNhd_of_localSuperMean_both {U : Set ℂ} {f : ℂ → ℝ}
+    (hU : IsOpen U) (hf : ContinuousOn f U)
+    (hm : HasLocalSuperMean U f) (hmneg : HasLocalSuperMean U (-f)) :
+    InnerProductSpace.HarmonicOnNhd f U := by
+  intro x hx
+  obtain ⟨δ, hδ, hδU⟩ := Metric.isOpen_iff.mp hU x hx
+  let ρ : ℝ := δ / 2
+  have hρ : 0 < ρ := by dsimp [ρ]; positivity
+  have hD : IsSweepDisc U x ρ := ⟨hρ,
+    (closedBall_subset_ball (by dsimp [ρ]; linarith)).trans hδU⟩
+  have hci := hD.circleIntegrable hf
+  have heq : EqOn f (discPoissonIntegral f x ρ) (ball x ρ) := by
+    intro y hy
+    have hyU := hD.2 (ball_subset_closedBall hy)
+    have hle := discSweep_le (c := x) (ρ := ρ) hf hm y hyU
+    have hge := discSweep_le (c := x) (ρ := ρ) hf.neg hmneg y hyU
+    have hneg : discSweep U x ρ (-f) = -discSweep U x ρ f := by
+      simpa using discSweep_smul (O := U) (c := x) (ρ := ρ) (f := f) (-1 : ℝ)
+    rw [hneg] at hge
+    simp only [Pi.neg_apply] at hge
+    rw [discSweep_of_mem hD hy] at hle hge
+    change -discPoissonIntegral f x ρ y ≤ -f y at hge
+    linarith
+  have hev : f =ᶠ[𝓝 x] discPoissonIntegral f x ρ :=
+    Filter.eventually_of_mem (isOpen_ball.mem_nhds (mem_ball_self hρ)) heq
+  exact (InnerProductSpace.harmonicAt_congr_nhds hev).2
+    (harmonicOnNhd_discPoissonIntegral hci x (mem_ball_self hρ))
+
+/-- Converse of the circle mean-value property for a continuous function on
+an open subset of the plane. -/
+theorem harmonicOnNhd_of_circleAverage_eq {U : Set ℂ} {f : ℂ → ℝ}
+    (hU : IsOpen U) (hf : ContinuousOn f U)
+    (hmean : ∀ x ∈ U, ∀ r > 0, closedBall x r ⊆ U →
+      Real.circleAverage f x r = f x) :
+    InnerProductSpace.HarmonicOnNhd f U := by
+  have hm : HasLocalSuperMean U f := by
+    intro x hx
+    obtain ⟨δ, hδ, hδU⟩ := Metric.isOpen_iff.mp hU x hx
+    refine ⟨δ, hδ, fun r hr => ?_⟩
+    have hs : closedBall x r ⊆ U := (closedBall_subset_ball hr.2).trans hδU
+    exact ⟨(hf.mono (sphere_subset_closedBall.trans hs)).circleIntegrable hr.1.le,
+      (hmean x hx r hr.1 hs).le⟩
+  have hmneg : HasLocalSuperMean U (-f) := by
+    intro x hx
+    obtain ⟨δ, hδ, hδU⟩ := Metric.isOpen_iff.mp hU x hx
+    refine ⟨δ, hδ, fun r hr => ?_⟩
+    have hs : closedBall x r ⊆ U := (closedBall_subset_ball hr.2).trans hδU
+    have hc : CircleIntegrable f x r :=
+      (hf.mono (sphere_subset_closedBall.trans hs)).circleIntegrable hr.1.le
+    refine ⟨hc.neg, ?_⟩
+    have he : Real.circleAverage (-f) x r = -Real.circleAverage f x r := by
+      simpa using (Real.circleAverage_smul (a := (-1 : ℝ)) (f := f) (c := x) (R := r))
+    rw [he, hmean x hx r hr.1 hs]
+    exact le_rfl
+  exact harmonicOnNhd_of_localSuperMean_both hU hf hm hmneg
+
+/-- The harmonic correction is harmonic in its pole variable on every
+bounded open domain, without assuming Green reciprocity. -/
+theorem harmonicOnNhd_greenHarmonicCorrection_pole
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U) {y : ℂ} (hy : y ∈ U) :
+    InnerProductSpace.HarmonicOnNhd
+      (fun x => (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal) U := by
+  apply harmonicOnNhd_of_circleAverage_eq hU
+  · intro x hx
+    exact (continuousAt_greenHarmonicCorrection_pole hU hUb hx hy).continuousWithinAt
+  · intro x hx r hr hs
+    obtain ⟨δ, hδ, hδU⟩ := (isCompact_closedBall x r).exists_cthickening_subset_open hU hs
+    have hε : 0 < δ / 3 := by positivity
+    have hthick : cthickening (3 * (δ / 3)) (closedBall x r) ⊆ U := by
+      simpa only [mul_div_cancel₀ _ (by norm_num : (3 : ℝ) ≠ 0)] using hδU
+    exact greenHarmonicCorrection_circleAverage_pole hU hr.le hε hthick hy
+
+/-- The Green function is harmonic in the pole variable away from the
+observation point. -/
+theorem harmonicAt_greenFunction_pole
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {x y : ℂ} (hx : x ∈ U) (hy : y ∈ U) (hxy : x ≠ y) :
+    InnerProductSpace.HarmonicAt (fun z => greenFunction U z y) x := by
+  have hN : InnerProductSpace.HarmonicAt (fun z => newtonKernel z y) x := by
+    have he : (fun z => newtonKernel z y) = newtonKernel y := funext (fun z => newtonKernel_comm z y)
+    rw [he]
+    exact harmonicAt_newtonKernel hxy
+  have hH := harmonicOnNhd_greenHarmonicCorrection_pole hU hUb hy x hx
+  apply (InnerProductSpace.harmonicAt_congr_nhds ?_).2 (hN.sub hH)
+  filter_upwards [hU.mem_nhds hx, isOpen_compl_singleton.mem_nhds hxy] with z hz hzy
+  simp only [mem_compl_iff, mem_singleton_iff] at hzy
+  rw [greenFunction, ite_eq_left ⟨hz, hy, hzy⟩]
+  rfl
+
+#print axioms harmonicOnNhd_of_localSuperMean_both
+#print axioms harmonicOnNhd_of_circleAverage_eq
+#print axioms harmonicOnNhd_greenHarmonicCorrection_pole
+#print axioms harmonicAt_greenFunction_pole
 #print axioms normalizedCircleMeasure_finite_and_supported
 #print axioms integral_normalizedCircleMeasure_of_measurable
 #print axioms normalizedCircleMeasure_regularizedNewtonKernel
