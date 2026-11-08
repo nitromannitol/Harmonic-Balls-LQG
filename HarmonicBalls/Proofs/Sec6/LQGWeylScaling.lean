@@ -2,7 +2,10 @@ import HarmonicBalls.Proofs.Sec6.VagueUniformTests
 import HarmonicBalls.Proofs.Sec5.LQGApproxDecoder
 import HarmonicBalls.Proposed.LQG
 
-/-! # Weyl scaling from the vague-limit definition -/
+/-! # Weyl scaling from the vague-limit definition 
+Credit: this module imports infrastructure of Leonardo Bonanno through the
+Lattice-Probability lean-v4.35 dependency (LatticeProb.Bonanno).
+-/
 
 namespace HarmonicBalls.Section6
 

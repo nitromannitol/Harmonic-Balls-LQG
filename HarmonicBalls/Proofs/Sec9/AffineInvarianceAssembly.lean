@@ -5,6 +5,9 @@ import HarmonicBalls.Proofs.Sec9.DyadicGlobalUniqueness
 
 The affine-invariance input follows from the covariance characterization of
 the whole-plane field. The Section 6 and Section 8 inputs remain explicit.
+
+Credit: this module imports infrastructure of Leonardo Bonanno through the
+Lattice-Probability lean-v4.35 dependency (LatticeProb.Bonanno).
 -/
 
 namespace HarmonicBalls
