@@ -1,16 +1,24 @@
-# Mean-zero tests away from the origin: work in progress
+# Mean-zero tests away from the origin
 
-The file `HarmonicBalls/Proofs/GFF/ZeroIntegralAwayOriginApproximation.lean`
-states the intended universal GFF second-moment approximation as
-`ZeroIntegralAwayOriginApproximation`. It does not yet prove that proposition.
+`HarmonicBalls.zeroIntegralAwayOriginApproximation` proves the stated
+`ZeroIntegralAwayOriginApproximation` proposition for every smooth compactly
+supported test of integral zero. One deterministic sequence works for every
+normalized whole-plane GFF; each test has integral zero and support away from
+zero, and the actual pairing differences converge to zero in second moment.
 
-`exists_zeroIntegral_awayOrigin_pointwise` constructs mean-zero smooth tests,
-each with support away from zero and all supports in one compact set, converging
-pointwise away from zero. The proof uses a normalized compactly supported bump
-and a sequence of shrinking cutoffs; `tendsto_integral_cutout` proves that the
-mass-restoring coefficient tends to zero.
+`exists_zeroIntegral_awayOrigin_pointwise` provides a common compact support,
+pointwise convergence off zero, and convergence in planar L². It constructs the
+sequence by cutting out a shrinking ball and restoring the mass with a fixed
+integral-one smooth test supported away from zero. Dominated convergence proves
+the planar L² limit.
 
-Still needed: a uniform bound and convergence of the logarithmic covariance
-energies, followed by the centered Gaussian covariance identity for the actual
-second moment. No such convergence is assumed by the proved results. This is
-not a claim of a numbered-result closure.
+`IsWholePlaneGFF.integral_pairing_sub_sq_eq_covariance` identifies the actual
+second moment with the covariance energy, using almost-sure linearity rather
+than assuming a samplewise linear version. The energy is controlled by planar
+L² through Leonardo Bonanno's Schur estimate in pinned Lattice-Probability,
+using `Section6.wholePlaneGFFCov_pairing_eq_logCov` for mean-zero tests. The
+common compact support fixes a single Schur constant. No covariance or L²
+convergence is assumed.
+
+This supplies an input to Lemma 11.12; it is not a numbered-result closure and
+does not prove sigma generation, a shift law, or ergodicity.
