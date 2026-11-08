@@ -13,7 +13,8 @@ general overlaps require a further argument.
 
 namespace HarmonicBalls
 
-open Set Metric
+open Set Metric Filter
+open scoped Topology
 
 /-- An isolated disc has the same Green kernel in a finite union as it has
 on its own, including observations outside the disc. -/
@@ -287,6 +288,58 @@ theorem continuousAt_greenHarmonicCorrection_pole
   have hsmall' : C x < η := lt_of_le_of_lt (le_abs_self (C x)) (by simpa only [Real.norm_eq_abs] using hsmall)
   exact lt_of_le_of_lt (abs_le.mpr ⟨by linarith, h1⟩) hsmall'
 
+/-- The harmonic correction is jointly continuous in the pole and the
+observation point throughout a bounded open domain. -/
+theorem continuousAt_greenHarmonicCorrection_uncurry
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z y : ℂ} (hz : z ∈ U) (hy : y ∈ U) :
+    ContinuousAt (fun p : ℂ × ℂ =>
+      (greatestHarmonicMinorant U (newtonKernelEReal p.1) p.2).toReal) (z, y) := by
+  obtain ⟨δ, hδ, hδU⟩ := Metric.isOpen_iff.mp hU z hz
+  let ε : ℝ := δ / 8
+  have hε : 0 < ε := by dsimp [ε]; positivity
+  have hzball : closedBall z (2 * ε) ⊆ U :=
+    (closedBall_subset_ball (by dsimp [ε]; linarith)).trans hδU
+  have hnear : ∀ x ∈ ball z (δ / 4), closedBall x (2 * ε) ⊆ U := by
+    intro x hx w hw
+    apply hδU
+    rw [mem_ball] at hx ⊢
+    rw [mem_closedBall] at hw
+    have ht := dist_triangle w x z
+    dsimp [ε] at hw
+    linarith
+  let H : ℂ → ℂ → ℝ := fun x w =>
+    (greatestHarmonicMinorant U (newtonKernelEReal x) w).toReal
+  let C : ℂ → ℝ := fun x => (2 * Real.pi)⁻¹ * Real.log (1 + ‖z - x‖ / ε)
+  have hC : ContinuousAt C z := by
+    dsimp [C]
+    fun_prop (disch := simp)
+  have hCz : C z = 0 := by simp [C]
+  have hCt : Tendsto (fun p : ℂ × ℂ => C p.1) (𝓝 (z, y)) (𝓝 0) := by
+    simpa only [hCz, Function.comp_def] using hC.tendsto.comp (continuous_fst : Continuous (fun p : ℂ × ℂ => p.1)).continuousAt.tendsto
+  have hbound : ∀ᶠ p : ℂ × ℂ in 𝓝 (z, y), ‖H p.1 p.2 - H z p.2‖ ≤ C p.1 := by
+    have hfirst : ∀ᶠ p : ℂ × ℂ in 𝓝 (z, y), p.1 ∈ ball z (δ / 4) :=
+      continuous_fst.continuousAt (isOpen_ball.mem_nhds (mem_ball_self (by positivity)))
+    have hsecond : ∀ᶠ p : ℂ × ℂ in 𝓝 (z, y), p.2 ∈ U :=
+      continuous_snd.continuousAt (hU.mem_nhds hy)
+    filter_upwards [hfirst, hsecond] with p hp hpU
+    have h1 := greenHarmonicCorrection_pole_shift_le hU hUb hε hpU hzball (hnear p.1 hp)
+    have h2 := greenHarmonicCorrection_pole_shift_le hU hUb hε hpU (hnear p.1 hp) hzball
+    rw [norm_sub_rev] at h2
+    change H p.1 p.2 - H z p.2 ≤ C p.1 at h1
+    change H z p.2 - H p.1 p.2 ≤ C p.1 at h2
+    rw [Real.norm_eq_abs]
+    exact abs_le.mpr ⟨by linarith, h1⟩
+  have hdiff : Tendsto (fun p : ℂ × ℂ => H p.1 p.2 - H z p.2)
+      (𝓝 (z, y)) (𝓝 0) := squeeze_zero_norm' hbound hCt
+  have hobs : Tendsto (fun p : ℂ × ℂ => H z p.2)
+      (𝓝 (z, y)) (𝓝 (H z y)) :=
+    ((harmonicOnNhd_greatestHarmonicMinorant_newtonKernel hU hUb hz y hy).1.continuousAt).tendsto.comp
+      continuous_snd.continuousAt
+  have hsum := hdiff.add hobs
+  change Tendsto (fun p : ℂ × ℂ => H p.1 p.2) (𝓝 (z, y)) (𝓝 (H z y))
+  simpa only [zero_add, sub_add_cancel] using hsum
+
 /-- For a fixed observation point, the Green function is continuous in the
 pole at interior points away from the diagonal. -/
 theorem continuousAt_greenFunction_pole
@@ -301,6 +354,27 @@ theorem continuousAt_greenFunction_pole
   filter_upwards [hU.mem_nhds hz, isOpen_compl_singleton.mem_nhds hzy] with x hx hxy
   simp only [greenFunction, hx, hy, true_and, mem_compl_iff, mem_singleton_iff] at *
   rw [ite_eq_left hxy]
+  rfl
+
+/-- The Green kernel is jointly continuous at interior off-diagonal pairs,
+without a reciprocity hypothesis. -/
+theorem continuousAt_greenFunction_uncurry
+    {U : Set ℂ} (hU : IsOpen U) (hUb : Bornology.IsBounded U)
+    {z y : ℂ} (hz : z ∈ U) (hy : y ∈ U) (hzy : z ≠ y) :
+    ContinuousAt (fun p : ℂ × ℂ => greenFunction U p.1 p.2) (z, y) := by
+  have hn : ContinuousAt (fun p : ℂ × ℂ => newtonKernel p.1 p.2) (z, y) := by
+    unfold newtonKernel
+    fun_prop (disch := simp [sub_ne_zero.mpr hzy])
+  have hH := continuousAt_greenHarmonicCorrection_uncurry hU hUb hz hy
+  apply (hn.sub hH).congr
+  have hfst : ∀ᶠ p : ℂ × ℂ in 𝓝 (z, y), p.1 ∈ U :=
+    continuous_fst.continuousAt (hU.mem_nhds hz)
+  have hsnd : ∀ᶠ p : ℂ × ℂ in 𝓝 (z, y), p.2 ∈ U :=
+    continuous_snd.continuousAt (hU.mem_nhds hy)
+  have hne : ∀ᶠ p : ℂ × ℂ in 𝓝 (z, y), p.1 ≠ p.2 :=
+    isClosed_diagonal.isOpen_compl.mem_nhds hzy
+  filter_upwards [hfst, hsnd, hne] with p hp₁ hp₂ hpne
+  rw [greenFunction, ite_eq_left ⟨hp₁, hp₂, hpne⟩]
   rfl
 
 /-- Removing a closed countable set from a disc preserves Green reciprocity,
@@ -416,7 +490,9 @@ theorem greenFunction_two_congruent_discs_centres_comm (a : ℂ) (r : ℝ) :
 #print axioms greenFunction_finite_discs_comm_of_disc_component
 #print axioms greenHarmonicCorrection_pole_shift_le
 #print axioms continuousAt_greenHarmonicCorrection_pole
+#print axioms continuousAt_greenHarmonicCorrection_uncurry
 #print axioms continuousAt_greenFunction_pole
+#print axioms continuousAt_greenFunction_uncurry
 #print axioms greenFunction_countably_punctured_ball_comm
 #print axioms greenFunction_neg
 #print axioms greenFunction_neg_pair_comm

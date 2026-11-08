@@ -26,10 +26,12 @@ settle pairs lying in a component formed by crossing discs.
 pole-shift bound to the actual harmonic correction for any bounded open
 domain, uniformly in the observation point. It yields
 `continuousAt_greenHarmonicCorrection_pole` and
-`continuousAt_greenFunction_pole` at interior off-diagonal pairs, without
-assuming reciprocity. Along with the existing harmonicity in the observation
-variable, this means a future proof of almost-everywhere reciprocity can be
-upgraded to pointwise reciprocity by separate continuity (diagonal and
+`continuousAt_greenFunction_pole` without assuming reciprocity. Its uniformity
+in the observation point also yields
+`continuousAt_greenHarmonicCorrection_uncurry` throughout the interior and
+`continuousAt_greenFunction_uncurry` at interior off-diagonal pairs. Thus a
+future almost-everywhere reciprocity proof could use
+`Measure.eqOn_open_of_ae_eq` on the off-diagonal open set (diagonal and
 exterior values are already equal). The almost-everywhere identity and its
 upgrade have not been formalized here.
 
