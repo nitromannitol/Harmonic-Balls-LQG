@@ -101,5 +101,5 @@ this chain. Operator decision needed; no Draft edit.
 ## Credit
 
 Leonardo Bonanno's potential-theoretic and LatticeProb work is consumed through the imported modules. The module
-docstring names him, and so do the credited modules (for example `Proofs/Potential/FiniteDiscGreenReciprocity.lean`
-and `Proofs/Sec8/TypicalPointStatement.lean`, which credits his `LatticeProb.Prob.Birkhoff` formalization).
+docstring names Leonardo Bonanno, and so do the credited modules (for example `Proofs/Potential/FiniteDiscGreenReciprocity.lean`
+and `Proofs/Sec8/TypicalPointStatement.lean`, which credits the `LatticeProb.Prob.Birkhoff` formalization).

@@ -32,7 +32,7 @@ Remaining leaves, as binders: `LiouvilleVolumeGrowthStmt` (Lemma 2.4), `HarnackT
 of Proposition 5.2 at times with `closure Λ ⊄ B₁`, docs/campaign/GRAPH.md G12), and the all-insertion coordinate-change
 input `LQGMeasureCoordChange` (Proposed).
 
-Leonardo Bonanno's potential-theoretic and LatticeProb work is consumed through the imported modules, which carry his
+Leonardo Bonanno's potential-theoretic and LatticeProb work is consumed through the imported modules, which carry Leonardo Bonanno's
 credit (for example Proofs/Potential/FiniteDiscGreenReciprocity.lean and Proofs/Sec8/TypicalPointStatement.lean). No
 frozen statement, definition or input is changed here; no numbered result is closed by a helper.
 -/
