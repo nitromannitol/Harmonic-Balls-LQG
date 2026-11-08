@@ -1,13 +1,12 @@
-# Metric Weyl exponent sign: partial formalization
+# Positivity of the LQG metric Weyl exponent
 
-The target `∀ γ ξ 𝔇, 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 → 0 < ξ` is not yet proved. No additional premise has been introduced. The whole-plane GFF existence used by the proposed route relies on Leonardo Bonanno's construction.
+`IsLQGMetric.weylExponent_pos` in `HarmonicBalls/Proofs/GFF/MetricXiSign.lean` proves `0 < ξ` from `IsLQGMetric γ ξ 𝔇` and `0 < γ`; it does not require `γ < 2` or any new hypothesis. It uses Leonardo Bonanno's construction through `exists_projectWholePlaneGFF` to rule out a vacuous metric axiom.
 
-`HarmonicBalls/Proofs/GFF/MetricXiSign.lean` proves the fixed distance law for arbitrary whole-plane GFF realizations and for each normalized affine field, positivity of the fixed distance, the exact second moment of `Bₙ = hcirc (exp (-n)) 0`, the almost-sure and in-measure convergence of `Xₙ = 𝔇 (hC) 0 (exp (-n))` to zero, and the fixed-scale almost-sure identity `Xₙ = exp (ξ * (Bₙ - lqgQ γ * n)) * Yₙ`. The identity holds separately for each n; countable intersection is still needed when a simultaneous event is used. The law theorem uses the measurable observable decoder, not samplewise representatives.
+The fixed-distance law comes from the measurable observable decoder and affine invariance. For `rₙ = exp (-n)`, `Bₙ = hcirc rₙ 0`, `Xₙ = 𝔇 (hC) 0 rₙ`, and the normalized affine distance `Yₙ`, the proof establishes:
 
-Remaining implications, on the probability space supplied by `exists_projectWholePlaneGFF`, with `Yₙ = 𝔇 (affinePairing hC hcirc (exp (-n)) 0) 0 1`:
+- `Yₙ` has the fixed law of `𝔇 (hC) 0 1`, which is almost surely positive.
+- `E[Bₙ²] = n` and `Bₙ/n → 0` in probability, using Chebyshev's inequality.
+- `log(Yₙ)/n → 0` in probability by fixed-law tightness, without independence.
+- `Xₙ → 0` almost surely and in probability, and for each n, almost surely, `Xₙ = exp (ξ * (Bₙ - lqgQ γ * n)) * Yₙ`.
 
-1. Prove `TendstoInMeasure P (fun n ω => hcirc ω (Real.exp (-(n : ℝ))) 0 / (n : ℝ)) atTop (fun _ => 0)` from the second moment and Chebyshev.
-2. Prove `TendstoInMeasure P (fun n ω => Real.log (Yₙ ω) / (n : ℝ)) atTop (fun _ => 0)` from fixed-law tightness and positivity. No independence is required.
-3. Combine the identity, positivity, and these limits to obtain the log-distance limit `-ξ * lqgQ γ` in probability, and use the existing zero limit to rule out `ξ < 0`. Separately, `ξ = 0` makes `Xₙ` identically distributed with the positive fixed distance and contradicts its zero limit. Establish `0 < lqgQ γ` from `0 < γ`.
-
-These are unproved formalization steps, not identified missing literature inputs or a mathematical counterexample.
+For nonnegativity, the proof intersects the countable families of positive-distance and scaling events, takes successive subsequences with almost-sure convergence for both probability limits, and uses the resulting log-distance limit together with the eventual inequality `Xₙ < 1`. It excludes `ξ = 0` separately: the scaling identity gives the fixed positive distance law for `Xₙ`, contradicting convergence to zero in probability. No simultaneous raw distribution representation or physical-dimension identification is used.
