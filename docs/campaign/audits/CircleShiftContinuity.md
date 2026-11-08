@@ -44,7 +44,7 @@ packet does not construct such a `D`.
 
 ## Proof route
 
-1. `continuous_circleAverage_joint`: unfold `Real.circleAverage`; the integrand `(u, p, θ) ↦ u (circleMap p.2 p.1 θ)` is
+1. `continuous_circleAverage_joint`: unfold `Real.circleAverage`; the integrand `(u, p, θ) ↦ u (circleMap p.val.2 p.val.1 θ)` (radius `p.val.1`, centre `p.val.2`) is
    jointly continuous by continuity of evaluation (`continuous_eval`, `ℂ` locally compact); then
    `intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'` over `[0, 2π]`.
 2. `continuous_circleAverageFun`: `ContinuousMap.continuous_of_continuous_uncurry` applied to step 1 (the uncurried

@@ -32,9 +32,10 @@ open MeasureTheory Set Filter Topology
 
 namespace HarmonicBalls
 
-/-- Joint continuity of the circle average in the function and in the pair `(centre, radius)`:
-`(u, p) ↦ ⨍_{∂B_{p.2.1}(p.2.2)} u` is continuous on `C(ℂ, ℝ) × CircleDomain`, with the compact-open topology on
-`C(ℂ, ℝ)`. The integrand `(u, p, θ) ↦ u (circleMap c r θ)` is jointly continuous by continuity of evaluation, and the
+/-- Joint continuity of the circle average in the function and in the point `p = (r, c) : CircleDomain`, with radius
+`r = p.val.1` and centre `c = p.val.2`: `(u, p) ↦ ⨍_{∂B_{p.val.1}(p.val.2)} u` is continuous on
+`C(ℂ, ℝ) × CircleDomain`, with the compact-open topology on `C(ℂ, ℝ)`.
+The integrand `(u, p, θ) ↦ u (circleMap p.val.2 p.val.1 θ)` is jointly continuous by continuity of evaluation, and the
 parametric interval integral over the compact parameter interval `[0, 2π]` is continuous. -/
 theorem continuous_circleAverage_joint :
     Continuous fun q : C(ℂ, ℝ) × CircleDomain => Real.circleAverage q.1 q.2.val.2 q.2.val.1 := by
