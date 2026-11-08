@@ -14,7 +14,9 @@ recorded in `notes/sec11-claims.md`.
 | Origin block density for a stationary, germ-trivial family of local certificate events | PROVED, conditional on explicit premises | same file (`frozen_block_density_of_certificate_family`) |
 | Uniform rate `δ` chosen before the probability space | OPEN | draft 554-563 |
 | Fubini glue of the marked identity: rooted a.s. statements for a.e. root `z` give `μ_ω`-a.e. `z` a.s. (draft 635-649) | PROVED, conditional on the marked identity (explicit hypothesis, DMS21 Lemma A.10 marked version) | `Proofs/Sec11/ClosureScales/RootedTransferGlue.lean` (`ae_ae_of_marked_identity_of_rooted_null`, commit b648d21) |
-| Rooted transfer for the pinch frequency (rooted laws, recentered observation) | OPEN (needs B1/B2 below) | draft 565-649 |
+| Internal pinch origin block density under a stationary, germ-trivial law `Q` (draft 536-563) | PROVED, conditional on the listed Q-level hypotheses | `Proofs/Sec11/ClosureScales/InternalOriginDensity.lean` (`internal_block_density_of_stationary_germ_law`, commit b4a8d2f) |
+| Typical-point transfer with the origin hypothesis discharged (draft 565-649) | PROVED, conditional on the rooted comparison families and the Q-level data | `Proofs/Sec11/ClosureScales/TypicalBlockDensityFromOrigin.lean` (`ae_ae_pinch_block_density_of_origin_law`, commit 582ea64) |
+| Uniform rate and rooted comparison families for every `Omega` (draft 554-563, 565-634) | OPEN: step `PinchRootedDataStmt` not yet written (next step); needs metric-level comparison `heq` (B3) | draft 554-649 |
 | Dyadic extension from `B_1` to `ℂ` | OPEN | draft 649-650 |
 | Prop 11.11 from `ManyPinchScalesStmt` | Existing reduction; waits on the line above | `Proofs/Sec11/StagedResultClosures.lean:79` (`harmonicBallNotMetricBallStmt_of_stagedInputs`) |
 
