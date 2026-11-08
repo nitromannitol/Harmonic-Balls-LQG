@@ -27,6 +27,7 @@ theorem integral_marked_mass_eps_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measu
     (hG : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε) (γ : ℝ) {η : ℂ → ℝ}
     (hη : Continuous η) (hηs : HasCompactSupport η)
     (hdisk : ∀ z ∈ tsupport η, ∀ x ∈ Metric.sphere z ε, ‖x‖ ≤ 1) :
+    Integrable (fun ω => ∫ z, η z * (ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω ε z)) ∂(volume : Measure ℂ)) P ∧
     ∫ ω, ∫ z, η z * (ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω ε z)) ∂(volume : Measure ℂ) ∂P
       = ∫ z, η z ∂(volume : Measure ℂ) := by
   obtain ⟨c, hc⟩ : ∃ c : ℝ, c = ε ^ (γ ^ 2 / 2) := ⟨_, rfl⟩
@@ -111,6 +112,14 @@ theorem integral_marked_mass_eps_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measu
     · rw [integral_const_mul, integral_const_mul, hKz z hz, hcK, mul_one]
     · simp [image_eq_zero_of_notMem_tsupport hz]
   -- Fubini, then the a.e. replacement of `hcirc` by its measurable version
+  refine ⟨?_, ?_⟩
+  · refine hprod.integral_prod_left.congr ?_
+    filter_upwards [hae] with ω hω
+    show ∫ z, η z * (c * Real.exp (γ * g ω z)) ∂(volume : Measure ℂ) = _
+    rw [← hc]
+    congr 1
+    funext z
+    rw [hgN ω hω z]
   calc ∫ ω, ∫ z, η z * (ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω ε z)) ∂(volume : Measure ℂ) ∂P
       = ∫ ω, ∫ z, η z * (c * Real.exp (γ * g ω z)) ∂(volume : Measure ℂ) ∂P := by
         refine integral_congr_ae ?_
