@@ -1,11 +1,12 @@
 import HarmonicBalls.Proofs.Potential.GreenRegularBoundaryGeometry
 import HarmonicBalls.Proofs.Sec6.DiscGreenMass
 
-/-! # Green reciprocity for disjoint discs
+/-! # Green reciprocity for finite disc families
 
 The component and Green-function infrastructure used here incorporates the
 potential-theoretic work of Leonardo Bonanno. This file establishes the
-pairwise disjoint case; overlapping discs require a further argument.
+families whose intersecting discs share a containing disc in the family;
+general overlaps require a further argument.
 -/
 
 namespace HarmonicBalls
@@ -66,7 +67,77 @@ theorem greenFunction_pairwise_disjoint_finite_discs_comm
     · rw [greenFunction_of_notMem_right hy, greenFunction_of_notMem_left hy]
   · rw [greenFunction_of_notMem_left hx, greenFunction_of_notMem_right hx]
 
+/-- Reciprocity holds when every two intersecting discs in a finite family
+are contained in one of the family discs. The intersecting discs themselves
+need not be nested. -/
+theorem greenFunction_finite_discs_comm_of_intersections_contained
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ)
+    (hcover : ∀ i ∈ F, ∀ j ∈ F,
+      Disjoint (ball (c i) (r i)) (ball (c j) (r j)) ∨
+      ∃ k ∈ F, ball (c i) (r i) ⊆ ball (c k) (r k) ∧
+        ball (c j) (r j) ⊆ ball (c k) (r k))
+    (x y : ℂ) :
+    greenFunction (⋃ i ∈ F, ball (c i) (r i)) x y =
+      greenFunction (⋃ i ∈ F, ball (c i) (r i)) y x := by
+  classical
+  revert hcover
+  induction F using Finset.strongInduction with
+  | H F ih =>
+    intro hcover
+    by_cases h : ∃ i ∈ F, ∃ j ∈ F, i ≠ j ∧ ball (c i) (r i) ⊆ ball (c j) (r j)
+    · obtain ⟨i, hi, j, hj, hij, hsub⟩ := h
+      have hF : (⋃ k ∈ F, ball (c k) (r k)) =
+          ⋃ k ∈ F.erase i, ball (c k) (r k) := by
+        apply Set.Subset.antisymm
+        · intro z hz
+          obtain ⟨k, hk, hzk⟩ := mem_iUnion₂.mp hz
+          by_cases hki : k = i
+          · subst k
+            exact mem_iUnion₂.mpr ⟨j, Finset.mem_erase.mpr ⟨Ne.symm hij, hj⟩, hsub hzk⟩
+          · exact mem_iUnion₂.mpr ⟨k, Finset.mem_erase.mpr ⟨hki, hk⟩, hzk⟩
+        · intro z hz
+          obtain ⟨k, hk, hzk⟩ := mem_iUnion₂.mp hz
+          exact mem_iUnion₂.mpr ⟨k, Finset.mem_of_mem_erase hk, hzk⟩
+      rw [hF]
+      apply ih (F.erase i) (Finset.erase_ssubset hi)
+      intro k hk l hl
+      rcases hcover k (Finset.mem_of_mem_erase hk) l (Finset.mem_of_mem_erase hl) with hd | ⟨m, hm, hkm, hlm⟩
+      · exact Or.inl hd
+      · right
+        by_cases hmi : m = i
+        · subst m
+          exact ⟨j, Finset.mem_erase.mpr ⟨Ne.symm hij, hj⟩, hkm.trans hsub, hlm.trans hsub⟩
+        · exact ⟨m, Finset.mem_erase.mpr ⟨hmi, hm⟩, hkm, hlm⟩
+    · apply greenFunction_pairwise_disjoint_finite_discs_comm F c r
+      intro i hi j hj hij
+      rcases hcover i hi j hj with hd | ⟨k, hk, hik, hjk⟩
+      · exact hd
+      · by_cases hki : i = k
+        · subst k
+          exact False.elim (h ⟨j, hj, i, hi, Ne.symm hij, hjk⟩)
+        · exact False.elim (h ⟨i, hi, k, hk, hki, hik⟩)
+
+/-- A finite disc family is covered by the preceding result when its discs
+are disjoint or nested. -/
+theorem greenFunction_laminar_finite_discs_comm
+    {ι : Type*} (F : Finset ι) (c : ι → ℂ) (r : ι → ℝ)
+    (hlam : ∀ i ∈ F, ∀ j ∈ F,
+      Disjoint (ball (c i) (r i)) (ball (c j) (r j)) ∨
+      ball (c i) (r i) ⊆ ball (c j) (r j) ∨
+      ball (c j) (r j) ⊆ ball (c i) (r i))
+    (x y : ℂ) :
+    greenFunction (⋃ i ∈ F, ball (c i) (r i)) x y =
+      greenFunction (⋃ i ∈ F, ball (c i) (r i)) y x := by
+  apply greenFunction_finite_discs_comm_of_intersections_contained F c r
+  intro i hi j hj
+  rcases hlam i hi j hj with hd | hs | hs
+  · exact Or.inl hd
+  · exact Or.inr ⟨j, hj, hs, Subset.rfl⟩
+  · exact Or.inr ⟨i, hi, Subset.rfl, hs⟩
+
 #print axioms greenFunction_finite_disc_union_eq_isolated_disc
 #print axioms greenFunction_pairwise_disjoint_finite_discs_comm
+#print axioms greenFunction_finite_discs_comm_of_intersections_contained
+#print axioms greenFunction_laminar_finite_discs_comm
 
 end HarmonicBalls
