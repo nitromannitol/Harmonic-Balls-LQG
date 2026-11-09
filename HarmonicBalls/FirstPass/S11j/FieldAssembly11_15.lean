@@ -31,8 +31,28 @@ namespace HarmonicBalls
 
 universe u
 
-open MeasureTheory Set Metric Filter
+open MeasureTheory ProbabilityTheory Set Metric Filter
 open scoped ENNReal Topology
+
+/-- A whole-plane GFF is a probability measure. The circle average at radius `1` is an admissible observable, its
+law is Gaussian (`IsGaussianProcess`, Mathlib), and a Gaussian law is a probability measure, so the total mass of `P`
+equals the total mass of the image of `P` under the observable. -/
+theorem isProbabilityMeasure_of_wholePlaneGFF {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc) :
+    IsProbabilityMeasure P := by
+  let t : GFFObservable.Admissible := ⟨GFFObservable.circle 1 0, by norm_num [GFFObservable.IsAdmissible]⟩
+  have hX : HasGaussianLaw (fun ω => hcirc ω 1 0) P := hGFF.isGaussianProcess.hasGaussianLaw_eval t
+  have hm : AEMeasurable (fun ω => hcirc ω 1 0) P := (hGFF.measurable_circle 1 0 one_pos).aemeasurable
+  have hG : IsGaussian (P.map (fun ω => hcirc ω 1 0)) := hX.isGaussian_map
+  have hmap := hG.map_eq_gaussianReal (ContinuousLinearMap.id ℝ ℝ)
+  have h1 : (P.map (fun ω => hcirc ω 1 0)) Set.univ = 1 := by
+    have h2 : ((P.map (fun ω => hcirc ω 1 0)).map (ContinuousLinearMap.id ℝ ℝ)) Set.univ = 1 := by
+      rw [hmap]
+      exact measure_univ
+    rwa [Measure.map_apply (ContinuousLinearMap.id ℝ ℝ).continuous.measurable MeasurableSet.univ,
+      Set.preimage_univ] at h2
+  rw [Measure.map_apply_of_aemeasurable hm MeasurableSet.univ, Set.preimage_univ] at h1
+  exact ⟨h1⟩
 
 /-- A function vanishing on the unit circle has zero circle average over the unit circle. -/
 theorem circleAverage_eq_zero_of_zero_on_circle {f : ℂ → ℝ} (hf : ∀ z : ℂ, ‖z‖ = 1 → f z = 0) :
@@ -97,7 +117,7 @@ theorem pinchFirstEvent_positive_fieldLevel
     (hEx : LQGMetricExponentPositive)
     {U V W T Q' Q : Set ℂ} {δ : ℝ} (h : IsBufferedPinchGeometry U V W T Q' Q δ)
     {γ α₀ ξ : ℝ} (hγ : 0 < γ) (hγ₂ : γ < 2) (hα : α₀ < lqgQ γ)
-    {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (D : Ω → ℂ → ℂ → ℝ)
     (hGFF : IsWholePlaneGFF P hC hcirc) (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
     (haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
@@ -107,6 +127,7 @@ theorem pinchFirstEvent_positive_fieldLevel
       (ball 0 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W))) 0 y) < ⊤)
     (hM2b : ∀ᵐ ω ∂P, internalDiam (D ω) δ (T \ thickening (3 * δ) W) < ⊤) :
     ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ}, MeasurableSet A ∧ 0 < P A := by
+  have : IsProbabilityMeasure P := isProbabilityMeasure_of_wholePlaneGFF hGFF
   obtain ⟨𝔇, h𝔇, hrepr⟩ := hD
   have hD' : IsLQGMetricOfField P γ ξ α₀ hC D := ⟨𝔇, h𝔇, hrepr⟩
   have hξ : 0 < ξ := hEx γ ξ 𝔇 hγ hγ₂ h𝔇
