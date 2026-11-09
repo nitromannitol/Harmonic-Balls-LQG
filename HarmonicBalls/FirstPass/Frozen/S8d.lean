@@ -47,4 +47,14 @@ def PhaseTorusDoublingProductErgodicFrozen : Prop :=
     MeasurePreserving T ν ν → Ergodic T ν →
     Ergodic (fun p : PhaseTorus × Y => (phaseTorusDouble p.1, T p.2)) (phaseTorusFieldMeasure ν)
 
+/-- FIRST-PASS FROZEN. Uniqueness of the Radon measure representing its integrals on continuous compactly supported
+functions (the uniqueness part of the Riesz representation theorem on the locally compact space `ℂ`). For locally finite
+measures `m, m'` on `ℂ`, if `∫ f dm = ∫ f dm'` for all continuous compactly supported real `f`, then `m = m'`. Source:
+Rudin, Real and Complex Analysis, 3rd ed., Thm 2.14; standard general measure theory, not specific to this paper;
+locator pending (exact numbering to be checked against the edition). Used by: firstPass_8_2 (through the uniqueness of the
+vague limit `isLQGLimit_unique`, FirstPass/S8d/LQGLimitUnique.lean, in the identification of the dilated LQG measure). -/
+def RadonIntegralUniqueFrozen : Prop :=
+  ∀ (m m' : Measure ℂ), IsLocallyFiniteMeasure m → IsLocallyFiniteMeasure m' →
+    (∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → ∫ z, f z ∂m = ∫ z, f z ∂m') → m = m'
+
 end HarmonicBalls
