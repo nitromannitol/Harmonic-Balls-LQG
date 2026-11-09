@@ -30,7 +30,7 @@ lemma weylShiftPair_fst_apply_of_const {γ ξ a : ℝ} {f : ℂ → ℝ} {S : Se
 /-- A strictly positive random variable exceeds some `C₁ > 0` with probability at least `1/2`. -/
 lemma exists_lower_of_ae_pos {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     {X : Ω → ℝ≥0∞} (hX : Measurable X) (hpos : ∀ᵐ ω ∂P, 0 < X ω) :
-    ∃ C₁ : ℝ≥0∞, 0 < C₁ ∧ 1 / 2 ≤ P {ω | C₁ ≤ X ω} := by
+    ∃ C₁ : ℝ≥0∞, 0 < C₁ ∧ C₁ ≠ ⊤ ∧ 1 / 2 ≤ P {ω | C₁ ≤ X ω} := by
   -- the events `{(k+1)⁻¹ ≤ X}` increase to `{0 < X}`, which has full measure
   set A : ℕ → Set Ω := fun k => {ω | ((k : ℝ≥0∞) + 1)⁻¹ ≤ X ω} with hA
   have hAmono : Monotone A := by
@@ -56,7 +56,7 @@ lemma exists_lower_of_ae_pos {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) 
   rw [hfull] at htend
   obtain ⟨k, hk⟩ := (htend.eventually
     (lt_mem_nhds (ENNReal.half_lt_self one_ne_zero ENNReal.one_ne_top))).exists
-  refine ⟨((k : ℝ≥0∞) + 1)⁻¹, ENNReal.inv_pos.2 (by simp), ?_⟩
+  refine ⟨((k : ℝ≥0∞) + 1)⁻¹, ENNReal.inv_pos.2 (by simp), ENNReal.inv_ne_top.2 (by simp), ?_⟩
   exact hk.le
 
 end HarmonicBalls

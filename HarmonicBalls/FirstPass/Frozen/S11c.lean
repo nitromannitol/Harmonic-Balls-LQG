@@ -45,7 +45,7 @@ of Duplantier-Sheffield 2011 for the LQG measure and of the LQG metric (paper Fa
 Used by: firstPass_11_10. -/
 def CameronMartinPositivityTransferFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ContDiff ℝ ⊤ f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
+  ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
@@ -145,7 +145,7 @@ in `Proposed/MillerSheffieldIG4.lean`), with the Weyl scaling of paper Facts 2.1
 Used by: firstPass_11_10. -/
 def CameronMartinEventTransferFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ContDiff ℝ ⊤ f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
+  ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ) (S₁ S₂ : Set ℂ) (c C : ℝ≥0∞),
   IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
