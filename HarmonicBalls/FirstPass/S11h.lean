@@ -1,5 +1,7 @@
 import HarmonicBalls.Proofs.Sec11.WholePlanePinchThirdEvent
 import HarmonicBalls.FirstPass.S11h.WeylShiftUniv
+import HarmonicBalls.Steps.Sec11.PinchFirstWeylPreservation
+import HarmonicBalls.Steps.Sec11.PinchMeasureWeylShift
 
 /-!
 # First pass, Section 11 third pinch event (fp-S11h, owner n2)
@@ -89,5 +91,42 @@ theorem IsPinchPointProofConfiguration.exists_positive_measure_wholePlane_shift_
     exact (hweight z hz').le
   · exact hgap
   · simpa only [Real.exp_log hq] using hω.1.2
+
+/-- Deterministic persistence of the first and second pinch events under a nonpositive Weyl shift `f` (paper lines
+3733-3756, "the upper quantities decrease, the masses are unchanged"; the lower quantities are first-exit crossing
+distances, unchanged because `f` vanishes on `B_3`, on `U` and on `𝔸_{3,6}`). The first event of `D` gives the first event
+of the shifted metric `E`, and the second event of `(μ, D)` gives the second event of `(μ.withDensity e^{γf}, E)`.
+Both are the committed Steps lemmas `pinchFirstEvent_of_weylScaling` and `pinchSecondEvent_of_weighted_weylScaling`;
+this is the only glue. -/
+theorem IsPinchPointProofConfiguration.pinchFirst_and_second_of_shift
+    {U V W T Q' Q : Set ℂ} {δ ξ γ M : ℝ}
+    (h : IsPinchPointProofConfiguration U V W T Q' Q δ)
+    {D E : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    (hE : IsEuclideanLengthMetric E) (hξ : 0 ≤ ξ) {f : ℂ → ℝ}
+    (hfneg : ∀ x, f x ≤ 0)
+    (hf : ∀ x ∈ closure U ∪ (annulus 0 1 2)ᶜ, f x = 0)
+    (hzeroD : ∀ x y, weylScaling D ξ 0 x y = ENNReal.ofReal (D x y))
+    (hforward : ∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y)
+    (hzeroE : ∀ x y, weylScaling E ξ 0 x y = ENNReal.ofReal (E x y))
+    (hreverse : ∀ x y, ENNReal.ofReal (D x y) = weylScaling E ξ (fun z => -f z) x y)
+    {μ : Measure ℂ}
+    (hE1 : pinchFirstEvent D W T Q' Q δ) (hE2 : pinchSecondEvent μ D U V δ M) :
+    pinchFirstEvent E W T Q' Q δ ∧
+      pinchSecondEvent (μ.withDensity (fun x => ENNReal.ofReal (Real.exp (γ * f x)))) E U V δ M := by
+  have hfinner : ∀ x ∈ ball (0 : ℂ) 1, f x = 0 := by
+    intro x hx
+    apply hf x (Or.inr ?_)
+    intro hxann
+    have hxsmall : dist x (0 : ℂ) < 1 := hx
+    have hxlarge : 1 < dist x (0 : ℂ) := lt_of_not_ge hxann.2
+    linarith
+  have hfouter : ∀ x ∈ (closedBall (0 : ℂ) 3)ᶜ, f x = 0 := by
+    intro x hx
+    apply hf x (Or.inr ?_)
+    intro hxann
+    have h23 : closedBall (0 : ℂ) 2 ⊆ closedBall (0 : ℂ) 3 := closedBall_subset_closedBall (by norm_num)
+    exact hx (h23 (ball_subset_closedBall hxann.1))
+  exact ⟨h.pinchFirstEvent_of_weylScaling hD hE hξ hfneg hfinner hfouter hzeroD hforward hzeroE hreverse hE1,
+    h.pinchSecondEvent_of_weighted_weylScaling hD hE hξ hfneg hf hzeroD hforward hzeroE hreverse hE2⟩
 
 end HarmonicBalls
