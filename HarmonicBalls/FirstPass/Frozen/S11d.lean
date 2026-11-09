@@ -52,4 +52,32 @@ def LQGMetricContinuousShiftLocality : Prop :=
           internalMetric (fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => g x - α₀ * Real.log ‖x‖) u v).toReal) U z w
             = G ω z w
 
+/-- FIRST-PASS FROZEN. Cameron-Martin quasi-invariance of the whole-plane GFF on distribution-level events (standard;
+locator: Miller-Sheffield Imaginary Geometry, Proposition 2.9 (paper line 3106 cites it as miller2017imaginary) for the Cameron-Martin shift
+`h ↦ h + g` with `g` in the Cameron-Martin space; the whole-plane GFF normalised by its unit-circle average, so the shift
+must have zero unit-circle average). For smooth compactly supported `g` with zero unit-circle average, the laws of `hC`
+and `hC + g` on the distribution σ-algebra are mutually absolutely continuous: a measurable set of fields is null for
+`hC` iff it is null for `hC + g`. Used by: firstPass_11_9 (transfer of the positive-probability event from the shifted field
+`h~ = h - (φ/ξ) log(2A/ε)` back to `h`, paper line 3131, "since the laws of h and h~ are mutually absolutely continuous"). -/
+def CameronMartinGFFMutualAbsCont : Prop :=
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (g : ℂ → ℝ), IsWholePlaneGFF P hC hcirc → Continuous g → HasCompactSupport g →
+    Real.circleAverage g 0 1 = 0 →
+    ∀ B : Set ((ℂ → ℝ) → ℝ), MeasurableSet[distributionMeasurableSpace] B →
+      (P ((fun ω => hC ω) ⁻¹' B) = 0 ↔ P ((fun ω => addFunPairing (hC ω) g) ⁻¹' B) = 0)
+
+/-- FIRST-PASS FROZEN. Composition rule of Weyl scalings for the log-singular LQG metric (paper Fact 2.2 III, line 445:
+`D_{h+f} = e^{ξ f} · D_h` for continuous `f`, applied with `h = h^ℂ - α₀ log|·|`; Gwynne-Miller 2021, Section 1.2 p. 6 and
+Remark 1.5 p. 8; Dubedat-Falconet-Gwynne-Pfeffer-Sun 2020, p. 9). It identifies the metric of the distribution `h^ℂ + g - α₀ log|·|`
+(the Defs convention `weylScaling (𝔇 ·) ξ (-α₀ log|·|)`) with the Weyl scaling of the metric of `h`, almost surely.
+Used by: firstPass_11_9 (the Weyl comparison `internalMetric_weylScaling_le` for the shifted metric, paper line 3127). -/
+def WeylScalingCompositionFrozen : Prop :=
+  ∀ (γ ξ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
+    ∀ 𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ, IsLQGMetric γ ξ 𝔇 →
+    ∀ g : ℂ → ℝ, Continuous g →
+      ∀ᵐ ω ∂P, ∀ x y : ℂ,
+        weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
+          weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y
+
 end HarmonicBalls
