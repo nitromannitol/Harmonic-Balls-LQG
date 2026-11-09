@@ -11,6 +11,11 @@ import HarmonicBalls.Proofs.Sec6.DiscPotentialComparison
 import HarmonicBalls.Proofs.Sec5.AccumulationSubharmonicMaximum
 import HarmonicBalls.Steps.Sec5.ContinuityAssembly
 import HarmonicBalls.Proofs.SecA.ObstacleLeastSuperharmonicMajorant
+import HarmonicBalls.Proposed.LQG
+import HarmonicBalls.Proofs.Sec2.SingularWeight
+import HarmonicBalls.Proofs.Sec2.BallMassReduction
+import HarmonicBalls.Proofs.Sec2.Assembly
+import HarmonicBalls.Steps.Sec2.VolumeGrowth
 
 /-!
 # Local persistence and the boundary-touching right-continuity step (Proposition 5.2)
@@ -538,7 +543,137 @@ theorem local_persistence {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {
   rw [hH0, mul_zero] at hle
   linarith
 
+/-! ## Stage 2: compactness and the uniform right-continuity estimate (lines 1230-1253) -/
+
+/-- The closure of a set lies in its Minkowski sum with an open ball. -/
+theorem closure_subset_add_ball (A : Set ℂ) {ε : ℝ} (hε : 0 < ε) :
+    closure A ⊆ A + ball (0 : ℂ) ε := by
+  intro x hx
+  obtain ⟨y, hy, hdist⟩ := Metric.mem_closure_iff.1 hx ε hε
+  rw [dist_eq_norm] at hdist
+  exact ⟨y, hy, x - y, mem_ball_zero_iff.2 hdist, by ring⟩
+
+/-- A finite family of positive reals has a common positive lower bound. -/
+theorem exists_pos_le_finset {ι : Type*} (s : Finset ι) (f : ι → ℝ) (hf : ∀ i, 0 < f i) :
+    ∃ δ : ℝ, 0 < δ ∧ ∀ i ∈ s, δ ≤ f i := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => exact ⟨1, one_pos, fun i hi => by simp at hi⟩
+  | @insert a s _ ih =>
+    obtain ⟨δ, hδ, hle⟩ := ih
+    refine ⟨min δ (f a), lt_min hδ (hf a), fun i hi => ?_⟩
+    rcases Finset.mem_insert.1 hi with rfl | hi'
+    · exact min_le_right _ _
+    · exact (min_le_left _ _).trans (hle i hi')
+
+/-- **Stage 2 (compactness).** On the event of stage 1, for every `ε > 0` there is `δ > 0` such that the closure
+of the cluster at all times `t' ∈ [t, t + δ]` lies in the `ε`-neighbourhood of the cluster at time `t`. The
+complement of that neighbourhood, inside the closed unit disc, is compact and covered by the stage-1 balls. -/
+theorem closure_cluster_small_of_local {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ) {βm βp : ℝ}
+    (hVR : ∀ R : ℝ, 0 < R → VolumeGrowth μ R βm βp)
+    (hsmall : ∀ q ∈ closedBall (0 : ℂ) 1, ∀ a : ℝ, 0 < a →
+      ∃ σ : ℝ, 0 < σ ∧ closure (cluster μ 4 q σ) ⊆ ball q a)
+    {z : ℂ} (hz : z ∈ ball (0 : ℂ) 1) {t : ℝ} (ht : 0 < t) {ε : ℝ} (hε : 0 < ε) :
+    ∃ δ : ℝ, 0 < δ ∧ ∀ t' ∈ Icc t (t + δ),
+      closure (cluster μ 1 z t') ⊆ cluster μ 1 z t + ball (0 : ℂ) ε := by
+  classical
+  set A : Set ℂ := cluster μ 1 z t + ball (0 : ℂ) ε with hAdef
+  have hAopen : IsOpen A := IsOpen.add_left isOpen_ball
+  set L : Set ℂ := closedBall (0 : ℂ) 1 \ A with hLdef
+  have hLc : IsCompact L := (isCompact_closedBall _ _).diff hAopen
+  -- local persistence at every point of the compact set `L`
+  have hloc : ∀ p : ℂ, ∃ ρ δ : ℝ, 0 < ρ ∧ 0 < δ ∧
+      (p ∈ L → ∀ s : ℝ, 0 ≤ s → s ≤ δ → ∀ x ∈ ball p ρ, x ∉ cluster μ 1 z (t + s)) := by
+    intro p
+    by_cases hp : p ∈ L
+    · have hpK : p ∉ closure (cluster μ 1 z t) := fun h => hp.2 (closure_subset_add_ball _ hε h)
+      obtain ⟨r, hr, δ, hδ, hpers⟩ := local_persistence hμ hVR hsmall hz ht hp.1 hpK
+      exact ⟨r / 2, δ, by linarith, hδ, fun _ s hs0 hsδ x hx => hpers s hs0 hsδ x hx⟩
+    · exact ⟨1, 1, one_pos, one_pos, fun h => absurd h hp⟩
+  choose ρ δ hρ hδ hpers using hloc
+  obtain ⟨F, hFL, hFcov⟩ :=
+    hLc.elim_nhds_subcover (fun p => ball p (ρ p)) (fun p _ => ball_mem_nhds p (hρ p))
+  obtain ⟨δ₀, hδ₀, hle⟩ := exists_pos_le_finset F δ hδ
+  refine ⟨δ₀, hδ₀, fun t' ht' => ?_⟩
+  intro y hy
+  by_contra hyA
+  have hcl : cluster μ 1 z t' ⊆ closedBall (0 : ℂ) 1 := fun x hx =>
+    ball_subset_closedBall (mem_cluster_iff.1 hx).1
+  have hyL : y ∈ L := ⟨closure_minimal hcl isClosed_closedBall hy, hyA⟩
+  obtain ⟨p, hpF, hyp⟩ := mem_iUnion₂.1 (hFcov hyL)
+  obtain ⟨x, hxball, hxcl⟩ := mem_closure_iff.1 hy (ball p (ρ p)) isOpen_ball hyp
+  have hs0 : 0 ≤ t' - t := by linarith [ht'.1]
+  have hsδ : t' - t ≤ δ p := by linarith [ht'.2, hle p hpF]
+  have hxnot := hpers p (hFL p hpF) (t' - t) hs0 hsδ x hxball
+  have e : t + (t' - t) = t' := by ring
+  rw [e] at hxnot
+  exact hxnot hxcl
+
+/-- **Proposition 5.2, boundary-touching step, from the numbered predecessor `h71` and the explicit field inputs
+of the LQG measure.** The almost-sure event is the small-auxiliary-cluster event of `SmallAuxiliaryClusterEvent.lean`
+together with the volume growth at every radius, which follows from the LQG chain `LQGVolumeGrowthAllScalesStmt`
+(with the Weyl-scaling, existence and non-atomicity field inputs). The conclusion is `ClusterBoundaryTouchingRightContinuityStep`
+(GRAPH G12); the proof is conditional on the field inputs named in the hypotheses. -/
+theorem clusterBoundaryTouching_of_fields (h71 : ClusterUpperBoundPolyHighProbStmt.{u})
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc) :
+    ClusterBoundaryTouchingRightContinuityStep.{u} := by
+  intro γ α₀ hγ hγ2 hα Ω _ P hC hcirc μ hGFF hμ
+  have hsm := ae_radiusFour_cluster_small_all_centres h71 (hAff Ω P hC hcirc)
+    (hCC Ω P γ α₀ hC hcirc) hγ hγ2 hα hGFF hμ
+  have hI2 : LQGVolumeGrowthAllScalesStmt.{u} :=
+    lqgVolumeGrowthAllScalesStmt_of_literature hDG hAff
+      (fun Ω _ P γ hC hcirc => hCC Ω P γ 0 hC hcirc) hW hE hN
+  have hA : 0 < (2 - γ) ^ 2 / 2 := div_pos (pow_pos (by linarith) 2) two_pos
+  have hB : 0 < γ * (lqgQ γ - α₀) := mul_pos hγ (by linarith)
+  have hβp : 0 < min ((2 - γ) ^ 2 / 2) (γ * (lqgQ γ - α₀)) / 2 :=
+    div_pos (lt_min hA hB) two_pos
+  have hβp' : min ((2 - γ) ^ 2 / 2) (γ * (lqgQ γ - α₀)) / 2 <
+      min ((2 - γ) ^ 2 / 2) (γ * (lqgQ γ - α₀)) := by
+    linarith [lt_min hA hB]
+  have hβm : max ((2 + γ) ^ 2 / 2) (γ * (lqgQ γ - α₀)) <
+      max ((2 + γ) ^ 2 / 2) (γ * (lqgQ γ - α₀)) + 1 := by linarith
+  have hvol := ae_isLocallyFiniteMeasure_volumeGrowth_of_exponents hI2 hγ hγ2 hα hβp hβp' hβm
+    hGFF hμ
+  filter_upwards [hsm, hvol] with ω hω1 hω2
+  intro z hz t ht _
+  refine ⟨1, one_pos, fun ε hε => ?_⟩
+  obtain ⟨δ, hδ, hcl⟩ := closure_cluster_small_of_local hω2.1 hω2.2 hω1
+    (ball_subset_ball (by norm_num) hz) ht hε.1
+  exact ⟨δ, hδ, hcl⟩
+
+/-- **Proposition 5.2 (`ClusterContinuityStmt`) from the staged inputs.** -/
+theorem clusterContinuity_of_staged (h71 : ClusterUpperBoundPolyHighProbStmt.{u})
+    (h33 : ClusterMonotoneStmt.{u}) (h72 : ClusterTimeContinuityStmt.{u})
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc) :
+    ClusterContinuityStmt.{u} :=
+  clusterContinuity_of_boundaryTouching h71 h33 h72
+    (clusterBoundaryTouching_of_fields h71 hDG hAff hCC hW hE hN)
+
 end HarmonicBalls
 
 #print axioms HarmonicBalls.local_persistence
-#print axioms HarmonicBalls.odometer_le_mul_on_ball
+#print axioms HarmonicBalls.closure_cluster_small_of_local
+#print axioms HarmonicBalls.clusterBoundaryTouching_of_fields
+#print axioms HarmonicBalls.clusterContinuity_of_staged
