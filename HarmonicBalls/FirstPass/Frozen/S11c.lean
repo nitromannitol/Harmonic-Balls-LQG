@@ -363,4 +363,42 @@ def LocalLQGDecoderFrozen : Prop :=
       ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
         K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
 
+/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK; operator 2026-11-09 22:26 UTC: check running, not yet approved). EXTERNAL,
+common local decoder: for `γ ∈ (0,2)` and a disc `D = ball c₂ r₂` with `0 ∉ closedBall c₂ r₂`, ONE s-finite kernel `K`
+from the mean-zero observations on `D` to measures on `ℂ` (clause 1: the γ-LQG measure of the field at every insertion
+`α₀ < Q`, up to a constant, a.s.; clause 2: the rooted LQG measure at every root `z` and every insertion `α₀ < Q`,
+including `α₀ = 0`, which the origin route of `FixedRoot11_7.lean` uses). This is the common-`K` form of
+`LocalLQGDecoderFrozen`, where `K` may depend on `α₀`. Source: Duplantier-Sheffield, arXiv:0808.1560v2, Proposition 1.1,
+with Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma A.10 (rooting), and B2 Claim 3.1
+(notes/fp-gaps/CHATGPT-11-7-B2.md:195-216). Used by: firstPass_11_7 (`FirstPass/S11c.lean`). -/
+def LocalLQGDecoderCommonFrozen : Prop :=
+  ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (c₂ : ℂ) (r₂ : ℝ), 0 < r₂ → (0 : ℂ) ∉ closedBall c₂ r₂ →
+  ∃ K : ProbabilityTheory.Kernel ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) ℂ,
+    ProbabilityTheory.IsSFiniteKernel K ∧
+    (∀ α₀ : ℝ, α₀ < lqgQ γ → ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+      ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
+        K (localMeanZeroObs α₀ (ball c₂ r₂) (hC ω)) = c • (μ ω).restrict (ball c₂ r₂)) ∧
+    (∀ α₀ : ℝ, α₀ < lqgQ γ → ∀ (z : ℂ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μz : Ω → Measure ℂ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasure P γ (fun ω => rootedCircleAverage α₀ γ z (hcirc ω)) μz →
+      ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
+        K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
+
+/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK; operator 2026-11-09 22:26 UTC, option A: non-smooth Cameron-Martin for the
+shift `χ_b = b χ` of B2 sec 5.2). EXTERNAL, Cameron-Martin for locally Lipschitz compactly supported shifts of the
+whole-plane GFF, read on the mean-zero pairings with the test functions supported in a set `D`: for `g` locally
+Lipschitz with compact support (it lies in the Cameron-Martin space, which contains the compactly supported functions of
+finite Dirichlet energy), a measurable set of observations that is null for the unshifted pairings `hC` is null for the
+shifted pairings `hC + ∫ φ g`. Mean-zero pairings do not see the additive constant of the normalisation, so no unit-circle
+average constraint is needed (contrast `CameronMartinGFFMutualAbsCont`, which needs smooth `g` with zero unit-circle
+average). Only this one-sided direction is used. Standard; locator pending (B2 sec 5.2 cites Miller-Sheffield, Imaginary
+Geometry IV, Prop. 2.9). Used by: firstPass_11_7 (`FirstPass/S11c/ShiftCM11_7.lean`). -/
+def CameronMartinLocallyLipschitzShiftAbsCont : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (D : Set ℂ) (g : ℂ → ℝ), IsWholePlaneGFF P hC hcirc → LocallyLipschitz g →
+    HasCompactSupport g → ∀ S : Set ({φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ), MeasurableSet S →
+    P {ω | (fun φ => hC ω φ.1) ∈ S} = 0 → P {ω | (fun φ => hC ω φ.1 + ∫ x, φ.1 x * g x) ∈ S} = 0
+
 end HarmonicBalls
