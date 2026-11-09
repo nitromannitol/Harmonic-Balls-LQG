@@ -1,4 +1,5 @@
 import HarmonicBalls.FirstPass.S11c.Assembly110
+import HarmonicBalls.FirstPass.S11c.Ref11_7
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
@@ -44,5 +45,32 @@ theorem firstPass_11_10.{u}
     (fun f hf1 hf2 hf3 => hM2 γ α₀ ξ hγ hγ2 hα Ω P hC hcirc μ D hGFF hμ hD f hf1 hf2 hf3 S₁ hS₁)
 
 #print axioms firstPass_11_10
+
+/-- **Lemma 11.7 (first pass, `firstPass_11_7`)**: many cone-bad scales, with `δ = p / 8` for the probability `p` of
+Lemma 11.8 at `(γ, γ)`. Route (B2 sections 5-8): `ae_eventually_ncard_of_fixedRoot` with the fixed-root input
+`hRef_of_decoder`. Frozen inputs: `ConeBadEventProbabilityStmt` (hypothesis Q2, Lemma 11.8 at `(γ, γ)`),
+`LocalCampbellMarkedRestrictionFrozen`, `LQGMeasureOfProfileMeasurableFrozen`, `LocalLQGDecoderCommonFrozen`,
+`CameronMartinLocallyLipschitzShiftAbsCont`. Proposed inputs, universal over the probability space:
+`LQGMeasureCoordChange`, `LQGMeasureExistence`, `LQGMeasureNonatomic`. The translation `hW'` is proved
+(`isWholePlaneGFF_translate`), not assumed. -/
+theorem firstPass_11_7.{u}
+    (hPos : ConeBadEventProbabilityStmt.{u}) (hCamp : LocalCampbellMarkedRestrictionFrozen.{u})
+    (hDecFrozen : LQGMeasureOfProfileMeasurableFrozen.{u}) (hDec : LocalLQGDecoderCommonFrozen.{u})
+    (hCM : CameronMartinLocallyLipschitzShiftAbsCont.{u})
+    (hCC : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hE : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α₀ hC hcirc)
+    (hNA : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc) :
+    ManyConeBadScalesStmt.{u} := by
+  intro γ α₀ hγ0 hγ2 hα Q hQ M hM
+  obtain ⟨p, hp, hPos'⟩ := hPos γ γ hγ0 hγ2 (gamma_lt_lqgQ hγ0 hγ2) Q hQ M hM
+  have hp0 : 0 < p := hp.1
+  refine ⟨p / 8, ⟨div_pos hp0 (by norm_num), by linarith [hp.2]⟩, ?_⟩
+  intro Ω _ P hC hcirc μ hh hμ
+  have := hh.isProbabilityMeasure
+  exact ae_eventually_ncard_of_fixedRoot hCamp hγ0 hγ2 hα hh hμ (hNA γ α₀ Ω P hC hcirc) hQ
+    (hRef_of_decoder hDec hDecFrozen hCM hCC hE hγ0 hγ2 hα hQ hp0 hPos' hh hμ)
 
 end HarmonicBalls.S11c
