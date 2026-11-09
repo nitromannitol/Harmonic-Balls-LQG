@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.S8c.LocalReduction
 import HarmonicBalls.FirstPass.S8c.Locality
+import HarmonicBalls.FirstPass.S8c.UnitGood
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.Draft.Section2
 
@@ -34,13 +35,14 @@ theorem localRoot_eventually_count_ae (hL1 : LocalRootedFieldMeasureDomination.{
     (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) (hν : IsLQGMeasureOfField P γ γ hcirc ν)
     (hlam : IsLQGMeasureOfField P γ 0 hcirc lam) (j : ℕ) (hj : 1 ≤ j)
     (β : ℝ) (N₀ : ℕ) (a b C₁m C₁p C₂m C₂p C₃ m ζ : ℝ)
-    (hunit : MeasurableSet {ν' : Measure ℂ | IsGoodAnnulus ν' 1 0 a b})
+    (ha : 0 < a)
     (hL3 : ∀ᵐ x ∂((volume.restrict (localDomain j)).prod P),
       localReferenceObservation ν j x ∈ recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ) :
     ∀ᵐ x ∂((P ⊗ₘ localRootKernel P lam (hGFF.aemeasurable_lqgMeasure hlam)).restrict
         (Prod.snd ⁻¹' localDomain j)),
       ∀ᶠ N : ℕ in atTop, (1 - ζ) * (N : ℝ) ≤
         (veryGoodComparableScaleCount (μ x.1) β x.2 N₀ a b C₁m C₁p C₂m C₂p C₃ m N : ℝ) := by
+  have hunit := measurableSet_unitGoodAnnulus a b ha
   have : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
   have hG : MeasurableSet (recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ) :=
     measurableSet_recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit

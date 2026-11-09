@@ -1,4 +1,5 @@
 import HarmonicBalls.FirstPass.S8c.RootCount
+import HarmonicBalls.FirstPass.S8c.UnitGood
 import HarmonicBalls.Proofs.Sec8.LocalMeasureRatios
 
 /-! # Covering the unit ball off the origin by the local domains (FIRST-PASS fp-S8c-8-2-local, step iv, pure part)
@@ -96,7 +97,7 @@ theorem localRoot_ae_ae_eventually_count (hL1 : LocalRootedFieldMeasureDominatio
     (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) (hν : IsLQGMeasureOfField P γ γ hcirc ν)
     (hlam : IsLQGMeasureOfField P γ 0 hcirc lam)
     (β : ℝ) (N₀ : ℕ) (a b C₁m C₁p C₂m C₂p C₃ m ζ : ℝ)
-    (hunit : MeasurableSet {ν' : Measure ℂ | IsGoodAnnulus ν' 1 0 a b})
+    (ha : 0 < a)
     (hL3 : ∀ j : ℕ, 1 ≤ j → ∀ᵐ x ∂((volume.restrict (localDomain j)).prod P),
       localReferenceObservation ν j x ∈ recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ) :
     ∀ᵐ ω ∂P, ∀ᵐ z ∂(lam ω).restrict (ball 0 1), z ∈ ball (0 : ℂ) 1 → z ≠ 0 →
@@ -125,7 +126,7 @@ theorem localRoot_ae_ae_eventually_count (hL1 : LocalRootedFieldMeasureDominatio
     (veryGoodComparableScaleCount (μ x.1) β x.2 N₀ a b C₁m C₁p C₂m C₂p C₃ m N : ℝ)
   have hall := ae_forall_localDomain P (localRootKernel P lam hlamA) Q
     (fun j hj => localRoot_eventually_count_ae hL1 hfull P γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα
-      hμ hν hlam j hj β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit (hL3 j hj))
+      hμ hν hlam j hj β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ ha (hL3 j hj))
   have hpair := ae_ae_forall_localDomain P (localRootKernel P lam hlamA) Q hall
   exact ae_restrict_of_normalized P lam (localRootKernel P lam hlamA) hκ hposlam
     (fun ω z => z ∈ ball (0 : ℂ) 1 → z ≠ 0 → Q (ω, z)) hpair
@@ -141,7 +142,7 @@ theorem localRoot_ae_eventually_count_of_weyl (hL1 : LocalRootedFieldMeasureDomi
     (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) (hν : IsLQGMeasureOfField P γ γ hcirc ν)
     (hlam : IsLQGMeasureOfField P γ 0 hcirc lam)
     (β : ℝ) (N₀ : ℕ) (a b C₁m C₁p C₂m C₂p C₃ m ζ : ℝ)
-    (hunit : MeasurableSet {ν' : Measure ℂ | IsGoodAnnulus ν' 1 0 a b})
+    (ha : 0 < a)
     (hL3 : ∀ j : ℕ, 1 ≤ j → ∀ᵐ x ∂((volume.restrict (localDomain j)).prod P),
       localReferenceObservation ν j x ∈ recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ)
     (hW : ∀ᵐ ω ∂P, (μ ω).restrict (ball 0 1) ≪ (lam ω).restrict (ball 0 1))
@@ -150,7 +151,7 @@ theorem localRoot_ae_eventually_count_of_weyl (hL1 : LocalRootedFieldMeasureDomi
       ∀ᶠ N : ℕ in atTop, (1 - ζ) * (N : ℝ) ≤
         (veryGoodComparableScaleCount (μ ω) β z N₀ a b C₁m C₁p C₂m C₂p C₃ m N : ℝ) := by
   filter_upwards [localRoot_ae_ae_eventually_count hL1 hfull P γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2
-    hα hμ hν hlam β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit hL3, hW, hN0] with ω hω hWω hN0ω
+    hα hμ hν hlam β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ ha hL3, hW, hN0] with ω hω hWω hN0ω
   have h1 := hWω.ae_le hω
   have hae0 : ∀ᵐ z ∂(μ ω), z ≠ 0 := by
     rw [ae_iff]
