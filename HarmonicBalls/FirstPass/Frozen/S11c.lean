@@ -31,7 +31,9 @@ def enlargedDyadicCell (n j k : ℤ) : Set ℂ :=
   {z : ℂ | |z.re - ((j : ℝ) + 1 / 2) * (2 : ℝ) ^ (-n)| ≤ ((2 : ℝ) ^ (-n) + (2 : ℝ) ^ (-n - 2)) / 2 ∧
     |z.im - ((k : ℝ) + 1 / 2) * (2 : ℝ) ^ (-n)| ≤ ((2 : ℝ) ^ (-n) + (2 : ℝ) ^ (-n - 2)) / 2}
 
-/-- FIRST-PASS FROZEN. Cameron-Martin positivity transfer for the joint law of the LQG measure and LQG metric
+/-- RETIRED (FALSE, ChatGPT truth check 2026-11-09, operator 19:20 UTC: the premise must be the probability of the source
+event, not an outer probability on the raw carrier). Superseded by `CameronMartinEventTransferFrozen`. Former FIRST-PASS
+FROZEN: Cameron-Martin positivity transfer for the joint law of the LQG measure and LQG metric
 (candidate form of the wave-3 ruling, 2026-11-09; the metric component is corrected to `weylScaling`, see
 `weylShiftPair`). Let `f` be smooth, compactly supported and zero on the unit circle. If the event that the shifted
 pair `weylShiftPair γ ξ f (μ, D)` lies in a measurable set `B` has positive probability, then so does the event that
@@ -79,7 +81,7 @@ def DyadicCellDiamSmallFrozen : Prop :=
 
 /-- A closed axis-parallel rectangle `[a₁,a₂] × [b₁,b₂]` in `ℂ` (closed dyadic squares are special cases). -/
 def IsClosedRectangle (R : Set ℂ) : Prop :=
-  ∃ a₁ a₂ b₁ b₂ : ℝ, a₁ ≤ a₂ ∧ b₁ ≤ b₂ ∧ R = Icc a₁ a₂ ×ℂ Icc b₁ b₂
+  ∃ a₁ a₂ b₁ b₂ : ℝ, a₁ < a₂ ∧ b₁ < b₂ ∧ R = Icc a₁ a₂ ×ℂ Icc b₁ b₂
 
 /-- FIRST-PASS FROZEN. Finite diameter of a compact connected finite union of closed rectangles, for the LQG metric:
 almost surely there is a finite bound on the internal distances within the union. (Generalized on 2026-11-09 from
@@ -132,7 +134,8 @@ def LQGMeasureSquarePositiveFrozen : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ S : Set ℂ, IsClosedDyadicSquare S → ∀ᵐ ω ∂P, 0 < μ ω S
 
-/-- FIRST-PASS FROZEN (wave-4 candidate form, 2026-11-09; supersedes the measurable-`B` form above for Lemma 11.10). Event
+/-- FIRST-PASS FROZEN (19:20 UTC truth check: the shifted event is required to be measurable, so that its probability is
+that of a source event; wave-4 candidate form, 2026-11-09; supersedes the measurable-`B` form above for Lemma 11.10). Event
 form of the Cameron-Martin positivity transfer for the joint event `{sup_{S₂} D_h ≤ c, μ_h(S₁) ≥ C}`. Let `f` be smooth,
 compactly supported and zero on the unit circle, and let `(μ, D)` be the LQG measure and metric of the whole-plane GFF,
 shifted by `f` through `weylShiftPair` (Weyl scaling, paper Facts 2.1 III and 2.2). If the shifted event has positive
@@ -152,6 +155,8 @@ def CameronMartinEventTransferFrozen : Prop :=
   IsClosedDyadicSquare S₁ → IsClosedDyadicSquare S₂ →
   Measurable (fun ω => ⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v) →
   Measurable (fun ω => μ ω S₁) →
+  MeasurableSet {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S₂ u v) ≤ c ∧
+    C ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} →
   0 < P {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S₂ u v) ≤ c ∧
     C ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} →
   0 < P {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v) ≤ c ∧ C ≤ μ ω S₁}

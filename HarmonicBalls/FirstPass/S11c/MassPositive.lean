@@ -57,8 +57,17 @@ theorem mass_event_pos_of_shift {γ α₀ ξ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 
       rw [weylShiftPair_fst_apply_of_const hS₁m (fun z hz => hfa z hz) (μ ω) (D ω), hexp, hmC]
       calc C₀ = C₀ / C₁ * C₁ := (ENNReal.div_mul_cancel hC₁pos.ne' hC₁top).symm
         _ ≤ C₀ / C₁ * μ ω S₁ := mul_le_mul_of_nonneg_left hω zero_le
+  have hset : {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S₂ u v) ≤ ⊤ ∧
+      C₀ ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} = {ω | C₀ ≤ ENNReal.ofReal m * μ ω S₁} := by
+    ext ω
+    simp only [Set.mem_ofPred_eq, le_top, true_and]
+    rw [weylShiftPair_fst_apply_of_const hS₁m (fun z hz => hfa z hz) (μ ω) (D ω), hexp]
+  have hmeasShift : MeasurableSet {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S₂ u v) ≤ ⊤ ∧
+      C₀ ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} := by
+    rw [hset]
+    exact measurableSet_le measurable_const (hmass.const_mul _)
   have hcm := hCM γ α₀ ξ f hγ hγ2 hα hfs hfc hf0 Ω P hC hcirc μ D S₁ S₂ ⊤ C₀ hGFF hμ hD hS₁ hS₂ hsup
-    hmass hprem
+    hmass hmeasShift hprem
   simpa using hcm
 
 end HarmonicBalls
