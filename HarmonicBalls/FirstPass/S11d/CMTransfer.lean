@@ -9,12 +9,14 @@ continuous. Here the shifted field is the whole-plane GFF `hC + g` with `g = -(�
 unit-circle average since `φ = 0` on `∂B₁`); the input is the frozen `CameronMartinGFFMutualAbsCont`.
 -/
 
+universe u
+
 namespace HarmonicBalls
 
 open MeasureTheory
 
 /-- Positive probability transfers from the shifted field to the GFF along a measurable set of fields. -/
-theorem cm_transfer_pos (hCM : CameronMartinGFFMutualAbsCont) {Ω : Type} [MeasurableSpace Ω]
+theorem cm_transfer_pos (hCM : CameronMartinGFFMutualAbsCont.{u}) {Ω : Type u} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hG : IsWholePlaneGFF P hC hcirc) {g : ℂ → ℝ} (hgc : ContDiff ℝ (⊤ : ℕ∞) g) (hgs : HasCompactSupport g)
     (hg0 : Real.circleAverage g 0 1 = 0) {B : Set ((ℂ → ℝ) → ℝ)}
