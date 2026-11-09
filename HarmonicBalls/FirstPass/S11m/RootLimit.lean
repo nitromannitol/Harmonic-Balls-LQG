@@ -47,6 +47,38 @@ theorem tendsto_sphere_sup_internalMetric_zero {D : ℂ → ℂ → ℝ} (hD : I
     rw [dist_zero_right, hyn]
     exact lt_of_lt_of_le hs (min_le_left _ _)) hyO).le
 
+/-- Root recovery (route Step 3.5): for `x ≠ 0` with `D(0, x; O) < ∞`, the infima `inf_{y ∈ ∂B_s} D(y, x; O \ {0})`
+tend to `D(0, x; O)` as `s → 0⁺`. The finiteness hypothesis is the route's standing assumption for connected `O`; its
+source is not yet located (see the report). -/
+theorem tendsto_sphere_iInf_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) {O : Set ℂ}
+    (hO : IsOpen O) (h0 : (0 : ℂ) ∈ O) {x : ℂ} (hx0 : x ≠ 0) (hfin : internalMetric D O 0 x ≠ ⊤)
+    (hcont : ContinuousOn (fun p : ℂ × ℂ => internalMetric D O p.1 p.2) (O ×ˢ O)) :
+    Tendsto (fun s : ℝ => ⨅ y ∈ sphere (0 : ℂ) s, internalMetric D (O \ {0}) y x) (𝓝[>] 0)
+      (𝓝 (internalMetric D O 0 x)) := by
+  have hsup := tendsto_sphere_sup_internalMetric_zero hD hO h0 hcont
+  rw [ENNReal.tendsto_nhds hfin]
+  intro ε hε
+  have hsupε : ∀ᶠ s in 𝓝[>] (0 : ℝ), (⨆ y ∈ sphere (0 : ℂ) s, internalMetric D O 0 y) < ε :=
+    hsup.eventually (gt_mem_nhds hε)
+  have hpos : ∀ᶠ s in 𝓝[>] (0 : ℝ), 0 < s := eventually_mem_nhdsWithin
+  have hlt : ∀ᶠ s in 𝓝[>] (0 : ℝ), s < ‖x‖ :=
+    nhdsWithin_le_nhds (eventually_lt_nhds (norm_pos_iff.mpr hx0))
+  have hnorm : ∀ᶠ s in 𝓝[>] (0 : ℝ), 0 < s ∧ s < ‖x‖ := hpos.and hlt
+  filter_upwards [hsupε, hnorm] with s hs hsn
+  constructor
+  · have hroot := internalMetric_root_le_sup_add_iInf D hD O s x
+    have hinf : (⨅ y ∈ sphere (0 : ℂ) s, internalMetric D (O \ {0}) y x) ≠ ⊤ :=
+      ne_top_of_le_ne_top hfin (iInf_sphere_internalMetric_le D hsn.1 hsn.2)
+    refine tsub_le_iff_right.mpr (le_of_lt ?_)
+    calc internalMetric D O 0 x
+        ≤ (⨆ y ∈ sphere (0 : ℂ) s, internalMetric D O 0 y) + ⨅ y ∈ sphere (0 : ℂ) s,
+            internalMetric D (O \ {0}) y x := hroot
+      _ < ε + ⨅ y ∈ sphere (0 : ℂ) s, internalMetric D (O \ {0}) y x :=
+          ENNReal.add_lt_add_right hinf hs
+      _ = (⨅ y ∈ sphere (0 : ℂ) s, internalMetric D (O \ {0}) y x) + ε := add_comm _ _
+  · exact (iInf_sphere_internalMetric_le D hsn.1 hsn.2).trans le_self_add
+
 end HarmonicBalls.S11m
 
 #print axioms HarmonicBalls.S11m.tendsto_sphere_sup_internalMetric_zero
+#print axioms HarmonicBalls.S11m.tendsto_sphere_iInf_internalMetric
