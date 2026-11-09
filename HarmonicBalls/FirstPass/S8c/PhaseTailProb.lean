@@ -41,7 +41,7 @@ theorem localPhaseTail_failure_le (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
         IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ →
         ∀ q : ℂ, P {ω | ¬ (PhaseVeryGoodAnnulus (μ ω) β 1 0 N
           (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b C₁m C₁p C₂m C₂p c q ∧
-          AnnulusBallComparison (μ ω) 0 0 m)} ≤ ENNReal.ofReal ζ := by
+          AnnulusBallComparison (μ ω) 0 0 m)} ≤ ENNReal.ofReal (ζ / 2) := by
   obtain ⟨c, hc, h⟩ := exists_uniform_singular_phase_probability_of_subrange hgrowth hfull hsub
   refine ⟨c, hc, fun γ hγ0 hγ2 β hβ ζ hζ b hb => ?_⟩
   have hγQ : γ < lqgQ γ := by
@@ -63,7 +63,7 @@ theorem localPhaseTail_failure_le (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
       ← ENNReal.ofReal_add (by linarith) (by linarith)]
     congr 1
     ring
-  exact hbound.trans (hsum.le.trans (ENNReal.ofReal_le_ofReal (by linarith)))
+  exact hbound.trans hsum.le
 
 #print axioms localPhaseTail_failure_le
 
