@@ -33,7 +33,13 @@ universe u
 
 /-- NEW step (route Step 3.6 with Step 4.2, `notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` l.319-332, l.359-379): one Borel
 set `E` of local fields modulo constants on `B₇(0)`, chosen before `α`, such that for every insertion `α < Q` and every model,
-almost surely `h^α|_{B₇} mod constants ∈ E` if and only if the three auxiliary events of the true pair `(μ, D)` hold. -/
+almost surely `h^α|_{B₇} mod constants ∈ E` if and only if the three auxiliary events of the true pair `(μ, D)` hold.
+
+UNVERIFIED (z4, round 8): the two-sided form is stronger than Lemma 11.12 (corrected, paper lines 3236-3244) needs, which
+asks only for `E ⊂ Ĝ₁` almost surely and `P[E] > 0`. `pinchFirstEvent` (`Draft/Section11.lean:95`) uses
+`internalMetric (thickening (2δ) (Q ∪ W))ᶜ 0 x` for `x ∈ sphere 0 5`, an unbounded set, and the whole-plane `setDist`s of
+`pinchSecondEvent`/`pinchThirdEvent`. No written argument gives almost-sure `σ(h|_{B₇})`-determination of these events.
+Replace by a one-sided local certificate (inclusion plus positivity) before relying on `firstPass_11_12_corrected_posXi_of_steps`. -/
 def PinchLocalDecoderStmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 → ∀ M : ℝ, 0 < M →
