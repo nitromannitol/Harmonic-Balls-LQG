@@ -7,12 +7,11 @@ import HarmonicBalls.Draft.Section11
 # First pass, Section 11: measurability of the third pinch event (fp-S11h, owner n2)
 
 Step N2 of `firstPass_11_17` (paper `lemma:third-event-proof`, corrected draft lines 3630-3633: each pinch event is measurable
-with respect to the field). For a whole-plane GFF `(hC, hcirc)` and an LQG metric `D` of `hC` (`IsLQGMetricOfField`, `α₀ = 0`),
-the event `pinchThirdEvent (D ω) V W δ` (`Draft/Section11.lean`) is a null-measurable set of `ω`.
-
-FIRST-PASS FROZEN inputs used (EXTERNAL, see `Frozen/S11d.lean` and `Frozen/S11g.lean`): `LQGInternalMetricWeylAeMeasurableFrozen`
-(field-level a.s. measurability of the internal metric), `LQGInternalMetricContinuousFrozen` (continuity of the internal metric on
-open sets), `LQGMetricLengthIdentityFrozen` (`ofReal D = internalMetric D univ`). General steps: `CountableSup.lean`.
+with respect to the field). This file holds the field-level helpers and the α = 0 internal-metric measurability. The
+third-event null-measurability for insertion `α₀ < Q` is in `FirstPass/S11h/ThirdEventAlpha.lean`. The former α = 0
+measurability theorems that used `LQGInternalMetricContinuousFrozen` and `LQGMetricLengthIdentityFrozen` were removed
+(operator 21:18 UTC: those inputs are false as typed; corrected forms `LQGInternalMetricContinuousAlphaGFFFrozen`,
+`LQGMetricLengthIdentityAlphaGFFFrozen` in `Frozen/S11g.lean`). General steps: `CountableSup.lean`.
 The Cameron-Martin transfer is not in this file.
 -/
 
@@ -64,30 +63,6 @@ theorem aemeasurable_internalMetric {Ω : Type u} [MeasurableSpace Ω] {P : Meas
   show Φ (hC ω) = internalMetric (D ω) W q q'
   rw [hDω, h0ω]
 
-/-- The metric `ω ↦ D ω` is a.s. jointly continuous on `ℂ × ℂ` (from the continuity of the internal metric on `univ`
-and the length identity). -/
-theorem ae_continuous_metric {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
-    {γ ξ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ}
-    (hint : LQGInternalMetricContinuousFrozen.{u}) (hlen : LQGMetricLengthIdentityFrozen.{u})
-    (hD : IsLQGMetricOfField P γ ξ 0 hC D) :
-    ∀ᵐ ω ∂P, Continuous (fun p : ℂ × ℂ => D ω p.1 p.2) := by
-  have hnn : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v := by
-    obtain ⟨𝔇, -, h⟩ := hD
-    filter_upwards [h] with ω hω u v
-    exact (hω u v).1
-  filter_upwards [hint γ ξ Ω P hC D hD univ isOpen_univ, hlen γ ξ Ω P hC D hD, hnn] with ω hcont hlω hnnω
-  rw [univ_prod_univ] at hcont
-  have hg : Continuous (fun p : ℂ × ℂ => ENNReal.ofReal (D ω p.1 p.2)) := by
-    have hfun : (fun p : ℂ × ℂ => ENNReal.ofReal (D ω p.1 p.2)) =
-        fun p => internalMetric (D ω) univ p.1 p.2 := funext fun p => hlω p.1 p.2
-    rw [hfun]
-    exact continuousOn_univ.mp hcont
-  have hreal : (fun p : ℂ × ℂ => D ω p.1 p.2) =
-      fun p => (ENNReal.ofReal (D ω p.1 p.2)).toReal :=
-    funext fun p => (ENNReal.toReal_ofReal (hnnω p.1 p.2)).symm
-  rw [hreal]
-  exact ENNReal.continuousOn_toReal.comp_continuous hg fun p => ENNReal.ofReal_ne_top
-
 /-- Bridge: for a continuous `D` and nonempty compact `S₁, S₂`, `ofReal (setDist D S₁ S₂)` is the infimum of
 `ofReal (D x y)` over `S₁ ×ˢ S₂` (the infimum defining `setDist` is attained on the compact `image2`). -/
 theorem ofReal_setDist_eq_iInf {D : ℂ → ℂ → ℝ} (hcont : Continuous (fun p : ℂ × ℂ => D p.1 p.2))
@@ -126,43 +101,5 @@ theorem aemeasurable_ofReal_setDist {Ω : Type*} [MeasurableSpace Ω] (P : Measu
     (fun p => hmeas p.1 p.2)
     (hcont.mono fun ω hω => (ENNReal.continuous_ofReal.comp hω).continuousOn)
 
-/-- A.e. measurability of the internal diameter `ω ↦ diam^δ_{D ω}(A)` (`Draft/Section11.lean`, `internalDiam`), for `A`
-arbitrary: the supremum over `A × A` reduces to a countable set (`aemeasurable_iSup_pair`), each internal metric is
-a.e. measurable (`aemeasurable_internalMetric`), and it is a.s. continuous on `A × A` (`LQGInternalMetricContinuousFrozen`
-on the open set `thickening δ A`). -/
-theorem aemeasurable_internalDiam {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
-    {γ ξ δ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {D : Ω → ℂ → ℂ → ℝ}
-    (hAe : LQGInternalMetricWeylAeMeasurableFrozen.{u}) (hint : LQGInternalMetricContinuousFrozen.{u})
-    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ2 : γ < 2) (hD : IsLQGMetricOfField P γ ξ 0 hC D)
-    (hδ : 0 < δ) (A : Set ℂ) :
-    AEMeasurable (fun ω => internalDiam (D ω) δ A) P := by
-  unfold internalDiam
-  refine aemeasurable_iSup_pair P A (fun ω x y => internalMetric (D ω) (thickening δ A) x y) ?_ ?_
-  · intro x y
-    exact aemeasurable_internalMetric hAe hgff hγ hγ2 hD isOpen_thickening x y
-  · filter_upwards [hint γ ξ Ω P hC D hD (thickening δ A) isOpen_thickening] with ω hω
-    exact hω.mono (prod_mono (self_subset_thickening hδ A) (self_subset_thickening hδ A))
-
-/-- The third pinch event `Ẽ₃` (`pinchThirdEvent`, `Draft/Section11.lean`) is a null-measurable set of `ω` for an LQG
-metric `D` of a whole-plane GFF (step N2 of `firstPass_11_17`, paper lines 3630-3633). -/
-theorem nullMeasurableSet_pinchThirdEvent {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
-    {γ ξ δ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {D : Ω → ℂ → ℂ → ℝ}
-    (hAe : LQGInternalMetricWeylAeMeasurableFrozen.{u}) (hint : LQGInternalMetricContinuousFrozen.{u})
-    (hlen : LQGMetricLengthIdentityFrozen.{u})
-    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ2 : γ < 2) (hD : IsLQGMetricOfField P γ ξ 0 hC D)
-    (hδ : 0 < δ) (V W : Set ℂ) :
-    NullMeasurableSet {ω | pinchThirdEvent (D ω) V W δ} P := by
-  have : IsProbabilityMeasure P := hgff.isProbabilityMeasure
-  have hI := aemeasurable_internalDiam hAe hint hgff hγ hγ2 hD hδ (thickening (3 * δ) W \ V)
-  have hmeas : ∀ z w, AEMeasurable (fun ω => ENNReal.ofReal (D ω z w)) P := by
-    intro z w
-    refine (aemeasurable_internalMetric hAe hgff hγ hγ2 hD isOpen_univ z w).congr ?_
-    filter_upwards [hlen γ ξ Ω P hC D hD] with ω hω
-    exact (hω z w).symm
-  have hR := aemeasurable_ofReal_setDist P D hmeas (ae_continuous_metric hint hlen hD)
-    (isCompact_sphere (0 : ℂ) (2 * δ)) (isCompact_sphere (0 : ℂ) (3 * δ))
-    (NormedSpace.sphere_nonempty.mpr (by linarith)) (NormedSpace.sphere_nonempty.mpr (by linarith))
-  unfold pinchThirdEvent
-  exact nullMeasurableSet_lt hI hR
 
 end HarmonicBalls

@@ -31,7 +31,7 @@ def LQGMetricSatisfiesAxiomsUnivFrozen : Prop :=
     (∀ x, Measurable fun ω => f ω x) →
     SatisfiesLQGMetricAxioms P γ ξ 𝔇 (fun ω => addFunPairing (hC ω) (f ω))
 
-/-- FIRST-PASS FROZEN. Continuity of the internal metric on open sets (internal metric of Fact 2.2 I, Bou-Rabee-Gwynne
+/-- RETIRED (operator 21:18 UTC, truth check: FALSE as typed, IsWholePlaneGFF missing; kept, do not use). FIRST-PASS FROZEN. Continuity of the internal metric on open sets (internal metric of Fact 2.2 I, Bou-Rabee-Gwynne
 arXiv:2208.11795, corrected draft line 428, `Defs/LQGMetric.lean:65`): for a whole-plane LQG
 metric `D` of a field `hC` (`IsLQGMetricOfField`, `α₀ = 0`, so `D = 𝔇(h^ℂ)` almost surely), every open `W ⊆ ℂ` and almost
 surely in `ω`, the ENNReal-valued internal metric `(z, w) ↦ D^W(z, w)` is continuous on `W ×ˢ W` (the value `∞` is allowed
@@ -44,7 +44,7 @@ def LQGInternalMetricContinuousFrozen : Prop :=
     ∀ W : Set ℂ, IsOpen W →
       ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
 
-/-- FIRST-PASS FROZEN. The length identity of an LQG metric (Fact 2.2 I, Bou-Rabee-Gwynne arXiv:2208.11795, corrected draft
+/-- RETIRED (operator 21:18 UTC, truth check: FALSE as typed, IsWholePlaneGFF missing; kept, do not use). FIRST-PASS FROZEN. The length identity of an LQG metric (Fact 2.2 I, Bou-Rabee-Gwynne arXiv:2208.11795, corrected draft
 line 428; the Euclidean length metric axiom `ofReal_eq_internalMetric` of `IsEuclideanLengthMetric`, `Defs/LQGMetric.lean`):
 for an LQG metric `D` of a whole-plane field `hC` (`IsLQGMetricOfField`, `α₀ = 0`), almost surely for all `z w ∈ ℂ`,
 `ENNReal.ofReal (D z w)` is the internal metric of `D` on the whole plane, i.e. the infimum of the `D`-lengths of paths
@@ -56,7 +56,7 @@ def LQGMetricLengthIdentityFrozen : Prop :=
     (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), IsLQGMetricOfField P γ ξ 0 hC D →
     ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
 
-/-- FIRST-PASS FROZEN. Continuity of the internal metric on open sets for an LQG metric with insertion `α₀ < Q`: the
+/-- RETIRED (operator 21:18 UTC, truth check: FALSE as typed, IsWholePlaneGFF missing; kept, do not use). FIRST-PASS FROZEN. Continuity of the internal metric on open sets for an LQG metric with insertion `α₀ < Q`: the
 alpha-general form of `LQGInternalMetricContinuousFrozen` (which is the case `α₀ = 0`). For `0 < γ < 2`, `α₀ < lqgQ γ` and
 an LQG metric `D` of `hC` (`IsLQGMetricOfField`, log-singular field `h^ℂ - α₀ log|·|`), every open `W ⊆ ℂ` and almost surely
 in `ω`, `(z, w) ↦ D^W(z, w)` is continuous on `W ×ˢ W` (the value `∞` is allowed). Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun
@@ -71,7 +71,7 @@ def LQGInternalMetricContinuousAlphaFrozen : Prop :=
     ∀ W : Set ℂ, IsOpen W →
       ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
 
-/-- FIRST-PASS FROZEN. The length identity of an LQG metric with insertion `α₀ < Q`: the alpha-general form of
+/-- RETIRED (operator 21:18 UTC, truth check: FALSE as typed, IsWholePlaneGFF missing; kept, do not use). FIRST-PASS FROZEN. The length identity of an LQG metric with insertion `α₀ < Q`: the alpha-general form of
 `LQGMetricLengthIdentityFrozen` (the case `α₀ = 0`). For `0 < γ < 2`, `α₀ < lqgQ γ` and an LQG metric `D` of `hC`
 (`IsLQGMetricOfField`), almost surely for all `z w ∈ ℂ`, `ENNReal.ofReal (D z w)` is the internal metric of `D` on `ℂ`, i.e. the
 infimum of the `D`-lengths of paths from `z` to `w`. Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun 2020, arXiv:1905.00380,
@@ -82,6 +82,38 @@ def LQGMetricLengthIdentityAlphaFrozen : Prop :=
   ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
     IsLQGMetricOfField P γ ξ α₀ hC D →
+    ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
+
+/-- FIRST-PASS FROZEN. Continuity of the internal metric on open sets for an LQG metric with insertion `α₀ < Q`, with the
+whole-plane GFF hypothesis. Corrected form of the RETIRED `LQGInternalMetricContinuousAlphaFrozen` (operator truth check
+21:18 UTC, `notes/fp-gaps/CHATGPT-frozen-truth-2300.md`: the supplied `hC` must be a whole-plane GFF). For `0 < γ < 2`,
+`α₀ < lqgQ γ`, if `∃ hcirc, IsWholePlaneGFF P hC hcirc` and `D` is an LQG metric of `hC` (`IsLQGMetricOfField`, log-singular
+field `h^ℂ - α₀ log|·|`), then for every open `W ⊆ ℂ` and almost surely in `ω`, `(z, w) ↦ D^W(z, w)` is continuous on
+`W ×ˢ W` (the value `∞` is allowed). Source: HB Fact 2.2(I) (arXiv:2208.11795, `fact:lqg-metric`: Euclidean topology and
+length-metric property); Dubédat-Falconet-Gwynne-Pfeffer-Sun 2020, arXiv:1905.00380v2, Theorem 1.10 (p. 10) and
+Proposition 3.17 (p. 43) for the insertion range. Used by: `ae_continuous_metric_alpha` (FirstPass/S11h/ThirdEventAlpha.lean),
+hence `nullMeasurableSet_pinchThirdEvent_alpha` and the faithful `firstPass_11_17_corrected`. -/
+def LQGInternalMetricContinuousAlphaGFFFrozen : Prop :=
+  ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ),
+    (∃ hcirc : Ω → ℝ → ℂ → ℝ, IsWholePlaneGFF P hC hcirc) →
+    0 < γ → γ < 2 → α₀ < lqgQ γ → IsLQGMetricOfField P γ ξ α₀ hC D →
+    ∀ W : Set ℂ, IsOpen W →
+      ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
+
+/-- FIRST-PASS FROZEN. The length identity of an LQG metric with insertion `α₀ < Q`, with the whole-plane GFF hypothesis.
+Corrected form of the RETIRED `LQGMetricLengthIdentityAlphaFrozen` (truth check 21:18 UTC, minimal corrected statement in
+`notes/fp-gaps/CHATGPT-frozen-truth-2300.md`). If `∃ hcirc, IsWholePlaneGFF P hC hcirc`, `0 < γ < 2`, `α₀ < lqgQ γ` and `D` is
+an LQG metric of `hC`, then almost surely for all `z w ∈ ℂ`, `ENNReal.ofReal (D z w)` is the internal metric of `D` on `ℂ`,
+i.e. the infimum of the `D`-lengths of paths from `z` to `w`. Source: HB Fact 2.2(I) (arXiv:2208.11795, length-metric property);
+Gwynne-Miller 2021, arXiv:1905.00383v3, Section 1.2 (axioms I-IV) and Theorem 1.2 (p. 6); Dubédat-Falconet-Gwynne-Pfeffer-Sun
+2020, arXiv:1905.00380v2, Theorem 1.10 (p. 10). Used by: `ae_continuous_metric_alpha` and
+`nullMeasurableSet_pinchThirdEvent_alpha` (FirstPass/S11h/ThirdEventAlpha.lean), hence `firstPass_11_17_corrected`. -/
+def LQGMetricLengthIdentityAlphaGFFFrozen : Prop :=
+  ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ),
+    (∃ hcirc : Ω → ℝ → ℂ → ℝ, IsWholePlaneGFF P hC hcirc) →
+    0 < γ → γ < 2 → α₀ < lqgQ γ → IsLQGMetricOfField P γ ξ α₀ hC D →
     ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
 
 end HarmonicBalls
