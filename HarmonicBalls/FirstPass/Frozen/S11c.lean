@@ -77,18 +77,24 @@ def DyadicCellDiamSmallFrozen : Prop :=
           internalMetric (D ω) (enlargedDyadicCell (N : ℤ) j k ∩ S2) u v ≤ ENNReal.ofReal ε},
       MeasurableSet A ∧ ENNReal.ofReal (1 - η) ≤ P A
 
-/-- FIRST-PASS FROZEN. Finite diameter of the closure of a connected finite union of closed dyadic squares, for the
-LQG metric: almost surely there is a finite bound on the internal distances within the union.
-Why it holds: the metric is finite and continuous on a compact connected union of cells (the metric is a length
-metric whose local distances are finite on compact sets).
+/-- A closed axis-parallel rectangle `[a₁,a₂] × [b₁,b₂]` in `ℂ` (closed dyadic squares are special cases). -/
+def IsClosedRectangle (R : Set ℂ) : Prop :=
+  ∃ a₁ a₂ b₁ b₂ : ℝ, a₁ ≤ a₂ ∧ b₁ ≤ b₂ ∧ R = Icc a₁ a₂ ×ℂ Icc b₁ b₂
+
+/-- FIRST-PASS FROZEN. Finite diameter of a compact connected finite union of closed rectangles, for the LQG metric:
+almost surely there is a finite bound on the internal distances within the union. (Generalized on 2026-11-09 from
+closed dyadic squares to closed rectangles: the exterior set of Lemma 11.10 is a union of rectangles, not of dyadic
+squares. The printed text, paper lines 3026-3028, says "a finite union of closed Euclidean squares".)
+Why it holds: the metric is finite and continuous on a compact connected union of rectangles (length metric, finite on
+compact sets).
 Source: Ding-Dubédat-Dunlap-Falconet (Publ. IHES 2020), Lemma 3.9, as cited by paper `dubedat2020weak` in the proof of
-Lemma 11.10 (paper lines 3026-3028; locator pending).
+Lemma 11.10 (paper lines 3026-3028; locator pending; the exact hypotheses of DDDF20 Lemma 3.9 are unverified).
 Used by: firstPass_11_10. -/
 def ConnectedSquareUnionDiamFiniteFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
-  ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ S ∈ F, IsClosedDyadicSquare S) ∧ K = ⋃ S ∈ F, S) → IsConnected K →
+  ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) → IsConnected K →
   ∀ᵐ ω ∂P, ∃ A : ℝ, ∀ u ∈ K, ∀ v ∈ K, internalMetric (D ω) K u v ≤ ENNReal.ofReal A
 
 end HarmonicBalls
