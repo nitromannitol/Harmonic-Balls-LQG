@@ -7,7 +7,7 @@ import HarmonicBalls.Defs.Notation
 # First-pass frozen inputs for Lemmas 11.16 and 11.17 (fp-S11f, owner n2)
 
 FIRST-PASS FROZEN inputs of the Section 11 pinch events. Each is a `def ... : Prop` (never an axiom). Only the
-square-diameter tail of Ding-Dubédat-Dunlap-Falconet is frozen here; the paper's own events and their measurability are
+square-diameter tail of Dubédat-Falconet-Gwynne-Pfeffer-Sun (DFGPS20; the name DDDF is kept) is frozen here; the paper's own events and their measurability are
 NOT frozen (operator ruling 2026-11-09 18:50 UTC).
 -/
 
@@ -24,7 +24,7 @@ where `D = 𝔇(hC ω)`, `S_ℓ(w) = closedSquare w ℓ` (lower-left corner `w`;
 compact set and does not change the statement) and `g_1(0) = hcirc ω 1 0` is the unit circle average at `0`.
 Restated (n2, round 2) from the `IsLQGMetricOfField` form to the metric functional `𝔇(hC ω)`: the same object, since the
 realized LQG metric of the field is `𝔇(hC ω)` (`IsLQGMetricOfField` with exponent zero).
-Source: Ding, Dubédat, Dunlap, Falconet, Lemma 3.19, equation (3.63), page 45, arXiv:1905.00380v2; the statement as quoted
+Source: Dubédat, Falconet, Gwynne, Pfeffer, Sun (DFGPS20), Lemma 3.19, equation (3.63), page 45, arXiv:1905.00380v2; the statement as quoted
 by Bou-Rabee-Gwynne (arXiv:2208.11795, paper lines 3392-3405, item (ii)), where it is used for the square-diameter tail of
 Lemma 11.9 (paper lines 3539-3541).
 Used by: firstPass_11_16 (through `PinchSecondMassStep`, once that step is proved; `HarmonicBalls/FirstPass/S11f/DyadicTail.lean`
