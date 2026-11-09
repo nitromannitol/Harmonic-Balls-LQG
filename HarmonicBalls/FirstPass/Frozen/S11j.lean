@@ -43,7 +43,10 @@ def CameronMartinMetricEventTransferFrozen : Prop :=
   NullMeasurableSet {ω | B (D ω)} P →
   0 < P {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} → 0 < P {ω | B (D ω)}
 
-/-- FIRST-PASS FROZEN (EXTERNAL, proposed minimal correction of `CameronMartinMetricEventTransferFrozen`, truth check
+/-- RETIRED (operator 22:44 UTC): superseded by `cameronMartinFieldCertificateTransfer` (proved, FirstPass/S11j/
+CertificateTransfer.lean); not used by any proof; kept, never deleted.
+
+FIRST-PASS FROZEN (EXTERNAL, proposed minimal correction of `CameronMartinMetricEventTransferFrozen`, truth check
 `notes/fp-gaps/CHATGPT-CM-metric-truth.md` section 1: add the measurability of the predicate `B` in the product
 σ-algebra on metrics; the Cameron-Martin absolute continuity `Law(e^{ξ f} D_h) ≪ Law(D_h)` gives the stated direction).
 Acceptance is the operator's (ACCEPT check) and is pending. Same content as the superseded predicate, plus

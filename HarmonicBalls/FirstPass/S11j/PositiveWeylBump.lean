@@ -1,4 +1,5 @@
 import HarmonicBalls.Steps.Sec11.SingularWeylBumpLength
+import HarmonicBalls.Steps.Sec11.MetricArcLength
 import HarmonicBalls.FirstPass.S11j.PositiveWeylFinite
 
 /-!
@@ -102,5 +103,22 @@ theorem ae_singularField_nonneg_weylBump_lengthMetric_of_metricFieldAxioms
       haxioms hgff hγ hγ₂ hα hD] with ω hm hz
   intro f hf hc hl
   exact hm.weylScaling_nonneg_bump_isLengthMetric hξ f hf hc hl hz
+
+/-- Almost surely, for one fixed nonnegative continuous compactly supported Weyl bump `f`, the bumped metric
+`e^{ξ f} D` is a Euclidean length metric. Fixed-`f` form (operator 22:44 UTC): the single almost-sure length property of
+`D` (`ae_isEuclideanLengthMetric_of_metricFieldAxioms`) and the deterministic zero identity
+`IsEuclideanLengthMetric.weylScaling_zero` suffice; no statement quantified over all `f` inside `∀ᵐ`. -/
+theorem ae_fixedWeylBump_isEuclideanLengthMetric
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ ξ α₀ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (D : Ω → ℂ → ℂ → ℝ)
+    (haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
+    (hξ : 0 ≤ ξ) (f : ℂ → ℝ) (hf : Continuous f) (hc : HasCompactSupport f) (hl : ∀ z, 0 ≤ f z) :
+    ∀ᵐ ω ∂P, IsEuclideanLengthMetric (fun x y => (weylScaling (D ω) ξ f x y).toReal) := by
+  filter_upwards [ae_isEuclideanLengthMetric_of_metricFieldAxioms P γ ξ α₀ hC hcirc D
+      haxioms hgff hγ hγ₂ hα hD] with ω hm
+  exact hm.weylScaling_nonneg_bump_isLengthMetric hξ f hf hc hl (hm.weylScaling_zero ξ)
 
 end HarmonicBalls

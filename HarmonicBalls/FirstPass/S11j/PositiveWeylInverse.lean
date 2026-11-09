@@ -113,4 +113,23 @@ theorem ae_singularField_nonneg_weylBump_inverse_of_metricFieldAxioms
   intro f hf hc hl x y
   exact hm.inverse_weylScaling_nonneg hξ f hf hc hl hz x y
 
+/-- Almost surely, for one fixed nonnegative continuous compactly supported weight `f`, the inverse identity
+`D = e^{-ξ f} (e^{ξ f} D)` holds at every pair of points. Fixed-`f` form (operator 22:44 UTC): it uses only the a.s.
+length property of `D` and the deterministic zero identity `IsEuclideanLengthMetric.weylScaling_zero`. -/
+theorem ae_fixedWeylBump_inverse
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ ξ α₀ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (D : Ω → ℂ → ℂ → ℝ)
+    (haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
+    (hξ : 0 ≤ ξ) (f : ℂ → ℝ) (hf : Continuous f) (hc : HasCompactSupport f) (hl : ∀ z, 0 ≤ f z) :
+    ∀ᵐ ω ∂P, ∀ x y,
+      ENNReal.ofReal (D ω x y) =
+        weylScaling (fun u v => (weylScaling (D ω) ξ f u v).toReal) ξ (fun z => -f z) x y := by
+  filter_upwards [ae_isEuclideanLengthMetric_of_metricFieldAxioms P γ ξ α₀ hC hcirc D
+      haxioms hgff hγ hγ₂ hα hD] with ω hm
+  intro x y
+  exact hm.inverse_weylScaling_nonneg hξ f hf hc hl (hm.weylScaling_zero ξ) x y
+
 end HarmonicBalls
