@@ -336,10 +336,15 @@ for the rooted field `h - γ log|· - z|` (`z` any point). The first clause is t
 insertion `α₀`); the second clause is the Campbell-rooted field of paper Lemma 11.7 (proof, lines 2936-2949), whose
 LQG measure is `IsLQGMeasure` for the profile `rootedCircleAverage`. The constant in B2 eq. (3.2) is
 `e^{-γ⟨h,ρ_D⟩}`; only the existence of some constant `c ∈ (0,∞)` is asserted (the cone event is scale-invariant).
-Mechanism: the circle averages of `h` on the circles inside `D` are a.s. limits of mean-zero pairings
+Mechanism: the circle averages of `h` on the circles inside `D`, minus the scalar `⟨h, ρ_D⟩` (`ρ_D` the normalized
+Lebesgue measure on `D`; this scalar accommodates the missing additive constant), are a.s. limits of mean-zero pairings
 (`LocalCircleAverageMeanZeroApproxFrozen`), and the LQG measure is a measurable function of the continuous circle-average
-profile on `D` (Duplantier–Sheffield, arXiv:0808.1560v2, Proposition 1.1; Duplantier–Miller–Sheffield, arXiv:1409.7055v4,
-Lemma A.10 for the rooting). Locator: standard; ChatGPT truth check pending. Not covered by n4's
+profile on `D` (Duplantier–Sheffield, arXiv:0808.1560v2, Proposition 1.1). Duplantier–Miller–Sheffield, arXiv:1409.7055v4,
+Lemma A.10 is a rooting identity, not a decoder theorem: its normalized rooting term `γ log max{|w|,1}` vanishes on the unit
+disk but is generally nonconstant on an arbitrary `D`. So the second clause is stated for the pure logarithmic rooted field
+`h - γ log|· - z|` actually defined here; identifying it with the Campbell-rooted normalized field needs a domain
+qualification or explicit treatment of that term (truth check 21:28 UTC: TRUE as written; notes/fp-gaps/CHATGPT-decoder-truth.md).
+Not covered by n4's
 `LQGMeasureOfProfileMeasurableFrozen` (`FirstPass/Frozen/S8d.lean:28`): that decoder takes a GLOBAL profile on
 `CircleParameter`, and the local observation does not determine the profile outside `D`.
 Used by: firstPass_11_7 (route: B2 sec 3-4 decoder, sec 5.1 rooted null section; FirstPass/S11c.lean, to come). -/
