@@ -7,6 +7,9 @@ import HarmonicBalls.FirstPass.S11d.Dyadic
 import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Draft.Section11
+import HarmonicBalls.Proofs.GFF.MetricXiSign
+
+universe u
 
 /-!
 # Proposition 11.9, the shifted event with positive probability (fp-S11d, owner n3)
@@ -38,28 +41,31 @@ theorem closedDyadicSquare_nonempty (n j k : ℤ) : (closedDyadicSquare n j k).N
 transfer back to `h`). For the smooth shift `g = -(c/ξ) φ` the metric of `h + g - α₀ log|·|` is at most `ε` on `V` on an
 event of positive probability on which `μ_h(S₁) ≥ C`. -/
 theorem shifted_event_exists
-    {γ ξ α₀ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ) (hξ : 0 < ξ)
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ ξ α₀ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
     (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
     (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
     (hAx : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
-    (hShift : LQGMetricContinuousShiftFactI)
+    (hShift : LQGMetricContinuousShiftFactI.{u})
     (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
-    (h1110 : SmallMetricDiameterLargeMassSquareStmt.{0})
+    (h1110 : SmallMetricDiameterLargeMassSquareStmt.{u})
     {U V W : Set ℂ} (hUo : IsOpen U) (hUc : IsConnected U)
     (hVo : IsOpen V) (hVc : IsConnected V) (hVb : Bornology.IsBounded V)
     (hWo : IsOpen W) (hWb : Bornology.IsBounded W)
     (hUV : U ⊆ V) (hVW : V ⊆ W) (hcl : closure V ⊆ W) (hWs : Disjoint W (Metric.sphere (0 : ℂ) 1))
     {C ε : ℝ} (hε : 0 < ε) (hεC : ε < C) :
     ∃ 𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ, IsLQGMetric γ ξ 𝔇 ∧
+      (∀ᵐ ω ∂P, D ω = fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal) ∧
       ∃ g : ℂ → ℝ, ContDiff ℝ (⊤ : ℕ∞) g ∧ HasCompactSupport g ∧ Real.circleAverage g 0 1 = 0 ∧
-        ∃ S₁ : Set ℂ, ∃ A : Set Ω, MeasurableSet A ∧ 0 < P A ∧
+        ∃ S₁ : Set ℂ, IsClosed S₁ ∧ (∀ z ∈ S₁, g z = 0) ∧ S₁ ⊆ U ∧ ∃ A : Set Ω, MeasurableSet A ∧ 0 < P A ∧
           ∀ ω ∈ A, (∀ u ∈ V, ∀ v ∈ V,
             internalMetric (fun x y => (weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y).toReal)
               W u v ≤ ENNReal.ofReal ε) ∧ ENNReal.ofReal C ≤ μ ω S₁ := by
+  have : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
   have hD2 := hD
   obtain ⟨𝔇, h𝔇, hDae⟩ := hD
+  have hξ : 0 < ξ := IsLQGMetric.weylExponent_pos h𝔇 hγ0
   obtain ⟨hI, hII, hIII, -⟩ := hAx hGFF hγ0 hγ2 hα 𝔇 h𝔇
   obtain ⟨x, hx⟩ := hUc.nonempty
   obtain ⟨S1, S2, hS1, hS2, hS1S2, hS2U⟩ := exists_closedDyadicSquare_pair hUo hx
@@ -139,7 +145,12 @@ theorem shifted_event_exists
     refine ⟨h1, h2.2, fun x y => ?_, h4⟩
     exact (ENNReal.ofReal_toReal (ne_top_of_lt (h2.1 x y))).trans (h3 x y)
   obtain ⟨B', hB'm, hB'sub, hB'good, hB'P⟩ := exists_measurable_subset_of_ae hBxm _ hgood
-  refine ⟨𝔇, h𝔇, g, hgs.1, hgs.2, hcirc0, S1, B', hB'm, ?_, ?_⟩
+  have hS1c : IsClosed S1 := isClosed_of_isClosedDyadicSquare hS1
+  have hS1U : S1 ⊆ U := hS1S2'.trans hS2U
+  have hφ0 : ∀ z ∈ S1, φ z = 0 := fun z hz =>
+    image_eq_zero_of_notMem_tsupport (fun h => (hφsup h).2 hz)
+  have hg0S1 : ∀ z ∈ S1, g z = 0 := fun z hz => by simp [hg, hφ0 z hz]
+  refine ⟨𝔇, h𝔇, hDeq, g, hgs.1, hgs.2, hcirc0, S1, hS1c, hg0S1, hS1U, B', hB'm, ?_, ?_⟩
   · rw [hB'P]
     exact hBxp
   · intro ω hω

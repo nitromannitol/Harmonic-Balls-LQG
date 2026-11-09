@@ -9,6 +9,8 @@ FIRST-PASS FROZEN inputs for `firstPass_11_9` (paper `prop:mass-diam-gen`, corre
 including the Weyl identity III: `weylScaling (𝔇 (hC ω)) ξ (f - α₀ log) = weylScaling (D_h ω) ξ f`).
 -/
 
+universe u
+
 namespace HarmonicBalls
 
 open MeasureTheory
@@ -27,7 +29,7 @@ metric `e^{ξ g} · D_h` is finite and a length metric inducing the Euclidean to
 (`gwynne2021existence` in the paper bibliography; arXiv locator pending) Section 1.2 p. 6; Dubedat-Falconet-Gwynne-Pfeffer-Sun 2020 (arXiv:1905.00380)
 Theorem 1.10 p. 10 and Proposition 3.17 p. 43 for the log singularity. Used by: firstPass_11_9. -/
 def LQGMetricContinuousShiftFactI : Prop :=
-  ∀ (γ ξ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+  ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
     ∀ 𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ, IsLQGMetric γ ξ 𝔇 →
@@ -42,7 +44,7 @@ pairing σ-algebra of `hC` on `U` (the σ-algebra of `h + g` on `U` equals that 
 Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 II (line 441), applied to `h + f` (Fact 2.2 III, line 445);
 Gwynne-Miller 2021 Section 1.2 p. 6 (locator pending). Used by: firstPass_11_9. -/
 def LQGMetricContinuousShiftLocality : Prop :=
-  ∀ (γ ξ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+  ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
     ∀ 𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ, IsLQGMetric γ ξ 𝔇 →
@@ -60,7 +62,7 @@ and `hC + g` on the distribution σ-algebra are mutually absolutely continuous: 
 `hC` iff it is null for `hC + g`. Used by: firstPass_11_9 (transfer of the positive-probability event from the shifted field
 `h~ = h - (φ/ξ) log(2A/ε)` back to `h`, paper line 3131, "since the laws of h and h~ are mutually absolutely continuous"). -/
 def CameronMartinGFFMutualAbsCont : Prop :=
-  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (hC : Ω → (ℂ → ℝ) → ℝ)
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (g : ℂ → ℝ), IsWholePlaneGFF P hC hcirc → ContDiff ℝ (⊤ : ℕ∞) g →
     HasCompactSupport g → Real.circleAverage g 0 1 = 0 →
     ∀ B : Set ((ℂ → ℝ) → ℝ), MeasurableSet[distributionMeasurableSpace] B →
@@ -72,12 +74,39 @@ Remark 1.5 p. 8; Dubedat-Falconet-Gwynne-Pfeffer-Sun 2020, p. 9). It identifies 
 (the Defs convention `weylScaling (𝔇 ·) ξ (-α₀ log|·|)`) with the Weyl scaling of the metric of `h`, almost surely.
 Used by: firstPass_11_9 (the Weyl comparison `internalMetric_weylScaling_le` for the shifted metric, paper line 3127). -/
 def WeylScalingCompositionFrozen : Prop :=
-  ∀ (γ ξ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+  ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
     ∀ 𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ, IsLQGMetric γ ξ 𝔇 →
     ∀ g : ℂ → ℝ, Continuous g →
       ∀ᵐ ω ∂P, ∀ x y : ℂ,
         weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
           weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y
+
+/-- FIRST-PASS FROZEN. Field-level measurability of the Weyl-scaled internal metric (standard; locator pending). For an
+LQG metric `𝔇` (`IsLQGMetric`, Weyl exponent `ξ`), an open set `W` and fixed `q q' : ℂ`, the map `T ↦ D^W_T(q, q')` is
+measurable for the σ-algebra of pairings, where `D_T = e^{-ξ α₀ log|·|} · 𝔇 T` is the metric of `T - α₀ log|·|` and
+`D^W_T` is its internal metric on `W`. Source: the measurability of `h ↦ D_h` required in Gwynne-Miller 2021 (Section 1.2,
+p. 6; locator pending), transported to the internal metric on the open set `W`. Operator ruling 2026-11-09 18:35 UTC:
+field-level measurability is EXTERNAL and is frozen at field level. Used by: firstPass_11_9 (the Cameron-Martin transfer
+event, paper line 3131). -/
+def LQGInternalMetricWeylMeasurableFrozen : Prop :=
+  ∀ (γ ξ α₀ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), IsLQGMetric γ ξ 𝔇 → ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ,
+    Measurable[distributionMeasurableSpace] fun T : (ℂ → ℝ) → ℝ =>
+      internalMetric (fun u v => (weylScaling (𝔇 T) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q'
+
+/-- FIRST-PASS FROZEN. Field-level measurability of the LQG mass of a closed set (standard; locator pending). For a
+whole-plane GFF `hC` with LQG measure `μ` (`IsLQGMeasureOfField`) and a closed set `S`, there is a measurable functional
+`F` on distributions such that `F (h^ℂ + f) = μ(S)` almost surely, for every continuous `f` vanishing on `S`. Source: `μ` is
+the vague limit of the regularized measures (Duplantier-Sheffield 2011, arXiv:0808.1560v2, Section 3; Bou-Rabee-Gwynne
+arXiv:2208.11795 Fact 2.1 III, p. 9, line 418, `LQGMeasureWeylScaling`: `μ_{h+f} = e^{γ f} μ_h`, which gives
+`μ_{h+f}(S) = μ_h(S)` when `f = 0` on `S`). Used by: firstPass_11_9 (mass identity `M(h^ℂ + g) = M(h^ℂ)` for the shift `g`
+vanishing on `S₁`, paper line 3131). -/
+def LQGMassFunctionalMeasurableFrozen : Prop :=
+  ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
+    IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → IsLQGMeasureOfField P γ α₀ hcirc μ →
+    ∀ S : Set ℂ, IsClosed S → ∃ F : ((ℂ → ℝ) → ℝ) → ℝ≥0∞, Measurable[distributionMeasurableSpace] F ∧
+      ∀ f : ℂ → ℝ, Continuous f → (∀ x ∈ S, f x = 0) →
+        ∀ᵐ ω ∂P, F (addFunPairing (hC ω) f) = μ ω S
 
 end HarmonicBalls
