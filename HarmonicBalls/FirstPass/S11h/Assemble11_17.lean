@@ -3,6 +3,7 @@ import HarmonicBalls.FirstPass.S11h.AsFacts11_17
 import HarmonicBalls.FirstPass.S11h.Select11_17
 import HarmonicBalls.FirstPass.S11h.O2Bump
 import HarmonicBalls.FirstPass.S11h.Faithful
+import HarmonicBalls.FirstPass.S11h.PinchCertificate11_17
 
 /-!
 # First pass, Lemma 11.17 (corrected form): assembly from the 11.16 pinch event (fp-S11h, owner n2)
@@ -12,12 +13,14 @@ import HarmonicBalls.FirstPass.S11h.Faithful
   (decision 21:12 UTC; the Draft 11.16 is not used, so there is no cycle with `firstPass_11_16_of_11_17`).
 - `hAx`: the staged metric field axioms `LQGMetricFieldAxioms` (Proposed/LQG.lean:199, Fact 2.2 I-IV), pending the
   operator's source-check; used only through the almost-sure facts of AsFacts11_17.lean.
-- `hCM`: `PinchPairTransferStmt`, the pair Cameron-Martin transfer of Step 17.6 for the bump shift. This is a NAMED
-  HYPOTHESIS, not a frozen input: the operator's frozen form (22:26 UTC note, notes/fp-gaps/) has not landed yet.
+- `hCMGFF`: the frozen `CameronMartinGFFMutualAbsCont` (Frozen/S11d). Step 17.6 is proved from it through
+  `pinchPair_transfer_of_certificate` (PinchCertificate11_17.lean).
+- `hCert`: `PinchCertificateStmt`, the NEW field-level certificate of Step 17.6 for the bump shift (one measurable field
+  event certifying the pinch triple before and after the shift). NOT frozen and NOT proved: an open NEW step.
 
 The proof follows Steps 17.3-17.6 of `notes/fp-gaps/CHATGPT-11-15-17-faithful.md` (section 6): the truncation selection
 (Select11_17, Cover11_17), the almost-sure bump admissibility and persistence of the pinch events (AsFacts11_17,
-PairPersistence11_17), the smooth bump of `exists_pinch_bump` (O2Bump), and finally `hCM`.
+PairPersistence11_17), the smooth bump of `exists_pinch_bump` (O2Bump), and finally the transfer with `hCMGFF` and `hCert`.
 -/
 
 namespace HarmonicBalls
@@ -44,22 +47,6 @@ def pinchShiftImp (γ ξ : ℝ) (φ : ℂ → ℝ) (U V W T Q' Q : Set ℂ) (δ 
         ENNReal.ofReal (setDist D (sphere (0 : ℂ) (2 * δ)) (sphere (0 : ℂ) (3 * δ)))) →
     pinchShiftedEvents γ ξ (bumpExponent ξ k φ) U V W T Q' Q δ M μ D
 
-/-- NAMED HYPOTHESIS (Step 17.6, not frozen): the pair Cameron-Martin transfer for the pinch events under a smooth,
-compactly supported, nonpositive shift `f` vanishing on the unit circle. If the shifted pair satisfies the three pinch
-events with positive probability, then the unshifted pair satisfies them on a measurable event of positive probability.
-Pending the operator's frozen form (22:26 UTC note); the truth of this form needs the measurability of `ω ↦ (μ ω, D ω)`. -/
-def PinchPairTransferStmt : Prop :=
-  ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
-  ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < ξ →
-  ∀ f : ℂ → ℝ, ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
-  (∀ z, f z ≤ 0) → ∀ M : ℝ, 0 < M →
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
-    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
-    0 < P {ω | pinchShiftedEvents γ ξ f U V W T Q' Q δ M (μ ω) (D ω)} →
-    ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ ∧ pinchSecondEvent (μ ω) (D ω) U V δ M ∧
-      pinchThirdEvent (D ω) V W δ}, MeasurableSet A ∧ 0 < P A
-
 /-- The bump exponent `f = ξ⁻¹ log k · φ` is nonpositive for `0 < k ≤ 1` and `0 ≤ φ ≤ 1`. -/
 theorem bumpExponent_nonpos {ξ k : ℝ} {φ : ℂ → ℝ} (hξ : 0 < ξ) (hk0 : 0 < k) (hk1 : k ≤ 1)
     (hφ : ∀ z, 0 ≤ φ z ∧ φ z ≤ 1) (z : ℂ) : bumpExponent ξ k φ z ≤ 0 := by
@@ -74,7 +61,8 @@ theorem bumpExponent_nonpos {ξ k : ℝ} {φ : ℂ → ℝ} (hξ : 0 < ξ) (hk0 
 theorem firstPass_11_17_of_11_16 (h16 : PinchSecondEventFaithfulStmt.{u})
     (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
-    (hCM : PinchPairTransferStmt.{u}) : PinchThirdEventFaithfulStmt.{u} := by
+    (hCMGFF : CameronMartinGFFMutualAbsCont.{u}) (hCert : PinchCertificateStmt.{u}) :
+    PinchThirdEventFaithfulStmt.{u} := by
   unfold PinchThirdEventFaithfulStmt
   intro U V W T Q' Q δ hgeo γ α₀ dγ hγ hγ₂ hα hdγ Ω _ P hC hcirc μ D hgff hμ hD M hM
   have hξ : 0 < γ / dγ := div_pos hγ hdγ
@@ -138,7 +126,7 @@ theorem firstPass_11_17_of_11_16 (h16 : PinchSecondEventFaithfulStmt.{u})
           measure_union_le _ _
       _ = P {ω | pinchShiftedEvents γ (γ / dγ) (bumpExponent (γ / dγ) (pinchSelectK n) φ)
             U V W T Q' Q δ M (μ ω) (D ω)} := by rw [hBad, add_zero]
-  -- Step 17.6, the pair Cameron-Martin transfer (named hypothesis hCM)
+  -- Step 17.6, the pair Cameron-Martin transfer through the field-level certificate (hCert, hCMGFF)
   have hfsm : ContDiff ℝ (⊤ : ℕ∞) (bumpExponent (γ / dγ) (pinchSelectK n) φ) := by
     unfold bumpExponent
     exact contDiff_const.mul hφsm
@@ -149,10 +137,23 @@ theorem firstPass_11_17_of_11_16 (h16 : PinchSecondEventFaithfulStmt.{u})
     intro z hz
     unfold bumpExponent
     rw [hφcirc z (mem_sphere_zero_iff_norm.2 hz), mul_zero]
-  have hfneg : ∀ z, bumpExponent (γ / dγ) (pinchSelectK n) φ z ≤ 0 :=
-    fun z => bumpExponent_nonpos hξ (pinchSelectK_pos n) (pinchSelectK_le_one n) hφ01 z
-  exact hCM U V W T Q' Q δ hgeo γ α₀ (γ / dγ) hγ hγ₂ hα hξ (bumpExponent (γ / dγ) (pinchSelectK n) φ)
-    hfsm hfcs hfcirc hfneg M hM Ω P hC hcirc μ D hgff hμ hD hSpos
+  have hfU : ∀ z ∈ U, bumpExponent (γ / dγ) (pinchSelectK n) φ z = 0 := by
+    intro z hz
+    unfold bumpExponent
+    rw [hφU z (subset_closure hz), mul_zero]
+  have hfA : ∀ z ∈ annulus 0 3 6, bumpExponent (γ / dγ) (pinchSelectK n) φ z = 0 := by
+    intro z hz
+    unfold bumpExponent
+    rw [bump_zero_on_annulus hgeo.W_subset hgeo.delta_lt hφsupp z hz, mul_zero]
+  have hcirc0 : Real.circleAverage (bumpExponent (γ / dγ) (pinchSelectK n) φ) 0 1 = 0 :=
+    circleAverage_zero_of_sphere hfcirc
+  have : IsProbabilityMeasure P := hgff.isProbabilityMeasure
+  have hSpos' : 0 < P {ω | pinchPairEvent U V W T Q' Q δ M
+      (weylShiftPair γ (γ / dγ) (bumpExponent (γ / dγ) (pinchSelectK n) φ) (μ ω, D ω))} := hSpos
+  have hcertF := hCert U V W T Q' Q δ hgeo γ α₀ (γ / dγ) hγ hγ₂ hα hξ
+    (bumpExponent (γ / dγ) (pinchSelectK n) φ) hfsm hfcs hfcirc hfU hfA M hM Ω P hC hcirc μ D hgff hμ hD
+  exact pinchPair_transfer_of_certificate hCMGFF P hC hcirc hgff γ (γ / dγ)
+    (bumpExponent (γ / dγ) (pinchSelectK n) φ) hfsm hfcs hcirc0 U V W T Q' Q δ M μ D hcertF hSpos'
 
 end HarmonicBalls
 
