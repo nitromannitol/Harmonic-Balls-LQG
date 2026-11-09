@@ -25,7 +25,11 @@ namespace HarmonicBalls
 open MeasureTheory
 
 
-/-- FIRST-PASS FROZEN (EXTERNAL). Cameron-Martin transfer of a metric event under a smooth shift. For `0 < γ < 2`,
+/-- FIRST-PASS FROZEN (EXTERNAL; FALSE AS WRITTEN, truth check 2026-11-09, `notes/fp-gaps/CHATGPT-CM-metric-truth.md`
+section 1: the predicate `B` is not required to be measurable). Superseded by
+`CameronMartinMetricEventTransferMeasurableFrozen` below; kept unchanged, not used by the assembly.
+
+Cameron-Martin transfer of a metric event under a smooth shift. For `0 < γ < 2`,
 `α₀ < Q_γ`, a smooth compactly supported `f` vanishing on the unit circle, and a predicate `B` on metrics: if the event
 that the Weyl-shifted metric `e^{ξ f} D_h` lies in `B` has positive probability, and both events are null-measurable,
 then the event that `D_h` lies in `B` has positive probability. -/
@@ -34,6 +38,22 @@ def CameronMartinMetricEventTransferFrozen : Prop :=
   ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (D : Ω → ℂ → ℂ → ℝ) (B : (ℂ → ℂ → ℝ) → Prop),
+  IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
+  NullMeasurableSet {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} P →
+  NullMeasurableSet {ω | B (D ω)} P →
+  0 < P {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} → 0 < P {ω | B (D ω)}
+
+/-- FIRST-PASS FROZEN (EXTERNAL, proposed minimal correction of `CameronMartinMetricEventTransferFrozen`, truth check
+`notes/fp-gaps/CHATGPT-CM-metric-truth.md` section 1: add the measurability of the predicate `B` in the product
+σ-algebra on metrics; the Cameron-Martin absolute continuity `Law(e^{ξ f} D_h) ≪ Law(D_h)` gives the stated direction).
+Acceptance is the operator's (ACCEPT check) and is pending. Same content as the superseded predicate, plus
+`MeasurableSet {d | B d}`. -/
+def CameronMartinMetricEventTransferMeasurableFrozen : Prop :=
+  ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (D : Ω → ℂ → ℂ → ℝ) (B : (ℂ → ℂ → ℝ) → Prop),
+  MeasurableSet {d : ℂ → ℂ → ℝ | B d} →
   IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
   NullMeasurableSet {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} P →
   NullMeasurableSet {ω | B (D ω)} P →

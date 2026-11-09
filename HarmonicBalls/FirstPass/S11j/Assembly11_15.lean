@@ -43,7 +43,7 @@ theorem pinchFirstEvent_positive_of_inputs
     (hgff : IsWholePlaneGFF P hC hcirc)
     (haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
     (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
-    (hCM : CameronMartinMetricEventTransferFrozen.{u})
+    (hCM : CameronMartinMetricEventTransferMeasurableFrozen.{u})
     -- (M1) the four threshold variables of the base metric are almost everywhere measurable
     (hM1 : AEMeasurable (fun ω => ENNReal.ofReal (setDist (D ω) Q' (frontier Q))) P)
     (hM2 : AEMeasurable (fun ω => ⨆ y ∈ sphere (0 : ℂ) 5,
@@ -59,7 +59,10 @@ theorem pinchFirstEvent_positive_of_inputs
     -- (M3) null measurability of the events: of the unshifted metric, and of every admissible Weyl shift
     (hM9 : NullMeasurableSet {ω | pinchFirstEvent (D ω) W T Q' Q δ} P)
     (hM10 : ∀ f : ℂ → ℝ, ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
-      NullMeasurableSet {ω | pinchFirstEvent (fun x y => (weylScaling (D ω) ξ f x y).toReal) W T Q' Q δ} P) :
+      NullMeasurableSet {ω | pinchFirstEvent (fun x y => (weylScaling (D ω) ξ f x y).toReal) W T Q' Q δ} P)
+    -- (M4) the event, as a predicate on metrics, is measurable in the product σ-algebra (required by the corrected
+    -- Cameron-Martin transfer, `notes/fp-gaps/CHATGPT-CM-metric-truth.md` section 1)
+    (hM11 : MeasurableSet {d : ℂ → ℂ → ℝ | pinchFirstEvent d W T Q' Q δ}) :
     ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ}, MeasurableSet A ∧ 0 < P A := by
   have hξ0 : 0 ≤ ξ := hξ.le
   -- the shift of the core lemma
@@ -121,7 +124,7 @@ theorem pinchFirstEvent_positive_of_inputs
   -- Cameron-Martin transfer back to the unshifted metric, then the inner measure
   have hpos2 : 0 < P {ω | pinchFirstEvent (D ω) W T Q' Q δ} :=
     hCM γ α₀ ξ f hγ hγ₂ hα hsm hcomp hcirc1 Ω P hC hcirc D (fun M => pinchFirstEvent M W T Q' Q δ)
-      hgff hD (hM10 f hsm hcomp hcirc1) hM9 hpos1
+      hM11 hgff hD (hM10 f hsm hcomp hcirc1) hM9 hpos1
   exact exists_measurable_subset_pos_of_nullMeasurableSet hM9 hpos2
 
 end HarmonicBalls
