@@ -134,3 +134,10 @@ Checked at326a1ae: CountableCircleDecoder4202e55 and BorelCircleLimitDecoder326a
 ## Superseding operator policy, 2026-11-09 00:55 UTC
 
 The operator withdrew the18:55 no-further-prover rule. `MATH-OPEN-20261109.md` inventories the remaining mathematical requests, exact declarations/consumers, printed sources and refuted forms. One Codex prover, then independent Sol xhigh audit, then Lean. Its LEAN-PENDING list separates audited written arguments from new proof requests; in particular the local8.2 route and Section11 r10 repairs must not be mistaken for missing written mathematics. Existing source review and frozen/carrier decisions remain operator-owned.
+
+
+## Operator rulings applied, 2026-11-09 03:00 UTC
+
+This update supersedes earlier pending-ruling labels. E51 item 2 is written-proof closed for the actual bounded cluster/ball consumers by independently audited mcrt steps3 section 1:230-315 (sha256 d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d). The bounded Jensen premise yields source-potential integrability and exceptional-set control under the observation measure, followed by a bounded witness preserving pole and observation-a.e. values. Exact consumer references and the remaining Lean smooth-test/Fatou/localization steps are in MATH-OPEN-20261109.md item 2. The unrestricted full-plane assertion remains refuted.
+
+E56: the operator explicitly authorizes the audited r10 actual C(J)/coded-Palm route for PalmStepM.lean's Omega consumer (hB:61) and PalmLambdaMeasurable.lean's lambda consumer (hB:94). Preserve RawToProfileStep's declaration and retire it from those consumers; do not prove it. The runner-promoted independent smooth-rate task remains active, and the actual-circle consumer repair is queued for z3. Existing deterministic measurable decoder and common-event GFF/DMS compatibility are proved; the consumer repair itself remains Lean-pending. No frozen declaration may change. DMS A.10 and other queued source matches remain explicit until operator review. Item 8 remains awaiting Ahmed's author-reading answer.
