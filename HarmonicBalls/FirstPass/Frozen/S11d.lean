@@ -55,14 +55,14 @@ def LQGMetricContinuousShiftLocality : Prop :=
 /-- FIRST-PASS FROZEN. Cameron-Martin quasi-invariance of the whole-plane GFF on distribution-level events (standard;
 locator: Miller-Sheffield Imaginary Geometry, Proposition 2.9 (paper line 3106 cites it as miller2017imaginary) for the Cameron-Martin shift
 `h ↦ h + g` with `g` in the Cameron-Martin space; the whole-plane GFF normalised by its unit-circle average, so the shift
-must have zero unit-circle average). For smooth compactly supported `g` with zero unit-circle average, the laws of `hC`
+must have zero unit-circle average). For smooth (`C^∞`, so in the Dirichlet/Cameron-Martin space) compactly supported `g` with zero unit-circle average, the laws of `hC`
 and `hC + g` on the distribution σ-algebra are mutually absolutely continuous: a measurable set of fields is null for
 `hC` iff it is null for `hC + g`. Used by: firstPass_11_9 (transfer of the positive-probability event from the shifted field
 `h~ = h - (φ/ξ) log(2A/ε)` back to `h`, paper line 3131, "since the laws of h and h~ are mutually absolutely continuous"). -/
 def CameronMartinGFFMutualAbsCont : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ) (g : ℂ → ℝ), IsWholePlaneGFF P hC hcirc → Continuous g → HasCompactSupport g →
-    Real.circleAverage g 0 1 = 0 →
+    (hcirc : Ω → ℝ → ℂ → ℝ) (g : ℂ → ℝ), IsWholePlaneGFF P hC hcirc → ContDiff ℝ (⊤ : ℕ∞) g →
+    HasCompactSupport g → Real.circleAverage g 0 1 = 0 →
     ∀ B : Set ((ℂ → ℝ) → ℝ), MeasurableSet[distributionMeasurableSpace] B →
       (P ((fun ω => hC ω) ⁻¹' B) = 0 ↔ P ((fun ω => addFunPairing (hC ω) g) ⁻¹' B) = 0)
 
