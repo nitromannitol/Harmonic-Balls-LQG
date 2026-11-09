@@ -1,5 +1,7 @@
 import HarmonicBalls.FirstPass.S11j.CertificateE1
 import HarmonicBalls.FirstPass.Frozen.S11d
+import HarmonicBalls.FirstPass.S11j.Thresholds4
+import HarmonicBalls.FirstPass.S11j.ThresholdsAE
 
 /-!
 # First pass, Section 11: field-level events for the faithful Lemma 11.15 (fp-S11j, owner n4)
@@ -201,5 +203,53 @@ theorem aemeasurable_internalDiam {Ω : Type u} [MeasurableSpace Ω] {P : Measur
     rw [internalDiam_eq_countable hlen hnω hδ hAA hAc]
     exact iSup_congr fun x => iSup_congr fun hx => iSup_congr fun y => iSup_congr fun hy => (hω x hx y hy).symm
   exact hmeas.aemeasurable.congr hX.symm
+
+/-- The four threshold variables of the base metric (paper line 3659-3667) are almost everywhere measurable, positive
+(`p₁`, `p₃`, from the length-metric property of `D`) and finite (`M2`, pending input); hence the thresholds
+`n, k, m, l` exist with positive probability (`exists_thresholds_measure_pos_of_aemeasurable`). -/
+theorem exists_thresholds_fieldLevel {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {Φ : Set ℂ → ℂ → ℂ → ((ℂ → ℝ) → ℝ) → ℝ≥0∞} {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    {U V W T Q' Q : Set ℂ} {δ : ℝ} (h : IsBufferedPinchGeometry U V W T Q' Q δ) (hU : U.Nonempty)
+    (hδ : 0 < δ) (hQ' : Q'.Nonempty) (hFr : (frontier Q).Nonempty)
+    (hmC : @Measurable Ω ((ℂ → ℝ) → ℝ) _ distributionMeasurableSpace hC)
+    (hΦ : ∀ W' : Set ℂ, IsOpen W' → ∀ q q' : ℂ, Measurable[distributionMeasurableSpace] (Φ W' q q'))
+    (hdec : ∀ W' : Set ℂ, IsOpen W' → ∀ q q' : ℂ, ∀ᵐ ω ∂P, Φ W' q q' (hC ω) = internalMetric (D ω) W' q q')
+    (hD_len : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω)) (hnn : ∀ᵐ ω ∂P, ∀ x y, 0 ≤ D ω x y)
+    (hS : sphere (0 : ℂ) 5 ⊆ ball 0 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W)))
+    {Sp Qp Fp Cp Ep : Set ℂ} (hSp : Sp ⊆ sphere (0 : ℂ) 5) (hSpc : sphere (0 : ℂ) 5 ⊆ closure Sp)
+    (hQp : Qp ⊆ Q') (hQpc : Q' ⊆ closure Qp) (hFp : Fp ⊆ frontier Q) (hFpc : frontier Q ⊆ closure Fp)
+    (hCp : Cp ⊆ T \ thickening (3 * δ) W) (hCpc : T \ thickening (3 * δ) W ⊆ closure Cp)
+    (hEp : Ep ⊆ sphere (0 : ℂ) (δ / 2)) (hEpc : sphere (0 : ℂ) (δ / 2) ⊆ closure Ep)
+    (hCountS : Sp.Countable) (hCountQ : Qp.Countable) (hCountF : Fp.Countable) (hCountC : Cp.Countable)
+    (hCountE : Ep.Countable)
+    -- (M2) almost sure finiteness of `X₂` and `X₄` (paper line 3664-3667; not proved, see reports/n4.md)
+    (hM2a : ∀ᵐ ω ∂P, (⨆ y ∈ sphere (0 : ℂ) 5, internalMetric (D ω)
+      (ball 0 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W))) 0 y) < ⊤)
+    (hM2b : ∀ᵐ ω ∂P, internalDiam (D ω) δ (T \ thickening (3 * δ) W) < ⊤) :
+    ∃ n k m l : ℕ, 0 < n ∧ 0 < k ∧
+      0 < P {ω | (n : ℝ≥0∞)⁻¹ ≤ ENNReal.ofReal (setDist (D ω) Q' (frontier Q)) ∧
+        (⨆ y ∈ sphere (0 : ℂ) 5, internalMetric (D ω)
+          (ball 0 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W))) 0 y) ≤ (m : ℝ≥0∞) ∧
+        (k : ℝ≥0∞)⁻¹ ≤ ENNReal.ofReal (setDist (D ω) {0} (sphere 0 (δ / 2))) ∧
+        internalDiam (D ω) δ (T \ thickening (3 * δ) W) ≤ (l : ℝ≥0∞)} := by
+  have hδ2 : 0 < δ / 2 := by positivity
+  have hOopen : IsOpen (ball (0 : ℂ) 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W))) :=
+    isOpen_ball.sdiff (isClosed_closure.union isClosed_closure)
+  have hUniv : ∀ q q' : ℂ, ∀ᵐ ω ∂P, Φ univ q q' (hC ω) = internalMetric (D ω) univ q q' :=
+    fun q q' => hdec univ isOpen_univ q q'
+  have h1 := aemeasurable_ofReal_setDist hmC hΦ hUniv hD_len hQ' hFr hQp hFp hQpc hFpc hCountQ hCountF
+  have h3 := aemeasurable_ofReal_setDist (A := {0}) (B := sphere (0 : ℂ) (δ / 2)) (A' := {0}) (B' := Ep)
+    hmC hΦ hUniv hD_len (singleton_nonempty 0) (NormedSpace.sphere_nonempty.2 hδ2.le) subset_rfl hEp
+    (singleton_subset_iff.2 (subset_closure rfl)) hEpc (countable_singleton 0) hCountE
+  have h2 := aemeasurable_sup_sphere_five hmC hΦ hD_len hnn hOopen hS hSp hSpc hCountS
+    (fun y => hdec _ hOopen 0 y)
+  have h4 := aemeasurable_internalDiam hmC hΦ hD_len hnn hδ hCp hCpc hCountC hdec
+  have p1 : ∀ᵐ ω ∂P, 0 < ENNReal.ofReal (setDist (D ω) Q' (frontier Q)) := by
+    filter_upwards [hD_len] with ω hlen
+    exact ENNReal.ofReal_pos.2 (h.setDist_Q'_frontier_pos hU hlen)
+  have p3 : ∀ᵐ ω ∂P, 0 < ENNReal.ofReal (setDist (D ω) {0} (sphere 0 (δ / 2))) := by
+    filter_upwards [hD_len] with ω hlen
+    exact ENNReal.ofReal_pos.2 (setDist_zero_sphere_pos_of_isEuclideanLengthMetric hlen hδ2)
+  exact exists_thresholds_measure_pos_of_aemeasurable h1 h2 h3 h4 p1 hM2a p3 hM2b
 
 end HarmonicBalls
