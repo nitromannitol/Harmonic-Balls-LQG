@@ -237,4 +237,42 @@ def WeylShiftedMassMeasurableFrozen : Prop :=
   ∀ S : Set ℂ, IsClosedDyadicSquare S →
     AEMeasurable (fun ω => (weylShiftPair γ ξ f (μ ω, D ω)).1 S) P
 
+/-- The marked restriction observation `(z, h|_D mod ℝ)` of the field `h = h^ℂ - α₀ log|·|` at a root `z`: the pairings of `h`
+with the mean-zero test functions `φ` supported in `D` (`fieldSigmaAlgebraModConst`, Draft/Section6.lean:148; constants drop out). -/
+noncomputable def campbellMarkedObs (α₀ : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    ℂ × ({φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ) :=
+  (z, fun φ => fieldPairing α₀ hC φ.1)
+
+/-- The reference observation at a root `z`: the restriction to `D` (mod constants) of `g - γ log|·-z| + b`, with
+`b(w) = -α₀ log|w| + γ log max(1,|w|)`. Since `fieldPairing α₀ hC φ = (g, φ) - α₀ ∫ φ log|·|`, the pairing with `φ` is
+`fieldPairing α₀ hC φ - γ ∫ (log|w - z| - log max(1,|w|)) φ(w) dw`. -/
+noncomputable def campbellReferenceObs (γ α₀ : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    ℂ × ({φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ) :=
+  (z, fun φ => fieldPairing α₀ hC φ.1 - γ * ∫ w, (Real.log ‖w - z‖ - Real.log (max 1 ‖w‖)) * φ.1 w)
+
+/-- FIRST-PASS FROZEN. EXTERNAL local rooted-field (Campbell–Palm) absolute continuity for the LQG measure of a whole-plane
+GFF: the rooted-field change of measure used in the proof of paper Lemma `lemma:mu_h-bad-and-harnack` (Lemma 11.7, paper
+line 2896; proof lines 2936-2949), in its stated form. For disks `U = ball c₁ r₁` with `closedBall c₁ r₁ ⊆ D = ball c₂ r₂`,
+`0 ∉ closedBall c₂ r₂`, the Campbell law `Q_U(dh, dz) = P(dh) 1_U(z) μ_h(dz) / μ_h(U)` of the LQG measure `μ_h` (insertion `α₀`)
+has marked restriction `(z, h|_D mod ℝ)` absolutely continuous with respect to the Lebesgue mixture over `z ∈ U` of the
+restrictions of `g - γ log|·-z| + b`, `b(w) = -α₀ log|w| + γ log max(1,|w|)`, where `g` is the GFF on the same space.
+Stated as: every measurable set of marked observations that is null for the reference mixture is null for `Q_U`.
+Only this one-sided, local statement is used; it is not a statement about cone events.
+Source: Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma A.10 (rooting), with Duplantier-Sheffield, arXiv:0808.1560v2,
+Proposition 1.1 (LQG measure), and the paper's rooted-field change of measure (line 2936ff); locator
+(CHATGPT-frozen-locators.md): no exact source; standard via DMS Lemma A.10 + local Cameron–Martin/GMC pushforward (rated implies).
+Not to be confused with `LocalRootedFieldMeasureDomination` (Frozen/S8c.lean), a different statement for Lemma 8.2.
+Used by: firstPass_11_7 (route: event-specific transfer, not yet written). -/
+def LocalCampbellMarkedRestrictionFrozen : Prop :=
+  ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
+  IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), 0 < r₁ → 0 < r₂ → closedBall c₁ r₁ ⊆ ball c₂ r₂ → (0 : ℂ) ∉ closedBall c₂ r₂ →
+  ∀ S : Set (ℂ × ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ)), MeasurableSet S →
+    (∫⁻ z in ball c₁ r₁, (∫⁻ ω, S.indicator (fun _ => (1 : ℝ≥0∞))
+        (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z) ∂P)) = 0 →
+    ∫⁻ ω, (μ ω (ball c₁ r₁))⁻¹ * ∫⁻ z in ball c₁ r₁,
+        S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellMarkedObs α₀ (ball c₂ r₂) (hC ω) z) ∂(μ ω) ∂P = 0
+
 end HarmonicBalls
