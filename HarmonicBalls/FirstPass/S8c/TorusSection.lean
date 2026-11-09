@@ -24,7 +24,7 @@ theorem dyadicScale_zero_eq_one : dyadicScale 0 = 1 := by
 failure bound holds for every constant phase and the measures are almost surely locally finite. -/
 theorem torusGoodLevel_section_failure_le {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     (ν : Ω → Measure ℂ) (hloc : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (ν ω))
-    (β : ℝ) (N : ℕ) (a b C₁m C₁p C₂m C₂p C₃ m ε : ℝ) (ε' : ℝ≥0∞)
+    (β : ℝ) (N : ℕ) (a b C₁m C₁p C₂m C₂p C₃ m : ℝ) (ε' : ℝ≥0∞)
     (hbound : ∀ q : ℂ, P {ω | ¬ (PhaseVeryGoodAnnulus (ν ω) β 1 0 N a b C₁m C₁p C₂m C₂p C₃ q ∧
       AnnulusBallComparison (ν ω) 0 0 m)} ≤ ε')
     (θ : PhaseTorus) :
