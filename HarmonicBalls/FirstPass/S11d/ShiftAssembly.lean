@@ -19,9 +19,9 @@ corrected draft lines 3110-3137), the shifted field `h~ = h - (φ/ξ) log(2(n+ε
 metric bound `E(·,·; W) ≤ ε` on `V` together with `μ_h(S₁) ≥ C`. The unshifted field `h` enters only through the 11.10 event
 (`SmallMetricDiameterLargeMassSquareStmt`), the exterior event (Fact 2.2 II, Proposed `LQGMetricFieldAxioms`), and the frozen
 Fact 2.2 I for the shift (`LQGMetricContinuousShiftFactI`); the plane topology enters through the frozen
-`PlaneDomainMinusConvexCompactPreconnectedFrozen`. The positive-probability transfer back to `h` is the next step (R3).
+`PlaneDomainMinusConvexCompactPreconnectedFrozen`. The positive-probability transfer back to `h` is in `FirstPass/S11d.lean` (firstPass_11_9).
 
-Caveat (open decision, see notes): the shift `g = -(c/ξ) φ` needs `ξ ≠ 0`; this file assumes `0 < ξ`.
+The Weyl exponent is positive by `IsLQGMetric.weylExponent_pos` (the shift `g = -(c/ξ) φ` needs `ξ ≠ 0`).
 -/
 
 namespace HarmonicBalls
