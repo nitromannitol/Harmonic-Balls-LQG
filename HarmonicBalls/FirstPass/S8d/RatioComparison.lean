@@ -7,7 +7,7 @@ Continuation of `CriteriaComparison.lean`. Under `c₁ • lam|_D ≤ μ|_D ≤ 
 * `ratio_transfer`: if `x / y ∈ [C₁, C₂]` and the numerator and denominator are comparable up to `k₁, k₂`, then the
   quotient for the singular measure lies in `[C₁ k₁/k₂, C₂ k₂/k₁]`. This is criteria (VG-i) and (VG-ii) of
   `IsVeryGoodAnnulus` (Defs/Annuli.lean:81).
-* `annulusGreenPotentialSup_comparable`: the Green potential supremum `annulusGreenPotentialSup` (Defs/Annuli.lean:65)
+* `s8d_annulusGreenPotentialSup_comparable`: the Green potential supremum `annulusGreenPotentialSup` (Defs/Annuli.lean:65)
   is comparable with the same constants: it is a supremum of integrals of the Green kernel against the restriction to `D`.
 
 No new mathematics. -/
@@ -63,7 +63,7 @@ theorem ratio_transfer (x y x' y' : ℝ≥0∞) (k₁ k₂ C₁ C₂ : ℝ) (hk�
       _ ≤ ENNReal.ofReal (C₂ * (k₂ / k₁)) * y' := by gcongr
 
 /-- The Green potential supremum is comparable with the constants of the density comparison. -/
-theorem annulusGreenPotentialSup_comparable (lam μ : Measure ℂ) (x₀ : ℂ) (a b : ℝ) (c₁ c₂ : ℝ≥0∞)
+theorem s8d_annulusGreenPotentialSup_comparable (lam μ : Measure ℂ) (x₀ : ℂ) (a b : ℝ) (c₁ c₂ : ℝ≥0∞)
     (hlow : c₁ • lam.restrict (annulus x₀ a b) ≤ μ.restrict (annulus x₀ a b))
     (hup : μ.restrict (annulus x₀ a b) ≤ c₂ • lam.restrict (annulus x₀ a b)) :
     c₁ * annulusGreenPotentialSup lam x₀ a b ≤ annulusGreenPotentialSup μ x₀ a b ∧
@@ -80,6 +80,6 @@ theorem annulusGreenPotentialSup_comparable (lam μ : Measure ℂ) (x₀ : ℂ) 
     exact lintegral_mono' hup le_rfl
 
 #print axioms ratio_transfer
-#print axioms annulusGreenPotentialSup_comparable
+#print axioms s8d_annulusGreenPotentialSup_comparable
 
 end HarmonicBalls

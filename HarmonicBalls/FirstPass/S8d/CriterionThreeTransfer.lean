@@ -154,10 +154,10 @@ theorem isVeryGoodAnnulus_of_density (lam μ : Measure ℂ) (x₀ : ℂ) (ρ βm
   have hD := hbd (annulus x₀ (ρ / 4) (2 * ρ)) hDm subset_rfl
   have hyl : ENNReal.ofReal k₁ * lam (annulus x₀ (ρ / 4) (2 * ρ)) ≤ μ (annulus x₀ (ρ / 4) (2 * ρ)) := hD.1
   have hyu : μ (annulus x₀ (ρ / 4) (2 * ρ)) ≤ ENNReal.ofReal k₂ * lam (annulus x₀ (ρ / 4) (2 * ρ)) := hD.2
-  have hM := annulusBallMassSize_comparable lam μ x₀ ρ βminus (ENNReal.ofReal k₁) (ENNReal.ofReal k₂)
+  have hM := s8d_annulusBallMassSize_comparable lam μ x₀ ρ βminus (ENNReal.ofReal k₁) (ENNReal.ofReal k₂)
     (ENNReal.ofReal_pos.2 hk₁).ne' ENNReal.ofReal_ne_top (ENNReal.ofReal_pos.2 (lt_of_lt_of_le hk₁ hk₁₂)).ne'
     ENNReal.ofReal_ne_top hbd
-  have hG := annulusGreenPotentialSup_comparable lam μ x₀ (ρ / 4) (2 * ρ) (ENNReal.ofReal k₁)
+  have hG := s8d_annulusGreenPotentialSup_comparable lam μ x₀ (ρ / 4) (2 * ρ) (ENNReal.ofReal k₁)
     (ENNReal.ofReal k₂) hlow hup
   have hm1 := ratio_transfer _ _ _ _ k₁ k₂ C₁m C₁p hk₁ hk₁₂ hC₁m hC₁p h1 hM.1 hM.2 hyl hyu
   have hm2 := ratio_transfer _ _ _ _ k₁ k₂ C₂m C₂p hk₁ hk₁₂ hC₂m hC₂p h2 hG.1 hG.2 hyl hyu

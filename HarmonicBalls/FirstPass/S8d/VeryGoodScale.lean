@@ -20,13 +20,13 @@ namespace HarmonicBalls
 variable {c : ℝ≥0∞}
 
 /-- The annulus-ball mass size is multiplied by a positive finite constant. -/
-theorem annulusBallMassSize_smul (μ : Measure ℂ) (hc0 : c ≠ 0) (hcT : c ≠ ∞) (βminus ρ : ℝ) (x₀ : ℂ) :
+theorem s8d_annulusBallMassSize_smul (μ : Measure ℂ) (hc0 : c ≠ 0) (hcT : c ≠ ∞) (βminus ρ : ℝ) (x₀ : ℂ) :
     annulusBallMassSize (c • μ) βminus ρ x₀ = c * annulusBallMassSize μ βminus ρ x₀ := by
   unfold annulusBallMassSize
   simp only [ENNReal.mul_iInf_of_ne hc0 hcT, Measure.smul_apply, smul_eq_mul, mul_div_assoc]
 
 /-- The Green potential supremum is multiplied by a positive finite constant. -/
-theorem annulusGreenPotentialSup_smul (μ : Measure ℂ) (x₀ : ℂ) (a b : ℝ) :
+theorem s8d_annulusGreenPotentialSup_smul (μ : Measure ℂ) (x₀ : ℂ) (a b : ℝ) :
     annulusGreenPotentialSup (c • μ) x₀ a b = c * annulusGreenPotentialSup μ x₀ a b := by
   unfold annulusGreenPotentialSup
   simp only [Measure.restrict_smul, lintegral_smul_measure, smul_eq_mul, ENNReal.mul_iSup]
@@ -49,7 +49,7 @@ theorem isVeryGoodAnnulus_smul_iff (μ : Measure ℂ) (hc0 : c ≠ 0) (hcT : c �
     IsVeryGoodAnnulus (c • μ) βminus ρ x₀ N₀ a b C₁m C₁p C₂m C₂p C₃ ↔
       IsVeryGoodAnnulus μ βminus ρ x₀ N₀ a b C₁m C₁p C₂m C₂p C₃ := by
   unfold IsVeryGoodAnnulus
-  simp only [annulusBallMassSize_smul μ hc0 hcT, annulusGreenPotentialSup_smul μ,
+  simp only [s8d_annulusBallMassSize_smul μ hc0 hcT, s8d_annulusGreenPotentialSup_smul μ,
     Measure.smul_apply, smul_eq_mul, isGoodAnnulus_smul_iff μ hc0 hcT,
     ENNReal.mul_div_mul_left _ _ hc0 hcT]
 

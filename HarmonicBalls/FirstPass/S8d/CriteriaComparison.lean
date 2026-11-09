@@ -73,7 +73,7 @@ theorem ball_subset_annulus_of_mem (x₀ z : ℂ) (ρ r : ℝ) (hz : z ∈ annul
 
 /-- The annulus-ball mass size is comparable with the one of the regular measure, with the constants of the density
 comparison: `c₁ · M(lam) ≤ M(μ) ≤ c₂ · M(lam)` (VG-i numerator). -/
-theorem annulusBallMassSize_comparable (lam μ : Measure ℂ) (x₀ : ℂ) (ρ βminus : ℝ) (c₁ c₂ : ℝ≥0∞)
+theorem s8d_annulusBallMassSize_comparable (lam μ : Measure ℂ) (x₀ : ℂ) (ρ βminus : ℝ) (c₁ c₂ : ℝ≥0∞)
     (hc₁ : c₁ ≠ 0) (hc₁' : c₁ ≠ ∞) (hc₂ : c₂ ≠ 0) (hc₂' : c₂ ≠ ∞)
     (hbd : ∀ s : Set ℂ, MeasurableSet s → s ⊆ annulus x₀ (ρ / 4) (2 * ρ) →
       c₁ * lam s ≤ μ s ∧ μ s ≤ c₂ * lam s) :
@@ -92,6 +92,6 @@ theorem annulusBallMassSize_comparable (lam μ : Measure ℂ) (x₀ : ℂ) (ρ �
     exact ENNReal.div_le_div_right
       (hbd (ball z r) measurableSet_ball (ball_subset_annulus_of_mem x₀ z ρ r hz hr.2)).2 _
 
-#print axioms annulusBallMassSize_comparable
+#print axioms s8d_annulusBallMassSize_comparable
 
 end HarmonicBalls

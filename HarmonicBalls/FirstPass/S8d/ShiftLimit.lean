@@ -33,7 +33,7 @@ theorem lqgApprox_add_const (γ : ℝ) (hε : ℝ → ℂ → ℝ) (c ε : ℝ) 
   ring
 
 /-- The fixed-scale `fieldCircleAverage` of order zero is the circle-average profile itself. -/
-theorem fieldCircleAverage_zero_eq (h : ℝ → ℂ → ℝ) : fieldCircleAverage 0 h = h := by
+theorem s8d_fieldCircleAverage_zero_eq (h : ℝ → ℂ → ℝ) : fieldCircleAverage 0 h = h := by
   funext r z
   simp [fieldCircleAverage]
 
