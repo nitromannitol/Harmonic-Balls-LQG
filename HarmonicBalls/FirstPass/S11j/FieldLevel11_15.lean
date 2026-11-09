@@ -103,4 +103,41 @@ theorem ae_fieldFirstEvent_iff {Ω : Type u} [MeasurableSpace Ω] {P : Measure �
   filter_upwards [key] with ω hω
   exact hω
 
+/-- The base metric is the inserted metric of the unshifted field, almost surely (IsLQGMetricOfField). -/
+theorem ae_base_eq_inserted {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) = weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v) :
+    ∀ᵐ ω ∂P, D ω = insertedLQGMetric 𝔇 ξ α₀ (addFunPairing (hC ω) (fun _ => 0)) := by
+  filter_upwards [hD] with ω hω
+  rw [addFunPairing_zero_shift]
+  funext u v
+  obtain ⟨h0, h1⟩ := hω u v
+  unfold insertedLQGMetric
+  rw [← h1, ENNReal.toReal_ofReal h0]
+
+/-- Almost-everywhere measurability of `ω ↦ ofReal (setDist (D ω) A B)` (a threshold variable of the first event): the
+distance is a countable infimum of internal distances over `univ`, which are the decoders at the unshifted field. -/
+theorem aemeasurable_ofReal_setDist {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    {Φ : Set ℂ → ℂ → ℂ → ((ℂ → ℝ) → ℝ) → ℝ≥0∞} {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hmC : @Measurable Ω ((ℂ → ℝ) → ℝ) _ distributionMeasurableSpace hC)
+    (hΦ : ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ, Measurable[distributionMeasurableSpace] (Φ W q q'))
+    (hdec : ∀ q q' : ℂ, ∀ᵐ ω ∂P, Φ univ q q' (hC ω) = internalMetric (D ω) univ q q')
+    (hD_len : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {A B A' B' : Set ℂ} (hA : A.Nonempty) (hB : B.Nonempty) (hAA : A' ⊆ A) (hBB : B' ⊆ B)
+    (hAc : A ⊆ closure A') (hBc : B ⊆ closure B') (hCA : A'.Countable) (hCB : B'.Countable) :
+    AEMeasurable (fun ω => ENNReal.ofReal (setDist (D ω) A B)) P := by
+  have hmeas : Measurable fun ω => ⨅ a ∈ A', ⨅ b ∈ B', Φ univ a b (hC ω) :=
+    measurable_iInf_mem_of_countable hCA fun a =>
+      measurable_iInf_mem_of_countable hCB fun b => (hΦ univ isOpen_univ a b).comp hmC
+  have hae : ∀ᵐ ω ∂P, ∀ a ∈ A', ∀ b ∈ B', Φ univ a b (hC ω) = internalMetric (D ω) univ a b :=
+    ae_forall_mem_of_countable hCA fun a _ => ae_forall_mem_of_countable hCB fun b _ => hdec a b
+  have hX : (fun ω => ENNReal.ofReal (setDist (D ω) A B)) =ᵐ[P]
+      fun ω => ⨅ a ∈ A', ⨅ b ∈ B', Φ univ a b (hC ω) := by
+    filter_upwards [hD_len, hae] with ω hlen hω
+    rw [ofReal_setDist_eq_countable hlen hA hB hAA hBB hAc hBc]
+    refine iInf_congr fun a => iInf_congr fun ha => iInf_congr fun b => iInf_congr fun hb => ?_
+    exact (hω a ha b hb).symm
+  exact hmeas.aemeasurable.congr hX.symm
+
 end HarmonicBalls
