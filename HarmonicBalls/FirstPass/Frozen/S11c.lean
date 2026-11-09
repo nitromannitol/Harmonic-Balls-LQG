@@ -180,4 +180,28 @@ def WeylInternalClosedFrozen : Prop :=
     (∀ x y, 0 ≤ E x y) → (∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y) → IsClosed U →
     (∀ z ∈ U, ξ * f z ≤ B) → ∀ x y, internalMetric E U x y ≤ ENNReal.ofReal (Real.exp B) * internalMetric D U x y
 
+/-- RETIRED (FALSE, ChatGPT truth check 2026-11-09, operator 19:25 UTC). The metric and the LQG measure are specified only
+almost everywhere (`IsLQGMetricOfField`, `IsLQGMeasureOfField`), so a `Measurable` conclusion does not follow from the
+field-level inputs. Replaced by the AEMeasurable form `LQGMetricSupMeasurableFrozen`. Former text kept for the record; NOT used.
+(Former FIRST-PASS FROZEN: `∀ γ α₀ ξ, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc D, IsWholePlaneGFF P hC hcirc →
+IsLQGMetricOfField P γ ξ α₀ hC D → ∀ K, (∃ F, (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
+Measurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v)`.) -/
+def LQGMetricSupMeasurableRetiredFalseFrozen : Prop :=
+  ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
+  ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
+    Measurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v)
+
+/-- RETIRED (FALSE, ChatGPT truth check 2026-11-09, operator 19:25 UTC). The LQG measure is specified only almost everywhere,
+so `Measurable (fun ω => μ ω S)` is not implied by the field-level inputs. Replaced by `LQGMeasureSquareMeasurableFrozen`
+(AEMeasurable form). Former text kept for the record; NOT used.
+(Former FIRST-PASS FROZEN: `∀ γ α₀, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc μ, IsWholePlaneGFF P hC hcirc →
+IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ S, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)`.) -/
+def LQGMeasureSquareMeasurableRetiredFalseFrozen : Prop :=
+  ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ S : Set ℂ, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)
+
 end HarmonicBalls
