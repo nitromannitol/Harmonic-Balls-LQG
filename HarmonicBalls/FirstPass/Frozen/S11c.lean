@@ -283,7 +283,8 @@ arXiv:1409.7055v4, Section 4.1, and Holden-Sun, arXiv:1610.05272, proof of Lemma
 (citation corrected per operator; not DMS Lemma A.10). Stated as equality of the laws
 of the pairings with the mean-zero test functions `φ` (smooth, compact support, `∫ φ = 0`): the constants drop out, so
 `(hC ω (φ(· - z)))_φ` and `(hC ω φ)_φ` have the same law. Only the mean-zero pairings are asserted.
-Used by: firstPass_11_7 (route: fixed-root null section B2 (5.1), not yet written; see report). -/
+Not used by firstPass_11_7 or its chain: the normalized translation `hW'` is proved from `IsWholePlaneGFF` in
+`S11c/TranslateField11_7.lean` (`isWholePlaneGFF_translate`), so this input is kept only as a checked statement. -/
 def WholePlaneGFFTranslationModConstFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
@@ -363,14 +364,18 @@ def LocalLQGDecoderFrozen : Prop :=
       ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
         K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
 
-/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK; operator 2026-11-09 22:26 UTC: check running, not yet approved). EXTERNAL,
+/-- FIRST-PASS FROZEN (TRUTH-CHECKED TRUE, ChatGPT 2026-11-09, notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md, item G1; operator
+22:33 UTC: freeze). EXTERNAL,
 common local decoder: for `γ ∈ (0,2)` and a disc `D = ball c₂ r₂` with `0 ∉ closedBall c₂ r₂`, ONE s-finite kernel `K`
 from the mean-zero observations on `D` to measures on `ℂ` (clause 1: the γ-LQG measure of the field at every insertion
 `α₀ < Q`, up to a constant, a.s.; clause 2: the rooted LQG measure at every root `z` and every insertion `α₀ < Q`,
 including `α₀ = 0`, which the origin route of `FixedRoot11_7.lean` uses). This is the common-`K` form of
 `LocalLQGDecoderFrozen`, where `K` may depend on `α₀`. Source: Duplantier-Sheffield, arXiv:0808.1560v2, Proposition 1.1,
-with Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma A.10 (rooting), and B2 Claim 3.1
-(notes/fp-gaps/CHATGPT-11-7-B2.md:195-216). Used by: firstPass_11_7 (`FirstPass/S11c.lean`). -/
+the fixed smooth compactly supported probability bump `ρ_D` in the decoder (not normalized Lebesgue measure on `D`),
+and the rooted clause assumes `IsLQGMeasure` (a locally finite rooted measure is not asserted for every combined insertion).
+Source: Duplantier-Sheffield, arXiv:0808.1560v2, Proposition 1.1, Proposition 3.1 and section 3.1 (pairing and circle
+covariance construction): a consequence of these constructions, not stated verbatim there (the universal local decoder
+uses a countable Borel limit construction). Used by: firstPass_11_7 (`FirstPass/S11c.lean`). -/
 def LocalLQGDecoderCommonFrozen : Prop :=
   ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (c₂ : ℂ) (r₂ : ℝ), 0 < r₂ → (0 : ℂ) ∉ closedBall c₂ r₂ →
   ∃ K : ProbabilityTheory.Kernel ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) ℂ,
@@ -386,15 +391,17 @@ def LocalLQGDecoderCommonFrozen : Prop :=
       ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
         K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
 
-/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK; operator 2026-11-09 22:26 UTC, option A: non-smooth Cameron-Martin for the
+/-- FIRST-PASS FROZEN (TRUTH-CHECKED TRUE, ChatGPT 2026-11-09, notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md, item G2, option A;
+operator 22:33 UTC: freeze exactly as stated). Non-smooth Cameron-Martin for the
 shift `χ_b = b χ` of B2 sec 5.2). EXTERNAL, Cameron-Martin for locally Lipschitz compactly supported shifts of the
 whole-plane GFF, read on the mean-zero pairings with the test functions supported in a set `D`: for `g` locally
 Lipschitz with compact support (it lies in the Cameron-Martin space, which contains the compactly supported functions of
 finite Dirichlet energy), a measurable set of observations that is null for the unshifted pairings `hC` is null for the
 shifted pairings `hC + ∫ φ g`. Mean-zero pairings do not see the additive constant of the normalisation, so no unit-circle
 average constraint is needed (contrast `CameronMartinGFFMutualAbsCont`, which needs smooth `g` with zero unit-circle
-average). Only this one-sided direction is used. Standard; locator pending (B2 sec 5.2 cites Miller-Sheffield, Imaginary
-Geometry IV, Prop. 2.9). Used by: firstPass_11_7 (`FirstPass/S11c/ShiftCM11_7.lean`). -/
+average). Only this one-sided direction is used. Source: Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2,
+Proposition 2.9 (Dirichlet space, section 2.2.1), which covers this shift. Used by: firstPass_11_7
+(`FirstPass/S11c/ShiftCM11_7.lean`). -/
 def CameronMartinLocallyLipschitzShiftAbsCont : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (D : Set ℂ) (g : ℂ → ℝ), IsWholePlaneGFF P hC hcirc → LocallyLipschitz g →
