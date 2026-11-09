@@ -140,4 +140,66 @@ theorem aemeasurable_ofReal_setDist {Ω : Type u} [MeasurableSpace Ω] {P : Meas
     exact (hω a ha b hb).symm
   exact hmeas.aemeasurable.congr hX.symm
 
+/-- The decoder identity at the unshifted field: `Φ W q q' (hC ω) = internalMetric (D ω) W q q'` almost surely. -/
+theorem ae_decoder_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {ξ α₀ : ℝ}
+    {Φ : Set ℂ → ℂ → ℂ → ((ℂ → ℝ) → ℝ) → ℝ≥0∞} {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hΦ : ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ, Measurable[distributionMeasurableSpace] (Φ W q q') ∧
+      ∀ f : ℂ → ℝ, Continuous f → ∀ᵐ ω ∂P, Φ W q q' (addFunPairing (hC ω) f) =
+        internalMetric (insertedLQGMetric 𝔇 ξ α₀ (addFunPairing (hC ω) f)) W q q')
+    (hbase : ∀ᵐ ω ∂P, D ω = insertedLQGMetric 𝔇 ξ α₀ (addFunPairing (hC ω) (fun _ => 0)))
+    {W : Set ℂ} (hW : IsOpen W) (q q' : ℂ) :
+    ∀ᵐ ω ∂P, Φ W q q' (hC ω) = internalMetric (D ω) W q q' := by
+  filter_upwards [((hΦ W hW q q').2 (fun _ => 0) continuous_const), hbase] with ω h1 h2
+  rw [addFunPairing_zero_shift] at h1 h2
+  rw [h2]
+  exact h1
+
+/-- Almost-everywhere measurability of the sup over the sphere `∂B₅` of the internal distances in the corridor `O`
+(threshold `X₂`), via a countable dense subset `Sp` and the continuity of `y ↦ D(0, y; O)` on `O`. -/
+theorem aemeasurable_sup_sphere_five {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    {Φ : Set ℂ → ℂ → ℂ → ((ℂ → ℝ) → ℝ) → ℝ≥0∞} {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hmC : @Measurable Ω ((ℂ → ℝ) → ℝ) _ distributionMeasurableSpace hC)
+    (hΦ : ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ, Measurable[distributionMeasurableSpace] (Φ W q q'))
+    (hD_len : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω)) (hnn : ∀ᵐ ω ∂P, ∀ x y, 0 ≤ D ω x y)
+    {O : Set ℂ} (hO : IsOpen O) (hS : sphere (0 : ℂ) 5 ⊆ O)
+    {Sp : Set ℂ} (hSp : Sp ⊆ sphere (0 : ℂ) 5) (hSpc : sphere (0 : ℂ) 5 ⊆ closure Sp) (hCountS : Sp.Countable)
+    (hdec : ∀ y : ℂ, ∀ᵐ ω ∂P, Φ O 0 y (hC ω) = internalMetric (D ω) O 0 y) :
+    AEMeasurable (fun ω => ⨆ y ∈ sphere (0 : ℂ) 5, internalMetric (D ω) O 0 y) P := by
+  have hmeas : Measurable fun ω => ⨆ y ∈ Sp, Φ O 0 y (hC ω) :=
+    measurable_iSup_mem_of_countable hCountS fun y => (hΦ O hO 0 y).comp hmC
+  have hae : ∀ᵐ ω ∂P, ∀ y ∈ Sp, Φ O 0 y (hC ω) = internalMetric (D ω) O 0 y :=
+    ae_forall_mem_of_countable hCountS fun y _ => hdec y
+  have hX : (fun ω => ⨆ y ∈ sphere (0 : ℂ) 5, internalMetric (D ω) O 0 y) =ᵐ[P]
+      fun ω => ⨆ y ∈ Sp, Φ O 0 y (hC ω) := by
+    filter_upwards [hD_len, hae, hnn] with ω hlen hω hnω
+    have hcont : ContinuousOn (fun y => internalMetric (D ω) O 0 y) O :=
+      IsEuclideanLengthMetric.continuousOn_internalMetric hlen hnω hO 0
+    refine (iSup_eq_iSup_of_dense_of_continuousOn hO hS hSp hSpc hcont).trans ?_
+    exact iSup_congr fun y => iSup_congr fun hy => (hω y hy).symm
+  exact hmeas.aemeasurable.congr hX.symm
+
+/-- Almost-everywhere measurability of the internal diameter (threshold `X₄`) via a countable dense subset `A'` of `A`
+and the decoders on the domain `thickening δ A`. -/
+theorem aemeasurable_internalDiam {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    {Φ : Set ℂ → ℂ → ℂ → ((ℂ → ℝ) → ℝ) → ℝ≥0∞} {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hmC : @Measurable Ω ((ℂ → ℝ) → ℝ) _ distributionMeasurableSpace hC)
+    (hΦ : ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ, Measurable[distributionMeasurableSpace] (Φ W q q'))
+    (hD_len : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω)) (hnn : ∀ᵐ ω ∂P, ∀ x y, 0 ≤ D ω x y)
+    {δ : ℝ} (hδ : 0 < δ) {A A' : Set ℂ} (hAA : A' ⊆ A) (hAc : A ⊆ closure A') (hCA : A'.Countable)
+    (hdec : ∀ W' : Set ℂ, IsOpen W' → ∀ q q' : ℂ, ∀ᵐ ω ∂P, Φ W' q q' (hC ω) = internalMetric (D ω) W' q q') :
+    AEMeasurable (fun ω => internalDiam (D ω) δ A) P := by
+  have hmeas : Measurable fun ω => ⨆ x ∈ A', ⨆ y ∈ A', Φ (thickening δ A) x y (hC ω) :=
+    measurable_iSup_mem_of_countable hCA fun x =>
+      measurable_iSup_mem_of_countable hCA fun y => (hΦ _ isOpen_thickening x y).comp hmC
+  have hae : ∀ᵐ ω ∂P, ∀ x ∈ A', ∀ y ∈ A', Φ (thickening δ A) x y (hC ω) =
+      internalMetric (D ω) (thickening δ A) x y :=
+    ae_forall_mem_of_countable hCA fun x _ => ae_forall_mem_of_countable hCA fun y _ =>
+      hdec _ isOpen_thickening x y
+  have hX : (fun ω => internalDiam (D ω) δ A) =ᵐ[P] fun ω => ⨆ x ∈ A', ⨆ y ∈ A', Φ (thickening δ A) x y (hC ω) := by
+    filter_upwards [hD_len, hae, hnn] with ω hlen hω hnω
+    rw [internalDiam_eq_countable hlen hnω hδ hAA hAc]
+    exact iSup_congr fun x => iSup_congr fun hx => iSup_congr fun y => iSup_congr fun hy => (hω x hx y hy).symm
+  exact hmeas.aemeasurable.congr hX.symm
+
 end HarmonicBalls
