@@ -49,6 +49,7 @@ Elaboration choices (operator to confirm):
 ## Import closure, consumers, credit
 
 - Direct imports: `Audit/GreenSubharmonicTestClass`, `Proofs/Potential/GeneralDomainGreenLaplacian`, `Proofs/Potential/BoundedDensityGreenContinuity`, `Proofs/Potential/Fundamental`.
+- Import closure: 354 `HarmonicBalls` modules including self, none missing (script walk of `^import HarmonicBalls` lines). `HarmonicBalls.Proposed.Birkhoff` and `HarmonicBalls.Proposed.LQG` enter through existing imports only. The new proofs do not reference them, and they stay pending operator source-check. 14 closure files mention Bonanno or Lattice-Probability.
 - Consumers: none yet. The unrestricted consumer upgrade at `Audit/GreenSubharmonicTestClass.lean:54-64` is not changed, because that file is not owned by this task.
 - Credit: the module docstring credits Leonardo Bonanno through the pinned Lattice-Probability (lean-v4.35) port, with the wording of `BoundedDensityGreenStability.lean:25-30`.
 
