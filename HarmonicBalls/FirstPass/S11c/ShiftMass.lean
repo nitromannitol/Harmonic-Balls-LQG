@@ -59,4 +59,22 @@ lemma exists_lower_of_ae_pos {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) 
   refine ⟨((k : ℝ≥0∞) + 1)⁻¹, ENNReal.inv_pos.2 (by simp), ENNReal.inv_ne_top.2 (by simp), ?_⟩
   exact hk.le
 
+/-- The lower bound for an almost everywhere measurable, almost surely positive random mass. -/
+lemma exists_lower_of_aemeasurable {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    {X : Ω → ℝ≥0∞} (hX : AEMeasurable X P) (hpos : ∀ᵐ ω ∂P, 0 < X ω) :
+    ∃ C₁ : ℝ≥0∞, 0 < C₁ ∧ C₁ ≠ ⊤ ∧ 1 / 2 ≤ P {ω | C₁ ≤ X ω} := by
+  have hmk : ∀ᵐ ω ∂P, 0 < hX.mk X ω := by
+    filter_upwards [hpos, hX.ae_eq_mk] with ω h1 h2
+    rw [← h2]
+    exact h1
+  obtain ⟨C₁, h0, htop, hhalf⟩ := exists_lower_of_ae_pos P hX.measurable_mk hmk
+  refine ⟨C₁, h0, htop, ?_⟩
+  have hset : P {ω | C₁ ≤ X ω} = P {ω | C₁ ≤ hX.mk X ω} := by
+    apply measure_congr
+    filter_upwards [hX.ae_eq_mk] with ω hω
+    show (C₁ ≤ X ω) = (C₁ ≤ hX.mk X ω)
+    rw [hω]
+  rw [hset]
+  exact hhalf
+
 end HarmonicBalls

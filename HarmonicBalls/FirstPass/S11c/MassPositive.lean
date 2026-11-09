@@ -28,8 +28,8 @@ theorem mass_event_pos_of_shift {γ α₀ ξ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 
     (hdisj : Disjoint S₂ (sphere (0 : ℂ) 1))
     (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
     (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
-    (hsup : Measurable (fun ω => ⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v))
-    (hmass : Measurable (fun ω => μ ω S₁)) (hpos : ∀ᵐ ω ∂P, 0 < μ ω S₁)
+    (hsup : AEMeasurable (fun ω => ⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v) P)
+    (hmass : AEMeasurable (fun ω => μ ω S₁) P) (hpos : ∀ᵐ ω ∂P, 0 < μ ω S₁)
     {C₀ : ℝ≥0∞} (hC₀ : 0 < C₀) (hC₀t : C₀ ≠ ⊤) :
     0 < P {ω | C₀ ≤ μ ω S₁} := by
   have hcompact : IsCompact S₁ := by
@@ -37,7 +37,7 @@ theorem mass_event_pos_of_shift {γ α₀ ξ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 
     exact isCompact_Icc.reProdIm isCompact_Icc
   have hS₁m : MeasurableSet S₁ := hcompact.isClosed.measurableSet
   have hdisj₁ : Disjoint S₁ (sphere (0 : ℂ) 1) := hdisj.mono_left hS12
-  obtain ⟨C₁, hC₁pos, hC₁top, hhalf⟩ := exists_lower_of_ae_pos P hmass hpos
+  obtain ⟨C₁, hC₁pos, hC₁top, hhalf⟩ := exists_lower_of_aemeasurable P hmass hpos
   set m : ℝ := (C₀ / C₁).toReal with hm_def
   have hdivpos : 0 < C₀ / C₁ := ENNReal.div_pos_iff.2 ⟨hC₀.ne', hC₁top⟩
   have hdivtop : C₀ / C₁ ≠ ⊤ := ENNReal.div_ne_top hC₀t hC₁pos.ne'
@@ -62,10 +62,10 @@ theorem mass_event_pos_of_shift {γ α₀ ξ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 
     ext ω
     simp only [Set.mem_ofPred_eq, le_top, true_and]
     rw [weylShiftPair_fst_apply_of_const hS₁m (fun z hz => hfa z hz) (μ ω) (D ω), hexp]
-  have hmeasShift : MeasurableSet {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S₂ u v) ≤ ⊤ ∧
-      C₀ ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} := by
+  have hmeasShift : NullMeasurableSet {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S₂ u v) ≤ ⊤ ∧
+      C₀ ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} P := by
     rw [hset]
-    exact measurableSet_le measurable_const (hmass.const_mul _)
+    exact nullMeasurableSet_le aemeasurable_const (hmass.const_mul _)
   have hcm := hCM γ α₀ ξ f hγ hγ2 hα hfs hfc hf0 Ω P hC hcirc μ D S₁ S₂ ⊤ C₀ hGFF hμ hD hS₁ hS₂ hsup
     hmass hmeasShift hprem
   simpa using hcm
