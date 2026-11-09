@@ -209,7 +209,8 @@ measurability, in AEMeasurable form, for the Weyl-shifted metric of the field: f
 of a whole-plane GFF (`IsLQGMeasureOfField`, `IsLQGMetricOfField`) and a continuous compactly supported weight `f ≤ 0`, the
 supremum over a closed dyadic square `S` of the internal metric of the Weyl-shifted metric `weylShiftPair γ ξ f (μ, D)` is
 almost surely measurable. Not stated for arbitrary pairs.
-Source: measurability of the LQG metric and measure at field level (Weyl scaling, paper Facts 2.1-2.2; locator pending).
+Source: measurability of the LQG metric at field level after Weyl scaling (paper Fact 2.2 III); locator (CHATGPT-frozen-locators.md):
+no exact source; standard via GM §1.2 and compact-path coding, as for `LQGMetricSupMeasurableFrozen` (rated implies).
 Used by: firstPass_11_10 (through shifted_event_pos_11_10). -/
 def WeylShiftedSupMeasurableFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -224,7 +225,8 @@ def WeylShiftedSupMeasurableFrozen : Prop :=
 measurability, in AEMeasurable form, for the Weyl-shifted measure of the field: for the LQG measure `μ` and the LQG metric `D`
 of a whole-plane GFF and a continuous compactly supported weight `f ≤ 0`, the mass `(weylShiftPair γ ξ f (μ, D)).1 S` of a
 closed dyadic square `S` is almost surely measurable. Not stated for arbitrary pairs.
-Source: measurability of the LQG measure at field level (Weyl scaling, paper Facts 2.1-2.2; locator pending).
+Source: measurability of the LQG measure at field level after Weyl scaling (paper Fact 2.1 III); locator (CHATGPT-frozen-locators.md):
+no exact source; standard via DS Proposition 1.1 and local Weyl multiplication, as for `LQGMassFunctionalMeasurableFrozen` (rated implies).
 Used by: firstPass_11_10 (through shifted_event_pos_11_10). -/
 def WeylShiftedMassMeasurableFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
