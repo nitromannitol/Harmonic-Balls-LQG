@@ -46,7 +46,7 @@ theorem localRoot_eventually_count_ae (hL1 : LocalRootedFieldMeasureDomination.{
   have : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
   have hG : MeasurableSet (recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ) :=
     measurableSet_recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit
-  have hmem := localRoot_ae_mem_of_localDomination hL1 P γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα
+  have hmem := localRoot_ae_mem_of_localDomination hL1 hfull P γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα
     hμ hν hlam j hj hG hL3
   have hloc : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω) :=
     hμ.mono fun _ h => h.isLocallyFiniteMeasure

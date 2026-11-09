@@ -27,13 +27,24 @@ Source: Duplantier, Miller, Sheffield, arXiv:1409.7055v4, Lemma A.10, p. 184 (wh
 sampling description), local joint form: locator pending (the field marginal is printed; the joint
 field-measure form is not). Operator ruling 2026-11-09 17:45 UTC; displayed form in
 `docs/campaign/audits/LocalRootedComparisonRepair.md`, section "Actual local observation".
-Used by: firstPass_8_2 (through the local reduction in `FirstPass/S8c/`). -/
+Used by: firstPass_8_2 (through the local reduction in `FirstPass/S8c/`).
+Restated (owner n4, 2026-11-09, after the referee verdict in notes/fp-gaps/CHATGPT-truth-new-frozen.md, which
+marked the earlier form UNCLEAR): the three a.s. premises give every nonempty open set positive mass under `μ`, `ν`
+and `lam`, so each normalised restriction (the root kernel `λ|B_1/λ(B_1)`, the recentred `μ` at the root, the
+reference `ν` on `B_{r_j}(0)`) has a positive denominator. Local finiteness (Radon) is already part of
+`IsLQGMeasureOfField` through `IsLQGLimit`. The conclusion is domination `≪`, not equality, as the referee requires
+for normalised marked laws. Without the positivity premises a degenerate observation (zero measure) would give root
+mass that the reference side need not carry. -/
 def LocalRootedFieldMeasureDomination : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ ν lam : Ω → Measure ℂ),
     ∀ hGFF : IsWholePlaneGFF P hC hcirc, 0 < γ → γ < 2 → α₀ < lqgQ γ →
     IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMeasureOfField P γ γ hcirc ν →
-    ∀ hlam : IsLQGMeasureOfField P γ 0 hcirc lam, ∀ j : ℕ, 1 ≤ j →
+    ∀ hlam : IsLQGMeasureOfField P γ 0 hcirc lam,
+    (∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < μ ω U) →
+    (∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < ν ω U) →
+    (∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < lam ω U) →
+    ∀ j : ℕ, 1 ≤ j →
       ((P ⊗ₘ localRootKernel P lam (hGFF.aemeasurable_lqgMeasure hlam)).restrict
           (Prod.snd ⁻¹' localDomain j)).map (localRootObservation μ j) ≪
         ((volume.restrict (localDomain j)).prod P).map (localReferenceObservation ν j)
