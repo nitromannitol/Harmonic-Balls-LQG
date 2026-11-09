@@ -97,4 +97,63 @@ def ConnectedSquareUnionDiamFiniteFrozen : Prop :=
   ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) → IsConnected K →
   ∀ᵐ ω ∂P, ∃ A : ℝ, ∀ u ∈ K, ∀ v ∈ K, internalMetric (D ω) K u v ≤ ENNReal.ofReal A
 
+/-- FIRST-PASS FROZEN (operator ruling, FIRST PASS wave 4, item n1, 2026-11-09). Field-level measurability of the internal
+supremum of the LQG metric over a finite union of closed rectangles: for such a set `K` (in particular a closed dyadic
+square, and the rectangles and their unions used in Lemma 11.10), `ω ↦ sup_{u,v ∈ K} D_h(u,v; K)` is measurable.
+The operator's wave-4 item covers closed dyadic squares; the extension to finite unions of closed rectangles (the
+enlarged pieces `Ŝ ∩ S₂` and the exterior set `K₁`) is requested and flagged for the operator's ruling.
+Source: measurability of the LQG metric at field level (paper Fact 2.2 setting; locator pending).
+Used by: firstPass_11_10. -/
+def LQGMetricSupMeasurableFrozen : Prop :=
+  ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
+  ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
+    Measurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v)
+
+/-- FIRST-PASS FROZEN (operator ruling, FIRST PASS wave 4, item n1, 2026-11-09). Measurability of the LQG area measure
+of a closed dyadic square: `ω ↦ μ_h(S)` is measurable.
+Source: locality of the LQG measure, paper Fact 2.1 II (line 407: `μ_h(U)` is a measurable function of `h|_U`), applied to
+open neighbourhoods of `S` and continuity from above of the finite measure; locator pending.
+Used by: firstPass_11_10. -/
+def LQGMeasureSquareMeasurableFrozen : Prop :=
+  ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ S : Set ℂ, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)
+
+/-- FIRST-PASS FROZEN. The LQG area measure charges every closed dyadic square with nonempty interior, almost surely.
+Source: full support of the Gaussian multiplicative chaos measure (Duplantier-Sheffield 2011, Liouville quantum gravity
+measure; the paper's introduction, line 138, states that `μ_h` assigns positive mass to open sets); locator pending.
+Used by: firstPass_11_10 (through the event `μ_h(S₁) > 0`). -/
+def LQGMeasureSquarePositiveFrozen : Prop :=
+  ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ S : Set ℂ, IsClosedDyadicSquare S → ∀ᵐ ω ∂P, 0 < μ ω S
+
+/-- FIRST-PASS FROZEN (wave-4 candidate form, 2026-11-09; supersedes the measurable-`B` form above for Lemma 11.10). Event
+form of the Cameron-Martin positivity transfer for the joint event `{sup_{S₂} D_h ≤ c, μ_h(S₁) ≥ C}`. Let `f` be smooth,
+compactly supported and zero on the unit circle, and let `(μ, D)` be the LQG measure and metric of the whole-plane GFF,
+shifted by `f` through `weylShiftPair` (Weyl scaling, paper Facts 2.1 III and 2.2). If the shifted event has positive
+outer probability, then the unshifted event has positive probability. The unshifted event is measurable by the two
+measurability items above (hypotheses here).
+Why it holds: the shifted pair is the pair of the field `h + f` a.s. (Weyl scaling), and the laws of `h` and `h + f`
+are mutually absolutely continuous (Cameron-Martin for `f` smooth, compactly supported, zero on the unit circle).
+Source: Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2, Proposition 2.9 (printed page 49; Hilbert-space form
+in `Proposed/MillerSheffieldIG4.lean`), with the Weyl scaling of paper Facts 2.1 III and 2.2; locator pending.
+Used by: firstPass_11_10. -/
+def CameronMartinEventTransferFrozen : Prop :=
+  ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ContDiff ℝ ⊤ f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ) (S₁ S₂ : Set ℂ) (c C : ℝ≥0∞),
+  IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
+  IsClosedDyadicSquare S₁ → IsClosedDyadicSquare S₂ →
+  Measurable (fun ω => ⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v) →
+  Measurable (fun ω => μ ω S₁) →
+  0 < P {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S₂ u v) ≤ c ∧
+    C ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} →
+  0 < P {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v) ≤ c ∧ C ≤ μ ω S₁}
+
 end HarmonicBalls
