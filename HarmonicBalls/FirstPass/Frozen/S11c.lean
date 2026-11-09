@@ -156,4 +156,22 @@ def CameronMartinEventTransferFrozen : Prop :=
     C ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} →
   0 < P {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v) ≤ c ∧ C ≤ μ ω S₁}
 
+/-- FIRST-PASS FROZEN (operator ruling, FIRST PASS 18:35 UTC, item n1: "the closed-set Weyl comparison for internal metrics
+is EXTERNAL (Weyl scaling of the LQG metric): freeze it in the weakest form used"). Weyl comparison of internal metrics on a
+closed set. Let `D` be a Euclidean length metric (the LQG metric, paper Fact 2.2 I), let `E` be the Weyl-scaled metric
+`E = weylScaling D ξ f` (paper Fact 2.2 III, `D_{h+f}(u,v) = inf_P ∫ e^{ξf(P)} ds_D`), and let `U` be closed with `ξ f ≤ B`
+on `U`. Then the internal metric of `E` on `U` is at most `e^B` times the internal metric of `D` on `U`.
+Why it holds: a curve in `U` is a competitor, after reparametrization by `D`-arclength, in the infimum defining `weylScaling`
+on each sub-arc, so its `E`-length is at most its weighted `D`-length, which is at most `e^B` times its `D`-length (the
+weight is at most `e^B` on `U`); the infimum over curves in `U` gives the claim.
+Source: paper Fact 2.2 III (corrected copy, lines 441-447) for the full metric; the internal form on closed sets is used in
+the printed proof of `prop:mass-diam-gen` (lines 3108-3128, eq:use-weyl) without a separate statement; the repo has the
+open-set version `IsEuclideanLengthMetric.internalMetric_weylScaling_le` (Steps/Sec11/WeylAnnulusBounds.lean, hypothesis
+`IsOpen U`). Locator pending.
+Used by: firstPass_11_10 (through S11c/Shifted.lean). -/
+def WeylInternalClosedFrozen : Prop :=
+  ∀ (D E : ℂ → ℂ → ℝ) (ξ B : ℝ) (f : ℂ → ℝ) (U : Set ℂ), IsEuclideanLengthMetric D →
+    (∀ x y, 0 ≤ E x y) → (∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y) → IsClosed U →
+    (∀ z ∈ U, ξ * f z ≤ B) → ∀ x y, internalMetric E U x y ≤ ENNReal.ofReal (Real.exp B) * internalMetric D U x y
+
 end HarmonicBalls
