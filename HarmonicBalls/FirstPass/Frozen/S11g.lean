@@ -31,4 +31,17 @@ def LQGMetricSatisfiesAxiomsUnivFrozen : Prop :=
     (∀ x, Measurable fun ω => f ω x) →
     SatisfiesLQGMetricAxioms P γ ξ 𝔇 (fun ω => addFunPairing (hC ω) (f ω))
 
+/-- FIRST-PASS FROZEN. Continuity of the internal metric on open sets (internal metric of Fact 2.2 I, Bou-Rabee-Gwynne
+arXiv:2208.11795, corrected draft line 428, `Defs/LQGMetric.lean:65`): for a whole-plane LQG
+metric `D` of a field `hC` (`IsLQGMetricOfField`, `α₀ = 0`, so `D = 𝔇(h^ℂ)` almost surely), every open `W ⊆ ℂ` and almost
+surely in `ω`, the ENNReal-valued internal metric `(z, w) ↦ D^W(z, w)` is continuous on `W ×ˢ W` (the value `∞` is allowed
+and is locally constant across components of `W`). The statement is per open `W` and almost surely (the weakest form used
+by the countable reductions of pinch events). Standard; locator pending. Operator ruling 2026-11-09 18:50 UTC
+(continuity on open sets, EXTERNAL). Used by: the measurability of the third event in `firstPass_11_17` (step N2). -/
+def LQGInternalMetricContinuousFrozen : Prop :=
+  ∀ (γ ξ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), IsLQGMetricOfField P γ ξ 0 hC D →
+    ∀ W : Set ℂ, IsOpen W →
+      ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
+
 end HarmonicBalls
