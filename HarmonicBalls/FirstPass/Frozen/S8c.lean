@@ -38,4 +38,19 @@ def LocalRootedFieldMeasureDomination : Prop :=
           (Prod.snd ⁻¹' localDomain j)).map (localRootObservation μ j) ≪
         ((volume.restrict (localDomain j)).prod P).map (localReferenceObservation ν j)
 
+/-- FIRST-PASS FROZEN. Weyl relation of the insertion off the origin, used in the local rooted comparison of
+Lemma 8.2: almost surely, the no-insertion LQG measure `lam` of the whole-plane GFF satisfies
+`lam = |z|^{γ α₀} μ` on the complement of `0`, where `μ` is the LQG measure with insertion `α₀`
+(`h = H - α₀ log|·|`, so `μ_h = |z|^{-γ α₀} μ_H` off `0`).
+Source: standard LQG insertion and Weyl change of variables (Duplantier-Sheffield, Ann. Probab. 2011;
+Duplantier-Miller-Sheffield, arXiv:1409.7055v4); standard; locator pending. Stated as "λ = |·|^{α₀γ} μ off zero"
+in notes/fp-gaps/G-8-2.md, section 4. Used by: firstPass_8_2 (through FirstPass/S8c/WeylOffOrigin.lean). -/
+def LocalLQGInsertionWeylOffOrigin : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ lam : Ω → Measure ℂ),
+    ∀ hGFF : IsWholePlaneGFF P hC hcirc, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+    IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ hlam : IsLQGMeasureOfField P γ 0 hcirc lam,
+    ∀ᵐ ω ∂P, ∀ s : Set ℂ, MeasurableSet s → (0 : ℂ) ∉ s →
+      lam ω s = ∫⁻ z in s, ENNReal.ofReal (‖z‖ ^ (γ * α₀)) ∂(μ ω)
+
 end HarmonicBalls
