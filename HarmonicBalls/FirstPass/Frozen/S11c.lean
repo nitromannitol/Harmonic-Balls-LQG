@@ -278,10 +278,12 @@ def LocalCampbellMarkedRestrictionFrozen : Prop :=
 /-- FIRST-PASS FROZEN (operator ruling 2026-11-09 20:22 UTC, decision (c); truth-checked style: translation invariance of the
 whole-plane GFF modulo additive constants). EXTERNAL: for the whole-plane GFF `h^ℂ` (`IsWholePlaneGFF`), translating the field
 by `z` and subtracting a constant does not change its law modulo constants, `g(· + z) - g_1(z) =d g` (Duplantier-Miller-Sheffield,
-arXiv:1409.7055v4, Lemma A.10, and the covariance `-log|x - y| + log max(1,|x|) + log max(1,|y|)`). Stated as equality of the laws
+arXiv:1409.7055v4, Section 4.1, and Holden-Sun, arXiv:1610.05272, proof of Lemma 4.2, p. 16; the covariance
+`-log|x - y| + log max(1,|x|) + log max(1,|y|)` is the one of the normalized whole-plane GFF). Truth check 20:44 UTC: TRUE
+(citation corrected per operator; not DMS Lemma A.10). Stated as equality of the laws
 of the pairings with the mean-zero test functions `φ` (smooth, compact support, `∫ φ = 0`): the constants drop out, so
 `(hC ω (φ(· - z)))_φ` and `(hC ω φ)_φ` have the same law. Only the mean-zero pairings are asserted.
-Used by: firstPass_11_7 (route: event-specific transfer, translation of the reference observation, not yet written). -/
+Used by: firstPass_11_7 (route: fixed-root null section B2 (5.1), not yet written; see report). -/
 def WholePlaneGFFTranslationModConstFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
