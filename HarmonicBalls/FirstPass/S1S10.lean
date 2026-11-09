@@ -8,6 +8,9 @@ import HarmonicBalls.Draft.Section2
 import HarmonicBalls.Draft.Section5
 import HarmonicBalls.Draft.Section10
 import HarmonicBalls.Draft.Section11
+import HarmonicBalls.Draft.Section3
+import HarmonicBalls.FirstPass.Frozen.S1S10
+import HarmonicBalls.FirstPass.S1S10.CrossingLemma
 
 /-!
 # FIRST PASS, Sections 1 and 10 (worker n1)
@@ -82,10 +85,51 @@ theorem firstPass_10_7
     HarmonicBallComplementBoundaryJordanStmt.{u} :=
   harmonicBallComplementBoundaryJordan_of_proved_scaling hI2 h55 h10 hAff hCC
 
+/-- FIRST PASS, Lemma 10.6 (prop:boundary-simple-loop), corrected as [C49]: the components of `ℂ \ closure Λ_t(z)`
+(not of `B_1 \ closure Λ_t(z)`) have simple-loop boundaries. Proof: almost surely the cluster is open and connected
+(Lemma 3.2, `ClusterOpenLaplacianStmt`) and each boundary point `p ≠ 0` has arbitrarily small crossing scales
+(Lemma 10.1, `ClusterBoundedCrossingsStmt`); then `firstPass_10_5_corrected` with `E = {0}`. -/
+theorem firstPass_10_6
+    (h10 : ClusterBoundedCrossingsStmt.{u}) (h32 : ClusterOpenLaplacianStmt.{u})
+    (hTor : TorhorstSimpleLoopFrozen) :
+    ComplementComponentBoundarySimpleLoopStmt.{u} := by
+  intro γ α₀ hγ0 hγ2 hα Ω _ P hC hcirc μ hGFF hμ
+  obtain ⟨α, -, hA⟩ := h10 γ hγ0 hγ2
+  have hA' := hA α₀ hα Ω P hC hcirc μ hGFF hμ
+  have hO := h32 γ α₀ hγ0 hγ2 hα Ω P hC hcirc μ hGFF hμ
+  filter_upwards [hA', hO] with ω hω hωO
+  intro t ht z hz hcl
+  obtain ⟨hopen, hconn, -⟩ := hωO t 1 ht one_pos z hz
+  have hGb : Bornology.IsBounded (cluster (μ ω) 1 z t) :=
+    Metric.isBounded_ball.subset (fun x hx => hx.1)
+  have hcross : ∀ p ∈ frontier (cluster (μ ω) 1 z t) \ {0}, ∀ δ : ℝ, 0 < δ → ∃ r : ℝ, 0 < r ∧ r < δ ∧
+      (crossingComponents (cluster (μ ω) 1 z t ∩ ball p (2 * r)) p (r / 3) (2 * r)).Finite := by
+    rintro p ⟨hpf, hp0⟩ δ hδ
+    have hpB : p ∈ ball (0 : ℂ) 1 := hcl hpf.1
+    have hpn : p ≠ 0 := fun h => hp0 (mem_singleton_iff.mpr h)
+    have hpnorm : 0 < ‖p‖ := norm_pos_iff.mpr hpn
+    have hmpos : 0 < min (δ ^ 2) ((‖p‖ / 20) ^ 2) := lt_min (by positivity) (by positivity)
+    obtain ⟨ε, hεP, hεm⟩ := (hω.and (Ioo_mem_nhdsGT hmpos)).exists
+    have hε0 : 0 < ε := hεm.1
+    have hεδ : ε < δ ^ 2 := lt_of_lt_of_le hεm.2 (min_le_left _ _)
+    have hεp : ε ≤ (‖p‖ / 20) ^ 2 := le_of_lt (lt_of_lt_of_le hεm.2 (min_le_right _ _))
+    have hsq : Real.sqrt ε ≤ ‖p‖ / 20 := by
+      have h := Real.sqrt_le_sqrt hεp
+      rwa [Real.sqrt_sq (by positivity)] at h
+    have hε20 : 20 * Real.sqrt ε ≤ ‖p‖ := by linarith
+    obtain ⟨ρ, ⟨hερ, hρs⟩, hbound⟩ :=
+      hεP p ⟨hpB, fun h => absurd (mem_ball_zero_iff.mp h) (not_lt.mpr hε20)⟩
+    have hρδ : ρ < δ := lt_of_le_of_lt hρs ((Real.sqrt_lt' hδ).mpr hεδ)
+    exact ⟨ρ, lt_of_lt_of_le hε0 hερ, hρδ, Set.finite_of_encard_le_coe (hbound t ht z hcl)⟩
+  exact (firstPass_10_5_corrected (G := cluster (μ ω) 1 z t) hconn.nonempty hGb hopen hconn
+    ⟨{0}, Set.finite_singleton 0, hcross⟩ hTor).2.2
+
 #print axioms firstPass_1_1
 #print axioms firstPass_1_2
 #print axioms firstPass_1_3
 #print axioms firstPass_10_1
 #print axioms firstPass_10_7
+#print axioms firstPass_10_6
+#print axioms firstPass_10_5_corrected
 
 end HarmonicBalls
