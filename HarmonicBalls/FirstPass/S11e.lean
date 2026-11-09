@@ -1,6 +1,8 @@
 import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.S11e.Include
+import HarmonicBalls.FirstPass.S11e.FirstPositive
+import HarmonicBalls.FirstPass.Frozen.S11e
 
 /-!
 # First pass, Section 11 pinch positivity (fp-S11e, owner n2)
@@ -71,6 +73,18 @@ theorem firstPass_11_12
     exact pinchPointEvent_of_auxiliary_events hconfig hgoodω.1 hgoodω.2 (μ ω) M hA'.1 hA'.2.1 hA'.2.2
   · rw [measure_sdiff_null hN0]
     exact hp
+
+/-- Lemma 11.15 (`lemma:first-event-proof`, paper line 3277), first-pass form: `P[Ẽ₁] > 0` for the fixed corrected pinch
+configuration (`isCorrectedPinchConfiguration_fixed`). The only hypothesis is the frozen field-level measurability
+`LQGMetricPointwiseAEMeasurableFrozen` (`FirstPass/Frozen/S11e.lean`, EXTERNAL, a.e. form on realized LQG metrics). Proof:
+`pinchFirst_positive_of_frozen` (`FirstPass/S11e/FirstPositive.lean`). -/
+theorem firstPass_11_15 (hfr : LQGMetricPointwiseAEMeasurableFrozen) : PinchFirstEventPositiveStmt.{u} := by
+  unfold PinchFirstEventPositiveStmt
+  refine ⟨_, _, _, _, _, _, _, isCorrectedPinchConfiguration_fixed.toIsPinchPointProofConfiguration, ?_⟩
+  intro γ ξ hγ hγ2 Ω _ P hC hcirc D hgff hD
+  exact pinchFirst_positive_of_frozen hfr isCorrectedPinchConfiguration_fixed hγ hγ2 P hC hcirc D hgff hD
+
+#print axioms firstPass_11_15
 
 #print axioms firstPass_11_16
 #print axioms firstPass_11_12
