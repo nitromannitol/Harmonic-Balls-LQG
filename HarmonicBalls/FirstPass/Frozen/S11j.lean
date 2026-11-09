@@ -62,4 +62,28 @@ def CameronMartinMetricEventTransferMeasurableFrozen : Prop :=
   NullMeasurableSet {ω | B (D ω)} P →
   0 < P {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} → 0 < P {ω | B (D ω)}
 
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator ruling Q1, 23:12 UTC). Metric-level Weyl composition
+(not to be confused with the field-level `WeylScalingCompositionFrozen` of `Frozen/S11d.lean`):
+scaling a metric `D` by `g` and then by `f` is scaling it by `g + f`, for an exponent `ξ > 0`, an Euclidean length
+metric `D`, weights `f, g` continuous on `ℂ \ {0}` (the log singularity `-α₀ log|·|` is continuous there), and finite
+inner scaling. Here `weylScaling D ξ g` is the infimum over `D`-length parametrized paths of `∫ e^{ξ g(P t)} dt`
+(`Defs/LQGMetric.lean`), and the inner metric enters only through `toReal`.
+
+Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 III, corrected paper line 445, which defines `e^{ξ f} · D` as this
+infimum; GM21 = Gwynne-Miller, (1.8), p. 6. The composition is the weighted-length identity: the `D'`-length of a
+`D`-parametrized path is `∫ e^{ξ g} dℓ_D`, and the change of parameter `dσ = e^{ξ g} dr` gives the weight `g + f`.
+Used by the common-field identification of the shifted metric (`FirstPass/S11j/FieldLevel11_15.lean`). -/
+def WeylMetricCompositionFrozen : Prop :=
+  ∀ ξ : ℝ, 0 < ξ → ∀ (D : ℂ → ℂ → ℝ) (g f : ℂ → ℝ), IsEuclideanLengthMetric D →
+    ContinuousOn g {z | z ≠ 0} → ContinuousOn f {z | z ≠ 0} →
+    (∀ x y, weylScaling D ξ g x y ≠ ⊤) →
+    ∀ x y, weylScaling (fun u v => (weylScaling D ξ g u v).toReal) ξ f x y =
+      weylScaling D ξ (fun z => g z + f z) x y
+
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator note 22:53 UTC, item B(a)). The Weyl exponent of an LQG
+metric is positive: `ξ = γ / d_γ` (Ding-Gwynne, arXiv:2108.12060, Theorem 1.9; the argument of
+`notes/fp-gaps/CHATGPT-xi-exponent-rigidity.md` section 3). Stated for `0 < γ < 2`, the only range used. -/
+def LQGMetricExponentPositive : Prop :=
+  ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 → 0 < ξ
+
 end HarmonicBalls
