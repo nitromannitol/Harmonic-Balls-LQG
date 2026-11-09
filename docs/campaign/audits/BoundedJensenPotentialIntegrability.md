@@ -80,6 +80,22 @@ Owned: `HarmonicBalls/Proofs/Potential/BoundedJensenPotentialIntegrability.lean`
       (Proofs/Potential/FiniteDiscGreenReciprocity.lean:587), which is for discs.
   (c) the lower bound `liminf u n x ≥ V x` on `S` (lower semicontinuity). This needs `G_O(·,y) → +∞` at `y` for general bounded
       `O`. Not located. Only the ball version `tendsto_greenFunction_ball_pole` (Proofs/Sec8/GreenKernelContinuity.lean:18) exists.
+  Exact Lean type of the missing ingredient, for bounded `O`, admissible `ν`, and `c = 0` (nonnegative approximants,
+  since `G_O ≥ 0` for bounded `O`; `c = 0` is needed so that the Fatou conclusion gives the Jensen bound with no shift):
+  ```
+  ∃ u : ℕ → ℂ → ℝ,
+    (∀ n, Measurable (u n)) ∧ (∀ n, IntegrableOn (u n) S μ) ∧
+    (∀ n, ∀ x ∈ S, 0 ≤ u n x) ∧
+    (∀ n, ∃ F ∈ boundedSubharmonicBallTestClass S z, ∀ x ∈ S, F x = -u n x) ∧
+    Tendsto (fun n => u n z) atTop (𝓝 (greenPotential O ν z)) ∧
+    ∀ x ∈ S, (∫⁻ y, greenKernelExtended O x y ∂ν) ≤ liminf (fun n => ENNReal.ofReal (u n x)) atTop
+  ```
+  Given this, `jensen_fatou_of_common_lower_bound` (with `V x = ∫⁻ greenKernelExtended O x y ∂ν`, `L = greenPotential O ν z`),
+  `greenPotential_eq_toReal_of_classical_lt_top`, and the sub-mean hypothesis (applied to `F`, using `z ∈ S`) give the
+  consumer's a.e. finiteness, integrability, agreement, and Jensen bound for bounded `O`. Two small items remain on that
+  route and are not yet written: `AEMeasurable (fun x => ∫⁻ y, greenKernelExtended O x y ∂ν) (μ.restrict S)` (Tonelli, from
+  `measurable_greenFunction_uncurry`, BoundedDomainGreenMeasurability.lean:52), and the a.e. transfer from `V.toReal` to the
+  Bochner potential. Neither needs new mathematics.
   The mollification providers do not suffice. `exists_compactlySupported_smooth_subharmonic_approximation`
   (Proofs/Sec6/LaplacianConvolution.lean:117) and `exists_local_mollification` (Proofs/Sec6/LocalMollification.lean:49)
   require continuity of the function, and the potential of `ν` is singular at atoms.
