@@ -32,7 +32,10 @@ universe u
 section 5, Step 16.2). For each buffered geometry, `γ ∈ (0, 2)`, `α₀ < Q`, `ξ`, and each LQG measure and metric of the field:
 the sigma-algebra of the field outside `closure W` (the comap of the zero-mean pairings of `localModConstPairings`) is
 contained in the ambient one, and for every `M > 0` there are deterministic `c₁, c₂ > 0` and an outside-measurable set `F`
-of positive probability inside `Ẽ₁ ∩ {c₁ ≤ D(∂B_δ, ∂B_{2δ})} ∩ {M S ≤ c₂}`. -/
+of positive probability such that, almost surely, every point of `F` lies in `Ẽ₁ ∩ {c₁ ≤ D(∂B_δ, ∂B_{2δ})} ∩ {M S ≤ c₂}`.
+The inclusion is almost everywhere, not pointwise: the model predicates identify `D`, `μ` with their canonical versions
+only almost surely, so a pointwise inclusion fails for a version changed on a null set (ChatGPT, operator note 23:27 UTC,
+section 3.1 counterexample). -/
 def PinchSecondExteriorStep : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
   ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -43,8 +46,8 @@ def PinchSecondExteriorStep : Prop :=
     ∀ M : ℝ, 0 < M → ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ 0 < c₂ ∧
       ∃ F : Set Ω,
         MeasurableSet[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] F ∧
-        F ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ ∧ c₁ ≤ setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ)) ∧
-          ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂} ∧
+        (∀ᵐ ω ∂P, ω ∈ F → pinchFirstEvent (D ω) W T Q' Q δ ∧ c₁ ≤ setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ)) ∧
+          ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂) ∧
         0 < P F
 
 /-- The outside-measurability conjunct of `PinchSecondExteriorStep`, for every `α₀`: the zero-mean local pairings of a
@@ -65,8 +68,12 @@ theorem localModConstPairings_comap_le {Ω : Type u} [MeasurableSpace Ω] {P : M
 
 /-- NEW, OPEN: the event part of `PinchSecondExteriorStep` (the statement `∀ M > 0, ∃ c₁ c₂ F ...` without its
 outside-measurability conjunct, which `localModConstPairings_comap_le` proves). This is the single remaining input of
-`firstPass_11_16_corrected`; its written argument has the gap of the operator note 2026-11-09 23:12 UTC (global `setDist` in
-`pinchFirstEvent`, Draft/Section11.lean:95-99; paper lem:E2 proof, corrected lines 3703-3706). With ChatGPT. -/
+`firstPass_11_16_corrected`. The operator note 23:12 UTC gap (global `setDist` in `pinchFirstEvent`,
+Draft/Section11.lean:95-99) is answered by ChatGPT (23:27 UTC, `notes/fp-gaps/CHATGPT-e2-locality-z3-frozen.md`
+sections 1-2): both global distances are exit distances, local by first-exit truncation, so `pinchFirstEvent` and the
+Draft are unchanged. Still OPEN here: the exit/crossing locality lemmas (formulas (1)-(2) of that note) and the
+exterior-code versions of `L, A, a₀, d₀, a₁, S` (its section 2.2, modulo-constant bridge (3)), and the positivity of the
+stronger local event `E₁` (corrected `lem:E1`). -/
 def PinchSecondExteriorEventStep : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
   ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -76,8 +83,8 @@ def PinchSecondExteriorEventStep : Prop :=
     ∀ M : ℝ, 0 < M → ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ 0 < c₂ ∧
       ∃ F : Set Ω,
         MeasurableSet[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] F ∧
-        F ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ ∧ c₁ ≤ setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ)) ∧
-          ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂} ∧
+        (∀ᵐ ω ∂P, ω ∈ F → pinchFirstEvent (D ω) W T Q' Q δ ∧ c₁ ≤ setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ)) ∧
+          ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂) ∧
         0 < P F
 
 /-- `PinchSecondExteriorStep` is equivalent to its event part: the outside-measurability conjunct is proved. -/
@@ -106,7 +113,8 @@ def PinchSecondConditionalMassFaithfulStep : Prop :=
 Proof: for `M > 0` take the thresholds `c₁, c₂` and the outside-measurable `F` of `PinchSecondExteriorStep`, and the mass set
 `H` of `PinchSecondConditionalMassFaithfulStep` for the same thresholds. Then `0 < P (F ∩ H)` by
 `measure_inter_pos_of_condExp_indicator_pos`. On `F ∩ H`: `internalDiam V ≤ internalDiam V̄ < c₁/2 < c₁ ≤ D(∂B_δ, ∂B_{2δ})`
-and `M S ≤ c₂ < 2c₂ < μ(U)`, so `pinchSecondEvent_of_thresholds` gives `Ẽ₂(M)`, and `Ẽ₁` holds from `F`. -/
+and `M S ≤ c₂ < 2c₂ < μ(U)`, so `pinchSecondEvent_of_thresholds` gives `Ẽ₂(M)`, and `Ẽ₁` holds from `F`. The inclusion
+on `F` is almost sure, so the witness is `(F ∩ H) \ N` with `N` an ambient measurable null superset of the exceptions. -/
 theorem firstPass_11_16_corrected_of_steps (hX : PinchSecondExteriorStep.{u})
     (hM : PinchSecondConditionalMassFaithfulStep.{u}) : PinchSecondEventFaithfulStmt.{u} := by
   intro U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω _ P hC hcirc μ D hGFF hμ hD M hM0
@@ -117,9 +125,20 @@ theorem firstPass_11_16_corrected_of_steps (hX : PinchSecondExteriorStep.{u})
     hM U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω P hC hcirc μ D hGFF hμ hD c₁ c₂ hc₁ hc₂
   have hpos : 0 < P (F ∩ H) :=
     measure_inter_pos_of_condExp_indicator_pos P hle hF hHm hFpos hcond
-  refine ⟨F ∩ H, fun ω hω => ?_, (hle _ hF).inter hHm, hpos⟩
-  obtain ⟨hE1, hsep, hS⟩ := hFsub hω.1
-  obtain ⟨hmass, hdiam⟩ := hHsub hω.2
+  -- The exterior inclusion holds only almost surely: remove an ambient measurable null set AFTER conditioning
+  -- (ChatGPT, operator note 23:27 UTC, section 3.4). `P ((F ∩ H) \ N) = P (F ∩ H) > 0`.
+  obtain ⟨N, hNsub, hNm, hN0⟩ := exists_measurable_superset_of_null (ae_iff.1 hFsub)
+  have hBpos : 0 < P ((F ∩ H) \ N) := by
+    rw [measure_sdiff_null hN0]
+    exact hpos
+  refine ⟨(F ∩ H) \ N, fun ω hω => ?_, ((hle _ hF).inter hHm).diff hNm, hBpos⟩
+  have hωF : ω ∈ F := hω.1.1
+  have hgood : pinchFirstEvent (D ω) W T Q' Q δ ∧ c₁ ≤ setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ)) ∧
+      ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂ := by
+    by_contra hbad
+    exact hω.2 (hNsub fun h => hbad (h hωF))
+  obtain ⟨hE1, hsep, hS⟩ := hgood
+  obtain ⟨hmass, hdiam⟩ := hHsub hω.1.2
   exact ⟨hE1, pinchSecondEvent_of_thresholds hc₁ hc₂
     ((internalDiam_le_closure (D ω) δ V).trans hdiam.le) hsep hS hmass⟩
 
