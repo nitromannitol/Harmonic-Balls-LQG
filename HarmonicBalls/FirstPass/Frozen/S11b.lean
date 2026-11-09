@@ -28,7 +28,7 @@ and the pointwise ergodic theorem gives the limit.
 
 Source: the paper's proof of Lemma 11.7 (lines 2936-2951 of the corrected copy), which cites the ergodicity of dyadic
 dilation of the whole-plane GFF modulo constants and the pointwise ergodic theorem. Standard; locator pending.
-Used by: firstPass_11_7. -/
+Used by: firstPass_11_7. RETIRED (unused by firstPass_11_7, operator 23:12 UTC; no statement change): the new firstPass_11_7 (`FirstPass/S11c.lean`) does not use this Prop; only the old `FirstPass/S11b.lean` does. -/
 def OriginRootedConeFrequencyFrozen : Prop :=
   ∀ (γ : ℝ) (Q : Set ℂ) (M : ℝ), 0 < γ → γ < 2 → IsCone Q → 0 < M →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -51,7 +51,7 @@ translation covariant (the whole-plane GFF modulo constants is stationary) and i
 Source: the paper's proof of `lemma:mu_h-bad-and-harnack` (Lemma 11.7; corrected copy, the paragraph beginning "The
 rooted-field change of measure used in the proof of Lemma \ref{lemma:mu_h-doubling-and-harnack}"), correction [C39].
 Standard; locator pending.
-Used by: firstPass_11_7. -/
+Used by: firstPass_11_7. RETIRED (unused by firstPass_11_7, operator 23:12 UTC; no statement change): the new firstPass_11_7 (`FirstPass/S11c.lean`) does not use this Prop; only the old `FirstPass/S11b.lean` does. -/
 def RootedConeFrequencyTransferFrozen : Prop :=
   ∀ (γ α₀ : ℝ) (Q : Set ℂ) (M δ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ → IsCone Q → 0 < M → 0 < δ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
