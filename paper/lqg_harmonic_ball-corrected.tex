@@ -2317,14 +2317,19 @@
 	\end{proof}
 	
 	The prior lemma implies uniqueness (up to sets of $\mu_h$-measure zero) of subharmonic balls. 
+% CORRECTION [C51] Printed: the regularized cluster is contained in A and A minus it is mu_h-null.
+% Corrected: the raw cluster is contained in A, A is contained in the regularized cluster, both differences are mu_h-null; equality when A is regular open.
+% Reason: the printed inclusion is false; at the last time a bounded hole disappears the raw cluster is a subharmonic ball omitting a nonempty set inside its regularization (audited steps4-final.tex Section 5; proposal [C10]). Author-approved 2026-11-09.
 	\begin{prop} \label{prop:sub-harmonic-ball-uniqueness} 
-		The following holds on an event of probability 1. Let $A \Subset B_R$ be a subharmonic ball centered at~$z \in B_R$ with $\mu_h(A)=t$ for some $t, R > 0$. Then, ${\regcluster{B_R;z}{t}} \subset A$ and $\mu_h(A \backslash {\regcluster{B_R;z}{t}}) = 0$.  
+		The following holds on an event of probability 1. Let $A \Subset B_R$ be a subharmonic ball centered at~$z \in B_R$ with $\mu_h(A)=t$ for some $t, R > 0$. Then, ${\cluster{B_R;z}{t}} \subset A \subset {\regcluster{B_R;z}{t}}$, $\mu_h(A \backslash {\cluster{B_R;z}{t}}) = 0$ and $\mu_h({\regcluster{B_R;z}{t}} \backslash A) = 0$. If moreover $A = \operatorname{int}\overline A$, then $A = {\regcluster{B_R;z}{t}}$.  
 	\end{prop}
 	
 	\begin{proof}
 		Let $f$ be given by \eqref{eq:obstacle-comp} and note that by Lemma \ref{lemma:obstacle-comp} (and since every subharmonic ball is a harmonic ball), 
 		$f  \geq 0$ in $B_R$ and $f = 0$ on $B_R \backslash A$.  Since $f \geq 0$ and $\Delta f \leq -\mu_h(A) \delta_z + \mu_h$ on $B_R$, we have that $(f(\cdot)- t G_{B_R}(z,\cdot)) \in \mclS{B_R; z}{t}$ and hence $f \geq \odometer{B_R; z}{t}$. This implies, together with $f = 0$ on $B_R \backslash A$, that  $\cluster{B_R; z}{t} \subset A$. 
-		Since $t = \mu_h(A) = \mu_h({\regcluster{B_R; z}{t}})$, this completes the proof. 
+		Write $G = \cluster{B_R; z}{t}$ and $\widehat G = \regcluster{B_R; z}{t} = \operatorname{int}\overline G$. Since $G \subset A \Subset B_R$, we have $\overline G \subset B_R$.
+		Obtain Proposition \ref{prop:boundary-measure-zero} at every dyadic radius $2^j$ by fixed dilation and intersect these events. Intersect also the events of Lemma \ref{lemma:cluster-compatibility} at these countably many outer radii. Given $R$, choose $2^j \geq R$; Lemma \ref{lemma:cluster-compatibility} with $s_1 = s_2 = R$ and $\overline G \subset B_R$ identifies $G$ with the cluster in $B_{2^j}$. The latter is compactly contained there and has $\mu_h$-null boundary. This proves $\mu_h(\partial G) = 0$ for every such $R, t, z$ on one event.
+		Lemma \ref{lemma:conservation-of-mass} gives $\mu_h(G) = t = \mu_h(A)$, so $\mu_h(A \backslash G) = 0$. Full support of $\mu_h$ and openness of $A$ imply $A \subset \overline G$: otherwise a ball inside $A \backslash \overline G$ would have positive measure. Since $A$ is open, $A \subset \widehat G$. Finally $\widehat G \backslash A \subset \partial G$, so $\mu_h(\widehat G \backslash A) = 0$. If $A$ is regular open, $G \subset A$ also gives $\widehat G \subset \operatorname{int}\overline A = A$. 
 	\end{proof}
 	
 	
@@ -2586,102 +2591,130 @@
 	that the boundaries of the complementary connected components of the cluster are simple loops. Before doing so, 
 	we prove a topological lemma. Recall from the statement of Lemma \ref{lemma:cannot-cross} that a set $X$ {\it crosses} an annulus $\A_{s_1, s_2}(z)$ if 
 	$\overline{X} \cap \partial B_{s_1}(z) \neq \emptyset$ and $\overline{X} \cap \partial B_{s_2}(z) \neq \emptyset$.
+% CORRECTION [C48] Printed: Lemma 10.5, every crossing component of U^c cap A contains a crossing component of the cluster.
+% Corrected: a deterministic lemma; finitely many crossings at small scales give local connectedness, no cut points and simple-loop boundaries.
+% Reason: clusters can have holes (audited counterexample, steps4-final.tex Section 3); a crossing component of U^c cap A can be a whole annulus inside another hole. Author-approved 2026-11-09.
 	\begin{lemma} \label{lemma:crossing-connected}
-		Let $A \Subset B_1$ be an annulus,~$t > 0$ and~$z \in B_1$ such that~${\cluster{}{t}(z)} \Subset B_1$, and $U$ a simply connected component of ${\overline{{{\cluster{}{t}(z)}}}}^c$ 
-		with $\Gamma = \partial U \Subset B_1$. Every connected component of $U^c \cap A$ which crosses
-		$A$ contains a connected component of ${\cluster{}{t}(z)} \cap A$ which crosses $A$. 
+		Let $G\subset\C$ be nonempty, bounded, connected and open, and let $K=\overline G$. Suppose there is a finite set $E$
+		such that for every $p\in\partial G\setminus E$ there are arbitrarily small $r>0$ for which only finitely many components
+		of $G\cap B_{2r}(p)$ have closures meeting both $\partial B_{r/3}(p)$ and $\partial B_{2r}(p)$. Then $K$ is locally
+		connected and has no cut points. Every component of $\C\setminus K$ has boundary a simple loop.
 	\end{lemma}
-	
 	\begin{proof}
-		See Figure \ref{fig:crossing-argument}. 
-		
-		Let $C$ be a connected component of $U^c \cap A$ which crosses $A$. The `filling' of $C$, $C'$, is the union of $C$ and the regions which are disconnected 
-		in $A$ from the inner boundary of the annulus, the outer boundary of the annulus, or both by $C$. Note that $C'$ is a topological rectangle
-		with two boundary segments which are part of the inner and outer boundaries of the annulus respectively, and two boundary segments contained in $\Gamma$. 
-		
-		By, \eg, the Poincar\'e-Miranda theorem~\cite{poincaremiranda}, there is either a simple arc in ${\cluster{}{t}(z)} \cap C'$ between the inner and outer boundaries 
-		of the annulus, or there is a simple arc in ${\cluster{}{t}(z)}^c \cap C'$ between the two boundary segments contained in $\Gamma$. 
-		In the former case, ${\cluster{}{t}(z)}$ crosses $A$ and thus there is a connected component of ${\cluster{}{t}(z)} \cap A$ in $C$ which crosses $A$. Hence it suffices to rule out the latter case, which we now do. 
-		
-		Suppose for sake of contradiction there is a simple open arc $P$ in ${\cluster{}{t}(z)}^c \cap C'$ between the two boundary segments contained in $\Gamma$. That is, $P$ is the interior of a simple arc contained in ${\cluster{}{t}(z)}^c \cap C'$ and $\overline{P} = P \cup \{a\} \cup \{b\}$
-		with $\{a, b\} \subset \Gamma$.
-		
-		As $\mathrm{int}(U^c)$ is simply connected, by \cite[Proposition 2.12]{pommerenke2013boundary},  
-		$\mathrm{int}(U^c) \backslash P$ has exactly two components $G_0$ and $G_1$ and these satisfy
-		\begin{equation}
-		\mathrm{int}(U^c) \cap \partial G_0 = \mathrm{int}(U^c) \cap \partial G_1 = P.
-		\end{equation}
-		As $\partial G_0$ and $\partial G_1$ contain points in $\Gamma$, the boundary of a simply connected component of 
-		${\cluster{}{t}(z)}^c$, by definition of component, both $G_0$ and $G_1$ must contain points in ${\cluster{}{t}(z)}$.  However, this contradicts the fact ${\cluster{}{t}(z)}$ is connected, Lemma \ref{lemma:non-coincidence-open-harmonic}. 
-		Indeed, 
-		\[
-		\partial G_0 \cup \partial G_1 \subset \partial U \cup P \subset {\cluster{}{t}(z)}^c
-		\]
-		which implies, as $G_0 \cap  {\cluster{}{t}(z)}$ and $G_1 \cap {\cluster{}{t}(z)}$ are open and disjoint,
-		that they must lie in different connected components of ${\cluster{}{t}(z)}$.
+First fix $p\in\partial G\setminus E$ and such a small $r$
+that $G$ has a point outside $\overline B_{2r}(p)$.
+Each component of $G\cap B_{2r}(p)$ meeting $B_{r/3}(p)$
+is a crossing component: connect one of its points to that
+outside point by a path in the open connected set $G$, and
+stop at the first hit of $\partial B_{2r}(p)$.
+Before that hit the path stays in the same component and
+crosses the inner circle. List these finitely many components
+as $C_1,\ldots,C_k$. Approximation by points of $G$ and finiteness
+give
+\[
+ K\cap B_{r/3}(p)\subset\bigcup_{i=1}^k\overline C_i.
+\]
+The union $H$ of those $\overline C_i$ containing $p$ is
+connected, since all its members contain $p$. Discarding the
+other finitely many compact sets leaves a sufficiently small
+relative neighbourhood of $p$ in $K$ contained in $H$.
+Moreover $H\subset K\cap\overline B_{2r}(p)$.
+This proves local connectedness at $p$. Interior points of $G$
+are already locally connected.
+
+We include the removal of the finite exceptional set. Suppose
+$K$ failed to be locally connected at $p\in E$. Choose $a>0$
+so small that $K\not\subset\overline B_a(p)$ and the component
+$C_0$ of $K\cap\overline B_a(p)$ containing $p$ is not a
+relative neighbourhood of $p$. Such an $a$ exists: otherwise
+these components themselves form a connected neighbourhood
+basis. There are points $x_j\to p$ in pairwise distinct other
+components $C_j$ of this compact intersection. Distinctness
+can be enforced because each component is closed and any
+finite collection not containing $p$ stays a positive distance
+from it. Each $C_j$ meets $\partial B_a(p)$. To see this
+boundary-bumping fact, if a component avoided the sphere,
+the equality of components and intersections of clopen
+neighbourhoods in a compact Hausdorff space would give a
+relatively clopen neighbourhood of it avoiding the sphere.
+That neighbourhood would then be clopen in $K$, contrary to
+connectedness. The equality just used follows by separating
+any putative disconnected intersection by disjoint open sets
+and taking a finite subcover of their compact complement.
+
+Here is the compact-set limit argument in full. Put
+$X=K\cap\overline B_a(p)$ and $d_j(x)=\operatorname{dist}(x,C_j)$
+for $x\in X$. These functions are nonnegative, bounded by
+$\operatorname{diam}X$, and $1$-Lipschitz. For each positive
+integer $n$ choose a finite $1/n$-net of the compact metric
+space $X$. Successive subsequences and a diagonal selection
+give convergence of $d_j$ on the countable union of these
+nets: each coordinate is a bounded real sequence.
+The Lipschitz bound and a finite net then make that subsequence
+uniformly Cauchy on $X$. Denote its continuous uniform limit
+by $d$ and put $L=\{x\in X:d(x)=0\}$. This is a nonempty
+compact set: choose $u_j\in C_j$, take a convergent subsequence
+in $X$, and use uniform convergence and the Lipschitz bound
+to see that the limit has $d=0$.
+
+For $x\in L$,
+$\operatorname{dist}(x,C_j)=d_j(x)\leq\|d_j-d\|_\infty$.
+Conversely, if some $u_j\in C_j$ stayed a positive distance
+from $L$, a subsequential limit $u\in X$ would satisfy $d(u)=0$,
+a contradiction. These two facts prove Hausdorff convergence
+of $C_j$ to $L$. If $L=L_1\cup L_2$ were disconnected,
+its two nonempty compact relatively closed parts would have
+positive distance. Disjoint sufficiently small neighbourhoods
+of the parts would contain $C_j$ for large $j$, and $C_j$
+would meet both neighbourhoods, contradicting connectedness
+of $C_j$. Thus $L$ is connected. Since $x_j\in C_j$ tends
+to $p$, we have $p\in L$. Choosing a point of
+$C_j\cap\partial B_a(p)$ and taking a subsequence shows that
+$L$ meets the sphere as well. Finally $L\subset X$ and its
+connectedness imply $L\subset C_0$.
+Choose $q\in L\cap B_a(p)\setminus E$, possible because the
+continuous distance from $p$ takes every value from zero to
+$a$ on $L$. There are $q_j\in C_j$ tending to $q$.
+Local connectedness at $q$ supplies a connected relative
+neighbourhood contained in $K\cap B_a(p)$. It eventually
+contains $q_j$ as well as $q$, contradicting the distinction
+between $C_j$ and $C_0$. Thus $K$ is locally connected everywhere.
+
+There are no cut points. For $p\in K\setminus G$, the connected
+set $G$ is dense in $K\setminus\{p\}$. For $p\in G$, the set
+$G\setminus\{p\}$ is connected and dense there: polygonal
+paths in a planar open connected set can be diverted inside
+a small disk around the removed point. In either case
+$K\setminus\{p\}$ is connected.
+
+Apply the theorem of Torhorst in the form printed as Theorem 3.1,
+p.~6, of Jolivet--Loridant--Luo,
+\href{https://arxiv.org/abs/1411.6776v1}{arXiv:1411.6776v1},
+\emph{A numerical scale for non-locally connected planar
+continua} (published in Topology and its Applications 202
+(2016), 21--39). It states that boundaries of complementary
+components of a locally connected continuum are locally
+connected, and are simple closed curves if the continuum has
+no cut point. A simple closed curve is a simple loop.
 	\end{proof}
 	
 	
 	
+% CORRECTION [C49] Printed: the components of B_1 minus the closure of the cluster, with a proof through Lemma 10.5 and Caratheodory's theorem.
+% Corrected: the components of C minus the closure of the cluster, from Lemma 10.1 and the corrected Lemma 10.5.
+% Reason: for a cluster compactly contained in B_1, the frontier of the outer component of B_1 minus its closure contains the circle and part of the cluster, so it is disconnected; the printed proof uses the false Lemma 10.5 (proposal [C16]). Author-approved 2026-11-09.
 	\begin{prop} \label{prop:boundary-simple-loop}
-		Almost surely, for all $t > 0$ and~$z \in B_1$ such that ${\cluster{}{t}(z)} \Subset B_1$, each of the connected components of $B_1 \backslash \overline{{{\cluster{}{t}(z)}}}$
+		Almost surely, for all $t > 0$ and~$z \in B_1$ such that ${\cluster{}{t}(z)} \Subset B_1$, each of the connected components of $\C \backslash \overline{{{\cluster{}{t}(z)}}}$
 		has a boundary that is a simple loop.
 	\end{prop}
 	\begin{proof}
-		
-		Suppose ${\cluster{}{t}(z)} \Subset B_1$ and let $U$ be a component of ${\overline{{{\cluster{}{t}(z)}}}}^c$.
-		Note that $U$ and ${\cluster{}{t}(z)}$ are disjoint and $\partial U \subseteq \partial {\cluster{}{t}(z)} \Subset B_1$.
-		
-		Let $\Gamma = \partial U \Subset B_1$. 
-		By Caratheodory's theorem ~\cite[Theorem 2.6]{pommerenke2013boundary} to show $\Gamma$ is a Jordan loop
-		it suffices to show that $\Gamma$ is locally connected and has no cut points. 
-		
-		{\it Step 1: Locally connected.} \\
-		As we will show, this follows from Lemma \ref{lemma:cannot-cross} and the definition of locally connected:
-		
-		Suppose for the sake of contradiction that $\Gamma$ is not locally connected.
-		By~\cite[Theorem 2.1]{pommerenke2013boundary}, this implies $U^c$ is not locally connected. 
-		By definition, this implies the existence
-		of a point $z \in U^c$ and $s > 0$ so that for every sub-neighborhood $V \subset B_{s}(z)$ containing 
-		$z$, the set $V \cap U^c$ is not connected. 
-		
-		
-		
-		As $U^c$ is connected, the closure of every component of $U^c \cap B_s(z)$ has non-empty intersection with $\partial B_s(z)$. 
-		Since $U^c$ is closed, every such component not containing $z$ must lie at positive distance from $z$.
-		Hence, for each $\epsilon \in (0,s)$ the number of such components intersecting $B_\epsilon(z)$ must be infinite, as
-		otherwise we could take $V$ to be $B_{\epsilon}(z)$ minus the other components which do not contain $z$ which intersect $B_{\epsilon}(z)$.
-		
-		This implies that for all $\rho > 0$ sufficiently small there is a ball $B_{2\rho}(z)$ with infinitely many distinct components of $U^c \cap B_{2 \rho}(x_0)$ with closures intersecting $\partial B_{2\rho}(z)$ and $\partial B_{\rho/3}(z)$. 
-		Every connected component of $U^c \cap B_{2 \rho}(z)$ intersected with $\A_{\rho/3, 2 \rho}(z)$ decomposes into a union of connected components 
-		of $U^c \cap \A_{\rho/3, 2 \rho}(z)$. Hence, by Lemma \ref{lemma:crossing-connected} applied to each connected
-		component of $U^c \cap \A_{\rho/3, 2 \rho}(z)$, every connected component of $U^c \cap B_{2 \rho}(z)$ which crosses
-		$\A_{\rho/3, 2 \rho}(z)$ contains a connected component of ${\cluster{}{t}(z)} \cap \A_{\rho/3, 2 \rho}(z)$ which crosses $\A_{\rho/3, 2 \rho}(z)$.
-		
-		The previous paragraph implies there is a ball $B_{2\rho}(z)$ with infinitely many distinct components of ${\cluster{}{t}(z)} \cap B_{2 \rho}(x_0)$ with closures intersecting $\partial B_{2\rho}(z)$ and $\partial B_{\rho/3}(z)$, contradicting Lemma \ref{lemma:cannot-cross}. 
-		
-		
-		{\it Step 2: No cut points.} \\
-		Let $\psi : B_1 \to U$ be a conformal map, which exists since $U$ is connected with connected complement, so is simply connected. Since $\Gamma$ is locally connected,~\cite[Theorem 2.1]{pommerenke2013boundary} implies that $\psi$ extends to a continuous map $\overline B_1 \to \overline U = U \cup \Gamma$. 
-		
-		Now, assume by way of contradiction that $\Gamma$ has a cut point $a \in \Gamma$. By~\cite[Proposition 2.5]{pommerenke2013boundary}, $\# \psi^{-1}(a) \geq 2$ (in principle $\#\psi^{-1}(a) $ could be infinite, even uncountable).
-		Furthermore, if $\mathcal I$ is the set of connected components of $\partial B_1 \setminus \phi^{-1}(a)$, then the set of connected components of $\Gamma \setminus \{a\}$ is $\{\psi(I) : I\in \mathcal I\}$. 
-		
-		Fix some $I\in\mathcal I$ and let $J$ be equal to $\partial B_1 \setminus I$ minus its endpoints. 
-		Then $I$ and $J$ are disjoint open arcs of $\partial B_1$ and their common endpoints are distinct points of $\psi^{-1}(a)$.  
-		Furthermore, the preceding paragraph implies that $\psi(\bar I) \cap \psi(J) = \emptyset$ and  $\psi(I) \cap \psi(\bar J) = \emptyset$
-		
-		Since $\Gamma$ disconnects $0$ from $y$, the homotopy class of the loop $\psi|_{\partial B_1}$ in $(\C \cup \infty) \setminus \{0,y\}$ is non-trivial.
-		Since $\psi$ maps the endpoints of $I$ and $J$ to $a$, each of $\psi|_I$ and $\psi|_J$ is a loop in $\C$, and $\psi|_{\partial B_1}$ is the concatenation of these two loops. 
-		The concatenation of two homotopically trivial loops is also homotopically trivial.
-		Therefore, one of $\psi|_I$ or $\psi|_J$ is not homotopic to a point in $(\C \cup \infty)\setminus \{0,y\}$. 
-		This implies that one of $\psi(\bar I)$ or $\psi(\bar J)$ disconnects $0$ from $y$.   
-		
-		Assume without loss of generality that $\psi(\bar I)$ disconnects $0$ from $y$. 
-		Since ${\cluster{}{t}(z)} \ni 0$ is connected (Lemma \ref{lemma:non-coincidence-open-harmonic}) and $U \ni y$ is connected by definition, ${\cluster{}{t}(z)}$ and $U$ are contained in different connected components of $\C\setminus \psi(\bar I)$. 
-		But, every point of $\psi(J) \subset \Gamma$ is an accumulation point of both ${\cluster{}{t}(z)}$ and $U$, so $\psi(J) \subset \psi(\bar I)$. 
-		Since $J$ is non-empty by construction, this contradicts the fact that $\psi(\bar I) \cap \psi(J) = \emptyset$.
-		We conclude that $\Gamma$ has no cut points.
+		Work on the intersection of the events of Lemmas \ref{lemma:non-coincidence-open-harmonic} and \ref{lemma:cannot-cross}.
+		Suppose ${\cluster{}{t}(z)} \Subset B_1$ and put $G = {\cluster{}{t}(z)}$, which is open and connected by
+		Lemma \ref{lemma:non-coincidence-open-harmonic}, and $K = \overline G$.
+		Lemma \ref{lemma:cannot-cross} supplies the hypotheses of Lemma \ref{lemma:crossing-connected} on one event simultaneously
+		for all compactly contained clusters: for each boundary point $p\ne0$, take successively smaller $\epsilon$ with
+		$20\sqrt\epsilon<|p|$ and use its $r=\rho\in[\epsilon,\sqrt\epsilon]$. The exceptional set is only $E=\{0\}$.
+		Lemma \ref{lemma:crossing-connected} then shows that every component of $\C\setminus K$ has boundary a simple loop.
 	\end{proof}
 	
 	The desired claim follows immediately from a scaling argument. 
@@ -2691,8 +2724,63 @@
 	\end{prop}
 	
 	\begin{proof}
-		Combine Lemma \ref{lemma:scale-invariance-flow} together with Lemma \ref{lemma:cannot-cross},  a union bound, 
-		and the relation between ${\regcluster{}{t}}$ and $\{\cluster{B_r}{t}\}_{r > 0}$ given in Theorem \ref{theorem:full-theorem-minus-uniqueness}. 
+% CORRECTION [C50] Printed: combine Lemma 5.7, Lemma 10.1, a union bound and Theorem 5.5.
+% Corrected: a pathwise dyadic rescaling of Proposition 10.6, a countable intersection, and the closure identity of Theorem 5.5.
+% Reason: Lemma 5.7 is an equality in law for a fixed centre; a union bound over uncountably many centres is not available. Text from the audited steps4-final.tex Section 3. Author-approved 2026-11-09.
+		Write $h_r(x)$ for the circle average of the field and $\operatorname{cluster}(\mu,R,z,t)$ for the cluster $\cluster{B_R;z}{t}$
+		defined with the measure $\mu$ in place of $\mu_h$. For each fixed $R=2^m$, $m\in\mathbb N$, define
+		\[
+		 h^{(R)}_r(x)=h_{Rr}(Rx)-h_R(0),\qquad
+		 A_R=\exp\{\gamma(h_R(0)+Q\log R)\}>0,\qquad
+		 \mu^{(R)}(E)=A_R^{-1}\mu_h(RE).
+		\]
+		By the affine invariance of the whole-plane GFF, applied to the dilation by $R$, the field $h^{(R)}$ is again a normalized
+		whole-plane GFF with the same insertion. Indeed $h_R(0)=h^\C_R(0)-\alpha_0\log R$, and subtracting this constant leaves the
+		insertion $-\alpha_0\log\max(r,|x|)$, with the same parameter as before.
+
+		The measure identity is valid for the dyadic limit defining the LQG measure. For any compactly supported continuous $f$,
+		change variables $y=Rx$ in the approximating integral for $h^{(R)}$:
+		\[
+		 \int f(x)r^{\gamma^2/2}e^{\gamma h^{(R)}_r(x)}\,dx
+		 =A_R^{-1}\int f(y/R)(Rr)^{\gamma^2/2}e^{\gamma h_{Rr}(y)}\,dy .
+		\]
+		Here $\gamma Q=2+\gamma^2/2$. For $r=2^{-k}$ and $k\geq m$, $Rr=2^{-(k-m)}$; deleting finitely many indices does not change
+		the limit. Hence $\mu^{(R)}$ is the LQG measure of $h^{(R)}$, on the same probability space.
+
+		For each sample, each $z\in B_R$, and $t>0$, the map $w\mapsto A_R^{-1}w(R\,\cdot)$ is a bijection from the supersolutions
+		for $(\mu_h,R,z,t)$ to those for $(\mu^{(R)},1,z/R,t/A_R)$. Continuity on the closed disks is preserved. For a nonnegative
+		smooth test $\varphi$ supported in $B_1$, its distributional inequality is exactly
+		\[
+		 \int A_R^{-1}w(Rx)\Delta\varphi(x)\,dx
+		 =A_R^{-1}\int w(y)\Delta_y[\varphi(y/R)]\,dy
+		 \leq A_R^{-1}\int\varphi(y/R)\,d\mu_h(y)
+		 =\int\varphi\,d\mu^{(R)}.
+		\]
+		The inverse change of variables proves the converse inequality. The obstacle transforms by $G_{B_R}(z,Rx)=G_{B_1}(z/R,x)$.
+		Taking the off-pole infima and including the pole separately therefore gives the identity
+		\[
+		 \operatorname{cluster}(\mu^{(R)},1,z/R,t/A_R)=R^{-1}\operatorname{cluster}(\mu_h,R,z,t).
+		\]
+		It holds for all $z,t$ at once on the measure-limit event.
+
+		Apply Proposition \ref{prop:boundary-simple-loop} to this transformed field and measure. Its probability-one event is
+		already simultaneous in every pole and positive time; in particular the random positive time $t/A_R$ is allowed.
+		Dilation is a homeomorphism, so it transports closures, complementary components, their frontiers, and simple loops.
+		Intersect the resulting events over $m\in\mathbb N$. On that one event every cluster compactly contained in any of these
+		disks has simple-loop complementary boundaries, simultaneously in $z,t$. This argument does not take an uncountable
+		intersection of fixed-centre equality-in-law statements from Lemma \ref{lemma:scale-invariance-flow}.
+
+		Intersect also the event of Theorem \ref{theorem:full-theorem-minus-uniqueness}, which gives, for all $z$, a bounded
+		family ${\regcluster{}{t}}(z)$ with
+		${\regcluster{}{t}}(z)=\operatorname{int}\overline{\operatorname{cluster}(\mu_h,R,z,t)}$ whenever
+		$\overline{{\regcluster{}{t}}(z)}\subset B_s$ and $R\geq s$, and the event of Lemma \ref{lemma:non-coincidence-open-harmonic}.
+		For any $z,t$, choose a dyadic $R$ large enough to contain the compact closure of ${\regcluster{}{t}}(z)$ and write
+		$G_R=\operatorname{cluster}(\mu_h,R,z,t)$. Since $G_R$ is open, $G_R\subset\operatorname{int}\overline{G_R}\subset\overline{G_R}$, so
+		\[
+		 \overline{{\regcluster{}{t}}(z)}=\overline{\operatorname{int}\overline{G_R}}=\overline{G_R}\subset B_R .
+		\]
+		The simultaneous dyadic result now applies to $G_R$, and the components of $\C\setminus\overline{{\regcluster{}{t}}(z)}$ are
+		those of $\C\setminus\overline{G_R}$. All of $z,t,R$ are chosen after entering the one event.
 	\end{proof}
 	
 	

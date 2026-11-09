@@ -17,3 +17,12 @@ corrected text and a one-line reason. Section 11 changes below are author-approv
 - [C47] Variable-annulus `SG` hyperlinks: link `SG_{s₁ρ,s₂ρ}` and `SG_{3r,6r}` to `eq:alternate-size-2-full` rather than `eq:alternate-size-2`; the latter has a fixed aspect ratio.
 
 Full audited replacement submissions are retained in `docs/campaign/S11-REPLACEMENT.md`.
+
+Sections 9 and 10 changes below are author-approved 2026-11-09 ("Yes clusters can have holes"). Their text is taken from the
+independently audited written proofs in the fleet file notes/wpn-steps4/steps4-final.tex (sha256 f9da848c8ad8179d8fd94795b7bfbdf198d7e8aefd38c72c89788a56acdba932),
+Section 3 (audit AUDIT-steps4-t3-r3.md, VERDICT CORRECT) and Section 5 (AUDIT-steps4-t5.md); Lean-specific remarks are omitted.
+
+- [C48] `lemma:crossing-connected` (Lemma 10.5): replace the printed lemma, false because clusters can have holes, by the deterministic statement that finitely many small-scale crossings give local connectedness, no cut points and simple-loop complementary boundaries (Torhorst's theorem, Jolivet-Loridant-Luo arXiv:1411.6776v1 Thm 3.1).
+- [C49] `prop:boundary-simple-loop` (Prop 10.6): components of `C \ closure` instead of `B_1 \ closure` (proposal [C16]); proof from Lemma 10.1 and [C48]. The outer component of `B_1 \ closure` has a disconnected frontier.
+- [C50] `prop:boundary-simple-loop-full-cluster` (Prop 10.7) proof: pathwise dyadic rescaling of Prop 10.6, a countable intersection and the closure identity of Theorem 5.5, instead of a union bound over uncountably many centres with the fixed-centre Lemma 5.7. Statement unchanged.
+- [C51] `prop:sub-harmonic-ball-uniqueness` (Prop 9.2): the weak form `Λ ⊂ A ⊂ Λ̂`, `μ_h(A \ Λ) = μ_h(Λ̂ \ A) = 0`, with `A = Λ̂` when `A` is regular open (proposal [C10]). The printed `Λ̂ ⊂ A` fails at the last time a bounded hole disappears. The paper does not use Prop 9.2.
