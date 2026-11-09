@@ -44,4 +44,16 @@ def LQGInternalMetricContinuousFrozen : Prop :=
     ∀ W : Set ℂ, IsOpen W →
       ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
 
+/-- FIRST-PASS FROZEN. The length identity of an LQG metric (Fact 2.2 I, Bou-Rabee-Gwynne arXiv:2208.11795, corrected draft
+line 428; the Euclidean length metric axiom `ofReal_eq_internalMetric` of `IsEuclideanLengthMetric`, `Defs/LQGMetric.lean`):
+for an LQG metric `D` of a whole-plane field `hC` (`IsLQGMetricOfField`, `α₀ = 0`), almost surely for all `z w ∈ ℂ`,
+`ENNReal.ofReal (D z w)` is the internal metric of `D` on the whole plane, i.e. the infimum of the `D`-lengths of paths
+from `z` to `w` in `ℂ`. The statement is for the metric `D` itself (not for an arbitrary function). Standard; locator
+pending. Used by: the measurability and continuity of the distance `ofReal (setDist D S₁ S₂)` in the third pinch event
+(`FirstPass/S11h/ThirdEventMeasurable.lean`, step N2 of `firstPass_11_17`). -/
+def LQGMetricLengthIdentityFrozen : Prop :=
+  ∀ (γ ξ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), IsLQGMetricOfField P γ ξ 0 hC D →
+    ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
+
 end HarmonicBalls

@@ -64,4 +64,46 @@ theorem aemeasurable_iSup_pair {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω
   rw [key]
   exact hm
 
+/-- Countable reduction of an infimum (general, no pinch content): if `t ⊆ P` is dense in `P` (`P ⊆ closure t`) and `G` is
+continuous on `P`, then `⨅ p ∈ P, G p = ⨅ p ∈ t, G p`. Used for the distance `ofReal (setDist D S₁ S₂)` between two compact
+sets, see `FirstPass/S11h/ThirdEventMeasurable.lean`. -/
+theorem iInf_eq_countable_of_continuousOn {X : Type*} [TopologicalSpace X] (P t : Set X) (htP : t ⊆ P)
+    (hPt : P ⊆ closure t) (G : X → ℝ≥0∞) (hG : ContinuousOn G P) :
+    (⨅ p ∈ P, G p) = ⨅ p ∈ t, G p := by
+  refine le_antisymm ?_ ?_
+  · exact le_iInf₂ fun p hp => iInf₂_le p (htP hp)
+  · refine le_iInf₂ fun p hp => ?_
+    by_contra hlt
+    rw [not_le] at hlt
+    obtain ⟨c, hGc, hcR⟩ := exists_between hlt
+    have hev : ∀ᶠ q in 𝓝[P] p, G q < c := (hG p hp).eventually (gt_mem_nhds hGc)
+    have hne : (𝓝[t] p).NeBot := mem_closure_iff_nhdsWithin_neBot.mp (hPt hp)
+    have hev' : ∀ᶠ q in 𝓝[t] p, G q < c :=
+      Filter.Eventually.filter_mono (nhdsWithin_mono p htP) hev
+    obtain ⟨q, hqc, hqt⟩ := (hev'.and self_mem_nhdsWithin).exists
+    have h1 : (⨅ p' ∈ t, G p') ≤ G q := iInf₂_le q hqt
+    exact lt_irrefl c ((hcR.trans_le h1).trans hqc)
+
+/-- Almost everywhere measurability of an infimum over a set `S` of a family which is a.s. continuous on `S` (general):
+the countable set `t ⊆ S` depends only on `S`, and the infimum over `S` equals the infimum over `t` almost surely. -/
+theorem aemeasurable_iInf_countable {Ω X : Type*} [MeasurableSpace Ω] [TopologicalSpace X]
+    [SecondCountableTopology X] (P : Measure Ω) (S : Set X) (G : Ω → X → ℝ≥0∞)
+    (hmeas : ∀ p, AEMeasurable (fun ω => G ω p) P)
+    (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p => G ω p) S) :
+    AEMeasurable (fun ω => ⨅ p ∈ S, G ω p) P := by
+  obtain ⟨t, htc, htS, hSt⟩ := TopologicalSpace.exists_countable_dense_subset S
+  have : Countable t := htc.to_subtype
+  have hEq : (fun ω => ⨅ p ∈ t, G ω p) =ᵐ[P] fun ω => ⨅ p ∈ S, G ω p := by
+    filter_upwards [hcont] with ω hω
+    exact (iInf_eq_countable_of_continuousOn S t htS hSt (G ω) hω).symm
+  have key : (fun ω => ⨅ p ∈ t, G ω p) = fun ω => ⨅ p : t, G ω (p : X) := by
+    funext ω
+    exact le_antisymm (le_iInf fun p : t => iInf₂_le (p : X) p.2)
+      (le_iInf₂ fun (p : X) (hp : p ∈ t) => iInf_le (fun q : t => G ω (q : X)) ⟨p, hp⟩)
+  have hm : AEMeasurable (fun ω => ⨅ p : t, G ω (p : X)) P :=
+    AEMeasurable.iInf fun p => hmeas (p : X)
+  refine AEMeasurable.congr ?_ hEq
+  rw [key]
+  exact hm
+
 end HarmonicBalls
