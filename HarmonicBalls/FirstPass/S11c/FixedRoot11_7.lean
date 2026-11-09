@@ -11,9 +11,11 @@ import HarmonicBalls.Draft.Section11
 
 Inputs (all explicit):
 * `LQGMeasureOfProfileMeasurableFrozen` (FirstPass/Frozen/S8d.lean:28, approved for this task, decision 2026-11-09 20:14);
-* `ConeBadEventProbabilityStmt` (Draft Lemma 11.8, `lemma:positive-probability`, corrected paper lines 2903-2908), used at
-  `z = 0` only. Its proof (paper lines 2903-2934) does not cite Lemma 11.7 (`lemma:mu_h-bad-and-harnack`, line 2896), so it is
-  admissible as a hypothesis (operator decision 4);
+* `ConeBadEventAt γ γ p Q M`: the body of Draft Lemma 11.8 (`ConeBadEventProbabilityStmt`, Draft/Section11.lean:186,
+  `lemma:positive-probability`, corrected paper lines 2903-2908) at one fixed constant `p`, insertion `α₀ = γ`. It is used at
+  `z = 0` only, and its proof (paper lines 2903-2934) does not cite Lemma 11.7 (`lemma:mu_h-bad-and-harnack`, line 2896), so
+  it is admissible as a hypothesis (operator decision 4). The constant `p` is passed in, so that one `p` serves all discs and
+  all `Ω` (the Draft requires `δ` fixed before `Ω`);
 * the whole-plane GFF `hW'` of the translated field (`WholePlaneGFFAffineInvariance`, Proposed; pending operator approval);
 * the coordinate change `LQGMeasureCoordChange` (Proposed; approved as hypothesis, decision N3);
 * the decoder identity `hdec0` for the rooted observation at insertion `0` (the decoder kernel `K` is supplied by the caller;
@@ -27,8 +29,18 @@ open scoped ENNReal
 
 namespace HarmonicBalls.S11c
 
+/-- The body of Draft Lemma 11.8 (`ConeBadEventProbabilityStmt`, Draft/Section11.lean:186) at a fixed constant `p`, insertion
+`α₀` and cone `Q`, mass `M`: for every `z` there is `N` such that for `n ≥ N` with `2^{-n}/100 < dist(𝔸_{2^{-n},6·2^{-n}}(z), 0)`
+the event `G̃_n(z; M, Q)` (coneMassEvent) contains a measurable event of probability at least `p`. -/
+def ConeBadEventAt (γ α₀ p : ℝ) (Q : Set ℂ) (M : ℝ) : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ z : ℂ, ∃ N : ℕ, ∀ n : ℕ, N ≤ n →
+    (2 : ℝ)⁻¹ ^ n / 100 < infDist (0 : ℂ) (annulus z ((2 : ℝ)⁻¹ ^ n) (6 * (2 : ℝ)⁻¹ ^ n)) →
+    ∃ A ⊆ {ω | coneMassEvent (μ ω) Q M ((2 : ℝ)⁻¹ ^ n) z}, MeasurableSet A ∧ ENNReal.ofReal p ≤ P A
+
 /-- The annulus `annulus 0 r (6r)` lies outside `closedBall 0 r`, so `infDist 0 _ ≥ r > r/100` (Metric.le_infDist). This is
-the distance condition of Draft Lemma 11.8 at `z = 0` (`ConeBadEventProbabilityStmt`, Draft/Section11.lean). -/
+the distance condition of Lemma 11.8 at `z = 0`. -/
 lemma infDist_zero_annulus_gt {r : ℝ} (hr : 0 < r) :
     r / 100 < infDist (0 : ℂ) (annulus 0 r (6 * r)) := by
   have h2 : ‖((2 * r : ℝ) : ℂ)‖ = 2 * r := by
@@ -49,36 +61,34 @@ lemma infDist_zero_annulus_gt {r : ℝ} (hr : 0 < r) :
 
 open Classical in
 /-- **Origin window for the translated field (Lemma 11.7 origin statement, Origin11_7.lean:192, with the profile
-framework).** For the γ-LQG measure `ν` of the translated whole-plane GFF `hcirc'` at insertion `γ`, there is a constant
-`p > 0` (that of Draft Lemma 11.8 at `(γ, γ, Q, M)`) and an index `N₀` such that almost surely, for all large `N`, the cone
-event holds at the shifted scales `2^{-(N₀+n)}`, `n ∈ [N+1, 2N]`, for at least `p N / 4` indices. -/
+framework).** For the γ-LQG measure `ν` of the translated whole-plane GFF `hcirc'` at insertion `γ`, almost surely, for all
+large `N`, the cone event holds at the shifted scales `2^{-(N₀+n)}`, `n ∈ [N+1, 2N]`, for at least `p N / 4` indices. The
+constant `p > 0` and the Lemma 11.8 body `hPp` are the same for every `Ω`, disc and root. -/
 theorem origin_window_of_translate {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     (hDecFrozen : LQGMeasureOfProfileMeasurableFrozen.{u})
-    (hP : ConeBadEventProbabilityStmt.{u})
-    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
-    {Q : Set ℂ} (hQ : IsCone Q) {M : ℝ} (hM : 0 < M)
+    {γ : ℝ} {Q : Set ℂ} (hQ : IsCone Q) {M : ℝ}
+    {p : ℝ} (hp : 0 < p) (hPp : ConeBadEventAt.{u} γ γ p Q M)
     {hC' : Ω → (ℂ → ℝ) → ℝ} {hcirc' : Ω → ℝ → ℂ → ℝ} (hW' : IsWholePlaneGFF P hC' hcirc')
     {ν : Ω → Measure ℂ} (hν : IsLQGMeasureOfField P γ γ hcirc' ν) :
-    ∃ N0 : ℕ, ∃ p : ℝ, 0 < p ∧ ∀ᵐ ω ∂P, ∀ᶠ N : ℕ in atTop,
+    ∃ N0 : ℕ, ∀ᵐ ω ∂P, ∀ᶠ N : ℕ in atTop,
       p / 4 * (N : ℝ) ≤ (((Finset.Icc (N + 1) (2 * N)).filter
         (fun n : ℕ => coneMassEvent (ν ω) Q M (dyadicScale (N0 + n)) 0)).card : ℝ) := by
-  obtain ⟨p, hpI, hPall⟩ := hP γ γ hγ0 hγ2 (gamma_lt_lqgQ hγ0 hγ2) Q hQ M hM
-  obtain ⟨N0, hN0⟩ := hPall Ω P hC' hcirc' ν hW' hν 0
+  obtain ⟨N0, hN0⟩ := hPp Ω P hC' hcirc' ν hW' hν 0
   have hr : (0 : ℝ) < (2 : ℝ)⁻¹ ^ N0 := pow_pos (by norm_num) N0
   obtain ⟨A, hAsub, -, hPA⟩ := hN0 N0 le_rfl (infDist_zero_annulus_gt hr)
   obtain ⟨F, hFm, -, hversion⟩ := hW'.exists_measurable_continuous_circle_version_univ
   obtain ⟨Dec, hDecM, hμD, hlim⟩ := hDecFrozen Ω P γ γ hC' hcirc' ν F hW' hν hFm hversion
-  exact ⟨N0, p, hpI.1, origin_window_visits hW' hQ hFm hversion hDecM hμD hlim N0 hpI.1 hAsub hPA⟩
+  exact ⟨N0, origin_window_visits hW' hQ hFm hversion hDecM hμD hlim N0 hp hAsub hPA⟩
 
 /-- **Fixed-root null section on the origin route (B2 (5.1)).** Assume the translated field `hcirc'` is a whole-plane GFF with
 the coordinate change, `ν` is its γ-LQG measure, `μz` is the γ-LQG measure of the rooted profile at `z` (insertion `0`), and
-the decoder identity holds for the rooted observation. Then there is `δ = p/8 > 0` with `(z, rooted observation)` almost
-surely outside the local bad set `localBadSet K Q M δ U nD` (BadSetMeasurable11_7.lean:43). -/
+the decoder identity holds for the rooted observation. Then, for the constant `p` of Lemma 11.8 and `δ = p/8`, the rooted
+observation at `z` is almost surely outside the local bad set `localBadSet K Q M (p/8) U nD` (BadSetMeasurable11_7.lean:43). -/
 theorem fixedRoot_null_of_origin {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     (hDecFrozen : LQGMeasureOfProfileMeasurableFrozen.{u})
-    (hP : ConeBadEventProbabilityStmt.{u})
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
-    {Q : Set ℂ} (hQ : IsCone Q) {M : ℝ} (hM : 0 < M)
+    {Q : Set ℂ} (hQ : IsCone Q) {M : ℝ}
+    {p : ℝ} (hp : 0 < p) (hPp : ConeBadEventAt.{u} γ γ p Q M)
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc hcirc' : Ω → ℝ → ℂ → ℝ} (z : ℂ)
     (hcirc'_eq : ∀ ω r x, hcirc' ω r x = hcirc ω r (x + z) - hcirc ω 1 z)
     {hC' : Ω → (ℂ → ℝ) → ℝ} (hW' : IsWholePlaneGFF P hC' hcirc')
@@ -90,13 +100,12 @@ theorem fixedRoot_null_of_origin {Ω : Type u} [MeasurableSpace Ω] {P : Measure
     {K : ProbabilityTheory.Kernel ({φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ) ℂ}
     (hdec0 : ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
       K (rootedMeanZeroObs 0 γ D z (hC ω)) = c • (μz ω).restrict D) :
-    ∃ p : ℝ, 0 < p ∧ ∀ᵐ ω ∂P,
-      (z, rootedMeanZeroObs 0 γ D z (hC ω)) ∉ localBadSet K Q M (p / 8) U nD := by
-  obtain ⟨N0, p, hp, hOrig⟩ := origin_window_of_translate hDecFrozen hP hγ0 hγ2 hQ hM hW' hν
+    ∀ᵐ ω ∂P, (z, rootedMeanZeroObs 0 γ D z (hC ω)) ∉ localBadSet K Q M (p / 8) U nD := by
+  obtain ⟨N0, hOrig⟩ := origin_window_of_translate hDecFrozen hQ hp hPp hW' hν
   have hμ := ae_rootedMeasure_eq_translate hγ0 hγ2 z hcirc'_eq hW' hCC hν hμz
   have hc' : ∀ᵐ ω ∂P, ENNReal.ofReal (Real.exp (γ * hcirc ω 1 z)) ≠ 0 ∧
       ENNReal.ofReal (Real.exp (γ * hcirc ω 1 z)) ≠ ⊤ :=
     ae_of_all _ fun ω => ⟨(ENNReal.ofReal_pos.mpr (Real.exp_pos _)).ne', ENNReal.ofReal_ne_top⟩
-  exact ⟨p, hp, ae_not_mem_localBadSet_of_origin hp.le hDm hD hzU hdec0 hμ hc' N0 hOrig⟩
+  exact ae_not_mem_localBadSet_of_origin hp.le hDm hD hzU hdec0 hμ hc' N0 hOrig
 
 end HarmonicBalls.S11c
