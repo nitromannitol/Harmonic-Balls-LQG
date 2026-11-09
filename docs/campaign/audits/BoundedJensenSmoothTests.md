@@ -29,6 +29,7 @@ Elaboration choices (operator to confirm):
 ## Global representation (every point of `ℂ`, not a.e.)
 
 - `integral_greenFunction_mul_laplacian_eq` (lines 33-45): `∫ G_O(x,y) ΔF(y) dy = -F(x)` for all `x ∈ ℂ`. For `x ∈ O` it is `hasLaplacian_greenFunction_bounded_domain` (`Proofs/Potential/GeneralDomainGreenLaplacian.lean:15-17`, `HasLaplacian (greenFunction V z) 0 (dirac z) V`) applied to the test function `F`. The definition is `Defs/Laplacian.lean:72-75`. For `x ∉ O`, `greenFunction O x · = 0` (`Defs/Green.lean:70-74`) and `F x = 0`.
+- Normalization check: `newtonKernel = -(2π)⁻¹ log‖x-y‖` with `ΔN(x,·) = -δ_x` (`Defs/Green.lean:43-47`), and `greenFunction O x y = N(x,y) - (greatest harmonic minorant)` (`Defs/Green.lean:70-74`). The sign and constant of `hasLaplacian_greenFunction_bounded_domain` are `Δ G_O(x,·) = -δ_x`, the same as the written proof's `F = P_Bα - P_Bβ` with `α = (-ΔF)₊ dx`, `β = (ΔF)₊ dx`. No extra constant appears in the Lean proof.
 - `hpot₁`, `hpot₂` (Step 6): `greenPotential O ν x = ∫ G_O(x,y) · (density) dy`, via `integral_withDensity_eq_integral_toReal_smul₀` (`Mathlib/MeasureTheory/Integral/Bochner/ContinuousLinearMap.lean:310`).
 - `hdiff` (Step 7): `greenPotential O ν₁ x - greenPotential O ν₂ x = -∫ G_O(x,y) ΔF(y) dy`, via `max_neg_sub_max_eq_neg` (lines 48-50): `(-t)₊ - t₊ = -t`.
 - `hrep`: `F = 0 + greenPotential O ν₁ - greenPotential O ν₂` as functions, which closes the membership.
