@@ -147,4 +147,69 @@ lemma isPreconnected_gridK1 {h : ℝ} (hh : 0 < h) {Jx Jy : Set ℤ} {A₁ A₂ 
     obtain ⟨y, hyc, hyK⟩ := gridCell_inter_gridK0 hh hp
     exact IsPreconnected.union y hyK hyc hK0 (isPreconnected_gridCell h _ _)
 
+/-- Contact: the enlarged abscissa interval `[(8j-1)h, (8j+9)h]` of a class cell meets the exterior set `K₁` inside the
+box. The witness is the edge point just outside the enlarged interval, in a unit cell that is free in the abscissa
+direction (the parity of the class makes the neighbouring cell free); the ordinate is the middle of a cell of `k`. -/
+lemma gridK1_contact {h : ℝ} (hh : 0 < h) {Jx Jy : Set ℤ} {A₁ A₂ B₁ B₂ j k : ℤ} (hA : A₁ + 16 ≤ A₂)
+    (hJx : ∀ j' ∈ Jx, j' % 2 = j % 2) (hjA : A₁ ≤ 8 * j) (hjA2 : 8 * j + 8 ≤ A₂)
+    (hk : B₁ ≤ 8 * k) (hkB : 8 * k + 8 ≤ B₂) :
+    ∃ w : ℂ, w ∈ gridK1 h Jx Jy A₁ A₂ B₁ B₂ ∧ w ∈ gridBox h A₁ A₂ B₁ B₂ ∧
+      w.re ∈ Icc ((8 * (j : ℝ) - 1) * h) ((8 * (j : ℝ) + 9) * h) ∧
+      w.im ∈ Icc ((8 * (k : ℝ) - 1) * h) ((8 * (k : ℝ) + 9) * h) := by
+  have cyl : ((B₁ : ℤ) : ℝ) * h ≤ ((8 * k + 4 : ℤ) : ℝ) * h :=
+    mul_le_mul_of_nonneg_right (by exact_mod_cast (show B₁ ≤ 8 * k + 4 by omega)) hh.le
+  have cyu : ((8 * k + 4 : ℤ) : ℝ) * h ≤ ((B₂ : ℤ) : ℝ) * h :=
+    mul_le_mul_of_nonneg_right (by exact_mod_cast (show 8 * k + 4 ≤ B₂ by omega)) hh.le
+  have cyc : ((8 * k + 4 : ℤ) : ℝ) * h ≤ (((8 * k + 4 : ℤ) : ℝ) + 1) * h :=
+    mul_le_mul_of_nonneg_right (by linarith) hh.le
+  have ikk : (8 * (k : ℝ) - 1) * h ≤ ((8 * k + 4 : ℤ) : ℝ) * h :=
+    mul_le_mul_of_nonneg_right (by push_cast; linarith) hh.le
+  have ikk' : ((8 * k + 4 : ℤ) : ℝ) * h ≤ (8 * (k : ℝ) + 9) * h :=
+    mul_le_mul_of_nonneg_right (by push_cast; linarith) hh.le
+  by_cases hr : 8 * j + 10 ≤ A₂
+  · -- right witness: the unit cell `X = 8j+9` is free
+    have hfree : ¬ gridAint Jx (8 * j + 9) := by
+      rintro ⟨j', hj', h1, h2⟩
+      have := hJx j' hj'
+      omega
+    have cxl : (A₁ : ℝ) * h ≤ ((8 * j + 9 : ℤ) : ℝ) * h :=
+      mul_le_mul_of_nonneg_right (by exact_mod_cast (show A₁ ≤ 8 * j + 9 by omega)) hh.le
+    have cxu : ((8 * j + 9 : ℤ) : ℝ) * h ≤ (A₂ : ℝ) * h :=
+      mul_le_mul_of_nonneg_right (by exact_mod_cast (show 8 * j + 9 ≤ A₂ by omega)) hh.le
+    have cxc : ((8 * j + 9 : ℤ) : ℝ) * h ≤ (((8 * j + 9 : ℤ) : ℝ) + 1) * h :=
+      mul_le_mul_of_nonneg_right (by linarith) hh.le
+    refine ⟨⟨((8 * j + 9 : ℤ) : ℝ) * h, ((8 * k + 4 : ℤ) : ℝ) * h⟩, ?_, ?_, ?_, ?_⟩
+    · refine mem_iUnion₂.2 ⟨(8 * j + 9, 8 * k + 4), ⟨by omega, by omega, by omega, by omega, Or.inl hfree⟩, ?_⟩
+      exact (mem_gridCell_iff h _ _ _).2 ⟨le_rfl, cxc, le_rfl, cyc⟩
+    · exact Complex.mem_reProdIm.2 ⟨⟨cxl, cxu⟩, ⟨cyl, cyu⟩⟩
+    · show ((8 * j + 9 : ℤ) : ℝ) * h ∈ Icc _ _
+      push_cast
+      exact ⟨by nlinarith, le_rfl⟩
+    · show ((8 * k + 4 : ℤ) : ℝ) * h ∈ Icc _ _
+      exact ⟨ikk, ikk'⟩
+  · -- left witness: the unit cell `X = 8j-2` is free, its right edge is `(8j-1)h`
+    have hfree : ¬ gridAint Jx (8 * j - 2) := by
+      rintro ⟨j', hj', h1, h2⟩
+      have := hJx j' hj'
+      omega
+    have cxl : (A₁ : ℝ) * h ≤ ((8 * j - 2 : ℤ) : ℝ) * h :=
+      mul_le_mul_of_nonneg_right (by exact_mod_cast (show A₁ ≤ 8 * j - 2 by omega)) hh.le
+    have cxu : ((8 * j - 1 : ℤ) : ℝ) * h ≤ (A₂ : ℝ) * h :=
+      mul_le_mul_of_nonneg_right (by exact_mod_cast (show 8 * j - 1 ≤ A₂ by omega)) hh.le
+    have cxc : ((8 * j - 2 : ℤ) : ℝ) * h ≤ (((8 * j - 2 : ℤ) : ℝ) + 1) * h :=
+      mul_le_mul_of_nonneg_right (by linarith) hh.le
+    have cxe : ((8 * j - 2 : ℤ) : ℝ) * h ≤ ((8 * j - 1 : ℤ) : ℝ) * h :=
+      mul_le_mul_of_nonneg_right (by push_cast; linarith) hh.le
+    refine ⟨⟨((8 * j - 1 : ℤ) : ℝ) * h, ((8 * k + 4 : ℤ) : ℝ) * h⟩, ?_, ?_, ?_, ?_⟩
+    · refine mem_iUnion₂.2 ⟨(8 * j - 2, 8 * k + 4), ⟨by omega, by omega, by omega, by omega, Or.inl hfree⟩, ?_⟩
+      refine (mem_gridCell_iff h _ _ _).2 ⟨cxe, ?_, le_rfl, cyc⟩
+      have e : ((8 * j - 2 : ℤ) : ℝ) + 1 = ((8 * j - 1 : ℤ) : ℝ) := by push_cast; ring
+      rw [e]
+    · exact Complex.mem_reProdIm.2 ⟨⟨cxl.trans cxe, cxu⟩, ⟨cyl, cyu⟩⟩
+    · show ((8 * j - 1 : ℤ) : ℝ) * h ∈ Icc _ _
+      push_cast
+      exact ⟨le_rfl, by nlinarith⟩
+    · show ((8 * k + 4 : ℤ) : ℝ) * h ∈ Icc _ _
+      exact ⟨ikk, ikk'⟩
+
 end HarmonicBalls
