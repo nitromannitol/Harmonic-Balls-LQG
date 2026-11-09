@@ -47,6 +47,45 @@ def PinchSecondExteriorStep : Prop :=
           ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂} ∧
         0 < P F
 
+/-- The outside-measurability conjunct of `PinchSecondExteriorStep`, for every `α₀`: the zero-mean local pairings of a
+whole-plane GFF are measurable (`hC ω φ - α₀ ∫ φ log|·|`, a deterministic shift of `hC ω φ`), so their sigma-algebra is
+contained in the ambient one. Proved; no input. -/
+theorem localModConstPairings_comap_le {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hgff : IsWholePlaneGFF P hC hcirc) (U : Set ℂ) :
+    MeasurableSpace.comap (localModConstPairings α₀ hC U) inferInstance ≤ ‹MeasurableSpace Ω› := by
+  refine Measurable.comap_le ?_
+  refine measurable_pi_iff.2 (fun φ => ?_)
+  have hφ : IsTestFunction Set.univ φ.1 := ⟨φ.2.1.1, φ.2.1.2.1, Set.subset_univ _⟩
+  have heq : (fun ω => localModConstPairings α₀ hC U ω φ) =
+      fun ω => hC ω φ.1 - α₀ * ∫ x, φ.1 x * Real.log ‖x‖ := by
+    funext ω
+    rfl
+  rw [heq]
+  exact (hgff.measurable_pairing φ.1 hφ).sub measurable_const
+
+/-- NEW, OPEN: the event part of `PinchSecondExteriorStep` (the statement `∀ M > 0, ∃ c₁ c₂ F ...` without its
+outside-measurability conjunct, which `localModConstPairings_comap_le` proves). This is the single remaining input of
+`firstPass_11_16_corrected`; its written argument has the gap of the operator note 2026-11-09 23:12 UTC (global `setDist` in
+`pinchFirstEvent`, Draft/Section11.lean:95-99; paper lem:E2 proof, corrected lines 3703-3706). With ChatGPT. -/
+def PinchSecondExteriorEventStep : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
+  ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
+    ∀ M : ℝ, 0 < M → ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ 0 < c₂ ∧
+      ∃ F : Set Ω,
+        MeasurableSet[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] F ∧
+        F ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ ∧ c₁ ≤ setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ)) ∧
+          ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂} ∧
+        0 < P F
+
+/-- `PinchSecondExteriorStep` is equivalent to its event part: the outside-measurability conjunct is proved. -/
+theorem pinchSecondExteriorStep_of_event (hE : PinchSecondExteriorEventStep.{u}) : PinchSecondExteriorStep.{u} := by
+  intro U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω _ P hC hcirc μ D hGFF hμ hDm
+  exact ⟨localModConstPairings_comap_le hGFF (closure W)ᶜ,
+    hE U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω P hC hcirc μ D hGFF hμ hDm⟩
+
 /-- NEW, OPEN: the conditional mass-diameter event of `lemma:massdiam` (paper lines 3511-3523) on the local geometry
 `U ⋐ V ⋐ O₁ = B_δ(V̄) ⋐ W` of a buffered configuration, with the field outside `closure W` as conditioning. For all
 `c₁, c₂ > 0` there is a measurable `H` inside `{μ(U) > 2c₂, diam_D(V̄; B_δ(V̄)) < c₁/2}` whose conditional probability given
@@ -231,5 +270,13 @@ theorem firstPass_11_16_corrected_of_exterior (hX : PinchSecondExteriorStep.{u})
     (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u}) (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
     PinchSecondEventFaithfulStmt.{u} :=
   firstPass_11_16_corrected_of_steps hX (pinchSecondConditionalMass_of_frozen hD hM hDiam hMk)
+
+/-- Lemma 11.16 (faithful form), conditional on the event part of the exterior step only (OPEN). Once
+`PinchSecondExteriorEventStep` is proved, this gives `firstPass_11_16_corrected` with the same hypotheses minus it. -/
+theorem firstPass_11_16_corrected_of_event (hE : PinchSecondExteriorEventStep.{u})
+    (hD : SmallMetricDiameterLargeMassStmt.{u}) (hM : LQGMassInnerMeasurableFrozen.{u})
+    (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u}) (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
+    PinchSecondEventFaithfulStmt.{u} :=
+  firstPass_11_16_corrected_of_exterior (pinchSecondExteriorStep_of_event hE) hD hM hDiam hMk
 
 end HarmonicBalls
