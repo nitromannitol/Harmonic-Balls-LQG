@@ -27,7 +27,7 @@ realized LQG metric of the field is `𝔇(hC ω)` (`IsLQGMetricOfField` with exp
 Source: Dubédat, Falconet, Gwynne, Pfeffer, Sun (DFGPS20), Lemma 3.19, equation (3.63), page 45, arXiv:1905.00380v2; the statement as quoted
 by Bou-Rabee-Gwynne (arXiv:2208.11795, paper lines 3392-3405, item (ii)), where it is used for the square-diameter tail of
 Lemma 11.9 (paper lines 3539-3541).
-Used by: firstPass_11_16 (through `PinchSecondMassStep`, once that step is proved; `HarmonicBalls/FirstPass/S11f/DyadicTail.lean`
+Used by: pinchSecondEvent_of_openSteps (through `PinchSecondMassStep`, once that step is proved; `HarmonicBalls/FirstPass/S11f/DyadicTail.lean`
 converts it to the discrete dyadic tail). -/
 def DDDFSquareDiameterTailFrozen : Prop :=
   ∀ (γ ξ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]

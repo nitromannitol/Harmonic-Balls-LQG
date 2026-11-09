@@ -9,7 +9,7 @@ import HarmonicBalls.FirstPass.Frozen.S11f
 
 Results of this file: Lemma 11.16 (`PinchSecondEventPositiveStmt`, paper `lemma:second-event-proof`, lines 3697-3725).
 
-Status (round 1): OPEN. `firstPass_11_16` is a conditional theorem: it follows from the two NEW steps packaged in
+Status (round 1): OPEN. `pinchSecondEvent_of_openSteps` is a conditional theorem: it follows from the two NEW steps packaged in
 `PinchSecondOpenSteps`, which are not yet proved.
 
 * `PinchSecondOutsideStep` (the one named open point, paper lines 3697-3700): for some thresholds `c₁, c₂ > 0` the event
@@ -71,7 +71,7 @@ def PinchSecondOpenSteps : Prop :=
 (OPEN). Proof: for `M > 0` take the thresholds and the outside-measurable set `F` of `PinchSecondOutsideStep`, and the
 conditional mass set `H` of `PinchSecondMassStep` with the same thresholds; `P (F ∩ H) > 0` by
 `measure_inter_pos_of_condExp_indicator_pos`, and `F ∩ H ⊆ Ẽ₁ ∩ Ẽ₂(M)` by `pinchSecondEvent_of_thresholds`. -/
-theorem firstPass_11_16 (h : PinchSecondOpenSteps.{u}) : PinchSecondEventPositiveStmt.{u} := by
+theorem pinchSecondEvent_of_openSteps (h : PinchSecondOpenSteps.{u}) : PinchSecondEventPositiveStmt.{u} := by
   obtain ⟨U, V, W, T, Q', Q, δ, hconf, hgap, hmass⟩ := h
   refine ⟨U, V, W, T, Q', Q, δ, hconf, ?_⟩
   intro γ ξ hγ hγ₂ Ω _ P hC hcirc μ D hgff hμ hD M hM
@@ -87,6 +87,6 @@ theorem firstPass_11_16 (h : PinchSecondOpenSteps.{u}) : PinchSecondEventPositiv
   rcases hHsub hω.2 with ⟨hH1, hH2⟩
   exact ⟨hF1, pinchSecondEvent_of_thresholds hc₁ hc₂ hH2 hF2 hF3 hH1⟩
 
-#print axioms firstPass_11_16
+#print axioms pinchSecondEvent_of_openSteps
 
 end HarmonicBalls
