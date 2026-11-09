@@ -65,7 +65,7 @@ the pointwise statement to the simultaneous statement over about `4^N` cells by 
 quantitative tail that the printed statement does not give. This Prop is therefore the printed simultaneous form
 and must be ruled on by the operator before it is used as an external input.
 Source: Ding-Dubédat-Dunlap-Falconet, Tightness of Liouville first passage percolation for γ < 2 (Publ. IHES 2020),
-Lemma 3.19, as cited by paper `dubedat2020weak` (locator pending).
+Lemma 3.19, as cited by paper `dubedat2020weak` (locator (CHATGPT-frozen-locators.md): DFGPS Lemmas 3.19-3.20, (3.63), (3.67); Proposition 3.17; rectangle reductions).
 Used by: firstPass_11_10. -/
 def DyadicCellDiamSmallFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -90,7 +90,7 @@ squares. The printed text, paper lines 3026-3028, says "a finite union of closed
 Why it holds: the metric is finite and continuous on a compact connected union of rectangles (length metric, finite on
 compact sets).
 Source: Ding-Dubédat-Dunlap-Falconet (Publ. IHES 2020), Lemma 3.9, as cited by paper `dubedat2020weak` in the proof of
-Lemma 11.10 (paper lines 3026-3028; locator pending; the exact hypotheses of DDDF20 Lemma 3.9 are unverified).
+Lemma 11.10 (paper lines 3026-3028; locator (CHATGPT-frozen-locators.md): DFGPS Propositions 3.10, 3.17; finite rectangle coverings; the exact hypotheses of DDDF20 Lemma 3.9 are unverified).
 Used by: firstPass_11_10. -/
 def ConnectedSquareUnionDiamFiniteFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -104,7 +104,7 @@ supremum of the LQG metric over a finite union of closed rectangles: for such a 
 square, and the rectangles and their unions used in Lemma 11.10), `ω ↦ sup_{u,v ∈ K} D_h(u,v; K)` is measurable.
 The operator's wave-4 item covers closed dyadic squares; the extension to finite unions of closed rectangles (the
 enlarged pieces `Ŝ ∩ S₂` and the exterior set `K₁`) is requested and flagged for the operator's ruling.
-Source: measurability of the LQG metric at field level (paper Fact 2.2 setting; locator pending).
+Source: measurability of the LQG metric at field level (paper Fact 2.2 setting; locator (CHATGPT-frozen-locators.md): no exact source; standard via GM 1.2 and compact-path coding).
 Used by: firstPass_11_10. -/
 def LQGMetricSupMeasurableFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -116,7 +116,7 @@ def LQGMetricSupMeasurableFrozen : Prop :=
 /-- FIRST-PASS FROZEN (operator ruling, FIRST PASS wave 4, item n1, 2026-11-09). Measurability of the LQG area measure
 of a closed dyadic square: `ω ↦ μ_h(S)` is measurable.
 Source: locality of the LQG measure, paper Fact 2.1 II (line 407: `μ_h(U)` is a measurable function of `h|_U`), applied to
-open neighbourhoods of `S` and continuity from above of the finite measure; locator pending.
+open neighbourhoods of `S` and continuity from above of the finite measure; locator (CHATGPT-frozen-locators.md): DS Proposition 1.1.
 Used by: firstPass_11_10. -/
 def LQGMeasureSquareMeasurableFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -126,7 +126,7 @@ def LQGMeasureSquareMeasurableFrozen : Prop :=
 
 /-- FIRST-PASS FROZEN. The LQG area measure charges every closed dyadic square with nonempty interior, almost surely.
 Source: full support of the Gaussian multiplicative chaos measure (Duplantier-Sheffield 2011, Liouville quantum gravity
-measure; the paper's introduction, line 138, states that `μ_h` assigns positive mass to open sets); locator pending.
+measure; the paper's introduction, line 138, states that `μ_h` assigns positive mass to open sets); locator (CHATGPT-frozen-locators.md): RV Theorem 2.12.
 Used by: firstPass_11_10 (through the event `μ_h(S₁) > 0`). -/
 def LQGMeasureSquarePositiveFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -145,7 +145,7 @@ measurability items above (hypotheses here).
 Why it holds: the shifted pair is the pair of the field `h + f` a.s. (Weyl scaling), and the laws of `h` and `h + f`
 are mutually absolutely continuous (Cameron-Martin for `f` smooth, compactly supported, zero on the unit circle).
 Source: Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2, Proposition 2.9 (printed page 49; Hilbert-space form
-in `Proposed/MillerSheffieldIG4.lean`), with the Weyl scaling of paper Facts 2.1 III and 2.2; locator pending.
+in `Proposed/MillerSheffieldIG4.lean`), with the Weyl scaling of paper Facts 2.1 III and 2.2; locator (CHATGPT-frozen-locators.md): MS Proposition 2.9 + DS Proposition 1.1 + GM axiom III.
 Used by: firstPass_11_10. -/
 def CameronMartinEventTransferFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -173,7 +173,7 @@ weight is at most `e^B` on `U`); the infimum over curves in `U` gives the claim.
 Source: paper Fact 2.2 III (corrected copy, lines 441-447) for the full metric; the internal form on closed sets is used in
 the printed proof of `prop:mass-diam-gen` (lines 3108-3128, eq:use-weyl) without a separate statement; the repo has the
 open-set version `IsEuclideanLengthMetric.internalMetric_weylScaling_le` (Steps/Sec11/WeylAnnulusBounds.lean, hypothesis
-`IsOpen U`). Locator pending.
+`IsOpen U`). locator (CHATGPT-frozen-locators.md): no exact source; standard via weighted path lengths, GM (1.8).
 Used by: firstPass_11_10 (through S11c/Shifted.lean). -/
 def WeylInternalClosedFrozen : Prop :=
   ∀ (D E : ℂ → ℂ → ℝ) (ξ B : ℝ) (f : ℂ → ℝ) (U : Set ℂ), IsEuclideanLengthMetric D →
