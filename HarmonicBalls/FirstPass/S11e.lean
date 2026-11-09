@@ -10,7 +10,7 @@ import HarmonicBalls.FirstPass.Frozen.S11e
 Results of this file: Lemmas 11.12, 11.15, 11.16, 11.17 of the paper (`lemma:mu_h-pinch-positive-probability`,
 `lemma:first-event-proof`, `lemma:second-event-proof`, `lemma:third-event-proof`). Current state:
 
-* `firstPass_11_16` is PROVED-FP: Lemma 11.17 (`PinchThirdEventPositiveStmt`) implies Lemma 11.16
+* `firstPass_11_16_of_11_17` is PROVED-FP: Lemma 11.17 (`PinchThirdEventPositiveStmt`) implies Lemma 11.16
   (`PinchSecondEventPositiveStmt`) with the same configuration and the same witnesses, since `Ẽ₁ ∩ Ẽ₂ ∩ Ẽ₃ ⊆ Ẽ₁ ∩ Ẽ₂`
   (paper lines 3281-3285).
 * Lemmas 11.15 and 11.17 and Lemma 11.12 remain OPEN (their NEW local-certificate steps are not yet formalized; see
@@ -26,7 +26,7 @@ universe u
 /-- Lemma 11.16 (`lemma:second-event-proof`, paper line 3281), first-pass form. It follows from Lemma 11.17
 (`PinchThirdEventPositiveStmt`, paper line 3285): the same configuration `U, V, W, T, Q', Q, δ₀` and the same
 measurable witnesses `A`, because `Ẽ₁ ∩ Ẽ₂ ∩ Ẽ₃ ⊆ Ẽ₁ ∩ Ẽ₂` and `P A > 0` is unchanged. -/
-theorem firstPass_11_16 (h : PinchThirdEventPositiveStmt.{u}) : PinchSecondEventPositiveStmt.{u} := by
+theorem firstPass_11_16_of_11_17 (h : PinchThirdEventPositiveStmt.{u}) : PinchSecondEventPositiveStmt.{u} := by
   obtain ⟨U, V, W, T, Q', Q, δ, hconfig, hpos⟩ := h
   refine ⟨U, V, W, T, Q', Q, δ, hconfig, ?_⟩
   intro γ ξ hγ hγ₂ Ω inst P hC hcirc μ D hgff hμ hD M hM
@@ -86,7 +86,7 @@ theorem firstPass_11_15 (hfr : LQGMetricPointwiseAEMeasurableFrozen) : PinchFirs
 
 #print axioms firstPass_11_15
 
-#print axioms firstPass_11_16
+#print axioms firstPass_11_16_of_11_17
 #print axioms firstPass_11_12
 
 end HarmonicBalls
