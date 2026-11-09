@@ -50,7 +50,7 @@ The constant `C` is uniform in the pole `x` and in the centre (`exists_greenFunc
 
 ## Credit
 
-The module docstring credits Leonardo Bonanno. His code reaches this file only through the pinned Lattice-Probability (lean-v4.35) port (the `LatticeProb.Prob.*` modules above). The Green function is the one of Armitage–Gardiner (`Defs/Green.lean`).
+The module docstring credits Leonardo Bonanno. Leonardo Bonanno's code reaches this file only through the pinned Lattice-Probability (lean-v4.35) port (the `LatticeProb.Prob.*` modules above). The Green function is the one of Armitage–Gardiner (`Defs/Green.lean`).
 
 ## Remaining consumers
 
