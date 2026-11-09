@@ -1,4 +1,5 @@
 import HarmonicBalls.FirstPass.S8d.ProfileTail
+import HarmonicBalls.FirstPass.S8d.RadonUnique
 import HarmonicBalls.FirstPass.S8c.PhaseTail
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.Draft.Section6
@@ -34,7 +35,7 @@ theorem s8d_localPhaseTailStep
     (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u}) (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
-    (hB : BirkhoffPointwiseErgodic.{0}) (hU : RadonIntegralUniqueFrozen) :
+    (hB : BirkhoffPointwiseErgodic.{0}) :
     LocalPhaseTailStep.{u} := by
   intro γ hγ0 hγ2 βminus hβ
   obtain ⟨C₃, hC₃, hL⟩ := hL67
@@ -84,7 +85,8 @@ theorem s8d_localPhaseTailStep
         P' {ω | ¬ IsVeryGoodAnnulus (μ ω) βminus ρ x₀ N₀ a b C₁m C₁p C₂m C₂p C₃} ≤
           ENNReal.ofReal (1 - (1 - ζ' / 4)) :=
     fun Ω' _ P' hC' hcirc' μ hG hμ ρ hρ x₀ hx => hN N₀ hN₀N₁ Ω' P' hC' hcirc' μ hG hμ ρ hρ x₀ hx
-  have hT := s8d_phase_tail_omega P hE1 hE3 hB hU γ hγ0 hγ2 hQ0 hγQ hC hcirc hGFF ν lam hν hlam hW
+  have hT := s8d_phase_tail_omega P hE1 hE3 hB radonIntegralUnique_proved γ hγ0 hγ2 hQ0 hγQ hC hcirc hGFF
+    ν lam hν hlam hW
     (hAff Ω P hC hcirc) (hCC Ω P γ 0 hC hcirc) (hCC Ω P γ γ hC hcirc) βminus N₀ hN₀9 a b C₁m C₁p C₂m C₂p C₃
     m ζ' hζ'0 hζ'1 ha.1 hC1m hC1p hC2m hC2p h67 hABC
   filter_upwards [hT] with x hx

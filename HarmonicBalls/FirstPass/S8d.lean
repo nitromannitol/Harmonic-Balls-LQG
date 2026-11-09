@@ -18,7 +18,8 @@ verbatim (`FirstPass/S8c.lean`, which we do not import, to avoid a name clash wi
 Hypotheses are the frozen inputs and the Draft or Proposed statements: `hL1`, `hfull`, `hWeyl`, `hEx`, `hN` (as in S8c),
 `hL67` (Draft VeryGoodAnnulusProbabilityStmt), `hAff`, `hCC` (Proposed coordinate-change inputs, universal form),
 `hE1` (profile measurability of the LQG measure, E1), `hE3` (product ergodicity of the doubling map, E3, universe 0),
-`hB` (Birkhoff, universe 0), `hU` (uniqueness of Radon measures, flagged for operator review). -/
+`hB` (Birkhoff, universe 0). The Radon-uniqueness step is a theorem (FirstPass/S8d/RadonUnique.lean, from Mathlib), so it
+is not an input. -/
 
 open MeasureTheory ProbabilityTheory Metric Set Filter
 open scoped ENNReal
@@ -40,10 +41,10 @@ theorem firstPass_8_2 (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u}) (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
-    (hB : BirkhoffPointwiseErgodic.{0}) (hU : RadonIntegralUniqueFrozen) :
+    (hB : BirkhoffPointwiseErgodic.{0}) :
     TypicalPointManyGoodScalesStmt.{u} := by
   have hTail : LocalPhaseTailStep.{u} :=
-    s8d_localPhaseTailStep hfull hWeyl hEx hL67 hAff hCC hE1 hE3 hB hU
+    s8d_localPhaseTailStep hfull hWeyl hEx hL67 hAff hCC hE1 hE3 hB
   intro γ α₀ hγ0 hγ2 hα βm hβ
   obtain ⟨C₃, hC₃, hT⟩ := hTail γ hγ0 hγ2 βm hβ
   refine ⟨C₃, hC₃, fun ζ hζ b hb => ?_⟩
