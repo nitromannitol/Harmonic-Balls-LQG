@@ -45,7 +45,8 @@ theorem tsupport_dilateTest_subset {R : ℝ} {k : ℂ → ℝ} (hk : tsupport k 
 /-- Locality of the dilated canonical pairings. If `T` and `T'` agree on the test functions supported in `B_b(0)`,
 then for `R / 2ⁿ < b` the `n`-th dilate of the canonical field of `T` and of `T'` agree on `B_R(0)`. -/
 theorem ballRestrict_dilOp_iterate_eq (γ : ℝ) {T T' : (ℂ → ℝ) → ℝ} {b R : ℝ}
-    (hT : ∀ φ : ℂ → ℝ, IsTestFunction (ball (0 : ℂ) b) φ → T φ = T' φ) (n : ℕ) (hnb : R / 2 ^ n < b) :
+    (hT : ∀ φ : ℂ → ℝ, IsTestFunction (ball (0 : ℂ) b) φ → ∫ x, φ x = 0 → T φ = T' φ) (n : ℕ)
+    (hnb : R / 2 ^ n < b) :
     ballRestrictPairing R (dilOp^[n] (canonFieldOf γ T)) =
       ballRestrictPairing R (dilOp^[n] (canonFieldOf γ T')) := by
   funext i
@@ -53,7 +54,7 @@ theorem ballRestrict_dilOp_iterate_eq (γ : ℝ) {T T' : (ℂ → ℝ) → ℝ} 
   have hd := isTestFunction_dilateTest hu n
   have hsupp : IsTestFunction (ball (0 : ℂ) b) (dilateTest n i.1) :=
     ⟨hd.1, hd.2.1, (tsupport_dilateTest_subset i.2.1.2.2 n).trans (closedBall_subset_ball hnb)⟩
-  have key := hT _ hsupp
+  have key := hT _ hsupp ((integral_dilateTest n i.1).trans i.2.2)
   simp only [ballRestrictPairing, iterate_dilOp, canonFieldOf, fieldPairing]
   rw [key]
 
@@ -63,7 +64,7 @@ distributions `T`, `T'` agreeing on the test functions supported in `B_b(0)`, th
 (all dilation indices `n ∈ [N+1, 2N]` satisfy `R / 2ⁿ ≤ R / 2^(N+1) < b`). -/
 theorem windowFreqOf_ballRestrict_eq (γ : ℝ) {R b : ℝ} (hR : 0 ≤ R)
     (F : Set (ModConstTestPairings (ball (0 : ℂ) R)))
-    {T T' : (ℂ → ℝ) → ℝ} (hT : ∀ φ : ℂ → ℝ, IsTestFunction (ball (0 : ℂ) b) φ → T φ = T' φ)
+    {T T' : (ℂ → ℝ) → ℝ} (hT : ∀ φ : ℂ → ℝ, IsTestFunction (ball (0 : ℂ) b) φ → ∫ x, φ x = 0 → T φ = T' φ)
     (N : ℕ) (hN : R / 2 ^ (N + 1) < b) :
     windowFreqOf γ (ballRestrictPairing R ⁻¹' F) T N = windowFreqOf γ (ballRestrictPairing R ⁻¹' F) T' N := by
   unfold windowFreqOf
