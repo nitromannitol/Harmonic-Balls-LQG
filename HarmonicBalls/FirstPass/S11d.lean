@@ -39,7 +39,7 @@ theorem measurable_field_distribution {Ω : Type u} [MeasurableSpace Ω] {hC : �
 theorem firstPass_11_9
     (hCM : CameronMartinGFFMutualAbsCont.{u})
     (hWSC : WeylScalingCompositionFrozen.{u})
-    (hMet : LQGInternalMetricWeylMeasurableFrozen)
+    (hMet : LQGInternalMetricWeylMeasurableFrozen.{u})
     (hMass : LQGMassFunctionalMeasurableFrozen.{u})
     (hShift : LQGMetricContinuousShiftFactI.{u})
     (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
@@ -69,20 +69,20 @@ theorem firstPass_11_9
     rwa [hadd] at hω
   -- countable dense subset of `V` (the sup over `V` is reduced to it)
   obtain ⟨Q, hQc, hQV, hVQ⟩ := TopologicalSpace.exists_countable_dense_subset V
+  -- the field-level measurable versions `Φ q q'` of the internal metric on `W` (frozen), for the pairs in `Q`
+  have hMetΦ := hMet γ ξ α₀ Ω P hC hcirc 𝔇 hGFF hγ0 hγ2 hα h𝔇 W hWo
+  choose Φ hΦm hΦa using hMetΦ
   -- the set of fields `T` with the metric bound on `Q` and the mass bound
   set B : Set ((ℂ → ℝ) → ℝ) :=
-    (⋂ q ∈ Q, ⋂ q' ∈ Q, {T | internalMetric (fun u v => (weylScaling (𝔇 T) ξ
-        (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q' ≤ ENNReal.ofReal ε}) ∩
-      {T | ENNReal.ofReal C ≤ F T} with hBdef
-  have hBmem : ∀ T, T ∈ B ↔ (∀ q ∈ Q, ∀ q' ∈ Q, internalMetric (fun u v => (weylScaling (𝔇 T) ξ
-        (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q' ≤ ENNReal.ofReal ε) ∧
+    (⋂ q ∈ Q, ⋂ q' ∈ Q, {T | Φ q q' T ≤ ENNReal.ofReal ε}) ∩ {T | ENNReal.ofReal C ≤ F T} with hBdef
+  have hBmem : ∀ T, T ∈ B ↔ (∀ q ∈ Q, ∀ q' ∈ Q, Φ q q' T ≤ ENNReal.ofReal ε) ∧
       ENNReal.ofReal C ≤ F T := by
     intro T
     simp [hBdef, Set.mem_iInter]
   have hBm : MeasurableSet[distributionMeasurableSpace] B := by
     refine MeasurableSet.inter ?_ ?_
     · refine MeasurableSet.biInter hQc fun q _ => MeasurableSet.biInter hQc fun q' _ => ?_
-      exact measurableSet_le (hMet γ ξ α₀ 𝔇 h𝔇 W hWo q q') measurable_const
+      exact measurableSet_le (hΦm q q') measurable_const
     · exact measurableSet_le measurable_const hF
   have hCmeas : @Measurable Ω ((ℂ → ℝ) → ℝ) _ distributionMeasurableSpace hC :=
     measurable_field_distribution hGFF.measurable_pairing
@@ -90,8 +90,11 @@ theorem firstPass_11_9
   have hWSCg := hWSC γ ξ α₀ Ω P hC hcirc hGFF hγ0 hγ2 hα 𝔇 h𝔇 g hgcont
   have hMg : ∀ᵐ ω ∂P, F (addFunPairing (hC ω) g) = μ ω S₁ :=
     hFid g hgcont (fun x hx => hg0S₁ x hx)
+  have hΦg : ∀ᵐ ω ∂P, ∀ q ∈ Q, ∀ q' ∈ Q, Φ q q' (addFunPairing (hC ω) g) = internalMetric
+      (fun u v => (weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q' :=
+    (ae_ball_iff hQc).2 fun q _ => (ae_ball_iff hQc).2 fun q' _ => hΦa q q' g hgcont
   have hsub : ∀ᵐ ω ∂P, ω ∈ A → ω ∈ (fun ω => addFunPairing (hC ω) g) ⁻¹' B := by
-    filter_upwards [hWSCg, hMg] with ω h1 h2 hωA
+    filter_upwards [hWSCg, hMg, hΦg] with ω h1 h2 h3 hωA
     obtain ⟨hmet, hmass⟩ := hAprop ω hωA
     rw [Set.mem_preimage, hBmem]
     refine ⟨fun q hq q' hq' => ?_, by rw [h2]; exact hmass⟩
@@ -100,7 +103,7 @@ theorem firstPass_11_9
         = (fun x y => (weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y).toReal) := by
       funext x y
       rw [h1 x y]
-    rw [hfun]
+    rw [h3 q hq q' hq', hfun]
     exact hmet q (hQV hq) q' (hQV hq')
   have hpos : 0 < P ((fun ω => addFunPairing (hC ω) g) ⁻¹' B) :=
     lt_of_lt_of_le hAp (measure_mono_ae hsub)
@@ -108,13 +111,23 @@ theorem firstPass_11_9
     cm_transfer_pos hCM hGFF hgc hgs hg0 hBm hpos
   -- the positive-probability event for `h^ℂ`, inside the full-measure set of pointwise identities
   have hBmeas : MeasurableSet ((fun ω => hC ω) ⁻¹' B) := hCmeas hBm
+  have hadd : ∀ T : (ℂ → ℝ) → ℝ, addFunPairing T (fun _ => 0) = T := fun T => by
+    funext φ
+    simp [addFunPairing]
+  have hΦ0 : ∀ᵐ ω ∂P, ∀ q ∈ Q, ∀ q' ∈ Q, Φ q q' (hC ω) = internalMetric
+      (fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q' := by
+    filter_upwards [(ae_ball_iff hQc).2 fun q _ => (ae_ball_iff hQc).2 fun q' _ =>
+      hΦa q q' (fun _ => 0) continuous_const] with ω h
+    simpa only [hadd] using h
   obtain ⟨A', hA'm, hA'sub, hA'good, hA'P⟩ := exists_measurable_subset_of_ae hBmeas
     (fun ω => F (hC ω) = μ ω S₁ ∧
       IsEuclideanLengthMetric (fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal) ∧
-      D ω = fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal)
-    (by filter_upwards [hFid0, hlen, hDeq] with ω h1 h2 h3 using ⟨h1, h2, h3⟩)
+      D ω = (fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal) ∧
+      ∀ q ∈ Q, ∀ q' ∈ Q, Φ q q' (hC ω) = internalMetric
+        (fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q')
+    (by filter_upwards [hFid0, hlen, hDeq, hΦ0] with ω h1 h2 h3 h4 using ⟨h1, h2, h3, h4⟩)
   refine ⟨A', fun ω hω => ?_, hA'm, by rw [hA'P]; exact hT⟩
-  obtain ⟨h1, h2, h3⟩ := hA'good ω hω
+  obtain ⟨h1, h2, h3, h4⟩ := hA'good ω hω
   have hωB : hC ω ∈ B := hA'sub hω
   obtain ⟨hmetB, hmassB⟩ := (hBmem (hC ω)).1 hωB
   have hcl' : closure Q ⊆ W := (closure_mono hQV).trans hcl
@@ -122,7 +135,9 @@ theorem firstPass_11_9
   refine ⟨fun u hu v hv => ?_, ?_⟩
   · rw [h3]
     have hcl_bound := internalMetric_le_on_closure h2 (fun x y => ENNReal.toReal_nonneg) hWo hcl'
-      (c := ENNReal.ofReal ε) (fun q hq q' hq' => hmetB q hq q' hq')
+      (c := ENNReal.ofReal ε) (fun q hq q' hq' => by
+        rw [← h4 q hq q' hq']
+        exact hmetB q hq q' hq')
     exact hcl_bound u (hVQ hu) v (hVQ hv)
   · rw [h1] at hmassB
     exact hmassB.trans (measure_mono hS₁U)
