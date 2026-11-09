@@ -3,6 +3,7 @@ import HarmonicBalls.FirstPass.S11h.LocalEvents
 import HarmonicBalls.FirstPass.S11f.SecondThresholds
 import HarmonicBalls.FirstPass.S11e.CondPos
 import HarmonicBalls.Proofs.Sec11.ModConstPairingLaw
+import HarmonicBalls.FirstPass.Frozen.S11k
 
 /-!
 # First pass, Section 11: the faithful second pinch event, Lemma 11.16 (fp-S11k, owner z3)
@@ -15,9 +16,10 @@ event and the crossing and Green thresholds hold, measurable for the field outsi
 event of `lemma:massdiam` on the local geometry `U, V, O₁ = B_δ(V̄), W`. Then `P (F ∩ H) > 0`, since `P[1_H | outside] > 0`
 almost surely (conditioning), and `F ∩ H` lies in the faithful events by the threshold inequalities.
 
-This file proves the composition `firstPass_11_16_corrected_of_steps` from two NEW steps, which are stated here as
-explicit hypotheses and are NOT yet proved: `PinchSecondExteriorStep` and `PinchSecondConditionalMassFaithfulStep`.
-`firstPass_11_16_corrected` itself is not claimed (OPEN).
+This file proves the composition `firstPass_11_16_corrected_of_steps` from two NEW steps. The conditional step
+`PinchSecondConditionalMassFaithfulStep` is PROVED from the cited Draft Proposition 11.9 and three EXTERNAL frozen inputs
+(`pinchSecondConditionalMass_of_frozen`, `FirstPass/Frozen/S11k.lean`). The exterior step `PinchSecondExteriorStep` is still a
+hypothesis (OPEN, see its docstring). `firstPass_11_16_corrected` itself is not claimed (OPEN).
 -/
 
 namespace HarmonicBalls
@@ -81,5 +83,153 @@ theorem firstPass_11_16_corrected_of_steps (hX : PinchSecondExteriorStep.{u})
   obtain ⟨hmass, hdiam⟩ := hHsub hω.2
   exact ⟨hE1, pinchSecondEvent_of_thresholds hc₁ hc₂
     ((internalDiam_le_closure (D ω) δ V).trans hdiam.le) hsep hS hmass⟩
+
+/-- The conditional mass-diameter step `PinchSecondConditionalMassFaithfulStep`, proved from the cited Draft Proposition 11.9
+(`SmallMetricDiameterLargeMassStmt`, hypothesis `hD`) and the three EXTERNAL frozen inputs of `FirstPass/Frozen/S11k.lean`.
+
+Proof. The buffered geometry makes `U = B_ρU(c)`, `V = B_ρV(c)`, `W = B_ρW(c)` concentric disks with `closure (B_{10δ}(V̄)) ⊆ W`.
+Put `O = B_δ(V̄)` (thickening) and `V' = B_{δ/2}(V̄)`. Then `U ⊆ V' ⊆ O`, `closure V' ⊆ O`, `closure O ⊆ W ⊆ annulus 0 1 2`, and
+`U, V', O` are open, connected (convex) and bounded. Draft 11.9 on `(U, V', O)` with `C = 2c₂ + 1` and
+`ε = min(c₁/4, (2c₂+1)/2)` gives a measurable `A` with `P A > 0` and `A ⊆ {diam ≤ ε, μ(U) ≥ C}`; the bound on `V' ⊇ V̄`
+gives the internal diameter of `V̄` (no continuity needed). The frozen inputs give `g₁ = μ(U)` and `g₂ = diam^δ(V̄)` almost
+surely, with `g_i` measurable for `σ(h|_O)`. Let `E = {2c₂ < g₁, g₂ < c₁/2}` (inner) and `N₀` a measurable null set off which
+`μ(U) = g₁` and `diam = g₂`. Then `H = E ∖ N₀` is measurable and lies in the faithful set; `A ⊆ H ∪ N₀`, so `P H ≥ P A > 0`;
+`1_H =ᵐ 1_E`, and the domain Markov input gives `0 < P[1_E | outside]` almost surely, hence `0 < P[1_H | outside]` a.s. -/
+theorem pinchSecondConditionalMass_of_frozen (hD : SmallMetricDiameterLargeMassStmt.{u})
+    (hM : LQGMassInnerMeasurableFrozen.{u}) (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{u}) : PinchSecondConditionalMassFaithfulStep.{u} := by
+  intro U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω _ P hC hcirc μ D hGFF hμ hDm c₁ c₂ hc₁ hc₂
+  have : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
+  obtain ⟨c, ρU, ρV, ρW, hU, hV, hW⟩ := hG.concentric
+  have hδ : 0 < δ := hG.delta_pos
+  have hδ2 : 0 < δ / 2 := by linarith
+  have h10 : (0 : ℝ) < 10 * δ := by linarith
+  have hbU := hG.buffer_U
+  have hbV := hG.buffer_V
+  have hbW := hG.buffer_W
+  have hUV : U ⊆ V := fun x hx => hbU (subset_closure (self_subset_thickening h10 _ (subset_closure hx)))
+  have hVW : V ⊆ W := fun x hx => hbV (subset_closure (self_subset_thickening h10 _ (subset_closure hx)))
+  have hWann : W ⊆ annulus 0 1 2 := fun x hx =>
+    (hbW (subset_closure (self_subset_thickening h10 _ (subset_closure hx)))).2
+  have hρU : 0 < ρU := by
+    obtain ⟨x, hx⟩ := hG.U_nonempty
+    rw [hU] at hx
+    exact dist_nonneg.trans_lt (mem_ball.1 hx)
+  obtain ⟨x0, hx0⟩ := hG.U_nonempty
+  have hρW : 0 < ρW := by
+    have hx0W : x0 ∈ ball c ρW := by rw [← hW]; exact hVW (hUV hx0)
+    exact dist_nonneg.trans_lt (mem_ball.1 hx0W)
+  have hUo : IsOpen U := hG.isOpen_U
+  have hUc : IsConnected U := by
+    rw [hU]; exact (convex_ball c ρU).isConnected (nonempty_ball.2 hρU)
+  have hUb : Bornology.IsBounded U := by rw [hU]; exact isBounded_ball
+  have hcV : Convex ℝ (closure V) := by rw [hV]; exact (convex_ball c ρV).closure
+  have hVb : Bornology.IsBounded (closure V) := by rw [hV]; exact isBounded_ball.closure
+  have hVcpt : IsCompact (closure V) := by rw [hV]; exact isBounded_ball.isCompact_closure
+  have hV'o : IsOpen (thickening (δ / 2) (closure V)) := isOpen_thickening
+  have hO1o : IsOpen (thickening δ (closure V)) := isOpen_thickening
+  have hV'c : IsConnected (thickening (δ / 2) (closure V)) :=
+    (hcV.thickening (δ / 2)).isConnected ⟨x0, self_subset_thickening hδ2 _ (subset_closure (hUV hx0))⟩
+  have hO1c : IsConnected (thickening δ (closure V)) :=
+    (hcV.thickening δ).isConnected ⟨x0, self_subset_thickening hδ _ (subset_closure (hUV hx0))⟩
+  have hV'b : Bornology.IsBounded (thickening (δ / 2) (closure V)) := hVb.thickening
+  have hO1b : Bornology.IsBounded (thickening δ (closure V)) := hVb.thickening
+  have hUV' : U ⊆ thickening (δ / 2) (closure V) := fun x hx =>
+    self_subset_thickening hδ2 _ (subset_closure (hUV hx))
+  have hclV' : closure V ⊆ thickening (δ / 2) (closure V) := self_subset_thickening hδ2 _
+  have hV'O1 : thickening (δ / 2) (closure V) ⊆ thickening δ (closure V) := thickening_mono (by linarith) _
+  have hcl : closure (thickening (δ / 2) (closure V)) ⊆ thickening δ (closure V) :=
+    (closure_thickening_subset_cthickening (δ / 2) (closure V)).trans
+      (cthickening_subset_thickening' hδ (by linarith) _)
+  have hO1W : closure (thickening δ (closure V)) ⊆ W :=
+    (closure_mono (thickening_mono (by linarith) _)).trans hbV
+  have hO1W' : thickening δ (closure V) ⊆ W := subset_closure.trans hO1W
+  have hdisj : Disjoint (thickening δ (closure V)) (sphere (0 : ℂ) 1) := by
+    refine Set.disjoint_left.2 fun x hx hs => ?_
+    have hann : x ∈ ball (0 : ℂ) 2 \ closedBall (0 : ℂ) 1 := hWann (hO1W' hx)
+    exact hann.2 (sphere_subset_closedBall hs)
+  -- Draft Proposition 11.9 on the disks `U ⊆ V' ⊆ O`
+  have hε : 0 < min (c₁ / 4) ((2 * c₂ + 1) / 2) := lt_min (by linarith) (by linarith)
+  have hεle : min (c₁ / 4) ((2 * c₂ + 1) / 2) ≤ c₁ / 4 := min_le_left _ _
+  have hεC : min (c₁ / 4) ((2 * c₂ + 1) / 2) < 2 * c₂ + 1 :=
+    lt_of_le_of_lt (min_le_right _ _) (by linarith)
+  obtain ⟨A, hAsub, hAm, hAp⟩ := hD γ α₀ ξ hγ0 hγ2 hα Ω P hC hcirc μ D hGFF hμ hDm
+    U (thickening (δ / 2) (closure V)) (thickening δ (closure V))
+    hUo hUc hUb hV'o hV'c hV'b hO1o hO1c hO1b hUV' hV'O1 hcl hdisj
+    (2 * c₂ + 1) _ hε hεC
+  -- inner versions of the mass and of the internal diameter
+  have hUO1 : closure U ⊆ thickening δ (closure V) :=
+    (closure_mono hUV).trans (self_subset_thickening hδ _)
+  obtain ⟨g1, hg1m, hg1⟩ := hM γ α₀ Ω P hC hcirc μ hGFF hγ0 hγ2 hα hμ
+    (thickening δ (closure V)) U hO1o hUo hUb hUO1
+  obtain ⟨g2, hg2m, hg2⟩ := hDiam γ ξ α₀ Ω P hC hcirc D hGFF hγ0 hγ2 hα hDm δ (closure V) hδ hVcpt
+  have hbad : ∀ᵐ ω ∂P, μ ω U = g1 ω ∧ internalDiam (D ω) δ (closure V) = g2 ω := hg1.and hg2
+  obtain ⟨N0, hN0sub, hN0m, hN0null⟩ : ∃ N0 : Set Ω,
+      {ω | ¬ (μ ω U = g1 ω ∧ internalDiam (D ω) δ (closure V) = g2 ω)} ⊆ N0 ∧ MeasurableSet N0 ∧ P N0 = 0 := by
+    obtain ⟨t, hts, htm, ht0⟩ := exists_measurable_superset_of_null (ae_iff.1 hbad)
+    exact ⟨t, hts, htm, ht0⟩
+  set E : Set Ω := {ω | ENNReal.ofReal (2 * c₂) < g1 ω ∧ g2 ω < ENNReal.ofReal (c₁ / 2)} with hE
+  have hEm : MeasurableSet[fieldSigmaAlgebra α₀ hC (thickening δ (closure V))] E :=
+    (measurableSet_lt measurable_const hg1m).inter (measurableSet_lt hg2m measurable_const)
+  have hEm0 : MeasurableSet E := (hGFF.fieldSigmaAlgebra_le α₀ (thickening δ (closure V))) _ hEm
+  -- the mass-diameter event `E \ N₀` and its positivity
+  have hAH : A ⊆ (E ∩ N0ᶜ) ∪ N0 := by
+    intro ω hωA
+    by_cases hN : ω ∈ N0
+    · exact Or.inr hN
+    · left
+      have hgood : μ ω U = g1 ω ∧ internalDiam (D ω) δ (closure V) = g2 ω := by
+        by_contra hb
+        exact hN (hN0sub hb)
+      obtain ⟨hb1, hb2⟩ := hAsub hωA
+      have hdiam : internalDiam (D ω) δ (closure V) ≤ ENNReal.ofReal (min (c₁ / 4) ((2 * c₂ + 1) / 2)) :=
+        iSup₂_le fun x hx => iSup₂_le fun y hy =>
+          hb1 x (hclV' hx) y (hclV' hy)
+      have hlt1 : ENNReal.ofReal (min (c₁ / 4) ((2 * c₂ + 1) / 2)) < ENNReal.ofReal (c₁ / 2) :=
+        (ENNReal.ofReal_lt_ofReal_iff (by linarith)).2 (by linarith)
+      have h1 : ENNReal.ofReal (2 * c₂) < g1 ω := by
+        rw [← hgood.1]
+        exact lt_of_lt_of_le ((ENNReal.ofReal_lt_ofReal_iff (by linarith)).2 (by linarith)) hb2
+      have h2 : g2 ω < ENNReal.ofReal (c₁ / 2) := by
+        rw [← hgood.2]
+        exact lt_of_le_of_lt hdiam hlt1
+      exact ⟨⟨h1, h2⟩, hN⟩
+  have hHpos : 0 < P (E ∩ N0ᶜ) := by
+    have hle : P A ≤ P ((E ∩ N0ᶜ) ∪ N0) := measure_mono hAH
+    have hle2 : P ((E ∩ N0ᶜ) ∪ N0) ≤ P (E ∩ N0ᶜ) + P N0 := measure_union_le _ _
+    rw [hN0null, add_zero] at hle2
+    exact lt_of_lt_of_le hAp (hle.trans hle2)
+  have hEpos : 0 < P E := lt_of_lt_of_le hHpos (measure_mono Set.inter_subset_left)
+  -- domain Markov: conditional positivity of the inner event `E`
+  have hcond := hMk α₀ Ω P hC hcirc hGFF W (thickening δ (closure V)) ⟨c, ρW, hρW, hW⟩ hO1o hO1W
+    E hEm hEpos
+  refine ⟨E ∩ N0ᶜ, hEm0.inter hN0m.compl, ?_, ?_⟩
+  · rintro ω ⟨⟨h1, h2⟩, hnN⟩
+    have hgood : μ ω U = g1 ω ∧ internalDiam (D ω) δ (closure V) = g2 ω := by
+      by_contra hb
+      exact hnN (hN0sub hb)
+    show ENNReal.ofReal (2 * c₂) < μ ω U ∧ internalDiam (D ω) δ (closure V) < ENNReal.ofReal (c₁ / 2)
+    rw [hgood.1, hgood.2]
+    exact ⟨h1, h2⟩
+  · have hae : ∀ᵐ ω ∂P, ω ∉ N0 := by
+      rw [ae_iff]; simpa using hN0null
+    have hcongr : (E ∩ N0ᶜ).indicator (1 : Ω → ℝ) =ᵐ[P] E.indicator (1 : Ω → ℝ) := by
+      filter_upwards [hae] with ω hω
+      by_cases h : ω ∈ E
+      · simp [Set.indicator, h, hω]
+      · simp [Set.indicator, h]
+    filter_upwards [condExp_congr_ae hcongr, hcond] with ω h2 h1
+    rw [h2]
+    exact h1
+
+/-- Lemma 11.16 (`lemma:second-event-proof`, corrected), faithful form, CONDITIONAL on the single NEW step
+`PinchSecondExteriorStep` (OPEN). The conditional mass-diameter step is discharged by `pinchSecondConditionalMass_of_frozen`
+from Draft Proposition 11.9 and the three EXTERNAL frozen inputs `LQGMassInnerMeasurableFrozen`,
+`LQGInternalDiamInnerMeasurableFrozen`, `DomainMarkovConditionalPositiveFrozen`. -/
+theorem firstPass_11_16_corrected_of_exterior (hX : PinchSecondExteriorStep.{u})
+    (hD : SmallMetricDiameterLargeMassStmt.{u}) (hM : LQGMassInnerMeasurableFrozen.{u})
+    (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u}) (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
+    PinchSecondEventFaithfulStmt.{u} :=
+  firstPass_11_16_corrected_of_steps hX (pinchSecondConditionalMass_of_frozen hD hM hDiam hMk)
 
 end HarmonicBalls
