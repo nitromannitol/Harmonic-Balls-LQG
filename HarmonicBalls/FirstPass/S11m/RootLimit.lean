@@ -1,0 +1,52 @@
+import HarmonicBalls.FirstPass.S11m.RootCut
+import HarmonicBalls.FirstPass.S11m.ChainMetric
+
+/-!
+# The circle supremum of the internal metric tends to zero (route Step 3.5)
+
+FIRST-PASS fp-S11m. Route Step 3.5 (`notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` l.286-317) uses the limit
+`s → 0` of `sup_{y ∈ ∂B_s} D(0, y; O)`, which `RootCut.lean` (`internalMetric_root_le_sup_add_iInf`) leaves open.
+Here it follows from continuity of `(z, w) ↦ D(z, w; O)` on `O × O` (a deterministic hypothesis; its almost sure form is the
+frozen input `LQGInternalMetricContinuousAlphaGFFFrozen`, FirstPass/Frozen/S11g.lean:96, used in the final assembly),
+with `D(0, 0; O) = 0`.
+-/
+
+namespace HarmonicBalls.S11m
+
+open Set Metric Topology Filter
+
+/-- If the internal metric of `D` on an open `O ∋ 0` is continuous on `O × O`, the circle suprema
+`sup_{y ∈ ∂B_s} D(0, y; O)` tend to `0` as `s → 0⁺` (route Step 3.5). -/
+theorem tendsto_sphere_sup_internalMetric_zero {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) {O : Set ℂ}
+    (hO : IsOpen O) (h0 : (0 : ℂ) ∈ O)
+    (hcont : ContinuousOn (fun p : ℂ × ℂ => internalMetric D O p.1 p.2) (O ×ˢ O)) :
+    Tendsto (fun s : ℝ => ⨆ y ∈ sphere (0 : ℂ) s, internalMetric D O 0 y) (𝓝[>] 0) (𝓝 0) := by
+  have hg : ContinuousOn (fun y : ℂ => internalMetric D O 0 y) O := by
+    have hmaps : MapsTo (fun y : ℂ => ((0 : ℂ), y)) O (O ×ˢ O) := fun y hy => ⟨h0, hy⟩
+    exact hcont.comp (continuousOn_const.prodMk continuousOn_id) hmaps
+  have hg0 : internalMetric D O 0 0 = 0 :=
+    hD.internalMetric_self_of_mem_open (isEuclideanLengthMetric_nonneg hD) hO h0
+  have ht : Tendsto (fun y : ℂ => internalMetric D O 0 y) (𝓝[O] 0) (𝓝 (internalMetric D O 0 0)) :=
+    hg 0 h0
+  rw [hg0] at ht
+  obtain ⟨ρ, hρ, hballO⟩ := Metric.isOpen_iff.mp hO 0 h0
+  rw [ENNReal.tendsto_nhds_zero]
+  intro ε hε
+  have hev : ∀ᶠ y in 𝓝[O] (0 : ℂ), internalMetric D O 0 y < ε := ht.eventually (gt_mem_nhds hε)
+  rw [eventually_nhdsWithin_iff, Metric.eventually_nhds_iff] at hev
+  obtain ⟨r, hr, hr'⟩ := hev
+  have hsmall : ∀ᶠ s in 𝓝[>] (0 : ℝ), s < min r ρ :=
+    nhdsWithin_le_nhds (eventually_lt_nhds (lt_min hr hρ))
+  filter_upwards [hsmall] with s hs
+  refine iSup₂_le fun y hy => ?_
+  have hyn : ‖y‖ = s := mem_sphere_zero_iff_norm.mp hy
+  have hyO : y ∈ O := hballO (by
+    rw [mem_ball_zero_iff, hyn]
+    exact lt_of_lt_of_le hs (min_le_right _ _))
+  exact (hr' (by
+    rw [dist_zero_right, hyn]
+    exact lt_of_lt_of_le hs (min_le_left _ _)) hyO).le
+
+end HarmonicBalls.S11m
+
+#print axioms HarmonicBalls.S11m.tendsto_sphere_sup_internalMetric_zero
