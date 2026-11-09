@@ -204,4 +204,35 @@ def LQGMeasureSquareMeasurableRetiredFalseFrozen : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ S : Set ℂ, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)
 
+/-- FIRST-PASS FROZEN (operator ruling 19:45 UTC, decisions wave 7, item n1 (1); truth check queued). EXTERNAL GFF/LQG
+measurability, in AEMeasurable form, for the Weyl-shifted metric of the field: for the LQG measure `μ` and the LQG metric `D`
+of a whole-plane GFF (`IsLQGMeasureOfField`, `IsLQGMetricOfField`) and a continuous compactly supported weight `f ≤ 0`, the
+supremum over a closed dyadic square `S` of the internal metric of the Weyl-shifted metric `weylShiftPair γ ξ f (μ, D)` is
+almost surely measurable. Not stated for arbitrary pairs.
+Source: measurability of the LQG metric and measure at field level (Weyl scaling, paper Facts 2.1-2.2; locator pending).
+Used by: firstPass_11_10 (through shifted_event_pos_11_10). -/
+def WeylShiftedSupMeasurableFrozen : Prop :=
+  ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+    IsLQGMetricOfField P γ ξ α₀ hC D →
+  ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → (∀ z, f z ≤ 0) →
+  ∀ S : Set ℂ, IsClosedDyadicSquare S →
+    AEMeasurable (fun ω => ⨆ u ∈ S, ⨆ v ∈ S, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S u v) P
+
+/-- FIRST-PASS FROZEN (operator ruling 19:45 UTC, decisions wave 7, item n1 (1); truth check queued). EXTERNAL GFF/LQG
+measurability, in AEMeasurable form, for the Weyl-shifted measure of the field: for the LQG measure `μ` and the LQG metric `D`
+of a whole-plane GFF and a continuous compactly supported weight `f ≤ 0`, the mass `(weylShiftPair γ ξ f (μ, D)).1 S` of a
+closed dyadic square `S` is almost surely measurable. Not stated for arbitrary pairs.
+Source: measurability of the LQG measure at field level (Weyl scaling, paper Facts 2.1-2.2; locator pending).
+Used by: firstPass_11_10 (through shifted_event_pos_11_10). -/
+def WeylShiftedMassMeasurableFrozen : Prop :=
+  ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+    IsLQGMetricOfField P γ ξ α₀ hC D →
+  ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → (∀ z, f z ≤ 0) →
+  ∀ S : Set ℂ, IsClosedDyadicSquare S →
+    AEMeasurable (fun ω => (weylShiftPair γ ξ f (μ ω, D ω)).1 S) P
+
 end HarmonicBalls
