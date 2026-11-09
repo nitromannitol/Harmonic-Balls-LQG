@@ -521,6 +521,289 @@ theorem holder_of_boundary_modulus {O U : Set ℂ} (hU : IsOpen U) (hbU : Bornol
   rw [abs_sub_comm]
   exact hbound
 
+/-! ## 6. Components of a smooth bounded open set, and the global extension -/
+
+/-- The boundary of a connected component of an open set lies in the boundary of the set. -/
+lemma frontier_connectedComponentIn_subset {O : Set ℂ} (hO : IsOpen O) (x : ℂ) :
+    frontier (connectedComponentIn O x) ⊆ frontier O := by
+  intro p hp
+  have hCo : IsOpen (connectedComponentIn O x) := hO.connectedComponentIn
+  have hpcl : p ∈ closure (connectedComponentIn O x) := hp.1
+  have hpC : p ∉ connectedComponentIn O x := fun h => hp.2 (by rw [hCo.interior_eq]; exact h)
+  refine ⟨closure_mono (connectedComponentIn_subset O x) hpcl, fun hpint => ?_⟩
+  rw [hO.interior_eq] at hpint
+  have hD : IsOpen (connectedComponentIn O p) := hO.connectedComponentIn
+  obtain ⟨c, hcD, hcC⟩ := mem_closure_iff.mp hpcl (connectedComponentIn O p) hD
+    (mem_connectedComponentIn hpint)
+  have h1 : connectedComponentIn O x = connectedComponentIn O c := connectedComponentIn_eq hcC
+  have h2 : connectedComponentIn O p = connectedComponentIn O c := connectedComponentIn_eq hcD
+  apply hpC
+  rw [h1, ← h2]
+  exact mem_connectedComponentIn hpint
+
+/-- A segment from a point of the open set `C` to a point outside `C` meets the boundary of `C`. -/
+lemma exists_frontier_mem_segment {C : Set ℂ} (hC : IsOpen C) {x y : ℂ} (hx : x ∈ C) (hy : y ∉ C) :
+    ∃ p ∈ segment ℝ x y, p ∈ frontier C := by
+  by_contra hcon
+  have hsub : segment ℝ x y ⊆ C ∪ (closure C)ᶜ := by
+    intro p hp
+    by_cases hpC : p ∈ C
+    · exact Or.inl hpC
+    · by_cases hpcl : p ∈ closure C
+      · exact (hcon ⟨p, hp, hpcl, fun h => hpC (interior_subset h)⟩).elim
+      · exact Or.inr hpcl
+  have hdisj : Disjoint C (closure C)ᶜ := disjoint_compl_right_iff_subset.mpr subset_closure
+  have hopen : IsOpen (closure C)ᶜ := isClosed_closure.isOpen_compl
+  have hpre : IsPreconnected (segment ℝ x y) := (convex_segment x y).isPreconnected
+  have hsub2 := hpre.subset_left_of_subset_union hC hopen hdisj hsub
+    ⟨x, left_mem_segment ℝ x y, hx⟩
+  exact hy (hsub2 (right_mem_segment ℝ x y))
+
+/-- Points of a segment are within the length of the segment from both endpoints. -/
+lemma dist_le_of_mem_segment {x y p : ℂ} (hp : p ∈ segment ℝ x y) :
+    dist x p ≤ dist x y ∧ dist y p ≤ dist x y := by
+  have h := (mem_segment_iff_wbtw.mp hp).dist_add_dist
+  constructor
+  · linarith [dist_nonneg (x := p) (y := y)]
+  · linarith [dist_comm y p, dist_nonneg (x := x) (y := p)]
+
+/-- The exterior sphere condition at a boundary point of a subset `C ⊆ O` whose frontier lies in `∂O`,
+from the uniform exterior sphere inequality of `∂O`. -/
+lemma exteriorSphereAt_of_subset {O C : Set ℂ} (hCO : C ⊆ O) (hfrC : frontier C ⊆ frontier O) {d : ℝ}
+    (hd : 0 < d)
+    (hgeom : ∀ z ∈ frontier O, ∃ w : ℂ, dist w z = d ∧
+      ∀ x ∈ closure O, d ^ 2 + (1 / 2 : ℝ) * dist x z ^ 2 ≤ dist x w ^ 2)
+    {z : ℂ} (hz : z ∈ frontier C) : HarmonicBalls.ExteriorSphereAt C z := by
+  obtain ⟨w, hwz, hw⟩ := hgeom z (hfrC hz)
+  refine ⟨w, d, hd, by rw [dist_comm]; exact hwz, ?_⟩
+  intro y hy hycl
+  have hyO : y ∈ closure O := closure_mono hCO hycl
+  have h1 := hw y hyO
+  rw [mem_ball] at hy
+  have h2 : dist y w ^ 2 < d ^ 2 := by
+    have := dist_nonneg (x := y) (y := w)
+    nlinarith
+  linarith [sq_nonneg (dist y z)]
+
+/-- Dirichlet data: `u` is continuous on `closure S`, harmonic on `S`, and equal to `g` on `∂S`. -/
+def DirichletGood (S : Set ℂ) (g u : ℂ → ℝ) : Prop :=
+  ContinuousOn u (closure S) ∧ InnerProductSpace.HarmonicOnNhd u S ∧ ∀ z ∈ frontier S, u z = g z
+
+/-- A bound `|f x - f y| ≤ C · dist x y ^ κ` gives `HolderOnWith` with the same constants. -/
+lemma holderOnWith_of_bound {S : Set ℂ} {f : ℂ → ℝ} {C κ : NNReal}
+    (h : ∀ x ∈ S, ∀ y ∈ S, |f x - f y| ≤ (C : ℝ) * dist x y ^ (κ : ℝ)) :
+    HolderOnWith C κ f S := by
+  intro x hx y hy
+  have h1 := h x hx y hy
+  have hd0 : (0 : ℝ) ≤ dist x y := dist_nonneg
+  rw [edist_dist, edist_dist, ENNReal.ofReal_rpow_of_nonneg hd0 (NNReal.coe_nonneg κ),
+    ← ENNReal.ofReal_coe_nnreal, ← ENNReal.ofReal_mul (NNReal.coe_nonneg C)]
+  exact ENNReal.ofReal_le_ofReal (by rw [Real.dist_eq]; exact h1)
+
+/-- The Stage 1 global statement (steps4-final Section 1, lines 125-199). For a smooth bounded open set
+`O` (`IsSmoothBoundedOpen`) and an `a`-Hölder datum `g` on `∂O`, with constant `L` and bound `B`, the
+Dirichlet problem on `O` has a solution `H`, harmonic on `O`, equal to `g` on `∂O`, and Hölder continuous
+on `closure O` with exponent `a/(a+2)`. The literature input `GilbargTrudingerThm2_14` is a hypothesis. -/
+theorem exists_dirichlet_holderOnWith {O : Set ℂ} (hO : IsSmoothBoundedOpen O)
+    (hGT : GilbargTrudingerThm2_14) {g : ℂ → ℝ} {a L B : ℝ} (ha : 0 < a) (hL : 0 ≤ L) (hB : 0 ≤ B)
+    (hgc : ContinuousOn g (frontier O))
+    (hgL : ∀ x ∈ frontier O, ∀ y ∈ frontier O, |g x - g y| ≤ L * dist x y ^ a)
+    (hgB : ∀ x ∈ frontier O, |g x| ≤ B) :
+    ∃ H : ℂ → ℝ, InnerProductSpace.HarmonicOnNhd H O ∧ (∀ z ∈ frontier O, H z = g z) ∧
+      ∃ C r : NNReal, 0 < r ∧ HolderOnWith C r H (closure O) := by
+  classical
+  have hO' := hO
+  obtain ⟨hbddO, ρ, hρC, hOρ, -⟩ := hO
+  have hOopen : IsOpen O := by
+    rw [hOρ]
+    exact isOpen_lt hρC.continuous continuous_const
+  obtain ⟨d, hd, hgeom⟩ :=
+    HarmonicBalls.SmoothDomainExteriorSphere.exists_half_radius_geometry_of_isSmoothBoundedOpen hO'
+  obtain ⟨R, hR⟩ := isBounded_iff_forall_norm_le.mp hbddO.closure
+  have hT : ∀ x ∈ closure O, ∀ y ∈ closure O, dist x y ≤ 2 * R := by
+    intro x hx y hy
+    rw [dist_eq_norm]
+    linarith [norm_sub_le x y, hR x hx, hR y hy]
+  -- one Dirichlet solution on each component
+  have hex : ∀ x ∈ O, ∃ u : ℂ → ℝ, DirichletGood (connectedComponentIn O x) g u := by
+    intro x hx
+    have hCO : connectedComponentIn O x ⊆ O := connectedComponentIn_subset O x
+    have hCopen : IsOpen (connectedComponentIn O x) := hOopen.connectedComponentIn
+    have hCconn : IsConnected (connectedComponentIn O x) :=
+      isConnected_connectedComponentIn_iff.mpr hx
+    have hCbdd : Bornology.IsBounded (connectedComponentIn O x) := hbddO.subset hCO
+    have hfrC := frontier_connectedComponentIn_subset hOopen x
+    have hext : ∀ z ∈ frontier (connectedComponentIn O x),
+        HarmonicBalls.ExteriorSphereAt (connectedComponentIn O x) z :=
+      fun z hz => exteriorSphereAt_of_subset hCO hfrC hd hgeom hz
+    have hφ : ContinuousOn g (frontier (connectedComponentIn O x)) := hgc.mono hfrC
+    obtain ⟨u, huc, hu, hub⟩ := hGT _ hCopen hCconn hCbdd hext g hφ
+    exact ⟨u, huc, hu, hub⟩
+  let solC : Set ℂ → ℂ → ℝ := fun S => Classical.epsilon (DirichletGood S g)
+  have hsolC : ∀ x ∈ O, DirichletGood (connectedComponentIn O x) g
+      (solC (connectedComponentIn O x)) :=
+    fun x hx => Classical.epsilon_spec (hex x hx)
+  let H : ℂ → ℝ := fun x => if x ∈ O then solC (connectedComponentIn O x) x else g x
+  have hH_O : ∀ x ∈ O, H x = solC (connectedComponentIn O x) x := fun x hx => by
+    simp [H, hx]
+  have hH_fr : ∀ z ∈ frontier O, H z = g z := by
+    intro z hz
+    have hzO : z ∉ O := fun h => hz.2 (by rw [hOopen.interior_eq]; exact h)
+    simp [H, hzO]
+  have hcomp : ∀ x ∈ O, ∀ y ∈ connectedComponentIn O x,
+      H y = solC (connectedComponentIn O x) y := by
+    intro x hx y hy
+    rw [hH_O y (connectedComponentIn_subset O x hy), connectedComponentIn_eq hy]
+  have hclos : ∀ x ∈ O, ∀ y ∈ closure (connectedComponentIn O x),
+      H y = solC (connectedComponentIn O x) y := by
+    intro x hx y hy
+    by_cases hyC : y ∈ connectedComponentIn O x
+    · exact hcomp x hx y hyC
+    · have hyf : y ∈ frontier (connectedComponentIn O x) :=
+        ⟨hy, fun h => hyC (interior_subset h)⟩
+      rw [hH_fr y (frontier_connectedComponentIn_subset hOopen x hyf)]
+      exact ((hsolC x hx).2.2 y hyf).symm
+  have hH_harm : InnerProductSpace.HarmonicOnNhd H O := by
+    intro x hx
+    have hCopen : IsOpen (connectedComponentIn O x) := hOopen.connectedComponentIn
+    have hmem : connectedComponentIn O x ∈ 𝓝 x := hCopen.mem_nhds (mem_connectedComponentIn hx)
+    have heq : H =ᶠ[𝓝 x] solC (connectedComponentIn O x) := by
+      filter_upwards [hmem] with y hy
+      exact hcomp x hx y hy
+    exact (InnerProductSpace.harmonicAt_congr_nhds heq).mpr
+      ((hsolC x hx).2.1 x (mem_connectedComponentIn hx))
+  -- the boundary modulus on each component
+  have hbmx : ∀ x ∈ O, ∀ z ∈ frontier O, ∀ y ∈ closure (connectedComponentIn O x),
+      dist y z ≤ 1 → |solC (connectedComponentIn O x) y - g z| ≤
+        (L + 2 * B / (barrierConst d (2 * R) * d)) * dist y z ^ (a / (a + 2)) := by
+    intro x hx z hz y hy hyz
+    have hCO : connectedComponentIn O x ⊆ O := connectedComponentIn_subset O x
+    have hCopen : IsOpen (connectedComponentIn O x) := hOopen.connectedComponentIn
+    have hfrC := frontier_connectedComponentIn_subset hOopen x
+    exact boundary_modulus hOopen hCO hCopen (hbddO.subset hCO) hfrC hd hT hgeom ha hL hB hgL hgB
+      (hsolC x hx).2.1 (hsolC x hx).1 (hsolC x hx).2.2 z hz y hy hyz
+  -- the Hölder estimate on each component closure
+  have hholdx : ∀ x ∈ O, ∀ y ∈ closure (connectedComponentIn O x),
+      ∀ y' ∈ closure (connectedComponentIn O x), dist y y' ≤ 1 →
+      |solC (connectedComponentIn O x) y - solC (connectedComponentIn O x) y'| ≤
+        (L + 2 * B / (barrierConst d (2 * R) * d)) * dist y y' ^ (a / (a + 2)) := by
+    intro x hx y hy y' hy' hyy'
+    have hCopen : IsOpen (connectedComponentIn O x) := hOopen.connectedComponentIn
+    have hfrC := frontier_connectedComponentIn_subset hOopen x
+    exact holder_of_boundary_modulus hCopen (hbddO.subset (connectedComponentIn_subset O x)) hfrC
+      (hsolC x hx).2.1 (hsolC x hx).1 (hsolC x hx).2.2 (fun z hz p hp hpz => hbmx x hx z hz p hp hpz)
+      y hy y' hy' hyy'
+  -- the maximum principle gives `|solC| ≤ B` on each component closure
+  have hsolB : ∀ x ∈ O, ∀ y ∈ closure (connectedComponentIn O x),
+      |solC (connectedComponentIn O x) y| ≤ B := by
+    intro x hx
+    have hCO : connectedComponentIn O x ⊆ O := connectedComponentIn_subset O x
+    have hCopen : IsOpen (connectedComponentIn O x) := hOopen.connectedComponentIn
+    have hfrC := frontier_connectedComponentIn_subset hOopen x
+    exact fun y hy => abs_le_of_frontier_abs_le hCopen (hbddO.subset hCO) (hsolC x hx).2.1
+      (hsolC x hx).1 (M := B)
+      (fun z hz => by rw [(hsolC x hx).2.2 z hz]; exact hgB z (hfrC hz)) y hy
+  have hHB : ∀ z ∈ closure O, |H z| ≤ B := by
+    intro z hz
+    by_cases hzO : z ∈ O
+    · rw [hH_O z hzO]
+      exact hsolB z hzO z (subset_closure (mem_connectedComponentIn hzO))
+    · have hzf : z ∈ frontier O := ⟨hz, fun h => hzO (interior_subset h)⟩
+      rw [hH_fr z hzf]
+      exact hgB z hzf
+  -- constants
+  set κ : ℝ := a / (a + 2) with hκdef
+  have hκ : 0 < κ := by rw [hκdef]; positivity
+  have hκa : κ ≤ a := by
+    rw [hκdef, div_le_iff₀ (by positivity)]
+    nlinarith
+  set C0 : ℝ := L + 2 * B / (barrierConst d (2 * R) * d) with hC0def
+  have hC0 : 0 ≤ C0 := by
+    have := barrierConst_pos (T := 2 * R) hd
+    rw [hC0def]
+    positivity
+  set Cf : ℝ := L + 2 * C0 + 2 * B with hCfdef
+  have hCf : 0 ≤ Cf := by
+    rw [hCfdef]
+    positivity
+  have hpowle : ∀ t : ℝ, 0 ≤ t → t ≤ 1 → t ^ a ≤ t ^ κ := by
+    intro t ht0 ht1
+    rcases eq_or_lt_of_le ht0 with h0 | hpos
+    · rw [← h0, Real.zero_rpow (ne_of_gt ha), Real.zero_rpow (ne_of_gt hκ)]
+    · exact Real.rpow_le_rpow_of_exponent_ge hpos ht1 hκa
+  -- the mixed case: `x ∈ O`, `y ∈ closure O`, `dist x y ≤ 1`
+  have hmixed : ∀ x ∈ O, ∀ y ∈ closure O, dist x y ≤ 1 →
+      |H x - H y| ≤ Cf * dist x y ^ κ := by
+    intro x hx y hy hxy
+    have hpow0 : 0 ≤ dist x y ^ κ := Real.rpow_nonneg dist_nonneg _
+    by_cases hyC : y ∈ closure (connectedComponentIn O x)
+    · rw [hclos x hx y hyC, hH_O x hx]
+      have h1 := hholdx x hx x (subset_closure (mem_connectedComponentIn hx)) y hyC hxy
+      have h2 : C0 * dist x y ^ κ ≤ Cf * dist x y ^ κ :=
+        mul_le_mul_of_nonneg_right (by rw [hCfdef]; linarith [hL, hB, hC0]) hpow0
+      exact h1.trans h2
+    · have hyC' : y ∉ connectedComponentIn O x := fun h => hyC (subset_closure h)
+      by_cases hyO : y ∈ O
+      · obtain ⟨p, hpseg, hpfr⟩ := exists_frontier_mem_segment hOopen.connectedComponentIn
+          (mem_connectedComponentIn hx) hyC'
+        have hpO : p ∈ frontier O := frontier_connectedComponentIn_subset hOopen x hpfr
+        obtain ⟨hxp, hyp⟩ := dist_le_of_mem_segment hpseg
+        have hyp1 : dist y p ≤ 1 := hyp.trans hxy
+        have hA := hbmx x hx p hpO x (subset_closure (mem_connectedComponentIn hx))
+          (hxp.trans hxy)
+        have hA' := hbmx y hyO p hpO y (subset_closure (mem_connectedComponentIn hyO)) hyp1
+        rw [hH_O x hx, hH_O y hyO]
+        have htri := abs_sub_le (solC (connectedComponentIn O x) x) (g p)
+          (solC (connectedComponentIn O y) y)
+        have hBy : |g p - solC (connectedComponentIn O y) y| =
+            |solC (connectedComponentIn O y) y - g p| := abs_sub_comm _ _
+        have hxpk : dist x p ^ κ ≤ dist x y ^ κ := Real.rpow_le_rpow dist_nonneg hxp hκ.le
+        have hypk : dist y p ^ κ ≤ dist x y ^ κ := Real.rpow_le_rpow dist_nonneg hyp hκ.le
+        have hC0k : C0 * dist x p ^ κ ≤ C0 * dist x y ^ κ := mul_le_mul_of_nonneg_left hxpk hC0
+        have hC0k' : C0 * dist y p ^ κ ≤ C0 * dist x y ^ κ :=
+          mul_le_mul_of_nonneg_left hypk hC0
+        have hCf2 : 2 * C0 * dist x y ^ κ ≤ Cf * dist x y ^ κ :=
+          mul_le_mul_of_nonneg_right (by rw [hCfdef]; linarith [hL, hB]) hpow0
+        linarith [htri, hA, hA', hBy, hC0k, hC0k', hCf2]
+      · have hyf : y ∈ frontier O := ⟨hy, fun h => hyO (interior_subset h)⟩
+        rw [hH_fr y hyf, hH_O x hx]
+        have hA := hbmx x hx y hyf x (subset_closure (mem_connectedComponentIn hx)) hxy
+        have hC0k : C0 * dist x y ^ κ ≤ Cf * dist x y ^ κ :=
+          mul_le_mul_of_nonneg_right (by rw [hCfdef]; linarith [hL, hB]) hpow0
+        exact hA.trans hC0k
+  -- the full estimate on `closure O`
+  have hmain : ∀ x ∈ closure O, ∀ y ∈ closure O, |H x - H y| ≤ Cf * dist x y ^ κ := by
+    intro x hx y hy
+    have hpow0 : 0 ≤ dist x y ^ κ := Real.rpow_nonneg dist_nonneg _
+    by_cases hdist : dist x y ≤ 1
+    · by_cases hxO : x ∈ O
+      · exact hmixed x hxO y hy hdist
+      · by_cases hyO : y ∈ O
+        · have h1 := hmixed y hyO x hx (by rw [dist_comm]; exact hdist)
+          rw [abs_sub_comm, dist_comm]
+          exact h1
+        · have hxf : x ∈ frontier O := ⟨hx, fun h => hxO (interior_subset h)⟩
+          have hyf : y ∈ frontier O := ⟨hy, fun h => hyO (interior_subset h)⟩
+          rw [hH_fr x hxf, hH_fr y hyf]
+          have hgxy := hgL x hxf y hyf
+          have hL' : L * dist x y ^ a ≤ L * dist x y ^ κ :=
+            mul_le_mul_of_nonneg_left (hpowle _ dist_nonneg hdist) hL
+          have hL'' : L * dist x y ^ κ ≤ Cf * dist x y ^ κ :=
+            mul_le_mul_of_nonneg_right (by rw [hCfdef]; linarith [hC0, hB]) hpow0
+          linarith [hgxy, hL', hL'']
+    · have hfar : 1 ≤ dist x y ^ κ := Real.one_le_rpow (le_of_lt (not_le.mp hdist)) hκ.le
+      have hC2 : 2 * B ≤ Cf := by
+        rw [hCfdef]
+        linarith [hL, hC0]
+      calc |H x - H y| ≤ |H x| + |H y| := abs_sub _ _
+        _ ≤ 2 * B := by linarith [hHB x hx, hHB y hy]
+        _ ≤ Cf * dist x y ^ κ := by nlinarith [hfar, hCf, hB]
+  refine ⟨H, hH_harm, hH_fr, Cf.toNNReal, κ.toNNReal, Real.toNNReal_pos.mpr hκ, ?_⟩
+  apply holderOnWith_of_bound
+  intro x hx y hy
+  rw [Real.coe_toNNReal _ hCf, Real.coe_toNNReal _ hκ.le]
+  exact hmain x hx y hy
+
 end GreenGeneral
 
 end HarmonicBalls
