@@ -309,4 +309,51 @@ def LocalCircleAverageMeanZeroApproxFrozen : Prop :=
     TendstoInMeasure P (fun n ω => fieldPairing α₀ (hC ω) (φ n)) atTop
       (fun ω => fieldCircleAverage α₀ (hcirc ω) r z - fieldPairing α₀ (hC ω) ρ)
 
+/-- The local mean-zero observation of the field `h = h^ℂ - α₀ log|·|` on a set `D`: the pairings of `h` with the
+mean-zero test functions supported in `D` (the observation part of `campbellMarkedObs`, without the root). -/
+noncomputable def localMeanZeroObs (α₀ : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) :
+    {φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ :=
+  fun φ => fieldPairing α₀ hC φ.1
+
+/-- The circle averages of the rooted field `h - γ log|· - z|` (the field rooted at `z`, as in the Campbell law of
+`LocalCampbellMarkedRestrictionFrozen`): `h_r(x) - γ · (average of log|· - z| over ∂B_r(x))`. -/
+noncomputable def rootedCircleAverage (α₀ γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ → ℝ) (r : ℝ) (x : ℂ) : ℝ :=
+  fieldCircleAverage α₀ hcirc r x - γ * Real.circleAverage (fun w => Real.log ‖w - z‖) x r
+
+/-- The mean-zero observation of the rooted field `h - γ log|· - z|` on `D`: the pairings of `h` minus
+`γ ∫ log|w - z| φ(w) dw` with the mean-zero test functions supported in `D`. -/
+noncomputable def rootedMeanZeroObs (α₀ γ : ℝ) (D : Set ℂ) (z : ℂ) (hC : (ℂ → ℝ) → ℝ) :
+    {φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ :=
+  fun φ => fieldPairing α₀ hC φ.1 - γ * ∫ w, Real.log ‖w - z‖ * φ.1 w
+
+/-- FIRST-PASS FROZEN (operator decision 2026-11-09 21:12 UTC, items 2 and 3). EXTERNAL: one s-finite (measurable)
+local decoder kernel `K` from the mean-zero observations on a disk `D = ball c₂ r₂` (`0 ∉ closedBall c₂ r₂`) to
+measures on `ℂ`, which
+recovers the γ-LQG measure of a whole-plane GFF on `D` up to a constant factor, almost surely, and which does the same
+for the rooted field `h - γ log|· - z|` (`z` any point). The first clause is the field `h` itself (`IsLQGMeasureOfField`,
+insertion `α₀`); the second clause is the Campbell-rooted field of paper Lemma 11.7 (proof, lines 2936-2949), whose
+LQG measure is `IsLQGMeasure` for the profile `rootedCircleAverage`. The constant in B2 eq. (3.2) is
+`e^{-γ⟨h,ρ_D⟩}`; only the existence of some constant `c ∈ (0,∞)` is asserted (the cone event is scale-invariant).
+Mechanism: the circle averages of `h` on the circles inside `D` are a.s. limits of mean-zero pairings
+(`LocalCircleAverageMeanZeroApproxFrozen`), and the LQG measure is a measurable function of the continuous circle-average
+profile on `D` (Duplantier–Sheffield, arXiv:0808.1560v2, Proposition 1.1; Duplantier–Miller–Sheffield, arXiv:1409.7055v4,
+Lemma A.10 for the rooting). Locator: standard; ChatGPT truth check pending. Not covered by n4's
+`LQGMeasureOfProfileMeasurableFrozen` (`FirstPass/Frozen/S8d.lean:28`): that decoder takes a GLOBAL profile on
+`CircleParameter`, and the local observation does not determine the profile outside `D`.
+Used by: firstPass_11_7 (route: B2 sec 3-4 decoder, sec 5.1 rooted null section; FirstPass/S11c.lean, to come). -/
+def LocalLQGDecoderFrozen : Prop :=
+  ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ (c₂ : ℂ) (r₂ : ℝ), 0 < r₂ → (0 : ℂ) ∉ closedBall c₂ r₂ →
+  ∃ K : ProbabilityTheory.Kernel ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) ℂ,
+    ProbabilityTheory.IsSFiniteKernel K ∧
+    (∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
+      ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
+        K (localMeanZeroObs α₀ (ball c₂ r₂) (hC ω)) = c • (μ ω).restrict (ball c₂ r₂)) ∧
+    (∀ (z : ℂ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μz : Ω → Measure ℂ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasure P γ (fun ω => rootedCircleAverage α₀ γ z (hcirc ω)) μz →
+      ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
+        K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
+
 end HarmonicBalls
