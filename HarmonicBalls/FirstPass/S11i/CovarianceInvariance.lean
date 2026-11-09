@@ -19,7 +19,7 @@ open MeasureTheory Filter Topology Metric Set
 namespace HarmonicBalls
 
 /-- Off the diagonal, `wholePlaneCov x z = log max(‖x‖,1) + log max(‖z‖,1) - log ‖z - x‖`. -/
-theorem wholePlaneCov_eq_of_ne {x z : ℂ} (h : x ≠ z) :
+theorem wholePlaneCov_eq_log_of_ne {x z : ℂ} (h : x ≠ z) :
     wholePlaneCov x z = Real.log (max ‖x‖ 1) + Real.log (max ‖z‖ 1) - Real.log ‖z - x‖ := by
   have hx : (0 : ℝ) < max ‖x‖ 1 := lt_of_lt_of_le one_pos (le_max_right _ _)
   have hz : (0 : ℝ) < max ‖z‖ 1 := lt_of_lt_of_le one_pos (le_max_right _ _)
@@ -40,7 +40,7 @@ theorem wholePlaneCov_smul_of_ne {c : ℝ} (hc : 0 < c) {x z : ℂ} (h : x ≠ z
   have e3 : ‖c • z - c • x‖ = c * ‖z - x‖ := by
     rw [← smul_sub, norm_smul, Real.norm_of_nonneg hc.le]
   have hd : 0 < ‖z - x‖ := norm_pos_iff.2 (sub_ne_zero.2 h.symm)
-  rw [wholePlaneCov_eq_of_ne hne, wholePlaneCov_eq_of_ne h, e1, e2, e3, Real.log_mul hc.ne' hd.ne']
+  rw [wholePlaneCov_eq_log_of_ne hne, wholePlaneCov_eq_log_of_ne h, e1, e2, e3, Real.log_mul hc.ne' hd.ne']
   unfold dilationGap
   ring
 
@@ -56,7 +56,7 @@ theorem continuous_dilationGap (c : ℝ) : Continuous (dilationGap c) := by
 
 /-- The whole-plane kernel is integrable against a test function, for every fixed centre `x`
 (the kernel is `log`-singular at `x` only, a null set). -/
-theorem integrable_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction univ ψ) (x : ℂ) :
+theorem integrable_mul_wholePlaneCov_dil {ψ : ℂ → ℝ} (hψ : IsTestFunction univ ψ) (x : ℂ) :
     Integrable (fun z => ψ z * wholePlaneCov x z) := by
   obtain ⟨R, hR⟩ := (hψ.2.1.isCompact.isBounded).subset_closedBall (0 : ℂ)
   have hsupp : ∀ z, ψ z ≠ 0 → ‖z‖ ≤ R := fun z hz =>
@@ -72,7 +72,7 @@ theorem integrable_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction un
   refine ((h1.add h2).sub h3).congr ?_
   have hae : ∀ᵐ z ∂(volume : Measure ℂ), z ≠ x := compl_mem_ae_iff.2 (measure_singleton x)
   filter_upwards [hae] with z hz
-  simp only [Pi.add_apply, Pi.sub_apply, wholePlaneCov_eq_of_ne hz.symm]
+  simp only [Pi.add_apply, Pi.sub_apply, wholePlaneCov_eq_log_of_ne hz.symm]
   ring
 
 /-- Pointwise dilation identity for a mean-zero test function `ψ`: for every `w`,
@@ -94,7 +94,7 @@ theorem integral_dilate_wholePlaneCov {c : ℝ} (hc : 0 < c) {ψ : ℂ → ℝ} 
     ring
   have hconst' : Integrable (fun z => (dilationGap c w - Real.log c) * ψ z + ψ z * dilationGap c z) :=
     hconst.add hg
-  rw [integral_congr_ae e, integral_add (integrable_mul_wholePlaneCov hψ w) hconst',
+  rw [integral_congr_ae e, integral_add (integrable_mul_wholePlaneCov_dil hψ w) hconst',
     integral_add hconst hg, integral_const_mul, hψ0, mul_zero, zero_add]
 
 /-- Covariance invariance under dilation (paper `lem:mixing`, covariance step): for mean-zero test functions
