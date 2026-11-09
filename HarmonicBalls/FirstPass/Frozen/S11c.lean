@@ -275,4 +275,18 @@ def LocalCampbellMarkedRestrictionFrozen : Prop :=
     ∫⁻ ω, (μ ω (ball c₁ r₁))⁻¹ * ∫⁻ z in ball c₁ r₁,
         S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellMarkedObs α₀ (ball c₂ r₂) (hC ω) z) ∂(μ ω) ∂P = 0
 
+/-- FIRST-PASS FROZEN (operator ruling 2026-11-09 20:22 UTC, decision (c); truth-checked style: translation invariance of the
+whole-plane GFF modulo additive constants). EXTERNAL: for the whole-plane GFF `h^ℂ` (`IsWholePlaneGFF`), translating the field
+by `z` and subtracting a constant does not change its law modulo constants, `g(· + z) - g_1(z) =d g` (Duplantier-Miller-Sheffield,
+arXiv:1409.7055v4, Lemma A.10, and the covariance `-log|x - y| + log max(1,|x|) + log max(1,|y|)`). Stated as equality of the laws
+of the pairings with the mean-zero test functions `φ` (smooth, compact support, `∫ φ = 0`): the constants drop out, so
+`(hC ω (φ(· - z)))_φ` and `(hC ω φ)_φ` have the same law. Only the mean-zero pairings are asserted.
+Used by: firstPass_11_7 (route: event-specific transfer, translation of the reference observation, not yet written). -/
+def WholePlaneGFFTranslationModConstFrozen : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+  ∀ z : ℂ,
+    P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction Set.univ φ ∧ ∫ x, φ x = 0}) => hC ω (fun x => φ.1 (x - z))) =
+      P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction Set.univ φ ∧ ∫ x, φ x = 0}) => hC ω φ.1)
+
 end HarmonicBalls
