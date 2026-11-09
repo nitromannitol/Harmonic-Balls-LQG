@@ -289,4 +289,24 @@ def WholePlaneGFFTranslationModConstFrozen : Prop :=
     P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction Set.univ φ ∧ ∫ x, φ x = 0}) => hC ω (fun x => φ.1 (x - z))) =
       P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction Set.univ φ ∧ ∫ x, φ x = 0}) => hC ω φ.1)
 
+/-- FIRST-PASS FROZEN (PENDING OPERATOR APPROVAL AND TRUTH CHECK; not yet approved). EXTERNAL local approximation of the
+circle averages of a whole-plane GFF by pairings with mean-zero test functions: for a disk `D` (any open set), a radius `r > 0`,
+a fixed normalized bump `ρ` supported in `D` (`∫ ρ = 1`) and a point `z` with `closedBall z r ⊆ D`, there are mean-zero test
+functions `φ n` supported in `D` such that the pairings `fieldPairing α₀ (hC) (φ n)` converge in probability to the centred
+circle average `h_r(z) - (h, ρ)` of the field `h = h^ℂ - α₀ log|·|`. Standard GFF fact: the smoothed circle measures
+`σ_{z,r,η}` (supported in `closedBall z (r + η) ⊆ D` for small `η`) give `(h, σ_{z,r,η}) → h_r(z)` in `L²` by the covariance
+`wholePlaneGFFCov` (Duplantier-Sheffield, arXiv:0808.1560v2, Section 3 and Prop. 3.1 for the continuous circle averages);
+`φ n = σ_{z,r,η_n} - ρ` (mean zero); the `α₀ log|·|` part of `fieldPairing` and `fieldCircleAverage` converges deterministically.
+Stated for the field `h` as in `fieldPairing` and with the base point `ρ` (pairing with a fixed bump), so no circle outside `D`
+is used. Only the mean-zero pairings are asserted (constants drop out). Used by: `exists_joint_local_circleAverage_version`
+route of firstPass_11_7 (FirstPass/S11c/LocalVersion11_7.lean), i.e. the local decoder K_D of CHATGPT-11-7-B2.md sec 3.1.1. -/
+def LocalCircleAverageMeanZeroApproxFrozen : Prop :=
+  ∀ (α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+  ∀ (D : Set ℂ), IsOpen D → ∀ (r : ℝ), 0 < r → ∀ ρ : ℂ → ℝ, IsTestFunction D ρ → ∫ x, ρ x = 1 →
+  ∀ z : ℂ, closedBall z r ⊆ D →
+  ∃ φ : ℕ → ℂ → ℝ, (∀ n, IsTestFunction D (φ n) ∧ ∫ x, φ n x = 0) ∧
+    TendstoInMeasure P (fun n ω => fieldPairing α₀ (hC ω) (φ n)) atTop
+      (fun ω => fieldCircleAverage α₀ (hcirc ω) r z - fieldPairing α₀ (hC ω) ρ)
+
 end HarmonicBalls
