@@ -86,4 +86,22 @@ lemma gridS1_subset_classes {h : ℝ} (hh : 0 < h) {P₁ P₂ Q₁ Q₂ : ℤ} (
     · linarith [hY3]
     · linarith [hY4]
 
+/-- The class cells lie in the box of `S₁`: each cell `[8jh, (8j+8)h]` with `P₁ ≤ 8j`, `8j+8 ≤ P₂` is inside `[P₁h, P₂h]`. -/
+lemma gridClassCells_subset_box {h : ℝ} (hh : 0 < h) {p q P₁ P₂ Q₁ Q₂ : ℤ} :
+    gridClassCells h {j : ℤ | j % 2 = p ∧ P₁ ≤ 8 * j ∧ 8 * j + 8 ≤ P₂}
+        {k : ℤ | k % 2 = q ∧ Q₁ ≤ 8 * k ∧ 8 * k + 8 ≤ Q₂} ⊆ gridBox h P₁ P₂ Q₁ Q₂ := by
+  intro z hz
+  simp only [gridClassCells, mem_iUnion] at hz
+  obtain ⟨j, ⟨-, hj1, hj2⟩, k, ⟨-, hk1, hk2⟩, hzc⟩ := hz
+  obtain ⟨⟨c1, c2⟩, ⟨c3, c4⟩⟩ := Complex.mem_reProdIm.1 hzc
+  have a1 : (P₁ : ℝ) * h ≤ (8 * (j : ℝ)) * h :=
+    mul_le_mul_of_nonneg_right (by exact_mod_cast (show P₁ ≤ 8 * j from hj1)) hh.le
+  have a2 : (8 * (j : ℝ) + 8) * h ≤ (P₂ : ℝ) * h :=
+    mul_le_mul_of_nonneg_right (by exact_mod_cast (show 8 * j + 8 ≤ P₂ from hj2)) hh.le
+  have b1 : (Q₁ : ℝ) * h ≤ (8 * (k : ℝ)) * h :=
+    mul_le_mul_of_nonneg_right (by exact_mod_cast (show Q₁ ≤ 8 * k from hk1)) hh.le
+  have b2 : (8 * (k : ℝ) + 8) * h ≤ (Q₂ : ℝ) * h :=
+    mul_le_mul_of_nonneg_right (by exact_mod_cast (show 8 * k + 8 ≤ Q₂ from hk2)) hh.le
+  exact Complex.mem_reProdIm.2 ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩
+
 end HarmonicBalls
