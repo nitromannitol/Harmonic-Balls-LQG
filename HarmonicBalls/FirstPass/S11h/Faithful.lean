@@ -88,25 +88,20 @@ def PinchSecondEventFaithfulStmt : Prop :=
       MeasurableSet A ∧ 0 < P A
 
 /-- Lemma 11.17, corrected form (`lemma:third-event-proof`, corrected paper lines 3355-3357): for every fixed buffered
-geometry, every `γ ∈ (0, 2)`, every `α₀ < Q`, and every `M > 0`, `P[Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃] > 0` (inner-measure form). -/
+geometry, every `γ ∈ (0, 2)`, every `α₀ < Q`, and every `M > 0`, `P[Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃] > 0` (inner-measure form).
+The Weyl exponent is the canonical one, `ξ = γ / d_γ` (eq:xi, corrected paper line 440; GM21 (1.5)), with `d_γ > 0`
+a parameter: the paper claims the lemma for this exponent only (operator notes 2026-11-09 21:42 and 21:57 UTC, Q-xi).
+The parameter `d_γ` enters only through the exponent `γ / d_γ > 0`, so the hypothesis `IsLQGMetricOfField` is the
+metric of the paper exactly when `d_γ` is the true dimension constant. -/
 def PinchThirdEventFaithfulStmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
-  ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ γ α₀ dγ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < dγ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
-    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
+    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ (γ / dγ) α₀ hC D →
   ∀ M : ℝ, 0 < M →
     ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ ∧ pinchSecondEvent (μ ω) (D ω) U V δ M ∧
       pinchThirdEvent (D ω) V W δ}, MeasurableSet A ∧ 0 < P A
 
-/-- Lemma 11.16, corrected form, from Lemma 11.17, corrected form: the same geometry, insertion, field, measure and
-witness; `Ẽ₁ ∩ Ẽ₂ ∩ Ẽ₃ ⊆ Ẽ₁ ∩ Ẽ₂` (corrected paper lines 3351-3357). -/
-theorem firstPass_11_16_corrected_of_11_17 (h : PinchThirdEventFaithfulStmt.{u}) :
-    PinchSecondEventFaithfulStmt.{u} := by
-  intro U V W T Q' Q δ hgeo γ α₀ ξ hγ hγ₂ hα Ω _ P hC hcirc μ D hgff hμ hD M hM
-  obtain ⟨A, hA, hmeas, hp⟩ := h U V W T Q' Q δ hgeo γ α₀ ξ hγ hγ₂ hα Ω P hC hcirc μ D hgff hμ hD M hM
-  exact ⟨A, fun ω hω => ⟨(hA hω).1, (hA hω).2.1⟩, hmeas, hp⟩
-
-#print axioms firstPass_11_16_corrected_of_11_17
 
 end HarmonicBalls
