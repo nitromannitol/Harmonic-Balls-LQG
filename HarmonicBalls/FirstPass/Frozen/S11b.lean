@@ -15,7 +15,9 @@ namespace HarmonicBalls
 
 universe u
 
-/-- FIRST-PASS FROZEN. Dilation ergodicity of the whole-plane GFF modulo additive constants, in the form it is used for
+/-- RETIRED (NOT-EXTERNAL, truth check 2026-11-09): this states the frequency of the paper's `coneMassEvent`, not
+general mathematics. Do not use. Replaced by the internal ergodic argument of `FirstPass/S11c.lean`.
+(Former FIRST-PASS FROZEN text, kept for the record.) Dilation ergodicity of the whole-plane GFF modulo additive constants, in the form it is used for
 the origin-rooted field `h^γ = g - γ log|·|` (LQG measure `μ0 ω`, `IsLQGMeasureOfField P γ γ hcirc μ0`), for the
 dyadic scales. For each scale index `n₀`, almost surely the Cesàro frequency of the events
 `coneMassEvent (μ0 ω) Q M (2⁻¹)^n 0` over `n ∈ {1, …, N}` tends to the expectation of the event at scale `n₀`.
@@ -36,7 +38,9 @@ def OriginRootedConeFrequencyFrozen : Prop :=
       atTop (𝓝 (∫⁻ ω, Set.indicator {ω' : Ω | coneMassEvent (μ0 ω') Q M ((2 : ℝ)⁻¹ ^ n₀) 0}
         (fun _ => (1 : ℝ≥0∞)) ω ∂P).toReal)
 
-/-- FIRST-PASS FROZEN. Rooted transfer from the origin to `μ_h`-almost every point, for the frequency of good
+/-- RETIRED (NOT-EXTERNAL, truth check 2026-11-09): this states the rooted transfer of the paper's `coneMassEvent`
+frequency, not general mathematics. Do not use. Replaced by the local Palm transfer in `FirstPass/Frozen/S11c.lean`.
+(Former FIRST-PASS FROZEN text, kept for the record.) Rooted transfer from the origin to `μ_h`-almost every point, for the frequency of good
 scales in the window `[N+1, 2N]` (the statement of Lemma 11.7 at a fixed `δ`). Let `μ0` be the LQG measure with
 `α = γ` (rooted at `0`) and `μ` the LQG measure with the given `α₀`, both of the same whole-plane GFF `g`. If almost
 surely the window frequency at the origin for `μ0` is at least `δ` for all large `N`, then almost surely, for

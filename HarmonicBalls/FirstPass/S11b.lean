@@ -59,7 +59,9 @@ lemma le_infDist_origin_annulus {r : ℝ} (hr : 0 < r) :
   linarith
 
 /-- FIRST-PASS, Lemma 11.7 (lemma:mu_h-bad-and-harnack, corrected [C39]), for `ManyConeBadScalesStmt`
-(`Draft/Section11.lean`). The inputs are: the Draft Lemma 11.8 (`ConeBadEventProbabilityStmt`), applied with
+(`Draft/Section11.lean`). WITHDRAWN (truth check 2026-11-09): it uses the two RETIRED Props
+`OriginRootedConeFrequencyFrozen` and `RootedConeFrequencyTransferFrozen`; the redo is `firstPass_11_7` in
+`FirstPass/S11c.lean`. The inputs of this withdrawn version are: the Draft Lemma 11.8 (`ConeBadEventProbabilityStmt`), applied with
 `α₀ := γ` at the origin; the staged existence of the LQG measure `LQGMeasureExistence` (`Proposed/LQG.lean`, pending
 operator source-check), used to produce the origin-rooted measure `μ0`; the frozen dilation ergodicity
 `OriginRootedConeFrequencyFrozen` and the frozen rooted transfer `RootedConeFrequencyTransferFrozen`.
