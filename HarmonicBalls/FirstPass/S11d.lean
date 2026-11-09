@@ -11,7 +11,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 * the 11.10 input `SmallMetricDiameterLargeMassSquareStmt` (n1's, Draft/Section11.lean);
 * FIRST-PASS FROZEN inputs: `LQGMetricContinuousShiftFactI`, `WeylScalingCompositionFrozen`,
   `CameronMartinGFFMutualAbsCont`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`,
-  `LQGInternalMetricWeylMeasurableFrozen`, `LQGMassFunctionalMeasurableFrozen`;
+  `LQGInternalMetricWeylAeMeasurableFrozen`, `LQGMassFunctionalMeasurableFrozen`;
 * the Proposed input `LQGMetricFieldAxioms` (pending operator source-check), taken as a hypothesis.
 
 Proof (repair in `notes/fp-11-9-fix.md`; paper lines 3110-3137). `shifted_event_exists` gives the shifted event for
@@ -39,7 +39,7 @@ theorem measurable_field_distribution {Ω : Type u} [MeasurableSpace Ω] {hC : �
 theorem firstPass_11_9
     (hCM : CameronMartinGFFMutualAbsCont.{u})
     (hWSC : WeylScalingCompositionFrozen.{u})
-    (hMet : LQGInternalMetricWeylMeasurableFrozen.{u})
+    (hMet : LQGInternalMetricWeylAeMeasurableFrozen.{u})
     (hMass : LQGMassFunctionalMeasurableFrozen.{u})
     (hShift : LQGMetricContinuousShiftFactI.{u})
     (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)

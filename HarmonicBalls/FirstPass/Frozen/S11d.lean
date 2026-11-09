@@ -85,6 +85,19 @@ def WeylScalingCompositionFrozen : Prop :=
         weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
           weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y
 
+/-- FIRST-PASS FROZEN. Field-level measurability of the Weyl-scaled internal metric, uniform form (standard; locator
+pending). For every LQG metric `𝔇` (`IsLQGMetric`, Weyl exponent `ξ`), an open set `W` and fixed `q q' : ℂ`, the map
+`T ↦ D^W_T(q, q')` is measurable for the σ-algebra of pairings, where `D_T = e^{-ξ α₀ log|·|} · 𝔇 T` and `D^W_T` is its
+internal metric on `W`. Source: measurability of `h ↦ D_h` (Gwynne-Miller 2021, Section 1.2, p. 6; locator pending), transported
+to the internal metric on `W`. Operator ruling 2026-11-09 18:35 UTC (field level, EXTERNAL). Used by:
+FirstPass/S11e/CertMeasurable.lean (`measurableSet_certificate_certMetricOn`, line 38). Not used by firstPass_11_9, which uses
+the weaker a.s. form `LQGInternalMetricWeylAeMeasurableFrozen` below. Truth of the uniform form is not verified (the
+infimum over paths need not be measurable off the carrier's support); operator decision pending. -/
+def LQGInternalMetricWeylMeasurableFrozen : Prop :=
+  ∀ (γ ξ α₀ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), IsLQGMetric γ ξ 𝔇 → ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ,
+    Measurable[distributionMeasurableSpace] fun T : (ℂ → ℝ) → ℝ =>
+      internalMetric (fun u v => (weylScaling (𝔇 T) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q'
+
 /-- FIRST-PASS FROZEN. Field-level measurable version of the Weyl-scaled internal metric (standard; locator pending). For an
 LQG metric `𝔇` (`IsLQGMetric`, Weyl exponent `ξ`) of a whole-plane GFF carrier `(Ω, P, hC, hcirc)`, an open set `W`
 and fixed `q q' : ℂ`, there is a measurable functional `Φ` on distributions (for the σ-algebra of pairings) with
@@ -95,7 +108,7 @@ of `h^ℂ + f - α₀ log|·|` and `D^W` its internal metric on `W`. Only this a
 (Bou-Rabee-Gwynne arXiv:2208.11795, p. 9, lines 432-457). Operator ruling 2026-11-09 18:35 UTC: field-level measurability is
 EXTERNAL and is frozen at field level; the a.s. form follows the truth check of 19:20 UTC (state the version explicitly).
 Used by: firstPass_11_9 (the Cameron-Martin transfer event, paper line 3131). -/
-def LQGInternalMetricWeylMeasurableFrozen : Prop :=
+def LQGInternalMetricWeylAeMeasurableFrozen : Prop :=
   ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → IsLQGMetric γ ξ 𝔇 →
