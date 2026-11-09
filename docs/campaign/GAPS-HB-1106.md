@@ -1,5 +1,7 @@
 # Harmonic-balls mathematical triage, 2026-11-06
 
+Operator04:55 superseding status: authoritative steps4-final.tex sha256 f9da848c8ad8179d8fd94795b7bfbdf198d7e8aefd38c72c89788a56acdba932, Sections6/7 independently re-audited CORRECT. The LBM conjunct of Proposition2.5 and all of Proposition2.6 are written-proof closed, Lean-pending; earlier GAPS/HOLD labels for them below are historical. Section1 general Green and Section4 B1 releases persist. Section3 Lemma10.5/Section5 strong9.2 stay HOLD pending Ahmed: no frozen edit, Section9/10 task or retirement. z3 checked b9fdb9a fixed/countable-test dyadic a.s. limit; current general Green exterior-sphere task preserved, independent LBM monotone-grid queue; reflected folded-path support prepared as unassigned ready backlog. No new literature admission or numbered Lean closure.
+
 ## 3. Section 8 global comparison: FALSE
 
 The universally quantified `hcomparison` in `HarmonicBalls/Proofs/Sec8/TypicalPointStatement.lean:34` is false; this does not refute the local comparison used in Lemma 8.2. The detailed source check and counterexample are in `docs/campaign/audits/RootedLawSourceCheck.md`; the proposed local interface and its unresolved joint-law and measurability bridges are in `docs/campaign/audits/LocalRootedComparisonRepair.md`.
