@@ -48,9 +48,21 @@ in notes/fp-gaps/G-8-2.md, section 4. Used by: firstPass_8_2 (through FirstPass/
 def LocalLQGInsertionWeylOffOrigin : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ lam : Ω → Measure ℂ),
-    ∀ hGFF : IsWholePlaneGFF P hC hcirc, 0 < γ → γ < 2 → α₀ < lqgQ γ →
-    IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ hlam : IsLQGMeasureOfField P γ 0 hcirc lam,
+    ∀ _hGFF : IsWholePlaneGFF P hC hcirc, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+    IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ _hlam : IsLQGMeasureOfField P γ 0 hcirc lam,
     ∀ᵐ ω ∂P, ∀ s : Set ℂ, MeasurableSet s → (0 : ℂ) ∉ s →
       lam ω s = ∫⁻ z in s, ENNReal.ofReal (‖z‖ ^ (γ * α₀)) ∂(μ ω)
+
+/-- FIRST-PASS FROZEN. Birkhoff's pointwise ergodic theorem for bounded measurable functions: for a probability space,
+an ergodic measure-preserving map `T` and a measurable `f` with `|f| ≤ 1`, the Cesàro averages of `f ∘ T^[n]` converge
+almost surely to `∫ f`. Source: Birkhoff (1931); standard; locator pending (e.g. Walters, An Introduction to Ergodic
+Theory, GTM 79, the pointwise ergodic theorem). Used by: firstPass_8_2 (through FirstPass/S8c/Frequency.lean, the phase
+tail LocalPhaseTailStep of notes/fp-gaps/G-8-2.md section 3). -/
+def BirkhoffPointwiseErgodic : Prop :=
+  ∀ (Y : Type u) [MeasurableSpace Y] (ν : MeasureTheory.Measure Y) [MeasureTheory.IsProbabilityMeasure ν]
+    (T : Y → Y) (f : Y → ℝ),
+    MeasureTheory.MeasurePreserving T ν ν → Ergodic T ν → Measurable f → (∀ y, |f y| ≤ 1) →
+    ∀ᵐ y ∂ν, Filter.Tendsto (fun k : ℕ => (∑ n ∈ Finset.range k, f (T^[n] y)) / (k : ℝ)) Filter.atTop
+      (nhds (∫ z, f z ∂ν))
 
 end HarmonicBalls
