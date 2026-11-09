@@ -80,4 +80,20 @@ theorem first_conjunct_of_certificate {D : ℂ → ℂ → ℝ} (hD : IsEuclidea
 #print axioms first_conjunct_of_certificate
 #print axioms iInf_internalMetric_le_ofReal_setDist
 
+/-- The second conjunct of `Ẽ₁` (`pinchFirstEvent`), from a certificate: the internal diameter of the set is below the
+internal distances from `0` to the circle `∂B_δ` inside `O ⊇ closure B_δ`; the set distance from `0` to `∂B_δ` is
+its exit lower bound (`frontier (ball 0 δ) = sphere 0 δ`). -/
+theorem second_conjunct_of_certificate {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) {A O : Set ℂ} {δ : ℝ}
+    (hδ : 0 < δ) (hclO : closure (ball (0 : ℂ) δ) ⊆ O)
+    (hcert : internalDiam D δ A < ⨅ z ∈ sphere (0 : ℂ) δ, internalMetric D O 0 z) :
+    internalDiam D δ A < ENNReal.ofReal (setDist D {0} (sphere (0 : ℂ) δ)) := by
+  have hL := iInf_internalMetric_le_ofReal_setDist hD (U := ball (0 : ℂ) δ) (O := O) (Q' := {0})
+    isOpen_ball hclO (singleton_subset_iff.mpr (mem_ball_self hδ)) (singleton_nonempty _)
+    (by rw [frontier_ball (0 : ℂ) hδ.ne']; exact (NormedSpace.sphere_nonempty (x := (0 : ℂ))).mpr hδ.le)
+  rw [frontier_ball (0 : ℂ) hδ.ne'] at hL
+  simp only [iInf_singleton] at hL
+  exact lt_of_lt_of_le hcert hL
+
+#print axioms second_conjunct_of_certificate
+
 end HarmonicBalls
