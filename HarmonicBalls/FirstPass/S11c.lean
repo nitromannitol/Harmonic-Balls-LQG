@@ -9,8 +9,8 @@ Each theorem `firstPass_<sec>_<k>` concludes the Draft statement of a numbered r
 (`HarmonicBalls/Draft/Section11.lean`). Its hypotheses are Draft statements, EXTERNAL frozen Props of
 `FirstPass/Frozen/S11c.lean` and `FirstPass/Frozen/*`, and the staged `Proposed/` inputs (operator ruling 19:45 UTC).
 
-* Proposition 11.10 (`SmallMetricDiameterLargeMassSquareStmt`, Draft/Section11.lean:214): `firstPass_11_10`, paper
-  lemma:mass-diam (lines 3071-3112) and the proof of Proposition 11.10 (`prop:mass-diam-gen`).
+* Lemma 11.10 (`SmallMetricDiameterLargeMassSquareStmt`, Draft/Section11.lean:214): `firstPass_11_10`, paper
+  lemma:mass-diam (lines 3071-3112) and the proof of Lemma 11.10 (`prop:mass-diam-gen`).
 -/
 
 open MeasureTheory Filter Topology Set Metric
@@ -18,7 +18,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls.S11c
 
-/-- FIRST-PASS, Proposition 11.10 (`SmallMetricDiameterLargeMassSquareStmt`, Draft/Section11.lean:214). For closed dyadic
+/-- FIRST-PASS, Lemma 11.10 (`SmallMetricDiameterLargeMassSquareStmt`, Draft/Section11.lean:214). For closed dyadic
 squares `S₁ ⊆ S₂` with `S₂` disjoint from the unit circle and `C > ε > 0`, the event that the internal diameter of `S₂`
 is at most `ε` and the mass of `S₁` is at least `C` has a measurable subset of positive probability.
 
@@ -46,8 +46,8 @@ theorem firstPass_11_10.{u}
 
 #print axioms firstPass_11_10
 
-/-- **Lemma 11.7 (first pass, `firstPass_11_7`)**: many cone-bad scales, with `δ = p / 8` for the probability `p` of
-Lemma 11.8 at `(γ, γ)`. Route (B2 sections 5-8): `ae_eventually_ncard_of_fixedRoot` with the fixed-root input
+/-- **Lemma 11.7 (first pass, `firstPass_11_7`)**: many cone-bad scales, with `δ = p / 8`, where `p` is the positive
+probability lower bound supplied by Lemma 11.8 at `(γ, γ)` (not necessarily an exact event probability). Route (B2 sections 5-8): `ae_eventually_ncard_of_fixedRoot` with the fixed-root input
 `hRef_of_decoder`. Frozen inputs: `ConeBadEventProbabilityStmt` (hypothesis Q2, Lemma 11.8 at `(γ, γ)`),
 `LocalCampbellMarkedRestrictionFrozen`, `LQGMeasureOfProfileMeasurableFrozen`, `LocalLQGDecoderCommonFrozen`,
 `CameronMartinLocallyLipschitzShiftAbsCont`. Proposed inputs, universal over the probability space:

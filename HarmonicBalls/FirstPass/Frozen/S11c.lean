@@ -60,13 +60,7 @@ def CameronMartinPositivityTransferFrozen : Prop :=
 level inside a closed dyadic square `S2` disjoint from the unit circle, in inner-probability form.
 Why it holds (as printed): each cell has internal diameter tending to zero in probability as the level grows
 (the pointwise small-scale continuity of the LQG metric).
-FLAG (defect (b) of the Lemma 11.10 proof, paper lines 3010-3016, reported 2026-11-09): the printed step passes from
-the pointwise statement to the simultaneous statement over about `4^N` cells by a union bound, which needs a
-quantitative tail that the printed statement does not give. This Prop is therefore the printed simultaneous form
-and must be ruled on by the operator before it is used as an external input.
-Source: Ding-Dubédat-Dunlap-Falconet, Tightness of Liouville first passage percolation for γ < 2 (Publ. IHES 2020),
-Lemma 3.19, as cited by paper `dubedat2020weak` (locator (CHATGPT-frozen-locators.md): DFGPS Lemmas 3.19-3.20, (3.63), (3.67); Proposition 3.17; rectangle reductions).
-Used by: firstPass_11_10. -/
+Attribution (operator note 23:32 UTC; statement audit `notes/fp-gaps/CHATGPT-11-7-11-10-statement-audit.md`, section 2.C): Dubédat-Falconet-Gwynne-Pfeffer-Sun, *Weak LQG metrics and Liouville first passage percolation*, arXiv:1905.00380v2. Quantitative locators: Proposition 3.10 (p. 34, internal square-diameter moments up to the boundary); Lemmas 3.19-3.20 (pp. 45-46, quantitative and simultaneous small-square estimates); Proposition 3.17 (pp. 43-44, admissible logarithmic singularity); equations (3.63) (failure tail) and (3.67) (simultaneous control). The simultaneous statement over the dyadic cells of level N is supplied by (3.63) and (3.67), not by a bare union bound. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3010-3016). Used by: firstPass_11_10. -/
 def DyadicCellDiamSmallFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -87,11 +81,7 @@ def IsClosedRectangle (R : Set ℂ) : Prop :=
 almost surely there is a finite bound on the internal distances within the union. (Generalized on 2026-11-09 from
 closed dyadic squares to closed rectangles: the exterior set of Lemma 11.10 is a union of rectangles, not of dyadic
 squares. The printed text, paper lines 3026-3028, says "a finite union of closed Euclidean squares".)
-Why it holds: the metric is finite and continuous on a compact connected union of rectangles (length metric, finite on
-compact sets).
-Source: Ding-Dubédat-Dunlap-Falconet (Publ. IHES 2020), Lemma 3.9, as cited by paper `dubedat2020weak` in the proof of
-Lemma 11.10 (paper lines 3026-3028; locator (CHATGPT-frozen-locators.md): DFGPS Propositions 3.10, 3.17; finite rectangle coverings; the exact hypotheses of DDDF20 Lemma 3.9 are unverified).
-Used by: firstPass_11_10. -/
+Justification (operator note 23:32 UTC; statement audit section 2.C-2.D): internal boundary estimates, Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.10 (p. 34) and Proposition 3.17 (pp. 43-44), together with the rectangle and singularity reductions: finite square coverings away from 0, and summable dyadic shell bounds near 0 where ξ(Q_γ - α₀) > 0. Ambient metric continuity alone does not justify this statement. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3026-3028); the exact hypotheses of Ding-Dubédat-Dunlap-Falconet, Lemma 3.9 remain unverified. Used by: firstPass_11_10. -/
 def ConnectedSquareUnionDiamFiniteFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
