@@ -70,4 +70,34 @@ theorem ae_rootedMeasure_eq_translate {Ω : Type*} [MeasurableSpace Ω] {P : Mea
   rw [hfun2, hexp] at shifted
   exact hμ.unique shifted
 
+/-- Existence of the rooted LQG measure (the `μ_z` of Lemma 11.7): almost surely the rooted approximations of
+`h^ℂ - γ log|· - z|` converge vaguely to `e^{γ h_1(z)} · ν(· + z)`. Same chain as `ae_rootedMeasure_eq_translate`,
+without the uniqueness step, so that `IsLQGMeasure` holds for the explicit measure below. -/
+theorem ae_isLQGLimit_rooted_translate {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {hC' : Ω → (ℂ → ℝ) → ℝ} {hcirc hcirc' : Ω → ℝ → ℂ → ℝ} (z : ℂ)
+    (hcirc'_eq : ∀ ω r x, hcirc' ω r x = hcirc ω r (x + z) - hcirc ω 1 z)
+    (hW' : IsWholePlaneGFF P hC' hcirc')
+    (hCC : LQGMeasureCoordChange P γ γ hC' hcirc')
+    {ν : Ω → Measure ℂ} (hν : IsLQGMeasureOfField P γ γ hcirc' ν) :
+    ∀ᵐ ω ∂P, IsLQGLimit γ (rootedCircleAverage 0 γ z (hcirc ω))
+      (ENNReal.ofReal (Real.exp (γ * hcirc ω 1 z)) • (ν ω).map (fun x => x + z)) := by
+  filter_upwards [hCC hW' hγ0 hγ2 (gamma_lt_lqgQ hγ0 hγ2) ν hν] with ω hcc
+  have hlim := hcc 1 one_ne_zero (-z)
+  have hfun : (fun ε w => fieldCircleAverage γ (hcirc' ω) (‖(1 : ℂ)‖ * ε) (1 * w + -z) +
+      lqgQ γ * Real.log ‖(1 : ℂ)‖) = fun ε w => fieldCircleAverage γ (hcirc' ω) ε (w - z) := by
+    funext ε w
+    simp [sub_eq_add_neg]
+  have hmeas : (ν ω).map (fun x => (x - -z) / 1) = (ν ω).map (fun x => x + z) := by
+    simp only [div_one, sub_neg_eq_add]
+  rw [hfun, hmeas] at hlim
+  have shifted := isLQGLimit_sub_const hlim (-(hcirc ω 1 z))
+  have hfun2 : (fun e w => fieldCircleAverage γ (hcirc' ω) e (w - z) - -(hcirc ω 1 z)) =
+      rootedCircleAverage 0 γ z (hcirc ω) := by
+    funext e w
+    exact (rootedCircleAverage_zero_eq γ (hcirc ω) (hcirc' ω) z (fun r x => hcirc'_eq ω r x) e w).symm
+  have hexp : -(γ * -(hcirc ω 1 z)) = γ * hcirc ω 1 z := by ring
+  rw [hfun2, hexp] at shifted
+  exact shifted
+
 end HarmonicBalls.S11c
