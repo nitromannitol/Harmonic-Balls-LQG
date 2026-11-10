@@ -8,6 +8,7 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.FirstPass.S11asLocal
 import HarmonicBalls.FirstPass.S11r.CMTransfer
 import HarmonicBalls.FirstPass.S11i.TranslationCanonical
+import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
 # Eventual rooted covariance: internal proportionality and the eventual ambient metric (fp-S11at, round 10)
@@ -516,5 +517,81 @@ theorem rootedCertificateEventualCovarianceStmt_of_transfer {Ω : Type u} [Measu
     (ae_of_all _ fun z _ b u hadm n => by
       obtain ⟨hu, hcomp, hu0⟩ := hAdmReg z b u hadm
       exact ae_shiftedCanon_dilation hCM γ hh hTr z u hu hcomp hu0 hG0 hG0a hinv hstep n)
+
+/-! ### The decoded pair: Campbell-Palm rooted decoders in absolute coordinates
+
+The decoded rooted measure and metric at the root `z` are the observation decoders `κ` (measure) and `dd` (metric) evaluated
+on the Campbell-Palm reference observation `campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z` (Frozen/S11c.lean:251). The
+centred pair (root at `0`) is the translate by `-z`; `centred_pair_identities` gives the identities `hμR`, `hdR`.
+The named hypotheses `hDecInt` and `hMass` of the wrapper are kept as hypotheses (operator note 2026-11-10 08:35 UTC). -/
+
+/-- Decoded rooted measure `μR z ω = κ(obs_D h^{α₀}_z)` in absolute coordinates (rooted LQG measure of Duplantier-Sheffield). -/
+noncomputable def decodedRootMeasure {Ω : Type*} {c₂ : ℂ} {r₂ : ℝ}
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : Measure ℂ :=
+  κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2
+
+/-- Decoded rooted metric `dR z ω = dd(obs_D h^{α₀}_z)` in absolute coordinates (Armitage-Gardiner: the decoder is evaluated on
+the observation code of the root `z`). -/
+noncomputable def decodedRootMetric {Ω : Type*} {c₂ : ℂ} {r₂ : ℝ}
+    (dd : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ)
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
+  dd (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2
+
+/-- Centred decoded measure: the translate of `decodedRootMeasure` by `-z`, so that the root is at `0`. -/
+noncomputable def decodedCentredMeasure {Ω : Type*} {c₂ : ℂ} {r₂ : ℝ}
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : Measure ℂ :=
+  (decodedRootMeasure κ γ α₀ hC z ω).map (fun w : ℂ => w - z)
+
+/-- Centred decoded metric: `D0 z ω x y = dR z ω (x + z) (y + z)`. -/
+noncomputable def decodedCentredMetric {Ω : Type*} {c₂ : ℂ} {r₂ : ℝ}
+    (dd : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ)
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
+  fun x y => decodedRootMetric dd γ α₀ hC z ω (x + z) (y + z)
+
+/-- **Eventual covariance for the decoded pair (Campbell-Palm rooted decoders).** The rooted certificate covariance statement
+`RootedCertificateEventualCovarianceStmt` for the pair `(μR, dR) = (κ ∘ obs, dd ∘ obs)` in absolute coordinates. Proved from
+the Cameron-Martin transfer wrapper `rootedCertificateEventualCovarianceStmt_of_transfer` (n2, CMTransfer.lean) and the
+centred pair identities; the decoded-to-internal identity `hDecInt` and the local mass identity `hMass` remain hypotheses. -/
+theorem rootedCertificateEventualCovarianceStmt_decoded {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u}) {γ α₀ : ℝ}
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hh : IsWholePlaneGFF P hC hcirc)
+    (hTr : ∀ z : ℂ, IsWholePlaneGFF P (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
+    (hCont : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
+    (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop)
+    (hAdmReg : ∀ z b u, Adm z b u → ContDiff ℝ (⊤ : ℕ∞) u ∧ HasCompactSupport u ∧ Real.circleAverage u 0 1 = 0)
+    (rR : ℂ → ℝ)
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (dd : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ)
+    (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
+    (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
+    (G : Set S11n.CanonSpace) (hG : MeasurableSet G) (hGa : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G)
+    (hGreg : ∀ L ∈ G, IsEuclideanLengthMetric (Dd L))
+    (G0 : Set S11n.CanonSpace) (hG0 : MeasurableSet G0) (hG0a : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G0)
+    (hinv : dilOp ⁻¹' G0 = G0)
+    (hstep : ∀ L ∈ G0, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      Dμ (dilOp L) = ENNReal.ofReal a • (Dμ L).map (fun w : ℂ => w / (((1 / 2 : ℝ)) : ℂ)) ∧
+      ∀ x y : ℂ, Dd (dilOp L) x y = b * Dd L (((1 / 2 : ℝ) : ℂ) * x) (((1 / 2 : ℝ) : ℂ) * y))
+    (hDecInt : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, ∃ ρ r β : ℝ, 0 < ρ ∧ 0 < r ∧ 0 < β ∧
+        closedBall (0 : ℂ) (2 * ρ) ⊆ ball 0 b ∩ ball 0 (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂) ∧
+        ∀ x ∈ closedBall (0 : ℂ) r, ∀ y ∈ closedBall (0 : ℂ) r,
+          decodedCentredMetric dd γ α₀ hC z ω x y =
+            β * (internalMetric (Dd (shiftedCanon γ hC hcirc z u ω)) (ball 0 (2 * ρ)) x y).toReal)
+    (hMass : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
+        (decodedCentredMeasure κ γ α₀ hC z ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
+          (ENNReal.ofReal a • Dμ (shiftedCanon γ hC hcirc z u ω)).restrict
+            (closedBall 0 (7 * FirstPassS11ah.certScale n))) :
+    RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M Adm rR
+      (decodedRootMeasure κ γ α₀ hC) (decodedRootMetric dd γ α₀ hC) Dμ Dd :=
+  rootedCertificateEventualCovarianceStmt_of_transfer hCM hC hcirc hh hTr c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
+    hCont hU Adm hAdmReg rR (decodedCentredMeasure κ γ α₀ hC) (decodedRootMeasure κ γ α₀ hC)
+    (decodedCentredMetric dd γ α₀ hC) (decodedRootMetric dd γ α₀ hC) Dμ Dd G hG hGa hGreg G0 hG0 hG0a hinv hstep
+    (centred_pair_identities (decodedRootMeasure κ γ α₀ hC) (decodedRootMetric dd γ α₀ hC)).1
+    (centred_pair_identities (decodedRootMeasure κ γ α₀ hC) (decodedRootMetric dd γ α₀ hC)).2
+    hDecInt hMass
 
 end FirstPassS11at
