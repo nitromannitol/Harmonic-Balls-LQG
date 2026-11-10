@@ -26,7 +26,7 @@ open scoped ENNReal
 
 /-- The punctured disc `B(z, r) ∖ {z}` is preconnected: it is the image of the half-plane `{Re w < log r}` under
 `w ↦ z + exp w`, since `exp` maps that half-plane onto the punctured disc of radius `r` about `0`. -/
-theorem isPreconnected_ball_diff_center {z : ℂ} {r : ℝ} (hr : 0 < r) :
+theorem isPreconnected_ball_diff_center_of_pos {z : ℂ} {r : ℝ} (hr : 0 < r) :
     IsPreconnected (ball z r \ {z}) := by
   have hconv : Convex ℝ {w : ℂ | w.re < Real.log r} :=
     convex_halfSpace_lt (f := Complex.re) ⟨fun x y => by simp, fun c x => by simp⟩ _
@@ -89,7 +89,7 @@ whole-space version `isConnected_compl_singleton_of_one_lt_rank`). -/
 theorem isPreconnected_diff_singleton_of_root {D : Set ℂ} (hD : IsOpen D) (hDp : IsPreconnected D) {z : ℂ}
     (hz : z ∈ D) : IsPreconnected (D \ {z}) := by
   obtain ⟨r, hr, hBD⟩ := Metric.isOpen_iff.1 hD z hz
-  have hBp := isPreconnected_ball_diff_center (z := z) hr
+  have hBp := isPreconnected_ball_diff_center_of_pos (z := z) hr
   have hB : ball z r \ {z} ⊆ D \ {z} := sdiff_subset_sdiff_left hBD
   intro u v hu hv hcov ha hb
   obtain ⟨a, ha⟩ := ha
