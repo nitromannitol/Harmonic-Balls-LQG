@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.S11
 import HarmonicBalls.FirstPass.S11c
 import HarmonicBalls.FirstPass.S11i.Corrected11_13
+import HarmonicBalls.FirstPass.S11i.Step8Event
 import HarmonicBalls.FirstPass.S11j.FieldAssembly11_15
 import HarmonicBalls.FirstPass.S11x
 import HarmonicBalls.FirstPass.Closure.Sec6
@@ -390,5 +391,51 @@ theorem closure_11_12
     hfr hmass hCMAbs hCMRew hComp
     (closure_11_9 hCMAbs hComp hfr hmass hShift hFD hAx hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2)
     hMf hDiam hMk hholder
+
+/-- **Closure of Lemma 11.13, canonical form** (`CorrectedLemma11_13CanonicalStmt`, `firstPass_11_13_canonical`): canonical
+Weyl exponent `ξ = lqgXi γ`, model fixed before the density. Part (c), the Lemma 11.12 event, is discharged by the closed
+corrected Lemma 11.12 `closure_11_12` (same inputs, through `pinchEventGamma_exists`). The one remaining named hypothesis is
+part (d), `Step8IdentityGivenPinchEventCanonicalStmt` (the rooted/marked/zoom identity, Step 8 of the corrected proof of
+`lemma:mu_h-pinch-bad`). -/
+theorem closure_11_13_canonical
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hLen : LQGMetricLengthUnivFrozen.{u})
+    (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
+      LocalMetricReplacementStmt.{u} γ ξ c₁ c₂ r₁ r₂)
+    (hμW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ α₀ hC hcirc)
+    (hLoc : LocalLQGDecoderCommonFrozen.{u})
+    (hCanon : LQGCanonicalDecodersExistStmt.{u})
+    (hNonat : HarmonicBalls.S11n.MeasureDecoder.LQGMeasureNonatomicAll.{u})
+    (hExists : WholePlaneGFFExistsFrozen.{0})
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u})
+    (hmass : LQGMassFunctionalMeasurableFrozen.{u})
+    (hCMAbs : CameronMartinGFFMutualAbsCont.{u})
+    (hCMRew : HarmonicBalls.S11aj.CameronMartinGFFReweighting.{u})
+    (hComp : WeylScalingCompositionFrozen.{u})
+    (hMf : LQGMassInnerMeasurableFrozen.{u})
+    (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{u})
+    (hholder : GreenPotentialHolderStmt.{u})
+    (hShift : LQGMetricContinuousShiftFactI.{u}) (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
+    (hDC : DyadicCellDiamSmallFrozen.{u}) (hCMT : CameronMartinEventTransferFrozen.{u})
+    (hPos10 : LQGMeasureSquarePositiveFrozen.{u}) (hMassM : LQGMeasureSquareMeasurableFrozen.{u})
+    (hSupM : LQGMetricSupMeasurableFrozen.{u}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{u})
+    (hW : WeylInternalClosedFrozen)
+    (hM1 : WeylShiftedSupMeasurableFrozen.{u}) (hM2 : WeylShiftedMassMeasurableFrozen.{u})
+    (hId : Step8IdentityGivenPinchEventCanonicalStmt.{u}) :
+    CorrectedLemma11_13CanonicalStmt.{u} := by
+  have h12 : CorrectedLemma11_12Stmt.{u} :=
+    closure_11_12 hAx hLen hN2 hμW hLoc hCanon hNonat hExists hDG hCC hE hfr hmass hCMAbs hCMRew hComp hMf hDiam
+      hMk hholder hShift hFD hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
+  exact firstPass_11_13_canonical (fun γ ξ α₀ Ω _ P hC hcirc => hAx Ω P γ ξ α₀ hC hcirc)
+    (fun γ Ω _ P hC hcirc => hE Ω P γ γ hC hcirc)
+    (fun U V W T Q' Q δ₀ hgeo γ M hγ hγ2 hM => pinchEventGamma_exists (ξ := lqgXi γ) h12 hgeo hγ hγ2 hM) hId
 
 end HarmonicBalls.Closure

@@ -94,7 +94,33 @@ def Step8IdentificationCanonicalStmt : Prop :=
   ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaCanonicalStmt.{u} U T Q' Q γ M E ∧
     Step8IdentityCanonicalStmt.{u} γ α₀ U V W T Q' Q δ₀ M E
 
-/-- **Lemma 11.13 (canonical), first pass.** `CorrectedLemma11_13CanonicalStmt` from the named input `hStep8`. The model
+/-- Part (c) of the Step 8 identification at the canonical exponent: a Lemma 11.12 event `E` at `γ`, for every buffered
+geometry, `0 < γ < 2` and `M > 0`. Closed in `Closure/Sec11.lean` (`closure_11_13_canonical`) by the closed corrected
+Lemma 11.12 (`closure_11_12`, through `pinchEventGamma_exists`, `Step8Event.lean`). -/
+def Step8PinchEventCanonicalStmt : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+  ∀ γ M : ℝ, 0 < γ → γ < 2 → 0 < M →
+  ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaCanonicalStmt.{u} U T Q' Q γ M E
+
+/-- Part (d) of the Step 8 identification at the canonical exponent: the rooted/marked/zoom identity
+`Step8IdentityCanonicalStmt` (Step 8 of the corrected proof of `lemma:mu_h-pinch-bad`, corrected lines 3848-3930) for a
+Lemma 11.12 event `E` at `γ`. The premise is the conclusion of part (c), so (c) and (d) together are equivalent to
+`Step8IdentificationCanonicalStmt` (`step8Identification_canonical_of_split`). This is the only named input left open. -/
+def Step8IdentityGivenPinchEventCanonicalStmt : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+  ∀ γ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
+  (∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaCanonicalStmt.{u} U T Q' Q γ M E) →
+  ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaCanonicalStmt.{u} U T Q' Q γ M E ∧
+    Step8IdentityCanonicalStmt.{u} γ α₀ U V W T Q' Q δ₀ M E
+
+/-- The split is exact: parts (c) and (d) together give `Step8IdentificationCanonicalStmt`. -/
+theorem step8Identification_canonical_of_split (hPE : Step8PinchEventCanonicalStmt.{u})
+    (hId : Step8IdentityGivenPinchEventCanonicalStmt.{u}) : Step8IdentificationCanonicalStmt.{u} := by
+  intro U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM
+  exact hId U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM (hPE U V W T Q' Q δ₀ hgeom γ M hγ0 hγ2 hM)
+
+/-- **Lemma 11.13 (canonical), first pass.** `CorrectedLemma11_13CanonicalStmt` from the two named inputs `hPE` (part (c),
+the Lemma 11.12 event) and `hId` (part (d), the Step 8 identity). The model
 `(Ω, P, hC, hcirc, μ, D)` is fixed before the density, and the density is `δ = min (q/4) (1/2)`, where `q` is the common
 probability of the Lemma 11.12 event in every γ-model (`Step8IdentityCanonicalStmt`, first conjunct). The probability
 normalisation of `P` comes from `FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF`. -/
@@ -103,10 +129,11 @@ theorem firstPass_11_13_canonical
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
     (hMeas : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ γ hC hcirc)
-    (hStep8 : Step8IdentificationCanonicalStmt.{u}) :
+    (hPE : Step8PinchEventCanonicalStmt.{u}) (hId : Step8IdentityGivenPinchEventCanonicalStmt.{u}) :
     CorrectedLemma11_13CanonicalStmt.{u} := by
   intro U V W T Q' Q δ₀ hgeom γ α₀ hγ0 hγ2 hα M hM Ω inst P hC hcirc μ D hG hμ hDm
-  obtain ⟨E, hPG, h8⟩ := hStep8 U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM
+  obtain ⟨E, hPG, h8⟩ :=
+    step8Identification_canonical_of_split hPE hId U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM
   obtain ⟨-, hW⟩ := hPG
   obtain ⟨q, hqeq, hfreq⟩ := h8
   have : IsProbabilityMeasure P := FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hG
