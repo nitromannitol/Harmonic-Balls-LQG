@@ -2,6 +2,7 @@ import HarmonicBalls.FirstPass.S11p
 import HarmonicBalls.FirstPass.S11p.NullSigma
 import HarmonicBalls.FirstPass.S11p.ModConstComposition
 import HarmonicBalls.FirstPass.S11p.FiniteWeighted
+import HarmonicBalls.FirstPass.S11p.BaseFinite
 import HarmonicBalls.FirstPass.Frozen.S11p
 import HarmonicBalls.FirstPass.Frozen.S11k
 
@@ -148,6 +149,25 @@ theorem exists_exterior_annulusGreenPotentialSup_of_frozen_base {Ω : Type u} [M
         (∀ᵐ ω ∂P, G ω = annulusGreenPotentialSup (μ ω) 0 3 6) ∧ ∀ᵐ ω ∂P, G ω ≠ ⊤ :=
   exists_exterior_annulusGreenPotentialSup_of_frozen hGFF γ α₀ μ hγ0 hγ2 hα hLQG hFr hBr W hsph hWA
     (ae_annulusGreenPotentialSup_ne_top_of_withDensity P γ α₀ μ₀ μ hBase hSing)
+
+/-- Route (ii) with the base finiteness discharged: `hBase` is derived from HB Prop. 2.5 (`GreenPotentialHolderStmt`,
+cited, Draft/Section2.lean) for the exponent-`0` base measure `μ₀` (`h₀`), with the Proposed non-atomicity `hNa0`
+(`FirstPass/S11p/BaseFinite.lean`). `hSing` stays a named hypothesis (`singular_measure_identity`, `FirstPass/S11q.lean`). -/
+theorem exists_exterior_annulusGreenPotentialSup_of_frozen_holder {Ω : Type u} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc) (γ α₀ : ℝ) (μ μ₀ : Ω → Measure ℂ) (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    (hα : α₀ < lqgQ γ) (hLQG : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hFr : LQGMassInnerMeasurableFrozen.{u}) (hBr : WholePlaneCircleAverageLimitFrozen.{u})
+    (hholder : GreenPotentialHolderStmt.{u}) (h₀ : IsLQGMeasureOfField P γ 0 hcirc μ₀)
+    (hNa0 : LQGMeasureNonatomic P γ 0 hC hcirc)
+    (W : Set ℂ) (hsph : sphere (0 : ℂ) 1 ⊆ (closure W)ᶜ)
+    (hWA : ∀ U : Set ℂ, IsOpen U → U ⊆ annulus (0 : ℂ) 3 6 → closure U ⊆ (closure W)ᶜ)
+    (hSing : ∀ᵐ ω ∂P, μ ω = (μ₀ ω).withDensity (fun z => ENNReal.ofReal (LQGSingularWeight γ α₀ z))) :
+    ∃ G : Ω → ℝ≥0∞,
+      Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] G ∧
+        (∀ᵐ ω ∂P, G ω = annulusGreenPotentialSup (μ ω) 0 3 6) ∧ ∀ᵐ ω ∂P, G ω ≠ ⊤ :=
+  exists_exterior_annulusGreenPotentialSup_of_frozen_base hGFF γ α₀ μ μ₀ hγ0 hγ2 hα hLQG hFr hBr W hsph hWA
+    (ae_annulusGreenPotentialSup_ne_top_base hGFF hγ0 hγ2 h₀ hNa0 hholder) hSing
 
 end HarmonicBalls
 

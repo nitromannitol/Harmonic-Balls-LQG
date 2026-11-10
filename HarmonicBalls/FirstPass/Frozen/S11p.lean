@@ -16,10 +16,11 @@ universe u
 
 /-- FIRST-PASS FROZEN. Circle averages of the whole-plane GFF are almost sure limits of pairings with unit-mass test
 functions concentrating on the circle (EXTERNAL; Duplantier-Sheffield, arXiv:0808.1560v2, Section 3.1 and Proposition
-3.1; Bou-Rabee-Gwynne, arXiv:2208.11795v3, eq. (2.6)). Truth check: PENDING (proof idea: take radial unit-mass bumps
-`ψ_j` around `z` with support shrinking to the circle `sphere z r`; then `(h^ℂ, ψ_j)` is the average of `h^ℂ_s(z)` over
-`s` against a unit-mass profile, which tends to `h^ℂ_r(z)` by the a.s. joint continuity of `(s, z) ↦ h^ℂ_s(z)`,
-`IsWholePlaneGFF.ae_continuousOn_circle`). Locator: operator source-check pending.
+3.1; Bou-Rabee-Gwynne, arXiv:2208.11795v3, Section 2.1, eq. (2.1), printed p. 8). Truth check: TRUE (ChatGPT, 00:53 UTC);
+derivable from `IsWholePlaneGFF` (mixed pairing/circle covariances in `covariance_eq`; proof notes/fp-gaps/CHATGPT-n4-circle-avg-limit.md
+section 2). Proof idea: take radial unit-mass bumps `ψ_j` around `z` with support shrinking to the circle `sphere z r`; then
+`(h^ℂ, ψ_j)` is the average of `h^ℂ_s(z)` over `s` against a unit-mass profile, which tends to `h^ℂ_r(z)` by the a.s. joint
+continuity of `(s, z) ↦ h^ℂ_s(z)`, `IsWholePlaneGFF.ae_continuousOn_circle` (radial-integral identity: section 3).
 
 Statement: for every whole-plane GFF `(P, hC, hcirc)`, every open `O` containing the circle `sphere z r` (`0 < r`), there
 is a sequence `ψ_j` of test functions with `tsupport ψ_j ⊆ O` and `∫ ψ_j = 1` such that almost surely
