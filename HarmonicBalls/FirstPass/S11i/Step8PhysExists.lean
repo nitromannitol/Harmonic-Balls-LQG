@@ -2,6 +2,7 @@ import HarmonicBalls.FirstPass.S11i.Corrected11_13
 import HarmonicBalls.FirstPass.S11i.Step8Event
 import HarmonicBalls.FirstPass.S11i.Step8ZoomFrequency
 import HarmonicBalls.FirstPass.S11i.HzoomScale
+import HarmonicBalls.FirstPass.S11i.ZoomMetricAlpha0
 
 /-!
 # Step 8 physical frequency with an existential event (fp-S11-13-physExists-adapter, owner n3)
@@ -171,9 +172,118 @@ theorem step8Identity_given_pinchEvent_canonical_of_route2 (hCC0 : CoordChangeZe
     Step8IdentityGivenPinchEventCanonicalStmt.{0} :=
   step8Identity_given_pinchEvent_canonical_of_physExists (step8PhysExists_of_route2 hCC0 hCal hIns)
 
+/-! ### Route 1 (fp-S11-13-route1-scales): scale transfer at insertion `α` by normalization
+
+Route 1 (Codex note, eq. (3)) gives the scale `k` of the insertion-`α` statement from the scale-`0` statement of the normalized
+insertion-`α` model. The normalization is `normMeasureAlpha` (measure, `Q - α` coefficient, `S11i/Step8PhysReduction.lean`) and
+`zoomMetricNormAlpha_of_isLQGMetricOfField` (metric, `S11i/ZoomMetricAlpha0.lean`). The only insertion transfer needed is at
+`k = 0`, the named binder `Step8InsertionTransferK0Stmt`. No decoder outside `ball 0 1` is used. -/
+
+/-- **NAMED BINDER (route 1, k = 0 insertion transfer, owner n4).** `Step8InsertionTransferStmt` at the unit scale only: the
+insertion-zero scale-`0` statement implies the insertion-`α` scale-`0` statement. Until n4's `allModelsAt_insertion_of_zero_k0`
+lands, this Prop is the input. -/
+def Step8InsertionTransferK0Stmt : Prop :=
+  ∀ (γ α q δ M : ℝ) (U V W T Q' Q : Set ℂ), IsBufferedPinchGeometry U V W T Q' Q δ →
+    0 < γ → γ < 2 → α < lqgQ γ →
+    AllModelsAt.{0} γ (lqgXi γ) 0 q U V W T Q' Q δ M 0 → AllModelsAt.{0} γ (lqgXi γ) α q U V W T Q' Q δ M 0
+
+/-- At the scale `k = 0` the physical statement is the unit-ball frequency (`2^0 = 1`). -/
+theorem physicalAt_zero_of_unitBall {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {q δ M : ℝ}
+    {U V W T Q' Q : Set ℂ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : UnitBallFrequencyStmt P q U V W T Q' Q δ M μ D) :
+    PhysicalAt P q U V W T Q' Q δ M 0 μ D := by
+  unfold UnitBallFrequencyStmt at h
+  unfold PhysicalAt
+  simpa only [pow_zero, one_mul] using h
+
+/-- The insertion-zero unit frequency gives the insertion-zero statement at scale `0`. -/
+theorem allModelsAt_zero_scale_zero_of_unit {γ q δ M : ℝ} {U V W T Q' Q : Set ℂ} {F : Set Step8Code}
+    (hU : InsertionZeroUnitStmt.{0} γ F U V W T Q' Q δ M) (hq : CommonProb.{0} γ F q) :
+    AllModelsAt.{0} γ (lqgXi γ) 0 q U V W T Q' Q δ M 0 := by
+  intro Ω _ P hC hcirc μ D hG hμ hD
+  exact physicalAt_zero_of_unitBall (hU Ω P hC hcirc μ D hG hμ hD q hq)
+
+/-- **Route 1 zoom (insertion `α`).** For a fixed insertion-`α` model, the unit-ball frequency of every zoomed pair
+`(a · zoomMeasure μ k, b · zoomMetric D k)` holds almost surely, given the scale-`0` statement `h0` at insertion `α` applied to
+the normalized model `(normField 2^k, normCirc 2^k, normMeasureAlpha, Dk)`. The constants are `a = e^{γ · (-C_{α,2^k})}` and
+`b = B⁻¹`, with `B` from `zoomMetricNormAlpha_of_isLQGMetricOfField`. -/
+theorem hzoom_alpha_all_of_scale_zero {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α q δ M : ℝ}
+    {U V W T Q' Q : Set ℂ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    {D : Ω → ℂ → ℂ → ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hG : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hD : IsLQGMetricOfField P γ ξ α hC D) (hCC : LQGMeasureCoordChange P γ α hC hcirc)
+    (h0 : AllModelsAt.{0} γ ξ α q U V W T Q' Q δ M 0) :
+    ∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      ∀ᵐ w ∂(ENNReal.ofReal a • zoomMeasure (μ ω) k), w ∈ ball (0 : ℂ) 1 →
+        Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+          CertificateEvent (ENNReal.ofReal a • zoomMeasure (μ ω) k) (fun x y => b * zoomMetric (D ω) k x y)
+            (pinchOmegaGeom W Q δ) U V W T Q' Q δ M ((2 : ℝ)⁻¹ ^ n) w}.ncard : ℕ) : ℝ) / (N : ℝ))
+          atTop (𝓝 q) := by
+  intro k
+  obtain ⟨Dk, hDk, hscale⟩ :=
+    HarmonicBalls.FirstPassS11iZoomMetricAlpha0.zoomMetricNormAlpha_of_isLQGMetricOfField hG hD k
+  have hR : (2 : ℝ) ^ k ≠ 0 := by positivity
+  have hGk := isWholePlaneGFF_normalized hG hR
+  have hμk := HarmonicBalls.FirstPassS11iStep8PhysReduction.isLQGMeasureOfField_normMeasureAlpha
+    hγ0 hγ2 hα hG hμ hCC k
+  have hU := h0 Ω P (normField ((2 : ℝ) ^ k) hC hcirc) (normCirc ((2 : ℝ) ^ k) hcirc)
+    (HarmonicBalls.FirstPassS11iStep8PhysReduction.normMeasureAlpha γ α μ hcirc k) Dk hGk hμk hDk
+  unfold PhysicalAt at hU
+  filter_upwards [hU, hscale] with ω hω hsc
+  obtain ⟨B, hB, hBeq⟩ := hsc
+  have hmet : (fun x y => B⁻¹ * zoomMetric (D ω) k x y) = Dk ω := by
+    funext x y
+    rw [hBeq x y, ← mul_assoc, inv_mul_cancel₀ hB.ne', one_mul]
+  refine ⟨Real.exp (γ * (-(hcirc ω ((2 : ℝ) ^ k) 0 + (lqgQ γ - α) * Real.log ((2 : ℝ) ^ k)))), B⁻¹,
+    Real.exp_pos _, inv_pos.mpr hB, ?_⟩
+  have hmeas : ENNReal.ofReal (Real.exp (γ * (-(hcirc ω ((2 : ℝ) ^ k) 0 +
+      (lqgQ γ - α) * Real.log ((2 : ℝ) ^ k))))) • zoomMeasure (μ ω) k =
+      HarmonicBalls.FirstPassS11iStep8PhysReduction.normMeasureAlpha γ α μ hcirc k ω := rfl
+  rw [hmeas, hmet]
+  simp only [pow_zero, one_mul] at hω
+  exact hω
+
+/-- **Route 1: every scale at insertion `α`.** The scale-`0` insertion-`α` statement implies the statement at every scale `k`
+(`hphys_of_zoom_const_family` applied to `hzoom_alpha_all_of_scale_zero`). -/
+theorem allModelsAt_all_scales_of_scale_zero {γ ξ α q δ M : ℝ} {U V W T Q' Q : Set ℂ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hCCα : HarmonicBalls.FirstPassS11iStep8PhysReduction.CoordChangeAlpha0Stmt.{0})
+    (h0 : AllModelsAt.{0} γ ξ α q U V W T Q' Q δ M 0) (k : ℕ) :
+    AllModelsAt.{0} γ ξ α q U V W T Q' Q δ M k := by
+  intro Ω _ P hC hcirc μ D hG hμ hD
+  unfold PhysicalAt
+  exact (HarmonicBalls.FirstPassS11iStep8Transfer.hphys_of_zoom_const_family P U V W T Q' Q δ M q μ D
+    (hzoom_alpha_all_of_scale_zero hγ0 hγ2 hα hG hμ hD (hCCα γ α Ω P hC hcirc) h0)) k
+
+/-- **Route 1 (universe 0): `Step8PhysExistsStmt.{0}`.** Take the pinch event `E` of the calibration binder (c); for each common
+probability `q` of `E`, calibration gives the coding event `F` with the insertion-zero unit frequency, which gives the scale-`0`
+insertion-zero statement; the k = 0 transfer (binder `Step8InsertionTransferK0Stmt`) gives the scale-`0` insertion-`α`
+statement; route 1 gives every scale. The coordinate change is needed only at the insertion `α` (`CoordChangeAlpha0Stmt`). -/
+theorem step8PhysExists_of_route1 (hCCα : HarmonicBalls.FirstPassS11iStep8PhysReduction.CoordChangeAlpha0Stmt.{0})
+    (hCal : Step8EventCalibrationStmt.{0}) (hK0 : Step8InsertionTransferK0Stmt) :
+    Step8PhysExistsStmt.{0} := by
+  intro U V W T Q' Q δ hgeom γ α M hγ0 hγ2 hα hM hE
+  obtain ⟨E, F, hPG, hcal, hU⟩ := hCal U V W T Q' Q δ M γ hgeom hγ0 hγ2 hM hE
+  refine ⟨E, hPG, fun q hq k => ?_⟩
+  exact allModelsAt_all_scales_of_scale_zero hγ0 hγ2 hα hCCα
+    (hK0 γ α q δ M U V W T Q' Q hgeom hγ0 hγ2 hα (allModelsAt_zero_scale_zero_of_unit hU (hcal q hq))) k
+
+/-- **Route 1 consumer (universe 0):** `Step8IdentityGivenPinchEventCanonicalStmt.{0}` from the Proposed insertion-`α`
+coordinate change `CoordChangeAlpha0Stmt`, the calibration binder `hCal`, and the k = 0 transfer `hK0`. -/
+theorem step8Identity_given_pinchEvent_canonical_of_route1
+    (hCCα : HarmonicBalls.FirstPassS11iStep8PhysReduction.CoordChangeAlpha0Stmt.{0})
+    (hCal : Step8EventCalibrationStmt.{0}) (hK0 : Step8InsertionTransferK0Stmt) :
+    Step8IdentityGivenPinchEventCanonicalStmt.{0} :=
+  step8Identity_given_pinchEvent_canonical_of_physExists (step8PhysExists_of_route1 hCCα hCal hK0)
+
 end HarmonicBalls.FirstPassS11iStep8PhysExists
 
 #print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_physExists
+#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route1
+#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8PhysExists_of_route1
+#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.allModelsAt_all_scales_of_scale_zero
+
+
 #print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.allModelsAt_zero_of_unit
 #print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8PhysExists_of_route2
 #print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route2

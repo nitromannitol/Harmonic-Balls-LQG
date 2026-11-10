@@ -83,6 +83,62 @@ theorem firstPass_11_13_final
     hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
     (HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route2 hCC0 hCal hIns)
 
+/-! ### Route-1 variant (fp-S11-13-route1-scales, owner n3)
+
+`firstPass_11_13_final` (route 2) is kept unchanged. The route-1 variant takes the scale transfer at insertion `α` from the
+scale `0` only (`Step8InsertionTransferK0Stmt`, n4's `k = 0` transfer, named binder) and the normalization of the metric
+(`zoomMetricNormAlpha_of_isLQGMetricOfField`, proved in `S11i/ZoomMetricAlpha0.lean`). The measure normalization at insertion
+`α` needs the coordinate change at `α` (`CoordChangeAlpha0Stmt`, Proposed, pending operator source-check); it also gives the
+closure's `hCC` at `α = 0`, so `hCC0` is not a separate binder here.
+
+OPEN list of the route-1 variant (named binders, exact types):
+1. `hN2` `LocalMetricReplacementStmt` (classification pending, as in route 2).
+2. `hCal` `Step8EventCalibrationStmt.{0}` (route 1 (c), `S11i/Step8PhysExists.lean`): OPEN, owner n1, math pending.
+3. `hK0` `Step8InsertionTransferK0Stmt` (route 1 (b) at `k = 0`): OPEN, owner n4 (`allModelsAt_insertion_of_zero_k0`).
+4. `hCCα` `CoordChangeAlpha0Stmt.{0}` (`Proposed/LQG.lean:116`, Fact 2.1 IV at every `α`): PROPOSED, pending operator source-check.
+5. PROPOSED, pending operator source-check: `hμW`, `hNonat`, `hDG`, `hE` (as in route 2).
+6. FROZEN: the remaining binders (as in route 2). -/
+
+theorem firstPass_11_13_final_route1
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
+    (hLen : LQGMetricLengthUnivFrozen.{0})
+    (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
+      LocalMetricReplacementStmt.{0} γ ξ c₁ c₂ r₁ r₂)
+    (hμW : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ α₀ hC hcirc)
+    (hLoc : LocalLQGDecoderCommonFrozen.{0})
+    (hCanon : LQGCanonicalDecodersExistStmt.{0})
+    (hNonat : HarmonicBalls.S11n.MeasureDecoder.LQGMeasureNonatomicAll.{0})
+    (hExists : WholePlaneGFFExistsFrozen.{0})
+    (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hCCα : HarmonicBalls.FirstPassS11iStep8PhysReduction.CoordChangeAlpha0Stmt.{0})
+    (hE : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{0})
+    (hmass : LQGMassFunctionalMeasurableFrozen.{0})
+    (hCMAbs : CameronMartinGFFMutualAbsCont.{0})
+    (hCMRew : HarmonicBalls.S11aj.CameronMartinGFFReweighting.{0})
+    (hComp : WeylScalingCompositionFrozen.{0})
+    (hMf : LQGMassInnerMeasurableFrozen.{0})
+    (hDiam : LQGInternalDiamInnerMeasurableFrozen.{0})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{0})
+    (hholder : GreenPotentialHolderStmt.{0})
+    (hShift : LQGMetricContinuousShiftFactI.{0}) (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
+    (hDC : DyadicCellDiamSmallFrozen.{0}) (hCMT : CameronMartinEventTransferFrozen.{0})
+    (hPos10 : LQGMeasureSquarePositiveFrozen.{0}) (hMassM : LQGMeasureSquareMeasurableFrozen.{0})
+    (hSupM : LQGMetricSupMeasurableFrozen.{0}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
+    (hW : WeylInternalClosedFrozen)
+    (hM1 : WeylShiftedSupMeasurableFrozen.{0}) (hM2 : WeylShiftedMassMeasurableFrozen.{0})
+    (hCal : HarmonicBalls.FirstPassS11iStep8PhysExists.Step8EventCalibrationStmt.{0})
+    (hK0 : HarmonicBalls.FirstPassS11iStep8PhysExists.Step8InsertionTransferK0Stmt) :
+    CorrectedLemma11_13CanonicalStmt.{0} :=
+  HarmonicBalls.Closure.closure_11_13_canonical.{0} hAx hLen hN2 hμW hLoc hCanon hNonat hExists hDG
+    (fun Ω _ P γ hC hcirc => hCCα γ 0 Ω P hC hcirc) hE hfr hmass hCMAbs hCMRew hComp hMf hDiam hMk hholder hShift hFD
+    hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
+    (HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route1 hCCα hCal hK0)
+
 end HarmonicBalls.FirstPassS11iFinal11_13
 
 #print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final
+#print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final_route1
