@@ -252,6 +252,54 @@ theorem exists_exit_data {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric
   intro τ hτ
   exact hρD (ball_subset_closedBall (hc2ball _ (hall τ hτ)))
 
+/-- **Eventual Step F** (R2 Steps E-F, section 3 of CHATGPT-n2-R2-rooted-length.md). Near the root, the internal physical
+metric of `weylPhysicalE d ξ f` on `D` is bounded by the Weyl distance: `I_D(x,z) ≤ W(x,z)` for `x` close to `z`. This is the
+core of `internalPhysicalMetric_tendsto_root`, and the source of finiteness near the root (`RootedRootFinite.lean`). -/
+theorem internalMetric_le_weylScaling_eventually {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ}
+    {D : Set ℂ} (hD : IsOpen D) {z : ℂ} (hz : z ∈ D) (hfc : ContinuousOn f (D \ {z}))
+    (hW : Tendsto (fun x => weylScaling d ξ f x z) (𝓝 z) (𝓝 0)) :
+    ∀ᶠ x in 𝓝 z, internalMetric (weylPhysicalE d ξ f) D x z ≤ weylScaling d ξ f x z := by
+  obtain ⟨c0, c2, m, hc0, hc02, hm, hexit⟩ := exists_exit_data hd ξ hD hz hfc
+  have hη : (0 : ℝ≥0∞) < ENNReal.ofReal (m * (c2 - c0)) :=
+    ENNReal.ofReal_pos.2 (mul_pos hm (by linarith))
+  have hzU : z ∈ {v | d z v < c0} := by
+    rw [mem_ofPred_eq, hd.self_eq_zero z]
+    exact hc0
+  filter_upwards [(isOpen_dist_lt_set hd z c0).mem_nhds hzU,
+    hW.eventually (gt_mem_nhds hη)] with x hxU hxW
+  apply le_of_forall_gt_imp_ge_of_dense
+  intro b hb
+  have h := lt_min hb hxW
+  simp only [weylScaling, iInf_lt_iff] at h
+  obtain ⟨T, p, hp, hp0, hpT, hcost⟩ := h
+  have hx0 : d z (p 0) < c0 := by
+    rw [hp0]
+    exact hxU
+  have hcostη : ∫⁻ t in Icc 0 T, ENNReal.ofReal (Real.exp (ξ * f (p t))) <
+      ENNReal.ofReal (m * (c2 - c0)) :=
+    lt_of_lt_of_le hcost (min_le_right _ _)
+  have hPD := hexit T p hp hx0 hcostη
+  obtain ⟨P, hPt, hPle⟩ :=
+    exists_path_range_le (E := weylPhysicalE d ξ f) hp.1 hp.2.1
+  have hPD' : ∀ t, P t ∈ D := by
+    intro t
+    rw [hPt t]
+    refine hPD _ ⟨mul_nonneg hp.1 t.2.1, ?_⟩
+    linarith [mul_le_mul_of_nonneg_left t.2.2 hp.1]
+  have hIP : internalMetric (weylPhysicalE d ξ f) D (p 0) (p T) ≤
+      pathLength (weylPhysicalE d ξ f) P :=
+    iInf₂_le P hPD'
+  have hcurve := curveLength_le_weyl_cost hd ξ f
+    (fun x y => ENNReal.ofReal_toReal_le) (fun x y => weylPhysicalE_symm hd ξ f x y) hp
+  subst hp0
+  subst hpT
+  calc internalMetric (weylPhysicalE d ξ f) D (p 0) (p T)
+      ≤ pathLength (weylPhysicalE d ξ f) P := hIP
+    _ ≤ curveLength (weylPhysicalE d ξ f) p 0 T := hPle
+    _ ≤ ∫⁻ t in Icc 0 T, ENNReal.ofReal (Real.exp (ξ * f (p t))) := hcurve
+    _ ≤ min b (ENNReal.ofReal (m * (c2 - c0))) := hcost.le
+    _ ≤ b := min_le_left _ _
+
 /-- **Root continuity of the internal physical metric** (Steps E-F; the input `he_cont` of
 `eq_const_mul_internal_of_local_agreement`). Let `d` be an `IsEuclideanLengthMetric`, `D` open with `z ∈ D`, `f` continuous
 on `D ∖ {z}`, and suppose the Weyl distance `weylScaling d ξ f x z` tends to `0` as `x → z` (the ambient continuity input
@@ -263,47 +311,7 @@ theorem internalPhysicalMetric_tendsto_root {d : ℂ → ℂ → ℝ} (hd : IsEu
     (hW : Tendsto (fun x => weylScaling d ξ f x z) (𝓝 z) (𝓝 0)) :
     Tendsto (fun x => internalPhysicalMetric (weylPhysicalE d ξ f) D x z) (𝓝[D] z) (𝓝 0) := by
   obtain ⟨c0, c2, m, hc0, hc02, hm, hexit⟩ := exists_exit_data hd ξ hD hz hfc
-  have hη : (0 : ℝ≥0∞) < ENNReal.ofReal (m * (c2 - c0)) :=
-    ENNReal.ofReal_pos.2 (mul_pos hm (by linarith))
-  have hkey : ∀ᶠ x in 𝓝 z,
-      internalMetric (weylPhysicalE d ξ f) D x z ≤ weylScaling d ξ f x z := by
-    have hzU : z ∈ {v | d z v < c0} := by
-      rw [mem_ofPred_eq, hd.self_eq_zero z]
-      exact hc0
-    filter_upwards [(isOpen_dist_lt_set hd z c0).mem_nhds hzU,
-      hW.eventually (gt_mem_nhds hη)] with x hxU hxW
-    apply le_of_forall_gt_imp_ge_of_dense
-    intro b hb
-    have h := lt_min hb hxW
-    simp only [weylScaling, iInf_lt_iff] at h
-    obtain ⟨T, p, hp, hp0, hpT, hcost⟩ := h
-    have hx0 : d z (p 0) < c0 := by
-      rw [hp0]
-      exact hxU
-    have hcostη : ∫⁻ t in Icc 0 T, ENNReal.ofReal (Real.exp (ξ * f (p t))) <
-        ENNReal.ofReal (m * (c2 - c0)) :=
-      lt_of_lt_of_le hcost (min_le_right _ _)
-    have hPD := hexit T p hp hx0 hcostη
-    obtain ⟨P, hPt, hPle⟩ :=
-      exists_path_range_le (E := weylPhysicalE d ξ f) hp.1 hp.2.1
-    have hPD' : ∀ t, P t ∈ D := by
-      intro t
-      rw [hPt t]
-      refine hPD _ ⟨mul_nonneg hp.1 t.2.1, ?_⟩
-      linarith [mul_le_mul_of_nonneg_left t.2.2 hp.1]
-    have hIP : internalMetric (weylPhysicalE d ξ f) D (p 0) (p T) ≤
-        pathLength (weylPhysicalE d ξ f) P :=
-      iInf₂_le P hPD'
-    have hcurve := curveLength_le_weyl_cost hd ξ f
-      (fun x y => ENNReal.ofReal_toReal_le) (fun x y => weylPhysicalE_symm hd ξ f x y) hp
-    subst hp0
-    subst hpT
-    calc internalMetric (weylPhysicalE d ξ f) D (p 0) (p T)
-        ≤ pathLength (weylPhysicalE d ξ f) P := hIP
-      _ ≤ curveLength (weylPhysicalE d ξ f) p 0 T := hPle
-      _ ≤ ∫⁻ t in Icc 0 T, ENNReal.ofReal (Real.exp (ξ * f (p t))) := hcurve
-      _ ≤ min b (ENNReal.ofReal (m * (c2 - c0))) := hcost.le
-      _ ≤ b := min_le_left _ _
+  have hkey := internalMetric_le_weylScaling_eventually hd ξ hD hz hfc hW
   have hsq : Tendsto (fun x => internalMetric (weylPhysicalE d ξ f) D x z) (𝓝[D] z) (𝓝 0) :=
     tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds
       (hW.mono_left nhdsWithin_le_nhds) (Eventually.of_forall fun _ => zero_le)
