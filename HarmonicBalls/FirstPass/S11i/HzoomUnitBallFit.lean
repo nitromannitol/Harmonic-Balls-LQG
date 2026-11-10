@@ -153,7 +153,7 @@ theorem ae_eventually_ballFit {γ ξ δ M : ℝ} {U V W T Q' Q : Set ℂ}
     (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
       ENNReal.ofReal (D ω u v) = weylScaling (𝔇 (hC ω)) ξ (fun x => -0 * Real.log ‖x‖) u v)
     (p : ℚ × ℚ × ℚ) (hp : ValidBall p) :
-    ∀ᵐ ω ∂P, ∀ z ∈ ball (ballCen p) (ballRad p), ∀ᶠ n : ℕ in atTop,
+    ∀ᵐ ω ∂P, ∀ z ∈ ball (ballCen p) (2 * ballRad p), ∀ᶠ n : ℕ in atTop,
       (FirstPassS11i.CertificateEvent (ballKernel hγ0 hγ2 hK p (fun φ => fieldPairing 0 (hC ω) φ.1))
           (ballMetric hγ0 hγ2 hR 𝔇 h𝔇 p (fun φ => fieldPairing 0 (hC ω) φ.1))
           (pinchOmegaGeom W Q δ) U V W T Q' Q δ M (FirstPassS11ah.certScale n) z ↔
@@ -164,8 +164,6 @@ theorem ae_eventually_ballFit {γ ξ δ M : ℝ} {U V W T Q' Q : Set ℂ}
   have hr2 : (0 : ℝ) < 2 * ballRad p := by linarith
   have hα : (0 : ℝ) < lqgQ γ := lqgQ_pos hγ0
   have hBo : IsOpen (ball (ballCen p) (2 * ballRad p)) := isOpen_ball
-  have hU0B : ball (ballCen p) (ballRad p) ⊆ ball (ballCen p) (2 * ballRad p) :=
-    ball_subset_ball (by linarith)
   obtain ⟨hfinK, hK1⟩ := kernelF_unrooted hγ0 hγ2 hK hp
   have hmc := metricCont_eq hγ0 hγ2 hR 𝔇 h𝔇 hp
   have hspec := Classical.choose_spec (hR (ballCen p) (ballCen p) (ballRad p) (2 * ballRad p) hγ0 hγ2 hr hr2
@@ -208,11 +206,11 @@ theorem ae_eventually_ballFit {γ ξ δ M : ℝ} {U V W T Q' Q : Set ℂ}
     rw [hDeq]
     exact hEω
   -- the decoded metric is `b · D` on the small closed balls of the root (no-shortcut radius `ρ`)
-  have hdecEq : ∀ z ∈ ball (ballCen p) (ballRad p), ∃ ρ : ℝ, 0 < ρ ∧ closedBall z ρ ⊆ ball (ballCen p) (2 * ballRad p) ∧
+  have hdecEq : ∀ z ∈ ball (ballCen p) (2 * ballRad p), ∃ ρ : ℝ, 0 < ρ ∧ closedBall z ρ ⊆ ball (ballCen p) (2 * ballRad p) ∧
       ∀ x ∈ closedBall z ρ, ∀ y ∈ closedBall z ρ,
         ballMetric hγ0 hγ2 hR 𝔇 h𝔇 p (fun φ => fieldPairing 0 (hC ω) φ.1) x y = b * D ω x y := by
     intro z hz
-    obtain ⟨ρ, hρ, hρsub, hρeq⟩ := FirstPassS11at.eq_internalMetric_on_small_ball_at hEucD hBo (hU0B hz)
+    obtain ⟨ρ, hρ, hρsub, hρeq⟩ := FirstPassS11at.eq_internalMetric_on_small_ball_at hEucD hBo hz
     refine ⟨ρ, hρ, hρsub, fun x hx y hy => ?_⟩
     have hxB : x ∈ ball (ballCen p) (2 * ballRad p) := hρsub hx
     have hyB : y ∈ ball (ballCen p) (2 * ballRad p) := hρsub hy
