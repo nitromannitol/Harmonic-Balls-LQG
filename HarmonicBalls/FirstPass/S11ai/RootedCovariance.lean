@@ -10,7 +10,9 @@ scale `2^{-n}` about `z` of `(μ, D)` is then the certificate of `(ν, E)` at sc
 `FirstPassS11aq.certificateEvent_translate_iff`), and the latter is the certificate of the dilated pair at scale one
 (`HarmonicBalls.FirstPassS11iCertDilate.certificateEvent_dilate_iff`). The coordinate-change constants (`a`, `b`) are positive.
 
-This file contains the deterministic core only; the local (buffered-ball) versions are not here.
+This file contains the deterministic core only. The global "identities" version of hCov was removed (its identities are
+false as stated: physical and canonical fields agree only on the root's buffered ball); the local version is
+`RootedPhysical.lean` (`FirstPassS11ai.rooted_covariance_window`).
 -/
 
 namespace FirstPassS11ai
@@ -38,22 +40,5 @@ theorem certificateEvent_rooted_iff (ν : Measure ℂ) (E : ℂ → ℂ → ℝ)
   rw [add_neg_cancel] at h1
   rw [mul_one, mul_zero] at h2
   exact h1.trans h2.symm
-
-/-- **hCov from coordinate-change identities.** If the rooted physical pair is the translate of `(ν, E)` (global form) and
-the decoded canonical measure and metric at the dilated translated field are the positive-constant dilations of `(ν, E)`,
-then the two sides of `hCov` (`RootedInstance.lean`) agree. The global identities are not yet proved (locality is needed). -/
-theorem rooted_covariance_of_identities (ν : Measure ℂ) (E : ℂ → ℂ → ℝ) (μR : Measure ℂ) (dR : ℂ → ℂ → ℝ)
-    (Dμℓ : Measure ℂ) (Ddℓ : ℂ → ℂ → ℝ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) (z : ℂ) (n : ℕ)
-    (hμ : μR = ν.map (fun w : ℂ => w - -z)) (hd : dR = fun x y => E (x + -z) (y + -z))
-    (hDμ : ∃ a : ℝ, 0 < a ∧
-      Dμℓ = ENNReal.ofReal a • ν.map (fun w : ℂ => w / ((FirstPassS11ah.certScale n : ℝ) : ℂ)))
-    (hDd : ∃ b : ℝ, 0 < b ∧
-      Ddℓ = fun u v => b * E (((FirstPassS11ah.certScale n : ℝ) : ℂ) * u) (((FirstPassS11ah.certScale n : ℝ) : ℂ) * v)) :
-    FirstPassS11i.CertificateEvent μR dR Ostar U V W T Q' Q η M (FirstPassS11ah.certScale n) z ↔
-      FirstPassS11i.CertificateEvent Dμℓ Ddℓ Ostar U V W T Q' Q η M 1 0 := by
-  obtain ⟨a, ha, rfl⟩ := hDμ
-  obtain ⟨b, hb, rfl⟩ := hDd
-  subst hμ hd
-  exact certificateEvent_rooted_iff ν E Ostar U V W T Q' Q η M z n ha hb
 
 end FirstPassS11ai

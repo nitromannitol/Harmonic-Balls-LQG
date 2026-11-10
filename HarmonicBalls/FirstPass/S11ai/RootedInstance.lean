@@ -38,6 +38,21 @@ def AdmissibleRootShift (α₀ : ℝ) (z : ℂ) (b : ℝ) (u : ℂ → ℝ) : Pr
   0 < b ∧ 2 * b < ‖z‖ ∧ 2 * b < 1 ∧ ContDiff ℝ (⊤ : ℕ∞) u ∧ HasCompactSupport u ∧
     Real.circleAverage u 0 1 = 0 ∧ ∀ w ∈ ball (0 : ℂ) b, u w = -α₀ * Real.log ‖z + w‖
 
+/-- Radius `min (‖z‖/4) (1/4)` of the root shift at `z` (`RootedPhysical.lean`): admissible at `z` for `z ≠ 0`. -/
+noncomputable def rootRadius (z : ℂ) : ℝ := min (‖z‖ / 4) (1 / 4)
+
+theorem rootRadius_pos {z : ℂ} (hz : 0 < ‖z‖) : 0 < rootRadius z := by
+  unfold rootRadius
+  exact lt_min (by linarith) (by norm_num)
+
+theorem two_mul_rootRadius_lt {z : ℂ} (hz : 0 < ‖z‖) : 2 * rootRadius z < ‖z‖ := by
+  have h1 : rootRadius z ≤ ‖z‖ / 4 := by unfold rootRadius; exact min_le_left _ _
+  linarith
+
+theorem two_mul_rootRadius_lt_one (z : ℂ) : 2 * rootRadius z < 1 := by
+  have h1 : rootRadius z ≤ 1 / 4 := by unfold rootRadius; exact min_le_right _ _
+  linarith
+
 /-- The buffered cutoff balls `closedBall z (7 · 2^{-n})` of (J) eventually lie in any open ball containing `z`. -/
 theorem eventually_closedBall_cutRadius_subset {c₂ z : ℂ} {r₂ : ℝ} (hz : z ∈ ball c₂ r₂) :
     ∀ᶠ n : ℕ in atTop, closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ := by
@@ -73,7 +88,9 @@ theorem ae_termwise_of_identification
           FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
             (FirstPassS11ah.certScale n) z'))
     (hCov : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
-      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ, closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
+      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ, closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z b →
+        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z (rootRadius z) →
+        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
         (FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
             (FirstPassS11ah.certScale n) z ↔
           FirstPassS11i.CertificateEvent
@@ -98,14 +115,18 @@ theorem ae_termwise_of_identification
     ae_restrict_mem (μ := (volume : Measure ℂ)) (measurableSet_ball : MeasurableSet (ball c₁ r₁))]
     with z hFz hCz hGz hzB hzA b u hb hbz hb1 hu hcomp hu0 hu_eq
   have hzD : z ∈ ball c₂ r₂ := hsub (ball_subset_closedBall hzB)
-  obtain ⟨n₀, hn₀⟩ := eventually_atTop.1 (eventually_closedBall_cutRadius_subset hzD)
+  have hzn : 0 < ‖z‖ := by linarith
+  have hzb : z ∈ ball z b := mem_ball_self hb
+  have hzr : z ∈ ball z (rootRadius z) := mem_ball_self (rootRadius_pos hzn)
+  obtain ⟨n₀, hn₀⟩ := eventually_atTop.1 ((eventually_closedBall_cutRadius_subset hzD).and
+    ((eventually_closedBall_cutRadius_subset hzb).and (eventually_closedBall_cutRadius_subset hzr)))
   have hadm : AdmissibleRootShift α₀ z b u := ⟨hb, hbz, hb1, hu, hcomp, hu0, hu_eq⟩
   filter_upwards [hFz hzA, hCz hzA b u hadm, hGz hzA b u hadm] with ω h1 h2 h3
   refine ⟨n₀, fun n hn => ?_⟩
-  have hs : closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ := hn₀ n hn
+  obtain ⟨hs, hsb, hsr⟩ := hn₀ n hn
   change c n (z, (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2) = _
   rw [hSeq, FirstPassS11ah.localCert_of_subset hs]
-  have hkey := (h1 z n hs).trans ((h2 n hs).trans (h3 n))
+  have hkey := (h1 z n hs).trans ((h2 n hsb hsr hs).trans (h3 n))
   rw [Set.indicator_apply]
   simp only [Set.mem_preimage]
   by_cases hE : FirstPassS11i.CertificateEvent
@@ -148,7 +169,9 @@ theorem ae_quantum_bad_mass_eq_zero_of_identification
           FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
             (FirstPassS11ah.certScale n) z'))
     (hCov : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
-      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ, closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
+      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ, closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z b →
+        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z (rootRadius z) →
+        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
         (FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
             (FirstPassS11ah.certScale n) z ↔
           FirstPassS11i.CertificateEvent
