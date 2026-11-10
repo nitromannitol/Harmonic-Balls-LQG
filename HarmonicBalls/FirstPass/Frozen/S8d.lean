@@ -24,7 +24,10 @@ its approximations `ε^{γ²/2} e^{γ ŷ_ε(z)} dz` along the dyadic scales, wit
 In words: the LQG measure is a measurable function of the circle-average profile (Duplantier–Sheffield, LQG and KPZ,
 arXiv:0808.1560; Duplantier–Sheffield 2011, Prop. 1.1 for the vague limit). The repository proves only the Ω-level
 measurability (Proofs/Sec5/OpenMeasureLaw.lean:130 `IsWholePlaneGFF.aemeasurable_lqgMeasure`), not this profile form.
-Source locator: standard; locator pending. Used by: firstPass_8_2 (through FirstPass/S8d.lean, the profile instance). -/
+Source locator: standard; locator pending. Used by: firstPass_8_2 (through FirstPass/S8d.lean, the profile instance). Truth check UNCLEAR (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §4):
+`CircleParameter` and `circleProfile` are not defined in the supplied files, so the profile space, its topology and
+the reconstruction cannot be checked exactly. The almost-sure specification of μ is not itself an obstruction, since
+the decoder must agree with μ only almost surely. Minimal corrected statement: §4. Not a FALSE verdict. -/
 def LQGMeasureOfProfileMeasurableFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ α : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ)
@@ -41,7 +44,10 @@ ergodic for the product of the uniform phase measure with `ν`. The doubling map
 mixing), and the product of a weakly mixing map with an ergodic map is ergodic (Walters, An Introduction to Ergodic
 Theory, GTM 79, §1.6 and Thm 1.27). Mathlib has no such product lemma (checked: no `Ergodic` product lemma under
 `Mathlib/Dynamics/Ergodic`). Source locator: standard; locator pending. Used by: firstPass_8_2 (the phase tail of
-FirstPass/S8d.lean, through `ae_frequency_of_torus_dilation`). -/
+FirstPass/S8d.lean, through `ae_frequency_of_torus_dilation`). Truth check UNCLEAR (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §2): `PhaseTorus`,
+`phaseTorusDouble` and `phaseTorusFieldMeasure` are not defined in the attachment, so the Haar-product,
+coordinatewise-doubling and independent-product conditions cannot be checked; the answer states that the intended
+Haar-product assertion is true. Not a FALSE verdict. Minimal corrected statement (explicit helper definitions): §2. -/
 def PhaseTorusDoublingProductErgodicFrozen : Prop :=
   ∀ (Y : Type u) [MeasurableSpace Y] (ν : Measure Y) [IsProbabilityMeasure ν] (T : Y → Y),
     MeasurePreserving T ν ν → Ergodic T ν →
@@ -52,7 +58,10 @@ functions (the uniqueness part of the Riesz representation theorem on the locall
 measures `m, m'` on `ℂ`, if `∫ f dm = ∫ f dm'` for all continuous compactly supported real `f`, then `m = m'`. Source:
 Rudin, Real and Complex Analysis, 3rd ed., Thm 2.14; standard general measure theory, not specific to this paper;
 locator pending (exact numbering to be checked against the edition). Used by: firstPass_8_2 (through the uniqueness of the
-vague limit `isLQGLimit_unique`, FirstPass/S8d/LQGLimitUnique.lean, in the identification of the dilated LQG measure). -/
+vague limit `isLQGLimit_unique`, FirstPass/S8d/LQGLimitUnique.lean, in the identification of the dilated LQG measure). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): locally
+finite Borel measures on ℂ are Radon and are determined by their integrals against C_c(ℂ). Source as the answer
+gives it: Rudin, Real and Complex Analysis, 3rd ed. (1987), Theorem 2.14, pp. 40-41, with Theorem 2.18, p. 48, for
+regularity. -/
 def RadonIntegralUniqueFrozen : Prop :=
   ∀ (m m' : Measure ℂ), IsLocallyFiniteMeasure m → IsLocallyFiniteMeasure m' →
     (∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → ∫ z, f z ∂m = ∫ z, f z ∂m') → m = m'
