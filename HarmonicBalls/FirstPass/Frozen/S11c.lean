@@ -60,7 +60,10 @@ def CameronMartinPositivityTransferFrozen : Prop :=
 level inside a closed dyadic square `S2` disjoint from the unit circle, in inner-probability form.
 Why it holds (as printed): each cell has internal diameter tending to zero in probability as the level grows
 (the pointwise small-scale continuity of the LQG metric).
-Attribution (operator note 23:32 UTC; statement audit `notes/fp-gaps/CHATGPT-11-7-11-10-statement-audit.md`, section 2.C): Dubédat-Falconet-Gwynne-Pfeffer-Sun, *Weak LQG metrics and Liouville first passage percolation*, arXiv:1905.00380v2. Quantitative locators: Proposition 3.10 (p. 34, internal square-diameter moments up to the boundary); Lemmas 3.19-3.20 (pp. 45-46, quantitative and simultaneous small-square estimates); Proposition 3.17 (pp. 43-44, admissible logarithmic singularity); equations (3.63) (failure tail) and (3.67) (simultaneous control). The simultaneous statement over the dyadic cells of level N is supplied by (3.63) and (3.67), not by a bare union bound. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3010-3016). Used by: firstPass_11_10. -/
+Attribution (operator note 23:32 UTC; statement audit `notes/fp-gaps/CHATGPT-11-7-11-10-statement-audit.md`, section 2.C): Dubédat-Falconet-Gwynne-Pfeffer-Sun, *Weak LQG metrics and Liouville first passage percolation*, arXiv:1905.00380v2. Quantitative locators: Proposition 3.10 (p. 34, internal square-diameter moments up to the boundary); Lemmas 3.19-3.20 (pp. 45-46, quantitative and simultaneous small-square estimates); Proposition 3.17 (pp. 43-44, admissible logarithmic singularity); equations (3.63) (failure tail) and (3.67) (simultaneous control). The simultaneous statement over the dyadic cells of level N is supplied by (3.63) and (3.67), not by a bare union bound. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3010-3016). Used by: firstPass_11_10. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): the axioms
+force ξ > 0, and quantitative square estimates and summable insertion bounds give the simultaneous inner-probability
+statement. Source as the answer gives it: consequence of DFGPS, arXiv:1905.00380v2, p. 34, Proposition 3.10; pp.
+43-44, Proposition 3.17; pp. 45-46, Lemmas 3.19-3.20, (3.63), (3.67). -/
 def DyadicCellDiamSmallFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -81,7 +84,10 @@ def IsClosedRectangle (R : Set ℂ) : Prop :=
 almost surely there is a finite bound on the internal distances within the union. (Generalized on 2026-11-09 from
 closed dyadic squares to closed rectangles: the exterior set of Lemma 11.10 is a union of rectangles, not of dyadic
 squares. The printed text, paper lines 3026-3028, says "a finite union of closed Euclidean squares".)
-Justification (operator note 23:32 UTC; statement audit section 2.C-2.D): internal boundary estimates, Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.10 (p. 34) and Proposition 3.17 (pp. 43-44), together with the rectangle and singularity reductions: finite square coverings away from 0, and summable dyadic shell bounds near 0 where ξ(Q_γ - α₀) > 0. Ambient metric continuity alone does not justify this statement. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3026-3028); the exact hypotheses of Ding-Dubédat-Dunlap-Falconet, Lemma 3.9 remain unverified. Used by: firstPass_11_10. -/
+Justification (operator note 23:32 UTC; statement audit section 2.C-2.D): internal boundary estimates, Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.10 (p. 34) and Proposition 3.17 (pp. 43-44), together with the rectangle and singularity reductions: finite square coverings away from 0, and summable dyadic shell bounds near 0 where ξ(Q_γ - α₀) > 0. Ambient metric continuity alone does not justify this statement. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3026-3028); the exact hypotheses of Ding-Dubédat-Dunlap-Falconet, Lemma 3.9 remain unverified. Used by: firstPass_11_10. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): with
+strictly positive rectangle side lengths, internal boundary estimates and the finite connected intersection graph
+give finite diameter. Source as the answer gives it: rectangle/closure and singularity consequence of DFGPS,
+arXiv:1905.00380v2, p. 34, Proposition 3.10, (3.26); pp. 43-44, Proposition 3.17. -/
 def ConnectedSquareUnionDiamFiniteFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -117,7 +123,10 @@ def LQGMeasureSquareMeasurableFrozen : Prop :=
 /-- FIRST-PASS FROZEN. The LQG area measure charges every closed dyadic square with nonempty interior, almost surely.
 Source: full support of the Gaussian multiplicative chaos measure (Duplantier-Sheffield 2011, Liouville quantum gravity
 measure; the paper's introduction, line 138, states that `μ_h` assigns positive mass to open sets); locator (CHATGPT-frozen-locators.md): RV Theorem 2.12.
-Used by: firstPass_11_10 (through the event `μ_h(S₁) > 0`). -/
+Used by: firstPass_11_10 (through the event `μ_h(S₁) > 0`). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): every such
+dyadic square contains an open ball away from 0, where the subcritical chaos measure has positive mass. Source as
+the answer gives it: Rhodes-Vargas, arXiv:1305.6221v1, p. 11, Theorem 2.12; full support is also stated in HB
+arXiv:2208.11795v3, §1.2, p. 3. -/
 def LQGMeasureSquarePositiveFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -164,7 +173,10 @@ Source: paper Fact 2.2 III (corrected copy, lines 441-447) for the full metric; 
 the printed proof of `prop:mass-diam-gen` (lines 3108-3128, eq:use-weyl) without a separate statement; the repo has the
 open-set version `IsEuclideanLengthMetric.internalMetric_weylScaling_le` (Steps/Sec11/WeylAnnulusBounds.lean, hypothesis
 `IsOpen U`). locator (CHATGPT-frozen-locators.md): no exact source; standard via weighted path lengths, GM (1.8).
-Used by: firstPass_11_10 (through S11c/Shifted.lean). -/
+Used by: firstPass_11_10 (through S11c/Shifted.lean). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): arclength
+parametrization bounds every competing path's E-length by e^B times its D-length, and this upper bound needs no
+measurability of f. Source as the answer gives it: deterministic consequence of Gwynne-Miller, arXiv:1905.00383v3,
+p. 5, (1.7), and p. 6, Axiom III, (1.8). -/
 def WeylInternalClosedFrozen : Prop :=
   ∀ (D E : ℂ → ℂ → ℝ) (ξ B : ℝ) (f : ℂ → ℝ) (U : Set ℂ), IsEuclideanLengthMetric D →
     (∀ x y, 0 ≤ E x y) → (∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y) → IsClosed U →
@@ -274,7 +286,9 @@ arXiv:1409.7055v4, Section 4.1, and Holden-Sun, arXiv:1610.05272, proof of Lemma
 of the pairings with the mean-zero test functions `φ` (smooth, compact support, `∫ φ = 0`): the constants drop out, so
 `(hC ω (φ(· - z)))_φ` and `(hC ω φ)_φ` have the same law. Only the mean-zero pairings are asserted.
 Not used by firstPass_11_7 or its chain: the normalized translation `hW'` is proved from `IsWholePlaneGFF` in
-`S11c/TranslateField11_7.lean` (`isWholePlaneGFF_translate`), so this input is kept only as a checked statement. -/
+`S11c/TranslateField11_7.lean` (`isWholePlaneGFF_translate`), so this input is kept only as a checked statement. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): translation
+preserves the joint Gaussian law of the mean-zero pairings, and the normalization constants disappear. Source as the
+answer gives it: Holden-Sun, arXiv:1610.05272v3, p. 16, proof of Lemma 4.2, immediately after (11). -/
 def WholePlaneGFFTranslationModConstFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
@@ -292,7 +306,10 @@ circle average `h_r(z) - (h, ρ)` of the field `h = h^ℂ - α₀ log|·|`. Stan
 `φ n = σ_{z,r,η_n} - ρ` (mean zero); the `α₀ log|·|` part of `fieldPairing` and `fieldCircleAverage` converges deterministically.
 Stated for the field `h` as in `fieldPairing` and with the base point `ρ` (pairing with a fixed bump), so no circle outside `D`
 is used. Only the mean-zero pairings are asserted (constants drop out). Used by: `exists_joint_local_circleAverage_version`
-route of firstPass_11_7 (FirstPass/S11c/LocalVersion11_7.lean), i.e. the local decoder K_D of CHATGPT-11-7-B2.md sec 3.1.1. -/
+route of firstPass_11_7 (FirstPass/S11c/LocalVersion11_7.lean), i.e. the local decoder K_D of CHATGPT-11-7-B2.md sec 3.1.1. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): smooth
+circle mollifications minus ρ converge by the covariance calculation, and the deterministic logarithmic term also
+converges. Source as the answer gives it: covariance consequence of Duplantier-Sheffield, arXiv:0808.1560v2, §3.1,
+pp. 16-17, (8)-(11) and Proposition 3.1, using the whole-plane covariance in HB v3, p. 8, (2.1). -/
 def LocalCircleAverageMeanZeroApproxFrozen : Prop :=
   ∀ (α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
