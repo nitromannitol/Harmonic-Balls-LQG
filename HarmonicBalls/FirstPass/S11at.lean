@@ -758,7 +758,7 @@ abbrev WinTest (D : Set ℂ) : Type := {φ : ℂ → ℝ // IsTestFunction D φ 
 
 open Classical in
 /-- The window metric of a continuous decoder `m`, extended by `0` off `D × D`. -/
-noncomputable def windowMetric (D : Set ℂ) (m : WinTest D → C(↥(D ×ˢ D), ℝ)) (φ : WinTest D) : ℂ → ℂ → ℝ :=
+noncomputable def windowMetric (D : Set ℂ) (m : (WinTest D → ℝ) → C(↥(D ×ˢ D), ℝ)) (φ : WinTest D → ℝ) : ℂ → ℂ → ℝ :=
   fun x y => if h : (x, y) ∈ D ×ˢ D then m φ ⟨(x, y), h⟩ else 0
 
 /-- The physical rooted metric at the root `z` (clause (20) of `LocalMetricReplacementStmt`): the real part of the Weyl
@@ -770,7 +770,7 @@ noncomputable def rootedWeylMetric {Ω : Type*} (𝔇 : ((ℂ → ℝ) → ℝ) 
 
 /-- Continuity of the window metric in the second variable at a point of the open window (Armitage-Gardiner: a continuous
 decoder is continuous on its window). -/
-theorem continuousAt_windowMetric {D : Set ℂ} (hD : IsOpen D) (m : WinTest D → C(↥(D ×ˢ D), ℝ)) (φ : WinTest D)
+theorem continuousAt_windowMetric {D : Set ℂ} (hD : IsOpen D) (m : (WinTest D → ℝ) → C(↥(D ×ˢ D), ℝ)) (φ : WinTest D → ℝ)
     {x : ℂ} (hx : x ∈ D) : ContinuousAt (fun y => windowMetric D m φ x y) x := by
   have hF : Continuous (fun y : D => (⟨(x, (y : ℂ)), ⟨hx, y.2⟩⟩ : ↥(D ×ˢ D))) :=
     Continuous.subtype_mk (continuous_const.prodMk continuous_subtype_val) (fun y => ⟨hx, y.2⟩)
@@ -886,8 +886,8 @@ output, on a whole ball about `z`). Conclusion: a positive radius `ρ` with `clo
 theorem hDecInt_at_of_local {D Dj W : Set ℂ} {z : ℂ} {Dw Dl : ℂ → ℂ → ℝ}
     (hDw : IsEuclideanLengthMetric Dw) (hDl : IsEuclideanLengthMetric Dl)
     (hDO : IsOpen D) (hzD : z ∈ D) (hDjO : IsOpen Dj) (hWO : IsOpen W) (hW0 : (0 : ℂ) ∈ W)
-    (mD : WinTest D → C(↥(D ×ˢ D), ℝ)) (φD : WinTest D)
-    (mj : WinTest Dj → C(↥(Dj ×ˢ Dj), ℝ)) (φj : WinTest Dj)
+    (mD : (WinTest D → ℝ) → C(↥(D ×ˢ D), ℝ)) (φD : WinTest D → ℝ)
+    (mj : (WinTest Dj → ℝ) → C(↥(Dj ×ˢ Dj), ℝ)) (φj : WinTest Dj → ℝ)
     (hclD : ∃ bD : ℝ, 0 < bD ∧ ∀ x ∈ D, ∀ y ∈ D,
       ENNReal.ofReal (windowMetric D mD φD x y) = ENNReal.ofReal bD * internalMetric Dw D x y)
     (hclj : ∃ bj : ℝ, 0 < bj ∧ ∀ x ∈ Dj, ∀ y ∈ Dj,
@@ -968,5 +968,94 @@ theorem hDecInt_at_of_local {D Dj W : Set ℂ} {z : ℂ} {Dw Dl : ℂ → ℂ �
     mem_closedBall_zero_iff.2 ((mem_closedBall_zero_iff.1 hy).trans (min_le_right _ _))
   rw [hkey x hx' y hy']
   rw [← hidL x hxL y hyL, ENNReal.toReal_ofReal (hnonnegL x y)]
+
+end FirstPassS11at
+
+namespace FirstPassS11at
+
+open MeasureTheory Metric Set Filter Topology
+open scoped ENNReal NNReal
+open HarmonicBalls HarmonicBalls.S11c
+
+/-- The window `ball 0 b ∩ ball 0 (rR z) ∩ (· + z)⁻¹' ball c₂ r₂` of the decoded identity `hDecInt` is open. -/
+theorem isOpen_decodedWindow {c₂ z : ℂ} {r₂ b r : ℝ} :
+    IsOpen (ball (0 : ℂ) b ∩ ball (0 : ℂ) r ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂)) :=
+  (isOpen_ball.inter isOpen_ball).inter (isOpen_ball.preimage (by fun_prop))
+
+/-- **Decoded metric identity from the rooted local identification (hDecInt, ae level).** The assembly of
+`hDecInt_at_of_local` over the root `z`, the shift `(b, u)` and the buffered index `j`: as in §4.2 of ChatGPT chat 201, `j` is
+chosen after `(z, b, u)` and before the inner `P`-a.s. statement. Inputs: the frozen metric clauses (20) of
+`LocalMetricReplacementStmt` on the large window (`hDwD`) and on the buffered windows (`hDwj`), in the `ENNReal` form of
+the clause; the rooted physical metric is a Euclidean length metric (`hLen`: NOT in the repository, see the report); n2's
+buffered metric identification (`hRLIm`, whole-ball form); the canonical length-metric property (`hLenC`); and the
+positivity of admissible shifts (`hW0`: `0 ∈ W`). The conclusion is `hDecInt` of
+`rootedCertificateEventualCovarianceStmt_decoded` for the decoder `windowMetric (ball c₂ r₂) mD`. -/
+theorem hDecInt_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ α₀ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {c₁ c₂ : ℂ} {r₁ r₂ : ℝ} (A : Set ℂ) (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop) (rR : ℂ → ℝ)
+    (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
+    (Uj Dj : ℕ → Set ℂ)
+    (mD : (WinTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂), ℝ))
+    (mj : (j : ℕ) → (WinTest (Dj j) → ℝ) → C(↥(Dj j ×ˢ Dj j), ℝ))
+    (hDjO : ∀ j, IsOpen (Dj j)) (hc1 : ball c₁ r₁ ⊆ ball c₂ r₂)
+    (hW0 : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      (0 : ℂ) ∈ ball (0 : ℂ) b ∩ ball (0 : ℂ) (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂))
+    (hDwD : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
+      ∀ p : ↥(ball c₂ r₂ ×ˢ ball c₂ r₂),
+        ENNReal.ofReal (mD (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2 p) =
+          ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (ball c₂ r₂) p.1.1 p.1.2)
+    (hDwj : ∀ j, ∀ᵐ z ∂(volume : Measure ℂ), z ∈ Uj j → ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
+      ∀ p : ↥(Dj j ×ˢ Dj j),
+        ENNReal.ofReal (mj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 p) =
+          ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (Dj j) p.1.1 p.1.2)
+    (hLen : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
+      IsEuclideanLengthMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω))
+    (hRLIm : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∃ j : ℕ, z ∈ Uj j ∧ ∀ᵐ ω ∂P, ∃ c ρ : ℝ, 0 < c ∧ 0 < ρ ∧ closedBall z ρ ⊆ Dj j ∧
+        ∀ x ∈ closedBall (0 : ℂ) ρ, ∀ y ∈ closedBall (0 : ℂ) ρ,
+          windowMetric (Dj j) (mj j) (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 (x + z) (y + z) =
+            c * Dd (shiftedCanon γ hC hcirc z u ω) x y)
+    (hLenC : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Dd (shiftedCanon γ hC hcirc z u ω))) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, ∃ ρ r β : ℝ, 0 < ρ ∧ 0 < r ∧ 0 < β ∧
+        closedBall (0 : ℂ) (2 * ρ) ⊆ ball (0 : ℂ) b ∩ ball (0 : ℂ) (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂) ∧
+        ∀ x ∈ closedBall (0 : ℂ) r, ∀ y ∈ closedBall (0 : ℂ) r,
+          decodedCentredMetric (windowMetric (ball c₂ r₂) mD) γ α₀ hC z ω x y =
+            β * (internalMetric (Dd (shiftedCanon γ hC hcirc z u ω)) (ball 0 (2 * ρ)) x y).toReal := by
+  have hDwj' : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ j, z ∈ Uj j → ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
+      ∀ p : ↥(Dj j ×ˢ Dj j),
+        ENNReal.ofReal (mj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 p) =
+          ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (Dj j) p.1.1 p.1.2 :=
+    ae_restrict_of_ae (ae_all_iff.2 hDwj)
+  filter_upwards [hDwD, hDwj', hLen, hRLIm, hLenC, hW0, ae_restrict_mem measurableSet_ball]
+    with z hDwDz hDwjz hLenz hRLIz hLenCz hW0z hzB hzA b u hadm
+  have hzD : z ∈ ball c₂ r₂ := hc1 hzB
+  obtain ⟨j, hzj, hRω⟩ := hRLIz hzA b u hadm
+  have hWO : IsOpen (ball (0 : ℂ) b ∩ ball (0 : ℂ) (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂)) :=
+    isOpen_decodedWindow
+  have hW0' := hW0z hzA b u hadm
+  filter_upwards [hDwDz, hDwjz j hzj, hLenz, hRω, hLenCz hzA b u hadm] with ω hDω hDjω hLenω hidω hLenCω
+  obtain ⟨bD, hbD, hDform⟩ := hDω
+  obtain ⟨bj, hbj, hDjform⟩ := hDjω
+  have hclD : ∃ bD' : ℝ, 0 < bD' ∧ ∀ x ∈ ball c₂ r₂, ∀ y ∈ ball c₂ r₂,
+      ENNReal.ofReal (windowMetric (ball c₂ r₂) mD (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2 x y) =
+        ENNReal.ofReal bD' * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (ball c₂ r₂) x y := by
+    refine ⟨bD, hbD, fun x hx y hy => ?_⟩
+    have hxy : (x, y) ∈ ball c₂ r₂ ×ˢ ball c₂ r₂ := ⟨hx, hy⟩
+    have h := hDform ⟨(x, y), hxy⟩
+    simpa [windowMetric, hxy] using h
+  have hclj : ∃ bj' : ℝ, 0 < bj' ∧ ∀ x ∈ Dj j, ∀ y ∈ Dj j,
+      ENNReal.ofReal (windowMetric (Dj j) (mj j) (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 x y) =
+        ENNReal.ofReal bj' * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (Dj j) x y := by
+    refine ⟨bj, hbj, fun x hx y hy => ?_⟩
+    have hxy : (x, y) ∈ Dj j ×ˢ Dj j := ⟨hx, hy⟩
+    have h := hDjform ⟨(x, y), hxy⟩
+    simpa [windowMetric, hxy] using h
+  obtain ⟨ρ', r, β, h1, h2, h3, h4, h5⟩ :=
+    hDecInt_at_of_local hLenω hLenCω (isOpen_ball) hzD (hDjO j) hWO hW0'
+      (mD) (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2 (mj j)
+      (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 hclD hclj hidω
+  exact ⟨ρ', r, β, h1, h2, h3, h4, fun x hx y hy => h5 x hx y hy⟩
 
 end FirstPassS11at
