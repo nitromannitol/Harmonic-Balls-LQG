@@ -1,3 +1,8 @@
+import HarmonicBalls.FirstPass.S11i.CertDilate
+import HarmonicBalls.FirstPass.S11i.RootedFrequencyShift
+import HarmonicBalls.FirstPass.S11aq
+import HarmonicBalls.FirstPass.S11ah.Cutoff
+import HarmonicBalls.FirstPass.S11c.TranslateField11_7
 import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.FirstPass.S11asLocal
 
@@ -144,4 +149,142 @@ theorem ae_eventual_certificateEvent_iff {Ω : Type*} [MeasurableSpace Ω] {P : 
   show D ω p.1 p.2 = β * E ω p.1 p.2
   exact hn₀ n hn p.1 hp.1 p.2 hp.2
 
+end FirstPassS11at
+
+namespace FirstPassS11at
+
+open MeasureTheory Metric Set Filter Topology
+open scoped ENNReal NNReal
+open HarmonicBalls HarmonicBalls.S11c
+
+/-- The root-shifted canonical element `canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u)` of the rooted
+pair at `z` with shift `u` (the right-hand side of `hCov` in `S11ai/RootedInstance.lean`). -/
+noncomputable def shiftedCanon {Ω : Type*} (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ)
+    (u : ℂ → ℝ) (ω : Ω) : ModConstTestPairings (Set.univ : Set ℂ) :=
+  canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u)
+
+/-- **Eventual pair locality at the certificate scales (step 6c, fixed root and shift).** For a fixed root, the physical
+pair `(μ0 ω, D0 ω)` and the shifted pair `(μu ω, Du ω)` have, almost surely and eventually in `n`, equal certificate
+events at `(certScale n, 0)`. Inputs: the no-shortcut lemma `hNS` (n2), the Euclidean length property of both metrics,
+the proportionality of the internal metrics on the window `closedBall 0 r₀` inside `Uloc`, and the mass locality
+`hMass` (eventual in `n`). -/
+theorem ae_eventual_certificateEvent_pair {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (hNS : NoShortcutSmallBallStmt)
+    (μ0 μu : Ω → Measure ℂ) (D0 Du : Ω → ℂ → ℂ → ℝ) {Uloc : Set ℂ} (hUloc : IsOpen Uloc) (h0 : (0 : ℂ) ∈ Uloc)
+    {r₀ : ℝ} (hr₀ : 0 < r₀) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
+    (hC : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
+    (hD0 : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D0 ω)) (hDu : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Du ω))
+    (hInt : ∀ᵐ ω ∂P, ∃ β : ℝ, 0 < β ∧ ∀ x ∈ closedBall (0 : ℂ) r₀, ∀ y ∈ closedBall (0 : ℂ) r₀,
+      internalMetric (D0 ω) Uloc x y = ENNReal.ofReal β * internalMetric (Du ω) Uloc x y)
+    (hMass : ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
+      (μ0 ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
+        (ENNReal.ofReal a • μu ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n))) :
+    ∀ᵐ ω ∂P, ∃ n₀ : ℕ, ∀ n ≥ n₀,
+      (FirstPassS11i.CertificateEvent (μ0 ω) (D0 ω) Ostar U V W T Q' Q η M (FirstPassS11ah.certScale n) 0 ↔
+        FirstPassS11i.CertificateEvent (μu ω) (Du ω) Ostar U V W T Q' Q η M (FirstPassS11ah.certScale n) 0) := by
+  have h1 : Tendsto (fun n : ℕ => FirstPassS11ah.certScale n) atTop (𝓝 0) := by
+    simpa [FirstPassS11ah.certScale] using
+      tendsto_pow_atTop_nhds_zero_of_lt_one (r := (2 : ℝ)⁻¹) (by norm_num) (by norm_num)
+  have h7 : Tendsto (fun n : ℕ => 7 * FirstPassS11ah.certScale n) atTop (𝓝 0) := by
+    have h := h1.const_mul 7
+    rwa [mul_zero] at h
+  have hpos : ∀ n : ℕ, 0 < FirstPassS11ah.certScale n := fun n => by
+    unfold FirstPassS11ah.certScale
+    positivity
+  have hmet := ae_eventual_ambient_proportional hNS D0 Du hUloc h0 hr₀
+    (fun n : ℕ => 7 * FirstPassS11ah.certScale n) h7 hD0 hDu hInt
+  filter_upwards [hmet, hMass] with ω hω hmω
+  obtain ⟨β, hβ, n₂, hn₂⟩ := hω
+  obtain ⟨n₁, hn₁⟩ := hmω
+  refine ⟨max n₁ n₂, fun n hn => ?_⟩
+  obtain ⟨a, ha, hμ⟩ := hn₁ n (le_trans (le_max_left _ _) hn)
+  refine FirstPassS11asLocal.certificateEvent_of_restrict_scalar (μ0 ω) (μu ω) (D0 ω) (Du ω) Ostar U V W T Q' Q η M
+    (FirstPassS11ah.certScale n) ha hβ hC hU (hpos n) hμ ?_
+  intro p hp
+  show D0 ω p.1 p.2 = β * Du ω p.1 p.2
+  exact hn₂ n (le_trans (le_max_right _ _) hn) p.1 hp.1 p.2 hp.2
+
+/-- **The eventual rooted covariance statement (the `hCov` clause of `S11ai/RootedInstance.lean`, n1 form).** The
+admissible-shift predicate `Adm` and the root radius `rR` are parameters, so that this file does not import the rooted
+instance (import cycle). For almost every root `z ∈ A` in `ball c₁ r₁`, every admissible shift `(b, u)` at `z`, almost
+surely, eventually in `n` (with the cutoff inclusions as premises): the physical rooted certificate at scale
+`certScale n` about `z` equals the unit-scale certificate of the dilated, translated, shifted canonical pair. -/
+def RootedCertificateEventualCovarianceStmt {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ)
+    (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop) (rR : ℂ → ℝ)
+    (μR : ℂ → Ω → Measure ℂ) (dR : ℂ → Ω → ℂ → ℂ → ℝ)
+    (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
+    (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ) : Prop :=
+  ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u → ∀ᵐ ω ∂P, ∃ n₀ : ℕ, ∀ n ≥ n₀,
+    closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z b →
+    closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z (rR z) →
+    closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
+    (FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
+        (FirstPassS11ah.certScale n) z ↔
+      FirstPassS11i.CertificateEvent (Dμ (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)))
+        (Dd (dilOp^[n] (shiftedCanon γ hC hcirc z u ω))) Ostar U V W T Q' Q η M 1 0)
+
+/-- **Eventual rooted covariance from the local inputs (fixed-root assembly).** Given the physical pair `(μ0, D0)` at
+`z` (the root-shifted field, translated so that it is centred at `0`; `hμR`, `hdR` identify the rooted physical pair
+with it), the local inputs of `ae_eventual_certificateEvent_pair` for every admissible `(b, u)`, and the dilation identity
+of the shifted canonical decoders `hdil` (the scaling covariance of `ae_decoders_dilOp_iterate`, here required for the
+shifted element), the statement `RootedCertificateEventualCovarianceStmt` follows. -/
+theorem rootedCertificateEventualCovarianceStmt_of_local {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (hNS : NoShortcutSmallBallStmt) {γ : ℝ} (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
+    (hCont : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
+    (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop) (hAdm : ∀ z b u, Adm z b u → 0 < b) (rR : ℂ → ℝ)
+    (μ0 μR : ℂ → Ω → Measure ℂ) (D0 dR : ℂ → Ω → ℂ → ℂ → ℝ)
+    (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
+    (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
+    (hμR : ∀ z ω, μR z ω = (μ0 z ω).map (fun w : ℂ => w - -z))
+    (hdR : ∀ z ω, dR z ω = fun x y => D0 z ω (x + -z) (y + -z))
+    (hD0 : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D0 z ω))
+    (hDu : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Dd (shiftedCanon γ hC hcirc z u ω)))
+    (hInt : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, ∃ β : ℝ, 0 < β ∧ ∀ x ∈ closedBall (0 : ℂ) (b / 2), ∀ y ∈ closedBall (0 : ℂ) (b / 2),
+        internalMetric (D0 z ω) (ball 0 b) x y =
+          ENNReal.ofReal β * internalMetric (Dd (shiftedCanon γ hC hcirc z u ω)) (ball 0 b) x y)
+    (hMass : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
+        (μ0 z ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
+          (ENNReal.ofReal a • Dμ (shiftedCanon γ hC hcirc z u ω)).restrict
+            (closedBall 0 (7 * FirstPassS11ah.certScale n)))
+    (hdil : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ n : ℕ, ∀ᵐ ω ∂P, ∃ a c : ℝ, 0 < a ∧ 0 < c ∧
+        Dμ (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)) =
+            ENNReal.ofReal a • (Dμ (shiftedCanon γ hC hcirc z u ω)).map
+              (fun w : ℂ => w / (((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) ∧
+          ∀ x y : ℂ, Dd (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)) x y =
+            c * Dd (shiftedCanon γ hC hcirc z u ω) (((((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) * x)
+              ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * y)) :
+    RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M Adm rR
+      μR dR Dμ Dd := by
+  filter_upwards [hD0, hDu, hInt, hMass, hdil] with z hD0z hDuz hIntz hMassz hdilz hzA b u hadm
+  have hb : 0 < b := hAdm z b u hadm
+  have hball : (0 : ℂ) ∈ ball (0 : ℂ) b := mem_ball_self hb
+  have hpair := ae_eventual_certificateEvent_pair hNS (μ0 z) (fun ω => Dμ (shiftedCanon γ hC hcirc z u ω))
+    (D0 z) (fun ω => Dd (shiftedCanon γ hC hcirc z u ω)) isOpen_ball hball (half_pos hb) Ostar U V W T Q' Q η M hCont hU
+    (hD0z hzA b u hadm) (hDuz hzA b u hadm) (hIntz hzA b u hadm) (hMassz hzA b u hadm)
+  filter_upwards [hpair, ae_all_iff.2 (hdilz hzA b u hadm)] with ω hωp hωd
+  obtain ⟨n₀, hn₀⟩ := hωp
+  refine ⟨n₀, fun n hn _ _ _ => ?_⟩
+  obtain ⟨a, c, ha, hc, hM, hE⟩ := hωd n
+  have hcs : FirstPassS11ah.certScale n = (1 / 2 : ℝ) ^ n := by
+    simp [FirstPassS11ah.certScale, one_div]
+  have hEfun : Dd (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)) = fun x y : ℂ =>
+      c * Dd (shiftedCanon γ hC hcirc z u ω) ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * x)
+        ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * y) :=
+    funext fun x => funext fun y => hE x y
+  have key := HarmonicBalls.FirstPassS11iCertDilate.certificateEvent_dilate_iff
+    (Dμ (shiftedCanon γ hC hcirc z u ω)) (Dd (shiftedCanon γ hC hcirc z u ω)) Ostar U V W T Q' Q η M 1 0
+    (R := (1 / 2 : ℝ) ^ n) (by positivity) ha hc
+  rw [mul_one, mul_zero] at key
+  rw [hμR z ω, hdR z ω]
+  refine (FirstPassS11aq.certificateEvent_translate_iff (μ0 z ω) (D0 z ω) Ostar U V W T Q' Q η M
+    (FirstPassS11ah.certScale n) z (-z)).trans ?_
+  rw [add_neg_cancel, hn₀ n hn, hcs, hM, hEfun]
+  exact key.symm
 end FirstPassS11at
