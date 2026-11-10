@@ -15,6 +15,7 @@ import HarmonicBalls.FirstPass.Closure.Sec11CanonicalOf13
 import HarmonicBalls.FirstPass.Closure.Main12CanonicalOf13
 import HarmonicBalls.FirstPass.Closure.PaperExponentOf13
 import HarmonicBalls.FirstPass.Closure.C1112Clean
+import HarmonicBalls.FirstPass.Closure.LocalRootKernelAc
 
 /-!
 # Top-level closure module (fp-closure-all-top-module)
