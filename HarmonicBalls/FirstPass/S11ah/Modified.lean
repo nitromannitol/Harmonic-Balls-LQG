@@ -11,14 +11,14 @@ import HarmonicBalls.FirstPass.S11ao
   (`HarmonicBalls/FirstPass/S11al.lean`, commit 8f2a2a5), given the containments `CertificateContainments`
   (taken as a hypothesis; proved by fp-S11ap).
 * `LocalLengthModification P c R D`: the `P`-almost-sure modification of a family of local length metrics on the disc
-  `ball c R`. Its existence is the named hypothesis `hq3` (task fp-S11ao, lemma `exists_localLengthModification`), not
-  proved here.
+  `ball c R`. Its existence is proved here from the almost-sure length property (`localLengthModification_of_ae`,
+  via `FirstPassS11ao.exists_measurable_localLengthModification`, S11ao.lean:44); no named input.
 * `failureSetLoc`: the Step 5 failure set (formula (K)) of the local certificate sequence `localCertLoc`, indexed by
   `(z, ω) ∈ ℂ × Ω`.
 * `measurableSet_failureSetLoc`: measurability for a decoder whose metrics are local length metrics for every `ω`.
 * `failureSetLoc_ae_agree`: two families agreeing `P`-a.e. have failure sets that agree `P`-a.e. on every section.
 * `exists_modified_failureSet_ae`: the Step 5 interface for the actual decoder, given `hLen` (the a.s. length property of
-  the decoder output) and `hq3`: a modified family with measurable failure set, equal to the actual one `P`-a.s.
+  the decoder output): a modified family with measurable failure set, equal to the actual one `P`-a.s.
 -/
 
 open MeasureTheory ProbabilityTheory Metric Set Filter Topology
@@ -121,7 +121,8 @@ theorem failureSetLoc_ae_agree {c : ℂ} {R : ℝ} (κ : Kernel Ω ℂ) {P : Mea
   exact (localCertLoc_congr κ n (ω, z) hω).symm
 
 /-- **Step 5 interface for the local decoder, almost surely (wave 31).** Let `D ω` be a local length metric on
-`ball c R` for `P`-a.e. `ω` (`hLen`), measurable in `ω`, and let `hq3` supply the `P`-a.s. modification (fp-S11ao).
+`ball c R` for `P`-a.e. `ω` (`hLen`), measurable in `ω`; the `P`-a.s. modification comes from `hLen`
+(`localLengthModification_of_ae`).
 Then there is a modified family `D'`, with the length property for every `ω`, whose Step 5 failure set is measurable
 and agrees with that of `D` on every section, for `P`-a.e. `ω`. -/
 theorem exists_modified_failureSet_ae {c : ℂ} {R : ℝ} (hR : 0 < R) (κ : Kernel Ω ℂ) [IsSFiniteKernel κ]

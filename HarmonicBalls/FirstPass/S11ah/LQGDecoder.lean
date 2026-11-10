@@ -14,10 +14,10 @@ This file proves that the decoder family is a.s. an `IsLengthMetricOn B` metric,
 
 * the almost-sure Euclidean length property of `𝔇 (hC ω)` (`IsLQGMetric`, axiom I of `SatisfiesLQGMetricAxioms`,
   applied to the field `hC ω + 0`);
-* the named input `CutoffInternalLengthStmt ξ α` (R1 of `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`, section 3.1,
-  items 1-4, used as stated on the operator's instruction of 2026-11-10). It is a deterministic statement about every
-  finite length metric `d` inducing the Euclidean topology. It is NOT in `HarmonicBalls/External` or
-  `HarmonicBalls/Proposed` and awaits operator staging and source-check.
+* the cutoff transfer `CutoffInternalLengthStmt ξ α` (R1 of `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`, section 3.1,
+  items 1-4), proved as `cutoffInternalLengthStmt` (CutoffLength.lean:163). The theorems below keep it as a parameter
+  `hR1`, which FirstPassS11ar instantiates with that proof. It is a deterministic statement about every finite length
+  metric `d` inducing the Euclidean topology.
 
 The deterministic core is `isLengthMetricOn_decoderOn`: the decoder equals `b · internalReal G B` on `B × B` because the
 two functions are continuous on `B × B`, agree off the diagonal (where the identity (18) and the length metric axioms
@@ -39,9 +39,10 @@ def weylLogReal (d : ℂ → ℂ → ℝ) (ξ α : ℝ) : ℂ → ℂ → ℝ :=
 def internalReal (D : ℂ → ℂ → ℝ) (U : Set ℂ) : ℂ → ℂ → ℝ :=
   fun x y => (internalMetric D U x y).toReal
 
-/-- **Named input R1: cutoff transfer of the internal metric of the logarithmic Weyl scaling.**
+/-- **Cutoff transfer of the internal metric of the logarithmic Weyl scaling (former named input R1; now proved as
+`cutoffInternalLengthStmt`, CutoffLength.lean:163).**
 Source: `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`, section 3.1 (deterministic statement, items 1-4), with the proof
-route of section 3.2. Used as stated (operator decision, wave 31). The statement is quantified over every finite
+route of section 3.2. The statement is quantified over every finite
 length metric `d` on `ℂ` inducing the Euclidean topology (`IsEuclideanLengthMetric d`) and every open connected `V`
 with compact closure and `0 ∉ closure V` (here `V = ball c₂ r₂`, `0 ∉ closedBall c₂ r₂`). The cutoff `f` of setup (17)
 is a test function equal to `-α log‖·‖` near `closure V`. The conclusions are items 1-4: (1) `W_f` is finite and
