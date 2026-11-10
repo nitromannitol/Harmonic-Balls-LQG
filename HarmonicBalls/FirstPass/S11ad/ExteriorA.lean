@@ -133,26 +133,26 @@ lemma pinchOmegaGeom_subset_compl_closure {W Q : Set ℂ} {δ : ℝ} (hδ : 0 < 
   have h2 := (connectedComponentIn_subset _ _ hx).2
   exact h2 (Or.inr (closure_mono (self_subset_thickening (by positivity) W) hxW))
 
-/-- Exterior version of the local sup `A` of `pinchFirstEventLocal` (note §6.3): `pinchLocalA (D ω) W Q δ` agrees almost
-surely with a random variable measurable for the field outside `closure W`. The only input is the locality item II of
-the metric axioms `hAx`, used through the derivation of `FirstLExterior.pinchFirstLExteriorStep_of_frozen`. -/
-theorem pinchLocalA_exterior_version (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
-    (U V W T Q' Q : Set ℂ) (δ : ℝ) (hG : IsBufferedPinchGeometry U V W T Q' Q δ)
+/-- The sphere `∂B₁(0)` avoids `closure W` (the buffered geometry puts `closure W` outside the unit disc). -/
+lemma sphere_one_subset_compl_closure {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (hG : IsBufferedPinchGeometry U V W T Q' Q δ) : sphere (0 : ℂ) 1 ⊆ (closure W)ᶜ := by
+  intro z hz
+  rw [mem_compl_iff]
+  intro hzW
+  have h1 := BundleParts.closure_W_norm_gt_one hG hzW
+  rw [mem_sphere_zero_iff_norm] at hz
+  linarith
+
+/-- Locality of the metric field, from item II of `hAx`: the metric is a.s. a Euclidean length metric, and every open
+set carries an exterior-measurable version of its internal metric. -/
+theorem metric_locality_of_frozen (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (γ ξ α₀ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (D : Ω → ℂ → ℂ → ℝ) (hGFF : IsWholePlaneGFF P hC hcirc) (hDm : IsLQGMetricOfField P γ ξ α₀ hC D)
-    (hOmega : ({0} ∪ sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ) :
-    ∃ Y : Ω → ℝ≥0∞, Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] Y ∧
-      ∀ᵐ ω ∂P, Y ω = pinchLocalA (D ω) W Q δ := by
-  have hδ0 : 0 < δ := hG.delta_pos
-  have hE : IsOpen (closure W)ᶜ := isClosed_closure.isOpen_compl
-  have hsph1 : sphere (0 : ℂ) 1 ⊆ (closure W)ᶜ := by
-    intro z hz
-    rw [mem_compl_iff]
-    intro hzW
-    have h1 := BundleParts.closure_W_norm_gt_one hG hzW
-    rw [mem_sphere_zero_iff_norm] at hz
-    linarith
+    (D : Ω → ℂ → ℂ → ℝ) (hGFF : IsWholePlaneGFF P hC hcirc) (hDm : IsLQGMetricOfField P γ ξ α₀ hC D) :
+    (∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω)) ∧
+    ∀ V' : Set ℂ, IsOpen V' → ∃ G : Ω → ℂ → ℂ → ℝ≥0∞,
+      (∀ z w, Measurable[fieldSigmaAlgebra α₀ hC V'] fun ω => G ω z w) ∧
+        ∀ᵐ ω ∂P, ∀ z ∈ V', ∀ w ∈ V', internalMetric (D ω) V' z w = G ω z w := by
   obtain ⟨𝔇, h𝔇, hDae⟩ := hDm
   obtain ⟨hI, hII, -, -⟩ := hAx Ω P γ ξ α₀ hC hcirc hGFF hγ0 hγ2 hα 𝔇 h𝔇
   have hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω) := by
@@ -164,28 +164,39 @@ theorem pinchLocalA_exterior_version (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
       exact h3.symm
     rw [hDeq]
     exact h1.2
-  have hloc : ∀ V' : Set ℂ, IsOpen V' → ∃ G : Ω → ℂ → ℂ → ℝ≥0∞,
-      (∀ z w, Measurable[fieldSigmaAlgebra α₀ hC V'] fun ω => G ω z w) ∧
-        ∀ᵐ ω ∂P, ∀ z ∈ V', ∀ w ∈ V', internalMetric (D ω) V' z w = G ω z w := by
-    intro V' hV'
-    obtain ⟨G, hGm, hGa⟩ := hII V' hV'
-    refine ⟨G, hGm, ?_⟩
-    filter_upwards [hGa, hmetric, hDae] with ω h1 h2 h3
-    have hDeq : D ω = fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal := by
-      funext u v
-      have h4 := ENNReal.toReal_ofReal (h3 u v).1
-      rw [(h3 u v).2] at h4
-      exact h4.symm
-    rw [hDeq]
-    exact h1
+  refine ⟨hmetric, fun V' hV' => ?_⟩
+  obtain ⟨G, hGm, hGa⟩ := hII V' hV'
+  refine ⟨G, hGm, ?_⟩
+  filter_upwards [hGa, hmetric, hDae] with ω h1 h2 h3
+  have hDeq : D ω = fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal := by
+    funext u v
+    have h4 := ENNReal.toReal_ofReal (h3 u v).1
+    rw [(h3 u v).2] at h4
+    exact h4.symm
+  rw [hDeq]
+  exact h1
+
+/-- Exterior version of the local sup `A` of `pinchFirstEventLocal` (note §6.3): `pinchLocalA (D ω) W Q δ` agrees almost
+surely with a random variable measurable for the field outside `closure W`. -/
+theorem pinchLocalA_exterior_version (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (U V W T Q' Q : Set ℂ) (δ : ℝ) (hG : IsBufferedPinchGeometry U V W T Q' Q δ)
+    (γ ξ α₀ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (D : Ω → ℂ → ℂ → ℝ) (hGFF : IsWholePlaneGFF P hC hcirc) (hDm : IsLQGMetricOfField P γ ξ α₀ hC D)
+    (hOmega : ({0} ∪ sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ) :
+    ∃ Y : Ω → ℝ≥0∞, Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] Y ∧
+      ∀ᵐ ω ∂P, Y ω = pinchLocalA (D ω) W Q δ := by
+  have hδ0 : 0 < δ := hG.delta_pos
+  have hE : IsOpen (closure W)ᶜ := isClosed_closure.isOpen_compl
+  obtain ⟨hmetric, hloc⟩ := metric_locality_of_frozen hAx γ ξ α₀ hγ0 hγ2 hα Ω P hC hcirc D hGFF hDm
   have hV : IsOpen (pinchOmegaGeom W Q δ) := isOpen_pinchOmegaGeom W Q δ
   have hVE : pinchOmegaGeom W Q δ ⊆ (closure W)ᶜ := pinchOmegaGeom_subset_compl_closure hδ0
   have hVc : (pinchOmegaGeom W Q δ)ᶜ.Nonempty :=
     ⟨8, fun h => by
       have h1 := mem_ball_zero_iff.1 (pinchOmegaGeom_subset_ball W Q δ h)
       norm_num at h1⟩
-  exact exists_exterior_sup_sphere hGFF α₀ hE hsph1 hmetric hloc hV hVE hVc (hOmega (Or.inl rfl))
-    (fun x hx => hOmega (Or.inr hx))
+  exact exists_exterior_sup_sphere hGFF α₀ hE (sphere_one_subset_compl_closure hG) hmetric hloc hV hVE hVc
+    (hOmega (Or.inl rfl)) (fun x hx => hOmega (Or.inr hx))
 
 end S11ad
 end HarmonicBalls
