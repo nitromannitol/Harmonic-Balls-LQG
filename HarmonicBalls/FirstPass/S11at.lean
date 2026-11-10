@@ -1096,7 +1096,7 @@ theorem rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent {Ω 
     (hrR : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → 0 < rR z)
     (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
     (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ)
-    (hBridge : FirstPassS11atProducers.HMuPairingBridge P γ α₀ hC hcirc) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1)
+    (hProf : LQGMeasureOfProfileMeasurableFrozen.{u}) (hOuter : closedBall c₂ r₂ ⊆ ball (0 : ℂ) 1)
     (hκ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ μz : Ω → Measure ℂ,
       IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz → ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
         (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
@@ -1138,8 +1138,8 @@ theorem rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent {Ω 
       hRLIm hLenC)
     (hMass_of_rootedLocalIdent A Adm κ Dμ Uj Dj κj hDj
       (by
-        filter_upwards [FirstPassS11atProducers.ae_exists_rootedLQGMeasure P γ α₀ hC hcirc c₁ r₁ hh hγ0 hγ2 hα
-          hExist0 hExistα hA10 hBridge hWin] with z hz
+        filter_upwards [FirstPassS11atProducers.ae_exists_rootedLQGMeasure_derived P γ α₀ hC hcirc c₁ r₁ hh hγ0 hγ2 hα
+          hExist0 hExistα hA10 hProf (hc1.trans (Metric.ball_subset_closedBall.trans hOuter))] with z hz
         exact fun _ => hz)
       hκ hκj hRLI)
 

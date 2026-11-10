@@ -32,7 +32,7 @@ theorem aemeasurable_circle_map_of_evaluations
 /-- Leonardo Bonanno's continuous circle-average version can be chosen jointly
 measurable and normalized at the unit circle for every sample. -/
 theorem IsWholePlaneGFF.exists_measurable_continuous_circle_version
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) :
     ∃ F : Ω → C(CircleParameter, ℝ),

@@ -24,7 +24,7 @@ theorem IsWholePlaneGFF.measurable_reconstructedGFF
 
 /-- The reconstructed field has the law of any normalized Bonanno GFF. -/
 theorem IsWholePlaneGFF.map_reconstructedGFF_eq
-    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {Ω : Type*} {Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
     {P : Measure Ω} {P' : Measure Ω'} [IsProbabilityMeasure P']
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {T : Ω' → LQGMetric.DistC}
@@ -48,7 +48,7 @@ theorem IsWholePlaneGFF.map_reconstructedGFF_eq
 
 /-- The reconstructed field satisfies Bonanno's normalized whole-plane GFF predicate. -/
 theorem IsWholePlaneGFF.reconstructedGFF_normalized
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) :
     LQGMetric.IsNormalizedWPGFF (reconstructedGFF hC) P := by
@@ -95,7 +95,7 @@ theorem IsWholePlaneGFF.reconstructedGFF_normalized
 /-- Each positive-radius raw circle average agrees almost surely with the
 circle average of the reconstructed distribution. -/
 theorem IsWholePlaneGFF.ae_circleAvg_reconstructedGFF
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {r : ℝ} (hr : 0 < r) (z : ℂ) :
     ∀ᵐ ω ∂P, hcirc ω r z = LQGMetric.circleAvg (reconstructedGFF hC ω) r z := by

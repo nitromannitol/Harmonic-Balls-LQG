@@ -14,7 +14,7 @@ namespace HarmonicBalls
 /-- Leonardo Bonanno's continuous circle-average version, normalized at the unit
 circle for every sample, and equal to the raw process at each fixed coordinate. -/
 theorem IsWholePlaneGFF.exists_continuous_circle_version
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) :
     ∃ H : ℝ → ℂ → Ω → ℝ,

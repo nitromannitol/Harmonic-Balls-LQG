@@ -1207,10 +1207,10 @@ theorem exists_measurable_conull_subset' {X : Type*} [MeasurableSpace X] (μ : M
 There is a pairing-measurable data map `Φ'` (Doob-Dynkin factor of the explicit limit data) and a measurable
 set `A` of data, almost surely containing the data of the GFF, every point of which is the data of a continuous
 profile with an LQG limit. -/
-theorem exists_pairing_good {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+theorem exists_pairing_good {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     (γ α₀ : ℝ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
     (μα : Ω → Measure ℂ) (hμα : IsLQGMeasureOfField P γ α₀ hcirc μα)
-    (hProf : LQGMeasureOfProfileMeasurableFrozen.{0}) :
+    (hProf : LQGMeasureOfProfileMeasurableFrozen.{u}) :
     ∃ Φ' : ((ℂ → ℝ) → ℝ) → (ℕ → ℝ),
       @Measurable ((ℂ → ℝ) → ℝ) (ℕ → ℝ) (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ) _ Φ' ∧
       (∀ᵐ ω ∂P, ∀ i : ℕ, Tendsto (fun j => hC ω (approxSeq i j)) atTop (𝓝 (Φ' (hC ω) i))) ∧
@@ -1332,12 +1332,12 @@ open FirstPassS11atBridge
 
 /-- **hμ producer, derived** (no `HMuPairingBridge`; the decoder input is `hProf`). For a.e. root `z` in
 `ball c₁ r₁`, the rooted γ-LQG measure of `rootedCircleFieldP α₀ γ hcirc z` exists almost surely. -/
-theorem ae_exists_rootedLQGMeasure_derived {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω)
+theorem ae_exists_rootedLQGMeasure_derived {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
     [IsProbabilityMeasure P] (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ : ℂ) (r₁ : ℝ)
     (hh : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
     (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ)
-    (hProf : LQGMeasureOfProfileMeasurableFrozen.{0}) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1) :
+    (hProf : LQGMeasureOfProfileMeasurableFrozen.{u}) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1) :
     ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∃ μz : Ω → Measure ℂ,
       IsLQGMeasure P γ (rootedCircleFieldP α₀ γ hcirc z) μz := by
   have hQ : 0 < lqgQ γ := by unfold lqgQ; positivity
