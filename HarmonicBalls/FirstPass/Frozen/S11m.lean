@@ -19,7 +19,7 @@ open MeasureTheory
 
 universe u
 
-/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator note 01:41 UTC, item 2). For `0 < γ < 2`, `α < Q_γ`,
+/-- FIRST-PASS FROZEN, derived: `lqgMetricAlphaWeylShiftLength_of_axioms` (FirstPass/S11m/WeylShiftAlphaLength.lean) from `LQGMetricFieldAxiomsUnivFrozen` and `weylScaling_continuous_compactSupport_length` (FirstPass/S11m/WeylLengthCompact.lean); no longer an input (operator note 02:15 UTC; originally operator note 01:41 UTC, item 2). For `0 < γ < 2`, `α < Q_γ`,
 every γ-LQG metric `𝔇` with Weyl exponent `ξ` (`IsLQGMetric γ ξ 𝔇`) and every whole-plane GFF `h^ℂ` on a probability
 space `Ω : Type u`, and every smooth compactly supported `f : ℂ → ℝ`, almost surely the metric `e^{ξ f} D_h` is a
 Euclidean length metric, where `D_h = weylScaling (𝔇 (h^ℂ)) ξ (-α log |·|)` is the α-metric (`IsLQGMetricOfField`).
