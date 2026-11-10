@@ -35,7 +35,10 @@ Source: DMS, arXiv:1409.7055v4, Appendix A, Lemma A.10, p. 184, whole-plane clau
 regularized weighting `ε^{γ²/2} e^{γ h_ε(u)} du dh` and conditions on the chosen point), together with Duplantier-Sheffield,
 arXiv:0808.1560, §3.3 (rooted random measures; the rooted measure Θ on pairs `(z, h)`).
 NOT verbatim: the printed lemma states the field marginal only, as `DMSLemmaA10WholePlaneUnnormalized`
-(Proposed/DuplantierMillerSheffield.lean:73), which discards the mark `z`; the marked identity is read off the proof. -/
+(Proposed/DuplantierMillerSheffield.lean:73), which discards the mark `z`; the marked identity is read off the proof.
+Truth check (chat 241, `notes/fp-gaps/CHATGPT-241-hb-DMS-A10-marked-truth-PRO.md` §1): FALSE as universally typed
+(missing `0 < γ` and `γ < 2`). At a fixed `0 < γ < 2` it follows from `DMSLemmaA10WholePlaneMarkedSub` by
+`dmsA10Marked_of_sub`; top-level theorems take the Sub form. -/
 def DMSLemmaA10WholePlaneMarked {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
   IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ →
@@ -43,5 +46,29 @@ def DMSLemmaA10WholePlaneMarked {Ω : Type*} [MeasurableSpace Ω] (P : Measure �
       Measurable[(pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ).prod inferInstance] Ψ →
         ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1, Ψ (hC ω, z) ∂(μ ω) ∂P
           = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, Ψ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) ∂P ∂volume
+
+/-- FIRST-PASS FROZEN (operator ruling 2026-11-10; chat 241 `notes/fp-gaps/CHATGPT-241-hb-DMS-A10-marked-truth-PRO.md`
+§4: the narrowest corrected declaration). Same parameters and body as `DMSLemmaA10WholePlaneMarked`; the subcritical
+range `0 < γ` and `γ < 2` is inserted after the two old antecedents, so call sites keep their argument order.
+Truth check: FALSE as universally typed: the subcritical assumptions are missing. TRUE under `0 < γ` and `γ < 2`.
+The identity is unnormalized; no factor `π⁻¹`; both sides have total mass `π`.
+Marked whole-plane form of Duplantier-Miller-Sheffield Lemma A.10 for `D = B₁`, unnormalized, with `ℝ≥0∞`-valued
+marked test functions `Ψ(h, z)`. Source: DMS, arXiv:1409.7055v4, Appendix A.1, Lemma A.10, printed p. 184, whole-plane
+clause and its proof; Duplantier-Sheffield, arXiv:0808.1560, §3.3 (rooted random measures). -/
+def DMSLemmaA10WholePlaneMarkedSub {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
+  IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ → 0 < γ → γ < 2 →
+    ∀ Ψ : (((ℂ → ℝ) → ℝ) × ℂ) → ℝ≥0∞,
+      Measurable[(pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ).prod inferInstance] Ψ →
+        ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1, Ψ (hC ω, z) ∂(μ ω) ∂P
+          = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, Ψ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) ∂P ∂volume
+
+/-- At a fixed subcritical `0 < γ < 2`, the Sub form gives the marked form `DMSLemmaA10WholePlaneMarked`
+(hypothesis threading only; no new mathematics). -/
+theorem dmsA10Marked_of_sub {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ)
+    (h : DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ) (hγ0 : 0 < γ) (hγ2 : γ < 2) :
+    DMSLemmaA10WholePlaneMarked P γ hC hcirc μ :=
+  fun hW hL => h hW hL hγ0 hγ2
 
 end HarmonicBalls
