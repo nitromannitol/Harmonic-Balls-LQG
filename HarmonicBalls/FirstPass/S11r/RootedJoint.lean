@@ -51,7 +51,7 @@ theorem measurable_campbellReferenceObs_joint {Ω : Type u} [MeasurableSpace Ω]
 /-- **Rooted null transfer, without the side hypothesis.** The statement of
 `ae_root_rootedObs_eq_zero_of_obs_null` (RootedNull.lean) with the joint measurability `hmeas` proved from the GFF
 pairings (`measurable_campbellReferenceObs_joint`). -/
-theorem ae_root_rootedObs_eq_zero_of_obs_null_noMeas (hI1 : LocalMarkedRootingIdentityFrozen.{u})
+theorem ae_root_rootedObs_eq_zero_of_obs_null_noMeas (hI1 : LocalMarkedRootingIdentityWeightedFrozen.{u})
     {γ α₀ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ)
