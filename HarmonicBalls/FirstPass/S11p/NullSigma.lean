@@ -57,8 +57,8 @@ def nullSigma {Ω : Type*} (𝒩 : NullIdeal Ω) (F : MeasurableSpace Ω) : Meas
     exact ⟨⋃ n, C n, MeasurableSet.iUnion hCm, 𝒩.null_mono hsub (𝒩.null_iUnion _ hCn)⟩
 
 /-- A function that agrees outside a negligible set with an `F`-measurable one is `nullSigma`-measurable. -/
-theorem measurable_nullSigma_of_ae_eq {Ω : Type*} {𝒩 : NullIdeal Ω} {F : MeasurableSpace Ω}
-    {X Y : Ω → ℝ≥0∞} (hY : Measurable[F] Y) {N : Set Ω} (hN : 𝒩.Null N) (hXY : ∀ ω, ω ∉ N → X ω = Y ω) :
+theorem measurable_nullSigma_of_ae_eq {Ω : Type*} {β : Type*} [MeasurableSpace β] {𝒩 : NullIdeal Ω}
+    {F : MeasurableSpace Ω} {X Y : Ω → β} (hY : Measurable[F] Y) {N : Set Ω} (hN : 𝒩.Null N) (hXY : ∀ ω, ω ∉ N → X ω = Y ω) :
     Measurable[nullSigma 𝒩 F] X := by
   intro B hB
   have hsub : (X ⁻¹' B) ∆ (Y ⁻¹' B) ⊆ N := by
