@@ -82,7 +82,7 @@ source (no `% CORRECTION` yet). For each result:
 
 - I1 **Full support of mu_h**: a.s. mu_h(U)>0 for every non-empty open U. The paper states it informally at lines 134-135. It is
   used in the repair of Prop 4.1 (G3), in Prop 5.6 (mu_h(B)>0, 2465-2470), Lemma 9.3 Step 3 (2382-2383), Lemma 9.4 (2399-2408) and
-  the repair of G7. It is not among the items of Fact 2.1. Derivable from the lower bound of Lemma 2.4 (Borel-Cantelli over dyadic
+  the repair of G7 [Lean 2026-11-10: two-sided HausdorffContinuousOn proved by regularizedClusterHausdorffContinuity_of_steps, Proofs/Sec5/LeftContinuity.lean:163; see the G7 entry]. It is not among the items of Fact 2.1. Derivable from the lower bound of Lemma 2.4 (Borel-Cantelli over dyadic
   eps) plus scaling (eq:h-coordinate-change, Fact 2.1 III-IV), or a GMC literature fact (would need an External).
 - I2 **A.s. volume growth for all small r and all z in B_R** (eq:volume-growth). The paper says it "follows from Lemma 2.4 and the
   scaling properties" (3529-3530). This needs Borel-Cantelli over dyadic scales and monotonicity in r. Used by all of App A,
@@ -144,7 +144,7 @@ source (no `% CORRECTION` yet). For each result:
 - Lit: none directly.
 - Consumed by: Thm 1.2 (171); the phrase "conditions of Theorem 1.1" in Prop 5.4 (855), Thm 5.5 (865), Prop 5.6 (875) and Sec 9
   (2278, 2392, 2410).
-- Issues: F1 (the literal test class makes the theorem false), G7 (left Hausdorff-continuity is never proved), S1 (Lambda_t(x) at
+- Issues: F1 (the literal test class makes the theorem false), G7 (left Hausdorff-continuity is never proved) [Lean 2026-11-10: two-sided HausdorffContinuousOn proved by regularizedClusterHausdorffContinuity_of_steps, Proofs/Sec5/LeftContinuity.lean:163; see the G7 entry], S1 (Lambda_t(x) at
   156).
 - Deps: 5.5, 5.6
 
@@ -352,7 +352,7 @@ The appendix proves everything for a deterministic Radon measure mu satisfying e
   - Uniqueness is deferred to Prop 5.6 (977).
 - Consumed by: Thm 1.1 (870), Prop 5.6 statement (873), Lemma 5.8 (1024), Lemma 9.3 (2343), Prop 10.7 (2691), Lemma 11.6 (2782),
   Prop 11.2 (2943).
-- Issues: G6 (four sub-points); G7.
+- Issues: G6 (four sub-points); G7 [Lean 2026-11-10: two-sided HausdorffContinuousOn proved by regularizedClusterHausdorffContinuity_of_steps, Proofs/Sec5/LeftContinuity.lean:163; see the G7 entry].
 - Deps: 3.5, 5.4, 5.7
 
 ### 5.6 Prop (prop:uniqueness, 872): UniquenessHarmonicBallsStmt
@@ -680,7 +680,7 @@ The appendix proves everything for a deterministic Radon measure mu satisfying e
   Lemma 3.1, Lemma 3.2, Prop 8.1 (needed at 2058, G29).
 - Lit: Borel-Cantelli (Mathlib `MeasureTheory.measure_limsup_atTop_eq_zero`, OuterMeasure/BorelCantelli.lean:62).
 - Consumed by: proof of Props 5.1-5.2 (2104, eq:continuity); text 299. Implicitly: Prop 5.4 (through Prop 5.2) and Thm 1.1(b).
-- Issues: G27, G29, G1, G7 (right-continuity only), G12 (scope Lambda compactly in B_1), F2 (the beta^- of the statement is
+- Issues: G27, G29, G1, G7 (right-continuity only) [Lean 2026-11-10: two-sided HausdorffContinuousOn proved by regularizedClusterHausdorffContinuity_of_steps, Proofs/Sec5/LeftContinuity.lean:163; see the G7 entry], G12 (scope Lambda compactly in B_1), F2 (the beta^- of the statement is
   the exponent of Lemma 2.4); S 2022-2026 (quantifiers and C), S 2025 (+ B_delta(z), already listed).
 - Deps: 2.4, 3.1, 3.2, 3.3, 3.4, 4.1, 6.1, 8.1
 
@@ -1335,6 +1335,7 @@ Properties of q_{B_R} (3537-3541):
 - **G7. Thm 1.1(b), "increase continuously in t (in the Hausdorff topology)" (157).** Props 5.2 and 7.2 give right-continuity
   only. Left-continuity is never stated. Short repair: if x is in Lambda_t but not in closure(union_{s<t} Lambda_s), a small ball
   around x has positive mass (I1) and misses that union, contradicting mu_h(Lambda_t) = t = lim mu_h(Lambda_s).
+  [Lean 2026-11-10 annotation; the text above is unchanged.] The Lean statement regularizedClusterHausdorffContinuity_of_steps (HarmonicBalls/Proofs/Sec5/LeftContinuity.lean:163) proves, almost surely, for every z in ball 0 (1/2) and T > 0 such that the clusters on (0,T) have closure in ball 0 1, that regularizedCluster (mu ω) 1 z is HausdorffContinuousOn (Ioo 0 T), i.e. two-sided continuity before exit; this is the statement RegularizedClusterHausdorffContinuityStep (HarmonicBalls/Steps/Sec5/RegularizedCluster.lean:32), proved from six named Section 5 step hypotheses (ClusterOpenLaplacianStmt, ClusterMonotoneStmt, ClusterConservationOfMassStmt, ClusterBoundaryMeasureZeroStmt, LQGMeasureFullSupportStmt, ClusterCompactRightContinuityStmt). It is used through regularizedClusterHarmonicBalls_of_exit (LeftContinuity.lean:217), reached from firstPass_5_5 (HarmonicBalls/FirstPass/S5S7S8.lean:161) via section5_5_of_staged_inputs (Proofs/Sec5/StagedInputAssembly.lean:189) and existenceHarmonicBalls_of_volumeGrowth_and_clusterEstimates (Proofs/Sec5/ExistenceFromVolumeGrowth.lean:20), and from closure_5_5_noWeyl (HarmonicBalls/FirstPass/Closure/Sec8Weyl.lean:107) via closure_5_5 (HarmonicBalls/FirstPass/Closure/SecA45.lean:220). Axioms: propext, Classical.choice, Quot.sound. The corrected TeX is the operator's; this line records what the Lean proves and makes no claim about the paper's argument.
 - **G8. Prop 5.6 proof (2432-2434).** "As the family {A_t} continuously decreases to {z}": hypothesis (b) only gives
   cap_t A_t = {z} for open sets, which does not yield B subset complement of A_{s0}. Fix:
   - The boundary of A_s lies in closure(Lambda-hat_s(z)) (Lemma 9.3), which is inside B_delta(z) for small s (Prop 5.2 scaled, or
@@ -1614,7 +1615,7 @@ Properties of q_{B_R} (3537-3541):
       Lambda-hat_a and then appeals to the "standard machine" and approximation.
     - Problem (i): "subset" in the interval identity follows from monotonicity. "Supset" does not: a point of
       closure(Lambda-hat_b) \ Lambda-hat_a that first enters closure Lambda-hat_s at time s must not lie in the open set
-      Lambda-hat_s. That is a left-continuity property (cf. G7).
+      Lambda-hat_s. That is a left-continuity property (cf. G7 [Lean 2026-11-10: two-sided HausdorffContinuousOn proved by regularizedClusterHausdorffContinuity_of_steps, Proofs/Sec5/LeftContinuity.lean:163; see the G7 entry]).
     - Problem (ii): A -> mu_h(S(A)) is not additive, since boundaries for different t can share points. S(A) need not be Borel,
       so approximation does not extend the identity to measurable A.
     - Problem (iii): A itself need not be measurable.
