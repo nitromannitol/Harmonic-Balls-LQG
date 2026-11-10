@@ -89,4 +89,21 @@ theorem exists_pinchSecondExteriorEvent_of_versions {Ω : Type*} [mΩ : Measurab
   rw [← h3]
   exact hc₁
 
+/-- The first event of Lemma 11.15 (`pinchFirstEvent`, `Draft/Section11.lean:95`) is a.s. the outside event
+`{L < a₀} ∩ {a₁ < d₀}` built from four exterior versions: `L` of `sup_{∂B₅} D(0, · ; (thick_{2δ}(Q ∪ W))ᶜ)`, `a₀` of
+`D(Q', ∂Q)`, `a₁` of `diam^{δ}(T \ thick_{3δ}W)` and `d₀` of `D({0}, ∂B_δ)`. The versions are the N1 inputs; this lemma
+is the bookkeeping that turns them into one exterior-measurable event. -/
+theorem pinchFirstEvent_ae_iff_versions {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} {m : MeasurableSpace Ω}
+    (W T Q' Q : Set ℂ) (δ : ℝ) {D : Ω → ℂ → ℂ → ℝ}
+    {l a₀ a₁ d₀ : Ω → ℝ≥0∞} (hl : Measurable[m] l) (ha₀ : Measurable[m] a₀)
+    (ha₁ : Measurable[m] a₁) (hd₀ : Measurable[m] d₀)
+    (hlv : ∀ᵐ ω ∂P, l ω = ⨆ x ∈ sphere (0 : ℂ) 5, internalMetric (D ω) (thickening (2 * δ) (Q ∪ W))ᶜ 0 x)
+    (ha₀v : ∀ᵐ ω ∂P, a₀ ω = ENNReal.ofReal (setDist (D ω) Q' (frontier Q)))
+    (ha₁v : ∀ᵐ ω ∂P, a₁ ω = internalDiam (D ω) δ (T \ thickening (3 * δ) W))
+    (hd₀v : ∀ᵐ ω ∂P, d₀ ω = ENNReal.ofReal (setDist (D ω) {0} (sphere 0 δ))) :
+    ∃ F : Set Ω, MeasurableSet[m] F ∧ ∀ᵐ ω ∂P, ω ∈ F ↔ pinchFirstEvent (D ω) W T Q' Q δ := by
+  refine ⟨{ω | l ω < a₀ ω ∧ a₁ ω < d₀ ω}, (measurableSet_lt hl ha₀).inter (measurableSet_lt ha₁ hd₀), ?_⟩
+  filter_upwards [hlv, ha₀v, ha₁v, hd₀v] with ω h1 h2 h3 h4
+  simp only [pinchFirstEvent, h1, h2, h3, h4]
+
 end HarmonicBalls
