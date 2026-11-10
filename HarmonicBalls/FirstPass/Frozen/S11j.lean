@@ -94,14 +94,15 @@ scaling, constant Weyl scaling, coordinate change and the Euclidean topology (Bo
 def LQGMetricExponentPositive : Prop :=
   ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 → 0 < ξ
 
-/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator note 23:37 UTC, replacing the retired
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check TRUE (ChatGPT, 00:28 UTC); operator note 23:37 UTC, replacing the retired
 `WeylMetricCompositionFrozen`). Metric-level Weyl composition with a CONTINUOUS outer shift: for `ξ > 0`, an Euclidean
 length metric `D`, a weight `g` continuous on `ℂ ∖ {0}` (the log singularity is continuous there) with finite inner
 scaling, and a continuous weight `f`, scaling by `g` and then by `f` is scaling by `g + f`. Here `weylScaling D ξ g` is
 the infimum of `∫ e^{ξ g}` over `D`-length parametrized paths (`Defs/LQGMetric.lean`), the inner metric enters via `toReal`.
 Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 III, corrected paper line 445; GM21 = Gwynne-Miller, (1.8), p. 6.
 The correction `ContinuousOn f {z | z ≠ 0}` ↦ `Continuous f` is the one of `notes/fp-gaps/CHATGPT-n4-frozen-truth-weyl.md`
-("Minimal Lean fix"), which gives a deterministic proof of the corrected statement; operator truth check pending. -/
+("Minimal Lean fix"), which gives a deterministic proof of the corrected statement. Proof idea (path approximation): for the exact
+finite-length definition, approximate by finite-length paths (notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md, section 1). -/
 def WeylMetricCompositionContinuousOuterFrozen : Prop :=
   ∀ ξ : ℝ, 0 < ξ → ∀ (D : ℂ → ℂ → ℝ) (g f : ℂ → ℝ), IsEuclideanLengthMetric D →
     ContinuousOn g {z | z ≠ 0} → Continuous f →
@@ -109,20 +110,23 @@ def WeylMetricCompositionContinuousOuterFrozen : Prop :=
     ∀ x y, weylScaling (fun u v => (weylScaling D ξ g u v).toReal) ξ f x y =
       weylScaling D ξ (fun z => g z + f z) x y
 
-/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator ruling B1, 23:42 UTC, option (a): a universe-`u`
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check TRUE (ChatGPT, 00:28 UTC); operator ruling B1, 23:42 UTC, option (a): a universe-`u`
 restatement of the axiom clause used). For `0 < γ < 2`, every γ-LQG metric `𝔇` (`IsLQGMetric γ ξ 𝔇`) and every
 whole-plane GFF `h^ℂ` on a probability space `Ω : Type u`, the metric `𝔇(h^ℂ)` is almost surely a Euclidean length metric
 (`IsEuclideanLengthMetric`, axiom I of Fact 2.2 at `h^ℂ`, with no insertion). Source: the axioms of `IsLQGMetric`
 (`Defs/LQGMetric.lean`, `satisfiesLQGMetricAxioms` at `f = 0`), which quantify over `Ω : Type`; the universe lift holds
 because the axioms involve only the joint law of the field and the metric (`IsLQGMetric` docstring); GM21 Theorem 1.2 (p. 6);
-Gwynne-Miller 2021, Fact 2.2 I (paper lines 432-453). -/
+Gwynne-Miller 2021, Fact 2.2 I (paper lines 432-453).
+Proof idea (universe reduction): reduce the large probability space to a small space of observations, apply the original
+clause at `f = 0`, and pull back (notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md, section 2). -/
 def LQGMetricLengthUnivFrozen : Prop :=
   ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → ∀ᵐ ω ∂P, IsEuclideanLengthMetric (𝔇 (hC ω))
 
 /-- FIRST-PASS FROZEN (PROPOSED input `LQGMetricFieldAxioms`, `Proposed/LQG.lean:199`, pending operator source-check;
-universal form). The Fact 2.2 axioms I-IV for the field `h^ℂ - α₀ log|·|` hold on every probability space `Ω : Type u`,
+universal form). Truth check TRUE (ChatGPT, 00:28 UTC): the universe wrapper preserves the proposed statement; its content
+includes the singular-insertion theorem and the free-`ξ` reduction (notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md, section 3). The Fact 2.2 axioms I-IV for the field `h^ℂ - α₀ log|·|` hold on every probability space `Ω : Type u`,
 for all `γ`, `ξ`, `α₀`, every whole-plane GFF `hC`, and all `P`. Used only as the hypothesis `haxioms` of
 `firstPass_11_15_corrected` (`FirstPass/S11j/FieldAssembly11_15.lean`). -/
 def LQGMetricFieldAxiomsUnivFrozen : Prop :=
