@@ -1,4 +1,5 @@
 import HarmonicBalls.FirstPass.S11i.Faithful
+import HarmonicBalls.FirstPass.Closure.Bridge12Connected
 
 /-!
 # Bridge from the corrected Lemma 11.13 to `ManyPinchScalesStmt` (fp-closure-bridge-1-2, z7)
@@ -11,10 +12,10 @@ asks for one pinch point configuration. Fixing one buffered geometry gives the b
 
 * `HarmonicBalls.IsBufferedPinchGeometry.toPinchPointConfiguration`: the projection (no hypothesis).
 * `HarmonicBalls.Closure.exists_bufferedPinchGeometry_of_connected`: the explicit geometry of §1, with the connectedness of
-  `T` as the hypothesis `hT`. The closed form `HarmonicBalls.Closure.exists_bufferedPinchGeometry` is to follow when
-  `isConnected_annulus_diff_closedBall` (`Closure/Bridge12Connected.lean`, z4) is committed.
+  `T` as the hypothesis `hT`. The closed form `HarmonicBalls.Closure.exists_bufferedPinchGeometry` discharges `hT` by
+  `isConnected_annulus_diff_closedBall` (`Closure/Bridge12Connected.lean`, z4).
 * `HarmonicBalls.Closure.manyPinchScales_of_corrected_of_connected`: `CorrectedLemma11_13Stmt` implies
-  `ManyPinchScalesStmt`, choosing the geometry above (closed form to follow with `hT`).
+  `ManyPinchScalesStmt`, choosing the geometry above; `HarmonicBalls.Closure.manyPinchScales_of_corrected` is the closed form.
 
 The `Defs` of the keyhole geometry are the paper's `𝔸_{r₁,r₂}(z) = B_{r₂}(z) \ closure B_{r₁}(z)` (`HarmonicBalls.annulus`).
 -/
@@ -310,6 +311,16 @@ theorem manyPinchScales_of_corrected_of_connected
   obtain ⟨U, V, W, T, Q', Q, δ₀, hgeom⟩ := exists_bufferedPinchGeometry_of_connected hT
   exact ⟨U, T, Q', Q, hgeom.toPinchPointConfiguration, fun γ α₀ ξ hγ0 hγ2 hα M hM =>
     h U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM⟩
+
+/-- The buffered keyhole geometry of §1 exists (closed form: connectedness of `T` from `isConnected_annulus_diff_closedBall`,
+`Closure/Bridge12Connected.lean`, z4). -/
+theorem exists_bufferedPinchGeometry :
+    ∃ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ :=
+  exists_bufferedPinchGeometry_of_connected isConnected_annulus_diff_closedBall
+
+/-- Lemma 11.13 in corrected form implies `ManyPinchScalesStmt` (closed form, no hypothesis on `T`). -/
+theorem manyPinchScales_of_corrected (h : CorrectedLemma11_13Stmt.{u}) : ManyPinchScalesStmt.{u} :=
+  manyPinchScales_of_corrected_of_connected isConnected_annulus_diff_closedBall h
 
 end Closure
 
