@@ -988,7 +988,8 @@ chosen after `(z, b, u)` and before the inner `P`-a.s. statement. Inputs: the fr
 `LocalMetricReplacementStmt` on the large window (`hDwD`) and on the buffered windows (`hDwj`), in the `ENNReal` form of
 the clause; the rooted physical metric is a Euclidean length metric (`hLen`: NOT in the repository, see the report); n2's
 buffered metric identification (`hRLIm`, whole-ball form); the canonical length-metric property (`hLenC`); and the
-positivity of admissible shifts (`hW0`: `0 ∈ W`). The conclusion is `hDecInt` of
+positivity of admissible shifts (`hAdmPos`: `0 < b`) and of the root radius (`hrR`: `0 < rR z` on `A`), which give
+`0 ∈ ball 0 b ∩ ball 0 (rR z) ∩ V_z` (`z ∈ ball c₂ r₂` from `hc1`). The conclusion is `hDecInt` of
 `rootedCertificateEventualCovarianceStmt_decoded` for the decoder `windowMetric (ball c₂ r₂) mD`. -/
 theorem hDecInt_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {γ α₀ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -998,8 +999,8 @@ theorem hDecInt_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measu
     (mD : (WinTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂), ℝ))
     (mj : (j : ℕ) → (WinTest (Dj j) → ℝ) → C(↥(Dj j ×ˢ Dj j), ℝ))
     (hDjO : ∀ j, IsOpen (Dj j)) (hc1 : ball c₁ r₁ ⊆ ball c₂ r₂)
-    (hW0 : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
-      (0 : ℂ) ∈ ball (0 : ℂ) b ∩ ball (0 : ℂ) (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂))
+    (hAdmPos : ∀ (z : ℂ) (b : ℝ) (u : ℂ → ℝ), Adm z b u → 0 < b)
+    (hrR : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → 0 < rR z)
     (hDwD : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
       ∀ p : ↥(ball c₂ r₂ ×ˢ ball c₂ r₂),
         ENNReal.ofReal (mD (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2 p) =
@@ -1028,13 +1029,14 @@ theorem hDecInt_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measu
         ENNReal.ofReal (mj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 p) =
           ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (Dj j) p.1.1 p.1.2 :=
     ae_restrict_of_ae (ae_all_iff.2 hDwj)
-  filter_upwards [hDwD, hDwj', hLen, hRLIm, hLenC, hW0, ae_restrict_mem measurableSet_ball]
-    with z hDwDz hDwjz hLenz hRLIz hLenCz hW0z hzB hzA b u hadm
+  filter_upwards [hDwD, hDwj', hLen, hRLIm, hLenC, hrR, ae_restrict_mem measurableSet_ball]
+    with z hDwDz hDwjz hLenz hRLIz hLenCz hrRz hzB hzA b u hadm
   have hzD : z ∈ ball c₂ r₂ := hc1 hzB
   obtain ⟨j, hzj, hRω⟩ := hRLIz hzA b u hadm
   have hWO : IsOpen (ball (0 : ℂ) b ∩ ball (0 : ℂ) (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂)) :=
     isOpen_decodedWindow
-  have hW0' := hW0z hzA b u hadm
+  have hW0' : (0 : ℂ) ∈ ball (0 : ℂ) b ∩ ball (0 : ℂ) (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂) :=
+    ⟨⟨Metric.mem_ball_self (hAdmPos z b u hadm), Metric.mem_ball_self (hrRz hzA)⟩, by simpa using hzD⟩
   filter_upwards [hDwDz, hDwjz j hzj, hLenz, hRω, hLenCz hzA b u hadm] with ω hDω hDjω hLenω hidω hLenCω
   obtain ⟨bD, hbD, hDform⟩ := hDω
   obtain ⟨bj, hbj, hDjform⟩ := hDjω
@@ -1057,5 +1059,77 @@ theorem hDecInt_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measu
       (mD) (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2 (mj j)
       (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 hclD hclj hidω
   exact ⟨ρ', r, β, h1, h2, h3, h4, fun x hx y hy => h5 x hx y hy⟩
+
+universe u
+
+/-- **Rooted certificate eventual covariance, decoded form, from the rooted local identification** (q1,
+fp-S11at). The two decoded clauses `hMass` (measure, `hMass_of_rootedLocalIdent`) and `hDecInt` (metric,
+`hDecInt_of_rootedLocalIdent`) are derived from their stated inputs; the rest is passed through to
+`rootedCertificateEventualCovarianceStmt_decoded`, with the decoder `windowMetric (ball c₂ r₂) mD`. -/
+theorem rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent {Ω : Type u} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u})
+    {γ α₀ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hh : IsWholePlaneGFF P hC hcirc)
+    (hTr : ∀ z : ℂ, IsWholePlaneGFF P (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
+    (hCont : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
+    (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop)
+    (hAdmReg : ∀ z b u, Adm z b u → ContDiff ℝ (⊤ : ℕ∞) u ∧ HasCompactSupport u ∧ Real.circleAverage u 0 1 = 0)
+    (rR : ℂ → ℝ)
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (mD : (WinTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂), ℝ))
+    (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
+    (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
+    (G : Set S11n.CanonSpace) (hG : MeasurableSet G) (hGa : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G)
+    (hGreg : ∀ L ∈ G, IsEuclideanLengthMetric (Dd L))
+    (G0 : Set S11n.CanonSpace) (hG0 : MeasurableSet G0) (hG0a : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G0)
+    (hinv : dilOp ⁻¹' G0 = G0)
+    (hstep : ∀ L ∈ G0, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      Dμ (dilOp L) = ENNReal.ofReal a • (Dμ L).map (fun w : ℂ => w / (((1 / 2 : ℝ)) : ℂ)) ∧
+      ∀ x y : ℂ, Dd (dilOp L) x y = b * Dd L (((1 / 2 : ℝ) : ℂ) * x) (((1 / 2 : ℝ) : ℂ) * y))
+    (Uj Dj : ℕ → Set ℂ)
+    (κj : (j : ℕ) → ({φ : ℂ → ℝ // IsTestFunction (Dj j) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (mj : (j : ℕ) → (WinTest (Dj j) → ℝ) → C(↥(Dj j ×ˢ Dj j), ℝ))
+    (hDj : ∀ j, Dj j ⊆ ball c₂ r₂) (hDjO : ∀ j, IsOpen (Dj j)) (hc1 : ball c₁ r₁ ⊆ ball c₂ r₂)
+    (hAdmPos : ∀ (z : ℂ) (b : ℝ) (u : ℂ → ℝ), Adm z b u → 0 < b)
+    (hrR : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → 0 < rR z)
+    (hμ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A →
+      ∃ μz : Ω → Measure ℂ, IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz)
+    (hκ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz → ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+        (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
+          ENNReal.ofReal a • (μz ω).restrict (ball c₂ r₂))
+    (hκj : ∀ j, ∀ᵐ z ∂(volume : Measure ℂ), z ∈ Uj j → ∀ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz → ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+        (κj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2).restrict (Dj j) =
+          ENNReal.ofReal a • (μz ω).restrict (Dj j))
+    (hRLI : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∃ j : ℕ, z ∈ Uj j ∧ ∀ᵐ ω ∂P, ∃ ρ c : ℝ, 0 < ρ ∧ 0 < c ∧ closedBall z ρ ⊆ Dj j ∧
+        ((κj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2).map (fun w : ℂ => w - z)).restrict
+            (closedBall 0 ρ) =
+          ENNReal.ofReal c • (Dμ (shiftedCanon γ hC hcirc z u ω)).restrict (closedBall 0 ρ))
+    (hDwD : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
+      ∀ p : ↥(ball c₂ r₂ ×ˢ ball c₂ r₂),
+        ENNReal.ofReal (mD (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2 p) =
+          ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (ball c₂ r₂) p.1.1 p.1.2)
+    (hDwj : ∀ j, ∀ᵐ z ∂(volume : Measure ℂ), z ∈ Uj j → ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
+      ∀ p : ↥(Dj j ×ˢ Dj j),
+        ENNReal.ofReal (mj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 p) =
+          ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (Dj j) p.1.1 p.1.2)
+    (hLen : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
+      IsEuclideanLengthMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω))
+    (hRLIm : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∃ j : ℕ, z ∈ Uj j ∧ ∀ᵐ ω ∂P, ∃ c ρ : ℝ, 0 < c ∧ 0 < ρ ∧ closedBall z ρ ⊆ Dj j ∧
+        ∀ x ∈ closedBall (0 : ℂ) ρ, ∀ y ∈ closedBall (0 : ℂ) ρ,
+          windowMetric (Dj j) (mj j) (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 (x + z) (y + z) =
+            c * Dd (shiftedCanon γ hC hcirc z u ω) x y)
+    (hLenC : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Dd (shiftedCanon γ hC hcirc z u ω))) :
+    RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M Adm rR
+      (decodedRootMeasure κ γ α₀ hC) (decodedRootMetric (windowMetric (ball c₂ r₂) mD) γ α₀ hC) Dμ Dd :=
+  rootedCertificateEventualCovarianceStmt_decoded hCM hC hcirc hh hTr c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
+    hCont hU Adm hAdmReg rR κ (windowMetric (ball c₂ r₂) mD) Dμ Dd G hG hGa hGreg G0 hG0 hG0a hinv hstep
+    (hDecInt_of_rootedLocalIdent A Adm rR Dd Uj Dj mD mj hDjO hc1 hAdmPos hrR hDwD hDwj hLen hRLIm hLenC)
+    (hMass_of_rootedLocalIdent A Adm κ Dμ Uj Dj κj hDj hμ hκ hκj hRLI)
 
 end FirstPassS11at
