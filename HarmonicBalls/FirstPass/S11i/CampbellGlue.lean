@@ -53,4 +53,16 @@ theorem ae_marked_null_of_reference_null (hCamp : HarmonicBalls.LocalCampbellMar
     rw [hres, lintegral_zero_measure]
   · exact (mul_eq_zero.1 hω').resolve_left (ENNReal.inv_ne_zero.2 hfω)
 
+/-- The side condition `hfin` of `ae_marked_null_of_reference_null` holds for every ball: the LQG measure is a.s. locally
+finite (`IsLQGLimit.isLocallyFiniteMeasure`, Defs/LQG.lean:55), and a ball lies in a compact closed ball. -/
+theorem ae_ballMass_ne_top {γ α₀ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} (hμ : HarmonicBalls.IsLQGMeasureOfField P γ α₀ hcirc μ) (c : ℂ) (r : ℝ) :
+    ∀ᵐ ω ∂P, μ ω (ball c r) ≠ ∞ := by
+  unfold HarmonicBalls.IsLQGMeasureOfField HarmonicBalls.IsLQGMeasure at hμ
+  filter_upwards [hμ] with ω hω
+  have := hω.isLocallyFiniteMeasure
+  exact ((measure_mono ball_subset_closedBall).trans_lt (isCompact_closedBall c r).measure_lt_top).ne
+
 end HarmonicBalls.CampbellGlue
+
+#print axioms HarmonicBalls.CampbellGlue.ae_ballMass_ne_top
