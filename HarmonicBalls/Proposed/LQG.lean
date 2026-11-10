@@ -49,7 +49,10 @@ is expected to be provable from `IsWholePlaneGFF`. Each deterministic affine map
 Berestycki-Powell initially uses log coefficient `1/(2π)` and rescales by `√(2π)` for LQG;
 the present kernel already has log coefficient one.
 derived: `HarmonicBalls.wholePlaneGFFAffineInvariance_derived` (FirstPass/S11v/Affine.lean): the statement is a
-theorem of `IsWholePlaneGFF` alone (`#print axioms`: propext, Classical.choice, Quot.sound). -/
+theorem of `IsWholePlaneGFF` alone (`#print axioms`: propext, Classical.choice, Quot.sound).
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def WholePlaneGFFAffineInvariance (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ,
     IsWholePlaneGFF P
@@ -64,7 +67,10 @@ measures `ε^{γ²/2} e^{γ h_ε(z)} dz` converge vaguely along `ε = 2^{-k}` to
 Source: Bou-Rabee-Gwynne (arXiv:2208.11795v3), Section 2.2, p. 9, states existence for this singular
 whole-plane field. Duplantier-Sheffield (arXiv:0808.1560v2), Proposition 1.1, p. 5, and Berestycki-Powell
 (arXiv:2404.16642v2), Theorem 2.1, p. 62, treat bounded-domain Dirichlet fields; transfer near the pole
-requires more than the domain Markov property. Local finiteness near the singularity uses `α₀ < Q`. -/
+requires more than the domain Markov property. Local finiteness near the singularity uses `α₀ < Q`.
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def LQGMeasureExistence (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
     ∃ μ : Ω → Measure ℂ, IsLQGMeasureOfField P γ α₀ hcirc μ
@@ -73,7 +79,10 @@ def LQGMeasureExistence (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → 
 is part of `IsLQGMeasureOfField`; this Prop is the non-atomicity. Source: paper, line 418 ("immediate from the
 definition"), Fact 2.1 I, p. 9. The assertion holds simultaneously for all points; uniqueness of the locally
 finite vague limit makes the choice of `μ` immaterial. Berestycki-Powell (arXiv:2404.16642v2), Theorems 2.1
-and 3.2 (pp. 62 and 81), require transfer to this whole-plane singular field. -/
+and 3.2 (pp. 62 and 81), require transfer to this whole-plane singular field.
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def LQGMeasureNonatomic (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ μ : Ω → Measure ℂ,
     IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ᵐ ω ∂P, ∀ x : ℂ, μ ω {x} = 0
@@ -81,7 +90,10 @@ def LQGMeasureNonatomic (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → 
 /-- **Fact 2.1 II (locality)** (line 405): for every deterministic open `U`, `μ_h(U)` is given by a measurable
 function of `h|_U`, i.e. it is a.s. equal to a `σ(h|_U)`-measurable random variable (`fieldSigmaAlgebra`).
 Source: paper, line 418 ("immediate from the definition", the circle averages over circles in `U` being
-`σ(h|_U)`-measurable up to null sets). -/
+`σ(h|_U)`-measurable up to null sets).
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def LQGMeasureLocality (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ μ : Ω → Measure ℂ,
     IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ U : Set ℂ, IsOpen U →
@@ -112,7 +124,10 @@ Dirichlet field; Fact 2.1 IV, p. 9 of Bou-Rabee-Gwynne, is the direct background
 Scope: only complex affine maps, which is how the paper uses Fact 2.1 IV (rescalings, lines 904-916 and 2164).
 For a general conformal `φ : Ũ → U` the field `h ∘ φ` lives on `Ũ` and its circle averages are not circle
 averages of `h`, so they are not expressible through the
-interface of `Defs/GFF.lean`. -/
+interface of `Defs/GFF.lean`.
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def LQGMeasureCoordChange (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ μ : Ω → Measure ℂ,
     IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ᵐ ω ∂P, ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ,
@@ -150,7 +165,10 @@ How the paper's unnumbered inputs and Lemma 2.4 follow from this single estimate
 4. I2 (Draft/Section2 `LQGVolumeGrowthAllScalesStmt`): Borel-Cantelli over `δ = 2^{-k}` (the failure probabilities
    `O(2^{-kp})` are summable), monotonicity of `r ↦ μ(B_r(z))` and the slack in the exponent ranges.
 5. I1 (Draft/Section2 `LQGMeasureFullSupportStmt`): the lower bound of I2, since every nonempty open set contains a
-   ball `B_r(z)` with `z ∈ B_R` and `r` small. -/
+   ball `B_r(z)` with `z ∈ B_R` and `r` small.
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def WholePlaneLQGBallMassBounds (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → ∀ μ : Ω → Measure ℂ, IsLQGMeasureOfField P γ 0 hcirc μ →
     ∀ βlower βupper : ℝ, 0 < βlower → βlower < 2 / (2 + γ) ^ 2 → 2 / (2 - γ) ^ 2 < βupper →
@@ -171,7 +189,10 @@ Invent. Math. 223, arXiv:1905.00383), Theorem 1.2 (p. 6), building on Ding-Dubé
 PTRF 178, arXiv:1905.00380), Theorem 1.2 (p. 6).
 
 The exponent is existentially quantified, exactly as in GM21, where `ξ = γ / d_γ` with `d_γ` the LFPP exponent
-of Ding-Gwynne 2018; this Prop asserts nothing for other values of `ξ`. -/
+of Ding-Gwynne 2018; this Prop asserts nothing for other values of `ξ`.
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def LQGMetricExistenceUniqueness : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ξ : ℝ, 0 < ξ ∧ (∃ 𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ, IsLQGMetric γ ξ 𝔇) ∧
     ∀ 𝔇 𝔇' : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ, IsLQGMetric γ ξ 𝔇 → IsLQGMetric γ ξ 𝔇' →
@@ -197,7 +218,10 @@ Remark 1.5 (p. 8). III and IV for `h` follow from those for `h^ℂ` and the comp
 
 Caveat on `ξ`: the Prop quantifies over every `ξ` for which `IsLQGMetric γ ξ 𝔇` holds. The literature
 constructs γ-LQG metrics only for `ξ = γ / d_γ`; if the axioms admitted another exponent, this Prop would assert
-Fact 2.2 for it as well. -/
+Fact 2.2 for it as well.
+
+Truth: TRUE as typed (Codex truth check 2026-11-10).
+-/
 def LQGMetricFieldAxioms (P : Measure Ω) (γ ξ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ 𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ,
     IsLQGMetric γ ξ 𝔇 →
