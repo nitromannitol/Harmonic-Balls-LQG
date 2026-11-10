@@ -23,9 +23,8 @@ Route: the threshold event `Θ` (`exists_thresholds_fieldLevel`) has positive pr
 (`cameronMartinFieldCertificateTransfer`) gives a positive measurable subset of the base event; a null trimming
 yields `pinchFirstEvent` for the base metric.
 
-Named hypotheses still open (see reports/n4.md): `hLen` (universe-`Type` item I for the unshifted metric),
-`hM2a`, `hM2b` (almost sure finiteness), `haxioms` (Proposed input, pending source-check), the frozen inputs
-`hCM`, `hfr`, `hQ1`, `hFW`, `hEx`, and the instance `[IsProbabilityMeasure P]` (not in `IsWholePlaneGFF`).
+Named hypotheses still open (see reports/n4.md): `hM2a`, `hM2b` (almost sure finiteness), `haxioms` (Proposed input, pending source-check), the frozen inputs
+`hCM`, `hfr`, `hFW`, `hEx` (`hQ1` and `hLen` are removed, see `ae_shift_metric_eq`), and the instance `[IsProbabilityMeasure P]` (not in `IsWholePlaneGFF`).
 -/
 
 namespace HarmonicBalls
@@ -114,15 +113,14 @@ theorem frontier_Q_nonempty {U V W T Q' Q : Set ℂ} {δ : ℝ} (h : IsBufferedP
 `α₀ < Q`, and the LQG metric `D` of the whole-plane GFF `hC`, the event `pinchFirstEvent` has positive inner measure. -/
 theorem pinchFirstEvent_positive_fieldLevel
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u})
-    (hQ1 : WeylMetricCompositionContinuousOuterFrozen) (hFW : WeylScalingCompositionFrozen.{u})
+    (hFW : WeylScalingCompositionFrozen.{u})
     (hEx : LQGMetricExponentPositive)
     {U V W T Q' Q : Set ℂ} {δ : ℝ} (h : IsBufferedPinchGeometry U V W T Q' Q δ)
     {γ α₀ ξ : ℝ} (hγ : 0 < γ) (hγ₂ : γ < 2) (hα : α₀ < lqgQ γ)
     {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (D : Ω → ℂ → ℂ → ℝ)
     (hGFF : IsWholePlaneGFF P hC hcirc) (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
-    (haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
-    (hLenU : LQGMetricLengthUnivFrozen.{u}) :
+    (haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc) :
     ∃ A ⊆ {ω | pinchFirstEvent (D ω) W T Q' Q δ}, MeasurableSet A ∧ 0 < P A := by
   have : IsProbabilityMeasure P := isProbabilityMeasure_of_wholePlaneGFF hGFF
   obtain ⟨𝔇, h𝔇, hrepr⟩ := hD
@@ -200,7 +198,7 @@ theorem pinchFirstEvent_positive_fieldLevel
     ae_fixedWeylBump_inverse P γ ξ α₀ hC hcirc D haxioms hGFF hγ hγ₂ hα hD' hξ.le f hfcont hfcs hfnn
   have hshift : ∀ᵐ ω ∂P, (fun x y => (weylScaling (D ω) ξ f x y).toReal) =
       insertedLQGMetric 𝔇 ξ α₀ (addFunPairing (hC ω) f) :=
-    ae_shift_metric_eq hQ1 hFW hGFF hγ hγ₂ hα h𝔇 hξ hrepr (hLenU γ ξ 𝔇 hγ hγ₂ h𝔇 Ω P hC hcirc hGFF) hfcont
+    ae_shift_metric_eq hFW hGFF hγ hγ₂ hα h𝔇 haxioms hrepr hfcont
   -- the field-level event of the shifted field, and of the base field
   have hEfEv : ∀ᵐ ω ∂P, addFunPairing (hC ω) f ∈ fieldFirstEvent Φ
       (ball 0 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W)))
@@ -277,12 +275,12 @@ axioms `LQGMetricFieldAxiomsUnivFrozen.{u}` (pending operator source-check). The
 (B2) is proved (`FirstPass/S11j/B2Finite.lean`). -/
 theorem firstPass_11_15_corrected
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u})
-    (hQ1 : WeylMetricCompositionContinuousOuterFrozen) (hFW : WeylScalingCompositionFrozen.{u})
-    (hEx : LQGMetricExponentPositive) (hLenU : LQGMetricLengthUnivFrozen.{u})
+    (hFW : WeylScalingCompositionFrozen.{u})
+    (hEx : LQGMetricExponentPositive)
     (haxioms : LQGMetricFieldAxiomsUnivFrozen.{u}) :
     PinchFirstEventFaithfulStmt.{u} := by
   intro U V W T Q' Q δ h γ α₀ ξ hγ hγ₂ hα Ω _ P hC hcirc D hGFF hD
-  exact pinchFirstEvent_positive_fieldLevel hCM hfr hQ1 hFW hEx h hγ hγ₂ hα P hC hcirc D hGFF hD
-    (haxioms Ω P γ ξ α₀ hC hcirc) hLenU
+  exact pinchFirstEvent_positive_fieldLevel hCM hfr hFW hEx h hγ hγ₂ hα P hC hcirc D hGFF hD
+    (haxioms Ω P γ ξ α₀ hC hcirc)
 
 #print axioms HarmonicBalls.firstPass_11_15_corrected
