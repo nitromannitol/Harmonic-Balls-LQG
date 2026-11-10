@@ -17,23 +17,35 @@ namespace HarmonicBalls.FirstPassS11iStep8LengthMetric
 
 open MeasureTheory
 
-/-- **Fact 2.2 I for the physical metric.** Let `D` be the physical metric `D_α` of the field
-`h^ℂ - α₀ log|·|` (`IsLQGMetricOfField`), with `hC` the pairings of a whole-plane GFF. Under the Proposed input
-`LQGMetricFieldAxioms` (item I), almost surely `D_α` is a Euclidean length metric. -/
+/-- **Physical metric as the real part of the Weyl scaling.** If `D ω` is the physical metric of `h^ℂ - α₀ log|·|`
+for the LQG metric `𝔇` (its `ENNReal` Weyl scaling is nonnegative and the real function `D ω` is nonnegative), then
+almost surely `D ω = (weylScaling (𝔇 (hC ω)) ξ (-α₀ log|·|)).toReal` as functions. This is the form in which the
+decoder clause of `LocalMetricReplacementStmt` (`S11r/LocalMetricReplacement.lean`) is stated. -/
+theorem ae_eq_toReal_weylScaling {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {ξ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hDω : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) = weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v) :
+    ∀ᵐ ω ∂P, D ω = fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal := by
+  filter_upwards [hDω] with ω hω
+  funext u v
+  rw [← (hω u v).2, ENNReal.toReal_ofReal (hω u v).1]
+
+/-- **Fact 2.2 I for the physical metric.** Let `D` be the physical metric `D_α` of the field `h^ℂ - α₀ log|·|`,
+given as the Weyl scaling of an LQG metric `𝔇` (`IsLQGMetric γ ξ 𝔇`, the same `𝔇` as in the decoder clauses), with
+`hC` the pairings of a whole-plane GFF. Under the Proposed input `LQGMetricFieldAxioms` (item I; used as a hypothesis,
+pending operator source-check), almost surely `D_α` is a Euclidean length metric. -/
 theorem ae_isEuclideanLengthMetric_of_fieldAxioms {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {γ ξ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {D : Ω → ℂ → ℂ → ℝ}
     (hFact : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
     (hGFF : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
-    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) :
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (hL : IsLQGMetric γ ξ 𝔇)
+    (hDω : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) = weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v) :
     ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω) := by
-  obtain ⟨𝔇, hL, hDa⟩ := hD
-  filter_upwards [(hFact hGFF hγ0 hγ2 hα 𝔇 hL).1, hDa] with ω hI hDω
-  have hfun : (fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal) = D ω := by
-    funext u v
-    rw [← (hDω u v).2, ENNReal.toReal_ofReal (hDω u v).1]
-  have hlen := hI.2
-  rw [hfun] at hlen
-  exact hlen
+  filter_upwards [(hFact hGFF hγ0 hγ2 hα 𝔇 hL).1, ae_eq_toReal_weylScaling hDω] with ω hI hfun
+  rw [hfun]
+  exact hI.2
 
 end HarmonicBalls.FirstPassS11iStep8LengthMetric
 
