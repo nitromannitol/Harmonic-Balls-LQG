@@ -10,6 +10,7 @@ import HarmonicBalls.FirstPass.S11d
 import HarmonicBalls.FirstPass.S11h.PinchCertificateProof11_17
 import HarmonicBalls.FirstPass.S11k.FirstLExterior
 import HarmonicBalls.FirstPass.S11m.Final11_12
+import HarmonicBalls.FirstPass.Closure.Bridge12
 
 /-!
 # Closure of the counted Section 11 results (fp-closure-11, owner z11)
@@ -28,7 +29,7 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 | 11.12 (`CorrectedLemma11_12Stmt`, z4) | `closure_11_12` | `firstPass_11_12_final` (72bf417): FROZEN inputs, Proposed hDG hCC hE hμW hNonat, cited hholder; I2 and affine invariance discharged inside z4's theorem; hN2 kept (operator 04:48) |
 | 11.16 (`PinchSecondEventFaithfulStmt`, corrected) | `closure_11_16` | closures 11.15 and 11.9; FROZEN; hholder (cited); Proposed hEx, hWeyl, hNa0, hNa |
 | 11.17 (`PinchThirdEventFaithfulStmt`, corrected) | `closure_11_17` | closure 11.16; hN2 (FROZEN) |
-| 11.11 (`HarmonicBallNotMetricBallStmt`) | `closure_11_11` | closure_11_6 hypotheses; h13 = printed ManyPinchScalesStmt **OPEN**; hmetricAxioms (Proposed) |
+| 11.11 (`HarmonicBallNotMetricBallStmt`) | `closure_11_11` | closure_11_6 hypotheses; h13 (printed ManyPinchScalesStmt) discharged by `manyPinchScales_of_corrected` on closure_11_13; hAx (FROZEN); hmetricAxioms (Proposed); hStep8 **OPEN** (inherited) |
 | 11.2 (`HarmonicBallNotLipschitzStmt`) | `closure_11_2` | as closure_11_5 |
 | 11.5 (`NoConeConditionStmt`) | `closure_11_5` | closure_11_6 and closure_11_7 hypotheses; I2 discharged by `volumeGrowthI2_of_staged` |
 | 11.6 (`AnnulusMassBoundByHarmonicChainStmt`) | `closure_11_6` | hDG, hCC, hE, hW, hN (Proposed; I2 and affine invariance discharged); hL1, hWeyl, hE1, hE3, hB (inputs of 5.5 and 8.1) |
@@ -38,8 +39,7 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 | 11.15 (`PinchFirstEventFaithfulStmt`, corrected) | `closure_11_15` | hCM, hMet, hWSC, haxioms (FROZEN); affine invariance discharged by `affineInvariance_proved_input`; `hEx` discharged by `lqgMetricExponentPositive_of_inputs` (`FirstPass/S11x.lean:94`), with `hExists` (FROZEN) |
 
 Status: all 14 counted Section 11 results have closure theorems. OPEN (paper-owned, no proof in the repository, kept as
-hypotheses): h13 = printed `ManyPinchScalesStmt` (Lemma 11.13) in `closure_11_11`; `hStep8 = Step8IdentificationStmt` in
-`closure_11_13`. The volume-growth input I2 and affine invariance are discharged, not open. The S11c/S11d name clash is
+hypotheses): `hStep8 = Step8IdentificationStmt` in `closure_11_13`, inherited by `closure_11_11`. The printed Lemma 11.13 (`ManyPinchScalesStmt`) is discharged by `manyPinchScales_of_corrected` (Bridge12). The volume-growth input I2 and affine invariance are discharged, not open. The S11c/S11d name clash is
 resolved (commit 6d75c22 renames the S11d declaration to exists_measurable_internal_metric_bound).
 -/
 
@@ -238,11 +238,11 @@ theorem closure_11_2
 
 /-- **Closure of Proposition 11.11** (`HarmonicBallNotMetricBallStmt`, `firstPass_11_11`). Paper-owned hypotheses:
 `AnnulusMassBoundByHarmonicChainStmt` (Lemma 11.6), discharged by `closure_11_6`, and `ManyPinchScalesStmt`
-(Lemma 11.13 in its PRINTED form), which is **OPEN**: the repository proves only the corrected form
-`CorrectedLemma11_13Stmt` (`firstPass_11_13_corrected`, closure `closure_11_13`, itself conditional on the OPEN
-`Step8IdentificationStmt`), and no bridge from the corrected form to the printed one exists (the printed statement
-quantifies one pinch configuration, the corrected one all buffered geometries; a bridge would need an explicit
-buffered geometry). Remaining: the hypotheses of `closure_11_6` (I2 discharged by `volumeGrowthI2_of_staged`) and `hmetricAxioms` (Proposed). -/
+(Lemma 11.13 in its PRINTED form), discharged by `HarmonicBalls.Closure.manyPinchScales_of_corrected`
+(`FirstPass/Closure/Bridge12.lean`, z7 96e95db) applied to `closure_11_13`. Remaining: the hypotheses of `closure_11_6`
+(I2 discharged by `volumeGrowthI2_of_staged`), `hmetricAxioms` (Proposed), `hAx` (FROZEN, `LQGMetricFieldAxiomsUnivFrozen`,
+as in `closure_11_13`), and **OPEN** `hStep8 : Step8IdentificationStmt`, inherited from `closure_11_13` (no proof in the
+repository, `FirstPass/S11i/Corrected11_13.lean:57`). -/
 theorem closure_11_11
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -257,13 +257,14 @@ theorem closure_11_11
     (hL1 : LocalRootedFieldMeasureDomination.{u}) (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u}) (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
     (hB : BirkhoffPointwiseErgodic.{0})
-    (h13 : ManyPinchScalesStmt.{u})
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) (hStep8 : Step8IdentificationStmt.{u})
     (hmetricAxioms : ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
       ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
         (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
         IsWholePlaneGFF P hC hcirc → LQGMetricFieldAxioms P γ ξ α₀ hC hcirc) :
     HarmonicBallNotMetricBallStmt.{u} :=
-  firstPass_11_11 (closure_11_6 hDG hCC hE hW hN hL1 hWeyl hE1 hE3 hB) h13
+  firstPass_11_11 (closure_11_6 hDG hCC hE hW hN hL1 hWeyl hE1 hE3 hB)
+    (HarmonicBalls.Closure.manyPinchScales_of_corrected (closure_11_13 hAx hE hStep8))
     (volumeGrowthI2_of_staged hDG hCC hW hE hN) hmetricAxioms
 
 /-- **Closure of Proposition 11.9** (`SmallMetricDiameterLargeMassStmt`, `firstPass_11_9`). Its paper-owned hypothesis
