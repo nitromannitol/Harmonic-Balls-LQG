@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.S11i.CertAssemble
 import HarmonicBalls.FirstPass.S11i.Faithful
 import HarmonicBalls.FirstPass.S11i.CertificateCanonical
+import HarmonicBalls.FirstPass.S11i.GammaModel
 import HarmonicBalls.FirstPass.S11af
 
 /-!
@@ -154,20 +155,15 @@ def GammaZoomIdentityStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M : �
               (𝓝 q)
 
 /-- **Lemma 11.13 (corrected), conditional on the Step 12 identity at the insertion `γ`.** The density is `δ = min (q/4) (1/2)`
-with `q = p_γ(M) > 0`; the positivity is the canonical positivity at `γ` in a γ-model. The hypothesis `hγM` is an explicit
-NEW input, not yet source-checked: a whole-plane model at the insertion `γ` for the same `ξ` exists whenever one exists at some
-insertion `α₀ < Q` (the existence that `certificate_canonical_pos` takes as `hmodel`). If no model exists at `(γ, ξ, α₀)`, the
-conclusion is vacuous and `δ = 1/2` is taken. -/
+with `q = p_γ(M) > 0`; the positivity is the canonical positivity at `γ` in a γ-model. The γ-model on the realization of
+an α₀-model with the same `ξ` is `FirstPassS11iGamma.gammaModel_of_alpha0Model` (derived, not assumed); its inputs are `hAx` and
+`hMeas` (`LQGMeasureExistence` at `α₀ = γ`, Proposed). If no model exists at `(γ, ξ, α₀)`, the conclusion is vacuous and
+`δ = 1/2` is taken. -/
 theorem correctedLemma11_13_of_gamma_identity
     (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
-    (hγM : ∀ (γ ξ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-      (∃ (Ω : Type u) (_ : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
-        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
-        IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ α₀ hcirc μ ∧ IsLQGMetricOfField P γ ξ α₀ hC D) →
-      ∃ (Ω : Type u) (_ : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
-        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
-        IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ γ hcirc μ ∧ IsLQGMetricOfField P γ ξ γ hC D)
+    (hMeas : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ γ hC hcirc)
     (hZ : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
       ∀ γ ξ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
         GammaZoomIdentityStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M) :
@@ -178,7 +174,9 @@ theorem correctedLemma11_13_of_gamma_identity
   by_cases hmod : ∃ (Ω : Type u) (inst : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
       IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ α₀ hcirc μ ∧ IsLQGMetricOfField P γ ξ α₀ hC D
-  · obtain ⟨Ωg, instg, Pg, hCg, hcircg, μg, Dg, hGg, hμg, hDg⟩ := hγM γ ξ α₀ hγ0 hγ2 hα hmod
+  · obtain ⟨Ωg, instg, Pg, hCg, hcircg, -, D0, hGg, -, hD0⟩ := hmod
+    obtain ⟨μg, Dg, hμg, hDg⟩ :=
+      FirstPassS11iGamma.gammaModel_of_alpha0Model hAx hMeas hγ0 hγ2 Ωg Pg hCg hcircg hGg D0 hD0
     have : IsProbabilityMeasure Pg := FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hGg
     obtain ⟨-, hpos, -⟩ := hW Ωg Pg hCg hcircg μg Dg hGg hμg hDg
     have hq : 0 < q := by
