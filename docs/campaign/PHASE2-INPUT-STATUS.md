@@ -1,8 +1,8 @@
 # Phase 2 input status: docstring verdicts of the frozen, staged and first-pass inputs
 
-Record of the mathematical status that the docstrings give for the frozen, staged and first-pass inputs, copied as written before any cleaning (PHASE2-CLEAN-PLAN.md, D8). Verdicts are copied, not judged here. Read-only audit by z6 (task fp-phase2-input-status, 2026-11-10) at HEAD b4b7f486.
+Record of the mathematical status that the docstrings give for the frozen, staged and first-pass inputs, copied as written before any cleaning (PHASE2-CLEAN-PLAN.md, D8). Verdicts are copied, not judged here. Read-only audit by z6 (task fp-phase2-input-status, 2026-11-10); Lean sources read as committed that day (docstrings only).
 
-- Scope: every `def` in `FirstPass/Frozen/` (17 files) and `Proposed/` (8 files), plus every other `def` whose docstring says FIRST-PASS FROZEN (15 files, FirstPass/ only). `HarmonicBalls/External/` does not exist. 114 defs in all.
+- Scope: every `def` in `FirstPass/Frozen/` (17 files) and `Proposed/` (8 files), plus 8 other `def`s whose docstring says FIRST-PASS FROZEN (in FirstPass/S11r/Frozen.lean, FrozenMetricReplacement.lean, LocalMetricReplacement.lean). `HarmonicBalls/External/` does not exist. 114 defs in all: 73 in FirstPass/Frozen, 33 in Proposed, 8 elsewhere.
 - Paths are relative to `HarmonicBalls/`; the line is the `def` line. Method: the `/-- -/` block directly above each `def` (attributes skipped), read by `scratch-z6/gen_status.py` (uncommitted). Ten rows were checked against the source by hand (section 4).
 - Status: TRUE; FALSE AS TYPED; RETIRED; DERIVED INTERFACE; DERIVED BRIDGE; PENDING; or `other: "..."` (five words of the docstring, when it has no verdict word). `(truth: X)` is the verdict the docstring gives beside a structural label. `→` gives the replacement or derivation the docstring names; "no name given" means it names none.
 - Evidence: the first three references in the docstring (chat N, notes/ path, operator time, Codex, ChatGPT time). Literature locator: author, arXiv id, theorem or proposition, page, as the docstring writes them; `none` if absent.
