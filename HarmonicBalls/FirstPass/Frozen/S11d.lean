@@ -42,7 +42,11 @@ def LQGMetricContinuousShiftFactI : Prop :=
 the internal metric of the Weyl-scaled metric on `U` is a.s. equal to a function `G` that is measurable for the
 pairing σ-algebra of `hC` on `U` (the σ-algebra of `h + g` on `U` equals that of `h` on `U`, since `g` is deterministic).
 Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 II (line 441), applied to `h + f` (Fact 2.2 III, line 445);
-Gwynne-Miller 2021 Section 1.2 p. 6 (locator pending). Used by: firstPass_11_9. -/
+Gwynne-Miller 2021 Section 1.2 p. 6 (locator pending). Truth check TRUE (ChatGPT, 02:36 UTC,
+`notes/fp-gaps/CHATGPT-hb-distribution-frozen.md` §3): the decoder is chosen after the metric and equality is almost sure;
+locality follows from the base locality axiom for the unweighted metric `𝔇(h^ℂ)` by a Borel weighted-path construction, with
+the `.toReal` convention checked at the insertion (§3.3). Sources as the answer gives them: Gwynne-Miller Section 1.2, axiom II
+(§3.5); Bou-Rabee-Gwynne Fact 2.2 I–IV, printed p. 10 in v3 (the answer corrects the p. 9 reference). Used by: firstPass_11_9. -/
 def LQGMetricContinuousShiftLocality : Prop :=
   ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ),
@@ -85,14 +89,16 @@ def WeylScalingCompositionFrozen : Prop :=
         weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
           weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y
 
-/-- RETIRED (FALSE, ChatGPT 02:39 UTC; use LQGInternalMetricWeylAeMeasurableFrozen). FIRST-PASS FROZEN. Field-level measurability of the Weyl-scaled internal metric, uniform form (standard; locator
+/-- RETIRED (FALSE, ChatGPT 02:36 UTC; use LQGInternalMetricWeylAeMeasurableFrozen). FIRST-PASS FROZEN. Field-level measurability of the Weyl-scaled internal metric, uniform form (standard; locator
 pending). For every LQG metric `𝔇` (`IsLQGMetric`, Weyl exponent `ξ`), an open set `W` and fixed `q q' : ℂ`, the map
 `T ↦ D^W_T(q, q')` is measurable for the σ-algebra of pairings, where `D_T = e^{-ξ α₀ log|·|} · 𝔇 T` and `D^W_T` is its
 internal metric on `W`. Source: measurability of `h ↦ D_h` (Gwynne-Miller 2021, Section 1.2, p. 6; locator pending), transported
 to the internal metric on `W`. Operator ruling 2026-11-09 18:35 UTC (field level, EXTERNAL). Used by:
 FirstPass/S11e/CertMeasurable.lean (`measurableSet_certificate_certMetricOn`, line 38). Not used by firstPass_11_9, which uses
-the weaker a.s. form `LQGInternalMetricWeylAeMeasurableFrozen` below. Truth of the uniform form is not verified (the
-infimum over paths need not be measurable off the carrier's support); operator decision pending. -/
+the weaker a.s. form `LQGInternalMetricWeylAeMeasurableFrozen` below. Truth check FALSE (ChatGPT, 02:36 UTC, `notes/fp-gaps/CHATGPT-hb-distribution-frozen.md` §1): measurability of every fixed
+evaluation `T ↦ 𝔇 T z w` does not give measurability of the displayed path operation on the entire raw carrier; explicit
+counterexample §1.1 preserving every field of `IsLQGMetric`. Minimal correction §1.2: `LQGInternalMetricWeylAeMeasurableFrozen`
+below, whose order `∀ 𝔇, ∃ Φ, ∀ f, a.s.` the answer marks as correct. -/
 def LQGInternalMetricWeylMeasurableFrozen : Prop :=
   ∀ (γ ξ α₀ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), IsLQGMetric γ ξ 𝔇 → ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ,
     Measurable[distributionMeasurableSpace] fun T : (ℂ → ℝ) → ℝ =>
@@ -124,7 +130,11 @@ whole-plane GFF `hC` with LQG measure `μ` (`IsLQGMeasureOfField`) and a closed 
 the vague limit of the regularized measures (Duplantier-Sheffield 2011, arXiv:0808.1560v2, Section 3; Bou-Rabee-Gwynne
 arXiv:2208.11795 Fact 2.1 III, p. 9, line 418, `LQGMeasureWeylScaling`: `μ_{h+f} = e^{γ f} μ_h`, which gives
 `μ_{h+f}(S) = μ_h(S)` when `f = 0` on `S`). Used by: firstPass_11_9 (mass identity `M(h^ℂ + g) = M(h^ℂ)` for the shift `g`
-vanishing on `S₁`, paper line 3131). -/
+vanishing on `S₁`, paper line 3131). Truth check TRUE (ChatGPT, 02:36 UTC, `notes/fp-gaps/CHATGPT-hb-distribution-frozen.md`
+§2): a single decoder can be built before quantifying over the continuous shifts, from countably many circle-average pairings
+(§2.1–2.3), and the measure is decoded from its defining limit (§2.4). Sources as the answer gives them: Bou-Rabee-Gwynne
+eq. (2.6), printed p. 9 (measure construction); Duplantier-Sheffield Proposition 1.1, printed p. 5 (a.s. convergence along
+powers of two, including deterministic continuous additive functions), and Proposition 3.1, printed p. 17. -/
 def LQGMassFunctionalMeasurableFrozen : Prop :=
   ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
