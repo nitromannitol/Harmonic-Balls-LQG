@@ -755,6 +755,38 @@ theorem circleProfile_eq_of_pos {F : C(CircleParameter, ℝ)} {g : ℝ → ℂ �
   simp only [hr, reduceDIte]
   exact hF (⟨r, hr⟩, z)
 
+/-- The `α₀`-inserted GMC-success set of pairing functionals, read through the profile map `G`. -/
+noncomputable def HMuGoodSet (γ α₀ : ℝ) (G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ)) : Set ((ℂ → ℝ) → ℝ) :=
+  {T | ∃ ν : Measure ℂ, IsLQGLimit γ (fieldCircleAverage α₀ (circleProfile (G T))) ν}
+
+/-- **Named gap `HMuPairingBridge`** (CHATGPT-211 §2, Steps 2, 4 and 6; `notes/fp-gaps/CHATGPT-211-hb-11-13-q1-hLen-hmu-PRO.md`
+l.394-418, l.437-457, l.494-530). It asserts the three facts the plan states without argument:
+(a) a map `G` from pairing functionals to continuous circle profiles with `G (hC ω) = hcirc ω` almost surely (Step 2;
+the repository's measurable version `IsWholePlaneGFF.exists_measurable_continuous_circle_version` is an `Ω`-level map,
+not a function of the pairings);
+(b) the GMC-success set `HMuGoodSet` of pairings is measurable for the pairing σ-algebra (Step 4);
+(c) for `volume`-a.e. root in `ball 0 1` and `P`-a.e. ω, the profile of the DMS-shifted pairing is the circle-average
+profile of `h + f_z + κ` (Step 6; `dmsShift`, `dmsConstant` of Proposed/DuplantierMillerSheffield.lean). -/
+def HMuPairingBridge {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
+  ∃ G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ),
+    (∀ᵐ ω ∂P, ∀ p : CircleParameter, G (hC ω) p = hcirc ω p.1 p.2) ∧
+    MeasurableSet[pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ] (HMuGoodSet γ α₀ G) ∧
+    (∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P, ∀ p : CircleParameter,
+      G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
+        hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0))
+
+/-- Indicator of the complement of the GMC-success set, as a function of the pairing and the root (the root is
+ignored: the marking in `DMSLemmaA10WholePlaneMarked` is trivial here). -/
+noncomputable def HMuIndicator (γ α₀ : ℝ) (G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ)) (q : ((ℂ → ℝ) → ℝ) × ℂ) : ℝ≥0∞ :=
+  (HMuGoodSet γ α₀ G)ᶜ.indicator (fun _ => 1) q.1
+
+theorem HMuIndicator_eq_zero_iff (γ α₀ : ℝ) (G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ))
+    (T : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    HMuIndicator γ α₀ G (T, z) = 0 ↔ T ∈ HMuGoodSet γ α₀ G := by
+  unfold HMuIndicator
+  by_cases h : T ∈ HMuGoodSet γ α₀ G <;> simp [h]
+
 /-- The map `(z, ω) ↦ z ↦ x ↦ f_z` in the variable `z`: `dmsShift` is jointly measurable. -/
 theorem measurable_dmsShift_joint (γ : ℝ) : Measurable (fun q : ℂ × ℂ => dmsShift γ q.1 q.2) := by
   unfold dmsShift
@@ -840,6 +872,97 @@ theorem circleProfile_shift_eq (α₀ γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ �
   unfold fieldCircleAverage addCircleAverage
   rw [hF', hfun]
   ring
+
+/-- **`hμ` producer** (CHATGPT-211 §2, Steps 1, 3, 5, 6 and 7). For a.e. root `z` in `ball c₁ r₁`, the rooted
+γ-LQG measure of `rootedCircleFieldP α₀ γ hcirc z` exists almost surely. The argument: the unrooted measure at insertion
+`0` (`LQGMeasureExistence`) weights the marked DMS identity `DMSLemmaA10WholePlaneMarked`; the GMC-success indicator
+has zero weighted integral, so the DMS-shifted pairing is GMC-good for a.e. root and a.s.; the DMS constant `κ` is
+absorbed by the constant rescaling `isLQGLimit_of_add_const`. The measurable profile map and the GMC-success set are
+the named gap `HMuPairingBridge`. -/
+theorem ae_exists_rootedLQGMeasure {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ : ℂ) (r₁ : ℝ)
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
+    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ)
+    (hBridge : HMuPairingBridge P γ α₀ hC hcirc) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∃ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleFieldP α₀ γ hcirc z) μz := by
+  have hQ : 0 < lqgQ γ := by unfold lqgQ; positivity
+  obtain ⟨lam, hlam⟩ := hExist0 hh hγ0 hγ2 hQ
+  obtain ⟨μα, hμα⟩ := hExistα hh hγ0 hγ2 hα
+  obtain ⟨G, hGae, hGset, hShift⟩ := hBridge
+  have hμα' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α₀ (hcirc ω)) (μα ω) := hμα
+  have hGoodAs : ∀ᵐ ω ∂P, hC ω ∈ HMuGoodSet γ α₀ G := by
+    filter_upwards [hμα', hGae] with ω h1 h2
+    show ∃ ν : Measure ℂ, IsLQGLimit γ (fieldCircleAverage α₀ (circleProfile (G (hC ω)))) ν
+    refine ⟨μα ω, isLQGLimit_congr_of_pos (fun k z => ?_) h1⟩
+    unfold fieldCircleAverage
+    rw [circleProfile_eq_of_pos (g := hcirc ω) h2 (dyadicScale_pos k) z]
+  -- the DMS marked identity, applied to the indicator of the complement of the GMC-success set
+  have hΨm : Measurable[(pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ).prod inferInstance]
+      (HMuIndicator γ α₀ G) :=
+    (measurable_const.indicator hGset.compl).comp measurable_fst
+  have hDMS := hA10 lam hh hlam (HMuIndicator γ α₀ G) hΨm
+  have hL : ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1, HMuIndicator γ α₀ G (hC ω, z) ∂(lam ω) ∂P = 0 := by
+    have h0 : ∀ᵐ ω ∂P, ∫⁻ z in ball (0 : ℂ) 1, HMuIndicator γ α₀ G (hC ω, z) ∂(lam ω) = 0 := by
+      filter_upwards [hGoodAs] with ω hω
+      have hz : ∀ z : ℂ, HMuIndicator γ α₀ G (hC ω, z) = 0 :=
+        fun z => (HMuIndicator_eq_zero_iff γ α₀ G _ z).2 hω
+      simp only [hz, lintegral_zero]
+    rw [lintegral_congr_ae h0]
+    simp
+  have hR : ∫⁻ z in ball (0 : ℂ) 1,
+      ∫⁻ ω, HMuIndicator γ α₀ G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) ∂P ∂volume = 0 := by
+    rw [← hDMS]
+    exact hL
+  have hjoint : Measurable (fun q : ℂ × Ω =>
+      HMuIndicator γ α₀ G (dmsShiftedPairing γ q.1 (hC q.2) (hcirc q.2 1 0), q.1)) :=
+    (measurable_const.indicator hGset.compl).comp (measurable_dmsShiftedPairing P γ hC hcirc hh)
+  have hg : Measurable (fun z : ℂ =>
+      ∫⁻ ω, HMuIndicator γ α₀ G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) ∂P) :=
+    hjoint.lintegral_prod_right'
+  have hz0 := (lintegral_eq_zero_iff hg).1 hR
+  have hz1 : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
+      HMuIndicator γ α₀ G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) = 0 := by
+    filter_upwards [hz0] with z hz
+    have hzm : Measurable (fun ω : Ω => (z, ω)) := measurable_const.prodMk measurable_id
+    exact (lintegral_eq_zero_iff (hjoint.comp hzm)).1 hz
+  have hz2 : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
+      dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G := by
+    filter_upwards [hz1] with z hz
+    filter_upwards [hz] with ω hω
+    exact (HMuIndicator_eq_zero_iff γ α₀ G _ z).1 hω
+  have hall : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
+      dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G ∧
+        ∀ p : CircleParameter, G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
+          hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0) := by
+    filter_upwards [hz2, hShift] with z h1 h2
+    filter_upwards [h1, h2] with ω hA hB
+    exact ⟨hA, hB⟩
+  have hwin := ae_restrict_of_ae_restrict_of_subset hWin hall
+  -- the constant rescaling of the DMS-shifted profile gives the rooted measure, pointwise in (z, ω)
+  filter_upwards [hwin] with z hz
+  have hpt : ∀ ω, ∃ μ : Measure ℂ,
+      (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G ∧
+        ∀ p : CircleParameter, G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
+          hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0)) →
+        IsLQGLimit γ (rootedCircleFieldP α₀ γ hcirc z ω) μ := by
+    intro ω
+    by_cases hω : dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G ∧
+        ∀ p : CircleParameter, G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
+          hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0)
+    · obtain ⟨hmem, hid⟩ := hω
+      obtain ⟨ν, hν⟩ := hmem
+      refine ⟨ENNReal.ofReal (Real.exp (-(γ * dmsConstant γ z (hcirc ω 1 0)))) • ν, fun _ => ?_⟩
+      apply isLQGLimit_of_add_const (κ := dmsConstant γ z (hcirc ω 1 0))
+      apply isLQGLimit_congr_of_pos (fun k x => ?_) hν
+      exact circleProfile_shift_eq α₀ γ z (hcirc ω) (dmsConstant γ z (hcirc ω 1 0)) _ hid (dyadicScale_pos k) x
+    · exact ⟨0, fun h => absurd h hω⟩
+  choose μz hμz using hpt
+  refine ⟨μz, ?_⟩
+  unfold IsLQGMeasure
+  filter_upwards [hz] with ω hω
+  exact hμz ω hω
 
 /-- The annular width parameter `η_j = (r/4) (1/2)^j` of the `j`-th explicit approximant. -/
 noncomputable def approxEta (r : ℝ) (j : ℕ) : ℝ := (r / 4) * (1 / 2 : ℝ) ^ j
@@ -1209,7 +1332,7 @@ open FirstPassS11atBridge
 
 /-- **hμ producer, derived** (no `HMuPairingBridge`; the decoder input is `hProf`). For a.e. root `z` in
 `ball c₁ r₁`, the rooted γ-LQG measure of `rootedCircleFieldP α₀ γ hcirc z` exists almost surely. -/
-theorem ae_exists_rootedLQGMeasure {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω)
+theorem ae_exists_rootedLQGMeasure_derived {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω)
     [IsProbabilityMeasure P] (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ : ℂ) (r₁ : ℝ)
     (hh : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
