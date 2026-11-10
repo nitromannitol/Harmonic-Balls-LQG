@@ -53,41 +53,25 @@ def RootedCertificateTermwiseIdentificationStmt {Ω : Type u} [MeasurableSpace �
         (ballRestrictPairing 7 ⁻¹' F).indicator (fun _ => (1 : ℝ))
           (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u)))
 
-/-- **Specialized termwise identity `hT` from the four clauses (operator note 2026-11-10 07:19 UTC; ChatGPT chat 191 re-run,
-`notes/fp-gaps/CHATGPT-n3-hT-PRO.md` §1-§2).** The sequence is the Step 8 local certificate `localCertSeq` (`hSeq` holds by
-definition). The remaining clauses are: `hFit`, the rooted fitting clause (named hypothesis, residual R2: no instance in the
-repository yet); `hCov`, the eventual covariance clause in the form of `RootedInstance.lean` (named hypothesis: q1's
-`RootedCertificateEventualCovarianceStmt` is not yet committed, S11at.lean); and `hFdef`, which says that the coding event
-`F` is the scale-one certificate event (defining identity of `F`), so that `hG` of `ae_termwise_of_identification` holds
-pointwise. The proof is that lemma. -/
-theorem rootedCertTermwise_of_clauses {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+/-- **Specialized termwise identity `hT` with the decoded rooted pair (operator note 2026-11-10 07:59 UTC; ChatGPT chat 196,
+`notes/fp-gaps/CHATGPT-hb-11-13-blockers.md` §1.2 and final dependency decision item 1).** The rooted pair is the decoded
+pair `(rootedMeasDec, rootedMetricDec)` of `RootedInstance.lean`, so the fitting clause holds by reflexivity and is not an
+input. The sequence is the Step 8 local certificate `localCertSeq` (`hSeq` holds by definition). Named input: `hCov`, q1's
+`RootedCertificateEventualCovarianceStmt` for the decoded pair (R1, pending: q1 blocker A, mcrt reports/q1.md). `hFdef` says
+that the coding event `F` is the scale-one certificate event (defining identity of `F`), so `hG` holds pointwise. The proof is
+`ae_termwise_of_identification`. -/
+theorem rootedCertTermwise_of_decoded {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {c₁ c₂ : ℂ} {r₁ r₂ : ℝ}
     (hsub : closedBall c₁ r₁ ⊆ ball c₂ r₂) (A : Set ℂ)
     (F : Set (ModConstTestPairings (ball (0 : ℂ) 7)))
     (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
     (m : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ)
     (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
-    (μR : ℂ → Ω → Measure ℂ) (dR : ℂ → Ω → ℂ → ℂ → ℝ)
     (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
     (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
-    (hFit : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ᵐ ω ∂P, ∀ (z' : ℂ) (n : ℕ),
-      closedBall z' (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
-        (FirstPassS11i.CertificateEvent (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2)
-            (m (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z' ↔
-          FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z'))
-    (hCov : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
-      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∃ n₀ : ℕ, ∀ n ≥ n₀,
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z b →
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z (rootRadius z) →
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
-        (FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z ↔
-          FirstPassS11i.CertificateEvent
-            (Dμ (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            (Dd (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            Ostar U V W T Q' Q η M 1 0))
+    (hCov : FirstPassS11at.RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
+      (AdmissibleRootShift α₀) rootRadius
+      (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd)
     (hFdef : ∀ L : ModConstTestPairings (Set.univ : Set ℂ),
       FirstPassS11i.CertificateEvent (Dμ L) (Dd L) Ostar U V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ F) :
     RootedCertificateTermwiseIdentificationStmt P γ α₀ hC hcirc c₁ c₂ r₁ r₂ A F κ m Ostar U V W T Q' Q η M := by
@@ -101,7 +85,7 @@ theorem rootedCertTermwise_of_clauses {Ω : Type u} [MeasurableSpace Ω] {P : Me
     Filter.Eventually.of_forall fun z _ b u _ =>
       Filter.Eventually.of_forall fun ω n => hFdef _
   exact ae_termwise_of_identification (F := F) hsub A Ostar U V W T Q' Q η M κ m
-    (localCertSeq κ m Ostar U V W T Q' Q η M) (fun _ _ _ => rfl) μR dR Dμ Dd hFit hCov hG
+    (localCertSeq κ m Ostar U V W T Q' Q η M) (fun _ _ _ => rfl) Dμ Dd hCov hG
 
 /-- The specialized termwise identity gives the rooted decoder identification `hId` of `ae_window_limit_at_root`, by the
 generic assembly `ae_rootedId_of_termwise` with `c = localCertSeq κ m …`. -/
@@ -122,4 +106,4 @@ theorem ae_rootedId_of_localCert {Ω : Type u} [MeasurableSpace Ω] {P : Measure
 end FirstPassS11ai
 
 #print axioms FirstPassS11ai.ae_rootedId_of_localCert
-#print axioms FirstPassS11ai.rootedCertTermwise_of_clauses
+#print axioms FirstPassS11ai.rootedCertTermwise_of_decoded
