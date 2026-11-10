@@ -13,8 +13,8 @@ the metric of `h^α` is `weylScaling (𝔇 (hC ω)) ξ (-α log|·|)` for an LQG
 `f_z = h^ℂ - α log|·| - γ log|· - z| + γ log max(1, |·|)` (`campbellReferenceObs`). The identities are on `D × D`
 with the internal metric `internalMetric · D`, equality up to a positive constant `b`.
 
-Status: FIRST-PASS FROZEN, EXTERNAL (operator decision 05:47 UTC; docstring only, no statement change). Truth check TRUE
-in substance (ChatGPT, chat 179; notes/fp-gaps/CHATGPT-hb-11-12-final.md section 1). Sources: Gwynne-Miller, arXiv:1905.00383,
+Status: FIRST-PASS FROZEN, EXTERNAL (operator decision 05:47 UTC; docstring only, no statement change). DERIVED BRIDGE, not printed (chat 179 Pro, CHATGPT-hb-11-12-audit-PRO.md): plausibly true; proof architecture
+l.142-172 (five steps); phase-2 obligation. Closest printed statements: Gwynne-Miller, arXiv:1905.00383,
 Axiom II, Theorem 1.2, Remark 1.5; Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380, Theorem 1.10, Proposition 3.17.
 The bridge theorem is to be proved in phase 2 by the route of section 1 (normalize, Axiom II, Doob-Dynkin factorization, ...).
 Its proof needs (i) the fixed-metric decoder of the corrected frozen input

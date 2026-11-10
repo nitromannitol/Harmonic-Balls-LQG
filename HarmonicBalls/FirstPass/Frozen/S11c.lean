@@ -371,7 +371,9 @@ def LocalLQGDecoderFrozen : Prop :=
       ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
         K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
 
-/-- FIRST-PASS FROZEN (TRUTH-CHECKED TRUE, ChatGPT 2026-11-09, notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md, item G1; operator
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.187: "The exact common local
+decoder is stronger than the printed locality statement and needs a measurable-factorization derivation; it is not a verbatim citation."
+FIRST-PASS FROZEN (TRUTH-CHECKED TRUE, ChatGPT 2026-11-09, notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md, item G1; operator
 22:33 UTC: freeze). EXTERNAL,
 common local decoder: for `γ ∈ (0,2)` and a disc `D = ball c₂ r₂` with `0 ∉ closedBall c₂ r₂`, ONE s-finite kernel `K`
 from the mean-zero observations on `D` to measures on `ℂ` (clause 1: the γ-LQG measure of the field at every insertion

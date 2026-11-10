@@ -78,7 +78,9 @@ def CameronMartinGFFMutualAbsCont : Prop :=
     ∀ B : Set ((ℂ → ℝ) → ℝ), MeasurableSet[distributionMeasurableSpace] B →
       (P ((fun ω => hC ω) ⁻¹' B) = 0 ↔ P ((fun ω => addFunPairing (hC ω) g) ⁻¹' B) = 0)
 
-/-- FIRST-PASS FROZEN. Composition rule of Weyl scalings for the log-singular LQG metric (paper Fact 2.2 III, line 445:
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.198: "It is a consequence of Weyl
+scaling and the log-singular extension, not a separately printed theorem with this exact type."
+FIRST-PASS FROZEN. Composition rule of Weyl scalings for the log-singular LQG metric (paper Fact 2.2 III, line 445:
 `D_{h+f} = e^{ξ f} · D_h` for continuous `f`, applied with `h = h^ℂ - α₀ log|·|`; Gwynne-Miller 2021, Section 1.2 p. 6 and
 Remark 1.5 p. 8; Dubedat-Falconet-Gwynne-Pfeffer-Sun 2020, p. 9). It identifies the metric of the distribution `h^ℂ + g - α₀ log|·|`
 (the Defs convention `weylScaling (𝔇 ·) ξ (-α₀ log|·|)`) with the Weyl scaling of the metric of `h`, almost surely.
@@ -110,7 +112,9 @@ def LQGInternalMetricWeylMeasurableFrozen : Prop :=
     Measurable[distributionMeasurableSpace] fun T : (ℂ → ℝ) → ℝ =>
       internalMetric (fun u v => (weylScaling (𝔇 T) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q'
 
-/-- FIRST-PASS FROZEN. Field-level measurable version of the Weyl-scaled internal metric (standard; locator pending). For an
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.194: "Field-level measurable
+factorization of the Weyl-scaled internal metric is not the literal statement of Axiom II; it requires a version/factorization argument."
+FIRST-PASS FROZEN. Field-level measurable version of the Weyl-scaled internal metric (standard; locator pending). For an
 LQG metric `𝔇` (`IsLQGMetric`, Weyl exponent `ξ`) of a whole-plane GFF carrier `(Ω, P, hC, hcirc)`, an open set `W`
 and fixed `q q' : ℂ`, there is a measurable functional `Φ` on distributions (for the σ-algebra of pairings) with
 `Φ (h^ℂ + f) = D^W(q, q')` almost surely for every continuous `f`, where `D = e^{-ξ α₀ log|·|} · 𝔇(h^ℂ + f)` is the metric
@@ -130,7 +134,9 @@ def LQGInternalMetricWeylAeMeasurableFrozen : Prop :=
         Φ (addFunPairing (hC ω) f) = internalMetric (fun u v =>
           (weylScaling (𝔇 (addFunPairing (hC ω) f)) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q'
 
-/-- FIRST-PASS FROZEN. Field-level measurability of the LQG mass of a closed set (standard; locator pending). For a
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.195: "a measurable functional
+representing the mass on a closed set is a consequence of local GMC construction and Weyl scaling, not a verbatim cited theorem."
+FIRST-PASS FROZEN. Field-level measurability of the LQG mass of a closed set (standard; locator pending). For a
 whole-plane GFF `hC` with LQG measure `μ` (`IsLQGMeasureOfField`) and a closed set `S`, there is a measurable functional
 `F` on distributions such that `F (h^ℂ + f) = μ(S)` almost surely, for every continuous `f` vanishing on `S`. Source: `μ` is
 the vague limit of the regularized measures (Duplantier-Sheffield 2011, arXiv:0808.1560v2, Section 3; Bou-Rabee-Gwynne

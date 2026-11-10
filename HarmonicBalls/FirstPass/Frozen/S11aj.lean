@@ -16,7 +16,9 @@ namespace HarmonicBalls.S11aj
 open MeasureTheory Set Metric
 open scoped ENNReal
 
-/-- FIRST-PASS FROZEN. Cameron-Martin reweighting of the whole-plane GFF (Miller-Sheffield, Imaginary Geometry IV,
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.197: "The Radon–Nikodym/reweighting
+identity is standard, but the exact normalization and arbitrary-carrier Lean interface must be derived."
+FIRST-PASS FROZEN. Cameron-Martin reweighting of the whole-plane GFF (Miller-Sheffield, Imaginary Geometry IV,
 arXiv:1302.4738v2, Proposition 2.9, printed p. 49; Gaussian tilting). Truth check TRUE exactly as typed, including the
 joint law with the circle averages `hcirc` (ChatGPT chat 151, 2026-11-10 04:15 UTC; `notes/fp-gaps/CHATGPT-lh-R7-cameron-martin.md`).
 The Cameron-Martin theorem for the whole-plane GFF: for every whole-plane GFF `(P, hC, hcirc)` and every smooth compactly

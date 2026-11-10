@@ -14,7 +14,10 @@ open MeasureTheory
 
 universe u
 
-/-- FIRST-PASS FROZEN, EXTERNAL (operator ruling 23:53 UTC on B1; truth check TRUE, ChatGPT 23:53 UTC,
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.188: "Canonical simultaneous
+measure/metric decoders are assembled from construction, measurability, locality, and uniqueness. There is no single printed
+theorem with this exact Lean type."
+FIRST-PASS FROZEN, EXTERNAL (operator ruling 23:53 UTC on B1; truth check TRUE, ChatGPT 23:53 UTC,
 `notes/fp-gaps/CHATGPT-n1-B1-canonical-decoders.md`, Verdict and section 1). For every `γ ∈ (0, 2)`, every `ξ ∈ ℝ` and
 every `α₀ < Q_γ`, there are common canonical decoders `Dμ : CanonSpace → Measure ℂ` and `Dd : CanonSpace → ℂ → ℂ → ℝ`
 for which `LQGCanonicalIdentificationStmt` holds: for every whole-plane GFF model, every LQG measure `μ` and every LQG

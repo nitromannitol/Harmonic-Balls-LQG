@@ -19,7 +19,9 @@ open scoped ENNReal
 
 universe u
 
-/-- FIRST-PASS FROZEN. Domain Markov property, conditional positivity form, for a disk `W = ball c r`
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.202: "It is a normalization-aware
+consequence of the GFF Markov decomposition and Cameron–Martin equivalence, not a verbatim proposition."
+FIRST-PASS FROZEN. Domain Markov property, conditional positivity form, for a disk `W = ball c r`
 (EXTERNAL; Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2: Proposition 2.8 (pp. 48-49: the domain Markov
 decomposition of the field on `W` into a zero-boundary GFF plus a harmonic function determined by the outside field) and
 Proposition 2.9 (p. 49: Cameron-Martin, equivalence of laws under shifts by `H^1_0(W)`). Truth check TRUE (ChatGPT,
@@ -48,7 +50,9 @@ def DomainMarkovConditionalPositiveFrozen : Prop :=
     ∀ᵐ ω ∂P, 0 < (P[A.indicator (1 : Ω → ℝ) |
       MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance]) ω
 
-/-- FIRST-PASS FROZEN. Inner measurability of the LQG mass of an open set with compact closure inside `O` (EXTERNAL;
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.200: "The right source is HB
+Fact 2.1 II, not Fact 2.1 III."
+FIRST-PASS FROZEN. Inner measurability of the LQG mass of an open set with compact closure inside `O` (EXTERNAL;
 locality and measurable dependence of the LQG measure: Bou-Rabee-Gwynne arXiv:2208.11795v3, Fact 2.1 II (p. 9); truth check
 TRUE (ChatGPT, operator note 23:27 UTC); locator pending).
 
@@ -62,7 +66,9 @@ def LQGMassInnerMeasurableFrozen : Prop :=
     ∀ (O U : Set ℂ), IsOpen O → IsOpen U → Bornology.IsBounded U → closure U ⊆ O →
     ∃ g : Ω → ℝ≥0∞, Measurable[fieldSigmaAlgebra α₀ hC O] g ∧ ∀ᵐ ω ∂P, μ ω U = g ω
 
-/-- FIRST-PASS FROZEN. Inner measurability of the internal diameter `diam^δ(A) = sup_{x,y ∈ A} D(x, y; B_δ(A))` of a compact
+/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.201: "The source is HB Fact 2.2
+II / GM Axiom II, plus countable reconstruction of the diameter."
+FIRST-PASS FROZEN. Inner measurability of the internal diameter `diam^δ(A) = sup_{x,y ∈ A} D(x, y; B_δ(A))` of a compact
 set `A` for an LQG metric `D` (`IsLQGMetricOfField`) (EXTERNAL; locality of the internal metric `D(·,·; O)`, which depends
 only on `h|_O`, and measurable dependence of the metric on the field: Bou-Rabee-Gwynne arXiv:2208.11795v3, Fact 2.2 II
 (p. 10); Gwynne-Miller arXiv:1905.00383v3, Section 1.2, Axiom II (p. 6); truth check TRUE (ChatGPT, operator note 23:27
