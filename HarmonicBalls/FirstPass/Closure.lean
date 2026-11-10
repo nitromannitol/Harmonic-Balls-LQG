@@ -25,7 +25,7 @@ Section 1 (main theorems; `FirstPass/Main.lean`)
 |---|---|---|---|
 | 1.1 `ExistenceUniquenessHarmonicBallsStmt` | `closure_1_1` (this file) | hL1 hWeyl hE1 hE3 hB (FROZEN); hDG hAff hCC hW hE hN (PROPOSED) | closed |
 | 1.2 `HarmonicBallNoveltyStmt` | `closure_1_2` (this file) | h13 = `manyPinchScales_of_corrected (closure_11_13 …)` (bridge, `Closure/Bridge12.lean`, z7, committed 96e95db); hStep8 `Step8IdentificationStmt` **OPEN** (inherited from `closure_11_13`); hI2 (Input I2, EXTERNAL per `FIRST-PASS-INPUTS.md`); hDG hAff hCC hW hE hN (PROPOSED); hL1 hWeyl hE1 hE3 hB, hCamp hDecFrozen hDec hCM, hAx `LQGMetricFieldAxiomsUnivFrozen` (FROZEN; supplies hmetricAxioms by specialisation), hTor (FROZEN) | conditional on OPEN hStep8 |
-| 1.3 `HarmonicBallLocalSetStmt` | `closure_1_3` (this file) | hI2 = I2 `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`; class EXTERNAL per `FIRST-PASS-INPUTS.md`; z4 notes: its derivation is unproved); hmeasure `LQGMeasureLocality` (PROPOSED); closure_8_2 inputs (FROZEN, PROPOSED) | closed, I2 class open |
+| 1.3 `HarmonicBallLocalSetStmt` | `closure_1_3` (this file) | hI2 = I2 `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`; class EXTERNAL per `FIRST-PASS-INPUTS.md`; explicit argument here; discharged from hDG hCC hW hE hN by `volumeGrowthI2_of_staged`, `Closure/Sec11.lean:55`, not passed); hmeasure `LQGMeasureLocality` (PROPOSED); closure_8_2 inputs (FROZEN, PROPOSED) | closed modulo the I2 argument |
 
 Section 2
 | 2.3 `GreenFunctionBallStmt` | `closure_2_3` (this file) | none (unconditional `firstPass_2_3`) | closed |
@@ -69,32 +69,35 @@ Sections 7-10 (`Closure/Sec78910.lean`, z7, commit 764a353)
 | 9.3 `HarmonicBallBoundarySubsetStmt` | `closure_9_3` | hDG hAff hCC hW hE hN (PROPOSED) | closed |
 | 9.4 `RegularOpenEqOfAEEqStmt` | `closure_9_4` | hDG hAff hCC hW hE hN (PROPOSED) | closed |
 | 10.1 `ClusterBoundedCrossingsStmt` | `closure_10_1` | hDG hCC hW hE hN (PROPOSED) | closed |
-| 10.5 `CrossingComponentContainsClusterCrossingStmt` | `closure_10_5` | premises on G (`hGne`, `hGb`) and `hEcross` (quantifiers of the counted theorem, not Props); hTor (FROZEN) | closed |
+| 10.5 `CrossingComponentContainsClusterCrossingStmt` | `closure_10_5` | premises on G (`hGne`, `hGb`, `hGo`, `hGc`: nonempty, bounded, open, connected) and `hEcross` (quantifiers of the counted theorem, not Props); hTor (FROZEN) | closed |
 | 10.6 `ComplementComponentBoundarySimpleLoopStmt` | `closure_10_6` | hDG hAff hCC hW hE hN (PROPOSED); hTor (FROZEN) | closed |
 | 10.7 `HarmonicBallComplementBoundaryJordanStmt` | `closure_10_7` | hL1 hWeyl hE1 hE3 hB hTor (FROZEN); hDG hAff hCC hW hE hN (PROPOSED) | closed |
 | 9.1 | none | cited (Shahgholian-Sjodin 2013; Sakai 1984) | cited, no closure |
 
-Section 11 (`Closure/Sec11.lean`, z11; committed in 989dd74, 329d919, 39dfaa9, eb693a6)
-| 11.2 `HarmonicBallNotLipschitzStmt` | `closure_11_2` | hI2 (EXTERNAL, see 1.3); hAff hDG hCC hE hW hN, hL1 hWeyl hE1 hE3 hB (PROPOSED or FROZEN); hCamp hDecFrozen hDec hCM (FROZEN) | closed, I2 open |
-| 11.5 `NoConeConditionStmt` | `closure_11_5` | as 11.2 | closed, I2 open |
-| 11.6 `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6` | hI2 (as 1.3); hAff hDG hCC hE hW hN (PROPOSED); hL1 hWeyl hE1 hE3 hB (FROZEN) | closed, I2 open |
+Section 11 (`Closure/Sec11.lean`, z11; last commit afa5737)
+| 11.2 `HarmonicBallNotLipschitzStmt` | `closure_11_2` | hDG hCC hE hW hN (PROPOSED); hL1 hWeyl hE1 hE3 hB (FROZEN); hCamp hDecFrozen hDec hCM (FROZEN); I2 discharged in the proof | closed |
+| 11.5 `NoConeConditionStmt` | `closure_11_5` | as 11.2 | closed |
+| 11.6 `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6` | hDG hCC hE hW hN (PROPOSED); hL1 hWeyl hE1 hE3 hB (FROZEN); I2 discharged in the proof | closed |
 | 11.7 `ManyConeBadScalesStmt` | `closure_11_7` | hDG hCC hE hNA (PROPOSED); hCamp hDecFrozen hDec hCM (FROZEN) | closed |
 | 11.8 `ConeBadEventProbabilityStmt` | `closure_11_8` | hDG hCC hE (PROPOSED) | closed |
 | 11.10 `SmallMetricDiameterLargeMassSquareStmt` | `closure_11_10` | FROZEN and PROPOSED (hAx, hShift; detail in `Closure/Sec11.lean`) | closed |
-| 11.11 `HarmonicBallNotMetricBallStmt` | `closure_11_11` | as 11.6, plus h13 `ManyPinchScalesStmt` **OPEN** (Lemma 11.13), plus hmetricAxioms (PROPOSED) | conditional on OPEN 11.13 |
+| 11.11 `HarmonicBallNotMetricBallStmt` | `closure_11_11` | hDG hCC hE hW hN (PROPOSED); hL1 hWeyl hE1 hE3 hB (FROZEN); hAx `LQGMetricFieldAxiomsUnivFrozen` (FROZEN); hStep8 `Step8IdentificationStmt` **OPEN** (inherited from `closure_11_13`); the printed Lemma 11.13 is discharged inside by `manyPinchScales_of_corrected`; I2 discharged inside (`volumeGrowthI2_of_staged`) | conditional on OPEN hStep8 |
 | 11.13 `CorrectedLemma11_13Stmt` | `closure_11_13` | hAx, hE (FROZEN, PROPOSED); hStep8 `Step8IdentificationStmt` **OPEN** (`FirstPass/S11i/Corrected11_13.lean:57`) | conditional on OPEN hStep8 |
 | 11.14 `PinchEventMetricBallConsequenceStmt` | `closure_11_14` | hAx (FROZEN) | closed |
-| 11.15 `PinchFirstEventFaithfulStmt` | `closure_11_15` | hCM hMet hWSC hAx hExists (FROZEN); hAff (PROPOSED) | closed |
+| 11.15 `PinchFirstEventFaithfulStmt` | `closure_11_15` | hCM hMet hWSC hAx hExists (FROZEN) | closed |
 | 11.9 `SmallMetricDiameterLargeMassStmt` | `closure_11_9` | FROZEN, PROPOSED and CITED inputs of 11.9 and 11.10 (table in `Closure/Sec11.lean`) | closed |
-| 11.12 `CorrectedLemma11_12Stmt` | `closure_11_12` | z4 inputs; hgrowth (I2) **OPEN** (z4 notes); hN2 (FROZEN, kept per operator 04:48) | conditional on OPEN I2 |
+| 11.12 `CorrectedLemma11_12Stmt` | `closure_11_12` | z4 inputs (`hLen`, `hμW`, `hLoc`, `hCanon`, `hNonat`, `hExists`, `hfr`, `hmass`, `hCMAbs`, `hCMRew`, `hComp`, `hMf`, `hDiam`, `hMk`, `hholder`, `hShift`, `hFD`, `hDC`, `hCMT`, `hPos10`, `hMassM`, `hSupM`, `hFin`, `hW`, `hM1`, `hM2`, `hDG`, `hCC`, `hE`, `hAx`); hN2 (FROZEN, kept per operator 04:48); I2 derived inside the proof (`S11m/Final11_12.lean`; no `hgrowth` argument) | closed (`#print axioms`: propext, Classical.choice, Quot.sound) |
 | 11.16 `PinchSecondEventFaithfulStmt` | `closure_11_16` | closures 11.15 and 11.9; hholder (CITED, Prop 2.5); FROZEN; PROPOSED hEx hWeyl hNa0 hNa | closed |
 | 11.17 `PinchThirdEventFaithfulStmt` | `closure_11_17` | closure 11.16; hN2 (FROZEN) | closed |
 
 ## Open items and flags
 * 1.2 is closed modulo the OPEN `hStep8` of `closure_11_13` (table above). The printed Lemma 11.13 is supplied by the bridge
   `manyPinchScales_of_corrected` (`Closure/Bridge12.lean`, committed 96e95db); no ManyPinchScalesStmt hypothesis remains.
-* I2 `LQGVolumeGrowthAllScalesStmt` is a hypothesis of 1.3, 11.2, 11.5, 11.6, and the open derivation is z4's notes.
-* Sec11 is committed in full (HEAD, 14 closures); this file builds against that version.
+* I2 `LQGVolumeGrowthAllScalesStmt` is an explicit argument of `closure_1_2` and `closure_1_3` only. Closures 11.2, 11.5,
+  11.6 and 11.11 discharge it by `volumeGrowthI2_of_staged` (`Closure/Sec11.lean:55`); 11.12 derives it inside its proof
+  (`FirstPass/S11m/Final11_12.lean`). Not OPEN in the sense of this file: a proof exists from the same PROPOSED inputs; its
+  classification is the operator's (`docs/campaign/CORRECTIONS.md:60-62`).
+* Sec11 is committed in full (afa5737, 14 closures); this file builds against that version.
 * Commit 85bdd95 (z11) overwrote this file with a Section 1 version whose `closure_1_2` takes `ManyPinchScalesStmt` as an OPEN hypothesis. This version restores the table above; `closure_1_2` here takes no ManyPinchScalesStmt hypothesis.
 
 Cycles: none found. Closures used by this file do not refer back to Section 1.
