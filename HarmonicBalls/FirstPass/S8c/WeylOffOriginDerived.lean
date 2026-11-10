@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.FirstPass.S11i.SingularWeyl
+import HarmonicBalls.FirstPass.S8c.WeylOffOriginRadon
 
 /-! # The Weyl relation off the origin, derived (FIRST-PASS fp-8-2-hWeyl-derived, worker z6)
 
@@ -78,5 +79,28 @@ theorem ae_integral_eq_rpow_of_isLQGMeasureOfField {Ω : Type*} [MeasurableSpace
     _ = ∫ z, f z * SingularWeyl.weylFactor γ (-α₀) z ∂(μ ω) := key.symm
     _ = ∫ z, f z * ‖z‖ ^ (γ * α₀) ∂(μ ω) :=
         integral_congr_ae (Eventually.of_forall fun z => (hpt z).symm)
+
+/-- **Weyl relation off the origin, hypothesis-free (derived).** `LocalLQGInsertionWeylOffOrigin`
+(`FirstPass/Frozen/S8c.lean`) holds with no hypotheses. Almost surely, the no-insertion measure `lam` of the
+whole-plane GFF satisfies `lam = |z|^{γ α₀} μ` on the complement of `0`, where `μ` has insertion `α₀`. Steps 1-4 are
+`ae_integral_eq_rpow_of_isLQGMeasureOfField`; Steps 5-6 are `FirstPassS8cWeyl.eq_withDensity_offOrigin_of_integral_eq`
+(`FirstPass/S8c/WeylOffOriginRadon.lean`), applied for each ω in the common conull set (Step 7). -/
+theorem localLQGInsertionWeylOffOrigin_derived : LocalLQGInsertionWeylOffOrigin.{u} := by
+  intro Ω _ P _ γ α₀ _hC hcirc μ lam hGFF _hγ0 _hγ2 _hα hμ hlam
+  have hμ' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α₀ (hcirc ω)) (μ ω) := hμ
+  have hlam' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage 0 (hcirc ω)) (lam ω) := hlam
+  have hw : ContinuousOn (fun z : ℂ => ‖z‖ ^ (γ * α₀)) {0}ᶜ := by
+    intro z hz
+    have hz0 : z ≠ 0 := by simpa using hz
+    exact ((continuous_norm.continuousAt (x := z)).rpow_const
+      (Or.inl (norm_ne_zero_iff.2 hz0))).continuousWithinAt
+  have hw0 : ∀ z : ℂ, 0 ≤ ‖z‖ ^ (γ * α₀) := fun z => Real.rpow_nonneg (norm_nonneg z) _
+  filter_upwards [ae_integral_eq_rpow_of_isLQGMeasureOfField hGFF hμ hlam, hμ', hlam']
+    with ω hω hμω hlamω
+  intro s hs h0s
+  have := hlamω.isLocallyFiniteMeasure
+  have := hμω.isLocallyFiniteMeasure
+  exact FirstPassS8cWeyl.eq_withDensity_offOrigin_of_integral_eq
+    (w := fun z : ℂ => ‖z‖ ^ (γ * α₀)) hw hw0 hω s hs h0s
 
 end HarmonicBalls
