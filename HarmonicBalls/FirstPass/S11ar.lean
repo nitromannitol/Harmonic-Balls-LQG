@@ -52,7 +52,7 @@ theorem localLengthModification_decoderOn_of_lqg {Ω : Type} [MeasurableSpace Ω
 /-- **Combined statement for n3 and n4 (fp-S11ar; `hq3` and `hae` discharged, R1 discharged).** For the LQG metric `𝔇`
 (`IsLQGMetric`), the whole-plane GFF `hC` (`IsWholePlaneGFF`), a disc `ball c R` with `0 < R` and `0 ∉ closedBall c R`, measurable
 continuous decoders `mω` on `ball c R ×ˢ ball c R` satisfying identity (18) almost surely, the decoders are almost surely
-`IsLengthMetricOn (ball c R)` metrics (`hae`), and they admit the `P`-a.s. measurable modification `LocalLengthModification`
+`IsLengthMetricOn (ball c R)` metrics (`hae`), and they have the `P`-a.s. measurable modification `LocalLengthModification`
 (`hq3`). -/
 theorem decoderOn_ae_length_and_modification {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
     {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
