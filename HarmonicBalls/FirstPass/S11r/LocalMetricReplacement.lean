@@ -13,7 +13,11 @@ the metric of `h^α` is `weylScaling (𝔇 (hC ω)) ξ (-α log|·|)` for an LQG
 `f_z = h^ℂ - α log|·| - γ log|· - z| + γ log max(1, |·|)` (`campbellReferenceObs`). The identities are on `D × D`
 with the internal metric `internalMetric · D`, equality up to a positive constant `b`.
 
-Status: the statement only. Its proof needs (i) the fixed-metric decoder of the corrected frozen input
+Status: FIRST-PASS FROZEN, EXTERNAL (operator decision 05:47 UTC; docstring only, no statement change). Truth check TRUE
+in substance (ChatGPT, chat 179; notes/fp-gaps/CHATGPT-hb-11-12-final.md section 1). Sources: Gwynne-Miller, arXiv:1905.00383,
+Axiom II, Theorem 1.2, Remark 1.5; Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380, Theorem 1.10, Proposition 3.17.
+The bridge theorem is to be proved in phase 2 by the route of section 1 (normalize, Axiom II, Doob-Dynkin factorization, ...).
+Its proof needs (i) the fixed-metric decoder of the corrected frozen input
 `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` (section 4.1; the retired unnormalised version was FALSE),
 (ii) the unrooted identity (18) for a fixed metric, `unrooted_identity_fixedMetric` (FirstPass/S11r/UnrootedFixed.lean,
 with the named universe-u shift axioms `LQGShiftAxiomI` / `LQGShiftAxiomIII`), (iii) the countable reconstruction (22)
@@ -35,7 +39,8 @@ open scoped ENNReal
 
 universe u
 
-/-- **Target B2: local metric replacement** (CHATGPT-n3-B1-B2.md section 4, eqs (17)-(20)). For `0 < γ < 2`, a disk
+/-- FIRST-PASS FROZEN, EXTERNAL (see the module docstring, Status). **Target B2: local metric replacement**
+(CHATGPT-n3-B1-B2.md section 4, eqs (17)-(20)). For `0 < γ < 2`, a disk
 `U = ball c₁ r₁` with `closedBall c₁ r₁ ⊆ D = ball c₂ r₂`, `closedBall c₂ r₂ ⊆ ball 0 1` and `0 ∉ closedBall c₂ r₂`
 (the restriction (16) of CHATGPT-n3-B1-B2.md section 4, "for clarity": the Campbell shift `γ log max(1, |·|)` of (19)
 vanishes on `D` and the cut-offs are smooth; the extension to disks not contained in `B_1 ∖ {0}` is not claimed here: it is

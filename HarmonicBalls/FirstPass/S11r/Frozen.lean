@@ -24,7 +24,9 @@ open MeasureTheory Metric Set
 
 universe u
 
-/-- FIRST-PASS FROZEN. Existence of the whole-plane Gaussian free field (EXTERNAL, general): for every universe `u` there
+/-- FIRST-PASS FROZEN. Truth check TRUE (ChatGPT, 01:17 UTC; notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md section 1),
+in every universe `u` (ULift for larger universes).
+Existence of the whole-plane Gaussian free field (EXTERNAL, general): for every universe `u` there
 are a probability space `Ω : Type u`, a pairing `hC` and a circle-average process `hcirc` with `IsWholePlaneGFF P hC hcirc`,
 that is a centred Gaussian field with covariance `wholePlaneCov` (`log (max(|z|,1) max(|w|,1) / |z-w|)`, normalised so that
 the average on the unit circle vanishes), whose circle averages are a.s. continuous in `(r, z) ∈ (0, ∞) × ℂ`.
