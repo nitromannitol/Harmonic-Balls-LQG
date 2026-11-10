@@ -180,4 +180,80 @@ theorem ae_frequency_of_scaled_zoom (Ostar U V W T Q' Q : Set ℂ) (η M q a b :
     simpa only [window_count_ofReal_smul_eq ha hb] using hw hwb
   exact ae_frequency_of_zoom Ostar U V W T Q' Q η M q μ D k hunit1
 
+/-- **Step 8 transfer, family form (unit constants).** For every `k`, almost surely, the unit-scale statement for the
+zoomed pair of `(μ ω, D ω)` gives the physical window frequency of `(μ ω, D ω)` on `B_{2^k}(0)`. The conclusion is
+exactly the `hphys` hypothesis of `step8_zoom_family_of_ae_frequency` for `Ostar = pinchOmegaGeom W Q δ` and `η = δ`. -/
+theorem hphys_of_zoom_unit_family {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
+    (U V W T Q' Q : Set ℂ) (δ M q : ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    (hzoom : ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(zoomMeasure (μ ω) k), w ∈ ball (0 : ℂ) 1 →
+      Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+        CertificateEvent (zoomMeasure (μ ω) k) (zoomMetric (D ω) k) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M
+          ((2 : ℝ)⁻¹ ^ n) w}.ncard : ℕ) : ℝ) / (N : ℝ)) atTop (𝓝 q)) :
+    ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), z ∈ ball (0 : ℂ) ((2 : ℝ) ^ k) →
+      Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+        CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M
+          ((2 : ℝ) ^ k * (2 : ℝ)⁻¹ ^ n) z}.ncard : ℕ) : ℝ) / (N : ℝ)) atTop (𝓝 q) := by
+  intro k
+  filter_upwards [hzoom k] with ω hω
+  exact ae_frequency_of_zoom (pinchOmegaGeom W Q δ) U V W T Q' Q δ M q (μ ω) (D ω) k hω
+
+/-- **Step 8 transfer, family form (positive constants).** As `hphys_of_zoom_unit_family`, but the zoomed pair of
+`(μ ω, D ω)` may carry almost surely positive constants `a`, `b` (the zoom measure is `ENNReal.ofReal a • zoomMeasure`
+and the zoom metric is `b * zoomMetric`). The conclusion is again exactly the `hphys` hypothesis of
+`step8_zoom_family_of_ae_frequency`. -/
+theorem hphys_of_zoom_const_family {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
+    (U V W T Q' Q : Set ℂ) (δ M q : ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    (hzoom : ∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      ∀ᵐ w ∂(ENNReal.ofReal a • zoomMeasure (μ ω) k), w ∈ ball (0 : ℂ) 1 →
+        Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+          CertificateEvent (ENNReal.ofReal a • zoomMeasure (μ ω) k) (fun x y => b * zoomMetric (D ω) k x y)
+            (pinchOmegaGeom W Q δ) U V W T Q' Q δ M ((2 : ℝ)⁻¹ ^ n) w}.ncard : ℕ) : ℝ) / (N : ℝ))
+          atTop (𝓝 q)) :
+    ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), z ∈ ball (0 : ℂ) ((2 : ℝ) ^ k) →
+      Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+        CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M
+          ((2 : ℝ) ^ k * (2 : ℝ)⁻¹ ^ n) z}.ncard : ℕ) : ℝ) / (N : ℝ)) atTop (𝓝 q) := by
+  intro k
+  filter_upwards [hzoom k] with ω hω
+  obtain ⟨a, b, ha, hb, hω'⟩ := hω
+  exact ae_frequency_of_scaled_zoom (pinchOmegaGeom W Q δ) U V W T Q' Q δ M q a b ha hb (μ ω) (D ω) k hω'
+
+/-- **Check: the unit-constant family feeds `step8_zoom_family_of_ae_frequency` without change of type.** -/
+theorem step8_zoom_family_of_zoom_unit {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
+    (U V W T Q' Q : Set ℂ) (δ M q : ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    (hzoom : ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(zoomMeasure (μ ω) k), w ∈ ball (0 : ℂ) 1 →
+      Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+        CertificateEvent (zoomMeasure (μ ω) k) (zoomMetric (D ω) k) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M
+          ((2 : ℝ)⁻¹ ^ n) w}.ncard : ℕ) : ℝ) / (N : ℝ)) atTop (𝓝 q)) :
+    ∃ (μk : ℕ → Ω → Measure ℂ) (Dk : ℕ → Ω → ℂ → ℂ → ℝ),
+      (∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+        μk k ω = ENNReal.ofReal a • (μ ω).map (fun x : ℂ => x / ((((2 : ℝ) ^ k : ℝ)) : ℂ)) ∧
+        ∀ x y : ℂ, Dk k ω x y = b * D ω ((((2 : ℝ) ^ k : ℝ) : ℂ) * x) ((((2 : ℝ) ^ k : ℝ) : ℂ) * y)) ∧
+      ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(μk k ω), w ∈ ball (0 : ℂ) 1 →
+        Tendsto (fun N : ℕ => ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+          FirstPassS11i.windowCert (pinchOmegaGeom W Q δ) U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ))
+          atTop (𝓝 q) :=
+  step8_zoom_family_of_ae_frequency P U V W T Q' Q δ M q μ D
+    (hphys_of_zoom_unit_family P U V W T Q' Q δ M q μ D hzoom)
+
+/-- **Check: the positive-constant family feeds `step8_zoom_family_of_ae_frequency` without change of type.** -/
+theorem step8_zoom_family_of_zoom_const {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
+    (U V W T Q' Q : Set ℂ) (δ M q : ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    (hzoom : ∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      ∀ᵐ w ∂(ENNReal.ofReal a • zoomMeasure (μ ω) k), w ∈ ball (0 : ℂ) 1 →
+        Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+          CertificateEvent (ENNReal.ofReal a • zoomMeasure (μ ω) k) (fun x y => b * zoomMetric (D ω) k x y)
+            (pinchOmegaGeom W Q δ) U V W T Q' Q δ M ((2 : ℝ)⁻¹ ^ n) w}.ncard : ℕ) : ℝ) / (N : ℝ))
+          atTop (𝓝 q)) :
+    ∃ (μk : ℕ → Ω → Measure ℂ) (Dk : ℕ → Ω → ℂ → ℂ → ℝ),
+      (∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+        μk k ω = ENNReal.ofReal a • (μ ω).map (fun x : ℂ => x / ((((2 : ℝ) ^ k : ℝ)) : ℂ)) ∧
+        ∀ x y : ℂ, Dk k ω x y = b * D ω ((((2 : ℝ) ^ k : ℝ) : ℂ) * x) ((((2 : ℝ) ^ k : ℝ) : ℂ) * y)) ∧
+      ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(μk k ω), w ∈ ball (0 : ℂ) 1 →
+        Tendsto (fun N : ℕ => ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+          FirstPassS11i.windowCert (pinchOmegaGeom W Q δ) U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ))
+          atTop (𝓝 q) :=
+  step8_zoom_family_of_ae_frequency P U V W T Q' Q δ M q μ D
+    (hphys_of_zoom_const_family P U V W T Q' Q δ M q μ D hzoom)
+
 end HarmonicBalls.FirstPassS11iStep8Transfer
