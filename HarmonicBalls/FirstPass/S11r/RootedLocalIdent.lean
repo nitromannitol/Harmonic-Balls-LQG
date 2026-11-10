@@ -888,4 +888,199 @@ theorem ae_rootedLocalIdent_restrict {Ω : Type u} [MeasurableSpace Ω] {P : Mea
   rw [hobs] at hrestr
   exact hrestr
 
+/-! ### Section 4.2, countable family of buffered local windows (round 5)
+
+Concentric rational windows `ball c r/2 ⊆ ball c r` with `closedBall c r ⊆ W` and `0 ∉ closedBall c r`, indexed by
+rational triples. An enumeration of the (countable) index set by `ℕ` gives the family `(U_j, D_j)` of ruling
+Section 4.2: each `D_j = ball (dc j) (dr j)` satisfies the hypotheses of `LocalMeasureKernelStmt`
+(`closedBall c₁ r₁ ⊆ ball c₂ r₂`, `0 ∉ closedBall c₂ r₂`), and for every root `z ≠ 0` and `b > 0` some `j` has
+`z ∈ U_j` and `closedBall (dc j) (dr j) ⊆ ball z b`. -/
+
+/-- The rational complex number `re + im i` of a triple `p = (re, im, r)`. -/
+def ratComplex (p : ℚ × ℚ × ℚ) : ℂ := ⟨(p.1 : ℝ), (p.2.1 : ℝ)⟩
+
+/-- The radius `r` of a rational triple `p = (re, im, r)`. -/
+def ratRadius (p : ℚ × ℚ × ℚ) : ℝ := (p.2.2 : ℝ)
+
+/-- The index set of buffered windows in `W`: rational concentric balls `closedBall (ratComplex p) (ratRadius p)`
+inside `W` and avoiding the origin. -/
+def bufferedIndex (W : Set ℂ) : Set (ℚ × ℚ × ℚ) :=
+  {p | 0 < ratRadius p ∧ closedBall (ratComplex p) (ratRadius p) ⊆ W ∧
+    (0 : ℂ) ∉ closedBall (ratComplex p) (ratRadius p)}
+
+theorem bufferedIndex_props {W : Set ℂ} {p : ℚ × ℚ × ℚ} (h : p ∈ bufferedIndex W) :
+    0 < ratRadius p ∧ closedBall (ratComplex p) (ratRadius p) ⊆ W ∧
+      (0 : ℂ) ∉ closedBall (ratComplex p) (ratRadius p) := h
+
+/-- **Density of buffered windows.** For an open `W`, a point `z ∈ W` with `z ≠ 0` and `b > 0`, there is a rational
+window `p` in the index set with `z` in the buffered disc `ball c (r/2)` and `closedBall c r ⊆ ball z b`. -/
+theorem exists_bufferedIndex_mem {W : Set ℂ} (hW : IsOpen W) {z : ℂ} (hz : z ∈ W) (hz0 : z ≠ 0) {b : ℝ}
+    (hb : 0 < b) :
+    ∃ p ∈ bufferedIndex W, z ∈ ball (ratComplex p) (ratRadius p / 2) ∧
+      closedBall (ratComplex p) (ratRadius p) ⊆ ball z b := by
+  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hW z hz
+  have hMpos : 0 < min (min ε b) ‖z‖ := lt_min (lt_min hε hb) (norm_pos_iff.2 hz0)
+  set M : ℝ := min (min ε b) ‖z‖ with hM
+  have hMε : M ≤ ε := (min_le_left _ _).trans (min_le_left _ _)
+  have hMb : M ≤ b := (min_le_left _ _).trans (min_le_right _ _)
+  have hMz : M ≤ ‖z‖ := min_le_right _ _
+  obtain ⟨r, hr0, hr1⟩ := exists_rat_btwn (show (0 : ℝ) < M / 4 by positivity)
+  obtain ⟨q1, hq1a, hq1b⟩ := exists_rat_btwn (show z.re - (r : ℝ) / 4 < z.re + (r : ℝ) / 4 by linarith)
+  obtain ⟨q2, hq2a, hq2b⟩ := exists_rat_btwn (show z.im - (r : ℝ) / 4 < z.im + (r : ℝ) / 4 by linarith)
+  set p : ℚ × ℚ × ℚ := (q1, q2, r) with hp
+  have hrp : ratRadius p = (r : ℝ) := rfl
+  have hcre : (ratComplex p).re = (q1 : ℝ) := rfl
+  have hcim : (ratComplex p).im = (q2 : ℝ) := rfl
+  have hcz : dist (ratComplex p) z < (r : ℝ) / 2 := by
+    rw [Complex.dist_eq]
+    have h := Complex.norm_le_abs_re_add_abs_im (ratComplex p - z)
+    rw [Complex.sub_re, Complex.sub_im, hcre, hcim] at h
+    have h1 : |(q1 : ℝ) - z.re| < (r : ℝ) / 4 := abs_sub_lt_iff.2 ⟨by linarith, by linarith⟩
+    have h2 : |(q2 : ℝ) - z.im| < (r : ℝ) / 4 := abs_sub_lt_iff.2 ⟨by linarith, by linarith⟩
+    linarith
+  have hr_pos : (0 : ℝ) < (r : ℝ) := hr0
+  have hMr : 4 * (r : ℝ) < M := by linarith
+  have hmem : p ∈ bufferedIndex W := by
+    show 0 < ratRadius p ∧ closedBall (ratComplex p) (ratRadius p) ⊆ W ∧
+      (0 : ℂ) ∉ closedBall (ratComplex p) (ratRadius p)
+    refine ⟨by rw [hrp]; exact hr_pos, ?_, ?_⟩
+    · intro w hw
+      rw [mem_closedBall, hrp] at hw
+      refine hball (mem_ball.2 ?_)
+      have := dist_triangle w (ratComplex p) z
+      linarith
+    · intro h0
+      rw [mem_closedBall, hrp] at h0
+      have h1 := dist_triangle z (ratComplex p) 0
+      rw [dist_zero_right z, dist_comm z (ratComplex p), dist_comm (ratComplex p) 0] at h1
+      linarith
+  refine ⟨p, hmem, ?_, ?_⟩
+  · rw [mem_ball, dist_comm, hrp]
+    exact hcz
+  · intro w hw
+    rw [mem_closedBall, hrp] at hw
+    rw [mem_ball]
+    have := dist_triangle w (ratComplex p) z
+    linarith
+
+/-- **The countable family of buffered windows (ruling Section 4.2).** For an open set `W` containing a point
+`z ≠ 0`, there are concentric rational windows `U_j = ball (uc j) (ur j)` inside `D_j = ball (dc j) (dr j)`, with
+`closedBall (dc j) (dr j) ⊆ W`, `0 ∉ closedBall (dc j) (dr j)`, the buffer inequality `ur j + dist (uc j) (dc j) < dr j`,
+and the approximation property: every `z ∈ W \ {0}` and `b > 0` have some `j` with `z ∈ U_j` and
+`closedBall (dc j) (dr j) ⊆ ball z b`. -/
+theorem exists_buffered_balls {W : Set ℂ} (hW : IsOpen W) (hW0 : ∃ z ∈ W, z ≠ 0) :
+    ∃ (uc dc : ℕ → ℂ) (ur dr : ℕ → ℝ), (∀ j, 0 < ur j) ∧ (∀ j, ur j + dist (uc j) (dc j) < dr j) ∧
+      (∀ j, closedBall (dc j) (dr j) ⊆ W) ∧ (∀ j, (0 : ℂ) ∉ closedBall (dc j) (dr j)) ∧
+      ∀ z ∈ W, z ≠ 0 → ∀ b : ℝ, 0 < b →
+        ∃ j, z ∈ ball (uc j) (ur j) ∧ closedBall (dc j) (dr j) ⊆ ball z b := by
+  obtain ⟨z0, hz0W, hz00⟩ := hW0
+  obtain ⟨p0, hp0, -⟩ := exists_bufferedIndex_mem hW hz0W hz00 one_pos
+  have : Nonempty (bufferedIndex W) := ⟨⟨p0, hp0⟩⟩
+  obtain ⟨g, hg⟩ := exists_surjective_nat (bufferedIndex W)
+  have hprop : ∀ j, 0 < ratRadius (g j).1 ∧ closedBall (ratComplex (g j).1) (ratRadius (g j).1) ⊆ W ∧
+      (0 : ℂ) ∉ closedBall (ratComplex (g j).1) (ratRadius (g j).1) :=
+    fun j => bufferedIndex_props (g j).2
+  refine ⟨fun j => ratComplex (g j).1, fun j => ratComplex (g j).1, fun j => ratRadius (g j).1 / 2,
+    fun j => ratRadius (g j).1, fun j => half_pos (hprop j).1, fun j => ?_,
+    fun j => (hprop j).2.1, fun j => (hprop j).2.2, ?_⟩
+  · simp only [dist_self, add_zero]
+    linarith [(hprop j).1]
+  · intro z hzW hz0 b hb
+    obtain ⟨p, hp, hzp, hsub⟩ := exists_bufferedIndex_mem hW hzW hz0 hb
+    obtain ⟨j, hj⟩ := hg ⟨p, hp⟩
+    refine ⟨j, ?_, ?_⟩
+    · show z ∈ ball (ratComplex (g j).1) (ratRadius (g j).1 / 2)
+      rw [hj]
+      exact hzp
+    · show closedBall (ratComplex (g j).1) (ratRadius (g j).1) ⊆ ball z b
+      rw [hj]
+      exact hsub
+
+/-- The radius of the buffered window: `dr - (ur + dist uc dc)`. The closed ball of this radius about a root in
+`ball uc ur` stays in `ball dc dr` (the buffer). -/
+noncomputable def bufferRadius (uc dc : ℂ) (ur dr : ℝ) : ℝ := dr - (ur + dist uc dc)
+
+theorem bufferRadius_pos {uc dc : ℂ} {ur dr : ℝ} (h : ur + dist uc dc < dr) :
+    0 < bufferRadius uc dc ur dr :=
+  sub_pos.2 h
+
+theorem closedBall_bufferRadius_subset {z uc dc : ℂ} {ur dr : ℝ} (hz : z ∈ ball uc ur) :
+    closedBall z (bufferRadius uc dc ur dr) ⊆ ball dc dr := by
+  intro w hw
+  rw [mem_closedBall] at hw
+  rw [mem_ball]
+  rw [mem_ball] at hz
+  have h1 := dist_triangle w z dc
+  have h2 := dist_triangle z uc dc
+  unfold bufferRadius at hw
+  linarith
+
+/-- **Section 4.4-4.5 with the buffered family (the measure clause of `hRLI`).** Given a family of buffered windows
+`(uc j, ur j, dc j, dr j)` with the approximation property `hdens` on the disc `ball c₁ r₁`, and for each `j` the base
+conullity `hbase` of the rooted local identification event at the window `ball (dc j) (dr j)` with the buffered radius
+`bufferRadius (uc j) (dc j) (ur j) (dr j)` (output of `ae_rootedLocalIdent_base` for the window), almost every root `z` in
+the disc is served by some buffered window `j` with `z ∈ U_j`, for every admissible shift `(b, u)`: the rooted decoded
+measure, restricted to `closedBall 0 ρ` with `ρ = bufferRadius ...`, is a positive multiple of the centred canonical
+measure of the root-shifted field (Section 4.5). This is `hRLI` (measure clause) of S11at.lean for the family `(U_j, D_j)`. -/
+theorem ae_rootedLocalIdent_buffered {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    (hCM : CameronMartinGFFMutualAbsCont.{u}) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hG : IsWholePlaneGFF P hC hcirc) {α₀ γ : ℝ} {c₁ : ℂ} {r₁ : ℝ}
+    (uc dc : ℕ → ℂ) (ur dr : ℕ → ℝ) (hbuf : ∀ j, ur j + dist (uc j) (dc j) < dr j)
+    (hdens : ∀ z ∈ ball c₁ r₁, z ≠ 0 → ∀ b : ℝ, 0 < b →
+      ∃ j, z ∈ ball (uc j) (ur j) ∧ closedBall (dc j) (dr j) ⊆ ball z b)
+    (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ)
+    (hDμ : Measurable Dμ) (hDd : ∀ x y : ℂ, Measurable fun L : S11n.CanonSpace => Dd L x y)
+    {f : ℕ → Set ℂ} (hfm : ∀ n, MeasurableSet (f n)) (hπ : ∀ m n, ∃ k, f k = f m ∩ f n)
+    (huniv : ∃ n, f n = univ) (hgen : borel ℂ = MeasurableSpace.generateFrom (Set.range f))
+    (κ : (j : ℕ) → ({φ : ℂ → ℝ // IsTestFunction (ball (dc j) (dr j)) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (m : (j : ℕ) → (MeanZeroTest (ball (dc j) (dr j)) → ℝ) →
+      C(↥(ball (dc j) (dr j) ×ˢ ball (dc j) (dr j) : Set (ℂ × ℂ)), ℝ))
+    (X : ℕ → ℕ → ℂ) (R : ℕ → ℕ → ℝ) (pq : ℕ → ℕ → ℂ × ℂ)
+    (hκm : ∀ j, Measurable (κ j)) (hmm : ∀ j, Measurable (m j))
+    (hbase : ∀ j, ∀ᵐ z ∂(volume.restrict (ball (uc j) (ur j))), ∀ᵐ ω ∂P,
+      S11c.translatedPairing hC hcirc z ω ∈ rootedLocalIdentEvent (ball (dc j) (dr j)) (κ j) (m j) Dμ Dd γ z
+        (closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j)))
+        (fun n => f n ∩ closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j))) (X j) (R j) (pq j)) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ (b : ℝ) (u : ℂ → ℝ),
+      FirstPassS11ai.AdmissibleRootShift α₀ z b u →
+        ∃ j, z ∈ ball (uc j) (ur j) ∧ ∀ᵐ ω ∂P, ∃ ρ c : ℝ, 0 < ρ ∧ 0 < c ∧
+          closedBall z ρ ⊆ ball (dc j) (dr j) ∧
+          ((κ j (campbellReferenceObs γ α₀ (ball (dc j) (dr j)) (hC ω) z).2).map (fun w => w - z)).restrict
+              (closedBall 0 ρ) =
+            ENNReal.ofReal c • (Dμ (canonFieldOf γ (addFunPairing (S11c.translatedPairing hC hcirc z ω) u))).restrict
+              (closedBall 0 ρ) := by
+  have hshift : ∀ j, ∀ᵐ z ∂(volume.restrict (ball (uc j) (ur j))), ∀ (b : ℝ) (u : ℂ → ℝ),
+      FirstPassS11ai.AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P,
+        addFunPairing (S11c.translatedPairing hC hcirc z ω) u ∈
+          rootedLocalIdentEvent (ball (dc j) (dr j)) (κ j) (m j) Dμ Dd γ z
+            (closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j)))
+            (fun n => f n ∩ closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j))) (X j) (R j) (pq j) :=
+    fun j => ae_rootedLocalIdent_shifted_all P hCM hG (α₀ := α₀) (κ j) (m j) Dμ Dd _ _ (X j) (R j) (pq j)
+      (hκm j) (hmm j) hDμ hDd measurableSet_closedBall (fun n => (hfm n).inter measurableSet_closedBall) (hbase j)
+  have hres : ∀ j, ∀ᵐ z ∂(volume.restrict (ball (uc j) (ur j))), ∀ (b : ℝ) (u : ℂ → ℝ),
+      FirstPassS11ai.AdmissibleRootShift α₀ z b u → ball (dc j) (dr j) ⊆ ball z b → ∀ᵐ ω ∂P, ∃ c : ℝ, 0 < c ∧
+        ((κ j (campbellReferenceObs γ α₀ (ball (dc j) (dr j)) (hC ω) z).2).map (fun w => w - z)).restrict
+            (closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j))) =
+          ENNReal.ofReal c • (Dμ (canonFieldOf γ (addFunPairing (S11c.translatedPairing hC hcirc z ω) u))).restrict
+            (closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j))) :=
+    fun j => ae_rootedLocalIdent_restrict (κ j) (m j) Dμ Dd _ measurableSet_closedBall hfm hπ huniv hgen
+      (X j) (R j) (pq j) (hshift j)
+  have hz0 : ∀ᵐ z ∂(volume : Measure ℂ), z ≠ 0 := compl_mem_ae_iff.2 (measure_singleton (0 : ℂ))
+  have hall : ∀ᵐ z ∂(volume : Measure ℂ), ∀ j, z ∈ ball (uc j) (ur j) → ∀ (b : ℝ) (u : ℂ → ℝ),
+      FirstPassS11ai.AdmissibleRootShift α₀ z b u → ball (dc j) (dr j) ⊆ ball z b → ∀ᵐ ω ∂P, ∃ c : ℝ, 0 < c ∧
+        ((κ j (campbellReferenceObs γ α₀ (ball (dc j) (dr j)) (hC ω) z).2).map (fun w => w - z)).restrict
+            (closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j))) =
+          ENNReal.ofReal c • (Dμ (canonFieldOf γ (addFunPairing (S11c.translatedPairing hC hcirc z ω) u))).restrict
+            (closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j))) :=
+    ae_all_iff.2 (fun j => (ae_restrict_iff' (measurableSet_ball : MeasurableSet (ball (uc j) (ur j)))).1 (hres j))
+  filter_upwards [ae_restrict_of_ae hall, ae_restrict_of_ae hz0, ae_restrict_mem measurableSet_ball] with
+    z hzall hz0' hzball b u hadm
+  obtain ⟨j, hzj, hbj⟩ := hdens z hzball hz0' b hadm.1
+  refine ⟨j, hzj, ?_⟩
+  have hGz := hzall j hzj b u hadm (Metric.ball_subset_closedBall.trans hbj)
+  filter_upwards [hGz] with ω hω
+  obtain ⟨c, hc, heq⟩ := hω
+  exact ⟨bufferRadius (uc j) (dc j) (ur j) (dr j), c, bufferRadius_pos (hbuf j), hc,
+    closedBall_bufferRadius_subset hzj, heq⟩
+
 end HarmonicBalls
