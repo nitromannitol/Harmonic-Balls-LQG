@@ -7,6 +7,7 @@ import HarmonicBalls.FirstPass.S11c.TranslateField11_7
 import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.FirstPass.S11asLocal
 import HarmonicBalls.FirstPass.S11r.CMTransfer
+import HarmonicBalls.FirstPass.S11i.TranslationCanonical
 
 /-!
 # Eventual rooted covariance: internal proportionality and the eventual ambient metric (fp-S11at, round 10)
@@ -365,34 +366,118 @@ theorem centred_pair_identities {Ω : Type*} (μR : ℂ → Ω → Measure ℂ) 
 
 universe u
 
+/-- **Iterated dilation covariance on an invariant set (deterministic).** Let `G0` be a `dilOp`-invariant set on which the
+decoders satisfy the one-step dilation identities (the conclusion of `B1_covariance`, S11s/B1Covariance.lean:120, on `G0`).
+Then on `G0` the `n`-fold identities hold with positive constants: induction on `n`, composing the scalings `(1/2)^k`. -/
+theorem dilOp_iterate_of_one_step {Dμ : S11n.CanonSpace → Measure ℂ} {Dd : S11n.CanonSpace → ℂ → ℂ → ℝ}
+    {G0 : Set S11n.CanonSpace} (hinv : ∀ L ∈ G0, dilOp L ∈ G0)
+    (hstep : ∀ L ∈ G0, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      Dμ (dilOp L) = ENNReal.ofReal a • (Dμ L).map (fun w : ℂ => w / (((1 / 2 : ℝ)) : ℂ)) ∧
+      ∀ x y : ℂ, Dd (dilOp L) x y = b * Dd L (((1 / 2 : ℝ) : ℂ) * x) (((1 / 2 : ℝ) : ℂ) * y))
+    (n : ℕ) : ∀ L ∈ G0, ∃ a c : ℝ, 0 < a ∧ 0 < c ∧
+      Dμ (dilOp^[n] L) = ENNReal.ofReal a • (Dμ L).map (fun w : ℂ => w / (((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) ∧
+      ∀ x y : ℂ, Dd (dilOp^[n] L) x y
+        = c * Dd L (((((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) * x) ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * y) := by
+  induction n with
+  | zero =>
+    intro L _
+    refine ⟨1, 1, one_pos, one_pos, ?_, fun x y => ?_⟩
+    · simp
+    · simp
+  | succ n ih =>
+    intro L hL
+    obtain ⟨a1, b1, ha1, hb1, hμ1, hd1⟩ := hstep L hL
+    obtain ⟨a2, c2, ha2, hc2, hμ2, hd2⟩ := ih (dilOp L) (hinv L hL)
+    have hs1 : Measurable (fun w : ℂ => w / (((1 / 2 : ℝ)) : ℂ)) := by fun_prop
+    have hsn : Measurable (fun w : ℂ => w / (((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) := by fun_prop
+    have hfun : ((fun w : ℂ => w / (((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) ∘ (fun w : ℂ => w / (((1 / 2 : ℝ)) : ℂ)))
+        = (fun w : ℂ => w / (((1 / 2 : ℝ) ^ (n + 1) : ℝ) : ℂ)) := by
+      funext w
+      simp only [Function.comp_apply]
+      rw [div_div, ← Complex.ofReal_mul, ← pow_succ']
+    have e1 : ∀ x : ℂ, (((1 / 2 : ℝ)) : ℂ) * ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * x)
+        = ((((1 / 2 : ℝ) ^ (n + 1) : ℝ)) : ℂ) * x := by
+      intro x
+      push_cast
+      ring
+    refine ⟨a2 * a1, c2 * b1, mul_pos ha2 ha1, mul_pos hc2 hb1, ?_, fun x y => ?_⟩
+    · rw [Function.iterate_succ_apply, hμ2, hμ1, Measure.map_smul _ hsn.aemeasurable, Measure.map_map hsn hs1, hfun,
+        smul_smul,
+        ← ENNReal.ofReal_mul ha2.le]
+    · rw [Function.iterate_succ_apply, hd2, hd1, e1 x, e1 y]
+      ring
+
+/-- **Length property and dilation covariance transferred to the root-shifted canonical field, from the base set
+for `alphaCanon γ hC`.** Translation of the base event: `ae_alphaCanon_translatedPairing_mem` (below) moves the a.s.
+membership in the measurable set `G` from the field `hC` to the translated field, by `prob_alphaCanon_translatedPairing`
+(S11i/TranslationCanonical.lean:98) applied to `Gᶜ`. -/
+theorem ae_alphaCanon_translatedPairing_mem {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc) (γ : ℝ) (z : ℂ)
+    {G : Set S11n.CanonSpace} (hG : MeasurableSet G) (hGa : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G) :
+    ∀ᵐ ω ∂P, alphaCanon γ (S11c.translatedPairing hC hcirc z) ω ∈ G := by
+  rw [ae_iff] at hGa ⊢
+  exact (prob_alphaCanon_translatedPairing hh γ z hG.compl).trans hGa
+
 /-- **Length property of the root-shifted canonical metric (Cameron–Martin transfer of the decoder regularity set).**
-`G` is a measurable set of canonical fields, conull for the canonical field `alphaCanon γ` of every whole-plane GFF, and
-`Dd` is a Euclidean length metric on `G`. Such data are supplied by `LQGCanonicalDecodersMeasurableExistStmt`
-(Frozen/S11n.lean:71). The Cameron–Martin transfer `HarmonicBalls.ae_shiftedCanon_mem_regularity` (n2,
-S11r/CMTransfer.lean:67) moves the conull event from the translated field to `shiftedCanon γ hC hcirc z u`, for a smooth
-compactly supported root shift `u` with zero unit-circle average (the properties of `AdmissibleRootShift`). -/
+`G` is measurable, conull for `alphaCanon γ hC` (the field of the wrapper), and `Dd` is a Euclidean length metric on `G`.
+Such `G` and `Dd` are the output of `LQGCanonicalDecodersMeasurableExistStmt` (Frozen/S11n.lean:71). The Cameron–Martin
+transfer `HarmonicBalls.ae_shiftedCanon_mem_regularity` (n2, S11r/CMTransfer.lean:67) moves the event to
+`shiftedCanon γ hC hcirc z u`, for a root shift `u` that is smooth, compactly supported, with zero unit-circle average. -/
 theorem ae_isEuclideanLengthMetric_shiftedCanon {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u}) (γ : ℝ)
-    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
     (hTr : ∀ z : ℂ, IsWholePlaneGFF P (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
     (z : ℂ) (u : ℂ → ℝ) (hu : ContDiff ℝ (⊤ : ℕ∞) u) (hcomp : HasCompactSupport u)
     (hu0 : Real.circleAverage u 0 1 = 0) (G : Set S11n.CanonSpace) (hG : MeasurableSet G)
-    (hGbase : ∀ (Ω' : Type u) [MeasurableSpace Ω'] (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ)
-      (hcirc' : Ω' → ℝ → ℂ → ℝ), IsWholePlaneGFF P' hC' hcirc' → ∀ᵐ ω ∂P', alphaCanon γ hC' ω ∈ G)
+    (hGa : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G)
     (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ) (hGreg : ∀ L ∈ G, IsEuclideanLengthMetric (Dd L)) :
     ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Dd (shiftedCanon γ hC hcirc z u ω)) := by
   have hbase : ∀ᵐ ω ∂P, canonFieldOf γ (S11c.translatedPairing hC hcirc z ω) ∈ G :=
-    hGbase Ω P (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z) (hTr z)
+    ae_alphaCanon_translatedPairing_mem hh γ z hG hGa
   filter_upwards [HarmonicBalls.ae_shiftedCanon_mem_regularity P hCM γ z (hTr z) hu hcomp hu0 hG hbase] with ω hω
   exact hGreg _ hω
 
-/-- **Eventual rooted covariance with the length property transferred.** The length property `hDu` of
-`rootedCertificateEventualCovarianceStmt_of_local` is discharged by `ae_isEuclideanLengthMetric_shiftedCanon` for every
-root `z` and every admissible shift `(b, u)` (`hAdmReg` gives the smoothness, compact support and zero circle average of
-`u`). The remaining inputs are `hDecInt`, `hMass` and `hdil`. -/
+/-- **Dilation covariance of the root-shifted canonical decoders (Cameron–Martin transfer of the covariance set `G0`).**
+`G0` is a measurable `dilOp`-invariant set, conull for `alphaCanon γ hC` (the output of `B1_covariance`,
+S11s/B1Covariance.lean:120, for the field `hC`), on which the one-step dilation identities hold. The transfer
+`HarmonicBalls.ae_shiftedCanon_mem_covariance`-style membership is `ae_canonFieldOf_addFunPairing_mem`
+(n2, S11r/CMTransfer.lean:54), and the `n`-fold identities come from `dilOp_iterate_of_one_step`. -/
+theorem ae_shiftedCanon_dilation {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u}) (γ : ℝ)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
+    (hTr : ∀ z : ℂ, IsWholePlaneGFF P (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    (z : ℂ) (u : ℂ → ℝ) (hu : ContDiff ℝ (⊤ : ℕ∞) u) (hcomp : HasCompactSupport u)
+    (hu0 : Real.circleAverage u 0 1 = 0)
+    {Dμ : S11n.CanonSpace → Measure ℂ} {Dd : S11n.CanonSpace → ℂ → ℂ → ℝ}
+    {G0 : Set S11n.CanonSpace} (hG0 : MeasurableSet G0) (hG0a : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G0)
+    (hinv : dilOp ⁻¹' G0 = G0)
+    (hstep : ∀ L ∈ G0, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      Dμ (dilOp L) = ENNReal.ofReal a • (Dμ L).map (fun w : ℂ => w / (((1 / 2 : ℝ)) : ℂ)) ∧
+      ∀ x y : ℂ, Dd (dilOp L) x y = b * Dd L (((1 / 2 : ℝ) : ℂ) * x) (((1 / 2 : ℝ) : ℂ) * y))
+    (n : ℕ) : ∀ᵐ ω ∂P, ∃ a c : ℝ, 0 < a ∧ 0 < c ∧
+      Dμ (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)) =
+          ENNReal.ofReal a • (Dμ (shiftedCanon γ hC hcirc z u ω)).map
+            (fun w : ℂ => w / (((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) ∧
+        ∀ x y : ℂ, Dd (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)) x y =
+          c * Dd (shiftedCanon γ hC hcirc z u ω) (((((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) * x)
+            ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * y) := by
+  have hinv' : ∀ L ∈ G0, dilOp L ∈ G0 := fun L hL => by
+    have h : L ∈ dilOp ⁻¹' G0 := by
+      rw [hinv]
+      exact hL
+    exact h
+  have hbase : ∀ᵐ ω ∂P, canonFieldOf γ (S11c.translatedPairing hC hcirc z ω) ∈ G0 :=
+    ae_alphaCanon_translatedPairing_mem hh γ z hG0 hG0a
+  filter_upwards [ae_canonFieldOf_addFunPairing_mem P hCM γ (hTr z) hu hcomp hu0 hG0 hbase] with ω hω
+  exact dilOp_iterate_of_one_step hinv' hstep n _ hω
+
+/-- **Eventual rooted covariance with the length property and the dilation covariance transferred.** The inputs `hDu`
+and `hdil` of `rootedCertificateEventualCovarianceStmt_of_local` are discharged by the Cameron–Martin transfers above, for
+every root `z` and every admissible shift `(b, u)` (`hAdmReg`: smoothness, compact support, zero circle average of `u`).
+The remaining inputs are `hDecInt` and `hMass` (the decoded pair). -/
 theorem rootedCertificateEventualCovarianceStmt_of_transfer {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u}) {γ : ℝ}
-    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hh : IsWholePlaneGFF P hC hcirc)
     (hTr : ∀ z : ℂ, IsWholePlaneGFF P (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
     (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
     (hCont : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
@@ -401,10 +486,13 @@ theorem rootedCertificateEventualCovarianceStmt_of_transfer {Ω : Type u} [Measu
     (rR : ℂ → ℝ) (μ0 μR : ℂ → Ω → Measure ℂ) (D0 dR : ℂ → Ω → ℂ → ℂ → ℝ)
     (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
     (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
-    (G : Set S11n.CanonSpace) (hG : MeasurableSet G)
-    (hGbase : ∀ (Ω' : Type u) [MeasurableSpace Ω'] (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ)
-      (hcirc' : Ω' → ℝ → ℂ → ℝ), IsWholePlaneGFF P' hC' hcirc' → ∀ᵐ ω ∂P', alphaCanon γ hC' ω ∈ G)
+    (G : Set S11n.CanonSpace) (hG : MeasurableSet G) (hGa : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G)
     (hGreg : ∀ L ∈ G, IsEuclideanLengthMetric (Dd L))
+    (G0 : Set S11n.CanonSpace) (hG0 : MeasurableSet G0) (hG0a : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G0)
+    (hinv : dilOp ⁻¹' G0 = G0)
+    (hstep : ∀ L ∈ G0, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+      Dμ (dilOp L) = ENNReal.ofReal a • (Dμ L).map (fun w : ℂ => w / (((1 / 2 : ℝ)) : ℂ)) ∧
+      ∀ x y : ℂ, Dd (dilOp L) x y = b * Dd L (((1 / 2 : ℝ) : ℂ) * x) (((1 / 2 : ℝ) : ℂ) * y))
     (hμR : ∀ z ω, μR z ω = (μ0 z ω).map (fun w : ℂ => w - -z))
     (hdR : ∀ z ω, dR z ω = fun x y => D0 z ω (x + -z) (y + -z))
     (hDecInt : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
@@ -416,22 +504,17 @@ theorem rootedCertificateEventualCovarianceStmt_of_transfer {Ω : Type u} [Measu
       ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
         (μ0 z ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
           (ENNReal.ofReal a • Dμ (shiftedCanon γ hC hcirc z u ω)).restrict
-            (closedBall 0 (7 * FirstPassS11ah.certScale n)))
-    (hdil : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
-      ∀ n : ℕ, ∀ᵐ ω ∂P, ∃ a c : ℝ, 0 < a ∧ 0 < c ∧
-        Dμ (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)) =
-            ENNReal.ofReal a • (Dμ (shiftedCanon γ hC hcirc z u ω)).map
-              (fun w : ℂ => w / (((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) ∧
-          ∀ x y : ℂ, Dd (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)) x y =
-            c * Dd (shiftedCanon γ hC hcirc z u ω) (((((1 / 2 : ℝ) ^ n : ℝ) : ℂ)) * x)
-              ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * y)) :
+            (closedBall 0 (7 * FirstPassS11ah.certScale n))) :
     RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M Adm rR
       μR dR Dμ Dd :=
   rootedCertificateEventualCovarianceStmt_of_local hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M hCont hU Adm
     rR μ0 μR D0 dR Dμ Dd hμR hdR
     (ae_of_all _ fun z _ b u hadm => by
       obtain ⟨hu, hcomp, hu0⟩ := hAdmReg z b u hadm
-      exact ae_isEuclideanLengthMetric_shiftedCanon hCM γ hTr z u hu hcomp hu0 G hG hGbase Dd hGreg)
-    hDecInt hMass hdil
+      exact ae_isEuclideanLengthMetric_shiftedCanon hCM γ hh hTr z u hu hcomp hu0 G hG hGa Dd hGreg)
+    hDecInt hMass
+    (ae_of_all _ fun z _ b u hadm n => by
+      obtain ⟨hu, hcomp, hu0⟩ := hAdmReg z b u hadm
+      exact ae_shiftedCanon_dilation hCM γ hh hTr z u hu hcomp hu0 hG0 hG0a hinv hstep n)
 
 end FirstPassS11at
