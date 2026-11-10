@@ -24,10 +24,12 @@ its approximations `ε^{γ²/2} e^{γ ŷ_ε(z)} dz` along the dyadic scales, wit
 In words: the LQG measure is a measurable function of the circle-average profile (Duplantier–Sheffield, LQG and KPZ,
 arXiv:0808.1560; Duplantier–Sheffield 2011, Prop. 1.1 for the vague limit). The repository proves only the Ω-level
 measurability (Proofs/Sec5/OpenMeasureLaw.lean:130 `IsWholePlaneGFF.aemeasurable_lqgMeasure`), not this profile form.
-Source locator: standard; locator pending. Used by: firstPass_8_2 (through FirstPass/S8d.lean, the profile instance). Truth check UNCLEAR (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §4):
-`CircleParameter` and `circleProfile` are not defined in the supplied files, so the profile space, its topology and
-the reconstruction cannot be checked exactly. The almost-sure specification of μ is not itself an obstruction, since
-the decoder must agree with μ only almost surely. Minimal corrected statement: §4. Not a FALSE verdict. -/
+Source locator: standard; locator pending. Used by: firstPass_8_2 (through FirstPass/S8d.lean, the profile instance). Truth check TRUE (ChatGPT, turn 2, batch file 02:58 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §4; turn 1 at
+02:49 UTC read it as UNCLEAR while `CircleParameter` and `circleProfile` were missing): the positive-radius profile
+space and the reconstruction give a measurable vague-limit decoder, and coordinatewise almost-sure agreement becomes
+simultaneous agreement by continuity. Source as the answer gives it: Duplantier-Sheffield, Liouville Quantum Gravity
+and KPZ, arXiv:0808.1560v2, p. 5, Proposition 1.1, and p. 17, Proposition 3.1; the decoder statement is a
+deterministic measurable-limit corollary, not a separately printed proposition. -/
 def LQGMeasureOfProfileMeasurableFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ α : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ)
@@ -44,10 +46,15 @@ ergodic for the product of the uniform phase measure with `ν`. The doubling map
 mixing), and the product of a weakly mixing map with an ergodic map is ergodic (Walters, An Introduction to Ergodic
 Theory, GTM 79, §1.6 and Thm 1.27). Mathlib has no such product lemma (checked: no `Ergodic` product lemma under
 `Mathlib/Dynamics/Ergodic`). Source locator: standard; locator pending. Used by: firstPass_8_2 (the phase tail of
-FirstPass/S8d.lean, through `ae_frequency_of_torus_dilation`). Truth check UNCLEAR (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §2): `PhaseTorus`,
-`phaseTorusDouble` and `phaseTorusFieldMeasure` are not defined in the attachment, so the Haar-product,
-coordinatewise-doubling and independent-product conditions cannot be checked; the answer states that the intended
-Haar-product assertion is true. Not a FALSE verdict. Minimal corrected statement (explicit helper definitions): §2. -/
+FirstPass/S8d.lean, through `ae_frequency_of_torus_dilation`). Truth check TRUE (ChatGPT, turn 2, batch file 02:58 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §2; turn 1 at
+02:49 UTC read it as UNCLEAR while the helpers were missing): the doubling map on both coordinates of (ℝ/ℤ)² with
+the Haar-product measure is weakly mixing, and its product with any ergodic probability-preserving map is ergodic.
+The answer assumes `phaseTorusFieldMeasure ν = (volume ⊗ volume) ⊗ ν`; the repository abbrev
+(HarmonicBalls/FirstPass/S8c/TorusTail.lean:25) and `phaseTorusDouble`
+(HarmonicBalls/Proofs/Sec8/PhaseTorus.lean:42, `(2 • p.1, 2 • p.2)`) agree with that assumption. Source as the
+answer gives it: Sarig, Lecture Notes on Ergodic Theory (3 April 2023 version), p. 9, Proposition 1.5, and p. 20,
+Proposition 1.9; Einsiedler-Ward, Ergodic Theory with a view towards Number Theory (21 June 2010 draft), p. 51,
+Theorem 2.36, (1) ⇔ (4). -/
 def PhaseTorusDoublingProductErgodicFrozen : Prop :=
   ∀ (Y : Type u) [MeasurableSpace Y] (ν : Measure Y) [IsProbabilityMeasure ν] (T : Y → Y),
     MeasurePreserving T ν ν → Ergodic T ν →
