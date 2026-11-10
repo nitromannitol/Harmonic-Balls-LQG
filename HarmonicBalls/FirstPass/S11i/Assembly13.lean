@@ -27,7 +27,14 @@ universe u
 `Ostar` with `0 ∈ Ostar` and `sphere 0 5 ⊆ Ostar` (the `O_*` of the certificate event) such that for every whole-plane
 model with `IsLQGMeasureOfField P γ α₀ hcirc μ` and `IsLQGMetricOfField P γ ξ α₀ hC D` there is a zoom family `μk, Dk` at
 dyadic scales `2^k` (the scaling shape of `ae_hscale_dyadic`) whose window certificate frequency converges to `q`, for
-every `k`, almost surely, for `μk`-almost every centre `w` in `B₁(0)`. -/
+every `k`, almost surely, for `μk`-almost every centre `w` in `B₁(0)`.
+
+Source (corrected paper, `paper/lqg_harmonic_ball-corrected.tex`, eq. `s11-pinch:eq:dyadic-frequency` at line 3832, proof
+of `lemma:mu_h-pinch-bad` at lines 3848-3930): the dyadic frequency converges almost surely to `p_α(M)`, the probability of
+the Lemma 11.12 event at scale one, so `q = p_α₀(M)`. The positivity `q > 0` is the positive-probability clause of
+Lemma 11.12 (`CorrectedLemma11_12Stmt`, Faithful.lean:56). Neither the identity `q = P(E^{α₀}(M))` nor the positivity is
+in Lean yet: this is the named input. Open point: `IsWholePlaneGFF` (Defs/GFF.lean:93) does not state that `P` is a
+probability measure, so `P(E)` need not be finite there. -/
 def ZoomWindowFrequencyStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M q : ℝ) : Prop :=
   ∃ Ostar : Set ℂ, IsOpen Ostar ∧ (0 : ℂ) ∈ Ostar ∧ sphere (0 : ℂ) 5 ⊆ Ostar ∧
     ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
