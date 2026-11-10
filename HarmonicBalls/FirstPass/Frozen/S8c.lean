@@ -45,7 +45,13 @@ with respect to λ_ω restricted there (the exact scalar is unnecessary for domi
 it: Duplantier-Miller-Sheffield, arXiv:1409.7055v4, pp. 184-185, Lemma A.10 (whole-plane paragraph, p. 184); HB,
 arXiv:2208.11795v3, p. 42, proof of Lemma 8.2, around (8.10); Miller-Sheffield, Imaginary Geometry IV,
 arXiv:1302.4738v2, p. 49, Proposition 2.9, (2.8). The normalized measure-valued pushforward statement is a corollary
-of these printed comparisons. -/
+of these printed comparisons.
+
+Truth check TRUE (ChatGPT Pro chat 219, `notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md` §2.1). Not derivable from the
+staged unmarked DMS inputs (§3). Derivable from a marked joint `(z, hC, hcirc)` DMS input (§4-§5); phase 2. The existing
+marked input `DMSLemmaA10WholePlaneMarked` (`FirstPass/Frozen/S11i.lean:39`) tests `hC` only and carries one circle average
+`hcirc ω 1 0`, not the circle profile that `LQGMeasureOfProfileMeasurableFrozen` (`FirstPass/Frozen/S8d.lean:33`) needs
+in §5 Step 5, so it does not supply the joint input. -/
 def LocalRootedFieldMeasureDomination : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ ν lam : Ω → Measure ℂ),
