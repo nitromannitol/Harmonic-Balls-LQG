@@ -33,7 +33,13 @@ section 1: the predicate `B` is not required to be measurable). Superseded by
 Cameron-Martin transfer of a metric event under a smooth shift. For `0 < γ < 2`,
 `α₀ < Q_γ`, a smooth compactly supported `f` vanishing on the unit circle, and a predicate `B` on metrics: if the event
 that the Weyl-shifted metric `e^{ξ f} D_h` lies in `B` has positive probability, and both events are null-measurable,
-then the event that `D_h` lies in `B` has positive probability. -/
+then the event that `D_h` lies in `B` has positive probability. Truth check FALSE (ChatGPT, 01:17 UTC,
+`notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md` §2): null-measurability of the two events on the sample space does not
+replace measurability of the predicate `B` on the space of metrics; counterexample §2.2 (a nonmeasurable set with alternating
+translates, on an extended probability space). Source as the answer gives it: Miller-Sheffield arXiv:1302.4738v2, Proposition
+2.9, p. 49, equation (2.8), proof p. 50 (Cameron-Martin equivalence modulo additive constants; no transfer for arbitrary
+nonmeasurable metric predicates). Minimal correction §2.3: the added hypothesis `MeasurableSet {d | B d}`, which is the
+hypothesis of `CameronMartinMetricEventTransferMeasurableFrozen` below. -/
 def CameronMartinMetricEventTransferFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
@@ -68,7 +74,7 @@ section 1: the outer weight `f` is only required to be continuous on `ℂ ∖ {0
 of infinite `D`-length become essential). Not used by any proof after the 23:37 UTC note; kept, never deleted. Superseded
 by `WeylMetricCompositionContinuousOuterFrozen` below.
 
-FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator ruling Q1, 23:12 UTC). Metric-level Weyl composition
+FIRST-PASS FROZEN (EXTERNAL; truth check FALSE as a proposition, ChatGPT 01:17 UTC, see the last sentences; operator ruling Q1, 23:12 UTC). Metric-level Weyl composition
 (not to be confused with the field-level `WeylScalingCompositionFrozen` of `Frozen/S11d.lean`):
 scaling a metric `D` by `g` and then by `f` is scaling it by `g + f`, for an exponent `ξ > 0`, an Euclidean length
 metric `D`, weights `f, g` continuous on `ℂ \ {0}` (the log singularity `-α₀ log|·|` is continuous there), and finite
@@ -78,7 +84,10 @@ inner scaling. Here `weylScaling D ξ g` is the infimum over `D`-length parametr
 Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 III, corrected paper line 445, which defines `e^{ξ f} · D` as this
 infimum; GM21 = Gwynne-Miller, (1.8), p. 6. The composition is the weighted-length identity: the `D'`-length of a
 `D`-parametrized path is `∫ e^{ξ g} dℓ_D`, and the change of parameter `dσ = e^{ξ g} dr` gives the weight `g + f`.
-Used by the common-field identification of the shifted metric (`FirstPass/S11j/FieldLevel11_15.lean`). -/
+Truth check FALSE as a proposition (ChatGPT, 01:17 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md` §4.2–4.3): the
+singular outer weight permits additional rectifiable paths after the first scaling (the iterated scaling is finite, the direct
+scaling is infinite). Source as the answer gives it: Gwynne-Miller (1.8), p. 6, defines Weyl scaling for a continuous shift
+and does not state a composition theorem with a punctured-plane-continuous weight. Used by the common-field identification of the shifted metric (`FirstPass/S11j/FieldLevel11_15.lean`). -/
 def WeylMetricCompositionFrozen : Prop :=
   ∀ ξ : ℝ, 0 < ξ → ∀ (D : ℂ → ℂ → ℝ) (g f : ℂ → ℝ), IsEuclideanLengthMetric D →
     ContinuousOn g {z | z ≠ 0} → ContinuousOn f {z | z ≠ 0} →
@@ -86,11 +95,12 @@ def WeylMetricCompositionFrozen : Prop :=
     ∀ x y, weylScaling (fun u v => (weylScaling D ξ g u v).toReal) ξ f x y =
       weylScaling D ξ (fun z => g z + f z) x y
 
-/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator notes 22:53 UTC item B(a) and 23:37 UTC). The Weyl exponent
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check TRUE (ChatGPT, 01:17 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md` §3); operator notes 22:53 UTC item B(a) and 23:37 UTC). The Weyl exponent
 of an LQG metric is positive: `ξ > 0` for `IsLQGMetric γ ξ 𝔇`, `0 < γ < 2`, the only range used. The statement is TRUE.
 Its source is the positivity argument, not Ding-Gwynne Theorem 1.9 (which assumes `ξ > 0`): normalized whole-plane GFF
 scaling, constant Weyl scaling, coordinate change and the Euclidean topology (Bou-Rabee-Gwynne arXiv:2208.11795, Section
-2.1, (2.1)-(2.2), p. 8); see `notes/fp-gaps/CHATGPT-xi-exponent-rigidity.md` section 3.
+2.1, (2.1)-(2.2), p. 8); see `notes/fp-gaps/CHATGPT-xi-exponent-rigidity.md` section 3. The answer's §3 (same argument) prints the normalized
+metric-scaling identity as Gwynne-Miller (1.15), p. 11.
 derived: lqgMetricExponentPositive_of_inputs (FirstPass/S11x.lean) -/
 def LQGMetricExponentPositive : Prop :=
   ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 → 0 < ξ
