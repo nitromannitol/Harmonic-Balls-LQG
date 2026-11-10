@@ -23,7 +23,7 @@ Section 1 (main theorems; `FirstPass/Main.lean`)
 | result | closure | remaining hypotheses (class) | status |
 |---|---|---|---|
 | 1.1 `ExistenceUniquenessHarmonicBallsStmt` | `closure_1_1` (this file) | hL1 hWeyl hE1 hE3 hB (FROZEN); hDG hAff hCC hW hE hN (PROPOSED) | closed |
-| 1.2 `HarmonicBallNoveltyStmt` | not written | waits on Lemma 11.13 (`ManyPinchScalesStmt`, operator's team n3) and on the printed-vs-corrected 11.13 question filed with the operator. Not staged: no `ManyPinchScalesStmt` input, no bridge. | waits on 11.13 |
+| 1.2 `HarmonicBallNoveltyStmt` | not yet in this file (`closure_1_2` drafted and type-checked in scratch with the bridge as a hypothesis; it is added when `Closure/Bridge12.lean` is committed) | h13 `ManyPinchScalesStmt` = `manyPinchScales_of_corrected (closure_11_13 …)` (bridge, z7, uncommitted); hStep8 `Step8IdentificationStmt` **OPEN** (inherited from `closure_11_13`); hI2 (I2, class open); hDG hAff hCC hW hE hN (PROPOSED); hL1 hWeyl hE1 hE3 hB, hCamp hDecFrozen hDec hCM, hAx `LQGMetricFieldAxiomsUnivFrozen` (FROZEN; supplies hmetricAxioms by specialisation), hTor (FROZEN) | waits on bridge z7; conditional on OPEN hStep8 and hI2 |
 | 1.3 `HarmonicBallLocalSetStmt` | `closure_1_3` (this file) | hI2 = I2 `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`; class EXTERNAL per `FIRST-PASS-INPUTS.md`; z4 notes: its derivation is unproved); hmeasure `LQGMeasureLocality` (PROPOSED); closure_8_2 inputs (FROZEN, PROPOSED) | closed, I2 class open |
 
 Section 2
@@ -90,10 +90,11 @@ Section 11 (`Closure/Sec11.lean`, z11; committed in 989dd74, 329d919, 39dfaa9, e
 | 11.17 `PinchThirdEventFaithfulStmt` | `closure_11_17` | closure 11.16; hN2 (FROZEN) | closed |
 
 ## Open items and flags
-* 1.2 not written (table above). Lemma 11.13 is the blocker for 1.2 and for the conditional closures 11_11 and 11_13.
+* 1.2 not yet in this file (table above). Its only missing ingredient is the bridge `manyPinchScales_of_corrected` (z7,
+  `Closure/Bridge12.lean`, uncommitted). The printed Lemma 11.13 is then conditional only on the OPEN `hStep8` of `closure_11_13`.
 * I2 `LQGVolumeGrowthAllScalesStmt` is a hypothesis of 1.3, 11.2, 11.5, 11.6, and the open derivation is z4's notes.
 * Sec11 is committed in full (HEAD, 14 closures); this file builds against that version.
-* Commit 85bdd95 (z11) overwrote this file with a Section 1 version whose `closure_1_2` takes `ManyPinchScalesStmt` as an OPEN hypothesis. This version restores the table above (1.2 NOT WRITTEN).
+* Commit 85bdd95 (z11) overwrote this file with a Section 1 version whose `closure_1_2` takes `ManyPinchScalesStmt` as an OPEN hypothesis. This version restores the table above (1.2 is added only when the bridge is committed).
 
 Cycles: none found. Closures used by this file do not refer back to Section 1.
 -/
