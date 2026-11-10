@@ -2,6 +2,7 @@ import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Draft.Section6
 import HarmonicBalls.FirstPass.S11h.Faithful
 import HarmonicBalls.FirstPass.S11h.LocalEvents
+import HarmonicBalls.Defs.LQGGraphDistance
 
 /-!
 # Faithful forms of Lemmas 11.12 and 11.13 (corrected paper), first pass fp-S11i (owner n3)
@@ -84,6 +85,27 @@ def CorrectedLemma11_13Stmt : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
     ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), ∀ᶠ N in atTop,
+      δ * N ≤ ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+        pinchPointEvent (μ ω) (D ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) z}.ncard : ℝ)
+
+/-- The canonical Weyl exponent `ξ = γ / d_γ` of the paper's LQG metric, with `d_γ = lqgGraphDimension γ`
+(`Defs/LQGGraphDistance.lean:105`). `IsLQGMetric` itself takes an arbitrary exponent; the paper fixes this one
+(operator audit, chat 224 PRO §5, Correction 1, 2026-11-10 11:09 UTC). -/
+noncomputable abbrev lqgXi (γ : ℝ) : ℝ :=
+  γ / lqgGraphDimension γ
+
+/-- Lemma 11.13 in the canonical form: as `CorrectedLemma11_13Stmt`, but with the canonical exponent
+`ξ = lqgXi γ` (Correction 1) and the model `(Ω, P, hC, hcirc, μ, D)` quantified before `∃ δ`, so that the density may
+depend on the model (Correction 3, operator DECISION 2026-11-10 11:09 UTC, the exact PASS target). The probability
+normalisation of `P` is not a binder: `IsWholePlaneGFF P hC hcirc` gives `IsProbabilityMeasure P` by
+`FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF` (`FirstPass/S11af.lean:24`) (Correction 2). -/
+def CorrectedLemma11_13CanonicalStmt : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ M : ℝ, 0 < M →
+  ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ (lqgXi γ) α₀ hC D →
+    ∃ δ ∈ Ioo (0 : ℝ) 1, ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), ∀ᶠ N in atTop,
       δ * N ≤ ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
         pinchPointEvent (μ ω) (D ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) z}.ncard : ℝ)
 

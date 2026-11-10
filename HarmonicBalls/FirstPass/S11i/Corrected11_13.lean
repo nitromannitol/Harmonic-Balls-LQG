@@ -75,6 +75,55 @@ theorem firstPass_11_13_corrected
   unfold GammaZoomIdentityStmt
   exact ⟨E, hPG, h8⟩
 
+/-- The Lemma 11.12 event at the canonical exponent `ξ = lqgXi γ`: `PinchEventGammaStmt` (`Assembly13.lean:120`) with
+`ξ = lqgXi γ`. The source file is unchanged. -/
+def PinchEventGammaCanonicalStmt (U T Q' Q : Set ℂ) (γ M : ℝ)
+    (E : Set (ModConstTestPairings (ball (0 : ℂ) 7))) : Prop :=
+  PinchEventGammaStmt.{u} U T Q' Q γ (lqgXi γ) M E
+
+/-- `Step8IdentityStmt` at the canonical exponent `ξ = lqgXi γ`. -/
+def Step8IdentityCanonicalStmt (γ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ)
+    (E : Set (ModConstTestPairings (ball (0 : ℂ) 7))) : Prop :=
+  Step8IdentityStmt.{u} γ (lqgXi γ) α₀ U V W T Q' Q δ M E
+
+/-- Step 8 identification at the canonical exponent: for every buffered geometry, `0 < γ < 2`, `α₀ < Q(γ)` and `M > 0`
+there is a Lemma 11.12 event `E` at `γ` (`PinchEventGammaCanonicalStmt`) satisfying `Step8IdentityCanonicalStmt`. -/
+def Step8IdentificationCanonicalStmt : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+  ∀ γ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
+  ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaCanonicalStmt.{u} U T Q' Q γ M E ∧
+    Step8IdentityCanonicalStmt.{u} γ α₀ U V W T Q' Q δ₀ M E
+
+/-- **Lemma 11.13 (canonical), first pass.** `CorrectedLemma11_13CanonicalStmt` from the named input `hStep8`. The model
+`(Ω, P, hC, hcirc, μ, D)` is fixed before the density, and the density is `δ = min (q/4) (1/2)`, where `q` is the common
+probability of the Lemma 11.12 event in every γ-model (`Step8IdentityCanonicalStmt`, first conjunct). The probability
+normalisation of `P` comes from `FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF`. -/
+theorem firstPass_11_13_canonical
+    (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
+    (hMeas : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ γ hC hcirc)
+    (hStep8 : Step8IdentificationCanonicalStmt.{u}) :
+    CorrectedLemma11_13CanonicalStmt.{u} := by
+  intro U V W T Q' Q δ₀ hgeom γ α₀ hγ0 hγ2 hα M hM Ω inst P hC hcirc μ D hG hμ hDm
+  obtain ⟨E, hPG, h8⟩ := hStep8 U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM
+  obtain ⟨-, hW⟩ := hPG
+  obtain ⟨q, hqeq, hfreq⟩ := h8
+  have : IsProbabilityMeasure P := FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hG
+  obtain ⟨μg, Dg, hμg, hDg⟩ :=
+    FirstPassS11iGamma.gammaModel_of_alpha0Model hAx hMeas hγ0 hγ2 Ω P hC hcirc hG D hDm
+  obtain ⟨-, hpos, -⟩ := hW Ω P hC hcirc μg Dg hG hμg hDg
+  have hq : 0 < q := by
+    rw [← hqeq Ω P hC hcirc μg Dg hG hμg hDg]
+    exact ENNReal.toReal_pos hpos.ne' (measure_ne_top P _)
+  refine ⟨min (q / 4) (1 / 2), ⟨lt_min (div_pos hq (by norm_num)) (by norm_num),
+    lt_of_le_of_lt (min_le_right _ _) (by norm_num)⟩, ?_⟩
+  obtain ⟨μk, Dk, hsc, hstep⟩ := hfreq Ω P hC hcirc μ D hG hμ hDm
+  exact (FirstPassS11i.CertAssemble.pinch_window_ae_buffered (hAx γ (lqgXi γ) α₀ Ω P hC hcirc) hG hγ0 hγ2 hα hDm
+    hgeom hq μk Dk hsc hstep).mono fun ω hω => hω.mono fun z hz => hz.mono fun N hN =>
+      le_trans (mul_le_mul_of_nonneg_right (min_le_left _ _) (Nat.cast_nonneg N)) hN
+
 end HarmonicBalls
 
 #print axioms HarmonicBalls.firstPass_11_13_corrected
+#print axioms HarmonicBalls.firstPass_11_13_canonical
