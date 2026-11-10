@@ -5,6 +5,7 @@ import HarmonicBalls.FirstPass.S11ah.Radial
 import HarmonicBalls.FirstPass.S11ah.LengthTransport
 import HarmonicBalls.FirstPass.S11ah.LocalMeasurable
 import HarmonicBalls.FirstPass.S11ah.Modified
+import HarmonicBalls.FirstPass.S11ah.LengthScale
 
 /-!
 # Steps 4 and 5 of the 11.13 local certificate sequence (fp-S11ah-11-13-steps-4-5, owner n4)
