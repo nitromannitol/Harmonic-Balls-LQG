@@ -155,7 +155,7 @@ Found (10):
 7. `tendsto_srwGreenInf_zero`, `walkOp_srwGreenInf` (d ≥ 3): [LP] `Walk/ExteriorDirichlet.lean:163,114` (see §5.6).
 8. `le_of_harmonic_on_box`: [LP] `Walk/ExteriorDirichlet.lean:60`.
 9. Pointers, names not read: [LP] `Prob/Scaling/WalkCLT.lean`, `Walk/ContinuousHeatGauss.lean`, `External/BallGreenBoundsProved.lean`, `External/GreenNormsProved.lean`.
-10. [LP] README lists "simple random walk on ℤ^d and on locally finite graphs" as proved (README.md:11-20).
+10. [LP] README.md:11-20 lists "simple random walk on ℤ^d and on locally finite graphs" among proved results.
 
 Absent or not located: Donsker invariance for SRW to Brownian motion as a single named theorem (`Prob/Scaling/WalkCLT.lean` and `BrownianFdd.lean` are the candidates; not checked).
 
@@ -171,8 +171,6 @@ Found (10):
 7. `Ergodic` (structure, f and μ): [ML] `Dynamics/Ergodic/Ergodic.lean:49`. Mathlib notion; `ae_empty_or_univ` at :61.
 8. Mathlib Birkhoff sums: `birkhoffSum_ae_eq_of_ae_eq`, `birkhoffAverage_ae_eq_of_ae_eq`: [ML] `Dynamics/BirkhoffSum/QuasiMeasurePreserving.lean:35,43`.
 9. Akcoglu-Krengel for boxes: `Prob/AkcogluKrengelAE/BirkhoffLpMaximalProved.lean` (sorry-free, file header says only the three standard axioms). Names inside not read.
-10. [LP] README: "ergodic theorems and zero-one laws" listed as proved (README.md:11-20).
-
 Gaps (not proved, do not cite as proved):
 - `Prob/AkcogluKrengelAE/RectangleErgodic.lean:38`: "Two steps are still missing."
 - `Prob/AkcogluKrengelAE/BallMaximalLp.lean:34`: two Props "mark the exact remaining gap" (conditional).
@@ -198,5 +196,4 @@ Absent or not located:
 2. Proof modules of `greenMaxPrinciple`, `greenDecay`, `greenDirichlet`, `harnack_constant_ge_one` in [ER] were not checked (statement files delegate by `exact`).
 3. `#print axioms` not run; no sorry token found in cited files (comments only).
 4. Conditional or gapped entries: `GaussianLogSobolevAssembly.lean:58` (residual), `RectangleErgodic.lean:38`, `BallMaximalLp.lean:34`.
-5. LQG content in LP is in `Bonanno/*` (LQGMetric, LQGDimension, MatedCRTHarmonic, QuantumZipper). Most GMC and metric facts take named hypotheses; the catalog lists names, not unconditional status.
-6. Heartbeat and naming: the lead should not rely on the `exists_measurable_version` name for GMC; two different declarations share it (§2.6).
+5. LQG content in LP is in `Bonanno/*` (LQGMetric, LQGDimension, MatedCRTHarmonic, QuantumZipper). Most GMC and metric facts take named hypotheses; the catalog lists names, not unconditional status. Two declarations named `exists_measurable_version` exist (§2.6).
