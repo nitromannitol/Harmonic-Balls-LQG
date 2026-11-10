@@ -34,7 +34,11 @@ and `lam`, so each normalised restriction (the root kernel `λ|B_1/λ(B_1)`, the
 reference `ν` on `B_{r_j}(0)`) has a positive denominator. Local finiteness (Radon) is already part of
 `IsLQGMeasureOfField` through `IsLQGLimit`. The conclusion is domination `≪`, not equality, as the referee requires
 for normalised marked laws. Without the positivity premises a degenerate observation (zero measure) would give root
-mass that the reference side need not carry. -/
+mass that the reference side need not carry. Truth check UNCLEAR (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §6):
+`localRootKernel`, `localDomain`, `localRootObservation`, `localReferenceObservation` and the local radius are
+missing from the attachment, so whether the observation maps use the normalized no-insertion measure, restrict to
+balls avoiding 0, recentre and normalize identically, and keep the same marked coordinates cannot be checked. DMS
+Lemma A.10 alone does not certify them. Minimal corrected statement: §6. Not a FALSE verdict. -/
 def LocalRootedFieldMeasureDomination : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ ν lam : Ω → Measure ℂ),
@@ -55,7 +59,10 @@ Lemma 8.2: almost surely, the no-insertion LQG measure `lam` of the whole-plane 
 (`h = H - α₀ log|·|`, so `μ_h = |z|^{-γ α₀} μ_H` off `0`).
 Source: standard LQG insertion and Weyl change of variables (Duplantier-Sheffield, Ann. Probab. 2011;
 Duplantier-Miller-Sheffield, arXiv:1409.7055v4); standard; locator pending. Stated as "λ = |·|^{α₀γ} μ off zero"
-in notes/fp-gaps/G-8-2.md, section 4. Used by: firstPass_8_2 (through FirstPass/S8c/WeylOffOrigin.lean). -/
+in notes/fp-gaps/G-8-2.md, section 4. Used by: firstPass_8_2 (through FirstPass/S8c/WeylOffOrigin.lean). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): the vague
+approximation identifies the two measures off 0, with density |z|^{γα₀}. Source as the answer gives it: HB,
+arXiv:2208.11795v3, p. 9, (2.6) and Fact 2.1(III); the identity is also printed explicitly on p. 42, proof of Lemma
+8.2. -/
 def LocalLQGInsertionWeylOffOrigin : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ lam : Ω → Measure ℂ),
@@ -68,7 +75,9 @@ def LocalLQGInsertionWeylOffOrigin : Prop :=
 an ergodic measure-preserving map `T` and a measurable `f` with `|f| ≤ 1`, the Cesàro averages of `f ∘ T^[n]` converge
 almost surely to `∫ f`. Source: Birkhoff (1931); standard; locator pending (e.g. Walters, An Introduction to Ergodic
 Theory, GTM 79, the pointwise ergodic theorem). Used by: firstPass_8_2 (through FirstPass/S8c/Frequency.lean, the phase
-tail LocalPhaseTailStep of notes/fp-gaps/G-8-2.md section 3). -/
+tail LocalPhaseTailStep of notes/fp-gaps/G-8-2.md section 3). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): a bounded
+measurable f is integrable, and ergodicity makes its Birkhoff limit the integral. Source as the answer gives it:
+Einsiedler-Ward, Ergodic Theory with a view towards Number Theory (draft dated 21 June 2010), p. 44, Theorem 2.30. -/
 def BirkhoffPointwiseErgodic : Prop :=
   ∀ (Y : Type u) [MeasurableSpace Y] (ν : MeasureTheory.Measure Y) [MeasureTheory.IsProbabilityMeasure ν]
     (T : Y → Y) (f : Y → ℝ),
