@@ -90,13 +90,13 @@ theorem decPunct_eq_const_mul_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsE
 `B_ε(0) ⊆ O` and `D(0, x; O) < ∞` for `x ∈ O \ {0}`, the decoded root value is `c · D(0, x; O)`. -/
 theorem decRoot_eq_const_mul_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
     (hnonneg : ∀ x y, 0 ≤ D x y) {V O : Set ℂ} (hVo : IsOpen V) (hconnV : IsConnected V) (hO : IsOpen O)
-    (hOV : O ⊆ V) {Dh : ℂ → ℂ → ℝ} {c : ℝ} (hc : 0 < c)
+    (hOV : O \ {0} ⊆ V) {Dh : ℂ → ℂ → ℝ} {c : ℝ} (hc : 0 < c)
     (hDh : ∀ v ∈ V, ∀ w ∈ V, Dh v w = c * internalCost D V v w) {ε : ℝ} (hε : 0 < ε)
     (hball : ball (0 : ℂ) ε ⊆ O) (h0 : (0 : ℂ) ∈ O) {x : ℂ} (hx : x ∈ O) (hx0 : x ≠ 0)
     (hfin : internalMetric D O 0 x ≠ ⊤) :
     decRoot V Dh ε O x = ENNReal.ofReal c * internalMetric D O 0 x := by
   have hOm : IsOpen (O \ {0}) := hO.sdiff isClosed_singleton
-  have hOmV : O \ {0} ⊆ V := fun v hv => hOV hv.1
+  have hOmV : O \ {0} ⊆ V := hOV
   have hxm : x ∈ O \ {0} := ⟨hx, hx0⟩
   have hcirc : ∀ n, ∀ y ∈ decCircle ε n, y ∈ O \ {0} := by
     intro n y hy
@@ -169,7 +169,7 @@ and `Dh = c · internalCost D V` on `V × V`, the decoded internal distance equa
 The hypotheses `hε`, `hball` concern the radius `εOf O` of the root circles. -/
 theorem decInt_eq_const_mul_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
     (hnonneg : ∀ x y, 0 ≤ D x y) {V O : Set ℂ} (hVo : IsOpen V) (hconnV : IsConnected V) (hO : IsOpen O)
-    (hconnO : IsConnected O) (hOV : O ⊆ V) {Dh : ℂ → ℂ → ℝ} {c : ℝ} (hc : 0 < c)
+    (hconnO : IsConnected O) (hOV : O \ {0} ⊆ V) {Dh : ℂ → ℂ → ℝ} {c : ℝ} (hc : 0 < c)
     (hDh : ∀ v ∈ V, ∀ w ∈ V, Dh v w = c * internalCost D V v w) {εOf : Set ℂ → ℝ}
     (hε : 0 < εOf O) (hball : ball (0 : ℂ) (εOf O) ⊆ O) {x y : ℂ} (hx : x ∈ O) (hy : y ∈ O) :
     decInt V Dh εOf O x y = ENNReal.ofReal c * internalMetric D O x y := by
@@ -193,7 +193,7 @@ theorem decInt_eq_const_mul_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEuc
           (internalMetric_ne_top_of_isConnected hD hO hconnO h0 hx), hsym x]
       · simp only [hx0, hy0, ↓reduceIte]
         have hOm : IsOpen (O \ {0}) := hO.sdiff isClosed_singleton
-        have hOmV : O \ {0} ⊆ V := fun v hv => hOV hv.1
+        have hOmV : O \ {0} ⊆ V := hOV
         have hxm : x ∈ O \ {0} := ⟨hx, hx0⟩
         have hym : y ∈ O \ {0} := ⟨hy, hy0⟩
         rw [decPunct_eq_const_mul_internalMetric hD hVo hconnV hOm hOmV hc hDh hxm hym,
@@ -205,6 +205,7 @@ theorem decInt_eq_const_mul_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEuc
         have hmono : Monotone (fun t : ℝ≥0∞ => ENNReal.ofReal c * t) := fun a b hab => by dsimp only; gcongr
         exact (Monotone.map_min hmono).symm
   · simp only [h0, ↓reduceIte]
-    exact decPunct_eq_const_mul_internalMetric hD hVo hconnV hO hOV hc hDh hx hy
+    have hOV' : O ⊆ V := fun v hv => hOV ⟨hv, fun h => h0 (Set.mem_singleton_iff.mp h ▸ hv)⟩
+    exact decPunct_eq_const_mul_internalMetric hD hVo hconnV hO hOV' hc hDh hx hy
 
 end HarmonicBalls.S11m
