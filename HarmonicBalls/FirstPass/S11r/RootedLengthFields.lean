@@ -235,4 +235,187 @@ theorem internalPhysicalMetric_lengthFields {d : ℂ → ℂ → ℝ} (hd : IsEu
   exact ⟨fun x hx => internalPhysicalMetric_self_eq_zero hd ξ f D hx, hsym, htri, hlen,
     internalPhysicalMetric_continuousOn_root hd ξ hD hDc hz hfc hW⟩
 
+/-- `I` is symmetric (`weylPhysicalE` is symmetric, `internalMetric_symm_of_symm`). -/
+theorem internalPhysicalMetric_symm_root {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) (f : ℂ → ℝ)
+    (D : Set ℂ) : ∀ a b, internalPhysicalMetric (weylPhysicalE d ξ f) D a b =
+      internalPhysicalMetric (weylPhysicalE d ξ f) D b a :=
+  internalPhysicalMetric_symm_of (internalMetric_symm_of_symm (weylPhysicalE_symm hd ξ f) D)
+
+/-- One-variable continuity `I(·, x) → 0` within `D` at every `x ∈ D` (the root case is he_cont). -/
+theorem internalPhysicalMetric_tendsto_pt {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ}
+    {D : Set ℂ} (hD : IsOpen D) {z : ℂ} (hz : z ∈ D) (hfc : ContinuousOn f (D \ {z}))
+    (hW : Tendsto (fun x => weylScaling d ξ f x z) (𝓝 z) (𝓝 0)) {x : ℂ} (hx : x ∈ D) :
+    Tendsto (fun y => internalPhysicalMetric (weylPhysicalE d ξ f) D y x) (𝓝[D] x) (𝓝 0) := by
+  by_cases hxz : x = z
+  · rw [hxz]
+    exact internalPhysicalMetric_tendsto_root hd ξ hD hz hfc hW
+  · exact internalPhysicalMetric_tendsto_of_continuousAt hd ξ hD hx
+      (hfc.continuousAt ((hD.sdiff isClosed_singleton).mem_nhds ⟨hx, hxz⟩))
+
+/-- **Good radius.** For `x ∈ D` there is `r > 0` with `ball x r ⊆ D` and `z ∉ ball x r ∖ {x}`. -/
+theorem exists_good_radius {D : Set ℂ} (hD : IsOpen D) {z x : ℂ} (hx : x ∈ D) :
+    ∃ r > 0, ball x r ⊆ D ∧ ∀ w ∈ ball x r, w ≠ x → w ≠ z := by
+  obtain ⟨r1, hr1, hball⟩ := Metric.isOpen_iff.1 hD x hx
+  by_cases hxz : x = z
+  · exact ⟨r1, hr1, hball, fun w _ hwx hwz => hwx (hwz.trans hxz.symm)⟩
+  · have hpos : 0 < dist z x := dist_pos.2 (Ne.symm hxz)
+    refine ⟨min r1 (dist z x), lt_min hr1 hpos, (ball_subset_ball (min_le_left _ _)).trans hball,
+      fun w hw _ hwz => ?_⟩
+    have h := mem_ball.1 hw
+    rw [hwz] at h
+    exact lt_irrefl _ (lt_of_lt_of_le h (min_le_right _ _))
+
+/-- **Exit lemma (crossing cost).** If `f` is continuous on the punctured ball `ball q r ∖ {q}`, then every path from `q`
+leaving `ball q r` has Weyl cost at least a fixed `η > 0` (`exists_exit_data` with base point `q`). -/
+theorem weylScaling_ge_of_exit {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ} {q : ℂ} {r : ℝ}
+    (hr : 0 < r) (hfc : ContinuousOn f (ball q r \ {q})) :
+    ∃ η > 0, ∀ b, b ∉ ball q r → ENNReal.ofReal η ≤ weylScaling d ξ f q b := by
+  obtain ⟨c0, c2, m, hc0, hc02, hm, hexit⟩ :=
+    exists_exit_data hd ξ isOpen_ball (mem_ball_self hr) hfc
+  refine ⟨m * (c2 - c0), mul_pos hm (by linarith), fun b hb => ?_⟩
+  by_contra hlt
+  have hlt' := not_le.1 hlt
+  unfold weylScaling at hlt'
+  simp only [iInf_lt_iff] at hlt'
+  obtain ⟨T, p, hp, hp0, hpT, hcost⟩ := hlt'
+  have h0 : d q (p 0) < c0 := by rw [hp0, hd.self_eq_zero]; exact hc0
+  have hT : p T ∈ ball q r := hexit T p hp h0 hcost T ⟨hp.1, le_rfl⟩
+  rw [hpT] at hT
+  exact hb hT
+
+/-- **Internal lower bound across the annulus.** If every point outside `ball q r` is at Weyl distance at least `η`
+from `q`, and `b ∈ D ∖ ball q r`, then the internal physical distance from `q` to `b` in `D` is at least `η`: every path in
+`D` from `q` to `b` has, at its last point before its first exit from `ball q r`, a partition step of Weyl cost `≥ η`. -/
+theorem internalPhysicalMetric_ge_of_exit {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ}
+    {D : Set ℂ} {q b : ℂ} {r η : ℝ} (hq : q ∈ D) (_hb : b ∈ D) (hbr : b ∉ ball q r)
+    (hsep : ∀ w, w ∉ ball q r → ENNReal.ofReal η ≤ weylScaling d ξ f q w)
+    (hfin : ∀ x ∈ D, ∀ y ∈ D, weylScaling d ξ f x y ≠ ⊤)
+    (hIfin : internalMetric (weylPhysicalE d ξ f) D q b ≠ ⊤) :
+    η ≤ internalPhysicalMetric (weylPhysicalE d ξ f) D q b := by
+  have hE : ENNReal.ofReal η ≤ internalMetric (weylPhysicalE d ξ f) D q b := by
+    refine le_iInf₂ fun P hPD => ?_
+    set S : Set ℝ := {u | u ∈ Icc (0:ℝ) 1 ∧ P.extend u ∉ ball q r} with hSdef
+    have hSne : S.Nonempty := ⟨1, ⟨⟨zero_le_one, le_rfl⟩, by rw [Path.extend_one]; exact hbr⟩⟩
+    have hSc : IsClosed S := by
+      have heq : S = Icc 0 1 ∩ (P.extend ⁻¹' ball q r)ᶜ := by
+        ext u
+        simp [hSdef]
+      rw [heq]
+      exact isClosed_Icc.inter (P.continuous_extend.isOpen_preimage _ isOpen_ball).isClosed_compl
+    obtain ⟨⟨hτ0, hτ1⟩, hτout⟩ : sInf S ∈ S := hSc.csInf_mem hSne ⟨0, fun u hu => hu.1.1⟩
+    obtain ⟨u, hu0, hu1, hmono, hrange⟩ : ∃ u : ℕ → ℝ, u 0 = 0 ∧ u 1 = sInf S ∧ Monotone u ∧
+        ∀ i, u i ∈ Icc (0:ℝ) 1 := by
+      refine ⟨fun i => if i = 0 then 0 else if i = 1 then sInf S else 1, by simp, by simp, ?_, ?_⟩
+      · refine monotone_nat_of_le_succ fun n => ?_
+        rcases n with _ | _ | n <;> simp [hτ0, hτ1]
+      · intro i
+        dsimp only
+        split_ifs
+        · exact ⟨le_rfl, zero_le_one⟩
+        · exact ⟨hτ0, hτ1⟩
+        · exact ⟨zero_le_one, le_rfl⟩
+    have hsum : ENNReal.ofReal (weylPhysicalE d ξ f (P.extend (u 1)) (P.extend (u 0))) ≤
+        curveLength (weylPhysicalE d ξ f) P.extend 0 1 := by
+      refine le_iSup_of_le ((2 : ℕ), (⟨u, hmono, hrange⟩ : {u : ℕ → ℝ // Monotone u ∧ ∀ i, u i ∈ Icc (0:ℝ) 1})) ?_
+      simp only [Finset.sum_range_succ, Finset.sum_range_zero, zero_add]
+      exact le_self_add
+    have hPτ : P.extend (sInf S) ∈ D := by
+      have h : P.extend (sInf S) = P ⟨sInf S, hτ0, hτ1⟩ := Path.extend_extends' P ⟨sInf S, hτ0, hτ1⟩
+      rw [h]
+      exact hPD _
+    have hηle : η ≤ weylPhysicalE d ξ f q (P.extend (sInf S)) :=
+      (ENNReal.ofReal_le_iff_le_toReal (hfin q hq _ hPτ)).1 (hsep _ hτout)
+    have hu1' := hsum
+    rw [hu1, hu0] at hu1'
+    calc ENNReal.ofReal η ≤ ENNReal.ofReal (weylPhysicalE d ξ f (P.extend (sInf S)) q) := by
+          rw [weylPhysicalE_symm hd ξ f (P.extend (sInf S)) q]
+          exact ENNReal.ofReal_le_ofReal hηle
+      _ = ENNReal.ofReal (weylPhysicalE d ξ f (P.extend (sInf S)) (P.extend 0)) := by
+          rw [Path.extend_zero]
+      _ ≤ curveLength (weylPhysicalE d ξ f) P.extend 0 1 := hu1'
+  exact (ENNReal.ofReal_le_iff_le_toReal hIfin).1 hE
+
+/-- **Non-degeneracy** (field `eq_of_eq_zero` of `IsLengthMetricOn`): the internal physical distance between distinct
+points of `D` is positive. -/
+theorem internalPhysicalMetric_eq_of_eq_zero {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ}
+    {D : Set ℂ} (hD : IsOpen D) (hDc : IsConnected D) {z : ℂ} (hz : z ∈ D) (hfc : ContinuousOn f (D \ {z}))
+    (hW : Tendsto (fun x => weylScaling d ξ f x z) (𝓝 z) (𝓝 0)) :
+    ∀ x ∈ D, ∀ y ∈ D, internalPhysicalMetric (weylPhysicalE d ξ f) D x y = 0 → x = y := by
+  intro x hx y hy h0
+  by_contra hne
+  obtain ⟨r0, hr0, hD0, hz0⟩ := exists_good_radius hD (z := z) hx
+  have hwpos : 0 < dist y x := dist_pos.2 (Ne.symm hne)
+  have hr : 0 < min r0 (dist y x) := lt_min hr0 hwpos
+  have hrD : ball x (min r0 (dist y x)) ⊆ D := (ball_subset_ball (min_le_left _ _)).trans hD0
+  have hfc' : ContinuousOn f (ball x (min r0 (dist y x)) \ {x}) :=
+    hfc.mono fun w hw => ⟨hrD hw.1, hz0 w (ball_subset_ball (min_le_left _ _) hw.1) hw.2⟩
+  obtain ⟨η, hη, hsep⟩ := weylScaling_ge_of_exit hd ξ hr hfc'
+  have hyr : y ∉ ball x (min r0 (dist y x)) := fun h =>
+    absurd (mem_ball.1 h) (not_lt.2 (min_le_right _ _))
+  have hfin := finite_on_disk_root hd ξ hD hDc hz hfc hW
+  have hle := internalPhysicalMetric_ge_of_exit hd ξ hx hy hyr hsep hfin.1 (hfin.2 x hx y hy)
+  linarith
+
+/-- **Euclidean topology** (field `isOpen_iff` of `IsLengthMetricOn`): a subset `U ⊆ D` is open iff every point of `U` has
+an internal-distance neighbourhood in `D` inside `U`. -/
+theorem internalPhysicalMetric_isOpen_iff {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ}
+    {D : Set ℂ} (hD : IsOpen D) (hDc : IsConnected D) {z : ℂ} (hz : z ∈ D) (hfc : ContinuousOn f (D \ {z}))
+    (hW : Tendsto (fun x => weylScaling d ξ f x z) (𝓝 z) (𝓝 0)) :
+    ∀ U ⊆ D, (IsOpen U ↔ ∀ x ∈ U, ∃ ε > 0, ∀ w ∈ D,
+      internalPhysicalMetric (weylPhysicalE d ξ f) D x w < ε → w ∈ U) := by
+  intro U hUD
+  have hfin := finite_on_disk_root hd ξ hD hDc hz hfc hW
+  constructor
+  · intro hU x hx
+    obtain ⟨r0, hr0, hball⟩ := Metric.isOpen_iff.1 hU x hx
+    obtain ⟨r1, hr1, hD1, hz1⟩ := exists_good_radius hD (z := z) (hUD hx)
+    have hr : 0 < min r0 r1 := lt_min hr0 hr1
+    have hrD : ball x (min r0 r1) ⊆ D := (ball_subset_ball (min_le_right _ _)).trans hD1
+    have hfc' : ContinuousOn f (ball x (min r0 r1) \ {x}) :=
+      hfc.mono fun w hw => ⟨hrD hw.1, hz1 w (ball_subset_ball (min_le_right _ _) hw.1) hw.2⟩
+    obtain ⟨η, hη, hsep⟩ := weylScaling_ge_of_exit hd ξ hr hfc'
+    refine ⟨η, hη, fun w hwD hw => ?_⟩
+    by_contra hwU
+    have hwr : w ∉ ball x (min r0 r1) := fun h => hwU (hball (ball_subset_ball (min_le_left _ _) h))
+    have hle := internalPhysicalMetric_ge_of_exit hd ξ (hUD hx) hwD hwr hsep hfin.1 (hfin.2 x (hUD hx) w hwD)
+    linarith
+  · intro h
+    rw [isOpen_iff_mem_nhds]
+    intro x hxU
+    obtain ⟨ε, hε, hεU⟩ := h x hxU
+    have hxD : x ∈ D := hUD hxU
+    have hlim := internalPhysicalMetric_tendsto_pt hd ξ hD hz hfc hW hxD
+    have hev : ∀ᶠ w in 𝓝[D] x, internalPhysicalMetric (weylPhysicalE d ξ f) D w x < ε :=
+      hlim.eventually (gt_mem_nhds hε)
+    rw [eventually_nhdsWithin_iff] at hev
+    filter_upwards [hev, hD.mem_nhds hxD] with w hw hwD
+    apply hεU w hwD
+    rw [internalPhysicalMetric_symm_root hd ξ f D x w]
+    exact hw hwD
+
+/-- **Full length-metric fields of the rooted internal physical metric**: all fields of `IsLengthMetricOn D I` except the
+ones for the decoder identity (which n4 derives from (20)): self-distance, symmetry, triangle inequality, length identity,
+joint continuity on `D × D`, non-degeneracy, and the Euclidean topology. -/
+theorem internalPhysicalMetric_lengthFields_full {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ)
+    {f : ℂ → ℝ} {D : Set ℂ} (hD : IsOpen D) (hDc : IsConnected D) {z : ℂ} (hz : z ∈ D)
+    (hfc : ContinuousOn f (D \ {z}))
+    (hW : Tendsto (fun x => weylScaling d ξ f x z) (𝓝 z) (𝓝 0)) :
+    (∀ x ∈ D, internalPhysicalMetric (weylPhysicalE d ξ f) D x x = 0) ∧
+    (∀ x y, internalPhysicalMetric (weylPhysicalE d ξ f) D x y = internalPhysicalMetric (weylPhysicalE d ξ f) D y x) ∧
+    (∀ x ∈ D, ∀ y ∈ D, ∀ w ∈ D, internalPhysicalMetric (weylPhysicalE d ξ f) D x w ≤
+        internalPhysicalMetric (weylPhysicalE d ξ f) D x y + internalPhysicalMetric (weylPhysicalE d ξ f) D y w) ∧
+    (∀ x ∈ D, ∀ y ∈ D, ENNReal.ofReal (internalPhysicalMetric (weylPhysicalE d ξ f) D x y) =
+        internalMetric (internalPhysicalMetric (weylPhysicalE d ξ f) D) D x y) ∧
+    ContinuousOn (fun q : ℂ × ℂ => internalPhysicalMetric (weylPhysicalE d ξ f) D q.1 q.2) (D ×ˢ D) ∧
+    (∀ x ∈ D, ∀ y ∈ D, internalPhysicalMetric (weylPhysicalE d ξ f) D x y = 0 → x = y) ∧
+    (∀ U ⊆ D, (IsOpen U ↔ ∀ x ∈ U, ∃ ε > 0, ∀ w ∈ D,
+      internalPhysicalMetric (weylPhysicalE d ξ f) D x w < ε → w ∈ U)) :=
+  ⟨(internalPhysicalMetric_lengthFields hd ξ hD hDc hz hfc hW).1,
+    (internalPhysicalMetric_lengthFields hd ξ hD hDc hz hfc hW).2.1,
+    (internalPhysicalMetric_lengthFields hd ξ hD hDc hz hfc hW).2.2.1,
+    (internalPhysicalMetric_lengthFields hd ξ hD hDc hz hfc hW).2.2.2.1,
+    (internalPhysicalMetric_lengthFields hd ξ hD hDc hz hfc hW).2.2.2.2,
+    internalPhysicalMetric_eq_of_eq_zero hd ξ hD hDc hz hfc hW,
+    internalPhysicalMetric_isOpen_iff hd ξ hD hDc hz hfc hW⟩
+
 end HarmonicBalls
