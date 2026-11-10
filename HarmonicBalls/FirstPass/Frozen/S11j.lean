@@ -135,11 +135,23 @@ def LQGMetricLengthUnivFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → ∀ᵐ ω ∂P, IsEuclideanLengthMetric (𝔇 (hC ω))
 
-/-- FIRST-PASS FROZEN (PROPOSED input `LQGMetricFieldAxioms`, `Proposed/LQG.lean:199`, pending operator source-check;
+/-- FIRST-PASS FROZEN (PROPOSED input `LQGMetricFieldAxioms`, `Proposed/LQG.lean:201` (docstring l.183-200), PENDING operator source-check for the universal wrapper;
 universal form). Truth check TRUE (ChatGPT, 00:28 UTC): the universe wrapper preserves the proposed statement; its content
 includes the singular-insertion theorem and the free-`ξ` reduction (notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md, section 3). The Fact 2.2 axioms I-IV for the field `h^ℂ - α₀ log|·|` hold on every probability space `Ω : Type u`,
-for all `γ`, `ξ`, `α₀`, every whole-plane GFF `hC`, and all `P`. Used only as the hypothesis `haxioms` of
-`firstPass_11_15_corrected` (`FirstPass/S11j/FieldAssembly11_15.lean`). -/
+for all `γ`, `ξ`, `α₀`, every whole-plane GFF `hC`, and all `P`.
+Published sources (copied from the docstring of `LQGMetricFieldAxioms`, `Proposed/LQG.lean:183-200`): Bou-Rabee-Gwynne
+arXiv:2208.11795, Fact 2.2 (paper lines 432-453; verification remark at line 455); Gwynne-Miller arXiv:1905.00383, Section 1.2
+(p. 6), Remark 1.5 (p. 8); Dubédat-Falconet-Gwynne-Pfeffer-Sun arXiv:1905.00380, definition p. 9, Theorem 1.10 (p. 10; finiteness
+for `α₀ < Q`), Proposition 3.17 (p. 43; Euclidean topology).
+Published sources (copied from `notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md`, section 3): HB Fact 2.2, printed p. 10; DFGPS
+arXiv:1905.00380v2, Theorem 1.10 (p. 10) and Proposition 3.17 (p. 43); Ding-Gwynne arXiv:2108.12060, Theorem 1.9 (p. 7; background
+charge `Q(ξ) = Q_γ`); Gwynne-Pfeffer arXiv:1903.09561v3, equation (4.2) and Lemma 4.1 (p. 10; `ξ = γ/d_γ` in the subcritical range).
+Caveat on `ξ` (`Proposed/LQG.lean:183-200`): the Prop quantifies over every `ξ` for which `IsLQGMetric` holds; the literature
+constructs γ-LQG metrics only for `ξ = γ/d_γ`.
+Counted consumers: `firstPass_11_12_final` (`FirstPass/S11m/Final11_12.lean:131`), `firstPass_11_15_corrected`
+(`FirstPass/S11j/FieldAssembly11_15.lean:276`), `firstPass_11_16_corrected` (`FirstPass/S11k/FirstLExterior.lean:260`),
+`firstPass_11_17_corrected` (`FirstPass/S11h/PinchCertificateProof11_17.lean:294`). Not used by `firstPass_11_13_corrected`
+(`FirstPass/S11i/Corrected11_13.lean:65`). Thirty-one further files in `HarmonicBalls` mention it (`grep -rln`). -/
 def LQGMetricFieldAxiomsUnivFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ ξ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc

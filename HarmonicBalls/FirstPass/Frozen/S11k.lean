@@ -58,7 +58,11 @@ TRUE (ChatGPT, operator note 23:27 UTC); locator pending).
 
 Statement: `μ(U)` is almost surely equal to a random variable measurable for `fieldSigmaAlgebra α₀ hC O`, the sigma-algebra
 of the field with its constant (the mass changes by `e^{γc}` under `h ↦ h + c`, so the modulo-constant version is not
-claimed). Used by: `pinchSecondConditionalMass_of_frozen`. -/
+claimed).
+Derivation: `notes/fp-gaps/CHATGPT-e2-locality-z3-frozen.md`, section 4.2 (TRUE): for a fixed open `U ⊆ O`, the local GMC construction
+gives a measurable function of `h^α|_U` representing `μ(U)` (HB Fact 2.1 II, printed p. 9); the definition identifies `μ` with the
+dyadic vague limit, and `fieldSigmaAlgebra` is unchanged by the fixed logarithmic shift.
+Used by: `pinchSecondConditionalMass_of_frozen`. -/
 def LQGMassInnerMeasurableFrozen : Prop :=
   ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
@@ -76,7 +80,12 @@ UTC); locator pending).
 
 Statement: with `O = thickening δ A`, the internal diameter is almost surely equal to a random variable measurable for
 `fieldSigmaAlgebra α₀ hC O`. Only this a.s. form is claimed (the infimum over paths is not measurable as a function of the
-whole distribution, `LQGInternalMetricWeylAeMeasurableFrozen`). Used by: `pinchSecondConditionalMass_of_frozen`. -/
+whole distribution, `LQGInternalMetricWeylAeMeasurableFrozen`).
+Derivation: `notes/fp-gaps/CHATGPT-e2-locality-z3-frozen.md`, section 4.3 (TRUE): for fixed `x, y ∈ O`, local metric measurability gives
+an inner-measurable version of `D(x,y;O)` (HB Fact 2.2 II, printed p. 10; Gwynne-Miller Section 1.2, Axiom II, p. 6); on the event
+where `D` is a length metric inducing the Euclidean topology, the internal diameter is the supremum of `D(x,y;O)` over a countable
+dense `A_* ⊆ A`.
+Used by: `pinchSecondConditionalMass_of_frozen`. -/
 def LQGInternalDiamInnerMeasurableFrozen : Prop :=
   ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (D : Ω → ℂ → ℂ → ℝ),

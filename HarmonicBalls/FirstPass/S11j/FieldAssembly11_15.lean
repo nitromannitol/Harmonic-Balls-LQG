@@ -267,11 +267,11 @@ theorem pinchFirstEvent_positive_fieldLevel
 `γ ∈ (0, 2)`, every `α₀ < Q`, every probability space `Ω : Type u`, whole-plane GFF `h^ℂ` and LQG metric `D` of
 `h^ℂ - α₀ log|·|`, the first pinch event holds with positive (inner) probability.
 
-The frozen inputs are universal hypotheses (B4 convention, operator 22:19 UTC): the Cameron-Martin transfer
-`CameronMartinGFFMutualAbsCont`, the field-level measurability and Weyl identities, the metric-level continuous-outer
-Weyl composition `WeylMetricCompositionContinuousOuterFrozen`, the positivity of the Weyl exponent
-`LQGMetricExponentPositive`, the universe-`u` length property `LQGMetricLengthUnivFrozen.{u}` (B1), and the Proposed field
-axioms `LQGMetricFieldAxiomsUnivFrozen.{u}` (pending operator source-check). The finiteness of the thresholds X2, X4
+The five hypotheses are exactly those of the signature (frozen universal hypotheses, B4 convention, operator 22:19 UTC):
+the Cameron-Martin transfer `hCM : CameronMartinGFFMutualAbsCont.{u}`, the field-level measurable Weyl-scaled metric
+`hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u}`, the Weyl composition `hFW : WeylScalingCompositionFrozen.{u}`, the
+positivity of the Weyl exponent `hEx : LQGMetricExponentPositive`, and the Proposed field axioms
+`haxioms : LQGMetricFieldAxiomsUnivFrozen.{u}` (pending operator source-check). The finiteness of the thresholds X2, X4
 (B2) is proved (`FirstPass/S11j/B2Finite.lean`). -/
 theorem firstPass_11_15_corrected
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u})

@@ -123,6 +123,9 @@ of `h^ℂ + f - α₀ log|·|` and `D^W` its internal metric on `W`. Only this a
 `h ↦ D_h` (Gwynne-Miller 2021, Section 1.2, p. 6; locator pending), with the internal metric on an open set as in Fact 2.2 I
 (Bou-Rabee-Gwynne arXiv:2208.11795, p. 9, lines 432-457). Operator ruling 2026-11-09 18:35 UTC: field-level measurability is
 EXTERNAL and is frozen at field level. Truth check TRUE for this a.s. form (notes/fp-gaps/CHATGPT-truth-1935.md, row `LQGInternalMetricWeylAeMeasurableFrozen`, the 19:35 UTC second opinion; also notes/fp-gaps/CHATGPT-11-15-17-chain-audit.md:130). The plain-`Measurable` version is FALSE (CHATGPT-truth-1935.md, row `LQGInternalMetricWeylMeasurableFrozen`), so the a.s. form is the one stated here.
+Derivation: `notes/fp-gaps/CHATGPT-truth-1935.md`, row `LQGInternalMetricWeylAeMeasurableFrozen` (TRUE): reconstruct the
+continuous base metric from countably many evaluations; radial Weyl weighting and internalization on an open set admit a Borel
+construction using compact families of rectifiable paths; this supplies one `Φ` for every fixed continuous shift.
 Used by: firstPass_11_9 (the Cameron-Martin transfer event, paper line 3131). -/
 def LQGInternalMetricWeylAeMeasurableFrozen : Prop :=
   ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
@@ -141,7 +144,9 @@ whole-plane GFF `hC` with LQG measure `μ` (`IsLQGMeasureOfField`) and a closed 
 `F` on distributions such that `F (h^ℂ + f) = μ(S)` almost surely, for every continuous `f` vanishing on `S`. Source: `μ` is
 the vague limit of the regularized measures (Duplantier-Sheffield 2011, arXiv:0808.1560v2, Section 3; Bou-Rabee-Gwynne
 arXiv:2208.11795 Fact 2.1 III, p. 9, line 418, `LQGMeasureWeylScaling`: `μ_{h+f} = e^{γ f} μ_h`, which gives
-`μ_{h+f}(S) = μ_h(S)` when `f = 0` on `S`). Used by: firstPass_11_9 (mass identity `M(h^ℂ + g) = M(h^ℂ)` for the shift `g`
+`μ_{h+f}(S) = μ_h(S)` when `f = 0` on `S`). Derivation: `notes/fp-gaps/CHATGPT-hb-distribution-frozen.md`, section 2 (TRUE): one measurable decoder built from countably many
+circle-average pairings (sections 2.1-2.3, including every continuous shift), the measure decoded from its defining limit (section 2.4).
+Used by: firstPass_11_9 (mass identity `M(h^ℂ + g) = M(h^ℂ)` for the shift `g`
 vanishing on `S₁`, paper line 3131). Truth check TRUE (ChatGPT, 02:36 UTC, `notes/fp-gaps/CHATGPT-hb-distribution-frozen.md`
 §2): a single decoder can be built before quantifying over the continuous shifts, from countably many circle-average pairings
 (§2.1–2.3), and the measure is decoded from its defining limit (§2.4). Sources as the answer gives them: Bou-Rabee-Gwynne
