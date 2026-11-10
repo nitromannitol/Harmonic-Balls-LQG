@@ -3,6 +3,7 @@ import HarmonicBalls.FirstPass.S11p.NullSigma
 import HarmonicBalls.FirstPass.S11p.ModConstComposition
 import HarmonicBalls.FirstPass.S11p.FiniteWeighted
 import HarmonicBalls.FirstPass.S11p.BaseFinite
+import HarmonicBalls.FirstPass.S11p.BufferedGeometry
 import HarmonicBalls.FirstPass.Frozen.S11p
 import HarmonicBalls.FirstPass.Frozen.S11k
 
@@ -169,6 +170,27 @@ theorem exists_exterior_annulusGreenPotentialSup_of_frozen_holder {Ω : Type u} 
   exists_exterior_annulusGreenPotentialSup_of_frozen_base hGFF γ α₀ μ μ₀ hγ0 hγ2 hα hLQG hFr hBr W hsph hWA
     (ae_annulusGreenPotentialSup_ne_top_base hGFF hγ0 hγ2 h₀ hNa0 hholder) hSing
 
+/-- N2 with the geometric preconditions taken from the buffered pinch geometry `IsBufferedPinchGeometry`: `hsph` and
+`hWA` are derived in `FirstPass/S11p/BufferedGeometry.lean` (`closure W ⊆ T ⊆ 𝔸_{1,5}`, `W ⊆ 𝔸_{1,2}`). This is the form
+for the pinch second exterior event (z3). -/
+theorem exists_exterior_annulusGreenPotentialSup_of_buffered {Ω : Type u} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc) (γ α₀ : ℝ) (μ μ₀ : Ω → Measure ℂ) (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    (hα : α₀ < lqgQ γ) (hLQG : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hFr : LQGMassInnerMeasurableFrozen.{u}) (hBr : WholePlaneCircleAverageLimitFrozen.{u})
+    (hholder : GreenPotentialHolderStmt.{u}) (h₀ : IsLQGMeasureOfField P γ 0 hcirc μ₀)
+    (hNa0 : LQGMeasureNonatomic P γ 0 hC hcirc)
+    {U V W T Q' Q : Set ℂ} {δ : ℝ} (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ)
+    (hSing : ∀ᵐ ω ∂P, μ ω = (μ₀ ω).withDensity (fun z => ENNReal.ofReal (LQGSingularWeight γ α₀ z))) :
+    ∃ G : Ω → ℝ≥0∞,
+      Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] G ∧
+        (∀ᵐ ω ∂P, G ω = annulusGreenPotentialSup (μ ω) 0 3 6) ∧ ∀ᵐ ω ∂P, G ω ≠ ⊤ :=
+  exists_exterior_annulusGreenPotentialSup_of_frozen_holder hGFF γ α₀ μ μ₀ hγ0 hγ2 hα hLQG hFr hBr hholder h₀ hNa0 W
+    (sphere_one_subset_compl_closure_W_of_buffered hgeo)
+    (closure_annulus_compl_closure_W_of_buffered hgeo) hSing
+
 end HarmonicBalls
+
+#print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_buffered
 
 #print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_frozen
