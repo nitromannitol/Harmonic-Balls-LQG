@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.S11r.UnrootedFixed
 import HarmonicBalls.FirstPass.S11r.LogSingularCutoff
 import HarmonicBalls.FirstPass.S11r.RootedObsShift
+import HarmonicBalls.FirstPass.S11r.RootedLocality
 
 /-!
 # The disk identity for a continuous shift (fp-S11r part (b), step (d); owner n2)
@@ -217,7 +218,76 @@ theorem vIdentity_rooted {γ ξ α : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c z :
   rw [hm]
   exact hω p
 
+/-- **Rooted identity (20) in Weyl-scaled form, for a root outside the disk** (fp-S11r, bridge of step (d)). Under the
+hypotheses of `vIdentity_rooted` (a root `z` with `r < R < dist z c`, `0 < r`), almost surely there is a scalar `b > 0`
+with `M (obs_D f_z) p = b · D_{f_z}(p)` for all `p ∈ D × D`, where `D_{f_z}` is the internal metric on `D = ball c r` of the
+Weyl scaling of `𝔇 (hC ω)` by the rooted weight `f_z = -α log|·| - γ log|· - z| + γ log max(1, |·|)` (the metric of `f_z`,
+equation (20) of `LocalMetricReplacementStmt`). Proof: the metric of the shifted field `h^ℂ + g` is the Weyl scaling of
+`𝔇 (hC ω)` by the continuous `g` (axiom III at universe `u`, `FirstPassS11aa.ae_weylScaling_universe`), `g = f_z` on `D`
+(`hgz`, and `‖·‖ < 1` on `D`), so the internal metrics agree by `RootedLocal.internalMetric_weylScaling_eq_of_eventuallyEq`
+(RootedLocality.lean). This covers roots outside `D`; roots inside the observation disk are the gluing of R2 (not here). -/
+theorem vIdentity_rooted_weylScaling {γ ξ α : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c z : ℂ} {r : ℝ} (hr : 0 < r)
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hPhi : LQGInternalMetricWeylAeMeasurableFrozen.{u})
+    (hCM : CameronMartinGFFMutualAbsCont.{u})
+    (ρ : ℂ → ℝ) (hρT : IsTestFunction (ball c r) ρ)
+    (M : ({φ : ℂ → ℝ // IsTestFunction (ball c r) φ ∧ ∫ x, φ x = 0} → ℝ) →
+        ContinuousMap ↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ)) ℝ)
+    (hMm : Measurable M)
+    (hid : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+      ∀ᵐ ω ∂P, ∀ p : ↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ)),
+        ENNReal.ofReal (M (localMeanZeroObs 0 (ball c r) (hC ω)) p) =
+          ENNReal.ofReal (Real.exp (-ξ * fieldPairing 0 (hC ω) ρ)) *
+            internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2)
+    {R : ℝ} (hrR : r < R) (hpR : R < dist z c)
+    (hU : closedBall c R ⊆ ball (0 : ℂ) 1) (h0 : (0 : ℂ) ∉ closedBall c r)
+    (g : ℂ → ℝ) (hgsm : ContDiff ℝ (⊤ : ℕ∞) g) (hgcomp : HasCompactSupport g)
+    (hgcirc : Real.circleAverage g 0 1 = 0)
+    (hgz : ∀ x ∈ ball c r, g x = -α * Real.log ‖x‖ - γ * Real.log ‖x - z‖)
+    (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hGFF : IsWholePlaneGFF P hC hcirc) :
+    ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧ ∀ p : ↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ)),
+      ENNReal.ofReal (M (campbellReferenceObs γ α (ball c r) (hC ω) z).2 p) =
+        ENNReal.ofReal b * internalMetric
+          (fun u v => (weylScaling (𝔇 (hC ω)) ξ
+            (fun w => -α * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) u v).toReal)
+          (ball c r) p.1.1 p.1.2 := by
+  have hV1 : ∀ x ∈ ball c r, ‖x‖ < 1 := fun x hx => by
+    have hxR : x ∈ closedBall c R := by
+      rw [mem_ball] at hx
+      rw [mem_closedBall]
+      linarith [dist_comm x c]
+    have := hU hxR
+    rwa [mem_ball_zero_iff] at this
+  have hVc : IsConnected (ball c r) := (convex_ball c r).isConnected ⟨c, mem_ball_self hr⟩
+  have hfg : ∀ x ∈ ball c r, g =ᶠ[nhds x]
+      (fun w => -α * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) := by
+    intro x hx
+    refine Filter.eventually_of_mem (isOpen_ball.mem_nhds hx) (fun y hy => ?_)
+    simp [hgz y hy, max_eq_left (hV1 y hy).le]
+  have key := vIdentity_rooted hγ0 hγ2 h𝔇 hPhi hCM ρ hρT M hMm hid hrR hpR hU h0 g hgsm hgcomp hgcirc hgz
+    Ω P hC hcirc hGFF
+  have hE0 := FirstPassS11aa.ae_isEuclideanLengthMetric_universe h𝔇 hGFF (0 : ℂ → ℝ) continuous_zero
+  simp only [addFunPairing_zero_fun] at hE0
+  have hEg := FirstPassS11aa.ae_isEuclideanLengthMetric_universe h𝔇 hGFF g hgsm.continuous
+  have hW := FirstPassS11aa.ae_weylScaling_universe h𝔇 hGFF
+  filter_upwards [key, hE0, hEg, hW] with ω hω hE0ω hEgω hWω
+  refine ⟨Real.exp (-ξ * fieldPairing 0 (addFunPairing (hC ω) g) ρ), Real.exp_pos _, fun p => ?_⟩
+  have hmetric : 𝔇 (addFunPairing (hC ω) g) = fun u v => (weylScaling (𝔇 (hC ω)) ξ g u v).toReal := by
+    funext u v
+    have h2 : 0 ≤ 𝔇 (addFunPairing (hC ω) g) u v := by
+      have h1 := hEgω.triangle u v u
+      have h3 := hEgω.self_eq_zero u
+      have h4 := hEgω.symm u v
+      linarith
+    rw [← hWω g hgsm.continuous u v, ENNReal.toReal_ofReal h2]
+  have hR1 := RootedLocal.internalMetric_weylScaling_eq_of_eventuallyEq (ξ := ξ) hE0ω hgsm.continuous hgcomp
+    isOpen_ball hVc hfg (x := p.1.1) (y := p.1.2)
+  rw [hω p, hmetric, hR1]
+
 end HarmonicBalls
 
+#print axioms HarmonicBalls.vIdentity_rooted_weylScaling
 #print axioms HarmonicBalls.vIdentity_rooted
 #print axioms HarmonicBalls.vIdentity_of_shift
