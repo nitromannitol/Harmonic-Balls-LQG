@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.S11k
 import HarmonicBalls.FirstPass.S11k.ExteriorDistances
+import HarmonicBalls.FirstPass.S11u
 
 /-!
 # First pass, Section 11: the exterior version bundle from its parts (fp-S11k, owner z3)
@@ -65,7 +66,7 @@ theorem frontier_nonempty_of_open_ne_univ {Q : Set ℂ} (hne : Q.Nonempty) (hQne
 /-- The bundle, assembled from its parts: the item-II locality and the item-I measure of `LQGMetricFieldAxiomsUnivFrozen`,
 the frozen circle-average limit, `PinchFirstLExteriorStep` (OPEN) and `PinchSecondAnnulusStep` (OPEN). -/
 theorem pinchSecondExteriorVersionsStep_of_parts (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
-    (hb : WholePlaneCircleAverageLimitFrozen.{u}) (hL : PinchFirstLExteriorStep.{u})
+    (hL : PinchFirstLExteriorStep.{u})
     (hS : PinchSecondAnnulusStep.{u}) : PinchSecondExteriorVersionsStep.{u} := by
   intro U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω _ P hC hcirc μ D hGFF hμ hD
   have hD' := hD
@@ -127,14 +128,14 @@ theorem pinchSecondExteriorVersionsStep_of_parts (hAx : LQGMetricFieldAxiomsUniv
     linarith
   have hfrQ : (frontier Q).Nonempty := frontier_nonempty_of_open_ne_univ hQne hQ_ne_univ
   obtain ⟨L', hL'm, hL'a⟩ := hL U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω P hC hcirc D hGFF hD'
-  obtain ⟨aQ, haQm, haQa⟩ := ExteriorDistances.exists_exterior_setDist_exit hb hGFF α₀ hE hsph hmetric hloc
+  obtain ⟨aQ, haQm, haQa⟩ := ExteriorDistances.exists_exterior_setDist_exit hGFF α₀ hE hsph hmetric hloc
     (U := Q) (V := annulus (0 : ℂ) 4 5 \ closure T) (A := Q') hG.isOpen_Q hVa hVaE hQ'Q
     hG.closure_Q_subset hQ'ne hfrQ
-  obtain ⟨a0, ha0m, ha0a⟩ := ExteriorDistances.exists_exterior_setDist_origin hb hGFF α₀ hE hsph hmetric hloc
+  obtain ⟨a0, ha0m, ha0a⟩ := ExteriorDistances.exists_exterior_setDist_origin hGFF α₀ hE hsph hmetric hloc
     hδpos hBE2
-  obtain ⟨dS, hdSm, hdSa⟩ := ExteriorDistances.exists_exterior_setDist_spheres hb hGFF α₀ hE hsph hmetric hloc
+  obtain ⟨dS, hdSm, hdSa⟩ := ExteriorDistances.exists_exterior_setDist_spheres hGFF α₀ hE hsph hmetric hloc
     hδpos hBE3
-  obtain ⟨aT, haTm, haTa⟩ := ExteriorDistances.exists_exterior_internalDiam_version hb hGFF α₀ hE hsph hmetric
+  obtain ⟨aT, haTm, haTa⟩ := ExteriorDistances.exists_exterior_internalDiam_version hGFF α₀ hE hsph hmetric
     hloc hδpos (A := T \ thickening (3 * δ) W)
     (ExteriorDistances.thickening_subset_compl_closure hδpos (fun x hx => hx.2))
   obtain ⟨G, hGm, hGa, hGfin⟩ := hS U V W T Q' Q δ hG γ α₀ hγ0 hγ2 hα Ω P hC hcirc μ hGFF hμ
@@ -157,12 +158,12 @@ theorem pinchSecondExteriorVersionsStep_of_parts (hAx : LQGMetricFieldAxiomsUniv
 limit `WholePlaneCircleAverageLimitFrozen` (n4) as an explicit hypothesis. All other hypotheses are as in
 `firstPass_11_16_corrected_of_versions`. -/
 theorem firstPass_11_16_corrected_of_parts (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
-    (hb : WholePlaneCircleAverageLimitFrozen.{u}) (hL : PinchFirstLExteriorStep.{u})
+    (hL : PinchFirstLExteriorStep.{u})
     (hS : PinchSecondAnnulusStep.{u}) (hPos : PinchFirstEventFaithfulStmt.{u})
     (hD : SmallMetricDiameterLargeMassStmt.{u}) (hM : LQGMassInnerMeasurableFrozen.{u})
     (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u}) (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
     PinchSecondEventFaithfulStmt.{u} :=
-  firstPass_11_16_corrected_of_versions (pinchSecondExteriorVersionsStep_of_parts hAx hb hL hS) hPos hAx hD hM hDiam hMk
+  firstPass_11_16_corrected_of_versions (pinchSecondExteriorVersionsStep_of_parts hAx hL hS) hPos hAx hD hM hDiam hMk
 
 end BundleParts
 

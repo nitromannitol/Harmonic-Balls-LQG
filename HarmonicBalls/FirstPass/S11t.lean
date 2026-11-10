@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.S11p.ExteriorMass
 import HarmonicBalls.Proposed.LQG
+import HarmonicBalls.FirstPass.S11u
 
 /-!
 # First pass, Section 11: the second annulus step from the N2 interface (fp-S11t, owner n4)
@@ -27,7 +28,7 @@ namespace PinchSecondAnnulusS11t
 
 /-- The N2 step `PinchSecondAnnulusStep` (`FirstPass/S11k/BundleParts.lean`), proved from the named inputs. -/
 theorem pinchSecondAnnulusStep_of_N2_inputs
-    (hFr : LQGMassInnerMeasurableFrozen.{u}) (hBr : WholePlaneCircleAverageLimitFrozen.{u})
+    (hFr : LQGMassInnerMeasurableFrozen.{u})
     (hholder : GreenPotentialHolderStmt.{u})
     (hEx : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
@@ -52,7 +53,7 @@ theorem pinchSecondAnnulusStep_of_N2_inputs
     have := div_pos hγ0 two_pos
     linarith
   obtain ⟨μ₀, h₀⟩ := hEx γ Ω P hC hcirc hGFF hγ0 hγ2 hQ0
-  exact exists_exterior_annulusGreenPotentialSup_of_buffered_singular hGFF γ α₀ μ μ₀ hγ0 hγ2 hα hμ hFr hBr hholder h₀
+  exact exists_exterior_annulusGreenPotentialSup_of_buffered_singular hGFF γ α₀ μ μ₀ hγ0 hγ2 hα hμ hFr hholder h₀
     (hWeyl γ Ω P hC hcirc) (hNa0 γ Ω P hC hcirc) (hNa γ α₀ Ω P hC hcirc) hG
 
 end PinchSecondAnnulusS11t

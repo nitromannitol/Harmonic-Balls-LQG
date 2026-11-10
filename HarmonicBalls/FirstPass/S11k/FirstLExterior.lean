@@ -4,6 +4,7 @@ import HarmonicBalls.FirstPass.S11k.ExteriorDistances
 import HarmonicBalls.FirstPass.S11h.CorridorSup11_17
 import HarmonicBalls.FirstPass.Frozen.S11g
 import HarmonicBalls.FirstPass.S11t
+import HarmonicBalls.FirstPass.S11u
 
 /-!
 # First pass, Section 11: the closed-corridor first conjunct `L` has an exterior version (fp-S11k, owner z3)
@@ -93,7 +94,7 @@ theorem iSup_shift_eq {f : ℕ → ℝ≥0∞} (hf : Monotone f) (N : ℕ) : ⨆
 /-- Exterior version of a single open-set internal metric value `internalMetric (D ω) V z w`, for an open `V ⊆ E`
 containing `z`: if `w ∈ V` it is the infimum over `{z} × {w}` of Proposition-level item II (exterior version
 `exists_exterior_iInf_internalMetric_version`); if `w ∉ V` no path lies in `V`, and the value is `⊤`. -/
-theorem exists_exterior_internalMetric_pt (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_internalMetric_pt
     {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hGFF : IsWholePlaneGFF P hC hcirc) (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {D : Ω → ℂ → ℂ → ℝ} (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -104,7 +105,7 @@ theorem exists_exterior_internalMetric_pt (hb : WholePlaneCircleAverageLimitFroz
     ∃ Y : Ω → ℝ≥0∞, Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC E) inferInstance] Y ∧
       ∀ᵐ ω ∂P, Y ω = internalMetric (D ω) V z w := by
   by_cases hw : w ∈ V
-  · obtain ⟨Y, hYm, hYa⟩ := ExteriorPairings.exists_exterior_iInf_internalMetric_version hb hGFF α₀ hE hsph
+  · obtain ⟨Y, hYm, hYa⟩ := ExteriorPairings.exists_exterior_iInf_internalMetric_version hGFF α₀ hE hsph
       hmetric hV hVE hII (singleton_subset_iff.2 hz) (singleton_subset_iff.2 hw)
     refine ⟨Y, hYm, ?_⟩
     filter_upwards [hYa] with ω h
@@ -121,9 +122,10 @@ theorem exists_exterior_internalMetric_pt (hb : WholePlaneCircleAverageLimitFroz
 
 /-- OPEN step `PinchFirstLExteriorStep`, proved from the frozen closed-domain identity `hK1` and the item-II
 locality of the metric axioms `hAx`. -/
-theorem pinchFirstLExteriorStep_of_frozen (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem pinchFirstLExteriorStep_of_frozen
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) (hK1 : InternalMetricClosedEqIInfThickeningFrozen) :
     BundleParts.PinchFirstLExteriorStep.{u} := by
+  have hb : WholePlaneCircleAverageLimitFrozen.{u} := wholePlaneCircleAverageLimit_derived.{u}
   intro U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω _ P hC hcirc D hGFF hD
   have hδ0 : 0 < δ := hG.delta_pos
   have hδ1 : δ < 1 / 1000 := hG.delta_lt
@@ -211,7 +213,7 @@ theorem pinchFirstLExteriorStep_of_frozen (hb : WholePlaneCircleAverageLimitFroz
   obtain ⟨S, hSsph, hSc, hSd⟩ := exists_countable_subset_sphere_dense (5 : ℝ)
   have : Countable S := hSc.to_subtype
   choose Y hYm hYa using fun p : ℕ × ℕ × S =>
-    exists_exterior_internalMetric_pt hb hGFF α₀ hE hsph1 hmetric (hVopen p.1 p.2.1) (hVE p.1 p.2.1)
+    exists_exterior_internalMetric_pt hGFF α₀ hE hsph1 hmetric (hVopen p.1 p.2.1) (hVE p.1 p.2.1)
       (hloc (Vn p.1 p.2.1) (hVopen p.1 p.2.1)) (z := 0) (w := (p.2.2 : ℂ)) (h0V p.1 p.2.1)
   refine ⟨fun ω => ⨆ y : S, ⨅ n : ℕ, ⨆ k : ℕ, Y (n, k, y) ω, ?_, ?_⟩
   · exact Measurable.iSup fun y => Measurable.iInf fun n => Measurable.iSup fun k => hYm (n, k, y)
@@ -239,12 +241,12 @@ theorem pinchFirstLExteriorStep_of_frozen (hb : WholePlaneCircleAverageLimitFroz
 axioms: the bundle now needs only the N2 step `PinchSecondAnnulusStep` (n4, task fp-S11t) as an explicit hypothesis;
 `PinchFirstLExteriorStep` is no longer an input. -/
 theorem firstPass_11_16_corrected_of_frozen (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
-    (hb : WholePlaneCircleAverageLimitFrozen.{u}) (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
+    (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
     (hS : BundleParts.PinchSecondAnnulusStep.{u}) (hPos : PinchFirstEventFaithfulStmt.{u})
     (hD : SmallMetricDiameterLargeMassStmt.{u}) (hM : LQGMassInnerMeasurableFrozen.{u})
     (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u}) (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
     PinchSecondEventFaithfulStmt.{u} :=
-  BundleParts.firstPass_11_16_corrected_of_parts hAx hb (pinchFirstLExteriorStep_of_frozen hb hAx hK1) hS hPos hD
+  BundleParts.firstPass_11_16_corrected_of_parts hAx (pinchFirstLExteriorStep_of_frozen hAx hK1) hS hPos hD
     hM hDiam hMk
 
 end FirstLExterior
@@ -256,7 +258,7 @@ from its named inputs). Explicit hypotheses: the frozen inputs `hAx`, `hb`, `hK1
 statements `hPos` (Lemma 11.15) and `hD`; the N2 named inputs `hholder` (cited, Bou-Rabee-Gwynne Prop 2.5) and the
 Proposed `hEx`, `hWeyl`, `hNa0`, `hNa`, pending operator source-check. -/
 theorem firstPass_11_16_corrected (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
-    (hb : WholePlaneCircleAverageLimitFrozen.{u}) (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
+    (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
     (hholder : GreenPotentialHolderStmt.{u})
     (hEx : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
@@ -270,8 +272,8 @@ theorem firstPass_11_16_corrected (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hM : LQGMassInnerMeasurableFrozen.{u}) (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u})
     (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
     PinchSecondEventFaithfulStmt.{u} :=
-  FirstLExterior.firstPass_11_16_corrected_of_frozen hAx hb hK1
-    (PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs hM hb hholder hEx hWeyl hNa0 hNa)
+  FirstLExterior.firstPass_11_16_corrected_of_frozen hAx hK1
+    (PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs hM hholder hEx hWeyl hNa0 hNa)
     hPos hD hM hDiam hMk
 
 end HarmonicBalls

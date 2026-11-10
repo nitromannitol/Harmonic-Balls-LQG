@@ -14,7 +14,8 @@ open MeasureTheory Filter Set Metric Topology
 
 universe u
 
-/-- FIRST-PASS FROZEN. Circle averages of the whole-plane GFF are almost sure limits of pairings with unit-mass test
+/-- RETIRED (derived: wholePlaneCircleAverageLimit_derived, FirstPass/S11u.lean; no longer an input to any
+first-pass theorem). Former FIRST-PASS FROZEN. Circle averages of the whole-plane GFF are almost sure limits of pairings with unit-mass test
 functions concentrating on the circle (EXTERNAL; Duplantier-Sheffield, arXiv:0808.1560v2, Section 3.1 and Proposition
 3.1; Bou-Rabee-Gwynne, arXiv:2208.11795v3, Section 2.1, eq. (2.1), printed p. 8). Truth check: TRUE (ChatGPT, 00:53 UTC);
 derivable from `IsWholePlaneGFF` (mixed pairing/circle covariances in `covariance_eq`; proof notes/fp-gaps/CHATGPT-n4-circle-avg-limit.md

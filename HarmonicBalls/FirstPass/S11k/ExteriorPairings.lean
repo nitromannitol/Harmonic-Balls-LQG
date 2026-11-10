@@ -6,6 +6,7 @@ import HarmonicBalls.Proofs.Sec6.AnnulusIteration
 import HarmonicBalls.Proofs.Sec1.Locality
 import HarmonicBalls.Steps.Sec11.LocalPairingLaw
 import HarmonicBalls.Steps.Sec11.LocalExtremaRepresentatives
+import HarmonicBalls.FirstPass.S11u
 
 /-!
 # First pass, Section 11: exterior versions of the field observables (fp-S11k, owner z3)
@@ -47,12 +48,13 @@ theorem comap_localModConst_eq_zero (α₀ : ℝ) (hC : Ω → (ℂ → ℝ) →
 measurable for the zero-mean exterior sigma-algebra of `E`. Proof: the exponent-`0` composition
 `ae_pairing_exists_meanZero_measurable` (n4) applied to the unit-mass mollifiers of the frozen circle-average
 limit on `E`, then the deterministic shift `- α₀ ∫ φ log‖·‖` of `fieldPairing`. -/
-theorem exists_exterior_fieldPairing_version (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_fieldPairing_version
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {φ : ℂ → ℝ} (hφ : IsTestFunction E φ) :
     ∃ g : Ω → ℝ, Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC E) inferInstance] g ∧
       ∀ᵐ ω ∂P, fieldPairing α₀ (hC ω) φ = g ω := by
+  have hb : WholePlaneCircleAverageLimitFrozen.{u} := wholePlaneCircleAverageLimit_derived.{u}
   have : IsProbabilityMeasure P := hGFF.isProbabilityMeasure
   obtain ⟨ψ, hψ, hlim⟩ := hb Ω P hC hcirc hGFF E 1 0 hE one_pos hsph
   obtain ⟨g0, hg0m, hg0⟩ := ae_pairing_exists_meanZero_measurable hGFF (fun j => (hψ j).1)
@@ -67,7 +69,7 @@ theorem exists_exterior_fieldPairing_version (hb : WholePlaneCircleAverageLimitF
 /-- Exterior version of a `fieldSigmaAlgebra α₀ hC U`-measurable observable with `U ⊆ E`: an almost-sure version
 measurable for the zero-mean exterior sigma-algebra of `E`. Proof: the Doob-Dynkin version lemma
 `exists_measurable_version_of_coordinate_versions` over the coordinates `localFieldPairings α₀ hC E`. -/
-theorem exists_exterior_version_of_fieldSigmaAlgebra (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_version_of_fieldSigmaAlgebra
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {U : Set ℂ} (hUE : U ⊆ E) {X : Type*} [MeasurableSpace X] [StandardBorelSpace X] [Nonempty X]
@@ -79,14 +81,14 @@ theorem exists_exterior_version_of_fieldSigmaAlgebra (hb : WholePlaneCircleAvera
   rw [fieldSigmaAlgebra_eq_comap_localFieldPairings] at hG'
   refine exists_measurable_version_of_coordinate_versions (localFieldPairings α₀ hC E) ?_ G hG'
   intro i
-  obtain ⟨g, hgm, hga⟩ := exists_exterior_fieldPairing_version hb hGFF α₀ hE hsph i.2
+  obtain ⟨g, hgm, hga⟩ := exists_exterior_fieldPairing_version hGFF α₀ hE hsph i.2
   exact ⟨g, hgm, hga⟩
 
 /-- Exterior version of an infimum of internal metric values on an open set `V ⊆ E`, where the metric
 satisfies item II of `LQGMetricFieldAxioms` on `V` (hypothesis `hII`). The infimum over `A × B ⊆ V × V` is
 measurable for `fieldSigmaAlgebra V` (`exists_local_iInf_internalMetric_representative`, countable reduction by
 continuity), hence for the zero-mean exterior sigma-algebra of `E` (`fieldSigmaAlgebra_mono`). -/
-theorem exists_exterior_iInf_internalMetric_version (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_iInf_internalMetric_version
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {D : Ω → ℂ → ℂ → ℝ} (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -100,7 +102,7 @@ theorem exists_exterior_iInf_internalMetric_version (hb : WholePlaneCircleAverag
   obtain ⟨Y, hY, hYa⟩ := exists_local_iInf_internalMetric_representative (m := fieldSigmaAlgebra α₀ hC V)
     hV hA hB hmetric (fun x _ y _ => hGm x y)
     (hGa.mono fun ω h x hx y hy => h x (hA hx) y (hB hy))
-  obtain ⟨Y', hY'm, hY'a⟩ := exists_exterior_version_of_fieldSigmaAlgebra hb hGFF α₀ hE hsph hVE
+  obtain ⟨Y', hY'm, hY'a⟩ := exists_exterior_version_of_fieldSigmaAlgebra hGFF α₀ hE hsph hVE
     Y hY
   exact ⟨Y', hY'm, by filter_upwards [hYa, hY'a] with ω h1 h2; rw [h1, h2]⟩
 
@@ -108,7 +110,7 @@ theorem exists_exterior_iInf_internalMetric_version (hb : WholePlaneCircleAverag
 `V ⊆ E` with `closure U ⊆ V`, under item II of the metric on `V`. Proof: `exists_outside_ofReal_setDist_of_internalMetric`
 (first-exit truncation, ChatGPT section 5.1) gives a `fieldSigmaAlgebra V`-measurable version, and
 `exists_exterior_version_of_fieldSigmaAlgebra` moves it to the zero-mean exterior sigma-algebra. -/
-theorem exists_exterior_ofReal_setDist_version (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_ofReal_setDist_version
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {D : Ω → ℂ → ℂ → ℝ} (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -123,7 +125,7 @@ theorem exists_exterior_ofReal_setDist_version (hb : WholePlaneCircleAverageLimi
     hGa.mono fun ω h x hx y hy => h x (hUV (subset_closure (hAU hx))) y (hUV (frontier_subset_closure hy))
   obtain ⟨a, ham, haa⟩ := exists_outside_ofReal_setDist_of_internalMetric (m := fieldSigmaAlgebra α₀ hC V)
     hV hU hAU hUV hA hfront hmetric (fun x _ y _ => hGm x y) hEq
-  obtain ⟨a', ham', ha'a⟩ := exists_exterior_version_of_fieldSigmaAlgebra hb hGFF α₀ hE hsph hVE a ham
+  obtain ⟨a', ham', ha'a⟩ := exists_exterior_version_of_fieldSigmaAlgebra hGFF α₀ hE hsph hVE a ham
   exact ⟨a', ham', by filter_upwards [haa, ha'a] with ω h1 h2; rw [h2, h1]⟩
 
 end ExteriorPairings

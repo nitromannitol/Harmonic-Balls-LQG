@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.S11k.ExteriorPairings
 import HarmonicBalls.Draft.Section11
+import HarmonicBalls.FirstPass.S11u
 
 /-!
 # First pass, Section 11: exterior versions of exit distances (fp-S11k, owner z3)
@@ -40,7 +41,7 @@ theorem setDist_nonneg_of_metric {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLeng
   exact isEuclideanLengthMetric_nonneg hD x y
 
 /-- Exterior version of the exit distance `D(A, ∂U)`, as an extended real. -/
-theorem exists_exterior_setDist_exit (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_setDist_exit
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {D : Ω → ℂ → ℂ → ℝ} (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -51,11 +52,11 @@ theorem exists_exterior_setDist_exit (hb : WholePlaneCircleAverageLimitFrozen.{u
     (hA : A.Nonempty) (hfront : (frontier U).Nonempty) :
     ∃ a : Ω → ℝ≥0∞, Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC E) inferInstance] a ∧
       ∀ᵐ ω ∂P, a ω = ENNReal.ofReal (setDist (D ω) A (frontier U)) :=
-  ExteriorPairings.exists_exterior_ofReal_setDist_version hb hGFF α₀ hE hsph hmetric hU hV hVE hAU hUV hA hfront
+  ExteriorPairings.exists_exterior_ofReal_setDist_version hGFF α₀ hE hsph hmetric hU hV hVE hAU hUV hA hfront
     (hloc V hV hVE)
 
 /-- Exterior version of the origin-to-circle distance `d₀ = D(0, ∂B_δ)` (ChatGPT eq. (26)), for `B_{2δ} ⊆ E`. -/
-theorem exists_exterior_setDist_origin (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_setDist_origin
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {D : Ω → ℂ → ℂ → ℝ} (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -66,7 +67,7 @@ theorem exists_exterior_setDist_origin (hb : WholePlaneCircleAverageLimitFrozen.
     ∃ a : Ω → ℝ≥0∞, Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC E) inferInstance] a ∧
       ∀ᵐ ω ∂P, a ω = ENNReal.ofReal (setDist (D ω) {0} (sphere (0 : ℂ) δ)) := by
   have hfront : frontier (ball (0 : ℂ) δ) = sphere (0 : ℂ) δ := frontier_ball 0 hδ.ne'
-  obtain ⟨a, ham, haa⟩ := exists_exterior_setDist_exit hb hGFF α₀ hE hsph hmetric hloc
+  obtain ⟨a, ham, haa⟩ := exists_exterior_setDist_exit hGFF α₀ hE hsph hmetric hloc
     (U := ball (0 : ℂ) δ) (V := ball (0 : ℂ) (2 * δ)) (A := {0}) isOpen_ball isOpen_ball hBE
     (singleton_subset_iff.2 (mem_ball_self hδ)) ((closure_ball_subset_closedBall).trans
       (closedBall_subset_ball (by linarith))) (singleton_nonempty 0)
@@ -75,7 +76,7 @@ theorem exists_exterior_setDist_origin (hb : WholePlaneCircleAverageLimitFrozen.
 
 /-- Exterior version of the sphere-to-sphere distance `d = D(∂B_δ, ∂B_{2δ})` as a real number (ChatGPT eq. (27)
 with the open domain `B_{3δ}`), for `B_{3δ} ⊆ E`. -/
-theorem exists_exterior_setDist_spheres (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_setDist_spheres
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {D : Ω → ℂ → ℂ → ℝ} (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -87,7 +88,7 @@ theorem exists_exterior_setDist_spheres (hb : WholePlaneCircleAverageLimitFrozen
       ∀ᵐ ω ∂P, d ω = setDist (D ω) (sphere (0 : ℂ) δ) (sphere (0 : ℂ) (2 * δ)) := by
   have hfront : frontier (ball (0 : ℂ) (2 * δ)) = sphere (0 : ℂ) (2 * δ) :=
     frontier_ball 0 (by linarith : (0 : ℝ) < 2 * δ).ne'
-  obtain ⟨a, ham, haa⟩ := exists_exterior_setDist_exit hb hGFF α₀ hE hsph hmetric hloc
+  obtain ⟨a, ham, haa⟩ := exists_exterior_setDist_exit hGFF α₀ hE hsph hmetric hloc
     (U := ball (0 : ℂ) (2 * δ)) (V := ball (0 : ℂ) (3 * δ)) (A := sphere (0 : ℂ) δ)
     isOpen_ball isOpen_ball hBE
     (fun z hz => by
@@ -116,7 +117,7 @@ theorem thickening_subset_compl_closure {δ : ℝ} (hδ : 0 < δ) {A W : Set ℂ
 /-- Exterior version of the internal diameter `internalDiam D δ A = sup_{x,y ∈ A} D(x,y; B_δ(A))` (Draft
 `internalDiam`, paper line 3252), for `B_δ(A) ⊆ E`. The supremum is measurable for `fieldSigmaAlgebra (B_δ(A))`
 (`exists_local_iSup_internalMetric_representative`), hence has a zero-mean exterior version. -/
-theorem exists_exterior_internalDiam_version (hb : WholePlaneCircleAverageLimitFrozen.{u})
+theorem exists_exterior_internalDiam_version
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
     {D : Ω → ℂ → ℂ → ℝ} (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -132,7 +133,7 @@ theorem exists_exterior_internalDiam_version (hb : WholePlaneCircleAverageLimitF
   obtain ⟨Y, hY, hYa⟩ := exists_local_iSup_internalMetric_representative (m := fieldSigmaAlgebra α₀ hC (thickening δ A))
     hV hAV hAV hmetric (fun x _ y _ => hGm x y)
     (hGa.mono fun ω h x hx y hy => h x (hAV hx) y (hAV hy))
-  obtain ⟨Y', hY'm, hY'a⟩ := ExteriorPairings.exists_exterior_version_of_fieldSigmaAlgebra hb hGFF α₀ hE hsph hVE Y hY
+  obtain ⟨Y', hY'm, hY'a⟩ := ExteriorPairings.exists_exterior_version_of_fieldSigmaAlgebra hGFF α₀ hE hsph hVE Y hY
   exact ⟨Y', hY'm, by filter_upwards [hYa, hY'a] with ω h1 h2; rw [internalDiam, h1, h2]⟩
 
 end ExteriorDistances
