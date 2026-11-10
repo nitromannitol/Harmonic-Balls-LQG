@@ -8,6 +8,7 @@ import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.S11r.NoShortcut
 import HarmonicBalls.FirstPass.S11d.Dyadic
+import HarmonicBalls.FirstPass.S11r.MetricSign
 
 /-!
 # Rooted local identification event (fp-S11r-rooted-local-ident)
@@ -1105,5 +1106,129 @@ theorem ae_rootedLocalIdent_buffered {Ω : Type u} [MeasurableSpace Ω] {P : Mea
   obtain ⟨c, hc, heq⟩ := hω
   exact ⟨bufferRadius (uc j) (dc j) (ur j) (dr j), c, bufferRadius_pos (hbuf j), hc,
     closedBall_bufferRadius_subset hzj, heq⟩
+
+
+/-! ### Metric converse on a window (fp-S11r-rooted-local-ident-c, ruling (c) of chat 228)
+
+The frozen clauses are `ENNReal`-valued; the real window identity is recovered by `eq_const_mul_of_dense_family`
+(MetricSign.lean). `windowDecodedMetric` has the same body as `FirstPassS11at.windowMetric` (S11at.lean:761), which
+lies downstream and cannot be imported here. -/
+
+open Classical in
+/-- The real decoded window metric at the endpoint pair `(x, y)`: the value of the decoder `m` on the window `D × D`,
+and `0` outside. (Same body as `FirstPassS11at.windowMetric`.) -/
+noncomputable def windowDecodedMetric (D : Set ℂ) (m : (MeanZeroTest D → ℝ) → C(↥(D ×ˢ D), ℝ))
+    (φ : MeanZeroTest D → ℝ) : ℂ → ℂ → ℝ :=
+  fun x y => if h : (x, y) ∈ D ×ˢ D then m φ ⟨(x, y), h⟩ else 0
+
+theorem rootedMetricAt_eq_ofReal_windowDecoded (D : Set ℂ) (m : (MeanZeroTest D → ℝ) → C(↥(D ×ˢ D), ℝ))
+    (γ : ℝ) (z : ℂ) (T : (ℂ → ℝ) → ℝ) (x y : ℂ) :
+    rootedMetricAt D m γ z T x y = ENNReal.ofReal (windowDecodedMetric D m (rootedLocalObs γ D z T) x y) := by
+  unfold rootedMetricAt windowDecodedMetric
+  split_ifs <;> simp_all
+
+/-- **Metric converse on a window (deterministic core).** Let `D` be open with `z ∈ D`, and let the rooted metric
+identity `rootedMetricIdent` hold for the reference index `k`, with the countable family `X` dense in every ball `ball 0 r`
+(`hXd`), the centred decoder `Dd (canonFieldOf γ T)` a Euclidean length metric and jointly continuous (`hLen`, `hDc`, the
+latter from the continuous canonical decoder `d` of `LQGCanonicalDecodersMeasurableExistStmt`), and the decoded window
+metric positive at the off-diagonal reference pair (`hpos`, from the window clause and positivity of the internal metric).
+Then there are `c > 0` and `ρ > 0` with `closedBall z ρ ⊆ D` and the **real** identity
+`windowDecodedMetric D m (rootedLocalObs γ D z T) (x + z) (y + z) = c * Dd (canonFieldOf γ T) x y` on `closedBall 0 ρ`.
+No sign input is needed: the sign and diagonal are fixed by `eq_const_mul_of_dense_family`. -/
+theorem windowDecoded_eq_const_mul_of_rootedMetricIdent {D : Set ℂ} (hD : IsOpen D) {z : ℂ} (hz : z ∈ D) {γ : ℝ}
+    (m : (MeanZeroTest D → ℝ) → C(↥(D ×ˢ D), ℝ)) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ) (T : (ℂ → ℝ) → ℝ)
+    (hLen : IsEuclideanLengthMetric (Dd (canonFieldOf γ T)))
+    (hDc : Continuous fun p : ℂ × ℂ => Dd (canonFieldOf γ T) p.1 p.2)
+    (X : ℕ → ℂ) (R : ℕ → ℝ) (pq : ℕ → ℂ × ℂ)
+    (hXd : ∀ r : ℝ, 0 < r → ∀ x ∈ ball (0 : ℂ) r, ∀ ε > 0, ∃ i, ‖X i‖ < r ∧ dist (X i) x < ε)
+    (hmet : rootedMetricIdent D m Dd γ z X R pq T)
+    (hpos : ∀ k, (pq k).1 ≠ (pq k).2 → (pq k).1 + z ∈ D → (pq k).2 + z ∈ D →
+      0 < windowDecodedMetric D m (rootedLocalObs γ D z T) ((pq k).1 + z) ((pq k).2 + z)) :
+    ∃ c ρ : ℝ, 0 < c ∧ 0 < ρ ∧ closedBall z ρ ⊆ D ∧
+      ∀ x ∈ closedBall (0 : ℂ) ρ, ∀ y ∈ closedBall (0 : ℂ) ρ,
+        windowDecodedMetric D m (rootedLocalObs γ D z T) (x + z) (y + z) = c * Dd (canonFieldOf γ T) x y := by
+  obtain ⟨k, hk1, hk2, hk3, hk4, hk5, hk6⟩ := hmet
+  have hne : (pq k).1 ≠ (pq k).2 := fun h => by
+    have h0 := hk5
+    rw [h, hLen.self_eq_zero] at h0
+    exact lt_irrefl _ h0
+  set D0 := Dd (canonFieldOf γ T) (pq k).1 (pq k).2 with hD0def
+  have hD0 : 0 < D0 := hk5
+  set m0 := windowDecodedMetric D m (rootedLocalObs γ D z T) ((pq k).1 + z) ((pq k).2 + z) with hm0def
+  have hm0 : 0 < m0 := hpos k hne hk3 hk4
+  have hRk : 0 < R k := lt_of_le_of_lt (norm_nonneg _) hk1
+  obtain ⟨δ, hδ, hball⟩ := Metric.isOpen_iff.1 hD z hz
+  set O : Set ℂ := ((fun x : ℂ => x + z) ⁻¹' D) ∩ ball (0 : ℂ) (R k) with hOdef
+  have hO : IsOpen O := (hD.preimage (continuous_id.add continuous_const)).inter isOpen_ball
+  -- density of the family in the window O
+  have hdense : ∀ x ∈ O, ∀ ε > 0, ∃ i, X i ∈ O ∧ dist (X i) x < ε := by
+    intro x hx ε hε
+    obtain ⟨hxD, hxB⟩ := hx
+    obtain ⟨δ', hδ', hball'⟩ := Metric.isOpen_iff.1 hD (x + z) hxD
+    obtain ⟨i, hiB, hid⟩ := hXd (R k) hRk x hxB (min ε δ') (lt_min hε hδ')
+    refine ⟨i, ⟨?_, ?_⟩, lt_of_lt_of_le hid (min_le_left _ _)⟩
+    · apply hball'
+      rw [Metric.mem_ball, dist_add_right]
+      exact lt_of_lt_of_le hid (min_le_right _ _)
+    · exact mem_ball_zero_iff.2 hiB
+  -- the ENNReal identity on the family
+  have hfam : ∀ i j, X i ∈ O → X j ∈ O →
+      ENNReal.ofReal (windowDecodedMetric D m (rootedLocalObs γ D z T) (X i + z) (X j + z)) =
+        ENNReal.ofReal (m0 / D0) * ENNReal.ofReal (Dd (canonFieldOf γ T) (X i) (X j)) := by
+    intro i j hi hj
+    have hiB : ‖X i‖ < R k := mem_ball_zero_iff.1 hi.2
+    have hjB : ‖X j‖ < R k := mem_ball_zero_iff.1 hj.2
+    have key := hk6 i j hiB hjB hi.1 hj.1
+    rw [rootedMetricAt_eq_ofReal_windowDecoded, rootedMetricAt_eq_ofReal_windowDecoded] at key
+    have hd0 : ENNReal.ofReal D0 ≠ 0 := (ENNReal.ofReal_pos.2 hD0).ne'
+    have hdt : ENNReal.ofReal D0 ≠ ⊤ := ENNReal.ofReal_ne_top
+    calc ENNReal.ofReal (windowDecodedMetric D m (rootedLocalObs γ D z T) (X i + z) (X j + z))
+        = ENNReal.ofReal (windowDecodedMetric D m (rootedLocalObs γ D z T) (X i + z) (X j + z)) *
+            ENNReal.ofReal D0 * (ENNReal.ofReal D0)⁻¹ := by
+          rw [mul_assoc, ENNReal.mul_inv_cancel hd0 hdt, mul_one]
+      _ = ENNReal.ofReal (Dd (canonFieldOf γ T) (X i) (X j)) * ENNReal.ofReal m0 * (ENNReal.ofReal D0)⁻¹ := by
+          rw [key]
+      _ = ENNReal.ofReal (m0 / D0) * ENNReal.ofReal (Dd (canonFieldOf γ T) (X i) (X j)) := by
+          rw [ENNReal.ofReal_div_of_pos hD0, div_eq_mul_inv]
+          ring
+  -- continuity of the window metric on O × O
+  have hMc : ContinuousOn (fun p : ℂ × ℂ => windowDecodedMetric D m (rootedLocalObs γ D z T) (p.1 + z) (p.2 + z))
+      (O ×ˢ O) := by
+    rw [continuousOn_iff_continuous_domRestrict]
+    have hmem : ∀ p : ↥(O ×ˢ O), ((p : ℂ × ℂ).1 + z, (p : ℂ × ℂ).2 + z) ∈ D ×ˢ D := fun p =>
+      ⟨p.2.1.1, p.2.2.1⟩
+    have hg : Continuous fun p : ↥(O ×ˢ O) =>
+        (⟨((p : ℂ × ℂ).1 + z, (p : ℂ × ℂ).2 + z), hmem p⟩ : ↥(D ×ˢ D)) :=
+      Continuous.subtype_mk (by fun_prop) _
+    have hcomp : Continuous fun p : ↥(O ×ˢ O) => m (rootedLocalObs γ D z T) (
+        ⟨((p : ℂ × ℂ).1 + z, (p : ℂ × ℂ).2 + z), hmem p⟩) := (m (rootedLocalObs γ D z T)).continuous.comp hg
+    refine hcomp.congr ?_
+    intro p
+    simp [Set.domRestrict_apply, windowDecodedMetric, hmem p]
+  -- real identity on O × O
+  have hreal := eq_const_mul_of_dense_family hLen hO (div_pos hm0 hD0) hdense
+    (m := fun x y => windowDecodedMetric D m (rootedLocalObs γ D z T) (x + z) (y + z))
+    hMc hDc.continuousOn hfam
+  -- the closed ball of radius ρ
+  have hρ1 : 0 < min (R k / 2) (δ / 2) := lt_min (half_pos hRk) (half_pos hδ)
+  have hρR : min (R k / 2) (δ / 2) ≤ R k / 2 := min_le_left _ _
+  have hρδ : min (R k / 2) (δ / 2) ≤ δ / 2 := min_le_right _ _
+  refine ⟨m0 / D0, min (R k / 2) (δ / 2), div_pos hm0 hD0, hρ1, ?_, ?_⟩
+  · intro x hx
+    apply hball
+    rw [Metric.mem_closedBall, dist_eq_norm] at hx
+    rw [Metric.mem_ball, dist_eq_norm]
+    linarith
+  · have hO' : ∀ x ∈ closedBall (0 : ℂ) (min (R k / 2) (δ / 2)), x ∈ O := by
+      intro x hx
+      have hxn : ‖x‖ ≤ min (R k / 2) (δ / 2) := mem_closedBall_zero_iff.1 hx
+      refine ⟨?_, mem_ball_zero_iff.2 ?_⟩
+      · show x + z ∈ D
+        apply hball
+        rw [Metric.mem_ball, dist_eq_norm, add_sub_cancel_right]
+        linarith
+      · linarith
+    intro x hx y hy
+    exact hreal x (hO' x hx) y (hO' y hy)
 
 end HarmonicBalls
