@@ -9,7 +9,9 @@ Two EXTERNAL facts. (1) `WholePlaneGFFExistsFrozen`: existence of a whole-plane 
 `hmodel_at_gamma` (FirstPass/S11r.lean, the model hypothesis of Lemma 11.13 in FirstPass/S11i/CertificateCanonical.lean).
 (2) `LocalLQGMetricNormalizedMeasurableFrozen`: the measurable local metric decoder of answer section 4.1 (equation (21)),
 the external input of the local metric replacement (`LocalMetricReplacementStmt`, S11r/LocalMetricReplacement.lean).
-Both are general mathematics, not specific to this paper. `def ... : Prop`s, never axioms.
+(3) `RootedPhysicalMetricContinuousAtInsertionFrozen`: continuity of the physical metric of the rooted field `f_z` at its
+insertion `z` (DFGPS Prop 3.17), the external input `he_cont` of `eq_const_mul_of_rat_disk_agreement` (RootedGluing.lean).
+All three are general mathematics, not specific to this paper. `def ... : Prop`s, never axioms.
 -/
 
 namespace HarmonicBalls
@@ -92,5 +94,37 @@ def LocalLQGMetricNormalizedMeasurableFixedMetricFrozen : Prop :=
           ENNReal.ofReal (M (localMeanZeroObs 0 (ball c r) (hC ω)) p) =
             ENNReal.ofReal (Real.exp (-ξ * fieldPairing 0 (hC ω) ρ)) *
               internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2
+
+/-- FIRST-PASS FROZEN, EXTERNAL. PENDING TRUTH CHECK. Continuity of the physical metric of the rooted field at its
+insertion (DFGPS Prop 3.17). For `0 < γ < 2`, `α < Q_γ = lqgQ γ`, a point `z ≠ 0`, a whole-plane GFF `hC` and an LQG
+metric `𝔇` of exponent `ξ`, for each fixed `z` and almost surely in `ω`, the Weyl-scaled metric of `𝔇 (hC ω)` by the rooted
+weight `-α log|·| - γ log|· - z| + γ log max(1, |·|)` (the metric of `f_z` in `LocalMetricReplacementStmt`, equation (20))
+tends to `0` at `z` in the Euclidean topology. This is the `he_cont` input of `eq_const_mul_of_rat_disk_agreement`
+(RootedGluing.lean), through `tendsto_toReal_nhdsWithin_zero_of_tendsto`. Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun,
+arXiv:1905.00380v2, Proposition 3.17, printed p. 43, eq. (3.56) (the metric induces the Euclidean topology for insertions
+`α ∈ (-∞, Q)`; summary in notes/fp-gaps/CHATGPT-11-15-17-faithful-referee.md). The insertion-at-`z` form with the rooted
+weight is the operator's freeze (task fp-S11r, operator note 03:42 UTC), not a verbatim printed statement: the truth check
+must confirm it against the printed insertion convention. -/
+def RootedPhysicalMetricContinuousAtInsertionFrozen : Prop :=
+  ∀ (γ ξ α : ℝ) (z : ℂ), 0 < γ → γ < 2 → α < lqgQ γ → z ≠ 0 →
+    ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc →
+      ∀ (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), IsLQGMetric γ ξ 𝔇 →
+      ∀ᵐ ω ∂P, Filter.Tendsto
+        (fun x => weylScaling (𝔇 (hC ω)) ξ
+          (fun w => -α * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) x z)
+        (nhds z) (nhds 0)
+
+/-- Deterministic step (no input): a limit to `0` in `ENNReal` at `z` gives the limit of the real values
+`(f x).toReal` to `0` within any set `D`. This converts the Weyl-scaled metric of
+`RootedPhysicalMetricContinuousAtInsertionFrozen` into the real-valued `he_cont` of `eq_const_mul_of_rat_disk_agreement`. -/
+theorem tendsto_toReal_nhdsWithin_zero_of_tendsto {f : ℂ → ENNReal} {z : ℂ} (D : Set ℂ)
+    (h : Filter.Tendsto f (nhds z) (nhds 0)) :
+    Filter.Tendsto (fun x => (f x).toReal) (nhdsWithin z D) (nhds 0) := by
+  have h1 : Filter.Tendsto (fun x => (f x).toReal) (nhds z) (nhds (0 : ENNReal).toReal) :=
+    (ENNReal.tendsto_toReal ENNReal.zero_ne_top).comp h
+  have h2 := h1.mono_left (nhdsWithin_le_nhds (s := D))
+  rwa [ENNReal.toReal_zero] at h2
 
 end HarmonicBalls
