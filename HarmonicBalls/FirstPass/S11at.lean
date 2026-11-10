@@ -344,4 +344,22 @@ theorem rootedCertificateEventualCovarianceStmt_of_local {Ω : Type*} [Measurabl
   rw [add_neg_cancel, hn₀ n hn, hcs, hM, hEfun]
   exact key.symm
 
+/-- **Centred pair identities (translation to the root).** For a pair `(μR, dR)` with root `z` in absolute coordinates, the
+centred pair `μ0 z ω = (μR z ω).map (· - z)` and `D0 z ω x y = dR z ω (x + z) (y + z)` satisfies the identities `hμR` and
+`hdR` of `rootedCertificateEventualCovarianceStmt_of_local`. This instantiates that wrapper at the decoded pair
+`(μR, dR) = (κ obsR, m obsR)`, where `hFit` is definitional. -/
+theorem centred_pair_identities {Ω : Type*} (μR : ℂ → Ω → Measure ℂ) (dR : ℂ → Ω → ℂ → ℂ → ℝ) :
+    (∀ z ω, μR z ω = ((μR z ω).map (fun w : ℂ => w - z)).map (fun w : ℂ => w - -z)) ∧
+    (∀ z ω, dR z ω = fun x y => (fun x' y' : ℂ => dR z ω (x' + z) (y' + z)) (x + -z) (y + -z)) := by
+  refine ⟨fun z ω => ?_, fun z ω => ?_⟩
+  · have hg : Measurable (fun w : ℂ => w - z) := by fun_prop
+    have hf : Measurable (fun w : ℂ => w - -z) := by fun_prop
+    rw [Measure.map_map hf hg]
+    have hfun : ((fun w : ℂ => w - -z) ∘ fun w : ℂ => w - z) = id := by
+      funext w
+      simp
+    rw [hfun, Measure.map_id]
+  · funext x y
+    simp
+
 end FirstPassS11at
