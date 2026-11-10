@@ -18,7 +18,8 @@ Route:
 * Cut-offs `c_n` with monotone convergence extend the identity to all compactly supported continuous
   functions, using that both measures have no atom at `0`.
 * `Measure.ext_of_integral_eq_on_compactlySupported` gives equality of measures.
-Measurability of the approximating densities in `z` is the frozen input `CircleAverageVersionMeasurableStmt`.
+Measurability of the approximating densities in `z` is derived from the almost-sure joint continuity of the
+circle averages (`ae_measurable_dyadic_circleAverage`); the former frozen input is retired.
 -/
 
 namespace HarmonicBalls.SingularWeyl
@@ -84,6 +85,19 @@ lemma measurable_fieldCircleAverage {α : ℝ} {hc : ℝ → ℂ → ℝ} {r : �
     rw [hJ z]
   rw [heq]
   exact hm.sub (measurable_const.mul hL)
+
+/-- **Dyadic circle averages are almost surely measurable in the centre (derived).** Under `IsWholePlaneGFF`,
+almost surely the circle averages are jointly continuous on `(0, ∞) × ℂ` (`IsWholePlaneGFF.ae_continuousOn_circle`,
+Duplantier-Sheffield 2011, Prop. 3.1). For each dyadic radius `2^{-k} > 0` the map `z ↦ hcirc ω (2^{-k}) z` is then
+continuous, hence measurable. This replaces the retired frozen input `CircleAverageVersionMeasurableStmt`. -/
+lemma ae_measurable_dyadic_circleAverage {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc) :
+    ∀ᵐ ω ∂P, ∀ k : ℕ, Measurable (fun z : ℂ => hcirc ω (dyadicScale k) z) := by
+  filter_upwards [hGFF.ae_continuousOn_circle] with ω hω k
+  have hcont : ContinuousOn (fun z : ℂ => hcirc ω (dyadicScale k) z) Set.univ :=
+    hω.comp (continuous_const.prodMk continuous_id).continuousOn
+      (fun z _ => ⟨dyadicScale_pos k, Set.mem_univ z⟩)
+  exact (continuousOn_univ.1 hcont).measurable
 
 /-- The Lebesgue density integral of the approximation `ε^{γ²/2} e^{γ h_ε(z)} dz`. -/
 lemma integral_lqgApprox {γ : ℝ} {hε : ℝ → ℂ → ℝ} {ε : ℝ} (hε0 : 0 ≤ ε) (hm : Measurable (hε ε))
@@ -394,13 +408,12 @@ theorem measure_eq_weyl {γ α : ℝ} {hg hh : ℝ → ℂ → ℝ} {m0 mα : Me
 
 /-- **Singular Weyl change of measure, almost surely (write-up Step 12, identity (1)).** For `0 < γ < 2`,
 `α < Q_γ`, almost surely `μ_α = |z|^{-γα} μ_0` on `ℂ` (the same conull event for all of `ℂ`).
-Inputs: the two nonatomicity statements (HB Fact 2.1 I, p. 9; `LQGMeasureNonatomic`, pending source-check) and
-the frozen measurability `CircleAverageVersionMeasurableStmt`. -/
+Inputs: the two nonatomicity statements (HB Fact 2.1 I, p. 9; `LQGMeasureNonatomic`, pending source-check); the
+measurability in `z` of the circle averages is derived from `hGFF` (`ae_measurable_dyadic_circleAverage`). -/
 theorem singular_weyl_measure_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) {γ α : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
     (hN0 : LQGMeasureNonatomic P γ 0 hC hcirc) (hNα : LQGMeasureNonatomic P γ α hC hcirc)
-    (hMeas : CircleAverageVersionMeasurableStmt P hcirc)
     {μ0 μα : Ω → Measure ℂ} (h0 : IsLQGMeasureOfField P γ 0 hcirc μ0)
     (hαμ : IsLQGMeasureOfField P γ α hcirc μα) :
     ∀ᵐ ω ∂P, μα ω = (μ0 ω).withDensity (fun z => ENNReal.ofReal (weylFactor γ α z)) := by
@@ -411,7 +424,7 @@ theorem singular_weyl_measure_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure 
   have hnα := hNα hGFF hγ hγ2 hα μα hαμ
   have h0' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage 0 (hcirc ω)) (μ0 ω) := h0
   have hαμ' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (hcirc ω)) (μα ω) := hαμ
-  filter_upwards [h0', hαμ', hn0, hnα, hMeas] with ω hω0 hωα hn0ω hnαω hmω
+  filter_upwards [h0', hαμ', hn0, hnα, ae_measurable_dyadic_circleAverage hGFF] with ω hω0 hωα hn0ω hnαω hmω
   have hgm : ∀ k : ℕ, Measurable (fieldCircleAverage 0 (hcirc ω) (dyadicScale k)) := fun k =>
     measurable_fieldCircleAverage (dyadicScale_pos k) (hmω k)
   have hhm : ∀ k : ℕ, Measurable (fieldCircleAverage α (hcirc ω) (dyadicScale k)) := fun k =>
@@ -427,11 +440,10 @@ theorem singular_weyl_absCont_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure 
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
     (hN0 : LQGMeasureNonatomic P γ 0 hC hcirc) (hNα : LQGMeasureNonatomic P γ α hC hcirc)
-    (hMeas : CircleAverageVersionMeasurableStmt P hcirc)
     {μ0 μα : Ω → Measure ℂ} (h0 : IsLQGMeasureOfField P γ 0 hcirc μ0)
     (hαμ : IsLQGMeasureOfField P γ α hcirc μα) :
     ∀ᵐ ω ∂P, μα ω ≪ μ0 ω ∧ μ0 ω ≪ μα ω := by
-  filter_upwards [singular_weyl_measure_ae P hGFF hγ hγ2 hα hN0 hNα hMeas h0 hαμ] with ω hω
+  filter_upwards [singular_weyl_measure_ae P hGFF hγ hγ2 hα hN0 hNα h0 hαμ] with ω hω
   rw [hω]
   refine ⟨withDensity_absolutelyContinuous _ _, withDensity_absolutelyContinuous' ?_ ?_⟩
   · exact (ENNReal.measurable_ofReal.comp (weylFactor_measurable γ α)).aemeasurable

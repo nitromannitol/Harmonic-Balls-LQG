@@ -11,11 +11,9 @@ namespace HarmonicBalls
 
 open MeasureTheory
 
-/-- FIRST-PASS FROZEN. Measurability of the dyadic circle averages of the whole-plane GFF in the centre
-variable. Almost surely, for every dyadic radius `2^{-k}`, the map `z ↦ hcirc ω (2^{-k}) z` is measurable.
-Source: standard; locator pending (the whole-plane GFF circle averages `h_r(z)`, `r > 0`, admit a version
-continuous in `z`; this is the version convention under which the LQG approximations are measurable densities).
-Used by: `HarmonicBalls.SingularWeyl.singular_weyl_measure_ae` (S11i/SingularWeyl.lean). -/
+/-- RETIRED (derived), not an input. Formerly a first-pass frozen input: measurability of the dyadic circle
+averages in the centre variable. It is now derived from `IsWholePlaneGFF.ae_continuousOn_circle`
+(`HarmonicBalls.SingularWeyl.ae_measurable_dyadic_circleAverage`, S11i/SingularWeyl.lean); no proof uses this `def`. -/
 def CircleAverageVersionMeasurableStmt {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   ∀ᵐ ω ∂P, ∀ k : ℕ, Measurable (fun z : ℂ => hcirc ω (dyadicScale k) z)
