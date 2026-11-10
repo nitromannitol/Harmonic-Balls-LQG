@@ -46,7 +46,10 @@ def PinchEventWitnessStmt (U T Q' Q : Set ℂ) (γ ξ M : ℝ)
     ∀ᵐ ω ∂P, localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E →
       pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0
 
-/-- **Step 12 of Lemma 11.13 (NEW named input).** For the buffered geometry `U V W T Q' Q` with buffer `δ`, the insertion
+/-- **SUPERSEDED (2026-11-10, Q1 answer §3.2).** Its target `P(E^{α₀}(M))` is the α₀-insertion probability, but the answer
+says the frequency limit is `p_γ(M)`, the γ-insertion probability. Do not use this hypothesis; use `GammaZoomIdentityStmt`.
+
+**Step 12 of Lemma 11.13 (NEW named input).** For the buffered geometry `U V W T Q' Q` with buffer `δ`, the insertion
 `α₀`, `γ`, `ξ` and `M`: there are a Lemma 11.12 event `E` (`PinchEventWitnessStmt`) and an open set `Ostar` with `0 ∈ Ostar`
 and `sphere 0 5 ⊆ Ostar` such that, for every whole-plane model, there is a zoom family `μk, Dk` at dyadic scales `2^k` (the
 scaling shape of `ae_hscale_dyadic`) whose window certificate frequency converges, for every `k`, almost surely and for
@@ -66,7 +69,9 @@ def ZoomIdentityStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ) :
             FirstPassS11i.windowCert Ostar U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ)) atTop
             (𝓝 (P {ω | localModConstField α₀ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal)
 
-/-- **Lemma 11.13 (corrected), conditional on the Step 12 identity.** The density is `δ = min (q/4) (1/2)` with
+/-- SUPERSEDED by `correctedLemma11_13_of_gamma_identity` below (its hypothesis `ZoomIdentityStmt` has the wrong target).
+
+**Lemma 11.13 (corrected), conditional on the Step 12 identity.** The density is `δ = min (q/4) (1/2)` with
 `q = P(E^{α₀}(M)) > 0`. The number `q` does not depend on the model: two whole-plane models give the same probability of
 the canonical event (`prob_ballRestrict_alphaCanon_indep`). If no whole-plane model exists at `(γ, ξ, α₀)`, the conclusion is
 vacuous and `δ = 1/2` is taken. -/
@@ -108,6 +113,89 @@ theorem correctedLemma11_13_of_identity
     intro Ω inst P hC hcirc μ D hG hμ hD
     exact (hmod ⟨Ω, inst, P, hC, hcirc, μ, D, hG, hμ, hD⟩).elim
 
+/-- **Lemma 11.12 event at the insertion `γ` (slice of `PinchEventWitnessStmt`).** `E` is measurable, has positive probability
+at the insertion `γ` in every whole-plane model, and implies the pinch-point event almost surely. Only the insertion `γ` is
+used (the positivity of `certificate_canonical_pos`, `CertificateCanonical.lean:70`). -/
+def PinchEventGammaStmt (U T Q' Q : Set ℂ) (γ ξ M : ℝ)
+    (E : Set (ModConstTestPairings (ball (0 : ℂ) 7))) : Prop :=
+  MeasurableSet E ∧
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ → IsLQGMetricOfField P γ ξ γ hC D →
+    MeasurableSet[Section6.fieldSigmaAlgebraModConst γ hC (ball (0 : ℂ) 7)]
+      {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E} ∧
+    0 < P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E} ∧
+    ∀ᵐ ω ∂P, localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E →
+      pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0
+
+/-- **Step 12 of Lemma 11.13 at the insertion `γ` (NEW named input; Q1 answer 2026-11-10 02:53 UTC, §3.2 and §5).** There are a
+Lemma 11.12 event `E` at `γ` (`PinchEventGammaStmt`) and a number `q` that is its canonical probability `P(A_E) = p_γ(M)` in
+every whole-plane model at the insertion `γ`, and an open set `Ostar` with `0 ∈ Ostar` and `sphere 0 5 ⊆ Ostar`, such that for
+every whole-plane model at the insertion `α₀` there is a zoom family `μk, Dk` at dyadic scales `2^k` whose window certificate
+frequency converges, for every `k`, almost surely and for `μk`-almost every `w` in `B₁(0)`, to `q`. -/
+def GammaZoomIdentityStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ) : Prop :=
+  ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaStmt.{u} U T Q' Q γ ξ M E ∧
+  ∃ q : ℝ,
+    (∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+      (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ → IsLQGMetricOfField P γ ξ γ hC D →
+      (P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal = q) ∧
+    ∃ Ostar : Set ℂ, IsOpen Ostar ∧ (0 : ℂ) ∈ Ostar ∧ sphere (0 : ℂ) 5 ⊆ Ostar ∧
+      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+        (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
+        ∃ (μk : ℕ → Ω → Measure ℂ) (Dk : ℕ → Ω → ℂ → ℂ → ℝ),
+          (∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
+            μk k ω = ENNReal.ofReal a • (μ ω).map (fun x : ℂ => x / ((((2 : ℝ) ^ k : ℝ)) : ℂ)) ∧
+            ∀ x y : ℂ, Dk k ω x y = b * D ω ((((2 : ℝ) ^ k : ℝ) : ℂ) * x) ((((2 : ℝ) ^ k : ℝ) : ℂ) * y)) ∧
+          ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(μk k ω), w ∈ ball (0 : ℂ) 1 →
+            Tendsto (fun N : ℕ => ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+              FirstPassS11i.windowCert Ostar U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ)) atTop
+              (𝓝 q)
+
+/-- **Lemma 11.13 (corrected), conditional on the Step 12 identity at the insertion `γ`.** The density is `δ = min (q/4) (1/2)`
+with `q = p_γ(M) > 0`; the positivity is the canonical positivity at `γ` in a γ-model. The hypothesis `hγM` is an explicit
+NEW input, not yet source-checked: a whole-plane model at the insertion `γ` for the same `ξ` exists whenever one exists at some
+insertion `α₀ < Q` (the existence that `certificate_canonical_pos` takes as `hmodel`). If no model exists at `(γ, ξ, α₀)`, the
+conclusion is vacuous and `δ = 1/2` is taken. -/
+theorem correctedLemma11_13_of_gamma_identity
+    (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
+    (hγM : ∀ (γ ξ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+      (∃ (Ω : Type u) (_ : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ α₀ hcirc μ ∧ IsLQGMetricOfField P γ ξ α₀ hC D) →
+      ∃ (Ω : Type u) (_ : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ γ hcirc μ ∧ IsLQGMetricOfField P γ ξ γ hC D)
+    (hZ : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+      ∀ γ ξ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
+        GammaZoomIdentityStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M) :
+    CorrectedLemma11_13Stmt.{u} := by
+  intro U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM
+  obtain ⟨E, ⟨-, hW⟩, q, hqeq, Ostar, -, -, -, hfreq⟩ :=
+    hZ U V W T Q' Q δ₀ hgeom γ ξ α₀ M hγ0 hγ2 hα hM
+  by_cases hmod : ∃ (Ω : Type u) (inst : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ α₀ hcirc μ ∧ IsLQGMetricOfField P γ ξ α₀ hC D
+  · obtain ⟨Ωg, instg, Pg, hCg, hcircg, μg, Dg, hGg, hμg, hDg⟩ := hγM γ ξ α₀ hγ0 hγ2 hα hmod
+    have : IsProbabilityMeasure Pg := FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hGg
+    obtain ⟨-, hpos, -⟩ := hW Ωg Pg hCg hcircg μg Dg hGg hμg hDg
+    have hq : 0 < q := by
+      rw [← hqeq Ωg Pg hCg hcircg μg Dg hGg hμg hDg]
+      exact ENNReal.toReal_pos hpos.ne' (measure_ne_top Pg _)
+    refine ⟨min (q / 4) (1 / 2), ⟨lt_min (div_pos hq (by norm_num)) (by norm_num),
+      lt_of_le_of_lt (min_le_right _ _) (by norm_num)⟩, ?_⟩
+    intro Ω inst P hC hcirc μ D hG hμ hD
+    obtain ⟨μk, Dk, hsc, hstep⟩ := hfreq Ω P hC hcirc μ D hG hμ hD
+    exact (FirstPassS11i.CertAssemble.pinch_window_ae_buffered (hAx γ ξ α₀ Ω P hC hcirc) hG hγ0 hγ2 hα hD hgeom hq
+      μk Dk hsc hstep).mono fun ω hω => hω.mono fun z hz => hz.mono fun N hN =>
+        le_trans (mul_le_mul_of_nonneg_right (min_le_left _ _) (Nat.cast_nonneg N)) hN
+  · refine ⟨1 / 2, ⟨by norm_num, by norm_num⟩, ?_⟩
+    intro Ω inst P hC hcirc μ D hG hμ hD
+    exact (hmod ⟨Ω, inst, P, hC, hcirc, μ, D, hG, hμ, hD⟩).elim
+
 end HarmonicBalls
 
+#print axioms HarmonicBalls.correctedLemma11_13_of_gamma_identity
 #print axioms HarmonicBalls.correctedLemma11_13_of_identity
