@@ -4,6 +4,11 @@ import HarmonicBalls.FirstPass.S2S3S4S9SA.GreenPole
 import HarmonicBalls.FirstPass.Closure.Sec8Weyl
 import HarmonicBalls.FirstPass.Closure.NoWeylMain
 import HarmonicBalls.FirstPass.Closure.Sec11NoWeyl
+import HarmonicBalls.FirstPass.Canonical.Stmts
+import HarmonicBalls.FirstPass.Canonical.Novelty
+import HarmonicBalls.FirstPass.Canonical.NotMetricBall
+import HarmonicBalls.FirstPass.Closure.Sec11Canonical
+import HarmonicBalls.FirstPass.Closure.Main12Canonical
 
 /-!
 # Top-level closure module (fp-closure-all-top-module)
