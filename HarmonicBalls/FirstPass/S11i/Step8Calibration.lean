@@ -14,8 +14,9 @@ pinch rule `decodedPinchRuleBall I (decodedFamily Ψc) (decGreen Φμ) (decMassU
 * `certificateEvent_iff_pinchLocalRule`: at Euclidean radius one and centre `0`, with `Ostar = pinchOmegaGeom W Q δ` and `η = δ`,
   the certificate event `FirstPassS11i.CertificateEvent` (`S11i/Certificate.lean:42`) is exactly the conjunction of the three local
   pinch events. This is a set identity, checked clause by clause against `S11h/LocalEvents.lean:39-51`.
-* `pinchLocalCertificate_seed_of_inputs`: the witness of `pinchLocalCertificate_of_inputs`, with the inclusion strengthened from the
-  three non-local pinch events to the scale-one certificate event. Its hypotheses are exactly those of `pinchLocalCertificate_of_inputs`.
+* `pinchLocalCertificate_seed_of_inputs`: the witness of `pinchLocalCertificate_of_inputs`, with the almost-sure EQUIVALENCE to the
+  scale-one certificate event (both directions, Codex step 2 of fp-S11i-event-equivalence). Its hypotheses are exactly those of
+  `pinchLocalCertificate_of_inputs`.
 
 The hypotheses are unchanged. The proof of the seed is the proof of `pinchLocalCertificate_of_inputs` with the final inclusion
 replaced by `certificateEvent_iff_pinchLocalRule`.
@@ -39,8 +40,9 @@ theorem certificateEvent_iff_pinchLocalRule (μ : Measure ℂ) (D : ℂ → ℂ 
     pinchThirdEventLocal, pinchLocalA, pinchLocalL, rescaledSet, one_mul, mul_one, Complex.ofReal_one, add_zero,
     Set.image_id', and_assoc]
 
-/-- The seed form of Lemma 11.12 (`PinchLocalCertificateStmt`, `S11m/Corrected11_12.lean:40`): the same Borel set `E` of pairings,
-with the a.s. inclusion into the scale-one certificate event `CertificateEvent` of the true pair `(μ, D)`. -/
+/-- The seed form of Lemma 11.12 (`PinchLocalCertificateStmt`, `S11m/Corrected11_12.lean:40`), strengthened to an equivalence: the
+same Borel set `E` of pairings, with the a.s. EQUIVALENCE `E-event ↔ CertificateEvent` for the true pair `(μ, D)` at every
+insertion `α < Q(γ)`. -/
 def PinchLocalCertificateSeedStmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
   insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ →
@@ -51,13 +53,14 @@ def PinchLocalCertificateSeedStmt : Prop :=
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ → IsLQGMetricOfField P γ ξ α hC D →
     0 < P {ω | localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E} ∧
-    ∀ᵐ ω ∂P, localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E →
-      CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0
+    ∀ᵐ ω ∂P, (localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E ↔
+      CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)
 
-/-- **Lemma 11.12 seed: the witness of `pinchLocalCertificate_of_inputs` is contained in the scale-one certificate event.** Same
-inputs and same witness `E = decodedPinchRuleBall …` as `pinchLocalCertificate_of_inputs`. The positive probability is that of the
-local pinch events (`pinchLocal_events_pos_discharged`), and the inclusion is `hall` followed by
-`certificateEvent_iff_pinchLocalRule`. The conclusion is `PinchLocalCertificateSeedStmt`. -/
+/-- **Lemma 11.12 seed with the a.s. equivalence: the witness of `pinchLocalCertificate_of_inputs` agrees almost surely with the
+scale-one certificate event.** Same inputs and same witness `E = decodedPinchRuleBall …` as `pinchLocalCertificate_of_inputs`. The
+positive probability is that of the local pinch events (`pinchLocal_events_pos_discharged`). The almost-sure equivalence is `hall`
+(`E ↔ pinchLocalRule`) composed with `certificateEvent_iff_pinchLocalRule` in both directions. The conclusion is
+`PinchLocalCertificateSeedStmt`. -/
 theorem pinchLocalCertificate_seed_of_inputs
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})
@@ -184,8 +187,8 @@ theorem pinchLocalCertificate_seed_of_inputs
       hMf hDiam hMk hS U V W T Q' Q δ hgeo hΩS γ α ξ hγ hγ2 hξ hα Ω P hC hcirc μ D hgff hμ hDm
       (hμW Ω P γ α hC hcirc) M hM
     refine ⟨lt_of_lt_of_le hpos (measure_mono_ae hsub), ?_⟩
-    filter_upwards [hall] with ω hω hmem
-    exact (certificateEvent_iff_pinchLocalRule (μ ω) (D ω) U V W T Q' Q δ M).mpr (hω.mp hmem)
+    filter_upwards [hall] with ω hω
+    exact hω.trans (certificateEvent_iff_pinchLocalRule (μ ω) (D ω) U V W T Q' Q δ M).symm
   · refine ⟨∅, MeasurableSet.empty, ?_⟩
     intro α _ Ω _ P hC hcirc μ D _ _ hD
     obtain ⟨𝔇, h𝔇, -⟩ := hD
