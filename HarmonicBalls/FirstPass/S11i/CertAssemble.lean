@@ -19,6 +19,8 @@ ball) is NOT proved here. It is an explicit hypothesis, stated for the given zoo
 families with the shape of `hscale`: the certificate event depends on the metric scale `b` in `Dk = b D(2^k ·, 2^k ·)`.
 -/
 
+universe u
+
 namespace FirstPassS11i.CertAssemble
 
 open MeasureTheory Filter Topology Set Metric
@@ -27,7 +29,7 @@ open HarmonicBalls FirstPassS11i
 
 /-- Almost surely the LQG metric is a Euclidean length metric (Fact 2.2 I, through the Proposed input
 `LQGMetricFieldAxioms`). Used as `hDlen` of `hcert_of_buffered`. -/
-theorem ae_isEuclideanLengthMetric_of_lqgMetric {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+theorem ae_isEuclideanLengthMetric_of_lqgMetric {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hAx : LQGMetricFieldAxioms P γ ξ α hC hcirc)
     (hG : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
     (hD : IsLQGMetricOfField P γ ξ α hC D) : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω) := by
@@ -45,7 +47,7 @@ theorem ae_isEuclideanLengthMetric_of_lqgMetric {Ω : Type} [MeasurableSpace Ω]
 `(μ, D)` of the whole-plane model, with the zoom family `μk`, `Dk` (hypothesis `hsc`, shape of `ae_hscale_dyadic`) and the
 certificate window frequency `hstep12` (Step 12), almost surely for `μ`-almost every `z` the pinch-window count is eventually
 at least `q N / 4`. -/
-theorem pinch_window_ae_buffered {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+theorem pinch_window_ae_buffered {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hAx : LQGMetricFieldAxioms P γ ξ α hC hcirc)
     (hG : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ)
     (hγ2 : γ < 2) (hα : α < lqgQ γ) {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
