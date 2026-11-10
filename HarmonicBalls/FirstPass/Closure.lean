@@ -1,144 +1,116 @@
 import HarmonicBalls.FirstPass.Main
-import HarmonicBalls.FirstPass.S2S3S4S9SA
 import HarmonicBalls.FirstPass.Closure.Sec6
+import HarmonicBalls.FirstPass.Closure.SecA45
 import HarmonicBalls.FirstPass.Closure.Sec78910
+import HarmonicBalls.FirstPass.Closure.Sec11
 
 /-!
-# Phase-1 closure aggregator for the counted results of "Harmonic balls in Liouville quantum gravity"
+# Closure of the main theorems of Section 1 (fp-closure-11-and-main, owner z11)
 
-Owner: z3 (task fp-closure-main-aggregator). File `HarmonicBalls/FirstPass/Closure.lean`, namespace `HarmonicBalls.Closure`.
+Each `closure_1_k` concludes exactly the conclusion of `firstPassMain_1_k` (`FirstPass/Main.lean`), with its
+paper-owned hypotheses discharged by the closure theorems of `FirstPass/Closure/*.lean`:
 
-Convention (as in `Closure/Sec6.lean`). For a counted numbered result `X.Y`, `closure_X_Y` has the conclusion of the counted
-first-pass theorem `firstPass_X_Y` (`FirstPass/*.lean`). Its hypotheses are only FIRST-PASS FROZEN Props, Proposed or
-External Props, and cited Props. Every paper-owned hypothesis of the printed proof is discharged by the closure of its
-result, recursively. Proof bodies are applications of the `firstPass_` theorems and of closures only.
-
-## Table (closures in this file; the other sections are closed in their own `Closure/*.lean` modules)
-
-| result | closure | remaining hypotheses (class) | status |
+| result | closure | remaining hypotheses (class) | OPEN items |
 |---|---|---|---|
-| 2.3 `GreenFunctionBallStmt` (prop:green-properties) | `closure_2_3` | none (unconditional) | closed |
-| 3.1 `LeastSupersolutionMemStmt` (lemma:basic-properties) | `closure_3_1` | hDG, hAff, hCC, hW, hE, hN (PROPOSED) | closed |
-| 3.2 `ClusterOpenLaplacianStmt` (lemma:non-coincidence-open-harmonic) | `closure_3_2` | hDG, hAff, hCC, hW, hE, hN (PROPOSED) | closed |
-| 3.3 `ClusterMonotoneStmt` | `closure_3_3` | hDG, hAff, hCC, hW, hE, hN (PROPOSED) | closed |
-| 3.4 `ClusterConservationOfMassStmt` | `closure_3_4` | hDG, hAff, hCC, hW, hE, hN (PROPOSED) | closed |
-| 3.5 `ClusterCompatibilityStmt` (lemma:cluster-compatibility) | `closure_3_5` | hDG, hAff, hCC, hW, hE, hN (PROPOSED) | closed |
-| 1.1 `ExistenceUniquenessHarmonicBallsStmt` (theorem:harmonic-balls) | `closure_1_1` | hL1, hWeyl, hE1, hE3, hB (the inputs of `closure_8_2`, `Closure/Sec78910.lean:53`, class as there); hDG, hAff, hCC, hW, hE, hN (PROPOSED) | closed |
-| 1.3 `HarmonicBallLocalSetStmt` (prop:locally-determined) | `closure_1_3` | hI2 `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`, cited input I2; **class to confirm**: a Draft-defined Prop, not in External or Proposed); hmeasure `LQGMeasureLocality` (`Proposed/LQG.lean:85`, PROPOSED); the `closure_8_2` inputs and the six Proposed Props above | closed, I2 class flagged |
-| 1.2 `HarmonicBallNoveltyStmt` (theorem:harmonic-balls-properties) | not written | **OPEN**: `firstPassMain_1_2` (`Main.lean:55`) takes `h13 : ManyPinchScalesStmt` (Lemma 11.13, `Draft/Section11.lean:259`). `closure_11_13` (Sec11) concludes `CorrectedLemma11_13Stmt` (`FirstPass/S11i/Faithful.lean:80`) with an OPEN hypothesis `hStep8` (`Step8IdentificationStmt`, `FirstPass/S11i/Corrected11_13.lean:57`), and `FirstPass/S11i.lean:1-14` states 11.13 as OPEN. No bridge to `ManyPinchScalesStmt` exists. `h7` (`closure_11_7`) and `hTyp` (`closure_8_2`) are available; `hmetricAxioms` is derivable from `LQGMetricFieldAxiomsUnivFrozen` (`FirstPass/Frozen/S11j.lean:143`). | blocked on 11.13 |
-| 2.5 `GreenPotentialLiouvilleHolderStmt` (prop:green-potential-holder) | none | **OPEN**: no `firstPass_2_5`. The Draft statement is FROZEN (`docs/campaign/FROZEN.md:25`). The printed proof cites Ponce 2016 Sec 16.2. The only Lean input in that role is `GreenPotentialHolderStmt` (`Draft/Section2.lean:190`), a Draft def, not an External or Proposed Prop. The ball-case Green clause exists only in the legacy `Proofs/Potential/GreenPotentialHolder.lean`. Not closed here. | OPEN |
-| 4.1-4.3, A.1-A.6, 5.1-5.8 | `Closure/SecA45.lean` (z6) | not in this file; the committed file holds A and 4 only, the 5.x closures are in z6's uncommitted working copy | owner z6 |
-| 6.1-6.13 except 6.5 | `Closure/Sec6.lean` (z3) | hDG, hCC, hE (PROPOSED) | closed |
-| 7.1, 7.2, 8.1, 8.2, 8.3, 9.2-9.4, 10.x | `Closure/Sec78910.lean` (z7, committed 764a353) | per that file | owner z7 |
-| 11.x | `Closure/Sec11.lean` (z11, partial, uncommitted edits) | per that file | owner z11 |
+| Theorem 1.1 (`ExistenceUniquenessHarmonicBallsStmt`) | `closure_1_1` | hDG, hCC, hE, hAff, hW, hN (Proposed); hL1, hWeyl, hE1, hE3, hB (FROZEN or cited inputs of 8.2) | none |
+| Theorem 1.2 (`HarmonicBallNoveltyStmt`) | `closure_1_2` | hDG, hAff, hCC, hW, hE, hN, hI2, hmetricAxioms (Proposed or external); hTor (FROZEN); hL1, hWeyl, hE1, hE3, hB; hCamp, hDecFrozen, hDec, hCM (FROZEN, of 11.7) | h13 = printed Lemma 11.13 (`ManyPinchScalesStmt`); hI2 (see the notes of this task) |
+| Proposition 1.3 (`HarmonicBallLocalSetStmt`) | `closure_1_3` | hI2, hDG, hCC, hE, hmeasure, hAff, hW, hN (external); hL1, hWeyl, hE1, hE3, hB | hI2 (see the notes of this task) |
 
-Cited results (2.1, 2.2, 2.4, 2.6, 6.5, 9.1 in `docs/campaign/INVENTORY.tsv`) have no closure: they are not paper-owned.
-Cycles: none found. The closures used here (`closure_8_2`, `closure_11_7`, `closure_11_13`) do not refer back to Section 1.
-
-Hypotheses of the six literature Props (the shared `variable` block of `FirstPass/S2S3S4S9SA.lean`):
-* `hDG`: `WholePlaneLQGBallMassBounds` (`Proposed/LQG.lean:154`), PROPOSED, pending operator source-check.
-* `hAff`: `WholePlaneGFFAffineInvariance` (`Proposed/LQG.lean:53`), PROPOSED, pending operator source-check.
-* `hCC`: `LQGMeasureCoordChange` at insertion `0` (`Proposed/LQG.lean:116`), PROPOSED, pending operator source-check.
-* `hW`: `LQGMeasureWeylScaling` at insertion `0` (`Proposed/LQG.lean:95`), PROPOSED, pending operator source-check.
-* `hE`: `LQGMeasureExistence` at insertion `0` (`Proposed/LQG.lean:68`), PROPOSED, pending operator source-check.
-* `hN`: `LQGMeasureNonatomic` (`Proposed/LQG.lean:77`), PROPOSED, pending operator source-check.
-
-No numbered result is used as a hypothesis in this file.
+Paper-owned hypotheses discharged: `TypicalPointManyGoodScalesStmt` (Lemma 8.2) by `closure_8_2`
+(`FirstPass/Closure/Sec78910.lean`); `ManyConeBadScalesStmt` (Lemma 11.7) by `closure_11_7` (`FirstPass/Closure/Sec11.lean`).
+Not discharged: `ManyPinchScalesStmt` (Lemma 11.13, printed form; only the corrected form is proved) and
+`LQGVolumeGrowthAllScalesStmt` (input I2), both kept as hypotheses and marked OPEN.
+No cycle: the closures of Section 1 use only the closures of Sections 6 to 11, which do not use Section 1.
 -/
 
 namespace HarmonicBalls.Closure
 
+open MeasureTheory
+
 universe u
 
-/-- Closure of Proposition 2.3 (`prop:green-properties`): the Green function of a ball. Unconditional. -/
-theorem closure_2_3 : GreenFunctionBallStmt := firstPass_2_3
-
-section LiteratureInputs
-
-variable
-  (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
-  (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
-  (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ 0 hC hcirc)
-  (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
-  (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
-  (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
-
-include hDG hAff hCC hW hE hN
-
-/-- Closure of Lemma 3.1 (`lemma:basic-properties`): least supersolution membership. -/
-theorem closure_3_1 : LeastSupersolutionMemStmt.{u} := firstPass_3_1 hDG hAff hCC hW hE hN
-
-/-- Closure of Lemma 3.2 (`lemma:non-coincidence-open-harmonic`): the cluster is an open Laplacian set. -/
-theorem closure_3_2 : ClusterOpenLaplacianStmt.{u} := firstPass_3_2 hDG hAff hCC hW hE hN
-
-/-- Closure of Lemma 3.3: monotonicity of the cluster in the scale. -/
-theorem closure_3_3 : ClusterMonotoneStmt.{u} := firstPass_3_3 hDG hAff hCC hW hE hN
-
-/-- Closure of Lemma 3.4: conservation of mass of the cluster. -/
-theorem closure_3_4 : ClusterConservationOfMassStmt.{u} := firstPass_3_4 hDG hAff hCC hW hE hN
-
-/-- Closure of Lemma 3.5 (`lemma:cluster-compatibility`): compatibility of the clusters across scales. -/
-theorem closure_3_5 : ClusterCompatibilityStmt.{u} := firstPass_3_5 hDG hAff hCC hW hE hN
-
-end LiteratureInputs
-
-section MainTheorems
-
-/-- Closure of Theorem 1.1 (`theorem:harmonic-balls`): existence and uniqueness of the harmonic balls. Composition
-`firstPassMain_1_1` (`FirstPass/Main.lean:33`) with Lemma 8.2 discharged by `closure_8_2` (`Closure/Sec78910.lean`). -/
+/-- **Closure of Theorem 1.1** (`ExistenceUniquenessHarmonicBallsStmt`, `firstPassMain_1_1`). The paper-owned hypothesis
+`TypicalPointManyGoodScalesStmt` (Lemma 8.2) is discharged by `closure_8_2`. -/
 theorem closure_1_1
-    (hL1 : LocalRootedFieldMeasureDomination.{u})
-    (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
-    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
-    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
-    (hB : BirkhoffPointwiseErgodic.{0})
-    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
-    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
-      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
-    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
-    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
-      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
-    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α : ℝ)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
-    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
-      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc) :
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u}) (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u}) (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hB : BirkhoffPointwiseErgodic.{0}) :
     ExistenceUniquenessHarmonicBallsStmt.{u} :=
   firstPassMain_1_1 hDG hCC hE (closure_8_2 hL1 hWeyl hE1 hE3 hB hDG hAff hCC hW hE hN)
 
-/-- Closure of Proposition 1.3 (`prop:locally-determined`): closed harmonic balls are local sets for the field.
-Composition `firstPassMain_1_3` (`FirstPass/Main.lean:104`) with Lemma 8.2 discharged by `closure_8_2`. -/
+/-- **Closure of Theorem 1.2** (`HarmonicBallNoveltyStmt`, `firstPassMain_1_2`). Paper-owned hypotheses:
+`TypicalPointManyGoodScalesStmt` (Lemma 8.2, `closure_8_2`) and `ManyConeBadScalesStmt` (Lemma 11.7, `closure_11_7`).
+**OPEN**: `ManyPinchScalesStmt` (h13, printed Lemma 11.13), kept as a hypothesis (only the corrected form is proved). -/
+theorem closure_1_2
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
+    (h13 : ManyPinchScalesStmt.{u})
+    (hTor : TorhorstSimpleLoopFrozen)
+    (hmetricAxioms : ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+        (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc → LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u}) (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u}) (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hB : BirkhoffPointwiseErgodic.{0})
+    (hCamp : LocalCampbellMarkedRestrictionFrozen.{u})
+    (hDecFrozen : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hDec : LocalLQGDecoderCommonFrozen.{u})
+    (hCM : CameronMartinLocallyLipschitzShiftAbsCont.{u}) :
+    HarmonicBallNoveltyStmt.{u} :=
+  firstPassMain_1_2 hDG hAff hCC hW hE hN hI2
+    (closure_8_2 hL1 hWeyl hE1 hE3 hB hDG hAff hCC hW hE hN)
+    (closure_11_7 hDG hCamp hDecFrozen hDec hCM
+      (fun γ α₀ Ω _ P hC hcirc => hCC Ω P γ α₀ hC hcirc)
+      (fun γ α₀ Ω _ P hC hcirc => hE Ω P γ α₀ hC hcirc)
+      (fun γ α₀ Ω _ P hC hcirc => hN Ω P γ α₀ hC hcirc))
+    h13 hTor hmetricAxioms
+
+/-- **Closure of Proposition 1.3** (`HarmonicBallLocalSetStmt`, `firstPassMain_1_3`). The paper-owned hypothesis
+`TypicalPointManyGoodScalesStmt` (Lemma 8.2) is discharged by `closure_8_2`. -/
 theorem closure_1_3
     (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
-    (hmeasure : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
-      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureLocality P γ α₀ hC hcirc)
-    (hL1 : LocalRootedFieldMeasureDomination.{u})
-    (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
-    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
-    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
-    (hB : BirkhoffPointwiseErgodic.{0})
-    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
-    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
-      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
-    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
-    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
-      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
-    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α : ℝ)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
-    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
-      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc) :
+    (hmeasure : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureLocality P γ α₀ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u}) (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u}) (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hB : BirkhoffPointwiseErgodic.{0}) :
     HarmonicBallLocalSetStmt.{u} :=
   firstPassMain_1_3 hI2 hDG hCC hE (closure_8_2 hL1 hWeyl hE1 hE3 hB hDG hAff hCC hW hE hN) hmeasure
-
-end MainTheorems
 
 end HarmonicBalls.Closure
