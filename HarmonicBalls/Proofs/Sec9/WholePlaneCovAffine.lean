@@ -22,7 +22,7 @@ theorem wholePlaneCov_eq_log_sub {z w : ℂ} (hzw : z ≠ w) :
 /-- An affine change of coordinates changes the kernel by one-point terms and
 the logarithm of the scale. The statement is off-diagonal because the kernel
 uses a finite convention at coincident points. -/
-theorem wholePlaneCov_affine {a b x y : ℂ} (ha : a ≠ 0) (hxy : x ≠ y) :
+theorem wholePlaneCov_comp_affine {a b x y : ℂ} (ha : a ≠ 0) (hxy : x ≠ y) :
     wholePlaneCov (a * x + b) (a * y + b) = wholePlaneCov x y +
       (Real.log (max ‖a * x + b‖ 1) - Real.log (max ‖x‖ 1)) +
       (Real.log (max ‖a * y + b‖ 1) - Real.log (max ‖y‖ 1)) - Real.log ‖a‖ := by

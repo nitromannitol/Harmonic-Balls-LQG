@@ -66,7 +66,7 @@ theorem integral_mul_wholePlaneCov_complex_affine {g : ℂ → ℝ}
         g y * Real.log ‖a‖ := by
     apply integral_congr_ae
     filter_upwards [ae_ne_complex x] with y hy
-    rw [wholePlaneCov_affine ha hy.symm]
+    rw [wholePlaneCov_comp_affine ha hy.symm]
     dsimp [D, wholePlaneNormalization]
     ring
   have hsub := integral_sub ((hki.add (hgi.mul_const (D x))).add hdi)

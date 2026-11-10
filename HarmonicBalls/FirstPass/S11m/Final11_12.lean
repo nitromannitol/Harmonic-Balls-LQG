@@ -99,8 +99,9 @@ theorem firstPass_11_12_of_inputs
 `firstPass_11_12_of_inputs` with its two remaining derivable hypotheses discharged by repository theorems:
 * `hAff` (`WholePlaneGFFAffineInvariance`) by `HarmonicBalls.wholePlaneGFFAffineInvariance_derived`
   (`FirstPass/S11v/Affine.lean:145`), a theorem with no hypothesis beyond `IsWholePlaneGFF`. Its Proofs-side twin
-  `wholePlaneGFFAffineInvariance_proved` (`Proofs/Sec9/AffineInvarianceAssembly.lean:21`) cannot be imported with it:
-  `Proofs/Sec9/WholePlaneCovAffine` and `FirstPass/S11v/AffineKernel` both declare `HarmonicBalls.wholePlaneCov_affine`.
+  `wholePlaneGFFAffineInvariance_proved` (`Proofs/Sec9/AffineInvarianceAssembly.lean:21`) was not used, since importing it clashed with `S11v` until the rename below:
+  `Proofs/Sec9/WholePlaneCovAffine` now names its lemma `HarmonicBalls.wholePlaneCov_comp_affine` (rename of the clashing
+  `wholePlaneCov_affine`, fp-Sec9-rename-wholePlaneCov-affine), so both files import together.
 * `hgrowth` (`LQGVolumeGrowthAllScalesStmt`, I2) by `HarmonicBalls.lqgVolumeGrowthAllScalesStmt_of_stronger_singularity`
   (`Proofs/Sec2/SingularAtomAtZero.lean:59`), from the PROPOSED inputs `hDG`, `hCC`, `hE` and the affine invariance above;
 * `hEx` (the case `α₀ = 0` of `hE`) by specialisation.
