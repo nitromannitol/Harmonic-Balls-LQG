@@ -19,7 +19,7 @@ open scoped ENNReal
 
 /-- The measurable exterior bound: for `A` open, preconnected, with `closure A ⊆ O` compact, and `A0` measurable with
 positive measure, some measurable `B ⊆ A0` with `P B > 0` carries the uniform bound `D(u,v; O) ≤ n` on `A × A`. -/
-theorem exists_measurable_exterior_bound {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+theorem exists_measurable_internal_metric_bound {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {Dr : Ω → ℂ → ℂ → ℝ} (hDnn : ∀ ω x y, 0 ≤ Dr ω x y)
     (hI : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Dr ω))
     {O A : Set ℂ} {A0 : Set Ω} (hO : IsOpen O) (hA : IsOpen A) (hAc : IsPreconnected A) (hclO : closure A ⊆ O)

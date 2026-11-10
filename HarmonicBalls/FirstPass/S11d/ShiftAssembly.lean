@@ -105,7 +105,7 @@ theorem shifted_event_exists
       (fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal) :=
     hI.mono fun ω h => h.2
   obtain ⟨n, Bx, hBxm, hBxsub, hBxp, hBxb⟩ :=
-    exists_measurable_exterior_bound
+    exists_measurable_internal_metric_bound
       (Dr := fun ω u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal)
       (fun ω x y => ENNReal.toReal_nonneg) hIlen hOo hA hAc hKO hKc hGO hA0m hA0p
   obtain ⟨hc0, hexp⟩ := shift_constants hε (Nat.cast_nonneg (α := ℝ) n)
