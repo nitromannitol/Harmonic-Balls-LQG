@@ -1,5 +1,6 @@
 import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Defs.LQGMetric
+import HarmonicBalls.Proposed.LQG
 
 /-!
 # First-pass frozen input for Lemmas 11.15 and 11.16 (fp-S11j, owner n4)
@@ -62,7 +63,12 @@ def CameronMartinMetricEventTransferMeasurableFrozen : Prop :=
   NullMeasurableSet {ω | B (D ω)} P →
   0 < P {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} → 0 < P {ω | B (D ω)}
 
-/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator ruling Q1, 23:12 UTC). Metric-level Weyl composition
+/-- RETIRED (FALSE as written; operator note 23:37 UTC, ChatGPT truth check `notes/fp-gaps/CHATGPT-n4-frozen-truth-weyl.md`
+section 1: the outer weight `f` is only required to be continuous on `ℂ ∖ {0}`, and a weight singular at `0` lets a path
+of infinite `D`-length become essential). Not used by any proof after the 23:37 UTC note; kept, never deleted. Superseded
+by `WeylMetricCompositionContinuousOuterFrozen` below.
+
+FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator ruling Q1, 23:12 UTC). Metric-level Weyl composition
 (not to be confused with the field-level `WeylScalingCompositionFrozen` of `Frozen/S11d.lean`):
 scaling a metric `D` by `g` and then by `f` is scaling it by `g + f`, for an exponent `ξ > 0`, an Euclidean length
 metric `D`, weights `f, g` continuous on `ℂ \ {0}` (the log singularity `-α₀ log|·|` is continuous there), and finite
@@ -80,10 +86,47 @@ def WeylMetricCompositionFrozen : Prop :=
     ∀ x y, weylScaling (fun u v => (weylScaling D ξ g u v).toReal) ξ f x y =
       weylScaling D ξ (fun z => g z + f z) x y
 
-/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator note 22:53 UTC, item B(a)). The Weyl exponent of an LQG
-metric is positive: `ξ = γ / d_γ` (Ding-Gwynne, arXiv:2108.12060, Theorem 1.9; the argument of
-`notes/fp-gaps/CHATGPT-xi-exponent-rigidity.md` section 3). Stated for `0 < γ < 2`, the only range used. -/
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator notes 22:53 UTC item B(a) and 23:37 UTC). The Weyl exponent
+of an LQG metric is positive: `ξ > 0` for `IsLQGMetric γ ξ 𝔇`, `0 < γ < 2`, the only range used. The statement is TRUE.
+Its source is the positivity argument, not Ding-Gwynne Theorem 1.9 (which assumes `ξ > 0`): normalized whole-plane GFF
+scaling, constant Weyl scaling, coordinate change and the Euclidean topology (Bou-Rabee-Gwynne arXiv:2208.11795, Section
+2.1, (2.1)-(2.2), p. 8); see `notes/fp-gaps/CHATGPT-xi-exponent-rigidity.md` section 3. -/
 def LQGMetricExponentPositive : Prop :=
   ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 → 0 < ξ
+
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator note 23:37 UTC, replacing the retired
+`WeylMetricCompositionFrozen`). Metric-level Weyl composition with a CONTINUOUS outer shift: for `ξ > 0`, an Euclidean
+length metric `D`, a weight `g` continuous on `ℂ ∖ {0}` (the log singularity is continuous there) with finite inner
+scaling, and a continuous weight `f`, scaling by `g` and then by `f` is scaling by `g + f`. Here `weylScaling D ξ g` is
+the infimum of `∫ e^{ξ g}` over `D`-length parametrized paths (`Defs/LQGMetric.lean`), the inner metric enters via `toReal`.
+Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 III, corrected paper line 445; GM21 = Gwynne-Miller, (1.8), p. 6.
+The correction `ContinuousOn f {z | z ≠ 0}` ↦ `Continuous f` is the one of `notes/fp-gaps/CHATGPT-n4-frozen-truth-weyl.md`
+("Minimal Lean fix"), which gives a deterministic proof of the corrected statement; operator truth check pending. -/
+def WeylMetricCompositionContinuousOuterFrozen : Prop :=
+  ∀ ξ : ℝ, 0 < ξ → ∀ (D : ℂ → ℂ → ℝ) (g f : ℂ → ℝ), IsEuclideanLengthMetric D →
+    ContinuousOn g {z | z ≠ 0} → Continuous f →
+    (∀ x y, weylScaling D ξ g x y ≠ ⊤) →
+    ∀ x y, weylScaling (fun u v => (weylScaling D ξ g u v).toReal) ξ f x y =
+      weylScaling D ξ (fun z => g z + f z) x y
+
+/-- FIRST-PASS FROZEN (EXTERNAL; truth check pending; operator ruling B1, 23:42 UTC, option (a): a universe-`u`
+restatement of the axiom clause used). For `0 < γ < 2`, every γ-LQG metric `𝔇` (`IsLQGMetric γ ξ 𝔇`) and every
+whole-plane GFF `h^ℂ` on a probability space `Ω : Type u`, the metric `𝔇(h^ℂ)` is almost surely a Euclidean length metric
+(`IsEuclideanLengthMetric`, axiom I of Fact 2.2 at `h^ℂ`, with no insertion). Source: the axioms of `IsLQGMetric`
+(`Defs/LQGMetric.lean`, `satisfiesLQGMetricAxioms` at `f = 0`), which quantify over `Ω : Type`; the universe lift holds
+because the axioms involve only the joint law of the field and the metric (`IsLQGMetric` docstring); GM21 Theorem 1.2 (p. 6);
+Gwynne-Miller 2021, Fact 2.2 I (paper lines 432-453). -/
+def LQGMetricLengthUnivFrozen : Prop :=
+  ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → ∀ᵐ ω ∂P, IsEuclideanLengthMetric (𝔇 (hC ω))
+
+/-- FIRST-PASS FROZEN (PROPOSED input `LQGMetricFieldAxioms`, `Proposed/LQG.lean:199`, pending operator source-check;
+universal form). The Fact 2.2 axioms I-IV for the field `h^ℂ - α₀ log|·|` hold on every probability space `Ω : Type u`,
+for all `γ`, `ξ`, `α₀`, every whole-plane GFF `hC`, and all `P`. Used only as the hypothesis `haxioms` of
+`firstPass_11_15_corrected` (`FirstPass/S11j/FieldAssembly11_15.lean`). -/
+def LQGMetricFieldAxiomsUnivFrozen : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ ξ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc
 
 end HarmonicBalls
