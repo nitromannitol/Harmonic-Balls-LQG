@@ -5,6 +5,7 @@ import HarmonicBalls.FirstPass.Frozen.S11i
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Proposed.DuplantierMillerSheffield
 import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
+import HarmonicBalls.FirstPass.Frozen.S8d
 import HarmonicBalls.FirstPass.S11u
 import HarmonicBalls.Proofs.Sec11.ClosureScales.CircleTestFubiniLimit
 import HarmonicBalls.Proofs.Sec8.CircleDensityContinuousLimit
@@ -754,38 +755,6 @@ theorem circleProfile_eq_of_pos {F : C(CircleParameter, ℝ)} {g : ℝ → ℂ �
   simp only [hr, reduceDIte]
   exact hF (⟨r, hr⟩, z)
 
-/-- The `α₀`-inserted GMC-success set of pairing functionals, read through the profile map `G`. -/
-noncomputable def HMuGoodSet (γ α₀ : ℝ) (G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ)) : Set ((ℂ → ℝ) → ℝ) :=
-  {T | ∃ ν : Measure ℂ, IsLQGLimit γ (fieldCircleAverage α₀ (circleProfile (G T))) ν}
-
-/-- **Named gap `HMuPairingBridge`** (CHATGPT-211 §2, Steps 2, 4 and 6; `notes/fp-gaps/CHATGPT-211-hb-11-13-q1-hLen-hmu-PRO.md`
-l.394-418, l.437-457, l.494-530). It asserts the three facts the plan states without argument:
-(a) a map `G` from pairing functionals to continuous circle profiles with `G (hC ω) = hcirc ω` almost surely (Step 2;
-the repository's measurable version `IsWholePlaneGFF.exists_measurable_continuous_circle_version` is an `Ω`-level map,
-not a function of the pairings);
-(b) the GMC-success set `HMuGoodSet` of pairings is measurable for the pairing σ-algebra (Step 4);
-(c) for `volume`-a.e. root in `ball 0 1` and `P`-a.e. ω, the profile of the DMS-shifted pairing is the circle-average
-profile of `h + f_z + κ` (Step 6; `dmsShift`, `dmsConstant` of Proposed/DuplantierMillerSheffield.lean). -/
-def HMuPairingBridge {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
-    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
-  ∃ G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ),
-    (∀ᵐ ω ∂P, ∀ p : CircleParameter, G (hC ω) p = hcirc ω p.1 p.2) ∧
-    MeasurableSet[pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ] (HMuGoodSet γ α₀ G) ∧
-    (∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P, ∀ p : CircleParameter,
-      G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
-        hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0))
-
-/-- Indicator of the complement of the GMC-success set, as a function of the pairing and the root (the root is
-ignored: the marking in `DMSLemmaA10WholePlaneMarked` is trivial here). -/
-noncomputable def HMuIndicator (γ α₀ : ℝ) (G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ)) (q : ((ℂ → ℝ) → ℝ) × ℂ) : ℝ≥0∞ :=
-  (HMuGoodSet γ α₀ G)ᶜ.indicator (fun _ => 1) q.1
-
-theorem HMuIndicator_eq_zero_iff (γ α₀ : ℝ) (G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ))
-    (T : (ℂ → ℝ) → ℝ) (z : ℂ) :
-    HMuIndicator γ α₀ G (T, z) = 0 ↔ T ∈ HMuGoodSet γ α₀ G := by
-  unfold HMuIndicator
-  by_cases h : T ∈ HMuGoodSet γ α₀ G <;> simp [h]
-
 /-- The map `(z, ω) ↦ z ↦ x ↦ f_z` in the variable `z`: `dmsShift` is jointly measurable. -/
 theorem measurable_dmsShift_joint (γ : ℝ) : Measurable (fun q : ℂ × ℂ => dmsShift γ q.1 q.2) := by
   unfold dmsShift
@@ -871,97 +840,6 @@ theorem circleProfile_shift_eq (α₀ γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ �
   unfold fieldCircleAverage addCircleAverage
   rw [hF', hfun]
   ring
-
-/-- **`hμ` producer** (CHATGPT-211 §2, Steps 1, 3, 5, 6 and 7). For a.e. root `z` in `ball c₁ r₁`, the rooted
-γ-LQG measure of `rootedCircleFieldP α₀ γ hcirc z` exists almost surely. The argument: the unrooted measure at insertion
-`0` (`LQGMeasureExistence`) weights the marked DMS identity `DMSLemmaA10WholePlaneMarked`; the GMC-success indicator
-has zero weighted integral, so the DMS-shifted pairing is GMC-good for a.e. root and a.s.; the DMS constant `κ` is
-absorbed by the constant rescaling `isLQGLimit_of_add_const`. The measurable profile map and the GMC-success set are
-the named gap `HMuPairingBridge`. -/
-theorem ae_exists_rootedLQGMeasure {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ : ℂ) (r₁ : ℝ)
-    (hh : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
-    (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
-    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ)
-    (hBridge : HMuPairingBridge P γ α₀ hC hcirc) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1) :
-    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∃ μz : Ω → Measure ℂ,
-      IsLQGMeasure P γ (rootedCircleFieldP α₀ γ hcirc z) μz := by
-  have hQ : 0 < lqgQ γ := by unfold lqgQ; positivity
-  obtain ⟨lam, hlam⟩ := hExist0 hh hγ0 hγ2 hQ
-  obtain ⟨μα, hμα⟩ := hExistα hh hγ0 hγ2 hα
-  obtain ⟨G, hGae, hGset, hShift⟩ := hBridge
-  have hμα' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α₀ (hcirc ω)) (μα ω) := hμα
-  have hGoodAs : ∀ᵐ ω ∂P, hC ω ∈ HMuGoodSet γ α₀ G := by
-    filter_upwards [hμα', hGae] with ω h1 h2
-    show ∃ ν : Measure ℂ, IsLQGLimit γ (fieldCircleAverage α₀ (circleProfile (G (hC ω)))) ν
-    refine ⟨μα ω, isLQGLimit_congr_of_pos (fun k z => ?_) h1⟩
-    unfold fieldCircleAverage
-    rw [circleProfile_eq_of_pos (g := hcirc ω) h2 (dyadicScale_pos k) z]
-  -- the DMS marked identity, applied to the indicator of the complement of the GMC-success set
-  have hΨm : Measurable[(pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ).prod inferInstance]
-      (HMuIndicator γ α₀ G) :=
-    (measurable_const.indicator hGset.compl).comp measurable_fst
-  have hDMS := hA10 lam hh hlam (HMuIndicator γ α₀ G) hΨm
-  have hL : ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1, HMuIndicator γ α₀ G (hC ω, z) ∂(lam ω) ∂P = 0 := by
-    have h0 : ∀ᵐ ω ∂P, ∫⁻ z in ball (0 : ℂ) 1, HMuIndicator γ α₀ G (hC ω, z) ∂(lam ω) = 0 := by
-      filter_upwards [hGoodAs] with ω hω
-      have hz : ∀ z : ℂ, HMuIndicator γ α₀ G (hC ω, z) = 0 :=
-        fun z => (HMuIndicator_eq_zero_iff γ α₀ G _ z).2 hω
-      simp only [hz, lintegral_zero]
-    rw [lintegral_congr_ae h0]
-    simp
-  have hR : ∫⁻ z in ball (0 : ℂ) 1,
-      ∫⁻ ω, HMuIndicator γ α₀ G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) ∂P ∂volume = 0 := by
-    rw [← hDMS]
-    exact hL
-  have hjoint : Measurable (fun q : ℂ × Ω =>
-      HMuIndicator γ α₀ G (dmsShiftedPairing γ q.1 (hC q.2) (hcirc q.2 1 0), q.1)) :=
-    (measurable_const.indicator hGset.compl).comp (measurable_dmsShiftedPairing P γ hC hcirc hh)
-  have hg : Measurable (fun z : ℂ =>
-      ∫⁻ ω, HMuIndicator γ α₀ G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) ∂P) :=
-    hjoint.lintegral_prod_right'
-  have hz0 := (lintegral_eq_zero_iff hg).1 hR
-  have hz1 : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
-      HMuIndicator γ α₀ G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) = 0 := by
-    filter_upwards [hz0] with z hz
-    have hzm : Measurable (fun ω : Ω => (z, ω)) := measurable_const.prodMk measurable_id
-    exact (lintegral_eq_zero_iff (hjoint.comp hzm)).1 hz
-  have hz2 : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
-      dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G := by
-    filter_upwards [hz1] with z hz
-    filter_upwards [hz] with ω hω
-    exact (HMuIndicator_eq_zero_iff γ α₀ G _ z).1 hω
-  have hall : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
-      dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G ∧
-        ∀ p : CircleParameter, G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
-          hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0) := by
-    filter_upwards [hz2, hShift] with z h1 h2
-    filter_upwards [h1, h2] with ω hA hB
-    exact ⟨hA, hB⟩
-  have hwin := ae_restrict_of_ae_restrict_of_subset hWin hall
-  -- the constant rescaling of the DMS-shifted profile gives the rooted measure, pointwise in (z, ω)
-  filter_upwards [hwin] with z hz
-  have hpt : ∀ ω, ∃ μ : Measure ℂ,
-      (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G ∧
-        ∀ p : CircleParameter, G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
-          hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0)) →
-        IsLQGLimit γ (rootedCircleFieldP α₀ γ hcirc z ω) μ := by
-    intro ω
-    by_cases hω : dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ HMuGoodSet γ α₀ G ∧
-        ∀ p : CircleParameter, G (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) p =
-          hcirc ω p.1 p.2 + Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0)
-    · obtain ⟨hmem, hid⟩ := hω
-      obtain ⟨ν, hν⟩ := hmem
-      refine ⟨ENNReal.ofReal (Real.exp (-(γ * dmsConstant γ z (hcirc ω 1 0)))) • ν, fun _ => ?_⟩
-      apply isLQGLimit_of_add_const (κ := dmsConstant γ z (hcirc ω 1 0))
-      apply isLQGLimit_congr_of_pos (fun k x => ?_) hν
-      exact circleProfile_shift_eq α₀ γ z (hcirc ω) (dmsConstant γ z (hcirc ω 1 0)) _ hid (dyadicScale_pos k) x
-    · exact ⟨0, fun h => absurd h hω⟩
-  choose μz hμz using hpt
-  refine ⟨μz, ?_⟩
-  unfold IsLQGMeasure
-  filter_upwards [hz] with ω hω
-  exact hμz ω hω
 
 /-- The annular width parameter `η_j = (r/4) (1/2)^j` of the `j`-th explicit approximant. -/
 noncomputable def approxEta (r : ℝ) (j : ℕ) : ℝ := (r / 4) * (1 / 2 : ℝ) ^ j
@@ -1096,5 +974,346 @@ theorem tendsto_unitCircleDensity_mul_dmsShift {r : ℝ} (hr : 0 < r) {δ : ℕ 
     integrable_unitCircleDensity_mul hr.le (hδ j) z continuous_logMaxOne
   simp only [e]
   rw [integral_add (I1.const_mul (-γ)) (I2.const_mul γ), integral_const_mul, integral_const_mul]
+
+namespace FirstPassS11atBridge
+
+instance instNonemptyCircleParameter : Nonempty CircleParameter :=
+  ⟨((⟨1, Set.mem_Ioi.2 one_pos⟩ : Set.Ioi (0 : ℝ)), (0 : ℂ))⟩
+
+/-- The dense sequence of circle parameters `p_i` (Mathlib `denseSeq`). -/
+noncomputable def denseCircle : ℕ → CircleParameter := TopologicalSpace.denseSeq CircleParameter
+
+theorem denseRange_denseCircle : DenseRange denseCircle := TopologicalSpace.denseRange_denseSeq _
+
+/-- Evaluation of a continuous circle profile on the dense sequence `p_i`. -/
+noncomputable def dataMap (y : C(CircleParameter, ℝ)) : ℕ → ℝ := fun i => y (denseCircle i)
+
+theorem continuous_dataMap : Continuous dataMap :=
+  continuous_pi fun i => continuous_eval_const (denseCircle i)
+
+/-- A continuous circle profile is determined by its values on the dense sequence `p_i`. -/
+theorem dataMap_injective : Function.Injective dataMap := by
+  intro y y' h
+  have hf : (⇑y) ∘ denseCircle = (⇑y') ∘ denseCircle := funext fun i => congrFun h i
+  have heq : (⇑y) = (⇑y') := denseRange_denseCircle.equalizer y.continuous y'.continuous hf
+  exact ContinuousMap.ext fun p => congrFun heq p
+
+/-- The image of a measurable set of profiles under the data map is measurable (Lusin-Souslin, since
+`C(CircleParameter, ℝ)` is Polish). -/
+theorem measurableSet_dataMap_image {s : Set C(CircleParameter, ℝ)} (hs : MeasurableSet s) :
+    MeasurableSet (dataMap '' s) :=
+  hs.image_of_continuousOn_injOn continuous_dataMap.continuousOn dataMap_injective.injOn
+
+/-- The explicit approximants of the dense circle parameters. -/
+noncomputable def approxSeq (i j : ℕ) : ℂ → ℝ :=
+  circleApprox (show 0 < (denseCircle i).1.1 from (denseCircle i).1.2) (denseCircle i).2 j
+
+/-- Test-function evaluations are measurable for the pairing σ-algebra. -/
+theorem measurable_pairing_eval {Ω : Type*} {hC : Ω → (ℂ → ℝ) → ℝ} {φ : ℂ → ℝ}
+    (hφ : IsTestFunction univ φ) :
+    @Measurable Ω ℝ (pairingSigmaAlgebra hC univ) _ (fun ω => hC ω φ) := by
+  refine measurable_iff_comap_le.2 ?_
+  unfold pairingSigmaAlgebra
+  exact le_iSup₂ (f := fun φ (_ : IsTestFunction univ φ) =>
+    MeasurableSpace.comap (fun ω => hC ω φ) inferInstance) φ hφ
+
+/-- The pairing σ-algebra on `Ω` is the pull-back of the pairing σ-algebra on the functional space. -/
+theorem pairingSigmaAlgebra_eq_comap {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ) :
+    pairingSigmaAlgebra hC univ =
+      MeasurableSpace.comap hC (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ) := by
+  unfold pairingSigmaAlgebra
+  simp only [MeasurableSpace.comap_iSup, MeasurableSpace.comap_comp, Function.comp_def]
+
+set_option linter.style.haveILetI false in
+/-- Doob-Dynkin factorization through the pairing: a pairing-measurable map into a standard Borel space
+factors through the raw pairing. -/
+theorem exists_pairing_factor {Ω : Type*} {hC : Ω → (ℂ → ℝ) → ℝ} {Y : Type*} [MeasurableSpace Y]
+    [StandardBorelSpace Y] [Nonempty Y] (D : Ω → Y)
+    (hD : @Measurable Ω Y (pairingSigmaAlgebra hC univ) _ D) :
+    ∃ Φ' : ((ℂ → ℝ) → ℝ) → Y,
+      @Measurable ((ℂ → ℝ) → ℝ) Y (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ) _ Φ' ∧
+        D = Φ' ∘ hC := by
+  letI : MeasurableSpace ((ℂ → ℝ) → ℝ) := pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ
+  rw [pairingSigmaAlgebra_eq_comap] at hD
+  exact hD.exists_eq_measurable_comp
+
+/-- The explicit limit data of a pairing functional along the approximants `approxSeq i`. -/
+noncomputable def pairingData {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ) (ω : Ω) : ℕ → ℝ :=
+  fun i => limsup (fun j => hC ω (approxSeq i j)) atTop
+
+set_option linter.style.haveILetI false in
+/-- The data map is pairing-measurable. -/
+theorem measurable_pairingData {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ) :
+    @Measurable Ω (ℕ → ℝ) (pairingSigmaAlgebra hC univ) _ (pairingData hC) := by
+  letI : MeasurableSpace Ω := pairingSigmaAlgebra hC univ
+  refine Measurable.of_eval fun i => ?_
+  unfold pairingData
+  exact Measurable.limsup fun j => measurable_pairing_eval (isTestFunction_circleApprox _ _ j)
+
+/-- The data of the GFF circle averages equals the evaluation of their continuous version, almost surely. -/
+theorem ae_pairingData_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
+    {F : Ω → C(CircleParameter, ℝ)}
+    (hFcoord : ∀ p : CircleParameter, (fun ω => F ω p) =ᵐ[P] fun ω => hcirc ω p.1 p.2) :
+    ∀ᵐ ω ∂P, pairingData hC ω = dataMap (F ω) := by
+  have key : ∀ᵐ ω ∂P, ∀ i : ℕ, pairingData hC ω i = dataMap (F ω) i := by
+    refine ae_all_iff.2 fun i : ℕ => ?_
+    have hT := ae_tendsto_circleApprox hh (show 0 < (denseCircle i).1.1 from (denseCircle i).1.2)
+      (denseCircle i).2
+    filter_upwards [hT, hFcoord (denseCircle i)] with ω h1 h2
+    unfold pairingData dataMap
+    have h1' : Tendsto (fun j => hC ω (approxSeq i j)) atTop
+        (𝓝 (hcirc ω (denseCircle i).1 (denseCircle i).2)) := h1
+    rw [h1'.limsup_eq]
+    exact h2.symm
+  filter_upwards [key] with ω hω
+  exact funext hω
+
+/-- A measurable conull subset of a set that is conull for the image measure. -/
+theorem exists_measurable_conull_subset' {X : Type*} [MeasurableSpace X] (μ : Measure X) (S : Set X)
+    (hS : ∀ᵐ x ∂μ, x ∈ S) :
+    ∃ A : Set X, MeasurableSet A ∧ (∀ᵐ x ∂μ, x ∈ A) ∧ A ⊆ S := by
+  obtain ⟨N, hSN, hNm, hN0⟩ := exists_measurable_superset_of_null (ae_iff.1 hS)
+  refine ⟨Nᶜ, hNm.compl, ?_, ?_⟩
+  · exact ae_iff.2 (by simpa using hN0)
+  · intro x hx
+    by_contra hxS
+    exact hx (hSN hxS)
+
+/-- **Clauses 1 and 2 of the pairing bridge, derived** (no new frozen input; the decoder input is `hProf`).
+There is a pairing-measurable data map `Φ'` (Doob-Dynkin factor of the explicit limit data) and a measurable
+set `A` of data, almost surely containing the data of the GFF, every point of which is the data of a continuous
+profile with an LQG limit. -/
+theorem exists_pairing_good {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    (γ α₀ : ℝ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
+    (μα : Ω → Measure ℂ) (hμα : IsLQGMeasureOfField P γ α₀ hcirc μα)
+    (hProf : LQGMeasureOfProfileMeasurableFrozen.{0}) :
+    ∃ Φ' : ((ℂ → ℝ) → ℝ) → (ℕ → ℝ),
+      @Measurable ((ℂ → ℝ) → ℝ) (ℕ → ℝ) (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ) _ Φ' ∧
+      (∀ᵐ ω ∂P, ∀ i : ℕ, Tendsto (fun j => hC ω (approxSeq i j)) atTop (𝓝 (Φ' (hC ω) i))) ∧
+      ∃ A : Set (ℕ → ℝ), MeasurableSet A ∧ (∀ᵐ ω ∂P, Φ' (hC ω) ∈ A) ∧
+        ∀ x ∈ A, ∃ y : C(CircleParameter, ℝ), dataMap y = x ∧
+          ∃ ν : Measure ℂ, IsLQGLimit γ (fieldCircleAverage α₀ (circleProfile y)) ν := by
+  obtain ⟨F, hFm, _, hFcoord⟩ := hh.exists_measurable_continuous_circle_version
+  obtain ⟨Φ', hΦm, hΦeq⟩ := exists_pairing_factor (pairingData hC) (measurable_pairingData hC)
+  obtain ⟨Dec, _, _, hDecGood⟩ := hProf Ω P γ α₀ hC hcirc μα F hh hμα hFm hFcoord
+  have hS : ∀ᵐ y ∂(P.map F), y ∈ {y : C(CircleParameter, ℝ) |
+      ∃ ν : Measure ℂ, IsLQGLimit γ (fieldCircleAverage α₀ (circleProfile y)) ν} := by
+    filter_upwards [hDecGood] with y hy
+    exact ⟨Dec y, hy⟩
+  obtain ⟨AC, hACm, hACae, hACsub⟩ := exists_measurable_conull_subset' (P.map F) _ hS
+  have hΦdata : ∀ᵐ ω ∂P, ∀ i : ℕ, Φ' (hC ω) i = dataMap (F ω) i := by
+    filter_upwards [ae_pairingData_eq hh hFcoord] with ω h1 i
+    have h3 : Φ' (hC ω) = pairingData hC ω := (congrFun hΦeq ω).symm
+    rw [h3, h1]
+  refine ⟨Φ', hΦm, ?_, dataMap '' AC, measurableSet_dataMap_image hACm, ?_, ?_⟩
+  · refine (ae_all_iff.2 fun i : ℕ => ?_)
+    filter_upwards [hΦdata, ae_tendsto_circleApprox hh (show 0 < (denseCircle i).1.1 from (denseCircle i).1.2)
+      (denseCircle i).2, hFcoord (denseCircle i)] with ω h1 h2 h3
+    rw [h1 i]
+    unfold dataMap
+    rw [h3]
+    exact h2
+  · have hFAC : ∀ᵐ ω ∂P, F ω ∈ AC := (ae_map_iff hFm.aemeasurable hACm).1 hACae
+    filter_upwards [hΦdata, hFAC] with ω h1 h2
+    rw [funext h1]
+    exact ⟨F ω, h2, rfl⟩
+  · intro x hx
+    obtain ⟨y, hyA, rfl⟩ := hx
+    obtain ⟨ν, hν⟩ := hACsub hyA
+    exact ⟨y, rfl, ν, hν⟩
+
+
+/-- The explicit annular widths `c * approxEta c j` tend to zero. -/
+theorem approxWidth_small {c : ℝ} (hc : 0 < c) :
+    ∀ η : ℝ, 0 < η → ∃ N : ℕ, ∀ j, N ≤ j → c * approxEta c j ≤ c * η := by
+  intro η hη
+  obtain ⟨N, hN⟩ := exists_pow_lt_of_lt_one (show 0 < 4 * η / c by positivity) (by norm_num : (1 / 2 : ℝ) < 1)
+  refine ⟨N, fun j hj => ?_⟩
+  have h1 : (1 / 2 : ℝ) ^ j ≤ (1 / 2) ^ N := pow_le_pow_of_le_one (by norm_num) (by norm_num) hj
+  have h2 : (1 / 2 : ℝ) ^ j * c < 4 * η := by
+    have h3 : (1 / 2 : ℝ) ^ j < 4 * η / c := lt_of_le_of_lt h1 hN
+    rwa [lt_div_iff₀ hc] at h3
+  have h4 : approxEta c j ≤ η := by
+    unfold approxEta
+    nlinarith
+  exact mul_le_mul_of_nonneg_left h4 hc.le
+
+/-- Deterministic step: the DMS-shifted pairing tested against the explicit approximants converges to the
+limit of the unshifted pairing plus the circle average of the DMS shift plus the constant. -/
+theorem tendsto_dmsShiftedPairing_approx (γ : ℝ) (zr : ℂ) (T : (ℂ → ℝ) → ℝ) (h10 : ℝ) {c : ℝ} (hc : 0 < c)
+    (z0 : ℂ) {a : ℝ} (h : Tendsto (fun j => T (circleApprox hc z0 j)) atTop (𝓝 a)) :
+    Tendsto (fun j => dmsShiftedPairing γ zr T h10 (circleApprox hc z0 j)) atTop
+      (𝓝 (a + Real.circleAverage (dmsShift γ zr) z0 c + dmsConstant γ zr h10)) := by
+  have h2 := tendsto_unitCircleDensity_mul_dmsShift hc (δ := fun j => c * approxEta c j)
+    (hδ := fun j => mul_pos hc (approxEta_pos hc j)) (approxWidth_small hc) γ z0 zr
+  have h2' : Tendsto (fun j => ∫ w, dmsShift γ zr w * circleApprox hc z0 j w) atTop
+      (𝓝 (Real.circleAverage (dmsShift γ zr) z0 c)) := by
+    refine h2.congr (fun j => ?_)
+    congr 1
+    ext x
+    unfold circleApprox
+    ring
+  have h3 := (h.add h2').add (tendsto_const_nhds (x := dmsConstant γ zr h10))
+  refine h3.congr (fun j => ?_)
+  unfold dmsShiftedPairing
+  rw [integral_circleApprox, mul_one]
+
+set_option linter.style.haveILetI false in
+/-- The fibres of the explicit limit data: `{T | T(ψ_{i,j}) → Φ' T i}` is pairing-measurable. -/
+theorem measurableSet_codeFiber (Φ' : ((ℂ → ℝ) → ℝ) → (ℕ → ℝ))
+    (hΦ : @Measurable ((ℂ → ℝ) → ℝ) (ℕ → ℝ) (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ) _ Φ')
+    (i : ℕ) :
+    @MeasurableSet ((ℂ → ℝ) → ℝ) (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ)
+      {T | Tendsto (fun j => T (approxSeq i j)) atTop (𝓝 (Φ' T i))} := by
+  letI : MeasurableSpace ((ℂ → ℝ) → ℝ) := pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ
+  have hm : Measurable (fun T : (ℂ → ℝ) → ℝ => Φ' T i) := (measurable_pi_apply i).comp hΦ
+  have hf : ∀ j : ℕ, Measurable (fun T : (ℂ → ℝ) → ℝ => T (approxSeq i j) - Φ' T i) := fun j =>
+    (measurable_pairing_eval (hC := fun T : (ℂ → ℝ) → ℝ => T)
+      (isTestFunction_circleApprox _ _ j)).sub hm
+  have hset : {T : (ℂ → ℝ) → ℝ | Tendsto (fun j => T (approxSeq i j)) atTop (𝓝 (Φ' T i))} =
+      {T | Tendsto (fun j => T (approxSeq i j) - Φ' T i) atTop (𝓝 0)} := by
+    ext T
+    exact tendsto_sub_nhds_zero_iff.symm
+  rw [hset]
+  exact measurableSet_tendsto (𝓝 (0 : ℝ)) hf
+
+/-- The DMS-shifted profile of a continuous GFF circle profile is continuous on `CircleParameter`. -/
+theorem continuous_dmsProfile (γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ → ℝ)
+    (hcont : ContinuousOn (fun p : ℝ × ℂ => hcirc p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) (κ : ℝ) :
+    Continuous (fun p : CircleParameter => hcirc p.1 p.2 +
+      Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + κ) := by
+  have hcircC : Continuous (fun p : CircleParameter => hcirc p.1 p.2) :=
+    continuousOn_univ.mp (hcont.comp (continuous_subtype_val.prodMap continuous_id).continuousOn
+      (fun p _ => ⟨p.1.2, Set.mem_univ _⟩))
+  have e : ∀ p : CircleParameter, Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) =
+      -γ * Real.log (max (p.1 : ℝ) ‖p.2 - z‖) + γ * Real.circleAverage logMaxOne p.2 (p.1 : ℝ) :=
+    fun p => HarmonicBalls.CircleTestFubini.circleAverage_dmsShift γ z p.2 p.1.2
+  have hmax : Continuous (fun p : CircleParameter => max (p.1 : ℝ) ‖p.2 - z‖) :=
+    (continuous_subtype_val.comp continuous_fst).max ((continuous_snd.sub continuous_const).norm)
+  have hlog : Continuous (fun p : CircleParameter => Real.log (max (p.1 : ℝ) ‖p.2 - z‖)) :=
+    hmax.log fun p => (lt_of_lt_of_le p.1.2 (le_max_left _ _)).ne'
+  have hav : Continuous (fun p : CircleParameter => Real.circleAverage logMaxOne p.2 (p.1 : ℝ)) :=
+    continuous_circleAverage_logMaxOne.comp (continuous_snd.prodMk (continuous_subtype_val.comp continuous_fst))
+  have hshift : Continuous (fun p : CircleParameter => Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ)) := by
+    have hfun : (fun p : CircleParameter => Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ)) =
+        fun p => -γ * Real.log (max (p.1 : ℝ) ‖p.2 - z‖) + γ * Real.circleAverage logMaxOne p.2 (p.1 : ℝ) :=
+      funext e
+    rw [hfun]
+    exact (continuous_const.mul hlog).add (continuous_const.mul hav)
+  exact (hcircC.add hshift).add continuous_const
+
+end FirstPassS11atBridge
+
+open FirstPassS11atBridge
+
+/-- **hμ producer, derived** (no `HMuPairingBridge`; the decoder input is `hProf`). For a.e. root `z` in
+`ball c₁ r₁`, the rooted γ-LQG measure of `rootedCircleFieldP α₀ γ hcirc z` exists almost surely. -/
+theorem ae_exists_rootedLQGMeasure {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω)
+    [IsProbabilityMeasure P] (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ : ℂ) (r₁ : ℝ)
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
+    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ)
+    (hProf : LQGMeasureOfProfileMeasurableFrozen.{0}) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∃ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleFieldP α₀ γ hcirc z) μz := by
+  have hQ : 0 < lqgQ γ := by unfold lqgQ; positivity
+  obtain ⟨lam, hlam⟩ := hExist0 hh hγ0 hγ2 hQ
+  obtain ⟨μα, hμα⟩ := hExistα hh hγ0 hγ2 hα
+  obtain ⟨Φ', hΦm, hTend, A, hA, hAgood, hAsound⟩ := exists_pairing_good γ α₀ hh μα hμα hProf
+  set Code : Set ((ℂ → ℝ) → ℝ) :=
+    {T | ∀ i : ℕ, Tendsto (fun j => T (approxSeq i j)) atTop (𝓝 (Φ' T i))} with hCode
+  have hCodem : @MeasurableSet ((ℂ → ℝ) → ℝ) (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ) Code := by
+    have hset : Code = ⋂ i : ℕ, {T | Tendsto (fun j => T (approxSeq i j)) atTop (𝓝 (Φ' T i))} := by
+      ext T
+      simp [hCode]
+    rw [hset]
+    exact MeasurableSet.iInter fun i => measurableSet_codeFiber Φ' hΦm i
+  have hGCm : @MeasurableSet ((ℂ → ℝ) → ℝ) (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ)
+      (Φ' ⁻¹' A ∩ Code) := (hΦm hA).inter hCodem
+  have hCodeAe : ∀ᵐ ω ∂P, hC ω ∈ Code := by
+    filter_upwards [hTend] with ω hω
+    exact hω
+  have hGCae : ∀ᵐ ω ∂P, hC ω ∈ Φ' ⁻¹' A ∩ Code := hAgood.and hCodeAe
+  -- the DMS marked identity for the indicator of the complement of `Good ∩ Code`
+  have hΨm : Measurable[(pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) univ).prod inferInstance]
+      (fun q : ((ℂ → ℝ) → ℝ) × ℂ => (Φ' ⁻¹' A ∩ Code)ᶜ.indicator (fun _ => (1 : ℝ≥0∞)) q.1) :=
+    (measurable_const.indicator hGCm.compl).comp measurable_fst
+  have hDMS := hA10 lam hh hlam _ hΨm
+  have hL : ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1,
+      (Φ' ⁻¹' A ∩ Code)ᶜ.indicator (fun _ => (1 : ℝ≥0∞)) (hC ω) ∂(lam ω) ∂P = 0 := by
+    have h0 : ∀ᵐ ω ∂P, ∫⁻ z in ball (0 : ℂ) 1,
+        (Φ' ⁻¹' A ∩ Code)ᶜ.indicator (fun _ => (1 : ℝ≥0∞)) (hC ω) ∂(lam ω) = 0 := by
+      filter_upwards [hGCae] with ω hω
+      simp [hω]
+    rw [lintegral_congr_ae h0]
+    simp
+  have hR := hDMS.symm.trans hL
+  have hjoint : Measurable (fun q : ℂ × Ω =>
+      (Φ' ⁻¹' A ∩ Code)ᶜ.indicator (fun _ => (1 : ℝ≥0∞)) (dmsShiftedPairing γ q.1 (hC q.2) (hcirc q.2 1 0))) :=
+    (measurable_const.indicator hGCm.compl).comp (measurable_dmsShiftedPairing P γ hC hcirc hh)
+  have hg : Measurable (fun z : ℂ => ∫⁻ ω,
+      (Φ' ⁻¹' A ∩ Code)ᶜ.indicator (fun _ => (1 : ℝ≥0∞)) (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) ∂P) :=
+    hjoint.lintegral_prod_right'
+  have hz0 := (lintegral_eq_zero_iff hg).1 hR
+  have hz1 : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
+      (Φ' ⁻¹' A ∩ Code)ᶜ.indicator (fun _ => (1 : ℝ≥0∞)) (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) = 0 := by
+    filter_upwards [hz0] with z hz
+    have hzm : Measurable (fun ω : Ω => (z, ω)) := measurable_const.prodMk measurable_id
+    exact (lintegral_eq_zero_iff (hjoint.comp hzm)).1 hz
+  have hall : ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P,
+      dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ Φ' ⁻¹' A ∩ Code := by
+    filter_upwards [hz1] with z hz
+    filter_upwards [hz] with ω hω
+    by_contra h
+    simp [Set.indicator_of_mem (Set.mem_compl h)] at hω
+  have hHCae : ∀ᵐ ω ∂P, ∀ i : ℕ,
+      Tendsto (fun j => hC ω (approxSeq i j)) atTop (𝓝 (hcirc ω (denseCircle i).1 (denseCircle i).2)) := by
+    refine ae_all_iff.2 fun i : ℕ => ?_
+    filter_upwards [ae_tendsto_circleApprox hh (show 0 < (denseCircle i).1.1 from (denseCircle i).1.2)
+      (denseCircle i).2] with ω h
+    exact h
+  have hcontAe := hh.ae_continuousOn_circle
+  filter_upwards [ae_restrict_of_ae_restrict_of_subset hWin hall] with z hz
+  have hpt : ∀ ω, ∃ μ : Measure ℂ,
+      (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ Φ' ⁻¹' A ∩ Code ∧
+        ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) ∧
+        ∀ i : ℕ, Tendsto (fun j => hC ω (approxSeq i j)) atTop
+          (𝓝 (hcirc ω (denseCircle i).1 (denseCircle i).2))) →
+      IsLQGLimit γ (rootedCircleFieldP α₀ γ hcirc z ω) μ := by
+    intro ω
+    by_cases hω : dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) ∈ Φ' ⁻¹' A ∩ Code ∧
+        ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) ∧
+        ∀ i : ℕ, Tendsto (fun j => hC ω (approxSeq i j)) atTop
+          (𝓝 (hcirc ω (denseCircle i).1 (denseCircle i).2))
+    · obtain ⟨hmem, hcont, hHC⟩ := hω
+      have hlim : ∀ i : ℕ, Φ' (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) i =
+          hcirc ω (denseCircle i).1 (denseCircle i).2 +
+            Real.circleAverage (dmsShift γ z) (denseCircle i).2 (denseCircle i).1 +
+            dmsConstant γ z (hcirc ω 1 0) := fun i =>
+        tendsto_nhds_unique (hmem.2 i)
+          (tendsto_dmsShiftedPairing_approx γ z (hC ω) (hcirc ω 1 0) (denseCircle i).1.2 (denseCircle i).2
+            (hHC i))
+      let prof : C(CircleParameter, ℝ) := ⟨fun p => hcirc ω p.1 p.2 +
+          Real.circleAverage (dmsShift γ z) p.2 (p.1 : ℝ) + dmsConstant γ z (hcirc ω 1 0),
+        continuous_dmsProfile γ z (hcirc ω) hcont (dmsConstant γ z (hcirc ω 1 0))⟩
+      have hdata : dataMap prof = Φ' (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) := by
+        funext i
+        rw [hlim i]
+        rfl
+      obtain ⟨y, hy, ν, hν⟩ := hAsound _ hmem.1
+      have hyprof : y = prof := dataMap_injective (hy.trans hdata.symm)
+      rw [hyprof] at hν
+      refine ⟨ENNReal.ofReal (Real.exp (-(γ * dmsConstant γ z (hcirc ω 1 0)))) • ν, fun _ => ?_⟩
+      apply isLQGLimit_of_add_const (κ := dmsConstant γ z (hcirc ω 1 0))
+      apply isLQGLimit_congr_of_pos (fun k x => ?_) hν
+      exact circleProfile_shift_eq α₀ γ z (hcirc ω) (dmsConstant γ z (hcirc ω 1 0)) prof (fun p => rfl)
+        (dyadicScale_pos k) x
+    · exact ⟨0, fun h => absurd h hω⟩
+  choose μz hμz using hpt
+  refine ⟨μz, ?_⟩
+  unfold IsLQGMeasure
+  filter_upwards [hz, hcontAe, hHCae] with ω h1 h2 h3
+  exact hμz ω ⟨h1, h2, h3⟩
 
 end FirstPassS11atProducers
