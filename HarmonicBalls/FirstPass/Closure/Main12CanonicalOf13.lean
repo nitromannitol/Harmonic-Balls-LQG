@@ -95,4 +95,38 @@ theorem closure_1_2_faithful_canonical_of_11_13
   harmonicBallNoveltyFaithful_of_canonical.{u}
     (closure_1_2_canonical_of_11_13 hDG hAff hCC hW hE hN hL1 hE1 hE3 hB hCamp hDecFrozen hDec hCM hAx h13 hTor)
 
+/-- **Counted form of the faithful Theorem 1.2** (`theorem:harmonic-balls-properties`; chat 242: STRONGER-BUT-PROVED;
+arbitrary carrier `Ω : Type u`, and radii restricted to `0 < s` as in `HarmonicBallNoveltyFaithfulStmt`). The conclusion is
+`HarmonicBallNoveltyFaithfulStmt`, the faithful statement with the positive-radius condition, at the canonical exponent
+`ξ = γ / lqgGraphDimension γ`; it is not the unrestricted `HarmonicBallNoveltyCanonicalStmt`. Same binders and conclusion as
+`closure_1_2_faithful_canonical_of_11_13` (`FirstPass/Closure/Main12CanonicalOf13.lean:70`), proved by applying it.
+Ledger: `hE1` and `hDecFrozen` are two occurrences of the same external proposition `LQGMeasureOfProfileMeasurableFrozen`;
+`hAx` is a universal-ξ external interface (harmless). -/
+theorem firstPass_1_2_faithful
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hB : BirkhoffPointwiseErgodic.{0})
+    (hCamp : LocalCampbellMarkedRestrictionFrozen.{u})
+    (hDecFrozen : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hDec : LocalLQGDecoderCommonFrozen.{u})
+    (hCM : CameronMartinLocallyLipschitzShiftAbsCont.{u})
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (h13 : CorrectedLemma11_13CanonicalStmt.{u})
+    (hTor : TorhorstSimpleLoopFrozen) :
+    HarmonicBallNoveltyFaithfulStmt.{u} :=
+  closure_1_2_faithful_canonical_of_11_13 hDG hAff hCC hW hE hN hL1 hE1 hE3 hB hCamp hDecFrozen hDec hCM hAx h13 hTor
+
 end HarmonicBalls.Closure
