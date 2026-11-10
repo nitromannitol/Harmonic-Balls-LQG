@@ -120,4 +120,75 @@ theorem measurableSet_canonicalFailure_alpha (K : S11n.CanonSpace → Measure �
   measurableSet_canonicalFailure K d Ostar U V W T Q' Q η M q (canonFieldOf α₀)
     (measurable_canonFieldOf_pairing α₀) hcert
 
+/-- **Measurability with the decoder restriction `G` (the form of `measurableSet_certificateEvent_canonical`).**
+The certificate event of the canonical decoders is measurable only on the conull set `G` of canonical fields, so the
+hypothesis is restricted to `G × univ` (as in step 5 of the chain). Off `{Φ T ∈ G}` no measurability is claimed. The
+window events are then taken with the restriction `Φ T ∈ G` (the convention of `canonWindowSet` in `S11i/CanonicalFailure.lean`).
+The conclusion is the failure set intersected with `{Φ T ∈ G}`. -/
+theorem measurableSet_canonicalFailure_onG (K : S11n.CanonSpace → Measure ℂ) (d : S11n.CanonSpace → ℂ → ℂ → ℝ)
+    (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) (q : ℝ) (Φ : ((ℂ → ℝ) → ℝ) → S11n.CanonSpace)
+    (G : Set S11n.CanonSpace) (hG : MeasurableSet G)
+    (hΦ : Measurable[pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ, inferInstance] Φ)
+    (hcertG : ∀ n : ℕ, MeasurableSet ({p : S11n.CanonSpace × ℂ |
+      CertificateEvent (K p.1) (d p.1) Ostar U V W T Q' Q η M ((2 : ℝ)⁻¹ ^ n) p.2} ∩ (G ×ˢ univ))) :
+    MeasurableSet[(pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ).prod inferInstance]
+      ({p : ((ℂ → ℝ) → ℝ) × ℂ | Φ p.1 ∈ G} ∩ canonicalFailure K d Ostar U V W T Q' Q η M q Φ) := by
+  classical
+  set m : MeasurableSpace (((ℂ → ℝ) → ℝ) × ℂ) :=
+    (pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ).prod inferInstance with hm
+  have hmap : Measurable[m, inferInstance] (fun p : ((ℂ → ℝ) → ℝ) × ℂ => (Φ p.1, p.2)) :=
+    (hΦ.comp measurable_fst).prodMk measurable_snd
+  -- the restricted window events are measurable
+  have hE : ∀ n : ℕ, MeasurableSet[m] {p : ((ℂ → ℝ) → ℝ) × ℂ |
+      CertificateEvent (K (Φ p.1)) (d (Φ p.1)) Ostar U V W T Q' Q η M ((2 : ℝ)⁻¹ ^ n) p.2 ∧ Φ p.1 ∈ G} := by
+    intro n
+    have hset : {p : ((ℂ → ℝ) → ℝ) × ℂ |
+        CertificateEvent (K (Φ p.1)) (d (Φ p.1)) Ostar U V W T Q' Q η M ((2 : ℝ)⁻¹ ^ n) p.2 ∧ Φ p.1 ∈ G} =
+        (fun p : ((ℂ → ℝ) → ℝ) × ℂ => (Φ p.1, p.2)) ⁻¹'
+          ({p : S11n.CanonSpace × ℂ |
+            CertificateEvent (K p.1) (d p.1) Ostar U V W T Q' Q η M ((2 : ℝ)⁻¹ ^ n) p.2} ∩ (G ×ˢ univ)) := by
+      ext p
+      simp [and_comm]
+    rw [hset]
+    exact hmap (hcertG n)
+  -- the restricted window frequency, a finite sum of indicators (measurable on the whole product)
+  set Fg : ℕ → ((ℂ → ℝ) → ℝ) × ℂ → ℝ := fun N p => (∑ n ∈ Finset.Icc (N + 1) (2 * N),
+    if CertificateEvent (K (Φ p.1)) (d (Φ p.1)) Ostar U V W T Q' Q η M ((2 : ℝ)⁻¹ ^ n) p.2 ∧ Φ p.1 ∈ G
+    then (1 : ℝ) else 0) / (N : ℝ) with hFg
+  have hF : ∀ N : ℕ, Measurable[m] (Fg N) := by
+    intro N
+    exact Measurable.div_const (Finset.measurable_sum _ fun n _ => Measurable.ite (hE n) measurable_const
+      measurable_const) _
+  -- on `{Φ T ∈ G}` the restricted frequency is the canonical window frequency
+  have hagree : ∀ (N : ℕ) (p : ((ℂ → ℝ) → ℝ) × ℂ), Φ p.1 ∈ G →
+      Fg N p = canonicalWindowFreq K d Ostar U V W T Q' Q η M (Φ p.1) p.2 N := by
+    intro N p hp
+    unfold canonicalWindowFreq
+    rw [ncard_window_eq_sum (fun n => CertificateEvent (K (Φ p.1)) (d (Φ p.1)) Ostar U V W T Q' Q η M
+      ((2 : ℝ)⁻¹ ^ n) p.2), hFg]
+    simp [hp]
+  have hset_eq : ({p : ((ℂ → ℝ) → ℝ) × ℂ | Φ p.1 ∈ G} ∩ canonicalFailure K d Ostar U V W T Q' Q η M q Φ) =
+      {p : ((ℂ → ℝ) → ℝ) × ℂ | Φ p.1 ∈ G} ∩ {p | ¬ Tendsto (fun N : ℕ => Fg N p) atTop (𝓝 q)} := by
+    ext p
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, canonicalFailure]
+    constructor
+    · rintro ⟨hA, hT⟩
+      refine ⟨hA, ?_⟩
+      have hfun : (fun N : ℕ => Fg N p) =
+          fun N : ℕ => canonicalWindowFreq K d Ostar U V W T Q' Q η M (Φ p.1) p.2 N :=
+        funext fun N => hagree N p hA
+      rw [hfun]
+      exact hT
+    · rintro ⟨hA, hT⟩
+      refine ⟨hA, ?_⟩
+      have hfun : (fun N : ℕ => Fg N p) =
+          fun N : ℕ => canonicalWindowFreq K d Ostar U V W T Q' Q η M (Φ p.1) p.2 N :=
+        funext fun N => hagree N p hA
+      rw [hfun] at hT
+      exact hT
+  rw [hset_eq]
+  have hA : MeasurableSet[m] {p : ((ℂ → ℝ) → ℝ) × ℂ | Φ p.1 ∈ G} := measurable_fst (hΦ hG)
+  exact hA.inter (@HarmonicBalls.FirstPassS11iCanonFailure.measurableSet_not_tendsto_real
+    (((ℂ → ℝ) → ℝ) × ℂ) m Fg hF q)
+
 end HarmonicBalls.FirstPassS11iStep8Transfer
