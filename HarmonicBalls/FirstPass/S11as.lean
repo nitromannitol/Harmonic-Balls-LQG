@@ -120,4 +120,19 @@ theorem rootedCovariance_eventually (μR : Measure ℂ) (dR : ℂ → ℂ → �
   filter_upwards [eventually_cutRadius_lt hb] with n hn
   exact certificateEvent_of_rootedLocalRescaling μR (μC n) dR (dC n) Ostar U V W T Q' Q η M z n hC hU (hloc n hn)
 
+/-- **Scale direction of the local rescaling (deterministic).** If the decoded canonical measure at scale `2^n` is the
+zoom-in `b • μL.map (· * 2^n)` of a unit-scale measure `μL` (the LQG coordinate rule for the magnified field), then its
+rescaled push-forward `map (· / 2^n)` returns `b • μL`. So the measure clause of `RootedLocalRescaling` (`μC.map (· / 2^n)`)
+is the unit-scale statement `μR.map (· - z) = a' • μL` on `closedBall 0 (7 · 2^{-n})`. -/
+theorem map_div_zoomIn_eq (μL : Measure ℂ) (b : ℝ≥0∞) {c : ℝ} (hc : 0 < c) :
+    ((b • μL.map (fun w : ℂ => w * (c : ℂ))).map (fun w : ℂ => w / (c : ℂ))) = b • μL := by
+  have hc0 : (c : ℂ) ≠ 0 := by exact_mod_cast hc.ne'
+  have hm1 : Measurable (fun w : ℂ => w * (c : ℂ)) := by fun_prop
+  have hm2 : Measurable (fun w : ℂ => w / (c : ℂ)) := by fun_prop
+  rw [Measure.map_smul b hm2.aemeasurable, Measure.map_map hm2 hm1]
+  have hid : ((fun w : ℂ => w / (c : ℂ)) ∘ (fun w : ℂ => w * (c : ℂ))) = id := by
+    funext w
+    simp [mul_div_cancel_right₀ w hc0]
+  rw [hid, Measure.map_id]
+
 end FirstPassS11as
