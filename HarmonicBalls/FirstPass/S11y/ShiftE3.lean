@@ -16,8 +16,9 @@ lower bound, since the weight is `0` near them); `A, d₀, d₁` are internal qu
 `d₂` is scaled by at most `k` (weight `log k / ξ` on `thickening δ K₂`).
 
 Only the weylScaling identities of FirstPass/S11m (E1Bounds, WeylShift) and Steps (WeylAnnulusBounds,
-PinchMeasureWeylShift) are used. The length-metric property of the shifted metric is a hypothesis (`hE`), the
-frozen input `LQGMetricAlphaWeylShiftLengthFrozen` (FirstPass/Frozen/S11m.lean:30).
+PinchMeasureWeylShift) are used. The length-metric property of the shifted metric is a hypothesis (`hE`) here;
+`ShiftLength.lean` derives it for a smooth compactly supported bump (`shiftLength_of_bump`), so this file needs no
+frozen input.
 -/
 
 open MeasureTheory Set Metric Filter
