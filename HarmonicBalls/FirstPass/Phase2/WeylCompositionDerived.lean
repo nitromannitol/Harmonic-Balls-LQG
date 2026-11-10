@@ -5,7 +5,7 @@ import HarmonicBalls.Steps.Sec11.ContinuousFieldShift
 Partial result toward `WeylScalingCompositionFrozen` (`FirstPass/Frozen/S11d.lean:91`). For a whole-plane GFF `hC`
 and a continuous shift `g`, the LQG metric of `hC + g` is the Weyl scaling of the metric of `hC` by `g`, and a second
 Weyl scaling by a continuous weight `L` composes into the Weyl scaling by `g + L`. Both identities are the Weyl
-axiom III (`SatisfiesLQGMetricAxioms.ae_weylScaling`, Defs/LQGMetric.lean) applied to the base fields `hC` and
+Weyl-scaling property III (`SatisfiesLQGMetricAxioms.ae_weylScaling`, Defs/LQGMetric.lean) applied to the base fields `hC` and
 `hC + g`, together with the field-shift identity `IsLQGMetric.addFunPairing_addFunPairing`.
 
 Not covered here: the frozen statement uses the logarithmic weight `fun z => -α₀ * Real.log ‖z‖`, which is not
