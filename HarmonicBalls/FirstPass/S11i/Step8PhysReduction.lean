@@ -45,6 +45,8 @@ Not supplied by the premise: the decoded certificate event of `ae_unitScale_of_d
 `hFdef`) must equal `E`, i.e. `∀ L, CertificateEvent (Dμ L) (Dd L) Ostar U' V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ E`
 for the decoded models. `PinchEventGammaStmt` (`S11i/Assembly13.lean:120`) gives only measurability, positivity, and
 `E ⇒ pinchPointEvent` a.s. (one-sided). -/
+-- SUPERSEDED, FALSE AS TYPED (universal over the event `E`; Codex, notes/fp-gaps/CODEX-hPhys-sol-20261110.md).
+-- Do not use. The corrected provider is `Step8PhysExistsStmt` (S11i/Step8PhysExists.lean).
 def Step8UnitScaleAlpha0Stmt.{v} : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
     ∀ γ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
@@ -81,6 +83,8 @@ def CoordChangeAlpha0Stmt.{v} : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc
 
 /-- The binder `hPhys` of `step8Identity_given_pinchEvent_canonical_of_phys` (`S11i/Step8IdentityAssembly.lean`), named. -/
+-- SUPERSEDED, FALSE AS TYPED (universal over the event `E`; Codex, notes/fp-gaps/CODEX-hPhys-sol-20261110.md).
+-- Do not use. The corrected provider is `Step8PhysExistsStmt` (S11i/Step8PhysExists.lean).
 def Step8PhysStmt.{v} : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
     ∀ γ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →

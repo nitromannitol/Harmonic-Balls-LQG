@@ -1,0 +1,179 @@
+import HarmonicBalls.FirstPass.S11i.Corrected11_13
+import HarmonicBalls.FirstPass.S11i.Step8Event
+import HarmonicBalls.FirstPass.S11i.Step8ZoomFrequency
+import HarmonicBalls.FirstPass.S11i.HzoomScale
+
+/-!
+# Step 8 physical frequency with an existential event (fp-S11-13-physExists-adapter, owner n3)
+
+Codex (`notes/fp-gaps/CODEX-hPhys-sol-20261110.md`, lines 1-51) shows that `Step8PhysStmt` and
+`Step8UnitScaleAlpha0Stmt` (`S11i/Step8PhysReduction.lean`) are FALSE as typed: they quantify over EVERY pinch event `E`,
+while the physical frequency does not depend on `E`. Two measurable subsets `E₀ ⊇ E₁` of positive probability ratio `p` and
+`p/2` both satisfy the pinch premise, so the same frequency would converge to `p` and to `p/2`. The counted consumer
+`Step8IdentityGivenPinchEventCanonicalStmt` needs only an EXISTENTIAL choice of the event. This file gives that corrected
+provider and its adapter.
+
+* `Step8PhysExistsStmt.{v}` (Codex step 6): from a pinch event, there is a pinch event `E` such that for every common
+  probability `q` of `E`, the physical frequency holds at every scale `k` for all insertion-`α` models (`AllModelsAt`).
+* `step8Identity_given_pinchEvent_canonical_of_physExists` (Codex step 7; no binder beyond the provider): the common
+  probability of `E` is `exists_localModConstField_prob`, the second conjunct is `step8_zoom_family_of_ae_frequency`.
+* Route 2 (universe 0): `Step8PhysExistsStmt.{0}` from
+  (a) `allModelsAt_zero_of_unit` (PROVED): insertion-zero physical frequency for every scale from the insertion-zero unit
+      statement, via `hphys_of_unit_models`, `zoomMetricNormStmt_of_isLQGMetricOfField` (α = 0, proved),
+      and the coordinate change `CoordChangeZeroStmt` (Proposed, Fact 2.1 IV);
+  (b) `Step8InsertionTransferStmt` (NAMED BINDER, n4 proves): insertion-zero to insertion-`α` for `AllModelsAt`;
+  (c) `Step8EventCalibrationStmt` (NAMED BINDER, n1 checks): a pinch event `E` calibrated to a coding event `F` whose
+      insertion-zero unit frequency is its own probability.
+  No singular α metric normalization (`hMet`) is used.
+
+Universe. `AllModelsAt.{v}` quantifies over `Ω : Type v`. The insertion-zero step (a) uses the metric zoom
+`zoomMetricNormStmt_of_isLQGMetricOfField`, which is stated for `Ω₀ : Type`, because `IsLQGMetric` quantifies its axioms
+over `Ω : Type` (`Defs/LQGMetric.lean:181`). So route 2 gives `Step8PhysExistsStmt.{0}` only. The closure statements
+(`Closure/Sec11Canonical.lean:77`, `Main12Canonical.lean:146`, `PaperExponent.lean:64`) take `hId` at a general universe `u`.
+That gap is open and is stated in the report.
+
+The identities `F = E` and `EventCalibration` are not definitional: `CommonProb` is a model-level equation, and the
+premise event is not the coding event. The provider therefore chooses its event (no universal quantifier over events).
+-/
+
+universe v
+
+namespace HarmonicBalls.FirstPassS11iStep8PhysExists
+
+open MeasureTheory Filter Topology Set Metric FirstPassS11i HarmonicBalls
+open HarmonicBalls.FirstPassS11iHzoom HarmonicBalls.FirstPassS11iStep8Zoom
+open scoped ENNReal
+
+/-- The Lemma 11.12 code space: pinch events are subsets of `ModConstTestPairings B₇`. -/
+abbrev Step8Code := ModConstTestPairings (ball (0 : ℂ) 7)
+
+/-- `CommonProb γ E q`: the canonical probability `P{localModConstField γ h B₇ ∈ E}` equals `q` in every whole-plane
+model (Armstrong-Kuusi-Mourrat style model independence, `localModConstField_prob_indep`). -/
+def CommonProb.{w} (γ : ℝ) (E : Set Step8Code) (q : ℝ) : Prop :=
+  ∀ (Ω : Type w) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+    (P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal = q
+
+/-- `PhysicalAt P q U V W T Q' Q δ M k μ D`: almost surely, for `μ`-almost every centre `z ∈ B_{2^k}(0)`, the window
+frequency of the certificate events (`pinchOmegaGeom W Q δ`, `η = δ`) at radii `2^k 2^{-n}` tends to `q`. This is the
+conclusion of `hPhys` (`S11i/Step8PhysReduction.lean`) at a fixed scale. -/
+def PhysicalAt.{w} {Ω : Type w} [MeasurableSpace Ω] (P : Measure Ω) (q : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ)
+    (k : ℕ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ) : Prop :=
+  ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), z ∈ ball (0 : ℂ) ((2 : ℝ) ^ k) →
+    Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
+      CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M
+        ((2 : ℝ) ^ k * (2 : ℝ)⁻¹ ^ n) z}.ncard : ℕ) : ℝ) / (N : ℝ)) atTop (𝓝 q)
+
+/-- `AllModelsAt γ ξ α q U V W T Q' Q δ M k`: `PhysicalAt` holds at scale `2^k` for every insertion-`α` LQG model on every
+probability space `Ω : Type w` and every law `P` (uniformity over laws is explicit: the Cameron-Martin step of the insertion
+transfer changes the law). -/
+def AllModelsAt.{w} (γ ξ α q : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ) (k : ℕ) : Prop :=
+  ∀ (Ω : Type w) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ → IsLQGMetricOfField P γ ξ α hC D →
+      PhysicalAt P q U V W T Q' Q δ M k μ D
+
+/-- `EventCalibration γ E F`: `E` and `F` have the same common probability. -/
+def EventCalibration.{w} (γ : ℝ) (E F : Set Step8Code) : Prop :=
+  ∀ q : ℝ, CommonProb.{w} γ E q → CommonProb.{w} γ F q
+
+/-- **Insertion-zero unit frequency of a coding event `F`** (route 2, universe `w`). For every insertion-zero model and every
+`q` that is the common probability of `F`, the unit-ball frequency of the certificate events is `q`. The coding identity of
+`F` (its `hFdef`, `S11i/Step8Decoded.lean:43`) and the unit-scale producer (`unitBallFrequencyModels_at_step8Frequency`,
+`S11i/HzoomUnitBallDoubled.lean`) are its content. -/
+def InsertionZeroUnitStmt.{w} (γ : ℝ) (F : Set Step8Code) (U V W T Q' Q : Set ℂ) (δ M : ℝ) : Prop :=
+  ∀ (Ω : Type w) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ → IsLQGMetricOfField P γ (lqgXi γ) 0 hC D →
+      ∀ q : ℝ, CommonProb.{w} γ F q → UnitBallFrequencyStmt P q U V W T Q' Q δ M μ D
+
+/-- **NAMED BINDER (route 2, (b)): insertion transfer of the physical frequency** (Codex step 3,
+`allModelsAt_insertion_of_zero`). From insertion zero to insertion `α < Q_γ`, for every scale `k`, uniformly over laws.
+Source: the local Cameron-Martin argument of the Codex note (lines 131-190) with `localLQGInsertionWeylOffOrigin_derived`,
+`ae_fitting_eventually_of_decoders`, `ae_unitScale_of_decoded_ball`, `ae_forall_of_cover`. Owner of the proof: n4. -/
+def Step8InsertionTransferStmt : Prop :=
+  ∀ (γ α q δ M : ℝ) (U V W T Q' Q : Set ℂ) (k : ℕ), IsBufferedPinchGeometry U V W T Q' Q δ →
+    0 < γ → γ < 2 → α < lqgQ γ →
+    AllModelsAt.{0} γ (lqgXi γ) 0 q U V W T Q' Q δ M k → AllModelsAt.{0} γ (lqgXi γ) α q U V W T Q' Q δ M k
+
+/-- The coordinate change of the LQG measure at insertion zero for every whole-plane model (`LQGMeasureCoordChange`,
+Proposed input, Fact 2.1 IV, `Proposed/LQG.lean:116`, pending operator source-check). -/
+def CoordChangeZeroStmt : Prop :=
+  ∀ (γ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ 0 hC hcirc
+
+/-- **NAMED BINDER (route 2, (c)): event calibration** (n1 checks). From the existence of some pinch event at `γ`, there is
+a pinch event `E` and a coding event `F` with the same common probability (`EventCalibration`), and `F` has the insertion-zero
+unit frequency `InsertionZeroUnitStmt`. The probability of `F` is not prescribed in advance: `E` is chosen so that the
+calibration holds (the Codex counterexample excludes a universal choice of `E`). -/
+def Step8EventCalibrationStmt.{w} : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ M γ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
+    0 < γ → γ < 2 → 0 < M →
+    (∃ E : Set Step8Code, PinchEventGammaCanonicalStmt.{w} U T Q' Q γ M E) →
+    ∃ E F : Set Step8Code, PinchEventGammaCanonicalStmt.{w} U T Q' Q γ M E ∧ EventCalibration.{w} γ E F ∧
+      InsertionZeroUnitStmt.{w} γ F U V W T Q' Q δ M
+
+/-- **Corrected existential provider (Codex step 6).** From the existence of a pinch event, there is a pinch event `E` such
+that every common probability `q` of `E` gives the physical frequency at every scale, for every insertion-`α` model. This
+replaces the false universal-event binder `Step8PhysStmt` (`S11i/Step8PhysReduction.lean`). -/
+def Step8PhysExistsStmt.{w} : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
+    ∀ γ α M : ℝ, 0 < γ → γ < 2 → α < lqgQ γ → 0 < M →
+    (∃ E : Set Step8Code, PinchEventGammaCanonicalStmt.{w} U T Q' Q γ M E) →
+    ∃ E : Set Step8Code, PinchEventGammaCanonicalStmt.{w} U T Q' Q γ M E ∧
+      ∀ q : ℝ, CommonProb.{w} γ E q → ∀ k : ℕ, AllModelsAt.{w} γ (lqgXi γ) α q U V W T Q' Q δ M k
+
+/-- **Consumer adapter (Codex step 7).** The corrected existential provider gives the counted consumer
+`Step8IdentityGivenPinchEventCanonicalStmt`: the common probability of the selected event comes from
+`exists_localModConstField_prob`, and the zoom family from `step8_zoom_family_of_ae_frequency`. -/
+theorem step8Identity_given_pinchEvent_canonical_of_physExists.{w} (hPhys : Step8PhysExistsStmt.{w}) :
+    Step8IdentityGivenPinchEventCanonicalStmt.{w} := by
+  intro U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM hE
+  obtain ⟨E, hPG, hall⟩ := hPhys U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM hE
+  refine ⟨E, hPG, ?_⟩
+  unfold Step8IdentityCanonicalStmt Step8IdentityStmt
+  obtain ⟨q, hq⟩ := HarmonicBalls.exists_localModConstField_prob γ hPG.1
+  refine ⟨q, fun Ω _ P hC hcirc μ D hG _ _ => hq Ω P hC hcirc hG, ?_⟩
+  intro Ω _ P hC hcirc μ D hG hμ hD
+  exact HarmonicBalls.FirstPassS11iStep8Zoom.step8_zoom_family_of_ae_frequency P U V W T Q' Q δ₀ M q μ D
+    (fun k => hall q hq k Ω P hC hcirc μ D hG hμ hD)
+
+/-- **(a) Insertion-zero physical frequency at every scale from the insertion-zero unit statement** (route 2, universe 0).
+For each insertion-zero model, `hphys_of_unit_models` (`S11i/HzoomScale.lean:173`) gives the zoom at every scale from the
+unit-ball frequency of the normalized models; the metric normalization is `zoomMetricNormStmt_of_isLQGMetricOfField`
+(`S11i/HzoomScale.lean:275`, proved for `Ω : Type`) and the coordinate change is `CoordChangeZeroStmt`. -/
+theorem allModelsAt_zero_of_unit {γ q δ M : ℝ} {U V W T Q' Q : Set ℂ} {F : Set Step8Code}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hCC0 : CoordChangeZeroStmt)
+    (hU : InsertionZeroUnitStmt.{0} γ F U V W T Q' Q δ M) (hq : CommonProb.{0} γ F q) (k : ℕ) :
+    AllModelsAt.{0} γ (lqgXi γ) 0 q U V W T Q' Q δ M k := by
+  intro Ω _ P hC hcirc μ D hG hμ hD
+  unfold PhysicalAt
+  have hunit : UnitBallFrequencyModelsStmt P γ (lqgXi γ) q U V W T Q' Q δ M :=
+    fun hC' hcirc' μ' D' h1 h2 h3 => hU Ω P hC' hcirc' μ' D' h1 h2 h3 q hq
+  exact (hphys_of_unit_models hγ0 hγ2 hG hμ (hCC0 γ Ω P hC hcirc)
+    (zoomMetricNormStmt_of_isLQGMetricOfField hG hD) hunit) k
+
+/-- **Route 2 (universe 0): `Step8PhysExistsStmt.{0}` from (a), (b), (c).** Take the pinch event `E` of the calibration
+binder (c); for each common probability `q` of `E`, calibration gives the coding probability of `F`, (a) gives the
+insertion-zero physical frequency at every scale, and (b) transfers it to insertion `α`. -/
+theorem step8PhysExists_of_route2 (hCC0 : CoordChangeZeroStmt) (hCal : Step8EventCalibrationStmt.{0})
+    (hIns : Step8InsertionTransferStmt) : Step8PhysExistsStmt.{0} := by
+  intro U V W T Q' Q δ hgeom γ α M hγ0 hγ2 hα hM hE
+  obtain ⟨E, F, hPG, hcal, hU⟩ := hCal U V W T Q' Q δ M γ hgeom hγ0 hγ2 hM hE
+  refine ⟨E, hPG, fun q hq k => ?_⟩
+  exact hIns γ α q δ M U V W T Q' Q k hgeom hγ0 hγ2 hα
+    (allModelsAt_zero_of_unit hγ0 hγ2 hCC0 hU (hcal q hq) k)
+
+/-- **Route 2 consumer (universe 0):** `Step8IdentityGivenPinchEventCanonicalStmt.{0}` from the three inputs (a) (proved),
+(b) `hIns` and (c) `hCal`, and the Proposed coordinate change `hCC0`. -/
+theorem step8Identity_given_pinchEvent_canonical_of_route2 (hCC0 : CoordChangeZeroStmt)
+    (hCal : Step8EventCalibrationStmt.{0}) (hIns : Step8InsertionTransferStmt) :
+    Step8IdentityGivenPinchEventCanonicalStmt.{0} :=
+  step8Identity_given_pinchEvent_canonical_of_physExists (step8PhysExists_of_route2 hCC0 hCal hIns)
+
+end HarmonicBalls.FirstPassS11iStep8PhysExists
+
+#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_physExists
+#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.allModelsAt_zero_of_unit
+#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8PhysExists_of_route2
+#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route2
