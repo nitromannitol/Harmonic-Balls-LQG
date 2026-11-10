@@ -189,8 +189,28 @@ theorem exists_exterior_annulusGreenPotentialSup_of_buffered {Ω : Type u} [Meas
     (sphere_one_subset_compl_closure_W_of_buffered hgeo)
     (closure_annulus_compl_closure_W_of_buffered hgeo) hSing
 
+/-- N2 with the singular identity discharged: `hSing` is `singular_measure_identity` (`FirstPass/S11q.lean`, n1) for the
+exponent-`α₀` LQG measure `μ` and the exponent-`0` base `μ₀`. Named inputs: the Proposed `hWeyl`, `hNa0`, `hNa`
+(`LQGMeasureWeylScaling`, `LQGMeasureNonatomic`, pending operator source-check), the cited HB Prop. 2.5 `hholder`, and the
+frozen `hFr`, `hBr`; the geometry is `IsBufferedPinchGeometry`. -/
+theorem exists_exterior_annulusGreenPotentialSup_of_buffered_singular {Ω : Type u} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc) (γ α₀ : ℝ) (μ μ₀ : Ω → Measure ℂ) (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    (hα : α₀ < lqgQ γ) (hLQG : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hFr : LQGMassInnerMeasurableFrozen.{u}) (hBr : WholePlaneCircleAverageLimitFrozen.{u})
+    (hholder : GreenPotentialHolderStmt.{u}) (h₀ : IsLQGMeasureOfField P γ 0 hcirc μ₀)
+    (hWeyl : LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hNa0 : LQGMeasureNonatomic P γ 0 hC hcirc) (hNa : LQGMeasureNonatomic P γ α₀ hC hcirc)
+    {U V W T Q' Q : Set ℂ} {δ : ℝ} (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) :
+    ∃ G : Ω → ℝ≥0∞,
+      Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] G ∧
+        (∀ᵐ ω ∂P, G ω = annulusGreenPotentialSup (μ ω) 0 3 6) ∧ ∀ᵐ ω ∂P, G ω ≠ ⊤ :=
+  exists_exterior_annulusGreenPotentialSup_of_buffered hGFF γ α₀ μ μ₀ hγ0 hγ2 hα hLQG hFr hBr hholder h₀ hNa0 hgeo
+    (singular_measure_identity P hGFF hγ0 hγ2 hα hWeyl hNa0 hNa h₀ hLQG)
+
 end HarmonicBalls
 
 #print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_buffered
+#print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_buffered_singular
 
 #print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_frozen
