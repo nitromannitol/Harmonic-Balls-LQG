@@ -90,7 +90,8 @@ def WeylMetricCompositionFrozen : Prop :=
 of an LQG metric is positive: `ξ > 0` for `IsLQGMetric γ ξ 𝔇`, `0 < γ < 2`, the only range used. The statement is TRUE.
 Its source is the positivity argument, not Ding-Gwynne Theorem 1.9 (which assumes `ξ > 0`): normalized whole-plane GFF
 scaling, constant Weyl scaling, coordinate change and the Euclidean topology (Bou-Rabee-Gwynne arXiv:2208.11795, Section
-2.1, (2.1)-(2.2), p. 8); see `notes/fp-gaps/CHATGPT-xi-exponent-rigidity.md` section 3. -/
+2.1, (2.1)-(2.2), p. 8); see `notes/fp-gaps/CHATGPT-xi-exponent-rigidity.md` section 3.
+derived: lqgMetricExponentPositive_of_inputs (FirstPass/S11x.lean) -/
 def LQGMetricExponentPositive : Prop :=
   ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 → 0 < ξ
 
