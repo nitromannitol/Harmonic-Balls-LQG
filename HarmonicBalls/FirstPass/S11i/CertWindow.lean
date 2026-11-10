@@ -51,8 +51,8 @@ theorem eventually_window_of_cert_freq (Pn cert : ℕ → Prop) (k : ℕ) (himp 
 
 /-- **Steps 13-14 (conditional form, write-up section 8).** `μk k` and `Dk k` are the LQG pair of the rescaled model at
 scale `2^k`: almost surely `μk k = c • μ.map (· / 2^k)` and `Dk k = b * D(2^k ·, 2^k ·)` (the shape of
-`step13_extend`). `hcert`: a certificate index of the rescaled model forces the actual pinch event at the rescaled
-point. `hstep12`: the certificate window frequency tends to `q` for `μk`-almost every `w` in the unit ball (Step 12,
+`step13_extend`). `hcert`: for `μk`-almost every point `w`, every certificate index of the rescaled model forces the actual
+pinch event at `w` (the write-up uses the implication only off an exceptional set, eq. (40)). `hstep12`: the certificate window frequency tends to `q` for `μk`-almost every `w` in the unit ball (Step 12,
 conclusion (10)). Conclusion: almost surely, for `μ`-almost every `z`, eventually `q N / 4` is at most the number of
 pinch-window indices at `z`. -/
 theorem pinch_window_ae_of_cert {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
@@ -62,7 +62,7 @@ theorem pinch_window_ae_of_cert {Ω : Type*} [MeasurableSpace Ω] (P : Measure �
     (hscale : ∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b : ℝ, 0 < a ∧ 0 < b ∧
       μk k ω = ENNReal.ofReal a • (μ ω).map (fun x : ℂ => x / ((((2 : ℝ) ^ k : ℝ)) : ℂ)) ∧
       ∀ u v : ℂ, Dk k ω u v = b * D ω ((((2 : ℝ) ^ k : ℝ) : ℂ) * u) ((((2 : ℝ) ^ k : ℝ) : ℂ) * v))
-    (hcert : ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ n : ℕ, ∀ w : ℂ, Cert k ω n w →
+    (hcert : ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(μk k ω), ∀ n : ℕ, Cert k ω n w →
       pinchPointEvent (μk k ω) (Dk k ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) w)
     (hstep12 : ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(μk k ω), w ∈ ball (0 : ℂ) 1 →
       Tendsto (fun N : ℕ => ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧ Cert k ω n w}.ncard : ℝ) / (N : ℝ))
@@ -89,7 +89,13 @@ theorem pinch_window_ae_of_cert {Ω : Type*} [MeasurableSpace Ω] (P : Measure �
           atTop (𝓝 q) := by
       have h1 := HarmonicBalls.Step13.ae_of_ae_smul_const _ (ENNReal.ofReal_pos.2 ha).ne' hst
       exact ae_of_ae_map (by fun_prop : Continuous fun x : ℂ => x / (R : ℂ)).aemeasurable h1
-    filter_upwards [hae] with z hz hzR
+    -- the certificate-to-pinch implication, transported from `μk`-a.e. `w` to `μ`-a.e. `z`
+    have hcae : ∀ᵐ z ∂(μ ω), ∀ n : ℕ, Cert k ω n (z / (R : ℂ)) →
+        pinchPointEvent (ENNReal.ofReal a • (μ ω).map (fun x : ℂ => x / (R : ℂ)))
+          (fun u v => b * D ω ((R : ℂ) * u) ((R : ℂ) * v)) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) (z / (R : ℂ)) := by
+      have h1 := HarmonicBalls.Step13.ae_of_ae_smul_const _ (ENNReal.ofReal_pos.2 ha).ne' hcc
+      exact ae_of_ae_map (by fun_prop : Continuous fun x : ℂ => x / (R : ℂ)).aemeasurable h1
+    filter_upwards [hae, hcae] with z hz hcz hzR
     have hw : z / (R : ℂ) ∈ ball (0 : ℂ) 1 := by
       rw [mem_ball_zero_iff] at hzR ⊢
       rw [norm_div, Complex.norm_real, Real.norm_of_nonneg hR0.le, div_lt_one hR0]
@@ -109,7 +115,7 @@ theorem pinch_window_ae_of_cert {Ω : Type*} [MeasurableSpace Ω] (P : Measure �
     have e2 : (R : ℂ) * (z / (R : ℂ)) = z := by
       field_simp
     rw [e1, e2] at hdil
-    exact hdil.1 (hcc (n + k) (z / (R : ℂ)) hn)
+    exact hdil.1 (hcz (n + k) hn)
   filter_upwards [ae_all_iff.2 key] with ω hω
   filter_upwards [ae_all_iff.2 hω] with z hz
   obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt ‖z‖ (by norm_num : (1 : ℝ) < 2)
