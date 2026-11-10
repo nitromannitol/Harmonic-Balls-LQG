@@ -75,14 +75,10 @@ def CorrectedLemma11_12Stmt : Prop :=
 
 /-- Lemma 11.13 in the corrected form (`lemma:mu_h-pinch-bad`, corrected paper lines 3251-3263), quantified over every
 buffered geometry (`[C42]`, corrected lines 3157-3201). The density `δ` is chosen before the probability space.
-
-The clause `insert 0 (sphere 0 5) ⊆ pinchOmegaGeom W Q δ₀` is the component property of corrected paper lines 3180-3200
-(the component of `0` in the pinch-geometry complement contains `0` and `∂B₅`), the same clause as in
-`CorrectedLemma11_12Stmt`. Operator decision (fp-S11i-11-13b, Blocker 2, as for 11.12): it is a hypothesis on the geometry,
-and `IsBufferedPinchGeometry` is unchanged. -/
+The component clause `insert 0 (sphere 0 5) ⊆ pinchOmegaGeom W Q δ₀` (corrected lines 3180-3200) is derived from the buffered
+geometry (`FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom`), so it is not a hypothesis here. -/
 def CorrectedLemma11_13Stmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
-  insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
   ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ M : ℝ, 0 < M →
   ∃ δ ∈ Ioo (0 : ℝ) 1, ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),

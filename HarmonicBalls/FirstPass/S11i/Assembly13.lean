@@ -80,12 +80,11 @@ theorem correctedLemma11_13_of_identity
     (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
     (hZ : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
-      insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
       ∀ γ ξ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
         ZoomIdentityStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M) :
     CorrectedLemma11_13Stmt.{u} := by
-  intro U V W T Q' Q δ₀ hgeom hOmega γ α₀ ξ hγ0 hγ2 hα M hM
-  obtain ⟨E, hWit, Ostar, -, -, -, hfreq⟩ := hZ U V W T Q' Q δ₀ hgeom hOmega γ ξ α₀ M hγ0 hγ2 hα hM
+  intro U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM
+  obtain ⟨E, hWit, Ostar, -, -, -, hfreq⟩ := hZ U V W T Q' Q δ₀ hgeom γ ξ α₀ M hγ0 hγ2 hα hM
   obtain ⟨hEm, hW⟩ := hWit
   by_cases hmod : ∃ (Ω : Type u) (inst : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
@@ -142,8 +141,7 @@ def GammaZoomIdentityStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M : �
       (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
       IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ → IsLQGMetricOfField P γ ξ γ hC D →
       (P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal = q) ∧
-    ∃ Ostar : Set ℂ, IsOpen Ostar ∧ (0 : ℂ) ∈ Ostar ∧ sphere (0 : ℂ) 5 ⊆ Ostar ∧
-      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
         (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
         IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
         ∃ (μk : ℕ → Ω → Measure ℂ) (Dk : ℕ → Ω → ℂ → ℂ → ℝ),
@@ -152,7 +150,7 @@ def GammaZoomIdentityStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M : �
             ∀ x y : ℂ, Dk k ω x y = b * D ω ((((2 : ℝ) ^ k : ℝ) : ℂ) * x) ((((2 : ℝ) ^ k : ℝ) : ℂ) * y)) ∧
           ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(μk k ω), w ∈ ball (0 : ℂ) 1 →
             Tendsto (fun N : ℕ => ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
-              FirstPassS11i.windowCert Ostar U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ)) atTop
+              FirstPassS11i.windowCert (pinchOmegaGeom W Q δ) U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ)) atTop
               (𝓝 q)
 
 /-- **Lemma 11.13 (corrected), conditional on the Step 12 identity at the insertion `γ`.** The density is `δ = min (q/4) (1/2)`
@@ -166,13 +164,12 @@ theorem correctedLemma11_13_of_gamma_identity
     (hMeas : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ γ hC hcirc)
     (hZ : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
-      insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
       ∀ γ ξ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
         GammaZoomIdentityStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M) :
     CorrectedLemma11_13Stmt.{u} := by
-  intro U V W T Q' Q δ₀ hgeom hOmega γ α₀ ξ hγ0 hγ2 hα M hM
-  obtain ⟨E, ⟨-, hW⟩, q, hqeq, Ostar, -, -, -, hfreq⟩ :=
-    hZ U V W T Q' Q δ₀ hgeom hOmega γ ξ α₀ M hγ0 hγ2 hα hM
+  intro U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM
+  obtain ⟨E, ⟨-, hW⟩, q, hqeq, hfreq⟩ :=
+    hZ U V W T Q' Q δ₀ hgeom γ ξ α₀ M hγ0 hγ2 hα hM
   by_cases hmod : ∃ (Ω : Type u) (inst : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
       IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ α₀ hcirc μ ∧ IsLQGMetricOfField P γ ξ α₀ hC D
