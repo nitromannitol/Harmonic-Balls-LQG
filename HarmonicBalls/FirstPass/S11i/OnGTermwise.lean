@@ -170,6 +170,20 @@ theorem ae_rootedOrbit_mem {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [Is
   filter_upwards [ae_shifted_mem_dilOrbit hCM γ hh hTr hG hGa z u hu hcomp hu0] with ω hω
   exact fun n => (mem_dilOrbit_iff.1 hω).1 n
 
+/-- **`hGroot` for a whole-plane GFF model, with no translation hypothesis.** The translates `translatedPairing hC hcirc z`
+are whole-plane GFFs (`isWholePlaneGFF_translate`), so `ae_rootedOrbit_mem` needs only the Cameron–Martin input and the
+conullity of `G`. This is the binder form of `hGroot` in `HFdefOnG.lean` (`A = univ`, any `α₀`), and of `hGrootU` in
+`InsertionZeroUnitE.lean`, which is quantified over every model. -/
+theorem hGroot_of_wholePlane {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    (hCM : CameronMartinGFFMutualAbsCont.{0}) (γ : ℝ)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
+    {G : Set S11n.CanonSpace} (hG : MeasurableSet G) (hGa : ∀ᵐ ω ∂P, alphaCanon γ hC ω ∈ G)
+    (c₁ : ℂ) (r₁ : ℝ) (α₀ : ℝ) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ (Set.univ : Set ℂ) → ∀ (b : ℝ) (u : ℂ → ℝ),
+      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
+        dilOp^[n] (canonFieldOf γ (addFunPairing (S11c.translatedPairing hC hcirc z ω) u)) ∈ G :=
+  ae_rootedOrbit_mem hCM γ hh (fun z => isWholePlaneGFF_translate hh z) hG hGa _ _ α₀
+
 /-- **Almost-sure event identity on `G`** (the hypothesis `hG` of `ae_termwise_of_identification`). The event identity
 is needed only on `G`, where `hFdefG` holds. The orbit membership above supplies `G` along every dilation iterate. -/
 theorem ae_identification_on_G {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
