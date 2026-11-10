@@ -11,8 +11,8 @@ length metrics only for `L` in a measurable conull set `G`. The canonical metric
 and is the Euclidean metric `dist` off `G` (`modifiedMetric`, `FirstPass/S11i/CertCanonMeasurable.lean`). Every hypothesis
 of `measurableSet_certificateEvent` (`FirstPass/S11i/CertMeasurable.lean`) holds for `canonMetric G d` at every field `L`,
 and the certificate event of `canonMetric G d` agrees with that of `d` almost surely along any whole-plane GFF model, since
-`alphaCanon α₀ hC ω ∈ G` almost surely. The measurability of the certificate event of the canonical metric is then
-unconditional, and the event of `d` is measurable up to a null set.
+`alphaCanon α₀ hC ω ∈ G` almost surely, so for almost every `ω` the certificate event of `d` coincides with that of
+`canonMetric G d` (`ae_canonCertificateEvent_iff_decoder`).
 -/
 
 namespace FirstPassS11z
