@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.S11s.Covariance
 import HarmonicBalls.FirstPass.S11v.DilOpCoord
 import HarmonicBalls.FirstPass.S11v.Decoders
+import HarmonicBalls.FirstPass.S11v.Affine
 
 /-!
 # B1 covariance of the decoders without pathwise homogeneity (fp-S11v, operator note 01:44 UTC, §4)
@@ -10,7 +11,8 @@ import HarmonicBalls.FirstPass.S11v.Decoders
 its decoded form: `ae_dilOp_alphaCanon_apply_eq` (S11v/DilOpCoord.lean) gives coordinatewise almost sure equality, and
 `ae_decoders_eq_of_coordwise_ae_eq` (S11v/Decoders.lean) turns it into almost sure equality of `K` and `d` at the two
 canonical fields. The decoders are taken as a kernel `K` with locally finite values and a measurable metric map `d`
-(the measurable decoder hypotheses of `LQGCanonicalDecodersMeasurableExistStmt`). `hAff` is still a hypothesis (P6 pending).
+(the measurable decoder hypotheses of `LQGCanonicalDecodersMeasurableExistStmt`). The affine invariance `WholePlaneGFFAffineInvariance` is the theorem `wholePlaneGFFAffineInvariance_derived`
+(S11v/Affine.lean), so no affine hypothesis is taken.
 -/
 
 namespace HarmonicBalls
@@ -22,7 +24,6 @@ open scoped ENNReal
 `K (dilOp L) = a • (K L).map (· / (1/2))` and `d (dilOp L) (u, v) = b · d L (u/2, v/2)` for `L = alphaCanon α hC ω`. -/
 theorem ae_covariance_canonical_dec {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) {γ ξ α : ℝ} (hγ : 0 < γ)
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
-    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
     {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)
     {D : Ω → ℂ → ℂ → ℝ} (hD : IsLQGMetricOfField P γ ξ α hC D)
     (K : Kernel S11n.CanonSpace ℂ) (hKf : ∀ L, IsFiniteMeasureOnCompacts (K L))
@@ -33,7 +34,7 @@ theorem ae_covariance_canonical_dec {Ω : Type} [MeasurableSpace Ω] (P : Measur
           = ENNReal.ofReal a • (K (alphaCanon α hC ω)).map (fun w : ℂ => w / ((1 / 2 : ℝ) : ℂ)) ∧
       ∀ u v : ℂ, d (dilOp (alphaCanon α hC ω)) (u, v)
           = b * d (alphaCanon α hC ω) (((1 / 2 : ℝ) : ℂ) * u, ((1 / 2 : ℝ) : ℂ) * v) := by
-  have hG' := isWholePlaneGFF_affinePullback hG hAff
+  have hG' := isWholePlaneGFF_affinePullback hG (wholePlaneGFFAffineInvariance_derived P hC hcirc)
   have hμ' := ae_isLQGMeasureOfField_affinePullback P hγ hG hμ
   have hD' := ae_isLQGMetricOfField_affinePullback P hG hD
   have hid1 := hid Ω P hC hcirc μ D hG hμ hD

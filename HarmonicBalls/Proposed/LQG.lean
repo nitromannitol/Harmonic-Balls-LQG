@@ -47,7 +47,9 @@ gravity* (arXiv:2404.16642v2), Corollary 5.7 and Remark 5.8 (p. 169) with Lemma 
 the covariance kernel (eq:cov-kernel, line 359), `-log |z - w|` being affine invariant up to additive terms, so it
 is expected to be provable from `IsWholePlaneGFF`. Each deterministic affine map is treated separately.
 Berestycki-Powell initially uses log coefficient `1/(2π)` and rescales by `√(2π)` for LQG;
-the present kernel already has log coefficient one. -/
+the present kernel already has log coefficient one.
+derived: `HarmonicBalls.wholePlaneGFFAffineInvariance_derived` (FirstPass/S11v/Affine.lean): the statement is a
+theorem of `IsWholePlaneGFF` alone (`#print axioms`: propext, Classical.choice, Quot.sound). -/
 def WholePlaneGFFAffineInvariance (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   IsWholePlaneGFF P hC hcirc → ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ,
     IsWholePlaneGFF P
