@@ -1,8 +1,10 @@
 import HarmonicBalls.FirstPass.S11i.CertAssemble
 import HarmonicBalls.FirstPass.S11i.Faithful
+import HarmonicBalls.FirstPass.S11i.CertificateCanonical
+import HarmonicBalls.FirstPass.S11af
 
 /-!
-# Lemma 11.13 (corrected): conditional assembly from the zoom-family window frequency (fp-S11i, owner n3)
+# Lemma 11.13 (corrected): conditional assembly from the Step 12 identity (fp-S11i, owner n3)
 
 Route A (`notes/n3.md`): `FirstPassS11i.CertAssemble.pinch_window_ae_buffered` gives, almost surely and for `μ`-a.e. `z`,
 the pinch-window count bound `q/4 * N ≤ #{n ∈ [N+1, 2N] : pinchPointEvent ...}` from the zoom-family window frequency
@@ -10,9 +12,15 @@ the pinch-window count bound `q/4 * N ≤ #{n ∈ [N+1, 2N] : pinchPointEvent ..
 
 Named inputs (neither frozen nor proved here):
 * `hAx`: `LQGMetricFieldAxioms` (Proposed, Fact 2.2 I-IV; operator-approved), used only for the Euclidean length property.
-* `hZoom`: `ZoomWindowFrequencyStmt` (NEW, Step 12 of Lemma 11.13 for the zoom family). It asserts a deterministic
-  `q > 0` that is the a.s. limit of the certificate window frequency. Its positivity is meant to be the probability of the
-  certificate event of Lemma 11.12 (`FirstPassS11i.certificate_canonical_pos`); that identity is not in Lean yet.
+* `hZ` (`ZoomIdentityStmt`, NEW, Step 12 of Lemma 11.13): for the Lemma 11.12 event `E` (`PinchEventWitnessStmt`, the body
+  of `CorrectedLemma11_12Stmt` for one set `E`), the zoom-family window frequency converges almost surely to the probability
+  `P(E^{α₀}(M))`, in every whole-plane model. Proved here, not assumed: the positivity `0 < P(E)`, the finiteness of `P(E)`
+  (`FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF`), and the model independence of `P(E)`
+  (`prob_ballRestrict_alphaCanon_indep`), so that the density `δ` is one number for all models.
+
+Source of the identity: corrected paper, `paper/lqg_harmonic_ball-corrected.tex`, eq. `s11-pinch:eq:dyadic-frequency`
+(line 3832), proof of `lemma:mu_h-pinch-bad` lines 3848-3930. Open point (Q1, `notes/n3.md`): that the identity holds for
+the Lemma 11.12 event `E` as produced by the paper's construction is the NEW input; it is not checked in Lean.
 -/
 
 namespace HarmonicBalls
@@ -22,20 +30,29 @@ open scoped ENNReal
 
 universe u
 
-/-- **Zoom-family window frequency (Step 12 of Lemma 11.13, NEW; named input).** For the buffered geometry
-`U V W T Q' Q` with buffer `δ`, the insertion `α₀`, `γ`, `ξ`, `M` and a deterministic limit `q`: there is an open set
-`Ostar` with `0 ∈ Ostar` and `sphere 0 5 ⊆ Ostar` (the `O_*` of the certificate event) such that for every whole-plane
-model with `IsLQGMeasureOfField P γ α₀ hcirc μ` and `IsLQGMetricOfField P γ ξ α₀ hC D` there is a zoom family `μk, Dk` at
-dyadic scales `2^k` (the scaling shape of `ae_hscale_dyadic`) whose window certificate frequency converges to `q`, for
-every `k`, almost surely, for `μk`-almost every centre `w` in `B₁(0)`.
+/-- The body of `CorrectedLemma11_12Stmt` (Faithful.lean:56) for one fixed set `E` of test pairings, at the parameters
+`γ ξ M` and the geometry `U T Q' Q`: the event `{localModConstField α ∈ E}` is measurable in the Section 6 sigma-algebra of
+fields modulo constants, has positive probability in every whole-plane model, and implies the pinch-point event a.s. -/
+def PinchEventWitnessStmt (U T Q' Q : Set ℂ) (γ ξ M : ℝ)
+    (E : Set (ModConstTestPairings (ball (0 : ℂ) 7))) : Prop :=
+  MeasurableSet E ∧
+  ∀ α : ℝ, α < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ → IsLQGMetricOfField P γ ξ α hC D →
+    MeasurableSet[Section6.fieldSigmaAlgebraModConst α hC (ball (0 : ℂ) 7)]
+      {ω | localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E} ∧
+    0 < P {ω | localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E} ∧
+    ∀ᵐ ω ∂P, localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E →
+      pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0
 
-Source (corrected paper, `paper/lqg_harmonic_ball-corrected.tex`, eq. `s11-pinch:eq:dyadic-frequency` at line 3832, proof
-of `lemma:mu_h-pinch-bad` at lines 3848-3930): the dyadic frequency converges almost surely to `p_α(M)`, the probability of
-the Lemma 11.12 event at scale one, so `q = p_α₀(M)`. The positivity `q > 0` is the positive-probability clause of
-Lemma 11.12 (`CorrectedLemma11_12Stmt`, Faithful.lean:56). Neither the identity `q = P(E^{α₀}(M))` nor the positivity is
-in Lean yet: this is the named input. Open point: `IsWholePlaneGFF` (Defs/GFF.lean:93) does not state that `P` is a
-probability measure, so `P(E)` need not be finite there. -/
-def ZoomWindowFrequencyStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M q : ℝ) : Prop :=
+/-- **Step 12 of Lemma 11.13 (NEW named input).** For the buffered geometry `U V W T Q' Q` with buffer `δ`, the insertion
+`α₀`, `γ`, `ξ` and `M`: there are a Lemma 11.12 event `E` (`PinchEventWitnessStmt`) and an open set `Ostar` with `0 ∈ Ostar`
+and `sphere 0 5 ⊆ Ostar` such that, for every whole-plane model, there is a zoom family `μk, Dk` at dyadic scales `2^k` (the
+scaling shape of `ae_hscale_dyadic`) whose window certificate frequency converges, for every `k`, almost surely and for
+`μk`-almost every `w` in `B₁(0)`, to the probability `P(E^{α₀}(M))`. -/
+def ZoomIdentityStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ) : Prop :=
+  ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventWitnessStmt.{u} U T Q' Q γ ξ M E ∧
   ∃ Ostar : Set ℂ, IsOpen Ostar ∧ (0 : ℂ) ∈ Ostar ∧ sphere (0 : ℂ) 5 ⊆ Ostar ∧
     ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
       (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
@@ -46,27 +63,51 @@ def ZoomWindowFrequencyStmt (γ ξ α₀ : ℝ) (U V W T Q' Q : Set ℂ) (δ M q
           ∀ x y : ℂ, Dk k ω x y = b * D ω ((((2 : ℝ) ^ k : ℝ) : ℂ) * x) ((((2 : ℝ) ^ k : ℝ) : ℂ) * y)) ∧
         ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ w ∂(μk k ω), w ∈ ball (0 : ℂ) 1 →
           Tendsto (fun N : ℕ => ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
-            FirstPassS11i.windowCert Ostar U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ)) atTop (𝓝 q)
+            FirstPassS11i.windowCert Ostar U V W T Q' Q δ M μk Dk k ω n w}.ncard : ℝ) / (N : ℝ)) atTop
+            (𝓝 (P {ω | localModConstField α₀ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal)
 
-/-- **Lemma 11.13 (corrected), conditional on the zoom-family window frequency.** The density is
-`δ = min (q/4) (1/2)`, chosen before the probability space (`q` depends only on the geometry, `γ`, `ξ`, `α₀`, `M`). -/
-theorem correctedLemma11_13_of_zoom
+/-- **Lemma 11.13 (corrected), conditional on the Step 12 identity.** The density is `δ = min (q/4) (1/2)` with
+`q = P(E^{α₀}(M)) > 0`. The number `q` does not depend on the model: two whole-plane models give the same probability of
+the canonical event (`prob_ballRestrict_alphaCanon_indep`). If no whole-plane model exists at `(γ, ξ, α₀)`, the conclusion is
+vacuous and `δ = 1/2` is taken. -/
+theorem correctedLemma11_13_of_identity
     (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
-    (hZoom : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+    (hZ : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
       ∀ γ ξ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
-        ∃ q : ℝ, 0 < q ∧ ZoomWindowFrequencyStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M q) :
+        ZoomIdentityStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M) :
     CorrectedLemma11_13Stmt.{u} := by
   intro U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM
-  obtain ⟨q, hq, Ostar, -, -, -, hfreq⟩ := hZoom U V W T Q' Q δ₀ hgeom γ ξ α₀ M hγ0 hγ2 hα hM
-  refine ⟨min (q / 4) (1 / 2), ⟨lt_min (div_pos hq (by norm_num)) (by norm_num),
-    lt_of_le_of_lt (min_le_right _ _) (by norm_num)⟩, ?_⟩
-  intro Ω _ P hC hcirc μ D hG hμ hD
-  obtain ⟨μk, Dk, hsc, hstep⟩ := hfreq Ω P hC hcirc μ D hG hμ hD
-  exact (FirstPassS11i.CertAssemble.pinch_window_ae_buffered (hAx γ ξ α₀ Ω P hC hcirc) hG hγ0 hγ2 hα hD hgeom hq
-    μk Dk hsc hstep).mono fun ω hω => hω.mono fun z hz => hz.mono fun N hN =>
-      le_trans (mul_le_mul_of_nonneg_right (min_le_left _ _) (Nat.cast_nonneg N)) hN
+  obtain ⟨E, hWit, Ostar, -, -, -, hfreq⟩ := hZ U V W T Q' Q δ₀ hgeom γ ξ α₀ M hγ0 hγ2 hα hM
+  obtain ⟨hEm, hW⟩ := hWit
+  by_cases hmod : ∃ (Ω : Type u) (inst : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ α₀ hcirc μ ∧ IsLQGMetricOfField P γ ξ α₀ hC D
+  · obtain ⟨Ω₀, inst₀, P₀, hC₀, hcirc₀, μ₀, D₀, hG₀, hμ₀, hD₀⟩ := hmod
+    have : IsProbabilityMeasure P₀ := FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hG₀
+    obtain ⟨-, hpos, -⟩ := hW α₀ hα Ω₀ P₀ hC₀ hcirc₀ μ₀ D₀ hG₀ hμ₀ hD₀
+    obtain ⟨q, hqdef⟩ : ∃ q : ℝ, q = (P₀ {ω | localModConstField α₀ hC₀ (ball (0 : ℂ) 7) ω ∈ E}).toReal :=
+      ⟨_, rfl⟩
+    have hq : 0 < q := by
+      rw [hqdef]
+      exact ENNReal.toReal_pos hpos.ne' (measure_ne_top P₀ _)
+    refine ⟨min (q / 4) (1 / 2), ⟨lt_min (div_pos hq (by norm_num)) (by norm_num),
+      lt_of_le_of_lt (min_le_right _ _) (by norm_num)⟩, ?_⟩
+    intro Ω inst P hC hcirc μ D hG hμ hD
+    have : IsProbabilityMeasure P := FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hG
+    have hP : P {ω | localModConstField α₀ hC (ball (0 : ℂ) 7) ω ∈ E} =
+        P₀ {ω | localModConstField α₀ hC₀ (ball (0 : ℂ) 7) ω ∈ E} := by
+      have h := S11iCert.prob_ballRestrict_alphaCanon_indep hG hG₀ α₀ E hEm
+      simpa only [S11iCert.ballRestrict_alphaCanon_eq] using h
+    obtain ⟨μk, Dk, hsc, hstep⟩ := hfreq Ω P hC hcirc μ D hG hμ hD
+    rw [hP, ← hqdef] at hstep
+    exact (FirstPassS11i.CertAssemble.pinch_window_ae_buffered (hAx γ ξ α₀ Ω P hC hcirc) hG hγ0 hγ2 hα hD hgeom hq
+      μk Dk hsc hstep).mono fun ω hω => hω.mono fun z hz => hz.mono fun N hN =>
+        le_trans (mul_le_mul_of_nonneg_right (min_le_left _ _) (Nat.cast_nonneg N)) hN
+  · refine ⟨1 / 2, ⟨by norm_num, by norm_num⟩, ?_⟩
+    intro Ω inst P hC hcirc μ D hG hμ hD
+    exact (hmod ⟨Ω, inst, P, hC, hcirc, μ, D, hG, hμ, hD⟩).elim
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.correctedLemma11_13_of_zoom
+#print axioms HarmonicBalls.correctedLemma11_13_of_identity
