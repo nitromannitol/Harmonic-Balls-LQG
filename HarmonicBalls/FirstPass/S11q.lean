@@ -525,4 +525,26 @@ lemma isLQGLimit_dilate_dyadic {γ : ℝ} {H : ℝ → ℂ → ℝ} {m : Measure
     ENNReal.toReal_ofReal (Real.exp_pos _).le, smul_eq_mul]
   exact tendsto_lqgApprox_dilate_dyadic hm hγ k hmeas hf hfs
 
+/-- **Identity (2) of the Step 12 note**: on the same almost-sure event, `μ_{α₀} ≪ μ₀` and `μ₀ ≪ μ_{α₀}`
+(the weight `|z|^(-γα₀)` is strictly positive, so the two measures have the same null sets). -/
+theorem singular_measure_mutual_ac {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (P : Measure Ω) (hGFF : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hWeyl : LQGMeasureWeylScaling P γ 0 hC hcirc) (hNa0 : LQGMeasureNonatomic P γ 0 hC hcirc)
+    (hNa : LQGMeasureNonatomic P γ α₀ hC hcirc)
+    {μ₀ μα : Ω → Measure ℂ} (h₀ : IsLQGMeasureOfField P γ 0 hcirc μ₀)
+    (hμα : IsLQGMeasureOfField P γ α₀ hcirc μα) :
+    ∀ᵐ ω ∂P, μα ω ≪ μ₀ ω ∧ μ₀ ω ≪ μα ω := by
+  filter_upwards [singular_measure_identity P hGFF hγ0 hγ2 hα hWeyl hNa0 hNa h₀ hμα] with ω hω
+  rw [hω]
+  refine ⟨withDensity_absolutelyContinuous _ _, ?_⟩
+  have hmeas : Measurable (fun x : ℂ => ENNReal.ofReal (LQGSingularWeight γ α₀ x)) := by
+    unfold LQGSingularWeight
+    fun_prop
+  intro s hs
+  have h := (withDensity_apply_eq_zero' hmeas.aemeasurable).mp hs
+  have heq : {x : ℂ | ENNReal.ofReal (LQGSingularWeight γ α₀ x) ≠ 0} ∩ s = s := by
+    refine Set.inter_eq_right.mpr fun x _ => ?_
+    exact (ENNReal.ofReal_pos.mpr (Real.exp_pos _)).ne'
+  rwa [heq] at h
+
 end HarmonicBalls
