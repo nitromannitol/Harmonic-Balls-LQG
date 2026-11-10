@@ -11,15 +11,16 @@ application of q1's wrapper `FirstPassS11at.rootedCertificateEventualCovarianceS
 
 What is proved here: `ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent`, the entry of the chain with the covariance clause
 discharged by the wrapper. Its hypotheses are exactly the wrapper's binders (with the Adm/rR instantiation below), the
-coding identity `hG` (Step 7, a named hypothesis), and the Step 8 data of `ae_quantum_bad_mass_eq_zero_of_identification`.
+deterministic scale-one coding identity `hFdef` (Step 7, a named hypothesis of the exact type of
+`FirstPassS11iStep8Decoded.ae_unitScale_of_decoded_ball`; the pointwise `hG` is derived from it), and the Step 8 data of `ae_quantum_bad_mass_eq_zero_of_identification`.
 
 Instantiations (not hypotheses): `Adm := AdmissibleRootShift α₀`, `rR := rootRadius`, `mD`-decoder through
 `FirstPassS11at.windowMetric (ball c₂ r₂) mD`, `hTr` from `isWholePlaneGFF_translatedPairing` (affine invariance `hAff`), and the
 admissibility clauses `hAdmReg`, `hAdmPos`, `hc1`, `hrR`, proved from the definition of `AdmissibleRootShift`
 and from `h0`.
 
-Named hypotheses (not discharged here): `hG` (Step 7 coding identity; `RootedTransfer.hG_of_scaleOne` is NOT used because it
-needs `ScaleOneAll`, FLAG 1 of `RootedInstance.lean`), `hOuter` (`closedBall c₂ r₂ ⊆ ball 0 1`, the Lemma 11.13 geometry layer),
+Named hypotheses (not discharged here): `hFdef` (Step 7 scale-one identity, chat 243 Q1; `RootedTransfer.hG_of_scaleOne` and
+`ScaleOneAll` are NOT used), `hOuter` (`closedBall c₂ r₂ ⊆ ball 0 1`, the Lemma 11.13 geometry layer),
 `hProf`, `hRLI`, `hRLIm` (n2's rooted local identification, pending its theorem names), and the frozen Props of the wrapper.
 -/
 
@@ -56,13 +57,8 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
     (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
     (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
     {F : Set (ModConstTestPairings (ball (0 : ℂ) 7))} (hF : MeasurableSet F)
-    (hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
-      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
-        (FirstPassS11i.CertificateEvent
-            (Dμ (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            (Dd (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            Ostar U V W T Q' Q η M 1 0 ↔
-          ballRestrictPairing 7 (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))) ∈ F))
+    (hFdef : ∀ L : ModConstTestPairings (Set.univ : Set ℂ),
+      FirstPassS11i.CertificateEvent (Dμ L) (Dd L) Ostar U V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ F)
     {S : Set (ℂ × ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ))}
     (hS : MeasurableSet S)
     (hSfail : ∀ x, x ∈ S ↔ x.1 ∈ A ∧ ¬ Tendsto (fun N : ℕ => ReferenceNullS11i.refWindowAverage c N x) atTop
@@ -131,8 +127,18 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
     have hzc : z ∈ closedBall c₂ r₂ := ball_subset_closedBall (hsub (ball_subset_closedBall hz))
     have hz0 : z ≠ 0 := fun h => h0 (h ▸ hzc)
     exact rootRadius_pos (norm_pos_iff.2 hz0)
+  -- Step 7: the pointwise coding identity `hG`, derived from the deterministic scale-one identity `hFdef` (ChatGPT 243, Q1)
+  have hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
+      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
+        (FirstPassS11i.CertificateEvent
+            (Dμ (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
+            (Dd (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
+            Ostar U V W T Q' Q η M 1 0 ↔
+          ballRestrictPairing 7 (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))) ∈ F) := by
+    refine ae_of_all _ fun z _ b u _ => ?_
+    exact ae_of_all _ fun ω n => hFdef _
   -- Step 6: the eventual covariance clause, from q1's decoded wrapper
-  have hCov := FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent
+  have hCov :=FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent
     (γ := γ) (α₀ := α₀) (ξ := ξ) (𝔇 := 𝔇) (hCM := hCM) (hC := hC) (hcirc := hcirc) (hh := hh) (hTr := hTr)
     (c₁ := c₁) (c₂ := c₂) (r₁ := r₁) (r₂ := r₂) (A := A) (Ostar := Ostar) (U := U) (V := V) (W := W) (T := T)
     (Q' := Q') (Q := Q) (η := η) (M := M) (hCont := hCont) (hU := hU) (Adm := AdmissibleRootShift α₀)
