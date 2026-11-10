@@ -80,11 +80,12 @@ theorem correctedLemma11_13_of_identity
     (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
     (hZ : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+      insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
       ∀ γ ξ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
         ZoomIdentityStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M) :
     CorrectedLemma11_13Stmt.{u} := by
-  intro U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM
-  obtain ⟨E, hWit, Ostar, -, -, -, hfreq⟩ := hZ U V W T Q' Q δ₀ hgeom γ ξ α₀ M hγ0 hγ2 hα hM
+  intro U V W T Q' Q δ₀ hgeom hOmega γ α₀ ξ hγ0 hγ2 hα M hM
+  obtain ⟨E, hWit, Ostar, -, -, -, hfreq⟩ := hZ U V W T Q' Q δ₀ hgeom hOmega γ ξ α₀ M hγ0 hγ2 hα hM
   obtain ⟨hEm, hW⟩ := hWit
   by_cases hmod : ∃ (Ω : Type u) (inst : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
@@ -165,12 +166,13 @@ theorem correctedLemma11_13_of_gamma_identity
     (hMeas : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ γ hC hcirc)
     (hZ : ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+      insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
       ∀ γ ξ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
         GammaZoomIdentityStmt.{u} γ ξ α₀ U V W T Q' Q δ₀ M) :
     CorrectedLemma11_13Stmt.{u} := by
-  intro U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM
+  intro U V W T Q' Q δ₀ hgeom hOmega γ α₀ ξ hγ0 hγ2 hα M hM
   obtain ⟨E, ⟨-, hW⟩, q, hqeq, Ostar, -, -, -, hfreq⟩ :=
-    hZ U V W T Q' Q δ₀ hgeom γ ξ α₀ M hγ0 hγ2 hα hM
+    hZ U V W T Q' Q δ₀ hgeom hOmega γ ξ α₀ M hγ0 hγ2 hα hM
   by_cases hmod : ∃ (Ω : Type u) (inst : MeasurableSpace Ω) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
       IsWholePlaneGFF P hC hcirc ∧ IsLQGMeasureOfField P γ α₀ hcirc μ ∧ IsLQGMetricOfField P γ ξ α₀ hC D
