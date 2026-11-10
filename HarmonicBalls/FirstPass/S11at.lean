@@ -9,6 +9,7 @@ import HarmonicBalls.FirstPass.S11asLocal
 import HarmonicBalls.FirstPass.S11r.CMTransfer
 import HarmonicBalls.FirstPass.S11i.TranslationCanonical
 import HarmonicBalls.FirstPass.Frozen.S11c
+import HarmonicBalls.FirstPass.S11at.Producers
 
 /-!
 # Eventual rooted covariance: internal proportionality and the eventual ambient metric (fp-S11at, round 10)
@@ -1093,8 +1094,9 @@ theorem rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent {Ω 
     (hDj : ∀ j, Dj j ⊆ ball c₂ r₂) (hDjO : ∀ j, IsOpen (Dj j)) (hc1 : ball c₁ r₁ ⊆ ball c₂ r₂)
     (hAdmPos : ∀ (z : ℂ) (b : ℝ) (u : ℂ → ℝ), Adm z b u → 0 < b)
     (hrR : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → 0 < rR z)
-    (hμ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A →
-      ∃ μz : Ω → Measure ℂ, IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz)
+    (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
+    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ)
+    (hBridge : FirstPassS11atProducers.HMuPairingBridge P γ α₀ hC hcirc) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1)
     (hκ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ μz : Ω → Measure ℂ,
       IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz → ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
         (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
@@ -1116,8 +1118,9 @@ theorem rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent {Ω 
       ∀ p : ↥(Dj j ×ˢ Dj j),
         ENNReal.ofReal (mj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2 p) =
           ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω) (Dj j) p.1.1 p.1.2)
-    (hLen : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
-      IsEuclideanLengthMetric (rootedWeylMetric 𝔇 ξ α₀ γ hC z ω))
+    (hLenFr : LQGMetricLengthUnivFrozen.{u}) (hFieldFr : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hRootFr : RootedPhysicalMetricContinuousAtInsertionFrozen.{u})
+    (h𝔇 : IsLQGMetric γ ξ 𝔇) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     (hRLIm : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
       ∃ j : ℕ, z ∈ Uj j ∧ ∀ᵐ ω ∂P, ∃ c ρ : ℝ, 0 < c ∧ 0 < ρ ∧ closedBall z ρ ⊆ Dj j ∧
         ∀ x ∈ closedBall (0 : ℂ) ρ, ∀ y ∈ closedBall (0 : ℂ) ρ,
@@ -1129,7 +1132,15 @@ theorem rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent {Ω 
       (decodedRootMeasure κ γ α₀ hC) (decodedRootMetric (windowMetric (ball c₂ r₂) mD) γ α₀ hC) Dμ Dd :=
   rootedCertificateEventualCovarianceStmt_decoded hCM hC hcirc hh hTr c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
     hCont hU Adm hAdmReg rR κ (windowMetric (ball c₂ r₂) mD) Dμ Dd G hG hGa hGreg G0 hG0 hG0a hinv hstep
-    (hDecInt_of_rootedLocalIdent A Adm rR Dd Uj Dj mD mj hDjO hc1 hAdmPos hrR hDwD hDwj hLen hRLIm hLenC)
-    (hMass_of_rootedLocalIdent A Adm κ Dμ Uj Dj κj hDj hμ hκ hκj hRLI)
+    (hDecInt_of_rootedLocalIdent A Adm rR Dd Uj Dj mD mj hDjO hc1 hAdmPos hrR hDwD hDwj
+      (FirstPassS11atProducers.rootedWeylMetric_ae_z hLenFr hFieldFr hRootFr P γ ξ α₀ hC hcirc hh 𝔇 h𝔇 hγ0 hγ2 hα
+        (ball c₁ r₁))
+      hRLIm hLenC)
+    (hMass_of_rootedLocalIdent A Adm κ Dμ Uj Dj κj hDj
+      (by
+        filter_upwards [FirstPassS11atProducers.ae_exists_rootedLQGMeasure P γ α₀ hC hcirc c₁ r₁ hh hγ0 hγ2 hα
+          hExist0 hExistα hA10 hBridge hWin] with z hz
+        exact fun _ => hz)
+      hκ hκj hRLI)
 
 end FirstPassS11at
