@@ -20,7 +20,10 @@ of the field), every evaluation `ω ↦ D ω x y` is almost everywhere measurabl
 Source: measurability of the LQG metric `h ↦ D_h` at field level (Gwynne-Miller 2021, Section 1.2, p. 6; locator pending),
 the Fact 2.2 measurability used in Bou-Rabee-Gwynne (arXiv:2208.11795, Fact 2.2, p. 9; locator pending).
 Used by: firstPass_11_15 (`HarmonicBalls/FirstPass/S11e.lean`), through `exists_measurable_version_of_continuous`
-(`HarmonicBalls/FirstPass/S11e/MeasurableVersion.lean`). -/
+(`HarmonicBalls/FirstPass/S11e/MeasurableVersion.lean`). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): the
+measurable metric functional supplies a measurable version, and the realized metric is required to agree only almost
+surely. Source as the answer gives it: Gwynne-Miller, arXiv:1905.00383v3, §1.2, p. 6, the unnumbered measurable-map
+definition and Axioms I and III, (1.8). -/
 def LQGMetricPointwiseAEMeasurableFrozen : Prop :=
   ∀ (γ ξ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (D : Ω → ℂ → ℂ → ℝ),
