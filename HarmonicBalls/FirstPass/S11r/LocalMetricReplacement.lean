@@ -36,7 +36,8 @@ universe u
 /-- **Target B2: local metric replacement** (CHATGPT-n3-B1-B2.md section 4, eqs (17)-(20)). For `0 < γ < 2`, a disk
 `U = ball c₁ r₁` with `closedBall c₁ r₁ ⊆ D = ball c₂ r₂`, `closedBall c₂ r₂ ⊆ ball 0 1` and `0 ∉ closedBall c₂ r₂`
 (the restriction (16) of CHATGPT-n3-B1-B2.md section 4, "for clarity": the Campbell shift `γ log max(1, |·|)` of (19)
-vanishes on `D` and the cut-offs are smooth; disks not in `B_1 ∖ {0}` are covered by countably many such disks there),
+vanishes on `D` and the cut-offs are smooth; the extension to disks not contained in `B_1 ∖ {0}` is not claimed here: it is
+the dilation corollary of z6 (`FirstPass/S11ak/Dilation.lean`, not yet committed)),
 and every LQG metric `𝔇` of exponent `ξ` (fixed before `m` is chosen), there is a Borel map `m`
 from the mean-zero observables of `D` to continuous functions on `D × D` such that:
 
