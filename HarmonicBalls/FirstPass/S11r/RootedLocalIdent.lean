@@ -7,6 +7,7 @@ import HarmonicBalls.FirstPass.S11c.TranslateField11_7
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.S11r.NoShortcut
+import HarmonicBalls.FirstPass.S11d.Dyadic
 
 /-!
 # Rooted local identification event (fp-S11r-rooted-local-ident)
@@ -30,7 +31,8 @@ The centred canonical field is `canonFieldOf γ T`; its decoders are `Dμ`, `Dd`
 
 Section 4.4 base conullity, measure clause: `ae_rootedMeasureIdent_base` (conditional on named inputs: the rooted decoder
 clause `hκ`, the coordinate change `hCC`, the existence `hνex`, the canonical identification `hIdγ`, a metric existence
-`hDex`, and the window positivity `hPF`, the last still PENDING a source). The metric clause of the base conullity is
+`hDex`, and the window geometry `hSb`, `hSQ` with the frozen full-support statement `hPos`; the window positivity and
+finiteness are derived in `ae_lqgMeasure_pos_lt_top`, the former input `hPF` is removed). The metric clause of the base conullity is
 `ae_rootedMetricIdent_base`, conditional on the named locality input `hLoc` (internal metric under translation and constant
 shift; MISSING, to be sourced: Fact 2.2 II, arXiv:2208.11795 p. 9-10) and on the Proposed metric axioms `hAx`. Its
 deterministic core `rootedMetricIdent_of_internal` uses the no-shortcut lemma `eq_internalMetric_on_small_ball`.
@@ -415,6 +417,27 @@ theorem kappa_preimage_eq {κ' ν : Measure ℂ} {z : ℂ} {D : Set ℂ} (hD : M
       Measure.map_apply (measurable_add_const z) hpre, hpre']
   rw [← h1, h, Measure.smul_apply, smul_eq_mul, restrict_withDensity_exp_of_zero _ hD hg γ, h2]
 
+/-- **Positivity and finiteness of the centred LQG mass of a bounded window (derived; replaces the former input `hPF`).**
+Let `S` be bounded and contain a closed dyadic square `Q`. For the centred LQG measure `ν` of a whole-plane field
+(`IsLQGMeasureOfField P γ γ hcirc ν`, insertion `γ` at the origin), almost surely `0 < ν ω S < ∞`. Positivity: the frozen
+full-support statement `LQGMeasureSquarePositiveFrozen` (Rhodes-Vargas, arXiv:1305.6221 Thm 2.12) on `Q`, then monotonicity.
+Finiteness: the local finiteness field `isLocallyFiniteMeasure` of `IsLQGLimit` on the compact closure of `S`. The statement
+is false for an unbounded `S` (or a null `S`), which is why the geometric hypotheses `hSb`, `hSQ` are threaded from the call
+sites (the windows are closed dyadic squares or closed balls). -/
+theorem ae_lqgMeasure_pos_lt_top (hPos : LQGMeasureSquarePositiveFrozen.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
+    {ν : Ω → Measure ℂ} (hν : IsLQGMeasureOfField P γ γ hcirc ν) {S : Set ℂ}
+    (hSb : Bornology.IsBounded S) (hSQ : ∃ Q : Set ℂ, IsClosedDyadicSquare Q ∧ Q ⊆ S) :
+    ∀ᵐ ω ∂P, 0 < ν ω S ∧ ν ω S < ∞ := by
+  obtain ⟨Q, hQ, hQS⟩ := hSQ
+  have hpos := hPos γ γ hγ0 hγ2 (S11c.gamma_lt_lqgQ hγ0 hγ2) Ω P hC hcirc ν hG hν Q hQ
+  have hν' : ∀ᵐ ω ∂P, IsLQGLimit γ (fun r z => fieldCircleAverage γ (hcirc ω) r z) (ν ω) := hν
+  filter_upwards [hpos, hν'] with ω hposω hνω
+  have hfin : IsLocallyFiniteMeasure (ν ω) := hνω.isLocallyFiniteMeasure
+  refine ⟨lt_of_lt_of_le hposω (measure_mono hQS), ?_⟩
+  exact lt_of_le_of_lt (measure_mono subset_closure) hSb.isCompact_closure.measure_lt_top
+
 /-- **Section 4.4, measure clause of the base conullity.** For almost every root `z` in the disc `U = ball c₁ r₁`
 (the rooted decoder clause of `LocalMeasureKernelStmt` at background `0`, with decoder `κ` on the window
 `D = ball c₂ r₂`), almost surely the translated field satisfies the measure clause `rootedMeasureIdent`
@@ -443,15 +466,15 @@ theorem ae_rootedMeasureIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measu
     (hDex : ∀ z : ℂ, ∃ D : Ω → ℂ → ℂ → ℝ, IsLQGMetricOfField P γ ξ γ (S11c.translatedPairing hC hcirc z) D)
     (S : Set ℂ) (hS : MeasurableSet S) (A : ℕ → Set ℂ) (hA : ∀ n, MeasurableSet (A n) ∧ A n ⊆ S)
     (hSD : ∀ z ∈ ball c₁ r₁, (fun w => w - z) ⁻¹' S ⊆ ball c₂ r₂)
-    (hPF : ∀ (z : ℂ) (ν : Ω → Measure ℂ), IsLQGMeasureOfField P γ γ (S11c.translatedCircle hcirc z) ν →
-      ∀ᵐ ω ∂P, 0 < ν ω S ∧ ν ω S < ∞) :
+    (hPos : LQGMeasureSquarePositiveFrozen.{u}) (hSb : Bornology.IsBounded S)
+    (hSQ : ∃ Q : Set ℂ, IsClosedDyadicSquare Q ∧ Q ⊆ S) :
     ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
       rootedMeasureIdent (ball c₂ r₂) κ Dμ γ z S A (S11c.translatedPairing hC hcirc z ω) := by
   filter_upwards [hκ, ae_restrict_mem measurableSet_ball] with z hz hzU
   have hG' := S11c.isWholePlaneGFF_translate hG z
   obtain ⟨ν, hν⟩ := hνex z hG' hγ0 hγ2 (S11c.gamma_lt_lqgQ hγ0 hγ2)
   obtain ⟨D, hDz⟩ := hDex z
-  have hPFω := hPF z ν hν
+  have hPFω := ae_lqgMeasure_pos_lt_top hPos hγ0 hγ2 hG' hν hSb hSQ
   have hIdω := hIdγ Ω P _ _ ν D hG' hν hDz
   have hμz := ae_isLQGLimit_rootedMax hγ0 hγ2 hG z (hCC z) hν
   have hκω := hz (fun ω => (ENNReal.ofReal (Real.exp (γ * hcirc ω 1 z)) • (ν ω).map (fun x => x + z)).withDensity
@@ -673,14 +696,14 @@ theorem ae_rootedLocalIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure
     (hDex : ∀ z : ℂ, ∃ D : Ω → ℂ → ℂ → ℝ, IsLQGMetricOfField P γ ξ γ (S11c.translatedPairing hC hcirc z) D)
     (S : Set ℂ) (hS : MeasurableSet S) (A : ℕ → Set ℂ) (hA : ∀ n, MeasurableSet (A n) ∧ A n ⊆ S)
     (hSD : ∀ z ∈ ball c₁ r₁, (fun w => w - z) ⁻¹' S ⊆ ball c₂ r₂)
-    (hPF : ∀ (z : ℂ) (ν : Ω → Measure ℂ), IsLQGMeasureOfField P γ γ (S11c.translatedCircle hcirc z) ν →
-      ∀ᵐ ω ∂P, 0 < ν ω S ∧ ν ω S < ∞)
+    (hPos : LQGMeasureSquarePositiveFrozen.{u}) (hSb : Bornology.IsBounded S)
+    (hSQ : ∃ Q : Set ℂ, IsClosedDyadicSquare Q ∧ Q ⊆ S)
     (X : ℕ → ℂ) (R : ℕ → ℝ) (pq : ℕ → ℂ × ℂ) (hRlim : Filter.Tendsto R Filter.atTop (nhds 0))
     (hpq : ∀ z ∈ ball c₁ r₁, ∀ k, ‖(pq k).1‖ < R k ∧ ‖(pq k).2‖ < R k ∧ (pq k).1 ≠ (pq k).2 ∧
       (pq k).1 + z ∈ ball c₂ r₂ ∧ (pq k).2 + z ∈ ball c₂ r₂) :
     ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
       rootedLocalIdentEvent (ball c₂ r₂) κ m Dμ Dd γ z S A X R pq (S11c.translatedPairing hC hcirc z ω) := by
-  filter_upwards [ae_rootedMeasureIdent_base hγ0 hγ2 hG hD1 κ hκ hCC hνex Dμ Dd hIdγ hDex S hS A hA hSD hPF,
+  filter_upwards [ae_rootedMeasureIdent_base hγ0 hγ2 hG hD1 κ hκ hCC hνex Dμ Dd hIdγ hDex S hS A hA hSD hPos hSb hSQ,
     ae_rootedMetricIdent_base hγ0 hγ2 hG hsub h𝔇 m hclause hLoc hAx hνex Dμ Dd hIdγ X R pq hRlim hpq]
     with z hz1 hz2
   filter_upwards [hz1, hz2] with ω h1 h2
