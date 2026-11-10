@@ -20,16 +20,16 @@ namespace HarmonicBalls.S11m
 open Set Metric Filter Topology
 open scoped ENNReal
 
-/-- **Root value as a limit of countable sphere infima** (deterministic). Let `D` be a nonnegative Euclidean length metric,
-`O` open with `0 ∈ O` and `B_ε(0) ⊆ O`, and `x ∈ O \ {0}` with `D(0, x; O) < ∞`. For a sequence `0 < s_n < ε`, `s_n → 0`,
-there are countable subsets `C n` dense in the circle `∂B_{s_n}`, and
-`D(0, x; O) = limsup_n ⨅_{y ∈ C n} D(y, x; O \ {0})`. -/
-theorem exists_countable_root_limsup {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+/-- **Root value along any countable dense circle sets** (deterministic). For a nonnegative Euclidean length metric `D`,
+an open `O ⊆ ℂ` with `0 ∈ O` and `B_ε(0) ⊆ O`, and `x ∈ O \ {0}` with `D(0, x; O) < ∞`, any choice of countable sets
+`C n` dense in the circles `∂B_{s n}` (`0 < s n < ε`, `s n → 0`) satisfies
+`D(0, x; O) = limsup_n ⨅_{y ∈ C n} D(y, x; O \ {0})`. The sets `C n` are not required to depend on `D`. -/
+theorem internalMetric_root_eq_limsup_of_dense {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
     (hnonneg : ∀ x y, 0 ≤ D x y) {O : Set ℂ} (hO : IsOpen O) (h0 : (0 : ℂ) ∈ O) {ε : ℝ}
     (hball : ball (0 : ℂ) ε ⊆ O) {x : ℂ} (hx : x ∈ O) (hx0 : x ≠ 0) (hfin : internalMetric D O 0 x ≠ ⊤)
-    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n) (hsε : ∀ n, s n < ε) :
-    ∃ C : ℕ → Set ℂ, (∀ n, (C n).Countable ∧ C n ⊆ sphere (0 : ℂ) (s n) ∧ sphere (0 : ℂ) (s n) ⊆ closure (C n)) ∧
-      internalMetric D O 0 x = limsup (fun n => ⨅ y ∈ C n, internalMetric D (O \ {0}) y x) atTop := by
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n) (hsε : ∀ n, s n < ε)
+    (C : ℕ → Set ℂ) (hC : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧ sphere (0 : ℂ) (s n) ⊆ closure (C n)) :
+    internalMetric D O 0 x = limsup (fun n => ⨅ y ∈ C n, internalMetric D (O \ {0}) y x) atTop := by
   have hcont : ContinuousOn (fun p : ℂ × ℂ => internalMetric D O p.1 p.2) (O ×ˢ O) :=
     hD.continuousOn_internalMetric_pair hnonneg hO
   have hT := tendsto_sphere_iInf_internalMetric hD hO h0 hx0 hfin hcont
@@ -52,11 +52,21 @@ theorem exists_countable_root_limsup {D : ℂ → ℂ → ℝ} (hD : IsEuclidean
     have hmaps : MapsTo (fun y : ℂ => (y, x)) (sphere (0 : ℂ) (s n)) ((O \ {0}) ×ˢ (O \ {0})) :=
       fun y hy => ⟨hsub hy, hx'⟩
     exact hcontO'.comp (continuousOn_id.prodMk continuousOn_const) hmaps
-  choose C hC using fun n => exists_countable_dense_subset_of_secondCountable (sphere (0 : ℂ) (s n))
-  refine ⟨C, fun n => ⟨(hC n).2.1, (hC n).1, (hC n).2.2⟩, ?_⟩
   rw [← hlim]
   congr 1
   funext n
   exact iInf_mem_eq_iInf_mem_of_dense_continuousOn (hcontY n) (hC n).1 (hC n).2.2
+
+/-- **Root value as a limit of countable sphere infima** (deterministic, existential form). Same hypotheses as
+`internalMetric_root_eq_limsup_of_dense`; the countable dense circle sets are produced by
+`exists_countable_dense_subset_of_secondCountable`. -/
+theorem exists_countable_root_limsup {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    (hnonneg : ∀ x y, 0 ≤ D x y) {O : Set ℂ} (hO : IsOpen O) (h0 : (0 : ℂ) ∈ O) {ε : ℝ}
+    (hball : ball (0 : ℂ) ε ⊆ O) {x : ℂ} (hx : x ∈ O) (hx0 : x ≠ 0) (hfin : internalMetric D O 0 x ≠ ⊤)
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n) (hsε : ∀ n, s n < ε) :
+    ∃ C : ℕ → Set ℂ, (∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧ sphere (0 : ℂ) (s n) ⊆ closure (C n)) ∧
+      internalMetric D O 0 x = limsup (fun n => ⨅ y ∈ C n, internalMetric D (O \ {0}) y x) atTop := by
+  choose C hC using fun n => exists_countable_dense_subset_of_secondCountable (sphere (0 : ℂ) (s n))
+  exact ⟨C, hC, internalMetric_root_eq_limsup_of_dense hD hnonneg hO h0 hball hx hx0 hfin s hs hpos hsε C hC⟩
 
 end HarmonicBalls.S11m
