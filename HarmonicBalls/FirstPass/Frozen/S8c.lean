@@ -34,11 +34,18 @@ and `lam`, so each normalised restriction (the root kernel `λ|B_1/λ(B_1)`, the
 reference `ν` on `B_{r_j}(0)`) has a positive denominator. Local finiteness (Radon) is already part of
 `IsLQGMeasureOfField` through `IsLQGLimit`. The conclusion is domination `≪`, not equality, as the referee requires
 for normalised marked laws. Without the positivity premises a degenerate observation (zero measure) would give root
-mass that the reference side need not carry. Truth check UNCLEAR (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §6):
-`localRootKernel`, `localDomain`, `localRootObservation`, `localReferenceObservation` and the local radius are
-missing from the attachment, so whether the observation maps use the normalized no-insertion measure, restrict to
-balls avoiding 0, recentre and normalize identically, and keep the same marked coordinates cannot be checked. DMS
-Lemma A.10 alone does not certify them. Minimal corrected statement: §6. Not a FALSE verdict. -/
+mass that the reference side need not carry. Truth check TRUE (ChatGPT, turn 2, batch file 02:58 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §6; turn 1 at
+02:49 UTC read it as UNCLEAR while the helpers were missing): with the restriction kernel, the local marked-point
+comparison gives domination, and almost-sure versions suffice. Both observations use the same B_{r_j/2} mass
+normalization: `massNormalize` (HarmonicBalls/FirstPass/S8c/LocalObservation.lean:37) is used in
+`localRootObservation` (line 41) and `localReferenceObservation` (line 46). Not checked: the body of
+`weightedRestrictionKernel`, which `localRootKernel` (line 51) calls. The answer uses only the stated
+normalized-restriction specification: almost surely, the restriction to `localDomain j` is absolutely continuous
+with respect to λ_ω restricted there (the exact scalar is unnecessary for domination). Source as the answer gives
+it: Duplantier-Miller-Sheffield, arXiv:1409.7055v4, pp. 184-185, Lemma A.10 (whole-plane paragraph, p. 184); HB,
+arXiv:2208.11795v3, p. 42, proof of Lemma 8.2, around (8.10); Miller-Sheffield, Imaginary Geometry IV,
+arXiv:1302.4738v2, p. 49, Proposition 2.9, (2.8). The normalized measure-valued pushforward statement is a corollary
+of these printed comparisons. -/
 def LocalRootedFieldMeasureDomination : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ ν lam : Ω → Measure ℂ),
