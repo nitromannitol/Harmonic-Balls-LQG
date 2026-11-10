@@ -19,7 +19,10 @@ open scoped ENNReal
 /-- FIRST-PASS FROZEN. Plane topology (standard; locator pending). For a connected open `V ⊆ ℂ` and a compact convex
 `K ⊆ V`, the set `V \ K` is preconnected. Source: Alexander duality in `S²`: the Čech `H¹` of the complement of `V` and
 of `K` vanish, so the complement of their union is connected (for `K` a closed dyadic square this is the connectedness
-of `V \ S₂` used in the paper, proof of `prop:mass-diam-gen`, line 3120). Used by: firstPass_11_9. -/
+of `V \ S₂` used in the paper, proof of `prop:mass-diam-gen`, line 3120). Used by: firstPass_11_9. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): a compact
+convex set contained in an open connected plane domain does not disconnect that domain. Source as the answer gives
+it: consequence of Alexander duality, Hatcher, Algebraic Topology (2002), p. 255, Corollary 3.45, with the
+Čech-cohomology extension on pp. 256-257. -/
 def PlaneDomainMinusConvexCompactPreconnectedFrozen : Prop :=
   ∀ V K : Set ℂ, IsOpen V → IsConnected V → IsCompact K → Convex ℝ K → K ⊆ V → IsPreconnected (V \ K)
 
@@ -79,7 +82,10 @@ def CameronMartinGFFMutualAbsCont : Prop :=
 `D_{h+f} = e^{ξ f} · D_h` for continuous `f`, applied with `h = h^ℂ - α₀ log|·|`; Gwynne-Miller 2021, Section 1.2 p. 6 and
 Remark 1.5 p. 8; Dubedat-Falconet-Gwynne-Pfeffer-Sun 2020, p. 9). It identifies the metric of the distribution `h^ℂ + g - α₀ log|·|`
 (the Defs convention `weylScaling (𝔇 ·) ξ (-α₀ log|·|)`) with the Weyl scaling of the metric of `h`, almost surely.
-Used by: firstPass_11_9 (the Weyl comparison `internalMetric_weylScaling_le` for the shifted metric, paper line 3127). -/
+Used by: firstPass_11_9 (the Weyl comparison `internalMetric_weylScaling_le` for the shifted metric, paper line 3127). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): a
+continuous first Weyl weight permits arclength substitution and multiplication of weights, including the logarithmic
+second weight. Source as the answer gives it: consequence of Gwynne-Miller, arXiv:1905.00383v3, p. 6, Axiom III,
+(1.8), and p. 8, Remark 1.5. -/
 def WeylScalingCompositionFrozen : Prop :=
   ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
