@@ -20,6 +20,7 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 |---|---|---|
 | 11.7 (`ManyConeBadScalesStmt`, corrected, `HarmonicBalls.S11c.firstPass_11_7`) | `closure_11_7` | hDG, hCC, hE, hNA (Proposed); hCamp, hDecFrozen, hDec, hCM (FROZEN) |
 | 11.8 (`ConeBadEventProbabilityStmt`) | `closure_11_8` | hDG, hCC, hE (Proposed) |
+| 11.11 (`HarmonicBallNotMetricBallStmt`) | `closure_11_11` | closure_11_6 hypotheses; h13 = printed ManyPinchScalesStmt **OPEN**; hmetricAxioms (Proposed) |
 | 11.2 (`HarmonicBallNotLipschitzStmt`) | `closure_11_2` | as closure_11_5 |
 | 11.5 (`NoConeConditionStmt`) | `closure_11_5` | closure_11_6 and closure_11_7 hypotheses; hI2 (see notes) |
 | 11.6 (`AnnulusMassBoundByHarmonicChainStmt`) | `closure_11_6` | hI2, hAff, hDG, hCC, hE, hW, hN (Proposed); hL1, hWeyl, hE1, hE3, hB (inputs of 5.5 and 8.1) |
@@ -28,7 +29,7 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 | 11.14 (`PinchEventMetricBallConsequenceStmt`) | `closure_11_14` | hAx (FROZEN) |
 | 11.15 (`PinchFirstEventFaithfulStmt`, corrected) | `closure_11_15` | hCM, hMet, hWSC, haxioms (FROZEN); hAff (Proposed); `hEx` discharged by `lqgMetricExponentPositive_of_inputs` (`FirstPass/S11x.lean:94`), with `hExists` (FROZEN) |
 
-Blocked by a name clash (not closed here): 11.9, 11.12, 11.16, 11.17 need the 11.9 chain (FirstPass/S11d.lean) and the 11.10 chain (FirstPass/S11c.lean) in one environment, but both declare HarmonicBalls.exists_measurable_exterior_bound (S11c/ExteriorBound.lean:93 and S11d/MeasurableExterior.lean:22). Not closed: 11.11 (needs Lemma 11.13 in the printed form ManyPinchScalesStmt, not the corrected one).
+Blocked by a name clash (not closed here): 11.9, 11.12, 11.16, 11.17 need the 11.9 chain (FirstPass/S11d.lean) and the 11.10 chain (FirstPass/S11c.lean) in one environment, but both declare HarmonicBalls.exists_measurable_exterior_bound (S11c/ExteriorBound.lean:93 and S11d/MeasurableExterior.lean:22). 11.11 is closed modulo the OPEN printed Lemma 11.13 (ManyPinchScalesStmt, h13).
 -/
 
 namespace HarmonicBalls.Closure
@@ -205,4 +206,37 @@ theorem closure_11_2
     HarmonicBallNotLipschitzStmt.{u} :=
   firstPass_11_2
     (closure_11_5 hI2 hAff hDG hCC hE hW hN hL1 hWeyl hE1 hE3 hB hCamp hDecFrozen hDec hCM)
+
+/-- **Closure of Proposition 11.11** (`HarmonicBallNotMetricBallStmt`, `firstPass_11_11`). Paper-owned hypotheses:
+`AnnulusMassBoundByHarmonicChainStmt` (Lemma 11.6), discharged by `closure_11_6`, and `ManyPinchScalesStmt`
+(Lemma 11.13 in its PRINTED form), which is **OPEN**: the repository proves only the corrected form
+`CorrectedLemma11_13Stmt` (`firstPass_11_13_corrected`, closure `closure_11_13`, itself conditional on the OPEN
+`Step8IdentificationStmt`), and no bridge from the corrected form to the printed one exists (the printed statement
+quantifies one pinch configuration, the corrected one all buffered geometries; a bridge would need an explicit
+buffered geometry). Remaining: the hypotheses of `closure_11_6`, the input I2 and `hmetricAxioms` (Proposed). -/
+theorem closure_11_11
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u}) (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u}) (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hB : BirkhoffPointwiseErgodic.{0})
+    (h13 : ManyPinchScalesStmt.{u})
+    (hmetricAxioms : ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+        (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc → LQGMetricFieldAxioms P γ ξ α₀ hC hcirc) :
+    HarmonicBallNotMetricBallStmt.{u} :=
+  firstPass_11_11 (closure_11_6 hI2 hAff hDG hCC hE hW hN hL1 hWeyl hE1 hE3 hB) h13 hI2 hmetricAxioms
+
 end HarmonicBalls.Closure
