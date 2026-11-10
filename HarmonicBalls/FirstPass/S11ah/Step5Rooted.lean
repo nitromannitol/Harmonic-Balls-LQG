@@ -8,9 +8,11 @@ Rooted analogue of `exists_modified_failureSet_closed_localCert` (`S11ah/Step5Lo
 `ω ↦ decoderOn (ball c₂ r₂) (m (campbellReferenceObs γ α (ball c₂ r₂) (hC ω) z).2)` at a root `z`. The index is the sample
 point `ω`: no pushforward of `P` to the observables is used (operator decision, wave 36).
 
-Named input: `RootedLengthPropertyStmt` (the rooted length property, for Lebesgue-a.e. root and `P`-a.s. sample). It is
-NOT a literature input: it is not in `HarmonicBalls/External` or `HarmonicBalls/Proposed`. Its source is pending (ChatGPT
-chat 192, `notes/fp-gaps/CHATGPT-n4-rooted-length.md`). Identity (20) is not used by the Step 5 argument.
+Input: `RootedLengthPropertyStmt` (the rooted length property, for Lebesgue-a.e. root and `P`-a.s. sample). It is
+proved in `S11ah/RootedLengthProperty.lean` (`rootedLengthProperty`) from identity (20) of `LocalMetricReplacementStmt`,
+the frozen rooted continuity `RootedPhysicalMetricContinuousAtInsertionFrozen` and the LQG axiom I; that file also gives
+`exists_modified_failureSet_rooted_localCert_discharged`, this theorem with the hypothesis `hLen` discharged.
+Identity (20) is not used by the Step 5 argument itself.
 -/
 
 open MeasureTheory ProbabilityTheory Metric Set Filter Topology HarmonicBalls
@@ -18,7 +20,7 @@ open scoped ENNReal
 
 namespace FirstPassS11ah
 
-/-- **Named hypothesis (pending source): the rooted length property.** For Lebesgue-a.e. root `z` in `ball c₁ r₁`, `P`-almost
+/-- **The rooted length property** (proved as `rootedLengthProperty`, `S11ah/RootedLengthProperty.lean`). For Lebesgue-a.e. root `z` in `ball c₁ r₁`, `P`-almost
 surely in the sample `ω`, the rooted decoder `decoderOn (ball c₂ r₂) (m (campbellReferenceObs γ α (ball c₂ r₂) (hC ω) z).2)`
 is a Euclidean length metric on `ball c₂ r₂` (`IsLengthMetricOn`). Its fields not supplied by identity (20) are the
 non-degeneracy `eq_of_eq_zero` and the Euclidean topology `isOpen_iff`. -/

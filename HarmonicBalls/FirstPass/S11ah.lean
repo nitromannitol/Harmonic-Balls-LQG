@@ -11,6 +11,7 @@ import HarmonicBalls.FirstPass.S11ah.CutoffLength
 import HarmonicBalls.FirstPass.S11ah.Step5Closed
 import HarmonicBalls.FirstPass.S11ah.Step5Local
 import HarmonicBalls.FirstPass.S11ah.Step5Rooted
+import HarmonicBalls.FirstPass.S11ah.RootedLengthProperty
 
 /-!
 # Steps 4 and 5 of the 11.13 local certificate sequence (fp-S11ah-11-13-steps-4-5, owner n4)
