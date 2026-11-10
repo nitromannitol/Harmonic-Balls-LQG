@@ -52,7 +52,8 @@ def CanonicalPinchConullStmt (α₀ M δ : ℝ) (U T Q' Q : Set ℂ) (Dμ : Cano
       δ * N ≤ ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧ pinchPointEvent (Dμ L) (Dd L) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) z}.ncard :
         ℝ)
 
-/-- NAMED INPUT (not frozen; operator source-check required). Identification of the LQG measure and the LQG metric of
+/-- Definition. Its existence for some decoders is the frozen input `LQGCanonicalDecodersExistStmt`
+(`FirstPass/Frozen/S11n.lean`). Identification of the LQG measure and the LQG metric of
 a whole-plane GFF model with canonical decoders. For every model with `IsLQGMeasureOfField P γ α₀ hcirc μ` and
 `IsLQGMetricOfField P γ ξ α₀ hC D`, almost surely there are constants `a, b > 0` with `μ ω = a • Dμ (canonical field)` and
 `D ω = b • Dd (canonical field)`. The constants absorb the additive-constant normalisation of the field (`μ_{h+c} =
@@ -153,5 +154,47 @@ theorem correctedLemma11_13_of_canonical {γ ξ α₀ M : ℝ} {U T Q' Q : Set �
           ℝ) := by
   obtain ⟨δ, hδ, Dμ, Dd, hCan, hId⟩ := h
   exact ⟨δ, hδ, fun Ω _ P hC hcirc μ D hh hμ hD => restoreModel_11_13 hCan hId Ω P hC hcirc μ D hh hμ hD⟩
+
+/-- Certified canonical decoders (ChatGPT B1 ruling `notes/fp-gaps/CHATGPT-n1-B1-canonical-decoders.md`, section 6). The
+decoders `Dμ' Dd'` agree with `Dμ Dd` up to positive factors, pointwise on one measurable set `G0` of canonical fields
+which every whole-plane GFF model reaches almost surely. Pinch events are invariant under positive factors
+(`pinchPointEvent_smul_iff`), so the canonical pinch statement may be proved for the certified decoders `Dμ' Dd'`. -/
+def CanonicalDecodersCertified (α₀ : ℝ) (Dμ : CanonSpace → Measure ℂ) (Dd : CanonSpace → ℂ → ℂ → ℝ)
+    (Dμ' : CanonSpace → Measure ℂ) (Dd' : CanonSpace → ℂ → ℂ → ℝ) : Prop :=
+  ∃ G0 : Set CanonSpace, MeasurableSet G0 ∧
+    (∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc → ∀ᵐ ω ∂P, alphaCanon α₀ hC ω ∈ G0) ∧
+    ∀ L ∈ G0, ∃ r s : ℝ, 0 < r ∧ 0 < s ∧ Dμ' L = ENNReal.ofReal r • Dμ L ∧ ∀ u v, Dd' L u v = s * Dd L u v
+
+/-- Identification transfers along certification: the constants of `LQGCanonicalIdentificationStmt` for `(Dμ, Dd)` become
+`a / r` and `b / s` for `(Dμ', Dd')`. -/
+theorem lqgCanonicalIdentification_of_certified {γ ξ α₀ : ℝ} {Dμ Dμ' : CanonSpace → Measure ℂ}
+    {Dd Dd' : CanonSpace → ℂ → ℂ → ℝ} (hcert : CanonicalDecodersCertified.{u} α₀ Dμ Dd Dμ' Dd')
+    (hId : LQGCanonicalIdentificationStmt.{u} γ ξ α₀ Dμ Dd) :
+    LQGCanonicalIdentificationStmt.{u} γ ξ α₀ Dμ' Dd' := by
+  obtain ⟨G0, -, hG0, hcs⟩ := hcert
+  intro Ω _ P hC hcirc μ D hh hμ hD
+  filter_upwards [hG0 Ω P hC hcirc hh, hId Ω P hC hcirc μ D hh hμ hD] with ω hωG hωI
+  obtain ⟨a, b, ha, hb, hμω, hDω⟩ := hωI
+  obtain ⟨r, s, hr, hs, hμ', hDd'⟩ := hcs _ hωG
+  refine ⟨a / r, b / s, div_pos ha hr, div_pos hb hs, ?_, fun u v => ?_⟩
+  · rw [hμω, hμ', smul_smul, ← ENNReal.ofReal_mul (div_pos ha hr).le, div_mul_cancel₀ a hr.ne']
+  · rw [hDω u v, hDd' u v, ← mul_assoc, div_mul_cancel₀ b hs.ne']
+
+/-- The bridge with explicit witnesses (operator ruling 23:53 UTC). The canonical pinch statement is needed only for decoders
+certified equal to the identification witnesses `Dμ Dd`, not for `Dμ Dd` themselves. -/
+theorem correctedLemma11_13_of_identification {γ ξ α₀ M : ℝ} {U T Q' Q : Set ℂ}
+    {Dμ : CanonSpace → Measure ℂ} {Dd : CanonSpace → ℂ → ℂ → ℝ}
+    (hId : LQGCanonicalIdentificationStmt.{u} γ ξ α₀ Dμ Dd)
+    (hPinch : ∃ δ ∈ Ioo (0 : ℝ) 1, ∃ (Dμ' : CanonSpace → Measure ℂ) (Dd' : CanonSpace → ℂ → ℂ → ℝ),
+      CanonicalDecodersCertified.{u} α₀ Dμ Dd Dμ' Dd' ∧ CanonicalPinchConullStmt.{u} α₀ M δ U T Q' Q Dμ' Dd') :
+    ∃ δ ∈ Ioo (0 : ℝ) 1, ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
+      ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), ∀ᶠ N in atTop,
+        δ * N ≤ ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧ pinchPointEvent (μ ω) (D ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) z}.ncard :
+          ℝ) := by
+  obtain ⟨δ, hδ, Dμ', Dd', hcert, hCan⟩ := hPinch
+  exact correctedLemma11_13_of_canonical ⟨δ, hδ, Dμ', Dd', hCan, lqgCanonicalIdentification_of_certified hcert hId⟩
 
 end HarmonicBalls.S11n
