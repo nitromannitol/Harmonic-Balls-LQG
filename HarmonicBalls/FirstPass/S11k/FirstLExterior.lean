@@ -3,6 +3,7 @@ import HarmonicBalls.FirstPass.S11k.ExteriorPairings
 import HarmonicBalls.FirstPass.S11k.ExteriorDistances
 import HarmonicBalls.FirstPass.S11h.CorridorSup11_17
 import HarmonicBalls.FirstPass.Frozen.S11g
+import HarmonicBalls.FirstPass.S11t
 
 /-!
 # First pass, Section 11: the closed-corridor first conjunct `L` has an exterior version (fp-S11k, owner z3)
@@ -247,5 +248,30 @@ theorem firstPass_11_16_corrected_of_frozen (hAx : LQGMetricFieldAxiomsUnivFroze
     hM hDiam hMk
 
 end FirstLExterior
+
+/-- Lemma 11.16, corrected form (`PinchSecondEventFaithfulStmt`, `FirstPass/S11h/Faithful.lean`). The bundle's open
+parts are now proved: `PinchFirstLExteriorStep` (`FirstLExterior.pinchFirstLExteriorStep_of_frozen`, from the frozen
+closed-domain identity `hK1`) and `PinchSecondAnnulusStep` (n4, `PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs`,
+from its named inputs). Explicit hypotheses: the frozen inputs `hAx`, `hb`, `hK1`, `hM`, `hDiam`, `hMk`; the Draft
+statements `hPos` (Lemma 11.15) and `hD`; the N2 named inputs `hholder` (cited, Bou-Rabee-Gwynne Prop 2.5) and the
+Proposed `hEx`, `hWeyl`, `hNa0`, `hNa`, pending operator source-check. -/
+theorem firstPass_11_16_corrected (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hb : WholePlaneCircleAverageLimitFrozen.{u}) (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
+    (hholder : GreenPotentialHolderStmt.{u})
+    (hEx : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hWeyl : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hNa0 : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ 0 hC hcirc)
+    (hNa : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hPos : PinchFirstEventFaithfulStmt.{u}) (hD : SmallMetricDiameterLargeMassStmt.{u})
+    (hM : LQGMassInnerMeasurableFrozen.{u}) (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
+    PinchSecondEventFaithfulStmt.{u} :=
+  FirstLExterior.firstPass_11_16_corrected_of_frozen hAx hb hK1
+    (PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs hM hb hholder hEx hWeyl hNa0 hNa)
+    hPos hD hM hDiam hMk
 
 end HarmonicBalls
