@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.S11ah.LocalMeasurable
 import HarmonicBalls.FirstPass.S11ah.FailureSet
 import HarmonicBalls.FirstPass.S11al
+import HarmonicBalls.FirstPass.S11ao
 
 /-!
 # Step 5 for the local decoders, almost surely (fp-S11ah-11-13-steps-4-5b, owner n4; wave 31)
@@ -38,11 +39,26 @@ theorem certificateEventLocality_of_containments {η M : ℝ} {Ostar U V W T Q' 
   exact FirstPassS11i.certificateEvent_congr_of_eqOn_closedBall (μ := μ) hC hr
     (fun p hp => h p.1 hp.1 p.2 hp.2)
 
-/-- **The a.s. modification of a family of local length metrics on `ball c R`** (the statement of fp-S11ao; its
-existence is the named hypothesis `hq3`). -/
+/-- **The a.s. modification of a family of local length metrics on `ball c R`** (the statement of fp-S11ao,
+`FirstPassS11ao.exists_measurable_localLengthModification`). -/
 def LocalLengthModification (P : Measure Ω) (c : ℂ) (R : ℝ) (D : Ω → ℂ → ℂ → ℝ) : Prop :=
   ∃ D' : Ω → ℂ → ℂ → ℝ, (∀ x ∈ ball c R, ∀ y ∈ ball c R, Measurable fun ω => D' ω x y) ∧
     (∀ ω, IsLengthMetricOn (ball c R) (D' ω)) ∧ ∀ᵐ ω ∂P, D' ω = D ω
+
+/-- The a.s. modification exists (fp-S11ao, Option A of Lemma 11.13): from the almost-sure length property of `D` on the
+disc, a family `D'` measurable in each pair of points, an `IsLengthMetricOn` metric for every sample and `P`-a.s. equal
+to `D`. -/
+theorem localLengthModification_of_ae {c : ℂ} {R : ℝ} (P : Measure Ω) (D : Ω → ℂ → ℂ → ℝ)
+    (hDm : ∀ x ∈ ball c R, ∀ y ∈ ball c R, Measurable fun ω => D ω x y)
+    (hae : ∀ᵐ ω ∂P, IsLengthMetricOn (ball c R) (D ω)) : LocalLengthModification P c R D := by
+  obtain ⟨H, -, hH0, D', hDm', hlen, hgood, -⟩ :=
+    FirstPassS11ao.exists_measurable_localLengthModification (P := P) (convex_ball c R) isOpen_ball hDm hae
+  have hH : ∀ᵐ ω ∂P, ω ∈ H := by
+    rw [ae_iff]
+    exact hH0
+  refine ⟨D', hDm', hlen, ?_⟩
+  filter_upwards [hH] with ω hω
+  exact (hgood ω hω).2
 
 /-- The local certificate sequence (J) at a point `x = (z, ω) ∈ ℂ × Ω` (Step 5 indexing `x.1 = z`, `x.2 = ℓ`). -/
 def localCertPt (c : ℂ) (R : ℝ) (κ : Kernel Ω ℂ) (D : Ω → ℂ → ℂ → ℝ)
@@ -112,8 +128,6 @@ theorem exists_modified_failureSet_ae {c : ℂ} {R : ℝ} (hR : 0 < R) (κ : Ker
     (P : Measure Ω) (D : Ω → ℂ → ℂ → ℝ)
     (hDm : ∀ x ∈ ball c R, ∀ y ∈ ball c R, Measurable fun ω => D ω x y)
     (hLen : ∀ᵐ ω ∂P, IsLengthMetricOn (ball c R) (D ω))
-    (hq3 : ∀ (D : Ω → ℂ → ℂ → ℝ), (∀ x ∈ ball c R, ∀ y ∈ ball c R, Measurable fun ω => D ω x y) →
-      (∀ᵐ ω ∂P, IsLengthMetricOn (ball c R) (D ω)) → LocalLengthModification P c R D)
     {Ostar U V W T Q' Q : Set ℂ} (hOstar : IsOpen Ostar) (h0 : (0 : ℂ) ∈ Ostar)
     (hsph : sphere (0 : ℂ) 5 ⊆ Ostar) (hU : MeasurableSet U) {η M : ℝ} (hη : 0 < η)
     {A : Set ℂ} (hA : MeasurableSet A) (q : ℝ) :
@@ -123,7 +137,7 @@ theorem exists_modified_failureSet_ae {c : ℂ} {R : ℝ} (hR : 0 < R) (κ : Ker
       MeasurableSet (failureSetLoc c R κ D' Ostar U V W T Q' Q η M A q) ∧
       ∀ᵐ ω ∂P, ∀ z : ℂ, ((z, ω) ∈ failureSetLoc c R κ D Ostar U V W T Q' Q η M A q ↔
         (z, ω) ∈ failureSetLoc c R κ D' Ostar U V W T Q' Q η M A q) := by
-  obtain ⟨D', hm, hl, hae⟩ := hq3 D hDm hLen
+  obtain ⟨D', hm, hl, hae⟩ := localLengthModification_of_ae P D hDm hLen
   exact ⟨D', hm, hl,
     measurableSet_failureSetLoc hR κ hm hl hOstar h0 hsph hU hη hA q,
     failureSetLoc_ae_agree κ A q hae⟩

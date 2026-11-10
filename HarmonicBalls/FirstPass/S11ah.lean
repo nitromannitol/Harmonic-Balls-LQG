@@ -6,6 +6,7 @@ import HarmonicBalls.FirstPass.S11ah.LengthTransport
 import HarmonicBalls.FirstPass.S11ah.LocalMeasurable
 import HarmonicBalls.FirstPass.S11ah.Modified
 import HarmonicBalls.FirstPass.S11ah.LengthScale
+import HarmonicBalls.FirstPass.S11ah.LQGDecoder
 
 /-!
 # Steps 4 and 5 of the 11.13 local certificate sequence (fp-S11ah-11-13-steps-4-5, owner n4)
@@ -23,6 +24,8 @@ Local domain (operator item (b)): `S11ah/Radial.lean` (radial homeomorphism `ℂ
 `measurable_localCertLoc`: joint measurability of the local indicator (J) for a metric on a disc, no locality needed;
 `localCertSet_iff_of_locality` uses the named hypothesis `CertificateEventLocality`, operator item (a), to be proved by q1).
 
-OPEN (see reports/n4.md): hypothesis `∀ ω, IsLengthMetricOn (ball c R) (D ω)` for the decoders is not supplied by
-`LocalMetricReplacementStmt` (metric identity only P-almost surely), and locality (a) is a named hypothesis.
+Decoders (`S11ah/LQGDecoder.lean`): the a.s. `IsLengthMetricOn (ball c R)` property follows from identity (18), the
+LQG axiom I and the named input `CutoffInternalLengthStmt` (R1); `exists_modified_failureSet_lqg` is the Step 5
+statement. The P-a.s. modification is `localLengthModification_of_ae` (fp-S11ao). OPEN: locality (a) is still the named
+hypothesis of `certificateEventLocality_of_containments` (containments by fp-S11ap).
 -/
