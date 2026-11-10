@@ -1,5 +1,7 @@
 import HarmonicBalls.FirstPass.Closure.Sec11
 import HarmonicBalls.FirstPass.S11i.Step8PhysExists
+import HarmonicBalls.FirstPass.S11i.InsertionTransfer
+import HarmonicBalls.FirstPass.Frozen.S11rMetric
 
 /-!
 # Lemma 11.13 (canonical), first-pass final assembly at universe 0 (fp-S11-13-final-assembly-u0, owner n3)
@@ -138,7 +140,94 @@ theorem firstPass_11_13_final_route1
     hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
     (HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route1 hCCα hCal hK0)
 
+/-! ### Counted Lemma 11.13, first pass, universe 0 (fp-S11-13-count, owner n3)
+
+`firstPass_11_13` is the counted theorem `CorrectedLemma11_13CanonicalStmt.{0}`. It is the route-1 assembly
+(`firstPass_11_13_final_route1`) with two changes:
+* the insertion transfer at `k = 0` (`hK0`) is discharged by
+  `HarmonicBalls.FirstPassS11iInsertionTransfer.allModelsAt_insertion_of_zero_k0` (`S11i/InsertionTransfer.lean:485`,
+  owner n4, commit be5d91ff). Its binders are threaded: `hCM := hCMRew`; `hEx := hE` at `α = 0`; `hNon := hNonat` at `α`;
+  `hK` the frozen binder below; `hR := hN2` at `ξ = lqgXi γ` (`0 < lqgXi γ` by `lqgGraphDimension_pos`,
+  `Defs/LQGGraphDistance.lean:110`); `hLF := hAx`. The binder `hK0` disappears; the new binder is `hK`.
+* `hN2`, which is also `hR`, is the frozen wrapper `LocalMetricReplacementFrozen` (`Frozen/S11rMetric.lean:33`), bound once.
+
+Binder classes (FROZEN / PROPOSED / OPEN), with the definition of each Prop:
+* FROZEN: `hAx` `LQGMetricFieldAxiomsUnivFrozen` (`Frozen/S11j.lean:155`); `hLen` `LQGMetricLengthUnivFrozen` (`Frozen/S11j.lean:133`);
+  `hN2` `LocalMetricReplacementFrozen` (`Frozen/S11rMetric.lean:33`, new, operator-approved); `hLoc` `LocalLQGDecoderCommonFrozen`
+  (`Frozen/S11c.lean:388`); `hCanon` `LQGCanonicalDecodersExistStmt` (`Frozen/S11n.lean:33`); `hExists`
+  `WholePlaneGFFExistsFrozen` (`S11r/Frozen.lean:39`); `hfr` `LQGInternalMetricWeylAeMeasurableFrozen` (`Frozen/S11d.lean:130`);
+  `hmass` `LQGMassFunctionalMeasurableFrozen` (`Frozen/S11d.lean:155`); `hCMAbs` `CameronMartinGFFMutualAbsCont`
+  (`Frozen/S11d.lean:74`); `hCMRew` `CameronMartinGFFReweighting` (`Frozen/S11aj.lean:33`); `hComp` `WeylScalingCompositionFrozen`
+  (`Frozen/S11d.lean:91`); `hMf` `LQGMassInnerMeasurableFrozen` (`Frozen/S11k.lean:66`); `hDiam`
+  `LQGInternalDiamInnerMeasurableFrozen` (`Frozen/S11k.lean:89`); `hMk` `DomainMarkovConditionalPositiveFrozen`
+  (`Frozen/S11k.lean:45`); `hholder` `GreenPotentialHolderStmt` (`Draft/Section2.lean:190`, cited Draft statement);
+  `hShift` `LQGMetricContinuousShiftFactI` (`Frozen/S11d.lean:34`); `hFD` `PlaneDomainMinusConvexCompactPreconnectedFrozen`
+  (`Frozen/S11d.lean:26`); `hDC` `DyadicCellDiamSmallFrozen` (`Frozen/S11c.lean:67`); `hCMT` `CameronMartinEventTransferFrozen`
+  (`Frozen/S11c.lean:149`); `hPos10` `LQGMeasureSquarePositiveFrozen` (`Frozen/S11c.lean:130`); `hMassM`
+  `LQGMeasureSquareMeasurableFrozen` (`Frozen/S11c.lean:117`); `hSupM` `LQGMetricSupMeasurableFrozen` (`Frozen/S11c.lean:105`);
+  `hFin` `ConnectedSquareUnionDiamFiniteFrozen` (`Frozen/S11c.lean:91`); `hW` `WeylInternalClosedFrozen`
+  (`Frozen/S11c.lean:180`); `hM1` `WeylShiftedSupMeasurableFrozen` (`Frozen/S11c.lean:217`); `hM2`
+  `WeylShiftedMassMeasurableFrozen` (`Frozen/S11c.lean:233`); `hK` `LocalMeasureKernelStmt` (`S11r/Frozen.lean:144`, quantified over
+  `γ c₁ c₂ r₁ r₂`).
+* PROPOSED (pending operator source-check): `hμW` `LQGMeasureWeylScaling` (`Proposed/LQG.lean:95`); `hNonat`
+  `LQGMeasureNonatomicAll` (`S11n/MeasureDecoder.lean:39`, through `LQGMeasureNonatomic`, `Proposed/LQG.lean:77`); `hDG`
+  `WholePlaneLQGBallMassBounds` (`Proposed/LQG.lean:154`); `hCCα` `CoordChangeAlpha0Stmt` (`S11i/Step8PhysReduction.lean:81`, through
+  `LQGMeasureCoordChange` at every `α`, `Proposed/LQG.lean:116`); `hE` `LQGMeasureExistence` (`Proposed/LQG.lean:68`).
+* OPEN: `hCal` `Step8EventCalibrationStmt.{0}` (`S11i/Step8PhysExists.lean:110`; owner n1; calibration of the pinch event).
+  Discharged by `insertionZeroUnit_of_href` (`S11i/InsertionZeroUnitE.lean:41`, n4) only with its named `hHref` input, not yet
+  wired here. The binder is kept, as the operator requested.
+
+Positional binders are listed in the order of the theorem signature. -/
+theorem firstPass_11_13
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
+    (hLen : LQGMetricLengthUnivFrozen.{0})
+    (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
+      LocalMetricReplacementFrozen.{0} γ ξ c₁ c₂ r₁ r₂)
+    (hμW : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ α₀ hC hcirc)
+    (hLoc : LocalLQGDecoderCommonFrozen.{0})
+    (hCanon : LQGCanonicalDecodersExistStmt.{0})
+    (hNonat : HarmonicBalls.S11n.MeasureDecoder.LQGMeasureNonatomicAll.{0})
+    (hExists : WholePlaneGFFExistsFrozen.{0})
+    (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hCCα : HarmonicBalls.FirstPassS11iStep8PhysReduction.CoordChangeAlpha0Stmt.{0})
+    (hE : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{0})
+    (hmass : LQGMassFunctionalMeasurableFrozen.{0})
+    (hCMAbs : CameronMartinGFFMutualAbsCont.{0})
+    (hCMRew : HarmonicBalls.S11aj.CameronMartinGFFReweighting.{0})
+    (hComp : WeylScalingCompositionFrozen.{0})
+    (hMf : LQGMassInnerMeasurableFrozen.{0})
+    (hDiam : LQGInternalDiamInnerMeasurableFrozen.{0})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{0})
+    (hholder : GreenPotentialHolderStmt.{0})
+    (hShift : LQGMetricContinuousShiftFactI.{0}) (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
+    (hDC : DyadicCellDiamSmallFrozen.{0}) (hCMT : CameronMartinEventTransferFrozen.{0})
+    (hPos10 : LQGMeasureSquarePositiveFrozen.{0}) (hMassM : LQGMeasureSquareMeasurableFrozen.{0})
+    (hSupM : LQGMetricSupMeasurableFrozen.{0}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
+    (hW : WeylInternalClosedFrozen)
+    (hM1 : WeylShiftedSupMeasurableFrozen.{0}) (hM2 : WeylShiftedMassMeasurableFrozen.{0})
+    (hCal : HarmonicBalls.FirstPassS11iStep8PhysExists.Step8EventCalibrationStmt.{0})
+    (hK : ∀ (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), LocalMeasureKernelStmt.{0} γ c₁ c₂ r₁ r₂) :
+    CorrectedLemma11_13CanonicalStmt.{0} :=
+  have hK0 : HarmonicBalls.FirstPassS11iStep8PhysExists.Step8InsertionTransferK0Stmt :=
+    fun γ α _ _ _ _ _ _ _ _ _ hgeom hγ0 hγ2 hα h0 =>
+      HarmonicBalls.FirstPassS11iInsertionTransfer.allModelsAt_insertion_of_zero_k0 hgeom hγ0 hγ2 hα hCMRew
+        (fun Ω _ P hC hcirc => hE Ω P γ 0 hC hcirc)
+        (fun Ω _ P hC hcirc => hNonat γ α Ω P hC hcirc)
+        (hK γ)
+        (fun c₁ c₂ r₁ r₂ =>
+          hN2 γ (lqgXi γ) hγ0 hγ2 (div_pos hγ0 (HarmonicBalls.lqgGraphDimension_pos γ)) c₁ c₂ r₁ r₂)
+        hAx h0
+  HarmonicBalls.Closure.closure_11_13_canonical.{0} hAx hLen hN2 hμW hLoc hCanon hNonat hExists hDG
+    (fun Ω _ P γ hC hcirc => hCCα γ 0 Ω P hC hcirc) hE hfr hmass hCMAbs hCMRew hComp hMf hDiam hMk hholder hShift hFD
+    hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
+    (HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route1 hCCα hCal hK0)
+
 end HarmonicBalls.FirstPassS11iFinal11_13
 
 #print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final
 #print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final_route1
+#print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13
