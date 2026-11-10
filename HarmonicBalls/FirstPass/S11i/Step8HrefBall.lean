@@ -126,8 +126,49 @@ theorem href_discNormalized_doubledDisc {Ω : Type u} [MeasurableSpace Ω] {P : 
   have hsub : closedBall c r ⊆ ball c (2 * r) := closedBall_subset_ball (by linarith)
   exact href_discNormalized_of_covariance hCM hB hG hsub hF hCC hU Dμ Dd hFdef κ₀ hκ₀m m₀ hCov m H hH hPH hagree hkappa
 
+/-- **`href` in the doubled-disc instance with the finite decoder kernel (chat 243 Q2, fp-S11i-11-13m).** This is
+`href_discNormalized_doubledDisc` at the finite kernel `κF` of `FirstPassS11ahFinite.exists_finite_localMeasureKernel`
+(`κF : Kernel (LocalObs c (2 * r)) ℂ`, `[IsFiniteKernel κF]`), with the binder `hkappa` discharged: for every observation
+code `ℓ` and every set `s`, `κF ℓ s ≤ κF.bound < ⊤` (`ProbabilityTheory.Kernel.measure_le_bound`,
+`ProbabilityTheory.Kernel.bound_lt_top`), so no rooted-measure existence is needed. The second normalization is
+`discNormalizedKernel` as in the doubled-disc instance. Hypotheses are otherwise those of `href_discNormalized_doubledDisc`. -/
+theorem href_discNormalized_doubledDisc_finiteKernel {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P]
+    (hCM : CameronMartinGFFMutualAbsCont.{u}) (hB : BirkhoffPointwiseErgodic.{0})
+    {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
+    (c : ℂ) {r : ℝ} (hr : 0 < r)
+    {F : Set (ModConstTestPairings (ball (0 : ℂ) 7))} (hF : MeasurableSet F)
+    {Ostar U V W T Q' Q : Set ℂ} {η M : ℝ}
+    (hCC : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
+    (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
+    (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
+    (hFdef : ∀ L : ModConstTestPairings (Set.univ : Set ℂ),
+      FirstPassS11i.CertificateEvent (Dμ L) (Dd L) Ostar U V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ F)
+    (κF : Kernel (FirstPassS11ahFinite.LocalObs c (2 * r)) ℂ) [IsFiniteKernel κF]
+    (m₀ : FirstPassS11ahFinite.LocalObs c (2 * r) → ℂ → ℂ → ℝ)
+    (hCov : FirstPassS11at.RootedCertificateEventualCovarianceStmt P γ hC hcirc c c r (2 * r) (ball c r)
+      Ostar U V W T Q' Q η M (AdmissibleRootShift 0) rootRadius
+      (FirstPassS11at.decodedRootMeasure (fun ℓ => κF ℓ) γ 0 hC) (FirstPassS11at.decodedRootMetric m₀ γ 0 hC) Dμ Dd)
+    (m : FirstPassS11ahFinite.LocalObs c (2 * r) → ℂ → ℂ → ℝ)
+    (H : Set (FirstPassS11ahFinite.LocalObs c (2 * r))) (hH : MeasurableSet H)
+    (hPH : rootedRefLaw P γ 0 c c r (2 * r) hC Hᶜ = 0)
+    (hagree : ∀ l ∈ H, m l = m₀ l) :
+    ∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball c r → ∀ᵐ ω ∂P,
+      campbellReferenceObs γ 0 (ball c (2 * r)) (hC ω) z ∉
+        ReferenceNullS11i.refBadWindowSet
+          (localCertSeq (fun ℓ => discNormalizedKernel (fun ℓ => κF ℓ) κF.measurable ℓ) m Ostar U V W T Q' Q η M)
+          (P {ω | alphaCanon γ hC ω ∈ ballRestrictPairing 7 ⁻¹' F}).toReal := by
+  have hkappa : ∀ᵐ z ∂(volume.restrict (ball c r)), ∀ᵐ ω ∂P,
+      κF (campbellReferenceObs γ 0 (ball c (2 * r)) (hC ω) z).2 (ball c (2 * r)) ≠ ⊤ :=
+    ae_of_all _ fun z => ae_of_all _ fun ω =>
+      ne_of_lt (lt_of_le_of_lt (ProbabilityTheory.Kernel.measure_le_bound κF _ _)
+        (ProbabilityTheory.Kernel.bound_lt_top κF))
+  exact href_discNormalized_doubledDisc hCM hB hG c hr hF hCC hU Dμ Dd hFdef (fun ℓ => κF ℓ) κF.measurable m₀ hCov
+    m H hH hPH hagree hkappa
+
 end HarmonicBalls.FirstPassS11iStep8HrefBall
 
 #print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.href_discNormalized_of_covariance
 #print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.canonical_frequency_eq_of_models
 #print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.href_discNormalized_doubledDisc
+#print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.href_discNormalized_doubledDisc_finiteKernel
