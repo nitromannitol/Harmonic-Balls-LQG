@@ -4,6 +4,9 @@ import HarmonicBalls.FirstPass.S11f.SecondThresholds
 import HarmonicBalls.FirstPass.S11e.CondPos
 import HarmonicBalls.Proofs.Sec11.ModConstPairingLaw
 import HarmonicBalls.FirstPass.Frozen.S11k
+import HarmonicBalls.FirstPass.Frozen.S11j
+import HarmonicBalls.FirstPass.S11k.EventAssembly
+import HarmonicBalls.FirstPass.S11k.SetDistPositive
 
 /-!
 # First pass, Section 11: the faithful second pinch event, Lemma 11.16 (fp-S11k, owner z3)
@@ -298,4 +301,79 @@ theorem firstPass_11_16_corrected_of_event (hE : PinchSecondExteriorEventStep.{u
     PinchSecondEventFaithfulStmt.{u} :=
   firstPass_11_16_corrected_of_exterior (pinchSecondExteriorStep_of_event hE) hD hM hDiam hMk
 
+/-- NEW, OPEN: the exterior version bundle of Lemma 11.16 (the N1 and N2 inputs of the corrected proof of `lemma:E2`,
+paper lines 3700-3727; ChatGPT `notes/fp-gaps/CHATGPT-n4-B2-z3-N1N2.md` sections 3-6). With `m` the zero-mean exterior
+sigma-algebra `comap (localModConstPairings α₀ hC (closure W)ᶜ)`, it asserts: (N1) an `m`-measurable event `F₀` that is
+almost surely `pinchFirstEvent` (the exterior versions of `L, a₀, a₁, d₀`, which `pinchFirstEvent_ae_iff_versions` turns into one event);
+(N1') an `m`-measurable real version `d` of `D(∂B_δ, ∂B_{2δ})`; (N2) for every `M > 0` an `m`-measurable `S` with
+`M · SG_{3,6}(0) ≤ S` almost surely and `S ≠ ∞` on `F₀` almost surely. The Green bound of (N2) is
+`exists_outside_green_of_singular_weyl` (`hbase` is the `α₀ = 0` input, open as B1), and its finiteness on `F₀` is the
+input `hFin` of `exists_exterior_annulusGreenPotentialSup` (n4). Nothing here is claimed: it is the single open input of
+`PinchSecondExteriorEventStep` after the reductions below. -/
+def PinchSecondExteriorVersionsStep : Prop :=
+  ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
+  ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
+    ∃ F₀ : Set Ω,
+      MeasurableSet[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] F₀ ∧
+      (∀ᵐ ω ∂P, ω ∈ F₀ ↔ pinchFirstEvent (D ω) W T Q' Q δ) ∧
+      ∃ d : Ω → ℝ,
+        Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] d ∧
+        (∀ᵐ ω ∂P, d ω = setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ))) ∧
+        ∀ M : ℝ, 0 < M → ∃ S : Ω → ENNReal,
+          Measurable[MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance] S ∧
+          (∀ᵐ ω ∂P, ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ S ω) ∧
+          (∀ᵐ ω ∂P, ω ∈ F₀ → S ω ≠ ⊤)
+
+/-- `PinchSecondExteriorEventStep` from `PinchSecondExteriorVersionsStep` (N1, N2, open) and two inputs already in the
+repository: the Draft positivity of the first event of Lemma 11.15 (`PinchFirstEventFaithfulStmt`, used only through its
+measurable inner-measure form, which `F₀` dominates almost surely) and the EXTERNAL metric axioms of the LQG metric
+(`LQGMetricFieldAxiomsUnivFrozen`, item I: almost surely a Euclidean length metric). Positivity of `d` on `F₀` is
+`setDist_sphere_two_pos` (`S11k/SetDistPositive.lean`). Proved, conditional on the two named inputs. -/
+theorem pinchSecondExteriorEventStep_of_versions (hV : PinchSecondExteriorVersionsStep.{u})
+    (hPos : PinchFirstEventFaithfulStmt.{u}) (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) :
+    PinchSecondExteriorEventStep.{u} := by
+  intro U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω _ P hC hcirc μ D hGFF hμ hD M hM
+  have hDx := hD
+  obtain ⟨F₀, hF₀m, hF₀iff, d, hdm, hdv, hS⟩ :=
+    hV U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω P hC hcirc μ D hGFF hμ hD
+  obtain ⟨A, hAsub, -, hAp⟩ := hPos U V W T Q' Q δ hG γ α₀ ξ hγ0 hγ2 hα Ω P hC hcirc D hGFF hDx
+  have hAle : A ≤ᵐ[P] F₀ := by
+    filter_upwards [hF₀iff] with ω hω hA
+    exact hω.2 (hAsub hA)
+  have hF₀pos : 0 < P F₀ := lt_of_lt_of_le hAp (measure_mono_ae hAle)
+  obtain ⟨𝔇, h𝔇, hDae⟩ := hDx
+  have hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω) := by
+    obtain ⟨hI, -⟩ := hAx Ω P γ ξ α₀ hC hcirc hGFF hγ0 hγ2 hα 𝔇 h𝔇
+    filter_upwards [hI, hDae] with ω h1 h2
+    have hDeq : D ω = fun u v => (weylScaling (𝔇 (hC ω)) ξ (fun x => -α₀ * Real.log ‖x‖) u v).toReal := by
+      funext u v
+      have h3 := ENNReal.toReal_ofReal (h2 u v).1
+      rw [(h2 u v).2] at h3
+      exact h3.symm
+    rw [hDeq]
+    exact h1.2
+  have hdpos : ∀ᵐ ω ∂P, ω ∈ F₀ → 0 < d ω := by
+    filter_upwards [hdv, hmetric] with ω h1 h2 _
+    rw [h1]
+    exact setDist_sphere_two_pos h2 hG.delta_pos
+  obtain ⟨S, hSm, hSv, hSfin⟩ := hS M hM
+  exact exists_pinchSecondExteriorEvent_of_versions W T Q' Q δ M hF₀m hF₀pos
+    (hF₀iff.mono fun ω h hω => h.1 hω) hdm hdv hdpos hSm hSv hSfin
+
+/-- Lemma 11.16, corrected form, conditional on the named inputs `PinchSecondExteriorVersionsStep` (OPEN, N1 and N2)
+and the Draft positivity `PinchFirstEventFaithfulStmt` (Lemma 11.15) with the EXTERNAL metric axioms. The Proposition 11.9
+input and the two frozen conditional-mass inputs are as in `firstPass_11_16_corrected_of_event`. -/
+theorem firstPass_11_16_corrected_of_versions (hV : PinchSecondExteriorVersionsStep.{u})
+    (hPos : PinchFirstEventFaithfulStmt.{u}) (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hD : SmallMetricDiameterLargeMassStmt.{u}) (hM : LQGMassInnerMeasurableFrozen.{u})
+    (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u}) (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
+    PinchSecondEventFaithfulStmt.{u} :=
+  firstPass_11_16_corrected_of_event (pinchSecondExteriorEventStep_of_versions hV hPos hAx) hD hM hDiam hMk
+
 end HarmonicBalls
+
+#print axioms HarmonicBalls.pinchSecondExteriorEventStep_of_versions
+#print axioms HarmonicBalls.firstPass_11_16_corrected_of_versions
