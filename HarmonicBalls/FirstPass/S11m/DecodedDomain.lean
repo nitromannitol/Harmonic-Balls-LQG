@@ -2,6 +2,7 @@ import HarmonicBalls.FirstPass.S11m.DecodedRoot
 import HarmonicBalls.FirstPass.S11m.DecodedClearance
 import HarmonicBalls.FirstPass.S11m.DecodedRule
 import HarmonicBalls.FirstPass.S11m.Finiteness
+import HarmonicBalls.FirstPass.S11m.RootMin
 
 /-!
 # Decoded internal data on fixed domains (fp-S11m, owner z4)
@@ -133,5 +134,77 @@ theorem decRoot_eq_const_mul_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEu
     (fun n : ℕ => ε / ((n : ℝ) + 2)) hs (fun n => by positivity)
     (fun n => div_lt_self hε (by linarith [(Nat.cast_nonneg n : (0 : ℝ) ≤ n)])) (decCircle ε)
     (fun n => decCircle_spec ε n)).symm
+
+open Classical in
+/-- **Decoded internal distance on a fixed domain** `O` (route eq (16)): if `0 ∉ O` it is the punctured clearance
+infimum; if `0 ∈ O` it is the minimum of the punctured value on `O \ {0}` and the sum of the two decoded root values,
+with the root values at the endpoint `0` read off directly. `εOf O` is the radius of the root circles on `O`. -/
+noncomputable def decInt (V : Set ℂ) (Dh : ℂ → ℂ → ℝ) (εOf : Set ℂ → ℝ) (O : Set ℂ) (x y : ℂ) : ℝ≥0∞ :=
+  if (0 : ℂ) ∈ O then
+    if x = 0 then (if y = 0 then 0 else decRoot V Dh (εOf O) O y)
+    else if y = 0 then decRoot V Dh (εOf O) O x
+    else min (decPunct V Dh (O \ {0}) x y) (decRoot V Dh (εOf O) O x + decRoot V Dh (εOf O) O y)
+  else decPunct V Dh O x y
+
+section MeasurableInt
+
+variable {Pair : Type*} [MeasurableSpace Pair]
+
+/-- The decoded internal distance is measurable in the pairing. -/
+theorem measurable_decInt {Dh : Pair → ℂ → ℂ → ℝ} (hDh : ∀ a b, Measurable fun ℓ => Dh ℓ a b) (V : Set ℂ)
+    (εOf : Set ℂ → ℝ) (O : Set ℂ) (x y : ℂ) : Measurable fun ℓ => decInt V (Dh ℓ) εOf O x y := by
+  unfold decInt
+  split_ifs
+  · exact measurable_const
+  · exact measurable_decRoot' hDh V (εOf O) O y
+  · exact measurable_decRoot' hDh V (εOf O) O x
+  · exact (measurable_decPunct hDh V (O \ {0}) x y).min
+      ((measurable_decRoot' hDh V (εOf O) O x).add (measurable_decRoot' hDh V (εOf O) O y))
+  · exact measurable_decPunct hDh V O x y
+
+end MeasurableInt
+
+/-- **Decoded internal identity** (deterministic). For a Euclidean length metric `D` on `V`, a connected open `O ⊆ V`
+and `Dh = c · internalCost D V` on `V × V`, the decoded internal distance equals `c · D(·,·; O)` on `O × O`.
+The hypotheses `hε`, `hball` concern the radius `εOf O` of the root circles. -/
+theorem decInt_eq_const_mul_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    (hnonneg : ∀ x y, 0 ≤ D x y) {V O : Set ℂ} (hVo : IsOpen V) (hconnV : IsConnected V) (hO : IsOpen O)
+    (hconnO : IsConnected O) (hOV : O ⊆ V) {Dh : ℂ → ℂ → ℝ} {c : ℝ} (hc : 0 < c)
+    (hDh : ∀ v ∈ V, ∀ w ∈ V, Dh v w = c * internalCost D V v w) {εOf : Set ℂ → ℝ}
+    (hε : 0 < εOf O) (hball : ball (0 : ℂ) (εOf O) ⊆ O) {x y : ℂ} (hx : x ∈ O) (hy : y ∈ O) :
+    decInt V Dh εOf O x y = ENNReal.ofReal c * internalMetric D O x y := by
+  unfold decInt
+  by_cases h0 : (0 : ℂ) ∈ O
+  · simp only [h0, ↓reduceIte]
+    have hsym : ∀ z, internalMetric D O z 0 = internalMetric D O 0 z := fun z => hD.internalMetric_symm O z 0
+    by_cases hx0 : x = 0
+    · subst hx0
+      by_cases hy0 : y = 0
+      · subst hy0
+        simp only [↓reduceIte]
+        rw [hD.internalMetric_self_of_mem_open hnonneg hO h0, mul_zero]
+      · simp only [hy0, ↓reduceIte]
+        exact decRoot_eq_const_mul_internalMetric hD hnonneg hVo hconnV hO hOV hc hDh hε hball h0 hy hy0
+          (internalMetric_ne_top_of_isConnected hD hO hconnO h0 hy)
+    · by_cases hy0 : y = 0
+      · subst hy0
+        simp only [hx0, ↓reduceIte]
+        rw [decRoot_eq_const_mul_internalMetric hD hnonneg hVo hconnV hO hOV hc hDh hε hball h0 hx hx0
+          (internalMetric_ne_top_of_isConnected hD hO hconnO h0 hx), hsym x]
+      · simp only [hx0, hy0, ↓reduceIte]
+        have hOm : IsOpen (O \ {0}) := hO.sdiff isClosed_singleton
+        have hOmV : O \ {0} ⊆ V := fun v hv => hOV hv.1
+        have hxm : x ∈ O \ {0} := ⟨hx, hx0⟩
+        have hym : y ∈ O \ {0} := ⟨hy, hy0⟩
+        rw [decPunct_eq_const_mul_internalMetric hD hVo hconnV hOm hOmV hc hDh hxm hym,
+          decRoot_eq_const_mul_internalMetric hD hnonneg hVo hconnV hO hOV hc hDh hε hball h0 hx hx0
+            (internalMetric_ne_top_of_isConnected hD hO hconnO h0 hx),
+          decRoot_eq_const_mul_internalMetric hD hnonneg hVo hconnV hO hOV hc hDh hε hball h0 hy hy0
+            (internalMetric_ne_top_of_isConnected hD hO hconnO h0 hy),
+          internalMetric_eq_min_punctured hD O (x := x) (y := y), hsym x, ← mul_add]
+        have hmono : Monotone (fun t : ℝ≥0∞ => ENNReal.ofReal c * t) := fun a b hab => by dsimp only; gcongr
+        exact (Monotone.map_min hmono).symm
+  · simp only [h0, ↓reduceIte]
+    exact decPunct_eq_const_mul_internalMetric hD hVo hconnV hO hOV hc hDh hx hy
 
 end HarmonicBalls.S11m
