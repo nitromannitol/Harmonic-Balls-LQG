@@ -36,8 +36,8 @@ def WholePlaneGFFExistsFrozen : Prop :=
 assignment, but the equality fixes the normalisation of the metric, and `2 𝔇` is also an LQG metric. Superseded by
 `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` below; do not use. The text below is the retired statement.
 
-FIRST-PASS FROZEN, EXTERNAL. PENDING TRUTH CHECK. The measurable normalised local metric decoder of the ordinary GFF
-(answer CHATGPT-n3-B1-B2.md section 4.1, equation (21)). For `0 < γ < 2`, `ξ ∈ ℝ` and a disk `D = ball c r` with
+FIRST-PASS FROZEN, EXTERNAL (retired; truth check FALSE, ChatGPT 01:48 UTC). The measurable normalised local metric decoder
+of the ordinary GFF (answer CHATGPT-n3-B1-B2.md section 4.1, equation (21)). For `0 < γ < 2`, `ξ ∈ ℝ` and a disk `D = ball c r` with
 `0 ∉ closedBall c r` there are a smooth probability bump `ρ` supported in `D` (`∫ ρ = 1`) and a Borel map `M` from the
 mean-zero observables of `D` (`localMeanZeroObs 0 D`) to continuous functions on `D × D` such that, for every whole-plane
 GFF `(Ω, P, hC, hcirc)` and every LQG metric `𝔇` of exponent `ξ` (`IsLQGMetric γ ξ 𝔇`), almost surely
@@ -63,16 +63,20 @@ def LocalLQGMetricNormalizedMeasurableFrozen : Prop :=
             ENNReal.ofReal (Real.exp (-ξ * fieldPairing 0 (hC ω) ρ)) *
               internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2
 
-/-- FIRST-PASS FROZEN, EXTERNAL. PENDING TRUTH CHECK. The fixed-metric normalised local metric decoder of the ordinary
-GFF (CHATGPT-n2-frozen-S11r.md section 1.2: the minimal correction of the retired `LocalLQGMetricNormalizedMeasurableFrozen`,
+/-- FIRST-PASS FROZEN, EXTERNAL. Truth check TRUE (ChatGPT, 02:49 UTC; notes/fp-gaps/CHATGPT-n2-frozen-corrected.md section 1).
+The fixed-metric normalised local metric decoder of the ordinary GFF (CHATGPT-n2-frozen-S11r.md section 1.2: the minimal correction of the retired `LocalLQGMetricNormalizedMeasurableFrozen`,
 used with answer CHATGPT-n3-B1-B2.md section 4.1, equation (21)). The metric assignment `𝔇` is fixed BEFORE the decoder is
 chosen: for every LQG metric `𝔇` of exponent `ξ` (`IsLQGMetric γ ξ 𝔇`) there are a smooth probability bump `ρ` supported in
 `D = ball c r` and a Borel map `M` from the mean-zero observables of `D` to continuous functions on `D × D` such that, for
 every whole-plane GFF `(Ω, P, hC, hcirc)`, almost surely, for all endpoints `p ∈ D × D`,
 `M (obs_D g) p = e^{-ξ ⟨g,ρ⟩} · D_g(·,·;D) p`, where `D_g = 𝔇 (hC ω)`, `⟨g,ρ⟩ = fieldPairing 0 (hC ω) ρ` and
 `D_g(·,·;D)` is the internal metric on `D` (`internalMetric`). The normalisation is fixed by `ρ` together with `𝔇`.
-Sources: Gwynne-Miller, arXiv:1905.00383v3, §1.2 p. 6 (the metric as a measurable map from distributions to continuous
-metrics), Theorem 1.2 p. 6 (existence and uniqueness up to a deterministic positive scale), Remark 1.5 p. 8 (proper domains).
+Sources: Gwynne-Miller, arXiv:1905.00383v3, §1.2 pp. 5-6 (continuous metrics and their Borel structure), p. 6 (metric
+definition, Axioms I-III and (1.8): measurable assignment, length property, locality, Weyl scaling), p. 6 Theorem 1.2 and
+p. 7 (uniqueness up to a deterministic positive constant), p. 8 Remark 1.5 and (1.10) (proper domains). The raw-coordinate
+decoder and the universe-polymorphic signature are deductions from these, not printed theorems (section 1, "Exact printed
+source"); the independently quantified exponent `ξ` is justified conditionally by the supplied axioms (paper (1.5) p. 4 fixes
+`ξ = γ/d_γ`).
 Used by: `LocalMetricReplacementStmt` (S11r/LocalMetricReplacement.lean), through (22) and (20). -/
 def LocalLQGMetricNormalizedMeasurableFixedMetricFrozen : Prop :=
   ∀ (γ ξ : ℝ) (c : ℂ) (r : ℝ), 0 < γ → γ < 2 → 0 < r → (0 : ℂ) ∉ closedBall c r →
