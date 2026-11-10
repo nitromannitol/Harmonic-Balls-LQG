@@ -212,29 +212,94 @@ def RootedCertificateEventualCovarianceStmt {Ω : Type*} [MeasurableSpace Ω] (P
       FirstPassS11i.CertificateEvent (Dμ (dilOp^[n] (shiftedCanon γ hC hcirc z u ω)))
         (Dd (dilOp^[n] (shiftedCanon γ hC hcirc z u ω))) Ostar U V W T Q' Q η M 1 0)
 
-/-- **Eventual rooted covariance from the local inputs (fixed-root assembly).** Given the physical pair `(μ0, D0)` at
-`z` (the root-shifted field, translated so that it is centred at `0`; `hμR`, `hdR` identify the rooted physical pair
-with it), the local inputs of `ae_eventual_certificateEvent_pair` for every admissible `(b, u)`, and the dilation identity
-of the shifted canonical decoders `hdil` (the scaling covariance of `ae_decoders_dilOp_iterate`, here required for the
-shifted element), the statement `RootedCertificateEventualCovarianceStmt` follows. -/
+/-- Small closed ball inside an open neighbourhood of the root: if `O` is open and `0 ∈ O`, then
+`closedBall 0 (2 * ρ) ⊆ O` for some `ρ > 0`. This gives the root-dependent locality radius of the rooted wrapper. -/
+theorem exists_closedBall_two_mul_subset {O : Set ℂ} (hO : IsOpen O) (h0 : (0 : ℂ) ∈ O) :
+    ∃ ρ : ℝ, 0 < ρ ∧ closedBall (0 : ℂ) (2 * ρ) ⊆ O := by
+  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hO 0 h0
+  refine ⟨ε / 4, by linarith, fun x hx => hball (Metric.mem_ball.2 ?_)⟩
+  have h := Metric.mem_closedBall.1 hx
+  linarith
+
+/-- **Eventual certificate equivalence, one-sided (decoded-to-internal form).** The decoder `Ddec ω` is not required to be
+a global Euclidean length metric. It is compared with the internal metric of the length metric `Du ω` on an open window
+`W₀ ∋ 0`, through a positive constant `β` on `closedBall 0 r₀` (`hDecInt`). The no-shortcut lemma
+`HarmonicBalls.eq_internalMetric_on_small_ball` (n2) is applied to `Du ω` only. Conclusion: almost surely, eventually in
+`n`, the certificate events at `(certScale n, 0)` of `(μdec, Ddec)` and of `(μu, Du)` agree. -/
+theorem ae_eventual_certificateEvent_decoded {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (μdec μu : Ω → Measure ℂ) (Ddec Du : Ω → ℂ → ℂ → ℝ)
+    (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
+    (hC : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
+    (hDu : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Du ω))
+    (hDecInt : ∀ᵐ ω ∂P, ∃ (W₀ : Set ℂ) (r₀ β : ℝ), IsOpen W₀ ∧ (0 : ℂ) ∈ W₀ ∧ 0 < r₀ ∧ 0 < β ∧
+      ∀ x ∈ closedBall (0 : ℂ) r₀, ∀ y ∈ closedBall (0 : ℂ) r₀,
+        Ddec ω x y = β * (internalMetric (Du ω) W₀ x y).toReal)
+    (hMass : ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
+      (μdec ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
+        (ENNReal.ofReal a • μu ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n))) :
+    ∀ᵐ ω ∂P, ∃ n₀ : ℕ, ∀ n ≥ n₀,
+      (FirstPassS11i.CertificateEvent (μdec ω) (Ddec ω) Ostar U V W T Q' Q η M
+          (FirstPassS11ah.certScale n) 0 ↔
+        FirstPassS11i.CertificateEvent (μu ω) (Du ω) Ostar U V W T Q' Q η M
+          (FirstPassS11ah.certScale n) 0) := by
+  have h1 : Tendsto (fun n : ℕ => FirstPassS11ah.certScale n) atTop (𝓝 0) := by
+    simpa [FirstPassS11ah.certScale] using
+      tendsto_pow_atTop_nhds_zero_of_lt_one (r := (2 : ℝ)⁻¹) (by norm_num) (by norm_num)
+  have h7 : Tendsto (fun n : ℕ => 7 * FirstPassS11ah.certScale n) atTop (𝓝 0) := by
+    have h := h1.const_mul 7
+    rwa [mul_zero] at h
+  have hpos : ∀ n : ℕ, 0 < FirstPassS11ah.certScale n := fun n => by
+    unfold FirstPassS11ah.certScale
+    positivity
+  filter_upwards [hDu, hDecInt, hMass] with ω hDuω hIω hMω
+  obtain ⟨W₀, r₀, β, hW₀, h0, hr₀, hβ, hI⟩ := hIω
+  obtain ⟨ρ, hρ, hNS⟩ := HarmonicBalls.eq_internalMetric_on_small_ball hDuω hW₀ h0
+  have hsmall : ∀ᶠ n : ℕ in atTop, 7 * FirstPassS11ah.certScale n < min ρ r₀ :=
+    h7.eventually (gt_mem_nhds (lt_min hρ hr₀))
+  obtain ⟨n₂, hn₂⟩ := eventually_atTop.1 hsmall
+  obtain ⟨n₁, hn₁⟩ := hMω
+  refine ⟨max n₁ n₂, fun n hn => ?_⟩
+  obtain ⟨a, ha, hμ⟩ := hn₁ n (le_trans (le_max_left _ _) hn)
+  have hw : 7 * FirstPassS11ah.certScale n ≤ min ρ r₀ :=
+    (hn₂ n (le_trans (le_max_right _ _) hn)).le
+  refine FirstPassS11asLocal.certificateEvent_of_restrict_scalar (μdec ω) (μu ω) (Ddec ω) (Du ω) Ostar U V W T Q' Q η M
+    (FirstPassS11ah.certScale n) ha hβ hC hU (hpos n) hμ ?_
+  intro p hp
+  have hx : p.1 ∈ closedBall (0 : ℂ) ρ :=
+    closedBall_subset_closedBall (hw.trans (min_le_left _ _)) hp.1
+  have hy : p.2 ∈ closedBall (0 : ℂ) ρ :=
+    closedBall_subset_closedBall (hw.trans (min_le_left _ _)) hp.2
+  have hx' : p.1 ∈ closedBall (0 : ℂ) r₀ :=
+    closedBall_subset_closedBall (hw.trans (min_le_right _ _)) hp.1
+  have hy' : p.2 ∈ closedBall (0 : ℂ) r₀ :=
+    closedBall_subset_closedBall (hw.trans (min_le_right _ _)) hp.2
+  show Ddec ω p.1 p.2 = β * Du ω p.1 p.2
+  rw [hI p.1 hx' p.2 hy', ← hNS p.1 hx p.2 hy,
+    ENNReal.toReal_ofReal (FirstPassS11at.nonneg_of_isEuclideanLengthMetric hDuω _ _)]
+
+/-- **Eventual rooted covariance from the decoded inputs (fixed-root assembly, one-sided).** The physical pair is the
+centred pair `(μ0, D0)` at `z` (`hμR`, `hdR` identify it with the rooted pair `(μR, dR)`). The decoder `D0 z ω` is only
+compared with the internal metric of the shifted canonical metric `Dd (shiftedCanon …)` on a window `ball 0 (2ρ)`:
+`hDecInt` gives a root-dependent locality radius `ρ` with `closedBall 0 (2ρ)` inside the admissible ball `ball 0 b`, the
+rooted ball `ball 0 (rR z)` and the translated observation domain `(· + z) ⁻¹' ball c₂ r₂`. The length property `hDu` and the
+dilation identity `hdil` are needed only for the shifted canonical element. -/
 theorem rootedCertificateEventualCovarianceStmt_of_local {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {γ : ℝ} (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
     (hCont : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
-    (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop) (hAdm : ∀ z b u, Adm z b u → 0 < b) (rR : ℂ → ℝ)
+    (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop) (rR : ℂ → ℝ)
     (μ0 μR : ℂ → Ω → Measure ℂ) (D0 dR : ℂ → Ω → ℂ → ℂ → ℝ)
     (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
     (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
     (hμR : ∀ z ω, μR z ω = (μ0 z ω).map (fun w : ℂ => w - -z))
     (hdR : ∀ z ω, dR z ω = fun x y => D0 z ω (x + -z) (y + -z))
-    (hD0 : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
-      ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D0 z ω))
     (hDu : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
       ∀ᵐ ω ∂P, IsEuclideanLengthMetric (Dd (shiftedCanon γ hC hcirc z u ω)))
-    (hInt : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
-      ∀ᵐ ω ∂P, ∃ β : ℝ, 0 < β ∧ ∀ x ∈ closedBall (0 : ℂ) (b / 2), ∀ y ∈ closedBall (0 : ℂ) (b / 2),
-        internalMetric (D0 z ω) (ball 0 b) x y =
-          ENNReal.ofReal β * internalMetric (Dd (shiftedCanon γ hC hcirc z u ω)) (ball 0 b) x y)
+    (hDecInt : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, ∃ ρ r β : ℝ, 0 < ρ ∧ 0 < r ∧ 0 < β ∧
+        closedBall (0 : ℂ) (2 * ρ) ⊆ ball 0 b ∩ ball 0 (rR z) ∩ ((fun x : ℂ => x + z) ⁻¹' ball c₂ r₂) ∧
+        ∀ x ∈ closedBall (0 : ℂ) r, ∀ y ∈ closedBall (0 : ℂ) r,
+          D0 z ω x y = β * (internalMetric (Dd (shiftedCanon γ hC hcirc z u ω)) (ball 0 (2 * ρ)) x y).toReal)
     (hMass : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
       ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
         (μ0 z ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
@@ -250,12 +315,15 @@ theorem rootedCertificateEventualCovarianceStmt_of_local {Ω : Type*} [Measurabl
               ((((1 / 2 : ℝ) ^ n : ℝ) : ℂ) * y)) :
     RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M Adm rR
       μR dR Dμ Dd := by
-  filter_upwards [hD0, hDu, hInt, hMass, hdil] with z hD0z hDuz hIntz hMassz hdilz hzA b u hadm
-  have hb : 0 < b := hAdm z b u hadm
-  have hball : (0 : ℂ) ∈ ball (0 : ℂ) b := mem_ball_self hb
-  have hpair := ae_eventual_certificateEvent_pair (μ0 z) (fun ω => Dμ (shiftedCanon γ hC hcirc z u ω))
-    (D0 z) (fun ω => Dd (shiftedCanon γ hC hcirc z u ω)) isOpen_ball hball (half_pos hb) Ostar U V W T Q' Q η M hCont hU
-    (hD0z hzA b u hadm) (hDuz hzA b u hadm) (hIntz hzA b u hadm) (hMassz hzA b u hadm)
+  filter_upwards [hDu, hDecInt, hMass, hdil] with z hDuz hDecz hMassz hdilz hzA b u hadm
+  have hDecU : ∀ᵐ ω ∂P, ∃ (W₀ : Set ℂ) (r₀ β : ℝ), IsOpen W₀ ∧ (0 : ℂ) ∈ W₀ ∧ 0 < r₀ ∧ 0 < β ∧
+      ∀ x ∈ closedBall (0 : ℂ) r₀, ∀ y ∈ closedBall (0 : ℂ) r₀,
+        D0 z ω x y = β * (internalMetric (Dd (shiftedCanon γ hC hcirc z u ω)) W₀ x y).toReal :=
+    (hDecz hzA b u hadm).mono fun ω ⟨ρ, r, β, hρ, hr, hβ, _, hI⟩ =>
+      ⟨ball 0 (2 * ρ), r, β, isOpen_ball, mem_ball_self (by linarith), hr, hβ, hI⟩
+  have hpair := ae_eventual_certificateEvent_decoded (μ0 z) (fun ω => Dμ (shiftedCanon γ hC hcirc z u ω))
+    (D0 z) (fun ω => Dd (shiftedCanon γ hC hcirc z u ω)) Ostar U V W T Q' Q η M hCont hU
+    (hDuz hzA b u hadm) hDecU (hMassz hzA b u hadm)
   filter_upwards [hpair, ae_all_iff.2 (hdilz hzA b u hadm)] with ω hωp hωd
   obtain ⟨n₀, hn₀⟩ := hωp
   refine ⟨n₀, fun n hn _ _ _ => ?_⟩
@@ -275,4 +343,5 @@ theorem rootedCertificateEventualCovarianceStmt_of_local {Ω : Type*} [Measurabl
     (FirstPassS11ah.certScale n) z (-z)).trans ?_
   rw [add_neg_cancel, hn₀ n hn, hcs, hM, hEfun]
   exact key.symm
+
 end FirstPassS11at
