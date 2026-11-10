@@ -66,7 +66,12 @@ def LocalRootedFieldMeasureDomination : Prop :=
           (Prod.snd ⁻¹' localDomain j)).map (localRootObservation μ j) ≪
         ((volume.restrict (localDomain j)).prod P).map (localReferenceObservation ν j)
 
-/-- FIRST-PASS FROZEN. Weyl relation of the insertion off the origin, used in the local rooted comparison of
+/-- RETIRED (derived): proved as `localLQGInsertionWeylOffOrigin_derived` (FirstPass/S8c/WeylOffOriginDerived.lean,
+commit 8f3e426), ChatGPT Pro chat 219 §1.3. The derived lemma has no hypotheses, but the closures in FirstPass/Closure
+and FirstPass/S8d, FirstPass/S11i that still take `hWeyl` as a binder have not been rewired to it; this statement is
+unchanged and is still the binder of those closures.
+
+FIRST-PASS FROZEN. Weyl relation of the insertion off the origin, used in the local rooted comparison of
 Lemma 8.2: almost surely, the no-insertion LQG measure `lam` of the whole-plane GFF satisfies
 `lam = |z|^{γ α₀} μ` on the complement of `0`, where `μ` is the LQG measure with insertion `α₀`
 (`h = H - α₀ log|·|`, so `μ_h = |z|^{-γ α₀} μ_H` off `0`).
