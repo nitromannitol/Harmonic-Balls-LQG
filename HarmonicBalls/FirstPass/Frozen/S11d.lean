@@ -85,7 +85,7 @@ def WeylScalingCompositionFrozen : Prop :=
         weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
           weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y
 
-/-- FIRST-PASS FROZEN. Field-level measurability of the Weyl-scaled internal metric, uniform form (standard; locator
+/-- RETIRED (FALSE, ChatGPT 02:39 UTC; use LQGInternalMetricWeylAeMeasurableFrozen). FIRST-PASS FROZEN. Field-level measurability of the Weyl-scaled internal metric, uniform form (standard; locator
 pending). For every LQG metric `𝔇` (`IsLQGMetric`, Weyl exponent `ξ`), an open set `W` and fixed `q q' : ℂ`, the map
 `T ↦ D^W_T(q, q')` is measurable for the σ-algebra of pairings, where `D_T = e^{-ξ α₀ log|·|} · 𝔇 T` and `D^W_T` is its
 internal metric on `W`. Source: measurability of `h ↦ D_h` (Gwynne-Miller 2021, Section 1.2, p. 6; locator pending), transported
