@@ -24,8 +24,8 @@ Section 1 (main theorems; `FirstPass/Main.lean`)
 | result | closure | remaining hypotheses (class) | status |
 |---|---|---|---|
 | 1.1 `ExistenceUniquenessHarmonicBallsStmt` | `closure_1_1` (this file) | hL1 hWeyl hE1 hE3 hB (FROZEN); hDG hAff hCC hW hE hN (PROPOSED) | closed |
-| 1.2 `HarmonicBallNoveltyStmt` | `closure_1_2` (this file) | h13 = `manyPinchScales_of_corrected (closure_11_13 …)` (bridge, `Closure/Bridge12.lean`, z7, committed 96e95db); hStep8 `Step8IdentificationStmt` **OPEN** (inherited from `closure_11_13`); hI2 (Input I2, EXTERNAL per `FIRST-PASS-INPUTS.md`); hDG hAff hCC hW hE hN (PROPOSED); hL1 hWeyl hE1 hE3 hB, hCamp hDecFrozen hDec hCM, hAx `LQGMetricFieldAxiomsUnivFrozen` (FROZEN; supplies hmetricAxioms by specialisation), hTor (FROZEN) | conditional on OPEN hStep8 |
-| 1.3 `HarmonicBallLocalSetStmt` | `closure_1_3` (this file) | hI2 = I2 `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`; class EXTERNAL per `FIRST-PASS-INPUTS.md`; explicit argument here; discharged from hDG hCC hW hE hN by `volumeGrowthI2_of_staged`, `Closure/Sec11.lean:55`, not passed); hmeasure `LQGMeasureLocality` (PROPOSED); closure_8_2 inputs (FROZEN, PROPOSED) | closed modulo the I2 argument |
+| 1.2 `HarmonicBallNoveltyStmt` | `closure_1_2` (this file) | h13 = `manyPinchScales_of_corrected (closure_11_13 …)` (bridge, `Closure/Bridge12.lean`, z7, committed 96e95db); hStep8 `Step8IdentificationStmt` **OPEN** (inherited from `closure_11_13`); I2 `LQGVolumeGrowthAllScalesStmt` discharged in the proof by `volumeGrowthI2_of_staged` (`Closure/Sec11.lean:55`; no hI2 argument); hDG hAff hCC hW hE hN (PROPOSED); hL1 hWeyl hE1 hE3 hB, hCamp hDecFrozen hDec hCM, hAx `LQGMetricFieldAxiomsUnivFrozen` (FROZEN; supplies hmetricAxioms by specialisation), hTor (FROZEN) | conditional on OPEN hStep8 |
+| 1.3 `HarmonicBallLocalSetStmt` | `closure_1_3` (this file) | I2 `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`) discharged in the proof by `volumeGrowthI2_of_staged` (`Closure/Sec11.lean:55`; no hI2 argument); hmeasure `LQGMeasureLocality` (PROPOSED); hDG hCC hW hE hN (PROPOSED); closure_8_2 inputs (FROZEN, PROPOSED) | closed |
 
 Section 2
 | 2.3 `GreenFunctionBallStmt` | `closure_2_3` (this file) | none (unconditional `firstPass_2_3`) | closed |
@@ -93,10 +93,10 @@ Section 11 (`Closure/Sec11.lean`, z11; last commit afa5737)
 ## Open items and flags
 * 1.2 is closed modulo the OPEN `hStep8` of `closure_11_13` (table above). The printed Lemma 11.13 is supplied by the bridge
   `manyPinchScales_of_corrected` (`Closure/Bridge12.lean`, committed 96e95db); no ManyPinchScalesStmt hypothesis remains.
-* I2 `LQGVolumeGrowthAllScalesStmt` is an explicit argument of `closure_1_2` and `closure_1_3` only. Closures 11.2, 11.5,
-  11.6 and 11.11 discharge it by `volumeGrowthI2_of_staged` (`Closure/Sec11.lean:55`); 11.12 derives it inside its proof
-  (`FirstPass/S11m/Final11_12.lean`). Not OPEN in the sense of this file: a proof exists from the same PROPOSED inputs; its
-  classification is the operator's (`docs/campaign/CORRECTIONS.md:60-62`).
+* I2 `LQGVolumeGrowthAllScalesStmt` (paper input I2) is a consequence, not a literature input (operator note 07:34 UTC).
+  No closure takes it as an argument: `closure_1_2`, `closure_1_3`, 11.2, 11.5, 11.6 and 11.11 discharge it inside the proof
+  by `volumeGrowthI2_of_staged` (`Closure/Sec11.lean:55`, from the PROPOSED inputs `hDG hCC hW hE hN`); 11.12 derives it inside
+  its proof (`FirstPass/S11m/Final11_12.lean`).
 * Sec11 is committed in full (afa5737, 14 closures); this file builds against that version.
 * Commit 85bdd95 (z11) overwrote this file with a Section 1 version whose `closure_1_2` takes `ManyPinchScalesStmt` as an OPEN hypothesis. This version restores the table above; `closure_1_2` here takes no ManyPinchScalesStmt hypothesis.
 
@@ -176,8 +176,8 @@ non-metric-ball clause (Proposition 11.11). Discharged: Lemma 8.2 by `closure_8_
 printed Lemma 11.13 (`ManyPinchScalesStmt`) by the bridge `manyPinchScales_of_corrected` (`Closure/Bridge12.lean`) applied to
 `closure_11_13`; `hmetricAxioms` by specialisation of the FROZEN universal form `LQGMetricFieldAxiomsUnivFrozen`
 (`Frozen/S11j.lean:143`). Remaining hypotheses: `hStep8` (OPEN, `Step8IdentificationStmt`, inherited from `closure_11_13`),
-`hI2` (Input I2, `LQGVolumeGrowthAllScalesStmt`, EXTERNAL per `docs/campaign/FIRST-PASS-INPUTS.md`), and the PROPOSED and
-FROZEN inputs listed in the table of this file. -/
+the paper input I2 (`LQGVolumeGrowthAllScalesStmt`), discharged in the proof by `volumeGrowthI2_of_staged` (no `hI2`
+argument), and the PROPOSED and FROZEN inputs listed in the table of this file. -/
 theorem closure_1_2
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -191,7 +191,6 @@ theorem closure_1_2
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
     (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
-    (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
@@ -205,7 +204,7 @@ theorem closure_1_2
     (hStep8 : Step8IdentificationStmt.{u})
     (hTor : TorhorstSimpleLoopFrozen) :
     HarmonicBallNoveltyStmt.{u} :=
-  firstPassMain_1_2 hDG hAff hCC hW hE hN hI2
+  firstPassMain_1_2 hDG hAff hCC hW hE hN (volumeGrowthI2_of_staged hDG hCC hW hE hN)
     (closure_8_2 hL1 hWeyl hE1 hE3 hB hDG hAff hCC hW hE hN)
     (closure_11_7 hDG hCamp hDecFrozen hDec hCM
       (fun γ α₀ Ω _ P hC hcirc => hCC Ω P γ α₀ hC hcirc)
@@ -218,7 +217,6 @@ theorem closure_1_2
 /-- Closure of Proposition 1.3 (`prop:locally-determined`): closed harmonic balls are local sets for the field.
 Composition `firstPassMain_1_3` (`FirstPass/Main.lean:104`) with Lemma 8.2 discharged by `closure_8_2`. -/
 theorem closure_1_3
-    (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
     (hmeasure : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureLocality P γ α₀ hC hcirc)
     (hL1 : LocalRootedFieldMeasureDomination.{u})
@@ -239,7 +237,8 @@ theorem closure_1_3
     (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc) :
     HarmonicBallLocalSetStmt.{u} :=
-  firstPassMain_1_3 hI2 hDG hCC hE (closure_8_2 hL1 hWeyl hE1 hE3 hB hDG hAff hCC hW hE hN) hmeasure
+  firstPassMain_1_3 (volumeGrowthI2_of_staged hDG hCC hW hE hN) hDG hCC hE
+    (closure_8_2 hL1 hWeyl hE1 hE3 hB hDG hAff hCC hW hE hN) hmeasure
 
 end MainTheorems
 
