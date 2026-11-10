@@ -1,6 +1,9 @@
 import HarmonicBalls.FirstPass.Closure
 import HarmonicBalls.FirstPass.Closure.Faithful12
 import HarmonicBalls.FirstPass.S2S3S4S9SA.GreenPole
+import HarmonicBalls.FirstPass.Closure.Sec8Weyl
+import HarmonicBalls.FirstPass.Closure.NoWeylMain
+import HarmonicBalls.FirstPass.Closure.Sec11NoWeyl
 
 /-!
 # Top-level closure module (fp-closure-all-top-module)
