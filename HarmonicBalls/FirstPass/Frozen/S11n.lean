@@ -32,4 +32,42 @@ def LQGCanonicalDecodersExistStmt : Prop :=
     ∃ (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ),
       S11n.LQGCanonicalIdentificationStmt.{u} γ ξ α₀ Dμ Dd
 
+/-- FIRST-PASS FROZEN, EXTERNAL (operator ruling 00:49 UTC, wave 22, B1 split; truth check TRUE (ChatGPT, 00:48 UTC,
+notes/fp-gaps/CHATGPT-n3-B1-B2.md §1). The measurable strengthening of `LQGCanonicalDecodersExistStmt`, which
+is kept unchanged. For every `γ ∈ (0, 2)`, every `ξ ∈ ℝ` and every `α₀ < Q_γ` there are
+
+* a kernel `K : CanonSpace → Measure ℂ`, measurable and s-finite (`IsSFiniteKernel K`), whose values are locally finite
+  Radon measures on `ℂ` (`IsFiniteMeasureOnCompacts`), the measure decoder;
+* a map `d : CanonSpace → C(ℂ × ℂ, ℝ)`, Borel for the compact-open topology, which is local uniform convergence on
+  `ℂ × ℂ`, the metric decoder;
+
+such that
+
+1. the identification clause `LQGCanonicalIdentificationStmt` holds with `Dμ := K` and `Dd L x y := d L (x, y)`, with the
+   same quantification over arbitrary whole-plane GFF models and the same two positive scalar factors as the old
+   statement (retained verbatim in the sense of that clause);
+2. the measure map is a measurable kernel with locally finite Radon values (the type of `K` and item 2 of the source);
+3. the metric map is Borel into continuous functions for local uniform convergence (`Measurable d`);
+4. there is a measurable set `G` of canonical fields, `P_α`-conull for every whole-plane GFF model
+   (`alphaCanon α₀ hC ω ∈ G` almost surely), on which `K L` has full support and `d L` is a length metric inducing the
+   Euclidean topology (`IsEuclideanLengthMetric`).
+
+Sources: Duplantier-Sheffield arXiv:0808.1560v2, Proposition 1.1, printed p. 5 (measure construction) and Proposition 2.1,
+printed p. 13 (coordinate change); Gwynne-Miller arXiv:1905.00383v3, section 1.2, printed pp. 5-6 (the metric as a measurable
+map from distributions to continuous metrics) and Theorem 1.2, printed p. 6 (existence and uniqueness); Gwynne-Miller
+Remark 1.5, printed p. 8, and Dubedat-Falconet-Gwynne-Pfeffer-Sun arXiv:1905.00380v2, Proposition 3.17, printed p. 43
+(continuity through an insertion of strength `α₀ < Q`). Used by: the measurable covariance proposition of
+`HarmonicBalls/FirstPass/S11s.lean` (B1) and, through it, the certified-decoder bridge of Step 13. -/
+def LQGCanonicalDecodersMeasurableExistStmt : Prop :=
+  ∀ (γ ξ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+    ∃ (K : ProbabilityTheory.Kernel S11n.CanonSpace ℂ) (d : S11n.CanonSpace → ContinuousMap (ℂ × ℂ) ℝ),
+      ProbabilityTheory.IsSFiniteKernel K ∧ (∀ L, MeasureTheory.IsFiniteMeasureOnCompacts (K L)) ∧
+      Measurable d ∧
+      S11n.LQGCanonicalIdentificationStmt.{u} γ ξ α₀ (fun L => K L) (fun L x y => d L (x, y)) ∧
+      ∃ G : Set S11n.CanonSpace, MeasurableSet G ∧
+        (∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+          (hcirc : Ω → ℝ → ℂ → ℝ),
+          IsWholePlaneGFF P hC hcirc → ∀ᵐ ω ∂P, alphaCanon α₀ hC ω ∈ G) ∧
+        ∀ L ∈ G, (K L).support = Set.univ ∧ IsEuclideanLengthMetric (fun x y => d L (x, y))
+
 end HarmonicBalls
