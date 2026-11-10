@@ -44,7 +44,14 @@ functional `T = (h, ·)` of `h` and the value `h_1(0)`. -/
 noncomputable def dmsShiftedPairing (γ : ℝ) (z : ℂ) (T : (ℂ → ℝ) → ℝ) (h10 : ℝ) : (ℂ → ℝ) → ℝ :=
   fun φ => T φ + (∫ w, dmsShift γ z w * φ w) + dmsConstant γ z h10 * ∫ w, φ w
 
-/-- **Duplantier-Miller-Sheffield, Lemma A.10, whole-plane clause, for `D = B_1`** (arXiv:1409.7055v4, Appendix A,
+/-- **RETIRED: do not use.** This normalized form is dead code: no counted chain uses it (operator, 10:53 UTC). The
+counted chain uses `DMSLemmaA10WholePlaneUnnormalized` (this file) and the marked FIRST-PASS FROZEN
+`DMSLemmaA10WholePlaneMarked` (`FirstPass/Frozen/S11i.lean:39`). The test `F ≡ 1 ⇒ 1 = π` cited from ChatGPT Pro
+chat 219 §3.2 (notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md, l.355-374) does NOT apply to the text below: its
+right side divides by `(volume (ball 0 1)).toReal`, so `F ≡ 1` gives `1 = 1`. Status of the statement left to
+the operator; its docstring is kept below unchanged.
+
+**Duplantier-Miller-Sheffield, Lemma A.10, whole-plane clause, for `D = B_1`** (arXiv:1409.7055v4, Appendix A,
 p. 184), as a property of the whole-plane GFF `(P, hC, hcirc)` and of its γ-LQG measure `μ` with `α₀ = 0`.
 
 "A sample from the law of `μ_h(D)dh`" is the probability law of the field under the weighting `μ_h(D)`, that is
