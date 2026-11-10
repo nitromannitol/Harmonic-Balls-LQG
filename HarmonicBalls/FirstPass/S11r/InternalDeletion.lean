@@ -321,10 +321,22 @@ theorem le_of_local_agreement {d e : ℂ → ℂ → ℝ} {U : Set ℂ} {p : ℂ
     exact key
   exact (ENNReal.ofReal_le_ofReal_iff (he_nonneg x hx y hy)).1 hle
 
-/-- Deleting one point (CHATGPT-n3-B1-B2.md, section 4.3): two nonnegative length metrics `d`, `e`
-on an open `U` whose internal metrics agree on a neighbourhood of each point of `U \ {p}`, and which
-tend to `0` at `p` (within `U`), coincide on `U`. The nonnegativity hypotheses are needed because
-`ENNReal.ofReal` in the internal-metric identities discards negative values. -/
+/-- A real function on `U × U` which is symmetric and satisfies the triangle inequality on `U` is nonnegative on `U`:
+`d x x ≤ d x x + d x x` gives `0 ≤ d x x`, and `d x x ≤ d x y + d y x = 2 d x y` (CHATGPT-n2-hII.md, section 3.1). -/
+theorem nonneg_of_symm_triangle_on {X : Type*} {U : Set X} {d : X → X → ℝ}
+    (hsymm : ∀ x y, d x y = d y x)
+    (htri : ∀ x ∈ U, ∀ y ∈ U, ∀ z ∈ U, d x z ≤ d x y + d y z) :
+    ∀ x ∈ U, ∀ y ∈ U, 0 ≤ d x y := by
+  intro x hx y hy
+  have hdiag := htri x hx x hx x hx
+  have hloop := htri x hx y hy x hx
+  rw [hsymm y x] at hloop
+  linarith
+
+/-- Deleting one point (CHATGPT-n3-B1-B2.md, section 4.3): two length metrics `d`, `e` (symmetric, with the
+triangle inequality on `U`, and internal-metric identities on `U`) on an open `U` whose internal metrics agree on a
+neighbourhood of each point of `U \ {p}`, and which tend to `0` at `p` (within `U`), coincide on `U`. Nonnegativity
+is not assumed: it follows from symmetry and the triangle inequality (`nonneg_of_symm_triangle_on`). -/
 theorem eq_of_local_internalMetric_agreement_off_point
     {U : Set ℂ} (hU : IsOpen U) {p : ℂ} (hp : p ∈ U)
     {d e : ℂ → ℂ → ℝ}
@@ -337,9 +349,11 @@ theorem eq_of_local_internalMetric_agreement_off_point
     (he_cont : Tendsto (fun z => e z p) (𝓝[U] p) (𝓝 0))
     (hloc : ∀ q ∈ U, q ≠ p → ∃ V : Set ℂ, IsOpen V ∧ q ∈ V ∧ V ⊆ U ∧
       ∀ x ∈ V, ∀ y ∈ V, internalMetric d V x y = internalMetric e V x y)
-    (hd_nonneg : ∀ x ∈ U, ∀ y ∈ U, 0 ≤ d x y) (he_nonneg : ∀ x ∈ U, ∀ y ∈ U, 0 ≤ e x y) :
+    :
     ∀ x ∈ U, ∀ y ∈ U, d x y = e x y := by
-  have hloc' : ∀ q ∈ U, q ≠ p → ∃ V : Set ℂ, IsOpen V ∧ q ∈ V ∧ V ⊆ U ∧
+  have hd_nonneg : ∀ x ∈ U, ∀ y ∈ U, 0 ≤ d x y := nonneg_of_symm_triangle_on hd_symm hd_tri
+  have he_nonneg : ∀ x ∈ U, ∀ y ∈ U, 0 ≤ e x y := nonneg_of_symm_triangle_on he_symm he_tri
+  have hloc': ∀ q ∈ U, q ≠ p → ∃ V : Set ℂ, IsOpen V ∧ q ∈ V ∧ V ⊆ U ∧
       ∀ x ∈ V, ∀ y ∈ V, internalMetric e V x y = internalMetric d V x y := by
     intro q hq hqp
     obtain ⟨V, h1, h2, h3, h4⟩ := hloc q hq hqp

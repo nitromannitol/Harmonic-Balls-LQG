@@ -1,5 +1,6 @@
 import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Steps.Sec11.MetricConstantScaling
+import HarmonicBalls.FirstPass.S11r.InternalSubdomain
 
 /-!
 # Pointwise consistency of the normalised local metrics, the identity (22) (fp-S11r part (b) P2, owner n2)
@@ -10,9 +11,9 @@ identity of `LocalLQGMetricNormalizedMeasurableFrozen`, with the constants `e^a 
 then the internal metric of `M` on `V` is `e^{a-b}` times `MV`, which is the identity (22) of CHATGPT-n3-B1-B2.md §4.1,
 at the level of one field and one pair of points.
 
-The subdomain identity `hII` (the internal metric on `V` of the internal metric on `D` equals the internal metric on
-`V`) is an explicit hypothesis here. It is deterministic metric geometry for a length metric inducing the Euclidean
-topology, with `closure V ⊆ D`; it is NOT yet proved (open, see notes/n2.md) and is not frozen.
+The subdomain identity hII (the internal metric on `V` of the internal metric on `D` equals the internal metric on `V`)
+is PROVED (`internalMetric_internalMetric_toReal_of_finite`, InternalSubdomain.lean; operator ruling 01:57 and 02:12 UTC,
+CHATGPT-n2-hII.md). No hypothesis of that form remains here; the Euclidean length property of `I` is used instead.
 -/
 
 namespace HarmonicBalls
@@ -45,16 +46,14 @@ theorem internalMetric_congr_ofReal_on {D E : ℂ → ℂ → ℝ} {U : Set ℂ}
   rw [this]
   exact hP _
 
-/-- **Pointwise (22).** For one field with metric `I`: if `ofReal M = e^a · internalMetric I D` on `D × D` and
-`ofReal MV = e^b · internalMetric I V` on `V × V`, and the subdomain identity `hII` holds on `V`, then for `x, y ∈ V`
-the internal metric of `M` on `V` is `e^{a-b}` times `MV`. -/
+/-- **Pointwise (22).** For one field with metric `I` (a Euclidean length metric): if `ofReal M = e^a · internalMetric I D`
+on `D × D` and `ofReal MV = e^b · internalMetric I V` on `V × V`, with `internalMetric I D` finite on `D × D`, then for
+`x, y ∈ V` the internal metric of `M` on `V` is `e^{a-b}` times `MV`. -/
 theorem internalMetric_normalised_consistency {D V : Set ℂ} (hVD : V ⊆ D)
-    {I M MV : ℂ → ℂ → ℝ} {a b : ℝ}
+    {I M MV : ℂ → ℂ → ℝ} {a b : ℝ} (hI : IsEuclideanLengthMetric I)
     (hfin : ∀ x ∈ D, ∀ y ∈ D, internalMetric I D x y ≠ ⊤)
     (hM : ∀ x ∈ D, ∀ y ∈ D, ENNReal.ofReal (M x y) = ENNReal.ofReal (Real.exp a) * internalMetric I D x y)
     (hMV : ∀ x ∈ V, ∀ y ∈ V, ENNReal.ofReal (MV x y) = ENNReal.ofReal (Real.exp b) * internalMetric I V x y)
-    (hII : ∀ x ∈ V, ∀ y ∈ V,
-      internalMetric (fun u v => (internalMetric I D u v).toReal) V x y = internalMetric I V x y)
     {x y : ℂ} (hx : x ∈ V) (hy : y ∈ V) :
     internalMetric M V x y = ENNReal.ofReal (Real.exp (a - b)) * ENNReal.ofReal (MV x y) := by
   -- Step 1: on `V × V`, `M` and `e^a · (internal metric of I on D)` have the same `ofReal`.
@@ -72,7 +71,8 @@ theorem internalMetric_normalised_consistency {D V : Set ℂ} (hVD : V ⊆ D)
   have hstep2 : internalMetric (fun u v => Real.exp a * T u v) V x y =
       ENNReal.ofReal (Real.exp a) * internalMetric I V x y := by
     rw [internalMetric_const_mul T (Real.exp_pos a) V x y]
-    rw [show internalMetric T V x y = internalMetric I V x y from hII x hx y hy]
+    rw [show internalMetric T V x y = internalMetric I V x y from
+      internalMetric_internalMetric_toReal_of_finite hI hVD hfin x y]
   -- Step 3: the constant `e^b` of `MV` cancels against `e^{-b}`.
   have hstep3 : internalMetric I V x y = ENNReal.ofReal (Real.exp (-b)) * ENNReal.ofReal (MV x y) := by
     rw [hMV x hx y hy, ← mul_assoc, ← ENNReal.ofReal_mul (Real.exp_pos (-b)).le,
