@@ -140,6 +140,31 @@ theorem firstPass_11_13_final_route1
     hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
     (HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route1 hCCα hCal hK0)
 
+/-! ### Background projections for the counted theorem (fp-S11-13-signature-and-final, owner n3)
+
+Codex ASTRA step 1: the measurable canonical decoders, the universe-0 metric axioms and the exponent positivity are
+derived from the frozen inputs of the signature, not added as binders. -/
+
+/-- The weak canonical decoder statement `LQGCanonicalDecodersExistStmt` (`Frozen/S11n.lean:33`) is the projection of the
+measurable one (`Frozen/S11n.lean:71`): forget the kernel, the metric map, their measurability and the conull set `G`. -/
+theorem lqgCanonicalDecodersExist_of_measurable (h : LQGCanonicalDecodersMeasurableExistStmt.{0}) :
+    LQGCanonicalDecodersExistStmt.{0} := by
+  intro γ ξ α₀ h0 h1 h2
+  obtain ⟨K, d, -, -, -, hId, -⟩ := h γ ξ α₀ h0 h1 h2
+  exact ⟨fun L => K L, fun L x y => d L (x, y), hId⟩
+
+/-- The universe-0 metric axioms `LQGMetricSatisfiesAxiomsUnivFrozen.{0}` (`Frozen/S11g.lean:31`) are the Defs field
+`IsLQGMetric.satisfiesLQGMetricAxioms` (`Defs/LQGMetric.lean:183`) at `Ω : Type`: no universe transfer is needed. -/
+theorem lqgMetricSatisfiesAxiomsUnivFrozen_zero : LQGMetricSatisfiesAxiomsUnivFrozen.{0} :=
+  fun _ _ _ h Ω _ P hC hcirc f h1 h2 h3 => h.satisfiesLQGMetricAxioms Ω P hC hcirc f h1 h2 h3
+
+/-- `LQGMetricExponentPositive` (`Frozen/S11j.lean:105`) from `hExists` and the derived whole-plane affine invariance
+(`wholePlaneGFFAffineInvariance_derived`, `S11v/Affine.lean:145`), through `lqgMetricExponentPositive_of_inputs`. -/
+theorem lqgMetricExponentPositive_derived (hExists : WholePlaneGFFExistsFrozen.{0}) :
+    LQGMetricExponentPositive :=
+  lqgMetricExponentPositive_of_inputs hExists
+    (fun _ _ P hC hcirc => HarmonicBalls.wholePlaneGFFAffineInvariance_derived P hC hcirc)
+
 /-! ### Counted Lemma 11.13, first pass, universe 0 (fp-S11-13-count, owner n3)
 
 `firstPass_11_13` is the counted theorem `CorrectedLemma11_13CanonicalStmt.{0}`. It is the route-1 assembly
@@ -154,7 +179,8 @@ theorem firstPass_11_13_final_route1
 Binder classes (FROZEN / PROPOSED / OPEN), with the definition of each Prop:
 * FROZEN: `hAx` `LQGMetricFieldAxiomsUnivFrozen` (`Frozen/S11j.lean:155`); `hLen` `LQGMetricLengthUnivFrozen` (`Frozen/S11j.lean:133`);
   `hN2` `LocalMetricReplacementFrozen` (`Frozen/S11rMetric.lean:33`, new, operator-approved); `hLoc` `LocalLQGDecoderCommonFrozen`
-  (`Frozen/S11c.lean:388`); `hCanon` `LQGCanonicalDecodersExistStmt` (`Frozen/S11n.lean:33`); `hExists`
+  (`Frozen/S11c.lean:388`); `hCanonM` `LQGCanonicalDecodersMeasurableExistStmt` (`Frozen/S11n.lean:71`, replaces the weak `hCanon`; the weak form
+  `LQGCanonicalDecodersExistStmt`, `Frozen/S11n.lean:33`, is its projection); `hExists`
   `WholePlaneGFFExistsFrozen` (`S11r/Frozen.lean:39`); `hfr` `LQGInternalMetricWeylAeMeasurableFrozen` (`Frozen/S11d.lean:130`);
   `hmass` `LQGMassFunctionalMeasurableFrozen` (`Frozen/S11d.lean:155`); `hCMAbs` `CameronMartinGFFMutualAbsCont`
   (`Frozen/S11d.lean:74`); `hCMRew` `CameronMartinGFFReweighting` (`Frozen/S11aj.lean:33`); `hComp` `WeylScalingCompositionFrozen`
@@ -177,6 +203,12 @@ Binder classes (FROZEN / PROPOSED / OPEN), with the definition of each Prop:
   Discharged by `insertionZeroUnit_of_href` (`S11i/InsertionZeroUnitE.lean:41`, n4) only with its named `hHref` input, not yet
   wired here. The binder is kept, as the operator requested.
 
+Step 1 (fp-S11-13-signature-and-final): the rooted route (`S11r/RootedHrefBall.lean:28`) needs the frozen inputs
+`hBirk`, `hRootCont`, `hProf`, `hWCont`, `hA10` (universal `DMSLemmaA10WholePlaneMarkedSub`, `Frozen/S11i.lean:58`), threaded
+here with underscore names (`_hBirk`, `_hRootCont`, `_hProf`, `_hWCont`, `_hA10`) because their consumer is the step-5
+`hHref`, not yet wired; the underscore is removed when they are consumed. The universe-0 metric axioms and the exponent
+positivity are derived (`lqgMetricSatisfiesAxiomsUnivFrozen_zero`, `lqgMetricExponentPositive_derived`), not binders.
+
 Positional binders are listed in the order of the theorem signature. -/
 theorem firstPass_11_13
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
@@ -186,7 +218,7 @@ theorem firstPass_11_13
     (hμW : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ α₀ hC hcirc)
     (hLoc : LocalLQGDecoderCommonFrozen.{0})
-    (hCanon : LQGCanonicalDecodersExistStmt.{0})
+    (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0})
     (hNonat : HarmonicBalls.S11n.MeasureDecoder.LQGMeasureNonatomicAll.{0})
     (hExists : WholePlaneGFFExistsFrozen.{0})
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -209,6 +241,12 @@ theorem firstPass_11_13
     (hSupM : LQGMetricSupMeasurableFrozen.{0}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
     (hW : WeylInternalClosedFrozen)
     (hM1 : WeylShiftedSupMeasurableFrozen.{0}) (hM2 : WeylShiftedMassMeasurableFrozen.{0})
+    (_hBirk : BirkhoffPointwiseErgodic.{0})
+    (_hRootCont : RootedPhysicalMetricContinuousAtInsertionFrozen.{0})
+    (_hProf : LQGMeasureOfProfileMeasurableFrozen.{0})
+    (_hWCont : WeylMetricCompositionContinuousOuterFrozen)
+    (_hA10 : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
     (hCal : HarmonicBalls.FirstPassS11iStep8PhysExists.Step8EventCalibrationStmt.{0})
     (hK : ∀ (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), LocalMeasureKernelStmt.{0} γ c₁ c₂ r₁ r₂) :
     CorrectedLemma11_13CanonicalStmt.{0} :=
@@ -221,9 +259,9 @@ theorem firstPass_11_13
         (fun c₁ c₂ r₁ r₂ =>
           hN2 γ (lqgXi γ) hγ0 hγ2 (div_pos hγ0 (HarmonicBalls.lqgGraphDimension_pos γ)) c₁ c₂ r₁ r₂)
         hAx h0
-  HarmonicBalls.Closure.closure_11_13_canonical.{0} hAx hLen hN2 hμW hLoc hCanon hNonat hExists hDG
-    (fun Ω _ P γ hC hcirc => hCCα γ 0 Ω P hC hcirc) hE hfr hmass hCMAbs hCMRew hComp hMf hDiam hMk hholder hShift hFD
-    hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
+  HarmonicBalls.Closure.closure_11_13_canonical.{0} hAx hLen hN2 hμW hLoc (lqgCanonicalDecodersExist_of_measurable hCanonM)
+    hNonat hExists hDG (fun Ω _ P γ hC hcirc => hCCα γ 0 Ω P hC hcirc) hE hfr hmass hCMAbs hCMRew hComp hMf hDiam hMk
+    hholder hShift hFD hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2
     (HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route1 hCCα hCal hK0)
 
 end HarmonicBalls.FirstPassS11iFinal11_13
@@ -231,3 +269,5 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 #print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final
 #print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final_route1
 #print axioms HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13
+#print axioms HarmonicBalls.FirstPassS11iFinal11_13.lqgMetricSatisfiesAxiomsUnivFrozen_zero
+#print axioms HarmonicBalls.FirstPassS11iFinal11_13.lqgMetricExponentPositive_derived
