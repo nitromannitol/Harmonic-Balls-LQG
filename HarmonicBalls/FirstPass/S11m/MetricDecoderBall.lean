@@ -41,7 +41,7 @@ universe u
 namespace HarmonicBalls.S11m.MetricDecoderBall
 
 /-- NAMED HYPOTHESIS P-d (route `CHATGPT-z4-11-12-local-certificate.md` section 4; operator note 00:59 UTC). Common
-metric decoder for the internal metric of a ball `B_R(0)` containing the insertion point `0`. For all `R > 0` and
+metric decoder for the internal metric of a ball `B_R(0)` containing the insertion point `0`. SUPERSEDED (operator note 01:41 UTC, item 1; not used by any declaration): the metric replacement is n2's `LocalMetricReplacementStmt` (FirstPass/S11r/LocalMetricReplacement.lean), applied on the countably many balls covering `B_R(0) \ {0}`. For all `R > 0` and
 admissible `0 < γ < 2`, `0 < ξ`, there is a map `Ψ` from the mean-zero pairings on `B_R(0)` to functions on `ℂ × ℂ`, with
 (i) each `Ψ ℓ` continuous on `B_R(0) × B_R(0)`, (ii) each evaluation `ℓ ↦ Ψ ℓ p` measurable, and (iii) for every
 insertion `α₀ < Q_γ` and every model, almost surely `Ψ` of the observation is `b · D(·,·; B_R(0))` on `B_R(0)²` for some
