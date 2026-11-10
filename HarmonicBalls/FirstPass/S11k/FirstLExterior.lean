@@ -254,7 +254,7 @@ end FirstLExterior
 /-- Lemma 11.16, corrected form (`PinchSecondEventFaithfulStmt`, `FirstPass/S11h/Faithful.lean`). The bundle's open
 parts are now proved: `PinchFirstLExteriorStep` (`FirstLExterior.pinchFirstLExteriorStep_of_frozen`, from the frozen
 closed-domain identity `hK1`) and `PinchSecondAnnulusStep` (n4, `PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs`,
-from its named inputs). Explicit hypotheses: the frozen inputs `hAx`, `hb`, `hK1`, `hM`, `hDiam`, `hMk`; the Draft
+from its named inputs). Explicit hypotheses: the frozen inputs `hAx`, `hK1`, `hM`, `hDiam`, `hMk`; the Draft
 statements `hPos` (Lemma 11.15) and `hD`; the N2 named inputs `hholder` (cited, Bou-Rabee-Gwynne Prop 2.5) and the
 Proposed `hEx`, `hWeyl`, `hNa0`, `hNa`, pending operator source-check. -/
 theorem firstPass_11_16_corrected (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
