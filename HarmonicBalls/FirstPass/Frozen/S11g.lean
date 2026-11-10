@@ -116,4 +116,27 @@ def LQGMetricLengthIdentityAlphaGFFFrozen : Prop :=
     0 < γ → γ < 2 → α₀ < lqgQ γ → IsLQGMetricOfField P γ ξ α₀ hC D →
     ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
 
+/-- FIRST-PASS FROZEN. Deterministic metric geometry (closed-set exhaustion of the internal metric): for a Euclidean length
+metric `D` and a closed set `C`, and `x, y ∈ C`, the internal metric of `C` is the infimum over `n` of the suprema over `k`
+of the internal metrics of the open neighbourhoods `thickening ((k+1)⁻¹) (C ∩ closedBall 0 (n+1))`. Paths of `C` are
+approximated by paths of the neighbourhoods; the length is lower semicontinuous under uniform convergence (Arzelà-Ascoli).
+Source: standard; locator pending. PENDING TRUTH CHECK (operator 23:55 UTC: approved as
+`internalMetric_closed_eq_iInf_thickening`; the ChatGPT truth and written-proof check is running). Used by:
+`corridorInternalSup_decoder` (FirstPass/S11h/CorridorSup11_17.lean), hence `pinchCertificateStmt_of_frozen`. -/
+def InternalMetricClosedEqIInfThickeningFrozen : Prop :=
+  ∀ (D : ℂ → ℂ → ℝ) (C : Set ℂ), IsClosed C → IsEuclideanLengthMetric D →
+    ∀ {x y : ℂ}, x ∈ C → y ∈ C →
+      internalMetric D C x y = ⨅ n : ℕ, ⨆ k : ℕ,
+        internalMetric D (Metric.thickening (((k : ℝ) + 1)⁻¹) (C ∩ Metric.closedBall 0 ((n : ℝ) + 1))) x y
+
+/-- FIRST-PASS FROZEN. Deterministic metric geometry (Euclidean property of a Weyl scaling): for a Euclidean length metric
+`D` and a continuous compactly supported shift `f`, the Weyl-scaled metric `(weylScaling D ξ f).toReal` is again a
+Euclidean length metric. The weights `exp (ξ f)` are bounded above and below, so the scaled metric is bi-Lipschitz to `D`,
+and the length property follows from the triangle inequality. Source: standard; locator pending. PENDING TRUTH CHECK
+(operator 00:09 UTC: approved as an EXTERNAL deterministic metric fact). Used by: `pinchCertificateStmt_of_frozen`
+(FirstPass/S11h/PinchCertificateProof11_17.lean), hence `firstPass_11_17`. -/
+def WeylScaledEuclideanFrozen : Prop :=
+  ∀ (D : ℂ → ℂ → ℝ) (ξ : ℝ) (f : ℂ → ℝ), IsEuclideanLengthMetric D → Continuous f → HasCompactSupport f →
+    IsEuclideanLengthMetric (fun u v => (weylScaling D ξ f u v).toReal)
+
 end HarmonicBalls
