@@ -376,4 +376,153 @@ theorem singular_measure_identity {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) �
   filter_upwards [hW, hN0, hNα, hA] with ω hWω hN0ω hNαω hAω
   exact singular_measure_of_ω (hcirc ω) (μα ω) (μ₀ ω) hAω hWω hN0ω hNαω
 
+/-! ### Section 7: coordinate identities under dilation (gaps note section 7.1)
+
+For `R > 0` the dilated field `h^{(R)}` of eq. (35) has circle averages `h^{(R)}_r(z) = h_{Rr}(Rz) - h_R(0)`, and its
+normalisation constant is `c_R = h_R(0) + Q log R` (eq. (31)). The identity below is an exact change of variables in the
+regularised densities; it does not need `LQGMeasureCoordChange`. -/
+
+/-- Circle averages `h^{(R)}_r(z) = h_{Rr}(Rz) - h_R(0)` of the dilated field (eq. (35)); `H r z = h_r(z)`. -/
+noncomputable def dilatedCircleAverage (H : ℝ → ℂ → ℝ) (R : ℝ) : ℝ → ℂ → ℝ :=
+  fun r z => H (R * r) (R * z) - H R 0
+
+/-- The normalisation constant `c_R = h_R(0) + Q log R` of eq. (31), with `Q = lqgQ γ`. -/
+noncomputable def dilationConstant (γ : ℝ) (H : ℝ → ℂ → ℝ) (R : ℝ) : ℝ :=
+  H R 0 + lqgQ γ * Real.log R
+
+lemma gamma_mul_lqgQ {γ : ℝ} (hγ : 0 < γ) : γ * lqgQ γ = 2 + γ ^ 2 / 2 := by
+  unfold lqgQ
+  field_simp
+
+/-- Exponent bookkeeping: `ε^{γ²/2} e^{-γ h} R^{-2} = e^{-γ (h + Q log R)} (Rε)^{γ²/2}`, using `γ Q = 2 + γ²/2`. -/
+lemma dilate_exponent_identity {γ R ε h : ℝ} (hγ : 0 < γ) (hR : 0 < R) (hε : 0 < ε) :
+    ε ^ (γ ^ 2 / 2) * Real.exp (-(γ * h)) * (R ^ 2)⁻¹
+      = Real.exp (-(γ * (h + lqgQ γ * Real.log R))) * (R * ε) ^ (γ ^ 2 / 2) := by
+  rw [Real.rpow_def_of_pos hε, Real.rpow_def_of_pos (mul_pos hR hε), Real.log_mul hR.ne' hε.ne']
+  have hexp : Real.exp (Real.log R) = R := Real.exp_log hR
+  have hR2 : (R ^ 2)⁻¹ = Real.exp (-(2 * Real.log R)) := by
+    rw [Real.exp_neg, two_mul, Real.exp_add, hexp, sq]
+  rw [hR2]
+  simp only [← Real.exp_add]
+  congr 1
+  linear_combination (Real.log R) * gamma_mul_lqgQ hγ
+
+/-- **Section 7.1 (measure identity, gaps note eq. (36)).** For `R > 0`, the regularised measure of the dilated field
+`h^{(R)}` at scale `ε` is `e^{-γ c_R}` times the push-forward of the regularised measure of `h` at scale `Rε` under
+`w ↦ w / R`, as an identity of integrals of arbitrary test functions `φ`. The only extra hypothesis is the
+measurability of the circle averages `H (R ε)` in `z` (the integral form of `withDensity` needs it). -/
+lemma integral_lqgApprox_dilate {γ R ε : ℝ} (H : ℝ → ℂ → ℝ) (hγ : 0 < γ) (hR : 0 < R) (hε : 0 < ε)
+    (hmeas : Measurable (H (R * ε))) (φ : ℂ → ℝ) :
+    ∫ z, φ z ∂(lqgApprox γ (dilatedCircleAverage H R) ε)
+      = Real.exp (-(γ * dilationConstant γ H R)) * ∫ w, φ (w / R) ∂(lqgApprox γ H (R * ε)) := by
+  have hRC : (R : ℂ) ≠ 0 := by exact_mod_cast hR.ne'
+  have hD1 : Measurable (fun z : ℂ => ENNReal.ofReal
+      (ε ^ (γ ^ 2 / 2) * Real.exp (γ * (H (R * ε) ((R : ℂ) * z) - H R 0)))) := by
+    have hm2 : Measurable (fun z : ℂ => H (R * ε) ((R : ℂ) * z)) :=
+      hmeas.comp (measurable_const.mul measurable_id)
+    fun_prop
+  have hD2 : Measurable (fun w : ℂ => ENNReal.ofReal
+      ((R * ε) ^ (γ ^ 2 / 2) * Real.exp (γ * H (R * ε) w))) := by
+    fun_prop
+  have h1 : ∫ z, φ z ∂(lqgApprox γ (dilatedCircleAverage H R) ε)
+      = ∫ z, (ε ^ (γ ^ 2 / 2) * Real.exp (-(γ * H R 0)))
+          * (Real.exp (γ * H (R * ε) ((R : ℂ) * z)) * φ z) := by
+    unfold lqgApprox dilatedCircleAverage
+    rw [integral_withDensity_eq_integral_toReal_smul hD1 (ae_of_all _ fun z => ENNReal.ofReal_lt_top)]
+    refine integral_congr_ae (ae_of_all _ fun z => ?_)
+    simp only [smul_eq_mul]
+    rw [ENNReal.toReal_ofReal (mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le)]
+    rw [show γ * (H (R * ε) ((R : ℂ) * z) - H R 0)
+        = γ * H (R * ε) ((R : ℂ) * z) + -(γ * H R 0) by ring, Real.exp_add]
+    ring
+  have h2 : ∫ w, φ (w / R) ∂(lqgApprox γ H (R * ε))
+      = (R * ε) ^ (γ ^ 2 / 2) * ∫ w, Real.exp (γ * H (R * ε) w) * φ (w / R) := by
+    unfold lqgApprox
+    rw [integral_withDensity_eq_integral_toReal_smul hD2 (ae_of_all _ fun z => ENNReal.ofReal_lt_top)]
+    rw [← integral_const_mul]
+    refine integral_congr_ae (ae_of_all _ fun z => ?_)
+    simp only [smul_eq_mul]
+    rw [ENNReal.toReal_ofReal (mul_nonneg (Real.rpow_nonneg (mul_pos hR hε).le _) (Real.exp_pos _).le)]
+    ring
+  -- change of variables `u = R • z` on the left-hand side
+  set G : ℂ → ℝ := fun u => (ε ^ (γ ^ 2 / 2) * Real.exp (-(γ * H R 0)))
+      * (Real.exp (γ * H (R * ε) u) * φ (u / R)) with hG
+  have hL : ∫ z, φ z ∂(lqgApprox γ (dilatedCircleAverage H R) ε) = ∫ z, G (R • z) := by
+    rw [h1]
+    refine integral_congr_ae (ae_of_all _ fun z => ?_)
+    simp only [hG, Complex.real_smul, mul_div_cancel_left₀ _ hRC]
+  have h3 := MeasureTheory.Measure.integral_comp_smul (μ := volume) G R
+  have hfinrank : Module.finrank ℝ ℂ = 2 := Complex.finrank_real_complex
+  rw [hfinrank, abs_of_pos (inv_pos.mpr (pow_pos hR 2)), smul_eq_mul] at h3
+  have hGint : ∫ u, G u = (ε ^ (γ ^ 2 / 2) * Real.exp (-(γ * H R 0)))
+      * ∫ u, Real.exp (γ * H (R * ε) u) * φ (u / R) := integral_const_mul _ _
+  have key := dilate_exponent_identity (h := H R 0) hγ hR hε
+  rw [hL, h3, hGint, h2, dilationConstant]
+  linear_combination (∫ u, Real.exp (γ * H (R * ε) u) * φ (u / R)) * key
+
+/-- For a dyadic dilation `R = 2^k` the scales shift: `2^k · 2^{-j} = 2^{-(j-k)}` for `j ≥ k`. -/
+lemma two_pow_mul_dyadicScale (k j : ℕ) (hkj : k ≤ j) :
+    (2 : ℝ) ^ k * dyadicScale j = dyadicScale (j - k) := by
+  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hkj
+  have h2 : (2 : ℝ) ^ k * (2 : ℝ)⁻¹ ^ k = 1 := by
+    rw [← mul_pow]
+    norm_num
+  unfold dyadicScale
+  rw [show k + d - k = d by omega, pow_add, ← mul_assoc, h2, one_mul]
+
+/-- Along the dyadic scales the regularised measures of the dilated field `h^{(2^k)}` converge, to
+`e^{-γ c_R} ∫ φ(·/R) dμ`, for every continuous compactly supported test function `φ`. -/
+lemma tendsto_lqgApprox_dilate_dyadic {γ : ℝ} {H : ℝ → ℂ → ℝ} {m : Measure ℂ} (hm : IsLQGLimit γ H m)
+    (hγ : 0 < γ) (k : ℕ) (hmeas : ∀ r : ℝ, 0 < r → Measurable (H r)) {φ : ℂ → ℝ}
+    (hφc : Continuous φ) (hφs : HasCompactSupport φ) :
+    Tendsto (fun j : ℕ => ∫ z, φ z ∂(lqgApprox γ (dilatedCircleAverage H ((2 : ℝ) ^ k)) (dyadicScale j)))
+      atTop (𝓝 (Real.exp (-(γ * dilationConstant γ H ((2 : ℝ) ^ k))) * ∫ w, φ (w / ((2 : ℝ) ^ k : ℝ)) ∂m)) := by
+  have hR : (0 : ℝ) < (2 : ℝ) ^ k := by positivity
+  set R : ℝ := (2 : ℝ) ^ k with hRdef
+  have hRC : (R : ℂ) ≠ 0 := by exact_mod_cast hR.ne'
+  have hψc : Continuous (fun w : ℂ => φ (w / R)) := hφc.comp (continuous_id.div_const _)
+  have hψs : HasCompactSupport (fun w : ℂ => φ (w / R)) := by
+    refine HasCompactSupport.intro
+      ((hφs.isCompact.image (continuous_const.mul continuous_id : Continuous fun w : ℂ => (R : ℂ) * w)))
+      (fun w hw => ?_)
+    by_contra hne
+    have hmem : w / R ∈ tsupport φ := subset_tsupport φ hne
+    exact hw ⟨w / R, hmem, by show (R : ℂ) * (w / R) = w; field_simp⟩
+  have hlimit := hm.tendsto_integral (fun w : ℂ => φ (w / R)) hψc hψs
+  have hshift := hlimit.comp (tendsto_sub_atTop_nat k)
+  refine Tendsto.congr' ?_ (tendsto_const_nhds.mul hshift)
+  filter_upwards [eventually_ge_atTop k] with j hj
+  simp only [Function.comp_apply]
+  rw [integral_lqgApprox_dilate H hγ hR (dyadicScale_pos j) (hmeas _ (mul_pos hR (dyadicScale_pos j))) φ,
+    two_pow_mul_dyadicScale k j hj]
+
+/-- **Section 7.1 (limit form).** For the dyadic dilation `R = 2^k`, the dilated field `h^{(R)}` (circle averages
+`dilatedCircleAverage H R`) has LQG limit `e^{-γ c_R} · (μ_h).map (· / R)`. This is the measure
+`ENNReal.ofReal (e^{-γ c_R}) • (μ_h).map (w ↦ w/R)` of the gaps note, section 7.1; with `IsLQGLimit.unique` it identifies
+the designated LQG measure of `h^{(R)}`. -/
+lemma isLQGLimit_dilate_dyadic {γ : ℝ} {H : ℝ → ℂ → ℝ} {m : Measure ℂ} (hm : IsLQGLimit γ H m)
+    (hγ : 0 < γ) (k : ℕ) (hmeas : ∀ r : ℝ, 0 < r → Measurable (H r)) :
+    IsLQGLimit γ (dilatedCircleAverage H ((2 : ℝ) ^ k))
+      (ENNReal.ofReal (Real.exp (-(γ * dilationConstant γ H ((2 : ℝ) ^ k))))
+        • m.map (fun w : ℂ => w / (((2 : ℝ) ^ k : ℝ) : ℂ))) := by
+  have := hm.isLocallyFiniteMeasure
+  have hR : (0 : ℝ) < (2 : ℝ) ^ k := by positivity
+  have hRC : (((2 : ℝ) ^ k : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hR.ne'
+  have hdiv : Measurable (fun w : ℂ => w / (((2 : ℝ) ^ k : ℝ) : ℂ)) := by fun_prop
+  let hom : ℂ ≃ₜ ℂ := Homeomorph.smulOfNeZero ((((2 : ℝ) ^ k : ℝ) : ℂ)⁻¹) (inv_ne_zero hRC)
+  have hfun : (fun w : ℂ => w / (((2 : ℝ) ^ k : ℝ) : ℂ)) = ⇑hom := by
+    funext w
+    show w / (((2 : ℝ) ^ k : ℝ) : ℂ) = (((2 : ℝ) ^ k : ℝ) : ℂ)⁻¹ • w
+    rw [smul_eq_mul, div_eq_inv_mul]
+  have hfin : IsFiniteMeasureOnCompacts (m.map (fun w : ℂ => w / (((2 : ℝ) ^ k : ℝ) : ℂ))) := by
+    rw [hfun]
+    exact MeasureTheory.Measure.IsFiniteMeasureOnCompacts.map m hom
+  have : IsFiniteMeasureOnCompacts (ENNReal.ofReal (Real.exp (-(γ * dilationConstant γ H ((2 : ℝ) ^ k))))
+      • m.map (fun w : ℂ => w / (((2 : ℝ) ^ k : ℝ) : ℂ))) :=
+    IsFiniteMeasureOnCompacts.smul _ ENNReal.ofReal_ne_top
+  refine ⟨inferInstance, fun f hf hfs => ?_⟩
+  rw [integral_smul_measure, integral_map hdiv.aemeasurable hf.aestronglyMeasurable,
+    ENNReal.toReal_ofReal (Real.exp_pos _).le, smul_eq_mul]
+  exact tendsto_lqgApprox_dilate_dyadic hm hγ k hmeas hf hfs
+
 end HarmonicBalls
