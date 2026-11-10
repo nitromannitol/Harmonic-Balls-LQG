@@ -645,22 +645,25 @@
 	
 	
 	We also have monotonicity of the clusters in $t$. 
+	% CORRECTION [C52] Printed: Lemma 3.3 omitted the pole z from both clusters and did not require positive time; corrected because the obstacle problem is defined for t>0 and monotonicity compares clusters with the same center.
 	\begin{lemma} \label{lemma:monotonicity}
-		On an event of probability 1, for all $t_1 \leq t_2$ and~$r > 0$,~$z \in B_r$, we have $\cluster{B_r}{t_1} \subseteq \cluster{B_r}{t_2}$.
+		On an event of probability 1, for all $0 < t_1 \leq t_2$ and~$r > 0$,~$z \in B_r$, we have $\cluster{B_r;z}{t_1} \subseteq \cluster{B_r;z}{t_2}$.
 	\end{lemma}
 	
 	Clusters also have a conservation of mass property. 
+	% CORRECTION [C53] Printed: the equality case assumed zero boundary mass for an undefined measure mu; corrected to mu_h, the measure used throughout Lemma 3.4.
 	\begin{lemma} \label{lemma:conservation-of-mass}
-		On an event of probability 1, for all $r,t > 0$ and~$z \in B_r$, we have $\mu_h({\cluster{B_r;z}{t}}) \leq t$ and $\odometer{B_r;z}{t} = 0$ on $\partial B_r$.  Moreover, if $\overline{{{\cluster{B_r;z}{t}}}} \subset B_r$ and $\mu(\partial {\cluster{B_r;z}{t}}) = 0$, then $\mu_h({\cluster{B_r;z}{t}}) = t$. 
+		On an event of probability 1, for all $r,t > 0$ and~$z \in B_r$, we have $\mu_h({\cluster{B_r;z}{t}}) \leq t$ and $\odometer{B_r;z}{t} = 0$ on $\partial B_r$.  Moreover, if $\overline{{{\cluster{B_r;z}{t}}}} \subset B_r$ and $\mu_h(\partial {\cluster{B_r;z}{t}}) = 0$, then $\mu_h({\cluster{B_r;z}{t}}) = t$. 
 	\end{lemma}
 	
 	
 	
 	
 	We conclude with a compatibility result for clusters across different domains. 
+	% CORRECTION [C54] Printed: the mass parameter t was free in Lemma 3.5; corrected by quantifying t inside the probability-one event.
 	\begin{lemma} \label{lemma:cluster-compatibility}
 		The following holds for each $R > 0$ on an event of probability 1. 
-		For all $s_1 \leq R$ and~$z \in B_{s_1}$ if, for some $s_2 \in [s_1, R]$, we have $\overline{\cluster{B_{s_2};z}{t}} \subset B_{s_1}$, 
+		For all $t > 0$, $s_1 \leq R$, and~$z \in B_{s_1}$, if, for some $s_2 \in [s_1, R]$, we have $\overline{\cluster{B_{s_2};z}{t}} \subset B_{s_1}$, 
 		then  $\cluster{B_{s};z}{t} = \cluster{B_{s_2};z}{t}$ for all $s \in [s_1, R]$.
 	\end{lemma}
 	
@@ -717,13 +720,14 @@
 	\end{proof}
 	
 	
+	% CORRECTION [C55] Printed: the deterministic Hölder exponent depended only on gamma; corrected to allow dependence on the log-singularity strength alpha_0, which changes the local power law near the origin.
 	\subsection{H\"{o}lder continuity of the odometer}
-	We observe that $\lss{}{t}$ is H\"{o}lder for a deterministic exponent depending only on $\gamma$. 
-	
-	
-	
+	We observe that $\lss{}{t}$ is H\"{o}lder for a deterministic exponent depending only on $\gamma$ and $\boldsymbol{\alpha}_0$. 
+
+
+
 	\begin{lemma} \label{odometer:cont}
-		There exists a deterministic exponent $\alpha = \alpha(\gamma)$ so that on an event of probability 1, there
+		There exists a deterministic exponent $\alpha = \alpha(\gamma,\boldsymbol{\alpha}_0) > 0$ so that on an event of probability 1, there
 		exists a constant $C > 0$
 		\[
 		|\lss{z}{t}(x) - \lss{z}{t}(y)| \leq C |x-y|^{\alpha}
@@ -824,21 +828,23 @@
 		\end{equation}
 	\end{prop}
 	
-	We show in the second part of Section \ref{sec:upper-bound} that the family is continuous. 
+	% CORRECTION [C56] Printed: Proposition 5.2 used the translated ball B_epsilon(z), and its all-time continuity claim was justified only by Proposition 7.2, which assumes compact containment; corrected to the ordinary epsilon-neighborhood and to the scope actually proved.
+	We show in the second part of Section \ref{sec:upper-bound} that the family is continuous before it reaches the boundary of the unit ball. 
 	\begin{prop} \label{prop:continuity}
 		On an event of probability 1, for all~$z \in B_{1/2}$ the cluster centered at~$z$ decreases to~$\{z\}$,  
 		\begin{equation} \label{eq:contains-origin}
-		\bigcap_{t > 0} \overline{{{\cluster{z}{t}}}} = \{z\}
+		\bigcap_{t > 0} \overline{{{\cluster{z}{t}}}} = \{z\}.
 		\end{equation} 
-		and continuously increase in $t$:  for each $t > 0$, for all $\epsilon > 0$ sufficiently small, there exists $\delta(z) > 0$ so that for all 
-		$t' \in [t, t + \delta(z)]$, 
+		Moreover, for each $t > 0$ such that ${\cluster{z}{t}} \Subset B_1$ and for all $\epsilon > 0$ sufficiently small, there exists $\delta > 0$ so that for all 
+		$t' \in [t, t + \delta]$, 
 		\begin{equation} \label{eq:continuity}
-		\overline{{\cluster{z}{t'}}} \subset {\cluster{z}{t}} + B_{\epsilon}(z).
+		\overline{{\cluster{z}{t'}}} \subset {\cluster{z}{t}} + B_{\epsilon}(0).
 		\end{equation}
 	\end{prop}
+	% CORRECTION [C57] Printed: Proposition 5.3 had an unbound radius r and containment in B_r(z); corrected to the unit-ball containment used by Proposition 8.1.
 	In Section \ref{sec:boundary-measure-zero}, we show that each cluster has zero boundary area measure.   
 	\begin{prop} \label{prop:boundary-measure}
-		On an event of probability 1,  for all~$z \in B_1$ and~$t > 0$ such that $\overline{{{\cluster{z}{t}}}} \subset B_r(z)$. 
+		On an event of probability 1, for all~$z \in B_1$ and~$t > 0$ such that $\overline{{{\cluster{z}{t}}}} \subset B_1$, 
 		\begin{equation}
 		\mu_h (\partial {\cluster{z}{t}}) = 0 \, . 
 		\end{equation}
@@ -854,9 +860,9 @@
 	hold with ${\regcluster{}{t}}$ in place of ${\cluster{}{t}}$. Thus, we may combine Proposition \ref{prop:lower-bound}, Lemma \ref{lemma:harmonic-ball}, and Propositions \ref{prop:upper-bound} through \ref{prop:boundary-measure} into the following statement. 
 	
 	
+	% CORRECTION [C58] Printed: Proposition 5.4 had an unused universal r, an unbound T, and “strict containment” in the closed ball; corrected to a center-dependent positive T and compact containment in the open unit ball before time T.
 	\begin{prop} \label{prop:conditional}
-		On an event of probability 1, for all~$r > 0 $ and~$z \in B_{1/2}$, there exists a family of clusters $\{{\regcluster{z}{t}}\}_{0 < t < T}$ strictly contained in $\overline{B_1}$
-		satisfying the conditions of Theorem \ref{theorem:harmonic-balls} for $0 < t<T$ and $\overline{{\regcluster{z}{T}}} \cap \partial B_1 \neq \emptyset$.
+		On an event of probability 1, for every~$z \in B_{1/2}$ there exists $T=T(z)>0$ such that ${\regcluster{z}{t}} \Subset B_1$ for every $0<t<T$, the family $\{{\regcluster{z}{t}}\}_{0 < t < T}$ satisfies the conditions of Theorem \ref{theorem:harmonic-balls} restricted to $0<t<T$, and $\overline{{\regcluster{z}{T}}} \cap \partial B_1 \neq \emptyset$.
 	\end{prop}
 	
 	
@@ -952,97 +958,147 @@
 	
 	
 	
+	% CORRECTION [C59] Printed: Theorem 5.5 used fixed-center equality in law, an invalid all-center union-bound step, center-independent exit times, and did not prove overlap gluing or two-sided Hausdorff continuity; corrected by pathwise dyadic covariance, canonical exit times, compatibility, and local-to-global continuity.
 	\subsection{Proof of Theorem \ref{theorem:full-theorem-minus-uniqueness} assuming Proposition \ref{prop:conditional}}
-	By combining Lemma \ref{lemma:scale-invariance-flow} together with Proposition \ref{prop:conditional} and a union bound, 
-	on an event of probability 1, for each $k \in \N$, there exists $T^{(k)} > 0$ so that for all~$x \in B_{1/2}$ the family of sets
-	\begin{equation}
-	\{\cluster{B_k; k x}{t}\}_{0 < t < A_k T^{(k)}}
+	Write $\operatorname{cluster}(\mu,R,z,t)$ for the cluster in $B_R$ with pole $z$, mass $t$, and measure $\mu$. For each dyadic radius $R=2^m$, $m\in\N$, set
+	\begin{equation} \label{eq:section5-rescaled-data}
+	 h^{(R)}:=h(R\cdot)-h_R(0),\qquad
+	 A_R:=e^{\gamma(Q\log R+h_R(0))},\qquad
+	 \mu^{(R)}(E):=A_R^{-1}\mu_h(RE).
 	\end{equation}
-	is compactly embedded in $\overline{B_{k/2}}$, and $\mathrm{int}(\overline{\cluster{B_k; k x}{t}})$ satisfies the properties of Theorem \ref{theorem:harmonic-balls} for $t < A_k T^{(k)}$,
-	and $\overline{\cluster{B_k; k x}{A_k T^{(k)}}} \cap \partial B_k \neq \emptyset$. 
-	
-	Let~$z \in \C$ be given, select~$k_0 = 3 |z|$ (so that there exists~$x \in B_{1/2}$ with~$k_0 x = z$) and define 
-	\begin{equation}
-	{\cluster{}{t}}(z)  = \begin{cases}
-	\cluster{B_{k_0}; z}{t} \qquad &\mbox{for $t < A_{k_0} T^{(k_0)}$} \\
-	\cluster{B_k; z}{t} \qquad &\mbox{if $A_{k-1} T^{(k-1)} \leq t < A_{k} T^{(k)}$ for some $k \in [k_0 + 1, \infty) \cap \N$}.
-	\end{cases}
-	\end{equation}
-	and ${\regcluster{}{t}(z)} = \mathrm{int}(\overline{\cluster{}{t}(z)})$.
-	By the compatibility property, Lemma \ref{lemma:cluster-compatibility}, the times $A_k T^{(k)}$ are increasing in~$k$
-	and hence the construction is well-defined. 
-	Compatibility also implies that the family $\{{\regcluster{}{t}}\}_{t > 0}$ satisfies the properties of Theorem \ref{theorem:harmonic-balls}. 
-	
-	It remains to show that for each $t > 0$ there exists a $k \in \N$ so that $t < A_{k} T^{(k)}$.
-	That is, we must show that
-	\begin{equation} \label{eq:strictly-increasing-times}
-	A_{k} T^{(k)} \to \infty \qquad \mbox{with probability 1}.
-	\end{equation}
-	Indeed, if this were the case, this would give us a complete family $\{\regcluster{}{}(z)\}_{t > 0}$ satisfying the properties of Theorem \ref{theorem:harmonic-balls}, and we have uniqueness of such a family by Proposition \ref{prop:uniqueness}.
-	
-	
-	First note that by Lemma \ref{lemma:scale-invariance-flow}, $T^{(k)} {\buildrel d \over =} T^{(1)}$ for each $k$.
-	Since $T^{(1)}$ is strictly positive, for each $p \in (0,1)$, there exists 
-	$c_p > 0$ so that 
+	By \eqref{eq:h-coordinate-change}, $h^{(R)}\overset{d}{=}h$. By the coordinate-change and Weyl-scaling properties in Fact \ref{fact:lqg-measure}, on one event of probability one, simultaneously for every dyadic $R$, the measure $\mu^{(R)}$ is the LQG measure associated with $h^{(R)}$.
+
+	The change-of-variables calculation in the proof of Lemma \ref{lemma:scale-invariance-flow} is pathwise. More precisely, for every dyadic $R$, every $z\in B_R$, and every $t>0$, the map
 	\[
-	\P[T^{(k)} > c_p] \geq p
+	 w\longmapsto A_R^{-1}w(R\,\cdot)
 	\]
-	for all $k \in \N$. In particular, 
-	\begin{equation} \label{eq:positive-io}
-	\P[\cap_{m=1}^{\infty} \cup_{k=m}^{\infty} T^{(k)} > c_p] \geq p.
+	is a bijection between the two supersolution classes and therefore
+	\begin{equation} \label{eq:section5-pathwise-scale}
+	 \operatorname{cluster}(\mu^{(R)},1,z/R,t/A_R)
+	 =R^{-1}\operatorname{cluster}(\mu_h,R,z,t).
 	\end{equation}
-	We claim that also
-	\begin{equation} \label{eq:geometric-bm}
-	\lim_{k \to \infty} A_k = \infty. 
+	Since the dyadic radii are countable, we may intersect the probability-one events from Proposition \ref{prop:conditional}, Proposition \ref{prop:upper-bound}, and Lemma \ref{lemma:cluster-compatibility} for all of the rescaled fields $h^{(R)}$.
+
+	For $z\in B_{R/2}$ define the first boundary-touching time
+	\begin{equation} \label{eq:section5-exit-time}
+	 \tau_R(z):=\inf\big\{t>0:
+	 \overline{\operatorname{cluster}(\mu_h,R,z,t)}\cap\partial B_R\neq\emptyset\big\}.
 	\end{equation}
-	Indeed, the process, 
+	Proposition \ref{prop:lower-bound}, Proposition \ref{prop:upper-bound}, Proposition \ref{prop:conditional}, and \eqref{eq:section5-pathwise-scale} imply that $0<\tau_R(z)<\infty$ and that
 	\[
-	t \to h_{e^{t}}(0)
+	 \left\{\operatorname{int}\overline{\operatorname{cluster}(\mu_h,R,z,t)}\right\}_{0<t<\tau_R(z)}
 	\]
-	has a continuous modification which is a standard two-sided Brownian motion \cite[Section 3.1]{duplantier2011liouville}. 
-	Thus, 
+	satisfies the conditions of Theorem \ref{theorem:harmonic-balls} on the interval $(0,\tau_R(z))$. If $R\leq S$ are dyadic, $z\in B_{R/2}$, and $t<\tau_R(z)$, then Lemma \ref{lemma:cluster-compatibility} gives
+	\begin{equation} \label{eq:section5-overlap}
+	 \operatorname{cluster}(\mu_h,R,z,t)
+	 =\operatorname{cluster}(\mu_h,S,z,t)
+	 \quad\text{and}\quad
+	 \tau_R(z)\leq\tau_S(z).
+	\end{equation}
+
+	It remains to show that the increasing exit times tend to infinity, on one event simultaneously for every center. For $c>0$, let $\mathcal E_c^{(R)}$ be the event that
 	\[
-	t \to A_{e^{t}} = e^{\gamma (Q t + h_{e^{t}}(0))} 
+	 \overline{\operatorname{cluster}(\mu^{(R)},1,x,s)}\subset B_1,
+	 \qquad \forall x\in B_{1/2},\quad\forall s\in(0,c).
 	\]
-	is a geometric Brownian motion with percentage drift $\gamma Q + \gamma^2/2$
-	and percentage volatility $\gamma$ --- this implies \eqref{eq:geometric-bm}. Combining \eqref{eq:geometric-bm} with \eqref{eq:positive-io} and using that $T^{(k)}$ is increasing in $k$ shows that with probability at least $p$, 
+	Proposition \ref{prop:upper-bound} implies
 	\[
-	A_k T^{(k)} \to \infty.
+	 \P\left[\bigcup_{n=1}^{\infty}\mathcal E_{1/n}^{(R)}\right]=1.
 	\]
-	Since this holds for any $p \in (0,1)$, we have \eqref{eq:strictly-increasing-times}, 
-	completing the proof. \qed
+	Fix $p\in(0,1)$. Since $h^{(R)}\overset{d}{=}h$, there is a deterministic $c_p>0$ such that
+	\[
+	 \P[\mathcal E_{c_p}^{(R)}]\geq p
+	 \qquad\text{for every dyadic }R.
+	\]
+	Consequently,
+	\begin{equation} \label{eq:section5-positive-io}
+	 \P\left[\bigcap_{M=1}^{\infty}
+	 \bigcup_{m\geq M}\mathcal E_{c_p}^{(2^m)}\right]\geq p,
+	\end{equation}
+	since every tail union has probability at least $p$.
+
+	Also, since $h_R(0)=h_R^{\C}(0)-\boldsymbol{\alpha}_0\log R$, for $R=e^u$ we have
+	\[
+	 \log A_{e^u}
+	 =\gamma\big((Q-\boldsymbol{\alpha}_0)u+h_{e^u}^{\C}(0)\big).
+	\]
+	The process $u\mapsto h_{e^u}^{\C}(0)$ is a standard Brownian motion, and $Q-\boldsymbol{\alpha}_0>0$, so
+	\begin{equation} \label{eq:section5-Ar-diverges}
+	 A_{2^m}\longrightarrow\infty
+	 \qquad\text{almost surely as }m\to\infty.
+	\end{equation}
+	On $\mathcal E_{c_p}^{(R)}$, equations \eqref{eq:section5-pathwise-scale} and \eqref{eq:section5-exit-time} give
+	\[
+	 \tau_R(z)\geq A_Rc_p,
+	 \qquad\forall z\in B_{R/2}.
+	\]
+	Combining this with \eqref{eq:section5-positive-io}, \eqref{eq:section5-Ar-diverges}, and the monotonicity in \eqref{eq:section5-overlap}, we find with probability at least $p$ that
+	\begin{equation} \label{eq:section5-exit-times-diverge}
+	 \tau_{2^m}(z)\longrightarrow\infty
+	 \qquad\text{for every }z\in\C.
+	\end{equation}
+	The event in \eqref{eq:section5-exit-times-diverge} is the same for all centers. Since $p\in(0,1)$ was arbitrary, it has probability one.
+
+	Work on the intersection of the preceding probability-one events. Given $z\in\C$ and $t>0$, choose a dyadic $R$ such that $z\in B_{R/2}$ and $t<\tau_R(z)$, and define
+	\begin{equation} \label{eq:section5-global-family}
+	 {\cluster{}{t}}(z):=\operatorname{cluster}(\mu_h,R,z,t),
+	 \qquad
+	 {\regcluster{}{t}}(z):=\operatorname{int}\overline{{\cluster{}{t}}(z)}.
+	\end{equation}
+	Equation \eqref{eq:section5-overlap} shows that this definition is independent of the chosen dyadic $R$. The family $\{{\regcluster{}{t}}(z)\}_{t>0}$ has the mass, boundary-mass, regular-openness, boundedness, connectedness, center-containment, monotonicity, and subharmonic-ball properties required in Theorem \ref{theorem:full-theorem-minus-uniqueness}: for any finite collection of times, choose one dyadic radius for which they all lie below $\tau_R(z)$.
+
+	The same observation gives the required two-sided Hausdorff continuity. Indeed, for a fixed $t>0$, choose $R$ with $t<\tau_R(z)$ and then choose $\eta>0$ such that
+	\[
+	 (t-\eta,t+\eta)\subset(0,\tau_R(z)).
+	\]
+	On this whole neighborhood the global family agrees with the single local family in $B_R$, which is Hausdorff-continuous by Proposition \ref{prop:conditional}. The convergence to $\{z\}$ as $t\to0$ follows in the same way from any one sufficiently large dyadic ball.
+
+	Finally, suppose ${\regcluster{}{t}}(z)\Subset B_s$ and let $r\geq s$. Choose a dyadic $R\geq r$ with $t<\tau_R(z)$. Since ${\cluster{}{t}}(z)$ is open,
+	\[
+	 \overline{{\cluster{}{t}}(z)}
+	 =\overline{{\regcluster{}{t}}(z)}\subset B_s\subset B_r.
+	\]
+	Lemma \ref{lemma:cluster-compatibility}, applied with outer radius $R$, gives
+	\[
+	 {\cluster{}{t}}(z)=\cluster{B_r;z}{t},
+	\]
+	and hence
+	\[
+	 {\regcluster{}{t}}(z)=\operatorname{int}\left(\overline{\cluster{B_r;z}{t}}\right).
+	\]
+	This proves Theorem \ref{theorem:full-theorem-minus-uniqueness}. \qed
 	
 	
 	\subsection{Harmonic balls are local}
 	In this subsection we prove that the harmonic balls given by Theorem \ref{theorem:full-theorem-minus-uniqueness} are local; that is, 
 	we prove Proposition \ref{prop:locally-determined}. 
 	
+	% CORRECTION [C60] Printed: Lemma 5.8 allowed z outside U and asserted an “essentially verbatim” extension to arbitrary bounded open U, although boundary continuity of G_U can fail at irregular points; corrected to Green-regular domains and a smooth exhaustion for the locality proposition.
 	Before doing so, we note that we have constructed clusters and stated Lemma \ref{lemma:cluster-compatibility} for clusters restricted to domains which are balls.
-	However, the definition of $\cluster{B_r; z}{t}$ and the proof of Lemma \ref{lemma:cluster-compatibility} extend essentially verbatim to the case when $B_r$ is replaced by any bounded open set containing the origin.
-	
+	The same definition and proof apply when the ball is replaced by a deterministic bounded Green-regular open set containing the pole; in particular, the Green function and the obstacle extend continuously to the boundary.
+
 	\begin{lemma} \label{lemma:strong-compatibility}
-		Let $U$ be a deterministic bounded open set. 
-		For all $t > 0$ and~$z \in \C$, we have $\overline{{\regcluster{}{t}(z)}} = \overline{\cluster{U; z}{t}}$ if either ${\regcluster{}{t}(z)} \Subset U$ or $\cluster{U; z}{t} \Subset U$.
+		Let $U$ be a deterministic bounded Green-regular open set. 
+		For all $t > 0$ and~$z \in U$, we have $\overline{{\regcluster{}{t}(z)}} = \overline{\cluster{U; z}{t}}$ if either ${\regcluster{}{t}(z)} \Subset U$ or $\cluster{U; z}{t} \Subset U$.
 	\end{lemma}
 	\begin{proof}
-		This is immediate from the proof of Lemma \ref{lemma:cluster-compatibility} together with Theorem \ref{theorem:full-theorem-minus-uniqueness}. 
+		The proof of Lemma \ref{lemma:cluster-compatibility} applies verbatim in a Green-regular domain, and the conclusion then follows from Theorem \ref{theorem:full-theorem-minus-uniqueness}. 
 	\end{proof}
-	
-	
-	
-	
-	
+
+
+
+
+
 	\begin{proof}[Proof of Proposition \ref{prop:locally-determined}] 
-		
-		Let the deterministic open set $U$, base point $z \in \C$,~$t > 0$, and cluster ${\regcluster{}{t}(z)}$ be given. As $\P[\overline{{\regcluster{}{t}(z)}} \subset U]  = 0$ if $z\notin U$
-		we suppose $z \in U$. As we may approximate $U$ by an increasing sequence of bounded open sets, we further suppose $U$ is bounded. 
-		
-		The cluster $\cluster{U; z}{t}$ depends only on $\mu_h |_{U}$ and hence, by locality (Fact \ref{fact:lqg-measure}), only on $h |_{U}$. 
-		Therefore, it suffices to observe from Lemma \ref{lemma:strong-compatibility} that 
-		\begin{equation} \label{eq:cluster-coincides}
-		\overline{{\regcluster{}{t}(z)}} \subset U  \iff  \overline{\cluster{U; z}{t}} \subset U 
-		\end{equation}
-		This completes the proof.
+		Let the deterministic open set $U$, base point $z \in \C$, and $t > 0$ be given. If $z\notin U$, then $\{\overline{{\regcluster{}{t}(z)}}\subset U\}$ is the empty event, so suppose that $z\in U$.
+		Let $U_z$ be the connected component of $U$ containing $z$, and choose a deterministic increasing exhaustion $U_n\Subset U_{n+1}\Subset U_z$ by bounded smooth domains containing $z$, with $\bigcup_n U_n=U_z$.
+		Since $\overline{{\regcluster{}{t}(z)}}$ is compact, Lemma \ref{lemma:strong-compatibility} gives
+		\begin{align} \label{eq:cluster-coincides}
+		\{\overline{{\regcluster{}{t}(z)}}\subset U\}
+		&=\bigcup_{n=1}^{\infty}\{\overline{{\regcluster{}{t}(z)}}\subset U_n\} \notag\\
+		&=\bigcup_{n=1}^{\infty}\{\overline{\cluster{U_n;z}{t}}\subset U_n\}.
+		\end{align}
+		For each $n$, the cluster $\cluster{U_n;z}{t}$ depends only on $\mu_h|_{U_n}$ and hence, by locality in Fact \ref{fact:lqg-measure}, only on $h|_{U_n}$. Each event on the last line of \eqref{eq:cluster-coincides} is therefore measurable with respect to $\sigma(h|_U)$, and so is their countable union.
 	\end{proof}
 	
 	
@@ -1186,8 +1242,9 @@
 	Finally, we will take a union bound over all $z \in B_{1 + \epsilon} \cap \frac{\epsilon}{100} \Z^2$. 
 	
 	
+	% CORRECTION [C61] Printed: Lemma 6.4 claimed a uniform choice a(b,p,gamma) and proof constants depending only on gamma; corrected because comparison with the log-singular field depends on alpha_0.
 	\begin{lemma} \label{lemma:annulus-hit}
-		Let $b \in (0,1)$ and $p \in (0,1)$. There exists $a = a(b,p,\gamma) \in (0,1)$ such that the event $E_r(z) = E_r(z;a,b)$ of~\eqref{eq:good-annulus-harmonic} satisfies 
+		Let $b \in (0,1)$ and $p \in (0,1)$. There exists $a = a(b,p,\gamma,\boldsymbol{\alpha}_0) \in (0,1)$ such that the event $E_r(z) = E_r(z;a,b)$ of~\eqref{eq:good-annulus-harmonic} satisfies 
 		\[
 		P\left[ E_r(z) \right] \geq p ,\quad \forall r > 0,\quad \forall z \mbox{ such that $\dist(\A_{3 r, 5 r}(z), \{0\}) \geq r/100$}.
 		\]
@@ -1205,7 +1262,7 @@
 		Suppose the statement of the lemma holds for $h^{\C}$ with $a' \in (0,1)$ in place of $a$. 
 		
 		Fix $r > 0$ and then  $z$ such that the annulus $\A_{3 r, 5 r}(z)$ lies at Euclidean distance at least $r/100$ from the origin. 
-		By Weyl scaling (Fact~\ref{fact:lqg-measure}), there are constants $C_1,C_2>  0$ depending only on $\gamma$ such that 
+		By Weyl scaling (Fact~\ref{fact:lqg-measure}), there are constants $C_1,C_2>  0$ depending only on $\gamma$ and $\boldsymbol{\alpha}_0$ such that 
 		\begin{equation}
 		\mu_h(Y) \geq C_1 |z|^{-\boldsymbol{\alpha}_0 \gamma} \mu_{h^{\C}}(Y), \quad \forall Y \subset \A_{3 r, 5 r}(z)
 		\end{equation}
@@ -1308,14 +1365,15 @@
 	chosen appropriately. 
 	
 	
+	% CORRECTION [C62] Printed: Lemma 6.7 suppressed the dependence of a, C_i^pm, and N_1 on alpha_0 and on the chosen lower volume exponent beta^-; corrected to the dependencies actually used in the singular-field comparison.
 	\begin{lemma} \label{lemma:very-good-annuli-hit}
 		Let $b \in (0,1)$ and $p \in (0,1)$.
-		There exists $a = a(b,p,\gamma) \in (0,1)$,  $C^{\pm}_1, C^{\pm}_2$ depending on $a, \gamma, p$
-		and a universal constant $C_3>0$ such that the event $\overline E_\rho(x_0)$ of \ref{enum:very-good-criteria-1} \ref{enum:very-good-criteria-2} \ref{enum:very-good-criteria-3} satisfies 
+		There exists $a = a(b,p,\gamma,\boldsymbol{\alpha}_0,\beta^-) \in (0,1)$, constants $C^{\pm}_1, C^{\pm}_2>0$ depending on $a,\gamma,p,\boldsymbol{\alpha}_0,\beta^-$,
+		and a universal constant $C_3>0$ such that the event $\overline E_\rho(x_0)$ of \ref{enum:very-good-criteria-1}, \ref{enum:very-good-criteria-2}, and \ref{enum:very-good-criteria-3} satisfies 
 		\[
 		P\left[ \overline E_\rho(x_0) \right] \geq p ,\quad \forall \rho > 0,\quad \forall x_0 \mbox{ such that $\dist(\A_{\rho/4, 2 \rho}(x_0), \{0\}) \geq \rho/100$}
 		\]
-		for all $N_0 \geq N_1(b,p,\gamma) \geq 1$ sufficiently large. 
+		for all $N_0 \geq N_1(b,p,\gamma,\boldsymbol{\alpha}_0,\beta^-) \geq 1$ sufficiently large. 
 	\end{lemma}
 	
 	\begin{proof}
@@ -1460,14 +1518,18 @@
 	
 	We next show that if it is difficult for Brownian motion to get through a domain without
 	exiting ${\cluster{}{t}}$, then the odometer must be small within the domain. 
+	% CORRECTION [C63] Printed: Lemma 6.9 allowed an infinite boundary supremum multiplied by a zero exit probability; corrected by adding the finite-supremum premise needed for the maximum-principle comparison.
 	\begin{lemma} \label{lemma:harmonic-odometer-comparison} 
 		Let~$z \in B_1$, and let $A$ denote an open set in $B_1$ not containing~$z$.
-		For all $x \in A \cap {\cluster{z}{t}}$
+		For $x \in A \cap {\cluster{z}{t}}$, let $\Lambda^x_t$ be the connected component of $A \cap {\cluster{z}{t}}$ containing $x$. If
+		\[
+		\sup_{\partial A \cap \overline \Lambda^x_t} \odometer{z}{t}<\infty,
+		\]
+		then
 		\begin{equation}
 		\odometer{z}{t}(x) \leq \left( \sup_{\partial A \cap \overline \Lambda^x_t} \odometer{z}{t} \right)  \P[\mbox{$\mathcal{B}^x$ exits  $A$ before hitting  $A \backslash \Lambda^x_t$} | h] \, , 
 		\end{equation}
-		where $\mathcal{B}^x$ denotes an independent Brownian motion started at $x$ and $\Lambda^x_t$ 
-		is the connected component of $A \cap {\cluster{z}{t}}$ containing $x$. 
+		where $\mathcal{B}^x$ denotes an independent Brownian motion started at $x$. 
 	\end{lemma}
 	
 	\begin{proof}
@@ -1487,7 +1549,7 @@
 		\odometer{z}{t} = 0 \quad &\mbox{on $A \cap \partial {\cluster{z}{t}}$}.
 		\end{cases}
 		\end{equation}
-		Now, fix $x \in A \cap {\cluster{z}{t}}$ and consider $\Lambda^x_t$, the connected component of $A \cap {\cluster{z}{t}}$ containing $x$.  
+		Now, fix $x \in A \cap {\cluster{z}{t}}$ satisfying the finite-supremum premise and consider $\Lambda^x_t$, the connected component of $A \cap {\cluster{z}{t}}$ containing $x$.  
 		As $A \cap \Lambda^x_t$ is a connected component of $A \cap {\cluster{z}{t}}$, \eqref{eq:expression-for-fA} and \eqref{eq:expression-for-odometer}
 		show that 
 		\[
@@ -1711,8 +1773,9 @@
 	
 	We next show that an upper bound for the amount of mass in $\A_{\rho/2, d^+_j}(x_0)$ implies an upper bound for the odometer in $\A_{\rho/2, d^+_{j+1}}(x_0)$. This will be a key input in the induction argument in the proof of Lemma~\ref{lemma:very-good-annuli-satisfy-harnack-type-estimate}.
 	
+	% CORRECTION [C64] Printed: Lemma 6.13 assumed only that the annulus did not contain z; corrected because the component and odometer argument uses the whole closed ball and must stay inside B_1 away from the pole.
 	\begin{lemma} \label{lemma:low-mass-implies-small-odometer}
-		Let~$z \in B_1$, and fix an annulus $\A_{\rho/2,\rho}(x_0)$ not containing~$z$ for which \ref{enum:very-good-criteria-3} occurs
+		Let~$z \in B_1$, and fix $\rho>0$ and $x_0\in\C$ such that $\overline B_\rho(x_0)\subset B_1\setminus\{z\}$ and \ref{enum:very-good-criteria-3} occurs
 		with parameters $a,b \in (0,1)$, $N_0 \geq 200$, and universal constant $C_3 > 0$. Let the shell decomposition $\{S_j, d^+_j\}_{j \geq 0}$ be given by Lemma \ref{lemma:shell-decomposition} and let $\widetilde \Lambda_t$ be a connected component of ${\cluster{z}{t}} \cap B_{\rho}(x_0)$. 
 		For $j\geq 0$, let
 		\begin{equation} \label{eq:k-j-parameter}
@@ -2104,8 +2167,8 @@
 	
 	\begin{proof}[Proof of Propositions~\ref{prop:upper-bound} and~\ref{prop:continuity}]
 		Proposition~\ref{prop:upper-bound} follows immediately from Proposition~\ref{prop:upper-bound-polynomially-high-prob}. 
-		
-		The fact that the clusters continuously increase in $t$, \eqref{eq:continuity}, is implied by Proposition \ref{prop:continuity-of-clusters}. 
+	
+		The continuity assertion \eqref{eq:continuity} at times for which ${\cluster{z}{t}} \Subset B_1$ is Proposition \ref{prop:continuity-of-clusters}. 
 		We show here that Proposition \ref{prop:upper-bound-polynomially-high-prob} implies that the clusters decrease to the center point, \eqref{eq:contains-origin}. 
 		
 		By Proposition \ref{prop:lower-bound}, for each $t > 0$ and~$z \in B_{1/2}$ there exists $\epsilon(t) > 0$ so that $B_{\epsilon(t)}(z) \subset {\cluster{z}{t}}$.
@@ -4128,11 +4191,12 @@ centers.
 	\section{Obstacle problem for Radon measures} \label{sec:obstacle-appendix}
 	
 	In this appendix we provide the proofs which were omitted in Section \ref{subsec:basic-properties}. 
+	% CORRECTION [C65] Printed: both sides of the Appendix A volume-growth condition used beta^-; corrected because the upper bound uses beta^+.
 	For clarity, we prove these results for any Radon measure $\mu$ satisfying, for some $R > 0$,
 	\begin{equation} \label{eq:volume-growth}
-	r^{\beta^-} \leq \mu(B_r(z)) \leq r^{\beta^-} \quad \mbox{for all $z \in B_R$},
+	r^{\beta^-} \leq \mu(B_r(z)) \leq r^{\beta^+} \quad \mbox{for all $z \in B_R$},
 	\end{equation}
-	for some exponents $\beta^+, \beta^- > 0$, for all $r$ sufficiently small. This implies the results in Section \ref{subsec:basic-properties} as the Liouville measure is a.s.\ a Radon measure which satisfies \eqref{eq:volume-growth}. Indeed, this follows from Lemma~\ref{lemma:volume-growth} and the scaling properties of $h$ and $\mu_h$, namely~\eqref{eq:h-coordinate-change} and~\eqref{eq:measure-coord}.
+	for some exponents $\beta^+, \beta^- > 0$, for all $r$ sufficiently small.
 	
 	For $R > 0$, let 
 	\begin{equation} \label{eq:expected-exit-time}
@@ -4152,15 +4216,16 @@ centers.
 	
 	For notational simplicity, we consider $R = 1$ in all but the last subsection. We will also only consider the case where~$z$ is the origin.
 	
+	% CORRECTION [C66] Printed: the obstacle took values in R union {+infinity}, although beta_t(0)=-infinity; corrected to the negative extended value and an explicitly vacuous majorization condition at the pole.
 	\subsection{Definition} \label{subsec:obstacle-problem}
-	For $t > 0$,  denote the {\it obstacle} $\beta_t: \overline{B_1} \to \R \cup \{\infty\}$ as 
+	For $t > 0$, denote the {\it obstacle} $\beta_t: \overline{B_1} \to \R \cup \{-\infty\}$ by 
 	\begin{equation} \label{eq:obstacle}
 	\beta_t(x) = -t G_{B_1}(0,x) + q_{B_1}(x).
 	\end{equation}
-	The set of  {\it supersolutions} 
+	The set of {\it supersolutions}
 	is
 	\begin{equation} \label{eq:shifted-supersolutions}
-	\mclSshift{}{t} = \{ w \in C(\overline{B_1}) :  \Delta w \leq 0 \mbox{ in $B_1$}  \mbox{ and }  w \geq   \beta_t \mbox{ in $\overline{B_1}$}\},
+	\mclSshift{}{t} = \{ w \in C(\overline{B_1}) :  \Delta w \leq 0 \mbox{ in $B_1$}  \mbox{ and }  w \geq \beta_t \mbox{ in $\overline{B_1}\setminus\{0\}$}\},
 	\end{equation}
 	where $C(\overline{B_1})$ denotes the set of continuous functions on the closed unit ball.
 	
@@ -4391,8 +4456,9 @@ centers.
 	
 	
 	We then use this together with the definition of weak normal derivative to prove the desired claim. 
+	% CORRECTION [C67] Printed: the equality conclusion in Appendix A.5 used the LQG-specific measure mu_h; corrected to the arbitrary Radon measure mu fixed in the Appendix.
 	\begin{lemma} \label{lemma:appendix-conservation-of-mass}
-		For all $t > 0$, $\mu({\cluster{}{t}}) \leq t$. Moreover, if $\overline{{{\cluster{}{t}}}} \subset B_1$ and $\mu(\partial {\cluster{}{t}}) = 0$, then $\mu_h({\cluster{}{t}}) = t$.
+		For all $t > 0$, $\mu({\cluster{}{t}}) \leq t$. Moreover, if $\overline{{{\cluster{}{t}}}} \subset B_1$ and $\mu(\partial {\cluster{}{t}}) = 0$, then $\mu({\cluster{}{t}}) = t$.
 	\end{lemma}
 	
 	
@@ -4454,15 +4520,16 @@ centers.
 	
 	
 	
+	% CORRECTION [C68] Printed: Appendix A.6 left t free, allowed nonpositive s_1, and did not scope the selected s_2 as an arbitrary quantified radius; corrected to the well-defined positive-radius statement.
 	\begin{lemma} \label{lemma:appendix-cluster-compatibility}
 		Suppose \eqref{eq:volume-growth} is satisfied for fixed $R > 0$. 
-		For all $s_1 \leq R$, if, for some $s_2 \in [s_1, R]$, we have $\overline{\cluster{B_{s_2}}{t}} \subset B_{s_1}$, 
-		then  $\cluster{B_{s}}{t} = \cluster{B_{s_2}}{t}$ for all $s \in [s_1, R]$.
+		For every $t>0$, every $0<s_1 \leq R$, and every $s_2 \in [s_1, R]$, if $\overline{\cluster{B_{s_2}}{t}} \subset B_{s_1}$, 
+		then $\cluster{B_{s}}{t} = \cluster{B_{s_2}}{t}$ for every $s \in [s_1, R]$.
 	\end{lemma}
-	
+
 	\begin{proof}
-		Fix $R > 0$. Note that if \eqref{eq:volume-growth} is satisfied for $R$, then it is satisfied for all $s \leq R$.
-		meaning $\lss{B_s}{t} \in \mclS{B_s}{t}$ and \eqref{eq:laplacian-of-v-general} holds for $\odometer{B_s}{t}$ for all $s \leq R$.  Let $s_1 \leq R$ be given and fix $s_2 \in [s_1, R]$ for which we have $\overline{\cluster{B_{s_2}}{t}} \subset B_{s_1}$.
+		Fix $R > 0$ and $t>0$. Note that if \eqref{eq:volume-growth} is satisfied for $R$, then it is satisfied for all $s \leq R$,
+		meaning $\lss{B_s}{t} \in \mclS{B_s}{t}$ and \eqref{eq:laplacian-of-v-general} holds for $\odometer{B_s}{t}$ for all $s \leq R$. Let $0<s_1 \leq R$ be given and fix $s_2 \in [s_1, R]$ for which we have $\overline{\cluster{B_{s_2}}{t}} \subset B_{s_1}$.
 		
 		We first claim that
 		\begin{equation} \label{eq:monotonicity-domains}
