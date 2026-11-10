@@ -13,11 +13,15 @@ the metric of `h^α` is `weylScaling (𝔇 (hC ω)) ξ (-α log|·|)` for an LQG
 `f_z = h^ℂ - α log|·| - γ log|· - z| + γ log max(1, |·|)` (`campbellReferenceObs`). The identities are on `D × D`
 with the internal metric `internalMetric · D`, equality up to a positive constant `b`.
 
-Status: the statement only. Its proof needs (i) the Borel factor of section 4.1 (Gwynne-Miller, frozen; not yet
-written), (ii) the Cameron-Martin transfer of (18) to `h^α` (`cameronMartinFieldCertificateTransfer`,
-`FirstPass/S11j/CertificateTransfer.lean`, plus `LQGInternalMetricWeylAeMeasurableFrozen`), (iii) the countable
-reconstruction (22), (iv) the rooted identity (20) via `ae_root_rootedObs_eq_zero_of_obs_null` (RootedNull.lean) and
-`eq_of_local_internalMetric_agreement_off_point` (InternalDeletion.lean:328). Open; see notes/n2.md.
+Status: the statement only. Its proof needs (i) the fixed-metric decoder of the corrected frozen input
+`LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` (section 4.1; the retired unnormalised version was FALSE),
+(ii) the unrooted identity (18) for a fixed metric, `unrooted_identity_fixedMetric` (FirstPass/S11r/UnrootedFixed.lean,
+with the named universe-u shift axioms `LQGShiftAxiomI` / `LQGShiftAxiomIII`), (iii) the countable reconstruction (22)
+(`internalMetric_normalised_consistency`, Consistency.lean, hII proved), (iv) the rooted identity (20) via
+`ae_root_rootedObs_eq_zero_of_obs_null_noMeas` (RootedJoint.lean, weighted by `rootWeight`) and
+`eq_of_local_internalMetric_agreement_off_point` (InternalDeletion.lean). Quantifier note: the statement puts the decoder
+`m` before the metric `𝔇`; the fixed-metric decoder gives the statement for one metric assignment, so passing to all
+`𝔇` needs `LQGMetricExistenceUniqueness` (Proposed/LQG.lean:173). Open; see notes/n2.md.
 -/
 
 namespace HarmonicBalls
@@ -35,7 +39,9 @@ mean-zero observables of `D` to continuous functions on `D × D` such that:
   `m(obs_D h^α)` is a positive multiple of the internal metric of `h^α` on `D`, on `D × D`;
 * (20) rooted: for Lebesgue-a.e. root `z ∈ U`, the same holds with `obs_D f_z` and the metric of `f_z`, a.s.
 
-The positive constants may depend on `ω` (resp. on `z`), and the root quantifier is Lebesgue-a.e. (answer, section 4.2). -/
+The positive constants may depend on `ω` (resp. on `z`): the scalar is `b = b(z, ω)`, constant over all endpoint pairs
+`p ∈ D × D` (CHATGPT-n2-hII.md section 2.2; the rooted convention is correct). The root quantifier is Lebesgue-a.e.
+(answer, section 4.2). -/
 def LocalMetricReplacementStmt (γ ξ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) : Prop :=
   0 < γ → γ < 2 → 0 < r₁ → 0 < r₂ → closedBall c₁ r₁ ⊆ ball c₂ r₂ → (0 : ℂ) ∉ closedBall c₂ r₂ →
   ∃ m : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) →
