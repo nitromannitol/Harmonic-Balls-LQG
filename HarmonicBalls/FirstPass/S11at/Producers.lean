@@ -5,6 +5,9 @@ import HarmonicBalls.FirstPass.Frozen.S11i
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Proposed.DuplantierMillerSheffield
 import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
+import HarmonicBalls.FirstPass.S11u
+import HarmonicBalls.Proofs.Sec11.ClosureScales.CircleTestFubiniLimit
+import HarmonicBalls.Proofs.Sec8.CircleDensityContinuousLimit
 
 /-!
 # Producers of `hLen` and `hμ` for the rooted certificate (task fp-S11at-hLen-hmu-producers, q1)
@@ -959,5 +962,139 @@ theorem ae_exists_rootedLQGMeasure {Ω : Type*} [MeasurableSpace Ω] (P : Measur
   unfold IsLQGMeasure
   filter_upwards [hz] with ω hω
   exact hμz ω hω
+
+/-- The annular width parameter `η_j = (r/4) (1/2)^j` of the `j`-th explicit approximant. -/
+noncomputable def approxEta (r : ℝ) (j : ℕ) : ℝ := (r / 4) * (1 / 2 : ℝ) ^ j
+
+theorem approxEta_pos {r : ℝ} (hr : 0 < r) (j : ℕ) : 0 < approxEta r j := by
+  unfold approxEta; positivity
+
+theorem approxEta_le {r : ℝ} (hr : 0 < r) (j : ℕ) : approxEta r j ≤ r / 4 := by
+  unfold approxEta
+  exact mul_le_of_le_one_right (by positivity) (pow_le_one₀ (by norm_num) (by norm_num))
+
+/-- The explicit unit annular approximant `ψ_j` of the circle average at `(r, z)`: the density of
+`FirstPass/S11u` with annulus width `r * η_j`. -/
+noncomputable def circleApprox {r : ℝ} (hr : 0 < r) (z : ℂ) (j : ℕ) : ℂ → ℝ :=
+  unitCircleDensity r (r * approxEta r j) (mul_pos hr (approxEta_pos hr j)) z
+
+theorem integral_circleApprox {r : ℝ} (hr : 0 < r) (z : ℂ) (j : ℕ) :
+    ∫ x, circleApprox hr z j x = 1 :=
+  integral_unitCircleDensity hr.le (mul_pos hr (approxEta_pos hr j)) z
+
+theorem isTestFunction_circleApprox {r : ℝ} (hr : 0 < r) (z : ℂ) (j : ℕ) :
+    IsTestFunction univ (circleApprox hr z j) :=
+  isTestFunction_unitCircleDensity z hr (approxEta_pos hr j) (subset_univ _)
+
+/-- **A.s. convergence of the explicit annular approximants** (the argument of
+`wholePlaneCircleAverageLimit_derived`, with the explicit geometric widths). -/
+theorem ae_tendsto_circleApprox {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    ∀ᵐ ω ∂P, Tendsto (fun j => hC ω (circleApprox hr z j)) atTop (𝓝 (hcirc ω r z)) := by
+  have hD : ∀ j, MemLp (fun ω => hC ω (circleApprox hr z j) - hcirc ω r z) 2 P := by
+    intro j
+    have hp : MemLp (fun ω => hC ω (circleApprox hr z j)) 2 P :=
+      (hGFF.isGaussianProcess.hasGaussianLaw_eval
+        (⟨.pairing _, isTestFunction_circleApprox hr z j⟩ : GFFObservable.Admissible)).memLp (by simp)
+    have hz : MemLp (fun ω => hcirc ω r z) 2 P := (hGFF.hasGaussianLaw_circle hr z).memLp (by simp)
+    exact hp.sub hz
+  have hbound : ∀ j, ∫ ω, (hC ω (circleApprox hr z j) - hcirc ω r z) ^ 2 ∂P ≤
+      8 * (r / 4) / r * (1 / 2) ^ j := by
+    intro j
+    rw [integral_sq_pairing_sub_circle_eq_variance hGFF hr z _ (isTestFunction_circleApprox hr z j),
+      variance_pairing_sub_circle_eq hGFF hr z _ (isTestFunction_circleApprox hr z j)]
+    have hηr : approxEta r j ≤ r / 2 := (approxEta_le hr j).trans (by linarith)
+    have hc := abs_unitCircleDensity_covariance_combination (r := r) (δ := r * approxEta r j)
+      (η := approxEta r j) hr (mul_pos hr (approxEta_pos hr j)) (by linarith [approxEta_le hr j]) le_rfl z
+    have hl := log_add_sub_log_sub_le_four_mul hr (approxEta_pos hr j) hηr
+    refine le_trans (le_abs_self _) (le_trans hc ?_)
+    have hscale : 2 * (4 * approxEta r j / r) = 8 * (r / 4) / r * (1 / 2) ^ j := by
+      unfold approxEta
+      field_simp
+      ring
+    linarith
+  have hsum : Summable (fun j : ℕ => 8 * (r / 4) / r * (1 / 2 : ℝ) ^ j) :=
+    summable_geometric_two.mul_left _
+  filter_upwards [ae_tendsto_zero_of_summable_integral_sq
+    (fun j ω => hC ω (circleApprox hr z j) - hcirc ω r z) hD _ hsum hbound] with ω hω
+  exact tendsto_sub_nhds_zero_iff.mp hω
+
+/-- Continuous observables: the annular averages converge to the circle average, for any widths
+`δ_j → 0`. -/
+theorem tendsto_unitCircleDensity_mul_continuous {r : ℝ} (hr : 0 < r) {δ : ℕ → ℝ} (hδ : ∀ j, 0 < δ j)
+    (hsmall : ∀ η : ℝ, 0 < η → ∃ N : ℕ, ∀ j, N ≤ j → δ j ≤ r * η) (z : ℂ) {f : ℂ → ℝ}
+    (hf : Continuous f) :
+    Tendsto (fun j => ∫ x, unitCircleDensity r (δ j) (hδ j) z x * f x) atTop
+      (𝓝 (Real.circleAverage f z r)) := by
+  have hg : Continuous (Real.circleAverage f z) := by fun_prop
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  obtain ⟨κ, hκ, hk⟩ := Metric.continuousAt_iff.mp hg.continuousAt (ε / 2) (half_pos hε)
+  set η : ℝ := min κ (r / 2) with hηdef
+  have hη : 0 < η := lt_min hκ (by linarith)
+  have hηκ : η ≤ κ := min_le_left _ _
+  obtain ⟨N, hN⟩ := hsmall η hη
+  refine Filter.eventually_atTop.mpr ⟨N, fun j hj => ?_⟩
+  have hint := integral_normalized_circleDensity_eq_circleAverage hr.le (hδ j) z hf
+  have hb := circleDensityRadialWeight_integral_sub_le hr (hδ j) (hN j hj) (Real.circleAverage f z) hg
+    (ε := ε / 2) (by
+      intro ρ hρ
+      have hd : dist ρ r < κ := by
+        rw [Real.dist_eq]
+        linarith
+      have := hk hd
+      rw [Real.dist_eq] at this
+      exact this.le)
+  have hab := abs_le.mp hb
+  unfold unitCircleDensity
+  rw [Real.dist_eq, hint, abs_lt]
+  constructor <;> linarith [hab.1, hab.2]
+
+/-- Logarithmic observables: `∫ μ_j(x) log ‖x - w‖ → log max(r, ‖z - w‖)` for any widths `δ_j → 0`. -/
+theorem tendsto_unitCircleDensity_mul_log {r : ℝ} (hr : 0 < r) {δ : ℕ → ℝ} (hδ : ∀ j, 0 < δ j)
+    (hsmall : ∀ η : ℝ, 0 < η → ∃ N : ℕ, ∀ j, N ≤ j → δ j ≤ r * η) (z w : ℂ) :
+    Tendsto (fun j => ∫ x, unitCircleDensity r (δ j) (hδ j) z x * Real.log ‖x - w‖) atTop
+      (𝓝 (Real.log (max r ‖z - w‖))) := by
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  set η : ℝ := min (r / 2) (ε * r / 8) with hηdef
+  have hη : 0 < η := lt_min (by linarith) (by positivity)
+  have hηr : η ≤ r / 2 := min_le_left _ _
+  have hηε : η ≤ ε * r / 8 := min_le_right _ _
+  obtain ⟨N, hN⟩ := hsmall η hη
+  refine Filter.eventually_atTop.mpr ⟨N, fun j hj => ?_⟩
+  have hb := abs_circleDensity_log_potential_sub_circle_le hr (hδ j)
+    (lt_of_le_of_lt hηr (by linarith)) (hN j hj) z w
+  have hl := log_add_sub_log_sub_le_four_mul hr hη hηr
+  have h4 : 4 * η / r ≤ ε / 2 := by
+    rw [div_le_iff₀ hr]
+    nlinarith
+  unfold unitCircleDensity
+  rw [Real.dist_eq]
+  exact lt_of_le_of_lt (hb.trans (hl.trans h4)) (by linarith)
+
+/-- DMS-shifted observables: `∫ μ_j(x) f_{z'}(x) → ⨍_{∂B_r(z)} f_{z'}`, the circle average of the DMS shift. -/
+theorem tendsto_unitCircleDensity_mul_dmsShift {r : ℝ} (hr : 0 < r) {δ : ℕ → ℝ} (hδ : ∀ j, 0 < δ j)
+    (hsmall : ∀ η : ℝ, 0 < η → ∃ N : ℕ, ∀ j, N ≤ j → δ j ≤ r * η) (γ : ℝ) (z z' : ℂ) :
+    Tendsto (fun j => ∫ x, unitCircleDensity r (δ j) (hδ j) z x * dmsShift γ z' x) atTop
+      (𝓝 (Real.circleAverage (dmsShift γ z') z r)) := by
+  have hlog := tendsto_unitCircleDensity_mul_log hr hδ hsmall z z'
+  have hmax := tendsto_unitCircleDensity_mul_continuous hr hδ hsmall z (f := logMaxOne) continuous_logMaxOne
+  rw [HarmonicBalls.CircleTestFubini.circleAverage_dmsShift γ z' z hr]
+  refine Tendsto.congr (fun j => ?_) ((hlog.const_mul (-γ)).add (hmax.const_mul γ))
+  have e : ∀ x, unitCircleDensity r (δ j) (hδ j) z x * dmsShift γ z' x =
+      -γ * (unitCircleDensity r (δ j) (hδ j) z x * Real.log ‖x - z'‖) +
+        γ * (unitCircleDensity r (δ j) (hδ j) z x * logMaxOne x) := by
+    intro x
+    unfold dmsShift logMaxOne
+    rw [max_comm]
+    ring
+  have I1 : Integrable (fun x => unitCircleDensity r (δ j) (hδ j) z x * Real.log ‖x - z'‖) :=
+    integrable_unitCircleDensity_mul_log hr.le (hδ j) z z'
+  have I2 : Integrable (fun x => unitCircleDensity r (δ j) (hδ j) z x * logMaxOne x) :=
+    integrable_unitCircleDensity_mul hr.le (hδ j) z continuous_logMaxOne
+  simp only [e]
+  rw [integral_add (I1.const_mul (-γ)) (I2.const_mul γ), integral_const_mul, integral_const_mul]
 
 end FirstPassS11atProducers
