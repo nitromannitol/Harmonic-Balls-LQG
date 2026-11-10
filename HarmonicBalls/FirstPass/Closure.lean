@@ -25,6 +25,7 @@ Section 1 (main theorems; `FirstPass/Main.lean`)
 |---|---|---|---|
 | 1.1 `ExistenceUniquenessHarmonicBallsStmt` | `closure_1_1` (this file) | hL1 hWeyl hE1 hE3 hB (FROZEN); hDG hAff hCC hW hE hN (PROPOSED) | closed |
 | 1.2 `HarmonicBallNoveltyStmt` | `closure_1_2` (this file) | h13 = `manyPinchScales_of_corrected (closure_11_13 …)` (bridge, `Closure/Bridge12.lean`, z7, committed 96e95db); hStep8 `Step8IdentificationStmt` **OPEN** (inherited from `closure_11_13`); I2 `LQGVolumeGrowthAllScalesStmt` discharged in the proof by `volumeGrowthI2_of_staged` (`Closure/Sec11.lean:55`; no hI2 argument); hDG hAff hCC hW hE hN (PROPOSED); hL1 hWeyl hE1 hE3 hB, hCamp hDecFrozen hDec hCM, hAx `LQGMetricFieldAxiomsUnivFrozen` (FROZEN; supplies hmetricAxioms by specialisation), hTor (FROZEN) | conditional on OPEN hStep8 |
+| 1.2 faithful `HarmonicBallNoveltyFaithfulStmt` | `closure_1_2_faithful` (`Closure/Faithful12.lean`) | as `closure_1_2`; metric clause restricted to ξ = γ / `lqgGraphDimension γ` and radii 0 < s (operator 08:24 UTC); implied by `HarmonicBallNoveltyStmt` | conditional on OPEN hStep8, as `closure_1_2` |
 | 1.3 `HarmonicBallLocalSetStmt` | `closure_1_3` (this file) | I2 `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`) discharged in the proof by `volumeGrowthI2_of_staged` (`Closure/Sec11.lean:55`; no hI2 argument); hmeasure `LQGMeasureLocality` (PROPOSED); hDG hCC hW hE hN (PROPOSED); closure_8_2 inputs (FROZEN, PROPOSED) | closed |
 
 Section 2
