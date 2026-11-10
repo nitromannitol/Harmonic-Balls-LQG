@@ -6,6 +6,10 @@ import HarmonicBalls.FirstPass.S11x
 import HarmonicBalls.FirstPass.Closure.Sec6
 import HarmonicBalls.FirstPass.Closure.SecA45
 import HarmonicBalls.FirstPass.Closure.Sec78910
+import HarmonicBalls.FirstPass.S11d
+import HarmonicBalls.FirstPass.S11h.PinchCertificateProof11_17
+import HarmonicBalls.FirstPass.S11k.FirstLExterior
+import HarmonicBalls.FirstPass.S11m.Final11_12
 
 /-!
 # Closure of the counted Section 11 results (fp-closure-11, owner z11)
@@ -20,6 +24,10 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 |---|---|---|
 | 11.7 (`ManyConeBadScalesStmt`, corrected, `HarmonicBalls.S11c.firstPass_11_7`) | `closure_11_7` | hDG, hCC, hE, hNA (Proposed); hCamp, hDecFrozen, hDec, hCM (FROZEN) |
 | 11.8 (`ConeBadEventProbabilityStmt`) | `closure_11_8` | hDG, hCC, hE (Proposed) |
+| 11.9 (`SmallMetricDiameterLargeMassStmt`) | `closure_11_9` | frozen, Proposed and cited inputs of 11.9 and 11.10 |
+| 11.12 (`CorrectedLemma11_12Stmt`, z4) | `closure_11_12` | z4 inputs; hgrowth (I2) OPEN per z4 notes; hN2 kept (operator 04:48) |
+| 11.16 (`PinchSecondEventFaithfulStmt`, corrected) | `closure_11_16` | closures 11.15 and 11.9; FROZEN; hholder (cited); Proposed hEx, hWeyl, hNa0, hNa |
+| 11.17 (`PinchThirdEventFaithfulStmt`, corrected) | `closure_11_17` | closure 11.16; hN2 (FROZEN) |
 | 11.11 (`HarmonicBallNotMetricBallStmt`) | `closure_11_11` | closure_11_6 hypotheses; h13 = printed ManyPinchScalesStmt **OPEN**; hmetricAxioms (Proposed) |
 | 11.2 (`HarmonicBallNotLipschitzStmt`) | `closure_11_2` | as closure_11_5 |
 | 11.5 (`NoConeConditionStmt`) | `closure_11_5` | closure_11_6 and closure_11_7 hypotheses; hI2 (see notes) |
@@ -29,7 +37,7 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 | 11.14 (`PinchEventMetricBallConsequenceStmt`) | `closure_11_14` | hAx (FROZEN) |
 | 11.15 (`PinchFirstEventFaithfulStmt`, corrected) | `closure_11_15` | hCM, hMet, hWSC, haxioms (FROZEN); hAff (Proposed); `hEx` discharged by `lqgMetricExponentPositive_of_inputs` (`FirstPass/S11x.lean:94`), with `hExists` (FROZEN) |
 
-Blocked by a name clash (not closed here): 11.9, 11.12, 11.16, 11.17 need the 11.9 chain (FirstPass/S11d.lean) and the 11.10 chain (FirstPass/S11c.lean) in one environment, but both declare HarmonicBalls.exists_measurable_exterior_bound (S11c/ExteriorBound.lean:93 and S11d/MeasurableExterior.lean:22). 11.11 is closed modulo the OPEN printed Lemma 11.13 (ManyPinchScalesStmt, h13).
+Status: 11.9, 11.12, 11.16, 11.17 added after the S11c/S11d name clash was resolved (commit 6d75c22 renames the S11d declaration to exists_measurable_internal_metric_bound). 11.11 is closed modulo the OPEN printed Lemma 11.13 (h13); 11.12 modulo the OPEN input I2 (hgrowth) and the inputs listed in its docstring.
 -/
 
 namespace HarmonicBalls.Closure
@@ -238,5 +246,134 @@ theorem closure_11_11
         IsWholePlaneGFF P hC hcirc → LQGMetricFieldAxioms P γ ξ α₀ hC hcirc) :
     HarmonicBallNotMetricBallStmt.{u} :=
   firstPass_11_11 (closure_11_6 hI2 hAff hDG hCC hE hW hN hL1 hWeyl hE1 hE3 hB) h13 hI2 hmetricAxioms
+
+/-- **Closure of Proposition 11.9** (`SmallMetricDiameterLargeMassStmt`, `firstPass_11_9`). Its paper-owned hypothesis
+`SmallMetricDiameterLargeMassSquareStmt` (Lemma 11.10) is discharged by `closure_11_10`. -/
+theorem closure_11_9
+    (hCM : CameronMartinGFFMutualAbsCont.{u}) (hWSC : WeylScalingCompositionFrozen.{u})
+    (hMet : LQGInternalMetricWeylAeMeasurableFrozen.{u}) (hMass : LQGMassFunctionalMeasurableFrozen.{u})
+    (hShift : LQGMetricContinuousShiftFactI.{u}) (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hDC : DyadicCellDiamSmallFrozen.{u}) (hCMT : CameronMartinEventTransferFrozen.{u})
+    (hPos : LQGMeasureSquarePositiveFrozen.{u}) (hMassM : LQGMeasureSquareMeasurableFrozen.{u})
+    (hSupM : LQGMetricSupMeasurableFrozen.{u}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{u})
+    (hW : WeylInternalClosedFrozen)
+    (hM1 : WeylShiftedSupMeasurableFrozen.{u}) (hM2 : WeylShiftedMassMeasurableFrozen.{u}) :
+    SmallMetricDiameterLargeMassStmt.{u} :=
+  firstPass_11_9 hCM hWSC hMet hMass hShift hFD
+    (fun γ ξ α₀ Ω _ P hC hcirc => hAx Ω P γ ξ α₀ hC hcirc)
+    (closure_11_10 hDC hCMT hPos hMassM hSupM hFin hW hShift hM1 hM2 hAx)
+
+/-- **Closure of Lemma 11.16, corrected form** (`PinchSecondEventFaithfulStmt`, `firstPass_11_16_corrected`). Its
+paper-owned hypotheses are discharged: `PinchFirstEventFaithfulStmt` by `closure_11_15` and
+`SmallMetricDiameterLargeMassStmt` by `closure_11_9`. Remaining: FROZEN inputs, the cited `GreenPotentialHolderStmt`
+(Proposition 2.5, Green clause), and the Proposed inputs `hEx`, `hWeyl`, `hNa0`, `hNa`. -/
+theorem closure_11_16
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
+    (hholder : GreenPotentialHolderStmt.{u})
+    (hEx : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hWeyl : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hNa0 : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ 0 hC hcirc)
+    (hNa : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hCM : CameronMartinGFFMutualAbsCont.{u}) (hWSC : WeylScalingCompositionFrozen.{u})
+    (hMet : LQGInternalMetricWeylAeMeasurableFrozen.{u}) (hExists : WholePlaneGFFExistsFrozen.{0})
+    (hAff : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hMass : LQGMassFunctionalMeasurableFrozen.{u}) (hShift : LQGMetricContinuousShiftFactI.{u})
+    (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
+    (hDC : DyadicCellDiamSmallFrozen.{u}) (hCMT : CameronMartinEventTransferFrozen.{u})
+    (hPos10 : LQGMeasureSquarePositiveFrozen.{u}) (hMassM : LQGMeasureSquareMeasurableFrozen.{u})
+    (hSupM : LQGMetricSupMeasurableFrozen.{u}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{u})
+    (hW : WeylInternalClosedFrozen)
+    (hM1 : WeylShiftedSupMeasurableFrozen.{u}) (hM2 : WeylShiftedMassMeasurableFrozen.{u})
+    (hM : LQGMassInnerMeasurableFrozen.{u}) (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{u}) :
+    PinchSecondEventFaithfulStmt.{u} :=
+  firstPass_11_16_corrected hAx hK1 hholder hEx hWeyl hNa0 hNa
+    (closure_11_15 hCM hMet hWSC hExists hAff hAx)
+    (closure_11_9 hCM hWSC hMet hMass hShift hFD hAx hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2)
+    hM hDiam hMk
+
+/-- **Closure of Lemma 11.17, corrected form** (`PinchThirdEventFaithfulStmt`, `firstPass_11_17_corrected`). Its
+paper-owned hypothesis `PinchSecondEventFaithfulStmt` (Lemma 11.16) is discharged by `closure_11_16`; the other
+hypotheses are FROZEN (`hN2 : WeylScaledEuclideanFrozen`) or those of 11.16. -/
+theorem closure_11_17
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
+    (hholder : GreenPotentialHolderStmt.{u})
+    (hEx : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hWeyl : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hNa0 : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ 0 hC hcirc)
+    (hNa : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hCM : CameronMartinGFFMutualAbsCont.{u}) (hWSC : WeylScalingCompositionFrozen.{u})
+    (hMet : LQGInternalMetricWeylAeMeasurableFrozen.{u}) (hExists : WholePlaneGFFExistsFrozen.{0})
+    (hAff : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hMass : LQGMassFunctionalMeasurableFrozen.{u}) (hShift : LQGMetricContinuousShiftFactI.{u})
+    (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
+    (hDC : DyadicCellDiamSmallFrozen.{u}) (hCMT : CameronMartinEventTransferFrozen.{u})
+    (hPos10 : LQGMeasureSquarePositiveFrozen.{u}) (hMassM : LQGMeasureSquareMeasurableFrozen.{u})
+    (hSupM : LQGMetricSupMeasurableFrozen.{u}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{u})
+    (hW : WeylInternalClosedFrozen)
+    (hM1 : WeylShiftedSupMeasurableFrozen.{u}) (hM2 : WeylShiftedMassMeasurableFrozen.{u})
+    (hM : LQGMassInnerMeasurableFrozen.{u}) (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{u})
+    (hN2 : WeylScaledEuclideanFrozen) :
+    PinchThirdEventFaithfulStmt.{u} :=
+  firstPass_11_17_corrected
+    (closure_11_16 hAx hK1 hholder hEx hWeyl hNa0 hNa hCM hWSC hMet hExists hAff hMass hShift hFD
+      hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2 hM hDiam hMk)
+    hAx hCM hWSC hMet hMass hK1 hN2
+
+
+/-- **Closure of Lemma 11.12, corrected form** (`CorrectedLemma11_12Stmt`, `HarmonicBalls.S11m.Final11_12.firstPass_11_12_of_inputs`,
+z4). The paper-owned hypothesis `SmallMetricDiameterLargeMassStmt` (Proposition 11.9) is discharged by `closure_11_9`.
+Remaining: the FROZEN inputs of z4's theorem; the Proposed inputs `LQGMeasureWeylScaling` (hμW), `LQGMeasureNonatomicAll`
+(hNonat), `LQGMeasureExistence` at alpha0 = 0 (hEx), `WholePlaneGFFAffineInvariance` (hAff); the cited
+`GreenPotentialHolderStmt` (hholder); hN2 (`LocalMetricReplacementStmt`, kept as an input per the operator note of 04:48);
+and hgrowth (`LQGVolumeGrowthAllScalesStmt`, input I2, classed OPEN in z4's notes). -/
+theorem closure_11_12
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hLen : LQGMetricLengthUnivFrozen.{u})
+    (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
+      LocalMetricReplacementStmt.{u} γ ξ c₁ c₂ r₁ r₂)
+    (hμW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ α₀ hC hcirc)
+    (hLoc : LocalLQGDecoderCommonFrozen.{u})
+    (hCanon : LQGCanonicalDecodersExistStmt.{u})
+    (hNonat : HarmonicBalls.S11n.MeasureDecoder.LQGMeasureNonatomicAll.{u})
+    (hEx : ∀ (γ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
+    (hAff : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hExists : WholePlaneGFFExistsFrozen.{0})
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
+    (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u})
+    (hmass : LQGMassFunctionalMeasurableFrozen.{u})
+    (hCMAbs : CameronMartinGFFMutualAbsCont.{u})
+    (hCMRew : HarmonicBalls.S11aj.CameronMartinGFFReweighting.{u})
+    (hComp : WeylScalingCompositionFrozen.{u})
+    (hMf : LQGMassInnerMeasurableFrozen.{u})
+    (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u})
+    (hMk : DomainMarkovConditionalPositiveFrozen.{u})
+    (hholder : GreenPotentialHolderStmt.{u})
+    (hShift : LQGMetricContinuousShiftFactI.{u}) (hFD : PlaneDomainMinusConvexCompactPreconnectedFrozen)
+    (hDC : DyadicCellDiamSmallFrozen.{u}) (hCMT : CameronMartinEventTransferFrozen.{u})
+    (hPos10 : LQGMeasureSquarePositiveFrozen.{u}) (hMassM : LQGMeasureSquareMeasurableFrozen.{u})
+    (hSupM : LQGMetricSupMeasurableFrozen.{u}) (hFin : ConnectedSquareUnionDiamFiniteFrozen.{u})
+    (hW : WeylInternalClosedFrozen)
+    (hM1 : WeylShiftedSupMeasurableFrozen.{u}) (hM2 : WeylShiftedMassMeasurableFrozen.{u}) :
+    CorrectedLemma11_12Stmt.{u} :=
+  HarmonicBalls.S11m.Final11_12.firstPass_11_12_of_inputs hAx hLen hN2 hμW hLoc hCanon hNonat hEx hAff hExists
+    hgrowth hfr hmass hCMAbs hCMRew hComp
+    (closure_11_9 hCMAbs hComp hfr hmass hShift hFD hAx hDC hCMT hPos10 hMassM hSupM hFin hW hM1 hM2)
+    hMf hDiam hMk hholder
 
 end HarmonicBalls.Closure
