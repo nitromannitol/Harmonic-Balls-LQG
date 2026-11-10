@@ -8,6 +8,7 @@ import HarmonicBalls.Steps.Sec11.WeylLocality
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 import HarmonicBalls.Steps.Sec11.MetricArcLength
 import HarmonicBalls.Proposed.LQG
+import HarmonicBalls.FirstPass.S11aa
 
 /-!
 # The unrooted identity (18) for a fixed metric assignment (fp-S11r part (b) P3, owner n2)
@@ -27,8 +28,7 @@ Proof (Cameron-Martin, the paper's sentence "a smooth compactly supported functi
 4. The observation of `h^α` is that of `h^ℂ + f` (`localMeanZeroObs_eq_addFunPairing`), and the internal metric of
    `𝔇 (h^ℂ + f)` on `D` is that of the Weyl scaling by `-α log|·|` on `D` (`internalMetric_weylScaling_eq_of_eqOn`).
 
-Named hypotheses, pending the universe lift (operator 02:12 UTC, task fp-S11aa): `LQGShiftAxiomI` and
-`LQGShiftAxiomIII` restate axioms I and III of `IsLQGMetric.satisfiesLQGMetricAxioms` at universe `u`. The length
+Axioms I and III at universe `u` are `FirstPassS11aa.ae_isEuclideanLengthMetric_universe` and `FirstPassS11aa.ae_weylScaling_universe` (task fp-S11aa, commit b44b873). The length
 property of `h^α` is item I of the Proposed `LQGMetricFieldAxioms` (Proposed/LQG.lean, pending source-check).
 -/
 
@@ -38,25 +38,6 @@ open MeasureTheory Set Metric
 open scoped ENNReal
 
 universe u
-
-/-- NAMED HYPOTHESIS (universe-`u` form of axiom I of `IsLQGMetric.satisfiesLQGMetricAxioms`, pending the lift of task
-fp-S11aa, operator 02:12 UTC): for a continuous deterministic shift `f`, almost surely `𝔇 (h^ℂ + f)` is a Euclidean
-length metric. -/
-def LQGShiftAxiomI (γ ξ : ℝ) : Prop :=
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (f : ℂ → ℝ),
-    IsWholePlaneGFF P hC hcirc → IsLQGMetric γ ξ 𝔇 → Continuous f →
-    ∀ᵐ ω ∂P, IsEuclideanLengthMetric (𝔇 (addFunPairing (hC ω) f))
-
-/-- NAMED HYPOTHESIS (universe-`u` form of axiom III of `IsLQGMetric.satisfiesLQGMetricAxioms`, pending the lift of task
-fp-S11aa, operator 02:12 UTC): almost surely, for every continuous `f`, the metric of `h^ℂ + f` is the Weyl scaling by `f`
-of the metric of `h^ℂ`. -/
-def LQGShiftAxiomIII (γ ξ : ℝ) : Prop :=
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ),
-    IsWholePlaneGFF P hC hcirc → IsLQGMetric γ ξ 𝔇 →
-    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → ∀ x y : ℂ,
-      ENNReal.ofReal (𝔇 (addFunPairing (hC ω) f) x y) = weylScaling (𝔇 (hC ω)) ξ f x y
 
 /-- A Euclidean length metric is nonnegative (symmetry, triangle inequality and `D x x = 0`). -/
 theorem euclidLength_nonneg {E : ℂ → ℂ → ℝ} (hE : IsEuclideanLengthMetric E) (x y : ℂ) : 0 ≤ E x y := by
@@ -95,7 +76,6 @@ theorem unrooted_identity_fixedMetric
     {γ ξ : ℝ} (hB1 : LocalLQGMetricNormalizedMeasurableFixedMetricFrozen.{u})
     (hCM : CameronMartinGFFMutualAbsCont.{u})
     (hPhi : LQGInternalMetricWeylAeMeasurableFrozen.{u})
-    (hShiftI : LQGShiftAxiomI.{u} γ ξ) (hShiftIII : LQGShiftAxiomIII.{u} γ ξ)
     (hFA : ∀ α : ℝ, α < lqgQ γ → ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α hC hcirc)
     (hγ0 : 0 < γ) (hγ2 : γ < 2) {c : ℂ} {r : ℝ} (hr : 0 < r) (h0 : (0 : ℂ) ∉ closedBall c r)
@@ -132,7 +112,7 @@ theorem unrooted_identity_fixedMetric
   have hPhiVal : ∀ (q : ↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ))) (g : ℂ → ℝ), Continuous g → ∀ᵐ ω ∂P,
       Φ q (addFunPairing (hC ω) g) = internalMetric (𝔇 (addFunPairing (hC ω) g)) (ball c r) q.1.1 q.1.2 := by
     intro q g hg
-    filter_upwards [hΦid q g hg, hShiftI Ω P hC hcirc 𝔇 g hGFF h𝔇 hg] with ω h1 h2
+    filter_upwards [hΦid q g hg, FirstPassS11aa.ae_isEuclideanLengthMetric_universe h𝔇 hGFF g hg] with ω h1 h2
     rw [h1]
     have hfun : (fun x y => (weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ
         (fun z => -(0 : ℝ) * Real.log ‖z‖) x y).toReal) = 𝔇 (addFunPairing (hC ω) g) := by
@@ -177,9 +157,9 @@ theorem unrooted_identity_fixedMetric
   have hqΦ : ∀ᵐ ω ∂P, ∀ q ∈ Q, Φ q (addFunPairing (hC ω) f) =
       internalMetric (𝔇 (addFunPairing (hC ω) f)) (ball c r) q.1.1 q.1.2 :=
     (ae_ball_iff hQc).2 fun q _ => hPhiVal q f hfc
-  have hEI := hShiftI Ω P hC hcirc 𝔇 f hGFF h𝔇 hfc
-  have hE0 := hShiftI Ω P hC hcirc 𝔇 (0 : ℂ → ℝ) hGFF h𝔇 continuous_zero
-  have hIII := hShiftIII Ω P hC hcirc 𝔇 hGFF h𝔇
+  have hEI := FirstPassS11aa.ae_isEuclideanLengthMetric_universe h𝔇 hGFF f hfc
+  have hE0 := FirstPassS11aa.ae_isEuclideanLengthMetric_universe h𝔇 hGFF (0 : ℂ → ℝ) continuous_zero
+  have hIII := FirstPassS11aa.ae_weylScaling_universe h𝔇 hGFF
   have hFI := ((hFA α hα Ω P hC hcirc) hGFF hγ0 hγ2 hα 𝔇 h𝔇).1
   filter_upwards [hadd, hqΦ, hEI, hE0, hIII, hFI] with ω hωB hωq hωE hωE0 hωIII hωF
   rw [addFunPairing_zero_fun] at hωE0
