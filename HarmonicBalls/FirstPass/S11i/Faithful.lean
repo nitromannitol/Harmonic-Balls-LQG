@@ -1,6 +1,7 @@
 import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Draft.Section6
 import HarmonicBalls.FirstPass.S11h.Faithful
+import HarmonicBalls.FirstPass.S11h.LocalEvents
 
 /-!
 # Faithful forms of Lemmas 11.12 and 11.13 (corrected paper), first pass fp-S11i (owner n3)
@@ -52,9 +53,14 @@ theorem localModConstField_measurable {Ω : Type*} (α : ℝ) (hC : Ω → (ℂ 
 /-- Lemma 11.12 in the corrected form (`[C43]`, corrected paper lines 3236-3244). For every buffered geometry, `γ`,
 `ξ`, `M > 0` there is one measurable rule `E` on the local field modulo constants on `B₇(0)`, such that for every
 `α < Q = lqgQ γ` and every model: `E^α(M)` is `σ(h^α|_{B₇})`-measurable modulo constants, `P[E^α(M)] > 0`, and
-`E^α(M) ⊆ Ĝ₁^{h^α}(0; M)` almost surely (Euclidean radius one, centre zero). -/
+`E^α(M) ⊆ Ĝ₁^{h^α}(0; M)` almost surely (Euclidean radius one, centre zero).
+
+The geometry hypothesis `{0} ∪ ∂B₅ ⊆ pinchOmegaGeom W Q δ₀` (the component `Ω_geom` of `0` in `B₇ \ (…)`, which must
+contain the origin and the circle `∂B₅`) is the corrected-paper clause of corrected paper lines 3186-3199, added by the
+operator ruling R1 (02:20 UTC). It is not part of `IsBufferedPinchGeometry`, which is unchanged. -/
 def CorrectedLemma11_12Stmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+  insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 → ∀ M : ℝ, 0 < M →
   ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), MeasurableSet E ∧
   ∀ α : ℝ, α < lqgQ γ →

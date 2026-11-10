@@ -69,6 +69,7 @@ Lemma 11.12 for one realization and the model-independence of the canonical law.
 Lemma 11.12 (measurable) and `0 < P(A_F)` for every whole-plane GFF realization `P` (write-up (17)-(18)). -/
 theorem certificate_canonical_pos (hCert : CorrectedLemma11_12Stmt.{u})
     (U V W T Q' Q : Set ℂ) (δ₀ : ℝ) (hgeom : IsBufferedPinchGeometry U V W T Q' Q δ₀)
+    (hOmega : insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀)
     {γ ξ M : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hM : 0 < M)
     (hmodel : ∃ (Ω₀ : Type u) (_ : MeasurableSpace Ω₀) (P₀ : Measure Ω₀) (_ : IsProbabilityMeasure P₀)
       (hC₀ : Ω₀ → (ℂ → ℝ) → ℝ) (hcirc₀ : Ω₀ → ℝ → ℂ → ℝ) (μ₀ : Ω₀ → Measure ℂ) (D₀ : Ω₀ → ℂ → ℂ → ℝ),
@@ -78,7 +79,7 @@ theorem certificate_canonical_pos (hCert : CorrectedLemma11_12Stmt.{u})
       ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
         (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
         0 < (P {ω | ballRestrictPairing 7 (alphaCanon γ hC ω) ∈ E}).toReal := by
-  obtain ⟨E, hEm, hEclause⟩ := hCert U V W T Q' Q δ₀ hgeom γ ξ hγ0 hγ2 M hM
+  obtain ⟨E, hEm, hEclause⟩ := hCert U V W T Q' Q δ₀ hgeom hOmega γ ξ hγ0 hγ2 M hM
   refine ⟨E, hEm, ?_⟩
   intro Ω _ P _ hC hcirc hGFF
   obtain ⟨Ω₀, mΩ₀, P₀, hP₀, hC₀, hcirc₀, μ₀, D₀, hGFF₀, hμ₀, hD₀⟩ := hmodel

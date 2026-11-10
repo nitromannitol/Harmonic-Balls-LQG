@@ -39,6 +39,7 @@ three auxiliary events of the true pair `(μ, D)` hold. The one-sided form is eq
 `notes/fp-gaps/CHATGPT-K1-proof-z4-F4.md`. -/
 def PinchLocalCertificateStmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
+  insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ →
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ M : ℝ, 0 < M →
   ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), MeasurableSet E ∧
   ∀ α : ℝ, α < lqgQ γ →
@@ -53,6 +54,7 @@ def PinchLocalCertificateStmt : Prop :=
 `0 < ξ`. This is an intermediate statement; the full statement is `CorrectedLemma11_12Stmt`. -/
 def CorrectedLemma11_12PosXiStmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
+  insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
   ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ M : ℝ, 0 < M →
   ∃ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), MeasurableSet E ∧
   ∀ α : ℝ, α < lqgQ γ →
@@ -72,8 +74,8 @@ theorem firstPass_11_12_corrected_posXi_of_cert
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
     (hCert : PinchLocalCertificateStmt.{u}) :
     CorrectedLemma11_12PosXiStmt.{u} := by
-  intro U V W T Q' Q δ hgeo γ ξ hγ hγ2 hξ M hM
-  obtain ⟨E, hEm, hE⟩ := hCert U V W T Q' Q δ hgeo γ ξ hγ hγ2 hξ M hM
+  intro U V W T Q' Q δ hgeo hOmega γ ξ hγ hγ2 hξ M hM
+  obtain ⟨E, hEm, hE⟩ := hCert U V W T Q' Q δ hgeo hOmega γ ξ hγ hγ2 hξ M hM
   refine ⟨E, hEm, ?_⟩
   intro α hα Ω _ P hC hcirc μ D hgff hμ hD
   obtain ⟨hSpos, hincl⟩ := hE α hα Ω P hC hcirc μ D hgff hμ hD
@@ -101,10 +103,10 @@ theorem firstPass_11_12_corrected
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
     (hCert : PinchLocalCertificateStmt.{u}) (hXi : LQGMetricExponentPositive) :
     CorrectedLemma11_12Stmt.{u} := by
-  intro U V W T Q' Q δ₀ hgeo γ ξ hγ hγ2 M hM
+  intro U V W T Q' Q δ₀ hgeo hOmega γ ξ hγ hγ2 M hM
   rcases lt_or_ge 0 ξ with hξ | hξ
   · obtain ⟨E, hEm, hE⟩ :=
-      firstPass_11_12_corrected_posXi_of_cert hAx hCert U V W T Q' Q δ₀ hgeo γ ξ hγ hγ2 hξ M hM
+      firstPass_11_12_corrected_posXi_of_cert hAx hCert U V W T Q' Q δ₀ hgeo hOmega γ ξ hγ hγ2 hξ M hM
     exact ⟨E, hEm, hE⟩
   · refine ⟨∅, MeasurableSet.empty, ?_⟩
     intro α _ Ω _ P hC hcirc μ D _ _ hD
