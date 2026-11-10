@@ -65,7 +65,7 @@ theorem ae_href_of_covariance {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω
       FirstPassS11i.CertificateEvent (Dμ L) (Dd L) Ostar U V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ F)
     (hCov : FirstPassS11at.RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ Set.univ
       Ostar U V W T Q' Q η M (AdmissibleRootShift α₀) rootRadius
-      (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd) :
+      (FirstPassS11at.decodedRootMeasure κ γ α₀ hC) (FirstPassS11at.decodedRootMetric m γ α₀ hC) Dμ Dd) :
     ∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball c₁ r₁ → ∀ᵐ ω ∂P,
       campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z ∉
         ReferenceNullS11i.refBadWindowSet (localCertSeq κ m Ostar U V W T Q' Q η M)

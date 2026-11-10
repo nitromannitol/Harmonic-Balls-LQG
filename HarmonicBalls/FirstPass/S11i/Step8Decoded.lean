@@ -60,7 +60,7 @@ theorem ae_unitScale_of_decoded_ball {Ω : Type u} [MeasurableSpace Ω] {P : Mea
       CertificateEvent (Dμ L) (Dd L) Ostar U' V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ F)
     (hCov : RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ Set.univ
       Ostar U' V W T Q' Q η M (AdmissibleRootShift α₀) rootRadius
-      (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd)
+      (FirstPassS11at.decodedRootMeasure κ γ α₀ hC) (FirstPassS11at.decodedRootMetric m γ α₀ hC) Dμ Dd)
     (hmeas : ∀ n, Measurable (localCertSeq κ m Ostar U' V W T Q' Q η M n))
     {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (hL : IsLQGMetric γ ξ 𝔇)
     (hFact : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)
