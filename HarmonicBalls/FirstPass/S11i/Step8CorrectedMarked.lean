@@ -1,6 +1,8 @@
 import Mathlib
 import HarmonicBalls.FirstPass.S11i.Step8TransferMarked
 import HarmonicBalls.FirstPass.S11i.ReferenceNull
+import HarmonicBalls.FirstPass.S11r.MarkedObs
+import HarmonicBalls.FirstPass.S11i.AnnularWeylAbsCont
 
 /-!
 # Corrected marked transfer with a zero-insertion DMS measure (Step 8, fp-S11i-11-13f, n3)
@@ -100,6 +102,33 @@ theorem ae_marked_local_transfer {Ω : Type u} [MeasurableSpace Ω] {P : Measure
   rw [ae_restrict_iff' measurableSet_ball] at h2
   exact h2
 
+/-- **Corrected marked transfer with the landed inputs (Step 8, fp-S11i-11-13f round 63).** Same conclusion as
+`ae_marked_local_transfer`; its two named inputs are discharged by landed lemmas:
+* the mean-zero identity `hDshift` is `campbellMarkedObs_dmsShiftedPairing` (n2, `S11r/MarkedObs.lean`);
+* the absolute continuity `hac` is `insertedMeasure_ac_zeroInsertion_on_unitBall` (`S11i/AnnularWeylAbsCont.lean`),
+  which uses the frozen Weyl relation `hWeyl` (`Frozen/S8c.lean:73`).
+Remaining inputs: the frozen DMS marked identity `hA10` for the zero-insertion measure `μ0`; `hμ0`, `hμα`; the atom-at-zero
+hypotheses `hNon0` (forwarded to the binder `_hNon0` of the absolute continuity lemma, which does not use it) and `hNonα`;
+the measurable local failure set `Bad` and the reference-observation statement `href`. -/
+theorem ae_marked_local_transfer_landed {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
+    (γ α₀ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (D : Set ℂ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (μ0 μα : Ω → Measure ℂ)
+    (hA10 : DMSLemmaA10WholePlaneMarked P γ hC hcirc μ0)
+    (hGFF : IsWholePlaneGFF P hC hcirc)
+    (hμ0 : IsLQGMeasureOfField P γ 0 hcirc μ0) (hμα : IsLQGMeasureOfField P γ α₀ hcirc μα)
+    (hNon0 : ∀ᵐ ω ∂P, μ0 ω {0} = 0) (hNonα : ∀ᵐ ω ∂P, μα ω {0} = 0)
+    (Bad : Set (ℂ × ({φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ))) (hBad : MeasurableSet Bad)
+    (href : ∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (0 : ℂ) 1 →
+      ∀ᵐ ω ∂P, campbellReferenceObs γ α₀ D (hC ω) z ∉ Bad) :
+    ∀ᵐ ω ∂P, ∀ᵐ z ∂(μα ω), z ∈ ball (0 : ℂ) 1 → campbellMarkedObs α₀ D (hC ω) z ∉ Bad := by
+  have hac := HarmonicBalls.FirstPassS11iAnnularWeylAbsCont.insertedMeasure_ac_zeroInsertion_on_unitBall
+    hWeyl P γ α₀ hC hcirc μ0 μα hGFF hγ0 hγ2 hα hμ0 hμα hNon0 hNonα
+  exact ae_marked_local_transfer γ α₀ D μ0 μα hA10 hGFF hμ0
+    (fun D' T z h10 => campbellMarkedObs_dmsShiftedPairing γ α₀ D' T z h10) Bad hBad href hac
+
 end HarmonicBalls.FirstPassS11iStep8Corrected
 
 #print axioms HarmonicBalls.FirstPassS11iStep8Corrected.ae_marked_local_transfer
+#print axioms HarmonicBalls.FirstPassS11iStep8Corrected.ae_marked_local_transfer_landed
