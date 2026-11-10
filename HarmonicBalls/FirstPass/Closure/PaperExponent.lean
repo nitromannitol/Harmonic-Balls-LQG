@@ -8,8 +8,8 @@ import HarmonicBalls.FirstPass.Closure.Main12Canonical
 The canonical closures `closure_11_13_canonical`, `closure_11_11_canonical` and `closure_1_2_faithful_canonical` are
 stated at the exponent `ξ = lqgXi γ`, where `lqgXi γ = γ / lqgGraphDimension γ` (`HarmonicBalls/FirstPass/S11i/Faithful.lean:94`).
 That identity is the paper's exponent `ξ = γ / d_γ` (eq:xi, `paper/lqg_harmonic_ball-corrected.tex:443`) only under the
-PROPOSED input `WholePlaneLQGGraphDimension` (`HarmonicBalls/Proposed/LQGDimension.lean:20`, pending operator
-source-check; characterisation `lqgGraphDimension_spec`, `Proposed/LQGDimension.lean:24`, from Ding-Gwynne
+PROPOSED input `WholePlaneLQGGraphDimension` (`HarmonicBalls/Proposed/LQGDimension.lean:19`, pending operator
+source-check; characterisation `lqgGraphDimension_spec`, `Proposed/LQGDimension.lean:23`, from Ding-Gwynne
 arXiv:1807.01072, Theorem 1.4).
 
 Operator decision 11:42 UTC (F2): the input is kept as an explicit first hypothesis `_hDim` of each wrapper below, so that
@@ -25,8 +25,8 @@ universe u
 
 /-- Paper-exponent record of `closure_11_13_canonical` (`FirstPass/Closure/Sec11.lean:400`): Lemma 11.13 at the canonical
 exponent `ξ = lqgXi γ` (`FirstPass/S11i/Faithful.lean:94`). The identity `lqgXi γ = γ / d_γ` with the paper's eq:xi
-(`paper/lqg_harmonic_ball-corrected.tex:443`) holds under `WholePlaneLQGGraphDimension` (`Proposed/LQGDimension.lean:20`,
-PROPOSED, pending operator source-check; spec `lqgGraphDimension_spec`, :24). Operator 11:42 UTC (F2). The dimension input
+(`paper/lqg_harmonic_ball-corrected.tex:443`) holds under `WholePlaneLQGGraphDimension` (`Proposed/LQGDimension.lean:19`,
+PROPOSED, pending operator source-check; spec `lqgGraphDimension_spec`, :23). Operator 11:42 UTC (F2). The dimension input
 is recorded in `_hDim` explicitly; it is not used in the proof; no new frozen input. Conclusion: `CorrectedLemma11_13CanonicalStmt`. -/
 theorem closure_11_13_paperExponent
     (_hDim : WholePlaneLQGGraphDimension)
@@ -68,8 +68,8 @@ theorem closure_11_13_paperExponent
 
 /-- Paper-exponent record of `closure_11_11_canonical` (`FirstPass/Closure/Sec11Canonical.lean:37`): Proposition 11.11 at
 the canonical exponent `ξ = lqgXi γ` (`FirstPass/S11i/Faithful.lean:94`). The identity `lqgXi γ = γ / d_γ` with the paper's
-eq:xi (`paper/lqg_harmonic_ball-corrected.tex:443`) holds under `WholePlaneLQGGraphDimension` (`Proposed/LQGDimension.lean:20`,
-PROPOSED, pending operator source-check; spec `lqgGraphDimension_spec`, :24). Operator 11:42 UTC (F2). The dimension input
+eq:xi (`paper/lqg_harmonic_ball-corrected.tex:443`) holds under `WholePlaneLQGGraphDimension` (`Proposed/LQGDimension.lean:19`,
+PROPOSED, pending operator source-check; spec `lqgGraphDimension_spec`, :23). Operator 11:42 UTC (F2). The dimension input
 is recorded in `_hDim` explicitly; it is not used in the proof; no new frozen input. Conclusion: `HarmonicBallNotMetricBallCanonicalStmt`. -/
 theorem closure_11_11_paperExponent
     (_hDim : WholePlaneLQGGraphDimension)
@@ -119,8 +119,8 @@ theorem closure_11_11_paperExponent
 
 /-- Paper-exponent record of `closure_1_2_faithful_canonical` (`FirstPass/Closure/Main12Canonical.lean:182`): Theorem 1.2
 at the canonical exponent `ξ = lqgXi γ` (`FirstPass/S11i/Faithful.lean:94`). The identity `lqgXi γ = γ / d_γ` with the paper's
-eq:xi (`paper/lqg_harmonic_ball-corrected.tex:443`) holds under `WholePlaneLQGGraphDimension` (`Proposed/LQGDimension.lean:20`,
-PROPOSED, pending operator source-check; spec `lqgGraphDimension_spec`, :24). Operator 11:42 UTC (F2). The dimension input
+eq:xi (`paper/lqg_harmonic_ball-corrected.tex:443`) holds under `WholePlaneLQGGraphDimension` (`Proposed/LQGDimension.lean:19`,
+PROPOSED, pending operator source-check; spec `lqgGraphDimension_spec`, :23). Operator 11:42 UTC (F2). The dimension input
 is recorded in `_hDim` explicitly; it is not used in the proof; no new frozen input. Conclusion: `HarmonicBallNoveltyFaithfulStmt`. -/
 theorem closure_1_2_paperExponent
     (_hDim : WholePlaneLQGGraphDimension)
