@@ -595,3 +595,146 @@ theorem rootedCertificateEventualCovarianceStmt_decoded {Ω : Type u} [Measurabl
     hDecInt hMass
 
 end FirstPassS11at
+
+namespace FirstPassS11at
+
+open MeasureTheory Metric Set Filter Topology
+open scoped ENNReal NNReal
+open HarmonicBalls HarmonicBalls.S11c
+
+/-! ### Rooted local identification: the decoded mass identity `hMass` (ChatGPT chat 201, sections 4.2-4.5 and 5)
+
+Inputs. `κ` is the decoder on the large domain `D = ball c₂ r₂`; `κj j` and `Dj j` are the decoders and buffered windows of
+n2's countable family (`RootedLocalIdent.lean`, pending; `Uj j` the root windows). The inputs `hμ` (rooted LQG measure
+existence, LQGMeasureExistence threaded), `hκ`, `hκj` (the rooted clauses of `LocalMeasureKernelStmt`, second conjunct at
+`α₀`) and `hRLI` (the buffered identification, outputs of `ae_rootedLocalIdent_base` and `ae_rootedLocalIdent_shifted`)
+are hypotheses until their names appear in hb notes/n3-inbox.md. -/
+
+/-- The rooted circle field at root `z` of the decoded clause: the GFF at background insertion `α₀`, plus `-γ log|· - z|`
+and the normalisation `γ log max(1, |·|)` (Campbell-Palm rooted field; the field of `LocalMeasureKernelStmt`). -/
+noncomputable def rootedCircleField {Ω : Type*} (α₀ γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ) : Ω → ℝ → ℂ → ℝ :=
+  fun ω => addCircleAverage (fieldCircleAverage α₀ (hcirc ω))
+    (fun w => -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖))
+
+/-- Centred transfer of proportionality (Armitage-Gardiner: restriction and push-forward). If `ν` and `νj` are both
+proportional to `μ` on `D` and on `Dj ⊆ D`, and `z + S ⊆ Dj`, then the centred restrictions of `ν` and `νj` to `S` are
+proportional with constant `a / aj`. -/
+theorem centred_restrict_eq_of_restrict_eq {ν νj μ : Measure ℂ} {z : ℂ} {D Dj S : Set ℂ} {a aj : ℝ}
+    (ha : 0 < a) (haj : 0 < aj) (hS : MeasurableSet S) (hDj : Dj ⊆ D)
+    (hνD : ν.restrict D = ENNReal.ofReal a • μ.restrict D)
+    (hνj : νj.restrict Dj = ENNReal.ofReal aj • μ.restrict Dj)
+    (hT : (fun w : ℂ => w - z) ⁻¹' S ⊆ Dj) :
+    (ν.map (fun w : ℂ => w - z)).restrict S =
+      ENNReal.ofReal (a / aj) • (νj.map (fun w : ℂ => w - z)).restrict S := by
+  have hmeas : Measurable (fun w : ℂ => w - z) := measurable_id.sub_const z
+  have hTD : (fun w : ℂ => w - z) ⁻¹' S ⊆ D := hT.trans hDj
+  have hν : ν.restrict ((fun w : ℂ => w - z) ⁻¹' S) =
+      ENNReal.ofReal a • μ.restrict ((fun w : ℂ => w - z) ⁻¹' S) := by
+    rw [← Measure.restrict_restrict_of_subset hTD, hνD, Measure.restrict_smul,
+      Measure.restrict_restrict_of_subset hTD]
+  have hνj' : νj.restrict ((fun w : ℂ => w - z) ⁻¹' S) =
+      ENNReal.ofReal aj • μ.restrict ((fun w : ℂ => w - z) ⁻¹' S) := by
+    rw [← Measure.restrict_restrict_of_subset hT, hνj, Measure.restrict_smul,
+      Measure.restrict_restrict_of_subset hT]
+  have hfac : ν.restrict ((fun w : ℂ => w - z) ⁻¹' S) =
+      ENNReal.ofReal (a / aj) • νj.restrict ((fun w : ℂ => w - z) ⁻¹' S) := by
+    rw [hν, hνj', smul_smul, ← ENNReal.ofReal_mul (div_nonneg ha.le haj.le), div_mul_cancel₀ a haj.ne']
+  rw [Measure.restrict_map hmeas hS, Measure.restrict_map hmeas hS, hfac, Measure.map_smul _ hmeas.aemeasurable]
+
+/-- Pointwise assembly of the mass identity at one root `z`, one shift `u` and one buffered window `Dj` (ChatGPT §5): the
+two rooted kernel clauses for the same rooted LQG measure `μz` and the buffered identification give the centred mass identity
+on `closedBall 0 ρ`; the certificate windows `closedBall 0 (7 certScale n)` eventually lie in it (restriction bookkeeping). -/
+theorem ae_mass_of_buffered_identification {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {c₂ : ℂ} {r₂ : ℝ} {z : ℂ} {u : ℂ → ℝ}
+    {Dj : Set ℂ} (hDj : Dj ⊆ ball c₂ r₂)
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (κj : ({φ : ℂ → ℝ // IsTestFunction Dj φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ) (μz : Ω → Measure ℂ)
+    (hκz : ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+      (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
+        ENNReal.ofReal a • (μz ω).restrict (ball c₂ r₂))
+    (hκjz : ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+      (κj (campbellReferenceObs γ α₀ Dj (hC ω) z).2).restrict Dj = ENNReal.ofReal a • (μz ω).restrict Dj)
+    (hid : ∀ᵐ ω ∂P, ∃ ρ c : ℝ, 0 < ρ ∧ 0 < c ∧ closedBall z ρ ⊆ Dj ∧
+      ((κj (campbellReferenceObs γ α₀ Dj (hC ω) z).2).map (fun w : ℂ => w - z)).restrict (closedBall 0 ρ) =
+        ENNReal.ofReal c • (Dμ (shiftedCanon γ hC hcirc z u ω)).restrict (closedBall 0 ρ)) :
+    ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
+      (decodedCentredMeasure κ γ α₀ hC z ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
+        (ENNReal.ofReal a • Dμ (shiftedCanon γ hC hcirc z u ω)).restrict
+          (closedBall 0 (7 * FirstPassS11ah.certScale n)) := by
+  filter_upwards [hκz, hκjz, hid] with ω hκzω hκjω hidω
+  obtain ⟨a, ha, hνD⟩ := hκzω
+  obtain ⟨aj, haj, hνj⟩ := hκjω
+  obtain ⟨ρ, c, hρ, hc, hsub, hνc⟩ := hidω
+  have hT : (fun w : ℂ => w - z) ⁻¹' closedBall (0 : ℂ) ρ ⊆ Dj := fun w hw =>
+    hsub (by simpa [Metric.mem_closedBall, dist_eq_norm] using hw)
+  have hEq := centred_restrict_eq_of_restrict_eq ha haj measurableSet_closedBall hDj hνD hνj hT
+  rw [hνc] at hEq
+  have hS : ((κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).map (fun w : ℂ => w - z)).restrict
+      (closedBall 0 ρ) = ENNReal.ofReal ((a / aj) * c) •
+        (Dμ (shiftedCanon γ hC hcirc z u ω)).restrict (closedBall 0 ρ) := by
+    rw [hEq, smul_smul, ENNReal.ofReal_mul (div_nonneg ha.le haj.le)]
+  have hlim : Filter.Tendsto (fun n : ℕ => 7 * FirstPassS11ah.certScale n) Filter.atTop (nhds 0) := by
+    have h := (tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 2⁻¹)
+      (by norm_num : (2 : ℝ)⁻¹ < 1)).const_mul 7
+    simpa [FirstPassS11ah.certScale] using h
+  obtain ⟨n₁, hn₁⟩ := eventually_atTop.1 ((tendsto_order.1 hlim).2 ρ hρ)
+  refine ⟨n₁, fun n hn => ⟨(a / aj) * c, mul_pos (div_pos ha haj) hc, ?_⟩⟩
+  have hK : closedBall (0 : ℂ) (7 * FirstPassS11ah.certScale n) ⊆ closedBall 0 ρ :=
+    Metric.closedBall_subset_closedBall (hn₁ n hn).le
+  unfold decodedCentredMeasure decodedRootMeasure
+  calc ((κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).map (fun w : ℂ => w - z)).restrict
+        (closedBall 0 (7 * FirstPassS11ah.certScale n))
+      = (((κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).map (fun w : ℂ => w - z)).restrict
+          (closedBall 0 ρ)).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) :=
+        (Measure.restrict_restrict_of_subset hK).symm
+    _ = (ENNReal.ofReal ((a / aj) * c) • (Dμ (shiftedCanon γ hC hcirc z u ω)).restrict (closedBall 0 ρ)).restrict
+          (closedBall 0 (7 * FirstPassS11ah.certScale n)) := by rw [hS]
+    _ = (ENNReal.ofReal ((a / aj) * c) • Dμ (shiftedCanon γ hC hcirc z u ω)).restrict
+          (closedBall 0 (7 * FirstPassS11ah.certScale n)) := by
+        rw [Measure.restrict_smul, Measure.restrict_restrict_of_subset hK, Measure.restrict_smul]
+
+/-- **Decoded mass identity from the rooted local identification (hMass).** The output of the decoded-to-canonical local
+identification of n2 (`ae_rootedLocalIdent_base`, `ae_rootedLocalIdent_shifted`, here the hypothesis `hRLI`), with the rooted
+kernel clauses `hκ` (large domain) and `hκj` (buffered windows) and the rooted LQG measure existence `hμ`, gives the
+`hMass` hypothesis of `rootedCertificateEventualCovarianceStmt_decoded`. The buffered index `j` is chosen after `(z, b, u)`
+and before the inner `P`-a.s. statement (ChatGPT §4.2), so `hRLI` quantifies `∃ j` outside `∀ᵐ ω`. -/
+theorem hMass_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {c₁ c₂ : ℂ} {r₁ r₂ : ℝ} (A : Set ℂ)
+    (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop)
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
+    (Uj Dj : ℕ → Set ℂ)
+    (κj : (j : ℕ) → ({φ : ℂ → ℝ // IsTestFunction (Dj j) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (hDj : ∀ j, Dj j ⊆ ball c₂ r₂)
+    (hμ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A →
+      ∃ μz : Ω → Measure ℂ, IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz)
+    (hκ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz → ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+        (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
+          ENNReal.ofReal a • (μz ω).restrict (ball c₂ r₂))
+    (hκj : ∀ j, ∀ᵐ z ∂(volume : Measure ℂ), z ∈ Uj j → ∀ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz → ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+        (κj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2).restrict (Dj j) =
+          ENNReal.ofReal a • (μz ω).restrict (Dj j))
+    (hRLI : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∃ j : ℕ, z ∈ Uj j ∧ ∀ᵐ ω ∂P, ∃ ρ c : ℝ, 0 < ρ ∧ 0 < c ∧ closedBall z ρ ⊆ Dj j ∧
+        ((κj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2).map (fun w : ℂ => w - z)).restrict
+            (closedBall 0 ρ) =
+          ENNReal.ofReal c • (Dμ (shiftedCanon γ hC hcirc z u ω)).restrict (closedBall 0 ρ)) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ), Adm z b u →
+      ∀ᵐ ω ∂P, ∃ n₁ : ℕ, ∀ n ≥ n₁, ∃ a : ℝ, 0 < a ∧
+        (decodedCentredMeasure κ γ α₀ hC z ω).restrict (closedBall 0 (7 * FirstPassS11ah.certScale n)) =
+          (ENNReal.ofReal a • Dμ (shiftedCanon γ hC hcirc z u ω)).restrict
+            (closedBall 0 (7 * FirstPassS11ah.certScale n)) := by
+  have hκj' : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ j, z ∈ Uj j → ∀ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleField α₀ γ hcirc z) μz → ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+        (κj j (campbellReferenceObs γ α₀ (Dj j) (hC ω) z).2).restrict (Dj j) =
+          ENNReal.ofReal a • (μz ω).restrict (Dj j) :=
+    ae_restrict_of_ae (ae_all_iff.2 hκj)
+  filter_upwards [hμ, hκ, hκj', hRLI] with z hμz hκz hκjz hRz hzA b u hadm
+  obtain ⟨μz, hμzE⟩ := hμz hzA
+  obtain ⟨j, hzj, hRω⟩ := hRz hzA b u hadm
+  exact ae_mass_of_buffered_identification (hDj j) κ (κj j) Dμ μz (hκz μz hμzE) (hκjz j hzj μz hμzE) hRω
+
+end FirstPassS11at
