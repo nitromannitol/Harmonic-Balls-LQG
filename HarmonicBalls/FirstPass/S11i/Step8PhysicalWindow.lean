@@ -28,7 +28,7 @@ theorem ae_unitScale_of_local_good {Ω : Type u} [MeasurableSpace Ω] {P : Measu
     (m : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ)
     (Ostar U' V W T Q' Q : Set ℂ) (η M : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (μα : Ω → Measure ℂ) (Dα : Ω → ℂ → ℂ → ℝ)
-    (hfit : ∀ᵐ ω ∂P, ∀ (z : ℂ) (n : ℕ), closedBall z (cutRadius n) ⊆ ball c₂ r₂ →
+    (hfit : ∀ᵐ ω ∂P, ∀ z ∈ ball c₂ r₂, ∀ᶠ n : ℕ in atTop,
       (FirstPassS11i.CertificateEvent (κ (fun φ => fieldPairing α₀ (hC ω) φ.1))
           (m (fun φ => fieldPairing α₀ (hC ω) φ.1)) Ostar U' V W T Q' Q η M (certScale n) z ↔
         FirstPassS11i.CertificateEvent (μα ω) (Dα ω) Ostar U' V W T Q' Q η M (certScale n) z))
@@ -48,7 +48,7 @@ theorem ae_unitScale_of_local_good {Ω : Type u} [MeasurableSpace Ω] {P : Measu
     exact hnot
   exact (tendsto_localWindow_iff_unitScale κ m Ostar U' V W T Q' Q η M
     (fun φ => fieldPairing α₀ (hC ω) φ.1) (μα ω) (Dα ω) q
-    (eventually_closedBall_cutRadius_subset hzD) (fun n hn => hf z n hn)).1 hloc
+    (eventually_closedBall_cutRadius_subset hzD) (hf z hzD)).1 hloc
 
 end HarmonicBalls.FirstPassS11iStep8PhysicalWindow
 

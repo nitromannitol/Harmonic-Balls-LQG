@@ -169,7 +169,7 @@ theorem ae_unitScale_of_ball {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     (href : ∀ᵐ z ∂(volume : Measure ℂ), z ∈ U → ∀ᵐ ω ∂P,
       campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z ∉
         HarmonicBalls.ReferenceNullS11i.refBadWindowSet (localCertSeq κ m Ostar U' V W T Q' Q η M) q)
-    (hfit : ∀ᵐ ω ∂P, ∀ (z : ℂ) (n : ℕ), closedBall z (cutRadius n) ⊆ ball c₂ r₂ →
+    (hfit : ∀ᵐ ω ∂P, ∀ z ∈ ball c₂ r₂, ∀ᶠ n : ℕ in atTop,
       (FirstPassS11i.CertificateEvent (κ (fun φ => fieldPairing α₀ (hC ω) φ.1))
           (m (fun φ => fieldPairing α₀ (hC ω) φ.1)) Ostar U' V W T Q' Q η M (certScale n) z ↔
         FirstPassS11i.CertificateEvent (μα ω) (Dα ω) Ostar U' V W T Q' Q η M (certScale n) z)) :

@@ -50,7 +50,7 @@ theorem ae_unitScale_of_covariance {Ω : Type u} [MeasurableSpace Ω] {P : Measu
       Ostar U' V W T Q' Q η M (AdmissibleRootShift α₀) rootRadius
       (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd)
     (hmeas : ∀ n, Measurable (localCertSeq κ m Ostar U' V W T Q' Q η M n))
-    (hfit : ∀ᵐ ω ∂P, ∀ (z : ℂ) (n : ℕ), closedBall z (cutRadius n) ⊆ ball c₂ r₂ →
+    (hfit : ∀ᵐ ω ∂P, ∀ z ∈ ball c₂ r₂, ∀ᶠ n : ℕ in atTop,
       (CertificateEvent (κ (fun φ => fieldPairing α₀ (hC ω) φ.1))
           (m (fun φ => fieldPairing α₀ (hC ω) φ.1)) Ostar U' V W T Q' Q η M (certScale n) z ↔
         CertificateEvent (μα ω) (Dα ω) Ostar U' V W T Q' Q η M (certScale n) z)) :

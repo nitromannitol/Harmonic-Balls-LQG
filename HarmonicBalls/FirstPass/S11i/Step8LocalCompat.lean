@@ -31,7 +31,7 @@ theorem tendsto_localWindow_iff_unitScale {c₂ z : ℂ} {r₂ : ℝ}
     (ℓ : {φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ)
     (μ : Measure ℂ) (d : ℂ → ℂ → ℝ) (q : ℝ)
     (hev : ∀ᶠ n : ℕ in atTop, closedBall z (cutRadius n) ⊆ ball c₂ r₂)
-    (hfit : ∀ n : ℕ, closedBall z (cutRadius n) ⊆ ball c₂ r₂ →
+    (hfit : ∀ᶠ n : ℕ in atTop,
       (FirstPassS11i.CertificateEvent (κ ℓ) (m ℓ) Ostar U V W T Q' Q η M (certScale n) z ↔
         FirstPassS11i.CertificateEvent μ d Ostar U V W T Q' Q η M (certScale n) z)) :
     Tendsto (fun N : ℕ => HarmonicBalls.ReferenceNullS11i.refWindowAverage
@@ -46,13 +46,14 @@ theorem tendsto_localWindow_iff_unitScale {c₂ z : ℂ} {r₂ : ℝ}
   have heq : (fun N : ℕ => HarmonicBalls.ReferenceNullS11i.refWindowAverage
         (localCertSeq κ m Ostar U V W T Q' Q η M) N (z, ℓ)) =ᶠ[atTop]
       (fun N : ℕ => unitScaleWindowFreq μ d Ostar U V W T Q' Q η M z N) := by
-    filter_upwards [hwin] with N hN
+    obtain ⟨n₁, hn₁⟩ := eventually_atTop.1 hfit
+    filter_upwards [hwin, eventually_ge_atTop (n₁ + 1)] with N hN hN1
     have hterm : ∀ n ∈ Finset.Icc (N + 1) (2 * N),
         localCertSeq κ m Ostar U V W T Q' Q η M n (z, ℓ) =
           if FirstPassS11i.CertificateEvent μ d Ostar U V W T Q' Q η M (certScale n) z then (1 : ℝ) else 0 := by
       intro n hn
       have hsub := hN n hn
-      have hiff := hfit n hsub
+      have hiff := hn₁ n (by have := (Finset.mem_Icc.1 hn).1; omega)
       show localCert (ball c₂ r₂) κ m Ostar U V W T Q' Q η M n ℓ z = _
       unfold localCert
       simp only [hsub, ↓reduceIte]
