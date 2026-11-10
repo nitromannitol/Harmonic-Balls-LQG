@@ -1,17 +1,21 @@
 import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Defs.LQGMetric
+import HarmonicBalls.Defs.LQG
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
 # First-pass frozen inputs: whole-plane GFF existence and the normalised local metric decoder (fp-S11r, owner n2)
 
-Two EXTERNAL facts. (1) `WholePlaneGFFExistsFrozen`: existence of a whole-plane GFF, used by the realization lemma
-`hmodel_at_gamma` (FirstPass/S11r.lean, the model hypothesis of Lemma 11.13 in FirstPass/S11i/CertificateCanonical.lean).
-(2) `LocalLQGMetricNormalizedMeasurableFrozen`: the measurable local metric decoder of answer section 4.1 (equation (21)),
-the external input of the local metric replacement (`LocalMetricReplacementStmt`, S11r/LocalMetricReplacement.lean).
+Four EXTERNAL facts, all general mathematics, not specific to this paper, all `def ... : Prop`s, never axioms.
+(1) `WholePlaneGFFExistsFrozen`: existence of a whole-plane GFF, used by the realization lemma `hmodel_at_gamma`
+(FirstPass/S11r.lean, the model hypothesis of Lemma 11.13 in FirstPass/S11i/CertificateCanonical.lean).
+(2) `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`: the fixed-metric measurable local metric decoder (answer section
+4.1, equation (21), corrected order), the external input of the local metric replacement (`LocalMetricReplacementStmt`,
+S11r/LocalMetricReplacement.lean). The retired unnormalised `LocalLQGMetricNormalizedMeasurableFrozen` is kept only for the record.
 (3) `RootedPhysicalMetricContinuousAtInsertionFrozen`: continuity of the physical metric of the rooted field `f_z` at its
 insertion `z` (DFGPS Prop 3.17), the external input `he_cont` of `eq_const_mul_of_rat_disk_agreement` (RootedGluing.lean).
-All three are general mathematics, not specific to this paper. `def ... : Prop`s, never axioms.
+(4) `LocalMeasureKernelStmt`: the whole-measure local kernel identity (A), the measure companion of (2)-(3) on the same disks
+(the local LQG measure input, HB Fact 2.1 (II), (III)); the external input of the measure side of the local replacement.
 -/
 
 namespace HarmonicBalls
@@ -95,16 +99,17 @@ def LocalLQGMetricNormalizedMeasurableFixedMetricFrozen : Prop :=
             ENNReal.ofReal (Real.exp (-ξ * fieldPairing 0 (hC ω) ρ)) *
               internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2
 
-/-- FIRST-PASS FROZEN, EXTERNAL. PENDING TRUTH CHECK. Continuity of the physical metric of the rooted field at its
-insertion (DFGPS Prop 3.17). For `0 < γ < 2`, `α < Q_γ = lqgQ γ`, a point `z ≠ 0`, a whole-plane GFF `hC` and an LQG
+/-- FIRST-PASS FROZEN, EXTERNAL. Truth check TRUE (ChatGPT, chat 149; notes/fp-gaps/CHATGPT-n2-hecont.md), as typed: no
+change to the hypotheses, the quantifier order or the `nhds` filter. Continuity of the physical metric of the rooted field
+at its insertion (DFGPS Prop 3.17). For `0 < γ < 2`, `α < Q_γ = lqgQ γ`, a point `z ≠ 0`, a whole-plane GFF `hC` and an LQG
 metric `𝔇` of exponent `ξ`, for each fixed `z` and almost surely in `ω`, the Weyl-scaled metric of `𝔇 (hC ω)` by the rooted
 weight `-α log|·| - γ log|· - z| + γ log max(1, |·|)` (the metric of `f_z` in `LocalMetricReplacementStmt`, equation (20))
 tends to `0` at `z` in the Euclidean topology. This is the `he_cont` input of `eq_const_mul_of_rat_disk_agreement`
 (RootedGluing.lean), through `tendsto_toReal_nhdsWithin_zero_of_tendsto`. Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun,
 arXiv:1905.00380v2, Proposition 3.17, printed p. 43, eq. (3.56) (the metric induces the Euclidean topology for insertions
-`α ∈ (-∞, Q)`; summary in notes/fp-gaps/CHATGPT-11-15-17-faithful-referee.md). The insertion-at-`z` form with the rooted
-weight is the operator's freeze (task fp-S11r, operator note 03:42 UTC), not a verbatim printed statement: the truth check
-must confirm it against the printed insertion convention. -/
+`α ∈ (-∞, Q)`; summary in notes/fp-gaps/CHATGPT-11-15-17-faithful-referee.md). It is stated as a consequence of DFGPS
+Prop 3.17 (insertion `γ` at `z`) plus the local path comparison of CHATGPT-n2-hecont.md, valid for arbitrary `ξ`; it is not
+a verbatim printed statement. -/
 def RootedPhysicalMetricContinuousAtInsertionFrozen : Prop :=
   ∀ (γ ξ α : ℝ) (z : ℂ), 0 < γ → γ < 2 → α < lqgQ γ → z ≠ 0 →
     ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
@@ -115,6 +120,44 @@ def RootedPhysicalMetricContinuousAtInsertionFrozen : Prop :=
         (fun x => weylScaling (𝔇 (hC ω)) ξ
           (fun w => -α * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) x z)
         (nhds z) (nhds 0)
+
+/-- FIRST-PASS FROZEN, EXTERNAL. Truth check TRUE (ChatGPT, chat 148; notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md section
+2.1: the displayed body is the right statement, no change needed). The whole-measure local kernel identity (A) (answer
+CHATGPT-n3-Q1-eq34.md section 1, first line), the measure companion of `LocalMetricReplacementStmt` on the same disks
+`U = ball c₁ r₁`, `D = ball c₂ r₂`, with `0 < γ < 2`, `closedBall c₁ r₁ ⊆ D`, `closedBall c₂ r₂ ⊆ ball 0 1`, `0 ∉ closedBall c₂ r₂`.
+There is one measurable kernel `κ` from the mean-zero observations of `D` to measures on `ℂ`, fixed before `α`, the
+probability space and the root, such that, restricted to `D`: (A-unrooted) for `α < Q_γ`, every whole-plane GFF model and
+every γ-LQG measure `μ` of `h^α = h^ℂ - α log|·|`, a.s. `κ(obs_D h^α)` is a positive multiple of `μ`; (A-rooted) for Lebesgue-a.e.
+root `z ∈ U`, every γ-LQG measure `μz` of the rooted field `f_z` (`addCircleAverage` of `fieldCircleAverage`), a.s. `κ` of the
+campbellReferenceObs observation is a positive multiple of `μz`. The scalar `a` may depend on `ω` and on `z`.
+Same-kernel requirement (CHATGPT-n1-n2-11-13-inputs.md section 2.4): `κ` is one map, used for every `α`, every model and both
+identities; the unrooted decoder is not transferred to other observation codes under the rooted law. The exceptional null
+sets need not be common to all `μz`, and the scalar need not be jointly measurable (section 2.1).
+Source: Bou-Rabee-Gwynne, arXiv:2208.11795v3 §2.2, printed p. 9, equation (2.6) (circle-average construction) and Fact 2.1
+(II) (locality) and (III) (Weyl scaling), paper line 407; the Borel kernel on observation codes is derived from the
+construction, not the literal assertion of Fact 2.1 (II). Construction behind the statement (section 2.3): one explicit local
+GMC map by circle averages with the additive constant fixed by a unit-integral test function; approximants Duplantier-Sheffield,
+arXiv:0808.1560v2, Proposition 1.1, p. 5, and Sheffield-Wang, arXiv:1605.06171v2, Theorems 1.1-1.2 and Remark 1.3, p. 3.
+Predicates: `IsLQGMeasure`, `IsLQGMeasureOfField` (Defs/LQG.lean). -/
+def LocalMeasureKernelStmt (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) : Prop :=
+  0 < γ → γ < 2 → 0 < r₁ → 0 < r₂ → closedBall c₁ r₁ ⊆ ball c₂ r₂ → closedBall c₂ r₂ ⊆ ball (0 : ℂ) 1 →
+  (0 : ℂ) ∉ closedBall c₂ r₂ →
+  ∃ κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ, Measurable κ ∧
+    (∀ α : ℝ, α < lqgQ γ → ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ →
+      ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+        (κ (localMeanZeroObs α (ball c₂ r₂) (hC ω))).restrict (ball c₂ r₂) =
+          ENNReal.ofReal a • (μ ω).restrict (ball c₂ r₂)) ∧
+    (∀ α : ℝ, α < lqgQ γ → ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc →
+      ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ μz : Ω → Measure ℂ,
+        IsLQGMeasure P γ (fun ω => addCircleAverage (fieldCircleAverage α (hcirc ω))
+          (fun w => -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖))) μz →
+        ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+          (κ (campbellReferenceObs γ α (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
+            ENNReal.ofReal a • (μz ω).restrict (ball c₂ r₂))
 
 /-- Deterministic step (no input): a limit to `0` in `ENNReal` at `z` gives the limit of the real values
 `(f x).toReal` to `0` within any set `D`. This converts the Weyl-scaled metric of
