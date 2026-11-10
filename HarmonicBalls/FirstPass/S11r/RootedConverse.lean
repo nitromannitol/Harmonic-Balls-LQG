@@ -84,7 +84,7 @@ theorem ae_rootedLocalIdent_windowConverse_buffered {Ω : Type u} [MeasurableSpa
       S11c.translatedPairing hC hcirc z ω ∈ rootedLocalIdentEvent (ball (dc j) (dr j)) (κ j) (m j) Dμ Dd γ z
         (closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j)))
         (fun n => f n ∩ closedBall 0 (bufferRadius (uc j) (dc j) (ur j) (dr j))) (X j) (R j) (pq j))
-    (E : ℂ → Ω → ℂ → ℂ → ℝ) (hEuc : ∀ᵐ z ∂(volume : Measure ℂ), ∀ᵐ ω ∂P, IsEuclideanLengthMetric (E z ω))
+    (E : ℂ → Ω → ℂ → ℂ → ℝ) (hEuc : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, IsEuclideanLengthMetric (E z ω))
     (hwin : ∀ j, ∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (uc j) (ur j) → ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
       ∀ p : ↥(ball (dc j) (dr j) ×ˢ ball (dc j) (dr j) : Set (ℂ × ℂ)),
         ENNReal.ofReal (m j (campbellReferenceObs γ α₀ (ball (dc j) (dr j)) (hC ω) z).2 p) =
@@ -112,7 +112,7 @@ theorem ae_rootedLocalIdent_windowConverse_buffered {Ω : Type u} [MeasurableSpa
   have hA := ae_all_iff.2 fun j =>
     (ae_restrict_iff' (measurableSet_ball : MeasurableSet (ball (uc j) (ur j)))).1 (hshift j)
   have hW := ae_all_iff.2 hwin
-  filter_upwards [ae_restrict_of_ae hA, ae_restrict_of_ae hW, ae_restrict_of_ae hEuc, hLenC,
+  filter_upwards [ae_restrict_of_ae hA, ae_restrict_of_ae hW, hEuc, hLenC,
     ae_restrict_of_ae hz0, ae_restrict_mem measurableSet_ball] with z hAz hWz hEz hLz hz0' hzball
   intro b u hadm
   obtain ⟨j, hzj, hbj⟩ := hdens z hzball hz0' b hadm.1
