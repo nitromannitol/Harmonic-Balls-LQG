@@ -22,7 +22,7 @@ namespace HarmonicBalls.FirstPassS11iStep8MarkedMem
 
 /-- **Reference side from the rooted law.** If `rootedRefLaw Hᶜ = 0` for a measurable set `H` of local observations,
 then for a.e. root `z` in the disc `ball c₁ r₁`, `P`-a.s. the rooted reference observation `campbellReferenceObs z ω` lies in `H`. -/
-theorem ae_refObs_mem_of_rootedRefLaw_compl_null {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+theorem ae_refObs_mem_of_rootedRefLaw_compl_null {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {γ α₀ : ℝ} {c₁ c₂ : ℂ} {r₁ r₂ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hG : IsWholePlaneGFF P hC hcirc)
     {H : Set (FirstPassS11ahFinite.LocalObs c₂ r₂)} (hH : MeasurableSet H)

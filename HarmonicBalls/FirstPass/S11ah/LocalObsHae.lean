@@ -26,16 +26,18 @@ open MeasureTheory ProbabilityTheory Metric Set Filter Topology
 open scoped ENNReal
 open HarmonicBalls HarmonicBalls.S11c FirstPassS11ah
 
+universe u
+
 namespace HarmonicBalls.FirstPassS11ahLocalHae
 
 /-- The joint rooted-reference observation `(z, ω) ↦ obs_z(ω)` on the decoder disc `ball c₂ r₂`
 (`campbellReferenceObs` at the root `z`, background `α₀`, identity-shift `hC ω`). -/
-noncomputable def rootedRefObs {Ω : Type} (γ α₀ : ℝ) (c₂ : ℂ) (r₂ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (p : ℂ × Ω) :
+noncomputable def rootedRefObs {Ω : Type u} (γ α₀ : ℝ) (c₂ : ℂ) (r₂ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (p : ℂ × Ω) :
     FirstPassS11ahFinite.LocalObs c₂ r₂ :=
   (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC p.2) p.1).2
 
 /-- The pushforward of the joint rooted-reference law `volume|_{ball c₁ r₁} ⊗ P` by the observation `rootedRefObs`. -/
-noncomputable def rootedRefLaw {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ)
+noncomputable def rootedRefLaw {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) : Measure (FirstPassS11ahFinite.LocalObs c₂ r₂) :=
   ((volume.restrict (ball c₁ r₁)).prod P).map (rootedRefObs γ α₀ c₂ r₂ hC)
 
