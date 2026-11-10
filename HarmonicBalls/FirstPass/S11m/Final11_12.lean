@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.S11m.CertificateAssembly
 import HarmonicBalls.FirstPass.S11t
 import HarmonicBalls.FirstPass.S11x
+import HarmonicBalls.Steps.Sec2.VolumeGrowth
 
 /-!
 # Lemma 11.12 (corrected): final assembly from named inputs (fp-S11m-11-12-faithful, owner z4)
@@ -35,9 +36,12 @@ The remaining named hypotheses, with their class:
 * CITED DRAFT statements of numbered results: `hDsm` `SmallMetricDiameterLargeMassStmt` (Proposition 11.9,
   `Draft/Section11.lean:201`); `hholder` `GreenPotentialHolderStmt` (Proposition 2.5, `Draft/Section2.lean:190`).
 * NOT YET CLASSIFIED (reported): `hN2` `LocalMetricReplacementStmt` (n2, `S11r/LocalMetricReplacement.lean:53`, kept
-  as an input by the operator's 04:48 UTC note, not in a `Frozen/` file); `hFull` `LQGMeasureFullSupportStmt`
-  (`Draft/Section2.lean:109`) and `hgrowth` `LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`), whose
-  docstrings describe them as consequences of Lemma 2.4 and not as numbered results.
+  as an input by the operator's 04:48 UTC note, not in a `Frozen/` file); `hgrowth` `LQGVolumeGrowthAllScalesStmt`
+  (`Draft/Section2.lean:122`, I2), whose docstring describes it as a consequence of Lemma 2.4 (paper line 501), not a
+  numbered result. Its derivation `lqgVolumeGrowthAllScalesStmt_of_ballMass` (`Steps/Sec2/VolumeGrowth.lean:164`) needs
+  `LiouvilleBallMassBoundStep` (`Steps/Sec2/VolumeGrowth.lean:69`), which restates Lemma 2.4 and is unproved.
+  `LQGMeasureFullSupportStmt` (I1, `Draft/Section2.lean:109`) is discharged from `hgrowth` by
+  `lqgMeasureFullSupportStmt_of_volumeGrowth` (`Steps/Sec2/VolumeGrowth.lean:220`).
 -/
 
 namespace HarmonicBalls.S11m.Final11_12
@@ -48,7 +52,7 @@ open scoped ENNReal
 universe u
 
 /-- **Lemma 11.12 (corrected), `CorrectedLemma11_12Stmt`, from named inputs only.** The hypotheses are listed in the
-module docstring; the derived ones (`hBase`, `hS`, `hXi`) are discharged in the proof, and the rest are the hypotheses
+module docstring; the derived ones (`hBase`, `hS`, `hXi`, `hFull`) are discharged in the proof, and the rest are the hypotheses
 of `firstPass_11_12_corrected_of_inputs` (`FirstPass/S11m/CertificateAssembly.lean`). -/
 theorem firstPass_11_12_of_inputs
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
@@ -65,7 +69,6 @@ theorem firstPass_11_12_of_inputs
     (hAff : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
     (hExists : WholePlaneGFFExistsFrozen.{0})
-    (hFull : LQGMeasureFullSupportStmt.{u})
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u})
     (hmass : LQGMassFunctionalMeasurableFrozen.{u})
@@ -79,6 +82,7 @@ theorem firstPass_11_12_of_inputs
     (hholder : GreenPotentialHolderStmt.{u}) :
     CorrectedLemma11_12Stmt.{u} := by
   have hXi : LQGMetricExponentPositive := lqgMetricExponentPositive_of_inputs hExists hAff
+  have hFull : LQGMeasureFullSupportStmt.{u} := HarmonicBalls.lqgMeasureFullSupportStmt_of_volumeGrowth hgrowth
   have hBase : HarmonicBalls.S11ak.LQGMetricBaseComparisonStmt.{u} :=
     HarmonicBalls.S11ak.lqgMetricBaseComparison_of_canonical hCanon hLen hEx
   have hS : BundleParts.PinchSecondAnnulusStep.{u} :=
