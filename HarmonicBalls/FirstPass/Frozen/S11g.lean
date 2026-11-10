@@ -122,7 +122,8 @@ of the internal metrics of the open neighbourhoods `thickening ((k+1)⁻¹) (C �
 approximated by paths of the neighbourhoods; the length is lower semicontinuous under uniform convergence (Arzelà-Ascoli).
 Source: standard; locator pending. Truth check TRUE (ChatGPT, 00:12 UTC; written proof in
 `notes/fp-gaps/CHATGPT-K1-proof-z4-F4.md` section 1: closed-ball cutoff, order inf_n sup_k, arc-length reparametrization of
-near-minimizing paths). Operator approval 23:55 UTC as `internalMetric_closed_eq_iInf_thickening`. Used by:
+near-minimizing paths); confirmed TRUE exactly as written (ChatGPT, 00:37 UTC, `notes/fp-gaps/CHATGPT-frozen-truth-S4d-S11g.md`
+section 2). Operator approval 23:55 UTC as `internalMetric_closed_eq_iInf_thickening`. Used by:
 `corridorInternalSup_decoder` (FirstPass/S11h/CorridorSup11_17.lean), hence `pinchCertificateStmt_of_frozen`. -/
 def InternalMetricClosedEqIInfThickeningFrozen : Prop :=
   ∀ (D : ℂ → ℂ → ℝ) (C : Set ℂ), IsClosed C → IsEuclideanLengthMetric D →
@@ -134,7 +135,8 @@ def InternalMetricClosedEqIInfThickeningFrozen : Prop :=
 `D` and a continuous compactly supported shift `f`, the Weyl-scaled metric `(weylScaling D ξ f).toReal` is again a
 Euclidean length metric. The weights `exp (ξ f)` are bounded above and below, so the scaled metric is bi-Lipschitz to `D`,
 and the length property follows from near-minimizing weighted curves. Source: standard; locator pending. Truth check TRUE
-(ChatGPT, 00:28 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md` section 5); operator approval 00:09 UTC as an EXTERNAL
+(ChatGPT, 00:28 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md` section 5; confirmed TRUE exactly as written, ChatGPT
+00:37 UTC, `notes/fp-gaps/CHATGPT-frozen-truth-S4d-S11g.md` section 3); operator approval 00:09 UTC as an EXTERNAL
 deterministic metric fact. Used by: `pinchCertificateStmt_of_frozen`
 (FirstPass/S11h/PinchCertificateProof11_17.lean), hence `firstPass_11_17`. -/
 def WeylScaledEuclideanFrozen : Prop :=
