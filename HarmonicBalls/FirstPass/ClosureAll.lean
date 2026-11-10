@@ -10,6 +10,7 @@ import HarmonicBalls.FirstPass.Canonical.NotMetricBall
 import HarmonicBalls.FirstPass.Closure.Sec11Canonical
 import HarmonicBalls.FirstPass.Closure.Main12Canonical
 import HarmonicBalls.FirstPass.Closure.PaperExponent
+import HarmonicBalls.FirstPass.S8dNoWeyl
 
 /-!
 # Top-level closure module (fp-closure-all-top-module)
