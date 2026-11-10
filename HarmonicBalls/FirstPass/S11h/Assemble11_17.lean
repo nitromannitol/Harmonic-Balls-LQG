@@ -8,15 +8,18 @@ import HarmonicBalls.FirstPass.S11h.PinchCertificate11_17
 /-!
 # First pass, Lemma 11.17 (corrected form): assembly from the 11.16 pinch event (fp-S11h, owner n2)
 
-`firstPass_11_17_of_11_16` proves `PinchThirdEventFaithfulStmt` (Faithful.lean) from three inputs:
+`firstPass_11_17_of_11_16` proves `PinchThirdEventFaithfulStmt` (Faithful.lean) from four hypotheses (`h16`, `hAx`,
+`hCMGFF`, `hCert`):
 - `h16`: the faithful Lemma 11.16, `PinchSecondEventFaithfulStmt` (owned by n4). The operator allows it as a hypothesis
-  (decision 21:12 UTC; the Draft 11.16 is not used, so there is no cycle with `firstPass_11_16_of_11_17`).
+  (decision 21:12 UTC; the Draft 11.16 is not used). It must come from the corrected Lemma 11.16 (`firstPass_11_16_corrected_*`,
+  FirstPass/S11k.lean), never from the older `firstPass_11_16_of_11_17` (using it here would be a cycle).
 - `hAx`: the staged metric field axioms `LQGMetricFieldAxioms` (Proposed/LQG.lean:199, Fact 2.2 I-IV), pending the
   operator's source-check; used only through the almost-sure facts of AsFacts11_17.lean.
 - `hCMGFF`: the frozen `CameronMartinGFFMutualAbsCont` (Frozen/S11d). Step 17.6 is proved from it through
   `pinchPair_transfer_of_certificate` (PinchCertificate11_17.lean).
-- `hCert`: `PinchCertificateStmt`, the NEW field-level certificate of Step 17.6 for the bump shift (one measurable field
-  event certifying the pinch triple before and after the shift). NOT frozen and NOT proved: an open NEW step.
+- `hCert`: `PinchCertificateStmt`, the field-level certificate of Step 17.6 for the bump shift (one measurable field
+  event certifying the pinch triple before and after the shift). It is proved from frozen inputs by
+  `pinchCertificateStmt_of_frozen` (PinchCertificateProof11_17.lean); `firstPass_11_17_corrected` there has it discharged.
 
 The proof follows Steps 17.3-17.6 of `notes/fp-gaps/CHATGPT-11-15-17-faithful.md` (section 6): the truncation selection
 (Select11_17, Cover11_17), the almost-sure bump admissibility and persistence of the pinch events (AsFacts11_17,
@@ -57,7 +60,7 @@ theorem bumpExponent_nonpos {ξ k : ℝ} {φ : ℂ → ℝ} (hξ : 0 < ξ) (hk0 
   have h3 := mul_nonneg (neg_nonneg.mpr h2) (hφ z).1
   nlinarith
 
-/-- Lemma 11.17, corrected form (`PinchThirdEventFaithfulStmt`), from the faithful Lemma 11.16 and the two named inputs. -/
+/-- Lemma 11.17, corrected form (`PinchThirdEventFaithfulStmt`), from the faithful Lemma 11.16 `h16` and the named inputs `hAx`, `hCMGFF`, `hCert` (four hypotheses in all). -/
 theorem firstPass_11_17_of_11_16 (h16 : PinchSecondEventFaithfulStmt.{u})
     (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)

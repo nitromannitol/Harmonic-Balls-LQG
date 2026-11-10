@@ -12,9 +12,9 @@ lines 95-107). The transfer itself is `cameronMartinFieldCertificateTransfer` (S
 frozen `CameronMartinGFFMutualAbsCont`. It needs one common measurable field event `B` that certifies both the pair event of
 `(μ ω, D ω)` and that of the Weyl-shifted pair `weylShiftPair γ ξ f (μ ω, D ω)`: this is `PinchFieldCertificate`.
 
-Here: the transfer `pinchPair_transfer_of_certificate` (proved). The certificate itself is the NEW step `PinchCertificateStmt`
-(a named statement, not frozen, not proved): it needs field-level versions of the scalar quantities of the three events,
-see the report of this round.
+Here: the transfer `pinchPair_transfer_of_certificate` (proved). The certificate is `PinchCertificateStmt`, proved from frozen
+inputs by `pinchCertificateStmt_of_frozen` (PinchCertificateProof11_17.lean) through the field-level decoders of the scalar
+quantities of the three events.
 -/
 
 namespace HarmonicBalls
@@ -55,14 +55,15 @@ theorem pinchPair_transfer_of_certificate (hCM : CameronMartinGFFMutualAbsCont.{
     {ω | pinchPairEvent U V W T Q' Q δ M (weylShiftPair γ ξ f (μ ω, D ω))} ⟨B, hB, hE0, hEf⟩
   exact key.2.2.2 hpos
 
-/-- NEW STEP (Step 17.6, field-level certificate). NOT frozen and NOT proved. For every buffered pinch geometry, every
+/-- Step 17.6, field-level certificate, proved from frozen inputs by `pinchCertificateStmt_of_frozen`
+(PinchCertificateProof11_17.lean). For every buffered pinch geometry, every
 `γ ∈ (0, 2)`, `α₀ < Q`, `ξ > 0`, every smooth compactly supported shift `f` vanishing on the unit circle, on `U` and on the
 annulus `𝔸_{3,6}(0)`, every whole-plane GFF carrier with its LQG measure and metric, and every `M > 0`, the pair event
 admits the field-level certificate `PinchFieldCertificate`.
-Written source: corrected paper lines 3726-3756 (Step 17.6; the measurability of `ω ↦ (μ ω, D ω)` is not written there);
-the proposal of `notes/fp-gaps/CHATGPT-cm-field-certificate.md` sections 2, 4, 5 (the scalar field versions: the internal
-metric and set distances via `LQGInternalMetricWeylAeMeasurableFrozen`, masses of `U` via `LQGMassFunctionalMeasurableFrozen`,
-the annulus Green potential `annulusGreenPotentialSup μ 0 3 6`, which has no frozen field-level version). The shift `f` only
+Written source: corrected paper lines 3726-3756 (Step 17.6); the proof route is `notes/fp-gaps/CHATGPT-cm-field-certificate.md`
+sections 2, 4, 5. The scalar field versions are the frozen decoders: the internal metric and set distances via
+`LQGInternalMetricWeylAeMeasurableFrozen`, masses of `U` via `LQGMassFunctionalMeasurableFrozen`, and the annulus Green
+potential `annulusGreenPotentialSup μ 0 3 6` via `exists_annulusGreenField` (S11h/GreenField11_17.lean). The shift `f` only
 enters through `f = 0` on `U` and on `𝔸_{3,6}(0)`, where the masses and the annulus potential are unchanged. -/
 def PinchCertificateStmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
