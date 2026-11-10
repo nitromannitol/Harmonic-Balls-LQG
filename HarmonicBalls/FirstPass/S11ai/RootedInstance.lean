@@ -10,8 +10,8 @@ Source: `notes/fp-gaps/CHATGPT-n3-identification.md` §5.2 and §5.3, with §1.2
 `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`; decoded-pair instantiation: `notes/fp-gaps/CHATGPT-hb-11-13-blockers.md` §1.2
 (chat 196).
 
-The rooted physical pair is the decoded pair of the rooted observation (`rootedObs`): `μR z ω := κ (rootedObs z ω)` and
-`dR z ω := m (rootedObs z ω)` (`rootedMeasDec`, `rootedMetricDec`). With this choice the fitting clause `hFit` is
+The rooted physical pair is the decoded pair `decodedRootMeasure κ`, `decodedRootMetric m` (S11at.lean; the
+Campbell reference observation). With this choice the fitting clause `hFit` is
 definitional (`Iff.rfl`), so it is no longer a hypothesis and no longer depends on n3.
 The clauses that remain are:
 * `hSeq` (sequence_eq): `c` is the truncated `localCert` sequence (J) of Step 4;
@@ -67,26 +67,8 @@ theorem eventually_closedBall_cutRadius_subset {c₂ z : ℂ} {r₂ : ℝ} (hz :
   unfold FirstPassS11ah.cutRadius FirstPassS11ah.certScale
   linarith
 
-/-- **Rooted observation (ChatGPT chat 196 §1.2).** The test-pairing component of the Campbell reference observation at the
-root `z`, for the restriction of the field to `D = ball c₂ r₂`. The decoders `κ` (measure) and `m` (metric) act on it. -/
-noncomputable def rootedObs {Ω : Type*} (γ α₀ : ℝ) (c₂ : ℂ) (r₂ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) :
-    {φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ :=
-  (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2
-
-/-- **Decoded rooted measure** `μR z ω := κ (rootedObs z ω)`: the rooted physical measure of the consumers (chat 196 §1.2). -/
-noncomputable def rootedMeasDec {Ω : Type*} (c₂ : ℂ) (r₂ : ℝ)
-    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
-    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : Measure ℂ :=
-  κ (rootedObs γ α₀ c₂ r₂ hC z ω)
-
-/-- **Decoded rooted metric** `dR z ω := m (rootedObs z ω)`: the rooted physical metric of the consumers (chat 196 §1.2). -/
-noncomputable def rootedMetricDec {Ω : Type*} (c₂ : ℂ) (r₂ : ℝ)
-    (m : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ)
-    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
-  m (rootedObs γ α₀ c₂ r₂ hC z ω)
-
 /-- **Termwise identity `hT` from the shared identification (§1.3 Steps 4-6, deterministic composition).**
-The rooted physical pair is the decoded pair (`rootedMeasDec`, `rootedMetricDec`), so the fitting clause holds by `Iff.rfl`.
+The rooted physical pair is the decoded pair (`FirstPassS11at.decodedRootMeasure`, `FirstPassS11at.decodedRootMetric`).
 For a.e. root `z ∈ A`, every admissible `(b, u)` and almost surely, the certificate sequence `c` at the rooted observation
 equals the scale-one indicator of `F` at the dilated, translated canonical pairing, for all large `n`. -/
 theorem ae_termwise_of_identification
@@ -103,7 +85,7 @@ theorem ae_termwise_of_identification
     {F : Set (ModConstTestPairings (ball (0 : ℂ) 7))}
     (hCov : FirstPassS11at.RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
       (AdmissibleRootShift α₀) rootRadius
-      (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd)
+      (FirstPassS11at.decodedRootMeasure κ γ α₀ hC) (FirstPassS11at.decodedRootMetric m γ α₀ hC) Dμ Dd)
     (hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
       AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
         (FirstPassS11i.CertificateEvent
@@ -174,7 +156,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_identification
     {F : Set (ModConstTestPairings (ball (0 : ℂ) 7))} (hF : MeasurableSet F)
     (hCov : FirstPassS11at.RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
       (AdmissibleRootShift α₀) rootRadius
-      (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd)
+      (FirstPassS11at.decodedRootMeasure κ γ α₀ hC) (FirstPassS11at.decodedRootMetric m γ α₀ hC) Dμ Dd)
     (hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
       AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
         (FirstPassS11i.CertificateEvent
