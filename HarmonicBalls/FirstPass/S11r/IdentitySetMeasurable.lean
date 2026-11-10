@@ -48,4 +48,24 @@ theorem measurableSet_forall_eq_of_continuous {Ψ : Type*} [MeasurableSpace Ψ] 
   rw [hset]
   exact hS.compl.union hcore
 
+/-- The identity required on a countable set `D` of endpoints is a measurable set of distributions, when each side is
+measurable in the distribution for each endpoint. This is the form used for the Cameron-Martin transfer of the metric
+identity: the countable set is dense in `V × V`, and the identity on all of `V × V` follows by continuity of both sides
+(`Continuous.ext_on`). -/
+theorem measurableSet_forall_mem_eq {Ψ : Type*} [MeasurableSpace Ψ] {X : Type*} [TopologicalSpace X] (D : Set X)
+    (hD : D.Countable) (F G : Ψ → X → ENNReal) (hFm : ∀ x, Measurable fun T => F T x)
+    (hGm : ∀ x, Measurable fun T => G T x) :
+    MeasurableSet {T | ∀ x ∈ D, F T x = G T x} := by
+  have hset : {T | ∀ x ∈ D, F T x = G T x} = ⋂ x ∈ D, {T | F T x = G T x} := by
+    ext T
+    constructor
+    · intro h
+      have h0 : ∀ x ∈ D, F T x = G T x := h
+      exact mem_iInter₂.2 fun x hx => h0 x hx
+    · intro h
+      have h1 : ∀ x ∈ D, F T x = G T x := fun x hx => mem_iInter₂.1 h x hx
+      exact h1
+  rw [hset]
+  exact MeasurableSet.biInter hD fun x _ => measurableSet_eq_fun (hFm x) (hGm x)
+
 end HarmonicBalls
