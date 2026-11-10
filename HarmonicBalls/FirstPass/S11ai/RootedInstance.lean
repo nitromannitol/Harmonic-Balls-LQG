@@ -1,26 +1,26 @@
 import HarmonicBalls.FirstPass.S11ai.RootedIdentification
 import HarmonicBalls.FirstPass.S11ah.LocalCert
+import HarmonicBalls.FirstPass.S11at
 
 /-!
 # Rooted instance of the shared certificate identification, and the termwise identity `hT` from it
-(fp-S11ai-11-13-steps-6-7, operator note 04:20 UTC)
+(fp-S11ai-11-13-steps-6-7, operator note 04:20 UTC; fp-S11ai-11-13-steps-6-7d, operator note 2026-11-10 07:59 UTC)
 
-Source: `notes/fp-gaps/CHATGPT-n3-identification.md` §5.2 (instance used by n1) and §5.3, with §1.2-§1.3 of
-`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`.
+Source: `notes/fp-gaps/CHATGPT-n3-identification.md` §5.2 and §5.3, with §1.2-§1.3 of
+`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`; decoded-pair instantiation: `notes/fp-gaps/CHATGPT-hb-11-13-blockers.md` §1.2
+(chat 196).
 
-n3's shared structure `CertificateIdentification` (chat 152 §5) is not yet committed. Its clauses are stated here inline,
-with the same content, so that n3's name can replace them when it exists:
+The rooted physical pair is the decoded pair of the rooted observation (`rootedObs`): `μR z ω := κ (rootedObs z ω)` and
+`dR z ω := m (rootedObs z ω)` (`rootedMeasDec`, `rootedMetricDec`). With this choice the fitting clause `hFit` is
+definitional (`Iff.rfl`), so it is no longer a hypothesis and no longer depends on n3.
+The clauses that remain are:
 * `hSeq` (sequence_eq): `c` is the truncated `localCert` sequence (J) of Step 4;
-* `hFit` (fitting_eq, rooted instance): for a.e. root `z ∈ A`, the decoded certificate of the rooted observation equals
-  the physical rooted certificate, for every centre and scale whose buffered cutoff ball lies in `D`;
-* `hCov` (covariance, §1.3 Step 6): the physical rooted certificate at scale `2^{-n}` equals the unit-scale certificate of
-  the dilated, translated canonical pairing, for all sufficiently large `n` (EVENTUAL in `n`, with the cutoff inside the
-  almost-sure quantifier: operator note 2026-11-10 07:10 UTC, ChatGPT chat 195, `notes/fp-gaps/CHATGPT-hb-hCov-locality.md`
-  §2). The eventual lemma is q1's `RootedCertificateEventualCovarianceStmt` (`S11at.lean`, not yet committed); it is the
-  hypothesis here until it lands. The fixed-`n` form was too strong as typed (metric shortcuts leave the locality ball);
-* `hG` (scale_one_eq, transferred): the unit-scale coding identity `unitObs ∈ F ↔ 𝓔_1(μ₀, d₀)` evaluated at the dilated,
-  translated canonical pairing, almost surely for the sample field. The transfer from the canonical law `P₀` to the law of
-  the translated field needs the Cameron–Martin input (§1.3 Step 5). NOT SOURCED as a transfer; reported.
+* `hCov` (covariance, §1.3 Step 6): the eventual-in-`n` covariance of the decoded rooted pair, stated as the named
+  hypothesis `FirstPassS11at.RootedCertificateEventualCovarianceStmt` (q1, `S11at.lean`). The cutoff is inside the a.s.
+  quantifier (operator note 2026-11-10 07:10 UTC, ChatGPT chat 195, `notes/fp-gaps/CHATGPT-hb-hCov-locality.md` §2). It is a
+  hypothesis until q1 proves it;
+* `hG` (scale_one_eq, transferred): the unit-scale coding identity `unitObs ∈ F ↔ 𝓔_1(μ₀, d₀)` at the dilated, translated
+  canonical pairing, almost surely. A hypothesis here; `RootedTransfer.lean` derives it from named inputs.
 
 Proved here: `ae_termwise_of_identification` (hT from these clauses, with the eventual cutoff inclusion
 `eventually_closedBall_cutRadius_subset`), and the entry `ae_quantum_bad_mass_eq_zero_of_identification`.
@@ -67,7 +67,26 @@ theorem eventually_closedBall_cutRadius_subset {c₂ z : ℂ} {r₂ : ℝ} (hz :
   unfold FirstPassS11ah.cutRadius FirstPassS11ah.certScale
   linarith
 
+/-- **Rooted observation (ChatGPT chat 196 §1.2).** The test-pairing component of the Campbell reference observation at the
+root `z`, for the restriction of the field to `D = ball c₂ r₂`. The decoders `κ` (measure) and `m` (metric) act on it. -/
+noncomputable def rootedObs {Ω : Type*} (γ α₀ : ℝ) (c₂ : ℂ) (r₂ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) :
+    {φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ :=
+  (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2
+
+/-- **Decoded rooted measure** `μR z ω := κ (rootedObs z ω)`: the rooted physical measure of the consumers (chat 196 §1.2). -/
+noncomputable def rootedMeasDec {Ω : Type*} (c₂ : ℂ) (r₂ : ℝ)
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : Measure ℂ :=
+  κ (rootedObs γ α₀ c₂ r₂ hC z ω)
+
+/-- **Decoded rooted metric** `dR z ω := m (rootedObs z ω)`: the rooted physical metric of the consumers (chat 196 §1.2). -/
+noncomputable def rootedMetricDec {Ω : Type*} (c₂ : ℂ) (r₂ : ℝ)
+    (m : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ)
+    (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
+  m (rootedObs γ α₀ c₂ r₂ hC z ω)
+
 /-- **Termwise identity `hT` from the shared identification (§1.3 Steps 4-6, deterministic composition).**
+The rooted physical pair is the decoded pair (`rootedMeasDec`, `rootedMetricDec`), so the fitting clause holds by `Iff.rfl`.
 For a.e. root `z ∈ A`, every admissible `(b, u)` and almost surely, the certificate sequence `c` at the rooted observation
 equals the scale-one indicator of `F` at the dilated, translated canonical pairing, for all large `n`. -/
 theorem ae_termwise_of_identification
@@ -79,28 +98,12 @@ theorem ae_termwise_of_identification
     (c : ℕ → (ℂ × ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ)) → ℝ)
     (hSeq : ∀ (n : ℕ) (z : ℂ) (ℓ : {φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ),
       c n (z, ℓ) = FirstPassS11ah.localCert (ball c₂ r₂) κ m Ostar U V W T Q' Q η M n ℓ z)
-    (μR : ℂ → Ω → Measure ℂ) (dR : ℂ → Ω → ℂ → ℂ → ℝ)
     (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
     (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
     {F : Set (ModConstTestPairings (ball (0 : ℂ) 7))}
-    (hFit : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ᵐ ω ∂P, ∀ (z' : ℂ) (n : ℕ),
-      closedBall z' (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
-        (FirstPassS11i.CertificateEvent (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2)
-            (m (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z' ↔
-          FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z'))
-    (hCov : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
-      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∃ n₀ : ℕ, ∀ n ≥ n₀,
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z b →
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z (rootRadius z) →
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
-        (FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z ↔
-          FirstPassS11i.CertificateEvent
-            (Dμ (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            (Dd (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            Ostar U V W T Q' Q η M 1 0))
+    (hCov : FirstPassS11at.RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
+      (AdmissibleRootShift α₀) rootRadius
+      (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd)
     (hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
       AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
         (FirstPassS11i.CertificateEvent
@@ -115,9 +118,10 @@ theorem ae_termwise_of_identification
           (ballRestrictPairing 7 ⁻¹' F).indicator (fun _ => (1 : ℝ))
             (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))) := by
   classical
-  filter_upwards [hFit, hCov, hG,
+  unfold FirstPassS11at.RootedCertificateEventualCovarianceStmt at hCov
+  filter_upwards [hCov, hG,
     ae_restrict_mem (μ := (volume : Measure ℂ)) (measurableSet_ball : MeasurableSet (ball c₁ r₁))]
-    with z hFz hCz hGz hzB hzA b u hb hbz hb1 hu hcomp hu0 hu_eq
+    with z hCz hGz hzB hzA b u hb hbz hb1 hu hcomp hu0 hu_eq
   have hzD : z ∈ ball c₂ r₂ := hsub (ball_subset_closedBall hzB)
   have hzn : 0 < ‖z‖ := by linarith
   have hzb : z ∈ ball z b := mem_ball_self hb
@@ -125,7 +129,7 @@ theorem ae_termwise_of_identification
   obtain ⟨nSub, hnSub⟩ := eventually_atTop.1 ((eventually_closedBall_cutRadius_subset hzD).and
     ((eventually_closedBall_cutRadius_subset hzb).and (eventually_closedBall_cutRadius_subset hzr)))
   have hadm : AdmissibleRootShift α₀ z b u := ⟨hb, hbz, hb1, hu, hcomp, hu0, hu_eq⟩
-  filter_upwards [hFz hzA, hCz hzA b u hadm, hGz hzA b u hadm] with ω h1 h2 h3
+  filter_upwards [hCz hzA b u hadm, hGz hzA b u hadm] with ω h2 h3
   obtain ⟨nCov, hnCov⟩ := h2
   refine ⟨max nSub nCov, fun n hn => ?_⟩
   have hnSub' : nSub ≤ n := le_trans (le_max_left _ _) hn
@@ -133,7 +137,8 @@ theorem ae_termwise_of_identification
   obtain ⟨hs, hsb, hsr⟩ := hnSub n hnSub'
   change c n (z, (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2) = _
   rw [hSeq, FirstPassS11ah.localCert_of_subset hs]
-  have hkey := (h1 z n hs).trans ((hnCov n hnCov' hsb hsr hs).trans (h3 n))
+  -- `hFit` is definitional for the decoded pair: the covariance clause already compares the decoded certificate.
+  have hkey := (hnCov n hnCov' hsb hsr hs).trans (h3 n)
   rw [Set.indicator_apply]
   simp only [Set.mem_preimage]
   by_cases hE : FirstPassS11i.CertificateEvent
@@ -148,7 +153,7 @@ theorem ae_termwise_of_identification
 
 /-- **Entry for n3 with the shared identification in place of `hT`.** Same conclusion as
 `ae_quantum_bad_mass_eq_zero_of_termwise`; the termwise identity is `ae_termwise_of_identification` applied to the
-clauses `hSeq`, `hFit`, `hCov`, `hG`. -/
+clauses `hSeq`, `hCov`, `hG` (`hFit` is definitional for the decoded pair). -/
 theorem ae_quantum_bad_mass_eq_zero_of_identification
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (hB : BirkhoffPointwiseErgodic.{0})
     (hCamp : HarmonicBalls.LocalCampbellMarkedRestrictionFrozen.{u})
@@ -164,28 +169,12 @@ theorem ae_quantum_bad_mass_eq_zero_of_identification
     (c : ℕ → (ℂ × ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ)) → ℝ)
     (hSeq : ∀ (n : ℕ) (z : ℂ) (ℓ : {φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ),
       c n (z, ℓ) = FirstPassS11ah.localCert (ball c₂ r₂) κ m Ostar U V W T Q' Q η M n ℓ z)
-    (μR : ℂ → Ω → Measure ℂ) (dR : ℂ → Ω → ℂ → ℂ → ℝ)
     (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
     (Dd : ModConstTestPairings (Set.univ : Set ℂ) → ℂ → ℂ → ℝ)
     {F : Set (ModConstTestPairings (ball (0 : ℂ) 7))} (hF : MeasurableSet F)
-    (hFit : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ᵐ ω ∂P, ∀ (z' : ℂ) (n : ℕ),
-      closedBall z' (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
-        (FirstPassS11i.CertificateEvent (κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2)
-            (m (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z' ↔
-          FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z'))
-    (hCov : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
-      AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∃ n₀ : ℕ, ∀ n ≥ n₀,
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z b →
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball z (rootRadius z) →
-        closedBall z (FirstPassS11ah.cutRadius n) ⊆ ball c₂ r₂ →
-        (FirstPassS11i.CertificateEvent (μR z ω) (dR z ω) Ostar U V W T Q' Q η M
-            (FirstPassS11ah.certScale n) z ↔
-          FirstPassS11i.CertificateEvent
-            (Dμ (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            (Dd (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))))
-            Ostar U V W T Q' Q η M 1 0))
+    (hCov : FirstPassS11at.RootedCertificateEventualCovarianceStmt P γ hC hcirc c₁ c₂ r₁ r₂ A Ostar U V W T Q' Q η M
+      (AdmissibleRootShift α₀) rootRadius
+      (rootedMeasDec c₂ r₂ κ γ α₀ hC) (rootedMetricDec c₂ r₂ m γ α₀ hC) Dμ Dd)
     (hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
       AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
         (FirstPassS11i.CertificateEvent
@@ -200,7 +189,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_identification
     ∀ᵐ ω ∂P, ∫⁻ z in ball c₁ r₁,
       S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellMarkedObs α₀ (ball c₂ r₂) (hC ω) z) ∂(μ ω) = 0 :=
   ae_quantum_bad_mass_eq_zero_of_termwise hCM hB hCamp hγ0 hγ2 hα hh hμ hE hr₁ hr₂ hsub h0 A c hF
-    (ae_termwise_of_identification hsub A Ostar U V W T Q' Q η M κ m c hSeq μR dR Dμ Dd hFit hCov hG)
+    (ae_termwise_of_identification hsub A Ostar U V W T Q' Q η M κ m c hSeq Dμ Dd hCov hG)
     hS hSfail
 
 end FirstPassS11ai
