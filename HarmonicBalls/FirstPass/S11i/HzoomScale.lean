@@ -23,7 +23,8 @@ Route, per `k` with `R = 2^k`:
 * 4.3 unit ball. The unit-ball frequency statement of every normalized model is the hypothesis `UnitBallFrequencyModelsStmt`.
   It is NOT proved here: it is where the frozen `DMSLemmaA10WholePlaneMarked` and the unit-scale hFit/hCov/hFdef argument
   enter (see the report).
-* The metric normalization (Fact 2.2 III-IV for the renormalized field) is the hypothesis `ZoomMetricNormStmt`, not proved here.
+* The metric normalization (Fact 2.2 III-IV for the renormalized field) is `ZoomMetricNormStmt`, proved as
+  `zoomMetricNormStmt_of_isLQGMetricOfField` from the axioms III, IV of `IsLQGMetric` (no hypothesis).
 -/
 
 open MeasureTheory Filter Topology Set Metric HarmonicBalls
@@ -125,9 +126,9 @@ def UnitBallFrequencyModelsStmt (P : Measure Ω) (γ ξ q : ℝ) (U V W T Q' Q :
     IsWholePlaneGFF P hC' hcirc' → IsLQGMeasureOfField P γ 0 hcirc' μ' → IsLQGMetricOfField P γ ξ 0 hC' D' →
       UnitBallFrequencyStmt P q U V W T Q' Q δ M μ' D'
 
-/-- **INPUT (pending): metric normalization at every scale.** For every `k`, the renormalized field `normField (2^k) hC hcirc`
+/-- **Metric normalization at every scale** (proved for `Ω : Type` as `zoomMetricNormStmt_of_isLQGMetricOfField`). For every `k`, the renormalized field `normField (2^k) hC hcirc`
 has an LQG metric `Dk` whose zoom relation holds: `zoomMetric (D ω) k = B · Dk ω` with `B > 0` almost surely. This is Fact 2.2
-III-IV (weyl scaling and coordinate change of the metric, paper lines 432-457) for the renormalized field. Not proved here. -/
+III-IV (weyl scaling and coordinate change of the metric, paper lines 432-457) for the renormalized field. -/
 def ZoomMetricNormStmt (P : Measure Ω) (γ ξ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (D : Ω → ℂ → ℂ → ℝ) : Prop :=
   ∀ k : ℕ, ∃ Dk : Ω → ℂ → ℂ → ℝ, IsLQGMetricOfField P γ ξ 0 (normField ((2 : ℝ) ^ k) hC hcirc) Dk ∧
@@ -180,5 +181,116 @@ theorem hphys_of_unit_models {P : Measure Ω} {γ ξ q δ M : ℝ} {U V W T Q' Q
           ((2 : ℝ) ^ k * (2 : ℝ)⁻¹ ^ n) z}.ncard : ℕ) : ℝ) / (N : ℝ)) atTop (𝓝 q) :=
   HarmonicBalls.FirstPassS11iStep8Transfer.hphys_of_zoom_const_family P U V W T Q' Q δ M q μ D
     (hzoom_all_of_unit_models hγ0 hγ2 hG hμ hCC hMetric hunit)
+
+/-! ### `ZoomMetricNormStmt`, proved from the axioms III and IV of `IsLQGMetric` (Fact 2.2 III-IV)
+
+The renormalized pairing is `normField R hC hcirc ω = addFunPairing (affinePullbackPairing (hC ω) R 0) (fun _ => -hcirc R 0)`.
+Its LQG metric is the metric `𝔇` of `IsLQGMetric` evaluated at it. Axiom III gives the Weyl scaling by constants, and
+`weylScaling_const` turns the constant into the factor `e^{ξ c}`; axiom IV (`coordChange`) gives the zoom. The universe of
+`Ω` is `Type` here, as in `IsLQGMetric`. -/
+
+/-- Pairing with the zero function is the identity: `addFunPairing T 0 = T`. -/
+lemma addFunPairing_fun_zero (T : (ℂ → ℝ) → ℝ) : addFunPairing T (fun _ => (0 : ℝ)) = T := by
+  funext φ
+  simp [addFunPairing]
+
+/-- **Weyl scaling by a constant** (Fact 2.2 III, line 445; GM21 (1.8)). `weylScaling D ξ c = e^{ξ c} · weylScaling D ξ 0`:
+the integrand is the constant `e^{ξ c}`, the integral over `[0, T]` is `e^{ξ c} T`, and the infimum over the paths commutes
+with the finite positive factor. -/
+lemma weylScaling_const (D : ℂ → ℂ → ℝ) (ξ c : ℝ) (u v : ℂ) :
+    weylScaling D ξ (fun _ => c) u v =
+      ENNReal.ofReal (Real.exp (ξ * c)) * weylScaling D ξ (fun _ => 0) u v := by
+  have hpos : ENNReal.ofReal (Real.exp (ξ * c)) ≠ 0 := (ENNReal.ofReal_pos.mpr (Real.exp_pos _)).ne'
+  unfold weylScaling
+  simp only [setLIntegral_const, Real.volume_Icc, sub_zero, mul_zero, Real.exp_zero, ENNReal.ofReal_one, one_mul,
+    ENNReal.mul_iInf_of_ne hpos ENNReal.ofReal_ne_top]
+
+/-- Axiom III of `IsLQGMetric` for a whole-plane GFF `G` (zero shift): almost surely, for every continuous `f`, the metric of
+`G + f` is the Weyl scaling `e^{ξ f}` of the metric of `G`. -/
+lemma ae_weylScaling_of_isWholePlaneGFF {Ω₀ : Type} [MeasurableSpace Ω₀] {P : Measure Ω₀} {γ ξ : ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (hM : IsLQGMetric γ ξ 𝔇) {G : Ω₀ → (ℂ → ℝ) → ℝ}
+    {hcirc : Ω₀ → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P G hcirc) :
+    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → ∀ u v : ℂ,
+      ENNReal.ofReal (𝔇 (addFunPairing (G ω) f) u v) = weylScaling (𝔇 (G ω)) ξ f u v := by
+  have h := (hM.satisfiesLQGMetricAxioms Ω₀ P G hcirc (fun _ _ => (0 : ℝ)) hG
+    (fun _ => continuous_const) (fun _ => measurable_const)).ae_weylScaling
+  simpa only [addFunPairing_fun_zero] using h
+
+/-- The coordinate-change constants of axiom IV and of `normField` at scale `R > 0`: the pullback of `hC ω` by the
+constant `lqgQ γ log R` is the renormalized pairing `normField R hC hcirc ω` shifted by `lqgQ γ log R + hcirc R 0`. -/
+lemma addFunPairing_affine_eq_normField {Ω₀ : Type} {hC : Ω₀ → (ℂ → ℝ) → ℝ} {hcirc : Ω₀ → ℝ → ℂ → ℝ}
+    (γ : ℝ) {R : ℝ} (hR : 0 < R) (ω : Ω₀) :
+    addFunPairing (affinePullbackPairing (hC ω) R 0) (fun _ => lqgQ γ * Real.log R) =
+      addFunPairing (normField R hC hcirc ω) (fun _ => lqgQ γ * Real.log R + hcirc ω R 0) := by
+  funext φ
+  simp only [addFunPairing, affinePullbackPairing, normField, Complex.norm_real, Real.norm_of_nonneg hR.le,
+    integral_const_mul]
+  ring
+
+/-- **Metric normalization at one scale** (Fact 2.2 III-IV for the renormalized field). For `R > 0` and `P`-a.e. `ω`, the
+zoomed metric `(x, y) ↦ D ω (R x, R y)` is `e^{ξ c}` times the Weyl scaling of the metric of `normField R hC hcirc ω`,
+with `c = lqgQ γ log R + hcirc R 0`. -/
+lemma zoom_metric_identity {Ω₀ : Type} [MeasurableSpace Ω₀] {P : Measure Ω₀} {γ ξ : ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (hM : IsLQGMetric γ ξ 𝔇)
+    {hC : Ω₀ → (ℂ → ℝ) → ℝ} {hcirc : Ω₀ → ℝ → ℂ → ℝ} {D : Ω₀ → ℂ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
+    (hDae : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) = weylScaling (𝔇 (hC ω)) ξ (fun _ => 0) u v)
+    {R : ℝ} (hR : 0 < R) :
+    ∀ᵐ ω ∂P, ∃ B : ℝ, 0 < B ∧ ∀ x y : ℂ,
+      (1 : ℝ) * D ω ((R : ℂ) * x) ((R : ℂ) * y) =
+        B * (weylScaling (𝔇 (normField R hC hcirc ω)) ξ (fun _ => 0) x y).toReal := by
+  have hWC := ae_weylScaling_of_isWholePlaneGFF hM hG
+  have hWN := ae_weylScaling_of_isWholePlaneGFF hM (isWholePlaneGFF_normalized hG hR.ne')
+  have hIV := (hM.satisfiesLQGMetricAxioms Ω₀ P hC hcirc (fun _ _ => (0 : ℝ)) hG
+    (fun _ => continuous_const) (fun _ => measurable_const)).coordChange R hR 0
+  filter_upwards [hDae, hWC, hWN, hIV] with ω hD hWCω hWNω hIVω
+  refine ⟨Real.exp (ξ * (lqgQ γ * Real.log R + hcirc ω R 0)), Real.exp_pos _, fun x y => ?_⟩
+  simp only [addFunPairing_fun_zero, add_zero,
+    addFunPairing_affine_eq_normField (hC := hC) (hcirc := hcirc) γ hR ω] at hIVω
+  have hnn : 0 ≤ D ω ((R : ℂ) * x) ((R : ℂ) * y) := (hD _ _).1
+  have h1 := (hD ((R : ℂ) * x) ((R : ℂ) * y)).2
+  have h2 := hWCω (fun _ => 0) continuous_const ((R : ℂ) * x) ((R : ℂ) * y)
+  simp only [addFunPairing_fun_zero] at h2
+  have h3 := hIVω x y
+  have h4 := hWNω (fun _ => lqgQ γ * Real.log R + hcirc ω R 0) continuous_const x y
+  rw [weylScaling_const] at h4
+  calc (1 : ℝ) * D ω ((R : ℂ) * x) ((R : ℂ) * y)
+      = (ENNReal.ofReal (D ω ((R : ℂ) * x) ((R : ℂ) * y))).toReal := by
+        rw [ENNReal.toReal_ofReal hnn, one_mul]
+    _ = (weylScaling (𝔇 (hC ω)) ξ (fun _ => 0) ((R : ℂ) * x) ((R : ℂ) * y)).toReal := by rw [h1]
+    _ = (ENNReal.ofReal (𝔇 (hC ω) ((R : ℂ) * x) ((R : ℂ) * y))).toReal := by rw [h2]
+    _ = (ENNReal.ofReal (𝔇 (addFunPairing (normField R hC hcirc ω)
+          (fun _ => lqgQ γ * Real.log R + hcirc ω R 0)) x y)).toReal := by rw [h3]
+    _ = (ENNReal.ofReal (Real.exp (ξ * (lqgQ γ * Real.log R + hcirc ω R 0))) *
+          weylScaling (𝔇 (normField R hC hcirc ω)) ξ (fun _ => 0) x y).toReal := by rw [h4]
+    _ = Real.exp (ξ * (lqgQ γ * Real.log R + hcirc ω R 0)) *
+          (weylScaling (𝔇 (normField R hC hcirc ω)) ξ (fun _ => 0) x y).toReal := by
+        rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal (Real.exp_pos _).le]
+
+/-- **`ZoomMetricNormStmt`, proved.** Let `hC` be a whole-plane GFF with LQG metric `D` (`IsLQGMetricOfField`, `α₀ = 0`). For
+each `k`, the renormalized field `normField (2^k) hC hcirc` has the LQG metric `Dk ω x y = (weylScaling (𝔇 (normField ω)) ξ 0 x y).toReal`
+(`𝔇` the metric of `IsLQGMetric` of `D`), and the zoom of `D` at scale `2^k` is a.s. a positive constant times `Dk`. Only
+axioms III and IV of `IsLQGMetric` are used, together with `isWholePlaneGFF_normalized`. Probability spaces in `Type`, as
+`IsLQGMetric` quantifies over them. -/
+theorem zoomMetricNormStmt_of_isLQGMetricOfField {Ω₀ : Type} [MeasurableSpace Ω₀] {P : Measure Ω₀} {γ ξ : ℝ}
+    {hC : Ω₀ → (ℂ → ℝ) → ℝ} {hcirc : Ω₀ → ℝ → ℂ → ℝ} {D : Ω₀ → ℂ → ℂ → ℝ}
+    (hG : IsWholePlaneGFF P hC hcirc) (hD : IsLQGMetricOfField P γ ξ 0 hC D) :
+    ZoomMetricNormStmt P γ ξ hC hcirc D := by
+  obtain ⟨𝔇, hM, hDae⟩ := hD
+  have hDae' : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) = weylScaling (𝔇 (hC ω)) ξ (fun _ => 0) u v := by
+    filter_upwards [hDae] with ω hω
+    simpa only [neg_zero, zero_mul] using hω
+  intro k
+  have hR : (0 : ℝ) < (2 : ℝ) ^ k := by positivity
+  refine ⟨fun ω x y => (weylScaling (𝔇 (normField ((2 : ℝ) ^ k) hC hcirc ω)) ξ (fun _ => 0) x y).toReal,
+    ⟨𝔇, hM, ?_⟩, zoom_metric_identity hM hG hDae' hR⟩
+  filter_upwards [ae_weylScaling_of_isWholePlaneGFF hM (isWholePlaneGFF_normalized hG hR.ne')] with ω hω
+  intro u v
+  have hfin : weylScaling (𝔇 (normField ((2 : ℝ) ^ k) hC hcirc ω)) ξ (fun _ => 0) u v ≠ ⊤ := by
+    rw [← hω (fun _ => 0) continuous_const u v, addFunPairing_fun_zero]
+    exact ENNReal.ofReal_ne_top
+  simp only [neg_zero, zero_mul]
+  exact ⟨ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hfin⟩
 
 end HarmonicBalls.FirstPassS11iHzoom
