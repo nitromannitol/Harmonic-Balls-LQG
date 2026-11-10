@@ -2,6 +2,10 @@ import HarmonicBalls.FirstPass.S11r.CMTransfer
 import HarmonicBalls.FirstPass.S11r.Frozen
 import HarmonicBalls.FirstPass.S11ai.RootedInstance
 import HarmonicBalls.FirstPass.S11r.UnrootedFixed
+import HarmonicBalls.FirstPass.S11c.CoordRooted11_7
+import HarmonicBalls.FirstPass.S11c.TranslateField11_7
+import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
+import HarmonicBalls.Proposed.LQG
 
 /-!
 # Rooted local identification event (fp-S11r-rooted-local-ident)
@@ -23,9 +27,10 @@ The centred canonical field is `canonFieldOf γ T`; its decoders are `Dμ`, `Dd`
 * `ae_rootedLocalIdent_shifted`: almost-sure transfer of the event to the root-shifted field (Section 4.4), from the base
   conullity `hbase` through the Cameron-Martin transfer `ae_addFunPairing_of_ae` (CMTransfer.lean).
 
-The base conullity `ae_rootedLocalIdent_base` (Section 4.4, `Hz ω ∈ rootedLocalIdentEvent`) is NOT proved in this file.
-The argument needs the translation covariance of the LQG measure and metric, which is not yet in the repository; see the
-round report.
+Section 4.4 base conullity, measure clause: `ae_rootedMeasureIdent_base` (conditional on named inputs: the rooted decoder
+clause `hκ`, the coordinate change `hCC`, the existence `hνex`, the canonical identification `hIdγ`, a metric existence
+`hDex`, and the window positivity `hPF`, the last still PENDING a source). The metric clause of the base conullity is NOT
+yet proved (it needs the translation covariance of the LQG metric, `LQGMetricFieldAxioms` III/IV, and the no-shortcut lemma).
 -/
 
 universe u
@@ -298,5 +303,195 @@ theorem ae_rootedLocalIdent_shifted {Ω : Type u} [MeasurableSpace Ω] (P : Meas
     (hbase : ∀ᵐ ω ∂P, S11c.translatedPairing hC hcirc z ω ∈ E) :
     ∀ᵐ ω ∂P, addFunPairing (S11c.translatedPairing hC hcirc z ω) u ∈ E :=
   ae_addFunPairing_of_ae P hCM hTr hadm.2.2.2.1 hadm.2.2.2.2.1 hadm.2.2.2.2.2.1 hE hbase
+
+/-! ### Section 4.4, measure clause of the base conullity (round 2)
+
+Route (notes/n2.md): the rooted LQG measure at the root `z` of the physical field, with the `(max 1 |·|)`
+normalisation, is the Weyl density `exp(γ v)` (v = γ log max(1,|·|), continuous) times the translate of the
+centred LQG measure `ν` (coordinate change, `ae_isLQGLimit_rooted_translate`); the rooted clause of
+`LocalMeasureKernelStmt` at background `0` then identifies `κ` with it on the window; the centred measure is
+identified with the canonical one by `LQGCanonicalIdentificationStmt` at insertion `γ`. -/
+
+/-- The continuous Weyl shift `v(w) = γ log max(1, |w|)`: it vanishes on the unit disc. -/
+theorem continuous_gamma_log_max_one (γ : ℝ) :
+    Continuous (fun w : ℂ => γ * Real.log (max 1 ‖w‖)) := by
+  refine continuous_const.mul (Continuous.log ?_ ?_)
+  · exact continuous_const.max continuous_norm
+  · intro w
+    exact (lt_of_lt_of_le one_pos (le_max_left _ _)).ne'
+
+/-- Continuity in the centre of the rooted circle averages `h_r(x) - γ circleAverage(log|· - z|)(x)` at a fixed
+positive radius, from the continuity of the field circle averages and the closed form of the log circle average
+(Mathlib `circleAverage_log_norm_sub_const_eq_log_radius_add_posLog`). -/
+theorem continuous_rootedCircleAverage_of_field {α γ r : ℝ} {z : ℂ} {h : ℝ → ℂ → ℝ} (hr : 0 < r)
+    (hf : Continuous (fun x => fieldCircleAverage α h r x)) :
+    Continuous (fun x => rootedCircleAverage α γ z h r x) := by
+  have hlog : Continuous (fun x : ℂ => Real.circleAverage (fun y => Real.log ‖y - z‖) x r) := by
+    have hfun : (fun x : ℂ => Real.circleAverage (fun y => Real.log ‖y - z‖) x r) =
+        fun x => Real.log r + Real.posLog (r⁻¹ * ‖x - z‖) := by
+      funext x
+      exact circleAverage_log_norm_sub_const_eq_log_radius_add_posLog hr.ne'
+    rw [hfun]
+    exact continuous_const.add (Real.continuous_posLog.comp
+      (continuous_const.mul (continuous_norm.comp (continuous_id.sub continuous_const))))
+  unfold rootedCircleAverage
+  exact hf.sub (continuous_const.mul hlog)
+
+/-- Weyl density of the rooted profile: the LQG measure of the rooted circle averages, with the
+`γ log max(1,|·|)` normalisation, is the translate of the centred measure `ν` weighted by `exp(γ v)`. -/
+theorem ae_isLQGLimit_rootedMax {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hG : IsWholePlaneGFF P hC hcirc) (z : ℂ)
+    (hCC : LQGMeasureCoordChange P γ γ (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    {ν : Ω → Measure ℂ} (hν : IsLQGMeasureOfField P γ γ (S11c.translatedCircle hcirc z) ν) :
+    ∀ᵐ ω ∂P, IsLQGLimit γ
+      (addCircleAverage (fieldCircleAverage 0 (hcirc ω))
+        (fun w => -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)))
+      ((ENNReal.ofReal (Real.exp (γ * hcirc ω 1 z)) • (ν ω).map (fun x => x + z)).withDensity fun w =>
+        ENNReal.ofReal (Real.exp (γ * (γ * Real.log (max 1 ‖w‖))))) := by
+  have hlim := S11c.ae_isLQGLimit_rooted_translate (P := P) hγ0 hγ2 (hcirc := hcirc)
+    (hcirc' := S11c.translatedCircle hcirc z) (hC' := S11c.translatedPairing hC hcirc z) z
+    (fun ω r x => rfl) (S11c.isWholePlaneGFF_translate hG z) hCC hν
+  have hcont : ∀ᵐ ω ∂P, ∀ n : ℕ, Continuous (fieldCircleAverage 0 (hcirc ω) (dyadicScale n)) :=
+    ae_all_iff.mpr (fun n => hG.ae_continuous_fieldCircleAverage 0 (dyadicScale_pos n))
+  filter_upwards [hlim, hcont] with ω hω hωc
+  have hW := Section6.isLQGLimit_addCircleAverage hω
+    (fun n => continuous_rootedCircleAverage_of_field (dyadicScale_pos n) (hωc n))
+    (fun w => γ * Real.log (max 1 ‖w‖)) (continuous_gamma_log_max_one γ)
+  have heq : addCircleAverage (rootedCircleAverage 0 γ z (hcirc ω)) (fun w => γ * Real.log (max 1 ‖w‖)) =
+      addCircleAverage (fieldCircleAverage 0 (hcirc ω))
+        (fun w => -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) := by
+    funext r x
+    simp only [addCircleAverage, rootedCircleAverage]
+    have hL : CircleIntegrable (fun w : ℂ => Real.log ‖w - z‖) x r := circleIntegrable_log_norm_sub_const r
+    have hV : CircleIntegrable (fun w : ℂ => γ * Real.log (max 1 ‖w‖)) x r :=
+      (continuous_gamma_log_max_one γ).continuousOn.circleIntegrable'
+    have hA : CircleIntegrable (fun w : ℂ => -γ * Real.log ‖w - z‖) x r := hL.const_mul (-γ)
+    have hscal : Real.circleAverage (fun w : ℂ => -γ * Real.log ‖w - z‖) x r =
+        -γ * Real.circleAverage (fun w : ℂ => Real.log ‖w - z‖) x r := by
+      have h1 : (fun w : ℂ => -γ * Real.log ‖w - z‖) = fun w => (-γ) • Real.log ‖w - z‖ := by
+        funext w
+        simp [smul_eq_mul]
+      rw [h1, Real.circleAverage_fun_smul, smul_eq_mul]
+    rw [show (fun w : ℂ => -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) =
+        fun w => (-γ * Real.log ‖w - z‖) + (γ * Real.log (max 1 ‖w‖)) from rfl,
+      Real.circleAverage_fun_add hA hV, hscal]
+    ring
+  rw [heq] at hW
+  exact hW
+
+/-- Locality of the Weyl density: if the shift `γ log max(1,|·|)` vanishes on `D`, the weighted measure agrees
+with `μ` on `D`. -/
+theorem restrict_withDensity_exp_of_zero (μ : Measure ℂ) {D : Set ℂ} (hD : MeasurableSet D) {g : ℂ → ℝ}
+    (hg : ∀ x ∈ D, g x = 0) (γ : ℝ) :
+    (μ.withDensity fun w => ENNReal.ofReal (Real.exp (γ * g w))).restrict D = μ.restrict D := by
+  rw [restrict_withDensity hD]
+  have hae : (fun w => ENNReal.ofReal (Real.exp (γ * g w))) =ᵐ[μ.restrict D] fun _ => 1 := by
+    refine ae_restrict_of_forall_mem hD (fun x hx => ?_)
+    simp [hg x hx]
+  rw [withDensity_congr_ae hae, withDensity_const, one_smul]
+
+/-- Pure measure identity on a window: if `κ` restricted to `D` is `a • (μz).restrict D` with `μz` the weighted
+translate `c • ν.map (· + z)` (weight `1` on `D`), then for a measurable `B` with `B - z ⊆ D`,
+`κ((· - z)⁻¹' B) = a * (c * ν B)`. -/
+theorem kappa_preimage_eq {κ' ν : Measure ℂ} {z : ℂ} {D : Set ℂ} (hD : MeasurableSet D) {a c : ENNReal}
+    {g : ℂ → ℝ} (hg : ∀ x ∈ D, g x = 0) (γ : ℝ)
+    (h : κ'.restrict D = a • ((c • ν.map (fun x => x + z)).withDensity fun w =>
+      ENNReal.ofReal (Real.exp (γ * g w))).restrict D)
+    {B : Set ℂ} (hB : MeasurableSet B) (hBD : (fun w => w - z) ⁻¹' B ⊆ D) :
+    κ' ((fun w => w - z) ⁻¹' B) = a * (c * ν B) := by
+  have hpre : MeasurableSet ((fun w => w - z) ⁻¹' B) := hB.preimage (measurable_id.sub_const z)
+  have hpre' : (fun x => x + z) ⁻¹' ((fun w => w - z) ⁻¹' B) = B := by
+    ext x
+    simp
+  have h1 : (κ'.restrict D) ((fun w => w - z) ⁻¹' B) = κ' ((fun w => w - z) ⁻¹' B) := by
+    rw [Measure.restrict_apply' hD, inter_eq_left.2 hBD]
+  have h2 : ((c • ν.map (fun x => x + z)).restrict D) ((fun w => w - z) ⁻¹' B) =
+      c * ν B := by
+    rw [Measure.restrict_apply' hD, inter_eq_left.2 hBD, Measure.smul_apply, smul_eq_mul,
+      Measure.map_apply (measurable_add_const z) hpre, hpre']
+  rw [← h1, h, Measure.smul_apply, smul_eq_mul, restrict_withDensity_exp_of_zero _ hD hg γ, h2]
+
+/-- **Section 4.4, measure clause of the base conullity.** For almost every root `z` in the disc `U = ball c₁ r₁`
+(the rooted decoder clause of `LocalMeasureKernelStmt` at background `0`, with decoder `κ` on the window
+`D = ball c₂ r₂`), almost surely the translated field satisfies the measure clause `rootedMeasureIdent`
+of the rooted local identification event.
+
+Inputs (all named, none proved here): the rooted decoder clause `hκ` (Frozen `LocalMeasureKernelStmt`, second
+conjunct, background `0`); the coordinate change `hCC` and the existence `hνex` of the centred LQG measure
+(Proposed `LQGMeasureCoordChange`, `LQGMeasureExistence`); the canonical identification `hIdγ` at insertion `γ`
+(`LQGCanonicalIdentificationStmt`) with a metric existence `hDex` (the premise of `hIdγ`); and positivity and
+finiteness of the centred LQG mass of the window `hPF` (pending, see the report). -/
+theorem ae_rootedMeasureIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c₁ c₂ : ℂ} {r₁ r₂ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
+    (hD1 : closedBall c₂ r₂ ⊆ ball (0 : ℂ) 1)
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (hκ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (fun ω => addCircleAverage (fieldCircleAverage 0 (hcirc ω))
+        (fun w => -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖))) μz →
+        ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+          (κ (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
+            ENNReal.ofReal a • (μz ω).restrict (ball c₂ r₂))
+    (hCC : ∀ z : ℂ, LQGMeasureCoordChange P γ γ (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    (hνex : ∀ z : ℂ, LQGMeasureExistence P γ γ (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ)
+    (hIdγ : S11n.LQGCanonicalIdentificationStmt.{u} γ ξ γ Dμ Dd)
+    (hDex : ∀ z : ℂ, ∃ D : Ω → ℂ → ℂ → ℝ, IsLQGMetricOfField P γ ξ γ (S11c.translatedPairing hC hcirc z) D)
+    (S : Set ℂ) (hS : MeasurableSet S) (A : ℕ → Set ℂ) (hA : ∀ n, MeasurableSet (A n) ∧ A n ⊆ S)
+    (hSD : ∀ z ∈ ball c₁ r₁, (fun w => w - z) ⁻¹' S ⊆ ball c₂ r₂)
+    (hPF : ∀ (z : ℂ) (ν : Ω → Measure ℂ), IsLQGMeasureOfField P γ γ (S11c.translatedCircle hcirc z) ν →
+      ∀ᵐ ω ∂P, 0 < ν ω S ∧ ν ω S < ∞) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
+      rootedMeasureIdent (ball c₂ r₂) κ Dμ γ z S A (S11c.translatedPairing hC hcirc z ω) := by
+  filter_upwards [hκ, ae_restrict_mem measurableSet_ball] with z hz hzU
+  have hG' := S11c.isWholePlaneGFF_translate hG z
+  obtain ⟨ν, hν⟩ := hνex z hG' hγ0 hγ2 (S11c.gamma_lt_lqgQ hγ0 hγ2)
+  obtain ⟨D, hDz⟩ := hDex z
+  have hPFω := hPF z ν hν
+  have hIdω := hIdγ Ω P _ _ ν D hG' hν hDz
+  have hμz := ae_isLQGLimit_rootedMax hγ0 hγ2 hG z (hCC z) hν
+  have hκω := hz (fun ω => (ENNReal.ofReal (Real.exp (γ * hcirc ω 1 z)) • (ν ω).map (fun x => x + z)).withDensity
+    fun w => ENNReal.ofReal (Real.exp (γ * (γ * Real.log (max 1 ‖w‖))))) hμz
+  filter_upwards [hPFω, hIdω, hκω] with ω hPFω' hIdω' hκω'
+  obtain ⟨a', b, ha', -, hνω, -⟩ := hIdω'
+  obtain ⟨a, ha, hκeq⟩ := hκω'
+  have hνω' : ν ω = ENNReal.ofReal a' • Dμ (canonFieldOf γ (S11c.translatedPairing hC hcirc z ω)) := hνω
+  have hνB : ∀ B : Set ℂ, ν ω B = ENNReal.ofReal a' * Dμ (canonFieldOf γ (S11c.translatedPairing hC hcirc z ω)) B :=
+    fun B => by rw [hνω', Measure.smul_apply, smul_eq_mul]
+  have hobs : rootedLocalObs γ (ball c₂ r₂) z (S11c.translatedPairing hC hcirc z ω) =
+      (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2 :=
+    funext (rootedLocalObs_translated hC hcirc γ (ball c₂ r₂) z ω)
+  have hgD : ∀ x ∈ ball c₂ r₂, γ * Real.log (max 1 ‖x‖) = 0 := by
+    intro x hx
+    have hx1 : x ∈ ball (0 : ℂ) 1 := hD1 (ball_subset_closedBall hx)
+    rw [mem_ball_zero_iff] at hx1
+    rw [max_eq_left hx1.le, Real.log_one, mul_zero]
+  have hkey : ∀ B : Set ℂ, MeasurableSet B → B ⊆ S →
+      (κ (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2) ((fun w => w - z) ⁻¹' B) =
+        ENNReal.ofReal a * (ENNReal.ofReal (Real.exp (γ * hcirc ω 1 z)) * ν ω B) := by
+    intro B hB hBS
+    have hBD : (fun w => w - z) ⁻¹' B ⊆ ball c₂ r₂ := (preimage_mono hBS).trans (hSD z hzU)
+    rw [kappa_preimage_eq measurableSet_ball hgD γ hκeq hB hBD]
+  unfold rootedMeasureIdent
+  rw [hobs]
+  have hpos : 0 < ν ω S := hPFω'.1
+  have hfin : ν ω S < ∞ := hPFω'.2
+  have hκS := hkey S hS subset_rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · refine pos_iff_ne_zero.2 (fun h0 => ?_)
+    rw [hνB, h0, mul_zero] at hpos
+    exact lt_irrefl _ hpos
+  · refine lt_top_iff_ne_top.2 (fun htop => ?_)
+    rw [hνB, htop, ENNReal.mul_top (ENNReal.ofReal_pos.2 ha').ne'] at hfin
+    exact lt_irrefl _ hfin
+  · rw [hκS]
+    exact ENNReal.mul_pos (ENNReal.ofReal_pos.2 ha).ne'
+      (ENNReal.mul_pos (ENNReal.ofReal_pos.2 (Real.exp_pos _)).ne' hpos.ne').ne'
+  · rw [hκS]
+    exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (ENNReal.mul_lt_top ENNReal.ofReal_lt_top hfin)
+  · intro n
+    rw [hkey (A n) (hA n).1 (hA n).2, hκS, hνB, hνB]
+    ring
 
 end HarmonicBalls
