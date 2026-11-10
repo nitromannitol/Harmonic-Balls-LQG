@@ -50,7 +50,8 @@ def DMSLemmaA10WholePlaneMarked {Ω : Type*} [MeasurableSpace Ω] (P : Measure �
 /-- FIRST-PASS FROZEN (operator ruling 2026-11-10; chat 241 `notes/fp-gaps/CHATGPT-241-hb-DMS-A10-marked-truth-PRO.md`
 §4: the narrowest corrected declaration). Same parameters and body as `DMSLemmaA10WholePlaneMarked`; the subcritical
 range `0 < γ` and `γ < 2` is inserted after the two old antecedents, so call sites keep their argument order.
-Truth check: FALSE as universally typed: the subcritical assumptions are missing. TRUE under `0 < γ` and `γ < 2`.
+Truth check: TRUE. The subcritical range `0 < γ` and `γ < 2` is part of this statement, and the identity holds for
+each such `γ` (chat 241 ruling, Codex truth 2026-11-10).
 The identity is unnormalized; no factor `π⁻¹`; both sides have total mass `π`.
 Marked whole-plane form of Duplantier-Miller-Sheffield Lemma A.10 for `D = B₁`, unnormalized, with `ℝ≥0∞`-valued
 marked test functions `Ψ(h, z)`. Source: DMS, arXiv:1409.7055v4, Appendix A.1, Lemma A.10, printed p. 184, whole-plane
