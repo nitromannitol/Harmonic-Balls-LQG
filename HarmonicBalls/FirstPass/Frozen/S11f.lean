@@ -28,7 +28,9 @@ Source: Dubédat, Falconet, Gwynne, Pfeffer, Sun (DFGPS20), Lemma 3.19, equation
 by Bou-Rabee-Gwynne (arXiv:2208.11795, paper lines 3392-3405, item (ii)), where it is used for the square-diameter tail of
 Lemma 11.9 (paper lines 3539-3541).
 Used by: pinchSecondEvent_of_openSteps (through `PinchSecondMassStep`, once that step is proved; `HarmonicBalls/FirstPass/S11f/DyadicTail.lean`
-converts it to the discrete dyadic tail). -/
+converts it to the discrete dyadic tail). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): the printed
+exponent is correct, and c₁ is quantified after 𝔇, which allows its multiplicative normalization. Source as the
+answer gives it: DFGPS, arXiv:1905.00380v2, p. 45, Lemma 3.19, (3.63), with the closed-square consequence. -/
 def DDDFSquareDiameterTailFrozen : Prop :=
   ∀ (γ ξ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ),
