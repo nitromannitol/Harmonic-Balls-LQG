@@ -22,7 +22,11 @@ statement for every universe. General LQG background, not specific to the harmon
 joint law of the field and the metric and does not depend on the universe of the sample space. Source: Dubedat-Falconet-
 Gwynne-Pfeffer-Sun 2020, arXiv:1905.00380, Theorem 1.10 and Proposition 3.17 (the metric axioms); Gwynne-Miller 2021,
 Theorem 1.2 (p. 6). Locator pending. Phase 2: derivable by a canonical pushforward along a universe-lifting map
-(n2 estimate 400-800 lines). Used by: ae_wholePlane_weylScaling_shift_univ (FirstPass/S11h/WeylShiftUniv.lean), and
+(n2 estimate 400-800 lines). Truth check TRUE (ChatGPT, 02:36 UTC, `notes/fp-gaps/CHATGPT-hb-distribution-frozen.md` §4):
+it follows from the existing field `IsLQGMetric.satisfiesLQGMetricAxioms` by transferring the data to a `Type`-valued sample
+space, pushing the GFF forward, and pulling back axioms I, III and each deterministic instance of IV; the single a.s. event of
+axiom III carries all continuous shifts and endpoints. The answer adds no literature input (the universe transfer is a
+deduction, not a printed theorem; sources as cited above). Used by: ae_wholePlane_weylScaling_shift_univ (FirstPass/S11h/WeylShiftUniv.lean), and
 through it firstPass_11_17. -/
 def LQGMetricSatisfiesAxiomsUnivFrozen : Prop :=
   ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), IsLQGMetric γ ξ 𝔇 →
