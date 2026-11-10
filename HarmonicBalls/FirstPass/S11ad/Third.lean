@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S11h.OuterDiamFinite
 import HarmonicBalls.FirstPass.S11h.SetDistPos
-import HarmonicBalls.FirstPass.S11ad
+import HarmonicBalls.FirstPass.S11ad.Const
 
 /-!
 # Deterministic and a.s. bounds for the third local event (note §6.4, step 5 of the certificate)
