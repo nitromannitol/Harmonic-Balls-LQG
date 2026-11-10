@@ -88,6 +88,7 @@ built at bd58fe6 (the only failures in the session were untracked or uncommitted
 | PinchFirstEventPositiveStmt | Lemma 11.15 | HarmonicBalls/Draft/Section11.lean:289 | freeze fix (3) inner measure, 10a56e3 |
 | PinchSecondEventPositiveStmt | Lemma 11.16 | HarmonicBalls/Draft/Section11.lean:299 | freeze fix (3) inner measure, 10a56e3 |
 | PinchThirdEventPositiveStmt | Lemma 11.17 | HarmonicBalls/Draft/Section11.lean:312 | freeze fix (3) inner measure, 10a56e3 |
+| LocalMetricReplacementFrozen | External input, first pass (hN2 of the Lemma 11.13 assembly; not a numbered result) | HarmonicBalls/FirstPass/Frozen/S11rMetric.lean:33 | none; wrapper of LocalMetricReplacementStmt (S11r/LocalMetricReplacement.lean:58); operator freeze 2026-11-10 19:00 UTC; Codex Sol truth note: no counterexample, exact Lean truth not certified |
 
 Notes:
 1. Resolved by the operator (E33, 12:40): Prop 9.2 as printed plus the weak [C10] form; Lemma 6.11 in the printed order.
