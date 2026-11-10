@@ -738,3 +738,235 @@ theorem hMass_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measure
   exact ae_mass_of_buffered_identification (hDj j) κ (κj j) Dμ μz (hκz μz hμzE) (hκjz j hzj μz hμzE) hRω
 
 end FirstPassS11at
+
+namespace FirstPassS11at
+
+open MeasureTheory Metric Set Filter Topology
+open scoped ENNReal NNReal
+open HarmonicBalls HarmonicBalls.S11c
+
+/-! ### Rooted local identification: the decoded metric identity `hDecInt` (ChatGPT chat 201, sections 4.3(4), 6)
+
+A continuous metric decoder `m φ` on the window `D` (Frozen/S11r `LocalMetricReplacementStmt`, clause (20)) is read as the
+window metric `windowMetric D m φ`, extended by `0` off `D × D` (as n2's `rootedMetricAt`). The physical rooted metric is
+`rootedWeylMetric` (the real part of the Weyl scaling of the rooted field, Armitage-Gardiner / Duplantier-Sheffield).
+The sign and diagonal of the decoded metric are fixed by continuity (`eq_const_mul_of_ofReal_eq`), using that the physical
+metric is a Euclidean length metric (an input, see the report). -/
+
+/-- Mean-zero test functions supported in the window `D` (the domain of the decoders). -/
+abbrev WinTest (D : Set ℂ) : Type := {φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0}
+
+open Classical in
+/-- The window metric of a continuous decoder `m`, extended by `0` off `D × D`. -/
+noncomputable def windowMetric (D : Set ℂ) (m : WinTest D → C(↥(D ×ˢ D), ℝ)) (φ : WinTest D) : ℂ → ℂ → ℝ :=
+  fun x y => if h : (x, y) ∈ D ×ˢ D then m φ ⟨(x, y), h⟩ else 0
+
+/-- The physical rooted metric at the root `z` (clause (20) of `LocalMetricReplacementStmt`): the real part of the Weyl
+scaling of the rooted field `h^ℂ - α₀ log|·| - γ log|· - z| + γ log max(1, |·|)`. -/
+noncomputable def rootedWeylMetric {Ω : Type*} (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (ξ α₀ γ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
+  fun u v => (weylScaling (𝔇 (hC ω)) ξ
+    (fun w => -α₀ * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) u v).toReal
+
+/-- Continuity of the window metric in the second variable at a point of the open window (Armitage-Gardiner: a continuous
+decoder is continuous on its window). -/
+theorem continuousAt_windowMetric {D : Set ℂ} (hD : IsOpen D) (m : WinTest D → C(↥(D ×ˢ D), ℝ)) (φ : WinTest D)
+    {x : ℂ} (hx : x ∈ D) : ContinuousAt (fun y => windowMetric D m φ x y) x := by
+  have hF : Continuous (fun y : D => (⟨(x, (y : ℂ)), ⟨hx, y.2⟩⟩ : ↥(D ×ˢ D))) :=
+    Continuous.subtype_mk (continuous_const.prodMk continuous_subtype_val) (fun y => ⟨hx, y.2⟩)
+  have hOn : ContinuousOn (fun y => windowMetric D m φ x y) D := by
+    rw [continuousOn_iff_continuous_domRestrict]
+    have heq : (D.domRestrict fun y => windowMetric D m φ x y) =
+        fun y : D => m φ ⟨(x, (y : ℂ)), ⟨hx, y.2⟩⟩ := by
+      funext y
+      simp [Set.domRestrict_apply, windowMetric, hx, y.2]
+    rw [heq]
+    exact (m φ).continuous.comp hF
+  exact hOn.continuousAt (hD.mem_nhds hx)
+
+/-- Sign and diagonal fixing for a decoded length metric (ChatGPT §6; Armitage-Gardiner). If `D` is a Euclidean length
+metric, `m` is continuous in its second variable on the open set `O`, and `m` equals `b · D` in `ENNReal` on `O × O`
+(`ofReal (m x y) = ofReal b * ofReal (D x y)`), then `m = b · D` on `O × O` as real numbers. Off the diagonal `D > 0`
+forces `m > 0` and the equality of reals; on the diagonal `m ≤ 0` from the `ENNReal` identity and `m ≥ 0` from the
+limit of the positive values `m x y`, `y → x`. -/
+theorem eq_const_mul_of_ofReal_eq {D m : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) {O : Set ℂ} (hO : IsOpen O)
+    {b : ℝ} (hb : 0 < b) (hcont : ∀ x ∈ O, ContinuousAt (fun y => m x y) x)
+    (hid : ∀ x ∈ O, ∀ y ∈ O, ENNReal.ofReal (m x y) = ENNReal.ofReal b * ENNReal.ofReal (D x y)) :
+    ∀ x ∈ O, ∀ y ∈ O, m x y = b * D x y := by
+  have hnonneg : ∀ x y, 0 ≤ D x y := fun x y => by
+    have h1 := hD.triangle x y x
+    have h2 := hD.symm y x
+    have h3 := hD.self_eq_zero x
+    linarith
+  have hoff : ∀ x ∈ O, ∀ y ∈ O, x ≠ y → m x y = b * D x y := by
+    intro x hx y hy hxy
+    have hpos : 0 < D x y :=
+      lt_of_le_of_ne (hnonneg x y) (fun h => hxy (hD.eq_of_eq_zero x y h.symm))
+    have h1 : ENNReal.ofReal (m x y) = ENNReal.ofReal (b * D x y) := by
+      rw [hid x hx y hy, ENNReal.ofReal_mul hb.le]
+    have hmpos : 0 < m x y :=
+      ENNReal.ofReal_pos.1 (by rw [h1]; exact ENNReal.ofReal_pos.2 (mul_pos hb hpos))
+    exact (ENNReal.ofReal_eq_ofReal_iff hmpos.le (mul_nonneg hb.le (hnonneg x y))).1 h1
+  intro x hx y hy
+  by_cases hxy : x = y
+  · subst hxy
+    have h0 : ENNReal.ofReal (m x x) = 0 := by
+      rw [hid x hx x hx, hD.self_eq_zero x, ENNReal.ofReal_zero, mul_zero]
+    have hle : m x x ≤ 0 := ENNReal.ofReal_eq_zero.1 h0
+    have hge : 0 ≤ m x x := by
+      have ht : Tendsto (fun y => m x y) (𝓝[≠] x) (𝓝 (m x x)) :=
+        (hcont x hx).mono_left nhdsWithin_le_nhds
+      refine ge_of_tendsto ht ?_
+      filter_upwards [eventually_nhdsWithin_of_eventually_nhds (hO.mem_nhds hx),
+        (eventually_mem_nhdsWithin : ∀ᶠ y in 𝓝[≠] x, y ∈ ({x}ᶜ : Set ℂ))] with y hyO hyne
+      show 0 ≤ m x y
+      have hne : x ≠ y := fun h => hyne (Set.mem_singleton_iff.2 h.symm)
+      rw [hoff x hx y hyO hne]
+      exact mul_nonneg hb.le (hnonneg x y)
+    rw [le_antisymm hle hge, hD.self_eq_zero x, mul_zero]
+  · exact hoff x hx y hy hxy
+
+/-- No shortcut at a point of an open set, centred at `w0` (the centred version of `HarmonicBalls.eq_internalMetric_on_small_ball`,
+S11r/NoShortcut.lean:28; same proof with the centre `w0`). For a Euclidean length metric `D` and an open set `U ∋ w0`, the
+ambient length metric equals the internal metric of `U` on a small closed ball about `w0`, and that ball lies in `U`. -/
+theorem eq_internalMetric_on_small_ball_at {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    {U : Set ℂ} (hU : IsOpen U) {w0 : ℂ} (h0 : w0 ∈ U) :
+    ∃ ρ : ℝ, 0 < ρ ∧ closedBall w0 ρ ⊆ U ∧ ∀ x ∈ closedBall w0 ρ, ∀ y ∈ closedBall w0 ρ,
+      ENNReal.ofReal (D x y) = internalMetric D U x y := by
+  have hnonneg : ∀ x y, 0 ≤ D x y := fun x y => by
+    have h1 := hD.triangle x y x
+    have h2 := hD.symm y x
+    have h3 := hD.self_eq_zero x
+    linarith
+  obtain ⟨δ, hδ, hball⟩ := (hD.isOpen_iff U).1 hU w0 h0
+  have hS : IsOpen {w : ℂ | D w0 w < δ / 4} := by
+    refine (hD.isOpen_iff _).2 fun z hz => ⟨δ / 4 - D w0 z, ?_, fun w hw => ?_⟩
+    · have hz' : D w0 z < δ / 4 := hz
+      linarith
+    · have hz' : D w0 z < δ / 4 := hz
+      have htri := hD.triangle w0 z w
+      have hw' : D z w < δ / 4 - D w0 z := hw
+      show D w0 w < δ / 4
+      linarith
+  have h00 : w0 ∈ {w : ℂ | D w0 w < δ / 4} := by
+    show D w0 w0 < δ / 4
+    rw [hD.self_eq_zero]
+    linarith
+  obtain ⟨η, hη, hηS⟩ := Metric.isOpen_iff.1 hS w0 h00
+  have key : ∀ x ∈ closedBall w0 (η / 2), D w0 x < δ / 4 := by
+    intro x hx
+    have hdist : dist x w0 < η := by
+      have := mem_closedBall.1 hx
+      linarith
+    exact hηS (mem_ball.2 hdist)
+  refine ⟨η / 2, by linarith, ?_, fun x hx y hy => ?_⟩
+  · intro x hx
+    exact hball x (by linarith [key x hx])
+  have hx' := key x hx
+  have hy' := key y hy
+  have hxy : D x y < δ / 2 := by
+    have htri := hD.triangle x w0 y
+    have hsymm := hD.symm x w0
+    linarith
+  have hclear : ∀ z ∉ U, δ / 2 ≤ D x z := by
+    intro z hz
+    have hz0 : δ ≤ D w0 z := by
+      by_contra hlt
+      exact hz (hball z (not_le.1 hlt))
+    have htri := hD.triangle w0 x z
+    linarith
+  exact (hD.internalMetric_eq_of_boundary_clearance hnonneg hclear hxy).symm
+
+/-- **Decoded metric identity on a small ball (ChatGPT §6, the assembly of `hDecInt`).** Fix a root `z`, a buffered window
+`Dj ⊆ D` (open), and the two decoders `mD`, `mj` of the large and buffered windows. Inputs: the physical rooted metric `Dw`
+is a Euclidean length metric (the input `hDw`, to be sourced; see the report); the canonical metric `Dl` is one (`hDl`); the
+two clauses (20) for `Dw` with the internal metrics on `D` and on `Dj`; and the buffered identification (n2's metric
+output, on a whole ball about `z`). Conclusion: a positive radius `ρ` with `closedBall 0 (2ρ) ⊆ W`, a radius `r`, and a constant
+`β > 0` with the centred decoded metric equal to `β` times the internal metric of `Dl` on `ball 0 (2ρ)`. -/
+theorem hDecInt_at_of_local {D Dj W : Set ℂ} {z : ℂ} {Dw Dl : ℂ → ℂ → ℝ}
+    (hDw : IsEuclideanLengthMetric Dw) (hDl : IsEuclideanLengthMetric Dl)
+    (hDO : IsOpen D) (hzD : z ∈ D) (hDjO : IsOpen Dj) (hWO : IsOpen W) (hW0 : (0 : ℂ) ∈ W)
+    (mD : WinTest D → C(↥(D ×ˢ D), ℝ)) (φD : WinTest D)
+    (mj : WinTest Dj → C(↥(Dj ×ˢ Dj), ℝ)) (φj : WinTest Dj)
+    (hclD : ∃ bD : ℝ, 0 < bD ∧ ∀ x ∈ D, ∀ y ∈ D,
+      ENNReal.ofReal (windowMetric D mD φD x y) = ENNReal.ofReal bD * internalMetric Dw D x y)
+    (hclj : ∃ bj : ℝ, 0 < bj ∧ ∀ x ∈ Dj, ∀ y ∈ Dj,
+      ENNReal.ofReal (windowMetric Dj mj φj x y) = ENNReal.ofReal bj * internalMetric Dw Dj x y)
+    (hid : ∃ c ρ : ℝ, 0 < c ∧ 0 < ρ ∧ closedBall z ρ ⊆ Dj ∧
+      ∀ x ∈ closedBall (0 : ℂ) ρ, ∀ y ∈ closedBall (0 : ℂ) ρ,
+        windowMetric Dj mj φj (x + z) (y + z) = c * Dl x y) :
+    ∃ ρ r β : ℝ, 0 < ρ ∧ 0 < r ∧ 0 < β ∧ closedBall (0 : ℂ) (2 * ρ) ⊆ W ∧
+      ∀ x ∈ closedBall (0 : ℂ) r, ∀ y ∈ closedBall (0 : ℂ) r,
+        windowMetric D mD φD (x + z) (y + z) = β * (internalMetric Dl (ball 0 (2 * ρ)) x y).toReal := by
+  obtain ⟨bD, hbD, hclD⟩ := hclD
+  obtain ⟨bj, hbj, hclj⟩ := hclj
+  obtain ⟨c, ρ, hc, hρ, hsubj, hidn⟩ := hid
+  have hzDj : z ∈ Dj := hsubj (mem_closedBall_self hρ.le)
+  obtain ⟨ρD, hρD, hsubD, hidD⟩ := eq_internalMetric_on_small_ball_at hDw hDO hzD
+  obtain ⟨ρJ, hρJ, hsubJ, hidJ⟩ := eq_internalMetric_on_small_ball_at hDw hDjO hzDj
+  have hm : 0 < min ρD ρJ := lt_min hρD hρJ
+  have hOD : ball z (min ρD ρJ) ⊆ closedBall z ρD := fun x hx =>
+    Metric.closedBall_subset_closedBall (min_le_left _ _) (Metric.ball_subset_closedBall hx)
+  have hOJ : ball z (min ρD ρJ) ⊆ closedBall z ρJ := fun x hx =>
+    Metric.closedBall_subset_closedBall (min_le_right _ _) (Metric.ball_subset_closedBall hx)
+  have hOD' : ∀ x ∈ ball z (min ρD ρJ), x ∈ D := fun x hx => hsubD (hOD hx)
+  have hOJ' : ∀ x ∈ ball z (min ρD ρJ), x ∈ Dj := fun x hx => hsubJ (hOJ hx)
+  -- sign and diagonal fixing on the two windows
+  have hD1 : ∀ x ∈ ball z (min ρD ρJ), ∀ y ∈ ball z (min ρD ρJ),
+      windowMetric D mD φD x y = bD * Dw x y :=
+    eq_const_mul_of_ofReal_eq hDw isOpen_ball hbD
+      (fun x hx => continuousAt_windowMetric hDO mD φD (hOD' x hx))
+      (fun x hx y hy => by
+        rw [hclD x (hOD' x hx) y (hOD' y hy), hidD x (hOD hx) y (hOD hy)])
+  have hJ1 : ∀ x ∈ ball z (min ρD ρJ), ∀ y ∈ ball z (min ρD ρJ),
+      windowMetric Dj mj φj x y = bj * Dw x y :=
+    eq_const_mul_of_ofReal_eq hDw isOpen_ball hbj
+      (fun x hx => continuousAt_windowMetric hDjO mj φj (hOJ' x hx))
+      (fun x hx y hy => by
+        rw [hclj x (hOJ' x hx) y (hOJ' y hy), hidJ x (hOJ hx) y (hOJ hy)])
+  -- the identity on a small ball about `0` (centred coordinates), physical side equal to the canonical side
+  have hkey : ∀ x ∈ closedBall (0 : ℂ) (min ρ (min ρD ρJ / 2)), ∀ y ∈ closedBall (0 : ℂ) (min ρ (min ρD ρJ / 2)),
+      windowMetric D mD φD (x + z) (y + z) = bD * c / bj * Dl x y := by
+    intro x hx y hy
+    have hxn : ‖x‖ ≤ min ρD ρJ / 2 := (mem_closedBall_zero_iff.1 hx).trans (min_le_right _ _)
+    have hyn : ‖y‖ ≤ min ρD ρJ / 2 := (mem_closedBall_zero_iff.1 hy).trans (min_le_right _ _)
+    have hx1 : x + z ∈ ball z (min ρD ρJ) := by
+      rw [mem_ball, dist_eq_norm, add_sub_cancel_right]
+      linarith
+    have hy1 : y + z ∈ ball z (min ρD ρJ) := by
+      rw [mem_ball, dist_eq_norm, add_sub_cancel_right]
+      linarith
+    have hxρ : x ∈ closedBall (0 : ℂ) ρ :=
+      mem_closedBall_zero_iff.2 ((mem_closedBall_zero_iff.1 hx).trans (min_le_left _ _))
+    have hyρ : y ∈ closedBall (0 : ℂ) ρ :=
+      mem_closedBall_zero_iff.2 ((mem_closedBall_zero_iff.1 hy).trans (min_le_left _ _))
+    have h := (hJ1 _ hx1 _ hy1).symm.trans (hidn x hxρ y hyρ)
+    rw [hD1 _ hx1 _ hy1, div_mul_eq_mul_div, eq_div_iff hbj.ne']
+    linear_combination bD * h
+  -- the canonical side: the internal metric on a ball `ball 0 (2 ρo)` inside `W`
+  obtain ⟨ε, hε, hεW⟩ := Metric.isOpen_iff.1 hWO 0 hW0
+  have hball2 : closedBall (0 : ℂ) (2 * (ε / 4)) ⊆ ball (0 : ℂ) ε :=
+    Metric.closedBall_subset_ball (by linarith)
+  have hUo : closedBall (0 : ℂ) (2 * (ε / 4)) ⊆ W := hball2.trans hεW
+  have hU0 : (0 : ℂ) ∈ ball (0 : ℂ) (2 * (ε / 4)) := mem_ball_self (by linarith)
+  obtain ⟨ρL, hρL, _, hidL⟩ := eq_internalMetric_on_small_ball_at hDl isOpen_ball hU0
+  have hnonnegL : ∀ x y, 0 ≤ Dl x y := fun x y => by
+    have h1 := hDl.triangle x y x
+    have h2 := hDl.symm y x
+    have h3 := hDl.self_eq_zero x
+    linarith
+  refine ⟨ε / 4, min (min ρ (min ρD ρJ / 2)) ρL, bD * c / bj, by linarith,
+    lt_min (lt_min hρ (half_pos hm)) hρL, div_pos (mul_pos hbD hc) hbj, hUo, ?_⟩
+  intro x hx y hy
+  have hx' : x ∈ closedBall (0 : ℂ) (min ρ (min ρD ρJ / 2)) :=
+    mem_closedBall_zero_iff.2 ((mem_closedBall_zero_iff.1 hx).trans (min_le_left _ _))
+  have hy' : y ∈ closedBall (0 : ℂ) (min ρ (min ρD ρJ / 2)) :=
+    mem_closedBall_zero_iff.2 ((mem_closedBall_zero_iff.1 hy).trans (min_le_left _ _))
+  have hxL : x ∈ closedBall (0 : ℂ) ρL :=
+    mem_closedBall_zero_iff.2 ((mem_closedBall_zero_iff.1 hx).trans (min_le_right _ _))
+  have hyL : y ∈ closedBall (0 : ℂ) ρL :=
+    mem_closedBall_zero_iff.2 ((mem_closedBall_zero_iff.1 hy).trans (min_le_right _ _))
+  rw [hkey x hx' y hy']
+  rw [← hidL x hxL y hyL, ENNReal.toReal_ofReal (hnonnegL x y)]
+
+end FirstPassS11at
