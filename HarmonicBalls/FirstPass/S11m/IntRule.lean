@@ -150,4 +150,59 @@ theorem pinchLocalRule_iff_int {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLength
   rw [pinchFirstEventLocal_iff_int hD hgeo, pinchSecondEventLocal_iff_int hD μ hgeo.delta_pos U V,
     pinchThirdEventLocal_iff_int hD hgeo.delta_pos V W]
 
+/-- A nonzero finite scalar passes through a double infimum over two index sets. -/
+theorem biInf_const_mul_eq {c : ℝ≥0∞} (hc0 : c ≠ 0) (hcT : c ≠ ⊤) (S T : Set ℂ) (f : ℂ → ℂ → ℝ≥0∞) :
+    (⨅ x ∈ S, ⨅ y ∈ T, c * f x y) = c * ⨅ x ∈ S, ⨅ y ∈ T, f x y := by
+  simp only [ENNReal.mul_iInf_of_ne hc0 hcT]
+
+/-- A nonzero finite scalar passes through a single infimum over an index set. -/
+theorem uniInf_const_mul_eq {c : ℝ≥0∞} (hc0 : c ≠ 0) (hcT : c ≠ ⊤) (S : Set ℂ) (f : ℂ → ℝ≥0∞) :
+    (⨅ y ∈ S, c * f y) = c * ⨅ y ∈ S, f y := by
+  simp only [ENNReal.mul_iInf_of_ne hc0 hcT]
+
+/-- The first internal local event is invariant under `D ↦ c D`, `c > 0`. -/
+theorem pinchFirstEventInt_const_mul_iff (D : ℂ → ℂ → ℝ) {c : ℝ} (hc : 0 < c) (W T Q' Q : Set ℂ) (δ : ℝ) :
+    pinchFirstEventInt (fun x y => c * D x y) W T Q' Q δ ↔ pinchFirstEventInt D W T Q' Q δ := by
+  have hc0 : ENNReal.ofReal c ≠ 0 := (ENNReal.ofReal_pos.2 hc).ne'
+  have hcTop : ENNReal.ofReal c ≠ ⊤ := ENNReal.ofReal_ne_top
+  unfold pinchFirstEventInt
+  simp only [pinchLocalA_const_mul D hc, internalMetric_const_mul D hc, internalDiam_const_mul D hc,
+    uniInf_const_mul_eq hc0 hcTop, ennreal_mul_lt_mul_iff_of_ne hc0 hcTop]
+
+/-- The third internal local event is invariant under `D ↦ c D`, `c > 0`. -/
+theorem pinchThirdEventInt_const_mul_iff (D : ℂ → ℂ → ℝ) {c : ℝ} (hc : 0 < c) (V W : Set ℂ) (δ : ℝ) :
+    pinchThirdEventInt (fun x y => c * D x y) V W δ ↔ pinchThirdEventInt D V W δ := by
+  have hc0 : ENNReal.ofReal c ≠ 0 := (ENNReal.ofReal_pos.2 hc).ne'
+  have hcTop : ENNReal.ofReal c ≠ ⊤ := ENNReal.ofReal_ne_top
+  unfold pinchThirdEventInt
+  simp only [internalDiam_const_mul D hc, internalMetric_const_mul D hc, biInf_const_mul_eq hc0 hcTop,
+    ennreal_mul_lt_mul_iff_of_ne hc0 hcTop]
+
+/-- The second internal local event is invariant under `μ ↦ a μ` and `D ↦ c D`, `a, c > 0`. -/
+theorem pinchSecondEventInt_smul_iff (μ : Measure ℂ) (D : ℂ → ℂ → ℝ) {a c : ℝ} (ha : 0 < a) (hc : 0 < c)
+    (U V : Set ℂ) (δ M : ℝ) :
+    pinchSecondEventInt (ENNReal.ofReal a • μ) (fun x y => c * D x y) U V δ M ↔
+      pinchSecondEventInt μ D U V δ M := by
+  have hc0 : ENNReal.ofReal c ≠ 0 := (ENNReal.ofReal_pos.2 hc).ne'
+  have hcTop : ENNReal.ofReal c ≠ ⊤ := ENNReal.ofReal_ne_top
+  have ha0 : ENNReal.ofReal a ≠ 0 := (ENNReal.ofReal_pos.2 ha).ne'
+  have haTop : ENNReal.ofReal a ≠ ⊤ := ENNReal.ofReal_ne_top
+  have hP : ENNReal.ofReal M * (ENNReal.ofReal a * annulusGreenPotentialSup μ 0 3 6) < ENNReal.ofReal a * μ U ↔
+      ENNReal.ofReal M * annulusGreenPotentialSup μ 0 3 6 < μ U := by
+    rw [← mul_assoc, mul_comm (ENNReal.ofReal M), mul_assoc, ennreal_mul_lt_mul_iff_of_ne ha0 haTop]
+  unfold pinchSecondEventInt
+  simp only [internalDiam_const_mul D hc, internalMetric_const_mul D hc, biInf_const_mul_eq hc0 hcTop,
+    ennreal_mul_lt_mul_iff_of_ne hc0 hcTop, HarmonicBalls.S11n.annulusGreenPotentialSup_smul,
+    Measure.smul_apply, smul_eq_mul]
+  exact and_congr_right (fun _ => hP)
+
+/-- The internal local certificate rule is invariant under `μ ↦ a μ` and `D ↦ c D`, `a, c > 0` (equation (3)). -/
+theorem pinchLocalRuleInt_smul_iff (μ : Measure ℂ) (D : ℂ → ℂ → ℝ) {a c : ℝ} (ha : 0 < a) (hc : 0 < c)
+    (W T Q' Q U V : Set ℂ) (δ M : ℝ) :
+    pinchLocalRuleInt (ENNReal.ofReal a • μ) (fun x y => c * D x y) W T Q' Q U V δ M ↔
+      pinchLocalRuleInt μ D W T Q' Q U V δ M := by
+  unfold pinchLocalRuleInt
+  rw [pinchFirstEventInt_const_mul_iff D hc, pinchSecondEventInt_smul_iff μ D ha hc,
+    pinchThirdEventInt_const_mul_iff D hc]
+
 end HarmonicBalls.S11m.IntRule
