@@ -631,4 +631,261 @@ theorem ae_rootedMetricIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measur
     (fun u v => Dd (canonFieldOf γ (S11c.translatedPairing hC hcirc z ω)) u v) b b' κ hb'
     (hI'.2) hDcnn hDcd hcl (fun x y hx hy => hlocω x y hx hy) X R pq hRlim (hpq z hzU)
 
+/-! ### Section 4.4, joint base conullity and transfer to admissible shifts (round 4)
+
+`ae_rootedLocalIdent_base` assembles the measure and metric clauses. `ae_rootedLocalIdent_shifted_all` transfers the event
+to all admissible root shifts, the null set of roots not depending on the shift. The converse `rootedMeasureIdent_restrict`
+(Section 4.3 (3)) turns the cross-multiplied measure clause into a proportionality on `S`, using a countable generating
+π-system `f` of the Borel sets (`exists_countable_piSystem_complex`). -/
+
+/-- **Section 4.4, base conullity (measure and metric).** For a.e. root `z` in the disc, almost surely the translated field
+lies in the rooted local identification event: the measure clause (`ae_rootedMeasureIdent_base`) and the metric clause
+(`ae_rootedMetricIdent_base`) hold together. The locality input `hLoc` (Fact 2.2 II, MISSING) and the Proposed metric
+axioms `hAx` enter through the metric clause only. -/
+theorem ae_rootedLocalIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c₁ c₂ : ℂ} {r₁ r₂ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
+    (hD1 : closedBall c₂ r₂ ⊆ ball (0 : ℂ) 1) (hsub : closedBall c₁ r₁ ⊆ ball c₂ r₂)
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (hκ : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (fun ω => addCircleAverage (fieldCircleAverage 0 (hcirc ω))
+        (fun w => -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖))) μz →
+        ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+          (κ (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2).restrict (ball c₂ r₂) =
+            ENNReal.ofReal a • (μz ω).restrict (ball c₂ r₂))
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (m : (MeanZeroTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)), ℝ))
+    (hclause : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
+      ∀ p : ↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)),
+        ENNReal.ofReal (m (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2 p) =
+          ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) p.1.1 p.1.2)
+    (hLoc : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ κ : ℝ, 0 < κ ∧ ∀ x y : ℂ,
+      x + z ∈ ball c₂ r₂ → y + z ∈ ball c₂ r₂ →
+        internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) (x + z) (y + z) =
+          ENNReal.ofReal κ * internalMetric (centredWeylMetric 𝔇 ξ γ hC hcirc z ω)
+            ((fun u => u + z) ⁻¹' ball c₂ r₂) x y)
+    (hAx : ∀ z : ℂ, LQGMetricFieldAxioms P γ ξ γ (S11c.translatedPairing hC hcirc z)
+      (S11c.translatedCircle hcirc z))
+    (hCC : ∀ z : ℂ, LQGMeasureCoordChange P γ γ (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    (hνex : ∀ z : ℂ, LQGMeasureExistence P γ γ (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
+    (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ)
+    (hIdγ : S11n.LQGCanonicalIdentificationStmt.{u} γ ξ γ Dμ Dd)
+    (hDex : ∀ z : ℂ, ∃ D : Ω → ℂ → ℂ → ℝ, IsLQGMetricOfField P γ ξ γ (S11c.translatedPairing hC hcirc z) D)
+    (S : Set ℂ) (hS : MeasurableSet S) (A : ℕ → Set ℂ) (hA : ∀ n, MeasurableSet (A n) ∧ A n ⊆ S)
+    (hSD : ∀ z ∈ ball c₁ r₁, (fun w => w - z) ⁻¹' S ⊆ ball c₂ r₂)
+    (hPF : ∀ (z : ℂ) (ν : Ω → Measure ℂ), IsLQGMeasureOfField P γ γ (S11c.translatedCircle hcirc z) ν →
+      ∀ᵐ ω ∂P, 0 < ν ω S ∧ ν ω S < ∞)
+    (X : ℕ → ℂ) (R : ℕ → ℝ) (pq : ℕ → ℂ × ℂ) (hRlim : Filter.Tendsto R Filter.atTop (nhds 0))
+    (hpq : ∀ z ∈ ball c₁ r₁, ∀ k, ‖(pq k).1‖ < R k ∧ ‖(pq k).2‖ < R k ∧ (pq k).1 ≠ (pq k).2 ∧
+      (pq k).1 + z ∈ ball c₂ r₂ ∧ (pq k).2 + z ∈ ball c₂ r₂) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
+      rootedLocalIdentEvent (ball c₂ r₂) κ m Dμ Dd γ z S A X R pq (S11c.translatedPairing hC hcirc z ω) := by
+  filter_upwards [ae_rootedMeasureIdent_base hγ0 hγ2 hG hD1 κ hκ hCC hνex Dμ Dd hIdγ hDex S hS A hA hSD hPF,
+    ae_rootedMetricIdent_base hγ0 hγ2 hG hsub h𝔇 m hclause hLoc hAx hνex Dμ Dd hIdγ X R pq hRlim hpq]
+    with z hz1 hz2
+  filter_upwards [hz1, hz2] with ω h1 h2
+  exact ⟨h1, h2⟩
+
+/-- **Section 4.4, transfer of the base conullity to all admissible root shifts.** The null set of roots does not depend
+on the shift `(b, u)`: for a.e. root `z` and every admissible root shift `u` at `z`, almost surely the root-shifted field
+`addFunPairing (translatedPairing hC hcirc z ω) u` lies in the rooted local identification event. This is the ordering of
+quantifiers of `hRLI` (`hMass_of_rootedLocalIdent` in S11at.lean). The only transfer is the Cameron-Martin step
+`ae_rootedLocalIdent_shifted`, applied for each fixed `(z, b, u)`. -/
+theorem ae_rootedLocalIdent_shifted_all {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hCM : CameronMartinGFFMutualAbsCont.{u}) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hG : IsWholePlaneGFF P hC hcirc) {α₀ γ : ℝ} {c₁ c₂ : ℂ} {r₁ r₂ : ℝ}
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (m : (MeanZeroTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)), ℝ))
+    (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ)
+    (S : Set ℂ) (A : ℕ → Set ℂ) (X : ℕ → ℂ) (R : ℕ → ℝ) (pq : ℕ → ℂ × ℂ)
+    (hκm : Measurable κ) (hmm : Measurable m) (hDμ : Measurable Dμ)
+    (hDd : ∀ x y : ℂ, Measurable fun L : S11n.CanonSpace => Dd L x y) (hS : MeasurableSet S)
+    (hA : ∀ n, MeasurableSet (A n))
+    (hbase : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
+      S11c.translatedPairing hC hcirc z ω ∈ rootedLocalIdentEvent (ball c₂ r₂) κ m Dμ Dd γ z S A X R pq) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ (b : ℝ) (u : ℂ → ℝ),
+      FirstPassS11ai.AdmissibleRootShift α₀ z b u →
+        ∀ᵐ ω ∂P, addFunPairing (S11c.translatedPairing hC hcirc z ω) u ∈
+          rootedLocalIdentEvent (ball c₂ r₂) κ m Dμ Dd γ z S A X R pq := by
+  filter_upwards [hbase] with z hz b u hadm
+  exact ae_rootedLocalIdent_shifted P hCM (S11c.isWholePlaneGFF_translate hG z) hadm
+    (measurableSet_rootedLocalIdentEvent (ball c₂ r₂) κ m Dμ Dd γ z S A X R pq hκm hmm hDμ hDd hS hA) hz
+
+/-- **A countable generating π-system of `ℂ`.** The finite intersections of the countable basis `countableBasis ℂ`
+(together with `univ`), enumerated by `ℕ`: closed under pairwise intersection, containing `univ`, and generating the
+Borel σ-algebra. -/
+theorem exists_countable_piSystem_complex :
+    ∃ f : ℕ → Set ℂ, (∀ m n, ∃ k, f k = f m ∩ f n) ∧ (∃ n, f n = univ) ∧
+      borel ℂ = MeasurableSpace.generateFrom (Set.range f) := by
+  set 𝔅 := TopologicalSpace.countableBasis ℂ with h𝔅
+  set Pfam : Set (Set ℂ) := (fun F : Set (Set ℂ) => ⋂₀ F) '' {F | F.Finite ∧ F ⊆ 𝔅} with hPfam
+  have hc : Pfam.Countable :=
+    (Set.countable_ofPred_finite_subset (TopologicalSpace.countable_countableBasis ℂ)).image _
+  have hne : Pfam.Nonempty := ⟨⋂₀ ∅, ∅, ⟨Set.finite_empty, Set.empty_subset _⟩, rfl⟩
+  obtain ⟨f, hf⟩ := hc.exists_eq_range hne
+  have hfm : ∀ m, f m ∈ Pfam := fun m => by rw [hf]; exact ⟨m, rfl⟩
+  have hmem : ∀ s ∈ Pfam, ∃ F : Set (Set ℂ), F.Finite ∧ F ⊆ 𝔅 ∧ s = ⋂₀ F := by
+    rintro s ⟨F, ⟨hF, hFB⟩, rfl⟩
+    exact ⟨F, hF, hFB, rfl⟩
+  have hopen : ∀ s ∈ Pfam, IsOpen s := by
+    intro s hs
+    obtain ⟨F, hF, hFB, rfl⟩ := hmem s hs
+    exact hF.isOpen_sInter fun t ht => (TopologicalSpace.isBasis_countableBasis ℂ).isOpen (hFB ht)
+  refine ⟨f, ?_, ?_, ?_⟩
+  · intro m n
+    obtain ⟨F, hF, hFB, hFm⟩ := hmem _ (hfm m)
+    obtain ⟨G, hG, hGB, hGn⟩ := hmem _ (hfm n)
+    have hmem' : f m ∩ f n ∈ Pfam :=
+      ⟨F ∪ G, ⟨hF.union hG, Set.union_subset hFB hGB⟩, by
+        show ⋂₀ (F ∪ G) = f m ∩ f n
+        rw [hFm, hGn, Set.sInter_union]⟩
+    rw [hf] at hmem'
+    obtain ⟨k, hk⟩ := hmem'
+    exact ⟨k, hk⟩
+  · have hu : (Set.univ : Set ℂ) ∈ Pfam :=
+      ⟨∅, ⟨Set.finite_empty, Set.empty_subset _⟩, Set.sInter_empty⟩
+    rw [hf] at hu
+    exact hu
+  · have hB := TopologicalSpace.isBasis_countableBasis ℂ
+    have hsub : TopologicalSpace.countableBasis ℂ ⊆ Pfam := fun B hB' =>
+      ⟨{B}, ⟨Set.finite_singleton B, Set.singleton_subset_iff.2 hB'⟩, Set.sInter_singleton B⟩
+    rw [← hf]
+    refine le_antisymm ?_ (MeasurableSpace.generateFrom_le fun s hs => (hopen s hs).measurableSet)
+    rw [hB.borel_eq_generateFrom]
+    exact MeasurableSpace.generateFrom_mono hsub
+
+/-- The π-system `{(f m ∩ S) ∪ (f n ∩ Sᶜ)}` built from a family `f` and a set `S`. -/
+def restrictPiFamily (S : Set ℂ) (f : ℕ → Set ℂ) : Set (Set ℂ) :=
+  {s | ∃ m n, s = (f m ∩ S) ∪ (f n ∩ Sᶜ)}
+
+theorem mem_restrictPiFamily_iff {S : Set ℂ} {f : ℕ → Set ℂ} {s : Set ℂ} :
+    s ∈ restrictPiFamily S f ↔ ∃ m n, s = (f m ∩ S) ∪ (f n ∩ Sᶜ) := Iff.rfl
+
+/-- **Uniqueness on a window (Section 4.3 (3), converse).** Let `f` be a countable generating π-system of the Borel sets.
+If two finite measures `ν`, `K` satisfy `ν(f n ∩ S) K(S) = K(f n ∩ S) ν(S)` for all `n`, with `0 < K(S) < ∞` and
+`ν(S) < ∞`, then `ν` restricted to `S` is the multiple `(ν(S)/K(S))` of `K` restricted to `S`. The sets
+`(f m ∩ S) ∪ (f n ∩ Sᶜ)` form the π-system used, since `ν` and `K` vanish on `Sᶜ` after restriction. -/
+theorem restrict_eq_smul_of_ratio {ν K : Measure ℂ} {S : Set ℂ} (hS : MeasurableSet S) {f : ℕ → Set ℂ}
+    (hfm : ∀ n, MeasurableSet (f n)) (hπ : ∀ m n, ∃ k, f k = f m ∩ f n) (huniv : ∃ n, f n = univ)
+    (hgen : borel ℂ = MeasurableSpace.generateFrom (Set.range f))
+    (hKpos : 0 < K S) (hKfin : K S ≠ ∞) (hνfin : ν S ≠ ∞)
+    (hratio : ∀ n, ν (f n ∩ S) * K S = K (f n ∩ S) * ν S) :
+    ν.restrict S = (ν S / K S) • K.restrict S := by
+  have hπSfam : IsPiSystem (restrictPiFamily S f) := by
+    intro s hs t ht _
+    obtain ⟨m1, n1, rfl⟩ := mem_restrictPiFamily_iff.1 hs
+    obtain ⟨m2, n2, rfl⟩ := mem_restrictPiFamily_iff.1 ht
+    obtain ⟨k, hk⟩ := hπ m1 m2
+    obtain ⟨l, hl⟩ := hπ n1 n2
+    refine mem_restrictPiFamily_iff.2 ⟨k, l, ?_⟩
+    rw [hk, hl]
+    ext x
+    simp only [Set.mem_inter_iff, Set.mem_union, Set.mem_compl_iff]
+    tauto
+  have hgenSfam : borel ℂ = MeasurableSpace.generateFrom (restrictPiFamily S f) := by
+    refine le_antisymm ?_ (MeasurableSpace.generateFrom_le ?_)
+    · rw [hgen]
+      refine MeasurableSpace.generateFrom_le ?_
+      intro s hs
+      obtain ⟨n, rfl⟩ := hs
+      apply MeasurableSpace.measurableSet_generateFrom
+      exact mem_restrictPiFamily_iff.2 ⟨n, n, (Set.inter_union_compl _ _).symm⟩
+    · intro s hs
+      obtain ⟨m, n, rfl⟩ := mem_restrictPiFamily_iff.1 hs
+      exact ((hfm m).inter hS).union ((hfm n).inter hS.compl)
+  obtain ⟨n0, hn0⟩ := huniv
+  have hunivSfam : (Set.univ : Set ℂ) ∈ restrictPiFamily S f :=
+    mem_restrictPiFamily_iff.2 ⟨n0, n0, by rw [hn0, Set.univ_inter, Set.univ_inter, Set.union_compl_self]⟩
+  refine Measure.ext_of_generateFrom_of_cover_subset (T := {Set.univ}) (BorelSpace.measurable_eq.trans hgenSfam)
+    hπSfam (Set.singleton_subset_iff.2 hunivSfam) (Set.countable_singleton _) (Set.sUnion_singleton _) ?_ ?_
+  · intro s hs
+    rw [Set.mem_singleton_iff.1 hs, Measure.restrict_apply_univ]
+    exact hνfin
+  · intro s hs
+    obtain ⟨m, n, rfl⟩ := mem_restrictPiFamily_iff.1 hs
+    have hint : ((f m ∩ S) ∪ (f n ∩ Sᶜ)) ∩ S = f m ∩ S := by
+      ext x
+      simp only [Set.mem_inter_iff, Set.mem_union, Set.mem_compl_iff]
+      tauto
+    rw [Measure.restrict_apply' hS, Measure.smul_apply, Measure.restrict_apply' hS, hint, smul_eq_mul]
+    have hKne : K S ≠ 0 := hKpos.ne'
+    calc ν (f m ∩ S) = ν (f m ∩ S) * K S * (K S)⁻¹ := by
+          rw [mul_assoc, ENNReal.mul_inv_cancel hKne hKfin, mul_one]
+      _ = K (f m ∩ S) * ν S * (K S)⁻¹ := by rw [hratio m]
+      _ = ν S / K S * K (f m ∩ S) := by rw [div_eq_mul_inv]; ring
+
+/-- **Section 4.3 (3), converse: the measure clause gives proportionality on `S`.** If the rooted measure clause
+`rootedMeasureIdent` holds for the cross-multiplied family `f n ∩ S` (a countable generating π-system `f`), then the
+decoded measure, pushed to centred coordinates, is `c` times the centred canonical measure, restricted to `S`, with
+`c > 0` finite. -/
+theorem rootedMeasureIdent_restrict {D : Set ℂ} {κ : (MeanZeroTest D → ℝ) → Measure ℂ}
+    {Dμ : S11n.CanonSpace → Measure ℂ} {γ : ℝ} {z : ℂ} {S : Set ℂ} {f : ℕ → Set ℂ}
+    (hS : MeasurableSet S) (hfm : ∀ n, MeasurableSet (f n)) (hπ : ∀ m n, ∃ k, f k = f m ∩ f n)
+    (huniv : ∃ n, f n = univ) (hgen : borel ℂ = MeasurableSpace.generateFrom (Set.range f))
+    {T : (ℂ → ℝ) → ℝ} (h : rootedMeasureIdent D κ Dμ γ z S (fun n => f n ∩ S) T) :
+    ∃ c : ℝ, 0 < c ∧
+      ((κ (rootedLocalObs γ D z T)).map (fun w => w - z)).restrict S =
+        ENNReal.ofReal c • (Dμ (canonFieldOf γ T)).restrict S := by
+  unfold rootedMeasureIdent at h
+  obtain ⟨hKpos, hKfin, hνpos, hνfin, hr⟩ := h
+  have hmeas : Measurable (fun w : ℂ => w - z) := by fun_prop
+  have hνeq : ∀ B, MeasurableSet B →
+      ((κ (rootedLocalObs γ D z T)).map (fun w => w - z)) B =
+        κ (rootedLocalObs γ D z T) ((fun w => w - z) ⁻¹' B) :=
+    fun B hB => Measure.map_apply hmeas hB
+  have hratio : ∀ n, ((κ (rootedLocalObs γ D z T)).map (fun w => w - z)) (f n ∩ S) *
+      Dμ (canonFieldOf γ T) S = Dμ (canonFieldOf γ T) (f n ∩ S) *
+        ((κ (rootedLocalObs γ D z T)).map (fun w => w - z)) S := by
+    intro n
+    rw [hνeq _ ((hfm n).inter hS), hνeq S hS]
+    exact hr n
+  have hνS : ((κ (rootedLocalObs γ D z T)).map (fun w => w - z)) S ≠ ∞ := by
+    rw [hνeq S hS]; exact hνfin.ne
+  have hres := restrict_eq_smul_of_ratio hS hfm hπ huniv hgen hKpos hKfin.ne hνS hratio
+  have hpos : 0 < ((κ (rootedLocalObs γ D z T)).map (fun w => w - z)) S / Dμ (canonFieldOf γ T) S := by
+    refine ENNReal.div_pos_iff.2 ⟨?_, hKfin.ne⟩
+    rw [hνeq S hS]; exact hνpos.ne'
+  have hfin : ((κ (rootedLocalObs γ D z T)).map (fun w => w - z)) S / Dμ (canonFieldOf γ T) S ≠ ∞ :=
+    (ENNReal.div_lt_top hνS hKpos.ne').ne
+  refine ⟨(((κ (rootedLocalObs γ D z T)).map (fun w => w - z)) S / Dμ (canonFieldOf γ T) S).toReal,
+    ENNReal.toReal_pos hpos.ne' hfin, ?_⟩
+  rw [ENNReal.ofReal_toReal hfin]
+  exact hres
+
+/-- **Section 4.4-4.5, restricted identity for admissible shifts (fixed window).** Let `f` be a countable generating
+π-system of the Borel sets and `A n = f n ∩ S`. Assume the transferred event `hshift` for all admissible root shifts
+(output of `ae_rootedLocalIdent_shifted_all`). Then for a.e. root `z` and every admissible shift `(b, u)` whose ball
+`ball z b` contains the window `ball c₂ r₂`, almost surely the decoded measure of the physical rooted observation (background
+`α₀`), pushed to centred coordinates, restricted to `S`, is a positive multiple of the centred canonical measure of the
+root-shifted field `shiftedCanon γ hC hcirc z u ω`. This is the measure clause of `hRLI` for a fixed window; the buffered
+index `j` of `hRLI` is chosen by the caller, with `ball c₂ r₂ = Dj j`. -/
+theorem ae_rootedLocalIdent_restrict {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {α₀ γ : ℝ} {c₁ c₂ : ℂ} {r₁ r₂ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (κ : ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) → Measure ℂ)
+    (m : (MeanZeroTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)), ℝ))
+    (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ)
+    (S : Set ℂ) (hS : MeasurableSet S) {f : ℕ → Set ℂ} (hfm : ∀ n, MeasurableSet (f n))
+    (hπ : ∀ m n, ∃ k, f k = f m ∩ f n) (huniv : ∃ n, f n = univ)
+    (hgen : borel ℂ = MeasurableSpace.generateFrom (Set.range f))
+    (X : ℕ → ℂ) (R : ℕ → ℝ) (pq : ℕ → ℂ × ℂ)
+    (hshift : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ (b : ℝ) (u : ℂ → ℝ),
+      FirstPassS11ai.AdmissibleRootShift α₀ z b u →
+        ∀ᵐ ω ∂P, addFunPairing (S11c.translatedPairing hC hcirc z ω) u ∈
+          rootedLocalIdentEvent (ball c₂ r₂) κ m Dμ Dd γ z S (fun n => f n ∩ S) X R pq) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ (b : ℝ) (u : ℂ → ℝ),
+      FirstPassS11ai.AdmissibleRootShift α₀ z b u → ball c₂ r₂ ⊆ ball z b →
+        ∀ᵐ ω ∂P, ∃ c : ℝ, 0 < c ∧
+          ((κ (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2).map (fun w => w - z)).restrict S =
+            ENNReal.ofReal c •
+              (Dμ (canonFieldOf γ (addFunPairing (S11c.translatedPairing hC hcirc z ω) u))).restrict S := by
+  filter_upwards [hshift] with z hz b u hadm hD
+  filter_upwards [hz b u hadm] with ω hω
+  obtain ⟨h1, -⟩ := hω
+  have hobs : rootedLocalObs γ (ball c₂ r₂) z (addFunPairing (S11c.translatedPairing hC hcirc z ω) u) =
+      (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2 :=
+    funext (rootedLocalObs_shifted_eq hC hcirc γ α₀ (ball c₂ r₂) z ω b u hadm hD)
+  have hrestr := rootedMeasureIdent_restrict hS hfm hπ huniv hgen h1
+  rw [hobs] at hrestr
+  exact hrestr
+
 end HarmonicBalls
