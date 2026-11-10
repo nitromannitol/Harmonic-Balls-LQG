@@ -3,6 +3,7 @@ import HarmonicBalls.FirstPass.S11s.Event
 import HarmonicBalls.FirstPass.S11s.Uniqueness
 import HarmonicBalls.FirstPass.S11s.Inverse
 import HarmonicBalls.FirstPass.S11n
+import HarmonicBalls.FirstPass.S11v.CovarianceDec
 
 /-!
 # B1: covariance of the canonical decoders under `dilOp` on a conull invariant set (fp-S11s-11-13-B1-covariance)
@@ -18,8 +19,11 @@ realizations (`ae_covariance_canonical`, `Covariance.lean`), of full `P_α` meas
 `P_α`-conull (`measurePreserving_dilOp_law`). On `G0` the measure covariance follows from the countable determining family
 (`measure_ext_of_complex_pi`) and the metric covariance from a countable dense set (`Continuous.ext_on`).
 
-Hypotheses: `hAff` (`WholePlaneGFFAffineInvariance`, caveat 1, PENDING TRUTH CHECK), `hhom` (a.s. homogeneity, GAP A), and
-the LQG measure `hμ` and metric `hD` of the model.
+Hypotheses: `hAff` (`WholePlaneGFFAffineInvariance`, caveat 1; to be derived as a theorem, P6 of operator note 01:44 UTC), and
+the LQG measure `hμ` and metric `hD` of the model. No pathwise homogeneity `hhom` is used: the covariance of the decoders
+is `ae_covariance_canonical_dec` (`S11v/CovarianceDec.lean`), which uses the coordinatewise identity
+`ae_dilOp_alphaCanon_apply_eq` (`S11v/DilOpCoord.lean`) and the measurable-function principle
+`ae_decoders_eq_of_coordwise_ae_eq` (`S11v/Decoders.lean`).
 -/
 
 namespace HarmonicBalls
@@ -118,7 +122,6 @@ theorem B1_covariance {γ ξ α : ℝ} (hγ0 : 0 < γ) (_hγ2 : γ < 2) (_hα : 
     {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
     (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
-    (hhom : ∀ᵐ ω ∂P, PairingHomogeneous (hC ω))
     {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)
     {D : Ω → ℂ → ℂ → ℝ} (hD : IsLQGMetricOfField P γ ξ α hC D)
     (K : Kernel S11n.CanonSpace ℂ) (d : S11n.CanonSpace → ContinuousMap (ℂ × ℂ) ℝ) (hd : Measurable d)
@@ -143,7 +146,7 @@ theorem B1_covariance {γ ξ α : ℝ} (hγ0 : 0 < γ) (_hγ2 : γ < 2) (_hα : 
     (measurableSet_covEvent K (fun L x y => d L (x, y)) hdd hCc hCm hQc).inter hGm
   -- a.s. membership of the canonical field in `A`
   have hAae : ∀ᵐ ω ∂P, alphaCanon α hC ω ∈ B1Event K d G C Q := by
-    filter_upwards [ae_covariance_canonical P hγ0 hG hAff hhom hμ hD hid, hGa] with ω hω hGω
+    filter_upwards [ae_covariance_canonical_dec P hγ0 hG hAff hμ hD K hKf d hd hid, hGa] with ω hω hGω
     obtain ⟨a, b, ha, hb, hT, hDb⟩ := hω
     have hT' : K (dilOp (alphaCanon α hC ω))
         = ENNReal.ofReal a • (K (alphaCanon α hC ω)).map (fun w : ℂ => w / ((1 / 2 : ℝ) : ℂ)) := hT
