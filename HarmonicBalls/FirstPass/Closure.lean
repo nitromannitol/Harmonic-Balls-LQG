@@ -73,7 +73,7 @@ Sections 7-10 (`Closure/Sec78910.lean`, z7, commit 764a353)
 | 10.7 `HarmonicBallComplementBoundaryJordanStmt` | `closure_10_7` | hL1 hWeyl hE1 hE3 hB hTor (FROZEN); hDG hAff hCC hW hE hN (PROPOSED) | closed |
 | 9.1 | none | cited (Shahgholian-Sjodin 2013; Sakai 1984) | cited, no closure |
 
-Section 11 (`Closure/Sec11.lean`, z11; committed closures in 989dd74, 329d919, 39dfaa9)
+Section 11 (`Closure/Sec11.lean`, z11; committed in 989dd74, 329d919, 39dfaa9, eb693a6)
 | 11.2 `HarmonicBallNotLipschitzStmt` | `closure_11_2` | hI2 (EXTERNAL, see 1.3); hAff hDG hCC hE hW hN, hL1 hWeyl hE1 hE3 hB (PROPOSED or FROZEN); hCamp hDecFrozen hDec hCM (FROZEN) | closed, I2 open |
 | 11.5 `NoConeConditionStmt` | `closure_11_5` | as 11.2 | closed, I2 open |
 | 11.6 `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6` | hI2 (as 1.3); hAff hDG hCC hE hW hN (PROPOSED); hL1 hWeyl hE1 hE3 hB (FROZEN) | closed, I2 open |
@@ -84,12 +84,16 @@ Section 11 (`Closure/Sec11.lean`, z11; committed closures in 989dd74, 329d919, 3
 | 11.13 `CorrectedLemma11_13Stmt` | `closure_11_13` | hAx, hE (FROZEN, PROPOSED); hStep8 `Step8IdentificationStmt` **OPEN** (`FirstPass/S11i/Corrected11_13.lean:57`) | conditional on OPEN hStep8 |
 | 11.14 `PinchEventMetricBallConsequenceStmt` | `closure_11_14` | hAx (FROZEN) | closed |
 | 11.15 `PinchFirstEventFaithfulStmt` | `closure_11_15` | hCM hMet hWSC hAx hExists (FROZEN); hAff (PROPOSED) | closed |
-| 11.9, 11.12, 11.16, 11.17 | in z11's working copy only (uncommitted) | not closed in HEAD; blocked per z11 report (name clash S11c/S11d; 11.12 needs Lemma 11.9) | uncommitted |
+| 11.9 `SmallMetricDiameterLargeMassStmt` | `closure_11_9` | FROZEN, PROPOSED and CITED inputs of 11.9 and 11.10 (table in `Closure/Sec11.lean`) | closed |
+| 11.12 `CorrectedLemma11_12Stmt` | `closure_11_12` | z4 inputs; hgrowth (I2) **OPEN** (z4 notes); hN2 (FROZEN, kept per operator 04:48) | conditional on OPEN I2 |
+| 11.16 `PinchSecondEventFaithfulStmt` | `closure_11_16` | closures 11.15 and 11.9; hholder (CITED, Prop 2.5); FROZEN; PROPOSED hEx hWeyl hNa0 hNa | closed |
+| 11.17 `PinchThirdEventFaithfulStmt` | `closure_11_17` | closure 11.16; hN2 (FROZEN) | closed |
 
 ## Open items and flags
 * 1.2 not written (table above). Lemma 11.13 is the blocker for 1.2 and for the conditional closures 11_11 and 11_13.
 * I2 `LQGVolumeGrowthAllScalesStmt` is a hypothesis of 1.3, 11.2, 11.5, 11.6, and the open derivation is z4's notes.
-* The Sec11 working copy carries uncommitted closures (11_9, 11_12, 11_16, 11_17), built here through the import.
+* Sec11 is committed in full (HEAD, 14 closures); this file builds against that version.
+* Commit 85bdd95 (z11) overwrote this file with a Section 1 version whose `closure_1_2` takes `ManyPinchScalesStmt` as an OPEN hypothesis. This version restores the table above (1.2 NOT WRITTEN).
 
 Cycles: none found. Closures used by this file do not refer back to Section 1.
 -/
