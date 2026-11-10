@@ -1,6 +1,7 @@
 import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Draft.Section6
 import HarmonicBalls.FirstPass.S11i.WindowShift
+import HarmonicBalls.FirstPass.S11i.CertWindow
 
 /-!
 # Lemma 11.13 (`ManyPinchScalesStmt`, lemma:mu_h-pinch-bad): first-pass status
