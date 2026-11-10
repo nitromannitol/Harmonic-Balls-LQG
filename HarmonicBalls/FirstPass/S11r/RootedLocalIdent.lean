@@ -6,6 +6,7 @@ import HarmonicBalls.FirstPass.S11c.CoordRooted11_7
 import HarmonicBalls.FirstPass.S11c.TranslateField11_7
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import HarmonicBalls.Proposed.LQG
+import HarmonicBalls.FirstPass.S11r.NoShortcut
 
 /-!
 # Rooted local identification event (fp-S11r-rooted-local-ident)
@@ -29,8 +30,10 @@ The centred canonical field is `canonFieldOf γ T`; its decoders are `Dμ`, `Dd`
 
 Section 4.4 base conullity, measure clause: `ae_rootedMeasureIdent_base` (conditional on named inputs: the rooted decoder
 clause `hκ`, the coordinate change `hCC`, the existence `hνex`, the canonical identification `hIdγ`, a metric existence
-`hDex`, and the window positivity `hPF`, the last still PENDING a source). The metric clause of the base conullity is NOT
-yet proved (it needs the translation covariance of the LQG metric, `LQGMetricFieldAxioms` III/IV, and the no-shortcut lemma).
+`hDex`, and the window positivity `hPF`, the last still PENDING a source). The metric clause of the base conullity is
+`ae_rootedMetricIdent_base`, conditional on the named locality input `hLoc` (internal metric under translation and constant
+shift; MISSING, to be sourced: Fact 2.2 II, arXiv:2208.11795 p. 9-10) and on the Proposed metric axioms `hAx`. Its
+deterministic core `rootedMetricIdent_of_internal` uses the no-shortcut lemma `eq_internalMetric_on_small_ball`.
 -/
 
 universe u
@@ -55,8 +58,8 @@ noncomputable def rootedLocalObs (γ : ℝ) (D : Set ℂ) (z : ℂ) (T : (ℂ �
 open Classical in
 /-- The metric decoder read at the uncentred pair `(x, y)`; `0` outside the window `D × D`. -/
 noncomputable def rootedMetricAt (D : Set ℂ) (m : (MeanZeroTest D → ℝ) → C(↥(D ×ˢ D), ℝ)) (γ : ℝ) (z : ℂ)
-    (T : (ℂ → ℝ) → ℝ) (x y : ℂ) : ℝ :=
-  if h : (x, y) ∈ D ×ˢ D then m (rootedLocalObs γ D z T) ⟨(x, y), h⟩ else 0
+    (T : (ℂ → ℝ) → ℝ) (x y : ℂ) : ENNReal :=
+  if h : (x, y) ∈ D ×ˢ D then ENNReal.ofReal (m (rootedLocalObs γ D z T) ⟨(x, y), h⟩) else 0
 
 /-- Measure clause (Section 4.3 (3)), cross-multiplied so that no scalar is quantified. The centred decoded measure
 `ν(B) = κ(obs)((· - z)⁻¹' B)` and the centred canonical measure `K = Dμ(canonFieldOf γ T)` satisfy: `K(S)` and `ν(S)` are
@@ -77,8 +80,8 @@ def rootedMetricIdent (D : Set ℂ) (m : (MeanZeroTest D → ℝ) → C(↥(D ×
   ∃ k : ℕ, ‖(pq k).1‖ < R k ∧ ‖(pq k).2‖ < R k ∧ (pq k).1 + z ∈ D ∧ (pq k).2 + z ∈ D ∧
     0 < Dd (canonFieldOf γ T) (pq k).1 (pq k).2 ∧
     ∀ i j : ℕ, ‖X i‖ < R k → ‖X j‖ < R k → X i + z ∈ D → X j + z ∈ D →
-      rootedMetricAt D m γ z T (X i + z) (X j + z) * Dd (canonFieldOf γ T) (pq k).1 (pq k).2 =
-        Dd (canonFieldOf γ T) (X i) (X j) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z)
+      rootedMetricAt D m γ z T (X i + z) (X j + z) * ENNReal.ofReal (Dd (canonFieldOf γ T) (pq k).1 (pq k).2) =
+        ENNReal.ofReal (Dd (canonFieldOf γ T) (X i) (X j)) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z)
 
 /-- **The rooted local identification event** (Section 4.3): the set of centred raw pairings `T` satisfying both the
 measure clause and the metric clause. -/
@@ -127,11 +130,11 @@ theorem measurable_rootedMetricAt (D : Set ℂ) (m : (MeanZeroTest D → ℝ) �
     Measurable[distributionMeasurableSpace] (fun T : (ℂ → ℝ) → ℝ => rootedMetricAt D m γ z T x y) := by
   by_cases h : (x, y) ∈ D ×ˢ D
   · have h' : (fun T : (ℂ → ℝ) → ℝ => rootedMetricAt D m γ z T x y) =
-        fun T => m (rootedLocalObs γ D z T) ⟨(x, y), h⟩ := by
+        fun T => ENNReal.ofReal (m (rootedLocalObs γ D z T) ⟨(x, y), h⟩) := by
       funext T
       simp [rootedMetricAt, h]
     rw [h']
-    exact (ContinuousMap.measurable_eval _).comp (hm.comp (measurable_rootedLocalObs γ D z))
+    exact ((ContinuousMap.measurable_eval _).comp (hm.comp (measurable_rootedLocalObs γ D z))).ennreal_ofReal
   · have h' : (fun T : (ℂ → ℝ) → ℝ => rootedMetricAt D m γ z T x y) = fun _ => 0 := by
       funext T
       simp [rootedMetricAt, h]
@@ -214,8 +217,8 @@ theorem measurableSet_rootedLocalIdentEvent (D : Set ℂ) (κ : (MeanZeroTest D 
         ⋃ k : ℕ, {T : (ℂ → ℝ) → ℝ | ‖(pq k).1‖ < R k ∧ ‖(pq k).2‖ < R k ∧ (pq k).1 + z ∈ D ∧
           (pq k).2 + z ∈ D ∧ 0 < Dd (canonFieldOf γ T) (pq k).1 (pq k).2 ∧
           ∀ i j : ℕ, ‖X i‖ < R k → ‖X j‖ < R k → X i + z ∈ D → X j + z ∈ D →
-            rootedMetricAt D m γ z T (X i + z) (X j + z) * Dd (canonFieldOf γ T) (pq k).1 (pq k).2 =
-              Dd (canonFieldOf γ T) (X i) (X j) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z)} := by
+            rootedMetricAt D m γ z T (X i + z) (X j + z) * ENNReal.ofReal (Dd (canonFieldOf γ T) (pq k).1 (pq k).2) =
+              ENNReal.ofReal (Dd (canonFieldOf γ T) (X i) (X j)) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z)} := by
       ext T
       simp [rootedMetricIdent]
     rw [hset]
@@ -225,18 +228,18 @@ theorem measurableSet_rootedLocalIdentEvent (D : Set ℂ) (κ : (MeanZeroTest D 
       measurableSet_lt measurable_const ((hDd _ _).comp (measurable_canonFieldOf_distribution γ))
     have hall : MeasurableSet[distributionMeasurableSpace] {T : (ℂ → ℝ) → ℝ | ∀ i j : ℕ,
         ‖X i‖ < R k → ‖X j‖ < R k → X i + z ∈ D → X j + z ∈ D →
-          rootedMetricAt D m γ z T (X i + z) (X j + z) * Dd (canonFieldOf γ T) (pq k).1 (pq k).2 =
-            Dd (canonFieldOf γ T) (X i) (X j) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z)} := by
+          rootedMetricAt D m γ z T (X i + z) (X j + z) * ENNReal.ofReal (Dd (canonFieldOf γ T) (pq k).1 (pq k).2) =
+            ENNReal.ofReal (Dd (canonFieldOf γ T) (X i) (X j)) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z)} := by
       refine measurableSet_forall_nat fun i => measurableSet_forall_nat fun j => ?_
       refine measurableSet_imp_prop_of (measurableSet_imp_prop_of (measurableSet_imp_prop_of
         (measurableSet_imp_prop_of ?_)))
       have h1 : Measurable[distributionMeasurableSpace] fun T : (ℂ → ℝ) → ℝ =>
-          rootedMetricAt D m γ z T (X i + z) (X j + z) * Dd (canonFieldOf γ T) (pq k).1 (pq k).2 :=
+          rootedMetricAt D m γ z T (X i + z) (X j + z) * ENNReal.ofReal (Dd (canonFieldOf γ T) (pq k).1 (pq k).2) :=
         (measurable_rootedMetricAt D m hm γ z _ _).mul
-          ((hDd _ _).comp (measurable_canonFieldOf_distribution γ))
+          (((hDd _ _).comp (measurable_canonFieldOf_distribution γ)).ennreal_ofReal)
       have h2 : Measurable[distributionMeasurableSpace] fun T : (ℂ → ℝ) → ℝ =>
-          Dd (canonFieldOf γ T) (X i) (X j) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z) :=
-        ((hDd _ _).comp (measurable_canonFieldOf_distribution γ)).mul
+          ENNReal.ofReal (Dd (canonFieldOf γ T) (X i) (X j)) * rootedMetricAt D m γ z T ((pq k).1 + z) ((pq k).2 + z) :=
+        (((hDd _ _).comp (measurable_canonFieldOf_distribution γ)).ennreal_ofReal).mul
           (measurable_rootedMetricAt D m hm γ z _ _)
       exact measurableSet_eq_fun h1 h2
     exact measurableSet_and_prop_of (measurableSet_and_prop_of (measurableSet_and_prop_of
@@ -493,5 +496,139 @@ theorem ae_rootedMeasureIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measu
   · intro n
     rw [hkey (A n) (hA n).1 (hA n).2, hκS, hνB, hνB]
     ring
+
+/-! ### Section 4.4, metric clause of the base conullity -/
+
+/-- The rooted Weyl metric of clause (20) of `LocalMetricReplacementStmt` at background `0`: the real part of the Weyl
+scaling of `𝔇 (hC ω)` by the rooted weight `-γ log|· - z| + γ log max(1,|·|)`. -/
+noncomputable def rootedWeylMetric (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (ξ γ : ℝ) {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ)
+    (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
+  fun u v => (weylScaling (𝔇 (hC ω)) ξ
+    (fun w => -(0 : ℝ) * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) u v).toReal
+
+/-- The centred Weyl metric of the translated normalised field at insertion `γ` (background `α₀ = γ`): the real metric
+of `IsLQGMetricOfField P γ ξ γ (translatedPairing hC hcirc z)`. -/
+noncomputable def centredWeylMetric (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (ξ γ : ℝ) {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
+  fun u v => (weylScaling (𝔇 (S11c.translatedPairing hC hcirc z ω)) ξ (fun x => -γ * Real.log ‖x‖) u v).toReal
+
+/-- **Deterministic core of the metric clause.** Given the rooted clause on the window `W` (`hcl`), the locality of the
+internal metric under translation and constant shift (`hloc`), and the centred identification `Dc = b' · Dd'` (`hDcd`),
+the rooted metric identity holds for a radius `R k` below the no-shortcut radius of the centred metric `Dc`
+(`eq_internalMetric_on_small_ball`), with the ENNReal form of the decoder (`rootedMetricAt`). -/
+theorem rootedMetricIdent_of_internal {W : Set ℂ} (hW : IsOpen W) {z : ℂ} (hzW : z ∈ W) {γ : ℝ}
+    (m : (MeanZeroTest W → ℝ) → C(↥(W ×ˢ W), ℝ)) (T : (ℂ → ℝ) → ℝ) (Dz Dc Dd' : ℂ → ℂ → ℝ) (b b' κ : ℝ)
+    (hb' : 0 < b') (hDc : IsEuclideanLengthMetric Dc) (hDcnn : ∀ u v, 0 ≤ Dc u v)
+    (hDcd : ∀ u v, Dc u v = b' * Dd' u v)
+    (hcl : ∀ x y : ℂ, x ∈ W → y ∈ W → rootedMetricAt W m γ z T x y = ENNReal.ofReal b * internalMetric Dz W x y)
+    (hloc : ∀ x y : ℂ, x + z ∈ W → y + z ∈ W →
+      internalMetric Dz W (x + z) (y + z) = ENNReal.ofReal κ * internalMetric Dc ((fun u => u + z) ⁻¹' W) x y)
+    (X : ℕ → ℂ) (R : ℕ → ℝ) (pq : ℕ → ℂ × ℂ) (hRlim : Filter.Tendsto R Filter.atTop (nhds 0))
+    (hpq : ∀ k, ‖(pq k).1‖ < R k ∧ ‖(pq k).2‖ < R k ∧ (pq k).1 ≠ (pq k).2 ∧
+      (pq k).1 + z ∈ W ∧ (pq k).2 + z ∈ W) :
+    ∃ k : ℕ, ‖(pq k).1‖ < R k ∧ ‖(pq k).2‖ < R k ∧ (pq k).1 + z ∈ W ∧ (pq k).2 + z ∈ W ∧
+      0 < Dd' (pq k).1 (pq k).2 ∧
+      ∀ i j : ℕ, ‖X i‖ < R k → ‖X j‖ < R k → X i + z ∈ W → X j + z ∈ W →
+        rootedMetricAt W m γ z T (X i + z) (X j + z) * ENNReal.ofReal (Dd' (pq k).1 (pq k).2) =
+          ENNReal.ofReal (Dd' (X i) (X j)) * rootedMetricAt W m γ z T ((pq k).1 + z) ((pq k).2 + z) := by
+  have hU : IsOpen ((fun u => u + z) ⁻¹' W) := hW.preimage (continuous_id.add continuous_const)
+  have h0 : (0 : ℂ) ∈ (fun u => u + z) ⁻¹' W := by simpa using hzW
+  obtain ⟨ρ, hρ, hNS⟩ := eq_internalMetric_on_small_ball hDc hU h0
+  have key : ∀ x y : ℂ, ‖x‖ < ρ → ‖y‖ < ρ → x + z ∈ W → y + z ∈ W →
+      rootedMetricAt W m γ z T (x + z) (y + z) =
+        ENNReal.ofReal b * (ENNReal.ofReal κ * ENNReal.ofReal (b' * Dd' x y)) := by
+    intro x y hx hy hxW hyW
+    rw [hcl (x + z) (y + z) hxW hyW, hloc x y hxW hyW,
+      ← hNS x (mem_closedBall_zero_iff.2 hx.le) y (mem_closedBall_zero_iff.2 hy.le), hDcd x y]
+  obtain ⟨k, hk⟩ : ∃ k, R k < ρ := (hRlim.eventually (gt_mem_nhds hρ)).exists
+  refine ⟨k, (hpq k).1, (hpq k).2.1, (hpq k).2.2.2.1, (hpq k).2.2.2.2, ?_, ?_⟩
+  · have h1 : 0 < Dc (pq k).1 (pq k).2 :=
+      lt_of_le_of_ne (hDcnn _ _) (fun h => (hpq k).2.2.1 (hDc.eq_of_eq_zero _ _ h.symm))
+    rw [hDcd] at h1
+    exact pos_of_mul_pos_right h1 hb'.le
+  · intro i j hXi hXj hXiW hXjW
+    have hp1 : ‖(pq k).1‖ < ρ := (hpq k).1.trans hk
+    have hp2 : ‖(pq k).2‖ < ρ := (hpq k).2.1.trans hk
+    rw [key (X i) (X j) (hXi.trans hk) (hXj.trans hk) hXiW hXjW,
+      key (pq k).1 (pq k).2 hp1 hp2 (hpq k).2.2.2.1 (hpq k).2.2.2.2]
+    simp only [ENNReal.ofReal_mul hb'.le]
+    ring
+
+/-- **Section 4.4, metric clause of the base conullity.** For almost every root `z` in the disc, almost surely the
+translated field satisfies the metric clause `rootedMetricIdent` of the rooted local identification event.
+
+Inputs (named, none proved here): the rooted clause (20) of `LocalMetricReplacementStmt` at background `0`, `hclause`;
+the locality of the internal metric under translation and constant shift, `hLoc` (MISSING, see the report: Fact 2.2 II
+of arXiv:2208.11795, with the translation covariance (Fact 2.2 IV) and the additive-constant rule of the Weyl scaling);
+the Proposed metric field axioms `hAx` (item I: finiteness and length metric); the canonical identification `hIdγ` at
+insertion `γ` with the centred metric; the measure existence `hνex` (premise of `hIdγ`). -/
+theorem ae_rootedMetricIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c₁ c₂ : ℂ} {r₁ r₂ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
+    (hsub : closedBall c₁ r₁ ⊆ ball c₂ r₂)
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (m : (MeanZeroTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)), ℝ))
+    (hclause : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
+      ∀ p : ↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)),
+        ENNReal.ofReal (m (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2 p) =
+          ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) p.1.1 p.1.2)
+    (hLoc : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ κ : ℝ, 0 < κ ∧ ∀ x y : ℂ,
+      x + z ∈ ball c₂ r₂ → y + z ∈ ball c₂ r₂ →
+        internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) (x + z) (y + z) =
+          ENNReal.ofReal κ * internalMetric (centredWeylMetric 𝔇 ξ γ hC hcirc z ω)
+            ((fun u => u + z) ⁻¹' ball c₂ r₂) x y)
+    (hAx : ∀ z : ℂ, LQGMetricFieldAxioms P γ ξ γ (S11c.translatedPairing hC hcirc z)
+      (S11c.translatedCircle hcirc z))
+    (hνex : ∀ z : ℂ, LQGMeasureExistence P γ γ (S11c.translatedPairing hC hcirc z)
+      (S11c.translatedCircle hcirc z))
+    (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ)
+    (hIdγ : S11n.LQGCanonicalIdentificationStmt.{u} γ ξ γ Dμ Dd)
+    (X : ℕ → ℂ) (R : ℕ → ℝ) (pq : ℕ → ℂ × ℂ) (hRlim : Filter.Tendsto R Filter.atTop (nhds 0))
+    (hpq : ∀ z ∈ ball c₁ r₁, ∀ k, ‖(pq k).1‖ < R k ∧ ‖(pq k).2‖ < R k ∧ (pq k).1 ≠ (pq k).2 ∧
+      (pq k).1 + z ∈ ball c₂ r₂ ∧ (pq k).2 + z ∈ ball c₂ r₂) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
+      rootedMetricIdent (ball c₂ r₂) m Dd γ z X R pq (S11c.translatedPairing hC hcirc z ω) := by
+  filter_upwards [hclause, hLoc, ae_restrict_mem measurableSet_ball] with z hclz hlocz hzU
+  have hW' := S11c.isWholePlaneGFF_translate hG z
+  have hlt := S11c.gamma_lt_lqgQ hγ0 hγ2
+  obtain ⟨ν, hν⟩ := hνex z hW' hγ0 hγ2 hlt
+  have hAxz := hAx z hW' hγ0 hγ2 hlt 𝔇 h𝔇
+  have hzW : z ∈ ball c₂ r₂ := hsub (ball_subset_closedBall hzU)
+  have hDmet : IsLQGMetricOfField P γ ξ γ (S11c.translatedPairing hC hcirc z)
+      (fun ω => centredWeylMetric 𝔇 ξ γ hC hcirc z ω) := by
+    refine ⟨𝔇, h𝔇, ?_⟩
+    filter_upwards [hAxz.1] with ω hω
+    intro u v
+    exact ⟨ENNReal.toReal_nonneg, ENNReal.ofReal_toReal (hω.1 u v).ne⟩
+  have hIdω := hIdγ Ω P (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z) ν
+    (fun ω => centredWeylMetric 𝔇 ξ γ hC hcirc z ω) hW' hν hDmet
+  filter_upwards [hclz, hlocz, hIdω, hAxz.1] with ω hclω hlocω hIdω' hI'
+  obtain ⟨b, hb, hclω⟩ := hclω
+  obtain ⟨κ, -, hlocω⟩ := hlocω
+  obtain ⟨a, b', -, hb', -, hbω⟩ := hIdω'
+  have hobs : rootedLocalObs γ (ball c₂ r₂) z (S11c.translatedPairing hC hcirc z ω) =
+      (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2 :=
+    funext (rootedLocalObs_translated hC hcirc γ (ball c₂ r₂) z ω)
+  have hcl : ∀ x y : ℂ, x ∈ ball c₂ r₂ → y ∈ ball c₂ r₂ →
+      rootedMetricAt (ball c₂ r₂) m γ z (S11c.translatedPairing hC hcirc z ω) x y =
+        ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) x y := by
+    intro x y hx hy
+    have hmem : (x, y) ∈ ball c₂ r₂ ×ˢ ball c₂ r₂ := ⟨hx, hy⟩
+    have hval : rootedMetricAt (ball c₂ r₂) m γ z (S11c.translatedPairing hC hcirc z ω) x y =
+        ENNReal.ofReal (m (rootedLocalObs γ (ball c₂ r₂) z (S11c.translatedPairing hC hcirc z ω))
+          ⟨(x, y), hmem⟩) := by
+      simp [rootedMetricAt, hmem]
+    rw [hval, hobs]
+    exact hclω ⟨(x, y), hmem⟩
+  have hDcd : ∀ u v, centredWeylMetric 𝔇 ξ γ hC hcirc z ω u v =
+      b' * Dd (canonFieldOf γ (S11c.translatedPairing hC hcirc z ω)) u v :=
+    fun u v => hbω u v
+  have hDcnn : ∀ u v, 0 ≤ centredWeylMetric 𝔇 ξ γ hC hcirc z ω u v :=
+    fun u v => ENNReal.toReal_nonneg
+  unfold rootedMetricIdent
+  exact rootedMetricIdent_of_internal isOpen_ball hzW m (S11c.translatedPairing hC hcirc z ω)
+    (rootedWeylMetric 𝔇 ξ γ hC z ω) (centredWeylMetric 𝔇 ξ γ hC hcirc z ω)
+    (fun u v => Dd (canonFieldOf γ (S11c.translatedPairing hC hcirc z ω)) u v) b b' κ hb'
+    (hI'.2) hDcnn hDcd hcl (fun x y hx hy => hlocω x y hx hy) X R pq hRlim (hpq z hzU)
 
 end HarmonicBalls
