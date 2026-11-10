@@ -16,6 +16,7 @@ import HarmonicBalls.FirstPass.Closure.Main12CanonicalOf13
 import HarmonicBalls.FirstPass.Closure.PaperExponentOf13
 import HarmonicBalls.FirstPass.Closure.C1112Clean
 import HarmonicBalls.FirstPass.Closure.LocalRootKernelAc
+import HarmonicBalls.FirstPass.S11i.Final11_13Close
 
 /-!
 # Top-level closure module (fp-closure-all-top-module)
@@ -29,6 +30,8 @@ This module imports every numbered closure theorem `closure_N_M` of the first pa
 * `closure_2_3_withPole` (this file): the closure of Proposition 2.3 with the pole clause, that is
   `GreenFunctionBallWithPoleStmt` (`FirstPass/S2S3S4S9SA/GreenPole.lean`). It is stated here, not in `Closure.lean`,
   so that `Closure.lean` keeps its import list.
+* `firstPass_11_13_closed` (`FirstPass/S11i/Final11_13Close.lean`), the counted Lemma 11.13 with no open binder. Nothing
+  in the import closure above reaches it, so this module imports it; it declares nothing here.
 
 This module adds no hypothesis. Its only declaration is `closure_2_3_withPole`.
 -/
