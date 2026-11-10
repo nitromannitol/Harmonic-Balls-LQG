@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.S11r.RootedRootFinite
 import HarmonicBalls.FirstPass.S11r.Frozen
+import HarmonicBalls.FirstPass.Frozen.S11j
 
 /-!
 # Producers of `hLen` and `hμ` for the rooted certificate (task fp-S11at-hLen-hmu-producers, q1)
@@ -647,5 +648,42 @@ theorem rootedWeight_isEuclideanLengthMetric_of_inputs {d : ℂ → ℂ → ℝ}
         show (weylScaling d ξ (rootedWeight α₀ γ z) a b).toReal =
           (weylScaling d ξ (rootedWeight α₀ γ z) b a).toReal
         rw [hsymm a b]) x y
+
+universe u
+
+/-- **`hLen` at a fixed root, almost surely** (Chat 211 Section 1). For `z ≠ 0`, almost surely the rooted metric of
+`rootedWeight α₀ γ z` is a Euclidean length metric. The base metric comes from `LQGMetricLengthUnivFrozen`, the Dα
+input (`IsEuclideanLengthMetric` and finiteness) from clause I of `LQGMetricFieldAxiomsUnivFrozen`, and the root continuity
+from `RootedPhysicalMetricContinuousAtInsertionFrozen`; the deterministic step is
+`rootedWeight_isEuclideanLengthMetric_of_inputs`. -/
+theorem rootedWeylMetric_ae_isEuclideanLengthMetric (hLenFr : LQGMetricLengthUnivFrozen.{u})
+    (hFieldFr : LQGMetricFieldAxiomsUnivFrozen.{u}) (hRootFr : RootedPhysicalMetricContinuousAtInsertionFrozen.{u})
+    {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ ξ α₀ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hP : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ) {z : ℂ} (hz : z ≠ 0) :
+    ∀ᵐ ω ∂P, IsEuclideanLengthMetric
+      (fun x y => (weylScaling (𝔇 (hC ω)) ξ (rootedWeight α₀ γ z) x y).toReal) := by
+  have hLenAe := hLenFr γ ξ 𝔇 hγ0 hγ2 h𝔇 Ω P hC hcirc hP
+  have hFieldAe := (hFieldFr Ω P γ ξ α₀ hC hcirc hP hγ0 hγ2 hα 𝔇 h𝔇).1
+  have hRootAe := hRootFr γ ξ α₀ z hγ0 hγ2 hα hz Ω P hC hcirc hP 𝔇 h𝔇
+  filter_upwards [hLenAe, hFieldAe, hRootAe] with ω h1 h2 h3
+  exact rootedWeight_isEuclideanLengthMetric_of_inputs ξ α₀ γ h1 hz h3 h2.2 (fun a b => (h2.1 a b).ne)
+
+/-- **`hLen`, almost everywhere in the root** (Chat 211 Section 1): the root `0` is `volume`-null, so the almost sure
+statement holds for `volume.restrict S`, for every set `S`. -/
+theorem rootedWeylMetric_ae_z (hLenFr : LQGMetricLengthUnivFrozen.{u})
+    (hFieldFr : LQGMetricFieldAxiomsUnivFrozen.{u}) (hRootFr : RootedPhysicalMetricContinuousAtInsertionFrozen.{u})
+    {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ ξ α₀ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hP : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ) (S : Set ℂ) :
+    ∀ᵐ z ∂(volume.restrict S), ∀ᵐ ω ∂P, IsEuclideanLengthMetric
+      (fun x y => (weylScaling (𝔇 (hC ω)) ξ (rootedWeight α₀ γ z) x y).toReal) := by
+  have hz0 : ∀ᵐ z ∂(volume : Measure ℂ), z ≠ 0 := by
+    rw [ae_iff]
+    simp
+  filter_upwards [ae_restrict_of_ae hz0] with z hz
+  exact rootedWeylMetric_ae_isEuclideanLengthMetric hLenFr hFieldFr hRootFr P γ ξ α₀ hC hcirc hP 𝔇 h𝔇 hγ0 hγ2 hα hz
 
 end FirstPassS11atProducers
