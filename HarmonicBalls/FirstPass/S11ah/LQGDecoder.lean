@@ -43,10 +43,11 @@ def internalReal (D : ℂ → ℂ → ℝ) (U : Set ℂ) : ℂ → ℂ → ℝ :
 Source: `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`, section 3.1 (deterministic statement, items 1-4), with the proof
 route of section 3.2. Used as stated (operator decision, wave 31). The statement is quantified over every finite
 length metric `d` on `ℂ` inducing the Euclidean topology (`IsEuclideanLengthMetric d`) and every open connected `V`
-with compact closure and `0 ∉ closure V` (here `V = ball c₂ r₂`, `0 ∉ closedBall c₂ r₂`). Its conclusions:
-item 1 (the cutoff `f` gives a global Euclidean length metric), item 2 (the cutoff `f` agrees with `-α log‖·‖` near
-`closure V`, so `f` is a test function), item 3 (`internalMetric` of `W_g` and of `W_f` agree on `V`), item 4 (the common
-internal distances are finite, and form a length metric on `V`). -/
+with compact closure and `0 ∉ closure V` (here `V = ball c₂ r₂`, `0 ∉ closedBall c₂ r₂`). The cutoff `f` of setup (17)
+is a test function equal to `-α log‖·‖` near `closure V`. The conclusions are items 1-4: (1) `W_f` is finite and
+`W_f.toReal` is a global Euclidean length metric; (2) `W_g` is finite on `V × V`; (3) `internalMetric` of `W_g` and of
+`W_f` agree on `V × V`; (4) the common internal distances are finite, induce the Euclidean topology and form a length
+metric on `V`. -/
 def CutoffInternalLengthStmt (ξ α : ℝ) : Prop :=
   ∀ d : ℂ → ℂ → ℝ, IsEuclideanLengthMetric d → ∀ V : Set ℂ, IsOpen V → IsConnected V →
     IsCompact (closure V) → (0 : ℂ) ∉ closure V →
@@ -55,6 +56,7 @@ def CutoffInternalLengthStmt (ξ α : ℝ) : Prop :=
         IsEuclideanLengthMetric (fun u v => (weylScaling d ξ f u v).toReal) ∧
         ∀ x ∈ V, ∀ y ∈ V, internalMetric (weylLogReal d ξ α) V x y =
           internalMetric (fun u v => (weylScaling d ξ f u v).toReal) V x y) ∧
+    (∀ x ∈ V, ∀ y ∈ V, weylScaling d ξ (fun z => -α * Real.log ‖z‖) x y ≠ ⊤) ∧
     (∀ x ∈ V, ∀ y ∈ V, internalMetric (weylLogReal d ξ α) V x y ≠ ⊤) ∧
     IsLengthMetricOn V (internalReal (weylLogReal d ξ α) V)
 
@@ -219,7 +221,7 @@ theorem ae_isLengthMetricOn_decoderOn {Ω : Type} [MeasurableSpace Ω] {P : Meas
     ∀ᵐ ω ∂P, IsLengthMetricOn B (decoderOn B (mω ω)) := by
   filter_upwards [ae_isEuclideanLengthMetric_of_lqg hL hG, hid] with ω hω hidω
   obtain ⟨b, hb, hbid⟩ := hidω
-  obtain ⟨_, hfin, hlen⟩ := hR1 (𝔇 (hC ω)) hω B hBo hBc hBcpt h0
+  obtain ⟨_, _, hfin, hlen⟩ := hR1 (𝔇 (hC ω)) hω B hBo hBc hBcpt h0
   exact isLengthMetricOn_decoderOn hBo hfin hlen (mω ω) hb hbid
 
 /-- Measurability in `ω` of the decoder at a pair of points of `B`, from measurability of `ω ↦ mω ω`. -/
