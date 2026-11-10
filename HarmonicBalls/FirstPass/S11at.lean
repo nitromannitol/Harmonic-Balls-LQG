@@ -1,3 +1,4 @@
+import HarmonicBalls.FirstPass.S11r.NoShortcut
 import HarmonicBalls.FirstPass.S11i.CertDilate
 import HarmonicBalls.FirstPass.S11i.RootedFrequencyShift
 import HarmonicBalls.FirstPass.S11aq
@@ -13,11 +14,11 @@ Chat 195 (`notes/fp-gaps/CHATGPT-hb-hCov-locality.md`) replaces the false fixed-
 * step 6a (`ae_internalMetric_decoded_scalar`): the two decoded internal metrics on a locality domain are proportional, a.s.,
   because the two local decoder outputs coincide (equal observations) and each equals a positive multiple of its internal
   metric (the replacement clauses of `LocalMetricReplacementStmt`, normalised by `LQGCanonicalIdentificationStmt`);
-* step 6b (`NoShortcutSmallBallStmt`, now the task of n2, `S11r/NoShortcut.lean`): ambient equals internal near `0`;
+* step 6b (`HarmonicBalls.eq_internalMetric_on_small_ball`, committed by n2 in `S11r/NoShortcut.lean`): ambient equals internal near `0`;
 * step 6c (`ae_eventual_ambient_proportional`, `ae_eventual_certificateEvent_iff`): a.s., for all large `n`, the ambient
   metrics are proportional on the window and the certificate events agree.
 
-Only `NoShortcutSmallBallStmt` is an explicit hypothesis of the eventual lemmas; step 6a is proved here in its
+The no-shortcut step is `HarmonicBalls.eq_internalMetric_on_small_ball` (n2, committed); no explicit hypothesis remains for it. step 6a is proved here in its
 deterministic core (the normalising constants are explicit), and the link from `LocalMetricReplacementStmt` to the
 observation-level hypotheses `hrepR`, `hrepU` is NOT yet written (see the report).
 -/
@@ -34,16 +35,6 @@ theorem nonneg_of_isEuclideanLengthMetric {D : ℂ → ℂ → ℝ} (hD : IsEucl
   have h := hD.triangle x y x
   rw [hD.self_eq_zero, hD.symm y x] at h
   linarith
-
-/-- **Input from n2 (task `fp-S11r-11-13-no-shortcut`, `HarmonicBalls/FirstPass/S11r/NoShortcut.lean`; not yet in the
-repository).** No shortcut near a point of an open set: for a Euclidean length metric `D` and an open `U ∋ 0`, the ambient
-length metric equals the internal metric of `U` on a small closed Euclidean ball about `0`
-(Armstrong-Kuusi-Mourrat length structure; ChatGPT chat 195, step 6b). Taken as an explicit hypothesis until its name
-appears in `notes/n3-inbox.md`. -/
-def NoShortcutSmallBallStmt : Prop :=
-  ∀ (D : ℂ → ℂ → ℝ), IsEuclideanLengthMetric D → ∀ (U : Set ℂ), IsOpen U → (0 : ℂ) ∈ U →
-    ∃ ρ : ℝ, 0 < ρ ∧ ∀ x ∈ closedBall (0 : ℂ) ρ, ∀ y ∈ closedBall (0 : ℂ) ρ,
-      ENNReal.ofReal (D x y) = internalMetric D U x y
 
 /-- **Step 6a, deterministic core: proportionality of two internal metrics from equal observations.** Let `Dr ω`, `Du ω` be
 the decoded metrics and `obsR ω`, `obsU ω` their local observations on `Uloc`. Suppose, almost surely, that the local decoder
@@ -81,11 +72,10 @@ theorem ae_internalMetric_decoded_scalar {Ω : Type*} [MeasurableSpace Ω] {P : 
 
 /-- **Step 6c, eventual ambient proportionality.** Let `D ω`, `E ω` be Euclidean length metrics for almost every `ω`, and
 suppose their internal metrics on the open set `Uloc ∋ 0` are proportional on a fixed window `closedBall 0 r₀` (`hInt`, the
-output of `ae_internalMetric_decoded_scalar`). With the no-shortcut input `hNS` (n2), almost surely there are `β > 0` and
+output of `ae_internalMetric_decoded_scalar`). With the no-shortcut lemma `HarmonicBalls.eq_internalMetric_on_small_ball` (n2), almost surely there are `β > 0` and
 `n₀` such that the ambient metrics are proportional on `closedBall 0 (rad n)` for all `n ≥ n₀`, whenever `rad n → 0`. The
 statement is only eventual: the no-shortcut radius is random (chat 195, step 6c). -/
 theorem ae_eventual_ambient_proportional {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
-    (hNS : NoShortcutSmallBallStmt)
     (D E : Ω → ℂ → ℂ → ℝ) {Uloc : Set ℂ} (hUloc : IsOpen Uloc) (h0 : (0 : ℂ) ∈ Uloc)
     {r₀ : ℝ} (hr₀ : 0 < r₀) (rad : ℕ → ℝ) (hrad : Tendsto rad atTop (𝓝 0))
     (hD : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
@@ -96,8 +86,8 @@ theorem ae_eventual_ambient_proportional {Ω : Type*} [MeasurableSpace Ω] {P : 
       ∀ y ∈ closedBall (0 : ℂ) (rad n), D ω x y = β * E ω x y := by
   filter_upwards [hD, hE, hInt] with ω hDω hEω hIω
   obtain ⟨β, hβ, hβint⟩ := hIω
-  obtain ⟨ρD, hρD, hD2⟩ := hNS (D ω) hDω Uloc hUloc h0
-  obtain ⟨ρE, hρE, hE2⟩ := hNS (E ω) hEω Uloc hUloc h0
+  obtain ⟨ρD, hρD, hD2⟩ := HarmonicBalls.eq_internalMetric_on_small_ball hDω hUloc h0
+  obtain ⟨ρE, hρE, hE2⟩ := HarmonicBalls.eq_internalMetric_on_small_ball hEω hUloc h0
   have hm : (0 : ℝ) < min (min ρD ρE) r₀ := lt_min (lt_min hρD hρE) hr₀
   have hev : ∀ᶠ n in atTop, rad n < min (min ρD ρE) r₀ := hrad.eventually (gt_mem_nhds hm)
   obtain ⟨n₀, hn₀⟩ := eventually_atTop.1 hev
@@ -119,7 +109,6 @@ locality on the window `closedBall 0 (7 r n)` (`hMass`, the output of `FirstPass
 scale) and the eventual metric proportionality above give, almost surely, the certificate equivalence at `(r n, 0)` for all
 `n ≥ n₀`. The constants `a` and `β` are absorbed by `FirstPassS11asLocal.certificateEvent_of_restrict_scalar`. -/
 theorem ae_eventual_certificateEvent_iff {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
-    (hNS : NoShortcutSmallBallStmt)
     (μ μ' : Ω → Measure ℂ) (D E : Ω → ℂ → ℂ → ℝ) {Uloc : Set ℂ} (hUloc : IsOpen Uloc) (h0 : (0 : ℂ) ∈ Uloc)
     {r₀ : ℝ} (hr₀ : 0 < r₀) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
     (hC : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
@@ -137,7 +126,7 @@ theorem ae_eventual_certificateEvent_iff {Ω : Type*} [MeasurableSpace Ω] {P : 
     have h := hr.const_mul 7
     rw [mul_zero] at h
     exact h
-  have hmet := ae_eventual_ambient_proportional hNS D E hUloc h0 hr₀ (fun n => 7 * r n) h7 hD hE hInt
+  have hmet := ae_eventual_ambient_proportional D E hUloc h0 hr₀ (fun n => 7 * r n) h7 hD hE hInt
   have hall := ae_all_iff.2 hMass
   filter_upwards [hall, hmet] with ω hmass hω
   obtain ⟨β, hβ, n₀, hn₀⟩ := hω
@@ -165,11 +154,10 @@ noncomputable def shiftedCanon {Ω : Type*} (γ : ℝ) (hC : Ω → (ℂ → ℝ
 
 /-- **Eventual pair locality at the certificate scales (step 6c, fixed root and shift).** For a fixed root, the physical
 pair `(μ0 ω, D0 ω)` and the shifted pair `(μu ω, Du ω)` have, almost surely and eventually in `n`, equal certificate
-events at `(certScale n, 0)`. Inputs: the no-shortcut lemma `hNS` (n2), the Euclidean length property of both metrics,
+events at `(certScale n, 0)`. Inputs: the no-shortcut lemma `HarmonicBalls.eq_internalMetric_on_small_ball` (n2), the Euclidean length property of both metrics,
 the proportionality of the internal metrics on the window `closedBall 0 r₀` inside `Uloc`, and the mass locality
 `hMass` (eventual in `n`). -/
 theorem ae_eventual_certificateEvent_pair {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
-    (hNS : NoShortcutSmallBallStmt)
     (μ0 μu : Ω → Measure ℂ) (D0 Du : Ω → ℂ → ℂ → ℝ) {Uloc : Set ℂ} (hUloc : IsOpen Uloc) (h0 : (0 : ℂ) ∈ Uloc)
     {r₀ : ℝ} (hr₀ : 0 < r₀) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
     (hC : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
@@ -191,7 +179,7 @@ theorem ae_eventual_certificateEvent_pair {Ω : Type*} [MeasurableSpace Ω] {P :
   have hpos : ∀ n : ℕ, 0 < FirstPassS11ah.certScale n := fun n => by
     unfold FirstPassS11ah.certScale
     positivity
-  have hmet := ae_eventual_ambient_proportional hNS D0 Du hUloc h0 hr₀
+  have hmet := ae_eventual_ambient_proportional D0 Du hUloc h0 hr₀
     (fun n : ℕ => 7 * FirstPassS11ah.certScale n) h7 hD0 hDu hInt
   filter_upwards [hmet, hMass] with ω hω hmω
   obtain ⟨β, hβ, n₂, hn₂⟩ := hω
@@ -230,7 +218,7 @@ with it), the local inputs of `ae_eventual_certificateEvent_pair` for every admi
 of the shifted canonical decoders `hdil` (the scaling covariance of `ae_decoders_dilOp_iterate`, here required for the
 shifted element), the statement `RootedCertificateEventualCovarianceStmt` follows. -/
 theorem rootedCertificateEventualCovarianceStmt_of_local {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
-    (hNS : NoShortcutSmallBallStmt) {γ : ℝ} (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    {γ : ℝ} (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ)
     (hCont : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) (hU : U ⊆ closedBall 0 7)
     (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop) (hAdm : ∀ z b u, Adm z b u → 0 < b) (rR : ℂ → ℝ)
@@ -265,7 +253,7 @@ theorem rootedCertificateEventualCovarianceStmt_of_local {Ω : Type*} [Measurabl
   filter_upwards [hD0, hDu, hInt, hMass, hdil] with z hD0z hDuz hIntz hMassz hdilz hzA b u hadm
   have hb : 0 < b := hAdm z b u hadm
   have hball : (0 : ℂ) ∈ ball (0 : ℂ) b := mem_ball_self hb
-  have hpair := ae_eventual_certificateEvent_pair hNS (μ0 z) (fun ω => Dμ (shiftedCanon γ hC hcirc z u ω))
+  have hpair := ae_eventual_certificateEvent_pair (μ0 z) (fun ω => Dμ (shiftedCanon γ hC hcirc z u ω))
     (D0 z) (fun ω => Dd (shiftedCanon γ hC hcirc z u ω)) isOpen_ball hball (half_pos hb) Ostar U V W T Q' Q η M hCont hU
     (hD0z hzA b u hadm) (hDuz hzA b u hadm) (hIntz hzA b u hadm) (hMassz hzA b u hadm)
   filter_upwards [hpair, ae_all_iff.2 (hdilz hzA b u hadm)] with ω hωp hωd
