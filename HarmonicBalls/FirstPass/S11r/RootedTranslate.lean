@@ -113,7 +113,7 @@ theorem isEuclideanLengthMetric_addRight' {D : ℂ → ℂ → ℝ} (hD : IsEucl
 
 /-! ### The main metric identity -/
 
-theorem addFunPairing_zero' (T : (ℂ → ℝ) → ℝ) : addFunPairing T (fun _ => 0) = T := by
+theorem addFunPairing_zero_const' (T : (ℂ → ℝ) → ℝ) : addFunPairing T (fun _ => 0) = T := by
   funext φ
   simp [addFunPairing]
 
@@ -172,7 +172,7 @@ theorem ae_rootedWeylMetric_internalMetric_translate
   have hIVω : ∀ x y : ℂ, 𝔇 (hC ω) (x + z) (y + z) = 𝔇 (addFunPairing T (fun _ => c)) x y := by
     intro x y
     have h := hiv x y
-    simp only [Complex.ofReal_one, one_mul, addFunPairing_zero', Real.log_one, mul_zero] at h
+    simp only [Complex.ofReal_one, one_mul, addFunPairing_zero_const', Real.log_one, mul_zero] at h
     rw [affinePullback_one_eq_translated hC hcirc z ω] at h
     exact h
   -- the constant Weyl shift of the field
