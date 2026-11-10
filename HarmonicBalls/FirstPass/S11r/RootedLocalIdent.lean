@@ -9,6 +9,7 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.S11r.NoShortcut
 import HarmonicBalls.FirstPass.S11d.Dyadic
 import HarmonicBalls.FirstPass.S11r.MetricSign
+import HarmonicBalls.FirstPass.S11r.RootedTranslate
 
 /-!
 # Rooted local identification event (fp-S11r-rooted-local-ident)
@@ -34,7 +35,7 @@ Section 4.4 base conullity, measure clause: `ae_rootedMeasureIdent_base` (condit
 clause `hκ`, the coordinate change `hCC`, the existence `hνex`, the canonical identification `hIdγ`, a metric existence
 `hDex`, and the window geometry `hSb`, `hSQ` with the frozen full-support statement `hPos`; the window positivity and
 finiteness are derived in `ae_lqgMeasure_pos_lt_top`, the former input `hPF` is removed). The metric clause of the base conullity is
-`ae_rootedMetricIdent_base`, conditional on the named locality input `hLoc` (internal metric under translation and constant
+`ae_rootedMetricIdent_base`, conditional on the locality input `hLoc` (now derived from `ae_rootedWeylMetric_internalMetric_translate`; internal metric under translation and constant
 shift; MISSING, to be sourced: Fact 2.2 II, arXiv:2208.11795 p. 9-10) and on the Proposed metric axioms `hAx`. Its
 deterministic core `rootedMetricIdent_of_internal` uses the no-shortcut lemma `eq_internalMetric_on_small_ball`.
 -/
@@ -523,19 +524,6 @@ theorem ae_rootedMeasureIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measu
 
 /-! ### Section 4.4, metric clause of the base conullity -/
 
-/-- The rooted Weyl metric of clause (20) of `LocalMetricReplacementStmt` at background `0`: the real part of the Weyl
-scaling of `𝔇 (hC ω)` by the rooted weight `-γ log|· - z| + γ log max(1,|·|)`. -/
-noncomputable def rootedWeylMetric (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (ξ γ : ℝ) {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ)
-    (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
-  fun u v => (weylScaling (𝔇 (hC ω)) ξ
-    (fun w => -(0 : ℝ) * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) u v).toReal
-
-/-- The centred Weyl metric of the translated normalised field at insertion `γ` (background `α₀ = γ`): the real metric
-of `IsLQGMetricOfField P γ ξ γ (translatedPairing hC hcirc z)`. -/
-noncomputable def centredWeylMetric (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (ξ γ : ℝ) {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ) (ω : Ω) : ℂ → ℂ → ℝ :=
-  fun u v => (weylScaling (𝔇 (S11c.translatedPairing hC hcirc z ω)) ξ (fun x => -γ * Real.log ‖x‖) u v).toReal
-
 /-- **Deterministic core of the metric clause.** Given the rooted clause on the window `W` (`hcl`), the locality of the
 internal metric under translation and constant shift (`hloc`), and the centred identification `Dc = b' · Dd'` (`hDcd`),
 the rooted metric identity holds for a radius `R k` below the no-shortcut radius of the centred metric `Dc`
@@ -582,25 +570,24 @@ theorem rootedMetricIdent_of_internal {W : Set ℂ} (hW : IsOpen W) {z : ℂ} (h
 translated field satisfies the metric clause `rootedMetricIdent` of the rooted local identification event.
 
 Inputs (named, none proved here): the rooted clause (20) of `LocalMetricReplacementStmt` at background `0`, `hclause`;
-the locality of the internal metric under translation and constant shift, `hLoc` (MISSING, see the report: Fact 2.2 II
+the locality of the internal metric under translation and constant shift, `hLoc` (derived, see `RootedTranslate.lean`; Fact 2.2 II
 of arXiv:2208.11795, with the translation covariance (Fact 2.2 IV) and the additive-constant rule of the Weyl scaling);
 the Proposed metric field axioms `hAx` (item I: finiteness and length metric); the canonical identification `hIdγ` at
 insertion `γ` with the centred metric; the measure existence `hνex` (premise of `hIdγ`). -/
 theorem ae_rootedMetricIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c₁ c₂ : ℂ} {r₁ r₂ : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
-    (hsub : closedBall c₁ r₁ ⊆ ball c₂ r₂)
+    (hsub : closedBall c₁ r₁ ⊆ ball c₂ r₂) (hD1 : closedBall c₂ r₂ ⊆ ball (0 : ℂ) 1)
     {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
     (m : (MeanZeroTest (ball c₂ r₂) → ℝ) → C(↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)), ℝ))
     (hclause : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ b : ℝ, 0 < b ∧
       ∀ p : ↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)),
         ENNReal.ofReal (m (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2 p) =
           ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) p.1.1 p.1.2)
-    (hLoc : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ κ : ℝ, 0 < κ ∧ ∀ x y : ℂ,
-      x + z ∈ ball c₂ r₂ → y + z ∈ ball c₂ r₂ →
-        internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) (x + z) (y + z) =
-          ENNReal.ofReal κ * internalMetric (centredWeylMetric 𝔇 ξ γ hC hcirc z ω)
-            ((fun u => u + z) ⁻¹' ball c₂ r₂) x y)
+    (hXi : LQGMetricExponentPositive) (hField : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hU : LQGMetricSatisfiesAxiomsUnivFrozen.{u}) (hLenFr : LQGMetricLengthUnivFrozen.{u})
+    (hRootFr : RootedPhysicalMetricContinuousAtInsertionFrozen.{u})
+    (hComp : WeylMetricCompositionContinuousOuterFrozen)
     (hAx : ∀ z : ℂ, LQGMetricFieldAxioms P γ ξ γ (S11c.translatedPairing hC hcirc z)
       (S11c.translatedCircle hcirc z))
     (hνex : ∀ z : ℂ, LQGMeasureExistence P γ γ (S11c.translatedPairing hC hcirc z)
@@ -612,6 +599,19 @@ theorem ae_rootedMetricIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measur
       (pq k).1 + z ∈ ball c₂ r₂ ∧ (pq k).2 + z ∈ ball c₂ r₂) :
     ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
       rootedMetricIdent (ball c₂ r₂) m Dd γ z X R pq (S11c.translatedPairing hC hcirc z ω) := by
+  -- the locality clause `hLoc` (V_z form), derived from `ae_rootedWeylMetric_internalMetric_translate`
+  have hLoc : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ κ : ℝ, 0 < κ ∧ ∀ x y : ℂ,
+      x + z ∈ ball c₂ r₂ → y + z ∈ ball c₂ r₂ →
+        internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) (x + z) (y + z) =
+          ENNReal.ofReal κ * internalMetric (centredWeylMetric 𝔇 ξ γ hC hcirc z ω)
+            ((fun u => u + z) ⁻¹' ball c₂ r₂) x y := by
+    have hz0 : ∀ᵐ z ∂(volume : Measure ℂ), z ≠ 0 := by
+      rw [ae_iff]
+      simp
+    filter_upwards [ae_restrict_of_ae hz0] with z hz
+    filter_upwards [ae_rootedWeylMetric_internalMetric_translate hγ0 hγ2 hD1 hG h𝔇 hXi hField hU hLenFr
+      hRootFr hComp hz] with ω hω
+    exact ⟨Real.exp (ξ * hcirc ω 1 z), Real.exp_pos _, fun x y h1 h2 => hω x y h1 h2⟩
   filter_upwards [hclause, hLoc, ae_restrict_mem measurableSet_ball] with z hclz hlocz hzU
   have hW' := S11c.isWholePlaneGFF_translate hG z
   have hlt := S11c.gamma_lt_lqgQ hγ0 hγ2
@@ -664,7 +664,7 @@ to all admissible root shifts, the null set of roots not depending on the shift.
 
 /-- **Section 4.4, base conullity (measure and metric).** For a.e. root `z` in the disc, almost surely the translated field
 lies in the rooted local identification event: the measure clause (`ae_rootedMeasureIdent_base`) and the metric clause
-(`ae_rootedMetricIdent_base`) hold together. The locality input `hLoc` (Fact 2.2 II, MISSING) and the Proposed metric
+(`ae_rootedMetricIdent_base`) hold together. The locality input `hLoc` (derived in `RootedTranslate.lean` from the frozen field axioms) and the Proposed metric
 axioms `hAx` enter through the metric clause only. -/
 theorem ae_rootedLocalIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c₁ c₂ : ℂ} {r₁ r₂ : ℝ}
@@ -683,11 +683,10 @@ theorem ae_rootedLocalIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure
       ∀ p : ↥(ball c₂ r₂ ×ˢ ball c₂ r₂ : Set (ℂ × ℂ)),
         ENNReal.ofReal (m (campbellReferenceObs γ 0 (ball c₂ r₂) (hC ω) z).2 p) =
           ENNReal.ofReal b * internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) p.1.1 p.1.2)
-    (hLoc : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P, ∃ κ : ℝ, 0 < κ ∧ ∀ x y : ℂ,
-      x + z ∈ ball c₂ r₂ → y + z ∈ ball c₂ r₂ →
-        internalMetric (rootedWeylMetric 𝔇 ξ γ hC z ω) (ball c₂ r₂) (x + z) (y + z) =
-          ENNReal.ofReal κ * internalMetric (centredWeylMetric 𝔇 ξ γ hC hcirc z ω)
-            ((fun u => u + z) ⁻¹' ball c₂ r₂) x y)
+    (hXi : LQGMetricExponentPositive) (hField : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hU : LQGMetricSatisfiesAxiomsUnivFrozen.{u}) (hLenFr : LQGMetricLengthUnivFrozen.{u})
+    (hRootFr : RootedPhysicalMetricContinuousAtInsertionFrozen.{u})
+    (hComp : WeylMetricCompositionContinuousOuterFrozen)
     (hAx : ∀ z : ℂ, LQGMetricFieldAxioms P γ ξ γ (S11c.translatedPairing hC hcirc z)
       (S11c.translatedCircle hcirc z))
     (hCC : ∀ z : ℂ, LQGMeasureCoordChange P γ γ (S11c.translatedPairing hC hcirc z) (S11c.translatedCircle hcirc z))
@@ -705,7 +704,8 @@ theorem ae_rootedLocalIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measure
     ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∀ᵐ ω ∂P,
       rootedLocalIdentEvent (ball c₂ r₂) κ m Dμ Dd γ z S A X R pq (S11c.translatedPairing hC hcirc z ω) := by
   filter_upwards [ae_rootedMeasureIdent_base hγ0 hγ2 hG hD1 κ hκ hCC hνex Dμ Dd hIdγ hDex S hS A hA hSD hPos hSb hSQ,
-    ae_rootedMetricIdent_base hγ0 hγ2 hG hsub h𝔇 m hclause hLoc hAx hνex Dμ Dd hIdγ X R pq hRlim hpq]
+    ae_rootedMetricIdent_base hγ0 hγ2 hG hsub hD1 h𝔇 m hclause hXi hField hU hLenFr hRootFr hComp hAx hνex Dμ Dd
+      hIdγ X R pq hRlim hpq]
     with z hz1 hz2
   filter_upwards [hz1, hz2] with ω h1 h2
   exact ⟨h1, h2⟩
