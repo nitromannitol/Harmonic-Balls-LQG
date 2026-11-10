@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.S11ai.RootedTransfer
 import HarmonicBalls.FirstPass.Frozen.S11j
+import HarmonicBalls.FirstPass.S11v.Affine
 
 /-!
 # Existence of the translated LQG metric (fp-S11r-hDex-source)
@@ -56,5 +57,20 @@ theorem exists_isLQGMetricOfField_translatedPairing {Ω : Type u} [MeasurableSpa
   exact ⟨ENNReal.toReal_nonneg, ENNReal.ofReal_toReal (hω.1 u v).ne⟩
 
 #print axioms exists_isLQGMetricOfField_translatedPairing
+
+/-- **Translated LQG metric exists, without the affine-invariance binder.** The same statement as
+`exists_isLQGMetricOfField_translatedPairing` with the binder `hAff` removed: the affine invariance of the whole-plane GFF
+is the theorem `wholePlaneGFFAffineInvariance_derived` (`FirstPass/S11v/Affine.lean`, derived from `IsWholePlaneGFF`
+alone), so `AffineInvarianceAll Ω` is supplied by it. -/
+theorem exists_isLQGMetricOfField_translatedPairing_derived {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ ξ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    (hG : IsWholePlaneGFF P hC hcirc) (h𝔇 : IsLQGMetric γ ξ 𝔇) (hField : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (z : ℂ) :
+    ∃ D : Ω → ℂ → ℂ → ℝ, IsLQGMetricOfField P γ ξ γ (S11c.translatedPairing hC hcirc z) D :=
+  exists_isLQGMetricOfField_translatedPairing hγ0 hγ2
+    (fun Q C K => HarmonicBalls.wholePlaneGFFAffineInvariance_derived Q C K) hG h𝔇 hField z
+
+#print axioms exists_isLQGMetricOfField_translatedPairing_derived
 
 end HarmonicBalls
