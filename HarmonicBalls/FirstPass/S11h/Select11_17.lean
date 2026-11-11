@@ -1,9 +1,9 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# First pass, Lemma 11.17, Step 17.3: a truncation selection (fp-S11h, owner n2)
+# Lemma 11.17, Step 17.3: a truncation selection
 
-Pure measure theory used in Step 17.3 of `notes/fp-gaps/CHATGPT-11-15-17-faithful.md` (section 6, lines 654-685):
+Pure measure theory used in Step 17.3:
 if an event `A` of positive probability is covered, up to a null set `N`, by a countable family `G n`, then some
 `G n` meets `A` in a set of positive probability. In the proof of corrected Lemma 11.17 (paper lines 3355-3357) the
 family is `G n = {a₂ ≥ 1/(n+1), d₂ ≤ n+1}` and `A = Ẽ₁ ∩ Ẽ₂(M)`; the covering by the `G n` up to a null set is

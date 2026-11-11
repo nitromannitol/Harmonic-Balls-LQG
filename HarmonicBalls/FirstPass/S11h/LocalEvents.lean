@@ -1,10 +1,9 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# First pass, Section 11: the local events of [C44] and their inclusions (fp-S11h section 3, owner n2)
+# Section 11: the local events of [C44] and their inclusions
 
-Source: `notes/fp-gaps/CHATGPT-11-15-17-faithful.md`, sections 2.1, 2.4 and 3 (corrected paper, correction [C44] as
-amended 2026-11-09 21:14 UTC). `internalMetric D O x y` is `D(x, y; O)` and `internalDiam D δ X` is `diam^δ_D(X)`.
+Corrected paper, correction [C44]. `internalMetric D O x y` is `D(x, y; O)` and `internalDiam D δ X` is `diam^δ_D(X)`.
 
 The quantities of note section 2.4 are `d_i = diam_D(K_i; O_i)` with the closures `K₀ = closure (T \ B_{3δ}(W))`,
 `K₁ = closure V`, `K₂ = closure (B_{3δ}(W) \ V)` and `O_i = B_δ(K_i)`. Since `B_δ(closure X) = B_δ(X)`

@@ -1,13 +1,12 @@
 import HarmonicBalls.FirstPass.S11h.GreenPotential11_17
 
 /-!
-# First pass, Lemma 11.17: the dyadic level-set formula for lower semicontinuous integrals (fp-S11h, owner n2)
+# Lemma 11.17: the dyadic level-set formula for lower semicontinuous integrals
 
 For a lower semicontinuous `κ : ℂ → ℝ≥0∞` and a measure `μ`, the integral `∫_A κ dμ` over a set `A` is the supremum over
 `n` of the dyadic sums `∑_{k < n 2^n} 2^{-n} μ(A ∩ {(k+1)/2^n < κ})` (layer-cake approximation from below). For open `A`
 each level set `A ∩ {(k+1)/2^n < κ}` is open, so each summand is the mass of an open set and the field-level mass decoder
-`exists_mass_open_functional` applies to it (GreenField11_17.lean). Source: notes/fp-gaps/CHATGPT-cm-field-certificate.md,
-section 4; the proof here is elementary (counting, and Fatou's lemma as in GreenPotential11_17.lean).
+`exists_mass_open_functional` applies to it (GreenField11_17.lean). The proof here is elementary (counting, and Fatou's lemma as in GreenPotential11_17.lean).
 -/
 
 namespace HarmonicBalls

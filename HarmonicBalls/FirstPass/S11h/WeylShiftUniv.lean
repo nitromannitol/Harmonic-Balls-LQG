@@ -1,7 +1,7 @@
 import HarmonicBalls.Steps.Sec11.WholePlaneWeylShift
 import HarmonicBalls.FirstPass.Frozen.S11g
 
-/-! # Universe-polymorphic Weyl identities for a shifted whole-plane field (fp-S11h, owner n2)
+/-! # Universe-polymorphic Weyl identities for a shifted whole-plane field
 
 Copy of `ae_wholePlane_weylScaling_shift` (`Steps/Sec11/WholePlaneWeylShift.lean:25`) for a probability space in any
 universe. The only change is that the metric axioms are taken from the FIRST-PASS FROZEN Prop

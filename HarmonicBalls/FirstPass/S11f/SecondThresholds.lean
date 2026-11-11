@@ -1,7 +1,7 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# First pass, threshold inequalities for the second pinch event (fp-S11f, owner n2)
+# Threshold inequalities for the second pinch event
 
 Deterministic part of Lemma 11.16 (`lemma:second-event-proof`, paper lines 3697-3725). If the internal diameter of `V`
 is at most `c₁/2`, the crossing distance `D(∂B_δ, ∂B_{2δ})` is at least `c₁`, the annulus Green potential times `M` is at

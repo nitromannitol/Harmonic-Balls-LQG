@@ -12,7 +12,7 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.FirstPass.Frozen.S11g
 
 /-!
-# First pass, Lemma 11.17: the field-level certificate `PinchCertificateStmt` from frozen inputs (fp-S11h, owner n2)
+# Lemma 11.17: the field-level certificate `PinchCertificateStmt` from frozen inputs
 
 `PinchCertificateStmt` (Step 17.6, `PinchCertificate11_17.lean`) is proved from the frozen inputs
 `LQGMetricFieldAxiomsUnivFrozen` (Fact 2.2, cited), `WeylScalingCompositionFrozen`, `LQGInternalMetricWeylAeMeasurableFrozen`
@@ -287,8 +287,7 @@ theorem pinchCertificateStmt_of_frozen (hComp : WeylScalingCompositionFrozen.{u}
     · exact b9
 
 /-- Lemma 11.17, faithful corrected form (`PinchThirdEventFaithfulStmt`: every `α₀ < Q`, the fixed buffered geometry of
-[C42], the amended [C44] geometry, corrected paper lines 3726-3756). Proved from the faithful Lemma 11.16 `h16` (an explicit
-named hypothesis, the operator's route B3/B4; no cycle, since 11.16 does not use 11.17), the cited metric axioms
+[C42], the amended [C44] geometry, corrected paper lines 3726-3756). Proved from the faithful Lemma 11.16 `h16` (an explicit named hypothesis; no cycle, since 11.16 does not use 11.17), the cited metric axioms
 `LQGMetricFieldAxiomsUnivFrozen` (Fact 2.2), the Cameron-Martin transfer `CameronMartinGFFMutualAbsCont`, and the frozen
 inputs of `pinchCertificateStmt_of_frozen`. -/
 theorem firstPass_11_17_corrected (h16 : PinchSecondEventFaithfulStmt.{u})

@@ -2,11 +2,11 @@ import HarmonicBalls.FirstPass.S11h.Faithful
 import HarmonicBalls.Draft.Section11Corrected
 
 /-!
-# First pass, Section 11: connectivity consequences of [C42] (fp-S11j, owner n4)
+# Section 11: connectivity consequences of [C42]
 
-Operator note 2026-11-09 21:48 UTC: the two connectivity properties F4 and F5 follow from [C42] once `U` is nonempty;
-no extra geometry field is added. Source: `notes/fp-gaps/CHATGPT-C42-connectivity.md` section 2 (disk-removal fact;
-F4 component condition inside `B₆`; F5 connectedness of the outer piece). Proved here as derived lemmas:
+The two connectivity properties F4 and F5 follow from [C42] once `U` is nonempty;
+no extra geometry field is added. Ingredients: disk-removal fact;
+F4 component condition inside `B₆`; F5 connectedness of the outer piece. Proved here as derived lemmas:
 
 * `IsBufferedPinchGeometry.zero_union_sphere_subset_six`: `{0} ∪ ∂B₅ ⊆ connectedComponentIn (B₆ \ (H_Q ∪ H_W)) 0`;
 * `IsBufferedPinchGeometry.isConnected_outer_piece`: `IsConnected (T \ B_{3δ}(W))`;
@@ -25,7 +25,7 @@ lemma mem_annulus_zero {z : ℂ} {r₁ r₂ : ℝ} : z ∈ annulus (0 : ℂ) r�
   simp only [annulus, mem_sdiff, mem_ball, mem_closedBall, not_le]
   exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
 
-/-- Disk-removal fact (`CHATGPT-C42-connectivity.md` §2). Let `G` be open and connected with `closedBall c b ⊆ G`,
+/-- Disk-removal fact. Let `G` be open and connected with `closedBall c b ⊆ G`,
 and let `Q` be an upward-closed predicate on radii with `Q s` for some `s < b`, where `Q ρ` forces `ρ > 0`. Then
 `{z ∈ G | Q |z - c|}` is connected. Taking `Q ρ = (a ≤ ρ)` or `Q ρ = (a < ρ)` removes an open or closed disk of
 radius `a` about `c` from `G`. Proof: a point at radius `≤ s` moves radially to the circle `|z - c| = s` inside the

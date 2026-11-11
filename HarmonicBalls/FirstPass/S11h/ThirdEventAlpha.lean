@@ -1,10 +1,9 @@
 import HarmonicBalls.FirstPass.S11h.ThirdEventMeasurable
 
 /-!
-# First pass, Section 11: measurability of the third pinch event for insertion `α₀ < Q` (fp-S11h, owner n2)
+# Section 11: measurability of the third pinch event for insertion `α₀ < Q`
 
-Alpha-general measurability (operator decision B1, 2026-11-09 21:12 UTC, with the corrected GFF hypothesis of the
-operator truth check 21:18 UTC) of `aemeasurable_internalDiam`, `ae_continuous_metric` and `nullMeasurableSet_pinchThirdEvent`
+Alpha-general measurability (with the corrected GFF hypothesis) of `aemeasurable_internalDiam`, `ae_continuous_metric` and `nullMeasurableSet_pinchThirdEvent`
 for an LQG metric `D` of the log-singular field `h^ℂ - α₀ log|·|`, with `0 < γ < 2` and `α₀ < lqgQ γ` (corrected context
 `h^α`, paper lines 3236-3238, correction `[C43]`). The α = 0 theorems that used the false inputs were removed from
 `ThirdEventMeasurable.lean`.

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11h.OuterDiamFinite
 import HarmonicBalls.Steps.Sec11.LocalPathLength
 
 /-!
-# First pass, Section 11: exit distances and the certificate for the first pinch event (fp-S11h, owner n2)
+# Section 11: exit distances and the certificate for the first pinch event
 
 Locality facts of the corrected paper (`corrected paper lines 3419-3434`: exit and crossing distances are local by
 first-boundary-hit truncation; "arbitrary point-to-point distances need not be local"), used for the first pinch event

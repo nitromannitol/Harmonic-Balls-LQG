@@ -4,8 +4,7 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# First pass, Lemma 11.17: the metric of the Weyl-shifted pair equals the field metric of the shifted field
-(fp-S11h, owner n2)
+# Lemma 11.17: the metric of the Weyl-shifted pair equals the field metric of the shifted field
 
 For a pair `(μ ω, D ω)` and a continuous shift `f`, the Weyl-shifted pair of `weylShiftPair` carries the metric
 `u v ↦ (weylScaling (D ω) ξ f u v).toReal`. The field decoders of `CoordDistDiam11_17.lean` are stated for

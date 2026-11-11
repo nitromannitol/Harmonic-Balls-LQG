@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.S11h.OuterDiamFinite
 
 /-!
-# First pass, Lemma 11.17: the set-distance and internal-diameter coordinates (fp-S11h, owner n2)
+# Lemma 11.17: the set-distance and internal-diameter coordinates
 
 Coordinates 1-5, 8 and 9 of `pinchScalars` are set distances and internal diameters of the pair. Each has a countable
 formula over internal metrics of open sets: `ofReal_setDist_eq_countable` (open set `univ`) and

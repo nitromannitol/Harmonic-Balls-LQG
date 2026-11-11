@@ -4,11 +4,11 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.S11h.Faithful
 
 /-!
-# First pass, Lemma 11.17: the pair Cameron-Martin transfer through a field-level certificate (fp-S11h, owner n2)
+# Lemma 11.17: the pair Cameron-Martin transfer through a field-level certificate
 
 Step 17.6 of the corrected paper (lines 3726-3756) transfers the positive probability of the shifted pinch triple back to
 the unshifted pair. For a pair `p = (μ, D)` the triple is `pinchPairEvent p = Ẽ₁ ∧ Ẽ₂ ∧ Ẽ₃` (Draft/Section11.lean
-lines 95-107). The transfer itself is `cameronMartinFieldCertificateTransfer` (S11j/CertificateTransfer, n4), proved from the
+lines 95-107). The transfer itself is `cameronMartinFieldCertificateTransfer`, proved from the
 frozen `CameronMartinGFFMutualAbsCont`. It needs one common measurable field event `B` that certifies both the pair event of
 `(μ ω, D ω)` and that of the Weyl-shifted pair `weylShiftPair γ ξ f (μ ω, D ω)`: this is `PinchFieldCertificate`.
 
@@ -60,8 +60,7 @@ theorem pinchPair_transfer_of_certificate (hCM : CameronMartinGFFMutualAbsCont.{
 `γ ∈ (0, 2)`, `α₀ < Q`, `ξ > 0`, every smooth compactly supported shift `f` vanishing on the unit circle, on `U` and on the
 annulus `𝔸_{3,6}(0)`, every whole-plane GFF carrier with its LQG measure and metric, and every `M > 0`, the pair event
 admits the field-level certificate `PinchFieldCertificate`.
-Written source: corrected paper lines 3726-3756 (Step 17.6); the proof route is `notes/fp-gaps/CHATGPT-cm-field-certificate.md`
-sections 2, 4, 5. The scalar field versions are the frozen decoders: the internal metric and set distances via
+Written source: corrected paper lines 3726-3756 (Step 17.6). The scalar field versions are the frozen decoders: the internal metric and set distances via
 `LQGInternalMetricWeylAeMeasurableFrozen`, masses of `U` via `LQGMassFunctionalMeasurableFrozen`, and the annulus Green
 potential `annulusGreenPotentialSup μ 0 3 6` via `exists_annulusGreenField` (S11h/GreenField11_17.lean). The shift `f` only
 enters through `f = 0` on `U` and on `𝔸_{3,6}(0)`, where the masses and the annulus potential are unchanged. -/

@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11h.SetDistPos
 import HarmonicBalls.FirstPass.S11h.OuterDiamFinite
 
 /-!
-# First pass, Lemma 11.17, Step 17.3 (truncation sets and their almost-sure cover) (fp-S11h, owner n2)
+# Lemma 11.17, Step 17.3 (truncation sets and their almost-sure cover)
 
-Step 17.3 of `notes/fp-gaps/CHATGPT-11-15-17-faithful.md` (section 6): the sets
+Step 17.3: the sets
 `G n = {a₂ ≥ 1/(n+1), d₂ ≤ n+1}`, with `a₂ = D(∂B_{2δ}, ∂B_{3δ})` (`setDist`, the distance in `pinchThirdEvent`,
 Draft/Section11.lean:107) and `d₂ = diam^δ(B_{3δ}(W) \ V)` (`internalDiam`, Draft/Section11.lean:89). Almost surely they
 cover the probability space (`a₂ > 0` by `setDist_sphere_pos_of_isEuclideanLengthMetric`, `d₂ < ∞` by

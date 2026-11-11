@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11j.Geometry
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchOpenFirstShift
 
 /-!
-# First pass, Section 11: the deterministic shift of the faithful Lemma 11.15 (fp-S11j, owner n4)
+# Section 11: the deterministic shift of the faithful Lemma 11.15
 
 Wrapper of the deterministic core shift `IsPinchPointProofConfiguration.exists_uniform_open_first_event_shift`
 (`Proofs/Sec11/CorrectedPinchOpenFirstShift.lean:14`) for the buffered pinch geometry. The shift vanishes off

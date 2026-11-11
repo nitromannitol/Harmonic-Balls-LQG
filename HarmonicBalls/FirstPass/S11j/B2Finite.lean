@@ -4,7 +4,7 @@ import HarmonicBalls.Steps.Sec11.PinchDiameterFiniteness
 import HarmonicBalls.Steps.Sec11.PinchAnnulusConnected
 
 /-!
-# Almost sure finiteness of the thresholds X2 and X4 of Lemma 11.15 (fp-S11j, owner n4; ruling B2, 23:58 UTC)
+# Almost sure finiteness of the thresholds X2 and X4 of Lemma 11.15
 
 Both finiteness facts (paper lines 3664-3667) are deterministic consequences of the buffered geometry and of a length
 metric `D` inducing the Euclidean topology (`IsEuclideanLengthMetric`); no literature input is used.

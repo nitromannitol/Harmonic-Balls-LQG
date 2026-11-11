@@ -16,8 +16,8 @@ Status: OPEN. Module contents:
   Index shift of the window `[N+1, 2N]` by `k` costs at most `k` (printed text: at most `2k`; corrected proof, paper
   lines 3900-3910).
 * Open NEW step: `HarmonicBalls.PinchPositiveRepairedStmt` below, the positivity of the repaired Lemma 11.12 at every
-  exponent `α < Q`, used at `α = γ` in the rooted transfer (corrected proof, paper lines 3877-3894). Its written argument is
-  `notes/fp-gaps/G-11-12.md` sections 1-6 (referee verdict CORRECT, `notes/fp-gaps/CHATGPT-G-8-2-G-11-12.md`). It is a
+  exponent `α < Q`, used at `α = γ` in the rooted transfer (corrected proof, paper lines 3877-3894).
+  It is a
   statement to be proved, not an input, and it is not frozen.
 -/
 
@@ -30,7 +30,7 @@ universe u
 /-- NEW statement, open (not frozen, not assumed): repaired positivity of the pinch event at every exponent `α < lqgQ γ`.
 For each `α`, `M > 0` and model `(P, hC, hcirc, μ, D)` there is an event `E` of the field σ-algebra on `B_7` modulo
 additive constants with `0 < P E`, on which the pinch holds almost surely, and an ambient measurable `A ⊆ E` with
-`A` contained pointwise in the raw pinch event and `P A = P E` (notes/fp-gaps/G-11-12.md section 6).
+`A` contained pointwise in the raw pinch event and `P A = P E`.
 
 The pointwise local containment `E ⊆ {pinch}` is refuted by the flag construction of G-11-12 section 6, so it is not used. -/
 def PinchPositiveRepairedStmt : Prop :=

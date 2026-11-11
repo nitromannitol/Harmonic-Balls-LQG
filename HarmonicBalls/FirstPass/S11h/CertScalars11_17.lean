@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11h.PinchCertificate11_17
 
 /-!
-# First pass, Lemma 11.17: the scalar form of the pinch certificate (fp-S11h, owner n2)
+# Lemma 11.17: the scalar form of the pinch certificate
 
 The pinch triple `pinchPairEvent` is a strict-inequality predicate on ten `ℝ≥0∞`-valued scalars of the pair `(μ, D)`
 (`pinchScalars`, `pinchPred`). A field-level certificate `PinchFieldCertificate` follows from one measurable field functional

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11j.C42Connectivity
 
 /-!
-# First pass, Section 11: F4 and F5 from [C42] (fp-S11j, owner n4)
+# Section 11: F4 and F5 from [C42]
 
-Derived lemmas (operator note 21:48 UTC), no new geometry field:
+Derived lemmas, no new geometry field:
 
 * F4 (`zero_union_sphere_subset_six`): `{0} ∪ ∂B₅ ⊆ connectedComponentIn (B₆ \ (H_Q ∪ H_W)) 0`, where
   `H_W = closure (thickening (2δ) W)` and `H_Q = closure (thickening (2δ) Q)`. Proof: the sets
@@ -17,7 +17,7 @@ namespace HarmonicBalls
 
 open MeasureTheory Set Metric
 
-/-- F4 (`CHATGPT-C42-connectivity.md` §2, equation (3)): `{0} ∪ ∂B₅` lies in the component of `0` of
+/-- F4: `{0} ∪ ∂B₅` lies in the component of `0` of
 `B₆ \ (closure (B_{2δ}(Q)) ∪ closure (B_{2δ}(W)))`. -/
 theorem IsBufferedPinchGeometry.zero_union_sphere_subset_six {U V W T Q' Q : Set ℂ} {δ : ℝ}
     (h : IsBufferedPinchGeometry U V W T Q' Q δ) :
@@ -158,7 +158,7 @@ theorem IsBufferedPinchGeometry.sphere_subset_connectedComponentIn_six {U V W T 
       (ball (0 : ℂ) 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W))) 0 :=
   fun _ hx => h.zero_union_sphere_subset_six (Or.inr hx)
 
-/-- F5 (`CHATGPT-C42-connectivity.md` §2, equation (4)): the outer piece `T \ B_{3δ}(W)` is connected. -/
+/-- F5: the outer piece `T \ B_{3δ}(W)` is connected. -/
 theorem IsBufferedPinchGeometry.isConnected_outer_piece {U V W T Q' Q : Set ℂ} {δ : ℝ}
     (h : IsBufferedPinchGeometry U V W T Q' Q δ) : IsConnected (T \ thickening (3 * δ) W) := by
   obtain ⟨c, ρ, hρ, hWc, hBig⟩ := h.exists_center_radius

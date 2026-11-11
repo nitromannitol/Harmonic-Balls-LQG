@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11h.CertScalars11_17
 import HarmonicBalls.FirstPass.Frozen.S11d
 
 /-!
-# First pass, Lemma 11.17: the mass coordinate of the pinch certificate (fp-S11h, owner n2)
+# Lemma 11.17: the mass coordinate of the pinch certificate
 
 Coordinate 7 of `pinchScalars` is the LQG mass `μ U` of the open set `U` (paper line 3238, open disks). The shift
 `f` of Step 17.5 vanishes on `U`, so the shifted measure `μ.withDensity (e^{γ f})` has the same mass on `U`

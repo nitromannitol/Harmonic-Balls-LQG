@@ -8,7 +8,7 @@ import HarmonicBalls.FirstPass.S11j.PositiveWeylInverse
 import HarmonicBalls.FirstPass.Frozen.S11j
 
 /-!
-# First pass, Section 11: conditional assembly of the faithful Lemma 11.15 (fp-S11j, owner n4)
+# Section 11: conditional assembly of the faithful Lemma 11.15
 
 Conditional assembly, kept separate from `firstPass_11_15_corrected`. For one fixed buffered geometry, one insertion
 `α₀ < Q`, one exponent `ξ > 0` and one LQG metric of a whole-plane GFF, it proves the positive-measure conclusion of
@@ -19,12 +19,12 @@ corrected Lemma 11.15 (`pinchFirstEvent`, paper lines 3347-3349, 3659-3696) from
 * the named measurability and positivity inputs (M1)-(M3) below (paper line 3664-3667 asserts that the four variables
   are positive and finite; measurability is not proven in the paper).
 
-**Status (2026-11-09): hM11 is unsatisfiable whenever the event is nonempty, so this conditional is vacuous as it
+**Status: hM11 is unsatisfiable whenever the event is nonempty, so this conditional is vacuous as it
 stands and is not a proof of the faithful 11.15.** `pinchFirstEvent` takes suprema, infima and path infima over
 uncountable index sets. A set of metrics in the product σ-algebra is determined by countably many coordinates. If
 `d` satisfies the event and `(a, b) ∈ Q' × frontier Q` is outside those coordinates, then changing `d a b` to `-1`
 makes `setDist ≤ 0`, so the first conjunct fails. The transfer needs measurability for the canonical field law
-instead (notes/n4.md).
+instead.
 
 Route (paper 3659-3696): thresholds `n, k, m, l` with positive probability for the base metric `D`; a positive
 smooth shift `f` from `exists_uniform_first_event_shift` (the event holds for the shifted metric `e^{ξ f} D` on the

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Frozen.S11f
 import HarmonicBalls.Proofs.Sec11.DyadicIntermediateSquare
 
 /-!
-# First pass, discrete dyadic square tail from the DDDF tail (fp-S11f, owner n2)
+# Discrete dyadic square tail from the DDDF tail
 
 Converts the uniform-on-compacts square tail `DDDFSquareDiameterTailFrozen` (DDDF20 Lemma 3.19 (3.63)) into the discrete
 tail `hbound` of the Section 11 dyadic seeds (`exists_dyadic_intermediate_square_seed`,

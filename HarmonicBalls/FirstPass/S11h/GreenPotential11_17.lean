@@ -1,12 +1,12 @@
 import HarmonicBalls.FirstPass.S11h.GreenKernel11_17
 
 /-!
-# First pass, Lemma 11.17: the annulus Green potential as a supremum over a countable set (fp-S11h, owner n2)
+# Lemma 11.17: the annulus Green potential as a supremum over a countable set
 
 Coordinate 6 of `pinchScalars` is `M * annulusGreenPotentialSup μ 0 3 6` (Defs/Annuli.lean:65). This file reduces the
 supremum over `x` in the annulus to a countable dense set of `x`, by lower semicontinuity of
 `x ↦ ∫_A κ(x, y) dμ(y)` (Fatou's lemma, `lintegral_liminf_le`, applied to the lower semicontinuous extended kernel
-`annulusKernelExt`, GreenKernel11_17.lean). Source: CHATGPT-cm-field-certificate.md section 4 (Green-potential coordinate).
+`annulusKernelExt`, GreenKernel11_17.lean).
 -/
 
 namespace HarmonicBalls

@@ -3,7 +3,7 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 import Mathlib.Data.ENNReal.Inv
 
 /-!
-# First pass, Section 11 thresholds for the third pinch event (fp-S11h, owner n2)
+# Section 11 thresholds for the third pinch event
 
 Step B of Lemma 11.17 (`lemma:third-event-proof`, corrected paper lines 3726-3756): "choose deterministic `c₁, c₂ > 0`
 such that `F = E₁ ∩ E₂ ∩ {a₂ ≥ c₁, d₂ ≤ c₂}` has positive probability". This file is generic measure theory with no

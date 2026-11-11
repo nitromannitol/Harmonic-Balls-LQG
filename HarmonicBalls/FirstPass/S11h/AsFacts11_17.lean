@@ -3,7 +3,7 @@ import HarmonicBalls.Steps.Sec11.MetricField
 import HarmonicBalls.Steps.Sec11.SingularWeylBumpLength
 
 /-!
-# First pass, Lemma 11.17, Step 17.5 (almost-sure part): admissibility of the bump shift (fp-S11h, owner n2)
+# Lemma 11.17, Step 17.5 (almost-sure part): admissibility of the bump shift
 
 The almost-sure hypotheses `hD`, `hE`, `hfin` of `pinchEvents_of_bumpShift` (PairPersistence11_17.lean), obtained
 for every nonpositive weight at once, so that the probabilistic step of Lemma 11.17 may use them uniformly in the

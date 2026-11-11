@@ -1,11 +1,11 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# First pass, Section 11 faithful forms of Lemmas 11.15-11.17 (fp-S11h, owner n2)
+# Section 11 faithful forms of Lemmas 11.15-11.17
 
 The Draft statements `PinchFirstEventPositiveStmt`, `PinchSecondEventPositiveStmt` and `PinchThirdEventPositiveStmt`
 (`Draft/Section11.lean:289-320`) fix the insertion to `0` and quantify existentially over the geometry. The fidelity
-review (operator note 2026-11-09 20:59 UTC; `notes/fp-gaps/CHATGPT-hb-s11-fidelity.md`, sections 1 and 4) requires the
+review requires the
 corrected forms below:
 
 * every insertion `α₀ < lqgQ γ` (the corrected context `h^α = g - α log|·|`, `α < Q`; corrected paper lines 3236-3238,
@@ -46,7 +46,7 @@ structure IsBufferedPinchGeometry (U V W T Q' Q : Set ℂ) (δ : ℝ) : Prop whe
   concentric : ∃ (c : ℂ) (ρU ρV ρW : ℝ), U = ball c ρU ∧ V = ball c ρV ∧ W = ball c ρW
   /-- `U` is an open disk of positive radius (corrected paper line 3238), so it is nonempty. Given `concentric`,
   this is `0 < ρU`. Without it `PinchSecondEventFaithfulStmt` and `PinchThirdEventFaithfulStmt` are false for `U = ∅`
-  (operator note 2026-11-09 21:42 UTC). -/
+. -/
   U_nonempty : U.Nonempty
   U_subset : U ⊆ annulus 0 1 2
   V_subset : V ⊆ annulus 0 1 2
@@ -90,7 +90,7 @@ def PinchSecondEventFaithfulStmt : Prop :=
 /-- Lemma 11.17, corrected form (`lemma:third-event-proof`, corrected paper lines 3355-3357): for every fixed buffered
 geometry, every `γ ∈ (0, 2)`, every `α₀ < Q`, and every `M > 0`, `P[Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃] > 0` (inner-measure form).
 The Weyl exponent is the canonical one, `ξ = γ / d_γ` (eq:xi, corrected paper line 440; GM21 (1.5)), with `d_γ > 0`
-a parameter: the paper claims the lemma for this exponent only (operator notes 2026-11-09 21:42 and 21:57 UTC, Q-xi).
+a parameter: the paper claims the lemma for this exponent only.
 The parameter `d_γ` enters only through the exponent `γ / d_γ > 0`, so the hypothesis `IsLQGMetricOfField` is the
 metric of the paper exactly when `d_γ` is the true dimension constant. -/
 def PinchThirdEventFaithfulStmt : Prop :=

@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.Frozen.S11g
 
 /-!
-# First pass, Lemma 11.17, coordinate 0 of `pinchScalars`: the closed-corridor internal supremum (fp-S11h, owner n2)
+# Lemma 11.17, coordinate 0 of `pinchScalars`: the closed-corridor internal supremum
 
 The coordinate `⨆ y ∈ ∂B₅(0), internalMetric D (B_{2δ}(Q ∪ W))ᶜ 0 y` of `pinchScalars` (`CertScalars11_17.lean`) is a
 measurable field functional of the shifted field. The corridor is closed (the paper defines `internalMetric` for open

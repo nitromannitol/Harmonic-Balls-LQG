@@ -2,15 +2,14 @@ import HarmonicBalls.FirstPass.S11h.GreenDyadic11_17
 import HarmonicBalls.FirstPass.S11h.MassCoord11_17
 
 /-!
-# First pass, Lemma 11.17: field-level version of the annulus Green potential (fp-S11h, owner n2)
+# Lemma 11.17: field-level version of the annulus Green potential
 
 Coordinate 6 of `pinchScalars` is `M * annulusGreenPotentialSup μ 0 3 6` (Defs/Annuli.lean:65). This file gives a
 measurable field functional `G` (`exists_annulusGreenField`) with `G (hC ω) = SG(μ_ω)` and
 `G (addFunPairing (hC ω) f) = SG(e^{γf} μ_ω)` almost surely, for a shift `f` vanishing on the annulus. Route: a
 countable dense set of centres (`exists_countable_annulusGreenPotentialSup`, Fatou in GreenPotential11_17.lean), the
 dyadic level-set formula (GreenDyadic11_17.lean), and the mass decoder `exists_mass_open_functional` for the open sets
-`𝔸 ∩ {(k+1)/2^n < κ_x}`, which the shift does not change because `f = 0` on the annulus. Source:
-notes/fp-gaps/CHATGPT-cm-field-certificate.md, sections 4 and 5.
+`𝔸 ∩ {(k+1)/2^n < κ_x}`, which the shift does not change because `f = 0` on the annulus.
 -/
 
 namespace HarmonicBalls

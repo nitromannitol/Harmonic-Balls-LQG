@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# First pass, Section 11: positivity of set distances for a Euclidean length metric (fp-S11h, owner n2)
+# Section 11: positivity of set distances for a Euclidean length metric
 
 Deterministic input for step B of Lemma 11.17 (corrected paper lines 3726-3756): the quantity `a₂ = D(∂B_{2δ}, ∂B_{3δ})`
 of the third event `pinchThirdEvent` is positive. The metric is any `IsEuclideanLengthMetric D` (Fact 2.2 I,

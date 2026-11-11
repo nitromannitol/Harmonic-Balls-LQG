@@ -3,12 +3,11 @@ import HarmonicBalls.FirstPass.S11j.CertificateE1
 import HarmonicBalls.FirstPass.S11h.OuterDiamFinite
 
 /-!
-# First pass, Lemma 11.17: the closed corridor is continuous on an open set inside it (fp-S11h, owner n2)
+# Lemma 11.17: the closed corridor is continuous on an open set inside it
 
 Coordinate 0 of `pinchScalars` is `⨆ y ∈ ∂B₅, D(0, y; C)` for the closed corridor `C = (B_{2δ}(Q ∪ W))ᶜ`
 (Draft/Section11.lean lines 95-96; paper eq:first-event, line 3257). Here `C` is only a closed set, so
-`D(·, ·; C)` is not a field-level decoder by itself; the formula `internalMetric_closed_eq_iInf_iSup` of
-CHATGPT-cm-field-certificate.md (section 3.3) reduces it to open sets (NEW analytic step, not in this file).
+`D(·, ·; C)` is not a field-level decoder by itself; the formula `internalMetric_closed_eq_iInf_iSup` reduces it to open sets (NEW analytic step, not in this file).
 
 This file proves the deterministic continuity part, which needs no closedness: for an open set `O ⊆ C`, the map
 `y ↦ D(x, y; C)` is continuous on `O` (triangle inequality on `C`, and `D(·, · ; C) ≤ D(·, · ; O)` by monotonicity in the

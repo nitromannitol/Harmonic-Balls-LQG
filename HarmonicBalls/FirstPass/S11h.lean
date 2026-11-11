@@ -4,7 +4,7 @@ import HarmonicBalls.Steps.Sec11.PinchFirstWeylPreservation
 import HarmonicBalls.Steps.Sec11.PinchMeasureWeylShift
 
 /-!
-# First pass, Section 11 third pinch event (fp-S11h, owner n2)
+# Section 11 third pinch event
 
 Step 1 of Lemma 11.17 (`lemma:third-event-proof`, paper lines 3726-3756): the smooth Weyl shift that produces the third
 pinch event, for a probability space in any universe.
@@ -15,7 +15,7 @@ pinch event, for a probability space in any universe.
 FROZEN `LQGMetricSatisfiesAxiomsUnivFrozen`. The proof is unchanged otherwise.
 
 It does not transfer any set to the shifted field: the events `Ẽ₁`, `Ẽ₂` of the shifted field and the Cameron-Martin
-transfer back to the unshifted field are NOT part of this statement (open; see `reports/n2.md`).
+transfer back to the unshifted field are NOT part of this statement (open).
 -/
 
 namespace HarmonicBalls

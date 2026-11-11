@@ -7,9 +7,9 @@ import HarmonicBalls.Steps.Sec11.WeylBoundaryGap
 import HarmonicBalls.Steps.Sec11.WeylInverse
 
 /-!
-# First pass, Lemma 11.17, Step 17.5: the three pinch events persist under the bump lowering (fp-S11h, owner n2)
+# Lemma 11.17, Step 17.5: the three pinch events persist under the bump lowering
 
-Deterministic part of Step 17.4-17.5 of `notes/fp-gaps/CHATGPT-11-15-17-faithful.md` (section 6), for a fixed bump
+Deterministic part of Step 17.4-17.5, for a fixed bump
 `φ` (paper eq:bump, corrected `[C42]`/`[C44]` geometry). With `k ∈ (0, 1]` and `f = ξ⁻¹ log k · φ` (so `e^{ξ f} = k^φ`
 and `f ≤ 0`), the shifted metric `E = e^{ξ f} · D` (weylScaling, Fact 2.2 III) satisfies `Ẽ₁`, `Ẽ₂` (with the measure
 `μ` reweighted by `e^{γ f}`, the Cameron-Martin density of `weylShiftPair`) and `Ẽ₃`, provided the original metric

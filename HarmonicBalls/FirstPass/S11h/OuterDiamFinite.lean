@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11h.Faithful
 import HarmonicBalls.Steps.Sec11.PinchAnnulusConnected
 
 /-!
-# First pass, Section 11: finiteness of the outer internal diameter (fp-S11h, owner n2)
+# Section 11: finiteness of the outer internal diameter
 
 Deterministic input `d₂ < ∞` of Lemma 11.17 (`lemma:third-event-proof`, corrected paper lines 3726-3756). The
 diameter `d₂ = diam^{δ}_D(B_{3δ}(W) \ V)` is the one in the event `Ẽ₃` (`pinchThirdEvent`, `Draft/Section11.lean:107`).

@@ -3,10 +3,9 @@ import HarmonicBalls.FirstPass.S11c.ShiftBump
 import HarmonicBalls.FirstPass.S11d.ShiftBound
 
 /-!
-# First pass, Section 11: the corrected set `O₂` and the final bump of Lemma 11.17 (fp-S11h, owner n2)
+# Section 11: the corrected set `O₂` and the final bump of Lemma 11.17
 
-Deterministic geometry of the faithful Lemma 11.17 (`notes/fp-gaps/CHATGPT-11-15-17-faithful.md`, section 2.2, repaired
-inclusion (2.1)-(2.2); operator notes 21:14 UTC ([C44] amended) and 21:22 UTC). For an `IsBufferedPinchGeometry U V W T Q' Q δ`
+Deterministic geometry of the faithful Lemma 11.17 (repaired inclusion; [C44] amended). For an `IsBufferedPinchGeometry U V W T Q' Q δ`
 (buffer conditions `buffer_U`, `buffer_W` and the open sets `V`, `W`), put `O₂ = B_δ(closure (B_{3δ}(W) \ V))`. Then
 
 * `closure O₂ ⊆ B_{4δ}`-neighbourhood of `W`, hence `closure O₂ ⊆ B_{5δ}(W)`;

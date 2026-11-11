@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Potential.FiniteDiscGreenReciprocity
 import HarmonicBalls.Proofs.Potential.GreenPositivity
 
 /-!
-# First pass, Lemma 11.17: the Green kernel of the annulus potential is lower semicontinuous (fp-S11h, owner n2)
+# Lemma 11.17: the Green kernel of the annulus potential is lower semicontinuous
 
 Coordinate 6 of `pinchScalars` is `M * SG_{3,6}(0)`, where `SG` is `annulusGreenPotentialSup` (Defs/Annuli.lean:65): the
 supremum over `x` in the annulus of `∫_A κ(x, y) dμ(y)`, with the extended kernel `κ(x, y) = +∞` on the diagonal and

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.Frozen.S11d
 
 /-!
-# Cameron-Martin transfer through one common field event (fp-S11j, owner n4)
+# Cameron-Martin transfer through one common field event
 
-Proved, not frozen (operator 22:44 UTC, notes/fp-gaps/CHATGPT-cm-field-certificate.md section 1).
+Proved, not frozen.
 Two events `E0`, `Ef` on the carrier `Ω` of a whole-plane GFF `hC` are certified by one common measurable event `B` of
 fields: `ω ∈ E0 ↔ hC ω ∈ B` and `ω ∈ Ef ↔ addFunPairing (hC ω) f ∈ B` almost surely. The Cameron-Martin mutual absolute
 continuity of `hC` and `hC + f` (`CameronMartinGFFMutualAbsCont`, Miller-Sheffield arXiv:1302.4738v2 Proposition 2.9,

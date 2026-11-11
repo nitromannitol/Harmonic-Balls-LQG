@@ -2,9 +2,9 @@ import HarmonicBalls.Steps.Sec11.InternalDiameterDecoder
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchFirstLawTransfer
 
 /-!
-# First pass, Lemma 11.15: countable reduction of the open first certificate (fp-S11j, owner n4)
+# Lemma 11.15: countable reduction of the open first certificate
 
-Route (notes/n4.md, round 11). The faithful event `pinchFirstEvent` contains the open-corridor certificate
+Route. The faithful event `pinchFirstEvent` contains the open-corridor certificate
 `correctedOpenFirstCertificate` (`pinchFirstEvent_of_correctedOpenFirstCertificate`, FirstPass/S11e/FirstEvent.lean). For a
 Euclidean length metric `D`, the open certificate is rewritten here as a countable formula: every supremum and infimum over an
 uncountable set is replaced by one over a countable subset dense in that set. The only analytic inputs are the continuity of

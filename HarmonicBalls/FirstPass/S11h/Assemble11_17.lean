@@ -6,12 +6,12 @@ import HarmonicBalls.FirstPass.S11h.Faithful
 import HarmonicBalls.FirstPass.S11h.PinchCertificate11_17
 
 /-!
-# First pass, Lemma 11.17 (corrected form): assembly from the 11.16 pinch event (fp-S11h, owner n2)
+# Lemma 11.17 (corrected form): assembly from the 11.16 pinch event
 
 `firstPass_11_17_of_11_16` proves `PinchThirdEventFaithfulStmt` (Faithful.lean) from four hypotheses (`h16`, `hAx`,
 `hCMGFF`, `hCert`):
-- `h16`: the faithful Lemma 11.16, `PinchSecondEventFaithfulStmt` (owned by n4). The operator allows it as a hypothesis
-  (decision 21:12 UTC; the Draft 11.16 is not used). It must come from the corrected Lemma 11.16 (`firstPass_11_16_corrected_*`,
+- `h16`: the faithful Lemma 11.16, `PinchSecondEventFaithfulStmt`. It is taken as a hypothesis
+(the Draft 11.16 is not used). It must come from the corrected Lemma 11.16 (`firstPass_11_16_corrected_*`,
   FirstPass/S11k.lean), never from the older `firstPass_11_16_of_11_17` (using it here would be a cycle).
 - `hAx`: the staged metric field axioms `LQGMetricFieldAxioms` (Proposed/LQG.lean:199, Fact 2.2 I-IV), pending the
   operator's source-check; used only through the almost-sure facts of AsFacts11_17.lean.
@@ -21,7 +21,7 @@ import HarmonicBalls.FirstPass.S11h.PinchCertificate11_17
   event certifying the pinch triple before and after the shift). It is proved from frozen inputs by
   `pinchCertificateStmt_of_frozen` (PinchCertificateProof11_17.lean); `firstPass_11_17_corrected` there has it discharged.
 
-The proof follows Steps 17.3-17.6 of `notes/fp-gaps/CHATGPT-11-15-17-faithful.md` (section 6): the truncation selection
+The proof follows Steps 17.3-17.6: the truncation selection
 (Select11_17, Cover11_17), the almost-sure bump admissibility and persistence of the pinch events (AsFacts11_17,
 PairPersistence11_17), the smooth bump of `exists_pinch_bump` (O2Bump), and finally the transfer with `hCMGFF` and `hCert`.
 -/

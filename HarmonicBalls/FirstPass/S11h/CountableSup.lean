@@ -1,6 +1,6 @@
 import Mathlib
 
-/-! # Countable reduction of pair suprema (fp-S11h, owner n2)
+/-! # Countable reduction of pair suprema
 
 FIRST-PASS NEW, general measure theory and topology (no pinch-specific content). Used for the measurability of the
 pinch events `Ẽ₁, Ẽ₂, Ẽ₃` as functions of the field (paper line 3630: "each event is measurable with respect to the

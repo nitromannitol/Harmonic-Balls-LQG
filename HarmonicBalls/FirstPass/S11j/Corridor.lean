@@ -3,13 +3,13 @@ import HarmonicBalls.FirstPass.S11j.C42Six
 import HarmonicBalls.Draft.Section11Corrected
 
 /-!
-# First pass, Section 11: the faithful buffered geometry as a corrected pinch configuration (fp-S11j, owner n4)
+# Section 11: the faithful buffered geometry as a corrected pinch configuration
 
 `IsCorrectedPinchConfiguration` (`Draft/Section11Corrected.lean`) is the corpus structure of the corrected fixed
 geometry: the pinch proof configuration, the six buffer fields, `δ < 10⁻³`, and the corridor field
 `corridor_contains : {0} ∪ sphere 0 5 ⊆ pinchCorridor W Q δ`. A faithful `IsBufferedPinchGeometry`
 (`FirstPass/S11h/Faithful.lean`) supplies the first seven fields; the corridor is derived in
-`FirstPass/S11j/C42Six.lean` (operator note 2026-11-09 21:48 UTC: F4 and F5 follow from [C42], no extra field).
+`FirstPass/S11j/C42Six.lean` (F4 and F5 follow from [C42], no extra field).
 -/
 
 namespace HarmonicBalls
