@@ -2,12 +2,11 @@ import HarmonicBalls.FirstPass.S11s
 import HarmonicBalls.FirstPass.S11v.Homog
 
 /-!
-# Coordinatewise B1 identity without pathwise homogeneity (fp-S11v, operator note 01:44 UTC, §3)
+# Coordinatewise B1 identity without pathwise homogeneity
 
 `dilOp_alphaCanon_eq` (S11s.lean) needs `PairingHomogeneous (hC ω)` at the given `ω`. Its proof uses homogeneity at one
 scalar (`1/4`) and one test function (`dilateTest 1 φ`) only. Here the one instance is supplied almost surely by
-`IsWholePlaneGFF.ae_pairing_smul`, for each fixed canonical coordinate `i`. The index `i` stays outside the a.s. quantifier
-(`notes/fp-gaps/CHATGPT-n1-hAff-hhom.md`, §3, "Replacement for `dilOp_alphaCanon_eq`").
+`IsWholePlaneGFF.ae_pairing_smul`, for each fixed canonical coordinate `i`. The index `i` stays outside the a.s. quantifier.
 -/
 
 namespace HarmonicBalls

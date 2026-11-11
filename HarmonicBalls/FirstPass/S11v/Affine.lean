@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11v.AffineAlg
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# `WholePlaneGFFAffineInvariance` is a theorem (fp-S11v, P6; operator note 01:44 UTC, `notes/fp-gaps/CHATGPT-n1-hAff-hhom.md` §1)
+# `WholePlaneGFFAffineInvariance` is a theorem
 
 `WholePlaneGFFAffineInvariance P hC hcirc` (Proposed/LQG.lean) says that the transformed pairings
 `hC' ω φ = |a|⁻² hC ω (φ ∘ F⁻¹) - hcirc ω |a| b ∫φ` and circle averages `hcirc' ω r z = hcirc ω (|a| r) (a z + b) -

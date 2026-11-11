@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11s.Transfer
 import HarmonicBalls.FirstPass.S11q
 
 /-!
-# Dyadic zoom of the B1 transfer (fp-S11v-11-13-hscale)
+# Dyadic zoom of the B1 transfer
 
 The affine pullback of a whole-plane GFF model at scale `R`: `h̃_R(ρ, z) = h(Rρ, Rz) - h_R(0)` (the field of
 `dilatedCircleAverage`, Duplantier-Sheffield scaling, ruling eqs. (9)-(11) of `S11s/Transfer.lean` with `R` in place of `1/2`).

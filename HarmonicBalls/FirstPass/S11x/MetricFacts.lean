@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Elementary facts on Euclidean length metrics (fp-S11x, owner z7)
+# Elementary facts on Euclidean length metrics
 
 For `D : ℂ → ℂ → ℝ` with `IsEuclideanLengthMetric D` (Defs/LQGMetric.lean): `D ≥ 0` (from the diagonal, the
 triangle inequality and symmetry), and `D(0, ·)` tends to `0` at `0` in the Euclidean topology, since the

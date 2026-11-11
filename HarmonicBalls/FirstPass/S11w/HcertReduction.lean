@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11i.DilatePinch
 
 /-!
-# The hypothesis `hcert` of `pinch_window_ae_of_cert`, reduced to the original model (fp-S11w; item (5))
+# The hypothesis `hcert` of `pinch_window_ae_of_cert`, reduced to the original model
 
 `CertWindow.pinch_window_ae_of_cert` (`FirstPass/S11i/CertWindow.lean:58`) takes the implication
 `hcert` for the rescaled model `(μk k, Dk k) = (c • μ.map (· / 2^k), b * D(2^k ·, 2^k ·))` (shape of `hscale`).

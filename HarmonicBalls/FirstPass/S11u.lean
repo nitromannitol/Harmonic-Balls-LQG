@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11u.Variance
 import HarmonicBalls.FirstPass.Frozen.S11p
 
 /-!
-# First pass: the circle-average limit derived from the whole-plane GFF (fp-S11u, owner n4)
+# The circle-average limit derived from the whole-plane GFF
 
 `WholePlaneCircleAverageLimitFrozen` (Frozen/S11p.lean) is proved as the theorem
 `wholePlaneCircleAverageLimit_derived`, from `IsWholePlaneGFF` alone. The unit-mass test functions are the normalized

@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11v.AffineKernel
 open scoped ContDiff
 
 /-!
-# Deterministic covariance identity for the affine pull-back (fp-S11v, P6)
+# Deterministic covariance identity for the affine pull-back
 
 For `a ≠ 0`, `b ∈ ℂ`, the observables of the transformed field are `affC a o • (affP a b o) - (mass o) • (circle |a| b)`
 (`hC'`, `hcirc'` of `WholePlaneGFFAffineInvariance`, Proposed/LQG.lean). This file proves the kernel identity

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11v.Pullback
 
 /-!
-# Lemma 11.13, hypothesis `hscale` of `CertWindow.pinch_window_ae_of_cert` (fp-S11v-11-13-hscale)
+# Lemma 11.13, hypothesis `hscale` of `CertWindow.pinch_window_ae_of_cert`
 
 `HarmonicBalls.FirstPass.S11i.CertWindow.pinch_window_ae_of_cert` takes the zoom hypothesis
 `hscale : ∀ k : ℕ, ∀ᵐ ω ∂P, ∃ a b, 0 < a ∧ 0 < b ∧ μk k ω = ofReal a • (μ ω).map (· / 2^k) ∧ Dk k ω u v = b * D ω (2^k u) (2^k v)`.

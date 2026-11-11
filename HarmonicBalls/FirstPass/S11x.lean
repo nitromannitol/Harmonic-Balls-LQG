@@ -6,15 +6,15 @@ import HarmonicBalls.FirstPass.S11x.CircleVariance
 import HarmonicBalls.FirstPass.S11x.MetricFacts
 
 /-!
-# The Weyl exponent of an LQG metric is positive (fp-S11x, owner z7)
+# The Weyl exponent of an LQG metric is positive
 
 The derived theorem `lqgMetricExponentPositive_of_inputs` proves the frozen Prop `LQGMetricExponentPositive`
 (FirstPass/Frozen/S11j.lean:94) from two named inputs, both used as explicit hypotheses:
 * `WholePlaneGFFExistsFrozen` (FirstPass/S11r/Frozen.lean:31): a whole-plane GFF on some `Type` (truth TRUE);
 * `WholePlaneGFFAffineInvariance` (Proposed/LQG.lean:51): the normalized whole-plane GFF is invariant under
-  `h ↦ h(a · ) - h_a(0)` (PENDING truth check, kept as a hypothesis).
+  `h ↦ h(a · ) - h_a(0)` (PENDING TRUTH CHECK, kept as a hypothesis).
 
-Argument (truth note notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md section 3.1; Bou-Rabee-Gwynne
+Argument (Bou-Rabee-Gwynne
 arXiv:2208.11795v3, Section 2.1, (2.1)-(2.2), p. 8; Duplantier-Sheffield, Berestycki-Powell for the GFF):
 with `r_n = e^{-s_n}`, `s_n = n + 1`, `H_n = h_{r_n}(0)`, the field `h^{(n)} = h(r_n ·) - H_n` has the law of `h`
 (`wholePlaneGFF_distribution_preimage_eq`), `Var H_n = s_n`, and the Weyl scaling and coordinate change of the

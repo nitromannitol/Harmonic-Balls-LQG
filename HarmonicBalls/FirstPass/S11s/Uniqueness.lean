@@ -1,12 +1,12 @@
 import Mathlib
 
 /-!
-# Countable π-system for the Borel sets of `ℂ` (fp-S11s-11-13-B1-covariance, step B2)
+# Countable π-system for the Borel sets of `ℂ`
 
 Two Radon measures on `ℂ` that agree on a countable π-system `C` generating the Borel sets are equal, once `C`
 contains an exhausting sequence of sets of compact closure (`measure_ext_of_complex_pi`). The π-system used is
 the family of finite intersections of a countable basis of `ℂ`, which is countable (`exists_countable_pi_system_complex`).
-This is the countable determining family of the covariance event (ruling section 3, part B).
+This is the countable determining family of the covariance event.
 -/
 
 namespace HarmonicBalls

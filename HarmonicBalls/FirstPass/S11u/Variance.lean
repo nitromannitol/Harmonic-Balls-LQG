@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11u.Mixed
 
 /-!
-# Variance of a pairing minus a circle average, and a.s. convergence from summable second moments (fp-S11u, owner n4)
+# Variance of a pairing minus a circle average, and a.s. convergence from summable second moments
 
 For a whole-plane GFF `(P, hC, hcirc)` and a test function `φ`, the variance of `hC φ - hcirc(r, z)` is the
 combination `Kpp + Kzz - 2 Kpc` of the three kernel integrals (`IsWholePlaneGFF.covariance_eq`, `wholePlaneGFFCov`).

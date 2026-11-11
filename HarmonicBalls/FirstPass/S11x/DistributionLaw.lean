@@ -3,7 +3,7 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Steps.Sec11.GaussianProcessLaw
 
 /-!
-# Laws of whole-plane GFF pairings on `distributionMeasurableSpace` (fp-S11x, owner z7)
+# Laws of whole-plane GFF pairings on `distributionMeasurableSpace`
 
 For a whole-plane GFF `(P, hC, hcirc)` the random pairing functional `ω ↦ hC ω` is measurable for
 `distributionMeasurableSpace` (`measurable_wholePlaneGFF_distribution`), and two whole-plane GFFs on one

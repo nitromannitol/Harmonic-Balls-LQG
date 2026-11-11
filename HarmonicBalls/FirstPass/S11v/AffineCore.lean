@@ -1,11 +1,10 @@
 import HarmonicBalls.Defs.GFF
 
 /-!
-# Change of variables for the complex affine maps `F z = a z + b` (fp-S11v, P6, operator note 01:44 UTC)
+# Change of variables for the complex affine maps `F z = a z + b`
 
 Deterministic core of `WholePlaneGFFAffineInvariance` (`Proposed/LQG.lean`): the smearing functionals of the
-observables of the whole-plane GFF transform under `F z = a z + b` (`a ≠ 0`, `s = |a|`) as in
-`notes/fp-gaps/CHATGPT-n1-hAff-hhom.md` §1:
+observables of the whole-plane GFF transform under `F z = a z + b` (`a ≠ 0`, `s = |a|`):
 * pairings: `|a|⁻² ∫ φ(F⁻¹ x) f(x) dx = ∫ φ(u) f(F u) du` (`integral_affine_complex`, Haar change of variables
   for the complex-linear map `u ↦ a u`, which is a real dilation by `|a|` composed with a rotation);
 * circle averages: `avg_{∂B(F z, s r)} f = avg_{∂B(z, r)} (f ∘ F)` (`circleAverage_affine_comp`, a reparametrisation

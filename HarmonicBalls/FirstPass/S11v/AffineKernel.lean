@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11u.Kernel
 import HarmonicBalls.Steps.Sec11.PairingCovarianceLinearity
 
 /-!
-# Kernel identities for the affine pull-back of the whole-plane covariance (fp-S11v, P6)
+# Kernel identities for the affine pull-back of the whole-plane covariance
 
 For `F z = a z + b` with `a ≠ 0`, `s = |a|`, let `A = avg_{∂B(0,1)} L∘F` and `M(x) = L(F x) - L(x) + A - log s`,
 `M0 = 2A - log s`, where `L = logMaxAbs = log max(|·|,1)` (`HarmonicBalls.logMaxAbs`, S11u/Kernel.lean).
@@ -12,7 +12,7 @@ These give the exact pointwise identity off the diagonal (`wholePlaneCov_affine`
   `K(F x, F y) = K(x, y) + M x + M y - M0`  (`K = wholePlaneCov`),
 the unit-circle identities `avg_{∂B(0,1)} K(x, ·) = 0` and `avg_{∂B(0,1)} M = M0`, and the continuity of the
 smeared potentials `x ↦ q.smear (K x ·)` of admissible observables `q`.
-Reference: Armstrong–Kuusi–Mourrat-style log-potential calculus; `notes/fp-gaps/CHATGPT-n1-hAff-hhom.md` §1.
+Reference: Armstrong–Kuusi–Mourrat-style log-potential calculus.
 -/
 
 namespace HarmonicBalls

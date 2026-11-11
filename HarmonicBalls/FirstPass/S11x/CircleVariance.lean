@@ -2,7 +2,7 @@ import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Proofs.Sec8.ConcentricCircleCovariance
 
 /-!
-# Circle averages of a whole-plane GFF at radius `r ∈ (0, 1]` (fp-S11x, owner z7)
+# Circle averages of a whole-plane GFF at radius `r ∈ (0, 1]`
 
 The circle average `h_r(0)` of the whole-plane GFF (normalized so that `h_1(0) = 0`, `IsWholePlaneGFF`) is
 centered with variance `-log r` (Duplantier-Sheffield, arXiv:0808.1560v2, Section 3.1; Bou-Rabee-Gwynne,

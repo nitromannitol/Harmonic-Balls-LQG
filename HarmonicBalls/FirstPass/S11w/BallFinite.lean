@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.LQG
 
 /-!
-# Almost sure finiteness of the LQG mass of a ball (fp-S11w; discharges `hfin` of `FirstPass/S11i/CampbellGlue.lean:36`)
+# Almost sure finiteness of the LQG mass of a ball
 
 The LQG measure of an `IsLQGMeasureOfField` pair is almost surely a locally finite measure (`IsLQGLimit`, `Defs/LQG.lean`).
 A ball of `ℂ` has compact closure, so its mass is finite almost surely. No frozen or proposed input is used.

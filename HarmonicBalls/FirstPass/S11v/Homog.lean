@@ -1,9 +1,9 @@
 import HarmonicBalls.Defs.GFF
 
 /-!
-# A.s. homogeneity of the whole-plane GFF pairing for a fixed scalar and test function (fp-S11v, operator note 01:44 UTC)
+# A.s. homogeneity of the whole-plane GFF pairing for a fixed scalar and test function
 
-Option (b) of `notes/fp-gaps/CHATGPT-n1-hAff-hhom.md` §3: `IsWholePlaneGFF` has no a.s. linearity in the test function
+`IsWholePlaneGFF` has no a.s. linearity in the test function
 simultaneously for all scalars and test functions (GAP A, §2), but for each fixed scalar `c` and test function `φ`,
 `hC ω (c φ) = c hC ω φ` almost surely. The proof is the zero-variance principle `ae_eq_integral_of_variance_eq_zero`
 (as in `ae_circleAverage_one_zero`), applied to `Y - c X` with `X = hC(φ)`, `Y = hC(cφ)`; the covariance is the kernel
@@ -58,7 +58,7 @@ theorem hasGaussianLaw_pairing {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω
     HasGaussianLaw (fun ω => hC ω φ) P :=
   hh.isGaussianProcess.hasGaussianLaw_eval (⟨.pairing φ, hφ⟩ : GFFObservable.Admissible)
 
-/-- **A.s. homogeneity for a fixed scalar and test function** (operator note 01:44 UTC, option (b)):
+/-- **A.s. homogeneity for a fixed scalar and test function**:
 `hC ω (c φ) = c · hC ω φ` for almost every `ω`. The statement is for each fixed `c` and `φ`; the simultaneous version over
 all `c` and `φ` is not a consequence of `IsWholePlaneGFF` (GAP A). -/
 theorem ae_pairing_smul {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11u.Kernel
 import HarmonicBalls.Proofs.Sec8.CircleDensityPolarIntegrability
 
 /-!
-# Mixed covariances of a unit annular density and a circle average (fp-S11u, owner n4)
+# Mixed covariances of a unit annular density and a circle average
 
 For the normalized Section 8 bump `unitCircleDensity r δ z` (unit mass, supported in an annulus around `∂B_r(z)`),
 the three whole-plane covariances of `hC(μ)` and `hcirc(r, z)` are expressed through the logarithmic potentials

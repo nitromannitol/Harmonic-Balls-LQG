@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.GFF
 
 /-!
-# Kernel identities for the whole-plane covariance on circles (fp-S11u, owner n4)
+# Kernel identities for the whole-plane covariance on circles
 
 The whole-plane kernel `wholePlaneCov x y = log (max |x| 1 * max |y| 1 / |x - y|)` (Defs/GFF.lean) splits as
 `a x + a y - log |x - y|` off the diagonal, with `a x = log max(|x|, 1)`. Averaging over a circle `∂B_ρ(z)` in the

@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.Frozen.S11n
 
 /-!
 # Canonical certificate event with a Euclidean length decoder metric for every field
-(fp-S11z-11-13, owner n4; the lemma n3 imports for open item 1, step (c1') of `CHATGPT-n3-B1-B2.md` sec. 5.1.)
+
 
 The canonical decoders `d L` of `LQGCanonicalDecodersMeasurableExistStmt` (`FirstPass/Frozen/S11n.lean`) are Euclidean
 length metrics only for `L` in a measurable conull set `G`. The canonical metric `canonMetric G d` agrees with `d` on `G`

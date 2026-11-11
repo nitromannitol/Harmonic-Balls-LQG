@@ -6,11 +6,11 @@ import HarmonicBalls.FirstPass.S11e.CondPos
 import HarmonicBalls.Steps.Sec11.PinchDistancePositivity
 
 /-!
-# First pass, Lemma 11.12: the positivity pieces E2 and E3 in the local notation (fp-S11y, owner z3)
+# Lemma 11.12: the positivity pieces E2 and E3 in the local notation
 
-Local events (`FirstPass/S11h/LocalEvents.lean`, z4's notation): `pinchFirstEventLocal` (E1),
+Local events (`FirstPass/S11h/LocalEvents.lean`, notation): `pinchFirstEventLocal` (E1),
 `pinchSecondEventLocal μ D U V δ M` (E2(M): `d₁ = diam^δ(V̄) < a₁ = D(∂B_δ, ∂B_{2δ})` and `M S < μ(U)`),
-`pinchThirdEventLocal` (E3). Paper lem:E2 (corrected lines 3700-3727), route ChatGPT z4 note section 6.3.
+`pinchThirdEventLocal` (E3). Paper lem:E2 (corrected lines 3700-3727).
 
 `pinchLocal_E2_positive` (this file): given an OUTSIDE-measurable event `F` (measurable for the zero-mean exterior
 sigma-algebra `comap (localModConstPairings α₀ hC (closure W)ᶜ)`) of positive probability on which E1 holds, there is a

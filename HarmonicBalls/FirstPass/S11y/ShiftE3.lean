@@ -7,7 +7,7 @@ import HarmonicBalls.Steps.Sec11.PinchMeasureWeylShift
 import HarmonicBalls.Steps.Sec11.WeylAnnulusBounds
 
 /-!
-# The deterministic third shift (Lemma 11.12, E3; corrected paper lines 3729-3755, z4 note §6.4)
+# The deterministic third shift (Lemma 11.12, E3; corrected paper lines 3729-3755)
 
 For the shift `f = ξ⁻¹ log k · φ` (`φ` the bump of `ShiftGeom.lean`, `0 < k ≤ 1`), a field whose metric `D` satisfies
 the first and second local events and has `a₂ ≥ c`, `d₂ ≤ d` with `k d ≤ c/2`, keeps `E₁` and `E₂` and satisfies `E₃`

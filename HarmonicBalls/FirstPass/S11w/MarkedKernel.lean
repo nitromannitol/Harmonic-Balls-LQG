@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.S11w.BallFinite
 
 /-!
-# Measurability of the mu-weighted Campbell mark integral (fp-S11w; discharges `hmeas` of `FirstPass/S11i/CampbellGlue.lean:37`)
+# Measurability of the mu-weighted Campbell mark integral
 
 For a random Radon measure `μ` (the LQG measure of `IsLQGMeasureOfField`), the map
 `ω ↦ μ_ω(B)⁻¹ * ∫_{B} 1_S(campbellMarkedObs α₀ D (hC ω) z) dμ_ω(z)` is almost surely measurable.

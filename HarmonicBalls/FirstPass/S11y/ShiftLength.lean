@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11y.ShiftE3
 import HarmonicBalls.FirstPass.S11m.WeylLengthCompact
 
 /-!
-# The shifted length metric, without a frozen input (Lemma 11.12, E3; z3 note §6.4)
+# The shifted length metric, without a frozen input (Lemma 11.12, E3)
 
 `pinchLocal_E3_of_shift` takes the length-metric property of the shifted metric as a hypothesis `hE`.
 This file discharges it deterministically. For a Euclidean length metric `D`, real `ξ`, and the shift weight

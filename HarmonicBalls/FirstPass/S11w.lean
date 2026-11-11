@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11w.BallFinite
 import HarmonicBalls.FirstPass.S11w.MarkedKernel
 
 /-!
-# Campbell glue with the side conditions discharged (fp-S11w; items (6) of the first-pass task fp-S11w-11-13-hcert-hfin)
+# Campbell glue with the side conditions discharged
 
 `HarmonicBalls.CampbellGlue.ae_marked_null_of_reference_null` (`FirstPass/S11i/CampbellGlue.lean`) takes two side
 conditions as hypotheses: `hfin` (the ball mass is almost surely finite) and `hmeas` (the mu-weighted mark integral is

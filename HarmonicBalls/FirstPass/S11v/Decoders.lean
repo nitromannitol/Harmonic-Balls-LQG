@@ -2,12 +2,11 @@ import HarmonicBalls.FirstPass.S11n
 import HarmonicBalls.FirstPass.S11s.Uniqueness
 
 /-!
-# Measurable-function principle for the canonical decoders (fp-S11v, operator note 01:44 UTC, §4)
+# Measurable-function principle for the canonical decoders
 
 Coordinatewise almost-sure equality `X ω i = Y ω i` (for every canonical index `i`, the index outside the
 almost-sure quantifier) implies almost-sure equality of every measurable decoder output:
-`K (X ω) = K (Y ω)` for a kernel `K` of measures on `ℂ` and `d (X ω) = d (Y ω)` for a Borel metric decoder `d`
-(`notes/fp-gaps/CHATGPT-n1-hAff-hhom.md`, §4, "The measurable-function principle").
+`K (X ω) = K (Y ω)` for a kernel `K` of measures on `ℂ` and `d (X ω) = d (Y ω)` for a Borel metric decoder `d`.
 
 Proof. The sets `S` with `X ω ∈ S ↔ Y ω ∈ S` almost surely form a σ-algebra (`coordAeSigma`) containing the
 coordinate cylinders, hence the product σ-algebra of `CanonSpace = CanonIdx → ℝ`. No measurability of `X` or `Y` is
@@ -102,7 +101,7 @@ theorem ae_decoder_eq_of_coordwise {Ω : Type*} [MeasurableSpace Ω] {P : Measur
     Continuous.ext_on hQd (d (X ω)).continuous (d (Y ω)).continuous (fun q hq => hω ⟨q, hq⟩)
   exact ContinuousMap.ext fun x => congrFun hfun x
 
-/-- **Decoder principle (operator note 01:44 UTC, §4).** If `X` and `Y` agree coordinatewise almost surely, then almost
+/-- **Decoder principle.** If `X` and `Y` agree coordinatewise almost surely, then almost
 surely the measure decoder `K` and the metric decoder `d` take the same values at `X ω` and `Y ω`. -/
 theorem ae_decoders_eq_of_coordwise_ae_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {X Y : Ω → S11n.CanonSpace}

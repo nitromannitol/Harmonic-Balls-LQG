@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11v.Decoders
 import HarmonicBalls.FirstPass.S11v.Affine
 
 /-!
-# B1 covariance of the decoders without pathwise homogeneity (fp-S11v, operator note 01:44 UTC, §4)
+# B1 covariance of the decoders without pathwise homogeneity
 
 `ae_covariance_canonical` (S11s/Covariance.lean) uses `hhom : ∀ᵐ ω, PairingHomogeneous (hC ω)` only to rewrite
 `dilOp (alphaCanon α hC ω)` as `alphaCanon α (normDilatePairing …) ω` pointwise. Here that identity is replaced by

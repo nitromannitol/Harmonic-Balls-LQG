@@ -3,9 +3,9 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.S11u
 
 /-!
-# First pass, Section 11: the second annulus step from the N2 interface (fp-S11t, owner n4)
+# Section 11: the second annulus step from the N2 interface
 
-This file proves `PinchSecondAnnulusStep` exactly as typed in `FirstPass/S11k/BundleParts.lean` (owner z3), from the
+This file proves `PinchSecondAnnulusStep` exactly as typed in `FirstPass/S11k/BundleParts.lean`, from the
 N2 interface `exists_exterior_annulusGreenPotentialSup_of_buffered_singular` (`FirstPass/S11p/ExteriorMass.lean`).
 The insertion-0 LQG measure `μ₀` on the same space is produced by the Proposed input `LQGMeasureExistence`
 (`Proposed/LQG.lean`), not assumed. The statement is copied (not imported) so that `BundleParts` can import this file.
