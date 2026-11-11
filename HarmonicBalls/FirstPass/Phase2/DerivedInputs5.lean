@@ -93,6 +93,143 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
+/-- Counted declaration `closure_1_2` (wrapper of `closure_1_2_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+theorem closure_1_2_derivedInputs5
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hCamp : LocalCampbellMarkedRestrictionFrozen.{u})
+    (hDec : LocalLQGDecoderCommonFrozen.{u})
+    (hCM : CameronMartinLocallyLipschitzShiftAbsCont.{u})
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hStep8 : Step8IdentificationStmt.{u})
+    (hTor : TorhorstSimpleLoopFrozen)
+    : HarmonicBallNoveltyStmt.{u} :=
+  HarmonicBalls.Closure.closure_1_2_noWeyl hDG hAff hCC hW hE hN hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0}) hCamp (hE1) hDec hCM hAx hStep8 hTor
+
+end HarmonicBalls.Closure
+
+namespace HarmonicBalls.Closure
+open MeasureTheory
+
+/-- Counted declaration `closure_1_2_faithful` (wrapper of `closure_1_2_faithful_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+theorem closure_1_2_faithful_derivedInputs5
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hCamp : LocalCampbellMarkedRestrictionFrozen.{u})
+    (hDec : LocalLQGDecoderCommonFrozen.{u})
+    (hCM : CameronMartinLocallyLipschitzShiftAbsCont.{u})
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hStep8 : Step8IdentificationStmt.{u})
+    (hTor : TorhorstSimpleLoopFrozen)
+    : HarmonicBallNoveltyFaithfulStmt.{u} :=
+  HarmonicBalls.Closure.closure_1_2_faithful_noWeyl hDG hAff hCC hW hE hN hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0}) hCamp (hE1) hDec hCM hAx hStep8 hTor
+
+end HarmonicBalls.Closure
+
+namespace HarmonicBalls.Closure
+open MeasureTheory
+
+/-- Counted declaration `closure_7_2` (wrapper of `closure_7_2_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+theorem closure_7_2_derivedInputs5
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    : ClusterTimeContinuityStmt.{u} :=
+  HarmonicBalls.Closure.closure_7_2_noWeyl hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0}) hDG hAff hCC hW hE hN
+
+end HarmonicBalls.Closure
+
+namespace HarmonicBalls.Closure
+open MeasureTheory
+
+/-- Counted declaration `closure_8_1` (wrapper of `closure_8_1_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+theorem closure_8_1_derivedInputs5
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    : BoundaryMeasureZeroOfCompactClusterStmt.{u} :=
+  HarmonicBalls.Closure.closure_8_1_noWeyl hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0}) hDG hAff hCC hW hE hN
+
+end HarmonicBalls.Closure
+
+namespace HarmonicBalls.Closure
+open MeasureTheory
+
+/-- Counted declaration `closure_9_2` (wrapper of `closure_9_2_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+theorem closure_9_2_derivedInputs5
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hAff : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    : HarmonicBalls.S9c.SubharmonicBallUniquenessC51Stmt.{u} :=
+  HarmonicBalls.Closure.closure_9_2_noWeyl hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0}) hDG hAff hCC hW hE hN
+
+end HarmonicBalls.Closure
+
+namespace HarmonicBalls.Closure
+open MeasureTheory
+
 /-- Counted declaration `closure_5_2` (wrapper of `closure_5_2_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
 theorem closure_5_2_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -185,6 +322,29 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
+/-- Counted declaration `typicalPointManyGoodScales_closed` (wrapper of `typicalPointManyGoodScales_closed_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+theorem typicalPointManyGoodScales_closed_derivedInputs5
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    : TypicalPointManyGoodScalesStmt.{u} :=
+  HarmonicBalls.Closure.typicalPointManyGoodScales_closed_noWeyl hDG hCC hE hW hN hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0})
+
+end HarmonicBalls.Closure
+
+namespace HarmonicBalls.Closure
+open MeasureTheory
+
 /-- Counted declaration `closure_11_2` (wrapper of `closure_11_2_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
 theorem closure_11_2_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -254,6 +414,31 @@ theorem closure_11_6_derivedInputs5
     (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
     : AnnulusMassBoundByHarmonicChainStmt.{u} :=
   HarmonicBalls.Closure.closure_11_6_noWeyl hDG hCC hE hW hN hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0})
+
+end HarmonicBalls.Closure
+
+namespace HarmonicBalls.Closure
+open MeasureTheory
+
+/-- Counted declaration `closure_11_11` (wrapper of `closure_11_11_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+theorem closure_11_11_derivedInputs5
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
+    (hW : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ α₀ hC hcirc)
+    (hL1 : LocalRootedFieldMeasureDomination.{u})
+    (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
+    (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hStep8 : Step8IdentificationStmt.{u})
+    : HarmonicBallNotMetricBallStmt.{u} :=
+  HarmonicBalls.Closure.closure_11_11_noWeyl hDG hCC hE hW hN hL1 hE1 hE3 (HarmonicBalls.birkhoffPointwiseErgodic_derived.{0}) hAx hStep8
 
 end HarmonicBalls.Closure
 
