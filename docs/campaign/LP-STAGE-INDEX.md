@@ -1,5 +1,10 @@
 # LP staging area: index of `HarmonicBalls/LPStage`
 
+> **Superseded 2026-11-11.** The in-repository copies were archived (HB 2478ebc4: `archive/HarmonicBalls/LPStage`; IDLA 741a5360:
+> `archive/MatedCRT/LPStaging`). Both papers import `LatticeProb.*` from the pinned Lattice-Probability revision 8fcf846.
+> The text below records the state before the archive move.
+
+
 Umbrella: `HarmonicBalls/LPStage/All.lean` imports the 54 LPStage modules of the table below (build with
 `lb HarmonicBalls.LPStage.All`, BUILD OK 2026-11-11): the 37 earlier ones plus, added 2026-11-11, the 12 LQGMeasureNonatomic*
 modules (z7), LQGMeasureFullSupport{,2,3} and LQGMeasureSquarePositive (z3, DONE 11:49) and WeylShiftedMass (z4, 10de7ef9).
@@ -54,7 +59,7 @@ Line numbers are those of the committed files at the time of the row-56 commit.
 | LiouvilleGraph | def `WholePlaneLQGGraphDimension` :83 (no theorem) | 44 | none | M6 | READY |
 | LocalObservation | support: `recenteredRestriction` :26, `normalizedRestriction` :34, `measurable_normalizedRestriction` :46 | support | none | M2 | READY |
 | MassFunctional | `lqgMassFunctionalMeasurable_lp` :759 (def `LQGMassFunctionalMeasurableLP` :67) | 21 | none | FirstPass/LPBridge/MassFunctional.lean | READY |
-| PhaseTorus | def `PhaseTorusDoublingProductErgodic` :45 (no theorem; unproved) | 9 | none | M2 | READY |
+| PhaseTorus | def `PhaseTorusDoublingProductErgodic` :45 (proved: `phaseTorusDoublingProductErgodic`, `LatticeProb/Prob/PhaseTorusErgodic.lean:136`) | 9 | none | M2 | READY |
 | PlanarGreen | support: `planarNewtonKernel` :30, `IsHarmonicMinorant` :41, `greenFunction` :56 | support | none | M3 | READY |
 | PlaneDomainConvexCompact | `isPreconnected_diff_of_convex_compact` :135 | 35 | none | - | READY |
 | PlaneTopology | def `TorhorstSimpleLoop` :72 (no theorem) | 36 | none | M3 | READY |
