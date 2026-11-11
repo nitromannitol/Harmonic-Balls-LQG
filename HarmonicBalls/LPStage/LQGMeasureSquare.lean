@@ -7,7 +7,7 @@ import HarmonicBalls.LPStage.PlaneTopology
 
 Task `fp-phase2-b2-a10sub-and-lpstage-square`, item (2), worker z3. General statement in LP and Mathlib terms of the
 measurability of the LQG area measure on closed dyadic squares (the HB Prop `LQGMeasureSquareMeasurableFrozen`,
-`HarmonicBalls/FirstPass/Frozen/S11c.lean:117`). The HB form is obtained in `HarmonicBalls/LPStage/LQGMeasureSquareBridge.lean`.
+`HarmonicBalls/FirstPass/Frozen/S11c.lean:117`). The HB form is obtained in `HarmonicBalls/FirstPass/LPBridge/LQGMeasureSquare.lean` (bridges may import HB; LP files may not).
 
 Route (the argument of `HarmonicBalls.lqgMeasureSquareMeasurable_derived`, `FirstPass/Phase2/SquareMeasurableDerived.lean`,
 restated without HB objects):
