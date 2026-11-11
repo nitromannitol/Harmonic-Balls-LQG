@@ -512,4 +512,174 @@ theorem exists_continuousOn_modification_of_gaussian {Ω : Type*} [MeasurableSpa
 
 end Localization
 
+/-!
+### The whole-plane GFF on the admissible observables (general LP form)
+
+Named input (not a frozen input; see the report): `WholePlaneCovSymmStmt`, the symmetry of the covariance kernel
+`wholePlaneGFFCov`. It is needed because `PosSemidef` in Mathlib includes `IsHermitian`.
+-/
+
+section WholePlaneGFF
+
+open scoped Classical
+
+open MeasureTheory ProbabilityTheory
+
+/-- Symmetry of the whole-plane covariance on admissible observables (named input). Mathematically it follows from
+`wholePlaneCov_comm` (`HarmonicBalls/Defs/GFF.lean:133`) and Fubini; the pairing-pairing and circle-circle cases and the
+pairing-circle case over the circle measure are not yet formalized in Lean. -/
+def WholePlaneCovSymmStmt : Prop :=
+  ∀ o o' : GFFObservable.Admissible, wholePlaneGFFCov o.1 o'.1 = wholePlaneGFFCov o'.1 o.1
+
+/-- The covariance kernel on admissible observables (index type of the Gaussian process). -/
+noncomputable def admKernel (o o' : GFFObservable.Admissible) : ℝ := wholePlaneGFFCov o.1 o'.1
+
+/-- Finite Gram matrices of the covariance kernel are positive semidefinite (Mathlib sense: Hermitian and
+nonnegative quadratic form), from the named inputs `WholePlaneCovPSDStmt` and `WholePlaneCovSymmStmt`. -/
+theorem kernelMatrix_posSemidef_of_psd (hB2 : WholePlaneCovPSDStmt) (hsymm : WholePlaneCovSymmStmt)
+    (I : Finset GFFObservable.Admissible) : (kernelMatrix admKernel I).PosSemidef := by
+  rw [Matrix.posSemidef_iff_dotProduct_mulVec]
+  refine ⟨?_, fun x => ?_⟩
+  · apply Matrix.IsHermitian.ext
+    intro i j
+    simp only [kernelMatrix, Matrix.of_apply, star_trivial, admKernel, hsymm j.1 i.1]
+  · set e := I.equivFin with he
+    have hB := hB2 I.card (fun k => (e.symm k).1) (fun k => x (e.symm k))
+    have hsum : ∑ k : Fin I.card, ∑ l : Fin I.card, x (e.symm k) * x (e.symm l)
+        * wholePlaneGFFCov (e.symm k).1.1 (e.symm l).1.1
+        = ∑ i : I, ∑ j : I, x i * x j * admKernel i.1 j.1 :=
+      Fintype.sum_equiv e.symm _ _ fun k => Fintype.sum_equiv e.symm _ _ fun l => rfl
+    have hq : dotProduct (star x) (Matrix.mulVec (kernelMatrix admKernel I) x) = ∑ i : I, ∑ j : I, x i * x j * admKernel i.1 j.1 := by
+      simp only [dotProduct, Matrix.mulVec, kernelMatrix, Matrix.of_apply, star_trivial, Finset.mul_sum]
+      refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
+    rw [hq, ← hsum]
+    exact hB
+
+/-- Covariances of a.s. equal random variables agree. -/
+lemma covariance_congr_ae' {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {X X' Y Y' : Ω → ℝ}
+    (hX : X =ᵐ[P] X') (hY : Y =ᵐ[P] Y') : cov[X, Y; P] = cov[X', Y'; P] := by
+  unfold covariance
+  rw [integral_congr_ae hX, integral_congr_ae hY]
+  refine integral_congr_ae ?_
+  filter_upwards [hX, hY] with ω h1 h2
+  rw [h1, h2]
+
+/-- Coordinates of a centre `z ∈ ℂ` in `Fin 2 → ℝ`: the centre component of a parameter `(r, v) ∈ ℝ × (Fin 2 → ℝ)`. -/
+noncomputable def coordsOf (z : ℂ) : Fin 2 → ℝ := ![z.re, z.im]
+
+/-- The complex centre of a parameter; inverse of `coordsOf`. -/
+def cplxOf (v : Fin 2 → ℝ) : ℂ := ⟨v 0, v 1⟩
+
+lemma cplxOf_coordsOf (z : ℂ) : cplxOf (coordsOf z) = z := by
+  apply Complex.ext <;> simp [cplxOf, coordsOf]
+
+lemma continuous_coordsOf : Continuous coordsOf := by
+  refine continuous_pi fun i => ?_
+  fin_cases i
+  · simpa [coordsOf] using Complex.continuous_re
+  · simpa [coordsOf] using Complex.continuous_im
+
+/-- The circle observable of a parameter point `p = (r, v)`; off `{r > 0}` it is the fixed circle `∂B_1(0)`. -/
+noncomputable def ptObs (p : ℝ × (Fin 2 → ℝ)) : GFFObservable :=
+  if 0 < p.1 then .circle p.1 (cplxOf p.2) else .circle 1 0
+
+lemma ptObs_isAdmissible (p : ℝ × (Fin 2 → ℝ)) : (ptObs p).IsAdmissible := by
+  unfold ptObs
+  split_ifs with h
+  · exact h
+  · exact one_pos
+
+/-- The admissible observable of a parameter point. -/
+noncomputable def ptAdm (p : ℝ × (Fin 2 → ℝ)) : GFFObservable.Admissible := ⟨ptObs p, ptObs_isAdmissible p⟩
+
+lemma ptAdm_coords {r : ℝ} (hr : 0 < r) (z : ℂ) : ptAdm (r, coordsOf z) = ⟨.circle r z, hr⟩ := by
+  apply Subtype.ext
+  simp [ptAdm, ptObs, hr, cplxOf_coordsOf]
+
+/-- The pairing with `φ` read off a point `ω` of the coordinate space (`0` off test functions). -/
+noncomputable def pairingField (ω : GFFObservable.Admissible → ℝ) (φ : ℂ → ℝ) : ℝ :=
+  if h : IsTestFunction Set.univ φ then ω ⟨.pairing φ, h⟩ else 0
+
+lemma pairingField_apply {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) (ω : GFFObservable.Admissible → ℝ) :
+    pairingField ω φ = ω ⟨.pairing φ, hφ⟩ :=
+  by simp [pairingField, hφ]
+
+/-- The whole-plane GFF in general LP form, from the Kolmogorov extension (B1, proved), the named PSD input
+`WholePlaneCovPSDStmt` (B2), the named symmetry input `WholePlaneCovSymmStmt` (B3sym), and the kernel increment bound
+`hvarK` on the circle parameters (discharged for the HarmonicBalls kernel in `FirstPass/Phase2/GFFExistsConstructed.lean`).
+Construction: centred Gaussian coordinate process with covariance `admKernel`, continuous modification of the circle
+process on `{r > 0}` (`exists_continuousOn_modification_of_gaussian`), and the pairings read off the coordinates. -/
+theorem exists_isWholePlaneGFF (hB2 : WholePlaneCovPSDStmt) (hsymm : WholePlaneCovSymmStmt)
+    (hvarK : ∀ a : ℝ, 0 < a → ∃ C : ℝ, 0 ≤ C ∧ ∀ p q : ℝ × (Fin 2 → ℝ), a ≤ p.1 → a ≤ q.1 →
+      wholePlaneGFFCov (ptObs p) (ptObs p) + wholePlaneGFFCov (ptObs q) (ptObs q)
+        - 2 * wholePlaneGFFCov (ptObs p) (ptObs q) ≤ C * dist p q) :
+    ∃ (Ω : Type) (_ : MeasurableSpace Ω) (P : Measure Ω) (_ : IsProbabilityMeasure P)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc := by
+  obtain ⟨μ, hμ, hgauss, hcent, hcov⟩ :=
+    exists_gaussian_of_kernel kolmogorovExtensionStmt_proved admKernel
+      (kernelMatrix_posSemidef_of_psd hB2 hsymm)
+  have := hμ
+  have hint : ∀ o : GFFObservable.Admissible, Integrable (fun ω : GFFObservable.Admissible → ℝ => ω o) μ :=
+    fun o => (hgauss.hasGaussianLaw_eval o).integrable
+  have hmem : ∀ o : GFFObservable.Admissible, MemLp (fun ω : GFFObservable.Admissible → ℝ => ω o) 2 μ :=
+    fun o => (hgauss.hasGaussianLaw_eval o).memLp_two
+  have hmeas : ∀ o : GFFObservable.Admissible, Measurable fun ω : GFFObservable.Admissible → ℝ => ω o :=
+    fun o => measurable_pi_apply o
+  have hvar : ∀ o o' : GFFObservable.Admissible,
+      Var[fun ω : GFFObservable.Admissible → ℝ => ω o - ω o'; μ]
+        = admKernel o o - 2 * admKernel o o' + admKernel o' o' := by
+    intro o o'
+    have h := variance_sub (μ := μ) (hmem o) (hmem o')
+    rw [← covariance_self (hmeas o).aemeasurable,
+      ← covariance_self (hmeas o').aemeasurable, hcov, hcov, hcov] at h
+    exact h
+  obtain ⟨Z, hZm, hZae, hZcont⟩ := exists_continuousOn_modification_of_gaussian (P := μ)
+    (fun (p : ℝ × (Fin 2 → ℝ)) (ω : GFFObservable.Admissible → ℝ) => ω (ptAdm p))
+    (fun p => measurable_pi_apply _)
+    (fun p q => by
+      rw [integral_sub (hint (ptAdm p)) (hint (ptAdm q)), hcent (ptAdm p), hcent (ptAdm q), sub_zero])
+    (fun p q => by
+      exact hgauss.hasGaussianLaw_fun_sub (s := ptAdm p) (t := ptAdm q))
+    (fun a ha => by
+      obtain ⟨C, hC0, hCb⟩ := hvarK a ha
+      refine ⟨C, hC0, fun p q hp hq => ?_⟩
+      rw [hvar (ptAdm p) (ptAdm q)]
+      show wholePlaneGFFCov (ptObs p) (ptObs p) - 2 * wholePlaneGFFCov (ptObs p) (ptObs q)
+        + wholePlaneGFFCov (ptObs q) (ptObs q) ≤ C * dist p q
+      linarith [hCb p q hp hq])
+  have hae : ∀ o : GFFObservable.Admissible,
+      (fun ω : GFFObservable.Admissible → ℝ =>
+        o.1.eval (pairingField ω) (fun r z => Z (r, coordsOf z) ω)) =ᵐ[μ] fun ω => ω o := by
+    rintro ⟨o, ho⟩
+    cases o with
+    | pairing φ =>
+      refine Filter.Eventually.of_forall fun ω => ?_
+      exact pairingField_apply ho ω
+    | circle r z =>
+      have h1 := hZae (r, coordsOf z) ho
+      have h2 : ptAdm (r, coordsOf z) = ⟨.circle r z, ho⟩ := ptAdm_coords (r := r) ho z
+      beta_reduce at h1
+      rw [h2] at h1
+      exact h1
+  refine ⟨GFFObservable.Admissible → ℝ, inferInstance, μ, hμ, pairingField,
+    fun ω r z => Z (r, coordsOf z) ω, ?_⟩
+  refine
+    { measurable_pairing := fun φ hφ => ?_
+      measurable_circle := fun r z _ => hZm _
+      isGaussianProcess := hgauss.congr fun o => (hae o).symm
+      integral_eq_zero := fun o ho => (integral_congr_ae (hae ⟨o, ho⟩)).trans (hcent _)
+      covariance_eq := fun o o' ho ho' =>
+        (covariance_congr_ae' (hae ⟨o, ho⟩) (hae ⟨o', ho'⟩)).trans (hcov _ _)
+      ae_continuousOn_circle := ?_ }
+  · have h : (fun ω : GFFObservable.Admissible → ℝ => pairingField ω φ)
+        = fun ω => ω ⟨.pairing φ, hφ⟩ := funext fun ω => pairingField_apply hφ ω
+    rw [h]
+    exact measurable_pi_apply _
+  · filter_upwards [hZcont] with ω hω
+    refine hω.comp (continuous_fst.prodMk (continuous_coordsOf.comp continuous_snd)).continuousOn ?_
+    intro p hp
+    exact hp.1
+
+end WholePlaneGFF
+
 end LatticeProb.Gauss
