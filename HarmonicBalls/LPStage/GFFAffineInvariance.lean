@@ -1,5 +1,6 @@
 import Mathlib
 import HarmonicBalls.LPStage.GFF
+import HarmonicBalls.LPStage.CircleAverageApprox2
 
 /-! # Affine invariance of the whole-plane GFF: LP form (LP stage, z6)
 
@@ -55,14 +56,6 @@ theorem wholePlaneGFFCov_circle_one_zero :
 namespace IsWholePlaneGFF
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
   {hcirc : Ω → ℝ → ℂ → ℝ}
-/-- The whole-plane GFF lives on a probability space. -/
-theorem isProbabilityMeasure (hh : IsWholePlaneGFF P hC hcirc) : IsProbabilityMeasure P :=
-  have : Nonempty GFFObservable.Admissible := ⟨⟨.circle 1 0, one_pos⟩⟩
-  hh.isGaussianProcess.isProbabilityMeasure
-/-- Each circle average of positive radius is Gaussian. -/
-theorem hasGaussianLaw_circle (hh : IsWholePlaneGFF P hC hcirc) {r : ℝ} (hr : 0 < r) (z : ℂ) :
-    HasGaussianLaw (fun ω => hcirc ω r z) P :=
-  hh.isGaussianProcess.hasGaussianLaw_eval (⟨.circle r z, hr⟩ : GFFObservable.Admissible)
 /-- The normalization `h^ℂ_1(0) = 0` (line 365) holds a.s. -/
 theorem ae_circleAverage_one_zero (hh : IsWholePlaneGFF P hC hcirc) : ∀ᵐ ω ∂P, hcirc ω 1 0 = 0 := by
   have := hh.isProbabilityMeasure
