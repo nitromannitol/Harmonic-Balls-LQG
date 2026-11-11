@@ -2,11 +2,10 @@ import HarmonicBalls.FirstPass.S11i.CertHcert
 import HarmonicBalls.FirstPass.S11h.Faithful
 
 /-!
-# Geometric non-emptiness for the certificate with buffer `η = δ` (fp-S11i-11-13, round 32)
+# Geometric non-emptiness for the certificate with buffer `η = δ`
 
 The hypotheses of `certificate_subset_pinchPointEvent` (`hF`, `hQ'`, `hK02`, `hK21`) follow from the buffered pinch
-geometry `IsBufferedPinchGeometry U V W T Q' Q δ` with the buffer `η = δ` (operator note 22:28 UTC: the geometric buffer
-of the write-ups is the buffer of `IsBufferedPinchGeometry`). Only the buffer clauses, openness, connectedness and
+geometry `IsBufferedPinchGeometry U V W T Q' Q δ` with the buffer `η = δ`. Only the buffer clauses, openness, connectedness and
 boundedness are used; no drawing is needed.
 -/
 
@@ -140,6 +139,3 @@ theorem hcert_of_buffered {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (D 
 
 end FirstPassS11i
 
-#print axioms FirstPassS11i.hcert_of_buffered
-#print axioms FirstPassS11i.certK02_nonempty
-#print axioms FirstPassS11i.certK21_nonempty

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.DyadicGrid
 
 /-!
-# Proposition 11.10, helpers for the final assembly (fp-S11c, owner n1)
+# Proposition 11.10, helpers for the final assembly
 
-FIRST-PASS NEW (bookkeeping). The assembly of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) uses four small
+The assembly of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) uses four small
 facts: (i) an event of probability at least `1 - δ` has complement of measure at most `δ` (the inner small-cell event of
 `DyadicCellDiamSmallFrozen` and the exterior event of `exists_measurable_exterior_bound`); (ii) an inclusion of integer grid
 boxes is monotone in the endpoints; (iii) a closed dyadic square of level `N` is the grid box of mesh `2^{-(N+3)}` with the

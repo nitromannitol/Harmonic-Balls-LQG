@@ -1,7 +1,7 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# Lemma 11.7, scale invariance of the cone-mass event (B2 sec 5.1 support, deterministic)
+# Lemma 11.7, scale invariance of the cone-mass event (deterministic)
 
 `coneMassEvent μ Q M r z` (Draft/Section11.lean:72) compares `M · annulusGreenPotentialSup μ z (3r) (6r)` with the mass
 `μ(annulus z r (2r) ∩ coneAt Q z)`. Both sides are linear in `μ`, so the event is unchanged under a multiplication of

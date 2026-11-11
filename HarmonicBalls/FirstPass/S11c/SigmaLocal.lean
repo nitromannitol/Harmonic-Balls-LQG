@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# First pass, Lemma 11.7: Dynkin extension of local measurability (fp-S11c, owner n1)
+# Lemma 11.7: Dynkin extension of local measurability
 
-Generic measure theory used in the transfer step (CHATGPT-11-7-proof.md, sec 4; operator note 20:22, B2): if the
+Generic measure theory used in the transfer step: if the
 mass of every open subset `V ⊆ U` is almost surely equal to a `m`-measurable variable (for the local field σ-algebra
 `m = σ(h|_U)`, input `LQGMeasureLocality`, Proposed/LQG.lean:83, Fact 2.1 II), then so is the mass of every Borel
 subset of `U`. This is the π-λ (Dynkin) argument on the open sets: the class of Borel `t` with `μ(t ∩ U)` a.s.

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Closure.Sec11
 
 /-!
-# Lemma 11.13 (canonical): assembly map with every available provider (fp-S11-13-assembly-map, owner n3)
+# Lemma 11.13 (canonical): assembly map with every available provider
 
 `HarmonicBalls.FirstPassS11iAssembly11_13.firstPass_11_13_canonical` concludes `CorrectedLemma11_13CanonicalStmt`
 (`HarmonicBalls/FirstPass/S11i/Faithful.lean:102`) exactly. The declaration sits in the namespace
@@ -21,16 +21,15 @@ Route (the one closest to done): `HarmonicBalls.Closure.closure_11_13_canonical`
 
 Binder classes. Abbreviation `FP/` = `HarmonicBalls/FirstPass/`.
 * FROZEN: a first-pass frozen axiom (`FP/Frozen/*.lean`, `FP/S11r/Frozen.lean`), or a cited Draft statement
-  (`GreenPotentialHolderStmt`, `Draft/Section2.lean:190`, Proposition 2.5, Green clause, listed in `docs/campaign/FROZEN.md`).
+ (`GreenPotentialHolderStmt`, `Draft/Section2.lean:190`, Proposition 2.5, Green clause).
   No repository theorem concludes any of these Props.
-* PROPOSED: a literature input staged in `HarmonicBalls/Proposed/LQG.lean`, pending operator source-check.
+* PROPOSED: a literature input staged in `HarmonicBalls/Proposed/LQG.lean`, pending source-check.
 * OPEN: no provider, not frozen.
 
 The 32 binders, in order:
 1. `hAx` `LQGMetricFieldAxiomsUnivFrozen`: FROZEN, `FP/Frozen/S11j.lean:155`.
 2. `hLen` `LQGMetricLengthUnivFrozen`: FROZEN, `FP/Frozen/S11j.lean:133`.
-3. `hN2` `LocalMetricReplacementStmt` (all `γ ξ`, disks in `ball 0 1` form): OPEN. Not in a `Frozen/` file; the
-   operator's 04:48 UTC note keeps it as an input; n2's B2 target, `FP/S11r/LocalMetricReplacement.lean:58`, unproved.
+3. `hN2` `LocalMetricReplacementStmt` (all `γ ξ`, disks in `ball 0 1` form): OPEN. Not in a `Frozen/` file; it is kept as an input; the target `FP/S11r/LocalMetricReplacement.lean:58` is unproved.
 4. `hμW` `LQGMeasureWeylScaling`: PROPOSED, `Proposed/LQG.lean:95`.
 5. `hLoc` `LocalLQGDecoderCommonFrozen`: FROZEN, `FP/Frozen/S11c.lean:388`.
 6. `hCanon` `LQGCanonicalDecodersExistStmt`: FROZEN, `FP/Frozen/S11n.lean:33`.
@@ -115,4 +114,3 @@ theorem firstPass_11_13_canonical
 
 end HarmonicBalls.FirstPassS11iAssembly11_13
 
-#print axioms HarmonicBalls.FirstPassS11iAssembly11_13.firstPass_11_13_canonical

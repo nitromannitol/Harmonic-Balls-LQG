@@ -2,12 +2,12 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Proposition 11.10, the Euclidean length property of the shifted metric (fp-S11c, owner n1)
+# Proposition 11.10, the Euclidean length property of the shifted metric
 
-FIRST-PASS NEW (bookkeeping, using the operator ruling of 21:25 UTC). The shift of the Cameron-Martin step is the Weyl
+The shift of the Cameron-Martin step is the Weyl
 scaling `weylScaling (D ω) ξ f` of the LQG metric `D ω` by a continuous compactly supported `f`. Its Euclidean length
 property `hEl` of `Shifted.shifted_sup_le_of_good` is the frozen Prop `LQGMetricContinuousShiftFactI`
-(`FirstPass/Frozen/S11d.lean`, owner n3), applied to the weight `f - α₀ log|·|`. The identification uses item III (Weyl
+ (`FirstPass/Frozen/S11d.lean`), applied to the weight `f - α₀ log|·|`. The identification uses item III (Weyl
 scaling) of the field-level axioms `LQGMetricFieldAxioms` (`Proposed/LQG.lean`) and the representation of `D` in
 `IsLQGMetricOfField`. No new frozen Prop is introduced.
 -/

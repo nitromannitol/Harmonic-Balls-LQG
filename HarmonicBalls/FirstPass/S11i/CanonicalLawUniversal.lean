@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11i.CylinderFactor
 import HarmonicBalls.FirstPass.S11i.GFFFamily
 
 /-!
-# The canonical law of a whole-plane GFF does not depend on the model (fp-S11i-11-13)
+# The canonical law of a whole-plane GFF does not depend on the model
 
 Two whole-plane GFF models (possibly on different probability spaces) have the same canonical law
 `P.map (ω ↦ (φ ↦ hC ω φ)_{φ mean-zero test})`: the finite-dimensional marginals are centred Gaussian with the same

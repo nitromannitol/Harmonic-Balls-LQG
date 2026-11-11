@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.Dilation
 
 /-!
-# Proposition 11.7, the LQG measure under the normalized dilation (fp-S11c, owner n1)
+# Proposition 11.7, the LQG measure under the normalized dilation
 
-FIRST-PASS NEW (deterministic). If `m` is the γ-LQG measure of the circle profile `h` (vague limit of the approximations
+If `m` is the γ-LQG measure of the circle profile `h` (vague limit of the approximations
 `lqgApprox γ h (dyadicScale k)`, `IsLQGLimit`, Defs/LQG.lean:53), then the measure
 `4·2^{γ²/2}e^{-γc} · (push-forward of m under w ↦ 2w)` is the γ-LQG measure of the normalized dilated profile
 `h'_e(z) = h_e(z/2) - c` (paper Facts 2.1 III-IV: Weyl scaling and conformal covariance; the constant is the one of

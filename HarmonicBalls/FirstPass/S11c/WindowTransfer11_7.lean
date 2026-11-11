@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11c.ConeTranslate11_7
 import HarmonicBalls.FirstPass.S11c.IdentifyBad11_7
 
 /-!
-# Lemma 11.7, window transfer (B2 sec 5.1 and sec 7; deterministic)
+# Lemma 11.7, window transfer (deterministic)
 
 Two deterministic facts used to pass the origin window bound (`origin_window_visits`, Origin11_7.lean:192) to the window
 sum `globalWindowSum` (IdentifyBad11_7.lean:23) of a rooted measure:
@@ -11,7 +11,7 @@ sum `globalWindowSum` (IdentifyBad11_7.lean:23) of a rooted measure:
 * `globalWindowSum_smul_map_add_right`: for `c ∈ (0, ∞)`, the window sum at root `z` of the measure `c • ν.map (· + z)`
   equals the window sum at the origin of `ν` (scale invariance ScaleCone11_7 and translation ConeTranslate11_7).
 * `window_shift_ge`: a window bound at the shifted indices `N₀ + n`, `n ∈ [N'+1, 2N']`, gives the bound `(p/8) N` on
-  `[N+1, 2N]` (B2 sec 1: the constant `δ = p/8`, from `N = N' + N₀`).
+  `[N+1, 2N]` (from `N = N' + N₀`).
 -/
 
 open MeasureTheory Filter Set
@@ -31,7 +31,7 @@ theorem globalWindowSum_smul_map_add_right (Q : Set ℂ) (M : ℝ) (z : ℂ) (ν
     (coneMassEvent_smul_iff _ Q M _ z hc0 hc).trans (coneMassEvent_map_add_right ν Q M _ z)
   simp only [Set.indicator_apply, Set.mem_ofPred_eq, key]
 
-/-- Index shift (B2 sec 1, `δ = p/8`): a window bound at the indices `N₀ + n`, `n ∈ [N'+1, 2N']`, yields the window bound
+/-- Index shift (`δ = p/8`): a window bound at the indices `N₀ + n`, `n ∈ [N'+1, 2N']`, yields the window bound
 `(p/8) N` on `[N+1, 2N]` for all large `N`. For `N = N' + N₀` one has `N' ≥ N₀` and `N ≤ 2N'`. -/
 lemma window_shift_ge (g : ℕ → ℝ) (hg : ∀ m, 0 ≤ g m) (N0 : ℕ) {p : ℝ} (hp : 0 ≤ p)
     (h : ∀ᶠ N' : ℕ in atTop, p / 4 * (N' : ℝ) ≤ ∑ n ∈ Finset.Icc (N' + 1) (2 * N'), g (N0 + n)) :

@@ -2,9 +2,8 @@ import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Steps.Sec11.AnnulusGreenDilation
 
 /-!
-# Local Palm comparison for cone-mass events under a continuous density (fp-S11c, owner n1)
+# Local Palm comparison for cone-mass events under a continuous density
 
-FIRST-PASS NEW (deterministic, Step 4 of the written proof of Lemma 11.7, `notes/fp-gaps/CHATGPT-11-7-proof.md`).
 Let `μ' = exp(γ v) · μ` with `a ≤ v ≤ b` on the ball `B_{6r}(z)` and `γ ≥ 0`. Then the cone-mass event
 `coneMassEvent μ Q M r z` implies `coneMassEvent μ' Q (M e^{γ(a-b)}) r z`. Only the two bounds on the ball enter: the
 annular Green potential is at most `e^{γb}` times the unweighted one, and the cone mass is at least `e^{γa}` times the

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.CanonicalLawUniversal
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Affine invariance of the canonical law (write-up sec. 6, B4, identities (26)-(30))
+# Affine invariance of the canonical law (identities (26)-(30))
 
 For a whole-plane GFF `h^ℂ` and a deterministic affine map `z ↦ a z + b` (`a ≠ 0`), the transformed pairings
 `h^{(a,b)}_C(ω, φ) = |a|^{-2} h_C(ω, φ((· - b)/a)) - h_circ(ω, |a|, b) ∫φ` and circle averages

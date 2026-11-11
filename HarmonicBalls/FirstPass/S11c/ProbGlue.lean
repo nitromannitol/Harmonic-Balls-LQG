@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.UpperProb
 
 /-!
-# Proposition 11.10, the positivity of an intersection of events (fp-S11c, owner n1)
+# Proposition 11.10, the positivity of an intersection of events
 
-FIRST-PASS NEW (measure theory). In the probability step of the proof of Proposition 11.10 (paper lines 3091-3112), the class
+In the probability step of the proof of Proposition 11.10 (paper lines 3091-3112), the class
 event `X` (positive probability), the good set `G` (from the class choice), the piece event `A` (inner event of the small
 cells) and the exterior event `B` (measurable exterior bound) are intersected. If the complements of the three good events have
 total measure less than that of `X`, the intersection has positive measure. This is the elementary inequality used there.

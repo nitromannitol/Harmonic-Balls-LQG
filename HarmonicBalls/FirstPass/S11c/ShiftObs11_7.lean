@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11c.BadSetMeasurable11_7
 import HarmonicBalls.Proofs.Potential.Fundamental
 
 /-!
-# Lemma 11.7, the Campbell reference observation is the insertion-zero rooted observation shifted by `b` (B2 sec 5.2)
+# Lemma 11.7, the Campbell reference observation is the insertion-zero rooted observation shifted by `b`
 
 For a root `z` and a disk `D`, the reference observation `campbellReferenceObs γ α₀ D hC z` (Frozen/S11c.lean) equals the
 insertion-zero rooted observation `rootedMeanZeroObs 0 γ D z hC` plus the pairing with the shift
@@ -11,7 +11,7 @@ insertion-zero rooted observation `rootedMeanZeroObs 0 γ D z hC` plus the pairi
 (the pairing of `h` with `φ` is `hC φ - α₀ ∫ φ log|·|`). Its cut-off form (`χ = 1` on `D`) writes the shift as a
 pairing with a function `b χ` that is compactly supported on the plane. The glue
 `lintegral_localBadSet_campbellRef_eq_zero` turns an absolute continuity statement between the laws of the two observations
-(the Cameron-Martin input of B2 sec 5.2, a hypothesis here) and the fixed-root null section (B2 (5.1)) into the vanishing of
+ (a hypothesis here) and the fixed-root null section into the vanishing of
 the reference bad-set integral of `Assembly11_7.lean` clause 3.
 -/
 
@@ -40,7 +40,7 @@ theorem integrable_mul_log_max {D : Set ℂ} {φ : ℂ → ℝ} (hφ : IsTestFun
     (continuous_const.max continuous_norm).log fun w => (lt_of_lt_of_le one_pos (le_max_left _ _)).ne'
   exact (hsm.continuous.mul hc).integrable_of_hasCompactSupport hcs.mul_right
 
-/-- Deterministic identity (B2 sec 5.2): the reference observation at `z` is the insertion-zero rooted observation at `z`
+/-- Deterministic identity: the reference observation at `z` is the insertion-zero rooted observation at `z`
 shifted by `campbellShift`. Pairings: `fieldPairing α₀ hC φ - γ ∫ (log|w - z| - log max(1,|w|)) φ = fieldPairing 0 hC φ
 - γ ∫ log|w - z| φ + ∫ b φ`. -/
 theorem campbellReferenceObs_snd_apply (γ α₀ : ℝ) {D : Set ℂ} (hC : (ℂ → ℝ) → ℝ) (z : ℂ)
@@ -73,7 +73,7 @@ theorem campbellReferenceObs_snd_apply (γ α₀ : ℝ) {D : Set ℂ} (hC : (ℂ
   simp only [campbellReferenceObs, rootedMeanZeroObs, fieldPairing, hA, hB, hR]
   ring
 
-/-- Cut-off form (B2 sec 5.2): if `χ = 1` on `D`, the shift may be taken to be the compactly supported function
+/-- Cut-off form: if `χ = 1` on `D`, the shift may be taken to be the compactly supported function
 `campbellShift · χ`, so the reference observation is the rooted observation shifted by the pairing with `b χ`. -/
 theorem campbellReferenceObs_snd_apply_of_cut (γ α₀ : ℝ) {D : Set ℂ} (hC : (ℂ → ℝ) → ℝ) (z : ℂ)
     (χ : ℂ → ℝ) (hχ : ∀ w ∈ D, χ w = 1)
@@ -92,11 +92,9 @@ theorem campbellReferenceObs_snd_apply_of_cut (γ α₀ : ℝ) {D : Set ℂ} (hC
   · have hsupp : w ∈ tsupport φ.1 := subset_tsupport _ (Function.mem_support.mpr hw)
     rw [hχ w (hD hsupp), mul_one]
 
-/-- Glue (B2 sec 5.2 to Assembly11_7 clause 3). Let `B` be the local bad set at a fixed root `z`. Assume that almost surely
-the insertion-zero rooted observation avoids the section `{x | (z, x) ∈ B}` (the output of `fixedRoot_null_of_origin`,
-B2 (5.1)), and that the laws of the reference observation and of the rooted observation are absolutely continuous in the
-sense: a measurable set of observations that is null for the rooted law is null for the reference law (the
-Cameron-Martin input of B2 sec 5.2, a hypothesis here). Then the reference bad-set integral vanishes. -/
+/-- Glue. Let `B` be the local bad set at a fixed root `z`. Assume that almost surely
+the insertion-zero rooted observation avoids the section `{x | (z, x) ∈ B}` (the output of `fixedRoot_null_of_origin`), and that the laws of the reference observation and of the rooted observation are absolutely continuous in the
+sense: a measurable set of observations that is null for the rooted law is null for the reference law (a hypothesis here). Then the reference bad-set integral vanishes. -/
 theorem lintegral_localBadSet_campbellRef_eq_zero
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {γ α₀ : ℝ}
     {D : Set ℂ} {z : ℂ}

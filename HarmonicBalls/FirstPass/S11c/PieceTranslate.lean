@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11c.Identify
 import HarmonicBalls.FirstPass.S11c.Cover
 
 /-!
-# Proposition 11.10, the piece hypothesis of the pointwise shifted bound (fp-S11c, owner n1)
+# Proposition 11.10, the piece hypothesis of the pointwise shifted bound
 
-FIRST-PASS NEW (bookkeeping). `shifted_sup_le_of_good` (`FirstPass/S11c/Shifted.lean`) takes the internal diameters of the
+`shifted_sup_le_of_good` (`FirstPass/S11c/Shifted.lean`) takes the internal diameters of the
 enlarged pieces `gridBlock h j k ∩ gridBox` on the grid of mesh `h = 2^{-(N+3)}`. The small-cell event of the frozen
 Proposition `DyadicCellDiamSmallFrozen` is stated with the Draft-level cells `enlargedDyadicCell N j k ∩ S₂`, with `S₂` a closed
 dyadic square. This file identifies the two forms, so that the piece hypothesis of the pointwise bound follows from the

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11d.SmoothCutoff
 
 /-!
-# Proposition 11.10, smooth bumps equal to one on a compact set and zero on a closed set (fp-S11c, owner n1)
+# Proposition 11.10, smooth bumps equal to one on a compact set and zero on a closed set
 
-FIRST-PASS NEW (deterministic). This is the cutoff `φ` of the printed proof of `lemma:mass-diam` (paper lines 3071-3090):
+This is the cutoff `φ` of the printed proof of `lemma:mass-diam` (paper lines 3071-3090):
 a smooth compactly supported bump with values in `[0,1]`, identically one on the exterior set `G` and identically zero on
 the unit circle and on the chosen small squares. The shift `h̃ := h + a φ` with `a ≤ 0` is smooth with compact support,
 takes values in `[a, 0]`, and is zero on the closed set `F`; it is the input of `CameronMartinEventTransferFrozen`.

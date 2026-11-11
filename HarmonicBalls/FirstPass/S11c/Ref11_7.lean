@@ -8,7 +8,7 @@ import HarmonicBalls.FirstPass.Frozen.S8d
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# The fixed-root input `hRef` of Lemma 11.7 (B2 sections 5.1-5.3)
+# The fixed-root input `hRef` of Lemma 11.7
 
 For each rational disc `k` (centre `c_k`, radii `s_k < t_k`, `U_k = B(c_k, s_k)`, `D_k = B(c_k, t_k)`) this file builds the
 kernel `K` and the integer `nD` of `hRef` (Assembly11_7.lean) from the frozen common decoder `LocalLQGDecoderCommonFrozen`

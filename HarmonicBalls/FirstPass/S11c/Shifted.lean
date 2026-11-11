@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11c.Classes
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Proposition 11.10, the pointwise shifted bound on the square (fp-S11c, owner n1)
+# Proposition 11.10, the pointwise shifted bound on the square
 
-FIRST-PASS NEW (deterministic, for one realisation). Let `E` be the Weyl-scaled metric of `D` by a function `f` (the shifted
+Let `E` be the Weyl-scaled metric of `D` by a function `f` (the shifted
 LQG metric, paper Fact 2.2 III). On the grid box `S₂`: if the weight satisfies `ξ f ≤ 0` on `S₂`, the weight on the exterior
 set `K₁` is at most `log(ε/(3a))`, the enlarged pieces `Ŝ ∩ S₂` have `D`-diameter at most `ε/3`, and `K₁` has `D`-diameter at
 most `a`, then `E` has internal diameter at most `ε` on `S₂` (paper lines 3127-3137, with the constant `ε/3` of defect (a)).

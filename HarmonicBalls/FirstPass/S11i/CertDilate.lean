@@ -3,9 +3,9 @@ import HarmonicBalls.Steps.Sec11.MetricConstantScaling
 import HarmonicBalls.Steps.Sec11.AnnulusGreenDilation
 
 /-!
-# Dilation covariance of the certificate event (fp-S11i, owner n3)
+# Dilation covariance of the certificate event
 
-Deterministic part of Step 9 of `CHATGPT-n3-Q1-eq34.md` section 5: the rescaled pair `(c • μ.map (· / R), b D(R·, R·))`
+Deterministic part of Step 9 of the written proof: the rescaled pair `(c • μ.map (· / R), b D(R·, R·))`
 has the certificate event at `(z, r)` iff the original pair has it at `(R z, R r)`. The mass and annulus-potential
 scalings are `c`, the metric scaling is `b` (both factors cancel in the strict inequalities).
 
@@ -171,8 +171,7 @@ lemma image_frontier_dilate {R : ℝ} (hR : 0 < R) (A : Set ℂ) :
     (fun w : ℂ => (R : ℂ) * w) '' frontier A = frontier ((fun w : ℂ => (R : ℂ) * w) '' A) :=
   (dilH R hR).image_frontier A
 
-/-- Dilation covariance of the certificate event `𝓔_r(z; M)` (rule [C43]; Step 9 of
-`CHATGPT-n3-Q1-eq34.md` section 5). The pair `(c • μ.map (· / R), b D(R·, R·))` has the certificate event at
+/-- Dilation covariance of the certificate event `𝓔_r(z; M)` (rule [C43]). The pair `(c • μ.map (· / R), b D(R·, R·))` has the certificate event at
 `(z, r)` iff `(μ, D)` has it at `(R z, R r)`; the masses scale by `c = a` and the metric by `b`, which cancel in
 every strict inequality. -/
 theorem certificateEvent_dilate_iff (μ : Measure ℂ) (D : ℂ → ℂ → ℝ) (Ostar U V W T Q' Q : Set ℂ)

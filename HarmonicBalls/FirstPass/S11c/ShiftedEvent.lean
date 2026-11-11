@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11c.ShiftMass
 import HarmonicBalls.FirstPass.S11c.ProbGlue
 
 /-!
-# Proposition 11.10, the shifted event has positive probability (fp-S11c, owner n1)
+# Proposition 11.10, the shifted event has positive probability
 
-FIRST-PASS NEW (measure theory). In the proof of Proposition 11.10 (paper lines 3091-3112) the shifted event
+In the proof of Proposition 11.10 (paper lines 3091-3112) the shifted event
 `{sup_{S₂} D_{h̃} ≤ ε, C ≤ μ_{h̃}(S₁)}` is shown to have positive probability by intersecting four good events. This file
 contains the two elementary steps: (i) the shifted mass of a set on which the shift vanishes is at least the unshifted mass
 of that set, since the density `exp(γ f)` is one there; (ii) the four-fold intersection lemma of `ProbGlue` gives positive

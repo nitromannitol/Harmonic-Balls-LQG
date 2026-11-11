@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11c.Vague
 import HarmonicBalls.FirstPass.S11c.Event
 
 /-!
-# Proposition 11.7, stationarity of the scale events under the normalized dilation (fp-S11c, owner n1)
+# Proposition 11.7, stationarity of the scale events under the normalized dilation
 
-FIRST-PASS NEW (deterministic). If `m` is the γ-LQG limit of a circle profile `h` and `m'` is the γ-LQG limit of the
+If `m` is the γ-LQG limit of a circle profile `h` and `m'` is the γ-LQG limit of the
 normalized dilated profile `h'_e(z) = h_e(z/2) - c` (`T` of `continuousCircleDilation`, which subtracts the value at
 `(1/2, 0)`), then the cone-mass event at the origin at dyadic scale `2^{-n}` for `m'` is the event at scale `2^{-(n+1)}`
 for `m`: `E_n(m') ↔ E_{n+1}(m)`. The proof: uniqueness of the LQG limit (`IsLQGLimit.unique`), identification of `m'` with

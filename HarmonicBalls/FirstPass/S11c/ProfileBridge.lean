@@ -2,10 +2,9 @@ import HarmonicBalls.FirstPass.S11c.Stationary
 import HarmonicBalls.Proofs.GFF.ContinuousCircleDilationMixing
 
 /-!
-# Proposition 11.7, the repo's circle dilation as the normalized dilation of profiles (fp-S11c, owner n1)
+# Proposition 11.7, the repo's circle dilation as the normalized dilation of profiles
 
-FIRST-PASS NEW (deterministic bridge). The ergodic dynamics on the continuous circle profiles (repo:
-`continuousCircleDilation = continuousCircleAffine (1/2) 0`, ContinuousCircleDilationMixing.lean:19) coincide with the
+The ergodic dynamics on the continuous circle profiles (`continuousCircleDilation = continuousCircleAffine (1/2) 0`, ContinuousCircleDilationMixing.lean:19) coincide with the
 normalized dilation `normalizedDilation` of the stationarity lemmas (Stationary.lean): on a profile `F` the point
 `(r, z)` is sent to `F(r/2, z/2) - F(1/2, 0)`. Hence the ergodicity of the repo transfers to the iteration of
 `normalizedDilation` on profiles, and `coneMassEvent_iterate_dilate` applies along the orbit.

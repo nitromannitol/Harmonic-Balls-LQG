@@ -2,9 +2,9 @@ import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
 
 /-!
-# Proposition 11.10, an almost surely finite random bound with large probability (fp-S11c, owner n1)
+# Proposition 11.10, an almost surely finite random bound with large probability
 
-FIRST-PASS NEW (measure theory). If a measurable random variable `X ≥ 0` is almost surely finite, then for every `η > 0`
+If a measurable random variable `X ≥ 0` is almost surely finite, then for every `η > 0`
 some integer `n` has `P(X ≤ n) ≥ 1 - η`. This is the step that turns the almost-sure finiteness of the diameter of the
 exterior set `K₁` (`ConnectedSquareUnionDiamFiniteFrozen`, DDDF20 Lemma 3.9) into a deterministic bound `a` holding with
 probability close to one, as needed for the exterior bound of the paper's proof (corrected lines 3079-3088, `eqn-exterior-diam`).

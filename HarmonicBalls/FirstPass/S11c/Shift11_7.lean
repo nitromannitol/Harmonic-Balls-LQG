@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# First pass, Lemma 11.7: the window shift (fp-S11c, owner n1)
+# Lemma 11.7: the window shift
 
 Step S6 bookkeeping. `origin_window_visits` (S11c/Origin11_7.lean) counts the cone event at the scales `2^{-(N₀+n)}`,
 `n ∈ [N+1, 2N]`; the Draft statement `ManyConeBadScalesStmt` counts the scales `2^{-n}`, `n ∈ [N+1, 2N]`. The two windows

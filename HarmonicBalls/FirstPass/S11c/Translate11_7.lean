@@ -2,7 +2,7 @@ import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Defs.LQG
 
 /-!
-# Lemma 11.7, translation of the rooted field (B2 (5.1) support, deterministic)
+# Lemma 11.7, translation of the rooted field (deterministic)
 
 Circle averages commute with translations of the centre and of the function: for a function `g : ℂ → ℝ`,
 `Real.circleAverage (fun u => g (u - z)) x r = Real.circleAverage g (x - z) r` (the circle `∂B_r(x)` is mapped to

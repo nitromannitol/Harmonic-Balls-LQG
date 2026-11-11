@@ -2,7 +2,7 @@ import HarmonicBalls.Defs.GFF
 import HarmonicBalls.FirstPass.S11c.WholePlaneTranslate11_7
 
 /-!
-# The translated whole-plane GFF is a whole-plane GFF (Lemma 11.7, operator Q1 route)
+# The translated whole-plane GFF is a whole-plane GFF (Lemma 11.7)
 
 For a whole-plane GFF `(hC, hcirc)` and `z ∈ ℂ`, the field `h(· + z) - h_1(z)` is again a whole-plane GFF:
 `hC' ω φ = hC ω (φ(· - z)) - hcirc ω 1 z · ∫ φ` and `hcirc' ω r x = hcirc ω r (x + z) - hcirc ω 1 z`.

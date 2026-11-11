@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec8.CircleLogPotential
 import HarmonicBalls.Steps.Sec11.PairingCovarianceLinearity
 
 /-!
-# Translation identity of the normalized whole-plane kernel (Lemma 11.7, operator route Q1)
+# Translation identity of the normalized whole-plane kernel (Lemma 11.7)
 
 Deterministic part of the translation `h ↦ h(· + z) - h_1(z)` of the whole-plane GFF. For an observable `o`
 let `shiftObs z o` be the observable with smearing `f ↦ o.smear (f (· + z))`, let `b = circle 1 z`, let

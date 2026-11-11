@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
-# Proposition 11.7, the window count from the visit frequency (fp-S11c, owner n1)
+# Proposition 11.7, the window count from the visit frequency
 
-FIRST-PASS NEW (deterministic arithmetic). If the visit frequency `#{n < N : b n} / N` tends to `q > 0`, then for all
+If the visit frequency `#{n < N : b n} / N` tends to `q > 0`, then for all
 large `N` the number of visits in the window `[N+1, 2N]` is at least `(q/4) N`. This is the counting step of the proof of
 `lemma:mu_h-bad-and-harnack` (Lemma 11.7, corrected `[C39]`): the window count is `C(2N+1) - C(N+1)`, where
 `C(M) = #{n < M : b n}`, and `C(M) ≈ qM` on both ends.

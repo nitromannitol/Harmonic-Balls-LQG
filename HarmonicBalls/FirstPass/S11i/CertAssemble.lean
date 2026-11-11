@@ -4,13 +4,13 @@ import HarmonicBalls.FirstPass.S11i.CertWindow
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Lemma 11.13, Steps 13-14: buffered certificate geometry into the pinch-window count (fp-S11i-11-13)
+# Lemma 11.13, Steps 13-14: buffered certificate geometry into the pinch-window count
 
 Composition of `HarmonicBalls.CertWindow.pinch_window_ae_of_cert` (hypotheses `hscale`, `hcert`, `hstep12`) with:
 * `hcert`: `FirstPassS11i.hcert_of_buffered` (CertGeometry.lean), for the buffered geometry `IsBufferedPinchGeometry`
   with buffer `η = δ`; no geometric hypothesis is left;
 * `hDlen`: almost sure Euclidean length property of the LQG metric, derived from the Proposed input
-  `LQGMetricFieldAxioms` (Fact 2.2 I; Proposed/LQG.lean, pending operator source-check);
+  `LQGMetricFieldAxioms` (Fact 2.2 I, Proposed/LQG.lean);
 * `hscale`: the zoom family `μk`, `Dk` with its shape. The caller supplies it; `HarmonicBalls.ae_hscale_dyadic`
   (FirstPass/S11v.lean) produces such a family.
 
@@ -75,5 +75,3 @@ theorem pinch_window_ae_buffered {Ω : Type u} [MeasurableSpace Ω] {P : Measure
 
 end FirstPassS11i.CertAssemble
 
-#print axioms FirstPassS11i.CertAssemble.ae_isEuclideanLengthMetric_of_lqgMetric
-#print axioms FirstPassS11i.CertAssemble.pinch_window_ae_buffered

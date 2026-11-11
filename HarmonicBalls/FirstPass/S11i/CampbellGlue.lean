@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Campbell glue: from the reference null set to the marked null set (fp-S11i-11-13, step hP; write-up Step 11)
+# Campbell glue: from the reference null set to the marked null set (step hP, write-up Step 11)
 
-Write-up eqs (31)-(32) (`CHATGPT-n3-B1-B2.md` sec. 5.2): if, for Lebesgue-almost every root `z` in a ball `B₁`, the
+Write-up eqs (31)-(32): if, for Lebesgue-almost every root `z` in a ball `B₁`, the
 reference observation of the event `S` is `P`-null, then the Campbell integral of `1_S` against the LQG measure is
 `P`-null for almost every field. This file derives that from the one-sided frozen Campbell input
 `LocalCampbellMarkedRestrictionFrozen` (`Frozen/S11c.lean`), with no further input.

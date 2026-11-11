@@ -2,7 +2,6 @@ import HarmonicBalls.FirstPass.S11i.CertMeasurable
 
 /-!
 # Measurability of the certificate event when the length property holds on a measurable set
-(fp-S11i-11-13, round 32; step (c1') of `notes/fp-gaps/CHATGPT-n3-B1-B2.md`, section 5.1).
 
 The canonical decoders `d L` are Euclidean length metrics only on a measurable conull set `G` of canonical fields
 (`LQGCanonicalDecodersMeasurableExistStmt`, `FirstPass/Frozen/S11n.lean:61`), whereas `measurableSet_certificateEvent`
@@ -86,4 +85,3 @@ theorem measurableSet_certificateEvent_on {Ω : Type*} [MeasurableSpace Ω]
 
 end FirstPassS11i
 
-#print axioms FirstPassS11i.measurableSet_certificateEvent_on

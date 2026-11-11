@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11c.ShiftObs11_7
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Lemma 11.7, Cameron-Martin transfer to the Campbell reference observation (B2 sec 5.2, option A)
+# Lemma 11.7, Cameron-Martin transfer to the Campbell reference observation (option A)
 
 * `abs_log_sub_log_le_of_ge`: `|log x - log y| ≤ |x - y| / ε` for `x, y ≥ ε > 0`.
 * `log_max_lipschitz`: `w ↦ log max(ε, |w|)` is Lipschitz on the plane.
@@ -113,7 +113,7 @@ lemma exists_cut_ball (c : ℂ) {r R : ℝ} (hr : 0 < r) (hrR : r < R) :
   refine ⟨f, f.contDiff, f.hasCompactSupport, ?_, fun w hw => f.one_of_mem_closedBall hw⟩
   rw [f.tsupport_eq]
 
-/-- The cut-off form of the shift `b` (B2 sec 5.2): for a disc `ball c r` with `0 ∉ closedBall c r` there is `χ` with
+/-- The cut-off form of the shift `b`: for a disc `ball c r` with `0 ∉ closedBall c r` there is `χ` with
 `χ = 1` on the disc such that the compactly supported function `b χ` is locally Lipschitz. -/
 theorem exists_campbellShift_cut (γ α₀ : ℝ) {c : ℂ} {r : ℝ} (hr : 0 < r) (h0 : (0 : ℂ) ∉ closedBall c r) :
     ∃ χ : ℂ → ℝ, (∀ w ∈ ball c r, χ w = 1) ∧
@@ -162,7 +162,7 @@ theorem exists_campbellShift_cut (γ α₀ : ℝ) {c : ℂ} {r : ℝ} (hr : 0 < 
   · rw [hfun]
     exact locallyLipschitz_mul_real hχLL hH
 
-/-- Cameron-Martin transfer (B2 sec 5.2, option A): under the frozen Cameron-Martin input for locally Lipschitz compactly
+/-- Cameron-Martin transfer (option A): under the frozen Cameron-Martin input for locally Lipschitz compactly
 supported shifts, a null rooted observation event (`P {O₀ ∈ S} = 0`, the insertion-zero rooted observation at `z`) gives a
 null reference observation event (`P {O_b ∈ S} = 0`, the Campbell reference observation with the shift `b χ`). This is the
 hypothesis `hAC` of `lintegral_localBadSet_campbellRef_eq_zero` (ShiftObs11_7.lean). -/

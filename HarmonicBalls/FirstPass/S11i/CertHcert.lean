@@ -3,10 +3,9 @@ import HarmonicBalls.FirstPass.S11i.CertMeasurable
 import HarmonicBalls.Steps.Sec11.PinchNormalizedLocalEvent
 
 /-!
-# The certificate window implies the pinch event at every rescaled centre (fp-S11i-11-13, round 32)
+# The certificate window implies the pinch event at every rescaled centre
 
-Hypothesis `hcert` of `CertWindow.pinch_window_ae_of_cert` (eq. (40) of `notes/fp-gaps/CHATGPT-n3-step12-gaps.md`,
-section 8): the window certificate of index `n` at a centre `w` of the rescaled model `(μk k ω, Dk k ω)` is the
+Hypothesis `hcert` of `CertWindow.pinch_window_ae_of_cert`: the window certificate of index `n` at a centre `w` of the rescaled model `(μk k ω, Dk k ω)` is the
 deterministic event `CertificateEvent` at Euclidean radius `(2⁻¹)^n`. By `certificate_subset_pinchPointEvent`
 (`Certificate.lean`, Step 4 of the corrected Lemma 11.13) it forces the pinch event at `w`. No probability is used.
 
@@ -71,4 +70,3 @@ theorem hcert_of_scale {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (D : �
 
 end FirstPassS11i
 
-#print axioms FirstPassS11i.hcert_of_scale

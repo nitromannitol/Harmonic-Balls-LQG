@@ -1,10 +1,9 @@
 import HarmonicBalls.FirstPass.S11n
 
 /-!
-# Canonical good set by kernel integration (Lemma 11.13; B1/B2 answer, sections 5-6, eqs. (33)-(35))
+# Canonical good set by kernel integration (Lemma 11.13, sections 5-6, eqs. (33)-(35))
 
-Let `κ` be the measure decoder of the canonical field space (a kernel `CanonSpace → Measure ℂ` with `IsSFiniteKernel`,
-as in the strengthened canonical-decoder statement of `notes/fp-gaps/CHATGPT-n3-B1-B2.md` sec. 1) and `d` the metric
+Let `κ` be the measure decoder of the canonical field space (a kernel `CanonSpace → Measure ℂ` with `IsSFiniteKernel`) and `d` the metric
 decoder. Put `F = {(L, z) | the eventual frequency bound fails at the root z}` (eq. (33)).
 
 * If every pinch event `{(L, z) | pinchPointEvent (κ L) (d L) ... 2^{-n} z}` is measurable (open item, sec. 5.1),

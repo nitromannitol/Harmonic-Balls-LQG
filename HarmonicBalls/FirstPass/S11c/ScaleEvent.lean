@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11c.JointVersion
 import HarmonicBalls.FirstPass.S11c.Event
 
 /-!
-# Proposition 11.7, measurability of the scale event `coneMassEvent` (fp-S11c, owner n1)
+# Proposition 11.7, measurability of the scale event `coneMassEvent`
 
-FIRST-PASS NEW (no new Props). For a cone `Q`, a constant `c`, a scale `r` and a point `z`, the set of realisations `ω` at
+For a cone `Q`, a constant `c`, a scale `r` and a point `z`, the set of realisations `ω` at
 which the scale event `coneMassEvent (μ ω) Q c r z` (`HarmonicBalls/Draft/Section11.lean:72`) holds is null-measurable, when
 `μ` is the LQG measure of the field and the jointly measurable version of `JointVersion.lean` is available. The event is
 `ofReal c * annulusGreenPotentialSup (μ ω) z (3r) (6r) ≤ μ ω (annulus z r (2r) ∩ coneAt Q z)`, and both sides are

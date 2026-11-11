@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11i.Step13Extend
 /-!
 # Lemma 11.13, Steps 13-14: from certificate window frequencies to pinch window counts
 
-Write-up `notes/fp-gaps/CHATGPT-n3-step12-gaps.md` section 8, equations (40)-(44), and the corrected proof of
+The corrected proof of
 `lemma:mu_h-pinch-bad` (corrected paper lines 3900-3910, the dilation step). Step 12 conclusion (10) is taken as an
 explicit hypothesis `hstep12`, stated for a certificate predicate `Cert` (the event `E^{f}_{2^{-n}}(w; M)` of Lemma 11.12
 for the rescaled model); the implication `hcert` states that a certificate index forces the actual pinch event.

@@ -5,14 +5,14 @@ import HarmonicBalls.FirstPass.S11i.GammaModel
 import HarmonicBalls.FirstPass.S11af
 
 /-!
-# Lemma 11.13 (corrected): conditional assembly from the Step 12 identity (fp-S11i, owner n3)
+# Lemma 11.13 (corrected): conditional assembly from the Step 12 identity
 
-Route A (`notes/n3.md`): `FirstPassS11i.CertAssemble.pinch_window_ae_buffered` gives, almost surely and for `μ`-a.e. `z`,
+Route A: `FirstPassS11i.CertAssemble.pinch_window_ae_buffered` gives, almost surely and for `μ`-a.e. `z`,
 the pinch-window count bound `q/4 * N ≤ #{n ∈ [N+1, 2N] : pinchPointEvent ...}` from the zoom-family window frequency
 (Step 12 of the corrected proof of `lemma:mu_h-pinch-bad`). This file assembles `CorrectedLemma11_13Stmt` from that input.
 
 Named inputs (neither frozen nor proved here):
-* `hAx`: `LQGMetricFieldAxioms` (Proposed, Fact 2.2 I-IV; operator-approved), used only for the Euclidean length property.
+* `hAx`: `LQGMetricFieldAxioms` (Proposed, Fact 2.2 I-IV), used only for the Euclidean length property.
 * `hZ` (`ZoomIdentityStmt`, NEW, Step 12 of Lemma 11.13): for the Lemma 11.12 event `E` (`PinchEventWitnessStmt`, the body
   of `CorrectedLemma11_12Stmt` for one set `E`), the zoom-family window frequency converges almost surely to the probability
   `P(E^{α₀}(M))`, in every whole-plane model. Proved here, not assumed: the positivity `0 < P(E)`, the finiteness of `P(E)`
@@ -20,7 +20,7 @@ Named inputs (neither frozen nor proved here):
   (`prob_ballRestrict_alphaCanon_indep`), so that the density `δ` is one number for all models.
 
 Source of the identity: corrected paper, `paper/lqg_harmonic_ball-corrected.tex`, eq. `s11-pinch:eq:dyadic-frequency`
-(line 3832), proof of `lemma:mu_h-pinch-bad` lines 3848-3930. Open point (Q1, `notes/n3.md`): that the identity holds for
+(line 3832), proof of `lemma:mu_h-pinch-bad` lines 3848-3930. Open point (Q1): that the identity holds for
 the Lemma 11.12 event `E` as produced by the paper's construction is the NEW input; it is not checked in Lean.
 -/
 
@@ -47,8 +47,7 @@ def PinchEventWitnessStmt (U T Q' Q : Set ℂ) (γ ξ M : ℝ)
     ∀ᵐ ω ∂P, localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E →
       pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0
 
-/-- **SUPERSEDED (2026-11-10, Q1 answer §3.2).** Its target `P(E^{α₀}(M))` is the α₀-insertion probability, but the answer
-says the frequency limit is `p_γ(M)`, the γ-insertion probability. Do not use this hypothesis; use `GammaZoomIdentityStmt`.
+/-- **SUPERSEDED by `GammaZoomIdentityStmt`.** Its target `P(E^{α₀}(M))` is the α₀-insertion probability, but the frequency limit is `p_γ(M)`, the γ-insertion probability. Do not use this hypothesis; use `GammaZoomIdentityStmt`.
 
 **Step 12 of Lemma 11.13 (NEW named input).** For the buffered geometry `U V W T Q' Q` with buffer `δ`, the insertion
 `α₀`, `γ`, `ξ` and `M`: there are a Lemma 11.12 event `E` (`PinchEventWitnessStmt`) and an open set `Ostar` with `0 ∈ Ostar`
@@ -129,7 +128,7 @@ def PinchEventGammaStmt (U T Q' Q : Set ℂ) (γ ξ M : ℝ)
     ∀ᵐ ω ∂P, localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E →
       pinchPointEvent (μ ω) (D ω) U T Q' Q M 1 0
 
-/-- **Step 12 of Lemma 11.13 at the insertion `γ` (NEW named input; Q1 answer 2026-11-10 02:53 UTC, §3.2 and §5).** There are a
+/-- **Step 12 of Lemma 11.13 at the insertion `γ` (NEW named input, §3.2 and §5).** There are a
 Lemma 11.12 event `E` at `γ` (`PinchEventGammaStmt`) and a number `q` that is its canonical probability `P(A_E) = p_γ(M)` in
 every whole-plane model at the insertion `γ`, and an open set `Ostar` with `0 ∈ Ostar` and `sphere 0 5 ⊆ Ostar`, such that for
 every whole-plane model at the insertion `α₀` there is a zoom family `μk, Dk` at dyadic scales `2^k` whose window certificate
@@ -194,5 +193,3 @@ theorem correctedLemma11_13_of_gamma_identity
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.correctedLemma11_13_of_gamma_identity
-#print axioms HarmonicBalls.correctedLemma11_13_of_identity

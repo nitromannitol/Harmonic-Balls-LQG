@@ -3,9 +3,9 @@ import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
 
 /-!
-# Proposition 11.10, the mass step of the Weyl shift (fp-S11c, owner n1)
+# Proposition 11.10, the mass step of the Weyl shift
 
-FIRST-PASS NEW (deterministic and measure-theoretic). (i) Under a Weyl shift by a function that is constant `a` on a
+(i) Under a Weyl shift by a function that is constant `a` on a
 measurable set `S`, the mass of `S` is multiplied by `e^{γa}` (paper Fact 2.1 III, `e^{γf}·μ_h = μ_{h+f}`, restricted to
 `S`; the shift is `weylShiftPair`, Frozen/S11c.lean). (ii) A strictly positive random mass is at least some `C₁ > 0` with
 probability at least `1/2` (the step `P[μ_h(S₁) ≥ C₁] ≥ 1/2` of the paper's proof of `lemma:mass-diam`, line 3050).

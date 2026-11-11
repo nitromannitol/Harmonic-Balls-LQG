@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11c.Frequency
 import HarmonicBalls.FirstPass.S11c.Window
 
 /-!
-# Proposition 11.7, the window count of an ergodic event (fp-S11c, owner n1)
+# Proposition 11.7, the window count of an ergodic event
 
-FIRST-PASS NEW (composition of two compiled steps). Let `T` be ergodic and measure-preserving on a probability space, and
+Let `T` be ergodic and measure-preserving on a probability space, and
 let `E` be a measurable event of probability at least `p > 0`. Then almost surely the number of visits of the orbit to `E`
 in the window `[N+1, 2N]` is at least `(p/4) N` for all large `N`. This is the abstract form of the window bound of the
 paper's proof of `lemma:mu_h-bad-and-harnack` (Lemma 11.7): the scale events at the origin are visits of an ergodic
