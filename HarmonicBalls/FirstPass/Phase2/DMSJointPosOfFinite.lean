@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.Phase2.DMSFiniteTiltPosDerived
 import HarmonicBalls.FirstPass.Phase2.RootedDominationJointPos
+import HarmonicBalls.FirstPass.Phase2.DMSJointPosCylinder
 
 /-!
 # The positive-radius joint marked identity from the finite-family tilt identity (MQ-lh-30 (a))
@@ -297,6 +298,37 @@ theorem leftMeas_eq_rightMeas_of_cyl {Ω : Type*} [MeasurableSpace Ω] {P : Meas
     exact measure_ball_lt_top
   have : IsFiniteMeasure (leftMeas P hC hcirc ρ) := ⟨by rw [huniv]; exact hRuniv⟩
   exact ext_of_generate_finite C hgen hPi hcyl huniv
+
+/-! ### J7: the joint identity from the finite-family identity -/
+
+/-- **J7, the joint marked identity from the finite-family tilt identity (MQ-lh-30 (a)).** The left measure `L` of plan J5
+equals the right measure `R` by `leftMeas_eq_rightMeas_of_cyl`, on the cylinders `DMSJointPosCylinder.cyl`
+(`isPiSystem_cyl`, `generateFrom_cyl`), and `lintegral_joint_eq_of_measures_eq` gives the identity for every measurable `Ψ`. -/
+theorem dMSJointPos_of_finiteTiltPos (hFin : DMSFiniteTiltPosStmt.{u}) :
+    DMSLemmaA10WholePlaneMarkedJointPosStmt.{u} := by
+  intro Ω _ P γ hC hcirc μ hW hL hγ0 hγ2 Ψ hΨ
+  have := hW.isProbabilityMeasure
+  obtain ⟨ρ, hρ, hfin, hρμ⟩ := exists_restrict_eq_finRestr hW hL hγ0 hγ2 hFin
+  have hG := measurable_obsG hW
+  have hGs := measurable_obsGs γ hW
+  have hLR := leftMeas_eq_rightMeas_of_cyl hρ hfin hρμ hG hGs
+    (fun n m φ c Φ hφ hΦ => hFin Ω P γ hC hcirc μ hW hL hγ0 hγ2 n m φ c Φ hφ hΦ)
+    DMSJointPosCylinder.cyl DMSJointPosCylinder.isPiSystem_cyl DMSJointPosCylinder.generateFrom_cyl
+    (fun S hS => by
+      obtain ⟨n, m, φ, c, E, hφ, hE, rfl⟩ := hS
+      exact DMSJointPosCylinder.measurable_obs hφ hE)
+    (fun S hS => by
+      obtain ⟨n, m, φ, c, E, hφ, hE, hSeq⟩ := hS
+      exact ⟨n, m, φ, c, E, hφ, hE, hSeq⟩)
+  exact lintegral_joint_eq_of_measures_eq hρ hfin hρμ hG hGs hLR Ψ hΨ
+
+/-- **J7, the joint identity from the subcritical pairing input (MQ-lh-30 (a)).** `dMSFiniteTiltPos_of_sub` gives the finite
+family identity from `DMSLemmaA10WholePlaneMarkedSub`, which is the pending input `hSub` (its source-check is open). -/
+theorem dMSJointPos_of_sub
+    (hSub : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ) :
+    DMSLemmaA10WholePlaneMarkedJointPosStmt.{u} :=
+  dMSJointPos_of_finiteTiltPos (DMSFiniteTiltPosDerived.dMSFiniteTiltPos_of_sub hSub)
 
 end DMSJointPosOfFinite
 
