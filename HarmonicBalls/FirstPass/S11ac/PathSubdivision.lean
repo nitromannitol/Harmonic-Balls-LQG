@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.LQGMetric
 import Mathlib.Topology.EMetricSpace.BoundedVariation
 
-/-! # Subdivided paths and internal metrics of pieces (fp-S11ac, owner z6)
+/-! # Subdivided paths and internal metrics of pieces
 
 Deterministic part of the punctured metric decoder (`metricDecoder_punctured_ball`). For a length metric `D`
 (`IsEuclideanLengthMetric D`), a path `γ` cut at times `0 = u 0 ≤ ⋯ ≤ u N = 1` into pieces

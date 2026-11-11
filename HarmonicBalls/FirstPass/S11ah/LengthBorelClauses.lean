@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11ah.LengthTransport
 import HarmonicBalls.FirstPass.S11ah.LQGDecoder
 
 /-!
-# Borel code of the clauses of `IsLengthMetricOn B (decoderOn B d)` (B1, owner n3)
+# Borel code of the clauses of `IsLengthMetricOn B (decoderOn B d)`
 
-Ruling chat 228, section B1. Let `B = ball c r` and let `d` be a continuous function on the window
+Let `B = ball c r` and let `d` be a continuous function on the window
 `B ×ˢ B`. The clauses of `IsLengthMetricOn B (decoderOn B d)` are treated as follows.
 
 * `self_eq_zero`, `symm`, `triangle`: countable dense reduction (`LengthBorel.lean`, generic
@@ -19,7 +19,7 @@ Ruling chat 228, section B1. Let `B = ball c r` and let `d` be a continuous func
   a finite-subcover argument using the triangle inequality and continuity of `D` on `B × B`).
 * `ofReal_eq_internalMetric`: NOT reduced here. It enters as the explicit hypothesis `hL7` of
   `measurableSet_isLengthMetricOn_decoderOn_of_internal`, with `internalSet B` the set where it holds.
-  The ruling's chain code does not by itself give this clause (see the report of round 68).
+  The chain code does not by itself give this clause.
 -/
 
 open MeasureTheory Set Filter Topology Metric

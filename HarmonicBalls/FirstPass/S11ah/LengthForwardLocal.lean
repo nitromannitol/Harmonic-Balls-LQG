@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11ah.LQGDecoder
 import HarmonicBalls.FirstPass.S11r.RootedTriangle
 
 /-!
-# Uniform near-geodesics in a length metric (B1, forward implication, owner n3)
+# Uniform near-geodesics in a length metric
 
-Ruling chat 236, section 6 (forward implication, `uniform_compact_near_geodesics`). Let `D` be a length
+Let `D` be a length
 metric on the open set `B` (`IsLengthMetricOn B D`), and let `K ⊆ B` be compact. For `η > 0` there is a
 compact `K' ⊆ B` such that any two points `a, b ∈ K` are joined by a path in `K'` with
 `pathLength D P ≤ ofReal (D a b + 7η)`.

@@ -8,12 +8,11 @@ import HarmonicBalls.FirstPass.S11j.FieldLevel11_15
 import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.Frozen.S11j
 
-/-! # Metric-and-measure event certificate for the second local event (fp-S11ag)
+/-! # Metric-and-measure event certificate for the second local event
 
 The pair version of `MetricEventCertificateStmt` (`FirstPass/S11ab.lean`): the event is a predicate `Φ` of the metric `D`
 and of the insertion-`α` LQG measure `μ` of the same whole-plane GFF. It is the form that the Cameron-Martin transfer of the
-second local event `E₂ = {a₁ > d₁, μ(U) > M S}` (`pinchSecondEventLocal`, `FirstPass/S11h/LocalEvents.lean`) needs (z3,
-blocker B2). The statement is a named form that the decoded rule must supply; it is not an External or Proposed input.
+second local event `E₂ = {a₁ > d₁, μ(U) > M S}` (`pinchSecondEventLocal`, `FirstPass/S11h/LocalEvents.lean`) needs. The statement is a named form that the decoded rule must supply; it is not an External or Proposed input.
 -/
 
 namespace HarmonicBalls.S11ag

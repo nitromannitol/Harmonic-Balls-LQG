@@ -14,9 +14,9 @@ import HarmonicBalls.FirstPass.S11ah.Step5Rooted
 import HarmonicBalls.FirstPass.S11ah.RootedLengthProperty
 
 /-!
-# Steps 4 and 5 of the 11.13 local certificate sequence (fp-S11ah-11-13-steps-4-5, owner n4)
+# The 11.13 local certificate: cutoff, failure set and decoders
 
-Step 4 (`notes/fp-gaps/CHATGPT-n3-Q1-eq34.md` section 5): `S11ah/Cutoff.lean` (cutoff `closedBall z (7·2^{-n}) ⊆ D_loc`,
+Step 4: `S11ah/Cutoff.lean` (cutoff `closedBall z (7·2^{-n}) ⊆ D_loc`,
 uniform finite cutoff) and `S11ah/LocalCert.lean` (`FirstPassS11ah.localCert`, the indicator (J)).
 
 Step 5: `S11ah/FailureSet.lean`: `failureSet A c q` (formula (K), in the window-average interface of
@@ -27,11 +27,11 @@ Local domain (operator item (b)): `S11ah/Radial.lean` (radial homeomorphism `ℂ
 `closedBall c ρ`), `S11ah/LengthTransport.lean` (`IsLengthMetricOn B D`; lift `liftMetric` to a whole-plane
 `IsEuclideanLengthMetric`), `S11ah/LocalMeasurable.lean` (`localCertSet`, `measurableSet_localCertSet`,
 `measurable_localCertLoc`: joint measurability of the local indicator (J) for a metric on a disc, no locality needed;
-`localCertSet_iff_of_locality` uses the named hypothesis `CertificateEventLocality`, operator item (a), to be proved by q1).
+`localCertSet_iff_of_locality` uses the named hypothesis `CertificateEventLocality`, to be proved).
 
-Decoders and Step 5, closed form (`S11ah/Step5Closed.lean`, wave 32): `exists_modified_failureSet_closed` has no named
+Failure sets, closed form: `exists_modified_failureSet_closed` has no named
 input. The R1 cutoff transfer is proved (`S11ah/CutoffLength.lean`, `cutoffInternalLengthStmt`); the a.s. length property
 of the decoders comes from identity (18) and the LQG axiom I (`S11ah/LQGDecoder.lean`); the P-a.s. modification is
-`localLengthModification_of_ae` (fp-S11ao); measurability of the observables is derived from `IsWholePlaneGFF`; locality
-is `certificateEventLocality_pinch` (containments of the pinch geometry, fp-S11ap). Rooted identity (20): n2.
+`localLengthModification_of_ae`; measurability of the observables is derived from `IsWholePlaneGFF`; locality
+is `certificateEventLocality_pinch` (containments of the pinch geometry).
 -/

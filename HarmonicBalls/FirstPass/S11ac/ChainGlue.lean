@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11ac.LocalIdentity
 import HarmonicBalls.Steps.Sec11.InternalMetricPaths
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 
-/-! # Chain representation of the internal metric of an open set by pieces (fp-S11ac, owner z6)
+/-! # Chain representation of the internal metric of an open set by pieces
 
 Generic and deterministic. Let `D` be a Euclidean length metric, `X` open, and `Dp j` open pieces with `Dp j ⊆ X` covering
 `X`. Let `cost j z w = b * internalMetric D (Dp j) z w` on `Dp j × Dp j`. Then the infimum of the costs of piece-chains

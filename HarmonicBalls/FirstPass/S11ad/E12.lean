@@ -9,8 +9,8 @@ import HarmonicBalls.FirstPass.S11ad.ExteriorE1
 
 * Step 1: the shifted first event has positive probability on the good box (`exists_E1_shift_pos`).
 * Step 2: Cameron-Martin transfer of `E₁` to the base field (`metric_event_transfer_of_rule`). Its rule input
-  `hE1rule` is `MetricEventCertificateStmt` for `E₁` (discharged for `E₁` in task fp-S11ae, taken as a hypothesis
-  here); its shift clause `hE1shift` is a named hypothesis pending operator decision R4.
+  `hE1rule` is `MetricEventCertificateStmt` for `E₁` (discharged for `E₁` in FirstPass/S11ae, taken as a hypothesis
+  here); its shift clause `hE1shift` is a named hypothesis.
 * Step 3: the outside-`W` version `G` of `E₁` (`pinchFirstEventLocal_exterior_version`) has positive probability.
 * Step 4: `S11y.pinchLocal_E2_positive` with `F := G` gives a measurable `A ⊆ G` of positive probability on which
   `E₁` and `E₂` hold.
@@ -39,9 +39,8 @@ def E1ShiftSet (Q : Set ℂ) (δ ξ : ℝ) :
     (∀ z, φ0 z ∈ Icc (0 : ℝ) 1) ∧ f = HarmonicBalls.shiftWeight ξ b bQ φQ φ0}
 
 /-- Positivity of `E₁ ∩ E₂` on a measurable set (note §6.2-6.3). The output `A` is measurable for the full
-sigma-algebra and `E₁`, `E₂` hold on `A`. Named hypotheses: `hE1rule` (rule measurability for `E₁`, task
-fp-S11ae) and `hE1shift` (the shift clause of `metric_event_transfer_of_rule`, for every admissible bump weight;
-pending operator decision R4). -/
+sigma-algebra and `E₁`, `E₂` hold on `A`. Named hypotheses: `hE1rule` (rule measurability for `E₁`, in
+FirstPass/S11ae) and `hE1shift` (the shift clause of `metric_event_transfer_of_rule`, for every admissible bump weight). -/
 theorem pinchLocal_E12_pos (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) (hCM : CameronMartinGFFMutualAbsCont.{u})
     (hD : SmallMetricDiameterLargeMassStmt.{u}) (hM : LQGMassInnerMeasurableFrozen.{u})
     (hDiam : LQGInternalDiamInnerMeasurableFrozen.{u}) (hMk : DomainMarkovConditionalPositiveFrozen.{u})

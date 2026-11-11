@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11ah.LengthChainCode
 import HarmonicBalls.FirstPass.S11ah.LengthForwardLocal
 
 /-!
-# Discretising a path into a fine chain (B1, forward implication, owner n3)
+# Discretising a path into a fine chain
 
-Ruling chat 236, section 6 (forward implication, last step). A path `P` from `q a` to `q b` inside a
+A path `P` from `q a` to `q b` inside a
 compact `K' ⊆ ball c r` with decoder length `≤ D(q a, q b) + η/2` is cut into `N0` pieces of parameter
 length `1/N0`. The decoder increments over the pieces are `≤ 1/(n+1)` (uniform continuity of
 `(s, t) ↦ D(P s, P t)` on `[0,1]²`, which vanishes on the diagonal) and their sum is `≤ D(q a, q b) + η/2`.

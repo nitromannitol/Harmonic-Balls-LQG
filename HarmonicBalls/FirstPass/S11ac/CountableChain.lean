@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S11ac.ChainGlue
 
-/-! # Countable index for the piece-chain infimum (fp-S11ac, owner z6)
+/-! # Countable index for the piece-chain infimum
 
 `chainInf` takes its infimum over sequences `ℕ → ℂ`, an uncountable index. Measurability of the infimum in a
 parameter needs a countable index. Here a piece-chain is a finite tuple: a length `n`, pieces `Fin n → ℕ` and

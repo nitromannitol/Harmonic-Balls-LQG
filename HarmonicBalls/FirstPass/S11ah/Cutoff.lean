@@ -2,7 +2,6 @@ import Mathlib
 
 /-!
 # Step 4 (geometry): the cutoff of the local certificate sequence
-(fp-S11ah-11-13-steps-4-5, owner n4; Step 4 of `notes/fp-gaps/CHATGPT-n3-Q1-eq34.md` section 5.)
 
 For `n : ℕ` the certificate scale is `r_n = 2^{-n}` and the cutoff radius is `7 r_n` (the buffered domain `O_* ⊆ B_7`,
 Step 1). The local certificate (J) is used at a centre `z` only when `closedBall z (7 r_n) ⊆ D_loc`. This file proves two

@@ -2,9 +2,9 @@ import Mathlib
 import HarmonicBalls.FirstPass.S11ah.LengthBorelClauses
 
 /-!
-# The corrected countable length code (B1 of the Borel code, owner n3)
+# The corrected countable length code
 
-Ruling chat 236, section 3. For `B = ball c r` and a dense sequence `q : ℕ → ↥B`, a *fine chain* of a
+For `B = ball c r` and a dense sequence `q : ℕ → ↥B`, a *fine chain* of a
 decoder `d` from the `q`-point `q a` to the `q`-point `q b`, inside the compact level `expK c r j`, is a
 finite sequence of `q`-points whose consecutive decoder distances are at most `1/(n+1)` (mesh) and whose
 decoder sum is at most `D(q a, q b) + 1/(k+1)` (sum). The length code `lengthCodeSet` asks, for all levels

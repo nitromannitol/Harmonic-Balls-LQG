@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11ah.LengthTransport
 
 /-!
-# Scaling of a local length metric (fp-S11ah-11-13-steps-4-5b, owner n4; wave 31)
+# Scaling of a local length metric
 
 The decoder output is `b · internalMetric(·, B)` with a random constant `b > 0` (LocalMetricReplacementStmt (18)).
 This file shows that `b · D` is again `IsLengthMetricOn B` when `D` is, and the scaling identity of internal metrics.

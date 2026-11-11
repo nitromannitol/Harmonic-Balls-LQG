@@ -2,12 +2,11 @@ import Mathlib
 import HarmonicBalls.FirstPass.S11r.Frozen
 
 /-!
-# A finite local measure decoder (fp-S11i-11-13g, item (a), n3)
+# A finite local measure decoder
 
 Derived adapter for `hBad`. The raw local measure decoder `κ₀` of `LocalMeasureKernelStmt` (S11r/Frozen.lean:144)
 is only `Measurable`, and the Step 5 measurability chain (`IsSFiniteKernel`, `exists_modified_failureSet_localCert`)
-needs an s-finite kernel. Operator ruling (notes/fp-gaps/CHATGPT-217-hb-11-13-n3-hBad-G4-PRO.md, section (a)):
-replace `κ₀` by its normalized restriction to the decoder disk `D = ball c₂ r₂`,
+needs an s-finite kernel. The adapter is: replace `κ₀` by its normalized restriction to the decoder disk `D = ball c₂ r₂`,
 
   `κ ℓ = (1 + κ₀ ℓ D)⁻¹ • (κ₀ ℓ).restrict D`.
 

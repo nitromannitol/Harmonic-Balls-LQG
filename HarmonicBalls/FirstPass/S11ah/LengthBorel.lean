@@ -1,11 +1,11 @@
 import Mathlib
 
 /-!
-# Borel measurability of pointwise inequalities on continuous functions (B1 foundation, owner n3)
+# Borel measurability of pointwise inequalities on continuous functions
 
 Generic countable-reduction lemma for the Borel σ-algebra `ContinuousMap.measurableSpace` on `C(X, ℝ)`
 (Mathlib: `ContinuousMap.measurableSpace := borel _`). It is the first step of the Borel code of
-`IsLengthMetricOn B (decoderOn B d)` (`measurableSet_isLengthMetricOn_decoderOn`, ruling chat 228, section B1):
+`IsLengthMetricOn B (decoderOn B d)`:
 a clause `∀ p, Φ d p ≤ 0`, with `Φ d` continuous, reduces to a countable dense set of points.
 -/
 

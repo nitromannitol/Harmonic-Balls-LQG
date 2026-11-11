@@ -4,24 +4,24 @@ import HarmonicBalls.FirstPass.S11ad.Shift3
 /-!
 # Positivity of the bounded certificate of Lemma 11.12 (route of note §6.2–6.4)
 
-Task fp-S11ad-11-12-certificate-positivity. Main result: `HarmonicBalls.S11ad.pinchLocal_events_pos`, the positivity of
+Main result: `HarmonicBalls.S11ad.pinchLocal_events_pos`, the positivity of
 the local event `E₁ ∩ E₂ ∩ E₃` (`pinchFirstEventLocal`, `pinchSecondEventLocal`, `pinchThirdEventLocal`) for the
 whole-plane GFF `hC`, the LQG measure `μ` and the LQG metric `D`.
 
-Route (note `CHATGPT-z4-11-12-local-certificate.md` §6.2–6.4):
-* `S11ad/E1Shift`: the Weyl-shifted first event has positive probability on the good box (§6.2).
-* `S11ad/ExteriorA`, `S11ad/ExteriorE1`: outside-`W` versions of `E₁` (§6.3), so the local second event applies.
-* `S11ad/E12`: Cameron–Martin transfer of `E₁` to the base field, then `E₂` on the outside version (§6.2–6.3).
-* `S11ad/Third`, `S11ad/Shift3`: choice of `c, d`, the bump shift `u = ξ⁻¹ log k φ` and `E₃` after shifting (§6.4).
+Route:
+* `S11ad/E1Shift`: the Weyl-shifted first event has positive probability on the good box.
+* `S11ad/ExteriorA`, `S11ad/ExteriorE1`: outside-`W` versions of `E₁`, so the local second event applies.
+* `S11ad/E12`: Cameron–Martin transfer of `E₁` to the base field, then `E₂` on the outside version.
+* `S11ad/Third`, `S11ad/Shift3`: choice of `c, d`, the bump shift `u = ξ⁻¹ log k φ` and `E₃` after shifting.
 * This file: the final Cameron–Martin transfer of the whole event `E₁ ∩ E₂ ∩ E₃` (`cm_predicate_transfer`).
 
 Named inputs (not proved here; see the hypotheses of `pinchLocal_events_pos`):
 * `hCM` (`CameronMartinGFFMutualAbsCont`), and the literature/locality inputs of `S11y.pinchLocal_E2_positive`
   (`hAx`, `hD`, `hM`, `hDiam`, `hMk`, `hS`).
-* `hE1rule`: `MetricEventCertificateStmt` for `E₁` (rule measurability (e) of `E₁`, discharged in task fp-S11ae).
-* `hE1shift`, `hE3shift`: the shift clauses of the Cameron–Martin transfers (operator decision R4, pending).
+* `hE1rule`: `MetricEventCertificateStmt` for `E₁` (rule measurability (e) of `E₁`, discharged in FirstPass/S11ae).
+* `hE1shift`, `hE3shift`: the shift clauses of the Cameron–Martin transfers (pending).
 * `hpairB`: the distribution-measurable certificate of the pair event `E₁ ∩ E₂ ∩ E₃` for the field `hC`, the metric `D`
-  and the measure `μ` (operator decision B2, pending: no rule for pair events exists yet).
+  and the measure `μ` (pending: no rule for pair events exists yet).
 
 Names follow Armstrong–Kuusi–Mourrat (internal metric, Weyl scaling) and Duplantier–Sheffield (LQG metric and measure).
 -/

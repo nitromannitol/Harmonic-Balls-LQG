@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11ac.CountableChain
 import HarmonicBalls.FirstPass.S11ac.Cost
 import HarmonicBalls.FirstPass.S11ac.Finite
 
-/-! # The punctured-ball metric decoder, generic core (fp-S11ac, owner z6)
+/-! # The punctured-ball metric decoder, generic core
 
 Piece costs `κ_j · M_j(z, w)` on the piece `Dp j`, `⊤` off it; the decoder `psiC` is the countable chain infimum
 (`CountableChain`) with vertices in a countable set `Q ∪ {x, y}`, made real by `toReal`. Its identity with

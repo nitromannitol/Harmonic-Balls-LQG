@@ -2,10 +2,7 @@ import Mathlib
 import HarmonicBalls.FirstPass.S11ah.LengthBorelClauses
 
 /-!
-# Compact fine chains give a path (B1 of the Borel code, owner n3)
-
-Ruling chat 236, section 4 (`compact_fine_chains_to_path`), in the form used by the reverse and the
-forward implications of the length clause of `IsLengthMetricOn B (decoderOn B d)`.
+# Compact fine chains give a path
 
 Let `B ⊆ ℂ` and let `D : ℂ → ℂ → ℝ` satisfy the metric clauses on `B` (self, separation, symmetry,
 triangle), continuity on `B × B`, and `V2 B D`. Let `K ⊆ B` be compact and `x y ∈ K`. Suppose that for
@@ -205,7 +202,7 @@ lemma mem_of_mapClusterPt' {α : Type*} [TopologicalSpace α] {g : α} {Φ : ℕ
 
 /-! ### The compact fine-chain lemma -/
 
-/-- **Compact fine chains give a path** (ruling chat 236, section 4). Let `K ⊆ B` be compact and
+/-- **Compact fine chains give a path**. Let `K ⊆ B` be compact and
 `x, y ∈ K`. If for every mesh `1/(n+1)` there is a chain in `K` from `x` to `y` with `D`-mesh
 `≤ 1/(n+1)` and `D`-sum `≤ L`, then some path in `K` from `x` to `y` has `pathLength D ≤ ofReal L`. -/
 theorem exists_path_of_fine_chains {B K : Set ℂ} {D : ℂ → ℂ → ℝ} {x y : ℂ} {L : ℝ} (hL : 0 ≤ L)

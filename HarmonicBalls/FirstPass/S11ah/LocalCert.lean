@@ -3,7 +3,6 @@ import HarmonicBalls.FirstPass.S11ah.Cutoff
 
 /-!
 # Step 4: the local certificate sequence (J)
-(fp-S11ah-11-13-steps-4-5, owner n4; Step 4 of `notes/fp-gaps/CHATGPT-n3-Q1-eq34.md` section 5.)
 
 For a local observation `ℓ` (with local measure `κ ℓ` and local metric decoder `D ℓ`) and a centre `z`, the `n`-th term is
 `c_n(z, ℓ) = 1_{𝓔_{2^{-n}}(κ ℓ, D ℓ; z, M)}` when `closedBall z (7 · 2^{-n}) ⊆ D_loc`, and `0` otherwise (formula (J)).

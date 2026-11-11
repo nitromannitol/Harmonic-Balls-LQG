@@ -8,16 +8,16 @@ import HarmonicBalls.Proofs.Sec11.NotMetricBallGrowth
 import HarmonicBalls.Steps.Sec11.ConeProbabilityFromLiterature
 
 /-!
-# First pass, Section 11 (fp-S11, owner n3)
+# Section 11
 
 Each theorem `firstPass_11_<k>` concludes the Draft statement of a numbered result of Section 11
 (`HarmonicBalls/Draft/Section11.lean`). Its hypotheses are only Draft statements of other numbered results and
 EXTERNAL Props (FIRST-PASS FROZEN Props in `FirstPass/Frozen/S11.lean`, the staged `Proposed/` inputs, the
 cited Draft statements).
 
-Status (round 1):
+Results:
 * Lemma 11.14 (`PinchEventMetricBallConsequenceStmt`): `firstPass_11_14`, from the staged input
-  `LQGMetricFieldAxioms` (Proposed/LQG.lean; Fact 2.2 I-IV for the field, pending operator source-check).
+  `LQGMetricFieldAxioms` (Proposed/LQG.lean; Fact 2.2 I-IV for the field, PENDING TRUTH CHECK).
 * Definitions 11.1, 11.3, 11.4 are in `Defs/Geometry.lean` (no theorem; Draft "-").
 -/
 

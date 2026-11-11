@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11ah.LengthScale
 import HarmonicBalls.FirstPass.S11ah.Modified
 
 /-!
-# The local metric decoders are a.s. Euclidean length metrics (fp-S11ah-11-13-steps-4-5b, owner n4; wave 31)
+# The local metric decoders are a.s. Euclidean length metrics
 
 Lemma 11.13, Step 5. The unrooted local metric replacement (identity (18) of `LocalMetricReplacementStmt`,
 `S11r/LocalMetricReplacement.lean`) says that, almost surely, the decoder `m(obs)` on the disc `B = ball c₂ r₂` is
@@ -14,8 +14,7 @@ This file proves that the decoder family is a.s. an `IsLengthMetricOn B` metric,
 
 * the almost-sure Euclidean length property of `𝔇 (hC ω)` (`IsLQGMetric`, axiom I of `SatisfiesLQGMetricAxioms`,
   applied to the field `hC ω + 0`);
-* the cutoff transfer `CutoffInternalLengthStmt ξ α` (R1 of `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`, section 3.1,
-  items 1-4), proved as `cutoffInternalLengthStmt` (CutoffLength.lean:163). The theorems below keep it as a parameter
+* the cutoff transfer `CutoffInternalLengthStmt ξ α`, proved as `cutoffInternalLengthStmt` (CutoffLength.lean:163). The theorems below keep it as a parameter
   `hR1`, which FirstPassS11ar instantiates with that proof. It is a deterministic statement about every finite length
   metric `d` inducing the Euclidean topology.
 
@@ -39,10 +38,9 @@ def weylLogReal (d : ℂ → ℂ → ℝ) (ξ α : ℝ) : ℂ → ℂ → ℝ :=
 def internalReal (D : ℂ → ℂ → ℝ) (U : Set ℂ) : ℂ → ℂ → ℝ :=
   fun x y => (internalMetric D U x y).toReal
 
-/-- **Cutoff transfer of the internal metric of the logarithmic Weyl scaling (former named input R1; now proved as
+/-- **Cutoff transfer of the internal metric of the logarithmic Weyl scaling (proved as
 `cutoffInternalLengthStmt`, CutoffLength.lean:163).**
-Source: `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`, section 3.1 (deterministic statement, items 1-4), with the proof
-route of section 3.2. The statement is quantified over every finite
+The statement is quantified over every finite
 length metric `d` on `ℂ` inducing the Euclidean topology (`IsEuclideanLengthMetric d`) and every open connected `V`
 with compact closure and `0 ∉ closure V` (here `V = ball c₂ r₂`, `0 ∉ closedBall c₂ r₂`). The cutoff `f` of setup (17)
 is a test function equal to `-α log‖·‖` near `closure V`. The conclusions are items 1-4: (1) `W_f` is finite and
@@ -240,7 +238,7 @@ theorem measurable_decoderOn {Ω : Type*} [MeasurableSpace Ω] {B : Set ℂ}
 
 /-- **Step 5 for the unrooted local decoders (a.s. form).** The decoders `decoderOn (ball c R) (mω ·)` of the local
 metric replacement (identity (18)) are almost surely `IsLengthMetricOn (ball c R)` metrics (`ae_isLengthMetricOn_decoderOn`).
-Hence the modification of `localLengthModification_of_ae` (fp-S11ao, Option A) exists, and its failure sets (K) agree
+Hence the modification of `localLengthModification_of_ae` exists, and its failure sets (K) agree
 `P`-a.s. with those of the decoders (`exists_modified_failureSet_ae`). -/
 theorem exists_modified_failureSet_lqg {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
     {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}

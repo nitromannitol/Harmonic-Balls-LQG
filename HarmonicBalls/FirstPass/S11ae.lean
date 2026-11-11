@@ -7,12 +7,12 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.Steps.Sec11.MetricField
 
 /-!
-# Metric event certificates for the local events (fp-S11ae, owner z7)
+# Metric event certificates for the local events
 
 The base a.s. form `MetricEventCertificateStmt` (`FirstPass/S11ab.lean`) holds for the local first event
 `pinchFirstEventLocal` and the local third event `pinchThirdEventLocal` (`FirstPass/S11h/LocalEvents.lean`).
 
-Route (notes/fp-gaps/CHATGPT-K1-proof-z4-F4.md section 2.4): the internal metrics of the inserted LQG metric are
+Route: the internal metrics of the inserted LQG metric are
 replaced by field-level decoders `Φ` (frozen input `LQGInternalMetricWeylAeMeasurableFrozen`, a.s. equal to the internal
 metric for each fixed open domain and pair of points). The event is the countable formula of `Count.lean` at the
 decoders; it is measurable for the distribution σ-algebra, and a.s. equal to the event of the metric, by the

@@ -6,12 +6,12 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.S11i.Faithful
 
-/-! # The punctured-ball metric decoder (fp-S11ac, owner z6; lead restatement 02:58 UTC)
+/-! # The punctured-ball metric decoder
 
 `metricDecoder_punctured_ball`: for every LQG metric `𝔇`, a measurable decoder `Ψ` of the pairings on `ball 0 R` that
 a.s. equals a positive multiple of the internal metric of `𝔇`'s weyl-scaled field on `ball 0 R \ {0}`.
 Inputs: `hAx` (`LQGMetricFieldAxiomsUnivFrozen`, Frozen, approved), `hLoc` (the unrooted local metric replacement on
-disks of `ball 0 R`, n2's `LocalMetricReplacementStmt` with `ball 0 1` replaced by `ball 0 R`).
+disks of `ball 0 R`, `LocalMetricReplacementStmt` with `ball 0 1` replaced by `ball 0 R`).
 -/
 
 namespace HarmonicBalls.S11ac
@@ -40,7 +40,7 @@ theorem isPathConnected_ball_diff_zero {R : ℝ} (hR : 0 < R) : IsPathConnected 
     norm_num at this
     linarith
 
-/-- **Punctured-ball metric decoder** (fp-S11ac, lead restatement 02:58 UTC). For every LQG metric `𝔇`, a measurable
+/-- **Punctured-ball metric decoder**. For every LQG metric `𝔇`, a measurable
 decoder `Ψ` of the pairings on `ball 0 R` which a.s. equals a positive multiple of the internal metric of the
 weyl-scaled field on `ball 0 R \ {0}`. Inputs: `hAx` (approved frozen field axioms) and `hLoc` (unrooted local metric
 replacement on disks of `ball 0 R`). -/

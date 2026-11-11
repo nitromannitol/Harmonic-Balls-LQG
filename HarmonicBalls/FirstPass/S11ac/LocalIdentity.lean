@@ -1,6 +1,6 @@
 import HarmonicBalls.Steps.Sec11.InternalMetricNear
 
-/-! # Local identity of internal metrics on overlapping open sets (fp-S11ac, owner z6)
+/-! # Local identity of internal metrics on overlapping open sets
 
 For a length metric `D` (`IsEuclideanLengthMetric D`) and open sets `Ua`, `Ub` containing `x`, the internal distances
 `internalMetric D Ua x y` and `internalMetric D Ub x y` both equal `ofReal (D x y)` for all `y` close to `x`

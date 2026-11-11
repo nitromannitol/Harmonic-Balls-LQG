@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11ah.LengthChainCode
 import HarmonicBalls.FirstPass.S11ah.FineChainPath
 
 /-!
-# The chain code gives the length clause (B1, owner n3, reverse implication)
+# The chain code gives the length clause
 
-Ruling chat 236, section 6, reverse implication. Let `B = ball c r`, `q` dense in `B`, and let `d` satisfy
+Let `B = ball c r`, `q` dense in `B`, and let `d` satisfy
 the metric clauses on `B`, `codeSet` and `lengthCodeSet`. Then `IsLengthMetricOn B (decoderOn B d)`.
 
 For `z, w ∈ B`: the lower bound `ofReal D(z,w) ≤ internalMetric` comes from the partition `{0,1}`. The upper

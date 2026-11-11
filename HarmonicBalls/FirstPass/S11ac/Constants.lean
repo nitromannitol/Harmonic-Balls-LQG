@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S11ac.ChainGlue
 
-/-! # Overlap chains and telescoping products (fp-S11ac, owner z6)
+/-! # Overlap chains and telescoping products
 
 Pieces `Dp j` (open) cover a preconnected set `X`. A list `L` is an overlap chain from `a` when consecutive pieces
 intersect (`OvChain`). The product of the local ratios along a chain telescopes to the ratio of the endpoint

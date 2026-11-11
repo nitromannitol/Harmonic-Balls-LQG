@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11ah.LengthChainReverse
 import HarmonicBalls.FirstPass.S11ah.LengthForwardChain
 
 /-!
-# The length clause of `IsLengthMetricOn B (decoderOn B d)` is Borel (B1, owner n3)
+# The length clause of `IsLengthMetricOn B (decoderOn B d)` is Borel
 
-Ruling chat 236, sections 6 (forward implication) and 7 (final Borel theorem). For `B = ball c r`
+For `B = ball c r`
 and a dense sequence `q` of `B`:
 
   `IsLengthMetricOn B (decoderOn B d) ↔ (d ∈ clausesSet B ∧ d ∈ codeSet c r) ∧ d ∈ lengthCodeSet c r q`.

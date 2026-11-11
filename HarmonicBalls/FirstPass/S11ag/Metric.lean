@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S11ae
 
-/-! # Metric part of the second local event (fp-S11ag)
+/-! # Metric part of the second local event
 
 The metric clause `d₁ < a₁` of the second local event `E₂` (`pinchSecondEventLocal`, `FirstPass/S11h/LocalEvents.lean`):
 `diam^δ_D(K₁) < D(∂B_δ, ∂B_{2δ})` with `K₁ = closure V`. Its countable form is `localThirdCount` (`FirstPass/S11ae/Count.lean`)

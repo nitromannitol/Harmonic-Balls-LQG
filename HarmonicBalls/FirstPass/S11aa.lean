@@ -1,11 +1,11 @@
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Universe lift of the LQG metric axioms I and III (blocker U of n2; task fp-S11aa-lqg-metric-universe-lift)
+# Universe lift of the LQG metric axioms I and III
 
 `IsLQGMetric.satisfiesLQGMetricAxioms` (`Defs/LQGMetric.lean`) quantifies over `Ω : Type`, while the decoder statements
 (`LocalMetricReplacementStmt`, `FirstPass/S11r/LocalMetricReplacement.lean`) quantify over `Ω : Type u`. This file proves,
-for `Ω : Type u`, the two almost sure statements n2 needs, without changing the Defs (option (b) of the operator decision):
+for `Ω : Type u`, the two almost sure statements below, without changing the Defs:
 
 * (I)   `∀ᵐ ω, IsEuclideanLengthMetric (𝔇 (addFunPairing (hC ω) f))` for a continuous `f`;
 * (III) `∀ᵐ ω, ∀ f continuous, ∀ u v, ENNReal.ofReal (𝔇 (addFunPairing (hC ω) f) u v) = weylScaling (𝔇 (hC ω)) ξ f u v`.
@@ -16,7 +16,7 @@ Transport to a Type-0 model. Let `G0 ⊆ Ω` be measurable of full measure on wh
 and the constant sample `(0, 0)` off `G0`. `CircleSample` is the subtype of `PairingFun × (ℝ → ℂ → ℝ)` of pairs whose circle
 component is continuous on `(0, ∞) × ℂ`; it has the product σ-algebra, so every observable is a coordinate, hence measurable.
 Because the default is continuous, the image lies in `CircleSample` everywhere, and no measurability of the continuity event
-is needed. This is a modification on a null set of the transport in notes/fp-gaps/CHATGPT-z4-weylshift-frozen.md §5, which
+is needed. This is a modification on a null set of the transport, which
 completes `P` instead.
 The push-forward `P.map sample` is a whole-plane GFF on `CircleSample` (all six clauses of `IsWholePlaneGFF` transfer),
 the axioms are applied to it with `Ω := CircleSample : Type`, and the conclusions are pulled back along `sample` (`ae_of_ae_map`).
@@ -253,7 +253,7 @@ lemma addFunPairing_zero_fun (T : PairingFun) : addFunPairing T (fun _ => (0 : �
   funext φ
   simp [addFunPairing]
 
-/-- **Universe lift of axiom I** (n2 blocker U, option (b)). For `Ω : Type u` with a whole-plane GFF `(P, hC, hcirc)` and an
+/-- **Universe lift of axiom I**. For `Ω : Type u` with a whole-plane GFF `(P, hC, hcirc)` and an
 LQG metric `𝔇` of Weyl exponent `ξ` (`IsLQGMetric`), and a continuous `f`, almost surely the metric of `hC ω + f` is a
 Euclidean length metric. -/
 theorem ae_isEuclideanLengthMetric_universe {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
@@ -271,7 +271,7 @@ theorem ae_isEuclideanLengthMetric_universe {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ)
   filter_upwards [h1, hG0] with ω hω hωG
   simpa only [sample_fst_eq hG0c hωG] using hω
 
-/-- **Universe lift of axiom III** (n2 blocker U, option (b)). For `Ω : Type u` with a whole-plane GFF `(P, hC, hcirc)` and an
+/-- **Universe lift of axiom III**. For `Ω : Type u` with a whole-plane GFF `(P, hC, hcirc)` and an
 LQG metric `𝔇` of Weyl exponent `ξ`, almost surely for every continuous `f` and all `u, v`, the metric of `hC ω + f` is
 the Weyl scaling `e^{ξ f}` of the metric of `hC ω`. -/
 theorem ae_weylScaling_universe {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}

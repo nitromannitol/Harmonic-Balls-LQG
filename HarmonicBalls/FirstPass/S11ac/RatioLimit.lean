@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S11ac.LocalIdentity
 
-/-! # Local ratio constants between overlapping pieces (fp-S11ac, owner z6)
+/-! # Local ratio constants between overlapping pieces
 
 For two overlapping pieces `Ua`, `Ub` with a common disk `ball c r`, the ratio of the two masses at `(c, w n)`, where
 `w n → c`, is eventually the ratio of the piece constants `β a / β b`: the internal metrics of `Ua` and `Ub` agree at

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11ac.Constants
 import HarmonicBalls.FirstPass.S11ac.RatioLimit
 
-/-! # Piece constants `κ_j` (fp-S11ac, owner z6)
+/-! # Piece constants `κ_j`
 
 For open pieces `Dp j`, pair data `c a b`, `r a b` (a disk inside `Dp a ∩ Dp b` for overlapping pairs), and a family
 of overlap chains `L j` from `0` to `j`, the piece constant is `κ_j(ω) = ∏ ratioLim` along `L j`. It is measurable in

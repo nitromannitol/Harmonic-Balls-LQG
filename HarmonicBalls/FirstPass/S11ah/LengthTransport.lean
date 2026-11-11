@@ -4,7 +4,6 @@ import HarmonicBalls.FirstPass.S11ah.Radial
 
 /-!
 # Transport of a local length metric on a disc to the whole plane
-(fp-S11ah-11-13-steps-4-5, owner n4; auxiliary to `S11ah/LocalMeasurable.lean`.)
 
 `IsLengthMetricOn B D`: `D` is a Euclidean length metric on the open set `B` (the local analogue of
 `IsEuclideanLengthMetric`; the internal metric is taken in `B`). For a disc `B = ball c R` and the radial

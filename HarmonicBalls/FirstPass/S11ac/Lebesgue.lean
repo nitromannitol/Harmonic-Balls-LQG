@@ -1,6 +1,6 @@
 import Mathlib
 
-/-! # Subdivision of a path along an open cover (fp-S11ac, owner z6)
+/-! # Subdivision of a path along an open cover
 
 A path `γ` in `ℂ` whose image is covered by open sets `V i` is cut at the equally spaced times `u i = min (i / N) 1`,
 for some `N ≥ 1`, so that each subinterval `[u i, u (i+1)]` is mapped into a single `V (j i)`.

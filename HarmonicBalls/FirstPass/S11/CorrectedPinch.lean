@@ -5,7 +5,7 @@ import HarmonicBalls.Draft.Section6
 # Corrected statement of Lemma 11.12 (pinch positivity for every exponent)
 
 The Draft statement `PinchEventPositiveProbabilityStmt` (`Draft/Section11.lean:246`) is the uncorrected case `α₀ = 0`.
-Correction [C43] (`docs/campaign/CORRECTIONS.md`; paper `lemma:mu_h-pinch-positive-probability`, line 3239) replaces it by
+The corrected form (paper `lemma:mu_h-pinch-positive-probability`, line 3239) replaces it by
 the local-certificate assertion for `Ĝ_1` and every `α < Q`, with the event in the field σ-algebra on `B_7` modulo
 additive constants. Lemma 11.13 (`ManyPinchScalesStmt`) needs this general-`α` form (the rooted application uses
 `α = γ`), so the corrected form is the statement that the first-pass theorem for Lemma 11.12 must prove.

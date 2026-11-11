@@ -10,10 +10,9 @@ import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 import HarmonicBalls.Steps.Sec11.InternalMetricPaths
 
 /-!
-# Proof of the cutoff transfer R1 (fp-S11ah-11-13-steps-4-5c, owner n4; wave 32)
+# Proof of the cutoff transfer R1
 
-`CutoffInternalLengthStmt ξ α` (`S11ah/LQGDecoder.lean`) is the deterministic statement R1 of
-`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` section 3.1. This file proves it, so it is no longer a named input.
+`CutoffInternalLengthStmt ξ α` (`S11ah/LQGDecoder.lean`) is the deterministic cutoff statement. This file proves it, so it is no longer a named input.
 
 Route (section 3.2 of that note, with the repository lemmas it uses):
 
@@ -21,7 +20,7 @@ Route (section 3.2 of that note, with the repository lemmas it uses):
   and `χ = 0` near `0`; item 1 is `HarmonicBalls.weylScaling_continuous_compactSupport_length` (S11m/WeylLengthCompact).
 * Step 2 (finiteness on `V`): `RootedLocal.weylScaling_eq_near` gives local equality of the weights, hence the local
   finiteness hypothesis of `RootedLocal.weylScaling_ne_top_of_connected`.
-* Step 3 (equality of internal metrics on `V`): `RootedLocal.internalMetric_weylScaling_eq_of_eventuallyEq` (n2).
+* Step 3 (equality of internal metrics on `V`): `RootedLocal.internalMetric_weylScaling_eq_of_eventuallyEq`.
 * Step 4 (length metric on `V`): `isLengthMetricOn_internalReal`, the internal distance of a Euclidean length metric
   on an open set is a Euclidean length metric there, built from the repository's internal-metric lemmas
   (`internalMetric_internalMetric_toReal_of_finite`, `internalMetric_eq_of_near`, triangle and symmetry).
@@ -158,8 +157,7 @@ theorem exists_smooth_cutoff_log (α : ℝ) {K : Set ℂ} (hK : IsCompact K) (hK
   show χ x * (-α * Real.log ‖x‖) = -α * Real.log ‖x‖
   rw [hχ1 x hx, one_mul]
 
-/-- **R1 is proved**: `CutoffInternalLengthStmt ξ α` for every `ξ, α`. Items 1-4 of
-`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` section 3.1; the proof is the route of its section 3.2. -/
+/-- **The cutoff transfer is proved**: `CutoffInternalLengthStmt ξ α` for every `ξ, α`. -/
 theorem cutoffInternalLengthStmt (ξ α : ℝ) : CutoffInternalLengthStmt ξ α := by
   intro d hd V hVo hVc hVcpt h0
   obtain ⟨f, hfT, hfeq⟩ := exists_smooth_cutoff_log α hVcpt h0 hVc.nonempty.closure

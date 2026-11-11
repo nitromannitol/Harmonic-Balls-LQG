@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11ah.LocalCert
 import HarmonicBalls.FirstPass.S11i.ReferenceNull
 
 /-!
-# Step 5: the failure set and joint measurability (fp-S11ah-11-13-steps-4-5, owner n4)
+# Step 5: the failure set and joint measurability
 
-Step 5 of `notes/fp-gaps/CHATGPT-n3-Q1-eq34.md` section 5, in the interface of n1's Steps 6-7 (`S11ai.lean`):
+In the interface of `S11ai.lean`:
 for a marked point `x = (z, ℓ) : ℂ × O` (`x.1 = z` is the centre of (J)) and a root set `A`, the failure set is
 
   `failureSet A c q = {x | x.1 ∈ A ∧ refWindowAverage c N x ↛ q}`,

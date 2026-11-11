@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11ac.ChainGlue
 import HarmonicBalls.FirstPass.S11ac.Lebesgue
 
-/-! # Finiteness of the internal metric from finite piece metrics (fp-S11ac, owner z6)
+/-! # Finiteness of the internal metric from finite piece metrics
 
 If a path-connected open set `X` is covered by open pieces `Dp j ⊆ X` whose internal metrics are finite, then the
 internal metric of `X` is finite between any two of its points: subdivide a path in `X` by the Lebesgue lemma and

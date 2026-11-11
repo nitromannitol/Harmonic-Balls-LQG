@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.GFF
 
 /-!
-# A whole-plane GFF is a probability measure (task fp-S11af-gff-probability, n4; for n3, item 1(b))
+# A whole-plane GFF is a probability measure
 
 `IsWholePlaneGFF P hC hcirc` (`HarmonicBalls/Defs/GFF.lean`, Duplantier-Sheffield 2011, Section 3.1) does not list
 `IsProbabilityMeasure P` among its clauses. This file shows that the probability property is already implied by the clause

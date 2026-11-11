@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11j.CertificateE1
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 
 /-!
-# Countable forms of the local events (fp-S11ae, owner z7)
+# Countable forms of the local events
 
 For a Euclidean length metric `d`, the local events `pinchFirstEventLocal` and `pinchThirdEventLocal`
 (`FirstPass/S11h/LocalEvents.lean`) are countable formulas in the internal metrics `d(x, y; O)` (Armitage-Gardiner

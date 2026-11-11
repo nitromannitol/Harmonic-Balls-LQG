@@ -1,10 +1,10 @@
 import HarmonicBalls.FirstPass.S11ac
 import HarmonicBalls.FirstPass.S11r.LocalMetricReplacement
 
-/-! # The punctured-ball metric decoder on the unit ball (fp-S11ac, owner z6)
+/-! # The punctured-ball metric decoder on the unit ball
 
 Corollary of `S11ac.metricDecoder_punctured_ball` with `R = 1`: the local metric replacement hypothesis is discharged by
-n2's `LocalMetricReplacementStmt` (FirstPass/S11r/LocalMetricReplacement.lean), which is stated on disks of `ball 0 1`.
+`LocalMetricReplacementStmt` (FirstPass/S11r/LocalMetricReplacement.lean), which is stated on disks of `ball 0 1`.
 -/
 
 namespace HarmonicBalls.S11ac
