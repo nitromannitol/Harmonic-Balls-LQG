@@ -181,9 +181,5 @@ theorem IsWholePlaneGFF.exists_modConst_normalized_lqg_masses_between
   rw [heq, normalizedRestriction, Measure.smul_apply, Measure.smul_apply,
     Measure.restrict_apply hB, inter_eq_self_of_subset_left hBR]
 
-#print axioms IsWholePlaneGFF.exists_ae_lqg_continuity_exhaustion_between
-#print axioms IsWholePlaneGFF.exists_ae_lqg_buffered_continuity_system_between
-#print axioms IsWholePlaneGFF.exists_normalizedRestriction_between_of_centered_versions
-#print axioms IsWholePlaneGFF.exists_modConst_normalized_lqg_masses_between
 
 end HarmonicBalls

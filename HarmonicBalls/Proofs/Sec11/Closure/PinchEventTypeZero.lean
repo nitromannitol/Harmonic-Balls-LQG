@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec11.Closure.MetricMeasurableZero
 import HarmonicBalls.Proofs.Sec11.Closure.FixedGeometry
 
 /-!
-# Lemma 11.12 at zero log-charge for probability spaces in `Type` (Section 11, r7 lines 64–305, 937–1037)
+# Lemma 11.12 at zero log-charge for probability spaces in `Type` (Section 11)
 
 The body of `PinchEventPositiveProbabilityStmt` (`HarmonicBalls/Draft/Section11.lean:246`) at `α₀ = 0`, for
 probability spaces `Ω : Type`, is reduced here to one named premise: the raw positivity of the strengthened
@@ -12,8 +12,7 @@ pinch event of the canonical metric `𝔇 (hC ω)` (`RawCanonicalPositiveStmt`, 
 metric map `D` is identified with the canonical `𝔇 (hC ω)` almost surely (`Closure/MetricBridgeZero.lean`), the
 canonical metric has measurable entries (`Closure/MetricMeasurableZero.lean`), and the measurable subset of the
 pinch event is `exists_measurable_pos_subset_pinch` (`Proofs/Sec11/PinchInnerPositivity.lean:38`). The measurability
-of the measure-valued field `μ` is the named premise `haem`. The universe restriction `Ω : Type` is the open
-point R7 of the status note.
+of the measure-valued field `μ` is the named premise `haem`. The universe restriction `Ω : Type` is open.
 -/
 
 namespace HarmonicBalls
@@ -92,7 +91,5 @@ theorem exists_pinchEvent_typeZero_fixed_of_raw
   refine ⟨fixedU, fixedT, fixedQ', fixedQ, isPinchPointConfiguration_fixed, ?_⟩
   exact pinchEventPositive_typeZero_of_raw isPinchPointConfiguration_fixed hraw haem
 
-#print axioms pinchEventPositive_typeZero_of_raw
-#print axioms exists_pinchEvent_typeZero_fixed_of_raw
 
 end HarmonicBalls

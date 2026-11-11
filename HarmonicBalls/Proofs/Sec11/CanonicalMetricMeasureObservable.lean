@@ -66,8 +66,5 @@ theorem canonicalMetricMeasureObservable_map_eq
   · apply Subtype.ext
     exact hω.2.trans hω'.2.symm
 
-#print axioms canonicalMetricMeasureObservable_map_eq
-#print axioms exists_canonicalMetricMeasureObservable
-#print axioms exists_canonicalMetricMeasureObservable_of_metricFieldAxioms
 
 end HarmonicBalls

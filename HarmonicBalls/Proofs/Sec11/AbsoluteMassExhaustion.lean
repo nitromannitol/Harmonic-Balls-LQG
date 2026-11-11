@@ -60,5 +60,4 @@ theorem IsWholePlaneGFF.exists_local_absolute_mass_of_exhaustion
     simpa only [heq] using ht
   exact ht'.liminf_eq
 
-#print axioms IsWholePlaneGFF.exists_local_absolute_mass_of_exhaustion
 end HarmonicBalls

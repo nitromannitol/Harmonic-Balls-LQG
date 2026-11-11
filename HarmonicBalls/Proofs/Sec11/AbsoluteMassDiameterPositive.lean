@@ -87,7 +87,6 @@ theorem IsWholePlaneGFF.absolute_mass_diameter_pos_of_shift
     simpa only [h0, hw] using hω
   rwa [measure_congr hz']
 
-#print axioms IsWholePlaneGFF.absolute_mass_diameter_pos_of_shift
 
 /-- A positive seed with protected mass and small tile distances gives
 unconditional joint mass and diameter positivity by core contraction. -/
@@ -131,5 +130,4 @@ theorem IsWholePlaneGFF.absolute_mass_diameter_pos_of_core_seed
   exact h.absolute_mass_diameter_pos_of_shift hμ S K hS hbounded hbufferS hfront hδ
     𝔇 h𝔇 ψ hψ hψint c _ g hg hgpin hp
 
-#print axioms IsWholePlaneGFF.absolute_mass_diameter_pos_of_core_seed
 end HarmonicBalls

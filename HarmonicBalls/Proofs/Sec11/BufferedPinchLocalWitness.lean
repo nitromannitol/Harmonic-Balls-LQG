@@ -58,6 +58,5 @@ theorem IsPinchPointProofConfiguration.local_witness_of_buffered_event
   exact exists_local_internal_pinch_liouvilleCharge_of_positive_moments P hC hcirc μ D
     h.toIsPinchPointConfiguration M p hgff hμ hfull haxioms hγ hγ₂ hξ hp hD hpos
 
-#print axioms IsPinchPointProofConfiguration.local_witness_of_buffered_event
 
 end HarmonicBalls

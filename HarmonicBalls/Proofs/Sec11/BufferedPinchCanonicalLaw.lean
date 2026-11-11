@@ -49,6 +49,5 @@ theorem IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_canon
     (measurableSet_pinchPointEventWithInternalBounds_on_lengthMetrics
       h.toIsPinchPointConfiguration M 0 (by norm_num : (0 : ℝ) < 1)) hshiftLaw hA
 
-#print axioms IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_canonicalLaw
 
 end HarmonicBalls

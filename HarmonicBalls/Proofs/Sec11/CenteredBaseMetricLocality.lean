@@ -118,9 +118,6 @@ theorem IsWholePlaneGFF.exists_modConst_dyadic_internal_baseMetrics_of_linearOnT
   exact h.exists_modConst_internal_baseMetric_of_linearOnTests_subset 𝔇 h𝔇 isOpen_ball
     (ball_subset_ball (le_of_lt (hK n hn))) hlin' ψ hψ hψint
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_baseMetric_of_linearOnTests_subset
-#print axioms IsWholePlaneGFF.exists_modConst_dyadic_internal_baseMetrics_of_linearOnTests
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_baseMetric_of_linearOnTests
 
 end HarmonicBalls

@@ -10,12 +10,12 @@ That input is derived here from the three staged literature inputs `hDG`, `hCC`,
 `lqgVolumeGrowthAllScalesStmt_of_staged_inputs` (`Proofs/Sec9/WeakUniquenessDerivedInputs.lean:53`), which
 supplies the affine-invariance premise by the proved provider `wholePlaneGFFAffineInvariance_univ`
 (`Proofs/Sec3/DerivedInputAssembly.lean:55`) and applies `lqgVolumeGrowthAllScalesStmt_of_stronger_singularity`
-(`Proofs/Sec2/SingularAtomAtZero.lean:59`). The staged inputs remain pending operator source-check.
+(`Proofs/Sec2/SingularAtomAtZero.lean:59`). The staged inputs remain pending source check.
 
 The measurable clause of `hinside` is kept strict (`MeasurableSet`, as in the chain); the producer gives only
-`NullMeasurableSet`, so that clause remains the open point F2 of the status note. The remaining leftovers are
-the square premises `hfront` (F1) and `hdata` (T1), the measurable clause `hmeasIns` (F2), the pinned-σ-algebra
-facts `hm`, `hA`, `hArep`, `ha`, `hb` (F3), and the sign `0 < ξ` (R0).
+`NullMeasurableSet`, so that clause remains open. The remaining leftovers are
+the square premises `hfront` and `hdata`, the measurable clause `hmeasIns`, the pinned-σ-algebra
+facts `hm`, `hA`, `hArep`, `ha`, `hb`, and the sign `0 < ξ`.
 -/
 
 namespace HarmonicBalls
@@ -53,6 +53,5 @@ theorem fixed_raw_positive_of_staged_volume_growth
   fixed_raw_positive_outside (lqgVolumeGrowthAllScalesStmt_of_staged_inputs.{0} hDG hCC hE)
     hγ hγ₂ hξ P 𝔇 h𝔇 hgff hμ M hfront hdata hmeasIns hm A hA hArep ha hb
 
-#print axioms fixed_raw_positive_of_staged_volume_growth
 
 end HarmonicBalls

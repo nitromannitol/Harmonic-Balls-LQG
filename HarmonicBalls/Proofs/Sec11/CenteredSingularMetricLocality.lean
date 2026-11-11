@@ -50,6 +50,5 @@ theorem IsWholePlaneGFF.exists_modConst_internalMetric_of_centered_locality
     rw [internalMetric_const_mul (D ω) (Real.exp_pos _)]
     exact (hs V x y).symm.trans (hg x hx y hy)
 
-#print axioms IsWholePlaneGFF.exists_modConst_internalMetric_of_centered_locality
 
 end HarmonicBalls

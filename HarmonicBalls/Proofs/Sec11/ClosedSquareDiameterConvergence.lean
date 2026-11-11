@@ -64,6 +64,4 @@ theorem IsWholePlaneGFF.tendsto_intermediate_diameters_of_closed_square_tail
     filter_upwards [hsmall d hd, htail] with n hn ht
     simpa [b', b, hn] using ht
 
-#print axioms IsWholePlaneGFF.tendsto_intermediate_diameters_of_closed_square_tail
-#print axioms IsWholePlaneGFF.measure_tail_with_unit_circle_factor
 end HarmonicBalls

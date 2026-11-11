@@ -2,9 +2,9 @@ import HarmonicBalls.Defs.Geometry
 import HarmonicBalls.Proofs.Sec6.HarnackIteration
 
 /-!
-# Fixed pinch-point configuration (Section 11, r7 lines 640–703)
+# Fixed pinch-point configuration (Section 11)
 
-Written argument: `notes/sec11-proof/sec11-proof-r7.tex`, paragraph "Fixed geometry" (r7 lines 640–703).
+Written argument: paragraph "Fixed geometry".
 The explicit sets `U = B_{.01}(1.5)`, `Q' = B_{.04}(-4.4)`, `Q = B_{.1}(-4.4)` and
 `T = B_{.1}(1.5) ∪ {x + iy : 1.5 < x < 4.9, |y| < .05} ∪ 𝔸_{4.8,5}` form an `IsPinchPointConfiguration`
 (`HarmonicBalls/Defs/Geometry.lean`). This module proves that such a configuration exists, which is the
@@ -22,21 +22,21 @@ noncomputable def pinchCentreA : ℂ := ((3 / 2 : ℝ) : ℂ)
 /-- The point `-4.4` of the complex plane, as the cast of a real number. -/
 noncomputable def pinchCentreB : ℂ := ((-22 / 5 : ℝ) : ℂ)
 
-/-- `U = B_{.01}(1.5)` (r7 lines 640–703). -/
+/-- `U = B_{.01}(1.5)`. -/
 def fixedU : Set ℂ := ball pinchCentreA (1 / 100)
 
-/-- `Q' = B_{.04}(-4.4)` (r7 lines 640–703). -/
+/-- `Q' = B_{.04}(-4.4)`. -/
 def fixedQ' : Set ℂ := ball pinchCentreB (1 / 25)
 
-/-- `Q = B_{.1}(-4.4)` (r7 lines 640–703). -/
+/-- `Q = B_{.1}(-4.4)`. -/
 def fixedQ : Set ℂ := ball pinchCentreB (1 / 10)
 
-/-- The strip `{x + iy : 1.5 < x < 4.9, |y| < .05}` in the definition of `T` (r7 lines 640–703). -/
+/-- The strip `{x + iy : 1.5 < x < 4.9, |y| < .05}` in the definition of `T`. -/
 def fixedStrip : Set ℂ :=
   ({z : ℂ | 3 / 2 < z.re} ∩ {z : ℂ | z.re < 49 / 10}) ∩
     ({z : ℂ | z.im < 1 / 20} ∩ {z : ℂ | -(1 / 20) < z.im})
 
-/-- `T = B_{.1}(1.5) ∪ {1.5 < x < 4.9, |y| < .05} ∪ 𝔸_{4.8,5}` (r7 lines 640–703). -/
+/-- `T = B_{.1}(1.5) ∪ {1.5 < x < 4.9, |y| < .05} ∪ 𝔸_{4.8,5}`. -/
 def fixedT : Set ℂ := ball pinchCentreA (1 / 10) ∪ fixedStrip ∪ annulus 0 (24 / 5) 5
 
 lemma pinchCentreA_re : pinchCentreA.re = 3 / 2 := by simp [pinchCentreA]
@@ -273,7 +273,5 @@ theorem exists_isPinchPointConfiguration :
     ∃ U T Q' Q : Set ℂ, IsPinchPointConfiguration U T Q' Q :=
   ⟨fixedU, fixedT, fixedQ', fixedQ, isPinchPointConfiguration_fixed⟩
 
-#print axioms isPinchPointConfiguration_fixed
-#print axioms exists_isPinchPointConfiguration
 
 end HarmonicBalls

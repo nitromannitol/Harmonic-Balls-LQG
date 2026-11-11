@@ -1,7 +1,7 @@
 import HarmonicBalls.Proofs.Sec11.WholePlaneMetricLocality
 
 /-!
-# Metric bridge at zero log-charge (Section 11, r7 lines 64–305)
+# Metric bridge at zero log-charge (Section 11)
 
 For a whole-plane GFF `hC` on a probability space `Ω : Type` and an arbitrary metric map `D` satisfying
 `IsLQGMetricOfField P γ ξ 0 hC D` (the γ-LQG metric of the field with `α₀ = 0`, `Defs/LQGMetric.lean`), the
@@ -11,8 +11,7 @@ Lemma 11.12 (`PinchEventPositiveProbabilityStmt`, `HarmonicBalls/Draft/Section11
 
 The agreement is the existing `IsWholePlaneGFF.ae_zeroCharge_metric_eq_base`
 (`Proofs/Sec11/WholePlaneMetricLocality.lean:45`), applied to the almost-sure Weyl identity that
-`IsLQGMetricOfField` supplies at `α₀ = 0`. The universe is `Ω : Type`, the universe of `IsLQGMetric`'s axioms
-(open point R7 of the status note); the universe-general statement is not claimed here.
+`IsLQGMetricOfField` supplies at `α₀ = 0`. The universe is `Ω : Type`, the universe of `IsLQGMetric`'s axioms. The universe-general statement is not claimed here.
 -/
 
 namespace HarmonicBalls
@@ -66,7 +65,5 @@ theorem ae_isEuclideanLengthMetric_of_isLQGMetricOfField_zero {Ω : Type} [Measu
   rw [hω1]
   exact hω2
 
-#print axioms ae_metric_eq_canonical_of_isLQGMetricOfField_zero
-#print axioms ae_isEuclideanLengthMetric_of_isLQGMetricOfField_zero
 
 end HarmonicBalls

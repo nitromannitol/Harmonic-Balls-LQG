@@ -6,9 +6,9 @@ import HarmonicBalls.Proofs.Sec11.ExpectedLQGLocalBound
 import HarmonicBalls.Steps.Sec2.VolumeGrowth
 
 /-!
-# Outside representatives of the fixed pinch configuration (Section 11, Lemma `l:r8-outside`)
+# Outside representatives of the fixed pinch configuration (Section 11)
 
-Lean counterpart of Lemma `l:r8-outside` (`notes/sec11-proof/sec11-proof-r8.tex`, line 1057): the outside
+Lean counterpart of the outside-representatives lemma of Section 11: the outside
 observables of the fixed configuration have versions measurable for the pinned σ-algebra `fixedPinnedSigma hC`
 (the σ-algebra of the zero-mean local pairings of the field on the outside of a neighbourhood of `W`), equal
 almost surely to the original observables. The representatives are only almost surely equal to the original
@@ -140,8 +140,5 @@ theorem fixed_outside_green_rep {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω
       (ae_lqgMeasure_annulus_ne_top hgff hμ) hpos M
   exact ⟨b, hb.mono (comap_localModConstPairings_outside_le_fixedPinnedSigma hC) le_rfl, hbe⟩
 
-#print axioms fixed_outside_first_certificate_rep
-#print axioms fixed_outside_sphere_rep
-#print axioms fixed_outside_green_rep
 
 end HarmonicBalls

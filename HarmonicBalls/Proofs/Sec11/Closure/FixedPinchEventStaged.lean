@@ -12,9 +12,8 @@ Assembly of `fixed_raw_positive_null_of_staged_volume_growth_outside`
 `exists_pinchEvent_typeZero_fixed_of_raw_gff` (`ClosureMeasureMeasurable.lean`).
 
 The hypotheses kept explicit are the staged inputs `hDG hCC hE` (`Proposed/LQG.lean`, source-checked) and the
-square-tail family `hdata` (T1; the `SquareDyadicTailInput` producer, not yet discharged). The carrier is
-`Ω : Type`; the statement for `Ω : Type*` of `PinchEventPositiveProbabilityStmt` awaits the transfer lemma
-`l:r6-transfer` (worker z3, R7). Nothing is claimed beyond this conditional statement.
+square-tail family `hdata` (the `SquareDyadicTailInput` producer, not yet discharged). The carrier is
+`Ω : Type`; the statement for `Ω : Type*` of `PinchEventPositiveProbabilityStmt` awaits the transfer lemma. Nothing is claimed beyond this conditional statement.
 -/
 
 namespace HarmonicBalls
@@ -62,7 +61,5 @@ theorem exists_pinchEvent_typeZero_fixed_of_staged_inputs
   exists_pinchEvent_typeZero_fixed_of_raw_gff
     (rawCanonicalPositiveStmt_fixed_of_staged_inputs hDG hCC hE hdata)
 
-#print axioms rawCanonicalPositiveStmt_fixed_of_staged_inputs
-#print axioms exists_pinchEvent_typeZero_fixed_of_staged_inputs
 
 end HarmonicBalls

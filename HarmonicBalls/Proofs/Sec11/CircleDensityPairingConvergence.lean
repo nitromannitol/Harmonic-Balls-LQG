@@ -71,5 +71,4 @@ theorem IsWholePlaneGFF.tendstoInMeasure_circleDensity_pairing
   exact tendstoInMeasure_of_centered_variance_tendsto_zero P _ _
     (fun n => (hp n).sub hc) hm hvar
 
-#print axioms IsWholePlaneGFF.tendstoInMeasure_circleDensity_pairing
 end HarmonicBalls

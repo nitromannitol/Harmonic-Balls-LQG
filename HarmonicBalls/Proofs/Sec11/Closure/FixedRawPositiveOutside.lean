@@ -9,18 +9,18 @@ import HarmonicBalls.Proofs.Sec9.WeakUniquenessDerivedInputs
 import HarmonicBalls.Steps.Sec11.WholePlaneWeylShift
 
 /-!
-# Raw positivity of the fixed configuration from outside representatives (Section 11, Lemma `l:r8-outside`)
+# Raw positivity of the fixed configuration from outside representatives (Section 11)
 
 The null-measurable chain `IsCorrectedPinchConfiguration.positive_wholePlane_first_second_null`
 (`Proofs/Sec11/CorrectedPinchFirstSecondNull.lean`) and its three successors take the outside observables
 `A`, `ha`, `hb` as exact measurability premises for the pinned σ-algebra. The almost-sure outside lemma
-(`Closure/FixedOutsideRepresentatives.lean`, Lemma `l:r8-outside`) supplies only almost-sure representatives.
+(`Closure/FixedOutsideRepresentatives.lean`) supplies only almost-sure representatives.
 Positivity of `P` of an event is invariant under almost-sure modification, so the chain is repeated here with
 the representatives `a`, `b` (with `a =ᵐ[P] ofReal (setDist …)` and `b =ᵐ[P] ofReal M · S`) in place of the exact
 functions. The top-level theorem `fixed_raw_positive_null_of_staged_volume_growth_outside` then discharges the
 premises `A hA hArep ha hb` of `fixed_raw_positive_null_of_staged_volume_growth_derived`
 (`Closure/FixedRawPositiveDerived.lean:55`). Its remaining premises are the staged inputs `hDG hCC hE`, the square
-tail input `hdata` (T1) and the zero-charge measure `hμ`; the carrier stays `Ω : Type` (R7).
+tail input `hdata` and the zero-charge measure `hμ`; the carrier stays `Ω : Type`.
 
 The chain is the one for Lemma 11.12 (`PinchEventPositiveProbabilityStmt`, `Draft/Section11.lean:246`) in
 `Closure/FixedRawPositiveNull.lean`; only the premises change.
@@ -201,10 +201,10 @@ theorem fixed_raw_positive_outside_null_representatives (hgrowth : LQGVolumeGrow
 
 /-- **Raw strengthened positivity of the fixed corrected configuration at zero log-charge, over `Ω : Type`, with
 the outside certificate premises discharged.** This is `fixed_raw_positive_null_of_staged_volume_growth_derived`
-(`Closure/FixedRawPositiveDerived.lean:55`) without its premises `A hA hArep ha hb` (F3): they are supplied by the
-outside representatives of Lemma `l:r8-outside` (`Closure/FixedOutsideRepresentatives.lean`). Kept explicit: the
-staged inputs `hDG hCC hE` (`Proposed/LQG.lean`), the square tail input `hdata` (T1), the zero-charge measure
-`hμ`, and the metric `h𝔇`. The square frontier premise (F1) and the sign `0 < ξ` (R0) are derived. -/
+(`Closure/FixedRawPositiveDerived.lean:55`) without its premises `A hA hArep ha hb`: they are supplied by the
+outside representatives (`Closure/FixedOutsideRepresentatives.lean`). Kept explicit: the
+staged inputs `hDG hCC hE` (`Proposed/LQG.lean`), the square tail input `hdata`, the zero-charge measure
+`hμ`, and the metric `h𝔇`. The square frontier premise and the sign `0 < ξ` are derived. -/
 theorem fixed_raw_positive_null_of_staged_volume_growth_outside
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -231,6 +231,5 @@ theorem fixed_raw_positive_null_of_staged_volume_growth_outside
   exact fixed_raw_positive_outside_null_representatives hgrowth hγ hγ₂ hξ P 𝔇 h𝔇 hgff hμ M hfront
     hdata A hA hArep a b ha hb hae hbe
 
-#print axioms fixed_raw_positive_null_of_staged_volume_growth_outside
 
 end HarmonicBalls

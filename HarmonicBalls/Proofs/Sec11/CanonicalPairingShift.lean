@@ -148,9 +148,5 @@ theorem IsWholePlaneGFF.localModConstPairingShift_observable_laws
   rw [Measure.map_map hF hS] at hf hb
   exact ⟨hf, hb⟩
 
-#print axioms IsWholePlaneGFF.localModConstPairingShift_observable_laws
-#print axioms IsWholePlaneGFF.localModConstPairingShift_preimage_pos_iff
-#print axioms localModConstPairingShift_measurableEquiv
-#print axioms IsWholePlaneGFF.quasiMeasurePreserving_localModConstPairingShift
 
 end HarmonicBalls

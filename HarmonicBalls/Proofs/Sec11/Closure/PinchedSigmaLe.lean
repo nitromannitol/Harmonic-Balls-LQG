@@ -2,7 +2,7 @@ import HarmonicBalls.Proofs.Sec11.Closure.FixedRawPositiveStaged
 import HarmonicBalls.Proofs.Sec11.ModConstPairingLaw
 
 /-!
-# The pinned σ-algebra is contained in the ambient one (Section 11, r7 lines 937–1037)
+# The pinned σ-algebra is contained in the ambient one (Section 11)
 
 The premise `hm : fixedPinnedSigma hC ≤ m₀` of `Closure/FixedRawPositiveStaged.lean` is a measurability fact:
 the zero-mean local pairings `φ ↦ fieldPairing 0 (hC ω) φ` are measurable because the GFF pairings
@@ -64,6 +64,5 @@ theorem fixed_raw_positive_staged_no_hm
   fixed_raw_positive_of_staged_volume_growth hDG hCC hE hγ hγ₂ hξ P 𝔇 h𝔇 hgff hμ M hfront hdata hmeasIns
     (fixedPinnedSigma_le hgff) A hA hArep ha hb
 
-#print axioms fixed_raw_positive_staged_no_hm
 
 end HarmonicBalls

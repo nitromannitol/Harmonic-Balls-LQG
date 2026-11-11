@@ -72,6 +72,5 @@ theorem IsPinchPointProofConfiguration.ae_internal_pinch_frequency_of_radial_pro
   exact hgff.ae_positive_internal_pinch_frequency_of_normalized_metric P hμ hfull hm
     h.toIsPinchPointConfiguration M hmetric hstat hunit
 
-#print axioms IsPinchPointProofConfiguration.ae_internal_pinch_frequency_of_radial_product
 
 end HarmonicBalls

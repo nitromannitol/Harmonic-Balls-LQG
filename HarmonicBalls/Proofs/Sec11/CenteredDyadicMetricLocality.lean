@@ -57,6 +57,5 @@ theorem IsWholePlaneGFF.exists_modConst_dyadic_internalMetrics_of_centered_local
   exact h.exists_modConst_internalMetric_of_centered_locality 𝔇 h𝔇 hD ψ hψ hψint
     (hlocal ε hε ψ hψ hψint _ isOpen_ball hsub)
 
-#print axioms IsWholePlaneGFF.exists_modConst_dyadic_internalMetrics_of_centered_locality
 
 end HarmonicBalls

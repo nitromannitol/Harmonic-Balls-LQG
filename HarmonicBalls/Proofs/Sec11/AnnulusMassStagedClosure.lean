@@ -18,7 +18,7 @@ balls, and the scaled-field comparison `annulusMassBoundByHarmonicChainStmt_of_s
 Explicit hypotheses of the main theorem:
 * the staged LQG inputs of `HarmonicBalls.Proposed.LQG` (`WholePlaneLQGBallMassBounds`,
   `WholePlaneGFFAffineInvariance`, `LQGMeasureCoordChange`, `LQGMeasureWeylScaling`, `LQGMeasureExistence`,
-  `LQGMeasureNonatomic`), pending operator source check;
+  `LQGMeasureNonatomic`), pending source check;
 * `BoundaryMeasureZeroOfCompactClusterStmt` (Proposition 8.1) and `HarnackTypeEstimateStmt` (Section 6).
 -/
 
@@ -71,4 +71,3 @@ theorem annulusMassBoundByHarmonicChainStmt_of_stagedInputs
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.annulusMassBoundByHarmonicChainStmt_of_stagedInputs

@@ -143,8 +143,5 @@ theorem IsWholePlaneGFF.exists_centered_baseMetric_shift_decoder
   rw [← hw.2.2.2.1 (p n).1 (p n).2, ENNReal.toReal_ofReal hmetric]
   exact heq
 
-#print axioms IsWholePlaneGFF.exists_centered_baseMetric_shift_decoder
-#print axioms exists_centered_distribution_decoder
-#print axioms IsWholePlaneGFF.ae_centered_distribution_decoder_shift
 
 end HarmonicBalls

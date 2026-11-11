@@ -77,5 +77,4 @@ theorem IsWholePlaneGFF.exists_global_absolute_pairing_shift_decoder
     · simp [hp0, hpin]
   exact ht.limUnder_eq
 
-#print axioms IsWholePlaneGFF.exists_global_absolute_pairing_shift_decoder
 end HarmonicBalls

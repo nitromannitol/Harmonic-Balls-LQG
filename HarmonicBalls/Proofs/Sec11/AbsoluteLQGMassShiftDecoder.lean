@@ -42,7 +42,6 @@ theorem IsWholePlaneGFF.exists_global_shifted_lqgApprox_mass_decoders
     rw [heq n g hg hpin z (hbuffer n z hz)]
     rfl
 
-#print axioms IsWholePlaneGFF.exists_global_shifted_lqgApprox_mass_decoders
 
 /-- The absolute LQG mass of a bounded continuity set is decoded from the
 global modulo-constant field, with one exceptional set for every continuous
@@ -87,5 +86,4 @@ theorem IsWholePlaneGFF.exists_global_shifted_lqgMass_decoder
     exact heqω n g hg hpin
   exact ht'.liminf_eq
 
-#print axioms IsWholePlaneGFF.exists_global_shifted_lqgMass_decoder
 end HarmonicBalls

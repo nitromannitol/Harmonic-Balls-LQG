@@ -41,6 +41,5 @@ theorem IsWholePlaneGFF.exists_joint_absolute_circle_shift_decoders_of_radial
     rw [hCω n g hg z hz, hRω n g hg hpin]
     ring
 
-#print axioms IsWholePlaneGFF.exists_joint_absolute_circle_shift_decoders_of_radial
 
 end HarmonicBalls

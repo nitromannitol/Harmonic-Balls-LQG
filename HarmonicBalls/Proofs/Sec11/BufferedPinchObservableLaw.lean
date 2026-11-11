@@ -71,6 +71,5 @@ theorem IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_obser
     exact (ne_of_gt hYpos) (hac hz)
   rwa [Measure.map_apply_of_aemeasurable hX hE, measure_congr hXeq] at hXpos
 
-#print axioms IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_observableLaw
 
 end HarmonicBalls

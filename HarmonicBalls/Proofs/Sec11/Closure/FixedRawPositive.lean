@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec11.Closure.CorrectedFixedGeometry
 import HarmonicBalls.Proofs.Sec11.Closure.FixedMassDiameterOutside
 
 /-!
-# Raw strengthened positivity of the fixed corrected configuration (Section 11, r7 lines 937–1037)
+# Raw strengthened positivity of the fixed corrected configuration (Section 11)
 
 The conditional chain `IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_growth`
 (`Proofs/Sec11/CorrectedPinchConditionalPositive.lean:13`) gives the positivity of the strengthened pinch event
@@ -14,9 +14,9 @@ neighbourhood of `W` (`Closure/FixedMassDiameterOutside.lean`), and the positivi
 `fixed_outside_hinside_of_square_dyadic_tail`.
 
 The leftover premises are explicit: the volume-growth input (through the full-support hypothesis, derived from
-`LQGVolumeGrowthAllScalesStmt`), the square premises `hfront` (F1) and `hdata` (T1), the measurable clause `hmeasIns`
-of `hinside` (F2), and the pinned-σ-algebra facts `hm`, `hA`, `hArep`, `ha`, `hb` (the first event measurable
-outside `W`, the claim under review F3). `0 < ξ` is the premise R0 of the status note.
+`LQGVolumeGrowthAllScalesStmt`), the square premises `hfront` and `hdata`, the measurable clause `hmeasIns`
+of `hinside`, and the pinned-σ-algebra facts `hm`, `hA`, `hArep`, `ha`, `hb` (the first event measurable
+outside `W`). The sign `0 < ξ` is an explicit premise.
 -/
 
 namespace HarmonicBalls
@@ -68,6 +68,5 @@ theorem fixed_raw_positive_outside (hgrowth : LQGVolumeGrowthAllScalesStmt.{0})
     isCorrectedPinchConfiguration_fixed hξ hγ hγ₂ hα P hC hcirc 𝔇 μ h𝔇 hgff hμ M
     (fixedPinnedSigma hC) hm A hA hArep ha hb hinside
 
-#print axioms fixed_raw_positive_outside
 
 end HarmonicBalls

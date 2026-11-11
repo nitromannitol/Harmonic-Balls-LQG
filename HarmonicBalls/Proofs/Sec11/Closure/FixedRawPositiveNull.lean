@@ -11,8 +11,8 @@ import HarmonicBalls.Proofs.Sec11.Closure.PinchedSigmaLe
 `IsWholePlaneGFF.nullMeasurableSet_mass_internalDiam` (`Proofs/Sec11/ConditionalCoreMeasurability.lean:26`) gives the
 inside events `{ω | internalDiam (𝔇 (hC ω)) fixedDelta fixedV < n⁻¹ ∧ k < μ ω fixedU}` in `NullMeasurableSet`, and the
 null-measurable growth chain `Closure/NullConditionalGrowth.lean` consumes exactly that. This module therefore removes
-the leftover `hmeasIns` (point F2 of the status note) and keeps the other premises of `fixed_raw_positive_outside`.
-The remaining leftovers are `hgrowth`, `hfront` (F1), `hdata` (T1), `hm`, `hA`, `hArep`, `ha`, `hb` (F3), and `0 < ξ` (R0).
+the leftover `hmeasIns` and keeps the other premises of `fixed_raw_positive_outside`.
+The remaining leftovers are `hgrowth`, `hfront`, `hdata`, `hm`, `hA`, `hArep`, `ha`, `hb`, and `0 < ξ`.
 -/
 
 namespace HarmonicBalls
@@ -69,12 +69,11 @@ theorem fixed_raw_positive_outside_null (hgrowth : LQGVolumeGrowthAllScalesStmt.
     isCorrectedPinchConfiguration_fixed hξ hγ hγ₂ hα P hC hcirc 𝔇 μ h𝔇 hgff hμ M
     (fixedPinnedSigma hC) hm A hA hArep ha hb hinside
 
-#print axioms fixed_raw_positive_outside_null
 
 /-- Raw strengthened positivity of the fixed corrected configuration for `ξ > 0`, with the volume-growth input derived
 from the staged inputs `hDG`, `hCC`, `hE`, the pinned-σ-algebra premise `hm` proved (`fixedPinnedSigma_le`), and the
-null-measurable inside clause. The leftover premises are `hfront` (F1), `hdata` (T1), `A`, `hA`, `hArep`, `ha`, `hb`
-(F3), and `0 < ξ` (R0). The staged inputs remain pending operator source-check. -/
+null-measurable inside clause. The leftover premises are `hfront`, `hdata`, `A`, `hA`, `hArep`, `ha`, `hb`
+and `0 < ξ`. The staged inputs remain pending source check. -/
 theorem fixed_raw_positive_null_of_staged_volume_growth
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -100,6 +99,5 @@ theorem fixed_raw_positive_null_of_staged_volume_growth
   fixed_raw_positive_outside_null (lqgVolumeGrowthAllScalesStmt_of_staged_inputs.{0} hDG hCC hE)
     hγ hγ₂ hξ P 𝔇 h𝔇 hgff hμ M hfront hdata (fixedPinnedSigma_le hgff) A hA hArep ha hb
 
-#print axioms fixed_raw_positive_null_of_staged_volume_growth
 
 end HarmonicBalls

@@ -60,6 +60,5 @@ theorem IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_buffe
   have hp' : 0 < P (τ ⁻¹' A) := by rw [measure_congr heq]; exact hp
   exact measure_pos_of_preimage_pos_of_quasiMeasurePreserving P τ hτ A hp'
 
-#print axioms IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_buffer_shiftMap
 
 end HarmonicBalls

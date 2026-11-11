@@ -2,7 +2,7 @@ import HarmonicBalls.Proofs.Sec11.CorrectedPinchConditionalPositive
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchFirstSecondNull
 
 /-!
-# Conditional growth chain for null-measurable inside events (Section 11, r7 lines 937–1037)
+# Conditional growth chain for null-measurable inside events (Section 11)
 
 The growth chains `IsCorrectedPinchConfiguration.positive_wholePlane_first_second_of_growth`
 (`Proofs/Sec11/CorrectedPinchFirstSecondGrowth.lean:13`) and
@@ -15,7 +15,7 @@ The null-measurable first-second chain `IsCorrectedPinchConfiguration.positive_w
 (`Proofs/Sec11/CorrectedPinchFirstSecondNull.lean:12`) already takes the null clause. This module adds the two
 growth-form consumers with the null clause: the same proofs, with that consumer in place of the strict one. The
 volume-growth input `LQGVolumeGrowthAllScalesStmt` and the full-support consequence are used exactly as in the
-strict chain. The strict clause is therefore not needed in the raw-positivity route (point F2 of the status note).
+strict chain. The strict clause is therefore not needed in the raw-positivity route.
 -/
 
 namespace HarmonicBalls
@@ -55,7 +55,6 @@ theorem IsCorrectedPinchConfiguration.positive_wholePlane_first_second_of_growth
     hArep ha hb (ae_annulusGreenPotentialSup_ne_top_of_lqgVolumeGrowth
       hgrowth hγ hγ₂ hα hgff hμ 3 (b := 6) (by norm_num)) hinside
 
-#print axioms IsCorrectedPinchConfiguration.positive_wholePlane_first_second_of_growth_null
 
 /-- Top-level pinch positivity with the null-measurable inside clause. Same as
 `IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_growth`
@@ -93,6 +92,5 @@ theorem IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_gro
     (h.positive_wholePlane_first_second_of_growth_null hgrowth hξ hγ hγ₂ hα P hC hcirc
       𝔇 μ h𝔇 hgff hμ M m hm A hA hArep ha hb hinside)
 
-#print axioms IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_growth_null
 
 end HarmonicBalls
