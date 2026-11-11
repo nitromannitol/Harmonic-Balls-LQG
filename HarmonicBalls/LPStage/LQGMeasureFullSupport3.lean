@@ -1,296 +1,276 @@
 import Mathlib
-import HarmonicBalls.LPStage.GFF
-import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.LQGMeasureFullSupport2
 
 /-!
-# LP stage: full support of the LQG measure, part 3 (z3, task `fp-lpstage-lqg-full-support-then-square-positive`, R57)
+# The ball clause of Lemma 2.4 from the multiscale bound: LP form, part A (LP stage, z3)
 
-LP port of the elementary closure properties of `PolyHighProb` used by the full-support chain
-(`HarmonicBalls/Proofs/Sec2/PolyHighProb.lean`): monotonicity, linear reparametrization of the scale, finite intersections,
-the union bound over dyadic scales (`dyadic_tail`) and the Borel-Cantelli lemma along the dyadic scales.
-All statements use the LP predicate `LatticeProb.Gauss.PolyHighProb`.
+LP copy of `HarmonicBalls/Proofs/Sec2/BallMassReduction.lean` lines 36-290: the per-sample reduction of the ball-mass
+bounds, `ballMass_upper_of_scaled` (eq:ball-volume, upper bound) and `ballMass_lower_of_scaled` (lower bound), from
+the scaled multiscale bound `ScaledBallBound` at the scales `ε` and `ε/4` and the power weight `μ_h = |x|^e μ₀` off `0`
+(Berestycki-Powell; Lemma A.1 of the BG20 reference). The weight relation is taken as the hypothesis `hW`, so the file
+depends on Mathlib and `LQGMeasureFullSupport2` only.
+
+The LP names of the HB helpers are `ScaledBallBound`, `rpow_mul_div_rpow_eq`, `scaled_rpow_eq`, `exists_away_from_zero`.
 -/
-
-open MeasureTheory ProbabilityTheory Metric Filter Set Topology
-open scoped ENNReal
-open LatticeProb.Gauss
 
 namespace LatticeProb.LQG
 
-section PolyHighProbAlgebra
+open MeasureTheory Metric Filter Set Topology
+open scoped ENNReal
 
-variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {E F : ℝ → Set Ω}
+universe u
 
-/-- An event containing, at all small scales, an event of polynomially high probability has polynomially high
-probability (`Proofs/Sec2/PolyHighProb.lean:23`). -/
-theorem polyHighProb_mono_of_small_lp (h : PolyHighProb P E) {r₁ : ℝ} (hr₁ : 0 < r₁)
-    (hEF : ∀ r, 0 < r → r < r₁ → E r ⊆ F r) : PolyHighProb P F := by
-  obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := h
-  refine ⟨p, hp, C, min r₀ r₁, lt_min hr₀ hr₁, fun r hr hrr => ?_⟩
-  calc P (F r)ᶜ ≤ P (E r)ᶜ :=
-        measure_mono (compl_subset_compl.2 (hEF r hr (hrr.trans_le (min_le_right _ _))))
-    _ ≤ _ := hE r hr (hrr.trans_le (min_le_left _ _))
+/-- The per-sample content of the event of `WholePlaneScaledBallMassStep` at scale `δ`, for a measure `m₀` and
+`G = γQ`: for `t ∈ [δ^{1-ζ}, 1]` and `z ∈ closedBall 0 (R₁ t)`,
+`t^G (δ/t)^{β⁻} δ^ζ ≤ m₀(B_δ(z)) ≤ t^G (δ/t)^{β⁺} δ^{-ζ}`. -/
+def ScaledBallBound (m₀ : Measure ℂ) (G R₁ βp βm ζ δ : ℝ) : Prop :=
+  ∀ t : ℝ, δ ^ (1 - ζ) ≤ t → t ≤ 1 → ∀ z ∈ closedBall (0 : ℂ) (R₁ * t),
+    ENNReal.ofReal (t ^ G * (δ / t) ^ βm * δ ^ ζ) ≤ m₀ (ball z δ) ∧
+      m₀ (ball z δ) ≤ ENNReal.ofReal (t ^ G * (δ / t) ^ βp * δ ^ (-ζ))
 
-theorem polyHighProb_mono_lp (h : PolyHighProb P E) (hEF : ∀ r, E r ⊆ F r) : PolyHighProb P F :=
-  polyHighProb_mono_of_small_lp h one_pos fun r _ _ => hEF r
+/-- `s^e (s^G (ε/s)^b ε^c) = s^{e+G-b} ε^{b+c}`. -/
+theorem rpow_mul_div_rpow_eq {s ε : ℝ} (hs : 0 < s) (hε : 0 < ε) (e G b c : ℝ) :
+    s ^ e * (s ^ G * (ε / s) ^ b * ε ^ c) = s ^ (e + G - b) * ε ^ (b + c) := by
+  rw [Real.rpow_sub hs, Real.rpow_add hs, Real.rpow_add hε, Real.div_rpow hε.le hs.le]
+  ring
 
-/-- Linear reparametrization of the scale: `ε ↦ E(c ε)` for a constant `c > 0`. -/
-theorem polyHighProb_comp_mul_lp (h : PolyHighProb P E) {c : ℝ} (hc : 0 < c) :
-    PolyHighProb P fun r => E (c * r) := by
-  obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := h
-  refine ⟨p, hp, C * c ^ p, r₀ / c, div_pos hr₀ hc, fun r hr hrr => ?_⟩
-  have hcr : c * r < r₀ := by rwa [lt_div_iff₀ hc, mul_comm] at hrr
-  calc P (E (c * r))ᶜ ≤ ENNReal.ofReal (C * (c * r) ^ p) := hE _ (mul_pos hc hr) hcr
-    _ = ENNReal.ofReal (C * c ^ p * r ^ p) := by rw [Real.mul_rpow hc.le hr.le, mul_assoc]
+/-- At `t = δ^{1-ζ}`: `t^G (δ/t)^b δ^c = δ^{(1-ζ)G + ζb + c}`. -/
+theorem scaled_rpow_eq {δ : ℝ} (hδ : 0 < δ) (ζ G b c : ℝ) :
+    (δ ^ (1 - ζ)) ^ G * (δ / δ ^ (1 - ζ)) ^ b * δ ^ c = δ ^ ((1 - ζ) * G + ζ * b + c) := by
+  have h1 : δ / δ ^ (1 - ζ) = δ ^ ζ := by
+    rw [div_eq_iff (Real.rpow_pos_of_pos hδ _).ne', ← Real.rpow_add hδ]
+    have : ζ + (1 - ζ) = 1 := by ring
+    rw [this, Real.rpow_one]
+  rw [h1, ← Real.rpow_mul hδ.le, ← Real.rpow_mul hδ.le, ← Real.rpow_add hδ, ← Real.rpow_add hδ]
 
-/-- The intersection of two events of polynomially high probability. -/
-theorem polyHighProb_inter_lp (hE : PolyHighProb P E) (hF : PolyHighProb P F) :
-    PolyHighProb P fun r => E r ∩ F r := by
-  obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := hE
-  obtain ⟨q, hq, D, s₀, hs₀, hF⟩ := hF
-  refine ⟨min p q, lt_min hp hq, max C 0 + max D 0, min (min r₀ s₀) 1,
-    lt_min (lt_min hr₀ hs₀) one_pos, fun r hr hrr => ?_⟩
-  have hr₀' : r < r₀ := hrr.trans_le ((min_le_left _ _).trans (min_le_left _ _))
-  have hs₀' : r < s₀ := hrr.trans_le ((min_le_left _ _).trans (min_le_right _ _))
-  have hr1 : r < 1 := hrr.trans_le (min_le_right _ _)
-  have hpr : r ^ p ≤ r ^ min p q := Real.rpow_le_rpow_of_exponent_ge hr hr1.le (min_le_left _ _)
-  have hqr : r ^ q ≤ r ^ min p q := Real.rpow_le_rpow_of_exponent_ge hr hr1.le (min_le_right _ _)
-  have hC : C * r ^ p ≤ max C 0 * r ^ min p q :=
-    mul_le_mul (le_max_left _ _) hpr (by positivity) (le_max_right _ _)
-  have hD : D * r ^ q ≤ max D 0 * r ^ min p q :=
-    mul_le_mul (le_max_left _ _) hqr (by positivity) (le_max_right _ _)
-  rw [compl_inter]
-  calc P ((E r)ᶜ ∪ (F r)ᶜ) ≤ P (E r)ᶜ + P (F r)ᶜ := measure_union_le _ _
-    _ ≤ ENNReal.ofReal (C * r ^ p) + ENNReal.ofReal (D * r ^ q) :=
-        add_le_add (hE r hr hr₀') (hF r hr hs₀')
-    _ ≤ ENNReal.ofReal (max C 0 * r ^ min p q) + ENNReal.ofReal (max D 0 * r ^ min p q) :=
-        add_le_add (ENNReal.ofReal_le_ofReal hC) (ENNReal.ofReal_le_ofReal hD)
-    _ = ENNReal.ofReal ((max C 0 + max D 0) * r ^ min p q) := by
-        rw [← ENNReal.ofReal_add (by positivity) (by positivity), add_mul]
+/-- A point at distance at most `ε/2` from `z` with norm at least `ε/2` and at most `|z| + ε/2`. -/
+theorem exists_away_from_zero (z : ℂ) {ε : ℝ} (hε : 0 < ε) :
+    ∃ w : ℂ, dist w z ≤ ε / 2 ∧ ε / 2 ≤ ‖w‖ ∧ ‖w‖ ≤ ‖z‖ + ε / 2 := by
+  by_cases hz : z = 0
+  · refine ⟨((ε / 2 : ℝ) : ℂ), ?_, ?_, ?_⟩ <;>
+      simp [hz, dist_eq_norm, Complex.norm_real, abs_of_pos hε]
+  · have hs : 0 < ‖z‖ := norm_pos_iff.2 hz
+    have hc : 0 ≤ ε / (2 * ‖z‖) := by positivity
+    refine ⟨(1 + ε / (2 * ‖z‖)) • z, ?_, ?_, ?_⟩
+    · rw [dist_eq_norm, add_smul, one_smul, add_sub_cancel_left, norm_smul, Real.norm_eq_abs,
+        abs_of_nonneg hc]
+      field_simp
+      rfl
+    · rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+      have : (1 + ε / (2 * ‖z‖)) * ‖z‖ = ‖z‖ + ε / 2 := by field_simp
+      rw [this]; linarith
+    · rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+      have : (1 + ε / (2 * ‖z‖)) * ‖z‖ = ‖z‖ + ε / 2 := by field_simp
+      rw [this]
 
-/-- **Borel-Cantelli along the dyadic scales** (`Proofs/Sec2/PolyHighProb.lean:70`). If `E` has polynomially high
-probability, then almost surely `ω ∈ E(2^{-k})` for all large `k`. -/
-theorem polyHighProb_ae_eventually_dyadic_lp (h : PolyHighProb P E) :
-    ∀ᵐ ω ∂P, ∀ᶠ k : ℕ in atTop, ω ∈ E ((2 : ℝ)⁻¹ ^ k) := by
-  obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := h
-  obtain ⟨k₀, hk₀⟩ := exists_pow_lt_of_lt_one hr₀ (by norm_num : (2 : ℝ)⁻¹ < 1)
-  have hq : (2 : ℝ)⁻¹ ^ p < 1 := Real.rpow_lt_one (by norm_num) (by norm_num) hp
-  have hterm : ∀ n : ℕ, P (E ((2 : ℝ)⁻¹ ^ (n + k₀)))ᶜ ≤
-      ENNReal.ofReal (max C 0) * ENNReal.ofReal ((2 : ℝ)⁻¹ ^ p) ^ n := by
-    intro n
-    have hpos : 0 < (2 : ℝ)⁻¹ ^ (n + k₀) := by positivity
-    have hlt : (2 : ℝ)⁻¹ ^ (n + k₀) < r₀ :=
-      (pow_le_pow_of_le_one (by norm_num) (by norm_num) (Nat.le_add_left k₀ n)).trans_lt hk₀
-    have hle : ((2 : ℝ)⁻¹ ^ (n + k₀)) ^ p ≤ ((2 : ℝ)⁻¹ ^ p) ^ n := by
-      rw [← Real.rpow_pow_comm (by norm_num)]
-      exact pow_le_pow_of_le_one (Real.rpow_nonneg (by norm_num) _) hq.le (Nat.le_add_right n k₀)
-    calc P (E ((2 : ℝ)⁻¹ ^ (n + k₀)))ᶜ ≤ ENNReal.ofReal (C * ((2 : ℝ)⁻¹ ^ (n + k₀)) ^ p) :=
-          hE _ hpos hlt
-      _ ≤ ENNReal.ofReal (max C 0 * ((2 : ℝ)⁻¹ ^ p) ^ n) :=
-          ENNReal.ofReal_le_ofReal (mul_le_mul (le_max_left _ _) hle
-            (by positivity) (le_max_right _ _))
-      _ = _ := by
-          rw [ENNReal.ofReal_mul (le_max_right _ _), ENNReal.ofReal_pow (by positivity)]
-  have hsum : ∑' n : ℕ, P (E ((2 : ℝ)⁻¹ ^ (n + k₀)))ᶜ ≠ ∞ := by
-    refine ne_top_of_le_ne_top ?_ (ENNReal.tsum_le_tsum hterm)
-    rw [ENNReal.tsum_mul_left, ENNReal.tsum_geometric]
-    refine ENNReal.mul_ne_top ENNReal.ofReal_ne_top (ENNReal.inv_ne_top.2 ?_)
-    exact (tsub_pos_of_lt (ENNReal.ofReal_lt_one.2 hq)).ne'
-  filter_upwards [ae_eventually_notMem hsum] with ω hω
-  rw [eventually_atTop] at hω ⊢
-  obtain ⟨N, hN⟩ := hω
-  refine ⟨N + k₀, fun k hk => ?_⟩
-  have h' := hN (k - k₀) (by omega)
-  rw [Nat.sub_add_cancel (by omega : k₀ ≤ k)] at h'
-  simpa using h'
+variable {m m₀ : Measure ℂ} {e G βp₀ βm₀ ζ R R₁ ε : ℝ}
 
-/-- If `b < a`, then `C ε^a ≤ ε^b` for all small `ε > 0` (`Proofs/Sec2/PolyHighProb.lean:112`). -/
-theorem eventually_mul_rpow_le_lp (C : ℝ) {a b : ℝ} (hab : b < a) :
-    ∀ᶠ ε in 𝓝[>] (0 : ℝ), C * ε ^ a ≤ ε ^ b := by
-  have hC1 : (0 : ℝ) < max C 0 + 1 := by positivity
-  obtain ⟨r₁, hr₁, h⟩ := exists_pos_forall_rpow_le_lp (sub_pos.2 hab) (inv_pos.2 hC1)
-  filter_upwards [Ioo_mem_nhdsGT hr₁] with ε hε
-  have hε0 : 0 < ε := hε.1
-  have h1 : ε ^ (a - b) ≤ (max C 0 + 1)⁻¹ := h ε hε.1 hε.2
-  have hsplit : ε ^ a = ε ^ (a - b) * ε ^ b := by rw [← Real.rpow_add hε0, sub_add_cancel]
-  have hb : 0 < ε ^ b := Real.rpow_pos_of_pos hε0 _
-  have hab' : 0 < ε ^ (a - b) := Real.rpow_pos_of_pos hε0 _
-  rw [hsplit]
-  calc C * (ε ^ (a - b) * ε ^ b) ≤ (max C 0 + 1) * (ε ^ (a - b) * ε ^ b) := by
-        gcongr; exact (le_max_left C 0).trans (le_add_of_nonneg_right zero_le_one)
-    _ ≤ (max C 0 + 1) * ((max C 0 + 1)⁻¹ * ε ^ b) := by gcongr
-    _ = ε ^ b := by rw [← mul_assoc, mul_inv_cancel₀ hC1.ne', one_mul]
-
-/-- If `a < b` and `c > 0`, then `ε^b ≤ c ε^a` for all small `ε > 0` (`Proofs/Sec2/PolyHighProb.lean:129`). -/
-theorem eventually_rpow_le_mul_lp {c : ℝ} (hc : 0 < c) {a b : ℝ} (hab : a < b) :
-    ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε ^ b ≤ c * ε ^ a := by
-  filter_upwards [eventually_mul_rpow_le_lp c⁻¹ hab] with ε hε
-  calc ε ^ b = c * (c⁻¹ * ε ^ b) := by rw [← mul_assoc, mul_inv_cancel₀ hc.ne', one_mul]
-    _ ≤ c * ε ^ a := by gcongr
-
-/-- A property holding at all small scales along `𝓝[>] 0` holds on some interval `(0, r₁)`
-(`Proofs/Sec2/PolyHighProb.lean:136`). -/
-theorem exists_pos_of_eventually_nhdsGT_lp {p : ℝ → Prop} (h : ∀ᶠ r in 𝓝[>] (0 : ℝ), p r) :
-    ∃ r₁ > 0, ∀ r : ℝ, 0 < r → r < r₁ → p r := by
-  obtain ⟨u, hu, hsub⟩ := mem_nhdsGT_iff_exists_Ioo_subset.1 h
-  exact ⟨u, hu, fun r hr hru => hsub ⟨hr, hru⟩⟩
-
-/-- Monotonicity for events compared only at small scales, in filter form (`PolyHighProb.lean:142`). -/
-theorem polyHighProb_mono_of_eventually_lp (h : PolyHighProb P E)
-    (hEF : ∀ᶠ r in 𝓝[>] (0 : ℝ), E r ⊆ F r) : PolyHighProb P F := by
-  obtain ⟨r₁, hr₁, h'⟩ := exists_pos_of_eventually_nhdsGT_lp hEF
-  exact polyHighProb_mono_of_small_lp h hr₁ h'
-
-/-- Intersecting with an almost sure event does not change the failure probabilities (`PolyHighProb.lean:148`). -/
-theorem polyHighProb_inter_ae_lp (h : PolyHighProb P E) {W : Set Ω} (hW : ∀ᵐ ω ∂P, ω ∈ W) :
-    PolyHighProb P fun r => E r ∩ W := by
-  obtain ⟨p, hp, C, r₀, hr₀, hE⟩ := h
-  have hW0 : P Wᶜ = 0 := ae_iff.1 hW
-  refine ⟨p, hp, C, r₀, hr₀, fun r hr hrr => ?_⟩
-  rw [compl_inter]
-  calc P ((E r)ᶜ ∪ Wᶜ) ≤ P (E r)ᶜ + P Wᶜ := measure_union_le _ _
-    _ = P (E r)ᶜ := by rw [hW0, add_zero]
-    _ ≤ _ := hE r hr hrr
-
-end PolyHighProbAlgebra
-
-/-! ### Ding-Gwynne Lemma 3.8 on `closedBall 0 R` from the affine image (`Proofs/Sec2/RescaledUniform.lean:118`) -/
-
-/-- Ding-Gwynne Lemma 3.8 on `closedBall 0 R`, from the bound on the unit square for the affine image of the
-field. The additive constant `h_{2R}(-R(1+i))` is centred Gaussian, so `e^{γ h_{2R}(-R(1+i))} ∈ [r^{γc₀}, r^{-γc₀}]`
-with polynomially high probability; the slack `β⁺ < β⁺'`, `β⁻' < β⁻` absorbs it and the constants. -/
-theorem polyHighProb_closedBall_of_square_lp {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
-    {γ R βp βm βp' βm' : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
-    (hGFF : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hR : 0 < R)
-    (hpp : βp < βp') (hmm : βm' < βm) (hβp' : 0 < βp') (hβm' : 0 < βm')
-    (hDG : PolyHighProb P fun ε => {ω | (∀ z ∈ Icc (0 : ℝ) 1 ×ℂ Icc (0 : ℝ) 1,
-          ENNReal.ofReal ε ≤ affineMeasure γ hcirc μ (squareA R) (squareB R) ω (ball z (ε ^ (1 / βm')))) ∧
-        ∀ z ∈ Icc (0 : ℝ) 1 ×ℂ Icc (0 : ℝ) 1,
-          affineMeasure γ hcirc μ (squareA R) (squareB R) ω (ball z (ε ^ (1 / βp'))) ≤ ENNReal.ofReal ε}) :
-    PolyHighProb P fun r => {ω | ∀ w ∈ closedBall (0 : ℂ) R,
-      ENNReal.ofReal (r ^ βm) ≤ μ ω (ball w r) ∧ μ ω (ball w r) ≤ ENNReal.ofReal (r ^ βp)} := by
-  have hP := hGFF.isProbabilityMeasure
-  have ha := squareA_ne_zero hR
-  have han := norm_squareA hR
-  set Y : Ω → ℝ := fun ω => hcirc ω ‖squareA R‖ (squareB R) with hY_def
-  have hapos : 0 < ‖squareA R‖ := by rw [han]; positivity
-  have hYG : HasGaussianLaw Y P := hGFF.hasGaussianLaw_circle hapos _
-  have hYm : ∫ ω, Y ω ∂P = 0 := hGFF.integral_eq_zero (.circle ‖squareA R‖ (squareB R)) hapos
-  set V := Var[Y; P] + 1 with hV
-  have hV0 : 0 < V := by have := variance_nonneg Y P; linarith
-  set c₀ := min (βm - βm') (βp' - βp) / (2 * γ) with hc₀_def
-  have hmin0 : 0 < min (βm - βm') (βp' - βp) := lt_min (by linarith) (by linarith)
-  have hc₀ : 0 < c₀ := div_pos hmin0 (by positivity)
-  have hγc₀ : γ * c₀ = min (βm - βm') (βp' - βp) / 2 := by rw [hc₀_def]; field_simp
-  have hγc₀m : γ * c₀ < βm - βm' := by
-    rw [hγc₀]; linarith [min_le_left (βm - βm') (βp' - βp)]
-  have hγc₀p : γ * c₀ < βp' - βp := by
-    rw [hγc₀]; linarith [min_le_right (βm - βm') (βp' - βp)]
-  -- the Gaussian additive constant
-  set GY : ℝ → Set Ω := fun r => {ω | |Y ω| < c₀ * Real.log r⁻¹} with hGY_def
-  have hGY : PolyHighProb P GY := by
-    have hev : ∀ᶠ r in 𝓝[>] (0 : ℝ), P (GY r)ᶜ ≤ ENNReal.ofReal (2 * r ^ (1 : ℝ)) := by
-      filter_upwards [Ioo_mem_nhdsGT (show (0 : ℝ) < Real.exp (-(2 * V / c₀ ^ 2)) by positivity)]
-        with r hr
-      obtain ⟨hr0, hrexp⟩ := hr
-      set ℓ := Real.log r⁻¹ with hℓ
-      have hℓV : 2 * V / c₀ ^ 2 ≤ ℓ := by
-        have := Real.log_lt_log hr0 hrexp
-        rw [Real.log_exp] at this
-        rw [hℓ, Real.log_inv]; linarith
-      have hℓ0 : 0 ≤ ℓ := le_trans (by positivity) hℓV
-      have hcompl : (GY r)ᶜ = {ω | c₀ * ℓ ≤ |Y ω|} := by
-        ext ω; simp only [hGY_def, mem_compl_iff, mem_ofPred_eq, not_lt, hℓ]
-      rw [hcompl]
-      refine (measure_le_abs_le_of_hasGaussianLaw_lp hYG hYm (by linarith : Var[Y; P] ≤ V) hV0
-        (by positivity)).trans (ENNReal.ofReal_le_ofReal ?_)
-      rw [Real.rpow_one]
-      have h2V : 2 * V ≤ ℓ * c₀ ^ 2 := (div_le_iff₀ (by positivity)).1 hℓV
-      have : Real.exp (-((c₀ * ℓ) ^ 2) / (2 * V)) ≤ r := by
-        calc Real.exp (-((c₀ * ℓ) ^ 2) / (2 * V)) ≤ Real.exp (-ℓ) := by
-              apply Real.exp_le_exp.2
-              rw [neg_div, neg_le_neg_iff, le_div_iff₀ (by positivity)]
-              nlinarith [mul_nonneg hℓ0 (sub_nonneg.2 h2V)]
-          _ = r := by rw [hℓ, Real.log_inv, neg_neg, Real.exp_log hr0]
+/-- Upper bound of eq:ball-volume for one sample: `μ_h(B_ε(z)) ≤ max(C₁ ε^{β⁺₀-ζ}, C₂ ε^{(1-ζ)(G₁+e)})`. -/
+theorem ballMass_upper_of_scaled
+    (hW : m.restrict {0}ᶜ = (m₀.withDensity fun x => ENNReal.ofReal (‖x‖ ^ e)).restrict {0}ᶜ)
+    (h0 : m {0} = 0) (hε : 0 < ε) (hε1 : ε < 1) (hζ1 : ζ < 1) (hR₁ : R ≤ R₁) (h1R₁ : 1 ≤ R₁)
+    (hT : βp₀ ≤ G + e) (hT₁ : 0 < (1 - ζ) * G + ζ * βp₀ - ζ + e)
+    (h2ε : 2 * ε ≤ ε ^ (1 - ζ)) (h2ε' : 2 * ε ^ (1 - ζ) ≤ 1)
+    (hF : ScaledBallBound m₀ G R₁ βp₀ βm₀ ζ ε)
+    (hFj : ∀ j : ℕ, (2 : ℝ)⁻¹ ^ j ≤ 4 * ε ^ (1 - ζ) → ScaledBallBound m₀ G R₁ βp₀ βm₀ ζ ((2 : ℝ)⁻¹ ^ j))
+    {z : ℂ} (hz : z ∈ ball (0 : ℂ) R) :
+    m (ball z ε) ≤ ENNReal.ofReal (max (2 ^ |e| * max 1 R ^ |e| * ε ^ (βp₀ - ζ))
+      (2 ^ |e| * 4 ^ ((1 - ζ) * G + ζ * βp₀ - ζ + e) /
+          (1 - (2 : ℝ)⁻¹ ^ ((1 - ζ) * G + ζ * βp₀ - ζ + e)) *
+        ε ^ ((1 - ζ) * ((1 - ζ) * G + ζ * βp₀ - ζ + e)))) := by
+  have hzR : ‖z‖ < R := mem_ball_zero_iff.1 hz
+  have hmeas : MeasurableSet (ball z ε) := measurableSet_ball
+  have hερ : 0 < ε ^ (1 - ζ) := Real.rpow_pos_of_pos hε _
+  rcases le_or_gt (ε ^ (1 - ζ)) ‖z‖ with hs | hs
+  · -- `|z| ≥ ε^{1-ζ}`: comparison of the weight with `|z|^e`
+    refine le_trans ?_ (ENNReal.ofReal_le_ofReal (le_max_left _ _))
+    set s := ‖z‖ with hs_def
+    have hs0 : 0 < s := hερ.trans_le hs
+    have hweight : ∀ x ∈ ball z ε, x ≠ 0 → ‖x‖ ^ e ≤ 2 ^ |e| * s ^ e := by
+      intro x hx _
+      rw [mem_ball, dist_eq_norm] at hx
+      have h1 := norm_sub_norm_le x z
+      have h2 := norm_sub_norm_le z x
+      rw [norm_sub_rev] at h2
+      exact rpow_le_two_rpow_abs_mul hs0 (by linarith) (by linarith)
+    set t := min s 1 with ht_def
+    have ht1 : t ≤ 1 := min_le_right _ _
+    have hεt : ε ^ (1 - ζ) ≤ t := le_min hs (Real.rpow_le_one hε.le hε1.le (by linarith))
+    have hzt : z ∈ closedBall (0 : ℂ) (R₁ * t) := by
+      rw [mem_closedBall_zero_iff, ← hs_def]
+      rcases le_total s 1 with h | h
+      · rw [ht_def, min_eq_left h]; nlinarith
+      · rw [ht_def, min_eq_right h, mul_one]; linarith
+    have hm₀ := (hF t hεt ht1 z hzt).2
+    calc m (ball z ε) ≤ ENNReal.ofReal (2 ^ |e| * s ^ e) * m₀ (ball z ε) :=
+          measure_le_of_rpow_norm_le hW h0 hmeas hweight
+      _ ≤ ENNReal.ofReal (2 ^ |e| * s ^ e) * ENNReal.ofReal (t ^ G * (ε / t) ^ βp₀ * ε ^ (-ζ)) :=
+          mul_le_mul_right hm₀ _
+      _ = ENNReal.ofReal (2 ^ |e| * s ^ e * (t ^ G * (ε / t) ^ βp₀ * ε ^ (-ζ))) :=
+          (ENNReal.ofReal_mul (by positivity)).symm
+      _ ≤ _ := by
+          refine ENNReal.ofReal_le_ofReal ?_
+          rw [mul_assoc (2 ^ |e|) (s ^ e), mul_assoc (2 ^ |e|) (max 1 R ^ |e|)]
+          refine mul_le_mul_of_nonneg_left ?_ (by positivity)
+          rcases le_total s 1 with h | h
+          · rw [ht_def, min_eq_left h, rpow_mul_div_rpow_eq hs0 hε, ← sub_eq_add_neg]
+            calc s ^ (e + G - βp₀) * ε ^ (βp₀ - ζ) ≤ 1 * ε ^ (βp₀ - ζ) := by
+                  gcongr; exact Real.rpow_le_one hs0.le h (by linarith)
+              _ ≤ max 1 R ^ |e| * ε ^ (βp₀ - ζ) := by
+                  gcongr; exact Real.one_le_rpow (le_max_left _ _) (abs_nonneg _)
+          · rw [ht_def, min_eq_right h, Real.one_rpow, div_one, one_mul, ← Real.rpow_add hε,
+              ← sub_eq_add_neg]
+            gcongr
+            calc s ^ e ≤ s ^ |e| := Real.rpow_le_rpow_of_exponent_le h (le_abs_self e)
+              _ ≤ max 1 R ^ |e| :=
+                  Real.rpow_le_rpow hs0.le (hzR.le.trans (le_max_right _ _)) (abs_nonneg _)
+  · -- `|z| < ε^{1-ζ}`: the shells around the origin
+    refine le_trans ?_ (ENNReal.ofReal_le_ofReal (le_max_right _ _))
+    set G₁ := (1 - ζ) * G + ζ * βp₀ - ζ with hG₁
+    have hρ0 : 0 < 2 * ε ^ (1 - ζ) := by positivity
+    obtain ⟨j₀, hj₀1, hj₀2⟩ :=
+      exists_nat_pow_near_of_lt_one hρ0 h2ε' (by norm_num : (0 : ℝ) < 2⁻¹) (by norm_num)
+    have hj₀4 : (2 : ℝ)⁻¹ ^ j₀ ≤ 4 * ε ^ (1 - ζ) := by
+      have : (2 : ℝ)⁻¹ ^ j₀ = 2 * (2 : ℝ)⁻¹ ^ (j₀ + 1) := by rw [pow_succ]; ring
+      rw [this]; linarith
+    have hεle : ε ≤ ε ^ (1 - ζ) := by linarith
+    have hsub : ball z ε ⊆ ball (0 : ℂ) ((2 : ℝ)⁻¹ ^ j₀) := by
+      intro x hx
+      rw [mem_ball, dist_eq_norm] at hx
+      rw [mem_ball_zero_iff]
+      have h1 := norm_sub_norm_le x z
       linarith
-    obtain ⟨r₁, hr₁, h'⟩ := exists_pos_of_eventually_nhdsGT_lp hev
-    exact ⟨1, one_pos, 2, r₁, hr₁, h'⟩
-  -- the bound of Ding-Gwynne at the scales `ε = ((2R)⁻¹ r)^{β}`
-  have hl := polyHighProb_comp_mul_lp (polyHighProb_comp_rpow_lp hDG hβm') (c := (2 * R)⁻¹) (by positivity)
-  have hu := polyHighProb_comp_mul_lp (polyHighProb_comp_rpow_lp hDG hβp') (c := (2 * R)⁻¹) (by positivity)
-  set K₁ := (2 * R) ^ (γ * lqgQ γ) * ((2 * R) ^ βm')⁻¹ with hK₁
-  set K₂ := (2 * R) ^ (γ * lqgQ γ) * ((2 * R) ^ βp')⁻¹ with hK₂
-  refine polyHighProb_mono_of_eventually_lp (polyHighProb_inter_lp (polyHighProb_inter_lp hl hu) hGY) ?_
-  filter_upwards [Ioo_mem_nhdsGT one_pos,
-    eventually_rpow_le_mul_lp (c := K₁) (by positivity) (a := γ * c₀ + βm') (b := βm) (by linarith),
-    eventually_mul_rpow_le_lp K₂ (a := βp' - γ * c₀) (b := βp) (by linarith)] with r hr hK₁r hK₂r
-  obtain ⟨hr0, hr1⟩ := hr
-  rintro ω ⟨⟨⟨hlow, -⟩, ⟨-, hup⟩⟩, hYω⟩ w hw
-  obtain ⟨z, hz, hzw⟩ := exists_square_preimage hR hw
-  have hρ0 : 0 < (2 * R)⁻¹ * r := by positivity
-  have hρl : (((2 * R)⁻¹ * r) ^ βm') ^ (1 / βm') = (2 * R)⁻¹ * r := by
-    rw [← Real.rpow_mul hρ0.le, mul_one_div_cancel hβm'.ne', Real.rpow_one]
-  have hρu : (((2 * R)⁻¹ * r) ^ βp') ^ (1 / βp') = (2 * R)⁻¹ * r := by
-    rw [← Real.rpow_mul hρ0.le, mul_one_div_cancel hβp'.ne', Real.rpow_one]
-  have hball : affineMeasure γ hcirc μ (squareA R) (squareB R) ω (ball z ((2 * R)⁻¹ * r)) =
-      ENNReal.ofReal (Real.exp (γ * (-(Y ω + lqgQ γ * Real.log ‖squareA R‖)))) * μ ω (ball w r) := by
-    have hrad : ‖squareA R‖ * ((2 * R)⁻¹ * r) = r := by
-      rw [han, mul_inv_cancel_left₀ (by positivity : (2 * R) ≠ 0)]
-    rw [affineMeasure_ball _ _ _ ha, hzw, hrad]
-  have hl' := hlow z hz
-  rw [hρl, hball] at hl'
-  have hu' := hup z hz
-  rw [hρu, hball] at hu'
-  set E1 := ENNReal.ofReal (Real.exp (γ * (-(Y ω + lqgQ γ * Real.log ‖squareA R‖)))) with hE1
-  set F := ENNReal.ofReal (Real.exp (γ * (Y ω + lqgQ γ * Real.log ‖squareA R‖))) with hF
-  have hFE : F * E1 = 1 := by
-    rw [hF, hE1, ← ENNReal.ofReal_mul (Real.exp_pos _).le, ← Real.exp_add]
-    rw [show γ * (Y ω + lqgQ γ * Real.log ‖squareA R‖) + γ * (-(Y ω + lqgQ γ * Real.log ‖squareA R‖)) = 0
-      by ring, Real.exp_zero, ENNReal.ofReal_one]
-  have hYb := abs_lt.1 (show |Y ω| < c₀ * Real.log r⁻¹ from hYω)
-  have hlogr : Real.log r = -Real.log r⁻¹ := by rw [Real.log_inv, neg_neg]
-  have hexpY1 : r ^ (γ * c₀) ≤ Real.exp (γ * Y ω) := by
-    rw [Real.rpow_def_of_pos hr0]
-    apply Real.exp_le_exp.2
-    have := mul_lt_mul_of_pos_left hYb.1 hγ
-    rw [hlogr]; linarith
-  have hexpY2 : Real.exp (γ * Y ω) ≤ r ^ (-(γ * c₀)) := by
-    rw [Real.rpow_def_of_pos hr0]
-    apply Real.exp_le_exp.2
-    have := mul_lt_mul_of_pos_left hYb.2 hγ
-    rw [hlogr]; linarith
-  have hFval : Real.exp (γ * (Y ω + lqgQ γ * Real.log ‖squareA R‖)) =
-      Real.exp (γ * Y ω) * (2 * R) ^ (γ * lqgQ γ) := by
-    rw [han, mul_add, Real.exp_add, Real.rpow_def_of_pos (by positivity)]
-    ring_nf
-  have hρm : ((2 * R)⁻¹ * r) ^ βm' = ((2 * R) ^ βm')⁻¹ * r ^ βm' := by
-    rw [Real.mul_rpow (by positivity) hr0.le, Real.inv_rpow (by positivity)]
-  have hρp : ((2 * R)⁻¹ * r) ^ βp' = ((2 * R) ^ βp')⁻¹ * r ^ βp' := by
-    rw [Real.mul_rpow (by positivity) hr0.le, Real.inv_rpow (by positivity)]
-  constructor
-  · calc ENNReal.ofReal (r ^ βm) ≤ F * ENNReal.ofReal (((2 * R)⁻¹ * r) ^ βm') := by
-          rw [hF, ← ENNReal.ofReal_mul (Real.exp_pos _).le]
-          apply ENNReal.ofReal_le_ofReal
-          rw [hFval, hρm]
-          calc r ^ βm ≤ K₁ * r ^ (γ * c₀ + βm') := hK₁r
-            _ = r ^ (γ * c₀) * (2 * R) ^ (γ * lqgQ γ) * (((2 * R) ^ βm')⁻¹ * r ^ βm') := by
-                rw [Real.rpow_add hr0, hK₁]; ring
-            _ ≤ Real.exp (γ * Y ω) * (2 * R) ^ (γ * lqgQ γ) * (((2 * R) ^ βm')⁻¹ * r ^ βm') := by
+    have hball : ∀ j : ℕ, j₀ ≤ j →
+        m₀ (ball 0 ((2 : ℝ)⁻¹ ^ j)) ≤ ENNReal.ofReal (1 * ((2 : ℝ)⁻¹ ^ j) ^ G₁) := by
+      intro j hj
+      have hδ0 : 0 < (2 : ℝ)⁻¹ ^ j := by positivity
+      have hδ1 : (2 : ℝ)⁻¹ ^ j ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+      have hδj : (2 : ℝ)⁻¹ ^ j ≤ 4 * ε ^ (1 - ζ) :=
+        (pow_le_pow_of_le_one (by norm_num) (by norm_num) hj).trans hj₀4
+      have h := (hFj j hδj (((2 : ℝ)⁻¹ ^ j) ^ (1 - ζ)) le_rfl
+        (Real.rpow_le_one hδ0.le hδ1 (by linarith)) 0
+        (by rw [mem_closedBall_zero_iff, norm_zero]; positivity)).2
+      rw [scaled_rpow_eq hδ0] at h
+      rw [one_mul, hG₁]
+      convert h using 3
+    calc m (ball z ε) ≤ m (ball 0 ((2 : ℝ)⁻¹ ^ j₀)) := measure_mono hsub
+      _ ≤ ENNReal.ofReal (2 ^ |e| * 1 * ((2 : ℝ)⁻¹ ^ (G₁ + e)) ^ j₀ / (1 - (2 : ℝ)⁻¹ ^ (G₁ + e))) :=
+          measure_ball_zero_le_of_dyadic hW h0 zero_le_one hT₁ hball
+      _ ≤ _ := by
+          refine ENNReal.ofReal_le_ofReal ?_
+          have hq1 : (2 : ℝ)⁻¹ ^ (G₁ + e) < 1 := Real.rpow_lt_one (by norm_num) (by norm_num) hT₁
+          have hpow : ((2 : ℝ)⁻¹ ^ (G₁ + e)) ^ j₀ ≤ 4 ^ (G₁ + e) * ε ^ ((1 - ζ) * (G₁ + e)) := by
+            rw [Real.rpow_pow_comm (by norm_num), Real.rpow_mul hε.le,
+              ← Real.mul_rpow (by norm_num) hερ.le]
+            exact Real.rpow_le_rpow (by positivity) hj₀4 hT₁.le
+          have hinv : 0 ≤ (1 - (2 : ℝ)⁻¹ ^ (G₁ + e))⁻¹ := inv_nonneg.2 (by linarith)
+          rw [mul_one, div_eq_mul_inv, div_eq_mul_inv]
+          calc 2 ^ |e| * ((2 : ℝ)⁻¹ ^ (G₁ + e)) ^ j₀ * (1 - (2 : ℝ)⁻¹ ^ (G₁ + e))⁻¹
+              ≤ 2 ^ |e| * (4 ^ (G₁ + e) * ε ^ ((1 - ζ) * (G₁ + e))) * (1 - (2 : ℝ)⁻¹ ^ (G₁ + e))⁻¹ := by
                 gcongr
-      _ ≤ F * (E1 * μ ω (ball w r)) := by gcongr
-      _ = μ ω (ball w r) := by rw [← mul_assoc, hFE, one_mul]
-  · calc μ ω (ball w r) = F * (E1 * μ ω (ball w r)) := by rw [← mul_assoc, hFE, one_mul]
-      _ ≤ F * ENNReal.ofReal (((2 * R)⁻¹ * r) ^ βp') := by gcongr
-      _ = ENNReal.ofReal (Real.exp (γ * (Y ω + lqgQ γ * Real.log ‖squareA R‖)) *
-            ((2 * R)⁻¹ * r) ^ βp') := by rw [hF, ← ENNReal.ofReal_mul (Real.exp_pos _).le]
-      _ ≤ ENNReal.ofReal (r ^ βp) := by
-          apply ENNReal.ofReal_le_ofReal
-          rw [hFval, hρp]
-          calc Real.exp (γ * Y ω) * (2 * R) ^ (γ * lqgQ γ) * (((2 * R) ^ βp')⁻¹ * r ^ βp')
-              ≤ r ^ (-(γ * c₀)) * (2 * R) ^ (γ * lqgQ γ) * (((2 * R) ^ βp')⁻¹ * r ^ βp') := by gcongr
-            _ = K₂ * r ^ (βp' - γ * c₀) := by
-                rw [sub_eq_add_neg, Real.rpow_add hr0, hK₂]; ring
-            _ ≤ r ^ βp := hK₂r
+            _ = _ := by ring
+
+/-- Lower bound of eq:ball-volume for one sample:
+`μ_h(B_ε(z)) ≥ min(c₁ ε^{β⁻₀+ζ}, (ε/4)^{max(e,0) + (1-ζ)G + ζβ⁻₀ + ζ})`. -/
+theorem ballMass_lower_of_scaled
+    (hW : m.restrict {0}ᶜ = (m₀.withDensity fun x => ENNReal.ofReal (‖x‖ ^ e)).restrict {0}ᶜ)
+    (hε : 0 < ε) (hε1 : ε < 1) (hζ0 : 0 ≤ ζ) (hζ1 : ζ < 1) (hR₁ : R ≤ R₁) (h8R₁ : 8 ≤ R₁)
+    (hT : G + e ≤ βm₀) (h2ε : 2 * ε ≤ ε ^ (1 - ζ)) (h2ε' : 2 * ε ^ (1 - ζ) ≤ 1)
+    (hF : ScaledBallBound m₀ G R₁ βp₀ βm₀ ζ ε) (hF4 : ScaledBallBound m₀ G R₁ βp₀ βm₀ ζ (ε / 4))
+    {z : ℂ} (hz : z ∈ ball (0 : ℂ) R) :
+    ENNReal.ofReal (min ((2 ^ |e|)⁻¹ * (max 1 R ^ |e|)⁻¹ * ε ^ (βm₀ + ζ))
+      ((ε / 4) ^ (max e 0 + ((1 - ζ) * G + ζ * βm₀ + ζ)))) ≤ m (ball z ε) := by
+  have hzR : ‖z‖ < R := mem_ball_zero_iff.1 hz
+  have hερ : 0 < ε ^ (1 - ζ) := Real.rpow_pos_of_pos hε _
+  rcases le_or_gt (ε ^ (1 - ζ)) ‖z‖ with hs | hs
+  · -- `|z| ≥ ε^{1-ζ}`
+    refine le_trans (ENNReal.ofReal_le_ofReal (min_le_left _ _)) ?_
+    set s := ‖z‖ with hs_def
+    have hs0 : 0 < s := hερ.trans_le hs
+    have hweight : ∀ x ∈ ball z ε, (2 ^ |e|)⁻¹ * s ^ e ≤ ‖x‖ ^ e := by
+      intro x hx
+      rw [mem_ball, dist_eq_norm] at hx
+      have h1 := norm_sub_norm_le x z
+      have h2 := norm_sub_norm_le z x
+      rw [norm_sub_rev] at h2
+      have hx0 : 0 < ‖x‖ := by linarith
+      rw [inv_mul_le_iff₀ (by positivity)]
+      exact rpow_le_two_rpow_abs_mul hx0 (by linarith) (by linarith)
+    have h0A : (0 : ℂ) ∉ ball z ε := by
+      rw [mem_ball, dist_comm, dist_zero_right, not_lt, ← hs_def]; linarith
+    set t := min s 1 with ht_def
+    have ht1 : t ≤ 1 := min_le_right _ _
+    have hεt : ε ^ (1 - ζ) ≤ t := le_min hs (Real.rpow_le_one hε.le hε1.le (by linarith))
+    have hzt : z ∈ closedBall (0 : ℂ) (R₁ * t) := by
+      rw [mem_closedBall_zero_iff, ← hs_def]
+      rcases le_total s 1 with h | h
+      · rw [ht_def, min_eq_left h]; nlinarith
+      · rw [ht_def, min_eq_right h, mul_one]; linarith
+    have hm₀ := (hF t hεt ht1 z hzt).1
+    calc ENNReal.ofReal ((2 ^ |e|)⁻¹ * (max 1 R ^ |e|)⁻¹ * ε ^ (βm₀ + ζ))
+        ≤ ENNReal.ofReal ((2 ^ |e|)⁻¹ * s ^ e * (t ^ G * (ε / t) ^ βm₀ * ε ^ ζ)) := by
+          refine ENNReal.ofReal_le_ofReal ?_
+          rw [mul_assoc ((2 : ℝ) ^ |e|)⁻¹ (max 1 R ^ |e|)⁻¹, mul_assoc ((2 : ℝ) ^ |e|)⁻¹ (s ^ e)]
+          refine mul_le_mul_of_nonneg_left ?_ (by positivity)
+          rcases le_total s 1 with h | h
+          · rw [ht_def, min_eq_left h, rpow_mul_div_rpow_eq hs0 hε]
+            calc (max 1 R ^ |e|)⁻¹ * ε ^ (βm₀ + ζ) ≤ 1 * ε ^ (βm₀ + ζ) := by
+                  gcongr
+                  exact inv_le_one_of_one_le₀ (Real.one_le_rpow (le_max_left _ _) (abs_nonneg _))
+              _ ≤ s ^ (e + G - βm₀) * ε ^ (βm₀ + ζ) := by
+                  gcongr; exact Real.one_le_rpow_of_pos_of_le_one_of_nonpos hs0 h (by linarith)
+          · rw [ht_def, min_eq_right h, Real.one_rpow, div_one, one_mul, ← Real.rpow_add hε]
+            gcongr
+            calc (max 1 R ^ |e|)⁻¹ = max 1 R ^ (-|e|) :=
+                  (Real.rpow_neg (by positivity) _).symm
+              _ ≤ s ^ (-|e|) := Real.rpow_le_rpow_of_nonpos hs0 (hzR.le.trans (le_max_right _ _))
+                  (neg_nonpos.2 (abs_nonneg e))
+              _ ≤ s ^ e := Real.rpow_le_rpow_of_exponent_le h (neg_abs_le e)
+      _ = ENNReal.ofReal ((2 ^ |e|)⁻¹ * s ^ e) * ENNReal.ofReal (t ^ G * (ε / t) ^ βm₀ * ε ^ ζ) :=
+          ENNReal.ofReal_mul (by positivity)
+      _ ≤ ENNReal.ofReal ((2 ^ |e|)⁻¹ * s ^ e) * m₀ (ball z ε) := mul_le_mul_right hm₀ _
+      _ ≤ m (ball z ε) := le_measure_of_le_rpow_norm hW measurableSet_ball h0A hweight
+  · -- `|z| < ε^{1-ζ}`: a ball of radius `ε/4` away from the origin
+    refine le_trans (ENNReal.ofReal_le_ofReal (min_le_right _ _)) ?_
+    obtain ⟨w, hwz, hw1, hw2⟩ := exists_away_from_zero z hε
+    have hδ0 : 0 < ε / 4 := by positivity
+    have hδ1 : ε / 4 ≤ 1 := by linarith
+    have hsub : ball w (ε / 4) ⊆ ball z ε := by
+      intro x hx; rw [mem_ball] at hx ⊢; linarith [dist_triangle x w z]
+    have h0A : (0 : ℂ) ∉ ball w (ε / 4) := by
+      rw [mem_ball, dist_comm, dist_zero_right, not_lt]; linarith
+    have hweight : ∀ x ∈ ball w (ε / 4), (ε / 4) ^ max e 0 ≤ ‖x‖ ^ e := by
+      intro x hx
+      rw [mem_ball, dist_eq_norm] at hx
+      have h1 := norm_sub_norm_le x w
+      have h2 := norm_sub_norm_le w x
+      rw [norm_sub_rev] at h2
+      have hxl : ε / 4 ≤ ‖x‖ := by linarith
+      have hxu : ‖x‖ ≤ 1 := by linarith
+      rcases le_total 0 e with he | he
+      · rw [max_eq_left he]; exact Real.rpow_le_rpow hδ0.le hxl he
+      · rw [max_eq_right he, Real.rpow_zero]
+        exact Real.one_le_rpow_of_pos_of_le_one_of_nonpos (by linarith) hxu he
+    have hδρ : ε ^ (1 - ζ) ≤ 4 * (ε / 4) ^ (1 - ζ) := by
+      have h4 : ε ^ (1 - ζ) = 4 ^ (1 - ζ) * (ε / 4) ^ (1 - ζ) := by
+        rw [← Real.mul_rpow (by norm_num) hδ0.le]; congr 1; ring
+      rw [h4]
+      gcongr
+      calc (4 : ℝ) ^ (1 - ζ) ≤ 4 ^ (1 : ℝ) :=
+            Real.rpow_le_rpow_of_exponent_le (by norm_num) (by linarith)
+        _ = 4 := Real.rpow_one 4
+    have hwt : w ∈ closedBall (0 : ℂ) (R₁ * (ε / 4) ^ (1 - ζ)) := by
+      rw [mem_closedBall_zero_iff]
+      have : 0 ≤ (ε / 4) ^ (1 - ζ) := (Real.rpow_pos_of_pos hδ0 _).le
+      nlinarith
+    have hm₀ := (hF4 ((ε / 4) ^ (1 - ζ)) le_rfl (Real.rpow_le_one hδ0.le hδ1 (by linarith)) w hwt).1
+    rw [scaled_rpow_eq hδ0] at hm₀
+    calc ENNReal.ofReal ((ε / 4) ^ (max e 0 + ((1 - ζ) * G + ζ * βm₀ + ζ)))
+        = ENNReal.ofReal ((ε / 4) ^ max e 0) *
+            ENNReal.ofReal ((ε / 4) ^ ((1 - ζ) * G + ζ * βm₀ + ζ)) := by
+          rw [← ENNReal.ofReal_mul (by positivity), Real.rpow_add hδ0]
+      _ ≤ ENNReal.ofReal ((ε / 4) ^ max e 0) * m₀ (ball w (ε / 4)) := mul_le_mul_right hm₀ _
+      _ ≤ m (ball w (ε / 4)) := le_measure_of_le_rpow_norm hW measurableSet_ball h0A hweight
+      _ ≤ m (ball z ε) := measure_mono hsub
 
 end LatticeProb.LQG
