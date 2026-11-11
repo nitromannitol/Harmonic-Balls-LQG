@@ -7,8 +7,7 @@ Lemma 4.2 (odometer:cont, line 721) asks for one random constant `C` with `|v^z_
 for all `t > 0` and `z ∈ B_1`. The proof (lines 730-733) writes `v^z_t` as minus the `G_{B_1}`-potential of
 `μ_h|_Λ + ν|_{∂Λ}`, a measure with density in `[0,1]` with respect to `μ_h` (Lemma 3.2), and applies
 Proposition 2.5. As printed (and as `GreenPotentialLiouvilleHolderStmt`, Draft/Section2.lean), Proposition 2.5 gives
-a Hölder constant for each `f` separately, which does not give a constant uniform in `t` and `z`
-(docs/campaign/GRAPH.md G4). The proof of Proposition 2.5 gives more: a Hölder seminorm `≤ C ‖f‖_∞` with `C`
+a Hölder constant for each `f` separately, which does not give a constant uniform in `t` and `z`. The proof of Proposition 2.5 gives more: a Hölder seminorm `≤ C ‖f‖_∞` with `C`
 depending on `μ` only. This file states that quantitative form for `O = B_R` as the step `GreenPotentialBallHolderStep`.
 
 The step is discharged in Lean: its body is verbatim `VolumeGrowth.greenPotential_ball_holder`

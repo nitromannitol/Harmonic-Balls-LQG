@@ -28,8 +28,8 @@ term; GRAPH S1), `v^z_t > -t G_{B_1}(z,·)` near `z`, i.e. `B_ε(z) ⊆ Λ^z_t`.
   (`log_div_le_greenFunction`), and `G_{B_1}(z,·) ≥ c > 0` on `B_{1-δ}(z) \ {z}` for `δ > |z|`
   (`exists_pos_le_greenFunction_ball`: Proposition 2.3 and compactness). Then `t G_{B_1}(z,x) > M ≥ q_1(x) ≥ -v(x)`
   for `x` in `B_ε(z)`, resp. in `B_{1-δ}(z)` when `t ≥ t(δ) = (M+1)/c`.
-* **Last claim, gap G3** (`closure_cluster_inter_sphere_nonempty`). The equality case of Lemma 3.4 needs
-  `μ_h(∂Λ^z_t) = 0`, which is not available (docs/campaign/GRAPH.md G3). The claim follows instead from the mass
+* **Last claim** (`closure_cluster_inter_sphere_nonempty`). The equality case of Lemma 3.4 needs
+  `μ_h(∂Λ^z_t) = 0`, which is not available. The claim follows instead from the mass
   identity `μ_h(Λ) + ν(∂Λ) = t` for `closure Λ ⊆ B_1`, which is the equality case of Lemma A.5, Step 3
   (`ObstacleConservationOfMassStep3`: `σ(B_R) = t` when `v` vanishes off a compact subset of `B_R`; no condition
   on `∂Λ`), applied to the odometer with the measure `σ = μ_h|_Λ + ν|_{∂Λ}` of Lemma 3.2. Since `ν ≤ μ_h` on `B_1`

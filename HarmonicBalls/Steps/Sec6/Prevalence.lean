@@ -5,8 +5,8 @@ import HarmonicBalls.Draft.Section6
 
 The printed proofs of Lemmas 6.3 (lines 1278-1290 of paper/lqg_harmonic_ball-corrected.tex) and 6.6 (lines
 1370-1385) give constants depending on `α₀`, since they apply Lemmas 6.4 and 6.7 at every scale, whose constants
-genuinely depend on `α₀` (corrections [C25], [C26]; docs/campaign/cex/AlphaUniformity.md §2, §5). The printed
-`α₀`-uniform statements (operator E31) follow by localization (AlphaUniformity.md §6): the deterministic steps
+genuinely depend on `α₀`. The printed
+`α₀`-uniform statements follow by localization: the deterministic steps
 S-Flat and S-Transfer are proved in `HarmonicBalls/Proofs/Sec6/Localization.lean`, and the `α₀`-uniform Lemmas 6.3,
 6.6 are derived from the two steps below in `HarmonicBalls/Proofs/Sec6/Prevalence.lean`.
 
