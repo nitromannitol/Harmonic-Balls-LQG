@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs21
 import HarmonicBalls.FirstPass.Phase2.WeylShiftedSupDerived2
 
 /-!
-# Row 28 binder trade (DerivedInputs22; task fp-lpstage-cameron-martin-resume, worker z7)
+# Row 28 binder trade
 
 Each wrapper `..._derivedInputs22` is the wrapper `..._derivedInputs21` with its binder
 `hM1 : WeylShiftedSupMeasurableFrozen` removed. The binder is discharged by
@@ -19,7 +19,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-trade wrapper `closure_11_16_derivedInputs22` (row 28): the binder `hM1` of `closure_11_16_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_16_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_16_derivedInputs22`: the binder `hM1` of `closure_11_16_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_16_derivedInputs21`. -/
 theorem closure_11_16_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
@@ -64,7 +64,7 @@ theorem closure_11_16_derivedInputs22
     hFA
     hMk
 
-/-- Binder-trade wrapper `closure_11_17_derivedInputs22` (row 28): the binder `hM1` of `closure_11_17_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_17_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_17_derivedInputs22`: the binder `hM1` of `closure_11_17_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_17_derivedInputs21`. -/
 theorem closure_11_17_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
@@ -109,7 +109,7 @@ theorem closure_11_17_derivedInputs22
     hFA
     hMk
 
-/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs22` (row 28): the binder `hM1` of `closure_11_11_canonical_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_canonical_of_11_13_universe0_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs22`: the binder `hM1` of `closure_11_11_canonical_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_canonical_of_11_13_universe0_derivedInputs21`. -/
 theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs22
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -169,7 +169,7 @@ theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs22
     hA10
     hK
 
-/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22` (row 28): the binder `hM1` of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22`: the binder `hM1` of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs21`. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -231,7 +231,7 @@ theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22
     hA10
     hK
 
-/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs22` (row 28): the binder `hM1` of `closure_1_2_canonical_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_canonical_of_11_13_universe0_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs22`: the binder `hM1` of `closure_1_2_canonical_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_canonical_of_11_13_universe0_derivedInputs21`. -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs22
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -299,7 +299,7 @@ theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs22
     hA10
     hK
 
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs22` (row 28): the binder `hM1` of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs22`: the binder `hM1` of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs21`. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs22
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -367,7 +367,7 @@ theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs22
     hA10
     hK
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs22` (row 28): the binder `hM1` of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs22`: the binder `hM1` of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs21`. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs22
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -437,7 +437,7 @@ theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs22
     hA10
     hK
 
-/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs22` (row 28): the binder `hM1` of `firstPass_11_11_faithful_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_11_faithful_universe0_derivedInputs21`. -/
+/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs22`: the binder `hM1` of `firstPass_11_11_faithful_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_11_faithful_universe0_derivedInputs21`. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs22
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -501,7 +501,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 
-/-- Binder-trade wrapper `firstPass_11_13_closed_derivedInputs22` (row 28): the binder `hM1` of `firstPass_11_13_closed_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_closed_derivedInputs21`. -/
+/-- Binder-trade wrapper `firstPass_11_13_closed_derivedInputs22`: the binder `hM1` of `firstPass_11_13_closed_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_closed_derivedInputs21`. -/
 theorem firstPass_11_13_closed_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -561,7 +561,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13Close
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs22` (row 28): the binder `hM1` of `firstPass_1_2_faithful_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_1_2_faithful_universe0_derivedInputs21`. -/
+/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs22`: the binder `hM1` of `firstPass_1_2_faithful_universe0_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_1_2_faithful_universe0_derivedInputs21`. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs22
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -629,7 +629,7 @@ theorem firstPass_1_2_faithful_universe0_derivedInputs22
     hA10
     hK
 
-/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs22` (row 28): the binder `hM1` of `closure_11_11_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_canonical_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs22`: the binder `hM1` of `closure_11_11_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_canonical_derivedInputs21`. -/
 theorem closure_11_11_canonical_derivedInputs22
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -684,7 +684,7 @@ theorem closure_11_11_canonical_derivedInputs22
     (HarmonicBalls.weylShiftedSupMeasurable_derived hAx hComp hfr)
     hId
 
-/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs22` (row 28): the binder `hM1` of `closure_11_11_paperExponent_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_paperExponent_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs22`: the binder `hM1` of `closure_11_11_paperExponent_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_11_paperExponent_derivedInputs21`. -/
 theorem closure_11_11_paperExponent_derivedInputs22
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -741,7 +741,7 @@ theorem closure_11_11_paperExponent_derivedInputs22
     (HarmonicBalls.weylShiftedSupMeasurable_derived hAx hComp hfr)
     hId
 
-/-- Binder-trade wrapper `closure_11_12_derivedInputs22` (row 28): the binder `hM1` of `closure_11_12_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_12_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_12_derivedInputs22`: the binder `hM1` of `closure_11_12_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_12_derivedInputs21`. -/
 theorem closure_11_12_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -790,7 +790,7 @@ theorem closure_11_12_derivedInputs22
     hFin
     (HarmonicBalls.weylShiftedSupMeasurable_derived hAx hComp hfr)
 
-/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs22` (row 28): the binder `hM1` of `closure_11_12_clean_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_12_clean_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs22`: the binder `hM1` of `closure_11_12_clean_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_12_clean_derivedInputs21`. -/
 theorem closure_11_12_clean_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -839,7 +839,7 @@ theorem closure_11_12_clean_derivedInputs22
     hFin
     (HarmonicBalls.weylShiftedSupMeasurable_derived hAx hComp hfr)
 
-/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs22` (row 28): the binder `hM1` of `closure_11_13_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_13_canonical_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs22`: the binder `hM1` of `closure_11_13_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_13_canonical_derivedInputs21`. -/
 theorem closure_11_13_canonical_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -890,7 +890,7 @@ theorem closure_11_13_canonical_derivedInputs22
     (HarmonicBalls.weylShiftedSupMeasurable_derived hAx hComp hfr)
     hId
 
-/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs22` (row 28): the binder `hM1` of `closure_11_13_paperExponent_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_13_paperExponent_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs22`: the binder `hM1` of `closure_11_13_paperExponent_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_11_13_paperExponent_derivedInputs21`. -/
 theorem closure_11_13_paperExponent_derivedInputs22
     (_hDim : WholePlaneLQGGraphDimension)
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
@@ -943,7 +943,7 @@ theorem closure_11_13_paperExponent_derivedInputs22
     (HarmonicBalls.weylShiftedSupMeasurable_derived hAx hComp hfr)
     hId
 
-/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs22` (row 28): the binder `hM1` of `closure_1_2_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_canonical_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs22`: the binder `hM1` of `closure_1_2_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_canonical_derivedInputs21`. -/
 theorem closure_1_2_canonical_derivedInputs22
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -1004,7 +1004,7 @@ theorem closure_1_2_canonical_derivedInputs22
     hId
     hTor
 
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs22` (row 28): the binder `hM1` of `closure_1_2_faithful_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_faithful_canonical_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs22`: the binder `hM1` of `closure_1_2_faithful_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_faithful_canonical_derivedInputs21`. -/
 theorem closure_1_2_faithful_canonical_derivedInputs22
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -1065,7 +1065,7 @@ theorem closure_1_2_faithful_canonical_derivedInputs22
     hId
     hTor
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs22` (row 28): the binder `hM1` of `closure_1_2_paperExponent_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_paperExponent_derivedInputs21`. -/
+/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs22`: the binder `hM1` of `closure_1_2_paperExponent_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `closure_1_2_paperExponent_derivedInputs21`. -/
 theorem closure_1_2_paperExponent_derivedInputs22
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -1132,7 +1132,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-trade wrapper `firstPass_11_13_derivedInputs22` (row 28): the binder `hM1` of `firstPass_11_13_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_derivedInputs21`. -/
+/-- Binder-trade wrapper `firstPass_11_13_derivedInputs22`: the binder `hM1` of `firstPass_11_13_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_derivedInputs21`. -/
 theorem firstPass_11_13_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1196,7 +1196,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 
-/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs22` (row 28): the binder `hM1` of `firstPass_11_13_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_canonical_derivedInputs21`. -/
+/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs22`: the binder `hM1` of `firstPass_11_13_canonical_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_canonical_derivedInputs21`. -/
 theorem firstPass_11_13_canonical_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1251,7 +1251,7 @@ end HarmonicBalls.FirstPassS11iAssembly11_13
 
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs22` (row 28): the binder `hM1` of `firstPass_11_13_final_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_final_derivedInputs21`. -/
+/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs22`: the binder `hM1` of `firstPass_11_13_final_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_final_derivedInputs21`. -/
 theorem firstPass_11_13_final_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1303,7 +1303,7 @@ theorem firstPass_11_13_final_derivedInputs22
     hCal
     hIns
 
-/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs22` (row 28): the binder `hM1` of `firstPass_11_13_final_route1_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_final_route1_derivedInputs21`. -/
+/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs22`: the binder `hM1` of `firstPass_11_13_final_route1_derivedInputs21` is discharged by `HarmonicBalls.weylShiftedSupMeasurable_derived` (`Phase2/WeylShiftedSupDerived2.lean:124`); the three premises are already bound by `firstPass_11_13_final_route1_derivedInputs21`. -/
 theorem firstPass_11_13_final_route1_derivedInputs22
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,

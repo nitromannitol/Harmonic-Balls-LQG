@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11at.Producers
 import HarmonicBalls.Proofs.Sec6.ContinuousWeylCircleAverage
 
 /-!
-# Derivation of `LQGMassFunctionalMeasurableFrozen` (phase 2, worker z6)
+# Derivation of `LQGMassFunctionalMeasurableFrozen`
 
-Written argument: `notes/fp-gaps/CHATGPT-hb-distribution-frozen.md`, section 2. The decoder is built from a
+The decoder is built from a
 countable dense family of circle averages, read off the raw distribution through the explicit annular approximants
 `circleApprox` (`FirstPass/S11at/Producers.lean`). The envelope below replaces the Borel reconstruction of the
 continuous circle-average process; the vague limit is replaced by lower limits of integrals of compactly supported
@@ -695,8 +695,7 @@ theorem massDecoder_addFun_eq {q : ℕ → ℝ × ℂ} (hq : ∀ m, 0 < (q m).1)
   rw [setLIntegral_congr_fun hS.measurableSet (fun x hx => h1 x hx)]
   simp
 
-/-- **Derivation of `LQGMassFunctionalMeasurableFrozen`** (phase 2, worker z6). Written argument:
-`notes/fp-gaps/CHATGPT-hb-distribution-frozen.md` §2. Decoder: `massDecoder` built from countably many circle averages
+/-- **Derivation of `LQGMassFunctionalMeasurableFrozen`**. Decoder: `massDecoder` built from countably many circle averages
 (a dense sequence `q`), the envelope, the dyadic approximating measures, and Radon identities for open and closed sets.
 No hypothesis is added: the statement is the frozen def, as typed. -/
 theorem lqgMassFunctionalMeasurable_derived : LQGMassFunctionalMeasurableFrozen.{u} := by

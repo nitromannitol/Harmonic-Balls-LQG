@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs28
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs29
 
 /-!
-# Row 23 from rows 1, 2, 3 (DerivedInputs30; task fp-phase2-di30-row23-trade, worker z6)
+# Row 23 from rows 1, 2, 3
 
 `LQGMeasureSquarePositiveFrozen` (FirstPass/Frozen/S11c.lean:130) is row 23. Its LP route is
 `lqgMeasureSquarePositiveFrozen_of_lpStage` (FirstPass/LPBridge/LQGMeasureSquarePositive.lean:30), which takes the LP forms of
@@ -68,11 +68,11 @@ theorem lqgMeasureSquarePositiveFrozen_of_rows123
 end HarmonicBalls
 -- generated blocks
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_11_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:32)
+-- DI30: closure_11_11_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:32)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs28` of `closure_11_11_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs28` of `closure_11_11_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -108,11 +108,11 @@ theorem closure_11_11_canonical_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_11_canonical_of_11_13_universe0_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:67)
+-- DI30: closure_11_11_canonical_of_11_13_universe0_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:67)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs28` of `closure_11_11_canonical_of_11_13_universe0_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs28` of `closure_11_11_canonical_of_11_13_universe0_derivedInputs22`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -150,11 +150,11 @@ theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_11_paperExponent_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:104)
+-- DI30: closure_11_11_paperExponent_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:104)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs28` of `closure_11_11_paperExponent_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs28` of `closure_11_11_paperExponent_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -191,11 +191,11 @@ theorem closure_11_11_paperExponent_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_11_paperExponent_of_11_13_universe0_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:140)
+-- DI30: closure_11_11_paperExponent_of_11_13_universe0_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:140)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs28` of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs28` of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -234,11 +234,11 @@ theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_12_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:178)
+-- DI30: closure_11_12_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:178)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_12_derivedInputs28` of `closure_11_12_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_12_derivedInputs28` of `closure_11_12_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -271,11 +271,11 @@ theorem closure_11_12_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_12_clean_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:210)
+-- DI30: closure_11_12_clean_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:210)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs28` of `closure_11_12_clean_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs28` of `closure_11_12_clean_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -308,11 +308,11 @@ theorem closure_11_12_clean_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_13_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:242)
+-- DI30: closure_11_13_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:242)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs28` of `closure_11_13_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs28` of `closure_11_13_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -346,11 +346,11 @@ theorem closure_11_13_canonical_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_11_13_paperExponent_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:275)
+-- DI30: closure_11_13_paperExponent_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:275)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs28` of `closure_11_13_paperExponent_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs28` of `closure_11_13_paperExponent_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -385,11 +385,11 @@ theorem closure_11_13_paperExponent_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_1_2_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:376)
+-- DI30: closure_1_2_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:376)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs28` of `closure_1_2_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs28` of `closure_1_2_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -428,11 +428,11 @@ theorem closure_1_2_canonical_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_1_2_faithful_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:482)
+-- DI30: closure_1_2_faithful_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:482)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs28` of `closure_1_2_faithful_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs28` of `closure_1_2_faithful_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -471,11 +471,11 @@ theorem closure_1_2_faithful_canonical_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): closure_1_2_paperExponent_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:559)
+-- DI30: closure_1_2_paperExponent_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:559)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs28` of `closure_1_2_paperExponent_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs28` of `closure_1_2_paperExponent_derivedInputs22`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -515,11 +515,11 @@ theorem closure_1_2_paperExponent_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): firstPass_11_11_faithful_universe0_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:669)
+-- DI30: firstPass_11_11_faithful_universe0_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:669)
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs28` of `firstPass_11_11_faithful_universe0_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs28` of `firstPass_11_11_faithful_universe0_derivedInputs22`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -557,11 +557,11 @@ theorem firstPass_11_11_faithful_universe0_derivedInputs30
 
 end HarmonicBalls.Closure
 
--- DI30 (task fp-phase2-di30-row23-trade): firstPass_11_13_final_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:855)
+-- DI30: firstPass_11_13_final_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:855)
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs28` of `firstPass_11_13_final_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs28` of `firstPass_11_13_final_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -595,11 +595,11 @@ theorem firstPass_11_13_final_derivedInputs30
 
 end HarmonicBalls.FirstPassS11iFinal11_13
 
--- DI30 (task fp-phase2-di30-row23-trade): firstPass_11_13_final_route1_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:888)
+-- DI30: firstPass_11_13_final_route1_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:888)
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs28` of `firstPass_11_13_final_route1_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs28` of `firstPass_11_13_final_route1_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -634,11 +634,11 @@ theorem firstPass_11_13_final_route1_derivedInputs30
 
 end HarmonicBalls.FirstPassS11iFinal11_13
 
--- DI30 (task fp-phase2-di30-row23-trade): firstPass_11_13_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:929)
+-- DI30: firstPass_11_13_canonical_derivedInputs28 with hPos10 traded for rows 1-3 (source DerivedInputs28.lean:929)
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
-/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs28` of `firstPass_11_13_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs28` of `firstPass_11_13_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -672,12 +672,12 @@ theorem firstPass_11_13_canonical_derivedInputs30
 
 end HarmonicBalls.FirstPassS11iAssembly11_13
 
--- DI30 (task fp-phase2-di30-row23-trade): firstPass_11_13_closed_derivedInputs29 with hPos10 traded for rows 1-3 (source DerivedInputs29.lean:109)
+-- DI30: firstPass_11_13_closed_derivedInputs29 with hPos10 traded for rows 1-3 (source DerivedInputs29.lean:109)
 namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
-/-- Binder trade of `firstPass_11_13_closed_derivedInputs3` (DerivedInputs3.lean:165): the binders `hFull` (row 40) and
-`hgrowth` (row 50) are derived from `hDG`, `hCCα` (at `α₀ = 0`) and `hE`, which the wrapper already binds. Binder count 37 → 35. -/
+/-- Binder trade of `firstPass_11_13_closed_derivedInputs3` (DerivedInputs3.lean:165): the binders `hFull` and
+`hgrowth` are derived from `hDG`, `hCCα` (at `α₀ = 0`) and `hE`, which the wrapper already binds. Binder count 37 → 35. -/
 theorem firstPass_11_13_closed_derivedInputs30
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hLen : LQGMetricLengthUnivFrozen.{0})

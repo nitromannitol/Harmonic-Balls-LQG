@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs5
 
-/-! Binder-hygiene wrappers (fp-phase2-binder-hygiene, z6). The universe-0 counted forms listed here lose the
+/-! Binder-hygiene wrappers. The universe-0 counted forms listed here lose the
 binders hCC, hW, hN, which are derived from hCCα, hμW, hNonat by the proved lemmas of DerivedInputs4
 (`coordChange_of_alpha0`, `weylScaling_at_zero`, `nonatomic_reorder`). Originals are unchanged. -/
 
@@ -8,7 +8,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper of `closure_1_2_canonical_of_11_13_universe0` (fp-phase2-binder-hygiene): the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper of `closure_1_2_canonical_of_11_13_universe0`: the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs7
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -67,7 +67,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper of `closure_1_2_faithful_canonical_of_11_13_universe0` (fp-phase2-binder-hygiene): the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper of `closure_1_2_faithful_canonical_of_11_13_universe0`: the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs7
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -126,7 +126,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper of `firstPass_1_2_faithful_universe0` (fp-phase2-binder-hygiene): the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper of `firstPass_1_2_faithful_universe0`: the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs7
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -184,7 +184,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper of `closure_1_2_paperExponent_of_11_13_universe0` (fp-phase2-binder-hygiene): the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper of `closure_1_2_paperExponent_of_11_13_universe0`: the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs7
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -245,7 +245,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper of `closure_11_11_paperExponent_of_11_13_universe0` (fp-phase2-binder-hygiene): the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper of `closure_11_11_paperExponent_of_11_13_universe0`: the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs7
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -301,7 +301,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper of `closure_11_11_canonical_of_11_13_universe0` (fp-phase2-binder-hygiene): the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper of `closure_11_11_canonical_of_11_13_universe0`: the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
 theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs7
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -356,7 +356,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper of `firstPass_11_11_faithful_universe0` (fp-phase2-binder-hygiene): the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper of `firstPass_11_11_faithful_universe0`: the binders hCC, hW, hN are removed and supplied by `coordChange_of_alpha0 hCCα`, `weylScaling_at_zero hμW`, `nonatomic_reorder hNonat` (FirstPass/Phase2/DerivedInputs4.lean, proved at universe 0). The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs7
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)

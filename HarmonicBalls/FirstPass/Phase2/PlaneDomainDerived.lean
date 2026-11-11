@@ -6,7 +6,7 @@ import HarmonicBalls.LPStage.PlaneDomainConvexCompact
 `PlaneDomainMinusConvexCompactPreconnectedFrozen` (`FirstPass/Frozen/S11d.lean:26`) is derived from the general plane
 topology lemma `LatticeProb.Topology.isPreconnected_diff_of_convex_compact` (`LPStage/PlaneDomainConvexCompact.lean`):
 for open connected `V ⊆ ℂ` and compact convex `K ⊆ V`, the set `V \ K` is preconnected. No hypothesis is added. The
-frozen Prop itself is not edited (task fp-phase2-plane-domain-convex-derive, worker z3). -/
+frozen Prop itself is not edited. -/
 
 namespace HarmonicBalls
 

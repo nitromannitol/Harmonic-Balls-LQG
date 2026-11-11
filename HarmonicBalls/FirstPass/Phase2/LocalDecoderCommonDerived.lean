@@ -6,10 +6,10 @@ import HarmonicBalls.Steps.Sec11.PairingCovarianceLinearity
 import HarmonicBalls.Proofs.Sec6.ContinuousWeylCircleAverage
 
 /-!
-# Common local decoder, derived (task fp-phase2-b1-decoder-derive part (2), owner z4)
+# Common local decoder, derived
 
 Targets: `LocalMeasureKernelStmt` (`FirstPass/S11r/Frozen.lean:144`) and `LocalLQGDecoderCommonFrozen`
-(`FirstPass/Frozen/S11c.lean:388`). Route: MQ-lh-12 (`notes/fp-gaps/MATH-ANSWERS.md` lines 75-103).
+(`FirstPass/Frozen/S11c.lean:388`).
 
 Step 3 of the route (countable Borel coding of continuous functions on a Polish, locally compact space) is proved
 here for an arbitrary such space; the square and the profile domain `{(r,x) : closedBall x r ⊆ D}` are instances.
@@ -29,7 +29,7 @@ open FirstPassS11atProducers
 
 universe u
 
-/-- MQ-lh-12 step 3: a countable dense family of a Polish, locally compact space `X` and a measurable decoder
+/-- Step 3: a countable dense family of a Polish, locally compact space `X` and a measurable decoder
 recovering each continuous function `X → ℝ` from its values along the family (Borel embedding of `C(X, ℝ)` into
 `ℕ → ℝ`, with a measurable left inverse by `MeasurableEmbedding.exists_measurable_extend`). -/
 theorem exists_dense_decode_polish (X : Type*) [TopologicalSpace X] [PolishSpace X] [LocallyCompactSpace X]
@@ -328,7 +328,7 @@ theorem ae_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsP
   unfold localCoord
   exact hω.limUnder_eq
 
-/-- MQ-lh-12 step 3 for the local domain: a countable dense sequence `d` of `LocalParam c R` and a measurable
+/-- Step 3 for the local domain: a countable dense sequence `d` of `LocalParam c R` and a measurable
 decoder `decode` with `decode (n ↦ f (d n)) = f` for every continuous `f` on `LocalParam c R`. -/
 theorem exists_localDecoder (c : ℂ) {R : ℝ} (hR : 0 < R) :
     ∃ d : ℕ → LocalParam c R, ∃ decode : (ℕ → ℝ) → C(LocalParam c R, ℝ), Measurable decode ∧
@@ -337,7 +337,7 @@ theorem exists_localDecoder (c : ℂ) {R : ℝ} (hR : 0 < R) :
   obtain ⟨d, -, decode, hm, hdec⟩ := exists_dense_decode_polish (LocalParam c R)
   exact ⟨d, decode, hm, hdec⟩
 
-/-- MQ-lh-12 step 4: almost surely the decoded local profile of the mean-zero observation is the continuous
+/-- Step 4: almost surely the decoded local profile of the mean-zero observation is the continuous
 function `p ↦ h^ℂ_{r}(x) - α log max(r,|x|) - (h, ρ)` on `LocalParam c R` (the centred circle profile). -/
 theorem ae_decode_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
@@ -373,7 +373,7 @@ theorem ae_decode_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure �
     funext fun n => hωn n
   rw [hfun, hdec]
 
-/-! ### Generic countable determination on a locally compact metric space (MQ-lh-12 step 6)
+/-! ### Generic countable determination on a locally compact metric space
 
 Ported from `ProfileDecoderDerived` (`TestFamily`, `exists_testFamily`) with `ℂ` replaced by a locally compact
 metric space `X` and the balls `closedBall 0 n` replaced by a compact exhaustion `K`. Applied to `X = ↥(ball c R)`. -/
@@ -755,7 +755,7 @@ end Decoder
 
 end Vague
 
-/-! ### Dyadic approximants on the disc `X = ball c R` (MQ-lh-12 step 5, route (b)-(c))
+/-! ### Dyadic approximants on the disc `X = ball c R`
 
 The density `ε^{γ²/2} e^{γ F(ε,z)}` at scale `ε = 2^{-k}` is read on the projected point `projBall`
 (the radial retraction onto `closedBall c (R - 2ε)`), so it is a continuous function of `(F, z)` and bounded on
@@ -1559,7 +1559,7 @@ theorem clauseA_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsPro
     hR (rootedHc γ z (hcirc ω)) hcont' (μz ω) hμω hKs T
     (fun y => decode (fun n => localCoord c hR (d n) y)) ((campbellReferenceObs γ α (ball c R) (hC ω) z).2) hF
 
-/-- Route steps 1-8 assembled: the kernel `κ` of `LocalMeasureKernelStmt` (route MQ-lh-12), with the countable decoder
+/-- Route steps 1-8 assembled: the kernel `κ` of `LocalMeasureKernelStmt`, with the countable decoder
 of `exists_localDecoder` and the compact exhaustion of the disc; both clauses (unrooted and rooted) are proved here. -/
 theorem localMeasureKernelStmt_derived (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) : LocalMeasureKernelStmt γ c₁ c₂ r₁ r₂ := by
   intro hγ0 hγ2 hr1 hr2 hsub1 hsub2 h0

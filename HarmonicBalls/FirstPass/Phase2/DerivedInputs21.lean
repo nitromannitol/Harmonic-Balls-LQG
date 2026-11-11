@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs20
 import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
 
 /-!
-# Derived inputs, round 21 (worker z6, fp-phase2-circle-locality-link-derive)
+# Derived inputs
 
 Wrappers of the DerivedInputs19 and DerivedInputs20 wrappers with the binders of row 33
 (`LQGMassInnerMeasurableFrozen`) and row 49 (`LQGMeasureLocality`, forall-closed) discharged by
@@ -17,7 +17,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-trade wrapper `closure_1_3_derivedInputs21` of the counted form `closure_1_3` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_3_derivedInputs19`. No binder is added. -/
+/-- Binder-trade wrapper `closure_1_3_derivedInputs21` of the counted form `closure_1_3`: the binders hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_3_derivedInputs19`. No binder is added. -/
 theorem closure_1_3_derivedInputs21
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
@@ -32,7 +32,7 @@ theorem closure_1_3_derivedInputs21
     (hE3 := hE3) (hDG := hDG) (hCC := hCC) (hE := hE)
     (hN := (fun Ω _ P γ α hC hcirc => HarmonicBalls.lqgMeasureNonatomicAll_of_inputs hDG (fun Ω _ P γ hC hcirc => hCC Ω P γ 0 hC hcirc) hE γ α Ω P hC hcirc))
 
-/-- Binder-trade wrapper `closure_11_16_derivedInputs21` of the counted form `closure_11_16` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hM, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_16_derivedInputs19`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_16_derivedInputs21` of the counted form `closure_11_16`: the binders hM, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_16_derivedInputs19`. No binder is added. -/
 theorem closure_11_16_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
@@ -65,7 +65,7 @@ theorem closure_11_16_derivedInputs21
     (hDiam := (HarmonicBalls.lqgInternalDiamInnerMeasurable_derived hFA)) (hMk := hMk)
     (hmeasure := (HarmonicBalls.lqgMeasureLocality_derived.{u}))
 
-/-- Binder-trade wrapper `closure_11_17_derivedInputs21` of the counted form `closure_11_17` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hM, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_17_derivedInputs19`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_17_derivedInputs21` of the counted form `closure_11_17`: the binders hM, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_17_derivedInputs19`. No binder is added. -/
 theorem closure_11_17_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
@@ -105,7 +105,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 
-/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs21` of the counted form `closure_11_11_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs21` of the counted form `closure_11_11_canonical_of_11_13_universe0`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs20`. No binder is added. -/
 theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs21
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -151,7 +151,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs21` of the counted form `closure_11_11_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs21` of the counted form `closure_11_11_paperExponent_of_11_13_universe0`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs20`. No binder is added. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs21
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -198,7 +198,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs21` of the counted form `closure_1_2_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs21` of the counted form `closure_1_2_canonical_of_11_13_universe0`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs20`. No binder is added. -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs21
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -248,7 +248,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs21` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs21` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs20`. No binder is added. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs21
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -298,7 +298,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs21` of the counted form `closure_1_2_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs21` of the counted form `closure_1_2_paperExponent_of_11_13_universe0`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs20`. No binder is added. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs21
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -350,7 +350,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 
-/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs21` of the counted form `firstPass_11_11_faithful_universe0` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_11_faithful_universe0_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs21` of the counted form `firstPass_11_11_faithful_universe0`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_11_faithful_universe0_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs21
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -396,7 +396,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-trade wrapper `firstPass_11_13_closed_derivedInputs21` of the counted form `firstPass_11_13_closed` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_closed_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_13_closed_derivedInputs21` of the counted form `firstPass_11_13_closed`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_closed_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_13_closed_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -440,7 +440,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs21` of the counted form `firstPass_1_2_faithful_universe0` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_1_2_faithful_universe0_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs21` of the counted form `firstPass_1_2_faithful_universe0`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_1_2_faithful_universe0_derivedInputs20`. No binder is added. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs21
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -490,7 +490,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs21` of the counted form `closure_11_11_canonical` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_canonical_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs21` of the counted form `closure_11_11_canonical`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_canonical_derivedInputs20`. No binder is added. -/
 theorem closure_11_11_canonical_derivedInputs21
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -532,7 +532,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs21` of the counted form `closure_11_11_paperExponent` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_paperExponent_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs21` of the counted form `closure_11_11_paperExponent`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_11_paperExponent_derivedInputs20`. No binder is added. -/
 theorem closure_11_11_paperExponent_derivedInputs21
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -575,7 +575,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-trade wrapper `closure_11_12_derivedInputs21` of the counted form `closure_11_12` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_12_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_12_derivedInputs21` of the counted form `closure_11_12`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_12_derivedInputs20`. No binder is added. -/
 theorem closure_11_12_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -613,7 +613,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs21` of the counted form `closure_11_12_clean` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_12_clean_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs21` of the counted form `closure_11_12_clean`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_12_clean_derivedInputs20`. No binder is added. -/
 theorem closure_11_12_clean_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -650,7 +650,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs21` of the counted form `closure_11_13_canonical` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_13_canonical_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs21` of the counted form `closure_11_13_canonical`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_13_canonical_derivedInputs20`. No binder is added. -/
 theorem closure_11_13_canonical_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -688,7 +688,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs21` of the counted form `closure_11_13_paperExponent` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_13_paperExponent_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs21` of the counted form `closure_11_13_paperExponent`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_11_13_paperExponent_derivedInputs20`. No binder is added. -/
 theorem closure_11_13_paperExponent_derivedInputs21
     (_hDim : WholePlaneLQGGraphDimension)
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
@@ -726,7 +726,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs21` of the counted form `closure_1_2_canonical` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_canonical_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs21` of the counted form `closure_1_2_canonical`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_canonical_derivedInputs20`. No binder is added. -/
 theorem closure_1_2_canonical_derivedInputs21
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -770,7 +770,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs21` of the counted form `closure_1_2_faithful_canonical` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_faithful_canonical_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs21` of the counted form `closure_1_2_faithful_canonical`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_faithful_canonical_derivedInputs20`. No binder is added. -/
 theorem closure_1_2_faithful_canonical_derivedInputs21
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -815,7 +815,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs21` of the counted form `closure_1_2_paperExponent` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_paperExponent_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs21` of the counted form `closure_1_2_paperExponent`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `closure_1_2_paperExponent_derivedInputs20`. No binder is added. -/
 theorem closure_1_2_paperExponent_derivedInputs21
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -862,7 +862,7 @@ namespace HarmonicBalls.S11m.Clean11_12
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_11_12_clean_derivedInputs21` of the counted form `firstPass_11_12_clean` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_12_clean_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_12_clean_derivedInputs21` of the counted form `firstPass_11_12_clean`: the binders hMf are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_12_clean_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_12_clean_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -894,7 +894,7 @@ namespace HarmonicBalls.S11m.Final11_12
 open MeasureTheory Set Metric Filter
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_11_12_final_derivedInputs21` of the counted form `firstPass_11_12_final` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_12_final_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_12_final_derivedInputs21` of the counted form `firstPass_11_12_final`: the binders hMf are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_12_final_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_12_final_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -925,7 +925,7 @@ end HarmonicBalls.S11m.Final11_12
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-trade wrapper `firstPass_11_13_derivedInputs21` of the counted form `firstPass_11_13` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_13_derivedInputs21` of the counted form `firstPass_11_13`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_13_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -969,7 +969,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory
 
-/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs21` of the counted form `firstPass_11_13_canonical` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_canonical_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs21` of the counted form `firstPass_11_13_canonical`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_canonical_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_13_canonical_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1007,7 +1007,7 @@ end HarmonicBalls.FirstPassS11iAssembly11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs21` of the counted form `firstPass_11_13_final` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_final_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs21` of the counted form `firstPass_11_13_final`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_final_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_13_final_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1046,7 +1046,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs21` of the counted form `firstPass_11_13_final_route1` (fp-phase2-derived-inputs-21, worker z6, fp-phase2-circle-locality-link-derive): the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` (row 49) and `lqgMassInnerMeasurable_derived'` (row 33), both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_final_route1_derivedInputs20`. No binder is added. -/
+/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs21` of the counted form `firstPass_11_13_final_route1`: the binders hMf, hmeasure are discharged by `lqgMeasureLocality_derived` and `lqgMassInnerMeasurable_derived'`, both in `Phase2/CircleAverageLocalityLinkDerived.lean`; the conclusion is that of `firstPass_11_13_final_route1_derivedInputs20`. No binder is added. -/
 theorem firstPass_11_13_final_route1_derivedInputs21
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,

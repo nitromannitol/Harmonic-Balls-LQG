@@ -6,18 +6,18 @@ import HarmonicBalls.Proofs.Sec2.SingularAtomAtZero
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 
 /-!
-# Binder trades of rows 40 and 50 to rows 1, 2, 3 (DerivedInputs29; task fp-phase2-di29-rows40-50-trade, worker z6)
+# Binder trades of rows 40 and 50 to rows 1, 2, 3
 
-Decision R60 (lead lh, 2026-11-11 11:48 UTC): the Draft statements `LQGMeasureFullSupportStmt` (row 40, Draft/Section2.lean:109)
-and `LQGVolumeGrowthAllScalesStmt` (row 50, Draft/Section2.lean:122) reduce to the three literature inputs of
+Decision R60: the Draft statements `LQGMeasureFullSupportStmt`
+and `LQGVolumeGrowthAllScalesStmt` reduce to the three literature inputs of
 Proposed/LQG.lean named in PHASE2-DERIVATION-STATUS.md:
 
 * row 1 `LQGMeasureExistence` (Proposed/LQG.lean:74), used at every `α` (row 4 needs existence at every `α₀`);
 * row 2 `LQGMeasureCoordChange` (Proposed/LQG.lean:131), used at `α₀ = 0`;
 * row 3 `WholePlaneLQGBallMassBounds` (Proposed/LQG.lean:172).
 
-The other premises are derived: `WholePlaneGFFAffineInvariance_derived` (row 10, FirstPass/Phase2/DerivedInputs11.lean:26),
-`HarmonicBalls.Section6.lqgMeasureWeylScaling` (row 5, Proofs/Sec6/LQGWeylScaling.lean:124), and row 4 `LQGMeasureNonatomic`
+The other premises are derived: `WholePlaneGFFAffineInvariance_derived`,
+`HarmonicBalls.Section6.lqgMeasureWeylScaling`, and row 4 `LQGMeasureNonatomic`
 through `singular_nonatomic_of_existence_and_wholePlane` (Proofs/Sec2/SingularAtomAtZero.lean). The two statements then follow from
 `lqgMeasureFullSupportStmt_of_literature` (Proofs/Sec2/Assembly.lean:124) and `lqgVolumeGrowthAllScalesStmt_of_literature`
 (Proofs/Sec2/Assembly.lean:120).
@@ -76,8 +76,8 @@ theorem lqgVolumeGrowthAllScalesStmt_of_rows123
     (fun Ω _ P γ hC hcirc => hE Ω P γ 0 hC hcirc)
     (lqgMeasureNonatomic_of_rows123 hDG hCC hE)
 
-/-- Binder trade of `firstPass_8_2_S8d_noWeyl_derivedInputs19` (DerivedInputs19.lean:27): the binder `hfull` (row 40) is
-derived from `hDG`, `hCC` (at `α₀ = 0`) and `hEx` (row 1), which the wrapper already binds. Binder count 6 → 5. -/
+/-- Binder trade of `firstPass_8_2_S8d_noWeyl_derivedInputs19` (DerivedInputs19.lean:27): the binder `hfull` is
+derived from `hDG`, `hCC` (at `α₀ = 0`) and `hEx`, which the wrapper already binds. Binder count 6 → 5. -/
 theorem firstPass_8_2_S8d_noWeyl_derivedInputs29
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -104,8 +104,8 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder trade of `firstPass_11_13_closed_derivedInputs3` (DerivedInputs3.lean:165): the binders `hFull` (row 40) and
-`hgrowth` (row 50) are derived from `hDG`, `hCCα` (at `α₀ = 0`) and `hE`, which the wrapper already binds. Binder count 37 → 35. -/
+/-- Binder trade of `firstPass_11_13_closed_derivedInputs3` (DerivedInputs3.lean:165): the binders `hFull` and
+`hgrowth` are derived from `hDG`, `hCCα` (at `α₀ = 0`) and `hE`, which the wrapper already binds. Binder count 37 → 35. -/
 theorem firstPass_11_13_closed_derivedInputs29
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hLen : LQGMetricLengthUnivFrozen.{0})

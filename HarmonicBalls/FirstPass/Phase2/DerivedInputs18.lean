@@ -7,7 +7,7 @@ import HarmonicBalls.FirstPass.Phase2.MassFunctionalDerived
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs9
 import HarmonicBalls.FirstPass.S8c.BirkhoffDerived
 
-/-! Binder-hygiene wrappers, round 18 (fp-audit-r1-close-and-di18, worker z6).
+/-! Binder-hygiene wrappers.
 The 23 counted wrappers of the DI15 family (the 8 `_derivedInputs16` wrappers, and the 15 `_derivedInputs15`
 wrappers without a DI16 version) are restated without every binder whose Prop has a binder-free derived theorem:
 `LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`,
@@ -24,7 +24,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 
-/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs18` of the counted form `closure_11_11_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-18, worker z6): the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs18` of the counted form `closure_11_11_canonical_of_11_13_universe0`: the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs18
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -73,7 +73,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs18` of the counted form `closure_11_11_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-18, worker z6): the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs18` of the counted form `closure_11_11_paperExponent_of_11_13_universe0`: the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs18
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -123,7 +123,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs18` of the counted form `closure_1_2_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-18, worker z6): the binders `hAff`, `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs18` of the counted form `closure_1_2_canonical_of_11_13_universe0`: the binders `hAff`, `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs18
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -176,7 +176,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs18` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-18, worker z6): the binders `hAff`, `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs18` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0`: the binders `hAff`, `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs18
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -229,7 +229,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs18` of the counted form `closure_1_2_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-18, worker z6): the binders `hAff`, `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs18` of the counted form `closure_1_2_paperExponent_of_11_13_universe0`: the binders `hAff`, `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs18
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -284,7 +284,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 
-/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs18` of the counted form `firstPass_11_11_faithful_universe0` (fp-phase2-derived-inputs-18, worker z6): the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs18` of the counted form `firstPass_11_11_faithful_universe0`: the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs18
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -333,7 +333,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs18` of the counted form `firstPass_11_13_closed` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `firstPass_11_13_closed_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs18` of the counted form `firstPass_11_13_closed`: the binders `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `firstPass_11_13_closed_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_13_closed_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -380,7 +380,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs18` of the counted form `firstPass_1_2_faithful_universe0` (fp-phase2-derived-inputs-18, worker z6): the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs18` of the counted form `firstPass_1_2_faithful_universe0`: the binders `hE1`, `hFD`, `hProf` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`). The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs16` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs18
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -433,7 +433,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_11_canonical_derivedInputs18` of the counted form `closure_11_11_canonical` (fp-phase2-derived-inputs-18, worker z6): the binders `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_11_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_11_canonical_derivedInputs18` of the counted form `closure_11_11_canonical`: the binders `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_11_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_11_canonical_derivedInputs18
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -478,7 +478,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_11_paperExponent_derivedInputs18` of the counted form `closure_11_11_paperExponent` (fp-phase2-derived-inputs-18, worker z6): the binders `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_11_paperExponent_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_11_paperExponent_derivedInputs18` of the counted form `closure_11_11_paperExponent`: the binders `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_11_paperExponent_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_11_paperExponent_derivedInputs18
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -524,7 +524,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `closure_11_12_derivedInputs18` of the counted form `closure_11_12` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_12_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_12_derivedInputs18` of the counted form `closure_11_12`: the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_12_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_12_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -565,7 +565,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_12_clean_derivedInputs18` of the counted form `closure_11_12_clean` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_12_clean_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_12_clean_derivedInputs18` of the counted form `closure_11_12_clean`: the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_12_clean_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_12_clean_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -605,7 +605,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `closure_11_13_canonical_derivedInputs18` of the counted form `closure_11_13_canonical` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_13_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_13_canonical_derivedInputs18` of the counted form `closure_11_13_canonical`: the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_13_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_13_canonical_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -646,7 +646,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_13_paperExponent_derivedInputs18` of the counted form `closure_11_13_paperExponent` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_13_paperExponent_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_13_paperExponent_derivedInputs18` of the counted form `closure_11_13_paperExponent`: the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `closure_11_13_paperExponent_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_11_13_paperExponent_derivedInputs18
     (_hDim : WholePlaneLQGGraphDimension)
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
@@ -687,7 +687,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-hygiene wrapper `closure_1_2_canonical_derivedInputs18` of the counted form `closure_1_2_canonical` (fp-phase2-derived-inputs-18, worker z6): the binders `hAff`, `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_2_canonical_derivedInputs18` of the counted form `closure_1_2_canonical`: the binders `hAff`, `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_1_2_canonical_derivedInputs18
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -734,7 +734,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_derivedInputs18` of the counted form `closure_1_2_faithful_canonical` (fp-phase2-derived-inputs-18, worker z6): the binders `hAff`, `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_faithful_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_derivedInputs18` of the counted form `closure_1_2_faithful_canonical`: the binders `hAff`, `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_faithful_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_1_2_faithful_canonical_derivedInputs18
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -782,7 +782,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs18` of the counted form `closure_1_2_paperExponent` (fp-phase2-derived-inputs-18, worker z6): the binders `hAff`, `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_paperExponent_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs18` of the counted form `closure_1_2_paperExponent`: the binders `hAff`, `hE1`, `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`, `WholePlaneGFFAffineInvariance`). The statement is that of `closure_1_2_paperExponent_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem closure_1_2_paperExponent_derivedInputs18
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -832,7 +832,7 @@ namespace HarmonicBalls.S11m.Clean11_12
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs18` of the counted form `firstPass_11_12_clean` (fp-phase2-derived-inputs-18, worker z6): the binders `hmass`, `hCMAbs` are removed and supplied by binder-free derived theorems for their Props (`CameronMartinGFFMutualAbsCont`, `LQGMassFunctionalMeasurableFrozen`). The statement is that of `firstPass_11_12_clean_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs18` of the counted form `firstPass_11_12_clean`: the binders `hmass`, `hCMAbs` are removed and supplied by binder-free derived theorems for their Props (`CameronMartinGFFMutualAbsCont`, `LQGMassFunctionalMeasurableFrozen`). The statement is that of `firstPass_11_12_clean_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_12_clean_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -864,7 +864,7 @@ namespace HarmonicBalls.S11m.Final11_12
 open MeasureTheory Set Metric Filter
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs18` of the counted form `firstPass_11_12_final` (fp-phase2-derived-inputs-18, worker z6): the binders `hmass`, `hCMAbs` are removed and supplied by binder-free derived theorems for their Props (`CameronMartinGFFMutualAbsCont`, `LQGMassFunctionalMeasurableFrozen`). The statement is that of `firstPass_11_12_final_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs18` of the counted form `firstPass_11_12_final`: the binders `hmass`, `hCMAbs` are removed and supplied by binder-free derived theorems for their Props (`CameronMartinGFFMutualAbsCont`, `LQGMassFunctionalMeasurableFrozen`). The statement is that of `firstPass_11_12_final_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_12_final_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -895,7 +895,7 @@ end HarmonicBalls.S11m.Final11_12
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs18` of the counted form `firstPass_11_13` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2`, `_hBirk`, `_hProf` are removed and supplied by binder-free derived theorems for their Props (`BirkhoffPointwiseErgodic`, `LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs18` of the counted form `firstPass_11_13`: the binders `hFD`, `hM2`, `_hBirk`, `_hProf` are removed and supplied by binder-free derived theorems for their Props (`BirkhoffPointwiseErgodic`, `LQGMeasureOfProfileMeasurableFrozen`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_13_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -941,7 +941,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs18` of the counted form `firstPass_11_13_canonical` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs18` of the counted form `firstPass_11_13_canonical`: the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_canonical_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_13_canonical_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -982,7 +982,7 @@ end HarmonicBalls.FirstPassS11iAssembly11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs18` of the counted form `firstPass_11_13_final` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_final_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs18` of the counted form `firstPass_11_13_final`: the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_final_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_13_final_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1024,7 +1024,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs18` of the counted form `firstPass_11_13_final_route1` (fp-phase2-derived-inputs-18, worker z6): the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_final_route1_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs18` of the counted form `firstPass_11_13_final_route1`: the binders `hFD`, `hM2` are removed and supplied by binder-free derived theorems for their Props (`PlaneDomainMinusConvexCompactPreconnectedFrozen`, `WeylShiftedMassMeasurableFrozen`). The statement is that of `firstPass_11_13_final_route1_derivedInputs15` minus these binders; no binder is added and the conclusion is unchanged. -/
 theorem firstPass_11_13_final_route1_derivedInputs18
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,

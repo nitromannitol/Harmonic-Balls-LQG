@@ -10,13 +10,13 @@ import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 # Phase 2: counted results 1.x to 10.x without the frozen inputs `BirkhoffPointwiseErgodic` and
 `LocalLQGInsertionWeylOffOrigin`
 
-For each counted declaration of a numbered result 1.x to 10.x (`docs/campaign/PHASE2-INVENTORY.md`, section 1)
+For each counted declaration of a numbered result 1.x to 10.x
 whose signature takes the frozen Prop `BirkhoffPointwiseErgodic` or `LocalLQGInsertionWeylOffOrigin` as a binder,
 this file states `<countedName>_derivedInputs`: the same statement with those binders removed, proved by applying
 the counted declaration to the derived theorems `birkhoffPointwiseErgodic_derived`
 (`FirstPass/S8c/BirkhoffDerived.lean`) and `localLQGInsertionWeylOffOrigin_derived`
 (`FirstPass/S8c/WeylOffOriginDerived.lean`). The other binders, and the proofs of the counted declarations, are
-unchanged. No existing file is edited (task fp-phase2-derived-inputs-s1-10, worker z3).
+unchanged. No existing file is edited.
 Results 1.x to 10.x that take neither input have no wrapper here.
 -/
 

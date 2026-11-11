@@ -3,11 +3,10 @@ import HarmonicBalls.Steps.Sec11.MetricArcLength
 import HarmonicBalls.Steps.Sec11.CurveLengthReparam
 import HarmonicBalls.FirstPass.Phase2.WeylInternalClosedDerived
 
-/-! # The closed-set internal metric is derived (Phase 2, task fp-phase2-internal-metric-closed-derive)
+/-! # The closed-set internal metric is derived
 
 `InternalMetricClosedEqIInfThickeningFrozen` (`FirstPass/Frozen/S11g.lean`) is derived with no new hypothesis.
-The frozen Prop itself is not edited. Written route: `notes/fp-gaps/CHATGPT-K1-proof-z4-F4.md` section 1 (1.1-1.4),
-checked step by step. Lean route:
+The frozen Prop itself is not edited. The written argument is checked step by step. Lean route:
 
 * `internalMetric_anti_set`, `iSup_thickening_le_internalMetric`: domain monotonicity (route (1.11)).
 * `arcLength_param`: arc-length parametrization of a path inside a set, with range (route 1.2; Lean lemmas

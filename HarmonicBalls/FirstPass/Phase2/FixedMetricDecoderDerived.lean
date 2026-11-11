@@ -10,10 +10,9 @@ import HarmonicBalls.FirstPass.S11m.LocalDecoder
 import HarmonicBalls.FirstPass.Phase2.AxiomsUnivDerived
 
 /-!
-# Fixed-metric normalized measurable decoder, derived (task fp-phase2-b1-decoder-derive, owner z4)
+# Fixed-metric normalized measurable decoder, derived
 
-Target: `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` (`FirstPass/S11r/Frozen.lean:89`), audit binder hB1.
-Route: MQ-lh-4 (`notes/fp-gaps/MATH-ANSWERS.md` lines 405-431).
+Target: `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` (`FirstPass/S11r/Frozen.lean:89`), binder hB1.
 
 Proved here: the square decoder infrastructure (`exists_dense_decode_ball`), the nonnegativity of a length metric,
 the centred test functions `ψ_φ = φ - (∫φ) ρ` on a ball, and, for one fixed sample space, the factorization of
@@ -205,7 +204,7 @@ theorem fmd_ae_metric {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {hC : 
   exact h0.ae_isEuclideanLengthMetric
 
 /-- Fixed-metric normalized measurable decoder `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`, derived from the
-sample-space-free point decoder `hUnivPt` (named hypothesis; the universal clause, BLOCKED-STEP MQ-lh-23). For each point
+sample-space-free point decoder `hUnivPt` (named hypothesis; the universal clause). For each point
 `q` of the square, `hUnivPt` gives one measurable functional `Dq` of the mean-zero ball observations, valid for every
 whole-plane GFF on every probability space. The decoder `M` is the dense-sequence decode of these values (`exists_dense_decode_ball`);
 the square-continuity and finiteness of the internal metric of `hC ω` on the ball come from the derived axioms. -/

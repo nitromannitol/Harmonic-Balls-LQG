@@ -20,8 +20,8 @@ namespace HarmonicBalls
 
 noncomputable section
 
-/-- FALSE AS TYPED (z6 counterexample 2026-11-11 06:30: no IsWholePlaneGFF premise); use lqgCircleAverageLocalityLink_derived (CircleAverageLocalityLinkDerived.lean).
-BLOCKED-STEP (not a source input; operator decides). The circle averages of `h = h^ℂ - α₀ log|·|`
+/-- FALSE AS TYPED (counterexample: no IsWholePlaneGFF premise); use lqgCircleAverageLocalityLink_derived (CircleAverageLocalityLinkDerived.lean).
+BLOCKED-STEP (not a source input). The circle averages of `h = h^ℂ - α₀ log|·|`
 over a circle `∂B_r(z)` with `closedBall z r ⊆ U`, `U` open, are `σ(h|_U)`-measurable up to null sets.
 This is the precise form of "immediate from the definition" (paper line 424, Fact 2.1 II; the sentence
 at Proposed/LQG.lean:90-95). `IsWholePlaneGFF` does not link `hcirc` to `hC` pointwise (only through

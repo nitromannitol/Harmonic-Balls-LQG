@@ -1,8 +1,8 @@
 import HarmonicBalls.FirstPass.Phase2.RootedDominationJointPos
 
-/-! # Derivation route of the positive-radius joint identity (task `fp-phase2-dms-joint-positive-radius`, step 3)
+/-! # Derivation route of the positive-radius joint identity
 
-Worker z3. The route of MATH-ANSWERS.md l.124-137 derives `DMSLemmaA10WholePlaneMarkedJointPosStmt`
+The route derives `DMSLemmaA10WholePlaneMarkedJointPosStmt`
 (RootedDominationJointPos.lean) in three moves: (i) the marked tilt identity for finite families of admissible pairings and
 positive-radius circles, from their joint Gaussian law; (ii) passage to GMC; (iii) extension from cylinder tests by a
 monotone-class argument. Move (i) is not written in detail in the answer and is not in Mathlib, the pinned packages or

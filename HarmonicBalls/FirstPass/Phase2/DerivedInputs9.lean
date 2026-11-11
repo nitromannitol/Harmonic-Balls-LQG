@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Phase2.CameronMartinMutualDerived
 import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
 
 /-!
-# Derived inputs, batch 9 (phase-2 triage, classes A and B; worker z4)
+# Derived inputs, batch 9
 
 Binder-free restatements `<propName>_derived : <Prop>` of frozen/FP Props that an existing
 theorem already proves. The Prop is written exactly as in its declaration; the proof is glue.

@@ -1,14 +1,13 @@
 import HarmonicBalls.FirstPass.Phase2.RootedDominationJoint
 
-/-! # Positive-radius joint marked DMS identity and the B2 conditional theorem (MQ-lh-13)
+/-! # Positive-radius joint marked DMS identity and the B2 conditional theorem
 
-Task `fp-phase2-dms-joint-positive-radius`, worker z3. The joint identity `DMSLemmaA10WholePlaneMarkedJointStmt`
+The joint identity `DMSLemmaA10WholePlaneMarkedJointStmt`
 (RootedDominationJoint.lean:50) is FALSE AS TYPED: the circle profile is read at radii `r ≤ 0`, where `IsWholePlaneGFF`
-leaves `hcirc` unconstrained (MATH-ANSWERS.md l.104-123). This file states the corrected identity, which reads only the
+leaves `hcirc` unconstrained. This file states the corrected identity, which reads only the
 positive-radius circles, parametrised by `CircleParameter = Set.Ioi 0 × ℂ`:
 
-* `DMSLemmaA10WholePlaneMarkedJointPos` / `DMSLemmaA10WholePlaneMarkedJointPosStmt`: the candidate input (PENDING
-  SOURCE CHECK R26; Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10, marked form). Not a binder of any counted
+* `DMSLemmaA10WholePlaneMarkedJointPos` / `DMSLemmaA10WholePlaneMarkedJointPosStmt`: the candidate input (PENDING TRUTH CHECK; Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10, marked form). Not a binder of any counted
   theorem and not staged in `Frozen/` or `Proposed/`.
 * `localRootedFieldMeasureDomination_of_jointPos_of_shifted`: the B2 conditional theorem with `hJoint` replaced by the
   positive-radius form. Its proof is that of `localRootedFieldMeasureDomination_of_joint_of_shifted`; the only change is
@@ -43,13 +42,13 @@ lemma measurable_posExtend : Measurable fun H : CircleParameter → ℝ => posEx
   · simp only [posExtend, hr, ↓reduceDIte]
     exact measurable_const
 
-/-- **Positive-radius joint marked DMS identity, one instance (candidate input, PENDING SOURCE CHECK R26).**
+/-- **Positive-radius joint marked DMS identity, one instance (candidate input, PENDING TRUTH CHECK).**
 Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10, in the marked form that sees the circle profile only at
 positive radii: for a whole-plane GFF `(hC, hcirc)` and the `α = 0` LQG measure `μ` of `hcirc` at parameter `0 < γ < 2`,
 and for every measurable test `Ψ` of the triple (pairing, positive-radius circle profile, mark), integrating `Ψ`
 against `μ_ω` restricted to the unit ball and against `P` equals integrating the DMS-shifted triple over the mark `z` in
 `B₁` and over `P`. Replaces the false-as-typed `DMSLemmaA10WholePlaneMarkedJoint`
-(RootedDominationJoint.lean:39; MQ-lh-13). -/
+. -/
 def DMSLemmaA10WholePlaneMarkedJointPos {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
   IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ → 0 < γ → γ < 2 →
@@ -85,9 +84,9 @@ lemma measurable_rootedTestFnPos {r : ℝ} {D : Set ℂ} {S : Set (ℂ × Measur
     (measurable_fst.prodMk ((measurable_posExtend.comp (measurable_fst.comp measurable_snd)).prodMk
       (measurable_snd.comp measurable_snd)))
 
-/-- **Conditional rooted domination, positive-radius form (fp-dms-joint-positive-radius; MQ-lh-13).** The conditional
+/-- **Conditional rooted domination, positive-radius form.** The conditional
 theorem `localRootedFieldMeasureDomination_of_joint_of_shifted` with the joint identity replaced by its positive-radius
-form `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate input, PENDING R26). The other hypotheses (`hProf`, `hSel`,
+form `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate input, PENDING TRUTH CHECK). The other hypotheses (`hProf`, `hSel`,
 `hShift`) and the conclusion are those of the original theorem. -/
 theorem localRootedFieldMeasureDomination_of_jointPos_of_shifted
     (hJoint : DMSLemmaA10WholePlaneMarkedJointPosStmt.{u})

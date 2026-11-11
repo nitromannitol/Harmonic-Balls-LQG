@@ -1,13 +1,13 @@
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs8
 
-/-! Binder-hygiene wrappers, round 8, second part (fp-phase2-derived-inputs-8, worker z6). Statements as in DerivedInputs8.lean. -/
+/-! Binder-hygiene wrappers, second part. Statements as in DerivedInputs8.lean. -/
 
 universe u
 
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs8` of the counted form `closure_1_2_paperExponent` (fp-phase2-derived-inputs-8, worker z6): the binders hLen, hN, hW are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs8` of the counted form `closure_1_2_paperExponent`: the binders hLen, hN, hW are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem closure_1_2_paperExponent_derivedInputs8
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -62,7 +62,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs8` of the counted form `closure_1_2_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs8` of the counted form `closure_1_2_paperExponent_of_11_13_universe0`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs8
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -123,7 +123,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs8` of the counted form `firstPass_11_11_faithful_universe0` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs8` of the counted form `firstPass_11_11_faithful_universe0`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs8
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -175,7 +175,7 @@ namespace HarmonicBalls.S11m.Clean11_12
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs8` of the counted form `firstPass_11_12_clean` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs8` of the counted form `firstPass_11_12_clean`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_12_clean_derivedInputs8
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -210,7 +210,7 @@ namespace HarmonicBalls.S11m.Final11_12
 open MeasureTheory Set Metric Filter
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs8` of the counted form `firstPass_11_12_final` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs8` of the counted form `firstPass_11_12_final`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_12_final_derivedInputs8
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -244,7 +244,7 @@ end HarmonicBalls.S11m.Final11_12
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs8` of the counted form `firstPass_11_13` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs8` of the counted form `firstPass_11_13`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_13_derivedInputs8
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -294,7 +294,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs8` of the counted form `firstPass_11_13_canonical` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs8` of the counted form `firstPass_11_13_canonical`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_13_canonical_derivedInputs8
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -339,7 +339,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs8` of the counted form `firstPass_11_13_closed` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs8` of the counted form `firstPass_11_13_closed`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_13_closed_derivedInputs8
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -387,7 +387,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13Close
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs8` of the counted form `firstPass_11_13_final` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs8` of the counted form `firstPass_11_13_final`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_13_final_derivedInputs8
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -431,7 +431,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs8` of the counted form `firstPass_11_13_final_route1` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs8` of the counted form `firstPass_11_13_final_route1`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_11_13_final_route1_derivedInputs8
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -476,7 +476,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs8` of the counted form `firstPass_1_2_faithful_universe0` (fp-phase2-derived-inputs-8, worker z6): the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
+/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs8` of the counted form `firstPass_1_2_faithful_universe0`: the binders hLen are removed and supplied by the derived inputs of this file. The statement is unchanged; no conclusion is weakened. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs8
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)

@@ -8,13 +8,11 @@ import HarmonicBalls.FirstPass.S8c.Measurability
 
 /-! # Joint marked DMS identity: conditional derivation of `LocalRootedFieldMeasureDomination` (Lemma 8.2)
 
-Task `fp-audit-r1-b2-rooted-domination`, addendum (lead lh, 02:02 UTC). Worker z3.
 
 The pairings-only marked identity `DMSLemmaA10WholePlaneMarkedSub` (`FirstPass/Frozen/S11i.lean:59`) sees the field only
-through `hC`, while the rooted observation of the α₀-measure needs the circle profile `hcirc` as well (route
-`notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md`, section 4). This file states the joint marked identity
+through `hC`, while the rooted observation of the α₀-measure needs the circle profile `hcirc` as well. This file states the joint marked identity
 `DMSLemmaA10WholePlaneMarkedJoint` (Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10, marked and with the
-circle averages of the shifted field). It is a candidate input: PENDING SOURCE CHECK R26. It is not a binder of any
+circle averages of the shifted field). It is a candidate input: PENDING TRUTH CHECK. It is not a binder of any
 counted theorem and is not staged in `Frozen/` or `Proposed/`.
 -/
 
@@ -31,7 +29,7 @@ universe u
 noncomputable def dmsShiftedCircle (γ : ℝ) (z : ℂ) (hc : ℝ → ℂ → ℝ) : ℝ → ℂ → ℝ :=
   fun r x => hc r x + Real.circleAverage (dmsShift γ z) x r + dmsConstant γ z (hc 1 0)
 
-/-- **Joint marked DMS identity (candidate input, PENDING SOURCE CHECK R26).** Duplantier-Miller-Sheffield,
+/-- **Joint marked DMS identity (candidate input, PENDING TRUTH CHECK).** Duplantier-Miller-Sheffield,
 arXiv:1409.7055, Lemma A.10, in the marked form that also sees the circle profile `hcirc`: for a whole-plane GFF `(hC, hcirc)`
 and the `α = 0` LQG measure `μ` of `hcirc` at parameter `0 < γ < 2`, and for every measurable test `Ψ` of the triple
 (pairing, circle profile, mark), integrating `Ψ` against `μ_ω` restricted to the unit ball and against `P` equals
@@ -45,7 +43,7 @@ def DMSLemmaA10WholePlaneMarkedJoint {Ω : Type*} [MeasurableSpace Ω] (P : Meas
           = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω,
               Ψ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P ∂volume
 
-/-- FALSE AS TYPED (MQ-lh-13, Codex 2026-11-11, MATH-ANSWERS.md l.104-123: zero/negative-radius circle values are
+/-- FALSE AS TYPED (zero/negative-radius circle values are
 unconstrained by `IsWholePlaneGFF`); use `DMSLemmaA10WholePlaneMarkedJointPosStmt` (RootedDominationJointPos.lean).
 
 The joint marked identity for every whole-plane GFF and every `α = 0` LQG measure, in the universe of the
@@ -83,11 +81,11 @@ theorem rootedLaw_apply_eq_zero_of_palm {Ω X : Type*} [MeasurableSpace Ω] [Mea
 
 /-! ## Steps 4-12 (conditional): helpers for the joint-identity route
 
-Route: section 5 of `notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md`. The conditional theorem takes the joint
-identity `DMSLemmaA10WholePlaneMarkedJointStmt` (candidate, PENDING R26), the frozen profile decoder
+The conditional theorem takes the joint
+identity `DMSLemmaA10WholePlaneMarkedJointStmt` (candidate, PENDING TRUTH CHECK), the frozen profile decoder
 `LQGMeasureOfProfileMeasurableFrozen` (`FirstPass/Frozen/S8d.lean:33`), a named measurable circle-profile selector
-(`CircleProfileSelectorStmt`, operator ruling 2) and the intermediate pointwise claim `ShiftedDecoderNullTransferStmt`
-(PENDING RULING R29). -/
+(`CircleProfileSelectorStmt`) and the intermediate pointwise claim `ShiftedDecoderNullTransferStmt`
+(PENDING TRUTH CHECK). -/
 
 /-- The positive-radius part of a circle-average profile, as a pure function (cf. `posCircle`,
 `FirstPass/S11aa.lean:72`). -/
@@ -112,7 +110,7 @@ lemma measurable_posPart_comp {Ω : Type*} [MeasurableSpace Ω] {hcirc : Ω → 
   · simp only [posPart, hr, ↓reduceIte]
     exact measurable_const
 
-/-- **Measurable circle-profile selector (named input, operator ruling 2, PENDING).** For every whole-plane GFF there is
+/-- **Measurable circle-profile selector (named input, PENDING TRUTH CHECK).** For every whole-plane GFF there is
 a measurable map `Sel` from positive-radius circle-average profiles to continuous functions on `CircleParameter` that
 agrees almost surely with the circle averages at each parameter. Measurable-selection device for `hProf`; its content
 is the a.s. continuity of the circle-average process (`IsWholePlaneGFF.ae_continuousOn_circle`) together with a countable
@@ -122,7 +120,7 @@ def CircleProfileSelectorStmt : Prop :=
     IsWholePlaneGFF P hC hcirc → ∃ Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ), Measurable Sel ∧
       ∀ p : CircleParameter, (fun ω => Sel (posPart (hcirc ω)) p) =ᵐ[P] fun ω => hcirc ω p.1 p.2
 
-/-- **Intermediate pointwise claim (PENDING RULING R29; not a frozen input).** Steps 10-11 of route section 5: for a
+/-- **Intermediate pointwise claim (PENDING TRUTH CHECK; not a frozen input).** Steps 10-11: for a
 fixed root `z ∈ D`, a null local reference event of `ν` forces a null event of the decoded DMS-shifted profile,
 recentred at `z`. `Dec` and `Sel` are the profile decoder and selector of the identification. -/
 def RootedShiftedDecoderNullTransfer {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -133,7 +131,7 @@ def RootedShiftedDecoderNullTransfer {Ω : Type*} [MeasurableSpace Ω] (P : Meas
       P {ω | recentredOutput (localRadius j)
         (Dec (Sel (posPart (dmsShiftedCircle γ z (hcirc ω)))), z) ∈ S} = 0
 
-/-- **Intermediate hypothesis (PENDING RULING R29; not a frozen input).** The pointwise claim
+/-- **Intermediate hypothesis (PENDING TRUTH CHECK; not a frozen input).** The pointwise claim
 `RootedShiftedDecoderNullTransfer` for every measurable decoder and selector that identify the α₀-measure `μ` through
 the circle profile. Open point for the operator: whether this universal form is true (decoders are not unique on
 DMS-shifted profiles; see the canonical-decoder option (a) of BLOCKED-STEP-C). -/
@@ -213,7 +211,7 @@ lemma measurable_rootedTestFn {r : ℝ} {D : Set ℂ} {S : Set (ℂ × Measure �
           ((hDec.comp (hSel.comp (measurable_posPart.comp measurable_fst))).prodMk measurable_snd)))
   exact h1.comp measurable_snd
 
-/-! ## Conditional rooted domination (route Steps 2-6 and 12; PENDING R26 and R29) -/
+/-! ## Conditional rooted domination (Steps 2-6 and 12; PENDING TRUTH CHECK) -/
 
 /-- Normalised restriction times the mass recovers the restriction: `m(B) · (m(B)⁻¹ • m|_B)(A) = m|_B(A)` when
 `m(B) < ∞`. -/
@@ -289,13 +287,13 @@ lemma ae_section_ref_null {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [Is
   rw [measure_congr hset]
   exact hz
 
-/-- SUPERSEDED: takes the FALSE hJoint (MQ-lh-13); use `localRootedFieldMeasureDomination_of_jointPos_of_shifted`
+/-- SUPERSEDED: takes the FALSE hJoint; use `localRootedFieldMeasureDomination_of_jointPos_of_shifted`
 (RootedDominationJointPos.lean).
 
-**Conditional rooted domination (fp-audit-r1-b2; route Steps 2-6 and 12 of section 5, CHATGPT-219).** From the
-joint marked DMS identity `hJoint` (Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10; PENDING R26), the
+**Conditional rooted domination.** From the
+joint marked DMS identity `hJoint` (Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10; PENDING TRUTH CHECK), the
 measurable profile decoder `hProf` (`LQGMeasureOfProfileMeasurableFrozen`), the circle-profile selector `hSel`
-(PENDING ruling 2) and the shifted decoder transfer `hShift` (PENDING R29), the local rooted comparison
+(PENDING TRUTH CHECK) and the shifted decoder transfer `hShift` (PENDING TRUTH CHECK), the local rooted comparison
 `LocalRootedFieldMeasureDomination` (Lemma 8.2 of arXiv:2208.11795, proof) follows. -/
 theorem localRootedFieldMeasureDomination_of_joint_of_shifted
     (hJoint : DMSLemmaA10WholePlaneMarkedJointStmt.{u})

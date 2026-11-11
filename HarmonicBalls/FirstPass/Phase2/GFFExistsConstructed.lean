@@ -7,8 +7,8 @@ import HarmonicBalls.LPStage.GFFCovSymm
 /-!
 # Constructed whole-plane GFF: covariance of circle averages and the increment variance bound (HB level)
 
-Owner: worker z6, task fp-phase2-gff-existence-row29. Lemmas about the covariance kernel `wholePlaneGFFCov` on pairs of
-circle averages with different centers and radii, the input of the moment bound of MQ-lh-17 (B4).
+Lemmas about the covariance kernel `wholePlaneGFFCov` on pairs of
+circle averages with different centers and radii, the input of the moment bound.
 
 * `wholePlaneGFFCov_circle_circle_eq`: the cross covariance of circle averages is the mean value identity
   `Cov(h_r(z), h_s(w)) = A_r(z) + A_s(w) - avg_{x in ∂B_r(z)} log max(s, |x - w|)`, where `A_r(z)` is the average of
@@ -16,7 +16,7 @@ circle averages with different centers and radii, the input of the moment bound 
   Jensen formula of Duplantier-Sheffield (arXiv:0808.1560 Section 3.1) and Armitage-Gardiner (potential theory).
 * `wholePlaneGFFCov_circle_self_eq`: the variance `Var(h_r(z)) = 2 A_r(z) - log r`.
 * `wholePlaneGFFCov_circle_increment_le`: the variance of `h_r(z) - h_s(w)` is at most
-  `2 log(max r s + |z - w|) - log r - log s ≤ (|r - s| + 2 |z - w|) / a` for `a ≤ r, s` (MQ-lh-17 (b)).
+  `2 log(max r s + |z - w|) - log r - log s ≤ (|r - s| + 2 |z - w|) / a` for `a ≤ r, s`.
 -/
 
 namespace HarmonicBalls
@@ -73,7 +73,7 @@ theorem wholePlaneGFFCov_circle_self_eq {r : ℝ} (hr : 0 < r) (z : ℂ) :
   rw [Real.circleAverage_congr_sphere hEq, Real.circleAverage_const]
   ring
 
-/-- Variance of a difference of two circle averages (MQ-lh-17 (b), B4): for `a ≤ r`, `a ≤ s`,
+/-- Variance of a difference of two circle averages: for `a ≤ r`, `a ≤ s`,
 `Var(h_r(z) - h_s(w)) ≤ 2 log(max r s + |z - w|) - log r - log s ≤ (|r - s| + 2 |z - w|) / a`. The covariance of the
 difference is `K_rr + K_ss - 2 K_rs`; the averages `A_r(z)`, `A_s(w)` cancel, and the cross term is
 `avg_{x ∈ ∂B_r(z)} log max(s, |x - w|) ≤ log (max r s + |z - w|)` since `|x - w| ≤ r + |z - w|` on `∂B_r(z)`. -/
@@ -113,8 +113,7 @@ theorem wholePlaneGFFCov_circle_increment_le {a r s : ℝ} (ha : 0 < a) (har : a
 
 /-! ### Row 29: `WholePlaneGFFExistsFrozen` from the LP construction
 
-Conditional on the two named inputs of `HarmonicBalls/LPStage/GFFExistence.lean`: `WholePlaneCovPSDStmt` (B2, positive
-semidefiniteness of the covariance, MQ-lh-25) and `WholePlaneCovSymmStmt` (symmetry of the covariance). The Kolmogorov
+Conditional on the two named inputs of `HarmonicBalls/LPStage/GFFExistence.lean`: `WholePlaneCovPSDStmt` (positive semidefiniteness of the covariance) and `WholePlaneCovSymmStmt` (symmetry of the covariance). The Kolmogorov
 extension (B1) is proved (`LatticeProb.exists_isProjectiveLimit_real`). The kernel increment bound is discharged here from
 `wholePlaneGFFCov_circle_increment_le`. -/
 

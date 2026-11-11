@@ -5,8 +5,7 @@ import Mathlib.MeasureTheory.Integral.CircleAverage
 
 /-! # Deterministic steps of the derivation of `LocalRootedFieldMeasureDomination` (Lemma 8.2)
 
-Task `fp-audit-r1-b2-rooted-domination` (worker z3). Route: notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md,
-section 5 ("Lean-sized derivation of `hL1` from the repaired marked DMS input"). This file proves the steps of that
+The route is a Lean-sized derivation of `hL1` from the repaired marked DMS input. This file proves the steps of that
 route that need no probabilistic input:
 
 * Step 1 (local geometry): for `z ∈ D_j = {3 r_j < |z| < 1 - 3 r_j}` the ball `B_{2 r_j}(z)` lies in `B_1(0)` and avoids `0`.
@@ -17,7 +16,7 @@ route that need no probabilistic input:
 * Step 9 (normalisation): `massNormalize r (c • η) = massNormalize r η` for `0 < c < ∞` (the random positive constants
   of the DMS and affine normalisations disappear from the observation).
 
-Not here (BLOCKED, see reports/z3.md): Steps 4-5 (the marked DMS identity must see the circle profile `hcirc`, not only
+Not here: Steps 4-5 (the marked DMS identity must see the circle profile `hcirc`, not only
 the pairings `hC`) and the transfer in Steps 10-11 (law identity of the circle profile under the Cameron-Martin measure).
 Step 3 is `localRootKernel_ac_ae` (`FirstPass/Closure/LocalRootKernelAc.lean:32`), reused.
 -/

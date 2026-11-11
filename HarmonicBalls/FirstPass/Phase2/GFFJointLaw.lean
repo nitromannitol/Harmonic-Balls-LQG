@@ -2,7 +2,7 @@ import HarmonicBalls.Steps.Sec11.GaussianProcessLaw
 import HarmonicBalls.FirstPass.Frozen.S11aj
 
 /-!
-# The joint law of the whole-plane GFF and its circle-average process (phase 2, worker z7)
+# The joint law of the whole-plane GFF and its circle-average process
 
 `IsWholePlaneGFF P hC hcirc` constrains `hC ω φ` only for test functions `φ` and `hcirc ω r z` only for `r > 0`
 (`measurable_pairing`, `measurable_circle`). The full product map `ω ↦ (hC ω, hcirc ω)` into the Pi σ-algebras
@@ -98,7 +98,7 @@ theorem isWholePlaneGFF_jointLaw_map_eq {Ω : Type u} {Ω' : Type v} [Measurable
     ← Measure.map_map measurable_pairOfFamily (measurable_obsFamily_map hQ),
     isWholePlaneGFF_observableLaw_map_eq P Q hC hcirc hC' hcirc' hP hQ]
 
-/-- **Cameron-Martin profile law** (Steps 10-11 of chat 219 s.5, `reports/z3.md` BLOCKED-STEP-B). Conditional on the
+/-- **Cameron-Martin profile law**. Conditional on the
 named input `CameronMartinGFFReweighting` (`FirstPass/Frozen/S11aj.lean:33`): for the Cameron-Martin measure `P'`
 (equivalent to `P`) under which `(hC + f, hcirc + Av f)` is a whole-plane GFF, the law of the shifted profile under
 `P'` equals the law of `(hC, hcirc)` under `P`. -/

@@ -7,7 +7,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputsSec1to10
 import HarmonicBalls.FirstPass.Phase2.LocalDecoderCommonDerived
 
 /-!
-# Binder trade hLoc/hDec/hK (DerivedInputs28; task fp-phase2-di28-decoder-trades, worker z4)
+# Binder trade hLoc/hDec/hK
 
 Each wrapper `..._derivedInputs28` is the newest counted wrapper (DerivedInputs27, or the newest older generation that wraps
 the same form) with every binder of type `LocalLQGDecoderCommonFrozen` (hLoc, hDec) or `LocalMeasureKernelStmt` (hK) removed.
@@ -25,7 +25,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs28` of `closure_11_11_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_canonical_derivedInputs28` of `closure_11_11_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -60,7 +60,7 @@ theorem closure_11_11_canonical_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_11_canonical_derivedInputs22 (hDG := hDG) (hCC := hCC) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanon := hCanon) (hExists := hExists) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hId := hId)
 
-/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs28` of `closure_11_11_canonical_of_11_13_universe0_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs28` of `closure_11_11_canonical_of_11_13_universe0_derivedInputs22`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -97,7 +97,7 @@ theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_11_canonical_of_11_13_universe0_derivedInputs22 (hDG := hDG) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanonM := hCanonM) (hExists := hExists) (hCC := hCC) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10) (hK := HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived)
 
-/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs28` of `closure_11_11_paperExponent_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_paperExponent_derivedInputs28` of `closure_11_11_paperExponent_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -133,7 +133,7 @@ theorem closure_11_11_paperExponent_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_11_paperExponent_derivedInputs22 (_hDim := _hDim) (hDG := hDG) (hCC := hCC) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanon := hCanon) (hExists := hExists) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hId := hId)
 
-/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs28` of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs28` of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -171,7 +171,7 @@ theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_11_paperExponent_of_11_13_universe0_derivedInputs22 (_hDim := _hDim) (hDG := hDG) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanonM := hCanonM) (hExists := hExists) (hCC := hCC) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10) (hK := HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived)
 
-/-- Binder-trade wrapper `closure_11_12_derivedInputs28` of `closure_11_12_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_12_derivedInputs28` of `closure_11_12_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -203,7 +203,7 @@ theorem closure_11_12_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_12_derivedInputs22 (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanon := hCanon) (hExists := hExists) (hDG := hDG) (hCC := hCC) (hE := hE) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin)
 
-/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs28` of `closure_11_12_clean_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_12_clean_derivedInputs28` of `closure_11_12_clean_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -235,7 +235,7 @@ theorem closure_11_12_clean_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_12_clean_derivedInputs22 (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanon := hCanon) (hExists := hExists) (hDG := hDG) (hCC := hCC) (hE := hE) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin)
 
-/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs28` of `closure_11_13_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_13_canonical_derivedInputs28` of `closure_11_13_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -268,7 +268,7 @@ theorem closure_11_13_canonical_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_13_canonical_derivedInputs22 (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanon := hCanon) (hExists := hExists) (hDG := hDG) (hCC := hCC) (hE := hE) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hId := hId)
 
-/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs28` of `closure_11_13_paperExponent_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_13_paperExponent_derivedInputs28` of `closure_11_13_paperExponent_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -302,7 +302,7 @@ theorem closure_11_13_paperExponent_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_13_paperExponent_derivedInputs22 (_hDim := _hDim) (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanon := hCanon) (hExists := hExists) (hDG := hDG) (hCC := hCC) (hE := hE) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hId := hId)
 
-/-- Binder-trade wrapper `closure_11_2_derivedInputs28` of `closure_11_2_derivedInputs19` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_2_derivedInputs28` of `closure_11_2_derivedInputs19`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -321,7 +321,7 @@ theorem closure_11_2_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_2_derivedInputs19 (hDG := hDG) (hCC := hCC) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM)
 
-/-- Binder-trade wrapper `closure_11_5_derivedInputs28` of `closure_11_5_derivedInputs19` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_11_5_derivedInputs28` of `closure_11_5_derivedInputs19`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -340,7 +340,7 @@ theorem closure_11_5_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_11_5_derivedInputs19 (hDG := hDG) (hCC := hCC) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM)
 
-/-- Binder-trade wrapper `closure_1_2_derivedInputs28` of `closure_1_2_derivedInputs5` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_derivedInputs28` of `closure_1_2_derivedInputs5`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -369,7 +369,7 @@ theorem closure_1_2_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_derivedInputs5 (hDG := hDG) (hAff := hAff) (hCC := hCC) (hW := hW) (hE := hE) (hN := hN) (hL1 := hL1) (hE1 := hE1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hStep8 := hStep8) (hTor := hTor)
 
-/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs28` of `closure_1_2_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_canonical_derivedInputs28` of `closure_1_2_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -407,7 +407,7 @@ theorem closure_1_2_canonical_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_canonical_derivedInputs22 (hDG := hDG) (hCC := hCC) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hN2 := hN2) (hCanon := hCanon) (hExists := hExists) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hId := hId) (hTor := hTor)
 
-/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs28` of `closure_1_2_canonical_of_11_13_universe0_derivedInputs27` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs28` of `closure_1_2_canonical_of_11_13_universe0_derivedInputs27`.
   Binders discharged by derived theorems: hDec, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -446,7 +446,7 @@ theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_canonical_of_11_13_universe0_derivedInputs27 (hDG := hDG) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hTor := hTor) (hN2 := hN2) (hCanonM := hCanonM) (hExists := hExists) (hCC := hCC) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10) (hK := HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived)
 
-/-- Binder-trade wrapper `closure_1_2_faithful_derivedInputs28` of `closure_1_2_faithful_derivedInputs5` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_faithful_derivedInputs28` of `closure_1_2_faithful_derivedInputs5`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -475,7 +475,7 @@ theorem closure_1_2_faithful_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_faithful_derivedInputs5 (hDG := hDG) (hAff := hAff) (hCC := hCC) (hW := hW) (hE := hE) (hN := hN) (hL1 := hL1) (hE1 := hE1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hStep8 := hStep8) (hTor := hTor)
 
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs28` of `closure_1_2_faithful_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_derivedInputs28` of `closure_1_2_faithful_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -513,7 +513,7 @@ theorem closure_1_2_faithful_canonical_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_faithful_canonical_derivedInputs22 (hDG := hDG) (hCC := hCC) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hN2 := hN2) (hCanon := hCanon) (hExists := hExists) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hId := hId) (hTor := hTor)
 
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs28` of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs27` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs28` of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs27`.
   Binders discharged by derived theorems: hDec, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -552,7 +552,7 @@ theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs27 (hDG := hDG) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hTor := hTor) (hN2 := hN2) (hCanonM := hCanonM) (hExists := hExists) (hCC := hCC) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10) (hK := HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived)
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs28` of `closure_1_2_paperExponent_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_paperExponent_derivedInputs28` of `closure_1_2_paperExponent_derivedInputs22`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -591,7 +591,7 @@ theorem closure_1_2_paperExponent_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_paperExponent_derivedInputs22 (_hDim := _hDim) (hDG := hDG) (hCC := hCC) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hN2 := hN2) (hCanon := hCanon) (hExists := hExists) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hId := hId) (hTor := hTor)
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_derivedInputs28` of `closure_1_2_paperExponent_of_11_13_derivedInputs` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_derivedInputs28` of `closure_1_2_paperExponent_of_11_13_derivedInputs`.
   Binders discharged by derived theorems: hDec (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -622,7 +622,7 @@ theorem closure_1_2_paperExponent_of_11_13_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_paperExponent_of_11_13_derivedInputs (_hDim := _hDim) (hDG := hDG) (hAff := hAff) (hCC := hCC) (hW := hW) (hE := hE) (hN := hN) (hL1 := hL1) (hE1 := hE1) (hE3 := hE3) (hCamp := hCamp) (hDecFrozen := hDecFrozen) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (h13 := h13) (hTor := hTor)
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs28` of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs27` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs28` of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs27`.
   Binders discharged by derived theorems: hDec, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -662,7 +662,7 @@ theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs28
   :=
   HarmonicBalls.Closure.closure_1_2_paperExponent_of_11_13_universe0_derivedInputs27 (_hDim := _hDim) (hDG := hDG) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCM := hCM) (hAx := hAx) (hTor := hTor) (hN2 := hN2) (hCanonM := hCanonM) (hExists := hExists) (hCC := hCC) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10) (hK := HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived)
 
-/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs28` of `firstPass_11_11_faithful_universe0_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_11_faithful_universe0_derivedInputs28` of `firstPass_11_11_faithful_universe0_derivedInputs22`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -699,7 +699,7 @@ theorem firstPass_11_11_faithful_universe0_derivedInputs28
   :=
   HarmonicBalls.Closure.firstPass_11_11_faithful_universe0_derivedInputs22 (hDG := hDG) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanonM := hCanonM) (hExists := hExists) (hCC := hCC) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10) (hK := HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived)
 
-/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs28` of `firstPass_1_2_faithful_universe0_derivedInputs27` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs28` of `firstPass_1_2_faithful_universe0_derivedInputs27`.
   Binders discharged by derived theorems: hDec, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -745,7 +745,7 @@ namespace HarmonicBalls.S11m.Clean11_12
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_11_12_clean_derivedInputs28` of `firstPass_11_12_clean_derivedInputs21` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_12_clean_derivedInputs28` of `firstPass_11_12_clean_derivedInputs21`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -779,7 +779,7 @@ namespace HarmonicBalls.S11m.Final11_12
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_11_12_final_derivedInputs28` of `firstPass_11_12_final_derivedInputs21` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_12_final_derivedInputs28` of `firstPass_11_12_final_derivedInputs21`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -813,7 +813,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_11_13_derivedInputs28` of `firstPass_11_13_derivedInputs27` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_derivedInputs28` of `firstPass_11_13_derivedInputs27`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -848,7 +848,7 @@ theorem firstPass_11_13_derivedInputs28
   :=
   HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_derivedInputs27 (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanonM := hCanonM) (hExists := hExists) (hDG := hDG) (hCC := hCC) (hE := hE) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hSupM := hSupM) (hFin := hFin) (_hRootCont := _hRootCont) (_hA10 := _hA10) (hCal := hCal) (hK := HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived)
 
-/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs28` of `firstPass_11_13_final_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_final_derivedInputs28` of `firstPass_11_13_final_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -881,7 +881,7 @@ theorem firstPass_11_13_final_derivedInputs28
   :=
   HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final_derivedInputs22 (hAx := hAx) (hN2 := hN2) (hLoc := HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived) (hCanon := hCanon) (hExists := hExists) (hDG := hDG) (hCC0 := hCC0) (hE := hE) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hCal := hCal) (hIns := hIns)
 
-/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs28` of `firstPass_11_13_final_route1_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_final_route1_derivedInputs28` of `firstPass_11_13_final_route1_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -922,7 +922,7 @@ namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs28` of `firstPass_11_13_canonical_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_canonical_derivedInputs28` of `firstPass_11_13_canonical_derivedInputs22`.
   Binders discharged by derived theorems: hLoc (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/
@@ -962,7 +962,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-trade wrapper `firstPass_11_13_closed_derivedInputs28` of `firstPass_11_13_closed_derivedInputs22` (fp-phase2-di28-decoder-trades, worker z4).
+/-- Binder-trade wrapper `firstPass_11_13_closed_derivedInputs28` of `firstPass_11_13_closed_derivedInputs22`.
   Binders discharged by derived theorems: hLoc, hK (`HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` for
   `LocalLQGDecoderCommonFrozen`, `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` for `LocalMeasureKernelStmt`).
   Other binders and the conclusion unchanged. -/

@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11i.Final11_13Close
 import HarmonicBalls.FirstPass.S8c.BirkhoffDerived
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 
-/-! # Counted results 11.x and A.x without the derived frozen inputs (phase 2, worker z6)
+/-! # Counted results 11.x and A.x without the derived frozen inputs
 
-For each counted declaration of result 11.x or A.x (docs/campaign/PHASE2-INVENTORY.md section 1) that takes
+For each counted declaration of result 11.x or A.x that takes
 `BirkhoffPointwiseErgodic` or `LocalLQGInsertionWeylOffOrigin` as a binder, this file gives the theorem
 `<countedName>_derivedInputs`: the same statement with that binder removed, proved by applying the counted
 declaration to the derived theorems `birkhoffPointwiseErgodic_derived` (FirstPass/S8c/BirkhoffDerived.lean)

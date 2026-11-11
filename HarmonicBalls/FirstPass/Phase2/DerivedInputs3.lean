@@ -12,7 +12,7 @@ import HarmonicBalls.FirstPass.S11i.Assembly11_13
 import HarmonicBalls.FirstPass.S11i.Final11_13
 
 /-! # Counted results without the frozen inputs WeylInternalClosedFrozen, LQGMeasureSquareMeasurableFrozen and
-LQGMetricPointwiseAEMeasurableFrozen (phase 2, worker z7, fp-phase2-derived-inputs3-wrappers)
+LQGMetricPointwiseAEMeasurableFrozen
 
 For each counted declaration (and each numbered-result alternate) that takes one of these three frozen inputs as a binder,
 the most derived existing version is wrapped as `<counted>_derivedInputs3`: the same statement with the binders removed,

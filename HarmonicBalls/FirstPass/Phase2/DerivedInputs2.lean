@@ -3,10 +3,9 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputsSec11A
 import HarmonicBalls.FirstPass.Phase2.WeylShiftedMassDerived
 
 /-! # Counted results 11.9, 11.10, 11.13, 11.16, 11.17 without the derived mass-measurability input
-(phase 2, worker z6)
 
-For each counted declaration that takes `WeylShiftedMassMeasurableFrozen` as a binder (docs/campaign/
-PHASE2-INVENTORY.md, section 2, input 27: uses 11.9, 11.10, 11.13, 11.16, 11.17), this file gives the theorem
+
+For each counted declaration that takes `WeylShiftedMassMeasurableFrozen` as a binder (uses 11.9, 11.10, 11.13, 11.16, 11.17), this file gives the theorem
 `<countedName>_derivedInputs2`: the same statement with that binder removed, proved by applying the counted
 declaration to `HarmonicBalls.weylShiftedMassMeasurable_derived` (FirstPass/Phase2/WeylShiftedMassDerived.lean).
 The counted declarations 11.9, 11.10, 11.16 and 11.17 take no `BirkhoffPointwiseErgodic` and no

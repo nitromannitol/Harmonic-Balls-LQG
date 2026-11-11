@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.Phase2.MassFunctionalDerived
 import HarmonicBalls.Proofs.Sec5.OpenMeasureLaw
 
 /-!
-# Derivation of `LQGMeasureOfProfileMeasurableFrozen` (fp-phase2-profile-decoder-derive, worker z7)
+# Derivation of `LQGMeasureOfProfileMeasurableFrozen`
 
-Written route: `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, lines 203-206. The decoder is the vague limit of the dyadic
+The decoder is the vague limit of the dyadic
 approximations of `circleProfile y` on its convergence locus, and `0` elsewhere; `IsWholePlaneGFF.ae_circle_map_eq_raw`
 identifies it with `μ ω` almost surely. The route's step (b), measurability of the convergence locus, is not supplied
 by the source. It is proved here by countable determination: vague convergence of the approximations is tested on a
@@ -396,7 +396,7 @@ theorem isLQGLimit_decoder (T : TestFamily) (γ α : ℝ) {y : C(CircleParameter
 
 end ProfileDecoderDerived
 
-/-- Derivation of `LQGMeasureOfProfileMeasurableFrozen` (fp-phase2-profile-decoder-derive, worker z7). The decoder
+/-- Derivation of `LQGMeasureOfProfileMeasurableFrozen`. The decoder
 is the Riesz measure of the vague limit of the dyadic approximations on the convergence locus, and `0` elsewhere. -/
 theorem lqgMeasureOfProfileMeasurable_derived : LQGMeasureOfProfileMeasurableFrozen.{u} := by
   intro Ω _ P _ γ α hC hcirc μ F hh hμ hFm hF

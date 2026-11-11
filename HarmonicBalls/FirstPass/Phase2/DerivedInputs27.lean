@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs26
 import HarmonicBalls.FirstPass.Phase2.SquarePositiveDerived
 
 /-!
-# Binder trade hPos10 (DerivedInputs27; task fp-phase2-row23-closed-square-then-lpstage-cm, worker z7)
+# Binder trade hPos10
 
 Each wrapper `..._derivedInputs27` is the wrapper `..._derivedInputs26` with the binder `hPos10 : LQGMeasureSquarePositiveFrozen`
 (FirstPass/Frozen/S11c.lean:130; ledger row 23) removed. The binder is discharged by
@@ -17,7 +17,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs27` of `closure_1_2_canonical_of_11_13_universe0_derivedInputs26` (fp-phase2-row23-closed-square-then-lpstage-cm, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
+/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs27` of `closure_1_2_canonical_of_11_13_universe0_derivedInputs26`: `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs27
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -60,7 +60,7 @@ theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs27
     (hCMT := hCMT) (hPos10 := HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived hDG (fun Ω _ P γ hC hcirc => hCC γ 0 Ω P hC hcirc) hE) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10)
     (hK := hK)
 
-/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs27` of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs26` (fp-phase2-row23-closed-square-then-lpstage-cm, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs27` of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs26`: `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs27
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -103,7 +103,7 @@ theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs27
     (hDC := hDC) (hCMT := hCMT) (hPos10 := HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived hDG (fun Ω _ P γ hC hcirc => hCC γ 0 Ω P hC hcirc) hE) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont)
     (hA10 := hA10) (hK := hK)
 
-/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs27` of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs26` (fp-phase2-row23-closed-square-then-lpstage-cm, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
+/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs27` of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs26`: `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs27
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -147,7 +147,7 @@ theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs27
     (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived hDG (fun Ω _ P γ hC hcirc => hCC γ 0 Ω P hC hcirc) hE) (hSupM := hSupM) (hFin := hFin)
     (hRootCont := hRootCont) (hA10 := hA10) (hK := hK)
 
-/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs27` of `firstPass_1_2_faithful_universe0_derivedInputs26` (fp-phase2-row23-closed-square-then-lpstage-cm, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
+/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs27` of `firstPass_1_2_faithful_universe0_derivedInputs26`: `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs27
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -194,7 +194,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-trade wrapper `firstPass_11_13_derivedInputs27` of `firstPass_11_13_derivedInputs26` (fp-phase2-row23-closed-square-then-lpstage-cm, worker z7): `_hWCont` is discharged by `HarmonicBalls.weylMetricCompositionContinuousOuter_derived` (as in DerivedInputs23). -/
+/-- Binder-trade wrapper `firstPass_11_13_derivedInputs27` of `firstPass_11_13_derivedInputs26`: `_hWCont` is discharged by `HarmonicBalls.weylMetricCompositionContinuousOuter_derived` (as in DerivedInputs23). -/
 theorem firstPass_11_13_derivedInputs27
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,

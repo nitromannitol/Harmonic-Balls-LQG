@@ -20,7 +20,7 @@ namespace HarmonicBalls
 open MeasureTheory Filter Set ProbabilityTheory
 open FirstPassS11aa
 
-/-- Universe transfer (route `notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md` §1.4): a whole-plane GFF on a
+/-- Universe transfer: a whole-plane GFF on a
 probability space in `Type 0` gives one on `ULift Ω : Type u`, namely `P.map ULift.up`, with the pairings and the
 circle averages composed with `ULift.down`. Every clause of `IsWholePlaneGFF` transfers: the pairings and circle
 averages are measurable through `ULift.down`; the Gaussian laws of finite families, the centering and the covariance

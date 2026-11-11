@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Frozen.S11k
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 
-/-! # Inner measurability of the LQG mass and of the internal diameter (phase 2, worker z4)
+/-! # Inner measurability of the LQG mass and of the internal diameter
 
 Derives the two inner-measurability interfaces of `FirstPass/Frozen/S11k.lean` from literature inputs of
 `HarmonicBalls/Proposed/LQG.lean`, with no other hypothesis:

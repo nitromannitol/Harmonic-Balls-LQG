@@ -15,7 +15,7 @@ universe u
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_1_1` (wrapper of `closure_1_1_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_1_1` (wrapper of `closure_1_1_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_1_1_derivedInputs5
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
@@ -40,7 +40,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_1_3` (wrapper of `closure_1_3_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_1_3` (wrapper of `closure_1_3_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_1_3_derivedInputs5
     (hmeasure : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureLocality P γ α₀ hC hcirc)
@@ -67,7 +67,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_10_7` (wrapper of `closure_10_7_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_10_7` (wrapper of `closure_10_7_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_10_7_derivedInputs5
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
@@ -93,7 +93,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_1_2` (wrapper of `closure_1_2_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_1_2` (wrapper of `closure_1_2_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_1_2_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -124,7 +124,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_1_2_faithful` (wrapper of `closure_1_2_faithful_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_1_2_faithful` (wrapper of `closure_1_2_faithful_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_1_2_faithful_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -155,7 +155,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_7_2` (wrapper of `closure_7_2_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_7_2` (wrapper of `closure_7_2_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_7_2_derivedInputs5
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
@@ -180,7 +180,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_8_1` (wrapper of `closure_8_1_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_8_1` (wrapper of `closure_8_1_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_8_1_derivedInputs5
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
@@ -205,7 +205,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_9_2` (wrapper of `closure_9_2_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_9_2` (wrapper of `closure_9_2_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_9_2_derivedInputs5
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE1 : LQGMeasureOfProfileMeasurableFrozen.{u})
@@ -230,7 +230,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_5_2` (wrapper of `closure_5_2_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_5_2` (wrapper of `closure_5_2_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_5_2_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -253,7 +253,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_5_3` (wrapper of `closure_5_3_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_5_3` (wrapper of `closure_5_3_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_5_3_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -276,7 +276,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_5_4` (wrapper of `closure_5_4_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_5_4` (wrapper of `closure_5_4_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_5_4_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -299,7 +299,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_5_5` (wrapper of `closure_5_5_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_5_5` (wrapper of `closure_5_5_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_5_5_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -322,7 +322,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `typicalPointManyGoodScales_closed` (wrapper of `typicalPointManyGoodScales_closed_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `typicalPointManyGoodScales_closed` (wrapper of `typicalPointManyGoodScales_closed_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem typicalPointManyGoodScales_closed_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -345,7 +345,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_11_2` (wrapper of `closure_11_2_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_2` (wrapper of `closure_11_2_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_2_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -371,7 +371,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_11_5` (wrapper of `closure_11_5_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_5` (wrapper of `closure_11_5_noWeyl`): the binders hB, hDecFrozen are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_5_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -397,7 +397,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_11_6` (wrapper of `closure_11_6_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_6` (wrapper of `closure_11_6_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_6_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -420,7 +420,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_11_11` (wrapper of `closure_11_11_noWeyl`): the binders hB are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_11` (wrapper of `closure_11_11_noWeyl`): the binders hB are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_11_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -446,7 +446,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Counted declaration `firstPass_11_13_closed` (wrapper of `firstPass_11_13_closed_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `firstPass_11_13_closed` (wrapper of `firstPass_11_13_closed_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem firstPass_11_13_closed_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hLen : LQGMetricLengthUnivFrozen.{0})
@@ -497,7 +497,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Counted declaration `closure_11_11_canonical` (wrapper of `closure_11_11_canonical_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_11_canonical` (wrapper of `closure_11_11_canonical_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_11_canonical_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -550,7 +550,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Counted declaration `closure_11_11_paperExponent` (wrapper of `closure_11_11_paperExponent_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_11_paperExponent` (wrapper of `closure_11_11_paperExponent_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_11_paperExponent_derivedInputs5
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -605,7 +605,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Counted declaration `closure_11_12_clean` (wrapper of `closure_11_12_clean_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_12_clean` (wrapper of `closure_11_12_clean_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_12_clean_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})
@@ -650,7 +650,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_11_12` (wrapper of `closure_11_12_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_12` (wrapper of `closure_11_12_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_12_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})
@@ -695,7 +695,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Counted declaration `closure_11_13_canonical` (wrapper of `closure_11_13_canonical_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_13_canonical` (wrapper of `closure_11_13_canonical_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_13_canonical_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})
@@ -741,7 +741,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Counted declaration `closure_11_13_paperExponent` (wrapper of `closure_11_13_paperExponent_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_11_13_paperExponent` (wrapper of `closure_11_13_paperExponent_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_11_13_paperExponent_derivedInputs5
     (_hDim : WholePlaneLQGGraphDimension)
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
@@ -787,7 +787,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Counted declaration `closure_1_2_canonical` (wrapper of `closure_1_2_canonical_derivedInputs4`): the binders hCMAbs, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_1_2_canonical` (wrapper of `closure_1_2_canonical_derivedInputs4`): the binders hCMAbs, hDecFrozen are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_1_2_canonical_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -844,7 +844,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Counted declaration `closure_1_2_faithful_canonical` (wrapper of `closure_1_2_faithful_canonical_derivedInputs4`): the binders hCMAbs, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_1_2_faithful_canonical` (wrapper of `closure_1_2_faithful_canonical_derivedInputs4`): the binders hCMAbs, hDecFrozen are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_1_2_faithful_canonical_derivedInputs5
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -902,7 +902,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Counted declaration `closure_1_2_paperExponent` (wrapper of `closure_1_2_paperExponent_derivedInputs4`): the binders hCMAbs, hDecFrozen are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `closure_1_2_paperExponent` (wrapper of `closure_1_2_paperExponent_derivedInputs4`): the binders hCMAbs, hDecFrozen are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem closure_1_2_paperExponent_derivedInputs5
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -961,7 +961,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory
 
-/-- Counted declaration `firstPass_11_13_canonical` (wrapper of `firstPass_11_13_canonical_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `firstPass_11_13_canonical` (wrapper of `firstPass_11_13_canonical_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem firstPass_11_13_canonical_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})
@@ -1007,7 +1007,7 @@ end HarmonicBalls.FirstPassS11iAssembly11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Counted declaration `firstPass_11_13` (wrapper of `firstPass_11_13_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `firstPass_11_13` (wrapper of `firstPass_11_13_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem firstPass_11_13_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hLen : LQGMetricLengthUnivFrozen.{0})
@@ -1059,7 +1059,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Counted declaration `firstPass_11_13_final` (wrapper of `firstPass_11_13_final_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `firstPass_11_13_final` (wrapper of `firstPass_11_13_final_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem firstPass_11_13_final_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hLen : LQGMetricLengthUnivFrozen.{0})
@@ -1105,7 +1105,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Counted declaration `firstPass_11_13_final_route1` (wrapper of `firstPass_11_13_final_route1_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources (audit R1, MINOR HB). No conclusion is weakened. -/
+/-- Counted declaration `firstPass_11_13_final_route1` (wrapper of `firstPass_11_13_final_route1_derivedInputs4`): the binders hCMAbs are removed and supplied by their derived sources. No conclusion is weakened. -/
 theorem firstPass_11_13_final_route1_derivedInputs5
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hLen : LQGMetricLengthUnivFrozen.{0})
@@ -1152,7 +1152,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Universe-0 corollary of `closure_1_2_canonical_of_11_13` (audit R1, MINOR HB): the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB, hDecFrozen. No conclusion is weakened. -/
+/-- Universe-0 corollary of `closure_1_2_canonical_of_11_13`: the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB, hDecFrozen. No conclusion is weakened. -/
 theorem closure_1_2_canonical_of_11_13_universe0
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -1218,7 +1218,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Universe-0 corollary of `closure_1_2_faithful_canonical_of_11_13` (audit R1, MINOR HB): the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB, hDecFrozen. No conclusion is weakened. -/
+/-- Universe-0 corollary of `closure_1_2_faithful_canonical_of_11_13`: the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB, hDecFrozen. No conclusion is weakened. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -1284,7 +1284,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Universe-0 corollary of `firstPass_1_2_faithful` (audit R1, MINOR HB): the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
+/-- Universe-0 corollary of `firstPass_1_2_faithful`: the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
 theorem firstPass_1_2_faithful_universe0
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -1349,7 +1349,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Universe-0 corollary of `closure_1_2_paperExponent_of_11_13` (audit R1, MINOR HB): the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB, hDecFrozen. No conclusion is weakened. -/
+/-- Universe-0 corollary of `closure_1_2_paperExponent_of_11_13`: the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB, hDecFrozen. No conclusion is weakened. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -1417,7 +1417,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Universe-0 corollary of `closure_11_11_paperExponent_of_11_13` (audit R1, MINOR HB): the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
+/-- Universe-0 corollary of `closure_11_11_paperExponent_of_11_13`: the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -1480,7 +1480,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Universe-0 corollary of `closure_11_11_canonical_of_11_13` (audit R1, MINOR HB): the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
+/-- Universe-0 corollary of `closure_11_11_canonical_of_11_13`: the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
 theorem closure_11_11_canonical_of_11_13_universe0
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -1542,7 +1542,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Universe-0 corollary of `firstPass_11_11_faithful` (audit R1, MINOR HB): the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
+/-- Universe-0 corollary of `firstPass_11_11_faithful`: the binder h13 (Lemma 11.13, canonical) is supplied by `firstPass_11_13_closed_derivedInputs5`, the closed proof of Lemma 11.13 at universe 0; its binders are merged in. Removed binders: hB. No conclusion is weakened. -/
 theorem firstPass_11_11_faithful_universe0
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
