@@ -32,7 +32,7 @@ theorem lqgMetricSatisfiesAxiomsUniv_of_lpStage : LQGMetricSatisfiesAxiomsUnivFr
     ((isWholePlaneGFF_iff P hC hcirc).1 hGFF) hf hfm
   exact (satisfiesLQGMetricAxioms_iff P γ ξ 𝔇 _).2 hLP
 
-/-- `LQGMetricLengthUnivFrozen` (`FirstPass/Frozen/S11j.lean:133`, inventory row 42) from the LP stage, binder-free. -/
+/-- `LQGMetricLengthUnivFrozen` (`FirstPass/Frozen/S11j.lean:133`) from the LP stage, binder-free. -/
 theorem lqgMetricLengthUniv_of_lpStage : LQGMetricLengthUnivFrozen.{u} := by
   intro γ ξ 𝔇 h0 h1 hLQG Ω _ P hC hcirc hGFF
   have hLP := LatticeProb.LQG.lqgMetricLengthUniv.{u} γ ξ 𝔇 h0 h1 ((isLQGMetric_iff γ ξ 𝔇).1 hLQG) Ω P hC hcirc

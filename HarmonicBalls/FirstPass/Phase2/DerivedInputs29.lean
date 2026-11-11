@@ -12,12 +12,12 @@ Decision R60: the Draft statements `LQGMeasureFullSupportStmt`
 and `LQGVolumeGrowthAllScalesStmt` reduce to the three literature inputs of
 Proposed/LQG.lean named in PHASE2-DERIVATION-STATUS.md:
 
-* row 1 `LQGMeasureExistence` (Proposed/LQG.lean:74), used at every `α` (row 4 needs existence at every `α₀`);
-* row 2 `LQGMeasureCoordChange` (Proposed/LQG.lean:131), used at `α₀ = 0`;
-* row 3 `WholePlaneLQGBallMassBounds` (Proposed/LQG.lean:172).
+* `LQGMeasureExistence` (Proposed/LQG.lean:74), used at every `α` (needs existence at every `α₀`);
+* `LQGMeasureCoordChange` (Proposed/LQG.lean:131), used at `α₀ = 0`;
+* `WholePlaneLQGBallMassBounds` (Proposed/LQG.lean:172).
 
 The other premises are derived: `WholePlaneGFFAffineInvariance_derived`,
-`HarmonicBalls.Section6.lqgMeasureWeylScaling`, and row 4 `LQGMeasureNonatomic`
+`HarmonicBalls.Section6.lqgMeasureWeylScaling`, and `LQGMeasureNonatomic`
 through `singular_nonatomic_of_existence_and_wholePlane` (Proofs/Sec2/SingularAtomAtZero.lean). The two statements then follow from
 `lqgMeasureFullSupportStmt_of_literature` (Proofs/Sec2/Assembly.lean:124) and `lqgVolumeGrowthAllScalesStmt_of_literature`
 (Proofs/Sec2/Assembly.lean:120).

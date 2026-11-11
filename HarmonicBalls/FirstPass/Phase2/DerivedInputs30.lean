@@ -8,7 +8,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs29
 /-!
 # Row 23 from rows 1, 2, 3
 
-`LQGMeasureSquarePositiveFrozen` (FirstPass/Frozen/S11c.lean:130) is row 23. Its LP route is
+`LQGMeasureSquarePositiveFrozen` (FirstPass/Frozen/S11c.lean:130). The LP route is
 `lqgMeasureSquarePositiveFrozen_of_lpStage` (FirstPass/LPBridge/LQGMeasureSquarePositive.lean:30), which takes the LP forms of
 rows 1, 2, 3 (`LatticeProb.LQG.LQGMeasureExistenceLP`, `LQGMeasureCoordChangeLP`, `WholePlaneLQGBallMassBoundsLP`,
 LPStage/LQGMeasureInputs.lean). The HB Props of Proposed/LQG.lean are transported to the LP forms here:

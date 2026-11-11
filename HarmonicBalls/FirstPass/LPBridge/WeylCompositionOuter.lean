@@ -6,7 +6,7 @@ import HarmonicBalls.LPStage.WeylCompositionOuter2
 # Bridge: the LP derived Weyl composition gives the frozen HB statement
 
 `HarmonicBalls.weylMetricCompositionContinuousOuterFrozen_of_lpStage` proves the frozen statement
-`WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117`, row 56 of PHASE2-INVENTORY.md section 2)
+`WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117` of PHASE2-INVENTORY.md section 2)
 from the LP statement `LatticeProb.LQG.weylMetricCompositionContinuousOuter_lp` (`LPStage/WeylCompositionOuter2.lean`).
 No hypothesis is added. The length-metric predicate is transferred by the bridge `isEuclideanLengthMetric_iff_lpStage`
 of `FirstPass/LPBridge/M5c.lean`; the Weyl scaling of the HB and LP copies agrees by definitional unfolding (as in M5c).

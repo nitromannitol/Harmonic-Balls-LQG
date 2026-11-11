@@ -5,8 +5,7 @@ import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
 /-!
 # Derived inputs
 
-Wrappers of the DerivedInputs19 and DerivedInputs20 wrappers with the binders of row 33
-(`LQGMassInnerMeasurableFrozen`) and row 49 (`LQGMeasureLocality`, forall-closed) discharged by
+Wrappers of the DerivedInputs19 and DerivedInputs20 wrappers with the binders `LQGMassInnerMeasurableFrozen` and `LQGMeasureLocality` (forall-closed) discharged by
 `lqgMassInnerMeasurable_derived'` and `lqgMeasureLocality_derived` (CircleAverageLocalityLinkDerived.lean).
 Row 22 (`LQGMeasureSquareMeasurableFrozen`) is not a binder of these wrappers. Same conclusions. -/
 

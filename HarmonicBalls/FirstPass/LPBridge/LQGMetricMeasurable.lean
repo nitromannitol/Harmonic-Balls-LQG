@@ -12,7 +12,7 @@ import HarmonicBalls.LPStage.LQGMetricMeasurable2
   (`FirstPass/Frozen/S11e.lean:27`), from the LP theorem `LatticeProb.LQG.lqgMetricPointwiseAEMeasurable_lp`
   (`LPStage/LQGMetricMeasurable2.lean`).
 * `HarmonicBalls.lqgInternalDiamInnerMeasurable_of_lp`: the HB frozen Prop `LQGInternalDiamInnerMeasurableFrozen`
-  (`FirstPass/Frozen/S11k.lean:89`, row 32), from `LatticeProb.LQG.lqgInternalDiamInnerMeasurable_lp`.
+  (`FirstPass/Frozen/S11k.lean:89`), from `LatticeProb.LQG.lqgInternalDiamInnerMeasurable_lp`.
 
 The only hypothesis of each bridge is the HB literature input `LQGMetricFieldAxioms` (`Proposed/LQG.lean`) in the
 quantified form used by the HB derivations (`lqgMetricPointwiseAEMeasurable_derived`,
@@ -40,7 +40,7 @@ theorem lqgMetricPointwiseAEMeasurable_of_lp
     γ ξ Ω P hC hcirc D ((isWholePlaneGFF_iff P hC hcirc).1 hW) hγ hγ2
     ((isLQGMetricOfField_iff P γ ξ 0 hC D).1 hD) x y
 
-/-- `LQGInternalDiamInnerMeasurableFrozen` (`FirstPass/Frozen/S11k.lean:89`, row 32) from the LP stage, given the HB
+/-- `LQGInternalDiamInnerMeasurableFrozen` (`FirstPass/Frozen/S11k.lean:89`) from the LP stage, given the HB
 input `LQGMetricFieldAxioms` in its quantified form. -/
 theorem lqgInternalDiamInnerMeasurable_of_lp
     (hFA : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)

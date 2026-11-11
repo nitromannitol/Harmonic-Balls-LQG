@@ -16,7 +16,7 @@ The 23 counted wrappers of `DerivedInputs18.lean` are restated with the same con
 `hCCα` (`CoordChangeAlpha0Stmt`, which unfolds to the forall-closure of the Proposed input `LQGMeasureCoordChange`) is
 replaced by `hCC` in the same argument order, and `hWCont` (`WeylMetricCompositionContinuousOuterFrozen`) is discharged
 by `weylMetricCompositionContinuousOuter_derived` (`Phase2/WeylCompositionOuterDerived.lean`). Row 4 (`LQGMeasureNonatomic`)
-and row 55 (`VeryGoodAnnulusProbabilityStmt`) have no binder in these wrappers. No binder is added. -/
+and `VeryGoodAnnulusProbabilityStmt` have no binder in these wrappers. No binder is added. -/
 
 universe u
 

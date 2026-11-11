@@ -36,7 +36,7 @@ universe u
 
 /-- Almost surely, the Weyl-shifted metric `(weylShiftPair γ ξ f (μ, D)).2` of an LQG metric `D` (the unfolded body of
 `IsLQGMetricOfField`, for the metric `𝔇` of `h^ℂ`) equals the metric `weylScaling (𝔇 (h^ℂ + f)) ξ (-α₀ log|·|)` of the shifted
-field. Clause III of `LQGMetricFieldAxioms` (TRUE, row 58) and `WeylScalingCompositionFrozen` (TRUE, row 34) are used. -/
+field. Clause III of `LQGMetricFieldAxioms` (TRUE) and `WeylScalingCompositionFrozen` (TRUE) are used. -/
 theorem weylShiftPair_snd_ae_eq_field_shift {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
     (γ ξ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hW : IsWholePlaneGFF P hC hcirc)
     (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
@@ -76,7 +76,7 @@ theorem measurable_addFunPairing_distribution {Ω : Type*} [MeasurableSpace Ω] 
 /-- For a closed set `S` and fixed `u v ∈ S`, the internal metric of the Weyl-shifted metric is almost surely measurable.
 Route: the closed-set identity `InternalMetricClosedEqIInfThickeningFrozen` writes it as `⨅ n, ⨆ k` of the
 internal metrics on the open thickenings of `S ∩ closedBall 0 (n+1)`; on each open set the internal metric of the
-Weyl-shifted metric equals a.s. `Φ (h^ℂ + f)` for a measurable `Φ` (`LQGInternalMetricWeylAeMeasurableFrozen`, row 36). -/
+Weyl-shifted metric equals a.s. `Φ (h^ℂ + f)` for a measurable `Φ` (`LQGInternalMetricWeylAeMeasurableFrozen`). -/
 theorem weylShiftInternalMetric_aemeasurable_closed {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
     [IsProbabilityMeasure P] (γ ξ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (hW : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)

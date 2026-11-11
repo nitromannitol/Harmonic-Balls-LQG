@@ -188,7 +188,7 @@ theorem measurable_obsAt {D : Set ℂ} (φ : ℂ → ℝ) :
     exact measurable_const
 
 /-- The circle coordinate of the observation `v` at the parameter `p`: the limit of the mean-zero pairings
-`v(ψ_j - ρ)` along the approximants (route step 2: "take limits of these coordinates"). -/
+`v(ψ_j - ρ)` along the approximants (step 2: "take limits of these coordinates"). -/
 noncomputable def localCoord (c : ℂ) {R : ℝ} (hR : 0 < R) (p : LocalParam c R)
     (v : {φ : ℂ → ℝ // IsTestFunction (ball c R) φ ∧ ∫ x, φ x = 0} → ℝ) : ℝ :=
   limUnder atTop (fun j => obsAt v (localTest c hR p j))
@@ -226,7 +226,7 @@ theorem circleAverage_log_norm_eq_max {r : ℝ} (hr : 0 < r) (x : ℂ) :
 
 /-- **Circle coordinates of the GFF, a.s.** For a whole-plane GFF `h^ℂ` with circle averages `hcirc`, the
 coordinate of the observation `v = localMeanZeroObs α D (hC ω)` at a fixed parameter `p` equals the centred
-circle average `h_r(x) - ⟨h, ρ⟩` almost surely (route steps 1-2; the centring constant is `fieldPairing α hC ρ`,
+circle average `h_r(x) - ⟨h, ρ⟩` almost surely (steps 1-2; the centring constant is `fieldPairing α hC ρ`,
 which the decoder cannot see). Linearity of the pairings on the countably many tests `ψ_j - ρ` is
 `IsWholePlaneGFF.ae_pairing_linear_combination`; the limits are `ae_tendsto_circleApprox` (a.s.) and
 `tendsto_unitCircleDensity_mul_log` (deterministic). -/
@@ -728,7 +728,7 @@ theorem measurable_decoderFunctionalX_apply {K : ℕ → Set X}
     rw [decoderFunctionalX_of_not_mem hKs T ν hloc hy g]
     exact tendsto_const_nhds
 
-/-- The decoder is measurable as a map into measures on `X` (route step 3 measurability; port of
+/-- The decoder is measurable as a map into measures on `X` (step 3 measurability; port of
 `measurable_decoder`, `FirstPass/Phase2/ProfileDecoderDerived.lean:372`). -/
 theorem measurable_decoderX {K : ℕ → Set X} (hKs : ∀ s : Set X, IsCompact s → ∃ n, s ⊆ K n)
     (T : TestFamilyX K) (ν : Y → ℕ → Measure X) (hloc : ∀ y k, IsLocallyFiniteMeasure (ν y k))
@@ -817,7 +817,7 @@ theorem continuous_localPoint (c : ℂ) {R ε : ℝ} (hε : 0 < ε) (h2 : 2 * ε
     Continuous (localPoint c hε h2) :=
   Continuous.subtype_mk (continuous_const.prodMk ((continuous_projBall (sub_pos.2 h2)).comp continuous_id)) _
 
-/-- The real density `ε^{γ²/2} e^{γ F(ε,z)}` of the dyadic approximant at scale `ε = 2^{-k}` (route step 4), read at
+/-- The real density `ε^{γ²/2} e^{γ F(ε,z)}` of the dyadic approximant at scale `ε = 2^{-k}` (step 4), read at
 the projected point; `0` when `2ε ≥ R` (then no test function of a disc is seen). -/
 noncomputable def approxDens (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ) (z : ℂ) : ℝ :=
   if h : 2 * dyadicScale k < R then
@@ -894,7 +894,7 @@ theorem measurable_integral_approxX (γ : ℝ) (c : ℂ) (R : ℝ) (k : ℕ) (g 
       g x * approxDens γ c R F k x.1) := hcont.stronglyMeasurable
   exact (hSM.integral_prod_right (ν := ballVol c R)).measurable
 
-/-- Extension by zero of a compactly supported continuous function on the disc `ball c R` to `ℂ` (route step 5). -/
+/-- Extension by zero of a compactly supported continuous function on the disc `ball c R` to `ℂ` (step 5). -/
 theorem exists_extend_zero_ball {c : ℂ} {R : ℝ} (g : C_c(ball c R, ℝ)) :
     ∃ f : C_c(ℂ, ℝ), (∀ x : ball c R, f x.1 = g x) ∧ ∀ z, z ∉ Subtype.val '' tsupport g → f z = 0 := by
   classical
@@ -929,7 +929,7 @@ theorem exists_extend_zero_ball {c : ℂ} {R : ℝ} (g : C_c(ball c R, ℝ)) :
         fun z hz => (hzero z hz).symm
   exact ⟨⟨⟨f, hcont⟩, HasCompactSupport.intro hK fun z hz => hzero z hz⟩, hfx, hzero⟩
 
-/-- Route step 7 on the closed disc: where `F` is the centred circle profile `fieldCircleAverage - P`, the
+/-- Step 7 on the closed disc: where `F` is the centred circle profile `fieldCircleAverage - P`, the
 approximant density is `e^{γP}` times the Lebesgue density of `lqgApprox` at scale `2^{-k}`. -/
 theorem approxDens_mul_exp (γ α P : ℝ) {c : ℂ} {R : ℝ} (hc : ℝ → ℂ → ℝ) (F : C(LocalParam c R, ℝ))
     (hF : ∀ p : LocalParam c R, F p = fieldCircleAverage α hc p.1.1 p.1.2 - P) (k : ℕ)
@@ -964,7 +964,7 @@ theorem isLocallyFiniteMeasure_comap_ball (μ : Measure ℂ) [IsLocallyFiniteMea
   · rw [(MeasurableEmbedding.subtype_coe measurableSet_ball).comap_apply]
     exact (measure_mono (image_preimage_subset _ _)).trans_lt measure_ball_lt_top
 
-/-- Route step 7 (identity with `lqgApprox`): for `f` continuous and supported in the disc, `∫ f d(lqgApprox)` is
+/-- Step 7 (identity with `lqgApprox`): for `f` continuous and supported in the disc, `∫ f d(lqgApprox)` is
 `e^{γP}` times `∫ f · approxDens`, where `F` is the centred circle profile (`hF`). -/
 theorem integral_lqgApprox_eq_approx (γ α P : ℝ) {c : ℂ} {R : ℝ} (hc : ℝ → ℂ → ℝ)
     (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hc ε)) (F : C(LocalParam c R, ℝ))
@@ -1035,7 +1035,7 @@ theorem eventually_two_dyadicScale_lt {t : ℝ} (ht : 0 < t) :
     simpa using h.const_mul 2
   exact h2.eventually (gt_mem_nhds ht)
 
-/-- Route step 7 (Riesz limit on the disc): if the centred profile `F` is `fieldCircleAverage - P` and `μ` is the
+/-- Step 7 (Riesz limit on the disc): if the centred profile `F` is `fieldCircleAverage - P` and `μ` is the
 γ-LQG measure of `hc` (`IsLQGLimit`), the approximants integrate every `g ∈ C_c(ball c R)` to
 `∫ g d(comap val (e^{-γP} • μ))`. -/
 theorem tendsto_approxX_integral (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (hc : ℝ → ℂ → ℝ)
@@ -1109,14 +1109,14 @@ theorem ball_exhaustion (c : ℂ) (R : ℝ) :
   exact ⟨fun n => E n, fun n => E.isCompact n, fun s hs => E.exists_superset_of_isCompact hs⟩
 
 /-- The decoded disc measure: the vague decoder `decoderX` of the dyadic approximants built from the decoded centred
-profile `decodeF y` (route step 7). -/
+profile `decodeF y` (step 7). -/
 noncomputable def discDecoder {Y : Type*} [MeasurableSpace Y] {c : ℂ} {R γ : ℝ} {K : ℕ → Set (ball c R)}
     (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
     (decodeF : Y → C(LocalParam c R, ℝ)) : Y → Measure (ball c R) :=
   decoderX hKs T (fun y k => approxX γ c R (decodeF y) k)
     (fun y k => isLocallyFiniteMeasure_approxX γ c R (decodeF y) k)
 
-/-- Route step 7 (identity of the decoded measure): if the decoded centred profile of `y` is `fieldCircleAverage - P`
+/-- Step 7 (identity of the decoded measure): if the decoded centred profile of `y` is `fieldCircleAverage - P`
 and `μ` is the γ-LQG measure of `hc`, the decoded disc measure is `comap val (e^{-γP} • μ)`. -/
 theorem discDecoder_eq_comap {Y : Type*} [MeasurableSpace Y] (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R)
     (hc : ℝ → ℂ → ℝ) (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hc ε)) (μ : Measure ℂ)
@@ -1143,7 +1143,7 @@ theorem discDecoder_eq_comap {Y : Type*} [MeasurableSpace Y] (γ α P : ℝ) {c 
   rw [integral_decoderX hKs T _ _ y g, decoderFunctionalX_of_mem hKs T _ _ hconv g]
   exact (tendsto_approxX_integral γ α P hR hc hcont μ hμ (decodeF y) hF g).limUnder_eq
 
-/-- Route step 7 (the kernel): `κ(y) = (1 + m_y(D))⁻¹ • map val m_y` for the decoded disc measure `m_y`; it is a
+/-- Step 7 (the kernel): `κ(y) = (1 + m_y(D))⁻¹ • map val m_y` for the decoded disc measure `m_y`; it is a
 finite measure (`≤ 1` in mass), so the kernel is s-finite. -/
 noncomputable def kernelMeas {Y : Type*} [MeasurableSpace Y] {c : ℂ} {R γ : ℝ} {K : ℕ → Set (ball c R)}
     (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
@@ -1174,7 +1174,7 @@ theorem measurable_kernelMeas {Y : Type*} [MeasurableSpace Y] (γ : ℝ) {c : �
   exact ((measurable_const.add ((Measure.measurable_coe MeasurableSet.univ).comp hm)).inv).mul
     ((Measure.measurable_coe (measurable_subtype_coe hS)).comp hm)
 
-/-- Route step 7 (clause A of the kernel, for one observation): on the disc, the kernel of the decoded observation is
+/-- Step 7 (clause A of the kernel, for one observation): on the disc, the kernel of the decoded observation is
 a positive multiple of the restricted γ-LQG measure. -/
 theorem kernelMeas_restrict_eq (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (hc : ℝ → ℂ → ℝ)
     (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hc ε)) (μ : Measure ℂ)
@@ -1209,7 +1209,7 @@ theorem kernelMeas_restrict_eq (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) 
     Measure.restrict_restrict measurableSet_ball, Set.inter_self, hres, smul_smul,
     ENNReal.ofReal_toReal hKtop]
 
-/-- Route step 7, clause A (unrooted), almost surely: for a whole-plane GFF `h^ℂ` and a γ-LQG measure `μ` of
+/-- Step 7, clause A (unrooted), almost surely: for a whole-plane GFF `h^ℂ` and a γ-LQG measure `μ` of
 `h^ℂ - α log|·|` (`IsLQGMeasureOfField`), the kernel `kernelMeas` of the local mean-zero observation is a positive
 multiple of `μ` restricted to the disc. -/
 theorem clauseA_unrooted (γ α : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R)
@@ -1240,7 +1240,7 @@ theorem clauseA_unrooted (γ α : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (h0 : (0
   exact kernelMeas_restrict_eq γ α (fieldPairing α (hC ω) (bumpRho c hR)) hR (hcirc ω) hcont' (μ ω) hμω hKs T
     (fun y => decode (fun n => localCoord c hR (d n) y)) (localMeanZeroObs α (ball c R) (hC ω)) hF
 
-/-! ### Rooted shift (route step 8): the field `h + f_z`, `f_z(w) = -γ log|w-z| + γ log max(1,|w|)` -/
+/-! ### Rooted shift (step 8): the field `h + f_z`, `f_z(w) = -γ log|w-z| + γ log max(1,|w|)` -/
 
 /-- The rooted shift `f_z(w) = -γ log|w - z| + γ log max(1,|w|)` (`campbellReferenceObs`). -/
 noncomputable def rootShift (γ : ℝ) (z w : ℂ) : ℝ :=
@@ -1292,7 +1292,7 @@ theorem circleAverage_rootShift (γ : ℝ) {r : ℝ} (hr : 0 < r) (z x : ℂ) :
 theorem continuous_log_max_one : Continuous fun w : ℂ => Real.log (max 1 ‖w‖) :=
   (continuous_const.max continuous_norm).log fun w => (lt_max_of_lt_left one_pos).ne'
 
-/-- Route step 8 (deterministic limit): the annular averages `∫ ψ_{j+N} f_z` of the rooted shift converge to the circle
+/-- Step 8 (deterministic limit): the annular averages `∫ ψ_{j+N} f_z` of the rooted shift converge to the circle
 average of `f_z` (the log singularity at `z` is handled by `tendsto_unitCircleDensity_mul_log`, the continuous part by
 `tendsto_unitCircleDensity_mul_continuous`). -/
 theorem tendsto_circleApprox_rootShift (γ : ℝ) {r : ℝ} (hr : 0 < r) (x z : ℂ) (N : ℕ) :
@@ -1333,7 +1333,7 @@ theorem tendsto_circleApprox_rootShift (γ : ℝ) {r : ℝ} (hr : 0 < r) (x z : 
     rw [integral_add (i1.const_mul (-γ)) (i2.const_mul γ), integral_const_mul, integral_const_mul]
   exact (e1.trans e2).symm
 
-/-- The observation of the rooted field `h + f_z` on the mean-zero tests of `D` (route step 8; the second component of
+/-- The observation of the rooted field `h + f_z` on the mean-zero tests of `D` (step 8; the second component of
 `campbellReferenceObs`, by `campbellReferenceObs_snd_eq_rootedObs`). -/
 noncomputable def rootedObs (γ α : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
     {φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ :=
@@ -1381,7 +1381,7 @@ theorem integrable_circleApprox_mul_rootShift {r : ℝ} (hr : 0 < r) (γ : ℝ) 
   simp only [Pi.add_apply, rootShift, circleApprox]
   ring
 
-/-- Route step 8 (a.s.): the coordinates of the rooted observation converge to the centred rooted circle profile
+/-- Step 8 (a.s.): the coordinates of the rooted observation converge to the centred rooted circle profile
 `h_r(x) - α log max(r,|x|) + (circle average of f_z) - (pairing of h and f_z with ρ)`. -/
 theorem ae_tendsto_localRooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
@@ -1418,7 +1418,7 @@ theorem ae_tendsto_localRooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω
   rw [heq]
   exact hω.add hD
 
-/-- Route step 8 (a.s.): the rooted circle coordinate of the observation of `h + f_z` at `p`. -/
+/-- Step 8 (a.s.): the rooted circle coordinate of the observation of `h + f_z` at `p`. -/
 theorem ae_localCoord_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (γ α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (z : ℂ) (p : LocalParam c R) :
@@ -1429,7 +1429,7 @@ theorem ae_localCoord_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} 
   unfold localCoord
   exact hω.limUnder_eq
 
-/-! ### Rooted clause A (route step 8): the rooted profile `hc' r x = h_r(x) + circleAverage(f_z)(x,r)` -/
+/-! ### Rooted clause A (step 8): the rooted profile `hc' r x = h_r(x) + circleAverage(f_z)(x,r)` -/
 
 /-- The rooted circle profile of `h + f_z`: `hc' r x = h^ℂ_r(x) + circleAverage(f_z)(x,r)`. -/
 noncomputable def rootedHc (γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ → ℝ) : ℝ → ℂ → ℝ :=
@@ -1461,7 +1461,7 @@ theorem continuous_rootedHc (γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ → ℝ)
     ∀ ε : ℝ, 0 < ε → Continuous (rootedHc γ z hcirc ε) := fun ε hε =>
   (hcont ε hε).add (continuous_circleAverage_rootShift_centre γ z hε)
 
-/-- Route step 8 (a.s. decoder identity, rooted): the decoded rooted observation is the continuous rooted profile
+/-- Step 8 (a.s. decoder identity, rooted): the decoded rooted observation is the continuous rooted profile
 on `LocalParam c R`. -/
 theorem ae_decode_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
@@ -1513,7 +1513,7 @@ theorem ae_decode_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsP
     funext fun n => hωn n
   rw [hfun, hdec]
 
-/-- Route step 8, clause A (rooted, almost surely): the kernel of the rooted observation `h + f_z` is a positive multiple
+/-- Step 8, clause A (rooted, almost surely): the kernel of the rooted observation `h + f_z` is a positive multiple
 of the rooted γ-LQG measure `μz` on the disc. -/
 theorem clauseA_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
@@ -1559,7 +1559,7 @@ theorem clauseA_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsPro
     hR (rootedHc γ z (hcirc ω)) hcont' (μz ω) hμω hKs T
     (fun y => decode (fun n => localCoord c hR (d n) y)) ((campbellReferenceObs γ α (ball c R) (hC ω) z).2) hF
 
-/-- Route steps 1-8 assembled: the kernel `κ` of `LocalMeasureKernelStmt`, with the countable decoder
+/-- Steps 1-8 assembled: the kernel `κ` of `LocalMeasureKernelStmt`, with the countable decoder
 of `exists_localDecoder` and the compact exhaustion of the disc; both clauses (unrooted and rooted) are proved here. -/
 theorem localMeasureKernelStmt_derived (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) : LocalMeasureKernelStmt γ c₁ c₂ r₁ r₂ := by
   intro hγ0 hγ2 hr1 hr2 hsub1 hsub2 h0
@@ -1578,7 +1578,7 @@ theorem localMeasureKernelStmt_derived (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ :
     intro μz hμz
     exact clauseA_rooted hGFF γ α c₂ hr2 h0b z μz hμz d decode hKs T hdec
 
-/-! ### Rooted clause 2 (route step 8, without the logarithmic cut-off): the field `h - γ log|· - z|` -/
+/-! ### Rooted clause 2 (step 8, without the logarithmic cut-off): the field `h - γ log|· - z|` -/
 
 /-- The rooted shift `w ↦ -γ log|w - z|` (`rootedCircleAverage`, `rootedMeanZeroObs`). -/
 noncomputable def rootShift0 (γ : ℝ) (z w : ℂ) : ℝ := -γ * Real.log ‖w - z‖
@@ -1623,7 +1623,7 @@ theorem integrable_circleApprox_mul_rootShift0 {r : ℝ} (hr : 0 < r) (γ : ℝ)
   simp only [rootShift0, circleApprox]
   ring
 
-/-- Route step 8 (deterministic limit, no cut-off): the annular averages of `-γ log|·-z|` converge. -/
+/-- Step 8 (deterministic limit, no cut-off): the annular averages of `-γ log|·-z|` converge. -/
 theorem tendsto_circleApprox_rootShift0 (γ : ℝ) {r : ℝ} (hr : 0 < r) (x z : ℂ) (N : ℕ) :
     Tendsto (fun j : ℕ => ∫ y, circleApprox hr x (j + N) y * rootShift0 γ z y) atTop
       (𝓝 (Real.circleAverage (rootShift0 γ z) x r)) := by
@@ -1782,7 +1782,7 @@ theorem rootedMeanZeroObs_eq_rootedObs0 (γ α : ℝ) (D : Set ℂ) (hC : (ℂ �
     rootedMeanZeroObs α γ D z hC = rootedObs0 γ α D hC z :=
   funext fun φ => rootedMeanZeroObs_eq γ α φ.1 hC z
 
-/-- Route step 8, clause 2 (rooted, almost surely): the kernel of `rootedMeanZeroObs` (the observation of
+/-- Step 8, clause 2 (rooted, almost surely): the kernel of `rootedMeanZeroObs` (the observation of
 `h - γ log|·-z|`) is a positive multiple of the rooted γ-LQG measure `μz` on the disc. -/
 theorem clauseA_rooted0 {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
@@ -1854,7 +1854,7 @@ theorem kernelMeas_eq_restrict {Y : Type*} [MeasurableSpace Y] (γ : ℝ) {c : �
     rw [hpre, measure_empty, smul_zero]
   exact (Measure.restrict_eq_self_of_ae_mem (ae_iff.2 hzero)).symm
 
-/-- Route steps 1-8 assembled for `LocalLQGDecoderCommonFrozen`: the single kernel `κ` (the same as in
+/-- Steps 1-8 assembled for `LocalLQGDecoderCommonFrozen`: the single kernel `κ` (the same as in
 `localMeasureKernelStmt_derived`) satisfies both clauses (unrooted and rooted) and is finite. -/
 theorem localLQGDecoderCommonFrozen_derived : LocalLQGDecoderCommonFrozen := by
   intro γ _ _ c₂ r₂ hr₂ h0

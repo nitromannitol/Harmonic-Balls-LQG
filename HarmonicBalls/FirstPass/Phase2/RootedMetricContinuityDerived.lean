@@ -9,7 +9,7 @@ Target: `RootedPhysicalMetricContinuousAtInsertionFrozen` (FirstPass/S11r/Frozen
 
 Proved here, with no new mathematics:
 * `weylScalingIn D U ξ f u v`: the Weyl-scaled distance of `D` by `ξ f` restricted to paths whose image lies in `U`
-  (the confined-path weight of route step (3)). It dominates `weylScaling` (Defs/LQGMetric.lean:107).
+  (the confined-path weight of step (3)). It dominates `weylScaling` (Defs/LQGMetric.lean:107).
 * `weylScalingIn_le_mul_of_abs_sub_le`: on the confining set `U`, a bounded change of the weight changes the confined
   distance by at most the constant factor `e^{|ξ| M}`.
 * `rootedPhysicalMetricContinuousAtInsertion_of_confined`: the frozen statement follows from the named hypothesis

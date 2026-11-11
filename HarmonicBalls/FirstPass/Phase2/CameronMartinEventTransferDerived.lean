@@ -32,7 +32,7 @@ namespace CMEventTransfer
 /-- The codomain of `GFFJointLaw.jointSample`: pairings with test functions and circle averages of positive radius. -/
 abbrev Sample := ({φ : ℂ → ℝ // IsTestFunction Set.univ φ} → ℝ) × ({p : ℝ × ℂ // 0 < p.1} → ℝ)
 
-/-- **Route step R1 (abstract Cameron-Martin transfer).** If `P ≪ P'`, the samples `Y` (under `P`) and `Y'` (under `P'`)
+/-- **Step R1 (abstract Cameron-Martin transfer).** If `P ≪ P'`, the samples `Y` (under `P`) and `Y'` (under `P'`)
 have the same law, and the events `A` and `As` are a.s. the preimages of one measurable set `E`, then positivity of
 `As` under `P` gives positivity of `A` under `P`. -/
 theorem transfer_of_law {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
@@ -71,7 +71,7 @@ def EventSampleRepresentation : Prop :=
           GFFJointLaw.jointSample (fun ω => addFunPairing (hC ω) f)
             (fun ω r z => hcirc ω r z + Real.circleAverage f z r) ω ∈ E)
 
-/-- **Route step R2.** The frozen Cameron-Martin event transfer, conditional on the named representation
+/-- **Step R2.** The frozen Cameron-Martin event transfer, conditional on the named representation
 `EventSampleRepresentation` and on the Cameron-Martin reweighting `CameronMartinGFFReweighting`
 (`FirstPass/Frozen/S11aj.lean:33`). This is a reduction, not the derived target. -/
 theorem cameronMartinEventTransfer_of_representation

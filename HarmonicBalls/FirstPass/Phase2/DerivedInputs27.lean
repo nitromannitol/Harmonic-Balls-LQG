@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.Phase2.SquarePositiveDerived
 # Binder trade hPos10
 
 Each wrapper `..._derivedInputs27` is the wrapper `..._derivedInputs26` with the binder `hPos10 : LQGMeasureSquarePositiveFrozen`
-(FirstPass/Frozen/S11c.lean:130; ledger row 23) removed. The binder is discharged by
+(FirstPass/Frozen/S11c.lean:130) removed. The binder is discharged by
 `HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived` (Phase2/SquarePositiveDerived.lean), which uses only the existence
 inputs `hDG`, `hCC` (at `α₀ = 0`) and `hE`; these are already binders of every wrapper. So the binder count drops by one in
 each wrapper, and no new premise is added. All other trades inherited from DerivedInputs22, DerivedInputs23 and

@@ -60,7 +60,7 @@ instance localRootKernel_isFiniteKernel {Ω : Type*} [MeasurableSpace Ω] (P : M
 
 /-! ## Step 2-3 of route section 5: from the Palm integral to the rooted law -/
 
-/-- **Palm replacement (route Steps 2-3).** The unnormalised Palm measure dominates the rooted law. Let `O` be a
+/-- **Palm replacement (Steps 2-3).** The unnormalised Palm measure dominates the rooted law. Let `O` be a
 measurable observation of a root `(ω, z)` and `S` a measurable set of observations. If for `P`-a.e. `ω` the set of
 roots `z ∈ D` with `O(ω, z) ∈ S` is null for `λ_ω|B₁`, then the rooted law `(P ⊗ₘ K_root).restrict (z ∈ D)` assigns
 `S` mass zero. The normalised root kernel `K_root` is a.s. absolutely continuous with respect to `λ_ω|B₁`
@@ -241,7 +241,7 @@ lemma measurable_localRootKernel_section {Ω : Type*} [MeasurableSpace Ω] (P : 
     Measurable fun ω => localRootKernel P lam hlam ω (Prod.mk ω ⁻¹' t) :=
   Kernel.measurable_kernel_prodMk_left ht
 
-/-- **Vanishing of the Palm integral (route Steps 10-12).** If the `λ_ω|B₁`-masses of the sections of a measurable
+/-- **Vanishing of the Palm integral (Steps 10-12).** If the `λ_ω|B₁`-masses of the sections of a measurable
 `t` integrate to zero over `P`, these masses vanish `P`-a.s. The normalised root kernel is `λ_ω|B₁` divided by
 `λ_ω(B₁)`, which is finite `P`-a.s., and it is a finite kernel, so the section masses are measurable. -/
 lemma ae_restrict_section_zero_of_lintegral {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
@@ -263,7 +263,7 @@ lemma ae_restrict_section_zero_of_lintegral {Ω : Type*} [MeasurableSpace Ω] (P
   filter_upwards [hG, hcZ] with ω hGω hω
   exact hGω.trans hω
 
-/-- **Fubini on the rooted reference product (route Step 5).** A `((vol|D_j) ⊗ P)`-null set of reference observations
+/-- **Fubini on the rooted reference product (Step 5).** A `((vol|D_j) ⊗ P)`-null set of reference observations
 has `P`-null sections for almost every root `z ∈ D_j`. The `P`-a.s. identity `ν = ν'` (`ν'` measurable) transfers to
 the reference observations. -/
 lemma ae_section_ref_null {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P] (j : ℕ)

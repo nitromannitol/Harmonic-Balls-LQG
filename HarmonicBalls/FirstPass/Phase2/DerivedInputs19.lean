@@ -6,7 +6,7 @@ import HarmonicBalls.Proposed.LQG
 
 /-! Trade wrappers.
 Scope: the DerivedInputs17 wrappers (counted results outside the DerivedInputs15 family). Trades:
-(a) the binder `LQGMeasureNonatomic` (row 4, Proposed/LQG.lean:86) is discharged by
+(a) the binder `LQGMeasureNonatomic` (Proposed/LQG.lean:86) is discharged by
 `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` (DerivedInputs15.lean:57) from the wrapper's own binders
 `hDG`, `hCC` (specialised to alpha_0 = 0) and `hE`;
 (b) the binder `LQGInternalDiamInnerMeasurableFrozen` is discharged by `HarmonicBalls.lqgInternalDiamInnerMeasurable_derived`

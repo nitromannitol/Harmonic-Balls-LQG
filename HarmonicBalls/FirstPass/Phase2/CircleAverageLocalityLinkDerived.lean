@@ -16,7 +16,7 @@ import HarmonicBalls.FirstPass.Phase2.InnerMeasurableDerived
   `LQGMeasureLocality` itself carries `IsWholePlaneGFF` as a premise, so nothing is lost for it.
 * `lqgMeasureLocality_of_gffCircleLink`: the proof of `lqgMeasureLocality_of_circleLink` with the link
   relativised to the GFF premise (the only use of `hlink` is in `hWk`, where `hGFF` is in scope).
-* `lqgMeasureLocality_derived`: the forall-closure of `LQGMeasureLocality` (`Proposed/LQG.lean:97`, row 49).
+* `lqgMeasureLocality_derived`: the forall-closure of `LQGMeasureLocality` (`Proposed/LQG.lean:97`).
 * `lqgMeasureSquareMeasurable_derived'` and `lqgMassInnerMeasurable_derived'`: the binder-free
   forms of `lqgMeasureSquareMeasurable_derived` and `lqgMassInnerMeasurable_derived`.
 -/
@@ -178,7 +178,7 @@ theorem lqgMeasureLocality_of_gffCircleLink {Ω : Type*} [MeasurableSpace Ω] (P
   rw [hsup]
   exact iSup_congr fun n => ((hstep n).limsup_eq).symm
 
-/-- **Locality of the LQG measure** (`LQGMeasureLocality`, `Proposed/LQG.lean:97`, row 49), in its universally
+/-- **Locality of the LQG measure** (`LQGMeasureLocality`, `Proposed/LQG.lean:97`), in its universally
 quantified form. -/
 theorem lqgMeasureLocality_derived : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureLocality P γ α₀ hC hcirc :=
