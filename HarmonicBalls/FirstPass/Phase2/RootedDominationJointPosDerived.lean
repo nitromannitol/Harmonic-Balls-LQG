@@ -18,12 +18,13 @@ namespace HarmonicBalls
 
 universe u
 
-/-- **Finite-family marked tilt identity, positive-radius circles (BLOCKED-STEP; named hypothesis, not proved).**
+/-- **Finite-family marked tilt identity, positive-radius circles (proved; no hypothesis).**
 For every whole-plane GFF `(hC, hcirc)`, every `α = 0` LQG measure `μ` of `hcirc` at `0 < γ < 2`, every finite family of
 test functions `φ i` and of positive-radius circles `c k`, and every measurable `Φ` of the finite observation, integrating
 `Φ` of the observation against `μ_ω` on `B₁` and against `P` equals integrating `Φ` of the DMS-shifted observation over
-`z ∈ B₁` and `P`. This is the cylinder form of `DMSLemmaA10WholePlaneMarkedJointPosStmt`; the answer's step (i)
-(joint Gaussian law) is its only missing ingredient, and steps (ii)-(iii) pass from it to all measurable test functions. -/
+`z ∈ B₁` and `P`. This is the cylinder form of `DMSLemmaA10WholePlaneMarkedJointPosStmt`. It is derived from the
+pairing-level input `DMSLemmaA10WholePlaneMarkedSub` (FirstPass/Frozen/S11i.lean:59) by `dMSFiniteTiltPos_of_sub`
+(FirstPass/Phase2/DMSFiniteTiltPosDerived.lean). -/
 def DMSFiniteTiltPosStmt : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
