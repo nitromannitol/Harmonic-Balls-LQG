@@ -1578,6 +1578,113 @@ theorem localMeasureKernelStmt_derived (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ :
     intro μz hμz
     exact clauseA_rooted hGFF γ α c₂ hr2 h0b z μz hμz d decode hKs T hdec
 
+/-! ### Rooted clause 2 (route step 8, without the logarithmic cut-off): the field `h - γ log|· - z|` -/
+
+/-- The rooted shift `w ↦ -γ log|w - z|` (`rootedCircleAverage`, `rootedMeanZeroObs`). -/
+noncomputable def rootShift0 (γ : ℝ) (z w : ℂ) : ℝ := -γ * Real.log ‖w - z‖
+
+/-- The observation of `rootedMeanZeroObs` is the pairing of `h - γ log|·-z|` (algebra). -/
+theorem rootedMeanZeroObs_eq (γ α₀ : ℝ) (φ : ℂ → ℝ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    fieldPairing α₀ hC φ - γ * ∫ w, Real.log ‖w - z‖ * φ w =
+      fieldPairing α₀ hC φ + ∫ w, rootShift0 γ z w * φ w := by
+  have h : ∫ w, rootShift0 γ z w * φ w = -γ * ∫ w, Real.log ‖w - z‖ * φ w := by
+    rw [← integral_const_mul]
+    congr 1
+    funext w
+    simp only [rootShift0]
+    ring
+  rw [h]
+  ring
+
+/-- The circle average of `-γ log|·-z|` (no linearity needed). -/
+theorem circleAverage_rootShift0 (γ : ℝ) {r : ℝ} (hr : 0 < r) (z x : ℂ) :
+    Real.circleAverage (rootShift0 γ z) x r = -γ * Real.log (max r ‖x - z‖) := by
+  have h := Real.circleAverage_smul (a := -γ) (f := fun w => Real.log ‖w - z‖) (c := x) (R := r)
+  have hfun : ((-γ) • fun w : ℂ => Real.log ‖w - z‖) = fun w : ℂ => -γ * Real.log ‖w - z‖ := by
+    funext w
+    rfl
+  rw [hfun, smul_eq_mul] at h
+  have e : rootShift0 γ z = fun w : ℂ => -γ * Real.log ‖w - z‖ := rfl
+  rw [e, h, circleAverage_log_norm_sub_eq x z hr]
+
+theorem integrable_rootShift0_mul_bump (γ : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (z : ℂ) :
+    Integrable fun w => rootShift0 γ z w * bumpRho c hR w := by
+  have h1 := (integrable_bump_mul_log_sub c hR z).const_mul (-γ)
+  refine h1.congr (Filter.Eventually.of_forall fun w => ?_)
+  simp only [rootShift0]
+  ring
+
+theorem integrable_circleApprox_mul_rootShift0 {r : ℝ} (hr : 0 < r) (γ : ℝ) (x z : ℂ) (j : ℕ) :
+    Integrable fun y => circleApprox hr x j y * rootShift0 γ z y := by
+  have hδ : 0 < r * approxEta r j := mul_pos hr (approxEta_pos hr j)
+  have i1 : Integrable fun y => unitCircleDensity r (r * approxEta r j) hδ x y * Real.log ‖y - z‖ :=
+    integrable_unitCircleDensity_mul_log hr.le hδ x z
+  refine (i1.const_mul (-γ)).congr (Filter.Eventually.of_forall fun y => ?_)
+  simp only [rootShift0, circleApprox]
+  ring
+
+/-- Route step 8 (deterministic limit, no cut-off): the annular averages of `-γ log|·-z|` converge. -/
+theorem tendsto_circleApprox_rootShift0 (γ : ℝ) {r : ℝ} (hr : 0 < r) (x z : ℂ) (N : ℕ) :
+    Tendsto (fun j : ℕ => ∫ y, circleApprox hr x (j + N) y * rootShift0 γ z y) atTop
+      (𝓝 (Real.circleAverage (rootShift0 γ z) x r)) := by
+  have hδ : ∀ j : ℕ, 0 < r * approxEta r (j + N) := fun j => mul_pos hr (approxEta_pos hr _)
+  have hsmall : ∀ η : ℝ, 0 < η → ∃ M : ℕ, ∀ j, M ≤ j → r * approxEta r (j + N) ≤ r * η := by
+    intro η hη
+    obtain ⟨M, hM⟩ := eventually_approxEta_lt (r := r) hη
+    exact ⟨M, fun j hj => mul_le_mul_of_nonneg_left (le_of_lt (hM (j + N) (by omega))) hr.le⟩
+  have hL := tendsto_unitCircleDensity_mul_log (r := r) (δ := fun j => r * approxEta r (j + N))
+    hr hδ hsmall x z
+  rw [circleAverage_rootShift0 γ hr z x]
+  refine (hL.const_mul (-γ)).congr fun j => ?_
+  have e : ∫ y, circleApprox hr x (j + N) y * rootShift0 γ z y =
+      -γ * ∫ y, unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y * Real.log ‖y - z‖ := by
+    rw [← integral_const_mul]
+    congr 1
+    funext y
+    simp only [rootShift0, circleApprox]
+    ring
+  exact e.symm
+
+/-- The rooted observation of `h - γ log|·-z|` on the mean-zero tests of `D`. -/
+noncomputable def rootedObs0 (γ α : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    {φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ :=
+  fun φ => fieldPairing α hC φ.1 + ∫ w, rootShift0 γ z w * φ.1 w
+
+theorem ae_tendsto_localRooted0 {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (z : ℂ) (p : LocalParam c R) :
+    ∀ᵐ ω ∂P, Tendsto (fun j => obsAt (rootedObs0 γ α (ball c R) (hC ω) z) (localTest c hR p j)) atTop
+      (𝓝 (hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) - fieldPairing α (hC ω) (bumpRho c hR) +
+        (Real.circleAverage (rootShift0 γ z) p.1.2 p.1.1 - ∫ w, rootShift0 γ z w * bumpRho c hR w))) := by
+  have hρ := integrable_rootShift0_mul_bump γ c hR z
+  have hD : Tendsto (fun j : ℕ => ∫ w, rootShift0 γ z w * localTest c hR p j w) atTop
+      (𝓝 (Real.circleAverage (rootShift0 γ z) p.1.2 p.1.1 - ∫ w, rootShift0 γ z w * bumpRho c hR w)) := by
+    have hsplit : ∀ j : ℕ, (∫ w, rootShift0 γ z w * localTest c hR p j w) =
+        (∫ w, circleApprox (localParam_radius_pos p) p.1.2 (j + localShift c p) w * rootShift0 γ z w) -
+          ∫ w, rootShift0 γ z w * bumpRho c hR w := by
+      intro j
+      rw [← integral_sub (integrable_circleApprox_mul_rootShift0 (localParam_radius_pos p) γ p.1.2 z _) hρ]
+      congr 1
+      funext w
+      simp only [localTest, Pi.sub_apply]
+      ring
+    have hfun : (fun j : ℕ => ∫ w, rootShift0 γ z w * localTest c hR p j w) = fun j : ℕ =>
+        (∫ w, circleApprox (localParam_radius_pos p) p.1.2 (j + localShift c p) w * rootShift0 γ z w) -
+          ∫ w, rootShift0 γ z w * bumpRho c hR w := funext hsplit
+    rw [hfun]
+    exact (tendsto_circleApprox_rootShift0 γ (localParam_radius_pos p) p.1.2 z (localShift c p)).sub_const _
+  filter_upwards [ae_tendsto_localPairing hGFF α c hR h0 p] with ω hω
+  have hobs : ∀ j : ℕ, obsAt (rootedObs0 γ α (ball c R) (hC ω) z) (localTest c hR p j) =
+      obsAt (localMeanZeroObs α (ball c R) (hC ω)) (localTest c hR p j) +
+        ∫ w, rootShift0 γ z w * localTest c hR p j w := fun j => by
+    have hadm := localTest_isTest c hR p j
+    simp only [obsAt, hadm, and_self, ↓reduceDIte, rootedObs0, localMeanZeroObs]
+  have heq : (fun j => obsAt (rootedObs0 γ α (ball c R) (hC ω) z) (localTest c hR p j)) =
+      fun j => obsAt (localMeanZeroObs α (ball c R) (hC ω)) (localTest c hR p j) +
+        ∫ w, rootShift0 γ z w * localTest c hR p j w := funext hobs
+  rw [heq]
+  exact hω.add hD
+
 end Approximants
 
 end LocalDecoderCommon
