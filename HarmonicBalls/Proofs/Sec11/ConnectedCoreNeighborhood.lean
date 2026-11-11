@@ -106,7 +106,4 @@ theorem dyadic_intermediate_core_shift_neighborhoods {N : ℕ} (a : ℂ) (r : �
   · exact disjoint_left.mpr (fun x hx hxF => hx.1.2 hxF)
   · exact disjoint_left.mpr (fun x hx hxS => hx.2 hxS)
 
-#print axioms exists_connected_precompact_neighborhood_avoiding
-#print axioms dyadic_intermediate_core_neighborhood
-#print axioms dyadic_intermediate_core_shift_neighborhoods
 end HarmonicBalls

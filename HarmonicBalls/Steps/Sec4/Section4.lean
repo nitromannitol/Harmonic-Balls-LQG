@@ -11,22 +11,22 @@ and the new steps of this directory.
 
 | result | reduction | consumes |
 |---|---|---|
-| Prop 4.1 | `clusterLowerBound_of_steps` | I2, Prop 2.3, Lemmas 3.1, 3.2, 3.4, A.1 general, shift, `GreenPotentialBallContinuousStep`, A.5 Step 3 (G3) |
-| Lemma 4.2 | `leastSupersolutionHolder_of_steps` | I2, Lemmas 3.1, 3.2, 3.4, `GreenRepresentationBallStep`, `GreenPotentialBallHolderStep` (G4) |
-| Lemma 4.3 | `clusterSubharmonicBall_of_steps` | I2, Prop 2.3, Lemmas 3.1, 3.2, 3.4, `GreenRepresentationBallStep`, `ClusterHarmonicQuadratureStep`, `ClusterGreenPotentialIdentityStep` (G5), `GreenFunctionIntegrableAwayFromPoleStep` |
+| Prop 4.1 | `clusterLowerBound_of_steps` | I2, Prop 2.3, Lemmas 3.1, 3.2, 3.4, A.1 general, shift, `GreenPotentialBallContinuousStep`, A.5 Step 3 |
+| Lemma 4.2 | `leastSupersolutionHolder_of_steps` | I2, Lemmas 3.1, 3.2, 3.4, `GreenRepresentationBallStep`, `GreenPotentialBallHolderStep` |
+| Lemma 4.3 | `clusterSubharmonicBall_of_steps` | I2, Prop 2.3, Lemmas 3.1, 3.2, 3.4, `GreenRepresentationBallStep`, `ClusterHarmonicQuadratureStep`, `ClusterGreenPotentialIdentityStep`, `GreenFunctionIntegrableAwayFromPoleStep` |
 
 ## New leaves of this directory
 
 | step | file | paper | difficulty |
 |---|---|---|---|
-| `GreenPotentialBallHolderStep` | GreenPotentialBallHolderStep.lean | Prop 2.5 quantitative (G4) | **proved** (GreenPotentialBallHolder.lean) |
+| `GreenPotentialBallHolderStep` | GreenPotentialBallHolderStep.lean | Prop 2.5 quantitative | **proved** (GreenPotentialBallHolder.lean) |
 | `GreenRepresentationBallStep` | LeastSupersolutionHolder.lean | line 732 (implicit; Riesz decomposition) | **proved** (Proofs/Sec4/GreenRepresentation.lean) |
 | `ClusterHarmonicQuadratureStep` | ClusterSubharmonicBall.lean | lines 773-779 | **proved** (Proofs/Sec4/ClusterSubharmonicBall.lean) |
-| `ClusterGreenPotentialIdentityStep` | ClusterSubharmonicBall.lean | lines 781-786 with G5 | **proved** from the next step and Step 1 (Proofs/Sec4/ClusterGreenIdentity.lean) |
-| `GreenHarmonicCorrectionBalayageStep` | ClusterSubharmonicBall.lean | G5: Green function of a general open set | **proved** (Proofs/Sec4/GreenBalayage.lean, sweeping: Proofs/Sec4/Sweep.lean) |
+| `ClusterGreenPotentialIdentityStep` | ClusterSubharmonicBall.lean | lines 781-786 | **proved** from the next step and Step 1 (Proofs/Sec4/ClusterGreenIdentity.lean) |
+| `GreenHarmonicCorrectionBalayageStep` | ClusterSubharmonicBall.lean | Green function of a general open set | **proved** (Proofs/Sec4/GreenBalayage.lean, sweeping: Proofs/Sec4/Sweep.lean) |
 | `GreenFunctionIntegrableAwayFromPoleStep` | ClusterSubharmonicBall.lean | implicit (ν₁-integrability) | **proved** (Proofs/Sec4/GreenAwayFromPole.lean) |
 
-G3 (last claim of Prop 4.1) needs no new leaf: it is the equality case of `ObstacleConservationOfMassStep3`
+The last claim of Prop 4.1 needs no new leaf: it is the equality case of `ObstacleConservationOfMassStep3`
 (Lemma A.5, Step 3), which does not assume `μ_h(∂Λ) = 0`.
 
 `GreenPotentialBallHolderStep` is proved in GreenPotentialBallHolder.lean, which cannot be imported here: the name

@@ -19,11 +19,11 @@ Prop 2.3 (`GreenFunctionBallStmt`, Draft/Section2.lean), the only numbered input
 | `ObstacleLeastSuperharmonicMajorantStep1` | A.1 | superharmonic majorants are `≥ 0` (minimum principle) | medium |
 | `ObstacleLeastSuperharmonicMajorantStep2` | A.1 | `f_t` superharmonic (AG01 Thm 3.7.5) | hard |
 | `ObstacleLeastSuperharmonicMajorantStep3` | A.1 | `f_t` usc off the pole (Poisson modification) | hard |
-| `ObstacleLeastSuperharmonicMajorantStep4` | A.1 | `f_t` usc at the pole (gap G2) | medium |
+| `ObstacleLeastSuperharmonicMajorantStep4` | A.1 | `f_t` usc at the pole | medium |
 | `ObstacleNonCoincidenceHarmonicStep2` | A.2 | `ṽ_t` subharmonic on `Λ_t` | hard |
 | `ObstacleNonCoincidenceHarmonicStep3` | A.2 | no open `W ⊆ Λ_t` away from the pole with `∂W ∩ Λ_t = ∅` | medium |
 | `ObstacleMonotoneStep1` | A.3 | truncated competitor in `S̃(t₁)` (minor gap) | medium |
-| `ObstacleConservationOfMassStep1` | A.5 | `Δ v_t ≥ 0` off the pole (gap G1, repair I7) | medium |
+| `ObstacleConservationOfMassStep1` | A.5 | `Δ v_t ≥ 0` off the pole | medium |
 | `ObstacleConservationOfMassStep2` | A.5 | `Δ v = -t δ_z + μ|_Λ + ν|_{∂Λ}`, `ν ≤ μ` (general `U`) | hard |
 | `ObstacleConservationOfMassStep3` | A.5 | `σ(B_R) ≤ t`, equality for compact support (Pon16 7.3, 12.15) | hard |
 | `ObstacleCompatibilityStep1` | A.6 | `u^{B_{r₁}} ≤ u^{B_{r₂}}` | medium |

@@ -2,7 +2,7 @@ import HarmonicBalls.Steps.Sec4.Basic
 import HarmonicBalls.Steps.Sec4.GreenPotentialBallHolderStep
 
 /-!
-# Lemma 4.2 (odometer:cont, line 721): reduction to Sections 2-3, a Green representation step and step G4
+# Lemma 4.2 (odometer:cont, line 721): reduction to Sections 2-3, a Green representation step
 
 `leastSupersolutionHolder_of_steps : LeastSupersolutionHolderStmt` (with [C8], exponent `α = α(γ, α₀)`).
 
@@ -20,7 +20,7 @@ the claim follows by Proposition 2.5."
 2. **Density** (Lemma 3.2). `ν ≤ μ_h` on `B_1` and `Λ ∩ ∂Λ = ∅` give `σ ≤ μ_h` on `B_1`, so
    `σ|_{B_1} = ρ μ_h|_{B_1}` with a Radon-Nikodym density `0 ≤ ρ ≤ 1` (`Measure.rnDeriv_le_one_of_le`). The
    absolute continuity clause of Lemma 3.2 is implied by `ν ≤ μ_h`.
-3. **Quantitative Proposition 2.5 (gap G4)** (`GreenPotentialBallHolderStep`). The Hölder seminorm of the Green
+3. **Quantitative Proposition 2.5** (`GreenPotentialBallHolderStep`). The Hölder seminorm of the Green
    potential of `ρ μ_h` is `≤ C ‖ρ‖_∞ ≤ C` with `C = C(μ_h)` and exponent `min (β⁺, 1) / 2`: the same `C` for all
    `t > 0` and `z ∈ B_1`. The step is proved in Steps/Sec4/GreenPotentialBallHolder.lean from
    `VolumeGrowth.greenPotential_ball_holder`, but cannot be imported here (name clash with Steps/SecA).
@@ -104,7 +104,7 @@ theorem holder_of_hasLaplacian_le (hRep : GreenRepresentationBallStep) (hHol : G
   exact h
 
 /-- **Lemma 4.2 from Sections 2-3** (lines 730-733), with the representation step and the quantitative
-Proposition 2.5 (G4); exponent `α = min (β⁺, 1) / 2`, `β⁺ = volumeGrowthExponentPlus γ α₀` ([C8]). -/
+Proposition 2.5; exponent `α = min (β⁺, 1) / 2`, `β⁺ = volumeGrowthExponentPlus γ α₀` ([C8]). -/
 theorem leastSupersolutionHolder_of_steps (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
     (h31 : LeastSupersolutionMemStmt.{u}) (h32 : ClusterOpenLaplacianStmt.{u})
     (h34 : ClusterConservationOfMassStmt.{u}) (hRep : GreenRepresentationBallStep)

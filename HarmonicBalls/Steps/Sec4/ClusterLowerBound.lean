@@ -11,7 +11,7 @@ Let `q_1` be the expected exit time of LBM from `B_1`, `Δ q_1 = -μ_h` in `B_1`
 `Δ v^z_t ≤ μ_h` (Lemma 3.1), `v^z_t + q_1` is superharmonic in `B_1` and `≥ 0` on `∂B_1`, so `v^z_t ≥ -q_1` on the
 closed ball (minimum principle). As `q_1` is finite (Proposition 2.5) and the obstacle `-t G_{B_1}(z,·)` tends to
 `-∞` at `z` (the printed `t log |x - z|`, lines 704-708, is the obstacle up to the normalization and a bounded
-term; GRAPH S1), `v^z_t > -t G_{B_1}(z,·)` near `z`, i.e. `B_ε(z) ⊆ Λ^z_t`. "Similarly" `B_{1-δ}(z) ⊆ Λ^z_t` for
+term), `v^z_t > -t G_{B_1}(z,·)` near `z`, i.e. `B_ε(z) ⊆ Λ^z_t`. "Similarly" `B_{1-δ}(z) ⊆ Λ^z_t` for
 `t ≥ t(δ)`. The last claim takes `t⁺ = μ_h(B_1)` and cites Lemma 3.4.
 
 ## Route in Lean
@@ -133,7 +133,7 @@ theorem ball_subset_cluster_of_general (hA1 : ObstacleLeastSuperharmonicMajorant
         _ ≤ t * greenFunction (ball 0 1) z x := mul_le_mul ht hG hc.le htpos.le
     linarith
 
-/-- **Proposition 4.1, last claim (gap G3)** (lines 711-712). If `t > μ(B_1)`, the closure of `Λ = Λ^z_t` meets
+/-- **Proposition 4.1, last claim** (lines 711-712). If `t > μ(B_1)`, the closure of `Λ = Λ^z_t` meets
 `∂B_1`. Otherwise `closure Λ` is a compact subset of `B_1` off which the odometer vanishes, and the equality case
 of Lemma A.5, Step 3 (`ObstacleConservationOfMassStep3`) gives `t = (μ|_Λ + ν|_{∂Λ})(B_1) ≤ μ(B_1)` for the
 measure of Lemma 3.2. -/
@@ -174,7 +174,7 @@ theorem closure_cluster_inter_sphere_nonempty (hStep3 : ObstacleConservationOfMa
 
 end Deterministic
 
-/-- **Proposition 4.1 from Sections 2-3 and Appendix A** (lines 691-713, with the repair G3 of the last claim). -/
+/-- **Proposition 4.1 from Sections 2-3 and Appendix A** (lines 691-713, with the repair of the last claim). -/
 theorem clusterLowerBound_of_steps (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h23 : GreenFunctionBallStmt)
     (h31 : LeastSupersolutionMemStmt.{u}) (h32 : ClusterOpenLaplacianStmt.{u})
     (h34 : ClusterConservationOfMassStmt.{u}) (hA1 : ObstacleLeastSuperharmonicMajorantGeneral)

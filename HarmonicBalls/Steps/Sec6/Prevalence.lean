@@ -14,12 +14,11 @@ The steps are step S-SubRange: the statements of Lemmas 6.3 and 6.6 for the whol
 the radii restricted to `[ε, ε^{3/4}]` and the count `c₀ log ε^{-1}` (about a quarter of the radii of the range).
 Proof route (the paper's argument at `α₀ = 0` on `K = ⌊(1/4) log₇ ε^{-1}⌋`, resp. `⌊(1/8) log₈ ε^{-1}⌋`, radii):
 * `E_r(z; a, b)`, resp. `Ē_ρ(x₀)`, is determined by `h^ℂ|_{𝔸_{3r,5r}(z)}`, resp. `h^ℂ|_{𝔸_{ρ/4,2ρ}(x₀)}`, modulo
-  additive constant (Fact 2.1 II-III, lines 1278-1280, 1372-1377; measurability: GRAPH G16);
+  additive constant (Fact 2.1 II-III, lines 1278-1280, 1372-1377);
 * Lemma 6.4 (resp. Lemma 6.7) at `α₀ = 0` and at the universal `p` of Lemma 6.5;
 * Lemma 6.5 (GM20b Lemma 3.1) for annuli centred at `z` (translation invariance of `h^ℂ` modulo constants,
   eq:gff-scaling), with a universal exponent `α` large enough to beat the union bound over the `O(ε^{-2})` grid
-  points (lines 1282-1291). For very good annuli the radii `8^{-n}` violate the spacing hypothesis of Lemma 6.5
-  (GRAPH G17); every other radius (`64^{-n}`) satisfies it, which halves the count.
+  points (lines 1282-1291). For very good annuli the radii `8^{-n}` violate the spacing hypothesis of Lemma 6.5; every other radius (`64^{-n}`) satisfies it, which halves the count.
 -/
 
 namespace HarmonicBalls

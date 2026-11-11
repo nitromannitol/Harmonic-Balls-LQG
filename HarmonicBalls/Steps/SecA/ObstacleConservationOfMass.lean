@@ -7,15 +7,15 @@ import HarmonicBalls.Steps.SecA.ObstacleOdometerZeroBoundary
 `ObstacleConservationOfMassStmt` (Draft/SectionA.lean): for `t > 0`, `μ(Λ_t) ≤ t`, and `μ(Λ_t) = t` if
 `closure Λ_t ⊂ B_1` and `μ(∂Λ_t) = 0`. Printed proof: lines 3792-3828. Stated for a general radius `R > 0` and
 pole `z ∈ B_R`: `ObstacleConservationOfMassGeneral`, which also records the intermediate identity
-`t = μ(Λ_t) + ν(∂Λ_t)` of lines 3822-3825 (needed for the repair G3 of Prop 4.1), and
+`t = μ(Λ_t) + ν(∂Λ_t)` of lines 3822-3825 (needed for the repair of Prop 4.1), and
 `ShiftedOdometerLaplacianGeneral`, the decomposition eq:laplacian-of-v (lines 3797-3803) and its general-ball
 form eq:laplacian-of-v-general (lines 3840-3846), used by Lemma A.6.
 
 ## Steps (difficulty in brackets)
 
-* `ObstacleConservationOfMassStep1` — **gap G1** (GRAPH.md): the odometer is subharmonic off the pole,
+* `ObstacleConservationOfMassStep1` — the odometer is subharmonic off the pole,
   `Δ v_t ≥ 0` on `B_R \ {z}`. The printed proof asserts `0 ≤ ν` in eq:laplacian-of-v without proof; Lemmas A.1
-  and A.2 give only `Δ ṽ_t ≤ 0` on `B_R` and `Δ ṽ_t = 0` on `Λ_t`. Repair by the subharmonic gluing I7 (the
+  and A.2 give only `Δ ṽ_t ≤ 0` on `B_R` and `Δ ṽ_t = 0` on `Λ_t`. Repair by the subharmonic gluing (the
   argument of lines 1418-1421, AG01 Thm 3.2.2).
 * `ObstacleConservationOfMassStep2` — eq:laplacian-of-v: from `Δ ṽ_t ≤ 0` on `B_R`, `Δ ṽ_t = 0` on `Λ_t`,
   `Δ G = -δ_z`, `Δ q = -μ`, Step 1 and `v_t = 0` off `Λ_t`, there is `0 ≤ ν ≤ μ` with
@@ -72,9 +72,9 @@ def ObstacleConservationOfMassGeneral : Prop :=
 
 /-! ## Steps -/
 
-/-- **Lemma A.5, Step 1 (gap G1; repair I7).** The odometer `v_t = ṽ_t - β_t` satisfies `Δ v_t ≥ 0` on
+/-- **Lemma A.5, Step 1.** The odometer `v_t = ṽ_t - β_t` satisfies `Δ v_t ≥ 0` on
 `B_R \ {z}`. The printed proof asserts `0 ≤ ν` in eq:laplacian-of-v (line 3802) without proof; it does not follow
-from Lemmas A.1-A.2. Repair (GRAPH.md, G1 and I7, the argument of lines 1418-1421): `v_t ≥ 0` is continuous on
+from Lemmas A.1-A.2. Repair (the argument of lines 1418-1421): `v_t ≥ 0` is continuous on
 `closedBall 0 R \ {z}` (Lemma A.1, Prop 2.3, `GreenPotentialBallContinuousStep`), `Δ v_t = μ ≥ 0` on
 `Λ_t \ {z}` (Lemma A.2, `GreenPotentialBallLaplacianStep`, Prop 2.3), so `v_t` satisfies the sub-mean-value
 inequality on small circles centred in `Λ_t \ {z}`; where `v_t = 0` the sub-mean-value inequality holds trivially

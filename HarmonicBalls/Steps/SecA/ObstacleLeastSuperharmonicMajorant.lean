@@ -18,7 +18,7 @@ Section 3 needs general `z`): `ObstacleLeastSuperharmonicMajorantGeneral`.
   (AG01 Thm 3.7.5 on the lower semicontinuous regularization `f̂_t`, and `f̂_t ≥ β_t` gives `f̂_t = f_t`).
 * `ObstacleLeastSuperharmonicMajorantStep3` — Step 3 off the pole (lines 3622-3647): `f_t` is upper
   semicontinuous at every `x₀ ∈ B_R \ {z}` (Poisson modification of `ε + f_t` on a small disc).
-* `ObstacleLeastSuperharmonicMajorantStep4` — **gap G2**, Step 3 at the pole: the printed choice of `δ`
+* `ObstacleLeastSuperharmonicMajorantStep4` — Step 3 at the pole: the printed choice of `δ`
   (lines 3626-3628, "`β_t(x) + ε/2 ≥ β_t(y)` on `B_δ(x₀)`") is impossible at `x₀ = z`, where `β_t(z) = -∞`.
   Repair: on a small disc `B_δ(z)`, `β_t < 0 ≤ f_t` (Step 1, `ObstacleTendstoAtBotStep`), so the Poisson
   modification of `ε + f_t` on `B_δ(z)` is still admissible; then conclude as in Step 3. [shares the Poisson modification with Step 3]
@@ -101,7 +101,7 @@ def ObstacleLeastSuperharmonicMajorantStep3 : Prop :=
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →
     ∀ x₀ ∈ ball (0 : ℂ) R, x₀ ≠ z → UpperSemicontinuousAt (lscLeastMajorant μ R z t) x₀
 
-/-- **Lemma A.1, Step 3 at the pole (gap G2, GRAPH.md).** `f_t` is upper semicontinuous at the pole `z`. The
+/-- **Lemma A.1, Step 3 at the pole.** `f_t` is upper semicontinuous at the pole `z`. The
 printed choice of `δ` (lines 3626-3628) is impossible at `x₀ = z`, where `β_t(z) = -∞`
 (`β_t(x) + ε/2 ≥ β_t(y)` fails for `x` close to `z`). Repair: choose `δ` with `closedBall z δ ⊆ B_R` and
 `β_t < 0` on `B_δ(z) \ {z}` (`ObstacleTendstoAtBotStep`; `β_t ≤ sup q_{B_R} + (t/2π) log (δ/r)` there); by Step 1,

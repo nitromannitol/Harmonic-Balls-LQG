@@ -17,7 +17,7 @@ Let `Λ = Λ_{B_r;z}(t)` with `closure Λ ⊆ B_r` and `μ_h(∂Λ) = 0`, `O ⊇
 2. (lines 781-786) `t (f-q)(z) - ∫_Λ (f-q) dμ_h = ∫∫ (G_O(z,x) - G_O(y,x)) dν(x) dμ_h(y)`; Fubini; the inner
    integral is `u(x)`; and `∫ u dν ≤ 0` as `u ≥ 0`, `ν|_Λ ≤ 0`.
 
-## Gap G5 and the steps
+## The steps
 
 The printed computation integrates `ν` over `Λ` only and writes `v(z)` for `u(x)` (line 785). But `ν` lives on a
 compact subset of `O`, not of `Λ`, and the identity needed is
@@ -32,7 +32,7 @@ representation `u = t G_{B_R}(z,·) - ∫_Λ G_{B_R}(·,x) μ(dx)` on `B_R` (Rie
 supersolution `v = u - t G_{B_R}(z,·)`, `GreenRepresentationBallStep`, as in Lemma 4.2). The steps:
 
 * `ClusterHarmonicQuadratureStep` — step 1 (integration by parts).
-* `ClusterGreenPotentialIdentityStep` — step 2 as corrected by G5: Fubini on `Λ × K` and the identity above, giving
+* `ClusterGreenPotentialIdentityStep` — step 2 as corrected: Fubini on `Λ × K` and the identity above, giving
   `∫_Λ G_O ν dμ = t G_O ν(z) - ∫ ũ dν` for every finite `ν` on a compact `K ⊆ O` not charging `z` with
   `G_O(z,·) ∈ L¹(ν)`.
 * `GreenHarmonicCorrectionBalayageStep` — the potential theory of the general open set `O` used by step 2: the
@@ -83,11 +83,11 @@ def ClusterHarmonicQuadratureStep : Prop :=
     ∀ (O : Set ℂ) (q : ℂ → ℝ), IsOpen O → closure Λ ⊆ O → InnerProductSpace.HarmonicOnNhd q O →
       IntegrableOn q Λ μ ∧ t * q z = ∫ x in Λ, q x ∂μ
 
-/-- **Lemma 4.3, Step 2 (lines 781-786, corrected by G5).** Let `μ` be Radon with the volume growth condition on
+/-- **Lemma 4.3, Step 2 (lines 781-786).** Let `μ` be Radon with the volume growth condition on
 `B_R` and let eq:v-characterization hold. For `O ⊇ closure Λ` open and `ν` a finite measure on a compact `K ⊆ O`
 with `ν({z}) = 0` and `G_O(z,·) ∈ L¹(ν)`: the Green potential `G_O ν` is `μ`-integrable on `Λ`, `ũ = 1_Λ u` is
 `ν`-integrable and `∫_Λ G_O ν dμ = t G_O ν(z) - ∫ ũ dν`.
-Route: (i) the identity `∫_Λ G_O(x,y) μ(dx) = t G_O(z,y) - ũ(y)` for `y ≠ z` (G5): `ũ` is continuous off `z` with
+Route: (i) the identity `∫_Λ G_O(x,y) μ(dx) = t G_O(z,y) - ũ(y)` for `y ≠ z`: `ũ` is continuous off `z` with
 compact support and `Δũ = -t δ_z + μ|_Λ` on `ℂ`, hence (Weyl, Liouville, total mass `μ(Λ) = t`) `ũ` equals the
 Newtonian potential `t N(z,·) - ∫_Λ N(x,·) μ(dx)` off `z` (continuity of the logarithmic potential of `μ|_Λ` from
 the volume growth bound); the harmonic part `H` of `G_O = N - H` contributes `0` by Step 1 applied to `H(·,y)`
@@ -117,7 +117,7 @@ superharmonic, equals `N(x,y)` for `|x - y| ≥ ε`, and for `closedBall x ε �
 noncomputable def regularizedNewtonKernel (ε : ℝ) (x y : ℂ) : ℝ :=
   -(2 * Real.pi)⁻¹ * Real.log (max ‖x - y‖ ε)
 
-/-- **Lemma 4.3, Step 2: the harmonic correction of the Green function of an open set** (G5; Armitage–Gardiner
+/-- **Lemma 4.3, Step 2: the harmonic correction of the Green function of an open set** (Armitage–Gardiner
 §§3.6, 4.1). Let `O` be open, `L ⊆ O` compact with `cthickening (3ε) L ⊆ O`, `z ∈ L`, and `m` a finite measure on `L`
 whose regularized Newtonian potential equals that of `t δ_z` at distance `> ε` from `L`. Then the harmonic
 correction `H(x,y) = I_O[N(x,·)](y)` of `G_O = N - H` (`0` for non-Greenian `O`) agrees on `L × O` with a jointly
@@ -215,7 +215,7 @@ theorem isSubharmonicBall_of_isClusterOdometer (hS1 : ClusterHarmonicQuadratureS
   simp only [Pi.add_apply, Pi.sub_apply]
   linarith
 
-/-- **Lemma 4.3 from Sections 2-3** (lines 764-789, with the repair G5), and the steps
+/-- **Lemma 4.3 from Sections 2-3** (lines 764-789), and the steps
 `ClusterHarmonicQuadratureStep`, `ClusterGreenPotentialIdentityStep`, `GreenFunctionIntegrableAwayFromPoleStep`, and
 `GreenRepresentationBallStep` (the Green representation of the odometer on `B_r`, as in Lemma 4.2). -/
 theorem clusterSubharmonicBall_of_steps (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h23 : GreenFunctionBallStmt)
