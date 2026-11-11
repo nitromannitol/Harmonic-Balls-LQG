@@ -121,5 +121,4 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
     · intro i x hx y hy
       exact hω.2.1 i.1 x hx y hy
 
-#print axioms IsWholePlaneGFF.condExp_mass_diameter_pos_of_dyadic_cores
 end HarmonicBalls

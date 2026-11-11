@@ -43,7 +43,6 @@ theorem condExp_indicator_pos_of_shifted_observable_versions
   rw [he]
   exact hp
 
-#print axioms condExp_indicator_pos_of_shifted_observable_versions
 
 /-- Conditional positivity for geometric events with a common
 modulo-constant field representation under every fixed smooth shift. -/
@@ -86,5 +85,4 @@ theorem IsWholePlaneGFF.condExp_modConst_pos_of_interior_shift_versions
   rw [he]
   exact hp
 
-#print axioms IsWholePlaneGFF.condExp_modConst_pos_of_interior_shift_versions
 end HarmonicBalls

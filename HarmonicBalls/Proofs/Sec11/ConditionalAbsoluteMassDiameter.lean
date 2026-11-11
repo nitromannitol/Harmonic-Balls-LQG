@@ -115,5 +115,4 @@ theorem IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_shifts
   rw [he]
   exact hpω
 
-#print axioms IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_shifts
 end HarmonicBalls

@@ -43,5 +43,4 @@ theorem positive_comparisons_of_conditional_null_thresholds
   intro ω hω
   exact ⟨hω.1.1, hω.2.1.trans hω.1.2.1, hω.1.2.2.trans hω.2.2⟩
 
-#print axioms positive_comparisons_of_conditional_null_thresholds
 end HarmonicBalls

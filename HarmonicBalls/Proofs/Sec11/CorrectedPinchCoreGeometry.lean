@@ -96,9 +96,4 @@ theorem IsCorrectedPinchConfiguration.exists_mass_core_square
   exact ⟨z, L, hL, hSU, hSU.trans h.closure_V_core.2.2,
     fun n x hx => h.mass_buffer n x (hSU hx)⟩
 
-#print axioms IsCorrectedPinchConfiguration.closure_V_core
-#print axioms exists_closedSquare_subset_of_isOpen
-#print axioms IsCorrectedPinchConfiguration.outside_core
-#print axioms IsCorrectedPinchConfiguration.mass_buffer
-#print axioms IsCorrectedPinchConfiguration.exists_mass_core_square
 end HarmonicBalls

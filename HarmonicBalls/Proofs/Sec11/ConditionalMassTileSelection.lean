@@ -62,8 +62,6 @@ theorem exists_mass_tile_class_of_conditional_mass_and_union_bound
     P μ univ S C (fun n => {ω | ∀ i : ι n, ω ∈ E n i}) c hcover hsmall
   exact ⟨n, j, by simpa using hj⟩
 
-#print axioms measure_pos_of_condExp_indicator_pos
-#print axioms exists_mass_tile_class_of_conditional_mass_and_union_bound
 
 /-- For every prescribed finite mass threshold, conditional LQG mass
 positivity and the tile union bound select one positive-probability class. -/
@@ -93,5 +91,4 @@ theorem IsWholePlaneGFF.exists_mass_tile_class_of_full_support
     μ S C ι E (ENNReal.ofReal t) hcover ?_ hsum
   simpa [ENNReal.ofReal_mul (show (0 : ℝ) ≤ 8 by norm_num)] using hc
 
-#print axioms IsWholePlaneGFF.exists_mass_tile_class_of_full_support
 end HarmonicBalls

@@ -67,6 +67,4 @@ theorem positive_pinchSecondEvent_of_conditional_null_massDiameter_representativ
       (fun ω => internalDiam (D ω) δ V) (fun ω => μ ω U) a' b'
       hA ha' hb' hae hbe hAp hfinite hinside)
 
-#print axioms positive_comparisons_of_conditional_null_thresholds_representatives
-#print axioms positive_pinchSecondEvent_of_conditional_null_massDiameter_representatives
 end HarmonicBalls

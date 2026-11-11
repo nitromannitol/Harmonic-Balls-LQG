@@ -221,11 +221,7 @@ theorem IsWholePlaneGFF.exists_internal_singularMetric_cutoff_shift_decoder
     rw [← hb.2.2.2.1 x y, ENNReal.toReal_ofReal hn]
   rw [hz n, heq, ← hcompare]
 
-#print axioms IsWholePlaneGFF.exists_internal_singularMetric_cutoff_shift_decoder
 
-#print axioms IsWholePlaneGFF.exists_internal_backgroundMetric_shift_decoder
 
-#print axioms IsWholePlaneGFF.exists_continuous_baseMetric_shift_decoder
-#print axioms IsWholePlaneGFF.exists_internal_baseMetric_continuous_shift_decoder
 
 end HarmonicBalls

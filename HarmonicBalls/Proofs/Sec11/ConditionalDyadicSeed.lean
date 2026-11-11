@@ -97,7 +97,5 @@ theorem IsWholePlaneGFF.exists_conditional_intermediate_seed
       exact le_iSup_of_le x (le_iSup_of_le hx (le_iSup_of_le y (le_iSup_of_le hy le_rfl)))
     exact hle.trans (hω.2.1 i).le
 
-#print axioms IsWholePlaneGFF.exists_conditional_intermediate_seed
 
-#print axioms exists_conditional_mass_tile_seed_after
 end HarmonicBalls

@@ -66,7 +66,5 @@ theorem IsPinchPointProofConfiguration.root_boundary_weyl_lower_bound
       rw [hf x hx]) hreverse
   simpa only [frontier_ball (0 : ℂ) hδ2.ne'] using hg
 
-#print axioms IsPinchPointProofConfiguration.obstacle_boundary_weyl_lower_bound
-#print axioms IsPinchPointProofConfiguration.root_boundary_weyl_lower_bound
 
 end HarmonicBalls

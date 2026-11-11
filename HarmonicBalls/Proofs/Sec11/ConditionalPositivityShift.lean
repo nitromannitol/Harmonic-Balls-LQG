@@ -68,6 +68,4 @@ theorem condExp_indicator_pos_of_outside_preserving_shift
   filter_upwards [hout F hF, hshift] with ω hω hs hmem
   exact ⟨hω.mpr hmem.1, hs hmem.2⟩
 
-#print axioms condExp_indicator_pos_of_measure_inter_pos
-#print axioms condExp_indicator_pos_of_outside_preserving_shift
 end HarmonicBalls

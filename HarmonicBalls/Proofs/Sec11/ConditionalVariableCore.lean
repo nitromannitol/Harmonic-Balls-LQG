@@ -56,5 +56,4 @@ theorem IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_variable_core_seed
     refine ⟨hAF hω.1, ?_, hω.2.2⟩
     exact hω.2.1.trans_le (measure_mono hsub)
 
-#print axioms IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_variable_core_seeds
 end HarmonicBalls

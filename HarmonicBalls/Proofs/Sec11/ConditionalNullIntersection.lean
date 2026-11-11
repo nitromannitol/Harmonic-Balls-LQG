@@ -29,5 +29,4 @@ theorem measure_inter_pos_of_condExp_indicator_pos_nullMeasurable
     exact propext (and_congr_right fun _ => iff_of_eq hω)
   rwa [measure_congr hinter] at hp
 
-#print axioms measure_inter_pos_of_condExp_indicator_pos_nullMeasurable
 end HarmonicBalls

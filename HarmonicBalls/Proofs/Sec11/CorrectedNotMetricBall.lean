@@ -101,8 +101,5 @@ theorem corrected_harmonicBallNotMetricBall_of_comparison_and_pinch
   exact ae_time_ne_metricBall_of_ae_boundary_exclusion (μ ω) (Λ ω) (D ω) 0
     hfamilyω.2 hpoint hnonneg
 
-#print axioms corrected_typical_boundary_ne_metricBall
-#print axioms corrected_harmonicBallNotMetricBall_of_comparison_and_pinch
-#print axioms corrected_pinchMetricBallConsequence_of_metricFieldAxioms
 
 end HarmonicBalls

@@ -45,7 +45,6 @@ theorem condExp_indicator_pos_of_shifted_observables
   rw [Measure.map_apply hX ((hW hC).inter hB)] at hpX
   simpa only [preimage_inter, preimage_comp] using hpX
 
-#print axioms condExp_indicator_pos_of_shifted_observables
 
 /-- Smooth shifts supported away from the outside observation can be chosen
 separately for each outside event when establishing conditional positivity. -/
@@ -91,5 +90,4 @@ theorem IsWholePlaneGFF.condExp_modConst_pos_of_interior_shifts
       simp [hφ]
   simp [W, X, Y, localModConstPairings, fieldPairing, addFunPairing, hzero]
 
-#print axioms IsWholePlaneGFF.condExp_modConst_pos_of_interior_shifts
 end HarmonicBalls

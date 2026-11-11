@@ -48,5 +48,4 @@ theorem measure_inter_pos_of_condExp_indicator_pos
     simpa using integral_congr_ae hzero
   linarith
 
-#print axioms measure_inter_pos_of_condExp_indicator_pos
 end HarmonicBalls

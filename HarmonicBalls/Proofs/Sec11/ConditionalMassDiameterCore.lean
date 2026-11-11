@@ -58,5 +58,4 @@ theorem IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_core_seeds
   · intro ω hω
     exact ⟨hAF hω.1, hω.2⟩
 
-#print axioms IsWholePlaneGFF.condExp_absolute_mass_diameter_pos_of_core_seeds
 end HarmonicBalls

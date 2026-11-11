@@ -121,7 +121,4 @@ theorem isConnected_dyadic_intermediate_core {N : ℕ} (a : ℂ) (r : ℝ)
       simpa using hK.nonempty
   exact ⟨hnonempty, hp'⟩
 
-#print axioms isPreconnected_sdiff_interior_of_frontier
-#print axioms isPreconnected_sdiff_finset_interiors
-#print axioms isConnected_dyadic_intermediate_core
 end HarmonicBalls

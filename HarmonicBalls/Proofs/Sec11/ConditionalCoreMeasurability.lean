@@ -77,7 +77,4 @@ theorem IsWholePlaneGFF.condExp_pinch_mass_diameter_pos_of_dyadic_cores
     (closure V) O hbufferS hfront hδ hpin 𝔇 h𝔇 ψ hψ hψint ht ha hmargin hKc hK
     hKO hSK hfull b p hp e he hsmall hbound
 
-#print axioms IsWholePlaneGFF.aemeasurable_base_internalDiam
-#print axioms IsWholePlaneGFF.nullMeasurableSet_mass_internalDiam
-#print axioms IsWholePlaneGFF.condExp_pinch_mass_diameter_pos_of_dyadic_cores
 end HarmonicBalls

@@ -64,5 +64,4 @@ theorem IsWholePlaneGFF.condExp_mass_diameter_pos_of_full_support_dyadic_cores
     hSK b p hp e he ?_ hsmall hbound
   simpa [ENNReal.ofReal_mul (show (0 : ℝ) ≤ 8 by norm_num)] using hcond
 
-#print axioms IsWholePlaneGFF.condExp_mass_diameter_pos_of_full_support_dyadic_cores
 end HarmonicBalls

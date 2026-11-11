@@ -83,5 +83,3 @@ theorem cone_event_pos_of_smooth_shift
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.cone_event_pos_of_smooth_shift
-#print axioms HarmonicBalls.measure_preimage_pos_of_map_absolutelyContinuous

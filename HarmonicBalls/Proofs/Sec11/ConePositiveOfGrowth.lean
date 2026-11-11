@@ -208,9 +208,4 @@ theorem coneBadEventProbability_of_growth_and_existence
     intro Ω _ P hC hcirc μ hG
     exact (hex ⟨Ω, inferInstance, P, hC, hcirc, hG⟩).elim
 
-#print axioms exists_cone_mass_green_thresholds_of_growth
-#print axioms cone_unit_event_positive_of_growth
-#print axioms cone_ordinary_event_uniform_positive_of_growth
-#print axioms cone_singular_universal_measurable_witness_of_growth
-#print axioms coneBadEventProbability_of_growth_and_existence
 end HarmonicBalls

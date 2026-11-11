@@ -43,5 +43,4 @@ theorem IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_gro
     (h.positive_wholePlane_first_second_of_growth hgrowth hξ hγ hγ₂ hα P hC hcirc
       𝔇 μ h𝔇 hgff hμ M m hm A hA hArep ha hb hinside)
 
-#print axioms IsCorrectedPinchConfiguration.positive_internal_pinch_of_conditional_growth
 end HarmonicBalls

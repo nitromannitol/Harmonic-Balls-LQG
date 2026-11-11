@@ -107,7 +107,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_backgroundMetric
   exact ⟨fun ω => Real.exp (ξ * c ω), G,
     Filter.Eventually.of_forall (fun _ => Real.exp_pos _), hG, hGeq⟩
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_backgroundMetric
-#print axioms IsWholePlaneGFF.exists_modConst_countable_internal_backgroundMetric
 
 end HarmonicBalls

@@ -1,10 +1,9 @@
 import HarmonicBalls.Defs.GFF
 
 /-!
-# Lemma l:r6-transfer, step 1: a canonical continuous modification of the circle averages
+# A canonical continuous modification of the circle averages
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer` (Universal realization of the supplied data,
-lines 282-640). The lemma transports probabilistic statements proved for usual probability spaces in `Type` to
+The universal realization of the supplied data transports probabilistic statements proved for usual probability spaces in `Type` to
 probability spaces in any universe, through a measurable map into a canonical space of continuous circle-average
 profiles.
 

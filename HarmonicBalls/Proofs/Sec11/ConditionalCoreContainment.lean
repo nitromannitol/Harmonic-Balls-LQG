@@ -57,7 +57,4 @@ theorem condExp_mass_diameter_pos_of_square_closure
   exact ⟨(internalDiam_le_closure (D ω) δ V).trans_lt hω.2,
     hω.1.trans_le (measure_mono hSU)⟩
 
-#print axioms internalDiam_le_closure
-#print axioms condExp_indicator_pos_of_subset_null
-#print axioms condExp_mass_diameter_pos_of_square_closure
 end HarmonicBalls

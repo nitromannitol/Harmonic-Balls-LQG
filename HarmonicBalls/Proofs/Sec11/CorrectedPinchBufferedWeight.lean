@@ -117,7 +117,5 @@ theorem IsPinchPointProofConfiguration.exists_first_buffered_weight_corridor_bou
     simp [f, hQzero x hq, h0zero x h0]
 
 
-#print axioms IsPinchPointProofConfiguration.exists_first_weyl_bumps_buffered
-#print axioms IsPinchPointProofConfiguration.exists_first_buffered_weight_corridor_bound
 
 end HarmonicBalls

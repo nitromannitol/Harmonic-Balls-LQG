@@ -86,5 +86,4 @@ theorem IsWholePlaneGFF.condExp_absolute_mass_pos_of_full_support
   rw [he]
   exact hpω
 
-#print axioms IsWholePlaneGFF.condExp_absolute_mass_pos_of_full_support
 end HarmonicBalls

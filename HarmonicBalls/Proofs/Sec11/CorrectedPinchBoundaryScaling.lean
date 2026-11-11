@@ -69,7 +69,5 @@ theorem ofReal_mul_setDist_boundary_le_of_inverse_weylScaling
       rw [← mul_assoc, ← ENNReal.ofReal_mul (Real.exp_pos L).le, ← Real.exp_add]
       simp
 
-#print axioms ofReal_setDist_boundary_le_mul_of_inverse_weylScaling
-#print axioms ofReal_mul_setDist_boundary_le_of_inverse_weylScaling
 
 end HarmonicBalls
