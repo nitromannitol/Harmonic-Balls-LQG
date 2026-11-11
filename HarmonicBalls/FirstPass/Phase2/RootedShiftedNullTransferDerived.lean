@@ -4,6 +4,10 @@ import HarmonicBalls.FirstPass.Phase2.LocalDecoderCommonDerived
 import HarmonicBalls.Proofs.Sec6.LQGTranslationCovariance
 import HarmonicBalls.Proofs.Sec2.AffineField
 import HarmonicBalls.Proofs.Sec2.LQGLimitLocality
+import HarmonicBalls.FirstPass.Phase2.RootedShiftedNullTransferEvent
+import HarmonicBalls.FirstPass.Phase2.GFFJointLaw
+import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
+import HarmonicBalls.FirstPass.S11v.Affine
 
 /-! # Shifted-root null transfer: the local identification (MQ-lh-29, step L4)
 
@@ -108,5 +112,207 @@ theorem decoder_shifted_local_eq {a0 γ r : ℝ} {z : ℂ} {hc : ℝ → ℂ →
   have hyU : ‖y‖ < 5 * r / 4 := mem_ball_zero_iff.mp (hK hy)
   exact fieldCircleAverage_local_identity (G1 := circleProfile F1) (G2 := circleProfile F2) hz hzu hEq
     (fun s x hs => hF1 s x hs) (fun s x hs => hF2 s x hs) (hpos k) hk hyU
+
+universe u
+
+open GFFJointLaw
+
+/-! ## Selector recovery and the per-sample step (MQ-lh-29, steps L4 and E_z(d)) -/
+
+/-- The zero extension of a profile on the positive-radius subtype of the joint sample (`jointSample`):
+`extSub F r z = F (r, z)` for `r > 0` and `0` otherwise. -/
+noncomputable def extSub (F : {p : ℝ × ℂ // 0 < p.1} → ℝ) : ℝ → ℂ → ℝ :=
+  fun r z => if h : 0 < r then F ⟨(r, z), h⟩ else 0
+
+lemma extSub_restrict (c : ℝ → ℂ → ℝ) : extSub (fun p => c p.1.1 p.1.2) = posPart c := by
+  funext r z
+  by_cases h : 0 < r <;> simp [extSub, posPart, h]
+
+lemma measurable_extSub : Measurable extSub := by
+  refine measurable_pi_iff.mpr fun r => measurable_pi_iff.mpr fun z => ?_
+  by_cases h : 0 < r
+  · simpa [extSub, h] using measurable_pi_apply (⟨(r, z), h⟩ : {p : ℝ × ℂ // 0 < p.1})
+  · simp [extSub, h, measurable_const]
+
+/-- **Recovery of a continuous profile.** If `Sel` recovers every profile from its zero extension (the recovery form
+of `CanonicalProfileSelectorStmt`, `B2ShiftedProfileDecoder.lean:59`), and `G` is continuous on the positive radii, then
+`Sel (posPart G)` is the profile `y` of `G`: `posPart G = posExtend y`, and `circleProfile y` reads `G` at every positive
+radius (Armitage-Gardiner, circle averages; Duplantier-Sheffield, circle-average profile). -/
+theorem sel_posPart_of_continuousOn {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)}
+    (hRec : ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y) {G : ℝ → ℂ → ℝ}
+    (hG : ContinuousOn (fun p : ℝ × ℂ => G p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) :
+    ∃ y : C(CircleParameter, ℝ), posPart G = posExtend ⇑y ∧ Sel (posPart G) = y ∧
+      ∀ s x, 0 < s → circleProfile y s x = G s x := by
+  have hc : Continuous fun p : CircleParameter => G p.1.1 p.2 :=
+    hG.comp_continuous ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+      fun p => Set.mk_mem_prod p.1.2 (Set.mem_univ _)
+  let y : C(CircleParameter, ℝ) := ⟨fun p => G p.1.1 p.2, hc⟩
+  have hpp : posPart G = posExtend ⇑y := by
+    funext r z
+    by_cases h : 0 < r <;> simp [posPart, posExtend, y, h]
+  exact ⟨y, hpp, by rw [hpp]; exact hRec y, fun s x hs => by simp [circleProfile, y, hs]⟩
+
+/-- **L4, one sample.** Step L4 of MQ-lh-29 for a fixed sample: the α₀-decoder of the selected DMS-shifted profile, recentred
+at `z`, equals `exp(γ h(1,z))` times the γ-decoder of the selected affine-plus-test profile, on `B_{5r/4}`. The
+hypotheses `hA` (the α₀ membership, E_z(c)) and `hB` (the γ membership, E_z(d)) are almost-sure facts. -/
+theorem decoder_shifted_of_selector {a0 γ r : ℝ} {z : ℂ} {hc : ℝ → ℂ → ℝ} {gt : ℂ → ℝ}
+    {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)} (T : ProfileDecoderDerived.TestFamily)
+    (hRec : ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y)
+    (hz : 3 * r < ‖z‖) (hzu : ‖z‖ < 1 - 3 * r) (hr : 0 < r)
+    (hcont : ContinuousOn (fun p : ℝ × ℂ => hc p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ))
+    (hL1 : ∀ s x, dmsShiftedCircle γ z hc s x = hc s x + Real.circleAverage (dmsShift γ z) x s)
+    (hgt : Continuous gt) (hEq : EqOn gt (fun y => -a0 * Real.log ‖y + z‖) (closedBall (0 : ℂ) (3 * r / 2)))
+    (hA : ∀ y : C(CircleParameter, ℝ), posPart (dmsShiftedCircle γ z hc) = posExtend ⇑y →
+      y ∈ ProfileDecoderDerived.convSet T γ a0)
+    (hB : Sel (posPart (fun s x => hc s (x + z) - hc 1 z + Real.circleAverage gt x s)) ∈
+      ProfileDecoderDerived.convSet T γ γ) :
+    ((ProfileDecoderDerived.decoder T γ a0 (Sel (posPart (dmsShiftedCircle γ z hc)))).map
+        (fun w => w - z)).restrict (ball (0 : ℂ) (5 * r / 4)) =
+      (ENNReal.ofReal (Real.exp (γ * hc 1 z)) •
+        ProfileDecoderDerived.decoder T γ γ
+          (Sel (posPart (fun s x => hc s (x + z) - hc 1 z + Real.circleAverage gt x s)))).restrict
+        (ball (0 : ℂ) (5 * r / 4)) := by
+  have hcontDms : ContinuousOn (fun p : ℝ × ℂ => dmsShiftedCircle γ z hc p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) :=
+    (hcont.add (continuousOn_circleAverage_dmsShift γ z)).add continuousOn_const
+  have hcontG : ContinuousOn (fun p : ℝ × ℂ => hc p.1 (p.2 + z) - hc 1 z + Real.circleAverage gt p.2 p.1)
+      (Set.Ioi 0 ×ˢ Set.univ) := by
+    have h1 : ContinuousOn (fun p : ℝ × ℂ => hc p.1 (p.2 + z)) (Set.Ioi 0 ×ˢ Set.univ) :=
+      hcont.comp (continuous_fst.prodMk (continuous_snd.add continuous_const)).continuousOn
+        fun p hp => Set.mk_mem_prod hp.1 (Set.mem_univ _)
+    exact (h1.sub continuousOn_const).add (Section6.continuous_circleAverage_radius_center hgt).continuousOn
+  obtain ⟨y1, hpp1, hsel1, hprof1⟩ :=
+    sel_posPart_of_continuousOn (G := dmsShiftedCircle γ z hc) hRec hcontDms
+  obtain ⟨y2, -, hsel2, hprof2⟩ :=
+    sel_posPart_of_continuousOn (G := fun s x => hc s (x + z) - hc 1 z + Real.circleAverage gt x s) hRec hcontG
+  refine decoder_shifted_local_eq T _ _ hz hzu hr hEq ?_ ?_ ?_ hB
+  · intro s x hs
+    rw [hsel1, hprof1 s x hs, hL1 s x]
+  · intro s x hs
+    rw [hsel2, hprof2 s x hs]
+  · rw [hsel1]
+    exact hA y1 hpp1
+
+/-- **Almost-sure selected membership.** For an LQG measure `μ` of the field at parameter `α`, the selected profile of the
+unshifted field lies in `convSet T γ α` almost surely (the `hmem` step of `lqgMeasureOfProfileMeasurable_derived`). -/
+theorem ae_sel_mem_convSet {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)} (hRec : ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y)
+    (T : ProfileDecoderDerived.TestFamily) (γ α : ℝ) (μ : Ω → Measure ℂ)
+    (hμ : IsLQGMeasureOfField P γ α hcirc μ) :
+    ∀ᵐ ω ∂P, Sel (posPart (hcirc ω)) ∈ ProfileDecoderDerived.convSet T γ α := by
+  have hagree : ∀ᵐ ω ∂P, ∀ p : CircleParameter, Sel (posPart (hcirc ω)) p = hcirc ω p.1 p.2 := by
+    filter_upwards [hGFF.ae_continuousOn_circle] with ω hω
+    obtain ⟨y, -, hsel, hprof⟩ := sel_posPart_of_continuousOn hRec hω
+    intro p
+    rw [hsel]
+    have hp : (0 : ℝ) < p.1.1 := p.1.2
+    have h := hprof p.1.1 p.2 hp
+    simpa [circleProfile, hp] using h
+  have h2 := (isLQGMeasureOfField_circleProfile_iff (F := fun ω => Sel (posPart (hcirc ω))) hagree γ α μ).1 hμ
+  filter_upwards [h2] with ω hω
+  intro m
+  exact ⟨_, hω.tendsto_integral (T.D m) (T.D m).continuous (T.D m).hasCompactSupport⟩
+
+/-- Measurability of the joint sample of a whole-plane GFF. -/
+theorem measurable_jointSample_of {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hP : IsWholePlaneGFF P hC hcirc) :
+    Measurable (jointSample hC hcirc) := by
+  rw [jointSample_eq_pairOfFamily]
+  exact measurable_pairOfFamily.comp (measurable_obsFamily_map hP)
+
+/-- Transfer of an almost-sure membership along an equality of laws, with `P ≪ P'`. -/
+theorem ae_mem_of_map_eq {Ω β : Type*} [MeasurableSpace Ω] [MeasurableSpace β] {P P' : Measure Ω}
+    {X X' : Ω → β} {A : Set β} (hA : MeasurableSet A) (hX : Measurable X) (hX' : Measurable X')
+    (hac : P ≪ P') (hmap : P'.map X' = P.map X) (h : ∀ᵐ ω ∂P, X ω ∈ A) :
+    ∀ᵐ ω ∂P, X' ω ∈ A := by
+  have h1 : P (X ⁻¹' Aᶜ) = 0 := ae_iff.mp h
+  have h2 : P' (X' ⁻¹' Aᶜ) = 0 := by
+    rw [← Measure.map_apply hX' hA.compl, hmap, Measure.map_apply hX hA.compl]
+    exact h1
+  exact ae_iff.mpr (hac h2)
+
+/-- **E_z(d), the γ-profile of the shifted field.** Let `gt` be a smooth compactly supported test function with mean zero on
+the unit circle. Under the Cameron-Martin reweighting `P'` of the affine pullback `h' = (affinePairing hC hcirc 1 z,
+affineCircle hcirc 1 z)` by `gt` (`cameronMartinGFFReweighting_derived`), the selected profile of `h' + Av gt` lies in
+`convSet T γ γ` almost surely, whenever the selected profile of `hcirc` does. -/
+theorem ae_sel_affine_shift_mem_convSet {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsWholePlaneGFF P hC hcirc)
+    {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)} (hSelM : Measurable Sel)
+    (T : ProfileDecoderDerived.TestFamily) (γ : ℝ) (z : ℂ) {gt : ℂ → ℝ}
+    (hsm : ContDiff ℝ (⊤ : ℕ∞) gt) (hcs : HasCompactSupport gt) (hgt0 : Real.circleAverage gt 0 1 = 0)
+    (hmem : ∀ᵐ ω ∂P, Sel (posPart (hcirc ω)) ∈ ProfileDecoderDerived.convSet T γ γ) :
+    ∀ᵐ ω ∂P, Sel (posPart (fun s x => affineCircle hcirc 1 z ω s x + Real.circleAverage gt x s)) ∈
+      ProfileDecoderDerived.convSet T γ γ := by
+  have hAff : IsWholePlaneGFF P (affinePairing hC hcirc 1 z) (affineCircle hcirc 1 z) :=
+    wholePlaneGFFAffineInvariance_derived P hC hcirc hGFF 1 one_ne_zero z
+  obtain ⟨P', hP'1, hP'2, hGFF'⟩ :=
+    S11aj.cameronMartinGFFReweighting_derived Ω P _ _ hAff gt hsm hcs hgt0
+  have : IsProbabilityMeasure P' := hGFF'.isGaussianProcess.isProbabilityMeasure
+  have hjl := (isWholePlaneGFF_jointLaw_map_eq P' P _ _ _ _ hGFF' hAff).trans
+    (isWholePlaneGFF_jointLaw_map_eq P P _ _ hC hcirc hAff hGFF)
+  have hJm := measurable_jointSample_of hGFF
+  have hJ'm := measurable_jointSample_of hGFF'
+  have hQm : Measurable fun J : ({φ : ℂ → ℝ // IsTestFunction Set.univ φ} → ℝ) ×
+      ({p : ℝ × ℂ // 0 < p.1} → ℝ) => Sel (extSub J.2) :=
+    hSelM.comp (measurable_extSub.comp measurable_snd)
+  have hmap := congrArg (Measure.map fun J : ({φ : ℂ → ℝ // IsTestFunction Set.univ φ} → ℝ) ×
+      ({p : ℝ × ℂ // 0 < p.1} → ℝ) => Sel (extSub J.2)) hjl
+  rw [Measure.map_map hQm hJ'm, Measure.map_map hQm hJm] at hmap
+  have hmem' : ∀ᵐ ω ∂P, Sel (extSub (jointSample hC hcirc ω).2) ∈ ProfileDecoderDerived.convSet T γ γ :=
+    hmem.mono fun ω hω => by
+      show Sel (extSub (fun p => hcirc ω p.1.1 p.1.2)) ∈ _
+      rw [extSub_restrict]
+      exact hω
+  have key := ae_mem_of_map_eq (ProfileDecoderDerived.measurableSet_convSet T γ γ)
+    (hQm.comp hJm) (hQm.comp hJ'm) hP'2 hmap hmem'
+  filter_upwards [key] with ω hω
+  have hω' : Sel (extSub (fun p : {p : ℝ × ℂ // 0 < p.1} =>
+      affineCircle hcirc 1 z ω p.1.1 p.1.2 + Real.circleAverage gt p.1.2 p.1.1)) ∈
+      ProfileDecoderDerived.convSet T γ γ := hω
+  rwa [extSub_restrict (fun s x => affineCircle hcirc 1 z ω s x + Real.circleAverage gt x s)] at hω'
+
+/-! ## Canonical data and the corrected statement (MQ-lh-29; MQ-lh-15 item 7) -/
+
+/-- The canonical test family of the decoder: `Classical.choice` of `exists_testFamily`. -/
+noncomputable def canonicalTest : ProfileDecoderDerived.TestFamily :=
+  Classical.choice ProfileDecoderDerived.exists_testFamily
+
+/-- The canonical profile selector (MQ-lh-15 item 3): the selector of `canonicalProfileSelector`
+(`B2ShiftedProfileDecoder.lean:74`). -/
+noncomputable def canonicalSel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ) :=
+  Classical.choose canonicalProfileSelector
+
+theorem canonicalSel_measurable : Measurable canonicalSel :=
+  (Classical.choose_spec canonicalProfileSelector).1
+
+theorem canonicalSel_posExtend (y : C(CircleParameter, ℝ)) : canonicalSel (posExtend ⇑y) = y :=
+  (Classical.choose_spec canonicalProfileSelector).2 y
+
+/-- **Corrected `RootedShiftedDecoderNullTransfer` (MQ-lh-29; MQ-lh-15 item 7).** The decoder is the canonical
+`decoder canonicalTest γ α₀` applied to the canonical selector, and the root quantifier is almost everywhere for the
+Lebesgue measure restricted to the local domain `D_j` (Duplantier-Miller-Sheffield, Lemma A.10, a.e.-root form). The
+original `RootedShiftedDecoderNullTransfer` (`RootedDominationJoint.lean:126`) is left unchanged. -/
+def RootedShiftedDecoderNullTransferCanonical {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (ν : Ω → Measure ℂ) (j : ℕ) : Prop :=
+  ∀ᵐ z ∂(volume.restrict (localDomain j)), ∀ S : Set (ℂ × Measure ℂ), MeasurableSet S →
+    P {ω | localReferenceObservation ν j (z, ω) ∈ S} = 0 →
+      P {ω | recentredOutput (localRadius j)
+        (ProfileDecoderDerived.decoder canonicalTest γ α₀
+          (canonicalSel (posPart (dmsShiftedCircle γ z (hcirc ω)))), z) ∈ S} = 0
+
+/-- Canonical form of `ShiftedDecoderNullTransferStmt` (`RootedDominationJoint.lean:138`): the α₀-measure `μ` is the
+canonical decoded measure of the field, and the conclusion is `RootedShiftedDecoderNullTransferCanonical`. The three
+existence and a.e.-root inputs of `ae_rootedShiftedNullEvent` are named hypotheses (Proposed, pending source-check). -/
+def ShiftedDecoderNullTransferCanonicalStmt : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ α₀ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ ν : Ω → Measure ℂ),
+    IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
+    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMeasureOfField P γ γ hcirc ν →
+    LQGMeasureExistence P γ 0 hC hcirc → LQGMeasureExistence P γ α₀ hC hcirc →
+    (∀ μ' : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ') →
+    (∀ᵐ ω ∂P, μ ω = ProfileDecoderDerived.decoder canonicalTest γ α₀
+      (canonicalSel (posPart (hcirc ω)))) →
+    ∀ j : ℕ, RootedShiftedDecoderNullTransferCanonical P γ α₀ hcirc ν j
 
 end HarmonicBalls
