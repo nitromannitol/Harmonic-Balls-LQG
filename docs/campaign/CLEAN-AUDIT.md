@@ -1,7 +1,7 @@
 # Clean audit: residual workflow metacommentary
 
-Date: 2026-11-11. Task: fp-clean-residual-audit (worker n3). Scope: `git ls-files '*.lean'` (3,061 files) and `README.md`, 3,062 files in total.
-Method: PHASE2-CLEAN-PLAN.md section 2 (cleaning rule). Edits are comment-only; `scratch-lk/commentonly.py` reported OK on every committed file. No `lc` or `lb` was run (K2: one final build later).
+Date: 2026-11-11. Scope: `git ls-files '*.lean'` (3,062 files) and `README.md`, 3,063 files in total, scanned after commit 8cdec65a.
+Method: PHASE2-CLEAN-PLAN.md section 2 (cleaning rule), applied line by line with a Python scan (fleet scratch, not committed). Edits are comment-only and were checked with `scratch-lk/commentonly.py`. No `lc` or `lb` was run (K2: one final build later).
 
 ## Greps
 
@@ -16,44 +16,47 @@ Applied line by line to each tracked file (a Python equivalent of `grep -n -E`):
     \b[Ww]orker\b|\boperator (note|fix|decision|audit)|\blead (lk|lh)|\bOwner\b
     ^\s*#(print|check|eval|reduce|synth)\b
 
-## Table: directory, files cleaned, files in flight, residual hits
+## Table: files and lines still matching, by directory
 
-| Directory | Cleaned (this round) | In flight (owner) | Residual hits |
+Lines count matching lines (a line with two patterns counts once). Four uncommitted files of other workers (all in FirstPass) were scanned; none has a hit.
+
+| Directory | Files | Lines | Status |
 |---|---|---|---|
-| HarmonicBalls/FirstPass (top level, S11*, Closure, Frozen, S8c, S1S10) | 51 | 0 | 0 |
-| archive/HarmonicBalls/Audit | 27 | 0 | 0 |
-| HarmonicBalls/Proofs/Assembly | 1 | 0 | 0 |
-| HarmonicBalls/Proofs/GFF | 0 | 35 (n4, C4) | 0 |
-| HarmonicBalls/Proofs/Sec9 | 0 | 2 (n2, C3) | 0 |
-| HarmonicBalls/Proofs/Sec5 | 0 | 1 (n2, C3) | 0 |
-| HarmonicBalls/Proofs/Sec6 | 0 | 1 (n4, C4) | 0 |
-| HarmonicBalls/Proofs/Sec1-4 | 0 | 2 (z3, C3) | 0 |
-| HarmonicBalls/Proofs/Sec11 | 0 | 1 (z7) | 0 |
-| HarmonicBalls/Defs, Assembly | 0 | 2 (k5, C2) | 0 |
-| README.md | 0 | 1 (k5) | 0 |
-| checks/AxiomGate.lean | 0 | 1 (D6 gate; `#print axioms` kept) | 0 |
-| HarmonicBalls/Draft | 0 | 8 (D2, frozen) | 0 |
-| HarmonicBalls/LPStage | 0 | 11 (hard skip) | 0 |
-| HarmonicBalls/FirstPass/Phase2 | 0 | 1 (hard skip) | 0 |
-| HarmonicBalls/FirstPass/S9c.lean | 0 | 1 (see note 2) | 1 (C51 pointer) |
+| HarmonicBalls/Defs, Assembly, Proposed | 0 | 0 | cleaned (0334976f, f5011389) |
+| HarmonicBalls/Proofs/Sec5 | 0 | 0 | cleaned (8cdec65a) |
+| all other directories (Steps, Proofs except below, Assembly, archive) | 0 | 0 | clean |
+| HarmonicBalls/Proofs/Sec3, Sec4, Sec9 | 3 | 3 | one `#eval` guard block each, kept (decision 1) |
+| README.md | 1 | 3 | `docs/campaign` links, kept (decision 2) |
+| HarmonicBalls/FirstPass | 6 | 8 | S9c.lean held (1 line); Phase2 5 files, 7 lines (hard skip) |
+| HarmonicBalls/Draft | 12 | 45 | frozen (D2), not edited |
+| HarmonicBalls/LPStage | 13 | 18 | hard skip |
+| HarmonicBalls/Proofs/GFF | 35 | 237 | n4 (C4) |
+| HarmonicBalls/Proofs/Sec6 | 1 | 7 | n4 |
+| HarmonicBalls/Proofs/Sec11 | 1 | 3 | z7 |
+| checks/AxiomGate.lean | 1 | 95 | gate: 92 `#print axioms` kept (D6); line 1 and 3-4 (decision 3) |
 
-Totals: 79 files cleaned, 66 in flight, 0 residual in unowned files apart from FirstPass/S9c.lean. Other directories have no residual hits.
+Total: 73 files, 419 lines still matching. The `#print axioms` and `#check`/`#eval` lines in Draft, GFF, LPStage, Sec6 and Sec11 belong to frozen or other-owned files and were not touched.
 
-## Commits (this round)
+## Commits
 
-- 4df4be3d residual batch 1 (39 files), b2e502df residual batch 2 (8 files), 8d19377f residual batch 3 (31 files, FIRST-PASS labels), 93c408de residual batch 4 (2 files, chat-number references). Earlier C3 wave: 27f25133, 38eabfb1, 22403199 (Proofs/Sec8).
+- Residual batches (this round): 4df4be3d (39 files), b2e502df (8), 8d19377f (31), 93c408de (2); 8667057f and 4cb7c286 are the audit file.
+- C2 batch 1, 0334976f: 14 files of Defs (5), Assembly (3) and Proposed (6), comment-only, all OK.
+- C2 batch 2, f5011389: Defs/LBM.lean (fleet path removed), Defs/Green.lean (`docs/campaign` pointer removed), Assembly/ExistenceUniqueness.lean (two `#print axioms` lines removed).
+- Residual batch 5, 8cdec65a: README.md (two "first-pass" wording edits), Proofs/Sec3 and Sec4 DerivedInputAssembly (`#check` lines removed), Proofs/Sec5/StagedInputAssembly.lean (three pointers rewritten), Proofs/Sec9/ThreeInputAssembly.lean (one pointer removed).
 
-## Kept items (not workflow metacommentary by rule)
+## Kept items (not workflow metacommentary by rule; lines / files at scan time)
 
-- Input status words, "pending operator source-check" and "staged" (163 lines, 74 files): input provenance under Proposed/External.
-- Campaign correction ids `[Cn]` (74 lines, 39 files), e.g. "corrected form [C51]". Kept as correction provenance; decision for the lead (see below).
-- FROZEN, EXTERNAL and DERIVED status labels (235 lines, 54 files): mathematical input status.
-- "candidate" status word (4 lines, 3 files), e.g. Proofs/Sec8/MeanZeroTestEquivalence.lean:5,18.
-- Audit titles in archive/HarmonicBalls/Audit (7 lines, 6 files).
+- "staged": 514 / 263, input provenance under Proposed/External.
+- "source-check" (pending operator source-check): 74 / 57, input provenance.
+- Correction ids `[Cn]`: 174 / 67, correction provenance.
+- FROZEN, EXTERNAL and DERIVED status labels: 250 / 58, mathematical input status.
+- "candidate" status word: 22 / 14.
+- `#eval show CommandElabM Unit from do` guard blocks: 3 (code, not comments; see decision 1).
 
 ## Decisions for the lead
 
-1. `FirstPass/S9c.lean` (1 pointer, line 11, `form [C51] of docs/campaign/CORRECTIONS.md`): held. It is named in the OWNS of `tasks/n3.next.moved-to-n4-20261109.md` (moved to n4). Its comment edit was reverted to HEAD and not committed.
-2. "note §6.2-6.4" pointers (14 lines, 9 files in FirstPass/S11ad*): refer to a note that is not in the repository. Kept.
-3. `FirstPass/S11am.lean:22` "operator gap G1": kept (ambiguous: spectral gap or campaign gap id).
-4. archive/HarmonicBalls/Audit file titles: keep or rename the archive files (not a comment change).
+1. Guard blocks in Proofs/Sec3/DerivedInputAssembly.lean (line 102), Proofs/Sec4/DerivedInputAssembly.lean (line 87) and Proofs/Sec9/WeakUniquenessDerivedInputs.lean (line 83) are deliberate in-file checks, not stray commands. Kept. Remove them only if the gate is to be the sole check.
+2. `docs/campaign` paths were removed from Lean comments (Defs/Green.lean, Proofs/Sec5/StagedInputAssembly.lean, Proofs/Sec9/ThreeInputAssembly.lean). README keeps its three links to `docs/campaign` (reader-facing; section 3 decision).
+3. `checks/AxiomGate.lean` line 1 names a task and a worker, and lines 3-4 point to `docs/campaign`. The file is outside this scope; its owner should clean it (comment-only).
+4. `FirstPass/S9c.lean` line 11 (`form [C51] of docs/campaign/CORRECTIONS.md`): held, as in the previous refresh.
+5. `FirstPass/S11am.lean:22` "operator gap G1" is not matched by the greps. Kept: it may denote a spectral gap or a campaign id.
