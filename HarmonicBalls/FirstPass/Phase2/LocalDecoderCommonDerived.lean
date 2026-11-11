@@ -744,6 +744,201 @@ end Decoder
 
 end Vague
 
+/-! ### Dyadic approximants on the disc `X = ball c R` (MQ-lh-12 step 5, route (b)-(c))
+
+The density `ε^{γ²/2} e^{γ F(ε,z)}` at scale `ε = 2^{-k}` is read on the projected point `projBall`
+(the radial retraction onto `closedBall c (R - 2ε)`), so it is a continuous function of `(F, z)` and bounded on
+compacta; on the closed disc `closedBall c (R - 2ε)` the projection is the identity. -/
+section Approximants
+
+open scoped CompactlySupported
+
+/-- The Lebesgue measure of the disc `ball c R` (the pullback of `volume` under the inclusion; `Subtype.measureSpace`
+is not a global instance). -/
+noncomputable def ballVol (c : ℂ) (R : ℝ) : Measure (ball c R) :=
+  Measure.comap (Subtype.val : ball c R → ℂ) (volume : Measure ℂ)
+
+theorem isLocallyFiniteMeasure_ballVol (c : ℂ) (R : ℝ) : IsLocallyFiniteMeasure (ballVol c R) := by
+  refine ⟨fun x => ?_⟩
+  have hx : dist (x : ℂ) c < R := mem_ball.1 x.2
+  have hρ : 0 < (R - dist (x : ℂ) c) / 2 := by linarith
+  refine ⟨Subtype.val ⁻¹' ball (x : ℂ) ((R - dist (x : ℂ) c) / 2), ?_, ?_⟩
+  · exact (isOpen_ball.preimage continuous_subtype_val).mem_nhds (mem_ball_self hρ)
+  · unfold ballVol
+    rw [(MeasurableEmbedding.subtype_coe measurableSet_ball).comap_apply]
+    exact (measure_mono (image_preimage_subset _ _)).trans_lt measure_ball_lt_top
+
+/-- The radial retraction of `ℂ` onto the closed disc `closedBall c s` (the identity on that disc). -/
+noncomputable def projBall (c : ℂ) (s : ℝ) (z : ℂ) : ℂ :=
+  c + (s / max (dist z c) s) • (z - c)
+
+theorem continuous_projBall {c : ℂ} {s : ℝ} (hs : 0 < s) : Continuous (projBall c s) := by
+  have h1 : Continuous fun z : ℂ => s / max (dist z c) s :=
+    continuous_const.div ((continuous_id.dist continuous_const).max continuous_const)
+      fun z => (lt_max_of_lt_right hs).ne'
+  have h2 : Continuous fun z : ℂ => z - c := continuous_id.sub continuous_const
+  unfold projBall
+  exact continuous_const.add (h1.smul h2)
+
+theorem dist_projBall_le {c : ℂ} {s : ℝ} (hs : 0 < s) (z : ℂ) : dist (projBall c s z) c ≤ s := by
+  unfold projBall
+  rw [dist_eq_norm, add_sub_cancel_left, norm_smul,
+    Real.norm_of_nonneg (div_nonneg hs.le (le_max_of_le_right hs.le)), ← dist_eq_norm]
+  rw [div_mul_eq_mul_div, div_le_iff₀ (lt_max_of_lt_right hs)]
+  exact mul_le_mul_of_nonneg_left (le_max_left _ _) hs.le
+
+theorem projBall_of_dist_le {c : ℂ} {s : ℝ} (hs : 0 < s) {z : ℂ} (hz : dist z c ≤ s) :
+    projBall c s z = z := by
+  unfold projBall
+  rw [max_eq_right hz, div_self hs.ne', one_smul, add_sub_cancel]
+
+/-- The point `(2^{-k}, projBall z)` of `LocalParam c R`, for `2ε < R`. -/
+noncomputable def localPoint (c : ℂ) {R ε : ℝ} (hε : 0 < ε) (h2 : 2 * ε < R) (z : ℂ) : LocalParam c R :=
+  ⟨(ε, projBall c (R - 2 * ε) z), ⟨hε, by
+    show dist (projBall c (R - 2 * ε) z) c + ε < R
+    linarith [dist_projBall_le (c := c) (sub_pos.2 h2) z]⟩⟩
+
+theorem continuous_localPoint (c : ℂ) {R ε : ℝ} (hε : 0 < ε) (h2 : 2 * ε < R) :
+    Continuous (localPoint c hε h2) :=
+  Continuous.subtype_mk (continuous_const.prodMk ((continuous_projBall (sub_pos.2 h2)).comp continuous_id)) _
+
+/-- The real density `ε^{γ²/2} e^{γ F(ε,z)}` of the dyadic approximant at scale `ε = 2^{-k}` (route step 4), read at
+the projected point; `0` when `2ε ≥ R` (then no test function of a disc is seen). -/
+noncomputable def approxDens (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ) (z : ℂ) : ℝ :=
+  if h : 2 * dyadicScale k < R then
+    dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * F (localPoint c (dyadicScale_pos k) h z))
+  else 0
+
+theorem continuous_approxDens_prod (γ : ℝ) (c : ℂ) (R : ℝ) (k : ℕ) :
+    Continuous fun q : C(LocalParam c R, ℝ) × ℂ => approxDens γ c R q.1 k q.2 := by
+  by_cases h : 2 * dyadicScale k < R
+  · have hE : Continuous fun q : C(LocalParam c R, ℝ) × ℂ =>
+        q.1 (localPoint c (dyadicScale_pos k) h q.2) :=
+      continuous_eval.comp
+        (continuous_fst.prodMk ((continuous_localPoint c (dyadicScale_pos k) h).comp continuous_snd))
+    have hEq : (fun q : C(LocalParam c R, ℝ) × ℂ => approxDens γ c R q.1 k q.2) = fun q =>
+        dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * q.1 (localPoint c (dyadicScale_pos k) h q.2)) := by
+      funext q
+      simp only [approxDens, h, ↓reduceDIte]
+    rw [hEq]
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hE))
+  · have hEq : (fun q : C(LocalParam c R, ℝ) × ℂ => approxDens γ c R q.1 k q.2) = fun _ => 0 := by
+      funext q
+      simp only [approxDens, h, ↓reduceDIte]
+    rw [hEq]
+    exact continuous_const
+
+theorem approxDens_nonneg (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ) (z : ℂ) :
+    0 ≤ approxDens γ c R F k z := by
+  by_cases h : 2 * dyadicScale k < R
+  · simp only [approxDens, h, ↓reduceDIte]
+    exact mul_nonneg (Real.rpow_nonneg (dyadicScale_pos k).le _) (Real.exp_pos _).le
+  · simp only [approxDens, h, ↓reduceDIte]
+    exact le_refl 0
+
+instance sFinite_ballVol (c : ℂ) (R : ℝ) : SFinite (ballVol c R) := by
+  haveI := isLocallyFiniteMeasure_ballVol c R
+  haveI : LocallyCompactSpace (ball c R) := isOpen_ball.locallyCompactSpace
+  infer_instance
+
+/-- The dyadic approximant `ε^{γ²/2} e^{γ F(ε,z)} dz` on the disc `X = ball c R` (the Lebesgue measure of `X`
+weighted by `approxDens`). -/
+noncomputable def approxX (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ) : Measure (ball c R) :=
+  (ballVol c R).withDensity fun x => ENNReal.ofReal (approxDens γ c R F k x.1)
+
+theorem continuous_approxDens_X (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ) :
+    Continuous fun x : ball c R => approxDens γ c R F k x.1 :=
+  (continuous_approxDens_prod γ c R k).comp (continuous_const.prodMk (continuous_subtype_val))
+
+theorem integral_approxX (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ)
+    (g : ball c R → ℝ) :
+    ∫ x, g x ∂(approxX γ c R F k) = ∫ x, g x * approxDens γ c R F k x.1 ∂(ballVol c R) := by
+  unfold approxX
+  rw [integral_withDensity_eq_integral_toReal_smul
+    (f := fun x : ball c R => ENNReal.ofReal (approxDens γ c R F k x.1))
+    (continuous_approxDens_X γ c R F k).measurable.ennreal_ofReal
+    (Eventually.of_forall fun x => ENNReal.ofReal_lt_top)]
+  congr 1
+  funext x
+  rw [smul_eq_mul, ENNReal.toReal_ofReal (approxDens_nonneg γ c R F k x.1), mul_comm]
+
+theorem isLocallyFiniteMeasure_approxX (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ) :
+    IsLocallyFiniteMeasure (approxX γ c R F k) := by
+  haveI := isLocallyFiniteMeasure_ballVol c R
+  unfold approxX
+  exact IsLocallyFiniteMeasure.withDensity_ofReal (continuous_approxDens_X γ c R F k)
+
+theorem measurable_integral_approxX (γ : ℝ) (c : ℂ) (R : ℝ) (k : ℕ) (g : C_c(ball c R, ℝ)) :
+    Measurable fun F : C(LocalParam c R, ℝ) =>
+      ∫ x, g x * approxDens γ c R F k x.1 ∂(ballVol c R) := by
+  have hcont : Continuous fun q : C(LocalParam c R, ℝ) × ball c R =>
+      g q.2 * approxDens γ c R q.1 k q.2.1 :=
+    (g.continuous.comp continuous_snd).mul
+      ((continuous_approxDens_prod γ c R k).comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))
+  have hSM : StronglyMeasurable (Function.uncurry fun (F : C(LocalParam c R, ℝ)) (x : ball c R) =>
+      g x * approxDens γ c R F k x.1) := hcont.stronglyMeasurable
+  exact (hSM.integral_prod_right (ν := ballVol c R)).measurable
+
+/-- Extension by zero of a compactly supported continuous function on the disc `ball c R` to `ℂ` (route step 5). -/
+theorem exists_extend_zero_ball {c : ℂ} {R : ℝ} (g : C_c(ball c R, ℝ)) :
+    ∃ f : C_c(ℂ, ℝ), ∀ x : ball c R, f x.1 = g x := by
+  classical
+  let K : Set ℂ := Subtype.val '' tsupport g
+  have hK : IsCompact K := (g.hasCompactSupport.isCompact).image continuous_subtype_val
+  have hKball : K ⊆ ball c R := by
+    rintro _ ⟨x, -, rfl⟩
+    exact x.2
+  let f : ℂ → ℝ := fun z => if h : z ∈ ball c R then g ⟨z, h⟩ else 0
+  have hfx : ∀ x : ball c R, f x.1 = g x := by
+    intro x
+    simp only [f, x.2, ↓reduceDIte, Subtype.coe_eta]
+  have hzero : ∀ z, z ∉ K → f z = 0 := by
+    intro z hz
+    by_cases hzb : z ∈ ball c R
+    · have hnot : (⟨z, hzb⟩ : ball c R) ∉ tsupport g := fun h => hz ⟨_, h, rfl⟩
+      simp only [f, hzb, ↓reduceDIte]
+      exact image_eq_zero_of_notMem_tsupport hnot
+    · simp only [f, hzb, ↓reduceDIte]
+  have hcontOn : ContinuousOn f (ball c R) := by
+    rw [continuousOn_iff_continuous_restrict]
+    have hres : (ball c R).domRestrict f = ⇑g := funext fun x => hfx x
+    rw [hres]
+    exact g.continuous
+  have hcont : Continuous f := by
+    refine continuous_iff_continuousAt.2 fun z0 => ?_
+    by_cases hz0 : z0 ∈ ball c R
+    · exact hcontOn.continuousAt (isOpen_ball.mem_nhds hz0)
+    · have hz0K : z0 ∉ K := fun h => hz0 (hKball h)
+      refine (continuousAt_const : ContinuousAt (fun _ : ℂ => (0 : ℝ)) z0).congr ?_
+      exact Filter.eventually_of_mem (hK.isClosed.isOpen_compl.mem_nhds hz0K)
+        fun z hz => (hzero z hz).symm
+  exact ⟨⟨⟨f, hcont⟩, HasCompactSupport.intro hK fun z hz => hzero z hz⟩, hfx⟩
+
+/-- Route step 7 on the closed disc: where `F` is the centred circle profile `fieldCircleAverage - P`, the
+approximant density is `e^{γP}` times the Lebesgue density of `lqgApprox` at scale `2^{-k}`. -/
+theorem approxDens_mul_exp (γ α P : ℝ) {c : ℂ} {R : ℝ} (hc : ℝ → ℂ → ℝ) (F : C(LocalParam c R, ℝ))
+    (hF : ∀ p : LocalParam c R, F p = fieldCircleAverage α hc p.1.1 p.1.2 - P) (k : ℕ)
+    (h2 : 2 * dyadicScale k < R) {z : ℂ} (hz : dist z c ≤ R - 2 * dyadicScale k) :
+    dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * fieldCircleAverage α hc (dyadicScale k) z) =
+      Real.exp (γ * P) * approxDens γ c R F k z := by
+  have hε : 0 < dyadicScale k := dyadicScale_pos k
+  have hp : projBall c (R - 2 * dyadicScale k) z = z := projBall_of_dist_le (sub_pos.2 h2) hz
+  have hFz : F (localPoint c hε h2 z) = fieldCircleAverage α hc (dyadicScale k) z - P := by
+    rw [hF]
+    show fieldCircleAverage α hc (dyadicScale k) (projBall c (R - 2 * dyadicScale k) z) - P = _
+    rw [hp]
+  simp only [approxDens, h2, ↓reduceDIte]
+  rw [hFz]
+  have hexp : Real.exp (γ * fieldCircleAverage α hc (dyadicScale k) z) =
+      Real.exp (γ * P) * Real.exp (γ * (fieldCircleAverage α hc (dyadicScale k) z - P)) := by
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  rw [hexp]
+  ring
+
+end Approximants
+
 end LocalDecoderCommon
 
 end HarmonicBalls
