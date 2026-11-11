@@ -1,5 +1,6 @@
 import Mathlib
 import HarmonicBalls.LPStage.GFF
+import LatticeProb.Prob.ChentsovPiModification
 
 /-!
 # Existence of the whole-plane GFF: named ingredients and the elementary moment bound (LP stage)
@@ -219,5 +220,289 @@ theorem exists_gaussian_of_kernel (hB1 : KolmogorovExtensionStmt) (K : ι → ι
     exact hcov.symm
 
 end KernelProcess
+
+/-! ### Eighth moments of centred Gaussian increments and the Kolmogorov criterion (B3, S3a)
+
+A centred Gaussian variable `D` with variance `v` has `∫ |D|⁸ = v⁴ ∫ |N|⁸` for `N ~ N(0,1)` (scaling of
+`gaussianReal`). Applied to the increments `X p - X q` of a centred Gaussian field with variance bounded by a constant
+times the distance, this gives the Kolmogorov moment condition with exponents `p = 8`, `q = 4` (`IsKolmogorovProcess`,
+Mathlib `Probability/Process/Kolmogorov.lean`), which is the hypothesis of the multiparameter criterion
+`LatticeProb.exists_continuous_modification_spaceTime_all` (`d = 2`, `q = 4 > d + 1 = 3`). -/
+
+section GaussianMoments
+
+open MeasureTheory ProbabilityTheory Filter Topology
+open scoped ENNReal NNReal
+
+/-- The eighth absolute moment `∫⁻ |x|⁸ dγ` of the standard Gaussian law `γ = N(0,1)` on `ℝ`. -/
+noncomputable def gaussAbsMoment8 : ℝ≥0∞ := ∫⁻ x, ENNReal.ofReal (|x| ^ 8) ∂(gaussianReal 0 1)
+
+lemma gaussAbsMoment8_lt_top : gaussAbsMoment8 < ∞ := by
+  have h := (memLp_id_gaussianReal (μ := 0) (v := 1) 8).integrable_norm_pow (by norm_num)
+  unfold gaussAbsMoment8
+  refine lt_of_eq_of_lt (lintegral_congr fun x => ?_) h.2
+  simp [Real.enorm_eq_ofReal]
+
+/-- Scaling: `∫⁻ |x|⁸ d N(0, v) = v⁴ · ∫⁻ |x|⁸ dγ` for `v : ℝ≥0`. -/
+lemma lintegral_abs_pow8_gaussianReal (v : ℝ≥0) :
+    ∫⁻ x, ENNReal.ofReal (|x| ^ 8) ∂(gaussianReal 0 v) = (v : ℝ≥0∞) ^ 4 * gaussAbsMoment8 := by
+  set c : ℝ := Real.sqrt (v : ℝ) with hc
+  have hc0 : 0 ≤ c := Real.sqrt_nonneg _
+  have hc2 : c ^ 2 = (v : ℝ) := Real.sq_sqrt v.2
+  have hmap : gaussianReal 0 v = (gaussianReal 0 1).map (fun x : ℝ ↦ c * x) := by
+    rw [gaussianReal_map_const_mul, mul_zero]
+    congr 1
+    apply NNReal.eq
+    simp [hc2]
+  have h8 : ENNReal.ofReal (c ^ 8) = (v : ℝ≥0∞) ^ 4 := by
+    rw [show c ^ 8 = (c ^ 2) ^ 4 by ring, hc2, ENNReal.ofReal_pow (NNReal.coe_nonneg v),
+      ENNReal.ofReal_coe_nnreal]
+  rw [hmap, lintegral_map' (f := fun x : ℝ ↦ ENNReal.ofReal (|x| ^ 8)) (by fun_prop) (by fun_prop),
+    gaussAbsMoment8, ← lintegral_const_mul' _ _ (by simp)]
+  refine lintegral_congr fun x => ?_
+  rw [show |c * x| ^ 8 = c ^ 8 * |x| ^ 8 by rw [abs_mul, mul_pow, abs_of_nonneg hc0],
+    ENNReal.ofReal_mul (pow_nonneg hc0 8), h8]
+
+/-- Eighth moment of a centred Gaussian variable: `∫⁻ |D|⁸ dP = (Var D)⁴ · ∫⁻ |N|⁸`. -/
+lemma lintegral_abs_pow8_of_hasGaussianLaw {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {D : Ω → ℝ} (hD : HasGaussianLaw D P) (h0 : ∫ ω, D ω ∂P = 0) :
+    ∫⁻ ω, ENNReal.ofReal (|D ω| ^ 8) ∂P = ((Var[D; P]).toNNReal : ℝ≥0∞) ^ 4 * gaussAbsMoment8 := by
+  have hmeas : AEMeasurable (fun x : ℝ ↦ ENNReal.ofReal (|x| ^ 8)) (P.map D) := by fun_prop
+  rw [← lintegral_map' hmeas hD.aemeasurable, hD.map_eq_gaussianReal, h0,
+    lintegral_abs_pow8_gaussianReal]
+
+/-- The Kolmogorov moment condition (exponents `p = 8`, `q = 4`) for a centred Gaussian field on `ℝ × ℝ²` whose
+increments have variance bounded by a constant times the (sup) distance of the indices. -/
+theorem isKolmogorovProcess_of_gaussian {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P] (X : ℝ × (Fin 2 → ℝ) → Ω → ℝ) (hm : ∀ p, Measurable (X p))
+    (hcent : ∀ p q, ∫ ω, (X p ω - X q ω) ∂P = 0)
+    (hgauss : ∀ p q, HasGaussianLaw (fun ω ↦ X p ω - X q ω) P)
+    {C : ℝ} (hC : 0 ≤ C)
+    (hvar : ∀ p q, Var[fun ω ↦ X p ω - X q ω; P] ≤ C * dist p q) :
+    ∃ M : ℝ≥0, IsKolmogorovProcess X P 8 4 M := by
+  refine ⟨(gaussAbsMoment8 * ENNReal.ofReal (C ^ 4)).toNNReal, ?_⟩
+  refine ⟨fun s t ↦ by rw [← BorelSpace.measurable_eq]; exact (hm s).prodMk (hm t),
+    fun s t ↦ ?_, by norm_num, by norm_num⟩
+  have hint : ∀ ω, edist (X s ω) (X t ω) ^ (8 : ℝ) = ENNReal.ofReal (|X s ω - X t ω| ^ 8) := by
+    intro ω
+    rw [edist_dist, Real.dist_eq, ENNReal.ofReal_rpow_of_nonneg (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 8)]
+    norm_num
+  simp_rw [hint]
+  rw [lintegral_abs_pow8_of_hasGaussianLaw (hgauss s t) (hcent s t)]
+  have hfin : gaussAbsMoment8 * ENNReal.ofReal (C ^ 4) ≠ ∞ :=
+    ENNReal.mul_ne_top gaussAbsMoment8_lt_top.ne ENNReal.ofReal_ne_top
+  rw [ENNReal.coe_toNNReal hfin, edist_dist, ENNReal.ofReal_rpow_of_nonneg dist_nonneg
+    (by norm_num : (0 : ℝ) ≤ 4), show (4 : ℝ) = ((4 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
+  have hv : ((Var[fun ω ↦ X s ω - X t ω; P]).toNNReal : ℝ≥0∞) ≤ ENNReal.ofReal (C * dist s t) :=
+    ENNReal.ofReal_le_ofReal (hvar s t)
+  calc ((Var[fun ω ↦ X s ω - X t ω; P]).toNNReal : ℝ≥0∞) ^ 4 * gaussAbsMoment8
+      ≤ (ENNReal.ofReal (C * dist s t)) ^ 4 * gaussAbsMoment8 := by gcongr
+    _ = ENNReal.ofReal ((C * dist s t) ^ 4) * gaussAbsMoment8 := by
+      rw [ENNReal.ofReal_pow (mul_nonneg hC dist_nonneg)]
+    _ = gaussAbsMoment8 * ENNReal.ofReal (C ^ 4) * ENNReal.ofReal (dist s t ^ 4) := by
+      rw [mul_pow, ENNReal.ofReal_mul (pow_nonneg hC 4)]
+      ring
+
+end GaussianMoments
+
+/-! ### Localization and gluing: a continuous modification on `(0, ∞) × ℝ²` (B3, S3b)
+
+The increments of a circle-average field have variance bounded only on `{r ≥ a}` for each `a > 0`, so the global
+Kolmogorov criterion applies to the processes clamped to the boxes `[1/(N+1), N+1] × [-(N+1), N+1]²`, which are
+1-Lipschitz images of the parameters. The modifications `Y N` of the clamped processes are glued along the open boxes
+`(1/(N+1), N+1) × (-(N+1), N+1)²` (an increasing exhaustion of `(0, ∞) × ℝ²`): on a full-measure set they agree on
+every open box, by continuity and a countable dense set, which gives one continuous version on `(0, ∞) × ℝ²`. -/
+
+section Localization
+
+open MeasureTheory ProbabilityTheory Filter Topology Set
+open scoped NNReal
+
+/-- The clamp of a real number to `[a, b]`, in the form `max a (min x b)`, is 1-Lipschitz. -/
+lemma abs_clamp_sub_clamp_le (a b x y : ℝ) :
+    |max a (min x b) - max a (min y b)| ≤ |x - y| := by
+  rw [max_comm a, max_comm a]
+  refine (abs_max_sub_max_le_abs _ _ _).trans ?_
+  have h1 := abs_min_sub_min_le_max x b y b
+  rw [sub_self, abs_zero, max_eq_left (abs_nonneg _)] at h1
+  exact h1
+
+/-- The clamp of a parameter to the closed box `[1/(N+1), N+1] × [-(N+1), N+1]²`. -/
+noncomputable def clampBox (N : ℕ) (p : ℝ × (Fin 2 → ℝ)) : ℝ × (Fin 2 → ℝ) :=
+  (max (1 / ((N : ℝ) + 1)) (min p.1 ((N : ℝ) + 1)),
+    fun i ↦ max (-((N : ℝ) + 1)) (min (p.2 i) ((N : ℝ) + 1)))
+
+/-- The open box `(1/(N+1), N+1) × (-(N+1), N+1)²`. -/
+def openBox (N : ℕ) : Set (ℝ × (Fin 2 → ℝ)) :=
+  {p | 1 / ((N : ℝ) + 1) < p.1 ∧ p.1 < (N : ℝ) + 1 ∧ ∀ i, |p.2 i| < (N : ℝ) + 1}
+
+lemma isOpen_openBox (N : ℕ) : IsOpen (openBox N) := by
+  have h1 : IsOpen {p : ℝ × (Fin 2 → ℝ) | 1 / ((N : ℝ) + 1) < p.1} :=
+    isOpen_lt continuous_const continuous_fst
+  have h2 : IsOpen {p : ℝ × (Fin 2 → ℝ) | p.1 < (N : ℝ) + 1} :=
+    isOpen_lt continuous_fst continuous_const
+  have h3 : IsOpen {p : ℝ × (Fin 2 → ℝ) | ∀ i, |p.2 i| < (N : ℝ) + 1} := by
+    have : {p : ℝ × (Fin 2 → ℝ) | ∀ i, |p.2 i| < (N : ℝ) + 1} =
+        ⋂ i, {p : ℝ × (Fin 2 → ℝ) | |p.2 i| < (N : ℝ) + 1} := by
+      ext p
+      simp
+    rw [this]
+    exact isOpen_iInter_of_finite fun i ↦
+      isOpen_lt (continuous_abs.comp ((continuous_apply i).comp continuous_snd)) continuous_const
+  have hset : openBox N = {p : ℝ × (Fin 2 → ℝ) | 1 / ((N : ℝ) + 1) < p.1} ∩
+      {p : ℝ × (Fin 2 → ℝ) | p.1 < (N : ℝ) + 1} ∩
+      {p : ℝ × (Fin 2 → ℝ) | ∀ i, |p.2 i| < (N : ℝ) + 1} := by
+    ext p
+    simp [openBox, and_assoc]
+  rw [hset]
+  exact (h1.inter h2).inter h3
+
+lemma openBox_mono {N M : ℕ} (h : N ≤ M) : openBox N ⊆ openBox M := by
+  rintro p ⟨h1, h2, h3⟩
+  have hN : (N : ℝ) ≤ M := by exact_mod_cast h
+  refine ⟨?_, by linarith, fun i ↦ by linarith [h3 i]⟩
+  have : (0 : ℝ) < (N : ℝ) + 1 := by positivity
+  exact lt_of_le_of_lt (one_div_le_one_div_of_le this (by linarith)) h1
+
+lemma clampBox_eq_of_mem {N : ℕ} {p : ℝ × (Fin 2 → ℝ)} (hp : p ∈ openBox N) : clampBox N p = p := by
+  obtain ⟨h1, h2, h3⟩ := hp
+  refine Prod.ext ?_ ?_
+  · show max (1 / ((N : ℝ) + 1)) (min p.1 ((N : ℝ) + 1)) = p.1
+    rw [min_eq_left h2.le, max_eq_right h1.le]
+  · funext i
+    show max (-((N : ℝ) + 1)) (min (p.2 i) ((N : ℝ) + 1)) = p.2 i
+    rw [min_eq_left (abs_lt.mp (h3 i)).2.le, max_eq_right (abs_lt.mp (h3 i)).1.le]
+
+lemma dist_clampBox_le (N : ℕ) (p q : ℝ × (Fin 2 → ℝ)) :
+    dist (clampBox N p) (clampBox N q) ≤ dist p q := by
+  rw [Prod.dist_eq, Prod.dist_eq]
+  refine max_le_max ?_ ?_
+  · show dist (max (1 / ((N : ℝ) + 1)) (min p.1 ((N : ℝ) + 1)))
+        (max (1 / ((N : ℝ) + 1)) (min q.1 ((N : ℝ) + 1))) ≤ dist p.1 q.1
+    rw [Real.dist_eq, Real.dist_eq]
+    exact abs_clamp_sub_clamp_le _ _ _ _
+  · refine (dist_pi_le_iff dist_nonneg).2 fun i ↦ ?_
+    refine le_trans ?_ (dist_le_pi_dist p.2 q.2 i)
+    show dist (max (-((N : ℝ) + 1)) (min (p.2 i) ((N : ℝ) + 1)))
+        (max (-((N : ℝ) + 1)) (min (q.2 i) ((N : ℝ) + 1))) ≤ dist (p.2 i) (q.2 i)
+    rw [Real.dist_eq, Real.dist_eq]
+    exact abs_clamp_sub_clamp_le _ _ _ _
+
+/-- The box index of a parameter with positive radius. -/
+noncomputable def boxIdx (p : ℝ × (Fin 2 → ℝ)) : ℕ := ⌊max (1 / p.1) (max p.1 ‖p.2‖)⌋₊
+
+lemma mem_openBox_boxIdx {p : ℝ × (Fin 2 → ℝ)} (hp : 0 < p.1) : p ∈ openBox (boxIdx p) := by
+  have hxlt := Nat.lt_floor_add_one (max (1 / p.1) (max p.1 ‖p.2‖))
+  have h1 : 1 / p.1 ≤ max (1 / p.1) (max p.1 ‖p.2‖) := le_max_left _ _
+  have h2 : p.1 ≤ max (1 / p.1) (max p.1 ‖p.2‖) := (le_max_left _ _).trans (le_max_right _ _)
+  have h3 : ‖p.2‖ ≤ max (1 / p.1) (max p.1 ‖p.2‖) := (le_max_right _ _).trans (le_max_right _ _)
+  unfold boxIdx
+  set x := max (1 / p.1) (max p.1 ‖p.2‖) with hx
+  refine ⟨?_, by linarith, fun i ↦ ?_⟩
+  · have hpos : (0 : ℝ) < (⌊x⌋₊ : ℝ) + 1 := by positivity
+    rw [div_lt_iff₀ hpos]
+    have := (div_lt_iff₀ hp).1 (lt_of_le_of_lt h1 hxlt)
+    linarith [mul_comm p.1 ((⌊x⌋₊ : ℝ) + 1)]
+  · rw [← Real.norm_eq_abs]
+    linarith [norm_le_pi_norm p.2 i]
+
+/-- The glued process, theorem form (B3): a continuous modification on `{r > 0}` of a centred Gaussian field whose
+increment variances are bounded on each `{r ≥ a}` by a constant times the distance. -/
+theorem exists_continuousOn_modification_of_gaussian {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P] (X : ℝ × (Fin 2 → ℝ) → Ω → ℝ) (hm : ∀ p, Measurable (X p))
+    (hcent : ∀ p q, ∫ ω, (X p ω - X q ω) ∂P = 0)
+    (hgauss : ∀ p q, HasGaussianLaw (fun ω ↦ X p ω - X q ω) P)
+    (hvar : ∀ a : ℝ, 0 < a → ∃ C : ℝ, 0 ≤ C ∧ ∀ p q : ℝ × (Fin 2 → ℝ), a ≤ p.1 → a ≤ q.1 →
+      Var[fun ω ↦ X p ω - X q ω; P] ≤ C * dist p q) :
+    ∃ Z : ℝ × (Fin 2 → ℝ) → Ω → ℝ, (∀ p, Measurable (Z p)) ∧
+      (∀ p : ℝ × (Fin 2 → ℝ), 0 < p.1 → Z p =ᵐ[P] X p) ∧
+      ∀ᵐ ω ∂P, ContinuousOn (fun p ↦ Z p ω) {p | 0 < p.1} := by
+  -- Step 1: continuous modifications of the clamped processes (global Kolmogorov criterion, `d = 2`, `q = 4`).
+  have hclamp : ∀ N : ℕ, ∃ Y : ℝ × (Fin 2 → ℝ) → Ω → ℝ, (∀ p, Measurable (Y p)) ∧
+      (∀ p, X (clampBox N p) =ᵐ[P] Y p) ∧ ∀ ω, Continuous fun p ↦ Y p ω := by
+    intro N
+    have ha : (0 : ℝ) < 1 / ((N : ℝ) + 1) := by positivity
+    obtain ⟨C, hC, hvarC⟩ := hvar _ ha
+    obtain ⟨M, hK⟩ := isKolmogorovProcess_of_gaussian (fun p ↦ X (clampBox N p))
+      (fun p ↦ hm _) (fun p q ↦ hcent _ _) (fun p q ↦ hgauss _ _) hC
+      (fun p q ↦ (hvarC _ _ (le_max_left _ _) (le_max_left _ _)).trans
+        (mul_le_mul_of_nonneg_left (dist_clampBox_le N p q) hC))
+    exact LatticeProb.exists_continuous_modification_spaceTime_all (d := 2) hK (by norm_num)
+  choose Y hYm hYae hYc using hclamp
+  -- Step 2: a countable dense set and the agreement events on the open boxes.
+  obtain ⟨S, hSc, hSd⟩ := TopologicalSpace.exists_countable_dense (ℝ × (Fin 2 → ℝ))
+  let K : ℕ → ℕ → Set (ℝ × (Fin 2 → ℝ)) := fun n m => S ∩ openBox (min n m)
+  have hKc : ∀ n m, (K n m).Countable := fun n m => hSc.mono inter_subset_left
+  let A : ℕ → ℕ → Set Ω := fun n m => {ω | ∀ p ∈ K n m, Y n p ω = Y m p ω}
+  have hAm : ∀ n m, MeasurableSet (A n m) := by
+    intro n m
+    have : A n m = ⋂ p ∈ K n m, {ω | Y n p ω = Y m p ω} := by
+      ext ω
+      simp [A]
+    rw [this]
+    exact MeasurableSet.biInter (hKc n m) fun p _ ↦ measurableSet_eq_fun (hYm n p) (hYm m p)
+  have hYX : ∀ n p, p ∈ openBox n → Y n p =ᵐ[P] X p := by
+    intro n p hp
+    have h := hYae n p
+    rw [clampBox_eq_of_mem hp] at h
+    exact h.symm
+  have hAae : ∀ n m, ∀ᵐ ω ∂P, ω ∈ A n m := by
+    intro n m
+    refine (ae_ball_iff (hKc n m)).2 fun p hp => ?_
+    have hpb : p ∈ openBox (min n m) := hp.2
+    have h1 : p ∈ openBox n := openBox_mono (min_le_left n m) hpb
+    have h2 : p ∈ openBox m := openBox_mono (min_le_right n m) hpb
+    exact ((hYX n p h1).trans (hYX m p h2).symm)
+  let G : Set Ω := {ω | ∀ n m, ω ∈ A n m}
+  have hGm : MeasurableSet G := by
+    have hG : G = ⋂ n, ⋂ m, A n m := by
+      ext ω
+      simp [G]
+    rw [hG]
+    exact MeasurableSet.iInter fun n => MeasurableSet.iInter fun m => hAm n m
+  have hG_ae : ∀ᵐ ω ∂P, ∀ n m, ω ∈ A n m :=
+    ae_all_iff.2 fun n => ae_all_iff.2 fun m => hAae n m
+  -- Step 3: on `G`, the modifications agree on every open box.
+  have hEq : ∀ ω ∈ G, ∀ n m, EqOn (fun p ↦ Y n p ω) (fun p ↦ Y m p ω) (openBox (min n m)) := by
+    intro ω hω n m
+    have hωA : ω ∈ A n m := (show ∀ n m, ω ∈ A n m from hω) n m
+    refine Set.EqOn.of_subset_closure (s := K n m) (t := openBox (min n m)) ?_
+      (hYc n ω).continuousOn (hYc m ω).continuousOn inter_subset_right
+      (by
+        intro x hx
+        have h := hSd.open_subset_closure_inter (isOpen_openBox (min n m)) hx
+        rw [Set.inter_comm] at h
+        exact h)
+    intro p hp
+    exact hωA p hp
+  -- Step 4: the glued process.
+  let Z : ℝ × (Fin 2 → ℝ) → Ω → ℝ := fun p => G.indicator (fun ω ↦ Y (boxIdx p) p ω)
+  have key : ∀ ω ∈ G, ∀ n p, p ∈ openBox n → Z p ω = Y n p ω := by
+    intro ω hω n p hpn
+    have hpos : 0 < p.1 := lt_trans (by positivity) hpn.1
+    have hpi : p ∈ openBox (boxIdx p) := mem_openBox_boxIdx hpos
+    have hmin : p ∈ openBox (min (boxIdx p) n) := by
+      rcases min_choice (boxIdx p) n with h | h <;> rw [h]
+      · exact hpi
+      · exact hpn
+    show G.indicator (fun ω ↦ Y (boxIdx p) p ω) ω = Y n p ω
+    rw [Set.indicator_of_mem hω]
+    exact hEq ω hω (boxIdx p) n hmin
+  refine ⟨Z, fun p ↦ (hYm (boxIdx p) p).indicator hGm, fun p hp ↦ ?_, ?_⟩
+  · have hYX' : Y (boxIdx p) p =ᵐ[P] X p := hYX (boxIdx p) p (mem_openBox_boxIdx hp)
+    filter_upwards [hG_ae, hYX'] with ω hωG hωY
+    show G.indicator (fun ω ↦ Y (boxIdx p) p ω) ω = X p ω
+    rw [Set.indicator_of_mem (show ω ∈ G from hωG)]
+    exact hωY
+  · filter_upwards [hG_ae] with ω hωG
+    have hωG' : ω ∈ G := show ω ∈ G from hωG
+    intro p0 hp0
+    have hmem : p0 ∈ openBox (boxIdx p0) := mem_openBox_boxIdx hp0
+    have hev : (fun p ↦ Z p ω) =ᶠ[𝓝 p0] (fun p ↦ Y (boxIdx p0) p ω) := by
+      filter_upwards [(isOpen_openBox (boxIdx p0)).mem_nhds hmem] with p hp
+      exact key ω hωG' (boxIdx p0) p hp
+    exact ((hYc (boxIdx p0) ω).continuousAt.congr hev.symm).continuousWithinAt
+
+end Localization
 
 end LatticeProb.Gauss
