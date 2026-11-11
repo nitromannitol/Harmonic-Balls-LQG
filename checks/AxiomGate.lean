@@ -1,7 +1,7 @@
--- Axiom gate for the numbered results (task fp-clean-d6-axiom-gate, worker z3).
+-- Axiom gate for the numbered results.
 -- Outside the default library (checks/ is not a lean_lib): compile with lc or `lake env lean checks/AxiomGate.lean`.
 -- Imports: the modules of the counted declarations (docs/campaign/COUNTED-MANIFEST.md),
--- the DERIVED-row theorems of docs/campaign/PHASE2-DERIVATION-STATUS.md, and HarmonicBalls.LPStage.All.
+-- the DERIVED-row theorems of docs/campaign/PHASE2-DERIVATION-STATUS.md.
 
 import HarmonicBalls.FirstPass.Canonical.NotMetricBall
 import HarmonicBalls.FirstPass.Canonical.Novelty
@@ -42,7 +42,6 @@ import HarmonicBalls.FirstPass.S2S3S4S9SA
 import HarmonicBalls.FirstPass.S5S7S8
 import HarmonicBalls.FirstPass.S8c.BirkhoffDerived
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
-import HarmonicBalls.LPStage.All
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import HarmonicBalls.Proofs.Sec9.LQGExistenceConsequences
@@ -189,10 +188,6 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.obstacleComparison
 
 -- Forall-xi and canonical-xi forms (COUNTED-MANIFEST.md)
--- 1.2 forall-xi `HarmonicBallNoveltyStmt`: firstPass_1_2 (HarmonicBalls/FirstPass/S1S10.lean:43)
-#print axioms HarmonicBalls.firstPass_1_2
--- 11.11 forall-xi `HarmonicBallNotMetricBallStmt`: firstPass_11_11 (HarmonicBalls/FirstPass/S11.lean:111)
-#print axioms HarmonicBalls.firstPass_11_11
 -- 11.13 forall-xi `CorrectedLemma11_13Stmt`: correctedLemma11_13_of_identity (HarmonicBalls/FirstPass/S11i/Assembly13.lean:79)
 #print axioms HarmonicBalls.correctedLemma11_13_of_identity
 -- 1.2 canonical-xi `HarmonicBallNoveltyCanonicalStmt`: harmonicBallNoveltyStmt_of_existence_and_results_canonical (HarmonicBalls/FirstPass/Canonical/Novelty.lean:23)
