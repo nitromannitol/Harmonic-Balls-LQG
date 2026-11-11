@@ -4,9 +4,9 @@ import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.PlaneTopology
 import HarmonicBalls.LPStage.LQGMeasureLocality
 
-/-! # Square measurability of the γ-Liouville quantum gravity area measure (LP stage)
+/-! # Square measurability of the γ-Liouville quantum gravity area measure
 
-Task `fp-phase2-b2-a10sub-and-lpstage-square`, item (2), worker z3. General statement in LP and Mathlib terms of the
+. General statement in LP and Mathlib terms of the
 measurability of the LQG area measure on closed dyadic squares (the HB Prop `LQGMeasureSquareMeasurableFrozen`,
 `HarmonicBalls/FirstPass/Frozen/S11c.lean:117`). The HB form is obtained in `HarmonicBalls/FirstPass/LPBridge/LQGMeasureSquare.lean` (bridges may import HB; LP files may not).
 
@@ -23,8 +23,8 @@ restated without HB objects):
 4. A closed dyadic square is closed, hence Borel (`isClosed_of_isClosedDyadicSquare`).
 
 No statement, hypothesis or conclusion of the source is changed. The γ-LQG definitions are those of
-`HarmonicBalls/LPStage/LQGMeasure.lean` (`LatticeProb.LQG.IsLQGMeasureOfField`), the field layer those of
-`HarmonicBalls/LPStage/GFF.lean` (`LatticeProb.Gauss.IsWholePlaneGFF`, `fieldSigmaAlgebra`).
+`LatticeProb/LQG/LQGMeasure.lean` (`LatticeProb.LQG.IsLQGMeasureOfField`), the field layer those of
+`LatticeProb/Gauss/GFF.lean` (`LatticeProb.Gauss.IsWholePlaneGFF`, `fieldSigmaAlgebra`).
 -/
 
 open LatticeProb.Gauss
@@ -149,9 +149,8 @@ theorem aemeasurable_lqgMeasure_closedDyadicSquare {Ω : Type*} [MeasurableSpace
 /-- **Square measurability without the locality hypothesis (circle-average link form).** The locality hypothesis of
 `aemeasurable_lqgMeasure_closedDyadicSquare` is replaced by the GFF-relativised circle-average link `hlink`
 (`LQGCircleAverageLink`, LP form), from which locality follows by `lqgLocality_of_circleLink`
-(`LPStage/LQGMeasureLocality.lean`). The unconditional link is NOT proved in LP stage: its HB derivation
-`HarmonicBalls.lqgCircleAverageLocalityLink_derived` needs `wholePlaneCircleAverageLimit_derived`, whose import closure
-exceeds the copy budget (see the header of `LPStage/LQGMeasureLocality.lean`). -/
+(`LatticeProb/LQG/LQGMeasureLocality.lean`). The unconditional link is NOT proved here: its HB derivation
+`HarmonicBalls.lqgCircleAverageLocalityLink_derived` needs `wholePlaneCircleAverageLimit_derived`, which is not copied here. -/
 theorem aemeasurable_lqgMeasure_closedDyadicSquare_of_circleLink {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)

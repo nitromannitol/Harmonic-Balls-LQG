@@ -2,12 +2,12 @@ import Mathlib
 import HarmonicBalls.LPStage.WeylCompositionOuter
 
 /-!
-# Weyl composition for the outer scaling, LP stage (part 2 of 2; row 56)
+# Weyl composition for the outer scaling, LP
 
 Second part of the LP copy of `HarmonicBalls/FirstPass/Phase2/WeylCompositionOuterDerived.lean` (lines 708-1219): the
 arclength reparametrization by inner distance, the Riemann comparison `riemann_arc`, and the one-way-topology lemma
 `weylScaling_innerDist_le_direct`. The LP statement `LatticeProb.LQG.WeylMetricCompositionContinuousOuterLP` is the form of
-`WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117`, row 56 of PHASE2-INVENTORY.md section 2),
+`WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117`),
 and `LatticeProb.LQG.weylMetricCompositionContinuousOuter_lp` proves it with no hypothesis added.
 Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 III; Gwynne-Miller (1.8).
 -/
@@ -530,7 +530,7 @@ theorem IsEuclideanLengthMetric.weylScaling_innerDist_le_direct {D : ℂ → ℂ
 
 
 /-- LP form of `WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117`): the same binders and
-conclusion, with the LP predicates `IsEuclideanLengthMetric` and `weylScaling` of `LPStage/LengthMetric.lean`. -/
+conclusion, with the LP predicates `IsEuclideanLengthMetric` and `weylScaling` of `LatticeProb/LQG/LengthMetric.lean`. -/
 def WeylMetricCompositionContinuousOuterLP : Prop :=
   ∀ ξ : ℝ, 0 < ξ → ∀ (D : ℂ → ℂ → ℝ) (g f : ℂ → ℝ), IsEuclideanLengthMetric D →
     ContinuousOn g {z | z ≠ 0} → Continuous f →

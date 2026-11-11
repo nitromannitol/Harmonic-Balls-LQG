@@ -2,10 +2,10 @@ import Mathlib
 import HarmonicBalls.LPStage.LengthMetric
 
 /-!
-# Derived length-metric statements (staged for `LatticeProb.LQG`, module M5, deterministic half)
+# Derived length-metric statements
 
 Two statements of the deterministic metric geometry of the γ-Liouville quantum gravity (LQG) metric, in the vocabulary of
-`HarmonicBalls/LPStage/LengthMetric.lean`, each with the same binders, quantifiers and conclusion as its frozen source:
+`LatticeProb/LQG/LengthMetric.lean`, each with the same binders, quantifiers and conclusion as its frozen source:
 
 * `weylScaledEuclidean_derived`: the Weyl scaling `e^{ξ f} · D` of a Euclidean length metric `D` by a continuous
   compactly supported `f` is a Euclidean length metric (Gwynne-Miller, arXiv:1905.00383, (1.7)-(1.8); the LP form of
@@ -19,12 +19,12 @@ Both statements are proved with no hypothesis added. The proofs use the arc-leng
 reversal of curves.
 
 Provenance (HarmonicBalls repository, branch main): the arc-length and Weyl comparison lemmas of
-`HarmonicBalls/LPStage/WeylInternalClosed.lean` (provenance recorded there) are copied here, and so are the lemmas of
+`LatticeProb/LQG/WeylInternalClosed.lean` (provenance recorded there) are copied here, and so are the lemmas of
 `HarmonicBalls/Steps/Sec11/WeylLocalEdges.lean`, `WeylPathReverse.lean`, `WeylPathConcatenation.lean`,
 `WeylPathSegments.lean`, and the proofs of `HarmonicBalls/FirstPass/Phase2/WeylScaledEuclideanDerived.lean` and
 `InternalMetricClosedDerived.lean`, with namespace `LatticeProb.LQG`. The file imports only Mathlib and
-`HarmonicBalls.LPStage.LengthMetric`. `LPStage/WeylInternalClosed.lean` imports this file and uses its declarations
-(its former copies of them were removed as duplicates), so the two modules can be imported together (`LPStage/All.lean`).
+`LatticeProb.LQG.LengthMetric`. `LatticeProb/LQG/WeylInternalClosed.lean` imports this file and uses its declarations
+so the two modules can be imported together.
 -/
 
 namespace LatticeProb.LQG

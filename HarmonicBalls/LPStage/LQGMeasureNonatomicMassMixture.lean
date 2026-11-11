@@ -2,7 +2,7 @@ import Mathlib
 import HarmonicBalls.LPStage.GFFAffineInvariance
 
 /-!
-# Mixtures of whole-plane GFFs over the dyadic scales: LP form (LP stage, z7)
+# Mixtures of whole-plane GFFs over the dyadic scales: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec2/Mixture.lean` (the mixing probability measure `ν{k} ∝ (k+1)⁻²` on `ℕ`, its slice
 bounds and its almost sure transfer) and of `HarmonicBalls/Proofs/Sec2/MixtureGFF.lean` (a mixture of whole-plane GFFs is a

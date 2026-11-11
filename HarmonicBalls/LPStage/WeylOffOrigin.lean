@@ -3,12 +3,12 @@ import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.LQGMeasureDerived
 
-/-! # The Weyl relation off the origin: LP form (LP stage, z6)
+/-! # The Weyl relation off the origin: LP form
 
 LP form of the frozen statement `LocalLQGInsertionWeylOffOrigin` (`HarmonicBalls/FirstPass/Frozen/S8c.lean:85`):
-same binders, quantifiers and conclusion, stated for the LP-stage definitions `IsWholePlaneGFF`
-(`HarmonicBalls/LPStage/GFF.lean`), `IsLQGMeasureOfField`, `IsLQGLimit`, `lqgApprox`, `dyadicScale`, `lqgQ`
-(`HarmonicBalls/LPStage/LQGMeasure.lean`) and `ProfileDerived.dyadicScale_pos` (`HarmonicBalls/LPStage/LQGMeasureDerived.lean`).
+same binders, quantifiers and conclusion, stated for the LP definitions `IsWholePlaneGFF`
+(`LatticeProb/Gauss/GFF.lean`), `IsLQGMeasureOfField`, `IsLQGLimit`, `lqgApprox`, `dyadicScale`, `lqgQ`
+(`LatticeProb/LQG/LQGMeasure.lean`) and `ProfileDerived.dyadicScale_pos` (`LatticeProb/LQG/LQGMeasureDerived.lean`).
 
 Proof: the derivation of `localLQGInsertionWeylOffOrigin_derived` (`HarmonicBalls/FirstPass/S8c/WeylOffOriginDerived.lean`),
 copied in LP form. The Weyl factor and its test identity are copied from `HarmonicBalls/FirstPass/S11i/SingularWeyl.lean`
@@ -480,7 +480,7 @@ lemma restrict_compl_zero_eq {m μ : Measure ℂ} [IsLocallyFiniteMeasure m]
     (isLocallyFiniteMeasure_withDensityOffOrigin_restrict hw hw0 h)
     (fun f hf hcf => integral_restrict_compl_zero_eq hw hw0 h f hf hcf)
 
-/-- **Step 5-6 (CHATGPT-219 §1.3).** Let `m, μ` be locally finite measures on `ℂ` and `w : ℂ → ℝ` nonnegative,
+/-- **Step 5-6.** Let `m, μ` be locally finite measures on `ℂ` and `w : ℂ → ℝ` nonnegative,
 continuous off the origin. If `∫ f dm = ∫ f · w dμ` for every continuous compactly supported real `f` vanishing near
 `0`, then `m s = ∫⁻_s ofReal (w z) dμ` for every measurable `s` avoiding `0`.
 (Weyl off-origin identity; for `m = λ_ω`, `μ = μ_ω`, `w z = ‖z‖^(γα₀)`, as in the write-up.) -/
@@ -566,7 +566,7 @@ theorem ae_integral_eq_rpow_of_isLQGMeasureOfField {Ω : Type*} [MeasurableSpace
         integral_congr_ae (Eventually.of_forall fun z => (hpt z).symm)
 
 /-- LP form of `LocalLQGInsertionWeylOffOrigin` (`HarmonicBalls/FirstPass/Frozen/S8c.lean:85`), with the same binders,
-quantifiers and conclusion, for the LP-stage definitions `IsWholePlaneGFF`, `IsLQGMeasureOfField` and `lqgQ`.
+quantifiers and conclusion, for the LP definitions `IsWholePlaneGFF`, `IsLQGMeasureOfField` and `lqgQ`.
 Almost surely, the no-insertion LQG measure `lam` of the whole-plane GFF satisfies `lam = |z|^{γ α₀} μ` on the complement
 of `0`, where `μ` is the LQG measure of insertion `α₀` (`h = h^ℂ - α₀ log|·|`, so `μ_h = |z|^{-γ α₀} μ_H` off `0`).
 Source: Duplantier-Sheffield, Ann. Probab. 2011 (LQG measures as vague limits, Prop. 1.1, and the Weyl change of

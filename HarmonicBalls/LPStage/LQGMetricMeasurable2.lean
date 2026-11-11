@@ -4,21 +4,21 @@ import HarmonicBalls.LPStage.LQGMassInner
 import HarmonicBalls.LPStage.LQGMetricMeasurable
 
 /-!
-# LP stage: inner measurability of the LQG metric (PointwiseAE and internal diameter)
+# Inner measurability of the LQG metric (PointwiseAE and internal diameter)
 
-Worker z7, task `fp-lpstage-lqg-metric-measurable`, item (1), second half. LP forms of the two HB frozen Props
+second half. LP forms of the two HB frozen Props
 that the HB proofs derive from the single literature input `LQGMetricFieldAxioms` (Fact 2.2 I-II):
 
 * `LatticeProb.LQG.LQGMetricPointwiseAEMeasurableLP`: LP form of `LQGMetricPointwiseAEMeasurableFrozen`
   (`HarmonicBalls/FirstPass/Frozen/S11e.lean:27`), with the same binders and conclusion;
   proof `lqgMetricPointwiseAEMeasurable_lp`, copied from `HarmonicBalls/FirstPass/Phase2/SquareMeasurableDerived.lean:57`.
 * `LatticeProb.LQG.LQGInternalDiamInnerMeasurableLP`: LP form of `LQGInternalDiamInnerMeasurableFrozen`
-  (`HarmonicBalls/FirstPass/Frozen/S11k.lean:89`, inventory row 32); proof `lqgInternalDiamInnerMeasurable_lp`,
+  (`HarmonicBalls/FirstPass/Frozen/S11k.lean:89`); proof `lqgInternalDiamInnerMeasurable_lp`,
   copied from `HarmonicBalls/FirstPass/Phase2/InnerMeasurableDerived.lean:78`.
 
-The only hypothesis of each proof is the LP input `LQGMetricFieldAxioms` (`LPStage/LQGMetric.lean:117`), quantified
-over the carriers as in the HB derivations. The deterministic inputs are `LPStage/LQGMetricMeasurable.lean` (continuity of
-the internal metric on `O × O`) and `LPStage/LQGMassInner.lean` (monotonicity of the field σ-algebra in the open set).
+The only hypothesis of each proof is the LP input `LQGMetricFieldAxioms` (`LatticeProb/LQG/LQGMetric.lean:117`), quantified
+over the carriers as in the HB derivations. The deterministic inputs are `LatticeProb/LQG/LQGMetricMeasurable.lean` (continuity of
+the internal metric on `O × O`) and `LatticeProb/LQG/LQGMassInner.lean` (monotonicity of the field σ-algebra in the open set).
 Terminology: LQG metric, internal metric, internal diameter (Gwynne-Miller arXiv:1905.00383 Sec. 1.2; Bou-Rabee-Gwynne
 arXiv:2208.11795 Fact 2.2).
 -/
@@ -66,7 +66,7 @@ def LQGMetricPointwiseAEMeasurableLP : Prop :=
     IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → IsLQGMetricOfField P γ ξ 0 hC D →
     ∀ x y : ℂ, AEMeasurable (fun ω => D ω x y) P
 
-/-- LP form of `LQGInternalDiamInnerMeasurableFrozen` (`HarmonicBalls/FirstPass/Frozen/S11k.lean:89`, row 32): for
+/-- LP form of `LQGInternalDiamInnerMeasurableFrozen` (`HarmonicBalls/FirstPass/Frozen/S11k.lean:89`): for
 `O = thickening δ A` with `A` compact, the internal diameter `internalDiam (D ω) δ A` is almost surely equal to a random
 variable measurable for `fieldSigmaAlgebra α₀ hC O`. -/
 def LQGInternalDiamInnerMeasurableLP : Prop :=

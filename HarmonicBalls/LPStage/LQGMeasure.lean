@@ -1,10 +1,10 @@
 import Mathlib
 import HarmonicBalls.LPStage.GFF
 
-/-! # The γ-Liouville quantum gravity area measure: general definitions (LP stage, M4)
+/-! # The γ-Liouville quantum gravity area measure: general definitions
 
 General copies of the γ-LQG area measure definitions, at the generality of their source, stated over the
-whole-plane field layer of `HarmonicBalls/LPStage/GFF.lean` (namespace `LatticeProb.Gauss`).
+whole-plane field layer of `LatticeProb/Gauss/GFF.lean` (namespace `LatticeProb.Gauss`).
 
 * `LatticeProb.LQG.lqgQ γ = 2/γ + γ/2`: the LQG constant `Q` (Duplantier-Sheffield 2011).
 * `LatticeProb.LQG.dyadicScale k = 2^{-k}`: the dyadic scales along which the limit is taken.
@@ -23,7 +23,7 @@ lemmas (HB definition ↔ LP definition) are in `HarmonicBalls/FirstPass/LPBridg
 
 Helper theorems inside the source bodies: none (the bodies contain no proof terms), so none is restated here.
 The sanity lemmas and uniqueness lemmas of the source (`dyadicScale_pos`, `lqgApprox_neg_log`, `isLQGLimit_volume`,
-`IsLQGLimit.unique`, `IsLQGMeasure.ae_eq`) are theorems, not definitions, and are not staged here.
+`IsLQGLimit.unique`, `IsLQGMeasure.ae_eq`) are theorems, not definitions, and are not included here.
 -/
 
 open MeasureTheory Filter Topology

@@ -5,7 +5,7 @@ import HarmonicBalls.LPStage.LQGMeasureNonatomicMassPoly
 import HarmonicBalls.LPStage.LQGMeasureInputs
 
 /-!
-# Non-atomicity of the LQG measure off the origin from the multiscale mass bound: LP form (LP stage, z7)
+# Non-atomicity of the LQG measure off the origin from the multiscale mass bound: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec6/WholePlaneNonatomic.lean`, lines 1-100 (the two statements used by the chain:
 `ae_wholePlane_nonatomic_of_scaledBallMass` and `ae_singular_nonatomic_off_origin_of_scaledBallMass`). The upper multiscale

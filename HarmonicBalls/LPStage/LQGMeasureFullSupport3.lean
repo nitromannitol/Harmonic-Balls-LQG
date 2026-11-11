@@ -7,7 +7,7 @@ import HarmonicBalls.LPStage.LQGMeasureNonatomicMassScaled
 import HarmonicBalls.LPStage.LQGMeasureNonatomicMassWeight
 
 /-!
-# The ball clause of Lemma 2.4 from the multiscale bound: LP form, part A (LP stage, z3)
+# The ball clause of Lemma 2.4 from the multiscale bound: LP form, part A
 
 LP copy of `HarmonicBalls/Proofs/Sec2/BallMassReduction.lean` lines 36-290: the per-sample reduction of the ball-mass
 bounds, `ballMass_upper_of_scaled` (eq:ball-volume, upper bound) and `ballMass_lower_of_scaled` (lower bound), from
@@ -392,7 +392,7 @@ theorem lqgVolumeGrowthAllScalesStmt_of_scaled_lp
     LQGVolumeGrowthAllScalesStmtLP.{u} :=
   lqgVolumeGrowthAllScalesStmt_of_ballMass_lp (liouvilleBallMassBoundStep_of_scaled_lp hS hE hN)
 
-/-- I1 (`LQGMeasureFullSupportStmtLP`, the LP form of the full-support statement of row 40) from the scaled step
+/-- I1 (`LQGMeasureFullSupportStmtLP`, the LP form of the full-support statement) from the scaled step
 `hS`, the existence `hE` and the non-atomicity `hN`. The singular-weight input of the HB route
 (`hW : LQGMeasureWeylScaling`) is discharged by the proved `singularWeightStep_lp`, so it is not a hypothesis here. -/
 theorem lqgMeasureFullSupportStmt_of_scaled_lp

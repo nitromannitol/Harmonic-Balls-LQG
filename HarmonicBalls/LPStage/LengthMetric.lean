@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Length metrics, Weyl scaling and internal diameters on `ℂ` (staged for `LatticeProb.LQG`, module M5, deterministic half)
+# Length metrics, Weyl scaling and internal diameters on `ℂ`
 
 General definitions of the metric geometry of the γ-Liouville quantum gravity (LQG) metric that do not involve the
 Gaussian free field or the LQG measure: the `D`-length of a curve and of a path, the internal metric `D(z, w; U)` of a set

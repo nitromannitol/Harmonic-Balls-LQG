@@ -4,10 +4,10 @@ import HarmonicBalls.LPStage.LQGMeasureLocality
 import HarmonicBalls.LPStage.LQGMeasureSquare
 
 /-!
-# LP stage: the circle-average link from the whole-plane GFF, and unconditional locality of the LQG measure
+# The circle-average link from the whole-plane GFF, and unconditional locality of the LQG measure
 
-Worker z3, task `fp-lpstage-locality-unconditional` (lead decision R53: the circle-average chain is imported from the
-z7 modules `LPStage/CircleAverageApprox.lean` and `LPStage/CircleAverageApprox2.lean`, not copied).
+(the circle-average chain is imported from the
+modules `LatticeProb/Gauss/CircleAverageApprox.lean` and `LatticeProb/Gauss/CircleAverageApprox2.lean`, not copied).
 
 * `LatticeProb.Gauss.IsWholePlaneGFF.wholePlaneCircleAverageLimit`: LP form of `WholePlaneCircleAverageLimitFrozen`
   (`FirstPass/Frozen/S11p.lean:29`; HB proof `wholePlaneCircleAverageLimit_derived`, `FirstPass/S11u.lean:93`).
@@ -53,7 +53,7 @@ theorem annulus_subset_thickening_sphere {r δ η : ℝ} (hr : 0 < r) (z : ℂ) 
       rw [key, norm_smul, Real.norm_eq_abs, ← hn_def, h2]
       linarith
 
-/-- Annular density of the circle `(r, z)` at the geometric widths `η₀ (1/2)^j`: the z7 `unitCircleDensity`
+/-- Annular density of the circle `(r, z)` at the geometric widths `η₀ (1/2)^j`: the `unitCircleDensity`
 with annulus width `r η₀ (1/2)^j`. -/
 noncomputable def circleApproxW {r : ℝ} (hr : 0 < r) {η₀ : ℝ} (hη₀ : 0 < η₀) (z : ℂ) (j : ℕ) : ℂ → ℝ :=
   unitCircleDensity r (r * (η₀ * (1 / 2) ^ j)) (mul_pos hr (mul_pos hη₀ (by positivity))) z

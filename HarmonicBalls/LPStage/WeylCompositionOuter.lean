@@ -3,14 +3,14 @@ import HarmonicBalls.LPStage.LengthMetric
 import HarmonicBalls.LPStage.LengthMetricDerived
 
 /-!
-# Weyl composition for the outer scaling, LP stage (part 1 of 2; row 56)
+# Weyl composition for the outer scaling, LP
 
 LP copy, in the names of `LatticeProb.LQG`, of the auxiliary Weyl-scaling lemmas used by the row-56 derivation
-`LatticeProb.LQG.weylMetricCompositionContinuousOuter_lp` (`LPStage/WeylCompositionOuter2.lean`): the inner distance
+`LatticeProb.LQG.weylMetricCompositionContinuousOuter_lp` (`LatticeProb/LQG/WeylCompositionOuter2.lean`): the inner distance
 `innerDist` of a length metric and a weight, its topology (`weylScaling_nhds`), the exit-time, chain and iterated-scaling
 lemmas, ending with `weylScaling_le_iterated`. Ported from `HarmonicBalls/FirstPass/Phase2/WeylCompositionOuterDerived.lean`
-lines 32-707 with the namespace changed and the statements unchanged. The Euclidean length metric lemmas already staged in
-`LPStage/LengthMetric.lean` and `LPStage/LengthMetricDerived.lean` are imported, not copied.
+lines 32-707 with the namespace changed and the statements unchanged. The Euclidean length metric lemmas already in
+`LatticeProb/LQG/LengthMetric.lean` and `LatticeProb/LQG/LengthMetricDerived.lean` are imported, not copied.
 -/
 
 namespace LatticeProb.LQG

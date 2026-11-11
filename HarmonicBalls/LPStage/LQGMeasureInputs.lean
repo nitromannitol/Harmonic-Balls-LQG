@@ -3,13 +3,13 @@ import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 
 /-!
-# LP-stage forms of three literature inputs of the square positivity (z3, row 23; decision R54)
+# LP forms of three literature inputs of the square positivity
 
 LP forms of the Proposed inputs `WholePlaneLQGBallMassBounds` (`Proposed/LQG.lean:172`), `LQGMeasureCoordChange`
 (`Proposed/LQG.lean:131`) and `LQGMeasureExistence` (`Proposed/LQG.lean:74`), with the same binders and conclusions and
 LP predicates (`IsWholePlaneGFF`, `IsLQGMeasureOfField`, `IsLQGLimit`, `fieldCircleAverage`, `PolyHighProb`).
 
-These are definitions of Props, used ONLY as hypotheses by the LP-stage statements that need them. No theorem about them
+These are definitions of Props, used ONLY as hypotheses by the LP statements that need them. No theorem about them
 is proved here, and no value of them is asserted. The source paragraph of each docstring is copied verbatim from the
 Proposed docstring; the literature is cited there, not here.
 -/

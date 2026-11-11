@@ -2,12 +2,12 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 
-/-! # Liouville graph distance and the whole-plane LQG dimension: general definitions (LP stage, M6)
+/-! # Liouville graph distance and the whole-plane LQG dimension: general definitions
 
 General copies of the Liouville graph-distance objects of Ding and Gwynne, arXiv:1807.01072v3, Definition 1.3, and of the
 whole-plane LQG dimension characterization of their Theorem 1.4, at the generality of their source. They are stated over
-the whole-plane field layer of `HarmonicBalls/LPStage/GFF.lean` (namespace `LatticeProb.Gauss`) and the γ-LQG measure of
-`HarmonicBalls/LPStage/LQGMeasure.lean` (namespace `LatticeProb.LQG`).
+the whole-plane field layer of `LatticeProb/Gauss/GFF.lean` (namespace `LatticeProb.Gauss`) and the γ-LQG measure of
+`LatticeProb/LQG/LQGMeasure.lean` (namespace `LatticeProb.LQG`).
 
 * `LatticeProb.LQG.IsLiouvilleGraphCover μ ε z w count`: `count` balls of positive radius and `μ`-mass at most `ε`
   cover a path from `z` to `w`.
@@ -18,7 +18,7 @@ the whole-plane field layer of `HarmonicBalls/LPStage/GFF.lean` (namespace `Latt
 * `LatticeProb.LQG.IsWholePlaneLQGDimension γ d`: `d > 0`, and for every whole-plane GFF realization with its γ-LQG
   measure `μ` (`α₀ = 0`), almost surely `IsLiouvilleGraphDimension (μ ω) 0 1 d`.
 * `LatticeProb.LQG.WholePlaneLQGGraphDimension`: the literature input of Ding and Gwynne, Theorem 1.4, equation (1.8),
-  staged as a Prop only.
+  stated as a Prop only.
 
 Provenance. Copies of `IsLiouvilleGraphCover`, `liouvilleGraphDistance`, `liouvilleGraphExponent`,
 `IsLiouvilleGraphDimension` and `IsWholePlaneLQGDimension` in `HarmonicBalls/Defs/LQGGraphDistance.lean` (lines 16-97),
@@ -28,7 +28,7 @@ hypothesis or conclusion of the source is changed. The bridge lemmas (HB definit
 of the LQG dimension (Duplantier and Sheffield, Berestycki and Powell).
 
 Helper theorems inside the source bodies: none (the bodies contain no proof terms), so none is restated here. The sanity
-and uniqueness lemmas of the source are theorems, not definitions, and are not staged here.
+and uniqueness lemmas of the source are theorems, not definitions, and are not included here.
 -/
 
 open MeasureTheory Filter Topology
@@ -72,13 +72,13 @@ def IsWholePlaneLQGDimension (γ dimension : ℝ) : Prop :=
     LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ →
     ∀ᵐ ω ∂P, IsLiouvilleGraphDimension (μ ω) 0 1 dimension
 
-/-- **LQG graph-distance exponent (literature input, staged as a Prop).** Ding and Gwynne, *The fractal dimension of
+/-- **LQG graph-distance exponent (literature input, stated as a Prop).** Ding and Gwynne, *The fractal dimension of
 Liouville quantum gravity: universality, monotonicity, and bounds*, arXiv:1807.01072v3, Theorem 1.4, p. 6, equation
 (1.8), together with the positivity of the dimension in Theorem 1.1, p. 4. For every `γ ∈ (0, 2)` some dimension
 satisfies `IsWholePlaneLQGDimension γ`. The statement restricts the full limit to dyadic mass scales and fixes the
 points `0` and `1`; the same deterministic dimension serves every realization of the normalized field.
 
-Status: PROPOSED. This copies `HarmonicBalls/Proposed/LQGDimension.lean:19`, which is pending operator source-check. It is
+Status: PROPOSED. This copies `HarmonicBalls/Proposed/LQGDimension.lean:19`, which is PENDING (source check). It is
 an assumption wherever it is used, not a theorem of this development. -/
 def WholePlaneLQGGraphDimension : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ dimension, IsWholePlaneLQGDimension γ dimension

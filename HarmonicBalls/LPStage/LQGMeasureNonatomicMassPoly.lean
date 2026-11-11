@@ -2,10 +2,10 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 
 /-!
-# Events with polynomially high probability: LP form (LP stage, z7)
+# Events with polynomially high probability: LP form
 
-LP copy of `HarmonicBalls/Proofs/Sec2/PolyHighProb.lean` (221 lines) for the LP-stage predicate `PolyHighProb`
-(`HarmonicBalls/LPStage/GFF.lean`). Elementary closure properties: monotonicity, finite intersections, linear and
+LP copy of `HarmonicBalls/Proofs/Sec2/PolyHighProb.lean` (221 lines) for the LP predicate `PolyHighProb`
+(`LatticeProb/Gauss/GFF.lean`). Elementary closure properties: monotonicity, finite intersections, linear and
 power reparametrization of the scale, the Borel-Cantelli lemma along the dyadic scales `ε = 2^{-k}`, and the union bound
 over the dyadic scales below a power of `r` (Berestycki-Powell, *Gaussian free field, Liouville quantum gravity and
 Gaussian multiplicative chaos*, for the polynomial high-probability convention; Duplantier-Sheffield 2011 for the dyadic

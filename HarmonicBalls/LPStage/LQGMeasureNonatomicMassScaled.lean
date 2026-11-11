@@ -3,13 +3,13 @@ import HarmonicBalls.LPStage.LQGMeasureNonatomicMassTail
 import HarmonicBalls.LPStage.LQGMeasureNonatomicMassPoly
 
 /-!
-# The multiscale ball-mass bound for `h^ℂ` around the origin: LP form (LP stage, z7)
+# The multiscale ball-mass bound for `h^ℂ` around the origin: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec2/ScaledBallMass.lean` (288 lines): the union bound over the dyadic scales of
 Berestycki-Powell (Lemma A.1 of the BG20 reference in the HB docstring; Ding-Gwynne 2020, Lemma 3.8, for the rescaled fields).
 The Steps `WholePlaneScaledBallMassStep` (`HarmonicBalls/Steps/Sec2/VolumeGrowth.lean:261`),
 `RescaledBallMassUniformStep` (`:313`) and the event `rescaledBallMassEvent` (`:297`) are copied as definitions with the
-LP-stage names. Nothing is assumed: the reduction `wholePlaneScaledBallMassStep_of_uniform_lp` takes the Steps as hypotheses
+LP names. Nothing is assumed: the reduction `wholePlaneScaledBallMassStep_of_uniform_lp` takes the Steps as hypotheses
 only as the HB reduction does (the reduction itself is proved here).
 -/
 

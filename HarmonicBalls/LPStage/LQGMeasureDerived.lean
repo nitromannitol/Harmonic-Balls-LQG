@@ -3,12 +3,12 @@ import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.GFF
 
 /-!
-# LP-stage derivation of the profile-decoder measurability (z4)
+# LP derivation of the profile-decoder measurability 
 
 LP copy of the binder-free derivation `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`
 (`HarmonicBalls/FirstPass/Phase2/ProfileDecoderDerived.lean:401`, with the auxiliary lemmas of
-`HarmonicBalls/FirstPass/Phase2/MassFunctionalDerived.lean`), for the LP-stage definitions of
-`HarmonicBalls/LPStage/GFF.lean` and `HarmonicBalls/LPStage/LQGMeasure.lean` only. The statement
+`HarmonicBalls/FirstPass/Phase2/MassFunctionalDerived.lean`), for the LP definitions of
+`LatticeProb/Gauss/GFF.lean` and `LatticeProb/LQG/LQGMeasure.lean` only. The statement
 `LQGMeasureOfProfileMeasurableLP` is the LP form of `LQGMeasureOfProfileMeasurableFrozen`
 (`HarmonicBalls/FirstPass/Frozen/S8d.lean:33`): same binders, quantifiers and conclusion.
 The bridge to the HB Prop is in `HarmonicBalls/FirstPass/LPBridge/LQGMeasureDerived.lean`.

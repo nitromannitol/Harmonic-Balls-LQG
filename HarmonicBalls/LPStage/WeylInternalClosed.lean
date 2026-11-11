@@ -3,7 +3,7 @@ import HarmonicBalls.LPStage.LengthMetric
 import HarmonicBalls.LPStage.LengthMetricDerived
 
 /-!
-# Weyl comparison of internal metrics on a closed set, with arclength reparametrization (staged for `LatticeProb.LQG`)
+# Weyl comparison of internal metrics on a closed set, with arclength reparametrization
 
 For a Euclidean length metric `D` on `ℂ` and the Weyl scaling `E = e^{ξ f} · D` (Gwynne-Miller, arXiv:1905.00383,
 (1.7)-(1.8)), with `ξ f ≤ B` on a set `U`, the internal metric of `E` on `U` is at most `e^B` times the internal metric
@@ -15,10 +15,9 @@ telescoping over a partition bounds the `E`-length of the path. The proof uses o
 Provenance (HarmonicBalls repository, branch main, commit da14a3bf): the arclength reparametrization lemmas are adapted from
 `HarmonicBalls/Steps/Sec11/ArcLengthInterval.lean` (lines 14-81), `WeylPathConcatenation.lean` (14-62), `WeylPathSegments.lean` (14-36), `WeylPathReverse.lean`
 (14-68), `MetricArcLength.lean` (11-100) and `CurveLengthReparam.lean` (10-110), with the namespace changed to
-`LatticeProb.LQG` and the imports changed to Mathlib and `HarmonicBalls.LPStage.LengthMetric`. The Weyl comparison
+`LatticeProb.LQG` and the imports changed to Mathlib and `LatticeProb.LQG.LengthMetric`. The Weyl comparison
 lemmas are from `HarmonicBalls/FirstPass/Phase2/WeylInternalClosedDerived.lean`. The arclength and curve-length lemmas
-they use are the `LatticeProb.LQG` declarations of `HarmonicBalls/LPStage/LengthMetricDerived.lean`, imported here
-(the copies that stood in this file were removed as duplicates).
+they use are the `LatticeProb.LQG` declarations of `LatticeProb/LQG/LengthMetricDerived.lean`, imported here
 -/
 
 namespace LatticeProb.LQG

@@ -8,12 +8,12 @@ import HarmonicBalls.LPStage.LQGMeasureNonatomicMassMixture
 import HarmonicBalls.LPStage.LQGMeasureInputs
 
 /-!
-# Non-atomicity of the singular LQG measure: LP form (LP stage, z7; row 41 chain, row 4 statement)
+# Non-atomicity of the singular LQG measure: LP form (chain statement)
 
 LP form of the Proposed input `LQGMeasureNonatomic` (`HarmonicBalls/Proposed/LQG.lean:86`, Fact 2.1 I), with the same binders
 and conclusion. It is PROVED here, not assumed: `lqgMeasureNonatomic_lp` takes the LP forms of the literature inputs
 `WholePlaneLQGBallMassBoundsLP` (Ding-Gwynne 2020, Lemma 3.8), `LQGMeasureCoordChangeLP` at `α₀ = 0` and `LQGMeasureExistenceLP`
-(`LPStage/LQGMeasureInputs.lean`) as hypotheses only. The argument is the port of
+(`LatticeProb/LQG/LQGMeasureInputs.lean`) as hypotheses only. The argument is the port of
 `HarmonicBalls.Section6.lqgMeasureNonatomic_of_existence` (`Proofs/Sec6/SingularityOriginNonatomic.lean:94`) and of
 `HarmonicBalls.singular_nonatomic_of_existence_and_wholePlane` (`Proofs/Sec2/SingularAtomAtZero.lean:48`): the atom at `0` is
 removed by a strictly stronger insertion (`ae_origin_nonatomic_of_stronger_existence`), and non-atomicity off `0` follows from
@@ -37,7 +37,7 @@ definition"), Fact 2.1 I, p. 9. The assertion holds simultaneously for all point
 finite vague limit makes the choice of `μ` immaterial. Berestycki-Powell (arXiv:2404.16642v2), Theorems 2.1
 and 3.2 (pp. 62 and 81), require transfer to this whole-plane singular field.
 
-Truth: TRUE as typed (Codex truth check 2026-11-10).
+Truth: TRUE as typed (checked 2026-11-10).
 -/
 def LQGMeasureNonatomicLP {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=

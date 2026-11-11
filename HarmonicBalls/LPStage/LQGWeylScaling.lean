@@ -4,12 +4,12 @@ import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.LQGMeasureDerived
 import HarmonicBalls.LPStage.MassFunctional
 
-/-! # Weyl scaling of the γ-LQG measure: LP form (LP stage, z6)
+/-! # Weyl scaling of the γ-LQG measure: LP form
 
 LP form of the Proposed statement `LQGMeasureWeylScaling` (`HarmonicBalls/Proposed/LQG.lean:107`, Fact 2.1 III of
 arXiv:2208.11795, p. 9): almost surely, `e^{γ f} · μ_h = μ_{h+f}` for every continuous `f : ℂ → ℝ`, where `μ_{h+f}` is
 the vague limit of `ε^{γ²/2} e^{γ (h+f)_ε(z)} dz` along `ε = 2^{-k}`. The statement is the same expression, stated for
-the LP-stage definitions `IsWholePlaneGFF`, `IsLQGMeasureOfField`, `IsLQGLimit`, `addCircleAverage`, `fieldCircleAverage`
+the LP definitions `IsWholePlaneGFF`, `IsLQGMeasureOfField`, `IsLQGLimit`, `addCircleAverage`, `fieldCircleAverage`
 and `lqgQ`.
 
 Proof: the derivation `lqgMeasureWeylScaling` of `HarmonicBalls/Proofs/Sec6/LQGWeylScaling.lean`, copied in LP form

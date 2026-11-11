@@ -8,11 +8,11 @@ import HarmonicBalls.LPStage.LQGMeasureNonatomicMassScaled
 import HarmonicBalls.LPStage.LQGMeasureInputs
 
 /-!
-# Ding-Gwynne Lemma 3.8 for the rescaled fields, uniformly in the scale: LP form (LP stage, z7)
+# Ding-Gwynne Lemma 3.8 for the rescaled fields, uniformly in the scale: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec2/RescaledUniform.lean`. The Step `RescaledBallMassUniformStep`
 (`HarmonicBalls/Steps/Sec2/VolumeGrowth.lean:313`) is proved from the literature input `WholePlaneLQGBallMassBoundsLP`
-(Ding-Gwynne 2020, Lemma 3.8; `LPStage/LQGMeasureInputs.lean`, used as a hypothesis), the affine invariance
+(Ding-Gwynne 2020, Lemma 3.8; `LatticeProb/LQG/LQGMeasureInputs.lean`, used as a hypothesis), the affine invariance
 `wholePlaneGFFAffineInvariance_lp`, the coordinate change `LQGMeasureCoordChangeLP` at `α₀ = 0` (hypothesis), and the proved
 mixture `wholePlaneGFFMixtureStep_lp`.
 
@@ -21,7 +21,7 @@ Argument (as in the HB docstring): (1) for `τ = 2^{-k}`, `h^{(k)} = h^ℂ(τ ·
 under `x ↦ 2R x - R(1+i)`, which maps the unit square onto `[-R, R]² ⊇ closedBall 0 R`, satisfies Ding-Gwynne Lemma 3.8 on
 `closedBall 0 R`; (4) a slice `k` costs `ν{k}⁻¹ = S (k+1)²`.
 
-This file is built in parts. Part 1 (this part): the Gaussian tail, the square map and the preimage of the closed ball.
+This file contains the Gaussian tail, the square map and the preimage of the closed ball.
 -/
 
 namespace LatticeProb.LQG.LQGMeasureNonatomicMass
@@ -280,7 +280,7 @@ theorem rescaledMeas_ball (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ₀
 end Rescaled
 
 /-- **Reduction** (LP copy of `HarmonicBalls.rescaledBallMassUniformStep_of_DG`): `RescaledBallMassUniformStepLP` from the
-literature inputs `WholePlaneLQGBallMassBoundsLP` (Ding-Gwynne 2020, Lemma 3.8; `LPStage/LQGMeasureInputs.lean`) and
+literature inputs `WholePlaneLQGBallMassBoundsLP` (Ding-Gwynne 2020, Lemma 3.8; `LatticeProb/LQG/LQGMeasureInputs.lean`) and
 `LQGMeasureCoordChangeLP` at `α₀ = 0` (Duplantier-Sheffield 2011, Prop. 2.1; Sheffield-Wang 2016, Thm. 1.1), used only as
 hypotheses. The whole-plane affine invariance is PROVED (`wholePlaneGFFAffineInvariance_lp`), and the mixture
 `wholePlaneGFFMixtureStep_lp` is proved, so neither is a hypothesis here. -/

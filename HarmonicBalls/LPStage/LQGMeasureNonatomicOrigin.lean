@@ -3,12 +3,12 @@ import HarmonicBalls.LPStage.LQGWeylScaling
 import HarmonicBalls.LPStage.LQGMeasureInputs
 
 /-!
-# Non-atomicity at the logarithmic singularity: LP form (LP stage, z7, row 41 chain)
+# Non-atomicity at the logarithmic singularity: LP form (chain)
 
 LP copy of the origin part of the non-atomicity argument: `HarmonicBalls/Proofs/Sec6/SingularityOriginNonatomic.lean`
-(lines 1-93) and its comparison lemma `HarmonicBalls/Proofs/Sec6/LQGLimitComparison.lean` (lines 1-88), with the LP-stage
+(lines 1-93) and its comparison lemma `HarmonicBalls/Proofs/Sec6/LQGLimitComparison.lean` (lines 1-88), with the LP
 names `IsWholePlaneGFF`, `IsLQGLimit`, `IsLQGMeasureOfField`, `lqgApprox`, `fieldCircleAverage`, `addCircleAverage`,
-`dyadicScale`, `lqgQ`, `LQGMeasureExistenceLP` (`HarmonicBalls/LPStage/LQGMeasureInputs.lean`).
+`dyadicScale`, `lqgQ`, `LQGMeasureExistenceLP` (`LatticeProb/LQG/LQGMeasureInputs.lean`).
 
 Content: a locally finite vague limit with a stronger logarithmic singularity has no atom at `0`, so an LQG measure of
 strength `α` has no atom at `0` when existence holds at a strictly larger strength `β ∈ (α, Q)` (Duplantier-Sheffield 2011,

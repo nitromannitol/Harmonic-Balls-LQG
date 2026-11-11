@@ -2,10 +2,10 @@ import Mathlib
 import HarmonicBalls.LPStage.LQGMeasure
 
 /-!
-# Deterministic locality of the vague LQG limit: LP form (LP stage, z7)
+# Deterministic locality of the vague LQG limit: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec2/LQGLimitLocality.lean` (111 lines). `IsLQGLimit γ hε m` is the deterministic vague-limit
-statement defining the LQG measure (Duplantier-Sheffield 2011, Prop. 1.1; `LPStage/LQGMeasure.lean`). Two elementary
+statement defining the LQG measure (Duplantier-Sheffield 2011, Prop. 1.1; `LatticeProb/LQG/LQGMeasure.lean`). Two elementary
 properties: if two circle-average families agree at all small dyadic scales on each compact subset of an open set `U`,
 then their vague limits agree on `U` (`isLQGLimit_restrict_eq`), and the measures of compact sets are ordered accordingly.
 The statements use no Harmonic-balls object.

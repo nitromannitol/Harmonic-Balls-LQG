@@ -3,12 +3,12 @@ import HarmonicBalls.LPStage.LQGMeasureNonatomicMassLocality
 import HarmonicBalls.LPStage.LQGWeylScaling
 
 /-!
-# The log singularity of `h = h^ℂ - α₀ log |·|` off the origin: LP form (LP stage, z7)
+# The log singularity of `h = h^ℂ - α₀ log |·|` off the origin: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec2/SingularWeight.lean` (99 lines). The Step `SingularWeightStep`
 (`HarmonicBalls/Steps/Sec2/VolumeGrowth.lean:277`) is copied as the definition `SingularWeightStepLP` and PROVED here
 (`singularWeightStep_lp`). The Weyl scaling of the LQG measure of `h^ℂ` (Fact 2.1 III, Duplantier-Sheffield 2011 and
-Berestycki-Powell) is the PROVED LP result `lqgMeasureWeylScaling_lp` (`LPStage/LQGWeylScaling.lean`), used with no
+Berestycki-Powell) is the PROVED LP result `lqgMeasureWeylScaling_lp` (`LatticeProb/LQG/LQGWeylScaling.lean`), used with no
 hypothesis (the HB proof takes it as the Proposed input `LQGMeasureWeylScaling`).
 
 Argument (as in the HB docstring): for `η > 0`, `f_η = -α₀ log max(|·|, η)` is continuous and equals `-α₀ log |·|` on

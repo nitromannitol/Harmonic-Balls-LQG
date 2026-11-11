@@ -9,11 +9,11 @@ import HarmonicBalls.LPStage.LQGMeasureNonatomicMassTail
 import HarmonicBalls.LPStage.LQGMeasureFullSupport3
 
 /-!
-# LP stage: square positivity of the LQG measure (row 23; z3, task `fp-lpstage-lqg-metric-univ-and-square-positive`, item 3)
+# Square positivity of the LQG measure
 
-Status: the LP form of the frozen row 23 is defined, and its proof from the three LP input binders of the HB derivation
-(`hDG`, `hCC`, `hE`, as in `LPStage/LQGMeasureInputs.lean`) is `lqgMeasureSquarePositiveLP_of_inputs`, through the LP
-full-support statement `LQGMeasureFullSupportStmtLP` (row 40, `LQGMeasureFullSupport3.lean`).
+Status: the LP form of the frozen statement is defined, and its proof from the three LP input binders of the HB derivation
+(`hDG`, `hCC`, `hE`, as in `LatticeProb/LQG/LQGMeasureInputs.lean`) is `lqgMeasureSquarePositiveLP_of_inputs`, through the LP
+full-support statement `LQGMeasureFullSupportStmtLP` (`LQGMeasureFullSupport3.lean`).
 
 * `LatticeProb.Topology.exists_isOpen_nonempty_subset_closedDyadicSquare`: LP port of
   `HarmonicBalls.exists_isOpen_nonempty_subset_closedDyadicSquare` (`SquarePositiveDerived.lean:24`).
@@ -76,12 +76,11 @@ theorem ae_pos_isClosedDyadicSquare_of_charges {Ω : Type*} [MeasurableSpace Ω]
   exact ae_pos_closedDyadicSquare_of_charges h n j k
 
 open LatticeProb.LQG.LQGMeasureNonatomicMass in
-/-- **Row 23 from the LP inputs** (LP copy of `HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived`,
+/-- **Square positivity from the LP inputs** (LP copy of `HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived`,
 `FirstPass/Phase2/SquarePositiveDerived.lean:40`, with the same three binders `hDG`, `hCC`, `hE`). The scaled
 multiscale step `WholePlaneScaledBallMassStepLP` and the non-atomicity `LQGMeasureNonatomicLP` are derived from the
 binders by the proved LP lemmas `rescaledBallMassUniformStep_lp`, `wholePlaneScaledBallMassStep_of_uniform_lp`,
-`circleAverageDyadicTailStep_lp` and `lqgMeasureNonatomic_lp`; the full-support statement `LQGMeasureFullSupportStmtLP`
-(row 40) is `lqgMeasureFullSupportStmt_of_scaled_lp`; square positivity is the elementary step
+`circleAverageDyadicTailStep_lp` and `lqgMeasureNonatomic_lp`; the full-support statement `LQGMeasureFullSupportStmtLP` is `lqgMeasureFullSupportStmt_of_scaled_lp`; square positivity is the elementary step
 `ae_pos_isClosedDyadicSquare_of_charges`. No hypothesis beyond the three binders. -/
 theorem lqgMeasureSquarePositiveLP_of_inputs
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)

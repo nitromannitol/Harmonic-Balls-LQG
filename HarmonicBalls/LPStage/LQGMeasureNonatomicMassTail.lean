@@ -3,11 +3,11 @@ import HarmonicBalls.LPStage.GFFAffineInvariance
 import HarmonicBalls.LPStage.LQGMeasureDerived
 
 /-!
-# Gaussian tail of the circle average of the whole-plane GFF at the origin: LP form (LP stage, z7)
+# Gaussian tail of the circle average of the whole-plane GFF at the origin: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec2/CircleAverageTail.lean` (lines 1-100). The Step
 `CircleAverageDyadicTailStep` (`HarmonicBalls/Steps/Sec2/VolumeGrowth.lean:324`) is copied as the definition
-`CircleAverageDyadicTailStepLP` with the LP-stage names, and it is PROVED here, not assumed.
+`CircleAverageDyadicTailStepLP` with the LP names, and it is PROVED here, not assumed.
 
 Argument (as in the HB docstring): for `r ∈ (0, 1]` the covariance kernel of the whole-plane GFF normalized at
 `|z| = 1` is `-log |x - y|` on `∂B_r(0) × ∂B_r(0)` (`wholePlaneCov_eq_neg_log`, Duplantier-Sheffield 2011); the average of

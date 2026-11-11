@@ -4,9 +4,9 @@ import HarmonicBalls.LPStage.LengthMetric
 import HarmonicBalls.LPStage.LQGMetric
 
 /-!
-# LP stage: universe transport of the LQG metric axioms (z3, task `fp-lpstage-lqg-metric-univ-and-square-positive`)
+# Universe transport of the LQG metric axioms
 
-`IsLQGMetric` (`LPStage/LQGMetric.lean`) quantifies its probability spaces over `Type` only. This file transports the
+`IsLQGMetric` (`LatticeProb/LQG/LQGMetric.lean`) quantifies its probability spaces over `Type` only. This file transports the
 axioms I-IV to a sample space in an arbitrary universe `Type u`, with no hypothesis beyond `IsLQGMetric`:
 
 * `LQGMetricSatisfiesAxiomsUnivLP`: LP form of `LQGMetricSatisfiesAxiomsUnivFrozen` (`FirstPass/Frozen/S11g.lean:31`),
@@ -20,8 +20,8 @@ Type-0 sample space `UnivSample = CircleSample × ContShift`. The pushed-forward
 `IsLQGMetric` apply there, and each clause is pulled back along the sample map by `ae_of_ae_map`. The sample field is
 `addFunPairing (hC ω) (f ω)` exactly, so no pairing is changed.
 
-Copied (mechanical LP ports, with the LP names of `LPStage/GFF.lean`, `LPStage/LQGMetric.lean` and
-`LPStage/LengthMetric.lean` reused, not redefined) from `FirstPass/S11aa.lean` (lines 28-107, 170-206, 252-258) and
+Copied (mechanical LP ports, with the LP names of `LatticeProb/Gauss/GFF.lean`, `LatticeProb/LQG/LQGMetric.lean` and
+`LatticeProb/LQG/LengthMetric.lean` reused, not redefined) from `FirstPass/S11aa.lean` (lines 28-107, 170-206, 252-258) and
 `FirstPass/Phase2/AxiomsUnivDerived.lean` (lines 37-203) and `FirstPass/Phase2/LengthUnivDerived.lean` (lines 19-39).
 -/
 
@@ -35,7 +35,7 @@ namespace LatticeProb.LQG
 
 /-! ### Pairing functionals and the Type-0 circle sample -/
 
-/-- Pairing functionals `(ℂ → ℝ) → ℝ`, carrying the σ-algebra `distributionMeasurableSpace` of `LPStage/GFF.lean`. A type
+/-- Pairing functionals `(ℂ → ℝ) → ℝ`, carrying the σ-algebra `distributionMeasurableSpace` of `LatticeProb/Gauss/GFF.lean`. A type
 synonym, so that the σ-algebra is attached to this name. -/
 def PairingFun : Type := (ℂ → ℝ) → ℝ
 
@@ -301,7 +301,7 @@ def LQGMetricSatisfiesAxiomsUnivLP : Prop :=
     (∀ x, Measurable fun ω => f ω x) →
     SatisfiesLQGMetricAxioms P γ ξ 𝔇 (fun ω => addFunPairing (hC ω) (f ω))
 
-/-- **LP form of `LQGMetricLengthUnivFrozen`** (`FirstPass/Frozen/S11j.lean:133`, inventory row 42): for every γ-LQG metric
+/-- **LP form of `LQGMetricLengthUnivFrozen`** (`FirstPass/Frozen/S11j.lean:133`): for every γ-LQG metric
 `𝔇` with Weyl exponent `ξ` and every whole-plane GFF `hC` on a probability space in `Type u`, almost surely `𝔇 (hC ω)` is a
 Euclidean length metric (`IsEuclideanLengthMetric`). -/
 def LQGMetricLengthUnivLP : Prop :=

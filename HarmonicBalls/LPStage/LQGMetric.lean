@@ -3,12 +3,12 @@ import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.LengthMetric
 
-/-! # The γ-Liouville quantum gravity metric: random half (LP stage, M5b)
+/-! # The γ-Liouville quantum gravity metric: random half
 
 General copies of the random-field definitions of the γ-LQG metric, at the generality of their source, stated over
-the whole-plane field layer (`HarmonicBalls/LPStage/GFF.lean`, namespace `LatticeProb.Gauss`), the γ-LQG constant
-`lqgQ` (`HarmonicBalls/LPStage/LQGMeasure.lean`) and the deterministic length-metric layer
-(`HarmonicBalls/LPStage/LengthMetric.lean`, namespace `LatticeProb.LQG`).
+the whole-plane field layer (`LatticeProb/Gauss/GFF.lean`, namespace `LatticeProb.Gauss`), the γ-LQG constant
+`lqgQ` (`LatticeProb/LQG/LQGMeasure.lean`) and the deterministic length-metric layer
+(`LatticeProb/LQG/LengthMetric.lean`, namespace `LatticeProb.LQG`).
 
 * `LatticeProb.LQG.SatisfiesLQGMetricAxioms P γ ξ 𝔇 h`: axioms I-IV of the γ-LQG metric, for the metric
   `𝔇 (h ω)` of a random generalized function `h` (Gwynne-Miller 2021, Section 1.2).
@@ -17,8 +17,8 @@ the whole-plane field layer (`HarmonicBalls/LPStage/GFF.lean`, namespace `Lattic
   `h^ℂ - α₀ log |·|`, where `h^ℂ` has pairings `hC`.
 * `LatticeProb.LQG.LQGMetricFieldAxioms P γ ξ α₀ hC hcirc`: an INPUT Prop, not a theorem. It is the literature
   statement of the axioms I-IV for the metric of the logarithmically shifted field (Dubédat-Falconet-Gwynne-Pfeffer-Sun
-  2020; Gwynne-Miller 2021). It is staged from the Proposed module `HarmonicBalls/Proposed/LQG.lean` and remains
-  pending operator source-check; nothing in this file proves or assumes it.
+  2020; Gwynne-Miller 2021). It is taken from the Proposed module `HarmonicBalls/Proposed/LQG.lean` and remains
+  PENDING (source check); nothing in this file proves or assumes it.
 
 Provenance. Copies of `SatisfiesLQGMetricAxioms` (Defs/LQGMetric.lean), `IsLQGMetric` (Defs/LQGMetric.lean),
 `IsLQGMetricOfField` (Defs/LQGMetric.lean) and `LQGMetricFieldAxioms` (Proposed/LQG.lean) of Bou-Rabee and Gwynne,
@@ -112,7 +112,7 @@ III and IV for `h` follow from those for `h^ℂ` and the composition rule of Wey
 Caveat on `ξ`: the Prop quantifies over every `ξ` for which `IsLQGMetric γ ξ 𝔇` holds. The literature constructs γ-LQG
 metrics only for `ξ = γ / d_γ`; if the axioms admitted another exponent, this Prop would assert Fact 2.2 for it as well.
 
-Truth: TRUE as typed (Codex truth check 2026-11-10, recorded in the source).
+Truth: TRUE as typed (checked 2026-11-10, recorded in the source).
 -/
 def LQGMetricFieldAxioms {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ ξ α₀ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=

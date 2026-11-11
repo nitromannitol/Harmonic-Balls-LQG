@@ -3,19 +3,19 @@ import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.CircleAverageApprox2
 
-/-! # Measurability of the γ-LQG mass of a closed set as a functional of the field (LP stage, z7)
+/-! # Measurability of the γ-LQG mass of a closed set as a functional of the field
 
 LP form of the statement `LQGMassFunctionalMeasurableFrozen` (`HarmonicBalls/FirstPass/Frozen/S11d.lean:155`):
-same binders, quantifiers and conclusion, stated for the LP-stage definitions of `HarmonicBalls/LPStage/GFF.lean`
+same binders, quantifiers and conclusion, stated for the LP definitions of `LatticeProb/Gauss/GFF.lean`
 (`IsWholePlaneGFF`, `addFunPairing`, `distributionMeasurableSpace`, `LatticeProb.Gauss`) and
-`HarmonicBalls/LPStage/LQGMeasure.lean` (`lqgQ`, `IsLQGMeasureOfField`, `LatticeProb.LQG`).
+`LatticeProb/LQG/LQGMeasure.lean` (`lqgQ`, `IsLQGMeasureOfField`, `LatticeProb.LQG`).
 
 Terminology: whole-plane Gaussian free field and its circle averages (Berestycki-Powell; Duplantier-Sheffield 2011),
 γ-LQG area measure as the vague limit of regularized measures along powers of two (Duplantier-Sheffield 2011,
 Proposition 1.1). The proof is a mechanical LP transcription of the decoder argument (massDecoder built from countably
 many circle averages, the envelope, dyadic approximating measures and Radon identities for open and closed sets). The a.s.
 convergence of the explicit annular approximants is `LatticeProb.Gauss.ae_tendsto_circleApprox`
-(`HarmonicBalls/LPStage/CircleAverageApprox2.lean`); the continuity of circle averages is in `LatticeProb.Gauss.Section6`
+(`LatticeProb/Gauss/CircleAverageApprox2.lean`); the continuity of circle averages is in `LatticeProb.Gauss.Section6`
 below (transcribed from `Proofs/Sec6/ContinuousWeylCircleAverage.lean`).
 -/
 
@@ -752,8 +752,7 @@ theorem massDecoder_addFun_eq {q : ℕ → ℝ × ℂ} (hq : ∀ m, 0 < (q m).1)
   rw [setLIntegral_congr_fun hS.measurableSet (fun x hx => h1 x hx)]
   simp
 
-/-- **Derivation of `LQGMassFunctionalMeasurableLP`** Written argument:
-`notes/fp-gaps/CHATGPT-hb-distribution-frozen.md` §2. Decoder: `massDecoder` built from countably many circle averages
+/-- **Derivation of `LQGMassFunctionalMeasurableLP`** Decoder: `massDecoder` built from countably many circle averages
 (a dense sequence `q`), the envelope, the dyadic approximating measures, and Radon identities for open and closed sets.
 No hypothesis is added: the statement is the frozen def, as typed. -/
 theorem lqgMassFunctionalMeasurable_lp : LQGMassFunctionalMeasurableLP.{u} := by

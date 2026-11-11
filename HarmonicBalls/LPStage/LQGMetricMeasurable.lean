@@ -2,9 +2,9 @@ import Mathlib
 import HarmonicBalls.LPStage.LengthMetric
 
 /-!
-# LP stage: joint continuity of the internal metric of a Euclidean length metric (LQG metric; support for row 32, LQGInternalDiamInnerMeasurableFrozen; PointwiseAE has no inventory row)
+# Joint continuity of the internal metric of a Euclidean length metric (LQG metric; support for `LQGInternalDiamInnerMeasurableFrozen`)
 
-Worker z7, task `fp-lpstage-lqg-metric-measurable`, item (1), deterministic half. Ports into `LatticeProb.LQG` the
+deterministic half. Ports into `LatticeProb.LQG` the
 metric-geometry lemmas that the HB proof of `lqgInternalDiamInnerMeasurable_derived`
 (`FirstPass/Phase2/InnerMeasurableDerived.lean:78`) takes from `Steps/Sec11`:
 
@@ -18,8 +18,8 @@ metric-geometry lemmas that the HB proof of `lqgInternalDiamInnerMeasurable_deri
   `continuousAt_internalMetric_pair`, `continuousOn_internalMetric_pair` (`Steps/Sec11/InternalMetricContinuity.lean`).
 
 The statements and proofs are those of the HB sources with the namespace changed to `LatticeProb.LQG`; the definitions
-(`pathLength`, `internalMetric`, `IsEuclideanLengthMetric`) are the LP copies of `LPStage/LengthMetric.lean`, with the same
-bodies as the HB copies in `HarmonicBalls/Defs/LQGMetric.lean`. Only Mathlib and `LPStage/LengthMetric.lean` are imported.
+(`pathLength`, `internalMetric`, `IsEuclideanLengthMetric`) are the LP copies of `LatticeProb/LQG/LengthMetric.lean`, with the same
+bodies as the HB copies in `HarmonicBalls/Defs/LQGMetric.lean`. Only Mathlib and `LatticeProb/LQG/LengthMetric.lean` are imported.
 Terminology: length metric, internal metric and internal distance as in Burago-Burago-Ivanov and Armstrong-Kuusi-Mourrat.
 -/
 

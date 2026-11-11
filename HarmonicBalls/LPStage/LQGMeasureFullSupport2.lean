@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Deterministic estimates for measures with a power weight at the origin (LP stage, z3)
+# Deterministic estimates for measures with a power weight at the origin
 
 LP copy of `HarmonicBalls/Proofs/Sec2/MultiscaleMass.lean` (140 lines), the ingredients of the multiscale argument for
 Lemma 2.4 near the log singularity (Berestycki-Powell, Lemma A.1 of the BG20 reference; Steps `SingularWeightStep` and
@@ -13,7 +13,7 @@ Lemma 2.4 near the log singularity (Berestycki-Powell, Lemma A.1 of the BG20 ref
 * `measure_ball_zero_le_of_dyadic`: the shells `{2^{-j-1} ≤ |x| < 2^{-j}}` bound the mass of `B_{2^{-j₀}}(0)` given bounds
   `m₀(B_{2^{-j}}(0)) ≤ K 2^{-j G₁}` at all dyadic scales `j ≥ j₀` and `G₁ + e > 0`.
 
-Nothing is assumed: this file imports Mathlib only (LP stage import rule).
+Nothing is assumed: this file imports Mathlib only (import rule).
 -/
 
 namespace LatticeProb.LQG

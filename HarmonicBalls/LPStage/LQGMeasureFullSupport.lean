@@ -4,7 +4,7 @@ import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.LQGMeasureNonatomicMassPoly
 
 /-!
-# Volume growth at all small scales and full support: LP form (LP stage, z3)
+# Volume growth at all small scales and full support: LP form
 
 LP copy of `HarmonicBalls/Steps/Sec2/VolumeGrowth.lean` lines 60-260 (the ball-mass event of eq:ball-volume, its window
 lemma, I2 from the step `LiouvilleBallMassBoundStep` and I1 from I2), with the LP predicates `IsWholePlaneGFF`,
@@ -13,7 +13,7 @@ lemma, I2 from the step `LiouvilleBallMassBoundStep` and I1 from I2), with the L
 * Steps (copied as definitions): `LiouvilleBallMassBoundStepLP` (`VolumeGrowth.lean:69`), with the event
   `ballMassBoundEventLP` (`VolumeGrowth.lean:60`).
 * Statements (copied as definitions with LP predicates): `LQGVolumeGrowthAllScalesStmtLP` (I2, `Draft/Section2.lean`),
-  `LQGMeasureFullSupportStmtLP` (I1, `Draft/Section2.lean:109`, the LP form of the row 40 statement).
+  `LQGMeasureFullSupportStmtLP` (I1, `Draft/Section2.lean:109`, the LP form of the full-support statement).
 * Proved reductions: `lqgVolumeGrowthAllScalesStmt_of_ballMass_lp` (Borel-Cantelli along the dyadic scales) and
   `lqgMeasureFullSupportStmt_of_volumeGrowth_lp`. Nothing is assumed.
 -/

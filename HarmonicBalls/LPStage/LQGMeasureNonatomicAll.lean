@@ -2,15 +2,15 @@ import Mathlib
 import HarmonicBalls.LPStage.LQGMeasureNonatomic
 
 /-!
-# Row 41: the universal non-atomicity input, LP form (LP stage, z7)
+# The universal non-atomicity input, LP form
 
 LP form of the HB statement `LQGMeasureNonatomicAll` (`HarmonicBalls/FirstPass/S11n/MeasureDecoder.lean:39`): for every
 whole-plane GFF model `(Ω, P, hC, hcirc)` and every `γ, α₀`, the LQG measure has no atom at any point almost surely. It is the
-universal form of the LP Proposition `LQGMeasureNonatomicLP` (`LPStage/LQGMeasureNonatomic.lean`, Fact 2.1 I of
+universal form of the LP Proposition `LQGMeasureNonatomicLP` (`LatticeProb/LQG/LQGMeasureNonatomic.lean`, Fact 2.1 I of
 Bou-Rabee-Gwynne, arXiv:2208.11795, p. 9).
 
-PROVED from the LP forms of the literature inputs (hypotheses only, R54): `WholePlaneLQGBallMassBoundsLP` (Ding-Gwynne 2020,
-Lemma 3.8), `LQGMeasureCoordChangeLP` at `α₀ = 0` and `LQGMeasureExistenceLP` (`LPStage/LQGMeasureInputs.lean`). The HB
+PROVED from the LP forms of the literature inputs (hypotheses only): `WholePlaneLQGBallMassBoundsLP` (Ding-Gwynne 2020,
+Lemma 3.8), `LQGMeasureCoordChangeLP` at `α₀ = 0` and `LQGMeasureExistenceLP` (`LatticeProb/LQG/LQGMeasureInputs.lean`). The HB
 derivation is `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` (`FirstPass/Phase2/DerivedInputs15.lean:57`).
 -/
 

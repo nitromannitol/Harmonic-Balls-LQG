@@ -2,16 +2,16 @@ import Mathlib
 import HarmonicBalls.LPStage.LQGMeasureInputs
 
 /-!
-# The whole-plane GFF and its LQG measure under a complex affine map: LP form (LP stage, z7)
+# The whole-plane GFF and its LQG measure under a complex affine map: LP form
 
 LP copy of `HarmonicBalls/Proofs/Sec2/AffineField.lean` (lines 1-97). For `a ∈ ℂ ∖ {0}` and `b ∈ ℂ`, the field
-`h^ℂ(a · + b) - h^ℂ_{|a|}(b)` is a whole-plane GFF (`wholePlaneGFFAffineInvariance_lp`, LPStage/GFFAffineInvariance.lean).
+`h^ℂ(a · + b) - h^ℂ_{|a|}(b)` is a whole-plane GFF (`wholePlaneGFFAffineInvariance_lp`, LatticeProb/Gauss/GFFAffineInvariance.lean).
 Its LQG measure is `e^{-γ (h^ℂ_{|a|}(b) + Q log |a|)} μ₀((· - b)/a)⁻¹` (the coordinate change of Duplantier-Sheffield 2011,
 Prop. 2.1, and Sheffield-Wang 2016, Theorem 1.1, as the literature hypothesis `LQGMeasureCoordChangeLP` at `α₀ = 0`;
 the additive constant of `IsLQGLimit`), and on balls it reads `e^{-γ (h^ℂ_{|a|}(b) + Q log |a|)} μ₀(B_{|a| r}(a w + b))`.
 These are the rescalings of Fact 2.1 IV used for Lemma 2.4 of Bou-Rabee-Gwynne.
 
-The only literature input is `LQGMeasureCoordChangeLP` (LPStage/LQGMeasureInputs.lean), used as a hypothesis.
+The only literature input is `LQGMeasureCoordChangeLP` (LatticeProb/LQG/LQGMeasureInputs.lean), used as a hypothesis.
 The statement and the proof use no Harmonic-balls object.
 -/
 
