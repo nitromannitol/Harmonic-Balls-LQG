@@ -4,8 +4,7 @@ import HarmonicBalls.Steps.Sec11.InternalMetricPaths
 /-!
 # Root recovery from punctured distances (write-up Step 3.5, first display (8))
 
-FIRST-PASS NEW (deterministic metric geometry, no external input), fp-S11m, owner z4.
-Source: `notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` lines 286-317, display (8). For an open set `O` with `0 ∈ O`,
+Source: Step 3.4 of the written proof. For an open set `O` with `0 ∈ O`,
 `0 < s`, and a point `x` with `s < ‖x‖`, the root distance `D(0, x; O)` is squeezed between punctured distances to the
 circle `∂B_s`:
 
@@ -124,6 +123,3 @@ theorem internalMetric_root_le_sup_add_iInf (D : ℂ → ℂ → ℝ) (hD : IsEu
 
 end HarmonicBalls.S11m
 
-#print axioms HarmonicBalls.S11m.exists_sphere_subpath
-#print axioms HarmonicBalls.S11m.iInf_sphere_internalMetric_le
-#print axioms HarmonicBalls.S11m.internalMetric_root_le_sup_add_iInf

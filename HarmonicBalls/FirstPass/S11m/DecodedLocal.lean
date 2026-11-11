@@ -2,10 +2,9 @@ import HarmonicBalls.FirstPass.S11m.DecodedDomain
 import HarmonicBalls.FirstPass.S11m.DecodedRaw
 
 /-!
-# Decoded internal distances on the local domains (fp-S11m, owner z4)
+# Decoded internal distances on the local domains
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` sections 3-4 and the bounded-domain interface of the
-operator note 04:19 UTC (z7's `DecodesOnSetsBall`). Given a decoded metric `Ψ ℓ : ℂ → ℂ → ℝ` that a.s. equals
+Route: the bounded-domain interface (`DecodesOnSetsBall`). Given a decoded metric `Ψ ℓ : ℂ → ℂ → ℝ` that a.s. equals
 `b · internalMetric D V` on the punctured ball `V = B_R(0) \ {0}` (`S11ac.metricDecoder_punctured_ball`), the family
 `decodedVal V Ψ O x y ℓ` (the decoded internal distance `decInt` on any open `O ⊆ B_R` with `O \ {0} ⊆ V`) equals
 `b · internalMetric D O` a.s., simultaneously for all such `O`, with one scale `b` per sample. Deterministic except for

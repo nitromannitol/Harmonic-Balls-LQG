@@ -1,10 +1,9 @@
 import HarmonicBalls.Steps.Sec11.InternalMetricExhaustion
 
 /-!
-# Punctured internal distances as a limit over an exhaustion (write-up Step 3.4, display (7))
+# Punctured internal distances as a limit over an exhaustion
 
-FIRST-PASS NEW (deterministic metric geometry, no external input), fp-S11m, owner z4.
-Source: `notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` lines 286-317 (Step 3.4, display (7)): for an open `O ⊆ B_7`, the
+Source: Step 3.4 of the written proof: for an open `O ⊆ B_7`, the
 punctured internal distance `D(x, y; O \ {0})` is the decreasing limit of the internal distances in the punctured shells
 `O ∩ V_n`, where `V_n = B_{7 - 1/(n+1)} \ closedBall 0 (1/(n+1))` is an increasing open exhaustion of `B_7 \ {0}`.
 The limit is an infimum over `n`, by monotonicity of the internal metric in its domain.
@@ -69,4 +68,3 @@ theorem internalMetric_sdiff_zero_eq_iInf_shell (D : ℂ → ℂ → ℝ) {O : S
 
 end HarmonicBalls.S11m
 
-#print axioms HarmonicBalls.S11m.internalMetric_sdiff_zero_eq_iInf_shell

@@ -4,10 +4,10 @@ import HarmonicBalls.FirstPass.S11k.ExitLocality
 import HarmonicBalls.Steps.Sec11.LocalPathLength
 
 /-!
-# Internal form of the local certificate rule (fp-S11m, owner z4)
+# Internal form of the local certificate rule
 
 The local events of `FirstPass/S11h/LocalEvents.lean` use ambient set distances `setDist D`. A decoder can only recover
-internal metrics of open sets inside `B₇(0)` (route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md`, sections 2.1-2.2
+internal metrics of open sets inside `B₇(0)` (sections 2.1-2.2
 and 4). For a length metric `D`, each ambient set distance of the local events is an internal infimum on an explicit open
 set (the cutting argument of route section 2.1; `ofReal_setDist_boundary_eq_internalMetric` and the exit lemmas of
 `FirstPass/S11k/ExitLocality.lean`). This file restates the local rule with internal infima only and proves that it is

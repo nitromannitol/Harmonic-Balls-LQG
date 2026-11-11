@@ -2,9 +2,9 @@ import HarmonicBalls.Steps.Sec11.WeylLocalCurveLength
 import HarmonicBalls.Steps.Sec11.MetricArcLength
 
 /-!
-# Weyl-shift estimates for the first event `E₁` (fp-S11m, owner z4)
+# Weyl-shift estimates for the first event `E₁`
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2; paper `lem:E1`
+Route: paper `lem:E1`
 (`paper/lqg_harmonic_ball-corrected.tex`, lines 3661-3700). Deterministic facts about `weylScaling D ξ f` for a
 length metric `D` (`IsEuclideanLengthMetric D`) and a weight `f`:
 

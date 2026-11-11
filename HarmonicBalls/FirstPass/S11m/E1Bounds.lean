@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11h.LocalEvents
 import HarmonicBalls.Steps.Sec11.WeylAnnulusBounds
 
 /-!
-# Deterministic bounds for the first event `E₁` (fp-S11m, owner z4)
+# Deterministic bounds for the first event `E₁`
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2; paper `lem:E1`
+Route: paper `lem:E1`
 (`paper/lqg_harmonic_ball-corrected.tex`, lines 3661-3700). For a Euclidean length metric `D`, a weight `f` with
 `weylScaling D ξ f` finite, and `E := (weylScaling D ξ f).toReal`:
 * `weylScaling_ge_of_exit`: first exit from `Q` (weight `≥ c` on `closure Q`), target outside `interior Q`.

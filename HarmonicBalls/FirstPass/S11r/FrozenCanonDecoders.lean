@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Frozen.S11n
 import HarmonicBalls.FirstPass.S11s.B1Covariance
 
 /-!
-# Canonical decoder data from the frozen measurable existence (fp-S11r-G-data, n2)
+# Canonical decoder data from the frozen measurable existence
 
 `CanonDecoderData γ ξ α₀` packages, for one `(γ, ξ, α₀)`, the data that the frozen input
 `LQGCanonicalDecodersMeasurableExistStmt` (`FirstPass/Frozen/S11n.lean`, the measurable strengthening of
@@ -91,5 +91,3 @@ theorem canonG0_of_model {γ ξ α₀ : ℝ} (D : CanonDecoderData γ ξ α₀) 
 
 end HarmonicBalls.FirstPassS11rFrozenCanonDecoders
 
-#print axioms HarmonicBalls.FirstPassS11rFrozenCanonDecoders.canonDecoderData_of_frozen
-#print axioms HarmonicBalls.FirstPassS11rFrozenCanonDecoders.canonG0_of_model

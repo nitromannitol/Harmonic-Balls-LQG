@@ -4,8 +4,7 @@ import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 /-!
 # Countable almost-sure transfer to a distribution-measurable set (step (e) of z4)
 
-Step (e) of the local certificate for Lemma 11.12 (`notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 5;
-`notes/fp-gaps/CHATGPT-K1-proof-z4-F4.md` section 2.4): a metric event is almost surely the event that a countable
+Step (e) of the local certificate for Lemma 11.12: a metric event is almost surely the event that a countable
 family of metric quantities lies in a measurable set, and each quantity is almost surely a measurable function of the
 field. Intersecting the countably many almost-sure identities gives one measurable set of fields, which is the form
 `MetricEventCertificateStmt` (`FirstPass/S11ab.lean`) asks for.

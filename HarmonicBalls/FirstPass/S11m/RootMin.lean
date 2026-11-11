@@ -2,9 +2,9 @@ import HarmonicBalls.Steps.Sec11.PuncturedPathLength
 import HarmonicBalls.FirstPass.S11m.RootCut
 
 /-!
-# Internal distance through the origin (fp-S11m, owner z4)
+# Internal distance through the origin
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` eq. (16) (lines 355-377): for an open-or-not set `O` and points
+Route: for an open-or-not set `O` and points
 `x, y ≠ 0`, a competitor path either avoids `0` (and is then a path of `O \ {0}`) or hits `0` (and is then a concatenation of
 a path from `x` to `0` and a path from `0` to `y`). Hence
 

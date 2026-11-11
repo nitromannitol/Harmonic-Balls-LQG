@@ -5,9 +5,9 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.MeasureTheory.Integral.CircleAverage
 
 /-!
-# Cameron-Martin shift of the log insertion, for the unrooted identity (18) (fp-S11r, owner n2)
+# Cameron-Martin shift of the log insertion, for the unrooted identity (18)
 
-Three proved tools for CHATGPT-n3-B1-B2.md section 4.1 (eq. (18)), the reduction of `h^α = h^ℂ - α log|·|` to a
+Three proved tools for the reduction of `h^α = h^ℂ - α log|·|` to a
 whole-plane GFF plus a smooth compactly supported function:
 
 * `exists_negLog_cutoff`: for a disk `D = ball c r` with `0 ∉ closedBall c r` there is a smooth compactly supported
@@ -112,8 +112,5 @@ theorem ae_mem_addFunPairing_of_ae_mem (hCM : CameronMartinGFFMutualAbsCont.{u})
   filter_upwards [measure_eq_zero_iff_ae_notMem.1 h1] with ω hω
   simpa using hω
 
-#print axioms HarmonicBalls.exists_negLog_cutoff
-#print axioms HarmonicBalls.localMeanZeroObs_eq_addFunPairing
-#print axioms HarmonicBalls.ae_mem_addFunPairing_of_ae_mem
 
 end HarmonicBalls

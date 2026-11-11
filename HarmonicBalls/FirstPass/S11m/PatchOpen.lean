@@ -1,11 +1,10 @@
 import Mathlib
 
 /-!
-# Patching local measures over a countable cover of a preconnected set (fp-S11m, owner z4)
+# Patching local measures over a countable cover of a preconnected set
 
 Generalisation of `HarmonicBalls.S11n.PatchMeasure` (a cover of `ℂ \ {0}`) to a cover of an arbitrary preconnected set
-`X ⊆ ℂ` by open sets `B j ⊆ X`, for instance `X = B₇(0) \ {0}` in the measure decoder of Lemma 11.12 (route
-`notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md`, section 3, equations (8)-(11)). The local measures are
+`X ⊆ ℂ` by open sets `B j ⊆ X`, for instance `X = B₇(0) \ {0}` in the measure decoder of Lemma 11.12. The local measures are
 `ν j = c j • μ.restrict (B j)`; the patch is `Σ_j ρ_j • ν_j.restrict (disj B j)` with `ρ_j` the product of the overlap
 ratios along a chain from the base ball `i₀` to `j`. Connectedness of `X` replaces the connectedness of `ℂ \ {0}` used in
 `PatchMeasure.reach_of_cover`. Deterministic; no probability.

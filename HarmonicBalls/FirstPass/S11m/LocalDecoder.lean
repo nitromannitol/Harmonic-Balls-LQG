@@ -3,9 +3,9 @@ import HarmonicBalls.Steps.Sec11.MetricArcLength
 import HarmonicBalls.FirstPass.S11m.WeylShift
 
 /-!
-# Normalised local field and its pairing σ-algebra (fp-S11m, owner z4)
+# Normalised local field and its pairing σ-algebra
 
-Route Steps 3.1 and 3.3 (6) of `notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` (the common local decoder of Lemma 11.12).
+Route Steps 3.1 and 3.3 (6) of the written proof (the common local decoder of Lemma 11.12).
 For a functional `T` of the field and a test function `ρ` with `∫ ρ = 1`, the normalised field `N_ρ T = T - ⟨T, ρ⟩` is the
 constant shift `constShift T (T ρ)`, whose pairing with a test function `φ` is `T φ - T ρ · ∫φ`.
 
@@ -19,7 +19,7 @@ constant shift `constShift T (T ρ)`, whose pairing with a test function `φ` is
 
 Hypothesis `hlin` below is the a.s. linearity of the random field on the test functions of `U` (for each `ω`, pointwise in
 this file). It is NOT provided by `IsWholePlaneGFF` (`HarmonicBalls/Defs/GFF.lean:93`), which only asks for Gaussian finite
-families; see `reports/z4.md` (fidelity point F1). No external input is used in this file.
+families. No external input is used in this file.
 -/
 
 namespace HarmonicBalls.S11m

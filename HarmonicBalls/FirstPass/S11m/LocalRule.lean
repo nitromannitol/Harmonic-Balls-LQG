@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11n
 import HarmonicBalls.Steps.Sec11.MetricConstantScaling
 
 /-!
-# Homogeneity of the local certificate rule (fp-S11m, owner z4)
+# Homogeneity of the local certificate rule
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 2 and section 5: the explicit certificate
+Route: the explicit certificate
 `E₁ = {L > A, a₀ > d₀}`, `E₂ = {a₁ > d₁, μ(U) > M S}`, `E₃ = {a₂ > d₂}` (equation (2)) is invariant under independent
 positive rescalings `μ ↦ a μ`, `D ↦ c D` (equation (3)). This file proves that invariance for the local events of
 `FirstPass/S11h/LocalEvents.lean`, which is what lets the decoded measure `a • μ` and the decoded metric `c • D` (with

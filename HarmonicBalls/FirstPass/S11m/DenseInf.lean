@@ -3,9 +3,9 @@ import Mathlib.Topology.ContinuousOn
 import Mathlib.Topology.Bases
 
 /-!
-# Countable dense replacements of infima and suprema (fp-S11m, owner z4)
+# Countable dense replacements of infima and suprema
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 4.3 (step (e)2 of `notes/z4.md`): the rule of
+The rule of
 Lemma 11.12 is a set of pairings, so each infimum or supremum over an uncountable set of points must be replaced by one
 over a countable dense subset. A decoder returns only measurable functions of the pairing (no continuity clause), so the
 replacement is exact only almost surely, where the true internal metric is continuous. This file gives the deterministic

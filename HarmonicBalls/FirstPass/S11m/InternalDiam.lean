@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11h.OuterDiamFinite
 import HarmonicBalls.Proofs.Sec11.PlanarDiskRemoval
 
 /-!
-# Finiteness of the first-event diameter `d₀` (fp-S11m, owner z4)
+# Finiteness of the first-event diameter `d₀`
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2 (finiteness of `d₀` used for `P(F) > 0`), for the
+Route: finiteness of `d₀` used for `P(F) > 0`, for the
 set `K₀ = closure (T \ B_{3δ}(W))` of the local first event (`pinchFirstEventLocal`, `FirstPass/S11h/LocalEvents.lean`;
 corrected paper lines 3603-3608). `W = B_ρ(c)` is a disk (concentric clause), `closedBall c (ρ + 3δ) ⊆ T` (buffer_W),
 and removing that open disk from the connected open set `T` leaves a connected set

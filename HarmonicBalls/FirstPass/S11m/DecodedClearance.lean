@@ -2,10 +2,9 @@ import HarmonicBalls.FirstPass.S11m.ClearanceEq
 import HarmonicBalls.Steps.Sec11.MetricConstantScaling
 
 /-!
-# Decoded localized clearance is a positive multiple of the internal metric (fp-S11m, owner z4)
+# Decoded localized clearance is a positive multiple of the internal metric
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 4.3 (internalization by countable clearance chains,
-identity L-EQ of `FirstPass/S11m/ClearanceEq.lean`) and section 5 (one scale factor per decoded quantity, equation (17)).
+Route: internalization by countable clearance chains (identity L-EQ of `FirstPass/S11m/ClearanceEq.lean`); one scale factor per decoded quantity.
 
 A metric decoder on the punctured ball `V = B_R \ {0}` returns, almost surely, a positive random multiple `c` of the
 internal metric of `V`. This file shows that the localized clearance infimum computed from such a decoded cost is

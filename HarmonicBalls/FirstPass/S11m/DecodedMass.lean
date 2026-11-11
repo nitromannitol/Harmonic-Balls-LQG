@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11m.DecodedRaw
 import HarmonicBalls.Steps.Sec11.PinchGreenMeasurable
 
 /-!
-# Decoded masses of the local second event (fp-S11m, owner z4)
+# Decoded masses of the local second event
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 5 and the mass clauses of `E₂(M)`
+Route: the mass clauses of `E₂(M)`
 (`pinchSecondEventLocal`, `FirstPass/S11h/LocalEvents.lean:45`): the decoded mass of `U` and the decoded annulus Green
 potential sup `S = SG_{3,6}` are read off a decoded measure `Φ ℓ : Measure ℂ`. If the decoder returns `c • (μ|B)` with
 `c ∈ (0, ∞)` and the balls `U`, `annulus 0 3 6` lie in `B`, then both masses equal `c` times the true masses of `μ`.

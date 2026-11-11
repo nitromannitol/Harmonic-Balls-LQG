@@ -1,9 +1,9 @@
 import HarmonicBalls.Steps.Sec11.CountableClearanceChains
 
 /-!
-# Localized countable clearance chains (fp-S11m, owner z4)
+# Localized countable clearance chains
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 4.3 (internalization is a countable operation).
+Route: internalization is a countable operation.
 
 `denseClearanceChainCost` (`Steps/Sec11/CountableClearanceChains.lean`) tests clearance against all of `Uᶜ`, which is
 uncountable, so it needs continuity of the metric in its second variable to be measurable. The decoded metric of

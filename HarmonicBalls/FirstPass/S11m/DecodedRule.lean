@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11m.DecodedRoot
 import HarmonicBalls.FirstPass.S11m.ClearanceLocal
 
 /-!
-# Measurability of the decoded clearance quantities (fp-S11m, owner z4)
+# Measurability of the decoded clearance quantities
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 4.3 and step (e)2 of `notes/z4.md`. A metric decoder gives
+A metric decoder gives
 a family `Dh ℓ : ℂ → ℂ → ℝ` indexed by pairings `ℓ`, measurable in `ℓ` for each pair of points (no continuity in the points).
 The decoded internal quantities are the localized clearance infima `localClearanceInf S Q (Dh ℓ)` over countable chain
 vertices `S` and countable clearance sets `Q`, and the decoded root values are `limsup`s of countable infima over

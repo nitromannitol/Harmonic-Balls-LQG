@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11m.ChainMetric
 /-!
 # The circle supremum of the internal metric tends to zero (route Step 3.5)
 
-FIRST-PASS fp-S11m. Route Step 3.5 (`notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` l.286-317) uses the limit
+Route Step 3.5 uses the limit
 `s → 0` of `sup_{y ∈ ∂B_s} D(0, y; O)`, which `RootCut.lean` (`internalMetric_root_le_sup_add_iInf`) leaves open.
 Here it follows from continuity of `(z, w) ↦ D(z, w; O)` on `O × O` (a deterministic hypothesis; its almost sure form is the
 frozen input `LQGInternalMetricContinuousAlphaGFFFrozen`, FirstPass/Frozen/S11g.lean:96, used in the final assembly),
@@ -80,5 +80,3 @@ theorem tendsto_sphere_iInf_internalMetric {D : ℂ → ℂ → ℝ} (hD : IsEuc
 
 end HarmonicBalls.S11m
 
-#print axioms HarmonicBalls.S11m.tendsto_sphere_sup_internalMetric_zero
-#print axioms HarmonicBalls.S11m.tendsto_sphere_iInf_internalMetric

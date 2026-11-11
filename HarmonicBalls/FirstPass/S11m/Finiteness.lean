@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11m.RootLimit
 import HarmonicBalls.Steps.Sec11.PinchConstrainedFiniteness
 
 /-!
-# Finiteness of the internal metric on a connected open set (fp-S11m, owner z4)
+# Finiteness of the internal metric on a connected open set
 
-Route Step 4.1 (`notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md`): a length metric inducing the Euclidean topology has finite
+Route Step 4.1: a length metric inducing the Euclidean topology has finite
 internal metric on each connected open domain. In Lean this is the finiteness source that Step 3.5 needed as the hypothesis
 `hfin` of `tendsto_sphere_iInf_internalMetric` (`RootLimit.lean`): a connected open subset of `ℂ` is path connected, so two of
 its points are joined inside it, and a length metric then gives a finite internal distance

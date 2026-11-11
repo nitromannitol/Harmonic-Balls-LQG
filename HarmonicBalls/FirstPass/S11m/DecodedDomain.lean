@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11m.Finiteness
 import HarmonicBalls.FirstPass.S11m.RootMin
 
 /-!
-# Decoded internal data on fixed domains (fp-S11m, owner z4)
+# Decoded internal data on fixed domains
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 4.4 (root values, eqs (14)-(17)) and section 5.
+Route: root values.
 For a fixed open set `V` (the punctured ball `X = B_R \ {0}`) and a decoded raw metric `Dh : ℂ → ℂ → ℝ`, this file defines
 
 * `decPunct V Dh O x y`: the localized clearance infimum over the fixed countable sets `decChain O` (dense in `O`) and

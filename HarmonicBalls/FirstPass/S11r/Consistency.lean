@@ -3,17 +3,16 @@ import HarmonicBalls.Steps.Sec11.MetricConstantScaling
 import HarmonicBalls.FirstPass.S11r.InternalSubdomain
 
 /-!
-# Pointwise consistency of the normalised local metrics, the identity (22) (fp-S11r part (b) P2, owner n2)
+# Pointwise consistency of the normalised local metrics, the identity (22)
 
 For a fixed field with metric `I` (on `D`, and on the smaller disk `V ⊆ D`), if the normalised local metric decoders
 satisfy `ofReal (M x y) = e^a · D_I(x,y;D)` on `D` and `ofReal (MV x y) = e^b · D_I(x,y;V)` on `V` (the local decoder
 identity of `LocalLQGMetricNormalizedMeasurableFrozen`, with the constants `e^a = e^{-ξ⟨g,ρ_D⟩}`, `e^b = e^{-ξ⟨g,ρ_V⟩}`),
-then the internal metric of `M` on `V` is `e^{a-b}` times `MV`, which is the identity (22) of CHATGPT-n3-B1-B2.md §4.1,
+then the internal metric of `M` on `V` is `e^{a-b}` times `MV`, which is the identity (22),
 at the level of one field and one pair of points.
 
 The subdomain identity hII (the internal metric on `V` of the internal metric on `D` equals the internal metric on `V`)
-is PROVED (`internalMetric_internalMetric_toReal_of_finite`, InternalSubdomain.lean; operator ruling 01:57 and 02:12 UTC,
-CHATGPT-n2-hII.md). No hypothesis of that form remains here; the Euclidean length property of `I` is used instead.
+is PROVED (`internalMetric_internalMetric_toReal_of_finite`, InternalSubdomain.lean). No hypothesis of that form remains here; the Euclidean length property of `I` is used instead.
 -/
 
 namespace HarmonicBalls

@@ -3,12 +3,12 @@ import HarmonicBalls.FirstPass.S11m.GoodMetric
 import HarmonicBalls.FirstPass.S11m.Exhaustion
 
 /-!
-# Positive probability of the good box `F` of the first local event (fp-S11m, owner z4)
+# Positive probability of the good box `F` of the first local event
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2: by countable exhaustion there are thresholds
+Route: by countable exhaustion there are thresholds
 `n` with `P{L ≥ 1/(n+1), A ≤ n, D(0,∂B_{δ/2}) ≥ 1/(n+1), d₀ ≤ n} > 0`, where `L = D(Q̄', ∂Q)`,
 `A = sup_{∂B₅} D(0,·; Ω_geom)`, `d₀ = diam^δ_D(K₀)`. Inputs: a.s. Euclidean length metric (hypothesis), and the clause
-`{0} ∪ ∂B₅ ⊆ Ω_geom` (hypothesis `hΩ`, the operator gap G1: not a field of `IsBufferedPinchGeometry`).
+`{0} ∪ ∂B₅ ⊆ Ω_geom` (hypothesis `hΩ`, not a field of `IsBufferedPinchGeometry`).
 No external input beyond these hypotheses.
 -/
 

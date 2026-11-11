@@ -5,10 +5,9 @@ import HarmonicBalls.Steps.Sec11.WeylLocalCurveLength
 import HarmonicBalls.Steps.Sec11.MetricArcLength
 
 /-!
-# Weyl scaling by a continuous compactly supported weight is a Euclidean length metric (fp-S11m, owner z4)
+# Weyl scaling by a continuous compactly supported weight is a Euclidean length metric
 
-Deterministic replacement of the frozen Prop `LQGMetricAlphaWeylShiftLengthFrozen` (operator note 02:15 UTC; truth check
-`notes/fp-gaps/CHATGPT-z4-weylshift-frozen.md`, sections 2-3). For a Euclidean length metric `D`, a real `ξ` and a
+Deterministic replacement of the frozen Prop `LQGMetricAlphaWeylShiftLengthFrozen` (sections 2-3). For a Euclidean length metric `D`, a real `ξ` and a
 continuous compactly supported `f`, the Weyl scaling `W = weylScaling D ξ f` is finite and `(W·).toReal` is again a
 Euclidean length metric. Proof (Steps 1-7 of the note): the weight satisfies `m ≤ e^{ξ f} ≤ M` with `m = e^{-|ξ| C}`,
 `M = e^{|ξ| C}`, `|f| ≤ C`; hence `m D ≤ W ≤ M D` (lower bound from `dist_le_of_lengthParametrized`, upper bound from
@@ -88,7 +87,7 @@ theorem IsEuclideanLengthMetric.weylScaling_le_ofReal_mul {D : ℂ → ℂ → �
   rw [hint, ENNReal.mul_iInf_of_ne (ENNReal.ofReal_pos.2 hM).ne' ENNReal.ofReal_ne_top]
   exact le_iInf fun P => hD.weylScaling_le_mul_pathLength ξ hM hfM P
 
-/-- Deterministic Weyl-scaled length property (note `CHATGPT-z4-weylshift-frozen.md` section 3; operator 02:15 UTC):
+/-- Deterministic Weyl-scaled length property:
 the Weyl scaling of a Euclidean length metric by a continuous compactly supported weight is finite and is again a
 Euclidean length metric after taking real parts. -/
 theorem weylScaling_continuous_compactSupport_length : WeylScalingContinuousCompactSupportLengthStmt := by

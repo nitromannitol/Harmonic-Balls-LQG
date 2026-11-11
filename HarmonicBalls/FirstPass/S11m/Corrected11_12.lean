@@ -5,22 +5,22 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Assembly of the corrected Lemma 11.12 (fp-S11m, owner z4)
+# Assembly of the corrected Lemma 11.12
 
-Route: `notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` sections 3-4, with the local certificate interface of
-`notes/fp-gaps/CHATGPT-K1-proof-z4-F4.md` section 3.3, equation (3.9) (operator notes 00:09 and 00:12 UTC).
+Route: the write-up's sections 3-4, with the local certificate interface of
+the write-up's section 3.3, equation (3.9).
 
-* `PinchLocalCertificateStmt` is the NEW step, kept as a named hypothesis until ChatGPT chat 110 answers. It asks for a
+* `PinchLocalCertificateStmt` is a new step, kept as a named hypothesis. It asks for a
   Borel set `E` of local pairings on `B₇(0)` with positive probability on which the three whole-plane auxiliary events
   hold almost surely. The two-sided `PinchLocalDecoderStmt` of the first version (commit 697963b) is withdrawn: it was
   stronger than Lemma 11.12 needs, and `pinchFirstEvent` is not almost surely `σ(h|_{B₇})`-determined.
-* `LQGMetricFieldAxioms` (`Proposed/LQG.lean:199`, Fact 2.2 I at `α₀ = α`, pending operator source-check) gives the
+* `LQGMetricFieldAxioms` (`Proposed/LQG.lean:199`, Fact 2.2 I at `α₀ = α`) gives the
   Euclidean length property of the Weyl-shifted metric.
-* `LQGMetricExponentPositive` (`FirstPass/Frozen/S11j.lean:94`, n4's frozen input, truth check TRUE) makes `ξ ≤ 0`
-  vacuous, so the statement is proved for every real `ξ` (operator note 00:09 UTC).
+* `LQGMetricExponentPositive` (`FirstPass/Frozen/S11j.lean:94`, truth check TRUE) makes `ξ ≤ 0`
+  vacuous, so the statement is proved for every real `ξ`.
 * The inclusion is `pinchPointEvent_of_auxiliary_events` (`FirstPass/S11e/Include.lean:30`), already proved.
 
-n2's `PinchThirdEventFaithfulStmt` is not used. The file does not import `CertificateCanonical`, which consumes
+`PinchThirdEventFaithfulStmt` is not used. The file does not import `CertificateCanonical`, which consumes
 `CorrectedLemma11_12Stmt`, so there is no cycle.
 -/
 
@@ -31,12 +31,11 @@ open scoped ENNReal
 
 universe u
 
-/-- NEW step, named hypothesis (operator notes 00:09 and 00:12 UTC; ChatGPT chat 110 pending). Local certificate for
+/-- NEW step, named hypothesis. Local certificate for
 Lemma 11.12 (corrected paper lines 3236-3244; route Step 3.6, Step 4.2 and the positivity of Steps 4.3-4.5). For a fixed
 buffered geometry, `γ ∈ (0,2)`, `ξ > 0` and `M > 0`, there is a Borel set `E` of pairings on `B₇(0)` such that for every
 insertion `α < Q` and every model: `P[h^α|_{B₇} mod constants ∈ E] > 0`, and almost surely, if this event holds, then the
-three auxiliary events of the true pair `(μ, D)` hold. The one-sided form is equation (3.9) of
-`notes/fp-gaps/CHATGPT-K1-proof-z4-F4.md`. -/
+three auxiliary events of the true pair `(μ, D)` hold. The one-sided form is equation (3.9) of the write-up. -/
 def PinchLocalCertificateStmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
   insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ →
@@ -97,7 +96,7 @@ theorem firstPass_11_12_corrected_posXi_of_cert
 /-- Lemma 11.12 in the corrected form for every real `ξ` (`CorrectedLemma11_12Stmt`, `FirstPass/S11i/Faithful.lean:56`;
 correction `[C43]`). For `0 < ξ` this is `firstPass_11_12_corrected_posXi_of_cert`. For `ξ ≤ 0` the hypothesis
 `IsLQGMetricOfField` is impossible, since `LQGMetricExponentPositive` gives `0 < ξ` for every `IsLQGMetric`
-(operator note 00:09 UTC), so the empty set serves as `E` and the implications hold vacuously. -/
+, so the empty set serves as `E` and the implications hold vacuously. -/
 theorem firstPass_11_12_corrected
     (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms P γ ξ α₀ hC hcirc)

@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11h.Faithful
 import HarmonicBalls.FirstPass.S11h.LocalEvents
 
 /-!
-# The local first event `E₁` for the Weyl-shifted metric (fp-S11m, owner z4)
+# The local first event `E₁` for the Weyl-shifted metric
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2; paper `lem:E1`
+Route: paper `lem:E1`
 (`paper/lqg_harmonic_ball-corrected.tex`, lines 3661-3700). Deterministic part only.
 
 For a Euclidean length metric `D` and a weight `f` with `ξ f = log b_Q φ_Q + log b φ_0` (the paper's

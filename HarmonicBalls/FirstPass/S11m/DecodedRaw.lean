@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11n
 import HarmonicBalls.Steps.Sec11.PinchLocalData
 
 /-!
-# Real form of the decoded metric identity (fp-S11m, owner z4)
+# Real form of the decoded metric identity
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 4.3 and section 5 (equation (17)). The punctured-ball
+The punctured-ball
 metric decoder `S11ac.metricDecoder_punctured_ball` gives, almost surely, `ENNReal.ofReal (Ψ ℓ p) = ENNReal.ofReal b *
 internalMetric D X p.1 p.2` on `X × X`. Since `Ψ` may be negative (only the `ofReal` equality is given), the decoded raw
 metric is normalised as `(ENNReal.ofReal (Ψ ℓ (a, b))).toReal`, which is nonnegative. This file converts the identity into

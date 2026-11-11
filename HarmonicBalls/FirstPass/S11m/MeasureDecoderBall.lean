@@ -5,9 +5,8 @@ import HarmonicBalls.FirstPass.S11n.MeasureDecoder
 import HarmonicBalls.Draft.Section2
 
 /-!
-# Common measure decoder on a ball containing `0` (fp-S11m, owner z4)
+# Common measure decoder on a ball containing `0`
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md`, section 3 (P-mu), equations (7)-(11).
 
 For a radius `R > 0` the punctured ball `X = B_R(0) \ {0}` is connected (`isPreconnected_ball_diff_zero`). It is covered
 by countably many balls `B j = ball (f j) (ρ j)` with `closedBall (f j) (ρ j) ⊆ X`, so that `0 ∉ closedBall` and the
@@ -205,7 +204,7 @@ theorem measureDecoder_of_cover (hLoc : LocalLQGDecoderCommonFrozen.{u})
     unfold glueMeasure
     rw [hsplit, Measure.restrict_congr_set hXeq]
 
-/-- Measure decoder on a ball containing `0` (route section 3 of `CHATGPT-z4-11-12-local-certificate.md`): for
+/-- Measure decoder on a ball containing `0`: for
 `0 < γ < 2` there is a measurable map `Φ` from the mean-zero pairings on `B_R(0)` to measures such that for every
 insertion `α₀ < Q` and every model, almost surely `Φ` of the observation is a positive finite multiple of `μ|_{B_R(0)}`.
 The constant is random (it is the normalisation of the decoder); `{0}` is `μ`-null. -/

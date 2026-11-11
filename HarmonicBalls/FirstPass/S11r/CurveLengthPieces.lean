@@ -2,8 +2,7 @@ import HarmonicBalls.Defs.LQGMetric
 
 /-! # Curve-length facts for an arbitrary `D : ℂ → ℂ → ℝ`
 
-Support for the local-to-global step of `eq_of_local_internalMetric_agreement_off_point`
-(CHATGPT-n3-B1-B2.md, section 4.3). No metric axioms are used: superadditivity over a split
+Support for the local-to-global step of `eq_of_local_internalMetric_agreement_off_point`. No metric axioms are used: superadditivity over a split
 point holds for the `ENNReal`-valued partition sums, since the jump term is nonnegative. -/
 
 namespace HarmonicBalls

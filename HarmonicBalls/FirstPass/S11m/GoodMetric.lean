@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11h.LocalEvents
 import HarmonicBalls.FirstPass.S11h.Faithful
 
 /-!
-# Positivity and finiteness of the local quantities of the first event (fp-S11m, owner z4)
+# Positivity and finiteness of the local quantities of the first event
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2 and paper `lem:E1`
+Route: paper `lem:E1`
 (`paper/lqg_harmonic_ball-corrected.tex`, lines 3661-3700). Deterministic: for a Euclidean length metric `D`,
 the quantities `L = D(Q̄', ∂Q)`, `a₀ = D(0, ∂B_δ)` are strictly positive and `A = sup_{x∈∂B₅} D(0,x; Ω)` is finite,
 provided the sphere `∂B₅` lies in the component `Ω = pinchOmegaGeom` of `0`.

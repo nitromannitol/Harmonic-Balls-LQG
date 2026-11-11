@@ -2,9 +2,8 @@ import HarmonicBalls.FirstPass.S11m.RootLimit
 import HarmonicBalls.FirstPass.S11m.DenseInf
 
 /-!
-# The root value as a limit of countable sphere infima (fp-S11m, owner z4)
+# The root value as a limit of countable sphere infima
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 3.5 and section 4.3 (step (e)1 of `notes/z4.md`).
 The internal distance from the origin `D(0, x; O)` is recovered from the punctured domain `O \ {0}` as the limit of the
 infima over the circles `∂B_{s_n}`, `s_n ↘ 0` (`RootLimit.tendsto_sphere_iInf_internalMetric`). The infima over the
 circles are replaced by infima over countable dense subsets (`DenseInf.iInf_mem_eq_iInf_mem_of_dense_continuousOn`),

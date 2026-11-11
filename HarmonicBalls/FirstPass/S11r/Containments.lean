@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11h.LocalEvents
 import HarmonicBalls.FirstPass.S11h.Faithful
 
 /-!
-# Containments of the buffered pinch geometry (fp-S11r-G-data, n2)
+# Containments of the buffered pinch geometry
 
 Both containment inputs of the ball-metric instance follow from `IsBufferedPinchGeometry` (S11h/Faithful.lean), so they
 are no longer binders:
@@ -65,5 +65,3 @@ theorem certificateContainments_of_buffered {U V W T Q' Q : Set ℂ} {δ : ℝ}
 
 end HarmonicBalls.FirstPassS11rContainments
 
-#print axioms HarmonicBalls.FirstPassS11rContainments.certificateContainments_of_buffered
-#print axioms HarmonicBalls.FirstPassS11rContainments.hU_of_buffered

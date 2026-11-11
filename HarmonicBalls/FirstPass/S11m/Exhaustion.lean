@@ -2,9 +2,9 @@ import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 
 /-!
-# Countable exhaustion of a good event has positive probability (fp-S11m, owner z4)
+# Countable exhaustion of a good event has positive probability
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2, "By countable exhaustion choose deterministic
+Route: "By countable exhaustion choose deterministic
 `c₁,…,c₄ > 0` such that `F = {L ≥ c₁, A ≤ c₂, D(0,∂B) ≥ c₃, d₀ ≤ c₄}` has positive probability."
 
 Generic probability: if almost surely `0 < L`, `A < ∞`, `0 < a`, `d < ∞`, then for some `n : ℕ` the event

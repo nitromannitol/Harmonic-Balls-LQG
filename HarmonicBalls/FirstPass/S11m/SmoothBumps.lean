@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11d.SmoothCutoff
 import HarmonicBalls.FirstPass.S11h.Faithful
 
 /-!
-# Smooth pinch bumps and the smooth shift weight (fp-S11m, owner z4)
+# Smooth pinch bumps and the smooth shift weight
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` section 6.2 (bumps `φ_Q`, `φ_0`, weight
+Route: bumps `φ_Q`, `φ_0`, weight
 `ξ⁻¹ (log b_Q φ_Q + log b φ_0)`) and paper `lem:E1` (`paper/lqg_harmonic_ball-corrected.tex`, lines 3661-3700).
 The bumps of `E1Event.lean` are continuous; the Cameron-Martin transfer
 (`CameronMartinMetricEventTransferMeasurableFrozen`, `FirstPass/Frozen/S11j.lean`) needs smooth, compactly supported

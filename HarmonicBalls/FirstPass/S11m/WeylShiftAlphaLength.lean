@@ -3,12 +3,12 @@ import HarmonicBalls.FirstPass.Frozen.S11m
 import HarmonicBalls.FirstPass.S11m.WeylLengthCompact
 
 /-!
-# The α-metric Weyl-shift length property is derived (fp-S11m, owner z4)
+# The α-metric Weyl-shift length property is derived
 
 The frozen Prop `LQGMetricAlphaWeylShiftLengthFrozen` (`FirstPass/Frozen/S11m.lean`) follows from the a.s. length-metric
 property of the α-metric, which is item I of `LQGMetricFieldAxiomsUnivFrozen` (`FirstPass/Frozen/S11j.lean`), and from the
 deterministic theorem `weylScaling_continuous_compactSupport_length` (`FirstPass/S11m/WeylLengthCompact.lean`), applied
-inside `filter_upwards` (operator note 02:15 UTC). The only external input is `LQGMetricFieldAxiomsUnivFrozen`.
+inside `filter_upwards`. The only external input is `LQGMetricFieldAxiomsUnivFrozen`.
 -/
 
 universe u
