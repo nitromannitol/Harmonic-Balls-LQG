@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec6.UniformSingularGoodAnnulus
 
 The underlying fine-support argument uses Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The zero-strength existence
-input is staged pending source review.
+input is (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

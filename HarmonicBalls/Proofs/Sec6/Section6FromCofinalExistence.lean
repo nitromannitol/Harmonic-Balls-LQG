@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec6.Section6FromExistence
 
 The annulus iteration uses Leonardo Bonanno's proof of the Gwynne–Miller lemma
 in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The literature inputs
-below are explicit hypotheses and remain subject to operator source review.
+below are explicit hypotheses and remain (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -113,7 +113,7 @@ theorem lqgMeasureNonatomic_of_cofinal_existence
   · simpa [hz] using h0
   · exact hoff z hz
 
-/-- The frozen Section 6 statements follow from the staged whole-plane mass
+/-- The frozen Section 6 statements follow from the whole-plane mass
 bounds, affine and coordinate-change laws, existence at zero, and existence at
 a countable cofinal sequence of subcritical singularity strengths. -/
 theorem section6_of_cofinal_existence

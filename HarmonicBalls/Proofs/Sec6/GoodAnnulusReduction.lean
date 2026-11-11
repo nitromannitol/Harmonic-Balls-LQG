@@ -6,7 +6,7 @@ import HarmonicBalls.Proofs.Sec2.SingularWeight
 
 The zero-singularity probability estimate, LQG measure existence, and Weyl scaling imply the
 full good-annulus probability estimate. The threshold loss retains its dependence on `α₀`.
-The staged literature hypotheses remain subject to operator source-check.
+The literature hypotheses remain (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls

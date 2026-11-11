@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.GoodAnnulusUniversalLaw
 
 The Brownian germ zero-one theorem discharges the zero-one premise in the
 fine-support and good-annulus reductions. The potential hitting and submean
-estimates and the staged LQG inputs remain explicit.
+estimates and the LQG inputs remain explicit.
 -/
 
 namespace HarmonicBalls.Section6

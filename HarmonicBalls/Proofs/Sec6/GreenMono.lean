@@ -7,7 +7,7 @@ For open `O ⊆ O'` with `O'` bounded, every harmonic minorant of `log (1/|x - �
 `O`, so `I_{O'} ≤ I_O` (`greatestHarmonicMinorant_anti`) and `G_O ≤ G_{O'}` on `O` off the diagonal
 (`greenFunction_mono`; Armitage-Gardiner §4.1). Hence `SG(x₀; s₁, s₂) ≤ SG(x₀; s₁, s₃)` for `s₂ ≤ s₃`: the supremum
 and the integral run over the larger annulus, and the kernel of the larger ball is larger
-(`greenPotentialSupMonoStep_proved`, used for GRAPH G22 in Lemma 6.11).
+(`greenPotentialSupMonoStep_proved`, used in Lemma 6.11).
 -/
 
 namespace HarmonicBalls

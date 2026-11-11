@@ -2,7 +2,7 @@ import HarmonicBalls.Proofs.Sec3.DerivedInputAssembly
 import HarmonicBalls.Proofs.Sec6.Section6FromVolumeGrowth
 import HarmonicBalls.Proofs.Sec9.WeakUniquenessDerivedInputs
 
-/-! # Section 6 from three staged measure inputs: the full thirteen-result conjunction
+/-! # Section 6 from three measure inputs: the full thirteen-result conjunction
 
 Credit: Leonardo Bonanno. The annulus iteration of `HarmonicBalls.Section6.section6_of_volumeGrowth` is the
 proved `HarmonicBalls.Section6.annulusIterationStmt_proved`, which uses his proof of the Gwynne–Miller lemma in
@@ -11,8 +11,7 @@ route `HarmonicBalls.Section6ThreeInput` (`Proofs/Sec6/ThreeInputAssembly.lean`)
 
 Premises, in frozen order: `hDG` (whole-plane LQG ball mass bounds, `WholePlaneLQGBallMassBounds`), `hCC`
 (LQG coordinate change at insertion parameter `0`, `LQGMeasureCoordChange`), and `hE` (LQG measure existence
-at every insertion parameter `α`, `LQGMeasureExistence`). These are staged Proposed inputs; their source-check
-by the operator is pending. The affine invariance and Weyl scaling premises of `section6_of_volumeGrowth` are
+at every insertion parameter `α`, `LQGMeasureExistence`). These are Proposed inputs (PENDING TRUTH CHECK). The affine invariance and Weyl scaling premises of `section6_of_volumeGrowth` are
 discharged by proved theorems, and the all-scales volume growth input is `lqgVolumeGrowthAllScalesStmt_of_staged_inputs`.
 
 The exports are reductions, not numbered closure. Each typed export keeps one frozen statement by name and the

@@ -7,7 +7,7 @@ import HarmonicBalls.Proposed.LQG
 
 On a single almost-sure event, the Green-potential extrema ratio is positive for every
 smooth bounded domain inside a ball and every nonempty compact subset of the domain.
-This supplies the positivity part of the fine-support argument in E19, Section 1.3(A).
+This supplies the positivity part of the fine-support argument.
 -/
 
 

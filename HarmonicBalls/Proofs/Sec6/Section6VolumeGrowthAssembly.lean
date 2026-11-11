@@ -1,11 +1,11 @@
 import HarmonicBalls.Proofs.Sec6.Section6LiteratureAssembly
 import HarmonicBalls.Proofs.Sec6.GoodPrevalenceVolumeGrowth
 
-/-! # Section 6 from staged LQG inputs
+/-! # Section 6 from LQG inputs
 
 The annulus iteration uses Leonardo Bonanno's proof of the Gwynne–Miller lemma
-in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The staged hypotheses
-remain subject to source review.
+in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The hypotheses
+remain (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -30,7 +30,7 @@ theorem veryGoodAnnuliSubRangeStep_of_disc_volumeGrowth
   veryGoodAnnuliSubRangeStep_of_goodAnnuliSubRangeStep (lqgMeasureFullSupportStmt_of_volumeGrowth hgrowth) hgrowth
     (goodAnnuliSubRangeStep_of_disc_volumeGrowth hgrowth hatom hAff hCC) hatom hAff hCC
 
-/-- Lemma 6.3 follows under the explicit staged LQG hypotheses. -/
+/-- Lemma 6.3 follows under the explicit LQG hypotheses. -/
 theorem manyGoodAnnuliStmt_of_disc_volumeGrowth
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hatom : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -51,7 +51,7 @@ theorem manyGoodAnnuliStmt_of_disc_volumeGrowth
   manyGoodAnnuliStmt_of_literature
     (goodAnnuliSubRangeStep_of_disc_volumeGrowth hgrowth hatom hAff hCC) hex hW
 
-/-- Lemma 6.6 follows under the explicit staged LQG hypotheses. -/
+/-- Lemma 6.6 follows under the explicit LQG hypotheses. -/
 theorem manyVeryGoodAnnuliStmt_of_disc_volumeGrowth
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hatom : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -72,7 +72,7 @@ theorem manyVeryGoodAnnuliStmt_of_disc_volumeGrowth
   manyVeryGoodAnnuliStmt_of_literature
     (veryGoodAnnuliSubRangeStep_of_disc_volumeGrowth hgrowth hatom hAff hCC) hex hW
 
-/-- Proposition 6.2 follows under the explicit staged LQG hypotheses. -/
+/-- Proposition 6.2 follows under the explicit LQG hypotheses. -/
 theorem harnackTypeComponentStmt_of_disc_volumeGrowth
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hatom : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -93,7 +93,7 @@ theorem harnackTypeComponentStmt_of_disc_volumeGrowth
   harnackTypeComponentStmt_of_volumeGrowth_and_prevalence hgrowth
     (veryGoodAnnuliSubRangeStep_of_disc_volumeGrowth hgrowth hatom hAff hCC) hex hW
 
-/-- Proposition 6.1 follows under the explicit staged LQG hypotheses. -/
+/-- Proposition 6.1 follows under the explicit LQG hypotheses. -/
 theorem harnackTypeEstimateStmt_of_disc_volumeGrowth
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hatom : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -115,7 +115,7 @@ theorem harnackTypeEstimateStmt_of_disc_volumeGrowth
     (veryGoodAnnuliSubRangeStep_of_disc_volumeGrowth hgrowth hatom hAff hCC) hex hW
 
 
-/-- All frozen numbered statements in Section 6 follow from the explicitly staged
+/-- All frozen numbered statements in Section 6 follow from the explicitly
 whole-plane LQG inputs.
 Volume growth and full support are supplied by the Section 2 assembly. -/
 theorem section6_of_literature

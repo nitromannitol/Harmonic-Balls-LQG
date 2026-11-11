@@ -3,8 +3,8 @@ import HarmonicBalls.Draft.Section6
 /-!
 # Localization: comparable measures and the flat weight (steps S-Flat, S-Transfer)
 
-The deterministic steps S-Flat and S-Transfer of docs/campaign/cex/AlphaUniformity.md §6.1, used to obtain the
-printed `α₀`-uniform constants of Lemmas 6.3 and 6.6 (operator E31) from their `α₀ = 0` instances.
+The deterministic steps used to obtain the
+printed `α₀`-uniform constants of Lemmas 6.3 and 6.6 from their `α₀ = 0` instances.
 
 * S-Transfer. Two measures `μ`, `ν` are *comparable on `B`* (`IsComparableOn μ ν B c`) if `c ν ≤ μ ≤ 4c ν` on subsets
   of `B`, for some `c ∈ (0, ∞)`. The good annulus event `E_r(z; a, b)` (eq:good-annulus-harmonic, lines 1115-1123)

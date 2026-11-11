@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec8.VeryGoodMeasureScaling
 
 /-! # Affine laws for good annuli
 
-The staged affine field and coordinate-change hypotheses transfer the unit
+The affine field and coordinate-change hypotheses transfer the unit
 annulus law to every centre and positive scale. Measurability of the unit
 good-annulus event remains an explicit hypothesis.
 -/
@@ -36,7 +36,7 @@ theorem isGoodAnnulus_affineMeasure_unit
   rw [hmap]
   exact isGoodAnnulus_unit_normalize (μ ω) hr z a b
 
-/-- Under the staged affine laws, the probability of a bad good-annulus event
+/-- Under the affine laws, the probability of a bad good-annulus event
 is independent of its centre and positive radius, provided the unit event is
 measurable as a set of measures. -/
 theorem badGoodAnnulus_probability_eq_unit

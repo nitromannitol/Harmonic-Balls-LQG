@@ -62,7 +62,7 @@ theorem annulus_point_avoidance_of_unit
     ← mul_assoc, mul_inv_cancel₀ hc.ne', one_mul, hpx]
 
 /-- Good-annulus prevalence follows from the unit threshold and point
-avoidance at the unit radius, with the staged LQG regularity and affine laws. -/
+avoidance at the unit radius, with the LQG regularity and affine laws. -/
 theorem goodAnnuliSubRangeStep_of_ae_unit_and_unit_point_avoidance
     (hfull : LQGMeasureFullSupportStmt.{u})
     (hatom : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)

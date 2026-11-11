@@ -4,7 +4,7 @@ import HarmonicBalls.Draft.Section6
 # Measurable thresholds for good annuli
 
 The good-annulus predicate quantifies over Borel sets, and its measurability as an event is
-not immediate (GRAPH G16). A measurable positive random lower bound for its mass threshold
+not immediate. A measurable positive random lower bound for its mass threshold
 is sufficient to obtain a deterministic threshold with a bound on the outer probability of
 the bad event. This isolates the measurable-witness requirement in Lemma 6.4.
 -/
@@ -78,7 +78,7 @@ theorem exists_goodAnnulus_threshold_of_measurable_witness
 
 /-- If the countable family of dyadic good-annulus events is measurable, almost-sure existence
 of some positive threshold implies a deterministic threshold with the prescribed probability.
-The measurability hypothesis records the unresolved part of GRAPH G16. -/
+The measurability hypothesis records the unresolved part of the argument. -/
 theorem exists_goodAnnulus_threshold_of_measurable_events
     {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
     {μ : Ω → Measure ℂ} {r b : ℝ} {z : ℂ}

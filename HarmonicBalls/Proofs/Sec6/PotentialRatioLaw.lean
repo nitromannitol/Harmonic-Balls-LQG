@@ -83,7 +83,7 @@ theorem ae_continuous_lqg_greenPotential_extrema
 
 /-- For a fixed smooth domain, normalized dilations of an LQG measure give
 identically distributed potential ratios. The affine invariance and coordinate
-change inputs are staged assumptions. -/
+change inputs are assumptions. -/
 theorem identDistrib_lqg_greenPotentialExtremaRatio_normalizedPullback
     (hholder : GreenPotentialHolderStmt.{u}) {Ω : Type u} [MeasurableSpace Ω]
     {P : Measure Ω} {γ α₀ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)

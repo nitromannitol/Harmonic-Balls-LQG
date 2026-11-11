@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.RecenteredAnnularNormalizedRestriction
 
 The imported annulus iteration uses Leonardo Bonanno's proof of the
 Gwynne–Miller lemma in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`.
-The staged affine invariance of the field is used without a separate LQG
+The affine invariance of the field is used without a separate LQG
 measure coordinate-change input.
 -/
 

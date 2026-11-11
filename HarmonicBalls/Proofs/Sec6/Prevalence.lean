@@ -6,7 +6,7 @@ import HarmonicBalls.Proofs.Sec2.SingularWeight
 /-!
 # Lemmas 6.3 and 6.6 in the printed `α₀`-uniform order
 
-Assembly of docs/campaign/cex/AlphaUniformity.md §6.2-6.3 (operator E31). Fix `α₀ < Q` and let `μ₀` be the γ-LQG
+Assembly of the α₀-uniformity argument. Fix `α₀ < Q` and let `μ₀` be the γ-LQG
 measure of `h^ℂ` on the same probability space (`LQGMeasureExistence` at `α₀ = 0`). By the Weyl identity
 (`SingularWeightStep`), a.s. `μ_h = |x|^{-γα₀} μ₀` on `ℂ \ {0}`. For a grid point `z`, `|z| ≥ 10√ε`, and a radius
 `r ≤ ε^{3/4}`, the weight is flat (within a factor 2 of its value at the centre) on `B_{5r}(z)` once
@@ -81,7 +81,7 @@ theorem isComparableOn_grid {μ μ₀ : Measure ℂ} {e ε R : ℝ} {z : ℂ} (h
 
 end Section6
 
-/-- **Lemma 6.3** in the printed order (`a = a(b, γ)`, universal `c`), from step S-SubRange, the existence of `μ₀`
+/-- **Lemma 6.3** in the printed order (`a = a(b, γ)`, universal `c`), from the existence of `μ₀`
 and the Weyl identity. -/
 theorem manyGoodAnnuliStmt_of_subRange (hsub : GoodAnnuliSubRangeStep.{u})
     (hex : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -114,7 +114,7 @@ theorem manyGoodAnnuliStmt_of_subRange (hsub : GoodAnnuliSubRangeStep.{u})
     exact ⟨n, by rw [hn, one_mul]⟩
 
 /-- **Lemma 6.6** in the printed order (`a = a(b, γ)`, universal `c, C₃`, `C₁^±, C₂^±` depending on `a, γ`,
-`N₁ = N₁(b, γ)`), from step S-SubRange, the existence of `μ₀` and the Weyl identity. -/
+`N₁ = N₁(b, γ)`), from the existence of `μ₀` and the Weyl identity. -/
 theorem manyVeryGoodAnnuliStmt_of_subRange (hsub : VeryGoodAnnuliSubRangeStep.{u})
     (hex : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ 0 hC hcirc)
@@ -148,7 +148,7 @@ theorem manyVeryGoodAnnuliStmt_of_subRange (hsub : VeryGoodAnnuliSubRangeStep.{u
     obtain ⟨n, hn⟩ := hρ.2.1
     exact ⟨n, by rw [hn, one_mul]⟩
 
-/-- Lemma 6.3 from step S-SubRange and the staged literature inputs `LQGMeasureExistence` (α₀ = 0) and
+/-- Lemma 6.3 from the literature inputs `LQGMeasureExistence` (α₀ = 0) and
 `LQGMeasureWeylScaling` (Fact 2.1 III, α₀ = 0). -/
 theorem manyGoodAnnuliStmt_of_literature (hsub : GoodAnnuliSubRangeStep.{u})
     (hex : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -157,7 +157,7 @@ theorem manyGoodAnnuliStmt_of_literature (hsub : GoodAnnuliSubRangeStep.{u})
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureWeylScaling P γ 0 hC hcirc) : ManyGoodAnnuliStmt.{u} :=
   manyGoodAnnuliStmt_of_subRange hsub hex (singularWeightStep_of_weyl hW)
 
-/-- Lemma 6.6 from step S-SubRange and the staged literature inputs `LQGMeasureExistence` (α₀ = 0) and
+/-- Lemma 6.6 from the literature inputs `LQGMeasureExistence` (α₀ = 0) and
 `LQGMeasureWeylScaling` (Fact 2.1 III, α₀ = 0). -/
 theorem manyVeryGoodAnnuliStmt_of_literature (hsub : VeryGoodAnnuliSubRangeStep.{u})
     (hex : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)

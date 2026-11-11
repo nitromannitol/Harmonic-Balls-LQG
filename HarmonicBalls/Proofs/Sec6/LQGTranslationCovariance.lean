@@ -81,7 +81,7 @@ theorem isLQGMeasureOfField_translate
   simpa only [fieldCircleAverage_zero] using hω b
 
 /-- Normalized translated whole-plane LQG measures have a common law using
-only the staged affine GFF invariance input. -/
+only the affine GFF invariance input. -/
 theorem identDistrib_translateMeasure
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}

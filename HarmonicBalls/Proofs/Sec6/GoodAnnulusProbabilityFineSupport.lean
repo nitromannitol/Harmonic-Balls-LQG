@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.GoodAnnulusProbabilityZeroExistence
 
 The imported fine-support and annulus iteration arguments use Leonardo Bonanno's
 proof in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. Zero-strength
-LQG existence is a staged input pending source review.
+LQG existence is an input (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

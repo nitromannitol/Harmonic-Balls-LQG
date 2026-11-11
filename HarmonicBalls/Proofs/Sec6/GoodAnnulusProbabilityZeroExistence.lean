@@ -6,7 +6,7 @@ import HarmonicBalls.Proofs.Sec6.GoodAnnulusReduction
 
 The annulus iteration imported above uses Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. Zero-strength LQG
-existence is a staged input pending source review.
+existence is an input (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -95,7 +95,7 @@ theorem goodAnnulus_zero_probability_of_dyadic_phase
 
 
 /-- Lemma 6.4 follows from the phase-uniform zero-strength estimate and
-staged zero-strength existence, without an additional Weyl-scaling input. -/
+zero-strength existence, without an additional Weyl-scaling input. -/
 theorem goodAnnulusProbabilityStmt_of_dyadic_phase_and_zero_existence
     (hphase : ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ b ∈ Ioo (0 : ℝ) 1,
       ∀ p ∈ Ioo (0 : ℝ) 1, ∀ (Ω : Type u) [MeasurableSpace Ω]

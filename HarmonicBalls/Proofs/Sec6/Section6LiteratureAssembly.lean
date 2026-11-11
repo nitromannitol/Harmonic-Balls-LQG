@@ -4,11 +4,11 @@ import HarmonicBalls.Proofs.Sec6.GoodPrevalenceBall
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.ShellDecomposition
 
-/-! # Section 6 from the Green-potential result and staged LQG inputs
+/-! # Section 6 from the Green-potential result and LQG inputs
 
 The annulus iteration uses Leonardo Bonanno's proof of the Gwynne–Miller
 lemma in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6` through
-`AnnulusLawTransfer`. The staged hypotheses remain subject to source review.
+`AnnulusLawTransfer`. The hypotheses remain (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -18,7 +18,7 @@ open MeasureTheory
 universe u
 
 /-- All frozen numbered statements in Section 6 follow from the Green-potential
-clause of Proposition 2.5 and the explicitly staged whole-plane LQG inputs.
+clause of Proposition 2.5 and the explicitly whole-plane LQG inputs.
 Volume growth and full support are supplied by the Section 2 assembly. -/
 theorem section6_of_greenPotential_and_literature
     (hholder : GreenPotentialHolderStmt.{u})

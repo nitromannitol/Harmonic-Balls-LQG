@@ -2,11 +2,11 @@ import HarmonicBalls.Proofs.Sec6.Section6FromVolumeGrowth
 import HarmonicBalls.Proofs.Sec2.Assembly
 import HarmonicBalls.Proofs.Sec6.NonpositiveSingularityNonatomic
 
-/-! # Section 6 from staged literature inputs
+/-! # Section 6 from literature inputs
 
 The annulus iteration uses Leonardo Bonanno's proof of the Gwynne–Miller lemma
 in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The literature inputs
-below are explicit hypotheses and remain subject to operator source review.
+below are explicit hypotheses and remain (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -15,7 +15,7 @@ open MeasureTheory
 
 universe u
 
-/-- The Section 6 statements follow from the staged whole-plane ball-mass,
+/-- The Section 6 statements follow from the whole-plane ball-mass,
 affine-invariance, coordinate-change, existence, and non-atomicity inputs
 for positive singularity strengths. Weyl scaling is derived from vague
 convergence, and nonpositive singularities are handled by local comparison;

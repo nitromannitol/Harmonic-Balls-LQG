@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.GoodAnnulusThreshold
 
 The fine-support argument for the good-annulus estimate uses that positive random ratios
 with the same one-scale distribution remain bounded away from zero infinitely often.
-No independence between scales is required (E19 route (b), Section 1.3(A)).
+No independence between scales is required.
 -/
 
 namespace HarmonicBalls.Section6

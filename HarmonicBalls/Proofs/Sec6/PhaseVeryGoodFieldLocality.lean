@@ -63,7 +63,7 @@ theorem isFieldMeasurableModConst_phaseVeryGoodAnnulus_of_normalized_version
   exact propext ((hequiv.trans (phaseVeryGoodAnnulus_normalizedRestriction_size_annulus
     (μ ω) βminus ρ 0 N₀ a b C₁m C₁p C₂m C₂p C₃ phase hρ hN₀ hp.ne' hf)).symm)
 
-/-- Under full support and the staged affine laws, a very-good annulus at the
+/-- Under full support and the affine laws, a very-good annulus at the
 origin is local modulo constants, given nonatomicity and Brownian point
 avoidance. -/
 theorem isFieldMeasurableModConst_phaseVeryGoodAnnulus_zero_of_affine

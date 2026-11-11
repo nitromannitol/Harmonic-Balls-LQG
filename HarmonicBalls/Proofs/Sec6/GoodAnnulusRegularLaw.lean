@@ -81,7 +81,7 @@ theorem badGoodAnnulus_probability_eq_unit_of_point_avoidance
 
 /-- One reference field supplies a threshold for every realization, centre,
 and positive scale. Nonatomicity is assumed for each field to which the
-staged affine coordinate-change theorem is applied. -/
+affine coordinate-change theorem is applied. -/
 theorem exists_universal_goodAnnulus_probability_of_ae_unit_of_point_avoidance
     (hfull : LQGMeasureFullSupportStmt.{u})
     {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)

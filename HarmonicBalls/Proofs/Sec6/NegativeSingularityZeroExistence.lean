@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec6.SingularWeightChangeAwayFromOrigin
 
 The imported Section 6 annulus iteration uses Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. Zero-strength existence
-is a staged literature input pending operator source review.
+is a literature input (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

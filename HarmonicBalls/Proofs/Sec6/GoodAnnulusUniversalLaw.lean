@@ -138,7 +138,7 @@ theorem ae_unit_goodAnnulus_threshold_of_hitting_bounds
   exact hω.isLocallyFiniteMeasure
 
 /-- The zero-singularity estimate follows from unit-event measurability,
-almost-sure positive unit thresholds, and the staged affine laws. If there is
+almost-sure positive unit thresholds, and the affine laws. If there is
 no realization at the given parameter, the estimate is vacuous. -/
 theorem goodAnnulus_zero_probability_of_ae_unit
     (hmeas : ∀ b ∈ Ioo (0 : ℝ) 1, ∀ n : ℕ, MeasurableSet
@@ -180,7 +180,7 @@ theorem goodAnnulus_zero_probability_of_ae_unit
     intro Ω m P hC hcirc μ h hμ r hr z hd
     exact False.elim (hex ⟨Ω, m, P, hC, hcirc, μ, h, hμ⟩)
 
-/-- Lemma 6.4 follows from the unit-annulus premises and the explicit staged
+/-- Lemma 6.4 follows from the unit-annulus premises and the explicit
 LQG existence, coordinate-change, affine-invariance and Weyl-scaling inputs. -/
 theorem goodAnnulusProbabilityStmt_of_ae_unit
     (hmeas : ∀ b ∈ Ioo (0 : ℝ) 1, ∀ n : ℕ, MeasurableSet

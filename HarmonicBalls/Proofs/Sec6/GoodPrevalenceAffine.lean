@@ -34,7 +34,7 @@ theorem measure_ge_of_compl_le_ofReal {Ω : Type*} [MeasurableSpace Ω]
   rw [← hid] at hsum'
   exact ENNReal.le_of_add_le_add_right ENNReal.ofReal_ne_top hsum'
 
-/-- Under the staged affine laws, a unit-annulus threshold yields prevalence
+/-- Under the affine laws, a unit-annulus threshold yields prevalence
 once each good-annulus event has its recentered mod-constant locality witness. -/
 theorem exists_goodAnnulus_prevalence_of_ae_unit
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}

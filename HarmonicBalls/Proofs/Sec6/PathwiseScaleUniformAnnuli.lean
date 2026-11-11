@@ -145,7 +145,7 @@ theorem ae_exists_scale_goodAnnulus_thresholds_of_volumeGrowth
   exact exists_scale_goodAnnulus_thresholds_of_compact (μ ω) hω hs hb x
 
 /-- The same common full-measure event works for every existing singular limit.
-Zero-strength existence is a staged hypothesis pending source review. -/
+Zero-strength existence is a hypothesis (PENDING TRUTH CHECK). -/
 theorem ae_all_singular_exists_scale_goodAnnulus_thresholds
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)

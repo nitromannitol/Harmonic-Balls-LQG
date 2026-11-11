@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec9.AffineInvarianceAssembly
 
 The annulus iteration uses Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The coordinate-change and
-existence inputs are staged and await operator source review.
+existence inputs are (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

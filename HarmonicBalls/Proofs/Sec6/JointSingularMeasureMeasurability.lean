@@ -7,7 +7,7 @@ import Mathlib.Probability.Kernel.WithDensity
 
 The imported Section 6 assembly uses Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The existence assumptions
-below are staged literature inputs pending operator source review.
+below are literature inputs (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

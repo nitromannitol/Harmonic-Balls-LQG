@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.SingularityOriginNonatomic
 
 The annulus iteration uses Leonardo Bonanno's proof of the Gwynne–Miller lemma
 in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The literature inputs
-below are explicit hypotheses and remain subject to operator source review.
+below are explicit hypotheses and remain (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -14,7 +14,7 @@ open MeasureTheory
 
 universe u
 
-/-- Section 6 follows from the staged whole-plane ball-mass and affine laws,
+/-- Section 6 follows from the whole-plane ball-mass and affine laws,
 the coordinate-change law, and existence of subcritical LQG measures.
 Non-atomicity and Weyl scaling are derived from these inputs. -/
 theorem section6_of_literature_without_nonatomic

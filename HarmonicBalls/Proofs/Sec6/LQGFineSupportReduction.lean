@@ -26,7 +26,7 @@ theorem antitone_fineSupportScale : Antitone fineSupportScale := by
 universe u
 
 /-- Fine support at almost every centre follows from the potential hitting
-bound and the zero-one property, together with the staged LQG inputs. -/
+bound and the zero-one property, together with the LQG inputs. -/
 theorem ae_ae_lqg_fine_support_of_hitting_bounds
     (hholder : GreenPotentialHolderStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})

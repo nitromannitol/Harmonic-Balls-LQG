@@ -17,7 +17,7 @@ The universal constant of Proposition 6.1 is `c / log 8`, `c` that of Lemma 6.6 
   `Λ^z_t ∩ B_{ρ/2}(x₀)` lies in a connected component of `Λ^z_t ∩ B_ρ(x₀)`, whose mass in `𝔸_{ρ/2,ρ}(x₀)` is at most
   that of `Λ^z_t`).
 
-Both constants `α` and `c` are chosen before `α₀`, as printed (E31): those of Lemmas 6.6 and 6.11 are.
+Both constants `α` and `c` are chosen before `α₀`, as printed: those of Lemmas 6.6 and 6.11 are.
 -/
 
 namespace HarmonicBalls

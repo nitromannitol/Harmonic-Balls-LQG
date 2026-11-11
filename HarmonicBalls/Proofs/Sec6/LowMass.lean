@@ -6,7 +6,7 @@ import HarmonicBalls.Proofs.Sec6.Localization
 # Lemma 6.13 from the decay step and the maximum principle on discs
 
 The combinatorial part of the proof of Lemma 6.13 (lines 1725-1810 of paper/lqg_harmonic_ball-corrected.tex), with
-the corrections [C15] (`closure B_ρ(x₀) ⊂ B_1 \ {z}`) and GRAPH G23 (all `N ≥ C₃ log₇ ε_j^{-1/2}` good radii are used,
+the corrected closure condition `closure B_ρ(x₀) ⊂ B_1 \ {z}` and (all `N ≥ C₃ log₇ ε_j^{-1/2}` good radii are used,
 which gives `b^N` instead of `b^{N-1}`, so that every `C₃ > 0` is allowed). Let `ε = ε_j`, `x ∈ Λ̃_t ∩ S_j`.
 
 * Covering (line 1731): a lattice point `w ∈ (ερ/100) ℤ²` with `|x - w| ≤ ερ/100` (`exists_lattice_near`).
@@ -115,7 +115,7 @@ theorem ball_subset_of_mem_shell {ρ : ℝ} (hρ : 0 < ρ) {N₀ : ℕ} (hN₀ :
 
 end Section6
 
-/-- **Lemma 6.13** (corrected by [C15], every `C₃ > 0`) from the decay step (Step 2) and the maximum principle on
+/-- **Lemma 6.13** (corrected, every `C₃ > 0`) from the decay step (Step 2) and the maximum principle on
 discs, with `C' = log 2 / (2 log 7)`. -/
 theorem lowMassSmallOdometerStmt_of_steps (hdec : GoodAnnulusOdometerDecayStep.{u})
     (hdisc : ComponentOdometerDiscMaxStep.{u}) : LowMassSmallOdometerStmt.{u} := by

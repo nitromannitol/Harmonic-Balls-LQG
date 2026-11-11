@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.GoodAnnulusProbabilityZeroExistence
 
 The imported fine-support and annulus iteration arguments use Leonardo Bonanno's
 proof in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. Zero-strength
-LQG existence is a staged input pending source review.
+LQG existence is an input (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -96,7 +96,7 @@ theorem uniform_goodAnnulus_probability_of_volumeGrowth
   rw [heq]
   exact hbound r hr
 
-/-- Lemma 6.4 from volume growth and staged zero-strength LQG existence. -/
+/-- Lemma 6.4 from volume growth and zero-strength LQG existence. -/
 theorem goodAnnulusProbabilityStmt_of_volumeGrowth_zero_existence
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hE0 : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)

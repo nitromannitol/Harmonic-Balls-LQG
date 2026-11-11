@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.GoodPrevalenceAffine
 
 The imported annulus iteration uses Leonardo Bonanno's proof of the
 Gwynne–Miller lemma in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`.
-The affine GFF and coordinate-change inputs remain staged assumptions.
+The affine GFF and coordinate-change inputs remain assumptions.
 -/
 
 namespace HarmonicBalls.Section6
@@ -76,7 +76,7 @@ theorem isFieldMeasurableModConst_goodAnnulus_recentered
   simpa only [ν, mem_ofPred_eq, isGoodAnnulus_affineMeasure_translate γ hcirc μ r z a b ω] using hω
 
 /-- Good-annulus prevalence follows from the unit threshold and point
-avoidance at positive radii, with the staged LQG regularity and affine laws. -/
+avoidance at positive radii, with the LQG regularity and affine laws. -/
 theorem goodAnnuliSubRangeStep_of_ae_unit_and_point_avoidance
     (hfull : LQGMeasureFullSupportStmt.{u})
     (hatom : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)

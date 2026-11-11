@@ -4,16 +4,16 @@ import HarmonicBalls.Proofs.Sec6.ShellDecomposition
 /-!
 # Lemma 6.11 from Lemmas 6.8, 6.10, 6.12, 6.13
 
-The proof of Lemma 6.11 (lines 1828-1949 of paper/lqg_harmonic_ball-corrected.tex), with the fixes of GRAPH G22
+The proof of Lemma 6.11 (lines 1828-1949 of paper/lqg_harmonic_ball-corrected.tex), with the corrections
 (base case through Lemma 6.10 with `(s₁,s₂,s₃,s₄) = (1/4,1/2,7/8,1)` and domain monotonicity of `SG`, plus the
-case `𝔸_{ρ/2,7ρ/8}(x₀) ⊆ Λ^z_t` excluded by the mass of a ball `B_{ρ/8}(y)`), G23 (all `C₃ > 0`; `b` from the
+case `𝔸_{ρ/2,7ρ/8}(x₀) ⊆ Λ^z_t` excluded by the mass of a ball `B_{ρ/8}(y)`), (all `C₃ > 0`; `b` from the
 universal `C'` of Lemma 6.13: `b := 2^{-2β⁻/(C'C₃)}`, so `b^{C'C₃ n} = 2^{-2β⁻ n}`; this replaces the slip at
-line 1916) and G25 (`Λ̃_t` is the statement's component of `Λ^z_t ∩ B_ρ(x₀)`).
+line 1916) and (`Λ̃_t` is the statement's component of `Λ^z_t ∩ B_ρ(x₀)`).
 
-Constants (chosen before `α₀`, as printed, operator E33(b)): `C₄` of Lemma 6.8 at `(1,3,5,7)`, `c` of Lemma 6.10 at
+Constants (chosen before `α₀`, as printed): `C₄` of Lemma 6.8 at `(1,3,5,7)`, `c` of Lemma 6.10 at
 `(1/4,1/2,7/8,1)`, `C'` of Lemma 6.13; `θ = a 2^{-β⁻} C₁⁻ / ((C₄ ∨ 1) c C₂⁺)`,
 `N₁ = max(200, ⌈-log θ / (β⁻ log 2)⌉)` (eq:choice-of-N1) and `α = a 2^{-N₀β⁻} (C₁⁻ ∧ 1) 8^{-β⁻} / 2`
-(eq:choice-of-alpha, corrected as in G22).
+(eq:choice-of-alpha, corrected).
 
 The deterministic core `harnack_core` runs the induction of lines 1857-1948 with `K_j = a M_ρ(x₀) ε_j^{β⁻}`:
 the mass bound at shell `j` gives, by Lemma 6.13, the odometer bound at `j+1`, which gives, by Lemma 6.8 (in the form
@@ -157,7 +157,7 @@ theorem harnack_core {μ : Measure ℂ} {β : ℝ} (hβ : 0 < β) {z x₀ : ℂ}
   have hB1 : ball x₀ ρ ⊆ ball 0 1 := fun x hx => (hball (ball_subset_closedBall hx)).1
   have hAA : annulus x₀ (ρ / 2) ρ ⊆ A' := annulus_subset_annulus (by linarith) (by linarith)
   have hC4' : 0 < max C₄ 1 := lt_max_of_lt_right one_pos
-  -- the case `𝔸_{ρ/2,7ρ/8}(x₀) ⊆ Λ^z_t` (GRAPH G22)
+  -- the case `𝔸_{ρ/2,7ρ/8}(x₀) ⊆ Λ^z_t`
   by_cases hne : ((cluster μ 1 z t)ᶜ ∩ annulus x₀ (ρ / 2) (7 / 8 * ρ)).Nonempty
   swap
   · by_contra hcon
@@ -373,7 +373,7 @@ theorem harnack_core {μ : Measure ℂ} {β : ℝ} (hβ : 0 < β) {z x₀ : ℂ}
 
 end Section6
 
-/-- **Lemma 6.11** (printed order, `b`, `N₁`, `α` chosen before `α₀`, operator E33(b)) from Lemmas 6.8, 6.10, 6.13,
+/-- **Lemma 6.11** (printed order, `b`, `N₁`, `α` chosen before `α₀`) from Lemmas 6.8, 6.10, 6.13,
 the shell decomposition (Lemma 6.12, proved), the maximum principle on components and domain monotonicity of `SG`. -/
 theorem veryGoodAnnulusHarnackTypeStmt_of_lemmas (h68 : AnnulusMassBoundByOdometerStmt.{u})
     (h610 : OdometerBoundByAnnulusMassStmt.{u}) (h613 : LowMassSmallOdometerStmt.{u})

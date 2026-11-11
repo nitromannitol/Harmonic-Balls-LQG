@@ -2,7 +2,7 @@ import HarmonicBalls.Proofs.Sec6.SizeRatioScalingLaw
 
 /-! # Scaling of relative annular collar events
 
-The LQG scale-law statement below uses the staged affine and coordinate-change
+The LQG scale-law statement below uses the affine and coordinate-change
 inputs. It concerns a fixed centre and does not assert a rooted law.
 -/
 
@@ -57,7 +57,7 @@ theorem relativeCollarFailure_map_inv_smul (μ : Measure ℂ) {k : ℝ} (hk : 0 
   ring_nf
 
 /-- The centred failure probability is independent of positive scale under
-the staged GFF affine and LQG coordinate-change laws. -/
+the GFF affine and LQG coordinate-change laws. -/
 theorem measure_relativeCollarFailure_scale
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)

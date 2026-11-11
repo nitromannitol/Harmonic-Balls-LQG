@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec6.Section6FromVolumeGrowth
 
 The annulus iteration uses Leonardo Bonanno's proof of the Gwynne–Miller lemma
 in `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The zero-strength
-existence input is staged and remains subject to operator source review.
+existence input is (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
