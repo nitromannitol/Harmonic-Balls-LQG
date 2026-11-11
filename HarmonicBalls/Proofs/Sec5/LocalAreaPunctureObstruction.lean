@@ -106,7 +106,4 @@ theorem punctured_disc_infimum_not_admissible_of_local_area_lower_bound
     hz.1 ha haz ht hC hV haV hμ
   exact leastSupersolutionOn_punctured_disc_not_mem_of_negative ha hz ht.le hw hn
 
-#print axioms exists_disc_supersolution_neg_of_local_area_lower_bound
-#print axioms punctured_disc_infimum_not_admissible_of_local_area_lower_bound
-
 end HarmonicBalls

@@ -116,9 +116,4 @@ theorem greenFunction_ball_sdiff_of_locallyFiniteRankOn
     EReal.toReal_coe, greenFunction, ite_eq_left ⟨hz.1, hx.1, Ne.symm hxz⟩,
     greatestHarmonicMinorant_ball hz.1 hx.1, EReal.toReal_coe]
 
-#print axioms harmonic_sub_le_of_locallyFiniteRankOn
-#print axioms IsHarmonicMinorant.le_greatestHarmonicMinorantBall_of_locallyFiniteRankOn
-#print axioms greatestHarmonicMinorant_ball_sdiff_of_locallyFiniteRankOn
-#print axioms greenFunction_ball_sdiff_of_locallyFiniteRankOn
-
 end HarmonicBalls

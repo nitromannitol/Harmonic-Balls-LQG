@@ -215,7 +215,4 @@ theorem not_mem_supersolutionsOn_locallyFiniteRankOn_punctured_of_compact_contai
   exact (hcl hboundary).2 ha
 
 
-#print axioms leastSupersolutionOn_locallyFiniteRankOn_punctured_disc_mem_iff
-#print axioms not_mem_supersolutionsOn_locallyFiniteRankOn_punctured_of_compact_containment
-
 end HarmonicBalls

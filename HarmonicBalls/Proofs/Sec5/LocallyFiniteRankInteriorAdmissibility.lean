@@ -76,7 +76,4 @@ theorem not_mem_supersolutionsOn_of_locallyFiniteRankOn_interior_puncture
   exact hneq ((continuousWithinAt_locallyFiniteRankOn_punctured_infimum_at_interior_iff
     hμ hR hV K hKclosed hK haR ha hz ht).mp ((hadm.1 a hac).mono subset_closure))
 
-#print axioms continuousWithinAt_locallyFiniteRankOn_punctured_infimum_at_interior_iff
-#print axioms not_mem_supersolutionsOn_of_locallyFiniteRankOn_interior_puncture
-
 end HarmonicBalls

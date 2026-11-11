@@ -160,10 +160,4 @@ theorem regularizedFamily_strongCompatibility_locallyFiniteRankOn_punctured_disc
     exact regularizedFamily_closure_eq_discCluster_of_compact_containment
       hR hz.1 ht hΛ hopen hv hdisc
 
-#print axioms leastSupersolutionOn_locallyFiniteRankOn_punctured_disc_le_supersolution
-#print axioms leastSupersolutionOn_locallyFiniteRankOn_punctured_disc_eq
-#print axioms clusterOn_locallyFiniteRankOn_punctured_disc_eq_sdiff
-#print axioms closure_clusterOn_locallyFiniteRankOn_punctured_disc_eq
-#print axioms regularizedFamily_strongCompatibility_locallyFiniteRankOn_punctured_disc
-
 end HarmonicBalls

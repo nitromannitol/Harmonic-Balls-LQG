@@ -181,8 +181,4 @@ theorem exists_fieldLocal_bounded_open_firstContact_family
   have hfin : H ω z < ⊤ := lt_of_le_of_lt hbound hμfin
   exact ⟨hpos, hbound, hfin, (hcharω z).1, (hcharω z).2 hpos hfin⟩
 
-#print axioms closure_eq_closure_iUnion_earlier_rat_of_hausdorffContinuousOn
-#print axioms exists_fieldLocal_open_firstContact_family
-#print axioms exists_fieldLocal_bounded_open_firstContact_family
-
 end HarmonicBalls

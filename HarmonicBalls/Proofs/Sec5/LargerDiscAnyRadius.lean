@@ -123,9 +123,4 @@ theorem ae_cluster_hausdorff_continuity_of_exists_larger_disc_closure_eq
     (fun s s' hs hss => hmono s s' 1 hs hss (by norm_num) z hz)
     (hright z hz t ht hEq)
 
-#print axioms ae_cluster_hausdorff_continuity_of_exists_larger_disc_closure_eq
-
-#print axioms ae_cluster_right_continuity_of_exists_larger_disc_closure_eq
-
-#print axioms ae_cluster_right_continuity_of_closure_eq_larger_disc
 end HarmonicBalls

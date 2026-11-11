@@ -115,9 +115,4 @@ theorem regularizedFamily_eq_of_restrict_eq_greenRegular_deletion
   exact regularizedFamily_eq_of_component_restrict_sdiff_relative_countable
     hμ hν hVμ hVν hU rfl hK hμν ht hΛ hΛ' (Or.inl hΛcl)
 
-#print axioms regularizedFamily_eq_of_restrict_eq_greenRegular_deletion
-#print axioms regularizedFamily_closure_eq_deleted_of_restrict_eq_greenRegular
-#print axioms clusterOn_sdiff_eq_of_restrict_eq_greenRegular_component
-#print axioms closure_clusterOn_sdiff_eq_of_restrict_eq_greenRegular_component
-
 end HarmonicBalls

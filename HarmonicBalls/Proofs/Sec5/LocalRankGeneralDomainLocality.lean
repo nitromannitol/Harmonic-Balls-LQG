@@ -218,12 +218,4 @@ theorem IsLQGLimit.regularizedFamily_eq_of_sdiff_local_rank_or
     hKc hK (hμlim.restrict_eq hνlim (hU.sdiff hKc) hloc)
     hqc hq ht hz hw hopenU hΛ hΛ' hcl
 
-#print axioms regularizedFamily_eq_of_restrict_eq_of_sdiff_local_rank_or
-#print axioms IsLQGLimit.regularizedFamily_eq_of_sdiff_local_rank_or
-#print axioms regularizedFamily_closure_eq_clusterOn_sdiff_of_green_boundary
-#print axioms regularizedFamily_strongCompatibility_sdiff_of_local_rank
-#print axioms regularizedFamily_closure_eq_clusterOn_sdiff_of_local_rank
-#print axioms regularizedFamily_eq_of_restrict_eq_of_sdiff_local_rank
-#print axioms IsLQGLimit.regularizedFamily_eq_of_sdiff_local_rank
-
 end HarmonicBalls

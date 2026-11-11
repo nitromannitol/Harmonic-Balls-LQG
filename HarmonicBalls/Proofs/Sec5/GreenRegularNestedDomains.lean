@@ -49,6 +49,4 @@ theorem nested_greenRegular_cluster_and_odometer_eq
     (hdisc.trans hUV)
   exact heU.trans heV.symm
 
-#print axioms nested_greenRegular_cluster_and_odometer_eq
-
 end HarmonicBalls

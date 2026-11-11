@@ -796,14 +796,4 @@ theorem IsLQGLimit.regularizedFamily_eq_of_relative_countable
     hD hK (hμlim.restrict_eq hνlim hD hloc) hqc hq ht hz hw hopenU hΛ hΛ' hcl
 
 
-#print axioms regularizedFamily_strongCompatibility_sdiff_of_relative_countable
-#print axioms regularizedFamily_eq_of_restrict_eq_of_relative_countable
-#print axioms IsLQGLimit.regularizedFamily_eq_of_relative_countable
-#print axioms greenFunction_sdiff_of_relative_countable
-#print axioms clusterOn_sdiff_of_relative_countable
-#print axioms closure_clusterOn_sdiff_of_relative_countable
-#print axioms greenFunction_sdiff_of_local_countable
-#print axioms clusterOn_sdiff_of_local_countable
-#print axioms closure_clusterOn_sdiff_of_local_countable
-
 end HarmonicBalls

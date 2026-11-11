@@ -56,6 +56,4 @@ theorem ae_strongCompatibility_of_greenRegular_components
     (fun r hr hzr => (hopen t r ht hr z hzr).1) (by simpa using hcl)
   simpa using hresult
 
-#print axioms ae_strongCompatibility_of_greenRegular_components
-
 end HarmonicBalls

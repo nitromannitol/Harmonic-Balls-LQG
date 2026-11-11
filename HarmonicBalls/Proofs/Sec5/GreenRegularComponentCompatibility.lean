@@ -66,8 +66,4 @@ theorem regularizedFamily_strongCompatibility_of_greenRegular_component
   exact regularizedFamily_strongCompatibility_of_component_boundary hU hUb hz ht
     hv hboundary hΛ hopen hcl
 
-#print axioms regularizedFamily_strongCompatibility_of_greenRegular_component
-
-#print axioms regularizedFamily_strongCompatibility_of_disc_component
-
 end HarmonicBalls

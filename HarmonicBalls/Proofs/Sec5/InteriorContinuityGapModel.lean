@@ -46,6 +46,4 @@ theorem exists_open_connected_local_continuity_but_boundary_jump :
     obtain ⟨x, hx, hnot⟩ := hne
     exact hnot (hsub (by simpa [rightClosedEnvelope, dyadicScale] using hx))
 
-#print axioms exists_open_connected_local_continuity_but_boundary_jump
-
 end HarmonicBalls

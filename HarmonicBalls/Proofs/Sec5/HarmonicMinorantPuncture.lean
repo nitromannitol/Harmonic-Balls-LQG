@@ -66,8 +66,4 @@ theorem IsHarmonicMinorant.harmonicOnNhd_add_log_punctured
   have hlog := (han.harmonicAt_log_norm (sub_ne_zero.mpr hxa)).const_smul (c := ε)
   convert (hh.1 x hx.1).add hlog using 1
 
-#print axioms IsHarmonicMinorant.harmonicOnNhd_add_log_punctured
-#print axioms exists_uniform_harmonicMinorant_upper_bound_ne_pole
-#print axioms IsHarmonicMinorant.tendsto_add_log_atBot_at_puncture
-
 end HarmonicBalls

@@ -63,7 +63,4 @@ theorem ae_locallyFiniteRankOn_puncture_inadmissible_all_centres
     (hvol.2 1 zero_lt_one) K hKclosed hK haR ha ⟨hz, hzK⟩ ht
     (ne_of_lt (hneg z hz a haR haz t ht))) hadm
 
-#print axioms ae_locallyFiniteRankOn_puncture_discontinuous_all_centres
-#print axioms ae_locallyFiniteRankOn_puncture_inadmissible_all_centres
-
 end HarmonicBalls

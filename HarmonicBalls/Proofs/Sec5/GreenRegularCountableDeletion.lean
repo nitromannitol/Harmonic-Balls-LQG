@@ -69,8 +69,4 @@ theorem clusterOn_two_countable_deletions_greenRegular_component
   · exact (closure_clusterOn_sdiff_of_countable_greenRegular_component hμ hV hU hUK hUb ht hzK hK hboundary).trans
       (closure_clusterOn_sdiff_of_countable_greenRegular_component hμ hV hU hUL hUb ht hzL hL hboundary).symm
 
-#print axioms clusterOn_sdiff_of_countable_greenRegular_component
-#print axioms closure_clusterOn_sdiff_of_countable_greenRegular_component
-#print axioms clusterOn_two_countable_deletions_greenRegular_component
-
 end HarmonicBalls

@@ -236,15 +236,4 @@ theorem exists_tendsto_odometerOn_of_regular_exhaustion
   · exact fun n => le_ciSup hbounded n
   · exact tendsto_atTop_ciSup hfmono hbounded
 
-#print axioms odometerOn_nonneg
-#print axioms clusterOn_subset_of_nested_regular
-#print axioms exists_tendsto_odometerOn_of_regular_exhaustion
-#print axioms odometerOn_le_of_green_difference
-#print axioms exists_green_difference_of_nested_regular
-#print axioms odometerOn_le_of_nested_regular
-
-#print axioms exists_green_difference_of_compactly_contained_regular
-#print axioms odometerOn_le_of_compactly_contained_regular
-#print axioms clusterOn_subset_of_compactly_contained_regular
-
 end HarmonicBalls

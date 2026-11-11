@@ -135,12 +135,4 @@ theorem disc_cluster_sdiff_subset_locally_finite_punctured
       rw [hG]
       linarith
 
-#print axioms laplacianLE_zero_of_locally_finite_removal
-#print axioms laplacianLE_of_locally_finite_removal
-#print axioms laplacianLE_disc_of_locally_finite_removal
-#print axioms closure_sdiff_locally_finite_ball
-#print axioms locally_finite_punctured_disc_supersolution_mem_disc
-#print axioms leastSupersolution_le_locally_finite_punctured_disc
-#print axioms disc_cluster_sdiff_subset_locally_finite_punctured
-
 end HarmonicBalls

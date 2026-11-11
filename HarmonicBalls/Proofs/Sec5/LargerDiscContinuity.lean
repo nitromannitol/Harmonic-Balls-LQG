@@ -89,8 +89,4 @@ theorem ae_cluster_hausdorff_continuity_of_closure_eq_radius_two
     (fun s s' hs hss => hmono s s' 1 hs hss (by norm_num) z hz)
     (hright z hz t ht heq)
 
-#print axioms ae_cluster_hausdorff_continuity_of_closure_eq_radius_two
-
-#print axioms ae_cluster_right_continuity_of_closure_eq_radius_two
-
 end HarmonicBalls

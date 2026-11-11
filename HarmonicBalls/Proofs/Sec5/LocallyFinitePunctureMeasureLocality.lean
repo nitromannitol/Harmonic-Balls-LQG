@@ -125,11 +125,4 @@ theorem IsLQGLimit.clusterOn_eq_of_locally_finite_punctured_disc
   clusterOn_eq_of_restrict_locally_finite_punctured_disc hμ hν hR hVμ hVν hK hz ht
     (hμlim.restrict_eq hνlim (isOpen_locally_finite_punctured_ball hK) hloc)
 
-#print axioms cluster_eq_of_restrict_locally_finite_punctured_disc
-#print axioms clusterOn_eq_of_restrict_locally_finite_punctured_disc
-#print axioms IsLQGLimit.clusterOn_eq_of_locally_finite_punctured_disc
-#print axioms countable_inter_ball_of_locally_finite
-#print axioms regularizedFamily_eq_of_restrict_eq_locally_finite_punctured_disc
-#print axioms IsLQGLimit.regularizedFamily_eq_of_locally_finite_punctured_disc
-
 end HarmonicBalls

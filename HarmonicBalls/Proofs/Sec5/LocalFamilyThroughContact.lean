@@ -184,8 +184,4 @@ theorem exists_fieldLocal_bounded_open_family_through_contact
     (hcharω z).2.2.2.1, (fun t ht => hFeqω.1 (z, t) ht),
     (fun t s ht hs => hFeqω.2 z t s ht hs), (hcharω z).2.2.2.2⟩
 
-#print axioms exists_fieldLocal_regularizedFamily_through_horizon
-#print axioms exists_fieldLocal_open_family_through_contact
-#print axioms exists_fieldLocal_bounded_open_family_through_contact
-
 end HarmonicBalls

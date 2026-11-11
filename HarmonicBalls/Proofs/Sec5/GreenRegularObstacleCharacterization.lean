@@ -195,10 +195,4 @@ theorem candidate_uniqueness
   exact (candidate_eqOn_leastSupersolutionOn hμ hR hV hU hsub hz ht hregular hw hwb hwlap).trans
     (candidate_eqOn_leastSupersolutionOn hμ hR hV hU hsub hz ht hregular hv hvb hvlap).symm
 
-#print axioms candidate_uniqueness
-#print axioms isOpen_candidate_noncontact
-#print axioms eqOn_of_obstacle_comparison
-#print axioms candidate_eqOn_leastSupersolutionOn
-#print axioms candidate_noncontact_eq_clusterOn
-
 end HarmonicBalls

@@ -149,10 +149,4 @@ theorem not_mem_supersolutionsOn_locallyFiniteRankOn_punctured_of_interior_compa
     heq.symm ▸ subset_closure hac
   exact (hcl hboundary).2 ha
 
-#print axioms inter_ball_subset_cluster_of_locallyFiniteRankOn_punctured_admissible
-#print axioms not_mem_supersolutionsOn_locallyFiniteRankOn_punctured_of_interior_compact_containment
-#print axioms leastSupersolution_mem_locallyFiniteRankOn_punctured_disc_of_interior_zero
-#print axioms leastSupersolutionOn_locallyFiniteRankOn_punctured_disc_eq_on_closedBall_of_interior_zero
-#print axioms leastSupersolutionOn_locallyFiniteRankOn_punctured_disc_mem_iff_interior_zero
-
 end HarmonicBalls

@@ -384,13 +384,4 @@ theorem closure_clusterOn_sdiff_of_local_rank
   intro x hx
   exact ⟨hx.1, hx.2.1⟩
 
-#print axioms clusterOn_sdiff_of_local_rank
-#print axioms closure_clusterOn_sdiff_of_local_rank
-#print axioms leastSupersolutionOn_sdiff_le_supersolution_of_local_rank
-#print axioms leastSupersolutionOn_sdiff_eq_of_local_rank
-#print axioms exists_harmonic_green_correction_of_local_rank
-#print axioms greenFunction_sdiff_of_local_rank
-#print axioms LocallyFiniteRank.inter_closed_of_subset_domain
-#print axioms exists_harmonic_extension_of_local_rank
-
 end HarmonicBalls

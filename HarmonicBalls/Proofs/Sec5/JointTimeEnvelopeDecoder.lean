@@ -79,9 +79,4 @@ theorem countable_mem_rightClosedEnvelope_diff
   have hsub := (closure_dyadic_iInter_subset_iff_right_continuous ht.1 hmono hbound).mpr hcont
   exact ht.2.2 (hsub ht.2.1)
 
-#print axioms exists_measurable_rightClosedEnvelope_joint_time_of_volumeGrowth
-#print axioms exists_measurableSet_mem_rightClosedEnvelope_joint_time_of_volumeGrowth
-#print axioms exists_measurableSet_mem_rightClosedEnvelope_diff_joint_time_of_volumeGrowth
-#print axioms countable_mem_rightClosedEnvelope_diff
-
 end HarmonicBalls

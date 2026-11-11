@@ -60,8 +60,4 @@ theorem IsLQGLimit.regularizedFamily_eq_of_locallyFiniteRankOn_deletion
   regularizedFamily_eq_of_restrict_sdiff_locallyFiniteRankOn hμ hν hVμ hVν hU hK
     (hμlim.restrict_eq hνlim (hU.sdiff hKc) hloc) ht hΛ hΛ' hcl
 
-#print axioms restrict_eq_of_restrict_sdiff_locallyFiniteRankOn
-#print axioms regularizedFamily_eq_of_restrict_sdiff_locallyFiniteRankOn
-#print axioms IsLQGLimit.regularizedFamily_eq_of_locallyFiniteRankOn_deletion
-
 end HarmonicBalls

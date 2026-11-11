@@ -62,6 +62,4 @@ theorem ae_greenRegular_clusterOn_quadrature
   exact general_clusterOn_subharmonic_quadrature_of_frontier_null hvol.1 hR (hvol.2 R hR)
     hU hsub hz ht hcl hfront hO hΛO hq hqsub
 
-#print axioms ae_greenRegular_clusterOn_quadrature
-
 end HarmonicBalls

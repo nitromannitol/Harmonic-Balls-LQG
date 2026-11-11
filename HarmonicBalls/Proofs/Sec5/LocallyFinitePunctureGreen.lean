@@ -108,8 +108,4 @@ theorem greenFunction_locally_finite_punctured_ball {R : ℝ} {z x : ℂ}
     greenFunction, ite_eq_left ⟨hz.1, hx.1, Ne.symm hxz⟩,
     greatestHarmonicMinorant_ball hz.1 hx.1, EReal.toReal_coe]
 
-#print axioms IsHarmonicMinorant.le_greatestHarmonicMinorantBall_locally_finite_punctured
-#print axioms greatestHarmonicMinorant_locally_finite_punctured_ball
-#print axioms greenFunction_locally_finite_punctured_ball
-
 end HarmonicBalls

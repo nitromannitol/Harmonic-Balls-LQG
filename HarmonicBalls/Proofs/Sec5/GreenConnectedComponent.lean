@@ -214,16 +214,4 @@ theorem clusterOn_subset_connectedComponentIn
   · have hxpos : 0 < leastSupersolutionOn μ U z t x := by simpa [hG] using hx
     exact (not_lt_of_ge hv) hxpos
 
-#print axioms greenFunction_eq_connectedComponentIn_all
-#print axioms supersolutionsOn_subset_connectedComponentIn
-#print axioms clusterOn_connectedComponentIn_subset
-#print axioms greatestHarmonicMinorant_eq_of_disjoint_open_union
-#print axioms greenFunction_eq_of_disjoint_open_union
-#print axioms greenFunction_eq_connectedComponentIn
-#print axioms IsOpen.sdiff_connectedComponentIn
-#print axioms greenFunction_eq_zero_of_not_mem_connectedComponentIn
-#print axioms clusterOn_subset_connectedComponentIn
-#print axioms harmonicOnNhd_piecewise_of_disjoint_open
-#print axioms greenFunction_eq_zero_of_disjoint_open_components
-
 end HarmonicBalls

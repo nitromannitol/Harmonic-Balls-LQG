@@ -86,8 +86,4 @@ theorem exists_measurable_closedCluster_joint_time_of_volumeGrowth
     rw [hcorrect ν hloc ⟨βminus, βplus, hv⟩ t ht]
     exact (mem_closure_iff_denseSeq hopen x).symm
 
-#print axioms exists_measurableSet_mem_cluster_joint_time_of_volumeGrowth
-#print axioms exists_measurable_cluster_joint_time_of_volumeGrowth
-#print axioms exists_measurable_closedCluster_joint_time_of_volumeGrowth
-
 end HarmonicBalls

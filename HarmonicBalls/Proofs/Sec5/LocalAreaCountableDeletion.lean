@@ -30,6 +30,4 @@ theorem relative_countable_disc_infimum_not_admissible_of_local_area_lower_bound
     hμloc hR hV K hD hK hz ht).mp hadm a haK ha
   linarith
 
-#print axioms relative_countable_disc_infimum_not_admissible_of_local_area_lower_bound
-
 end HarmonicBalls

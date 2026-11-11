@@ -110,10 +110,4 @@ theorem IsWholePlaneGFF.eq_zero_of_quasiInvariant_inner_circleAverage_shift
     Ioo_subset_Ioc_self (by rw [closure_Ioo (by norm_num : (0 : ℝ) ≠ 1)]; exact Ioc_subset_Icc_self)
   exact heq' ⟨zero_lt_one, le_rfl⟩
 
-#print axioms cluster_eq_of_restrict_eq_smul
-#print axioms ae_cluster_right_continuous_of_quasiInvariant_local_mass_scaling
-#print axioms ae_lqg_cluster_right_continuous_of_quasiInvariant_local_mass_scaling
-#print axioms IsWholePlaneGFF.eq_zero_of_quasiInvariant_circleAverage_shift
-#print axioms IsWholePlaneGFF.eq_zero_of_quasiInvariant_inner_circleAverage_shift
-
 end HarmonicBalls

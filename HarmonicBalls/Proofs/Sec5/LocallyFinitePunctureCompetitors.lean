@@ -240,13 +240,4 @@ theorem regularizedFamily_strongCompatibility_locally_finite_punctured_disc
     exact regularizedFamily_closure_eq_discCluster_of_compact_containment
       hR hz.1 ht hΛ hopen hv hdisc
 
-#print axioms supersolution_lower_bound_near_sphere
-#print axioms add_shift_finset_barrier_mem_supersolutionsOn_locally_finite
-#print axioms leastSupersolutionOn_locally_finite_punctured_disc_le_supersolution
-#print axioms leastSupersolutionOn_locally_finite_punctured_disc_eq
-#print axioms clusterOn_locally_finite_punctured_disc_eq_sdiff
-#print axioms closure_sdiff_locally_finite_of_isOpen
-#print axioms closure_clusterOn_locally_finite_punctured_disc_eq
-#print axioms regularizedFamily_strongCompatibility_locally_finite_punctured_disc
-
 end HarmonicBalls

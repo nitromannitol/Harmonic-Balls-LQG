@@ -361,12 +361,4 @@ theorem general_clusterOn_harmonic_mean_value_of_frontier_null
   have h := (general_clusterOn_harmonic_quadrature_of_frontier_null hμ hR hV hU hsub hz ht hcl hfront).2 O q hO hΛO hq
   rw [h.2, mul_div_cancel_left₀ _ (ne_of_gt ht)]
 
-#print axioms general_clusterOn_quadrature
-#print axioms general_clusterOn_subharmonic_quadrature_of_frontier_null
-#print axioms general_clusterOn_harmonic_mean_value_of_frontier_null
-#print axioms general_clusterOn_smooth_laplacian_quadrature_of_frontier_null
-#print axioms general_clusterOn_smooth_laplacian_quadrature
-#print axioms general_clusterOn_harmonic_quadrature
-#print axioms general_clusterOn_harmonic_quadrature_of_frontier_null
-
 end HarmonicBalls

@@ -73,8 +73,6 @@ theorem tendsto_greenRegular_shifted_obstacle_atBot
   dsimp only [obstacle]
   nlinarith
 
-#print axioms tendsto_greenRegular_shifted_obstacle_atBot
-
 /-- A continuous superharmonic function on a bounded open domain is
 nonnegative if its boundary values are nonnegative. -/
 theorem IsSuperharmonicOn.nonneg_of_nonneg_boundary
@@ -111,8 +109,6 @@ theorem IsSuperharmonicOn.nonneg_of_nonneg_boundary
   by_contra h
   have hxW : x ∈ W := ⟨hx, not_le.mp h⟩
   simp [hWe] at hxW
-
-#print axioms IsSuperharmonicOn.nonneg_of_nonneg_boundary
 
 /-- Nonnegative superharmonic majorants of an obstacle with a distinguished
 pole. No condition is imposed at the pole. -/
@@ -165,9 +161,6 @@ theorem shifted_supersolution_mem_nonnegativeSuperharmonicMajorants
   · intro x hx hxz
     dsimp only
     linarith [hw.2.2 x hx hxz]
-
-#print axioms greenPotentialBall_mem_nonnegativeSuperharmonicMajorants
-#print axioms shifted_supersolution_mem_nonnegativeSuperharmonicMajorants
 
 /-- The pointwise infimum of the nonnegative majorants. -/
 noncomputable def nonnegativeMajorantInf (U : Set ℂ) (z : ℂ) (β : ℂ → ℝ) (x : ℂ) : ℝ :=
@@ -379,11 +372,6 @@ theorem continuousAt_nonnegativeMajorantInf_pole
       exact (hδ₁β ⟨ball_subset_ball hδ1.le hy, hyz⟩).le
   exact continuousAt_iff_lower_upperSemicontinuousAt.2 ⟨hlsc, husc⟩
 
-#print axioms continuousAt_nonnegativeMajorantInf_pole
-#print axioms continuousAt_nonnegativeMajorantInf_of_ne_pole
-#print axioms upperSemicontinuousAt_nonnegativeMajorantInf_of_poisson
-#print axioms isSuperharmonicOn_nonnegativeMajorantInf
-
 /-- The least nonnegative majorant lies between the shifted obstacle and
 the enclosing-disc potential, away from the pole. -/
 theorem nonnegativeMajorantInf_green_bounds
@@ -457,9 +445,6 @@ theorem continuousOn_nonnegativeMajorantInf_green
       exact (nonnegativeMajorantInf_green_bounds hμ hR hV hsub ht.le hy hyz).1
     · filter_upwards [self_mem_nhdsWithin, hnear] with y hy hyz
       exact (nonnegativeMajorantInf_green_bounds hμ hR hV hsub ht.le hy hyz).2
-
-#print axioms nonnegativeMajorantInf_green_bounds
-#print axioms continuousOn_nonnegativeMajorantInf_green
 
 /-- On a bounded open Green-regular domain, the frozen least supersolution
 is itself admissible. The measure is locally finite and satisfies the
@@ -536,8 +521,6 @@ theorem leastSupersolutionOn_mem_of_greenRegular
     rw [heq hx]
     exact hv.2.2 x hx hxz
 
-#print axioms leastSupersolutionOn_mem_of_greenRegular
-
 /-- Admissibility on a bounded Green-regular domain under all-scale volume
 growth. No compact containment of a cluster is assumed. -/
 theorem leastSupersolutionOn_mem_of_bounded_greenRegular
@@ -551,8 +534,6 @@ theorem leastSupersolutionOn_mem_of_bounded_greenRegular
   obtain ⟨R, hRsub⟩ := hUb.subset_ball (0 : ℂ)
   have hR : 0 < R := lt_of_le_of_lt dist_nonneg (mem_ball.mp (hRsub hz))
   exact leastSupersolutionOn_mem_of_greenRegular hμ hR (hV R hR) hU hRsub hz ht hboundary
-
-#print axioms leastSupersolutionOn_mem_of_bounded_greenRegular
 
 /-- At a Green-regular boundary point, the pointwise infimum attains its
 zero boundary value continuously from the domain, without assuming it is
@@ -584,10 +565,5 @@ theorem continuousWithinAt_leastSupersolutionOn_of_green_boundary_limit
   rw [hvzero]
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' ?_ tendsto_const_nhds hlo hhi
   simpa using (tendsto_const_nhds (x := -t)).mul hboundary
-
-#print axioms continuousWithinAt_leastSupersolutionOn_of_green_boundary_limit
-
-#print axioms enclosingDisc_potential_shift_on_domain
-#print axioms continuousOn_greenRegular_shifted_obstacle
 
 end HarmonicBalls

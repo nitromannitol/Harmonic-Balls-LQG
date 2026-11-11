@@ -169,9 +169,4 @@ theorem leastSupersolutionOn_uniform_lipschitz_time
     constructor <;> linarith
   simpa only [Real.dist_eq] using hlip.dist_le_mul u hu' v hv'
 
-#print axioms leastSupersolutionOn_antitone_time
-#print axioms leastSupersolutionOn_convex_time
-#print axioms leastSupersolutionOn_locallyLipschitz_time
-#print axioms leastSupersolutionOn_uniform_lipschitz_time
-
 end HarmonicBalls
