@@ -1053,6 +1053,8 @@
 	\[
 	 (t-\eta,t+\eta)\subset(0,\tau_R(z)).
 	\]
+	% AUDIT R2 M4 (awaiting operator approval; docs/campaign/AUDIT-R2-RESPONSES.md): Proposition 5.4 gives right-continuity only;
+	% two-sided continuity here needs the left-continuity step, which is not yet in the draft.
 	On this whole neighborhood the global family agrees with the single local family in $B_R$, which is Hausdorff-continuous by Proposition \ref{prop:conditional}. The convergence to $\{z\}$ as $t\to0$ follows in the same way from any one sufficiently large dyadic ball.
 
 	Finally, suppose ${\regcluster{}{t}}(z)\Subset B_s$ and let $r\geq s$. Choose a dyadic $R\geq r$ with $t<\tau_R(z)$. Since ${\cluster{}{t}}(z)$ is open,
@@ -1229,7 +1231,7 @@
 	
 	
 	\begin{lemma} \label{lemma:good-annuli}
-		Fix $b \in (0,1)$. There exists $a = a(b,\gamma) > 0$ and a universal constant $c > 0$ such that the following holds
+		Fix $b \in (0,1)$. There exists $a = a(b,\gamma,\boldsymbol{\alpha}_0) > 0$ and a universal constant $c > 0$ such that the following holds % CORRECTION [C69] (audit R2): alpha_0 dependence written out.
 		with polynomially high probability as $\epsilon \to 0$. 
 		For each $z \in (B_{1 + \epsilon} \backslash B_{10 \sqrt{\epsilon}}) \cap \frac{\epsilon}{100} \Z^2$ there are at least $c \log_7 \epsilon^{-1/2}$ radii $r \in [\epsilon, \epsilon^{1/2}] \cap
 		\{7^{-n}\}_{n \in \N}$ for which $E_r(z)$ occurs, where $E_r(z) = E_r(z; a, b)$ is as in \eqref{eq:good-annulus-harmonic}. 
@@ -1354,7 +1356,7 @@
 	In this section we prove that very good annuli are prevalent, following the same strategy as the last section. 
 	
 	\begin{lemma} \label{lemma:very-good-annuli}
-		Fix $b \in (0,1)$. There exists $a = a(b,\gamma) > 0$, universal constants $c, C_3 > 0$, $C^{\pm}_1, C^{\pm}_2 > 0$ depending on $a, \gamma$, and $N_1 = N_1(b,\gamma) \geq 1$ such that for all $N_0  \geq N_1 $ the following holds with polynomially high probability as $\epsilon \to 0$. For each $x_0 \in (B_{1 + \epsilon} \backslash B_{10 \sqrt{\epsilon}}) \cap \frac{\epsilon}{100} \Z^2$ there are at least $c \log_8 \epsilon^{-1/2}$ radii $\rho \in [\epsilon, \epsilon^{1/2}] \cap
+		Fix $b \in (0,1)$. There exists $a = a(b,\gamma,\boldsymbol{\alpha}_0,\beta^-) > 0$, universal constants $c, C_3 > 0$, $C^{\pm}_1, C^{\pm}_2 > 0$ depending on $a, \gamma$, and $N_1 = N_1(b,\gamma,\boldsymbol{\alpha}_0,\beta^-) \geq 1$ such that for all $N_0  \geq N_1 $ the following holds with polynomially high probability as $\epsilon \to 0$. For each $x_0 \in (B_{1 + \epsilon} \backslash B_{10 \sqrt{\epsilon}}) \cap \frac{\epsilon}{100} \Z^2$ there are at least $c \log_8 \epsilon^{-1/2}$ radii $\rho \in [\epsilon, \epsilon^{1/2}] \cap % CORRECTION [C69] (audit R2)
 		\{8^{-n}\}_{n \in \N}$ for which $\overline E_\rho(x_0)$ occurs, where $\overline E_\rho(x_0) = \overline E_\rho(x_0; N_0, a, b,C^{\pm}_1, C^{\pm}_2, C_3)$ is as in \ref{enum:very-good-criteria-1}, 	\ref{enum:very-good-criteria-2}, 	\ref{enum:very-good-criteria-3}.
 		
 	\end{lemma}
@@ -1630,7 +1632,7 @@
 	\subsection{Very good annuli satisfy the Harnack-type estimate} \label{subsec:very-good-annuli-satisfy-harnack-type-estimate}
 	In this section we prove that there are choices of parameters so that for every~$z \in B_{1}$, every annulus $\A_{\rho/2, \rho}(x_0)$ with $\overline{B}_{\rho}(x_0) \subset B_1 \backslash \{z\}$  which is very good also satisfies the Harnack-type property at~$z$.
 	\begin{lemma} \label{lemma:very-good-annuli-satisfy-harnack-type-estimate}
-		There exists a universal constant $C_3 > 0$ and $b = b(\gamma) \in (0,1)$ so that the following is true
+		There exists a universal constant $C_3 > 0$ and $b = b(\gamma,\boldsymbol{\alpha}_0) \in (0,1)$ so that the following is true % CORRECTION [C69] (audit R2)
 		for every~$z \in B_{1}$.  For every choice of $C_1^\pm , C_2^\pm  > 0$ and $a \in (0,1)$ there exists 
 		\begin{itemize}
 			\item $N_1 \geq 200$ depending only on $a,\gamma,C_1^-, C_2^+$;
@@ -1648,7 +1650,7 @@
 		\end{center}
 		\caption{Illustration of the choice of constants and dependencies in the proof of Proposition \ref{prop:harnack-type-stronger-property}.
 			A line between two constants indicates
-			that the downwards constant is chosen in a way which depends directly on the upwards constant. Where the constant is chosen is written directly next to it. Note that $b = b(\gamma)$. Otherwise, dependence on $\gamma \in (0,2)$ and some universal constants is not indicated.  
+			that the downwards constant is chosen in a way which depends directly on the upwards constant. Where the constant is chosen is written directly next to it. Note that $b = b(\gamma,\boldsymbol{\alpha}_0)$. Otherwise, dependence on $\gamma \in (0,2)$ and some universal constants is not indicated.  
 			$N_0$ can be any number larger than $N_1$. This is done so that there is flexibility later (the proof of Proposition \ref{prop:boundary-measure-zero}) to choose the initial scale $N_0$ to be large.} \label{fig:constant-dependencies}
 	\end{figure}
 	
@@ -1893,7 +1895,7 @@
 	
 	\begin{proof}[Proof of Lemma \ref{lemma:very-good-annuli-satisfy-harnack-type-estimate}]
 		Let $C^{\pm}_1 > 0, C^{\pm}_2 >0$, corresponding to \ref{enum:very-good-criteria-1} and \ref{enum:very-good-criteria-2},
-		and $a \in (0,1)$, $C_3 > 0$, corresponding to \ref{enum:very-good-criteria-3}, be given.  Fix $b = b(\gamma) \in (0,1)$, $N_0 \geq N_1(a,C^-_1, C^+_2) \geq 200$, and then $\alpha = \alpha(a, N_0, \gamma, C^-_1) \in (0,1)$ which will be specified 
+		and $a \in (0,1)$, $C_3 > 0$, corresponding to \ref{enum:very-good-criteria-3}, be given.  Fix $b = b(\gamma,\boldsymbol{\alpha}_0) \in (0,1)$, $N_0 \geq N_1(a,C^-_1, C^+_2) \geq 200$, and then $\alpha = \alpha(a, N_0, \gamma, C^-_1) \in (0,1)$ which will be specified 
 		in \eqref{eq:choice-of-b}, \eqref{eq:choice-of-N1}, and \eqref{eq:choice-of-alpha} respectively. 
 		
 		
@@ -2090,7 +2092,7 @@
 		\[
 		{\cluster{z}{t + \epsilon}} \Subset {\cluster{z}{t}} + B_{\delta} ,\quad \text{for $\delta = C \epsilon^{1/(4\beta^-)}$} % CORRECTION [C18] Printed: Cluster + B_delta(z) (translated ball); corrected to the neighbourhood Cluster + B_delta, as in Proposition 5.2.
 		\]
-		where $\beta^- > \max\{(2+\gamma)^2/2, \gamma(Q-\boldsymbol{\alpha}_0)\}$ is from Lemma \ref{lemma:volume-growth} and  $C = C(\beta^-) >0$ is a deterministic constant. 
+		where $\beta^- > \max\{(2+\gamma)^2/2, \gamma(Q-\boldsymbol{\alpha}_0)\}$ is from Lemma \ref{lemma:volume-growth} and  $C = C(\beta^-,\boldsymbol{\alpha}_0) >0$ is a deterministic constant % CORRECTION [C69] (audit R2). 
 	\end{prop}
 	
 	\begin{proof}
@@ -2643,12 +2645,14 @@
 	
 	
 	
-	\begin{figure}
-		\includegraphics[width=0.5\textwidth]{Figures/fig-crossing-argument.pdf}
-		\caption{A visual aid to the proof of Lemma \ref{lemma:crossing-connected}. The annulus $A$ is transparent, $U$ is the gray simply connected domain, 
-			$C$ is the connected violet domain, the components of $(C' \backslash C) \cap A$ are in yellow, and $P$ is the path with two boundary points $a$ and $b$; both $a$ and $b$ are in $\Gamma$, the boundary of $U$.}
-		\label{fig:crossing-argument}
-	\end{figure}
+	% CORRECTION [C48] (audit R2, minor): orphan figure fig:crossing-argument removed; it described the
+% deleted proof of Lemma 10.5 and was no longer referenced. Original text kept commented:
+% \begin{figure}
+% 		\includegraphics[width=0.5\textwidth]{Figures/fig-crossing-argument.pdf}
+% 		\caption{A visual aid to the proof of Lemma \ref{lemma:crossing-connected}. The annulus $A$ is transparent, $U$ is the gray simply connected domain, 
+% 			$C$ is the connected violet domain, the components of $(C' \backslash C) \cap A$ are in yellow, and $P$ is the path with two boundary points $a$ and $b$; both $a$ and $b$ are in $\Gamma$, the boundary of $U$.}
+% 		\label{fig:crossing-argument}
+% 	\end{figure}
 	
 	
 	We will use Lemma \ref{lemma:cannot-cross} together with some basic properties of the cluster to show
@@ -3062,6 +3066,7 @@ no cut point. A simple closed curve is a simple loop.
 		That argument uses only that the sets $\regcluster{}{t}$, $t > 0$, are bounded and open, satisfy $\mu_h(\regcluster{}{t}) = t$ and $\mu_h(\partial\regcluster{}{t}) = 0$, and increase continuously in $t$ in the Hausdorff topology. By \eqref{eq:regular-cluster} and Theorem~\ref{theorem:full-theorem-minus-uniqueness}, this family is the family of Theorem~\ref{theorem:harmonic-balls} at the centre $0$, whose conditions (a) and (b) give these properties. Hence \eqref{eq:mass-times} holds for every Lebesgue measurable $A \subset [0,\infty)$. 
 		
 		
+		% AUDIT R2 (C70 residual): measurability of the cone-condition set A below is not yet proved; see CORRECTIONS.md [C70].
 		By~\eqref{eq:mass-times} applied to the set 
 		\[
 		A = \{t > 0 : \mbox{ ${\regcluster{}{t}}$ satisfies the cone condition at each $z\in \partial {\regcluster{}{t}}$}\}
@@ -3213,7 +3218,7 @@ no cut point. A simple closed curve is a simple loop.
 	
 	
 	
-% CORRECTION [C42] Printed: the figure specifies $U \subset T$ and $Q' \subset Q$, and eq:metric-delta0-choice prints the six buffers $B_{10\delta_0}(T) \Subset \A_{1,6}$, $B_{10\delta_0}(U) \Subset V$, $B_{10\delta_0}(V) \Subset W$, $B_{10\delta_0}(W) \Subset \A_{1,2}$, $B_{10\delta_0}(Q') \Subset Q$, $B_{10\delta_0}(Q) \Subset \A_{4,5} \setminus B_{10\delta_0}(T)$; it does not require $B_{10\delta_0}(W) \Subset T$ and does not name the component $\Omega$.
+% CORRECTION [C42] Printed: the figure specifies $U \subset T$ and $Q' \subset Q$, and eq:metric-delta0-choice prints the six buffers $B_{10\delta_0}(T) \Subset \A_{1,6}$, $B_{10\delta_0}(U) \Subset V$, $B_{10\delta_0}(V) \Subset W$, $B_{10\delta_0}(W) \Subset \A_{1,2}$, $B_{10\delta_0}(Q') \Subset Q$, $B_{10\delta_0}(Q) \Subset \A_{4,5} \setminus B_{10\delta_0}(T)$; it does not require $B_{10\delta_0}(W) \Subset T$. The component $\Omega$ belongs to the replacement argument (audit R2).
 % Corrected: additionally require $B_{10\delta}(\overline W) \Subset T \cap \A_{1,2}$ (eq:buffers) and name the component $\Omega$ containing $0$, as specified below.
 % Reason: the locality, bump support, and path-connection arguments require these separations.
 Let $h^\alpha=g-\alpha\log|\cdot|$, where $g$ is a normalized whole-plane GFF and $\alpha<Q$.
@@ -3433,8 +3438,7 @@ is locally finite. The annular potential $S_f$ is finite and
 strictly positive. For the last assertion, the local volume
 bound $\mu_f(B_s(x))\le Ks^b$ away from the logarithmic
 singularity follows from the upper half of Lemma 2.4,
-(2.11), p.~10 of Bou-Rabee--Gwynne,
-arXiv:2208.11795v1, used only for $\alpha_0=0$:
+\eqref{eq:ball-volume}, used only for $\alpha_0=0$:
 the uniform bound on $B_1$ holds with polynomially high
 probability for each $b\in(0,(2-\gamma)^2/2)$.
 Apply Borel--Cantelli at dyadic radii, monotonicity, and
@@ -4035,11 +4039,10 @@ in $t,z,r$ with $0\notin\overline B_{10r}(z)$,
  \mu_h(\A_{r,2r}(z)\cap\Lambda_t)\le C_H S_h(r,z).
 \end{equation}
 Here $\Lambda_t$ denotes the harmonic ball centered at the
-source $0$. This is Lemma 11.6, p.~50, of
-arXiv:2208.11795v1. Its two precise preceding inputs are
-Lemma 6.8, p.~25 (annular mass is bounded by a constant times
+source $0$. This is Lemma~\ref{lemma:harmonic-comparison-chain}. Its two precise preceding inputs are
+Lemma~\ref{lemma:odometer-annuli} (annular mass is bounded by a constant times
 the supremum of the odometer on a larger annulus) and
-Lemma 6.10, p.~27 (that supremum is bounded by the annular
+Lemma~\ref{lemma:odometer-bound-lqg-mass} (that supremum is bounded by the annular
 Green potential if the cluster misses a point of the middle
 annulus). To recall the deduction, choose a containing disk
 for $\Lambda_t$ and its nonnegative odometer $v_t$.
@@ -4085,8 +4088,7 @@ The already established harmonic-ball construction
 gives increasing bounded open sets $\Lambda_t$, with
 $\mu_h(\Lambda_t)=t$, $\mu_h(\partial\Lambda_t)=0$, and
 Hausdorff-continuous closures. These are the properties in
-Theorem 1.1, p.~3, and Theorem 5.5, p.~16, of
-arXiv:2208.11795v1.
+Theorem~\ref{theorem:harmonic-balls} and Theorem~\ref{theorem:full-theorem-minus-uniqueness}.
 
 For a fixed realization define the arrival time
 \[
@@ -4189,12 +4191,12 @@ centers.
 	\section{Obstacle problem for Radon measures} \label{sec:obstacle-appendix}
 	
 	In this appendix we provide the proofs which were omitted in Section \ref{subsec:basic-properties}. 
-	% CORRECTION [C65] Printed: both sides of the Appendix A volume-growth condition used beta^-; corrected because the upper bound uses beta^+. Also restored (audit A2): the sentence deleted in this hunk, now citing Lemma~\ref{lemma:volume-growth} (Lemma 2.4 of the corrected draft).
+	% CORRECTION [C65] Printed: both sides of the Appendix A volume-growth condition used beta^-; corrected because the upper bound uses beta^+. Also restored (audit A2): the sentence deleted in this hunk, now citing Lemma~\ref{lemma:volume-growth} (Lemma~\ref{lemma:volume-growth}).
 	For clarity, we prove these results for any Radon measure $\mu$ satisfying, for some $R > 0$,
 	\begin{equation} \label{eq:volume-growth}
 	r^{\beta^-} \leq \mu(B_r(z)) \leq r^{\beta^+} \quad \mbox{for all $z \in B_R$},
 	\end{equation}
-	for some exponents $\beta^+, \beta^- > 0$, for all $r$ sufficiently small. This implies the results in Section \ref{subsec:basic-properties} as the Liouville measure is a.s.\ a Radon measure which satisfies \eqref{eq:volume-growth}. Indeed, this follows from Lemma~\ref{lemma:volume-growth} (Lemma 2.4 of the corrected draft) and the scaling properties of $h$ and $\mu_h$, namely~\eqref{eq:h-coordinate-change} and~\eqref{eq:measure-coord}.
+	for some exponents $\beta^+, \beta^- > 0$, for all $r$ sufficiently small. This implies the results in Section \ref{subsec:basic-properties} as the Liouville measure is a.s.\ a Radon measure which satisfies \eqref{eq:volume-growth}. Indeed, this follows from Lemma~\ref{lemma:volume-growth} (Lemma~\ref{lemma:volume-growth}) and the scaling properties of $h$ and $\mu_h$, namely~\eqref{eq:h-coordinate-change} and~\eqref{eq:measure-coord}.
 	
 	For $R > 0$, let 
 	\begin{equation} \label{eq:expected-exit-time}
@@ -4518,7 +4520,7 @@ centers.
 	
 	
 	
-	% CORRECTION [C68] Printed: Appendix A.6 left t free, allowed nonpositive s_1, and did not scope the selected s_2 as an arbitrary quantified radius; corrected to the well-defined positive-radius statement.
+	% CORRECTION [C68] (clarification, not an error; audit R2) Printed: Appendix A.6 left t free, allowed nonpositive s_1, and did not scope the selected s_2 as an arbitrary quantified radius; corrected to the well-defined positive-radius statement.
 	\begin{lemma} \label{lemma:appendix-cluster-compatibility}
 		Suppose \eqref{eq:volume-growth} is satisfied for fixed $R > 0$. 
 		For every $t>0$, every $0<s_1 \leq R$, and every $s_2 \in [s_1, R]$, if $\overline{\cluster{B_{s_2}}{t}} \subset B_{s_1}$, 

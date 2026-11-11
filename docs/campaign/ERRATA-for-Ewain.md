@@ -11,7 +11,7 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 
 **Theorem 1.1 (harmonic balls: test class)** <!-- C7 -->
 - *Printed:* the test functions $f_2$ range over $\tilde H_O(\Lambda(z))$ for some open set $O$ with $\Lambda(z)\subset\overline O$.
-- *Problem:* with this class, no bounded open set containing $z$ satisfies the defining identity, because a Green function with a pole at a boundary point of $\Lambda(z)$ is admissible but violates it. For example, take $O=B_R\setminus S$ with $S$ a slit through $z$, and a pole $y\in\partial\Lambda(z)$: then $G_O(z,y)=0$, while $\int_{\Lambda(z)}G_O(\cdot,y)\,d\mu_h>0$. With $\overline{\Lambda(z)}\subset O$, boundary poles satisfy the identity, which is why the correction is stated that way. Theorem 1.1 as printed is therefore false.
+- *Problem:* with this class, the defining identity can fail. For example, let $O=B_R\setminus S$ with $S$ a slit through $z$, so that $z\in\partial O$. The failure comes from the slit through $z$, not from a pole on $\partial\Lambda(z)$: any pole in $O\setminus\Lambda(z)$ works. With $\overline{\Lambda(z)}\subset O$ the identity holds, which is why the correction is stated that way. Theorem 1.1 as printed is therefore false.
 - *Correction:* $O$ is a bounded open set with $\overline{\Lambda(z)}\subset O$.
 
 ### Section 2: volume growth and heat kernel
@@ -33,13 +33,6 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Problem:* $G_{B_r;z}$ is not a defined object. The identity $\Delta u=-t\delta_z+\dots$ in Lemma 3.2 needs the Green function of $B_r$ with its pole at $z$.
 - *Correction:* use $G_{B_r}(z,x)$ in (3.3) and $t\,G_{B_r}(z,\cdot)$ in (3.4).
 
-### Section 4: odometer
-
-**Lemma 4.2 (Hölder continuity of the odometer)** <!-- C55 --> *(minor: dependence bookkeeping)*
-- *Printed:* the deterministic Hölder exponent depends only on $\gamma$.
-- *Problem:* the local power law near the origin depends on the log-singularity strength $\boldsymbol\alpha_0$, so the exponent must depend on it as well.
-- *Correction:* the exponent may depend on $\gamma$ and $\boldsymbol\alpha_0$. The random constant stays uniform in $t,z,x,y$.
-
 ### Section 5: upper bounds and the global family
 
 **Proposition 5.2 (continuity of clusters)** <!-- C56 -->
@@ -54,13 +47,13 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 
 **Proposition 5.4 (regularised clusters)** <!-- C58 -->
 - *Printed:* there is an unused universal $r$, an unbounded $T$, and a "strict containment" in the closed unit ball.
-- *Problem:* $T$ must depend on the centre and on the sample, and the containment must be compact in the open ball.
+- *Problem:* $T$ must depend on the centre and on the sample, and the containment must be compact in the open ball. (The printed "unbounded $T$" should read "unbound $T$": no dependence on the centre or the sample is stated.)
 - *Correction:* for every $z\in B_{1/2}$ there is a positive random $T=T(z)$ such that $\widehat\Lambda^{z}_t\Subset B_1$ for all $0<t<T$.
 
 **Theorem 5.5 (proof)** <!-- C59 -->
 - *Printed:* the proof uses an equality in law for a fixed centre and a union bound over all centres; it uses centre-independent exit times; and it does not prove overlap gluing or two-sided Hausdorff continuity.
 - *Problem:* Lemma 5.7 is an equality in law for a fixed centre, and the printed proof does not justify passing from it to all centres; the gluing and continuity claims are not proved.
-- *Correction:* rewrite the proof with the pathwise dyadic covariance (as in the correction of Proposition 10.7 below, which rests on Proposition 10.6), canonical exit times, compatibility of the clusters, and local-to-global continuity. The all-centre event and the two-sided continuity are stated explicitly.
+- *Correction:* rewrite the proof with the pathwise dyadic covariance (as in the correction of Proposition 10.7 below, which rests on Proposition 10.6), canonical exit times, compatibility of the clusters, and local-to-global continuity. The all-centre event is stated explicitly. Right-continuity in $t$ follows from Propositions 5.2 and 7.2. Two-sided continuity, as needed for Theorem 1.1(b), is not yet proved in the corrected draft: left-continuity is missing, and the proof must not cite Proposition 5.4 for it.
 
 **Lemma 5.8 (strong compatibility)** <!-- C60 -->
 - *Printed:* $z$ may lie outside $U$, and an "essentially verbatim" extension is asserted for an arbitrary bounded open set $U$.
@@ -71,13 +64,8 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 
 **Lemma 6.4 (annuli are hit)** <!-- C61 -->
 - *Printed:* $a=a(b,p,\gamma)$, and the constants in the proof depend only on $\gamma$. The transfer from the comparison field to $h$ also uses the factor $|z|^{-\boldsymbol\alpha_0\gamma}$ and a ratio in the wrong direction.
-- *Problem:* the comparison with the log-singular field depends on $\boldsymbol\alpha_0$. The factor $|z|^{-\boldsymbol\alpha_0\gamma}$ is not uniform on the annulus when $|z|$ is of order $r$ or $z=0$, and the transfer of the event needs $a=(C_1/C_2)a'$, not $(C_2/C_1)a'$.
-- *Correction:* $a=a(b,p,\gamma,\boldsymbol\alpha_0)$, and the constants in the proof depend on $\boldsymbol\alpha_0$ as well. Replace the factor $|z|^{-\boldsymbol\alpha_0\gamma}$ by the sup/inf ratio of $|x|^{-\boldsymbol\alpha_0\gamma}$ over the annulus, which is at most $1001^{\gamma|\boldsymbol\alpha_0|}$, and take $a=(C_1/C_2)a'/1001^{\gamma|\boldsymbol\alpha_0|}$ in the transfer.
-
-**Lemma 6.7 (very good annuli are hit)** <!-- C62 --> *(minor: dependence bookkeeping)*
-- *Printed:* the dependence of $a$, $C^{\pm}_i$ and $N_1$ on $\boldsymbol\alpha_0$ and on the lower volume exponent $\beta^-$ is suppressed.
-- *Problem:* the comparison with the singular field uses these dependencies, so they cannot be suppressed.
-- *Correction:* $a=a(b,p,\gamma,\boldsymbol\alpha_0,\beta^-)$, the constants $C^{\pm}_1,C^{\pm}_2$ depend on $a,\gamma,p,\boldsymbol\alpha_0,\beta^-$, and $C_3>0$ is universal. The dependence of $N_1$ is displayed in the statement.
+- *Problem:* the comparison with the log-singular field depends on $\boldsymbol\alpha_0$. The factor $|z|^{-\boldsymbol\alpha_0\gamma}$ is not uniform on the annulus when $|z|$ is of order $r$ or $z=0$, and the transfer of the event uses the exact Weyl density, which gives the constant $a=a'/1001^{\gamma|\boldsymbol\alpha_0|}$.
+- *Correction:* $a=a(b,p,\gamma,\boldsymbol\alpha_0)$, and the constants in the proof depend on $\boldsymbol\alpha_0$ as well. Replace the factor $|z|^{-\boldsymbol\alpha_0\gamma}$ by the sup/inf ratio of $|x|^{-\boldsymbol\alpha_0\gamma}$ over the annulus, which is at most $1001^{\gamma|\boldsymbol\alpha_0|}$, and take $a=a'/1001^{\gamma|\boldsymbol\alpha_0|}$ in the transfer.
 
 **Lemma 6.9 (harmonic odometer comparison)** <!-- C63 -->
 - *Printed:* the comparison allows an infinite boundary supremum to be multiplied by a zero exit probability.
@@ -105,14 +93,14 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 
 **Proposition 9.2 (uniqueness of sub-harmonic balls)** <!-- C51 -->
 - *Printed:* the inclusion $\widehat\Lambda\subset A$ for the sub-harmonic ball $A$ of mass $t$.
-- *Problem:* at the last time a bounded hole disappears, the cluster is a sub-harmonic ball that omits a nonempty set inside its regularisation, so the inclusion fails. Such holes occur with positive probability; the construction is in §3 of steps4-final.tex, which is to be attached to this list.
+- *Problem:* we have not proved the printed inclusion. At the last time a bounded hole disappears, the cluster may be a sub-harmonic ball that omits a nonempty set inside its regularisation. We do not claim a counterexample.
 - *Correction:* $\Lambda^{B_R;z}_t\subset A\subset\widehat\Lambda^{B_R;z}_t$, with $\mu_h(A\setminus\Lambda^{B_R;z}_t)=\mu_h(\widehat\Lambda^{B_R;z}_t\setminus A)=0$, and $A=\widehat\Lambda^{B_R;z}_t$ when $A$ is a regular open set. The paper does not use this proposition.
 
 ### Section 10: crossings and complementary components
 
 **Lemma 10.5 (crossing components)** <!-- C48 -->
 - *Printed:* every crossing component of $U^c\cap A$ contains a crossing component of the cluster.
-- *Problem:* this is false, because clusters can have holes: a crossing component can be a whole annulus inside another hole. Such holes occur with positive probability; a construction is given in §3 of our note steps4-final.tex, which is to be attached to this list.
+- *Problem:* we have not proved the printed statement for clusters with holes, where a crossing component can be a whole annulus inside another hole. We do not claim that it is false.
 - *Correction:* a deterministic statement. Finitely many crossings at small scales give local connectedness, no cut points, and simple-loop boundaries for the complementary components (Torhorst's theorem; see Jolivet, Loridant and Luo, arXiv:1411.6776, Theorem 3.1).
 
 **Proposition 10.6 (complementary components of clusters)** <!-- C49 -->
@@ -138,24 +126,29 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Correction:* replace $\mathcal A_{3r,5r}(z)$ by $\mathcal A_{r,2r}(z)$, so that $\mu_h(\mathcal A_{r,2r}(z)\cap\mathcal Q(z))\ge M\cdot SG_{3r,6r}(z)>C\cdot SG_{3r,6r}(z)$.
 
 **Lemma 11.7 (bad scales and Harnack)** <!-- C39 -->
-- *Printed:* the separated-annulus probability bound is applied directly at the origin and transferred.
-- *Problem:* the separated-annulus bound alone does not give the positive rooted frequency required.
-- *Correction:* the positive rooted frequency at $\alpha=\gamma$ is established by dilation ergodicity, and transferred by the rooted-field identity.
+- *Printed:* the separated-annulus probability bound is applied at the origin and transferred to the rooted field.
+- *Problem:* the rooted frequency needs the rooted ergodic argument, which the printed proof uses through Lemma 8.3 without stating the rooted-field identity explicitly.
+- *Correction:* the positive rooted frequency at $\alpha=\gamma$ is established by dilation ergodicity, and transferred by the rooted-field identity, stated explicitly.
 
 **Lemma 11.8 (bump construction)** <!-- C37 -->
-- *Printed:* the bump height $\log(MC_2/C_1)/\gamma$ is nonnegative, and the drift comparison has a universal constant.
-- *Problem:* the height can be negative, and the weight comparison depends on $\boldsymbol\alpha_0$.
+- *Printed:* the bump height $\log(MC_2/C_1)/\gamma$ and the drift comparison with a universal constant.
+- *Problem:* the weight comparison depends on $\boldsymbol\alpha_0$. (A negative bump height is harmless; the nonnegative bump below is a simplification.)
 - *Correction:* use a nonnegative bump of height $\log\max\{1,2MC_2/C_1\}/\gamma$, and the comparison factor $1201^{-\gamma|\boldsymbol\alpha_0|}$.
 
 **Pinch-event geometry (before Lemma 11.12)** <!-- C42 -->
-- *Printed:* eq:metric-delta0-choice gives explicit buffers for $U$, $V$, $W$, $T$, $Q'$ and $Q$, but not $B_{10\delta_0}(W)\Subset T$ (it has $B_{10\delta_0}(W)\Subset\mathcal A_{1,2}$), and the connected component $\Omega$ is not specified.
-- *Problem:* the locality, bump-support and path-connection arguments require explicit separations.
-- *Correction:* add $B_{10\delta_0}(W)\Subset T$ to eq:metric-delta0-choice, and specify the connected component $\Omega$ in the text.
+- *Printed:* eq:metric-delta0-choice gives explicit buffers for $U$, $V$, $W$, $T$, $Q'$ and $Q$, but not $B_{10\delta_0}(W)\Subset T$ (it has $B_{10\delta_0}(W)\Subset\mathcal A_{1,2}$).
+- *Problem:* the locality, bump-support and path-connection arguments of the replacement require the separation $B_{10\delta_0}(W)\Subset T$.
+- *Correction:* add $B_{10\delta_0}(W)\Subset T$ to eq:metric-delta0-choice; the connected component $\Omega$ used in the replacement argument is specified in the text.
 
 **Lemma 11.12 (pinch positive probability)** <!-- C43 -->
 - *Printed:* the statement is for $\alpha_0=0$ and $P[\tilde G_1(0)]>0$.
 - *Problem:* the tilde denotes a different event, and the rooted transfer needs $\alpha=\gamma$.
 - *Correction:* for every $\alpha<Q$ and every $M>0$ there is an event $E^\alpha(M)\subset\widehat G_1^{h^\alpha}(0;M)$, measurable with respect to $h^\alpha|_{B_7}$ and invariant under additive constants, with $P[E^\alpha(M)]>0$; proved with local certificates.
+
+**Proofs of Lemma 11.12 and Lemmas 11.15–11.17 (pinch-event proofs)** <!-- C44 -->
+- *Printed:* four defects. (i) The bump in the proof of the third event sets $\tilde h=h+\frac{\phi}{\xi}\log\big(\frac{C_2}{C_1}\wedge1\big)$ (lines 3475–3478); if $C_2\ge C_1$ then $\tilde h=h$, and the chain $\operatorname{diam}\le\frac{C_2}{C_1}\operatorname{diam}\le D_h$ fails. (ii) The support condition $\phi\equiv0$ on $(U\cup B_{4\delta_0}(W))^c$ (line 3461) says nothing on $U\subset W$, yet $\phi\equiv0$ on $U$ is used at line 3481. (iii) The event of eq:large-mass-low-diam (lines 3410–3413) has the threshold $e^{-\xi\sup_W\varphi}$, where $\varphi$ is the harmonic extension of the GFF boundary data; $\sup_W\varphi=+\infty$ almost surely, so the threshold is $0$ and the event is empty. (iv) The thresholds of Lemma 11.16 depend on the conditioning and use non-strict inequalities (campaign GRAPH.md G43).
+- *Problem:* each defect breaks a step of the printed argument; the proofs as printed do not establish Lemma 11.12 or Lemmas 11.15–11.17.
+- *Correction:* replace these proofs by local certificates and a joint large-mass, small-diameter construction, with the bump factor, the support on $U$ and the thresholds repaired in the same step. The inner separation $(v-\delta)-(u+\delta)>8\delta$ is unchanged.
 
 **Lemma 11.13 (many pinch scales)** <!-- C45 -->
 - *Printed:* the proof uses positive probability at $\alpha=0$ directly for typical points, and transfers the frequency from the unrooted field; global metric events are treated as if they were annular-local.
@@ -171,6 +164,7 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Printed:* the passage from intervals to all Lebesgue measurable sets is a "standard machine" argument.
 - *Problem:* the set function $A\mapsto\mu_h(\bigcup_{t\in A}\partial\widehat\Lambda_t)$ is not additive, and the interval computation gives only an inclusion up to a null set.
 - *Correction:* for every Lebesgue measurable $A$, eq:mass-times is the boundary-union identity of Section 11, proved by arrival times.
+- *Open:* measurability of the cone-condition set $A$ in the corrected Proposition 11.2 is not yet proved.
 
 ### Appendix A
 
@@ -210,12 +204,24 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Problem:* the event on which compatibility holds must not depend on $t$, so $t$ has to be quantified inside it.
 - *Correction:* for each $R>0$, on an event of probability one: for all $t>0$, $s_1\le R$ and $z\in B_{s_1}$, if $\overline{\Lambda^{B_{s_2};z}_t}\subset B_{s_1}$ for some $s_2\in[s_1,R]$, then $\Lambda^{B_s;z}_t=\Lambda^{B_{s_2};z}_t$ for all $s\in[s_1,R]$.
 
+### Section 4
+
+**Lemma 4.2 (Hölder continuity of the odometer)** <!-- C55 --> *(minor: dependence bookkeeping)*
+- *Printed:* the deterministic Hölder exponent depends only on $\gamma$.
+- *Problem:* the local power law near the origin depends on the log-singularity strength $\boldsymbol\alpha_0$, so the exponent must depend on it as well.
+- *Correction:* the exponent may depend on $\gamma$ and $\boldsymbol\alpha_0$. The random constant stays uniform in $t,z,x,y$.
+
 ### Section 6
 
 **Equation (6.2) (good-annulus event, §6.1) and the proof of Lemma 6.4** <!-- C23 -->
 - *Printed:* the good-annulus event asks that "$\mathcal B^u$ exits $\mathcal A_{3r,5r}(z)$ before exiting $Y$", for Borel sets $Y\subset\mathcal A_{3r,5r}(z)$; the proof of Lemma 6.4 uses the same wording.
 - *Problem:* when $Y\subset\mathcal A_{3r,5r}(z)$, the strict event is empty, so the condition does not express what is intended.
 - *Correction:* "exits $\mathcal A_{3r,5r}(z)$ no later than exiting $Y$", that is, the exit time of the annulus is at most the exit time of $Y$.
+
+**Lemma 6.7 (very good annuli are hit)** <!-- C62 --> *(minor: dependence bookkeeping)*
+- *Printed:* the dependence of $a$, $C^{\pm}_i$ and $N_1$ on $\boldsymbol\alpha_0$ and on the lower volume exponent $\beta^-$ is suppressed.
+- *Problem:* the comparison with the singular field uses these dependencies, so they cannot be suppressed.
+- *Correction:* $a=a(b,p,\gamma,\boldsymbol\alpha_0,\beta^-)$, the constants $C^{\pm}_1,C^{\pm}_2$ depend on $a,\gamma,p,\boldsymbol\alpha_0,\beta^-$, and $C_3>0$ is universal. The dependence of $N_1$ is displayed in the statement.
 
 ### Section 11
 
@@ -239,15 +245,15 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Problem:* the appendix is written for an arbitrary Radon measure $\mu$.
 - *Correction:* for the measure $\mu$ fixed in the appendix: $\mu(\Lambda_t)\le t$ for $t>0$, and if $\overline{\Lambda_t}\subset B_1$ and $\mu(\partial\Lambda_t)=0$, then $\mu(\Lambda_t)=t$.
 
-**Lemma A.6 (compatibility for obstacle clusters)** <!-- C68 -->
+**Lemma A.6 (compatibility for obstacle clusters)** <!-- C68 --> *(clarification)*
 - *Printed:* $t$ is free, $s_1$ may be nonpositive, and $s_2$ is not scoped as an arbitrary quantified radius.
-- *Problem:* as printed, $t$ is free, $s_1$ may be nonpositive, and $s_2$ is not scoped as an arbitrary quantified radius, so the statement is misstated.
+- *Problem:* not an error. In a deterministic lemma a free $t$ reads as universal, and $s_1\le0$ makes the hypothesis vacuous; the statement is clarified.
 - *Correction:* for every $t>0$, every $0<s_1\le R$ and every $s_2\in[s_1,R]$: if $\overline{\Lambda_{B_{s_2}}(t)}\subset B_{s_1}$, then $\Lambda_{B_s}(t)=\Lambda_{B_{s_2}}(t)$ for all $s\in[s_1,R]$.
 
 
 ## Part 3. Proof gaps
 
-Each item is a gap in a printed proof, not a change of statement. Where the corrected draft repairs one, it carries a correction marker.
+Each item is a gap in a printed proof, not a change of statement. Where the corrected draft repairs one, it carries a correction marker. Selection rule: Part 3 lists every printed gap or slip that we have checked against the printed lines and that is not a statement change; gaps recorded in our internal graph but not checked against the printed text are not listed, and the full list is available on request.
 
 - **Lemma 3.2 and eqs. (laplacian-of-v), (laplacian-of-v-general).** The proofs use $\nu\ge0$ without justification. A short repair uses the argument in the proof of Lemma 6.10.
 - **Lemma A.1, Step 3.** The inequality $\beta_t(x)+\varepsilon/2\ge\beta_t(y)$ on $B_\delta(x_0)$ fails at $x_0=0$, where $\beta_t(0)=-\infty$; the ball $B_\delta(0)$ needs a separate estimate.
@@ -259,3 +265,19 @@ Each item is a gap in a printed proof, not a change of statement. Where the corr
 - **Proposition 7.2, covering near the origin.** The grid of Proposition 6.1 excludes $B_{10\sqrt\delta}(0)$, so the covering of the shell near the origin is not justified.
 - **Proposition 7.2, mass equality.** "$\mu_h(\Lambda^z_t)=t$ by Lemma 3.4" also needs $\mu_h(\partial\Lambda^z_t)=0$, which is Proposition 8.1.
 - **Lemma 11.6.** The time $t$ is free and "a.s." is missing. The verbatim extension of Lemmas 6.8 and 6.10 to $B_R$ also needs $\mathcal A_{0.5r,6r}(z)\subset B_R$.
+- **Proposition 1.3.** "For each fixed $t\geq0$" (line 180) should read $t>0$.
+- **Proposition 4.1, proof.** The lower bound (lines 704–708) compares with $t\log|x-z|$; the Green-function term is $-tG$.
+- **Lemma 4.2, proof (lines 730–733).** A constant uniform in $t$ and $z$ needs a quantitative form of Proposition 2.5 (a Hölder bound $C(h)\|f\|_\infty$), which the printed proof does not supply.
+- **Proposition 2.5 and Appendix A (lines 534, 3529–3530).** "Finiteness follows immediately from Lemma 2.4" and "follows from Lemma 2.4 and the scaling properties" need an almost-sure, all-scales, all-centres version of the volume-growth bound; it is not written.
+- **Propositions 6.1, 6.2 and 8.1 (lines 1067, 1079, 2124).** The time $t$ is free in the statements; they must be read as holding for all $t$.
+- **Measurability of $E_r(z)$ (lines 1117–1123).** $E_r(z)$ quantifies over all Borel sets $Y$, an uncountable family. The printed text asserts $E_r(z)\in\sigma(h|_{\mathcal A_{3r,5r}(z)})$ (line 1123) without proof, and Lemmas 6.3–6.7 need it.
+- **Lemma 6.11 (line 1569) and Propositions 6.1–6.2 (lines 1593–1595).** Lemma 6.11 and Lemma 6.6 each produce an existential universal constant $C_3$; as printed the two need not match, and the combination needs $C_3$ of Lemma 6.6 to dominate that of Lemma 6.11.
+- **Lemma 6.11, base case (lines 1898–1900).** Lemma 6.10 is applied on $\mathcal A_{\rho/4,2\rho}(x_0)$, which need not lie in $B_1\setminus\{z\}$ (the hypothesis is only $\overline{B_\rho(x_0)}\subset B_1\setminus\{z\}$); as printed the inequality is false when $\operatorname{dist}(z,B_\rho(x_0))\to0$.
+- **Lemmas 6.11 and 6.13, components (lines 1772, 1834–1836, 1842).** The statements take $\widetilde\Lambda$ to be a component of $\Lambda\cap B_\rho(x_0)$, but the proofs switch to a component of $\Lambda\cap\mathcal A_{\rho/2,\rho}(x_0)$ with a different goal.
+- **Lemma 6.11, constants (lines 1859, 1899, 1916).** The constant bookkeeping (the factor $1/(C_1^-\vee1)$ at line 1899 and the choice of $N_0$ at line 1916) fails for $C_1^-<1$.
+- **Proposition 5.6, proof (lines 2432–2434).** "As the family $\{A_t\}$ continuously decreases to $\{z\}$" does not yield that $B$ is disjoint from $A_{s_0}$: the hypothesis gives the intersection $\{z\}$ only for open sets.
+- **Proposition 7.1, covering near the origin (lines 1975–1981).** The grid of Proposition 6.1 excludes $B_{10\sqrt\varepsilon}(0)$, so the covering of $\partial B_{r/2}(z)$ by eq:cover-inner-ball is not justified for $z$ with $\big||z|-r/2\big|<9\sqrt\varepsilon$.
+- **Proposition 8.1, parameters (lines 2231–2233).** One parameter tuple is used for Lemmas 6.7, 6.11, 8.2 and 8.3, but the order of choice of $C_3$, $b$, $a$, $C^\pm$, $N_0$, $\alpha$ and $m$ is not given.
+- **Lemma 10.1 (lines 2496–2502).** The hypothesis $\overline{B_\rho(x_0)}\subset B_1\setminus\{z\}$ of Proposition 6.2 is never checked: $w$ may lie near $\partial B_1$, so $B_\rho(x_0)$ need not lie in $B_1$. The statement "for every $t>0$ and $z\in\mathbb C$" (line 2498) should read $z\in B_1$.
+- **Lemma 11.10, eqn-shifted-field-weyl (lines 3041–3044).** The triangle inequality through $\overline G$ gives $3\varepsilon/2$, not $\varepsilon$, for the diameter bound on $\mathsf S_2$.
+- **Section 2 (line 431) and Proposition 11.9 (lines 3036, 3071): $D_h$ for $\boldsymbol\alpha_0\neq0$.** Section 2 defines $D_{h+f}$ only for continuous $f$; for $\boldsymbol\alpha_0\neq0$ the field $h$ is not of that form near $0$, yet Weyl scaling of $D_h$ is used at lines 3036 and 3071.

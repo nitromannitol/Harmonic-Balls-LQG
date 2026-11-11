@@ -46,7 +46,7 @@ the shared ones and the copy of `IsVeryGoodAnnulus` differed only in the packagi
 
 ## Corrections and readings
 
-* [C15] (Lemma 6.13, lines 1710-1712; ESCALATIONS E16): "an annulus `𝔸_{ρ/2,ρ}(x₀)` not containing `z`" is replaced by
+* [C64] (Lemma 6.13, lines 1710-1712; ESCALATIONS E16): "an annulus `𝔸_{ρ/2,ρ}(x₀)` not containing `z`" is replaced by
   `closure B_ρ(x₀) ⊂ B_1 \ {z}`, as in Lemma 6.11. As printed the lemma is false for `z = x₀`.
 * eq:good-annulus-harmonic (line 1120, GRAPH slip list): "`𝓑^u` exits `𝔸_{3r,5r}(z)` before exiting `Y`" is
   impossible for `Y ⊆ 𝔸` (so the printed event always holds); the intended event (lines 1090-1091) is
@@ -448,7 +448,7 @@ def ShellDecompositionStmt : Prop :=
       ball w (8 * Real.sqrt (shellScale N₀ j) * ρ) ⊆ annulus x₀ (ρ / 2) (shellOuterRadius ρ j) ∧
       annulus x₀ (ρ / 2) (shellOuterRadius ρ j) ⊆ annulus x₀ (ρ / 2) ρ
 
-/-- Lemma 6.13 (lemma:low-mass-implies-small-odometer, line 1710), corrected by [C15]. Let `z ∈ B_1` and
+/-- Lemma 6.13 (lemma:low-mass-implies-small-odometer, line 1710), corrected by [C64]. Let `z ∈ B_1` and
 `closure B_ρ(x₀) ⊂ B_1 \ {z}` (printed: "`𝔸_{ρ/2,ρ}(x₀)` not containing `z`", false for `z = x₀`, E16), such that
 (VG-iii) occurs with parameters `a, b ∈ (0,1)`, `N₀ ≥ 200` and `C₃ > 0`. Let `{S_j, d^+_j}` be the shell decomposition of
 Lemma 6.12, `Λ̃_t` a connected component of `Λ^z_t ∩ B_ρ(x₀)` and `K_j = a M_ρ(x₀) ε_j^{β⁻}`. Then for each `j ≥ 0`:

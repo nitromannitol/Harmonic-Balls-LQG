@@ -37,7 +37,7 @@ bounded), so any such family is almost surely the family of Theorem 5.5.
 
 ## Corrections applied
 
-[C9] (Proposition 5.4, lines 853-856: `T = T(z) > 0` depends on `z`; the idle binder "for all `r > 0`" is deleted;
+[C58] (Proposition 5.4, lines 853-856: `T = T(z) > 0` depends on `z`; the idle binder "for all `r > 0`" is deleted;
 ESCALATIONS E10, docs/campaign/GRAPH.md F4, G6). [C6], [C7] through `SatisfiesHarmonicBallConditions` and
 `IsHarmonicBallFamily`. Readings of misprints, each flagged in the docstring and reported (not yet in
 `~/paper-fleets/hb/CORRECTIONS-PROPOSED.md`): Proposition 5.2 (line 832, `B_ε(z)` read `B_ε`), Proposition 5.3
@@ -159,12 +159,12 @@ def ClusterBoundaryMeasureZeroStmt : Prop :=
   ∀ᵐ ω ∂P, ∀ z ∈ ball (0 : ℂ) 1, ∀ t : ℝ, 0 < t → closure (cluster (μ ω) 1 z t) ⊆ ball 0 1 →
     μ ω (frontier (cluster (μ ω) 1 z t)) = 0
 
-/-- Proposition 5.4 (prop:conditional, line 853), with correction [C9]. On an event of probability 1, for all
+/-- Proposition 5.4 (prop:conditional, line 853), with correction [C58]. On an event of probability 1, for all
 `z ∈ B_{1/2}` there is `T = T(z) > 0` such that the regularized clusters `Λ̂^z_t = int(closure Λ^z_t)`
 (eq:regular-cluster, line 846), `0 < t < T`, are compactly contained in `B_1` and satisfy the conditions of
 Theorem 1.1 for `0 < t < T` (`SatisfiesHarmonicBallConditionsOn`), and `closure Λ̂^z_T ∩ ∂B_1 ≠ ∅`.
 
-* [C9] (ESCALATIONS E10, docs/campaign/GRAPH.md F4): the printed statement binds "for all `r > 0`", which occurs
+* [C58] (ESCALATIONS E10, docs/campaign/GRAPH.md F4): the printed statement binds "for all `r > 0`", which occurs
   nowhere, and leaves `T` unbound. `T` is existentially quantified after `z`: with the uniform `T` of
   Proposition 5.1 the last claim would force all exit times from `B_1` of centres in `B_{1/2}` to coincide, which
   fails already for Lebesgue measure (exit time `π(1 - |z|)²`).
