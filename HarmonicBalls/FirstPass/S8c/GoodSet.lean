@@ -5,8 +5,7 @@ import HarmonicBalls.Proofs.Sec8.PhaseVeryGoodScaling
 
 The good set `recentredGoodSet` consists of the pairs `(z, η)` such that, for all large `N`, at least `(1 - ζ) N`
 scales `n ∈ [N+1, 2N]` are good for the normalised recentred measure `η`, at the origin with lattice phase `-z`
-(the lattice of `(VG-iii)` is anchored at the original origin and is shifted by `-z` after recentring; see
-`docs/campaign/audits/LocalRootedComparisonRepair.md`, "Countable tail event and exact transfer").
+(the lattice of `(VG-iii)` is anchored at the original origin and is shifted by `-z` after recentring).
 Its second component is taken through `finitePart`, which is locally finite for every measure
 (`isLocallyFiniteMeasure_finitePart`), so that the phase-annulus measurability of
 `Proofs/Sec8/PhaseVeryGoodScaling.lean:24` applies. Measurability of the good set is proved from the unit

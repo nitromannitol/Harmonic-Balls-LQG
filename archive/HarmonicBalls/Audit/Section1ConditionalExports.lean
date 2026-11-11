@@ -70,9 +70,4 @@ example (hbound : AnnulusMassBoundByHarmonicChainStmt.{u})
     HarmonicBallNotMetricBallStmt.{u} :=
   harmonicBallNotMetricBallStmt_of_comparison_pinch_and_volumeGrowth hbound hmany hgrowth hmetric
 
-#print axioms harmonicBallLocalSet_of_volumeGrowth_existence_uniqueness_and_measureLocality
-#print axioms existenceHarmonicBalls_of_volumeGrowth_and_clusterEstimates
-#print axioms harmonicBallComplementBoundaryJordan_of_volumeGrowth
-#print axioms harmonicBallNotMetricBallStmt_of_comparison_pinch_and_volumeGrowth
-
 end HarmonicBalls.Section1ConditionalExportsAudit

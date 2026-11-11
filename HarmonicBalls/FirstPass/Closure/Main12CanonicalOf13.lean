@@ -101,7 +101,7 @@ theorem closure_1_2_faithful_canonical_of_11_13
 `HarmonicBallNoveltyFaithfulStmt`, the faithful statement with the positive-radius condition, at the canonical exponent
 `ξ = γ / lqgGraphDimension γ`; it is not the unrestricted `HarmonicBallNoveltyCanonicalStmt`. Same binders and conclusion as
 `closure_1_2_faithful_canonical_of_11_13` (`FirstPass/Closure/Main12CanonicalOf13.lean:70`), proved by applying it.
-Ledger: `hE1` and `hDecFrozen` are two occurrences of the same external proposition `LQGMeasureOfProfileMeasurableFrozen`;
+`hE1` and `hDecFrozen` are two occurrences of the same external proposition `LQGMeasureOfProfileMeasurableFrozen`;
 `hAx` is a universal-ξ external interface (harmless). -/
 theorem firstPass_1_2_faithful_v1
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -203,7 +203,7 @@ theorem closure_1_2_faithful_canonical_of_11_13_clean
 
 /-- **Counted form of the faithful Theorem 1.2** (`theorem:harmonic-balls-properties`, arbitrary carrier `Ω : Type u`, radii restricted to `0 < s` as in `HarmonicBallNoveltyFaithfulStmt`), with no external `hAff` and no duplicate `hDecFrozen`. Conclusion
 `HarmonicBallNoveltyFaithfulStmt` at `ξ = γ / lqgGraphDimension γ`. Proof: `closure_1_2_faithful_canonical_of_11_13_clean`.
-Ledger: `hE1` is the single occurrence of `LQGMeasureOfProfileMeasurableFrozen`; `hAx` is a universal-ξ external interface
+`hE1` is the single occurrence of `LQGMeasureOfProfileMeasurableFrozen`; `hAx` is a universal-ξ external interface
 (harmless). The earlier binder list is kept as `firstPass_1_2_faithful_v1`. -/
 theorem firstPass_1_2_faithful
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)

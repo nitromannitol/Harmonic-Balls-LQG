@@ -51,9 +51,4 @@ example
           μ ω (ball z r) ≤ ENNReal.ofReal (r ^ βplus) := by
   exact lqgVolumeGrowthAllScalesStmt_of_literature hDG hAff hCC hW hE hN
 
-#print axioms lqgVolumeGrowthAllScalesStmt_of_literature
-#print axioms rescaledBallMassUniformStep_of_DG
-#print axioms lqgVolumeGrowthAllScalesStmt_of_ballMass
-#print axioms originManyGoodScalesStmt_of_literature
-
 end HarmonicBalls

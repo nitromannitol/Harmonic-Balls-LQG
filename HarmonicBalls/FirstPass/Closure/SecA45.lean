@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.S8d
 /-!
 # closures for Appendix A and Sections 4-5
 
-For each counted numbered result X.Y of Appendix A, Section 4 and Section 5 (`docs/campaign/INVENTORY.tsv`), a theorem
+For each counted numbered result X.Y of Appendix A, Section 4 and Section 5, a theorem
 `HarmonicBalls.Closure.closure_X_Y` (`closure_A_k` for Appendix A, `closure_4_k`, `closure_5_k`) whose conclusion is
 exactly the conclusion of the counted `firstPass_X_Y` theorem. Every paper-owned hypothesis is discharged by its
 `firstPass_*` theorem, recursively (Lemma 6.7 by `FirstPass/S6.lean:56`, Lemma 8.2 by `FirstPass/S8d.lean:32`), and the
@@ -160,7 +160,7 @@ theorem closure_5_8
 /-- Proposition 5.2 (prop:continuity-of-clusters, line 2088 of the corrected draft). Hypotheses: the Proposed inputs
 `hDG hCC hE hW hN`, and the five FROZEN Props `hL1 hWeyl hE1 hE3 hB` that the discharge of Lemma 8.2 needs
 (`typicalPointManyGoodScales_closed`).
-Scope (audit R1, MINOR HB): the conclusion `ClusterContinuityStmt` quantifies over all `t > 0` (the all-t form). It is
+Scope: the conclusion `ClusterContinuityStmt` quantifies over all `t > 0` (the all-t form). It is
 stronger than the printed Proposition 5.2 at line 2088, which requires `cluster z t ⋐ B₁` and writes `cluster + B_δ(z)`.
 The docstring of `ClusterContinuityStmt` (Draft/Section5.lean) says the later `t` are unproved; this discrepancy is not reconciled here. -/
 theorem closure_5_2

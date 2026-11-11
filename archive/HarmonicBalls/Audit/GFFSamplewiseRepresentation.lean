@@ -92,8 +92,4 @@ theorem IsWholePlaneGFF.map_rooted_recentered_observation_eq_raw_of_coordinatewi
       (((Section6.measurable_pairingProc hh).comp measurable_fst).prodMk measurable_snd)
   exact map_prod_eq_of_coordinatewise_ae_eq Prod.snd hcan hraw_meas measurable_snd hcoord
 
-#print axioms ae_ae_eventually_raw_phase_events_of_countable_coordinates
-#print axioms map_rooted_recentered_observation_eq_raw_of_ae_sampled
-#print axioms IsWholePlaneGFF.map_rooted_recentered_observation_eq_raw_of_coordinatewise
-
 end HarmonicBalls

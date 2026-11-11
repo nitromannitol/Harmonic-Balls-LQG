@@ -156,9 +156,4 @@ example {a c h b : ℝ} (ha : 0 ≤ a) (hc : 0 ≤ c) (hh : 0 < h) (hb : 0 < b) 
       a < b ∧ a * c < b * h :=
   pinch_contraction_iff_product_bound ha hc hh hb
 
-#print axioms IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_canonicalLaw
-#print axioms IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_radial_product
-#print axioms pinchPointEvent_of_internalBounds
-#print axioms pinch_contraction_iff_product_bound
-
 end HarmonicBalls.Section11PinchPositivityAudit

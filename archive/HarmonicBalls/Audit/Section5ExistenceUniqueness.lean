@@ -148,14 +148,4 @@ example {μ : Measure ℂ} {Λ₁ Λ₂ : ℝ → Set ℂ} {z : ℂ}
     (h₁ : IsRegularizedClusterFamily μ Λ₁ z) (h₂ : IsRegularizedClusterFamily μ Λ₂ z) :
     EqOn Λ₁ Λ₂ (Ioi 0) := h₁.eqOn h₂
 
-#print axioms existenceHarmonicBalls_of_volumeGrowth_and_clusterEstimates
-#print axioms wholePlaneGFFAffineInvariance_proved
-#print axioms existenceHarmonicBalls_of_volumeGrowth
-#print axioms cofinalRegularizedClusterIntervals_of_volumeGrowth
-#print axioms harmonicBallNoEntry
-#print axioms uniquenessHarmonicBalls_of_steps
-#print axioms harmonicBallBoundarySubset_of_volumeGrowth
-#print axioms regularOpenEqOfAEEq_of_volumeGrowth
-#print axioms IsRegularizedClusterFamily.eqOn
-
 end HarmonicBalls

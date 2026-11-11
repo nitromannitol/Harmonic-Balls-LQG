@@ -4,8 +4,7 @@ import HarmonicBalls.Proofs.Sec11.PinchRootedKernel
 
 /-! # Local observations for the rooted comparison of Lemma 8.2
 
-Definitions of the actual local observation maps of
-`docs/campaign/audits/LocalRootedComparisonRepair.md`, section "Actual local observation":
+Definitions of the actual local observation maps:
 
 * `r_j = 1/(16 j)` and the domain `D_j = {z : 3 r_j < |z| < 1 - 3 r_j}`, which covers `B_1(0) \ {0}`;
 * the recentred restricted measure `L_j(η, z) = (T_z)_* (η|B_{r_j}(z))`, with `T_z x = x - z`;

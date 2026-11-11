@@ -1,6 +1,6 @@
 import HarmonicBalls.Steps.Sec11.ConeProbabilityFromLiterature
 
-/-! # Conditional consumer audit for Lemma 11.8
+/-! # Conditional consumer for Lemma 11.8
 
 This is a provider handoff, not a source admission. The proof uses Leonardo
 Bonanno's Lattice-Probability formalization, including its Cameron-Martin port,
@@ -42,8 +42,5 @@ example (hS : WholePlaneScaledBallMassStep.{u})
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
       LQGMeasureExistence P γ α hC hcirc) : ConeBadEventProbabilityStmt.{u} :=
   coneBadEventProbability_of_existence hS hgrowth hE
-
-#print axioms coneBadEventProbability_of_literature
-#print axioms coneBadEventProbability_of_existence
 
 end HarmonicBalls

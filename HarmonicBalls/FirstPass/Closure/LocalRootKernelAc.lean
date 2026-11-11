@@ -12,7 +12,6 @@ The helper `localRootKernel` is the weighted restriction kernel `weightedRestric
 (`Proofs/Sec11/PinchRootedKernel.lean:28`) with unit weight, and that kernel is a measurable version of
 `normalizedRestriction` (`Proofs/Sec8/LocalMeasureRatios.lean:16`, `normalizedRestriction μ U = (μ U)⁻¹ • μ.restrict U`).
 
-The body of `weightedRestrictionKernel` was not checked by the earlier audit. This file checks it.
 `ae_weightedRestrictionKernel_eq` (`Proofs/Sec11/PinchRootedKernel.lean`) identifies the kernel almost surely with the
 normalized restriction of the weighted measure, and a unit density does not change the measure. A normalized restriction
 is a nonnegative scalar multiple of the restriction, hence absolutely continuous with respect to it, including when the

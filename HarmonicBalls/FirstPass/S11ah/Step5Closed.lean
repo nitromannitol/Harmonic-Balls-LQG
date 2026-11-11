@@ -13,7 +13,7 @@ Closed forms of the Step 5 interface of `S11ah/LQGDecoder.lean` and `S11ah/Modif
 * the measurability in `ω` of the observables `localMeanZeroObs α D (hC ω)` follows from the measurability of the
   pairings `hC ω φ` (`IsWholePlaneGFF.measurable_pairing`), so the measurability `hm` of the decoder family is derived
   from the measurability `Measurable m` of identity (18);
-* locality of the certificate event (operator item (a)) is derived from the containments of the paper's pinch
+* locality of the certificate event is derived from the containments of the paper's pinch
   geometry (`FirstPassS11ap.pinchOmegaGeom_certificate_data`) with `Ostar = pinchOmegaGeom W Q δ`, `η = δ`.
 
 The decoders are indexed by the model sample space `Ω` (which carries `hC`), not by the observables, because identity
@@ -36,7 +36,7 @@ theorem measurable_localMeanZeroObs_ae {Ω : Type*} [MeasurableSpace Ω] {P : Me
   have hφ : IsTestFunction univ φ.1 := ⟨φ.2.1.1, φ.2.1.2.1, subset_univ _⟩
   exact (hG.measurable_pairing φ.1 hφ).sub measurable_const
 
-/-- **Locality of the pinch certificate event** (operator item (a)): for the paper's `Ostar = pinchOmegaGeom W Q δ`
+/-- **Locality of the pinch certificate event**: for the paper's `Ostar = pinchOmegaGeom W Q δ`
 and `η = δ`, the locality hypothesis `CertificateEventLocality` holds, from the containments of the buffered pinch
 geometry (`FirstPassS11ap.pinchOmegaGeom_certificate_data`). -/
 theorem certificateEventLocality_pinch {U V W T Q' Q : Set ℂ} {δ M : ℝ}

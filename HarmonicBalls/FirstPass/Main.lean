@@ -19,7 +19,7 @@ Composition of the committed `firstPass_<sec>_<num>` theorems into one theorem p
 Every other Draft hypothesis of the printed proofs is discharged by a `firstPass_` theorem. Literature inputs of
 the Section 2, 3, 4, 9 and A files are taken at the arguments they use: the `α₀ = 0` instances are specialisations
 of the `∀ α₀` form (`hCC`, `hE`) taken as the hypothesis, so no new Prop is introduced.
-The list of hypotheses with sources is in `docs/campaign/FIRST-PASS-INPUTS.md`.
+
 -/
 
 namespace HarmonicBalls

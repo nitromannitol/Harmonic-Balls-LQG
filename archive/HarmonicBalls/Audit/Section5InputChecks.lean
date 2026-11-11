@@ -29,7 +29,7 @@ binder. The volume input `LQGVolumeGrowthAllScalesStmt` (I2) is the only volume-
 
 Remaining leaves, as binders: `LiouvilleVolumeGrowthStmt` (Lemma 2.4), `HarnackTypeEstimateStmt` (Proposition 6.1),
 `TypicalPointManyGoodScalesStmt` (Lemma 8.2), `ClusterBoundaryTouchingRightContinuityStep` (the right-continuity step
-of Proposition 5.2 at times with `closure Λ ⊄ B₁`, docs/campaign/GRAPH.md G12), and the all-insertion coordinate-change
+of Proposition 5.2 at times with `closure Λ ⊄ B₁`), and the all-insertion coordinate-change
 input `LQGMeasureCoordChange` (Proposed).
 
 Leonardo Bonanno's potential-theoretic and LatticeProb work is consumed through the imported modules, which carry Leonardo Bonanno's
@@ -170,17 +170,5 @@ theorem section5_clusterStrongCompatibility_of_staged_inputs
   section5_clusterStrongCompatibility_of_I2 (section5_volumeGrowth_of_staged_inputs hDG hCC hE)
 
 /-! ## Axiom checks (expected: propext, Classical.choice, Quot.sound only) -/
-
-#print axioms section5_volumeGrowth_of_staged_inputs
-#print axioms section5_clusterUpperBound_of_I2
-#print axioms section5_clusterBoundaryMeasureZero_of_I2
-#print axioms section5_clusterContinuity_of_I2
-#print axioms section5_regularizedCluster_of_I2
-#print axioms section5_existence_of_I2
-#print axioms section5_uniqueness_of_I2
-#print axioms section5_clusterScaleInvariance_of_I2
-#print axioms section5_clusterStrongCompatibility_of_I2
-#print axioms section5_uniqueness_of_staged_inputs
-#print axioms section5_clusterStrongCompatibility_of_staged_inputs
 
 end HarmonicBalls

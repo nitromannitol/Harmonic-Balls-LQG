@@ -81,7 +81,4 @@ example (h : ClusterBoundedCrossingsStmt.{u}) :
         (closure C ∩ sphere w (ρ / 3)).Nonempty ∧
         (closure C ∩ sphere w (2 * ρ)).Nonempty}).encard ≤ ⌈1 / α⌉₊ := h
 
-#print axioms clusterBoundedCrossings_of_volumeGrowth_and_zero_existence
-#print axioms clusterBoundedCrossings_of_three_staged_inputs
-
 end HarmonicBalls

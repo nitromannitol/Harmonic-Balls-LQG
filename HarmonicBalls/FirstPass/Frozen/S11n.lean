@@ -14,7 +14,7 @@ open MeasureTheory
 
 universe u
 
-/-- DERIVED INTERFACE. Audit l.188: "Canonical simultaneous
+/-- DERIVED INTERFACE. "Canonical simultaneous
 measure/metric decoders are assembled from construction, measurability, locality, and uniqueness. There is no single printed
 theorem with this exact Lean type."
 FROZEN, EXTERNAL (truth check TRUE, Verdict and section 1). For every `γ ∈ (0, 2)`, every `ξ ∈ ℝ` and

@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S6
 /-!
 # Phase-1 closure of Section 6
 
-For each paper-owned numbered result 6.n of Section 6 (`docs/campaign/INVENTORY.tsv`), `closure_6_n` has the conclusion
+For each numbered result 6.n of Section 6, `closure_6_n` has the conclusion
 of the counted theorem `HarmonicBalls.FirstPass.S6.firstPass_6_n` (`FirstPass/S6.lean`). Its only hypotheses
 are the three literature inputs of Section 6, shared by all twelve closures:
 * `hDG`: `WholePlaneLQGBallMassBounds` (`Proposed/LQG.lean:154`; Ding-Gwynne arXiv:1807.01072, Lemma 3.8, whole-plane case),

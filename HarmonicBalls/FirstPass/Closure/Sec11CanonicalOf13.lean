@@ -53,7 +53,7 @@ theorem closure_11_11_canonical_of_11_13
 `Ω : Type u` and all real radii `s`). Statement `HarmonicBallNotMetricBallCanonicalStmt` at the canonical exponent
 `ξ = lqgXi γ`, with the numbered Lemma 11.13 `CorrectedLemma11_13CanonicalStmt` as the single input `h13`. Same binders
 and conclusion as `closure_11_11_canonical_of_11_13` (`FirstPass/Closure/Sec11CanonicalOf13.lean:29`), proved by applying it.
-Ledger: `hE1` is an occurrence of `LQGMeasureOfProfileMeasurableFrozen`; `hAx` is a universal-ξ external interface (harmless). -/
+`hE1` is an occurrence of `LQGMeasureOfProfileMeasurableFrozen`; `hAx` is a universal-ξ external interface (harmless). -/
 theorem firstPass_11_11_faithful
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)

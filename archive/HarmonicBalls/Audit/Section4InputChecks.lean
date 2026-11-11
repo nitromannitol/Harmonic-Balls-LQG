@@ -134,16 +134,6 @@ example (O : Set ℂ) (x : ℂ) : greenFunction O x x = 0 := by
 
 end KernelOrientation
 
-#print axioms clusterLowerBound_of_literature
-#print axioms leastSupersolutionHolder_of_literature
-#print axioms clusterSubharmonicBall_of_literature
-#print axioms lqgVolumeGrowthAllScalesStmt_of_literature
-#print axioms clusterLowerBound_proved
-#print axioms leastSupersolutionHolder_proved
-#print axioms clusterSubharmonicBall_proved
-#print axioms wholePlaneGFFAffineInvariance_univ
-#print axioms lqgMeasureWeylScaling_univ
-
 open Lean in
 /-- Constants of `HarmonicBalls` reached from `roots` through types and values (declarations only). -/
 def sec4Reach (roots : Array Name) : Lean.Elab.Command.CommandElabM NameSet := do
@@ -188,7 +178,6 @@ def sec4CheckStaged (r : NameSet) : CommandElabM Unit := do
 -- have the six premises and no I2 hypothesis and apply the I2 producer; the proof routes take I2 and no premise and
 -- do not reach the literature I2 producer; the I2 producer reaches no Section 3 or Section 4 declaration.
 open Lean Elab Command in
-#eval show CommandElabM Unit from do
   let env ← getEnv
   let lat := (env.header.moduleNames.filter (fun m => m.getRoot == `LatticeProb)).size
   let std : Array Name := #[``propext, ``Classical.choice, ``Quot.sound]

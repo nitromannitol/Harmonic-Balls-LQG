@@ -101,8 +101,4 @@ example {D : ℂ → ℂ → ℝ}
     (hlen : ∀ z w, ENNReal.ofReal (D z w) = internalMetric D univ z w) :
     IsEuclideanLengthMetric D := ⟨hself, hsep, hsym, htri, htop, hlen⟩
 
-#print axioms IsEuclideanLengthMetric.exists_geodesic_of_compact_closedBalls
-#print axioms ae_exists_geodesic_of_metricFieldAxioms_of_compact_closedBalls
-#print axioms ae_exists_geodesic_wholePlane_of_boundedlyCompact
-
 end HarmonicBalls

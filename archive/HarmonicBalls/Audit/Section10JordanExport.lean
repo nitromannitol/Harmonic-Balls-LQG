@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec10.JordanDyadicScaling
 import HarmonicBalls.Proofs.Sec9.ExistenceResultsAssembly
 
 /-!
-# Proposition 10.7 conditional export audit
+# Proposition 10.7 conditional export
 
 The affine GFF invariance, Weyl scaling, and nonatomicity replacements used
 through the imported assemblies include the Bonanno Cameron–Martin port,
@@ -61,9 +61,5 @@ theorem auditJordanExport_of_staged
     HarmonicBallComplementBoundaryJordanStmt.{u} :=
   auditJordanExport_dyadic
     (lqgVolumeGrowthAllScalesStmt_of_existence hDG hCC hE) hexists h10
-
-#print axioms auditJordanExport
-#print axioms auditJordanExport_dyadic
-#print axioms auditJordanExport_of_staged
 
 end HarmonicBalls

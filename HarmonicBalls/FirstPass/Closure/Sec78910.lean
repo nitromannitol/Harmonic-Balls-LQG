@@ -9,7 +9,7 @@ import HarmonicBalls.FirstPass.S1S10.CrossingLemma
 /-!
 # Closure of the counted numbered results of Sections 7-10
 
-For each counted result `X.Y` of Sections 7-10 (paper-owned in `docs/campaign/INVENTORY.tsv`), a theorem
+For each counted result `X.Y` of Sections 7-10, a theorem
 `HarmonicBalls.Closure.closure_X_Y` with the conclusion of the counted `firstPass_X_Y` (corrected form where
 counted). Its hypotheses are only:
 * Proposed literature inputs (`HarmonicBalls/Proposed/LQG.lean`: `WholePlaneLQGBallMassBounds`,

@@ -78,8 +78,3 @@ theorem circleCompatDecoder_gff_identification_typed (rho : ℂ → ℝ) (hρ : 
   HarmonicBalls.circleCompatDecoder_gff_identification rho hρ q hq
 
 end HarmonicBalls.Audit.Sec11CirclePalm
-
-#print axioms HarmonicBalls.Audit.Sec11CirclePalm.circleAverage_log_norm_sub_eq_log_max_sec8
-#print axioms HarmonicBalls.Audit.Sec11CirclePalm.circleAverage_log_norm_sub_eq_log_max_sec11
-#print axioms HarmonicBalls.Audit.Sec11CirclePalm.stepM_of_dms_typed
-#print axioms HarmonicBalls.Audit.Sec11CirclePalm.circleCompatDecoder_gff_identification_typed

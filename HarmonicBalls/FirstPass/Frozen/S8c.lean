@@ -25,8 +25,7 @@ observation (`localReferenceObservation ν j`, `γ`-insertion measure `ν` on `B
 distributed on `localDomain j` and independent of the field).
 Source: Duplantier, Miller, Sheffield, arXiv:1409.7055v4, Lemma A.10, p. 184 (whole-plane paragraph, marked
 sampling description), local joint form: locator pending (the field marginal is printed; the joint
-field-measure form is not). The displayed form is in
-`docs/campaign/audits/LocalRootedComparisonRepair.md`, section "Actual local observation".
+field-measure form is not).
 Used by: firstPass_8_2 (through the local reduction in `FirstPass/S8c/`).
 Restated (which
 marked the earlier form UNCLEAR): the three a.s. premises give every nonempty open set positive mass under `μ`, `ν`

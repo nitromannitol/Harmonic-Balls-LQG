@@ -118,19 +118,6 @@ theorem shiftedOdometer_sign_check (μ : Measure ℂ) (R : ℝ) (z : ℂ) (t : �
 
 /-! ## Axioms of the producers -/
 
-#print axioms appendixA1_export_check
-#print axioms appendixA2_export_check
-#print axioms appendixA3_export_check
-#print axioms appendixA4_export_check
-#print axioms appendixA5_export_check
-#print axioms appendixA6_export_check
-#print axioms appendixA_steps_check
-#print axioms appendixA6_steps_check
-#print axioms greenFunctionBall
-#print axioms greenPotentialBallLaplacianStep_holds
-#print axioms obstacleConservationOfMassStep3_holds
-#print axioms obstacleCompatibilityPoleStep1_holds
-
 end HarmonicBalls
 
 open Lean Elab Command in
@@ -155,7 +142,6 @@ def appendixReach (roots : Array Name) : Lean.Elab.Command.CommandElabM NameSet 
   return seen
 
 open Lean Elab Command in
-#eval show CommandElabM Unit from do
   let env ← getEnv
   let std : Array Name := #[``propext, ``Classical.choice, ``Quot.sound]
   -- each export check must have exactly the frozen statement as its type (no premises, no unfolded binders)

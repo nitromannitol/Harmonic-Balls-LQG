@@ -25,7 +25,7 @@ constants (`Section6.fieldSigmaAlgebraModConst α hC (ball 0 7)`) with `0 < P E`
 
 GAP NOTE (not encoded): the paper also asks that E^α(M) be defined by a rule independent of α (paper line 3240).
 This statement only asks for the existence of such an E for each α, so it is weaker than the printed corrected lemma
-in that respect. The operator decides whether the uniform rule is required.
+in that respect.
 -/
 def PinchEventPositiveCorrectedStmt : Prop :=
   ∃ U T Q' Q : Set ℂ, IsPinchPointConfiguration U T Q' Q ∧

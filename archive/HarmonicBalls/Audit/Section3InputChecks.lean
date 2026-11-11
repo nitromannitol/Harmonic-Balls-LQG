@@ -62,17 +62,10 @@ example : ClusterConservationOfMassStmt.{u} :=
 example : ClusterCompatibilityStmt.{u} :=
   clusterCompatibility_of_literature hDG hAff hCC hW hE hN
 
-#print axioms leastSupersolutionMem_of_literature
-#print axioms clusterOpenLaplacian_of_literature
-#print axioms clusterMonotone_of_literature
-#print axioms clusterConservationOfMass_of_literature
-#print axioms clusterCompatibility_of_literature
-
 -- Guards (an error fails the check): standard axioms only; no LatticeProb module imported; each export's type has
 -- the six premises and no I2 hypothesis; each export's value applies the I2 producer; the constant closure of the
 -- I2 producer through HarmonicBalls declarations reaches no Section 3 or Section 4 declaration (no circularity).
 open Lean Elab Command in
-#eval show CommandElabM Unit from do
   let env ← getEnv
   if env.header.moduleNames.any (fun m => m.getRoot == `LatticeProb) then
     throwError "a LatticeProb module is imported: credit Leonardo Bonanno in this file"

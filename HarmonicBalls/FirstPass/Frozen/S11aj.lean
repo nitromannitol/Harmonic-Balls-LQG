@@ -16,7 +16,7 @@ namespace HarmonicBalls.S11aj
 open MeasureTheory Set Metric
 open scoped ENNReal
 
-/-- DERIVED INTERFACE. Audit l.197: "The Radon–Nikodym/reweighting
+/-- DERIVED INTERFACE. "The Radon–Nikodym/reweighting
 identity is standard, but the exact normalization and arbitrary-carrier Lean interface must be derived."
 FROZEN. Cameron-Martin reweighting of the whole-plane GFF (Miller-Sheffield, Imaginary Geometry IV,
 arXiv:1302.4738v2, Proposition 2.9, printed p. 49; Gaussian tilting). Truth check TRUE exactly as typed, including the

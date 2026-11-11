@@ -23,7 +23,7 @@ Step 5: `S11ah/FailureSet.lean`: `failureSet A c q` (formula (K), in the window-
 `ReferenceNullS11i.refWindowAverage`), its measurability `measurableSet_failureSet` (needs joint measurability `hc` of the
 `c n`), and joint measurability of (J) for whole-plane decoders `measurable_localCert_of_decoder`.
 
-Local domain (operator item (b)): `S11ah/Radial.lean` (radial homeomorphism `ℂ ≃ₜ ball c R`, identity on
+Local domain: `S11ah/Radial.lean` (radial homeomorphism `ℂ ≃ₜ ball c R`, identity on
 `closedBall c ρ`), `S11ah/LengthTransport.lean` (`IsLengthMetricOn B D`; lift `liftMetric` to a whole-plane
 `IsEuclideanLengthMetric`), `S11ah/LocalMeasurable.lean` (`localCertSet`, `measurableSet_localCertSet`,
 `measurable_localCertLoc`: joint measurability of the local indicator (J) for a metric on a disc, no locality needed;

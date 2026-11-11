@@ -19,7 +19,7 @@ open scoped ENNReal
 
 universe u
 
-/-- DERIVED INTERFACE. Audit l.202: "It is a normalization-aware
+/-- DERIVED INTERFACE. "It is a normalization-aware
 consequence of the GFF Markov decomposition and Cameron–Martin equivalence, not a verbatim proposition."
 FROZEN. Domain Markov property, conditional positivity form, for a disk `W = ball c r`
 (EXTERNAL; Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2: Proposition 2.8 (pp. 48-49: the domain Markov
@@ -49,7 +49,7 @@ def DomainMarkovConditionalPositiveFrozen : Prop :=
     ∀ᵐ ω ∂P, 0 < (P[A.indicator (1 : Ω → ℝ) |
       MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance]) ω
 
-/-- DERIVED INTERFACE. Audit l.200: "The right source is HB
+/-- DERIVED INTERFACE. "The right source is HB
 Fact 2.1 II, not Fact 2.1 III."
 FROZEN. Inner measurability of the LQG mass of an open set with compact closure inside `O` (EXTERNAL;
 locality and measurable dependence of the LQG measure: Bou-Rabee-Gwynne arXiv:2208.11795v3, Fact 2.1 II (p. 9); truth check
@@ -69,7 +69,7 @@ def LQGMassInnerMeasurableFrozen : Prop :=
     ∀ (O U : Set ℂ), IsOpen O → IsOpen U → Bornology.IsBounded U → closure U ⊆ O →
     ∃ g : Ω → ℝ≥0∞, Measurable[fieldSigmaAlgebra α₀ hC O] g ∧ ∀ᵐ ω ∂P, μ ω U = g ω
 
-/-- DERIVED INTERFACE. Audit l.201: "The source is HB Fact 2.2
+/-- DERIVED INTERFACE. "The source is HB Fact 2.2
 II / GM Axiom II, plus countable reconstruction of the diameter."
 FROZEN. Inner measurability of the internal diameter `diam^δ(A) = sup_{x,y ∈ A} D(x, y; B_δ(A))` of a compact
 set `A` for an LQG metric `D` (`IsLQGMetricOfField`) (EXTERNAL; locality of the internal metric `D(·,·; O)`, which depends

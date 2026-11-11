@@ -367,7 +367,7 @@ def LocalLQGDecoderFrozen : Prop :=
       ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
         K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
 
-/-- DERIVED INTERFACE. Audit l.187: "The exact common local
+/-- DERIVED INTERFACE. "The exact common local
 decoder is stronger than the printed locality statement and needs a measurable-factorization derivation; it is not a verbatim citation."
 FROZEN (TRUTH-CHECKED TRUE). EXTERNAL,
 common local decoder: for `γ ∈ (0,2)` and a disc `D = ball c₂ r₂` with `0 ∉ closedBall c₂ r₂`, ONE s-finite kernel `K`

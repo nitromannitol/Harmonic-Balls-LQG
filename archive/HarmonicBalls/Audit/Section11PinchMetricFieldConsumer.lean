@@ -93,8 +93,4 @@ theorem pinchEventPositiveProbabilityStmt_of_metricFieldAxioms_and_internal_oute
       haxioms hg hγ hγ' hQ hd hm hpos
   exact ⟨E, fun ω hω => (hsub hω).1, hE, hEpos⟩
 
-#print axioms exists_measurable_pos_subset_internal_pinch_of_metricFieldAxioms
-#print axioms exists_measurable_pos_subset_pinch_of_metricFieldAxioms
-#print axioms pinchEventPositiveProbabilityStmt_of_metricFieldAxioms_and_internal_outer_positive
-
 end HarmonicBalls

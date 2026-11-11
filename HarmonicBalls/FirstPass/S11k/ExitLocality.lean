@@ -69,7 +69,7 @@ theorem ofReal_setDist_sphere_sphere_eq_internalMetric {D : ℂ → ℂ → ℝ}
 `m`-measurable for each pair of points of `A × ∂U` and agrees almost surely with `internalMetric (D ω) V` on `A × ∂U`
 (uniformly in the pair), then `ENNReal.ofReal (setDist (D ω) A (frontier U))` has an `m`-measurable version. This is the
 measurability input of the outside-field distances `D(Q', ∂Q)`, `D(0, ∂B_δ)`, `D(∂B_δ, ∂B_{2δ})` with `V = (closure W)ᶜ`;
-the family `G` is the open input (weighted singular metric, see the N1 request in the task notes). -/
+the family `G` is the open input (weighted singular metric). -/
 theorem exists_outside_ofReal_setDist_of_internalMetric {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω}
     {m : MeasurableSpace Ω} {D : Ω → ℂ → ℂ → ℝ} {G : Ω → ℂ → ℂ → ℝ≥0∞} {V A U : Set ℂ}
     (hV : IsOpen V) (hU : IsOpen U) (hAU : A ⊆ U) (hUV : closure U ⊆ V)

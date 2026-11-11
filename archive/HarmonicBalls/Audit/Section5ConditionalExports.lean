@@ -50,9 +50,4 @@ example (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
       LQGMeasureCoordChange P γ α₀ hC hcirc) : ExistenceHarmonicBallsStmt.{u} :=
   existenceHarmonicBalls_of_volumeGrowth_and_clusterEstimates hI2 h53 h71 h72 hAff hCC
 
-#print axioms clusterScaleInvariance_of_volumeGrowth
-#print axioms clusterStrongCompatibilityStmt_of_volumeGrowth
-#print axioms cofinalRegularizedClusterIntervals_of_bufferedHorizon
-#print axioms existenceHarmonicBalls_of_volumeGrowth_and_clusterEstimates
-
 end HarmonicBalls

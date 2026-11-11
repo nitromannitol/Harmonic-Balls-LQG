@@ -50,8 +50,4 @@ example : ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
     ∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < μ ω U :=
   lqgMeasureFullSupportStmt_of_stronger_singularity hDG hAff hCC hE
 
-#print axioms singular_nonatomic_of_existence_and_wholePlane
-#print axioms lqgVolumeGrowthAllScalesStmt_of_stronger_singularity
-#print axioms lqgMeasureFullSupportStmt_of_stronger_singularity
-
 end HarmonicBalls

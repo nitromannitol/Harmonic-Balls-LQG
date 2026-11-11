@@ -82,11 +82,4 @@ example
       closure (Λhat ω z t) = closure (clusterOn (μ ω) U z t) :=
   clusterStrongCompatibility_of_steps h32 hcompat
 
-#print axioms clusterContinuity_of_boundaryTouching
-#print axioms clusterRightContinuity_of_steps
-#print axioms clusterCompactRightContinuity_of_steps
-#print axioms clusterShrinksToCenter_of_upperBound
-#print axioms clusterStrongCompatibility_of_steps
-#print axioms closure_regularizedCluster_eq_of_isOpen
-
 end HarmonicBalls

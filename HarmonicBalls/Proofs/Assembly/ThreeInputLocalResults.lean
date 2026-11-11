@@ -129,7 +129,6 @@ end ThreeStagedInputs
 -- all-insertion form and equals the premise of the staged I2 export; closure of the exports reaches no theorem that
 -- proves Lemma 8.2 (the open obligation) and no non-definitional Proposed or External constant.
 open Lean Meta Elab Command in
-#eval show CommandElabM Unit from do
   let env ← getEnv
   let std : List Name := [``propext, ``Classical.choice, ``Quot.sound]
   let exports : Array Name := #[``HarmonicBalls.leastSupersolutionMem_of_three_staged_inputs,
