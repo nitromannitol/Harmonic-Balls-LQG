@@ -31,7 +31,7 @@ All verdict words in the table: TRUE 53, FALSE AS TYPED 12, none 49. Structural 
 | 2 | `LQGMetricSupMeasurableRetiredFalseFrozen` | FirstPass/Frozen/S11c.lean:191 | RETIRED (truth: FALSE AS TYPED) → replaced by LQGMetricSupMeasurableFrozen (AEMeasurable form) | operator 19:25 UTC | none |
 | 3 | `LQGMeasureSquareMeasurableRetiredFalseFrozen` | FirstPass/Frozen/S11c.lean:203 | RETIRED (truth: FALSE AS TYPED) → replaced by LQGMeasureSquareMeasurableFrozen (AEMeasurable form) | operator 19:25 UTC | none |
 | 4 | `WeylShiftedSupMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:217 | PENDING | - | Fact 2.2 |
-| 5 | `WeylShiftedMassMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:233 | PENDING | - | Fact 2.1 |
+| 5 | `WeylShiftedMassMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:233 | DERIVED: `weylShiftedMassMeasurable_derived` (HarmonicBalls/FirstPass/Phase2/WeylShiftedMassDerived.lean:96, commit 5f327308; binders: none); docstring verdict was: PENDING | - | Fact 2.1 |
 | 6 | `LQGInternalMetricWeylMeasurableFrozen` | FirstPass/Frozen/S11d.lean:110 | RETIRED (truth: FALSE AS TYPED) → use LQGInternalMetricWeylAeMeasurableFrozen | notes/fp-gaps/CHATGPT-hb-distribution-frozen.md; ChatGPT 02:36 UTC | Gwynne-Miller, p. 6 |
 | 7 | `LQGInternalMetricContinuousFrozen` | FirstPass/Frozen/S11g.lean:45 | RETIRED (truth: FALSE AS TYPED) → no name given | operator 21:18 UTC | Bou-Rabee-Gwynne, arXiv:2208.11795, Fact 2.2 |
 | 8 | `LQGMetricLengthIdentityFrozen` | FirstPass/Frozen/S11g.lean:58 | RETIRED (truth: FALSE AS TYPED) → no name given | operator 21:18 UTC | Bou-Rabee-Gwynne, arXiv:2208.11795, Fact 2.2 |
@@ -57,14 +57,14 @@ All verdict words in the table: TRUE 53, FALSE AS TYPED 12, none 49. Structural 
 | 8 | `IsClosedRectangle` | FirstPass/Frozen/S11c.lean:80 | other: "A closed axis-parallel rectangle [a₁,a₂]" | - | none |
 | 9 | `ConnectedSquareUnionDiamFiniteFrozen`* | FirstPass/Frozen/S11c.lean:91 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Lemma 11.10, p. 34 |
 | 10 | `LQGMetricSupMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:105 | other: "operator ruling, FIRST PASS wave" | - | Lemma 11.10 |
-| 11 | `LQGMeasureSquareMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:117 | other: "operator ruling, FIRST PASS wave" | - | Fact 2.1 |
+| 11 | `LQGMeasureSquareMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:117 | DERIVED: `lqgMeasureSquareMeasurable_derived` (HarmonicBalls/FirstPass/Phase2/SquareMeasurableDerived.lean:37, commit 7ba20277; binders: hmeasure: Proposed LQGMeasureLocality (universal form)); docstring verdict was: other: "operator ruling, FIRST PASS wave" | - | Fact 2.1 |
 | 12 | `LQGMeasureSquarePositiveFrozen`* | FirstPass/Frozen/S11c.lean:130 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Rhodes-Vargas, arXiv:1305.6221v1, Theorem 2.12., p. 11 |
 | 13 | `CameronMartinEventTransferFrozen`* | FirstPass/Frozen/S11c.lean:149 | other: "truth check: the shifted event" | - | arXiv:1302.4738v2, Lemma 11.10 |
-| 14 | `WeylInternalClosedFrozen`* | FirstPass/Frozen/S11c.lean:180 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Gwynne-Miller, arXiv:1905.00383v3, Fact 2.2, p. 5 |
+| 14 | `WeylInternalClosedFrozen`* | FirstPass/Frozen/S11c.lean:180 | DERIVED: `weylInternalClosed_derived` (HarmonicBalls/FirstPass/Phase2/WeylInternalClosedDerived.lean:149, commit 3ec79df9; binders: none); docstring verdict was: TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Gwynne-Miller, arXiv:1905.00383v3, Fact 2.2, p. 5 |
 | 15 | `LQGMetricSupMeasurableRetiredFalseFrozen` | FirstPass/Frozen/S11c.lean:191 | RETIRED (truth: FALSE AS TYPED) → replaced by LQGMetricSupMeasurableFrozen (AEMeasurable form) | operator 19:25 UTC | none |
 | 16 | `LQGMeasureSquareMeasurableRetiredFalseFrozen` | FirstPass/Frozen/S11c.lean:203 | RETIRED (truth: FALSE AS TYPED) → replaced by LQGMeasureSquareMeasurableFrozen (AEMeasurable form) | operator 19:25 UTC | none |
 | 17 | `WeylShiftedSupMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:217 | PENDING | - | Fact 2.2 |
-| 18 | `WeylShiftedMassMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:233 | PENDING | - | Fact 2.1 |
+| 18 | `WeylShiftedMassMeasurableFrozen`* | FirstPass/Frozen/S11c.lean:233 | DERIVED: `weylShiftedMassMeasurable_derived` (HarmonicBalls/FirstPass/Phase2/WeylShiftedMassDerived.lean:96, commit 5f327308; binders: none); docstring verdict was: PENDING | - | Fact 2.1 |
 | 19 | `campbellMarkedObs` | FirstPass/Frozen/S11c.lean:244 | other: "The marked restriction observation (z," | - | none |
 | 20 | `campbellReferenceObs` | FirstPass/Frozen/S11c.lean:251 | other: "The reference observation at a" | - | none |
 | 21 | `LocalCampbellMarkedRestrictionFrozen`* | FirstPass/Frozen/S11c.lean:268 | other: "EXTERNAL local rooted-field (Campbell–Palm) absolute" | - | Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma 11.7 |
@@ -76,7 +76,7 @@ All verdict words in the table: TRUE 53, FALSE AS TYPED 12, none 49. Structural 
 | 27 | `LocalLQGDecoderFrozen` | FirstPass/Frozen/S11c.lean:359 | TRUE | notes/fp-gaps/CHATGPT-decoder-truth.md | arXiv:0808.1560v2, Lemma 11.7 |
 | 28 | `LocalLQGDecoderCommonFrozen`* | FirstPass/Frozen/S11c.lean:388 | DERIVED INTERFACE (truth: TRUE) | chat 179; notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md; operator 22:33 UTC | Duplantier-Sheffield, arXiv:0808.1560v2, Proposition 1.1 |
 | 29 | `CameronMartinLocallyLipschitzShiftAbsCont`* | FirstPass/Frozen/S11c.lean:414 | TRUE | notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md; operator 22:33 UTC | arXiv:1302.4738v2, Proposition 2.9 |
-| 30 | `PlaneDomainMinusConvexCompactPreconnectedFrozen`* | FirstPass/Frozen/S11d.lean:26 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Corollary 3.45, p. 255 |
+| 30 | `PlaneDomainMinusConvexCompactPreconnectedFrozen`* | FirstPass/Frozen/S11d.lean:26 | DERIVED: `planeDomainMinusConvexCompactPreconnected_derived` (HarmonicBalls/FirstPass/Phase2/PlaneDomainDerived.lean:14, commit e99fef25; binders: none); docstring verdict was: TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Corollary 3.45, p. 255 |
 | 31 | `LQGMetricContinuousShiftFactI`* | FirstPass/Frozen/S11d.lean:34 | other: "Fact 2.2 I for the" | - | Gwynne-Miller, arXiv:2208.11795, Fact 2.2, p. 6 |
 | 32 | `LQGMetricContinuousShiftLocality` | FirstPass/Frozen/S11d.lean:53 | TRUE | notes/fp-gaps/CHATGPT-hb-distribution-frozen.md | Gwynne-Miller, arXiv:2208.11795, Fact 2.2, p. 6 |
 | 33 | `CameronMartinGFFMutualAbsCont`* | FirstPass/Frozen/S11d.lean:74 | TRUE | notes/fp-gaps/CHATGPT-truth-new-frozen.md; notes/fp-gaps/CHATGPT-resolve-unclear.md; notes/fp-gaps/CHATGPT-11-15-17-chain-audit.md | Proposition 2.9 |
@@ -84,7 +84,7 @@ All verdict words in the table: TRUE 53, FALSE AS TYPED 12, none 49. Structural 
 | 35 | `LQGInternalMetricWeylMeasurableFrozen` | FirstPass/Frozen/S11d.lean:110 | RETIRED (truth: FALSE AS TYPED) → use LQGInternalMetricWeylAeMeasurableFrozen | notes/fp-gaps/CHATGPT-hb-distribution-frozen.md; ChatGPT 02:36 UTC | Gwynne-Miller, p. 6 |
 | 36 | `LQGInternalMetricWeylAeMeasurableFrozen`* | FirstPass/Frozen/S11d.lean:130 | DERIVED INTERFACE (truth: TRUE) | chat 179; notes/fp-gaps/CHATGPT-truth-1935.md; notes/fp-gaps/CHATGPT-11-15-17-chain-audit.md | Bou-Rabee-Gwynne, arXiv:2208.11795, Fact 2.2, p. 6 |
 | 37 | `LQGMassFunctionalMeasurableFrozen`* | FirstPass/Frozen/S11d.lean:155 | DERIVED INTERFACE (truth: TRUE) | chat 179; notes/fp-gaps/CHATGPT-hb-distribution-frozen.md | Duplantier-Sheffield, arXiv:0808.1560v2, Fact 2.1, p. 9 |
-| 38 | `LQGMetricPointwiseAEMeasurableFrozen` | FirstPass/Frozen/S11e.lean:27 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Gwynne-Miller, arXiv:2208.11795, Fact 2.2, p. 6 |
+| 38 | `LQGMetricPointwiseAEMeasurableFrozen` | FirstPass/Frozen/S11e.lean:27 | DERIVED: `lqgMetricPointwiseAEMeasurable_derived` (HarmonicBalls/FirstPass/Phase2/SquareMeasurableDerived.lean:57, commit 7ba20277; binders: hFA: Proposed LQGMetricFieldAxioms (universal form)); docstring verdict was: TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Gwynne-Miller, arXiv:2208.11795, Fact 2.2, p. 6 |
 | 39 | `DDDFSquareDiameterTailFrozen` | FirstPass/Frozen/S11f.lean:34 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | arXiv:1905.00380v2, Lemma 3.19, p. 45 |
 | 40 | `LQGMetricSatisfiesAxiomsUnivFrozen` | FirstPass/Frozen/S11g.lean:31 | TRUE | notes/fp-gaps/CHATGPT-hb-distribution-frozen.md | Gwynne-Pfeffer-Sun, arXiv:1905.00380, Fact 2.2, p. 6 |
 | 41 | `LQGInternalMetricContinuousFrozen` | FirstPass/Frozen/S11g.lean:45 | RETIRED (truth: FALSE AS TYPED) → no name given | operator 21:18 UTC | Bou-Rabee-Gwynne, arXiv:2208.11795, Fact 2.2 |
