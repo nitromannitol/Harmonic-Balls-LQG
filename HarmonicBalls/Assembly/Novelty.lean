@@ -67,7 +67,5 @@ theorem harmonicBallNoveltyStmt_of_existence_and_results
   · intro ξ D hD
     exact hmetric γ α₀ ξ hγ hγ₂ hα Ω P hC hcirc μ D hgff hμ hD Λ hΛ
 
-#print axioms exists_harmonicBallFamily_extension
-#print axioms harmonicBallNoveltyStmt_of_existence_and_results
 
 end HarmonicBalls

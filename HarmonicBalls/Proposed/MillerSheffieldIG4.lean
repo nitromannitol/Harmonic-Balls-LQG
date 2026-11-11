@@ -4,7 +4,7 @@ import Mathlib
 
 Source: J. Miller and S. Sheffield, *Imaginary Geometry IV: interior rays, whole-plane reversibility, and
 space-filling trees*, arXiv:1302.4738v2, Section 2.1, Proposition 2.9, printed page 49 (the statement was read from
-the text layer of arXiv:1302.4738v2 at page 49; operator source-check pending).
+the text layer of arXiv:1302.4738v2 at page 49; source check pending).
 
 Source setting (lines 1891-1897 and 1915-1918 of the text layer): `H` is the Hilbert space closure of `H_s` modulo a
 global additive constant, with the Dirichlet inner product `(f, g)_∇ = (2π)^{-1} ∫ ∇f · ∇g`. A whole-plane GFF `h`
@@ -20,7 +20,7 @@ former with respect to that of the latter is given by `(1/Z) e^{(h,g)_∇}` (2.8
 This file stages the first sentence, for `h` defined up to a constant in `ℝ`. The second sentence (the same statement
 for a whole-plane GFF defined up to a global additive constant in `rℤ`, `r > 0`, with the normalization
 `(h, φ₀) ∈ [0, r)`) is NOT staged here: its statement needs the concrete normalized field, not an abstract Gaussian
-on `H`. The operator should decide whether to stage it separately. -/
+on `H`. Whether to stage it separately is open. -/
 
 universe u
 

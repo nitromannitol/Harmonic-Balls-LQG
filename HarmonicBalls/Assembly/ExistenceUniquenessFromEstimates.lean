@@ -10,7 +10,7 @@ import HarmonicBalls.Proofs.Sec9.VolumeGrowthAssembly
 This conditional assembly leaves I2, Liouville volume growth, Propositions 6.1
 and 8.1, and the general-α LQG coordinate-change predicate as explicit
 premises. In particular, it does not close Propositions 6.1 or 8.1. The staged
-coordinate-change input in `HarmonicBalls.Proposed.LQG` is pending operator
+coordinate-change input in `HarmonicBalls.Proposed.LQG` is pending
 source review; this composition does not establish its literature attribution
 or source fidelity. The potential-theoretic infrastructure uses work of
 Leonardo Bonanno.
@@ -40,6 +40,5 @@ theorem existenceUniquenessHarmonicBallsStmt_of_harnack_and_compactBoundary
       (harmonicBallBoundarySubset_of_volumeGrowth hI2)
       (regularOpenEqOfAEEq_of_volumeGrowth hI2))
 
-#print axioms existenceUniquenessHarmonicBallsStmt_of_harnack_and_compactBoundary
 
 end HarmonicBalls

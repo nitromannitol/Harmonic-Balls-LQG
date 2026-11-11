@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec9.LQGExistenceConsequences
 /-! # Section 1 from staged mass inputs
 
 These conditional assemblies retain Propositions 6.1 and 8.1 as hypotheses.
-The staged LQG predicates await operator source review. The potential-theoretic
+The staged LQG predicates await source review. The potential-theoretic
 infrastructure uses work of Leonardo Bonanno.
 -/
 
@@ -53,7 +53,5 @@ theorem harmonicBallLocalSetStmt_of_stagedMassInputs
       (fun _ _ P γ hC hcirc => hCC P γ 0 hC hcirc) hE)
     h61 h81 hCC hlocal
 
-#print axioms existenceUniquenessHarmonicBallsStmt_of_stagedMassInputs
-#print axioms harmonicBallLocalSetStmt_of_stagedMassInputs
 
 end HarmonicBalls

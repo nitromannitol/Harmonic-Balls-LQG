@@ -3,7 +3,7 @@ import HarmonicBalls.Defs.LQGGraphDistance
 /-!
 # The Liouville graph-distance dimension
 
-This literature input is staged pending operator source-check.
+This literature input is staged pending source check.
 -/
 
 namespace HarmonicBalls

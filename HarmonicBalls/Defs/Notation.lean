@@ -23,7 +23,7 @@ noncomputable def lqgQ (γ : ℝ) : ℝ :=
 real `p > 0` with `P[E^r] ≥ 1 - O(r^p)` (line 336). We bound the (outer) probability of the complement, so the good
 event need not be measurable: `P[(E r)ᶜ] ≤ C r^p` for all `0 < r < r₀`. The exponent `p` is REAL (`r ^ p` is `Real.rpow`):
 an earlier version let `p` elaborate as a natural number, which forced `p ≥ 1` and made every statement using this
-predicate stronger than the paper (finding of worker c2, round 12). -/
+predicate stronger than the paper. -/
 def PolyHighProb {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (E : ℝ → Set Ω) : Prop :=
   ∃ p : ℝ, 0 < p ∧ ∃ C : ℝ, ∃ r₀ > 0, ∀ r : ℝ, 0 < r → r < r₀ → P (E r)ᶜ ≤ ENNReal.ofReal (C * r ^ p)
 

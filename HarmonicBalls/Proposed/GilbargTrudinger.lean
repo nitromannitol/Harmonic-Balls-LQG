@@ -5,8 +5,7 @@ import Mathlib
 
 Source: D. Gilbarg and N. S. Trudinger, *Elliptic Partial Differential Equations of Second Order*,
 2nd edition, revised third printing, Springer (2001), Theorem 2.14, p. 26, together with the
-exterior-sphere barrier (2.34), p. 27. Locator as given in the task brief; the operator source-checks
-the wording before promotion to `HarmonicBalls/External`. This is a `Prop` taken as an explicit
+exterior-sphere barrier (2.34), p. 27. The wording awaits a source check. This is a `Prop` taken as an explicit
 hypothesis; it is used only in `HarmonicBalls/Proofs/Potential/GreenGeneralBoundary.lean`.
 
 Scope of the staged statement: the Laplace equation in the plane (`ℂ ≅ ℝ²`) on a bounded domain
@@ -26,7 +25,7 @@ def ExteriorSphereAt (U : Set ℂ) (z : ℂ) : Prop :=
 /-- Gilbarg-Trudinger, Theorem 2.14 (p. 26), for the Laplacian on `ℂ ≅ ℝ²`: if a bounded domain `U`
 satisfies the exterior sphere condition at every boundary point, then for every continuous boundary
 datum `φ` on `∂U` there is a function `u`, continuous on `closure U` and harmonic in `U`, with
-`u = φ` on `∂U`. Staged as a hypothesis; the operator source-checks it before promotion. -/
+`u = φ` on `∂U`. Staged as a hypothesis; the source check is pending. -/
 def GilbargTrudingerThm2_14 : Prop :=
   ∀ U : Set ℂ, IsOpen U → IsConnected U → Bornology.IsBounded U →
     (∀ z ∈ frontier U, ExteriorSphereAt U z) →

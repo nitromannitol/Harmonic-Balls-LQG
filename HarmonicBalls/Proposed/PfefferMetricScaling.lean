@@ -20,7 +20,7 @@ real parameter `Q` of `PfefferBackgroundScaling`; the value of (1.4) is not stag
 Credit: the whole-plane GFF carriers `IsWholePlaneGFF`, the pairing functionals and their σ-algebras come from
 `HarmonicBalls.Defs.GFF` and `HarmonicBalls.Defs.LQGMetric`. Their whole-plane GFF construction is due to Leonardo Bonanno.
 
-Deviations from the printed statement, flagged for the operator source-check:
+Deviations from the printed statement, flagged for the source check:
 1. Metrics are real-valued `D : ℂ → ℂ → ℝ`, as in `IsLQGMetric`. The printed metrics may take the value `∞`
    (internal metrics, p. 5). Such values enter through `ENNReal.ofReal` and the `ℝ≥0∞`-valued `internalMetric`,
    `curveLength`, `pathLength`.

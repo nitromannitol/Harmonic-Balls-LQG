@@ -34,7 +34,7 @@ the statements of Lemma 10.1 - Lemma 11.17.
 * Simply connected set (Lemma 10.5, line 2586; Proposition 10.6, lines 2646, 2661): the Riemann-sphere sense of the
   paper, "connected with connected complement", for a connected open `U ⊆ ℂ` written `IsConnected Uᶜ` (complement in
   `ℂ`) in `Draft/Section10.lean`; not Mathlib's planar `IsSimplyConnected U`, which fails for unbounded components
-  (operator fix (1), 2026-11-03). `int(U^c)` (proof of Lemma 10.5): `interior Uᶜ`.
+  `int(U^c)` (proof of Lemma 10.5): `interior Uᶜ`.
 * Rescaled sets `A_r(z) := r A + z` (line 3102, Section 11.3): `rescaledSet`.
 * Closed dyadic squares (Lemma 11.10, line 2980): `closedDyadicSquare`, `IsClosedDyadicSquare`.
 * The deterministic sets `U ⋐ T`, `Q' ⋐ Q` of Section 11.3 (line 3100, Figure fig:pinch-point) entering the pinch-point

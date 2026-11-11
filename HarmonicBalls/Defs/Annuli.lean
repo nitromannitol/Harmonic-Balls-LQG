@@ -25,7 +25,7 @@ eq:good-annulus-harmonic, line 1120, fixes `μ`, and the Brownian motion is inde
   for `Y ⊆ 𝔸_{3r,5r}(z)`, so the printed event always holds. The intended event (slip at 1120, `GRAPH.md`; cf.
   lines 1090-1091) is `{τ_𝔸 ≤ τ_Y}`: the Brownian motion stays in `Y` until it exits the annulus.
 * `β⁻` in `M_ρ` (eq:alternate-size, line 1129) is "the" lower exponent of Lemma 2.4, which allows any
-  `β⁻ > (2+γ)²/2`. It is a parameter of the definitions (Issue D10).
+  `β⁻ > (2+γ)²/2`. It is a parameter of the definitions.
 * Green function on the diagonal: `SG` integrates the paper's value `G(x, x) = +∞` there (the junk value of
   `greenFunction` is not used); for `μ = μ_h`, which has no atoms, the diagonal does not contribute.
 * The lattice `(ερ/100) ℤ²` of (VG-iii) is not centred at `x₀`, as printed (Issue G21).

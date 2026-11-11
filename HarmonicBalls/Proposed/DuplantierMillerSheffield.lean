@@ -6,7 +6,7 @@ import HarmonicBalls.Defs.LQGMetric
 
 Source: J. Duplantier, J. Miller and S. Sheffield, *Liouville quantum gravity as a mating of trees*,
 arXiv:1409.7055v4, Appendix A, Lemma A.10, printed page 184 (PDF page 184). The statement was checked against the
-page image of arXiv:1409.7055v4 (round 8 of the Sec. 11 task of z3); operator source-check pending.
+page image of arXiv:1409.7055v4; source check pending.
 
 The whole-plane clause of Lemma A.10 reads: *if `h` is a whole-plane GFF with the additive constant fixed so that its
 average on `∂D` is equal to `0`, then a sample from the law of `μ_h(D)dh` can be produced by sampling `h` according to
@@ -44,12 +44,10 @@ functional `T = (h, ·)` of `h` and the value `h_1(0)`. -/
 noncomputable def dmsShiftedPairing (γ : ℝ) (z : ℂ) (T : (ℂ → ℝ) → ℝ) (h10 : ℝ) : (ℂ → ℝ) → ℝ :=
   fun φ => T φ + (∫ w, dmsShift γ z w * φ w) + dmsConstant γ z h10 * ∫ w, φ w
 
-/-- **RETIRED: do not use.** This normalized form is dead code: no counted chain uses it (operator, 10:53 UTC). The
-counted chain uses `DMSLemmaA10WholePlaneUnnormalized` (this file) and the marked FIRST-PASS FROZEN
-`DMSLemmaA10WholePlaneMarked` (`FirstPass/Frozen/S11i.lean:39`). The test `F ≡ 1 ⇒ 1 = π` cited from ChatGPT Pro
-chat 219 §3.2 (notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md, l.355-374) does NOT apply to the text below: its
-right side divides by `(volume (ball 0 1)).toReal`, so `F ≡ 1` gives `1 = 1`. Status of the statement left to
-the operator; its docstring is kept below unchanged.
+/-- **RETIRED: do not use.** This normalized form is dead code: no counted chain uses it. The
+counted chain uses `DMSLemmaA10WholePlaneUnnormalized` (this file) and `DMSLemmaA10WholePlaneMarked`
+(`FirstPass/Frozen/S11i.lean:39`). The test `F ≡ 1 ⇒ 1 = π` does not apply to the text below: its
+right side divides by `(volume (ball 0 1)).toReal`, so `F ≡ 1` gives `1 = 1`. The status of the statement is open.
 
 **Duplantier-Miller-Sheffield, Lemma A.10, whole-plane clause, for `D = B_1`** (arXiv:1409.7055v4, Appendix A,
 p. 184), as a property of the whole-plane GFF `(P, hC, hcirc)` and of its γ-LQG measure `μ` with `α₀ = 0`.
@@ -76,7 +74,7 @@ so that the average of the resulting field on `∂D` is `0`. It is read as unnor
 `l:r9-marked` (reports: "These are unnormalized measures: P_g has mass one and d²z is ordinary Lebesgue measure"): the
 measure `μ_h(D) dP(h)` equals the image of Lebesgue measure on `D`, times `P`, under the shift. Its total-mass
 consequence `E[μ_h(B_1)] = π` is eq:r9-total-area of r10 (line 2613). The normalized-ratio form is
-`DMSLemmaA10WholePlane` above. Source check pending (operator). -/
+`DMSLemmaA10WholePlane` above. Source check pending. -/
 def DMSLemmaA10WholePlaneUnnormalized {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
   IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ →

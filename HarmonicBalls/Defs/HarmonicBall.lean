@@ -84,9 +84,9 @@ def IsHarmonicBall (μ : Measure ℂ) (Λ : Set ℂ) (z : ℂ) : Prop :=
 `x ↦ ∫_O G_O(x,y) ν(dy)` with `ν` a signed Radon measure with support in `O \ D`, written via its Jordan
 decomposition `ν = ν₁ - ν₂`, with `ν₁, ν₂` finite measures concentrated on a compact set `K ⊆ O \ D`
 (see the module docstring). In the paper `O, D` are bounded open sets (line 141).
-Reading recorded (audit R1, MINOR HB): the class is restricted to `ν = ν₁ - ν₂` with finite measures `ν₁, ν₂`
+Reading: the class is restricted to `ν = ν₁ - ν₂` with finite measures `ν₁, ν₂`
 concentrated on one compact `K ⊆ O \ D`. The printed text (eq:harmonic-fns, line 140) speaks of a signed Radon measure
-with support in `O \ D`. Per OPUS-AUDIT-R1 (MINOR HB), this reading weakens existence and strengthens uniqueness relative
+with support in `O \ D`. This reading weakens existence and strengthens uniqueness relative
 to the printed class. -/
 def greenPotentialClass (O D : Set ℂ) : Set (ℂ → ℝ) :=
   {f | ∃ (K : Set ℂ) (ν₁ ν₂ : Measure ℂ), IsCompact K ∧ K ⊆ O \ D ∧ IsFiniteMeasure ν₁ ∧ IsFiniteMeasure ν₂ ∧
