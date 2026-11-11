@@ -954,4 +954,36 @@ theorem ae_tendsto_circleApprox {Ω : Type*} [MeasurableSpace Ω] {P : Measure �
   filter_upwards [ae_tendsto_zero_of_summable_integral_sq
     (fun j ω => hC ω (circleApprox hr z j) - hcirc ω r z) hD _ hsum hbound] with ω hω
   exact tendsto_sub_nhds_zero_iff.mp hω
+
+/-- Continuous observables: the annular averages converge to the circle average, for any widths
+`δ_j → 0`. -/
+theorem tendsto_unitCircleDensity_mul_continuous {r : ℝ} (hr : 0 < r) {δ : ℕ → ℝ} (hδ : ∀ j, 0 < δ j)
+    (hsmall : ∀ η : ℝ, 0 < η → ∃ N : ℕ, ∀ j, N ≤ j → δ j ≤ r * η) (z : ℂ) {f : ℂ → ℝ}
+    (hf : Continuous f) :
+    Tendsto (fun j => ∫ x, unitCircleDensity r (δ j) (hδ j) z x * f x) atTop
+      (𝓝 (Real.circleAverage f z r)) := by
+  have hg : Continuous (Real.circleAverage f z) := by fun_prop
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  obtain ⟨κ, hκ, hk⟩ := Metric.continuousAt_iff.mp hg.continuousAt (ε / 2) (half_pos hε)
+  set η : ℝ := min κ (r / 2) with hηdef
+  have hη : 0 < η := lt_min hκ (by linarith)
+  have hηκ : η ≤ κ := min_le_left _ _
+  obtain ⟨N, hN⟩ := hsmall η hη
+  refine Filter.eventually_atTop.mpr ⟨N, fun j hj => ?_⟩
+  have hint := integral_normalized_circleDensity_eq_circleAverage hr.le (hδ j) z hf
+  have hb := circleDensityRadialWeight_integral_sub_le hr (hδ j) (hN j hj) (Real.circleAverage f z) hg
+    (ε := ε / 2) (by
+      intro ρ hρ
+      have hd : dist ρ r < κ := by
+        rw [Real.dist_eq]
+        linarith
+      have := hk hd
+      rw [Real.dist_eq] at this
+      exact this.le)
+  have hab := abs_le.mp hb
+  unfold unitCircleDensity
+  rw [Real.dist_eq, hint, abs_lt]
+  constructor <;> linarith [hab.1, hab.2]
+
 end LatticeProb.Gauss

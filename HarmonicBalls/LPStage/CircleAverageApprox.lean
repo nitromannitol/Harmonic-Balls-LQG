@@ -707,3 +707,64 @@ theorem circleDensity_log_potential_excess_tendsto_zero {r η : ℝ}
     first | exact h.1 | exact h.2
 
 end LatticeProb.Gauss
+
+-- ===== Proofs/Sec8/CircleDensityContinuousLimit (lemma circleDensityRadialWeight_integral_sub_le only)
+open MeasureTheory Set Metric Filter Real
+open scoped Topology
+namespace LatticeProb.Gauss
+/-- A normalized radial weight integrates a continuous function close to its
+value at the limiting radius when the weight is supported nearby. -/
+theorem circleDensityRadialWeight_integral_sub_le {r δ η ε : ℝ}
+    (hr : 0 < r) (hδ : 0 < δ) (hwidth : δ ≤ r * η)
+    (g : ℝ → ℝ) (hg : Continuous g)
+    (hclose : ∀ ρ, |ρ - r| < η → |g ρ - g r| ≤ ε) :
+    |(∫ ρ in Ioi (0 : ℝ), circleDensityRadialWeight r δ hδ ρ * g ρ) - g r| ≤ ε := by
+  let W := circleDensityRadialWeight r δ hδ
+  have hW : Continuous W := by
+    dsimp [W, circleDensityRadialWeight]
+    exact continuous_const.mul (continuous_id.mul
+      ((circleRadiusBump r δ hδ).continuous.comp (continuous_id.pow 2)))
+  have hi : IntegrableOn (fun ρ => W ρ * g ρ) (Ioi (0 : ℝ)) := by
+    have hc : IntegrableOn (fun ρ => W ρ * g ρ) (Icc (r - η) (r + η)) :=
+      (hW.mul hg).continuousOn.integrableOn_compact isCompact_Icc
+    refine hc.of_forall_sdiff_eq_zero measurableSet_Ioi ?_
+    intro ρ hρ
+    by_cases hw : W ρ = 0
+    · simp [hw]
+    · have hn := circleDensityRadialWeight_support_radius hr hδ hwidth
+        (show 0 ≤ ρ from le_of_lt hρ.1) hw
+      rw [abs_lt] at hn
+      exact (hρ.2 ⟨by linarith [hn.1], by linarith [hn.2]⟩).elim
+  have hwi : IntegrableOn W (Ioi (0 : ℝ)) := circleDensityRadialWeight_integrableOn hr.le hδ
+  have hwm : (∫ ρ in Ioi (0 : ℝ), W ρ) = 1 := circleDensityRadialWeight_integral hr.le hδ
+  have hl : g r - ε ≤ ∫ ρ in Ioi (0 : ℝ), W ρ * g ρ := by
+    calc
+      _ = ∫ ρ in Ioi (0 : ℝ), W ρ * (g r - ε) := by
+        rw [integral_mul_const, hwm, one_mul]
+      _ ≤ _ := by
+        apply integral_mono_ae (hwi.mul_const _) hi
+        apply ae_restrict_of_forall_mem measurableSet_Ioi
+        intro ρ hρ
+        by_cases hw : W ρ = 0
+        · simp [hw]
+        · apply mul_le_mul_of_nonneg_left _ (circleDensityRadialWeight_nonneg r δ hr.le hδ hρ.le)
+          have h := hclose ρ (circleDensityRadialWeight_support_radius hr hδ hwidth hρ.le hw)
+          rw [abs_le] at h
+          linarith [h.1]
+  have hu : (∫ ρ in Ioi (0 : ℝ), W ρ * g ρ) ≤ g r + ε := by
+    calc
+      _ ≤ ∫ ρ in Ioi (0 : ℝ), W ρ * (g r + ε) := by
+        apply integral_mono_ae hi (hwi.mul_const _)
+        apply ae_restrict_of_forall_mem measurableSet_Ioi
+        intro ρ hρ
+        by_cases hw : W ρ = 0
+        · simp [hw]
+        · apply mul_le_mul_of_nonneg_left _ (circleDensityRadialWeight_nonneg r δ hr.le hδ hρ.le)
+          have h := hclose ρ (circleDensityRadialWeight_support_radius hr hδ hwidth hρ.le hw)
+          rw [abs_le] at h
+          linarith [h.2]
+      _ = _ := by rw [integral_mul_const, hwm, one_mul]
+  rw [abs_le]
+  constructor <;> linarith
+
+end LatticeProb.Gauss
