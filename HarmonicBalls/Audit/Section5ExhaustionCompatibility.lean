@@ -33,6 +33,4 @@ theorem clusterStrongCompatibility_of_regular_exhaustions
   exact regularizedFamily_closure_eq_clusterOn_of_regular_exhaustion
     hω.1 hω.2 hU hUb V hopen hmono hcover hsub hzV ht hboundary (hfamily z) hcl
 
-#print axioms clusterStrongCompatibility_of_regular_exhaustions
-
 end HarmonicBalls

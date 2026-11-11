@@ -90,10 +90,4 @@ theorem closure_clusterOn_eq_insert_pole {μ : Measure ℂ} {U : Set ℂ}
     by_cases h : x = z <;> simp [h, hz]
   rw [heq, closure_union, closure_singleton, singleton_union]
 
-#print axioms isGLB_supersolutionsOn_values_of_ne_pole
-#print axioms le_leastSupersolutionOn_iff_of_ne_pole
-#print axioms exists_supersolutionOn_lt_of_leastSupersolutionOn_lt
-#print axioms coe_leastSupersolutionOn_eq_sInf_ereal_of_ne_pole
-#print axioms closure_clusterOn_eq_insert_pole
-
 end HarmonicBalls

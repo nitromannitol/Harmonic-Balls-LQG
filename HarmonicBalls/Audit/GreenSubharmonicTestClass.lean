@@ -82,12 +82,4 @@ theorem greenPotential_dirac_self (O : Set ℂ) (x : ℂ) :
     greenPotential O (Measure.dirac x) x = 0 := by
   simp [greenPotential, integral_dirac, greenFunction_self]
 
-#print axioms harmonic_mem_boundedSubharmonicBallTestClass
-#print axioms hasSubMeanValueProperty_congr
-#print axioms subMeanValue_all_iff_bounded_of_representatives
-#print axioms positiveMeasure_pole_null
-#print axioms greenPotential_eq_zero_of_not_integrable
-#print axioms integrable_greenFunction_dirac_self
-#print axioms greenPotential_dirac_self
-
 end HarmonicBalls
