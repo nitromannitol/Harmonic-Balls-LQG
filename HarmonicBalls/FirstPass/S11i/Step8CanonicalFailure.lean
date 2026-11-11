@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11i.CanonicalFailure
 import HarmonicBalls.FirstPass.S11i.RootedFrequencyShift
 
 /-!
-# Step 8: the canonical failure set is measurable (fp-S11i-step8-canonical-failure, z11)
+# Step 8: the canonical failure set is measurable
 
-Steps 6-9 of the measurability chain of `notes/fp-gaps/CHATGPT-n3-hT.md` (sections 6-9, lines 174-317).
+Steps 6-9 of the measurability chain.
 
 For a pairing `T : (ℂ → ℝ) → ℝ` and a root `z : ℂ`, the canonical field is `canonFieldOf α₀ T` (the pairings of
 `h^α₀ = h^ℂ - α₀ log|·|` modulo constants; `alphaCanon α₀ hC ω = canonFieldOf α₀ (hC ω)`, `alphaCanon_eq_canonFieldOf`).
@@ -22,14 +22,14 @@ namespace HarmonicBalls.FirstPassS11iStep8Transfer
 open MeasureTheory Set Filter Topology
 open FirstPassS11i
 
-/-- Canonical window frequency (chat 191 §6, §9): `N⁻¹` times the number of `n ∈ [N+1, 2N]` for which the certificate
+/-- Canonical window frequency (§9): `N⁻¹` times the number of `n ∈ [N+1, 2N]` for which the certificate
 event of the canonical measure `K L` and the canonical metric `d L` holds at radius `2⁻ⁿ` and root `z`. -/
 noncomputable def canonicalWindowFreq (K : S11n.CanonSpace → Measure ℂ) (d : S11n.CanonSpace → ℂ → ℂ → ℝ)
     (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) (L : S11n.CanonSpace) (z : ℂ) (N : ℕ) : ℝ :=
   (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
       CertificateEvent (K L) (d L) Ostar U V W T Q' Q η M ((2 : ℝ)⁻¹ ^ n) z}.ncard : ℕ) : ℝ) / (N : ℝ)
 
-/-- Canonical failure set (chat 191 §6, §8): the pairs `(T, z)` of a pairing `T` and a root `z` at which the canonical
+/-- Canonical failure set (§8): the pairs `(T, z)` of a pairing `T` and a root `z` at which the canonical
 window frequency along the canonical field `Φ T` does not converge to `q`. -/
 def canonicalFailure (K : S11n.CanonSpace → Measure ℂ) (d : S11n.CanonSpace → ℂ → ℂ → ℝ)
     (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) (q : ℝ) (Φ : ((ℂ → ℝ) → ℝ) → S11n.CanonSpace) :
@@ -63,7 +63,7 @@ theorem ncard_window_eq_sum (P : ℕ → Prop) (N : ℕ) :
   push_cast
   rfl
 
-/-- **Measurability of the canonical failure set (steps 6-9 of the chain, chat 191 §6-§9).** Let `Φ` be a measurable map
+/-- **Measurability of the canonical failure set (steps 6-9 of the chain).** Let `Φ` be a measurable map
 from the pairing σ-algebra of the identity to the canonical space, and assume the certificate events of the canonical
 decoders are measurable on `CanonSpace × ℂ` (`hcert`, step 5). Then the set of `(T, z)` at which the canonical window
 frequency does not converge to `q` is measurable for the product of the pairing σ-algebra and the Borel σ-algebra of `ℂ`. -/

@@ -1,8 +1,8 @@
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 
-/-! # FIRST PASS, Section 6: the numbered harmonic-measure and annulus estimates
+/-! # Section 6: the numbered harmonic-measure and annulus estimates
 
-Owner q4 (task fp-S6). Each `firstPass_6_<n>` has the Draft statement of the printed result 6.<n> as its conclusion
+Each `firstPass_6_<n>` has the Draft statement of the printed result 6.<n> as its conclusion
 (`HarmonicBalls/Draft/Section6.lean`). Its only hypotheses are the three EXTERNAL LQG background inputs of
 `HarmonicBalls.Section6Full.section6Full_of_three_inputs`, which are existing Proposed Props and are reused, not frozen anew:
 * `hDG`: `WholePlaneLQGBallMassBounds` (`HarmonicBalls/Proposed/LQG.lean`), whole-plane LQG ball-mass estimates;
@@ -85,17 +85,5 @@ theorem firstPass_6_12 : ShellDecompositionStmt :=
 theorem firstPass_6_13 : LowMassSmallOdometerStmt.{u} :=
   lowMassSmallOdometerStmt_of_three_inputs hDG hCC hE
 
-#print axioms firstPass_6_1
-#print axioms firstPass_6_2
-#print axioms firstPass_6_3
-#print axioms firstPass_6_4
-#print axioms firstPass_6_6
-#print axioms firstPass_6_7
-#print axioms firstPass_6_8
-#print axioms firstPass_6_9
-#print axioms firstPass_6_10
-#print axioms firstPass_6_11
-#print axioms firstPass_6_12
-#print axioms firstPass_6_13
 
 end HarmonicBalls.FirstPass.S6
