@@ -1,8 +1,9 @@
 # LP staging area: index of `HarmonicBalls/LPStage`
 
-Umbrella: `HarmonicBalls/LPStage/All.lean` imports the 37 committed LPStage modules whose tasks are finished (build with
-`lb HarmonicBalls.LPStage.All`). Not yet imported: the z7 LQGMeasureNonatomic* modules and the z3 LQGMeasureFullSupport*
-and LQGMeasureSquarePositive modules (their reports are not DONE; see the open items at the end of this file).
+Umbrella: `HarmonicBalls/LPStage/All.lean` imports the 54 LPStage modules of the table below (build with
+`lb HarmonicBalls.LPStage.All`, BUILD OK 2026-11-11): the 37 earlier ones plus, added 2026-11-11, the 12 LQGMeasureNonatomic*
+modules (z7), LQGMeasureFullSupport{,2,3} and LQGMeasureSquarePositive (z3, DONE 11:49) and WeylShiftedMass (z4, 10de7ef9).
+Not imported: z4's LocalMeasureKernel{,2} (open items at the end of this file).
 Row numbers are those of `docs/campaign/PHASE2-INVENTORY.md` section 2 (the 57 inputs; as in PHASE2-DERIVATION-STATUS.md).
 "HB row" = the staged input; "support" = definitions or lemmas used by a staged result, no row of their own.
 "Hypotheses": "none" = the main result takes no literature Prop; a definitional predicate (e.g. `IsWholePlaneGFF`) is not counted.
@@ -23,10 +24,26 @@ Line numbers are those of the committed files at the time of the row-56 commit.
 | LQGMassInner | `lqgMassInnerMeasurable_of_gff` :33 | 33 | none | FirstPass/LPBridge/LQGMassInner.lean |
 | LQGMeasure | support: `lqgQ` :34, `dyadicScale` :38, `lqgApprox` :43, `IsLQGLimit` :49, `IsLQGMeasure` :58 | support | none | M4 |
 | LQGMeasureDerived | `lqgMeasureOfProfileMeasurable_lp` :575 (def `LQGMeasureOfProfileMeasurableLP` :31) | 6 | none | FirstPass/LPBridge/LQGMeasureDerived.lean |
+| LQGMeasureFullSupport | `lqgMeasureFullSupportStmt_of_volumeGrowth_lp` :159 (def `LQGMeasureFullSupportStmtLP` :61) | 40 (LP form) | LP `LQGVolumeGrowthAllScalesStmtLP` (:50) as binder | FirstPass/LPBridge/LQGMeasureFullSupport.lean |
+| LQGMeasureFullSupport2 | support: `measure_le_of_rpow_norm_le` :40, `measure_ball_zero_le_of_dyadic` :76 | support (40) | none | - (via FullSupport3) |
+| LQGMeasureFullSupport3 | `lqgMeasureFullSupportStmt_of_scaled_lp` :398 (row 40 LP); `lqgVolumeGrowthAllScalesStmt_of_scaled_lp` :386 (row 50 LP); `liouvilleBallMassBoundStep_of_scaled_lp` :292 | 40; 50 | LP existence and non-atomicity binders (hS hE hN) | FirstPass/LPBridge/LQGMeasureFullSupport.lean (row 40) |
 | LQGMeasureInputs | LP forms of the Proposed inputs, as definitions: `LQGMeasureExistenceLP` :52, `LQGMeasureCoordChangeLP` :40, `WholePlaneLQGBallMassBoundsLP` :27 (no theorem) | 1; 2; 3 | LP literature Props, defined not proved | - |
 | LQGMeasureLocality | conditional `lqgLocality_of_circleLink` :410; defs `LQGLocality` :88, `LQGCircleAverageLink` :99 | 49 (conditional form) | `LQGCircleAverageLink` (:99); discharged by `lqgCircleAverageLink_of_gff` (LQGMeasureLocality2:151) | via LQGMeasureLocality2 bridge |
 | LQGMeasureLocality2 | unconditional `lqgLocality_of_gff` :171; `lqgCircleAverageLink_of_gff` :151 | 49 (unconditional) | none beyond `IsWholePlaneGFF` | FirstPass/LPBridge/LQGMeasureLocality.lean |
+| LQGMeasureNonatomic | `LQGMeasureNonatomicLP` :42 (def); `lqgMeasureNonatomic_lp` :49 | 4 (LP form of Proposed `LQGMeasureNonatomic`, Proposed/LQG.lean:77) | LP `WholePlaneLQGBallMassBoundsLP` (hDG), `LQGMeasureCoordChangeLP` (hCC, alpha=0), `LQGMeasureExistenceLP` (hE) | FirstPass/LPBridge/LQGMeasureNonatomicAll.lean (`lqgMeasureNonatomic_of_lp`) |
+| LQGMeasureNonatomicAll | `LQGMeasureNonatomicAllLP` :25 (def); `lqgMeasureNonatomicAll_lp` :30 | 41 (LP form) | the same three LP inputs | FirstPass/LPBridge/LQGMeasureNonatomicAll.lean (`lqgMeasureNonatomicAll_of_lp`) |
+| LQGMeasureNonatomicMassAffine | `affineMeasure_ball` :73; `isLQGMeasureOfField_affine` :86 | support (4, 41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassLocality | `restrict_eq_of_integral_eq_of_tsupport_subset` :61; `isLQGLimit_restrict_eq` :88 | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassMixture | `mixMeasure_singleton` :60; `ae_mix_of_forall` :98 | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassPoly | `polyHighProb_ae_eventually_dyadic` :88; `polyHighProb_dyadic_tail` :174 | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassRescaled | `rescaledMeas_ball` :273; `rescaledBallMassUniformStep_lp` :287 | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassScaled | `wholePlaneScaledBallMassStep_of_uniform_lp` :301; defs `RescaledBallMassUniformStepLP` :36, `WholePlaneScaledBallMassStepLP` :46 | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassTail | `circleAverageDyadicTailStep_lp` :60 (def `CircleAverageDyadicTailStepLP` :32) | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassWeight | `singularWeightStep_lp` :102 (def `SingularWeightStepLP` :29) | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicMassWholePlane | `ae_wholePlane_nonatomic_of_scaledBallMass` :28; `ae_singular_nonatomic_off_origin_of_scaledBallMass` :84 | support (41 chain) | binders as in file | - |
+| LQGMeasureNonatomicOrigin | `origin_nonatomic_of_stronger_singularity` :131; `ae_origin_nonatomic_of_stronger_existence` :196 | support (41 chain) | binders as in file | - |
 | LQGMeasureSquare | `aemeasurable_lqgMeasure_borel` :121; `aemeasurable_lqgMeasure_open` :109 | 22 | `LQGLocality` (LP form of row 49 input) | FirstPass/LPBridge/LQGMeasureSquare.lean |
+| LQGMeasureSquarePositive | `lqgMeasureSquarePositiveLP_of_inputs` :86 (def `LQGMeasureSquarePositiveLP` :55) | 23 (LP form) | the three LP inputs (binders of SquarePositiveDerived.lean:40) | FirstPass/LPBridge/LQGMeasureSquarePositive.lean |
 | LQGMetric | support: `SatisfiesLQGMetricAxioms` :47, `IsLQGMetric` :73, `LQGMetricFieldAxioms` :117 | support | none | M5b |
 | LQGMetricMeasurable | support: deterministic continuity of the internal metric (`IsEuclideanLengthMetric.continuousAt_internalMetric_self` :329) | support (32) | none | FirstPass/LPBridge/LQGMetricMeasurable.lean |
 | LQGMetricMeasurable2 | `lqgMetricPointwiseAEMeasurable_lp` :85 (def :63); `lqgInternalDiamInnerMeasurable_lp` :116 (def :72) | 32; PointwiseAE (no table row) | none | FirstPass/LPBridge/LQGMetricMeasurable.lean |
@@ -46,8 +63,12 @@ Line numbers are those of the committed files at the time of the row-56 commit.
 | WeylInternalClosed | `weylInternalClosed_derived` :38 (helpers imported from LengthMetricDerived) | 26 | none | FirstPass/LPBridge/M5a.lean |
 | WeylMassMeasurable | `measurable_lintegral_of_caratheodory` :28 (general measure theory) | support (27) | none | - |
 | WeylOffOrigin | `localLQGInsertionWeylOffOrigin_lp` :587 (def :574); `radonUniqueLP` :181 | 11 | none | FirstPass/LPBridge/WeylOffOrigin.lean |
+| WeylShiftedMass | `weylShiftedMassMeasurable_lp` :131 (def `WeylShiftedMassMeasurableLP` :40) | 27 (LP form) | none (proved) | FirstPass/LPBridge/WeylShiftedMass.lean |
 | WeylSupMeasurable | `aemeasurable_iSup_mem_of_lowerSemicontinuousOn` :43 | 28 | none | - |
 
 Open items (not in `All.lean`):
-- z7 LQGMeasureNonatomic* (report IN_PROGRESS) and z3 LQGMeasureFullSupport*, LQGMeasureSquarePositive (report BLOCKED): add when DONE.
-- LQGMetricMeasurable.lean:5 header cites "row 33" for the PointwiseAE form; row 33 of the table is `LQGMassInnerMeasurableFrozen`, and no table row names PointwiseAE. Note to be corrected by z7.
+- z4 `LPStage/LocalMeasureKernel.lean`, `LocalMeasureKernel2.lean`: committed by z4 (b01b9b8c), not imported; the umbrella
+  decision is the lead's.
+- Done 2026-11-11: the `LQGMetricMeasurable.lean:5` header now cites row 32 (`LQGInternalDiamInnerMeasurableFrozen`) for the
+  support and says that PointwiseAE has no inventory row (row 33 is `LQGMassInnerMeasurableFrozen`).
+- Row 50 (`lqgVolumeGrowthAllScalesStmt_of_scaled_lp`, LQGMeasureFullSupport3:386): no FirstPass bridge file yet.

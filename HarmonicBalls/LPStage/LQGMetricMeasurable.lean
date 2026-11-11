@@ -2,7 +2,7 @@ import Mathlib
 import HarmonicBalls.LPStage.LengthMetric
 
 /-!
-# LP stage: joint continuity of the internal metric of a Euclidean length metric (LQG metric, row 33 / PointwiseAE support)
+# LP stage: joint continuity of the internal metric of a Euclidean length metric (LQG metric; support for row 32, LQGInternalDiamInnerMeasurableFrozen; PointwiseAE has no inventory row)
 
 Worker z7, task `fp-lpstage-lqg-metric-measurable`, item (1), deterministic half. Ports into `LatticeProb.LQG` the
 metric-geometry lemmas that the HB proof of `lqgInternalDiamInnerMeasurable_derived`
