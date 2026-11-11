@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11r.FrozenCanonDecoders
 
 /-! # Canonical-exponent decoder consumers
 
-The first declaration, `lqgCanonicalDecodersExist_of_measurable_canonXi`, is the canonical-exponent form of `lqgCanonicalDecodersExist_of_measurable` (`FirstPass/S11i/Final11_13.lean:150`), the projection of the measurable canonical-exponent decoder existence. The second, `canonDecoderData_of_frozen_canonXi`, extracts `CanonDecoderData γ (lqgXi γ) α₀` for `0 < γ < 2` and `α₀ < lqgQ γ` from the same measurable statement.
+The first declaration, `lqgCanonicalDecodersExist_of_measurable_canonXi`, is the canonical-exponent form of `lqgCanonicalDecodersExist_of_measurable` (`FirstPass/S11i/Final11_13.lean:150`), the projection of the measurable canonical-exponent decoder existence. The second, `canonDecoderData_of_frozen_canonXi`, shows that `CanonDecoderData γ (lqgXi γ) α₀` is nonempty for `0 < γ < 2` and `α₀ < lqgQ γ`, given the same measurable statement.
 -/
 
 namespace HarmonicBalls.FirstPassS11iFinal11_13
