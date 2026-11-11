@@ -145,8 +145,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_singularMetric_punctured
   filter_upwards [hGeq] with ω hω x hx y hy
   exact hω x y
 
-#print axioms exists_internalMetric_version_iUnion
-#print axioms IsWholePlaneGFF.exists_shifted_internal_singularMetric_punctured
-#print axioms IsWholePlaneGFF.exists_modConst_internal_singularMetric_punctured
 
 end HarmonicBalls

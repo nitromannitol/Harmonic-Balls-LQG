@@ -62,8 +62,4 @@ theorem lqg_square_diameter_optimizing_moment_bounds {γ ξ s : ℝ}
   have hpositive : 0 < s * (γ * ξ) := mul_pos hs hγξ
   nlinarith
 
-#print axioms two_lt_lqgQ_of_subcritical
-#print axioms exists_square_diameter_tail_exponent
-#print axioms exists_lqg_square_diameter_tail_exponent
-#print axioms lqg_square_diameter_optimizing_moment_bounds
 end HarmonicBalls

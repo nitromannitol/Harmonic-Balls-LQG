@@ -49,6 +49,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_point_removal
     (Section6.fieldSigmaAlgebraModConst α hC U) hV hdense hmetric' F hF hFeq'
   exact ⟨c, G, hc, hG, hGeq⟩
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_point_removal
 
 end HarmonicBalls

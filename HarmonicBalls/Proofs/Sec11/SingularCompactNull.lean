@@ -7,8 +7,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.PosLogEqCircleAverage
 Let `h = h^ℂ - α log|·|` be the field of the paper, with circle averages `fieldCircleAverage α hcirc` built from a
 whole-plane GFF `IsWholePlaneGFF P hC hcirc`, and let `μ` be its γ-LQG measure `IsLQGMeasureOfField P γ α hcirc μ`.
 The source scope is `0 < γ < 2` and `α < Q = lqgQ γ`; both are kept as hypotheses of the statements. For every
-deterministic compact `K ⊆ ℂ` with `0 ∉ K` and `Leb K = 0`, almost surely `μ ω K = 0`. The quantifier order is the
-task's: `K` is fixed before `ω`, and no samplewise absolute continuity `μ ω ≪ volume` is used.
+deterministic compact `K ⊆ ℂ` with `0 ∉ K` and `Leb K = 0`, almost surely `μ ω K = 0`. The quantifier order is: `K` is fixed before `ω`, and no samplewise absolute continuity `μ ω ≪ volume` is used.
 
 Argument (first moment, as in `FixedSquareFrontierNull`, with one extra deterministic weight).
 
@@ -29,8 +28,7 @@ singular-LQG-null almost surely whenever it avoids the origin.
 
 Credit: the import closure of this module contains code by Leonardo Bonanno. It reaches the external LatticeProb
 module `LatticeProb.Prob.Birkhoff` (his LatticeProb formalization of the ergodic theorem) through
-`HarmonicBalls/Proofs/Sec8/BirkhoffPort.lean`; this module does not cite that code directly. The closure check is
-recorded in `docs/campaign/audits/SingularCompactNull.md`.
+`HarmonicBalls/Proofs/Sec8/BirkhoffPort.lean`; this module does not cite that code directly.
 -/
 
 namespace HarmonicBalls

@@ -177,6 +177,4 @@ theorem IsWholePlaneGFF.exists_shifted_normalized_measure_decoder_between
   · simp
 
 
-#print axioms IsWholePlaneGFF.exists_referenceBall_shifted_mass_decoders_between
-#print axioms IsWholePlaneGFF.exists_shifted_normalized_measure_decoder_between
 end HarmonicBalls

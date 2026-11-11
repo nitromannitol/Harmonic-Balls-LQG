@@ -145,8 +145,5 @@ theorem IsWholePlaneGFF.exists_puncture_criterion_at_liouville_charge
   h.exists_puncture_criterion_of_metricOfField hAff E s γ haxioms hγ hγ₂
     hs hξ hγ.le (gamma_lt_lqgQ hγ hγ₂) hE V hball
 
-#print axioms IsWholePlaneGFF.exists_puncture_criterion_at_liouville_charge
-#print axioms IsWholePlaneGFF.exists_puncture_criterion_of_metricOfField
-#print axioms IsWholePlaneGFF.exists_puncture_criterion_of_lqgMetric
 
 end HarmonicBalls

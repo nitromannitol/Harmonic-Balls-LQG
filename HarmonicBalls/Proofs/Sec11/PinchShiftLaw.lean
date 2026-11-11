@@ -88,8 +88,5 @@ theorem IsPinchPointProofConfiguration.positive_singularField_internal_pinch_of_
   have hp' : 0 < P (τ ⁻¹' A) := by rw [measure_congr heq]; exact hp
   exact measure_pos_of_preimage_pos_of_quasiMeasurePreserving P τ hτ A hp'
 
-#print axioms ae_lqgMeasure_comp_eq_withDensity_of_circleAverage_shift
-#print axioms measure_pos_of_preimage_pos_of_quasiMeasurePreserving
-#print axioms IsPinchPointProofConfiguration.positive_singularField_internal_pinch_of_shiftMap
 
 end HarmonicBalls

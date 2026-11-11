@@ -78,7 +78,5 @@ theorem origin_shifted_modConst_germ_trivial_of_unshifted_pairing_law
     P Q α β hC hC' d hd (ball 0 r) hf).mpr hAC
   exact origin_shifted_modConst_germ_trivial_of_pairing_law P Q hQ β d hd hr hAC'
 
-#print axioms localFieldPairings_map_absolutelyContinuous_iff_of_deterministic_shift
-#print axioms origin_shifted_modConst_germ_trivial_of_unshifted_pairing_law
 
 end HarmonicBalls

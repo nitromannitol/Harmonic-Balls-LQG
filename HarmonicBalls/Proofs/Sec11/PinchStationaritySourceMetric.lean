@@ -76,6 +76,5 @@ theorem identDistrib_pinchIndicators_of_normalized_dilation_of_ae_lengthMetric
   exact (IdentDistrib.of_ae_eq hd.aemeasurable_fst hEq₀).symm.trans
     (hd.trans (IdentDistrib.of_ae_eq hd.aemeasurable_snd hEq₁))
 
-#print axioms identDistrib_pinchIndicators_of_normalized_dilation_of_ae_lengthMetric
 
 end HarmonicBalls

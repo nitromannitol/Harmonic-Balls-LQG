@@ -36,6 +36,5 @@ theorem IsWholePlaneGFF.exists_joint_pinned_unit_circle_shift_decoder
     simp
   simpa [href, hgpin] using hcorrect g hg z hz
 
-#print axioms IsWholePlaneGFF.exists_joint_pinned_unit_circle_shift_decoder
 
 end HarmonicBalls

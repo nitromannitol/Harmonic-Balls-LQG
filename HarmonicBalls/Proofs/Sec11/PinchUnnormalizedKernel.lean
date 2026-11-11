@@ -102,8 +102,5 @@ theorem ae_ae_of_unnormalized_shiftedRootReferenceLaw
   · exact hac
   · exact hfixed
 
-#print axioms ae_ae_of_unnormalized_shiftedRootReferenceLaw
-#print axioms ae_unnormalizedWeightedRestrictionKernel_eq
-#print axioms weightedRestrictionKernel_compProd_ac_canonical
 
 end HarmonicBalls

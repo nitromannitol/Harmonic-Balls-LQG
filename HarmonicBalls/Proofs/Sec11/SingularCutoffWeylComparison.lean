@@ -83,6 +83,5 @@ theorem IsWholePlaneGFF.ae_internal_singularMetric_weylShift_eq_cutoff
   rw [hcomp] at heq
   rwa [hsumcomp]
 
-#print axioms IsWholePlaneGFF.ae_internal_singularMetric_weylShift_eq_cutoff
 
 end HarmonicBalls

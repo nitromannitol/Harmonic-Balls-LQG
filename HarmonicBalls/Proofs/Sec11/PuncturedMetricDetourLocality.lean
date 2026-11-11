@@ -41,6 +41,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_small_detours
   have hy0 : y ≠ 0 := by simpa only [mem_singleton_iff] using hy.2
   exact hω.internalMetric_sdiff_zero_eq_of_small_detours hx0 hy0 hs
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_small_detours
 
 end HarmonicBalls

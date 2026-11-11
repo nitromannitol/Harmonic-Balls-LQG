@@ -83,8 +83,5 @@ theorem origin_shifted_modConst_germ_trivial_of_pairing_law
   rw [← fieldSigmaAlgebraModConst_eq_of_deterministic_pairing_shift α hC hC' d hd]
   exact hA ε hε
 
-#print axioms IsWholePlaneGFF.origin_shifted_modConst_germ_trivial
-#print axioms fieldSigmaAlgebra_eq_of_deterministic_pairing_shift
-#print axioms origin_shifted_modConst_germ_trivial_of_pairing_law
 
 end HarmonicBalls

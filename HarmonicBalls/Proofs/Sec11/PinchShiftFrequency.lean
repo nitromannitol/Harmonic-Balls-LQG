@@ -57,6 +57,5 @@ theorem IsPinchPointProofConfiguration.ae_positive_pinchBlockDensity_of_shiftMap
   exact ae_positive_pinchBlockDensity_of_unitScale_stationary_lqg_event
     h.toIsPinchPointConfiguration M 0 hγ hγ₂ hα hgff hμ hD hmloc haxioms htrivial hstat hp
 
-#print axioms IsPinchPointProofConfiguration.ae_positive_pinchBlockDensity_of_shiftMap
 
 end HarmonicBalls

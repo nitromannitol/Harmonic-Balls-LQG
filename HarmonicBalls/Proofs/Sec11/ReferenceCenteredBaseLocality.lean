@@ -83,7 +83,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_baseMetric_of_centering
     rw [← heq]
     exact hg x hx y hy
 
-#print axioms fieldSigmaAlgebra_sub_reference_eq_modConst_of_centering
-#print axioms IsWholePlaneGFF.exists_modConst_internal_baseMetric_of_centering
 
 end HarmonicBalls

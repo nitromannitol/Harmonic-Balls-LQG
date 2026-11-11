@@ -117,7 +117,6 @@ theorem exists_dyadic_product_tail_exponent_gt_two
   exact ⟨p, hp, hpp, dyadic_product_tail_of_all_moments P A T b δ p₀ p C
     hA hT hδ (by linarith) hpp hC hmom htail⟩
 
-#print axioms exists_dyadic_product_tail_exponent_gt_two
 /-- A dyadic power threshold still vanishes after multiplying by the
 polynomial allowance, provided its original exponent is strictly larger. -/
 theorem dyadic_threshold_mul_growth_eventually_lt
@@ -136,7 +135,4 @@ theorem dyadic_threshold_mul_growth_eventually_lt
   rw [hexp]
   exact hn
 
-#print axioms dyadic_threshold_mul_growth_eventually_lt
-#print axioms measure_dyadic_prefactor_gt_le
-#print axioms dyadic_product_tail_of_all_moments
 end HarmonicBalls

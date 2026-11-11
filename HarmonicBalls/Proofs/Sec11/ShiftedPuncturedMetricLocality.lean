@@ -104,7 +104,5 @@ theorem IsWholePlaneGFF.exists_modConst_nested_internal_singularMetric_away_zero
     (h.exists_shifted_internal_singularMetric_away_zero 𝔇 h𝔇 hD hmetric
       (fun ω => -hC ω ψ) hc hV hVU hr haway)
 
-#print axioms IsWholePlaneGFF.exists_shifted_internal_singularMetric_away_zero
-#print axioms IsWholePlaneGFF.exists_modConst_nested_internal_singularMetric_away_zero
 
 end HarmonicBalls

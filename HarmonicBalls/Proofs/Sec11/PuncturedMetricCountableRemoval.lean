@@ -97,9 +97,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_countable_poi
     𝔇 h𝔇 hD hmetric hV hne hVU ψ hψ hψint
   exact ae_internalMetric_sdiff_singleton_eq_of_countable_dense hV hdense hcount hmetric hremove
 
-#print axioms exists_countable_dense_subset_sdiff_zero
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_singleton_eq_of_dense
-#print axioms ae_internalMetric_sdiff_singleton_eq_of_countable_dense
-#print axioms IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_countable_point_removal
 
 end HarmonicBalls

@@ -64,6 +64,5 @@ theorem exists_local_internal_pinch_liouvilleCharge_of_positive_moments
   exact exists_local_internal_pinch_of_metric_locality P hC hcirc μ D hconfig M
     hgff hμ hfull c G hc hmetric hG hGeq hpos
 
-#print axioms exists_local_internal_pinch_liouvilleCharge_of_positive_moments
 
 end HarmonicBalls

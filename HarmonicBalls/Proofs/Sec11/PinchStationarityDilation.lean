@@ -68,6 +68,5 @@ theorem identDistrib_pinchIndicators_of_normalized_dilation
   rw [hdil]
   simp [pow_succ, mul_comm]
 
-#print axioms identDistrib_pinchIndicators_of_normalized_dilation
 
 end HarmonicBalls

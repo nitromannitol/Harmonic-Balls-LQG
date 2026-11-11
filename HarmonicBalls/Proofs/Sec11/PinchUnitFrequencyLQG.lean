@@ -75,6 +75,5 @@ theorem IsWholePlaneGFF.ae_positive_internal_pinch_frequency_of_lqg_inputs
   exact h.ae_positive_internal_pinch_frequency_of_normalized_metric P hμ hfull hm
     hconfig M hmetric hs hpos
 
-#print axioms IsWholePlaneGFF.ae_positive_internal_pinch_frequency_of_lqg_inputs
 
 end HarmonicBalls

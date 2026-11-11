@@ -215,8 +215,6 @@ theorem IsWholePlaneGFF.exists_punctured_singularMetric_shift_decoder
     filter_upwards [hs g hg hc hu hm] with ω hω n
     simpa only [hunion] using hω n
 
-#print axioms IsWholePlaneGFF.exists_punctured_singularMetric_shift_decoder
 
-#print axioms IsWholePlaneGFF.exists_exhausted_singularMetric_shift_decoder
 
 end HarmonicBalls

@@ -57,6 +57,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_singularMetric_away_zero
   rw [internalMetric_const_mul _ hcω, heq, ← internalMetric_const_mul _ hcω]
   exact hg x hx y hy
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_singularMetric_away_zero
 
 end HarmonicBalls

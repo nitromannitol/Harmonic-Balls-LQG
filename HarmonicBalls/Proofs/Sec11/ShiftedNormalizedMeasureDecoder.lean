@@ -201,8 +201,6 @@ theorem IsWholePlaneGFF.exists_normalized_measure_smooth_shift_laws
   rw [hb, hs] at hforward hback
   exact ⟨hforward, hback⟩
 
-#print axioms IsWholePlaneGFF.exists_normalized_measure_smooth_shift_laws
 
-#print axioms IsWholePlaneGFF.exists_shifted_normalized_measure_decoder
 
 end HarmonicBalls

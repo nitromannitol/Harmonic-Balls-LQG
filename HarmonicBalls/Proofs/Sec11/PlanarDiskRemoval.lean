@@ -85,6 +85,4 @@ theorem IsCorrectedPinchConfiguration.outer_piece_isConnected
   rw [heq]
   exact isConnected_sdiff_ball_of_closure_subset h.isOpen_T h.isConnected_T c hr hsub
 
-#print axioms isConnected_sdiff_ball_of_closure_subset
-#print axioms IsCorrectedPinchConfiguration.outer_piece_isConnected
 end HarmonicBalls

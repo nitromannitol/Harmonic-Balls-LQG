@@ -118,8 +118,6 @@ theorem IsWholePlaneGFF.exists_modConst_dyadic_internalMetrics_of_shifted_locali
   exact h.exists_modConst_internalMetric_of_shifted_locality 𝔇 h𝔇 hD hmetric isOpen_ball
     ⟨0, mem_ball_self hr⟩ ψ hψ hψint (hlocalψ _ isOpen_ball hsub)
 
-#print axioms IsWholePlaneGFF.exists_modConst_dyadic_internalMetrics_of_shifted_locality
 
-#print axioms IsWholePlaneGFF.exists_modConst_internalMetric_of_shifted_locality
 
 end HarmonicBalls

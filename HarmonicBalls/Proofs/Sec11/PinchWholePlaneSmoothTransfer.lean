@@ -123,6 +123,4 @@ theorem IsCorrectedPinchConfiguration.positive_internal_pinch_of_open_first_seco
   exact h.positive_internal_pinch_of_wholePlane_smooth_shift P M hC hcirc 𝔇 μ
     h𝔇 hgff hμ hfull ψ hψ hψint g hg hp
 
-#print axioms IsCorrectedPinchConfiguration.positive_internal_pinch_of_open_first_second
-#print axioms IsCorrectedPinchConfiguration.positive_internal_pinch_of_wholePlane_smooth_shift
 end HarmonicBalls

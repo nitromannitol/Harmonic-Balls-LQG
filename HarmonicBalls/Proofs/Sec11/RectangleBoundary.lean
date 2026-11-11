@@ -58,6 +58,4 @@ theorem isConnected_frontier_complexIntermediateGridSquare {N : ℕ} (a : ℂ)
   rw [hs, ← e.preimage_frontier]
   exact e.isConnected_preimage.mpr (isConnected_frontier_rectangle h₁ h₂)
 
-#print axioms isConnected_frontier_rectangle
-#print axioms isConnected_frontier_complexIntermediateGridSquare
 end HarmonicBalls

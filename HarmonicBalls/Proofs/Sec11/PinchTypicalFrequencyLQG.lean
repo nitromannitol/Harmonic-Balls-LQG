@@ -78,6 +78,5 @@ theorem IsWholePlaneGFF.ae_ae_pinch_frequency_of_normalizedLQG
     ν hμν hlocν hmetricν hconfig M δ w hw hpos hfin ρ shift hshift R hrooted
     hac hdom recenter hrec P hcomp heq hf
 
-#print axioms IsWholePlaneGFF.ae_ae_pinch_frequency_of_normalizedLQG
 
 end HarmonicBalls

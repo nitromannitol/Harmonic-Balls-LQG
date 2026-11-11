@@ -78,6 +78,5 @@ theorem IsPinchPointProofConfiguration.exists_positive_measure_singular_internal
   exact hproduce _ _ _ γ M b hd he henonneg hz hforward hzeroE hreverse
     hω.1.1 hω.1.2.1 hω.1.2.2.1 hω.1.2.2.2.1 hω.1.2.2.2.2
 
-#print axioms IsPinchPointProofConfiguration.exists_positive_measure_singular_internal_pinch_of_buffer
 
 end HarmonicBalls

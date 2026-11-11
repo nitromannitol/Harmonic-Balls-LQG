@@ -97,10 +97,5 @@ theorem ae_internal_pinchBlockDensity_of_randomConstant_pairing_law
   rw [← fieldSigmaAlgebraModConst_add_random_constant α hC c (ball 0 ε)]
   exact hK n hn
 
-#print axioms localModConstPairings_add_random_constant
-#print axioms fieldSigmaAlgebraModConst_add_random_constant
-#print axioms localModConstPairings_ac_add_random_constants_iff
-#print axioms origin_randomConstant_modConst_germ_trivial_of_pairing_law
-#print axioms ae_internal_pinchBlockDensity_of_randomConstant_pairing_law
 
 end HarmonicBalls

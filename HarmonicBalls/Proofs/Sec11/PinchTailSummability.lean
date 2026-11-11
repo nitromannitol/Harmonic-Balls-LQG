@@ -61,7 +61,4 @@ theorem exists_summable_lqg_square_tail_below_holder_exponent {γ ξ : ℝ}
     dsimp [p]; linarith
   exact ⟨s, p, hs, hsh, hsQ, hp, hpq, summable_dyadic_square_count_mul_tail hp⟩
 
-#print axioms exists_summable_lqg_square_tail
-#print axioms exists_summable_lqg_square_tail_below_holder_exponent
-#print axioms summable_dyadic_square_count_mul_tail
 end HarmonicBalls

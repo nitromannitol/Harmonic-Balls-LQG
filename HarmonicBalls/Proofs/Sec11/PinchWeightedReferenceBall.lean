@@ -36,5 +36,4 @@ theorem IsWholePlaneGFF.ae_weighted_referenceBall_pos_finite
   let : IsLocallyFiniteMeasure ν := hμshift.isLocallyFiniteMeasure
   exact ⟨hνzero, ne_of_lt (Metric.isBounded_ball.measure_lt_top (μ := ν))⟩
 
-#print axioms IsWholePlaneGFF.ae_weighted_referenceBall_pos_finite
 end HarmonicBalls

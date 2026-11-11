@@ -41,5 +41,4 @@ theorem positive_pinchSecondEvent_of_conditional_null_massDiameter
       (fun ω => internalDiam (D ω) δ V) (fun ω => μ ω U)
       hA ha hb hAp hfinite hinside)
 
-#print axioms positive_pinchSecondEvent_of_conditional_null_massDiameter
 end HarmonicBalls

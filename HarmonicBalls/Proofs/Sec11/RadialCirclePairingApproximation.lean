@@ -85,7 +85,6 @@ theorem IsWholePlaneGFF.exists_radial_zeroMean_test_approximation
     simp_rw [mul_sub, mul_comm (g _)]
     exact (integral_sub (hi _ (ha (k n))) (hi _ (hb (k n)))).symm
 
-#print axioms IsWholePlaneGFF.exists_radial_zeroMean_test_approximation
 
 /-- The pinned radial circle average is a measurable function of the
 whole-plane field modulo constants, consistently under all continuous shifts
@@ -122,7 +121,6 @@ theorem IsWholePlaneGFF.exists_global_radial_circle_shift_decoder
       ring
   exact ht.limUnder_eq
 
-#print axioms IsWholePlaneGFF.exists_global_radial_circle_shift_decoder
 
 /-- The global modulo-constant field jointly decodes absolute circle averages
 at countably many radii and all centers buffered in a fixed ball, on one event
@@ -155,5 +153,4 @@ theorem IsWholePlaneGFF.exists_global_joint_absolute_circle_shift_decoders
     rw [heq, hCω n g hg z hz, hRω n g hg hpin]
     ring
 
-#print axioms IsWholePlaneGFF.exists_global_joint_absolute_circle_shift_decoders
 end HarmonicBalls

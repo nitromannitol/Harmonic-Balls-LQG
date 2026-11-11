@@ -59,6 +59,5 @@ theorem IsWholePlaneGFF.exists_small_pinch_scales_criterion_at_liouville_charge
   obtain ⟨n, hn, hevent⟩ := exists_small_dyadic_scale_of_positive_block_density hδpos hf r hr
   exact ⟨n, hn, hevent, pinchPointEvent_of_internalBounds hmetric hevent⟩
 
-#print axioms IsWholePlaneGFF.exists_small_pinch_scales_criterion_at_liouville_charge
 
 end HarmonicBalls

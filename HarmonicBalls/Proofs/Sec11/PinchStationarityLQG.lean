@@ -112,7 +112,5 @@ theorem IsWholePlaneGFF.identDistrib_pinchIndicators_of_normalizedLQG
   exact identDistrib_pinchIndicators_of_normalized_dilation_of_ae_lengthMetric P μ D D'
     hconfig M a c ha hD' hmetric hscale
 
-#print axioms IsWholePlaneGFF.ae_lengthMetric_of_affine_mixture
-#print axioms IsWholePlaneGFF.identDistrib_pinchIndicators_of_normalizedLQG
 
 end HarmonicBalls
