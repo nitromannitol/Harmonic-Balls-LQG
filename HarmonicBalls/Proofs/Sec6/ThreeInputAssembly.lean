@@ -7,7 +7,7 @@ import Lean.Util.CollectAxioms
 /-!
 # Propositions 6.1 and 6.2 from three staged measure inputs and the open Section 6 leaves
 
-Worker z4, task `section6-three-input-derived-laplacian-assembly`. Pure assembly: this module adds no mathematics.
+Pure assembly: this module adds no mathematics.
 It is a conditional reduction, not a closure of Proposition 6.1 or 6.2. Source review of the staged inputs is pending.
 
 Exports. Four theorems at the frozen conclusions `HarnackTypeEstimateStmt` (Proposition 6.1,
@@ -53,7 +53,7 @@ Credit: Leonardo Bonanno. Two modules of his `LatticeProb` library, `LatticeProb
 `HarmonicBalls/Proofs/Sec6/DerivedInputAssembly.lean`. The constant closure of the four exports reaches no LatticeProb
 declaration (guard: no LatticeProb module reached). By contrast, `section6_of_volumeGrowth` applied to I2 reaches the annulus
 iteration and about 194 LatticeProb modules, among them `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`, which holds his
-proof of the Gwynne–Miller lemma (scratch check recorded in `docs/campaign/audits/Section6ThreeInputAssembly.md`). These
+proof of the Gwynne–Miller lemma (recorded in `docs/campaign/audits/Section6ThreeInputAssembly.md`). These
 exports do not use that route.
 -/
 
@@ -142,10 +142,6 @@ theorem harnackTypeComponentStmt_of_three_inputs_steps
 
 end Section6ThreeInput
 
-#print axioms HarmonicBalls.Section6ThreeInput.harnackTypeEstimateStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6ThreeInput.harnackTypeComponentStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6ThreeInput.harnackTypeEstimateStmt_of_three_inputs_steps
-#print axioms HarmonicBalls.Section6ThreeInput.harnackTypeComponentStmt_of_three_inputs_steps
 
 -- Guard: standard axioms only; each export takes exactly hDG, hCC, hE and its open leaves (no affine, Weyl or Lemma 3.2
 -- binder); the hE binder quantifies over every insertion α and equals the premise of the staged I2 export; the closure

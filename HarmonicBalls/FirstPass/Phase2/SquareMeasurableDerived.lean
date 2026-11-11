@@ -8,7 +8,7 @@ import HarmonicBalls.Proposed.LQG
 
 Two frozen Props of `HarmonicBalls/FirstPass/Frozen` are derived here, each from one literature input of
 `HarmonicBalls/Proposed/LQG.lean`, taken as an explicit hypothesis in its universally quantified form (the binder form
-of `closure_1_3_derivedInputs`, `HarmonicBalls/FirstPass/Phase2/DerivedInputsSec1to10.lean`). No first-pass frozen Prop
+of `closure_1_3_derivedInputs`, `HarmonicBalls/FirstPass/Phase2/DerivedInputsSec1to10.lean`). No frozen Prop of `HarmonicBalls/FirstPass`
 is used, and no Prop is frozen here.
 
 * `lqgMeasureSquareMeasurable_derived` proves `LQGMeasureSquareMeasurableFrozen` (`Frozen/S11c.lean:117`) from the

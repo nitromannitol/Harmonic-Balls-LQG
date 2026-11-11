@@ -2,12 +2,12 @@ import HarmonicBalls.FirstPass.Phase2.GFFExistsConstructed
 import HarmonicBalls.LPStage.GFFCovPSD7
 
 /-!
-# Row 29 with the covariance positivity input proved (MQ-lh-25)
+# Whole-plane GFF existence with the covariance positivity input proved
 
 `wholePlaneGFFExistsFrozen_derived` takes the two named inputs `WholePlaneCovPSDStmt` (B2) and
 `WholePlaneCovSymmStmt`. Both are now proved in `LPStage`: `LatticeProb.Gauss.wholePlaneCovPSD_proved`
-(`LPStage/GFFCovPSD1.lean` to `GFFCovPSD7.lean`, route MQ-lh-25) and `LatticeProb.Gauss.wholePlaneCovSymm_proved`
-(`LPStage/GFFCovSymm.lean`, theorem after `end GFFCovSymm`). No named input remains for row 29 in this file.
+(`LPStage/GFFCovPSD1.lean` to `GFFCovPSD7.lean`) and `LatticeProb.Gauss.wholePlaneCovSymm_proved`
+(`LPStage/GFFCovSymm.lean`, theorem after `end GFFCovSymm`). No named input remains in this file.
 -/
 
 namespace HarmonicBalls

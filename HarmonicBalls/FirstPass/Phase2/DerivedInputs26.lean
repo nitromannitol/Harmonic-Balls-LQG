@@ -9,7 +9,7 @@ with the binder trades of `DerivedInputs23` applied at once, for the counted for
 * `hLoc` (same Prop as `hDec`, `LocalLQGDecoderCommonFrozen`) is removed and `hDec` supplies it;
 * `_hWCont` (`firstPass_11_13` only) is discharged by `HarmonicBalls.weylMetricCompositionContinuousOuter_derived`
   (Phase2/WeylCompositionOuterDerived.lean), binder-free.
-No other binder is traded here; the reducible rows of PHASE2-DERIVATION-STATUS.md are checked in the task report.
+No other binder is traded here.
 -/
 
 universe u
