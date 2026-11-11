@@ -4,7 +4,7 @@ import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# First pass, Section 11, ergodic inputs (fp-S11b, owner n1)
+# Section 11, ergodic inputs
 
 Each theorem `firstPass_11_<k>` concludes the Draft statement of a numbered result of Section 11
 (`HarmonicBalls/Draft/Section11.lean`). Its hypotheses are only Draft statements of other numbered results,
@@ -59,7 +59,7 @@ lemma le_infDist_origin_annulus {r : ℝ} (hr : 0 < r) :
   linarith
 
 /-- FIRST-PASS, Lemma 11.7 (lemma:mu_h-bad-and-harnack, corrected [C39]), for `ManyConeBadScalesStmt`
-(`Draft/Section11.lean`). WITHDRAWN (truth check 2026-11-09): it uses the two RETIRED Props
+(`Draft/Section11.lean`). WITHDRAWN: it uses the two RETIRED Props
 `OriginRootedConeFrequencyFrozen` and `RootedConeFrequencyTransferFrozen`; the redo is `firstPass_11_7` in
 `FirstPass/S11c.lean`. The inputs of this withdrawn version are: the Draft Lemma 11.8 (`ConeBadEventProbabilityStmt`), applied with
 `α₀ := γ` at the origin; the staged existence of the LQG measure `LQGMeasureExistence` (`Proposed/LQG.lean`, pending

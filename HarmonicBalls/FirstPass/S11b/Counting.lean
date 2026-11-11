@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11.Frequency
 
-/-! # Counting bridge for Lemma 11.7 (fp-S11b, owner n1)
+/-! # Counting bridge for Lemma 11.7
 
 Converts the `Set.ncard` form of the counts in `ManyConeBadScalesStmt` (`Draft/Section11.lean`) into the finset
-counts of `FirstPassS11.eventually_window_count_ge` (n3, `FirstPass/S11/Frequency.lean`).
+counts of `FirstPassS11.eventually_window_count_ge` (`FirstPass/S11/Frequency.lean`).
 -/
 
 open Set Filter Topology

@@ -8,7 +8,7 @@ import HarmonicBalls.Steps.Sec11.WholePlaneWeylShift
 import HarmonicBalls.Steps.Sec11.ProperMetricDyadic
 
 /-!
-# First pass, positivity of the first pinch event (fp-S11e2, owner n2)
+# Positivity of the first pinch event
 
 Lemma 11.15 (`lemma:first-event-proof`, paper line 3277): `P[Ẽ₁] > 0` for a pinch configuration. The proof transfers
 the open-certificate positivity of the Type proof `IsCorrectedPinchConfiguration.positive_open_first` to the Type-0 carrier

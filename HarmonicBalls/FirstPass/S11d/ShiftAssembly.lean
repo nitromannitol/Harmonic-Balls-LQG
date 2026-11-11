@@ -12,7 +12,7 @@ import HarmonicBalls.Proofs.GFF.MetricXiSign
 universe u
 
 /-!
-# Proposition 11.9, the shifted event with positive probability (fp-S11d, owner n3)
+# Proposition 11.9, the shifted event with positive probability
 
 FIRST-PASS NEW (assembly R2). For the Draft statement `SmallMetricDiameterLargeMassStmt` (paper `prop:mass-diam-gen`,
 corrected draft lines 3110-3137), the shifted field `h~ = h - (φ/ξ) log(2(n+ε)/ε)` has, with positive probability, the

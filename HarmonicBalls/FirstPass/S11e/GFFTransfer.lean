@@ -2,7 +2,7 @@ import HarmonicBalls.Defs.GFF
 
 
 /-!
-# First pass, transfer of the whole-plane GFF to a Type-0 carrier (fp-S11e2, owner n2)
+# Transfer of the whole-plane GFF to a Type-0 carrier
 
 For Lemma 11.15 (paper `lemma:first-event-proof`, line 3277) the existing Type proof
 `IsCorrectedPinchConfiguration.positive_open_first` (`Proofs/Sec11/CorrectedPinchFirstPositive.lean:12`) is applied to a

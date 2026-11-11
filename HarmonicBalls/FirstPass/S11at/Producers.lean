@@ -11,9 +11,9 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CircleTestFubiniLimit
 import HarmonicBalls.Proofs.Sec8.CircleDensityContinuousLimit
 
 /-!
-# Producers of `hLen` and `hμ` for the rooted certificate (task fp-S11at-hLen-hmu-producers, q1)
+# Producers of `hLen` and `hμ` for the rooted certificate
 
-Route of `notes/fp-gaps/CHATGPT-211-hb-11-13-q1-hLen-hmu-PRO.md`, section 1 (`hLen`). The rooted insertion weight is
+The rooted insertion weight is
 `rootedWeight α₀ γ z w = -α₀ log|w| - γ log|w - z| + γ log max(1,|w|)` (the weight of `rootedWeylMetric`, `S11at.lean`).
 Term-by-term: the weight is continuous off `{0, z}`; its Weyl scaling is finite on the punctured plane `{0}ᶜ` by the
 root-finite lemma `finite_on_disk_root` (Armitage-Gardiner-style connectedness; Duplantier-Sheffield Fact 2.2 (I) and (III)
@@ -694,7 +694,7 @@ theorem rootedWeylMetric_ae_z (hLenFr : LQGMetricLengthUnivFrozen.{u})
   filter_upwards [ae_restrict_of_ae hz0] with z hz
   exact rootedWeylMetric_ae_isEuclideanLengthMetric hLenFr hFieldFr hRootFr P γ ξ α₀ hC hcirc hP 𝔇 h𝔇 hγ0 hγ2 hα hz
 
-/-! ### hμ: the rooted LQG measure exists for almost every root (CHATGPT-211 §2)
+/-! ### hμ: the rooted LQG measure exists for almost every root
 
 Steps 1, 3, 5, 6 and 7 of the §2 derivation are formalized below. The measurable pairing-to-profile map and the
 GMC-success set (Steps 2 and 4) and the identification of the DMS-shifted profile (Step 6) have no written argument
@@ -759,8 +759,7 @@ theorem circleProfile_eq_of_pos {F : C(CircleParameter, ℝ)} {g : ℝ → ℂ �
 noncomputable def HMuGoodSet (γ α₀ : ℝ) (G : ((ℂ → ℝ) → ℝ) → C(CircleParameter, ℝ)) : Set ((ℂ → ℝ) → ℝ) :=
   {T | ∃ ν : Measure ℂ, IsLQGLimit γ (fieldCircleAverage α₀ (circleProfile (G T))) ν}
 
-/-- **Named gap `HMuPairingBridge`** (CHATGPT-211 §2, Steps 2, 4 and 6; `notes/fp-gaps/CHATGPT-211-hb-11-13-q1-hLen-hmu-PRO.md`
-l.394-418, l.437-457, l.494-530). It asserts the three facts the plan states without argument:
+/-- **Named gap `HMuPairingBridge`**. It asserts the three facts the plan states without argument:
 (a) a map `G` from pairing functionals to continuous circle profiles with `G (hC ω) = hcirc ω` almost surely (Step 2;
 the repository's measurable version `IsWholePlaneGFF.exists_measurable_continuous_circle_version` is an `Ω`-level map,
 not a function of the pairings);
@@ -873,7 +872,7 @@ theorem circleProfile_shift_eq (α₀ γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ �
   rw [hF', hfun]
   ring
 
-/-- **`hμ` producer** (CHATGPT-211 §2, Steps 1, 3, 5, 6 and 7). For a.e. root `z` in `ball c₁ r₁`, the rooted
+/-- **`hμ` producer** (Steps 1, 3, 5, 6 and 7). For a.e. root `z` in `ball c₁ r₁`, the rooted
 γ-LQG measure of `rootedCircleFieldP α₀ γ hcirc z` exists almost surely. The argument: the unrooted measure at insertion
 `0` (`LQGMeasureExistence`) weights the marked DMS identity `DMSLemmaA10WholePlaneMarked`; the GMC-success indicator
 has zero weighted integral, so the DMS-shifted pairing is GMC-good for a.e. root and a.s.; the DMS constant `κ` is

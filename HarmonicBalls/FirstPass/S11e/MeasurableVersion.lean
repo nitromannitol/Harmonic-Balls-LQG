@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# First pass, measurable versions of random continuous metrics (fp-S11e2, owner n2)
+# Measurable versions of random continuous metrics
 
 Generic measure-theoretic fact used for Lemma 11.15 (paper `lemma:first-event-proof`, line 3277; certificate events
 `Ẽ₁` of lines 3325-3357): a random function `D : Ω → ℂ × ℂ → ℝ` which is almost surely continuous and whose evaluation at

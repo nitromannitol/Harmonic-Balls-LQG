@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11d.CountableSup
 import HarmonicBalls.FirstPass.S11d.ExteriorBound
 
 /-!
-# Proposition 11.9, the measurable exterior bound (fp-S11d, owner n3)
+# Proposition 11.9, the measurable exterior bound
 
 FIRST-PASS NEW. The exterior bound of `prop:mass-diam-gen` (corrected paper, lines 3120-3125): with positive probability,
 `sup_{u,v ∈ V \ S₂} D_h(u,v; O) ≤ n` for a deterministic `n : ℕ`, with the event measurable. The inputs are the

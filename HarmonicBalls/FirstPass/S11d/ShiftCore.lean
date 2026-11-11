@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11d.Core
 import HarmonicBalls.FirstPass.S11d.ShiftBound
 
 /-!
-# Proposition 11.9, the core and the square bound for the shifted metric (fp-S11d, owner n3)
+# Proposition 11.9, the core and the square bound for the shifted metric
 
 FIRST-PASS NEW. Three deterministic steps of the proof of `prop:mass-diam-gen` (corrected paper, lines 3127-3137) for the
 Weyl-shifted metric `E` of `h~`:

@@ -3,7 +3,7 @@ import HarmonicBalls.Steps.Sec11.PinchInternalDiam
 import HarmonicBalls.Steps.Sec11.PinchRadialCrossing
 
 /-!
-# Deterministic inclusion: the three auxiliary pinch events give the pinch-point event (fp-S11e, owner n2)
+# Deterministic inclusion: the three auxiliary pinch events give the pinch-point event
 
 For a pinch-point proof configuration (`IsPinchPointProofConfiguration`, `Draft/Section11.lean`) the auxiliary events
 `Ẽ₁`, `Ẽ₂(M)`, `Ẽ₃` (`pinchFirstEvent`, `pinchSecondEvent`, `pinchThirdEvent`; paper lines 3325-3357) together imply the

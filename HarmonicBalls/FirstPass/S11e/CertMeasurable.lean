@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec11.CorrectedPinchFirstLawTransfer
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchFirstMeasurable
 
 /-!
-# First pass, Lemma 11.15: measurability of the open certificate on the field (fp-S11e2, owner n2)
+# Lemma 11.15: measurability of the open certificate on the field
 
 Paper `lemma:first-event-proof` (line 3277) needs a measurable event inside the open certificate
 `correctedOpenFirstCertificate` (`Proofs/Sec11/CorrectedPinchFirstLawTransfer.lean`). Here the certificate is measurable

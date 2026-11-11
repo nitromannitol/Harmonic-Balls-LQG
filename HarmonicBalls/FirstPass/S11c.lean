@@ -3,11 +3,11 @@ import HarmonicBalls.FirstPass.S11c.Ref11_7
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# First pass, Section 11, the shifted event (fp-S11c, owner n1)
+# Section 11, the shifted event
 
 Each theorem `firstPass_<sec>_<k>` concludes the Draft statement of a numbered result of Section 11
 (`HarmonicBalls/Draft/Section11.lean`). Its hypotheses are Draft statements, EXTERNAL frozen Props of
-`FirstPass/Frozen/S11c.lean` and `FirstPass/Frozen/*`, and the staged `Proposed/` inputs (operator ruling 19:45 UTC).
+`FirstPass/Frozen/S11c.lean` and `FirstPass/Frozen/*`, and the staged `Proposed/` inputs.
 
 * Lemma 11.10 (`SmallMetricDiameterLargeMassSquareStmt`, Draft/Section11.lean:214): `firstPass_11_10`, paper
   lemma:mass-diam (lines 3071-3112) and the proof of Lemma 11.10 (`prop:mass-diam-gen`).
@@ -25,9 +25,8 @@ is at most `ε` and the mass of `S₁` is at least `C` has a measurable subset o
 Hypotheses: the frozen Props `DyadicCellDiamSmallFrozen`, `CameronMartinEventTransferFrozen`,
 `LQGMeasureSquarePositiveFrozen`, `LQGMeasureSquareMeasurableFrozen`, `LQGMetricSupMeasurableFrozen`,
 `ConnectedSquareUnionDiamFiniteFrozen`, `WeylInternalClosedFrozen`, `LQGMetricContinuousShiftFactI`, and the measurability
-of the Weyl-shifted metric and measure `WeylShiftedSupMeasurableFrozen`, `WeylShiftedMassMeasurableFrozen` (operator ruling
-19:45 UTC, item n1 (1)); and the staged Proposed field axioms `LQGMetricFieldAxioms`, quantified over the field objects
-(operator ruling 19:45 UTC, item n1 (2)). -/
+of the Weyl-shifted metric and measure `WeylShiftedSupMeasurableFrozen`, `WeylShiftedMassMeasurableFrozen`; and the staged Proposed field axioms `LQGMetricFieldAxioms`, quantified over the field objects.
+ -/
 theorem firstPass_11_10.{u}
     (hDC : DyadicCellDiamSmallFrozen.{u}) (hCM : CameronMartinEventTransferFrozen.{u})
     (hPos : LQGMeasureSquarePositiveFrozen.{u}) (hMassM : LQGMeasureSquareMeasurableFrozen.{u})
@@ -46,7 +45,7 @@ theorem firstPass_11_10.{u}
 
 #print axioms firstPass_11_10
 
-/-- **Lemma 11.7 (first pass, `firstPass_11_7`)**: many cone-bad scales, with `δ = p / 8`, where `p` is the positive
+/-- **Lemma 11.7 (`firstPass_11_7`)**: many cone-bad scales, with `δ = p / 8`, where `p` is the positive
 probability lower bound supplied by Lemma 11.8 at `(γ, γ)` (not necessarily an exact event probability). Route (B2 sections 5-8): `ae_eventually_ncard_of_fixedRoot` with the fixed-root input
 `hRef_of_decoder`. Frozen inputs: `ConeBadEventProbabilityStmt` (hypothesis Q2, Lemma 11.8 at `(γ, γ)`),
 `LocalCampbellMarkedRestrictionFrozen`, `LQGMeasureOfProfileMeasurableFrozen`, `LocalLQGDecoderCommonFrozen`,

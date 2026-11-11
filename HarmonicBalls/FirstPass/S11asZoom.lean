@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11s.Covariance
 import HarmonicBalls.Proofs.Sec9.AffineInvarianceAssembly
 
 /-!
-# Iterated zoom-in of the canonical decoders (fp-S11as round 6, q1)
+# Iterated zoom-in of the canonical decoders
 
 Step 7 of the rooted local rescaling (`FirstPass/S11as.lean`, `RootedLocalRescaling`). The one-step covariance of the frozen
 canonical decoders under the zoom-in by `1/2` (`ae_covariance_canonical`, `FirstPass/S11s/Covariance.lean`) is iterated `n`

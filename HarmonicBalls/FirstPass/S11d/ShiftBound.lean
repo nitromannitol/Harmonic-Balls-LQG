@@ -3,7 +3,7 @@ import HarmonicBalls.Steps.Sec11.WeylAnnulusBounds
 import HarmonicBalls.Steps.Sec11.WeylInversePath
 
 /-!
-# Proposition 11.9, bounds for the Weyl-shifted metric (fp-S11d, owner n3)
+# Proposition 11.9, bounds for the Weyl-shifted metric
 
 FIRST-PASS NEW. Wrappers for the shift step of `prop:mass-diam-gen` (corrected paper, lines 3127-3131): with
 `h~ = h - (φ/ξ) log(2A/ε)`, the metric of `h~` is the Weyl scaling of the metric of `h` by the weight `e^{-φ c}` (`c = log(2A/ε)`),

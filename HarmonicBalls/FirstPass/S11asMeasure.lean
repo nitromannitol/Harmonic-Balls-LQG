@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Measure half of the rooted local rescaling (fp-S11as, round 2): observation identity and local proportionality
+# Measure half of the rooted local rescaling: observation identity and local proportionality
 
 Block 1 (deterministic): a smooth shift `f` that equals the background `-α₀ log‖·‖` on the disc `D` does not change the
 rooted mean-zero observation on `D` when the background is moved from `α₀` to `0`.

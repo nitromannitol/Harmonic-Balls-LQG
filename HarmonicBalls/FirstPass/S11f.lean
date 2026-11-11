@@ -5,18 +5,17 @@ import HarmonicBalls.FirstPass.S11f.SecondThresholds
 import HarmonicBalls.FirstPass.Frozen.S11f
 
 /-!
-# First pass, Section 11 second pinch event (fp-S11f, owner n2)
+# Section 11 second pinch event
 
 Results of this file: Lemma 11.16 (`PinchSecondEventPositiveStmt`, paper `lemma:second-event-proof`, lines 3697-3725).
 
-Status (round 1): OPEN. `pinchSecondEvent_of_openSteps` is a conditional theorem: it follows from the two NEW steps packaged in
+Status: OPEN. `pinchSecondEvent_of_openSteps` is a conditional theorem: it follows from the two NEW steps packaged in
 `PinchSecondOpenSteps`, which are not yet proved.
 
 * `PinchSecondOutsideStep` (the one named open point, paper lines 3697-3700): for some thresholds `c₁, c₂ > 0` the event
   `E₁ ∩ {D(∂B_δ,∂B_{2δ}) ≥ c₁} ∩ {M S ≤ c₂}` contains a set measurable for the sigma-algebra of the field outside `W`
   with positive probability. The paper asserts measurability of `E₁`, `a₁` and `S` with respect to the field outside `W`;
-  the global LQG distances do not obviously have this property (ChatGPT Pro check pending:
-  `notes/fp-gaps/CHATGPT-11-16-global-distance.md`). Not frozen, not routed around.
+  the global LQG distances do not obviously have this property. Not frozen, not routed around.
 * `PinchSecondMassStep` (NEW, paper lemma:massdiam conditional form, lines 3511-3523 with the conditional-equivalence
   argument after (CM-C)): the event `{μ(U) > 2c₂, diam^δ(V) ≤ c₁/2}` contains a measurable set whose conditional
   probability given the outside field is almost surely positive. Its square-diameter tail is `DDDFSquareDiameterTailFrozen`.

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S11d
 
 /-!
-# Proposition 11.9, Cameron-Martin transfer of positive probability (fp-S11d, owner n3)
+# Proposition 11.9, Cameron-Martin transfer of positive probability
 
 FIRST-PASS NEW. The last step of `prop:mass-diam-gen` (corrected paper, line 3131): a positive-probability event for the
 shifted field `h~ = h - (φ/ξ) log(2A/ε)` gives a positive-probability event for `h`, because the laws are mutually absolutely

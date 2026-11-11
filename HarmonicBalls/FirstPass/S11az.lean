@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11am
 
 /-!
-# Countable dense index sets of the pinch geometry (fp-S11az, owner z11)
+# Countable dense index sets of the pinch geometry
 
 Every subset `A` of `ℂ` has a countable subset `S ⊆ A` with `A ⊆ closure S` (`IsCountDenseIn S A` of
 `FirstPass/S11am.lean:36`). This is the separability of `ℂ` (Mathlib `TopologicalSpace.IsSeparable.of_separableSpace`

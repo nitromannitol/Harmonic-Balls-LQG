@@ -1,7 +1,7 @@
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 
 /-!
-# Weyl density step of the measure half of the rooted local rescaling (fp-S11as, round 4)
+# Weyl density step of the measure half of the rooted local rescaling
 
 Two whole-plane fields whose circle averages differ by the circle averages of a continuous function `v`
 (`hcirc' = hcirc + circleAverage v`) have, almost surely, LQG measures (background `α`, insertion `γ`) related by the

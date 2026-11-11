@@ -3,7 +3,7 @@ import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 import HarmonicBalls.FirstPass.S11d.Finite
 
 /-!
-# Proposition 11.9, finiteness of the exterior internal diameter (fp-S11d, owner n3)
+# Proposition 11.9, finiteness of the exterior internal diameter
 
 FIRST-PASS NEW. Deterministic input to the exterior bound of `prop:mass-diam-gen` (corrected paper, lines 3120-3125):
 for a Euclidean length metric `D`, an open set `O`, and an open preconnected `A` with `closure A ⊆ O` and compact

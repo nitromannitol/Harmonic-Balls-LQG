@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11ay
 import HarmonicBalls.FirstPass.S11bb.Stmt
 
 /-!
-# The local certificate from the decoded identification (fp-S11bb, STEP B; Lemma 11.12)
+# The local certificate from the decoded identification
 
 `HarmonicBalls.S11bb.pinchLocalCertificate_of_identification` proves `PinchLocalCertificateStmt`
 (`FirstPass/S11m/Corrected11_12.lean:40`) from the decoded identification `PinchDecodedIdentificationStmt`
@@ -38,7 +38,7 @@ universe u
 namespace HarmonicBalls
 namespace S11bb
 
-/-- **Local certificate from the decoded identification** (fp-S11bb, STEP B). For every buffered pinch geometry and
+/-- **Local certificate from the decoded identification**. For every buffered pinch geometry and
 parameters `γ ∈ (0,2)`, `ξ > 0`, `M > 0`, the decoded identification `hId` gives a measurable set `E` of pairings on
 `B₇(0)` with positive probability on which the three non-local events hold almost surely; this is
 `PinchLocalCertificateStmt`. -/

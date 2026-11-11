@@ -2,14 +2,14 @@ import HarmonicBalls.FirstPass.S11m.Corrected11_12
 import HarmonicBalls.FirstPass.S11m.LocalRule
 
 /-!
-# Decoded identification of the local certificate (fp-S11bb, STEP A; Lemma 11.12)
+# Decoded identification of the local certificate
 
-This file states the decoded identification `PinchDecodedIdentificationStmt` only. It is proved by the
-owner of the decoding (z4) and consumed by `HarmonicBalls.S11bb.pinchLocalCertificate_of_identification`
+This file states the decoded identification `PinchDecodedIdentificationStmt` only. It is proved elsewhere and
+consumed by `HarmonicBalls.S11bb.pinchLocalCertificate_of_identification`
 (FirstPass/S11bb.lean), which proves the certificate `PinchLocalCertificateStmt` from it.
 
-The identification is step 4 of `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md` (equation (2), line 101;
-Section 5, line 383; Section 6.1, line 414). For a buffered pinch geometry and parameters `γ ∈ (0,2)`, `ξ > 0`,
+The identification is step 4 of the local-certificate argument.
+For a buffered pinch geometry and parameters `γ ∈ (0,2)`, `ξ > 0`,
 `M > 0`, it gives one Borel set `E` of pairings on `B₇(0)` such that, almost surely, the local field
 `h^α|_{B₇(0)}` modulo constants lies in `E` if and only if the local certificate rule `pinchLocalRule` of the true
 pair `(μ, D)` holds together with the two finiteness facts `SG_{3,6}(μ) ≠ ∞` and `μ(U) ≠ ∞`.
@@ -27,7 +27,7 @@ universe u
 namespace HarmonicBalls
 namespace S11bb
 
-/-- Decoded identification of the local certificate (STEP A of fp-S11bb). For every buffered pinch geometry
+/-- Decoded identification of the local certificate. For every buffered pinch geometry
 `(U, V, W, T, Q', Q, δ)` with `{0} ∪ ∂B₅(0) ⊆ pinchOmegaGeom W Q δ`, and every `γ ∈ (0,2)`, `ξ > 0`, `M > 0`, there is
 a measurable set `E` of pairings on `B₇(0)` such that, for every insertion `α < Q(γ)` and every whole-plane GFF model
 with insertion-`α` LQG measure `μ` and LQG metric `D`, almost surely:

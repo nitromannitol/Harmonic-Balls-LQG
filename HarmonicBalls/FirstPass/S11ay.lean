@@ -5,14 +5,13 @@ import HarmonicBalls.Defs.Annuli
 import HarmonicBalls.Steps.Sec11.PinchGreenFinite
 
 /-!
-# Almost sure finiteness at insertion `α` (fp-S11ay; finiteness inputs of the corrected Lemma 11.12)
+# Almost sure finiteness at insertion `α`
 
 Let `0 < γ < 2`, `α < Q = lqgQ γ`, and let `μ` be the γ-LQG measure of the insertion-`α` field
 `h = h^ℂ - α log|·|` (`IsLQGMeasureOfField P γ α hcirc μ`) of a whole-plane GFF. The decoded pinch rule
 (`S11am.decodedPinchRule_iff`) needs two almost sure finiteness facts:
 
-* `S = SG_{3,6}(μ) = annulusGreenPotentialSup μ 0 3 6 ≠ ∞` (written argument: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md`
-  §6.1, lines 414-432): the annular Green potential is finite under LQG volume growth (dyadic summation of the Green
+* `S = SG_{3,6}(μ) = annulusGreenPotentialSup μ 0 3 6 ≠ ∞`: the annular Green potential is finite under LQG volume growth (dyadic summation of the Green
   kernel bound against `μ(B_r(z)) ≤ r^{β⁺}`), `ae_annulusGreenPotentialSup_ne_top_of_lqgVolumeGrowth`;
 * `μ(U) ≠ ∞` for every bounded `U ⊆ ℂ`: local finiteness of the LQG limit (`IsLQGLimit`, Fact 2.1 I).
 

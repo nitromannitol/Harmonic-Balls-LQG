@@ -12,17 +12,17 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.S11at.Producers
 
 /-!
-# Eventual rooted covariance: internal proportionality and the eventual ambient metric (fp-S11at, round 10)
+# Eventual rooted covariance: internal proportionality and the eventual ambient metric
 
-Chat 195 (`notes/fp-gaps/CHATGPT-hb-hCov-locality.md`) replaces the false fixed-scale ambient locality by three steps:
+Chat 195 replaces the false fixed-scale ambient locality by three steps:
 * step 6a (`ae_internalMetric_decoded_scalar`): the two decoded internal metrics on a locality domain are proportional, a.s.,
   because the two local decoder outputs coincide (equal observations) and each equals a positive multiple of its internal
   metric (the replacement clauses of `LocalMetricReplacementStmt`, normalised by `LQGCanonicalIdentificationStmt`);
-* step 6b (`HarmonicBalls.eq_internalMetric_on_small_ball`, committed by n2 in `S11r/NoShortcut.lean`): ambient equals internal near `0`;
+* step 6b (`HarmonicBalls.eq_internalMetric_on_small_ball`): ambient equals internal near `0`;
 * step 6c (`ae_eventual_ambient_proportional`, `ae_eventual_certificateEvent_iff`): a.s., for all large `n`, the ambient
   metrics are proportional on the window and the certificate events agree.
 
-The no-shortcut step is `HarmonicBalls.eq_internalMetric_on_small_ball` (n2, committed); no explicit hypothesis remains for it. step 6a is proved here in its
+The no-shortcut step is `HarmonicBalls.eq_internalMetric_on_small_ball`; no explicit hypothesis remains for it. step 6a is proved here in its
 deterministic core (the normalising constants are explicit), and the link from `LocalMetricReplacementStmt` to the
 observation-level hypotheses `hrepR`, `hrepU` is NOT yet written (see the report).
 -/
@@ -76,9 +76,9 @@ theorem ae_internalMetric_decoded_scalar {Ω : Type*} [MeasurableSpace Ω] {P : 
 
 /-- **Step 6c, eventual ambient proportionality.** Let `D ω`, `E ω` be Euclidean length metrics for almost every `ω`, and
 suppose their internal metrics on the open set `Uloc ∋ 0` are proportional on a fixed window `closedBall 0 r₀` (`hInt`, the
-output of `ae_internalMetric_decoded_scalar`). With the no-shortcut lemma `HarmonicBalls.eq_internalMetric_on_small_ball` (n2), almost surely there are `β > 0` and
+output of `ae_internalMetric_decoded_scalar`). With the no-shortcut lemma `HarmonicBalls.eq_internalMetric_on_small_ball`, almost surely there are `β > 0` and
 `n₀` such that the ambient metrics are proportional on `closedBall 0 (rad n)` for all `n ≥ n₀`, whenever `rad n → 0`. The
-statement is only eventual: the no-shortcut radius is random (chat 195, step 6c). -/
+statement is only eventual: the no-shortcut radius is random. -/
 theorem ae_eventual_ambient_proportional {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     (D E : Ω → ℂ → ℂ → ℝ) {Uloc : Set ℂ} (hUloc : IsOpen Uloc) (h0 : (0 : ℂ) ∈ Uloc)
     {r₀ : ℝ} (hr₀ : 0 < r₀) (rad : ℕ → ℝ) (hrad : Tendsto rad atTop (𝓝 0))
@@ -158,7 +158,7 @@ noncomputable def shiftedCanon {Ω : Type*} (γ : ℝ) (hC : Ω → (ℂ → ℝ
 
 /-- **Eventual pair locality at the certificate scales (step 6c, fixed root and shift).** For a fixed root, the physical
 pair `(μ0 ω, D0 ω)` and the shifted pair `(μu ω, Du ω)` have, almost surely and eventually in `n`, equal certificate
-events at `(certScale n, 0)`. Inputs: the no-shortcut lemma `HarmonicBalls.eq_internalMetric_on_small_ball` (n2), the Euclidean length property of both metrics,
+events at `(certScale n, 0)`. Inputs: the no-shortcut lemma `HarmonicBalls.eq_internalMetric_on_small_ball`, the Euclidean length property of both metrics,
 the proportionality of the internal metrics on the window `closedBall 0 r₀` inside `Uloc`, and the mass locality
 `hMass` (eventual in `n`). -/
 theorem ae_eventual_certificateEvent_pair {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
@@ -196,7 +196,7 @@ theorem ae_eventual_certificateEvent_pair {Ω : Type*} [MeasurableSpace Ω] {P :
   show D0 ω p.1 p.2 = β * Du ω p.1 p.2
   exact hn₂ n (le_trans (le_max_right _ _) hn) p.1 hp.1 p.2 hp.2
 
-/-- **The eventual rooted covariance statement (the `hCov` clause of `S11ai/RootedInstance.lean`, n1 form).** The
+/-- **The eventual rooted covariance statement (the `hCov` clause of `S11ai/RootedInstance.lean`).** The
 admissible-shift predicate `Adm` and the root radius `rR` are parameters, so that this file does not import the rooted
 instance (import cycle). For almost every root `z ∈ A` in `ball c₁ r₁`, every admissible shift `(b, u)` at `z`, almost
 surely, eventually in `n` (with the cutoff inclusions as premises): the physical rooted certificate at scale
@@ -228,7 +228,7 @@ theorem exists_closedBall_two_mul_subset {O : Set ℂ} (hO : IsOpen O) (h0 : (0 
 /-- **Eventual certificate equivalence, one-sided (decoded-to-internal form).** The decoder `Ddec ω` is not required to be
 a global Euclidean length metric. It is compared with the internal metric of the length metric `Du ω` on an open window
 `W₀ ∋ 0`, through a positive constant `β` on `closedBall 0 r₀` (`hDecInt`). The no-shortcut lemma
-`HarmonicBalls.eq_internalMetric_on_small_ball` (n2) is applied to `Du ω` only. Conclusion: almost surely, eventually in
+`HarmonicBalls.eq_internalMetric_on_small_ball` is applied to `Du ω` only. Conclusion: almost surely, eventually in
 `n`, the certificate events at `(certScale n, 0)` of `(μdec, Ddec)` and of `(μu, Du)` agree. -/
 theorem ae_eventual_certificateEvent_decoded {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     (μdec μu : Ω → Measure ℂ) (Ddec Du : Ω → ℂ → ℂ → ℝ)
@@ -423,7 +423,7 @@ theorem ae_alphaCanon_translatedPairing_mem {Ω : Type*} [MeasurableSpace Ω] {P
 /-- **Length property of the root-shifted canonical metric (Cameron–Martin transfer of the decoder regularity set).**
 `G` is measurable, conull for `alphaCanon γ hC` (the field of the wrapper), and `Dd` is a Euclidean length metric on `G`.
 Such `G` and `Dd` are the output of `LQGCanonicalDecodersMeasurableExistStmt` (Frozen/S11n.lean:71). The Cameron–Martin
-transfer `HarmonicBalls.ae_shiftedCanon_mem_regularity` (n2, S11r/CMTransfer.lean:67) moves the event to
+transfer `HarmonicBalls.ae_shiftedCanon_mem_regularity` moves the event to
 `shiftedCanon γ hC hcirc z u`, for a root shift `u` that is smooth, compactly supported, with zero unit-circle average. -/
 theorem ae_isEuclideanLengthMetric_shiftedCanon {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u}) (γ : ℝ)
@@ -442,8 +442,8 @@ theorem ae_isEuclideanLengthMetric_shiftedCanon {Ω : Type u} [MeasurableSpace �
 /-- **Dilation covariance of the root-shifted canonical decoders (Cameron–Martin transfer of the covariance set `G0`).**
 `G0` is a measurable `dilOp`-invariant set, conull for `alphaCanon γ hC` (the output of `B1_covariance`,
 S11s/B1Covariance.lean:120, for the field `hC`), on which the one-step dilation identities hold. The transfer
-`HarmonicBalls.ae_shiftedCanon_mem_covariance`-style membership is `ae_canonFieldOf_addFunPairing_mem`
-(n2, S11r/CMTransfer.lean:54), and the `n`-fold identities come from `dilOp_iterate_of_one_step`. -/
+`HarmonicBalls.ae_shiftedCanon_mem_covariance`-style membership is `ae_canonFieldOf_addFunPairing_mem`,
+and the `n`-fold identities come from `dilOp_iterate_of_one_step`. -/
 theorem ae_shiftedCanon_dilation {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u}) (γ : ℝ)
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
@@ -524,7 +524,7 @@ theorem rootedCertificateEventualCovarianceStmt_of_transfer {Ω : Type u} [Measu
 The decoded rooted measure and metric at the root `z` are the observation decoders `κ` (measure) and `dd` (metric) evaluated
 on the Campbell-Palm reference observation `campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z` (Frozen/S11c.lean:251). The
 centred pair (root at `0`) is the translate by `-z`; `centred_pair_identities` gives the identities `hμR`, `hdR`.
-The named hypotheses `hDecInt` and `hMass` of the wrapper are kept as hypotheses (operator note 2026-11-10 08:35 UTC). -/
+The named hypotheses `hDecInt` and `hMass` of the wrapper are kept as hypotheses. -/
 
 /-- Decoded rooted measure `μR z ω = κ(obs_D h^{α₀}_z)` in absolute coordinates (rooted LQG measure of Duplantier-Sheffield). -/
 noncomputable def decodedRootMeasure {Ω : Type*} {c₂ : ℂ} {r₂ : ℝ}
@@ -553,7 +553,7 @@ noncomputable def decodedCentredMetric {Ω : Type*} {c₂ : ℂ} {r₂ : ℝ}
 
 /-- **Eventual covariance for the decoded pair (Campbell-Palm rooted decoders).** The rooted certificate covariance statement
 `RootedCertificateEventualCovarianceStmt` for the pair `(μR, dR) = (κ ∘ obs, dd ∘ obs)` in absolute coordinates. Proved from
-the Cameron-Martin transfer wrapper `rootedCertificateEventualCovarianceStmt_of_transfer` (n2, CMTransfer.lean) and the
+the Cameron-Martin transfer wrapper `rootedCertificateEventualCovarianceStmt_of_transfer` and the
 centred pair identities; the decoded-to-internal identity `hDecInt` and the local mass identity `hMass` remain hypotheses. -/
 theorem rootedCertificateEventualCovarianceStmt_decoded {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] (hCM : HarmonicBalls.CameronMartinGFFMutualAbsCont.{u}) {γ α₀ : ℝ}
@@ -603,13 +603,13 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal NNReal
 open HarmonicBalls HarmonicBalls.S11c
 
-/-! ### Rooted local identification: the decoded mass identity `hMass` (ChatGPT chat 201, sections 4.2-4.5 and 5)
+/-! ### Rooted local identification: the decoded mass identity `hMass`
 
 Inputs. `κ` is the decoder on the large domain `D = ball c₂ r₂`; `κj j` and `Dj j` are the decoders and buffered windows of
-n2's countable family (`RootedLocalIdent.lean`, pending; `Uj j` the root windows). The inputs `hμ` (rooted LQG measure
+countable family (`RootedLocalIdent.lean`, pending; `Uj j` the root windows). The inputs `hμ` (rooted LQG measure
 existence, LQGMeasureExistence threaded), `hκ`, `hκj` (the rooted clauses of `LocalMeasureKernelStmt`, second conjunct at
 `α₀`) and `hRLI` (the buffered identification, outputs of `ae_rootedLocalIdent_base` and `ae_rootedLocalIdent_shifted`)
-are hypotheses until their names appear in hb notes/n3-inbox.md. -/
+are hypotheses of this statement. -/
 
 /-- The rooted circle field at root `z` of the decoded clause: the GFF at background insertion `α₀`, plus `-γ log|· - z|`
 and the normalisation `γ log max(1, |·|)` (Campbell-Palm rooted field; the field of `LocalMeasureKernelStmt`). -/
@@ -642,7 +642,7 @@ theorem centred_restrict_eq_of_restrict_eq {ν νj μ : Measure ℂ} {z : ℂ} {
     rw [hν, hνj', smul_smul, ← ENNReal.ofReal_mul (div_nonneg ha.le haj.le), div_mul_cancel₀ a haj.ne']
   rw [Measure.restrict_map hmeas hS, Measure.restrict_map hmeas hS, hfac, Measure.map_smul _ hmeas.aemeasurable]
 
-/-- Pointwise assembly of the mass identity at one root `z`, one shift `u` and one buffered window `Dj` (ChatGPT §5): the
+/-- Pointwise assembly of the mass identity at one root `z`, one shift `u` and one buffered window `Dj`: the
 two rooted kernel clauses for the same rooted LQG measure `μz` and the buffered identification give the centred mass identity
 on `closedBall 0 ρ`; the certificate windows `closedBall 0 (7 certScale n)` eventually lie in it (restriction bookkeeping). -/
 theorem ae_mass_of_buffered_identification {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
@@ -696,10 +696,10 @@ theorem ae_mass_of_buffered_identification {Ω : Type*} [MeasurableSpace Ω] {P 
         rw [Measure.restrict_smul, Measure.restrict_restrict_of_subset hK, Measure.restrict_smul]
 
 /-- **Decoded mass identity from the rooted local identification (hMass).** The output of the decoded-to-canonical local
-identification of n2 (`ae_rootedLocalIdent_base`, `ae_rootedLocalIdent_shifted`, here the hypothesis `hRLI`), with the rooted
+identification (`ae_rootedLocalIdent_base`, `ae_rootedLocalIdent_shifted`, here the hypothesis `hRLI`), with the rooted
 kernel clauses `hκ` (large domain) and `hκj` (buffered windows) and the rooted LQG measure existence `hμ`, gives the
 `hMass` hypothesis of `rootedCertificateEventualCovarianceStmt_decoded`. The buffered index `j` is chosen after `(z, b, u)`
-and before the inner `P`-a.s. statement (ChatGPT §4.2), so `hRLI` quantifies `∃ j` outside `∀ᵐ ω`. -/
+and before the inner `P`-a.s. statement, so `hRLI` quantifies `∃ j` outside `∀ᵐ ω`. -/
 theorem hMass_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {c₁ c₂ : ℂ} {r₁ r₂ : ℝ} (A : Set ℂ)
     (Adm : ℂ → ℝ → (ℂ → ℝ) → Prop)
@@ -746,10 +746,10 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal NNReal
 open HarmonicBalls HarmonicBalls.S11c
 
-/-! ### Rooted local identification: the decoded metric identity `hDecInt` (ChatGPT chat 201, sections 4.3(4), 6)
+/-! ### Rooted local identification: the decoded metric identity `hDecInt`
 
 A continuous metric decoder `m φ` on the window `D` (Frozen/S11r `LocalMetricReplacementStmt`, clause (20)) is read as the
-window metric `windowMetric D m φ`, extended by `0` off `D × D` (as n2's `rootedMetricAt`). The physical rooted metric is
+window metric `windowMetric D m φ`, extended by `0` off `D × D` (as `rootedMetricAt`). The physical rooted metric is
 `rootedWeylMetric` (the real part of the Weyl scaling of the rooted field, Armitage-Gardiner / Duplantier-Sheffield).
 The sign and diagonal of the decoded metric are fixed by continuity (`eq_const_mul_of_ofReal_eq`), using that the physical
 metric is a Euclidean length metric (an input, see the report). -/
@@ -785,7 +785,7 @@ theorem continuousAt_windowMetric {D : Set ℂ} (hD : IsOpen D) (m : (WinTest D 
     exact (m φ).continuous.comp hF
   exact hOn.continuousAt (hD.mem_nhds hx)
 
-/-- Sign and diagonal fixing for a decoded length metric (ChatGPT §6; Armitage-Gardiner). If `D` is a Euclidean length
+/-- Sign and diagonal fixing for a decoded length metric (Armitage-Gardiner). If `D` is a Euclidean length
 metric, `m` is continuous in its second variable on the open set `O`, and `m` equals `b · D` in `ENNReal` on `O × O`
 (`ofReal (m x y) = ofReal b * ofReal (D x y)`), then `m = b · D` on `O × O` as real numbers. Off the diagonal `D > 0`
 forces `m > 0` and the equality of reals; on the diagonal `m ≤ 0` from the `ENNReal` identity and `m ≥ 0` from the
@@ -878,10 +878,10 @@ theorem eq_internalMetric_on_small_ball_at {D : ℂ → ℂ → ℝ} (hD : IsEuc
     linarith
   exact (hD.internalMetric_eq_of_boundary_clearance hnonneg hclear hxy).symm
 
-/-- **Decoded metric identity on a small ball (ChatGPT §6, the assembly of `hDecInt`).** Fix a root `z`, a buffered window
+/-- **Decoded metric identity on a small ball (the assembly of `hDecInt`).** Fix a root `z`, a buffered window
 `Dj ⊆ D` (open), and the two decoders `mD`, `mj` of the large and buffered windows. Inputs: the physical rooted metric `Dw`
 is a Euclidean length metric (the input `hDw`, to be sourced; see the report); the canonical metric `Dl` is one (`hDl`); the
-two clauses (20) for `Dw` with the internal metrics on `D` and on `Dj`; and the buffered identification (n2's metric
+two clauses (20) for `Dw` with the internal metrics on `D` and on `Dj`; and the buffered identification (metric
 output, on a whole ball about `z`). Conclusion: a positive radius `ρ` with `closedBall 0 (2ρ) ⊆ W`, a radius `r`, and a constant
 `β > 0` with the centred decoded metric equal to `β` times the internal metric of `Dl` on `ball 0 (2ρ)`. -/
 theorem hDecInt_at_of_local {D Dj W : Set ℂ} {z : ℂ} {Dw Dl : ℂ → ℂ → ℝ}
@@ -984,10 +984,10 @@ theorem isOpen_decodedWindow {c₂ z : ℂ} {r₂ b r : ℝ} :
   (isOpen_ball.inter isOpen_ball).inter (isOpen_ball.preimage (by fun_prop))
 
 /-- **Decoded metric identity from the rooted local identification (hDecInt, ae level).** The assembly of
-`hDecInt_at_of_local` over the root `z`, the shift `(b, u)` and the buffered index `j`: as in §4.2 of ChatGPT chat 201, `j` is
+`hDecInt_at_of_local` over the root `z`, the shift `(b, u)` and the buffered index `j`: `j` is
 chosen after `(z, b, u)` and before the inner `P`-a.s. statement. Inputs: the frozen metric clauses (20) of
 `LocalMetricReplacementStmt` on the large window (`hDwD`) and on the buffered windows (`hDwj`), in the `ENNReal` form of
-the clause; the rooted physical metric is a Euclidean length metric (`hLen`: NOT in the repository, see the report); n2's
+the clause; the rooted physical metric is a Euclidean length metric (`hLen`); the
 buffered metric identification (`hRLIm`, whole-ball form); the canonical length-metric property (`hLenC`); and the
 positivity of admissible shifts (`hAdmPos`: `0 < b`) and of the root radius (`hrR`: `0 < rR z` on `A`), which give
 `0 ∈ ball 0 b ∩ ball 0 (rR z) ∩ V_z` (`z ∈ ball c₂ r₂` from `hc1`). The conclusion is `hDecInt` of
@@ -1063,8 +1063,7 @@ theorem hDecInt_of_rootedLocalIdent {Ω : Type*} [MeasurableSpace Ω] {P : Measu
 
 universe u
 
-/-- **Rooted certificate eventual covariance, decoded form, from the rooted local identification** (q1,
-fp-S11at). The two decoded clauses `hMass` (measure, `hMass_of_rootedLocalIdent`) and `hDecInt` (metric,
+/-- **Rooted certificate eventual covariance, decoded form, from the rooted local identification**. The two decoded clauses `hMass` (measure, `hMass_of_rootedLocalIdent`) and `hDecInt` (metric,
 `hDecInt_of_rootedLocalIdent`) are derived from their stated inputs; the rest is passed through to
 `rootedCertificateEventualCovarianceStmt_decoded`, with the decoder `windowMetric (ball c₂ r₂) mD`. -/
 theorem rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent {Ω : Type u} [MeasurableSpace Ω]

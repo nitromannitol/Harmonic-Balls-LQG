@@ -5,16 +5,16 @@ import HarmonicBalls.FirstPass.S11d.ShiftSets
 import HarmonicBalls.FirstPass.Frozen.S11d
 
 /-!
-# Proposition 11.9 (`prop:mass-diam-gen`), first pass (fp-S11d, owner n3)
+# Proposition 11.9 (`prop:mass-diam-gen`)
 
 `firstPass_11_9` proves `SmallMetricDiameterLargeMassStmt` (Draft/Section11.lean) from:
-* the 11.10 input `SmallMetricDiameterLargeMassSquareStmt` (n1's, Draft/Section11.lean);
+* the 11.10 input `SmallMetricDiameterLargeMassSquareStmt`;
 * FIRST-PASS FROZEN inputs: `LQGMetricContinuousShiftFactI`, `WeylScalingCompositionFrozen`,
   `CameronMartinGFFMutualAbsCont`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`,
   `LQGInternalMetricWeylAeMeasurableFrozen`, `LQGMassFunctionalMeasurableFrozen`;
 * the Proposed input `LQGMetricFieldAxioms` (pending operator source-check), taken as a hypothesis.
 
-Proof (repair in `notes/fp-11-9-fix.md`; paper lines 3110-3137). `shifted_event_exists` gives the shifted event for
+Proof. `shifted_event_exists` gives the shifted event for
 `h̃ = h^ℂ + g - α₀ log|·|`. The Cameron-Martin transfer `cm_transfer_pos` moves it to `h^ℂ` along a set `B` of fields.
 `B` is defined with a countable dense `Q ⊆ V` (the sup over `V` is reduced to `Q` by `internalMetric_le_on_closure`),
 so that `B` is measurable. The mass `μ(S₁)` enters through the frozen field-level mass functional `F`.
@@ -35,7 +35,7 @@ theorem measurable_field_distribution {Ω : Type u} [MeasurableSpace Ω] {hC : �
   simp only [MeasurableSpace.comap_iSup, MeasurableSpace.comap_comp]
   exact iSup₂_le fun φ hφ => (hpair φ hφ).comap_le
 
-/-- Proposition 11.9 (`prop:mass-diam-gen`), first pass: the Draft statement `SmallMetricDiameterLargeMassStmt`. -/
+/-- Proposition 11.9 (`prop:mass-diam-gen`): the Draft statement `SmallMetricDiameterLargeMassStmt`. -/
 theorem firstPass_11_9
     (hCM : CameronMartinGFFMutualAbsCont.{u})
     (hWSC : WeylScalingCompositionFrozen.{u})

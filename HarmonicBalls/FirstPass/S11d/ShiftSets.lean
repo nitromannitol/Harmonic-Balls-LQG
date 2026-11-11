@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11d.ShiftGeometry
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Proposition 11.9, sets and almost-sure bookkeeping (fp-S11d, owner n3)
+# Proposition 11.9, sets and almost-sure bookkeeping
 
 FIRST-PASS NEW. Support lemmas for the assembly of the shifted event (paper lines 3110-3137): closed dyadic squares are
 compact and convex (the frozen plane-topology input applies to `K = S₂`); an almost-sure property yields a measurable

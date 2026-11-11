@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11ai.RootedInstance
 
 /-!
-# Block 3 of the measure half of the rooted local rescaling (fp-S11as, round 3): the physical Cameron–Martin shift
+# Block 3 of the measure half of the rooted local rescaling: the physical Cameron–Martin shift
 
 Let `u` be an admissible root shift at `(α₀, z, b)` (`FirstPassS11ai.AdmissibleRootShift`): `u(w) = -α₀ log|z + w|` on
 `ball 0 b`, with compact support and zero unit-circle mean. In the physical frame the shift is `x ↦ u(x - z)`, which equals

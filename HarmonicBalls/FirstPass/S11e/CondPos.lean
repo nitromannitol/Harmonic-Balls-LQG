@@ -2,7 +2,7 @@ import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
-# First pass, conditional positivity (fp-S11e2, owner n2)
+# Conditional positivity
 
 General probability fact used in the event `E₂` of Lemma 11.17 (paper `lemma:E2`, lines 3697-3725): if the conditional
 probability of `H` given a sub-σ-algebra `m` is almost surely positive, and `F` is `m`-measurable with positive

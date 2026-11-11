@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11e.FirstPositive
 import HarmonicBalls.FirstPass.Frozen.S11e
 
 /-!
-# First pass, Section 11 pinch positivity (fp-S11e, owner n2)
+# Section 11 pinch positivity
 
 Results of this file: Lemmas 11.12, 11.15, 11.16, 11.17 of the paper (`lemma:mu_h-pinch-positive-probability`,
 `lemma:first-event-proof`, `lemma:second-event-proof`, `lemma:third-event-proof`). Current state:
@@ -13,8 +13,8 @@ Results of this file: Lemmas 11.12, 11.15, 11.16, 11.17 of the paper (`lemma:mu_
 * `firstPass_11_16_of_11_17` is PROVED-FP: Lemma 11.17 (`PinchThirdEventPositiveStmt`) implies Lemma 11.16
   (`PinchSecondEventPositiveStmt`) with the same configuration and the same witnesses, since `Ẽ₁ ∩ Ẽ₂ ∩ Ẽ₃ ⊆ Ẽ₁ ∩ Ẽ₂`
   (paper lines 3281-3285).
-* Lemmas 11.15 and 11.17 and Lemma 11.12 remain OPEN (their NEW local-certificate steps are not yet formalized; see
-  `reports/n2.md`).
+* Lemmas 11.15 and 11.17 and Lemma 11.12 remain OPEN (their NEW local-certificate steps are not yet formalized).
+  
 -/
 
 namespace HarmonicBalls

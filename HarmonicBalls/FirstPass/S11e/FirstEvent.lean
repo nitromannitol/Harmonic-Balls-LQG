@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec11.Closure.CorrectedFixedGeometry
 import HarmonicBalls.Proofs.GFF.MetricXiSign
 
 /-!
-# First pass, Lemma 11.15 helpers (fp-S11e2, owner n2)
+# Lemma 11.15 helpers
 
 Deterministic and parameter-level inputs of `PinchFirstEventPositiveStmt` (`Draft/Section11.lean`, paper
 `lemma:first-event-proof`, line 3277):

@@ -2,10 +2,10 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 
 /-!
-# Proposition 11.9, deterministic core of the triangle step (fp-S11d, owner n3)
+# Proposition 11.9, deterministic core of the triangle step
 
-FIRST-PASS NEW. The repaired final step of the proof of `prop:mass-diam-gen` (corrected paper, lines 3110-3137;
-repair in `notes/fp-11-9-fix.md`, steps (b)-(d)). For a Euclidean length metric `D` (Fact 2.2 I), an open connected
+The repaired final step of the proof of `prop:mass-diam-gen` (corrected paper, lines 3110-3137).
+ For a Euclidean length metric `D` (Fact 2.2 I), an open connected
 `V`, a closed `S ⊆ V`, an open `O` with `closure (V \ S) ⊆ O`, and `S ⊆ W`, `O ⊆ W`: a bound `ε/2` on
 `D(·,·; S)` over `S` and on `D(·,·; O)` over `V \ S` gives the bound `ε` on `D(·,·; W)` over `V`.
 

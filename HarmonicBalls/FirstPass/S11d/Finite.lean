@@ -2,7 +2,7 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Steps.Sec11.PinchConstrainedFiniteness
 
 /-!
-# Proposition 11.9, finiteness of the internal metric on a preconnected open set (fp-S11d, owner n3)
+# Proposition 11.9, finiteness of the internal metric on a preconnected open set
 
 FIRST-PASS NEW. Used for the exterior bound `sup_{u,v ∈ V \ S₂} D_h(u,v; O) ≤ A` (paper line 3120): the set `V \ S₂` is open
 and preconnected (`PlaneDomainMinusConvexCompactPreconnectedFrozen`), so any two of its points are joined inside `O`, hence

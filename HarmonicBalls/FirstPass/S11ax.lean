@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11m.DenseInf
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 
 /-!
-# Decoded local rule on bounded domains (fp-S11ax, owner z7)
+# Decoded local rule on bounded domains
 
-Interface fix requested by z4 (`reports/z4.md`, "INTERFACE FINDING"): the decoder only gives internal distances on
+The decoder only gives internal distances on
 domains inside a bounded ball (`S11m/DecodedDomain.lean`), so the whole-plane values `Φ univ p q ℓ` of
 `FirstPass/S11am.lean` are not available. The local events in their internal form (`FirstPass/S11m/IntRule.lean`) use
 only bounded domains:

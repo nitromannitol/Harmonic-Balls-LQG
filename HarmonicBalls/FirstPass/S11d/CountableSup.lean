@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Proposition 11.9, countable suprema for the exterior bound (fp-S11d, owner n3)
+# Proposition 11.9, countable suprema for the exterior bound
 
 FIRST-PASS NEW. Deterministic and measure-theoretic tools for the exterior bound
 `sup_{u,v ∈ V \ S₂} D_h(u,v; O) ≤ A` (corrected paper, proof of `prop:mass-diam-gen`, lines 3120-3125):

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11h.Faithful
 import HarmonicBalls.FirstPass.S11h.LocalEvents
 
-/-! # Admissibility of the decoded domains of the corrected Lemma 11.12 (fp-S11ba, owner z6)
+/-! # Admissibility of the decoded domains of the corrected Lemma 11.12
 
 The decoded values of internal distances (`S11m.decodedVal_ae_family`, `FirstPass/S11m/DecodedLocal.lean:58`) are valid on
 a domain `O` that is admissible: open, `O \ {0} ⊆ ball 0 7 \ {0}`, and connected whenever `0 ∈ O`
@@ -152,7 +152,7 @@ theorem admissible_diam_third {U V W T Q' Q : Set ℂ} {δ : ℝ} (hG : IsBuffer
   exact decodedAdmissible_thickening (by linarith [hG.delta_lt, hG.delta_pos]) (by linarith [hG.delta_lt])
     (norm_le_of_closure hup) (le_norm_of_closure hlo)
 
-/-- **Bundled admissibility of the decoded domains of the local rule** (fp-S11ba). Every domain on which the internal forms
+/-- **Bundled admissibility of the decoded domains of the local rule**. Every domain on which the internal forms
 `pinchFirstEventInt`, `pinchSecondEventInt`, `pinchThirdEventInt` (`FirstPass/S11m/IntRule.lean:106-122`) and the
 local value `pinchLocalA` (`FirstPass/S11h/LocalEvents.lean:30`) evaluate an internal metric or internal diameter. -/
 theorem pinchDomains_admissible {U V W T Q' Q : Set ℂ} {δ : ℝ} (hG : IsBufferedPinchGeometry U V W T Q' Q δ)
