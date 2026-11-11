@@ -7,6 +7,7 @@ import HarmonicBalls.FirstPass.Canonical.NotMetricBall
 import HarmonicBalls.FirstPass.Canonical.Novelty
 import HarmonicBalls.FirstPass.Closure
 import HarmonicBalls.FirstPass.Closure.Bridge12
+import HarmonicBalls.FirstPass.Closure.RetiredInputs
 import HarmonicBalls.FirstPass.Closure.Sec11
 import HarmonicBalls.FirstPass.Closure.Sec6
 import HarmonicBalls.FirstPass.Closure.Sec78910
@@ -298,3 +299,29 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.Closure.closure_10_7_derivedInputs36
 -- 11.6: closure_11_6_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:47)
 #print axioms HarmonicBalls.Closure.closure_11_6_derivedInputs36
+
+-- Closure forms with the whole-plane GFF existence and closed internal-metric inputs supplied (not counted rows)
+-- closure_11_12_clean_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:34)
+#print axioms HarmonicBalls.Closure.closure_11_12_clean_derived
+-- closure_1_2_canonical_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:74)
+#print axioms HarmonicBalls.Closure.closure_1_2_canonical_derived
+-- closure_1_2_faithful_canonical_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:136)
+#print axioms HarmonicBalls.Closure.closure_1_2_faithful_canonical_derived
+-- closure_11_13_paperExponent_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:198)
+#print axioms HarmonicBalls.Closure.closure_11_13_paperExponent_derived
+-- closure_11_11_paperExponent_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:241)
+#print axioms HarmonicBalls.Closure.closure_11_11_paperExponent_derived
+-- closure_1_2_paperExponent_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:292)
+#print axioms HarmonicBalls.Closure.closure_1_2_paperExponent_derived
+-- closure_11_15_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:356)
+#print axioms HarmonicBalls.Closure.closure_11_15_derived
+-- closure_11_16_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:366)
+#print axioms HarmonicBalls.Closure.closure_11_16_derived
+-- closure_11_17_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:397)
+#print axioms HarmonicBalls.Closure.closure_11_17_derived
+-- closure_11_12_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:429)
+#print axioms HarmonicBalls.Closure.closure_11_12_derived
+-- closure_11_13_canonical_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:469)
+#print axioms HarmonicBalls.Closure.closure_11_13_canonical_derived
+-- closure_11_11_canonical_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:511)
+#print axioms HarmonicBalls.Closure.closure_11_11_canonical_derived
