@@ -208,3 +208,16 @@ Prepared for the pin switch window (LP-MOVE-PLAN section 2). No repository file 
 - LP-STAGE-INDEX.md: batches 1-3 marked no row MOVED, so no row is marked here.
 
 Co-Authored-By: Claude Haiku 5.5 <noreply@anthropic.com>
+
+## Batch 5: local decoder measure kernel and Weyl-shifted mass (6 modules)
+
+- LP repository: `/home/nitro/lean/LP-idla-phase2`, branch `idla/phase2` (not pushed). LP commit `52e2f5f` (parent `0155c34`): `LatticeProb/LQG/LocalMeasureKernel.lean` to `LocalMeasureKernel5.lean` and `LatticeProb/LQG/WeylShiftedMass.lean` (6 files, 2,427 insertions; no other LP file touched).
+- Modules: `LocalMeasureKernel` to `LocalMeasureKernel5`, `WeylShiftedMass`. The HB mirrors are unchanged. Imports: Mathlib, `LatticeProb.Topology.PlaneTopology`, the LP modules of batches 1-4, and the batch members (`LocalMeasureKernel` to `LocalMeasureKernel4`). Dropped: none.
+- Checks before the copy: (a) every import of the six files is Mathlib or an LPStage module of batches 1-4 or of this batch, so none was skipped; (b) no file name and no short declaration name (137 names) of the six files occurs in the LP tree, including the IDLA-side modules.
+- Code identity: the LP copies and the HB mirrors have the same code lines after comment and import stripping (6 of 6).
+- Build: `lake build LatticeProb.LQG.LocalMeasureKernel5 LatticeProb.LQG.WeylShiftedMass` under the shared LP lock: `Build completed successfully (8949 jobs)`, no errors, no `sorry`, no warnings.
+- Rewire map: `scratch-k4/rewire/map.tsv` now has 66 rows (6 added). `rewire.sh dry`: 33 files changed, 94 import lines each side, 0 non-import changes, 0 files under External or Draft, 0 targets importing a moved module. `rewire.sh check`: `git apply --check` OK. Not applied (pin-switch window: operator's call).
+- Residual non-moved LPStage import (1 target): `checks/AxiomGate.lean`.
+- LP-STAGE-INDEX.md: not edited (its move column belongs to another owner).
+
+Co-Authored-By: Claude Haiku 5.5 <noreply@anthropic.com>
