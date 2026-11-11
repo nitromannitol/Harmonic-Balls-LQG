@@ -1,0 +1,19 @@
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs37
+
+-- Axiom audit of the derived-input forms of round 37 (checks/ is not a lean_lib: compile with lc).
+
+#print axioms HarmonicBalls.pinchCertificateStmt_of_frozen_derivedInputs37
+#print axioms HarmonicBalls.firstPass_11_15_corrected_derivedInputs37
+#print axioms HarmonicBalls.firstPass_11_17_corrected_derivedInputs37
+#print axioms HarmonicBalls.firstPass_11_9_derivedInputs37
+#print axioms HarmonicBalls.weylShiftedSupMeasurable_derived_derivedInputs37
+#print axioms HarmonicBalls.Closure.closure_11_12_clean_derivedInputs37
+#print axioms HarmonicBalls.Closure.closure_1_2_faithful_canonical_derivedInputs37
+#print axioms HarmonicBalls.Closure.closure_11_13_canonical_derivedInputs37
+#print axioms HarmonicBalls.Closure.closure_11_11_canonical_derivedInputs37
+#print axioms HarmonicBalls.Closure.closure_1_2_canonical_derivedInputs37
+#print axioms HarmonicBalls.Closure.closure_11_15_derivedInputs37
+#print axioms HarmonicBalls.Closure.closure_11_16_derivedInputs37
+#print axioms HarmonicBalls.FirstPassS11iAssembly11_13.firstPass_11_13_canonical_derivedInputs37
+#print axioms HarmonicBalls.S11m.Clean11_12.firstPass_11_12_clean_derivedInputs37
+#print axioms HarmonicBalls.S11m.Final11_12.firstPass_11_12_final_derivedInputs37

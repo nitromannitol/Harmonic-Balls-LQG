@@ -48,6 +48,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs31
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs33
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs35
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs36
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs37
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -158,8 +159,8 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_7
 -- 11.8: closure_11_8 (HarmonicBalls/FirstPass/Closure/Sec11.lean:80)
 #print axioms HarmonicBalls.Closure.closure_11_8
--- 11.9: firstPass_11_9 (HarmonicBalls/FirstPass/S11d.lean:39)
-#print axioms HarmonicBalls.firstPass_11_9
+-- 11.9: firstPass_11_9_derivedInputs37 (HarmonicBalls/FirstPass/Phase2/DerivedInputs37.lean:52)
+#print axioms HarmonicBalls.firstPass_11_9_derivedInputs37
 -- 11.10: firstPass_11_10_derivedInputs17 (HarmonicBalls/FirstPass/Phase2/DerivedInputs17.lean:431)
 #print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputs17
 -- 11.11: firstPass_11_11 (HarmonicBalls/FirstPass/S11.lean:111)
@@ -178,6 +179,8 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs35
 -- 11.16 audit row: firstPass_11_16_corrected_derivedInputs (HarmonicBalls/FirstPass/Phase2/DerivedInputs31.lean:24)
 #print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs
+-- 11.17 corrected form: firstPass_11_17_corrected_derivedInputs37 (HarmonicBalls/FirstPass/Phase2/DerivedInputs37.lean:45)
+#print axioms HarmonicBalls.firstPass_11_17_corrected_derivedInputs37
 -- A.1: closure_A_1 (HarmonicBalls/FirstPass/Closure/SecA45.lean:37)
 #print axioms HarmonicBalls.Closure.closure_A_1
 -- A.2: closure_A_2 (HarmonicBalls/FirstPass/Closure/SecA45.lean:40)
