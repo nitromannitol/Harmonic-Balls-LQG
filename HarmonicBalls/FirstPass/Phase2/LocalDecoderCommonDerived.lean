@@ -1277,6 +1277,51 @@ theorem circleAverage_rootShift (γ : ℝ) {r : ℝ} (hr : 0 < r) (z x : ℂ) :
     exact h
   rw [e2, e3, circleAverage_log_norm_sub_eq x z hr]
 
+/-- The logarithm of the local modulus `log max(1,|w|)` is continuous. -/
+theorem continuous_log_max_one : Continuous fun w : ℂ => Real.log (max 1 ‖w‖) :=
+  (continuous_const.max continuous_norm).log fun w => (lt_max_of_lt_left one_pos).ne'
+
+/-- Route step 8 (deterministic limit): the annular averages `∫ ψ_{j+N} f_z` of the rooted shift converge to the circle
+average of `f_z` (the log singularity at `z` is handled by `tendsto_unitCircleDensity_mul_log`, the continuous part by
+`tendsto_unitCircleDensity_mul_continuous`). -/
+theorem tendsto_circleApprox_rootShift (γ : ℝ) {r : ℝ} (hr : 0 < r) (x z : ℂ) (N : ℕ) :
+    Tendsto (fun j : ℕ => ∫ y, circleApprox hr x (j + N) y * rootShift γ z y) atTop
+      (𝓝 (Real.circleAverage (rootShift γ z) x r)) := by
+  have hδ : ∀ j : ℕ, 0 < r * approxEta r (j + N) := fun j => mul_pos hr (approxEta_pos hr _)
+  have hsmall : ∀ η : ℝ, 0 < η → ∃ M : ℕ, ∀ j, M ≤ j → r * approxEta r (j + N) ≤ r * η := by
+    intro η hη
+    obtain ⟨M, hM⟩ := eventually_approxEta_lt (r := r) hη
+    exact ⟨M, fun j hj => mul_le_mul_of_nonneg_left (le_of_lt (hM (j + N) (by omega))) hr.le⟩
+  have hL := tendsto_unitCircleDensity_mul_log (r := r) (δ := fun j => r * approxEta r (j + N))
+    hr hδ hsmall x z
+  have hM := tendsto_unitCircleDensity_mul_continuous (r := r) (δ := fun j => r * approxEta r (j + N))
+    hr hδ hsmall x continuous_log_max_one
+  have hLim := (hL.const_mul (-γ)).add (hM.const_mul γ)
+  have hcirc : Real.circleAverage (rootShift γ z) x r =
+      -γ * Real.log (max r ‖x - z‖) + γ * Real.circleAverage (fun w => Real.log (max 1 ‖w‖)) x r :=
+    circleAverage_rootShift γ hr z x
+  rw [hcirc]
+  refine hLim.congr fun j => ?_
+  have i1 : Integrable (fun y => unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y *
+      Real.log ‖y - z‖) :=
+    integrable_unitCircleDensity_mul_log hr.le (hδ j) x z
+  have i2 : Integrable (fun y => unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y *
+      Real.log (max 1 ‖y‖)) :=
+    integrable_unitCircleDensity_mul hr.le (hδ j) x continuous_log_max_one
+  have e1 : ∫ y, circleApprox hr x (j + N) y * rootShift γ z y =
+      ∫ y, (-γ * (unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y * Real.log ‖y - z‖) +
+        γ * (unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y * Real.log (max 1 ‖y‖))) := by
+    congr 1
+    funext y
+    simp only [rootShift, circleApprox]
+    ring
+  have e2 : ∫ y, (-γ * (unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y * Real.log ‖y - z‖) +
+        γ * (unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y * Real.log (max 1 ‖y‖))) =
+      -γ * (∫ y, unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y * Real.log ‖y - z‖) +
+        γ * (∫ y, unitCircleDensity r (r * approxEta r (j + N)) (hδ j) x y * Real.log (max 1 ‖y‖)) := by
+    rw [integral_add (i1.const_mul (-γ)) (i2.const_mul γ), integral_const_mul, integral_const_mul]
+  exact (e1.trans e2).symm
+
 end Approximants
 
 end LocalDecoderCommon
