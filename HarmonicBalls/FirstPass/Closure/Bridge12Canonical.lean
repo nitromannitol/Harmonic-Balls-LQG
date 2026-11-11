@@ -1,11 +1,10 @@
 import HarmonicBalls.FirstPass.Closure.Bridge12
 
 /-!
-# Canonical-exponent form of Lemma 11.13 for the closures of 1.2 and 11.11 (fp-11-13-canonical-bridge-1-2-11-11, z4)
+# Canonical-exponent form of Lemma 11.13 for the closures of 1.2 and 11.11
 
-FIRST-PASS plumbing, deterministic (no probability). Source: `notes/fp-gaps/CHATGPT-224-hb-11-13-target-audit-PRO.md` §5,
-Correction 1 (canonical exponent `ξ = lqgXi γ`, `FirstPass/S11i/Faithful.lean:94`) and Correction 3 (the model
-`(Ω, P, hC, hcirc, μ, D)` is quantified before `∃ δ`, the exact PASS form).
+Deterministic (no probability). Source: Correction 1 (canonical exponent `ξ = lqgXi γ`, `FirstPass/S11i/Faithful.lean:94`) and Correction 3 (the model
+`(Ω, P, hC, hcirc, μ, D)` is quantified before `∃ δ`, the exact form).
 
 * `ManyPinchScalesCanonicalStmt`: `ManyPinchScalesStmt` (`Draft/Section11.lean:259`) with `ξ := lqgXi γ`, body otherwise
   copied. Its density `δ` is chosen before the probability space (uniform in the model), as in the printed statement.
@@ -15,7 +14,7 @@ Correction 1 (canonical exponent `ξ = lqgXi γ`, `FirstPass/S11i/Faithful.lean:
 
 Not given: `CorrectedLemma11_13CanonicalStmt → ManyPinchScalesCanonicalStmt`. The canonical hypothesis gives `∃ δ` after
 the model, and the uniform form needs `∃ δ` before it. Swapping these two quantifiers is not plumbing (cross-model
-uniformity, chat 224 Correction 3, `STRONGER-BUT-PROVED`). The 1.2 and 11.11 consumers fix the model before using `δ`
+uniformity, `STRONGER-BUT-PROVED`). The 1.2 and 11.11 consumers fix the model before using `δ`
 (see the report), so they need only the model-dependent form.
 -/
 
@@ -37,7 +36,7 @@ def ManyPinchScalesCanonicalStmt : Prop :=
     δ * N ≤ ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
       pinchPointEvent (μ ω) (D ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) z}.ncard : ℝ)
 
-/-- Lemma 11.13 at the canonical exponent `ξ = lqgXi γ`, with the model quantified before `∃ δ` (Correction 3, PASS form):
+/-- Lemma 11.13 at the canonical exponent `ξ = lqgXi γ`, with the model quantified before `∃ δ` (Correction 3):
 the pinch geometry is fixed first, then the model, then the density. Same pinch event as `ManyPinchScalesStmt`. -/
 def ManyPinchScalesCanonicalModelStmt : Prop :=
   ∃ U T Q' Q : Set ℂ, IsPinchPointConfiguration U T Q' Q ∧

@@ -3,10 +3,10 @@ import HarmonicBalls.FirstPass.S11ap
 import HarmonicBalls.FirstPass.Closure.Sec11
 
 /-!
-# Lemma 11.12 (corrected) without the redundant component clause (fp-11-12-clean, owner z7)
+# Lemma 11.12 (corrected) without the redundant component clause
 
 `CorrectedLemma11_12Stmt` (`FirstPass/S11i/Faithful.lean:62`) carries the premise
-`insert 0 (sphere 0 5) ⊆ pinchOmegaGeom W Q δ₀` (corrected paper lines 3180-3200, operator ruling R1). This premise
+`insert 0 (sphere 0 5) ⊆ pinchOmegaGeom W Q δ₀` (corrected paper lines 3180-3200). This premise
 follows from the buffered geometry `IsBufferedPinchGeometry U V W T Q' Q δ₀` alone, by
 `FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom` (`FirstPass/S11ap.lean:93`), so it is redundant.
 

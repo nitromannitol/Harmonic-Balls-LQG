@@ -19,9 +19,9 @@ import HarmonicBalls.FirstPass.Closure.LocalRootKernelAc
 import HarmonicBalls.FirstPass.S11i.Final11_13Close
 
 /-!
-# Top-level closure module (fp-closure-all-top-module)
+# Top-level closure module
 
-This module imports every numbered closure theorem `closure_N_M` of the first pass:
+This module imports every numbered closure theorem `closure_N_M`:
 
 * the chain of `FirstPass/Closure.lean`, which imports `Closure/Sec6`, `Closure/SecA45`, `Closure/Sec78910`,
   `Closure/Sec11` and `Closure/Bridge12`;
@@ -38,7 +38,7 @@ This module adds no hypothesis. Its only declaration is `closure_2_3_withPole`.
 
 namespace HarmonicBalls.Closure
 
-/-- Closure of Proposition 2.3 with the pole clause (audit chat 204 §1, operator 09:42 UTC). Unconditional. -/
+/-- Closure of Proposition 2.3 with the pole clause. Unconditional. -/
 theorem closure_2_3_withPole : GreenFunctionBallWithPoleStmt := firstPass_2_3_withPole
 
 end HarmonicBalls.Closure

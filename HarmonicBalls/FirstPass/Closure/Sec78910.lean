@@ -7,7 +7,7 @@ import HarmonicBalls.FirstPass.S1S10
 import HarmonicBalls.FirstPass.S1S10.CrossingLemma
 
 /-!
-# Closure of the counted numbered results of Sections 7-10 (task fp-closure-78910, worker z7)
+# Closure of the counted numbered results of Sections 7-10
 
 For each counted result `X.Y` of Sections 7-10 (paper-owned in `docs/campaign/INVENTORY.tsv`), a theorem
 `HarmonicBalls.Closure.closure_X_Y` with the conclusion of the counted `firstPass_X_Y` (corrected form where
@@ -15,7 +15,7 @@ counted). Its hypotheses are only:
 * Proposed literature inputs (`HarmonicBalls/Proposed/LQG.lean`: `WholePlaneLQGBallMassBounds`,
   `LQGMeasureCoordChange`, `LQGMeasureExistence`, `LQGMeasureWeylScaling`, `LQGMeasureNonatomic`,
   `WholePlaneGFFAffineInvariance`), in the universal (`∀ α₀`, `∀ α`) forms of `Main.lean`;
-* FIRST-PASS FROZEN Props (`FirstPass/Frozen/*.lean`): `LocalRootedFieldMeasureDomination`,
+* FROZEN Props (`FirstPass/Frozen/*.lean`): `LocalRootedFieldMeasureDomination`,
   `LocalLQGInsertionWeylOffOrigin`, `LQGMeasureOfProfileMeasurableFrozen`, `PhaseTorusDoublingProductErgodicFrozen`,
   `BirkhoffPointwiseErgodic`, `TorhorstSimpleLoopFrozen`;
 * the cited input `GreenPotentialHolderStmt` (HB Proposition 2.5, `hholder`, used by Lemma 8.3 only).
@@ -47,7 +47,7 @@ universe u
 /-! ## Lemma 8.2: the hub of Sections 7-9 -/
 
 /-- Lemma 8.2 (lemma:mu_h-doubling-and-harnack, line 2151), closure of `firstPass_8_2`. Its hypotheses are the
-FIRST-PASS FROZEN Props `LocalRootedFieldMeasureDomination` (`hL1`), `LocalLQGInsertionWeylOffOrigin` (`hWeyl`),
+FROZEN Props `LocalRootedFieldMeasureDomination` (`hL1`), `LocalLQGInsertionWeylOffOrigin` (`hWeyl`),
 `LQGMeasureOfProfileMeasurableFrozen` (`hE1`), `PhaseTorusDoublingProductErgodicFrozen` (`hE3`) and
 `BirkhoffPointwiseErgodic` (`hB`), and the Proposed inputs `hDG`, `hAff`, `hCC`, `hW`, `hE`, `hN`. -/
 theorem closure_8_2
@@ -96,7 +96,7 @@ theorem closure_7_1
   HarmonicBalls.firstPass_7_1 hDG (fun Ω _ P γ hC hcirc => hCC Ω P γ 0 hC hcirc) hE
 
 /-- Proposition 7.2 (prop:continuity-of-clusters, line 2021), closure of `firstPass_7_2`. Its hypothesis `hTyp`
-(Lemma 8.2) is `closure_8_2`; the remaining hypotheses are the Proposed and FIRST-PASS FROZEN inputs of `closure_8_2`. -/
+(Lemma 8.2) is `closure_8_2`; the remaining hypotheses are the Proposed and FROZEN inputs of `closure_8_2`. -/
 theorem closure_7_2
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
@@ -250,7 +250,7 @@ theorem closure_10_1
 /-- Lemma 10.5 (lemma:crossing-connected), corrected form [C48], closure of `firstPass_10_5_corrected`. The conclusion
 is the deterministic statement for a set `G`; `hEcross` (finitely many small crossing components off a finite set) is
 a premise of the counted theorem, not a paper-owned Prop: for the clusters it is supplied by Lemma 10.1 in
-`closure_10_6`. The only other hypothesis is the FIRST-PASS FROZEN `TorhorstSimpleLoopFrozen`. -/
+`closure_10_6`. The only other hypothesis is the FROZEN `TorhorstSimpleLoopFrozen`. -/
 theorem closure_10_5 {G : Set ℂ} (hGne : G.Nonempty) (hGb : Bornology.IsBounded G)
     (hGo : IsOpen G) (hGc : IsConnected G)
     (hEcross : ∃ E : Set ℂ, E.Finite ∧ ∀ p ∈ frontier G \ E, ∀ δ : ℝ, 0 < δ → ∃ r : ℝ, 0 < r ∧ r < δ ∧
@@ -284,7 +284,7 @@ theorem closure_10_6
 
 /-- Proposition 10.7 (prop:boundary-simple-loop-full-cluster), corrected as [C50], closure of `firstPass_10_7`.
 Its hypotheses: `h55` (Theorem 5.5, `firstPass_5_5`, which takes Lemma 8.2 = `closure_8_2`), `h10` (`closure_10_6`),
-the volume-growth input (`lqgVolumeGrowthAllScalesStmt_of_five_staged_inputs`), and the Proposed and FIRST-PASS FROZEN
+the volume-growth input (`lqgVolumeGrowthAllScalesStmt_of_five_staged_inputs`), and the Proposed and FROZEN
 inputs listed in `closure_8_2`, `closure_10_6`. -/
 theorem closure_10_7
     (hL1 : LocalRootedFieldMeasureDomination.{u})
@@ -315,15 +315,3 @@ theorem closure_10_7
 
 end HarmonicBalls.Closure
 
-#print axioms HarmonicBalls.Closure.closure_7_1
-#print axioms HarmonicBalls.Closure.closure_7_2
-#print axioms HarmonicBalls.Closure.closure_8_1
-#print axioms HarmonicBalls.Closure.closure_8_2
-#print axioms HarmonicBalls.Closure.closure_8_3
-#print axioms HarmonicBalls.Closure.closure_9_2
-#print axioms HarmonicBalls.Closure.closure_9_3
-#print axioms HarmonicBalls.Closure.closure_9_4
-#print axioms HarmonicBalls.Closure.closure_10_1
-#print axioms HarmonicBalls.Closure.closure_10_5
-#print axioms HarmonicBalls.Closure.closure_10_6
-#print axioms HarmonicBalls.Closure.closure_10_7

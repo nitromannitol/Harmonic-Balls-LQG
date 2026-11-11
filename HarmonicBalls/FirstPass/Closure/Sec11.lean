@@ -14,10 +14,10 @@ import HarmonicBalls.FirstPass.S11m.Final11_12
 import HarmonicBalls.FirstPass.Closure.Bridge12
 
 /-!
-# Closure of the counted Section 11 results (fp-closure-11, owner z11)
+# Closure of the counted Section 11 results
 
-Each `closure_11_k` concludes exactly the conclusion of the counted first-pass theorem of Lemma/Proposition 11.k
-and takes as hypotheses only FIRST-PASS FROZEN Props, Proposed/External Props and the cited `GreenPotentialHolderStmt`
+Each `closure_11_k` concludes exactly the conclusion of the counted theorem of Lemma/Proposition 11.k
+and takes as hypotheses only FROZEN Props, Proposed/External Props and the cited `GreenPotentialHolderStmt`
 (Proposition 2.5, Green clause). Paper-owned hypotheses are discharged by the closure of their result, recursively.
 Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adapted to the binder order of each
 `firstPass` theorem by a lambda (no new mathematics).
@@ -27,7 +27,7 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 | 11.7 (`ManyConeBadScalesStmt`, corrected, `HarmonicBalls.S11c.firstPass_11_7`) | `closure_11_7` | hDG, hCC, hE, hNA (Proposed); hCamp, hDecFrozen, hDec, hCM (FROZEN) |
 | 11.8 (`ConeBadEventProbabilityStmt`) | `closure_11_8` | hDG, hCC, hE (Proposed) |
 | 11.9 (`SmallMetricDiameterLargeMassStmt`) | `closure_11_9` | frozen, Proposed and cited inputs of 11.9 and 11.10 |
-| 11.12 (`CorrectedLemma11_12Stmt`, z4) | `closure_11_12` | `firstPass_11_12_final` (72bf417): FROZEN inputs, Proposed hDG hCC hE hμW hNonat, cited hholder; I2 and affine invariance discharged inside z4's theorem; hN2 kept (operator 04:48) |
+| 11.12 (`CorrectedLemma11_12Stmt`) | `closure_11_12` | `firstPass_11_12_final`: FROZEN inputs, Proposed hDG hCC hE hμW hNonat, cited hholder; I2 and affine invariance discharged inside the theorem; hN2 kept |
 | 11.16 (`PinchSecondEventFaithfulStmt`, corrected) | `closure_11_16` | closures 11.15 and 11.9; FROZEN; hholder (cited); Proposed hEx, hWeyl, hNa0, hNa |
 | 11.17 (`PinchThirdEventFaithfulStmt`, corrected) | `closure_11_17` | closure 11.16; hN2 (FROZEN) |
 | 11.11 (`HarmonicBallNotMetricBallStmt`) | `closure_11_11` | closure_11_6 hypotheses; h13 (printed ManyPinchScalesStmt) discharged by `manyPinchScales_of_corrected` on closure_11_13; hAx (FROZEN; `hmetricAxioms` obtained from it by specialisation); hStep8 **OPEN** (inherited) |
@@ -41,7 +41,6 @@ Universe `u`; the axiom-form hypothesis `LQGMetricFieldAxiomsUnivFrozen` is adap
 
 Status: all 14 counted Section 11 results have closure theorems. OPEN (paper-owned, no proof in the repository, kept as
 hypotheses): `hStep8 = Step8IdentificationStmt` in `closure_11_13`, inherited by `closure_11_11`. The printed Lemma 11.13 (`ManyPinchScalesStmt`) is discharged by `manyPinchScales_of_corrected` (Bridge12). The volume-growth input I2 and affine invariance are discharged, not open. The S11c/S11d name clash is
-resolved (commit 6d75c22 renames the S11d declaration to exists_measurable_internal_metric_bound).
 -/
 
 namespace HarmonicBalls.Closure
@@ -109,7 +108,7 @@ theorem closure_11_7
     hCamp hDecFrozen hDec hCM hCC hE hNA
 
 /-- **Closure of Lemma 11.10** (`SmallMetricDiameterLargeMassSquareStmt`, corrected form `HarmonicBalls.S11c.firstPass_11_10`).
-Remaining hypotheses: FIRST-PASS FROZEN inputs and the axiom form `LQGMetricFieldAxiomsUnivFrozen`. -/
+Remaining hypotheses: FROZEN inputs and the axiom form `LQGMetricFieldAxiomsUnivFrozen`. -/
 theorem closure_11_10
     (hDC : DyadicCellDiamSmallFrozen.{u}) (hCMT : CameronMartinEventTransferFrozen.{u})
     (hPos : LQGMeasureSquarePositiveFrozen.{u}) (hMassM : LQGMeasureSquareMeasurableFrozen.{u})
@@ -135,7 +134,7 @@ theorem closure_11_13
     (fun γ Ω _ P hC hcirc => hE Ω P γ γ hC hcirc) hStep8
 
 /-- **Closure of Lemma 11.14** (`PinchEventMetricBallConsequenceStmt`, `firstPass_11_14`). Remaining hypothesis: the
-FIRST-PASS FROZEN axiom form `LQGMetricFieldAxiomsUnivFrozen`. -/
+FROZEN axiom form `LQGMetricFieldAxiomsUnivFrozen`. -/
 theorem closure_11_14 (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) :
     PinchEventMetricBallConsequenceStmt.{u} :=
   firstPass_11_14 hAx
@@ -240,7 +239,7 @@ theorem closure_11_2
 /-- **Closure of Proposition 11.11** (`HarmonicBallNotMetricBallStmt`, `firstPass_11_11`). Paper-owned hypotheses:
 `AnnulusMassBoundByHarmonicChainStmt` (Lemma 11.6), discharged by `closure_11_6`, and `ManyPinchScalesStmt`
 (Lemma 11.13 in its PRINTED form), discharged by `HarmonicBalls.Closure.manyPinchScales_of_corrected`
-(`FirstPass/Closure/Bridge12.lean`, z7 96e95db) applied to `closure_11_13`. Remaining: the hypotheses of `closure_11_6`
+(`FirstPass/Closure/Bridge12.lean`) applied to `closure_11_13`. Remaining: the hypotheses of `closure_11_6`
 (I2 discharged by `volumeGrowthI2_of_staged`), `hAx` (FROZEN, `LQGMetricFieldAxiomsUnivFrozen`, also used by
 `closure_11_13`; the axiom form `hmetricAxioms` of the printed statement is its specialisation, not a separate input), and **OPEN** `hStep8 : Step8IdentificationStmt`, inherited from `closure_11_13` (no proof in the
 repository, `FirstPass/S11i/Corrected11_13.lean:57`). -/
@@ -347,13 +346,12 @@ theorem closure_11_17
     hAx hCM hWSC hMet hMass hK1 hN2
 
 
-/-- **Closure of Lemma 11.12, corrected form** (`CorrectedLemma11_12Stmt`, `HarmonicBalls.S11m.Final11_12.firstPass_11_12_final`,
-z4, commit 72bf417). The paper-owned hypothesis `SmallMetricDiameterLargeMassStmt` (Proposition 11.9) is discharged by
-`closure_11_9`. Remaining: the FROZEN inputs of z4's theorem (hAx, hLen, hN2, hLoc, hCanon, hNonat, hExists, hfr, hmass,
+/-- **Closure of Lemma 11.12, corrected form** (`CorrectedLemma11_12Stmt`, `HarmonicBalls.S11m.Final11_12.firstPass_11_12_final`). The paper-owned hypothesis `SmallMetricDiameterLargeMassStmt` (Proposition 11.9) is discharged by
+`closure_11_9`. Remaining: the FROZEN inputs of the theorem (hAx, hLen, hN2, hLoc, hCanon, hNonat, hExists, hfr, hmass,
 hCMAbs, hCMRew, hComp, hMf, hDiam, hMk, and the closure_11_9 inputs); the Proposed inputs `LQGMeasureWeylScaling` (hμW),
 `LQGMeasureNonatomicAll` (hNonat), `WholePlaneLQGBallMassBounds` (hDG), `LQGMeasureCoordChange` (hCC) and
 `LQGMeasureExistence` (hE); the cited `GreenPotentialHolderStmt` (hholder). The input I2 and the affine invariance are
-discharged inside z4's theorem (no hypothesis here). -/
+discharged inside the theorem (no hypothesis here). -/
 theorem closure_11_12
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})

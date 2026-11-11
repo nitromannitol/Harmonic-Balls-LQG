@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11n
 
 /-!
-# Frozen existence of common canonical LQG decoders (Step 15 of `CHATGPT-11-13-proof.md`)
+# Frozen existence of common canonical LQG decoders
 
 One EXTERNAL input for the pull-back of the canonical statement to an arbitrary whole-plane GFF model. Its witnesses
 are the common decoders `Dμ`, `Dd` on the canonical field space, used in `LQGCanonicalIdentificationStmt`
@@ -14,11 +14,10 @@ open MeasureTheory
 
 universe u
 
-/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.188: "Canonical simultaneous
+/-- DERIVED INTERFACE. Audit l.188: "Canonical simultaneous
 measure/metric decoders are assembled from construction, measurability, locality, and uniqueness. There is no single printed
 theorem with this exact Lean type."
-FIRST-PASS FROZEN, EXTERNAL (operator ruling 23:53 UTC on B1; truth check TRUE, ChatGPT 23:53 UTC,
-`notes/fp-gaps/CHATGPT-n1-B1-canonical-decoders.md`, Verdict and section 1). For every `γ ∈ (0, 2)`, every `ξ ∈ ℝ` and
+FROZEN, EXTERNAL (truth check TRUE, Verdict and section 1). For every `γ ∈ (0, 2)`, every `ξ ∈ ℝ` and
 every `α₀ < Q_γ`, there are common canonical decoders `Dμ : CanonSpace → Measure ℂ` and `Dd : CanonSpace → ℂ → ℂ → ℝ`
 for which `LQGCanonicalIdentificationStmt` holds: for every whole-plane GFF model, every LQG measure `μ` and every LQG
 metric `D` of the field `h^ℂ - α₀ log|·|`, almost surely `μ = a • Dμ (alphaCanon α₀ hC)` and
@@ -26,8 +25,8 @@ metric `D` of the field `h^ℂ - α₀ log|·|`, almost surely `μ = a • Dμ (
 
 Sources: the measure decoder from the mean-zero local decoders, Duplantier-Sheffield arXiv:0808.1560v2; the metric
 uniqueness up to a deterministic factor, Gwynne-Miller arXiv:1905.00383v3, Theorem 1.2, p. 6; the inserted metric,
-DFGPS arXiv:1905.00380v2; the reconstruction of the normalised field from mean-zero observations (ruling, section 2.2).
-The parameter `ξ` is free: Gwynne-Miller Theorem 1.2 is displayed at `ξ = γ/d_γ`, and section 5.2 of the ruling reduces the
+DFGPS arXiv:1905.00380v2; the reconstruction of the normalised field from mean-zero observations.
+The parameter `ξ` is free: Gwynne-Miller Theorem 1.2 is displayed at `ξ = γ/d_γ`, and the reduction of the
 free-`ξ` form to that value (for a value with no metric the metric clause is vacuous).
 Used by: `correctedLemma11_13_of_existence` (`HarmonicBalls/FirstPass/S11n/Existence.lean`). -/
 def LQGCanonicalDecodersExistStmt : Prop :=
@@ -35,8 +34,7 @@ def LQGCanonicalDecodersExistStmt : Prop :=
     ∃ (Dμ : S11n.CanonSpace → Measure ℂ) (Dd : S11n.CanonSpace → ℂ → ℂ → ℝ),
       S11n.LQGCanonicalIdentificationStmt.{u} γ ξ α₀ Dμ Dd
 
-/-- FIRST-PASS FROZEN, EXTERNAL (operator ruling 00:49 UTC, wave 22, B1 split; truth check TRUE (ChatGPT, 00:48 UTC,
-notes/fp-gaps/CHATGPT-n3-B1-B2.md §1), truth check TRUE (ChatGPT, 01:35 UTC, notes/fp-gaps/CHATGPT-hb-decoders-weyl.md §1).
+/-- FROZEN, EXTERNAL (truth check TRUE).
 The measurable strengthening of `LQGCanonicalDecodersExistStmt`, which
 is kept unchanged. For every `γ ∈ (0, 2)`, every `ξ ∈ ℝ` and every `α₀ < Q_γ` there are
 
@@ -65,9 +63,8 @@ Gwynne-Miller Theorem 1.2 alone does not give, their Weyl exponent being fixed a
 arXiv:2108.12060v1, Definition 1.5, printed pp. 5-6, and Theorem 1.9, printed p. 7, (1.13); subcritical parameter
 correspondence arXiv:2005.13576v2, Proposition 1.1, printed p. 3, and Section 1.3, printed p. 9, (1.9)-(1.10).
 Clause 4 is required also when no LQG metric exists at the given `ξ`; this is harmless, since fixed defaults satisfy
-that branch (a fixed locally finite measure replaces unsuccessful inputs; notes/fp-gaps/CHATGPT-hb-decoders-weyl.md
-§1 item 1 and §2.1). Used by: the measurable covariance proposition of
-`HarmonicBalls/FirstPass/S11s.lean` (B1) and, through it, the certified-decoder bridge of Step 13. -/
+that branch (a fixed locally finite measure replaces unsuccessful inputs). Used by: the measurable covariance proposition of
+`HarmonicBalls/FirstPass/S11s.lean` and, through it, the certified-decoder bridge of Step 13. -/
 def LQGCanonicalDecodersMeasurableExistStmt : Prop :=
   ∀ (γ ξ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
     ∃ (K : ProbabilityTheory.Kernel S11n.CanonSpace ℂ) (d : S11n.CanonSpace → ContinuousMap (ℂ × ℂ) ℝ),

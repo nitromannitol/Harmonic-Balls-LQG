@@ -1,20 +1,20 @@
 import HarmonicBalls.FirstPass.S6
 
 /-!
-# Phase-1 closure of Section 6 (fp-closure-6, owner z3)
+# Phase-1 closure of Section 6
 
 For each paper-owned numbered result 6.n of Section 6 (`docs/campaign/INVENTORY.tsv`), `closure_6_n` has the conclusion
-of the counted first-pass theorem `HarmonicBalls.FirstPass.S6.firstPass_6_n` (`FirstPass/S6.lean`). Its only hypotheses
+of the counted theorem `HarmonicBalls.FirstPass.S6.firstPass_6_n` (`FirstPass/S6.lean`). Its only hypotheses
 are the three literature inputs of Section 6, shared by all twelve closures:
 * `hDG`: `WholePlaneLQGBallMassBounds` (`Proposed/LQG.lean:154`; Ding-Gwynne arXiv:1807.01072, Lemma 3.8, whole-plane case),
-  Proposed, pending operator source-check;
+  Proposed, pending source-check;
 * `hCC`: `LQGMeasureCoordChange` at insertion `0` (`Proposed/LQG.lean:116`; paper eq:measure-coord, Fact 2.1 IV;
-  Duplantier-Sheffield 2011, Prop 2.1), Proposed, pending operator source-check;
+  Duplantier-Sheffield 2011, Prop 2.1), Proposed, pending source-check;
 * `hE`: `LQGMeasureExistence` (`Proposed/LQG.lean:68`; paper eq:measure-lim, Section 2.2; Duplantier-Sheffield arXiv:0808.1560,
-  Prop 1.1), Proposed, pending operator source-check.
+  Prop 1.1), Proposed, pending source-check.
 
 No numbered result is used as a hypothesis. Lemma 6.5 (annulus iteration, cited from Gwynne-Miller, Ann. Inst. Fourier 70
-(2020), Lemma 3.1) is not a closure: it is a cited result, not a paper-owned one, and the first-pass chain proves what it
+(2020), Lemma 3.1) is not a closure: it is a cited result, not a paper-owned one, and the chain proves what it
 needs. Proof bodies are applications of the `firstPass_6_n` theorems only.
 -/
 

@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11i.Faithful
 import HarmonicBalls.FirstPass.S11v.Affine
 
 /-!
-# Theorem 1.2 at the canonical exponent, fed by the numbered Lemma 11.13 (fp-counted-1-2-of-11-13, z3)
+# Theorem 1.2 at the canonical exponent, fed by the numbered Lemma 11.13
 
 File `HarmonicBalls/FirstPass/Closure/Main12CanonicalOf13.lean`, namespace `HarmonicBalls.Closure`.
 
@@ -96,9 +96,8 @@ theorem closure_1_2_faithful_canonical_of_11_13
   harmonicBallNoveltyFaithful_of_canonical.{u}
     (closure_1_2_canonical_of_11_13 hDG hAff hCC hW hE hN hL1 hE1 hE3 hB hCamp hDecFrozen hDec hCM hAx h13 hTor)
 
-/-- **Counted form of the faithful Theorem 1.2, v1** (superseded by `firstPass_1_2_faithful`, which drops the external
-`hAff` and the duplicate `hDecFrozen`; kept unchanged) (`theorem:harmonic-balls-properties`; chat 242: STRONGER-BUT-PROVED;
-arbitrary carrier `Ω : Type u`, and radii restricted to `0 < s` as in `HarmonicBallNoveltyFaithfulStmt`). The conclusion is
+/-- **Counted form of the faithful Theorem 1.2** (superseded by `firstPass_1_2_faithful`, which drops the external
+`hAff` and the duplicate `hDecFrozen`; kept unchanged) (`theorem:harmonic-balls-properties`, arbitrary carrier `Ω : Type u`, and radii restricted to `0 < s` as in `HarmonicBallNoveltyFaithfulStmt`). The conclusion is
 `HarmonicBallNoveltyFaithfulStmt`, the faithful statement with the positive-radius condition, at the canonical exponent
 `ξ = γ / lqgGraphDimension γ`; it is not the unrestricted `HarmonicBallNoveltyCanonicalStmt`. Same binders and conclusion as
 `closure_1_2_faithful_canonical_of_11_13` (`FirstPass/Closure/Main12CanonicalOf13.lean:70`), proved by applying it.
@@ -131,8 +130,9 @@ theorem firstPass_1_2_faithful_v1
     HarmonicBallNoveltyFaithfulStmt.{u} :=
   closure_1_2_faithful_canonical_of_11_13 hDG hAff hCC hW hE hN hL1 hE1 hE3 hB hCamp hDecFrozen hDec hCM hAx h13 hTor
 
-/-- **Closure of Theorem 1.2 at the canonical exponent, fed by the numbered Lemma 11.13, cleaned binders**
-(fp-counted-1-2-11-11-binder-cleanup, z7). The binders of `closure_1_2_canonical_of_11_13` with two changes:
+/-- **Closure of Theorem 1.2 at the canonical exponent, fed by the numbered Lemma 11.13**
+
+The binders of `closure_1_2_canonical_of_11_13` with two changes:
 the external `hAff` is removed, and its two uses are discharged by `HarmonicBalls.wholePlaneGFFAffineInvariance_derived`
 (`FirstPass/S11v/Affine.lean:145`, derived from `IsWholePlaneGFF` alone); the duplicate `hDecFrozen` is removed, and `hE1`
 is passed to `closure_11_7` in its place (both have the type `LQGMeasureOfProfileMeasurableFrozen.{u}`). The local root
@@ -173,8 +173,7 @@ theorem closure_1_2_canonical_of_11_13_clean
     hTor
     (fun γ α₀ ξ _ _ _ Ω _ P hC hcirc _ => hAx Ω P γ ξ α₀ hC hcirc)
 
-/-- **Closure of the faithful Theorem 1.2 at the canonical exponent, cleaned binders** (fp-counted-1-2-11-11-binder-cleanup,
-z7): the binders of `closure_1_2_canonical_of_11_13_clean`, with the conclusion restricted to the positive radii by
+/-- **Closure of the faithful Theorem 1.2 at the canonical exponent**: the binders of `closure_1_2_canonical_of_11_13_clean`, with the conclusion restricted to the positive radii by
 `harmonicBallNoveltyFaithful_of_canonical` (`Closure/Main12Canonical.lean:169`). Mirror of `closure_1_2_faithful_canonical_of_11_13`
 (v1, with `hAff` and `hDecFrozen`). -/
 theorem closure_1_2_faithful_canonical_of_11_13_clean
@@ -202,9 +201,7 @@ theorem closure_1_2_faithful_canonical_of_11_13_clean
   harmonicBallNoveltyFaithful_of_canonical.{u}
     (closure_1_2_canonical_of_11_13_clean hDG hCC hW hE hN hL1 hE1 hE3 hB hCamp hDec hCM hAx h13 hTor)
 
-/-- **Counted form of the faithful Theorem 1.2** (`theorem:harmonic-balls-properties`; chat 242: STRONGER-BUT-PROVED;
-arbitrary carrier `Ω : Type u`, radii restricted to `0 < s` as in `HarmonicBallNoveltyFaithfulStmt`), cleaned binders
-(fp-counted-1-2-11-11-binder-cleanup, z7): no external `hAff`, and no duplicate `hDecFrozen`. Conclusion
+/-- **Counted form of the faithful Theorem 1.2** (`theorem:harmonic-balls-properties`, arbitrary carrier `Ω : Type u`, radii restricted to `0 < s` as in `HarmonicBallNoveltyFaithfulStmt`), with no external `hAff` and no duplicate `hDecFrozen`. Conclusion
 `HarmonicBallNoveltyFaithfulStmt` at `ξ = γ / lqgGraphDimension γ`. Proof: `closure_1_2_faithful_canonical_of_11_13_clean`.
 Ledger: `hE1` is the single occurrence of `LQGMeasureOfProfileMeasurableFrozen`; `hAx` is a universal-ξ external interface
 (harmless). The earlier binder list is kept as `firstPass_1_2_faithful_v1`. -/

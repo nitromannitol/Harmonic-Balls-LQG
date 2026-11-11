@@ -3,10 +3,10 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Proposed.DuplantierMillerSheffield
 
 /-!
-# First-pass frozen inputs of the S11i chain (Lemma 11.13)
+# Frozen inputs of the S11i chain (Lemma 11.13)
 
 Each `def` below is an EXTERNAL fact (general GFF / LQG background, not a statement about the clusters,
-odometers or harmonic balls of this paper), stated in the weakest form the first-pass proofs use.
+odometers or harmonic balls of this paper), stated in the weakest form the proofs use.
 
 `DMSLemmaA10WholePlaneMarked` imports the formula `dmsShiftedPairing` (the shift `z ↦ -γ log|· - z| + γ log max(|·|,1)`
 and its circle-average constant) from `Proposed/DuplantierMillerSheffield.lean`. That file is a definition only; the
@@ -18,15 +18,14 @@ namespace HarmonicBalls
 open MeasureTheory Metric
 open scoped ENNReal
 
-/-- RETIRED (derived), not an input. Formerly a first-pass frozen input: measurability of the dyadic circle
+/-- RETIRED (derived), not an input. Formerly a frozen input: measurability of the dyadic circle
 averages in the centre variable. It is now derived from `IsWholePlaneGFF.ae_continuousOn_circle`
 (`HarmonicBalls.SingularWeyl.ae_measurable_dyadic_circleAverage`, S11i/SingularWeyl.lean); no proof uses this `def`. -/
 def CircleAverageVersionMeasurableStmt {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   ∀ᵐ ω ∂P, ∀ k : ℕ, Measurable (fun z : ℂ => hcirc ω (dyadicScale k) z)
 
-/-- FIRST-PASS FROZEN (operator ruling 2026-11-10 05:19 UTC: route B1, marked DMS; chat 170 answer
-`notes/fp-gaps/CHATGPT-n3-marked-A10.md` §2). Truth check TRUE (chat 170), assuming the normalization encoded by
+/-- FROZEN (marked DMS). Truth check TRUE, assuming the normalization encoded by
 `dmsShiftedPairing` (whole-plane GFF with unit-circle average zero; no factor `π⁻¹`: both sides have total mass `π`).
 Marked whole-plane form of Duplantier-Miller-Sheffield Lemma A.10 for `D = B₁`, unnormalized, with `ℝ≥0∞`-valued
 marked test functions `Ψ(h, z)`. Under `P(dω) μ_ω(dz)` restricted to `z ∈ B₁`, the marked pair `(h, z)` has the same
@@ -36,7 +35,7 @@ regularized weighting `ε^{γ²/2} e^{γ h_ε(u)} du dh` and conditions on the c
 arXiv:0808.1560, §3.3 (rooted random measures; the rooted measure Θ on pairs `(z, h)`).
 NOT verbatim: the printed lemma states the field marginal only, as `DMSLemmaA10WholePlaneUnnormalized`
 (Proposed/DuplantierMillerSheffield.lean:73), which discards the mark `z`; the marked identity is read off the proof.
-Truth check (chat 241, `notes/fp-gaps/CHATGPT-241-hb-DMS-A10-marked-truth-PRO.md` §1): FALSE as universally typed
+Truth check: FALSE as universally typed
 (missing `0 < γ` and `γ < 2`). At a fixed `0 < γ < 2` it follows from `DMSLemmaA10WholePlaneMarkedSub` by
 `dmsA10Marked_of_sub`; top-level theorems take the Sub form. -/
 def DMSLemmaA10WholePlaneMarked {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -47,11 +46,10 @@ def DMSLemmaA10WholePlaneMarked {Ω : Type*} [MeasurableSpace Ω] (P : Measure �
         ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1, Ψ (hC ω, z) ∂(μ ω) ∂P
           = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, Ψ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), z) ∂P ∂volume
 
-/-- FIRST-PASS FROZEN (operator ruling 2026-11-10; chat 241 `notes/fp-gaps/CHATGPT-241-hb-DMS-A10-marked-truth-PRO.md`
-§4: the narrowest corrected declaration). Same parameters and body as `DMSLemmaA10WholePlaneMarked`; the subcritical
+/-- FROZEN. Same parameters and body as `DMSLemmaA10WholePlaneMarked`; the subcritical
 range `0 < γ` and `γ < 2` is inserted after the two old antecedents, so call sites keep their argument order.
 Truth check: TRUE. The subcritical range `0 < γ` and `γ < 2` is part of this statement, and the identity holds for
-each such `γ` (chat 241 ruling, Codex truth 2026-11-10).
+each such `γ`.
 The identity is unnormalized; no factor `π⁻¹`; both sides have total mass `π`.
 Marked whole-plane form of Duplantier-Miller-Sheffield Lemma A.10 for `D = B₁`, unnormalized, with `ℝ≥0∞`-valued
 marked test functions `Ψ(h, z)`. Source: DMS, arXiv:1409.7055v4, Appendix A.1, Lemma A.10, printed p. 184, whole-plane

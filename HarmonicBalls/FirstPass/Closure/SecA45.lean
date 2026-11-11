@@ -4,15 +4,15 @@ import HarmonicBalls.FirstPass.S6
 import HarmonicBalls.FirstPass.S8d
 
 /-!
-# First-pass closures for Appendix A and Sections 4-5 (task fp-closure-A45, worker z6)
+# closures for Appendix A and Sections 4-5
 
 For each counted numbered result X.Y of Appendix A, Section 4 and Section 5 (`docs/campaign/INVENTORY.tsv`), a theorem
 `HarmonicBalls.Closure.closure_X_Y` (`closure_A_k` for Appendix A, `closure_4_k`, `closure_5_k`) whose conclusion is
 exactly the conclusion of the counted `firstPass_X_Y` theorem. Every paper-owned hypothesis is discharged by its
 `firstPass_*` theorem, recursively (Lemma 6.7 by `FirstPass/S6.lean:56`, Lemma 8.2 by `FirstPass/S8d.lean:32`), and the
 affine-invariance Prop is discharged by its repo proof. What remains as hypotheses is only:
-* Proposed inputs of `HarmonicBalls/Proposed/LQG.lean` (`hDG hCC hE hW hN`, pending operator source-check);
-* FIRST-PASS FROZEN Props `hL1 hWeyl hE1 hE3 hB` (Lemma 8.2 route, `FirstPass/Frozen/S8c.lean`, `FirstPass/Frozen/S8d.lean`),
+* Proposed inputs of `HarmonicBalls/Proposed/LQG.lean` (`hDG hCC hE hW hN`, pending source-check);
+* FROZEN Props `hL1 hWeyl hE1 hE3 hB` (Lemma 8.2 route, `FirstPass/Frozen/S8c.lean`, `FirstPass/Frozen/S8d.lean`),
   taken by `closure_5_2`-`closure_5_5` only.
 No cited input and no OPEN hypothesis. Proof bodies are applications only.
 
@@ -87,7 +87,7 @@ end Section4
 `HarmonicBalls.FirstPass.S6.firstPass_6_7` (`FirstPass/S6.lean:56`, from `hDG hCC hE`) and whose unnumbered input
 I1 (`LQGMeasureFullSupportStmt`) is discharged by `lqgMeasureFullSupportStmt_of_literature`
 (`Proofs/Sec2/Assembly.lean:124`, from the six Proposed inputs). Hypotheses: the Proposed inputs `hDG hCC hE hW hN`,
-in the general `(γ, α₀)` forms that `firstPass_8_2` takes, and the five FIRST-PASS FROZEN Props `hL1 hWeyl hE1 hE3 hB`
+in the general `(γ, α₀)` forms that `firstPass_8_2` takes, and the five FROZEN Props `hL1 hWeyl hE1 hE3 hB`
 (`FirstPass/Frozen/S8c.lean`, `FirstPass/Frozen/S8d.lean`). -/
 theorem typicalPointManyGoodScales_closed
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -158,12 +158,11 @@ theorem closure_5_8
   firstPass_5_8 hDG hCC hE
 
 /-- Proposition 5.2 (prop:continuity-of-clusters, line 2088 of the corrected draft). Hypotheses: the Proposed inputs
-`hDG hCC hE hW hN`, and the five FIRST-PASS FROZEN Props `hL1 hWeyl hE1 hE3 hB` that the discharge of Lemma 8.2 needs
+`hDG hCC hE hW hN`, and the five FROZEN Props `hL1 hWeyl hE1 hE3 hB` that the discharge of Lemma 8.2 needs
 (`typicalPointManyGoodScales_closed`).
 Scope (audit R1, MINOR HB): the conclusion `ClusterContinuityStmt` quantifies over all `t > 0` (the all-t form). It is
 stronger than the printed Proposition 5.2 at line 2088, which requires `cluster z t ⋐ B₁` and writes `cluster + B_δ(z)`.
-The docstring of `ClusterContinuityStmt` (Draft/Section5.lean) says the later `t` are unproved (GRAPH G12); that note is
-not reconciled here. -/
+The docstring of `ClusterContinuityStmt` (Draft/Section5.lean) says the later `t` are unproved; this discrepancy is not reconciled here. -/
 theorem closure_5_2
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -241,18 +240,5 @@ theorem closure_5_5
 
 /-! ## Axiom check (repo convention, as `FirstPass/S5S7S8.lean`) -/
 
-#print axioms closure_A_1
-#print axioms closure_A_6
-#print axioms closure_4_1
-#print axioms closure_4_3
-#print axioms typicalPointManyGoodScales_closed
-#print axioms closure_5_1
-#print axioms closure_5_2
-#print axioms closure_5_3
-#print axioms closure_5_4
-#print axioms closure_5_5
-#print axioms closure_5_6
-#print axioms closure_5_7
-#print axioms closure_5_8
 
 end HarmonicBalls.Closure

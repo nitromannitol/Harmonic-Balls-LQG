@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Closure.Sec78910
 import HarmonicBalls.FirstPass.Closure.SecA45
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 
-/-! # Closure with the derived Weyl relation off the origin (FIRST-PASS fp-8-2-hWeyl-derived, worker z6)
+/-! # Closure with the derived Weyl relation off the origin
 
 `LocalLQGInsertionWeylOffOrigin` (`hWeyl`, `FirstPass/Frozen/S8c.lean`) is derived, with no hypotheses, by
 `localLQGInsertionWeylOffOrigin_derived` (`FirstPass/S8c/WeylOffOriginDerived.lean`). Each `<name>_noWeyl` below drops the

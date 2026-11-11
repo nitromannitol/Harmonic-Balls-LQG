@@ -3,12 +3,12 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# First-pass frozen input for Lemma 11.12 (fp-S11m, owner z4)
+# Frozen input for Lemma 11.12
 
-FIRST-PASS FROZEN inputs (EXTERNAL; truth check pending). A `def ... : Prop`, never an axiom.
+FROZEN inputs (EXTERNAL; truth check pending). A `def ... : Prop`, never an axiom.
 
 Only the Euclidean length property of the Weyl-shifted LQG metric by a smooth compactly supported weight is frozen
-here (operator note 01:41 UTC, item 2). The other inputs of the local certificate are reused from the frozen files:
+here. The other inputs of the local certificate are reused from the frozen files:
 `LQGMetricFieldAxiomsUnivFrozen` (`FirstPass/Frozen/S11j.lean`) for the length property of the α-metric itself, and
 `CameronMartinMetricEventTransferMeasurableFrozen` (`FirstPass/Frozen/S11j.lean`) for the Cameron-Martin transfer.
 -/
@@ -19,7 +19,7 @@ open MeasureTheory
 
 universe u
 
-/-- FIRST-PASS FROZEN, derived: `lqgMetricAlphaWeylShiftLength_of_axioms` (FirstPass/S11m/WeylShiftAlphaLength.lean) from `LQGMetricFieldAxiomsUnivFrozen` and `weylScaling_continuous_compactSupport_length` (FirstPass/S11m/WeylLengthCompact.lean); no longer an input (operator note 02:15 UTC; originally operator note 01:41 UTC, item 2). For `0 < γ < 2`, `α < Q_γ`,
+/-- FROZEN, derived: `lqgMetricAlphaWeylShiftLength_of_axioms` (FirstPass/S11m/WeylShiftAlphaLength.lean) from `LQGMetricFieldAxiomsUnivFrozen` and `weylScaling_continuous_compactSupport_length` (FirstPass/S11m/WeylLengthCompact.lean); no longer an input. For `0 < γ < 2`, `α < Q_γ`,
 every γ-LQG metric `𝔇` with Weyl exponent `ξ` (`IsLQGMetric γ ξ 𝔇`) and every whole-plane GFF `h^ℂ` on a probability
 space `Ω : Type u`, and every smooth compactly supported `f : ℂ → ℝ`, almost surely the metric `e^{ξ f} D_h` is a
 Euclidean length metric, where `D_h = weylScaling (𝔇 (h^ℂ)) ξ (-α log |·|)` is the α-metric (`IsLQGMetricOfField`).

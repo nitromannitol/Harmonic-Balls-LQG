@@ -4,14 +4,14 @@ import HarmonicBalls.Defs.LQGGraphDistance
 /-!
 # Faithful form of Theorem 1.2 (canonical Weyl exponent, positive radii)
 
-Owner: z3 (task fp-closure-1-2-faithful). File `HarmonicBalls/FirstPass/Closure/Faithful12.lean`, namespace
+File `HarmonicBalls/FirstPass/Closure/Faithful12.lean`, namespace
 `HarmonicBalls.Closure`.
 
 The counted statement `HarmonicBallNoveltyStmt` (`Draft/Section1.lean:124`) states the LQG-metric clause for every Weyl
 exponent `ξ`, every realized metric `D` and every real radius `s`. The printed Theorem 1.2 (`theorem:harmonic-balls-properties`,
 `paper/lqg_harmonic_ball-corrected.tex:174`) concerns the γ-LQG metric `D_h` with the canonical exponent `ξ = γ / d_γ`
 (eq:xi, `paper/lqg_harmonic_ball-corrected.tex:444`, in the Fact on the LQG metric) and balls of positive radius
-(operator note 08:24 UTC, `notes/fp-gaps/CHATGPT-hb-main-1-1-1-3-PRO.md` l.153-172).
+.
 
 `HarmonicBallNoveltyFaithfulStmt` is that restriction. It is implied by `HarmonicBallNoveltyStmt`
 (`harmonicBallNoveltyFaithful_of_stmt`), so the counted result is not weakened.
@@ -34,8 +34,7 @@ open MeasureTheory Set
 /-- **Faithful form of Theorem 1.2** (`theorem:harmonic-balls-properties`, `paper/lqg_harmonic_ball-corrected.tex:174`).
 Same body as `HarmonicBallNoveltyStmt` (`Draft/Section1.lean:124`), with one change: the LQG-metric clause is stated only for
 the canonical Weyl exponent `ξ = γ / d_γ`, `d_γ = lqgGraphDimension γ` (`Defs/LQGGraphDistance.lean:105`; eq:xi, paper line 444),
-and only for radii `0 < s`. The Lipschitz clause and the Jordan clause are unchanged. Operator note 08:24 UTC
-(`notes/fp-gaps/CHATGPT-hb-main-1-1-1-3-PRO.md` l.153-172). -/
+and only for radii `0 < s`. The Lipschitz clause and the Jordan clause are unchanged. -/
 def HarmonicBallNoveltyFaithfulStmt : Prop :=
   ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)

@@ -1,7 +1,7 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# FIRST-PASS FROZEN inputs of Lemmas 11.7 and 11.10 (task fp-S11c-11-7-redo-11-10, worker n1)
+# FROZEN inputs of Lemmas 11.7 and 11.10
 
 Each `Prop` here is EXTERNAL: a general GFF / LQG / measure-theory / potential-theory fact, not a statement about
 this paper's clusters, odometers, harmonic balls or IDLA processes. Its docstring gives the source locator, or
@@ -31,10 +31,9 @@ def enlargedDyadicCell (n j k : ℤ) : Set ℂ :=
   {z : ℂ | |z.re - ((j : ℝ) + 1 / 2) * (2 : ℝ) ^ (-n)| ≤ ((2 : ℝ) ^ (-n) + (2 : ℝ) ^ (-n - 2)) / 2 ∧
     |z.im - ((k : ℝ) + 1 / 2) * (2 : ℝ) ^ (-n)| ≤ ((2 : ℝ) ^ (-n) + (2 : ℝ) ^ (-n - 2)) / 2}
 
-/-- RETIRED (FALSE, ChatGPT truth check 2026-11-09, operator 19:20 UTC: the premise must be the probability of the source
-event, not an outer probability on the raw carrier). Superseded by `CameronMartinEventTransferFrozen`. Former FIRST-PASS
+/-- RETIRED (FALSE, not an outer probability on the raw carrier). Superseded by `CameronMartinEventTransferFrozen`. Former statement
 FROZEN: Cameron-Martin positivity transfer for the joint law of the LQG measure and LQG metric
-(candidate form of the wave-3 ruling, 2026-11-09; the metric component is corrected to `weylScaling`, see
+ (the metric component is corrected to `weylScaling`, see
 `weylShiftPair`). Let `f` be smooth, compactly supported and zero on the unit circle. If the event that the shifted
 pair `weylShiftPair γ ξ f (μ, D)` lies in a measurable set `B` has positive probability, then so does the event that
 `(μ, D)` lies in `B`. Measurability of `ω ↦ (μ ω, D ω)` is an explicit hypothesis.
@@ -56,13 +55,13 @@ def CameronMartinPositivityTransferFrozen : Prop :=
       0 < (P.map (fun ω => (μ ω, D ω))) (weylShiftPair γ ξ f ⁻¹' B) →
       0 < (P.map (fun ω => (μ ω, D ω))) B
 
-/-- FIRST-PASS FROZEN. Small internal diameter of the enlarged dyadic cells, simultaneously for all cells of one
+/-- FROZEN. Small internal diameter of the enlarged dyadic cells, simultaneously for all cells of one
 level inside a closed dyadic square `S2` disjoint from the unit circle, in inner-probability form.
 Why it holds (as printed): each cell has internal diameter tending to zero in probability as the level grows
 (the pointwise small-scale continuity of the LQG metric).
-Attribution (operator note 23:32 UTC; statement audit `notes/fp-gaps/CHATGPT-11-7-11-10-statement-audit.md`, section 2.C): Dubédat-Falconet-Gwynne-Pfeffer-Sun, *Weak LQG metrics and Liouville first passage percolation*, arXiv:1905.00380v2. Quantitative locators: Proposition 3.10 (p. 34, internal square-diameter moments up to the boundary); Lemmas 3.19-3.20 (pp. 45-46, quantitative and simultaneous small-square estimates); Proposition 3.17 (pp. 43-44, admissible logarithmic singularity); equations (3.63) (failure tail) and (3.67) (simultaneous control). The simultaneous statement over the dyadic cells of level N is supplied by (3.63) and (3.67), not by a bare union bound. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3010-3016). Used by: firstPass_11_10. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): the axioms
+Attribution: Dubédat-Falconet-Gwynne-Pfeffer-Sun, *Weak LQG metrics and Liouville first passage percolation*, arXiv:1905.00380v2. Quantitative locators: Proposition 3.10 (p. 34, internal square-diameter moments up to the boundary); Lemmas 3.19-3.20 (pp. 45-46, quantitative and simultaneous small-square estimates); Proposition 3.17 (pp. 43-44, admissible logarithmic singularity); equations (3.63) (failure tail) and (3.67) (simultaneous control). The simultaneous statement over the dyadic cells of level N is supplied by (3.63) and (3.67), not by a bare union bound. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3010-3016). Used by: firstPass_11_10. Truth check TRUE: the axioms
 force ξ > 0, and quantitative square estimates and summable insertion bounds give the simultaneous inner-probability
-statement. Source as the answer gives it: consequence of DFGPS, arXiv:1905.00380v2, p. 34, Proposition 3.10; pp.
+statement. Source: consequence of DFGPS, arXiv:1905.00380v2, p. 34, Proposition 3.10; pp.
 43-44, Proposition 3.17; pp. 45-46, Lemmas 3.19-3.20, (3.63), (3.67). -/
 def DyadicCellDiamSmallFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -80,13 +79,12 @@ def DyadicCellDiamSmallFrozen : Prop :=
 def IsClosedRectangle (R : Set ℂ) : Prop :=
   ∃ a₁ a₂ b₁ b₂ : ℝ, a₁ < a₂ ∧ b₁ < b₂ ∧ R = Icc a₁ a₂ ×ℂ Icc b₁ b₂
 
-/-- FIRST-PASS FROZEN. Finite diameter of a compact connected finite union of closed rectangles, for the LQG metric:
-almost surely there is a finite bound on the internal distances within the union. (Generalized on 2026-11-09 from
-closed dyadic squares to closed rectangles: the exterior set of Lemma 11.10 is a union of rectangles, not of dyadic
+/-- FROZEN. Finite diameter of a compact connected finite union of closed rectangles, for the LQG metric:
+almost surely there is a finite bound on the internal distances within the union. (not of dyadic
 squares. The printed text, paper lines 3026-3028, says "a finite union of closed Euclidean squares".)
-Justification (operator note 23:32 UTC; statement audit section 2.C-2.D): internal boundary estimates, Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.10 (p. 34) and Proposition 3.17 (pp. 43-44), together with the rectangle and singularity reductions: finite square coverings away from 0, and summable dyadic shell bounds near 0 where ξ(Q_γ - α₀) > 0. Ambient metric continuity alone does not justify this statement. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3026-3028); the exact hypotheses of Ding-Dubédat-Dunlap-Falconet, Lemma 3.9 remain unverified. Used by: firstPass_11_10. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): with
+Justification: internal boundary estimates, Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.10 (p. 34) and Proposition 3.17 (pp. 43-44), together with the rectangle and singularity reductions: finite square coverings away from 0, and summable dyadic shell bounds near 0 where ξ(Q_γ - α₀) > 0. Ambient metric continuity alone does not justify this statement. Source as cited by paper `dubedat2020weak` in the proof of Lemma 11.10 (paper lines 3026-3028); the exact hypotheses of Ding-Dubédat-Dunlap-Falconet, Lemma 3.9 remain unverified. Used by: firstPass_11_10. Truth check TRUE: with
 strictly positive rectangle side lengths, internal boundary estimates and the finite connected intersection graph
-give finite diameter. Source as the answer gives it: rectangle/closure and singularity consequence of DFGPS,
+give finite diameter. Source: rectangle/closure and singularity consequence of DFGPS,
 arXiv:1905.00380v2, p. 34, Proposition 3.10, (3.26); pp. 43-44, Proposition 3.17. -/
 def ConnectedSquareUnionDiamFiniteFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -95,12 +93,12 @@ def ConnectedSquareUnionDiamFiniteFrozen : Prop :=
   ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) → IsConnected K →
   ∀ᵐ ω ∂P, ∃ A : ℝ, ∀ u ∈ K, ∀ v ∈ K, internalMetric (D ω) K u v ≤ ENNReal.ofReal A
 
-/-- FIRST-PASS FROZEN (operator ruling, FIRST PASS wave 4, item n1, 2026-11-09). Field-level measurability of the internal
+/-- FROZEN. Field-level measurability of the internal
 supremum of the LQG metric over a finite union of closed rectangles: for such a set `K` (in particular a closed dyadic
 square, and the rectangles and their unions used in Lemma 11.10), `ω ↦ sup_{u,v ∈ K} D_h(u,v; K)` is measurable.
-The operator's wave-4 item covers closed dyadic squares; the extension to finite unions of closed rectangles (the
-enlarged pieces `Ŝ ∩ S₂` and the exterior set `K₁`) is requested and flagged for the operator's ruling.
-Source: measurability of the LQG metric at field level (paper Fact 2.2 setting; locator (CHATGPT-frozen-locators.md): no exact source; standard via GM 1.2 and compact-path coding).
+This covers closed dyadic squares; the extension to finite unions of closed rectangles (the
+enlarged pieces `Ŝ ∩ S₂` and the exterior set `K₁`) is not covered here.
+Source: measurability of the LQG metric at field level (paper Fact 2.2 setting; locator: no exact source; standard via GM 1.2 and compact-path coding).
 Used by: firstPass_11_10. -/
 def LQGMetricSupMeasurableFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -109,10 +107,10 @@ def LQGMetricSupMeasurableFrozen : Prop :=
   ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
     AEMeasurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v) P
 
-/-- FIRST-PASS FROZEN (operator ruling, FIRST PASS wave 4, item n1, 2026-11-09). Measurability of the LQG area measure
+/-- FROZEN. Measurability of the LQG area measure
 of a closed dyadic square: `ω ↦ μ_h(S)` is measurable.
 Source: locality of the LQG measure, paper Fact 2.1 II (line 407: `μ_h(U)` is a measurable function of `h|_U`), applied to
-open neighbourhoods of `S` and continuity from above of the finite measure; locator (CHATGPT-frozen-locators.md): DS Proposition 1.1.
+open neighbourhoods of `S` and continuity from above of the finite measure; locator: DS Proposition 1.1.
 Used by: firstPass_11_10. -/
 def LQGMeasureSquareMeasurableFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -120,12 +118,11 @@ def LQGMeasureSquareMeasurableFrozen : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ S : Set ℂ, IsClosedDyadicSquare S → AEMeasurable (fun ω => μ ω S) P
 
-/-- FIRST-PASS FROZEN. The LQG area measure charges every closed dyadic square with nonempty interior, almost surely.
+/-- FROZEN. The LQG area measure charges every closed dyadic square with nonempty interior, almost surely.
 Source: full support of the Gaussian multiplicative chaos measure (Duplantier-Sheffield 2011, Liouville quantum gravity
-measure; the paper's introduction, line 138, states that `μ_h` assigns positive mass to open sets); locator (CHATGPT-frozen-locators.md): RV Theorem 2.12.
-Used by: firstPass_11_10 (through the event `μ_h(S₁) > 0`). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): every such
-dyadic square contains an open ball away from 0, where the subcritical chaos measure has positive mass. Source as
-the answer gives it: Rhodes-Vargas, arXiv:1305.6221v1, p. 11, Theorem 2.12; full support is also stated in HB
+measure; the paper's introduction, line 138, states that `μ_h` assigns positive mass to open sets); locator: RV Theorem 2.12.
+Used by: firstPass_11_10 (through the event `μ_h(S₁) > 0`). Truth check TRUE: every such
+dyadic square contains an open ball away from 0, where the subcritical chaos measure has positive mass. Source: Rhodes-Vargas, arXiv:1305.6221v1, p. 11, Theorem 2.12; full support is also stated in HB
 arXiv:2208.11795v3, §1.2, p. 3. -/
 def LQGMeasureSquarePositiveFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -133,9 +130,9 @@ def LQGMeasureSquarePositiveFrozen : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ S : Set ℂ, IsClosedDyadicSquare S → ∀ᵐ ω ∂P, 0 < μ ω S
 
-/-- FIRST-PASS FROZEN (19:20 UTC truth check: the shifted event is required to be measurable, so that its probability is
+/-- FROZEN (truth check: the shifted event is required to be measurable, so that its probability is
 that of a source event; the field-level measurabilities are stated almost everywhere (AEMeasurable), since the LQG
-objects are defined only almost surely (IsLQGMeasureOfField, IsLQGMetricOfField); wave-4 candidate form, 2026-11-09; supersedes the measurable-`B` form above for Lemma 11.10). Event
+objects are defined only almost surely (IsLQGMeasureOfField, IsLQGMetricOfField); supersedes the measurable-`B` form above for Lemma 11.10). Event
 form of the Cameron-Martin positivity transfer for the joint event `{sup_{S₂} D_h ≤ c, μ_h(S₁) ≥ C}`. Let `f` be smooth,
 compactly supported and zero on the unit circle, and let `(μ, D)` be the LQG measure and metric of the whole-plane GFF,
 shifted by `f` through `weylShiftPair` (Weyl scaling, paper Facts 2.1 III and 2.2). If the shifted event has positive
@@ -144,7 +141,7 @@ measurability items above (hypotheses here).
 Why it holds: the shifted pair is the pair of the field `h + f` a.s. (Weyl scaling), and the laws of `h` and `h + f`
 are mutually absolutely continuous (Cameron-Martin for `f` smooth, compactly supported, zero on the unit circle).
 Source: Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2, Proposition 2.9 (printed page 49; Hilbert-space form
-in `Proposed/MillerSheffieldIG4.lean`), with the Weyl scaling of paper Facts 2.1 III and 2.2; locator (CHATGPT-frozen-locators.md): MS Proposition 2.9 + DS Proposition 1.1 + GM axiom III.
+in `Proposed/MillerSheffieldIG4.lean`), with the Weyl scaling of paper Facts 2.1 III and 2.2; locator: MS Proposition 2.9 + DS Proposition 1.1 + GM axiom III.
 Used by: firstPass_11_10. -/
 def CameronMartinEventTransferFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -161,8 +158,8 @@ def CameronMartinEventTransferFrozen : Prop :=
     C ≤ (weylShiftPair γ ξ f (μ ω, D ω)).1 S₁} →
   0 < P {ω | (⨆ u ∈ S₂, ⨆ v ∈ S₂, internalMetric (D ω) S₂ u v) ≤ c ∧ C ≤ μ ω S₁}
 
-/-- FIRST-PASS FROZEN (operator ruling, FIRST PASS 18:35 UTC, item n1: "the closed-set Weyl comparison for internal metrics
-is EXTERNAL (Weyl scaling of the LQG metric): freeze it in the weakest form used"). Weyl comparison of internal metrics on a
+/-- FROZEN (the closed-set Weyl comparison for internal metrics
+is EXTERNAL (Weyl scaling of the LQG metric), frozen in the weakest form used). Weyl comparison of internal metrics on a
 closed set. Let `D` be a Euclidean length metric (the LQG metric, paper Fact 2.2 I), let `E` be the Weyl-scaled metric
 `E = weylScaling D ξ f` (paper Fact 2.2 III, `D_{h+f}(u,v) = inf_P ∫ e^{ξf(P)} ds_D`), and let `U` be closed with `ξ f ≤ B`
 on `U`. Then the internal metric of `E` on `U` is at most `e^B` times the internal metric of `D` on `U`.
@@ -172,20 +169,20 @@ weight is at most `e^B` on `U`); the infimum over curves in `U` gives the claim.
 Source: paper Fact 2.2 III (corrected copy, lines 441-447) for the full metric; the internal form on closed sets is used in
 the printed proof of `prop:mass-diam-gen` (lines 3108-3128, eq:use-weyl) without a separate statement; the repo has the
 open-set version `IsEuclideanLengthMetric.internalMetric_weylScaling_le` (Steps/Sec11/WeylAnnulusBounds.lean, hypothesis
-`IsOpen U`). locator (CHATGPT-frozen-locators.md): no exact source; standard via weighted path lengths, GM (1.8).
-Used by: firstPass_11_10 (through S11c/Shifted.lean). Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): arclength
+`IsOpen U`). locator: no exact source; standard via weighted path lengths, GM (1.8).
+Used by: firstPass_11_10 (through S11c/Shifted.lean). Truth check TRUE: arclength
 parametrization bounds every competing path's E-length by e^B times its D-length, and this upper bound needs no
-measurability of f. Source as the answer gives it: deterministic consequence of Gwynne-Miller, arXiv:1905.00383v3,
+measurability of f. Source: deterministic consequence of Gwynne-Miller, arXiv:1905.00383v3,
 p. 5, (1.7), and p. 6, Axiom III, (1.8). -/
 def WeylInternalClosedFrozen : Prop :=
   ∀ (D E : ℂ → ℂ → ℝ) (ξ B : ℝ) (f : ℂ → ℝ) (U : Set ℂ), IsEuclideanLengthMetric D →
     (∀ x y, 0 ≤ E x y) → (∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y) → IsClosed U →
     (∀ z ∈ U, ξ * f z ≤ B) → ∀ x y, internalMetric E U x y ≤ ENNReal.ofReal (Real.exp B) * internalMetric D U x y
 
-/-- RETIRED (FALSE, ChatGPT truth check 2026-11-09, operator 19:25 UTC). The metric and the LQG measure are specified only
+/-- RETIRED (FALSE). The metric and the LQG measure are specified only
 almost everywhere (`IsLQGMetricOfField`, `IsLQGMeasureOfField`), so a `Measurable` conclusion does not follow from the
 field-level inputs. Replaced by the AEMeasurable form `LQGMetricSupMeasurableFrozen`. Former text kept for the record; NOT used.
-(Former FIRST-PASS FROZEN: `∀ γ α₀ ξ, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc D, IsWholePlaneGFF P hC hcirc →
+(Former FROZEN: `∀ γ α₀ ξ, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc D, IsWholePlaneGFF P hC hcirc →
 IsLQGMetricOfField P γ ξ α₀ hC D → ∀ K, (∃ F, (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
 Measurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v)`.) -/
 def LQGMetricSupMeasurableRetiredFalseFrozen : Prop :=
@@ -195,10 +192,10 @@ def LQGMetricSupMeasurableRetiredFalseFrozen : Prop :=
   ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
     Measurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v)
 
-/-- RETIRED (FALSE, ChatGPT truth check 2026-11-09, operator 19:25 UTC). The LQG measure is specified only almost everywhere,
+/-- RETIRED (FALSE). The LQG measure is specified only almost everywhere,
 so `Measurable (fun ω => μ ω S)` is not implied by the field-level inputs. Replaced by `LQGMeasureSquareMeasurableFrozen`
 (AEMeasurable form). Former text kept for the record; NOT used.
-(Former FIRST-PASS FROZEN: `∀ γ α₀, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc μ, IsWholePlaneGFF P hC hcirc →
+(Former FROZEN: `∀ γ α₀, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc μ, IsWholePlaneGFF P hC hcirc →
 IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ S, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)`.) -/
 def LQGMeasureSquareMeasurableRetiredFalseFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -206,12 +203,12 @@ def LQGMeasureSquareMeasurableRetiredFalseFrozen : Prop :=
     (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
   ∀ S : Set ℂ, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)
 
-/-- FIRST-PASS FROZEN (operator ruling 19:45 UTC, decisions wave 7, item n1 (1); truth check queued). EXTERNAL GFF/LQG
+/-- FROZEN (truth check queued). EXTERNAL GFF/LQG
 measurability, in AEMeasurable form, for the Weyl-shifted metric of the field: for the LQG measure `μ` and the LQG metric `D`
 of a whole-plane GFF (`IsLQGMeasureOfField`, `IsLQGMetricOfField`) and a continuous compactly supported weight `f ≤ 0`, the
 supremum over a closed dyadic square `S` of the internal metric of the Weyl-shifted metric `weylShiftPair γ ξ f (μ, D)` is
 almost surely measurable. Not stated for arbitrary pairs.
-Source: measurability of the LQG metric at field level after Weyl scaling (paper Fact 2.2 III); locator (CHATGPT-frozen-locators.md):
+Source: measurability of the LQG metric at field level after Weyl scaling (paper Fact 2.2 III); locator:
 no exact source; standard via GM §1.2 and compact-path coding, as for `LQGMetricSupMeasurableFrozen` (rated implies).
 Used by: firstPass_11_10 (through shifted_event_pos_11_10). -/
 def WeylShiftedSupMeasurableFrozen : Prop :=
@@ -223,11 +220,11 @@ def WeylShiftedSupMeasurableFrozen : Prop :=
   ∀ S : Set ℂ, IsClosedDyadicSquare S →
     AEMeasurable (fun ω => ⨆ u ∈ S, ⨆ v ∈ S, internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S u v) P
 
-/-- FIRST-PASS FROZEN (operator ruling 19:45 UTC, decisions wave 7, item n1 (1); truth check queued). EXTERNAL GFF/LQG
+/-- FROZEN (truth check queued). EXTERNAL GFF/LQG
 measurability, in AEMeasurable form, for the Weyl-shifted measure of the field: for the LQG measure `μ` and the LQG metric `D`
 of a whole-plane GFF and a continuous compactly supported weight `f ≤ 0`, the mass `(weylShiftPair γ ξ f (μ, D)).1 S` of a
 closed dyadic square `S` is almost surely measurable. Not stated for arbitrary pairs.
-Source: measurability of the LQG measure at field level after Weyl scaling (paper Fact 2.1 III); locator (CHATGPT-frozen-locators.md):
+Source: measurability of the LQG measure at field level after Weyl scaling (paper Fact 2.1 III); locator:
 no exact source; standard via DS Proposition 1.1 and local Weyl multiplication, as for `LQGMassFunctionalMeasurableFrozen` (rated implies).
 Used by: firstPass_11_10 (through shifted_event_pos_11_10). -/
 def WeylShiftedMassMeasurableFrozen : Prop :=
@@ -252,7 +249,7 @@ noncomputable def campbellReferenceObs (γ α₀ : ℝ) (D : Set ℂ) (hC : (ℂ
     ℂ × ({φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ) :=
   (z, fun φ => fieldPairing α₀ hC φ.1 - γ * ∫ w, (Real.log ‖w - z‖ - Real.log (max 1 ‖w‖)) * φ.1 w)
 
-/-- FIRST-PASS FROZEN. EXTERNAL local rooted-field (Campbell–Palm) absolute continuity for the LQG measure of a whole-plane
+/-- FROZEN. EXTERNAL local rooted-field (Campbell–Palm) absolute continuity for the LQG measure of a whole-plane
 GFF: the rooted-field change of measure used in the proof of paper Lemma `lemma:mu_h-bad-and-harnack` (Lemma 11.7, paper
 line 2896; proof lines 2936-2949), in its stated form. For disks `U = ball c₁ r₁` with `closedBall c₁ r₁ ⊆ D = ball c₂ r₂`,
 `0 ∉ closedBall c₂ r₂`, the Campbell law `Q_U(dh, dz) = P(dh) 1_U(z) μ_h(dz) / μ_h(U)` of the LQG measure `μ_h` (insertion `α₀`)
@@ -262,7 +259,7 @@ Stated as: every measurable set of marked observations that is null for the refe
 Only this one-sided, local statement is used; it is not a statement about cone events.
 Source: Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma A.10 (rooting), with Duplantier-Sheffield, arXiv:0808.1560v2,
 Proposition 1.1 (LQG measure), and the paper's rooted-field change of measure (line 2936ff); locator
-(CHATGPT-frozen-locators.md): no exact source; standard via DMS Lemma A.10 + local Cameron–Martin/GMC pushforward (rated implies).
+: no exact source; standard via DMS Lemma A.10 + local Cameron–Martin/GMC pushforward (rated implies).
 Not to be confused with `LocalRootedFieldMeasureDomination` (Frozen/S8c.lean), a different statement for Lemma 8.2.
 Used by: firstPass_11_7 (route: event-specific transfer, not yet written). -/
 def LocalCampbellMarkedRestrictionFrozen : Prop :=
@@ -277,18 +274,17 @@ def LocalCampbellMarkedRestrictionFrozen : Prop :=
     ∫⁻ ω, (μ ω (ball c₁ r₁))⁻¹ * ∫⁻ z in ball c₁ r₁,
         S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellMarkedObs α₀ (ball c₂ r₂) (hC ω) z) ∂(μ ω) ∂P = 0
 
-/-- FIRST-PASS FROZEN (operator ruling 2026-11-09 20:22 UTC, decision (c); truth-checked style: translation invariance of the
+/-- FROZEN (truth-checked style: translation invariance of the
 whole-plane GFF modulo additive constants). EXTERNAL: for the whole-plane GFF `h^ℂ` (`IsWholePlaneGFF`), translating the field
 by `z` and subtracting a constant does not change its law modulo constants, `g(· + z) - g_1(z) =d g` (Duplantier-Miller-Sheffield,
 arXiv:1409.7055v4, Section 4.1, and Holden-Sun, arXiv:1610.05272, proof of Lemma 4.2, p. 16; the covariance
-`-log|x - y| + log max(1,|x|) + log max(1,|y|)` is the one of the normalized whole-plane GFF). Truth check 20:44 UTC: TRUE
-(citation corrected per operator; not DMS Lemma A.10). Stated as equality of the laws
+`-log|x - y| + log max(1,|x|) + log max(1,|y|)` is the one of the normalized whole-plane GFF). Truth check: TRUE
+(citation corrected; not DMS Lemma A.10). Stated as equality of the laws
 of the pairings with the mean-zero test functions `φ` (smooth, compact support, `∫ φ = 0`): the constants drop out, so
 `(hC ω (φ(· - z)))_φ` and `(hC ω φ)_φ` have the same law. Only the mean-zero pairings are asserted.
 Not used by firstPass_11_7 or its chain: the normalized translation `hW'` is proved from `IsWholePlaneGFF` in
-`S11c/TranslateField11_7.lean` (`isWholePlaneGFF_translate`), so this input is kept only as a checked statement. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): translation
-preserves the joint Gaussian law of the mean-zero pairings, and the normalization constants disappear. Source as the
-answer gives it: Holden-Sun, arXiv:1610.05272v3, p. 16, proof of Lemma 4.2, immediately after (11). -/
+`S11c/TranslateField11_7.lean` (`isWholePlaneGFF_translate`), so this input is kept only as a checked statement. Truth check TRUE: translation
+preserves the joint Gaussian law of the mean-zero pairings, and the normalization constants disappear. Source: Holden-Sun, arXiv:1610.05272v3, p. 16, proof of Lemma 4.2, immediately after (11). -/
 def WholePlaneGFFTranslationModConstFrozen : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
@@ -296,7 +292,7 @@ def WholePlaneGFFTranslationModConstFrozen : Prop :=
     P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction Set.univ φ ∧ ∫ x, φ x = 0}) => hC ω (fun x => φ.1 (x - z))) =
       P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction Set.univ φ ∧ ∫ x, φ x = 0}) => hC ω φ.1)
 
-/-- FIRST-PASS FROZEN (PENDING OPERATOR APPROVAL AND TRUTH CHECK; not yet approved). EXTERNAL local approximation of the
+/-- FROZEN (PENDING OPERATOR APPROVAL AND TRUTH CHECK; not yet approved). EXTERNAL local approximation of the
 circle averages of a whole-plane GFF by pairings with mean-zero test functions: for a disk `D` (any open set), a radius `r > 0`,
 a fixed normalized bump `ρ` supported in `D` (`∫ ρ = 1`) and a point `z` with `closedBall z r ⊆ D`, there are mean-zero test
 functions `φ n` supported in `D` such that the pairings `fieldPairing α₀ (hC) (φ n)` converge in probability to the centred
@@ -306,9 +302,9 @@ circle average `h_r(z) - (h, ρ)` of the field `h = h^ℂ - α₀ log|·|`. Stan
 `φ n = σ_{z,r,η_n} - ρ` (mean zero); the `α₀ log|·|` part of `fieldPairing` and `fieldCircleAverage` converges deterministically.
 Stated for the field `h` as in `fieldPairing` and with the base point `ρ` (pairing with a fixed bump), so no circle outside `D`
 is used. Only the mean-zero pairings are asserted (constants drop out). Used by: `exists_joint_local_circleAverage_version`
-route of firstPass_11_7 (FirstPass/S11c/LocalVersion11_7.lean), i.e. the local decoder K_D of CHATGPT-11-7-B2.md sec 3.1.1. Truth check TRUE (ChatGPT, batch file 02:49 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, table row): smooth
+route of firstPass_11_7 (FirstPass/S11c/LocalVersion11_7.lean), i.e. the local decoder K_D. Truth check TRUE: smooth
 circle mollifications minus ρ converge by the covariance calculation, and the deterministic logarithmic term also
-converges. Source as the answer gives it: covariance consequence of Duplantier-Sheffield, arXiv:0808.1560v2, §3.1,
+converges. Source: covariance consequence of Duplantier-Sheffield, arXiv:0808.1560v2, §3.1,
 pp. 16-17, (8)-(11) and Proposition 3.1, using the whole-plane covariance in HB v3, p. 8, (2.1). -/
 def LocalCircleAverageMeanZeroApproxFrozen : Prop :=
   ∀ (α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
@@ -336,13 +332,13 @@ noncomputable def rootedMeanZeroObs (α₀ γ : ℝ) (D : Set ℂ) (z : ℂ) (hC
     {φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ :=
   fun φ => fieldPairing α₀ hC φ.1 - γ * ∫ w, Real.log ‖w - z‖ * φ.1 w
 
-/-- FIRST-PASS FROZEN (operator decision 2026-11-09 21:12 UTC, items 2 and 3). EXTERNAL: one s-finite (measurable)
+/-- FROZEN (items 2 and 3). EXTERNAL: one s-finite (measurable)
 local decoder kernel `K` from the mean-zero observations on a disk `D = ball c₂ r₂` (`0 ∉ closedBall c₂ r₂`) to
 measures on `ℂ`, which
 recovers the γ-LQG measure of a whole-plane GFF on `D` up to a constant factor, almost surely, and which does the same
 for the rooted field `h - γ log|· - z|` (`z` any point). The first clause is the field `h` itself (`IsLQGMeasureOfField`,
 insertion `α₀`); the second clause is the Campbell-rooted field of paper Lemma 11.7 (proof, lines 2936-2949), whose
-LQG measure is `IsLQGMeasure` for the profile `rootedCircleAverage`. The constant in B2 eq. (3.2) is
+LQG measure is `IsLQGMeasure` for the profile `rootedCircleAverage`. The constant is
 `e^{-γ⟨h,ρ_D⟩}`; only the existence of some constant `c ∈ (0,∞)` is asserted (the cone event is scale-invariant).
 Mechanism: the circle averages of `h` on the circles inside `D`, minus the scalar `⟨h, ρ_D⟩` (`ρ_D` the normalized
 Lebesgue measure on `D`; this scalar accommodates the missing additive constant), are a.s. limits of mean-zero pairings
@@ -351,11 +347,11 @@ profile on `D` (Duplantier–Sheffield, arXiv:0808.1560v2, Proposition 1.1). Dup
 Lemma A.10 is a rooting identity, not a decoder theorem: its normalized rooting term `γ log max{|w|,1}` vanishes on the unit
 disk but is generally nonconstant on an arbitrary `D`. So the second clause is stated for the pure logarithmic rooted field
 `h - γ log|· - z|` actually defined here; identifying it with the Campbell-rooted normalized field needs a domain
-qualification or explicit treatment of that term (truth check 21:28 UTC: TRUE as written; notes/fp-gaps/CHATGPT-decoder-truth.md).
-Not covered by n4's
+qualification or explicit treatment of that term.
+Not covered by the frozen input
 `LQGMeasureOfProfileMeasurableFrozen` (`FirstPass/Frozen/S8d.lean:28`): that decoder takes a GLOBAL profile on
 `CircleParameter`, and the local observation does not determine the profile outside `D`.
-Used by: firstPass_11_7 (route: B2 sec 3-4 decoder, sec 5.1 rooted null section; FirstPass/S11c.lean, to come). -/
+Used by: firstPass_11_7 (rooted null section, FirstPass/S11c.lean, to come). -/
 def LocalLQGDecoderFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ (c₂ : ℂ) (r₂ : ℝ), 0 < r₂ → (0 : ℂ) ∉ closedBall c₂ r₂ →
   ∃ K : ProbabilityTheory.Kernel ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ) ℂ,
@@ -371,10 +367,9 @@ def LocalLQGDecoderFrozen : Prop :=
       ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
         K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
 
-/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.187: "The exact common local
+/-- DERIVED INTERFACE. Audit l.187: "The exact common local
 decoder is stronger than the printed locality statement and needs a measurable-factorization derivation; it is not a verbatim citation."
-FIRST-PASS FROZEN (TRUTH-CHECKED TRUE, ChatGPT 2026-11-09, notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md, item G1; operator
-22:33 UTC: freeze). EXTERNAL,
+FROZEN (TRUTH-CHECKED TRUE). EXTERNAL,
 common local decoder: for `γ ∈ (0,2)` and a disc `D = ball c₂ r₂` with `0 ∉ closedBall c₂ r₂`, ONE s-finite kernel `K`
 from the mean-zero observations on `D` to measures on `ℂ` (clause 1: the γ-LQG measure of the field at every insertion
 `α₀ < Q`, up to a constant, a.s.; clause 2: the rooted LQG measure at every root `z` and every insertion `α₀ < Q`,
@@ -400,9 +395,8 @@ def LocalLQGDecoderCommonFrozen : Prop :=
       ∀ᵐ ω ∂P, ∃ c : ℝ≥0∞, 0 < c ∧ c < ⊤ ∧
         K (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = c • (μz ω).restrict (ball c₂ r₂))
 
-/-- FIRST-PASS FROZEN (TRUTH-CHECKED TRUE, ChatGPT 2026-11-09, notes/fp-gaps/CHATGPT-11-7-G1-G2-Q1.md, item G2, option A;
-operator 22:33 UTC: freeze exactly as stated). Non-smooth Cameron-Martin for the
-shift `χ_b = b χ` of B2 sec 5.2). EXTERNAL, Cameron-Martin for locally Lipschitz compactly supported shifts of the
+/-- FROZEN (TRUTH-CHECKED TRUE). Non-smooth Cameron-Martin for the
+shift `χ_b = b χ`. EXTERNAL, Cameron-Martin for locally Lipschitz compactly supported shifts of the
 whole-plane GFF, read on the mean-zero pairings with the test functions supported in a set `D`: for `g` locally
 Lipschitz with compact support (it lies in the Cameron-Martin space, which contains the compactly supported functions of
 finite Dirichlet energy), a measurable set of observations that is null for the unshifted pairings `hC` is null for the

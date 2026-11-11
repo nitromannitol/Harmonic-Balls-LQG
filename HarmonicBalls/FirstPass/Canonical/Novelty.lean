@@ -3,11 +3,10 @@ import HarmonicBalls.Assembly.Novelty
 import HarmonicBalls.FirstPass.S1S10
 
 /-!
-# Canonical-exponent copies of the novelty assembly and of Theorem 1.2 (FIRST-PASS fp-canonical-stmts-and-novelty, worker z6)
+# Canonical-exponent copies of the novelty assembly and of Theorem 1.2
 
 Copies of `harmonicBallNoveltyStmt_of_existence_and_results` (`HarmonicBalls/Assembly/Novelty.lean:46`) and of `firstPass_1_2`
-(`HarmonicBalls/FirstPass/S1S10.lean:43`) for the canonical statements of `FirstPass/Canonical/Stmts.lean` (chat 224,
-Correction 1, `ξ := lqgXi γ`): the metric hypothesis is `HarmonicBallNotMetricBallCanonicalStmt` and the conclusion is
+(`HarmonicBalls/FirstPass/S1S10.lean:43`) for the canonical statements of `FirstPass/Canonical/Stmts.lean` (Correction 1, `ξ := lqgXi γ`): the metric hypothesis is `HarmonicBallNotMetricBallCanonicalStmt` and the conclusion is
 `HarmonicBallNoveltyCanonicalStmt`. The proofs are the originals with the universal quantifier over `ξ` removed; every
 other hypothesis is unchanged. `exists_harmonicBallFamily_extension` is reused from `Assembly/Novelty.lean`. -/
 
@@ -17,7 +16,7 @@ open MeasureTheory Set
 
 universe u
 
-/-- Theorem 1.2 at the canonical exponent `ξ = lqgXi γ` (chat 224 Correction 1), assembled from Theorem 1.1, Propositions
+/-- Theorem 1.2 at the canonical exponent `ξ = lqgXi γ`, assembled from Theorem 1.1, Propositions
 10.7 and 11.2, and Proposition 11.11 at the canonical exponent (`hmetric`). Copy of
 `harmonicBallNoveltyStmt_of_existence_and_results` (`Assembly/Novelty.lean:46`). This is a conditional assembly. -/
 theorem harmonicBallNoveltyStmt_of_existence_and_results_canonical
@@ -44,8 +43,7 @@ theorem harmonicBallNoveltyStmt_of_existence_and_results_canonical
   · intro D hD
     exact hmetric γ α₀ hγ hγ₂ hα Ω P hC hcirc μ D hgff hμ hD Λ hΛ
 
-/-- FIRST PASS, Theorem 1.2 at the canonical exponent `ξ = lqgXi γ` (`theorem:harmonic-balls-properties`, chat 224
-Correction 1). The Jordan clause is Proposition 10.7 and the non-Lipschitz clause is Proposition 11.2; the metric-ball clause
+/-- Theorem 1.2 at the canonical exponent `ξ = lqgXi γ` (`theorem:harmonic-balls-properties`). The Jordan clause is Proposition 10.7 and the non-Lipschitz clause is Proposition 11.2; the metric-ball clause
 is the canonical Proposition 11.11, taken as the hypothesis `hmetric`. Copy of `firstPass_1_2` (`FirstPass/S1S10.lean:43`). -/
 theorem firstPass_1_2_canonical
     (h55 : ExistenceHarmonicBallsStmt.{u}) (h56 : UniquenessHarmonicBallsStmt.{u})

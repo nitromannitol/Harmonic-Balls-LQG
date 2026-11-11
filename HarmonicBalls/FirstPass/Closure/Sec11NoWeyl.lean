@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Closure.Sec11
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 
-/-! # Section 11 closures without the Weyl hypothesis (FIRST-PASS fp-closure-noWeyl-sec11, worker z3)
+/-! # Section 11 closures without the Weyl hypothesis
 
 `LocalLQGInsertionWeylOffOrigin` (`hWeyl`, `FirstPass/Frozen/S8c.lean`) is derived, with no hypotheses, by
 `localLQGInsertionWeylOffOrigin_derived` (`FirstPass/S8c/WeylOffOriginDerived.lean`). Each `<name>_noWeyl` below drops the

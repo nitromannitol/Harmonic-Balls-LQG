@@ -7,7 +7,7 @@ import Mathlib.Topology.Connected.Basic
 /-!
 # Bridge 1.2: the annulus `𝔸_{6/5,5}(0)` minus a closed disk is connected
 
-Deterministic topology for the bridge `1.2` of the first-pass closure (assembled in `Closure/Bridge12.lean`).
+Deterministic topology for the bridge `1.2` of the closure (assembled in `Closure/Bridge12.lean`).
 Write `T := 𝔸_{6/5,5}(0) \ B̄(-9/2, 1/4)` (`annulus` of `Defs/Notation.lean`). The closed disk lies in
 `{4.25 ≤ |z| ≤ 4.75}`. Main result: `isConnected_annulus_diff_closedBall : IsConnected T`.
 

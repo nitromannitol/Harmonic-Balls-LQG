@@ -2,13 +2,13 @@ import HarmonicBalls.Proofs.Sec11.ModConstPairingLaw
 import HarmonicBalls.Draft.Section11
 
 /-!
-# First-pass frozen inputs for Lemma 11.16 (fp-S11k, owner z3)
+# Frozen inputs for Lemma 11.16
 
 Three EXTERNAL Props used by `pinchSecondConditionalMass_of_frozen` (`FirstPass/S11k.lean`), the conditional
 mass-diameter step of `lemma:massdiam` (corrected paper lines 3511-3523) in the form `lemma:E2` uses (corrected lines
 3700-3727). They are general GFF and LQG background (domain Markov, locality and measurability of the LQG mass and of the
 internal metric), not statements about this paper's clusters, odometers or harmonic balls. Each was truth-checked TRUE
-(ChatGPT, operator note 23:27 UTC, `notes/fp-gaps/CHATGPT-e2-locality-z3-frozen.md` section 4); the operator source-check
+; the source-check
 of the locators is pending.
 -/
 
@@ -19,13 +19,12 @@ open scoped ENNReal
 
 universe u
 
-/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.202: "It is a normalization-aware
+/-- DERIVED INTERFACE. Audit l.202: "It is a normalization-aware
 consequence of the GFF Markov decomposition and Cameron–Martin equivalence, not a verbatim proposition."
-FIRST-PASS FROZEN. Domain Markov property, conditional positivity form, for a disk `W = ball c r`
+FROZEN. Domain Markov property, conditional positivity form, for a disk `W = ball c r`
 (EXTERNAL; Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2: Proposition 2.8 (pp. 48-49: the domain Markov
 decomposition of the field on `W` into a zero-boundary GFF plus a harmonic function determined by the outside field) and
-Proposition 2.9 (p. 49: Cameron-Martin, equivalence of laws under shifts by `H^1_0(W)`). Truth check TRUE (ChatGPT,
-operator note 23:27 UTC, section 4.1); locator pending).
+Proposition 2.9 (p. 49: Cameron-Martin, equivalence of laws under shifts by `H^1_0(W)`). Truth check TRUE (section 4.1); locator pending).
 
 Statement: for an open `O` with `closure O ⊆ W`, every event `A` of the field inside `O` with `P A > 0` (sigma-algebra
 `fieldSigmaAlgebra`, with constants) has conditional probability given the field outside `closure W` modulo constants
@@ -50,16 +49,16 @@ def DomainMarkovConditionalPositiveFrozen : Prop :=
     ∀ᵐ ω ∂P, 0 < (P[A.indicator (1 : Ω → ℝ) |
       MeasurableSpace.comap (localModConstPairings α₀ hC (closure W)ᶜ) inferInstance]) ω
 
-/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.200: "The right source is HB
+/-- DERIVED INTERFACE. Audit l.200: "The right source is HB
 Fact 2.1 II, not Fact 2.1 III."
-FIRST-PASS FROZEN. Inner measurability of the LQG mass of an open set with compact closure inside `O` (EXTERNAL;
+FROZEN. Inner measurability of the LQG mass of an open set with compact closure inside `O` (EXTERNAL;
 locality and measurable dependence of the LQG measure: Bou-Rabee-Gwynne arXiv:2208.11795v3, Fact 2.1 II (p. 9); truth check
-TRUE (ChatGPT, operator note 23:27 UTC); locator pending).
+TRUE; locator pending).
 
 Statement: `μ(U)` is almost surely equal to a random variable measurable for `fieldSigmaAlgebra α₀ hC O`, the sigma-algebra
 of the field with its constant (the mass changes by `e^{γc}` under `h ↦ h + c`, so the modulo-constant version is not
 claimed).
-Derivation: `notes/fp-gaps/CHATGPT-e2-locality-z3-frozen.md`, section 4.2 (TRUE): for a fixed open `U ⊆ O`, the local GMC construction
+Truth check TRUE: for a fixed open `U ⊆ O`, the local GMC construction
 gives a measurable function of `h^α|_U` representing `μ(U)` (HB Fact 2.1 II, printed p. 9); the definition identifies `μ` with the
 dyadic vague limit, and `fieldSigmaAlgebra` is unchanged by the fixed logarithmic shift.
 Used by: `pinchSecondConditionalMass_of_frozen`. -/
@@ -70,18 +69,17 @@ def LQGMassInnerMeasurableFrozen : Prop :=
     ∀ (O U : Set ℂ), IsOpen O → IsOpen U → Bornology.IsBounded U → closure U ⊆ O →
     ∃ g : Ω → ℝ≥0∞, Measurable[fieldSigmaAlgebra α₀ hC O] g ∧ ∀ᵐ ω ∂P, μ ω U = g ω
 
-/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.201: "The source is HB Fact 2.2
+/-- DERIVED INTERFACE. Audit l.201: "The source is HB Fact 2.2
 II / GM Axiom II, plus countable reconstruction of the diameter."
-FIRST-PASS FROZEN. Inner measurability of the internal diameter `diam^δ(A) = sup_{x,y ∈ A} D(x, y; B_δ(A))` of a compact
+FROZEN. Inner measurability of the internal diameter `diam^δ(A) = sup_{x,y ∈ A} D(x, y; B_δ(A))` of a compact
 set `A` for an LQG metric `D` (`IsLQGMetricOfField`) (EXTERNAL; locality of the internal metric `D(·,·; O)`, which depends
 only on `h|_O`, and measurable dependence of the metric on the field: Bou-Rabee-Gwynne arXiv:2208.11795v3, Fact 2.2 II
-(p. 10); Gwynne-Miller arXiv:1905.00383v3, Section 1.2, Axiom II (p. 6); truth check TRUE (ChatGPT, operator note 23:27
-UTC); locator pending).
+(p. 10); Gwynne-Miller arXiv:1905.00383v3, Section 1.2, Axiom II (p. 6); truth check TRUE; locator pending).
 
 Statement: with `O = thickening δ A`, the internal diameter is almost surely equal to a random variable measurable for
 `fieldSigmaAlgebra α₀ hC O`. Only this a.s. form is claimed (the infimum over paths is not measurable as a function of the
 whole distribution, `LQGInternalMetricWeylAeMeasurableFrozen`).
-Derivation: `notes/fp-gaps/CHATGPT-e2-locality-z3-frozen.md`, section 4.3 (TRUE): for fixed `x, y ∈ O`, local metric measurability gives
+Truth check TRUE: for fixed `x, y ∈ O`, local metric measurability gives
 an inner-measurable version of `D(x,y;O)` (HB Fact 2.2 II, printed p. 10; Gwynne-Miller Section 1.2, Axiom II, p. 6); on the event
 where `D` is a length metric inducing the Euclidean topology, the internal diameter is the supremum of `D(x,y;O)` over a countable
 dense `A_* ⊆ A`.

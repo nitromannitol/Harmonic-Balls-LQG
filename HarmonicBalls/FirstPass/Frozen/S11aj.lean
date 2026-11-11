@@ -2,9 +2,9 @@ import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# First-pass frozen input: Cameron-Martin reweighting of the whole-plane GFF (fp-S11aj)
+# Frozen input: Cameron-Martin reweighting of the whole-plane GFF
 
-FIRST-PASS FROZEN input for the shifted clause of `FirstPass/S11aj.lean`. Moved verbatim from `FirstPass/S11aj.lean`
+FROZEN input for the shifted clause of `FirstPass/S11aj.lean`. Moved verbatim from `FirstPass/S11aj.lean`
 (statement unchanged, same namespace `HarmonicBalls.S11aj`, same universe). It is a `def ... : Prop`, never an axiom,
 used as a named hypothesis by `FirstPass/S11aj.lean` and `FirstPass/S11an.lean`.
 -/
@@ -16,11 +16,11 @@ namespace HarmonicBalls.S11aj
 open MeasureTheory Set Metric
 open scoped ENNReal
 
-/-- DERIVED INTERFACE (chat 179 Pro audit, CHATGPT-hb-11-12-audit-PRO.md l.173-221). Audit l.197: "The Radon–Nikodym/reweighting
+/-- DERIVED INTERFACE. Audit l.197: "The Radon–Nikodym/reweighting
 identity is standard, but the exact normalization and arbitrary-carrier Lean interface must be derived."
-FIRST-PASS FROZEN. Cameron-Martin reweighting of the whole-plane GFF (Miller-Sheffield, Imaginary Geometry IV,
+FROZEN. Cameron-Martin reweighting of the whole-plane GFF (Miller-Sheffield, Imaginary Geometry IV,
 arXiv:1302.4738v2, Proposition 2.9, printed p. 49; Gaussian tilting). Truth check TRUE exactly as typed, including the
-joint law with the circle averages `hcirc` (ChatGPT chat 151, 2026-11-10 04:15 UTC; `notes/fp-gaps/CHATGPT-lh-R7-cameron-martin.md`).
+joint law with the circle averages `hcirc`.
 The Cameron-Martin theorem for the whole-plane GFF: for every whole-plane GFF `(P, hC, hcirc)` and every smooth compactly
 supported `f` with zero unit-circle average, there is a measure `P'` equivalent to `P` under which the shifted pairings
 `addFunPairing (hC ω) f` and the shifted circle averages `hcirc ω r z + Av_{∂B_r(z)} f` form a whole-plane GFF.

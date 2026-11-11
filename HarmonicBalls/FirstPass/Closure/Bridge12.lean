@@ -2,18 +2,18 @@ import HarmonicBalls.FirstPass.S11i.Faithful
 import HarmonicBalls.FirstPass.Closure.Bridge12Connected
 
 /-!
-# Bridge from the corrected Lemma 11.13 to `ManyPinchScalesStmt` (fp-closure-bridge-1-2, z7)
+# Bridge from the corrected Lemma 11.13 to `ManyPinchScalesStmt`
 
-FIRST-PASS CLOSURE, deterministic (no probability). Source: `notes/fp-gaps/CHATGPT-hb-1-2-bridge.md` §1 (projection and
-an explicit buffered keyhole geometry) and §3 (the bridge), ChatGPT chat 178, operator note 2026-11-10 05:42 UTC.
+Deterministic (no probability). Projection and
+an explicit buffered keyhole geometry, and the bridge.
 
 `CorrectedLemma11_13Stmt` (corrected `[C42]`) quantifies over every buffered geometry, while `ManyPinchScalesStmt`
 asks for one pinch point configuration. Fixing one buffered geometry gives the bridge.
 
 * `HarmonicBalls.IsBufferedPinchGeometry.toPinchPointConfiguration`: the projection (no hypothesis).
-* `HarmonicBalls.Closure.exists_bufferedPinchGeometry_of_connected`: the explicit geometry of §1, with the connectedness of
+* `HarmonicBalls.Closure.exists_bufferedPinchGeometry_of_connected`: the explicit geometry, with the connectedness of
   `T` as the hypothesis `hT`. The closed form `HarmonicBalls.Closure.exists_bufferedPinchGeometry` discharges `hT` by
-  `isConnected_annulus_diff_closedBall` (`Closure/Bridge12Connected.lean`, z4).
+  `isConnected_annulus_diff_closedBall` (`Closure/Bridge12Connected.lean`).
 * `HarmonicBalls.Closure.manyPinchScales_of_corrected_of_connected`: `CorrectedLemma11_13Stmt` implies
   `ManyPinchScalesStmt`, choosing the geometry above; `HarmonicBalls.Closure.manyPinchScales_of_corrected` is the closed form.
 
@@ -122,7 +122,7 @@ lemma mem_bridgeBox {p q s : ℝ} {w : ℂ} :
     w ∈ bridgeBox p q s ↔ dist w 0 ≤ p ∧ q ≤ dist w 0 ∧ s ≤ dist w (-9 / 2 : ℂ) :=
   Iff.rfl
 
-/-- The keyhole set of the §1 geometry: `T = 𝔸_{6/5,5}(0) \ closedBall (-9/2) (1/4)`. -/
+/-- The keyhole set of the geometry: `T = 𝔸_{6/5,5}(0) \ closedBall (-9/2) (1/4)`. -/
 abbrev bridgeT : Set ℂ := annulus 0 (6 / 5) 5 \ closedBall (-9 / 2 : ℂ) (1 / 4)
 
 lemma mem_bridgeT {w : ℂ} :
@@ -196,7 +196,7 @@ lemma bridge_buffer_ball {c : ℂ} {ρ r : ℝ} {Y : Set ℂ} (hY : closedBall c
   rw [mem_closedBall]
   linarith [dist_triangle w a c]
 
-/-! ## The six buffer conditions of the §1 geometry (`δ = 1/100000`, so `r = 10 δ = 1/10000`) -/
+/-! ## The six buffer conditions of the geometry (`δ = 1/100000`, so `r = 10 δ = 1/10000`) -/
 
 lemma bridge_buffer_U {r : ℝ} (hr : r ≤ 1 / 1000) :
     closure (thickening r (closure (ball (3 / 2 : ℂ) (1 / 50)))) ⊆ ball (3 / 2 : ℂ) (1 / 25) :=
@@ -260,7 +260,7 @@ lemma bridge_closure_Q_sub : closure (ball (-9 / 2 : ℂ) (1 / 8)) ⊆ annulus 0
 
 /-! ## The bridge -/
 
-/-- An explicit buffered keyhole geometry (§1 of the bridge note): `U = B(3/2, 1/50)`, `V = B(3/2, 1/25)`,
+/-- An explicit buffered keyhole geometry: `U = B(3/2, 1/50)`, `V = B(3/2, 1/25)`,
 `W = B(3/2, 3/50)`, `T = 𝔸_{6/5,5}(0) \ B̄(-9/2, 1/4)`, `Q' = B(-9/2, 1/16)`, `Q = B(-9/2, 1/8)`, `δ = 1/100000`.
 The connectedness of `T` is the hypothesis `hT` (to be discharged by `isConnected_annulus_diff_closedBall`). -/
 theorem exists_bufferedPinchGeometry_of_connected
@@ -304,7 +304,7 @@ theorem exists_bufferedPinchGeometry_of_connected
       buffer_Q := bridge_buffer_Q (by norm_num) }
 
 /-- `CorrectedLemma11_13Stmt` implies `ManyPinchScalesStmt`: fix the buffered geometry of
-`exists_bufferedPinchGeometry_of_connected` and forget `V, W, δ₀` (§3 of the bridge note). -/
+`exists_bufferedPinchGeometry_of_connected` and forget `V, W, δ₀`. -/
 theorem manyPinchScales_of_corrected_of_connected
     (hT : IsConnected (annulus 0 (6 / 5) 5 \ closedBall (-9 / 2 : ℂ) (1 / 4)))
     (h : CorrectedLemma11_13Stmt.{u}) : ManyPinchScalesStmt.{u} := by
@@ -312,8 +312,8 @@ theorem manyPinchScales_of_corrected_of_connected
   exact ⟨U, T, Q', Q, hgeom.toPinchPointConfiguration, fun γ α₀ ξ hγ0 hγ2 hα M hM =>
     h U V W T Q' Q δ₀ hgeom γ α₀ ξ hγ0 hγ2 hα M hM⟩
 
-/-- The buffered keyhole geometry of §1 exists (closed form: connectedness of `T` from `isConnected_annulus_diff_closedBall`,
-`Closure/Bridge12Connected.lean`, z4). -/
+/-- The buffered keyhole geometry exists (closed form: connectedness of `T` from `isConnected_annulus_diff_closedBall`,
+`Closure/Bridge12Connected.lean`). -/
 theorem exists_bufferedPinchGeometry :
     ∃ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ :=
   exists_bufferedPinchGeometry_of_connected isConnected_annulus_diff_closedBall

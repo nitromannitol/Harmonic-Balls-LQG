@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.GFF
 
 /-!
-# First-pass frozen input for Lemma 11.16: circle averages as limits of pairings (fp-S11p, owner n4)
+# Frozen input for Lemma 11.16: circle averages as limits of pairings
 
 One EXTERNAL Prop used by `FirstPass/S11p/ModConstComposition.lean` to recover the additive constant of the
 whole-plane GFF from pairings with test functions supported outside `closure W`. The normalisation
@@ -14,12 +14,10 @@ open MeasureTheory Filter Set Metric Topology
 
 universe u
 
-/-- RETIRED (derived: wholePlaneCircleAverageLimit_derived, FirstPass/S11u.lean; no longer an input to any
-first-pass theorem). Former FIRST-PASS FROZEN. Circle averages of the whole-plane GFF are almost sure limits of pairings with unit-mass test
+/-- RETIRED (derived: wholePlaneCircleAverageLimit_derived, FirstPass/S11u.lean). Former FROZEN. Circle averages of the whole-plane GFF are almost sure limits of pairings with unit-mass test
 functions concentrating on the circle (EXTERNAL; Duplantier-Sheffield, arXiv:0808.1560v2, Section 3.1 and Proposition
-3.1; Bou-Rabee-Gwynne, arXiv:2208.11795v3, Section 2.1, eq. (2.1), printed p. 8). Truth check: TRUE (ChatGPT, 00:53 UTC);
-derivable from `IsWholePlaneGFF` (mixed pairing/circle covariances in `covariance_eq`; proof notes/fp-gaps/CHATGPT-n4-circle-avg-limit.md
-section 2). Proof idea: take radial unit-mass bumps `ψ_j` around `z` with support shrinking to the circle `sphere z r`; then
+3.1; Bou-Rabee-Gwynne, arXiv:2208.11795v3, Section 2.1, eq. (2.1), printed p. 8). Truth check: TRUE;
+derivable from `IsWholePlaneGFF` (mixed pairing/circle covariances in `covariance_eq`). Proof idea: take radial unit-mass bumps `ψ_j` around `z` with support shrinking to the circle `sphere z r`; then
 `(h^ℂ, ψ_j)` is the average of `h^ℂ_s(z)` over `s` against a unit-mass profile, which tends to `h^ℂ_r(z)` by the a.s. joint
 continuity of `(s, z) ↦ h^ℂ_s(z)`, `IsWholePlaneGFF.ae_continuousOn_circle` (radial-integral identity: section 3).
 

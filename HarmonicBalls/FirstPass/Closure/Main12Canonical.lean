@@ -6,11 +6,10 @@ import HarmonicBalls.FirstPass.Canonical.NotMetricBall
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 
 /-!
-# Theorem 1.2 at the canonical Weyl exponent, without `hWeyl` (fp-canonical-closure-1-2, z3)
+# Theorem 1.2 at the canonical Weyl exponent, without `hWeyl`
 
-File `HarmonicBalls/FirstPass/Closure/Main12Canonical.lean`. FIRST-PASS closure chain of Theorem 1.2
-(`HarmonicBallNoveltyStmt`, `Draft/Section1.lean:124`) at the canonical exponent `ξ = lqgXi γ` (chat 224 Correction 1,
-`FirstPass/S11i/Faithful.lean:94`), with the model quantified before the density (Correction 3, PASS form,
+File `HarmonicBalls/FirstPass/Closure/Main12Canonical.lean`. Closure chain of Theorem 1.2
+(`HarmonicBallNoveltyStmt`, `Draft/Section1.lean:124`) at the canonical exponent `ξ = lqgXi γ` (`FirstPass/S11i/Faithful.lean:94`), with the model quantified before the density (Correction 3,
 `ManyPinchScalesCanonicalModelStmt`, `Closure/Bridge12Canonical.lean:42`).
 
 Declarations: `firstPassMain_1_2_canonical` (`FirstPass/Main.lean:55`), `closure_1_2_canonical` (`FirstPass/Closure.lean:183`),
@@ -26,9 +25,9 @@ section FirstPassMain
 
 open MeasureTheory Metric Set Filter Topology
 
-/-- FIRST PASS MAIN, Theorem 1.2 at the canonical exponent `ξ = lqgXi γ` (chat 224 Correction 1). Copy of `firstPassMain_1_2`
+/-- Theorem 1.2 at the canonical exponent `ξ = lqgXi γ`. Copy of `firstPassMain_1_2`
 (`FirstPass/Main.lean:55-103`) with `h13 : ManyPinchScalesStmt` replaced by `h13 : ManyPinchScalesCanonicalModelStmt`
-(model quantified before the density, chat 224 Correction 3), `firstPass_11_11` by `firstPass_11_11_canonical`, and
+ (model quantified before the density), `firstPass_11_11` by `firstPass_11_11_canonical`, and
 `firstPass_1_2` by `firstPass_1_2_canonical`. All other hypotheses are unchanged. -/
 theorem firstPassMain_1_2_canonical
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)

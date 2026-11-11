@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Closure.Sec11CanonicalOf13
 import HarmonicBalls.FirstPass.Closure.Main12CanonicalOf13
 
 /-! # Paper-exponent records of the counted canonical closures, fed by the numbered Lemma 11.13
-(FIRST-PASS fp-counted-paper-exponent-of-11-13, worker z4)
+
 
 The counted canonical closures `closure_11_11_canonical_of_11_13` (`FirstPass/Closure/Sec11CanonicalOf13.lean:29`) and
 `closure_1_2_faithful_canonical_of_11_13` (`FirstPass/Closure/Main12CanonicalOf13.lean:70`) take the numbered canonical
@@ -11,9 +11,9 @@ Lemma 11.13, `h13 : CorrectedLemma11_13CanonicalStmt` (`FirstPass/S11i/Faithful.
 `Step8IdentityGivenPinchEventCanonicalStmt`. They are stated at the exponent `ξ = lqgXi γ`
 (`FirstPass/S11i/Faithful.lean:94`). That identity is the paper's exponent `ξ = γ / d_γ` (eq:xi,
 `paper/lqg_harmonic_ball-corrected.tex:443`) only under the PROPOSED input `WholePlaneLQGGraphDimension`
-(`HarmonicBalls/Proposed/LQGDimension.lean:19`, pending operator source-check).
+(`HarmonicBalls/Proposed/LQGDimension.lean:19`, pending source-check).
 
-As in `FirstPass/PaperExponent.lean` (operator decision 11:42 UTC, F2), the dimension input is an explicit first hypothesis
+As in `FirstPass/PaperExponent.lean` (F2), the dimension input is an explicit first hypothesis
 `_hDim` of each wrapper. It is not used in the proof, and no new frozen input is introduced. Each wrapper has the binders of
 the wrapped theorem in their order, and the conclusion of the wrapped theorem. -/
 
@@ -79,7 +79,5 @@ theorem closure_1_2_paperExponent_of_11_13
     HarmonicBallNoveltyFaithfulStmt.{u} :=
   closure_1_2_faithful_canonical_of_11_13 hDG hAff hCC hW hE hN hL1 hE1 hE3 hB hCamp hDecFrozen hDec hCM hAx h13 hTor
 
-#print axioms closure_11_11_paperExponent_of_11_13
-#print axioms closure_1_2_paperExponent_of_11_13
 
 end HarmonicBalls.Closure

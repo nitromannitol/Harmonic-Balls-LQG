@@ -2,14 +2,14 @@ import HarmonicBalls.FirstPass.Canonical.Stmts
 import HarmonicBalls.FirstPass.Closure.Bridge12Canonical
 import HarmonicBalls.Proofs.Sec11.NotMetricBallGrowth
 
-/-! # Canonical-exponent copies of Proposition 11.11 (FIRST-PASS fp-canonical-11-11-chain, worker z4)
+/-! # Canonical-exponent copies of Proposition 11.11
 
 Copies of `typical_boundary_ne_metricBall` (`Proofs/Sec11/TypicalBoundary.lean:15`),
 `harmonicBallNotMetricBall_of_comparison_and_pinch` (`Proofs/Sec11/NotMetricBall.lean:14`),
 `harmonicBallNotMetricBall_of_comparison_pinch_and_volumeGrowth` (`Proofs/Sec11/NotMetricBallGrowth.lean:32`),
 `harmonicBallNotMetricBallStmt_of_comparison_pinch_and_volumeGrowth` (`Proofs/Sec11/NotMetricBallGrowth.lean:56`) and
-`firstPass_11_11` (`FirstPass/S11.lean:111`), for the canonical exponent `ξ = lqgXi γ` (chat 224, Correction 1) and the
-model-dependent pinch hypothesis `ManyPinchScalesCanonicalModelStmt` (chat 224, Correction 3), in the style of
+`firstPass_11_11` (`FirstPass/S11.lean:111`), for the canonical exponent `ξ = lqgXi γ` (Correction 1) and the
+model-dependent pinch hypothesis `ManyPinchScalesCanonicalModelStmt` (Correction 3), in the style of
 Armstrong-Kuusi-Mourrat's harmonic-ball bookkeeping and the LQG literature (Duplantier-Sheffield, Berestycki-Powell).
 
 Recipe: the proofs are the originals with the binder `ξ` removed and `ξ := lqgXi γ` substituted; the pinch hypothesis is
@@ -23,7 +23,7 @@ open MeasureTheory Metric Set Filter Topology
 
 universe u
 
-/-- Canonical copy of `typical_boundary_ne_metricBall` at the canonical exponent `ξ = lqgXi γ` (chat 224, Correction 1),
+/-- Canonical copy of `typical_boundary_ne_metricBall` at the canonical exponent `ξ = lqgXi γ` (Correction 1),
 with the pinch hypothesis `ManyPinchScalesCanonicalModelStmt` (Correction 3). The density `δ` is obtained from the
 pinch hypothesis at the instantiated model `(Ω, P, hC, hcirc, μ, D)`. -/
 theorem typical_boundary_ne_metricBall_canonical
@@ -69,7 +69,7 @@ theorem typical_boundary_ne_metricBall_canonical
     (frequently_of_positive_dyadic_block_density _ hδ.1 hdensity)
     (fun r hr h0 => hcomparison t ht r hr z h0)
 
-/-- Canonical copy of `harmonicBallNotMetricBall_of_comparison_and_pinch` at `ξ = lqgXi γ` (chat 224, Correction 1),
+/-- Canonical copy of `harmonicBallNotMetricBall_of_comparison_and_pinch` at `ξ = lqgXi γ` (Correction 1),
 with `ManyPinchScalesCanonicalModelStmt` (Correction 3). -/
 theorem harmonicBallNotMetricBall_of_comparison_and_pinch_canonical
     (hbound : AnnulusMassBoundByHarmonicChainStmt.{u})
@@ -101,7 +101,7 @@ theorem harmonicBallNotMetricBall_of_comparison_and_pinch_canonical
     hfamilyω.2 hpoint hnonneg
 
 /-- Canonical copy of `harmonicBallNotMetricBall_of_comparison_pinch_and_volumeGrowth` at `ξ = lqgXi γ`
-(chat 224, Correction 1), with `ManyPinchScalesCanonicalModelStmt` (Correction 3). -/
+ (Correction 1), with `ManyPinchScalesCanonicalModelStmt` (Correction 3). -/
 theorem harmonicBallNotMetricBall_of_comparison_pinch_and_volumeGrowth_canonical
     (hbound : AnnulusMassBoundByHarmonicChainStmt.{u})
     (hmany : Closure.ManyPinchScalesCanonicalModelStmt.{u})
@@ -123,8 +123,7 @@ theorem harmonicBallNotMetricBall_of_comparison_pinch_and_volumeGrowth_canonical
     hgff hμ hmetric hfamily
 
 /-- Canonical copy of `harmonicBallNotMetricBallStmt_of_comparison_pinch_and_volumeGrowth` (Proposition 11.11,
-`HarmonicBallNotMetricBallStmt`) for the canonical statement `HarmonicBallNotMetricBallCanonicalStmt` (chat 224,
-Correction 1, `ξ := lqgXi γ`). The metric-field-axiom hypothesis is kept as in the original (`∀ ξ`) and is instantiated
+`HarmonicBallNotMetricBallStmt`) for the canonical statement `HarmonicBallNotMetricBallCanonicalStmt` (Correction 1, `ξ := lqgXi γ`). The metric-field-axiom hypothesis is kept as in the original (`∀ ξ`) and is instantiated
 at `ξ = lqgXi γ`. -/
 theorem harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth
     (hbound : AnnulusMassBoundByHarmonicChainStmt.{u})
@@ -141,9 +140,9 @@ theorem harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGro
     (hmetricAxioms γ α₀ (lqgXi γ) hγ hγ₂ hα Ω P hC hcirc hgff)
     hgff hμ hmetric hfamily
 
-/-- FIRST-PASS canonical Proposition 11.11 (prop:not-metric-balls, paper line 3150), the canonical copy of `firstPass_11_11`
+/-- Canonical Proposition 11.11 (prop:not-metric-balls, paper line 3150), the canonical copy of `firstPass_11_11`
 (`FirstPass/S11.lean:111`) for `HarmonicBallNotMetricBallCanonicalStmt`. Uses the canonical pinch statement
-`ManyPinchScalesCanonicalModelStmt` (Lemma 11.13, chat 224 Corrections 1 and 3), the Draft volume growth I2 and the
+`ManyPinchScalesCanonicalModelStmt` (Lemma 11.13), the Draft volume growth I2 and the
 staged metric-field axioms (`∀ ξ`, as in `firstPass_11_11`). -/
 theorem firstPass_11_11_canonical (h6: AnnulusMassBoundByHarmonicChainStmt.{u})
     (h13 : Closure.ManyPinchScalesCanonicalModelStmt.{u}) (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
@@ -154,10 +153,5 @@ theorem firstPass_11_11_canonical (h6: AnnulusMassBoundByHarmonicChainStmt.{u})
     HarmonicBallNotMetricBallCanonicalStmt.{u} :=
   harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth h6 h13 hI2 hmetricAxioms
 
-#print axioms typical_boundary_ne_metricBall_canonical
-#print axioms harmonicBallNotMetricBall_of_comparison_and_pinch_canonical
-#print axioms harmonicBallNotMetricBall_of_comparison_pinch_and_volumeGrowth_canonical
-#print axioms harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth
-#print axioms firstPass_11_11_canonical
 
 end HarmonicBalls

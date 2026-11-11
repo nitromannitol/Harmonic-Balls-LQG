@@ -5,13 +5,13 @@ import HarmonicBalls.FirstPass.Canonical.Stmts
 import HarmonicBalls.FirstPass.Canonical.NotMetricBall
 
 /-!
-# Closure of Proposition 11.11, canonical copy chain (fp-canonical-closure-11-11, owner z7)
+# Closure of Proposition 11.11, canonical copy chain
 
 `closure_11_11_canonical` is `closure_11_11` (`FirstPass/Closure/Sec11.lean`) with three changes, all mechanical:
 * the Lemma 11.13 input is the canonical one: `closure_11_13_canonical` (`Sec11.lean`, canonical exponent
   `ξ = lqgXi γ`, model fixed before the density), converted to `ManyPinchScalesCanonicalModelStmt` by
   `manyPinchScalesCanonicalModel_of_canonical` (`Bridge12Canonical.lean`);
-* the first-pass assembly is `firstPass_11_11_canonical` (`FirstPass/Canonical/NotMetricBall.lean`), with conclusion
+* the assembly is `firstPass_11_11_canonical` (`FirstPass/Canonical/NotMetricBall.lean`), with conclusion
   `HarmonicBallNotMetricBallCanonicalStmt` (`FirstPass/Canonical/Stmts.lean`);
 * there is no `hWeyl` binder: the input `LocalLQGInsertionWeylOffOrigin` of `closure_11_6` is supplied by
   `localLQGInsertionWeylOffOrigin_derived` (`FirstPass/S8c/WeylOffOriginDerived.lean`).
