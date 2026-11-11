@@ -96,7 +96,4 @@ theorem exists_fieldLocal_stopped_containment_and_family
       exact ⟨q', htq, (heq (z, ⟨q', q'.property⟩)).mpr hqU⟩
   exact ⟨hevent, fun h => hFω (hevent.mp h)⟩
 
-#print axioms exists_later_containment_of_hausdorffContinuous
-#print axioms exists_fieldLocal_stopped_containment_and_family
-
 end HarmonicBalls

@@ -96,6 +96,4 @@ theorem exists_positive_fieldLocal_time_and_family
   · intro hx
     exact ⟨n, hn, (hGval n hn).symm ▸ hx⟩
 
-#print axioms exists_positive_fieldLocal_time_and_family
-
 end HarmonicBalls

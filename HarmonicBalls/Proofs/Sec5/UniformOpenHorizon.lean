@@ -185,8 +185,4 @@ theorem ae_regularizedFamily_uniform_containment_on_compacts
   apply mem_thickening_iff.mpr
   exact ⟨z, hz, hbound z (hR hz) (hsub hx)⟩
 
-#print axioms ae_regularizedFamily_uniform_small_time
-#print axioms exists_fieldLocal_open_horizons_uniform_on_compacts
-#print axioms ae_regularizedFamily_uniform_containment_on_compacts
-
 end HarmonicBalls

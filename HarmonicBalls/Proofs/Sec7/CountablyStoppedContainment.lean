@@ -83,6 +83,4 @@ theorem exists_fieldLocal_countably_selected_containment_and_family
   rw [hval]
   exact (hω (κ ω)).2 (hmem.mp he)
 
-#print axioms exists_fieldLocal_countably_selected_containment_and_family
-
 end HarmonicBalls

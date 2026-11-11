@@ -115,7 +115,4 @@ theorem exists_fieldLocal_countably_stopped_regularizedFamily_representative
   · intro hx
     exact ⟨κ ω, rfl, (heq _ _ hcontain).symm ▸ hx⟩
 
-#print axioms exists_fieldLocal_countably_stopped_regularizedFamily_representative
-#print axioms exists_fieldLocal_stopped_regularizedFamily_representative
-
 end HarmonicBalls

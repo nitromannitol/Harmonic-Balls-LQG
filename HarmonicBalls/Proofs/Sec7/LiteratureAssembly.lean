@@ -94,8 +94,4 @@ theorem exists_positive_fieldLocal_time_and_family_of_literature
 
 end
 
-#print axioms clusterUpperBoundPolyHighProb_of_literature
-#print axioms clusterBoundary_and_timeContinuity_of_literature
-#print axioms exists_positive_fieldLocal_time_and_family_of_literature
-
 end HarmonicBalls

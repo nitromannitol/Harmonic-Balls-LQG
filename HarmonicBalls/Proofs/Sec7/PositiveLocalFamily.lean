@@ -42,6 +42,4 @@ theorem exists_positive_fieldLocal_time_and_family_before
       (hstopω ⟨z, hz⟩).1
   exact ⟨hcl, hFω z t hcl⟩
 
-#print axioms exists_positive_fieldLocal_time_and_family_before
-
 end HarmonicBalls

@@ -84,7 +84,4 @@ theorem ae_uniform_punctured_disc_infimum_not_admissible
   have hp : 0 ≤ (2 : ℝ)⁻¹ ^ n := by positivity
   linarith
 
-#print axioms polyHighProb_uniform_punctured_disc_infimum_not_admissible
-#print axioms ae_uniform_punctured_disc_infimum_not_admissible
-
 end HarmonicBalls

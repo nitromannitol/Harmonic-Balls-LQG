@@ -6,7 +6,7 @@ import Lean.Util.CollectAxioms
 
 /-! # Weak Proposition 9.2 from the staged measure inputs and the open Lemma 8.2
 
-Worker z4, task `section9-weak-uniqueness-derived-volume-inputs`. This module is a reduction. It is not numbered
+This module is a reduction. It is not numbered
 closure of Proposition 9.2, of Lemma 8.2 or of Input I2.
 
 Export. `subharmonicBallUniquenessWeak_of_stronger_singularity_typicalScales` has the frozen conclusion
@@ -81,9 +81,6 @@ end HarmonicBalls
 
 #check @HarmonicBalls.lqgVolumeGrowthAllScalesStmt_of_staged_inputs
 #check @HarmonicBalls.subharmonicBallUniquenessWeak_of_stronger_singularity_typicalScales
-#print axioms HarmonicBalls.lqgVolumeGrowthAllScalesStmt_of_staged_inputs
-#print axioms HarmonicBalls.subharmonicBallUniquenessWeak_of_stronger_singularity_typicalScales
-
 open Lean Meta Elab Command in
 #eval show CommandElabM Unit from do
   let env ← getEnv

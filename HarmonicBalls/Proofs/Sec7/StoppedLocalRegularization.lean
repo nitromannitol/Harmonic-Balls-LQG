@@ -109,7 +109,4 @@ theorem exists_fieldLocal_stopped_regularizedFamily_of_fullSupport
   rw [hHB, denseSequenceRegularization_eq hBopen]
   exact (regularOpenFamily_eq_regularization_earlier_rat (hfamily z).1 (τ ω).property).symm
 
-#print axioms regularOpenFamily_eq_regularization_earlier_rat
-#print axioms exists_fieldLocal_stopped_regularizedFamily_of_fullSupport
-
 end HarmonicBalls
