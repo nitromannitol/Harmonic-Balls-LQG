@@ -2,6 +2,7 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.LQGMeasureDerived
+import HarmonicBalls.LPStage.CameronMartinDerived2
 
 /-! # Locality of the γ-LQG area measure (LP stage, conditional form)
 

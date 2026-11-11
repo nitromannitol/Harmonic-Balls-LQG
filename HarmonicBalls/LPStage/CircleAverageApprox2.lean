@@ -1,5 +1,6 @@
 import Mathlib
 import HarmonicBalls.LPStage.CircleAverageApprox
+import HarmonicBalls.LPStage.CameronMartinDerived2
 
 /-! # Circle-average approximants and their almost sure convergence (LP stage, z7), part 2
 
@@ -330,7 +331,7 @@ theorem logMaxAbs_continuous : Continuous logMaxAbs := by
     (fun x => ne_of_gt (lt_of_lt_of_le one_pos (le_max_right _ _)))
 
 /-- Off the diagonal the whole-plane kernel is `a x + a y - log |x - y|`. -/
-theorem wholePlaneCov_eq_of_ne {x y : ℂ} (hxy : x ≠ y) :
+theorem wholePlaneCov_eq_of_ne_circleAverageApprox2 {x y : ℂ} (hxy : x ≠ y) :
     wholePlaneCov x y = logMaxAbs x + logMaxAbs y - Real.log ‖x - y‖ := by
   have hx : max ‖x‖ 1 ≠ 0 := ne_of_gt (lt_of_lt_of_le one_pos (le_max_right _ _))
   have hy : max ‖y‖ 1 ≠ 0 := ne_of_gt (lt_of_lt_of_le one_pos (le_max_right _ _))
@@ -356,7 +357,7 @@ theorem circleAverage_wholePlaneCov {z x : ℂ} {ρ : ℝ} (hρ : 0 < ρ) :
     intro y hy
     have hyx : x ≠ y := fun h => hy (h.symm ▸ rfl)
     show wholePlaneCov x y = _
-    rw [wholePlaneCov_eq_of_ne hyx, norm_sub_rev]
+    rw [wholePlaneCov_eq_of_ne_circleAverageApprox2 hyx, norm_sub_rev]
   rw [Real.circleAverage_congr_codiscreteWithin hcongr hρ.ne']
   have hc1 : CircleIntegrable (fun y => logMaxAbs x + logMaxAbs y) z ρ :=
     ContinuousOn.circleIntegrable' (continuous_const.add logMaxAbs_continuous).continuousOn
@@ -494,7 +495,7 @@ theorem integral_unitCircleDensity_mul_wholePlaneCov {r δ : ℝ} (hr : 0 ≤ r)
       (fun y => logMaxAbs x * unitCircleDensity r δ hδ z y +
         unitCircleDensity r δ hδ z y * logMaxAbs y - unitCircleDensity r δ hδ z y * Real.log ‖y - x‖) := by
     filter_upwards [hae] with y hy
-    rw [wholePlaneCov_eq_of_ne hy.symm, norm_sub_rev]
+    rw [wholePlaneCov_eq_of_ne_circleAverageApprox2 hy.symm, norm_sub_rev]
     ring
   have I1 : Integrable (fun y => logMaxAbs x * unitCircleDensity r δ hδ z y) :=
     (integrable_unitCircleDensity hr hδ z).const_mul _

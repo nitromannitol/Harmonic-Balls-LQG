@@ -23,10 +23,8 @@ Provenance (HarmonicBalls repository, branch main): the arc-length and Weyl comp
 `HarmonicBalls/Steps/Sec11/WeylLocalEdges.lean`, `WeylPathReverse.lean`, `WeylPathConcatenation.lean`,
 `WeylPathSegments.lean`, and the proofs of `HarmonicBalls/FirstPass/Phase2/WeylScaledEuclideanDerived.lean` and
 `InternalMetricClosedDerived.lean`, with namespace `LatticeProb.LQG`. The file imports only Mathlib and
-`HarmonicBalls.LPStage.LengthMetric`, so the copies of `WeylInternalClosed.lean` are a deliberate duplication.
-Consequence: this file and `LPStage/WeylInternalClosed.lean` declare the same names in `LatticeProb.LQG`, so they cannot be
-imported together (the import fails with "environment already contains ..."). `FirstPass/LPBridge/M5c.lean` therefore
-imports this file and not `FirstPass/LPBridge/M5a.lean`.
+`HarmonicBalls.LPStage.LengthMetric`. `LPStage/WeylInternalClosed.lean` imports this file and uses its declarations
+(its former copies of them were removed as duplicates), so the two modules can be imported together (`LPStage/All.lean`).
 -/
 
 namespace LatticeProb.LQG
