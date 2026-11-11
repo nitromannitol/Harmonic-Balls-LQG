@@ -47,6 +47,5 @@ theorem ae_ae_of_observed_unnormalized_rooted_law
     have hsource := (hrooted n).ae_le href
     exact ae_of_ae_map (hobserve.comp measurable_fst |>.prodMk measurable_snd).aemeasurable hsource
 
-#print axioms ae_ae_of_observed_unnormalized_rooted_law
 
 end HarmonicBalls

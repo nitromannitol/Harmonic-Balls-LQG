@@ -60,5 +60,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_absolute_pairing
       simpa [hl, hpin] using ht
     exact ht'.liminf_eq
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_absolute_pairing
 end HarmonicBalls

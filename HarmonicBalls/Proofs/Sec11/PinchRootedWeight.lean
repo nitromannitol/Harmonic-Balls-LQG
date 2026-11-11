@@ -144,12 +144,5 @@ theorem IsWholePlaneGFF.ae_ae_of_rooted_logarithmicWeight
     (logarithmicRootWeight a) (measurable_logarithmicRootWeight a)
     (logarithmicRootWeight_ne_zero a) (logarithmicRootWeight_ne_top a) ν hac hp
 
-#print axioms exists_mem_weightedLocalization
-#print axioms weightedLocalization_measure_ne_top
-#print axioms logarithmicRootWeight_eq_rpow
-#print axioms logarithmicRootWeight_ae_eq_rpow
-#print axioms IsWholePlaneGFF.ae_withDensity_logarithmicRootWeight_eq_rpow
-#print axioms ae_ae_of_rooted_positive_weight
-#print axioms IsWholePlaneGFF.ae_ae_of_rooted_logarithmicWeight
 
 end HarmonicBalls

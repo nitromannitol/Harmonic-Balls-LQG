@@ -74,5 +74,4 @@ theorem positive_pinchEvent_of_normalized_observable_ac
   by_contra hn
   exact (ne_of_gt hp) (hac (nonpos_iff_eq_zero.mp (not_lt.mp hn)))
 
-#print axioms positive_pinchEvent_of_normalized_observable_ac
 end HarmonicBalls

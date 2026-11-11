@@ -64,6 +64,5 @@ theorem IsWholePlaneGFF.ae_positive_internal_pinch_frequency_of_normalized_metri
   exact hGFF.ae_internal_pinch_frequency_of_normalized_metric P hμ hfull hD hconfig M
     hmetric hstat δ hδprob
 
-#print axioms IsWholePlaneGFF.ae_positive_internal_pinch_frequency_of_normalized_metric
 
 end HarmonicBalls

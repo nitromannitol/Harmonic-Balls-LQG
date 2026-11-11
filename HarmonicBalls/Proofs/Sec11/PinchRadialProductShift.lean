@@ -49,6 +49,5 @@ theorem IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_radia
   exact h.positive_singular_internal_pinch_of_buffer_shiftMap hξ hq hq1 P γ α M hC hcirc D μ
     haxioms (Section6.lqgMeasureWeylScaling Ω P γ α hC hcirc) hgff hγ hγ₂ hα hD hμ hshift hp
 
-#print axioms IsPinchPointProofConfiguration.positive_singular_internal_pinch_of_radial_product
 
 end HarmonicBalls

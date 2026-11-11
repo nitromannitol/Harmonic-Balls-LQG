@@ -60,6 +60,5 @@ theorem IsWholePlaneGFF.ae_internal_pinch_frequency_of_recentered_normalizedLQG
   exact ae_internal_pinch_block_density_of_recentered_comparison R P U T Q V M δ
     (fun k => (2 : ℝ)⁻¹ ^ k) z recenter hrec hac heq hf
 
-#print axioms IsWholePlaneGFF.ae_internal_pinch_frequency_of_recentered_normalizedLQG
 
 end HarmonicBalls

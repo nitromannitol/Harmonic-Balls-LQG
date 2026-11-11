@@ -58,6 +58,5 @@ theorem IsWholePlaneGFF.exists_modConst_normalized_lqg_masses
   rw [heq, normalizedRestriction, Measure.smul_apply, Measure.smul_apply,
     Measure.restrict_apply hB, inter_eq_self_of_subset_left hBR]
 
-#print axioms IsWholePlaneGFF.exists_modConst_normalized_lqg_masses
 
 end HarmonicBalls

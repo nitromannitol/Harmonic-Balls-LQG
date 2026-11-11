@@ -27,5 +27,4 @@ theorem pinchPointEventWithInternalBounds_normalizedRestriction
       (pinchPointEventWithInternalBounds_const_mul μ D U T Q' Q M r z hc
         (ENNReal.inv_ne_zero.mpr htop) (ENNReal.inv_ne_top.mpr hzero))
 
-#print axioms pinchPointEventWithInternalBounds_normalizedRestriction
 end HarmonicBalls

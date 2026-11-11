@@ -45,5 +45,4 @@ theorem IsCorrectedPinchConfiguration.positive_second_base_of_dyadic_tail
     hm A M hA hAp (h.conditional_dyadic_thresholds hgff hμ hγ hξ 𝔇 h𝔇 z L hL
       hSU hfront hfull b p hp e he hsmall hbound)
 
-#print axioms IsCorrectedPinchConfiguration.positive_second_base_of_dyadic_tail
 end HarmonicBalls

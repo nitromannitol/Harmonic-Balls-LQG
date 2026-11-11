@@ -61,6 +61,5 @@ theorem ae_ae_pinch_block_density_of_rooted_local_comparison
     (fun k ω => pinchPointEventWithInternalBounds (μ ω) (D ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ k) z)
     q hX hR hL hRL hf
 
-#print axioms ae_ae_pinch_block_density_of_rooted_local_comparison
 
 end HarmonicBalls

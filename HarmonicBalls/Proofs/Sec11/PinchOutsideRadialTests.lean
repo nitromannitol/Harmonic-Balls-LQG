@@ -72,6 +72,4 @@ theorem IsCorrectedPinchConfiguration.eventually_radialAnnularTest_outside
   refine ⟨htest.1, htest.2.1, ?_⟩
   exact (tsupport_mul_subset_right.trans hts).trans hout
 
-#print axioms IsCorrectedPinchConfiguration.exists_core_radial_gap
-#print axioms IsCorrectedPinchConfiguration.eventually_radialAnnularTest_outside
 end HarmonicBalls

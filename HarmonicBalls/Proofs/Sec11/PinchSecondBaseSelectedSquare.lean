@@ -45,5 +45,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_second_base_of_dyad
   exact h.positive_second_base_of_dyadic_tail hgrowth hγ hγ2 hξ hgff hμ hAff 𝔇 h𝔇
     A M hA hAp z L hL hSU hfront hfull b p hp e he hsmall hbound
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_second_base_of_dyadic_tail
 end HarmonicBalls

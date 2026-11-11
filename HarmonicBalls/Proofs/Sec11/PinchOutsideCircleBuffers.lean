@@ -35,6 +35,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_pinning_reference_collar
   exact ((isCompact_sphere (0 : ℂ) 1).union (isCompact_sphere 0 4)).exists_cthickening_subset_open
     isClosed_closure.isOpen_compl h.pinning_reference_circles_subset_outside
 
-#print axioms IsCorrectedPinchConfiguration.pinning_reference_circles_subset_outside
-#print axioms IsCorrectedPinchConfiguration.exists_outside_pinning_reference_collar
 end HarmonicBalls

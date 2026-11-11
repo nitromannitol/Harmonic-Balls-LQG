@@ -163,7 +163,4 @@ theorem IsCorrectedPinchConfiguration.positive_second_of_outside_green_annulus
   exact positive_pinchSecondEvent_of_conditional_null_massDiameter_representatives P _ hm A D μ
     U V hδ M a b hA hAp ha hb hae hbe hmetric hgreen hinside
 
-#print axioms IsCorrectedPinchConfiguration.positive_second_of_outside_green_annulus
-#print axioms IsCorrectedPinchConfiguration.exists_outside_green_threshold
-#print axioms IsCorrectedPinchConfiguration.exists_outside_green_annulus_mass
 end HarmonicBalls

@@ -76,7 +76,4 @@ theorem exists_local_pinch_sphere_distance_representative
   rw [ofReal_setDist_inner_spheres_eq_internalMetric hmω hδ]
   exact haω.symm
 
-#print axioms IsCorrectedPinchConfiguration.inner_sphere_ball_subset_outside
-#print axioms ofReal_setDist_inner_spheres_eq_internalMetric
-#print axioms exists_local_pinch_sphere_distance_representative
 end HarmonicBalls

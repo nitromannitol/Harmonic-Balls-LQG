@@ -70,6 +70,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_baseMetric_center_distance
   rw [ofReal_setDist_center_pinch_sphere_eq_internalMetric hw hδ]
   simpa only [iInf_singleton] using he.symm
 
-#print axioms ofReal_setDist_center_pinch_sphere_eq_internalMetric
-#print axioms IsCorrectedPinchConfiguration.exists_outside_baseMetric_center_distance
 end HarmonicBalls

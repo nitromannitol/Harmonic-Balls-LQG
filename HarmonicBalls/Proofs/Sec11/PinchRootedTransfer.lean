@@ -87,8 +87,5 @@ theorem ae_ae_pinchBlockDensity_of_rooted_weighted_cover
         pinchPointEvent (μ ω) (D ω) U T Q' Q M ((2 : ℝ)⁻¹ ^ k) z}.ncard : ℝ) :=
   ae_ae_of_rooted_weighted_cover P μ κ B hB hcover w hw hpos hfin hk ν hac hp
 
-#print axioms ae_ae_of_rooted_weighted_restriction
-#print axioms ae_ae_of_rooted_weighted_cover
-#print axioms ae_ae_pinchBlockDensity_of_rooted_weighted_cover
 
 end HarmonicBalls

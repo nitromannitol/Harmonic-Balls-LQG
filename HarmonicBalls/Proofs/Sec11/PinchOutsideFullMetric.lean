@@ -62,5 +62,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_internal_baseMetric_on_comp
     simp [B]
 
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_internal_baseMetric_on_complement
 end HarmonicBalls

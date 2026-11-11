@@ -69,7 +69,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_baseMetric_Q_distance
     h.closure_Q_subset_outside hQne hfront]
   exact he.symm
 
-#print axioms IsCorrectedPinchConfiguration.closure_Q_subset_outside
-#print axioms IsCorrectedPinchConfiguration.inner_Q_subset_Q
-#print axioms IsCorrectedPinchConfiguration.exists_outside_baseMetric_Q_distance
 end HarmonicBalls

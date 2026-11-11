@@ -80,6 +80,5 @@ theorem IsWholePlaneGFF.ae_internal_pinch_frequency_of_normalized_metric
     _ r hr hcofinal hrmono hgmono hlocal' (hGFF.origin_germ_trivial α₀)
     hXm hX hs' δ hδ
 
-#print axioms IsWholePlaneGFF.ae_internal_pinch_frequency_of_normalized_metric
 
 end HarmonicBalls

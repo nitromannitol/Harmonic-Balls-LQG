@@ -49,5 +49,4 @@ theorem IsCorrectedPinchConfiguration.positive_second_base_of_volumeGrowth
   exact h.positive_second_base_of_outside_green_annulus hgff hμ 𝔇 h𝔇 hfront
     (hmass'.mono fun _ hh => hh.2) (hmass'.mono fun _ hh => hh.1) hm A M hA hAp hgreen hinside
 
-#print axioms IsCorrectedPinchConfiguration.positive_second_base_of_volumeGrowth
 end HarmonicBalls

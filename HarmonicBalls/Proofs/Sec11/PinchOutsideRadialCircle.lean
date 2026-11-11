@@ -72,5 +72,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_pinned_reference_circle
       simpa [k, Function.comp_def, hl, hp0] using hlim
     exact hlim'.liminf_eq
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_pinned_reference_circle
 end HarmonicBalls

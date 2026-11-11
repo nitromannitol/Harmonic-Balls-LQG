@@ -116,6 +116,4 @@ theorem IsCorrectedPinchConfiguration.exists_joint_outside_circle_average
   rw [hd z hz, hx]
   simp [fieldCircleAverage]
 
-#print axioms IsCorrectedPinchConfiguration.exists_joint_outside_circle_average
-#print axioms IsCorrectedPinchConfiguration.exists_outside_circle_average
 end HarmonicBalls

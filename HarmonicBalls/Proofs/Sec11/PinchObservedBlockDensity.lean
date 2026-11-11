@@ -37,6 +37,5 @@ theorem ae_ae_block_density_of_observed_rooted_law
   ae_ae_of_observed_unnormalized_rooted_law P R μ hμ hloc w hw hpos hfin observe hobserve
     ρ shift hshift Q (measurableSet_eventually_blockEvent_ncard E hE q) hrooted hac hfixed
 
-#print axioms ae_ae_block_density_of_observed_rooted_law
 
 end HarmonicBalls

@@ -90,7 +90,5 @@ theorem ae_ae_pinch_block_density_of_dominated_rooted_law
   filter_upwards [hω] with z hz
   exact eventually_pinchPointEvent_block_ncard_of_internalBounds hmetric hz
 
-#print axioms ae_ae_pinch_block_density_of_dominated_rooted_law
-#print axioms ae_ae_internal_pinch_block_density_of_dominated_rooted_law
 
 end HarmonicBalls

@@ -42,5 +42,4 @@ theorem IsCorrectedPinchConfiguration.positive_second_base_of_outside_green_annu
   exact h.positive_second_of_outside_green_annulus hgff hμ hfront hfinite hpositive hm A
     (fun ω => 𝔇 (hC ω)) h.δ₀_mem.1 M a hA hAp ha hae hmetric hgreen hinside
 
-#print axioms IsCorrectedPinchConfiguration.positive_second_base_of_outside_green_annulus
 end HarmonicBalls

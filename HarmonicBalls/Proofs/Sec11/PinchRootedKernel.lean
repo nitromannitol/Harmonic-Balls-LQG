@@ -89,9 +89,5 @@ theorem ae_ae_of_rooted_weighted_cover_of_aemeasurable
   exact ae_ae_of_rooted_weighted_cover P μ κ B hB hcover w hw hpos hfin
     (fun n => ae_weightedRestrictionKernel_eq P μ hμ (B n) (hB n) (w n) (hw n)) ν hac hp
 
-#print axioms measurable_measure_withDensity
-#print axioms ae_weightedRestrictionKernel_eq
-#print axioms ae_ae_of_rooted_weighted_cover_of_aemeasurable
-#print axioms IsWholePlaneGFF.exists_finiteKernel_ae_normalized_weighted_restriction
 
 end HarmonicBalls

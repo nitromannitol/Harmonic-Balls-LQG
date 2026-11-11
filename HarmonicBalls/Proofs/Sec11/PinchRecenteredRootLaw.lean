@@ -88,8 +88,6 @@ theorem ae_ae_pinch_block_density_of_recentered_rooted_law
   exact ae_internal_pinch_block_density_of_recentered_comparison (R n z) Q
     U T Q' Qset M q (fun k => (2 : ℝ)⁻¹ ^ k) z (recenter z) hr hc he hfixed
 
-#print axioms ae_ae_pinch_block_density_of_recentered_rooted_law
 
-#print axioms ae_internal_pinch_block_density_of_recentered_comparison
 
 end HarmonicBalls

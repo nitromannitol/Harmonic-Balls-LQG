@@ -43,5 +43,4 @@ theorem IsCorrectedPinchConfiguration.exists_positive_outside_first_certificate
   rw [measure_congr heq]
   exact h.positive_open_first hξ P γ hC hcirc 𝔇 h𝔇 hgff
 
-#print axioms IsCorrectedPinchConfiguration.exists_positive_outside_first_certificate
 end HarmonicBalls

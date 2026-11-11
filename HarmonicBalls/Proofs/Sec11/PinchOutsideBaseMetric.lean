@@ -91,6 +91,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_baseMetric_sphere_distance
       rw [mem_ball]
       linarith [h.δ₀_mem.1]
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_baseMetric_sphere_distance
-#print axioms IsCorrectedPinchConfiguration.exists_outside_internal_baseMetric
 end HarmonicBalls

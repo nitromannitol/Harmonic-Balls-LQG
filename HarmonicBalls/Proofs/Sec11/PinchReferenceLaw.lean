@@ -82,8 +82,5 @@ theorem ae_ae_of_shiftedRootReferenceLaw
   exact ae_shiftedRootReferenceLaw_of_ae_comparison (ρ n) P (shift n)
     (hshift n) (Q n) hp (hac n) (hfixed n)
 
-#print axioms weightedRestrictionKernel_compProd_ac_unnormalized
-#print axioms ae_shiftedRootReferenceLaw_of_ae_comparison
-#print axioms ae_ae_of_shiftedRootReferenceLaw
 
 end HarmonicBalls

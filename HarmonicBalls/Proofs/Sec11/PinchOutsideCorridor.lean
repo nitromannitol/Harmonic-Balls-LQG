@@ -48,5 +48,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_baseMetric_corridor_crossin
   filter_upwards [hae] with ω he
   simpa only [iSup_singleton] using he.symm
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_baseMetric_corridor_crossing
 end HarmonicBalls

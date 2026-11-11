@@ -59,5 +59,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_baseMetric_buffered_diamete
     rw [he]
     simp [internalDiam]
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_baseMetric_buffered_diameter
 end HarmonicBalls

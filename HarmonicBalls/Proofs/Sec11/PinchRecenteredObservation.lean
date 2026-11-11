@@ -132,11 +132,7 @@ theorem ae_internal_pinch_block_density_observation_law
   filter_upwards [hFae, hmap] with p hp hpF
   exact (hp 0).1 hpF
 
-#print axioms ae_internal_pinch_block_density_observation_law
 
-#print axioms ae_ae_pinch_block_density_of_recentered_observation
 
-#print axioms aemeasurable_recenteredPinchObservation
-#print axioms ae_internal_pinch_block_density_of_recentered_observation
 
 end HarmonicBalls
