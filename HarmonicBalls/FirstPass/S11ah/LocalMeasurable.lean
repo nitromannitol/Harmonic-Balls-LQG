@@ -13,8 +13,7 @@ version through the radial lift (`S11ah/Radial.lean`, `S11ah/LengthTransport.lea
 * `localCertSet c R κ D ...`: the set of `(ω, z)` at which the certificate event holds for the metric `D ω`, read
   through the lift at some admissible radius `radialSeq R j` whose disc contains `closedBall z (7 r)`;
 * `measurableSet_localCertSet`: it is measurable (no locality needed: a countable union of measurable pieces);
-* `localCertSet_eq_of_locality`: under the named locality hypothesis `CertificateEventLocality` (operator's item (a),
-  taken as a hypothesis here), the membership does not depend on the admissible lift.
+* `localCertSet_eq_of_locality`: under the named locality hypothesis `CertificateEventLocality` (taken as a hypothesis here), the membership does not depend on the admissible lift.
 
 The buffered containments of the sets `Ostar, U, V, W, T, Q', Q` in `B_7` are not reproved here; they enter only
 through `CertificateEventLocality`.

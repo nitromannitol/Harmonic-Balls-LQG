@@ -11,8 +11,7 @@ pinch event, for a probability space in any universe.
 
 `exists_positive_measure_wholePlane_shift_thirdEvent_univ` is the copy of the committed Type-level theorem
 `IsPinchPointProofConfiguration.exists_positive_measure_wholePlane_shift_thirdEvent`
-(`Proofs/Sec11/WholePlanePinchThirdEvent.lean:18`), with `Ω : Type u` and the metric axioms taken from the FIRST-PASS
-FROZEN `LQGMetricSatisfiesAxiomsUnivFrozen`. The proof is unchanged otherwise.
+(`Proofs/Sec11/WholePlanePinchThirdEvent.lean:18`), with `Ω : Type u` and the metric axioms taken from the FROZEN `LQGMetricSatisfiesAxiomsUnivFrozen`. The proof is unchanged otherwise.
 
 It does not transfer any set to the shifted field: the events `Ẽ₁`, `Ẽ₂` of the shifted field and the Cameron-Martin
 transfer back to the unshifted field are NOT part of this statement (open).
