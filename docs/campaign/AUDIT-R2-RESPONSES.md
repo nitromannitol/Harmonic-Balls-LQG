@@ -45,7 +45,7 @@ Source: `notes/fp-gaps/OPUS-AUDIT-R2.md` (fleet). Task fp-audit-r2-hb-errata-and
 |---|---|---|
 | M9 (B1 decoder) | IN PROGRESS | z4, fp-phase2-b1-decoder-derive; partial commit 78d91e32 |
 | M10 (B2 DMS joint positive radius) | IN PROGRESS | z3, fp-phase2-dms-joint-positive-radius; partial commit c1f49ef0 (its message flags DMSLemmaA10WholePlaneMarkedJointStmt as false as typed, MQ-lh-13) |
-| M11, M12 (hholder), HB(B) binders | IN PROGRESS | z6, fp-phase2-canonical-decoders-canon-xi; no commit yet (untracked CanonicalDecodersCanonXi*.lean in the working tree) |
+| M11, M12 (hholder), HB(B) binders | M11: OPEN, forall-xi forms stay conditional on named Props, canonical-xi consequences in 6883fd97; M12 (hholder): BLOCKED, stays a binder (cited HB Prop 2.5 input; route B is an operator decision), 94723b16; HB(B): PARTIAL, 6 wrappers discharged in 94723b16 (DerivedInputs23), hDsm still bound, manifest f2473471 | z6, fp-audit-r2-binders |
 
 ## Round-1 rows marked Partial or No for HB
 
