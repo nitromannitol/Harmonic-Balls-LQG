@@ -116,6 +116,11 @@ Printed: harmonic ball "(in the sense of eq:harmonic-ball)". Corrected: "(in the
 
 ## [C23] Equation (6.2) (good-annulus event, §6.1, eq:good-annulus-harmonic) and the proof of Lemma 6.4 (lemma:annulus-hit), lines 1179-1180 and 1309 (early correction; applied 2026-11-10 with the author's approval)
 Printed: "`\mathcal B^u` exits `\A` before exiting `Y`" with `Y \subset \A`. Corrected: "exits `\A` no later than exiting `Y`", i.e. `\tau_\A \le \tau_Y`. Reason: with `Y \subset \A`, `\tau_Y \le \tau_\A`, so the strict reading has probability 0 and the event is trivial; the intended event is `\tau_\A \le \tau_Y`, the reading used in `Defs/Annuli.lean`. Evidence: docs/campaign/cex/AlphaUniformity.md section 2, step 1; CORRECTIONS-PROPOSED [C23].
+- [C71] Theorem 5.5 (two-sided Hausdorff continuity of the global cluster family), proof: the left-continuity step is made
+  explicit (missing detail, not an error; MQ-lh-24, CODEX PARTIAL 13:45Z). Printed: the proof passes from right-continuity
+  (Proposition 5.4) to two-sided continuity with "by Proposition 5.4" only. Corrected: the three-line argument of MQ-lh-24
+  (left-continuity from exact mass, full support of `mu_h`, openness and monotonicity, then compactness). The statement is
+  unchanged; Theorem 1.1(b) and [C59] stay as printed (TRUE, CODEX). Patch: `% CORRECTION [C71]` at the M4 comment of the tex.
 
 ## Early items: superseded or not adopted (no separate patch)
 - Superseded by a later patch that makes the same correction: [C2] by [C65]; [C4] by [C53] and [C67]; [C8] by [C55]; [C9] by [C58]; [C10] by [C51] (the weak form `\cluster \subset A` is part of [C51]); [C11] by [C43]; [C13] by [C52]; [C14] by [C54] and [C68]; [C15] by [C64]; [C16] by [C49]; [C19] by [C57]; [C20] by [C58]; [C21] by [C60]; [C24] by [C63] (finite-supremum premise); [C25] by [C61] (`a(b,p,\gamma,\boldsymbol{\alpha}_0)`; the `a(b,\gamma)` of Lemma 6.3 is true, AlphaUniformity.md section 6); [C26] by [C62].

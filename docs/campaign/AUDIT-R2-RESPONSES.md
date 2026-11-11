@@ -9,7 +9,7 @@ Source: `notes/fp-gaps/OPUS-AUDIT-R2.md` (fleet). Task fp-audit-r2-hb-errata-and
 | M1 printed defects of Lemma 11.12 and Lemmas 11.15–11.17 | FIXED (commit) | ERRATA-for-Ewain.md Part 1, C44 item; ERRATA-INTERNAL.md line 8 corrected (reason was wrong); O2 amendment stays internal |
 | M2 [C48] and [C51] falsity claims | FIXED (commit) | Email: "not proved", no counterexample claimed (lead R43); CORRECTIONS.md C48, C51; INTERNAL C48/C51 and C10/C51 conflict, one line each |
 | M3 Part 3 gaps | FIXED (commit) | Part 3: selection-rule sentence at the top; 16 bullets, each checked at the printed lines; G17 not confirmed (see below) |
-| M4 Theorem 5.5 two-sided continuity | FIXED in the email (commit); tex patch AWAITING OPERATOR APPROVAL | Email C59 reworded; tex comment at corr:1056 (no new mathematics); proposed patch below |
+| M4 Theorem 5.5 two-sided continuity | FIXED in the email (commit); tex patch APPLIED as [C71] (clarification; op 13:10) | Email C59 reworded; tex patch at corr:1056 applied as [C71] (missing detail; no new statement) |
 
 ## HB(A) minors
 
@@ -68,7 +68,7 @@ None in this round. Note on the audit's wording: CORRECTIONS-PROPOSED.md is not 
 
 ## AWAITING OPERATOR APPROVAL (new mathematical text)
 
-M4: left-continuity repair for the corrected proof of Theorem 5.5 (replaces the sentence "by Proposition 5.4" at corr:1048–1056). Proposed three lines, from GRAPH.md:1335 (G7); not inserted in the tex:
+M4: left-continuity repair for the corrected proof of Theorem 5.5 (replaces the sentence "by Proposition 5.4" at corr:1048–1056). Three lines (MQ-lh-24 FINAL THREE LINES, from GRAPH.md:1335 (G7)) inserted in the tex as [C71] (op 13:10):
 
 1. Left-continuity: if $x\in\Lambda_t\setminus\overline{\bigcup_{s<t}\Lambda_s}$, a ball $B_\varepsilon(x)$ has positive $\mu_h$-mass and misses $\bigcup_{s<t}\Lambda_s$, so $\mu_h(\Lambda_t)>\mu_h\big(\overline{\bigcup_{s<t}\Lambda_s}\big)$.
 2. This contradicts $\mu_h(\Lambda_t)=t=\lim_{s\uparrow t}\mu_h(\Lambda_s)$ (Lemma 3.4, Proposition 8.1), once $\mu_h\big(\partial\bigcup_{s<t}\Lambda_s\big)=0$ is established.

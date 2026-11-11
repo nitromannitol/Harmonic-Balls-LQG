@@ -1053,8 +1053,17 @@
 	\[
 	 (t-\eta,t+\eta)\subset(0,\tau_R(z)).
 	\]
-	% AUDIT R2 M4 (awaiting operator approval; docs/campaign/AUDIT-R2-RESPONSES.md): Proposition 5.4 gives right-continuity only;
-	% two-sided continuity here needs the left-continuity step, which is not yet in the draft.
+	% CORRECTION [C71]: the printed proof gives right-continuity only ("by Proposition 5.4"); the left-continuity step is
+	% made explicit below (missing detail; the statement is unchanged).
+	Fix $0<t<T$ and set $U_t=\bigcup_{0<s<t}{\cluster{}{s}}(z)$. Choosing $s_n\uparrow t$, monotonicity and continuity from below give
+	$\mu_h(U_t)=\lim_n s_n=t$. If $x\in{\cluster{}{t}}(z)\setminus\overline{U_t}$, openness gives a ball $B_\rho(x)\subset{\cluster{}{t}}(z)\setminus\overline{U_t}$,
+	with positive mass by full support. Since $U_t$ and $B_\rho(x)$ are disjoint measurable subsets of ${\cluster{}{t}}(z)$,
+	$t=\mu_h({\cluster{}{t}}(z))\ge\mu_h(U_t)+\mu_h(B_\rho(x))>t$, a contradiction. Hence ${\cluster{}{t}}(z)\subset\overline{U_t}$, and
+	monotonicity gives $\overline{{\cluster{}{t}}(z)}=\overline{U_t}$. Given $\varepsilon>0$, compactness supplies finitely many points
+	$u_i\in U_t$ whose $\varepsilon/2$-balls cover $\overline{{\cluster{}{t}}(z)}$. Choose $s_*<t$ with every $u_i\in{\cluster{}{s_*}}(z)$.
+	For $s\in[s_*,t]$, nesting gives $\mathrm{d}_{\mathrm H}(\overline{{\cluster{}{s}}(z)},\overline{{\cluster{}{t}}(z)})\le\varepsilon/2<\varepsilon$.
+	This proves left-continuity. Together with the right-hand estimate of Proposition 5.2 (corrected form, [C56]), which gives local
+	two-sided continuity, it transfers to the global family, because the two families agree on a neighbourhood.
 	On this whole neighborhood the global family agrees with the single local family in $B_R$, which is Hausdorff-continuous by Proposition \ref{prop:conditional}. The convergence to $\{z\}$ as $t\to0$ follows in the same way from any one sufficiently large dyadic ball.
 
 	Finally, suppose ${\regcluster{}{t}}(z)\Subset B_s$ and let $r\geq s$. Choose a dyadic $R\geq r$ with $t<\tau_R(z)$. Since ${\cluster{}{t}}(z)$ is open,
