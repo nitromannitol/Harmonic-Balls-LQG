@@ -189,9 +189,4 @@ theorem tendsto_integral_norm_varying_density_exhaustion
       gcongr
       exact hbound (hopen n) (hsub n) ν hν (fun y => F n y - f y) ((hF n).sub hf) ((hFi n).sub hfi)
 
-#print axioms integrable_density_exhaustion_product
-#print axioms ae_tendsto_integrable_density_exhaustion
-#print axioms tendsto_integral_norm_integrable_density_exhaustion
-#print axioms integrable_density_exhaustion_bound
-#print axioms tendsto_integral_norm_varying_density_exhaustion
 end HarmonicBalls

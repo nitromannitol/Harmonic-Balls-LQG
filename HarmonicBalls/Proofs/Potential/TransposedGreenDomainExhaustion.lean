@@ -78,6 +78,4 @@ theorem tendsto_integral_norm_transposedGreenPotential_sub_of_exhaustion
         simpa only [Pi.sub_apply, sub_self, norm_zero] using (hx.sub tendsto_const_nhds).norm)
   simpa only [Pi.sub_apply, sub_self, norm_zero, integral_zero] using ht
 
-#print axioms ae_tendsto_transposedGreenPotential_of_exhaustion
-#print axioms tendsto_integral_norm_transposedGreenPotential_sub_of_exhaustion
 end HarmonicBalls

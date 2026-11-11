@@ -223,11 +223,4 @@ theorem tendsto_sigmaFinite_density_distributional_tests {V : Set ℂ}
   simp_rw [heq _ hf hfi, heq _ (hF _) (hFi _)]
   exact ht.neg
 
-#print axioms sigmaFinite_density_transposedGreen_product
-#print axioms sigmaFinite_density_transposedGreen_slice
-#print axioms hasLaplacian_sigmaFinite_density_transposedGreen
-#print axioms tendsto_sigmaFinite_density_transposedGreen_L1
-#print axioms tendsto_sigmaFinite_density_test
-#print axioms integral_negativeSource_sub_positiveSource
-#print axioms tendsto_sigmaFinite_density_distributional_tests
 end HarmonicBalls

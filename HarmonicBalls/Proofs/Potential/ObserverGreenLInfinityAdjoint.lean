@@ -168,7 +168,4 @@ theorem observer_green_Linfinity_duality
       filter_upwards [hS g] with y hy
       rw [hy]
 
-#print axioms observer_green_Linfinity_duality
-#print axioms bounded_observer_green_row
-#print axioms existsUnique_observer_green_Linfinity_operator
 end HarmonicBalls

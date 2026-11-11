@@ -374,18 +374,5 @@ theorem green_integrable_product_restrict_of_local_upper_growth {μ ν : Measure
   exact (green_integrable_product_of_local_upper_growth hup hO hOb hK hν (r + 1)).mono_measure
     (Measure.prod_mono (Measure.restrict_mono hsub le_rfl) le_rfl)
 
-#print axioms green_integrable_product_restrict_of_local_upper_growth
-#print axioms green_integrable_product_of_local_upper_growth
-#print axioms green_integrable_product_of_upper
-#print axioms aestronglyMeasurable_greenFunction_prod_of_open
-#print axioms ae_greenPotential_sub_of_local_upper_growth
-#print axioms ae_greenPotential_of_local_upper_growth
-#print axioms ae_greenPotential_of_upper
-#print axioms ae_green_disc_potential_of_upper
-#print axioms green_disc_integrable_product_of_upper
-#print axioms green_disc_integral_bound_of_upper
-#print axioms greenPotential_sub_eq_lintegral_toReal
-#print axioms lintegral_greenKernelExtended_eq
-#print axioms lintegral_greenKernelExtended_lt_top
 
 end HarmonicBalls

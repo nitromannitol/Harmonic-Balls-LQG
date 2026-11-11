@@ -58,7 +58,5 @@ theorem uniform_zero_and_harmonic_transposed_green_of_mass_tendsto_zero
   filter_upwards [(tendsto_order.1 hlim).2 ε hε] with n hn x hx
   exact lt_of_le_of_lt (hC (ν n) (hνV n) (hνU n) x hx) hn
 
-#print axioms exists_uniform_mass_bound_transposed_green_of_source_free
-#print axioms uniform_zero_and_harmonic_transposed_green_of_mass_tendsto_zero
 
 end HarmonicBalls

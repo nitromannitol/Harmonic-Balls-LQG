@@ -122,5 +122,4 @@ theorem sigmaFinite_source_free_density_green_local_lipschitz
   convert h using 1
   ring
 
-#print axioms sigmaFinite_source_free_density_green_local_lipschitz
 end HarmonicBalls

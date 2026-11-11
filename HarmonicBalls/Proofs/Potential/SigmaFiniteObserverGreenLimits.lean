@@ -254,11 +254,6 @@ theorem tendsto_integral_norm_sigmaFinite_varying_density_observer_exhaustion
       gcongr
       exact hbound (hopen n) (hsub n) ν hν (fun y => F n y - f y) ((hF n).sub hf) ((hFi n).sub hfi)
 
-#print axioms sigmaFinite_integrable_density_observer_exhaustion_product
-#print axioms ae_tendsto_sigmaFinite_integrable_density_observer_exhaustion
-#print axioms tendsto_integral_norm_sigmaFinite_integrable_density_observer_exhaustion
-#print axioms sigmaFinite_integrable_density_observer_exhaustion_bound
-#print axioms tendsto_integral_norm_sigmaFinite_varying_density_observer_exhaustion
 /-- Distance cutoffs converge in product L¹ and at almost every observer, and
 also converge in observer L¹. The kernel is in source-observer order. -/
 theorem sigmaFinite_integrable_density_observer_diagonal_cutoff
@@ -359,7 +354,6 @@ theorem sigmaFinite_integrable_density_observer_diagonal_cutoff
   · simpa [A, G, Set.indicator_apply] using hlim
 
 
-#print axioms tendsto_integral_norm_sigmaFinite_observer_exhaustion_product
 /-- Diagonal-cutoff potentials also converge in observer L¹ when the source
  densities converge in L¹. -/
 theorem tendsto_integral_norm_sigmaFinite_varying_density_diagonal_cutoff
@@ -452,6 +446,4 @@ theorem tendsto_integral_norm_sigmaFinite_varying_density_diagonal_cutoff
       integral_add hk.integral_prod_right.norm (hff.integral_prod_right.sub hu.integral_prod_right).norm
     _ ≤ _ := add_le_add hbound le_rfl
 
-#print axioms tendsto_integral_norm_sigmaFinite_varying_density_diagonal_cutoff
-#print axioms sigmaFinite_integrable_density_observer_diagonal_cutoff
 end HarmonicBalls

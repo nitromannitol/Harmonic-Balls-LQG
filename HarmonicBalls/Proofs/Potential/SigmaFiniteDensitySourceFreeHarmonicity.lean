@@ -115,5 +115,4 @@ theorem sigmaFinite_integrable_density_transposedGreen_source_free {V U : Set â„
   filter_upwards [hU.mem_nhds hx] with y hy
   exact (hs y hy).2
 
-#print axioms sigmaFinite_integrable_density_transposedGreen_source_free
 end HarmonicBalls

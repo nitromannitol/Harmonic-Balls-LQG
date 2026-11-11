@@ -39,6 +39,5 @@ theorem greenFunction_reciprocity_of_finite_disc_reciprocity
     · rw [greenFunction_of_notMem_right hy, greenFunction_of_notMem_left hy]
   · rw [greenFunction_of_notMem_left hx, greenFunction_of_notMem_right hx]
 
-#print axioms greenFunction_reciprocity_of_finite_disc_reciprocity
 
 end HarmonicBalls

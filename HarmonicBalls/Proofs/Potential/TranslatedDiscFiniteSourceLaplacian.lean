@@ -74,7 +74,5 @@ theorem hasLaplacian_translatedDisc_greenPotential {ν : Measure ℂ} [IsFiniteM
   rw [← hleft, ← hright]
   simpa only [ψ, potential_translate_ball, laplacian_comp_add_right] using ht.2.2
 
-#print axioms integrableOn_translatedDisc_greenPotential
-#print axioms hasLaplacian_translatedDisc_greenPotential
 
 end HarmonicBalls

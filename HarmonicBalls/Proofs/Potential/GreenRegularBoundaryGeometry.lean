@@ -648,11 +648,6 @@ theorem exists_open_exterior_disc_neighborhood
   refine ⟨a, r a, (hr a).1, heq, ?_⟩
   exact (havoids a ha).mono_left subset_closure
 
-#print axioms exists_open_exterior_disc_neighborhood
-#print axioms tendsto_greenFunction_zero_of_exterior_disc
-#print axioms tendsto_greenFunction_zero_of_strict_exterior_disc
-#print axioms tendsto_greenFunction_zero_of_continuous_harmonic_barrier
-#print axioms tendsto_greenFunction_zero_of_harmonic_barrier
 
 /-- Four unit discs centered at the cardinal directions contain the
 punctured unit disc. -/
@@ -727,28 +722,5 @@ theorem four_disc_union_irregular_boundary :
   · simp [mem_ball, dist_eq_norm]
   · exact not_tendsto_greenFunction_zero_of_punctured_ball_subset hV ha hz hsub
 
-#print axioms four_disc_union_irregular_boundary
-#print axioms punctured_unit_ball_subset_four_discs
-#print axioms not_tendsto_greenFunction_zero_of_punctured_ball_subset
-#print axioms tendsto_greenFunction_zero_of_approximating_harmonic_minorants
-#print axioms greenFunction_le_newtonKernel_sub_minorant
-#print axioms tendsto_greenFunction_zero_of_harmonic_minorant
-#print axioms tendsto_greenFunction_zero_iff_greatestHarmonicMinorant
-#print axioms greenFunction_eventually_eq_zero_of_not_mem_closure_pole_component
-#print axioms tendsto_greenFunction_zero_of_not_mem_closure_pole_component
-#print axioms exists_ball_inter_finite_disc_union_eq_unique_active_disc
-#print axioms finite_disc_union_eventually_eq_unique_active_disc
-#print axioms finite_union_eventually_eq_union_of_active_closures
-#print axioms finite_disc_union_eventually_eq_active_circles
-#print axioms tendsto_greenFunction_zero_of_pairwise_disjoint_finite_discs
-#print axioms tendsto_greenFunction_zero_of_finite_disc_union_isolated_pole_disc
-#print axioms tendsto_greenFunction_zero_of_disjoint_union_ball
-#print axioms greenFunction_eq_of_disjoint_open_union_all
-#print axioms tendsto_greenFunction_zero_of_disjoint_open_union
-#print axioms tendsto_greenFunction_nhds_of_nhdsWithin
-#print axioms tendsto_greenFunction_zero_of_pole_component_boundary
-#print axioms exists_mem_sphere_of_mem_closure_finite_disc_union
-#print axioms tendsto_greenFunction_zero_of_subset_of_boundary_limit
-#print axioms exists_greenRegular_exhaustion_ball
 
 end HarmonicBalls

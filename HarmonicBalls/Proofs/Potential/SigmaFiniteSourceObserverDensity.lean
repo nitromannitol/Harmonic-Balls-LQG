@@ -138,8 +138,4 @@ theorem tendsto_integral_norm_sigmaFinite_integrable_density_observer
       rw [hx]
     _ ≤ _ := hd.2.2.2
 
-#print axioms sigmaFinite_integrable_weighted_green_product_and_slices
-#print axioms sigmaFinite_integrable_density_green_product_of_local_upper_growth
-#print axioms sigmaFinite_integrable_density_observer_bound
-#print axioms tendsto_integral_norm_sigmaFinite_integrable_density_observer
 end HarmonicBalls

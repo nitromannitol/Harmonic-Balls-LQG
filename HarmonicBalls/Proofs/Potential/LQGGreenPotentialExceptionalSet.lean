@@ -76,6 +76,5 @@ theorem ae_lqg_greenPotential_exceptional_set
     exact Filter.Eventually.filter_mono (ae_mono (Measure.restrict_mono hs le_rfl))
       (ae_greenPotential_sub_of_local_upper_growth hup hO hOb hK₁ hK₂ hν₁ hν₂ s)
 
-#print axioms ae_lqg_greenPotential_exceptional_set
 
 end HarmonicBalls

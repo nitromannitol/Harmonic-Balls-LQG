@@ -126,7 +126,4 @@ theorem tendsto_observer_green_of_totalVariation
   exact squeeze_zero (fun _ => integral_nonneg fun _ => norm_nonneg _)
     (fun n => hb hV hsub (ν n) η (hν n) hη) hl
 
-#print axioms tendsto_observer_green_of_totalVariation
-#print axioms finite_measure_difference_density
-#print axioms observer_green_totalVariation_bound
 end HarmonicBalls

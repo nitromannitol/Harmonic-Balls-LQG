@@ -201,9 +201,5 @@ theorem exists_greenRegular_exhaustion {U : Set ℂ} (hU : IsOpen U)
       (hUb.subset (subset_closure.trans (hprop n).2.1)) ((hprop n).2.2.1)
       hy hyout hr hcontact hdisj
 
-#print axioms exists_greenRegular_exhaustion
-#print axioms exists_greenRegular_exhaustion_of_finite_disc_boundary_limits
-#print axioms exists_open_relativelyCompact_exhaustion
-#print axioms exists_finite_disc_open_exhaustion
 
 end HarmonicBalls

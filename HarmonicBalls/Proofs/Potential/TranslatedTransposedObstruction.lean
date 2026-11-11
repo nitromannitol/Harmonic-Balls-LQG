@@ -110,6 +110,5 @@ theorem no_transposed_changed_source_for_translated_observation
     simpa only [sub_add_cancel] using hx
   simpa only [hobs] using heq₀
 
-#print axioms no_transposed_changed_source_for_translated_observation
 
 end HarmonicBalls

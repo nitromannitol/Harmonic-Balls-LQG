@@ -171,8 +171,5 @@ theorem ae_greenPotential_univ_eq_translatedDisc_add_correction
   exact ⟨hu, hb, hatom,
     greenPotential_univ_eq_translatedDisc_add_correction hR hν hxball hatom hu hb⟩
 
-#print axioms harmonicOnNhd_translatedDiscSourceCorrection
-#print axioms greenPotential_univ_eq_translatedDisc_add_correction
-#print axioms ae_greenPotential_univ_eq_translatedDisc_add_correction
 
 end HarmonicBalls

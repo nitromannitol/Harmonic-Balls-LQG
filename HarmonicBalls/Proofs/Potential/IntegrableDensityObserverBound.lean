@@ -158,8 +158,4 @@ theorem tendsto_integral_norm_integrable_density_observer
       rw [hx]
     _ ≤ _ := hd.2.2.2
 
-#print axioms integrable_density_green_product_of_local_upper_growth
-#print axioms green_row_bound_of_local_upper_growth
-#print axioms integrable_density_observer_bound
-#print axioms tendsto_integral_norm_integrable_density_observer
 end HarmonicBalls

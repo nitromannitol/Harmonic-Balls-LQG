@@ -96,6 +96,5 @@ theorem transposedGreen_diagonal_cutoff
     simpa [A, G, Set.indicator_apply] using hx
   · simpa [A, G, Set.indicator_apply] using hlim
 
-#print axioms transposedGreen_diagonal_cutoff
 
 end HarmonicBalls

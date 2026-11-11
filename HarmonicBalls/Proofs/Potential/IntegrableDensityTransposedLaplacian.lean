@@ -151,7 +151,5 @@ theorem hasLaplacian_integrable_density_transposedGreen {V : Set ℂ}
   filter_upwards [hae] with x hx
   exact hx.2.symm
 
-#print axioms integrable_density_transposedGreen_product
-#print axioms hasLaplacian_integrable_density_transposedGreen
 
 end HarmonicBalls

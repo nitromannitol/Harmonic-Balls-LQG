@@ -5,7 +5,7 @@ import HarmonicBalls.Defs.Obstacle
 # Hölder continuity of Green potentials on a disc under an upper volume growth bound
 
 Bou-Rabee and Gwynne, *Harmonic balls in Liouville quantum gravity* (arXiv:2208.11795): the Green clause of
-Proposition 2.5 (prop:lbm-exit-time, line 524; ESCALATIONS E26) for `O = B_R(0)`, and property 1 of the potential
+Proposition 2.5 (prop:lbm-exit-time, line 524) for `O = B_R(0)`, and property 1 of the potential
 `q_{B_R}` of Appendix A (eq:expected-exit-time, lines 3532-3543).
 
 Let `μ` be a measure on `ℂ`, finite on `B_R(0)`, with the upper volume growth bound `μ(B_r(z)) ≤ r^{β⁺}` for
@@ -33,7 +33,7 @@ The paper's proof cites the Campanato embedding (Ponce 2016, §16.2). We use a d
 
 * `greenPotential_ball_holder_of_upper`: the quantitative statement with explicit constant;
 * `VolumeGrowth.greenPotential_ball_holder`: the same from `VolumeGrowth`, constant independent of `f`
-  (Hölder seminorm `≤ C(μ, R) ‖f‖_∞`, as needed for Lemma 4.2, GRAPH.md G4);
+  (Hölder seminorm `≤ C(μ, R) ‖f‖_∞`, as needed for Lemma 4.2);
 * `greenPotential_ball_holderOnWith`: the Green clause of Proposition 2.5 for `O = B_R(0)` in the shape of
   `GreenPotentialLiouvilleHolderStmt` (`f ∈ L^∞(closure O)`, `closure (ball 0 R) = closedBall 0 R`);
 * `greenPotentialBall_continuousOn`: the body of `GreenPotentialBallContinuousStep` (Steps/SecA/Basic.lean), property
@@ -493,8 +493,7 @@ theorem holderOnWith_of_dist_le {f : ℂ → ℝ} {s : Set ℂ} {C r : ℝ≥0}
     ← ENNReal.ofReal_mul (NNReal.coe_nonneg C)]
   exact ENNReal.ofReal_le_ofReal (h x hx y hy)
 
-/-- **Proposition 2.5, Green clause, for `O = B_R(0)`** (prop:lbm-exit-time, line 524; deterministic form, ESCALATIONS
-E26). Let `μ` be a locally finite measure satisfying the volume growth condition on `B_R`. For every
+/-- **Proposition 2.5, Green clause, for `O = B_R(0)`** (prop:lbm-exit-time, line 524; deterministic form). Let `μ` be a locally finite measure satisfying the volume growth condition on `B_R`. For every
 `f ∈ L^∞(closedBall 0 R, μ)` the Green potential `q(x) = ∫_{B_R} G_{B_R}(x,y) f(y) μ(dy)` converges absolutely for
 `x ∈ closedBall 0 R = closure (B_R)` and is Hölder continuous there (exponent `min(β⁺,1)/2`). -/
 theorem greenPotential_ball_holderOnWith {μ : Measure ℂ} [IsLocallyFiniteMeasure μ] {R βminus βplus : ℝ}

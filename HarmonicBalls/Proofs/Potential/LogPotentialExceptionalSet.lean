@@ -314,18 +314,5 @@ theorem ae_logPotential_of_volumeGrowth {μ ν : Measure ℂ}
   obtain ⟨βminus, βplus, _, hβ, r₀, hr₀, hg⟩ := hμ R hR
   exact ⟨r₀, βplus, hr₀, hβ, fun r hr hr₀' z hz => (hg r hr hr₀' z hz).2⟩
 
-#print axioms ae_logPotential_of_volumeGrowth
-#print axioms newtonKernel_lower_bound_of_closedBall
-#print axioms newtonKernelEReal_parts_lt_top
-#print axioms ae_logPotential_of_local_upper_growth
-#print axioms extendedSignedIntegral_newtonKernel_eq
-#print axioms ae_newtonKernel_and_atom_of_upper
-#print axioms ae_integrable_newtonKernel_of_upper
-#print axioms log_integrable_product_of_upper
-#print axioms abs_log_le_rpow_of_bounded
-#print axioms riesz_integrable_product_of_upper
-#print axioms riesz_integrable_restrict_ball_of_upper
-#print axioms restrict_ball_singleton_eq_zero_of_upper
-#print axioms ae_measure_singleton_eq_zero_of_upper
 
 end HarmonicBalls

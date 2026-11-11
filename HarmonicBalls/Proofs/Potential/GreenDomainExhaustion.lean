@@ -86,9 +86,5 @@ theorem exists_greenRegular_exhaustion_with_kernel_limit
   exact ⟨V, hopen, hmono, hcover, hcompact, hpole, hregular,
     fun x hx hzx => tendsto_greenFunction_of_exhaustion V hopen hmono hU hUb hcover hz hx hzx⟩
 
-#print axioms monotone_greenFunction_of_exhaustion
-#print axioms tendsto_greenFunction_of_exhaustion
-#print axioms tendsto_greenFunction_of_relativelyCompact_exhaustion
-#print axioms exists_greenRegular_exhaustion_with_kernel_limit
 
 end HarmonicBalls

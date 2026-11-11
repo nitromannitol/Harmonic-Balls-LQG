@@ -127,9 +127,6 @@ theorem no_transposed_changed_source_for_large_observation
   rw [hsplit, integral_add_measure hd hi, integral_dirac] at hx
   linarith
 
-#print axioms no_transposed_changed_source_for_large_observation
 
-#print axioms integrable_transposed_green_of_source_free
-#print axioms no_transposed_continuous_correction_for_large_observation
 
 end HarmonicBalls

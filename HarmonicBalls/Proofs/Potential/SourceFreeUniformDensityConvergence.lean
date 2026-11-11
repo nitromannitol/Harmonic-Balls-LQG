@@ -77,6 +77,4 @@ theorem sigmaFinite_source_free_density_green_local_uniform
   exact lt_of_le_of_lt (hb (fun y => f n y - g y) ((hfm n).sub hgm)
     ((hf n).sub hg) hz x hx) hn
 
-#print axioms sigmaFinite_source_free_density_green_bound
-#print axioms sigmaFinite_source_free_density_green_local_uniform
 end HarmonicBalls

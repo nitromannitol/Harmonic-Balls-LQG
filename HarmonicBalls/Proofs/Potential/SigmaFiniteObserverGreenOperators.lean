@@ -205,8 +205,5 @@ theorem sigmaFinite_observer_green_Linfinity_duality
       filter_upwards [hS g] with y hy
       rw [hy]
 
-#print axioms existsUnique_sigmaFinite_integrable_density_observer_L1_operator
-#print axioms existsUnique_sigmaFinite_observer_green_Linfinity_operator
-#print axioms sigmaFinite_observer_green_Linfinity_duality
 
 end HarmonicBalls

@@ -124,5 +124,4 @@ theorem integrable_density_transposedGreen_source_free {V U : Set ℂ}
   filter_upwards [hU.mem_nhds hx] with y hy
   exact (hs y hy).2
 
-#print axioms integrable_density_transposedGreen_source_free
 end HarmonicBalls

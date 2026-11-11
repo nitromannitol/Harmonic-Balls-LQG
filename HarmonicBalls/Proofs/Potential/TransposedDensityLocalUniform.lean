@@ -164,9 +164,5 @@ theorem weighted_transposed_green_L1_local_uniform
   rw [heq]
   exact lt_of_le_of_lt (hb (fun y => f n y - g y) ((hf n).sub hg) x hx) hn
 
-#print axioms integrable_weighted_transposed_green_of_source_free
-#print axioms harmonicOnNhd_weighted_transposed_green_of_source_free
-#print axioms weighted_transposed_green_source_free_bound
-#print axioms weighted_transposed_green_L1_local_uniform
 
 end HarmonicBalls

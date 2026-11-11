@@ -126,5 +126,4 @@ theorem integrable_density_observer_diagonal_cutoff
     simpa [A, G, Set.indicator_apply] using hx
   · simpa [A, G, Set.indicator_apply] using hlim
 
-#print axioms integrable_density_observer_diagonal_cutoff
 end HarmonicBalls

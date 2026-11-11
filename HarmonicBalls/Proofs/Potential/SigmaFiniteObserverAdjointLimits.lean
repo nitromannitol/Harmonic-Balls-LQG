@@ -204,7 +204,4 @@ theorem sigmaFinite_observer_green_adjoint_representative_dominated_continuity
     simp_rw [heq]
     exact ht f
 
-#print axioms sigmaFinite_observer_green_representative_duality
-#print axioms sigmaFinite_observer_green_adjoint_representative_dominated_continuity
-#print axioms sigmaFinite_observer_green_adjoint_dominated_continuity
 end HarmonicBalls

@@ -82,6 +82,5 @@ theorem existsUnique_integrable_density_observer_L1_operator
   apply Lp.ext
   exact (hS.1 f).trans (hF f).symm
 
-#print axioms existsUnique_integrable_density_observer_L1_operator
 
 end HarmonicBalls

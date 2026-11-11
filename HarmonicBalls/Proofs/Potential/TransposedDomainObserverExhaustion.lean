@@ -117,7 +117,4 @@ theorem transposedGreenPotential_observer_exhaustion
   filter_upwards [hp.prod_left_ae, ae_all_iff.mpr (fun n => (hpn n).prod_left_ae)] with x hx hxn
   exact ⟨hx, hxn⟩
 
-#print axioms transposedGreenPotential_observer_exhaustion
-#print axioms ae_tendsto_transposedGreenPotential_of_observer_exhaustion
-#print axioms tendsto_integral_norm_transposedGreenPotential_sub_of_observer_exhaustion
 end HarmonicBalls

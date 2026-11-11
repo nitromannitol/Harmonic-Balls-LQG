@@ -82,9 +82,5 @@ theorem continuousOn_greenPotential_translatedDisc_on_source_free_open
   (harmonicOnNhd_greenPotential_translatedDisc_of_source_free_open
     hK hKB hν hU hUB hνU).continuousOn
 
-#print axioms harmonicOnNhd_greenPotential_translatedDisc_of_compact_source
-#print axioms continuousOn_greenPotential_translatedDisc_of_compact_source
-#print axioms harmonicOnNhd_greenPotential_translatedDisc_of_source_free_open
-#print axioms continuousOn_greenPotential_translatedDisc_on_source_free_open
 
 end HarmonicBalls

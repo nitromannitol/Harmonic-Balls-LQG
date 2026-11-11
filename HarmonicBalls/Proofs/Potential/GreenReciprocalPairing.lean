@@ -71,6 +71,5 @@ theorem green_reciprocal_pairing {V : Set ℂ}
   · rw [← hl, ← hr']
     exact integral_integral_swap hi
 
-#print axioms green_reciprocal_pairing
 
 end HarmonicBalls

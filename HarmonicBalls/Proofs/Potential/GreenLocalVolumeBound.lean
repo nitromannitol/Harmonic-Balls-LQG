@@ -259,15 +259,5 @@ theorem tendsto_greenFunction_local_volume_bound {R : ℝ} (hR : 0 < R) :
       (Real.pi * (r ^ 2 * log⁺ (2 * R / r)) +
         r ^ 2 * ∫ z : ℂ, log⁺ (1 / ‖z‖))) (𝓝[>] 0) (𝓝 ((2 * Real.pi)⁻¹ * 0)))
 
-#print axioms tendsto_sq_mul_posLog_div
-#print axioms tendsto_greenFunction_local_volume_bound
-#print axioms exists_greenFunction_local_volume_bound
-#print axioms greenFunction_local_volume_bound_logarithmic
-#print axioms greenFunction_local_volume_bound
-#print axioms greenFunction_ball_center_eq_posLog
-#print axioms integral_posLog_div_norm_sub_ball_le
-#print axioms posLog_div_norm_le_scale
-#print axioms integral_posLog_div_norm_scale
-#print axioms tendsto_sq_mul_one_add_abs_log
 
 end HarmonicBalls

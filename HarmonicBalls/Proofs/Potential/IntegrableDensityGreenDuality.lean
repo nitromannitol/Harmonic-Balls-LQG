@@ -66,6 +66,5 @@ theorem integrable_density_transposedGreen_fubini_duality
   · simpa only [heq₁, heq₂] using
       (integral_integral_swap (f := fun y x => f y * greenFunction V y x * g x) hFG).symm
 
-#print axioms integrable_density_transposedGreen_fubini_duality
 
 end HarmonicBalls
