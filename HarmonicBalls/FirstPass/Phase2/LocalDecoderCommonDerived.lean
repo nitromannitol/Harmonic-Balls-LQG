@@ -1229,6 +1229,54 @@ theorem clauseA_unrooted (γ α : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (h0 : (0
   exact kernelMeas_restrict_eq γ α (fieldPairing α (hC ω) (bumpRho c hR)) hR (hcirc ω) hcont' (μ ω) hμω hKs T
     (fun y => decode (fun n => localCoord c hR (d n) y)) (localMeanZeroObs α (ball c R) (hC ω)) hF
 
+/-! ### Rooted shift (route step 8): the field `h + f_z`, `f_z(w) = -γ log|w-z| + γ log max(1,|w|)` -/
+
+/-- The rooted shift `f_z(w) = -γ log|w - z| + γ log max(1,|w|)` (`campbellReferenceObs`). -/
+noncomputable def rootShift (γ : ℝ) (z w : ℂ) : ℝ :=
+  -γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)
+
+/-- The reference observation of `campbellReferenceObs` is the pairing of `h + f_z` (algebra; no integrability). -/
+theorem campbellReferenceObs_eq (γ α₀ : ℝ) (φ : ℂ → ℝ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    fieldPairing α₀ hC φ - γ * ∫ w, (Real.log ‖w - z‖ - Real.log (max 1 ‖w‖)) * φ w =
+      fieldPairing α₀ hC φ + ∫ w, rootShift γ z w * φ w := by
+  have h : ∫ w, rootShift γ z w * φ w = -γ * ∫ w, (Real.log ‖w - z‖ - Real.log (max 1 ‖w‖)) * φ w := by
+    rw [← integral_const_mul]
+    congr 1
+    funext w
+    simp only [rootShift]
+    ring
+  rw [h]
+  ring
+
+/-- The circle average of the rooted shift (linearity of `circleAverage` on the two summands). -/
+theorem circleAverage_rootShift (γ : ℝ) {r : ℝ} (hr : 0 < r) (z x : ℂ) :
+    Real.circleAverage (rootShift γ z) x r =
+      -γ * Real.log (max r ‖x - z‖) + γ * Real.circleAverage (fun w => Real.log (max 1 ‖w‖)) x r := by
+  have hL : CircleIntegrable (fun w => Real.log ‖w - z‖) x r := circleIntegrable_log_norm_sub_const r
+  have hM : CircleIntegrable (fun w => Real.log (max 1 ‖w‖)) x r :=
+    (((continuous_const.max continuous_norm).log fun w => (lt_max_of_lt_left one_pos).ne').continuousOn.circleIntegrable hr.le)
+  have e1 : rootShift γ z = (fun w => -γ * Real.log ‖w - z‖) + (fun w => γ * Real.log (max 1 ‖w‖)) := rfl
+  have hL1 : CircleIntegrable (fun w => -γ * Real.log ‖w - z‖) x r := IntervalIntegrable.const_mul hL (-γ)
+  have hM1 : CircleIntegrable (fun w => γ * Real.log (max 1 ‖w‖)) x r := IntervalIntegrable.const_mul hM γ
+  rw [e1, Real.circleAverage_add hL1 hM1]
+  have e2 : Real.circleAverage (fun w => -γ * Real.log ‖w - z‖) x r =
+      -γ * Real.circleAverage (fun w => Real.log ‖w - z‖) x r := by
+    have h := Real.circleAverage_smul (a := -γ) (f := fun w => Real.log ‖w - z‖) (c := x) (R := r)
+    have hfun : ((-γ) • fun w : ℂ => Real.log ‖w - z‖) = fun w : ℂ => -γ * Real.log ‖w - z‖ := by
+      funext w
+      rfl
+    rw [hfun, smul_eq_mul] at h
+    exact h
+  have e3 : Real.circleAverage (fun w => γ * Real.log (max 1 ‖w‖)) x r =
+      γ * Real.circleAverage (fun w => Real.log (max 1 ‖w‖)) x r := by
+    have h := Real.circleAverage_smul (a := γ) (f := fun w => Real.log (max 1 ‖w‖)) (c := x) (R := r)
+    have hfun : (γ • fun w : ℂ => Real.log (max 1 ‖w‖)) = fun w : ℂ => γ * Real.log (max 1 ‖w‖) := by
+      funext w
+      rfl
+    rw [hfun, smul_eq_mul] at h
+    exact h
+  rw [e2, e3, circleAverage_log_norm_sub_eq x z hr]
+
 end Approximants
 
 end LocalDecoderCommon
