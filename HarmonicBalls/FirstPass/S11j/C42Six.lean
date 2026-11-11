@@ -196,6 +196,3 @@ theorem IsBufferedPinchGeometry.corridor_contains {U V W T Q' Q : Set ℂ} {δ :
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.IsBufferedPinchGeometry.zero_union_sphere_subset_six
-#print axioms HarmonicBalls.IsBufferedPinchGeometry.isConnected_outer_piece
-#print axioms HarmonicBalls.IsBufferedPinchGeometry.corridor_contains

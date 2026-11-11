@@ -212,7 +212,4 @@ theorem exists_exterior_annulusGreenPotentialSup_of_buffered_singular {Ω : Type
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_buffered
-#print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_buffered_singular
 
-#print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup_of_frozen

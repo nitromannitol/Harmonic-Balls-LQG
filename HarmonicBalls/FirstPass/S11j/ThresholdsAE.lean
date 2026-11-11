@@ -55,6 +55,5 @@ theorem exists_thresholds_measure_pos_of_aemeasurable {Ω : Type*} [MeasurableSp
   rw [measure_congr heq]
   exact hpos
 
-#print axioms exists_thresholds_measure_pos_of_aemeasurable
 
 end HarmonicBalls

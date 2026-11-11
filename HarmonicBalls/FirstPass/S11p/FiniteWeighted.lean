@@ -81,4 +81,3 @@ theorem ae_annulusGreenPotentialSup_ne_top_of_withDensity {Ω : Type*} [Measurab
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.ae_annulusGreenPotentialSup_ne_top_of_withDensity

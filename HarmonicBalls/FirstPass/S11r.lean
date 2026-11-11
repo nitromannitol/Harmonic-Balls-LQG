@@ -59,6 +59,5 @@ theorem hmodel_at_gamma (hGFF : WholePlaneGFFExistsFrozen.{u})
   intro u v
   exact ⟨ENNReal.toReal_nonneg, ENNReal.ofReal_toReal (ne_top_of_lt (hω.1 u v))⟩
 
-#print axioms HarmonicBalls.hmodel_at_gamma
 
 end HarmonicBalls

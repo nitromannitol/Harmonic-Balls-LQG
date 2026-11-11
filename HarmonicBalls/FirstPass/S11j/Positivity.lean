@@ -128,8 +128,5 @@ theorem exists_thresholds_measure_pos {P : Measure Ω} [IsProbabilityMeasure P] 
       _ = P F + P B1 + P B2 + P B3 + P B4 := by ring
   exact absurd hlt (not_lt.2 this)
 
-#print axioms measure_lt_inv_nat_lt_of_pos
-#print axioms measure_nat_lt_lt_of_lt_top
-#print axioms exists_thresholds_measure_pos
 
 end HarmonicBalls

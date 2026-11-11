@@ -72,4 +72,3 @@ theorem setDist_sphere_two_pos {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLength
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.setDist_sphere_two_pos

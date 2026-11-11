@@ -44,5 +44,3 @@ theorem exists_exterior_annulusGreenPotentialSup {Î© : Type*} [MeasurableSpace Î
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.exists_exterior_annulusGreenPotentialSup
-#print axioms HarmonicBalls.exists_measurable_annulusGreenPotentialSup_version

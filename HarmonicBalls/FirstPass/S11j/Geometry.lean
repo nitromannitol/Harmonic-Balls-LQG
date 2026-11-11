@@ -84,6 +84,5 @@ theorem IsBufferedPinchGeometry.toPinchPointProofConfiguration
       thickening_Q' := hbQ'
       thickening_Q := hbQ }
 
-#print axioms IsBufferedPinchGeometry.toPinchPointProofConfiguration
 
 end HarmonicBalls

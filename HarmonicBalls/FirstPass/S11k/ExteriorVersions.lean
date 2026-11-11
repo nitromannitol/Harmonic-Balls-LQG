@@ -57,7 +57,5 @@ theorem exists_measurable_limsup_version {P : Measure Î©} {m : MeasurableSpace Î
   rw [h]
   exact hL
 
-#print axioms HarmonicBalls.exists_measurable_version_of_coordinate_versions
-#print axioms HarmonicBalls.exists_measurable_limsup_version
 
 end HarmonicBalls

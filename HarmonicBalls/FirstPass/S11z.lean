@@ -135,8 +135,3 @@ theorem canonical_certificateEvent_measurable_of_exist (hE : HarmonicBalls.LQGCa
 
 end FirstPassS11z
 
-#print axioms FirstPassS11z.canonMetric_spec
-#print axioms FirstPassS11z.measurableSet_canonCertificateEvent
-#print axioms FirstPassS11z.ae_canonMetric_eq_decoder
-#print axioms FirstPassS11z.ae_canonCertificateEvent_iff_decoder
-#print axioms FirstPassS11z.canonical_certificateEvent_measurable_of_exist

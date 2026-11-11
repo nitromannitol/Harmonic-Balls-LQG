@@ -29,7 +29,5 @@ theorem setDist_zero_sphere_pos_of_isEuclideanLengthMetric {D : ℂ → ℂ → 
   rw [disjoint_singleton_left, mem_sphere, dist_self]
   exact fun h0 => hr.ne' h0.symm
 
-#print axioms IsBufferedPinchGeometry.setDist_Q'_frontier_pos
-#print axioms setDist_zero_sphere_pos_of_isEuclideanLengthMetric
 
 end HarmonicBalls

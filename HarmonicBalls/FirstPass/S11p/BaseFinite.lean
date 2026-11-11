@@ -115,4 +115,3 @@ theorem ae_annulusGreenPotentialSup_ne_top_base {Î© : Type u} [MeasurableSpace Î
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.ae_annulusGreenPotentialSup_ne_top_base

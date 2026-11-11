@@ -32,6 +32,5 @@ theorem IsBufferedPinchGeometry.toIsCorrectedPinchConfiguration
   buffer_Q := h.buffer_Q
   corridor_contains := h.corridor_contains
 
-#print axioms IsBufferedPinchGeometry.toIsCorrectedPinchConfiguration
 
 end HarmonicBalls

@@ -34,6 +34,5 @@ theorem exists_measurable_subset_pos_of_nullMeasurableSet {Ω : Type*} [Measurab
         _ = P (t \ N) := by rw [hN0, add_zero]
     exact lt_of_lt_of_le hpt hle
 
-#print axioms exists_measurable_subset_pos_of_nullMeasurableSet
 
 end HarmonicBalls

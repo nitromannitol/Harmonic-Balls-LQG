@@ -60,4 +60,3 @@ end PinchSecondAnnulusS11t
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs

@@ -370,5 +370,3 @@ theorem firstPass_11_16_corrected_of_versions (hV : PinchSecondExteriorVersionsS
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.pinchSecondExteriorEventStep_of_versions
-#print axioms HarmonicBalls.firstPass_11_16_corrected_of_versions
