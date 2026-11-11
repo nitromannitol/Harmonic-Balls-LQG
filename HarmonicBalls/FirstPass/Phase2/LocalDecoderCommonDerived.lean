@@ -753,6 +753,10 @@ section Approximants
 
 open scoped CompactlySupported
 
+/-- The disc `ball c R` is locally compact (an open subset of `ℂ`). -/
+instance locallyCompactSpace_ball (c : ℂ) (R : ℝ) : LocallyCompactSpace (ball c R) :=
+  isOpen_ball.locallyCompactSpace
+
 /-- The Lebesgue measure of the disc `ball c R` (the pullback of `volume` under the inclusion; `Subtype.measureSpace`
 is not a global instance). -/
 noncomputable def ballVol (c : ℂ) (R : ℝ) : Measure (ball c R) :=
@@ -1075,6 +1079,58 @@ theorem tendsto_approxX_integral (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R
   have hT := (hμ.tendsto_integral (⇑fc) fc.continuous fc.hasCompactSupport).const_mul (Real.exp (-(γ * P)))
   rw [hL]
   exact Tendsto.congr' heq.symm hT
+
+/-- Locally finite scalar multiples of a locally finite measure (`ENNReal.ofReal r • μ`). -/
+instance isLocallyFiniteMeasure_ofReal_smul (μ : Measure ℂ) [IsLocallyFiniteMeasure μ] (r : ℝ) :
+    IsLocallyFiniteMeasure (ENNReal.ofReal r • μ) := by
+  refine ⟨fun x => ?_⟩
+  obtain ⟨U, hU, hμU⟩ := IsLocallyFiniteMeasure.finiteAtNhds (μ := μ) x
+  exact ⟨U, hU, by
+    rw [Measure.smul_apply, smul_eq_mul]
+    exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top hμU⟩
+
+/-- A compact exhaustion of the disc `ball c R` (for the vague decoder). -/
+theorem ball_exhaustion (c : ℂ) (R : ℝ) :
+    ∃ K : ℕ → Set (ball c R), (∀ n, IsCompact (K n)) ∧
+      (∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) := by
+  haveI : LocallyCompactSpace (ball c R) := isOpen_ball.locallyCompactSpace
+  let E : CompactExhaustion (ball c R) := CompactExhaustion.choice (ball c R)
+  exact ⟨fun n => E n, fun n => E.isCompact n, fun s hs => E.exists_superset_of_isCompact hs⟩
+
+/-- The decoded disc measure: the vague decoder `decoderX` of the dyadic approximants built from the decoded centred
+profile `decodeF y` (route step 7). -/
+noncomputable def discDecoder {Y : Type*} [MeasurableSpace Y] {c : ℂ} {R γ : ℝ} {K : ℕ → Set (ball c R)}
+    (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (decodeF : Y → C(LocalParam c R, ℝ)) : Y → Measure (ball c R) :=
+  decoderX hKs T (fun y k => approxX γ c R (decodeF y) k)
+    (fun y k => isLocallyFiniteMeasure_approxX γ c R (decodeF y) k)
+
+/-- Route step 7 (identity of the decoded measure): if the decoded centred profile of `y` is `fieldCircleAverage - P`
+and `μ` is the γ-LQG measure of `hc`, the decoded disc measure is `comap val (e^{-γP} • μ)`. -/
+theorem discDecoder_eq_comap {Y : Type*} [MeasurableSpace Y] (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R)
+    (hc : ℝ → ℂ → ℝ) (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hc ε)) (μ : Measure ℂ)
+    (hμ : IsLQGLimit γ (fieldCircleAverage α hc) μ)
+    {K : ℕ → Set (ball c R)} (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (decodeF : Y → C(LocalParam c R, ℝ)) (y : Y)
+    (hF : ∀ p : LocalParam c R, decodeF y p = fieldCircleAverage α hc p.1.1 p.1.2 - P) :
+    discDecoder (γ := γ) hKs T decodeF y =
+      Measure.comap (Subtype.val : ball c R → ℂ) (ENNReal.ofReal (Real.exp (-(γ * P))) • μ) := by
+  haveI : IsLocallyFiniteMeasure μ := hμ.isLocallyFiniteMeasure
+  haveI : LocallyCompactSpace (ball c R) := isOpen_ball.locallyCompactSpace
+  haveI : (discDecoder (γ := γ) hKs T decodeF y).Regular := by
+    unfold discDecoder decoderX
+    infer_instance
+  haveI : IsLocallyFiniteMeasure (ENNReal.ofReal (Real.exp (-(γ * P))) • μ) := inferInstance
+  haveI := isLocallyFiniteMeasure_comap_ball (ENNReal.ofReal (Real.exp (-(γ * P))) • μ) c R
+  haveI : (Measure.comap (Subtype.val : ball c R → ℂ)
+      (ENNReal.ofReal (Real.exp (-(γ * P))) • μ)).Regular := inferInstance
+  apply Measure.ext_of_integral_eq_on_compactlySupported
+  intro g
+  have hconv : y ∈ convSetX T (fun y k => approxX γ c R (decodeF y) k) := fun m =>
+    ⟨_, tendsto_approxX_integral γ α P hR hc hcont μ hμ (decodeF y) hF (T.D m)⟩
+  unfold discDecoder
+  rw [integral_decoderX hKs T _ _ y g, decoderFunctionalX_of_mem hKs T _ _ hconv g]
+  exact (tendsto_approxX_integral γ α P hR hc hcont μ hμ (decodeF y) hF g).limUnder_eq
 
 end Approximants
 
