@@ -4,10 +4,9 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Every `hzoom(k)` from the unit-ball frequency, with the normalized zoomed model (fp-S11i-hzoom-scale, owner n4)
+# Every `hzoom(k)` from the unit-ball frequency, with the normalized zoomed model
 
-Source: ChatGPT chat 196 (PRO), decision D3, `notes/fp-gaps/CHATGPT-hb-11-13-blockers.md` section 4 (l.460-634) and its
-final dependency decision, item 6. The family hypothesis `hzoom` of `hphys_of_zoom_const_family`
+The family hypothesis `hzoom` of `hphys_of_zoom_const_family`
 (`S11i/Step8TransferDilation.lean`) is obtained for every `k`, not only for the unit scale, from the unit-ball frequency
 of the NORMALIZED model at scale `R = 2^k`. No marked DMS theorem on `B_{2^k}` is used.
 
@@ -16,7 +15,7 @@ Route, per `k` with `R = 2^k`:
   `a = R`, `b = 0` (`WholePlaneGFFAffineInvariance`, derived in `S11v/Affine.lean`). They are a whole-plane GFF
   (`isWholePlaneGFF_normalized`, no input). The LQG measure of the normalized field is
   `normMeasure γ μ hcirc k ω = e^{-γ C_k(ω)} · zoomMeasure (μ ω) k`, with `C_k = hcirc ω R 0 + Q log R`. Its limit property
-  comes from the Proposed input `LQGMeasureCoordChange` (`Proposed/LQG.lean`, pending operator source-check) and the constant
+  comes from the Proposed input `LQGMeasureCoordChange` (`Proposed/LQG.lean`, pending source-check) and the constant
   shift `isLQGLimit_add_const` (proved here).
 * 4.2 scale transfer. `hzoom_all_of_unit_models`: the constants are `a = e^{-γ C_k}` and `b = B⁻¹`, where `B` is the metric
   constant of the zoom.

@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11c.Connect
 import Mathlib.Analysis.Convex.PathConnected
 
 /-!
-# Proposition 11.10, the exterior set as a union of unit cells (fp-S11c, owner n1)
+# Proposition 11.10, the exterior set as a union of unit cells
 
-FIRST-PASS NEW. The exterior set `K₀ = box \ (Xs ×ℂ Ys)` of the proof of `lemma:mass-diam` (paper 3022-3024) is
+The exterior set `K₀ = box \ (Xs ×ℂ Ys)` of the proof of `lemma:mass-diam` (paper 3022-3024) is
 replaced by the union `K₁` of the closed unit cells of the box that are not inside an enlarged cell of the class.
 `K₁` is a finite union of closed rectangles (for DDDF20 Lemma 3.9 as frozen), contains `K₀`, is connected, and
 every enlarged piece meets it. The class cells `U` are disjoint from `K₁`.

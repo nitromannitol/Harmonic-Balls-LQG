@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.Cover
 
 /-!
-# Proposition 11.10, closedness of the grid sets (fp-S11c, owner n1)
+# Proposition 11.10, closedness of the grid sets
 
-FIRST-PASS NEW (deterministic). The closed-set Weyl comparison (`WeylInternalClosedFrozen`) is applied to the closed box,
+The closed-set Weyl comparison (`WeylInternalClosedFrozen`) is applied to the closed box,
 the closed enlarged blocks and the exterior set `K₁` (a finite union of closed unit cells inside the box). These closedness
 facts and the inclusion `K₁ ⊆ box` are proved here.
 -/

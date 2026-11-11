@@ -2,9 +2,9 @@ import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Steps.Sec11.AnnulusGreenDilation
 
 /-!
-# Proposition 11.7, invariance of the cone-mass event under the dilation (fp-S11c, owner n1)
+# Proposition 11.7, invariance of the cone-mass event under the dilation
 
-FIRST-PASS NEW (deterministic). For a finite measure transformed by `c • map (w ↦ 2w)` (the LQG measure of the normalized
+For a finite measure transformed by `c • map (w ↦ 2w)` (the LQG measure of the normalized
 dilated profile, `isLQGLimit_dilate`, Vague.lean), the event `G̃_r(z; M, 𝒬)` (Draft `coneMassEvent`, line 2793) at scale `r`
 and centre `z` is the event `G̃_{r/2}(z/2; M, 𝒬)` of the original measure: the scale index moves by one. Ingredients:
 the cone is invariant under positive scalings (`IsCone`), the annuli and cone translates are dilated by `w ↦ 2w`, and the

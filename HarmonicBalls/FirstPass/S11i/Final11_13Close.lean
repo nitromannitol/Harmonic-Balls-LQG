@@ -4,17 +4,17 @@ import HarmonicBalls.FirstPass.S11ak.BaseComparison
 import HarmonicBalls.FirstPass.S11t
 
 /-!
-# Lemma 11.13 (canonical), closed: no OPEN binder (fp-S11-13-final-close, owner n3; Codex ASTRA step 7)
+# Lemma 11.13 (canonical), closed: no OPEN binder
 
 `firstPass_11_13_closed` concludes `CorrectedLemma11_13CanonicalStmt.{0}` from frozen and proposed inputs only. It is
 `firstPass_11_13` (`S11i/Final11_13.lean:213`) with its open binder `hCal` replaced by
-`step8EventCalibration` (`S11i/Step8CalibrationClose.lean:37`, commit 89f7c26c, n1).
+`step8EventCalibration` (`S11i/Step8CalibrationClose.lean:37`, commit 89f7c26c).
 
 Why a separate module. `S11i/Step8CalibrationClose.lean` imports `S11i/Final11_13.lean` (for the projections
 `lqgMetricExponentPositive_derived` and `lqgMetricSatisfiesAxiomsUnivFrozen_zero`). So `Final11_13.lean` cannot import
 `Step8CalibrationClose.lean` without an import cycle. This leaf module imports both. The closed theorem can move into
 `Final11_13.lean` once `Step8CalibrationClose.lean` imports a module that holds the projections instead (one import line
-there, not owned by this task).
+there).
 
 Binders: those of `firstPass_11_13` except `hCal`, plus three frozen Draft inputs of `step8EventCalibration`: `hFull` (I1,
 `Draft/Section2.lean:109`), `hgrowth` (I2, `Draft/Section2.lean:122`) and `hDsm` (Prop 11.9, `Draft/Section11.lean:201`).
@@ -23,7 +23,7 @@ projection, `hLen`, `hE` at `α₀ = 0`) and `hS` (`PinchSecondAnnulusS11t.pinch
 `S11t.lean:30`, from `hMf`, `hholder`, `hE`, `hμW`, `hNonat`). The docstring of `PinchSecondAnnulusStep`
 (`S11k/BundleParts.lean:40`) still says OPEN; that is stale, since this lemma proves it.
 
-Classes (FROZEN = `docs/campaign/FROZEN.md` or a `Frozen/` file; PROPOSED = `Proposed/` or a Proposed def):
+Classes (PROPOSED = `Proposed/` or a Proposed def):
 the `firstPass_11_13` list (see its docstring) with `hCal` removed, plus `hFull`, `hgrowth`, `hDsm` (FROZEN).
 -/
 
@@ -90,6 +90,5 @@ theorem firstPass_11_13_closed
       hK hRootCont hPos10 hA10 hBirk hProf hWCont hCCα hE hCanonM hExists)
     hK
 
-#print axioms HarmonicBalls.FirstPassS11iFinal11_13Close.firstPass_11_13_closed
 
 end HarmonicBalls.FirstPassS11iFinal11_13Close

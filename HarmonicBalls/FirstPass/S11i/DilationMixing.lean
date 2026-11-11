@@ -4,7 +4,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
-# Dilation of the whole-plane GFF: deterministic identities (Step 8 of the 11.13 proof, owner n3)
+# Dilation of the whole-plane GFF: deterministic identities (Step 8 of the 11.13 proof)
 
 Source: corrected paper, lemma `s11-pinch:lem:mixing` (tex lines 3769-3812), the dilation `𝒯 g = g(·/2)`.
 On pairings, `(𝒯ⁿ g, k) = (g, κₙ k)` with `κₙ k (y) = 4ⁿ k (2ⁿ • y)` (`dilateTest`). This file proves the

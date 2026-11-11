@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11i.CanonicalLawUniversal
 import HarmonicBalls.FirstPass.S11i.RootedLocality
 
 /-!
-# Positivity of the canonical certificate probability (write-up Step 7 / Section 4, B1 of `notes/fp-gaps/CHATGPT-n3-step12-gaps.md`)
+# Positivity of the canonical certificate probability (write-up Step 7 / Section 4)
 
 For one whole-plane GFF realization `(Ω, P, hC, hcirc)` and the canonical field `alphaCanon γ hC`, the event
 `A_F = {ω | ballRestrictPairing 7 (alphaCanon γ hC ω) ∈ F}` has probability independent of the realization

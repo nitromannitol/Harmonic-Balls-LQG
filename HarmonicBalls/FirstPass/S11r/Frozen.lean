@@ -4,7 +4,7 @@ import HarmonicBalls.Defs.LQG
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# First-pass frozen inputs: whole-plane GFF existence and the normalised local metric decoder (fp-S11r, owner n2)
+# First-pass frozen inputs: whole-plane GFF existence and the normalised local metric decoder
 
 Four EXTERNAL facts, all general mathematics, not specific to this paper, all `def ... : Prop`s, never axioms.
 (1) `WholePlaneGFFExistsFrozen`: existence of a whole-plane GFF, used by the realization lemma `hmodel_at_gamma`
@@ -24,7 +24,7 @@ open MeasureTheory Metric Set
 
 universe u
 
-/-- FIRST-PASS FROZEN. Truth check TRUE (ChatGPT, 01:17 UTC; notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md section 1),
+/-- FROZEN. Truth check TRUE,
 in every universe `u` (ULift for larger universes).
 Existence of the whole-plane Gaussian free field (EXTERNAL, general): for every universe `u` there
 are a probability space `Ω : Type u`, a pairing `hC` and a circle-average process `hcirc` with `IsWholePlaneGFF P hC hcirc`,
@@ -34,18 +34,18 @@ Sources: Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2 §2.2.1, pp.
 arXiv:0808.1560v2 §3.1, eq. (10) and Prop. 3.1, p. 17; Bou-Rabee-Gwynne, arXiv:2208.11795v3 §2.1, eq. (2.1), p. 8.
 Used by: `hmodel_at_gamma` (FirstPass/S11r.lean), hence the model hypothesis `hmodel` of `certificate_canonical_pos`
 (FirstPass/S11i/CertificateCanonical.lean).
-Truth check TRUE (ChatGPT, 01:17 UTC, notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md §1): true in every universe `u`
+Truth check TRUE: true in every universe `u`
 (by `ULift` for larger universes). -/
 def WholePlaneGFFExistsFrozen : Prop :=
   ∃ (Ω : Type u) (_ : MeasurableSpace Ω) (P : Measure Ω) (_ : IsProbabilityMeasure P)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc
 
-/-- RETIRED (FALSE, ChatGPT 01:48 UTC; CHATGPT-n2-frozen-S11r.md section 1.1): the decoder is chosen before the metric
+/-- RETIRED (FALSE): the decoder is chosen before the metric
 assignment, but the equality fixes the normalisation of the metric, and `2 𝔇` is also an LQG metric. Superseded by
 `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` below; do not use. The text below is the retired statement.
 
-FIRST-PASS FROZEN, EXTERNAL (retired; truth check FALSE, ChatGPT 01:48 UTC). The measurable normalised local metric decoder
-of the ordinary GFF (answer CHATGPT-n3-B1-B2.md section 4.1, equation (21)). For `0 < γ < 2`, `ξ ∈ ℝ` and a disk `D = ball c r` with
+FROZEN, EXTERNAL (retired, truth check FALSE). The measurable normalised local metric decoder
+of the ordinary GFF (equation (21)). For `0 < γ < 2`, `ξ ∈ ℝ` and a disk `D = ball c r` with
 `0 ∉ closedBall c r` there are a smooth probability bump `ρ` supported in `D` (`∫ ρ = 1`) and a Borel map `M` from the
 mean-zero observables of `D` (`localMeanZeroObs 0 D`) to continuous functions on `D × D` such that, for every whole-plane
 GFF `(Ω, P, hC, hcirc)` and every LQG metric `𝔇` of exponent `ξ` (`IsLQGMetric γ ξ 𝔇`), almost surely
@@ -71,9 +71,9 @@ def LocalLQGMetricNormalizedMeasurableFrozen : Prop :=
             ENNReal.ofReal (Real.exp (-ξ * fieldPairing 0 (hC ω) ρ)) *
               internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2
 
-/-- FIRST-PASS FROZEN, EXTERNAL. Truth check TRUE (ChatGPT, 02:49 UTC; notes/fp-gaps/CHATGPT-n2-frozen-corrected.md section 1).
-The fixed-metric normalised local metric decoder of the ordinary GFF (CHATGPT-n2-frozen-S11r.md section 1.2: the minimal correction of the retired `LocalLQGMetricNormalizedMeasurableFrozen`,
-used with answer CHATGPT-n3-B1-B2.md section 4.1, equation (21)). The metric assignment `𝔇` is fixed BEFORE the decoder is
+/-- FROZEN, EXTERNAL. Truth check TRUE.
+The fixed-metric normalised local metric decoder of the ordinary GFF (the minimal correction of the retired `LocalLQGMetricNormalizedMeasurableFrozen`,
+used with the write-up equation (21)). The metric assignment `𝔇` is fixed BEFORE the decoder is
 chosen: for every LQG metric `𝔇` of exponent `ξ` (`IsLQGMetric γ ξ 𝔇`) there are a smooth probability bump `ρ` supported in
 `D = ball c r` and a Borel map `M` from the mean-zero observables of `D` to continuous functions on `D × D` such that, for
 every whole-plane GFF `(Ω, P, hC, hcirc)`, almost surely, for all endpoints `p ∈ D × D`,
@@ -101,7 +101,7 @@ def LocalLQGMetricNormalizedMeasurableFixedMetricFrozen : Prop :=
             ENNReal.ofReal (Real.exp (-ξ * fieldPairing 0 (hC ω) ρ)) *
               internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2
 
-/-- FIRST-PASS FROZEN, EXTERNAL. Truth check TRUE (ChatGPT, chat 149; notes/fp-gaps/CHATGPT-n2-hecont.md), as typed: no
+/-- FROZEN, EXTERNAL. Truth check TRUE, as typed: no
 change to the hypotheses, the quantifier order or the `nhds` filter. Continuity of the physical metric of the rooted field
 at its insertion (DFGPS Prop 3.17). For `0 < γ < 2`, `α < Q_γ = lqgQ γ`, a point `z ≠ 0`, a whole-plane GFF `hC` and an LQG
 metric `𝔇` of exponent `ξ`, for each fixed `z` and almost surely in `ω`, the Weyl-scaled metric of `𝔇 (hC ω)` by the rooted
@@ -109,8 +109,8 @@ weight `-α log|·| - γ log|· - z| + γ log max(1, |·|)` (the metric of `f_z`
 tends to `0` at `z` in the Euclidean topology. This is the `he_cont` input of `eq_const_mul_of_rat_disk_agreement`
 (RootedGluing.lean), through `tendsto_toReal_nhdsWithin_zero_of_tendsto`. Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun,
 arXiv:1905.00380v2, Proposition 3.17, printed p. 43, eq. (3.56) (the metric induces the Euclidean topology for insertions
-`α ∈ (-∞, Q)`; summary in notes/fp-gaps/CHATGPT-11-15-17-faithful-referee.md). It is stated as a consequence of DFGPS
-Prop 3.17 (insertion `γ` at `z`) plus the local path comparison of CHATGPT-n2-hecont.md, valid for arbitrary `ξ`; it is not
+`α ∈ (-∞, Q)`). It is stated as a consequence of DFGPS
+Prop 3.17 (insertion `γ` at `z`) plus the local path comparison, valid for arbitrary `ξ`; it is not
 a verbatim printed statement. -/
 def RootedPhysicalMetricContinuousAtInsertionFrozen : Prop :=
   ∀ (γ ξ α : ℝ) (z : ℂ), 0 < γ → γ < 2 → α < lqgQ γ → z ≠ 0 →
@@ -123,16 +123,14 @@ def RootedPhysicalMetricContinuousAtInsertionFrozen : Prop :=
           (fun w => -α * Real.log ‖w‖ - γ * Real.log ‖w - z‖ + γ * Real.log (max 1 ‖w‖)) x z)
         (nhds z) (nhds 0)
 
-/-- FIRST-PASS FROZEN, EXTERNAL. Truth check TRUE (ChatGPT, chat 148; notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md section
-2.1: the displayed body is the right statement, no change needed). The whole-measure local kernel identity (A) (answer
-CHATGPT-n3-Q1-eq34.md section 1, first line), the measure companion of `LocalMetricReplacementStmt` on the same disks
+/-- FROZEN, EXTERNAL. Truth check TRUE (no change needed). The whole-measure local kernel identity (A) (first line), the measure companion of `LocalMetricReplacementStmt` on the same disks
 `U = ball c₁ r₁`, `D = ball c₂ r₂`, with `0 < γ < 2`, `closedBall c₁ r₁ ⊆ D`, `closedBall c₂ r₂ ⊆ ball 0 1`, `0 ∉ closedBall c₂ r₂`.
 There is one measurable kernel `κ` from the mean-zero observations of `D` to measures on `ℂ`, fixed before `α`, the
 probability space and the root, such that, restricted to `D`: (A-unrooted) for `α < Q_γ`, every whole-plane GFF model and
 every γ-LQG measure `μ` of `h^α = h^ℂ - α log|·|`, a.s. `κ(obs_D h^α)` is a positive multiple of `μ`; (A-rooted) for Lebesgue-a.e.
 root `z ∈ U`, every γ-LQG measure `μz` of the rooted field `f_z` (`addCircleAverage` of `fieldCircleAverage`), a.s. `κ` of the
 campbellReferenceObs observation is a positive multiple of `μz`. The scalar `a` may depend on `ω` and on `z`.
-Same-kernel requirement (CHATGPT-n1-n2-11-13-inputs.md section 2.4): `κ` is one map, used for every `α`, every model and both
+Same-kernel requirement: `κ` is one map, used for every `α`, every model and both
 identities; the unrooted decoder is not transferred to other observation codes under the rooted law. The exceptional null
 sets need not be common to all `μz`, and the scalar need not be jointly measurable (section 2.1).
 Source: Bou-Rabee-Gwynne, arXiv:2208.11795v3 §2.2, printed p. 9, equation (2.6) (circle-average construction) and Fact 2.1

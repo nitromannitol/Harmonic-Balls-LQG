@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.AlphaCanonical
 import HarmonicBalls.FirstPass.S11j.CertificateTransfer
 
 /-!
-# Window frequency under a smooth Cameron-Martin shift (fp-S11i-11-13, write-up Step 11)
+# Window frequency under a smooth Cameron-Martin shift (write-up Step 11)
 
 For a whole-plane GFF `hC` and a smooth compactly supported `u` with zero unit-circle average, the window frequency along
 dilations of an event `E` of the canonical space, for the distribution `addFunPairing (hC ω) u` (that is, `h^γ + u`), has
@@ -13,7 +13,7 @@ distribution σ-algebra (`measurableSet_tendsto_windowFreqOf`). Its preimages un
 are the two failure events of one common field event, so the Cameron-Martin transfer through one common field event
 (`cameronMartinFieldCertificateTransfer`, S11j, from the frozen `CameronMartinGFFMutualAbsCont`) gives null-set equivalence.
 
-Source: write-up Step 11 (`notes/fp-gaps/CHATGPT-11-13-proof.md` l.464-487, "Cameron-Martin transfers this conclusion after
+Source: write-up Step 11 ("Cameron-Martin transfers this conclusion after
 adding `u_z`"). The shift `u` is a Cameron-Martin shift; the singular shift `-γ log|·|` stays in the event set.
 -/
 

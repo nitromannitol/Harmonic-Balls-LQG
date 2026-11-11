@@ -4,10 +4,8 @@ import HarmonicBalls.FirstPass.S11i.RootedFrequencyShift
 import HarmonicBalls.FirstPass.S11s.Event
 
 /-!
-# Cameron-Martin transfer of measurable events to the translated and shifted field (fp-S11r-cm-transfer)
+# Cameron-Martin transfer of measurable events to the translated and shifted field
 
-Source: ChatGPT chat 196, `notes/fp-gaps/CHATGPT-hb-11-13-blockers.md`, §2.1 (generic transfer) and §2.2 (three instances),
-final dependency decision step 4.
 
 * `ae_addFunPairing_of_ae`: the generic transfer. If a measurable set `B` of distributions contains `hCz ω` almost surely,
   then `addFunPairing (hCz ω) g ∈ B` almost surely. The only input is the frozen Cameron-Martin quasi-invariance
@@ -32,7 +30,7 @@ namespace HarmonicBalls
 open MeasureTheory Filter
 open scoped ENNReal
 
-/-- **Generic Cameron-Martin event transfer (chat 196, §2.1).** Let `hCz` be a whole-plane GFF and `g` a smooth compactly
+/-- **Generic Cameron-Martin event transfer (§2.1).** Let `hCz` be a whole-plane GFF and `g` a smooth compactly
 supported function with zero unit-circle average. If a measurable set `B` of distributions contains `hCz ω` almost surely,
 then `addFunPairing (hCz ω) g` lies in `B` almost surely. Proof: the frozen `CameronMartinGFFMutualAbsCont` applied to `Bᶜ`. -/
 theorem ae_addFunPairing_of_ae {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
@@ -50,7 +48,7 @@ theorem ae_addFunPairing_of_ae {Ω : Type u} [MeasurableSpace Ω] (P : Measure �
   have hiff := hCM Ω P hCz hcircz g hhz hg hcomp hg0 Bᶜ hBc
   exact ae_iff.mpr (hiff.mp hzero)
 
-/-- **Transfer of a measurable canonical-field event (chat 196, §2.1 with `B = canonFieldOf γ ⁻¹' G`).** -/
+/-- **Transfer of a measurable canonical-field event (§2.1 with `B = canonFieldOf γ ⁻¹' G`).** -/
 theorem ae_canonFieldOf_addFunPairing_mem {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (γ : ℝ)
     {hCz : Ω → (ℂ → ℝ) → ℝ} {hcircz : Ω → ℝ → ℂ → ℝ} (hhz : IsWholePlaneGFF P hCz hcircz)
@@ -61,7 +59,7 @@ theorem ae_canonFieldOf_addFunPairing_mem {Ω : Type u} [MeasurableSpace Ω] (P 
     ∀ᵐ ω ∂P, canonFieldOf γ (addFunPairing (hCz ω) g) ∈ G :=
   ae_addFunPairing_of_ae P hCM hhz hg hcomp hg0 (measurable_canonFieldOf γ hG) hbase
 
-/-- **Instance 1 (chat 196, §2.2, `Breg`): membership in the measurable decoder regularity set.** For the translated field
+/-- **Instance 1 (§2.2, `Breg`): membership in the measurable decoder regularity set.** For the translated field
 `translatedPairing hC hcirc z` and the shift `g`, the shifted canonical field stays in the measurable set `Greg` almost surely,
 provided it does so for the translated field. Applied with `Greg` the set `G` of the measurable decoder strengthening. -/
 theorem ae_shiftedCanon_mem_regularity {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
@@ -74,7 +72,7 @@ theorem ae_shiftedCanon_mem_regularity {Ω : Type u} [MeasurableSpace Ω] (P : M
     ∀ᵐ ω ∂P, canonFieldOf γ (addFunPairing (S11c.translatedPairing hC hcirc z ω) g) ∈ Greg :=
   ae_canonFieldOf_addFunPairing_mem P hCM γ hhz hg hcomp hg0 hGreg hbase
 
-/-- **Instance 2 (chat 196, §2.2): membership in the measurable canonical identification set.** Same transfer, with a
+/-- **Instance 2 (§2.2): membership in the measurable canonical identification set.** Same transfer, with a
 measurable set `Gid` of canonical fields in place of the decoder regularity set. -/
 theorem ae_shiftedCanon_mem_identification {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (γ : ℝ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (z : ℂ)
@@ -86,7 +84,7 @@ theorem ae_shiftedCanon_mem_identification {Ω : Type u} [MeasurableSpace Ω] (P
     ∀ᵐ ω ∂P, canonFieldOf γ (addFunPairing (S11c.translatedPairing hC hcirc z ω) g) ∈ Gid :=
   ae_canonFieldOf_addFunPairing_mem P hCM γ hhz hg hcomp hg0 hGid hbase
 
-/-- **Instance 3 (chat 196, §2.2, `hdil`): membership in the measurable covariance event `covEvent`.** The event
+/-- **Instance 3 (§2.2, `hdil`): membership in the measurable covariance event `covEvent`.** The event
 `covEvent (fun L => K L) dd C Q` is measurable by `measurableSet_covEvent` (`FirstPass/S11s/Event.lean:47`). -/
 theorem ae_shiftedCanon_mem_covariance {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (γ : ℝ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (z : ℂ)

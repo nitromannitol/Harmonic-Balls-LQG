@@ -1,10 +1,10 @@
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Constant shifts and monotonicity of the Weyl scaling (fp-S11m, owner z4)
+# Constant shifts and monotonicity of the Weyl scaling
 
 Deterministic facts about `weylScaling D ξ f u v` (`HarmonicBalls/Defs/LQGMetric.lean`, the infimum over length
-parametrised paths of `∫ exp (ξ f (p t)) dt`) used by the route of Lemma 11.12 (`notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md`):
+parametrised paths of `∫ exp (ξ f (p t)) dt`) used by the route of Lemma 11.12:
 
 * a constant shift multiplies the Weyl scaling by `e^{ξ c}`: this is the random normalisation `N_ρ` of Step 3.3 (6), since
   `N_ρ h = h - ⟨h, ρ⟩` subtracts a random constant;

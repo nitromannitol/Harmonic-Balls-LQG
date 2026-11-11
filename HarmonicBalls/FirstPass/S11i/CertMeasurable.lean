@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.S11i.PinchMeasurable
 
 /-!
 # Measurability of the internal distances of the corrected local certificate in `(ω, z)`
-(fp-S11i-11-13, round 31; eq. (27) of `notes/fp-gaps/CHATGPT-n3-B1-B2.md`, section 5.1).
+(eq. (27) of the write-up, section 5.1).
 
 For a measurable family `D ω` of Euclidean length metrics, the internal distances occurring in `CertificateEvent`
 are measurable in `(ω, z)`. The parametrisation `x ↦ r x + z` turns the `z`-dependent domain `rescaledSet O r z`
@@ -198,7 +198,7 @@ lemma measurable_setDist_closure_frontier {D : Ω → ℂ → ℂ → ℝ}
   rw [key]
   exact hm
 
-/-- **Measurability of the corrected local certificate in `(ω, z)` (eq. (27) of CHATGPT-n3-B1-B2, sec. 5.1).**
+/-- **Measurability of the corrected local certificate in `(ω, z)` (eq. (27) of the write-up, sec. 5.1).**
 For a measurable family of Euclidean length metrics `D ω` (continuous in the points) and a Kernel `κ` of measures,
 the set of `(ω, z)` at which `CertificateEvent (κ ω) (D ω) Ostar U V W T Q' Q η M r z` holds is measurable.
 Hypotheses on `Ostar`: open, containing `0` and the sphere of radius `5` (the domain of the sphere supremum; without
@@ -236,5 +236,3 @@ theorem measurableSet_certificateEvent (κ : ProbabilityTheory.Kernel Ω ℂ) [P
 
 end FirstPassS11i
 
-#print axioms FirstPassS11i.measurableSet_certificateEvent
-#print axioms FirstPassS11i.measurable_internalDiam_affine

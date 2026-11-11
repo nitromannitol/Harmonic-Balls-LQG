@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11i.RootedFrequencyShift
 import HarmonicBalls.FirstPass.Frozen.S11n
 
 /-!
-# Canonical window failure set is measurable (fp-S11i-11-13d, n3; Blocker 2 of Step 8)
+# Canonical window failure set is measurable (Blocker 2 of Step 8)
 
-Chat 191 (`notes/fp-gaps/CHATGPT-n3-hT.md`, sections 5-8): the failure indicator of the Step 8 frequency statement is taken
+The failure indicator of the Step 8 frequency statement is taken
 from the measurable canonical decoders (frozen strengthening `LQGCanonicalDecodersExistStmt`, `FirstPass/Frozen/S11n.lean`:
 kernel `K` measurable and s-finite, metric `d` Borel, conull set `G` on which `d` is a Euclidean length metric), not from the
 arbitrary physical `μ(h)`, `D(h)`. This file proves only the measurability part: for a measurable map `f` from a measurable
@@ -85,7 +85,7 @@ theorem measurableSet_not_tendsto_real {α : Type*} [MeasurableSpace α] (g : �
   exact (MeasurableSet.iInter fun m => MeasurableSet.iUnion fun N₀ => MeasurableSet.iInter fun N =>
     hmeas N₀ N _).compl
 
-/-- **Measurability of the canonical failure event (Blocker 2 of Step 8, chat 191 §6-§7).** The set of `(ω, z)` at which the
+/-- **Measurability of the canonical failure event (Blocker 2 of Step 8).** The set of `(ω, z)` at which the
 canonical window frequency of certificate events does not converge to `q` is measurable in `Ω × ℂ` (product of the given
 σ-algebra on `Ω` with the Borel σ-algebra on `ℂ`). -/
 theorem measurableSet_canonFailure (f : Ω → S11n.CanonSpace) (hf : Measurable f)
@@ -107,4 +107,3 @@ theorem measurableSet_canonFailure (f : Ω → S11n.CanonSpace) (hf : Measurable
 
 end HarmonicBalls.FirstPassS11iCanonFailure
 
-#print axioms HarmonicBalls.FirstPassS11iCanonFailure.measurableSet_canonFailure

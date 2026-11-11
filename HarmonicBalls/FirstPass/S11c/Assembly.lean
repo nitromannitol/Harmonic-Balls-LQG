@@ -2,9 +2,9 @@ import HarmonicBalls.Proofs.Sec11.MassDiameterClassSelection
 import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
 
 /-!
-# Proposition 11.10, probabilistic core of the class choice (fp-S11c, owner n1)
+# Proposition 11.10, probabilistic core of the class choice
 
-FIRST-PASS NEW. Deterministic-in-form bookkeeping of the paper's proof of `lemma:mass-diam` (corrected lines
+Deterministic-in-form bookkeeping of the paper's proof of `lemma:mass-diam` (corrected lines
 3046-3110): the four parity classes of the level-`N` cells of `S₁` (`exists_positive_measure_four_tile_class`,
 reused from `Proofs/Sec11/MassDiameterClassSelection.lean`) and an almost-sure set `G` whose complement has small
 probability (the exterior bound of the second Weyl shift). Given the positive-probability class event, some class `i`

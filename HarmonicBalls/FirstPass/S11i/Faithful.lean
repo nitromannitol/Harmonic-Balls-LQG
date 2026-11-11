@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11h.LocalEvents
 import HarmonicBalls.Defs.LQGGraphDistance
 
 /-!
-# Faithful forms of Lemmas 11.12 and 11.13 (corrected paper), first pass fp-S11i (owner n3)
+# Faithful forms of Lemmas 11.12 and 11.13 (corrected paper)
 
-Operator note 2026-11-09 20:59 UTC (`notes/fp-gaps/CHATGPT-hb-s11-fidelity.md`, sections 2 and 3): the Draft forms are
+The Draft forms are
 too weak. This file states the corrected forms; `firstPass_11_12_corrected` and `firstPass_11_13_corrected` will prove
 them.
 
@@ -57,8 +57,7 @@ theorem localModConstField_measurable {Ω : Type*} (α : ℝ) (hC : Ω → (ℂ 
 `E^α(M) ⊆ Ĝ₁^{h^α}(0; M)` almost surely (Euclidean radius one, centre zero).
 
 The geometry hypothesis `{0} ∪ ∂B₅ ⊆ pinchOmegaGeom W Q δ₀` (the component `Ω_geom` of `0` in `B₇ \ (…)`, which must
-contain the origin and the circle `∂B₅`) is the corrected-paper clause of corrected paper lines 3186-3199, added by the
-operator ruling R1 (02:20 UTC). It is not part of `IsBufferedPinchGeometry`, which is unchanged. -/
+contain the origin and the circle `∂B₅`) is the clause of corrected paper lines 3186-3199 that is added here. It is not part of `IsBufferedPinchGeometry`, which is unchanged. -/
 def CorrectedLemma11_12Stmt : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
   insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀ →
@@ -90,13 +89,13 @@ def CorrectedLemma11_13Stmt : Prop :=
 
 /-- The canonical Weyl exponent `ξ = γ / d_γ` of the paper's LQG metric, with `d_γ = lqgGraphDimension γ`
 (`Defs/LQGGraphDistance.lean:105`). `IsLQGMetric` itself takes an arbitrary exponent; the paper fixes this one
-(operator audit, chat 224 PRO §5, Correction 1, 2026-11-10 11:09 UTC). -/
+ (Correction 1). -/
 noncomputable abbrev lqgXi (γ : ℝ) : ℝ :=
   γ / lqgGraphDimension γ
 
 /-- Lemma 11.13 in the canonical form: as `CorrectedLemma11_13Stmt`, but with the canonical exponent
 `ξ = lqgXi γ` (Correction 1) and the model `(Ω, P, hC, hcirc, μ, D)` quantified before `∃ δ`, so that the density may
-depend on the model (Correction 3, operator DECISION 2026-11-10 11:09 UTC, the exact PASS target). The probability
+depend on the model (Correction 3, the exact PASS target). The probability
 normalisation of `P` is not a binder: `IsWholePlaneGFF P hC hcirc` gives `IsProbabilityMeasure P` by
 `FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF` (`FirstPass/S11af.lean:24`) (Correction 2). -/
 def CorrectedLemma11_13CanonicalStmt : Prop :=

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.CanonicalGood
 import HarmonicBalls.Steps.Sec11.PinchJointMeasure
 
 /-!
-# Measurability of the pinch events in `(ω, z)` (open item `hpin` of `CanonicalGood`; B1/B2 answer sec. 5.1)
+# Measurability of the pinch events in `(ω, z)` (open item `hpin` of `CanonicalGood`)
 
 Each supremum or infimum in `pinchPointEvent` runs over an affine image `x ↦ r x + z` of a fixed set, or over a
 product of two such images. For a continuous integrand it equals its value over a countable dense subset of the
@@ -318,7 +318,7 @@ lemma measurable_uncurry_of_continuousMap {Ω : Type*} [MeasurableSpace Ω]
 
 /-- The pinch events `{(ω, z) | pinchPointEvent (κ ω) (D ω) U T Q' Q M (2⁻¹)^n z}` are measurable, for an
 s-finite kernel `κ` of measures, a jointly measurable family `D` of metrics continuous in `(x, y)`, and a
-measurable `U`. This is `hpin` of `CanonicalGood` (B1/B2 answer, sec. 5.1). -/
+measurable `U`. This is `hpin` of `CanonicalGood` (sec. 5.1). -/
 theorem measurableSet_pinchSet {Ω : Type*} [MeasurableSpace Ω] (κ : Kernel Ω ℂ) [IsSFiniteKernel κ]
     (D : Ω → ℂ → ℂ → ℝ) (hDm : Measurable fun q : Ω × (ℂ × ℂ) => D q.1 q.2.1 q.2.2)
     (hDc : ∀ ω, Continuous fun q : ℂ × ℂ => D ω q.1 q.2) (M : ℝ) {U T Q' Q : Set ℂ}

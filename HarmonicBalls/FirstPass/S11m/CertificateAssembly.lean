@@ -14,10 +14,9 @@ import HarmonicBalls.FirstPass.S11ak.Seven
 import HarmonicBalls.FirstPass.S11ak.BaseComparison
 
 /-!
-# Assembly of the local certificate `PinchLocalCertificateStmt` (fp-S11m, owner z4)
+# Assembly of the local certificate `PinchLocalCertificateStmt`
 
-Route: `notes/fp-gaps/CHATGPT-lh-R4-R5.md` §R5b.3 (order of choices) and `CHATGPT-z4-11-12-local-certificate.md`
-(decoded rule, eq. (17)). For fixed geometry, `γ`, `ξ`, `M`:
+Route: order of choices and decoded rule, eq. (17). For fixed geometry, `γ`, `ξ`, `M`:
 
 * if some `IsLQGMetric γ ξ 𝔇₀` exists, fix one, take the punctured-ball metric decoder `Ψ` of it
   (`S11ak.metricDecoder_punctured_ball_seven`), the measure decoder `Φμ` of `B₇`
@@ -227,7 +226,7 @@ lemma caWeylRel {M₀ Mt D : ℂ → ℂ → ℝ} (hM₀ : IsEuclideanLengthMetr
 /-- **Local certificate `PinchLocalCertificateStmt` from named inputs.** The decoders, the base comparison, the
 positivity and the finiteness enter only as the hypotheses below (frozen Props or Proposed/External statements):
 * `hAx`, `hLen`, `hN2`, `hBase`, `hμW`: the metric field axioms, the length property of the base metric, the
-  local metric replacement (n2), the base comparison (z6, `S11ak.LQGMetricBaseComparisonStmt`), and the Weyl scaling of
+  local metric replacement, the base comparison (z6, `S11ak.LQGMetricBaseComparisonStmt`), and the Weyl scaling of
   the measure (Proposed, Fact 2.1 III);
 * `hLoc`, `hNonat`, `hFull`: the measure decoder inputs of `measureDecoder_ball_zero`;
 * `hgrowth`: the volume growth input of the finiteness of `annulusGreenPotentialSup`;
@@ -369,8 +368,7 @@ theorem pinchLocalCertificate_of_inputs
     exact (hex ⟨𝔇, h𝔇⟩).elim
 
 /-- **Lemma 11.12 (corrected), `CorrectedLemma11_12Stmt`, from external inputs only.** The local certificate is
-`pinchLocalCertificate_of_inputs`; the length axioms and the exponent positivity `LQGMetricExponentPositive` (n4,
-truth check TRUE) enter as in `firstPass_11_12_corrected` (`S11m/Corrected11_12.lean`). The hypotheses are exactly the
+`pinchLocalCertificate_of_inputs`; the length axioms and the exponent positivity `LQGMetricExponentPositive` (truth check TRUE) enter as in `firstPass_11_12_corrected` (`S11m/Corrected11_12.lean`). The hypotheses are exactly the
 named inputs of `pinchLocalCertificate_of_inputs` together with `hXi`; there is no other hypothesis. -/
 theorem firstPass_11_12_corrected_of_inputs
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) (hXi : LQGMetricExponentPositive)

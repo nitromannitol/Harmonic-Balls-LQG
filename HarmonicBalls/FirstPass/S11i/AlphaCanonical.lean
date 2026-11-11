@@ -1,9 +1,8 @@
 import HarmonicBalls.FirstPass.S11i.WindowFrequency
 
 /-!
-# Window frequencies of the canonical field `h^α` modulo constants (fp-S11i, owner n3; write-up Steps 7.1 and 9)
+# Window frequencies of the canonical field `h^α` modulo constants (write-up Steps 7.1 and 9)
 
-FIRST-PASS NEW (deterministic identity plus transfer of the Birkhoff statement).
 The pairings of the field `h^α = h^ℂ - α log|·|` (`fieldPairing`, `HarmonicBalls/Defs/GFF.lean:113`) on mean-zero test
 functions are the pairings of `h^ℂ` shifted by the logarithmic drift `φ ↦ -α ∫ φ(x) log|x| dx`. This drift is invariant
 under the canonical dilation on mean-zero tests, `∫ κ₁φ · log|·| = ∫ φ · log|·|` (with `κ₁ = dilateTest 1`), because the
