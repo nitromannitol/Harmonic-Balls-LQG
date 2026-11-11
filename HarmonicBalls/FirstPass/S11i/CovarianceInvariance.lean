@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.DilationMixing
 import HarmonicBalls.Defs.GFF
 
 /-!
-# Step 8 helper: dilation invariance of the covariance of mean-zero pairings (owner n3)
+# Step 8 helper: dilation invariance of the covariance of mean-zero pairings
 
 Source: corrected paper, `s11-pinch:lem:mixing` (tex lines 3769-3812), covariance step (C6 part). For test
 functions `φ, ψ` with `∫ φ = 0 = ∫ ψ` and `n : ℕ`, with `κₙ` the dilation `dilateTest n`,

@@ -10,10 +10,9 @@ import HarmonicBalls.FirstPass.S11i.Step8LengthMetric
 import HarmonicBalls.FirstPass.S11i.Step8Fitting
 
 /-!
-# The coding identity `hFdef` on the canonical support `G` (fp-S11i-hFdef-on-G, n4)
+# The coding identity `hFdef` on the canonical support `G`
 
-Operator ruling (2026-11-10 19:20 UTC): `hFdef` is required only on the canonical support `G` (the set n2 builds,
-`S11r/RootedHrefBall.lean`, `RootedHrefBallStructure.lean`), not for every code `L`.
+`hFdef` is required only on the canonical support `G` (`S11r/RootedHrefBall.lean`, `RootedHrefBallStructure.lean`), not for every code `L`.
 
 ## Part 1: the identity on `G` for the Lemma 11.12 coding set
 
@@ -21,7 +20,7 @@ For the coding set `E := decodedPinchRuleBall I (decodedFamily Ψc) (decGreen Φ
 `Ψc` (metric) and `Φμ` (measure) on the code space `ModConstTestPairings (ball 0 7)`, and `Dμ L := Φμ (ballRestrictPairing 7 L)`,
 `Dd L := Ψc (ballRestrictPairing 7 L)`, the identity `hFdef` holds for `L ∈ G` by `certificateEvent_iff_pinchLocalRule`
 (`S11i/Step8Calibration.lean:35`) and `decodedPinchRule_iff_ball` (`S11ax.lean`, `b = c = 1`). The G-properties used,
-to be delivered by n2 for every `L ∈ G` (posted to `notes/n3-inbox.md`):
+to be delivered for every `L ∈ G`:
 * `hmet`: `IsEuclideanLengthMetric (Ψc (ballRestrictPairing 7 L))` and `0 ≤ Ψc (ballRestrictPairing 7 L) x y`;
 * `hdec`: `DecodesOnSetsBall I (decodedFamily Ψc) (Ψc (ballRestrictPairing 7 L)) 1 (ballRestrictPairing 7 L)`;
 * `hfin`: `annulusGreenPotentialSup (Φμ (ballRestrictPairing 7 L)) 0 3 6 ≠ ⊤` and `Φμ (ballRestrictPairing 7 L) U ≠ ⊤`.
@@ -31,7 +30,7 @@ to be delivered by n2 for every `L ∈ G` (posted to `notes/n3-inbox.md`):
 Each consumer takes `hFdef` for all `L`. Its G-variant takes `G`, `hFdefG : ∀ L ∈ G, ...` and the rooted membership
 `hGroot`: almost surely, every rooted pairing `dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))`
 (for `z ∈ ball c₁ r₁`, admissible shift `(b, u)`, all `n`) lies in `G`. This is the decoded observation lying in `G` a.s.
-(operator item (2)). `hGroot` is a NAMED hypothesis: n2 must deliver it (rooted translation and shift invariance of `G`);
+`hGroot` is a NAMED hypothesis: it must be delivered (rooted translation and shift invariance of `G`);
 it is not derived here. The leaf uses `hFdef` only at the rooted pairing (`S11ai/RootedCertSpecialized.lean:86`).
 -/
 
@@ -246,5 +245,3 @@ theorem ae_unitScale_of_decoded_ball_G {Ω : Type u} [MeasurableSpace Ω] {P : M
 
 end HarmonicBalls.FirstPassS11iHFdefOnGChain
 
-#print axioms HarmonicBalls.FirstPassS11iHFdefOnG.hFdef_decoded_on_G
-#print axioms HarmonicBalls.FirstPassS11iHFdefOnGChain.ae_unitScale_of_decoded_ball_G

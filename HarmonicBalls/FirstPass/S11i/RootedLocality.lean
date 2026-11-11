@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11i.RootedFrequencyShift
 
 /-!
-# Locality of the rooted window frequency (fp-S11i-11-13, write-up Step 11.4)
+# Locality of the rooted window frequency (write-up Step 11.4)
 
 For `R ≥ 0` and an event `F` of the pairings on the ball `B_R(0)` modulo constants, the event
 `E = ballRestrictPairing R ⁻¹' F` depends only on the canonical field restricted to `B_R(0)`.
@@ -11,7 +11,7 @@ functions supported in `B_b(0)` give the same dilated canonical pairings on `B_R
 window frequencies of `E` at `T` and `T'` coincide for every `N` with `R / 2^(N+1) < b`. Only deterministic algebra
 (`iterate_dilOp`, `MixingCanonical.lean:123`; `canonFieldOf`, `RootedFrequencyShift.lean:29`).
 
-This is the locality used in Step 11 of the write-up (`notes/fp-gaps/CHATGPT-11-13-proof.md` l.464-487) to pass from a
+This is the locality used in Step 11 of the write-up to pass from a
 distribution agreeing with `h^γ + u` on `B_b(0)` to the local event; it is not a probability statement.
 -/
 

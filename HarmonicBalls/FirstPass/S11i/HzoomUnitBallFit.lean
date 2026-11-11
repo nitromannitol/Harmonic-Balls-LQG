@@ -4,13 +4,13 @@ import HarmonicBalls.FirstPass.S11d.Dyadic
 import HarmonicBalls.Proofs.GFF.BackgroundChargeParameter
 
 /-!
-# The fitting identity `hfit` of the doubled-disc inputs (fp-S11i-hzoom-scale-e, n4)
+# The fitting identity `hfit` of the doubled-disc inputs
 
 For a valid ball `p` (root disc `ball c r`, decoder disc `ball c (2 r)`):
 
 * `kernelF_unrooted`: the unrooted clause of the finite decoder kernel `κF_p` (exists_finite_localMeasureKernel).
 * `goodObs`: the good set `H_good` of the metric decoder (observations whose decoder is a length metric).
-* `ae_obs_mem_good`: the physical observation lies in `H_good` almost surely (B3 `ae_markedObs_mem_modificationSet`,
+* `ae_obs_mem_good`: the physical observation lies in `H_good` almost surely (`ae_markedObs_mem_modificationSet`,
   rooted length property `rootedLengthProperty`, positivity `hPos` on a dyadic square in the root disc).
 -/
 
@@ -62,7 +62,7 @@ lemma metricCont_eq {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
       (validBall_facts hp).2.2.1 (validBall_facts hp).2.2.2 𝔇 h𝔇) := by
   simp only [metricCont, hp, dite_true]
 
-/-- **The physical observation lies in the good set** (`hfit`, chat 238 section 3, "Why B3 enters here"). -/
+/-- **The physical observation lies in the good set** (`hfit`). -/
 theorem ae_obs_mem_good {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     (hR : ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ, HarmonicBalls.LocalMetricReplacementStmt.{0} γ ξ c₁ c₂ r₁ r₂)
     {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
@@ -93,7 +93,7 @@ theorem ae_obs_mem_good {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
   have hrefH : ∀ᵐ z ∂(volume.restrict (ball (ballCen p) (ballRad p))), ∀ᵐ ω ∂P,
       (campbellReferenceObs γ 0 (ball (ballCen p) (2 * ballRad p)) (hC ω) z).2 ∈ goodObs hγ0 hγ2 hR 𝔇 h𝔇 p :=
     hrooted
-  -- B3: the marked observations lie in the good set almost surely
+  -- The marked observations lie in the good set almost surely
   have hmark := HarmonicBalls.FirstPassS11iStep8MarkedMem.ae_markedObs_mem_modificationSet
     (hWeyl := localLQGInsertionWeylOffOrigin_derived) γ 0 hγ0 hγ2 hα hcl hunit μ μ hA10 hG hμ hμ hNon hNon hH hrefH
   -- positivity of the mass of the root disc (hPos on a dyadic square inside it)
@@ -134,7 +134,7 @@ lemma subset_closedBall_of_buffered {U V W T Q' Q : Set ℂ} {δ : ℝ}
   exact (FirstPassS11ap.certificateContainments_of_buffered hgeo).W_thick
     (self_subset_thickening (by linarith [hgeo.delta_pos]) W hxW)
 
-/-- **The fitting identity `hfit`** (chat 238 section 3, on the doubled disc, with the metric index of the rulings).
+/-- **The fitting identity `hfit`** (on the doubled disc, with the metric index).
 For a whole-plane model with LQG metric `𝔇` (`hD`: the a.s. identity of `D`), almost surely, for every root `z` in
 `ball c r`, eventually in `n`, the decoded certificate event (kernel `ballKernel`, metric `ballMetric`) and the physical
 one (`μ`, `D`) agree. -/
@@ -295,5 +295,3 @@ theorem ae_eventually_ballFit {γ ξ δ M : ℝ} {U V W T Q' Q : Set ℂ}
 
 end HarmonicBalls.FirstPassS11iHzoomUnitBallFit
 
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBallFit.ae_obs_mem_good
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBallFit.real_eq_of_ofReal_eq

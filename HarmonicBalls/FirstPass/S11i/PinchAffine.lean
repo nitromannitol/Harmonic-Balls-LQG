@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11c.GreenTranslate11_7
 import HarmonicBalls.Proofs.Sec5.GreenScaling
 
 /-!
-# Affine transfer of the pinch event (fp-S11i-11-13, write-up l.223-225, deterministic part)
+# Affine transfer of the pinch event (write-up l.223-225, deterministic part)
 
 For `r > 0` and `z ∈ ℂ` the chart `ψ x = (x - z)/r` (inverse `φ u = r u + z`) carries the pinch event at `(z, r)` of
 `(μ, D)` to the pinch event at `(0, 1)` of the pushed-forward measure `μ.map ψ` and of the pulled-back metric

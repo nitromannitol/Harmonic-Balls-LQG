@@ -4,14 +4,14 @@ import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.MeasureTheory.Integral.CircleAverage
 
 /-!
-# Smooth log-shift cut off near the origin (fp-S11i-11-13, write-up Step 11, the function `u_z`)
+# Smooth log-shift cut off near the origin (write-up Step 11, the function `u_z`)
 
 For `z ≠ 0` and a radius `b` with `2b < min(|z|, 1)`, there is a smooth compactly supported `u` with zero unit-circle
 average that agrees with `-α₀ log|· + z|` on the ball `B_b(0)`. This is the write-up's `u_z ∈ C_c^∞(B_{2b}(z))` equal to
 `-α₀ log|·|` on `B_b(z)`, translated to the origin: the rooted insertion at `z` is `-α₀ log|·+z|` near `0`
 (the translation `y ↦ z + y`). Its unit-circle average is zero because the support lies in `B_{2b}(0) ⊂ B_1(0)`.
 The cut-off is `Real.smoothTransition ((2b - ‖y‖)/b)`, equal to `1` on `B_b(0)` and to `0` outside `B_{2b}(0)`.
-Source: write-up Step 11, `notes/fp-gaps/CHATGPT-11-13-proof.md` l.464-487 (choice of `u_z`).
+Source: Step 11 of the written proof (choice of `u_z`).
 -/
 
 open Metric Filter Topology

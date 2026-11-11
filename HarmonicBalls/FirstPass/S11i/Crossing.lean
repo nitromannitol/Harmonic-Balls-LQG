@@ -4,7 +4,7 @@ import HarmonicBalls.Defs.LQGMetric
 # Crossing and chaining for an ambient length metric (Lemma 11.13, step 4)
 
 For an ambient metric `D` which is a length metric (`IsEuclideanLengthMetric`, `HarmonicBalls/Defs/LQGMetric.lean`),
-two deterministic facts used in step 4 of `notes/fp-gaps/CHATGPT-11-13-proof.md`:
+two deterministic facts used in step 4 of the written proof:
 
 * `crossing_dist_ge`: a path from `z` to a point at distance `R` from `z` crosses the circles of radii
   `r₁ < r₂ < r₃ < R`, so `D(z, x)` is at least the sum of the three successive sphere distances

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11i.LogPotential
 
 /-!
-# Step 8 helper: Fubini for the logarithmic potential of test functions (owner n3)
+# Step 8 helper: Fubini for the logarithmic potential of test functions
 
 Source: corrected paper, lemma `s11-pinch:lem:mixing` (tex lines 3769-3812). The covariance of the dilated
 test function is `∫ f x * ∫ z, k z * log ‖x - 2⁻ⁿ z‖` (`integral_dilateTest_wholePlaneCov`); exchanging the two

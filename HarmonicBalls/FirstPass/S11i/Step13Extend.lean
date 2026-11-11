@@ -3,14 +3,14 @@ import HarmonicBalls.FirstPass.S11i.DilatePinch
 /-!
 # Step 13 of the proof of Lemma 11.13: from the B_1 window limit to the whole plane
 
-Source: `notes/fp-gaps/CHATGPT-11-13-proof.md`, Step 13 (l.528-579). For `R = 2^k` the rescaled field
+Source: Step 13 of the written proof. For `R = 2^k` the rescaled field
 `h^(R)(w) = h(R w) - h_R(0)` has LQG pair `(c • mu.map (· / R), b * D(R ·, R ·))` with random `c, b > 0`
-(Proposed inputs LQGMeasureCoordChange and LQGMetricFieldAxioms IV, pending operator source-check). Its window
+ (Proposed inputs LQGMeasureCoordChange and LQGMetricFieldAxioms IV). Its window
 count at `w` is the window count of `(mu, D)` at `R w` with the scale index shifted by `k`
 (`pinchWindowCount_rescale`, from `pinchPointEvent_dilate_iff`). The windows `[N+1, 2N]` and `[N+1-k, 2N-k]`
 differ by at most `k` indices (`ncard_window_shift_sub_le`), so the limit transfers (`tendsto_div_of_abs_sub_le`).
 Step 12 (the B_1 window limit for the rescaled pair) is the NAMED HYPOTHESIS `hstep12` of `step13_extend`.
-Nothing here is frozen; the Step 12 proof is pending (ChatGPT, notes/fp-gaps).
+Nothing here is frozen; the Step 12 proof is pending.
 -/
 
 namespace HarmonicBalls.Step13

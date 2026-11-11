@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 import HarmonicBalls.Proofs.GFF.BackgroundChargeParameter
 
 /-!
-# Unit-ball frequency of every normalized LQG model (Step 8, fp-S11i-hzoom-scale-c, n4)
+# Unit-ball frequency of every normalized LQG model (Step 8)
 
 Plugs the named binders of the per-ball Step 8 route into `UnitBallFrequencyModelsStmt` (`HzoomScale.lean:124`).
 
@@ -11,9 +11,9 @@ Plugs the named binders of the per-ball Step 8 route into `UnitBallFrequencyMode
   (a) `hNat`: `LQGMeasureNonatomic` for every model (approved HB staged input, Proposed/LQG.lean:77, Fact 2.1 I).
   (c) `hA10`: `DMSLemmaA10WholePlaneMarked` for every model (frozen, Frozen/S11i.lean:39).
   (b) decoders `κ`, `m` per valid ball, and `hBad`, `href`, `hfit`: the binders of `ae_unitScale_of_ball`
-      (Step8Exhaustion.lean:155), n3's Step 8 outputs.
+      (Step8Exhaustion.lean:155), the Step 8 outputs.
 * `unitBallFrequencyModels_of_inputs`: `UnitBallFrequencyModelsStmt` from these binders, through `unitBallFrequencyStmt_of_cover`.
-* `unitBallFrequencyModels_at_canonical`: the same at the canonical value `canonicalUnitFrequency` (`qF`, chat 217 (c), chat 228 B4).
+* `unitBallFrequencyModels_at_canonical`: the same at the canonical value `canonicalUnitFrequency` (`qF`).
 * `hzoom_all_of_inputs`, `hphys_of_inputs`: `hzoom_all_of_unit_models`, `hphys_of_unit_models` with the producer plugged in.
 
 The null atom `μ' ω {0} = 0` is derived from `hNat`. The Weyl hypothesis `hWeyl` is the derived theorem
@@ -49,11 +49,11 @@ structure Step8UnitBallInputs (P : Measure Ω) (γ ξ q δ M : ℝ) (U V W T Q' 
   /-- (b) Decoder of the local metric on the ball of index `p`. -/
   m : ∀ p : ℚ × ℚ × ℚ,
     ({φ : ℂ → ℝ // IsTestFunction (ball (ballCen p) (ballRad p)) φ ∧ ∫ x, φ x = 0} → ℝ) → ℂ → ℂ → ℝ
-  /-- (b) Measurability of the local failure set (n3, `ae_unitScale_of_ball` binder `hBad`). -/
+  /-- (b) Measurability of the local failure set (`ae_unitScale_of_ball` binder `hBad`). -/
   hBad : ∀ p : ℚ × ℚ × ℚ, ValidBall p →
     MeasurableSet (HarmonicBalls.ReferenceNullS11i.refBadWindowSet
       (localCertSeq (κ p) (m p) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M) q)
-  /-- (b) Reference observation avoids the failure set (n3, `ae_unitScale_of_ball` binder `href`), every model. -/
+  /-- (b) Reference observation avoids the failure set (`ae_unitScale_of_ball` binder `href`), every model. -/
   href : ∀ (hC' : Ω → (ℂ → ℝ) → ℝ) (hcirc' : Ω → ℝ → ℂ → ℝ) (μ' : Ω → Measure ℂ) (D' : Ω → ℂ → ℂ → ℝ),
     IsWholePlaneGFF P hC' hcirc' → IsLQGMeasureOfField P γ 0 hcirc' μ' → IsLQGMetricOfField P γ ξ 0 hC' D' →
     ∀ p : ℚ × ℚ × ℚ, ValidBall p →
@@ -61,7 +61,7 @@ structure Step8UnitBallInputs (P : Measure Ω) (γ ξ q δ M : ℝ) (U V W T Q' 
         campbellReferenceObs γ 0 (ball (ballCen p) (ballRad p)) (hC' ω) z ∉
           HarmonicBalls.ReferenceNullS11i.refBadWindowSet
             (localCertSeq (κ p) (m p) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M) q
-  /-- (b) Fitting identity of the decoded and physical certificate events (n3, `ae_unitScale_of_ball` binder `hfit`). -/
+  /-- (b) Fitting identity of the decoded and physical certificate events (`ae_unitScale_of_ball` binder `hfit`). -/
   hfit : ∀ (hC' : Ω → (ℂ → ℝ) → ℝ) (hcirc' : Ω → ℝ → ℂ → ℝ) (μ' : Ω → Measure ℂ) (D' : Ω → ℂ → ℂ → ℝ),
     IsWholePlaneGFF P hC' hcirc' → IsLQGMeasureOfField P γ 0 hcirc' μ' → IsLQGMetricOfField P γ ξ 0 hC' D' →
     ∀ p : ℚ × ℚ × ℚ, ValidBall p →
@@ -97,7 +97,7 @@ theorem unitBallFrequencyModels_of_inputs [IsProbabilityMeasure P] (hγ0 : 0 < �
     (hBad := inp.hBad p hp) (href := inp.href hC' hcirc' μ' D' hG hμ hD p hp)
     (hfit := inp.hfit hC' hcirc' μ' D' hG hμ hD p hp)
 
-/-- The canonical unit-ball limit `qF = (P {ω | alphaCanon α hC₀ ω ∈ F}).toReal` (chat 217 (c), chat 228 B4; the
+/-- The canonical unit-ball limit `qF = (P {ω | alphaCanon α hC₀ ω ∈ F}).toReal` (the
 limit in Step8Decoded.lean:80 is written with `alphaCanon γ`, see the report). -/
 noncomputable def canonicalUnitFrequency (P : Measure Ω) (α : ℝ) (hC₀ : Ω → (ℂ → ℝ) → ℝ)
     (F : Set (ModConstTestPairings (ball (0 : ℂ) 7))) : ℝ :=
@@ -138,6 +138,3 @@ theorem hphys_of_inputs [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → 
 
 end HarmonicBalls.FirstPassS11iHzoomUnitBall
 
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBall.unitBallFrequencyModels_of_inputs
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBall.hzoom_all_of_inputs
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBall.hphys_of_inputs

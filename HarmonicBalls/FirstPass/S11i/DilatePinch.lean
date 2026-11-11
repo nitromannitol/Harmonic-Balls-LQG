@@ -4,8 +4,7 @@ import HarmonicBalls.FirstPass.S11n
 /-!
 # Dilation of the pinch event (deterministic part of Step 13 of the proof of Lemma 11.13)
 
-Source: `paper/lqg_harmonic_ball-corrected.tex`, Lemma `lem:mu_h-pinch-bad` (11.13), and the write-up
-`notes/fp-gaps/CHATGPT-11-13-proof.md`, Step 13 (l.528-579): for `R > 0` the rescaled field
+Source: `paper/lqg_harmonic_ball-corrected.tex`, Lemma `lem:mu_h-pinch-bad` (11.13), Step 13 of the written proof: for `R > 0` the rescaled field
 `h^(R)(w) = h(R w) - h_R(0)` has the coordinate identities
 `mu_{h^(R)}(A) = c * mu_h(R A)` and `D_{h^(R)}(u,v) = b * D_h(R u, R v)` with positive constants `c, b`.
 The pinch event of the rescaled pair at `(z, r)` is then the pinch event of the original pair at `(R z, R r)`.

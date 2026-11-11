@@ -4,7 +4,7 @@ import Mathlib.Probability.Moments.Covariance
 import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
 
 /-!
-# Step 8 helper: characteristic functions of finite Gaussian families (owner n3)
+# Step 8 helper: characteristic functions of finite Gaussian families
 
 Source: corrected paper, lemma `s11-pinch:lem:mixing` (tex lines 3769-3812), via Gaussian cylinder approximation.
 Probability facts from Mathlib only (no GFF input): a real linear combination `∑ θ_k Z_k` of a jointly Gaussian

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.RootedLocality
 import HarmonicBalls.FirstPass.S11i.TranslationCanonical
 
 /-!
-# Almost sure local window frequency at a fixed root (fp-S11i-11-13, write-up Step 11.5)
+# Almost sure local window frequency at a fixed root (write-up Step 11.5)
 
 Fix a root `z` and a radius `b > 0` with `2b < ‖z‖` and `2b < 1` (write-up: `b = min{‖z‖, 1-‖z‖}/8`). Let `u` be smooth,
 compactly supported, with zero unit-circle average and `u = -α₀ log‖· + z‖` on `B_b(0)` (`exists_log_shift_cutoff`,

@@ -4,17 +4,17 @@ import HarmonicBalls.FirstPass.S11i.HzoomScale
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 
 /-!
-# Unit-ball frequency of every normalized LQG model, on the doubled disc (fp-S11i-hzoom-scale-e, n4)
+# Unit-ball frequency of every normalized LQG model, on the doubled disc
 
-`Step8UnitBallInputs2`: the inputs of the per-ball Step 8 route on the doubled disc (operator rulings of 2026-11-10 15:12 UTC):
+`Step8UnitBallInputs2`: the inputs of the per-ball Step 8 route on the doubled disc:
 
 * root disc `U_p = ball c r`, decoder disc `D_p = ball c (2 r)` (`c = ballCen p`, `r = ballRad p`);
 * kernel `κ_p` and metric decoder `m_p 𝔇` (index: the LQG metric `𝔇` with `IsLQGMetric γ ξ 𝔇`), built in
   HzoomUnitBallDecoders.lean; fitting identity `hfit` in HzoomUnitBallFit.lean;
-* `href` is a NAMED field (n3's doubled-disc instance, Step8HrefBall.lean, not yet posted);
+* `href` is a NAMED field (Step8HrefBall.lean, not yet posted);
 * the frozen/approved inputs are the binders of `step8UnitBallInputs2_of`: `hK` (LocalMeasureKernelStmt), `hR`
   (LocalMetricReplacementStmt), `hfr`, `hPos` (frozen), `hgeo` (IsBufferedPinchGeometry: replaces the containment binders
-  hCC, hU, hUm, hdelta, ruling B2), `hNat` (LQGMeasureNonatomic), `hA10` (DMSLemmaA10WholePlaneMarked).
+  hCC, hU, hUm, hdelta), `hNat` (LQGMeasureNonatomic), `hA10` (DMSLemmaA10WholePlaneMarked).
 
 The probability space is `Ω : Type` (not `Type u`): `rootedLengthProperty` (S11ah/RootedLengthProperty.lean:57) is stated for
 `Ω : Type`. The corollary `unitBallFrequencyModels_of_inputs2` is `UnitBallFrequencyModelsStmt` (HzoomScale.lean:124) at the
@@ -32,7 +32,7 @@ namespace HarmonicBalls.FirstPassS11iHzoomUnitBallDoubled
 variable {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
 
 /-- The inputs of the Step 8 unit-ball route on the doubled disc. `κ p`, `m 𝔇 p` live on the decoder disc
-`ball (ballCen p) (2 * ballRad p)`; `hBad`, `href`, `hfit` are indexed by the LQG metric `𝔇` (ruling B1). -/
+`ball (ballCen p) (2 * ballRad p)`; `hBad`, `href`, `hfit` are indexed by the LQG metric `𝔇`. -/
 structure Step8UnitBallInputs2 (P : Measure Ω) (γ ξ q δ M : ℝ) (U V W T Q' Q : Set ℂ) where
   /-- Null atom of the LQG measure (approved input `LQGMeasureNonatomic`, Proposed/LQG.lean:77). -/
   hNat : ∀ (hC' : Ω → (ℂ → ℝ) → ℝ) (hcirc' : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomic P γ 0 hC' hcirc'
@@ -48,7 +48,7 @@ structure Step8UnitBallInputs2 (P : Measure Ω) (γ ξ q δ M : ℝ) (U V W T Q'
   hBad : ∀ (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇) (p : ℚ × ℚ × ℚ), ValidBall p →
     MeasurableSet (HarmonicBalls.ReferenceNullS11i.refBadWindowSet
       (localCertSeq (κ p) (m 𝔇 h𝔇 p) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M) q)
-  /-- NAMED: reference observations avoid the failure set at `q` (n3's `href`, Step8HrefBall.lean; doubled-disc instance
+  /-- NAMED: reference observations avoid the failure set at `q` (Step8HrefBall.lean, doubled-disc instance
   pending). -/
   href : ∀ (hC' : Ω → (ℂ → ℝ) → ℝ) (hcirc' : Ω → ℝ → ℂ → ℝ) (μ' : Ω → Measure ℂ)
     (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇),
@@ -104,7 +104,7 @@ noncomputable def step8UnitBallInputs2_of {γ ξ q δ M : ℝ} {U V W T Q' Q : S
         exact hω 0)
       hD p hp
 
-/-- `canonicalUnitFrequency` is the step-8 frequency at the insertion `γ` (chat 243 Q3). -/
+/-- `canonicalUnitFrequency` is the step-8 frequency at the insertion `γ`. -/
 theorem canonicalUnitFrequency_eq_step8Frequency (P : Measure Ω) (γ : ℝ) (hC₀ : Ω → (ℂ → ℝ) → ℝ)
     (F : Set (ModConstTestPairings (ball (0 : ℂ) 7))) :
     HarmonicBalls.FirstPassS11iHzoomUnitBall.canonicalUnitFrequency P γ hC₀ F =
@@ -138,8 +138,7 @@ theorem unitBallFrequencyModels_of_inputs2 [IsProbabilityMeasure P] {γ ξ q δ 
     (hBad := inp.hBad 𝔇 h𝔇 p hp) (href := inp.href hC' hcirc' μ' 𝔇 h𝔇 hG hμ p hp)
     (hfit := inp.hfit hC' hcirc' μ' D' 𝔇 h𝔇 hG hμ hDa p hp)
 
-/-- The unit-ball frequency of every whole-plane model at the step-8 frequency `q_F = step8Frequency P γ hC₀ F`
-(chat 243 Q3: the insertion is `γ`). -/
+/-- The unit-ball frequency of every whole-plane model at the step-8 frequency `q_F = step8Frequency P γ hC₀ F`. -/
 theorem unitBallFrequencyModels_at_step8Frequency [IsProbabilityMeasure P] {γ ξ δ M : ℝ} {U V W T Q' Q : Set ℂ}
     (hγ0 : 0 < γ) (hγ2 : γ < 2) (hC₀ : Ω → (ℂ → ℝ) → ℝ)
     (F : Set (ModConstTestPairings (ball (0 : ℂ) 7)))
@@ -151,5 +150,3 @@ theorem unitBallFrequencyModels_at_step8Frequency [IsProbabilityMeasure P] {γ �
 
 end HarmonicBalls.FirstPassS11iHzoomUnitBallDoubled
 
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBallDoubled.unitBallFrequencyModels_of_inputs2
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBallDoubled.step8UnitBallInputs2_of

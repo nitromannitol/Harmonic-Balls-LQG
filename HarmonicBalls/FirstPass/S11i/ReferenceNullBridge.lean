@@ -2,8 +2,7 @@ import HarmonicBalls.FirstPass.S11i.ReferenceNull
 import HarmonicBalls.FirstPass.S11i.CertWindow
 
 /-!
-# Window-count bridge for the reference null set (fp-S11i-11-13; write-up `CHATGPT-n3-B1-B2.md` sec. 5, eq. (29) and
-the one-sided implication of the corrected certificate)
+# Window-count bridge for the reference null set (the one-sided implication of the corrected certificate)
 
 Deterministic. For certificate events `cert n x` forcing the pinch events `pinch n x`, the window count of the pinch events
 is at least `q/4 · N` as soon as the certificate window average converges to `q > 0`
@@ -59,5 +58,3 @@ theorem pinch_bad_subset_refBad {X : Type*} (cert pinch : ℕ → X → Prop)
 
 end HarmonicBalls.ReferenceNullS11i
 
-#print axioms HarmonicBalls.ReferenceNullS11i.pinch_bad_subset_refBad
-#print axioms HarmonicBalls.ReferenceNullS11i.ncard_window_eq_sum

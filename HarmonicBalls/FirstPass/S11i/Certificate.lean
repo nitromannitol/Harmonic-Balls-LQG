@@ -4,7 +4,7 @@ import HarmonicBalls.Draft.Section11
 /-!
 # The common local certificate and its inclusion (Lemma 11.13, steps 2 and 4)
 
-Steps 2 and 4 of `notes/fp-gaps/CHATGPT-11-13-proof.md`, with the explicit common rule [C43]: for the scale-one sets
+Steps 2 and 4 of the written proof, with the explicit common rule [C43]: for the scale-one sets
 `U, V, W, T, Q', Q`, a buffer `η > 0`, a domain `O_*` (Step 1; the buffers are not part of
 `IsPinchPointConfiguration`), and `M`, the certificate `𝓔_r^f(z; M) = E₁ ∩ E₂ ∩ E₃` is defined by transporting every set
 by `w ↦ z + r w` (`r` is the Euclidean radius). The metric is not rescaled.

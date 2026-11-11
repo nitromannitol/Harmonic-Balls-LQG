@@ -5,7 +5,7 @@ import Mathlib.MeasureTheory.Constructions.Cylinders
 import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
 
 /-!
-# Step 8 helper: the canonical dilation is measure preserving (owner n3)
+# Step 8 helper: the canonical dilation is measure preserving
 
 Source: corrected paper, `s11-pinch:lem:mixing` (tex lines 3769-3812), the identification of the dilation `𝒯 g = g(·/2)`
 on whole-plane fields modulo constants. On the canonical space `ModConstTestPairings univ` (pairings with mean-zero test

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.GaussianMix
 import HarmonicBalls.Defs.GFF
 
 /-!
-# Step 8 helper: finite families of GFF pairings are jointly Gaussian (owner n3)
+# Step 8 helper: finite families of GFF pairings are jointly Gaussian
 
 Source: `IsWholePlaneGFF.isGaussianProcess` (Defs/GFF.lean, Duplantier-Sheffield 2011, Section 3.1 and eq:cov-kernel,
 corrected paper lines 356-365): every finite family of admissible observables is a Gaussian vector. Here the family

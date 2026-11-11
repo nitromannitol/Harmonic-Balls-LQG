@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11i.DilationMixing
 
 /-!
-# Step 8 helper: the logarithmic potential of a test function is continuous (owner n3)
+# Step 8 helper: the logarithmic potential of a test function is continuous
 
 Source: corrected paper, lemma `s11-pinch:lem:mixing` (tex lines 3769-3812), used in the covariance decay
 `Cov((g, f), (𝒯ⁿ g, k)) → 0` (Armitage-Gardiner, potential theory of `log|·|`: `log|·|` is locally integrable

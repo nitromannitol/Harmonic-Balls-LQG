@@ -18,9 +18,8 @@ import HarmonicBalls.FirstPass.S11h.Faithful
 
 /-!
 # Insertion transfer: all-model zero-insertion physical frequency implies the insertion-`α` one
-(fp-S11i-insertion-transfer, owner n4)
 
-Source: `notes/fp-gaps/CODEX-hPhys-sol-20261110.md`, section "For insertion transfer" and VERDICT step 3.
+
 
 `PhysicalAt` and `AllModelsAt` are the proposed interfaces of that note, written with the same bodies as the existing
 binder `Step8PhysStmt` (`S11i/Step8PhysReduction.lean:84`). `Step8PhysExists.lean` is not in the repository yet, so the
@@ -518,11 +517,3 @@ theorem allModelsAt_insertion_of_zero_k0 {γ α q δ M : ℝ} {U V W T Q' Q : Se
 
 end HarmonicBalls.FirstPassS11iInsertionTransfer
 
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.tendsto_window_iff_of_eventually_iff
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.exists_log_cutoff_avoid_zero
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.restrict_eq_withDensity_of_off_zero
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.zeroInsertion_shift_eq_insertion_on_disc
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.internalMetric_shift_eq_on_disc
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.fieldPairing_shift_eq_on_disc
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.disc_transfer_k0
-#print axioms HarmonicBalls.FirstPassS11iInsertionTransfer.allModelsAt_insertion_of_zero_k0

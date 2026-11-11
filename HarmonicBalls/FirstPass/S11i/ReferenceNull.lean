@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11w
 
 /-!
-# Reference null set of the pinch-window observation (fp-S11i-11-13; write-up `CHATGPT-n3-B1-B2.md` sec. 5.2, eqs (29), (31), (32))
+# Reference null set of the pinch-window observation
 
 For a family `c n` of certificate indicators on the reference observations, the window average over the dyadic window
 `(N, 2N]` is `B_N` of eq. (29); the bad set `S` is where `B_N` does not converge to `q` (eq. (29)). If, for Lebesgue-almost
@@ -75,4 +75,3 @@ theorem ae_marked_window_null (hCamp : HarmonicBalls.LocalCampbellMarkedRestrict
 
 end HarmonicBalls.ReferenceNullS11i
 
-#print axioms HarmonicBalls.ReferenceNullS11i.ae_marked_window_null

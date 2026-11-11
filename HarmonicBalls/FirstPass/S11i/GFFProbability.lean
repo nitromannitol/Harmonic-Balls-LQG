@@ -1,14 +1,13 @@
 import HarmonicBalls.Defs.GFF
 
 /-!
-# Total mass of the whole-plane GFF (FIRST-PASS, Chat 224 Correction 2)
+# Total mass of the whole-plane GFF
 
 The probability-space interface of the rooted, Campbell and Birkhoff argument needs the carrier measure `P` of a
 whole-plane Gaussian free field to be a probability measure (Duplantier-Sheffield 2011, Section 2.1; Harmonic balls
 in LQG, arXiv:2208.11795, Section 2.1). Under the definition `IsWholePlaneGFF P hC hcirc`
 (`HarmonicBalls/Defs/GFF.lean`) this is already proved there as `IsWholePlaneGFF.isProbabilityMeasure`, from the
-Gaussian clause `isGaussianProcess` at the admissible observable `circle 1 0`. This file restates that theorem under
-the name requested by the operator. It adds no mathematics.
+Gaussian clause `isGaussianProcess` at the admissible observable `circle 1 0`. This file restates that theorem.
 -/
 
 open MeasureTheory

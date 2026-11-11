@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11q
 # Measure half of the rescaling hypothesis `hscale` (Lemma 11.13, write-up sec. 6 / eq. (30)-(32))
 
 The LQG measure of the dyadically dilated field `h^{(R)}`, `R = 2^k`, is the designated limit with circle averages
-`dilatedCircleAverage H R`. By `isLQGLimit_dilate_dyadic` (FirstPass/S11q.lean, n1's Step 12 coordinate identities) this
+`dilatedCircleAverage H R`. By `isLQGLimit_dilate_dyadic` (FirstPass/S11q.lean) this
 limit is `e^{-γ c_R} · (μ_h).map (· / R)`; `IsLQGLimit.unique` (Defs/LQG.lean) identifies the designated measure.
 Only the LQG limit characterisation is used; no metric input. The metric half of `hscale` is not here.
 -/

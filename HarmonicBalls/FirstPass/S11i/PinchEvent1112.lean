@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.Step8Event
 import HarmonicBalls.FirstPass.S11m.Final11_12
 
 /-!
-# Lemma 11.12 event at gamma from the named inputs of firstPass_11_12_final (fp-S11i-11-13d, n3)
+# Lemma 11.12 event at gamma from the named inputs of firstPass_11_12_final
 
 Replaces the hypothesis CorrectedLemma11_12Stmt of pinchEventGamma_exists (Step8Event.lean) by the named inputs of
 firstPass_11_12_final (S11m/Final11_12.lean:131), with the same binders in the same order. No new input.
@@ -15,7 +15,7 @@ open scoped ENNReal
 
 universe u
 
-/-- The 11.12 event at the insertion gamma (B4), from the inputs of firstPass_11_12_final. -/
+/-- The 11.12 event at the insertion gamma, from the inputs of firstPass_11_12_final. -/
 theorem pinchEventGamma_of_11_12_inputs
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})

@@ -3,7 +3,7 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Insertion-`γ` model on the realization of an insertion-`α₀` model (fp-S11i, owner n3)
+# Insertion-`γ` model on the realization of an insertion-`α₀` model
 
 This file discharges the hypothesis `hγM` of `correctedLemma11_13_of_gamma_identity` (`FirstPass/S11i/Assembly13.lean`).
 Given a whole-plane model `(μ, D)` at `(γ, ξ, α₀)` on a realization `(Ω, P, hC, hcirc)`, the same realization carries a
@@ -47,4 +47,3 @@ end FirstPassS11iGamma
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.FirstPassS11iGamma.gammaModel_of_alpha0Model

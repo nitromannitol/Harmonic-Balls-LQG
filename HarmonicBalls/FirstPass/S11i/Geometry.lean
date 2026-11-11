@@ -4,8 +4,7 @@ import HarmonicBalls.Defs.Geometry
 # An explicit pinch-point configuration (Lemma 11.13, step 1)
 
 `ManyPinchScalesStmt` (`HarmonicBalls/Draft/Section11.lean:259`) begins with `∃ U T Q' Q, IsPinchPointConfiguration U T Q' Q`.
-This file proves that existence for one explicit deterministic geometry, fixed before all other parameters (step 1 of
-`notes/fp-gaps/CHATGPT-11-13-proof.md`, with `c = 3/2`):
+This file proves that existence for one explicit deterministic geometry, fixed before all other parameters (with `c = 3/2`):
 `U = B_{1/100}(3/2)`, `T = B_{1/10}(3/2) ∪ S ∪ 𝔸_{24/5,5}` with the strip `S = {3/2 < x < 49/10, |y| < 1/50}`,
 `Q' = B_{1/100}(-22/5)`, `Q = B_{1/50}(-22/5)`. The fields checked are those of the structure `IsPinchPointConfiguration`
 (`HarmonicBalls/Defs/Geometry.lean:190`); the keyhole shape of the paper's figure is not part of that structure.

@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11q.Metric
 
 For a whole-plane GFF model `hC` with LQG metric `D` (`IsLQGMetricOfField`) and the dilated background
 `hC(R ·) + Q_γ log R - c` (paper eq. (34)), the real metric of the dilated field is
-`e^{-ξ(c - α₀ log R)} · D(R ·, R ·)` almost surely (paper eq. (37)). This is n1's
+`e^{-ξ(c - α₀ log R)} · D(R ·, R ·)` almost surely (paper eq. (37)). This is
 `ae_weylScaling_affinePullback_background` (FirstPass/S11q/Metric.lean) read back in real-valued form.
 The measure half is `FirstPass/S11i/DilateMeasure.lean`; both halves use the same constant `c_R = c - α₀ log R`
 (`c_R = dilationConstant`, FirstPass/S11q.lean, when `c = H R 0 + (Q_γ + α₀) log R`).

@@ -6,7 +6,7 @@ import Mathlib.MeasureTheory.Measure.LevyConvergence
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 /-!
-# Step 8 helper: asymptotic product factorization for the whole-plane GFF (owner n3)
+# Step 8 helper: asymptotic product factorization for the whole-plane GFF
 
 Source: corrected paper, `s11-pinch:lem:mixing` (tex lines 3769-3812), the finite-dimensional factorization: for
 test functions `a i` and mean-zero test functions `b j`, the joint laws of `(h, a_i)_i` and `(h, κₙ b_j)_j`

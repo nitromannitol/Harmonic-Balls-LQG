@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Joint probability at one level (Lemma 11.12 replacement, Theorem 2)
 
-Generic measure step of Theorem 2 (`notes/fp-gaps/G-11-12.md`, section 3, "Proof of unconditional positivity"): "Choose
+Generic measure step of Theorem 2: "Choose
 one deterministic `n` such that the mass event and `max_S diam_D(H_S) < ε/16` have joint probability at least `p/2`."
 If an event `A` satisfies `p ≤ P A` for some `p > 0`, and the events `B n` hold eventually almost surely, then some single
 `n` satisfies `P (A ∩ B n) ≥ p/2`. Only measure theory is used.

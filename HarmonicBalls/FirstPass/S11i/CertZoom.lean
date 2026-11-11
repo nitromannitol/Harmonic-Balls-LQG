@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11i.CertDilate
 import HarmonicBalls.FirstPass.S11i.CertHcert
 
 /-!
-# Window certificates of the dyadic zoom family are physical certificate events (fp-S11i, owner n3)
+# Window certificates of the dyadic zoom family are physical certificate events
 
-Step 8 (F-i) of `CHATGPT-n3-Q1-eq34.md` section 5. For the zoom family of `GammaZoomIdentityStmt`
+Step 8 (F-i) of the written proof. For the zoom family of `GammaZoomIdentityStmt`
 (`Assembly13.lean`), `μk k ω = a • (μ ω).map (· / 2^k)` and `Dk k ω = b D(2^k ·, 2^k ·)`, the window certificate of index
 `n` at the centre `w` (`FirstPassS11i.windowCert`, radius `(2⁻¹)^n`) is the physical certificate event of `(μ, D)` at
 Euclidean radius `2^k (2⁻¹)^n` about the point `2^k w`. This is `certificateEvent_dilate_iff` with `R = 2^k`,

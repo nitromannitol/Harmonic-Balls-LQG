@@ -3,13 +3,13 @@ import HarmonicBalls.FirstPass.S11i.Faithful
 import HarmonicBalls.FirstPass.S11ah.LocalCert
 
 /-!
-# Shared decoded-to-physical identification of certificates (fp-S11i-11-13c, owner n3)
+# Shared decoded-to-physical identification of certificates
 
-`CertificateIdentification` is the shared `Prop` of `notes/fp-gaps/CHATGPT-n3-identification.md` §5: one structure with three
+`CertificateIdentification` is the shared `Prop`: one structure with three
 clauses, used by two instances.
 
-* §5.1 (Step 8, unrooted law, `Step8IdentificationStmt`): `obs ω = obs_{D_j} h^{α₀}_ω` on a local domain `Dloc = D_j`.
-* §5.2 (n1, hId, rooted law): `obs ω = obs_D f_{z₀,ω}` (Campbell reference field) for a fixed good root `z₀`.
+* Step 8, unrooted law (`Step8IdentificationStmt`): `obs ω = obs_{D_j} h^{α₀}_ω` on a local domain `Dloc = D_j`.
+* hId, rooted law: `obs ω = obs_D f_{z₀,ω}` (Campbell reference field) for a fixed good root `z₀`.
 
 Fields:
 * `sequence_eq`: the decoded sequence `c` is the truncated `localCert` sequence (`FirstPassS11ah.localCert`, `LocalCert.lean:24`).
@@ -27,7 +27,7 @@ namespace HarmonicBalls
 open MeasureTheory Metric Set Filter
 open FirstPassS11i FirstPassS11ah
 
-/-- The shared identification of decoded and physical certificates (`CHATGPT-n3-identification.md` §5). The observation law is
+/-- The shared identification of decoded and physical certificates. The observation law is
 `P` (`obs : Ω → Obs`, decoders `κ`, `m`), the physical objects are `μ, d` on `Ω`, and the scale-one coding event `F` is given
 by the canonical law `P₀` with observation `unitObs` and physical objects `μ₀, d₀`. -/
 structure CertificateIdentification

@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.S11s.Inverse
 import HarmonicBalls.FirstPass.S11i.MixingCanonical
 
 /-!
-# On-`G` termwise interface (Astra step 4, operator task fp-S11i-onG-termwise)
+# On-`G` termwise interface (Astra step 4)
 
 Input: a measurable set `G` of canonical fields, conull for `alphaCanon γ hC` under the whole-plane GFF model, on which
 the event identity `hFdefG` holds (`L ∈ G → CertificateEvent (Dμ L) (Dd L) … ↔ ballRestrictPairing 7 L ∈ F`).
@@ -22,7 +22,7 @@ Proved here:
   root-shifted canonical field lies in `G`. This is the rooted membership that was a named input (`hGroot`).
 * `ae_identification_on_G`: the almost-sure event identity of `ae_termwise_of_identification`, using `hFdefG` on `G` only.
 * `ae_termwise_on_G`: `ae_termwise_of_identification` with that identity (the all-code wrapper is untouched).
-* `covariance_set_on_G`, `ae_shiftedCanon_dilation_on_G`: a B1 covariance set `G0` is replaced by `G0 ∩ dilOrbit G`.
+* `covariance_set_on_G`, `ae_shiftedCanon_dilation_on_G`: a covariance set `G0` is replaced by `G0 ∩ dilOrbit G`.
   No inclusion `G0 ⊆ G` is assumed; it is obtained from `dilOrbit_subset`.
 
 Conventions: the field parameter is `γ` throughout, as in `ae_termwise_of_identification` (`canonFieldOf γ`), and the
@@ -65,7 +65,7 @@ theorem dilOpInv_iterate_succ_dilOp (L : S11n.CanonSpace) (n : ℕ) :
     dilOpInv^[n + 1] (dilOp L) = dilOpInv^[n] L := by
   rw [Function.iterate_succ_apply, dilOpInv_dilOp]
 
-/-- `dilOrbit G` is invariant under `dilOp` (as a set equality, so that it may be intersected with a `B1` set). -/
+/-- `dilOrbit G` is invariant under `dilOp` (as a set equality, so that it may be intersected with a covariance set). -/
 theorem preimage_dilOp_dilOrbit (G : Set S11n.CanonSpace) :
     dilOp ⁻¹' dilOrbit G = dilOrbit G := by
   ext L
@@ -240,7 +240,7 @@ theorem ae_termwise_on_G {γ α₀ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : 
   ae_termwise_of_identification hsub A Ostar U V W T Q' Q η M κ m c hSeq Dμ Dd hCov
     (ae_identification_on_G hCM hh hTr hG hGa Ostar U V W T Q' Q η M Dμ Dd hFdefG A c₁ r₁ α₀)
 
-/-- **B1 covariance set intersected with the orbit.** Given a B1 set `G0` (measurable, conull, `dilOp`-invariant),
+/-- **Covariance set intersected with the orbit.** Given a covariance set `G0` (measurable, conull, `dilOp`-invariant),
 `G0 ∩ dilOrbit G` is measurable, conull, `dilOp`-invariant, and contained in `G`. No inclusion `G0 ⊆ G` is assumed. -/
 theorem covariance_set_on_G {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc) (α : ℝ)
@@ -254,7 +254,7 @@ theorem covariance_set_on_G {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [I
   · rw [Set.preimage_inter, hinv, preimage_dilOp_dilOrbit]
 
 /-- **Dilation covariance of the root-shifted canonical field on `G0 ∩ dilOrbit G`.** This is
-`FirstPassS11at.ae_shiftedCanon_dilation` (B1 covariance transfer) applied to the intersected set. It takes the output
+`FirstPassS11at.ae_shiftedCanon_dilation` (covariance transfer) applied to the intersected set. It takes the output
 shape of `B1_covariance` (S11s/B1Covariance.lean:120): `G0`, `dilOp ⁻¹' G0 = G0`, and the one-step identities on `G0`. -/
 theorem ae_shiftedCanon_dilation_on_G {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     (hCM : CameronMartinGFFMutualAbsCont.{0}) (γ : ℝ)
@@ -280,7 +280,7 @@ theorem ae_shiftedCanon_dilation_on_G {Ω : Type} [MeasurableSpace Ω] {P : Meas
   exact FirstPassS11at.ae_shiftedCanon_dilation hCM γ hh hTr z u hu hcomp hu0 h0 h1 h2
     (fun L hL => hstep L hL.1) n
 
-/-- **`B1_covariance` instantiated, then intersected with the orbit of `G`.** The B1 covariance set `G0` (from the
+/-- **`B1_covariance` instantiated, then intersected with the orbit of `G`.** The covariance set `G0` (from the
 global canonical decoders `K`, `d` of `LQGCanonicalDecodersMeasurableExistStmt`) is not assumed to lie in `G`. The
 output set is `G0 ∩ dilOrbit G`, which is measurable, conull, `dilOp`-invariant, contained in `G`, and carries the
 one-step identities of `B1_covariance`. `G` is abstract: its regularity `hGs` on `G` is an input, as is its conullity. -/

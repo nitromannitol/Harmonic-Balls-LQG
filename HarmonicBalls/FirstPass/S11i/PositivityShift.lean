@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Positivity by scaled shifts (Lemma 11.12 replacement, Theorem 2, unconditional positivity)
 
-Generic measure step of `notes/fp-gaps/G-11-12.md`, section 3, "Proof of unconditional positivity": "Its shift law is
+Generic measure step: "Its shift law is
 equivalent to the original law. Since the events `{e^{γk} μ(S₀) > 8c}`, `k ∈ ℕ`, exhaust a full-measure event,
 equivalence proves `p = P{μ(S₀) > 8c} > 0`."
 

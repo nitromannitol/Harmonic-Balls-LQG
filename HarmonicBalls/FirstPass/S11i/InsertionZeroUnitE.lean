@@ -11,7 +11,7 @@ import HarmonicBalls.FirstPass.S11ap
 import HarmonicBalls.FirstPass.S11b
 
 /-!
-# Insertion-zero unit frequency of a coding event (fp-S11i-insertion-zero-unit-E, n4)
+# Insertion-zero unit frequency of a coding event
 
 `InsertionZeroUnitStmt.{0} γ E U V W T Q' Q δ M` (`S11i/Step8PhysExists.lean:85`) for a coding event `E` of the
 Lemma 11.12 construction. The proof is the doubled-disc route of `S11i/HzoomUnitBallDoubled.lean`: for every
@@ -23,12 +23,12 @@ Inputs (all binders; none is proved here):
 * frozen: `hK` (`LocalMeasureKernelStmt`, `S11r/Frozen.lean:144`), `hR` (`LocalMetricReplacementStmt` at `ξ = lqgXi γ`,
   `S11r/LocalMetricReplacement.lean:58`), `hfr` (`RootedPhysicalMetricContinuousAtInsertionFrozen`), `hPos`
   (`LQGMeasureSquarePositiveFrozen`);
-* Proposed: `hNon` (`LQGMeasureNonatomic`, `Proposed/LQG.lean:77`; operator-confirmed 2026-11-10), in its universal form;
+* Proposed: `hNon` (`LQGMeasureNonatomic`, `Proposed/LQG.lean:77`), in its universal form;
 * frozen, Sub form: `hA10` (`DMSLemmaA10WholePlaneMarkedSub`, `Frozen/S11i.lean:58`), converted to the marked form by
   `HarmonicBalls.dmsA10Marked_of_sub` at the fixed `0 < γ < 2`;
 * NAMED: `hHref`, the `href` field of `Step8UnitBallInputs2` (reference observations avoid the failure set at `q`),
   in its universal form over whole-plane models and over every `q` with `CommonProb γ E q`. It is the one remaining
-  named input of this file; its instance for the ball decoders is the work of n2 (`S11r/RootedHrefBall.lean`).
+  named input of this file; its instance for the ball decoders is not proved here.
 -/
 
 open MeasureTheory Filter Topology Set Metric
@@ -83,7 +83,7 @@ theorem insertionZeroUnit_of_href {γ δ M : ℝ} {U V W T Q' Q : Set ℂ} {E : 
 `E := decodedPinchRuleBall I (decodedFamily Ψc) (decGreen Φμ) (decMassU Φμ U) M`, the href field of
 `insertionZeroUnit_of_href` is `ae_href_of_covariance_G` (`S11i/HFdefOnG.lean`) with `hFdef` on `G` from
 `hFdef_decoded_on_G`. The named inputs are the G-properties `hmet`, `hdec`, `hfin`, `hEmeas`, and the two rooted inputs
-`hCovU` (n2's covariance for the ball decoders) and `hGrootU` (rooted membership in `G`). -/
+`hCovU` and `hGrootU` (rooted membership in `G`). -/
 theorem insertionZeroUnit_decoded_on_G {γ δ M : ℝ} {U V W T Q' Q : Set ℂ}
     (hγ0 : 0 < γ) (hγ2 : γ < 2)
     (hgeo : HarmonicBalls.IsBufferedPinchGeometry U V W T Q' Q δ)
@@ -155,7 +155,7 @@ theorem insertionZeroUnit_decoded_on_G {γ δ M : ℝ} {U V W T Q' Q : Set ℂ}
     exact hhh
   exact insertionZeroUnit_of_href hγ0 hγ2 hgeo hK hR hfr hPos hNon hA10 hHref
 
-/-! ### Global-decoder variant (operator task fp-S11i-insertionZeroUnit-onG).
+/-! ### Global-decoder variant.
 The rooted bridge uses the global canonical decoders `D.K`, `D.d` of the frozen package `CanonDecoderData`
 (S11r/FrozenCanonDecoders.lean:31), not the local `Φμ`, `Ψc`, which only define the coding set `E`.
 The old theorems above are kept unchanged. -/
@@ -304,4 +304,3 @@ theorem insertionZeroUnit_globalOnG {γ δ M : ℝ} {U V W T Q' Q : Set ℂ}
 
 end HarmonicBalls.FirstPassS11iInsertionZeroUnitE
 
-#print axioms HarmonicBalls.FirstPassS11iInsertionZeroUnitE.insertionZeroUnit_decoded_on_G

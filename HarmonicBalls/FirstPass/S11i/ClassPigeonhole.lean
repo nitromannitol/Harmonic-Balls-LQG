@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Measure pigeonhole over four classes (Lemma 11.12 replacement, Theorem 2)
 
-Generic measure step of Theorem 2 (`notes/fp-gaps/G-11-12.md`, section 3, "Proof of unconditional positivity"): "The four
+Generic measure step of Theorem 2: "The four
 classes cover `S_0`, so one deterministic class has total core mass greater than `2c` on a positive-probability subset
 of this event." If an event `B` is covered by finitely many events `A c`, one per class `c`, then some class satisfies
 `P B ≤ 4 · P (B ∩ A c)`, so `P (B ∩ A c) > 0` whenever `P B > 0`.

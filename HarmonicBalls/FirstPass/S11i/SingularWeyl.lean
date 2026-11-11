@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.Frozen.S11i
 /-!
 # Singular Weyl change of the γ-LQG measure (write-up Step 12, identities (1)-(2))
 
-Source: `notes/fp-gaps/CHATGPT-n3-step12-gaps.md` §1-§2 (identities (1), (2)); HB Fact 2.1 (I) (nonatomicity),
+Source: HB Fact 2.1 (I) (nonatomicity),
 printed p. 9. For `0 < γ < 2` and `α < Q`, almost surely `μ_α = |z|^{-γα} μ_0` as measures on `ℂ`, and the two
 measures have the same null sets. The write-up's Weyl-scaling input `LQGMeasureWeylScaling` is not used.
 

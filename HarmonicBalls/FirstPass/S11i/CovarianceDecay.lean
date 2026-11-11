@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.LogPotentialFubini
 import HarmonicBalls.Defs.GFF
 
 /-!
-# Step 8 helper: covariance decay of the dilated whole-plane GFF (owner n3)
+# Step 8 helper: covariance decay of the dilated whole-plane GFF
 
 Source: corrected paper, lemma `s11-pinch:lem:mixing` (tex lines 3769-3812). For test functions `f, k` with
 `∫ k = 0`, the covariance of the pairing with `f` and the pairing with the dilated test function `κₙ k`

@@ -9,17 +9,16 @@ import HarmonicBalls.FirstPass.S11r.LocalMetricReplacement
 import HarmonicBalls.FirstPass.S11r.Frozen
 
 /-!
-# Per-ball decoders of the unit-ball frequency (Step 8, fp-S11i-hzoom-scale-e, n4)
+# Per-ball decoders of the unit-ball frequency (Step 8)
 
-Building blocks for the doubled-disc inputs `Step8UnitBallInputs2` (HzoomUnitBallDoubled.lean), chat 238 steps 1-6, 9-11,
-with the rulings of the operator (2026-11-10 15:12 UTC):
+Building blocks for the doubled-disc inputs `Step8UnitBallInputs2` (HzoomUnitBallDoubled.lean), steps 1-6, 9-11:
 
 * root disc `U_p = ball c r`, decoder disc `D_p = ball c (2 r)`, `c = ballCen p`, `r = ballRad p` (`ValidBall p`);
 * kernel: `κ_p := discNormalizedKernel κF_p`, where `κF_p` is the finite kernel of `exists_finite_localMeasureKernel`
-  (`FirstPassS11ahFinite`, FiniteLocalKernel.lean:64) on the disc `D_p` (chat 243 Q2);
+  (`FirstPassS11ahFinite`, FiniteLocalKernel.lean:64) on the disc `D_p`;
 * metric: `m_p 𝔇 ℓ` is the decoder `decoderOn D_p (m₀ ℓ)` of the metric replacement `m₀` of `LocalMetricReplacementStmt`
   (S11r/LocalMetricReplacement.lean:58) for the LQG metric `𝔇`, on the good set `H_good` (the set where it is a length metric),
-  and the Euclidean distance off `H_good`. The metric index `𝔇` is an explicit argument (ruling B1).
+  and the Euclidean distance off `H_good`. The metric index `𝔇` is an explicit argument.
 
 `validBall_facts`: the geometry of `ValidBall`. `ballKernel`, `ballMetric`: the decoders. `ballMetric_isLengthMetric`,
 `ballMetric_measurable`: their length-metric property and measurability. `ballKernel`, `ballMetric`, `measurable_ballBad`.
@@ -56,7 +55,7 @@ lemma validBall_facts {p : ℚ × ℚ × ℚ} (hp : ValidBall p) :
     rw [mem_closedBall, dist_comm, dist_zero_right] at h
     linarith
 
-/-- The finite decoder kernel `κF_p` on the decoder disc `ball c (2 r)` (`exists_finite_localMeasureKernel`, chat 243 Q2);
+/-- The finite decoder kernel `κF_p` on the decoder disc `ball c (2 r)` (`exists_finite_localMeasureKernel`);
 the zero kernel off `ValidBall`. -/
 noncomputable def kernelF {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     (hK : ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ, HarmonicBalls.LocalMeasureKernelStmt.{u} γ c₁ c₂ r₁ r₂) (p : ℚ × ℚ × ℚ) :
@@ -68,7 +67,7 @@ noncomputable def kernelF {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
       (validBall_facts hp).2.2.2)
   else 0
 
-/-- The normalized kernel `κ_p = discNormalizedKernel κF_p` (n3's href uses this normalization, Step8Modified.lean:51). -/
+/-- The normalized kernel `κ_p = discNormalizedKernel κF_p` (Step8Modified.lean:51). -/
 noncomputable def ballKernel {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     (hK : ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ, HarmonicBalls.LocalMeasureKernelStmt.{u} γ c₁ c₂ r₁ r₂) (p : ℚ × ℚ × ℚ) :
     Kernel (FirstPassS11ahFinite.LocalObs (ballCen p) (2 * ballRad p)) ℂ :=
@@ -138,7 +137,7 @@ theorem ballMetric_measurable {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
   rw [heq]
   exact Measurable.ite hG hdec measurable_const
 
-/-- **The local failure set is measurable** (`hBad`, chat 238 section 1; `measurable_localCert_disc` and
+/-- **The local failure set is measurable** (`hBad`, `measurable_localCert_disc` and
 `measurableSet_refBadWindowSet`). Uses the buffered pinch geometry `hgeo` for the locality of the certificate event
 (`certificateEventLocality_of_containments`), for the open set `Ostar` and for the sphere in `Ostar`. -/
 theorem measurableSet_ballBad {γ ξ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
@@ -184,5 +183,3 @@ theorem certificateEvent_of_restrict_scalar_at (μ μ' : Measure ℂ) (D D' : �
 
 end HarmonicBalls.FirstPassS11iHzoomUnitBallDecoders
 
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBallDecoders.ballMetric_isLengthMetric
-#print axioms HarmonicBalls.FirstPassS11iHzoomUnitBallDecoders.certificateEvent_of_restrict_scalar_at
