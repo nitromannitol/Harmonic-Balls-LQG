@@ -9,7 +9,7 @@ import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.Proofs.GFF.ContinuousCircleDilationMixing
 import HarmonicBalls.Steps.Sec5.ScaleInvariance
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the eventual phase count of one Omega, from the profile space
+/-! # helper: the eventual phase count of one Omega, from the profile space
 
 For a whole-plane GFF `(P, hC, hcirc)` and its γ-LQG measure `ν` (insertion parameter `γ`), the profile `F` is measurable
 (`ProfileVersion`), `Dec` is the frozen measurable profile map (E1), and the profile law `Q = P.map F` carries the dilation

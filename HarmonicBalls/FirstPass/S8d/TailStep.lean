@@ -7,7 +7,7 @@ import HarmonicBalls.Draft.Section2
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Proofs.Sec8.UniformAnnulusThreshold
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the phase-tail step `LocalPhaseTailStep`, from the frozen inputs
+/-! # helper: the phase-tail step `LocalPhaseTailStep`, from the frozen inputs
 
 `LocalPhaseTailStep` (FirstPass/S8c/PhaseTail.lean:29) is the existential form of the phase tail of Lemma 8.2. Its
 constants are taken from the probability statement `VeryGoodAnnulusProbabilityStmt` (Draft/Section6.lean:331) at the

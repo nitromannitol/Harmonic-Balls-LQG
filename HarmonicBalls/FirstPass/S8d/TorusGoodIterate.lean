@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S8d.TorusDoubleIterate
 import HarmonicBalls.Proofs.Sec8.PhaseVeryGoodScaling
 import HarmonicBalls.Proofs.Sec8.AnnulusComparisonStationarity
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the level-`n` torus good event under one dilation
+/-! # helper: the level-`n` torus good event under one dilation
 
 For a measure `μ` on `ℂ` and a constant `c ∈ (0, ∞)`, let `μ' = c • μ.map (k⁻¹ • ·)` with `k = dyadicScale n`
 (this is the shape of `normalizedPullbackMeasure`, Steps/Sec5/ScaleInvariance.lean:21). The level-`n` good predicate of

@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.Annuli
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): two-sided density comparison of measures on a region
+/-! # helper: two-sided density comparison of measures on a region
 
 For the singular LQG measure `μ` (parameter `α₀ = γ`) and the regular one `lam` (parameter `0`) of the same field,
 the Weyl relation off the origin (`LocalLQGInsertionWeylOffOrigin`, FirstPass/Frozen/S8c.lean:59) gives, on a region
@@ -41,7 +41,5 @@ theorem smul_le_restrict_of_density (lam μ : Measure ℂ) (D : Set ℂ) (hD : M
   filter_upwards [ae_restrict_mem hD] with y hyD _
   exact hgc y hyD
 
-#print axioms restrict_le_smul_of_density
-#print axioms smul_le_restrict_of_density
 
 end HarmonicBalls

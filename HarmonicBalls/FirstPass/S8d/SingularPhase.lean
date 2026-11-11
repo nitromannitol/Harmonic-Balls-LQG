@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8d.RegularPhase
 import HarmonicBalls.FirstPass.S8d.TranslatedDensity
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the singular translated very-good event, probability bound (route d2 + d1)
+/-! # helper: the singular translated very-good event, probability bound (route d2 + d1)
 
 For the singular LQG measure `ν` (`α = γ`) of a whole-plane GFF and the regular measure `lam` (`α = 0`) of the same field,
 the Weyl relation off the origin (`hW`, the frozen `LocalLQGInsertionWeylOffOrigin` of FirstPass/Frozen/S8c.lean:59 in its
@@ -65,6 +65,5 @@ theorem singular_translated_failure_le {Ω : Type u} [MeasurableSpace Ω] (P : M
       (translated_density_bounds (ν ω) (lam ω) γ q hωW).2 hr)
   exact (measure_mono_ae hae).trans hreg
 
-#print axioms singular_translated_failure_le
 
 end HarmonicBalls

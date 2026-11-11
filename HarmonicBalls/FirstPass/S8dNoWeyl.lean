@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8d
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 
-/-! # FIRST-PASS result 8.2 without the Weyl hypothesis, S8d version (fp-8-2-noWeyl-and-imports, worker z6)
+/-! # Result 8.2 without the Weyl hypothesis, S8d version
 
 `FirstPass/S8d.lean:32` declares `firstPass_8_2` (the S8d proof, the one used by the closure chain
 `Closure/Sec78910.lean` and `Closure/SecA45.lean`). It takes the frozen Prop `LocalLQGInsertionWeylOffOrigin` as the
@@ -20,7 +20,7 @@ open MeasureTheory
 
 universe u
 
-/-- FIRST-PASS result 8.2 (Lemma 8.2, many good scales at typical points), S8d proof, without the Weyl hypothesis:
+/-- Result 8.2 (Lemma 8.2, many good scales at typical points), S8d proof, without the Weyl hypothesis:
 the S8d `firstPass_8_2` applied to the derived Weyl relation off the origin `localLQGInsertionWeylOffOrigin_derived` in
 the slot of `hWeyl`. -/
 theorem firstPass_8_2_S8d_noWeyl (hL1 : LocalRootedFieldMeasureDomination.{u})

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S8d.SingularPhase
 import HarmonicBalls.FirstPass.S8d.TranslatedDensity
 import HarmonicBalls.Proofs.Sec8.PhaseTorus
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the phase failure bound for every phase
+/-! # helper: the phase failure bound for every phase
 
 The phase failure bound `hbound` of the phase tail (`PhaseTailConvert.lean`, `localPhaseTail_ae_of_dilation_ae` in
 `AeHid.lean`) asks, for every complex phase `q`, that the phase-shifted very-good event at the origin together with the
@@ -142,6 +142,5 @@ theorem s8d_phase_failure_all_q {Ω : Type u} [MeasurableSpace Ω] (P : Measure 
       congr 1
       ring
 
-#print axioms s8d_phase_failure_all_q
 
 end HarmonicBalls

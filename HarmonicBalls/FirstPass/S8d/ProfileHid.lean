@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S8c.TorusGood
 import HarmonicBalls.FirstPass.S8c.Measurability
 import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the torus identity `hid` on the profile space, almost surely
+/-! # helper: the torus identity `hid` on the profile space, almost surely
 
 Let `F : Ω → C(CircleParameter, ℝ)` be measurable with law `Q = P.map F`, let `Dec` be a measurable map from profiles to
 measures on `ℂ`, and let `R` be measurable (in the application `R = continuousCircleDilation`). Suppose that, for `P`-a.e.

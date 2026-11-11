@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8d.DensityComparison
 import HarmonicBalls.Defs.Annuli
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): comparison of the very-good criteria under a density
+/-! # helper: comparison of the very-good criteria under a density
 
 Let `lam` be the regular measure and `μ` the singular one of the same field, and suppose that on the annulus
 `D = 𝔸_{ρ/4,2ρ}(x₀)` the restrictions satisfy `c₁ • lam|_D ≤ μ|_D ≤ c₂ • lam|_D`
@@ -92,6 +92,5 @@ theorem s8d_annulusBallMassSize_comparable (lam μ : Measure ℂ) (x₀ : ℂ) (
     exact ENNReal.div_le_div_right
       (hbd (ball z r) measurableSet_ball (ball_subset_annulus_of_mem x₀ z ρ r hz hr.2)).2 _
 
-#print axioms s8d_annulusBallMassSize_comparable
 
 end HarmonicBalls

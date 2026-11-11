@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Proofs.GFF.MeasurableContinuousCircleVersion
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): universe-free continuous circle-average version
+/-! # helper: universe-free continuous circle-average version
 
 `IsWholePlaneGFF.exists_measurable_continuous_circle_version` (Proofs/GFF/MeasurableContinuousCircleVersion.lean:34)
 is stated for `Ω : Type`, although its proof uses only universe-free ingredients. This file states and proves the
@@ -80,6 +80,5 @@ theorem IsWholePlaneGFF.exists_measurable_continuous_circle_version_univ
     change L ω p - L ω q = hcirc ω p.1 p.2
     rw [hp, hq, sub_zero]
 
-#print axioms IsWholePlaneGFF.exists_measurable_continuous_circle_version_univ
 
 end HarmonicBalls

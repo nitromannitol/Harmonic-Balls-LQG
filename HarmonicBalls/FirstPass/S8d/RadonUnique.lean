@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S8d
 import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the Radon-uniqueness input is a theorem
+/-! # helper: the Radon-uniqueness input is a theorem
 
 `RadonIntegralUniqueFrozen` (FirstPass/Frozen/S8d.lean) asks that two locally finite measures on `ℂ` with the same
 integrals against all continuous compactly supported real functions are equal. This is the uniqueness part of the Riesz

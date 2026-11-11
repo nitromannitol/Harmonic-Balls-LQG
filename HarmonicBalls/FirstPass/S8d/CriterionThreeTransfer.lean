@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S8d.RatioComparison
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the very-good annulus event under a density comparison
+/-! # helper: the very-good annulus event under a density comparison
 
 Completes the comparison of `IsVeryGoodAnnulus` (Defs/Annuli.lean:81) for the singular and the regular measure on the
 annulus `D = 𝔸_{ρ/4,2ρ}(x₀)`, under `k₁ • lam|_D ≤ μ|_D ≤ k₂ • lam|_D` (`DensityComparison.lean`).
@@ -164,6 +164,5 @@ theorem isVeryGoodAnnulus_of_density (lam μ : Measure ℂ) (x₀ : ℂ) (ρ βm
   exact ⟨hm1, hm2, fun n hn z hz hlat => (h3 n hn z hz hlat).trans
     (criterion3_count_transfer lam μ x₀ z ρ hρ N₀ hN₀ a b k₁ k₂ ha hk₁ hk₁₂ hlow hup hz n hn)⟩
 
-#print axioms isVeryGoodAnnulus_of_density
 
 end HarmonicBalls

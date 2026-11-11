@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec5.ScalingMeasure
 import HarmonicBalls.Proofs.GFF.ContinuousCircleDilationMixing
 import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the dilation identity of the profile LQG measure, almost surely
+/-! # helper: the dilation identity of the profile LQG measure, almost surely
 
 Let `F` be the measurable continuous circle-average profile of a whole-plane GFF (`ProfileVersion.lean`), let `ν` be the
 γ-LQG measure of parameter `γ` (`α₀ = γ`), and let `Dec` be the measurable LQG-measure-of-profile map of the frozen input
@@ -88,6 +88,5 @@ theorem s8d_dilation_identity_ae {Ω : Type u} [MeasurableSpace Ω] (P : Measure
   have heq := s8d_isLQGLimit_unique hU hω4 h5
   rw [heq, hων]
 
-#print axioms s8d_dilation_identity_ae
 
 end HarmonicBalls

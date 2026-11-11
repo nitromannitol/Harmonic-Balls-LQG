@@ -2,11 +2,11 @@ import HarmonicBalls.FirstPass.S8d.ShiftLimit
 import HarmonicBalls.FirstPass.S8d.VeryGoodScale
 import HarmonicBalls.Proposed.LQG
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the very-good event of the regular field at a translated centre
+/-! # helper: the very-good event of the regular field at a translated centre
 
 For the regular field (`α₀ = 0`) and a deterministic translation `q` with `‖q‖ ≤ 1/5`, the very-good annulus event of the
 translated regular LQG measure, centred at `-q`, has probability at most `1 - p`. This is the regular-field input of
-the phase failure bound (route d1, `notes/n4.md`): Draft Lemma 6.7 (`VeryGoodAnnulusProbabilityStmt`,
+the phase failure bound (route d1): Draft Lemma 6.7 (`VeryGoodAnnulusProbabilityStmt`,
 Draft/Section6.lean:331) applied to the affinely transformed field.
 
 The transformed field is `WholePlaneGFFAffineInvariance` (Proposed/LQG.lean:51) with `a = 1`, `b = q`; its LQG measure is
@@ -15,7 +15,7 @@ the constant shift `isLQGLimit_add_const` (ShiftLimit.lean) for the normalizatio
 The scalar drops out of the very-good event (`isVeryGoodAnnulus_smul_iff`, VeryGoodScale.lean).
 
 Lemma 6.7 enters as the hypothesis `h67` (its conclusion at the fixed constants), so no statement of the paper is
-restated here. Source of the inputs: Proposed/LQG.lean (pending operator source-check), Draft Lemma 6.7. -/
+restated here. Source of the inputs: Proposed/LQG.lean (pending source-check), Draft Lemma 6.7. -/
 
 open MeasureTheory Metric Set Filter
 open scoped ENNReal
@@ -89,6 +89,5 @@ theorem regular_phase_probability {Ω : Type u} [MeasurableSpace Ω] (P : Measur
   rw [← hset]
   exact hmain
 
-#print axioms regular_phase_probability
 
 end HarmonicBalls

@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S8d.CriteriaComparison
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): ratio and Green-potential comparison under a density
+/-! # helper: ratio and Green-potential comparison under a density
 
 Continuation of `CriteriaComparison.lean`. Under `c₁ • lam|_D ≤ μ|_D ≤ c₂ • lam|_D` on the annulus `D = 𝔸_{ρ/4,2ρ}(x₀)`:
 
@@ -79,7 +79,5 @@ theorem s8d_annulusGreenPotentialSup_comparable (lam μ : Measure ℂ) (x₀ : �
     rw [← smul_eq_mul, ← lintegral_smul_measure]
     exact lintegral_mono' hup le_rfl
 
-#print axioms ratio_transfer
-#print axioms s8d_annulusGreenPotentialSup_comparable
 
 end HarmonicBalls

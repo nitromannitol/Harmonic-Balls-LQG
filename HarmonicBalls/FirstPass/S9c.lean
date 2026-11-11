@@ -5,15 +5,13 @@ import HarmonicBalls.Proofs.Sec6.VolumeGrowthConsequences
 import HarmonicBalls.Steps.Sec2.VolumeGrowth
 import HarmonicBalls.Draft.Section9
 
-/-! # FIRST-PASS result 9.2, corrected form [C51] (fp-S9c-9-2-C51, owner n4): `firstPass_9_2_corrected`
+/-! # Result 9.2, corrected form [C51]: `firstPass_9_2_corrected`
 
 Proposition 9.2 of "Harmonic balls in Liouville quantum gravity" (Bou-Rabee-Gwynne, arXiv:2208.11795), in the corrected
-form [C51] of docs/campaign/CORRECTIONS.md: `SubharmonicBallUniquenessC51Stmt` (the statement of
-notes/fp-gaps/CHATGPT-9-2-C51-proof.md, section 1). The weak form `SubharmonicBallUniquenessWeakStmt` (Draft/Section9.lean)
+form [C51] of docs/campaign/CORRECTIONS.md: `SubharmonicBallUniquenessC51Stmt` (section 1). The weak form `SubharmonicBallUniquenessWeakStmt` (Draft/Section9.lean)
 gives only `cluster ⊆ A` and `μ(A \ regularizedCluster) = 0`.
 
-Route (section 4 of the ChatGPT proof, the "smallest upgrade of the weak theorem", rated CORRECT by the independent referee,
-notes/fp-gaps/CHATGPT-9-2-C51-referee.md):
+Route (the "smallest upgrade of the weak theorem"):
 * the weak theorem (`subharmonicBallUniquenessWeak_of_volumeGrowth_typicalScales`);
 * the all-radii, simultaneous-centre boundary nullity `ClusterBoundaryNullAllRadii` (Steps 1, 2, 6 of the proof, via
   Proposition 8.1 and Lemma 3.5 on dyadic radii: `clusterBoundaryNullAllRadii_of_dyadic_typical_scales`);
@@ -32,8 +30,7 @@ namespace HarmonicBalls.S9c
 
 universe u
 
-/-- Proposition 9.2, corrected form ([C51], docs/campaign/CORRECTIONS.md; statement as in
-notes/fp-gaps/CHATGPT-9-2-C51-proof.md, section 1). On one event of probability one, for every `A`, `z`, `t`, `R` with
+/-- Proposition 9.2, corrected form ([C51], section 1). On one event of probability one, for every `A`, `z`, `t`, `R` with
 `0 < t`, `0 < R`, `z ∈ B_R`, `A ⋐ B_R` a subharmonic ball centred at `z` with `μ_h(A) = t`:
 the cluster `Λ^{B_R;z}_t` (eq:non-co-set) is contained in `A`, `A` is contained in its regularization
 `Λ̂^{B_R;z}_t = int(closure Λ^{B_R;z}_t)` (eq:regular-cluster), `μ_h(A \ Λ^{B_R;z}_t) = 0`,
@@ -55,7 +52,7 @@ def SubharmonicBallUniquenessC51Stmt : Prop :=
     μ ω (regularizedCluster (μ ω) R z t \ A) = 0 ∧
     (A = interior (closure A) → A = regularizedCluster (μ ω) R z t)
 
-/-- Pathwise form of the upgrade (Steps 7 and 8 of the ChatGPT proof, section 4). On one realization `μ`, given full
+/-- Pathwise form of the upgrade (section 4). On one realization `μ`, given full
 support, the weak conclusion for every subharmonic ball, and the boundary nullity `μ(∂Λ^{B_R;z}_t) = 0` for every cluster
 with `closure ⊆ B_R`, the five conclusions of [C51] hold. Only topology and measure theory are used. -/
 theorem c51_of_weak_boundary_fullSupport (μ : Measure ℂ)
@@ -112,7 +109,7 @@ theorem c51_of_weak_boundary_fullSupport (μ : Measure ℂ)
   rw [← hreg] at hsubcl
   exact hsubcl hx
 
-/-- **Proposition 9.2**, corrected form ([C51]) — FIRST PASS, result `firstPass_9_2_corrected`.
+/-- **Proposition 9.2**, corrected form ([C51]) — result `firstPass_9_2_corrected`.
 Hypotheses: the five staged LQG Props of Proposed/LQG.lean (as in the weak theorem) and the Draft statement
 `TypicalPointManyGoodScalesStmt` (Lemma 8.2). The volume-growth input `LQGVolumeGrowthAllScalesStmt` (Draft Section 2) is
 derived from the five staged Props, as in the weak theorem. -/
@@ -145,6 +142,5 @@ theorem firstPass_9_2_corrected
   intro A z t R ht hR hz hA hsub hmass
   exact c51_of_weak_boundary_fullSupport (μ ω) hf hw hb A z t R ht hR hz hA hsub hmass
 
-#print axioms firstPass_9_2_corrected
 
 end HarmonicBalls.S9c

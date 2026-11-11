@@ -2,7 +2,7 @@ import HarmonicBalls.Proofs.GFF.ContinuousCircleDilationMixing
 import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
 import HarmonicBalls.Defs.LQG
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the dilated continuous circle profile, at positive scales
+/-! # helper: the dilated continuous circle profile, at positive scales
 
 For a continuous circle-average profile `f` (`C(CircleParameter, ℝ)`, Bonanno-type version) the dilation
 `continuousCircleDilation` (Proofs/GFF/ContinuousCircleDilationMixing.lean:19) is the affine pullback by `z ↦ z/2`
@@ -94,7 +94,5 @@ theorem s8d_isLQGLimit_congr_pos (γ : ℝ) {h h' : ℝ → ℂ → ℝ}
     exact ⟨H.isLocallyFiniteMeasure, fun f hf hc => by
       simpa only [← hA] using H.tendsto_integral f hf hc⟩
 
-#print axioms s8d_circleProfile_dilation_iterate
-#print axioms s8d_isLQGLimit_congr_pos
 
 end HarmonicBalls

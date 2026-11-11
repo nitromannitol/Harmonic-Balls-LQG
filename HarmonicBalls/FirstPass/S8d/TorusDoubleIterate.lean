@@ -1,6 +1,6 @@
 import HarmonicBalls.Proofs.Sec8.PhaseTorus
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the torus phase of an iterate of the doubling map
+/-! # helper: the torus phase of an iterate of the doubling map
 
 The phase torus doubling `phaseTorusDouble` (Proofs/Sec8/PhaseTorus.lean:42) multiplies both circle coordinates by `2`.
 Its `m`-fold iterate has torus phase `2^m` times the original, up to the outer lattice `(1/100)ℤ²` of the torus
@@ -43,6 +43,5 @@ theorem s8d_torusPhase_double_iterate (m : ℕ) (θ : PhaseTorus) :
     push_cast at hx1 hx2 hjk ⊢
     linear_combination (2 : ℂ) * hjk + hx1 / 100 + (hx2 / 100) * Complex.I
 
-#print axioms s8d_torusPhase_double_iterate
 
 end HarmonicBalls

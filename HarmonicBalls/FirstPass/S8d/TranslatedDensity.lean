@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8d.CriterionThreeTransfer
 import HarmonicBalls.FirstPass.S8c.Locality
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the singular phase event as a translated very-good event
+/-! # helper: the singular phase event as a translated very-good event
 
 For a measure `η` and a phase `q`, the phase-shifted very-good event at the origin (`PhaseVeryGoodAnnulus`, scale `1`,
 phase `q`) is the very-good event of the translated measure `η.map (· - q)` at the centre `-q`
@@ -143,7 +143,5 @@ theorem translated_density_bounds (ν lam : Measure ℂ) (γ : ℝ) (q : ℂ)
       _ ≤ ENNReal.ofReal ((c1)⁻¹) • (lam.map (fun w : ℂ => w - q)).restrict (annulus (-q) (1 / 4) (2 * 1)) :=
           measure_smul_mono _ hB
 
-#print axioms translated_density_bounds
-#print axioms phaseVeryGood_iff_isVeryGood_translate
 
 end HarmonicBalls

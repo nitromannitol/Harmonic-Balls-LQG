@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Defs.GFF
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): constant shifts of the LQG approximations and limits
+/-! # helper: constant shifts of the LQG approximations and limits
 
 A constant additive shift `h ↦ h + c` of the circle-average profile multiplies the approximations
 `ε^{γ²/2} e^{γ h_ε(z)} dz` (`lqgApprox`, Defs/LQG.lean:46) by the constant `e^{γ c}`, so the vague limit `IsLQGLimit`
@@ -52,6 +52,5 @@ theorem isLQGLimit_add_const (γ : ℝ) (hε : ℝ → ℂ → ℝ) (m : Measure
     simp only [lqgApprox_add_const, integral_smul_measure, smul_eq_mul]
     exact hlim.const_mul _
 
-#print axioms isLQGLimit_add_const
 
 end HarmonicBalls

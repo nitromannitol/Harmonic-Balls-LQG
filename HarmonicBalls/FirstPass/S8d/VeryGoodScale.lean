@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.Annuli
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): positive constant multiples of very-good annuli
+/-! # helper: positive constant multiples of very-good annuli
 
 The very-good annulus event `IsVeryGoodAnnulus` (Defs/Annuli.lean:81) is invariant under multiplication of the
 measure by a positive finite constant `c`: the annulus-ball mass size `annulusBallMassSize` (Defs/Annuli.lean:~92)
@@ -53,6 +53,5 @@ theorem isVeryGoodAnnulus_smul_iff (μ : Measure ℂ) (hc0 : c ≠ 0) (hcT : c �
     Measure.smul_apply, smul_eq_mul, isGoodAnnulus_smul_iff μ hc0 hcT,
     ENNReal.mul_div_mul_left _ _ hc0 hcT]
 
-#print axioms isVeryGoodAnnulus_smul_iff
 
 end HarmonicBalls

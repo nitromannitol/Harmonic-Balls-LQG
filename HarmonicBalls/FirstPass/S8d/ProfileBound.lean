@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec8.PhaseVeryGoodScaling
 import HarmonicBalls.Proofs.Sec8.AnnulusComparisonStationarity
 import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the per-phase failure bound on the profile space
+/-! # helper: the per-phase failure bound on the profile space
 
 Let `Q = P.map F` be the law of the measurable circle-average profile `F` of a field, and `Dec` the measurable map of
 the frozen input E1 (`LQGMeasureOfProfileMeasurableFrozen`), so that `ν = Dec ∘ F` almost surely. The Ω-level bound
