@@ -1,35 +1,78 @@
 # Harmonic balls in Liouville quantum gravity: Lean formalization
 
-This repository is a Lean 4 formalization of the paper A. Bou-Rabee and E. Gwynne, *Harmonic balls in Liouville quantum gravity*, arXiv:2208.11795 ([arXiv](https://arxiv.org/abs/2208.11795)).
+A Lean 4 formalization of the numbered results of
 
-## What is formalized and where
+> Ahmed Bou-Rabee and Ewain Gwynne, "Harmonic balls in Liouville quantum gravity", arXiv:2208.11795.
 
-- Definitions: `HarmonicBalls/Defs/`.
-- Statements of the numbered results: `HarmonicBalls/Draft/`.
-- Counted results: `HarmonicBalls/FirstPass/ClosureAll.lean` is the top-level module that imports the closure theorems `closure_N_M` of the first pass.
-- Supporting proofs: `HarmonicBalls/FirstPass/`, `HarmonicBalls/Proofs/` and `HarmonicBalls/Steps/`.
-- Literature inputs: `HarmonicBalls/Proposed/` and `HarmonicBalls/FirstPass/Frozen/`.
+The statements follow the corrected draft, [`paper/lqg_harmonic_ball-corrected.tex`](paper/lqg_harmonic_ball-corrected.tex). The arXiv source is kept as [`paper/lqg_harmonic_ball.tex`](paper/lqg_harmonic_ball.tex). The corrections to the arXiv source are marked in the corrected draft.
+
+## Content
+
+- `HarmonicBalls/Defs/`: definitions of the Gaussian free field, the Liouville measure and metric, Green functions and harmonic balls.
+- `HarmonicBalls/Draft/`: statements of the numbered results, by section of the paper.
+- `HarmonicBalls/Proposed/`: literature inputs, each a Prop-valued definition with its published source.
+- `HarmonicBalls/Assembly/`: the results of Section 1 (existence, uniqueness and novelty of harmonic balls), assembled from their inputs.
+- `HarmonicBalls/Steps/` and `HarmonicBalls/Proofs/`: the reduction of each result to its inputs, and the proofs of the lemmas used, by section.
+- `HarmonicBalls/FirstPass/`: earlier proofs of the numbered results, with the input statements they use.
 
 ## Status
 
-Every numbered result of the paper is proved in Lean. The results depend on the literature inputs only through explicit hypotheses, whose propositions are defined in `HarmonicBalls/Proposed/` and `HarmonicBalls/FirstPass/Frozen/`. The inputs in `HarmonicBalls/Proposed/` are not yet checked against their published sources. The closure theorems imported by `HarmonicBalls/FirstPass/ClosureAll.lean` use only the standard axioms `propext`, `Classical.choice` and `Quot.sound`.
+The statements of the numbered results are in `HarmonicBalls/Draft/`. The results depend on the literature inputs only through explicit hypotheses, whose propositions are defined in `HarmonicBalls/Proposed/` and in the input statements of `HarmonicBalls/FirstPass/`. The inputs in `HarmonicBalls/Proposed/` await a check against their published sources.
 
-## Corrected paper
+The counted declaration of each numbered result is listed in [`docs/campaign/COUNTED-MANIFEST.md`](docs/campaign/COUNTED-MANIFEST.md). That manifest gives 62 counted declarations and lists 10 numbered results without one, together with the open items on the forall-ξ forms and on the Hölder binder `hholder`.
 
-The corrected draft of the paper is `paper/lqg_harmonic_ball-corrected.tex`. The arXiv source is kept as `paper/lqg_harmonic_ball.tex`.
+Verification: [`checks/AxiomGate.lean`](checks/AxiomGate.lean) prints the axioms of each counted declaration. It is outside the default build; run it with `lake env lean checks/AxiomGate.lean`. The record in [`docs/campaign/AXIOM-GATE.md`](docs/campaign/AXIOM-GATE.md) reports 92 declarations, none using an axiom beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Building
 
-- Toolchain: Lean `v4.35.0-rc2`, as in `lean-toolchain`.
-- Dependencies: Mathlib (`v4.35.0-rc2`), Lattice-Probability, MarkovProcess and elliptic_regularity. Their revisions are pinned in `lake-manifest.json`.
-
-To build:
+- Toolchain: `leanprover/lean4:v4.35.0-rc2`, as in [`lean-toolchain`](lean-toolchain), with Mathlib `v4.35.0-rc2`.
+- Dependencies, pinned in [`lake-manifest.json`](lake-manifest.json): Mathlib; MarkovProcess (`666cda0`); elliptic_regularity (EllipticRegularityLean, `1e29da0`); Lattice-Probability (`3912597a70`).
 
 ```
 lake exe cache get
 lake build
 ```
 
-## AI disclosure
+## Repository layout
 
-The Lean code was written with AI assistance and checked by Lean.
+```text
+HarmonicBalls.lean        Root module
+HarmonicBalls/Defs/       Definitions (Gaussian free field, Liouville measure and metric, Green functions, harmonic balls)
+HarmonicBalls/Draft/      Statements of the numbered results, by section
+HarmonicBalls/Proposed/   Literature inputs as Prop-valued definitions, with their published sources
+HarmonicBalls/Assembly/   Section 1 results assembled from their inputs
+HarmonicBalls/Steps/      Reduction of each result to its inputs, by section
+HarmonicBalls/Proofs/     Proofs of the lemmas used by the reductions, by section
+HarmonicBalls/FirstPass/  Earlier proofs and the input statements they use
+HarmonicBalls/LPStage/    General lemmas staged for Lattice-Probability
+HarmonicBalls/Audit/      Checks of the inputs and exports of the results
+checks/                   Axiom gate, outside the default build
+docs/                     Inventories, corrections and notes on the formalization
+paper/                    Corrected draft, arXiv source, figures
+archive/                  Files moved out of the build (see docs/campaign/ARCHIVE.md)
+```
+
+## How this was built
+
+The development used AI-assisted proof writing under human direction.
+
+## Authors and citation
+
+The Lean formalization is by Ahmed Bou-Rabee. The paper is by Ahmed Bou-Rabee and Ewain Gwynne.
+
+```bibtex
+@misc{bou-rabee-gwynne-harmonic-balls,
+  author = {Ahmed Bou-Rabee and Ewain Gwynne},
+  title = {Harmonic balls in Liouville quantum gravity},
+  eprint = {2208.11795},
+  archivePrefix = {arXiv}
+}
+```
+
+## License
+
+Copyright 2026 Ahmed Bou-Rabee. Licensed under the Apache License, Version 2.0; see [LICENSE](LICENSE).
+
+## Acknowledgements
+
+The Lattice-Probability dependency contains an "LQG, GFF and mated-CRT library adapted from Leonardo Bonanno's lean-formalizations".
