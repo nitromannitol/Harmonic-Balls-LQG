@@ -1,7 +1,6 @@
 # Clean audit: residual workflow metacommentary
 
-Date: 2026-11-11. Task: fp-clean-residual-audit (worker n3).
-Scope: `git ls-files '*.lean'` (3,061 files) and `README.md`, 3,062 files in total.
+Date: 2026-11-11. Task: fp-clean-residual-audit (worker n3). Scope: `git ls-files '*.lean'` (3,061 files) and `README.md`, 3,062 files in total.
 Method: PHASE2-CLEAN-PLAN.md section 2 (cleaning rule). Edits are comment-only; `scratch-lk/commentonly.py` reported OK on every committed file. No `lc` or `lb` was run (K2: one final build later).
 
 ## Greps
@@ -38,14 +37,11 @@ Applied line by line to each tracked file (a Python equivalent of `grep -n -E`):
 | HarmonicBalls/FirstPass/Phase2 | 0 | 1 (hard skip) | 0 |
 | HarmonicBalls/FirstPass/S9c.lean | 0 | 1 (see note 2) | 1 (C51 pointer) |
 
-Other directories (Proofs/Sec8, Sec10, Potential, Sec2, Sec7, Metric, Brownian, Counterexamples, Steps/*, LPBridge, Proposed) have no residual hits.
-
-Totals: 79 files cleaned, 66 in flight, 0 residual in unowned files apart from FirstPass/S9c.lean.
+Totals: 79 files cleaned, 66 in flight, 0 residual in unowned files apart from FirstPass/S9c.lean. Other directories have no residual hits.
 
 ## Commits (this round)
 
-- 4df4be3d residual batch 1 (39 files), b2e502df residual batch 2 (8 files), 8d19377f residual batch 3 (31 files, FIRST-PASS labels), 93c408de residual batch 4 (2 files, chat-number references).
-- Earlier C3 wave: 27f25133, 38eabfb1, 22403199 (Proofs/Sec8).
+- 4df4be3d residual batch 1 (39 files), b2e502df residual batch 2 (8 files), 8d19377f residual batch 3 (31 files, FIRST-PASS labels), 93c408de residual batch 4 (2 files, chat-number references). Earlier C3 wave: 27f25133, 38eabfb1, 22403199 (Proofs/Sec8).
 
 ## Kept items (not workflow metacommentary by rule)
 
@@ -57,8 +53,7 @@ Totals: 79 files cleaned, 66 in flight, 0 residual in unowned files apart from F
 
 ## Decisions for the lead
 
-1. `FirstPass/S9c.lean` (1 pointer, line 11, `form [C51] of docs/campaign/CORRECTIONS.md`): held. It is named in the OWNS of `tasks/n3.next.moved-to-n4-20261109.md` (moved to n4). Edit prepared, not committed.
+1. `FirstPass/S9c.lean` (1 pointer, line 11, `form [C51] of docs/campaign/CORRECTIONS.md`): held. It is named in the OWNS of `tasks/n3.next.moved-to-n4-20261109.md` (moved to n4). Its comment edit was reverted to HEAD and not committed.
 2. "note §6.2-6.4" pointers (14 lines, 9 files in FirstPass/S11ad*): refer to a note that is not in the repository. Kept.
 3. `FirstPass/S11am.lean:22` "operator gap G1": kept (ambiguous: spectral gap or campaign gap id).
-4. "staged" and "[Cn]" wording: keep or reword (kept here).
-5. archive/HarmonicBalls/Audit file titles: keep or rename archive files (not a comment change).
+4. archive/HarmonicBalls/Audit file titles: keep or rename the archive files (not a comment change).
