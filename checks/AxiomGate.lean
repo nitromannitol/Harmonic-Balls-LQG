@@ -1,0 +1,249 @@
+-- Axiom gate for the numbered results (task fp-clean-d6-axiom-gate, worker z3).
+-- Outside the default library (checks/ is not a lean_lib): compile with lc or `lake env lean checks/AxiomGate.lean`.
+-- Imports: the modules of the counted declarations (docs/campaign/COUNTED-MANIFEST.md),
+-- the DERIVED-row theorems of docs/campaign/PHASE2-DERIVATION-STATUS.md, and HarmonicBalls.LPStage.All.
+
+import HarmonicBalls.FirstPass.Canonical.NotMetricBall
+import HarmonicBalls.FirstPass.Canonical.Novelty
+import HarmonicBalls.FirstPass.Closure
+import HarmonicBalls.FirstPass.Closure.Bridge12
+import HarmonicBalls.FirstPass.Closure.Sec11
+import HarmonicBalls.FirstPass.Closure.Sec6
+import HarmonicBalls.FirstPass.Closure.Sec78910
+import HarmonicBalls.FirstPass.Closure.SecA45
+import HarmonicBalls.FirstPass.Phase2.CameronMartinMutualDerived
+import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
+import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs11
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs17
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs19
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs23
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs3
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs9
+import HarmonicBalls.FirstPass.Phase2.InternalMetricClosedDerived
+import HarmonicBalls.FirstPass.Phase2.LengthUnivDerived
+import HarmonicBalls.FirstPass.Phase2.LocalDecoderCommonDerived
+import HarmonicBalls.FirstPass.Phase2.MassFunctionalDerived
+import HarmonicBalls.FirstPass.Phase2.PlaneDomainDerived
+import HarmonicBalls.FirstPass.Phase2.ProfileDecoderDerived
+import HarmonicBalls.FirstPass.Phase2.WeylCompositionOuterDerived
+import HarmonicBalls.FirstPass.Phase2.WeylInternalClosedDerived
+import HarmonicBalls.FirstPass.Phase2.WeylScaledEuclideanDerived
+import HarmonicBalls.FirstPass.Phase2.WeylShiftedMassDerived
+import HarmonicBalls.FirstPass.Phase2.WeylShiftedSupDerived2
+import HarmonicBalls.FirstPass.S11
+import HarmonicBalls.FirstPass.S11b
+import HarmonicBalls.FirstPass.S11d
+import HarmonicBalls.FirstPass.S11e
+import HarmonicBalls.FirstPass.S11i.Assembly13
+import HarmonicBalls.FirstPass.S11i.Corrected11_13
+import HarmonicBalls.FirstPass.S1S10
+import HarmonicBalls.FirstPass.S2S3S4S9SA
+import HarmonicBalls.FirstPass.S5S7S8
+import HarmonicBalls.FirstPass.S8c.BirkhoffDerived
+import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
+import HarmonicBalls.LPStage.All
+import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
+import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
+import HarmonicBalls.Proofs.Sec9.LQGExistenceConsequences
+import HarmonicBalls.Proofs.Sec9.ObstacleComparison
+
+/-!
+# Axiom gate
+
+One `#print axioms` line per declaration, grouped by numbered result (N: counted declaration, X: forall-xi and
+canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVED row). Not part of the library.
+-/
+
+
+-- Counted declarations, one per numbered result (COUNTED-MANIFEST.md)
+-- 1.1: firstPass_1_1 (HarmonicBalls/FirstPass/S1S10.lean:35)
+#print axioms HarmonicBalls.firstPass_1_1
+-- 1.2: firstPass_1_2 (HarmonicBalls/FirstPass/S1S10.lean:43)
+#print axioms HarmonicBalls.firstPass_1_2
+-- 1.3: firstPass_1_3 (HarmonicBalls/FirstPass/S1S10.lean:53)
+#print axioms HarmonicBalls.firstPass_1_3
+-- 2.3: closure_2_3 (HarmonicBalls/FirstPass/Closure.lean:113)
+#print axioms HarmonicBalls.Closure.closure_2_3
+-- 3.1: closure_3_1 (HarmonicBalls/FirstPass/Closure.lean:134)
+#print axioms HarmonicBalls.Closure.closure_3_1
+-- 3.2: closure_3_2 (HarmonicBalls/FirstPass/Closure.lean:137)
+#print axioms HarmonicBalls.Closure.closure_3_2
+-- 3.3: closure_3_3 (HarmonicBalls/FirstPass/Closure.lean:140)
+#print axioms HarmonicBalls.Closure.closure_3_3
+-- 3.4: closure_3_4 (HarmonicBalls/FirstPass/Closure.lean:143)
+#print axioms HarmonicBalls.Closure.closure_3_4
+-- 3.5: closure_3_5 (HarmonicBalls/FirstPass/Closure.lean:146)
+#print axioms HarmonicBalls.Closure.closure_3_5
+-- 4.1: closure_4_1 (HarmonicBalls/FirstPass/Closure/SecA45.lean:73)
+#print axioms HarmonicBalls.Closure.closure_4_1
+-- 4.2: closure_4_2 (HarmonicBalls/FirstPass/Closure/SecA45.lean:76)
+#print axioms HarmonicBalls.Closure.closure_4_2
+-- 4.3: closure_4_3 (HarmonicBalls/FirstPass/Closure/SecA45.lean:79)
+#print axioms HarmonicBalls.Closure.closure_4_3
+-- 5.1: closure_5_1 (HarmonicBalls/FirstPass/Closure/SecA45.lean:116)
+#print axioms HarmonicBalls.Closure.closure_5_1
+-- 5.2: closure_5_2_derivedInputs19 (HarmonicBalls/FirstPass/Phase2/DerivedInputs19.lean:82)
+#print axioms HarmonicBalls.Closure.closure_5_2_derivedInputs19
+-- 5.3: firstPass_5_3 (HarmonicBalls/FirstPass/S5S7S8.lean:136)
+#print axioms HarmonicBalls.firstPass_5_3
+-- 5.4: firstPass_5_4 (HarmonicBalls/FirstPass/S5S7S8.lean:148)
+#print axioms HarmonicBalls.firstPass_5_4
+-- 5.5: firstPass_5_5 (HarmonicBalls/FirstPass/S5S7S8.lean:161)
+#print axioms HarmonicBalls.firstPass_5_5
+-- 5.6: closure_5_6 (HarmonicBalls/FirstPass/Closure/SecA45.lean:127)
+#print axioms HarmonicBalls.Closure.closure_5_6
+-- 5.7: closure_5_7 (HarmonicBalls/FirstPass/Closure/SecA45.lean:139)
+#print axioms HarmonicBalls.Closure.closure_5_7
+-- 5.8: closure_5_8 (HarmonicBalls/FirstPass/Closure/SecA45.lean:150)
+#print axioms HarmonicBalls.Closure.closure_5_8
+-- 6.1: closure_6_1 (HarmonicBalls/FirstPass/Closure/Sec6.lean:37)
+#print axioms HarmonicBalls.Closure.closure_6_1
+-- 6.2: closure_6_2 (HarmonicBalls/FirstPass/Closure/Sec6.lean:41)
+#print axioms HarmonicBalls.Closure.closure_6_2
+-- 6.3: closure_6_3 (HarmonicBalls/FirstPass/Closure/Sec6.lean:45)
+#print axioms HarmonicBalls.Closure.closure_6_3
+-- 6.4: closure_6_4 (HarmonicBalls/FirstPass/Closure/Sec6.lean:49)
+#print axioms HarmonicBalls.Closure.closure_6_4
+-- 6.6: closure_6_6 (HarmonicBalls/FirstPass/Closure/Sec6.lean:53)
+#print axioms HarmonicBalls.Closure.closure_6_6
+-- 6.7: closure_6_7 (HarmonicBalls/FirstPass/Closure/Sec6.lean:57)
+#print axioms HarmonicBalls.Closure.closure_6_7
+-- 6.8: closure_6_8 (HarmonicBalls/FirstPass/Closure/Sec6.lean:62)
+#print axioms HarmonicBalls.Closure.closure_6_8
+-- 6.9: closure_6_9 (HarmonicBalls/FirstPass/Closure/Sec6.lean:67)
+#print axioms HarmonicBalls.Closure.closure_6_9
+-- 6.10: closure_6_10 (HarmonicBalls/FirstPass/Closure/Sec6.lean:72)
+#print axioms HarmonicBalls.Closure.closure_6_10
+-- 6.11: closure_6_11 (HarmonicBalls/FirstPass/Closure/Sec6.lean:77)
+#print axioms HarmonicBalls.Closure.closure_6_11
+-- 6.12: closure_6_12 (HarmonicBalls/FirstPass/Closure/Sec6.lean:82)
+#print axioms HarmonicBalls.Closure.closure_6_12
+-- 6.13: closure_6_13 (HarmonicBalls/FirstPass/Closure/Sec6.lean:87)
+#print axioms HarmonicBalls.Closure.closure_6_13
+-- 7.1: closure_7_1 (HarmonicBalls/FirstPass/Closure/Sec78910.lean:88)
+#print axioms HarmonicBalls.Closure.closure_7_1
+-- 7.2: firstPass_7_2 (HarmonicBalls/FirstPass/S5S7S8.lean:52)
+#print axioms HarmonicBalls.firstPass_7_2
+-- 8.1: firstPass_8_1 (HarmonicBalls/FirstPass/S5S7S8.lean:72)
+#print axioms HarmonicBalls.firstPass_8_1
+-- 8.2: firstPass_8_2_S8d_noWeyl_derivedInputs23 (HarmonicBalls/FirstPass/Phase2/DerivedInputs23.lean:226)
+#print axioms HarmonicBalls.firstPass_8_2_S8d_noWeyl_derivedInputs23
+-- 8.3: closure_8_3 (HarmonicBalls/FirstPass/Closure/Sec78910.lean:150)
+#print axioms HarmonicBalls.Closure.closure_8_3
+-- 9.3: firstPass_9_3 (HarmonicBalls/FirstPass/S2S3S4S9SA.lean:94)
+#print axioms HarmonicBalls.firstPass_9_3
+-- 9.4: firstPass_9_4 (HarmonicBalls/FirstPass/S2S3S4S9SA.lean:99)
+#print axioms HarmonicBalls.firstPass_9_4
+-- 10.1: firstPass_10_1 (HarmonicBalls/FirstPass/S1S10.lean:64)
+#print axioms HarmonicBalls.firstPass_10_1
+-- 10.6: firstPass_10_6 (HarmonicBalls/FirstPass/S1S10.lean:92)
+#print axioms HarmonicBalls.firstPass_10_6
+-- 10.7: firstPass_10_7 (HarmonicBalls/FirstPass/S1S10.lean:75)
+#print axioms HarmonicBalls.firstPass_10_7
+-- 11.2: firstPass_11_2 (HarmonicBalls/FirstPass/S11.lean:59)
+#print axioms HarmonicBalls.firstPass_11_2
+-- 11.5: firstPass_11_5 (HarmonicBalls/FirstPass/S11.lean:67)
+#print axioms HarmonicBalls.firstPass_11_5
+-- 11.6: closure_11_6_derivedInputs19 (HarmonicBalls/FirstPass/Phase2/DerivedInputs19.lean:240)
+#print axioms HarmonicBalls.Closure.closure_11_6_derivedInputs19
+-- 11.7: firstPass_11_7 (HarmonicBalls/FirstPass/S11b.lean:70)
+#print axioms HarmonicBalls.firstPass_11_7
+-- 11.8: closure_11_8 (HarmonicBalls/FirstPass/Closure/Sec11.lean:80)
+#print axioms HarmonicBalls.Closure.closure_11_8
+-- 11.9: firstPass_11_9 (HarmonicBalls/FirstPass/S11d.lean:39)
+#print axioms HarmonicBalls.firstPass_11_9
+-- 11.10: firstPass_11_10_derivedInputs17 (HarmonicBalls/FirstPass/Phase2/DerivedInputs17.lean:431)
+#print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputs17
+-- 11.11: firstPass_11_11 (HarmonicBalls/FirstPass/S11.lean:111)
+#print axioms HarmonicBalls.firstPass_11_11
+-- 11.12: firstPass_11_12 (HarmonicBalls/FirstPass/S11e.lean:42)
+#print axioms HarmonicBalls.firstPass_11_12
+-- 11.13: manyPinchScales_of_corrected (HarmonicBalls/FirstPass/Closure/Bridge12.lean:322)
+#print axioms HarmonicBalls.Closure.manyPinchScales_of_corrected
+-- 11.14: closure_11_14 (HarmonicBalls/FirstPass/Closure/Sec11.lean:139)
+#print axioms HarmonicBalls.Closure.closure_11_14
+-- 11.15: firstPass_11_15_derivedInputs3 (HarmonicBalls/FirstPass/Phase2/DerivedInputs3.lean:945)
+#print axioms HarmonicBalls.firstPass_11_15_derivedInputs3
+-- 11.16: firstPass_11_16_of_11_17 (HarmonicBalls/FirstPass/S11e.lean:29)
+#print axioms HarmonicBalls.firstPass_11_16_of_11_17
+-- A.1: closure_A_1 (HarmonicBalls/FirstPass/Closure/SecA45.lean:37)
+#print axioms HarmonicBalls.Closure.closure_A_1
+-- A.2: closure_A_2 (HarmonicBalls/FirstPass/Closure/SecA45.lean:40)
+#print axioms HarmonicBalls.Closure.closure_A_2
+-- A.3: closure_A_3 (HarmonicBalls/FirstPass/Closure/SecA45.lean:43)
+#print axioms HarmonicBalls.Closure.closure_A_3
+-- A.4: closure_A_4 (HarmonicBalls/FirstPass/Closure/SecA45.lean:46)
+#print axioms HarmonicBalls.Closure.closure_A_4
+-- A.5: closure_A_5 (HarmonicBalls/FirstPass/Closure/SecA45.lean:49)
+#print axioms HarmonicBalls.Closure.closure_A_5
+-- A.6: closure_A_6 (HarmonicBalls/FirstPass/Closure/SecA45.lean:52)
+#print axioms HarmonicBalls.Closure.closure_A_6
+
+-- Numbered results whose only declaration is in Proofs/ (COUNTED-MANIFEST.md)
+-- 2.4: liouvilleVolumeGrowthStmt_of_existence (HarmonicBalls/Proofs/Sec9/LQGExistenceConsequences.lean:30)
+#print axioms HarmonicBalls.liouvilleVolumeGrowthStmt_of_existence
+-- 6.5: annulusIterationStmt_of_three_inputs (HarmonicBalls/Proofs/Sec6/FullThreeInputAssembly.lean:73)
+#print axioms HarmonicBalls.Section6Full.annulusIterationStmt_of_three_inputs
+-- 9.1: obstacleComparison (HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32)
+#print axioms HarmonicBalls.obstacleComparison
+
+-- Forall-xi and canonical-xi forms (COUNTED-MANIFEST.md)
+-- 1.2 forall-xi `HarmonicBallNoveltyStmt`: firstPass_1_2 (HarmonicBalls/FirstPass/S1S10.lean:43)
+#print axioms HarmonicBalls.firstPass_1_2
+-- 11.11 forall-xi `HarmonicBallNotMetricBallStmt`: firstPass_11_11 (HarmonicBalls/FirstPass/S11.lean:111)
+#print axioms HarmonicBalls.firstPass_11_11
+-- 11.13 forall-xi `CorrectedLemma11_13Stmt`: correctedLemma11_13_of_identity (HarmonicBalls/FirstPass/S11i/Assembly13.lean:79)
+#print axioms HarmonicBalls.correctedLemma11_13_of_identity
+-- 1.2 canonical-xi `HarmonicBallNoveltyCanonicalStmt`: harmonicBallNoveltyStmt_of_existence_and_results_canonical (HarmonicBalls/FirstPass/Canonical/Novelty.lean:23)
+#print axioms HarmonicBalls.harmonicBallNoveltyStmt_of_existence_and_results_canonical
+-- 11.11 canonical-xi `HarmonicBallNotMetricBallCanonicalStmt`: harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth (HarmonicBalls/FirstPass/Canonical/NotMetricBall.lean:129)
+#print axioms HarmonicBalls.harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth
+-- 11.13 canonical-xi `CorrectedLemma11_13CanonicalStmt`: firstPass_11_13_canonical (HarmonicBalls/FirstPass/S11i/Corrected11_13.lean:127)
+#print axioms HarmonicBalls.firstPass_11_13_canonical
+
+-- Derived-input theorems of DERIVED rows (PHASE2-DERIVATION-STATUS.md)
+-- row 5: lqgMeasureWeylScaling (HarmonicBalls/Proofs/Sec6/LQGWeylScaling.lean:124)
+#print axioms HarmonicBalls.Section6.lqgMeasureWeylScaling
+-- row 6: lqgMeasureOfProfileMeasurable_derived (HarmonicBalls/FirstPass/Phase2/ProfileDecoderDerived.lean:401)
+#print axioms HarmonicBalls.lqgMeasureOfProfileMeasurable_derived
+-- row 7: birkhoffPointwiseErgodic_derived (HarmonicBalls/FirstPass/S8c/BirkhoffDerived.lean:21)
+#print axioms HarmonicBalls.birkhoffPointwiseErgodic_derived
+-- row 10: WholePlaneGFFAffineInvariance_derived (HarmonicBalls/FirstPass/Phase2/DerivedInputs11.lean:26)
+#print axioms HarmonicBalls.WholePlaneGFFAffineInvariance_derived
+-- row 11: localLQGInsertionWeylOffOrigin_derived (HarmonicBalls/FirstPass/S8c/WeylOffOriginDerived.lean:88)
+#print axioms HarmonicBalls.localLQGInsertionWeylOffOrigin_derived
+-- row 13: cameronMartinGFFMutualAbsCont_derived (HarmonicBalls/FirstPass/Phase2/DerivedInputs9.lean:37)
+#print axioms HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived
+-- row 13: cameronMartinGFFMutualAbsCont_derived (HarmonicBalls/FirstPass/Phase2/CameronMartinMutualDerived.lean:56)
+#print axioms HarmonicBalls.cameronMartinGFFMutualAbsCont_derived
+-- row 15: localLQGDecoderCommonFrozen_derived (HarmonicBalls/FirstPass/Phase2/LocalDecoderCommonDerived.lean:1859)
+#print axioms HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived
+-- row 21: lqgMassFunctionalMeasurable_derived (HarmonicBalls/FirstPass/Phase2/MassFunctionalDerived.lean:702)
+#print axioms HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived
+-- row 22: lqgMeasureSquareMeasurable_derived' (HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:192)
+#print axioms HarmonicBalls.lqgMeasureSquareMeasurable_derived'
+-- row 26: weylInternalClosed_derived (HarmonicBalls/FirstPass/Phase2/WeylInternalClosedDerived.lean:149)
+#print axioms HarmonicBalls.weylInternalClosed_derived
+-- row 27: weylShiftedMassMeasurable_derived (HarmonicBalls/FirstPass/Phase2/WeylShiftedMassDerived.lean:96)
+#print axioms HarmonicBalls.weylShiftedMassMeasurable_derived
+-- row 28: weylShiftedSupMeasurable_derived (HarmonicBalls/FirstPass/Phase2/WeylShiftedSupDerived2.lean:124)
+#print axioms HarmonicBalls.weylShiftedSupMeasurable_derived
+-- row 33: lqgMassInnerMeasurable_derived' (HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:198)
+#print axioms HarmonicBalls.lqgMassInnerMeasurable_derived'
+-- row 35: planeDomainMinusConvexCompactPreconnected_derived (HarmonicBalls/FirstPass/Phase2/PlaneDomainDerived.lean:14)
+#print axioms HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived
+-- row 37: cameronMartinGFFReweighting_derived (HarmonicBalls/FirstPass/Phase2/CameronMartinReweightingDerived2.lean:267)
+#print axioms HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived
+-- row 39: internalMetricClosedEqIInfThickening_derived (HarmonicBalls/FirstPass/Phase2/InternalMetricClosedDerived.lean:409)
+#print axioms HarmonicBalls.internalMetricClosedEqIInfThickening_derived
+-- row 42: lqgMetricLengthUniv_derived (HarmonicBalls/FirstPass/Phase2/LengthUnivDerived.lean:30)
+#print axioms HarmonicBalls.lqgMetricLengthUniv_derived
+-- row 49: lqgMeasureLocality_derived (HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:185)
+#print axioms HarmonicBalls.lqgMeasureLocality_derived
+-- row 51: localMeasureKernelStmt_derived (HarmonicBalls/FirstPass/Phase2/LocalDecoderCommonDerived.lean:1564)
+#print axioms HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived
+-- row 56: weylMetricCompositionContinuousOuter_derived (HarmonicBalls/FirstPass/Phase2/WeylCompositionOuterDerived.lean:1221)
+#print axioms HarmonicBalls.weylMetricCompositionContinuousOuter_derived
+-- row 57: weylScaledEuclidean_derived (HarmonicBalls/FirstPass/Phase2/WeylScaledEuclideanDerived.lean:93)
+#print axioms HarmonicBalls.weylScaledEuclidean_derived

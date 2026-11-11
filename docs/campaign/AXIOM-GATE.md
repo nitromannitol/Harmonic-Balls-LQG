@@ -1,0 +1,134 @@
+# Axiom gate: kernel axioms of the numbered results
+
+Owner: worker z3 (task fp-clean-d6-axiom-gate, item D6 of the clean-up, lead decision R61). Checked at repository HEAD b01b9b8c with `checks/AxiomGate.lean` (lc, lock-free; built .olean files; uncommitted working-tree edits are not part of the check unless built).
+
+**Reproduce.** `lc checks/AxiomGate.lean` (or `lake env lean checks/AxiomGate.lean` from the repository root). The file is outside the default library: it is not built by `lake build`, and it is never edited by the lakefile.
+
+**What is checked.** One `#print axioms` line per declaration: the counted declaration of each numbered result (one per result, COUNTED-MANIFEST.md), the forall-xi and canonical-xi forms, the Proofs-only results, and the theorems of DERIVED rows (PHASE2-DERIVATION-STATUS.md). `#print axioms` reports the kernel axioms used, including `sorryAx`.
+
+**What it does not show.** `#print axioms` does not list hypotheses. A declaration that depends only on `propext`, `Classical.choice`, `Quot.sound` can still be conditional: its explicit binders (literature Props such as `hDG`, `hCC`, `hE`, or frozen inputs) are part of its signature. The binder columns of COUNTED-MANIFEST.md and the remaining-input column of PHASE2-DERIVATION-STATUS.md give that information. "Standard axioms only" therefore means "no extra axiom", not "unconditional".
+
+**Result.** 92 declarations, all with axiom output (0 missing). 0 declarations use an axiom beyond `propext`, `Classical.choice`, `Quot.sound`.
+
+Distinct axiom sets over all declarations: 92 with [propext, Classical.choice, Quot.sound].
+
+**Not gated, by design or by status.**
+- Numbered results with no declaration in `HarmonicBalls/FirstPass/` or `HarmonicBalls/Closure/` (COUNTED-MANIFEST.md, second table): 2.1, 2.2, 2.5, 2.6, 9.2, 10.5, 11.17. The manifest records no declaration for them, so nothing is gated for these results.
+- Row 6 LP-stage route (`LPStage/LQGMeasureDerived.lean` and its bridge): not gated, because its staging is parked (R41). Rows 15 and 51 (LP PARTIAL): only the HB-route theorem is gated.
+- Row 28 (DERIVED conditional, `weylShiftedSupMeasurable_derived`): its axioms are clean, but it is conditional on the frozen inputs `LQGMetricFieldAxiomsUnivFrozen`, `WeylScalingCompositionFrozen`, `LQGInternalMetricWeylAeMeasurableFrozen` (PHASE2-DERIVATION-STATUS.md row 28). They are hypotheses, not axioms, so this gate does not show them.
+- Declarations of the counted table whose binders are named literature Props (hDG, hCC, hE, hTyp, hholder, ...): the Props are in `HarmonicBalls/Proposed/` or `HarmonicBalls/External/`, and the gate does not show them. See COUNTED-MANIFEST.md, binder columns.
+- Not checked here: the `#print axioms` of `LPStage.All` (imported, no `#print` line; it was not in the requested list).
+
+## Counted declarations: one per numbered result (COUNTED-MANIFEST.md, first table)
+
+| label | declaration | file:line | axioms |
+|---|---|---|---|
+| 1.1 | `HarmonicBalls.firstPass_1_1` | `HarmonicBalls/FirstPass/S1S10.lean:35` | propext, Classical.choice, Quot.sound |
+| 1.2 | `HarmonicBalls.firstPass_1_2` | `HarmonicBalls/FirstPass/S1S10.lean:43` | propext, Classical.choice, Quot.sound |
+| 1.3 | `HarmonicBalls.firstPass_1_3` | `HarmonicBalls/FirstPass/S1S10.lean:53` | propext, Classical.choice, Quot.sound |
+| 2.3 | `HarmonicBalls.Closure.closure_2_3` | `HarmonicBalls/FirstPass/Closure.lean:113` | propext, Classical.choice, Quot.sound |
+| 3.1 | `HarmonicBalls.Closure.closure_3_1` | `HarmonicBalls/FirstPass/Closure.lean:134` | propext, Classical.choice, Quot.sound |
+| 3.2 | `HarmonicBalls.Closure.closure_3_2` | `HarmonicBalls/FirstPass/Closure.lean:137` | propext, Classical.choice, Quot.sound |
+| 3.3 | `HarmonicBalls.Closure.closure_3_3` | `HarmonicBalls/FirstPass/Closure.lean:140` | propext, Classical.choice, Quot.sound |
+| 3.4 | `HarmonicBalls.Closure.closure_3_4` | `HarmonicBalls/FirstPass/Closure.lean:143` | propext, Classical.choice, Quot.sound |
+| 3.5 | `HarmonicBalls.Closure.closure_3_5` | `HarmonicBalls/FirstPass/Closure.lean:146` | propext, Classical.choice, Quot.sound |
+| 4.1 | `HarmonicBalls.Closure.closure_4_1` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:73` | propext, Classical.choice, Quot.sound |
+| 4.2 | `HarmonicBalls.Closure.closure_4_2` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:76` | propext, Classical.choice, Quot.sound |
+| 4.3 | `HarmonicBalls.Closure.closure_4_3` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:79` | propext, Classical.choice, Quot.sound |
+| 5.1 | `HarmonicBalls.Closure.closure_5_1` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:116` | propext, Classical.choice, Quot.sound |
+| 5.2 | `HarmonicBalls.Closure.closure_5_2_derivedInputs19` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs19.lean:82` | propext, Classical.choice, Quot.sound |
+| 5.3 | `HarmonicBalls.firstPass_5_3` | `HarmonicBalls/FirstPass/S5S7S8.lean:136` | propext, Classical.choice, Quot.sound |
+| 5.4 | `HarmonicBalls.firstPass_5_4` | `HarmonicBalls/FirstPass/S5S7S8.lean:148` | propext, Classical.choice, Quot.sound |
+| 5.5 | `HarmonicBalls.firstPass_5_5` | `HarmonicBalls/FirstPass/S5S7S8.lean:161` | propext, Classical.choice, Quot.sound |
+| 5.6 | `HarmonicBalls.Closure.closure_5_6` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:127` | propext, Classical.choice, Quot.sound |
+| 5.7 | `HarmonicBalls.Closure.closure_5_7` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:139` | propext, Classical.choice, Quot.sound |
+| 5.8 | `HarmonicBalls.Closure.closure_5_8` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:150` | propext, Classical.choice, Quot.sound |
+| 6.1 | `HarmonicBalls.Closure.closure_6_1` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:37` | propext, Classical.choice, Quot.sound |
+| 6.2 | `HarmonicBalls.Closure.closure_6_2` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:41` | propext, Classical.choice, Quot.sound |
+| 6.3 | `HarmonicBalls.Closure.closure_6_3` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:45` | propext, Classical.choice, Quot.sound |
+| 6.4 | `HarmonicBalls.Closure.closure_6_4` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:49` | propext, Classical.choice, Quot.sound |
+| 6.6 | `HarmonicBalls.Closure.closure_6_6` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:53` | propext, Classical.choice, Quot.sound |
+| 6.7 | `HarmonicBalls.Closure.closure_6_7` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:57` | propext, Classical.choice, Quot.sound |
+| 6.8 | `HarmonicBalls.Closure.closure_6_8` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:62` | propext, Classical.choice, Quot.sound |
+| 6.9 | `HarmonicBalls.Closure.closure_6_9` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:67` | propext, Classical.choice, Quot.sound |
+| 6.10 | `HarmonicBalls.Closure.closure_6_10` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:72` | propext, Classical.choice, Quot.sound |
+| 6.11 | `HarmonicBalls.Closure.closure_6_11` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:77` | propext, Classical.choice, Quot.sound |
+| 6.12 | `HarmonicBalls.Closure.closure_6_12` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:82` | propext, Classical.choice, Quot.sound |
+| 6.13 | `HarmonicBalls.Closure.closure_6_13` | `HarmonicBalls/FirstPass/Closure/Sec6.lean:87` | propext, Classical.choice, Quot.sound |
+| 7.1 | `HarmonicBalls.Closure.closure_7_1` | `HarmonicBalls/FirstPass/Closure/Sec78910.lean:88` | propext, Classical.choice, Quot.sound |
+| 7.2 | `HarmonicBalls.firstPass_7_2` | `HarmonicBalls/FirstPass/S5S7S8.lean:52` | propext, Classical.choice, Quot.sound |
+| 8.1 | `HarmonicBalls.firstPass_8_1` | `HarmonicBalls/FirstPass/S5S7S8.lean:72` | propext, Classical.choice, Quot.sound |
+| 8.2 | `HarmonicBalls.firstPass_8_2_S8d_noWeyl_derivedInputs23` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs23.lean:226` | propext, Classical.choice, Quot.sound |
+| 8.3 | `HarmonicBalls.Closure.closure_8_3` | `HarmonicBalls/FirstPass/Closure/Sec78910.lean:150` | propext, Classical.choice, Quot.sound |
+| 9.3 | `HarmonicBalls.firstPass_9_3` | `HarmonicBalls/FirstPass/S2S3S4S9SA.lean:94` | propext, Classical.choice, Quot.sound |
+| 9.4 | `HarmonicBalls.firstPass_9_4` | `HarmonicBalls/FirstPass/S2S3S4S9SA.lean:99` | propext, Classical.choice, Quot.sound |
+| 10.1 | `HarmonicBalls.firstPass_10_1` | `HarmonicBalls/FirstPass/S1S10.lean:64` | propext, Classical.choice, Quot.sound |
+| 10.6 | `HarmonicBalls.firstPass_10_6` | `HarmonicBalls/FirstPass/S1S10.lean:92` | propext, Classical.choice, Quot.sound |
+| 10.7 | `HarmonicBalls.firstPass_10_7` | `HarmonicBalls/FirstPass/S1S10.lean:75` | propext, Classical.choice, Quot.sound |
+| 11.2 | `HarmonicBalls.firstPass_11_2` | `HarmonicBalls/FirstPass/S11.lean:59` | propext, Classical.choice, Quot.sound |
+| 11.5 | `HarmonicBalls.firstPass_11_5` | `HarmonicBalls/FirstPass/S11.lean:67` | propext, Classical.choice, Quot.sound |
+| 11.6 | `HarmonicBalls.Closure.closure_11_6_derivedInputs19` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs19.lean:240` | propext, Classical.choice, Quot.sound |
+| 11.7 | `HarmonicBalls.firstPass_11_7` | `HarmonicBalls/FirstPass/S11b.lean:70` | propext, Classical.choice, Quot.sound |
+| 11.8 | `HarmonicBalls.Closure.closure_11_8` | `HarmonicBalls/FirstPass/Closure/Sec11.lean:80` | propext, Classical.choice, Quot.sound |
+| 11.9 | `HarmonicBalls.firstPass_11_9` | `HarmonicBalls/FirstPass/S11d.lean:39` | propext, Classical.choice, Quot.sound |
+| 11.10 | `HarmonicBalls.S11c.firstPass_11_10_derivedInputs17` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs17.lean:431` | propext, Classical.choice, Quot.sound |
+| 11.11 | `HarmonicBalls.firstPass_11_11` | `HarmonicBalls/FirstPass/S11.lean:111` | propext, Classical.choice, Quot.sound |
+| 11.12 | `HarmonicBalls.firstPass_11_12` | `HarmonicBalls/FirstPass/S11e.lean:42` | propext, Classical.choice, Quot.sound |
+| 11.13 | `HarmonicBalls.Closure.manyPinchScales_of_corrected` | `HarmonicBalls/FirstPass/Closure/Bridge12.lean:322` | propext, Classical.choice, Quot.sound |
+| 11.14 | `HarmonicBalls.Closure.closure_11_14` | `HarmonicBalls/FirstPass/Closure/Sec11.lean:139` | propext, Classical.choice, Quot.sound |
+| 11.15 | `HarmonicBalls.firstPass_11_15_derivedInputs3` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs3.lean:945` | propext, Classical.choice, Quot.sound |
+| 11.16 | `HarmonicBalls.firstPass_11_16_of_11_17` | `HarmonicBalls/FirstPass/S11e.lean:29` | propext, Classical.choice, Quot.sound |
+| A.1 | `HarmonicBalls.Closure.closure_A_1` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:37` | propext, Classical.choice, Quot.sound |
+| A.2 | `HarmonicBalls.Closure.closure_A_2` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:40` | propext, Classical.choice, Quot.sound |
+| A.3 | `HarmonicBalls.Closure.closure_A_3` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:43` | propext, Classical.choice, Quot.sound |
+| A.4 | `HarmonicBalls.Closure.closure_A_4` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:46` | propext, Classical.choice, Quot.sound |
+| A.5 | `HarmonicBalls.Closure.closure_A_5` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:49` | propext, Classical.choice, Quot.sound |
+| A.6 | `HarmonicBalls.Closure.closure_A_6` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:52` | propext, Classical.choice, Quot.sound |
+
+## Forall-xi and canonical-xi forms (COUNTED-MANIFEST.md)
+
+| label | declaration | file:line | axioms |
+|---|---|---|---|
+| 1.2 forall-xi `HarmonicBallNoveltyStmt` | `HarmonicBalls.firstPass_1_2` | `HarmonicBalls/FirstPass/S1S10.lean:43` | propext, Classical.choice, Quot.sound |
+| 11.11 forall-xi `HarmonicBallNotMetricBallStmt` | `HarmonicBalls.firstPass_11_11` | `HarmonicBalls/FirstPass/S11.lean:111` | propext, Classical.choice, Quot.sound |
+| 11.13 forall-xi `CorrectedLemma11_13Stmt` | `HarmonicBalls.correctedLemma11_13_of_identity` | `HarmonicBalls/FirstPass/S11i/Assembly13.lean:79` | propext, Classical.choice, Quot.sound |
+| 1.2 canonical-xi `HarmonicBallNoveltyCanonicalStmt` | `HarmonicBalls.harmonicBallNoveltyStmt_of_existence_and_results_canonical` | `HarmonicBalls/FirstPass/Canonical/Novelty.lean:23` | propext, Classical.choice, Quot.sound |
+| 11.11 canonical-xi `HarmonicBallNotMetricBallCanonicalStmt` | `HarmonicBalls.harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth` | `HarmonicBalls/FirstPass/Canonical/NotMetricBall.lean:129` | propext, Classical.choice, Quot.sound |
+| 11.13 canonical-xi `CorrectedLemma11_13CanonicalStmt` | `HarmonicBalls.firstPass_11_13_canonical` | `HarmonicBalls/FirstPass/S11i/Corrected11_13.lean:127` | propext, Classical.choice, Quot.sound |
+
+## Numbered results whose only declaration is in Proofs/ (COUNTED-MANIFEST.md)
+
+| label | declaration | file:line | axioms |
+|---|---|---|---|
+| 2.4 | `HarmonicBalls.liouvilleVolumeGrowthStmt_of_existence` | `HarmonicBalls/Proofs/Sec9/LQGExistenceConsequences.lean:30` | propext, Classical.choice, Quot.sound |
+| 6.5 | `HarmonicBalls.Section6Full.annulusIterationStmt_of_three_inputs` | `HarmonicBalls/Proofs/Sec6/FullThreeInputAssembly.lean:73` | propext, Classical.choice, Quot.sound |
+| 9.1 | `HarmonicBalls.obstacleComparison` | `HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32` | propext, Classical.choice, Quot.sound |
+
+## Derived-input theorems of DERIVED rows (PHASE2-DERIVATION-STATUS.md)
+
+| label | declaration | file:line | axioms |
+|---|---|---|---|
+| row 5 | `HarmonicBalls.Section6.lqgMeasureWeylScaling` | `HarmonicBalls/Proofs/Sec6/LQGWeylScaling.lean:124` | propext, Classical.choice, Quot.sound |
+| row 6 | `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` | `HarmonicBalls/FirstPass/Phase2/ProfileDecoderDerived.lean:401` | propext, Classical.choice, Quot.sound |
+| row 7 | `HarmonicBalls.birkhoffPointwiseErgodic_derived` | `HarmonicBalls/FirstPass/S8c/BirkhoffDerived.lean:21` | propext, Classical.choice, Quot.sound |
+| row 10 | `HarmonicBalls.WholePlaneGFFAffineInvariance_derived` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs11.lean:26` | propext, Classical.choice, Quot.sound |
+| row 11 | `HarmonicBalls.localLQGInsertionWeylOffOrigin_derived` | `HarmonicBalls/FirstPass/S8c/WeylOffOriginDerived.lean:88` | propext, Classical.choice, Quot.sound |
+| row 13 | `HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs9.lean:37` | propext, Classical.choice, Quot.sound |
+| row 13 | `HarmonicBalls.cameronMartinGFFMutualAbsCont_derived` | `HarmonicBalls/FirstPass/Phase2/CameronMartinMutualDerived.lean:56` | propext, Classical.choice, Quot.sound |
+| row 15 | `HarmonicBalls.LocalDecoderCommon.localLQGDecoderCommonFrozen_derived` | `HarmonicBalls/FirstPass/Phase2/LocalDecoderCommonDerived.lean:1859` | propext, Classical.choice, Quot.sound |
+| row 21 | `HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived` | `HarmonicBalls/FirstPass/Phase2/MassFunctionalDerived.lean:702` | propext, Classical.choice, Quot.sound |
+| row 22 | `HarmonicBalls.lqgMeasureSquareMeasurable_derived'` | `HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:192` | propext, Classical.choice, Quot.sound |
+| row 26 | `HarmonicBalls.weylInternalClosed_derived` | `HarmonicBalls/FirstPass/Phase2/WeylInternalClosedDerived.lean:149` | propext, Classical.choice, Quot.sound |
+| row 27 | `HarmonicBalls.weylShiftedMassMeasurable_derived` | `HarmonicBalls/FirstPass/Phase2/WeylShiftedMassDerived.lean:96` | propext, Classical.choice, Quot.sound |
+| row 28 | `HarmonicBalls.weylShiftedSupMeasurable_derived` | `HarmonicBalls/FirstPass/Phase2/WeylShiftedSupDerived2.lean:124` | propext, Classical.choice, Quot.sound |
+| row 33 | `HarmonicBalls.lqgMassInnerMeasurable_derived'` | `HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:198` | propext, Classical.choice, Quot.sound |
+| row 35 | `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived` | `HarmonicBalls/FirstPass/Phase2/PlaneDomainDerived.lean:14` | propext, Classical.choice, Quot.sound |
+| row 37 | `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` | `HarmonicBalls/FirstPass/Phase2/CameronMartinReweightingDerived2.lean:267` | propext, Classical.choice, Quot.sound |
+| row 39 | `HarmonicBalls.internalMetricClosedEqIInfThickening_derived` | `HarmonicBalls/FirstPass/Phase2/InternalMetricClosedDerived.lean:409` | propext, Classical.choice, Quot.sound |
+| row 42 | `HarmonicBalls.lqgMetricLengthUniv_derived` | `HarmonicBalls/FirstPass/Phase2/LengthUnivDerived.lean:30` | propext, Classical.choice, Quot.sound |
+| row 49 | `HarmonicBalls.lqgMeasureLocality_derived` | `HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:185` | propext, Classical.choice, Quot.sound |
+| row 51 | `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` | `HarmonicBalls/FirstPass/Phase2/LocalDecoderCommonDerived.lean:1564` | propext, Classical.choice, Quot.sound |
+| row 56 | `HarmonicBalls.weylMetricCompositionContinuousOuter_derived` | `HarmonicBalls/FirstPass/Phase2/WeylCompositionOuterDerived.lean:1221` | propext, Classical.choice, Quot.sound |
+| row 57 | `HarmonicBalls.weylScaledEuclidean_derived` | `HarmonicBalls/FirstPass/Phase2/WeylScaledEuclideanDerived.lean:93` | propext, Classical.choice, Quot.sound |
+
+Source: `checks/AxiomGate.lean` (generated by z3 from the counted manifest and the DERIVED rows; the `#print` lines are its only content besides the imports).
