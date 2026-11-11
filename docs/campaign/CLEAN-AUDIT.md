@@ -22,8 +22,7 @@ Lines count matching lines (a line with two patterns counts once). Four uncommit
 
 | Directory | Files | Lines | Status |
 |---|---|---|---|
-| HarmonicBalls/Defs, Assembly, Proposed | 0 | 0 | cleaned (0334976f, f5011389) |
-| HarmonicBalls/Proofs/Sec5 | 0 | 0 | cleaned (8cdec65a) |
+| HarmonicBalls/Defs, Assembly, Proposed, Proofs/Sec5 | 0 | 0 | cleaned (0334976f, f5011389, 8cdec65a) |
 | all other directories (Steps, Proofs except below, Assembly, archive) | 0 | 0 | clean |
 | HarmonicBalls/Proofs/Sec3, Sec4, Sec9 | 3 | 3 | one `#eval` guard block each, kept (decision 1) |
 | README.md | 1 | 3 | `docs/campaign` links, kept (decision 2) |
@@ -51,11 +50,10 @@ Total: 73 files, 419 lines still matching. The `#print axioms` and `#check`/`#ev
 - Correction ids `[Cn]`: 174 / 67, correction provenance.
 - FROZEN, EXTERNAL and DERIVED status labels: 250 / 58, mathematical input status.
 - "candidate" status word: 22 / 14.
-- `#eval show CommandElabM Unit from do` guard blocks: 3 (code, not comments; see decision 1).
 
 ## Decisions for the lead
 
-1. Guard blocks in Proofs/Sec3/DerivedInputAssembly.lean (line 102), Proofs/Sec4/DerivedInputAssembly.lean (line 87) and Proofs/Sec9/WeakUniquenessDerivedInputs.lean (line 83) are deliberate in-file checks, not stray commands. Kept. Remove them only if the gate is to be the sole check.
+1. Guard blocks (`#eval show CommandElabM Unit from do`, code not comments) in Proofs/Sec3/DerivedInputAssembly.lean (line 102), Proofs/Sec4/DerivedInputAssembly.lean (line 87) and Proofs/Sec9/WeakUniquenessDerivedInputs.lean (line 83) are deliberate in-file checks, not stray commands. Kept. Remove them only if the gate is to be the sole check.
 2. `docs/campaign` paths were removed from Lean comments (Defs/Green.lean, Proofs/Sec5/StagedInputAssembly.lean, Proofs/Sec9/ThreeInputAssembly.lean). README keeps its three links to `docs/campaign` (reader-facing; section 3 decision).
 3. `checks/AxiomGate.lean` line 1 names a task and a worker, and lines 3-4 point to `docs/campaign`. The file is outside this scope; its owner should clean it (comment-only).
 4. `FirstPass/S9c.lean` line 11 (`form [C51] of docs/campaign/CORRECTIONS.md`): held, as in the previous refresh.
