@@ -132,11 +132,4 @@ theorem tendstoUniformlyOn_leastSupersolutionOn_of_potential
   rw [Real.dist_eq, abs_sub_comm]
   linarith
 
-#print axioms obstacle_gap_le_of_greenPotentialBall
-#print axioms mem_clusterOn_of_potential_gap
-#print axioms tendstoUniformlyOn_leastSupersolutionOn_of_potential
-
-#print axioms supersolutionsOn_potential_transfer
-#print axioms abs_leastSupersolutionOn_sub_le_of_greenPotentialBall
-
 end HarmonicBalls
