@@ -13,11 +13,12 @@ same binders, quantifiers and conclusion, stated for the LP-stage definitions `I
 Proof: the derivation of `localLQGInsertionWeylOffOrigin_derived` (`HarmonicBalls/FirstPass/S8c/WeylOffOriginDerived.lean`),
 copied in LP form. The Weyl factor and its test identity are copied from `HarmonicBalls/FirstPass/S11i/SingularWeyl.lean`
 (lines 30-163), the Radon identification from `HarmonicBalls/FirstPass/S8c/WeylOffOriginRadon.lean`. The Riesz-Markov
-uniqueness step uses Mathlib's `MeasureTheory.Measure.ext_of_integral_eq_on_compactlySupported` directly (the copy of
-`HarmonicBalls/FirstPass/S8d/RadonUnique.lean`, which is the same Mathlib call). No new mathematics: the steps are the
-vague limits of the circle-average approximations (Duplantier-Sheffield 2011, Prop. 1.1), the change of variables
-`ε^{γ²/2} e^{γ h_ε} = w · ε^{γ²/2} e^{γ h^ℂ_ε}` off the origin (Jensen's formula for `log ‖·‖` on circles about `z`),
-and the Riesz-Markov uniqueness of Radon measures on `ℂ`. The almost-sure joint continuity of the circle averages
+uniqueness step is Mathlib's `MeasureTheory.Measure.ext_of_integral_eq_on_compactlySupported`, the call that
+`HarmonicBalls/FirstPass/S8d/RadonUnique.lean` also makes (here `radonUniqueLP`). No new mathematics: the steps are the
+vague limits of the circle-average approximations (Duplantier-Sheffield 2011, Prop. 1.1), the identity
+`h_ε(z) = h^ℂ_ε(z) - α₀ log|z|` for `ε < |z|` (Jensen's formula for `log ‖·‖` on circles about `z`), which makes the
+approximating densities differ by the Weyl factor `‖z‖^{-γα₀}` off the origin, and the Riesz-Markov uniqueness of
+Radon measures on `ℂ`. The almost-sure joint continuity of the circle averages
 (`IsWholePlaneGFF.ae_continuousOn_circle`) gives the measurability of the dyadic approximants. The terminology follows
 Duplantier-Sheffield, *Liouville quantum gravity and KPZ* (2011), and Berestycki-Powell, *Gaussian free field, Liouville
 quantum gravity and Gaussian multiplicative chaos*.
