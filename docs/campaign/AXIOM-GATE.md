@@ -12,6 +12,8 @@ Owner: worker z3 (task fp-clean-d6-axiom-gate, item D6 of the clean-up, lead dec
 
 Distinct axiom sets over all declarations: 92 with [propext, Classical.choice, Quot.sound].
 
+**Update 2026-11-11 (round-36 counted forms).** `checks/AxiomGate.lean` now has 112 `#print axioms` lines: 11 were added for the `_derivedInputs36` counted forms of 1.3, 5.2, 5.3, 5.4, 5.5, 7.2, 8.1, 8.2, 9.2, 10.7, 11.6 (`HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean`; COUNTED-MANIFEST.md, round-36 refresh), in which the input `PhaseTorusDoublingProductErgodicFrozen` is supplied by a theorem. All 112 declarations print [propext, Classical.choice, Quot.sound]. The tables below are as of the earlier check and still name the previous counted forms of those results.
+
 **Not gated, by design or by status.**
 - Numbered results with no declaration in `HarmonicBalls/FirstPass/` or `HarmonicBalls/Closure/` (COUNTED-MANIFEST.md, second table): 2.1, 2.2, 2.5, 2.6, 9.2, 10.5, 11.17. The manifest records no declaration for them, so nothing is gated for these results.
 - Row 6 LP-stage route (`LPStage/LQGMeasureDerived.lean` and its bridge): not gated, because its staging is parked (R41). Rows 15 and 51 (LP PARTIAL): only the HB-route theorem is gated.

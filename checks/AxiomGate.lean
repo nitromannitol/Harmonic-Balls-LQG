@@ -47,6 +47,7 @@ import HarmonicBalls.FirstPass.S9c
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs31
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs33
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs35
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs36
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -271,3 +272,26 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.weylMetricCompositionContinuousOuter_derived
 -- row 57: weylScaledEuclidean_derived (HarmonicBalls/FirstPass/Phase2/WeylScaledEuclideanDerived.lean:93)
 #print axioms HarmonicBalls.weylScaledEuclidean_derived
+-- Round 36: counted forms with the phase-torus ergodicity input supplied (COUNTED-MANIFEST.md, round-36 refresh)
+-- 1.3: closure_1_3_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:170)
+#print axioms HarmonicBalls.Closure.closure_1_3_derivedInputs36
+-- 5.2: closure_5_2_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:108)
+#print axioms HarmonicBalls.Closure.closure_5_2_derivedInputs36
+-- 5.3: closure_5_3_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:96)
+#print axioms HarmonicBalls.Closure.closure_5_3_derivedInputs36
+-- 5.4: closure_5_4_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:335)
+#print axioms HarmonicBalls.Closure.closure_5_4_derivedInputs36
+-- 5.5: closure_5_5_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:133)
+#print axioms HarmonicBalls.Closure.closure_5_5_derivedInputs36
+-- 7.2: closure_7_2_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:121)
+#print axioms HarmonicBalls.Closure.closure_7_2_derivedInputs36
+-- 8.1: closure_8_1_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:60)
+#print axioms HarmonicBalls.Closure.closure_8_1_derivedInputs36
+-- 8.2: firstPass_8_2_S8d_noWeyl_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:30)
+#print axioms HarmonicBalls.firstPass_8_2_S8d_noWeyl_derivedInputs36
+-- 9.2: closure_9_2_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:347)
+#print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs36
+-- 10.7: closure_10_7_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:157)
+#print axioms HarmonicBalls.Closure.closure_10_7_derivedInputs36
+-- 11.6: closure_11_6_derivedInputs36 (HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:47)
+#print axioms HarmonicBalls.Closure.closure_11_6_derivedInputs36
