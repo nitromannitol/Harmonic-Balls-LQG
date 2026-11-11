@@ -317,8 +317,5 @@ theorem IsWholePlaneGFF.tendsto_integral_dyadic_observables_product
   exact tendsto_cylinder_product_of_tendstoInDistribution
     (h.tendstoInDistribution_dyadic_observables o q) f g
 
-#print axioms IsWholePlaneGFF.fullObservableDilationCovarianceDecay
-#print axioms IsWholePlaneGFF.tendstoInDistribution_dyadic_observables
-#print axioms IsWholePlaneGFF.tendsto_integral_dyadic_observables_product
 
 end HarmonicBalls

@@ -84,10 +84,4 @@ theorem IsWholePlaneGFF.ae_reconstructFullTest_logInsertion_apply
   change reconstructFullTest (fun ψ => hC ω ψ) φ + logInsertionDistribution z a φ = _
   rw [hv, logInsertionDistribution_apply]
 
-#print axioms locallyIntegrable_logInsertion
-#print axioms logInsertionDistribution_apply
-#print axioms integrable_test_mul_logInsertion
-#print axioms measurable_logInsertionDistribution
-#print axioms IsWholePlaneGFF.ae_reconstructFullTest_logInsertion
-#print axioms IsWholePlaneGFF.ae_reconstructFullTest_logInsertion_apply
 end HarmonicBalls

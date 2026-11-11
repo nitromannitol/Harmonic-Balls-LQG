@@ -95,7 +95,6 @@ theorem exists_common_continuity_ball
         ν ω (frontier (ball (0 : ℂ) (r 0))) = 0 by
           simpa only [ρ, Measure.add_apply, add_eq_zero] using h).2
 
-#print axioms exists_common_continuity_ball
 
 /-- Two locally finite random measures admit one generating continuity
 pi-system and one buffered exhaustion of a common continuity ball. -/
@@ -147,7 +146,6 @@ theorem exists_common_buffered_continuity_system
     simp only [ρ, Measure.add_apply, add_eq_zero] at h
     exact ⟨fun n => ⟨(h.1 n).1.2, (h.1 n).2.2⟩, h.2.1.2, h.2.2.2⟩
 
-#print axioms exists_common_buffered_continuity_system
 
 /-- The cone event on normalized restrictions is encoded by the real masses
 on any generating pi-system. The set is obtained from measurability of the
@@ -186,7 +184,6 @@ theorem exists_coneMassEvent_countable_encoding
   have h := Set.ext_iff.mp hpre η
   exact h.symm
 
-#print axioms exists_coneMassEvent_countable_encoding
 
 /-- A shared decoder of normalized masses on a generating pi-system gives
 both cone-event representations, without assuming an event representation. -/
@@ -229,7 +226,6 @@ theorem coneMassEvent_representation_of_mass_decoder
     exact (coneMassEvent_normalizedRestriction_iff (ν ω) M r z hU hcone hgreen
       hω.1 hω.2.1).symm.trans ((hencode (ν ω) U).trans hBω)
 
-#print axioms coneMassEvent_representation_of_mass_decoder
 
 /-- The actual fixed-shift LQG limit is a measurable random measure: its
 Weyl density is continuous, and uniqueness identifies the vague limit. -/
@@ -264,7 +260,6 @@ theorem IsWholePlaneGFF.aemeasurable_fixedShift_lqgMeasure
   filter_upwards [hνeq] with ω hω
   exact hω.symm
 
-#print axioms IsWholePlaneGFF.aemeasurable_fixedShift_lqgMeasure
 
 /-- The actual LQG limits of a field and its fixed smooth shift have the
 same cone-event decoder on a common continuity ball of positive finite mass. -/
@@ -326,7 +321,6 @@ theorem IsWholePlaneGFF.exists_fixedShift_coneMassEvent_representation
     rw [hunion] at hp
     exact ⟨hp.1, hp.2, hDω⟩
 
-#print axioms IsWholePlaneGFF.exists_fixedShift_coneMassEvent_representation
 
 /-- A common continuity ball can be chosen around the cone and Green
 annuli, and the actual fixed-shift LQG limits then have one local event
@@ -382,7 +376,6 @@ theorem IsWholePlaneGFF.exists_enclosing_fixedShift_coneMassEvent_representation
     (hcone.trans (ball_subset_ball hε.1.le))
     (hgreen.trans (ball_subset_ball hε.1.le)) k
 
-#print axioms IsWholePlaneGFF.exists_enclosing_fixedShift_coneMassEvent_representation
 
 /-- A common measurable decoder of normalized local measures produces both
 cone-event representations, with an arbitrary deterministic insertion. -/
@@ -424,9 +417,5 @@ theorem coneMassEvent_representation_of_measure_decoder
     exact (coneMassEvent_normalizedRestriction_iff (ν ω) M r z hU hcone hgreen
       hω.1 hω.2.1).symm
 
-#print axioms coneMassEvent_representation_of_measure_decoder
-#print axioms coneMassEvent_iff_of_restrict_eq
-#print axioms measurableSet_coneMassEvent
-#print axioms coneMassEvent_normalizedRestriction_iff
 
 end HarmonicBalls

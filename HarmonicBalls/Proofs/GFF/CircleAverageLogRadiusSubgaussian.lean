@@ -116,13 +116,5 @@ theorem IsWholePlaneGFF.measure_logRadius_circle_increment_abs_gt_self
     P {ω | a < |hcirc ω (Real.exp s) 0 - hcirc ω (Real.exp s) 0|} = 0 := by
   simp only [sub_self, abs_zero, not_lt_of_ge ha, Set.ofPred_false, measure_empty]
 
-#print axioms IsWholePlaneGFF.measurable_logRadius_circle_increment
-#print axioms IsWholePlaneGFF.measurableSet_logRadius_circle_increment_abs_ge
-#print axioms IsWholePlaneGFF.measurableSet_logRadius_circle_increment_abs_gt
-#print axioms IsWholePlaneGFF.hasSubgaussianMGF_logRadius_circle_increment
-#print axioms IsWholePlaneGFF.measure_logRadius_circle_increment_abs_ge_le
-#print axioms IsWholePlaneGFF.measure_logRadius_circle_increment_abs_ge_le_posPart
-#print axioms IsWholePlaneGFF.measure_logRadius_circle_increment_abs_gt_le
-#print axioms IsWholePlaneGFF.measure_logRadius_circle_increment_abs_gt_self
 
 end HarmonicBalls

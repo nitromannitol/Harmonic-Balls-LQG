@@ -124,15 +124,5 @@ theorem IsWholePlaneGFF.geometric_circle_increment_hasLaw
   rw [hg.map_eq_gaussianReal, h.integral_circle_increment (pow_pos hq (n + 1))
     (pow_pos hq n), h.variance_geometric_circle_increment hq hq1 n]
 
-#print axioms IsWholePlaneGFF.hasGaussianLaw_circle_increment
-#print axioms IsWholePlaneGFF.integral_circle_increment
-#print axioms IsWholePlaneGFF.variance_radial_circle_increment
-#print axioms IsWholePlaneGFF.covariance_radial_circle_increments_eq_zero
-#print axioms IsWholePlaneGFF.iIndepFun_finite_radial_circle_increments
-#print axioms IsWholePlaneGFF.iIndepFun_radial_circle_increments
-#print axioms IsWholePlaneGFF.circle_increment_hasLaw
-#print axioms IsWholePlaneGFF.iIndepFun_geometric_circle_increments
-#print axioms IsWholePlaneGFF.variance_geometric_circle_increment
-#print axioms IsWholePlaneGFF.geometric_circle_increment_hasLaw
 
 end HarmonicBalls

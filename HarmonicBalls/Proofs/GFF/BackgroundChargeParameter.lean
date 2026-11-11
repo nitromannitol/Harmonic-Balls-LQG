@@ -63,12 +63,5 @@ theorem gamma_eq_and_xi_eq_div_of_lqgQ_eq_of_mul_lqgQ_eq
   ⟨gamma_eq_of_lqgQ_eq hγ hγ₀ hQ,
     xi_eq_of_lqgQ_eq_of_mul_lqgQ_eq hγ.1 hQ hξQ⟩
 
-#print axioms lqgQ_sub_lqgQ
-#print axioms lqgQ_strictAntiOn
-#print axioms lqgQ_injOn
-#print axioms gamma_eq_of_lqgQ_eq
-#print axioms lqgQ_pos
-#print axioms xi_eq_of_lqgQ_eq_of_mul_lqgQ_eq
-#print axioms gamma_eq_and_xi_eq_div_of_lqgQ_eq_of_mul_lqgQ_eq
 
 end HarmonicBalls

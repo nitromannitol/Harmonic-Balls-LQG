@@ -72,11 +72,5 @@ theorem IsWholePlaneGFF.integral_logRadius_circle_increment_fourth_le
   simpa only [(show Even 4 by decide).pow_abs] using
     (h.integral_logRadius_circle_increment_fourth s t).le
 
-#print axioms IsWholePlaneGFF.variance_logRadius_circle_increment
-#print axioms IsWholePlaneGFF.logRadius_circle_increment_hasLaw
-#print axioms IsWholePlaneGFF.integrable_logRadius_circle_increment_fourth
-#print axioms IsWholePlaneGFF.integral_logRadius_circle_increment_fourth
-#print axioms IsWholePlaneGFF.integral_logRadius_circle_increment_fourth_self
-#print axioms IsWholePlaneGFF.integral_logRadius_circle_increment_fourth_le
 
 end HarmonicBalls

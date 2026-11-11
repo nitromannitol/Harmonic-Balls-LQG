@@ -75,8 +75,4 @@ theorem IsWholePlaneGFF.ae_centered_circleAvg_shiftedReconstructedGFF
     hh.ae_circleAvg_one_zero_reconstructedGFF] with ω h₁ h₂ h₃ h₄
   rw [h₁, h₂, h₃, h₄, zero_add]
 
-#print axioms IsWholePlaneGFF.measurable_shiftedReconstructedGFF
-#print axioms IsWholePlaneGFF.shiftedReconstructedGFF_isGFFPlusCont
-#print axioms IsWholePlaneGFF.ae_circleAvg_shiftedReconstructedGFF
-#print axioms IsWholePlaneGFF.ae_centered_circleAvg_shiftedReconstructedGFF
 end HarmonicBalls

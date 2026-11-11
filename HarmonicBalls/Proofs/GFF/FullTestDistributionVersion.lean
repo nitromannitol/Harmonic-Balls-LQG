@@ -104,6 +104,4 @@ theorem IsWholePlaneGFF.exists_fullTest_distribution_version
   · intro φ hφ
     simpa [distributionPairingExtension, hφ] using (hv ⟨φ, hφ.1, hφ.2.1, hφ.2.2⟩).symm
 
-#print axioms IsWholePlaneGFF.exists_fullTest_distribution_version
-#print axioms ae_eq_of_fullTest_versions
 end HarmonicBalls

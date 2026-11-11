@@ -110,8 +110,5 @@ theorem exists_nonzero_plane_testFunction :
   change bump 0 = 0 at hz
   linarith
 
-#print axioms pairingVersionSpike_add_ae_eq
-#print axioms pairingVersionSpike_add_not_represents
-#print axioms exists_nonzero_plane_testFunction
 
 end HarmonicBalls

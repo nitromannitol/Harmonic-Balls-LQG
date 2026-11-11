@@ -81,9 +81,4 @@ theorem IsWholePlaneGFF.ae_continuousCircleLQGDecoder_eq_raw
   exact (continuousCircleLQGDecoder_eq γ α (F ω) n).trans
     (hω γ α _ (dyadicScale_pos n)).symm
 
-#print axioms continuousCircleLQGDecoder
-#print axioms continuousCircleLQGDecoder_eq
-#print axioms measurable_continuousCircleLQGDecoder
-#print axioms IsWholePlaneGFF.identDistrib_continuousCircleAffine_joint_lqgApprox
-#print axioms IsWholePlaneGFF.ae_continuousCircleLQGDecoder_eq_raw
 end HarmonicBalls

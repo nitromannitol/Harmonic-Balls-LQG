@@ -111,10 +111,3 @@ theorem ae_continuous_circle_map_eq
   intro p
   exact congrFun (hd.equalizer (F ω).continuous (G ω).continuous (funext hω)) p
 
-#print axioms aemeasurable_circle_map_of_evaluations
-#print axioms IsWholePlaneGFF.exists_measurable_continuous_circle_version
-#print axioms measurable_circle_evaluation
-#print axioms measurable_circle_evaluation_random
-#print axioms measurable_circle_version_joint
-#print axioms measurable_circle_evaluation_random_radius_center
-#print axioms ae_continuous_circle_map_eq

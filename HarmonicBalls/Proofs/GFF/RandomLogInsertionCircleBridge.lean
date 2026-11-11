@@ -153,14 +153,4 @@ theorem IsWholePlaneGFF.measurable_centered_random_logInsertion_circle_expressio
   (hh.measurable_random_logInsertion_circle_expression hZ hA w hr).sub
     (hA.mul (Real.measurable_log.comp (measurable_const.max hZ.norm)))
 
-#print axioms IsWholePlaneGFF.ae_mollAvg_circleAvg_all_logInsertions
-#print axioms IsWholePlaneGFF.ae_centered_circleAvg_all_logInsertions
-#print axioms IsWholePlaneGFF.ae_unit_circleAvg_all_logInsertions
-#print axioms IsWholePlaneGFF.ae_mollAvg_circleAvg_random_logInsertion
-#print axioms IsWholePlaneGFF.ae_centered_circleAvg_random_logInsertion
-#print axioms IsWholePlaneGFF.ae_unit_circleAvg_random_logInsertion
-#print axioms IsWholePlaneGFF.measurable_random_logInsertion_circleAvg
-#print axioms IsWholePlaneGFF.measurable_centered_random_logInsertion_circle_expression
-#print axioms IsWholePlaneGFF.measurable_reconstructedGFF_add_random_logInsertion
-#print axioms IsWholePlaneGFF.measurable_random_logInsertion_circle_expression
 end HarmonicBalls

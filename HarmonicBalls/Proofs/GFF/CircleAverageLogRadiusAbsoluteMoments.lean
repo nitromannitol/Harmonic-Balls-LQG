@@ -77,11 +77,5 @@ theorem IsWholePlaneGFF.integral_logRadius_circle_increment_abs_rpow_self
   rw [h.integral_logRadius_circle_increment_abs_rpow s s hp]
   simp [Real.zero_rpow (show p / 2 ≠ 0 by positivity)]
 
-#print axioms integrable_gaussianReal_abs_rpow
-#print axioms IsWholePlaneGFF.integrable_logRadius_circle_increment_abs_rpow
-#print axioms gaussianReal_zero_eq_map_sqrt
-#print axioms integral_gaussianReal_abs_rpow
-#print axioms IsWholePlaneGFF.integral_logRadius_circle_increment_abs_rpow
-#print axioms IsWholePlaneGFF.integral_logRadius_circle_increment_abs_rpow_self
 
 end HarmonicBalls

@@ -130,8 +130,4 @@ theorem IsWholePlaneGFF.tendsto_covariance_affinePairing_dyadic
   exact h.covariance_affinePairing_eq_potential hφ hψ hψzero
     (Complex.ofReal_ne_zero.mpr (ne_of_gt (by positivity)))
 
-#print axioms tendsto_integral_mul_dyadic_comp
-#print axioms IsWholePlaneGFF.covariance_affinePairing_eq_potential
-#print axioms IsWholePlaneGFF.covariance_affinePairing_eq_logPotential
-#print axioms IsWholePlaneGFF.tendsto_covariance_affinePairing_dyadic
 end HarmonicBalls

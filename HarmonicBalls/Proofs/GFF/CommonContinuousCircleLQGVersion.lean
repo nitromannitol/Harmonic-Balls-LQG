@@ -94,9 +94,4 @@ theorem aemeasurable_raw_circle_random
   filter_upwards [h] with ω hω
   exact hω (r ω, z ω)
 
-#print axioms IsWholePlaneGFF.ae_circle_map_eq_raw
-#print axioms ae_circle_map_eq_raw
-#print axioms ae_lqgApprox_circleProfile_eq
-#print axioms isLQGMeasureOfField_circleProfile_iff
-#print axioms aemeasurable_raw_circle_random
 end HarmonicBalls

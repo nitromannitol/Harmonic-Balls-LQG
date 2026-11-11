@@ -61,8 +61,6 @@ theorem IsWholePlaneGFF.product_has_ae_euclidean_metric_extension
   filter_upwards [hn] with p hp metric z w
   exact extendPlaneMetricMap_eq_dist_of_not_represents metric _ hp z w
 
-#print axioms IsWholePlaneGFF.product_has_ae_euclidean_metric_extension
 
-#print axioms IsWholePlaneGFF.product_has_ae_unrepresentable_modification
 
 end HarmonicBalls

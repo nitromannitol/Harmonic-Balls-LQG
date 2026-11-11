@@ -133,8 +133,4 @@ theorem IsWholePlaneGFF.ae_circleAvg_one_zero_reconstructedGFF
     ∀ᵐ ω ∂P, LQGMetric.circleAvg (reconstructedGFF hC ω) 1 0 = 0 :=
   hh.reconstructedGFF_normalized.2
 
-#print axioms IsWholePlaneGFF.ae_circleAvg_one_zero_reconstructedGFF
-#print axioms IsWholePlaneGFF.ae_circleAvg_reconstructedGFF
-#print axioms IsWholePlaneGFF.reconstructedGFF_normalized
-#print axioms IsWholePlaneGFF.map_reconstructedGFF_eq
 end HarmonicBalls

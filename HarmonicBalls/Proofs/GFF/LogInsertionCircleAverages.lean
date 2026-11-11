@@ -87,8 +87,4 @@ theorem IsWholePlaneGFF.ae_circleAvg_one_zero_reconstructedGFF_add_logInsertion
   rw [hzero] at hraw
   simpa only [hraw, zero_add, zero_sub, norm_neg] using h
 
-#print axioms IsWholePlaneGFF.ae_circleAvg_reconstructedGFF_add_logInsertion
-#print axioms IsWholePlaneGFF.ae_circleAvg_one_zero_reconstructedGFF_add_logInsertion
-#print axioms tendsto_mollAvg_logInsertion
-#print axioms circleAvg_logInsertion
 end HarmonicBalls

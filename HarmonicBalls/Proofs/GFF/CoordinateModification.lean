@@ -25,7 +25,6 @@ theorem wholePlaneCov_eq_additive_of_ne {z w : ℂ} (hzw : z ≠ w) :
     Real.log_mul (by positivity) (by positivity)]
   ring
 
-#print axioms wholePlaneCov_eq_additive_of_ne
 
 /-- Circle smearing removes the diagonal discrepancy between the project
 kernel and Leonardo Bonanno's additive logarithmic covariance kernel. -/
@@ -41,7 +40,6 @@ theorem wholePlaneGFFCov_circle_eq_gffCircleCov {r s : ℝ} (hs : 0 < s) (z w : 
   exact (wholePlaneCov_eq_additive_of_ne (by simpa [eq_comm] using hy) :
     wholePlaneCov x y = LQGDimension.gffGreen x y)
 
-#print axioms wholePlaneGFFCov_circle_eq_gffCircleCov
 
 /-- All pairings of Leonardo Bonanno's normalized distribution-valued GFF
 are jointly Gaussian and centered, including tests with nonzero integral. -/
@@ -62,7 +60,6 @@ theorem normalizedGFF_allPairings_gaussian
   rw [← integral_congr_ae (LQGMetric.MarkovNorm.pairVec_ae hh φ)]
   exact hc.2
 
-#print axioms normalizedGFF_allPairings_gaussian
 
 /-- The covariance of two test pairings of Leonardo Bonanno's normalized GFF
 is the limit of their mean-zero approximations' logarithmic covariances. -/
@@ -96,7 +93,6 @@ theorem normalizedGFF_pairing_covariance_tendsto
     (LQGMetric.centered_pairProc hh.1 _)]
   exact hh.1.covariance_eq _ _
 
-#print axioms normalizedGFF_pairing_covariance_tendsto
 
 /-- The unit-circle mollifier's logarithmic potential converges uniformly,
 with the geometric rate in Leonardo Bonanno's circle-average construction. -/
@@ -112,7 +108,6 @@ theorem abs_logPot_unitCircleBump_add_le (n : ℕ) (x : ℂ) :
         LQGMetric.CircleAvg.circLog 0 1 x) by ring, abs_neg]
   exact h
 
-#print axioms abs_logPot_unitCircleBump_add_le
 
 /-- The mean-zero approximation has the normalized logarithmic potential,
 up to a uniform geometric error. -/
@@ -142,7 +137,6 @@ theorem abs_logPot_meanZeroApprox_sub_le (φ : LQGMetric.TestC) (n : ℕ) (x : �
   rw [heq, abs_mul, abs_neg]
   exact mul_le_mul_of_nonneg_left (abs_logPot_unitCircleBump_add_le n x) (abs_nonneg _)
 
-#print axioms abs_logPot_meanZeroApprox_sub_le
 
 /-- Integrating the normalized potential approximation against a fixed test
 function preserves its geometric convergence, in Leonardo Bonanno's construction. -/
@@ -171,7 +165,6 @@ theorem tendsto_integral_test_mul_meanZeroApprox_error (ρ φ : LQGMetric.TestC)
   rw [integral_mul_const]
   ring
 
-#print axioms tendsto_integral_test_mul_meanZeroApprox_error
 
 /-- The potential error also vanishes against the changing mean-zero test
 approximations, whose absolute masses are uniformly bounded. -/
@@ -219,7 +212,6 @@ theorem tendsto_integral_meanZeroApprox_mul_error (ρ φ : LQGMetric.TestC) :
       LQGMetric.CircleAvg.integral_circBump, mul_one]]
   ring
 
-#print axioms tendsto_integral_meanZeroApprox_mul_error
 
 /-- A mean-zero approximation integrates a continuous function against the
 original test and subtracts its unit-circle average, as in Leonardo Bonanno's
@@ -241,7 +233,6 @@ theorem tendsto_integral_meanZeroApprox_mul_continuous
   simp_rw [heq]
   exact tendsto_const_nhds.sub ((LQGMetric.CircleAvg.tendsto_mollAvg_ofCont f 1 0).const_mul _)
 
-#print axioms tendsto_integral_meanZeroApprox_mul_continuous
 
 /-- The logarithmic covariances of Leonardo Bonanno's mean-zero approximations
 converge to the normalized potential expression. -/
@@ -282,7 +273,6 @@ theorem tendsto_logCov_meanZeroApprox (ρ φ : LQGMetric.TestC) :
   change D x * f x + D x * (p x - f x) = D x * p x
   ring
 
-#print axioms tendsto_logCov_meanZeroApprox
 
 /-- Test-pairing covariance in Leonardo Bonanno's normalized GFF, expressed
 using a logarithmic potential and the normalizing unit-circle average. -/
@@ -298,7 +288,6 @@ theorem normalizedGFF_pairing_covariance_eq_potential
   tendsto_nhds_unique (normalizedGFF_pairing_covariance_tendsto hh ρ φ)
     (tendsto_logCov_meanZeroApprox ρ φ)
 
-#print axioms normalizedGFF_pairing_covariance_eq_potential
 
 /-- Integrating the project kernel against a test removes its diagonal junk
 value and yields Leonardo Bonanno's logarithmic potential plus both
@@ -333,7 +322,6 @@ theorem integral_test_mul_wholePlaneCov (φ : LQGMetric.TestC) (x : ℂ) :
   dsimp only [f, LQGMetric.CircleAvg.logPot, ContinuousMap.coe_mk]
   ring
 
-#print axioms integral_test_mul_wholePlaneCov
 
 /-- Test-test covariance of the project kernel in terms of Leonardo Bonanno's
 logarithmic potential and the two unit-circle normalization terms. -/
@@ -356,7 +344,6 @@ theorem wholePlaneGFFCov_pairings_eq_potential (ρ φ : LQGMetric.TestC) :
     LQGMetric.CircleAvg.circLog 0 1 x)) + _ = _
   simp_rw [mul_add]
 
-#print axioms wholePlaneGFFCov_pairings_eq_potential
 
 /-- The logarithmic kernel times a test is integrable against Lebesgue measure
 and the unit-circle measure; this justifies exchanging these integrals. -/
@@ -391,7 +378,6 @@ theorem integrable_test_log_unitCircle_prod (φ : LQGMetric.TestC) :
     apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
     simpa only [norm_zero, add_zero, Real.log_one, sub_zero] using hbound
 
-#print axioms integrable_test_log_unitCircle_prod
 
 /-- The unit-circle average of Leonardo Bonanno's logarithmic potential is
 the negative test integral of the circle logarithmic potential. -/
@@ -429,7 +415,6 @@ theorem circleAverage_logPot_unitCircle (φ : LQGMetric.TestC) :
       change φ y * -LQGMetric.CircleAvg.circLog 0 1 y = _
       ring
 
-#print axioms circleAverage_logPot_unitCircle
 
 /-- The logarithmic kernel times a test is integrable against Lebesgue measure
 and the circle measure; this justifies exchanging these integrals. -/
@@ -464,7 +449,6 @@ theorem integrable_test_log_circle_prod (φ : LQGMetric.TestC) (z : ℂ) {r : �
     apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
     linarith [neg_abs_le (Real.log r)]
 
-#print axioms integrable_test_log_circle_prod
 
 /-- The circle average of Leonardo Bonanno's logarithmic potential is
 the negative test integral of the circle logarithmic potential. -/
@@ -502,7 +486,6 @@ theorem circleAverage_logPot_circle (φ : LQGMetric.TestC) (z : ℂ) {r : ℝ} (
       change φ y * -LQGMetric.CircleAvg.circLog z r y = _
       ring
 
-#print axioms circleAverage_logPot_circle
 
 /-- The mixed project kernel in terms of the normalized logarithmic potential
 of Leonardo Bonanno's test pairing. -/
@@ -523,7 +506,6 @@ theorem wholePlaneGFFCov_circle_pairing_eq_potential (φ : LQGMetric.TestC)
   rw [Real.circleAverage_fun_add hf.continuousOn.circleIntegrable'
     (continuousOn_const.circleIntegrable'), Real.circleAverage_const]
 
-#print axioms wholePlaneGFFCov_circle_pairing_eq_potential
 
 /-- The mixed whole-plane kernel is integrable against a test function and a
 circle measure. The diagonal convention is immaterial for this product. -/
@@ -561,7 +543,6 @@ theorem integrable_test_wholePlaneCov_circle_prod (φ : LQGMetric.TestC)
   dsimp [f]
   ring
 
-#print axioms integrable_test_wholePlaneCov_circle_prod
 
 /-- Exchanging a test pairing and a positive-radius circle average preserves
 the covariance kernel, by Fubini's theorem. -/
@@ -599,7 +580,6 @@ theorem wholePlaneGFFCov_pairing_circle_symm (φ : LQGMetric.TestC)
   unfold wholePlaneCov
   rw [norm_sub_rev, mul_comm (max ‖y‖ 1) (max ‖x‖ 1)]
 
-#print axioms wholePlaneGFFCov_pairing_circle_symm
 
 /-- Uniform potential convergence can be integrated against Leonardo Bonanno's
 mollified circle increments. -/
@@ -644,7 +624,6 @@ theorem tendsto_integral_circDiff_mul_meanZeroApprox_error
       LQGMetric.CircleAvg.integral_circBump]; norm_num]
   ring
 
-#print axioms tendsto_integral_circDiff_mul_meanZeroApprox_error
 
 /-- The mixed logarithmic covariances of Leonardo Bonanno's mollified circle
 increments and normalized test approximations converge to the potential formula. -/
@@ -695,7 +674,6 @@ theorem tendsto_logCov_circDiff_meanZeroApprox (φ : LQGMetric.TestC)
   change D x * f x + D x * (p x - f x) = D x * p x
   ring
 
-#print axioms tendsto_logCov_circDiff_meanZeroApprox
 
 /-- The unit-circle normalization term averages to zero in Leonardo Bonanno's
 potential formula. -/
@@ -716,7 +694,6 @@ theorem circleAverage_normalized_logPot_unitCircle (φ : LQGMetric.TestC) :
     LQGMetric.CircleAvg.circLog 0 1 x) 0 1 = _
   rw [Real.circleAverage_fun_smul, hzero, smul_eq_mul, mul_zero, add_zero]
 
-#print axioms circleAverage_normalized_logPot_unitCircle
 
 /-- Leonardo Bonanno's normalized GFF has exactly the project's test-test
 covariance, including the project's diagonal convention. -/
@@ -730,7 +707,6 @@ theorem normalizedGFF_pairing_covariance_eq_project
     wholePlaneGFFCov_pairings_eq_potential, circleAverage_normalized_logPot_unitCircle]
   ring
 
-#print axioms normalizedGFF_pairing_covariance_eq_project
 
 /-- The L² norm of one successive mollified circle increment has geometric
 rate, using Leonardo Bonanno's variance estimate. -/
@@ -753,7 +729,6 @@ theorem norm_circleAvg_succ_toLp_le
       Real.sq_sqrt (by positivity : 0 ≤ 4 / r), Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2⁻¹)]
   exact (pow_le_pow_iff_left₀ (norm_nonneg _) (by positivity) two_ne_zero).1 hsq
 
-#print axioms norm_circleAvg_succ_toLp_le
 
 /-- The L² representative of a mollified circle-average increment in
 Leonardo Bonanno's GFF construction. -/
@@ -798,7 +773,6 @@ theorem norm_circleIncrementApproxVec_succ_sub_le
         (norm_circleAvg_succ_toLp_le hh w hs n)
     _ = _ := by ring
 
-#print axioms norm_circleIncrementApproxVec_succ_sub_le
 
 /-- Leonardo Bonanno's mollified circle increments converge in L² to a
 representative of the circle-average increment. -/
@@ -829,7 +803,6 @@ theorem exists_tendsto_circleIncrementApproxVec
       exact (LQGMetric.CircleAvg.mollAvg_sub_eq (h ω) n z r n w s).symm
   exact tendstoInMeasure_ae_unique h1 h2
 
-#print axioms exists_tendsto_circleIncrementApproxVec
 
 /-- Mixed covariance of Leonardo Bonanno's circle increment and test pairing,
 obtained as the L² limit of their mean-zero approximations. -/
@@ -860,7 +833,6 @@ theorem normalizedGFF_circleIncrement_pairing_covariance_tendsto
   rw [LQGMetric.MarkovZB.inner_toLp_eq_cov _ _ (LQGMetric.centered_pairProc hh.1 _)]
   exact hh.1.covariance_eq _ _
 
-#print axioms normalizedGFF_circleIncrement_pairing_covariance_tendsto
 
 /-- The mixed covariance of a normalized circle average and a test pairing
 is the project whole-plane covariance kernel. -/
@@ -877,7 +849,6 @@ theorem normalizedGFF_circleIncrement_pairing_covariance_eq_project
   rw [wholePlaneGFFCov_circle_pairing_eq_potential]
   linarith
 
-#print axioms normalizedGFF_circleIncrement_pairing_covariance_eq_project
 
 /-- The mollified circle-average increments of Leonardo Bonanno's normalized
 GFF are jointly Gaussian with all of its test-function pairings. -/
@@ -896,7 +867,6 @@ theorem normalizedGFF_pairings_mollifiedIncrements_gaussian
     exact Filter.Eventually.of_forall fun ω =>
       (LQGMetric.CircleAvg.mollAvg_sub_eq (h ω) n p.1.2 p.1.1 n p.2.2 p.2.1).symm
 
-#print axioms normalizedGFF_pairings_mollifiedIncrements_gaussian
 
 /-- The pairings and circle-average increments of Leonardo Bonanno's normalized
 GFF form one jointly Gaussian process. -/
@@ -961,7 +931,6 @@ theorem normalizedGFF_pairings_increments_gaussian
     (fun n => (hG n).aemeasurable) (L.continuous.measurable.comp hY).aemeasurable hmap ht
   exact ⟨0, V, hV⟩
 
-#print axioms normalizedGFF_pairings_increments_gaussian
 
 /-- Leonardo Bonanno's normalized GFF admits a continuous circle-average
 version that is jointly Gaussian with all test-function pairings. -/
@@ -995,7 +964,6 @@ theorem normalizedGFF_exists_joint_circle_version
       LQGMetric.CircleAvg.gffCircleCov_eq_incCov hr hs]
     exact LQGMetric.CircleAvg.covariance_cInc hh.1 hr one_pos hs one_pos z 0 w 0
 
-#print axioms normalizedGFF_exists_joint_circle_version
 
 /-- Leonardo Bonanno's circle-average construction has a coordinatewise
 measurable jointly Gaussian version which is jointly continuous almost surely. -/
@@ -1060,7 +1028,6 @@ theorem normalizedGFF_exists_measurable_joint_circle_version
       LQGMetric.CircleAvg.gffCircleCov_eq_incCov hr hs]
     exact LQGMetric.CircleAvg.covariance_cInc hh.1 hr one_pos hs one_pos z 0 w 0
 
-#print axioms normalizedGFF_exists_measurable_joint_circle_version
 
 /-- Leonardo Bonanno's normalized distribution-valued GFF supplies all six
 fields of the project whole-plane GFF, with the original test pairings. -/
@@ -1132,7 +1099,6 @@ theorem normalizedGFF_exists_projectGFF
   · intro ω φ
     exact hCeq ω φ ⟨φ.contDiff, φ.hasCompactSupport, Set.subset_univ _⟩
 
-#print axioms normalizedGFF_exists_projectGFF
 
 /-- Leonardo Bonanno's normalized whole-plane GFF construction yields a
 probability space carrying the project whole-plane GFF. -/
@@ -1146,7 +1112,6 @@ theorem exists_projectWholePlaneGFF :
   obtain ⟨hC, hcirc, hg, _, _⟩ := normalizedGFF_exists_projectGFF hh
   exact ⟨Ω, m, P, hP, hC, hcirc, hg⟩
 
-#print axioms exists_projectWholePlaneGFF
 
 /-- A measurable coordinatewise modification preserves all six fields of the
 whole-plane GFF specification, with circle averages unchanged. -/
@@ -1485,12 +1450,4 @@ theorem IsWholePlaneGFF.product_has_ae_non_linear_modification
   rw [heq]
   exact hp
 
-#print axioms IsWholePlaneGFF.product_has_ae_non_linear_modification
-#print axioms IsWholePlaneGFF.exists_ae_non_linear_modification
-#print axioms IsWholePlaneGFF.product_has_non_linear_modification
-#print axioms IsWholePlaneGFF.comp_measurePreserving
-#print axioms IsWholePlaneGFF.exists_modification_not_ae_linear
-#print axioms IsWholePlaneGFF.exists_diagonal_modification
-#print axioms IsWholePlaneGFF.coordinateModification
-#print axioms diagonalSpike_sections
 end HarmonicBalls

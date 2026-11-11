@@ -137,13 +137,4 @@ theorem ae_normalizedLogInsertedCircleProfile_random_eq_raw
   filter_upwards [ae_normalizedLogInsertedCircleProfile_eq_raw h] with ω hω p
   exact hω (A ω) (V ω) p
 
-#print axioms measurable_normalizedLogInsertedCircleProfile
-#print axioms IsWholePlaneGFF.ae_logInsertedCircleProfile_eq_raw
-#print axioms ae_logInsertedCircleProfile_random_eq_raw
-#print axioms ae_normalizedLogInsertedCircleProfile_random_eq_raw
-#print axioms measurable_logInsertedCircleProfile_random
-#print axioms measurable_logInsertedCircleProfile
-#print axioms measurable_normalizedLogInsertedCircleProfile_random
-#print axioms ae_logInsertedCircleProfile_eq_raw
-#print axioms ae_normalizedLogInsertedCircleProfile_eq_raw
 end HarmonicBalls

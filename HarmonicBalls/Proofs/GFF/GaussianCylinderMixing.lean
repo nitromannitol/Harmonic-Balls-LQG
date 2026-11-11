@@ -246,7 +246,6 @@ theorem tendstoInDistribution_gaussian_independent_blocks
   have ht' := ht.continuous_comp hs
   simpa [split, Y, A, B, Function.comp_def] using ht'
 
-#print axioms tendstoInDistribution_gaussian_independent_blocks
 
 /-- Finite-dimensional weak convergence implies convergence of every bounded
 continuous cylinder expectation. -/
@@ -298,7 +297,6 @@ theorem tendsto_cylinder_product_of_tendstoInDistribution
     exact integral_prod_mul (fun ω => f (U ω)) (fun ω => g (V ω))
   simpa only [he₁, he₂] using hc
 
-#print axioms tendsto_cylinder_product_of_tendstoInDistribution
 /-- Bounded continuous functions of centered Gaussian blocks factor in the
 limit when the marginal covariance matrices are fixed and the cross block
 converges to zero. -/
@@ -323,7 +321,6 @@ theorem tendsto_integral_gaussian_independent_blocks
   tendsto_cylinder_product_of_tendstoInDistribution
     (tendstoInDistribution_gaussian_independent_blocks hX hXm hX0 hAA hBB hAB) f g
 
-#print axioms tendsto_integral_gaussian_independent_blocks
 
 /-- Finite original pairings and normalized dyadic pairings of a whole-plane
 GFF converge jointly in law to independent copies of the corresponding
@@ -396,7 +393,6 @@ theorem IsWholePlaneGFF.tendstoInDistribution_dyadic_pairings
   have ht := tendstoInDistribution_gaussian_independent_blocks hX hXm hX0 hAA hBB hAB
   simpa [X, a, affinePairing, hψzero] using ht
 
-#print axioms IsWholePlaneGFF.tendstoInDistribution_dyadic_pairings
 
 /-- Bounded continuous cylinder functions of original and normalized dyadic
 GFF pairings have asymptotically factorized expectations. -/
@@ -418,7 +414,6 @@ theorem IsWholePlaneGFF.tendsto_integral_dyadic_pairings_product
   exact tendsto_cylinder_product_of_tendstoInDistribution
     (h.tendstoInDistribution_dyadic_pairings φ ψ hφ hψ hψzero) f g
 
-#print axioms IsWholePlaneGFF.tendsto_integral_dyadic_pairings_product
 
 /-- Every fixed bilinear combination of the mixed covariances of original and
 normalized dyadic GFF pairings tends to zero. Only the dilated tests need have
@@ -443,7 +438,4 @@ theorem IsWholePlaneGFF.tendsto_sum_covariance_affinePairing_dyadic
           (a i * b j)))
   simpa using hc
 
-#print axioms IsWholePlaneGFF.tendsto_sum_covariance_affinePairing_dyadic
-#print axioms tendsto_integral_gaussian_of_covariance
-#print axioms tendstoInDistribution_gaussian_of_covariance
 end HarmonicBalls

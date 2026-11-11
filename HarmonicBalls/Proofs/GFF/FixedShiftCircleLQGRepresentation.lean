@@ -453,17 +453,5 @@ theorem coneMassEvent_smul_iff (μ : Measure ℂ) (Q : Set ℂ) (M r : ℝ) (z :
   · intro h
     exact mul_le_mul_right h c
 
-#print axioms circleDensityDifference_shift_tendsto
-#print axioms decoder_add_shift_of_pairing_law
-#print axioms IsWholePlaneGFF.exists_localPairing_tests_with_shift_limit
-#print axioms IsWholePlaneGFF.ae_shifted_centeredCircle_decoder_at
-#print axioms IsWholePlaneGFF.ae_ae_shifted_centeredCircle_decoder
-#print axioms IsWholePlaneGFF.exists_fixedShift_normalizedLQGApprox
-#print axioms tendstoInMeasure_normalizedMass_of_fixedShift_approximation
-#print axioms exists_fixedShift_normalizedMass_decoder_of_common_limits
-#print axioms IsWholePlaneGFF.exists_fixedShift_normalizedMass_decoder
-#print axioms fixedShift_event_representation_of_mass_decoder
-#print axioms fixedShift_event_representation_with_insertion
-#print axioms coneMassEvent_smul_iff
 
 end HarmonicBalls

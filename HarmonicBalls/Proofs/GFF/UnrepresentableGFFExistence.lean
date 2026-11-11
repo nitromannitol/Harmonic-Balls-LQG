@@ -79,9 +79,5 @@ theorem not_exists_ae_simultaneous_representation
   obtain ⟨_, contradiction⟩ := hfalse.exists
   exact contradiction
 
-#print axioms exists_projectWholePlaneGFF_unrepresentable_modification
-#print axioms exists_projectWholePlaneGFF_ae_unrepresentable
-#print axioms exists_projectWholePlaneGFF_ae_euclidean_metric_extension
-#print axioms not_exists_ae_simultaneous_representation
 
 end HarmonicBalls

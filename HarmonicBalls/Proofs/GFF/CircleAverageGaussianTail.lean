@@ -75,6 +75,5 @@ theorem IsWholePlaneGFF.circleAverage_gaussian_tail {Ω : Type*} [MeasurableSpac
         dsimp [T]
         ring
 
-#print axioms IsWholePlaneGFF.circleAverage_gaussian_tail
 
 end HarmonicBalls

@@ -127,6 +127,4 @@ theorem IsWholePlaneGFF.ae_reconstructFullTestShift_apply
   change reconstructFullTest (fun ψ => hC ω ψ) φ + g φ = _
   rw [hv]
 
-#print axioms IsWholePlaneGFF.ae_reconstructFullTestShift
-#print axioms IsWholePlaneGFF.ae_reconstructFullTestShift_apply
 end HarmonicBalls

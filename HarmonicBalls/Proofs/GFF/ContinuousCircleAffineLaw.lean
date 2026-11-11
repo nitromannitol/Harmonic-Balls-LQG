@@ -120,12 +120,5 @@ theorem IsWholePlaneGFF.identDistrib_continuousCircleAffine_family
   exact (h.identDistrib_continuousCircleAffine hF hversion ha b).comp
     (Measurable.of_eval fun i => ContinuousMap.measurable_eval (p i))
 
-#print axioms affineCircleParameter
-#print axioms continuousCircleAffine
-#print axioms continuousCircleAffine_one_zero
-#print axioms measurable_continuousCircleAffine
-#print axioms identDistrib_circle_map_of_evaluations
-#print axioms IsWholePlaneGFF.identDistrib_continuousCircleAffine
-#print axioms IsWholePlaneGFF.identDistrib_continuousCircleAffine_family
 
 end HarmonicBalls

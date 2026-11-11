@@ -92,8 +92,6 @@ theorem IsWholePlaneGFF.log_normalized_affine_baseMetric_div_nat_tendstoInMeasur
     (Real.exp_pos (-(n : ℝ))) 0 1).comp Real.measurable_log
   exact hd
 
-#print axioms tendstoInMeasure_div_nat_of_identDistrib
-#print axioms IsWholePlaneGFF.log_normalized_affine_baseMetric_div_nat_tendstoInMeasure_zero
 
 /-- A fixed law that converges in probability to zero is concentrated at zero. -/
 theorem ae_eq_zero_of_identDistrib_tendstoInMeasure_zero
@@ -119,7 +117,6 @@ theorem ae_eq_zero_of_identDistrib_tendstoInMeasure_zero
     exact Filter.Eventually.of_forall fun _ => tendsto_const_nhds
   exact tendstoInMeasure_ae_unique hGG hG
 
-#print axioms ae_eq_zero_of_identDistrib_tendstoInMeasure_zero
 
 /-- The circle average at radius `exp (-n)` has second moment `n`. -/
 theorem IsWholePlaneGFF.integral_sq_circle_exp_neg_nat
@@ -176,7 +173,6 @@ theorem IsWholePlaneGFF.circle_exp_neg_nat_div_nat_tendstoInMeasure_zero
   congr 1
   field_simp [hε.ne', hnR.ne']
 
-#print axioms IsWholePlaneGFF.circle_exp_neg_nat_div_nat_tendstoInMeasure_zero
 
 /-- The base metric is strictly positive between distinct points almost surely. -/
 theorem IsWholePlaneGFF.ae_baseMetric_value_pos
@@ -236,7 +232,6 @@ theorem IsWholePlaneGFF.baseMetric_exp_neg_nat_tendstoInMeasure_zero
       (Real.exp (-(n : ℝ)) : ℂ)).aemeasurable_fst.aestronglyMeasurable
   · exact h.ae_baseMetric_exp_neg_nat_tendsto_zero 𝔇 h𝔇
 
-#print axioms IsWholePlaneGFF.baseMetric_exp_neg_nat_tendstoInMeasure_zero
 
 /-- The distance at radius `exp (-n)` in terms of the normalized affine field. -/
 theorem IsWholePlaneGFF.ae_baseMetric_exp_neg_nat_eq
@@ -321,7 +316,6 @@ theorem IsWholePlaneGFF.metric_weylExponent_nonneg
     nlinarith
   exact hall.exists.choose_spec
 
-#print axioms IsWholePlaneGFF.metric_weylExponent_nonneg
 
 /-- The Weyl exponent of a whole-plane LQG metric cannot vanish. -/
 theorem IsWholePlaneGFF.metric_weylExponent_ne_zero
@@ -353,7 +347,6 @@ theorem IsWholePlaneGFF.metric_weylExponent_ne_zero
     linarith
   exact this.exists.elim (fun _ hfalse => hfalse)
 
-#print axioms IsWholePlaneGFF.metric_weylExponent_ne_zero
 
 /-- The Weyl exponent in the whole-plane LQG metric axioms is positive when
 `γ` is positive. Leonardo Bonanno's GFF construction supplies the realization. -/
@@ -366,13 +359,6 @@ theorem IsLQGMetric.weylExponent_pos
   exact lt_of_le_of_ne (h.metric_weylExponent_nonneg hγ 𝔇 h𝔇)
     (Ne.symm (h.metric_weylExponent_ne_zero 𝔇 h𝔇))
 
-#print axioms IsLQGMetric.weylExponent_pos
 
-#print axioms IsWholePlaneGFF.ae_baseMetric_exp_neg_nat_eq
-#print axioms IsWholePlaneGFF.ae_baseMetric_value_pos
-#print axioms IsWholePlaneGFF.ae_baseMetric_exp_neg_nat_tendsto_zero
-#print axioms IsWholePlaneGFF.integral_sq_circle_exp_neg_nat
-#print axioms IsWholePlaneGFF.identDistrib_baseMetric_value
-#print axioms IsWholePlaneGFF.identDistrib_normalized_affine_baseMetric_value
 
 end HarmonicBalls

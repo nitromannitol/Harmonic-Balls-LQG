@@ -41,7 +41,5 @@ theorem IsWholePlaneGFF.map_admissibleObservationProcess_eq
   rw [isProjectiveLimit_map h'.measurable_admissibleObservationProcess.aemeasurable I]
   exact (h.identDistrib_finite_observables h' Subtype.val).map_eq.symm
 
-#print axioms IsWholePlaneGFF.measurable_admissibleObservationProcess
-#print axioms IsWholePlaneGFF.map_admissibleObservationProcess_eq
 
 end HarmonicBalls

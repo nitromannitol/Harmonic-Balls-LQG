@@ -293,14 +293,5 @@ theorem zeroIntegralAwayOriginApproximation {φ : ℂ → ℝ}
     (fun n => h.integral_pairing_sub_sq_le_schur hφ (hψ n) hφzero (hψzero n) hS
       (hsupp n)) hbound
 
-#print axioms exists_testFunction_integral_one_away_origin
-#print axioms cutout_corrected_test
-#print axioms tendsto_integral_mul_shrinking_bump
-#print axioms tendsto_originShrinkingBump_rOut
-#print axioms tendsto_integral_cutout
-#print axioms exists_zeroIntegral_awayOrigin_pointwise
-#print axioms IsWholePlaneGFF.integral_pairing_sub_sq_eq_covariance
-#print axioms IsWholePlaneGFF.integral_pairing_sub_sq_le_schur
-#print axioms zeroIntegralAwayOriginApproximation
 
 end HarmonicBalls

@@ -138,7 +138,5 @@ theorem IsWholePlaneGFF.ae_geometric_circle_radial_strong_law
   · simpa only [div_div, zero_div] using ho.div_const (Real.log q)
   · simpa only [div_div, zero_div] using hi.div_const (Real.log q)
 
-#print axioms IsWholePlaneGFF.variance_circle_origin
-#print axioms IsWholePlaneGFF.ae_geometric_circle_radial_strong_law
 
 end HarmonicBalls

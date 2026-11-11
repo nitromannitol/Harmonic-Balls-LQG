@@ -120,11 +120,5 @@ theorem IsWholePlaneGFF.measure_circleAverage_lognormal_gt_le
   gcongr
   exact hgff.lintegral_circleAverage_lognormal_rpow_le hL hL1 hR ξ q hz
 
-#print axioms IsWholePlaneGFF.nullMeasurableSet_circleAverage_lognormal_gt
-#print axioms IsWholePlaneGFF.measure_circleAverage_lognormal_gt_le
-#print axioms IsWholePlaneGFF.aemeasurable_circleAverage_lognormal_rpow
-#print axioms IsWholePlaneGFF.integrable_circleAverage_lognormal_rpow
-#print axioms IsWholePlaneGFF.lintegral_circleAverage_lognormal_rpow_eq
-#print axioms IsWholePlaneGFF.lintegral_circleAverage_lognormal_rpow_le
 
 end HarmonicBalls

@@ -83,6 +83,3 @@ theorem ae_continuous_circle_versions_eq
     hd.equalizer hcH hcK (funext hω)
   exact congrFun eqfun ⟨(r, z), ⟨hr, Set.mem_univ _⟩⟩
 
-#print axioms IsWholePlaneGFF.exists_continuous_circle_version
-#print axioms ae_circle_version_eq_on_countable
-#print axioms ae_continuous_circle_versions_eq

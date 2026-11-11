@@ -111,9 +111,5 @@ theorem IsWholePlaneGFF.exists_measurable_exp_mul_fieldCircleAverage_supremum
     rintro _ ⟨x, hx, rfl⟩
     exact Real.exp_le_exp.mpr (le_csSup hfb (mem_image_of_mem _ hx))
 
-#print axioms exists_measurable_compact_supremum
-#print axioms IsWholePlaneGFF.exists_measurable_fieldCircleAverage_supremum
-#print axioms IsWholePlaneGFF.exists_measurable_exp_fieldCircleAverage_supremum
-#print axioms IsWholePlaneGFF.exists_measurable_exp_mul_fieldCircleAverage_supremum
 
 end HarmonicBalls

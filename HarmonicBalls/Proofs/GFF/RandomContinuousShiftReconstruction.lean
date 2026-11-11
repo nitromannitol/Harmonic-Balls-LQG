@@ -84,8 +84,4 @@ theorem IsWholePlaneGFF.ae_reconstructFullTest_randomShift_apply
     LQGMetric.ofCont (continuousShift f hf ω) φ = hC ω φ + ∫ z, f ω z * φ z
   rw [hv, ofCont_continuousShift_apply]
 
-#print axioms measurable_continuousShift
-#print axioms IsWholePlaneGFF.measurable_reconstructFullTest_randomShift
-#print axioms IsWholePlaneGFF.ae_reconstructFullTest_randomShift
-#print axioms IsWholePlaneGFF.ae_reconstructFullTest_randomShift_apply
 end HarmonicBalls
