@@ -557,6 +557,87 @@ noncomputable def limFunctionalX {ν : ℕ → Measure X} (hν : ∀ k, IsLocall
     have := hν k
     exact integral_mono (integrable_of_ccX f _) (integrable_of_ccX g _) (fun x => hfg x)
 
+/-- Open-set test functions on `X` (port of `exists_open_mass_test_functions`, `LPStage/LQGMeasureDerived.lean:286`):
+for an open `U`, continuous compactly supported `f n` with `μ U = ⨆ n, ∫ f n dμ` for every locally finite `μ`. -/
+theorem exists_open_mass_test_functionsX {U : Set X} (hU : IsOpen U) :
+    ∃ f : ℕ → X → ℝ, (∀ n, Continuous (f n)) ∧ (∀ n, HasCompactSupport (f n)) ∧
+      ∀ μ : Measure X, IsLocallyFiniteMeasure μ → μ U = ⨆ n, ENNReal.ofReal (∫ x, f n x ∂μ) := by
+  classical
+  let : LocallyCompactSpace U := hU.locallyCompactSpace
+  let K : CompactExhaustion U := CompactExhaustion.choice U
+  let C : ℕ → Set X := fun n => Subtype.val '' K n
+  have hC (n : ℕ) : IsCompact (C n) := (K.isCompact n).image continuous_subtype_val
+  have hCU (n : ℕ) : C n ⊆ U := by
+    rintro x ⟨y, -, rfl⟩
+    exact y.property
+  have hmono : Monotone C := fun i j hij => image_mono (K.subset hij)
+  have hcover : (⋃ n, C n) = U := by
+    rw [← image_iUnion, K.iUnion_eq, image_univ]
+    exact Subtype.range_coe
+  have hcut (n : ℕ) : ∃ g : C(X, ℝ), EqOn g 1 (C n) ∧ EqOn g 0 Uᶜ ∧
+      HasCompactSupport g ∧ ∀ x, g x ∈ Icc (0 : ℝ) 1 :=
+    exists_continuous_one_zero_of_isCompact (hC n) hU.isClosed_compl
+      (disjoint_compl_right_iff_subset.mpr (hCU n))
+  choose g hgOne hgZero hgComp hgRange using hcut
+  refine ⟨fun n => g n, fun n => (g n).continuous, hgComp, ?_⟩
+  intro μ hμ
+  let _ := hμ
+  apply le_antisymm
+  · rw [← hcover, hmono.measure_iUnion]
+    apply iSup_le
+    intro n
+    apply le_iSup_of_le n
+    apply ((g n).continuous.integrable_of_hasCompactSupport (hgComp n)).measure_le_integral
+    · exact Filter.Eventually.of_forall fun x => (hgRange n x).1
+    · intro x hx
+      simpa using le_of_eq (hgOne n hx).symm
+  · apply iSup_le
+    intro n
+    apply integral_le_measure
+    · intro x hx
+      exact (hgRange n x).2
+    · intro x hx
+      exact le_of_eq (hgZero n hx)
+
+/-- A family of locally finite measures on `X` is measurable once its values on open sets are measurable
+(port of `measurable_measure_of_isOpen`, `LPStage/LQGMeasureDerived.lean:328`, with the balls replaced by the
+interiors of a compact exhaustion of `X`). -/
+theorem measurable_measure_of_isOpenX {Ω : Type*} [MeasurableSpace Ω] {ν : Ω → Measure X}
+    (hloc : ∀ ω, IsLocallyFiniteMeasure (ν ω))
+    (hopen : ∀ U : Set X, IsOpen U → Measurable (fun ω => ν ω U)) : Measurable ν := by
+  let K : CompactExhaustion X := CompactExhaustion.choice X
+  let B : ℕ → Set X := fun n => interior (K n)
+  have hB (n : ℕ) : IsOpen (B n) := isOpen_interior
+  have hmono : Monotone B := fun i j hij => interior_mono (K.subset hij)
+  have hBU : (⋃ n, B n) = univ := by
+    refine eq_univ_of_forall fun x => ?_
+    have hx : x ∈ ⋃ n, K n := by rw [K.iUnion_eq]; exact mem_univ x
+    obtain ⟨m, hm⟩ := mem_iUnion.1 hx
+    exact mem_iUnion.2 ⟨m + 1, K.subset_interior_succ m hm⟩
+  have hfinite (n : ℕ) (ω : Ω) : IsFiniteMeasure ((ν ω).restrict (B n)) := by
+    let _ := hloc ω
+    apply isFiniteMeasure_restrict.mpr
+    apply ne_of_lt
+    exact lt_of_le_of_lt (measure_mono interior_subset) (K.isCompact n).measure_lt_top
+  have hres (n : ℕ) : Measurable (fun ω => (ν ω).restrict (B n)) := by
+    let _ : ∀ ω, IsFiniteMeasure ((ν ω).restrict (B n)) := hfinite n
+    apply Measurable.measure_of_isPiSystem BorelSpace.measurable_eq isPiSystem_isOpen
+    · intro U hU
+      change IsOpen U at hU
+      simpa only [Measure.restrict_apply hU.measurableSet] using hopen (U ∩ B n) (hU.inter (hB n))
+    · simpa only [Measure.restrict_apply MeasurableSet.univ, univ_inter] using hopen (B n) (hB n)
+  apply Measure.measurable_measure.mpr
+  intro S hS
+  have heq (ω : Ω) : ν ω S = ⨆ n, ((ν ω).restrict (B n)) S := by
+    simp only [Measure.restrict_apply hS]
+    rw [← Monotone.measure_iUnion]
+    · congr 1
+      rw [← inter_iUnion, hBU, inter_univ]
+    · intro i j hij
+      exact inter_subset_inter_right S (hmono hij)
+  simp_rw [heq]
+  exact Measurable.iSup fun n => (Measure.measurable_coe hS).comp (hres n)
+
 section Decoder
 
 variable {Y : Type*} [MeasurableSpace Y]
@@ -597,6 +678,67 @@ theorem integral_decoderX {K : ℕ → Set X} (hKs : ∀ s : Set X, IsCompact s 
     (y : Y) (g : C_c(X, ℝ)) :
     ∫ x, g x ∂(decoderX hKs T ν hloc y) = decoderFunctionalX hKs T ν hloc y g :=
   RealRMK.integral_rieszMeasure _ g
+
+omit [MeasurableSpace Y] in
+theorem decoderFunctionalX_of_mem {K : ℕ → Set X} (hKs : ∀ s : Set X, IsCompact s → ∃ n, s ⊆ K n)
+    (T : TestFamilyX K) (ν : Y → ℕ → Measure X) (hloc : ∀ y k, IsLocallyFiniteMeasure (ν y k))
+    {y : Y} (hy : y ∈ convSetX T ν) (g : C_c(X, ℝ)) :
+    decoderFunctionalX hKs T ν hloc y g = limUnder atTop (fun k => ∫ x, g x ∂(ν y k)) := by
+  unfold decoderFunctionalX
+  split_ifs
+  rfl
+
+omit [MeasurableSpace Y] in
+theorem decoderFunctionalX_of_not_mem {K : ℕ → Set X} (hKs : ∀ s : Set X, IsCompact s → ∃ n, s ⊆ K n)
+    (T : TestFamilyX K) (ν : Y → ℕ → Measure X) (hloc : ∀ y k, IsLocallyFiniteMeasure (ν y k))
+    {y : Y} (hy : y ∉ convSetX T ν) (g : C_c(X, ℝ)) :
+    decoderFunctionalX hKs T ν hloc y g = 0 := by
+  unfold decoderFunctionalX
+  split_ifs
+  simp
+
+/-- Measurability of the decoded functional in the observation (port of `measurable_decoderFunctional_apply`,
+`FirstPass/Phase2/ProfileDecoderDerived.lean:356`). -/
+theorem measurable_decoderFunctionalX_apply {K : ℕ → Set X}
+    (hKs : ∀ s : Set X, IsCompact s → ∃ n, s ⊆ K n)
+    (T : TestFamilyX K) (ν : Y → ℕ → Measure X) (hloc : ∀ y k, IsLocallyFiniteMeasure (ν y k))
+    (hmeas : ∀ (g : C_c(X, ℝ)) (k : ℕ), Measurable fun y => ∫ x, g x ∂(ν y k)) (g : C_c(X, ℝ)) :
+    Measurable fun y => decoderFunctionalX hKs T ν hloc y g := by
+  have hind : ∀ k, Measurable fun y => (convSetX T ν).indicator (fun y => ∫ x, g x ∂(ν y k)) y :=
+    fun k => (hmeas g k).indicator (measurableSet_convSetX T hmeas)
+  refine measurable_of_tendsto_metrizable hind ?_
+  refine tendsto_pi_nhds.2 fun y => ?_
+  by_cases hy : y ∈ convSetX T ν
+  · simp only [Set.indicator_of_mem hy]
+    rw [decoderFunctionalX_of_mem hKs T ν hloc hy g]
+    obtain ⟨L, hL⟩ := tendsto_of_testFamilyX hKs T (fun k => hloc y k) hy g
+    exact tendsto_nhds_limUnder ⟨L, hL⟩
+  · simp only [Set.indicator_of_notMem hy]
+    rw [decoderFunctionalX_of_not_mem hKs T ν hloc hy g]
+    exact tendsto_const_nhds
+
+/-- The decoder is measurable as a map into measures on `X` (route step 3 measurability; port of
+`measurable_decoder`, `FirstPass/Phase2/ProfileDecoderDerived.lean:372`). -/
+theorem measurable_decoderX {K : ℕ → Set X} (hKs : ∀ s : Set X, IsCompact s → ∃ n, s ⊆ K n)
+    (T : TestFamilyX K) (ν : Y → ℕ → Measure X) (hloc : ∀ y k, IsLocallyFiniteMeasure (ν y k))
+    (hmeas : ∀ (g : C_c(X, ℝ)) (k : ℕ), Measurable fun y => ∫ x, g x ∂(ν y k)) :
+    Measurable (decoderX hKs T ν hloc) := by
+  have hl : ∀ y, IsLocallyFiniteMeasure (decoderX hKs T ν hloc y) := fun y => by
+    unfold decoderX
+    infer_instance
+  refine measurable_measure_of_isOpenX hl (fun U hU => ?_)
+  obtain ⟨f, hfc, hfcc, hmass⟩ := exists_open_mass_test_functionsX hU
+  have heq : (fun y => decoderX hKs T ν hloc y U) =
+      fun y => ⨆ n, ENNReal.ofReal (decoderFunctionalX hKs T ν hloc y ⟨⟨f n, hfc n⟩, hfcc n⟩) := by
+    funext y
+    rw [hmass (decoderX hKs T ν hloc y) (hl y)]
+    congr 1
+    funext n
+    congr 1
+    exact integral_decoderX hKs T ν hloc y ⟨⟨f n, hfc n⟩, hfcc n⟩
+  rw [heq]
+  exact Measurable.iSup fun n => ENNReal.measurable_ofReal.comp
+    (measurable_decoderFunctionalX_apply hKs T ν hloc hmeas _)
 
 end Decoder
 
