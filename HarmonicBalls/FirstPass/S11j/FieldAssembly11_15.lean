@@ -12,7 +12,7 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Lemma 11.15 at the field level: conditional assembly (worker n4, task fp-S11j)
+# Lemma 11.15 at the field level: conditional assembly
 
 Positivity of the first event `pinchFirstEvent` (Armstrong-Kuusi-Mourrat style open first certificate, paper
 Lemma 11.15, corrected form) for the LQG metric of a whole-plane GFF with a log singularity at `0`.
@@ -23,7 +23,7 @@ Route: the threshold event `Θ` (`exists_thresholds_fieldLevel`) has positive pr
 (`cameronMartinFieldCertificateTransfer`) gives a positive measurable subset of the base event; a null trimming
 yields `pinchFirstEvent` for the base metric.
 
-Named hypotheses still open (see reports/n4.md): `hM2a`, `hM2b` (almost sure finiteness), `haxioms` (Proposed input, pending source-check), the frozen inputs
+Named hypotheses still open: `hM2a`, `hM2b` (almost sure finiteness), `haxioms` (Proposed input, pending source-check), the frozen inputs
 `hCM`, `hfr`, `hFW`, `hEx` (`hQ1` and `hLen` are removed, see `ae_shift_metric_eq`), and the instance `[IsProbabilityMeasure P]` (not in `IsWholePlaneGFF`).
 -/
 
@@ -267,7 +267,7 @@ theorem pinchFirstEvent_positive_fieldLevel
 `γ ∈ (0, 2)`, every `α₀ < Q`, every probability space `Ω : Type u`, whole-plane GFF `h^ℂ` and LQG metric `D` of
 `h^ℂ - α₀ log|·|`, the first pinch event holds with positive (inner) probability.
 
-The five hypotheses are exactly those of the signature (frozen universal hypotheses, B4 convention, operator 22:19 UTC):
+The five hypotheses are exactly those of the signature:
 the Cameron-Martin transfer `hCM : CameronMartinGFFMutualAbsCont.{u}`, the field-level measurable Weyl-scaled metric
 `hfr : LQGInternalMetricWeylAeMeasurableFrozen.{u}`, the Weyl composition `hFW : WeylScalingCompositionFrozen.{u}`, the
 positivity of the Weyl exponent `hEx : LQGMetricExponentPositive`, and the Proposed field axioms
