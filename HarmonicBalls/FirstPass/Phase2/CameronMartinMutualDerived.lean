@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.Frozen.S11aj
 import HarmonicBalls.Steps.Sec11.GaussianProcessLaw
 
-/-! # Mutual absolute continuity of the shifted whole-plane GFF (phase 2, worker z4)
+/-! # Mutual absolute continuity of the shifted whole-plane GFF
 
 Derives `CameronMartinGFFMutualAbsCont` (FirstPass/Frozen/S11d.lean:74) from the frozen Cameron-Martin reweighting
 `CameronMartinGFFReweighting` (FirstPass/Frozen/S11aj.lean:33; Miller-Sheffield, Imaginary Geometry, Proposition 2.9,

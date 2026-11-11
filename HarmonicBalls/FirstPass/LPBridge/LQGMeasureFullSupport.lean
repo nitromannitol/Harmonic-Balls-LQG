@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.LPBridge.M4
 import HarmonicBalls.LPStage.LQGMeasureFullSupport3
 
 /-!
-# LP-stage bridge for the full support of the LQG measure (row 40, z3)
+# LP-stage bridge for the full support of the LQG measure
 
 `HarmonicBalls.lqgMeasureFullSupportStmt_of_lpStage` is the HB statement `LQGMeasureFullSupportStmt`
 (`HarmonicBalls/Draft/Section2.lean:109`, I1), obtained from the LP statement `LQGMeasureFullSupportStmtLP`
@@ -16,7 +16,7 @@ fed by the LP scaled step `WholePlaneScaledBallMassStepLP` (derived from the inp
 `rescaledBallMassUniformStep_lp`, `wholePlaneScaledBallMassStep_of_uniform_lp`, `circleAverageDyadicTailStep_lp`),
 the non-atomicity `lqgMeasureNonatomic_lp` and the existence `LQGMeasureExistenceLP` at `α₀ = 0`. The three LP
 literature inputs `WholePlaneLQGBallMassBoundsLP`, `LQGMeasureCoordChangeLP` and `LQGMeasureExistenceLP` are
-hypotheses of the bridge (R54): they are not proved here and remain pending the operator's source check of their
+hypotheses of the bridge: they are not proved here and remain pending the operator's source check of their
 Proposed counterparts.
 -/
 

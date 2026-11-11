@@ -4,7 +4,7 @@ import HarmonicBalls.LPStage.LQGMeasureLocality2
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# LP-stage bridge for the locality of the LQG measure (z3)
+# LP-stage bridge for the locality of the LQG measure
 
 `HarmonicBalls.lqgMeasureLocality_of_lpStage` is the HB Proposed input `LQGMeasureLocality` (`Proposed/LQG.lean:97`,
 Fact 2.1 II), obtained from the unconditional LP statement `LatticeProb.LQG.lqgLocality_of_gff`

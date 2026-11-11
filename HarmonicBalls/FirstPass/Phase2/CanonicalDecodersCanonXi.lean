@@ -2,12 +2,11 @@ import HarmonicBalls.FirstPass.Frozen.S11n
 import HarmonicBalls.FirstPass.S11i.Faithful
 
 /-!
-# Canonical-exponent form of the frozen canonical decoder existence (MQ-lh-11)
+# Canonical-exponent form of the frozen canonical decoder existence
 
 `LQGCanonicalDecodersExistStmt` (`FirstPass/Frozen/S11n.lean:33`) and its measurable strengthening
 `LQGCanonicalDecodersMeasurableExistStmt` (`FirstPass/Frozen/S11n.lean:71`) quantify over a free exponent `ξ`.
-The answer to MQ-lh-11 (route item 4 of the answer, notes/fp-gaps/MATH-ANSWERS.md l.51-74) states that Gwynne-Miller
-Theorem 1.2 does not justify the free `ξ`, and allows the narrowing of each existence statement to the canonical
+Gwynne-Miller, Theorem 1.2, does not justify the free `ξ`, and allows the narrowing of each existence statement to the canonical
 exponent `lqgXi γ = γ / d_γ` (`FirstPass/S11i/Faithful.lean:94`). The frozen statements are kept unchanged. The forms
 below are the narrowed statements; `_of_free` shows that each is a consequence of its frozen form.
 -/

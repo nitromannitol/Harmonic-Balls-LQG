@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.LPBridge.M5b
 import HarmonicBalls.LPStage.LQGMetricMeasurable2
 
 /-!
-# LP-stage bridge for the inner measurability of the LQG metric (z7, task `fp-lpstage-lqg-metric-measurable`)
+# LP-stage bridge for the inner measurability of the LQG metric
 
 * `HarmonicBalls.lqgMetricPointwiseAEMeasurable_of_lp`: the HB frozen Prop `LQGMetricPointwiseAEMeasurableFrozen`
   (`FirstPass/Frozen/S11e.lean:27`), from the LP theorem `LatticeProb.LQG.lqgMetricPointwiseAEMeasurable_lp`

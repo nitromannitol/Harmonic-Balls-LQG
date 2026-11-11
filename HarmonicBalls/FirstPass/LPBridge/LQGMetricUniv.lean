@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.LPBridge.M5b
 import HarmonicBalls.LPStage.LQGMetricUniv
 
 /-!
-# LP-stage bridge for the universe transport of the LQG metric axioms (z3, task `fp-lpstage-lqg-metric-univ-and-square-positive`)
+# LP-stage bridge for the universe transport of the LQG metric axioms
 
 * `HarmonicBalls.lqgMetricSatisfiesAxiomsUniv_of_lpStage : LQGMetricSatisfiesAxiomsUnivFrozen.{u}` (`FirstPass/Frozen/S11g.lean:31`),
   from the LP theorem `LatticeProb.LQG.lqgMetricSatisfiesAxiomsUniv` (`LPStage/LQGMetricUniv.lean`).

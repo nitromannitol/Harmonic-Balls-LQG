@@ -4,13 +4,13 @@ import HarmonicBalls.FirstPass.Frozen.S11aj
 import Mathlib.Analysis.SpecialFunctions.Integrals.PosLogEqCircleAverage
 
 /-!
-# Derivation of the frozen Cameron-Martin reweighting input (phase 2, worker z7)
+# Derivation of the frozen Cameron-Martin reweighting input
 
 Derives `HarmonicBalls.S11aj.CameronMartinGFFReweighting` (`FirstPass/Frozen/S11aj.lean:33`), exactly as typed,
 as a theorem without hypotheses. Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2, Proposition 2.9 and its
 Gaussian-tilting proof, with the normalization and joint-observable verification supplied here.
 
-Route (notes/fp-gaps/CHATGPT-lh-R7-cameron-martin.md, section 2): with `q_f = -(2π)⁻¹ Δ f`, `X = hC(q_f)`,
+Route: with `q_f = -(2π)⁻¹ Δ f`, `X = hC(q_f)`,
 `v = Var X`, the tilt `dP'/dP = exp(-X - v/2)` shifts every observable `Y_o` by `a_o = o.smear f`, because
 `Cov(Y_o, X) = a_o` (the log-potential identity below).
 

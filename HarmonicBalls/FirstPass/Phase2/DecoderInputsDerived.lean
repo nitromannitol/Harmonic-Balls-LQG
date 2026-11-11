@@ -2,16 +2,15 @@ import HarmonicBalls.FirstPass.Phase2.MassFunctionalDerived
 import HarmonicBalls.FirstPass.S11n
 
 /-!
-# Partial derivation for the canonical decoders (phase 2, worker z7)
+# Partial derivation for the canonical decoders
 
 Scope: the measurability of the closed-set and open-set masses of the canonical decoder. A canonical pairing
 `L : S11n.CanonSpace` (mean-zero whole-plane pairings) is lifted to a raw distribution `rawOfCanon L`,
 `φ ↦ L (φ - (∫ φ) · unitTest)` on test functions, where `unitTest` is a fixed test function of integral one.
-The lift is measurable for the distribution σ-algebra `distributionMeasurableSpace`, so the masses of the
-z6 decoder (`MassFunctionalDerived.massDecoder`, `openMass`) are measurable functions of `L`.
+The lift is measurable for the distribution σ-algebra `distributionMeasurableSpace`, so the masses of the decoder (`MassFunctionalDerived.massDecoder`, `openMass`) are measurable functions of `L`.
 
 Not in this file: the Measure-valued kernel `K : CanonSpace → Measure ℂ` of `LQGCanonicalDecodersMeasurableExistStmt`
-(its vague-limit assembly, and the identity with `e^{-γ c} μ` on the good event). See `reports/z7.md`.
+(its vague-limit assembly, and the identity with `e^{-γ c} μ` on the good event).
 -/
 
 namespace HarmonicBalls.DecoderInputsDerived

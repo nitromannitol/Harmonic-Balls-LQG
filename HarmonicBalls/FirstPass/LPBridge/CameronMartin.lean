@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.LPStage.CameronMartinDerived2
 
 /-!
-# Cameron-Martin frozen inputs from the LP stage (bridge, task fp-lpstage-cameron-martin-resume, worker z7)
+# Cameron-Martin frozen inputs from the LP stage
 
 Binder-free proofs of the two frozen Cameron-Martin Props of the Harmonic-balls draft, from the LP-stage theorems:
 

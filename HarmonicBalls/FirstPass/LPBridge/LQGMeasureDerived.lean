@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.LPBridge.M4
 import HarmonicBalls.LPStage.LQGMeasureDerived
 
 /-!
-# LP-stage bridge for the profile-decoder measurability (z4)
+# LP-stage bridge for the profile-decoder measurability
 
 `HarmonicBalls.lqgMeasureOfProfileMeasurable_of_lpStage` is the HB Prop `LQGMeasureOfProfileMeasurableFrozen`
 (`FirstPass/Frozen/S8d.lean:33`), obtained from the LP theorem

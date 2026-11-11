@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs8b
 import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
 import HarmonicBalls.FirstPass.Phase2.CameronMartinEventTransferDerived
 
-/-! Binder-hygiene wrappers, round 10 (fp-phase2-derived-inputs-10-cmrew, worker z6).
+/-! Binder-hygiene wrappers.
 Each counted-family wrapper `<counted>_derivedInputs8` (DerivedInputs8.lean, DerivedInputs8b.lean) that has the
 binder `hCMRew : HarmonicBalls.S11aj.CameronMartinGFFReweighting` gets a wrapper `<counted>_derivedInputs10` with
 the same statement minus that binder. The binder is supplied by the binder-free
@@ -18,7 +18,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_11_canonical_derivedInputs10` of the counted form `closure_11_11_canonical` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_canonical_derivedInputs10` of the counted form `closure_11_11_canonical`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_canonical_derivedInputs10
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -70,7 +70,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs10` of the counted form `closure_11_11_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs10` of the counted form `closure_11_11_canonical_of_11_13_universe0`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs10
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -124,7 +124,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_11_paperExponent_derivedInputs10` of the counted form `closure_11_11_paperExponent` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_paperExponent_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_paperExponent_derivedInputs10` of the counted form `closure_11_11_paperExponent`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_paperExponent_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_paperExponent_derivedInputs10
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -177,7 +177,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs10` of the counted form `closure_11_11_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs10` of the counted form `closure_11_11_paperExponent_of_11_13_universe0`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs10
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -232,7 +232,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `closure_11_12_derivedInputs10` of the counted form `closure_11_12` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_12_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_12_derivedInputs10` of the counted form `closure_11_12`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_12_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_12_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -278,7 +278,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_12_clean_derivedInputs10` of the counted form `closure_11_12_clean` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_12_clean_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_12_clean_derivedInputs10` of the counted form `closure_11_12_clean`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_12_clean_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_12_clean_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -323,7 +323,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `closure_11_13_canonical_derivedInputs10` of the counted form `closure_11_13_canonical` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_13_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_13_canonical_derivedInputs10` of the counted form `closure_11_13_canonical`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_13_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_13_canonical_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -369,7 +369,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_13_paperExponent_derivedInputs10` of the counted form `closure_11_13_paperExponent` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_13_paperExponent_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_13_paperExponent_derivedInputs10` of the counted form `closure_11_13_paperExponent`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_11_13_paperExponent_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_11_13_paperExponent_derivedInputs10
     (_hDim : WholePlaneLQGGraphDimension)
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
@@ -415,7 +415,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-hygiene wrapper `closure_1_2_canonical_derivedInputs10` of the counted form `closure_1_2_canonical` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_canonical_derivedInputs10` of the counted form `closure_1_2_canonical`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_canonical_derivedInputs10
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -471,7 +471,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs10` of the counted form `closure_1_2_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs10` of the counted form `closure_1_2_canonical_of_11_13_universe0`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs10
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -530,7 +530,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_derivedInputs10` of the counted form `closure_1_2_faithful_canonical` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_faithful_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_derivedInputs10` of the counted form `closure_1_2_faithful_canonical`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_faithful_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_faithful_canonical_derivedInputs10
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -586,7 +586,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs10` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs10` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs10
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -646,7 +646,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs10` of the counted form `closure_1_2_paperExponent` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_paperExponent_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs10` of the counted form `closure_1_2_paperExponent`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_paperExponent_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_paperExponent_derivedInputs10
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -704,7 +704,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs10` of the counted form `closure_1_2_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs10` of the counted form `closure_1_2_paperExponent_of_11_13_universe0`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs10
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -768,7 +768,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs10` of the counted form `firstPass_11_11_faithful_universe0` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs10` of the counted form `firstPass_11_11_faithful_universe0`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs10
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -823,7 +823,7 @@ namespace HarmonicBalls.S11m.Clean11_12
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs10` of the counted form `firstPass_11_12_clean` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_12_clean_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs10` of the counted form `firstPass_11_12_clean`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_12_clean_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_12_clean_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -860,7 +860,7 @@ namespace HarmonicBalls.S11m.Final11_12
 open MeasureTheory Set Metric Filter
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs10` of the counted form `firstPass_11_12_final` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_12_final_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs10` of the counted form `firstPass_11_12_final`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_12_final_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_12_final_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -896,7 +896,7 @@ end HarmonicBalls.S11m.Final11_12
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs10` of the counted form `firstPass_11_13` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs10` of the counted form `firstPass_11_13`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -949,7 +949,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs10` of the counted form `firstPass_11_13_canonical` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs10` of the counted form `firstPass_11_13_canonical`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_canonical_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_canonical_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -997,7 +997,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs10` of the counted form `firstPass_11_13_closed` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_closed_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs10` of the counted form `firstPass_11_13_closed`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_closed_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_closed_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1048,7 +1048,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13Close
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs10` of the counted form `firstPass_11_13_final` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_final_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs10` of the counted form `firstPass_11_13_final`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_final_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_final_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1089,7 +1089,7 @@ theorem firstPass_11_13_final_derivedInputs10
     hCanon hNonat hExists hDG hCC0 hE hfr HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived
     hComp hMf hDiam hMk hholder hShift hFD hDC hCMT hPos10 hSupM hFin hM1 hM2 hCal hIns hmeasure
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs10` of the counted form `firstPass_11_13_final_route1` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_final_route1_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs10` of the counted form `firstPass_11_13_final_route1`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_11_13_final_route1_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_final_route1_derivedInputs10
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1137,7 +1137,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs10` of the counted form `firstPass_1_2_faithful_universe0` (fp-phase2-derived-inputs-10, worker z6): the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs10` of the counted form `firstPass_1_2_faithful_universe0`: the binder `hCMRew : CameronMartinGFFReweighting` is removed and supplied by `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267, binder-free). The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs8` minus `hCMRew`; no other binder and no conclusion is changed. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs10
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -1195,8 +1195,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.CMEventTransfer
 
 /-- Binder-hygiene wrapper `cameronMartinEventTransfer_of_representation_derivedInputs10` of
-`HarmonicBalls.CMEventTransfer.cameronMartinEventTransfer_of_representation` (fp-phase2-derived-inputs-10-cmrew,
-worker z6): the binder `hCMRew : HarmonicBalls.S11aj.CameronMartinGFFReweighting.{u}` is removed and supplied by
+`HarmonicBalls.CMEventTransfer.cameronMartinEventTransfer_of_representation`: the binder `hCMRew : HarmonicBalls.S11aj.CameronMartinGFFReweighting.{u}` is removed and supplied by
 `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` (Phase2/CameronMartinReweightingDerived2.lean:267).
 The binder `hRep : EventSampleRepresentation.{u}` and the conclusion are unchanged. -/
 theorem cameronMartinEventTransfer_of_representation_derivedInputs10

@@ -4,7 +4,7 @@ import HarmonicBalls.LPStage.GFFAffineInvariance
 
 /-!
 # Bridge: the LP affine invariance of the whole-plane GFF to the HB statement `WholePlaneGFFAffineInvariance`
-(LPBridge, z6)
+
 
 `LatticeProb.LQG.AffineDerived.WholePlaneGFFAffineInvarianceLP` (`HarmonicBalls/LPStage/GFFAffineInvariance.lean`) is the
 LP form of `HarmonicBalls.WholePlaneGFFAffineInvariance` (`HarmonicBalls/Proposed/LQG.lean:56`). The hypothesis and the

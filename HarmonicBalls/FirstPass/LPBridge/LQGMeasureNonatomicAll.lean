@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.LPBridge.M4
 import HarmonicBalls.LPStage.LQGMeasureNonatomicAll
 
 /-!
-# Bridge: the LP non-atomicity statements to the HB statements (LPBridge, z7; row 41)
+# Bridge: the LP non-atomicity statements to the HB statements
 
 `LatticeProb.LQG.LQGMeasureNonatomicLP` (`HarmonicBalls/LPStage/LQGMeasureNonatomic.lean`) is the LP form of
 `HarmonicBalls.LQGMeasureNonatomic` (`HarmonicBalls/Proposed/LQG.lean:86`), and `LQGMeasureNonatomicAllLP`
@@ -15,7 +15,7 @@ existing equivalences of the bridges: `isWholePlaneGFF_iff` (`LPBridge/M1.lean`)
 (`LPBridge/M4.lean`), as in `LPBridge/LQGWeylScaling.lean`.
 
 The LP literature inputs `WholePlaneLQGBallMassBoundsLP`, `LQGMeasureCoordChangeLP` (at `α₀ = 0`) and `LQGMeasureExistenceLP`
-are hypotheses of the bridge (R54); they are not proved here and remain pending the operator's source check of their Proposed
+are hypotheses of the bridge; they are not proved here and remain pending the operator's source check of their Proposed
 counterparts. The HB definitions are kept and no counted declaration is changed.
 -/
 

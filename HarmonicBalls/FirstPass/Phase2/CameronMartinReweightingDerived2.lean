@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived
 
 /-!
-# Derivation of the frozen Cameron-Martin reweighting input, part 2 (phase 2, worker z7)
+# Derivation of the frozen Cameron-Martin reweighting input, part 2
 
 Second part of `CameronMartinReweightingDerived.lean`: the finite-dimensional law of the tilted family
 (`law_shift`), the assembly of `IsWholePlaneGFF` under the tilt, and the theorem

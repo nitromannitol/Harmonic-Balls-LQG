@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.LPBridge.M4
 import HarmonicBalls.LPStage.MassFunctional
 
 /-!
-# Measurability of the LQG mass of a closed set: frozen Prop from the LP stage (bridge, task fp-lpstage-circle-average-approx-then-mass, worker z7)
+# Measurability of the LQG mass of a closed set: frozen Prop from the LP stage
 
 Binder-free proof of the frozen Prop `HarmonicBalls.LQGMassFunctionalMeasurableFrozen` (`HarmonicBalls/FirstPass/Frozen/S11d.lean:155`)
 from the LP-stage theorem `LatticeProb.LQG.MassFunctionalDerived.lqgMassFunctionalMeasurable_lp`

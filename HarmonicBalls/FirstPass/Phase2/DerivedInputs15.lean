@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11n.MeasureDecoder
 import HarmonicBalls.FirstPass.S11i.Step8PhysReduction
 import HarmonicBalls.Proofs.Sec2.SingularAtomAtZero
 
-/-! Binder-hygiene wrappers, round 15 (fp-phase2-derived-inputs-15-nonatomic, worker z6).
+/-! Binder-hygiene wrappers.
 `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` discharges the universal non-atomicity binder `hNonat`
 (`LQGMeasureNonatomicAll`, FirstPass/S11n/MeasureDecoder.lean:39) from the section inputs of
 `Proofs/Sec2/SingularAtomAtZero.lean` (hDG, hCC at α₀ = 0, hE), with the whole-plane affine invariance supplied by
@@ -19,7 +19,7 @@ open MeasureTheory
 
 namespace HarmonicBalls
 
-/-- Specialisation of a universal coordinate change to the insertion `α₀ = 0` (fp-phase2-derived-inputs-15, worker z6):
+/-- Specialisation of a universal coordinate change to the insertion `α₀ = 0`:
 the form `LQGMeasureCoordChange P γ α₀` quantified over `α₀` gives the zero-insertion form used by the section
 variable `hCC` of `Proofs/Sec2/SingularAtomAtZero.lean`. -/
 theorem coordChangeZero_univ
@@ -31,7 +31,7 @@ theorem coordChangeZero_univ
   exact h Ω P γ 0 hC hcirc
 
 /-- The `CoordChangeAlpha0Stmt` input (`FirstPass/S11i/Step8PhysReduction.lean:81`, universal in `α₀`, arguments
-`γ α₀` before `Ω`) gives the zero-insertion coordinate change (fp-phase2-derived-inputs-15, worker z6). -/
+`γ α₀` before `Ω`) gives the zero-insertion coordinate change. -/
 theorem coordChangeZero_of_alpha0Stmt
     (h : HarmonicBalls.FirstPassS11iStep8PhysReduction.CoordChangeAlpha0Stmt.{u}) :
     ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -40,8 +40,7 @@ theorem coordChangeZero_of_alpha0Stmt
   exact h γ 0 Ω P hC hcirc
 
 /-- The zero-insertion coordinate change `CoordChangeZeroStmt` (`FirstPass/S11i/Step8PhysExists.lean`, universe 0,
-arguments `γ Ω P hC hcirc`) gives the same proposition in the argument order of `hCC`
-(fp-phase2-derived-inputs-15, worker z6). -/
+arguments `γ Ω P hC hcirc`) gives the same proposition in the argument order of `hCC`. -/
 theorem coordChangeZero_of_zeroStmt
     (h : HarmonicBalls.FirstPassS11iStep8PhysExists.CoordChangeZeroStmt) :
     ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -51,7 +50,7 @@ theorem coordChangeZero_of_zeroStmt
 
 /-- The non-atomicity interface `LQGMeasureNonatomicAll` (`FirstPass/S11n/MeasureDecoder.lean:39`) from the staged
 existence and coordinate-change inputs, with the whole-plane affine invariance supplied by the binder-free
-`WholePlaneGFFAffineInvariance_derived` (fp-phase2-derived-inputs-15, worker z6). It is the glue of
+`WholePlaneGFFAffineInvariance_derived`. It is the glue of
 `HarmonicBalls.singular_nonatomic_of_existence_and_wholePlane` (`Proofs/Sec2/SingularAtomAtZero.lean:48`), with the
 argument order `γ α₀ Ω P hC hcirc` of the universal form. -/
 theorem lqgMeasureNonatomicAll_of_inputs
@@ -73,7 +72,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_11_canonical_derivedInputs15` of the counted form `closure_11_11_canonical` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_canonical_derivedInputs15` of the counted form `closure_11_11_canonical`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_canonical_derivedInputs15
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -124,7 +123,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs15` of the counted form `closure_11_11_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs15` of the counted form `closure_11_11_canonical_of_11_13_universe0`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs15
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -176,7 +175,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_11_paperExponent_derivedInputs15` of the counted form `closure_11_11_paperExponent` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_paperExponent_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_paperExponent_derivedInputs15` of the counted form `closure_11_11_paperExponent`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_paperExponent_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_paperExponent_derivedInputs15
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -227,7 +226,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs15` of the counted form `closure_11_11_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs15` of the counted form `closure_11_11_paperExponent_of_11_13_universe0`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs15
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -280,7 +279,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `closure_11_12_derivedInputs15` of the counted form `closure_11_12` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_12_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_12_derivedInputs15` of the counted form `closure_11_12`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_12_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_12_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -323,7 +322,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_12_clean_derivedInputs15` of the counted form `closure_11_12_clean` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_12_clean_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_12_clean_derivedInputs15` of the counted form `closure_11_12_clean`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_12_clean_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_12_clean_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -365,7 +364,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `closure_11_13_canonical_derivedInputs15` of the counted form `closure_11_13_canonical` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_13_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_13_canonical_derivedInputs15` of the counted form `closure_11_13_canonical`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_13_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_13_canonical_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -408,7 +407,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_11_13_paperExponent_derivedInputs15` of the counted form `closure_11_13_paperExponent` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_13_paperExponent_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_11_13_paperExponent_derivedInputs15` of the counted form `closure_11_13_paperExponent`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_11_13_paperExponent_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_11_13_paperExponent_derivedInputs15
     (_hDim : WholePlaneLQGGraphDimension)
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
@@ -451,7 +450,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-hygiene wrapper `closure_1_2_canonical_derivedInputs15` of the counted form `closure_1_2_canonical` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_canonical_derivedInputs15` of the counted form `closure_1_2_canonical`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_canonical_derivedInputs15
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -505,7 +504,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs15` of the counted form `closure_1_2_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs15` of the counted form `closure_1_2_canonical_of_11_13_universe0`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs15
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -562,7 +561,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_derivedInputs15` of the counted form `closure_1_2_faithful_canonical` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_faithful_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_derivedInputs15` of the counted form `closure_1_2_faithful_canonical`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_faithful_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_faithful_canonical_derivedInputs15
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -616,7 +615,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs15` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs15` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs15
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -674,7 +673,7 @@ end HarmonicBalls.Closure
 namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs15` of the counted form `closure_1_2_paperExponent` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_paperExponent_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_derivedInputs15` of the counted form `closure_1_2_paperExponent`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_paperExponent_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_paperExponent_derivedInputs15
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
@@ -730,7 +729,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Metric Set Filter Topology
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs15` of the counted form `closure_1_2_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs15` of the counted form `closure_1_2_paperExponent_of_11_13_universe0`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs15
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -792,7 +791,7 @@ open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs15` of the counted form `firstPass_11_11_faithful_universe0` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs15` of the counted form `firstPass_11_11_faithful_universe0`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs15
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -845,7 +844,7 @@ namespace HarmonicBalls.S11m.Clean11_12
 open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs15` of the counted form `firstPass_11_12_clean` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_12_clean_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_clean_derivedInputs15` of the counted form `firstPass_11_12_clean`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_12_clean_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_12_clean_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -879,7 +878,7 @@ namespace HarmonicBalls.S11m.Final11_12
 open MeasureTheory Set Metric Filter
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs15` of the counted form `firstPass_11_12_final` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_12_final_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_12_final_derivedInputs15` of the counted form `firstPass_11_12_final`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_12_final_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_12_final_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -912,7 +911,7 @@ end HarmonicBalls.S11m.Final11_12
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs15` of the counted form `firstPass_11_13` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_derivedInputs15` of the counted form `firstPass_11_13`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -962,7 +961,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13
 namespace HarmonicBalls.FirstPassS11iAssembly11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs15` of the counted form `firstPass_11_13_canonical` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_canonical_derivedInputs15` of the counted form `firstPass_11_13_canonical`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_canonical_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_canonical_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1006,7 +1005,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs15` of the counted form `firstPass_11_13_closed` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_closed_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs15` of the counted form `firstPass_11_13_closed`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_closed_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_closed_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1055,7 +1054,7 @@ end HarmonicBalls.FirstPassS11iFinal11_13Close
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 open MeasureTheory
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs15` of the counted form `firstPass_11_13_final` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_final_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_derivedInputs15` of the counted form `firstPass_11_13_final`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_final_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_final_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1094,7 +1093,7 @@ theorem firstPass_11_13_final_derivedInputs15
     hExists hDG hCC0 hE hfr hComp hMf hDiam hMk hholder hShift hFD hDC hCMT hPos10 hSupM hFin hM1
     hM2 hCal hIns hmeasure
 
-/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs15` of the counted form `firstPass_11_13_final_route1` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_final_route1_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_final_route1_derivedInputs15` of the counted form `firstPass_11_13_final_route1`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_11_13_final_route1_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_11_13_final_route1_derivedInputs15
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -1140,7 +1139,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs15` of the counted form `firstPass_1_2_faithful_universe0` (fp-phase2-derived-inputs-15, worker z6): the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
+/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs15` of the counted form `firstPass_1_2_faithful_universe0`: the binder `hNonat : LQGMeasureNonatomicAll` is removed and supplied by `HarmonicBalls.lqgMeasureNonatomicAll_of_inputs` from the wrapper's own `hDG`, `hE` and coordinate-change binders. The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs14` minus `hNonat`; no other binder and no conclusion is changed. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs15
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)

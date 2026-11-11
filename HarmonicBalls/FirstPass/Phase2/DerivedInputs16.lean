@@ -3,14 +3,14 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs3
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs9
 import HarmonicBalls.FirstPass.Phase2.MassFunctionalDerived
 
-/-! Binder-hygiene wrappers, round 16 (fp-phase2-derived-inputs-16-paper-own, worker z6).
+/-! Binder-hygiene wrappers.
 Each wrapper `<counted>_derivedInputs16` has the statement of `<counted>_derivedInputs15` minus the binder
 `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, Proposition 11.9, `prop:mass-diam-gen`;
 `Draft/Section11.lean:201`). That binder is supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3`
 (`FirstPass/Phase2/DerivedInputs3.lean:32`): its binders `hCM` and `hMass` are discharged by the binder-free
 `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and its other binders are
 binders of the wrapper. No binder is added. Counted wrappers whose remaining binders do not allow this
-discharge are not listed (see reports/z6.md). Originals are unchanged. -/
+discharge are not listed. Originals are unchanged. -/
 
 universe u
 
@@ -21,7 +21,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 
-/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs16` of the counted form `closure_11_11_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `closure_11_11_canonical_of_11_13_universe0_derivedInputs16` of the counted form `closure_11_11_canonical_of_11_13_universe0`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_11_11_canonical_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem closure_11_11_canonical_of_11_13_universe0_derivedInputs16
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -73,7 +73,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs16` of the counted form `closure_11_11_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs16` of the counted form `closure_11_11_paperExponent_of_11_13_universe0`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_11_11_paperExponent_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem closure_11_11_paperExponent_of_11_13_universe0_derivedInputs16
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -126,7 +126,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs16` of the counted form `closure_1_2_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs16` of the counted form `closure_1_2_canonical_of_11_13_universe0`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_1_2_canonical_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs16
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -184,7 +184,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs16` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs16` of the counted form `closure_1_2_faithful_canonical_of_11_13_universe0`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs16
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -242,7 +242,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs16` of the counted form `closure_1_2_paperExponent_of_11_13_universe0` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs16` of the counted form `closure_1_2_paperExponent_of_11_13_universe0`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs16
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -302,7 +302,7 @@ open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 open MeasureTheory Filter Topology Set Metric
 
-/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs16` of the counted form `firstPass_11_11_faithful_universe0` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `firstPass_11_11_faithful_universe0_derivedInputs16` of the counted form `firstPass_11_11_faithful_universe0`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `firstPass_11_11_faithful_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem firstPass_11_11_faithful_universe0_derivedInputs16
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -354,7 +354,7 @@ namespace HarmonicBalls.Closure
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs16` of the counted form `firstPass_1_2_faithful_universe0` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `firstPass_1_2_faithful_universe0_derivedInputs16` of the counted form `firstPass_1_2_faithful_universe0`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `firstPass_1_2_faithful_universe0_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs16
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -410,7 +410,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13Close
 open MeasureTheory Metric Set Filter Topology
 open HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs16` of the counted form `firstPass_11_13_closed` (fp-phase2-derived-inputs-16, worker z6): the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `firstPass_11_13_closed_derivedInputs15` minus `hDsm`; no binder is added. -/
+/-- Binder-hygiene wrapper `firstPass_11_13_closed_derivedInputs16` of the counted form `firstPass_11_13_closed`: the binder `hDsm : SmallMetricDiameterLargeMassStmt` (HB result 11.9, `Draft/Section11.lean:201`) is removed and supplied by `HarmonicBalls.Closure.closure_11_9_derivedInputs3` (`FirstPass/Phase2/DerivedInputs3.lean:32`) with `hCM` and `hMass` from the binder-free `cameronMartinGFFMutualAbsCont_derived` and `lqgMassFunctionalMeasurable_derived`, and the other binders from the wrapper itself. The statement is that of `firstPass_11_13_closed_derivedInputs15` minus `hDsm`; no binder is added. -/
 theorem firstPass_11_13_closed_derivedInputs16
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,

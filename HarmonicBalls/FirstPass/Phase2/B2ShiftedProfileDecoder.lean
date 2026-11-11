@@ -3,16 +3,15 @@ import HarmonicBalls.FirstPass.Phase2.ProfileDecoderDerived
 import HarmonicBalls.FirstPass.S11at.Producers
 import HarmonicBalls.FirstPass.Phase2.LocalDecoderCommonDerived
 
-/-! # B2 shifted-profile decoder: canonical decoder property and the success at a.e. root (MQ-lh-15)
+/-! # B2 shifted-profile decoder: canonical decoder property and the success at a.e. root
 
-Task `fp-phase2-rooted-continuity-and-shifted-decoder`, part (3); worker z3. Route: MATH-ANSWERS.md l.158-183 (verdict
-TRUE-AFTER-FIX, option (a) for the explicit canonical decoder `ProfileDecoderDerived.decoder`).
+Status: TRUE after the fix, for the explicit canonical decoder `ProfileDecoderDerived.decoder`.
 
 * `CanonicalDecoderLimitStmt` and `canonicalDecoder_limit`: the additional Lean statement of l.161-165, proved by its
   step 2 (existence of a limit gives membership in `convSet`, then `isLQGLimit_decoder`).
 * `shifted_selected_lintegral_eq_zero` and `shifted_selected_mem_convSet_ae_root`: step 4 of l.170-183, the joint identity
   applied to the complement of the Borel convergence locus. The joint identity is the positive-radius form
-  `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, PENDING R26), taken as an explicit hypothesis; the false
+  `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, PENDING TRUTH CHECK), taken as an explicit hypothesis; the false
   `DMSLemmaA10WholePlaneMarkedJointStmt` is not used. The joint identity is stated for the `α = 0` measure only, so
   the convergence locus is `convSet T γ 0`.
 * `measurable_selected_dmsShiftedCircle`: the joint measurability `hJM` needed by step 4, proved by composition from the
@@ -29,7 +28,7 @@ namespace HarmonicBalls
 
 universe u
 
-/-- **Canonical decoder property (MQ-lh-15 answer, l.161-165; TRUE-AFTER-FIX, option (a)).** For the explicit canonical
+/-- **Canonical decoder property (TRUE after the fix).** For the explicit canonical
 decoder `ProfileDecoderDerived.decoder T γ α`, every continuous positive-radius profile `y` whose circle-average LQG
 limit exists has the LQG limit `decoder T γ α y`. -/
 def CanonicalDecoderLimitStmt (T : ProfileDecoderDerived.TestFamily) (γ α : ℝ) : Prop :=
@@ -37,7 +36,7 @@ def CanonicalDecoderLimitStmt (T : ProfileDecoderDerived.TestFamily) (γ α : �
     (∃ m, IsLQGLimit γ (fieldCircleAverage α (circleProfile y)) m) →
       IsLQGLimit γ (fieldCircleAverage α (circleProfile y)) (ProfileDecoderDerived.decoder T γ α y)
 
-/-- The canonical decoder has the property `CanonicalDecoderLimitStmt` (MQ-lh-15, route step 2): an existing limit gives
+/-- The canonical decoder has the property `CanonicalDecoderLimitStmt`: an existing limit gives
 membership in the convergence locus `convSet` (apply the convergence to each test function `T.D n`), and then
 `isLQGLimit_decoder` identifies the output. -/
 theorem canonicalDecoder_limit (T : ProfileDecoderDerived.TestFamily) (γ α : ℝ) :
@@ -54,7 +53,7 @@ lemma posExtend_coe_eq (g : ℝ → ℂ → ℝ) :
   · simp [posExtend, posPart, hr]
   · simp [posExtend, posPart, hr]
 
-/-- **Canonical selector (MQ-lh-15 answer, route step 3).** There is a measurable selector
+/-- **Canonical selector.** There is a measurable selector
 `Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)` that recovers every continuous positive-radius profile from its values on the
 dense coordinates: `Sel (posExtend y) = y`. Discharged by `canonicalProfileSelector` below. -/
 def CanonicalProfileSelectorStmt : Prop :=
@@ -68,8 +67,7 @@ instance instPolishSpaceCircleParameterIoi : PolishSpace (Set.Ioi (0 : ℝ)) :=
 instance instLocallyCompactSpaceCircleParameterIoi : LocallyCompactSpace (Set.Ioi (0 : ℝ)) :=
   isOpen_Ioi.locallyCompactSpace
 
-/-- **Step 3 (MQ-lh-15): the canonical selector exists.** Reuse of `HarmonicBalls.exists_dense_decode_polish` (MQ-lh-12
-step 3) on the Polish, locally compact, nonempty space `CircleParameter = Set.Ioi 0 × ℂ`: pick the dense sequence
+/-- **Step 3: the canonical selector exists.** Reuse of `HarmonicBalls.exists_dense_decode_polish` on the Polish, locally compact, nonempty space `CircleParameter = Set.Ioi 0 × ℂ`: pick the dense sequence
 `d` and the measurable left inverse `decode` of `f ↦ (f (d n))_n`, and set `Sel H := decode (n ↦ H (d n))`, where the
 coordinates `d n = (r_n, z_n)` have `r_n > 0`. Measurability of `H ↦ H (r_n) (z_n)` is evaluation in the Pi σ-algebra. For
 `H = posExtend y`, the coordinates are `y (d n)`, so `Sel (posExtend y) = decode (y ∘ d) = y`. -/
@@ -143,7 +141,7 @@ theorem measurable_selected_dmsShiftedCircle {Ω : Type u} [MeasurableSpace Ω] 
     Measurable fun q : ℂ × Ω => Sel (posPart (dmsShiftedCircle γ q.1 (hcirc q.2))) :=
   hSelM.comp (measurable_posPart_dmsShiftedCircle γ hGFF)
 
-/-- **Step 4 core (MQ-lh-15 answer, l.170-183): the joint identity transfers the convergence locus.** Let `E` be the
+/-- **Step 4 core: the joint identity transfers the convergence locus.** Let `E` be the
 complement of the convergence locus `convSet T γ 0`. The joint identity, applied to the test `1_E (Sel (posExtend H))`,
 gives the vanishing of the lower integral over the unit ball of the selected DMS-shifted profile lying in `E`. The
 original-law profile lies in the convergence locus almost surely, since `μ` is its LQG measure. -/
@@ -193,7 +191,7 @@ theorem shifted_selected_lintegral_eq_zero
         hJ.symm
     _ = 0 := hL
 
-/-- **Success at a.e. root (MQ-lh-15 answer, l.170-183, route step 4).** Original-law success gives shifted success:
+/-- **Success at a.e. root.** Original-law success gives shifted success:
 for Lebesgue-a.e. root `z` in the unit ball, almost surely the selected DMS-shifted profile lies in the convergence
 locus `convSet T γ 0`. The joint measurability of `(z, ω) ↦ Sel (posPart (dms))` is proved
 (`measurable_selected_dmsShiftedCircle`, the answer gave no argument for it; the proof is measurability by composition). -/

@@ -10,7 +10,7 @@ import HarmonicBalls.FirstPass.Phase2.PlaneDomainDerived
 import HarmonicBalls.FirstPass.Phase2.WeylScaledEuclideanDerived
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 
-/-! Binder-hygiene wrappers, round 17 (fp-phase2-derived-inputs-17, worker z7).
+/-! Binder-hygiene wrappers.
 Scope: counted results outside the DerivedInputs15 family (11.11, 11.12, 11.13, 1.2 are not here).
 Each wrapper `<counted>_derivedInputs17` has the statement of the latest wrapper `<counted>_derivedInputsN`
 minus every explicit binder whose Prop has a binder-free derived theorem: LQGMeasureOfProfileMeasurableFrozen
@@ -31,7 +31,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls
 
-/-- Binder-hygiene wrapper `firstPass_8_2_S8d_noWeyl_derivedInputs17` of the counted form `firstPass_8_2_S8d_noWeyl` (fp-phase2-derived-inputs-17, worker z7): the binders hAff, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `firstPass_8_2_S8d_noWeyl_derivedInputs` is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_8_2_S8d_noWeyl_derivedInputs17` of the counted form `firstPass_8_2_S8d_noWeyl`: the binders hAff, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `firstPass_8_2_S8d_noWeyl_derivedInputs` is unchanged. -/
 theorem firstPass_8_2_S8d_noWeyl_derivedInputs17
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hfull : LQGMeasureFullSupportStmt.{u})
@@ -53,7 +53,7 @@ end HarmonicBalls
 
 namespace HarmonicBalls.Closure
 
-/-- Binder-hygiene wrapper `closure_1_1_derivedInputs17` of the counted form `closure_1_1` (fp-phase2-derived-inputs-17, worker z7): the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_1_1_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_1_derivedInputs17` of the counted form `closure_1_1`: the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_1_1_derivedInputs5` is unchanged. -/
 theorem closure_1_1_derivedInputs17
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
@@ -72,7 +72,7 @@ theorem closure_1_1_derivedInputs17
     (hW := (fun Ω _ P γ hC hcirc => HarmonicBalls.Section6.lqgMeasureWeylScaling Ω P γ 0 hC hcirc))
     (hE := hE) (hN := hN)
 
-/-- Binder-hygiene wrapper `closure_1_3_derivedInputs17` of the counted form `closure_1_3` (fp-phase2-derived-inputs-17, worker z7): the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_1_3_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_1_3_derivedInputs17` of the counted form `closure_1_3`: the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_1_3_derivedInputs5` is unchanged. -/
 theorem closure_1_3_derivedInputs17
     (hmeasure : ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureLocality P γ α₀ hC hcirc)
@@ -93,7 +93,7 @@ theorem closure_1_3_derivedInputs17
     (hW := (fun Ω _ P γ hC hcirc => HarmonicBalls.Section6.lqgMeasureWeylScaling Ω P γ 0 hC hcirc))
     (hE := hE) (hN := hN)
 
-/-- Binder-hygiene wrapper `closure_5_2_derivedInputs17` of the counted form `closure_5_2` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_5_2_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_5_2_derivedInputs17` of the counted form `closure_5_2`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_5_2_derivedInputs5` is unchanged. -/
 theorem closure_5_2_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -111,7 +111,7 @@ theorem closure_5_2_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3)
 
-/-- Binder-hygiene wrapper `closure_5_3_derivedInputs17` of the counted form `closure_5_3` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_5_3_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_5_3_derivedInputs17` of the counted form `closure_5_3`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_5_3_derivedInputs5` is unchanged. -/
 theorem closure_5_3_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -129,7 +129,7 @@ theorem closure_5_3_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3)
 
-/-- Binder-hygiene wrapper `closure_5_4_derivedInputs17` of the counted form `closure_5_4` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_5_4_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_5_4_derivedInputs17` of the counted form `closure_5_4`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_5_4_derivedInputs5` is unchanged. -/
 theorem closure_5_4_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -147,7 +147,7 @@ theorem closure_5_4_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3)
 
-/-- Binder-hygiene wrapper `closure_5_5_derivedInputs17` of the counted form `closure_5_5` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_5_5_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_5_5_derivedInputs17` of the counted form `closure_5_5`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_5_5_derivedInputs5` is unchanged. -/
 theorem closure_5_5_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -165,7 +165,7 @@ theorem closure_5_5_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3)
 
-/-- Binder-hygiene wrapper `closure_7_2_derivedInputs17` of the counted form `closure_7_2` (fp-phase2-derived-inputs-17, worker z7): the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_7_2_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_7_2_derivedInputs17` of the counted form `closure_7_2`: the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_7_2_derivedInputs5` is unchanged. -/
 theorem closure_7_2_derivedInputs17
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
@@ -184,7 +184,7 @@ theorem closure_7_2_derivedInputs17
     (hW := (fun Ω _ P γ hC hcirc => HarmonicBalls.Section6.lqgMeasureWeylScaling Ω P γ 0 hC hcirc))
     (hE := hE) (hN := hN)
 
-/-- Binder-hygiene wrapper `closure_8_1_derivedInputs17` of the counted form `closure_8_1` (fp-phase2-derived-inputs-17, worker z7): the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_8_1_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_8_1_derivedInputs17` of the counted form `closure_8_1`: the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_8_1_derivedInputs5` is unchanged. -/
 theorem closure_8_1_derivedInputs17
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
@@ -203,7 +203,7 @@ theorem closure_8_1_derivedInputs17
     (hW := (fun Ω _ P γ hC hcirc => HarmonicBalls.Section6.lqgMeasureWeylScaling Ω P γ 0 hC hcirc))
     (hE := hE) (hN := hN)
 
-/-- Binder-hygiene wrapper `closure_9_2_derivedInputs17` of the counted form `closure_9_2` (fp-phase2-derived-inputs-17, worker z7): the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_9_2_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_9_2_derivedInputs17` of the counted form `closure_9_2`: the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_9_2_derivedInputs5` is unchanged. -/
 theorem closure_9_2_derivedInputs17
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
@@ -222,7 +222,7 @@ theorem closure_9_2_derivedInputs17
     (hW := (fun Ω _ P γ hC hcirc => HarmonicBalls.Section6.lqgMeasureWeylScaling Ω P γ 0 hC hcirc))
     (hE := hE) (hN := hN)
 
-/-- Binder-hygiene wrapper `closure_10_7_derivedInputs17` of the counted form `closure_10_7` (fp-phase2-derived-inputs-17, worker z7): the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_10_7_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_10_7_derivedInputs17` of the counted form `closure_10_7`: the binders hE1, hAff, hW are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.WholePlaneGFFAffineInvariance_derived`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_10_7_derivedInputs5` is unchanged. -/
 theorem closure_10_7_derivedInputs17
     (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hE3 : PhaseTorusDoublingProductErgodicFrozen.{0})
@@ -242,7 +242,7 @@ theorem closure_10_7_derivedInputs17
     (hW := (fun Ω _ P γ hC hcirc => HarmonicBalls.Section6.lqgMeasureWeylScaling Ω P γ 0 hC hcirc))
     (hE := hE) (hN := hN) (hTor := hTor)
 
-/-- Binder-hygiene wrapper `closure_11_2_derivedInputs17` of the counted form `closure_11_2` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_11_2_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_2_derivedInputs17` of the counted form `closure_11_2`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_11_2_derivedInputs5` is unchanged. -/
 theorem closure_11_2_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -263,7 +263,7 @@ theorem closure_11_2_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3) (hCamp := hCamp) (hDec := hDec) (hCM := hCM)
 
-/-- Binder-hygiene wrapper `closure_11_5_derivedInputs17` of the counted form `closure_11_5` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_11_5_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_5_derivedInputs17` of the counted form `closure_11_5`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_11_5_derivedInputs5` is unchanged. -/
 theorem closure_11_5_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -284,7 +284,7 @@ theorem closure_11_5_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3) (hCamp := hCamp) (hDec := hDec) (hCM := hCM)
 
-/-- Binder-hygiene wrapper `closure_11_6_derivedInputs17` of the counted form `closure_11_6` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_11_6_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_6_derivedInputs17` of the counted form `closure_11_6`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `closure_11_6_derivedInputs5` is unchanged. -/
 theorem closure_11_6_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -302,7 +302,7 @@ theorem closure_11_6_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3)
 
-/-- Binder-hygiene wrapper `typicalPointManyGoodScales_closed_derivedInputs17` of the counted form `typicalPointManyGoodScales_closed` (fp-phase2-derived-inputs-17, worker z7): the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `typicalPointManyGoodScales_closed_derivedInputs5` is unchanged. -/
+/-- Binder-hygiene wrapper `typicalPointManyGoodScales_closed_derivedInputs17` of the counted form `typicalPointManyGoodScales_closed`: the binders hW, hE1 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`. No binder is added and no conclusion is weakened. Original `typicalPointManyGoodScales_closed_derivedInputs5` is unchanged. -/
 theorem typicalPointManyGoodScales_closed_derivedInputs17
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -321,7 +321,7 @@ theorem typicalPointManyGoodScales_closed_derivedInputs17
     (hN := hN) (hL1 := hL1) (hE1 := HarmonicBalls.lqgMeasureOfProfileMeasurable_derived)
     (hE3 := hE3)
 
-/-- Binder-hygiene wrapper `closure_11_9_derivedInputs17` of the counted form `closure_11_9` (fp-phase2-derived-inputs-17, worker z7): the binders hCM, hMass, hFD are removed and supplied by the binder-free derived theorems `HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived`, `HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived`, `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_11_9_derivedInputs3` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_9_derivedInputs17` of the counted form `closure_11_9`: the binders hCM, hMass, hFD are removed and supplied by the binder-free derived theorems `HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived`, `HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived`, `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived`. No binder is added and no conclusion is weakened. Original `closure_11_9_derivedInputs3` is unchanged. -/
 theorem closure_11_9_derivedInputs17
     (hWSC : WeylScalingCompositionFrozen.{u})
     (hMet : LQGInternalMetricWeylAeMeasurableFrozen.{u})
@@ -344,7 +344,7 @@ theorem closure_11_9_derivedInputs17
     (hAx := hAx) (hDC := hDC) (hCMT := hCMT) (hPos := hPos) (hSupM := hSupM) (hFin := hFin)
     (hM1 := hM1) (hmeasure := hmeasure)
 
-/-- Binder-hygiene wrapper `closure_11_16_derivedInputs17` of the counted form `closure_11_16` (fp-phase2-derived-inputs-17, worker z7): the binders hWeyl, hCM, hMass, hFD are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived`, `HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived`, `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_11_16_derivedInputs3` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_16_derivedInputs17` of the counted form `closure_11_16`: the binders hWeyl, hCM, hMass, hFD are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived`, `HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived`, `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived`. No binder is added and no conclusion is weakened. Original `closure_11_16_derivedInputs3` is unchanged. -/
 theorem closure_11_16_derivedInputs17
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
@@ -383,7 +383,7 @@ theorem closure_11_16_derivedInputs17
     (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hM1 := hM1)
     (hM := hM) (hDiam := hDiam) (hMk := hMk) (hmeasure := hmeasure)
 
-/-- Binder-hygiene wrapper `closure_11_17_derivedInputs17` of the counted form `closure_11_17` (fp-phase2-derived-inputs-17, worker z7): the binders hWeyl, hCM, hMass, hFD, hN2 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived`, `HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived`, `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived`, `HarmonicBalls.weylScaledEuclidean_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `closure_11_17_derivedInputs3` is unchanged. -/
+/-- Binder-hygiene wrapper `closure_11_17_derivedInputs17` of the counted form `closure_11_17`: the binders hWeyl, hCM, hMass, hFD, hN2 are removed and supplied by the binder-free derived theorems `HarmonicBalls.Section6.lqgMeasureWeylScaling`, `HarmonicBalls.DerivedInputs9.cameronMartinGFFMutualAbsCont_derived`, `HarmonicBalls.MassFunctionalDerived.lqgMassFunctionalMeasurable_derived`, `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived`, `HarmonicBalls.weylScaledEuclidean_derived`. No binder is added and no conclusion is weakened. Original `closure_11_17_derivedInputs3` is unchanged. -/
 theorem closure_11_17_derivedInputs17
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
@@ -427,7 +427,7 @@ end HarmonicBalls.Closure
 
 namespace HarmonicBalls.S11c
 
-/-- Binder-hygiene wrapper `firstPass_11_10_derivedInputs17` of the counted form `firstPass_11_10` (fp-phase2-derived-inputs-17, worker z7): the binders hM2 are removed and supplied by the binder-free derived theorems `HarmonicBalls.weylShiftedMassMeasurable_derived` (DERIVED rows of docs/campaign/PHASE2-DERIVATION-STATUS.md). No binder is added and no conclusion is weakened. Original `firstPass_11_10_derivedInputs3` is unchanged. -/
+/-- Binder-hygiene wrapper `firstPass_11_10_derivedInputs17` of the counted form `firstPass_11_10`: the binders hM2 are removed and supplied by the binder-free derived theorems `HarmonicBalls.weylShiftedMassMeasurable_derived`. No binder is added and no conclusion is weakened. Original `firstPass_11_10_derivedInputs3` is unchanged. -/
 theorem firstPass_11_10_derivedInputs17
     (hDC : DyadicCellDiamSmallFrozen.{u})
     (hCM : CameronMartinEventTransferFrozen.{u})

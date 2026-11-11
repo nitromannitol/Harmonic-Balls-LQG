@@ -2,9 +2,8 @@ import HarmonicBalls.FirstPass.Phase2.B2ShiftedProfileDecoder
 import HarmonicBalls.FirstPass.Phase2.ProfileDecoderDerived
 import HarmonicBalls.FirstPass.S11at.Producers
 
-/-! # B2 shifted-profile decoder, part 2 (MQ-lh-15 steps 3 and 5)
+/-! # B2 shifted-profile decoder, part 2
 
-Task `fp-phase2-b2-shifted-decoder-steps-3-5-6`, worker z3.
 
 * `ae_canonicalSel_posPart_eq_field`: the canonical selector (`canonicalProfileSelector`, step 3) returns the field's own
   continuous profile on the positive part of the field, almost surely (from `IsWholePlaneGFF.ae_continuousOn_circle`).
@@ -12,7 +11,7 @@ Task `fp-phase2-b2-shifted-decoder-steps-3-5-6`, worker z3.
   every continuous profile `y` equal to the positive part of the DMS-shifted circle profile lies in `convSet T γ 0` and has
   the LQG limit `decoder T γ 0 y`.
 * `shifted_rootedLQGMeasure_ae_exists`: step 5, `FirstPassS11atProducers.ae_exists_rootedLQGMeasure_derived` with its
-  premise `hProf` discharged by the binder-free `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (lead ruling).
+  premise `hProf` discharged by the binder-free `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`.
 -/
 
 open MeasureTheory ProbabilityTheory Metric Set Filter
@@ -42,10 +41,10 @@ theorem ae_canonicalSel_posPart_eq_field {Ω : Type u} [MeasurableSpace Ω] {P :
   rw [h2]
   rfl
 
-/-- **Step 4 for the true shifted profile (MQ-lh-15, with the step-3 canonical selector).** For Lebesgue-a.e. root `z` in
+/-- **Step 4 for the true shifted profile.** For Lebesgue-a.e. root `z` in
 the unit ball, almost surely: whenever the positive part of the DMS-shifted circle profile is the zero extension of a
 continuous profile `y`, `y` lies in the convergence locus `convSet T γ 0` and its LQG limit is `decoder T γ 0 y`.
-Given the candidate joint identity `hJoint` (PENDING R26) as a hypothesis; no other hypothesis. -/
+Given the candidate joint identity `hJoint` (PENDING TRUTH CHECK) as a hypothesis; no other hypothesis. -/
 theorem shifted_profile_decoder_limit_ae_root
     (hJoint : DMSLemmaA10WholePlaneMarkedJointPosStmt.{u})
     (T : ProfileDecoderDerived.TestFamily) (γ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2)
@@ -70,8 +69,8 @@ theorem shifted_profile_decoder_limit_ae_root
   rw [hSy] at hω
   exact ⟨hω, ProfileDecoderDerived.isLQGLimit_decoder T γ 0 hω⟩
 
-/-- **Step 5 (MQ-lh-15 route).** `FirstPassS11atProducers.ae_exists_rootedLQGMeasure_derived` with its premise `hProf`
-discharged by the binder-free `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived` (lead ruling, standing delegation).
+/-- **Step 5.** `FirstPassS11atProducers.ae_exists_rootedLQGMeasure_derived` with its premise `hProf`
+discharged by the binder-free `HarmonicBalls.lqgMeasureOfProfileMeasurable_derived`.
 The remaining premises `hExist0`, `hExistα`, `hA10` are those of the producer, not discharged here. -/
 theorem shifted_rootedLQGMeasure_ae_exists {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
     [IsProbabilityMeasure P] (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ : ℂ) (r₁ : ℝ)
@@ -83,7 +82,7 @@ theorem shifted_rootedLQGMeasure_ae_exists {Ω : Type u} [MeasurableSpace Ω] (P
   FirstPassS11atProducers.ae_exists_rootedLQGMeasure_derived P γ α₀ hC hcirc c₁ r₁ hh hγ0 hγ2 hα hExist0 hExistα hA10
     lqgMeasureOfProfileMeasurable_derived hWin
 
-/-- **Step 5, subcritical form (MQ-lh-15, operator item (1)).** Same statement as `shifted_rootedLQGMeasure_ae_exists`,
+/-- **Step 5, subcritical form.** Same statement as `shifted_rootedLQGMeasure_ae_exists`,
 with the universally typed marked input `hA10` replaced by its subcritical form
 `hSub : ∀ μ, DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ` (`FirstPass/Frozen/S11i.lean:59`), whose statement carries the
 range `0 < γ`, `γ < 2`. At the given `γ`, the marked form is recovered by `dmsA10Marked_of_sub` (`S11i.lean:69`) from

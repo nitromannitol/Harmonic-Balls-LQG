@@ -7,8 +7,6 @@ import HarmonicBalls.FirstPass.Phase2.InnerMeasurableDerived
 /-!
 # Derived circle-average locality link and the locality of the LQG measure (Fact 2.1 II)
 
-Worker z6, task `fp-phase2-circle-locality-link-derive`, route MQ-lh-20 (c)
-(`notes/fp-gaps/MATH-ANSWERS.md` lines 345-367).
 
 * `lqgCircleAverageLocalityLink_derived`: `LQGCircleAverageLocalityLink` (the link hypothesis of
   `lqgMeasureLocality_of_circleLink`) under the whole-plane GFF premise `IsWholePlaneGFF P hC hcirc`.
@@ -19,7 +17,7 @@ Worker z6, task `fp-phase2-circle-locality-link-derive`, route MQ-lh-20 (c)
 * `lqgMeasureLocality_of_gffCircleLink`: the proof of `lqgMeasureLocality_of_circleLink` with the link
   relativised to the GFF premise (the only use of `hlink` is in `hWk`, where `hGFF` is in scope).
 * `lqgMeasureLocality_derived`: the forall-closure of `LQGMeasureLocality` (`Proposed/LQG.lean:97`, row 49).
-* `lqgMeasureSquareMeasurable_derived'` (row 22) and `lqgMassInnerMeasurable_derived'` (row 33): the binder-free
+* `lqgMeasureSquareMeasurable_derived'` and `lqgMassInnerMeasurable_derived'`: the binder-free
   forms of `lqgMeasureSquareMeasurable_derived` and `lqgMassInnerMeasurable_derived`.
 -/
 
@@ -50,7 +48,7 @@ theorem measurable_gff_pairing {Ω : Type*} [MeasurableSpace Ω] (α₀ : ℝ) (
   simp [fieldPairing]
 
 /-- **Circle-average locality link** (`LQGCircleAverageLocalityLink`, `LQGMeasureLocalityDerived.lean:28`), derived
-from the whole-plane GFF premise. Route (MQ-lh-20 (c)): `IsProbabilityMeasure P` from `IsWholePlaneGFF.isProbabilityMeasure`;
+from the whole-plane GFF premise. Route: `IsProbabilityMeasure P` from `IsWholePlaneGFF.isProbabilityMeasure`;
 `wholePlaneCircleAverageLimit_derived` with `O := U` (the sphere lies in the closed ball, hence in `U`) gives test
 functions `ψ j` supported in `U` with `hC ω (ψ j) → hcirc ω r z` a.s.; each `hC · (ψ j)` is `σ(h|_U)`-measurable;
 the limit `limUnder` is measurable (`StronglyMeasurable.limUnder`), and `fieldCircleAverage α₀ (hcirc ω) r z` is this
@@ -187,13 +185,13 @@ theorem lqgMeasureLocality_derived : ∀ (γ α₀ : ℝ) (Ω : Type u) [Measura
   fun γ α₀ _ _ P hC hcirc => lqgMeasureLocality_of_gffCircleLink P γ α₀ hC hcirc
     (fun hGFF => lqgCircleAverageLocalityLink_derived P α₀ hC hcirc hGFF)
 
-/-- `LQGMeasureSquareMeasurableFrozen` (row 22), binder-free: `lqgMeasureSquareMeasurable_derived` with the
+/-- `LQGMeasureSquareMeasurableFrozen`, binder-free: `lqgMeasureSquareMeasurable_derived` with the
 locality input `lqgMeasureLocality_derived`. -/
 theorem lqgMeasureSquareMeasurable_derived' : LQGMeasureSquareMeasurableFrozen.{u} :=
   lqgMeasureSquareMeasurable_derived.{u} (fun γ α₀ Ω _ P hC hcirc =>
     lqgMeasureLocality_derived γ α₀ Ω P hC hcirc)
 
-/-- `LQGMassInnerMeasurableFrozen` (row 33), binder-free: `lqgMassInnerMeasurable_derived` with the locality input
+/-- `LQGMassInnerMeasurableFrozen`, binder-free: `lqgMassInnerMeasurable_derived` with the locality input
 `lqgMeasureLocality_derived`. -/
 theorem lqgMassInnerMeasurable_derived' : LQGMassInnerMeasurableFrozen.{u} :=
   lqgMassInnerMeasurable_derived.{u} (fun Ω _ P _ γ α₀ hC hcirc =>

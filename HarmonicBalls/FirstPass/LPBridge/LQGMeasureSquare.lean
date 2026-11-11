@@ -6,7 +6,7 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
 
 /-!
-# LP-stage bridge for the square measurability of the LQG area measure (z3)
+# LP-stage bridge for the square measurability of the LQG area measure
 
 `HarmonicBalls.lqgMeasureSquareMeasurable_of_lpStage` is the HB Prop `LQGMeasureSquareMeasurableFrozen`
 (`FirstPass/Frozen/S11c.lean:117`), obtained from the LP general statement
@@ -44,8 +44,7 @@ theorem lqgMeasureSquareMeasurable_of_lpStage
     ⟨n, j, k, hSeq⟩
 
 /-- `LQGMeasureSquareMeasurableFrozen` (`Frozen/S11c.lean:117`), binder-free: `lqgMeasureSquareMeasurable_of_lpStage` with
-the locality input discharged by `lqgMeasureLocality_derived` (`FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean`,
-z6 dc3897c3, ledger row 49, DERIVED). -/
+the locality input discharged by `lqgMeasureLocality_derived` (`FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean`). -/
 theorem lqgMeasureSquareMeasurable_of_lpStage_derived : LQGMeasureSquareMeasurableFrozen.{u} :=
   lqgMeasureSquareMeasurable_of_lpStage.{u} (fun γ α₀ Ω _ P hC hcirc =>
     lqgMeasureLocality_derived γ α₀ Ω P hC hcirc)

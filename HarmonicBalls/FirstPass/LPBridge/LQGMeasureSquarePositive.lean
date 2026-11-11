@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.LPBridge.M4
 import HarmonicBalls.LPStage.LQGMeasureSquarePositive
 
 /-!
-# LP-stage bridge for the square positivity of the LQG measure (row 23, z3)
+# LP-stage bridge for the square positivity of the LQG measure
 
 `HarmonicBalls.lqgMeasureSquarePositiveFrozen_of_lpStage` is the HB statement `LQGMeasureSquarePositiveFrozen`
 (`FirstPass/Frozen/S11c.lean:130`), obtained from the LP statement `LQGMeasureSquarePositiveLP`
@@ -14,7 +14,7 @@ import HarmonicBalls.LPStage.LQGMeasureSquarePositive
 The LP-stage proof is `LatticeProb.LQG.lqgMeasureSquarePositiveLP_of_inputs`, from the three LP literature inputs
 `WholePlaneLQGBallMassBoundsLP`, `LQGMeasureCoordChangeLP` and `LQGMeasureExistenceLP` (the binders of the HB
 derivation `HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived`, `FirstPass/Phase2/SquarePositiveDerived.lean:40`).
-These inputs are hypotheses of the bridge (R54): they are not proved here and remain pending the operator's source
+These inputs are hypotheses of the bridge: they are not proved here and remain pending the operator's source
 check of their Proposed counterparts.
 -/
 

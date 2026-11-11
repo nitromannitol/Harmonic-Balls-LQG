@@ -1,11 +1,11 @@
 import HarmonicBalls.FirstPass.Frozen.S11g
 import HarmonicBalls.FirstPass.S11aa
 
-/-! # The LQG metric axioms on a sample space in `Type u` are derived (phase 2, worker z4)
+/-! # The LQG metric axioms on a sample space in `Type u` are derived
 
-Task fp-phase2-axioms-univ-derive. Derives `LQGMetricSatisfiesAxiomsUnivFrozen` (FirstPass/Frozen/S11g.lean:31) from the
+Derives `LQGMetricSatisfiesAxiomsUnivFrozen` (FirstPass/Frozen/S11g.lean:31) from the
 Defs field `IsLQGMetric.satisfiesLQGMetricAxioms` (Defs/LQGMetric.lean:183), which quantifies over `Ω : Type` only.
-Written route: notes/fp-gaps/CHATGPT-hb-distribution-frozen.md section 4, with one correction. Section 4.2 pushes the
+The written route, with one correction, pushes the
 whole circle process through a null-set modification; here only the circle component is modified off a measurable
 null set `G0` (`circleOn`), and the pairing component is kept exactly as `hC ω`. Only the pairing enters the pairing
 σ-algebras of the locality axiom II, so an exact pairing makes the locality measurability transfer exact.

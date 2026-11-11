@@ -2,11 +2,11 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.Phase2.GFFJointLaw
 
 /-!
-# Cameron-Martin transfer of the shifted closed event (phase 2, worker z4)
+# Cameron-Martin transfer of the shifted closed event
 
 Target: `cameronMartinEventTransfer_derived : CameronMartinEventTransferFrozen.{u}` (`FirstPass/Frozen/S11c.lean:149`).
 
-Route (notes/fp-gaps/CHATGPT-11-7-11-10-statement-audit.md:144; CHATGPT-frozen-locators.md:10): the Cameron-Martin
+Route: the Cameron-Martin
 measure `P'` (equivalent to `P`) under which the shifted sample `(hC + f, hcirc + Av f)` has the law of
 `(hC, hcirc)` under `P` (`GFFJointLaw.cameronMartin_profileLaw_map_eq`), and the Weyl identities transfer the
 shifted observables to the sample.
@@ -15,8 +15,8 @@ This file proves the measure-theoretic core of the route and reduces the target 
 statement `EventSampleRepresentation` (a BLOCKED-STEP, see the docstring there). The target itself is NOT derived here.
 
 Steps:
-* `transfer_of_law` (route step R1, abstract Cameron-Martin transfer): proved.
-* `cameronMartinEventTransfer_of_representation` (route step R2): the frozen statement, conditional on
+* `transfer_of_law`: proved.
+* `cameronMartinEventTransfer_of_representation`: the frozen statement, conditional on
   `EventSampleRepresentation` and `CameronMartinGFFReweighting`.
 -/
 
@@ -72,7 +72,7 @@ def EventSampleRepresentation : Prop :=
             (fun ω r z => hcirc ω r z + Real.circleAverage f z r) ω ∈ E)
 
 /-- **Route step R2.** The frozen Cameron-Martin event transfer, conditional on the named representation
-`EventSampleRepresentation` (R4) and on the Cameron-Martin reweighting `CameronMartinGFFReweighting`
+`EventSampleRepresentation` and on the Cameron-Martin reweighting `CameronMartinGFFReweighting`
 (`FirstPass/Frozen/S11aj.lean:33`). This is a reduction, not the derived target. -/
 theorem cameronMartinEventTransfer_of_representation
     (hRep : EventSampleRepresentation.{u})

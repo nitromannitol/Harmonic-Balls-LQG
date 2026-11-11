@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.LPBridge.M5c
 import HarmonicBalls.LPStage.WeylCompositionOuter2
 
 /-!
-# Bridge: the LP derived Weyl composition gives the frozen HB statement (row 56)
+# Bridge: the LP derived Weyl composition gives the frozen HB statement
 
 `HarmonicBalls.weylMetricCompositionContinuousOuterFrozen_of_lpStage` proves the frozen statement
 `WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117`, row 56 of PHASE2-INVENTORY.md section 2)
