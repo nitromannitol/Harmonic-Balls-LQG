@@ -12,7 +12,7 @@ Legend: DERIVED = theorem of the exact Prop, arguments universally quantified, n
 | 3 | WholePlaneLQGBallMassBounds [P] | Proposed/LQG.lean:172 | 49 | OPEN-LITERATURE | Ding-Gwynne 1807.01072 Lemma 3.8; no theorem | - |
 | 4 | LQGMeasureNonatomic [P] | Proposed/LQG.lean:86 | 32 | REDUCIBLE | singular_nonatomic_of_existence_and_wholePlane (Proofs/Sec2/SingularAtomAtZero.lean:48), hDG=row 3, hAff=row 10, hCC=row 2, hE=row 1 | rows 1, 2, 3 [P] |
 | 5 | LQGMeasureWeylScaling [P] | Proposed/LQG.lean:107 | 32 | DERIVED | HarmonicBalls.Section6.lqgMeasureWeylScaling (Proofs/Sec6/LQGWeylScaling.lean:124), universal form, sorry-free; counted wrappers `*_derivedInputs14` use it (FirstPass/Phase2/DerivedInputs14.lean, 7833dfe9) | none |
-| 6 | LQGMeasureOfProfileMeasurableFrozen | FirstPass/Frozen/S8d.lean:33 | 18 | OPEN-LITERATURE | DS 0808.1560 Prop 1.1 (locator pending); no theorem | - |
+| 6 | LQGMeasureOfProfileMeasurableFrozen | FirstPass/Frozen/S8d.lean:33 | 18 | DERIVED | lqgMeasureOfProfileMeasurable_derived (Phase2/ProfileDecoderDerived.lean; commit b242f836, fp-phase2-profile-decoder-derive, z7) | - |
 | 7 | BirkhoffPointwiseErgodic | FirstPass/Frozen/S8c.lean:100 | 17 | DERIVED | birkhoffPointwiseErgodic_derived (FirstPass/S8c/BirkhoffDerived.lean:21), ab59757c | - |
 | 8 | LocalRootedFieldMeasureDomination | FirstPass/Frozen/S8c.lean:55 | 16 | REDUCIBLE | localRootedFieldMeasureDomination_of_joint_of_shifted (FirstPass/Phase2/RootedDominationJoint.lean:294) | DMSLemmaA10WholePlaneMarkedJointStmt (RootedDominationJoint.lean:50), CircleProfileSelectorStmt (:117), ShiftedDecoderNullTransferStmt (:137); none derived; row 6 |
 | 9 | PhaseTorusDoublingProductErgodicFrozen | FirstPass/Frozen/S8d.lean:58 | 16 | OPEN-LITERATURE | doubling map weak mixing; Thm 1.27, Prop 1.5 (cited). LP copy LPStage/PhaseTorus.lean:45 unproved | - |
@@ -63,7 +63,7 @@ Legend: DERIVED = theorem of the exact Prop, arguments universally quantified, n
 | 54 | RootedPhysicalMetricContinuousAtInsertionFrozen | FirstPass/S11r/Frozen.lean:115 | 1 | PARKED R23 | B-R7, step 7 of audit R1 | R23 input |
 | 55 | VeryGoodAnnulusProbabilityStmt | Draft/Section6.lean:331 | 1 | REDUCIBLE | closure_6_7 (FirstPass/Closure/Sec6.lean:57), firstPass_6_7 (FirstPass/S6.lean:56), veryGoodAnnulusProbabilityStmt_of_three_inputs (Proofs/Sec6/FullThreeInputAssembly.lean:81) | rows 1, 2, 3 [P] |
 | 56 | WeylMetricCompositionContinuousOuterFrozen | FirstPass/Frozen/S11j.lean:117 | 1 | OPEN-LITERATURE | external; no proof | - |
-| 57 | WeylScaledEuclideanFrozen | FirstPass/Frozen/S11g.lean:146 | 1 | OPEN-LITERATURE | standard; locator pending | - |
+| 57 | WeylScaledEuclideanFrozen | FirstPass/Frozen/S11g.lean:146 | 1 | DERIVED | weylScaledEuclidean_derived (Phase2/WeylScaledEuclideanDerived.lean; commit 7e1c91e6, fp-phase2-weyl-scaled-euclidean-derive, z4) | - |
 
 Notes (gaps and corrections found while filling rows 39-57; no Lean changed):
 - Gap: WholePlaneScaledBallMassStep (Steps/Sec2/VolumeGrowth.lean:261) is a premise of rows 40 and 50 and of the Steps/Sec11 cone files, but it is not among the 57 inputs and has no proving theorem. Operator to decide whether it is an input row.
