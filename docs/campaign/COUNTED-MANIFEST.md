@@ -33,9 +33,30 @@ forms (`...CanonicalStmt`, xi = lqgXi gamma) are listed too. Fewest-binder candi
   `closure_11_13` (FirstPass/Closure/Sec11.lean:128) and `firstPass_11_13_corrected` (FirstPass/S11i/Corrected11_13.lean:65)
   take `hStep8 : Step8IdentificationStmt` (Corrected11_13.lean:57), a named input with no proof in the repository.
 
-**Counting caveat.** A binder count is the number of explicit binders of the signature. Section variables that a
-file brings in with `include` (for example `Proofs/Sec9/LQGExistenceConsequences.lean:26`, `include hDG hCC hE`) are
-not counted, so a `PROOFS` row can understate its binders. Its binder list shows the explicit binders only.
+**Counting caveat.** A binder count is the number of explicit binders of the declaration's type, as Lean reports it.
+A hypothesis that a file declares with `variable` and brings in with `include` is an explicit binder of every theorem
+of that section and is counted (binder recount below). In the tables after the first one (Proofs-only rows, corrected
+forms, forall-xi forms) the counts are still the binders written in the signature, so a row whose file uses `include`
+(for example `Proofs/Sec9/LQGExistenceConsequences.lean:26`, `include hDG hCC hE`) can understate its binders.
+
+**Binder recount (2026-11-11).** The counts of the first table were compared with the types of the declarations: for
+every theorem of `HarmonicBalls/FirstPass/` and `HarmonicBalls/Closure/` whose type ends in one of the 60 draft
+statements (233 theorems), the explicit binders were read from the elaborated type. 22 rows had count 0 because the
+generator read only the written signature, while the theorem sits in a section with `include`:
+- 3.1 to 3.5 (`FirstPass/Closure.lean:130`) and 9.3, 9.4 (`FirstPass/S2S3S4S9SA.lean:59`): 6 binders
+  `hDG hAff hCC hW hE hN`;
+- 4.1 to 4.3 (`FirstPass/Closure/SecA45.lean:70`): 5 binders `hDG hCC hW hE hN`;
+- 6.1 to 6.4 and 6.6 to 6.13 (`FirstPass/Closure/Sec6.lean:34`): 3 binders `hDG hCC hE`.
+
+Here `hDG`, `hAff`, `hCC`, `hW`, `hE`, `hN` are the literature inputs `WholePlaneLQGBallMassBounds`,
+`WholePlaneGFFAffineInvariance`, `LQGMeasureCoordChange`, `LQGMeasureWeylScaling`, `LQGMeasureExistence`,
+`LQGMeasureNonatomic` (each quantified over the probability space; `FirstPass/Closure.lean:118-128`). These rows are
+corrected in the table. The other 38 rows agree with Lean; the rows 2.3 and A.1 to A.6 have no binder. With the
+corrected counts each counted declaration still has the fewest binders among the theorems of the two directories that
+conclude its statement (3.x, 6.x, 9.3, 9.4: a tie with the `firstPass_`/`closure_` twin), so no counted declaration
+changes and the axiom gate is unchanged. Outside the two directories, `HarmonicBalls/Proofs/` has forms of some of
+these statements with fewer binders (for example `Proofs/Sec6/VolumeGrowthConsequences.lean:20` for 6.11, with the one
+binder `hI2 : LQGVolumeGrowthAllScalesStmt`); they are not counted declarations under the rule above.
 
 ## Counted declaration per numbered result
 
@@ -45,14 +66,14 @@ not counted, so a `PROOFS` row can understate its binders. Its binder list shows
 | 1.2 | `HarmonicBallNoveltyStmt` | `firstPass_1_2` | HarmonicBalls/FirstPass/S1S10.lean:43 | 5 | h55 h56 hjordan hlip hmetric |
 | 1.3 | `HarmonicBallLocalSetStmt` | `closure_1_3_derivedInputs36` | HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:170 | 4 | hL1 hDG hCC hE |
 | 2.3 | `GreenFunctionBallStmt` | `closure_2_3` | HarmonicBalls/FirstPass/Closure.lean:112 | 0 |  |
-| 3.1 | `LeastSupersolutionMemStmt` | `closure_3_1` | HarmonicBalls/FirstPass/Closure.lean:133 | 0 |  |
-| 3.2 | `ClusterOpenLaplacianStmt` | `closure_3_2` | HarmonicBalls/FirstPass/Closure.lean:136 | 0 |  |
-| 3.3 | `ClusterMonotoneStmt` | `closure_3_3` | HarmonicBalls/FirstPass/Closure.lean:139 | 0 |  |
-| 3.4 | `ClusterConservationOfMassStmt` | `closure_3_4` | HarmonicBalls/FirstPass/Closure.lean:142 | 0 |  |
-| 3.5 | `ClusterCompatibilityStmt` | `closure_3_5` | HarmonicBalls/FirstPass/Closure.lean:145 | 0 |  |
-| 4.1 | `ClusterLowerBoundStmt` | `closure_4_1` | HarmonicBalls/FirstPass/Closure/SecA45.lean:73 | 0 |  |
-| 4.2 | `LeastSupersolutionHolderStmt` | `closure_4_2` | HarmonicBalls/FirstPass/Closure/SecA45.lean:76 | 0 |  |
-| 4.3 | `ClusterSubharmonicBallStmt` | `closure_4_3` | HarmonicBalls/FirstPass/Closure/SecA45.lean:79 | 0 |  |
+| 3.1 | `LeastSupersolutionMemStmt` | `closure_3_1` | HarmonicBalls/FirstPass/Closure.lean:133 | 6 | hDG hAff hCC hW hE hN |
+| 3.2 | `ClusterOpenLaplacianStmt` | `closure_3_2` | HarmonicBalls/FirstPass/Closure.lean:136 | 6 | hDG hAff hCC hW hE hN |
+| 3.3 | `ClusterMonotoneStmt` | `closure_3_3` | HarmonicBalls/FirstPass/Closure.lean:139 | 6 | hDG hAff hCC hW hE hN |
+| 3.4 | `ClusterConservationOfMassStmt` | `closure_3_4` | HarmonicBalls/FirstPass/Closure.lean:142 | 6 | hDG hAff hCC hW hE hN |
+| 3.5 | `ClusterCompatibilityStmt` | `closure_3_5` | HarmonicBalls/FirstPass/Closure.lean:145 | 6 | hDG hAff hCC hW hE hN |
+| 4.1 | `ClusterLowerBoundStmt` | `closure_4_1` | HarmonicBalls/FirstPass/Closure/SecA45.lean:73 | 5 | hDG hCC hW hE hN |
+| 4.2 | `LeastSupersolutionHolderStmt` | `closure_4_2` | HarmonicBalls/FirstPass/Closure/SecA45.lean:76 | 5 | hDG hCC hW hE hN |
+| 4.3 | `ClusterSubharmonicBallStmt` | `closure_4_3` | HarmonicBalls/FirstPass/Closure/SecA45.lean:79 | 5 | hDG hCC hW hE hN |
 | 5.1 | `ClusterUpperBoundStmt` | `closure_5_1` | HarmonicBalls/FirstPass/Closure/SecA45.lean:116 | 3 | hDG hCC hE |
 | 5.2 | `ClusterContinuityStmt` | `closure_5_2_derivedInputs36` | HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:108 | 4 | hDG hCC hE hSub |
 | 5.3 | `ClusterBoundaryMeasureZeroStmt` | `closure_5_3_derivedInputs36` | HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:96 | 4 | hDG hCC hE hL1 |
@@ -61,25 +82,25 @@ not counted, so a `PROOFS` row can understate its binders. Its binder list shows
 | 5.6 | `UniquenessHarmonicBallsStmt` | `closure_5_6` | HarmonicBalls/FirstPass/Closure/SecA45.lean:127 | 3 | hDG hCC hE |
 | 5.7 | `ClusterScaleInvarianceStmt` | `closure_5_7` | HarmonicBalls/FirstPass/Closure/SecA45.lean:139 | 3 | hDG hCC hE |
 | 5.8 | `ClusterStrongCompatibilityStmt` | `closure_5_8` | HarmonicBalls/FirstPass/Closure/SecA45.lean:150 | 3 | hDG hCC hE |
-| 6.1 | `HarnackTypeEstimateStmt` | `closure_6_1` | HarmonicBalls/FirstPass/Closure/Sec6.lean:37 | 0 |  |
-| 6.2 | `HarnackTypeComponentStmt` | `closure_6_2` | HarmonicBalls/FirstPass/Closure/Sec6.lean:41 | 0 |  |
-| 6.3 | `ManyGoodAnnuliStmt` | `closure_6_3` | HarmonicBalls/FirstPass/Closure/Sec6.lean:45 | 0 |  |
-| 6.4 | `GoodAnnulusProbabilityStmt` | `closure_6_4` | HarmonicBalls/FirstPass/Closure/Sec6.lean:49 | 0 |  |
-| 6.6 | `ManyVeryGoodAnnuliStmt` | `closure_6_6` | HarmonicBalls/FirstPass/Closure/Sec6.lean:53 | 0 |  |
-| 6.7 | `VeryGoodAnnulusProbabilityStmt` | `closure_6_7` | HarmonicBalls/FirstPass/Closure/Sec6.lean:57 | 0 |  |
-| 6.8 | `AnnulusMassBoundByOdometerStmt` | `closure_6_8` | HarmonicBalls/FirstPass/Closure/Sec6.lean:62 | 0 |  |
-| 6.9 | `OdometerHarmonicMeasureBoundStmt` | `closure_6_9` | HarmonicBalls/FirstPass/Closure/Sec6.lean:67 | 0 |  |
-| 6.10 | `OdometerBoundByAnnulusMassStmt` | `closure_6_10` | HarmonicBalls/FirstPass/Closure/Sec6.lean:72 | 0 |  |
-| 6.11 | `VeryGoodAnnulusHarnackTypeStmt` | `closure_6_11` | HarmonicBalls/FirstPass/Closure/Sec6.lean:77 | 0 |  |
-| 6.12 | `ShellDecompositionStmt` | `closure_6_12` | HarmonicBalls/FirstPass/Closure/Sec6.lean:82 | 0 |  |
-| 6.13 | `LowMassSmallOdometerStmt` | `closure_6_13` | HarmonicBalls/FirstPass/Closure/Sec6.lean:87 | 0 |  |
+| 6.1 | `HarnackTypeEstimateStmt` | `closure_6_1` | HarmonicBalls/FirstPass/Closure/Sec6.lean:37 | 3 | hDG hCC hE |
+| 6.2 | `HarnackTypeComponentStmt` | `closure_6_2` | HarmonicBalls/FirstPass/Closure/Sec6.lean:41 | 3 | hDG hCC hE |
+| 6.3 | `ManyGoodAnnuliStmt` | `closure_6_3` | HarmonicBalls/FirstPass/Closure/Sec6.lean:45 | 3 | hDG hCC hE |
+| 6.4 | `GoodAnnulusProbabilityStmt` | `closure_6_4` | HarmonicBalls/FirstPass/Closure/Sec6.lean:49 | 3 | hDG hCC hE |
+| 6.6 | `ManyVeryGoodAnnuliStmt` | `closure_6_6` | HarmonicBalls/FirstPass/Closure/Sec6.lean:53 | 3 | hDG hCC hE |
+| 6.7 | `VeryGoodAnnulusProbabilityStmt` | `closure_6_7` | HarmonicBalls/FirstPass/Closure/Sec6.lean:57 | 3 | hDG hCC hE |
+| 6.8 | `AnnulusMassBoundByOdometerStmt` | `closure_6_8` | HarmonicBalls/FirstPass/Closure/Sec6.lean:62 | 3 | hDG hCC hE |
+| 6.9 | `OdometerHarmonicMeasureBoundStmt` | `closure_6_9` | HarmonicBalls/FirstPass/Closure/Sec6.lean:67 | 3 | hDG hCC hE |
+| 6.10 | `OdometerBoundByAnnulusMassStmt` | `closure_6_10` | HarmonicBalls/FirstPass/Closure/Sec6.lean:72 | 3 | hDG hCC hE |
+| 6.11 | `VeryGoodAnnulusHarnackTypeStmt` | `closure_6_11` | HarmonicBalls/FirstPass/Closure/Sec6.lean:77 | 3 | hDG hCC hE |
+| 6.12 | `ShellDecompositionStmt` | `closure_6_12` | HarmonicBalls/FirstPass/Closure/Sec6.lean:82 | 3 | hDG hCC hE |
+| 6.13 | `LowMassSmallOdometerStmt` | `closure_6_13` | HarmonicBalls/FirstPass/Closure/Sec6.lean:87 | 3 | hDG hCC hE |
 | 7.1 | `ClusterUpperBoundPolyHighProbStmt` | `closure_7_1` | HarmonicBalls/FirstPass/Closure/Sec78910.lean:88 | 3 | hDG hCC hE |
 | 7.2 | `ClusterTimeContinuityStmt` | `closure_7_2_derivedInputs36` | HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:121 | 4 | hL1 hDG hCC hE |
 | 8.1 | `BoundaryMeasureZeroOfCompactClusterStmt` | `closure_8_1_derivedInputs36` | HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:60 | 4 | hL1 hDG hCC hE |
 | 8.2 | `TypicalPointManyGoodScalesStmt` | `firstPass_8_2_S8d_noWeyl_derivedInputs36` | HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:30 | 4 | hSub hDG hEx hCC |
 | 8.3 | `OriginManyGoodScalesStmt` | `closure_8_3_derivedInputs35` | HarmonicBalls/FirstPass/Phase2/DerivedInputs35.lean:32 | 5 | hholder hDG hN hCC hE |
-| 9.3 | `HarmonicBallBoundarySubsetStmt` | `firstPass_9_3` | HarmonicBalls/FirstPass/S2S3S4S9SA.lean:94 | 0 |  |
-| 9.4 | `RegularOpenEqOfAEEqStmt` | `firstPass_9_4` | HarmonicBalls/FirstPass/S2S3S4S9SA.lean:99 | 0 |  |
+| 9.3 | `HarmonicBallBoundarySubsetStmt` | `firstPass_9_3` | HarmonicBalls/FirstPass/S2S3S4S9SA.lean:94 | 6 | hDG hAff hCC hW hE hN |
+| 9.4 | `RegularOpenEqOfAEEqStmt` | `firstPass_9_4` | HarmonicBalls/FirstPass/S2S3S4S9SA.lean:99 | 6 | hDG hAff hCC hW hE hN |
 | 10.1 | `ClusterBoundedCrossingsStmt` | `firstPass_10_1` | HarmonicBalls/FirstPass/S1S10.lean:64 | 2 | hI2 hE0 |
 | 10.6 | `ComplementComponentBoundarySimpleLoopStmt` | `firstPass_10_6` | HarmonicBalls/FirstPass/S1S10.lean:92 | 3 | h10 h32 hTor |
 | 10.7 | `HarmonicBallComplementBoundaryJordanStmt` | `closure_10_7_derivedInputs36` | HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean:157 | 5 | hL1 hDG hCC hE hTor |
