@@ -87,7 +87,4 @@ theorem dyadic_scaled_power_error_eventually_le
           mul_le_mul_of_nonneg_right hf.le (Real.rpow_nonneg (by norm_num) _)
         _ = _ := one_mul _
 
-#print axioms dyadic_scaled_power_error_eventually_le
-#print axioms dyadic_diameter_threshold_eventually_lt
-#print axioms intermediate_square_threshold_eventually_lt
 end HarmonicBalls

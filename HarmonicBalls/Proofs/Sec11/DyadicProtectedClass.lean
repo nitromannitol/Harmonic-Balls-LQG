@@ -36,5 +36,4 @@ theorem dyadic_class_closed_and_subset (a : ℂ) (L : ℝ) (hL : 0 < L)
     rcases hi with ⟨h1, h2, h3, h4⟩
     constructor <;> [constructor <;> nlinarith; constructor <;> nlinarith]
 
-#print axioms dyadic_class_closed_and_subset
 end HarmonicBalls

@@ -79,6 +79,4 @@ theorem internalMetric_le_dyadicSquareInternalDiameter {Ω : Type*}
       dyadicSquareInternalDiameter D a L n i ω :=
   le_iSup_of_le x (le_iSup_of_le hx (le_iSup_of_le y (le_iSup_of_le hy le_rfl)))
 
-#print axioms IsWholePlaneGFF.aemeasurable_dyadicSquareInternalDiameter
-#print axioms internalMetric_le_dyadicSquareInternalDiameter
 end HarmonicBalls

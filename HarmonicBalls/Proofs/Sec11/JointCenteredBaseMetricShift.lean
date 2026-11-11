@@ -89,6 +89,5 @@ theorem IsWholePlaneGFF.exists_joint_measure_centered_baseMetric_shift_decoder
   · funext n
     exact hg' n
 
-#print axioms IsWholePlaneGFF.exists_joint_measure_centered_baseMetric_shift_decoder
 
 end HarmonicBalls

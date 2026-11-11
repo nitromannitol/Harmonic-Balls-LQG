@@ -45,7 +45,6 @@ theorem exists_positive_measure_finite_tiles_internal_distance_bound
       · exact (hω.2 x hx y hy).trans_le (by exact_mod_cast le_max_right m n)
       · exact (hω.1.2 j hj x hx y hy).trans_le (by exact_mod_cast le_max_left m n)
 
-#print axioms exists_positive_measure_finite_tiles_internal_distance_bound
 
 /-- If a measurable mass event has positive conditional probability, then
 every positive outside event contains a positive-probability seed with that
@@ -70,5 +69,4 @@ theorem exists_positive_conditional_mass_finite_tile_seed
   refine ⟨n, ?_⟩
   simpa only [mem_inter_iff, and_assoc] using hn
 
-#print axioms exists_positive_conditional_mass_finite_tile_seed
 end HarmonicBalls

@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
 Let `h` be a whole-plane Gaussian free field (`IsWholePlaneGFF`) and let `μ` be its zero-charge γ-LQG measure
 (`IsLQGMeasureOfField P γ 0 hcirc μ`, Duplantier–Sheffield 2011, Prop. 1.1; the scope `0 < γ < 2` of the paper is kept
 in the statements). For every deterministic compact Lebesgue-null set `K`, almost surely `μ ω K = 0`. The quantifier
-order is the one of the task: `K` is fixed before `ω`, and no samplewise absolute continuity `μ ω ≪ volume` is used.
+order is: `K` is fixed before `ω`, and no samplewise absolute continuity `μ ω ≪ volume` is used.
 
 Argument (first moment). For `0 < ε ≤ 1` and `‖z‖ ≤ R`, the circle average `h_ε(z)` has variance `2 A_ε(z) - log ε`,
 where `A_ε(z)` is the circle average of `log (max |·| 1)` over `∂B_ε(z)`, and `A_ε(z) ≤ log (R + 1)`. The Gaussian
@@ -27,8 +27,7 @@ zero-charge LQG-null almost surely.
 
 Credit: the import closure of this module contains code by Leonardo Bonanno. It reaches the external LatticeProb
 module `LatticeProb.Prob.Birkhoff` (his LatticeProb formalization of the ergodic theorem) through
-`HarmonicBalls/Proofs/Sec8/BirkhoffPort.lean`; this module does not cite that code directly. The closure check is
-recorded in `docs/campaign/audits/FixedSquareFrontierNull.md`.
+`HarmonicBalls/Proofs/Sec8/BirkhoffPort.lean`; this module does not cite that code directly.
 -/
 
 namespace HarmonicBalls

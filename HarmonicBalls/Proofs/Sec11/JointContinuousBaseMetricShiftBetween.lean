@@ -179,5 +179,4 @@ theorem IsWholePlaneGFF.exists_joint_measure_continuous_baseMetric_shift_decoder
     exact h
 
 
-#print axioms IsWholePlaneGFF.exists_joint_measure_continuous_baseMetric_shift_decoder_between
 end HarmonicBalls

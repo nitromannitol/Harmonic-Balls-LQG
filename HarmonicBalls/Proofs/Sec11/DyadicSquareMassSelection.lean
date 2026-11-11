@@ -81,6 +81,4 @@ theorem IsWholePlaneGFF.exists_complex_square_mass_class_after
   refine ⟨n, hN, j, ?_⟩
   simpa only [X', ite_eq_left hN] using hj
 
-#print axioms IsWholePlaneGFF.exists_complex_square_mass_class_after
-#print axioms IsWholePlaneGFF.exists_complex_square_mass_class_of_power_error
 end HarmonicBalls

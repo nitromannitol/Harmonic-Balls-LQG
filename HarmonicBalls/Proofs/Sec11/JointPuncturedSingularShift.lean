@@ -126,6 +126,5 @@ theorem IsWholePlaneGFF.exists_joint_punctured_singular_weyl_shift_decoder
     · funext n
       exact hg' n
 
-#print axioms IsWholePlaneGFF.exists_joint_punctured_singular_weyl_shift_decoder
 
 end HarmonicBalls

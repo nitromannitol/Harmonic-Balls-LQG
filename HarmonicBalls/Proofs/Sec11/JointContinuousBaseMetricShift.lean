@@ -115,6 +115,5 @@ theorem IsWholePlaneGFF.exists_joint_measure_continuous_baseMetric_shift_decoder
     rw [Measure.map_map hK (hG.comp hX), Measure.map_map hK (hG.comp hY)] at h
     exact h
 
-#print axioms IsWholePlaneGFF.exists_joint_measure_continuous_baseMetric_shift_decoder
 
 end HarmonicBalls

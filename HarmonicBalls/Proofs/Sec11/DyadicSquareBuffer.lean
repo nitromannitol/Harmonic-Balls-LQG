@@ -41,5 +41,4 @@ theorem complex_enlarged_dyadic_square_subset_buffer
   rcases hz with ⟨h1, h2, h3, h4⟩
   constructor <;> [constructor <;> nlinarith; constructor <;> nlinarith]
 
-#print axioms complex_enlarged_dyadic_square_subset_buffer
 end HarmonicBalls

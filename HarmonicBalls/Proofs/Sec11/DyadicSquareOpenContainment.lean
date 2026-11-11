@@ -98,7 +98,4 @@ theorem IsWholePlaneGFF.exists_complex_square_mass_class_inside_open
     X b c d p hp e he hcond hmargin hbound
   exact ⟨n, j, hN n hn, hj⟩
 
-#print axioms IsWholePlaneGFF.exists_complex_square_mass_class_inside_open
-#print axioms closedSquare_buffer_subset_thickening
-#print axioms complex_enlarged_dyadic_square_eventually_subset_open
 end HarmonicBalls

@@ -53,5 +53,4 @@ theorem IsWholePlaneGFF.exists_dyadic_square_seed
     exact (internalMetric_le_dyadicSquareInternalDiameter D a L n i ω hx hy).trans
       (hω.1 i).le
 
-#print axioms IsWholePlaneGFF.exists_dyadic_square_seed
 end HarmonicBalls

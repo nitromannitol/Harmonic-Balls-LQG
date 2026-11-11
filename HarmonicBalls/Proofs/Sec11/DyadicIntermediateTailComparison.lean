@@ -106,11 +106,4 @@ theorem dyadicIntermediateInternalDiameter_tail_le
   intro ω hω
   exact lt_of_lt_of_le hω (dyadicIntermediateInternalDiameter_le_closedSquareDiameter D a L hL n i ω)
 
-#print axioms dyadicIntermediateInternalDiameter_le_closedSquareDiameter
-#print axioms complexIntermediateGridSquare_eq_closedSquare
-#print axioms complexGridCenter_mem_closedSquare
-#print axioms complexIntermediateGridSquare_eq_centered
-#print axioms dyadicGridCenter_mem_closedSquare
-#print axioms metricDiameterTailExponent_gt_two
-#print axioms dyadicIntermediateInternalDiameter_tail_le
 end HarmonicBalls

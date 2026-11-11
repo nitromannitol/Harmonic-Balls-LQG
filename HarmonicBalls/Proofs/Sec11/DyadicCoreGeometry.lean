@@ -50,6 +50,4 @@ theorem dyadic_intermediate_connected_core_geometry {N : ℕ} (a : ℂ) (r : ℝ
   exact ⟨hc, hconn, hcover, hattach, hd, V, T, hVo, hVc, hCV, hVcompact,
     hTo, hVT, hTW, hTF, hTS⟩
 
-#print axioms union_complexGridSquare_eq_class
-#print axioms dyadic_intermediate_connected_core_geometry
 end HarmonicBalls

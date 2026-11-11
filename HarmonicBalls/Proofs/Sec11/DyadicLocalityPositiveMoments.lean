@@ -172,8 +172,5 @@ theorem IsWholePlaneGFF.exists_small_pinch_scales_of_unit_probability_and_positi
   obtain ⟨n, hn, hevent⟩ := exists_small_dyadic_scale_of_positive_block_density hδ.1 hω r hr
   exact ⟨n, hn, hevent, pinchPointEvent_of_internalBounds hmetric hevent⟩
 
-#print axioms IsWholePlaneGFF.exists_small_pinch_scales_of_unit_probability_and_positive_moments
-#print axioms IsWholePlaneGFF.exists_puncture_criterion_of_lqgMetric_positive_moments
-#print axioms IsWholePlaneGFF.exists_dyadic_locality_criterion_of_positive_diameter_moments
 
 end HarmonicBalls

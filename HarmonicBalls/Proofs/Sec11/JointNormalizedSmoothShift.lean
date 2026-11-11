@@ -134,8 +134,6 @@ theorem IsWholePlaneGFF.exists_joint_singular_decoder_of_diameter_moments
     h.exists_joint_normalized_smooth_shift_decoder hμ hfull hε c G hG hGeq p hp B hB hg
   exact ⟨c, R, hR.1, hR.2, hc, F, hF, heq, hf, hb⟩
 
-#print axioms IsWholePlaneGFF.exists_joint_singular_decoder_of_diameter_moments
 
-#print axioms IsWholePlaneGFF.exists_joint_normalized_smooth_shift_decoder
 
 end HarmonicBalls

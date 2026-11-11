@@ -117,8 +117,5 @@ theorem IsWholePlaneGFF.exists_puncture_criterion_of_fixed_diameter_moments
     (closedBall_compact_connected_subset_double (c i) hε).2.2.1
     (r := Real.exp (-(s + n))) (Real.exp_pos _)).le
 
-#print axioms IsWholePlaneGFF.exists_puncture_criterion_of_fixed_diameter_moments
-#print axioms IsWholePlaneGFF.lintegral_scaledCompactInternalDiameter_eq
-#print axioms IsWholePlaneGFF.identDistrib_baseMetric_internalDiameter
 
 end HarmonicBalls

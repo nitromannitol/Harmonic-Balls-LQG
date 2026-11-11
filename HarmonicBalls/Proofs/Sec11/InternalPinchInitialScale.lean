@@ -74,6 +74,5 @@ theorem ae_positive_internal_pinchBlockDensity_of_unitScale_stationary_lqg_event
     hγ hγ₂ hα hgff hμ hD hmloc haxioms htrivial hstat' hpos'
 
 
-#print axioms ae_positive_internal_pinchBlockDensity_of_unitScale_stationary_lqg_event
 
 end HarmonicBalls

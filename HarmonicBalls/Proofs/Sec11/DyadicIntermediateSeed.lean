@@ -56,5 +56,4 @@ theorem IsWholePlaneGFF.exists_dyadic_intermediate_square_seed
       exact le_iSup_of_le x (le_iSup_of_le hx (le_iSup_of_le y (le_iSup_of_le hy le_rfl)))
     exact hle.trans (hω.1 i).le
 
-#print axioms IsWholePlaneGFF.exists_dyadic_intermediate_square_seed
 end HarmonicBalls

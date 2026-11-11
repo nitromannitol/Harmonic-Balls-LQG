@@ -130,7 +130,5 @@ theorem IsWholePlaneGFF.exists_joint_measure_internal_baseMetric_shift_decoder
     rw [Measure.map_map hK (hG.comp hX), Measure.map_map hK (hG.comp hY)] at hh
     exact hh
 
-#print axioms exists_measurable_internalMetric_values_decoder
-#print axioms IsWholePlaneGFF.exists_joint_measure_internal_baseMetric_shift_decoder
 
 end HarmonicBalls

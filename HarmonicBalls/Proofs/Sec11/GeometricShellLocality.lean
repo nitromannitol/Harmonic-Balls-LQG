@@ -58,7 +58,5 @@ theorem IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_geometric_dec
   have hy0 : y ≠ 0 := by simpa only [mem_singleton_iff] using hy.2
   exact hω.internalMetric_sdiff_zero_eq_of_geometric_decay V hR hq hq1 hC hb hdiam hx0 hy0
 
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_geometric_decay
-#print axioms IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_geometric_decay
 
 end HarmonicBalls

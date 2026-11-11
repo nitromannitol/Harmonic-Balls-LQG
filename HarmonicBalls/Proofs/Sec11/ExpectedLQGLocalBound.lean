@@ -37,8 +37,7 @@ Argument.
 
 Credit: the import closure of this module contains code by Leonardo Bonanno. It reaches the external LatticeProb
 module `LatticeProb.Prob.Birkhoff` (his LatticeProb formalization of the ergodic theorem) through
-`HarmonicBalls/Proofs/Sec8/BirkhoffPort.lean`; this module does not cite that code directly. The closure check is
-recorded in `docs/campaign/audits/ExpectedLQGLocalBound.md`.
+`HarmonicBalls/Proofs/Sec8/BirkhoffPort.lean`; this module does not cite that code directly.
 -/
 
 namespace HarmonicBalls

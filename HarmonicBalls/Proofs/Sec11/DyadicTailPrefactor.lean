@@ -41,7 +41,6 @@ theorem dyadic_scaled_power_error_prefactor_eventually_le
           mul_le_mul_of_nonneg_right hf.le (Real.rpow_nonneg (by norm_num) _)
         _ = _ := one_mul _
 
-#print axioms dyadic_scaled_power_error_prefactor_eventually_le
 /-- A uniform intermediate-square tail with a fixed prefactor yields the
 prefactor-free dyadic tail required by the pinch construction. -/
 theorem dyadicIntermediateInternalDiameter_tail_of_prefactor
@@ -68,5 +67,4 @@ theorem dyadicIntermediateInternalDiameter_tail_of_prefactor
     ring
   exact (hn i).trans (ENNReal.ofReal_le_ofReal (by simpa only [hside] using hs))
 
-#print axioms dyadicIntermediateInternalDiameter_tail_of_prefactor
 end HarmonicBalls

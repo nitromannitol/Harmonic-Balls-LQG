@@ -155,8 +155,6 @@ theorem IsWholePlaneGFF.exists_dyadic_joint_measure_metric_decoder_of_diameter_m
     h.exists_joint_shifted_measure_metric_decoder hμ hfull hε c G hG hGeq p hp
   exact ⟨c, R, hR.1, hR.2, hc, F, hFm, hFbase, hFshift⟩
 
-#print axioms IsWholePlaneGFF.exists_dyadic_joint_measure_metric_decoder_of_diameter_moments
 
-#print axioms IsWholePlaneGFF.exists_joint_shifted_measure_metric_decoder
 
 end HarmonicBalls

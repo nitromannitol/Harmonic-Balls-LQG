@@ -95,7 +95,4 @@ theorem IsWholePlaneGFF.aemeasurable_dyadicIntermediateInternalDiameter
     (isOpen_complexOpenEnlargedGridSquare a _ i)
     (complexIntermediateGridSquare_subset_open_enlarged a _ hr i)).aemeasurable_fst
 
-#print axioms complexGridSquare_subset_interior_intermediate
-#print axioms complexIntermediateGridSquare_subset_open_enlarged
-#print axioms IsWholePlaneGFF.aemeasurable_dyadicIntermediateInternalDiameter
 end HarmonicBalls

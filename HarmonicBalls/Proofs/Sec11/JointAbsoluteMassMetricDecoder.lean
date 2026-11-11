@@ -64,7 +64,6 @@ theorem IsWholePlaneGFF.exists_joint_absolute_mass_metric_shift_decoder
         ξ * (-(hC ω ψ + ∫ x, g x * ψ x)) = 0 := by ring
     rw [hz, Real.exp_zero, one_mul]
 
-#print axioms IsWholePlaneGFF.exists_joint_absolute_mass_metric_shift_decoder
 
 /-- The joint decoder also recovers the whole continuous metric, not merely
 its distances at a prescribed countable family of endpoints. -/
@@ -130,5 +129,4 @@ theorem IsWholePlaneGFF.exists_joint_absolute_mass_continuous_metric_shift_decod
   rw [hvec, hdecodeH]
   rfl
 
-#print axioms IsWholePlaneGFF.exists_joint_absolute_mass_continuous_metric_shift_decoder
 end HarmonicBalls

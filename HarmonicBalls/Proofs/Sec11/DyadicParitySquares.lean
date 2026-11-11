@@ -50,8 +50,6 @@ theorem gridSquare_union_subset_classes {N : ℕ} (r : ℝ) :
   change x ∈ ⋃ k : Fin N × Fin N, if squareParity k = squareParity i then gridSquare r k else ∅
   exact mem_iUnion.mpr ⟨i, by simpa using hi⟩
 
-#print axioms gridSquare_subset_enlarged
-#print axioms gridSquare_union_subset_classes
 
 /-- Equal parity and distinct natural indices put the enlarged intervals
 strictly apart. -/
@@ -100,6 +98,4 @@ theorem enlarged_grid_squares_disjoint {N : ℕ} (r : ℝ) (hr : 0 < r)
   · exact (disjoint_left.mp (enlarged_grid_intervals_disjoint r hr _ _ hp2 h2))
       ⟨hx.2.2.1, hx.2.2.2⟩ ⟨hy.2.2.1, hy.2.2.2⟩
 
-#print axioms enlarged_grid_intervals_disjoint
-#print axioms enlarged_grid_squares_disjoint
 end HarmonicBalls

@@ -47,6 +47,5 @@ theorem ae_positive_internal_pinchBlockDensity_of_stationary_lqg_event_birkhoff
   · exact hstat
   · exact hpos
 
-#print axioms ae_positive_internal_pinchBlockDensity_of_stationary_lqg_event_birkhoff
 
 end HarmonicBalls

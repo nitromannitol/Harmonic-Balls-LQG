@@ -80,6 +80,5 @@ theorem ae_internal_pinchBlockDensity_of_unitScale_stationary_lqg_event_of_lt_pr
     (pointwiseBirkhoff_of_latticeProb _ _ _) hstat' δ hδ' 
 
 
-#print axioms ae_internal_pinchBlockDensity_of_unitScale_stationary_lqg_event_of_lt_prob
 
 end HarmonicBalls

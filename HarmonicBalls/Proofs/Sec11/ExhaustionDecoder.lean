@@ -75,10 +75,7 @@ theorem cutoff_normalization_factor_pairing (ξ t : ℝ) (ψ g f₀ f : ℂ → 
   exact cutoff_normalization_factor ξ (t + ∫ z, g z * ψ z)
     (∫ z, f₀ z * ψ z) (∫ z, f z * ψ z)
 
-#print axioms cutoff_normalization_factor_pairing
 
-#print axioms cutoff_normalization_factor
 
-#print axioms exists_normalized_iInf_decoder
 
 end HarmonicBalls

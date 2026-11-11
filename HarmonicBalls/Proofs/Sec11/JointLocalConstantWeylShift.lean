@@ -120,9 +120,5 @@ theorem ae_joint_local_decoder_weyl_eq_of_constOn
   exact joint_local_decoder_weyl_eq_of_constOn α hC ω hm ξ γ g hV hVU hR hRU hconst
     (hw g hg hcomp hneg).1 (fun x y => (hfinite g hneg x y).2) p (b ω) (μ ω) F hf
 
-#print axioms joint_local_decoder_of_scaled_metric
-#print axioms ae_joint_local_decoder_weyl_eq_of_constOn
-#print axioms normalizedRestriction_withDensity_eq_of_constOn
-#print axioms joint_local_decoder_weyl_eq_of_constOn
 
 end HarmonicBalls

@@ -118,8 +118,6 @@ theorem IsWholePlaneGFF.exists_pinch_frequency_criterion_of_finite_diameter_mome
     h.ae_internal_pinch_frequency_of_normalizedLQG hAff hCC hγ hγ₂ hα hμ hfull
       𝔇 h𝔇 hD haxioms hconfig M (hcriterion hmom) δ hδ⟩
 
-#print axioms IsWholePlaneGFF.exists_pinch_frequency_criterion_of_finite_diameter_moments
 
-#print axioms IsWholePlaneGFF.exists_dyadic_locality_criterion_of_finite_diameter_moments
 
 end HarmonicBalls

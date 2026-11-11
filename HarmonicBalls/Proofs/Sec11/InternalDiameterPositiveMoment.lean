@@ -139,9 +139,5 @@ theorem IsWholePlaneGFF.exists_puncture_criterion_of_fixed_diameter_positive_mom
             (ξ * lqgQ γ))) n i ω hle) hp.le
     _ ≤ C := hbound n i hi
 
-#print axioms IsWholePlaneGFF.exists_puncture_criterion_of_fixed_diameter_positive_moments
-#print axioms scaledBallNormalizedInternalDiameter_le_compact_of_scale_le
-#print axioms IsWholePlaneGFF.lintegral_rpow_scaledCompactInternalDiameter_eq
-#print axioms IsWholePlaneGFF.exists_uniform_rpow_scaledCompactInternalDiameter_bound
 
 end HarmonicBalls

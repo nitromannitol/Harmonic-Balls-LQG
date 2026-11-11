@@ -98,6 +98,4 @@ theorem dyadic_intermediate_compact_core {N : ℕ} (a : ℂ) (r : ℝ) (hr : 0 <
   · intro i
     exact complexGridSquare_subset_interior_intermediate a r hr i.1
 
-#print axioms compact_core_of_disjoint_closed_pieces
-#print axioms dyadic_intermediate_compact_core
 end HarmonicBalls
