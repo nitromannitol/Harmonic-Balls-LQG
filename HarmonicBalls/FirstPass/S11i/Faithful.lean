@@ -95,7 +95,7 @@ noncomputable abbrev lqgXi (γ : ℝ) : ℝ :=
 
 /-- Lemma 11.13 in the canonical form: as `CorrectedLemma11_13Stmt`, but with the canonical exponent
 `ξ = lqgXi γ` (Correction 1) and the model `(Ω, P, hC, hcirc, μ, D)` quantified before `∃ δ`, so that the density may
-depend on the model (Correction 3, the exact PASS target). The probability
+depend on the model (Correction 3, the exact target). The probability
 normalisation of `P` is not a binder: `IsWholePlaneGFF P hC hcirc` gives `IsProbabilityMeasure P` by
 `FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF` (`FirstPass/S11af.lean:24`) (Correction 2). -/
 def CorrectedLemma11_13CanonicalStmt : Prop :=

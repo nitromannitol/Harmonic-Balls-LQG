@@ -88,7 +88,7 @@ Section 11 (`Closure/Sec11.lean`)
 | 11.14 `PinchEventMetricBallConsequenceStmt` | `closure_11_14` | hAx (FROZEN) | closed |
 | 11.15 `PinchFirstEventFaithfulStmt` | `closure_11_15` | hCM hMet hWSC hAx hExists (FROZEN) | closed |
 | 11.9 `SmallMetricDiameterLargeMassStmt` | `closure_11_9` | FROZEN, PROPOSED and CITED inputs of 11.9 and 11.10 (table in `Closure/Sec11.lean`) | closed |
-| 11.12 `CorrectedLemma11_12Stmt` | `closure_11_12` | Inputs (`hLen`, `hμW`, `hLoc`, `hCanon`, `hNonat`, `hExists`, `hfr`, `hmass`, `hCMAbs`, `hCMRew`, `hComp`, `hMf`, `hDiam`, `hMk`, `hholder`, `hShift`, `hFD`, `hDC`, `hCMT`, `hPos10`, `hMassM`, `hSupM`, `hFin`, `hW`, `hM1`, `hM2`, `hDG`, `hCC`, `hE`, `hAx`); hN2 (FROZEN); I2 derived inside the proof (`S11m/Final11_12.lean`; no `hgrowth` argument) | closed (`#print axioms`: propext, Classical.choice, Quot.sound) |
+| 11.12 `CorrectedLemma11_12Stmt` | `closure_11_12` | Inputs (`hLen`, `hμW`, `hLoc`, `hCanon`, `hNonat`, `hExists`, `hfr`, `hmass`, `hCMAbs`, `hCMRew`, `hComp`, `hMf`, `hDiam`, `hMk`, `hholder`, `hShift`, `hFD`, `hDC`, `hCMT`, `hPos10`, `hMassM`, `hSupM`, `hFin`, `hW`, `hM1`, `hM2`, `hDG`, `hCC`, `hE`, `hAx`); hN2 (FROZEN); I2 derived inside the proof (`S11m/Final11_12.lean`; no `hgrowth` argument) | closed (axioms: propext, Classical.choice, Quot.sound) |
 | 11.16 `PinchSecondEventFaithfulStmt` | `closure_11_16` | closures 11.15 and 11.9; hholder (CITED, Prop 2.5); FROZEN; PROPOSED hEx hWeyl hNa0 hNa | closed |
 | 11.17 `PinchThirdEventFaithfulStmt` | `closure_11_17` | closure 11.16; hN2 (FROZEN) | closed |
 

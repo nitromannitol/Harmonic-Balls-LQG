@@ -8,7 +8,7 @@ import HarmonicBalls.FirstPass.S11t
 
 `firstPass_11_13_closed` concludes `CorrectedLemma11_13CanonicalStmt.{0}` from frozen and proposed inputs only. It is
 `firstPass_11_13` (`S11i/Final11_13.lean:213`) with its open binder `hCal` replaced by
-`step8EventCalibration` (`S11i/Step8CalibrationClose.lean:37`, commit 89f7c26c).
+`step8EventCalibration` (`S11i/Step8CalibrationClose.lean:37`).
 
 Why a separate module. `S11i/Step8CalibrationClose.lean` imports `S11i/Final11_13.lean` (for the projections
 `lqgMetricExponentPositive_derived` and `lqgMetricSatisfiesAxiomsUnivFrozen_zero`). So `Final11_13.lean` cannot import

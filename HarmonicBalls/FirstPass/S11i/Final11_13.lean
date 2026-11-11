@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11i.InsertionTransfer
 import HarmonicBalls.FirstPass.Frozen.S11rMetric
 
 /-!
-# Lemma 11.13 (canonical), first-pass final assembly at universe 0
+# Lemma 11.13 (canonical), final assembly at universe 0
 
 `HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_final` concludes `CorrectedLemma11_13CanonicalStmt.{0}`
 (`HarmonicBalls/FirstPass/S11i/Faithful.lean:102`). Universe 0 is fixed: the paper
@@ -43,7 +43,7 @@ namespace HarmonicBalls.FirstPassS11iFinal11_13
 
 open MeasureTheory
 
-/-- **Lemma 11.13 (canonical), first-pass final assembly, universe 0.** `CorrectedLemma11_13CanonicalStmt.{0}` from the
+/-- **Lemma 11.13 (canonical), final assembly, universe 0.** `CorrectedLemma11_13CanonicalStmt.{0}` from the
 frozen and proposed inputs (classes in the module docstring) and the named inputs `hN2`, `hCal`, `hIns`, `hCC0`. The only
 open named inputs are `hN2`, `hCal`, `hIns`; `hCC0` is Proposed. -/
 theorem firstPass_11_13_final
@@ -170,7 +170,7 @@ theorem lqgMetricExponentPositive_derived (hExists : WholePlaneGFFExistsFrozen.{
 `firstPass_11_13` is the counted theorem `CorrectedLemma11_13CanonicalStmt.{0}`. It is the route-1 assembly
 (`firstPass_11_13_final_route1`) with two changes:
 * the insertion transfer at `k = 0` (`hK0`) is discharged by
-  `HarmonicBalls.FirstPassS11iInsertionTransfer.allModelsAt_insertion_of_zero_k0` (`S11i/InsertionTransfer.lean:485`, commit be5d91ff). Its binders are threaded: `hCM := hCMRew`; `hEx := hE` at `α = 0`; `hNon := hNonat` at `α`;
+  `HarmonicBalls.FirstPassS11iInsertionTransfer.allModelsAt_insertion_of_zero_k0` (`S11i/InsertionTransfer.lean:485`). Its binders are threaded: `hCM := hCMRew`; `hEx := hE` at `α = 0`; `hNon := hNonat` at `α`;
   `hK` the frozen binder below; `hR := hN2` at `ξ = lqgXi γ` (`0 < lqgXi γ` by `lqgGraphDimension_pos`,
   `Defs/LQGGraphDistance.lean:110`); `hLF := hAx`. The binder `hK0` disappears; the new binder is `hK`.
 * `hN2`, which is also `hR`, is the frozen wrapper `LocalMetricReplacementFrozen` (`Frozen/S11rMetric.lean:33`), bound once.

@@ -4,12 +4,12 @@ import HarmonicBalls.Defs.LQG
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# First-pass frozen inputs: whole-plane GFF existence and the normalised local metric decoder
+# Frozen inputs: whole-plane GFF existence and the normalised local metric decoder
 
 Four EXTERNAL facts, all general mathematics, not specific to this paper, all `def ... : Prop`s, never axioms.
 (1) `WholePlaneGFFExistsFrozen`: existence of a whole-plane GFF, used by the realization lemma `hmodel_at_gamma`
 (FirstPass/S11r.lean, the model hypothesis of Lemma 11.13 in FirstPass/S11i/CertificateCanonical.lean).
-(2) `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`: the fixed-metric measurable local metric decoder (answer section
+(2) `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`: the fixed-metric measurable local metric decoder (section
 4.1, equation (21), corrected order), the external input of the local metric replacement (`LocalMetricReplacementStmt`,
 S11r/LocalMetricReplacement.lean). The retired unnormalised `LocalLQGMetricNormalizedMeasurableFrozen` is kept only for the record.
 (3) `RootedPhysicalMetricContinuousAtInsertionFrozen`: continuity of the physical metric of the rooted field `f_z` at its
@@ -55,7 +55,7 @@ Reading: `e^{-ξ⟨g,ρ⟩} D_g` is the metric `D_{g_D}` of the normalised field
 a function of the mean-zero local observation; the statement is that this metric is a Borel function of that observation,
 with the normalisation fixed by `ρ`. Continuity of `D_g` on `D × D` is part of the cited proper-domain statement.
 Sources: Gwynne-Miller, arXiv:1905.00383v3 §1.2, p. 6 (the metric as a measurable map from distributions to continuous
-metrics), Theorem 1.2, p. 6 (existence and uniqueness), Remark 1.5, p. 8 (proper domains); answer §4.1, eq. (21).
+metrics), Theorem 1.2, p. 6 (existence and uniqueness), Remark 1.5, p. 8 (proper domains); §4.1, eq. (21).
 Used by: the local metric replacement (`LocalMetricReplacementStmt`, S11r/LocalMetricReplacement.lean), via the
 countable consistency (22) and the rooted identity (20). -/
 def LocalLQGMetricNormalizedMeasurableFrozen : Prop :=

@@ -226,11 +226,11 @@ lemma caWeylRel {M₀ Mt D : ℂ → ℂ → ℝ} (hM₀ : IsEuclideanLengthMetr
 /-- **Local certificate `PinchLocalCertificateStmt` from named inputs.** The decoders, the base comparison, the
 positivity and the finiteness enter only as the hypotheses below (frozen Props or Proposed/External statements):
 * `hAx`, `hLen`, `hN2`, `hBase`, `hμW`: the metric field axioms, the length property of the base metric, the
-  local metric replacement, the base comparison (z6, `S11ak.LQGMetricBaseComparisonStmt`), and the Weyl scaling of
+  local metric replacement, the base comparison (`S11ak.LQGMetricBaseComparisonStmt`), and the Weyl scaling of
   the measure (Proposed, Fact 2.1 III);
 * `hLoc`, `hNonat`, `hFull`: the measure decoder inputs of `measureDecoder_ball_zero`;
 * `hgrowth`: the volume growth input of the finiteness of `annulusGreenPotentialSup`;
-* `hfr`, ..., `hS`: the inputs of the positivity `S11an.pinchLocal_events_pos_discharged` (z3). -/
+* `hfr`, ..., `hS`: the inputs of the positivity `S11an.pinchLocal_events_pos_discharged`. -/
 theorem pinchLocalCertificate_of_inputs
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})
