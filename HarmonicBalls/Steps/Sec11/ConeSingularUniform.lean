@@ -50,5 +50,3 @@ theorem cone_singular_uniform_measurable_witness
   exact ⟨A, hA, hAm, (hpbound P hC hcirc ν hG hν n z).trans hAbound⟩
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.cone_singular_uniform_measurable_witness

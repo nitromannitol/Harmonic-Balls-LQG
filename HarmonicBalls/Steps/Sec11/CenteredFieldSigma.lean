@@ -145,12 +145,5 @@ theorem fieldSigmaAlgebra_sub_reference_eq_modConst
   funext ω
   simp only [fieldPairing, centeredTestPairing_eq_of_linearOnTests (hC ω) (hlin ω) hψ hφ]
 
-#print axioms IsTestFunction.exists_integral_eq_one
-#print axioms fieldSigmaAlgebra_centeredTestPairing_le_modConst
-#print axioms fieldSigmaAlgebra_centeredTestPairing_eq_modConst
-#print axioms exists_centeredTestPairing_fieldSigmaAlgebra_eq_modConst
-#print axioms centeredTestPairing_add_const
-#print axioms centeredTestPairing_eq_of_linearOnTests
-#print axioms fieldSigmaAlgebra_sub_reference_eq_modConst
 
 end HarmonicBalls

@@ -235,10 +235,5 @@ theorem coneBadEventProbability_of_literature_sharp
       (fun Ω _ P γ hC hcirc => hE Ω P γ 0 hC hcirc) hN
   exact coneBadEventProbability_of_existence_sharp hS hgrowth hE
 
-#print axioms cone_annulus_comparable_of_singular_weight_sharp
-#print axioms coneMassEvent_of_singular_weight_sharp
-#print axioms cone_singular_universal_measurable_witness_sharp
-#print axioms coneBadEventProbability_of_existence_sharp
-#print axioms coneBadEventProbability_of_literature_sharp
 
 end HarmonicBalls

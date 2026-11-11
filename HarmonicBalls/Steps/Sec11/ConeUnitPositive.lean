@@ -102,7 +102,3 @@ theorem cone_event_probability_eq_across_spaces
     (measurableSet_coneMassEvent Q M r z hqm)
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.cone_unit_event_positive
-
-#print axioms HarmonicBalls.cone_event_probability_eq_across_spaces

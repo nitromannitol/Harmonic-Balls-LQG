@@ -133,10 +133,5 @@ theorem exists_scaled_ball_criterion_of_compact_diameter_moments
   intro n
   exact (scaledBallDiameterWithScale_lintegral_le_compact P D hcirc s ξ ε c a n i).trans (hbound n)
 
-#print axioms image_real_smul_closedBall
-#print axioms closedBall_compact_connected_subset_double
-#print axioms scaledBallDiameterWithScale_le_compact
-#print axioms scaledBallDiameterWithScale_lintegral_le_compact
-#print axioms exists_scaled_ball_criterion_of_compact_diameter_moments
 
 end HarmonicBalls

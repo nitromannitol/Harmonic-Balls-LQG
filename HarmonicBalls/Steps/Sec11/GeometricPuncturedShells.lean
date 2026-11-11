@@ -70,8 +70,5 @@ theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_geometric_shells
   · exact hx
   · exact hy
 
-#print axioms geometricShell_covers_tail
-#print axioms geometricShell_bridge
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_geometric_shells
 
 end HarmonicBalls

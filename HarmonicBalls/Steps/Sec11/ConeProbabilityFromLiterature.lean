@@ -15,7 +15,7 @@ universe u
 
 /-- Lemma 11.8 follows from the staged whole-plane ball-mass estimate,
 coordinate-change property and existence of the subcritical LQG measure.
-The proposed inputs remain subject to operator source review. -/
+The proposed inputs remain subject to source review. -/
 theorem coneBadEventProbability_of_literature
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
@@ -49,5 +49,3 @@ theorem coneBadEventProbability_of_literature
   exact coneBadEventProbability_of_existence hS hgrowth hE
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.coneBadEventProbability_of_literature

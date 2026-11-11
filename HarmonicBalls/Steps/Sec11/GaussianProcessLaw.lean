@@ -124,10 +124,7 @@ theorem wholePlaneGFF_trim_fieldSigmaAlgebra_eq
   rw [trim_measurableSet_eq _ hA, trim_measurableSet_eq _ hA,
     ← Measure.map_apply hf hB, ← Measure.map_apply hf hB, heq]
 
-#print axioms wholePlaneGFF_trim_fieldSigmaAlgebra_eq
 
-#print axioms wholePlaneGFF_localFieldPairings_map_eq
 
-#print axioms gaussian_process_map_eq_of_mean_covariance
 
 end HarmonicBalls

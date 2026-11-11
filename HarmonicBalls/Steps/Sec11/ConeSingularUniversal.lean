@@ -49,5 +49,3 @@ theorem cone_singular_universal_measurable_witness
     exact hAbound
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.cone_singular_universal_measurable_witness

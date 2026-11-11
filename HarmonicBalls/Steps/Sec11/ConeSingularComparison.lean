@@ -81,6 +81,3 @@ theorem coneMassEvent_of_singular_weight
   · rw [ENNReal.ofReal_mul hM]
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.cone_annulus_comparable_of_singular_weight
-#print axioms HarmonicBalls.coneMassEvent_of_singular_weight

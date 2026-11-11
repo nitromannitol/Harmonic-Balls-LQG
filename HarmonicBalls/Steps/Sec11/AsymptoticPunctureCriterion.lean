@@ -58,6 +58,5 @@ theorem exists_scaled_ball_criterion_of_exponent_and_compact_moments
       hθQ he ha
   · exact hmom
 
-#print axioms exists_scaled_ball_criterion_of_exponent_and_compact_moments
 
 end HarmonicBalls

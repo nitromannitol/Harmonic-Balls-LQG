@@ -101,8 +101,5 @@ theorem measure_internalMetric_cover_chain_exceedance_le
         (C ω) hz hcover hWU hd hx hy)) hbad
     _ ≤ _ := measure_biUnion_finset_le _ _
 
-#print axioms measure_internalMetric_cover_chain_exceedance_le
-#print axioms IsEuclideanLengthMetric.internalMetric_le_sum_finite_cover_chain
-#print axioms IsEuclideanLengthMetric.internalMetric_le_of_finite_cover_chain
 
 end HarmonicBalls

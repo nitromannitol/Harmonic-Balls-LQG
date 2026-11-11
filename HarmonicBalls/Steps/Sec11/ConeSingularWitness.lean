@@ -41,5 +41,3 @@ theorem exists_cone_measurable_subset_of_singular_weight
   exact coneMassEvent_of_singular_weight hr hM hd hω hevent
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.exists_cone_measurable_subset_of_singular_weight

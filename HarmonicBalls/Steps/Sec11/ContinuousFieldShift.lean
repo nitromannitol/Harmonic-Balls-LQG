@@ -140,11 +140,5 @@ theorem IsWholePlaneGFF.ae_metric_background_add_random_constant
     ENNReal.toReal_ofReal (Real.exp_nonneg _), ENNReal.toReal_ofReal horig] at hr
   exact hr
 
-#print axioms fieldSigmaAlgebra_background_add_random_constant
-#print axioms fieldSigmaAlgebra_addFunPairing
-#print axioms IsWholePlaneGFF.ae_metric_background_add_random_constant
-#print axioms eq_of_distribution_measurable_of_testPairing_eq
-#print axioms addFunPairing_addFunPairing_apply_test
-#print axioms IsLQGMetric.addFunPairing_addFunPairing
 
 end HarmonicBalls

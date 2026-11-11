@@ -116,7 +116,3 @@ theorem exists_cone_bump_height {γ a b : ℝ} (hγ : 0 < γ) (ha : 0 < a) (hb :
   nlinarith
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.coneMassEvent_of_bump
-#print axioms HarmonicBalls.exists_cone_smooth_bump
-#print axioms HarmonicBalls.exists_cone_bump_height

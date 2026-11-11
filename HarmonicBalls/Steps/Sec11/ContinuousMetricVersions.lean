@@ -62,6 +62,5 @@ theorem exists_internalMetric_version_of_countable
     simp only [hEq] at heq
     simpa only [G, hx, hy, ↓reduceDIte] using heq.symm
 
-#print axioms exists_internalMetric_version_of_countable
 
 end HarmonicBalls

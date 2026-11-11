@@ -42,5 +42,3 @@ theorem coneMassEvent_of_comparableWith
     _ ≤ μ (annulus z r (2 * r) ∩ coneAt Q z) := h.le_apply hinner
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.coneMassEvent_of_comparableWith

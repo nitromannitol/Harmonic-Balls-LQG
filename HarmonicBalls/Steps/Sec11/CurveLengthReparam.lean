@@ -134,8 +134,5 @@ theorem IsEuclideanLengthMetric.cumulative_length_comp_of_tracking
   have hreal := congrArg ENNReal.toReal hunit
   simpa only [ENNReal.toReal_ofReal ht.1, sub_zero, A] using hreal
 
-#print axioms IsEuclideanLengthMetric.cumulative_length_comp_of_tracking
-#print axioms IsEuclideanLengthMetric.cumulative_curveLength_properties
-#print axioms IsEuclideanLengthMetric.curveLength_comp_of_monotoneOn
 
 end HarmonicBalls

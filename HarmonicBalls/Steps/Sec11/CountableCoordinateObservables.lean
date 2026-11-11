@@ -83,7 +83,5 @@ theorem IsWholePlaneGFF.exists_modConst_observable_of_reference_shift
   rw [Function.comp_apply, ← hω, hFeq]
   rfl
 
-#print axioms ae_eq_measurable_comp_of_coordinatewise_ae_eq
-#print axioms IsWholePlaneGFF.exists_modConst_observable_of_reference_shift
 
 end HarmonicBalls

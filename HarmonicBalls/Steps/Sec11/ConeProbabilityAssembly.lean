@@ -58,5 +58,3 @@ theorem coneBadEventProbability_of_existence
     exact (hex ⟨Ω, inferInstance, P, hC, hcirc, hG⟩).elim
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.coneBadEventProbability_of_existence

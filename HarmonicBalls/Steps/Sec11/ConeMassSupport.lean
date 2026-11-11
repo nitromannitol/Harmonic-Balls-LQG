@@ -66,7 +66,3 @@ theorem ae_cone_annulus_mass_pos
   exact hQ.annulus_mass_pos_of_fullSupport (μ ω) (hfull α₀ (μ ω) hlimit) z hr
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.IsCone.annulus_mass_pos_of_fullSupport
-
-#print axioms HarmonicBalls.ae_cone_annulus_mass_pos

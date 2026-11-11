@@ -51,5 +51,3 @@ theorem exists_cone_mass_green_thresholds
   exact ⟨hω.2.1, hω.2.2⟩
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.exists_cone_mass_green_thresholds

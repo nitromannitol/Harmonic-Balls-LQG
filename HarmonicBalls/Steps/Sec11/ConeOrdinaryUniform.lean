@@ -55,7 +55,3 @@ theorem cone_ordinary_event_uniform_positive
     exact le_of_eq (cone_ordinary_event_probability_eq_reference hγ hG hG' hμ hμ' Q hQ M n z).symm
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.cone_ordinary_event_probability_eq_reference
-
-#print axioms HarmonicBalls.cone_ordinary_event_uniform_positive

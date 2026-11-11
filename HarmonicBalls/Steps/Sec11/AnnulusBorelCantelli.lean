@@ -120,8 +120,5 @@ theorem ae_internalMetric_sdiff_zero_eq_of_summable_annulus_exceedance
   exact hDω.internalMetric_sdiff_zero_eq_of_exponential_annuli hEω hEωnonneg hξ hα
     hgap V hball hzeroω hscaleω hC hbase hx hy
 
-#print axioms ae_internalMetric_sdiff_zero_eq_of_summable_annulus_exceedance
-#print axioms exists_finite_multiplier_of_eventually_le
-#print axioms ae_exponential_annulus_bounds_of_summable_exceedance
 
 end HarmonicBalls

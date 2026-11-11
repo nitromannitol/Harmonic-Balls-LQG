@@ -67,7 +67,5 @@ theorem exists_measurable_internalDiameter_decoder {U K : Set ℂ}
   simp only [iSup_subtype]
   exact (hD.iSup_internalMetric_eq_of_dense_subset hnonneg hU hKU hQK hKQ).symm
 
-#print axioms IsEuclideanLengthMetric.iSup_internalMetric_eq_of_dense_subset
-#print axioms exists_measurable_internalDiameter_decoder
 
 end HarmonicBalls

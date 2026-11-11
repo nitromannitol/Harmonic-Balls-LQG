@@ -52,6 +52,5 @@ theorem IsWholePlaneGFF.comp_measurePreserving
     exact heq.symm.trans (h.covariance_eq o o' ho ho')
   · exact hf.quasiMeasurePreserving.tendsto_ae h.ae_continuousOn_circle
 
-#print axioms IsWholePlaneGFF.comp_measurePreserving
 
 end HarmonicBalls

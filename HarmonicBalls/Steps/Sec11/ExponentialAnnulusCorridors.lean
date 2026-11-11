@@ -147,13 +147,5 @@ theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_exponential_annu
   · intro n z hz
     simpa only [add_assoc] using hz.1.le
 
-#print axioms isOpen_exponentialAnnulusCorridor
-#print axioms exponentialAnnulusCorridor_subset
-#print axioms geometricShell_subset_exponentialAnnulusCorridor
-#print axioms isConnected_exponentialAnnulusCorridor
-#print axioms isCompact_geometricShell
-#print axioms IsEuclideanLengthMetric.exponentialAnnulusCorridor_diameter_lt_top
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_exponential_annuli
-#print axioms exists_exponentialAnnulusCorridor_subset
 
 end HarmonicBalls

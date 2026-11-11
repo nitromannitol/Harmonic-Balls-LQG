@@ -79,6 +79,5 @@ theorem exists_scaled_ball_criterion_of_explicit_diameter_moments
   · intro n i _
     exact Filter.Eventually.of_forall (hnorm n i).2
 
-#print axioms exists_scaled_ball_criterion_of_explicit_diameter_moments
 
 end HarmonicBalls

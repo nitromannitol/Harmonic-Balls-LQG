@@ -48,6 +48,5 @@ theorem exists_internalMetric_version_of_dense
     simp only [fun n => heq _ (hq ⟨x, hx⟩ n) _ (hq ⟨y, hy⟩ n)] at hl
     simpa only [H, hx, hy, ↓reduceDIte] using hl.symm
 
-#print axioms exists_internalMetric_version_of_dense
 
 end HarmonicBalls

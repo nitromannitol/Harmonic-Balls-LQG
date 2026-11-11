@@ -129,9 +129,6 @@ theorem exists_scaled_ball_criterion_of_circleAverage_tail
   intro n i hi
   exact le_rfl
 
-#print axioms IsWholePlaneGFF.tsum_weighted_circleAverage_exp_upper_lt_top
-#print axioms exists_scaled_ball_criterion_of_circleAverage_tail
 
-#print axioms IsWholePlaneGFF.tsum_circleAverage_exp_upper_lt_top
 
 end HarmonicBalls

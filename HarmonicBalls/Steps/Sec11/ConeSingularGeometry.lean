@@ -52,5 +52,3 @@ theorem rpow_norm_le_of_mem_cone_annulus {r e : ℝ} {z x y : ℂ}
   exact hb
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.rpow_norm_le_of_mem_cone_annulus

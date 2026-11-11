@@ -43,5 +43,3 @@ theorem coneMassEvent_map_sub_iff (μ : Measure ℂ) (Q : Set ℂ) (hQ : IsCone 
   rw [Measure.map_apply (by fun_prop) hset, hpre, Section6.annulusGreenPotentialSup_map_sub]
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.coneMassEvent_map_sub_iff

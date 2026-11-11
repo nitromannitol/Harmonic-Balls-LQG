@@ -42,5 +42,3 @@ theorem coneMassEvent_map_inv_smul_iff (μ : Measure ℂ) (Q : Set ℂ) (hQ : Is
   ring_nf
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.coneMassEvent_map_inv_smul_iff

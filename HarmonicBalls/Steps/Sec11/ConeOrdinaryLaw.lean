@@ -84,7 +84,3 @@ theorem cone_event_probability_dyadic
   exact hlaw
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.cone_event_probability_translate
-
-#print axioms HarmonicBalls.cone_event_probability_dyadic

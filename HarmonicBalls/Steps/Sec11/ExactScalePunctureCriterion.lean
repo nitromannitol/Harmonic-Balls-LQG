@@ -54,6 +54,5 @@ theorem exists_scaled_ball_criterion_of_exact_scale_moments
     simp only [add_zero, one_mul, le_refl]
   · exact hmom
 
-#print axioms exists_scaled_ball_criterion_of_exact_scale_moments
 
 end HarmonicBalls

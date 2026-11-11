@@ -228,12 +228,5 @@ theorem exists_scaled_annulus_cover_chains :
   · intro i _
     exact (hcover s n).2 i
 
-#print axioms SimpleGraph.preconnected_of_open_cover_intersections
-#print axioms exists_scaled_annulus_cover_chains
-#print axioms exists_scaled_annulus_ball_chain
-#print axioms SimpleGraph.exists_closed_walk_visiting_all
-#print axioms exists_scaled_ball_cover_with_visiting_walk
-#print axioms ballIntersectionGraph_preconnected_of_cover
-#print axioms exists_connected_scaled_finite_ball_cover
 
 end HarmonicBalls

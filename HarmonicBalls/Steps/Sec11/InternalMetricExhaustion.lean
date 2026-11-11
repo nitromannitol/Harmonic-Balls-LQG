@@ -27,6 +27,5 @@ theorem internalMetric_iUnion_of_monotone_isOpen
     exact (iInf_le (fun n => ⨅ (q : Path x y) (_ : ∀ t, q t ∈ U n),
       pathLength D q) n).trans (iInf_le_of_le p (iInf_le_of_le hpath le_rfl))
 
-#print axioms internalMetric_iUnion_of_monotone_isOpen
 
 end HarmonicBalls

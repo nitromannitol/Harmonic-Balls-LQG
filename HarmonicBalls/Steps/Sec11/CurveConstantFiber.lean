@@ -162,12 +162,8 @@ theorem IsEuclideanLengthMetric.ae_ne_of_lengthParametrized
   intro t ht
   exact ⟨ht.2, not_ne_iff.mp ht.1⟩
 
-#print axioms IsEuclideanLengthMetric.ae_ne_of_lengthParametrized
 
-#print axioms IsEuclideanLengthMetric.measure_compact_constant_fiber
 
-#print axioms IsEuclideanLengthMetric.curveLength_le_time_outside_compact_fiber
 
-#print axioms IsEuclideanLengthMetric.ofReal_dist_le_time_outside_compact_fiber
 
 end HarmonicBalls

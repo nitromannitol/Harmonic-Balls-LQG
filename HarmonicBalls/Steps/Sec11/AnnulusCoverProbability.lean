@@ -127,8 +127,5 @@ theorem ae_internalMetric_sdiff_zero_eq_of_local_cover_exceedance
     (summable_annulus_exceedance_of_finite_cover_chains P D A s β N pieces domains z p
       hD hz hcover hWU hlocal hp)
 
-#print axioms measure_internalMetric_cover_chain_exceedance_le_of_ae
-#print axioms ae_internalMetric_sdiff_zero_eq_of_local_cover_exceedance
-#print axioms summable_annulus_exceedance_of_finite_cover_chains
 
 end HarmonicBalls
