@@ -93,6 +93,47 @@ section 1, D7) and renames are operator-only.
   behind other builds for more than 45 minutes, and was stopped on operator instruction (lead, 13:25 UTC). The LP
   build of the same 13 modules (above) compiled the same text, so the umbrella check is replaced by the comment-only check.
 
+## Batch 2: LQG modules (36)
+
+- LP repository: `/home/nitro/lean/LP-idla-phase2`, branch `idla/phase2` (not pushed).
+- LP commit: `79351f7` (36 new files in `LatticeProb/LQG/`, 10,384 insertions; `LatticeProb/LQG.lean` gains 36 import lines; no other LP file touched).
+- HB commit of the comment cleanup (36 mirror files): `e84472dd`.
+
+### Modules and LP paths
+
+All 36 go to `LatticeProb/LQG/<Name>.lean` with the HB file name unchanged: LQGMassInner, LQGMeasure, LQGMeasureDerived, LQGMeasureFullSupport, LQGMeasureFullSupport2, LQGMeasureFullSupport3, LQGMeasureInputs, LQGMeasureLocality, LQGMeasureLocality2, LQGMeasureNonatomic, LQGMeasureNonatomicAll, LQGMeasureNonatomicOrigin, LQGMeasureNonatomicMassAffine, LQGMeasureNonatomicMassLocality, LQGMeasureNonatomicMassMixture, LQGMeasureNonatomicMassPoly, LQGMeasureNonatomicMassRescaled, LQGMeasureNonatomicMassScaled, LQGMeasureNonatomicMassTail, LQGMeasureNonatomicMassWeight, LQGMeasureNonatomicMassWholePlane, LQGMeasureSquare, LQGMeasureSquarePositive, LQGMetric, LQGMetricMeasurable, LQGMetricMeasurable2, LQGMetricUniv, LQGWeylScaling, LengthMetric, LengthMetricDerived, LiouvilleGraph, MassFunctional, WeylCompositionOuter, WeylCompositionOuter2, WeylInternalClosed, WeylOffOrigin. Namespaces and declaration names are unchanged.
+
+### Import rewrite
+
+- `import HarmonicBalls.LPStage.X` becomes `import LatticeProb.<Dir>.X`: `LQG` for the 36 modules above; `Gauss`, `Prob`, `Analysis`, `Topology` for the batch-1 modules, as in batch 1.
+- Other imports are Mathlib or LP (no batch-2 file imports an HB module outside `HarmonicBalls.LPStage`).
+- Import closure: every LPStage import of a batch-2 file is a batch-1 or batch-2 module. Not moved, and not needed by the closure: `GFFCovSymm`, `GFFExistence`, `WeylMassMeasurable`, `WeylSupMeasurable`. Not moved: `WeylShiftedMass`, `LocalMeasureKernel*`, `All.lean`.
+
+### Gates at the time of the move
+
+- (1) Ownership and uncommitted changes: no batch-2 file is named in the OWNS sections of the active HB tasks (z3, z4, z6, z7, n1) or of the active mcrt tasks; no batch-2 mirror file had uncommitted changes (the untracked `LocalMeasureKernel4.lean` and `LocalMeasureKernel5.lean` are outside the batch). Dropped: none.
+- (2) `docs/campaign/LP-STAGE-INDEX.md` has no move column yet (no "hold" or "not movable" mark; last commit `9b50f301`). Its intended criteria were applied directly: all 36 modules import only `LatticeProb.*` or `HarmonicBalls.LPStage.*`, and all 36 are imported by `HarmonicBalls/LPStage/All.lean`.
+- (3) Clash probe against the LP tree before the commit (1,510 `.lean` files, 14,852 declarations, textual, namespace-aware, `private` skipped): 484 batch-2 declarations, 0 duplicates inside the batch, 0 clashes; none of the 36 target paths existed.
+- (4) No mcrt task names `LatticeProb/LQG.lean` or `LatticeProb/LQG/` in its OWNS.
+
+### Mirror check
+
+- Recipe: `diff <(sed -E 's/^import HarmonicBalls\.LPStage\.(\w+)[ \t]*$/…/' HarmonicBalls/LPStage/M.lean) LatticeProb/LQG/M.lean`, with the module-specific directory substituted. Result: empty for all 36 modules; `grep -c '^import HarmonicBalls' LatticeProb/LQG/*.lean` is 0.
+- Every `import LatticeProb.*` line of the 36 files resolves to an existing file of the LP tree.
+
+### Comment cleanup in the HB mirror (36 files, commit `e84472dd`)
+
+Removed: stage labels ("LP stage", "(LP stage, ...)"), worker and task identifiers, row, decision, item and part labels, references to generated notes and to external reports, copy-budget remarks, the "First pass:" label, and the "staged for" phrasing (now "included", "taken from" or "stated as"). The operator source-check wording is kept as `PENDING (source check)`. Pointers to HB modules that moved are now LP module paths (`LatticeProb/LQG/<Name>.lean`, `LatticeProb/Gauss/<Name>.lean`).
+
+Kept: paper citations, `Proposed` and `Frozen` names and status words, mathematical content, and provenance pointers to HB source files (`HarmonicBalls/FirstPass/...`, `HarmonicBalls/Steps/...`, `HarmonicBalls/Proofs/...`).
+
+### Checks
+
+- `commentonly.py` against HEAD, before the HB commit: OK for 36 of 36 files (the code of each file is unchanged).
+- `lc` per changed file: `CHECK OK` for 36 of 36 files.
+- LP build, under the shared `mcrt/lp.lock`: `lake build LatticeProb.LQG` (the aggregator; builds the 36 modules and their closure): `Build completed successfully (8974 jobs)`; no errors, no warnings in the log. The batch files contain no `sorry`, `admit`, `native_decide`, `set_option maxHeartbeats` and no `axiom` declaration.
+- Not run: `lake build LatticeProb` and `lake build LatticeProbV435` (whole libraries; the LP tree carries other uncommitted work); `lb HarmonicBalls.LPStage.All` (HB imports are unchanged; the HB side is checked per file with `lc`).
+
 ## Status lines
 
 - HB commit (comment cleanup, 9 mirror files): `70f3786b`, "LPStage batch 1: comment-only cleanup of workflow metacommentary".
@@ -100,3 +141,4 @@ section 1, D7) and renames are operator-only.
 - Umbrella build `lb HarmonicBalls.LPStage.All`: not run (see above); replaced by the comment-only check.
 - LP commit: `a6b767d` on `idla/phase2` (unpushed).
 - Step-3 recipe re-run before the HB commit: empty for all 13 modules.
+- Batch 2 (36 LQG modules): LP commit `79351f7`; HB comment cleanup `e84472dd`; `lake build LatticeProb.LQG` OK.
