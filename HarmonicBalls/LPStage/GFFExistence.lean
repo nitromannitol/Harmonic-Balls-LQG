@@ -4,24 +4,22 @@ import LatticeProb.Prob.ChentsovPiModification
 import HarmonicBalls.LPStage.KolmogorovExtension
 
 /-!
-# Existence of the whole-plane GFF: named ingredients and the elementary moment bound (LP stage)
+# Existence of the whole-plane GFF: named ingredients and the elementary moment bound
 
-Owner: worker z6, task fp-phase2-gff-existence-row29. Statement target: `exists_isWholePlaneGFF` (general LP form of
-`WholePlaneGFFExistsFrozen`, `HarmonicBalls/FirstPass/S11r/Frozen.lean:39`).
+Statement target: `exists_isWholePlaneGFF`, the general LP form of the whole-plane GFF existence statement.
 
-Route (MQ-lh-16 / MQ-lh-17 of `notes/fp-gaps/MATH-ANSWERS.md`):
+Ingredients (labels B1-B4 are used in the statements below):
 
-* B1 (`KolmogorovExtensionStmt`): Kolmogorov extension on an arbitrary index set with the product σ-algebra. Absent from
-  pinned Mathlib and from `LatticeProb`; a named hypothesis with its source, not a frozen input.
+* B1 (`KolmogorovExtensionStmt`): Kolmogorov extension on an arbitrary index set with the product σ-algebra. Absent
+  from pinned Mathlib; discharged below as `kolmogorovExtensionStmt_proved`.
 * B2 (`WholePlaneCovPSDStmt`): positive semidefiniteness of the whole-plane covariance on admissible observables.
-  Only a sketch exists (log energy `= (2π)⁻¹ ∫ |∇U|²`, MQ-lh-17 (b)); a named hypothesis, reported as a gap.
+  Only a sketch exists; a named hypothesis, pending source check.
 * B4: the moment bound. Its elementary real-analysis core is `two_log_max_add_sub_log_le` below (proved). The covariance
   identity `Var(h_r(z) - h_s(w)) = -log r - log s + 2 ∫ log max(|x - w|, s) dρ_{z,r}(x)` is not yet formalized.
-* B3: continuity. `LatticeProb.exists_continuous_modification_spaceTime_all`
-  (`.lake/packages/lattice-probability/LatticeProb/Prob/ChentsovPiModification.lean:413`) is proved, not Bonanno code;
-  the box gluing is not yet formalized.
+* B3: continuity. `LatticeProb.exists_continuous_modification_spaceTime_all` (`LatticeProb.Prob.ChentsovPiModification`)
+  is proved; the box gluing is not yet formalized.
 
-Nothing here is a frozen input. The named Props below are hypotheses of the statements that use them.
+The named Props below are hypotheses of the statements that use them.
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology
@@ -31,7 +29,7 @@ namespace LatticeProb.Gauss
 /-- Kolmogorov extension theorem for an arbitrary index type `ι`, real coordinates, product σ-algebra: a projective
 family of probability measures on the finite-dimensional coordinate spaces has a projective limit.
 Source: William J. Anderson, *Advanced Probability II Notes*, Theorem 6.0.6, p. 60
-(<https://www.math.mcgill.ca/bill/589/589notes.pdf#page=60>); MQ-lh-16 B1 in `notes/fp-gaps/MATH-ANSWERS.md`.
+(<https://www.math.mcgill.ca/bill/589/589notes.pdf#page=60>).
 Absent from pinned Mathlib: `Mathlib/MeasureTheory/Constructions/Projective.lean` has uniqueness only (`IsProjectiveLimit`
 is defined there, no existence). -/
 def KolmogorovExtensionStmt : Prop :=
@@ -40,7 +38,7 @@ def KolmogorovExtensionStmt : Prop :=
       ∃ μ : Measure (ι → ℝ), IsProbabilityMeasure μ ∧ IsProjectiveLimit (α := fun _ : ι => ℝ) μ P
 
 /-- B1 is discharged: the Kolmogorov extension for real coordinates on an arbitrary index set is proved in
-`HarmonicBalls/LPStage/KolmogorovExtension.lean` (`LatticeProb.exists_isProjectiveLimit_real`, source Anderson,
+`LatticeProb.Prob.KolmogorovExtension` (`LatticeProb.exists_isProjectiveLimit_real`, source Anderson,
 Advanced Probability II Notes, Thm 6.0.6, p. 60). -/
 theorem kolmogorovExtensionStmt_proved : KolmogorovExtensionStmt :=
   fun ι P hP h1 => LatticeProb.exists_isProjectiveLimit_real ι P hP h1
@@ -48,14 +46,13 @@ theorem kolmogorovExtensionStmt_proved : KolmogorovExtensionStmt :=
 /-- Positive semidefiniteness of the whole-plane covariance on admissible observables: for every finite family of
 admissible observables `o_i` and real `c_i`, `∑ c_i c_j wholePlaneGFFCov o_i o_j ≥ 0`.
 Sketch (not a written proof): with `σ = ∑ c_i σ_i` (signed smearing measures), `m = σ(ℂ)` and `ν = σ - m ρ` (ρ the uniform
-probability on the unit circle), the form equals `-∬ log|x - y| dν dν = (2π)⁻¹ ∫ |∇U|²` with `U = -log|·| * ν`
-(MQ-lh-17 (b), `notes/fp-gaps/MATH-ANSWERS.md`). The limit from smooth regularizations is not written out.
-Named hypothesis: the operator must source it before any consumer is unconditional. -/
+probability on the unit circle), the form equals `-∬ log|x - y| dν dν = (2π)⁻¹ ∫ |∇U|²` with `U = -log|·| * ν`. The limit from smooth regularizations is not written out.
+Named hypothesis, pending source check: no consumer is unconditional until it is sourced. -/
 def WholePlaneCovPSDStmt : Prop :=
   ∀ (n : ℕ) (o : Fin n → GFFObservable.Admissible) (c : Fin n → ℝ),
     0 ≤ ∑ i, ∑ j, c i * c j * wholePlaneGFFCov (o i).1 (o j).1
 
-/-- Elementary bound behind the moment estimate (MQ-lh-17 (b), B4): for `0 < a ≤ r`, `a ≤ s`, `0 ≤ d`,
+/-- Elementary bound behind the moment estimate (B4): for `0 < a ≤ r`, `a ≤ s`, `0 ≤ d`,
 `2 log (max r s + d) - log r - log s ≤ (|r - s| + 2 d) / a`. -/
 theorem two_log_max_add_sub_log_le {a r s d : ℝ} (ha : 0 < a) (har : a ≤ r) (has : a ≤ s) (hd : 0 ≤ d) :
     2 * Real.log (max r s + d) - Real.log r - Real.log s ≤ (|r - s| + 2 * d) / a := by
@@ -228,7 +225,7 @@ theorem exists_gaussian_of_kernel (hB1 : KolmogorovExtensionStmt) (K : ι → ι
 
 end KernelProcess
 
-/-! ### Eighth moments of centred Gaussian increments and the Kolmogorov criterion (B3, S3a)
+/-! ### Eighth moments of centred Gaussian increments and the Kolmogorov criterion (B3)
 
 A centred Gaussian variable `D` with variance `v` has `∫ |D|⁸ = v⁴ ∫ |N|⁸` for `N ~ N(0,1)` (scaling of
 `gaussianReal`). Applied to the increments `X p - X q` of a centred Gaussian field with variance bounded by a constant
@@ -312,7 +309,7 @@ theorem isKolmogorovProcess_of_gaussian {Ω : Type*} [MeasurableSpace Ω] {P : M
 
 end GaussianMoments
 
-/-! ### Localization and gluing: a continuous modification on `(0, ∞) × ℝ²` (B3, S3b)
+/-! ### Localization and gluing: a continuous modification on `(0, ∞) × ℝ²` (B3)
 
 The increments of a circle-average field have variance bounded only on `{r ≥ a}` for each `a > 0`, so the global
 Kolmogorov criterion applies to the processes clamped to the boxes `[1/(N+1), N+1] × [-(N+1), N+1]²`, which are
@@ -515,7 +512,7 @@ end Localization
 /-!
 ### The whole-plane GFF on the admissible observables (general LP form)
 
-Named input (not a frozen input; see the report): `WholePlaneCovSymmStmt`, the symmetry of the covariance kernel
+Named input: `WholePlaneCovSymmStmt`, the symmetry of the covariance kernel
 `wholePlaneGFFCov`. It is needed because `PosSemidef` in Mathlib includes `IsHermitian`.
 -/
 
@@ -526,7 +523,7 @@ open scoped Classical
 open MeasureTheory ProbabilityTheory
 
 /-- Symmetry of the whole-plane covariance on admissible observables (named input). Mathematically it follows from
-`wholePlaneCov_comm` (`HarmonicBalls/Defs/GFF.lean:133`) and Fubini; the pairing-pairing and circle-circle cases and the
+`wholePlaneCov_comm` and Fubini; the pairing-pairing and circle-circle cases and the
 pairing-circle case over the circle measure are not yet formalized in Lean. -/
 def WholePlaneCovSymmStmt : Prop :=
   ∀ o o' : GFFObservable.Admissible, wholePlaneGFFCov o.1 o'.1 = wholePlaneGFFCov o'.1 o.1
@@ -606,7 +603,7 @@ lemma pairingField_apply {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) (
 
 /-- The whole-plane GFF in general LP form, from the Kolmogorov extension (B1, proved), the named PSD input
 `WholePlaneCovPSDStmt` (B2), the named symmetry input `WholePlaneCovSymmStmt` (B3sym), and the kernel increment bound
-`hvarK` on the circle parameters (discharged for the HarmonicBalls kernel in `FirstPass/Phase2/GFFExistsConstructed.lean`).
+`hvarK` on the circle parameters (discharged for the application kernel outside this file).
 Construction: centred Gaussian coordinate process with covariance `admKernel`, continuous modification of the circle
 process on `{r > 0}` (`exists_continuousOn_modification_of_gaussian`), and the pairings read off the coordinates. -/
 theorem exists_isWholePlaneGFF (hB2 : WholePlaneCovPSDStmt) (hsymm : WholePlaneCovSymmStmt)

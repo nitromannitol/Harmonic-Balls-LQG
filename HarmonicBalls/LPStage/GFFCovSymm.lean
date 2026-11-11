@@ -6,7 +6,7 @@ import HarmonicBalls.LPStage.GFFExistence
 
 `wholePlaneCovSymm_proved : WholePlaneCovSymmStmt` states that the covariance `wholePlaneGFFCov o o'` of two
 admissible observables is symmetric. The kernel is `wholePlaneCov x y = log (max(|x|,1) max(|y|,1) / |x - y|)`
-(eq:cov-kernel), the smearing measures are Lebesgue measure against test functions (pairings) and the uniform
+the smearing measures are Lebesgue measure against test functions (pairings) and the uniform
 probability measures on circles (Duplantier-Sheffield, arXiv:0808.1560, Section 3; Armitage-Gardiner for the
 logarithmic potential). The three cases are:
 
@@ -17,8 +17,7 @@ logarithmic potential). The three cases are:
 The analytic content is the local integrability of the logarithmic kernel: `|wholePlaneCov x y| ≤ 2 log R +
 |log |x - y||` on `closedBall 0 R` (`abs_wholePlaneCov_le`), and the translation-invariant dominating functions
 `sectDom`. Credit: `logAbsBall`, `abs_log_le_rpow_neg_half`, `norm_log_norm_le_rpow` and
-`integrableOn_log_norm_ball` are adapted from the repository files `HarmonicBalls/FirstPass/S11i/DilationMixing.lean`
-and `HarmonicBalls/FirstPass/S11i/LogPotentialFubini.lean` (not imported).
+`integrableOn_log_norm_ball` are adapted from earlier log-potential estimates (not imported).
 -/
 
 open MeasureTheory Metric Set Filter Topology
@@ -113,7 +112,7 @@ lemma norm_circleMap_le' (c : ℂ) (r : ℝ) (θ : ℝ) : ‖circleMap c r θ‖
     _ = ‖c‖ + |r| := by
         rw [norm_mul, Complex.norm_exp_ofReal_mul_I, mul_one, Complex.norm_real, Real.norm_eq_abs]
 
-/-! ### Local integrability of `log` on `ℂ` (adapted from `FirstPass/S11i/DilationMixing.lean`) -/
+/-! ### Local integrability of `log` on `ℂ` -/
 
 lemma abs_log_le_rpow_neg_half {r : ℝ} (hr0 : 0 < r) (hr1 : r ≤ 1) :
     |Real.log r| ≤ 2 * r ^ (-(1 / 2 : ℝ)) := by
