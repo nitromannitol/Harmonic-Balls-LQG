@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.LPBridge.M5b
 import HarmonicBalls.LPStage.WeylShiftedMass
 
 /-!
-# LP-stage bridge for the Weyl-shifted LQG mass (row 27, z4)
+# LP-stage bridge for the Weyl-shifted LQG mass
 
 `HarmonicBalls.weylShiftedMassMeasurable_of_lpStage` is the HB frozen statement `WeylShiftedMassMeasurableFrozen`
 (`FirstPass/Frozen/S11c.lean:233`), obtained from the unconditional LP statement
@@ -21,7 +21,7 @@ open LPBridge
 
 universe u
 
-/-- `WeylShiftedMassMeasurableFrozen` (row 27) from the LP stage, binder-free. -/
+/-- `WeylShiftedMassMeasurableFrozen` from the LP stage, binder-free. -/
 theorem weylShiftedMassMeasurable_of_lpStage : WeylShiftedMassMeasurableFrozen.{u} := by
   intro γ α₀ ξ hγ0 hγ2 hα₀ Ω _ P hC hcirc μ D hW hμ hD f hf hfc hf0 S hS
   exact LatticeProb.LQG.weylShiftedMassMeasurable_lp.{u} γ α₀ ξ hγ0 hγ2 hα₀ Ω P hC hcirc μ D

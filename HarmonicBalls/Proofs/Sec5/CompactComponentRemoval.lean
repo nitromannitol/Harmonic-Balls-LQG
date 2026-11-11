@@ -1,6 +1,11 @@
 import HarmonicBalls.Proofs.Sec5.GeneralDomainClusterOpen
 import HarmonicBalls.Proofs.Sec5.RelativeCountableMeasureLocality
 
+/-! # Compact component removal for regularized clusters
+
+Deleting a relatively countable set from the pole component preserves the closure of the cluster when its least supersolution is admissible (`closure_clusterOn_sdiff_of_countable_on_component`). Under compact containment in the original domain, `regularizedFamily_closure_eq_clusterOn_of_component_compact_containment` and `regularizedFamily_closure_eq_sdiff_of_component_compact_containment` identify the closure of the regularized cluster family with the closure of the cluster before and after the deletion. Under the same hypotheses, `regularizedFamily_eq_of_restrict_sdiff_component_compact_containment` shows that two regularized cluster families whose measures agree off the deleted set coincide at time `t`.
+-/
+
 namespace HarmonicBalls
 
 open MeasureTheory Metric Set Filter

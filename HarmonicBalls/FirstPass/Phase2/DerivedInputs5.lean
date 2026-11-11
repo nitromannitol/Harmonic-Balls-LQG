@@ -9,6 +9,11 @@ import HarmonicBalls.FirstPass.Phase2.CameronMartinMutualDerived
 import HarmonicBalls.FirstPass.Phase2.MassFunctionalDerived
 import HarmonicBalls.FirstPass.S8c.BirkhoffDerived
 
+/-! # Closure statements with derived inputs removed
+
+Each `*_derivedInputs5` declaration is a wrapper of a `*_noWeyl` or `*_derivedInputs4` closure statement. Each wrapper removes binders such as `hB`, `hDecFrozen` or `hCMAbs` and supplies them by their derived sources; no conclusion is weakened. The `*_universe0` corollaries at the end of the file supply the binder `h13` (Lemma 11.13, canonical) by `firstPass_11_13_closed_derivedInputs5`.
+-/
+
 universe u
 
 

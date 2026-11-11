@@ -5,12 +5,12 @@ import HarmonicBalls.FirstPass.LPBridge.M4
 import HarmonicBalls.LPStage.LocalMeasureKernel5
 
 /-!
-# LP-stage bridge for the local measure kernel (rows 51 and 15, z4)
+# LP-stage bridge for the local measure kernel
 
 `HarmonicBalls.localMeasureKernelStmt_of_lpStage` is the HB statement `LocalMeasureKernelStmt`
-(`FirstPass/S11r/Frozen.lean:144`, row 51), with the binders of `localMeasureKernelStmt_derived` (`γ c₁ c₂ r₁ r₂`).
+(`FirstPass/S11r/Frozen.lean:144`), with the binders of `localMeasureKernelStmt_derived` (`γ c₁ c₂ r₁ r₂`).
 `HarmonicBalls.localLQGDecoderCommonFrozen_of_lpStage` is the HB statement `LocalLQGDecoderCommonFrozen`
-(`FirstPass/Frozen/S11c.lean:388`, row 15), binder-free. Both are obtained from the unconditional LP statements
+(`FirstPass/Frozen/S11c.lean:388`), binder-free. Both are obtained from the unconditional LP statements
 `localMeasureKernelStmt_lp` and `localLQGDecoderCommonFrozen_lp` (`LPStage/LocalMeasureKernel5.lean`) through the bridge
 equivalences `isWholePlaneGFF_iff` (M1), `isLQGMeasureOfField_iff` and `isLQGMeasure_iff` (M4). The HB and LP definitions of
 the observables (`localMeanZeroObs`, `campbellReferenceObs`, `rootedCircleAverage`, `rootedMeanZeroObs`, `addCircleAverage`)
@@ -24,7 +24,7 @@ open LPBridge
 
 universe u
 
-/-- `LocalMeasureKernelStmt` (row 51) from the LP stage, with the binders of `localMeasureKernelStmt_derived`. -/
+/-- `LocalMeasureKernelStmt` from the LP stage, with the binders of `localMeasureKernelStmt_derived`. -/
 theorem localMeasureKernelStmt_of_lpStage (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) :
     LocalMeasureKernelStmt γ c₁ c₂ r₁ r₂ := by
   intro hγ0 hγ2 hr1 hr2 hsub1 hsub2 h0
@@ -39,7 +39,7 @@ theorem localMeasureKernelStmt_of_lpStage (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r�
     filter_upwards [h2 α hα Ω P hC hcirc ((isWholePlaneGFF_iff P hC hcirc).1 hW)] with z hz μz hμz
     exact hz μz ((isLQGMeasure_iff P γ _ μz).1 hμz)
 
-/-- `LocalLQGDecoderCommonFrozen` (row 15) from the LP stage, binder-free. -/
+/-- `LocalLQGDecoderCommonFrozen` from the LP stage, binder-free. -/
 theorem localLQGDecoderCommonFrozen_of_lpStage : LocalLQGDecoderCommonFrozen.{u} := by
   intro γ hγ0 hγ2 c₂ r₂ hr₂ h0
   obtain ⟨K, hK, h1, h2⟩ :=

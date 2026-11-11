@@ -1,5 +1,10 @@
 import HarmonicBalls.Proofs.Sec8.JointVeryGoodMeasurable
 
+/-! # Joint measurability of the very-good comparable-scale event
+
+For a random locally finite measure, `exists_jointlyMeasurable_veryGoodComparableScaleFrequency` gives a jointly measurable representative of the eventual very-good comparable-scale event, simultaneously in the centre.
+-/
+
 open MeasureTheory Metric Set Filter
 open scoped ENNReal
 
