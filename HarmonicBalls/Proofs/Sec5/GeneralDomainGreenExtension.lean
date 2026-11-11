@@ -152,7 +152,6 @@ theorem supersolution_mem_sdiff_of_locallyFiniteRankOn_interior_zero
       rw [greenFunction_of_notMem_right hyU, mul_zero] at h
       rwa [greenFunction_of_notMem_right hynot, mul_zero]
 
-#print axioms supersolution_mem_sdiff_of_locallyFiniteRankOn_interior_zero
 
 /-- With an admissible full-domain least supersolution, deleting a closed
 locally finite-rank set deletes exactly its points from the cluster. -/
@@ -308,17 +307,10 @@ theorem leastSupersolutionOn_mem_sdiff_iff_interior_zero
   · exact leastSupersolutionOn_mem_sdiff_of_interior_zero
       hμ hU hUb (subset_closure.trans hUR) hKc hK hz hqc hq ht hw
 
-#print axioms leastSupersolutionOn_mem_sdiff_iff_interior_zero
 
-#print axioms leastSupersolutionOn_mem_sdiff_of_interior_zero
 
-#print axioms leastSupersolutionOn_eq_zero_of_sdiff_admissible
 
-#print axioms clusterOn_sdiff_of_locallyFiniteRankOn
-#print axioms closure_clusterOn_sdiff_of_locallyFiniteRankOn
 
-#print axioms greenFunction_sdiff_of_locallyFiniteRankOn
 
-#print axioms exists_harmonic_green_correction_of_locallyFiniteRankOn
 
 end HarmonicBalls

@@ -175,10 +175,5 @@ theorem ae_relative_countable_disc_infimum_inadmissible_all_centres
     (hvol.2 1 zero_lt_one) K hD hK ⟨hz, hzK⟩ ht).mp hadm a haK haU
   exact (ne_of_lt (hneg z hz a haU haz t ht)) heq
 
-#print axioms leastSupersolutionOn_relative_countable_disc_mem_iff
-#print axioms tendsto_leastSupersolutionOn_relative_countable_disc_at_deleted
-#print axioms continuousWithinAt_relative_countable_disc_infimum_iff
-#print axioms ae_relative_countable_disc_infimum_discontinuous_all_centres
-#print axioms ae_relative_countable_disc_infimum_inadmissible_all_centres
 
 end HarmonicBalls

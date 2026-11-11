@@ -109,10 +109,5 @@ theorem leastSupersolutionOn_le_finiteRank_punctured_of_volumeGrowth
     ((greenPotentialBallLaplacianStep_holds μ hμ R βm βp hR (hV R hR)).mono_domain hsub)
     ht hx hxz
 
-#print axioms countable_inter_open_of_locallyFiniteRank
-#print axioms laplacianLE_of_locallyFiniteRank_removal
-#print axioms finiteRank_punctured_supersolution_mem_domain
-#print axioms leastSupersolutionOn_le_finiteRank_punctured
-#print axioms leastSupersolutionOn_le_finiteRank_punctured_of_volumeGrowth
 
 end HarmonicBalls

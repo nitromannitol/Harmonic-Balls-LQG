@@ -58,8 +58,5 @@ theorem regularizedFamily_strongCompatibility_sdiff_of_component_eq_disc
   exact regularizedFamily_strongCompatibility_of_component_eq_countable_disc
     hμ hV hUK (hUb.subset sdiff_subset) hR hz hc hK ht hΛ hcl
 
-#print axioms connectedComponentIn_sdiff_of_countable_on_component
-#print axioms clusterOn_sdiff_eq_of_component_eq_disc
-#print axioms regularizedFamily_strongCompatibility_sdiff_of_component_eq_disc
 
 end HarmonicBalls

@@ -131,10 +131,5 @@ theorem regularizedFamily_strongCompatibility_of_countable_on_component
   · exact regularizedFamily_closure_eq_of_countable_on_component
       hμ hV hU hUK hUb ht hz hK hw hopenU hΛ hopen hcl
 
-#print axioms isOpen_component_sdiff
-#print axioms exists_continuous_potential_of_volumeGrowth
-#print axioms clusterOn_sdiff_of_countable_on_component
-#print axioms regularizedFamily_closure_eq_of_countable_on_component
-#print axioms regularizedFamily_strongCompatibility_of_countable_on_component
 
 end HarmonicBalls

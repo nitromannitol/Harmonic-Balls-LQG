@@ -153,12 +153,6 @@ theorem not_mem_supersolutionsOn_finset_punctured_of_compact_containment
     heq.symm ▸ subset_closure hac
   exact (hcl hboundary).2 ha
 
-#print axioms finset_subset_cluster_of_punctured_admissible
-#print axioms not_mem_supersolutionsOn_finset_punctured_of_compact_containment
 
-#print axioms leastSupersolution_le_at_pole_of_continuous
-#print axioms leastSupersolution_mem_finset_punctured_disc_of_zero
-#print axioms leastSupersolutionOn_finset_punctured_disc_eq_on_closedBall_of_zero
-#print axioms leastSupersolutionOn_finset_punctured_disc_mem_iff
 
 end HarmonicBalls

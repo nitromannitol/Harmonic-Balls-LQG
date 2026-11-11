@@ -110,9 +110,5 @@ theorem regularizedFamily_strongCompatibility_of_countable_on_component_of_volum
       (hUb.subset (connectedComponentIn_subset U z)) (mem_connectedComponentIn hz.1) ht hw)
     hboundary hΛ (isOpen_cluster_of_volumeGrowth hμ hV ht) hcl
 
-#print axioms isOpen_clusterOn_of_leastSupersolutionOn_mem
-#print axioms isOpen_cluster_of_volumeGrowth
-#print axioms regularizedFamily_closure_eq_of_countable_on_component_of_volumeGrowth
-#print axioms regularizedFamily_strongCompatibility_of_countable_on_component_of_volumeGrowth
 
 end HarmonicBalls

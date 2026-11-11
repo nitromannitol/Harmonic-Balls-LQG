@@ -130,11 +130,5 @@ theorem regularizedFamily_strongCompatibility_finset_punctured_disc
     exact regularizedFamily_closure_eq_discCluster_of_compact_containment
       hR hz.1 ht hΛ hopen hv hdisc
 
-#print axioms tendsto_leastSupersolutionOn_finset_punctured_disc_at_puncture
-#print axioms continuousWithinAt_finset_punctured_infimum_iff
-#print axioms leastSupersolution_eq_zero_of_finset_punctured_admissible
-#print axioms closure_clusterOn_finset_punctured_disc_eq
-#print axioms regularizedFamily_closure_eq_clusterOn_finset_punctured_disc
-#print axioms regularizedFamily_strongCompatibility_finset_punctured_disc
 
 end HarmonicBalls

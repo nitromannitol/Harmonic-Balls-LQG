@@ -138,11 +138,6 @@ theorem leastSupersolutionOn_mem_sdiff_iff_continuousOn
       (show a ∉ U \ K from fun ha => ha.2 haK) haz
     exact (heqV haV).symm.trans hzero
 
-#print axioms leastSupersolutionOn_mem_sdiff_iff_continuousOn
-#print axioms not_mem_supersolutionsOn_sdiff_of_green_pos_of_not_mem_clusterOn
 
-#print axioms mem_clusterOn_of_sdiff_admissible_of_green_pos
-#print axioms not_mem_supersolutionsOn_sdiff_of_green_pos_compact_containment
-#print axioms not_mem_supersolutionsOn_sdiff_of_near_pole_compact_containment
 
 end HarmonicBalls

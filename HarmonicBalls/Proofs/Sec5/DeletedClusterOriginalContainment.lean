@@ -60,8 +60,6 @@ theorem regularizedFamily_eq_of_deleted_cluster_contained_in_original
   exact regularizedFamily_eq_of_component_restrict_sdiff_relative_countable
     hμ hν hVμ hVν hU rfl hK hμν ht hΛ hΛ' (Or.inl hΛcl)
 
-#print axioms regularizedFamily_eq_of_deleted_cluster_contained_in_original
 
-#print axioms regularizedFamily_closure_eq_of_deleted_cluster_contained_in_original
 
 end HarmonicBalls

@@ -59,8 +59,5 @@ theorem IsLQGLimit.regularizedFamily_eq_of_finiteRank_deletion
   regularizedFamily_eq_of_restrict_sdiff_finiteRank hμ hν hVμ hVν hU hK
     (hμlim.restrict_eq hνlim (hU.sdiff hKc) hloc) ht hΛ hΛ' hcl
 
-#print axioms restrict_eq_of_restrict_sdiff_finiteRank
-#print axioms regularizedFamily_eq_of_restrict_sdiff_finiteRank
-#print axioms IsLQGLimit.regularizedFamily_eq_of_finiteRank_deletion
 
 end HarmonicBalls

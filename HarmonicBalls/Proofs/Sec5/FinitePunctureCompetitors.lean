@@ -125,10 +125,5 @@ theorem clusterOn_finset_punctured_disc_eq_sdiff
         exact h
   · exact disc_cluster_sdiff_subset_finite_punctured hμ hR hV ht.le K hK hz
 
-#print axioms LaplacianLE.add_finset_of_nonpos
-#print axioms add_finset_cappedGreenBarrier_mem_supersolutionsOn
-#print axioms leastSupersolutionOn_finset_punctured_disc_le_supersolution
-#print axioms leastSupersolutionOn_finset_punctured_disc_eq
-#print axioms clusterOn_finset_punctured_disc_eq_sdiff
 
 end HarmonicBalls

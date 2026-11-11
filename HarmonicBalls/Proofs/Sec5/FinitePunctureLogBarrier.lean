@@ -117,10 +117,6 @@ theorem IsHarmonicMinorant.sub_le_of_boundary_finset_punctured
   filter_upwards [self_mem_nhdsWithin] with ε hεpos
   exact hε ε hεpos
 
-#print axioms IsHarmonicMinorant.add_finset_log_sub_le_of_boundary
-#print axioms IsHarmonicMinorant.sub_le_of_boundary_finset_punctured
 
-#print axioms tendsto_finset_log_barrier_atBot
-#print axioms IsHarmonicMinorant.tendsto_add_finset_log_atBot
 
 end HarmonicBalls

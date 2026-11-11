@@ -82,9 +82,6 @@ theorem harmonicOnNhd_eq_of_locallyFiniteRankOn_ball
     (fun y hy hyK => sub_eq_zero.mpr (hbd y hy hyK)) hx
   exact sub_eq_zero.mp heq
 
-#print axioms harmonicOnNhd_eq_of_locallyFiniteRankOn_ball
 
-#print axioms harmonic_sub_le_of_locallyFiniteRankOn_ball
-#print axioms harmonicOnNhd_eq_zero_of_locallyFiniteRankOn_ball
 
 end HarmonicBalls

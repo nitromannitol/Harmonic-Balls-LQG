@@ -126,8 +126,6 @@ theorem exists_fieldLocal_families_of_plane_exhaustion
     rw [htop]
     exact ENNReal.ofReal_lt_top
 
-#print axioms exists_fieldLocal_families_of_plane_exhaustion
 
-#print axioms exists_fieldLocal_families_of_open_exhaustion
 
 end HarmonicBalls

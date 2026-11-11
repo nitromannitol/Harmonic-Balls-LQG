@@ -115,9 +115,6 @@ theorem polyHighProb_punctured_cluster_compact_not_admissible
     hω.2.1 zero_lt_one (hω.2.2 1 zero_lt_one) K (by simp [K]) hK hz ht.1 hpunc
   simpa [K] using And.intro hpunc hn
 
-#print axioms polyHighProb_punctured_cluster_compact_not_admissible
 
-#print axioms regularizedFamily_eq_of_restrict_eq_finset_punctured_disc
-#print axioms IsLQGLimit.regularizedFamily_eq_of_finset_punctured_disc
 
 end HarmonicBalls

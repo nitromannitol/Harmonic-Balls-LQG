@@ -91,8 +91,5 @@ theorem exists_capped_barrier_of_locallyFiniteRank
         exact ⟨hy.1, hy.2, hyW⟩
       linarith [hb₂cover y hyJ, hb₁n y]
 
-#print axioms LocallyFiniteRank.mono
-#print axioms exists_capped_barrier_of_finite
-#print axioms exists_capped_barrier_of_locallyFiniteRank
 
 end HarmonicBalls

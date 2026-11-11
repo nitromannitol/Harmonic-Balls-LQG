@@ -44,6 +44,5 @@ theorem clusterOn_countable_removal_interval_of_compact_regularizedFamily
     regularizedFamily_closure_eq_sdiff_of_restrict_eq_of_boundary
       hμ hν hVμ hVν hU hUK hUb ht.1 hz hK hμν hboundary hΛ hclt⟩
 
-#print axioms clusterOn_countable_removal_interval_of_compact_regularizedFamily
 
 end HarmonicBalls

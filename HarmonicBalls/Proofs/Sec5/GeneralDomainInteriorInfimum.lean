@@ -122,8 +122,6 @@ theorem lscRegularization_shifted_infimum_eq_of_contact
   filter_upwards [hfc.eventually (Ioi_mem_nhds (show f x - ε < f x by linarith))] with y hy _
   exact hy.le
 
-#print axioms shifted_leastSupersolutionOn_nonneg
-#print axioms lscRegularization_shifted_infimum_eq_of_contact
 
 /-- Away from the pole, the regularized shifted infimum still dominates the
 shifted Green obstacle. -/
@@ -164,7 +162,6 @@ theorem shifted_obstacle_le_lscRegularization_shifted_infimum
   dsimp [β, f] at *
   linarith
 
-#print axioms shifted_obstacle_le_lscRegularization_shifted_infimum
 
 /-- The pointwise minimum of two general-domain competitors is again a
 competitor. -/
@@ -182,7 +179,6 @@ theorem min_mem_supersolutionsOn
   · intro x hx hxz
     exact le_min (h₁.2.2 x hx hxz) (h₂.2.2 x hx hxz)
 
-#print axioms min_mem_supersolutionsOn
 
 /-- The Poisson kernel admits the classical lower Harnack bound in a disc. -/
 theorem poissonKernel_ge_harnack_factor {c x ζ : ℂ} {ρ : ℝ}
@@ -211,7 +207,6 @@ theorem poissonKernel_ge_harnack_factor {c x ζ : ℂ} {ρ : ℝ}
   have hh := mul_le_mul_of_nonneg_left hsq hfac
   nlinarith [sq_nonneg (ρ + ‖x - c‖)]
 
-#print axioms poissonKernel_ge_harnack_factor
 
 /-- Harnack's lower estimate for a Poisson integral whose boundary values
 are bounded below by a constant. -/
@@ -254,7 +249,6 @@ theorem discPoissonIntegral_sub_lower_bound {φ : ℂ → ℝ} {c x : ℂ} {ρ L
   rw [havg, hdiff c (mem_ball_self hρ), hdiff x hx] at hle
   exact hle
 
-#print axioms discPoissonIntegral_sub_lower_bound
 
 /-- A Poisson modification of a shifted competitor remains admissible when
 a constant majorizes the obstacle in the disc and is below its boundary data. -/
@@ -340,7 +334,6 @@ theorem exists_poisson_modified_supersolutionOn
   rw [poissonModification_of_mem hy]
   ring
 
-#print axioms exists_poisson_modified_supersolutionOn
 
 /-- On a disc with a constant barrier, the shifted frozen infimum is the
 greatest lower bound of the Poisson integrals of shifted competitors. -/
@@ -396,7 +389,6 @@ theorem isGLB_poissonIntegrals_shifted_supersolutionsOn
     change a ≤ leastSupersolutionOn μ U z t x + q x
     linarith
 
-#print axioms isGLB_poissonIntegrals_shifted_supersolutionsOn
 
 /-- The lower semicontinuous regularization of the shifted frozen infimum is
 superharmonic, even when the domain boundary is irregular. -/
@@ -466,9 +458,7 @@ theorem isSuperharmonicOn_shifted_infimum_of_lowerSemicontinuous
     exact hy.le
   exact (isSuperharmonicOn_lscRegularization_shifted_infimum hμ hR hV hU hsub hz ht).congr heq
 
-#print axioms isSuperharmonicOn_shifted_infimum_of_lowerSemicontinuous
 
-#print axioms isSuperharmonicOn_lscRegularization_shifted_infimum
 
 /-- Strict separation of the regularized envelope from the obstacle gives a
 constant barrier on a sufficiently small disc. -/
@@ -522,7 +512,6 @@ theorem exists_constant_barrier_of_strict_regularized_noncontact
   · intro y hy _
     exact (hδsub (hcb (ball_subset_closedBall hy))).2.1.le
 
-#print axioms exists_constant_barrier_of_strict_regularized_noncontact
 
 /-- The shifted obstacle tends to minus infinity at the pole, so a constant
 barrier exists there without assuming regularity of the infimum. -/
@@ -552,7 +541,6 @@ theorem exists_constant_barrier_at_pole
   · intro y hy hyz
     exact ((hδsub (hcb (ball_subset_closedBall hy))).2 hyz).le
 
-#print axioms exists_constant_barrier_at_pole
 
 /-- The shifted frozen infimum has a Poisson-integral representation on a
 small disc about the pole. -/
@@ -569,7 +557,6 @@ theorem exists_poisson_infimum_disc_at_pole
   exact ⟨ρ, hρ, hdisc, fun x hx =>
     isGLB_poissonIntegrals_shifted_supersolutionsOn hμ hR hV hU hsub hz ht.le hρ hdisc hb ho hx⟩
 
-#print axioms exists_poisson_infimum_disc_at_pole
 
 /-- Superharmonicity of the shifted frozen infimum is sufficient for both
 interior conclusions. This isolates the local envelope step. -/
@@ -665,7 +652,6 @@ theorem continuousAt_shifted_infimum_of_constant_barrier
         (hU.mem_nhds hcU)).upperSemicontinuousAt
   exact continuousAt_iff_lower_upperSemicontinuousAt.2 ⟨hl, hu⟩
 
-#print axioms continuousAt_shifted_infimum_of_constant_barrier
 
 /-- At every off-pole point the shifted obstacle admits an arbitrarily small
 constant barrier error against the shifted infimum. -/
@@ -721,7 +707,6 @@ theorem exists_approximate_constant_barrier_off_pole
   · intro y hy _
     exact (hδsub (hcb (ball_subset_closedBall hy))).2.1.le
 
-#print axioms exists_approximate_constant_barrier_off_pole
 
 /-- The shifted infimum is continuous at the pole. -/
 theorem continuousAt_shifted_infimum_at_pole
@@ -733,7 +718,6 @@ theorem continuousAt_shifted_infimum_at_pole
   obtain ⟨ρ, L, hρ, hd, hb, ho⟩ := exists_constant_barrier_at_pole hμ hR hV hU hsub hz ht
   exact continuousAt_shifted_infimum_of_constant_barrier hμ hR hV hU hsub hz ht.le hρ hd hb ho
 
-#print axioms continuousAt_shifted_infimum_at_pole
 
 /-- A nonnegative constant may be added to a supersolution. -/
 theorem supersolutionsOn_add_nonneg_const {μ : Measure ℂ} {U : Set ℂ}
@@ -804,7 +788,6 @@ theorem shifted_infimum_lower_bound_of_approximate_barrier
   dsimp [f, q, k] at *
   linarith
 
-#print axioms shifted_infimum_lower_bound_of_approximate_barrier
 
 /-- The shifted general-domain infimum is lower semicontinuous in the interior. -/
 theorem lowerSemicontinuousOn_shifted_infimum
@@ -849,15 +832,8 @@ theorem general_domain_interior_infimum_regularity
   exact isSuperharmonicOn_shifted_infimum_of_lowerSemicontinuous hμ hR hV hU hsub hz ht.le
     (lowerSemicontinuousOn_shifted_infimum hμ hR hV hU hsub hz ht)
 
-#print axioms lowerSemicontinuousOn_shifted_infimum
-#print axioms general_domain_interior_infimum_regularity
 
-#print axioms interior_regularity_of_shifted_superharmonic
 
-#print axioms continuousAt_leastSupersolutionOn_of_contact
 
-#print axioms bddBelow_supersolutionsOn_values_interior
-#print axioms leastSupersolutionOn_le_of_mem_interior
-#print axioms upperSemicontinuousAt_leastSupersolutionOn_interior
 
 end HarmonicBalls

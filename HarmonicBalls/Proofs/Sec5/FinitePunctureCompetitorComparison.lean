@@ -90,10 +90,5 @@ theorem disc_cluster_sdiff_subset_finite_punctured_of_green_eq
       dsimp only [odometer]
       linarith
 
-#print axioms closure_sdiff_finset_of_isOpen
-#print axioms finite_punctured_disc_supersolution_mem_disc
-#print axioms leastSupersolution_le_finite_punctured_disc
-#print axioms mem_clusterOn_finite_punctured_disc_of_green_gap
-#print axioms disc_cluster_sdiff_subset_finite_punctured_of_green_eq
 
 end HarmonicBalls

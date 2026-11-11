@@ -504,25 +504,5 @@ theorem leastSupersolutionOn_positive_affine_at_pole {μ : Measure ℂ}
   leastSupersolutionOn_positive_affine_of_bddBelow (Metric.isBounded_ball.subset hsub)
     hk hc ht (bddBelow_supersolutionsOn_values_pole hμ hR hV hU hsub hz) a
 
-#print axioms greenFunction_positive_affine
-#print axioms supersolutionsOn_comp_real_smul
-#print axioms LaplacianLE.comp_add_right
-#print axioms supersolutionsOn_comp_add_right
-#print axioms supersolutionsOn_comp_real_smul_inv
-#print axioms leastSupersolutionOn_comp_real_smul
-#print axioms clusterOn_comp_real_smul
-#print axioms supersolutionsOn_comp_add_right_inv
-#print axioms leastSupersolutionOn_comp_add_right
-#print axioms clusterOn_comp_add_right
-#print axioms clusterOn_map_real_smul
-#print axioms clusterOn_map_add_right
-#print axioms clusterOn_positive_affine
-#print axioms leastSupersolutionOn_positive_affine
-#print axioms odometerOn_positive_affine
-#print axioms supersolutionsOn_comp_positive_affine
-#print axioms supersolutionsOn_comp_positive_affine_inv
-#print axioms leastSupersolutionOn_comp_real_smul_of_bddBelow
-#print axioms leastSupersolutionOn_positive_affine_of_bddBelow
-#print axioms leastSupersolutionOn_positive_affine_at_pole
 
 end HarmonicBalls

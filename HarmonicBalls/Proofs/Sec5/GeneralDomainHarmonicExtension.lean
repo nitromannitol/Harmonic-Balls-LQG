@@ -74,8 +74,6 @@ theorem harmonic_extension_unique_of_locallyFiniteRankOn
   exact heq.of_subset_closure hf.continuousOn hg.continuousOn sdiff_subset
     (by rw [hcl]; exact subset_closure)
 
-#print axioms harmonic_extension_unique_of_locallyFiniteRankOn
 
-#print axioms exists_harmonic_extension_of_locallyFiniteRankOn
 
 end HarmonicBalls

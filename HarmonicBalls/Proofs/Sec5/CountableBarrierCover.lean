@@ -876,20 +876,5 @@ theorem closure_clusterOn_countable_sdiff_eq
   rw [clusterOn_countable_sdiff_eq hμ hU hUb hUR hKc hK hz hqc hq ht hw]
   exact closure_sdiff_countable_inter hopen (hK.mono inter_subset_left)
 
-#print axioms leastSupersolutionOn_countable_sdiff_eq
-#print axioms clusterOn_countable_sdiff_eq
-#print axioms closure_clusterOn_countable_sdiff_eq
-#print axioms leastSupersolutionOn_le_countable_punctured
-#print axioms isSuperharmonicOn_of_countable_removal
-#print axioms laplacianLE_zero_of_countable_removal
-#print axioms isSubharmonicOn_ball_sdiff_le_of_countable
-#print axioms clusterOn_countable_sdiff_subset_clusterOn_sdiff
-#print axioms greenFunction_sdiff_of_countable
-#print axioms supersolution_mem_sdiff_of_countable_interior_zero
-#print axioms exists_harmonic_extension_of_countable
-#print axioms harmonic_extension_unique_of_countable
-#print axioms exists_capped_barrier_of_countable
-#print axioms greenFunction_ball_sdiff_of_countable
-#print axioms leastSupersolutionOn_countable_punctured_le_supersolution
 
 end HarmonicBalls

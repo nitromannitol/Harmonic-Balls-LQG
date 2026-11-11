@@ -63,7 +63,6 @@ theorem hasLaplacian_general_green {U : Set ℂ} (hU : IsOpen U)
     (integrable_mul_laplacian_of_test hhL.1 hφ), hhφ, add_zero]
   exact hdφ
 
-#print axioms hasLaplacian_general_green
 
 /-- The actual infimum lies above its Green obstacle away from the pole. -/
 theorem green_obstacle_le_leastSupersolutionOn
@@ -284,15 +283,8 @@ theorem general_clusterOn_mass_le_of_compact_containment
   obtain ⟨ν, -, -, hm⟩ := general_odometer_mass_of_compact_containment hμ hR hV hU hsub hz ht hcl
   exact le_trans (le_add_right le_rfl) (le_of_eq hm)
 
-#print axioms general_odometer_mass_of_compact_containment
-#print axioms general_clusterOn_mass_le_of_compact_containment
 
-#print axioms general_odometer_mass_decomposition
 
-#print axioms laplacianGE_general_odometer_off_pole
 
-#print axioms harmonicOnNhd_general_green_off_pole
-#print axioms green_obstacle_le_leastSupersolutionOn
-#print axioms general_odometer_eq_zero_of_notMem_clusterOn
 
 end HarmonicBalls

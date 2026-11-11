@@ -199,15 +199,9 @@ theorem exists_local_harmonic_replacement_of_locallyFiniteRankOn
     hr.1 hball hKclosed hK hdis hh' hbound'
   exact ⟨r, hr.1, q, hq, heq⟩
 
-#print axioms exists_local_harmonic_replacement_of_locallyFiniteRankOn
 
-#print axioms exists_harmonic_replacement_of_locallyFiniteRankOn_ball
 
-#print axioms harmonic_eq_of_locallyFiniteRankOn_ball_of_continuous_boundary
 
-#print axioms harmonic_sub_le_of_locallyFiniteRankOn_ball_of_continuous_boundary
 
-#print axioms exists_radius_sphere_disjoint_of_countable
-#print axioms exists_radius_sphere_disjoint_of_locallyFiniteRankOn
 
 end HarmonicBalls

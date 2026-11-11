@@ -133,11 +133,6 @@ theorem closure_clusterOn_locallyFiniteRankOn_punctured_eq_of_green_eq
       (show K ∩ clusterOn μ U z t ⊆ K ∩ U from
         fun _ hx => ⟨hx.1, hx.2.1⟩)
 
-#print axioms LocallyFiniteRankOn.mono_domain
-#print axioms clusterOn_locallyFiniteRankOn_punctured_eq_sdiff_of_green_eq
-#print axioms closure_clusterOn_locallyFiniteRankOn_punctured_eq_of_green_eq
 
-#print axioms leastSupersolutionOn_locallyFiniteRankOn_punctured_le_supersolution
-#print axioms leastSupersolutionOn_locallyFiniteRankOn_punctured_eq_of_green_eq
 
 end HarmonicBalls

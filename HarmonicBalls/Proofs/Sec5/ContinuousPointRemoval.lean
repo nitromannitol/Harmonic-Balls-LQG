@@ -106,10 +106,5 @@ theorem clusterOn_punctured_disc_eq_sdiff {μ : Measure ℂ} (hμ : IsLocallyFin
   exact clusterOn_punctured_disc_eq_sdiff_of_zero_point_removal hμ hR hV ha hz ht
     (fun _ hv hvΔ => laplacianLE_zero_of_punctured isOpen_ball ha hv hvΔ)
 
-#print axioms leastSupersolutionOn_punctured_disc_eq
-#print axioms laplacianLE_punctured_disc
-#print axioms clusterOn_punctured_disc_eq_sdiff
-#print axioms isSuperharmonicOn_of_punctured
-#print axioms laplacianLE_zero_of_punctured
 
 end HarmonicBalls

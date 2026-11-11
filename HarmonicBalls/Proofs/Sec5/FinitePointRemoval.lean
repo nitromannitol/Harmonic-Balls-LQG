@@ -65,9 +65,5 @@ theorem laplacianLE_disc_of_finite_removal {μ : Measure ℂ}
     ((greenPotentialBallContinuousStep_holds μ hμ R βm βp hR hV).mono ball_subset_closedBall)
     (greenPotentialBallLaplacianStep_holds μ hμ R βm βp hR hV) K hw
 
-#print axioms laplacianLE_zero_of_finite_removal
-#print axioms isSuperharmonicOn_of_finite_removal
-#print axioms laplacianLE_of_finite_removal
-#print axioms laplacianLE_disc_of_finite_removal
 
 end HarmonicBalls

@@ -711,7 +711,6 @@ theorem eventually_clusterOn_eq_countable_deleted_disc_of_compact_containment
   filter_upwards [hstable] with n hn
   exact hn.trans heq.symm
 
-#print axioms eventually_clusterOn_eq_countable_deleted_disc_of_compact_containment
 
 /-- For a punctured disc, compact containment of the limiting cluster makes
 regular exhaustion clusters eventually equal that cluster as sets. The proof
@@ -795,29 +794,6 @@ theorem regularizedFamily_closure_eq_clusterOn_of_regular_exhaustion
     hcover hsub hz ht hboundary]
   exact (closure_iUnion_eq_of_eventually_closure_eq _ hclusters hev).symm
 
-#print axioms eventually_sweep_eq_of_open_exhaustion
-#print axioms tendsto_sweep_limit_of_open_exhaustion
-#print axioms tendsto_greenFunction_of_open_exhaustion
-#print axioms tendsto_odometerOn_of_regular_exhaustion
-#print axioms iUnion_clusterOn_eq_of_regular_exhaustion
-#print axioms closure_iUnion_eq_of_eventually_closure_eq
-#print axioms regularizedFamily_closure_eq_clusterOn_of_regular_exhaustion
-#print axioms eventually_clusterOn_eq_punctured_disc_of_compact_containment
 
-#print axioms eventually_clusterOn_eq_enclosing_disc_of_compact_containment
-#print axioms iUnion_clusterOn_subset_of_regular_exhaustion
-#print axioms eventually_closure_clusterOn_eq_regularized_of_exhaustion
-#print axioms eventually_clusterOn_eq_disc_of_regularized_compact_containment
-#print axioms odometerOn_eq_disc_of_compact_disc_cluster
-#print axioms eventually_odometerOn_eq_disc_of_regularized_compact_containment
-#print axioms eventually_odometerOn_eq_countable_deleted_disc
-#print axioms eventually_eqOn_odometerOn_disc_of_regularized_compact_containment
-#print axioms eventually_odometerOn_eq_disc_of_clusterOn_compact_containment
-#print axioms eventually_odometerOn_eq_countable_deleted_disc_of_compact_containment
-#print axioms exists_shifted_clipped_supersolutionOn_extension
-#print axioms leastSupersolutionOn_le_of_subdomain_admissible
-#print axioms leastSupersolutionOn_le_of_regular_subdomain
-#print axioms odometerOn_gap_le_greenFunction_gap
-#print axioms regularized_closure_subset_clusterOn_of_regular_exhaustion
 
 end HarmonicBalls

@@ -114,9 +114,5 @@ theorem regularizedFamily_strongCompatibility_of_countable_on_disc_intersection_
   · exact hΛ
   · exact hcl
 
-#print axioms tendsto_greenFunction_zero_of_enclosing_disc
-#print axioms exists_enclosing_disc_of_eq_iInter_ball
-#print axioms regularizedFamily_strongCompatibility_of_component_enclosing_discs
-#print axioms regularizedFamily_strongCompatibility_of_countable_on_disc_intersection_component
 
 end HarmonicBalls

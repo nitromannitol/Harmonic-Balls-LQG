@@ -116,9 +116,5 @@ theorem disc_cluster_sdiff_subset_finite_punctured
   disc_cluster_sdiff_subset_finite_punctured_of_green_eq hμ hR hV ht K
     (fun _ hx hxz => greenFunction_finset_punctured_ball K hK hz hx hxz)
 
-#print axioms IsHarmonicMinorant.le_greatestHarmonicMinorantBall_finset_punctured
-#print axioms greatestHarmonicMinorant_finset_punctured_ball
-#print axioms greenFunction_finset_punctured_ball
-#print axioms disc_cluster_sdiff_subset_finite_punctured
 
 end HarmonicBalls

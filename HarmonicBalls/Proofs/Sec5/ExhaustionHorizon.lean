@@ -156,10 +156,5 @@ theorem exists_fieldLocal_horizons_diverging_of_open_exhaustion
   exact ⟨(hKω z).1, (hKω z).2.1, (hKω z).2.2.2.1,
     (hKω z).2.2.2.2.1.trans htop, by simpa only [htop] using (hKω z).2.2.2.2.2⟩
 
-#print axioms IsCompact.subset_monotone_open_iUnion
-#print axioms exact_containment_horizon_iSup
-#print axioms exists_fieldLocal_horizons_of_open_exhaustion
-#print axioms exact_containment_horizon_univ
-#print axioms exists_fieldLocal_horizons_diverging_of_open_exhaustion
 
 end HarmonicBalls

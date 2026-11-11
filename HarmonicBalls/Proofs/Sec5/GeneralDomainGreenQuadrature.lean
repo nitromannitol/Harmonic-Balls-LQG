@@ -683,20 +683,5 @@ theorem general_clusterOn_isHarmonicBallGen_of_frontier_null
   rw [integral_sub h1.1 h2.1, hq.2, h1.2, h2.2]
   ring
 
-#print axioms general_clusterOn_isHarmonicBallGen_of_frontier_null
-#print axioms general_clusterOn_greenPotential_quadrature
-#print axioms aestronglyMeasurable_greenFunction_prod_of_compact
-#print axioms general_clusterOn_green_quadrature_exterior
-#print axioms general_odometer_green_representation
-#print axioms general_odometer_newton_representation
-#print axioms general_odometer_enclosingDisc_green_representation
-#print axioms HasLaplacian.congr_ae_volume
-#print axioms general_odometer_zero_extended_hasLaplacian
-#print axioms HasLaplacian.extend_by_zero_of_compact
-#print axioms integrable_greenFunction_source_of_compact
-#print axioms integrable_greenFunction_ball_obstacle_mass
-#print axioms general_clusterOn_obstacle_mass_le
-#print axioms general_clusterOn_green_quadrature_away_closure
-#print axioms general_clusterOn_isHarmonicBall_of_frontier_null
 
 end HarmonicBalls

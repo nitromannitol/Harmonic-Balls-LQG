@@ -105,9 +105,5 @@ theorem regularizedFamily_containment_iff_relative_countable_disc
       hμ hV hR K hD hK hz ht hΛ (Or.inr hcl)]
     exact hcl
 
-#print axioms clusterOn_relative_countable_disc_eq_sdiff
-#print axioms closure_clusterOn_relative_countable_disc_eq
-#print axioms regularizedFamily_strongCompatibility_relative_countable_disc
-#print axioms regularizedFamily_containment_iff_relative_countable_disc
 
 end HarmonicBalls

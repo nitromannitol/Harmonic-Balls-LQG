@@ -95,9 +95,5 @@ theorem ae_uniform_finset_punctured_disc_infimum_not_admissible
   exact finite_puncture_inadmissible_of_singleton hV.1 zero_lt_one
     (hV.2 1 zero_lt_one) K hK ha hzK ht.1 (hsmall t ht z hz a (hK ha) hdist)
 
-#print axioms finite_puncture_admissible_of_subset
-#print axioms finite_puncture_inadmissible_of_singleton
-#print axioms polyHighProb_uniform_finset_punctured_disc_infimum_not_admissible
-#print axioms ae_uniform_finset_punctured_disc_infimum_not_admissible
 
 end HarmonicBalls

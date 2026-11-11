@@ -85,11 +85,5 @@ theorem IsLQGLimit.regularizedFamily_eq_of_countable_deletion
   regularizedFamily_eq_of_restrict_sdiff_countable hμ hν hVμ hVν hU hK
     (hμlim.restrict_eq hνlim (hU.sdiff hKc) hloc) ht hΛ hΛ' hcl
 
-#print axioms VolumeGrowth.measure_countable
-#print axioms measure_countable_of_volumeGrowth_allScales
-#print axioms cluster_eq_of_restrict_sdiff_countable
-#print axioms restrict_eq_of_restrict_sdiff_eq_of_null
-#print axioms regularizedFamily_eq_of_restrict_sdiff_countable
-#print axioms IsLQGLimit.regularizedFamily_eq_of_countable_deletion
 
 end HarmonicBalls

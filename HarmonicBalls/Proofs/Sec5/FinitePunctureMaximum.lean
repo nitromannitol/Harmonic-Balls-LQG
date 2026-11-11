@@ -106,8 +106,5 @@ theorem harmonicOnNhd_finset_punctured_ball_le_of_tendsto_atBot
     rw [circleAverage_neg_fun, Pi.neg_apply, hmean]
   exact isSubharmonicOn_finset_punctured_ball_le_of_tendsto_atBot K hcont hsub hlim hbd
 
-#print axioms isSubharmonicOn_finset_punctured_ball_le_of_tendsto_atBot
-#print axioms harmonicOnNhd_finset_punctured_ball_le_of_tendsto_atBot
-#print axioms harmonicOnNhd_finset_log_barrier
 
 end HarmonicBalls

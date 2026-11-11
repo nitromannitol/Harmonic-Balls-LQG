@@ -100,7 +100,6 @@ theorem exists_supersolutionOn_uniformly_lt
   obtain ⟨a, ha, hxa⟩ := mem_iUnion₂.mp (hF hx)
   exact hwlt a ha x hxa
 
-#print axioms exists_supersolutionOn_uniformly_lt
 
 /-- A constant-barrier disc has the Poisson extension of the actual
 frozen infimum as its shifted infimum. -/
@@ -163,7 +162,6 @@ theorem shifted_infimum_eq_discPoissonIntegral
     hρ hd hb ho hx).1 ⟨w, hw, rfl⟩
   exact hg.trans hmono
 
-#print axioms shifted_infimum_eq_discPoissonIntegral
 
 /-- The shifted general-domain infimum is harmonic on its noncontact set. -/
 theorem harmonicOnNhd_shifted_infimum_clusterOn
@@ -208,7 +206,6 @@ theorem harmonicOnNhd_shifted_infimum_clusterOn
   filter_upwards [isOpen_ball.mem_nhds (mem_ball_self hρ)] with y hy
   exact shifted_infimum_eq_discPoissonIntegral hμ hR hV hU hsub hz ht hρ hd hb ho hy
 
-#print axioms harmonicOnNhd_shifted_infimum_clusterOn
 
 /-- Removing a potential from a distributionally harmonic sum gives the
 positive measure as the Laplacian. -/
@@ -249,8 +246,5 @@ theorem hasLaplacian_leastSupersolutionOn_clusterOn
   exact hasLaplacian_zero_of_harmonicOnNhd hopen
     (harmonicOnNhd_shifted_infimum_clusterOn hμ hR hV hU hsub hz ht)
 
-#print axioms hasLaplacian_leastSupersolutionOn_clusterOn
-#print axioms hasLaplacian_of_add_potential_zero
-#print axioms isOpen_clusterOn_of_volumeGrowth
 
 end HarmonicBalls
