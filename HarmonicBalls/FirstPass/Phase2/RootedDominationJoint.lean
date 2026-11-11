@@ -289,7 +289,10 @@ lemma ae_section_ref_null {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [Is
   rw [measure_congr hset]
   exact hz
 
-/-- **Conditional rooted domination (fp-audit-r1-b2; route Steps 2-6 and 12 of section 5, CHATGPT-219).** From the
+/-- SUPERSEDED: takes the FALSE hJoint (MQ-lh-13); use `localRootedFieldMeasureDomination_of_jointPos_of_shifted`
+(RootedDominationJointPos.lean).
+
+**Conditional rooted domination (fp-audit-r1-b2; route Steps 2-6 and 12 of section 5, CHATGPT-219).** From the
 joint marked DMS identity `hJoint` (Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10; PENDING R26), the
 measurable profile decoder `hProf` (`LQGMeasureOfProfileMeasurableFrozen`), the circle-profile selector `hSel`
 (PENDING ruling 2) and the shifted decoder transfer `hShift` (PENDING R29), the local rooted comparison
