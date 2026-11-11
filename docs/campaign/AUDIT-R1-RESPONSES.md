@@ -74,8 +74,8 @@ Commits: `3518c8f8`, `987564de` (z7, email and ledger); `04195351` (z3, tex mark
 | Item | Status | Note |
 |---|---|---|
 | B1 Section 11 bridge inputs | IN PROGRESS (z4, task fp-audit-r1-b1-measurability-inputs; earlier task fp-audit-r1-b1-local-metric-replacement) | Partial commit 95e4ac15 (z4): the unrooted clause (18) of `LocalMetricReplacementStmt` is derived from `unrooted_identity_fixedMetric` in `HarmonicBalls/FirstPass/Phase2/LocalMetricReplacementDerived.lean`; binders hFA (Proposed), hB1, hCM, hPhi (unprinted frozen). z4 report: BLOCKED-partial; the rooted clause and the full bridge are blocked by unprinted steps. |
-| B2 `hL1` (Lemma 8.2 step) | IN PROGRESS (z3, task fp-audit-r1-b2-rooted-domination) | No commit yet. Not an email item. |
-| B3 I1 `hFull`, I2 `hgrowth` | IN PROGRESS (z6, task fp-audit-r1-b2-b3-lean, step DerivedInputs4) | No commit yet. The repo already derives them (audit). |
+| B2 `hL1` (Lemma 8.2 step) | IN PROGRESS (z3, task fp-audit-r1-b2-rooted-domination) | No commit yet; uncommitted `HarmonicBalls/FirstPass/Phase2/RootedDominationDerived.lean`. Not an email item. |
+| B3 I1 `hFull`, I2 `hgrowth` | IN PROGRESS (z6, task fp-audit-r1-b2-b3-lean, step DerivedInputs4) | No commit yet; uncommitted `HarmonicBalls/FirstPass/Phase2/DerivedInputs4.lean`. The repo already derives them (audit). |
 | B3 `hholder` (Prop 2.5) | DISPUTED | Lead ruling (operator 04:40 UTC): Prop 2.5 / hholder stays a cited input; the paper proves it by citation to Ponce §16.2. No change. |
 | MINOR (B) HB list | IN PROGRESS (z6, fp-audit-r1-b2-b3-lean) | Retired `hWeyl` and duplicate binders; universe-0 corollary of 11.13; ξ via `Classical.choice` (record); Lean Prop 5.2 docstring (all-t form); `greenPotentialClass` reading (record). |
 
@@ -83,9 +83,20 @@ Commits: `3518c8f8`, `987564de` (z7, email and ledger); `04195351` (z3, tex mark
 
 A7, A8, A9, A10, B4, B5, B6, B7 concern `idla/MatedCRT`. They are not HB rows and are not addressed here.
 
+## Decoder inputs (audit B1 "similar decoder inputs", round 2)
+
+| Prop (file:line) | Status | Note |
+|---|---|---|
+| `LocalMeasureKernelStmt` (`FirstPass/S11r/Frozen.lean:144`) | BLOCKED-STEP | Cites DS arXiv:0808.1560 Prop 1.1, Sheffield–Wang, paper §2.2–2.3. Written route is a sketch only (`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` §2 Step 2): a countable measurable code, then the dyadic GMC limit. No written proof that the limit map is Borel. |
+| `LocalLQGDecoderCommonFrozen` (`FirstPass/Frozen/S11c.lean:388`) | BLOCKED-STEP | Its docstring says "not stated verbatim" in DS. Route sketch in `CHATGPT-11-7-G1-G2-Q1.md` (line 32, "one Borel operation taking the local dyadic GMC limit"). Same missing step. |
+| `LQGCanonicalDecodersExistStmt` (`FirstPass/Frozen/S11n.lean:33`) | BLOCKED-STEP | Docstring: "no single printed theorem with this exact Lean type". Measure step as above. Metric step needs the free-ξ reduction (`CHATGPT-hb-decoders-weyl.md` §2.3), which says a further theorem is needed, not in External/Proposed. |
+| `LQGCanonicalDecodersMeasurableExistStmt` (`FirstPass/Frozen/S11n.lean:71`) | BLOCKED-STEP | Same two missing steps, plus Borel measurability of the measure kernel (`CHATGPT-hb-decoders-weyl.md` §3, "can be constructed", not written). |
+
+Detail: reports/z7.md.
+
 ## Open after this round
 
-1. Lead: email and ledger for IDLA are not in this repository. Not mine.
+1. Decoder inputs: four BLOCKED-STEP rows above; no `_derived` theorem yet (missing: Borel dyadic GMC-limit map; free-ξ metric reduction).
 2. Operator: steps4-final.tex attachment or relocation (C48, C51); INTERNAL [C10] vs [C51]; A2 volume-growth step (z3 observation).
 3. z3: A5 site check (Prop 6.1 and Lemma 10.1 proofs); G-item repairs routed by operator.
 4. z4 (B1, rooted clause and full bridge), z3 (B2 hL1), z6 (B3 I1/I2, MINOR Lean): pending their reports.
