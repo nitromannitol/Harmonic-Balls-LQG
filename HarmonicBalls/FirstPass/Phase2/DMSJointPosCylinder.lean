@@ -115,4 +115,35 @@ theorem generateFrom_cyl : mX = MeasurableSpace.generateFrom cyl := by
   obtain ⟨n, m, φ, c, E, hφ, hE, rfl⟩ := hs
   exact measurable_obs hφ hE
 
+/-- **J2.** The cylinders form a π-system. The intersection of two cylinders is the cylinder of the concatenated families
+`Fin.append φ φ'`, `Fin.append c c'`, with the set cut out by the two reindexings `Fin.castAdd` and `Fin.natAdd`. -/
+theorem isPiSystem_cyl : IsPiSystem cyl := by
+  rintro _ ⟨n, m, φ, c, E, hφ, hE, rfl⟩ _ ⟨n', m', φ', c', E', hφ', hE', rfl⟩ _
+  have hL : Measurable fun w : (Fin (n + n') → ℝ) × (Fin (m + m') → ℝ) × ℂ =>
+      ((fun i : Fin n => w.1 (Fin.castAdd n' i)), (fun k : Fin m => w.2.1 (Fin.castAdd m' k)), w.2.2) :=
+    Measurable.prodMk (measurable_pi_iff.2 fun i => (measurable_pi_apply _).comp measurable_fst)
+      (Measurable.prodMk (measurable_pi_iff.2 fun k =>
+        (measurable_pi_apply _).comp (measurable_fst.comp measurable_snd)) (measurable_snd.comp measurable_snd))
+  have hR : Measurable fun w : (Fin (n + n') → ℝ) × (Fin (m + m') → ℝ) × ℂ =>
+      ((fun i : Fin n' => w.1 (Fin.natAdd n i)), (fun k : Fin m' => w.2.1 (Fin.natAdd m k)), w.2.2) :=
+    Measurable.prodMk (measurable_pi_iff.2 fun i => (measurable_pi_apply _).comp measurable_fst)
+      (Measurable.prodMk (measurable_pi_iff.2 fun k =>
+        (measurable_pi_apply _).comp (measurable_fst.comp measurable_snd)) (measurable_snd.comp measurable_snd))
+  refine ⟨n + n', m + m', Fin.append φ φ', Fin.append c c',
+    (fun w : (Fin (n + n') → ℝ) × (Fin (m + m') → ℝ) × ℂ =>
+        ((fun i : Fin n => w.1 (Fin.castAdd n' i)), (fun k : Fin m => w.2.1 (Fin.castAdd m' k)), w.2.2)) ⁻¹' E ∩
+      (fun w : (Fin (n + n') → ℝ) × (Fin (m + m') → ℝ) × ℂ =>
+        ((fun i : Fin n' => w.1 (Fin.natAdd n i)), (fun k : Fin m' => w.2.1 (Fin.natAdd m k)), w.2.2)) ⁻¹' E',
+    ?_, ?_, ?_⟩
+  · intro i
+    refine Fin.addCases (motive := fun i => IsTestFunction Set.univ (Fin.append φ φ' i))
+      (fun j => ?_) (fun j => ?_) i
+    · rw [Fin.append_left]
+      exact hφ j
+    · rw [Fin.append_right]
+      exact hφ' j
+  · exact (hE.preimage hL).inter (hE'.preimage hR)
+  · ext x
+    simp [obs, Fin.append_left, Fin.append_right]
+
 end HarmonicBalls.DMSJointPosCylinder
