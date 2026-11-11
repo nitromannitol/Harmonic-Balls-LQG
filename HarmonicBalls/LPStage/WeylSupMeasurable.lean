@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Suprema over a set of a lower semicontinuous random field: countable reduction and a.e. measurability
 
-General measure theory, with no Harmonic-Balls object. Staged for `LatticeProb.Prob`; only Mathlib is imported.
+General measure theory, with no Harmonic-balls object. Namespace `LatticeProb.Prob`; only Mathlib is imported.
 For a supremum `⨆ x ∈ S, F ω x` in `ℝ≥0∞` over an uncountable set `S`:
 
 * `iSup_mem_eq_iSup_mem_of_lowerSemicontinuousOn`: a function that is lower semicontinuous on `S` has the same
@@ -12,9 +12,9 @@ For a supremum `⨆ x ∈ S, F ω x` in `ℝ≥0∞` over an uncountable set `S`
   `D ⊆ S` dense in `S`, and `x ↦ F ω x` is lower semicontinuous on `S` for almost every `ω`, then
   `ω ↦ ⨆ x ∈ S, F ω x` is a.e. measurable.
 
-These are the reduction step for `WeylShiftedSupMeasurableFrozen` (the supremum over a closed dyadic square of the
-internal metric of a Weyl-shifted LQG metric). Their hypotheses on `F` are not supplied here; see
-`HarmonicBalls/FirstPass/Phase2/WeylShiftedSupDerived.lean`.
+These are the reduction step for the almost-everywhere measurability of the supremum over a closed dyadic square of the
+internal metric of a Weyl-shifted LQG metric, as used in the Lean formalization accompanying [Harmonic balls in Liouville quantum gravity, arXiv:2208.11795]. Their hypotheses on
+`F` are not supplied here; the derivation that supplies them is in that formalization.
 -/
 
 open MeasureTheory Filter Topology Set

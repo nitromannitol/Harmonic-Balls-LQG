@@ -3,9 +3,10 @@ import Mathlib
 /-!
 # Deterministic estimates for measures with a power weight at the origin
 
-LP copy of `HarmonicBalls/Proofs/Sec2/MultiscaleMass.lean` (140 lines), the ingredients of the multiscale argument for
-Lemma 2.4 near the log singularity (Berestycki-Powell, Lemma A.1 of the BG20 reference; Steps `SingularWeightStep` and
-`WholePlaneScaledBallMassStep` of `HarmonicBalls/Steps/Sec2/VolumeGrowth.lean`). Throughout, `m` and `m₀` are measures on
+Adapted from the Lean formalization accompanying [Harmonic balls in Liouville quantum gravity, arXiv:2208.11795],
+the ingredients of the multiscale argument for arXiv:2208.11795, Lemma 2.4 near the logarithmic singularity (Berestycki and
+Gwynne, Random walks on mated-CRT planar maps and Liouville Brownian motion, arXiv:2003.10320, Lemma A.1, p. 66 of v2).
+Throughout, `m` and `m₀` are measures on
 `ℂ` with `m({0}) = 0` and `m = |x|^e m₀` on `ℂ \ {0}`, the relation between `μ_h` and `μ_{h^ℂ}` for `e = -γα₀`.
 
 * `measure_le_of_rpow_norm_le`, `le_measure_of_le_rpow_norm`: comparison of `m` and `m₀` on sets where the weight is bounded.

@@ -3,8 +3,9 @@ import Mathlib
 /-!
 # Weighted masses of random measures: measurability and approximation (general measure theory)
 
-Staged for `LatticeProb.Prob`. Only Mathlib is imported, and no Harmonic-Balls object occurs in a statement.
-Three facts, used by `HarmonicBalls/FirstPass/Phase2/WeylShiftedMassDerived.lean`:
+Namespace `LatticeProb.Prob`. Only Mathlib is imported, and no Harmonic-balls object occurs in a statement.
+Adapted from the Lean formalization accompanying [Harmonic balls in Liouville quantum gravity, arXiv:2208.11795], where three facts below are used in the derivation of the
+almost-everywhere measurability of Weyl-shifted LQG masses:
 
 * `measurable_lintegral_of_caratheodory`: if `h : Ω → ℂ → ℝ` is measurable in `ω` for each `z` and continuous in `z`
   for each `ω`, then `ω ↦ ∫⁻ z, φ z * G (h ω z)` is measurable (Fubini for a Carathéodory integrand).

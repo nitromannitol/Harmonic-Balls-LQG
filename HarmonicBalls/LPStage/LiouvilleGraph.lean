@@ -17,14 +17,13 @@ the whole-plane field layer of `LatticeProb/Gauss/GFF.lean` (namespace `LatticeP
   exponent tends to `1 / d`.
 * `LatticeProb.LQG.IsWholePlaneLQGDimension γ d`: `d > 0`, and for every whole-plane GFF realization with its γ-LQG
   measure `μ` (`α₀ = 0`), almost surely `IsLiouvilleGraphDimension (μ ω) 0 1 d`.
-* `LatticeProb.LQG.WholePlaneLQGGraphDimension`: the literature input of Ding and Gwynne, Theorem 1.4, equation (1.8),
+* `LatticeProb.LQG.WholePlaneLQGGraphDimension`: the literature input of Ding and Gwynne (arXiv:1807.01072), Theorem 1.4, equation (1.8),
   stated as a Prop only.
 
-Provenance. Copies of `IsLiouvilleGraphCover`, `liouvilleGraphDistance`, `liouvilleGraphExponent`,
-`IsLiouvilleGraphDimension` and `IsWholePlaneLQGDimension` in `HarmonicBalls/Defs/LQGGraphDistance.lean` (lines 16-97),
-and of the input `WholePlaneLQGGraphDimension` in `HarmonicBalls/Proposed/LQGDimension.lean` (line 19). No statement,
-hypothesis or conclusion of the source is changed. The bridge lemmas (HB definition ↔ LP definition) are in
-`HarmonicBalls/FirstPass/LPBridge/M6.lean`. The terminology is that of the Liouville graph distance (Ding and Gwynne) and
+Provenance. Adapted from the Lean formalization accompanying [Harmonic balls in Liouville quantum gravity,
+arXiv:2208.11795]: the definitions `IsLiouvilleGraphCover`, `liouvilleGraphDistance`, `liouvilleGraphExponent`,
+`IsLiouvilleGraphDimension` and `IsWholePlaneLQGDimension`, and the input `WholePlaneLQGGraphDimension`. No statement,
+hypothesis or conclusion of the source is changed. The terminology is that of the Liouville graph distance (Ding and Gwynne) and
 of the LQG dimension (Duplantier and Sheffield, Berestycki and Powell).
 
 Helper theorems inside the source bodies: none (the bodies contain no proof terms), so none is restated here. The sanity
@@ -74,12 +73,12 @@ def IsWholePlaneLQGDimension (γ dimension : ℝ) : Prop :=
 
 /-- **LQG graph-distance exponent (literature input, stated as a Prop).** Ding and Gwynne, *The fractal dimension of
 Liouville quantum gravity: universality, monotonicity, and bounds*, arXiv:1807.01072v3, Theorem 1.4, p. 6, equation
-(1.8), together with the positivity of the dimension in Theorem 1.1, p. 4. For every `γ ∈ (0, 2)` some dimension
+(1.8), together with the positivity of the dimension in Theorem 1.1, p. 4 (due to Ding-Zeitouni-Zhang, arXiv:1807.00422). For every `γ ∈ (0, 2)` some dimension
 satisfies `IsWholePlaneLQGDimension γ`. The statement restricts the full limit to dyadic mass scales and fixes the
 points `0` and `1`; the same deterministic dimension serves every realization of the normalized field.
 
-Status: PROPOSED. This copies `HarmonicBalls/Proposed/LQGDimension.lean:19`, which is PENDING (source check). It is
-an assumption wherever it is used, not a theorem of this development. -/
+This is a literature input, not a theorem: it is an assumption wherever it is used, and not a theorem of this
+development. -/
 def WholePlaneLQGGraphDimension : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ dimension, IsWholePlaneLQGDimension γ dimension
 
