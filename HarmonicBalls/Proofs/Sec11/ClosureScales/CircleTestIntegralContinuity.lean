@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CountableCircleDecoder
 /-!
 # Continuity of the circle-test integrals on the carrier `C(CircleDomain, ℝ)`
 
-Source. Written argument `notes/sec11-proof/sec11-proof-r10.tex`, lines 1046-1062. For a test function `φ`, the displayed
+Source. Written argument lines 1046-1062. For a test function `φ`, the displayed
 limit `lim_n ∫ c(2^{-n}, z) φ(z) d²z` (line 1052) is accompanied by the claim "Each integral is a continuous function of
 `c` and the limit, where it exists, is Borel" (line 1054). This file formalizes the continuity of the integrals jointly in the
 radius `r > 0` and in the profile `F : C(CircleDomain, ℝ)`, where `CircleDomain = {p : ℝ × ℂ // 0 < p.1}`.

@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.BorelCircleLimitDecoder
 /-!
 # Borel convergence locus of the circle-test integrals on `C(CircleDomain, ℝ)`
 
-Source. Written argument `notes/sec11-proof/sec11-proof-r10.tex`, lines 1046-1055: for a test function `φ`, the limit
+Source. Written argument lines 1046-1055: for a test function `φ`, the limit
 `lim_n ∫ c(2^{-n}, z) φ(z) d²z`, where it exists, is Borel (lines 1054-1055). The countable validity conditions are at lines
 1074-1089. This file formalizes the Borel prerequisites of that claim with the committed providers.
 

@@ -2,9 +2,9 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.LQGProfileMeasure
 import HarmonicBalls.Proofs.Sec5.OpenMeasureLaw
 
 /-!
-# Lemma l:r6-transfer, step 3d.3: measurability of the LQG measure of a canonical profile
+# Measurability of the LQG measure of a canonical profile
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, measure part (lines 560-600). The measure
+The measure
 `profileMeasure γ α₀ f` (`LQGProfileMeasure.lean`) is the Riesz measure of the limit functional. On an open set `U`, its
 mass is the supremum of the integrals of cut-off tests `φ k` increasing to the indicator of `U` (monotone convergence),
 and these integrals are the limit functional. The mass on open sets is measurable in the profile, so the Sec5 criterion
@@ -150,7 +150,7 @@ theorem measurable_profileMeasure_apply_open (γ α₀ : ℝ) {U : Set ℂ} (hU 
   rw [h]
   exact Measurable.iSup fun k => ENNReal.measurable_ofReal.comp (measurable_profileLimit γ α₀ (φ k))
 
-/-- **The LQG measure is a measurable function of the canonical profile** (Lemma l:r6-transfer, measure part): the
+/-- **The LQG measure is a measurable function of the canonical profile**: the
 Borel map `m_{γ,α₀}` of the canonical profile is `f ↦ profileMeasure γ α₀ f`. -/
 theorem measurable_profileMeasure (γ α₀ : ℝ) : Measurable (profileMeasure γ α₀) :=
   measurable_measure_of_isOpen (fun f => isLocallyFiniteMeasure_profileMeasure γ α₀ f)

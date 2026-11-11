@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Lemma l:r6-transfer, metric part: almost sure membership in a measurable graph
+# Almost sure membership in a measurable graph
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, metric part, the graph argument (lines 480-520):
+Source: the graph argument:
 the joint law of the raw field and the coded circle averages is transported from the canonical model, and the canonical
 joint law is concentrated on a Borel graph. The measure-theoretic core of this argument is that a pair of random
 variables whose joint law is a measure `ν` with `ν Gᶜ = 0` for a measurable set `G` lies in `G` almost surely.

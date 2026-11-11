@@ -2,9 +2,9 @@ import Mathlib
 import HarmonicBalls.Proofs.Sec11.ClosureScales.CountableCircleDecoder
 import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmPairingMeasurable
 
-/-! # Borel circle-limit decoder (r10 `l:r9-circle-code`, lines 1313-1323)
+/-! # Borel circle-limit decoder
 
-Source: `notes/sec11-proof/sec11-proof-r10.tex`, lines 1313-1323. For an arbitrary `T`, take the limits of the test
+Source: lines 1313-1323. For an arbitrary `T`, take the limits of the test
 evaluations where they exist, decode the resulting countable circle values by the continuous-function decoder
 `circleDecoder` (`CountableCircleDecoder`), and return zero on any invalid code. This file formalizes the Borel map `C`
 of that passage on the positive-radius carrier `C(CircleDomain, ℝ)`.
@@ -72,7 +72,7 @@ theorem measurable_seqLimitOrZero {S : Type*} [MeasurableSpace S] {a : ℕ → S
   exact hL.indicator hG
 
 open scoped Classical in
-/-- **The Borel circle-limit decoder** (r10 `l:r9-circle-code`, lines 1313-1323). At `s`, if every test sequence
+/-- **The Borel circle-limit decoder**. At `s`, if every test sequence
 `n ↦ a i n s` converges, it decodes the vector of limits `(lim_n a i n s)_{i ∈ I}` by the countable circle decoder
 `circleDecoder q`, which returns `0` on an invalid code; elsewhere it returns `0`. -/
 def circleLimitDecoder {S I : Type*} (q : I → CircleDomain) (a : I → ℕ → S → ℝ) (s : S) :
@@ -157,7 +157,7 @@ theorem measurable_pairing_eval {φ : ℂ → ℝ} (hφ : IsTestFunction Set.uni
   unfold pairingMeasSpace pairingSigmaAlgebra
   exact le_iSup_of_le φ (le_iSup_of_le hφ le_rfl)
 
-/-- **Borel circle-limit decoder on the raw pairing** (r10 `l:r9-circle-code`, lines 1313-1323). For test functions
+/-- **Borel circle-limit decoder on the raw pairing**. For test functions
 `psi i n` on `Set.univ`, the map `C` on `(ℂ → ℝ) → ℝ` takes the limits of the test evaluations `T ↦ T (psi i n)`,
 decodes them by `circleDecoder q`, and returns zero on an invalid code. It is measurable for the pairing σ-algebra and
 has the characterizations (i) and (ii) with `a i n T = T (psi i n)`. -/

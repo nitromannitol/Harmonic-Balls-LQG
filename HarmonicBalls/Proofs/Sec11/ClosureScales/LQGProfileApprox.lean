@@ -2,10 +2,9 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.UniversalCircleLaw
 import HarmonicBalls.Proofs.Sec5.LQGApproxDecoder
 
 /-!
-# Lemma l:r6-transfer, step 3a: LQG approximations of canonical profiles
+# LQG approximations of canonical profiles
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, the measure part `m_{γ,α}` (proof, lines
-560-600). For a canonical profile `f` (a continuous circle-average profile on `J = (0,∞) × ℂ`), the approximations
+Source: the measure part `m_{γ,α}`. For a canonical profile `f` (a continuous circle-average profile on `J = (0,∞) × ℂ`), the approximations
 `ε^{γ²/2} e^{γ h_ε(z)} dz` along the dyadic scales `ε = 2^{-k}` are defined through the measurable decoder of
 `Sec5/LQGApproxDecoder.lean`. This file proves four facts:
 * the approximation is measurable in `f`, and so is the integral of each compactly supported continuous test;

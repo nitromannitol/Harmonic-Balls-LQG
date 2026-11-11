@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Lemma l:r6-transfer, step 3b: a countable family of compactly supported tests
+# A countable family of compactly supported tests
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, the measure part (lines 560-600). The LQG measure
+The LQG measure
 is the vague limit of the LQG approximations, and vague convergence is tested against compactly supported continuous
 functions. This file gives a countable family `Ψ` of compactly supported continuous tests such that every continuous
 `ψ` vanishing outside a closed ball is uniformly approximated, on the next larger closed ball, by a member of `Ψ`

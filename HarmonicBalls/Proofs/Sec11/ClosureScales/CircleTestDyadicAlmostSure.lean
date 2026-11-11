@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.SmoothCircleAverageRate
 /-!
 # Almost-sure convergence of the dyadic circle-test integrals
 
-Source. `notes/sec11-proof/sec11-proof-r10.tex`, lines 1046-1061 (audited CORRECT): for a test function `φ` the limit
+For a test function `φ` the limit
 `lim_{n→∞} ∫ c(2^{-n}, z) φ(z) d²z` is read off the field, and "this identity follows first in `L²` from the joint Gaussian
 covariance formula and then almost surely for our countable family of tests and radii".
 

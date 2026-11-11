@@ -7,7 +7,7 @@ For the whole-plane GFF, the circle average `ω ↦ hcirc ω r z` is measurable 
 continuous for almost every `ω` (`IsWholePlaneGFF.ae_continuousOn_circle`). Hence there is a jointly measurable
 version `g` of `(ω, z) ↦ hcirc ω r z`: it is continuous in `z` for every `ω` and equal to `hcirc ω r ·` off a
 measurable `P`-null set of samples. This is the measurability input of the Fubini identity for the marked first
-moment `E μ_ε(η) = ∫ η` (r10 `l:r9-marked`, "First moments and the required `L¹` convergence").
+moment `E μ_ε(η) = ∫ η`.
 -/
 
 noncomputable section

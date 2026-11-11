@@ -93,7 +93,5 @@ theorem exists_pinchEvent_typeZero_fixed_of_raw_gff
   refine ⟨fixedU, fixedT, fixedQ', fixedQ, isPinchPointConfiguration_fixed, ?_⟩
   exact pinchEventPositive_typeZero_of_raw_gff isPinchPointConfiguration_fixed hraw
 
-#print axioms pinchEventPositive_typeZero_of_raw_gff
-#print axioms exists_pinchEvent_typeZero_fixed_of_raw_gff
 
 end HarmonicBalls

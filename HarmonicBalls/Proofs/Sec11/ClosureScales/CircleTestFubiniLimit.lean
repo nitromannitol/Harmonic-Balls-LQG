@@ -9,8 +9,8 @@ import HarmonicBalls.Proposed.DuplantierMillerSheffield
 /-!
 # Deterministic test-integral limit of circle averages
 
-Deterministic prerequisite of the `R` direction of `l:r9-circle-code`, following the written
-argument of `notes/sec11-proof/sec11-proof-r10.tex`, lines 1353-1378: the circle/plane Fubini
+Deterministic prerequisite of the `R` direction of the circle-code lemma, following the written
+argument: the circle/plane Fubini
 identity moves the circle average from a locally integrable insertion onto a smooth compactly
 supported test, and the averaged tests `φ_r` converge to `φ` with one fixed compact enlargement.
 

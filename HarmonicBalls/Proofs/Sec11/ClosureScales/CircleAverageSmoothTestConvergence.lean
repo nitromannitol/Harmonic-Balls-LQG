@@ -12,8 +12,7 @@ function (`CircleTestFubiniLimit`). As `r → 0⁺` every iterated Fréchet deri
 uniformly to the corresponding derivative of `φ`, in the operator norm of the continuous multilinear
 maps, and all the supports lie in one fixed compact set `testEnlargement φ`.
 
-This is the deterministic content of the written limit `φ * σ_r → φ` in the test-function topology
-(fleet notes `sec11-proof-r10.tex`, lines 1046–1062 and 1353–1378). No probability, Gaussian, Fourier
+This is the deterministic content of the written limit `φ * σ_r → φ` in the test-function topology. No probability, Gaussian, Fourier
 or distributional input is used. The analytic inputs are differentiation under the circle integral
 (`HarmonicBalls.hasFDerivAt_translate_integral`), the commutation of continuous linear maps with
 circle averages (`ContinuousLinearMap.circleAverage_comp_comm`), and uniform continuity of compactly

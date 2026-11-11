@@ -3,9 +3,9 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CompactTestDensity
 import HarmonicBalls.Proofs.Sec11.ClosureScales.CountableTestCauchy
 
 /-!
-# Lemma l:r6-transfer, step 3d (part 1): the good set of canonical profiles
+# The good set of canonical profiles
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, measure part (lines 560-600). The LQG measure is
+The LQG measure is
 the vague limit of the approximations along the dyadic scales, and vague convergence is read off the countable family
 `testFamily` (`CompactTestDensity.lean`). The good set `goodProfiles γ α₀` consists of the canonical profiles along which
 the approximations have masses bounded on each closed ball and converge against the countable family. This file proves:
@@ -32,7 +32,7 @@ theorem testFamily_approx : ∀ (ψ : ℂ → ℝ), Continuous ψ → ∀ R : �
       (∀ z : ℂ, (R : ℝ) + 1 < ‖z‖ → g z = 0) ∧ ∀ z : ℂ, ‖z‖ ≤ (R : ℝ) + 1 → |g z - ψ z| < ε :=
   (Classical.choose_spec exists_countable_compactSupport_approx).2.2
 
-/-- **The good set** (Lemma l:r6-transfer, measure part). A canonical profile `f` is good when the LQG approximations
+/-- **The good set**. A canonical profile `f` is good when the LQG approximations
 `profileApprox γ α₀ n f` have masses bounded on each closed ball `closedBall 0 (R + 1)` along the dyadic scales, and their
 integrals against the countable family `testFamily` are Cauchy. -/
 def goodProfiles (γ α₀ : ℝ) : Set CanonicalProfile :=

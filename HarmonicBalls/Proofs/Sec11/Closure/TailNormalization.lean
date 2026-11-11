@@ -8,7 +8,7 @@ For a whole-plane GFF `h^ℂ` normalized so that its unit circle average vanishe
 `Defs/GFF.lean`; paper line 365), the threshold factor `e^{ξ h^ℂ_1(0)}` in `SquareDyadicTailInput` equals `1`
 almost surely. The tail statement is therefore the statement for the normalized field `h_1(0) = 0` of Pfeffer
 arXiv:2104.04020v3 Prop. 4.6. The Lean fact used is `IsWholePlaneGFF.ae_circleAverage_one_zero`.
-This file records obligation O1 of docs/campaign/Sec11Closure.md (round 10). It proves nothing about the tail bound.
+This file proves nothing about the tail bound.
 -/
 
 namespace HarmonicBalls
@@ -49,7 +49,5 @@ theorem squareDyadicTailInput_iff_normalized {hC : Ω → (ℂ → ℝ) → ℝ}
   unfold SquareDyadicTailInput NormalizedSquareDyadicTailInput
   simp only [key]
 
-#print axioms ofReal_exp_mul_circleAverage_one_zero_ae
-#print axioms squareDyadicTailInput_iff_normalized
 
 end HarmonicBalls

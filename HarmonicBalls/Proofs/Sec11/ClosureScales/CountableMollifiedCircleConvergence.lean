@@ -5,8 +5,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.MollifiedCircleGaussianL2
 /-!
 # Countable family of mollified circle pairings: deterministic scales and almost sure convergence
 
-Written argument: `notes/sec11-proof/sec11-proof-r10.tex`, lines 1304-1312 (audited in `AUDIT-r9.md` 931-957 and
-`AUDIT-r10.md` 110). For a literal mollifier `ρ` (`IsLiteralMollifier`) and a countable family `q : I → CircleDomain`
+For a literal mollifier `ρ` (`IsLiteralMollifier`) and a countable family `q : I → CircleDomain`
 of coded circles `(r_i, w_i)`, the scales `countableCircleScale hρ q i n` are built from `ρ` and `q` only: they are
 positive, strictly decreasing in `n`, and tend to `0`.
 

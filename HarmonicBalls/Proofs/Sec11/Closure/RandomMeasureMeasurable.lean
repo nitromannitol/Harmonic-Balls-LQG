@@ -12,7 +12,7 @@ evaluations of the modification `G.indicator μ`, where `G` is a measurable set 
 many evaluations on `piQ` agree with measurable versions.
 
 Applied to the LQG measure, this discharges `haem` of `PinchEventTypeZero.lean` from the staged input
-`LQGMeasureLocality` (Fact 2.1 II, `Proposed/LQG.lean`, pending operator source-check). The original theorem is not
+`LQGMeasureLocality` (Fact 2.1 II, `Proposed/LQG.lean`, pending source check). The original theorem is not
 changed. No LatticeProb.Bonanno code is used.
 -/
 
@@ -285,8 +285,5 @@ theorem pinchEventPositive_typeZero_of_raw_locality {U T Q' Q : Set ℂ}
   · rw [measure_sdiff_null hS0]
     exact hEpos
 
-#print axioms HarmonicBalls.RandomMeasureMeasurable.aemeasurable_of_open_aemeasurable
-#print axioms HarmonicBalls.RandomMeasureMeasurable.aemeasurable_lqg_measure_zero_of_locality
-#print axioms HarmonicBalls.pinchEventPositive_typeZero_of_raw_locality
 
 end HarmonicBalls

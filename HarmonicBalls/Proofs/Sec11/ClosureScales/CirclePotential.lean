@@ -5,7 +5,7 @@ import Mathlib
 For `r > 0` and `a, c ∈ ℂ`, the average of `log ‖· - a‖` over the circle of centre `c` and radius `r` is
 `log max(r, ‖a - c‖)`: the logarithmic potential of the uniform probability on the circle, evaluated at `a`
 (Armitage-Gardiner, potential theory on the plane). It is the circle-average identity behind the log-insertion limit
-of the circle-code step (r10 `l:r9-circle-code`, proof). It follows from Mathlib's unit-circle identity
+of the circle-code step. It follows from Mathlib's unit-circle identity
 `circleAverage_log_norm_sub_const_eq_posLog` by rescaling, and an almost-everywhere replacement at the single
 point where the rescaled integrand is singular.
 

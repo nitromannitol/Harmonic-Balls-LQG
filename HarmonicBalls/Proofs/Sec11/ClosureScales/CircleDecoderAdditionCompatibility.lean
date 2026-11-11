@@ -9,8 +9,7 @@ import HarmonicBalls.Proposed.DuplantierMillerSheffield
 /-!
 # Compatibility of the circle-limit decoder with deterministic additions
 
-Source: r10 written proof `notes/sec11-proof/sec11-proof-r10.tex`, lines 1313-1350 (the Borel decoder, then the two
-continuous additions). Audited in `AUDIT-r9.md` 959-998 and reaffirmed in `AUDIT-r10.md` 110.
+Source: the Borel decoder, then the two continuous additions.
 
 Setting. `I` is countable, `q : I → CircleDomain` has dense range, `rho` is a literal mollifier (`IsLiteralMollifier`),
 and `eps : I → ℕ → ℝ` has positive terms with `eps i → 0⁺` for each `i`. For `q i = (r, c)` put
@@ -32,7 +31,7 @@ Results.
 
 Inputs. `mollified_continuous_circle_limit` (approximate identity on a circle, continuous `u`) and
 `mollified_log_circle_limit` (logarithmic insertion). The function `dmsShift` is used as a definition only, from
-`HarmonicBalls.Proposed.DuplantierMillerSheffield` (Lemma A.10 of Duplantier-Miller-Sheffield, operator source-check
+`HarmonicBalls.Proposed.DuplantierMillerSheffield` (Lemma A.10 of Duplantier-Miller-Sheffield, source check
 pending); no proposition of that file is used. The joint continuity of the circle average is re-proved locally by the
 parametric-integral argument of `Section6.continuous_circleAverage_radius_center`: importing that module would pull in
 the Lattice-Probability port, which this file does not consume.
@@ -50,7 +49,7 @@ def circleCompatPsi (rho : ℂ → ℝ) {I : Type*} (q : I → CircleDomain) (ep
     ℂ → ℝ :=
   circleMollifier rho (q i).val.2 (q i).val.1 (eps i n)
 
-/-- The named pairing decoder `D(T) = circleLimitDecoder q (fun i n S => S (psi i n)) T` (r10 lines 1313-1323). -/
+/-- The named pairing decoder `D(T) = circleLimitDecoder q (fun i n S => S (psi i n)) T`. -/
 def circleCompatDecoder (rho : ℂ → ℝ) {I : Type*} (q : I → CircleDomain) (eps : I → ℕ → ℝ)
     (T : (ℂ → ℝ) → ℝ) : C(CircleDomain, ℝ) :=
   circleLimitDecoder q (fun (i : I) (n : ℕ) (S : (ℂ → ℝ) → ℝ) => S (circleCompatPsi rho q eps i n)) T
@@ -203,7 +202,7 @@ theorem circleCompatDecoder_spec (rho : ℂ → ℝ) (hρ : IsLiteralMollifier r
     exact hDm
   · exact circleLimitDecoder_unique hq (a := fun (i : I) (n : ℕ) (S : (ℂ → ℝ) → ℝ) => S (circleCompatPsi rho q eps i n)) h1' h2'
 
-/-- **Compatibility of the named decoder with deterministic additions** (r10 lines 1313-1350). Under the single baseline
+/-- **Compatibility of the named decoder with deterministic additions**. Under the single baseline
 premise `n ↦ T (psi i n) → F (q i)` for every `i`: the decoder of `T` is `F`; for every continuous `u` the additions
 `v ↦ u v * psi i n v` are integrable and the decoder of `T + ∫ u φ` is `F + Ucirc u`; for every `γ`, `z` the additions
 `v ↦ dmsShift γ z v * psi i n v` are integrable and the decoder of `T + ∫ dmsShift γ z φ` is `G(γ, z, F)`. No linearity

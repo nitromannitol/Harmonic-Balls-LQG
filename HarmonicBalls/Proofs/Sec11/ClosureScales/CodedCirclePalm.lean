@@ -9,9 +9,8 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.LQGProfileMeasureAE
 
 /-! # Coded LQG measure of an actual continuous circle profile
 
-The coded Palm identity (eq:r6-palm, r8 line 1815) is stated on the actual carrier `C(CircleDomain, ℝ)`: the continuous
-functions on the positive-radius domain `CircleDomain = {p : ℝ × ℂ // 0 < p.1}` (r10 lines 927-950 and 1257-1392; the
-marked identity at r10 lines 2575-2778). This file supplies its measure-theoretic input.
+The coded Palm identity is stated on the actual carrier `C(CircleDomain, ℝ)`: the continuous
+functions on the positive-radius domain `CircleDomain = {p : ℝ × ℂ // 0 < p.1}`. This file supplies its measure-theoretic input.
 
 * `circleProfileMeasure γ α₀ F` is the coded LQG measure of `F`, built by the dyadic formula of `profileMeasure`
   (LQGProfileMeasure.lean) on the actual carrier: `circleProfileApprox` applies `profileDecoder γ (2^{-k})` to
@@ -269,7 +268,7 @@ theorem measurable_circle_palm_lintegral (γ : ℝ) {Ψ : C(CircleDomain, ℝ) �
 /-! ### The actual profile of a whole-plane GFF -/
 
 /-- **The actual continuous positive-circle profile** of a whole-plane GFF with pairing functional `T`: the named circle
-decoder `circleCompatDecoder` (r10 lines 1313-1323; CircleDecoderAdditionCompatibility.lean:54) at a literal mollifier
+decoder `circleCompatDecoder` (CircleDecoderAdditionCompatibility.lean:54) at a literal mollifier
 `rho` and a family `q : I → CircleDomain`, with the scales `countableCircleScale hρ q`
 (CountableMollifiedCircleConvergence.lean:138). Its identification with the circle field and its DMS compatibility are
 `circleCompatDecoder_gff_identification` (CircleDecoderGFFIdentification.lean:67). -/

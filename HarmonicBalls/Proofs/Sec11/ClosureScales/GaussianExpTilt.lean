@@ -5,8 +5,7 @@ import Mathlib
 Let `Y` be a centred Gaussian variable of variance `v ≠ 0`, let `X_1, …, X_k` be real random variables such that
 `(X, Y)` is a Gaussian vector, and let `a_j = Cov(X_j, Y)`. Then for every bounded continuous `ψ : ℝ^k → ℝ`,
 `E[ψ(X) exp(γ Y - γ² v / 2)] = E[ψ(X + γ a)]`: the exponential tilt by `Y` shifts the law of `X` by `γ a`.
-This is the finite-dimensional tilt of r10 `l:r9-marked` (`sec11-proof-r10.tex`, "Retaining the marked point in
-Gaussian tilting", lines 2681-2700).
+This is the finite-dimensional tilt in the paragraph "Retaining the marked point in Gaussian tilting".
 
 The covariance matrix of `X` is never inverted: the proof writes `X = W + (a/v) Y` with `W` independent of `Y`
 (Mathlib `HasGaussianLaw.indepFun_of_covariance_eval`, since the covariances of `W` with `Y` vanish), and then tilts

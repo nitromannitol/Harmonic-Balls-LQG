@@ -1,9 +1,9 @@
 import HarmonicBalls.Proofs.Sec11.ClosureScales.LQGGoodProfiles
 
 /-!
-# Lemma l:r6-transfer, step 3d.2: the limit functional and the Riesz measure of a canonical profile
+# The limit functional and the Riesz measure of a canonical profile
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, measure part (lines 560-600): the LQG measure is
+The LQG measure is
 the vague limit of the approximations `profileApprox γ α₀ n f` along the dyadic scales. On the good set
 `goodProfiles γ α₀` (`LQGGoodProfiles.lean`), the integrals of every compactly supported continuous test converge; their
 limit defines a positive linear functional on `C_c(ℂ, ℝ)` (`profileFunctional`), and the Riesz–Markov–Kakutani measure of
@@ -42,8 +42,7 @@ theorem exists_profileLimit_tendsto {γ α₀ : ℝ} {f : CanonicalProfile} (hf 
   rw [profileLimit_eq_of_tendsto hf hL]
   exact hL
 
-/-- The limit functional of the canonical profile `f`: a positive linear map on `C_c(ℂ, ℝ)` (Lemma l:r6-transfer,
-measure part). -/
+/-- The limit functional of the canonical profile `f`: a positive linear map on `C_c(ℂ, ℝ)`. -/
 noncomputable def profileFunctional (γ α₀ : ℝ) (f : CanonicalProfile) :
     CompactlySupportedContinuousMap ℂ ℝ →ₚ[ℝ] ℝ where
   toFun := profileLimit γ α₀ f
@@ -93,7 +92,7 @@ noncomputable def profileFunctional (γ α₀ : ℝ) (f : CanonicalProfile) :
     · simp only [profileLimit, hf, ↓reduceIte, le_refl]
 
 /-- The LQG measure of the canonical profile `f`: the Riesz–Markov–Kakutani measure of the limit functional
-`profileFunctional γ α₀ f` (Lemma l:r6-transfer, measure part). -/
+`profileFunctional γ α₀ f`. -/
 noncomputable def profileMeasure (γ α₀ : ℝ) (f : CanonicalProfile) : Measure ℂ :=
   RealRMK.rieszMeasure (profileFunctional γ α₀ f)
 

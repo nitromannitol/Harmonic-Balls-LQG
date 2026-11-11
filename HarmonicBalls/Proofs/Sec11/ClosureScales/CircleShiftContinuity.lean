@@ -3,17 +3,14 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CircleDecoderAdditionCompatibili
 /-!
 # Joint continuity of the circle-code insertion on the actual carrier
 
-Source: r10 written proof `notes/sec11-proof/sec11-proof-r10.tex`. Lemma `l:r9-circle-code` states the literal
-insertion `Γ_z c (r, w) = c (r, w) - γ log max (r, |w - z|) + γ ∫ log max (1, |v|) σ_{r,w}(dv)` (TeX lines
-1257-1284, equation `eq:r9-Gamma`). Its proof asserts that `Γ` is jointly Borel, in fact continuous (TeX lines
-1380-1392). The independent audit of that assertion is `AUDIT-r9.md` line 18, table row "1027–1038" (round-9 TeX
-numbering). The audit note is `docs/campaign/audits/CircleShiftContinuity.md`.
+Source: the written argument, which states the literal
+insertion `Γ_z c (r, w) = c (r, w) - γ log max (r, |w - z|) + γ ∫ log max (1, |v|) σ_{r,w}(dv)`. Its proof asserts that `Γ` is jointly Borel, in fact continuous.
 
 Carrier. `CircleDomain = {p : ℝ × ℂ // 0 < p.1}` with its subspace topology, and `C(CircleDomain, ℝ)` with the
 compact-open topology (a Polish space, `CountableCircleDecoder.lean`). The functions are the literal
 `circleDMSShiftFun` and `circleAverageFun` of `CircleDecoderAdditionCompatibility.lean`. Nothing here uses a
 probability space, a reconstruction, a bound at infinity, or a continuous-insertion premise. The import closure of
-this file contains no Lattice-Probability module, so no credit line is required (see the audit note).
+this file contains no Lattice-Probability module.
 
 Main results.
 * `continuous_circleAverageFun`: `u ↦ circleAverageFun u u.continuous` is continuous from `C(ℂ, ℝ)` to

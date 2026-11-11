@@ -1,10 +1,10 @@
 import HarmonicBalls.Proofs.Sec11.ClosureScales.LQGProfileMeasurable
 
 /-!
-# Lemma l:r6-transfer, step 3e: the LQG measure is the Borel map of the canonical profile almost surely
+# The LQG measure is the Borel map of the canonical profile almost surely
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, measure part (lines 560-600), the identity
-`μ(ω) = m_{γ,α}(c(ω))` (eq:r6-area). Let `μ` be the LQG measure of a whole-plane GFF (`IsLQGMeasureOfField`), and let `c`
+The identity
+`μ(ω) = m_{γ,α}(c(ω))`. Let `μ` be the LQG measure of a whole-plane GFF (`IsLQGMeasureOfField`), and let `c`
 be a canonical profile agreeing with the circle averages on `J` almost surely. Then `c ω` is a good profile for almost every
 `ω`, and the Riesz measure `profileMeasure γ α₀ (c ω)` equals `μ ω`: both are Radon measures with the same vague limit
 along the dyadic scales (`IsLQGLimit.unique`).
@@ -53,7 +53,7 @@ theorem good_of_isLQGLimit {γ α₀ : ℝ} {hcirc : ℝ → ℂ → ℝ} {μ : 
   · exact (tendsto_profileApprox_of_isLQGLimit hL hf (testFamily_spec g hg).1
       (testFamily_spec g hg).2).cauchySeq
 
-/-- **The LQG measure is the Borel map of the canonical profile almost surely** (eq:r6-area of Lemma l:r6-transfer): for a
+/-- **The LQG measure is the Borel map of the canonical profile almost surely**: for a
 whole-plane GFF with LQG measure `μ`, `μ ω = profileMeasure γ α₀ (c ω)` for almost every `ω`. -/
 theorem profileMeasure_ae_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)

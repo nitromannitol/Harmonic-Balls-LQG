@@ -2,13 +2,11 @@ import Mathlib
 
 /-! # Route (A), Palm identity: two measure-theoretic tools of the written proofs of r10
 
-* `ae_tendsto_zero_of_sq_integral_le`: Chebyshev and Borel-Cantelli, as in the paragraph of r10
-  `l:r9-circle-code` (r10 lines 1257-1392) that chooses, for each coded circle, a sequence `eps_j` along
+* `ae_tendsto_zero_of_sq_integral_le`: Chebyshev and Borel-Cantelli, as in the paragraph that chooses, for each coded circle, a sequence `eps_j` along
   which the squared `L²` error is at most `2^(-4j)`; the errors then tend to zero almost surely
   (`∑_j P(|error| > 2^(-j)) < ∞`).
 * `tendsto_integral_abs_sub_of_ae_tendsto`: the `L¹` convergence `E|X_eps - X| → 0` by the min-trick
-  `E|X_eps - X| = E X_eps + E X - 2 E min(X_eps, X)`, as in the paragraph "First moments and the required
-  `L¹` convergence" of `l:r9-marked` (r10 lines 2575-2790).
+  `E|X_eps - X| = E X_eps + E X - 2 E min(X_eps, X)`.
 -/
 
 noncomputable section
@@ -19,7 +17,7 @@ namespace HarmonicBalls
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
-/-- **Chebyshev and Borel-Cantelli** (r10 `l:r9-circle-code`): if the second moments of `E j` are at most
+/-- **Chebyshev and Borel-Cantelli**: if the second moments of `E j` are at most
 `(1/16)^j = 2^(-4j)`, then `E j → 0` almost surely. -/
 theorem ae_tendsto_zero_of_sq_integral_le {P : Measure Ω} [IsProbabilityMeasure P]
     {E : ℕ → Ω → ℝ} (hint : ∀ j, Integrable (fun ω => E j ω ^ 2) P)
@@ -61,8 +59,7 @@ theorem ae_tendsto_zero_of_sq_integral_le {P : Measure Ω} [IsProbabilityMeasure
   exact squeeze_zero_norm' hsmall
     (tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num))
 
-/-- **L¹ convergence by the min-trick** (r10 `l:r9-marked`, "First moments and the required `L¹`
-convergence"): if `X n → Y` almost surely, the `X n` and `Y` are nonnegative and integrable, and
+/-- **L¹ convergence by the min-trick**: if `X n → Y` almost surely, the `X n` and `Y` are nonnegative and integrable, and
 `E X n = E Y` for all large `n`, then `E|X n - Y| → 0`. -/
 theorem tendsto_integral_abs_sub_of_ae_tendsto {P : Measure Ω} {X : ℕ → Ω → ℝ} {Y : Ω → ℝ}
     (hX : ∀ n, Integrable (X n) P) (hY : Integrable Y P)

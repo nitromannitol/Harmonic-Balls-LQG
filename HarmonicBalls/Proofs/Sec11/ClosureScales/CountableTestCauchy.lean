@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Lemma l:r6-transfer, step 3c: convergence on a countable family implies convergence on all tests
+# Convergence on a countable family implies convergence on all tests
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, measure part (lines 560-600). The good set of the
+The good set of the
 measure part is defined through the countable family `Ψ` of `exists_countable_compactSupport_approx`
 (`CompactTestDensity.lean`). This file proves the analytic step: if locally finite measures `ν n` have masses on each
 closed ball bounded uniformly in `n`, and the integrals against `Ψ` converge, then the integrals against every

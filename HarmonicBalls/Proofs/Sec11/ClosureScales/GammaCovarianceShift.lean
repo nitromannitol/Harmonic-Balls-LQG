@@ -9,11 +9,10 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.RouteAKernel
 
 For the whole-plane GFF `(P, hC, hcirc)` and a circle `∂B(z, ε)` in the closed unit disk, the covariance of the pairing
 `hC · φ` with the circle average `hcirc · ε z` is, by Sec8 `circleAverage_wholePlaneCov_eq`,
-`∫ φ(x) (log max(|x|,1) - log max(ε, |z - x|)) dx`. The DMS shift `dmsShift γ z` (the marked shift `k_z` of r10
-`l:r9-marked`) has pairing `∫ dmsShift γ z · φ`. Their difference is
+`∫ φ(x) (log max(|x|,1) - log max(ε, |z - x|)) dx`. The DMS shift `dmsShift γ z` (the marked shift `k_z`) has pairing `∫ dmsShift γ z · φ`. Their difference is
 `γ ∫ φ(x) (log|x - z| - log max(ε, |x - z|)) dx`, which vanishes off `B_ε(z)` and is bounded by
-`|γ| ‖φ‖∞ ∫_{B_ε} |log(|v|/ε)| dv`, hence by `|γ| C 2π ε²`, uniformly in `z`. (r10 `l:r9-marked`: "the absolute error is
-bounded by `γ ‖φ_j‖∞ ∫_{|v|<ε} log(ε/|v|) d²v`"; we use the cruder constant `2π` for the integral.)
+`|γ| ‖φ‖∞ ∫_{B_ε} |log(|v|/ε)| dv`, hence by `|γ| C 2π ε²`, uniformly in `z`. (the absolute error is
+bounded by `γ ‖φ_j‖∞ ∫_{|v|<ε} log(ε/|v|) d²v`; we use the cruder constant `2π` for the integral.)
 -/
 
 noncomputable section
@@ -176,7 +175,7 @@ theorem integrable_test_mul_log_sub {φ : ℂ → ℝ} (hφc : Continuous φ) (h
     exact mul_nonneg (le_trans (abs_nonneg _) (hC0 0))
       (indicator_nonneg (fun _ _ => abs_nonneg _) _)
 
-/-- **Covariance shift of the marked circle observable** (r10 `l:r9-marked`): for a bounded compactly supported test
+/-- **Covariance shift of the marked circle observable**: for a bounded compactly supported test
 function `φ` and a circle `∂B(z,ε)` in the closed unit disk,
 `|γ Cov(hC φ, hcirc ε z) - ∫ dmsShift γ z · φ| ≤ |γ| C 2π ε²`, uniformly in `z`. -/
 theorem gamma_covariance_sub_dmsShift_bound {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}

@@ -5,7 +5,7 @@ import HarmonicBalls.Proposed.Birkhoff
 /-!
 # Internal pinch block density at the origin under a stationary, germ-trivial law
 
-Written argument `notes/sec11-proof/sec11-proof.tex`, draft lines 536-563: the pointwise ergodic theorem
+Written argument draft lines 536-563: the pointwise ergodic theorem
 (Birkhoff, LatticeProb, Leonardo Bonanno, via `HarmonicBalls.Proposed.Birkhoff`), the stationarity of the
 dyadic-scale indicator sequence, and the choice of a rate `δ` strictly below the probability of the scale-one
 event. The prefix-to-block step is `tendsto_block_average_of_prefix_average` (`CertificateBlockDensity.lean`).
@@ -137,5 +137,3 @@ theorem internal_block_density_of_stationary_germ_law
   linarith
 
 end HarmonicBalls
-#print axioms HarmonicBalls.map_shift_stationary_of_first_shift
-#print axioms HarmonicBalls.internal_block_density_of_stationary_germ_law

@@ -4,11 +4,11 @@ import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Proofs.Sec11.ClosureScales.UniversalRealization
 import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmPairingMeasurable
 
-/-! # Route (A), canonical field model: the Borel reconstruction pairing (r10, canonical model)
+/-! # Route (A), canonical field model: the Borel reconstruction pairing
 
 For a canonical circle-average sample `c` (an element of `CanonicalProfile`, continuous on the positive-radius index
 set) and a smooth compactly supported test function `φ`, the reconstruction pairing is the limit of the dyadic circle
-integrals `∫ c(2^{-n}, z) φ(z) d²z` (r10: "For each such test φ read lim_{n→∞} ∫ c(2^{-n}, z) φ(z) d²z"). It is defined
+integrals `∫ c(2^{-n}, z) φ(z) d²z`. It is defined
 as a limit superior, which equals the limit wherever the limit exists. We prove that it is a Borel function of the
 canonical sample, pointwise in the test function and as a map into the raw pairing functionals with the pairing
 σ-algebra. The almost-sure identification with the raw pairings of the GFF is not part of this file. -/
@@ -62,7 +62,7 @@ theorem measurable_canonicalReconPairing {φ : ℂ → ℝ} (hφ : IsTestFunctio
   exact Measurable.limsup hF
 
 /-- The reconstruction as a Borel map into the raw pairing functionals `(ℂ → ℝ) → ℝ` with the pairing σ-algebra:
-the Borel reconstruction `R : 𝓐 → 𝓡` of the canonical model (r10, pairing level). -/
+the Borel reconstruction `R : 𝓐 → 𝓡` of the canonical model. -/
 theorem measurable_canonicalReconPairing_map :
     @Measurable CanonicalProfile ((ℂ → ℝ) → ℝ) _ pairingMeasSpace
       (fun c : CanonicalProfile => fun φ : ℂ → ℝ => canonicalReconPairing c φ) :=

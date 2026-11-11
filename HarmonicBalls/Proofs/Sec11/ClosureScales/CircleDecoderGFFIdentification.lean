@@ -8,10 +8,9 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmPairingMeasurable
 /-!
 # Identification of the named circle-limit decoder on a whole-plane GFF
 
-Source: r10 written proof `notes/sec11-proof/sec11-proof-r10.tex`, lines 1313-1350. On the preceding conull event the
+On the preceding conull event the
 named decoder returns the circle averages on every circle of `CircleDomain`, and it is compatible with every continuous
-addition and with every DMS insertion `dmsShift γ z`. Audited in `AUDIT-r9.md` 931-998 and reaffirmed in
-`AUDIT-r10.md` 110.
+addition and with every DMS insertion `dmsShift γ z`.
 
 Setting, fixed before any probability space: a literal mollifier `rho` (`IsLiteralMollifier rho`), a countable index
 type `I` and a dense family `q : I → CircleDomain`. The scales are `countableCircleScale hρ q` and the decoder is
@@ -20,7 +19,7 @@ type `I` and a dense family `q : I → CircleDomain`. The scales are `countableC
 Imports. `PalmDMSConstant` is not imported, to keep this import closure light. The Section 11 helper is
 `HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max`, not the Section 8 declaration
 `HarmonicBalls.circleAverage_log_norm_sub_eq_log_max` (`Proofs/Sec8/CircleLogPotential.lean`), so the two names do not
-clash (checked by `HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean`). Its unit-circle lemma is repeated privately
+clash. Its unit-circle lemma is repeated privately
 below (`circleAverage_dmsShift_unit_sec11`) against the `CirclePotential` version. The import closure contains no
 `LatticeProb` module, so no Lattice-Probability credit is consumed here. The definitions `dmsShift`, `dmsConstant` and
 `dmsShiftedPairing` of `Proposed.DuplantierMillerSheffield` are used as definitions only.
@@ -53,7 +52,7 @@ private theorem circleAverage_dmsShift_unit_sec11 (γ : ℝ) {z : ℂ} (hz : ‖
   rw [h1, h2, HarmonicBalls.CirclePotential.circleAverage_log_norm_sub_eq_log_max one_pos, hmax,
     Real.log_one, smul_zero]
 
-/-- **Identification of the named decoder on a whole-plane GFF** (r10 lines 1313-1350).
+/-- **Identification of the named decoder on a whole-plane GFF**.
 
 Let `rho` be a literal mollifier, `I` a countable index type, `q : I → CircleDomain` dense, and
 `D = circleCompatDecoder rho q (countableCircleScale hρ q)`. Deterministically, the scales are positive, strictly

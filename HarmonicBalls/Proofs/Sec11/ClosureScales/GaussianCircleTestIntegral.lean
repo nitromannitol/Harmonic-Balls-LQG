@@ -636,5 +636,3 @@ theorem IsWholePlaneGFF.exists_measurable_conull_ae_integral_circle_mul_eq_pairi
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.IsWholePlaneGFF.ae_integral_circle_mul_eq_pairing_circleAverage
-#print axioms HarmonicBalls.IsWholePlaneGFF.exists_measurable_conull_ae_integral_circle_mul_eq_pairing_circleAverage

@@ -5,7 +5,7 @@ import HarmonicBalls.Proposed.Birkhoff
 /-!
 # Frozen pinch block density from a certificate family at the origin
 
-Written argument `notes/sec11-proof/sec11-proof.tex`, draft lines 515-552 (dilation stationarity, the pointwise
+Written argument draft lines 515-552 (dilation stationarity, the pointwise
 ergodic theorem, and the passage from prefix averages to block averages `2 A_{2N} - A_N`).
 
 The indicator sequence `X n` is the indicator of the scale-`2^{-n}` certificate event `E n`. Each `E n` is a
@@ -158,6 +158,3 @@ theorem frozen_block_density_of_certificate_family
   linarith
 
 end HarmonicBalls
-#print axioms HarmonicBalls.sum_Icc_prefix_add_block
-#print axioms HarmonicBalls.tendsto_block_average_of_prefix_average
-#print axioms HarmonicBalls.frozen_block_density_of_certificate_family
