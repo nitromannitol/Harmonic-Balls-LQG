@@ -59,7 +59,7 @@ the LQG clock of the reflected path.
 
 ## Heat kernel (`IsLBMHeatKernel`)
 
-eq:defining-property-of-kernel (line 547) with correction [C5] (~/paper-fleets/hb/CORRECTIONS-PROPOSED.md):
+eq:defining-property-of-kernel (line 547) with correction [C5]:
 `P[𝓑_t^x ∈ dy | h] = p^K_t(x, y) μ_h(dy)` on `K`. The printed reference measure `dy` cannot be right, since the law
 of LBM at a fixed time is absolutely continuous with respect to `μ_h`, which is singular with respect to Lebesgue
 measure (line 92): the Liouville heat kernel is a density with respect to the Liouville measure

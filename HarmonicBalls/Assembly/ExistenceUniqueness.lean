@@ -35,15 +35,11 @@ theorem existenceUniquenessHarmonicBallsStmt_of_sec5_of_bridge
   intro z
   exact ⟨Λhat ω z, hbridge (μ ω) (Λhat ω z) z (he z), fun A hA => hu z A hA⟩
 
-#print axioms existenceUniquenessHarmonicBallsStmt_of_sec5_of_bridge
-
 /-- Assemble the introduction's statement from the Section 5 statements. -/
 theorem existenceUniquenessHarmonicBallsStmt_of_sec5
     (h55 : ExistenceHarmonicBallsStmt.{u}) (h56 : UniquenessHarmonicBallsStmt.{u}) :
     ExistenceUniquenessHarmonicBallsStmt.{u} :=
   existenceUniquenessHarmonicBallsStmt_of_sec5_of_bridge h55 h56
     regularizedClusterFamily_isHarmonicBallFamily
-
-#print axioms existenceUniquenessHarmonicBallsStmt_of_sec5
 
 end HarmonicBalls

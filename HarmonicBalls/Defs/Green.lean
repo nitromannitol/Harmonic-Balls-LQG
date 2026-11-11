@@ -25,7 +25,7 @@ References using the kernel `-log ‖x - y‖` (without the factor `(2π)⁻¹`)
 
 The paper's `G_O : Ō × Ō → ℝ ∪ {∞}` is `+∞` on the diagonal. Here `greenFunction O x y : ℝ` takes the junk value
 `0` on the diagonal `x = y`; every definition or statement evaluating `G_O` on the diagonal must exclude it
-explicitly (docs/campaign/CONVENTIONS.md). We also set `greenFunction O x y = 0` if `x ∉ O` or `y ∉ O`; for a ball
+explicitly. We also set `greenFunction O x y = 0` if `x ∉ O` or `y ∉ O`; for a ball
 (or any regular open set) this is the boundary value `G_O(x,·) = 0` on `∂O` of Proposition 2.3.
 For an open set with no harmonic minorant of the kernel (a non-Greenian set, e.g. `O = ℂ`) the greatest harmonic
 minorant is `⊥` and the value is junk; the paper only uses bounded `O`, which are Greenian
