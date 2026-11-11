@@ -2,6 +2,7 @@ import HarmonicBalls.FirstPass.Phase2.CanonicalDecoderIdentity
 import HarmonicBalls.FirstPass.Phase2.RootedShiftedNullTransferDerived
 import HarmonicBalls.FirstPass.Phase2.RootedDominationJointPos
 import HarmonicBalls.FirstPass.Frozen.S11i
+import HarmonicBalls.FirstPass.Phase2.DMSJointPosOfFinite
 
 /-! # Canonical form of the B2 rooted domination (fp-phase2-canonical-domination)
 
@@ -197,5 +198,18 @@ theorem localRootedFieldMeasureDomination_canonical
     (hId : CanonicalDecoderIdentityStmt.{u}) :
     LocalRootedFieldMeasureDomination.{u} :=
   localRootedFieldMeasureDomination_canonical_of_shifted hJoint hSub hId shiftedDecoderNullTransferCanonicalStmt_derived
+
+/-- **Canonical rooted domination, with the joint identity derived.** The conditional theorem
+`localRootedFieldMeasureDomination_canonical` with `hJoint` discharged by `DMSJointPosOfFinite.dMSJointPos_of_sub hSub`
+(Duplantier-Miller-Sheffield Lemma A.10, joint identity from the finite tilt family). The canonical decoder identity is
+the derived `canonicalDecoderIdentityStmt_derived`, and the null transfer is derived. The only remaining input is the
+pending Lemma A.10 subcritical pairing input `hSub` (`DMSLemmaA10WholePlaneMarkedSub`, FirstPass/Frozen/S11i.lean:57,
+source-check open). -/
+theorem localRootedFieldMeasureDomination_of_sub
+    (hSub : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ) :
+    LocalRootedFieldMeasureDomination.{u} :=
+  localRootedFieldMeasureDomination_canonical (DMSJointPosOfFinite.dMSJointPos_of_sub hSub) hSub
+    canonicalDecoderIdentityStmt_derived
 
 end HarmonicBalls
