@@ -140,10 +140,6 @@ theorem regularizedFamily_strongCompatibility_of_connectedComponentIn_eq_ball
     (by simpa using hzR) ht hΛ (by simpa using hcompact)
   simpa only [sdiff_empty, clusterOn_ball μ hR.ne', hc] using h
 
-#print axioms clusterOn_eq_disc_of_connectedComponentIn_eq_ball
-#print axioms regularizedFamily_strongCompatibility_of_connectedComponentIn_eq_ball
 
-#print axioms exists_leastSupersolutionOn_component_extension
-#print axioms clusterOn_eq_connectedComponentIn_of_leastSupersolutionOn_mem
 
 end HarmonicBalls

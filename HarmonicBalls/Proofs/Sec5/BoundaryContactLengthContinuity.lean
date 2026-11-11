@@ -137,8 +137,5 @@ theorem ae_cluster_right_continuity_iff_boundary_contact_length
     by_contra hfail
     exact (ne_of_gt (hpositive z hz t ht hfail)) hnull
 
-#print axioms tendsto_boundary_contact_length_iff_null_jump
-#print axioms tendsto_boundary_contact_length_dyadic_iff
-#print axioms ae_cluster_right_continuity_iff_boundary_contact_length
 
 end HarmonicBalls

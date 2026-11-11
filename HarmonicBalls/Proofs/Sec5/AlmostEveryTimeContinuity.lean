@@ -100,8 +100,5 @@ theorem ae_time_ae_lqg_cluster_right_continuous_for_countable_centres
   filter_upwards [hw] with ω hω z hz
   exact hω ⟨z, hz⟩
 
-#print axioms ae_time_ae_cluster_right_continuous
-#print axioms ae_time_ae_lqg_cluster_right_continuous
-#print axioms ae_time_ae_lqg_cluster_right_continuous_for_countable_centres
 
 end HarmonicBalls

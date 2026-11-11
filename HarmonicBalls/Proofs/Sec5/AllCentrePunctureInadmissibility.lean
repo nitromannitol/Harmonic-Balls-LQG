@@ -188,10 +188,5 @@ theorem ae_locally_finite_puncture_inadmissible_all_centres
     exact ball_subset_closedBall (hKR ha)
   exact hdisc z hz K hKR hKloc hzK a ha t ht ((hadm.1 a hac).mono subset_closure)
 
-#print axioms ae_disc_cluster_small_open_neighborhoods_all_centres
-#print axioms leastSupersolution_lt_zero_of_earlier_not_mem_cluster
-#print axioms ae_leastSupersolution_lt_zero_all_centres
-#print axioms ae_locally_finite_puncture_discontinuous_all_centres
-#print axioms ae_locally_finite_puncture_inadmissible_all_centres
 
 end HarmonicBalls

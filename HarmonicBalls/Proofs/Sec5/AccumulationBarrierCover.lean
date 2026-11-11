@@ -120,8 +120,5 @@ theorem exists_cappedGreenBarrier_cover_of_locally_finite_accumulation
       exact ⟨hy.1, hy.2, hyW⟩
     linarith [hcover₂ y (hJ₂W hyJ)]
 
-#print axioms exists_cappedGreenBarrier_cover_of_locally_finite_accumulation
-#print axioms finite_inter_compact_sdiff_neighborhood_of_locally_finite_accumulation
-#print axioms exists_finset_cappedGreenBarrier_neighborhood
 
 end HarmonicBalls

@@ -165,11 +165,5 @@ theorem ae_boundary_jump_component_has_positive_length
     (ofReal_dist_le_hausdorffMeasure_one_of_closure isPreconnected_connectedComponentIn
       (mem_connectedComponentIn hx) hycomp)
 
-#print axioms ae_boundary_jump_component_has_positive_length
-#print axioms ofReal_dist_le_hausdorffMeasure_one_of_closure
-#print axioms boundary_jump_component_attaches
-#print axioms ae_boundary_jump_component_attaches
-#print axioms closure_component_sdiff_meets_closed
-#print axioms closure_component_iInter_sdiff_meets_closed
 
 end HarmonicBalls

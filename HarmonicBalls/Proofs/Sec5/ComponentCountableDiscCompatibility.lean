@@ -76,8 +76,5 @@ theorem regularizedFamily_containment_iff_of_component_eq_countable_disc
       hμ hV hU hUb hR hz hcomp hK ht hΛ (Or.inr hcl)]
     exact hcl
 
-#print axioms clusterOn_eq_sdiff_of_component_eq_countable_disc
-#print axioms regularizedFamily_strongCompatibility_of_component_eq_countable_disc
-#print axioms regularizedFamily_containment_iff_of_component_eq_countable_disc
 
 end HarmonicBalls

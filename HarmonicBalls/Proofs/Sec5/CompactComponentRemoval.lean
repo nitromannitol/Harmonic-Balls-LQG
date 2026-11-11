@@ -103,9 +103,5 @@ theorem regularizedFamily_eq_of_restrict_sdiff_component_compact_containment
   exact regularizedFamily_eq_of_restrict_sdiff_relative_countable hμ hν hVμ hVν
     hU.connectedComponentIn hK hμν ht hΛ hΛ' (Or.inl hinside)
 
-#print axioms closure_clusterOn_sdiff_of_countable_on_component
-#print axioms regularizedFamily_closure_eq_clusterOn_of_component_compact_containment
-#print axioms regularizedFamily_closure_eq_sdiff_of_component_compact_containment
-#print axioms regularizedFamily_eq_of_restrict_sdiff_component_compact_containment
 
 end HarmonicBalls

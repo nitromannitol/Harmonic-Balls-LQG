@@ -344,14 +344,5 @@ theorem greenFunction_ball_sdiff_of_locally_finite_accumulation
     EReal.toReal_coe, greenFunction, ite_eq_left ⟨hz.1, hx.1, Ne.symm hxz⟩,
     greatestHarmonicMinorant_ball hz.1 hx.1, EReal.toReal_coe]
 
-#print axioms IsHarmonicMinorant.le_greatestHarmonicMinorantBall_of_accumulation
-#print axioms greatestHarmonicMinorant_ball_sdiff_of_locally_finite_accumulation
-#print axioms greenFunction_ball_sdiff_of_locally_finite_accumulation
-#print axioms IsHarmonicMinorant.le_greatestHarmonicMinorantBall_of_locally_finite_accumulation
-#print axioms IsHarmonicMinorant.exists_uniform_excess_near_closed_deletion
-#print axioms harmonic_sub_le_of_locally_finite_accumulation
-#print axioms harmonic_sub_le_of_superharmonic_barrier
-#print axioms HarmonicOnNhd.sub_superharmonic
-#print axioms isSubharmonicOn_ball_sdiff_le_of_eventually_lt
 
 end HarmonicBalls

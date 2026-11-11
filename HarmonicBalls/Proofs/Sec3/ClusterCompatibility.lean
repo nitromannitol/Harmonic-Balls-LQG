@@ -7,7 +7,7 @@ Proofs of `ObstacleCompatibilityPoleStep1` and `ObstacleCompatibilityPoleStep2` 
 
 * Harmonic functions have `Δ = 0` distributionally (`hasLaplacian_zero_of_harmonicOnNhd`, via the mean value property
   and the converse of Weyl's lemma), and `Δ ≤ μ` is local (`LaplacianLE.union`, a smooth cut-off).
-* The removable singularity of `G_{B_{r₁}}(z,·) - G_{B_{r₂}}(z,·)` at the pole `z` (E32): off the pole it equals
+* The removable singularity of `G_{B_{r₁}}(z,·) - G_{B_{r₂}}(z,·)` at the pole `z`: off the pole it equals
   `h_z = h^{r₂}_z - h^{r₁}_z`, the difference of the explicit greatest harmonic minorants
   (`greatestHarmonicMinorantBall`), which is harmonic on a neighbourhood of `closedBall 0 r₁`.
 * Step 1: `ŵ = v_{B_{r₂};z}(t) - t h_z ∈ S_{B_{r₁};z}(t)`, so `u_{B_{r₁};z}(t) ≤ u_{B_{r₂};z}(t)` (eq:monotonicity-domains).

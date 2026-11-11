@@ -247,15 +247,8 @@ theorem regularizedFamily_strongCompatibility_sdiff_of_connectedComponentIn_eq_b
   have h := regularizedFamily_strongCompatibility_relative_countable_disc hμ hV hR K hDR hKR hzRK ht hΛ hcl'
   simpa only [heq] using h
 
-#print axioms regularizedFamily_strongCompatibility_sdiff_of_connectedComponentIn_eq_ball
 
-#print axioms leastSupersolutionOn_mem_of_connectedComponentIn_eq_ball
-#print axioms clusterOn_sdiff_of_connectedComponentIn_eq_ball
 
-#print axioms leastSupersolutionOn_eq_zeroExtend_component
-#print axioms leastSupersolutionOn_mem_of_component_mem
 
-#print axioms zeroExtend_component_leastSupersolutionOn_mem
-#print axioms component_leastSupersolutionOn_le_at_pole
 
 end HarmonicBalls

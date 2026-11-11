@@ -125,10 +125,5 @@ theorem regularizedFamily_strongCompatibility_accumulating_punctured_disc
     exact regularizedFamily_closure_eq_discCluster_of_compact_containment
       hR hz.1 ht hΛ hopen hv hdisc
 
-#print axioms closure_clusterOn_accumulating_punctured_disc_eq
-#print axioms regularizedFamily_strongCompatibility_accumulating_punctured_disc
-#print axioms locally_finite_off_inter_closed_deletion
-#print axioms leastSupersolutionOn_accumulating_punctured_disc_eq
-#print axioms clusterOn_accumulating_punctured_disc_eq_sdiff
 
 end HarmonicBalls

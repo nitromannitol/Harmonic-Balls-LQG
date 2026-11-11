@@ -7,7 +7,7 @@ import HarmonicBalls.Steps.Sec4.ClusterLowerBound
 `clusterLowerBound_proved`: Proposition 4.1 given I2, from Prop 2.3, Lemmas 3.1, 3.2, 3.4, Lemma A.1 (general form),
 the shift step, the continuity of `q_{B_R}` and Lemma A.5, Step 3 (whose equality case is the repair of gap G3).
 `clusterLowerBound_of_literature`: the same from the staged literature inputs (I2 by
-`lqgVolumeGrowthAllScalesStmt_of_literature`, worker c2).
+`lqgVolumeGrowthAllScalesStmt_of_literature`).
 -/
 
 namespace HarmonicBalls

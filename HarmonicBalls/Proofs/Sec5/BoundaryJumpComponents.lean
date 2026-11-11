@@ -113,8 +113,5 @@ theorem ae_countable_boundary_jump_components
       (le_of_not_gt (by simpa only [mem_ball] using hnot))
   · exact hpos t ht z hz
 
-#print axioms ae_countable_boundary_jump_components
-#print axioms countable_components_of_positive_length
-#print axioms measurableSet_connectedComponentIn_of_measurable
 
 end HarmonicBalls

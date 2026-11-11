@@ -122,9 +122,5 @@ theorem ae_summable_infDist_cluster_future_points
   · exact fun _ _ => ⟨z, self_mem_cluster hz⟩
   · exact fun t ht' => hinter t ht' z hz
 
-#print axioms sum_separated_future_points_le
-#print axioms summable_separated_future_points
-#print axioms summable_infDist_future_points
-#print axioms ae_summable_infDist_cluster_future_points
 
 end HarmonicBalls

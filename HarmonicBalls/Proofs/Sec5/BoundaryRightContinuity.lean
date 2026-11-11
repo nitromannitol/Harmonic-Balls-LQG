@@ -612,8 +612,7 @@ theorem closure_cluster_small_of_local {μ : Measure ℂ} (hμ : IsLocallyFinite
 /-- **Proposition 5.2, boundary-touching step, from the numbered predecessor `h71` and the explicit field inputs
 of the LQG measure.** The almost-sure event is the small-auxiliary-cluster event of `SmallAuxiliaryClusterEvent.lean`
 together with the volume growth at every radius, which follows from the LQG chain `LQGVolumeGrowthAllScalesStmt`
-(with the Weyl-scaling, existence and non-atomicity field inputs). The conclusion is `ClusterBoundaryTouchingRightContinuityStep`
-(GRAPH G12); the proof is conditional on the field inputs named in the hypotheses. -/
+(with the Weyl-scaling, existence and non-atomicity field inputs). The conclusion is `ClusterBoundaryTouchingRightContinuityStep`. The proof is conditional on the field inputs named in the hypotheses. -/
 theorem clusterBoundaryTouching_of_fields (h71 : ClusterUpperBoundPolyHighProbStmt.{u})
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -673,7 +672,3 @@ theorem clusterContinuity_of_staged (h71 : ClusterUpperBoundPolyHighProbStmt.{u}
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.local_persistence
-#print axioms HarmonicBalls.closure_cluster_small_of_local
-#print axioms HarmonicBalls.clusterBoundaryTouching_of_fields
-#print axioms HarmonicBalls.clusterContinuity_of_staged

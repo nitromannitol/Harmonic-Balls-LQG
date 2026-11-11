@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec3.ConservationOfMassLemma
 # Section 3 from the literature inputs
 
 Lemmas 3.1-3.5 with I2 (`LQGVolumeGrowthAllScalesStmt`) discharged by
-`lqgVolumeGrowthAllScalesStmt_of_literature` (Proofs/Sec2/Assembly.lean, worker c2): the results depend only on the
+`lqgVolumeGrowthAllScalesStmt_of_literature` (Proofs/Sec2/Assembly.lean): the results depend only on the
 staged literature inputs Ding-Gwynne 2020, Lemma 3.8 (`WholePlaneLQGBallMassBounds`), the affine invariance of the
 whole-plane GFF (`WholePlaneGFFAffineInvariance`) and Fact 2.1 (`LQGMeasureCoordChange`, `LQGMeasureWeylScaling`,
 `LQGMeasureExistence`, `LQGMeasureNonatomic`).

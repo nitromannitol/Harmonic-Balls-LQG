@@ -130,10 +130,5 @@ theorem IsLQGLimit.regularizedFamily_eq_of_component_relative_countable
   regularizedFamily_eq_of_component_restrict_sdiff_relative_countable hμ hν hVμ hVν
     hU hcomp hK (hμlim.restrict_eq hνlim hD hloc) ht hΛ hΛ' hcl
 
-#print axioms clusterOn_eq_of_component_restrict_sdiff_relative_countable
-#print axioms clusterOn_sdiff_eq_of_component_restrict_sdiff_relative_countable
-#print axioms regularizedFamily_eq_of_component_restrict_sdiff_relative_countable
-#print axioms IsLQGLimit.clusterOn_eq_of_component_relative_countable
-#print axioms IsLQGLimit.regularizedFamily_eq_of_component_relative_countable
 
 end HarmonicBalls

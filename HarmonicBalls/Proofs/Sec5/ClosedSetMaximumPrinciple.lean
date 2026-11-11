@@ -244,12 +244,6 @@ theorem greenFunction_ball_sdiff_of_barriers {R : ℝ} {z x : ℂ}
     greenFunction, ite_eq_left ⟨hz.1, hx.1, Ne.symm hxz⟩,
     greatestHarmonicMinorant_ball hz.1 hx.1, EReal.toReal_coe]
 
-#print axioms greatestHarmonicMinorant_ball_sdiff_of_barriers
-#print axioms greenFunction_ball_sdiff_of_barriers
 
-#print axioms IsHarmonicMinorant.le_greatestHarmonicMinorantBall_of_barriers
-#print axioms harmonicOnNhd_ball_sdiff_le_of_tendsto_atBot
-#print axioms IsHarmonicMinorant.add_barrier_sub_le_of_boundary
-#print axioms IsHarmonicMinorant.sub_le_of_boundary_of_barrier
 
 end HarmonicBalls

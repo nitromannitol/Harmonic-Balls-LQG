@@ -65,7 +65,5 @@ theorem ae_accumulating_puncture_inadmissible_all_centres
     (hvol.2 1 zero_lt_one) K hKclosed hLclosed hL hK hKR ⟨hz, hzK⟩ ht).mp hadm a ha
   exact (ne_of_lt (hneg z hz a (hKR ha) haz t ht)) heq
 
-#print axioms ae_accumulating_puncture_discontinuous_all_centres
-#print axioms ae_accumulating_puncture_inadmissible_all_centres
 
 end HarmonicBalls

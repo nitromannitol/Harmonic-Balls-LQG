@@ -9,8 +9,7 @@ import Lean.Util.CollectAxioms
 # Section 4 from the four remaining literature inputs
 
 Proposition 4.1, Lemma 4.2 and Lemma 4.3 at their frozen statements (`ClusterLowerBoundStmt`,
-`LeastSupersolutionHolderStmt`, `ClusterSubharmonicBallStmt`; `HarmonicBalls/Draft/Section4.lean:95`, `:116`, `:132`;
-`docs/campaign/FROZEN.md`).
+`LeastSupersolutionHolderStmt`, `ClusterSubharmonicBallStmt`; `HarmonicBalls/Draft/Section4.lean:95`, `:116`, `:132`).
 
 The existing exports `clusterLowerBound_of_literature` (`HarmonicBalls/Proofs/Sec4/ClusterLowerBound.lean`),
 `leastSupersolutionHolder_of_literature` (`HarmonicBalls/Proofs/Sec4/LeastSupersolutionHolder.lean`) and
@@ -27,7 +26,7 @@ This file discharges the two premises that have proved providers and keeps four 
   follows from the vague-limit definition of the LQG measure.
 * Explicit: `hDG` (`WholePlaneLQGBallMassBounds`, Ding-Gwynne 2020, Lemma 3.8), `hCC` (`LQGMeasureCoordChange`, Fact 2.1 IV),
   `hE` (`LQGMeasureExistence`, Section 2.2 of the paper) and `hN` (`LQGMeasureNonatomic`, Fact 2.1 I). They are staged in
-  `HarmonicBalls/Proposed/LQG.lean` and remain pending operator source-check; this file does not certify them.
+  `HarmonicBalls/Proposed/LQG.lean` and remain pending source-check; this file does not certify them.
 
 Input I2 (`LQGVolumeGrowthAllScalesStmt`) is produced inside `lqgVolumeGrowthAllScalesStmt_of_literature`, so it is not a
 hypothesis of the exports here. Both providers are instantiated at the carrier universe `u`.
@@ -85,11 +84,6 @@ end DerivedInputs
 #check @leastSupersolutionHolder_of_remaining_literature
 #check @clusterSubharmonicBall_of_remaining_literature
 
-#print axioms wholePlaneGFFAffineInvariance_univ
-#print axioms lqgMeasureWeylScaling_univ
-#print axioms clusterLowerBound_of_remaining_literature
-#print axioms leastSupersolutionHolder_of_remaining_literature
-#print axioms clusterSubharmonicBall_of_remaining_literature
 
 -- Guards (an error fails the check): the three exports depend only on the standard constants, take exactly the four
 -- retained premises and neither derived premise nor I2, and apply the two providers; the provider closure reaches no

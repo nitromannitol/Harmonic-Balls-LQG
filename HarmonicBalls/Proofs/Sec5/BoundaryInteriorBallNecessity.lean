@@ -103,8 +103,5 @@ theorem cluster_right_continuity_iff_boundary_interior_ball
   · exact boundary_interior_ball_of_cluster_right_continuity ht hmono hopen
   · exact cluster_right_continuity_of_boundary_interior_ball hV ht hmono hmass hinter
 
-#print axioms cluster_right_continuity_iff_boundary_interior_ball
-#print axioms interior_ball_of_not_mem_iInter_closure
-#print axioms boundary_interior_ball_of_cluster_right_continuity
 
 end HarmonicBalls

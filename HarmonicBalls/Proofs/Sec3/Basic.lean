@@ -12,7 +12,7 @@ import HarmonicBalls.Proofs.SecA.ObstacleMonotone
   cluster is the non-coincidence set and the odometers agree.
 * `obstacleOdometerZeroBoundaryGeneral_holds` (Lemma A.4, general form).
 * `leastSupersolutionMem_proved` (Lemma 3.1) and `clusterMonotone_proved` (Lemma 3.3), with Input I2
-  (`LQGVolumeGrowthAllScalesStmt`, worker c2's task) as the only hypothesis.
+  (`LQGVolumeGrowthAllScalesStmt`) as the only hypothesis.
 -/
 
 namespace HarmonicBalls

@@ -57,9 +57,5 @@ theorem leastSupersolutionOn_eq_sInf_continuous {μ : Measure ℂ} {U : Set ℂ}
   rw [supersolutionsOn_continuous_image_eq hU hx]
   rfl
 
-#print axioms mem_supersolutionsOn_of_eqOn
-#print axioms exists_continuous_supersolutionOn_eqOn
-#print axioms supersolutionsOn_continuous_image_eq
-#print axioms leastSupersolutionOn_eq_sInf_continuous
 
 end HarmonicBalls

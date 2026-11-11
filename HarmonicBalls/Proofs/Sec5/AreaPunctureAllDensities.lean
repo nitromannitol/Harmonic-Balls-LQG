@@ -66,9 +66,5 @@ theorem punctured_disc_infimum_not_admissible_of_area_lower_bound
   exact leastSupersolutionOn_punctured_disc_not_mem_of_negative ha hz ht.le
     (supersolutions_mono_measure hμ hw) hn
 
-#print axioms exists_area_supersolution_neg_at_of_pos
-#print axioms area_punctured_disc_infimum_not_admissible
-#print axioms volume_punctured_disc_infimum_not_admissible
-#print axioms punctured_disc_infimum_not_admissible_of_area_lower_bound
 
 end HarmonicBalls

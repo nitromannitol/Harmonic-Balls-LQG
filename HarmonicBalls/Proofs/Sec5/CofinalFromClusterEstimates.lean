@@ -72,8 +72,5 @@ theorem cofinalRegularizedClusterIntervals_of_goodScales
     (boundaryMeasureZeroOfCompactClusterStmt_of_steps (clusterOpenLaplacian_proved hI2) h611 h82)
     hAff hCC
 
-#print axioms cofinalRegularizedClusterIntervals_of_clusterEstimates
-#print axioms cofinalRegularizedClusterIntervals_of_harnack_and_compactBoundary
-#print axioms cofinalRegularizedClusterIntervals_of_goodScales
 
 end HarmonicBalls

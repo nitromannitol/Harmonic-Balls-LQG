@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec6.SingularityOriginNonatomic
 /-! # Volume growth without a non-atomicity input
 
 The hypotheses below are staged in `HarmonicBalls.Proposed.LQG` and remain
-subject to operator source review. In particular, existence is needed at every
+subject to source review. In particular, existence is needed at every
 subcritical insertion strength, not just at zero. The origin atom is removed
 using a strictly stronger insertion; the whole-plane mass estimate then gives
 non-atomicity away from the origin. Neither argument assumes I2 or Lemma 2.4.

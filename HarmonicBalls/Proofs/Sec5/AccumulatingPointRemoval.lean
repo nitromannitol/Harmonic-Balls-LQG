@@ -196,16 +196,5 @@ theorem leastSupersolution_le_punctured_disc_of_single_accumulation
   intro C _ _
   exact (Set.finite_singleton a).subset inter_subset_left
 
-#print axioms countable_inter_open_of_locally_finite
-#print axioms countable_inter_open_of_locally_finite_accumulation
-#print axioms laplacianLE_zero_of_locally_finite_accumulation_removal
-#print axioms laplacianLE_of_locally_finite_accumulation_removal
-#print axioms closure_sdiff_countable_inter
-#print axioms accumulating_punctured_supersolution_mem_domain
-#print axioms leastSupersolutionOn_le_accumulating_punctured
-#print axioms leastSupersolutionOn_le_accumulating_punctured_of_volumeGrowth
-#print axioms accumulating_punctured_disc_supersolution_mem_disc
-#print axioms leastSupersolution_le_accumulating_punctured_disc
-#print axioms leastSupersolution_le_punctured_disc_of_single_accumulation
 
 end HarmonicBalls

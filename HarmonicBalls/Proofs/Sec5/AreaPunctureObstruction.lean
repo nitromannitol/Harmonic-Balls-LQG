@@ -65,7 +65,5 @@ theorem exists_area_punctured_disc_infimum_not_admissible
   obtain ⟨C, hC, w, hw, hn⟩ := exists_area_supersolution_neg_at hz.1 ha haz ht
   exact ⟨C, hC, leastSupersolutionOn_punctured_disc_not_mem_of_negative ha hz ht.le hw hn⟩
 
-#print axioms exists_area_supersolution_neg_at
-#print axioms exists_area_punctured_disc_infimum_not_admissible
 
 end HarmonicBalls

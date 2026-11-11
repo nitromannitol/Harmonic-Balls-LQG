@@ -52,5 +52,4 @@ theorem clusterCompactRightContinuityAllCentres_of_steps (h33 : ClusterMonotoneS
     (add_subset_add Subset.rfl (ball_subset_ball hrad)))
 
 
-#print axioms clusterCompactRightContinuityAllCentres_of_steps
 end HarmonicBalls

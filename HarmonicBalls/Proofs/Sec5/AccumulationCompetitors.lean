@@ -112,7 +112,5 @@ theorem leastSupersolutionOn_accumulating_punctured_disc_eq_of_green_eq
     (leastSupersolution_le_accumulating_punctured_disc hμ hR hV ht.le hLclosed hL hK
       (ball_subset_closedBall hx.1) hxz)
 
-#print axioms leastSupersolutionOn_accumulating_punctured_disc_eq_of_green_eq
-#print axioms leastSupersolutionOn_accumulating_punctured_disc_le_supersolution
 
 end HarmonicBalls

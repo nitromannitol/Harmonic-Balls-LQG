@@ -123,9 +123,5 @@ theorem regularizedFamily_strongCompatibility_of_component_boundary
     exact regularizedFamily_closure_eq_clusterOn_of_compact_containment
       hU.connectedComponentIn hVb hzV ht hΛ hopen hv hsmall
 
-#print axioms closure_subset_connectedComponentIn_of_subset
-#print axioms clusterOn_eq_of_connectedComponentIn_eq_of_restrict_eq
-#print axioms regularizedFamily_eq_of_restrict_connectedComponentIn
-#print axioms regularizedFamily_strongCompatibility_of_component_boundary
 
 end HarmonicBalls

@@ -63,7 +63,5 @@ theorem clusterOn_two_countable_deletions_of_compact_regularizedFamily
       hμ hV hU hUL hUb ht hzL hL hboundary hΛ hcl
     exact h1.symm.trans h2
 
-#print axioms clusterOn_sdiff_eq_of_compact_regularizedFamily_of_boundary
-#print axioms clusterOn_two_countable_deletions_of_compact_regularizedFamily
 
 end HarmonicBalls

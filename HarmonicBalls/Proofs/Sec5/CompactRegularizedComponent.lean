@@ -80,8 +80,5 @@ theorem regularizedFamily_closure_eq_of_countable_on_disc_intersection_component
     (tendsto_greenFunction_zero_of_enclosing_discs (mem_connectedComponentIn hz.1)
       (exists_enclosing_disc_of_eq_iInter_ball hcomp)) hΛ hcl
 
-#print axioms leastSupersolutionOn_mem_of_compact_regularizedFamily
-#print axioms regularizedFamily_closure_eq_of_countable_on_component_of_boundary
-#print axioms regularizedFamily_closure_eq_of_countable_on_disc_intersection_component
 
 end HarmonicBalls

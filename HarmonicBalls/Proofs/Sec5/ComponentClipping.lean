@@ -192,11 +192,5 @@ theorem clusterOn_eq_connectedComponentIn_of_volumeGrowth
       (hsub.trans ball_subset_closedBall))
     ((greenPotentialBallLaplacianStep_holds μ hμ R βm βp hR (hgrowth R hR)).mono_domain hsub)
 
-#print axioms LaplacianLE.min_zero_of_potential
-#print axioms exists_clipped_component_supersolution_extension
-#print axioms leastSupersolutionOn_le_connectedComponentIn
-#print axioms clusterOn_eq_connectedComponentIn_of_potential
-#print axioms leastSupersolutionOn_eq_connectedComponentIn
-#print axioms clusterOn_eq_connectedComponentIn_of_volumeGrowth
 
 end HarmonicBalls

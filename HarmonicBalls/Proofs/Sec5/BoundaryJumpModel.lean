@@ -85,6 +85,5 @@ theorem exists_connected_zero_area_boundary_jump :
       simp
     · simp [modelBefore]
 
-#print axioms exists_connected_zero_area_boundary_jump
 
 end HarmonicBalls

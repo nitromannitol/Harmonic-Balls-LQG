@@ -105,8 +105,5 @@ theorem ae_cluster_right_continuity_of_boundary_interior_ball
     (fun s s' hs hss' => hmono s s' 1 hs hss' zero_lt_one z hz)
     (hmass t ht z hz) (hinter t ht z hz) hball
 
-#print axioms ae_cluster_right_continuity_of_boundary_interior_ball
-#print axioms future_closure_inter_subset_of_interior_ball
-#print axioms cluster_right_continuity_of_boundary_interior_ball
 
 end HarmonicBalls

@@ -133,8 +133,5 @@ theorem uniformScale_containmentFailure_smallTime
             exact hn)).symm
       _ = L (unitClusterContainmentUntil T)ᶜ := by rw [← hd.map_eq]
 
-#print axioms IsWholePlaneGFF.nullMeasurableSet_unitClusterContainmentUntil_measureLaw
-#print axioms IsWholePlaneGFF.nullMeasurableSet_unitClusterContainmentUntil
-#print axioms uniformScale_containmentFailure_smallTime
 
 end HarmonicBalls

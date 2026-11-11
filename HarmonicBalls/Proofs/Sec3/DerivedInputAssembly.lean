@@ -19,7 +19,7 @@ two premises that have proved providers and keeps four explicit:
   (`HarmonicBalls/Proofs/Sec6/LQGWeylScaling.lean`), derived from literal vague convergence.
 * Explicit: `hDG` (`WholePlaneLQGBallMassBounds`, Ding-Gwynne 2020, Lemma 3.8), `hCC` (`LQGMeasureCoordChange`, Fact 2.1 IV),
   `hE` (`LQGMeasureExistence`, Section 2.2 of the paper) and `hN` (`LQGMeasureNonatomic`, Fact 2.1 I). They are staged in
-  `HarmonicBalls/Proposed/LQG.lean` and remain pending operator source-check; this file does not certify them.
+  `HarmonicBalls/Proposed/LQG.lean` and remain pending source-check; this file does not certify them.
 
 Both providers are instantiated universally at the carrier universe `u` (`wholePlaneGFFAffineInvariance_univ`,
 `lqgMeasureWeylScaling_univ`) and passed to the existing exports. Input I2 (`LQGVolumeGrowthAllScalesStmt`) is produced
@@ -101,13 +101,6 @@ end DerivedInputs
 #check @clusterConservationOfMass_of_remaining_literature
 #check @clusterCompatibility_of_remaining_literature
 
-#print axioms wholePlaneGFFAffineInvariance_univ
-#print axioms lqgMeasureWeylScaling_univ
-#print axioms leastSupersolutionMem_of_remaining_literature
-#print axioms clusterOpenLaplacian_of_remaining_literature
-#print axioms clusterMonotone_of_remaining_literature
-#print axioms clusterConservationOfMass_of_remaining_literature
-#print axioms clusterCompatibility_of_remaining_literature
 
 -- Guards (an error fails the check): the five exports depend only on the standard constants, take exactly the four
 -- retained premises and neither derived premise nor I2, and apply the two providers; the provider closure reaches no
