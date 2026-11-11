@@ -38,14 +38,21 @@ import HarmonicBalls.FirstPass.S11e
 import HarmonicBalls.FirstPass.S11i.Assembly13
 import HarmonicBalls.FirstPass.S11i.Corrected11_13
 import HarmonicBalls.FirstPass.S1S10
+import HarmonicBalls.FirstPass.S1S10.CrossingLemma
 import HarmonicBalls.FirstPass.S2S3S4S9SA
 import HarmonicBalls.FirstPass.S5S7S8
 import HarmonicBalls.FirstPass.S8c.BirkhoffDerived
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
+import HarmonicBalls.FirstPass.S9c
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs31
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs33
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs35
+import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import HarmonicBalls.Proofs.Sec9.LQGExistenceConsequences
 import HarmonicBalls.Proofs.Sec9.ObstacleComparison
+import HarmonicBalls.Steps.Sec2.VolumeGrowth
 
 /-!
 # Axiom gate
@@ -166,6 +173,10 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_15_derivedInputs3
 -- 11.16: firstPass_11_16_of_11_17 (HarmonicBalls/FirstPass/S11e.lean:29)
 #print axioms HarmonicBalls.firstPass_11_16_of_11_17
+-- 11.16: firstPass_11_16_corrected_derivedInputs35 (HarmonicBalls/FirstPass/Phase2/DerivedInputs35.lean:54)
+#print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs35
+-- 11.16 audit row: firstPass_11_16_corrected_derivedInputs (HarmonicBalls/FirstPass/Phase2/DerivedInputs31.lean:24)
+#print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs
 -- A.1: closure_A_1 (HarmonicBalls/FirstPass/Closure/SecA45.lean:37)
 #print axioms HarmonicBalls.Closure.closure_A_1
 -- A.2: closure_A_2 (HarmonicBalls/FirstPass/Closure/SecA45.lean:40)
@@ -182,10 +193,28 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- Numbered results whose only declaration is in Proofs/ (COUNTED-MANIFEST.md)
 -- 2.4: liouvilleVolumeGrowthStmt_of_existence (HarmonicBalls/Proofs/Sec9/LQGExistenceConsequences.lean:30)
 #print axioms HarmonicBalls.liouvilleVolumeGrowthStmt_of_existence
+-- 2.4: liouvilleVolumeGrowthStmt_of_ballMass (HarmonicBalls/Steps/Sec2/VolumeGrowth.lean:80)
+#print axioms HarmonicBalls.liouvilleVolumeGrowthStmt_of_ballMass
 -- 6.5: annulusIterationStmt_of_three_inputs (HarmonicBalls/Proofs/Sec6/FullThreeInputAssembly.lean:73)
 #print axioms HarmonicBalls.Section6Full.annulusIterationStmt_of_three_inputs
+-- 6.5: annulusIterationStmt_proved (HarmonicBalls/Proofs/Sec6/AnnulusLawTransfer.lean:207)
+#print axioms HarmonicBalls.Section6.annulusIterationStmt_proved
 -- 9.1: obstacleComparison (HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32)
 #print axioms HarmonicBalls.obstacleComparison
+-- 9.2 corrected form [C51]: firstPass_9_2_corrected (HarmonicBalls/FirstPass/S9c.lean:116)
+#print axioms HarmonicBalls.S9c.firstPass_9_2_corrected
+-- 9.2: closure_9_2_derivedInputs33 (HarmonicBalls/FirstPass/Phase2/DerivedInputs33.lean:55)
+#print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs33
+-- 10.5 corrected form [C48]: firstPass_10_5_corrected (HarmonicBalls/FirstPass/S1S10/CrossingLemma.lean:38)
+#print axioms HarmonicBalls.firstPass_10_5_corrected
+-- 5.2: closure_5_2_derivedInputs33 (HarmonicBalls/FirstPass/Phase2/DerivedInputs33.lean:25)
+#print axioms HarmonicBalls.Closure.closure_5_2_derivedInputs33
+-- 8.2: firstPass_8_2_S8d_noWeyl_derivedInputs33 (HarmonicBalls/FirstPass/Phase2/DerivedInputs33.lean:74)
+#print axioms HarmonicBalls.firstPass_8_2_S8d_noWeyl_derivedInputs33
+-- 8.3: closure_8_3_derivedInputs35 (HarmonicBalls/FirstPass/Phase2/DerivedInputs35.lean:32)
+#print axioms HarmonicBalls.Closure.closure_8_3_derivedInputs35
+-- 11.6: closure_11_6_derivedInputs33 (HarmonicBalls/FirstPass/Phase2/DerivedInputs33.lean:40)
+#print axioms HarmonicBalls.Closure.closure_11_6_derivedInputs33
 
 -- Forall-xi and canonical-xi forms (COUNTED-MANIFEST.md)
 -- 11.13 forall-xi `CorrectedLemma11_13Stmt`: correctedLemma11_13_of_identity (HarmonicBalls/FirstPass/S11i/Assembly13.lean:79)
