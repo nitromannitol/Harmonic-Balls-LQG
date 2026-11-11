@@ -881,7 +881,7 @@ theorem measurable_integral_approxX (γ : ℝ) (c : ℂ) (R : ℝ) (k : ℕ) (g 
 
 /-- Extension by zero of a compactly supported continuous function on the disc `ball c R` to `ℂ` (route step 5). -/
 theorem exists_extend_zero_ball {c : ℂ} {R : ℝ} (g : C_c(ball c R, ℝ)) :
-    ∃ f : C_c(ℂ, ℝ), ∀ x : ball c R, f x.1 = g x := by
+    ∃ f : C_c(ℂ, ℝ), (∀ x : ball c R, f x.1 = g x) ∧ ∀ z, z ∉ Subtype.val '' tsupport g → f z = 0 := by
   classical
   let K : Set ℂ := Subtype.val '' tsupport g
   have hK : IsCompact K := (g.hasCompactSupport.isCompact).image continuous_subtype_val
@@ -912,7 +912,7 @@ theorem exists_extend_zero_ball {c : ℂ} {R : ℝ} (g : C_c(ball c R, ℝ)) :
       refine (continuousAt_const : ContinuousAt (fun _ : ℂ => (0 : ℝ)) z0).congr ?_
       exact Filter.eventually_of_mem (hK.isClosed.isOpen_compl.mem_nhds hz0K)
         fun z hz => (hzero z hz).symm
-  exact ⟨⟨⟨f, hcont⟩, HasCompactSupport.intro hK fun z hz => hzero z hz⟩, hfx⟩
+  exact ⟨⟨⟨f, hcont⟩, HasCompactSupport.intro hK fun z hz => hzero z hz⟩, hfx, hzero⟩
 
 /-- Route step 7 on the closed disc: where `F` is the centred circle profile `fieldCircleAverage - P`, the
 approximant density is `e^{γP}` times the Lebesgue density of `lqgApprox` at scale `2^{-k}`. -/
@@ -936,6 +936,89 @@ theorem approxDens_mul_exp (γ α P : ℝ) {c : ℂ} {R : ℝ} (hc : ℝ → ℂ
     ring
   rw [hexp]
   ring
+
+/-- Locally finite pull-back of a locally finite measure to the disc (general version of
+`isLocallyFiniteMeasure_ballVol`). -/
+theorem isLocallyFiniteMeasure_comap_ball (μ : Measure ℂ) [IsLocallyFiniteMeasure μ] (c : ℂ) (R : ℝ) :
+    IsLocallyFiniteMeasure (Measure.comap (Subtype.val : ball c R → ℂ) μ) := by
+  refine ⟨fun x => ?_⟩
+  have hx : dist (x : ℂ) c < R := mem_ball.1 x.2
+  have hρ : 0 < (R - dist (x : ℂ) c) / 2 := by linarith
+  refine ⟨Subtype.val ⁻¹' ball (x : ℂ) ((R - dist (x : ℂ) c) / 2), ?_, ?_⟩
+  · exact (isOpen_ball.preimage continuous_subtype_val).mem_nhds (mem_ball_self hρ)
+  · rw [(MeasurableEmbedding.subtype_coe measurableSet_ball).comap_apply]
+    exact (measure_mono (image_preimage_subset _ _)).trans_lt measure_ball_lt_top
+
+/-- Route step 7 (identity with `lqgApprox`): for `f` continuous and supported in the disc, `∫ f d(lqgApprox)` is
+`e^{γP}` times `∫ f · approxDens`, where `F` is the centred circle profile (`hF`). -/
+theorem integral_lqgApprox_eq_approx (γ α P : ℝ) {c : ℂ} {R : ℝ} (hc : ℝ → ℂ → ℝ)
+    (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hc ε)) (F : C(LocalParam c R, ℝ))
+    (hF : ∀ p : LocalParam c R, F p = fieldCircleAverage α hc p.1.1 p.1.2 - P) (k : ℕ)
+    (h2 : 2 * dyadicScale k < R) {f : ℂ → ℝ} (hsupp : ∀ z, f z ≠ 0 → dist z c ≤ R - 2 * dyadicScale k) :
+    ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α hc) (dyadicScale k)) =
+      Real.exp (γ * P) * ∫ z, f z * approxDens γ c R F k z := by
+  have hε : 0 < dyadicScale k := dyadicScale_pos k
+  have hfca : Continuous fun z => fieldCircleAverage α hc (dyadicScale k) z := by
+    have h1 : Continuous fun z => hc (dyadicScale k) z := hcont _ hε
+    have h3 : Continuous fun z : ℂ => Real.log (max (dyadicScale k) ‖z‖) :=
+      (continuous_const.max continuous_norm).log fun z => (lt_max_of_lt_left hε).ne'
+    have hEq : (fun z => fieldCircleAverage α hc (dyadicScale k) z) =
+        fun z => hc (dyadicScale k) z - α * Real.log (max (dyadicScale k) ‖z‖) := by
+      funext z
+      unfold fieldCircleAverage
+      rw [circleAverage_log_norm_eq_max hε z]
+    rw [hEq]
+    exact h1.sub (continuous_const.mul h3)
+  have hD : Continuous fun z => dyadicScale k ^ (γ ^ 2 / 2) *
+      Real.exp (γ * fieldCircleAverage α hc (dyadicScale k) z) :=
+    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hfca))
+  unfold lqgApprox
+  rw [integral_withDensity_eq_integral_toReal_smul
+    (f := fun z => ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) *
+      Real.exp (γ * fieldCircleAverage α hc (dyadicScale k) z)))
+    hD.measurable.ennreal_ofReal (Eventually.of_forall fun z => ENNReal.ofReal_lt_top)]
+  rw [← integral_const_mul]
+  congr 1
+  funext z
+  by_cases hfz : f z = 0
+  · simp [hfz]
+  · have hz := hsupp z hfz
+    have hnn : 0 ≤ dyadicScale k ^ (γ ^ 2 / 2) *
+        Real.exp (γ * fieldCircleAverage α hc (dyadicScale k) z) :=
+      mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le
+    rw [smul_eq_mul, ENNReal.toReal_ofReal hnn, approxDens_mul_exp γ α P hc F hF k h2 hz]
+    ring
+
+/-- The integral over the disc of the approximant density reduces to the integral over `ℂ` (the support of `f`
+lies in the disc). -/
+theorem integral_approxX_eq_ball (γ : ℝ) (c : ℂ) (R : ℝ) (F : C(LocalParam c R, ℝ)) (k : ℕ) {f : ℂ → ℝ}
+    (hsupp : ∀ z, f z ≠ 0 → dist z c < R) :
+    ∫ x : ball c R, f x.1 * approxDens γ c R F k x.1 ∂(ballVol c R) =
+      ∫ z, f z * approxDens γ c R F k z := by
+  unfold ballVol
+  refine (integral_subtype_comap measurableSet_ball (fun z => f z * approxDens γ c R F k z)).trans
+    (setIntegral_eq_integral_of_forall_compl_eq_zero fun z hz => ?_)
+  by_cases hfz : f z = 0
+  · simp [hfz]
+  · exact absurd (mem_ball.2 (hsupp z hfz)) hz
+
+/-- A compact subset of the disc lies in a closed disc of radius `s < R`. -/
+theorem exists_radius_of_compact {c : ℂ} {R : ℝ} (hR : 0 < R) {K : Set ℂ} (hK : IsCompact K)
+    (hKb : K ⊆ ball c R) : ∃ s : ℝ, 0 ≤ s ∧ s < R ∧ ∀ z ∈ K, dist z c ≤ s := by
+  rcases K.eq_empty_or_nonempty with hE | hne
+  · exact ⟨R / 2, by linarith, by linarith, fun z hz => by simp [hE] at hz⟩
+  · obtain ⟨z0, hz0, hmax⟩ := hK.exists_isMaxOn hne (continuous_id.dist continuous_const).continuousOn
+    exact ⟨dist z0 c, dist_nonneg, mem_ball.1 (hKb hz0), fun z hz => isMaxOn_iff.1 hmax z hz⟩
+
+/-- The dyadic scales eventually satisfy `2 · 2^{-k} < t`. -/
+theorem eventually_two_dyadicScale_lt {t : ℝ} (ht : 0 < t) :
+    ∀ᶠ k : ℕ in atTop, 2 * dyadicScale k < t := by
+  have h : Tendsto (fun k : ℕ => dyadicScale k) atTop (𝓝 0) := by
+    unfold dyadicScale
+    exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have h2 : Tendsto (fun k : ℕ => 2 * dyadicScale k) atTop (𝓝 0) := by
+    simpa using h.const_mul 2
+  exact h2.eventually (gt_mem_nhds ht)
 
 end Approximants
 
