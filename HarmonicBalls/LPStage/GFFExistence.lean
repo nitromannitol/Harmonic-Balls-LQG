@@ -93,4 +93,131 @@ theorem two_log_max_add_sub_log_le {a r s d : ℝ} (ha : 0 < a) (har : a ≤ r) 
   have h9 : 2 * d / a = 2 * (d / a) := by ring
   linarith
 
+/-! ### Finite-dimensional laws of a centred Gaussian family with a positive semidefinite kernel
+
+Adapted from Mathlib's `ProbabilityTheory.BrownianReal.projectiveFamily` (`Mathlib/Probability/BrownianMotion/
+GaussianProjectiveFamily.lean`, Etienne Marion, Apache 2.0 license): the same construction with the covariance
+`min s t` replaced by an arbitrary kernel `K` whose finite Gram matrices are positive semidefinite. -/
+
+section KernelFamily
+
+open MeasureTheory ProbabilityTheory NormedSpace Set WithLp
+
+variable {ι : Type} [DecidableEq ι]
+
+/-- The covariance matrix of the kernel `K` on a finite index set `I`. -/
+def kernelMatrix (K : ι → ι → ℝ) (I : Finset ι) : Matrix I I ℝ := .of fun s t => K s.1 t.1
+
+/-- The centred Gaussian measure on `I → ℝ` with covariance `K` restricted to `I`. -/
+noncomputable def kernelFamily (K : ι → ι → ℝ) (I : Finset ι) : Measure (I → ℝ) :=
+  multivariateGaussian 0 (kernelMatrix K I) |>.map (MeasurableEquiv.toLp 2 (I → ℝ)).symm
+
+lemma measurePreserving_ofLp_kernelFamily (K : ι → ι → ℝ) (I : Finset ι) :
+    MeasurePreserving ofLp (multivariateGaussian 0 (kernelMatrix K I)) (kernelFamily K I) where
+  measurable := by fun_prop
+  map_eq := rfl
+
+instance isProbabilityMeasure_kernelFamily (K : ι → ι → ℝ) (I : Finset ι) :
+    IsProbabilityMeasure (kernelFamily K I) := by
+  unfold kernelFamily
+  infer_instance
+
+instance isGaussian_kernelFamily (K : ι → ι → ℝ) (I : Finset ι) : IsGaussian (kernelFamily K I) := by
+  rw [kernelFamily, show ⇑(MeasurableEquiv.toLp 2 (I → ℝ)).symm = ⇑(EuclideanSpace.equiv I ℝ) from rfl]
+  infer_instance
+
+lemma isProjectiveMeasureFamily_kernelFamily (K : ι → ι → ℝ)
+    (hK : ∀ I : Finset ι, (kernelMatrix K I).PosSemidef) :
+    IsProjectiveMeasureFamily (α := fun _ : ι ↦ ℝ) (kernelFamily K) := by
+  intro I J hJI
+  nth_rw 2 [kernelFamily]
+  rw [Measure.map_map]
+  · have : (Finset.restrict₂ (π := fun _ : ι ↦ ℝ) hJI ∘ (MeasurableEquiv.toLp 2 (I → ℝ)).symm) =
+        ofLp ∘ (EuclideanSpace.restrict₂ hJI) := by
+      ext; simp
+    rw [this, ((measurePreserving_ofLp_kernelFamily K J).comp
+        (measurePreserving_restrict₂_multivariateGaussian (hK I) hJI)).map_eq]
+  · exact Finset.measurable_restrict₂ _
+  · fun_prop
+
+lemma covariance_kernelFamily_fun (K : ι → ι → ℝ) (I : Finset ι) (f g : (I → ℝ) → ℝ) :
+    cov[f, g; kernelFamily K I] =
+      cov[f ∘ ofLp, g ∘ ofLp; multivariateGaussian 0 (kernelMatrix K I)] := by
+  rw [kernelFamily, covariance_map_equiv]
+  rfl
+
+lemma covariance_eval_kernelFamily (K : ι → ι → ℝ) (hK : ∀ I : Finset ι, (kernelMatrix K I).PosSemidef)
+    (I : Finset ι) (s t : I) :
+    cov[fun x : I → ℝ ↦ x s, fun x : I → ℝ ↦ x t; kernelFamily K I] = K s.1 t.1 := by
+  rw [covariance_kernelFamily_fun]
+  exact covariance_eval_multivariateGaussian (μ := 0) (hK I) s t
+
+lemma integral_kernelFamily {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] (K : ι → ι → ℝ)
+    (I : Finset ι) (f : (I → ℝ) → E) :
+    ∫ x, f x ∂(kernelFamily K I) = ∫ x, f (ofLp x) ∂(multivariateGaussian 0 (kernelMatrix K I)) := by
+  simp [kernelFamily, integral_map_equiv]
+
+lemma integral_id_kernelFamily (K : ι → ι → ℝ) (I : Finset ι) :
+    ∫ x, x ∂(kernelFamily K I) = 0 := by
+  rw [integral_kernelFamily, ← PiLp.coe_continuousLinearEquiv 2 ℝ,
+    ContinuousLinearEquiv.integral_comp_id_comm, integral_id_multivariateGaussian, map_zero]
+
+lemma integral_eval_kernelFamily (K : ι → ι → ℝ) (I : Finset ι) (s : I) :
+    ∫ x : I → ℝ, x s ∂(kernelFamily K I) = 0 := by
+  have h := integral_id_kernelFamily K I
+  have hint : Integrable (fun x : I → ℝ ↦ x) (kernelFamily K I) := IsGaussian.integrable_id
+  have := (ContinuousLinearMap.proj s : (I → ℝ) →L[ℝ] ℝ).integral_comp_comm hint
+  simpa [h] using this
+
+end KernelFamily
+
+/-! ### A centred Gaussian process with a positive semidefinite kernel, from the Kolmogorov extension (B1)
+
+Given `KolmogorovExtensionStmt` (B1) and positive semidefiniteness of every finite Gram matrix of `K` (B2, as a
+hypothesis of the finite-dimensional family), the coordinate process of the projective limit is a centred Gaussian
+process with covariance `K`. -/
+
+section KernelProcess
+
+open MeasureTheory ProbabilityTheory
+
+variable {ι : Type} [DecidableEq ι]
+
+/-- Kolmogorov extension (B1) applied to the kernel families: there is a probability measure `μ` on `ι → ℝ` under
+which the coordinates form a centred Gaussian process with covariance `K`. -/
+theorem exists_gaussian_of_kernel (hB1 : KolmogorovExtensionStmt) (K : ι → ι → ℝ)
+    (hK : ∀ I : Finset ι, (kernelMatrix K I).PosSemidef) :
+    ∃ μ : Measure (ι → ℝ), IsProbabilityMeasure μ ∧
+      IsGaussianProcess (fun (i : ι) (ω : ι → ℝ) ↦ ω i) μ ∧
+      (∀ i, ∫ ω, ω i ∂μ = 0) ∧
+      ∀ i j, cov[fun ω : ι → ℝ ↦ ω i, fun ω : ι → ℝ ↦ ω j; μ] = K i j := by
+  obtain ⟨μ, hμ, hlim⟩ := hB1 ι (kernelFamily K) (isProjectiveMeasureFamily_kernelFamily K hK)
+    (fun J ↦ inferInstance)
+  refine ⟨μ, hμ, ⟨fun I ↦ ?_⟩, ?_, ?_⟩
+  · have hm : Measurable (I.restrict : (ι → ℝ) → (I → ℝ)) := Finset.measurable_restrict _
+    exact ⟨hm.aemeasurable, by rw [hlim I]; infer_instance⟩
+  · intro i
+    have hmeas : Measurable (({i} : Finset ι).restrict : (ι → ℝ) → ({i} : Finset ι) → ℝ) :=
+      Finset.measurable_restrict _
+    have hi : i ∈ ({i} : Finset ι) := Finset.mem_singleton_self i
+    have h := integral_map (μ := μ) hmeas.aemeasurable
+      (measurable_pi_apply (⟨i, hi⟩ : ({i} : Finset ι))).aestronglyMeasurable
+      (f := fun x : ({i} : Finset ι) → ℝ ↦ x ⟨i, hi⟩)
+    rw [hlim {i}, integral_eval_kernelFamily] at h
+    exact h.symm
+  · intro i j
+    have hi : i ∈ ({i, j} : Finset ι) := by simp
+    have hj : j ∈ ({i, j} : Finset ι) := by simp
+    have hmeas : Measurable (({i, j} : Finset ι).restrict : (ι → ℝ) → ({i, j} : Finset ι) → ℝ) :=
+      Finset.measurable_restrict _
+    have hcov := covariance_map (μ := μ)
+      (X := fun x : ({i, j} : Finset ι) → ℝ ↦ x ⟨i, hi⟩)
+      (Y := fun x : ({i, j} : Finset ι) → ℝ ↦ x ⟨j, hj⟩) (Z := ({i, j} : Finset ι).restrict)
+      (measurable_pi_apply _).aestronglyMeasurable (measurable_pi_apply _).aestronglyMeasurable
+      hmeas.aemeasurable
+    rw [hlim {i, j}, covariance_eval_kernelFamily K hK {i, j} ⟨i, hi⟩ ⟨j, hj⟩] at hcov
+    exact hcov.symm
+
+end KernelProcess
+
 end LatticeProb.Gauss
