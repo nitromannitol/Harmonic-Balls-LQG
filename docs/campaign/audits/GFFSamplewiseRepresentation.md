@@ -34,7 +34,7 @@ The entire declaration's outer binders and six fields are:
 
 ## Checked bridges and exact remaining implications
 
-`HarmonicBalls/Audit/GFFSamplewiseRepresentation.lean` proves:
+`archive/HarmonicBalls/Audit/GFFSamplewiseRepresentation.lean` proves:
 
 1. `ae_ae_eventually_raw_phase_events_of_countable_coordinates`: for each scale a specified countable family of local tests determines the event, and for each selected test separately reconstruction agrees with raw translation at `P`-a.e. field and `μ ω`-a.e. root in `A`. Existing reconstructed event membership then transfers to the raw observations at eventually all scales. The countable family, event invariance, sampled-root agreements and reconstructed event are explicit premises; no raw-process measurability or samplewise `hrep` is assumed. By the existing `eq_preimage_restrict_countable` argument in `CanonicalPhaseCertificate.lean:20–58`, measurable cylinder events have countable coordinate dependence; the new theorem itself takes the selectors and invariance as hypotheses.
 2. `map_rooted_recentered_observation_eq_raw_of_ae_sampled`: a common equality for the local tests only at `(P ⊗ₘ κ)`-a.e. sampled root suffices for equality of the two joint mapped laws. This assumes neither agreement at other roots nor representation on all mean-zero tests.

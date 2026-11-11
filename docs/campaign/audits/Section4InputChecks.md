@@ -1,12 +1,12 @@
 # Section 4 input consumption checks: Proposition 4.1 and Lemmas 4.2-4.3
 
 TASK: z3-section4-input-consumption-check (worker z3, Claude Haiku 5.5, 2026-11-07). Lean file:
-`HarmonicBalls/Audit/Section4InputChecks.lean` (new). Lean only. No frozen statement, staged premise or existing export
+`archive/HarmonicBalls/Audit/Section4InputChecks.lean` (new). Lean only. No frozen statement, staged premise or existing export
 is edited, and no numbered result is closed by this file.
 
 ## Result
 
-* `lc HarmonicBalls/Audit/Section4InputChecks.lean`: CHECK OK. `lb HarmonicBalls.Audit.Section4InputChecks`: BUILD OK.
+* `lc archive/HarmonicBalls/Audit/Section4InputChecks.lean`: CHECK OK. `lb HarmonicBalls.Audit.Section4InputChecks`: BUILD OK.
   The module emits no warning or error; its log lines are the printed axioms and the guard summary.
 * Printed axioms: all nine constants (the six exports, the I2 producer and the two derived providers) depend only on
   `propext`, `Classical.choice` and `Quot.sound`.

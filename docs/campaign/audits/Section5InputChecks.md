@@ -2,12 +2,12 @@
 
 Task `section5-volume-input-consumption-check` (worker z4, round 9). Scope: the frozen statements of Section 5
 (`HarmonicBalls/Draft/Section5.lean:122,140,155,175,192,206,226,246`; FROZEN.md:42-49) and their producers in
-`Steps/Sec5`, `Proofs/Sec5`, `Proofs/Sec7`-`Sec9`. Owned output: `HarmonicBalls/Audit/Section5InputChecks.lean` (new).
+`Steps/Sec5`, `Proofs/Sec5`, `Proofs/Sec7`-`Sec9`. Owned output: `archive/HarmonicBalls/Audit/Section5InputChecks.lean` (new).
 No source-facing edit, no literature input, no numbered closure. Draft, FROZEN, Proposed and the paper are unchanged.
 
 ## Validation
 
-- `lc HarmonicBalls/Audit/Section5InputChecks.lean`: CHECK OK (log 033528-2049218).
+- `lc archive/HarmonicBalls/Audit/Section5InputChecks.lean`: CHECK OK (log 033528-2049218).
 - `lb HarmonicBalls.Audit.Section5InputChecks`: BUILD OK (log 033535-2049809).
 - Printed axioms of the 11 exports: `propext`, `Classical.choice`, `Quot.sound` only.
 - Code-level scan of the owned Lean file for `sorry`, `admit`, `native_decide`, `axiom`: no match.

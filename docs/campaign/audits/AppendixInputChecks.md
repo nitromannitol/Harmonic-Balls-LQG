@@ -1,6 +1,6 @@
 # Appendix A input consumption checks (Lemmas A.1-A.6)
 
-Owner: worker z6. Lean file: `HarmonicBalls/Audit/AppendixInputChecks.lean` (new).
+Owner: worker z6. Lean file: `archive/HarmonicBalls/Audit/AppendixInputChecks.lean` (new).
 Frozen statements: `HarmonicBalls/Draft/SectionA.lean` (FROZEN.md rows 33-38). Read-only: Defs, Draft, FROZEN, External,
 the preserved paper.
 

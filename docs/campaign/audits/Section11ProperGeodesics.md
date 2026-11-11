@@ -8,7 +8,7 @@ operator source-check, the singular properness bridge is not proved, and the
 conclusions are point-to-point paths. In particular this is not a Section 11
 closure or an audit approving a frozen declaration.
 
-`HarmonicBalls/Audit/Section11ProperGeodesics.lean` gives typed applications of
+`archive/HarmonicBalls/Audit/Section11ProperGeodesics.lean` gives typed applications of
 both targets with the complete bodies of the two staged propositions and the
 singular representative expanded, and checks the deterministic export. It also
 checks the individual fields of the bundled GFF, metric-map and length-metric

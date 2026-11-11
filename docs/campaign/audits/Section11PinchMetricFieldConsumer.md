@@ -1,6 +1,6 @@
 # Section 11 pinch metric-field consumer
 
-`HarmonicBalls/Audit/Section11PinchMetricFieldConsumer.lean` proves conditional
+`archive/HarmonicBalls/Audit/Section11PinchMetricFieldConsumer.lean` proves conditional
 measurable-subset consumers for the original raw events. The imported
 potential-theoretic infrastructure includes code by Leonardo Bonanno.
 

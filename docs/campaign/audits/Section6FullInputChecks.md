@@ -8,7 +8,7 @@ Credit: Leonardo Bonanno. The annulus iteration (`annulusIterationStmt_proved`) 
 ## Artifacts
 
 - `HarmonicBalls/Proofs/Sec6/FullThreeInputAssembly.lean` (namespace `HarmonicBalls.Section6Full`): `section6Full_of_three_inputs` (the thirteen frozen statements in frozen order) and thirteen typed exports `<statement>_of_three_inputs`, each keeping the same three binders.
-- `HarmonicBalls/Audit/Section6FullInputChecks.lean`: fourteen `#print axioms` lines and a guard (`#eval`) for constants, binders, conjunct order, consumption and closure.
+- `archive/HarmonicBalls/Audit/Section6FullInputChecks.lean`: fourteen `#print axioms` lines and a guard (`#eval`) for constants, binders, conjunct order, consumption and closure.
 - Not edited: Defs, Draft, FROZEN, Proposed, External, old providers, umbrella, and the Bonanno-free `Proofs/Sec6/ThreeInputAssembly.lean`.
 
 ## Route

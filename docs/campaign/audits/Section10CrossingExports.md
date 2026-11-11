@@ -215,7 +215,7 @@ run_cmd do
           logInfo m!"TARGET IN TYPE {n}"
 ```
 
-`~/paper-fleets/hb/lc HarmonicBalls/Audit/Section10CrossingExports.lean` and
+`~/paper-fleets/hb/lc archive/HarmonicBalls/Audit/Section10CrossingExports.lean` and
 `~/paper-fleets/hb/lb HarmonicBalls.Audit.Section10CrossingExports` pass.
 Each provider's `#print axioms` is exactly `[propext, Classical.choice,
 Quot.sound]`. The audit module has no placeholders. These facts certify the

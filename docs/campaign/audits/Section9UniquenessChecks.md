@@ -4,7 +4,7 @@
 the existing producers have the frozen types, at their explicit premises. No numbered result is closed here:
 the premises in the table below remain open, and the printed strong Prop 9.2 has no producer.
 
-Module: `HarmonicBalls/Audit/Section9UniquenessChecks.lean` (new). `lc` OK; `lb HarmonicBalls.Audit.Section9UniquenessChecks`
+Module: `archive/HarmonicBalls/Audit/Section9UniquenessChecks.lean` (new). `lc` OK; `lb HarmonicBalls.Audit.Section9UniquenessChecks`
 BUILD OK (`/home/nitro/paper-fleets/hb/logs/lb/002819-1652416.log`). It imports `HarmonicBalls.Proofs.Sec9.ObstacleComparison`,
 `WeakUniqueness`, `DyadicGlobalUniqueness`, `AffineInvarianceAssembly`. Nothing was reproved: each example is an existing
 declaration at its literal type, with its explicit premises as binders.

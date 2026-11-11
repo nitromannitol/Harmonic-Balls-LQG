@@ -1,6 +1,6 @@
 # Section 2 four-input consumption check
 
-`HarmonicBalls/Audit/Section2FourInputChecks.lean` applies both exports from
+`archive/HarmonicBalls/Audit/Section2FourInputChecks.lean` applies both exports from
 `Proofs/Sec2/SingularAtomAtZero.lean` to the expanded frozen I2 and I1 types in
 `Draft/Section2.lean:109,122`, at arbitrary universe `u`. The I2 event precedes
 all radii and admissible exponents; its radius threshold can depend on them.

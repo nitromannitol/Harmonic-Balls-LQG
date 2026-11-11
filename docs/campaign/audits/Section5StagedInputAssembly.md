@@ -3,7 +3,7 @@
 Task `section5-derived-staged-input-assembly` (worker z4, Claude Haiku 5.5). Credit: Leonardo Bonanno, whose work
 enters through the imported modules (named in the module headers).
 
-Files (new): `HarmonicBalls/Proofs/Sec5/StagedInputAssembly.lean` (exports), `HarmonicBalls/Audit/Section5StagedChecks.lean`
+Files (new): `HarmonicBalls/Proofs/Sec5/StagedInputAssembly.lean` (exports), `archive/HarmonicBalls/Audit/Section5StagedChecks.lean`
 (typed, insertion-scope, axiom and consumption checks).
 
 Status: the reduction compiles (lc and lb pass). It is not a numbered closure of Section 5, and it is not a

@@ -59,7 +59,7 @@ universe `u` as its conclusion:
 
 Both are **EXCESS** as hypotheses of each unconditioned numbered result; they
 are made explicit, not hidden in a conclusion-shaped hypothesis. The typed
-examples in `HarmonicBalls/Audit/Section6ConditionalExports.lean` use I2 and
+examples in `archive/HarmonicBalls/Audit/Section6ConditionalExports.lean` use I2 and
 the fully expanded E0 to produce each frozen proposition. They apply each
 actual provider directly. The existence premise is used in
 `Prevalence.lean:93-106,122-136` to obtain a zero-strength measure in the same
@@ -194,7 +194,7 @@ producers of I2. A separate value traversal from the I2 producer `lqgVolumeGrowt
 
 ## Verification and limitations
 
-`~/paper-fleets/hb/lc HarmonicBalls/Audit/Section6ConditionalExports.lean` and
+`~/paper-fleets/hb/lc archive/HarmonicBalls/Audit/Section6ConditionalExports.lean` and
 `~/paper-fleets/hb/lb HarmonicBalls.Audit.Section6ConditionalExports` pass.
 For **each** of the four providers `#print axioms` reports exactly
 `[propext, Classical.choice, Quot.sound]`; this checks axiomatic closure, not

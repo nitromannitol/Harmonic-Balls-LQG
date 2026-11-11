@@ -1,7 +1,7 @@
 # Section 9 three-input numbered export (worker z4)
 
 Task `section9-three-input-numbered-export-assembly`. Files: `HarmonicBalls/Proofs/Sec9/ThreeInputAssembly.lean`
-(new), `HarmonicBalls/Audit/Section9ThreeInputChecks.lean` (new), this note.
+(new), `archive/HarmonicBalls/Audit/Section9ThreeInputChecks.lean` (new), this note.
 
 ## Exports
 

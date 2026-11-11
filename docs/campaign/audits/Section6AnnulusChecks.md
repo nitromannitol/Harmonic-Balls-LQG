@@ -1,6 +1,6 @@
 # Section 6 export checks: Lemma 6.5 and Lemma 6.12
 
-TASK: z4-section6-annulus-export-check (worker z4, 2026-11-07). Lean file: `HarmonicBalls/Audit/Section6AnnulusChecks.lean`.
+TASK: z4-section6-annulus-export-check (worker z4, 2026-11-07). Lean file: `archive/HarmonicBalls/Audit/Section6AnnulusChecks.lean`.
 Scope: the proved exports of Lemma 6.5 (`AnnulusIterationStmt`) and Lemma 6.12 (`ShellDecompositionStmt`) at their
 exact frozen types; their dependencies by constant closure; Leonardo Bonanno's attribution. Lean only: no new
 mathematics, no numbered closure, no edit to frozen, proposed or source files.
@@ -88,7 +88,7 @@ Guards in the audit file (an error fails `lc` or `lb`):
 
 ## Checks run
 
-- `lc HarmonicBalls/Audit/Section6AnnulusChecks.lean`: CHECK OK (final run; log `logs/lc/003946-1683614.log`).
+- `lc archive/HarmonicBalls/Audit/Section6AnnulusChecks.lean`: CHECK OK (final run; log `logs/lc/003946-1683614.log`).
 - `lb HarmonicBalls.Audit.Section6AnnulusChecks`: BUILD OK (log `logs/lb/004002-1684446.log`).
 - Printed axioms, from the lc log: `annulusIterationStmt_proved`, `shellDecompositionStmt_proved` and
   `section6_of_greenPotential_and_literature` each depend on `[propext, Classical.choice, Quot.sound]`.

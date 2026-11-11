@@ -1,6 +1,6 @@
 # Section 3 input consumption checks
 
-TASK: z4-sec3-input-consumption-check (worker z4, 2026-11-07). Lean file: `HarmonicBalls/Audit/Section3InputChecks.lean`.
+TASK: z4-sec3-input-consumption-check (worker z4, 2026-11-07). Lean file: `archive/HarmonicBalls/Audit/Section3InputChecks.lean`.
 Scope: type-check of the existing exports of Lemmas 3.1-3.5 against the frozen statements. Lean only, no new mathematics,
 no source admission of any literature input, not closure of Section 3.
 
@@ -75,6 +75,6 @@ Conclusion: I2 is consumed through its producer, and no source or target depende
 
 ## Build
 
-- lc: `CHECK OK` on `HarmonicBalls/Audit/Section3InputChecks.lean` (log: /home/nitro/paper-fleets/hb/logs/lc/002927-1659277.log).
+- lc: `CHECK OK` on `archive/HarmonicBalls/Audit/Section3InputChecks.lean` (log: /home/nitro/paper-fleets/hb/logs/lc/002927-1659277.log).
 - lb: `BUILD OK (HarmonicBalls.Audit.Section3InputChecks)` (log: /home/nitro/paper-fleets/hb/logs/lb/002936-1659497.log).
 - The `#print axioms` lines and the guard message are in the lc log of the earlier run (002732-1650530.log); the final edit touched only a docstring.

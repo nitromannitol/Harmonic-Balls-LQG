@@ -1,6 +1,6 @@
 # Audit: Sec11CirclePalmImportChecks (task sec11-circle-palm-helper-import-integration)
 
-Module: `HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean` (new, 85 lines; namespace `HarmonicBalls.Audit.Sec11CirclePalm`).
+Module: `archive/HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean` (new, 85 lines; namespace `HarmonicBalls.Audit.Sec11CirclePalm`).
 Purpose: one file imports `HarmonicBalls`, `PalmStepMDMS` (hence `PalmDMSConstant` and the Section 8 circle potential) and
 `CircleDecoderGFFIdentification` (hence the Section 11 circle decoder and potential). It checks that the two circle-average
 helpers coexist under distinct names and that the typed references have the stated types. It adds no mathematics and
@@ -27,7 +27,7 @@ It is used exclusively through the pinned Lattice-Probability port, `nitromannit
   `Proofs/Sec8/CircleLogPotential` and uses the Section 8 argument order. It is untouched and resolves to the Section 8
   declaration by design.
 
-## Typed references (`HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean`)
+## Typed references (`archive/HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean`)
 
 | Theorem | Refers to | Hypotheses kept |
 |---|---|---|

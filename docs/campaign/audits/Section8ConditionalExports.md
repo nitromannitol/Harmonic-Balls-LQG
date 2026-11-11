@@ -30,7 +30,7 @@ question. E50 remains open for the dependence of 6.6 witnesses on βminus.
 
 ## Expanded binder review
 
-`HarmonicBalls/Audit/Section8ConditionalExports.lean` expands the bodies of all
+`archive/HarmonicBalls/Audit/Section8ConditionalExports.lean` expands the bodies of all
 seven 8.3 provider premises and all three 8.1 provider premises, as well as both
 conclusions, and applies the actual providers. The table classifies each
 logical block of the **frozen result**, not the extra provider premises. SOURCE
@@ -145,7 +145,7 @@ open. No 8.2 or unconditional numbered closure is asserted.
 
 ## Checks
 
-`~/paper-fleets/hb/lc HarmonicBalls/Audit/Section8ConditionalExports.lean`
+`~/paper-fleets/hb/lc archive/HarmonicBalls/Audit/Section8ConditionalExports.lean`
 and `~/paper-fleets/hb/lb HarmonicBalls.Audit.Section8ConditionalExports` pass.
 Both provider `#print axioms` results are exactly `propext`,
 `Classical.choice`, and `Quot.sound`; axiom closure does not eliminate explicit
