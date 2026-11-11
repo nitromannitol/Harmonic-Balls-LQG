@@ -317,6 +317,51 @@ theorem ae_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsP
   rw [heq']
   exact h2.limUnder_eq
 
+/-- MQ-lh-12 step 3 for the local domain: a countable dense sequence `d` of `LocalParam c R` and a measurable
+decoder `decode` with `decode (n ↦ f (d n)) = f` for every continuous `f` on `LocalParam c R`. -/
+theorem exists_localDecoder (c : ℂ) {R : ℝ} (hR : 0 < R) :
+    ∃ d : ℕ → LocalParam c R, ∃ decode : (ℕ → ℝ) → C(LocalParam c R, ℝ), Measurable decode ∧
+      ∀ f : C(LocalParam c R, ℝ), decode (fun n => f (d n)) = f := by
+  have := localParam_nonempty c hR
+  obtain ⟨d, -, decode, hm, hdec⟩ := exists_dense_decode_polish (LocalParam c R)
+  exact ⟨d, decode, hm, hdec⟩
+
+/-- MQ-lh-12 step 4: almost surely the decoded local profile of the mean-zero observation is the continuous
+function `p ↦ h^ℂ_{r}(x) - α log max(r,|x|) - (h, ρ)` on `LocalParam c R` (the centred circle profile). -/
+theorem ae_decode_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R)
+    (d : ℕ → LocalParam c R) (decode : (ℕ → ℝ) → C(LocalParam c R, ℝ))
+    (hdec : ∀ f : C(LocalParam c R, ℝ), decode (fun n => f (d n)) = f) :
+    ∀ᵐ ω ∂P, ∃ G : C(LocalParam c R, ℝ),
+      (∀ p : LocalParam c R, G p = hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) -
+        fieldPairing α (hC ω) (bumpRho c hR)) ∧
+      decode (fun n => localCoord c hR (d n) (localMeanZeroObs α (ball c R) (hC ω))) = G := by
+  have hco : ∀ᵐ ω ∂P, ∀ n, localCoord c hR (d n) (localMeanZeroObs α (ball c R) (hC ω)) =
+      hcirc ω (d n).1.1 (d n).1.2 - α * Real.log (max (d n).1.1 ‖(d n).1.2‖) -
+        fieldPairing α (hC ω) (bumpRho c hR) :=
+    ae_all_iff.2 fun n => ae_localCoord_eq hGFF α c hR h0 (d n)
+  filter_upwards [hGFF.ae_continuousOn_circle, hco] with ω hω hωn
+  have hpos : ∀ p : LocalParam c R, 0 < p.1.1 := fun p => localParam_radius_pos p
+  have hmem : ∀ p : LocalParam c R, ((p.1.1, p.1.2) : ℝ × ℂ) ∈ Set.Ioi (0 : ℝ) ×ˢ (Set.univ : Set ℂ) :=
+    fun p => ⟨hpos p, Set.mem_univ _⟩
+  have hpair : Continuous fun p : LocalParam c R => ((p.1.1, p.1.2) : ℝ × ℂ) :=
+    (continuous_fst.comp continuous_subtype_val).prodMk (continuous_snd.comp continuous_subtype_val)
+  have hcirc_c : Continuous fun p : LocalParam c R => hcirc ω p.1.1 p.1.2 :=
+    hω.comp_continuous hpair hmem
+  have hlog : Continuous fun p : LocalParam c R => Real.log (max p.1.1 ‖p.1.2‖) :=
+    Continuous.log ((continuous_fst.comp continuous_subtype_val).max
+      (continuous_norm.comp (continuous_snd.comp continuous_subtype_val)))
+      fun p => ne_of_gt (lt_of_lt_of_le (hpos p) (le_max_left _ _))
+  have hgc : Continuous fun p : LocalParam c R => hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) -
+      fieldPairing α (hC ω) (bumpRho c hR) :=
+    (hcirc_c.sub (continuous_const.mul hlog)).sub continuous_const
+  refine ⟨⟨_, hgc⟩, fun p => rfl, ?_⟩
+  have hfun : (fun n => localCoord c hR (d n) (localMeanZeroObs α (ball c R) (hC ω))) =
+      fun n => (⟨_, hgc⟩ : C(LocalParam c R, ℝ)) (d n) :=
+    funext fun n => hωn n
+  rw [hfun, hdec]
+
 end LocalDecoderCommon
 
 end HarmonicBalls
