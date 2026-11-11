@@ -386,6 +386,8 @@
 	\begin{equation} \label{eq:gff}
 	h = h^{\C} - \boldsymbol{\alpha}_0 \log |\cdot|.
 	\end{equation}
+	% CORRECTION [C69] Printed: the constants of Prop 6.1, Lemma 6.3, Lemma 6.7, Lemma 6.11, Prop 7.2 and Lemma 10.1 were stated or justified as depending only on gamma, although by Lemma 2.4 and Lemma 6.4 they depend on alpha_0. Corrected: one standing convention, with the dependence written out at each site.
+	As $\boldsymbol\alpha_0$ is fixed throughout, every constant below may depend on $\boldsymbol\alpha_0$ and on the exponent $\beta^-$ of Lemma~\ref{lemma:volume-growth}.
 	It is immediate from~\eqref{eq:gff-scaling} that
 	\begin{equation} \label{eq:h-coordinate-change}
 	h \overset{d}{=} h(a\cdot) - h_{|a|}, \quad \forall a \in \C \backslash \{0\}.
@@ -1123,7 +1125,7 @@
 	holds for every annulus but rather for `most' annuli. 	Specifically, we show the following.
 	
 	\begin{prop} \label{prop:harnack-type-property}	
-		There exists $\alpha = \alpha(\gamma) > 0$ and events
+		There exists $\alpha = \alpha(\gamma,\boldsymbol{\alpha}_0) > 0$ and events
 		$\overline E_\rho(x_0)$ for $\rho \in (0,1)$ and $x_0 \in \C$
 		with the following properties: for each~$z \in B_{1}$, if $\overline E_\rho(x_0)$ occurs, $\overline{B_{\rho}}(x_0) \subset B_1 \backslash \{z\}$, and $\mu_h({\cluster{z}{t}} \cap \A_{\rho/2, \rho}(x_0)) \leq \alpha \mu_h(\A_{\rho/2, \rho}(x_0))$, then ${\cluster{z}{t}} \cap B_{\rho/2}(x_0) = \emptyset$.
 		
@@ -1242,7 +1244,7 @@
 	Finally, we will take a union bound over all $z \in B_{1 + \epsilon} \cap \frac{\epsilon}{100} \Z^2$. 
 	
 	
-	% CORRECTION [C61] Printed: Lemma 6.4 claimed a uniform choice a(b,p,gamma) and proof constants depending only on gamma; corrected because comparison with the log-singular field depends on alpha_0.
+	% CORRECTION [C61] Printed: Lemma 6.4 claimed a uniform choice a(b,p,gamma) and proof constants depending only on gamma; corrected because comparison with the log-singular field depends on alpha_0. Also corrected (audit A4, [C61] extended): the transfer had the reversed ratio (the hypothesis on Y for h must give the hypothesis on Y for h^C, which needs a = (C1/C2) a', not (C2/C1) a'), and the factor |z|^{-alpha_0 gamma} is not uniform on the annulus when |z| is of order r or z = 0; it is replaced by the sup/inf ratio of |x|^{-alpha_0 gamma} over the annulus, at most 1001^{gamma|alpha_0|}, giving a = a' / 1001^{gamma|alpha_0|}.
 	\begin{lemma} \label{lemma:annulus-hit}
 		Let $b \in (0,1)$ and $p \in (0,1)$. There exists $a = a(b,p,\gamma,\boldsymbol{\alpha}_0) \in (0,1)$ such that the event $E_r(z) = E_r(z;a,b)$ of~\eqref{eq:good-annulus-harmonic} satisfies 
 		\[
@@ -1261,20 +1263,17 @@
 		We first explain why it is sufficient to prove the lemma with $h^\C$ in place of $h$. 
 		Suppose the statement of the lemma holds for $h^{\C}$ with $a' \in (0,1)$ in place of $a$. 
 		
-		Fix $r > 0$ and then  $z$ such that the annulus $\A_{3 r, 5 r}(z)$ lies at Euclidean distance at least $r/100$ from the origin. 
-		By Weyl scaling (Fact~\ref{fact:lqg-measure}), there are constants $C_1,C_2>  0$ depending only on $\gamma$ and $\boldsymbol{\alpha}_0$ such that 
-		\begin{equation}
-		\mu_h(Y) \geq C_1 |z|^{-\boldsymbol{\alpha}_0 \gamma} \mu_{h^{\C}}(Y), \quad \forall Y \subset \A_{3 r, 5 r}(z)
+		Fix $r > 0$ and then $z$ such that the annulus $A := \A_{3 r, 5 r}(z)$ lies at Euclidean distance at least $r/100$ from the origin. Put $w(x) := |x|^{-\boldsymbol{\alpha}_0 \gamma}$.
+		Choose a continuous function $f$ on $\C$ which equals $-\boldsymbol{\alpha}_0 \log|x|$ on a neighbourhood of $A$. By Weyl scaling (Fact~\ref{fact:lqg-measure}), $\mu_h = e^{\gamma f} \mu_{h^{\C}}$ on this neighbourhood, so that
+		\begin{equation} \label{eq:annulus-density-transfer}
+		\mu_h(Y) = \int_Y w(x) \, \mu_{h^{\C}}(dx), \quad \forall Y \subset A .
 		\end{equation}
-		and
-		\begin{equation}
-		\mu_h(Y) \leq C_2 |z|^{-\boldsymbol{\alpha}_0 \gamma} \mu_{h^{\C}}(Y), \quad \forall Y \subset \A_{3 r, 5 r}(z) .
-		\end{equation} 
-		Thus, for all $Y \subset \A_{3 r, 5 r}(z)$
+		Let $M := \max_{x \in A} |x|$ and $m := \min_{x \in A} |x|$, and let $\kappa := \sup_{x \in A} w(x) / \inf_{x \in A} w(x) = (M/m)^{\gamma|\boldsymbol{\alpha}_0|}$. Since $\dist(0,A) \geq r/100$, either $0 \in B_{3r}(z)$, so that $|z| \leq 3r - r/100$, $M \leq 8r$ and $m \geq r/100$; or $|z| \geq 5r + r/100$, so that $m \geq |z| - 5r$ and $M \leq |z| + 5r$, whence $M/m \leq (|z|+5r)/(|z|-5r) \leq 1001$. This includes $z = 0$. Hence $\kappa \leq K := 1001^{\gamma|\boldsymbol{\alpha}_0|}$, uniformly in $r$ and $z$.
+		Now let $a := a'/K$, and let $Y \subset A$ satisfy $\mu_h(Y) \leq a\, \mu_h(A)$. By \eqref{eq:annulus-density-transfer},
 		\[
-		\mu_{h^\C}(Y) \leq a' \mu_{h^\C}(\A_{3 r, 5 r}(z)) \implies  \mu_h(Y) \leq \frac{C_2}{C_1} \times a' \mu_{h}(\A_{3 r, 5 r}(z))
+		\mu_{h^{\C}}(Y) \leq \frac{\mu_h(Y)}{\inf_A w} \leq \frac{a\, \mu_h(A)}{\inf_A w} \leq a\, \kappa\, \mu_{h^{\C}}(A) \leq a' \mu_{h^{\C}}(A).
 		\]
-		and hence $\P[E_r(z)] \geq p$ for $a := \frac{C_2}{C_1} \times a'$.
+		The probability in~\eqref{eq:good-annulus-harmonic} depends only on $Y$, since $\mathcal B^u$ is independent of $h$. So every $Y$ admissible for $E_r(z)$ with $a$ is admissible for the field $h^{\C}$ with $a'$, and the event of the statement for $h^{\C}$ with $a'$ is contained in $E_r(z)$ for $h$ with $a$, realization by realization. Hence $\P[E_r(z)] \geq p$ for $a := a'/K$.
 		
 		
 		{\it Step 2: Case when $\boldsymbol{\alpha}_0 = 0$.} \\
@@ -1347,7 +1346,7 @@
 		\end{equation} 
 		with a universal implicit constant in the $O_\epsilon(\cdot)$. 
 		
-		By Lemma~\ref{lemma:annulus-hit}, there exists $a = a(b,\gamma) > 0$ such that for this choice of $a$, one has $\P[E_r(z)] \geq p$ for each $r > 0$ and each $z \in \C \backslash B_{10 r}$. Therefore, the estimate~\eqref{eqn-annulus-hit-iterate} holds for this choice of $a$. We now conclude by means of a union bound over all $z\in  (B_{1 + \epsilon} \backslash B_{10 \sqrt{\epsilon}}) \cap \frac{\epsilon}{100} \Z^2$. 
+		By Lemma~\ref{lemma:annulus-hit}, there exists $a = a(b,\gamma,\boldsymbol{\alpha}_0) > 0$ such that for this choice of $a$, one has $\P[E_r(z)] \geq p$ for each $r > 0$ and each $z \in \C \backslash B_{10 r}$. Therefore, the estimate~\eqref{eqn-annulus-hit-iterate} holds for this choice of $a$. We now conclude by means of a union bound over all $z\in  (B_{1 + \epsilon} \backslash B_{10 \sqrt{\epsilon}}) \cap \frac{\epsilon}{100} \Z^2$. 
 	\end{proof}
 	
 	
@@ -1386,7 +1385,7 @@
 		
 		
 		Fix $\rho > 0$ and then $x_0$ such that the annulus $\A_{\rho/4, 2\rho}(x_0)$ lies at Euclidean distance at least $\rho/100$ from the origin. 
-		By Weyl scaling (Fact~\ref{fact:lqg-measure}), there are constants $A_1,A_2>  0$ depending only on $\gamma$ such that 
+		By Weyl scaling (Fact~\ref{fact:lqg-measure}), there are constants $A_1,A_2>  0$ depending only on $\gamma$ and $\boldsymbol{\alpha}_0$ such that 
 		\begin{equation}
 		\frac{M^{h}_{\rho}(x_0)}{\mu_h(A_{\rho/4, 2 \rho}(x_0))} \geq A_1  \frac{M^{h^\C}_{\rho}(x_0)}{\mu_{h^\C}(A_{\rho/4, 2 \rho}(x_0))}
 		\end{equation}
@@ -1975,7 +1974,7 @@
 		\begin{equation} \label{eq:choice-of-b}
 		b := 2^{-\frac{2 \beta^-}{(C' \times C_3) \vee 1}}  .
 		\end{equation}
-		We emphasize that $b$ depends only on $\gamma$ (through $\beta^-$) since $C_3$ is a universal constant.
+		We emphasize that $b$ depends only on $\gamma$ and $\boldsymbol{\alpha}_0$ (through $\beta^-$, which by Lemma~\ref{lemma:volume-growth} depends on $\gamma$ and $\boldsymbol{\alpha}_0$) since $C_3$ is a universal constant.
 		We also choose $N_1$ sufficiently large so that
 		\begin{equation} \label{eq:choice-of-N1}
 		2^{-\beta^- N_1} \leq a \times 2^{-\beta^-} \times \frac{\frac{1}{C_4 \vee 1}}{(c \times C^+_2 \times \frac{1}{C^-_1 \vee 1}) \vee 1}.
@@ -2091,7 +2090,7 @@
 		\[
 		{\cluster{z}{t + \epsilon}} \Subset {\cluster{z}{t}} + B_{\delta} ,\quad \text{for $\delta = C \epsilon^{1/(4\beta^-)}$} % CORRECTION [C18] Printed: Cluster + B_delta(z) (translated ball); corrected to the neighbourhood Cluster + B_delta, as in Proposition 5.2.
 		\]
-		where $\beta^- > (2+\gamma)^2/2$ is from Lemma \ref{lemma:volume-growth} and  $C = C(\beta^-) >0$ is a deterministic constant. 
+		where $\beta^- > \max\{(2+\gamma)^2/2, \gamma(Q-\boldsymbol{\alpha}_0)\}$ is from Lemma \ref{lemma:volume-growth} and  $C = C(\beta^-) >0$ is a deterministic constant. 
 	\end{prop}
 	
 	\begin{proof}
@@ -2171,6 +2170,7 @@
 		The continuity assertion \eqref{eq:continuity} at times for which ${\cluster{z}{t}} \Subset B_1$ is Proposition \ref{prop:continuity-of-clusters}. 
 		We show here that Proposition \ref{prop:upper-bound-polynomially-high-prob} implies that the clusters decrease to the center point, \eqref{eq:contains-origin}. 
 		
+		% CORRECTION [C56] Printed: the all-time continuity claim of Proposition 5.2 was justified only by Proposition 7.2, which assumes compact containment. Here epsilon(t) is chosen for each fixed t, which is the scope actually proved; no all-time claim is made in this paragraph.
 		By Proposition \ref{prop:lower-bound}, for each $t > 0$ and~$z \in B_{1/2}$ there exists $\epsilon(t) > 0$ so that $B_{\epsilon(t)}(z) \subset {\cluster{z}{t}}$.
 		By Proposition \ref{prop:upper-bound-polynomially-high-prob} and the Borel-Cantelli lemma, applied to a sequence of dyadic radii, $r_n := \{2^{-n}\}_{n \geq 2}$, 
 		a.s.\ there exists a sequence of positive times $\{t_n\}_{n \geq 2}$ so that 
@@ -2569,7 +2569,7 @@
 	\begin{lemma}\ \label{lemma:cannot-cross} Almost surely, for each small enough $\epsilon > 0$
 		it holds for each $w \in B_1 \backslash B_{20 \sqrt{\epsilon}}$ that there is a $\rho \in [\epsilon, \epsilon^{1/2}]$
 		(depending on $w$) such that for every~$t > 0$ and~$z \in \C$, we have that ${\cluster{}{t}(z)}$ does not cross $\A_{\rho/3, 2\rho}(w)$ more than  $K := \lceil 1/\alpha \rceil$ times for all ${\cluster{}{t}(z)} \Subset B_1$
-		where $\alpha = \alpha(\gamma) \in (0,1)$ is as in Proposition \ref{prop:harnack-type-stronger-property}. 
+		where $\alpha = \alpha(\gamma,\boldsymbol{\alpha}_0) \in (0,1)$ is as in Proposition \ref{prop:harnack-type-stronger-property}. 
 		That is, there are at most $K$
 		connected components of ${\cluster{}{t}(z)} \cap B_{2 \rho}(w)$
 		whose closures intersect both $\partial B_{\rho/3}(w)$ and $\partial B_{2\rho}(w)$.
@@ -3057,14 +3057,9 @@ no cut point. A simple closed curve is a simple loop.
 		\begin{equation}\label{eq:mass-times}
 		\mu_h(\{z : z \in \partial {\regcluster{}{t}} \mbox{ for some $t \in A$}\}) = \mbox{Leb}(A) ,
 		\end{equation} 
-		where $\mbox{Leb}$ denotes one-dimensional Lebesgue measure. This follows from the standard machine. Indeed, \eqref{eq:mass-times} holds for intervals,  $A = [a,b]$,
-		\[
-		\mu_h(\{z : z \in \partial {\regcluster{}{t}} \mbox{ for some $t \in [a,b]$}\}) = \mu_h( \overline{\regcluster{}{b}} \backslash 
-		\regcluster{}{a}) = 
-		(b-a),
-		\]
-		by Theorem \ref{theorem:full-theorem-minus-uniqueness}.
-		By approximation, this implies \eqref{eq:mass-times} holds for all Lebesgue measurable subsets of $[0,\infty)$. 
+		where $\mbox{Leb}$ denotes one-dimensional Lebesgue measure.
+		% CORRECTION [C70] Printed: the passage from intervals to all Lebesgue measurable sets was a 'standard machine' argument. The set function $A \mapsto \mu_h(\bigcup_{t \in A} \partial\regcluster{}{t})$ is not additive, and the interval computation gives only an inclusion up to a null set (GRAPH G37). Corrected: for every Lebesgue measurable $A$, \eqref{eq:mass-times} is the boundary-union identity \eqref{s11-pinch:eq:boundary-union} of Section 11, proved by arrival times.
+		That argument uses only that the sets $\regcluster{}{t}$, $t > 0$, are bounded and open, satisfy $\mu_h(\regcluster{}{t}) = t$ and $\mu_h(\partial\regcluster{}{t}) = 0$, and increase continuously in $t$ in the Hausdorff topology. By \eqref{eq:regular-cluster} and Theorem~\ref{theorem:full-theorem-minus-uniqueness}, this family is the family of Theorem~\ref{theorem:harmonic-balls} at the centre $0$, whose conditions (a) and (b) give these properties. Hence \eqref{eq:mass-times} holds for every Lebesgue measurable $A \subset [0,\infty)$. 
 		
 		
 		By~\eqref{eq:mass-times} applied to the set 
@@ -3218,8 +3213,8 @@ no cut point. A simple closed curve is a simple loop.
 	
 	
 	
-% CORRECTION [C42] Printed: the figure specifies U subset T and Q' subset Q without quantitative buffers.
-% Corrected: fix the buffered keyhole geometry and the component Omega as specified below.
+% CORRECTION [C42] Printed: the figure specifies $U \subset T$ and $Q' \subset Q$, and eq:metric-delta0-choice prints the six buffers $B_{10\delta_0}(T) \Subset \A_{1,6}$, $B_{10\delta_0}(U) \Subset V$, $B_{10\delta_0}(V) \Subset W$, $B_{10\delta_0}(W) \Subset \A_{1,2}$, $B_{10\delta_0}(Q') \Subset Q$, $B_{10\delta_0}(Q) \Subset \A_{4,5} \setminus B_{10\delta_0}(T)$; it does not require $B_{10\delta_0}(W) \Subset T$ and does not name the component $\Omega$.
+% Corrected: additionally require $B_{10\delta}(\overline W) \Subset T \cap \A_{1,2}$ (eq:buffers) and name the component $\Omega$ containing $0$, as specified below.
 % Reason: the locality, bump support, and path-connection arguments require these separations.
 Let $h^\alpha=g-\alpha\log|\cdot|$, where $g$ is a normalized whole-plane GFF and $\alpha<Q$.
 Choose the deterministic sets in Figure~\ref{fig:pinch-point} with the following
@@ -4189,15 +4184,17 @@ centers.
 
 \end{proof}
 
+	% CORRECTION [C65] (audit A1): \appendix was lost inside the [C65] hunk; restored here, so that Appendix A, Lemmas A.5 and A.6 and (A.1) resolve again.
+	\appendix
 	\section{Obstacle problem for Radon measures} \label{sec:obstacle-appendix}
 	
 	In this appendix we provide the proofs which were omitted in Section \ref{subsec:basic-properties}. 
-	% CORRECTION [C65] Printed: both sides of the Appendix A volume-growth condition used beta^-; corrected because the upper bound uses beta^+.
+	% CORRECTION [C65] Printed: both sides of the Appendix A volume-growth condition used beta^-; corrected because the upper bound uses beta^+. Also restored (audit A2): the sentence deleted in this hunk, now citing Lemma~\ref{lemma:volume-growth} (Lemma 2.4 of the corrected draft).
 	For clarity, we prove these results for any Radon measure $\mu$ satisfying, for some $R > 0$,
 	\begin{equation} \label{eq:volume-growth}
 	r^{\beta^-} \leq \mu(B_r(z)) \leq r^{\beta^+} \quad \mbox{for all $z \in B_R$},
 	\end{equation}
-	for some exponents $\beta^+, \beta^- > 0$, for all $r$ sufficiently small.
+	for some exponents $\beta^+, \beta^- > 0$, for all $r$ sufficiently small. This implies the results in Section \ref{subsec:basic-properties} as the Liouville measure is a.s.\ a Radon measure which satisfies \eqref{eq:volume-growth}. Indeed, this follows from Lemma~\ref{lemma:volume-growth} (Lemma 2.4 of the corrected draft) and the scaling properties of $h$ and $\mu_h$, namely~\eqref{eq:h-coordinate-change} and~\eqref{eq:measure-coord}.
 	
 	For $R > 0$, let 
 	\begin{equation} \label{eq:expected-exit-time}
