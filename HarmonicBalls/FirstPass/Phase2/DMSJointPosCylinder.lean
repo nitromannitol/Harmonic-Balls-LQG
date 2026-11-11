@@ -56,4 +56,63 @@ theorem measurable_obs {n m : ℕ} {φ : Fin n → ℂ → ℝ} {c : Fin m → C
 theorem univ_mem_cyl : (Set.univ : Set DMSJointX) ∈ cyl :=
   ⟨0, 0, Fin.elim0, Fin.elim0, Set.univ, fun i => Fin.elim0 i, MeasurableSet.univ, Set.preimage_univ.symm⟩
 
+/-- The evaluation of the field at a test function is measurable for the cylinder σ-algebra. -/
+theorem measurableSet_eval_cyl {A : Set ℝ} (hA : MeasurableSet A) {φ : ℂ → ℝ}
+    (hφ : IsTestFunction Set.univ φ) :
+    MeasurableSet[MeasurableSpace.generateFrom cyl] ((fun x : DMSJointX => x.1 φ) ⁻¹' A) := by
+  have hφ1 : ∀ i : Fin 1, IsTestFunction Set.univ (![φ] i) := fun i => by
+    fin_cases i
+    simpa using hφ
+  have hE : MeasurableSet {w : (Fin 1 → ℝ) × (Fin 0 → ℝ) × ℂ | w.1 0 ∈ A} :=
+    ((measurable_pi_apply 0).comp measurable_fst) hA
+  have hset : (fun x : DMSJointX => x.1 φ) ⁻¹' A = obs ![φ] Fin.elim0 ⁻¹' {w | w.1 0 ∈ A} := by
+    ext x
+    simp [obs]
+  rw [hset]
+  exact MeasurableSpace.measurableSet_generateFrom
+    ⟨1, 0, ![φ], Fin.elim0, {w | w.1 0 ∈ A}, hφ1, hE, rfl⟩
+
+/-- The circle-average profile at a fixed circle parameter is measurable for the cylinder σ-algebra. -/
+theorem measurableSet_profile_cyl {A : Set ℝ} (hA : MeasurableSet A) (p : CircleParameter) :
+    MeasurableSet[MeasurableSpace.generateFrom cyl] ((fun x : DMSJointX => x.2.1 p) ⁻¹' A) := by
+  have hE : MeasurableSet {w : (Fin 0 → ℝ) × (Fin 1 → ℝ) × ℂ | w.2.1 0 ∈ A} :=
+    ((measurable_pi_apply 0).comp (measurable_fst.comp measurable_snd)) hA
+  have hset : (fun x : DMSJointX => x.2.1 p) ⁻¹' A = obs Fin.elim0 ![p] ⁻¹' {w | w.2.1 0 ∈ A} := by
+    ext x
+    simp [obs]
+  rw [hset]
+  exact MeasurableSpace.measurableSet_generateFrom
+    ⟨0, 1, Fin.elim0, ![p], {w | w.2.1 0 ∈ A}, fun i => Fin.elim0 i, hE, rfl⟩
+
+/-- The root is measurable for the cylinder σ-algebra. -/
+theorem measurableSet_root_cyl {A : Set ℂ} (hA : MeasurableSet A) :
+    MeasurableSet[MeasurableSpace.generateFrom cyl] ((fun x : DMSJointX => x.2.2) ⁻¹' A) := by
+  have hE : MeasurableSet {w : (Fin 0 → ℝ) × (Fin 0 → ℝ) × ℂ | w.2.2 ∈ A} :=
+    (measurable_snd.comp measurable_snd) hA
+  have hset : (fun x : DMSJointX => x.2.2) ⁻¹' A = obs Fin.elim0 Fin.elim0 ⁻¹' {w | w.2.2 ∈ A} := by
+    ext x
+    simp [obs]
+  rw [hset]
+  exact MeasurableSpace.measurableSet_generateFrom
+    ⟨0, 0, Fin.elim0, Fin.elim0, {w | w.2.2 ∈ A}, fun i => Fin.elim0 i, hE, rfl⟩
+
+/-- The identity from the cylinder σ-algebra to `mX` is measurable: the field component is pairing-measurable by
+`measurable_into_pairing`, the profile and root components by the cylinder evaluations above. -/
+theorem measurable_id_cyl :
+    @Measurable DMSJointX DMSJointX (MeasurableSpace.generateFrom cyl) mX id := by
+  let _ : MeasurableSpace DMSJointX := MeasurableSpace.generateFrom cyl
+  let _ : MeasurableSpace ((ℂ → ℝ) → ℝ) := pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ
+  show @Measurable DMSJointX DMSJointX (MeasurableSpace.generateFrom cyl) mX (fun x => (x.1, x.2.1, x.2.2))
+  refine Measurable.prodMk ?_ (Measurable.prodMk ?_ ?_)
+  · exact @FirstPassS11atProducers.measurable_into_pairing DMSJointX (MeasurableSpace.generateFrom cyl) (fun x => x.1)
+      (fun φ hφ A hA => measurableSet_eval_cyl hA hφ)
+  · exact measurable_pi_iff.2 fun p A hA => measurableSet_profile_cyl hA p
+  · exact fun A hA => measurableSet_root_cyl hA
+
+/-- **J3.** The cylinder family generates the joint σ-algebra: `mX = generateFrom cyl`. -/
+theorem generateFrom_cyl : mX = MeasurableSpace.generateFrom cyl := by
+  refine le_antisymm (fun s hs => measurable_id_cyl hs) (MeasurableSpace.generateFrom_le fun s hs => ?_)
+  obtain ⟨n, m, φ, c, E, hφ, hE, rfl⟩ := hs
+  exact measurable_obs hφ hE
+
 end HarmonicBalls.DMSJointPosCylinder
