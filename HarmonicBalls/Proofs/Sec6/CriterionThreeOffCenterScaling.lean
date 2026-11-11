@@ -59,7 +59,7 @@ theorem criterionThree_map_inv_smul_center (μ : Measure ℂ) {k : ℝ} (hk : 0 
     exact hh
 
 /-- The centered and dilated criterion-three failures have equal probability
-under the staged affine and coordinate-change laws. -/
+under the affine and coordinate-change laws. -/
 theorem measure_criterionThree_failure_scale_center
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
     (hγ : 0 < γ) (hγ₂ : γ < 2) (hα : α₀ < lqgQ γ)

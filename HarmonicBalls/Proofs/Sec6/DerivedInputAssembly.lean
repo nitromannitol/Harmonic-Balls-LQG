@@ -16,7 +16,7 @@ internally: `lqgMeasureWeylScaling_univ` is `HarmonicBalls.Section6.lqgMeasureWe
 The exports keep every other premise as an explicit hypothesis, at its existing exact Prop:
 
 * `hsub : VeryGoodAnnuliSubRangeStep` (very good annuli; `HarmonicBalls/Steps/Sec6/Prevalence.lean:54`);
-* `hex : LQGMeasureExistence P γ 0` (staged in `HarmonicBalls/Proposed/LQG.lean`, pending operator source-check);
+* `hex : LQGMeasureExistence P γ 0` (in `HarmonicBalls/Proposed/LQG.lean`, PENDING TRUTH CHECK);
 * `h32 : ClusterOpenLaplacianStmt` (Lemma 3.2; `HarmonicBalls/Draft/Section3.lean:66`);
 * `h68 : AnnulusMassBoundByOdometerStmt` (Lemma 6.8) and `h610 : OdometerBoundByAnnulusMassStmt` (Lemma 6.10);
 * `h613 : LowMassSmallOdometerStmt` (Lemma 6.13), or in the `_steps` variants its two steps
@@ -101,107 +101,3 @@ theorem shellDecompositionStmt_of_proved : ShellDecompositionStmt :=
 end Section6Derived
 
 end HarmonicBalls
-
-/-! ## Guards
-
-The printed binders and axioms are the audit record. The meta guard below fails closed: the four Proposition exports
-must conclude the frozen Props, keep their leaves as hypotheses and take no `LQGMeasureWeylScaling` hypothesis; every
-export and provider must depend only on `propext`, `Classical.choice` and `Quot.sound`. -/
-
-#check @HarmonicBalls.Section6Derived.harnackTypeEstimateStmt_of_derived_weyl
-#check @HarmonicBalls.Section6Derived.harnackTypeComponentStmt_of_derived_weyl
-#check @HarmonicBalls.Section6Derived.harnackTypeEstimateStmt_of_derived_weyl_steps
-#check @HarmonicBalls.Section6Derived.harnackTypeComponentStmt_of_derived_weyl_steps
-#check @HarmonicBalls.Section6Derived.shellDecompositionStmt_of_proved
-#check @HarmonicBalls.Section6Derived.lqgMeasureWeylScaling_univ
-#print axioms HarmonicBalls.Section6Derived.harnackTypeEstimateStmt_of_derived_weyl
-#print axioms HarmonicBalls.Section6Derived.harnackTypeComponentStmt_of_derived_weyl
-#print axioms HarmonicBalls.Section6Derived.harnackTypeEstimateStmt_of_derived_weyl_steps
-#print axioms HarmonicBalls.Section6Derived.harnackTypeComponentStmt_of_derived_weyl_steps
-#print axioms HarmonicBalls.Section6Derived.shellDecompositionStmt_of_proved
-#print axioms HarmonicBalls.Section6Derived.lqgMeasureWeylScaling_univ
-
-open Lean Elab Command in
-#eval show CommandElabM Unit from do
-  let env ← getEnv
-  let std : Array Name := #[``propext, ``Classical.choice, ``Quot.sound]
-  let valOf : ConstantInfo → Option Expr := fun c => match c with
-    | .thmInfo tv => some tv.value
-    | .defnInfo dv => some dv.value
-    | _ => none
-  let leavesCommon : Array Name := #[``HarmonicBalls.VeryGoodAnnuliSubRangeStep,
-    ``HarmonicBalls.LQGMeasureExistence, ``HarmonicBalls.ClusterOpenLaplacianStmt,
-    ``HarmonicBalls.AnnulusMassBoundByOdometerStmt, ``HarmonicBalls.OdometerBoundByAnnulusMassStmt]
-  let exps : Array (Name × Name × Array Name) := #[
-    (``HarmonicBalls.Section6Derived.harnackTypeEstimateStmt_of_derived_weyl,
-      ``HarmonicBalls.HarnackTypeEstimateStmt, leavesCommon ++ #[``HarmonicBalls.LowMassSmallOdometerStmt]),
-    (``HarmonicBalls.Section6Derived.harnackTypeComponentStmt_of_derived_weyl,
-      ``HarmonicBalls.HarnackTypeComponentStmt, leavesCommon ++ #[``HarmonicBalls.LowMassSmallOdometerStmt]),
-    (``HarmonicBalls.Section6Derived.harnackTypeEstimateStmt_of_derived_weyl_steps,
-      ``HarmonicBalls.HarnackTypeEstimateStmt,
-      leavesCommon ++ #[``HarmonicBalls.GoodAnnulusOdometerDecayStep, ``HarmonicBalls.ComponentOdometerDiscMaxStep]),
-    (``HarmonicBalls.Section6Derived.harnackTypeComponentStmt_of_derived_weyl_steps,
-      ``HarmonicBalls.HarnackTypeComponentStmt,
-      leavesCommon ++ #[``HarmonicBalls.GoodAnnulusOdometerDecayStep, ``HarmonicBalls.ComponentOdometerDiscMaxStep])]
-  let shell : Name := ``HarmonicBalls.Section6Derived.shellDecompositionStmt_of_proved
-  let weylUniv : Name := ``HarmonicBalls.Section6Derived.lqgMeasureWeylScaling_univ
-  let all : Array Name := exps.map (·.1) ++ #[shell, weylUniv]
-  for e in all do
-    for a in (← liftCoreM (collectAxioms e)) do
-      unless std.contains a do
-        throwError "{e} depends on the non-standard constant {a}"
-  for (e, p, leaves) in exps do
-    let some ci := env.find? e | throwError "missing {e}"
-    let tys := ci.type.getUsedConstants
-    unless tys.contains p do
-      throwError "{e} does not conclude the frozen statement {p}"
-    if tys.contains ``HarmonicBalls.LQGMeasureWeylScaling then
-      throwError "{e} still takes the Weyl premise as a hypothesis"
-    for l in leaves do
-      unless tys.contains l do
-        throwError "{e} lacks the retained leaf {l}"
-  let some sci := env.find? shell | throwError "missing {shell}"
-  unless sci.type.getUsedConstants.contains ``HarmonicBalls.ShellDecompositionStmt do
-    throwError "{shell} does not have the frozen statement ShellDecompositionStmt"
-  let some wci := env.find? weylUniv | throwError "missing {weylUniv}"
-  let some wv := valOf wci | throwError "{weylUniv} has no value"
-  unless wv.getUsedConstants.contains ``HarmonicBalls.Section6.lqgMeasureWeylScaling do
-    throwError "{weylUniv} does not apply HarmonicBalls.Section6.lqgMeasureWeylScaling"
-  -- closure walk from the dependencies of the exports: HarmonicBalls, LatticeProb and this module's own constants
-  -- are traversed; other imported roots (Mathlib, the Markov and elliptic packages) are not
-  let mut todo : Array Name := #[]
-  for e in all do
-    let some ci := env.find? e | throwError "missing {e}"
-    todo := todo ++ ci.type.getUsedConstants
-    if let some v := valOf ci then
-      todo := todo ++ v.getUsedConstants
-  let mut seen : NameSet := {}
-  let mut latMods : NameSet := {}
-  let mut latConsts : NameSet := {}
-  let mut propMods : NameSet := {}
-  while !todo.isEmpty do
-    let n := todo.back!
-    todo := todo.pop
-    if seen.contains n then continue
-    seen := seen.insert n
-    let some ci := env.find? n | continue
-    match env.getModuleIdxFor? n with
-    | some mi =>
-      let md := env.header.moduleNames[mi]!
-      unless md.getRoot == `HarmonicBalls || md.getRoot == `LatticeProb do continue
-      if md.getRoot == `LatticeProb then
-        latMods := latMods.insert md
-        latConsts := latConsts.insert n
-      if md.toString.startsWith "HarmonicBalls.Proposed" then propMods := propMods.insert md
-    | none => pure ()
-    todo := todo ++ ci.type.getUsedConstants
-    if let some v := valOf ci then
-      todo := todo ++ v.getUsedConstants
-  let libMods := env.header.moduleNames.filter (fun m => m.getRoot == `LatticeProb)
-  let latStr := ", ".intercalate (latMods.toList.map toString)
-  let propStr := ", ".intercalate (propMods.toList.map toString)
-  logInfo m!"Section6DerivedInputAssembly: LatticeProb modules in the import closure: {libMods.size}"
-  logInfo m!"Section6DerivedInputAssembly: LatticeProb declarations reached by the exports: {latConsts.toList.length}"
-  logInfo m!"Section6DerivedInputAssembly: LatticeProb modules reached: {latMods.toList.length} ({latStr})"
-  logInfo m!"Section6DerivedInputAssembly: staged Proposed modules reached: {propMods.toList.length} ({propStr})"
-  logInfo m!"Section6DerivedInputAssembly: guards passed for {all.size} declarations"

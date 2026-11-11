@@ -142,7 +142,7 @@ theorem identDistrib_lqgMeasure_of_gff
 
 /-- The normalized affine pullback of a whole-plane LQG measure has the same
 law as the original measure. The affine GFF and LQG coordinate-change inputs
-are staged assumptions. -/
+are assumptions. -/
 theorem identDistrib_affineMeasure
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}

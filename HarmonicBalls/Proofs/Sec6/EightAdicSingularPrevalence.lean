@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.AlmostSureSingularPrevalence
 
 The annulus iteration uses Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The cofinal existence
-hypotheses are staged literature inputs pending operator source review.
+hypotheses are literature inputs (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

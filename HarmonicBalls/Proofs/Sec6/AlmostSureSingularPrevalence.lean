@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec6.UniformSingularPrevalence
 
 The imported annulus iteration uses Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. Cofinal LQG measure
-existence is a staged literature input pending operator source review.
+existence is a literature input (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

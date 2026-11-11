@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.SimultaneousSingularMeasure
 
 The Section 6 assemblies imported here use Leonardo Bonanno's proof in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The existence assumptions
-below are staged literature inputs pending operator source review.
+below are literature inputs (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6

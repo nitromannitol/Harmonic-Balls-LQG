@@ -31,7 +31,7 @@ theorem veryGoodAnnuliSubRangeStep_of_disc
   veryGoodAnnuliSubRangeStep_of_goodAnnuliSubRangeStep hfull hgrowth
     (goodAnnuliSubRangeStep_of_disc hholder hfull hgrowth hatom hAff hCC) hatom hAff hCC
 
-/-- Lemma 6.3 follows under the explicit staged LQG hypotheses. -/
+/-- Lemma 6.3 follows under the explicit LQG hypotheses. -/
 theorem manyGoodAnnuliStmt_of_disc
     (hholder : GreenPotentialHolderStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
@@ -53,7 +53,7 @@ theorem manyGoodAnnuliStmt_of_disc
   manyGoodAnnuliStmt_of_literature
     (goodAnnuliSubRangeStep_of_disc hholder hfull hgrowth hatom hAff hCC) hex hW
 
-/-- Lemma 6.6 follows under the explicit staged LQG hypotheses. -/
+/-- Lemma 6.6 follows under the explicit LQG hypotheses. -/
 theorem manyVeryGoodAnnuliStmt_of_disc
     (hholder : GreenPotentialHolderStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
@@ -75,7 +75,7 @@ theorem manyVeryGoodAnnuliStmt_of_disc
   manyVeryGoodAnnuliStmt_of_literature
     (veryGoodAnnuliSubRangeStep_of_disc hholder hfull hgrowth hatom hAff hCC) hex hW
 
-/-- Proposition 6.2 follows under the explicit staged LQG hypotheses. -/
+/-- Proposition 6.2 follows under the explicit LQG hypotheses. -/
 theorem harnackTypeComponentStmt_of_disc
     (hholder : GreenPotentialHolderStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
@@ -97,7 +97,7 @@ theorem harnackTypeComponentStmt_of_disc
   harnackTypeComponentStmt_of_volumeGrowth_and_prevalence hgrowth
     (veryGoodAnnuliSubRangeStep_of_disc hholder hfull hgrowth hatom hAff hCC) hex hW
 
-/-- Proposition 6.1 follows under the explicit staged LQG hypotheses. -/
+/-- Proposition 6.1 follows under the explicit LQG hypotheses. -/
 theorem harnackTypeEstimateStmt_of_disc
     (hholder : GreenPotentialHolderStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})

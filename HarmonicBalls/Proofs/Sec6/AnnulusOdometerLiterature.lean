@@ -1,9 +1,9 @@
 import HarmonicBalls.Proofs.Sec6.AnnulusOdometerAssembly
 import HarmonicBalls.Proofs.Sec2.Assembly
 
-/-! # Lemma 6.10 from staged LQG inputs
+/-! # Lemma 6.10 from LQG inputs
 
-The inputs below remain explicit and are subject to their source checks.
+The inputs below remain explicit (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -12,7 +12,7 @@ open MeasureTheory
 
 universe u
 
-/-- Lemma 6.10 from the staged inputs used to establish LQG volume growth. -/
+/-- Lemma 6.10 from the inputs used to establish LQG volume growth. -/
 theorem odometerBoundByAnnulusMass_of_literature
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),

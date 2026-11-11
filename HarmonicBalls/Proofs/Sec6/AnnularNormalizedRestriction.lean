@@ -64,7 +64,7 @@ theorem IsWholePlaneGFF.exists_modConst_annular_normalizedRestriction
     (hopen V hV).measurableSet hfV hp _ d hdm hdeq
   simpa only [hE] using hv
 
-/-- Full support and the staged affine laws provide an annular normalized
+/-- Full support and the affine laws provide an annular normalized
 restriction measurable in the field modulo constants. -/
 theorem IsWholePlaneGFF.exists_modConst_annular_normalizedRestriction_of_affine
     (hfull : LQGMeasureFullSupportStmt.{u})

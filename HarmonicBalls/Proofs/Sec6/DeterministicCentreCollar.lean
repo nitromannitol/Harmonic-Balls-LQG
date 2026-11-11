@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec6.RootedCollarRescaling
 
 /-! # Collars at deterministic centres
 
-The fixed-centre estimate uses the staged affine and coordinate-change
+The fixed-centre estimate uses the affine and coordinate-change
 hypotheses and Leonardo Bonanno's Section 6 iteration in
 `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`.
 -/

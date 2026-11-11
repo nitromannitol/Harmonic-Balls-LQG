@@ -104,7 +104,7 @@ theorem veryGoodAnnulusHarnackTypeStmt_of_sec3 (h32 : ClusterOpenLaplacianStmt.{
   veryGoodAnnulusHarnackTypeStmt_of_lemmas h68 h610 h613 (clusterComponentInnerBallStep_of_clusterOpen h32)
     greenPotentialSupMonoStep_proved
 
-/-- **Proposition 6.2** from step S-SubRange (very good annuli, α₀ = 0), the staged inputs `LQGMeasureExistence`
+/-- **Proposition 6.2** from step S-SubRange (very good annuli, α₀ = 0), the inputs `LQGMeasureExistence`
 and `LQGMeasureWeylScaling` (α₀ = 0), and Lemmas 3.2, 6.8, 6.10, 6.13. -/
 theorem harnackTypeComponentStmt_of_inputs (hsub : VeryGoodAnnuliSubRangeStep.{u})
     (hex : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)

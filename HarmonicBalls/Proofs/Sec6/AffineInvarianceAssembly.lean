@@ -5,8 +5,8 @@ import HarmonicBalls.Proofs.Sec9.AffineInvarianceAssembly
 /-! # Section 6 with proved affine invariance
 
 The annulus iteration uses Leonardo Bonanno's proof in
-`LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The remaining staged LQG
-hypotheses are explicit and await source review.
+`LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`. The remaining LQG
+hypotheses are explicit (PENDING TRUTH CHECK).
 -/
 
 namespace HarmonicBalls.Section6
@@ -15,7 +15,7 @@ open MeasureTheory
 
 universe u
 
-/-- The good-annulus subrange step follows from volume growth and the staged
+/-- The good-annulus subrange step follows from volume growth and the
 LQG coordinate-change law; GFF affine invariance is proved. -/
 theorem goodAnnuliSubRangeStep_of_volumeGrowth_coordChange
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
@@ -33,7 +33,7 @@ theorem veryGoodAnnuliSubRangeStep_of_goodPrevalence
   veryGoodAnnuliSubRangeStep_of_goodPrevalence_of_translation hgrowth hsub
     (fun _ _ P hC hcirc => wholePlaneGFFAffineInvariance_proved P hC hcirc)
 
-/-- All frozen Section 6 conclusions follow from the staged whole-plane mass
+/-- All frozen Section 6 conclusions follow from the whole-plane mass
 bounds, coordinate-change law, and a cofinal sequence of existence inputs. -/
 theorem section6_of_massBounds_coordChange_cofinal_existence
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)

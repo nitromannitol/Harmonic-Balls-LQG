@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec6.BufferedExhaustion
 
 /-! # Null frontiers of deterministic annuli
 
-The conclusions use the staged whole-plane affine invariance and LQG
+The conclusions use the whole-plane affine invariance and LQG
 coordinate-change inputs explicitly.
 -/
 
@@ -82,7 +82,7 @@ theorem ae_lqg_annulus_frontier_eq_zero_of_affine
   exact hsub.trans (union_subset_union frontier_ball_subset_sphere (by
     simpa only [frontier_compl] using (frontier_closedBall_subset_sphere (x := z) (ε := r))))
 
-/-- The staged affine laws supply the frontier condition for a buffered
+/-- The affine laws supply the frontier condition for a buffered
 continuity-set exhaustion of a deterministic annulus. -/
 theorem IsWholePlaneGFF.exists_buffered_lqg_annular_exhaustion_of_affine
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}

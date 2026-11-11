@@ -71,7 +71,7 @@ theorem criterionThree_map_inv_smul (μ : Measure ℂ) {k : ℝ} (hk : 0 < k)
     exact hh
 
 /-- The failure probability of criterion three at the origin is independent
-of scale, under the staged affine and coordinate-change inputs. -/
+of scale, under the affine and coordinate-change inputs. -/
 theorem measure_criterionThree_failure_scale
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ α₀ : ℝ}
     (hγ : 0 < γ) (hγ₂ : γ < 2) (hα : α₀ < lqgQ γ)

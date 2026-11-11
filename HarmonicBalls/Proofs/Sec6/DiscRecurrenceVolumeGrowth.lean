@@ -35,7 +35,7 @@ theorem ae_continuous_lqg_discPotential_extrema_of_volumeGrowth
   exact ⟨(hc'.mono hK).domRestrict, (hc'.mono subset_closure).domRestrict⟩
 
 /-- Disc potential ratios at different centres and scales have the same law
-under volume growth and the staged affine and coordinate-change laws. -/
+under volume growth and the affine and coordinate-change laws. -/
 theorem identDistrib_fineSupportDisc_ratio_of_volumeGrowth
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u}) {Ω : Type u} [MeasurableSpace Ω]
     {P : Measure Ω} {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
@@ -153,7 +153,7 @@ theorem aemeasurable_fineSupportDisc_ratio_joint_of_volumeGrowth
 
 
 /-- Disc potential ratios recur above a positive threshold at almost every
-centre, under volume growth and the staged affine laws. -/
+centre, under volume growth and the affine laws. -/
 theorem ae_ae_fineSupportDisc_ratio_recurs_of_volumeGrowth
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsFiniteMeasure P] {γ : ℝ}
@@ -183,7 +183,7 @@ theorem ae_ae_fineSupportDisc_ratio_recurs_of_volumeGrowth
     exact (hn.symm.trans h0).measure_mem_eq measurableSet_Iio
 
 /-- LQG has Brownian fine support at almost every centre, assuming volume
-growth and the staged affine and coordinate-change laws. -/
+growth and the affine and coordinate-change laws. -/
 theorem ae_ae_lqg_fine_support_of_disc_volumeGrowth
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsFiniteMeasure P] {γ : ℝ}

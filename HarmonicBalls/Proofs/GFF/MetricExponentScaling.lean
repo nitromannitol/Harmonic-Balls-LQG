@@ -3,8 +3,7 @@ import HarmonicBalls.Proposed.PfefferMetricScaling
 /-! # Deterministic exponent comparison for Pfeffer's background scaling (1.10)
 
 This file consumes `PfefferBackgroundScaling`, which is Pfeffer's Proposition 1.9, equation (1.10) (arXiv:2104.04020v3,
-p. 8), staged as a proposed input in `HarmonicBalls/Proposed/PfefferMetricScaling.lean`. That input is pending the
-operator's source-check.
+p. 8), a proposed input in `HarmonicBalls/Proposed/PfefferMetricScaling.lean`. That input is (PENDING TRUTH CHECK).
 
 What is proved here. If the scaling constants satisfy `c_r = r ^ (ξ · lqgQ γ)` exactly, then the background exponent
 `Q` in (1.10) equals `lqgQ γ`. The argument is elementary. For `0 < δ < 1` and `r > 0`, the ratio
@@ -12,7 +11,7 @@ What is proved here. If the scaling constants satisfy `c_r = r ^ (ξ · lqgQ γ)
 quotient lies within any `η > 0` of `ξ Q` for all small `δ`. Letting `δ → 0` forces `ξ lqgQ γ = ξ Q`, and `ξ > 0` gives
 `Q = lqgQ γ`. The proof uses only `r = 1`, so it does not need the uniformity in `r` of (1.10).
 
-Not proved here (remaining targets, see `docs/campaign/audits/MetricExponentScaling.md`): that the LQG metric
+Not proved here (remaining targets): that the LQG metric
 `IsLQGMetric` lies in the class `IsPfefferWeakLQGMetric`; that its Axiom V constants can be taken exactly
 `r ^ (ξ · lqgQ γ)`, i.e. the tightness of the normalized distances at the exact normalizers; and the physical
 parameter correspondence that identifies the background charge `Q(ξ)` of (1.4) with the LQG parameter.

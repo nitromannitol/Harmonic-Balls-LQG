@@ -16,7 +16,7 @@ open scoped ENNReal
 universe u
 
 /-- At a fixed positive radius, one pair of size windows works at every centre
-and in every whole-plane realization, under volume growth and the staged affine
+and in every whole-plane realization, under volume growth and the affine
 field invariance. The windows may depend on the radius. -/
 theorem exists_universal_wholePlane_size_windows_fixed_scale
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
@@ -63,7 +63,7 @@ theorem exists_universal_wholePlane_size_windows_fixed_scale
 
 
 /-- Fixed-radius size windows also hold for singular fields on annuli separated
-from the origin, under the staged existence and affine field inputs. -/
+from the origin, under the existence and affine field inputs. -/
 theorem exists_universal_lqg_size_windows_fixed_scale
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     {γ α₀ β : ℝ} (hγ : 0 < γ) (hγ₂ : γ < 2) (hβ : (2 + γ) ^ 2 / 2 < β)

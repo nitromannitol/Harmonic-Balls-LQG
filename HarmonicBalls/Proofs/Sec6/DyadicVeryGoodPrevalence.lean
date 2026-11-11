@@ -111,7 +111,7 @@ theorem veryGoodAnnuliSubRangeStep_of_goodPrevalence_of_translation
     exact False.elim (href ⟨Ω, mΩ, P, hC, hcirc, μ, hgff, hμ⟩)
 
 /-- Lemma 6.6 follows from the good-annulus subrange step, volume growth and
-the staged affine and zero-singularity existence hypotheses. -/
+the affine and zero-singularity existence hypotheses. -/
 theorem manyVeryGoodAnnuliStmt_of_goodPrevalence_of_translation
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hsub : GoodAnnuliSubRangeStep.{u})
@@ -127,7 +127,7 @@ theorem manyVeryGoodAnnuliStmt_of_goodPrevalence_of_translation
   exact lqgMeasureWeylScaling Ω P γ 0 hC hcirc
 
 /-- Proposition 6.2 follows from the good-annulus prevalence step, volume
-growth and the staged affine and zero-singularity existence hypotheses. -/
+growth and the affine and zero-singularity existence hypotheses. -/
 theorem harnackTypeComponentStmt_of_goodPrevalence_of_translation
     (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     (hsub : GoodAnnuliSubRangeStep.{u})

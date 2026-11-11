@@ -20,7 +20,7 @@ whole-plane GFF. Hence the law of `X_r` does not depend on `r > 0` (`normalizedA
 the Euclidean topology of the metric and the compactness of the two circles (`annularAcross_pos_lt_top`).
 
 Not in this file: the around-annulus length (`pfefferAround`, an infimum over separating loops) and any internal
-diameter; see `docs/campaign/audits/MetricAnnulusScaleLaw.md`.
+diameter.
 -/
 
 namespace HarmonicBalls
@@ -31,7 +31,7 @@ open scoped ENNReal NNReal Topology
 /-! ### Definitions -/
 
 /-- The across-annulus distance `A_D(z₀; a, b) = inf {D x y : |x - z₀| = a, |y - z₀| = b}` of Pfeffer
-(arXiv:2104.04020, Axiom V of Definition 1.6). It has the formula of `pfefferAcross` in the staged file
+(arXiv:2104.04020, Axiom V of Definition 1.6). It has the formula of `pfefferAcross` in the file
 `HarmonicBalls/Proposed/PfefferMetricScaling.lean`, restated here so that this module does not consume that file. -/
 noncomputable def annularAcross (D : ℂ → ℂ → ℝ) (z₀ : ℂ) (a b : ℝ) : ℝ≥0∞ :=
   ⨅ x ∈ Metric.sphere z₀ a, ⨅ y ∈ Metric.sphere z₀ b, ENNReal.ofReal (D x y)
@@ -397,8 +397,5 @@ theorem normalizedAcross_tight {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     _ = P {ω | ENNReal.ofReal ((N : ℝ) + 1)⁻¹ ≤ normalizedAcross γ ξ hC hcirc 𝔇 z₀ a b r ω ∧
           normalizedAcross γ ξ hC hcirc 𝔇 z₀ a b r ω ≤ ENNReal.ofReal ((N : ℝ) + 1)} := rfl
 
-#print axioms normalizedAcross_identDistrib
-#print axioms normalizedAcross_tight
-#print axioms annularAcross_ae_pos_lt_top
 
 end HarmonicBalls

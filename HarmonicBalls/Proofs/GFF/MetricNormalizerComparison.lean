@@ -2,7 +2,6 @@ import Mathlib
 
 /-! # Comparison of two normalizer families for one random scale observable
 
-Task `weak-metric-normalizer-family-comparison` (worker z6).
 
 Let `X r : Ω → ℝ≥0∞` be random observables indexed by the scale `r > 0`, and let `c r`, `c' r > 0` be two deterministic
 normalizers. Assume that the normalized observable `X r / c r` is uniformly tight together with its reciprocal over `r > 0`,
@@ -255,7 +254,3 @@ theorem uniformLogExponent_iff {P : Measure Ω} [IsProbabilityMeasure P] {X : �
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.normalizer_ratio_bounded
-#print axioms HarmonicBalls.uniformLogExponent_of_comparison
-#print axioms HarmonicBalls.uniformLogExponent_stable
-#print axioms HarmonicBalls.uniformLogExponent_iff

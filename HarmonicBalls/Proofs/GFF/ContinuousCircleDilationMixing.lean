@@ -213,13 +213,5 @@ theorem IsWholePlaneGFF.exists_mixing_continuous_circle_version
     fun _ _ hA hB => h.tendsto_continuousCircleDilation_inter hF hversion hA hB,
     h.ergodic_continuousCircleDilation hF hversion⟩
 
-#print axioms coordinateSigma_circle_evaluation
-#print axioms IsWholePlaneGFF.measurePreserving_continuousCircleDilation
-#print axioms continuousCircleDilation_iterate_succ
-#print axioms ae_iterated_circle_evaluations
-#print axioms IsWholePlaneGFF.cylinderFactorization_continuousCircleDilation
-#print axioms IsWholePlaneGFF.tendsto_continuousCircleDilation_inter
-#print axioms IsWholePlaneGFF.ergodic_continuousCircleDilation
-#print axioms IsWholePlaneGFF.exists_mixing_continuous_circle_version
 
 end HarmonicBalls

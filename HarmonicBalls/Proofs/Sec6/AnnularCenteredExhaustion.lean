@@ -128,7 +128,7 @@ theorem isFieldMeasurableModConst_goodAnnulus_of_null_frontier
     ((fieldSigmaAlgebraModConst_le 0 hC _).trans (hgff.fieldSigmaAlgebra_le 0 _))
     hr z ha b hatom hfinite hpositive hpolar E hEm hmono hbounded hE hEf _ d hdm hdeq
 
-/-- The staged affine GFF and coordinate-change laws imply good-annulus
+/-- The affine GFF and coordinate-change laws imply good-annulus
 locality once nonatomicity, finite positive annular mass and Brownian point
 avoidance are available. -/
 theorem isFieldMeasurableModConst_goodAnnulus_of_affine
