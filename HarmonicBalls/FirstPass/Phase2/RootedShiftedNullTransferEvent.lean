@@ -17,14 +17,16 @@ Items (a), (b) and (c) of the probability-one event `E_z` of `notes/fp-gaps/MATH
   (`IsWholePlaneGFF.ae_continuousOn_circle`); this is the input of the canonical selector.
 * (c) for Lebesgue-a.e. root `z` in `localDomain j`, almost surely every continuous profile `y` whose zero extension is the
   positive part of the DMS-shifted circle profile lies in the convergence locus `convSet T γ a0`. Route: the producer
-  `shifted_rootedLQGMeasure_ae_exists` (`B2ShiftedProfileDecoder2.lean`, from `ae_exists_rootedLQGMeasure_derived`) gives,
+  `shifted_rootedLQGMeasure_ae_exists_sub` (`B2ShiftedProfileDecoder2.lean`, from `ae_exists_rootedLQGMeasure_derived`) gives,
   for a.e. `z`, an LQG measure of `rootedCircleFieldP a0 γ hcirc z`; the identity
   `rootedCircleFieldP a0 γ hcirc z ω = fieldCircleAverage a0 (dmsShiftedCircle γ z (hcirc ω))` holds once the DMS constant
   vanishes; the dyadic-scale comparison `isLQGLimit_congr_of_pos` transfers the LQG limit to `y`; and the convergence
   membership is read off from the LQG limit, as in the proof of `lqgMeasureOfProfileMeasurable_derived`.
 
 The joint identity `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, pending truth check) is not used: this route is the
-`α₀`-version of step 5 and needs only the marked input `DMSLemmaA10WholePlaneMarked`, as the producer does.
+`α₀`-version of step 5 and needs only the subcritical marked input `DMSLemmaA10WholePlaneMarkedSub`
+(`FirstPass/Frozen/S11i.lean:59`, range `0 < γ < 2`), through the producer `shifted_rootedLQGMeasure_ae_exists_sub`
+(`B2ShiftedProfileDecoder2.lean`). The unrestricted marked form `DMSLemmaA10WholePlaneMarked` (false as universally typed) is not used.
 
 Terminology: Duplantier-Sheffield (LQG measures of the GFF), Armitage-Gardiner (circle averages).
 -/
@@ -69,11 +71,11 @@ theorem ae_shifted_mem_convSet_ball {Ω : Type u} [MeasurableSpace Ω] (P : Meas
     (T : ProfileDecoderDerived.TestFamily) (γ a0 : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : a0 < lqgQ γ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hGFF : IsWholePlaneGFF P hC hcirc)
     (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ a0 hC hcirc)
-    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ) :
+    (hSub : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ) :
     ∀ᵐ z ∂(volume.restrict (ball (0 : ℂ) 1)), ∀ᵐ ω ∂P, ∀ y : C(CircleParameter, ℝ),
       posPart (dmsShiftedCircle γ z (hcirc ω)) = posExtend ⇑y →
         y ∈ ProfileDecoderDerived.convSet T γ a0 := by
-  filter_upwards [shifted_rootedLQGMeasure_ae_exists P γ a0 hC hcirc 0 1 hGFF hγ0 hγ2 hα hExist0 hExistα hA10
+  filter_upwards [shifted_rootedLQGMeasure_ae_exists_sub P γ a0 hC hcirc 0 1 hGFF hγ0 hγ2 hα hExist0 hExistα hSub
       subset_rfl, ae_restrict_mem measurableSet_ball] with z hz hzb
   obtain ⟨μz, hμz⟩ := hz
   have hμz' : ∀ᵐ ω ∂P, IsLQGLimit γ (rootedCircleFieldP a0 γ hcirc z ω) (μz ω) := hμz
@@ -107,7 +109,7 @@ theorem ae_rootedShiftedNullEvent {Ω : Type u} [MeasurableSpace Ω] (P : Measur
     (T : ProfileDecoderDerived.TestFamily) (γ a0 : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : a0 < lqgQ γ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hGFF : IsWholePlaneGFF P hC hcirc)
     (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ a0 hC hcirc)
-    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ) (j : ℕ) :
+    (hSub : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ) (j : ℕ) :
     ∀ᵐ z ∂(volume.restrict (localDomain j)), ∀ᵐ ω ∂P,
       hcirc ω 1 0 = 0 ∧ ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) ∧
         ∀ y : C(CircleParameter, ℝ), posPart (dmsShiftedCircle γ z (hcirc ω)) = posExtend ⇑y →
@@ -120,7 +122,7 @@ theorem ae_rootedShiftedNullEvent {Ω : Type u} [MeasurableSpace Ω] (P : Measur
     linarith
   have hab : ∀ᵐ ω ∂P, hcirc ω 1 0 = 0 ∧ ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) :=
     (ae_circleAverage_one_zero_event hGFF).and (ae_continuousOn_circleProfile_event hGFF)
-  have hc := ae_shifted_mem_convSet_ball P T γ a0 hγ0 hγ2 hα hC hcirc hGFF hExist0 hExistα hA10
+  have hc := ae_shifted_mem_convSet_ball P T γ a0 hγ0 hγ2 hα hC hcirc hGFF hExist0 hExistα hSub
   filter_upwards [ae_restrict_of_ae_restrict_of_subset hdom hc] with z hz
   filter_upwards [hz, hab] with ω h1 h2
   exact ⟨h2.1, h2.2, h1⟩
