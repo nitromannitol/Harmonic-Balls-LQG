@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.MarkedComparison
 
 For nonnegative test data (`ψ ≥ 0` bounded continuous on `ℝ^k`, `η ≥ 0` in `C_c(B₁)`), the Palm identity of
 `palm_test_identity` holds with lintegrals: the left side integrates `ψ(hC φ)` against the marked mass, the right side
-the shifted expectations. This is the form used to pass to indicators of open sets (r10 `l:r9-marked`, Extension).
+the shifted expectations. This is the form used to pass to indicators of open sets.
 -/
 
 noncomputable section

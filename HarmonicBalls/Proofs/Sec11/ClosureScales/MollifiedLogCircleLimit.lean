@@ -7,7 +7,7 @@ import HarmonicBalls.Proposed.DuplantierMillerSheffield
 /-!
 # Deterministic logarithmic-insertion limit of mollified circle averages
 
-Source: r10 `l:r9-circle-code`, lines 1331-1350 (Fubini plus the circle-potential formula).
+Source: Fubini plus the circle-potential formula.
 
 Let `rho` be continuous on `ℂ` with `tsupport rho ⊆ closedBall 0 1` and `∫ rho = 1`, and let
 `rho_e(x) = e⁻² rho(e⁻¹ • x)` for `e > 0`. For `r > 0`, `w z : ℂ` and `γ : ℝ`, the integrand
@@ -21,7 +21,7 @@ For `g = log ‖· - z‖` the inner average is the logarithmic potential `log m
 circle measure (Armitage-Gardiner potential theory), and for `g = logMaxOne` it is continuous in the centre.
 Both limits are the approximate identity at `y = 0`. No Gaussian event, decoder or literature hypothesis is used.
 `dmsShift` is the Proposed definition in `HarmonicBalls.Proposed.DuplantierMillerSheffield`; this file uses its
-formula only (source review of that definition remains with the operator). The hypotheses `_h_even` and the
+formula only (source review of that definition is pending). The hypotheses `_h_even` and the
 smoothness assumption are carried to match the statement; the limit uses only continuity and the support condition.
 -/
 
@@ -357,7 +357,7 @@ theorem integral_mul_circleAverage_mollifierAt (h_supp : tsupport rho ⊆ closed
 
 end Mollifier
 
-/-- **Deterministic logarithmic-insertion limit** (r10 `l:r9-circle-code`, lines 1331-1350).
+/-- **Deterministic logarithmic-insertion limit**.
 
 For `rho` even, nonnegative, smooth, with `tsupport rho ⊆ closedBall 0 1` and `∫ rho = 1`, and for `r > 0`,
 `γ : ℝ`, `z w : ℂ`: the integrand `v ↦ dmsShift γ z v * circleAverage (fun u ↦ e⁻² rho(e⁻¹ • (u - v))) w r`

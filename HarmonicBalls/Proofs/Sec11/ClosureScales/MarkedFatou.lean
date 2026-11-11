@@ -7,8 +7,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CircleAverageJointMeasurable
 /-! # Route (A), Palm identity: the Fatou bound for the marked LQG mass
 
 For the γ-LQG measure `μ_g` of the whole-plane GFF with `α₀ = 0` and `0 ≤ η ∈ C_c(B_1)`, the expectation of
-`μ_g(η)` is at most `∫ η`: "Fatou consequently implies `E μ_g(η) ≤ ∫ η dz`" (r10 `l:r9-marked`, "First moments and
-the required `L¹` convergence"). The proof: the vague limit along the dyadic scales `2^(-k)` (`IsLQGLimit`), the first
+`μ_g(η)` is at most `∫ η`: "Fatou consequently implies `E μ_g(η) ≤ ∫ η dz`". The proof: the vague limit along the dyadic scales `2^(-k)` (`IsLQGLimit`), the first
 moment `E μ_ε(η) = ∫ η` for small `ε` (`integral_marked_mass_eps_eq`), and Fatou's lemma.
 -/
 
@@ -49,7 +48,7 @@ theorem exists_margin_of_tsupport_subset_ball {η : ℂ → ℝ} (hηs : HasComp
     refine ⟨‖z0‖, ?_, fun z hz => isMaxOn_iff.1 hmax z hz⟩
     simpa using htsupp hz0
 
-/-- **Fatou bound for the marked LQG mass** (r10 `l:r9-marked`): `E μ_g(η) ≤ ∫ η` for `0 ≤ η ∈ C_c(B_1)`. -/
+/-- **Fatou bound for the marked LQG mass**: `E μ_g(η) ≤ ∫ η` for `0 ≤ η ∈ C_c(B_1)`. -/
 theorem lintegral_lqgMeasure_le (γ : ℝ) {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hG : IsWholePlaneGFF P hC hcirc) {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ 0 hcirc μ)

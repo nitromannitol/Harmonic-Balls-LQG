@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.LQGKernelBorel
 For `S` measurable in the product of the pairing σ-algebra and the Borel σ-algebra of `ℂ`, the map
 `ω ↦ μ_ω {z | (hC ω, z) ∈ S}` is measurable, where `μ_ω` is restricted to the unit disk and taken as zero off the good
 set. This is the measurability needed to form the measure `P.bind (ω ↦ (μ_ω).map (z ↦ (hC ω, z)))` of the marked field
-in Step M (r10 `l:r9-marked`). The proof is the π-λ induction on measurable rectangles.
+in Step M. The proof is the π-λ induction on measurable rectangles.
 -/
 
 noncomputable section

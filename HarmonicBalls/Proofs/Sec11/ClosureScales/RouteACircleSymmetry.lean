@@ -6,8 +6,7 @@ For continuous compactly supported `F, ψ : ℂ → ℝ` and `R : ℝ`, the inte
 equals the integral of `F` against the circle averages of `ψ`:
 `∫ z, ψ z * ⨍_{∂B(z,R)} F = ∫ x, F x * ⨍_{∂B(x,-R)} ψ`  (`Real.circleAverage`).
 This is Fubini in the variables `(z, θ)` and `(x, θ)`, with the translation `z ↦ z + circleMap 0 R θ`.
-The identity underlies the identification of `∫ hcirc(r, z) ψ(z) dz` with the pairing of the smoothed test function
-(route (A) of r8, the codes of l.504-642; see notes/z3.md, plan C3).
+The identity underlies the identification of `∫ hcirc(r, z) ψ(z) dz` with the pairing of the smoothed test function.
 -/
 
 noncomputable section

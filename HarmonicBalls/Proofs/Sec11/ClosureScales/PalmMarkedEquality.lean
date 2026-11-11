@@ -10,7 +10,7 @@ space times `ℂ`. On a rectangle `A × B` (`A` a cylinder over finitely many te
 the Palm integrals of `1_A` against `κ_ω(B)` resp. the shifted expectation over `B ∩ B₁` (`lintegral_markedLeft`,
 `lintegral_markedRight`). They agree by the ψ-extension `lintegral_palm_psi` with `ψ = 1_U`. Their total masses agree
 (both equal the volume of `B₁`, by the Palm identity with `ψ ≡ 1`). Finite measures are then equal by
-`ext_marked_of_cylinder` (r10 `l:r9-marked`, the marked assembly). -/
+`ext_marked_of_cylinder`. -/
 
 noncomputable section
 

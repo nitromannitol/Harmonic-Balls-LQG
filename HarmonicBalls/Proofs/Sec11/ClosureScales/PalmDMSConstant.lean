@@ -10,7 +10,7 @@ unit-circle average `h₁₀ = hcirc · 1 0` of the whole-plane GFF vanishes, wh
 (`IsWholePlaneGFF.ae_circleAverage_one_zero`). The unit-circle average of `dmsShift γ z` is `-γ log max(1, |z|) = 0`:
 on the unit circle the normalisation `γ log max(|w|, 1)` vanishes, and Jensen's formula gives the average of
 `log|w - z|`. Hence, almost surely, the DMS shifted pairing is the field plus the deterministic shift
-`∫ dmsShift_z φ` (r10 `l:r9-marked`, `StepM`).
+`∫ dmsShift_z φ`.
 -/
 
 noncomputable section

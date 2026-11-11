@@ -10,7 +10,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.MarkedL1
 import HarmonicBalls.Proofs.Sec11.ClosureScales.MarkedFatou
 import HarmonicBalls.Proposed.DuplantierMillerSheffield
 
-/-! # Route (A), Palm identity: the product-test case of Step M (r10 `l:r9-marked`)
+/-! # Route (A), Palm identity: the product-test case of Step M
 
 For a bounded continuous `ψ : ℝ^k → ℝ`, test functions `φ_1, …, φ_k`, and a nonnegative continuous `η` supported in
 the open unit disk, the marked identity
@@ -174,8 +174,7 @@ theorem measurable_integral_circleAverage {P : Measure Ω} [IsProbabilityMeasure
       (Real.continuous_exp.measurable.comp (measurable_const.mul (hgm.comp measurable_swap))))
   exact (hH.stronglyMeasurable.integral_prod_right').measurable
 
-/-- Fubini for the marked circle masses tested against a bounded measurable `F`: the exchange of `ω` and `z`
-(r10 `l:r9-marked`). The jointly measurable version `g` of the circle averages agrees with `hcirc` off a null set,
+/-- Fubini for the marked circle masses tested against a bounded measurable `F`: the exchange of `ω` and `z`. The jointly measurable version `g` of the circle averages agrees with `hcirc` off a null set,
 for all `z` at once. -/
 theorem integral_fubini_marked {P : Measure Ω} [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε) (γ : ℝ)
@@ -244,7 +243,7 @@ theorem integral_fubini_marked {P : Measure Ω} [IsProbabilityMeasure P] {hC : �
   rw [hL, hR]
   exact integral_integral_swap hG_int
 
-/-- **Palm test identity** (product-test case of Step M; r10 `l:r9-marked`). For a bounded continuous `ψ` on `ℝ^k`,
+/-- **Palm test identity** (product-test case of Step M). For a bounded continuous `ψ` on `ℝ^k`,
 test functions `φ_j`, and a nonnegative continuous `η` supported in the open unit disk,
 `E[ψ(hC φ) μ_g(η)] = ∫ η(z) E[ψ(hC φ + ∫ dmsShift_z φ)] d²z`. The constant term of `dmsShiftedPairing` is not
 present: it vanishes almost surely on the unit disk (a separate step). -/

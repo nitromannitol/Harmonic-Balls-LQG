@@ -10,8 +10,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CodeLimitTools
 /-! # Route (A), Palm identity: the L¹ convergence of the marked LQG masses
 
 For `0 ≤ η ∈ C_c(B_1)`, the marked masses `X_k = μ_{2^(-k)}(η)` (density `ε^(γ²/2) exp(γ h_ε)`, `ε = 2^(-k)`) converge to
-`Y = μ_g(η)` in `L¹`: `E|X_k - Y| → 0` (r10 `l:r9-marked`: "For `X_eps = μ_eps(eta)` and `X = μ_g(eta)`,
-`E|X_eps - X| = E X_eps + E X - 2 E min(X_eps, X) → 0`"). The proof: the a.s. vague convergence, the first moment of
+`Y = μ_g(η)` in `L¹`: `E|X_k - Y| → 0`. The proof: the a.s. vague convergence, the first moment of
 `X_k` for small scales (`integral_marked_mass_eps_eq`), `E Y = ∫ η` (`integral_lqgMeasure_eq_of_nonneg`), and the
 min-trick `tendsto_integral_abs_sub_of_ae_tendsto` (CodeLimitTools.lean).
 -/
@@ -42,7 +41,7 @@ theorem ae_tendsto_marked_mass (γ : ℝ) {Ω : Type*} [MeasurableSpace Ω] {P :
   rw [integral_lqgApprox_of_continuous (dyadicScale_pos k) (hcontk k) η]
   simp only [fieldCircleAverage_zero_eq]
 
-/-- **L¹ convergence of the marked LQG masses** (r10 `l:r9-marked`): for `0 ≤ η ∈ C_c(B_1)`,
+/-- **L¹ convergence of the marked LQG masses**: for `0 ≤ η ∈ C_c(B_1)`,
 `E|μ_{2^(-k)}(η) - μ_g(η)| → 0`. -/
 theorem tendsto_integral_abs_marked_sub (γ : ℝ) {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}

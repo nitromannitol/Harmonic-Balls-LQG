@@ -2,16 +2,16 @@ import Mathlib
 import HarmonicBalls.Proofs.Sec11.ClosureScales.UniversalRealization
 
 /-!
-# Lemma l:r6-transfer, rooted transfer: the shifted circle-average map `Γ_z`
+# The shifted circle-average map `Γ_z`
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, rooted transfer (lines 1143-1183). For a canonical
+For a canonical
 profile `c` and a point `z`, the paper defines the continuous circle-average function
 
   `(Γ_z c)(r,w) = c(r,w) - γ log max(r,|w-z|) + γ ∫ log max(1,|v|) σ_{r,w}(dv)`,
 
 where `σ_{r,w}` is the normalized measure on the circle `∂B_r(w)`, and states that `(c,z) ↦ Γ_z c` is a jointly Borel map
 into the canonical space. This file proves that `Γ_z c` is continuous on `J = (0,∞) × ℂ` (so it is a `CanonicalProfile`)
-and that `(c,z) ↦ Γ_z c` is measurable. The marked Palm identity (eq:r6-palm), which uses this map, is NOT formalized here:
+and that `(c,z) ↦ Γ_z c` is measurable. The marked Palm identity, which uses this map, is NOT formalized here:
 its source is [DMS] Lemma A.10 (whole plane) and its marked version is only sketched in the paper (lines 1150-1156).
 -/
 
@@ -56,7 +56,7 @@ theorem continuousOn_shiftedCircleFun (γ : ℝ) (z : ℂ) {f : ℝ × ℂ → �
 noncomputable def shiftedProfile (γ : ℝ) (z : ℂ) (c : CanonicalProfile) : CanonicalProfile :=
   ⟨shiftedCircleFun γ z c.1, continuousOn_shiftedCircleFun γ z c.2⟩
 
-/-- **Joint measurability of `(c,z) ↦ Γ_z c`** (paper r7 line 1161: "a jointly Borel map of `(c,z)`"). -/
+/-- **Joint measurability of `(c,z) ↦ Γ_z c`** ("a jointly Borel map of `(c,z)`"). -/
 theorem measurable_shiftedProfile (γ : ℝ) :
     Measurable fun q : CanonicalProfile × ℂ => shiftedProfile γ q.2 q.1 := by
   have hfun : Measurable fun q : CanonicalProfile × ℂ => shiftedCircleFun γ q.2 q.1.1 := by

@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmInnerApprox
 For an open set `W ⊆ ℂ`, the marked point `z` ranges over `W ∩ B₁`. The indicator of `W ∩ B₁` is the monotone limit of
 the `C_c(B₁)` cutoffs `innerApprox W m` (`PalmInnerApprox`), so the nonnegative Palm identity (`lintegral_palm_test`,
 `PalmLintegralPalm`) passes to `W ∩ B₁` by monotone convergence in `m`. The random measure enters through a measurable
-kernel `κ` that agrees almost surely with `μ_ω` restricted to `B₁` (r10 `l:r9-marked`, open-set step).
+kernel `κ` that agrees almost surely with `μ_ω` restricted to `B₁`.
 -/
 
 noncomputable section

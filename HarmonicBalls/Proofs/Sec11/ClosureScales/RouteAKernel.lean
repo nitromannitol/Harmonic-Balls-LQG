@@ -5,7 +5,7 @@ import Mathlib
 The covariance kernel of the whole-plane GFF is `wholePlaneCov z w = log(max(|z|,1) max(|w|,1) / |z - w|)`
 (`HarmonicBalls/Defs/GFF.lean`). Its logarithmic part is locally integrable in the plane; this file proves
 `IntegrableOn (fun w => |log ‖w‖|) (ball 0 R)` by polar coordinates. It is the first input of the L² bound on
-pairings of the GFF (r8 route (A), lines 504-642, the codes and the Schur estimate).
+pairings of the GFF.
 -/
 
 namespace HarmonicBalls

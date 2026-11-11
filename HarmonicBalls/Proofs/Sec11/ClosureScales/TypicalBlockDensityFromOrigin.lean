@@ -73,4 +73,3 @@ theorem ae_ae_pinch_block_density_of_origin_law
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.ae_ae_pinch_block_density_of_origin_law

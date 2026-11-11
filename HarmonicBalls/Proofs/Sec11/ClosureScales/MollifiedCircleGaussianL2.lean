@@ -9,8 +9,7 @@ import HarmonicBalls.Proofs.Potential.Fundamental
 /-!
 # L² convergence of the literal mollified circle pairing for the whole-plane GFF
 
-Section 11 closure, the L² input of the r10 statement `l:r9-circle-code`
-(`notes/sec11-proof/sec11-proof-r10.tex`, lines 1287-1303). Fixed circle `∂B_r(w)` with `r > 0`, a literal mollifier
+Section 11 closure, the L² input of the circle-code statement. Fixed circle `∂B_r(w)` with `r > 0`, a literal mollifier
 `ρ` (even, nonnegative, smooth, supported in `closedBall 0 1`, mass one) and
 `φ_ε(v) = ⨍_{∂B_r(w)} ε⁻² ρ(ε⁻¹ (x - v)) dx`.
 
@@ -29,7 +28,7 @@ Section 11 closure, the L² input of the r10 statement `l:r9-circle-code`
 Terminology: the whole-plane GFF and its covariance are those of Duplantier-Sheffield (`Defs/GFF.lean`); the logarithmic
 potential of the circle is the mean value identity of potential theory (Armitage-Gardiner), via `circleAverage_log_sub`.
 
-No external input, no new hypothesis: the hypotheses on `ρ` are the five conditions of the r10 statement, packaged as
+No external input, no new hypothesis: the hypotheses on `ρ` are the five conditions of the circle-code statement, packaged as
 `IsLiteralMollifier`.
 -/
 
@@ -38,7 +37,7 @@ namespace HarmonicBalls
 open MeasureTheory ProbabilityTheory Filter Topology Metric Set
 open scoped ContDiff
 
-/-- The hypotheses on the literal mollifier `ρ` of the r10 statement: even, nonnegative, smooth, supported in
+/-- The hypotheses on the literal mollifier `ρ` of the circle-code statement: even, nonnegative, smooth, supported in
 `closedBall 0 1`, with integral one. -/
 structure IsLiteralMollifier (rho : ℂ → ℝ) : Prop where
   even : ∀ x : ℂ, rho (-x) = rho x
@@ -47,7 +46,7 @@ structure IsLiteralMollifier (rho : ℂ → ℝ) : Prop where
   supp : tsupport rho ⊆ closedBall (0 : ℂ) 1
   mass : ∫ x : ℂ, rho x = 1
 
-/-- The literal mollified circle average `φ_ε(v) = ⨍_{∂B_r(w)} (ε²)⁻¹ ρ(ε⁻¹ • (x - v)) dx` (r10 l:r9-circle-code). -/
+/-- The literal mollified circle average `φ_ε(v) = ⨍_{∂B_r(w)} (ε²)⁻¹ ρ(ε⁻¹ • (x - v)) dx`. -/
 noncomputable def circleMollifier (rho : ℂ → ℝ) (w : ℂ) (r e : ℝ) (v : ℂ) : ℝ :=
   Real.circleAverage (fun x : ℂ => (e ^ 2) ^ (-1 : ℤ) * rho ((e ^ (-1 : ℤ)) • (x - v))) w r
 
@@ -514,7 +513,7 @@ lemma integral_sq_sub_eq_covariance {Ω : Type*} [MeasurableSpace Ω] {P : Measu
     ring
   rw [hfun, integral_add h4 h3, integral_sub h1 (h2.const_mul 2), integral_const_mul]
 
-/-- **Gaussian L² convergence of the literal mollified circle pairing** (r10 l:r9-circle-code, the L² input). For a
+/-- **Gaussian L² convergence of the literal mollified circle pairing** (the L² input). For a
 whole-plane GFF `h` with pairings `hC` and circle averages `hcirc`, the random variables `⟨h, φ_ε⟩ - h_r(w)` are in
 `L²(P)` for `ε > 0` and their second moments tend to `0` as `ε ↓ 0`. -/
 theorem isWholePlaneGFF_circleMollifier_L2 {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}

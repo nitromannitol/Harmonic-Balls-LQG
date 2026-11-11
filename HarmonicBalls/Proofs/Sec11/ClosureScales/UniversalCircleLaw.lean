@@ -3,9 +3,9 @@ import HarmonicBalls.Proofs.Sec5.GaussianProcessLaw
 import HarmonicBalls.Proofs.GFF.CoordinateModification
 
 /-!
-# Lemma l:r6-transfer, step 5 (lite): the universal law of the circle averages on `J`
+# The universal law of the circle averages on `J`
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer` (lines 284-640), the identity `c_*P = λ` for
+The identity `c_*P = λ` for
 the canonical profile. The canonical profile of a whole-plane GFF is the measurable modification of the circle
 averages from `UniversalRealization.lean`. Its restriction to `J = (0,∞) × ℂ` is a random element of `J → ℝ` with
 the product σ-algebra. This file proves that the law of this restriction does not depend on the GFF model: two
@@ -89,7 +89,7 @@ theorem IsWholePlaneGFF.map_circleProfileOnJ_eq
   · rw [Measure.map_apply hm₁ MeasurableSet.univ, Measure.map_apply hm₂ MeasurableSet.univ]
     simp
 
-/-- **The universal law `ν` of the circle averages on `J`** (the identity `c_*P = λ` of Lemma l:r6-transfer). A
+/-- **The universal law `ν` of the circle averages on `J`**. A
 whole-plane GFF with `Type` carrier exists (`exists_projectWholePlaneGFF`); its restricted canonical profile has a
 law `ν`. By `IsWholePlaneGFF.map_circleProfileOnJ_eq`, every whole-plane GFF in any universe `u₁` has the same law
 for its restricted canonical profile. -/

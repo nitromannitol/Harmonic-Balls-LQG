@@ -5,8 +5,8 @@ import Mathlib
 For a smooth compactly supported `f : ℂ → E` and a continuous parametrization `g : ℝ → ℂ` (for the circle average,
 `g θ = circleMap 0 R θ`), the function `y ↦ ∫ θ ∈ (0, 2π], f (y + g θ)` is `C^∞`, with derivative
 `∫ θ, fderiv f (y + g θ)`. In particular the circle average `Real.circleAverage f · R` of a test function is smooth
-with compact support; this is the smoothness of the smoothed test functions `ψ_r` of r8 (`Γ_z`, l.1801-1808) and of
-the mollified circle codes of r10 (`l:r9-circle-code`, 1257-1392). Proof: differentiation under the integral sign
+with compact support; this is the smoothness of the smoothed test functions `ψ_r` and of
+the mollified circle codes. Proof: differentiation under the integral sign
 (`hasFDerivAt_integral_of_dominated_of_fderiv_le`) and induction on the order.
 -/
 

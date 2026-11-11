@@ -3,7 +3,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.UniversalRealization
 
 /-! # Route (A) codes of the canonical circle-average profile: measurability
 
-Route (A) of the r8 proof of Lemma `l:r6-transfer` (notes/sec11-proof/sec11-proof-r8.tex, lines 504-642): the
+The
 reconstruction `R` of the whole-plane field from its positive-radius circle averages `c` is built from the countable
 family of limits `lim_n ∫ c(2^{-n}, z) ψ(z) d²z` against test functions `ψ` (the codes). This file proves that the
 codes are Borel functions of the canonical profile `c ∈ CanonicalProfile`; the convergence locus is Borel and the
@@ -16,8 +16,7 @@ open MeasureTheory Filter Topology Set
 
 noncomputable section
 
-/-- The integral `∫ c(2^{-n}, z) ψ(z) d²z` of the canonical profile at radius `2^{-n}` against `ψ`
-(r8 line 530-535, the codes of the countable reconstruction). -/
+/-- The integral `∫ c(2^{-n}, z) ψ(z) d²z` of the canonical profile at radius `2^{-n}` against `ψ`. -/
 def circleTestIntegral (ψ : ℂ → ℝ) (n : ℕ) (c : CanonicalProfile) : ℝ :=
   ∫ z, c.1 ((1 / 2 : ℝ) ^ n, z) * ψ z
 
@@ -47,7 +46,7 @@ theorem measurableSet_circleTestConverges {ψ : ℂ → ℝ} (hψ : Continuous �
     MeasurableSet {c : CanonicalProfile | ∃ l : ℝ, Tendsto (fun n => circleTestIntegral ψ n c) atTop (𝓝 l)} :=
   measurableSet_exists_tendsto fun n => measurable_circleTestIntegral hψ n
 
-/-- **Borel measurability of the codes** (route (A), r8 lines 504-642): for continuous `ψ`, the map
+/-- **Borel measurability of the codes** (route (A)): for continuous `ψ`, the map
 `c ↦ lim_n ∫ c(2^{-n}, z) ψ(z) d²z` (zero off the convergence locus) is measurable on the canonical profiles. -/
 theorem measurable_circleTestLimit {ψ : ℂ → ℝ} (hψ : Continuous ψ) :
     Measurable (circleTestLimit ψ) := by

@@ -4,8 +4,6 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.MollifiedLogCircleLimit
 /-!
 # Deterministic continuous-addition limit of mollified circle averages
 
-Source: r10 `l:r9-circle-code1323-1330` (`sec11-proof-r10.tex`, lines 1323-1330), independently audited in
-`AUDIT-r9.md` and `AUDIT-r10.md`.
 
 Let `rho : ℂ → ℝ` be even, nonnegative and smooth, with `tsupport rho ⊆ closedBall 0 1` and `∫ rho = 1`.
 For `e > 0` the literal kernel `(e ^ 2) ^ (-1) * rho (e ^ (-1) • (x - v))` is the mollifier
@@ -98,7 +96,7 @@ lemma tendsto_mul_circleAverage_kernel {rho : ℂ → ℝ} (hc : Continuous rho)
   funext y
   rw [circleAverage_comp_sub]
 
-/-- **Deterministic continuous-addition limit** (r10 `l:r9-circle-code1323-1330`). Let `rho` be even,
+/-- **Deterministic continuous-addition limit**. Let `rho` be even,
 nonnegative and smooth with `tsupport rho ⊆ closedBall 0 1` and `∫ rho = 1`. For a continuous `u : ℂ → ℝ`,
 `r > 0` and `w : ℂ`: (i) for each `e > 0` the integrand is integrable; (ii) its integral tends to
 `circleAverage u w r` as `e → 0⁺`. No boundedness, compact support or integrability is assumed on `u`. -/

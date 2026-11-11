@@ -1,9 +1,9 @@
 import HarmonicBalls.Proofs.Sec11.ClosureScales.UniversalCircleLaw
 
 /-!
-# Lemma l:r6-transfer, metric part, step 4a: the joint law of pairings and circle averages is universal
+# The joint law of pairings and circle averages is universal
 
-Source: `notes/sec11-proof/sec11-proof-r7.tex`, Lemma `l:r6-transfer`, metric part (lines 395-420 and 480-500): the joint
+The joint
 law `(h^ℂ, c)_* P` of the raw field and the coded circle averages is compared with the canonical joint law by testing on
 cylinders involving finitely many test-function pairings and finitely many circle evaluations. The paper states that the
 finite-dimensional laws agree "by the defining Gaussian covariance and centering". This file proves that statement for

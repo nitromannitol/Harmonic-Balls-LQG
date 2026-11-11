@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmSectionMeasurable
 For the random measure `μ` (through a kernel `κ : Ω → Measure ℂ` whose sections are measurable), the marked measure
 of the field is `Lμ = P.bind (ω ↦ (κ ω).map (z ↦ (hC ω, z)))` on `(pairing functionals) × ℂ`, and the shifted-field
 measure is `Rμ = ((vol|_{B₁}).prod P).map (z, ω) ↦ (T_z(hC ω), z)` with `T_z(T) = T + ∫ dmsShift_z`. Their lintegral
-formulas are the two sides of Step M (r10 `l:r9-marked`). The pairing functionals are carried by the type synonym
+formulas are the two sides of Step M. The pairing functionals are carried by the type synonym
 `PairFun` (instance: the pairing σ-algebra), so that the default product σ-algebra of `(ℂ → ℝ) → ℝ` is not used.
 -/
 

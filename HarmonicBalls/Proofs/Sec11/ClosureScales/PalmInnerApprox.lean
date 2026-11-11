@@ -6,7 +6,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.LQGKernelBorel
 For an open set `U ⊆ ℂ`, the functions `innerApprox U m = openApprox (U ∩ B₁) m · ballCut m` are continuous, nonnegative,
 bounded by one, supported in a closed disk of radius `1 - 1/(m+1) < 1` (so in `C_c(B₁)`), increasing in `m`, and increase
 to the indicator of `U ∩ B₁`. They give the monotone approximations used to pass the Palm identity
-(`palm_test_identity`, test functions in `C_c(B₁)`) to indicators of open subsets of `B₁` (r10 `l:r9-marked`).
+(`palm_test_identity`, test functions in `C_c(B₁)`) to indicators of open subsets of `B₁`.
 -/
 
 noncomputable section

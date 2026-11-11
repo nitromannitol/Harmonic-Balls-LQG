@@ -16,10 +16,10 @@ Prop, `PinchRootedDataStep`. The step packages the written argument's obligation
   one, and the rate `δ < Q(internal pinch at scale 1)`), which `ae_ae_pinch_block_density_of_origin_law` consumes.
 
 The consumer `manyPinchScalesStmt_of_rootedDataStep` proves the frozen statement from the step. It uses:
-* z6's fixed geometry `exists_isPinchPointConfiguration` (`Closure/FixedGeometry.lean`, draft 271-311);
+* the fixed geometry `exists_isPinchPointConfiguration` (`Closure/FixedGeometry.lean`);
 * the measurable modification of the metric `exists_measurable_metric_modification_of_metricFieldAxioms`;
 * the staged metric-field axioms `LQGMetricFieldAxioms` (`Proposed/LQG.lean`), passed as the explicit hypothesis
-  `hmetricAxioms` exactly as in `harmonicBallNotMetricBallStmt_of_stagedInputs` (pending operator source-check).
+  `hmetricAxioms` exactly as in `harmonicBallNotMetricBallStmt_of_stagedInputs` (pending source check).
 
 Nothing here is a literature input staged by this file. `PinchRootedDataStep` is an open proof obligation; the frozen
 statement is not closed until it is discharged. The pointwise ergodic theorem is LatticeProb's (Leonardo Bonanno).
@@ -99,7 +99,7 @@ def PinchRootedDataStep : Prop :=
         Nonempty (PinchRootedData P μ D hμ U T Q' Qset M δ hconfig)
 
 /-- Lemma 11.13 (`ManyPinchScalesStmt`) from the rooted data step and the staged metric-field axioms. The fixed
-geometry is z6's `exists_isPinchPointConfiguration`; the rate is the one of `PinchRootedDataStep`. -/
+geometry is `exists_isPinchPointConfiguration`; the rate is the one of `PinchRootedDataStep`. -/
 theorem manyPinchScalesStmt_of_rootedDataStep
     (hmetricAxioms : ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
       ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -166,6 +166,4 @@ theorem harmonicBallNotMetricBallStmt_of_rootedDataStep
     (manyPinchScalesStmt_of_rootedDataStep hmetricAxioms hstep) hmetricAxioms
 
 end HarmonicBalls
-#print axioms HarmonicBalls.harmonicBallNotMetricBallStmt_of_rootedDataStep
 
-#print axioms HarmonicBalls.manyPinchScalesStmt_of_rootedDataStep

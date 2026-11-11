@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Fubini glue for the rooted (marked) transfer of pinch frequencies (Section 11)
 
-Written argument `notes/sec11-proof/sec11-proof.tex`, draft lines 565-649: the marked whole-plane GMC identity
+Written argument draft lines 565-649: the marked whole-plane GMC identity
 `P(dg) μ_g(dz) = Law(g^{[z]}, z) d²z` on `B_1` (DMS21 Lemma A.10, marked version; cited by the draft, not yet a Lean
 input) is combined with the rooted almost-sure statements for Lebesgue-a.e. root `z` to give the almost-sure statement
 for `μ_ω`-a.e. point `z`. This file proves only that measure-theoretic step.
@@ -63,4 +63,3 @@ theorem ae_ae_of_marked_identity_of_rooted_null
   exact one_ne_zero hz
 
 end HarmonicBalls
-#print axioms HarmonicBalls.ae_ae_of_marked_identity_of_rooted_null

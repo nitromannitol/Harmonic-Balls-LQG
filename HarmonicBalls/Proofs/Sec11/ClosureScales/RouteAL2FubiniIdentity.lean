@@ -7,7 +7,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.RouteAL2FubiniWeight
 For `Z : Ω × ℂ → ℝ` with continuous sample paths and uniform second moments on a compact `K`, and `ψ` continuous and
 supported in `K`:
 `E[(∫ Z(·, z) ψ(z) dz)²] = ∫∫ ψ(z) ψ(z') E[Z(·, z) Z(·, z')] dz dz'`.
-This is the first step of the identity `∫ c(r, z) ψ(z) dz = hC(ψ_r)` a.s. (r8 l.504-642, "first in L²").
+This is the first step of the identity `∫ c(r, z) ψ(z) dz = hC(ψ_r)` a.s..
 The integrability input is `integrable_abs_mul_sq_prod` (RouteAL2Fubini.lean).
 -/
 

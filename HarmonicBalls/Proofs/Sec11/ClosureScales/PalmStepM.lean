@@ -6,15 +6,14 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CodedCirclePalm
 
 /-! # Route (A), Palm identity: the marked whole-plane identity (Step M) and the coded Palm identity
 
-Source: notes/sec11-proof/sec11-proof-r8.tex, the marked whole-plane GMC identity on `B_1` (lines 1783-1789) and the
-coded identity (lines 1801-1816), with eq:r6-palm at line 1815.
+Source: the marked whole-plane GMC identity on `B_1` and the coded identity.
 
-* `StepM` (Step M): the marked whole-plane clause, `P(dg) μ_g(dz) = Law(g^{[z]}, z) d²z` (r8 lines 1783-1789).
-  r8 only sketches it (lines 1790-1800, "obtained from the same proof"); the written proof is requested in round 9.
+* `StepM` (Step M): the marked whole-plane clause, `P(dg) μ_g(dz) = Law(g^{[z]}, z) d²z`.
+  The written argument only sketches it.
   It is the genuine staged DMS input and stays an explicit hypothesis of every consumer below. Stated, not proved.
 * `RawToProfileStep` (Step B): the canonical profile is a measurable function of the raw pairings, compatible with the
-  shift `h ↦ h + f_z`. Not in r8: r8 (lines 1808-1810) gives only the profile-to-raw direction `R(Γ_z c) = g^{[z]}`.
-  QUARANTINED: it is kept verbatim as historical evidence, and no production consumer uses it. Its consumer
+  shift `h ↦ h + f_z`. The written argument gives only the profile-to-raw direction `R(Γ_z c) = g^{[z]}`.
+  Historical evidence only: no production consumer uses it. Its consumer
   `palm_omega_of_stepM_stepB_quarantined` is retained for the record only.
 
 The real consumer is `palm_circle_omega_of_stepM`. It replaces Step B by the proved measurable circle decoder
@@ -32,8 +31,8 @@ open scoped ENNReal
 
 namespace HarmonicBalls
 
-/-- **Step M** (marked whole-plane GMC identity on `B_1`; r8 lines 1783-1789, with the marked version of
-[DMS, Lemma A.10, p. 184] claimed in r8 l.1790-1800). Stated, not proved. For every `Ψ` measurable for the raw pairing
+/-- **Step M** (marked whole-plane GMC identity on `B_1`, with the marked version of
+[DMS, Lemma A.10, p. 184]). Stated, not proved. For every `Ψ` measurable for the raw pairing
 σ-algebra `pairingSigmaAlgebra (· ) univ` (tensored with the Borel σ-algebra of the marked point), the marked point `z`
 weights `μ_h(dz)` on the left and the shifted field `h + f_z`, `f_z = dmsShiftedPairing`, on the right. -/
 def StepM {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -47,7 +46,7 @@ def StepM {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω
 
 /-- **Step B** (raw-to-profile bridge; NOT in r8). For a whole-plane GFF whose canonical profile is `c`, there is a
 measurable map `ρ` from raw pairing functionals to canonical profiles with `ρ(h) = c` a.s., and `ρ(h + f_z) = Γ_z c`
-a.s. for every `z ∈ B_1` (`Γ_z` is `shiftedProfile`, r8 lines 1801-1808). Stated, not proved. -/
+a.s. for every `z ∈ B_1` (`Γ_z` is `shiftedProfile`). Stated, not proved. -/
 def RawToProfileStep {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (c : Ω → CanonicalProfile) : Prop :=
   IsWholePlaneGFF P hC hcirc → (∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c ω).1 p = hcirc ω p.1 p.2) →
@@ -91,7 +90,7 @@ theorem palm_omega_of_stepM_stepB_quarantined {Ω : Type*} [MeasurableSpace Ω] 
   rw [hL, hR] at key
   exact key
 
-/-- **The coded Palm identity, Ω-form, on the actual carrier** (eq:r6-palm, r8 line 1815, with `C(CircleDomain, ℝ)` as
+/-- **The coded Palm identity, Ω-form, on the actual carrier** (with `C(CircleDomain, ℝ)` as
 the profile space). Let `(P, hC, hcirc)` be a whole-plane GFF with LQG measure `μ`, let `rho` be a literal mollifier and
 `q : I → CircleDomain` a dense countable family, and let `F ω = circleCodedProfile hρ q (hC ω)` be the actual profile.
 For a nonnegative jointly measurable `Ψ` on actual profiles times the marked point,

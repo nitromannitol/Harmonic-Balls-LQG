@@ -6,8 +6,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.CircleAverageJointMeasurable
 /-! # Route (A), Palm identity: the first moment of the marked mass at scale ε
 
 For the whole-plane GFF, `μ_ε(dz) = ε^(γ²/2) exp(γ h_ε(z)) dz` with `h_ε(z) = hcirc · ε z` the circle average at
-radius `ε`. For a continuous compactly supported `η` and small `ε`, `E μ_ε(η) = ∫ η` (r10 `l:r9-marked`, "First moments
-and the required L¹ convergence": "For 0 ≤ η ∈ C_c(B_1) and all sufficiently small ε, Tonelli gives E μ_ε(η) = ∫ η").
+radius `ε`. For a continuous compactly supported `η` and small `ε`, `E μ_ε(η) = ∫ η`.
 The hypothesis `hdisk` says that the circles of radius `ε` about the points of `tsupport η` lie in the closed unit disk
 (for small `ε` this holds because `tsupport η ⊆ B_1` is compact). Inputs: the Gaussian moment
 (`integral_exp_circleAverage_eq`, CircleGaussianMoment.lean), the jointly measurable version
@@ -21,7 +20,7 @@ open scoped Classical
 
 namespace HarmonicBalls
 
-/-- **First moment of the marked mass** (r10 `l:r9-marked`): `E ∫ η(z) ε^(γ²/2) exp(γ h_ε(z)) dz = ∫ η`. -/
+/-- **First moment of the marked mass**: `E ∫ η(z) ε^(γ²/2) exp(γ h_ε(z)) dz = ∫ η`. -/
 theorem integral_marked_mass_eps_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hG : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε) (γ : ℝ) {η : ℂ → ℝ}

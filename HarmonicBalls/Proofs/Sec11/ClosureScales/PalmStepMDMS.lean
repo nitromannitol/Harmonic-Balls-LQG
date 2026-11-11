@@ -8,8 +8,7 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmDMSConstant
 
 /-! # Route (A), Step M: the marked whole-plane identity from the DMS input (P4)
 
-`StepM` (`PalmStepM`) is the marked whole-plane identity `P(dg) μ_g(dz) = Law(g^{[z]}, z) d²z` on `B₁` (r10
-`l:r9-marked`). Its only literature input is the printed unnormalized total-mass identity of [DMS, Lemma A.10, p. 184],
+`StepM` (`PalmStepM`) is the marked whole-plane identity `P(dg) μ_g(dz) = Law(g^{[z]}, z) d²z` on `B₁`. Its only literature input is the printed unnormalized total-mass identity of [DMS, Lemma A.10, p. 184],
 staged as `DMSLemmaA10WholePlaneUnnormalized` (Proposed/DuplantierMillerSheffield.lean) and kept as the explicit
 hypothesis `hU`. From `hU` the proof uses:
 * the good set `G` of `exists_lqg_good_set` and the kernel `κ = G.indicator (μ ·|_{B₁})`, measurable by
@@ -25,7 +24,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls
 
-/-- **Step M from the DMS input** (r10 `l:r9-marked`): the marked whole-plane identity `StepM`, proved from the staged
+/-- **Step M from the DMS input**: the marked whole-plane identity `StepM`, proved from the staged
 unnormalized total-mass identity `hU` (`DMSLemmaA10WholePlaneUnnormalized`, DMS Lemma A.10 p. 184). -/
 theorem stepM_of_dms {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}

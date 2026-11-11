@@ -7,7 +7,7 @@ For a fixed nonnegative bounded continuous `ψ` on `ℝ^k`, both sides of the op
 `PalmZExtension`) are the values on `B ∩ B₁` of finite measures on `ℂ`: the marked measure
 `B ↦ ∫⁻ ψ(hC φ) κ_ω(B ∩ B₁) dP` and the shifted measure `B ↦ ∫⁻_{B ∩ B₁} E[ψ(hC φ + ∫ dmsShift_z φ)] dz`.
 They agree on open sets and on the whole plane. Open sets form a π-system generating the Borel σ-algebra, so the two
-measures agree on all Borel sets (r10 `l:r9-marked`, the z-extension from open to Borel sets).
+measures agree on all Borel sets.
 -/
 
 noncomputable section

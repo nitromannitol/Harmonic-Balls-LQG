@@ -7,7 +7,7 @@ For a Borel set `B ⊆ ℂ`, both sides of the Borel identity (`lintegral_palm_b
 against finite measures on `Fin k → ℝ`: the image of `P.withDensity (κ · (B ∩ B₁))` under `ω ↦ (hC ω φ_j)_j`, and the image
 of `(vol|_{B ∩ B₁}) ⊗ P` under `(z, ω) ↦ (hC ω φ_j + ∫ dmsShift_z φ_j)_j`. The Borel identity says that they agree on
 nonnegative bounded continuous functions; uniqueness of finite Borel measures then gives agreement on every measurable
-functional of the pairing (r10 `l:r9-marked`, the ψ-extension from continuous to measurable functionals). -/
+functional of the pairing. -/
 
 noncomputable section
 

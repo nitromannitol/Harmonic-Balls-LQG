@@ -13,8 +13,7 @@ For the γ-LQG measure `μ_g` of the whole-plane GFF (`α₀ = 0`), `E μ_g(η) 
 is the Fatou bound `lintegral_lqgMeasure_le` (MarkedFatou.lean). For the lower bound, the cut-offs
 `χ_m(z) = min 1 (max 0 (m (1 - |z|) - 1))` increase to `1_{B_1}`; the total mass `E μ_g(B_1) = π`
 (`integral_measure_ball_eq_pi`, from the staged printed unnormalized Prop) gives `E μ_g(χ_m) → π = ∫ χ_m`, and Fatou
-applied to `c χ_m - η ≥ 0` gives `E μ_g(η) ≥ ∫ η - c (∫ χ_m - E μ_g(χ_m))`. This is the step "ν = d²z on B_1" of
-r10 `l:r9-marked` (sentence "Both measures have total mass π, so their nonnegative difference has mass zero").
+applied to `c χ_m - η ≥ 0` gives `E μ_g(η) ≥ ∫ η - c (∫ χ_m - E μ_g(χ_m))`. This is the step "ν = d²z on B_1" of the marked identity.
 -/
 
 noncomputable section
@@ -220,7 +219,7 @@ theorem tendsto_integral_markedCutoffBall_volume :
   rw [integral_indicator_one measurableSet_ball] at hlim
   simpa [Measure.real, Complex.volume_ball, Real.pi_nonneg] using hlim
 
-/-- **Lebesgue first moment of the marked LQG mass** (r10 `l:r9-marked`, "Both measures have total mass π"):
+/-- **Lebesgue first moment of the marked LQG mass**:
 `E μ_g(η) = ∫ η` for `0 ≤ η` continuous with compact support in the unit ball, `α₀ = 0`, under the staged printed
 unnormalized whole-plane identity `hU` of [DMS, Lemma A.10, p. 184] (through `integral_measure_ball_eq_pi`). -/
 theorem integral_lqgMeasure_eq_of_nonneg (γ : ℝ) {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}

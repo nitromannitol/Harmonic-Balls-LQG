@@ -1,10 +1,10 @@
 import Mathlib
 import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmStepM
 
-/-! # Route (A), eq:r6-palm in the λ-form (λ = the law of the actual profile)
+/-! # The coded Palm identity in the λ-form (λ = the law of the actual profile)
 
 The Ω-form of the coded Palm identity on the actual carrier is `palm_circle_omega_of_stepM` (PalmStepM.lean). This file
-gives its λ-form, eq:r6-palm of the r8 text (line 1815), with `λ = Measure.map (circleCodedProfile hρ q ∘ hC) P` the law
+gives its λ-form, with `λ = Measure.map (circleCodedProfile hρ q ∘ hC) P` the law
 of the actual profile: `eq_r6_palm_circle_lambda_of_stepM`. The only extra ingredient is the measurability of
 `F ↦ ∫_{B_1} Ψ(F, z) circleProfileMeasure γ 0 F (dz)`, proved in CodedCirclePalm.lean from the kernel lemma
 `measurable_lintegral_kernel_of_pointwise_finite` (Mathlib's `Measurable.lintegral_kernel_prod_right` needs an s-finite
@@ -46,8 +46,8 @@ theorem measurable_profile_palm_lintegral (γ : ℝ) {Ψ : CanonicalProfile → 
   measurable_lintegral_kernel_of_pointwise_finite (profileMeasureBall γ)
     (fun _ => inferInstance) (f := fun c' z => Ψ c' z) hΨ
 
-/-- **QUARANTINED historical evidence (no production use).** eq:r6-palm of r8 (line 1815), canonical-profile λ-form, with
-`λ = Measure.map c P`. It is derived from the quarantined `RawToProfileStep` through
+/-- **Historical evidence, not used in the proof chain.** Canonical-profile λ-form, with
+`λ = Measure.map c P`. It is derived from `RawToProfileStep` through
 `palm_omega_of_stepM_stepB_quarantined`. The real λ-form is `eq_r6_palm_circle_lambda_of_stepM`. -/
 theorem eq_r6_palm_lambda_of_stepM_stepB_quarantined {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -69,7 +69,7 @@ theorem eq_r6_palm_lambda_of_stepM_stepB_quarantined {Ω : Type*} [MeasurableSpa
   simp_rw [hR]
   exact palm_omega_of_stepM_stepB_quarantined hG hμ hcJ hM hB Ψ hΨ
 
-/-- **eq:r6-palm of r8 (line 1815), λ-form on the actual carrier.** With `λ = Measure.map F P` the law of the actual
+/-- **The coded Palm identity, λ-form on the actual carrier.** With `λ = Measure.map F P` the law of the actual
 profile `F ω = circleCodedProfile hρ q (hC ω)`, for a nonnegative jointly measurable `Ψ` on actual profiles times the
 marked point, `∫ ∫_{B_1} Ψ(F, z) (circleProfileMeasure γ 0 F)(dz) λ(dF) = ∫_{B_1} ∫ Ψ(circleDMSShiftFun γ z F, z) λ(dF) d²z`.
 Derived from `palm_circle_omega_of_stepM` (PalmStepM.lean), by the transport of the Ω-identity along the pushforward. -/
