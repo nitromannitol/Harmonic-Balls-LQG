@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11i.Step8Frequency
 import HarmonicBalls.FirstPass.S11i.Step8IdentityAssembly
 
 /-!
-# Step 8 physical frequency `hPhys`: reduction to the unit-scale statement (fp-S11-13-hPhys-reduction, owner n3)
+# Step 8 physical frequency `hPhys`: reduction to the unit-scale statement
 
 `Step8PhysStmt` is the binder `hPhys` of `step8Identity_given_pinchEvent_canonical_of_phys`
 (`S11i/Step8IdentityAssembly.lean`): for every insertion-`α₀` model and every `k`, almost surely the physical window
@@ -39,13 +39,13 @@ open scoped ENNReal
 has value `q` in every whole-plane model. Then every insertion-`α₀` LQG model `(μ, D)` (`IsLQGMeasureOfField P γ α₀`,
 `IsLQGMetricOfField P γ (lqgXi γ) α₀`) has the unit-ball frequency `q` (`UnitBallFrequencyStmt`, radii `2⁻ⁿ`,
 Ostar `pinchOmegaGeom W Q δ₀`, `η = δ₀`). The insertion-`0` analogue is `UnitBallFrequencyModelsStmt`
-(`S11i/HzoomScale.lean:124`, n4).
+ (`S11i/HzoomScale.lean:124`).
 
 Not supplied by the premise: the decoded certificate event of `ae_unitScale_of_decoded_ball` (`S11i/Step8Decoded.lean:43`,
 `hFdef`) must equal `E`, i.e. `∀ L, CertificateEvent (Dμ L) (Dd L) Ostar U' V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ E`
 for the decoded models. `PinchEventGammaStmt` (`S11i/Assembly13.lean:120`) gives only measurability, positivity, and
 `E ⇒ pinchPointEvent` a.s. (one-sided). -/
--- SUPERSEDED, FALSE AS TYPED (universal over the event `E`; Codex, notes/fp-gaps/CODEX-hPhys-sol-20261110.md).
+-- SUPERSEDED, FALSE AS TYPED (universal over the event `E`).
 -- Do not use. The corrected provider is `Step8PhysExistsStmt` (S11i/Step8PhysExists.lean).
 def Step8UnitScaleAlpha0Stmt.{v} : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
@@ -76,14 +76,14 @@ def ZoomMetricNormAlpha0Stmt.{v} : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ) (D : Ω → ℂ → ℂ → ℝ),
     IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D → ZoomMetricNormAlphaFor P γ ξ α₀ hC hcirc D
 
-/-- **Input (Proposed, pending operator source-check): coordinate change of the LQG measure at `α₀`** (Fact 2.1 IV,
+/-- **Input (Proposed, pending source-check): coordinate change of the LQG measure at `α₀`** (Fact 2.1 IV,
 `LQGMeasureCoordChange`, `Proposed/LQG.lean:116`), for every whole-plane model. -/
 def CoordChangeAlpha0Stmt.{v} : Prop :=
   ∀ (γ α₀ : ℝ) (Ω : Type v) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc
 
 /-- The binder `hPhys` of `step8Identity_given_pinchEvent_canonical_of_phys` (`S11i/Step8IdentityAssembly.lean`), named. -/
--- SUPERSEDED, FALSE AS TYPED (universal over the event `E`; Codex, notes/fp-gaps/CODEX-hPhys-sol-20261110.md).
+-- SUPERSEDED, FALSE AS TYPED (universal over the event `E`).
 -- Do not use. The corrected provider is `Step8PhysExistsStmt` (S11i/Step8PhysExists.lean).
 def Step8PhysStmt.{v} : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
@@ -237,6 +237,3 @@ theorem step8Identity_of_unit_scale.{v} (hUnit : Step8UnitScaleAlpha0Stmt.{v}) (
 
 end HarmonicBalls.FirstPassS11iStep8PhysReduction
 
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysReduction.hPhys_of_unit_models
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysReduction.step8Identity_of_unit_scale
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysReduction.step8Frequency_eq_localModConst

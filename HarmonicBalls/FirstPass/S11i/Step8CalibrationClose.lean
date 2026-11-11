@@ -4,15 +4,14 @@ import HarmonicBalls.FirstPass.S11r.RootedHrefGlobal
 import HarmonicBalls.FirstPass.S11i.Final11_13
 
 /-!
-# Step 8 event calibration, closed (fp-S11i-calibration-close, owner n1; Codex step 6 of
-`notes/fp-gaps/CODEX-ASTRA-11-13-diagnosis-20261110.md`)
+# Step 8 event calibration, closed
 
 `step8EventCalibration` proves `Step8EventCalibrationStmt.{0}` (`S11i/Step8PhysExists.lean:109`), route 2 (c) of Lemma 11.13.
 The witness is the calibrated Lemma 11.12 event `E` of `pinchLocalCertificate_canonical_of_inputs`
 (`S11i/Step8CalibrationCanonical.lean`): `PinchEventGammaCanonicalStmt E` at insertion `γ` with the almost-sure equivalence to
 `CertificateEvent`. The pair is `(E, E)`, so the calibration `EventCalibration γ E E` is the identity. The insertion-zero unit
 frequency of `E` is `insertionZeroUnit_of_href` (`S11i/InsertionZeroUnitE.lean:44`), applied to `hHref_of_global`
-(`S11r/RootedHrefGlobal.lean:163`, n2's route).
+ (`S11r/RootedHrefGlobal.lean:163`).
 
 The Ω-inclusion `insert 0 (sphere 0 5) ⊆ pinchOmegaGeom W Q δ` is not a hypothesis of `Step8EventCalibrationStmt`. It is derived
 from `IsBufferedPinchGeometry` by `FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom` (`S11ap.lean:93`).
@@ -103,6 +102,5 @@ theorem step8EventCalibration
   exact insertionZeroUnit_of_href hγ0 hγ2 hgeo (hK γ) hR hRootFr hPos hNon
     (fun Ω _ P hC hcirc μ => hA10 Ω P γ hC hcirc μ) hHref
 
-#print axioms step8EventCalibration
 
 end HarmonicBalls.S11i.Step8CalibrationClose
