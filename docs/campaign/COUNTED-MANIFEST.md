@@ -44,12 +44,12 @@ not counted, so a `PROOFS` row can understate its binders. Its binder list shows
 | 1.1 | `ExistenceUniquenessHarmonicBallsStmt` | `firstPass_1_1` | HarmonicBalls/FirstPass/S1S10.lean:35 | 2 | h55 h56 |
 | 1.2 | `HarmonicBallNoveltyStmt` | `firstPass_1_2` | HarmonicBalls/FirstPass/S1S10.lean:43 | 5 | h55 h56 hjordan hlip hmetric |
 | 1.3 | `HarmonicBallLocalSetStmt` | `firstPass_1_3` | HarmonicBalls/FirstPass/S1S10.lean:53 | 4 | hI2 h55 h56 hmeasure |
-| 2.3 | `GreenFunctionBallStmt` | `closure_2_3` | HarmonicBalls/FirstPass/Closure.lean:113 | 0 |  |
-| 3.1 | `LeastSupersolutionMemStmt` | `closure_3_1` | HarmonicBalls/FirstPass/Closure.lean:134 | 0 |  |
-| 3.2 | `ClusterOpenLaplacianStmt` | `closure_3_2` | HarmonicBalls/FirstPass/Closure.lean:137 | 0 |  |
-| 3.3 | `ClusterMonotoneStmt` | `closure_3_3` | HarmonicBalls/FirstPass/Closure.lean:140 | 0 |  |
-| 3.4 | `ClusterConservationOfMassStmt` | `closure_3_4` | HarmonicBalls/FirstPass/Closure.lean:143 | 0 |  |
-| 3.5 | `ClusterCompatibilityStmt` | `closure_3_5` | HarmonicBalls/FirstPass/Closure.lean:146 | 0 |  |
+| 2.3 | `GreenFunctionBallStmt` | `closure_2_3` | HarmonicBalls/FirstPass/Closure.lean:112 | 0 |  |
+| 3.1 | `LeastSupersolutionMemStmt` | `closure_3_1` | HarmonicBalls/FirstPass/Closure.lean:133 | 0 |  |
+| 3.2 | `ClusterOpenLaplacianStmt` | `closure_3_2` | HarmonicBalls/FirstPass/Closure.lean:136 | 0 |  |
+| 3.3 | `ClusterMonotoneStmt` | `closure_3_3` | HarmonicBalls/FirstPass/Closure.lean:139 | 0 |  |
+| 3.4 | `ClusterConservationOfMassStmt` | `closure_3_4` | HarmonicBalls/FirstPass/Closure.lean:142 | 0 |  |
+| 3.5 | `ClusterCompatibilityStmt` | `closure_3_5` | HarmonicBalls/FirstPass/Closure.lean:145 | 0 |  |
 | 4.1 | `ClusterLowerBoundStmt` | `closure_4_1` | HarmonicBalls/FirstPass/Closure/SecA45.lean:73 | 0 |  |
 | 4.2 | `LeastSupersolutionHolderStmt` | `closure_4_2` | HarmonicBalls/FirstPass/Closure/SecA45.lean:76 | 0 |  |
 | 4.3 | `ClusterSubharmonicBallStmt` | `closure_4_3` | HarmonicBalls/FirstPass/Closure/SecA45.lean:79 | 0 |  |
@@ -83,17 +83,17 @@ not counted, so a `PROOFS` row can understate its binders. Its binder list shows
 | 10.1 | `ClusterBoundedCrossingsStmt` | `firstPass_10_1` | HarmonicBalls/FirstPass/S1S10.lean:64 | 2 | hI2 hE0 |
 | 10.6 | `ComplementComponentBoundarySimpleLoopStmt` | `firstPass_10_6` | HarmonicBalls/FirstPass/S1S10.lean:92 | 3 | h10 h32 hTor |
 | 10.7 | `HarmonicBallComplementBoundaryJordanStmt` | `firstPass_10_7` | HarmonicBalls/FirstPass/S1S10.lean:75 | 5 | hI2 h55 h10 hAff hCC |
-| 11.2 | `HarmonicBallNotLipschitzStmt` | `firstPass_11_2.{u}` | HarmonicBalls/FirstPass/S11.lean:59 | 1 | h5 |
-| 11.5 | `NoConeConditionStmt` | `firstPass_11_5.{u}` | HarmonicBalls/FirstPass/S11.lean:67 | 3 | h6 h7 hI2 |
+| 11.2 | `HarmonicBallNotLipschitzStmt` | `firstPass_11_2.{u}` | HarmonicBalls/FirstPass/S11.lean:58 | 1 | h5 |
+| 11.5 | `NoConeConditionStmt` | `firstPass_11_5.{u}` | HarmonicBalls/FirstPass/S11.lean:66 | 3 | h6 h7 hI2 |
 | 11.6 | `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6_derivedInputs33` | HarmonicBalls/FirstPass/Phase2/DerivedInputs33.lean:40 | 5 | hDG hCC hE hSub hE3 |
 | 11.7 | `ManyConeBadScalesStmt` | `firstPass_11_7.{u}` | HarmonicBalls/FirstPass/S11b.lean:70 | 4 | h8 hE hFreq hTr |
-| 11.8 | `ConeBadEventProbabilityStmt` | `closure_11_8` | HarmonicBalls/FirstPass/Closure/Sec11.lean:80 | 3 | hDG hCC hE |
+| 11.8 | `ConeBadEventProbabilityStmt` | `closure_11_8` | HarmonicBalls/FirstPass/Closure/Sec11.lean:79 | 3 | hDG hCC hE |
 | 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9` | HarmonicBalls/FirstPass/S11d.lean:39 | 8 | hCM hWSC hMet hMass hShift hFD hAx h1110 |
 | 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `firstPass_11_10_derivedInputs17` | HarmonicBalls/FirstPass/Phase2/DerivedInputs17.lean:431 | 9 | hDC hCM hPos hSupM hFin hFactI hM1 hAx hmeasure |
-| 11.11 | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11.{u}` | HarmonicBalls/FirstPass/S11.lean:111 | 4 | h6 h13 hI2 hmetricAxioms |
+| 11.11 | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11.{u}` | HarmonicBalls/FirstPass/S11.lean:110 | 4 | h6 h13 hI2 hmetricAxioms |
 | 11.12 | `PinchEventPositiveProbabilityStmt` | `firstPass_11_12` | HarmonicBalls/FirstPass/S11e.lean:42 | 2 | hAx h |
 | 11.13 | `ManyPinchScalesStmt` | `manyPinchScales_of_corrected` | HarmonicBalls/FirstPass/Closure/Bridge12.lean:322 | 1 | h |
-| 11.14 | `PinchEventMetricBallConsequenceStmt` | `closure_11_14` | HarmonicBalls/FirstPass/Closure/Sec11.lean:139 | 1 | hAx |
+| 11.14 | `PinchEventMetricBallConsequenceStmt` | `closure_11_14` | HarmonicBalls/FirstPass/Closure/Sec11.lean:138 | 1 | hAx |
 | 11.15 | `PinchFirstEventPositiveStmt` | `firstPass_11_15_derivedInputs3` | HarmonicBalls/FirstPass/Phase2/DerivedInputs3.lean:945 | 1 | hFA |
 | A.1 | `ObstacleLeastSuperharmonicMajorantStmt` | `closure_A_1` | HarmonicBalls/FirstPass/Closure/SecA45.lean:37 | 0 |  |
 | A.2 | `ObstacleNonCoincidenceHarmonicStmt` | `closure_A_2` | HarmonicBalls/FirstPass/Closure/SecA45.lean:40 | 0 |  |
