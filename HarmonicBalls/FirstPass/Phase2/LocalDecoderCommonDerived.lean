@@ -229,11 +229,11 @@ circle average `h_r(x) - ⟨h, ρ⟩` almost surely (route steps 1-2; the centri
 which the decoder cannot see). Linearity of the pairings on the countably many tests `ψ_j - ρ` is
 `IsWholePlaneGFF.ae_pairing_linear_combination`; the limits are `ae_tendsto_circleApprox` (a.s.) and
 `tendsto_unitCircleDensity_mul_log` (deterministic). -/
-theorem ae_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+theorem ae_tendsto_localPairing {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (p : LocalParam c R) :
-    ∀ᵐ ω ∂P, localCoord c hR p (localMeanZeroObs α (ball c R) (hC ω)) =
-      hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) - fieldPairing α (hC ω) (bumpRho c hR) := by
+    ∀ᵐ ω ∂P, Tendsto (fun j => obsAt (localMeanZeroObs α (ball c R) (hC ω)) (localTest c hR p j)) atTop
+      (𝓝 (hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) - fieldPairing α (hC ω) (bumpRho c hR))) := by
   have hr : 0 < p.1.1 := localParam_radius_pos p
   set N := localShift c p with hN_def
   set ψ : ℕ → ℂ → ℝ := fun j => circleApprox hr p.1.2 (j + N) with hψ_def
@@ -311,11 +311,21 @@ theorem ae_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsP
       funext (hsplit ω hωlin)
     rw [heq]
     exact h1.sub_const _
-  unfold localCoord
   have heq' : (fun j => obsAt (localMeanZeroObs α (ball c R) (hC ω)) (localTest c hR p j)) =
       fun j => fieldPairing α (hC ω) (localTest c hR p j) := funext hobs
   rw [heq']
-  exact h2.limUnder_eq
+  exact h2
+
+/-- **Circle coordinates of the GFF, a.s.** The coordinate of the mean-zero observation at `p` is the centred circle
+average `h_r(x) - α log max(r,|x|) - (h, ρ)` almost surely (`ae_tendsto_localPairing` and `Tendsto.limUnder_eq`). -/
+theorem ae_localCoord_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (p : LocalParam c R) :
+    ∀ᵐ ω ∂P, localCoord c hR p (localMeanZeroObs α (ball c R) (hC ω)) =
+      hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) - fieldPairing α (hC ω) (bumpRho c hR) := by
+  filter_upwards [ae_tendsto_localPairing hGFF α c hR h0 p] with ω hω
+  unfold localCoord
+  exact hω.limUnder_eq
 
 /-- MQ-lh-12 step 3 for the local domain: a countable dense sequence `d` of `LocalParam c R` and a measurable
 decoder `decode` with `decode (n ↦ f (d n)) = f` for every continuous `f` on `LocalParam c R`. -/
