@@ -1,5 +1,7 @@
 import HarmonicBalls.FirstPass.S11u.Kernel
 import HarmonicBalls.LPStage.GFFExistence
+import HarmonicBalls.FirstPass.LPBridge.M1
+import HarmonicBalls.FirstPass.Phase2.GFFExistsDerived
 
 /-!
 # Constructed whole-plane GFF: covariance of circle averages and the increment variance bound (HB level)
@@ -107,5 +109,82 @@ theorem wholePlaneGFFCov_circle_increment_le {a r s : ℝ} (ha : 0 < a) (har : a
     exact hmono
   have key := LatticeProb.Gauss.two_log_max_add_sub_log_le ha har has (norm_nonneg (z - w))
   linarith
+
+/-! ### Row 29: `WholePlaneGFFExistsFrozen` from the LP construction
+
+Conditional on the two named inputs of `HarmonicBalls/LPStage/GFFExistence.lean`: `WholePlaneCovPSDStmt` (B2, positive
+semidefiniteness of the covariance, MQ-lh-25) and `WholePlaneCovSymmStmt` (symmetry of the covariance). The Kolmogorov
+extension (B1) is proved (`LatticeProb.exists_isProjectiveLimit_real`). The kernel increment bound is discharged here from
+`wholePlaneGFFCov_circle_increment_le`. -/
+
+/-- The circle observable of a parameter point, as an LP observable. -/
+lemma ptObs_eq_circle {p : ℝ × (Fin 2 → ℝ)} (hp : 0 < p.1) :
+    LatticeProb.Gauss.ptObs p = LatticeProb.Gauss.GFFObservable.circle p.1 (LatticeProb.Gauss.cplxOf p.2) := by
+  simp [LatticeProb.Gauss.ptObs, hp]
+
+/-- `‖cplxOf v - cplxOf u‖ ≤ 2 dist (r, v) (s, u)` for the centre components in the sup norm. -/
+lemma norm_cplxOf_sub_le (p q : ℝ × (Fin 2 → ℝ)) :
+    ‖LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2‖ ≤ 2 * dist p q := by
+  have hd0 : dist (p.2 0) (q.2 0) ≤ dist p q :=
+    (dist_le_pi_dist p.2 q.2 0).trans (by rw [Prod.dist_eq]; exact le_max_right _ _)
+  have hd1 : dist (p.2 1) (q.2 1) ≤ dist p q :=
+    (dist_le_pi_dist p.2 q.2 1).trans (by rw [Prod.dist_eq]; exact le_max_right _ _)
+  rw [Real.dist_eq] at hd0 hd1
+  have hre : |(LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2).re| ≤ dist p q := by
+    simpa [LatticeProb.Gauss.cplxOf] using hd0
+  have him : |(LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2).im| ≤ dist p q := by
+    simpa [LatticeProb.Gauss.cplxOf] using hd1
+  calc ‖LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2‖
+      ≤ |(LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2).re|
+        + |(LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2).im| :=
+        Complex.norm_le_abs_re_add_abs_im _
+    _ ≤ 2 * dist p q := by linarith
+
+/-- The kernel increment bound of the LP kernel on circle parameters (the hypothesis `hvarK` of
+`LatticeProb.Gauss.exists_isWholePlaneGFF`), from `wholePlaneGFFCov_circle_increment_le`. -/
+theorem lp_increment_bound :
+    ∀ a : ℝ, 0 < a → ∃ C : ℝ, 0 ≤ C ∧ ∀ p q : ℝ × (Fin 2 → ℝ), a ≤ p.1 → a ≤ q.1 →
+      LatticeProb.Gauss.wholePlaneGFFCov (LatticeProb.Gauss.ptObs p) (LatticeProb.Gauss.ptObs p)
+        + LatticeProb.Gauss.wholePlaneGFFCov (LatticeProb.Gauss.ptObs q) (LatticeProb.Gauss.ptObs q)
+        - 2 * LatticeProb.Gauss.wholePlaneGFFCov (LatticeProb.Gauss.ptObs p) (LatticeProb.Gauss.ptObs q)
+        ≤ C * dist p q := by
+  intro a ha
+  refine ⟨5 / a, by positivity, fun p q hp hq => ?_⟩
+  have hp0 : 0 < p.1 := lt_of_lt_of_le ha hp
+  have hq0 : 0 < q.1 := lt_of_lt_of_le ha hq
+  rw [ptObs_eq_circle hp0, ptObs_eq_circle hq0]
+  have hK : ∀ (r s : ℝ) (z w : ℂ),
+      LatticeProb.Gauss.wholePlaneGFFCov (LatticeProb.Gauss.GFFObservable.circle r z)
+          (LatticeProb.Gauss.GFFObservable.circle s w)
+        = wholePlaneGFFCov (GFFObservable.circle r z) (GFFObservable.circle s w) :=
+    fun _ _ _ _ => rfl
+  rw [hK, hK, hK]
+  have h := wholePlaneGFFCov_circle_increment_le ha hp hq (LatticeProb.Gauss.cplxOf p.2)
+    (LatticeProb.Gauss.cplxOf q.2)
+  refine h.trans ?_
+  have h1 : |p.1 - q.1| ≤ dist p q := by
+    rw [Prod.dist_eq, ← Real.dist_eq]
+    exact le_max_left _ _
+  have h2 := norm_cplxOf_sub_le p q
+  have hsum : |p.1 - q.1| + 2 * ‖LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2‖
+      ≤ 5 * dist p q := by linarith
+  calc (|p.1 - q.1| + 2 * ‖LatticeProb.Gauss.cplxOf p.2 - LatticeProb.Gauss.cplxOf q.2‖) / a
+      ≤ (5 * dist p q) / a := div_le_div_of_nonneg_right hsum ha.le
+    _ = 5 / a * dist p q := by ring
+
+/-- Row 29, universe `0`: a whole-plane GFF exists (`WholePlaneGFFExistsFrozen.{0}`), conditional on the named inputs
+`WholePlaneCovPSDStmt` (B2) and `WholePlaneCovSymmStmt`. -/
+theorem wholePlaneGFFExistsFrozen_zero_derived (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
+    (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt) : WholePlaneGFFExistsFrozen.{0} := by
+  obtain ⟨Ω, mΩ, P, hP, hC, hcirc, h⟩ :=
+    LatticeProb.Gauss.exists_isWholePlaneGFF hB2 hsymm lp_increment_bound
+  exact ⟨Ω, mΩ, P, hP, hC, hcirc, (HarmonicBalls.LPBridge.isWholePlaneGFF_iff P hC hcirc).mpr h⟩
+
+universe u
+
+/-- Row 29, every universe `u`, conditional on the same named inputs (`ULift` of the universe-`0` statement). -/
+theorem wholePlaneGFFExistsFrozen_derived (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
+    (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt) : WholePlaneGFFExistsFrozen.{u} :=
+  wholePlaneGFFExists_ulift (wholePlaneGFFExistsFrozen_zero_derived hB2 hsymm)
 
 end HarmonicBalls
