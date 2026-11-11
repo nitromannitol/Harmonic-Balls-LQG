@@ -77,3 +77,38 @@ The proof already uses `\mu` throughout, so no proof edit is needed. Patch [H16]
 
 ## [C68] Appendix A.6 (lemma:appendix-cluster-compatibility), lines 4457–4465 (applied 2026-11-10 with the author's approval)
 This is the exact deterministic quantifier order audited in chat 210; the rest of the proof is unchanged. Patch [H17] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
+
+## Early corrections [C1]-[C36] (applied 2026-11-10 with the author's approval, lh 23:58 UTC)
+Only the adopted early corrections that are genuine printed errors are patched below. Each patch keeps the original label `n` and is marked by a trailing `% CORRECTION [Cn]` comment on the modified line. Superseded items and the items not adopted are listed at the end.
+
+## [C1] Lemma 2.4 (lemma:volume-growth), line 502 (early correction; applied 2026-11-10 with the author's approval)
+Printed: `\beta^+ \in (0,(2-\gamma)^2/2)` and `\beta^- > (2+\gamma)^2/2` for every `\boldsymbol{\alpha}_0`. Corrected: `\beta^+ \in (0,\min\{(2-\gamma)^2/2,\gamma(Q-\boldsymbol{\alpha}_0)\})` and `\beta^- > \max\{(2+\gamma)^2/2,\gamma(Q-\boldsymbol{\alpha}_0)\}`. Reason: at `z=0`, `\log\mu_h(B_\epsilon(0))/\log\epsilon \to \gamma(Q-\boldsymbol{\alpha}_0)`, so the printed upper bound fails for `\boldsymbol{\alpha}_0>2` and the lower bound for `\boldsymbol{\alpha}_0<-2`, both admissible since `\boldsymbol{\alpha}_0\in(-\infty,Q)`. Evidence: ESCALATIONS E1; CORRECTIONS-PROPOSED [C1].
+
+## [C3] Section 3, equations (3.3) and (3.4) (eq:non-co-set, eq:limit-odometer), lines 597 and 601 (early correction; applied 2026-11-10 with the author's approval)
+Printed: the cluster uses `G_{B_r;z}(z,x)` and the odometer uses `t G_{B_r;z}(0,\cdot)`. Corrected: `G_{B_r}(z,x)` and `t G_{B_r}(z,\cdot)`. Reason: the Green function is that of `B_r` with pole at `z`; Lemma 3.2 (`\Delta u = -t\delta_z + \dots`) requires the pole at `z`. Evidence: CORRECTIONS-PROPOSED [C3].
+
+## [C5] Proposition 2.5 (prop:lbm-exit-time), equation (2.13) (eq:defining-property-of-kernel), line 551 (early correction; applied 2026-11-10 with the author's approval)
+Printed: `\P[\mathcal B^x_t \in dy \mid h] = p^K_t(x,y)\,dy`. Corrected: `p^K_t(x,y)\,\mu_h(dy)`. Reason: the law of the LBM at a fixed time is absolutely continuous with respect to `\mu_h`, which is singular with respect to Lebesgue measure. Evidence: ESCALATIONS E5; CORRECTIONS-PROPOSED [C5].
+
+## [C6] Theorem 1.1(a) (theorem:harmonic-balls), line 160 (early correction; applied 2026-11-10 with the author's approval)
+Printed: `\mu_h(\partial\Lambda_t(x)) = 0`. Corrected: `\mu_h(\partial\Lambda_t(z)) = 0`. Reason: `x` is not bound in the statement; `z` is the centre of the family. Evidence: CORRECTIONS-PROPOSED [C6].
+
+## [C7] Section 1, harmonic-ball test class (eq:harmonic-ball, Theorem 1.1), line 150 (early correction; applied 2026-11-10 with the author's approval)
+Printed: `f_2 \in \tilde H_O(\Lambda(z))` for some `O` with `\Lambda(z)\subset\overline O`. Corrected: for some bounded open `O` with `\overline{\Lambda(z)}\subset O`. Reason: with the printed class, a bounded open `\Lambda` containing `z` need not be a harmonic ball; the test function `G_O(\cdot,y)` with a pole `y\in\partial\Lambda` is admissible and gives a contradiction (Lebesgue and `\mu_h` counterexample). Evidence: CORRECTIONS-PROPOSED [C7] (Lean-certified, commit dd688d2).
+
+## [C12] Definition 11.1 (def:lipschitz), line 2874 (early correction; applied 2026-11-10 with the author's approval)
+Printed: `U \cap B_r(x_0) = \{ z \in B_r(x_0) : \Im(z) > f(\Re(z)) \}`, where `U` is not defined in the definition. Corrected: `A \cap B_r(x_0)`. Reason: typo; `A` is the set being defined. Evidence: CORRECTIONS-PROPOSED [C12].
+
+## [C18] Proposition 7.2 (prop:continuity-of-clusters), line 2092 (early correction; applied 2026-11-10 with the author's approval)
+Printed: `\cluster{z}{t+\epsilon} \Subset \cluster{z}{t} + B_\delta(z)`. Corrected: `\cluster{z}{t} + B_\delta`, the ordinary `\delta`-neighbourhood, as in Proposition 5.2 ([C56]). Reason: for `z\neq0` the translated ball `\Lambda + B_\delta(z)` does not contain the cluster's neighbourhood at small `t` (eq:contains-origin). Evidence: CORRECTIONS-PROPOSED [C18]; commit f92316c.
+
+## [C22] Section 9.2, introduction to Lemma 9.3 (lemma:contains-boundary), line 2405 (early correction tied to [C7]; applied 2026-11-10 with the author's approval)
+Printed: harmonic ball "(in the sense of eq:harmonic-ball)". Corrected: "(in the sense of Theorem 1.1)", the class enlarged by [C7]. Reason: with the printed narrow class, Lemma 9.1(2) and Lemma 9.3 fail (narrow harmonic balls with Lebesgue `\mu`). Evidence: CORRECTIONS-PROPOSED [C22].
+
+## [C23] Proposition 6.2 (good-annulus event, equation (6.2)) and the proof of Lemma 6.4 (lemma:annulus-hit), lines 1179-1180 and 1309 (early correction; applied 2026-11-10 with the author's approval)
+Printed: "`\mathcal B^u` exits `\A` before exiting `Y`" with `Y \subset \A`. Corrected: "exits `\A` no later than exiting `Y`", i.e. `\tau_\A \le \tau_Y`. Reason: with `Y \subset \A`, `\tau_Y \le \tau_\A`, so the strict reading has probability 0 and the event is trivial; the intended event is `\tau_\A \le \tau_Y`, the reading used in `Defs/Annuli.lean`. Evidence: docs/campaign/cex/AlphaUniformity.md section 2, step 1; CORRECTIONS-PROPOSED [C23].
+
+## Early items: superseded or not adopted (no separate patch)
+- Superseded by a later patch that makes the same correction: [C2] by [C65]; [C4] by [C53] and [C67]; [C8] by [C55]; [C9] by [C58]; [C10] by [C51] (the weak form `\cluster \subset A` is part of [C51]); [C11] by [C43]; [C13] by [C52]; [C14] by [C54] and [C68]; [C15] by [C64]; [C16] by [C49]; [C19] by [C57]; [C20] by [C58]; [C21] by [C60]; [C24] by [C63] (finite-supremum premise); [C25] by [C61] (`a(b,p,\gamma,\boldsymbol{\alpha}_0)`; the `a(b,\gamma)` of Lemma 6.3 is true, AlphaUniformity.md section 6); [C26] by [C62].
+- Not adopted: [C17] (proof gap only; the statement change is not adopted).
+- No record found: [C27]-[C36] (no analysis in CORRECTIONS-PROPOSED.md, FROZEN.md, ESCALATIONS.md, GAPS-HB-1106.md or cex/).

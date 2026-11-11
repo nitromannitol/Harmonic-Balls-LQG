@@ -147,7 +147,7 @@
 	(defined in Section \ref{subsec:green} below). 
 	That is, $\Lambda(z)$ is a harmonic ball centered at~$z \in \C$, if \eqref{eq:harmonic-ball} is
 	satisfied for all functions $f = f_1 + f_2$ where $f_1$ is harmonic in a neighborhood of the closure of $\Lambda(z)$
-	and $f_2 \in \tilde H_O(\Lambda(z))$ for some $O$ with~$\Lambda(z) \subset \overline{O}$. 
+	and $f_2 \in \tilde H_O(\Lambda(z))$ for some bounded open $O$ with~$\overline{\Lambda(z)} \subset O$. % CORRECTION [C7] Printed: "for some O with Lambda(z) in closure(O)" (test class too narrow); corrected to a bounded open O with closure(Lambda(z)) in O. 
 	
 	
 	
@@ -157,7 +157,7 @@
 		On an event of probability one, for each~$z \in \C$, there exists a unique family of harmonic balls $\{\Lambda_t(z)\}_{t > 0}$
 		satisfying the following properties:
 		\begin{enumerate}[label=(\alph*)]
-			\item For each $t > 0$ and~$z\in\C$, $\mu_h(\Lambda_t(z)) = t$, $\mu_h(\partial \Lambda_t(x)) = 0$, and $\Lambda_t(z)$ is equal to the interior of its closure.
+			\item For each $t > 0$ and~$z\in\C$, $\mu_h(\Lambda_t(z)) = t$, $\mu_h(\partial \Lambda_t(z)) = 0$, and $\Lambda_t(z)$ is equal to the interior of its closure. % CORRECTION [C6] Printed: mu_h(partial Lambda_t(x)) = 0 (x is not bound); corrected to the bound variable z.
 			\item The domains $\Lambda_t(z)$ are bounded, connected, contain~$\{z\}$, increase continuously in $t$ (in the Hausdorff topology), and satisfy $\cap_{t > 0} \Lambda_t(z) = \{z\}$.
 		\end{enumerate}
 	\end{theorem}
@@ -499,7 +499,7 @@
 	
 	
 	\begin{lemma} \label{lemma:volume-growth}
-		For each $\beta^+ \in (0, (2 -\gamma)^2/2)$ and $\beta^- > (2+\gamma)^2/2$
+		For each $\beta^+ \in (0, \min\{(2 -\gamma)^2/2, \gamma(Q-\boldsymbol{\alpha}_0)\})$ and $\beta^- > \max\{(2+\gamma)^2/2, \gamma(Q-\boldsymbol{\alpha}_0)\}$ % CORRECTION [C1] Printed: beta+ in (0,(2-gamma)^2/2) and beta- > (2+gamma)^2/2 for all alpha_0; corrected to the min/max with gamma(Q-alpha_0), the exponent of mu_h(B_eps(0)), which is false for alpha_0 > 2 (upper) or alpha_0 < -2 (lower).
 		it holds with polynomially high probability as $\epsilon \to 0$ that  
 		\begin{equation} \label{eq:ball-volume}
 		\epsilon^{\beta^-} \leq \mu_h(B_\epsilon(z)) \leq \epsilon^{\beta^+} ,\quad\forall z \in B_1 .
@@ -548,7 +548,7 @@
 	Let $K$ be a square in $\C$ and for $x \in \C$ let $\{ \mathcal{B}_t^x\}_{t > 0}$ denote $\gamma$-LBM with respect to the field $h$ started from $x$ with Neumann (reflecting) boundary conditions on $K$. The heat kernel $p^K_t$ of reflected LBM in $K$ is the 
 	function $p^K_t(x,y) : (0,\infty) \times K \times K \to [0,\infty)$ such that 
 	\begin{equation} \label{eq:defining-property-of-kernel}
-	\P[ \mathcal{B}_t^x \in dy | h] = p^K_t(x,y) dy.
+	\P[ \mathcal{B}_t^x \in dy | h] = p^K_t(x,y) \mu_h(dy). % CORRECTION [C5] Printed: p^K_t(x,y) dy (Lebesgue); corrected to p^K_t(x,y) mu_h(dy), since the LBM law at a fixed time is absolutely continuous with respect to mu_h, which is singular with respect to Lebesgue.
 	\end{equation}
 	
 	
@@ -594,11 +594,11 @@
 	\end{equation}
 	and the {\it cluster} as
 	\begin{equation} \label{eq:non-co-set}
-	\cluster{B_r; z}{t} = \{ x \in B_r : \lss{B_r; z}{t}(x) > -t G_{B_r; z}(z, x) \}.
+	\cluster{B_r; z}{t} = \{ x \in B_r : \lss{B_r; z}{t}(x) > -t G_{B_r}(z, x) \}. % CORRECTION [C3] Printed: G_{B_r; z}(z, x); corrected to the Green function G_{B_r}(z, x) of B_r.
 	\end{equation}
 	We also consider the {\it odometer}	
 	\begin{equation} \label{eq:limit-odometer}
-	\odometer{B_r; z}{t} = \lss{B_r; z}{t}  + t G_{B_r; z}(0, \cdot).
+	\odometer{B_r; z}{t} = \lss{B_r; z}{t}  + t G_{B_r}(z, \cdot). % CORRECTION [C3] Printed: G_{B_r; z}(0, .); corrected to G_{B_r}(z, .), the pole at z required by Lemma 3.2.
 	\end{equation}
 	Note that $\mclS{B_r; z}{t}$ is non-empty as it contains the zero function --- thus $\lss{B_r; z}{t}$ always exists.
 	This equation in \eqref{eq:super-solutions} is known as an {\it obstacle problem} with obstacle given by the Green's function.
@@ -1176,8 +1176,8 @@
 	We start with defining good annuli. For $z \in \C$, $r > 0$ and parameters $a,b \in (0,1)$,
 	let $E_r(z) = E_r(z; a,b)$ be the event that the following is true. For each Borel set $Y \subset \A_{3r, 5r}(z)$
 	such that $\mu_h(Y) \leq a \mu_h(\A_{3 r, 5r}(z))$ we have 
-	\begin{equation} \label{eq:good-annulus-harmonic}
-	\sup_{u \in \partial B_{4 r}(z)} P\left[ \mbox{$\mathcal{B}^u$ exits $\A_{3 r, 5 r}(z)$ before exiting $Y$}  \, |\, h  \right] \leq b ,
+	\begin{equation} \label{eq:good-annulus-harmonic} % CORRECTION [C23] Printed: "B^u exits A before exiting Y" (strict reading gives probability 0, since Y is contained in A); corrected to "exits A no later than exiting Y", i.e. tau_A <= tau_Y.
+	\sup_{u \in \partial B_{4 r}(z)} P\left[ \mbox{$\mathcal{B}^u$ exits $\A_{3 r, 5 r}(z)$ no later than exiting $Y$}  \, |\, h  \right] \leq b ,
 	\end{equation}
 	where $\mathcal B^u$ denotes standard planar Brownian motion started from $u$. 
 	We note that $E_r(z) \in \sigma(h |_{\A_{3r,5r}(z)})$.
@@ -1306,7 +1306,7 @@
 		\end{equation}
 		Hence, if $\mu_h(Y) \leq [ C \mu_h(\A_{3,5}(0) ) ]^{-1} (b/2)  \times \mu_h(\A_{3,5}(0) )$, then $P\left[ \mathcal B^u_{T} \in Y \,|\, h \right] \leq b/2$ for each $u\in \partial B_4(0)$. Combining this with~\eqref{eq:annulus-hit-time} shows that for every such Borel set $Y$,
 		\begin{equation}
-		\sup_{u \in \partial B_4(0)}  P\left[ \text{$\mathcal B^u$ exits $\A_{3,5}(0)$ before exiting $Y$} \,|\, h \right] \leq b .
+		\sup_{u \in \partial B_4(0)}  P\left[ \text{$\mathcal B^u$ exits $\A_{3,5}(0)$ no later than exiting $Y$} \,|\, h \right] \leq b . % CORRECTION [C23] Printed: "exits A_{3,5}(0) before exiting Y" (same slip as the definition); corrected to "no later than", i.e. tau_A <= tau_Y.
 		\end{equation}
 		
 		That is, a.s.\ $E_1(0)$ occurs with $a$ replaced by the random variable $[ C \mu_h(\A_{3,5}(0) ) ]^{-1} (b/2)$. This random variable is a.s.\ positive, so we can find a deterministic $a \in (0,1)$ such that 
@@ -2089,7 +2089,7 @@
 		The following occurs on an event of probability 1. 
 		For each $t > 0$ and~$z \in B_1$ such that ${\cluster{z}{t}} \Subset B_1$, for all $\epsilon > 0$ sufficiently small, depending on $t$,
 		\[
-		{\cluster{z}{t + \epsilon}} \Subset {\cluster{z}{t}} + B_{\delta}(z) ,\quad \text{for $\delta = C \epsilon^{1/(4\beta^-)}$}
+		{\cluster{z}{t + \epsilon}} \Subset {\cluster{z}{t}} + B_{\delta} ,\quad \text{for $\delta = C \epsilon^{1/(4\beta^-)}$} % CORRECTION [C18] Printed: Cluster + B_delta(z) (translated ball); corrected to the neighbourhood Cluster + B_delta, as in Proposition 5.2.
 		\]
 		where $\beta^- > (2+\gamma)^2/2$ is from Lemma \ref{lemma:volume-growth} and  $C = C(\beta^-) >0$ is a deterministic constant. 
 	\end{prop}
@@ -2402,9 +2402,10 @@
 	
 	\subsection{Comparing harmonic and subharmonic balls}
 	
-	We show that any harmonic ball for $\mu_h$ (in the sense of~\eqref{eq:harmonic-ball}) centered at~$z$ must have a boundary contained in the closure of 
+	We show that any harmonic ball for $\mu_h$ (in the sense of Theorem~\ref{theorem:harmonic-balls}) centered at~$z$ must have a boundary contained in the closure of 
 	some ${\regcluster{z}{t}}$. Similar arguments have appeared in \cite[Proposition 3.2]{shahgholian2013harmonic},
 	\cite[Proposition 2.5]{hedenmalm2002hele}, and \cite[Section 3]{gustafsson1990onquadraturedomains}. 
+	% CORRECTION [C22] Printed: "any harmonic ball (in the sense of eq:harmonic-ball)" in the introduction, which refers to the printed test class; corrected to "in the sense of Theorem 1.1", the class enlarged as in [C7].
 	\begin{lemma}\label{lemma:contains-boundary}
 		Almost surely, every harmonic ball  $A \Subset B_R$ centered at~$z \in B_R$ with $t = \mu_h(A) > 0$  satisfies $\partial A \subset \overline{{\regcluster{}{t}}(z)}$.
 	\end{lemma}
@@ -2870,7 +2871,7 @@ no cut point. A simple closed curve is a simple loop.
 		$f: \R \to \R$ such that --- upon relabeling and reorienting the coordinate axes if necessary ---
 		we have 
 		\[
-		U \cap B_r(x_0) = \{ z \in B_r(x_0) : \Im(z) > f(\Re(z)) \}.
+		A \cap B_r(x_0) = \{ z \in B_r(x_0) : \Im(z) > f(\Re(z)) \}. % CORRECTION [C12] Printed: U \cap B_r(x_0) (U is not defined in the definition); corrected to A, the set being defined.
 		\]
 	\end{definition}
 	
