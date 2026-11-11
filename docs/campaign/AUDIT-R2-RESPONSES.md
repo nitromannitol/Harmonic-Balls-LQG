@@ -43,7 +43,7 @@ Source: `notes/fp-gaps/OPUS-AUDIT-R2.md` (fleet). Task fp-audit-r2-hb-errata-and
 
 | Item | Status | Owner and partial commits |
 |---|---|---|
-| M9 (B1 decoder) | IN PROGRESS | z4, fp-phase2-b1-decoder-derive; partial commit 78d91e32 |
+| M9 (B1 decoder) | IN PROGRESS (partial): hK LocalMeasureKernelStmt (FirstPass/S11r/Frozen.lean:140) DERIVED; hLoc/hDec LocalLQGDecoderCommonFrozen (FirstPass/Frozen/S11c.lean:375,386,388) DERIVED; hN2 LocalMetricReplacementFrozen (FirstPass/Frozen/S11rMetric.lean:33) PARTIAL, z4 checking; hA10 (FirstPass/Frozen/S11i.lean:37) OPEN | z4, fp-phase2-b1-decoder-derive; derived by localMeasureKernelStmt_derived (a9b0d406) and localLQGDecoderCommonFrozen_derived (9deeaee0), ledger da31111f; earlier partial commit 78d91e32 |
 | M10 (B2 DMS joint positive radius) | IN PROGRESS | z3, fp-phase2-dms-joint-positive-radius; partial commit c1f49ef0 (its message flags DMSLemmaA10WholePlaneMarkedJointStmt as false as typed, MQ-lh-13) |
 | M11, M12 (hholder), HB(B) binders | M11: OPEN, forall-xi forms stay conditional on named Props, canonical-xi consequences in 6883fd97; M12 (hholder): BLOCKED, stays a binder (cited HB Prop 2.5 input; route B is an operator decision), 94723b16; HB(B): PARTIAL, 6 wrappers discharged in 94723b16 (DerivedInputs23), hDsm still bound, manifest f2473471 | z6, fp-audit-r2-binders |
 
@@ -56,7 +56,7 @@ Source: `notes/fp-gaps/OPUS-AUDIT-R2.md` (fleet). Task fp-audit-r2-hb-errata-and
 | HB A5 α₀ dependence | FIXED for the C69 sites (above); p in C62 open |
 | HB A6 gap list | FIXED (M3) |
 | HB per-item: C58, C47, C48/C51 | FIXED (above) |
-| HB B1 / B2 / B3 hholder (M9, M10, M12) | IN PROGRESS (Lean rows above) |
+| HB B1 / B2 / B3 hholder (M9, M10, M12) | IN PROGRESS (Lean rows above; M9: hK and hLoc/hDec DERIVED, hN2 PARTIAL, hA10 OPEN) |
 
 ## Not confirmed in the printed text
 
