@@ -59,4 +59,3 @@ theorem exists_subdivision_of_cover {x y : ℂ} (γ : Path x y) {ι : Type*} (V 
 
 end HarmonicBalls.S11ac
 
-#print axioms HarmonicBalls.S11ac.exists_subdivision_of_cover

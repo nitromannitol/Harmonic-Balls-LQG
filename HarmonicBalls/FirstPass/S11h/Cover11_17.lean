@@ -87,5 +87,3 @@ theorem ae_exists_pinchSelectGood {Ω : Type*} [MeasurableSpace Ω] {P : Measure
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.ae_exists_pinchSelectGood
-#print axioms HarmonicBalls.pinchSelectGood_strict

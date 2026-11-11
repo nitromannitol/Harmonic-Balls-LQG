@@ -233,6 +233,3 @@ theorem certificateEvent_measure_congr_buffered {U V W T Q' Q : Set ℂ} {δ : �
 
 end FirstPassS11aq
 
-#print axioms FirstPassS11aq.certificateEvent_translate_iff
-#print axioms FirstPassS11aq.certificateEvent_measure_congr
-#print axioms FirstPassS11aq.certificateEvent_measure_congr_buffered

@@ -69,6 +69,5 @@ theorem measurableSet_certificate_certMetricOn
       exact hg
   exact h.measurableSet_open_first_certificate hDm hlen
 
-#print axioms measurableSet_certificate_certMetricOn
 
 end HarmonicBalls

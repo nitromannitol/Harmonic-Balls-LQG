@@ -104,5 +104,3 @@ theorem ae_rootedId_of_localCert {Ω : Type u} [MeasurableSpace Ω] {P : Measure
 
 end FirstPassS11ai
 
-#print axioms FirstPassS11ai.ae_rootedId_of_localCert
-#print axioms FirstPassS11ai.rootedCertTermwise_of_decoded

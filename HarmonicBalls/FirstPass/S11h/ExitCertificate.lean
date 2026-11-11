@@ -77,8 +77,6 @@ theorem first_conjunct_of_certificate {D : ℂ → ℂ → ℝ} (hD : IsEuclidea
   refine lt_of_le_of_lt ?_ (lt_of_lt_of_le hcert (iInf_internalMetric_le_ofReal_setDist hD hQ hclO hQ' hQ'ne hfr))
   exact iSup₂_mono fun x _ => internalMetric_mono_set hO' 0 x
 
-#print axioms first_conjunct_of_certificate
-#print axioms iInf_internalMetric_le_ofReal_setDist
 
 /-- The second conjunct of `Ẽ₁` (`pinchFirstEvent`), from a certificate: the internal diameter of the set is below the
 internal distances from `0` to the circle `∂B_δ` inside `O ⊇ closure B_δ`; the set distance from `0` to `∂B_δ` is
@@ -94,6 +92,5 @@ theorem second_conjunct_of_certificate {D : ℂ → ℂ → ℝ} (hD : IsEuclide
   simp only [iInf_singleton] at hL
   exact lt_of_lt_of_le hcert hL
 
-#print axioms second_conjunct_of_certificate
 
 end HarmonicBalls

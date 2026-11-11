@@ -113,4 +113,3 @@ theorem exists_finite_localMeasureKernel {γ : ℝ} {c₁ c₂ : ℂ} {r₁ r₂
 
 end HarmonicBalls.FirstPassS11ahFinite
 
-#print axioms HarmonicBalls.FirstPassS11ahFinite.exists_finite_localMeasureKernel

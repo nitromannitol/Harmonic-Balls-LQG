@@ -138,5 +138,3 @@ theorem sum_internalMetric_le_pathLength (hD : IsEuclideanLengthMetric D) {x y :
 
 end HarmonicBalls.S11ac
 
-#print axioms HarmonicBalls.S11ac.sum_internalMetric_le_pathLength
-#print axioms HarmonicBalls.S11ac.curveLength_add

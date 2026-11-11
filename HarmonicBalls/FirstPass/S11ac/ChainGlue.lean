@@ -278,4 +278,3 @@ theorem chainInf_eq (hD : IsEuclideanLengthMetric D) {X : Set ℂ} (hX : IsOpen 
 
 end HarmonicBalls.S11ac
 
-#print axioms HarmonicBalls.S11ac.chainInf_eq

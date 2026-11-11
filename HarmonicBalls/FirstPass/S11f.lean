@@ -86,6 +86,5 @@ theorem pinchSecondEvent_of_openSteps (h : PinchSecondOpenSteps.{u}) : PinchSeco
   rcases hHsub hω.2 with ⟨hH1, hH2⟩
   exact ⟨hF1, pinchSecondEvent_of_thresholds hc₁ hc₂ hH2 hF2 hF3 hH1⟩
 
-#print axioms pinchSecondEvent_of_openSteps
 
 end HarmonicBalls

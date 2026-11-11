@@ -118,8 +118,5 @@ theorem pinchThirdEventLocal_subset (D : ℂ → ℂ → ℝ) (V W : Set ℂ) (�
     (h : pinchThirdEventLocal D V W δ) : pinchThirdEvent D V W δ :=
   (internalDiam_le_closure D δ _).trans_lt h
 
-#print axioms pinchFirstEventLocal_subset
-#print axioms pinchSecondEventLocal_subset
-#print axioms pinchThirdEventLocal_subset
 
 end HarmonicBalls

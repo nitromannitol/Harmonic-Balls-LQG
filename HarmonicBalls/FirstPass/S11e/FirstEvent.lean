@@ -43,8 +43,5 @@ theorem weylExponent_pos_of_gamma_pos {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → �
     (h𝔇 : IsLQGMetric γ ξ 𝔇) (hγ : 0 < γ) : 0 < ξ :=
   IsLQGMetric.weylExponent_pos h𝔇 hγ
 
-#print axioms pinchFirstEvent_of_correctedOpenFirstCertificate
-#print axioms exists_pinchProofConfiguration
-#print axioms weylExponent_pos_of_gamma_pos
 
 end HarmonicBalls

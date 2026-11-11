@@ -228,6 +228,5 @@ theorem isLipschitzDomain_satisfiesConeCondition {A : Set ℂ} (hA : IsLipschitz
 
 end FirstPassS11
 
-#print axioms HarmonicBalls.FirstPassS11.isLipschitzDomain_satisfiesConeCondition
 
 end HarmonicBalls

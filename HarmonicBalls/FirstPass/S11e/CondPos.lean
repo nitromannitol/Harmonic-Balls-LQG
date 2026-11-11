@@ -41,6 +41,5 @@ theorem measure_inter_pos_of_condExp_indicator_pos {Ω : Type*} {m₀ : Measurab
     measureReal_def] at hpos
   exact (ENNReal.toReal_pos_iff.mp hpos).1
 
-#print axioms measure_inter_pos_of_condExp_indicator_pos
 
 end HarmonicBalls

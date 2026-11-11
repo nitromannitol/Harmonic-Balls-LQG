@@ -138,4 +138,3 @@ theorem pinchEvents_of_bumpShift {U V W T Q' Q : Set ℂ} {δ γ ξ k M : ℝ} {
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.pinchEvents_of_bumpShift

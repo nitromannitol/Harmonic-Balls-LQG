@@ -165,7 +165,6 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
   exact ae_quantum_bad_mass_eq_zero_of_identification hCM hB hCamp hγ0 hγ2 hα hh hμ hE hr₁ hr₂ hsub h0 A Ostar U V W T Q' Q η M
     κ (FirstPassS11at.windowMetric (ball c₂ r₂) mD) c hSeq Dμ Dd hF hCov hG hS hSfail
 
-#print axioms ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
 
 /-- **Steps 6-7 entry, guarded length clause.** The same conclusion as
 `ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent`, with the length-metric binder `hLenAll` in the guarded form
@@ -300,6 +299,5 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent_guarded
   exact ae_quantum_bad_mass_eq_zero_of_identification hCM hB hCamp hγ0 hγ2 hα hh hμ hE hr₁ hr₂ hsub h0 A Ostar U V W T Q' Q η M
     κ (FirstPassS11at.windowMetric (ball c₂ r₂) mD) c hSeq Dμ Dd hF hCov hG hS hSfail
 
-#print axioms ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent_guarded
 
 end FirstPassS11ai

@@ -43,7 +43,6 @@ theorem firstPass_11_10.{u}
     (fun f hf1 hf2 hf3 => hM1 γ α₀ ξ hγ hγ2 hα Ω P hC hcirc μ D hGFF hμ hD f hf1 hf2 hf3 S₂ hS₂)
     (fun f hf1 hf2 hf3 => hM2 γ α₀ ξ hγ hγ2 hα Ω P hC hcirc μ D hGFF hμ hD f hf1 hf2 hf3 S₁ hS₁)
 
-#print axioms firstPass_11_10
 
 /-- **Lemma 11.7 (`firstPass_11_7`)**: many cone-bad scales, with `δ = p / 8`, where `p` is the positive
 probability lower bound supplied by Lemma 11.8 at `(γ, γ)` (not necessarily an exact event probability). Route (B2 sections 5-8): `ae_eventually_ncard_of_fixedRoot` with the fixed-root input

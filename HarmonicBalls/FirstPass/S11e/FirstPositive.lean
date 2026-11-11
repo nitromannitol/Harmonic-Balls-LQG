@@ -177,6 +177,5 @@ theorem pinchFirst_positive_of_frozen (hfr : LQGMetricPointwiseAEMeasurableFroze
       _ = P A := by rw [hPM, hN0]; simp
   exact ⟨A, hAsub, hAm, hPA⟩
 
-#print axioms pinchFirst_positive_of_frozen
 
 end HarmonicBalls

@@ -129,7 +129,3 @@ theorem certificateEvent_pinch_congr {μ : Measure ℂ} {D D' : ℂ → ℂ → 
 
 end FirstPassS11ap
 
-#print axioms FirstPassS11ap.certificateContainments_of_buffered
-#print axioms FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom
-#print axioms FirstPassS11ap.pinchOmegaGeom_certificate_data
-#print axioms FirstPassS11ap.certificateEvent_pinch_congr

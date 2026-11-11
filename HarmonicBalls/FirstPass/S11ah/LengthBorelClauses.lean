@@ -500,4 +500,3 @@ theorem measurableSet_isLengthMetricOn_decoderOn_of_internal {c : ℂ} {r : ℝ}
 
 end HarmonicBalls.FirstPassS11ahLengthBorelClauses
 
-#print axioms HarmonicBalls.FirstPassS11ahLengthBorelClauses.isLengthMetricOn_decoderOn_iff

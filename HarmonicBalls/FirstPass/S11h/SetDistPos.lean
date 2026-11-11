@@ -98,6 +98,5 @@ theorem setDist_sphere_pos_of_isEuclideanLengthMetric (hD : IsEuclideanLengthMet
   · refine Set.disjoint_left.2 fun x hx hy => ?_
     exact (ne_of_lt hrs) ((mem_sphere_zero_iff_norm.1 hx).symm.trans (mem_sphere_zero_iff_norm.1 hy))
 
-#print axioms setDist_sphere_pos_of_isEuclideanLengthMetric
 
 end HarmonicBalls

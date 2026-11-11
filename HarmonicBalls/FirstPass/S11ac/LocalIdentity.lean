@@ -42,4 +42,3 @@ theorem eventually_internalMetric_eq (hD : IsEuclideanLengthMetric D) (hnonneg :
 
 end HarmonicBalls.S11ac
 
-#print axioms HarmonicBalls.S11ac.eventually_internalMetric_eq

@@ -296,5 +296,3 @@ theorem ae_weylScaling_universe {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) �
 
 end FirstPassS11aa
 
-#print axioms FirstPassS11aa.ae_isEuclideanLengthMetric_universe
-#print axioms FirstPassS11aa.ae_weylScaling_universe

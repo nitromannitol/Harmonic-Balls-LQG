@@ -50,7 +50,6 @@ theorem firstPass_11_14.{u} (hAx : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : M
   obtain ⟨hev1, hev2, -⟩ := hev
   exact metricBall_of_pinch_event hDlen hc hr h0 hu hev1 hev2 hfr
 
-#print axioms firstPass_11_14
 
 /-- FIRST-PASS, Proposition 11.2 (prop:not-balls, paper line 2816), for `HarmonicBallNotLipschitzStmt`
 (`Draft/Section11.lean:136`). The printed proof (lines 2991-3012) uses Lemma 11.5 only; the transfer from typical
@@ -117,10 +116,5 @@ theorem firstPass_11_11.{u} (h6 : AnnulusMassBoundByHarmonicChainStmt.{u})
     HarmonicBallNotMetricBallStmt.{u} :=
   harmonicBallNotMetricBallStmt_of_comparison_pinch_and_volumeGrowth h6 h13 hI2 hmetricAxioms
 
-#print axioms firstPass_11_2
-#print axioms firstPass_11_5
-#print axioms firstPass_11_6
-#print axioms firstPass_11_8
-#print axioms firstPass_11_11
 
 end HarmonicBalls

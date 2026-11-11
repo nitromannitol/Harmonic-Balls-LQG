@@ -79,4 +79,3 @@ theorem ae_isLengthMetricOn_rootedRefLaw {Ω : Type} [MeasurableSpace Ω] {P : M
 
 end HarmonicBalls.FirstPassS11ahLocalHae
 
-#print axioms HarmonicBalls.FirstPassS11ahLocalHae.ae_isLengthMetricOn_rootedRefLaw

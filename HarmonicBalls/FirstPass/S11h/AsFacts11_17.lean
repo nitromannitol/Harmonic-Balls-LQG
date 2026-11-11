@@ -79,5 +79,3 @@ theorem ae_pinchEvents_bumpShift {Ω : Type*} [MeasurableSpace Ω] (P : Measure 
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.ae_bumpShift_admissible
-#print axioms HarmonicBalls.ae_pinchEvents_bumpShift

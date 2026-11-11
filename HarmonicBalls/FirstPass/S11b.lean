@@ -124,6 +124,5 @@ theorem firstPass_11_7.{u}
     linarith
   exact hTr γ α₀ Q M (p / 2) hγ0 hγ2 hα₀ hQ hM (half_pos hp0) Ω P hC hcirc μ0 μ hWP hμ0 hμ hgood0
 
-#print axioms firstPass_11_7
 
 end HarmonicBalls

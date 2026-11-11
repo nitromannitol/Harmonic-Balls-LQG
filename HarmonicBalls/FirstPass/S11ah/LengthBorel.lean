@@ -45,4 +45,3 @@ theorem measurable_eval_real {X : Type*} [TopologicalSpace X] (p : X) :
 
 end HarmonicBalls.FirstPassS11ahLengthBorel
 
-#print axioms HarmonicBalls.FirstPassS11ahLengthBorel.measurableSet_forall_nonpos_of_dense

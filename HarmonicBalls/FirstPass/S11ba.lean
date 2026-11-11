@@ -167,4 +167,3 @@ theorem pinchDomains_admissible {U V W T Q' Q : Set ℂ} {δ : ℝ} (hG : IsBuff
 
 end HarmonicBalls.S11ba
 
-#print axioms HarmonicBalls.S11ba.pinchDomains_admissible

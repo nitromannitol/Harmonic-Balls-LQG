@@ -35,4 +35,3 @@ theorem metricDecoder_punctured_ball_seven (hAx : HarmonicBalls.LQGMetricFieldAx
 
 end HarmonicBalls.S11ak
 
-#print axioms HarmonicBalls.S11ak.metricDecoder_punctured_ball_seven

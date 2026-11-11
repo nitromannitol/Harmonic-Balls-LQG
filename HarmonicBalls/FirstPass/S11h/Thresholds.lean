@@ -70,6 +70,5 @@ theorem exists_measurable_thresholds_pos {Ω : Type*} [MeasurableSpace Ω] {P : 
   · rw [measure_congr hAeq]
     exact hn
 
-#print axioms exists_measurable_thresholds_pos
 
 end HarmonicBalls

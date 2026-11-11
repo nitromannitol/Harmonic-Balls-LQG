@@ -212,5 +212,3 @@ theorem certificateEvent_congr_of_eqOn_closedBall {μ : Measure ℂ} {D D' : ℂ
 
 end FirstPassS11i
 
-#print axioms FirstPassS11i.certificateEvent_congr_of_eqOn_closedBall
-#print axioms FirstPassS11i.thickening_rescaledSet_subset_closedBall

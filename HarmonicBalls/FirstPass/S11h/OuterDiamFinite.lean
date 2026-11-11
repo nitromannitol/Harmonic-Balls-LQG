@@ -70,7 +70,5 @@ theorem ae_internalDiam_third_lt_top {Ω : Type*} [MeasurableSpace Ω] {P : Meas
     ∀ᵐ ω ∂P, internalDiam (D ω) δ (thickening (3 * δ) W \ V) < ⊤ :=
   hD.mono fun _ h => hgeo.internalDiam_third_lt_top h
 
-#print axioms IsBufferedPinchGeometry.internalDiam_third_lt_top
-#print axioms ae_internalDiam_third_lt_top
 
 end HarmonicBalls

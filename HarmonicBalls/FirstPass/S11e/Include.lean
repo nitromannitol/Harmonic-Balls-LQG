@@ -64,6 +64,5 @@ theorem pinchPointEvent_of_auxiliary_events
   · simpa only [pinchPointEvent, mul_one, hres] using hclause2
   · simpa only [pinchPointEvent, mul_one, hres] using hsecond.2
 
-#print axioms pinchPointEvent_of_auxiliary_events
 
 end HarmonicBalls

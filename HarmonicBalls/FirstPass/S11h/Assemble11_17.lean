@@ -160,4 +160,3 @@ theorem firstPass_11_17_of_11_16 (h16 : PinchSecondEventFaithfulStmt.{u})
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.firstPass_11_17_of_11_16

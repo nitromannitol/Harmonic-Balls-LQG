@@ -155,6 +155,5 @@ theorem dddf_dyadic_tail {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsPr
       exact lt_of_lt_of_le hω (dyadicIntermediateInternalDiameter_le_closedSquare (fun ω => 𝔇 (hC ω)) z hL n i ω)
     · rw [dyadic_side_rpow_eq hL _ n, exponent_rewrite_aux p _ lam hn1]
 
-#print axioms dddf_dyadic_tail
 
 end HarmonicBalls

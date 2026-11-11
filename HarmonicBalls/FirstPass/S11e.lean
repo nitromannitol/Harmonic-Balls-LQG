@@ -84,9 +84,6 @@ theorem firstPass_11_15 (hfr : LQGMetricPointwiseAEMeasurableFrozen) : PinchFirs
   intro γ ξ hγ hγ2 Ω _ P hC hcirc D hgff hD
   exact pinchFirst_positive_of_frozen hfr isCorrectedPinchConfiguration_fixed hγ hγ2 P hC hcirc D hgff hD
 
-#print axioms firstPass_11_15
 
-#print axioms firstPass_11_16_of_11_17
-#print axioms firstPass_11_12
 
 end HarmonicBalls

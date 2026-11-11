@@ -76,7 +76,5 @@ theorem ae_internalDiam_outer_lt_top {Ω : Type*} [MeasurableSpace Ω] {P : Meas
   filter_upwards [hD, hnn] with ω h1 h2
   exact h.internalDiam_outer_lt_top h1 h2
 
-#print axioms HarmonicBalls.IsBufferedPinchGeometry.iSup_sphere_internalMetric_lt_top
-#print axioms HarmonicBalls.IsBufferedPinchGeometry.internalDiam_outer_lt_top
 
 end HarmonicBalls

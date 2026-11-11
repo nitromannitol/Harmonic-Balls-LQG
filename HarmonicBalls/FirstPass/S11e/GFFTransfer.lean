@@ -152,6 +152,5 @@ theorem isWholePlaneGFF_carrierMap {Ω : Type*} [MeasurableSpace Ω] {P : Measur
     exact covariance_congr_ae P (hae o).symm (hae o').symm
   · exact Filter.Eventually.of_forall fun y => y.circ_cont
 
-#print axioms isWholePlaneGFF_carrierMap
 
 end HarmonicBalls

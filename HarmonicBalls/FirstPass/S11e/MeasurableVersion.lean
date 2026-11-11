@@ -52,6 +52,5 @@ theorem exists_measurable_version_of_continuous
     rw [heq]
     exact hlim.limsup_eq
 
-#print axioms exists_measurable_version_of_continuous
 
 end HarmonicBalls
