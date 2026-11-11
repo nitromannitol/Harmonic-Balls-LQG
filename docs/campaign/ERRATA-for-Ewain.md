@@ -69,11 +69,6 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 
 ### Section 6: annuli and odometer comparison
 
-**Equation (6.2) (good-annulus event, §6.1) and the proof of Lemma 6.4** <!-- C23 -->
-- *Printed:* the good-annulus event asks that "$\mathcal B^u$ exits $\mathcal A_{3r,5r}(z)$ before exiting $Y$", for Borel sets $Y\subset\mathcal A_{3r,5r}(z)$; the proof of Lemma 6.4 uses the same wording.
-- *Problem:* when $Y\subset\mathcal A_{3r,5r}(z)$, the strict event is empty, so the condition does not express what is intended.
-- *Correction:* "exits $\mathcal A_{3r,5r}(z)$ no later than exiting $Y$", that is, the exit time of the annulus is at most the exit time of $Y$.
-
 **Lemma 6.4 (annuli are hit)** <!-- C61 -->
 - *Printed:* $a=a(b,p,\gamma)$, and the constants in the proof depend only on $\gamma$. The transfer from the comparison field to $h$ also uses the factor $|z|^{-\boldsymbol\alpha_0\gamma}$ and a ratio in the wrong direction.
 - *Problem:* the comparison with the log-singular field depends on $\boldsymbol\alpha_0$. The factor $|z|^{-\boldsymbol\alpha_0\gamma}$ is not uniform on the annulus when $|z|$ is of order $r$ or $z=0$, and the transfer of the event needs $a=(C_1/C_2)a'$, not $(C_2/C_1)a'$.
@@ -219,6 +214,13 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Printed:* the mass parameter $t$ is free in the statement.
 - *Problem:* the event on which compatibility holds must not depend on $t$, so $t$ has to be quantified inside it.
 - *Correction:* for each $R>0$, on an event of probability one: for all $t>0$, $s_1\le R$ and $z\in B_{s_1}$, if $\overline{\Lambda^{B_{s_2};z}_t}\subset B_{s_1}$ for some $s_2\in[s_1,R]$, then $\Lambda^{B_s;z}_t=\Lambda^{B_{s_2};z}_t$ for all $s\in[s_1,R]$.
+
+### Section 6
+
+**Equation (6.2) (good-annulus event, §6.1) and the proof of Lemma 6.4** <!-- C23 -->
+- *Printed:* the good-annulus event asks that "$\mathcal B^u$ exits $\mathcal A_{3r,5r}(z)$ before exiting $Y$", for Borel sets $Y\subset\mathcal A_{3r,5r}(z)$; the proof of Lemma 6.4 uses the same wording.
+- *Problem:* when $Y\subset\mathcal A_{3r,5r}(z)$, the strict event is empty, so the condition does not express what is intended.
+- *Correction:* "exits $\mathcal A_{3r,5r}(z)$ no later than exiting $Y$", that is, the exit time of the annulus is at most the exit time of $Y$.
 
 ### Section 11
 
