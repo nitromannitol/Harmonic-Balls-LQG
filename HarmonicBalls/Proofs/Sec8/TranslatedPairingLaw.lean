@@ -66,7 +66,4 @@ theorem IsWholePlaneGFF.rooted_translated_pairingProc_equivalence
   · apply shiftedRootReferenceLaw_absolutelyContinuous_of_fiberwise ρ P P _ _ hbase hjoint
     exact Filter.Eventually.of_forall (fun z => Measure.absolutelyContinuous_of_le (hh.map_translated_pairingProc_eq z).symm.le)
 
-#print axioms IsWholePlaneGFF.rooted_translated_pairingProc_equivalence
-#print axioms IsWholePlaneGFF.map_translated_pairingProc_eq
-
 end HarmonicBalls

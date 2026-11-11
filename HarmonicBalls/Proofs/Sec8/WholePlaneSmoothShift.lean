@@ -131,9 +131,4 @@ theorem IsWholePlaneGFF.rooted_local_smooth_shift_law
   filter_upwards [hg] with z hz
   exact hh.local_smooth_shift_pairing_law hr hrR hz (k z)
 
-#print axioms IsWholePlaneGFF.smooth_shift_pairing_laws
-#print axioms IsWholePlaneGFF.smooth_shift_raw_pairing_laws
-#print axioms IsWholePlaneGFF.local_smooth_shift_pairing_law
-#print axioms IsWholePlaneGFF.rooted_local_smooth_shift_law
-
 end HarmonicBalls

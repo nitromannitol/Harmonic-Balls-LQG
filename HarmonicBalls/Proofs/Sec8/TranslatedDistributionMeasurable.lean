@@ -168,8 +168,4 @@ theorem IsWholePlaneGFF.exists_rooted_translated_distribution_version
   obtain ⟨H, hH, hversion⟩ := hh.exists_meanZero_distribution_version
   exact ⟨H, hH, hversion, hh.rooted_translated_distribution_version_equivalence H hH hversion ρ⟩
 
-#print axioms continuous_testAffinePull_one
-#print axioms measurable_translated_distribution_pairing
-#print axioms IsWholePlaneGFF.exists_rooted_translated_distribution_version
-
 end HarmonicBalls

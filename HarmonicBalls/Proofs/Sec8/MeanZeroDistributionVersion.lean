@@ -71,7 +71,4 @@ theorem IsWholePlaneGFF.exists_meanZero_distribution_version
     exact (ae_map_iff (LQGMetric.GFFLaw.measurable_pairProc hh'.1.measurable).aemeasurable hS).2 href
   exact (ae_map_iff (Section6.measurable_pairingProc hh).aemeasurable hS).1 hin
 
-#print axioms meanZeroDistributionVersion_pairProc
-#print axioms IsWholePlaneGFF.exists_meanZero_distribution_version
-
 end HarmonicBalls
