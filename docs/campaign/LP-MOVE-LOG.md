@@ -191,3 +191,8 @@ Prepared for the pin switch window (LP-MOVE-PLAN section 2). No repository file 
 - The 41 moved LPStage mirrors still import LPStage modules (their own chain). They are not rewritten by design and retire with the HB rewire.
 - How to run (after the pin switch, operator, with the HB owners quiescent): `rewire.sh dry` (writes `rewire.patch`, modifies nothing), `rewire.sh check` (dry, residual imports, `git apply --check`), `rewire.sh apply` (dry, refuses target files with uncommitted changes unless `FORCE=1`, then `git apply`). Re-run `dry` before `apply` if the tree has changed.
 - How to reverse: `git apply -R rewire.patch` from the repository root, after an apply of that patch (the reverse check is meaningful only on the applied tree).
+
+## Mirror sync (docstrings)
+
+- 2026-11-11, LP HEAD 21b12551b: 47 of the 53 moved mirrors differed from their LP files outside the import lines (LP docstring and locator rewrites). Each was rewritten as its own import lines followed by the LP file's non-import lines verbatim (commit 1bc9a7c5). commentonly.py: OK for all 47, DIFF for none. The other 6 already matched.
+- Final mirror check (diff outside `^import ` lines, all 53 moved modules) at LP HEAD 21b12551b: 0 differing.
