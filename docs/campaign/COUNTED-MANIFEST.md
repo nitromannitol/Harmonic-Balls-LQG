@@ -35,9 +35,10 @@ forms (`...CanonicalStmt`, xi = lqgXi gamma) are listed too. Fewest-binder candi
 
 **Counting caveat.** A binder count is the number of explicit binders of the declaration's type, as Lean reports it.
 A hypothesis that a file declares with `variable` and brings in with `include` is an explicit binder of every theorem
-of that section and is counted (binder recount below). In the tables after the first one (Proofs-only rows, corrected
-forms, forall-xi forms) the counts are still the binders written in the signature, so a row whose file uses `include`
-(for example `Proofs/Sec9/LQGExistenceConsequences.lean:26`, `include hDG hCC hE`) can understate its binders.
+of that section and is counted (binder recount below). The rows of the later tables that name a declaration of the axiom gate
+(2.4, 6.5, 9.1, the corrected forms
+9.2, 10.5, 11.16, 11.17, and the six forall-xi and canonical-xi rows) were compared with the Lean types on 2026-11-11
+and agree. The 11.16 audit table (candidate declarations that are not counted) was not recounted.
 
 **Binder recount (2026-11-11).** The counts of the first table were compared with the types of the declarations: for
 every theorem of `HarmonicBalls/FirstPass/` and `HarmonicBalls/Closure/` whose type ends in one of the 60 draft
