@@ -124,7 +124,7 @@ Distinct axiom sets over all declarations: 92 with [propext, Classical.choice, Q
 | row 33 | `HarmonicBalls.lqgMassInnerMeasurable_derived'` | `HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:198` | propext, Classical.choice, Quot.sound |
 | row 35 | `HarmonicBalls.planeDomainMinusConvexCompactPreconnected_derived` | `HarmonicBalls/FirstPass/Phase2/PlaneDomainDerived.lean:14` | propext, Classical.choice, Quot.sound |
 | row 37 | `HarmonicBalls.S11aj.cameronMartinGFFReweighting_derived` | `HarmonicBalls/FirstPass/Phase2/CameronMartinReweightingDerived2.lean:267` | propext, Classical.choice, Quot.sound |
-| row 39 | `HarmonicBalls.internalMetricClosedEqIInfThickening_derived` | `HarmonicBalls/FirstPass/Phase2/InternalMetricClosedDerived.lean:409` | propext, Classical.choice, Quot.sound |
+| row 39 | `HarmonicBalls.internalMetricClosedEqIInfThickening_derived` | `HarmonicBalls/FirstPass/Phase2/InternalMetricClosedDerived.lean:408` | propext, Classical.choice, Quot.sound |
 | row 42 | `HarmonicBalls.lqgMetricLengthUniv_derived` | `HarmonicBalls/FirstPass/Phase2/LengthUnivDerived.lean:30` | propext, Classical.choice, Quot.sound |
 | row 49 | `HarmonicBalls.lqgMeasureLocality_derived` | `HarmonicBalls/FirstPass/Phase2/CircleAverageLocalityLinkDerived.lean:185` | propext, Classical.choice, Quot.sound |
 | row 51 | `HarmonicBalls.LocalDecoderCommon.localMeasureKernelStmt_derived` | `HarmonicBalls/FirstPass/Phase2/LocalDecoderCommonDerived.lean:1564` | propext, Classical.choice, Quot.sound |
