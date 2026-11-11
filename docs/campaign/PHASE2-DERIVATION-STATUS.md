@@ -152,3 +152,23 @@ Binders of counted declarations whose Prop is not a row of this table (head of t
 - PinchThirdEventPositiveStmt: 1 (11.12)
 - RootedConeFrequencyTransferFrozen: 1 (11.7)
 - SmallMetricDiameterLargeMassSquareStmt: 1 (11.9)
+
+## Round 38 (2026-11-11): hypotheses the counted forms do not use
+
+A search over the compiled theorems of the repository (forward chaining on statements; every match confirmed by
+definitional equality; the generated file `HarmonicBalls/FirstPass/Phase2/DerivedInputs38.lean` is the check) found the
+counted forms whose conclusion already follows from a subset of their hypotheses. No input is proved in this round: the
+hypotheses removed are either unused or were theorems already. Axioms of the 11 new forms: propext, Classical.choice,
+Quot.sound (`checks/AxiomsDerivedInputs38.lean`, and `checks/AxiomGate.lean`: 125 declarations).
+
+| result | counted form now | binders | no longer bound |
+|---|---|---|---|
+| 3.1, 3.2, 3.3, 3.4, 3.5 | `closure_3_k_derivedInputs38` | 6 -> 4 (`hDG hCC hE hN`) | `hAff` (affine invariance of the whole-plane GFF), `hW` (Weyl scaling of the LQG measure) |
+| 6.12 | `closure_6_12_derivedInputs38` | 3 -> 0 | `hDG`, `hCC`, `hE`: the statement is `shellDecompositionStmt_proved` |
+| 9.3, 9.4 | `firstPass_9_3_derivedInputs38`, `firstPass_9_4_derivedInputs38` | 6 -> 5 (`hDG hCC hW hE hN`) | `hAff` |
+| 11.9 | `firstPass_11_9_derivedInputs38` | 7 -> 4 (`hMet hShift hAx h1110`) | `hCM`, `hMass`, `hFD`: supplied by `cameronMartinGFFMutualAbsCont_derived`, `lqgMassFunctionalMeasurable_derived`, `planeDomainMinusConvexCompactPreconnected_derived` |
+| 11.10 | `S11c.firstPass_11_10_derivedInputs38` | 9 -> 8 | `hmeasure`: supplied by `lqgMeasureSquareMeasurable_derived'` |
+| 11.17 (faithful form) | `firstPass_11_17_corrected_derivedInputs38` | 7 -> 3 (`h16 hAx hdec`) | `hCMGFF`, `hF`, `hK1`, `hN2`: supplied by their `_derived` theorems |
+
+No reduction was found by this search for 4.1-4.3 (5 binders) nor for any other counted form (68 declarations
+examined in all).
