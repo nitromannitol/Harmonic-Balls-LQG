@@ -45,3 +45,39 @@ Moved to `archive/` (37 files, each a rename at 100% similarity; `git show -M --
 | paper/Figures/harmonic-balls/1_2.png | archive/paper/Figures/unused/harmonic-balls/1_2.png |
 | paper/Figures/harmonic-balls/3_2.png | archive/paper/Figures/unused/harmonic-balls/3_2.png |
 | paper/Figures/harmonic-balls/9_5.png | archive/paper/Figures/unused/harmonic-balls/9_5.png |
+
+## Development audit modules
+
+Moved to `archive/HarmonicBalls/Audit/` (27 files, each a rename at 100% similarity; `git show -M --name-status` on the commit titled "Archive development audit modules"). Reason: development audit checks, superseded by `checks/AxiomGate.lean`. No file was deleted.
+
+Kept in `HarmonicBalls/Audit/`, because five modules outside it import them: `GreenSubharmonicTestClass.lean` (imported by `HarmonicBalls/Proofs/Potential/BoundedJensenPotentialIntegrability.lean`, `BoundedJensenSmoothTests.lean` and `BoundedSubharmonicRepresentatives.lean`), `Section5InfimumSemantics.lean` (imported by `HarmonicBalls/Proofs/Sec5/PoleInfimumCharacterization.lean`) and `Section5ExhaustionCompatibility.lean` (imported by `HarmonicBalls/Proofs/Sec5/StrongCompatibilityAssembly.lean`). None of the three imports a moved module.
+
+| old path | new path |
+|---|---|
+| HarmonicBalls/Audit/AppendixInputChecks.lean | archive/HarmonicBalls/Audit/AppendixInputChecks.lean |
+| HarmonicBalls/Audit/ConeProbabilityLiterature.lean | archive/HarmonicBalls/Audit/ConeProbabilityLiterature.lean |
+| HarmonicBalls/Audit/FirstPass11.lean | archive/HarmonicBalls/Audit/FirstPass11.lean |
+| HarmonicBalls/Audit/GFFSamplewiseRepresentation.lean | archive/HarmonicBalls/Audit/GFFSamplewiseRepresentation.lean |
+| HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean | archive/HarmonicBalls/Audit/Sec11CirclePalmImportChecks.lean |
+| HarmonicBalls/Audit/Section10CrossingExports.lean | archive/HarmonicBalls/Audit/Section10CrossingExports.lean |
+| HarmonicBalls/Audit/Section10JordanExport.lean | archive/HarmonicBalls/Audit/Section10JordanExport.lean |
+| HarmonicBalls/Audit/Section11PinchMetricFieldConsumer.lean | archive/HarmonicBalls/Audit/Section11PinchMetricFieldConsumer.lean |
+| HarmonicBalls/Audit/Section11PinchPositivity.lean | archive/HarmonicBalls/Audit/Section11PinchPositivity.lean |
+| HarmonicBalls/Audit/Section11ProperGeodesics.lean | archive/HarmonicBalls/Audit/Section11ProperGeodesics.lean |
+| HarmonicBalls/Audit/Section1ConditionalExports.lean | archive/HarmonicBalls/Audit/Section1ConditionalExports.lean |
+| HarmonicBalls/Audit/Section2FourInputChecks.lean | archive/HarmonicBalls/Audit/Section2FourInputChecks.lean |
+| HarmonicBalls/Audit/Section2VolumeGrowthInputs.lean | archive/HarmonicBalls/Audit/Section2VolumeGrowthInputs.lean |
+| HarmonicBalls/Audit/Section3InputChecks.lean | archive/HarmonicBalls/Audit/Section3InputChecks.lean |
+| HarmonicBalls/Audit/Section4InputChecks.lean | archive/HarmonicBalls/Audit/Section4InputChecks.lean |
+| HarmonicBalls/Audit/Section5ConditionalExports.lean | archive/HarmonicBalls/Audit/Section5ConditionalExports.lean |
+| HarmonicBalls/Audit/Section5ContinuityCompatibility.lean | archive/HarmonicBalls/Audit/Section5ContinuityCompatibility.lean |
+| HarmonicBalls/Audit/Section5ExistenceUniqueness.lean | archive/HarmonicBalls/Audit/Section5ExistenceUniqueness.lean |
+| HarmonicBalls/Audit/Section5InputChecks.lean | archive/HarmonicBalls/Audit/Section5InputChecks.lean |
+| HarmonicBalls/Audit/Section5StagedChecks.lean | archive/HarmonicBalls/Audit/Section5StagedChecks.lean |
+| HarmonicBalls/Audit/Section6AnnulusChecks.lean | archive/HarmonicBalls/Audit/Section6AnnulusChecks.lean |
+| HarmonicBalls/Audit/Section6ConditionalExports.lean | archive/HarmonicBalls/Audit/Section6ConditionalExports.lean |
+| HarmonicBalls/Audit/Section6FullInputChecks.lean | archive/HarmonicBalls/Audit/Section6FullInputChecks.lean |
+| HarmonicBalls/Audit/Section8ConditionalExports.lean | archive/HarmonicBalls/Audit/Section8ConditionalExports.lean |
+| HarmonicBalls/Audit/Section9ComparisonExports.lean | archive/HarmonicBalls/Audit/Section9ComparisonExports.lean |
+| HarmonicBalls/Audit/Section9ThreeInputChecks.lean | archive/HarmonicBalls/Audit/Section9ThreeInputChecks.lean |
+| HarmonicBalls/Audit/Section9UniquenessChecks.lean | archive/HarmonicBalls/Audit/Section9UniquenessChecks.lean |
