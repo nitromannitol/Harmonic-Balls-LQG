@@ -209,6 +209,95 @@ theorem lintegral_joint_eq_of_measures_eq {Ω : Type*} [MeasurableSpace Ω] {P :
     rw [rightKernel, lintegral_map hΨ hm]
   rw [hA, ← hL, hLR, hR]
 
+/-! ### J6: `L = R` on a generating π-system of cylinders
+
+The finite identity `hT` is `DMSFiniteTiltPosStmt` for the fixed `μ`. It is transported to `ρ` by `(μ ω).restrict B₁ = ρ ω`
+almost surely. The cylinder family is an argument `C`, so this file does not import `DMSJointPosCylinder`; the final
+theorem (J7) supplies `hPi`, `hgen`, `hCm`, `hCform` for its `cyl` (plan steps J2-J3, `isPiSystem_cyl`, `generateFrom_cyl`). -/
+
+/-- **J6, one cylinder.** For test functions `φ`, circle parameters `c` and a measurable `E`, the left and the right measures
+agree on `{x | obs φ c x ∈ E}`: the finite identity `hT` with `Φ = E.indicator 1` (Duplantier-Miller-Sheffield Lemma A.10). -/
+theorem leftMeas_cyl_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ ρ : Ω → Measure ℂ}
+    (hρ : Measurable ρ) (hfin : ∀ ω, IsFiniteMeasure (ρ ω))
+    (hρμ : ∀ᵐ ω ∂P, (μ ω).restrict (ball (0 : ℂ) 1) = ρ ω)
+    (hG : Measurable (obsG hC hcirc)) (hGs : Measurable (obsGs γ hC hcirc))
+    (hT : ∀ (n m : ℕ) (φ : Fin n → ℂ → ℝ) (c : Fin m → CircleParameter)
+      (Φ : (Fin n → ℝ) × (Fin m → ℝ) × ℂ → ℝ≥0∞), (∀ i, IsTestFunction Set.univ (φ i)) → Measurable Φ →
+        ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1,
+            Φ ((fun i => hC ω (φ i)), (fun k => hcirc ω (c k).1 (c k).2), z) ∂(μ ω) ∂P
+          = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω,
+              Φ ((fun i => dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) (φ i)),
+                (fun k => dmsShiftedCircle γ z (hcirc ω) (c k).1 (c k).2), z) ∂P ∂volume)
+    (n m : ℕ) (φ : Fin n → ℂ → ℝ) (c : Fin m → CircleParameter)
+    (E : Set ((Fin n → ℝ) × (Fin m → ℝ) × ℂ)) (hφ : ∀ i, IsTestFunction Set.univ (φ i)) (hE : MeasurableSet E)
+    (S : Set PosObs) (hSeq : S = {x : PosObs | ((fun i => x.1 (φ i)), (fun k => x.2.1 (c k)), x.2.2) ∈ E})
+    (hSm : MeasurableSet S) :
+    leftMeas P hC hcirc ρ S = rightMeas P γ hC hcirc S := by
+  subst hSeq
+  have hk := measurable_leftKernel hρ hfin hG
+  have hk2 := measurable_rightKernel (P := P) hGs
+  have hΦ : Measurable (E.indicator (1 : (Fin n → ℝ) × (Fin m → ℝ) × ℂ → ℝ≥0∞)) := measurable_one.indicator hE
+  have hL : leftMeas P hC hcirc ρ {x : PosObs | ((fun i => x.1 (φ i)), (fun k => x.2.1 (c k)), x.2.2) ∈ E}
+      = ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1,
+          E.indicator 1 ((fun i => hC ω (φ i)), (fun k => hcirc ω (c k).1 (c k).2), z) ∂(μ ω) ∂P := by
+    rw [leftMeas_apply P hC hcirc ρ hk hSm]
+    refine lintegral_congr_ae ?_
+    filter_upwards [hρμ] with ω hω
+    have hm : Measurable fun z => obsG hC hcirc (ω, z) := hG.comp measurable_prodMk_left
+    rw [leftKernel, Measure.map_apply hm hSm, ← lintegral_indicator_one (hm hSm), ← hω]
+    exact lintegral_congr fun z => rfl
+  have hR : rightMeas P γ hC hcirc {x : PosObs | ((fun i => x.1 (φ i)), (fun k => x.2.1 (c k)), x.2.2) ∈ E}
+      = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω,
+          E.indicator 1 ((fun i => dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) (φ i)),
+            (fun k => dmsShiftedCircle γ z (hcirc ω) (c k).1 (c k).2), z) ∂P ∂volume := by
+    rw [rightMeas_apply P γ hC hcirc hk2 hSm]
+    refine lintegral_congr fun z => ?_
+    have hm : Measurable fun ω => obsGs γ hC hcirc (z, ω) := hGs.comp measurable_prodMk_left
+    rw [rightKernel, Measure.map_apply hm hSm, ← lintegral_indicator_one (hm hSm)]
+    exact lintegral_congr fun ω => rfl
+  rw [hL, hR]
+  exact hT n m φ c (E.indicator 1) hφ hΦ
+
+/-- **J6, `L = R` on a generating π-system.** If `C` is a π-system generating `posObsSigma`, consisting of measurable
+cylinders of the form `{x | obs φ c x ∈ E}` with test functions `φ`, then `leftMeas = rightMeas`. The proof is
+`ext_of_generate_finite`; finiteness of `L` comes from `L univ = R univ < ∞`. -/
+theorem leftMeas_eq_rightMeas_of_cyl {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ ρ : Ω → Measure ℂ}
+    (hρ : Measurable ρ) (hfin : ∀ ω, IsFiniteMeasure (ρ ω))
+    (hρμ : ∀ᵐ ω ∂P, (μ ω).restrict (ball (0 : ℂ) 1) = ρ ω)
+    (hG : Measurable (obsG hC hcirc)) (hGs : Measurable (obsGs γ hC hcirc))
+    (hT : ∀ (n m : ℕ) (φ : Fin n → ℂ → ℝ) (c : Fin m → CircleParameter)
+      (Φ : (Fin n → ℝ) × (Fin m → ℝ) × ℂ → ℝ≥0∞), (∀ i, IsTestFunction Set.univ (φ i)) → Measurable Φ →
+        ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1,
+            Φ ((fun i => hC ω (φ i)), (fun k => hcirc ω (c k).1 (c k).2), z) ∂(μ ω) ∂P
+          = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω,
+              Φ ((fun i => dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0) (φ i)),
+                (fun k => dmsShiftedCircle γ z (hcirc ω) (c k).1 (c k).2), z) ∂P ∂volume)
+    (C : Set (Set PosObs)) (hPi : IsPiSystem C) (hgen : posObsSigma = MeasurableSpace.generateFrom C)
+    (hCm : ∀ S ∈ C, MeasurableSet S)
+    (hCform : ∀ S ∈ C, ∃ (n m : ℕ) (φ : Fin n → ℂ → ℝ) (c : Fin m → CircleParameter)
+      (E : Set ((Fin n → ℝ) × (Fin m → ℝ) × ℂ)), (∀ i, IsTestFunction Set.univ (φ i)) ∧ MeasurableSet E ∧
+        S = {x : PosObs | ((fun i => x.1 (φ i)), (fun k => x.2.1 (c k)), x.2.2) ∈ E}) :
+    leftMeas P hC hcirc ρ = rightMeas P γ hC hcirc := by
+  have hk2 := measurable_rightKernel (P := P) hGs
+  have hcyl : ∀ S ∈ C, leftMeas P hC hcirc ρ S = rightMeas P γ hC hcirc S := by
+    intro S hS
+    obtain ⟨n, m, φ, c, E, hφ, hE, hSeq⟩ := hCform S hS
+    exact leftMeas_cyl_eq hρ hfin hρμ hG hGs hT n m φ c E hφ hE S hSeq (hCm S hS)
+  have huniv : leftMeas P hC hcirc ρ univ = rightMeas P γ hC hcirc univ :=
+    leftMeas_cyl_eq hρ hfin hρμ hG hGs hT 0 0 Fin.elim0 Fin.elim0 Set.univ (fun i => Fin.elim0 i)
+      MeasurableSet.univ univ (by ext; simp) MeasurableSet.univ
+  have hRuniv : rightMeas P γ hC hcirc univ < ⊤ := by
+    rw [rightMeas_apply P γ hC hcirc hk2 MeasurableSet.univ]
+    have h1 : ∀ z : ℂ, rightKernel P γ hC hcirc z univ = 1 := fun z => by
+      have hm : Measurable fun ω => obsGs γ hC hcirc (z, ω) := hGs.comp measurable_prodMk_left
+      rw [rightKernel, Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, measure_univ]
+    simp only [h1, lintegral_const, Measure.restrict_apply_univ, one_mul]
+    exact measure_ball_lt_top
+  have : IsFiniteMeasure (leftMeas P hC hcirc ρ) := ⟨by rw [huniv]; exact hRuniv⟩
+  exact ext_of_generate_finite C hgen hPi hcyl huniv
+
 end DMSJointPosOfFinite
 
 end HarmonicBalls
