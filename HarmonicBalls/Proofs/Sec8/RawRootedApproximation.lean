@@ -224,10 +224,4 @@ theorem IsWholePlaneGFF.exists_unitBall_frequency_certificate
     ε hε.1 S hcount hgen hpi hsets f hf hlim N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ ha
   exact ⟨ε, hε, E, hE, hEae⟩
 
-#print axioms IsWholePlaneGFF.exists_raw_rooted_normalizedLQGApprox
-#print axioms unitBall_rooted_dyadic_buffer
-#print axioms ae_mem_weightedRestriction_compProd
-#print axioms IsWholePlaneGFF.exists_unitBall_rooted_mass_approximations
-#print axioms IsWholePlaneGFF.exists_unitBall_frequency_certificate
-
 end HarmonicBalls

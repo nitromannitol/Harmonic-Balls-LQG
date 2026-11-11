@@ -68,6 +68,4 @@ theorem IsWholePlaneGFF.common_rooted_normalizedMass_approximations
   · exact tendstoInMeasure_rooted_normalizedMass_of_approximation Q g μ hm hμ hc B hB w hw
       hmass hε E hmono hunion S hsets hfrontμ Y hY F hF hFμ
 
-#print axioms IsWholePlaneGFF.common_rooted_normalizedMass_approximations
-
 end HarmonicBalls

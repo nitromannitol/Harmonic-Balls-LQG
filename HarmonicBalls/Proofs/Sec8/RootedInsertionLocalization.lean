@@ -103,12 +103,4 @@ theorem integral_recentered_wholePlane_root_insertion_localTest
   have : ‖y + z‖ < 1 := by linarith
   simpa [mem_ball, dist_eq_norm] using this
 
-#print axioms closedBall_subset_unitBall_of_norm_add_lt_one
-#print axioms exists_pos_closedBall_subset_unitBall
-#print axioms wholePlane_root_insertion_eq_log_on_unitBall
-#print axioms integral_wholePlane_root_insertion_eq_log
-#print axioms wholePlane_root_inserted_local_pairings_eq_log
-#print axioms integral_recentered_wholePlane_root_insertion_eq_log
-#print axioms integral_recentered_wholePlane_root_insertion_localTest
-
 end HarmonicBalls

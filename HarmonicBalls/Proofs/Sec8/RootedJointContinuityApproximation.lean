@@ -84,6 +84,4 @@ theorem IsWholePlaneGFF.exists_rooted_common_continuity_approximations
   exact ⟨ε, hε, S, hc, hp, hu, hsets, hg, f, hfm, hfref, hfroot,
     ae_recentered_ball_mass_weightedRestriction_compProd Q μ hm hlocμ B hB w hw hε.1⟩
 
-#print axioms IsWholePlaneGFF.exists_rooted_common_continuity_approximations
-
 end HarmonicBalls

@@ -134,8 +134,4 @@ theorem IsWholePlaneGFF.ae_ae_eventually_recentered_phase_events
   have hzn := bufferedRoots_mono hn hN
   exact ⟨hzn, hz n hzA hzn⟩
 
-#print axioms IsWholePlaneGFF.ae_ae_eventually_recentered_phase_events
-#print axioms ae_shiftedRootReferenceLaw_of_phase_field_event
-#print axioms IsWholePlaneGFF.ae_ae_localized_recentered_phase_event
-
 end HarmonicBalls

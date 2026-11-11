@@ -55,6 +55,4 @@ theorem exists_observed_frequency_event_weightedRestriction_compProd
     (fun x => μ x.1) ε hε hμQ hlocQ hmQ S hcount hgen hpi hsets f hf hlim
     β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit
 
-#print axioms exists_observed_frequency_event_weightedRestriction_compProd
-
 end HarmonicBalls

@@ -45,6 +45,4 @@ theorem originManyGoodScalesStmt_of_literature
     (lqgVolumeGrowthAllScalesStmt_of_literature hDG hAff hCC₀ hW hex hatom)
     hN₀ hAff hCC hex hW
 
-#print axioms originManyGoodScalesStmt_of_literature
-
 end HarmonicBalls

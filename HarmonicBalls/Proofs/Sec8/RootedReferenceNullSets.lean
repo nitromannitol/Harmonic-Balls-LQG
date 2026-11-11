@@ -108,10 +108,4 @@ theorem IsWholePlaneGFF.ae_ae_buffered_root_cover
     simpa [mem_ball, dist_eq_norm] using hin
   · exact Or.inr (exteriorBufferedRoots_cover hout)
 
-#print axioms IsWholePlaneGFF.ae_ae_buffered_root_cover
-#print axioms ae_shiftedRootReferenceLaw_root_not_mem
-#print axioms IsWholePlaneGFF.ae_ae_not_mem_of_rooted_comparison
-#print axioms exteriorBufferedRoots_cover
-#print axioms ae_exteriorBufferedRoots_side
-
 end HarmonicBalls

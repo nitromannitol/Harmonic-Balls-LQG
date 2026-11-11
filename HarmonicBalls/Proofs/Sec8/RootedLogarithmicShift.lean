@@ -132,11 +132,4 @@ theorem IsWholePlaneGFF.rooted_origin_logarithmic_shift_law
   rw [hxeq, norm_neg] at hxnorm
   exact (not_lt_of_ge hz) hxnorm
 
-#print axioms IsWholePlaneGFF.rooted_local_smooth_insertion_law
-#print axioms IsWholePlaneGFF.rooted_local_logarithmic_shift_law
-#print axioms integrable_test_mul_translated_log
-#print axioms integral_test_mul_translated_log_add
-#print axioms IsWholePlaneGFF.rooted_local_combined_logarithmic_shift_law
-#print axioms IsWholePlaneGFF.rooted_origin_logarithmic_shift_law
-
 end HarmonicBalls

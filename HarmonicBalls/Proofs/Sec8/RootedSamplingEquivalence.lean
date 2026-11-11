@@ -50,7 +50,4 @@ theorem ae_weightedRestriction_compProd_iff
   · intro h
     exact (weightedRestrictionKernel_compProd_ac_canonical P μ hμ B hB w hw hfin).ae_le h
 
-#print axioms unnormalizedWeightedRestrictionKernel_compProd_ac_normalized
-#print axioms ae_weightedRestriction_compProd_iff
-
 end HarmonicBalls

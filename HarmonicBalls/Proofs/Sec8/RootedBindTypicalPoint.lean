@@ -65,8 +65,4 @@ theorem IsWholePlaneGFF.ae_ae_mem_unitBall_of_raw_rooted_bind
     ae_of_ae_map measurable_prodMk_left.aemeasurable hω
   exact (ae_restrict_iff' measurableSet_ball).mp hz
 
-#print axioms ae_ae_mem_of_observed_restricted_bind
-#print axioms ae_ae_of_observed_restricted_bind_cover
-#print axioms IsWholePlaneGFF.ae_ae_mem_unitBall_of_raw_rooted_bind
-
 end HarmonicBalls

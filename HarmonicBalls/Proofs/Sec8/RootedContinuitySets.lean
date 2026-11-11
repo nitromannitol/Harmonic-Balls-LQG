@@ -164,7 +164,4 @@ theorem exists_recentered_continuity_system
   exact ⟨r 0, hr 0, T, hc, hp, hu, ho, hg, E, hEm, hmono, hunion, hbuffer,
     ae_frontiers_intersections_of_common_continuity P ν E T hE hT⟩
 
-#print axioms exists_recentered_continuity_system
-#print axioms exists_buffered_ball_exhaustion_of_ae_locallyFinite
-
 end HarmonicBalls

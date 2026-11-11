@@ -72,6 +72,4 @@ theorem tendstoInMeasure_rooted_normalizedMass_of_approximation
   simp_rw [hFx]
   exact hlim'
 
-#print axioms tendstoInMeasure_rooted_normalizedMass_of_approximation
-
 end HarmonicBalls

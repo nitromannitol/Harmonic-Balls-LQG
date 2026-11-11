@@ -79,6 +79,4 @@ theorem IsWholePlaneGFF.exists_rooted_normalizedLQGApprox_of_joint_domination
   funext z
   rw [heq.1 n z]
 
-#print axioms IsWholePlaneGFF.exists_rooted_normalizedLQGApprox_of_joint_domination
-
 end HarmonicBalls

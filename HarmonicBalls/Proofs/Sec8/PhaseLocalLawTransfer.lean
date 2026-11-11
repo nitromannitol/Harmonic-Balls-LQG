@@ -138,8 +138,4 @@ theorem ae_ae_rooted_veryGoodComparableScaleFrequency_of_local_recentered_law
     (ρ n) (hρ n) (R n) (F n) (hF n) ε hε hUpos (hFpos n) (hlaw n)
     (fun _ ω => μ ω) (hcenter n) β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit hphase
 
-#print axioms ae_ae_rooted_veryGoodComparableScaleFrequency_of_local_recentered_law
-
-#print axioms ae_ae_veryGoodComparableScaleFrequency_of_local_recentered_law
-
 end HarmonicBalls

@@ -78,6 +78,4 @@ theorem ae_rooted_veryGoodComparableScaleFrequency_of_common_approximations
   rw [veryGoodComparableScaleCount_eq_centered_torus]
   simpa only [center, he] using hN
 
-#print axioms ae_rooted_veryGoodComparableScaleFrequency_of_common_approximations
-
 end HarmonicBalls

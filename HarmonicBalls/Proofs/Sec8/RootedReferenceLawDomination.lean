@@ -67,7 +67,4 @@ theorem shiftedRootReferenceLaw_local_shift_domination
   filter_upwards [heq, hdom] with z heqz hdomz
   exact local_shifted_pairing_laws_of_global_domination P X hX (f z) (g z) heqz (k z) hdomz
 
-#print axioms shiftedRootReferenceLaw_absolutelyContinuous_of_fiberwise
-#print axioms shiftedRootReferenceLaw_local_shift_domination
-
 end HarmonicBalls

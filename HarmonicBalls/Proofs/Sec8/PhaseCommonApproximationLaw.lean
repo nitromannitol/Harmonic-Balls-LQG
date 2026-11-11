@@ -43,6 +43,4 @@ theorem localNormalizedMeasure_law_absolutelyContinuous_of_common_approximations
     (measurable_subtype_coe.comp hU) (measurable_subtype_coe.comp hV)
     (Metric.ball 0 ε) Metric.isOpen_ball.measurableSet S hcount hgen hpi hsets huniv f hf hu hv
 
-#print axioms localNormalizedMeasure_law_absolutelyContinuous_of_common_approximations
-
 end HarmonicBalls

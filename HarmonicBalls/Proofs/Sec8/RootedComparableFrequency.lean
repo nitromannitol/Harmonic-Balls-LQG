@@ -112,8 +112,4 @@ theorem IsWholePlaneGFF.ae_ae_singular_blockFrequency_of_regular_root_reference
     P ν hνmeas X hX decode hdecode hdecodefinite hdecodeeq B hB hcover hfin
     β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit ρ Q shift hshift R hrooted hac hfixed
 
-#print axioms IsWholePlaneGFF.ae_ae_singular_blockFrequency_of_regular_away_zero
-#print axioms ae_ae_veryGoodComparableScaleFrequency_of_observed_root_reference_cover
-#print axioms IsWholePlaneGFF.ae_ae_singular_blockFrequency_of_regular_root_reference
-
 end HarmonicBalls

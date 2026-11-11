@@ -106,9 +106,4 @@ theorem IsWholePlaneGFF.rooted_combined_normalization_equivalence
   simpa only [integral_recentered_root_insertion_split, add_assoc] using
     hh.rooted_normalization_shift_equivalence ρ hr hrR a b hside
 
-#print axioms integral_recentered_root_insertion_split
-#print axioms IsWholePlaneGFF.rooted_combined_normalization_equivalence
-#print axioms contDiffOn_translated_wholePlane_normalization
-#print axioms IsWholePlaneGFF.rooted_normalization_shift_equivalence
-
 end HarmonicBalls

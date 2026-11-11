@@ -114,8 +114,4 @@ theorem phaseVeryGoodComparable_blockFrequency_iff_normalizedRestriction
     (restrict_eq_smul_normalizedRestriction μ isOpen_ball.measurableSet hzero htop)
     β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ phase
 
-#print axioms phaseVeryGoodComparable_blockFrequency_iff_normalizedRestriction
-#print axioms eventually_phaseVeryGoodComparable_iff_of_restrict_eq_smul
-#print axioms phaseVeryGoodComparable_blockFrequency_iff_of_restrict_eq_smul
-
 end HarmonicBalls

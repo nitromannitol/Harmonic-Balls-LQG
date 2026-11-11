@@ -76,8 +76,4 @@ theorem IsWholePlaneGFF.map_raw_rooted_unitBall_bind
   exact map_observed_restricted_bind P μ hmeas _ hfield meanZeroFieldEquiv
     meanZeroFieldEquiv.measurable _ measurableSet_ball hfin
 
-#print axioms map_observed_restricted_bind
-#print axioms observed_normalized_compProd_ac_map_restricted_bind
-#print axioms IsWholePlaneGFF.map_raw_rooted_unitBall_bind
-
 end HarmonicBalls

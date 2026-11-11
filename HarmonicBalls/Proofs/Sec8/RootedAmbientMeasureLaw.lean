@@ -80,6 +80,4 @@ theorem exists_uniform_rooted_frequency_of_centered_measureLaw
     filter_upwards [hdomz.ae_le hcenter] with ω hω
     exact hω z
 
-#print axioms exists_uniform_rooted_frequency_of_centered_measureLaw
-
 end HarmonicBalls

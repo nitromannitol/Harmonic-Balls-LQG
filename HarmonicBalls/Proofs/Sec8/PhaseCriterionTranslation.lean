@@ -185,11 +185,4 @@ theorem isVeryGoodAnnulus_iff_centered_shifted_phase (μ : Measure ℂ)
   simp only [add_neg_cancel, ← sub_eq_add_neg, zero_sub, phaseVeryGoodCriterionThree_zero] at hphase
   rw [hphase]
 
-#print axioms phaseVeryGoodCriterionThree_centered_normalization
-#print axioms phaseVeryGoodCriterionThree_map_inv_smul
-#print axioms exists_phaseVeryGoodCriterionThree_probability
-#print axioms isVeryGoodAnnulus_iff_centered_shifted_phase
-#print axioms phaseVeryGoodCriterionThree_map_add
-#print axioms veryGoodCriterionThree_map_add_iff_phase
-
 end HarmonicBalls

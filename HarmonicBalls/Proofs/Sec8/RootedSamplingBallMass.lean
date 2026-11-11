@@ -49,6 +49,4 @@ theorem ae_recentered_ball_mass_weightedRestriction_compProd
   filter_upwards [hroot, ae_fst_of_ae_compProd P κ hFeq] with x hx heq
   simpa only [g, ← heq x.2] using hx
 
-#print axioms ae_recentered_ball_mass_weightedRestriction_compProd
-
 end HarmonicBalls

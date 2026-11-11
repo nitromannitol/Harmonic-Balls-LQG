@@ -60,6 +60,4 @@ theorem IsWholePlaneGFF.rooted_centeredCircle_laws_mutually_absolutelyContinuous
   rw [Measure.map_congr heq, Measure.map_congr heq'] at hac hca
   exact ⟨hac, hca⟩
 
-#print axioms IsWholePlaneGFF.rooted_centeredCircle_laws_mutually_absolutelyContinuous
-
 end HarmonicBalls

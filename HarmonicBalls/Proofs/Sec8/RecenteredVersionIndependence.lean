@@ -110,10 +110,4 @@ theorem IsWholePlaneGFF.normalized_translated_version_ac_origin_insertion
   exact hh.normalized_recentered_observation_ac_origin_insertion μ hμ B hB hfin ρ γ
     hr hrR hside hrooted
 
-#print axioms IsWholePlaneGFF.normalized_translated_version_ac_origin_insertion
-
-#print axioms ae_meanZeroDistributionVersion_eq_of_version
-#print axioms ae_inserted_translated_pairing_of_version
-#print axioms map_rooted_recentered_observation_eq_of_version
-
 end HarmonicBalls

@@ -45,6 +45,4 @@ theorem originManyGoodScalesStmt_of_explicit_inputs
   · intro Ω _ P γ α hC hcirc μ _ _ _ _ _
     exact hCC Ω P γ α hC hcirc
 
-#print axioms originManyGoodScalesStmt_of_explicit_inputs
-
 end HarmonicBalls

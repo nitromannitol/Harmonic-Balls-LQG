@@ -54,6 +54,4 @@ theorem IsWholePlaneGFF.exists_rooted_continuity_reference_approximations
     ae_recentered_ball_mass_weightedRestriction_compProd Q μ hμ hloc B hB w hw hε.1] with x hx hm
   exact ⟨hm.1, hm.2, hx⟩
 
-#print axioms IsWholePlaneGFF.exists_rooted_continuity_reference_approximations
-
 end HarmonicBalls

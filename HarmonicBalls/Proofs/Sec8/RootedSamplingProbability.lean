@@ -73,8 +73,4 @@ theorem aemeasurable_recentered_of_weightedRestriction_compProd
     rw [hx]
     exact (F (x.2, x.1)).property
 
-#print axioms ae_fst_of_ae_compProd
-#print axioms isProbabilityMeasure_weightedRestriction_compProd
-#print axioms aemeasurable_recentered_of_weightedRestriction_compProd
-
 end HarmonicBalls

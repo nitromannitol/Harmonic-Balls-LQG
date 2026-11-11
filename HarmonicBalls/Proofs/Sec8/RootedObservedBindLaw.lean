@@ -77,8 +77,4 @@ theorem observed_normalized_compProd_ac_restricted_bind
     (fun _ => 1) measurable_const hfin').map
       ((hX.comp measurable_fst).prodMk measurable_snd)
 
-#print axioms observed_bind_eq_compProd_map
-#print axioms observed_restricted_bind_eq_compProd_map
-#print axioms observed_normalized_compProd_ac_restricted_bind
-
 end HarmonicBalls

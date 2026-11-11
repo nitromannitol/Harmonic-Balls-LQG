@@ -59,6 +59,4 @@ theorem IsWholePlaneGFF.normalized_recentered_field_ac_origin_insertion
   apply measure_eq_zero_iff_ae_notMem.mpr
   exact (ae_map_iff hY.aemeasurable hA.compl).2 hroot
 
-#print axioms IsWholePlaneGFF.normalized_recentered_field_ac_origin_insertion
-
 end HarmonicBalls

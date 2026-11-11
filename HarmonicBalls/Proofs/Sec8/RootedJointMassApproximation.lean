@@ -68,6 +68,4 @@ theorem IsWholePlaneGFF.common_rooted_normalizedMass_of_joint_domination
     (fun ω => fieldCircleAverage α (gcirc ω)) μ hm hμ hc B hB w hw hmass
     hε E hmono hunion S hsets hfrontν hposν hfrontμ Y hY F hF hFν hFμ
 
-#print axioms IsWholePlaneGFF.common_rooted_normalizedMass_of_joint_domination
-
 end HarmonicBalls

@@ -113,8 +113,4 @@ theorem IsWholePlaneGFF.ae_ae_recentered_observation_of_rooted_comparison
   exact ae_ae_mem_of_observed_restricted_bind P μ hμ (Section6.pairingProc hC)
     (Section6.measurable_pairingProc hh) B hB hfin hmap
 
-#print axioms IsWholePlaneGFF.ae_ae_recentered_observation_of_rooted_comparison
-#print axioms IsWholePlaneGFF.normalized_recentered_observation_ac_origin_insertion
-#print axioms IsWholePlaneGFF.recentered_observation_ac_origin_insertion
-
 end HarmonicBalls

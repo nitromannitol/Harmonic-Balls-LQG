@@ -91,7 +91,4 @@ theorem IsWholePlaneGFF.rooted_centeredCircle_law_ac_weightedLocalization_ball
     exact measure_ball_lt_top.ne
   · exact hY
 
-#print axioms IsWholePlaneGFF.rooted_centeredCircle_law_ac_of_subset
-#print axioms IsWholePlaneGFF.rooted_centeredCircle_law_ac_weightedLocalization_ball
-
 end HarmonicBalls

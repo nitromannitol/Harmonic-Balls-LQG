@@ -64,7 +64,4 @@ theorem IsWholePlaneGFF.aemeasurable_raw_rooted_unitBall_kernel
     exact measure_ball_ne_top
   exact aemeasurable_observed_restricted_root_kernel P μ hmeas _ hfield _ measurableSet_ball hfin
 
-#print axioms aemeasurable_observed_restricted_root_kernel
-#print axioms IsWholePlaneGFF.aemeasurable_raw_rooted_unitBall_kernel
-
 end HarmonicBalls

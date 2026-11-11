@@ -88,8 +88,6 @@ theorem IsWholePlaneGFF.normalized_raw_translated_pairing_ac_origin_insertion
   exact hh.normalized_recentered_observation_ac_origin_insertion μ hμ B hB hfin ρ γ
     hr hrR hside hrooted
 
-#print axioms IsWholePlaneGFF.normalized_raw_translated_pairing_ac_origin_insertion
-
 /-- Fixed-coordinate almost-everywhere equality need not survive evaluation
 at a random coordinate. -/
 theorem exists_coordinatewise_ae_eq_but_diagonal_ne
@@ -106,9 +104,5 @@ theorem exists_coordinatewise_ae_eq_but_diagonal_ne
     simp [hω]
   · intro ω
     simp
-
-#print axioms meanZeroDistributionVersion_pairings_eq_iff
-#print axioms map_rooted_recentered_observation_eq_raw_of_distribution_representation
-#print axioms exists_coordinatewise_ae_eq_but_diagonal_ne
 
 end HarmonicBalls

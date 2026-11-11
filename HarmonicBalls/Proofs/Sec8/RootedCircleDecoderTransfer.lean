@@ -103,6 +103,4 @@ theorem IsWholePlaneGFF.exists_dominated_normalizedLQGApprox
     exact (normalizedRestriction_lqgApprox_eq_of_centered_ae γ (g ω)
       (dyadicScale_pos n) 0 (hEm n) (D n (Y ω)) (hω n)).symm
 
-#print axioms IsWholePlaneGFF.exists_dominated_normalizedLQGApprox
-
 end HarmonicBalls

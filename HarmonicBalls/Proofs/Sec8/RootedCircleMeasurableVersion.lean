@@ -83,6 +83,4 @@ theorem IsWholePlaneGFF.exists_rooted_circle_measurable_version
     funext z
     rw [hg]
 
-#print axioms IsWholePlaneGFF.exists_rooted_circle_measurable_version
-
 end HarmonicBalls

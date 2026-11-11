@@ -75,6 +75,4 @@ theorem IsWholePlaneGFF.exists_rooted_observed_frequency_of_joint_domination
     β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit
   exact ⟨ε, hε, E, hE, he⟩
 
-#print axioms IsWholePlaneGFF.exists_rooted_observed_frequency_of_joint_domination
-
 end HarmonicBalls
