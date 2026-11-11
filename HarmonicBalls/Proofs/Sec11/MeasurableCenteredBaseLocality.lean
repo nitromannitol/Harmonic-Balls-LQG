@@ -78,8 +78,6 @@ theorem IsWholePlaneGFF.exists_modConst_internal_baseMetric_subset
   exact ⟨c, G, hc, fun x y => (hG x y).mono
     (fieldSigmaAlgebraModConst_mono α hC hUV) le_rfl, heq⟩
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_baseMetric_subset
 
-#print axioms IsWholePlaneGFF.exists_modConst_internal_baseMetric
 
 end HarmonicBalls

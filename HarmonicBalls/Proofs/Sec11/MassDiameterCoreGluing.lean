@@ -76,8 +76,4 @@ theorem IsEuclideanLengthMetric.internalDiam_lt_of_attached_pieces
   · obtain ⟨u, hu, huc⟩ := hattach i
     exact ⟨u, huc, (internalMetric_anti D (hJ i) x u).trans (hsmall i x hi u hu)⟩
 
-#print axioms IsEuclideanLengthMetric.iSup_internalMetric_le_core_gluing
-#print axioms IsEuclideanLengthMetric.iSup_internalMetric_lt_of_core_gluing
-#print axioms IsEuclideanLengthMetric.internalDiam_lt_of_core_gluing
-#print axioms IsEuclideanLengthMetric.internalDiam_lt_of_attached_pieces
 end HarmonicBalls

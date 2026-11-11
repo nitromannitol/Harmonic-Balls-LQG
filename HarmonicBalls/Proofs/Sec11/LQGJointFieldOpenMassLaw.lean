@@ -55,6 +55,5 @@ theorem IsWholePlaneGFF.identDistrib_lqg_open_masses_with_observable
   exact ((IdentDistrib.of_ae_eq hd.aemeasurable_fst heq).symm.trans hd).trans
     (IdentDistrib.of_ae_eq hd.aemeasurable_snd heq')
 
-#print axioms IsWholePlaneGFF.identDistrib_lqg_open_masses_with_observable
 
 end HarmonicBalls

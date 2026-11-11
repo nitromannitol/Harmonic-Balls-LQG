@@ -86,6 +86,5 @@ theorem IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder
   funext n
   rw [heq n (p n).1 (p n).2]
 
-#print axioms IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder
 
 end HarmonicBalls

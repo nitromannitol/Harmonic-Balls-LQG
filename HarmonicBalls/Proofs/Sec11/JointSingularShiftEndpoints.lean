@@ -155,7 +155,5 @@ theorem IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_at_all_endpoint
     exact (hm g hg.1.continuous hg.2.1 hu).liminf_normalized_internalMetric
       (hU n) (hp n).1 (hp n).2 (hat n) (hbt n) _ ENNReal.ofReal_ne_top
 
-#print axioms IsEuclideanLengthMetric.liminf_normalized_internalMetric
-#print axioms IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_at_all_endpoints
 
 end HarmonicBalls

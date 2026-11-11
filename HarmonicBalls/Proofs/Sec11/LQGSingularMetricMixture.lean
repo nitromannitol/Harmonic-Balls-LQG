@@ -59,7 +59,5 @@ theorem exists_common_singularMetric_observable_of_mixture
   exact ae_slice_of_ae_mix (P := P)
     (p := fun k ω => F (fun o => o.1.eval (hC k ω) (hcirc k ω)) = D k ω) hEq k
 
-#print axioms ae_slice_of_ae_mix
-#print axioms exists_common_singularMetric_observable_of_mixture
 
 end HarmonicBalls

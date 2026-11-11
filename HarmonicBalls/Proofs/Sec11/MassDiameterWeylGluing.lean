@@ -49,5 +49,4 @@ theorem IsEuclideanLengthMetric.mass_and_internalDiam_of_weyl_core_gluing
           hD.internalMetric_weylScaling_le hE hEnonneg hO₀ hzero hscale hcoreweight x y
         _ ≤ ENNReal.ofReal (Real.exp B) * b := by gcongr; exact hcore x hx y hy
 
-#print axioms IsEuclideanLengthMetric.mass_and_internalDiam_of_weyl_core_gluing
 end HarmonicBalls

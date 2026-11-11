@@ -132,6 +132,5 @@ theorem IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_all_endpoints_o
   exact h.exists_joint_singular_weyl_shift_decoder_at_all_endpoints hμ hfull hε 𝔇 h𝔇
     hD hDfield haxioms hγ hγ₂ hα hξ.le ψ hψ hψint f hf U hU p hp hremove
 
-#print axioms IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_all_endpoints_of_positive_moments
 
 end HarmonicBalls

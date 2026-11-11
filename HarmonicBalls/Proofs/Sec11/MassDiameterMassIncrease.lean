@@ -44,5 +44,4 @@ theorem exists_smooth_shift_increasing_mass
       exact (ENNReal.ofReal_lt_ofReal_iff_of_nonneg hM).2 (by linarith)
     exact hlt.trans_le (hm.trans (by gcongr; exact hA ω hω))
 
-#print axioms exists_smooth_shift_increasing_mass
 end HarmonicBalls

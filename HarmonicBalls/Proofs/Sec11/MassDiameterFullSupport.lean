@@ -42,6 +42,4 @@ theorem exists_positive_lqg_mass_threshold_of_growth
     (lqgMeasureFullSupportStmt_of_volumeGrowth hgrowth γ α hγ hγ₂ hα
       Ω P hC hcirc μ hgff hμ)
 
-#print axioms exists_positive_mass_threshold_of_ae_full_support
-#print axioms exists_positive_lqg_mass_threshold_of_growth
 end HarmonicBalls

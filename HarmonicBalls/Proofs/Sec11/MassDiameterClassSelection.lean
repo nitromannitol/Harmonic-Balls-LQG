@@ -62,7 +62,4 @@ theorem exists_positive_measure_four_tile_class {Ω X : Type*}
     norm_num
   simpa only [heq] using hp
 
-#print axioms exists_cover_member_measure_gt
-#print axioms exists_positive_measure_cover_member
-#print axioms exists_positive_measure_four_tile_class
 end HarmonicBalls

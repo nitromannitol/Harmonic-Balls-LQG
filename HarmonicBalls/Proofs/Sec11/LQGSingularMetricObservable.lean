@@ -133,9 +133,5 @@ theorem IsWholePlaneGFF.identDistrib_lqgMeasure_singularMetric_observable
     hEq.mono fun ω hω => congrArg (Prod.mk (μ ω)) hω
   exact (IdentDistrib.of_ae_eq hd.aemeasurable_fst heq).symm.trans hd
 
-#print axioms exists_observable_of_field_measurable
-#print axioms exists_continuous_observable_of_field_representative
-#print axioms IsWholePlaneGFF.exists_singularMetric_observable
-#print axioms IsWholePlaneGFF.identDistrib_lqgMeasure_singularMetric_observable
 
 end HarmonicBalls

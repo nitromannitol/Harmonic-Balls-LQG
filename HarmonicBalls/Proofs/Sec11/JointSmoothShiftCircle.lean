@@ -217,9 +217,5 @@ theorem IsWholePlaneGFF.exists_referenceBall_shifted_mass_decoders
   filter_upwards [ae_all_iff.mpr hFeq] with ω hω B g hg
   simpa only [hAunion] using hω B g hg
 
-#print axioms IsWholePlaneGFF.exists_referenceBall_shifted_mass_decoders
-#print axioms IsWholePlaneGFF.exists_local_shifted_normalizedLQGMass_decoder
-#print axioms IsWholePlaneGFF.exists_local_shifted_normalizedLQGApprox_decoder
-#print axioms IsWholePlaneGFF.exists_joint_local_singular_circle_shift_decoder
 
 end HarmonicBalls

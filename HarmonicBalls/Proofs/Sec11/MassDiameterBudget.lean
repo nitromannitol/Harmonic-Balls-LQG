@@ -33,5 +33,4 @@ theorem exists_negative_weyl_core_budget {a b ε : ℝ}
   · exact (ENNReal.ofReal_lt_ofReal_iff_of_nonneg (by positivity)).2 hreal
   all_goals positivity
 
-#print axioms exists_negative_weyl_core_budget
 end HarmonicBalls

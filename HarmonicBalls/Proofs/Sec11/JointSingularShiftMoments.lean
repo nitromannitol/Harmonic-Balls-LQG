@@ -102,6 +102,5 @@ theorem IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_of_positive_dia
   exact h.exists_joint_singular_weyl_shift_decoder_of_point_removal hμ hfull hε 𝔇 h𝔇
     hD hDfield haxioms hγ hγ₂ hα hξ.le ψ hψ hψint f hf U hU p hp hp₂ hremove
 
-#print axioms IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_of_positive_diameter_moments
 
 end HarmonicBalls

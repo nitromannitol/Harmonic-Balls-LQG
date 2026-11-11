@@ -75,5 +75,4 @@ theorem exists_positive_mass_small_diameter_wholePlane_shift
       simpa using (hω.1.2 x hx y hy).le) hbudget hS hfS
   exact ⟨hglue.1 ▸ (hA ω hω.1.1).1, hglue.2⟩
 
-#print axioms exists_positive_mass_small_diameter_wholePlane_shift
 end HarmonicBalls

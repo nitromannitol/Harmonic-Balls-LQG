@@ -35,5 +35,4 @@ theorem exists_mass_increasing_shift_preserving_event
   rw [heq]
   exact hpos
 
-#print axioms exists_mass_increasing_shift_preserving_event
 end HarmonicBalls

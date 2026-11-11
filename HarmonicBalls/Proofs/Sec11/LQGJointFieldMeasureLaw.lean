@@ -108,6 +108,5 @@ theorem IsWholePlaneGFF.identDistrib_lqgMeasure_with_observable
     ← Measure.map_apply_of_aemeasurable hcode.aemeasurable_fst hT,
     ← Measure.map_apply_of_aemeasurable hcode.aemeasurable_snd hT, hcode.map_eq]
 
-#print axioms IsWholePlaneGFF.identDistrib_lqgMeasure_with_observable
 
 end HarmonicBalls

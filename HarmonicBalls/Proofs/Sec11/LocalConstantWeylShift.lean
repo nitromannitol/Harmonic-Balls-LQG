@@ -163,15 +163,7 @@ theorem local_decoder_weyl_eq_of_constOn
   exact (normalized_localMetricMeasure_weyl_eq_of_constOn hD ξ γ g hV hVU hg
     hE hscale x y b μ hB hR hBU hRU).symm
 
-#print axioms normalized_localMetricMeasure_weyl_eq_of_constOn
-#print axioms local_decoder_weyl_eq_of_constOn
 
-#print axioms withDensity_apply_of_constantOn
-#print axioms normalized_withDensity_apply_of_constantOn
 
-#print axioms integral_mul_localZeroMeanTest_eq_zero
-#print axioms localModConstPairingShift_eq_self_of_eqOn
-#print axioms localModConstPairings_observable_eq_of_eqOn
-#print axioms IsEuclideanLengthMetric.internalMetric_weylScaling_eq_of_constOn
 
 end HarmonicBalls

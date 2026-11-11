@@ -45,6 +45,4 @@ theorem exists_mass_scale_class_of_full_support_and_tile_union_bound
     (fun n => {ω | ∀ i : ι n, ω ∈ E n i}) hAp hU hUne hUS hfull hcover
     (tendsto_all_tiles_failure_of_sum_failure P ι E hsum)
 
-#print axioms tendsto_all_tiles_failure_of_sum_failure
-#print axioms exists_mass_scale_class_of_full_support_and_tile_union_bound
 end HarmonicBalls

@@ -45,6 +45,5 @@ theorem IsWholePlaneGFF.identDistrib_normalizedDilation_singularMetric
   exact h.identDistrib_normalizedPullback_singularMetric hAff hCC hγ hγ₂ hα hμ hk
     𝔇 h𝔇 hD hD' haxioms
 
-#print axioms IsWholePlaneGFF.identDistrib_normalizedDilation_singularMetric
 
 end HarmonicBalls

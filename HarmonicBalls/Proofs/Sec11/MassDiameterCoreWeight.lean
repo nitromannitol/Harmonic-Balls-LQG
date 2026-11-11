@@ -58,6 +58,4 @@ theorem exists_smooth_core_contraction_weight_with_budget
     exists_smooth_core_contraction_weight hcompact hO hinside hdisjoint hξ hB.le
   exact ⟨B, f, hf, hnonpos, hglobal, hcore, hS, houtside, hbudget⟩
 
-#print axioms exists_smooth_core_contraction_weight_with_budget
-#print axioms exists_smooth_core_contraction_weight
 end HarmonicBalls

@@ -44,7 +44,4 @@ theorem IsWholePlaneGFF.tendsto_dyadic_square_diameters
     (fun n => Fin (2 ^ n) × Fin (2 ^ n)) X a d hmargin
   exact tendsto_dyadic_square_failure_sum P _ C q hCfinite hq hbound
 
-#print axioms IsWholePlaneGFF.tendsto_dyadic_square_diameters
-#print axioms dyadic_square_grid_card
-#print axioms tendsto_dyadic_square_failure_sum
 end HarmonicBalls

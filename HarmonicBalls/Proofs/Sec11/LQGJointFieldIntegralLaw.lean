@@ -98,6 +98,5 @@ theorem IsWholePlaneGFF.identDistrib_lqg_integrals_with_observable
     exact (hd n).map_eq
   exact ⟨hu, hv, tendstoInDistribution_unique X hxu hxv⟩
 
-#print axioms IsWholePlaneGFF.identDistrib_lqg_integrals_with_observable
 
 end HarmonicBalls

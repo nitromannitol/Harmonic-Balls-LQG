@@ -35,7 +35,6 @@ theorem square_diameter_exponent_gt_two
   · rw [lt_div_iff₀ hden]
     nlinarith
 
-#print axioms square_diameter_exponent_gt_two
 
 /-- A vanishing exponent error can be absorbed into any smaller fixed
 exponent along dyadic scales. -/
@@ -57,7 +56,6 @@ theorem dyadic_power_error_eventually_le (p p' : ℝ) (hp : p' < p)
       rw [Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 1 / 2), Real.rpow_natCast,
         ENNReal.ofReal_pow (by positivity)]
 
-#print axioms dyadic_power_error_eventually_le
 
 /-- Only sufficiently fine scales need satisfy the per-square geometric
 estimate; the finitely many coarser scales do not affect the limit. -/
@@ -103,7 +101,6 @@ theorem tendsto_dyadic_square_failure_sum_of_power_error
   intro i
   simpa only [one_mul] using (hn i).trans he'
 
-#print axioms tendsto_dyadic_square_failure_sum_of_power_error
 
 /-- A sufficiently fine-scale geometric estimate gives simultaneous control
 of all dyadic square observables for a pinned whole-plane GFF. -/
@@ -148,8 +145,4 @@ theorem IsWholePlaneGFF.tendsto_dyadic_square_diameters_of_eventual_margin
   filter_upwards [hmargin, hbound] with k hk hb
   simpa only [a', ite_eq_left hk] using hb
 
-#print axioms IsWholePlaneGFF.tendsto_dyadic_square_diameters_of_eventual_margin
-#print axioms IsWholePlaneGFF.tendsto_dyadic_square_diameters_of_eventually
-#print axioms dyadic_decay_rate_lt_quarter
-#print axioms tendsto_dyadic_square_failure_sum_of_eventually
 end HarmonicBalls

@@ -162,7 +162,5 @@ theorem IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_of_point_remova
     rw [ht g hg.1.continuous hg.2.1 hu (U i) (hU i) (hr i)
       (p i).1 (p i).2 (hp i).2 (hp₂ i)]
 
-#print axioms IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_of_point_removal
-#print axioms IsWholePlaneGFF.exists_joint_singular_weyl_shift_decoder_of_shell_bounds
 
 end HarmonicBalls

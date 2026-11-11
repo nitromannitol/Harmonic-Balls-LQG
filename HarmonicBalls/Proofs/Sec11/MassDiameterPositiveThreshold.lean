@@ -47,6 +47,4 @@ theorem exists_positive_mass_scale_and_four_tile_class
     P μ A S C E c hcover (hsmall c hc hp)
   exact ⟨c, hc, n, i, hi⟩
 
-#print axioms exists_positive_mass_threshold
-#print axioms exists_positive_mass_scale_and_four_tile_class
 end HarmonicBalls

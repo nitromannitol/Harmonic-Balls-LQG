@@ -64,6 +64,4 @@ theorem exists_mass_increasing_shift_of_lqg_growth
     (lqgMeasureFullSupportStmt_of_volumeGrowth hgrowth γ α hγ hγ₂ hα
       Ω P hC hcirc μ hgff hμ) hγ hM
 
-#print axioms exists_mass_increasing_shift_of_ae_full_support
-#print axioms exists_mass_increasing_shift_of_lqg_growth
 end HarmonicBalls

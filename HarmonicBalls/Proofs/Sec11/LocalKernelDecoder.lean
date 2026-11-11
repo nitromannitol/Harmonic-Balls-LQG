@@ -76,6 +76,5 @@ theorem exists_measure_decoder_of_piSystem
   · filter_upwards [hall] with ω hω
     exact ext_of_generate_finite S hgen hpi hω (hω univ huniv)
 
-#print axioms exists_measure_decoder_of_piSystem
 
 end HarmonicBalls

@@ -67,7 +67,5 @@ theorem IsWholePlaneGFF.identDistrib_lqgMeasure_metric_of_common_observable
   exact ((IdentDistrib.of_ae_eq hd.aemeasurable_fst heq).symm.trans hd).trans
     (IdentDistrib.of_ae_eq hd.aemeasurable_snd heq')
 
-#print axioms IsWholePlaneGFF.identDistrib_lqgMeasure_metric_of_common_observable
-#print axioms IsWholePlaneGFF.identDistrib_lqgMeasure_with_standardBorel_observable
 
 end HarmonicBalls

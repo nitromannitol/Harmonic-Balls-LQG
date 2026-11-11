@@ -21,7 +21,6 @@ theorem eventually_dyadic_scale_lt (s : ℝ) (hs : 0 < s)
       atTop (𝓝 0) := by simpa using ht
   exact (tendsto_order.1 ht').2 d hd
 
-#print axioms eventually_dyadic_scale_lt
 
 /-- A uniform dyadic power estimate with exponent greater than two makes
 all comparison-scale tile failures simultaneously unlikely. -/
@@ -82,6 +81,4 @@ theorem IsWholePlaneGFF.exists_mass_class_of_dyadic_power_error
     c hcover hsmall
   exact ⟨n, j, by simpa using hj⟩
 
-#print axioms IsWholePlaneGFF.tendsto_dyadic_square_diameters_of_power_error
-#print axioms IsWholePlaneGFF.exists_mass_class_of_dyadic_power_error
 end HarmonicBalls

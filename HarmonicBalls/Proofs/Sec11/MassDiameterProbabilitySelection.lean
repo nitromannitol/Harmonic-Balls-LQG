@@ -46,6 +46,4 @@ theorem exists_lqg_mass_scale_class_of_growth_and_failure_tendsto
     hAp hU hUne hUS (lqgMeasureFullSupportStmt_of_volumeGrowth hgrowth γ α hγ hγ₂ hα
       Ω P hC hcirc μ hgff hμ) hcover hfail
 
-#print axioms exists_mass_scale_class_of_full_support_and_failure_tendsto
-#print axioms exists_lqg_mass_scale_class_of_growth_and_failure_tendsto
 end HarmonicBalls

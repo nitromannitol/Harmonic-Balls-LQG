@@ -62,8 +62,6 @@ theorem tendsto_all_tiles_failure_of_common_factor
     have hle : a n * R ω ≤ a n * r n := by gcongr; exact le_of_not_gt hR
     exact (hle.trans_lt (hmargin n)).trans_le hω
 
-#print axioms tendsto_all_tiles_failure_of_common_exception
-#print axioms tendsto_all_tiles_failure_of_common_factor
 
 /-- The common-factor estimate and conditional mass positivity select a
 fixed scale and mass-carrying class with all tile diameters below `d`. -/
@@ -96,7 +94,6 @@ theorem exists_mass_tile_class_of_conditional_mass_and_common_factor
     P μ univ S C (fun n => {ω | ∀ i : ι n, X n i ω < d}) c hcover hsmall
   exact ⟨n, j, by simpa using hj⟩
 
-#print axioms exists_mass_tile_class_of_conditional_mass_and_common_factor
 
 /-- For the unit-circle normalized whole-plane GFF, the common factor
 `exp (ξ h₁(0))` equals one almost surely, so it has no exceptional tail. -/
@@ -124,7 +121,6 @@ theorem IsWholePlaneGFF.tendsto_all_tiles_failure_of_pinned_circle_factor
   apply tendsto_all_tiles_failure_of_common_factor P ι X R a (fun _ => 1) d ?_ ht hsum
   simpa using hmargin
 
-#print axioms IsWholePlaneGFF.tendsto_all_tiles_failure_of_pinned_circle_factor
 
 /-- A uniform geometric tile-failure bound beats a geometric bound on the
 number of tiles when the product of their rates is less than one. -/
@@ -151,5 +147,4 @@ theorem tendsto_sum_tile_failures_of_geometric_bound
     _ ≤ (A * r ^ n) * (C * q ^ n) := by gcongr; exact hcard n
     _ = (r * q) ^ n * (A * C) := by rw [mul_pow]; ac_rfl
 
-#print axioms tendsto_sum_tile_failures_of_geometric_bound
 end HarmonicBalls

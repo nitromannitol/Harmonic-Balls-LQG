@@ -125,9 +125,5 @@ theorem IsWholePlaneGFF.identDistrib_lqgMeasure_baseMetric
     rw [hF_eq _ _ hc]
     exact ContinuousMap.ext (fun p => (hω p).symm)
 
-#print axioms exists_common_observable_of_distribution_measurable
-#print axioms IsLQGMetric.exists_common_continuous_observable
-#print axioms IsWholePlaneGFF.identDistrib_lqgMeasure_baseMetric_values
-#print axioms IsWholePlaneGFF.identDistrib_lqgMeasure_baseMetric
 
 end HarmonicBalls

@@ -95,7 +95,5 @@ theorem IsWholePlaneGFF.identDistrib_lqgMeasure_singularMetric
     h' 𝔇 h𝔇 hD hD' haxioms hγ hγ₂ hα
   exact h.identDistrib_lqgMeasure_metric_of_common_observable h' hμ hμ' F hF hEq hEq'
 
-#print axioms IsWholePlaneGFF.exists_common_singularMetric_observable
-#print axioms IsWholePlaneGFF.identDistrib_lqgMeasure_singularMetric
 
 end HarmonicBalls

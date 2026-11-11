@@ -77,5 +77,4 @@ theorem exists_positive_mass_small_diameter_wholePlane_shift_preserving_event
       simpa using (hω.1.2 x hx y hy).le) hbudget hS hfS
   exact ⟨hω.1.1, hglue.1 ▸ (hA ω hω.1.1).1, hglue.2⟩
 
-#print axioms exists_positive_mass_small_diameter_wholePlane_shift_preserving_event
 end HarmonicBalls

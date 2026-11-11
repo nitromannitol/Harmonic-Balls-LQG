@@ -45,5 +45,4 @@ theorem exists_positive_measure_core_internal_distance_bound
       (le_iSup_of_le hy le_rfl)))
   exact hle.trans_lt hω.2.2
 
-#print axioms exists_positive_measure_core_internal_distance_bound
 end HarmonicBalls

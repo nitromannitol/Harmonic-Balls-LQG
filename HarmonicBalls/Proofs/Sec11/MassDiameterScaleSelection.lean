@@ -71,6 +71,4 @@ theorem exists_positive_measure_scale_and_four_tile_class_of_failure_bound
     {ω | ω ∈ A ∧ ω ∈ E n} S (C n) c (hcover n) (by simpa [and_assoc] using hp')
   exact ⟨n, i, by simpa [and_assoc] using hi⟩
 
-#print axioms exists_positive_measure_scale_and_four_tile_class_of_failure_bound
-#print axioms exists_positive_measure_scale_and_four_tile_class
 end HarmonicBalls
