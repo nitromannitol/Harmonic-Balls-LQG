@@ -191,4 +191,79 @@ theorem fmd_factor_point {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     _ = (G ω q.1 q.2).toReal := (congrFun hKeq ω).symm
     _ = _ := hGq
 
+/-- The metric property holds almost surely, from the Type-`u` derived axioms (`f = 0`, `addFunPairing T 0 = T`). -/
+theorem fmd_ae_metric {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+    {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc) {γ ξ : ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (hLQG : IsLQGMetric γ ξ 𝔇) :
+    ∀ᵐ ω ∂P, IsEuclideanLengthMetric (𝔇 (hC ω)) := by
+  have h0 := lqgMetricSatisfiesAxiomsUniv_derived γ ξ 𝔇 hLQG Ω P hC hcirc (fun _ _ => (0 : ℝ)) hGFF
+    (fun ω => continuous_const) (fun x => measurable_const)
+  have hid : (fun ω => addFunPairing (hC ω) (fun _ : ℂ => (0 : ℝ))) = hC := by
+    funext ω φ
+    simp [addFunPairing]
+  rw [hid] at h0
+  exact h0.ae_isEuclideanLengthMetric
+
+/-- Fixed-metric normalized measurable decoder `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`, derived from the
+sample-space-free point decoder `hUnivPt` (named hypothesis; the universal clause, BLOCKED-STEP MQ-lh-23). For each point
+`q` of the square, `hUnivPt` gives one measurable functional `Dq` of the mean-zero ball observations, valid for every
+whole-plane GFF on every probability space. The decoder `M` is the dense-sequence decode of these values (`exists_dense_decode_ball`);
+the square-continuity and finiteness of the internal metric of `hC ω` on the ball come from the derived axioms. -/
+theorem localLQGMetricNormalizedMeasurableFixedMetric_of_univPoint
+    (hUnivPt : ∀ (γ ξ : ℝ) (c : ℂ) (r : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (ρ : ℂ → ℝ),
+      0 < γ → γ < 2 → 0 < r → (0 : ℂ) ∉ closedBall c r → IsLQGMetric γ ξ 𝔇 →
+      IsTestFunction (ball c r) ρ → ∫ x, ρ x = 1 → ∀ q : ℂ × ℂ, q ∈ ball c r ×ˢ ball c r →
+      ∃ Dq : ({φ : ℂ → ℝ // IsTestFunction (ball c r) φ ∧ ∫ x, φ x = 0} → ℝ) → ℝ, Measurable Dq ∧
+        ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+          (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+          ∀ᵐ ω ∂P, Dq (localMeanZeroObs 0 (ball c r) (hC ω)) =
+            Real.exp (ξ * (-(hC ω ρ))) * (internalMetric (𝔇 (hC ω)) (ball c r) q.1 q.2).toReal) :
+    LocalLQGMetricNormalizedMeasurableFixedMetricFrozen.{u} := by
+  intro γ ξ c r hγ hγ2 hr h0c 𝔇 hLQG
+  obtain ⟨ρ, hρ, hρint⟩ := IsTestFunction.exists_integral_eq_one isOpen_ball ⟨c, mem_ball_self hr⟩
+  obtain ⟨d, _hd, decode, hdec, hdecode_eq⟩ := exists_dense_decode_ball c hr
+  have hpt : ∀ n : ℕ, ∃ Dq : ({φ : ℂ → ℝ // IsTestFunction (ball c r) φ ∧ ∫ x, φ x = 0} → ℝ) → ℝ,
+      Measurable Dq ∧ ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+        (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+        ∀ᵐ ω ∂P, Dq (localMeanZeroObs 0 (ball c r) (hC ω)) =
+          Real.exp (ξ * (-(hC ω ρ))) * (internalMetric (𝔇 (hC ω)) (ball c r) (d n).1.1 (d n).1.2).toReal :=
+    fun n => hUnivPt γ ξ c r 𝔇 ρ hγ hγ2 hr h0c hLQG hρ hρint (d n).1 (d n).2
+  choose Dq hDqm hDq using hpt
+  refine ⟨ρ, fun v => decode (fun n => Dq n v), hρ, hρint, hdec.comp (Measurable.of_eval fun n => hDqm n), ?_⟩
+  intro Ω _ P _ hC hcirc hGFF
+  have hmet := fmd_ae_metric hGFF hLQG
+  have hae : ∀ᵐ ω ∂P, ∀ n, Dq n (localMeanZeroObs 0 (ball c r) (hC ω)) =
+      Real.exp (ξ * (-(hC ω ρ))) * (internalMetric (𝔇 (hC ω)) (ball c r) (d n).1.1 (d n).1.2).toReal :=
+    ae_all_iff.mpr fun n => hDq n Ω P hC hcirc hGFF
+  filter_upwards [hmet, hae] with ω hωm hω
+  have hcont : ContinuousOn (fun p : ℂ × ℂ => internalMetric (𝔇 (hC ω)) (ball c r) p.1 p.2)
+      (ball c r ×ˢ ball c r) :=
+    hωm.continuousOn_internalMetric_pair (fmd_nonneg hωm) isOpen_ball
+  have hfin : ∀ p : ℂ × ℂ, p ∈ ball c r ×ˢ ball c r → internalMetric (𝔇 (hC ω)) (ball c r) p.1 p.2 ≠ ⊤ :=
+    fun p hp => S11m.internalMetric_ne_top_of_isConnected hωm isOpen_ball
+      ((convex_ball c r).isConnected ⟨c, mem_ball_self hr⟩) hp.1 hp.2
+  have hcR : Continuous (fun q : ↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ)) =>
+      (internalMetric (𝔇 (hC ω)) (ball c r) q.1.1 q.1.2).toReal) := by
+    have h1 : ContinuousOn (fun p : ℂ × ℂ => (internalMetric (𝔇 (hC ω)) (ball c r) p.1 p.2).toReal)
+        (ball c r ×ˢ ball c r) :=
+      ContinuousOn.comp (g := ENNReal.toReal) ENNReal.continuousOn_toReal hcont
+        (fun p hp => hfin p hp)
+    exact continuousOn_iff_continuous_domRestrict.mp h1
+  let F : C(↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ)), ℝ) :=
+    ⟨fun q => Real.exp (ξ * (-(hC ω ρ))) * (internalMetric (𝔇 (hC ω)) (ball c r) q.1.1 q.1.2).toReal,
+      continuous_const.mul hcR⟩
+  have hv : (fun n => Dq n (localMeanZeroObs 0 (ball c r) (hC ω))) = fun n => F (d n) :=
+    funext fun n => hω n
+  have hM : decode (fun n => Dq n (localMeanZeroObs 0 (ball c r) (hC ω))) = F := by
+    rw [hv]
+    exact hdecode_eq F
+  intro p
+  have hexp : -ξ * fieldPairing 0 (hC ω) ρ = ξ * (-(hC ω ρ)) := by
+    simp only [fieldPairing, zero_mul, sub_zero]
+    ring
+  show ENNReal.ofReal (decode (fun n => Dq n (localMeanZeroObs 0 (ball c r) (hC ω))) p) = _
+  rw [hM, hexp]
+  show ENNReal.ofReal (Real.exp (ξ * (-(hC ω ρ))) * (internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2).toReal) = _
+  rw [ENNReal.ofReal_mul (Real.exp_nonneg _), ENNReal.ofReal_toReal (hfin p.1 p.2)]
+
 end HarmonicBalls
