@@ -2,6 +2,7 @@ import HarmonicBalls.FirstPass.Phase2.RootedDominationDerived
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.FirstPass.Frozen.S11aj
 import HarmonicBalls.Proposed.LQG
+import HarmonicBalls.FirstPass.Closure.LocalRootKernelAc
 
 /-! # Joint marked DMS identity: conditional derivation of `LocalRootedFieldMeasureDomination` (Lemma 8.2)
 
@@ -47,5 +48,32 @@ counted statements. This is the shape of the input `hJoint` of the conditional t
 def DMSLemmaA10WholePlaneMarkedJointStmt : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedJoint P γ hC hcirc μ
+
+/-- The normalised root kernel is a finite kernel (it is `weightedRestrictionKernel` with unit weight). -/
+instance localRootKernel_isFiniteKernel {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (lam : Ω → Measure ℂ) (hlam : AEMeasurable lam P) : IsFiniteKernel (localRootKernel P lam hlam) := by
+  unfold localRootKernel
+  infer_instance
+
+/-! ## Step 2-3 of route section 5: from the Palm integral to the rooted law -/
+
+/-- **Palm replacement (route Steps 2-3).** The unnormalised Palm measure dominates the rooted law. Let `O` be a
+measurable observation of a root `(ω, z)` and `S` a measurable set of observations. If for `P`-a.e. `ω` the set of
+roots `z ∈ D` with `O(ω, z) ∈ S` is null for `λ_ω|B₁`, then the rooted law `(P ⊗ₘ K_root).restrict (z ∈ D)` assigns
+`S` mass zero. The normalised root kernel `K_root` is a.s. absolutely continuous with respect to `λ_ω|B₁`
+(`localRootKernel_ac_ae`, Lemma 8.2 proof). -/
+theorem rootedLaw_apply_eq_zero_of_palm {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
+    (P : Measure Ω) [SFinite P] (lam : Ω → Measure ℂ) (hlam : AEMeasurable lam P)
+    {D : Set ℂ} (hD : MeasurableSet D) (O : Ω × ℂ → X) (hO : Measurable O)
+    {S : Set X} (hS : MeasurableSet S)
+    (hzero : ∀ᵐ ω ∂P, (lam ω).restrict (ball 0 1) (Prod.mk ω ⁻¹' (O ⁻¹' S ∩ Prod.snd ⁻¹' D)) = 0) :
+    ((P ⊗ₘ localRootKernel P lam hlam).restrict (Prod.snd ⁻¹' D)).map O S = 0 := by
+  have hA : MeasurableSet (O ⁻¹' S ∩ Prod.snd ⁻¹' D) := (hO hS).inter (measurable_snd hD)
+  rw [Measure.map_apply hO hS, Measure.restrict_apply (hO hS),
+    Measure.compProd_apply hA]
+  have hae : ∀ᵐ ω ∂P, localRootKernel P lam hlam ω (Prod.mk ω ⁻¹' (O ⁻¹' S ∩ Prod.snd ⁻¹' D)) = 0 := by
+    filter_upwards [localRootKernel_ac_ae P lam hlam, hzero] with ω hac hz
+    exact hac hz
+  rw [lintegral_congr_ae hae, lintegral_zero]
 
 end HarmonicBalls
