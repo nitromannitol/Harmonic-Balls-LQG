@@ -3,8 +3,7 @@ import HarmonicBalls.FirstPass.S11r.Frozen
 /-!
 # Continuity of the rooted physical metric at an insertion, through a confined single-insertion estimate
 
-(fp-phase2-rooted-continuity-and-shifted-decoder, part (2), worker z3; route of MQ-lh-7,
-notes/fp-gaps/MATH-ANSWERS.md, verdict ROUTE.)
+
 
 Target: `RootedPhysicalMetricContinuousAtInsertionFrozen` (FirstPass/S11r/Frozen.lean:115-124).
 
@@ -18,7 +17,7 @@ Proved here, with no new mathematics:
 
 NOT proved here (BLOCKED-STEP): `ConfinedSingleInsertionWeightStmt` is taken as an explicit hypothesis. It is the
 confined-path output of the annular proof of Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.17
-(printed pp. 43-44, eq. (3.56)), with insertion strength `γ` at `z`. Route step (2) of MQ-lh-7 cites it and gives no
+(printed pp. 43-44, eq. (3.56)), with insertion strength `γ` at `z`. Step (2) of the route cites it and gives no
 written argument for its confinement. The unconfined continuity (metric induces the Euclidean topology) is clause I of
 `LQGMetricFieldAxioms` (Proposed/LQG.lean) only at the insertion point `0`; it does not give confined paths.
 -/
@@ -82,8 +81,7 @@ theorem weylScalingIn_le_mul_of_abs_sub_le (D : ℂ → ℂ → ℝ) (U : Set �
 `hC`, an LQG metric `𝔇` and an insertion of strength `γ ∈ (0, 2)` at `z ≠ 0`, almost surely, for every radius `ρ > 0`,
 the confined distance with weight `-γ log|· - z|` tends to `0` as `x → z`.
 Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.17 (printed p. 43, eq. (3.56)) and its
-annular proof (pp. 43-44), with insertion strength `γ` at `z`; route step (2) of MQ-lh-7 (notes/fp-gaps/MATH-ANSWERS.md,
-verdict ROUTE). -/
+annular proof (pp. 43-44), with insertion strength `γ` at `z`. -/
 def ConfinedSingleInsertionWeightStmt : Prop :=
   ∀ (γ ξ : ℝ) (z : ℂ), 0 < γ → γ < 2 → z ≠ 0 →
     ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]

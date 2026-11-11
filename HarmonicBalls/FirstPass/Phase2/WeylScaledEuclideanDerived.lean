@@ -8,12 +8,11 @@ import HarmonicBalls.Steps.Sec11.WeylPathReverse
 /-!
 # The Weyl scaling of a Euclidean length metric is a Euclidean length metric
 
-Derivation of `WeylScaledEuclideanFrozen` (`FirstPass/Frozen/S11g.lean:146`; row 57 of
-`docs/campaign/PHASE2-INVENTORY.md`): if `D` is a Euclidean length metric on `ℂ` and `f` is continuous with compact
+Derivation of `WeylScaledEuclideanFrozen` (`FirstPass/Frozen/S11g.lean:146`): if `D` is a Euclidean length metric on `ℂ` and `f` is continuous with compact
 support, then for every real `ξ` the Weyl scaling `e^{ξ f} · D` (Gwynne-Miller, arXiv:1905.00383, (1.8), p. 6; paper
 Fact 2.2 III, line 445) is again a Euclidean length metric (Fact 2.2 I, line 435). No hypothesis is added.
 
-Route (`notes/fp-gaps/CHATGPT-hb-frozen-truth-0026.md`, section 5): the weight is bounded above and below by positive
+Route: the weight is bounded above and below by positive
 constants `e^{∓K}`, so the weighted distance is bi-Lipschitz equivalent to `D` (`weylScaling` lies between `e^{-K} D`
 and `e^{K} D`), which gives finiteness, separation and the topology. The metric axioms follow from reversal
 (`weylScaling_symm`) and concatenation (`weylScaling_triangle`) of curves. The length property is
@@ -87,7 +86,7 @@ theorem IsEuclideanLengthMetric.exp_mul_le_weylScaling {D : ℂ → ℂ → ℝ}
         setLIntegral_mono' measurableSet_Icc fun t _ =>
           ENNReal.ofReal_le_ofReal (Real.exp_le_exp.mpr (hw (p t)))
 
-/-- **Derived** (task fp-phase2-weyl-scaled-euclidean-derive): the Weyl scaling `e^{ξ f} · D` of a Euclidean length
+/-- **Derived**: the Weyl scaling `e^{ξ f} · D` of a Euclidean length
 metric `D` by a continuous compactly supported `f` is a Euclidean length metric (`WeylScaledEuclideanFrozen`,
 `FirstPass/Frozen/S11g.lean:146`). No hypothesis is added. -/
 theorem weylScaledEuclidean_derived : WeylScaledEuclideanFrozen := by

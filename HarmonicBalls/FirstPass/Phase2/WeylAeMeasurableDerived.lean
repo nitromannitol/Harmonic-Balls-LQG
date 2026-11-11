@@ -1,8 +1,8 @@
 import HarmonicBalls.FirstPass.Frozen.S11d
 
-/-! # Measurability of the weighted internal metric: reduction to one deterministic fact (phase 2, worker z4)
+/-! # Measurability of the weighted internal metric: reduction to one deterministic fact
 
-Task fp-audit-r1-measurability-inputs, item (1): `LQGInternalMetricWeylAeMeasurableFrozen` (FirstPass/Frozen/S11d.lean:130).
+`LQGInternalMetricWeylAeMeasurableFrozen` (FirstPass/Frozen/S11d.lean:130).
 
 This file isolates the deterministic content of that frozen statement. The frozen Prop asks, for each open `W`, for a
 `distributionMeasurableSpace`-measurable `Φ` which agrees almost surely with the internal metric of the `toReal`-weighted
@@ -10,8 +10,7 @@ metric `e^{-ξ α₀ log|·|} · 𝔇(h^ℂ + f)` on `W`. Once the metric `𝔇 
 (`IsLQGMetric.measurable_apply`), the measurability half is the composition `Φ = G ∘ 𝔇`, where `G` is a
 measurable functional of a metric. The only analytic content is therefore the following deterministic fact.
 
-NOT PROVED. `LQGWeightedInternalDetMeasurable` below is the exact missing ingredient. The written argument in
-`notes/fp-gaps/CHATGPT-hb-distribution-frozen.md` (sections 1.2, 3.1-3.4) sketches it through lower semicontinuity of the
+NOT PROVED. `LQGWeightedInternalDetMeasurable` below is the exact missing ingredient. The written argument sketches it through lower semicontinuity of the
 constrained weighted distance in the continuous metric and a Borel exhaustion, but leaves the lower semicontinuity
 claim unproved (l.389-391), does not treat the vertex `0` of the singular weight by a chain argument, and does not
 verify the Borel-ness on the space of metrics. The operator's route for this fact is not yet fixed. -/

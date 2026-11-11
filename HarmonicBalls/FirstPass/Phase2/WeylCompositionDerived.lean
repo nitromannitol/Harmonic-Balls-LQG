@@ -1,6 +1,6 @@
 import HarmonicBalls.Steps.Sec11.ContinuousFieldShift
 
-/-! # Weyl composition for continuous weights (phase 2, fp-phase2-weyl-composition-derive, worker z6)
+/-! # Weyl composition for continuous weights
 
 Partial result toward `WeylScalingCompositionFrozen` (`FirstPass/Frozen/S11d.lean:91`). For a whole-plane GFF `hC`
 and a continuous shift `g`, the LQG metric of `hC + g` is the Weyl scaling of the metric of `hC` by `g`, and a second

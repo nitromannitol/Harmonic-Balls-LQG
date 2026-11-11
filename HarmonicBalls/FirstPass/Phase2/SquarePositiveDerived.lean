@@ -2,12 +2,12 @@ import HarmonicBalls.Proofs.Sec9.LQGExistenceConsequences
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Square positivity of the LQG measure from the existence inputs (row 23)
+# Square positivity of the LQG measure from the existence inputs
 
-Task fp-phase2-row23-closed-square-then-lpstage-cm (worker z7). The frozen statement
+The frozen statement
 `LQGMeasureSquarePositiveFrozen` (FirstPass/Frozen/S11c.lean:130) asks that, almost surely, every closed dyadic
 square `S` satisfies `0 < μ_h(S)`. It follows from the full-support statement `LQGMeasureFullSupportStmt`
-(Draft/Section2.lean:109; input I1 of docs/campaign/GRAPH.md), which is obtained from the existence inputs
+, which is obtained from the existence inputs
 `hDG`, `hCC` (at `α₀ = 0`) and `hE` by `lqgMeasureFullSupportStmt_of_existence`
 (Proofs/Sec9/LQGExistenceConsequences.lean:46). The only further step is elementary: a closed dyadic square contains
 a nonempty open rectangle, and the LQG measure is monotone on Borel sets.

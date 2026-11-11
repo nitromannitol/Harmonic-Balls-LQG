@@ -4,7 +4,7 @@ import HarmonicBalls.Steps.Sec11.CurveLengthReparam
 import HarmonicBalls.Steps.Sec11.WeylPathSegments
 import HarmonicBalls.Steps.Sec11.WeylPathReverse
 
-/-! # The closed-set Weyl comparison of internal metrics is derived (Phase 2, task fp-phase2-weyl-internal-closed-derive)
+/-! # The closed-set Weyl comparison of internal metrics is derived
 
 `WeylInternalClosedFrozen` (`FirstPass/Frozen/S11c.lean`, line 180; written argument in its docstring, "Why it holds")
 is derived with no new hypothesis. The frozen Prop itself is not edited.
@@ -142,7 +142,7 @@ theorem pathLength_le_of_weylScaling {D E : ℂ → ℂ → ℝ} (hD : IsEuclide
     _ = ENNReal.ofReal (Real.exp B) * curveLength D P.extend 0 1 := by
         rw [ENNReal.ofReal_toReal hfin]
 
-/-- **Derived** (task fp-phase2-weyl-internal-closed-derive): the closed-set Weyl comparison of internal metrics,
+/-- **Derived**: the closed-set Weyl comparison of internal metrics,
 `WeylInternalClosedFrozen` (`FirstPass/Frozen/S11c.lean:180`), with no hypothesis added. Source as in its docstring:
 paper Fact 2.2 III (corrected copy, lines 441-447); the open-set version is
 `IsEuclideanLengthMetric.internalMetric_weylScaling_le`. -/

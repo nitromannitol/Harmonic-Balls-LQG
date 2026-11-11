@@ -3,16 +3,15 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.Frozen.S11g
 import HarmonicBalls.FirstPass.Frozen.S11j
 
-/-! # Weyl-shifted internal metric: field-shift identity and a.e. measurability at fixed endpoints (phase 2, worker z4)
+/-! # Weyl-shifted internal metric: field-shift identity and a.e. measurability at fixed endpoints
 
-Staged work towards `WeylShiftedSupMeasurableFrozen` (FirstPass/Frozen/S11c.lean:217). Only frozen inputs whose status
-row in docs/campaign/PHASE2-INPUT-STATUS.md is TRUE are used, each as an explicit hypothesis:
+Staged work towards `WeylShiftedSupMeasurableFrozen` (FirstPass/Frozen/S11c.lean:217). Only frozen inputs whose status is TRUE are used, each as an explicit hypothesis:
 
-* `LQGMetricFieldAxiomsUnivFrozen` (row 58; clause I finiteness and Euclidean length, clause III Weyl scaling);
-* `WeylScalingCompositionFrozen` (row 34);
-* `LQGInternalMetricWeylAeMeasurableFrozen` (row 36);
-* `InternalMetricClosedEqIInfThickeningFrozen` (row 47);
-* `WeylScaledEuclideanFrozen` (row 48).
+* `LQGMetricFieldAxiomsUnivFrozen` (clause I finiteness and Euclidean length, clause III Weyl scaling);
+* `WeylScalingCompositionFrozen`;
+* `LQGInternalMetricWeylAeMeasurableFrozen`;
+* `InternalMetricClosedEqIInfThickeningFrozen`;
+* `WeylScaledEuclideanFrozen`.
 
 Proved here, with no hypothesis beyond these:
 
@@ -23,10 +22,10 @@ Proved here, with no hypothesis beyond these:
   is a.e. measurable.
 
 NOT proved here: `WeylShiftedSupMeasurableFrozen` itself. Its supremum is over all `u v ∈ S` (uncountable). The reduction
-is `aemeasurable_iSup_mem_of_lowerSemicontinuousOn` (HarmonicBalls/LPStage/WeylSupMeasurable.lean) applied with
+is `aemeasurable_iSup_mem_of_lowerSemicontinuousOn` applied with
 `D = D₀ ×ˢ D₀` for a countable dense `D₀ ⊆ S`. It needs, for almost every `ω` and every closed dyadic square `S`,
 `LowerSemicontinuousOn (fun p : ℂ × ℂ => internalMetric (weylShiftPair γ ξ f (μ ω, D ω)).2 S p.1 p.2) (S ×ˢ S)`.
-No input whose status row is TRUE gives this (BLOCKED; see reports/z4.md). -/
+No input whose status row is TRUE gives this. -/
 
 namespace HarmonicBalls
 
@@ -75,7 +74,7 @@ theorem measurable_addFunPairing_distribution {Ω : Type*} [MeasurableSpace Ω] 
   exact measurable_iff_comap_le.1 ((hW.measurable_pairing φ hφ).add_const _)
 
 /-- For a closed set `S` and fixed `u v ∈ S`, the internal metric of the Weyl-shifted metric is almost surely measurable.
-Route: the closed-set identity `InternalMetricClosedEqIInfThickeningFrozen` (row 47) writes it as `⨅ n, ⨆ k` of the
+Route: the closed-set identity `InternalMetricClosedEqIInfThickeningFrozen` writes it as `⨅ n, ⨆ k` of the
 internal metrics on the open thickenings of `S ∩ closedBall 0 (n+1)`; on each open set the internal metric of the
 Weyl-shifted metric equals a.s. `Φ (h^ℂ + f)` for a measurable `Φ` (`LQGInternalMetricWeylAeMeasurableFrozen`, row 36). -/
 theorem weylShiftInternalMetric_aemeasurable_closed {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)

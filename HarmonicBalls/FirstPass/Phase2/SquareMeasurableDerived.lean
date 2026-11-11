@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec6.MeasureEvaluation
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Derived measurability inputs of triage group A (Phase 2, fp-phase2-square-and-metric-measurable-derive, z7)
+# Derived measurability inputs of triage group A
 
 Two frozen Props of `HarmonicBalls/FirstPass/Frozen` are derived here, each from one literature input of
 `HarmonicBalls/Proposed/LQG.lean`, taken as an explicit hypothesis in its universally quantified form (the binder form

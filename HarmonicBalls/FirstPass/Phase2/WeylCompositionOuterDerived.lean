@@ -7,8 +7,7 @@ import HarmonicBalls.Steps.Sec11.ArcLengthInterval
 
 /-! # Weyl composition for the outer scaling (Frozen statement `WeylMetricCompositionContinuousOuterFrozen`)
 
-Derivation of `WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117`; route in the fleet notes
-`CHATGPT-hb-frozen-truth-0026.md`, section 1; source: Bou-Rabee-Gwynne arXiv:2208.11795, Fact 2.2 III, and Gwynne-Miller
+Derivation of `WeylMetricCompositionContinuousOuterFrozen` (`FirstPass/Frozen/S11j.lean:117`; source: Bou-Rabee-Gwynne arXiv:2208.11795, Fact 2.2 III, and Gwynne-Miller
 (1.8)). For `ξ > 0`, a Euclidean length metric `D`, a weight `g` continuous on `ℂ ∖ {0}` with finite Weyl scaling and a
 continuous weight `f`, the Weyl scaling of the inner metric `d = (weylScaling D ξ g).toReal` by `f` equals the Weyl
 scaling of `D` by `g + f`.

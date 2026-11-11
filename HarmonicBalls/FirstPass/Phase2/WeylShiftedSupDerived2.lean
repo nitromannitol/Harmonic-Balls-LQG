@@ -5,7 +5,7 @@ import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 import HarmonicBalls.LPStage.WeylSupMeasurable
 
 /-!
-# The supremum of the Weyl-shifted internal metric over a closed dyadic square is a.e. measurable (phase 2, row 28)
+# The supremum of the Weyl-shifted internal metric over a closed dyadic square is a.e. measurable
 
 Derivation of `WeylShiftedSupMeasurableFrozen` (`FirstPass/Frozen/S11c.lean:217`). For a closed dyadic square `S`, the
 supremum `⨆ u ∈ S, ⨆ v ∈ S, internalMetric (weylShiftPair γ ξ f (μ, D)).2 S u v` is a.s. measurable. The route:
@@ -26,7 +26,7 @@ supremum `⨆ u ∈ S, ⨆ v ∈ S, internalMetric (weylShiftPair γ ξ f (μ, D
    each term is a.e. measurable (`weylShiftInternalMetric_aemeasurable_closed`, `FirstPass/Phase2/WeylShiftedSupDerived.lean`).
 
 Inputs. The Euclidean length property of `D ω` (clause I of `LQGMetricFieldAxiomsUnivFrozen`, row 58), the Weyl composition
-`WeylScalingCompositionFrozen` (row 34) and the a.e. measurability `LQGInternalMetricWeylAeMeasurableFrozen` (row 36) are
+`WeylScalingCompositionFrozen` and the a.e. measurability `LQGInternalMetricWeylAeMeasurableFrozen` are
 explicit hypotheses, as in `WeylShiftedSupDerived.lean`. The closed-set exhaustion and the Weyl scaling property are proved
 here or in the imported files, with no hypothesis.
 -/
@@ -116,10 +116,10 @@ theorem exists_countable_dense_subset_of_set (S : Set ℂ) :
     exact mem_univ _
   exact closure_subtype.mp hmem
 
-/-- **Derived** (row 28): the supremum over a closed dyadic square `S` of the internal metric of the Weyl-shifted LQG metric
+/-- **Derived**: the supremum over a closed dyadic square `S` of the internal metric of the Weyl-shifted LQG metric
 is a.s. measurable, `WeylShiftedSupMeasurableFrozen` (`FirstPass/Frozen/S11c.lean:217`). The explicit hypotheses are the
 TRUE frozen inputs of `WeylShiftedSupDerived.lean`: the Euclidean length property of the LQG metric (clause I of
-`LQGMetricFieldAxiomsUnivFrozen`, row 58), the Weyl composition (row 34) and the a.e. measurability (row 36). The closed-set
+`LQGMetricFieldAxiomsUnivFrozen`, row 58), the Weyl composition and the a.e. measurability. The closed-set
 exhaustion and the Weyl scaling property (`weylScaledEuclidean_derived`) are proved in the imported files. -/
 theorem weylShiftedSupMeasurable_derived
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) (hWSC : WeylScalingCompositionFrozen.{u})
