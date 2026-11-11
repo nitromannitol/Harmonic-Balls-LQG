@@ -40,7 +40,7 @@ The event may depend on the fixed outer radius `R`, exactly as in the current wo
 The random constant `C` remains uniform in `t,z,x,y`; only the deterministic exponent’s displayed dependence changes. Patch [H4] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
 
 ## [C56] Proposition 5.2 (prop:continuity) and its concluding proof line, lines 827–838 and 2105–2109 (applied 2026-11-10 with the author's approval)
-Adopted: the translated ball `B_\epsilon(z)` is replaced by the ordinary `\epsilon`-neighbourhood, and continuity is stated only for the times before the cluster reaches the boundary of the unit ball, which is the scope the second part of Section 5 proves (marker at corrected:831). Not adopted: the all-`t` alternative (edit only `B_\epsilon(0)` and insert a boundary-touching extension proof), because the draft does not contain that argument. A marker at corrected:2171 is pending (z3). Patch [H5] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
+Adopted: the translated ball `B_\epsilon(z)` is replaced by the ordinary `\epsilon`-neighbourhood, and continuity is stated only for the times before the cluster reaches the boundary of the unit ball, which is the scope the second part of Section 5 proves (markers at corrected:833 and corrected:2173, z3, commit 04195351). Not adopted: the all-`t` alternative (edit only `B_\epsilon(0)` and insert a boundary-touching extension proof), because the draft does not contain that argument. Patch [H5] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
 
 ## [C57] Proposition 5.3 (prop:boundary-measure), lines 839–845 (applied 2026-11-10 with the author's approval)
 This binds no new parameter; it matches the actual result proved later in the paper. Patch [H6] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
@@ -55,6 +55,7 @@ This is the one non-surgical patch: it replaces the fixed-center law argument by
 This keeps Proposition 1.3 for every deterministic open `U`; only the auxiliary domain-cluster lemma is restricted to the regular domains actually used in the exhaustion. Patch [H9] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
 
 ## [C61] Lemma 6.4 (lemma:annulus-hit), lines 1189–1194 and 1207–1208 (applied 2026-11-10 with the author's approval)
+Audit R1 extension (z3, commit 04195351; marker at corrected:1247): `a = a(b,p,\gamma,\boldsymbol{\alpha}_0)`; the transfer uses `a = (C_1/C_2)a'` (the printed ratio was reversed); the factor `|z|^{-\boldsymbol{\alpha}_0\gamma}` is replaced by the sup/inf ratio over the annulus, at most `1001^{\gamma|\boldsymbol{\alpha}_0|}`, giving `a = a'/1001^{\gamma|\boldsymbol{\alpha}_0|}`.
 No dependence on `r` or `z` is introduced; only the fixed insertion parameter must be displayed. Patch [H10] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
 
 ## [C62] Lemma 6.7 (lemma:very-good-annuli-hit), lines 1311–1319 (applied 2026-11-10 with the author's approval)
@@ -67,6 +68,7 @@ This excludes exactly the false `\infty\cdot0` case; all later applications have
 The paper may retain the single universal `C_3` supplied by Lemma 6.6; Lean’s stronger “every `C_3>0`” version need not be printed. Patch [H13] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
 
 ## [C65] Appendix A setup, equation eq:volume-growth, lines 4131–4135 (applied 2026-11-10 with the author's approval)
+Audit R1 (z3, commit 04195351; marker at corrected:4192 and at the volume-growth hunk): `\appendix` restored (audit A1, unmarked damage of the [C44]/[C65] hunks), and the sentence deleted in this hunk restored, citing Lemma 2.4 of the corrected draft (audit A2).
 This is the exponent pair used by the formal statement and by the LQG volume bounds cited earlier. Patch [H14] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
 
 ## [C66] Appendix A obstacle and supersolution class, lines 4155–4164 (applied 2026-11-10 with the author's approval)
@@ -77,6 +79,12 @@ The proof already uses `\mu` throughout, so no proof edit is needed. Patch [H16]
 
 ## [C68] Appendix A.6 (lemma:appendix-cluster-compatibility), lines 4457–4465 (applied 2026-11-10 with the author's approval)
 This is the exact deterministic quantifier order audited in chat 210; the rest of the proof is unchanged. Patch [H17] of ChatGPT chat 248 (notes/fp-gaps/CHATGPT-248-hb-pending-latex-patches-H1-H21-PRO.md), from the Pro audits of chats 164 (Section 5), 203 (Section 6), 204 (Sections 2-4, Appendix A) and 210 (Appendix A).
+
+## [C69] Standing dependence on alpha_0 (Prop 6.1, Lemma 6.3, Lemma 6.7, Lemma 6.11, Prop 7.2, Lemma 10.1), corrected:389 (audit A5; z3, commit 04195351)
+Printed: the constants were stated or justified as depending only on `\gamma`, although by Lemma 2.4 and Lemma 6.4 they depend on `\boldsymbol{\alpha}_0`. Corrected: one standing convention, with the dependence written out at each site. Bookkeeping, minor; email: Part 2.
+
+## [C70] Proposition 11.2 (eq:mass-times), corrected:3061 (audit A6; z3, commit 04195351)
+Printed: the passage from intervals to all Lebesgue measurable sets was a "standard machine" argument. `A \mapsto \mu_h(\bigcup_{t\in A}\partial\regcluster{}{t})` is not additive, and the interval computation gives only an inclusion up to a null set (GRAPH G37). Corrected: for every Lebesgue measurable `A`, eq:mass-times is the boundary-union identity of Section 11, proved by arrival times (the [C46] argument). Evidence: GRAPH G37.
 
 ## Early corrections [C1]-[C36] (applied 2026-11-10 with the author's approval, lh 23:58 UTC)
 Only the adopted early corrections that are genuine printed errors are patched below. Each patch keeps the original label `n` and is marked by a trailing `% CORRECTION [Cn]` comment on the modified line. Superseded items and the items not adopted are listed at the end.

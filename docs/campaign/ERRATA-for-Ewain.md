@@ -74,10 +74,10 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Problem:* when $Y\subset\mathcal A_{3r,5r}(z)$, the strict event is empty, so the condition does not express what is intended.
 - *Correction:* "exits $\mathcal A_{3r,5r}(z)$ no later than exiting $Y$", that is, the exit time of the annulus is at most the exit time of $Y$.
 
-**Lemma 6.4 (annuli are hit)** <!-- C61 --> *(dependence bookkeeping, minor; the proof defects are pending, see the responses file)*
-- *Printed:* $a=a(b,p,\gamma)$, and the constants in the proof depend only on $\gamma$.
-- *Problem:* the comparison with the log-singular field depends on $\boldsymbol\alpha_0$.
-- *Correction:* $a=a(b,p,\gamma,\boldsymbol\alpha_0)$, and the constants in the proof depend on $\boldsymbol\alpha_0$ as well.
+**Lemma 6.4 (annuli are hit)** <!-- C61 -->
+- *Printed:* $a=a(b,p,\gamma)$, and the constants in the proof depend only on $\gamma$. The transfer from the comparison field to $h$ also uses the factor $|z|^{-\boldsymbol\alpha_0\gamma}$ and a ratio in the wrong direction.
+- *Problem:* the comparison with the log-singular field depends on $\boldsymbol\alpha_0$. The factor $|z|^{-\boldsymbol\alpha_0\gamma}$ is not uniform on the annulus when $|z|$ is of order $r$ or $z=0$, and the transfer of the event needs $a=(C_1/C_2)a'$, not $(C_2/C_1)a'$.
+- *Correction:* $a=a(b,p,\gamma,\boldsymbol\alpha_0)$, and the constants in the proof depend on $\boldsymbol\alpha_0$ as well. Replace the factor $|z|^{-\boldsymbol\alpha_0\gamma}$ by the sup/inf ratio of $|x|^{-\boldsymbol\alpha_0\gamma}$ over the annulus, which is at most $1001^{\gamma|\boldsymbol\alpha_0|}$, and take $a=(C_1/C_2)a'/1001^{\gamma|\boldsymbol\alpha_0|}$ in the transfer.
 
 **Lemma 6.7 (very good annuli are hit)** <!-- C62 --> *(minor: dependence bookkeeping)*
 - *Printed:* the dependence of $a$, $C^{\pm}_i$ and $N_1$ on $\boldsymbol\alpha_0$ and on the lower volume exponent $\beta^-$ is suppressed.
@@ -177,6 +177,11 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Problem:* metric balls can have arbitrary centres, and the exceptional set of times is random.
 - *Correction:* the proof treats arbitrary metric centres and proves the boundary-union identity through arrival times. The statement is as printed.
 
+**Proposition 11.2 (non-Lipschitz clause of Theorem 1.2), eq:mass-times** <!-- C70 -->
+- *Printed:* the passage from intervals to all Lebesgue measurable sets is a "standard machine" argument.
+- *Problem:* the set function $A\mapsto\mu_h(\bigcup_{t\in A}\partial\widehat\Lambda_t)$ is not additive, and the interval computation gives only an inclusion up to a null set.
+- *Correction:* for every Lebesgue measurable $A$, eq:mass-times is the boundary-union identity of Section 11, proved by arrival times.
+
 ### Appendix A
 
 **Standing volume-growth condition (Appendix A)** <!-- C65 -->
@@ -185,6 +190,13 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Correction:* $r^{\beta^-}\le\mu(B_r(z))\le r^{\beta^+}$ for all $z\in B_R$.
 
 ## Part 2. Minor corrections
+
+### Standing convention
+
+**Dependence on $\boldsymbol\alpha_0$ (Propositions 6.1, 7.2, Lemmas 6.3, 6.7, 6.11, 10.1)** <!-- C69 -->
+- *Printed:* the constants of these results are stated or justified as depending only on $\gamma$.
+- *Problem:* by Lemma 2.4 and Lemma 6.4 they depend on $\boldsymbol\alpha_0$ as well. This is dependence bookkeeping.
+- *Correction:* one standing convention, with the dependence on $\boldsymbol\alpha_0$ written out at each site.
 
 ### Section 1
 
@@ -240,7 +252,6 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 
 Each item is a gap in a printed proof, not a change of statement. Where the corrected draft repairs one, it carries a correction marker.
 
-- **Proposition 11.2 (non-Lipschitz clause of Theorem 1.2), eq:mass-times.** The step "$A\mapsto\mu_h(\bigcup_{t\in A}\partial\widehat\Lambda_t)$ is additive" is not valid, and the interval identity gives only an inclusion. The arrival-time argument of Proposition 11.11 applies here.
 - **Lemma 3.2 and eqs. (laplacian-of-v), (laplacian-of-v-general).** The proofs use $\nu\ge0$ without justification. A short repair uses the argument in the proof of Lemma 6.10.
 - **Lemma A.1, Step 3.** The inequality $\beta_t(x)+\varepsilon/2\ge\beta_t(y)$ on $B_\delta(x_0)$ fails at $x_0=0$, where $\beta_t(0)=-\infty$; the ball $B_\delta(0)$ needs a separate estimate.
 - **Proposition 4.1, last claim.** The equality case of Lemma 3.4 needs $\mu_h(\partial\Lambda)=0$, which is not available in general. For $\overline\Lambda\subset B_1$, a repair uses the identity in the proof of Lemma A.5.
