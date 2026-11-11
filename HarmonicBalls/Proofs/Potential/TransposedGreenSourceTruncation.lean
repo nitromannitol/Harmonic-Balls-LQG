@@ -81,6 +81,5 @@ theorem transposedGreen_source_truncation {V : Set ℂ}
       simpa using (hx.2.2.sub tendsto_const_nhds).norm)
   simpa using hlim
 
-#print axioms transposedGreen_source_truncation
 
 end HarmonicBalls

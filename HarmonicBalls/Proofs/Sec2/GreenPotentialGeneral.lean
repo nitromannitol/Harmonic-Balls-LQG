@@ -32,6 +32,5 @@ theorem greenPotentialHolderStmt_of_volumeGrowth
     (by dsimp [b]; linarith) (by dsimp [B]; linarith)
   exact ⟨B + 1, b / 2, by linarith, by dsimp [b]; linarith, r₀, hr₀, hr⟩
 
-#print axioms greenPotentialHolderStmt_of_volumeGrowth
 
 end HarmonicBalls

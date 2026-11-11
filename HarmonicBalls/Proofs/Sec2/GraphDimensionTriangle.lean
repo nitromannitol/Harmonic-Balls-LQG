@@ -90,7 +90,5 @@ theorem IsLiouvilleGraphDimension.min_le {μ : Measure ℂ} {z v w : ℂ} {d₁ 
     rw [max_eq_right hi] at hle
     exact (inv_le_inv₀ h₃.1 h₂.1).1 (by simpa only [one_div] using hle)
 
-#print axioms IsLiouvilleGraphDimension.symm
-#print axioms IsLiouvilleGraphDimension.min_le
 
 end HarmonicBalls

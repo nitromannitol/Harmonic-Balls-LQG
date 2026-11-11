@@ -61,6 +61,5 @@ theorem hasLaplacian_wholePlane_greenPotential {ν : Measure ℂ} [IsFiniteMeasu
     have hlocal := wholePlane_on_disc hR hK (subset_union_left.trans hsub) hν
     exact hlocal.2 φ ⟨hφ.1, hφ.2.1, subset_union_right.trans hsub⟩
 
-#print axioms hasLaplacian_wholePlane_greenPotential
 
 end HarmonicBalls

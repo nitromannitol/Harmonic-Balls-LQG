@@ -8,7 +8,7 @@ import HarmonicBalls.Proofs.Sec6.VolumeGrowthConsequences
 The Section 2 mass estimate and Section 6 prevalence results supply the
 volume-growth and Harnack assumptions in the pointwise hole-exit theorem.
 The LQG inputs are staged pending source review; the Section 6 chain awaits
-campaign audit. The typical-point good-scale estimate remains explicit.
+audit. The typical-point good-scale estimate remains explicit.
 -/
 
 namespace HarmonicBalls

@@ -112,6 +112,5 @@ theorem harmonicBallLocalSet_of_steps
       · rintro ⟨n, hn⟩
         exact ((propext_iff.mp (heq n)).mpr hn).trans (hVsub n)
 
-#print axioms harmonicBallLocalSet_of_steps
 
 end HarmonicBalls

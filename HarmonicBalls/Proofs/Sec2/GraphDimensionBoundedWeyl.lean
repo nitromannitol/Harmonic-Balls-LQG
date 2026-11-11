@@ -59,7 +59,5 @@ theorem ae_lqgLimit_addCircleAverage_graphDimension
     rw [← abs_mul] at h
     first | exact (abs_le.mp h).1 | exact (abs_le.mp h).2
 
-#print axioms isLiouvilleGraphDimension_iff_withDensity_exp
-#print axioms ae_lqgLimit_addCircleAverage_graphDimension
 
 end HarmonicBalls

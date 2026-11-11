@@ -81,8 +81,5 @@ theorem tendsto_transposedGreen_integral_norm_of_mass_tendsto_zero
   rw [heq]
   exact hn.2.2.2.2
 
-#print axioms disc_green_volume_row_bound
-#print axioms transposedGreen_mass_bound
-#print axioms tendsto_transposedGreen_integral_norm_of_mass_tendsto_zero
 
 end HarmonicBalls

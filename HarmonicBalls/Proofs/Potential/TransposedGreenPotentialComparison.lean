@@ -84,8 +84,5 @@ theorem transposedGreen_potential_mono_domain {V W : Set ℂ}
     (le_rfl : ν ≤ ν) hν hν).2] with x hx
   exact ⟨hx.1, hx.2.1, hx.2.2.2.2.1, hx.2.2.2.2.2⟩
 
-#print axioms transposedGreen_potential_comparison
-#print axioms transposedGreen_potential_mono_source
-#print axioms transposedGreen_potential_mono_domain
 
 end HarmonicBalls

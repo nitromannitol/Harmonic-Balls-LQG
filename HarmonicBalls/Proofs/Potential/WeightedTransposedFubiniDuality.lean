@@ -75,6 +75,5 @@ theorem weighted_transposedGreen_fubini_duality
   · simpa only [heq₂] using hFG.integral_prod_left
   · simpa only [heq₁, heq₂] using (integral_integral_swap (f := fun y x => f y * g x * greenFunction V y x) hFG).symm
 
-#print axioms weighted_transposedGreen_fubini_duality
 
 end HarmonicBalls

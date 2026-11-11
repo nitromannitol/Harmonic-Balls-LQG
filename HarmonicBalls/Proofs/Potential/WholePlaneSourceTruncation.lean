@@ -118,8 +118,5 @@ theorem wholePlane_source_truncation_ae {K : Set ℂ} {ν : Measure ℂ}
       (wholePlane_source_truncation_on hK hν isBounded_ball E hE hmono hcover).1)
   simpa only [Metric.iUnion_ball_nat, Measure.restrict_univ] using h
 
-#print axioms wholePlane_kernel_integrable_product
-#print axioms wholePlane_source_truncation_on
-#print axioms wholePlane_source_truncation_ae
 
 end HarmonicBalls

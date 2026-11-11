@@ -107,8 +107,5 @@ theorem isLiouvilleGraphDimension_complex_similarity_iff (μ : Measure ℂ) (z w
   simp only [IsLiouvilleGraphDimension, he,
     liouvilleGraphDistance_complex_similarity μ _ z w r hr b]
 
-#print axioms isLiouvilleGraphCover_complex_similarity_iff
-#print axioms liouvilleGraphDistance_complex_similarity
-#print axioms isLiouvilleGraphDimension_complex_similarity_iff
 
 end HarmonicBalls

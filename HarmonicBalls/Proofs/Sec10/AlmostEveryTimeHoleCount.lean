@@ -106,7 +106,5 @@ theorem ae_time_ae_cluster_hole_count_bound_of_rational_times
   have hle := (hp q ⟨hqt.le, hq.le⟩).trans (hr q (htpos.trans hqt) z hz)
   exact (not_le_of_gt (by exact_mod_cast Nat.lt_succ_self N)) hle
 
-#print axioms ae_time_ae_cluster_hole_count_right_persistent
-#print axioms ae_time_ae_cluster_hole_count_bound_of_rational_times
 
 end HarmonicBalls

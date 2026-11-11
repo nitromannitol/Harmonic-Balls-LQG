@@ -88,9 +88,5 @@ theorem continuousOn_greenPotential_univ_of_source_free_open
     ContinuousOn (greenPotential univ ν) U :=
   (harmonicOnNhd_greenPotential_univ_of_source_free_open hK hν hU hνU).continuousOn
 
-#print axioms harmonicOnNhd_greenPotential_univ_of_compact_source
-#print axioms continuousOn_greenPotential_univ_of_compact_source
-#print axioms harmonicOnNhd_greenPotential_univ_of_source_free_open
-#print axioms continuousOn_greenPotential_univ_of_source_free_open
 
 end HarmonicBalls

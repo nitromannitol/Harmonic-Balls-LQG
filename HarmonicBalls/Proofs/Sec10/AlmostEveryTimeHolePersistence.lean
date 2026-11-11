@@ -68,7 +68,5 @@ theorem ae_time_ae_no_holes_of_rational_times_for_countable_centres
   obtain ⟨V, hV, hbV, _⟩ := hp q ⟨hqt.le, hq.le⟩
   exact hr q (htpos.trans hqt) z hz V hV hbV
 
-#print axioms ae_time_ae_cluster_hole_persistence_for_countable_centres
-#print axioms ae_time_ae_no_holes_of_rational_times_for_countable_centres
 
 end HarmonicBalls

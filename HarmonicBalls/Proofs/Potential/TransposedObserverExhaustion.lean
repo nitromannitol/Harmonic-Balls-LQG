@@ -61,7 +61,5 @@ theorem transposed_green_observer_exhaustion_l1
   obtain ⟨hk, hf⟩ := finiteSource_transposedGreen_observation_integrability hup hV hVb hν
   exact ⟨hk, hf, integrable_indicator_exhaustion_l1 hf A hA hmono hcover⟩
 
-#print axioms integrable_indicator_exhaustion_l1
-#print axioms transposed_green_observer_exhaustion_l1
 
 end HarmonicBalls

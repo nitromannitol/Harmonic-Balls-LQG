@@ -25,6 +25,5 @@ theorem harmonicBallLocalSet_of_volumeGrowth_existence_uniqueness_and_measureLoc
   harmonicBallLocalSet_of_volumeGrowth_and_compatibility hI2 h55 h56
     (clusterStrongCompatibilityStmt_of_volumeGrowth hI2) hmeasure
 
-#print axioms harmonicBallLocalSet_of_volumeGrowth_existence_uniqueness_and_measureLocality
 
 end HarmonicBalls

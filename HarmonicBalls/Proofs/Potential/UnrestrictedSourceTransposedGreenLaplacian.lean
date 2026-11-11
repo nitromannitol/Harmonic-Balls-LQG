@@ -51,9 +51,5 @@ theorem hasLaplacian_transposedGreen_unrestricted_source {V : Set ℂ}
   have h := hasLaplacian_generalDomain_transposedGreenPotential hV hVb hν
   simpa only [transposedGreen_integral_restrict_source] using h
 
-#print axioms transposedGreen_integral_restrict_source
-#print axioms ae_transposedGreen_integrable_unrestricted_source
-#print axioms integrableOn_transposedGreen_unrestricted_source
-#print axioms hasLaplacian_transposedGreen_unrestricted_source
 
 end HarmonicBalls

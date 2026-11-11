@@ -90,6 +90,5 @@ theorem weighted_transposedGreen_observation_stability
     (hpoint.mono fun x hx => by simpa using (hx.sub tendsto_const_nhds).norm)
   simpa using hlim
 
-#print axioms weighted_transposedGreen_observation_stability
 
 end HarmonicBalls

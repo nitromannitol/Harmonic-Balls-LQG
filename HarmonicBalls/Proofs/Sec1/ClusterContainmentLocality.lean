@@ -64,7 +64,5 @@ theorem harmonicBallLocalSet_of_volumeGrowth_and_compatibility
   harmonicBallLocalSet_of_steps h58 h55 h56
     (clusterContainmentLocality_of_steps hI2 h55 h58) hmeasure
 
-#print axioms clusterContainmentLocality_of_steps
-#print axioms harmonicBallLocalSet_of_volumeGrowth_and_compatibility
 
 end HarmonicBalls

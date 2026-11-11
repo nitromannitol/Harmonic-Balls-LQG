@@ -53,8 +53,5 @@ theorem liouvilleGraphDistance_ne_top (μ : Measure ℂ) [IsLocallyFiniteMeasure
   obtain ⟨n, hn⟩ := exists_isLiouvilleGraphCover μ hμ hε z w
   exact ne_top_of_le_ne_top (by simp) (liouvilleGraphDistance_le hn)
 
-#print axioms exists_ball_measure_le_of_singleton
-#print axioms exists_isLiouvilleGraphCover
-#print axioms liouvilleGraphDistance_ne_top
 
 end HarmonicBalls

@@ -149,9 +149,5 @@ theorem wholePlane_observation_source_truncation_ae {K : Set ℂ} {μ ν : Measu
       (wholePlane_observation_source_truncation_on hup hK hν isBounded_ball E hE hmono hcover).1)
   simpa only [Metric.iUnion_ball_nat, Measure.restrict_univ] using h
 
-#print axioms wholePlane_observation_kernel_integrable_product
-#print axioms wholePlane_observation_source_integrability
-#print axioms wholePlane_observation_source_truncation_on
-#print axioms wholePlane_observation_source_truncation_ae
 
 end HarmonicBalls

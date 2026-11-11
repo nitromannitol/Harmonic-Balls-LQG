@@ -83,10 +83,5 @@ theorem liouvilleGraphDistance_symm (μ : Measure ℂ) (ε : ℝ) (z w : ℂ) :
   ext k
   constructor <;> rintro ⟨n, rfl, hc⟩ <;> exact ⟨n, rfl, hc.symm⟩
 
-#print axioms IsLiouvilleGraphCover.trans
-#print axioms IsLiouvilleGraphCover.symm
-#print axioms exists_isLiouvilleGraphCover_of_ne_top
-#print axioms liouvilleGraphDistance_triangle
-#print axioms liouvilleGraphDistance_symm
 
 end HarmonicBalls

@@ -107,8 +107,5 @@ theorem isLiouvilleGraphDimension_affine_iff (μ : Measure ℂ) (z w : ℂ) (d r
   simp only [IsLiouvilleGraphDimension, he,
     liouvilleGraphDistance_affine μ _ z w r hr b]
 
-#print axioms isLiouvilleGraphCover_affine_iff
-#print axioms liouvilleGraphDistance_affine
-#print axioms isLiouvilleGraphDimension_affine_iff
 
 end HarmonicBalls

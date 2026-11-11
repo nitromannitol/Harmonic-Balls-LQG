@@ -9,7 +9,7 @@ import HarmonicBalls.Proofs.Sec9.VolumeGrowthAssembly
 
 This conditional assembly retains volume growth, the Harnack and compact-boundary
 estimates, and the staged general-α coordinate-change and locality predicates as
-explicit hypotheses. The staged predicates await operator source review. The
+explicit hypotheses. The staged predicates await source review. The
 potential-theoretic infrastructure uses work of Leonardo Bonanno.
 -/
 
@@ -39,6 +39,5 @@ theorem harmonicBallLocalSet_of_harnack_and_compactBoundary
       (harmonicBallBoundarySubset_of_volumeGrowth hI2)
       (regularOpenEqOfAEEq_of_volumeGrowth hI2)) hmeasure
 
-#print axioms harmonicBallLocalSet_of_harnack_and_compactBoundary
 
 end HarmonicBalls

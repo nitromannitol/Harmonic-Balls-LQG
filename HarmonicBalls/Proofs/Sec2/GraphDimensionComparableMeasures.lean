@@ -88,9 +88,5 @@ theorem isLiouvilleGraphDimension_iff_of_comparable
     exact isLiouvilleGraphDimension_of_measure_sandwich (h.smul hc) (h.smul hC)
       hlower hupper
 
-#print axioms IsLiouvilleGraphCover.of_measure_le
-#print axioms liouvilleGraphDistance_mono_measure
-#print axioms isLiouvilleGraphDimension_of_measure_sandwich
-#print axioms isLiouvilleGraphDimension_iff_of_comparable
 
 end HarmonicBalls

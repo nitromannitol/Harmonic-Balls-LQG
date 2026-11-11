@@ -107,8 +107,5 @@ theorem tendsto_weighted_transposedGreen_of_L1 {R : ℝ} (hR : 0 < R)
   rw [heq]
   exact hb
 
-#print axioms weighted_transposedGreen_integrable_product
-#print axioms weighted_transposedGreen_bound
-#print axioms tendsto_weighted_transposedGreen_of_L1
 
 end HarmonicBalls

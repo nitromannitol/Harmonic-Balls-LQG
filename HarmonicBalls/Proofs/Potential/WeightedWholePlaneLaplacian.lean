@@ -149,12 +149,5 @@ theorem hasLaplacian_weighted_wholePlane {ν : Measure ℂ} [IsFiniteMeasure ν]
   filter_upwards [hae] with x hx
   exact hx.2.symm
 
-#print axioms positiveSource
-#print axioms negativeSource
-#print axioms finite_positiveSource
-#print axioms finite_negativeSource
-#print axioms hasLaplacian_wholePlane_sub_greenPotential
-#print axioms weighted_wholePlane_slice
-#print axioms hasLaplacian_weighted_wholePlane
 
 end HarmonicBalls

@@ -100,8 +100,5 @@ theorem isLiouvilleGraphDimension_smul_iff {μ : Measure ℂ} {z w : ℂ} {d c :
   · intro h
     exact h.smul hc
 
-#print axioms isLiouvilleGraphDimension_smul_iff
-#print axioms liouvilleGraphDistance_smul
-#print axioms IsLiouvilleGraphDimension.smul
 
 end HarmonicBalls

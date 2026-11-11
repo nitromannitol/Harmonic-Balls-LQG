@@ -47,8 +47,5 @@ theorem not_isLiouvilleGraphDimension_self (μ : Measure ℂ) [IsLocallyFiniteMe
   have heq : (1 : ℝ) / d = 0 := tendsto_nhds_unique hd.2.2 hzero
   exact (ne_of_gt (one_div_pos.mpr hd.1)) heq
 
-#print axioms liouvilleGraphDistance_self
-#print axioms liouvilleGraphExponent_self
-#print axioms not_isLiouvilleGraphDimension_self
 
 end HarmonicBalls

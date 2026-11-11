@@ -177,12 +177,5 @@ theorem IsLiouvilleGraphDimension.fullScale {μ : Measure ℂ} {z w : ℂ} {dime
     have hb := dyadicIntervalIndex_spec hε.1 hε.2.le
     exact (graphExponent_bracket h (by omega) hε.1 hb.1.le hb.2).2
 
-#print axioms liouvilleGraphDistance_ne_top_of_dyadic_eventually
-#print axioms exists_dyadicScale_bracket
-#print axioms log_graphDistance_le_of_le
-#print axioms log_inv_bracket
-#print axioms graphExponent_bracket
-#print axioms tendsto_dyadicIntervalIndex
-#print axioms IsLiouvilleGraphDimension.fullScale
 
 end HarmonicBalls

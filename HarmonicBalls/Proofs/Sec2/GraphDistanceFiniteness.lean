@@ -52,6 +52,5 @@ theorem liouvilleGraphDistance_ne_top_of_nonatomic (μ : Measure ℂ)
   obtain ⟨n, hn⟩ := exists_liouvilleGraphCover μ hε z w
   exact ne_top_of_le_ne_top (by simp) (liouvilleGraphDistance_le hn)
 
-#print axioms liouvilleGraphDistance_ne_top_of_nonatomic
 
 end HarmonicBalls

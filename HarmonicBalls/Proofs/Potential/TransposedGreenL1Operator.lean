@@ -125,7 +125,5 @@ theorem existsUnique_transposedGreen_L1_operator {R : ℝ} (hR : 0 < R) :
   apply Lp.ext
   exact (hS.1 f).trans (hF f).symm
 
-#print axioms integrable_density_transposedGreen_bound
-#print axioms existsUnique_transposedGreen_L1_operator
 
 end HarmonicBalls

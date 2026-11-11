@@ -5,7 +5,7 @@ import HarmonicBalls.Proofs.Sec6.VolumeGrowthConsequences
 /-! # Hole criteria from volume growth and typical scales
 
 The Section 6 derivation of Lemma 6.11 is used to remove it as a separate
-hypothesis. That Section 6 chain remains subject to campaign audit.
+hypothesis. That Section 6 chain remains subject to audit.
 -/
 
 namespace HarmonicBalls

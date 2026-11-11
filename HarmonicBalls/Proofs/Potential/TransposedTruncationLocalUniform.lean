@@ -60,6 +60,5 @@ theorem transposed_green_source_truncation_local_uniform
   rw [heq, sub_add_cancel_left, abs_neg]
   exact hn x hx
 
-#print axioms transposed_green_source_truncation_local_uniform
 
 end HarmonicBalls

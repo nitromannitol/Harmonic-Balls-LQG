@@ -127,7 +127,5 @@ theorem ae_countable_hole_count_bound_exceptions_of_rational_times
   have hle := (hp q ⟨htq.le, hq.le⟩).trans (hrat q (ht.trans htq))
   exact (not_le_of_gt (by exact_mod_cast Nat.lt_succ_self N)) hle
 
-#print axioms ae_countable_times_with_nonpersistent_hole_count
-#print axioms ae_countable_hole_count_bound_exceptions_of_rational_times
 
 end HarmonicBalls

@@ -74,6 +74,5 @@ theorem weighted_transposedGreen_joint_truncation
   · simp only [indicator_of_notMem hx]
     exact le_add_of_nonneg_left (norm_nonneg _)
 
-#print axioms weighted_transposedGreen_joint_truncation
 
 end HarmonicBalls

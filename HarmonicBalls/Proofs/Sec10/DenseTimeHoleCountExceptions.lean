@@ -73,7 +73,5 @@ theorem ae_countable_hole_count_bound_exceptions_of_ae_deterministic_time
   intro t htT ht
   exact hω ⟨t, htT⟩ ht z hz
 
-#print axioms ae_countable_hole_count_bound_exceptions_of_dense_times
-#print axioms ae_countable_hole_count_bound_exceptions_of_ae_deterministic_time
 
 end HarmonicBalls

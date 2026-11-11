@@ -95,7 +95,5 @@ theorem ae_cluster_hole_count_measurable_of_volumeGrowth
   apply measurable_zero_extend_of_nat_upper_levels
   exact fun n => (hlevel z hz n).1
 
-#print axioms ae_cluster_hole_count_times_measurable_of_volumeGrowth
-#print axioms ae_cluster_hole_count_measurable_of_volumeGrowth
 
 end HarmonicBalls

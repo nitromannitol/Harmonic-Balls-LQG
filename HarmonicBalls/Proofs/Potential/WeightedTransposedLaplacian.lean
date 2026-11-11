@@ -125,8 +125,5 @@ theorem hasLaplacian_weighted_transposedGreen {V : Set ℂ}
   filter_upwards [hae] with x hx
   exact hx.2.symm
 
-#print axioms hasLaplacian_generalDomain_sub_transposedGreenPotential
-#print axioms weighted_transposedGreen_slice
-#print axioms hasLaplacian_weighted_transposedGreen
 
 end HarmonicBalls
