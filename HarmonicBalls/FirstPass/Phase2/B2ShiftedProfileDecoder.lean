@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.Phase2.RootedDominationJointPos
 import HarmonicBalls.FirstPass.Phase2.ProfileDecoderDerived
 import HarmonicBalls.FirstPass.S11at.Producers
+import HarmonicBalls.FirstPass.Phase2.LocalDecoderCommonDerived
 
 /-! # B2 shifted-profile decoder: canonical decoder property and the success at a.e. root (MQ-lh-15)
 
@@ -53,12 +54,35 @@ lemma posExtend_coe_eq (g : ℝ → ℂ → ℝ) :
   · simp [posExtend, posPart, hr]
   · simp [posExtend, posPart, hr]
 
-/-- **Canonical selector (MQ-lh-15 answer, route step 3; BLOCKED-STEP, named Prop, not used by the proofs above).** There is
-a measurable selector `Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)` that recovers every continuous positive-radius profile
-from its values on the dense coordinates: `Sel (posExtend y) = y`. The answer states this only as a requirement ("choose
-the profile selector canonically"), with no construction and no measurability argument. -/
+/-- **Canonical selector (MQ-lh-15 answer, route step 3).** There is a measurable selector
+`Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)` that recovers every continuous positive-radius profile from its values on the
+dense coordinates: `Sel (posExtend y) = y`. Discharged by `canonicalProfileSelector` below. -/
 def CanonicalProfileSelectorStmt : Prop :=
   ∃ Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ), Measurable Sel ∧ ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y
+
+/-- `CircleParameter = Set.Ioi 0 × ℂ` is Polish and locally compact: `Set.Ioi 0` is open in `ℝ`
+(`IsOpen.polishSpace`, `IsOpen.locallyCompactSpace`), and `ℂ` is Polish and locally compact. -/
+instance instPolishSpaceCircleParameterIoi : PolishSpace (Set.Ioi (0 : ℝ)) :=
+  isOpen_Ioi.polishSpace
+
+instance instLocallyCompactSpaceCircleParameterIoi : LocallyCompactSpace (Set.Ioi (0 : ℝ)) :=
+  isOpen_Ioi.locallyCompactSpace
+
+/-- **Step 3 (MQ-lh-15): the canonical selector exists.** Reuse of `HarmonicBalls.exists_dense_decode_polish` (MQ-lh-12
+step 3) on the Polish, locally compact, nonempty space `CircleParameter = Set.Ioi 0 × ℂ`: pick the dense sequence
+`d` and the measurable left inverse `decode` of `f ↦ (f (d n))_n`, and set `Sel H := decode (n ↦ H (d n))`, where the
+coordinates `d n = (r_n, z_n)` have `r_n > 0`. Measurability of `H ↦ H (r_n) (z_n)` is evaluation in the Pi σ-algebra. For
+`H = posExtend y`, the coordinates are `y (d n)`, so `Sel (posExtend y) = decode (y ∘ d) = y`. -/
+theorem canonicalProfileSelector : CanonicalProfileSelectorStmt := by
+  obtain ⟨d, -, decode, hm, hdec⟩ := exists_dense_decode_polish CircleParameter
+  refine ⟨fun H => decode (fun n => H (d n).1.1 (d n).2), ?_, fun y => ?_⟩
+  · refine hm.comp (measurable_pi_iff.2 fun n => ?_)
+    exact (measurable_pi_apply (d n).2).comp (measurable_pi_apply (d n).1.1)
+  · have hrec : ∀ n, posExtend ⇑y (d n).1.1 (d n).2 = y (d n) := fun n => by
+      have hpos : 0 < (d n).1.1 := Set.mem_Ioi.1 (d n).1.2
+      simp [posExtend, hpos]
+    simp only [hrec]
+    exact hdec y
 
 set_option maxHeartbeats 400000 in
 /-- Measurability in the pole `z` of the circle average of the DMS shift over a general circle `∂B_r(x)`; the case
