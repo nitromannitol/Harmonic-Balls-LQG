@@ -4,14 +4,14 @@ import HarmonicBalls.Draft.Section8
 import HarmonicBalls.Draft.Section2
 import HarmonicBalls.Proposed.LQG
 
-/-! # FIRST-PASS result 8.2 (`TypicalPointManyGoodScalesStmt`, Lemma 8.2, lemma:mu_h-doubling-and-harnack)
+/-! # Result 8.2 (`TypicalPointManyGoodScalesStmt`, Lemma 8.2, lemma:mu_h-doubling-and-harnack)
 
 `firstPass_8_2` proves the Draft statement `TypicalPointManyGoodScalesStmt` from:
 * the FROZEN local joint field-measure identification `LocalRootedFieldMeasureDomination` (L1, DMS A.10 local form);
 * the FROZEN Weyl relation off the origin `LocalLQGInsertionWeylOffOrigin` (standard; locator pending);
 * the Draft full-support statement `LQGMeasureFullSupportStmt` (Draft/Section2);
 * the Proposed existence and non-atomicity of LQG measures (`LQGMeasureExistence`, `LQGMeasureNonatomic`,
-  Proposed/LQG.lean; explicit literature inputs pending operator source-check);
+  Proposed/LQG.lean; explicit literature inputs pending source-check);
 * the NEW, OPEN phase tail `LocalPhaseTailStep` (G-8-2 section 3, eq. (7)-(8)); it is an input and is NOT proved here.
 
 L2 (the unit good-annulus measurability) is discharged by `GoodEventPointPolarity.lean`; the Weyl comparison off the
@@ -25,7 +25,7 @@ namespace HarmonicBalls
 
 universe u
 
-/-- FIRST-PASS result 8.2 from the frozen local inputs, the Proposed existence and non-atomicity inputs, and the
+/-- Result 8.2 from the frozen local inputs, the Proposed existence and non-atomicity inputs, and the
 open phase tail `LocalPhaseTailStep`. -/
 theorem firstPass_8_2 (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hfull : LQGMeasureFullSupportStmt.{u}) (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
@@ -62,6 +62,5 @@ theorem firstPass_8_2 (hL1 : LocalRootedFieldMeasureDomination.{u})
     (fun j hj => localReference_ae_mem_of_tail P ν βm N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hTailN
       hposν hlocν j hj)
 
-#print axioms firstPass_8_2
 
 end HarmonicBalls

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8c.PhaseTail
 import HarmonicBalls.FirstPass.Frozen.S8c
 
-/-! # Block frequencies from Cesàro averages (FIRST-PASS fp-S8c-8-2-local, deterministic step of G-8-2 section 3)
+/-! # Block frequencies from Cesàro averages (deterministic step of G-8-2 section 3)
 
 If the Cesàro averages `(1/k) Σ_{n<k} x n` of a real sequence converge to `q > 1 - ζ`, then the block sums
 `Σ_{n ∈ [N+1, 2N]} x n` eventually exceed `(1 - ζ) N`. This is the deterministic step after the pointwise ergodic
@@ -72,6 +72,5 @@ theorem ae_eventually_frequency_of_birkhoff (hB : BirkhoffPointwiseErgodic.{u}) 
   filter_upwards [hB Y ν T f hT herg hf hbd] with y hy
   exact eventually_block_sum_ge_of_average_tendsto (fun n => f (T^[n] y)) _ ζ hmean hy
 
-#print axioms eventually_block_sum_ge_of_average_tendsto
 
 end HarmonicBalls

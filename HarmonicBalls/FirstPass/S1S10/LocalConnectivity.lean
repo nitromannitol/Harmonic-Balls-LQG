@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.Geometry
 
-/-! # Pointwise local connectedness of `closure G` from crossing components (FIRST PASS helper, worker n1)
+/-! # Pointwise local connectedness of `closure G` from crossing components
 
 Used for the local-connectedness clause of the corrected Lemma 10.5 ([C48]). The crossing hypothesis is on the
 components of `G ∩ B_{2r}(p)` (the open set `G`, as printed), not on those of `closure G`.

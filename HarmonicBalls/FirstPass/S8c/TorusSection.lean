@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8c.TorusGood
 import HarmonicBalls.FirstPass.S8c.PhaseTailProb
 
-/-! # Phase sections of the level-0 torus good event (FIRST-PASS fp-S8c-8-2-local)
+/-! # Phase sections of the level-0 torus good event
 
 The probability bound (9) of `localPhaseTail_failure_le` is stated for the unit scale `ρ = 1` and a constant
 phase, for the (locally finite) measure itself. The level-0 torus good event `torusGoodLevel _ 0 ν` uses
@@ -36,6 +36,5 @@ theorem torusGoodLevel_section_failure_le {Ω : Type*} [MeasurableSpace Ω] (P :
   simp only [dyadicScale_zero_eq_one, hfp, not_and] at hmem ⊢
   exact hmem
 
-#print axioms torusGoodLevel_section_failure_le
 
 end HarmonicBalls

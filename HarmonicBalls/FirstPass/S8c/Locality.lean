@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S8c.GoodSet
 import HarmonicBalls.Proofs.Sec8.PhaseFrequencyLocality
 import HarmonicBalls.Proofs.Sec8.PhaseCriterionTranslation
 
-/-! # Locality of the good event at the root (FIRST-PASS fp-S8c-8-2-local, step G: locality identity)
+/-! # Locality of the good event at the root (step G: locality identity)
 
 For a root `z` and a radius `r > 0`, the eventual very-good count of `μ` at `z` (lattice anchored at the original origin,
 as printed in (VG-iii), `Defs/Annuli.lean`) equals, eventually in `N`, the eventual phase count of the normalised
@@ -140,6 +140,5 @@ theorem veryGoodComparableScaleCount_eventually_iff_recentredGood (μ : Measure 
 
 end Locality
 
-#print axioms veryGoodComparableScaleCount_eventually_iff_recentredGood
 
 end HarmonicBalls

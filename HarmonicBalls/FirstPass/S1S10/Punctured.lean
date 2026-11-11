@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.Geometry
 
-/-! # Connectedness after removing a point from a planar open set (FIRST PASS helper, worker n1)
+/-! # Connectedness after removing a point from a planar open set
 
 Used for the no-cut-point clause of the corrected Lemma 10.5 ([C48]): for an open preconnected `U ⊂ ℂ` and `p ∈ U`,
 `U \ {p}` is preconnected. Classical; proved here from the polar parametrisation of a punctured disc.

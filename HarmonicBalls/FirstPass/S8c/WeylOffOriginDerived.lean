@@ -2,12 +2,11 @@ import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.FirstPass.S11i.SingularWeyl
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginRadon
 
-/-! # The Weyl relation off the origin, derived (FIRST-PASS fp-8-2-hWeyl-derived, worker z6)
+/-! # The Weyl relation off the origin, derived
 
 The frozen Prop `LocalLQGInsertionWeylOffOrigin` (`FirstPass/Frozen/S8c.lean`) is derived here from the
 definitions of the GFF circle averages and of the LQG vague limits. No LQG measure existence, no coordinate
-change and no Cameron-Martin theorem is used. The argument is Steps 1-7 of ChatGPT Pro chat 219
-(`notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md` §1.3).
+change and no Cameron-Martin theorem is used. The argument is Steps 1-7 of the derivation.
 
 * Steps 1-4 (this file): on one common conull set, the vague limits of `lam` (insertion `0`) and `μ` (insertion `α₀`)
   satisfy `∫ f dlam = ∫ f ‖·‖^(γ α₀) dμ` for every continuous compactly supported `f` vanishing near `0`. The

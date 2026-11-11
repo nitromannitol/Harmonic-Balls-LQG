@@ -2,7 +2,7 @@ import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Proofs.Sec11.PinchRootedKernel
 
-/-! # Local observations for the rooted comparison of Lemma 8.2 (FIRST-PASS, fp-S8c-8-2-local)
+/-! # Local observations for the rooted comparison of Lemma 8.2
 
 Definitions of the actual local observation maps of
 `docs/campaign/audits/LocalRootedComparisonRepair.md`, section "Actual local observation":

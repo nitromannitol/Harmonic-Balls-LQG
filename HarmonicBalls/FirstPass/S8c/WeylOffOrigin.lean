@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S8c.RootCover
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.Proposed.LQG
 
-/-! # The Weyl comparison off the origin and the final root-side statement (FIRST-PASS fp-S8c-8-2-local, step W)
+/-! # The Weyl comparison off the origin and the final root-side statement (step W)
 
 The comparison `hW` of `μ(ω)|_{B_1}` with `λ(ω)|_{B_1}`, used by `localRoot_ae_eventually_count_of_weyl`, is derived
 from the FROZEN Weyl relation off the origin `LocalLQGInsertionWeylOffOrigin` (`Frozen/S8c.lean`) and the
@@ -99,6 +99,5 @@ theorem localRoot_ae_eventually_count_final (hL1 : LocalRootedFieldMeasureDomina
   exact localRoot_ae_eventually_count_of_weyl hL1 hfull P γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα
     hμ hν hlam β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ ha hL3 hW hN0
 
-#print axioms localRoot_ae_eventually_count_final
 
 end HarmonicBalls

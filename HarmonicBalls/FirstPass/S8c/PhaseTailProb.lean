@@ -1,7 +1,7 @@
 import HarmonicBalls.Proofs.Sec8.UniformPhasePrevalenceAssembly
 import HarmonicBalls.FirstPass.S8c.PhaseTail
 
-/-! # The probability part (9) of the phase tail (FIRST-PASS fp-S8c-8-2-local, G-8-2 section 3)
+/-! # The probability part (9) of the phase tail (G-8-2 section 3)
 
 `exists_uniform_singular_phase_probability_of_subrange` (Proofs/Sec8/UniformPhasePrevalenceAssembly.lean) is the
 per-phase, uniform-in-`Ω` bound of G-8-2 eq. (9) for the insertion-`γ` measure `ν`: at unit outer scale, for every
@@ -65,6 +65,5 @@ theorem localPhaseTail_failure_le (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     ring
   exact hbound.trans hsum.le
 
-#print axioms localPhaseTail_failure_le
 
 end HarmonicBalls

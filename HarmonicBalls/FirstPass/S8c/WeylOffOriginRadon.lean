@@ -2,9 +2,9 @@ import Mathlib
 import HarmonicBalls.FirstPass.S8d.RadonUnique
 
 /-!
-# Weyl change off the origin: Radon identification (FIRST PASS, fp-8-2, Steps 5-6)
+# Weyl change off the origin: Radon identification (Steps 5-6)
 
-Source: `notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md` §1.3, Steps 5-6 (lines 169-205). This is the
+Derivation: Steps 5-6. This is the
 deterministic part of the off-origin Weyl identity behind `LocalLQGInsertionWeylOffOrigin`
 (FirstPass/Frozen/S8c.lean:73). No new mathematics and no new input.
 
@@ -318,7 +318,7 @@ lemma restrict_compl_zero_eq {m μ : Measure ℂ} [IsLocallyFiniteMeasure m]
     (isLocallyFiniteMeasure_withDensityOffOrigin_restrict hw hw0 h)
     (fun f hf hcf => integral_restrict_compl_zero_eq hw hw0 h f hf hcf)
 
-/-- **Step 5-6 (CHATGPT-219 §1.3).** Let `m, μ` be locally finite measures on `ℂ` and `w : ℂ → ℝ` nonnegative,
+/-- **Step 5-6.** Let `m, μ` be locally finite measures on `ℂ` and `w : ℂ → ℝ` nonnegative,
 continuous off the origin. If `∫ f dm = ∫ f · w dμ` for every continuous compactly supported real `f` vanishing near
 `0`, then `m s = ∫⁻_s ofReal (w z) dμ` for every measurable `s` avoiding `0`.
 (Weyl off-origin identity; for `m = λ_ω`, `μ = μ_ω`, `w z = ‖z‖^(γα₀)`, as in the write-up.) -/

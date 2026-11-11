@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8c.PhaseTail
 import HarmonicBalls.FirstPass.S8c.RootCount
 
-/-! # Transfer of the phase tail to the reference observations on the local domains (FIRST-PASS fp-S8c-8-2-local)
+/-! # Transfer of the phase tail to the reference observations on the local domains
 
 Given the phase tail (`LocalPhaseTailStep`, G-8-2 section 3 eq. (7)) for the reference measure `ν`, the reference
 observations `V_j(z, ω) = localReferenceObservation ν j (z, ω)` lie almost surely in the recentred good set on the
@@ -71,6 +71,5 @@ theorem localReference_ae_mem_of_tail {Ω : Type*} [MeasurableSpace Ω] (P : Mea
   rw [hset]
   exact hN
 
-#print axioms localReference_ae_mem_of_tail
 
 end HarmonicBalls

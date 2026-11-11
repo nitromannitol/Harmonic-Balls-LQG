@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8c.TorusFull
 import HarmonicBalls.Proofs.Sec8.PhaseTorusLebesgue
 
-/-! # The planar form of the torus phase tail (FIRST-PASS fp-S8c-8-2-local, G-8-2 section 3, eqs. (5)-(10))
+/-! # The planar form of the torus phase tail (G-8-2 section 3, eqs. (5)-(10))
 
 `torusPhaseTail_of_dilation` (FirstPass/S8c/TorusFull.lean) gives the eventual block frequency of the torus-indexed
 level-`n` good events, almost surely on `phaseTorusFieldMeasure P`, given a measure-preserving dilation `R` of the
@@ -15,7 +15,7 @@ unnormalised measure `ν x.2`. The transport uses only: the quasi-measure-preser
 identity between a block count and a block sum of indicators.
 
 No new mathematics. The dilation `R`, `hergT` and `hid` stay hypotheses: they are the open steps (b) and (c) of
-`LocalPhaseTailStep`, and their realisation on the field law is the operator's decision. -/
+`LocalPhaseTailStep`, and their realisation on the field law is left open. -/
 
 open MeasureTheory MeasureTheory.Measure ProbabilityTheory Metric Set Filter
 open scoped ENNReal
@@ -78,6 +78,5 @@ theorem localPhaseTail_ae_of_dilation (hB : BirkhoffPointwiseErgodic.{u}) {Ω : 
   refine Eq.trans ?_ (ncard_block_eq_sum _ N).symm
   exact Finset.sum_congr rfl fun n _ => hind n
 
-#print axioms localPhaseTail_ae_of_dilation
 
 end HarmonicBalls

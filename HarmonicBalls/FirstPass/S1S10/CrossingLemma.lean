@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S1S10.LocalConnectivity
 import HarmonicBalls.FirstPass.S1S10.Punctured
 import HarmonicBalls.FirstPass.Frozen.S1S10
 
-/-! # Corrected Lemma 10.5 (deterministic), FIRST PASS (worker n1)
+/-! # Corrected Lemma 10.5 (deterministic)
 
 Lemma 10.5 of the corrected paper, `lemma:crossing-connected` ([C48]): for a nonempty bounded connected open `G ⊂ ℂ`
 with `K = closure G`, if there is a finite set `E` such that every `p ∈ ∂G \ E` has arbitrarily small scales `r` at
@@ -31,7 +31,7 @@ theorem isPreconnected_closure_diff_singleton {G : Set ℂ} (hGo : IsOpen G) (hG
       ⟨subset_closure hx, fun h => haG (mem_singleton_iff.mp h ▸ hx)⟩
     exact hGc.isPreconnected.subset_closure hst sdiff_subset
 
-/-- FIRST PASS, Lemma 10.5 (lemma:crossing-connected), corrected as [C48]. Hypotheses: `G` nonempty, bounded,
+/-- Lemma 10.5 (lemma:crossing-connected), corrected as [C48]. Hypotheses: `G` nonempty, bounded,
 connected and open; a finite set `E` with the crossing condition on `∂G \ E`. Conclusion: `closure G` is
 locally connected, has no cut points, and each component of `ℂ \ closure G` has a simple-loop boundary (Torhorst,
 frozen input `TorhorstSimpleLoopFrozen`). -/

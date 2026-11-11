@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S8c.PhaseMean
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.Proofs.Sec8.PhaseTorus
 
-/-! # The torus-indexed phase tail from the Birkhoff theorem (FIRST-PASS fp-S8c-8-2-local, step (vi) of LocalPhaseTailStep)
+/-! # The torus-indexed phase tail from the Birkhoff theorem (step (vi) of LocalPhaseTailStep)
 
 On the phase torus times the field space, the doubling map `(θ, ω) ↦ (2θ, R ω)` (`phaseTorusDouble` of
 Proofs/Sec8/PhaseTorus.lean, and a measure-preserving dilation `R` of the field space) carries the level-`n` good
@@ -11,7 +11,7 @@ events to the level-`0` good event: `Gn n = T^[n]⁻¹' G` (G-8-2 section 3, eq.
 probability at least `1 - ζ/2` on every phase section, the Birkhoff ergodic theorem for an ergodic `T` gives, almost
 surely on the torus times the field space, eventually `(1 - ζ) N` good levels in each block `[N+1, 2N]`.
 This is the torus form of the phase tail (`hphase` of Proofs/Sec8/PhaseTorusLebesgue.lean). The two named inputs are
-the ergodicity of `T` (G-8-2 section 3, mixing of the GFF dilation; operator ruling pending) and the identity (10).
+the ergodicity of `T` (G-8-2 section 3, mixing of the GFF dilation) and the identity (10).
 -/
 
 open MeasureTheory ProbabilityTheory Filter
@@ -65,6 +65,5 @@ theorem ae_frequency_of_torus_dilation (hB : BirkhoffPointwiseErgodic.{u}) {Ω :
   simp only [hsum]
   exact hp
 
-#print axioms ae_frequency_of_torus_dilation
 
 end HarmonicBalls

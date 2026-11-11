@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S8c.Frequency
 
-/-! # Lifting a periodic almost-sure property from the fundamental box to the plane (FIRST-PASS fp-S8c-8-2-local)
+/-! # Lifting a periodic almost-sure property from the fundamental box to the plane
 
 The phase-sensitive very-good event at unit scale is invariant under the period lattice `(1/100) ℤ²` of the phase torus
 (every dyadic inner lattice `(2^{-n}/100) ℤ²` contains `(1/100) ℤ²`, G-8-2 section 3). Hence a Lebesgue-almost-sure
@@ -55,6 +55,5 @@ theorem ae_of_ae_phaseFundamentalBox (p : ℂ → Prop)
       rw [measure_preimage_add_right]
       exact h)
 
-#print axioms ae_of_ae_phaseFundamentalBox
 
 end HarmonicBalls

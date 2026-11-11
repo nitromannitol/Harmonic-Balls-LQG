@@ -1,10 +1,10 @@
 import HarmonicBalls.FirstPass.S8c.GoodSet
 import HarmonicBalls.Proofs.Sec8.PhaseFrequencyLocality
 
-/-! # The phase-sensitive tail of Lemma 8.2: named open step and reference-side locality (FIRST-PASS fp-S8c-8-2-local)
+/-! # The phase-sensitive tail of Lemma 8.2: named open step and reference-side locality
 
-`LocalPhaseTailStep` is the Draft-shaped existential form of the phase tail (7) of notes/fp-gaps/G-8-2.md, section 3,
-with the constants of (6)-(8). It is a NEW step (this paper's Lemma 8.2 argument, G-8-2 section 3, which uses the
+`LocalPhaseTailStep` is the Draft-shaped existential form of the phase tail (7),
+with the constants of (6)-(8). It is a NEW step (this paper's Lemma 8.2 argument, which uses the
 Section 6 probability bounds and the ergodicity of doubling times dilation); it is NOT frozen and NOT proved here.
 
 `phaseCount_eventually_iff_normalized` is the reference-side locality: the eventual phase count of `ν` at the origin
@@ -25,7 +25,7 @@ constants `C₁^±, C₂^±`, a start `N₁ ≥ 9`, and for each `N₀ ≥ N₁`
 GFF and every insertion-`γ` LQG measure `ν` on the same space, almost surely for Lebesgue-almost every phase `w`
 (here the product `volume × P`, the phase being the first coordinate), the very-good frequency with threshold `a` and
 phase `w` holds eventually. The constants are those of (6)-(8): `a_* = a / ((401^{γ²})²)`, the same `b`, `C₃`, size
-constants, `N₀`, `m`. Source: notes/fp-gaps/G-8-2.md, section 3, eqs. (5)-(10). -/
+constants, `N₀`, `m`. Equations (5)-(10) of the derivation of Lemma 8.2. -/
 def LocalPhaseTailStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ βminus : ℝ, (2 + γ) ^ 2 / 2 < βminus →
   ∃ C₃ : ℝ, 0 < C₃ ∧ ∀ ζ : ℝ, 0 < ζ → ∀ b ∈ Ioo (0 : ℝ) 1,
@@ -117,6 +117,5 @@ theorem phaseCount_eventually_iff_normalized (ν : Measure ℂ) [IsLocallyFinite
     rw [hS]
   exact Filter.eventually_congr hev
 
-#print axioms phaseCount_eventually_iff_normalized
 
 end HarmonicBalls

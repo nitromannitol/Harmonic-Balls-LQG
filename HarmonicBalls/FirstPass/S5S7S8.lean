@@ -10,7 +10,7 @@ import HarmonicBalls.Draft.Section7
 import HarmonicBalls.Draft.Section8
 
 /-!
-# First-pass closures for Sections 5, 7 and 8 (task fp-S5S7S8, worker n4)
+# closures for Sections 5, 7 and 8
 
 Each theorem `firstPass_<sec>_<num>` concludes the Draft statement of the numbered result. Its hypotheses are only
 existing Proposed inputs of `HarmonicBalls/Proposed/LQG.lean` (`WholePlaneLQGBallMassBounds`, `LQGMeasureCoordChange`,
@@ -203,17 +203,5 @@ theorem firstPass_5_8
   section5_8_of_staged_inputs hDG hCC hE
 
 
-#print axioms firstPass_5_1
-#print axioms firstPass_5_2
-#print axioms firstPass_5_3
-#print axioms firstPass_5_4
-#print axioms firstPass_5_5
-#print axioms firstPass_5_6
-#print axioms firstPass_5_7
-#print axioms firstPass_5_8
-#print axioms firstPass_7_1
-#print axioms firstPass_7_2
-#print axioms firstPass_8_1
-#print axioms firstPass_8_3
 
 end HarmonicBalls

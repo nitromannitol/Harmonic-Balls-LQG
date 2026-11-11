@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S8c.JointTransfer
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.Draft.Section2
 
-/-! # Joint local reduction of Lemma 8.2 (FIRST-PASS, fp-S8c-8-2-local)
+/-! # Joint local reduction of Lemma 8.2
 
 The root observation `localRootObservation μ j` lies almost surely in a measurable set `G` of
 (recentred normalised measures), under the normalised rooted law `P ⊗ₘ κ` restricted to `{z ∈ D_j}`,
@@ -57,6 +57,5 @@ theorem localRoot_ae_mem_of_localDomination (hL1 : LocalRootedFieldMeasureDomina
   have hV := aemeasurable_localReferenceObservation P ν hνA j (localDomain j)
   exact ae_mem_of_map_absolutelyContinuous _ _ P _ _ hO hV hLD hG hL3
 
-#print axioms localRoot_ae_mem_of_localDomination
 
 end HarmonicBalls

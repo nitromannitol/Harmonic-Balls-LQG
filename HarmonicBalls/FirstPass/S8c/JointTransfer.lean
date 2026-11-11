@@ -1,6 +1,6 @@
 import Mathlib.MeasureTheory.Measure.Prod
 
-/-! # Joint transfer of an almost-sure membership along a local domination (FIRST-PASS, fp-S8c-8-2-local)
+/-! # Joint transfer of an almost-sure membership along a local domination
 
 Pure measure theory, used in the local reduction of Lemma 8.2. If the root-side image of the restricted
 root law is absolutely continuous with respect to the reference-side image of the product law, and the
@@ -30,6 +30,5 @@ theorem ae_mem_of_map_absolutelyContinuous {Ω Z E : Type*} [MeasurableSpace Ω]
   rw [Measure.map_apply_of_aemeasurable hO hGc] at hO0
   exact ae_iff.mpr hO0
 
-#print axioms ae_mem_of_map_absolutelyContinuous
 
 end HarmonicBalls

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S2S3S4S9SA
 import HarmonicBalls.Proofs.Sec8.GreenKernelContinuity
 
 /-!
-# Proposition 2.3 with the pole clause (fp-2-3-green-pole)
+# Proposition 2.3 with the pole clause
 
 Bou-Rabee and Gwynne, *Harmonic balls in Liouville quantum gravity* (arXiv:2208.11795), Proposition 2.3
 (prop:green-properties, corrected draft line 484). The paper's Green function `G_{B_R}(x,·)` has the value `+∞` at its
@@ -23,7 +23,7 @@ namespace HarmonicBalls
 
 open Metric Filter Topology
 
-/-- **Proposition 2.3 with the pole clause** (audit chat 204, §1). `GreenFunctionBallStmt` (Draft/Section2.lean:68)
+/-- **Proposition 2.3 with the pole clause** (§1). `GreenFunctionBallStmt` (Draft/Section2.lean:68)
 together with `G_{B_R}(x,y) → +∞` as `y → x` for `x ∈ B_R(0)`, `y ≠ x`: the Green function takes the value `+∞` at
 its pole, so `G_{B_R}(x,·) > 0` on the whole of `B_R`. -/
 def GreenFunctionBallWithPoleStmt : Prop :=

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S8c.TorusTail
 import HarmonicBalls.FirstPass.S8c.GoodSet
 import HarmonicBalls.FirstPass.S8c.UnitGood
 
-/-! # Measurability of the torus-indexed good levels (FIRST-PASS fp-S8c-8-2-local, input (iv) of LocalPhaseTailStep)
+/-! # Measurability of the torus-indexed good levels (input (iv) of LocalPhaseTailStep)
 
 For a measurable family `ν : Ω → Measure ℂ`, the level-`n` good event on the phase torus times the field space is the
 very-good criterion at scale `dyadicScale n` with torus phase `torusPhase p.1`, together with the annulus-ball
@@ -48,6 +48,5 @@ theorem measurableSet_torusGoodLevel {Ω : Type*} [MeasurableSpace Ω] (β : ℝ
   rw [Set.ofPred_and]
   exact h1.inter h2
 
-#print axioms measurableSet_torusGoodLevel
 
 end HarmonicBalls

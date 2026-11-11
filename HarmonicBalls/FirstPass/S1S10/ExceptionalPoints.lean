@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.Geometry
 import HarmonicBalls.Proofs.Sec10.ContinuumBoundaryBumping
 
-/-! # Removing finitely many exceptional points from local connectedness (FIRST PASS helper, worker n1)
+/-! # Removing finitely many exceptional points from local connectedness
 
 A compact connected `K ⊂ ℂ` which is locally connected (relative to `K`) at every point outside a finite set `E` is
 locally connected at every point. This is the step of the corrected Lemma 10.5 ([C48]) which removes the finite

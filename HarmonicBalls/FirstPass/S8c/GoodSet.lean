@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8c.Measurability
 import HarmonicBalls.Proofs.Sec8.PhaseVeryGoodScaling
 
-/-! # The recentred good set (FIRST-PASS fp-S8c-8-2-local, step G: local finiteness and measurability)
+/-! # The recentred good set (step G: local finiteness and measurability)
 
 The good set `recentredGoodSet` consists of the pairs `(z, η)` such that, for all large `N`, at least `(1 - ζ) N`
 scales `n ∈ [N+1, 2N]` are good for the normalised recentred measure `η`, at the origin with lattice phase `-z`
@@ -158,6 +158,5 @@ theorem measurableSet_recentredGoodSet (β : ℝ) (N₀ : ℕ) (a b C₁m C₁p 
 
 end GoodSet
 
-#print axioms measurableSet_recentredGoodSet
 
 end HarmonicBalls

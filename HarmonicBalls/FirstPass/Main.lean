@@ -7,12 +7,12 @@ import HarmonicBalls.FirstPass.S11
 import HarmonicBalls.FirstPass.Frozen.S1S10
 
 /-!
-# FIRST PASS, main theorems (worker n2, task fp-HB-main-composition)
+# main theorems
 
 Composition of the committed `firstPass_<sec>_<num>` theorems into one theorem per main result
 (Theorem 1.1, Theorem 1.2, Proposition 1.3). Each `firstPassMain_<sec>_<num>` has as hypotheses only:
-* EXTERNAL Props: the staged literature inputs of `Proposed/LQG.lean` (pending operator source-check),
-  the cited input I2 `LQGVolumeGrowthAllScalesStmt`, the FIRST-PASS FROZEN `TorhorstSimpleLoopFrozen`;
+* EXTERNAL Props: the staged literature inputs of `Proposed/LQG.lean` (pending source-check),
+  the cited input I2 `LQGVolumeGrowthAllScalesStmt`, the FROZEN `TorhorstSimpleLoopFrozen`;
 * the Draft statements of the numbered results not yet PROVED-FP: `TypicalPointManyGoodScalesStmt` (Lemma 8.2),
   `ManyConeBadScalesStmt` (Lemma 11.7), `ManyPinchScalesStmt` (Lemma 11.13).
 
@@ -28,7 +28,7 @@ open MeasureTheory Metric Set Filter Topology
 
 universe u
 
-/-- FIRST PASS MAIN, Theorem 1.1 (theorem:harmonic-balls): existence and uniqueness of the family of harmonic balls.
+/-- Theorem 1.1 (theorem:harmonic-balls): existence and uniqueness of the family of harmonic balls.
 Composition of `firstPass_1_1` with `firstPass_5_5` (Theorem 5.5) and `firstPass_5_6` (Proposition 5.6). -/
 theorem firstPassMain_1_1
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -49,7 +49,7 @@ theorem firstPassMain_1_1
   have h56 := firstPass_5_6 hDG hCC0 hE
   exact firstPass_1_1 h55 h56
 
-/-- FIRST PASS MAIN, Theorem 1.2 (theorem:harmonic-balls-properties): novelty of the harmonic balls, i.e. the Jordan
+/-- Theorem 1.2 (theorem:harmonic-balls-properties): novelty of the harmonic balls, i.e. the Jordan
 clause (Proposition 10.7), the non-Lipschitz clause (Proposition 11.2) and the non-metric-ball clause (Proposition
 11.11), with the family of Theorem 1.1. Open Draft hypotheses: `h7` (Lemma 11.7), `h13` (Lemma 11.13), `hTyp` (Lemma 8.2). -/
 theorem firstPassMain_1_2
@@ -99,7 +99,7 @@ theorem firstPassMain_1_2
   have hmetric := firstPass_11_11 h6 h13 hI2 hmetricAxioms
   exact firstPass_1_2 h55 h56 hjordan hlip hmetric
 
-/-- FIRST PASS MAIN, Proposition 1.3 (prop:locally-determined): closed harmonic balls are local sets for the field.
+/-- Proposition 1.3 (prop:locally-determined): closed harmonic balls are local sets for the field.
 Composition of `firstPass_1_3` with `firstPass_5_5` and `firstPass_5_6`. -/
 theorem firstPassMain_1_3
     (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
@@ -123,8 +123,5 @@ theorem firstPassMain_1_3
   have h56 := firstPass_5_6 hDG hCC0 hE
   exact firstPass_1_3 hI2 h55 h56 hmeasure
 
-#print axioms firstPassMain_1_1
-#print axioms firstPassMain_1_2
-#print axioms firstPassMain_1_3
 
 end HarmonicBalls

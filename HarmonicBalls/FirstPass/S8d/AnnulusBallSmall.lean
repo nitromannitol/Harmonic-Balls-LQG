@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.Annuli
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the annulus-ball comparison fails with small probability for small `m`
+/-! # helper: the annulus-ball comparison fails with small probability for small `m`
 
 The origin annulus-ball comparison `AnnulusBallComparison μ 0 0 m` (Defs/Annuli.lean, the comparison `G_0(0; m)` of the
 phase bound) reads `m · μ(B_1(0)) ≤ μ(𝔸_{1/2,1}(0))` (`annulusBallComparison_zero_iff`). Its failure events
@@ -80,6 +80,5 @@ theorem annulus_ball_comparison_small {Ω : Type*} [MeasurableSpace Ω] (P : Mea
   rw [hEset k]
   exact hk.le
 
-#print axioms annulus_ball_comparison_small
 
 end HarmonicBalls

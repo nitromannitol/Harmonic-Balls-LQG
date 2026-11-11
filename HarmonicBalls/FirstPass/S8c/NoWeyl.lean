@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8c
 import HarmonicBalls.FirstPass.S8c.WeylOffOriginDerived
 
-/-! # FIRST-PASS result 8.2 without the Weyl hypothesis (fp-8-2-noWeyl-and-imports, worker z6)
+/-! # Result 8.2 without the Weyl hypothesis
 
 `firstPass_8_2` (`FirstPass/S8c.lean:30`) takes the frozen Prop `LocalLQGInsertionWeylOffOrigin` as the binder `hWeyl`.
 That Prop is derived with no hypotheses by `localLQGInsertionWeylOffOrigin_derived`
@@ -19,7 +19,7 @@ open MeasureTheory
 
 universe u
 
-/-- FIRST-PASS result 8.2 (Lemma 8.2, many good scales at typical points) without the Weyl hypothesis: the S8c proof
+/-- Result 8.2 (Lemma 8.2, many good scales at typical points) without the Weyl hypothesis: the S8c proof
 `firstPass_8_2` applied to the derived Weyl relation off the origin `localLQGInsertionWeylOffOrigin_derived` in the
 slot of `hWeyl`. -/
 theorem firstPass_8_2_noWeyl (hL1 : LocalRootedFieldMeasureDomination.{u})

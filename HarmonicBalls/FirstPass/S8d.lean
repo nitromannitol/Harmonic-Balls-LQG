@@ -5,11 +5,11 @@ import HarmonicBalls.Draft.Section8
 import HarmonicBalls.Draft.Section2
 import HarmonicBalls.Proposed.LQG
 
-/-! # FIRST-PASS result 8.2 (fp-S8d-8-2-from-chatgpt-proof, owner n4): `firstPass_8_2`
+/-! # Result 8.2: `firstPass_8_2`
 
 Result 8.2 of "Harmonic balls in Liouville quantum gravity" (Bou-Rabee–Gwynne, arXiv:2208.11795):
-`TypicalPointManyGoodScalesStmt` (Draft/Section8.lean:74). The route is the one of the ChatGPT proof of Lemma 8.2
-(notes/fp-gaps/CHATGPT-8-2-proof.md, rated CORRECT by the independent referee): the local count of good scales is reduced
+`TypicalPointManyGoodScalesStmt` (Draft/Section8.lean:74). The route is the one of the proof of Lemma 8.2
+: the local count of good scales is reduced
 to the phase tail `LocalPhaseTailStep` (FirstPass/S8c/PhaseTail.lean), which is proved in FirstPass/S8d/TailStep.lean on
 the profile space `C(CircleParameter, ℝ)` (the circle profile of the field, with the continuous circle dilation as
 measure-preserving ergodic map). The reduction from the tail to the statement is the S8c argument, reproduced here
@@ -28,7 +28,7 @@ namespace HarmonicBalls
 
 universe u
 
-/-- Result 8.2 (FIRST PASS): for every many-good-scales statement at typical points. -/
+/-- Result 8.2: for every many-good-scales statement at typical points. -/
 theorem firstPass_8_2 (hL1 : LocalRootedFieldMeasureDomination.{u})
     (hfull : LQGMeasureFullSupportStmt.{u}) (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
     (hL67 : VeryGoodAnnulusProbabilityStmt.{u})
@@ -72,6 +72,5 @@ theorem firstPass_8_2 (hL1 : LocalRootedFieldMeasureDomination.{u})
     (fun j hj => localReference_ae_mem_of_tail P ν βm N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hTailN
       hposν hlocν j hj)
 
-#print axioms firstPass_8_2
 
 end HarmonicBalls

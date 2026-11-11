@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S8c.RootCount
 import HarmonicBalls.FirstPass.S8c.UnitGood
 import HarmonicBalls.Proofs.Sec8.LocalMeasureRatios
 
-/-! # Covering the unit ball off the origin by the local domains (FIRST-PASS fp-S8c-8-2-local, step iv, pure part)
+/-! # Covering the unit ball off the origin by the local domains (step iv, pure part)
 
 The local domains `D_j = {3 r_j < |z| < 1 - 3 r_j}` (`FirstPass/S8c/LocalObservation.lean`) cover `B_1(0) \ {0}`.
 Combined with the root-side eventual count `localRoot_eventually_count_ae`, this gives an almost-sure statement
@@ -160,6 +160,5 @@ theorem localRoot_ae_eventually_count_of_weyl (hL1 : LocalRootedFieldMeasureDomi
     with z hz1 hz2 hz3
   exact hz1 hz2 hz3
 
-#print axioms localRoot_ae_ae_eventually_count
 
 end HarmonicBalls

@@ -13,12 +13,12 @@ import HarmonicBalls.FirstPass.Frozen.S1S10
 import HarmonicBalls.FirstPass.S1S10.CrossingLemma
 
 /-!
-# FIRST PASS, Sections 1 and 10 (worker n1)
+# Sections 1 and 10
 
 Each theorem `firstPass_<section>_<number>` has as conclusion the Draft statement of the numbered result
 (or its corrected form) and as hypotheses only:
 * Draft statements of other numbered results used by the printed proof (`Draft/Section*.lean`), and
-* external inputs: the Proposed statements of `Proposed/LQG.lean` (pending operator source-check).
+* external inputs: the Proposed statements of `Proposed/LQG.lean` (pending source-check).
 
 No new mathematics is proved in this file for the results below: each is a composition of committed reductions
 (`Assembly/`, `Proofs/Sec1`, `Proofs/Sec10`). Hypotheses are kept at the printed quantifier order and carrier.
@@ -30,14 +30,14 @@ open MeasureTheory Metric Set Filter Topology
 
 universe u
 
-/-- FIRST PASS, Theorem 1.1 (theorem:harmonic-balls). Existence (Theorem 5.5) and uniqueness (Proposition 5.6) of
+/-- Theorem 1.1 (theorem:harmonic-balls). Existence (Theorem 5.5) and uniqueness (Proposition 5.6) of
 the family of harmonic balls, assembled by `existenceUniquenessHarmonicBallsStmt_of_sec5`. -/
 theorem firstPass_1_1
     (h55 : ExistenceHarmonicBallsStmt.{u}) (h56 : UniquenessHarmonicBallsStmt.{u}) :
     ExistenceUniquenessHarmonicBallsStmt.{u} :=
   existenceUniquenessHarmonicBallsStmt_of_sec5 h55 h56
 
-/-- FIRST PASS, Theorem 1.2 (theorem:harmonic-balls-properties). The Jordan clause is Proposition 10.7; the
+/-- Theorem 1.2 (theorem:harmonic-balls-properties). The Jordan clause is Proposition 10.7; the
 non-Lipschitz and non-metric-ball clauses are the Section 11 statements, taken as hypotheses. The family at the
 origin is extended to all centres through Theorem 1.1 (`harmonicBallNoveltyStmt_of_existence_and_results`). -/
 theorem firstPass_1_2
@@ -48,7 +48,7 @@ theorem firstPass_1_2
     HarmonicBallNoveltyStmt.{u} :=
   harmonicBallNoveltyStmt_of_existence_and_results (firstPass_1_1 h55 h56) hjordan hlip hmetric
 
-/-- FIRST PASS, Proposition 1.3 (prop:locally-determined). Closed harmonic balls are local sets for the field,
+/-- Proposition 1.3 (prop:locally-determined). Closed harmonic balls are local sets for the field,
 from volume growth (Section 2), Theorem 5.5, Proposition 5.6 and locality of the LQG measure (Proposed input). -/
 theorem firstPass_1_3
     (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
@@ -59,7 +59,7 @@ theorem firstPass_1_3
     HarmonicBallLocalSetStmt.{u} :=
   harmonicBallLocalSet_of_volumeGrowth_existence_uniqueness_and_measureLocality hI2 h55 h56 hmeasure
 
-/-- FIRST PASS, Lemma 10.1 (lemma:cannot-cross). Deterministic bound `⌈1/α⌉` on the number of crossing components,
+/-- Lemma 10.1 (lemma:cannot-cross). Deterministic bound `⌈1/α⌉` on the number of crossing components,
 from the volume growth of Section 2 and zero-strength existence of the LQG measure (Proposed input). -/
 theorem firstPass_10_1
     (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
@@ -69,7 +69,7 @@ theorem firstPass_10_1
     ClusterBoundedCrossingsStmt.{u} :=
   clusterBoundedCrossings_of_volumeGrowth_and_zero_existence hI2 hE0
 
-/-- FIRST PASS, Proposition 10.7 (prop:boundary-simple-loop-full-cluster), corrected as [C50]: pathwise dyadic
+/-- Proposition 10.7 (prop:boundary-simple-loop-full-cluster), corrected as [C50]: pathwise dyadic
 rescaling of Proposition 10.6 (`harmonicBallComplementBoundaryJordan_of_proved_scaling`). The affine invariance
 and coordinate-change inputs are Proposed. -/
 theorem firstPass_10_7
@@ -85,7 +85,7 @@ theorem firstPass_10_7
     HarmonicBallComplementBoundaryJordanStmt.{u} :=
   harmonicBallComplementBoundaryJordan_of_proved_scaling hI2 h55 h10 hAff hCC
 
-/-- FIRST PASS, Lemma 10.6 (prop:boundary-simple-loop), corrected as [C49]: the components of `ℂ \ closure Λ_t(z)`
+/-- Lemma 10.6 (prop:boundary-simple-loop), corrected as [C49]: the components of `ℂ \ closure Λ_t(z)`
 (not of `B_1 \ closure Λ_t(z)`) have simple-loop boundaries. Proof: almost surely the cluster is open and connected
 (Lemma 3.2, `ClusterOpenLaplacianStmt`) and each boundary point `p ≠ 0` has arbitrarily small crossing scales
 (Lemma 10.1, `ClusterBoundedCrossingsStmt`); then `firstPass_10_5_corrected` with `E = {0}`. -/
@@ -124,12 +124,5 @@ theorem firstPass_10_6
   exact (firstPass_10_5_corrected (G := cluster (μ ω) 1 z t) hconn.nonempty hGb hopen hconn
     ⟨{0}, Set.finite_singleton 0, hcross⟩ hTor).2.2
 
-#print axioms firstPass_1_1
-#print axioms firstPass_1_2
-#print axioms firstPass_1_3
-#print axioms firstPass_10_1
-#print axioms firstPass_10_7
-#print axioms firstPass_10_6
-#print axioms firstPass_10_5_corrected
 
 end HarmonicBalls

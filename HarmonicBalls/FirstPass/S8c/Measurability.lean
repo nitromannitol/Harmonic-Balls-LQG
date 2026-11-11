@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S8c.LocalObservation
 import HarmonicBalls.Proofs.Sec8.RootedSamplingProbability
 
-/-! # Measurability of the local observation maps (FIRST-PASS, fp-S8c-8-2-local, step M)
+/-! # Measurability of the local observation maps (step M)
 
 Joint measurability of the root observation `O_j = localRootObservation μ j` and the reference observation
 `V_j = localReferenceObservation ν j` of `LocalObservation.lean`. They are needed for the joint transfer lemma

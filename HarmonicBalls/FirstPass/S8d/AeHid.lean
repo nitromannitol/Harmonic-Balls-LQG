@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S8c.PhaseTailConvert
 
-/-! # FIRST-PASS helper (fp-S8d, owner n4): the phase tail with the dilation identity almost surely
+/-! # helper: the phase tail with the dilation identity almost surely
 
 S8c's `torusPhaseTail_of_dilation` (FirstPass/S8c/TorusFull.lean) and `localPhaseTail_ae_of_dilation`
 (FirstPass/S8c/PhaseTailConvert.lean) take the dilation identity `hid` pointwise. The coordinate change of LQG
@@ -101,7 +101,5 @@ theorem localPhaseTail_ae_of_dilation_ae (hB : BirkhoffPointwiseErgodic.{u}) {Ω
   refine Eq.trans ?_ (ncard_block_eq_sum _ N).symm
   exact Finset.sum_congr rfl fun n _ => hind n
 
-#print axioms torusPhaseTail_of_dilation_ae
-#print axioms localPhaseTail_ae_of_dilation_ae
 
 end HarmonicBalls

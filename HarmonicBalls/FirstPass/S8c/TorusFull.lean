@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S8c.TorusTail
 import HarmonicBalls.FirstPass.S8c.TorusGood
 import HarmonicBalls.FirstPass.S8c.TorusSection
 
-/-! # The torus-indexed phase tail, reduced to the dilation (FIRST-PASS fp-S8c-8-2-local, LocalPhaseTailStep, torus form)
+/-! # The torus-indexed phase tail, reduced to the dilation (LocalPhaseTailStep, torus form)
 
 For a measurable family `ν : Ω → Measure ℂ` of locally finite measures, the level-`n` torus good events
 `torusGoodLevel _ n ν` have the following almost-sure eventual frequency on the phase torus times the field law:
@@ -47,6 +47,5 @@ theorem torusPhaseTail_of_dilation (hB : BirkhoffPointwiseErgodic.{u}) {Ω : Typ
       (ENNReal.ofReal (ζ / 2)) hbound θ)
     (fun n => torusGoodLevel β N₀ a b C₁m C₁p C₂m C₂p C₃ m n ν) hid
 
-#print axioms torusPhaseTail_of_dilation
 
 end HarmonicBalls

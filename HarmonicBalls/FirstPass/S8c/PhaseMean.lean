@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S8c.Frequency
 
-/-! # The mean of the good indicator over phases and fields (FIRST-PASS fp-S8c-8-2-local, mean step of LocalPhaseTailStep)
+/-! # The mean of the good indicator over phases and fields (mean step of LocalPhaseTailStep)
 
 If a measurable set `G` of phase-field pairs has, for every phase `θ`, complementary section probability at most `ε`
 (the per-phase bound (9), `localPhaseTail_failure_le`, with `ε = ζ/2`), then the product measure of `G` under the
@@ -48,6 +48,5 @@ theorem integral_indicator_prod_ge {Θ Ω : Type*} [MeasurableSpace Θ] [Measura
   calc 1 - ε = ((1 : ℝ≥0∞) - ENNReal.ofReal ε).toReal := hreal.symm
     _ ≤ ((μΘ.prod P) G).toReal := ENNReal.toReal_mono (measure_ne_top _ _) hle
 
-#print axioms integral_indicator_prod_ge
 
 end HarmonicBalls

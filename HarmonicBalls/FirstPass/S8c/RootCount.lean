@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S8c.UnitGood
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.Draft.Section2
 
-/-! # Root-side eventual very-good count on the local domain (FIRST-PASS fp-S8c-8-2-local, step (iii), part 1)
+/-! # Root-side eventual very-good count on the local domain (step (iii), part 1)
 
 For the normalised rooted law restricted to `{z ∈ D_j}`, almost surely the very-good count at the root `z`
 eventually dominates `(1 - ζ) N`. Inputs: the FROZEN local joint domination `LocalRootedFieldMeasureDomination` (L1),
@@ -67,6 +67,5 @@ theorem localRoot_eventually_count_ae (hL1 : LocalRootedFieldMeasureDomination.{
   exact (veryGoodComparableScaleCount_eventually_iff_recentredGood (μ x.1) x.2 (localRadius j)
     (localRadius_pos hj) hxpos β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ).2 hx
 
-#print axioms localRoot_eventually_count_ae
 
 end HarmonicBalls
