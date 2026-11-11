@@ -15,7 +15,7 @@ This file proves the measure-theoretic core of the route and reduces the target 
 statement `EventSampleRepresentation` (a BLOCKED-STEP, see the docstring there). The target itself is NOT derived here.
 
 Steps:
-* `transfer_of_law`: proved.
+* `transfer_of_law` (abstract Cameron-Martin transfer): proved.
 * `cameronMartinEventTransfer_of_representation`: the frozen statement, conditional on
   `EventSampleRepresentation` and `CameronMartinGFFReweighting`.
 -/
