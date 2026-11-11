@@ -49,7 +49,7 @@ theorem rootedWeight_continuousOn_compl_zero_root (α₀ γ : ℝ) {z : ℂ} :
   exact (((continuousAt_const.mul c1).sub (continuousAt_const.mul c2)).add
     (continuousAt_const.mul c3)).continuousWithinAt
 
-/-- **Finiteness of the rooted Weyl scaling on the punctured plane** (`hLen`, Steps 2-3 of Chat 211 section 1).
+/-- **Finiteness of the rooted Weyl scaling on the punctured plane** (`hLen`, Steps 2-3).
 For a Euclidean length metric `d` and a root `z ≠ 0` at which the Weyl scaling of the rooted weight tends to `0`
 in `ENNReal` (the frozen rooted insertion continuity, `RootedPhysicalMetricContinuousAtInsertionFrozen`), the rooted
 Weyl scaling is finite on `{0}ᶜ`. Proof: `finite_on_disk_root` on the connected open set `{0}ᶜ`. -/
@@ -62,7 +62,7 @@ theorem weylScaling_rootedWeight_ne_top_punctured {d : ℂ → ℂ → ℝ} (hd 
   exact (finite_on_disk_root hd ξ isOpen_compl_singleton hconn hzD
     (rootedWeight_continuousOn_compl_zero_root α₀ γ) hW).1
 
-/-! ### The point `0`: finiteness and continuity (Step 4 of Chat 211, section 1) -/
+/-! ### The point `0`: finiteness and continuity (Step 4) -/
 
 /-- The insertion weight `w ↦ -α₀ log|w|` at `0`; its Weyl scaling is the metric `Dα` of Fact 2.2 I
 (`LQGMetricFieldAxiomsUnivFrozen`, clause I). -/
@@ -149,7 +149,7 @@ theorem weylScaling_le_prefix_cost {d : ℂ → ℂ → ℝ} (ξ : ℝ) (f : ℂ
   refine (iInf₂_le t p).trans ((iInf₂_le hpt h0).trans ((iInf_le _ rfl).trans ?_))
   exact lintegral_mono_set (Icc_subset_Icc le_rfl ht.2)
 
-/-- **Confined comparison at `0`** (Chat 211 section 1, Step 4). Let `B` bound `ξ · rootFactor` on `closedBall 0 r` and
+/-- **Confined comparison at `0`** (Step 4). Let `B` bound `ξ · rootFactor` on `closedBall 0 r` and
 let `ε` be the confinement constant of `weylScaling_alpha_ge_off_ball`. If `W_α(0,x) < b ≤ ε`, then
 `W_F(0,x) ≤ exp B · b`: a near-optimal `Dα`-path from `0` stays in `ball 0 r`, where the rooted weight is at most
 `exp B` times the `Dα` weight. -/
@@ -210,7 +210,7 @@ theorem weylScaling_rootedWeight_zero_le_mul {d : ℂ → ℂ → ℝ} (ξ α₀
   filter_upwards [Ioo_mem_nhdsGT hxε] with b hb
   exact weylScaling_rootedWeight_zero_le_of_lt ξ α₀ γ hB hε hb.1 hb.2.le
 
-/-- **Step 4 of Chat 211 section 1.** At the point `0` the rooted Weyl scaling is finite everywhere and tends to `0`
+/-- **Step 4.** At the point `0` the rooted Weyl scaling is finite everywhere and tends to `0`
 in `ENNReal`, given the Dα length-metric input (`hA`, `hfin`: clause I of `LQGMetricFieldAxiomsUnivFrozen`) and the
 root-continuity input at `z ≠ 0` (`hW`: `RootedPhysicalMetricContinuousAtInsertionFrozen`). -/
 theorem weylScaling_rootedWeight_zero_finite_and_tendsto {d : ℂ → ℂ → ℝ} (ξ α₀ γ : ℝ) {z : ℂ}
@@ -265,9 +265,9 @@ theorem weylScaling_rootedWeight_zero_finite_and_tendsto {d : ℂ → ℂ → �
       exact weylScaling_rootedWeight_zero_le_mul ξ α₀ γ hB hε hx
   exact ⟨hfinite, hTW⟩
 
-/-! ### Local control at every point (Step 5 of Chat 211 section 1): annulus barrier and near-geodesic bound -/
+/-! ### Local control at every point (Step 5): annulus barrier and near-geodesic bound -/
 
-/-- **Annulus barrier** (Chat 211 Step 5). If the weight is at least `m` on the annulus `δ' < dist(·, x) < δ`, if the
+/-- **Annulus barrier** (Step 5). If the weight is at least `m` on the annulus `δ' < dist(·, x) < δ`, if the
 `d`-distance from `x` to the exterior `{dist(·,x) ≥ δ}` is at least `s`, and if the `d`-distance from `x` to the inner
 disc `{dist(·,x) ≤ δ'}` is below `s / 2`, then every path from `x` to a point `w` with `δ ≤ dist(w,x)` has `f`-cost at least
 `m * (s / 2)`. The path must cross the annulus; the crossing is at least `s / 2` long (triangle inequality and
@@ -364,7 +364,7 @@ theorem exists_barrier_scales {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthM
   · have hmem : u ∈ ball x ε := by rw [mem_ball]; linarith
     exact hsub hmem
 
-/-- Upper bound for the `d`-length-weighted cost near a point where the weight is bounded above (Chat 211 Step 5,
+/-- Upper bound for the `d`-length-weighted cost near a point where the weight is bounded above (Step 5,
 Fact 2.2 III): for `d x w` small, `W(x,w) ≤ exp B · (d x w + η)`. The near-geodesic path stays in a small `d`-ball, where
 `ξ f ≤ B`. -/
 theorem weylScaling_le_near {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) (f : ℂ → ℝ)
@@ -395,7 +395,7 @@ theorem weylScaling_le_near {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMet
     _ ≤ ENNReal.ofReal (Real.exp B) * ENNReal.ofReal (d x w + η) :=
         mul_le_mul_of_nonneg_left (ENNReal.ofReal_le_ofReal (by linarith [min_le_left η (s0 / 2)])) zero_le
 
-/-- Weight lower bound on an annulus (compactness; Chat 211 Step 5). If `f` is continuous on the closed annulus
+/-- Weight lower bound on an annulus (compactness; Step 5). If `f` is continuous on the closed annulus
 `{δ' ≤ dist(·,x) ≤ δ}`, then `exp(ξ f)` has a positive minimum there. -/
 theorem exists_annulus_lower_bound (ξ : ℝ) {f : ℂ → ℝ} {x : ℂ} {δ' δ : ℝ} (hδ' : 0 < δ') (hδ : δ' ≤ δ)
     (hf : ContinuousOn f (closedBall x δ ∩ {u : ℂ | δ' ≤ dist u x})) :
@@ -413,7 +413,7 @@ theorem exists_annulus_lower_bound (ξ : ℝ) {f : ℂ → ℝ} {x : ℂ} {δ' �
   refine ⟨Real.exp (ξ * f u0), Real.exp_pos _, fun u hu1 hu2 => ?_⟩
   exact isMinOn_iff.1 hmin u ⟨mem_closedBall.2 hu2.le, hu1.le⟩
 
-/-- A radius avoiding the points `a`, `b` other than the centre `x` (Chat 211 Step 5: the annuli stay off the insertions). -/
+/-- A radius avoiding the points `a`, `b` other than the centre `x` (Step 5: the annuli stay off the insertions). -/
 theorem exists_avoid_radius (x a b : ℂ) :
     ∃ δ : ℝ, 0 < δ ∧ ∀ q ∈ ({a, b} : Set ℂ), q ≠ x → δ < dist q x := by
   have key : ∀ c : ℂ, ∃ δc : ℝ, 0 < δc ∧ (c ≠ x → δc < dist c x) := by
@@ -465,7 +465,7 @@ theorem annulus_avoids {x a b : ℂ} {δ δ'' : ℝ} (hδ : ∀ q ∈ ({a, b} : 
       rw [hub] at hu1
       linarith
 
-/-- **Generic Euclidean continuity at a point** (Chat 211 Step 5, from the upper bound): if the nonnegative
+/-- **Generic Euclidean continuity at a point** (Step 5, from the upper bound): if the nonnegative
 function `E` satisfies `E w ≤ c (d x w + η)` for `d x w < δ(η)`, then `E → 0` along the Euclidean topology. -/
 theorem tendsto_of_near_bound {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (x : ℂ) {E : ℂ → ℝ} {c : ℝ}
     (hc : 0 ≤ c) (hE0 : ∀ w, 0 ≤ E w)
@@ -560,7 +560,7 @@ theorem tendsto_E_all {d : ℂ → ℂ → ℝ} (ξ α₀ γ : ℝ) {z : ℂ} (h
       exact tendsto_E_root ξ α₀ γ hd hW
     · exact tendsto_E_generic hd ξ α₀ γ h0 hzx
 
-/-- **Barrier at a point** (Chat 211 Step 5, separation and Euclidean openness). For every centre `x` and every
+/-- **Barrier at a point** (Step 5, separation and Euclidean openness). For every centre `x` and every
 radius `r > 0` there are an outer radius `δ ∈ (0, r]` and `c > 0` with `c ≤ E x w` whenever `δ ≤ dist(w, x)`. -/
 theorem barrier_at {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ α₀ γ : ℝ) {z x : ℂ}
     (hfinW : ∀ w : ℂ, weylScaling d ξ (rootedWeight α₀ γ z) x w ≠ ⊤) {r : ℝ} (hr : 0 < r) :
@@ -590,7 +590,7 @@ theorem barrier_at {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (�
   refine ⟨min ρ r, hδpos, min_le_right _ _, m * (s / 2), mul_pos hm (half_pos hs), fun w hw => ?_⟩
   exact (ENNReal.ofReal_le_iff_le_toReal (hfinW w)).1 (hbar w hw)
 
-/-- **Deterministic `hLen` (Chat 211 Steps 1-7, section 1).** For a Euclidean length metric `d` and a root `z ≠ 0`, the
+/-- **Deterministic `hLen`.** For a Euclidean length metric `d` and a root `z ≠ 0`, the
 rooted metric `(u, v) ↦ (weylScaling d ξ (rootedWeight α₀ γ z) u v).toReal` is a Euclidean length metric on the whole
 plane. Inputs: the base metric `hd`; the Dα length-metric input `hA`, `hfin` (clause I of
 `LQGMetricFieldAxiomsUnivFrozen`); the frozen root continuity `hW` (`RootedPhysicalMetricContinuousAtInsertionFrozen`). -/
@@ -659,7 +659,7 @@ theorem rootedWeight_isEuclideanLengthMetric_of_inputs {d : ℂ → ℂ → ℝ}
 
 universe u
 
-/-- **`hLen` at a fixed root, almost surely** (Chat 211 Section 1). For `z ≠ 0`, almost surely the rooted metric of
+/-- **`hLen` at a fixed root, almost surely**. For `z ≠ 0`, almost surely the rooted metric of
 `rootedWeight α₀ γ z` is a Euclidean length metric. The base metric comes from `LQGMetricLengthUnivFrozen`, the Dα
 input (`IsEuclideanLengthMetric` and finiteness) from clause I of `LQGMetricFieldAxiomsUnivFrozen`, and the root continuity
 from `RootedPhysicalMetricContinuousAtInsertionFrozen`; the deterministic step is
@@ -678,7 +678,7 @@ theorem rootedWeylMetric_ae_isEuclideanLengthMetric (hLenFr : LQGMetricLengthUni
   filter_upwards [hLenAe, hFieldAe, hRootAe] with ω h1 h2 h3
   exact rootedWeight_isEuclideanLengthMetric_of_inputs ξ α₀ γ h1 hz h3 h2.2 (fun a b => (h2.1 a b).ne)
 
-/-- **`hLen`, almost everywhere in the root** (Chat 211 Section 1): the root `0` is `volume`-null, so the almost sure
+/-- **`hLen`, almost everywhere in the root**: the root `0` is `volume`-null, so the almost sure
 statement holds for `volume.restrict S`, for every set `S`. -/
 theorem rootedWeylMetric_ae_z (hLenFr : LQGMetricLengthUnivFrozen.{u})
     (hFieldFr : LQGMetricFieldAxiomsUnivFrozen.{u}) (hRootFr : RootedPhysicalMetricContinuousAtInsertionFrozen.{u})

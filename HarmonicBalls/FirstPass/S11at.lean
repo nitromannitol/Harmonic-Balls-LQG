@@ -14,7 +14,7 @@ import HarmonicBalls.FirstPass.S11at.Producers
 /-!
 # Eventual rooted covariance: internal proportionality and the eventual ambient metric
 
-Chat 195 replaces the false fixed-scale ambient locality by three steps:
+Three steps replace the false fixed-scale ambient locality:
 * step 6a (`ae_internalMetric_decoded_scalar`): the two decoded internal metrics on a locality domain are proportional, a.s.,
   because the two local decoder outputs coincide (equal observations) and each equals a positive multiple of its internal
   metric (the replacement clauses of `LocalMetricReplacementStmt`, normalised by `LQGCanonicalIdentificationStmt`);
