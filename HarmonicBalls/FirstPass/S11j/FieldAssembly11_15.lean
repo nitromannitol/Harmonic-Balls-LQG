@@ -283,4 +283,3 @@ theorem firstPass_11_15_corrected
   exact pinchFirstEvent_positive_fieldLevel hCM hfr hFW hEx h hγ hγ₂ hα P hC hcirc D hGFF hD
     (haxioms Ω P γ ξ α₀ hC hcirc)
 
-#print axioms HarmonicBalls.firstPass_11_15_corrected
