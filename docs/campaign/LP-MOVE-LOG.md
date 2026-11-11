@@ -196,3 +196,15 @@ Prepared for the pin switch window (LP-MOVE-PLAN section 2). No repository file 
 
 - 2026-11-11, LP HEAD 21b12551b: 47 of the 53 moved mirrors differed from their LP files outside the import lines (LP docstring and locator rewrites). Each was rewritten as its own import lines followed by the LP file's non-import lines verbatim (commit 1bc9a7c5). commentonly.py: OK for all 47, DIFF for none. The other 6 already matched.
 - Final mirror check (diff outside `^import ` lines, all 53 moved modules) at LP HEAD 21b12551b: 0 differing.
+
+## Batch 4: whole-plane GFF covariance, positive semidefiniteness (7 modules)
+
+- LP repository: `/home/nitro/lean/LP-idla-phase2`, branch `idla/phase2` (not pushed). LP commit `9453dd0` (parent `b779843`): `LatticeProb/Gauss/GFFCovPSD1.lean` to `GFFCovPSD7.lean` (7 files, 1,178 insertions; no other LP file touched). The root `LatticeProb.lean` is unchanged by this commit; the `LatticeProb` library glob covers `Gauss`, as in batches 1-3.
+- Modules: `GFFCovPSD1` to `GFFCovPSD7`. The HB mirrors are unchanged; they differ from the LP files in comments only. Imports: `LatticeProb.Gauss.GFFCovSymm` and `GFFExistence` (batch 3), and `GFFCovPSD1` to `GFFCovPSD6` (inside the batch). Dropped: none.
+- Code identity: the LP copies and the HB mirrors have the same code lines after comment and import stripping (7 of 7, `commentonly.py` strip logic).
+- Build: `lake build LatticeProb.Gauss.GFFCovPSD7` under the shared LP lock: `Build completed successfully (8949 jobs)`, no errors, no `sorry`. The 12 warning lines name no batch file.
+- Rewire map: `scratch-k4/rewire/map.tsv` now has 60 rows (7 added). `rewire.sh dry`: 33 files changed, 102 import lines each side, 0 non-import changes, 0 files under External or Draft, 0 targets importing a moved module. Not applied (pin-switch window: operator's call).
+- Residual non-moved LPStage imports (8 targets): `LPStage/All`, `LPStage/LocalMeasureKernel2` to `5`, `FirstPass/LPBridge/LocalMeasureKernel`, `FirstPass/LPBridge/WeylShiftedMass`, `checks/AxiomGate`. `GFFCovPSD2` left this list (moved). `FirstPass/LPBridge/LocalMeasureKernel` is listed by the current check; the batch 1-3 residual note did not list it.
+- LP-STAGE-INDEX.md: batches 1-3 marked no row MOVED, so no row is marked here.
+
+Co-Authored-By: Claude Haiku 5.5 <noreply@anthropic.com>
