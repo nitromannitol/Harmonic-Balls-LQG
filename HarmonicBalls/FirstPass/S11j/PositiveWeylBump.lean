@@ -3,7 +3,7 @@ import HarmonicBalls.Steps.Sec11.MetricArcLength
 import HarmonicBalls.FirstPass.S11j.PositiveWeylFinite
 
 /-!
-# First pass, Section 11: length metric after a nonnegative Weyl bump (fp-S11j, owner n4)
+# Section 11: length metric after a nonnegative Weyl bump
 
 Positive counterpart of `ae_singularField_weylBump_lengthMetric_of_metricFieldAxioms`
 (`Steps/Sec11/SingularWeylBumpLength.lean:19`), which covers nonpositive compactly supported bumps only. The shift
@@ -105,7 +105,7 @@ theorem ae_singularField_nonneg_weylBump_lengthMetric_of_metricFieldAxioms
   exact hm.weylScaling_nonneg_bump_isLengthMetric hξ f hf hc hl hz
 
 /-- Almost surely, for one fixed nonnegative continuous compactly supported Weyl bump `f`, the bumped metric
-`e^{ξ f} D` is a Euclidean length metric. Fixed-`f` form (operator 22:44 UTC): the single almost-sure length property of
+`e^{ξ f} D` is a Euclidean length metric. Fixed-`f` form: the single almost-sure length property of
 `D` (`ae_isEuclideanLengthMetric_of_metricFieldAxioms`) and the deterministic zero identity
 `IsEuclideanLengthMetric.weylScaling_zero` suffice; no statement quantified over all `f` inside `∀ᵐ`. -/
 theorem ae_fixedWeylBump_isEuclideanLengthMetric

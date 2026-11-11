@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11p.GreenMeasurable
 import HarmonicBalls.FirstPass.S11q
 
 /-!
-# A.s. finiteness of the annular Green potential under a bounded density (fp-S11p, owner n4)
+# A.s. finiteness of the annular Green potential under a bounded density
 
-Route (ii) of the operator ruling for `hFin` in `FirstPass/S11p.lean`: the singular LQG measure of exponent `α₀` is the
+Route (ii) for `hFin` in `FirstPass/S11p.lean`: the singular LQG measure of exponent `α₀` is the
 base measure `μ₀` (exponent `0`) reweighted by `z ↦ |z|^{-γα₀}` (`singular_measure_identity`, `FirstPass/S11q.lean`).
 On the annulus `𝔸_{3,6}` this weight is bounded, so `SG_{3,6}(μ) ≤ K · SG_{3,6}(μ₀)`. The finiteness of the base
 potential `SG_{3,6}(μ₀)` is a NAMED HYPOTHESIS `hBase` here (it is the Green-potential clause of HB Proposition 2.5,

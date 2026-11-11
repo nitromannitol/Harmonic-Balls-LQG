@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11i.MixingCanonical
 import HarmonicBalls.FirstPass.S11i.AlphaCanonical
 
 /-!
-# B1, part A: covariance of the canonical decoders on realizations (fp-S11s-11-13-B1-covariance)
+# B1, part A: covariance of the canonical decoders on realizations
 
 Ruling section 3, part A (eqs. (7)-(11)), with `r = 1/2`. For a whole-plane GFF model `h = h^ℂ - α log|·|` with LQG
 measure `μ` and LQG metric `D`, the pulled-back model `h̃` (pairing `normDilatePairing`, circle averages of `hcirc` at
@@ -17,7 +17,7 @@ surely with `L = alphaCanon α hC ω`:
 Universe: the models are over `Ω : Type` (as required by `ae_weylScaling_affinePullback_background`), so the frozen
 identification is used at universe `0`.
 
-Input (caveat 1, PENDING TRUTH CHECK): `WholePlaneGFFAffineInvariance` (`Proposed/LQG.lean`) is a hypothesis `hAff`.
+Input (PENDING TRUTH CHECK): `WholePlaneGFFAffineInvariance` (`Proposed/LQG.lean`) is a hypothesis `hAff`.
 Input (GAP A): the a.s. homogeneity `PairingHomogeneous (hC ω)` is a hypothesis `hhom`.
 -/
 

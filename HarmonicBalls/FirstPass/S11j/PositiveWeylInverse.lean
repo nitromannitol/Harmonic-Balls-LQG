@@ -4,7 +4,7 @@ import HarmonicBalls.Steps.Sec11.WeylMetricConstantScaling
 import HarmonicBalls.Steps.Sec11.PinchNormalizedLocalEvent
 
 /-!
-# First pass, Section 11: inverse Weyl identity after a nonnegative bump (fp-S11j, owner n4)
+# Section 11: inverse Weyl identity after a nonnegative bump
 
 Positive counterpart (F6c) of the inverse identity `IsEuclideanLengthMetric.inverse_weylScaling`
 (`Steps/Sec11/WeylInverse.lean:71`), which is stated for nonpositive weights. For a nonnegative compactly supported
@@ -114,7 +114,7 @@ theorem ae_singularField_nonneg_weylBump_inverse_of_metricFieldAxioms
   exact hm.inverse_weylScaling_nonneg hξ f hf hc hl hz x y
 
 /-- Almost surely, for one fixed nonnegative continuous compactly supported weight `f`, the inverse identity
-`D = e^{-ξ f} (e^{ξ f} D)` holds at every pair of points. Fixed-`f` form (operator 22:44 UTC): it uses only the a.s.
+`D = e^{-ξ f} (e^{ξ f} D)` holds at every pair of points. Fixed-`f` form: it uses only the a.s.
 length property of `D` and the deterministic zero identity `IsEuclideanLengthMetric.weylScaling_zero`. -/
 theorem ae_fixedWeylBump_inverse
     {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ ξ α₀ : ℝ)

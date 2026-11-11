@@ -3,7 +3,7 @@ import HarmonicBalls.Steps.Sec11.CenteredFieldSigma
 import HarmonicBalls.Steps.Sec11.PairingCovarianceLinearity
 
 /-!
-# Generator-level composition for the exterior mass (fp-S11p, owner n4)
+# Generator-level composition for the exterior mass
 
 At exponent `α = 0` the pairing `fieldPairing 0 (hC ω) φ` is `hC ω φ`. For a whole-plane GFF, a pairing with a test
 function `φ` supported in `O` is almost surely equal to a `comap (localModConstPairings 0 hC O)`-measurable function,

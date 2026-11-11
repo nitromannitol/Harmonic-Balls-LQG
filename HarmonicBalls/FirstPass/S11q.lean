@@ -4,10 +4,10 @@ import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Defs.Notation
 import HarmonicBalls.Proposed.LQG
 
-/-! # Step 12, singular measure identity (FirstPass S11q, worker n1)
+/-! # Step 12, singular measure identity
 
 Source: Bou-Rabee and Gwynne, *Harmonic balls in Liouville quantum gravity* (arXiv:2208.11795), Section 2.2
-(Fact 2.1 I and III, printed p. 9), as organised in `notes/fp-gaps/CHATGPT-n3-step12-gaps.md`, sections 1-2.
+(Fact 2.1 I and III, printed p. 9).
 The field `h = h^ℂ - α₀ log |·|` has circle averages `fieldCircleAverage α₀ (hcirc ω)` (`Defs/GFF.lean`).
 The inputs are the Proposed Props `LQGMeasureWeylScaling` (Fact 2.1 III, used at insertion `0`) and
 `LQGMeasureNonatomic` (Fact 2.1 I, at insertions `0` and `α₀`), used as explicit hypotheses.

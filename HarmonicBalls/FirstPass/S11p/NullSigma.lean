@@ -4,7 +4,7 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 import Mathlib.Order.SymmDiff
 
 /-!
-# The σ-algebra of almost sure modifications of a sub-σ-algebra (fp-S11p, owner n4)
+# The σ-algebra of almost sure modifications of a sub-σ-algebra
 
 A null ideal `𝒩` on `Ω` (for a probability measure `P`: the sets of `P`-measure zero, `NullIdeal.ofMeasure P`). For a
 sub-σ-algebra `F`, `nullSigma 𝒩 F` is the σ-algebra of sets that agree up to a negligible set with a set of `F`.

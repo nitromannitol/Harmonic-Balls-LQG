@@ -2,11 +2,11 @@ import HarmonicBalls.FirstPass.S11j.FieldLevel11_15
 import HarmonicBalls.FirstPass.Frozen.S11j
 
 /-!
-# First pass, Section 11: the shifted metric in the faithful Lemma 11.15 (fp-S11j, owner n4)
+# Section 11: the shifted metric in the faithful Lemma 11.15
 
 Identification of the Weyl-shifted metric `e^{ξ f} · D_h` with the LQG metric of the shifted field `h + f`, used in the
 Cameron-Martin transfer. The metric-level composition is the frozen input `WeylMetricCompositionContinuousOuterFrozen`
-(`FirstPass/Frozen/S11j.lean`; replaces the retired, false `WeylMetricCompositionFrozen`, operator note 23:37 UTC). Terminology: Duplantier-Sheffield and Berestycki-Powell
+(`FirstPass/Frozen/S11j.lean`; replaces the retired, false `WeylMetricCompositionFrozen`). Terminology: Duplantier-Sheffield and Berestycki-Powell
 (Weyl scaling `e^{ξ h} D`, LQG metric), Armitage-Gardiner (internal distance).
 -/
 
@@ -42,8 +42,7 @@ theorem weylScaling_congr_ofReal {D₁ D₂ : ℂ → ℂ → ℝ}
 inserted LQG metric of the shifted field `h + f`. Inputs: the metric identity of `D_h` (`hD`); the field-level Weyl
 identity `WeylScalingCompositionFrozen` (`Frozen/S11d.lean`, for `g = f`); and clause III (Weyl scaling) of the field
 axioms `LQGMetricFieldAxioms` (`Proposed/LQG.lean`) for the continuous shift `f`. No length-metric input and no
-`WeylMetricCompositionContinuousOuterFrozen` is used (chain audit, `notes/fp-gaps/CHATGPT-11-15-17-chain-audit.md`,
-section 4 "Minimal repair"): with `W_s = weylScaling · ξ (-α₀ log|·|)`, a.s. `W_s(𝔇(h^ℂ + f)) = W_{f - α₀ log}(𝔇(h^ℂ))
+`WeylMetricCompositionContinuousOuterFrozen` is used: with `W_s = weylScaling · ξ (-α₀ log|·|)`, a.s. `W_s(𝔇(h^ℂ + f)) = W_{f - α₀ log}(𝔇(h^ℂ))
 = W_f(D_h)`, and `toReal` gives the claim. -/
 theorem ae_shift_metric_eq {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {D : Ω → ℂ → ℂ → ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}

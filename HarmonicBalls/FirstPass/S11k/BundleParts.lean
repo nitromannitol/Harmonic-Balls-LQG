@@ -3,15 +3,15 @@ import HarmonicBalls.FirstPass.S11k.ExteriorDistances
 import HarmonicBalls.FirstPass.S11u
 
 /-!
-# First pass, Section 11: the exterior version bundle from its parts (fp-S11k, owner z3)
+# Section 11: the exterior version bundle from its parts
 
 `PinchSecondExteriorVersionsStep` (`FirstPass/S11k.lean`) is assembled from
 
 * the EXTERNAL metric axioms `LQGMetricFieldAxiomsUnivFrozen` (items I and II, locality on open sets);
-* the frozen circle-average limit `WholePlaneCircleAverageLimitFrozen` (n4);
+* the frozen circle-average limit `WholePlaneCircleAverageLimitFrozen`;
 * `PinchFirstLExteriorStep` (NEW, OPEN): the first conjunct `L` of `pinchFirstEvent` has a zero-mean exterior version.
   Its domain `(thickening (2δ) (Q ∪ W))ᶜ` is closed; no source gives its internal metric as a function of the outside field
-  (see `reports/z3.md`, Blocker 1);
+ ;
 * `PinchSecondAnnulusStep` (NEW, OPEN, the N2 output of `exists_exterior_annulusGreenPotentialSup_of_frozen_base`,
   `FirstPass/S11p/ExteriorMass.lean:137`, whose named inputs `hBase`, `hSing` are not yet bridged to this form).
 
@@ -154,8 +154,8 @@ theorem pinchSecondExteriorVersionsStep_of_parts (hAx : LQGMetricFieldAxiomsUniv
       exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top h
 
 /-- Lemma 11.16, corrected form, with the exterior version bundle replaced by its two OPEN parts `PinchFirstLExteriorStep`
-(closed-domain `L`, Blocker 1 of `reports/z3.md`) and `PinchSecondAnnulusStep` (N2), and with the frozen circle-average
-limit `WholePlaneCircleAverageLimitFrozen` (n4) as an explicit hypothesis. All other hypotheses are as in
+(closed-domain `L`) and `PinchSecondAnnulusStep` (N2), and with the frozen circle-average
+limit `WholePlaneCircleAverageLimitFrozen` as an explicit hypothesis. All other hypotheses are as in
 `firstPass_11_16_corrected_of_versions`. -/
 theorem firstPass_11_16_corrected_of_parts (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hL : PinchFirstLExteriorStep.{u})

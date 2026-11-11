@@ -1,7 +1,7 @@
 import HarmonicBalls.Steps.Sec11.SingularFieldWeylForward
 
 /-!
-# First pass, Section 11: finiteness of a Weyl weight bounded above (fp-S11j, owner n4)
+# Section 11: finiteness of a Weyl weight bounded above
 
 The singular-field finiteness lemma `ae_singularField_negative_weylScaling_finite`
 (`Steps/Sec11/SingularFieldWeylForward.lean:44`) covers nonpositive weights only. The positive shift `u₁ ≥ 0` of

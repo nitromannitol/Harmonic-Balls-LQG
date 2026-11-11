@@ -1,7 +1,7 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# Assembly of the exterior event of Lemma 11.16 (fp-S11k, owner z3)
+# Assembly of the exterior event of Lemma 11.16
 
 `PinchSecondExteriorEventStep` (`FirstPass/S11k.lean`) asks for constants `c₁, c₂ > 0` and an event `F` measurable for the
 exterior sigma-algebra with `P F > 0` on which the first event, the lower bound `c₁ ≤ D(∂B_δ, ∂B_{2δ})` and the Green bound

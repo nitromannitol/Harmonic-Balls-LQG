@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11h.SetDistPos
 import HarmonicBalls.Steps.Sec11.PinchDistancePositivity
 
 /-!
-# First pass, Section 11: deterministic positivity of two thresholds for the faithful first event (fp-S11j, owner n4)
+# Section 11: deterministic positivity of two thresholds for the faithful first event
 
 For a Euclidean length metric `D`, the two variables `setDist D Q' (frontier Q)` (`X1`) and `setDist D {0} (sphere 0 (δ/2))`
 (`X3`, the threshold of the core `exists_uniform_first_event_shift`) are strictly positive. Only the faithful geometry

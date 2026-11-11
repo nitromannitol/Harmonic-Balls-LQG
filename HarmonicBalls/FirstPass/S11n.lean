@@ -2,13 +2,13 @@ import HarmonicBalls.FirstPass.S11i.Faithful
 import HarmonicBalls.FirstPass.S11i.AlphaCanonical
 
 /-!
-# Restoring the arbitrary model in Lemma 11.13 (Step 15 of `notes/fp-gaps/CHATGPT-11-13-proof.md`, first pass fp-S11n)
+# Restoring the arbitrary model in Lemma 11.13
 
 Birkhoff is applied on the canonical field space (mean-zero pairings `CanonSpace`, the canonical field `alphaCanon`),
 not on the arbitrary probability space of the Draft. This file is the pull-back from that canonical statement to an
 arbitrary whole-plane GFF model `(Ω, P, hC, hcirc)` with LQG measure `μ` and LQG metric `D`.
 
-Interface for the assembly of `firstPass_11_13_corrected` (owner n3):
+Interface for the assembly of `firstPass_11_13_corrected`:
 
 * `CanonicalPinchConullStmt α₀ M δ U T Q' Q Dμ Dd` (input, proved by the canonical Birkhoff argument): a measurable set
   `G` of canonical fields such that, for every whole-plane GFF model, the canonical field of `h^{α₀}` lies in `G` almost
@@ -103,8 +103,7 @@ theorem pinchPointEvent_smul_iff {a b : ℝ} (ha : 0 < a) (hb : 0 < b) (ν : Mea
   · exact ENNReal.mul_lt_mul_iff_right hB hB'
   · rw [mul_left_comm, ENNReal.mul_lt_mul_iff_right hA hA']
 
-/-- Pull-back of the canonical conull statement to an arbitrary whole-plane GFF model (Step 15 of
-`CHATGPT-11-13-proof.md`). The density `δ` does not depend on the model. -/
+/-- Pull-back of the canonical conull statement to an arbitrary whole-plane GFF model. The density `δ` does not depend on the model. -/
 theorem restoreModel_11_13 {γ ξ α₀ M δ : ℝ} {U T Q' Q : Set ℂ} {Dμ : CanonSpace → Measure ℂ}
     {Dd : CanonSpace → ℂ → ℂ → ℝ}
     (hCan : CanonicalPinchConullStmt.{u} α₀ M δ U T Q' Q Dμ Dd)
@@ -155,7 +154,7 @@ theorem correctedLemma11_13_of_canonical {γ ξ α₀ M : ℝ} {U T Q' Q : Set �
   obtain ⟨δ, hδ, Dμ, Dd, hCan, hId⟩ := h
   exact ⟨δ, hδ, fun Ω _ P hC hcirc μ D hh hμ hD => restoreModel_11_13 hCan hId Ω P hC hcirc μ D hh hμ hD⟩
 
-/-- Certified canonical decoders (ChatGPT B1 ruling `notes/fp-gaps/CHATGPT-n1-B1-canonical-decoders.md`, section 6). The
+/-- Certified canonical decoders. The
 decoders `Dμ' Dd'` agree with `Dμ Dd` up to positive factors, pointwise on one measurable set `G0` of canonical fields
 which every whole-plane GFF model reaches almost surely. Pinch events are invariant under positive factors
 (`pinchPointEvent_smul_iff`), so the canonical pinch statement may be proved for the certified decoders `Dμ' Dd'`. -/
@@ -181,7 +180,7 @@ theorem lqgCanonicalIdentification_of_certified {γ ξ α₀ : ℝ} {Dμ Dμ' : 
   · rw [hμω, hμ', smul_smul, ← ENNReal.ofReal_mul (div_pos ha hr).le, div_mul_cancel₀ a hr.ne']
   · rw [hDω u v, hDd' u v, ← mul_assoc, div_mul_cancel₀ b hs.ne']
 
-/-- The bridge with explicit witnesses (operator ruling 23:53 UTC). The canonical pinch statement is needed only for decoders
+/-- The bridge with explicit witnesses. The canonical pinch statement is needed only for decoders
 certified equal to the identification witnesses `Dμ Dd`, not for `Dμ Dd` themselves. -/
 theorem correctedLemma11_13_of_identification {γ ξ α₀ M : ℝ} {U T Q' Q : Set ℂ}
     {Dμ : CanonSpace → Measure ℂ} {Dd : CanonSpace → ℂ → ℂ → ℝ}

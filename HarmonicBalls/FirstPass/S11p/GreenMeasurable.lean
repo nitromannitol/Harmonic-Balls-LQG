@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11h.GreenField11_17
 
 /-!
-# Measurable versions of the annular Green potential supremum (fp-S11p, owner n4)
+# Measurable versions of the annular Green potential supremum
 
-Step N2 of `notes/fp-gaps/CHATGPT-n4-B2-z3-N1N2.md` section 6 (ChatGPT chat 105): the supremum
+Step N2: the supremum
 `SG(μ) = annulusGreenPotentialSup μ x₀ a b` is almost surely equal to a random variable measurable for an ARBITRARY
 sub-σ-algebra `𝓖` of the ambient one, provided the masses of the open subsets of the annulus are almost surely equal to
 `𝓖`-measurable random variables. The proof is the countable-supremum argument of `exists_annulusGreenField`

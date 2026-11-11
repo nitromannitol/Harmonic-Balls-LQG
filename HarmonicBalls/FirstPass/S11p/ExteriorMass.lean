@@ -9,7 +9,7 @@ import HarmonicBalls.FirstPass.Frozen.S11k
 import HarmonicBalls.FirstPass.S11u
 
 /-!
-# Exterior measurability of the LQG mass in the annulus (fp-S11p, owner n4)
+# Exterior measurability of the LQG mass in the annulus
 
 Discharges the hypothesis `hExt` of `exists_exterior_annulusGreenPotentialSup` (`FirstPass/S11p.lean`) from the
 external inputs `LQGMassInnerMeasurableFrozen` (Frozen/S11k, locality and measurability of the LQG mass, BRG Fact 2.1 II)
@@ -174,7 +174,7 @@ theorem exists_exterior_annulusGreenPotentialSup_of_frozen_holder {Ω : Type u} 
 
 /-- N2 with the geometric preconditions taken from the buffered pinch geometry `IsBufferedPinchGeometry`: `hsph` and
 `hWA` are derived in `FirstPass/S11p/BufferedGeometry.lean` (`closure W ⊆ T ⊆ 𝔸_{1,5}`, `W ⊆ 𝔸_{1,2}`). This is the form
-for the pinch second exterior event (z3). -/
+for the pinch second exterior event. -/
 theorem exists_exterior_annulusGreenPotentialSup_of_buffered {Ω : Type u} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hGFF : IsWholePlaneGFF P hC hcirc) (γ α₀ : ℝ) (μ μ₀ : Ω → Measure ℂ) (hγ0 : 0 < γ) (hγ2 : γ < 2)
@@ -191,7 +191,7 @@ theorem exists_exterior_annulusGreenPotentialSup_of_buffered {Ω : Type u} [Meas
     (sphere_one_subset_compl_closure_W_of_buffered hgeo)
     (closure_annulus_compl_closure_W_of_buffered hgeo) hSing
 
-/-- N2 with the singular identity discharged: `hSing` is `singular_measure_identity` (`FirstPass/S11q.lean`, n1) for the
+/-- N2 with the singular identity discharged: `hSing` is `singular_measure_identity` (`FirstPass/S11q.lean`) for the
 exponent-`α₀` LQG measure `μ` and the exponent-`0` base `μ₀`. Named inputs: the Proposed `hWeyl`, `hNa0`, `hNa`
 (`LQGMeasureWeylScaling`, `LQGMeasureNonatomic`, pending operator source-check), the cited HB Prop. 2.5 `hholder`, and the
 frozen `hFr` (the circle-average limit is derived, `wholePlaneCircleAverageLimit_derived`); the geometry is `IsBufferedPinchGeometry`. -/

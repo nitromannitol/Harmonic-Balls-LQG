@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11j.Thresholds4
 import HarmonicBalls.FirstPass.S11j.ThresholdsAE
 
 /-!
-# First pass, Section 11: field-level events for the faithful Lemma 11.15 (fp-S11j, owner n4)
+# Section 11: field-level events for the faithful Lemma 11.15
 
 The open first certificate `correctedOpenFirstCertificate` of the inserted LQG metric `e^{-ξ α₀ log|·|} · 𝔇(T)` is a
 countable formula in internal metrics (`openFirstCountable`, `CertificateE1.lean`). Here the internal metrics are
@@ -222,7 +222,7 @@ theorem exists_thresholds_fieldLevel {Ω : Type u} [MeasurableSpace Ω] {P : Mea
     (hEp : Ep ⊆ sphere (0 : ℂ) (δ / 2)) (hEpc : sphere (0 : ℂ) (δ / 2) ⊆ closure Ep)
     (hCountS : Sp.Countable) (hCountQ : Qp.Countable) (hCountF : Fp.Countable) (hCountC : Cp.Countable)
     (hCountE : Ep.Countable)
-    -- (M2) almost sure finiteness of `X₂` and `X₄` (paper line 3664-3667; not proved, see reports/n4.md)
+    -- (M2) almost sure finiteness of `X₂` and `X₄` (paper line 3664-3667; not proved)
     (hM2a : ∀ᵐ ω ∂P, (⨆ y ∈ sphere (0 : ℂ) 5, internalMetric (D ω)
       (ball 0 6 \ (closure (thickening (2 * δ) Q) ∪ closure (thickening (2 * δ) W))) 0 y) < ⊤)
     (hM2b : ∀ᵐ ω ∂P, internalDiam (D ω) δ (T \ thickening (3 * δ) W) < ⊤) :

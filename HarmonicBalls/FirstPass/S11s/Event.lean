@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11n
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# The measurable covariance event (fp-S11s-11-13-B1-covariance, step B1)
+# The measurable covariance event
 
 Ruling section 3, part B (eqs. (12)-(14)). For the measure decoder `Kf` and the metric decoder `dd` on the canonical space,
 with the ratios `covA` (measure, at the balls `B_1`, `B_{1/2}`) and `covB` (metric, at the points `(0,1)`, `(0,1/2)`), the
@@ -26,7 +26,7 @@ noncomputable def covA (Kf : S11n.CanonSpace → Measure ℂ) (L : S11n.CanonSpa
 noncomputable def covB (dd : S11n.CanonSpace → ℂ → ℂ → ℝ) (L : S11n.CanonSpace) : ℝ :=
   dd (dilOp L) 0 1 / dd L 0 ((1 / 2 : ℝ) : ℂ)
 
-/-- The covariance event (ruling part B): on the countable family `C` of measurable sets and the countable set `Q`,
+/-- The covariance event: on the countable family `C` of measurable sets and the countable set `Q`,
 the measure covariance `K(TL) S = covA · (K L)(· / (1/2)) S` and the metric covariance
 `d(TL)(q) = covB · d(L)((1/2) q)` hold. -/
 def covEvent (Kf : S11n.CanonSpace → Measure ℂ) (dd : S11n.CanonSpace → ℂ → ℂ → ℝ) (C : Set (Set ℂ))

@@ -3,12 +3,12 @@ import HarmonicBalls.Draft.Section11
 import HarmonicBalls.FirstPass.S11u
 
 /-!
-# First pass, Section 11: exterior versions of exit distances (fp-S11k, owner z3)
+# Section 11: exterior versions of exit distances
 
 Exit distances `setDist D A (frontier U)` and the sphere-to-sphere distance `setDist D (∂B_δ) (∂B_{2δ})` of the
 metric, for an open `U` and an open `V ⊆ E` with `closure U ⊆ V`, have almost-sure versions measurable for the
 zero-mean exterior sigma-algebra of `E` (`ExteriorPairings.exists_exterior_ofReal_setDist_version`). These are the
-exit-distance inputs of `PinchSecondExteriorVersionsStep`: `a₀ = D(Q', ∂Q)` (ChatGPT `a_0` of section 5.1, eq. (25)),
+exit-distance inputs of `PinchSecondExteriorVersionsStep`: `a₀ = D(Q', ∂Q)`,
 `d₀ = D(0, ∂B_δ)` (eq. (26)) and `d = D(∂B_δ, ∂B_{2δ})` (eq. (27), with the open annulus replaced by `B_{3δ}`).
 
 Locality hypothesis `hloc` is item II of `LQGMetricFieldAxioms` (Proposed/LQG.lean:206) for the open sets `V ⊆ E`.
@@ -55,7 +55,7 @@ theorem exists_exterior_setDist_exit
   ExteriorPairings.exists_exterior_ofReal_setDist_version hGFF α₀ hE hsph hmetric hU hV hVE hAU hUV hA hfront
     (hloc V hV hVE)
 
-/-- Exterior version of the origin-to-circle distance `d₀ = D(0, ∂B_δ)` (ChatGPT eq. (26)), for `B_{2δ} ⊆ E`. -/
+/-- Exterior version of the origin-to-circle distance `d₀ = D(0, ∂B_δ)`, for `B_{2δ} ⊆ E`. -/
 theorem exists_exterior_setDist_origin
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)
@@ -74,8 +74,7 @@ theorem exists_exterior_setDist_origin
     (by rw [hfront]; exact NormedSpace.sphere_nonempty.2 hδ.le)
   exact ⟨a, ham, by filter_upwards [haa] with ω h; rw [h, hfront]⟩
 
-/-- Exterior version of the sphere-to-sphere distance `d = D(∂B_δ, ∂B_{2δ})` as a real number (ChatGPT eq. (27)
-with the open domain `B_{3δ}`), for `B_{3δ} ⊆ E`. -/
+/-- Exterior version of the sphere-to-sphere distance `d = D(∂B_δ, ∂B_{2δ})` as a real number (with the open domain `B_{3δ}`), for `B_{3δ} ⊆ E`. -/
 theorem exists_exterior_setDist_spheres
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     (α₀ : ℝ) {E : Set ℂ} (hE : IsOpen E) (hsph : sphere (0 : ℂ) 1 ⊆ E)

@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# First pass, Section 11: deterministic thresholds of positive probability (fp-S11j, owner n4)
+# Section 11: deterministic thresholds of positive probability
 
 Pure measure theory used by the faithful Lemma 11.15 (corrected paper, local event `E₁`, lines 3659-3696: "Choose
 deterministic `c₁,…,c₄ > 0` so that `F = {L ≥ c₁, A ≤ c₂, D(0,∂B_{δ/2}) ≥ c₃, d₀ ≤ c₄}` has positive probability.

@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11i.SingularWeyl
 import HarmonicBalls.FirstPass.S11k.GreenWeight
 
 /-!
-# Outside-measurable Green potential at insertion `α` (fp-S11k, owner z3)
+# Outside-measurable Green potential at insertion `α`
 
 Route for the outside version `N2` of `annulusGreenPotentialSup (μ_α) 0 3 6` in `PinchSecondExteriorEventStep`:
 the singular Weyl change `μ_α = μ_0.withDensity |z|^{-γα}` (a.s., `SingularWeyl.singular_weyl_measure_ae`) and the weighted

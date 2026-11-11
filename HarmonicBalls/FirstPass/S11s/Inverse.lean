@@ -2,11 +2,11 @@ import HarmonicBalls.FirstPass.S11i.MixingCanonical
 import HarmonicBalls.FirstPass.S11i.DilationMixing
 
 /-!
-# The inverse of the dual dilation `dilOp` (fp-S11s-11-13-B1-covariance, step B3)
+# The inverse of the dual dilation `dilOp`
 
 `dilOp L i = L (dilateTest 1 i)` with `dilateTest 1 k y = 4 k(2 y)` (S11i/DilationMixing.lean). Its inverse on mean-zero
 test functions is `dilateTestInv k y = (1/4) k(y/2)`; hence `dilOp` is a bijection of the canonical space, with
-measurable inverse `dilOpInv` (used for the two-sided invariance of the covariance event, ruling section 3 part C).
+measurable inverse `dilOpInv` (used for the two-sided invariance of the covariance event).
 -/
 
 namespace HarmonicBalls

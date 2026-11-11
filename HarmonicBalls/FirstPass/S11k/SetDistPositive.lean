@@ -1,7 +1,7 @@
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
 
 /-!
-# Positivity of the boundary distance `D(∂B_δ, ∂B_{2δ})` (fp-S11k, owner z3)
+# Positivity of the boundary distance `D(∂B_δ, ∂B_{2δ})`
 
 For a Euclidean length metric `D` (`IsEuclideanLengthMetric`, `Defs/LQGMetric.lean:81`) the distance between the disjoint
 compact circles `∂B_δ(0)` and `∂B_{2δ}(0)` is positive. This gives the positivity `0 < d` on the exterior event of

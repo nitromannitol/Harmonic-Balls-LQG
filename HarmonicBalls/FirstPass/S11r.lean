@@ -4,10 +4,10 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.FirstPass.S11r.Frozen
 
 /-!
-# First pass, realization of the LQG model at insertion `γ` (fp-S11r, owner n2)
+# Realization of the LQG model at insertion `γ`
 
 Lemma `hmodel_at_gamma` is the model hypothesis `hmodel` of `certificate_canonical_pos` (FirstPass/S11i/CertificateCanonical.lean,
-n3's B3): for `γ ∈ (0, 2)` there are an exponent `ξ > 0` and one whole-plane GFF realization `(Ω₀, P₀, hC₀, hcirc₀)` with an
+B3): for `γ ∈ (0, 2)` there are an exponent `ξ > 0` and one whole-plane GFF realization `(Ω₀, P₀, hC₀, hcirc₀)` with an
 LQG measure `μ₀` and an LQG metric `D₀` at insertion `α₀ = γ`. The statement is the same expression as `hmodel` with `ξ` existential.
 
 Inputs (all hypotheses, none derived here):

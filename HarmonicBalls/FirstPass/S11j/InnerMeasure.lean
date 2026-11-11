@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11j.Positivity
 
 /-!
-# First pass, Section 11: inner-measure form of a null-measurable event (fp-S11j, owner n4)
+# Section 11: inner-measure form of a null-measurable event
 
 The Lean statements of Lemmas 11.15-11.17 are in inner-measure form: `∃ A ⊆ S, MeasurableSet A ∧ 0 < P A`. A
 null-measurable event of positive probability has such a measurable subset of the same probability. Pure measure

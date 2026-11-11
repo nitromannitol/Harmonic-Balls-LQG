@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.S11n
 import HarmonicBalls.FirstPass.S11v.CovarianceDec
 
 /-!
-# B1: covariance of the canonical decoders under `dilOp` on a conull invariant set (fp-S11s-11-13-B1-covariance)
+# B1: covariance of the canonical decoders under `dilOp` on a conull invariant set
 
 Ruling section 3, Proposition (eqs. (5)-(6)), with `T = dilOp`, `r = 1/2`, `S_r ν = ν.map (· / (1/2))`. For the frozen
 canonical witnesses `K` (measure decoder), `d` (metric decoder) and `G` (the conull set of `LQGCanonicalDecodersMeasurableExistStmt`)

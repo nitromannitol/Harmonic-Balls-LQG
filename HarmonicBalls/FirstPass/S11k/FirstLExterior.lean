@@ -7,10 +7,10 @@ import HarmonicBalls.FirstPass.S11t
 import HarmonicBalls.FirstPass.S11u
 
 /-!
-# First pass, Section 11: the closed-corridor first conjunct `L` has an exterior version (fp-S11k, owner z3)
+# Section 11: the closed-corridor first conjunct `L` has an exterior version
 
 Proves `BundleParts.PinchFirstLExteriorStep` (the zero-mean exterior version of
-`L = ⨆ x ∈ ∂B₅, internalMetric D (B_{2δ}(Q ∪ W))ᶜ 0 x`, Blocker 1 of `reports/z3.md`) from
+`L = ⨆ x ∈ ∂B₅, internalMetric D (B_{2δ}(Q ∪ W))ᶜ 0 x`) from
 
 * the FROZEN closed-domain identity `InternalMetricClosedEqIInfThickeningFrozen` (`FirstPass/Frozen/S11g.lean`,
   truth check TRUE), which writes the internal metric of a closed set as an infimum of suprema of internal metrics of
@@ -238,7 +238,7 @@ theorem pinchFirstLExteriorStep_of_frozen
     exact (iSup_subtype'' S _).trans (iSup_sphere_eq_of_dense hω hOc hOF hsph5 0 hSsph hSd).symm
 
 /-- Lemma 11.16, corrected form, from the frozen closed-domain identity `hK1` and the item-II locality of the metric
-axioms: the bundle now needs only the N2 step `PinchSecondAnnulusStep` (n4, task fp-S11t) as an explicit hypothesis;
+axioms: the bundle now needs only the N2 step `PinchSecondAnnulusStep` as an explicit hypothesis;
 `PinchFirstLExteriorStep` is no longer an input. -/
 theorem firstPass_11_16_corrected_of_frozen (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hK1 : InternalMetricClosedEqIInfThickeningFrozen)
@@ -253,7 +253,7 @@ end FirstLExterior
 
 /-- Lemma 11.16, corrected form (`PinchSecondEventFaithfulStmt`, `FirstPass/S11h/Faithful.lean`). The bundle's open
 parts are now proved: `PinchFirstLExteriorStep` (`FirstLExterior.pinchFirstLExteriorStep_of_frozen`, from the frozen
-closed-domain identity `hK1`) and `PinchSecondAnnulusStep` (n4, `PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs`,
+closed-domain identity `hK1`) and `PinchSecondAnnulusStep` (`PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs`,
 from its named inputs). Explicit hypotheses: the frozen inputs `hAx`, `hK1`, `hM`, `hDiam`, `hMk`; the Draft
 statements `hPos` (Lemma 11.15) and `hD`; the N2 named inputs `hholder` (cited, Bou-Rabee-Gwynne Prop 2.5) and the
 Proposed `hEx`, `hWeyl`, `hNa0`, `hNa`, pending operator source-check. -/

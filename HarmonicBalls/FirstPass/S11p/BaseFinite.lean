@@ -3,7 +3,7 @@ import HarmonicBalls.Defs.Annuli
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Base finiteness of the annular Green potential from HB Proposition 2.5 (fp-S11p, owner n4)
+# Base finiteness of the annular Green potential from HB Proposition 2.5
 
 Bridges the Green-potential clause of Proposition 2.5 (`GreenPotentialHolderStmt`, Draft/Section2.lean; cited and used
 as a hypothesis, as in `FirstPass/S5S7S8.lean`) to `annulusGreenPotentialSup` for the exponent-`0` base measure `μ₀`

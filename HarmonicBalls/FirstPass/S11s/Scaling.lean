@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11q
 import HarmonicBalls.FirstPass.S11s
 
 /-!
-# B1 scaling identities for the dilation by `r = 1/2` (fp-S11s-11-13-B1-covariance)
+# B1 scaling identities for the dilation by `r = 1/2`
 
 Deterministic identities used to transfer the LQG measure and the LQG metric to the dilated field
 `h̃ = h(r ·) - h_r(0)` (ruling section 3, eqs. (7)-(9)), with `r = 1/2`:

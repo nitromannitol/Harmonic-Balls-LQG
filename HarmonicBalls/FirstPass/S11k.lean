@@ -9,12 +9,11 @@ import HarmonicBalls.FirstPass.S11k.EventAssembly
 import HarmonicBalls.FirstPass.S11k.SetDistPositive
 
 /-!
-# First pass, Section 11: the faithful second pinch event, Lemma 11.16 (fp-S11k, owner z3)
+# Section 11: the faithful second pinch event, Lemma 11.16
 
 Target: `firstPass_11_16_corrected : PinchSecondEventFaithfulStmt` (`FirstPass/S11h/Faithful.lean:80`).
 
-Route (corrected paper, proof of `lemma:E2`, lines 3700-3727, and `lemma:massdiam`, lines 3511-3523; ChatGPT note
-`notes/fp-gaps/CHATGPT-11-15-17-faithful.md` section 5, Steps 16.1-16.3). Write `F` for the event that the first
+Route. Write `F` for the event that the first
 event and the crossing and Green thresholds hold, measurable for the field outside `W`, and `H` for the mass-diameter
 event of `lemma:massdiam` on the local geometry `U, V, O₁ = B_δ(V̄), W`. Then `P (F ∩ H) > 0`, since `P[1_H | outside] > 0`
 almost surely (conditioning), and `F ∩ H` lies in the faithful events by the threshold inequalities.
@@ -31,14 +30,12 @@ open MeasureTheory Metric Set Filter
 
 universe u
 
-/-- NEW, OPEN: the exterior-measurable first event with the thresholds (paper `lemma:E2` proof, first sentences; ChatGPT
-section 5, Step 16.2). For each buffered geometry, `γ ∈ (0, 2)`, `α₀ < Q`, `ξ`, and each LQG measure and metric of the field:
+/-- OPEN: the exterior-measurable first event with the thresholds (paper `lemma:E2` proof, first sentences). For each buffered geometry, `γ ∈ (0, 2)`, `α₀ < Q`, `ξ`, and each LQG measure and metric of the field:
 the sigma-algebra of the field outside `closure W` (the comap of the zero-mean pairings of `localModConstPairings`) is
 contained in the ambient one, and for every `M > 0` there are deterministic `c₁, c₂ > 0` and an outside-measurable set `F`
 of positive probability such that, almost surely, every point of `F` lies in `Ẽ₁ ∩ {c₁ ≤ D(∂B_δ, ∂B_{2δ})} ∩ {M S ≤ c₂}`.
 The inclusion is almost everywhere, not pointwise: the model predicates identify `D`, `μ` with their canonical versions
-only almost surely, so a pointwise inclusion fails for a version changed on a null set (ChatGPT, operator note 23:27 UTC,
-section 3.1 counterexample). -/
+only almost surely, so a pointwise inclusion fails for a version changed on a null set. -/
 def PinchSecondExteriorStep : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
   ∀ γ α₀ ξ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -71,9 +68,8 @@ theorem localModConstPairings_comap_le {Ω : Type u} [MeasurableSpace Ω] {P : M
 
 /-- NEW, OPEN: the event part of `PinchSecondExteriorStep` (the statement `∀ M > 0, ∃ c₁ c₂ F ...` without its
 outside-measurability conjunct, which `localModConstPairings_comap_le` proves). This is the single remaining input of
-`firstPass_11_16_corrected`. The operator note 23:12 UTC gap (global `setDist` in `pinchFirstEvent`,
-Draft/Section11.lean:95-99) is answered by ChatGPT (23:27 UTC, `notes/fp-gaps/CHATGPT-e2-locality-z3-frozen.md`
-sections 1-2): both global distances are exit distances, local by first-exit truncation, so `pinchFirstEvent` and the
+`firstPass_11_16_corrected`. The gap (global `setDist` in `pinchFirstEvent`,
+Draft/Section11.lean:95-99) is answered: both global distances are exit distances, local by first-exit truncation, so `pinchFirstEvent` and the
 Draft are unchanged. Still OPEN here: the exit/crossing locality lemmas (formulas (1)-(2) of that note) and the
 exterior-code versions of `L, A, a₀, d₀, a₁, S` (its section 2.2, modulo-constant bridge (3)), and the positivity of the
 stronger local event `E₁` (corrected `lem:E1`). -/
@@ -129,7 +125,7 @@ theorem firstPass_11_16_corrected_of_steps (hX : PinchSecondExteriorStep.{u})
   have hpos : 0 < P (F ∩ H) :=
     measure_inter_pos_of_condExp_indicator_pos P hle hF hHm hFpos hcond
   -- The exterior inclusion holds only almost surely: remove an ambient measurable null set AFTER conditioning
-  -- (ChatGPT, operator note 23:27 UTC, section 3.4). `P ((F ∩ H) \ N) = P (F ∩ H) > 0`.
+  --. `P ((F ∩ H) \ N) = P (F ∩ H) > 0`.
   obtain ⟨N, hNsub, hNm, hN0⟩ := exists_measurable_superset_of_null (ae_iff.1 hFsub)
   have hBpos : 0 < P ((F ∩ H) \ N) := by
     rw [measure_sdiff_null hN0]
@@ -301,14 +297,13 @@ theorem firstPass_11_16_corrected_of_event (hE : PinchSecondExteriorEventStep.{u
     PinchSecondEventFaithfulStmt.{u} :=
   firstPass_11_16_corrected_of_exterior (pinchSecondExteriorStep_of_event hE) hD hM hDiam hMk
 
-/-- NEW, OPEN: the exterior version bundle of Lemma 11.16 (the N1 and N2 inputs of the corrected proof of `lemma:E2`,
-paper lines 3700-3727; ChatGPT `notes/fp-gaps/CHATGPT-n4-B2-z3-N1N2.md` sections 3-6). With `m` the zero-mean exterior
+/-- NEW, OPEN: the exterior version bundle of Lemma 11.16. With `m` the zero-mean exterior
 sigma-algebra `comap (localModConstPairings α₀ hC (closure W)ᶜ)`, it asserts: (N1) an `m`-measurable event `F₀` that is
 almost surely `pinchFirstEvent` (the exterior versions of `L, a₀, a₁, d₀`, which `pinchFirstEvent_ae_iff_versions` turns into one event);
 (N1') an `m`-measurable real version `d` of `D(∂B_δ, ∂B_{2δ})`; (N2) for every `M > 0` an `m`-measurable `S` with
 `M · SG_{3,6}(0) ≤ S` almost surely and `S ≠ ∞` on `F₀` almost surely. The Green bound of (N2) is
 `exists_outside_green_of_singular_weyl` (`hbase` is the `α₀ = 0` input, open as B1), and its finiteness on `F₀` is the
-input `hFin` of `exists_exterior_annulusGreenPotentialSup` (n4). Nothing here is claimed: it is the single open input of
+input `hFin` of `exists_exterior_annulusGreenPotentialSup`. Nothing here is claimed: it is the single open input of
 `PinchSecondExteriorEventStep` after the reductions below. -/
 def PinchSecondExteriorVersionsStep : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →

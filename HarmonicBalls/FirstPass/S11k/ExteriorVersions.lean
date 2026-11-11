@@ -1,10 +1,9 @@
 import HarmonicBalls.Steps.Sec11.CountableCoordinateObservables
 
 /-!
-# Exterior versions of field observables (fp-S11k, N1, owner z3)
+# Exterior versions of field observables
 
-Two measure-theoretic lemmas for the exterior versions of Lemma 11.16 (ChatGPT `notes/fp-gaps/CHATGPT-n4-B2-z3-N1N2.md`,
-section 3: "every scalar full-exterior-field-measurable variable has an almost-surely equal version measurable for the raw
+Two measure-theoretic lemmas for the exterior versions of Lemma 11.16 ("every scalar full-exterior-field-measurable variable has an almost-surely equal version measurable for the raw
 zero-mean exterior code", and the limit (17) `(h^α, φ) = lim_j (h^α, φ - m_φ ψ_j)` almost surely).
 
 * `exists_measurable_version_of_coordinate_versions`: if each real coordinate `X · i` of a family has an `m`-measurable

@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11p.GreenMeasurable
 import HarmonicBalls.Proofs.Sec11.ModConstPairingLaw
 
 /-!
-# N2 for the first pass, Lemma 11.16: the exterior annular Green potential (fp-S11p, owner n4)
+# N2 for Lemma 11.16: the exterior annular Green potential
 
-Lemma N2 of `notes/fp-gaps/CHATGPT-n4-B2-z3-N1N2.md` (section 6), as used by `PinchSecondExteriorEventStep`
+Lemma N2 as used by `PinchSecondExteriorEventStep`
 (`FirstPass/S11k.lean`): the supremum `SG(μ) = annulusGreenPotentialSup μ 0 3 6` has an almost-sure version that is
 measurable for the uncompleted exterior σ-algebra `comap (localModConstPairings α₀ hC (closure W)ᶜ)` of S11k, and is
 almost surely finite.
@@ -13,7 +13,7 @@ The two hypotheses are the exact remaining inputs:
 * `hExt`: the masses of the open subsets of `𝔸_{3,6}` are almost surely measurable for the exterior σ-algebra. This is
   NOT yet established; see the report (it needs the normalisation of the whole-plane GFF, `h^ℂ_1(0) = 0`, to recover the
   constant from the zero-mean exterior pairings, and it is not yet a numbered input).
-* `hFin`: almost-sure finiteness of `SG(μ)` (ChatGPT section 6.4, or `ae_annulusGreenPotentialSup_ne_top_of_lqgVolumeGrowth`
+* `hFin`: almost-sure finiteness of `SG(μ)` (or `ae_annulusGreenPotentialSup_ne_top_of_lqgVolumeGrowth`
   in `Steps/Sec11/PinchGreenFinite.lean`, which needs the Draft statement `LQGVolumeGrowthAllScalesStmt`).
 -/
 

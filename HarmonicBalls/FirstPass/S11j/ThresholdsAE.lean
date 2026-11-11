@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11j.Positivity
 
 /-!
-# First pass, Section 11: positive-probability thresholds, almost-everywhere measurable form (fp-S11j, owner n4)
+# Section 11: positive-probability thresholds, almost-everywhere measurable form
 
 The Measurable version `exists_thresholds_measure_pos` (`FirstPass/S11j/Positivity.lean:76`) is upgraded to
 almost-everywhere measurable variables. Each variable is replaced by a measurable version; the positivity and

@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11s.Scaling
 import HarmonicBalls.FirstPass.S11q.Metric
 
 /-!
-# B1 transfer of the LQG measure and metric under `h ↦ h̃ = h(·/2 ·) - h_{1/2}(0)` (fp-S11s-11-13-B1-covariance)
+# B1 transfer of the LQG measure and metric under `h ↦ h̃ = h(·/2 ·) - h_{1/2}(0)`
 
 Ruling section 3, eqs. (9)-(11), with `r = 1/2`:
 

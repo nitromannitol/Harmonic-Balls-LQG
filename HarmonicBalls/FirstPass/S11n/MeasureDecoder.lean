@@ -34,8 +34,7 @@ open HarmonicBalls.S11n.PatchMeasure
 `HarmonicBalls.LQGMeasureNonatomic`, which asserts this simultaneously for all points, not only at `0`.
 Source: Fact 2.1 I (the LQG measure, item I: a.s. `μ_h` is a non-atomic Radon measure), paper
 `paper/lqg_harmonic_ball-corrected.tex:408` (Fact `fact:lqg-measure`; Bou-Rabee-Gwynne arXiv:2208.11795, p. 9).
-Truth check TRUE as quantified with its GFF guard (notes/fp-gaps/CHATGPT-11-7-11-10-statement-audit.md:74, row
-"Universal hNA"). Status: Proposed; the operator's source-check of this locator is not yet recorded. -/
+Truth check TRUE as quantified with its GFF guard. Status: Proposed; the operator's source-check of this locator is not yet recorded. -/
 def LQGMeasureNonatomicAll : Prop :=
   ∀ (γ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
     HarmonicBalls.LQGMeasureNonatomic P γ α₀ hC hcirc

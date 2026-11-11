@@ -9,16 +9,15 @@ import HarmonicBalls.Steps.Sec11.LocalExtremaRepresentatives
 import HarmonicBalls.FirstPass.S11u
 
 /-!
-# First pass, Section 11: exterior versions of the field observables (fp-S11k, owner z3)
+# Section 11: exterior versions of the field observables
 
 Let `E` be an open set containing the unit circle. The zero-mean exterior sigma-algebra
 `comap (localModConstPairings α₀ hC E)` carries an almost-sure version of every
 `fieldSigmaAlgebra α₀ hC U`-measurable real or `ℝ≥0∞` observable with `U ⊆ E`, and of every
 exit distance `ENNReal.ofReal (setDist D A (frontier U))` with `closure U ⊆ V ⊆ E` for an open `V`.
-These are the building blocks (N1) of `PinchSecondExteriorVersionsStep`, following ChatGPT
-`notes/fp-gaps/CHATGPT-n4-B2-z3-N1N2.md` sections 3-5.
+These are the building blocks (N1) of `PinchSecondExteriorVersionsStep`.
 
-Inputs (explicit hypotheses): `WholePlaneCircleAverageLimitFrozen.{u}` (FIRST-PASS FROZEN, n4), the GFF
+Inputs (explicit hypotheses): `WholePlaneCircleAverageLimitFrozen.{u}`, the GFF
 hypothesis `IsWholePlaneGFF`, and, for the metric, item II (locality) of `LQGMetricFieldAxioms` in the form
 of a hypothesis `hII` on the open set `V`.
 -/
@@ -46,7 +45,7 @@ theorem comap_localModConst_eq_zero (α₀ : ℝ) (hC : Ω → (ℂ → ℝ) →
 
 /-- A test-function pairing supported in an open `E` containing the unit circle has an almost-sure version
 measurable for the zero-mean exterior sigma-algebra of `E`. Proof: the exponent-`0` composition
-`ae_pairing_exists_meanZero_measurable` (n4) applied to the unit-mass mollifiers of the frozen circle-average
+`ae_pairing_exists_meanZero_measurable` applied to the unit-mass mollifiers of the frozen circle-average
 limit on `E`, then the deterministic shift `- α₀ ∫ φ log‖·‖` of `fieldPairing`. -/
 theorem exists_exterior_fieldPairing_version
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
@@ -107,8 +106,8 @@ theorem exists_exterior_iInf_internalMetric_version
   exact ⟨Y', hY'm, by filter_upwards [hYa, hY'a] with ω h1 h2; rw [h1, h2]⟩
 
 /-- Exterior version of an exit distance `ENNReal.ofReal (setDist D A (frontier U))`, for an open `U` and an open
-`V ⊆ E` with `closure U ⊆ V`, under item II of the metric on `V`. Proof: `exists_outside_ofReal_setDist_of_internalMetric`
-(first-exit truncation, ChatGPT section 5.1) gives a `fieldSigmaAlgebra V`-measurable version, and
+`V ⊆ E` with `closure U ⊆ V`, under item II of the metric on `V`. Proof: `exists_outside_ofReal_setDist_of_internalMetric` (first-exit truncation)
+ gives a `fieldSigmaAlgebra V`-measurable version, and
 `exists_exterior_version_of_fieldSigmaAlgebra` moves it to the zero-mean exterior sigma-algebra. -/
 theorem exists_exterior_ofReal_setDist_version
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)

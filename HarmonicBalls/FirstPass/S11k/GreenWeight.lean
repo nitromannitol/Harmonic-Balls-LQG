@@ -2,11 +2,10 @@ import HarmonicBalls.Defs.Annuli
 import HarmonicBalls.Proofs.Sec4.GreenAwayFromPole
 
 /-!
-# Weighted annular Green potential (fp-S11k, owner z3)
+# Weighted annular Green potential
 
 Lemma 11.16 needs the annular Green supremum `annulusGreenPotentialSup` of the LQG measure at insertion `α`, which is a
-continuous Weyl change of the measure at insertion `0` (ChatGPT note `notes/fp-gaps/CHATGPT-n4-B2-z3-N1N2.md`, section 6.1,
-identity (31): `μ_α|A = |z|^{-γα} μ_0|A`). This file proves the measure-theoretic half, with no LQG input: a density bounded
+continuous Weyl change of the measure at insertion `0` (`μ_α|A = |z|^{-γα} μ_0|A`). This file proves the measure-theoretic half, with no LQG input: a density bounded
 by `C` on the annulus `annulus x₀ a b` gives a Green potential at most `C` times the unweighted one. The density
 `|z|^{-c}` of `annulus 0 3 6` is bounded by `exp(|c| log 6)`.
 -/

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11h.Faithful
 
 /-!
-# Geometric preconditions of N2 from the buffered pinch geometry (fp-S11p, owner n4)
+# Geometric preconditions of N2 from the buffered pinch geometry
 
 The two geometric hypotheses of the exterior annular Green potential lemma (`hsph` and `hWA` of
 `exists_exterior_annulusGreenPotentialSup_of_frozen_holder`, `FirstPass/S11p/ExteriorMass.lean`) are consequences of the

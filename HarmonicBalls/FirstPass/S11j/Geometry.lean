@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11h.Faithful
 import HarmonicBalls.Proofs.Sec11.CorrectedPinchUniformFirstShift
 
 /-!
-# First pass, Section 11: the faithful buffered geometry in the corpus shift core (fp-S11j, owner n4)
+# Section 11: the faithful buffered geometry in the corpus shift core
 
 `IsBufferedPinchGeometry` (`FirstPass/S11h/Faithful.lean:43`; corrected paper lines 3157-3201, `[C42]`) implies the
 corpus structure `IsPinchPointProofConfiguration` (`Draft/Section11.lean`) once `U` is nonempty. The deterministic
@@ -10,7 +10,7 @@ shift core `IsPinchPointProofConfiguration.exists_uniform_first_event_shift` the
 
 The hypothesis `U.Nonempty` is NOT part of `IsBufferedPinchGeometry`. The paper's `U` is an open disk. Without it the
 conversion fails, and `PinchSecondEventFaithfulStmt` is false for `U = ∅`: `pinchSecondEvent` then requires
-`ofReal M * _ < μ ∅ = 0`. See `reports/n4.md`, finding F1.
+`ofReal M * _ < μ ∅ = 0`.
 -/
 
 namespace HarmonicBalls
