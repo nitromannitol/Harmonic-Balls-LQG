@@ -1132,6 +1132,72 @@ theorem discDecoder_eq_comap {Y : Type*} [MeasurableSpace Y] (γ α P : ℝ) {c 
   rw [integral_decoderX hKs T _ _ y g, decoderFunctionalX_of_mem hKs T _ _ hconv g]
   exact (tendsto_approxX_integral γ α P hR hc hcont μ hμ (decodeF y) hF g).limUnder_eq
 
+/-- Route step 7 (the kernel): `κ(y) = (1 + m_y(D))⁻¹ • map val m_y` for the decoded disc measure `m_y`; it is a
+finite measure (`≤ 1` in mass), so the kernel is s-finite. -/
+noncomputable def kernelMeas {Y : Type*} [MeasurableSpace Y] {c : ℂ} {R γ : ℝ} {K : ℕ → Set (ball c R)}
+    (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (decodeF : Y → C(LocalParam c R, ℝ)) (y : Y) : Measure ℂ :=
+  (1 + discDecoder (γ := γ) hKs T decodeF y univ)⁻¹ •
+    Measure.map (Subtype.val : ball c R → ℂ) (discDecoder (γ := γ) hKs T decodeF y)
+
+theorem measurable_kernelMeas {Y : Type*} [MeasurableSpace Y] (γ : ℝ) {c : ℂ} {R : ℝ}
+    {K : ℕ → Set (ball c R)} (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (decodeF : Y → C(LocalParam c R, ℝ)) (hdec : Measurable decodeF) :
+    Measurable (kernelMeas (γ := γ) hKs T decodeF) := by
+  have hm : Measurable (discDecoder (γ := γ) hKs T decodeF) := by
+    unfold discDecoder
+    refine measurable_decoderX hKs T _ _ (fun g k => ?_)
+    have hfun : (fun y => ∫ x, g x ∂(approxX γ c R (decodeF y) k)) =
+        fun y => ∫ x, g x * approxDens γ c R (decodeF y) k x.1 ∂(ballVol c R) := by
+      funext y
+      exact integral_approxX γ c R (decodeF y) k g
+    rw [hfun]
+    exact (measurable_integral_approxX γ c R k g).comp hdec
+  refine Measure.measurable_of_measurable_coe _ fun S hS => ?_
+  have hfun : (fun y => kernelMeas (γ := γ) hKs T decodeF y S) = fun y =>
+      (1 + discDecoder (γ := γ) hKs T decodeF y univ)⁻¹ *
+        discDecoder (γ := γ) hKs T decodeF y (Subtype.val ⁻¹' S) := by
+    funext y
+    rw [kernelMeas, Measure.smul_apply, Measure.map_apply measurable_subtype_coe hS, smul_eq_mul]
+  rw [hfun]
+  exact ((measurable_const.add ((Measure.measurable_coe MeasurableSet.univ).comp hm)).inv).mul
+    ((Measure.measurable_coe (measurable_subtype_coe hS)).comp hm)
+
+/-- Route step 7 (clause A of the kernel, for one observation): on the disc, the kernel of the decoded observation is
+a positive multiple of the restricted γ-LQG measure. -/
+theorem kernelMeas_restrict_eq (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (hc : ℝ → ℂ → ℝ)
+    (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hc ε)) (μ : Measure ℂ)
+    (hμ : IsLQGLimit γ (fieldCircleAverage α hc) μ)
+    {K : ℕ → Set (ball c R)} (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    {Y : Type*} [MeasurableSpace Y] (decodeF : Y → C(LocalParam c R, ℝ)) (y : Y)
+    (hF : ∀ p : LocalParam c R, decodeF y p = fieldCircleAverage α hc p.1.1 p.1.2 - P) :
+    ∃ a : ℝ, 0 < a ∧ (kernelMeas (γ := γ) hKs T decodeF y).restrict (ball c R) =
+      ENNReal.ofReal a • μ.restrict (ball c R) := by
+  have : IsLocallyFiniteMeasure μ := hμ.isLocallyFiniteMeasure
+  obtain ⟨ν, hν⟩ : ∃ ν : Measure ℂ, ν = ENNReal.ofReal (Real.exp (-(γ * P))) • μ := ⟨_, rfl⟩
+  have hs : 0 < Real.exp (-(γ * P)) := Real.exp_pos _
+  have hres : ν.restrict (ball c R) = ENNReal.ofReal (Real.exp (-(γ * P))) • μ.restrict (ball c R) := by
+    rw [hν, Measure.restrict_smul]
+  have hMfin : ν (ball c R) ≠ ⊤ := by
+    rw [hν, Measure.smul_apply, smul_eq_mul]
+    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top (measure_ball_lt_top).ne
+  have h1M : (1 + ν (ball c R)) ≠ 0 := fun h => one_ne_zero (add_eq_zero.1 h).1
+  have hK0 : (1 + ν (ball c R))⁻¹ * ENNReal.ofReal (Real.exp (-(γ * P))) ≠ 0 :=
+    mul_ne_zero (ENNReal.inv_ne_zero.2 (ENNReal.add_ne_top.2 ⟨ENNReal.one_ne_top, hMfin⟩))
+      (ENNReal.ofReal_pos.2 hs).ne'
+  have hKtop : (1 + ν (ball c R))⁻¹ * ENNReal.ofReal (Real.exp (-(γ * P))) ≠ ⊤ :=
+    ENNReal.mul_ne_top (ENNReal.inv_ne_top.2 h1M) ENNReal.ofReal_ne_top
+  refine ⟨((1 + ν (ball c R))⁻¹ * ENNReal.ofReal (Real.exp (-(γ * P)))).toReal,
+    ENNReal.toReal_pos hK0 hKtop, ?_⟩
+  have hdisc := discDecoder_eq_comap γ α P hR hc hcont μ hμ hKs T decodeF y hF
+  unfold kernelMeas
+  rw [hdisc, ← hν]
+  have hM : Measure.comap (Subtype.val : ball c R → ℂ) ν univ = ν (ball c R) := by
+    rw [(MeasurableEmbedding.subtype_coe measurableSet_ball).comap_apply, image_univ, Subtype.range_coe]
+  rw [hM, map_comap_subtype_coe measurableSet_ball ν, Measure.restrict_smul,
+    Measure.restrict_restrict measurableSet_ball, Set.inter_self, hres, smul_smul,
+    ENNReal.ofReal_toReal hKtop]
+
 end Approximants
 
 end LocalDecoderCommon
