@@ -58,6 +58,4 @@ theorem IsWholePlaneGFF.exists_rooted_observed_frequency_of_unweighted_joint_dom
   exact (gGFF.rooted_centeredCircle_law_ac_of_subset hμ hm B U hB hU hBU w hw
     hfinB hfinU (Y ε) (hY ε) n z).trans (hdom ε hε n z hz)
 
-#print axioms IsWholePlaneGFF.exists_rooted_observed_frequency_of_unweighted_joint_domination
-
 end HarmonicBalls

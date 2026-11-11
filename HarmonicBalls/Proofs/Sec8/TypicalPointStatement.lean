@@ -79,6 +79,4 @@ theorem typicalPointManyGoodScalesStmt_of_ambientLaw
     (hCC Ω P γ γ hC hcirc) (hGFF.aemeasurable_lqgMeasure hμ) S hPS hμS hlocS
     w hw hpos hfin ρ hρ shift hshift R hroot hac hdom hraw
 
-#print axioms typicalPointManyGoodScalesStmt_of_ambientLaw
-
 end HarmonicBalls

@@ -73,6 +73,4 @@ theorem typicalPointManyGoodScalesStmt_of_literature
     (Section6.goodAnnuliSubRangeStep_of_volumeGrowth hgrowth hAff hCC0)
     hEx hW hAff hCC hcomparison
 
-#print axioms typicalPointManyGoodScalesStmt_of_literature
-
 end HarmonicBalls

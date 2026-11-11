@@ -78,8 +78,4 @@ theorem ae_ae_of_unweighted_ball_shiftedRootReferenceLaw
   exact (unnormalizedWeightedLocalization_compProd_ac_ball P μ hμ hloc w hw n).trans
     (hrooted n)
 
-#print axioms ae_ae_of_unweighted_ball_shiftedRootReferenceLaw
-#print axioms unnormalizedWeightedRestrictionKernel_compProd_ac_of_subset
-#print axioms unnormalizedWeightedLocalization_compProd_ac_ball
-
 end HarmonicBalls

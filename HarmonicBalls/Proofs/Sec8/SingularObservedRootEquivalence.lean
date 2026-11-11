@@ -121,10 +121,4 @@ theorem IsWholePlaneGFF.ae_observed_rooted_laws_equivalent
       _ measurableSet_ball hfinν hfinμ
       (hh.ae_regular_absolutelyContinuous_of_volumeGrowth hgrowth hγ hγ2 hμ hν)
 
-#print axioms regular_absolutelyContinuous_of_singular_weight
-#print axioms IsWholePlaneGFF.ae_regular_absolutelyContinuous_of_volumeGrowth
-#print axioms IsWholePlaneGFF.ae_singular_mass_ne_zero_of_regular
-#print axioms observed_restricted_bind_absolutelyContinuous
-#print axioms IsWholePlaneGFF.ae_observed_rooted_laws_equivalent
-
 end HarmonicBalls

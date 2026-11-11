@@ -100,11 +100,4 @@ theorem IsWholePlaneGFF.ae_ae_singular_of_regular_of_volumeGrowth
     hgrowth hγ hγ2 hα hμ hν, hp] with ω hdom hpω
   exact hdom.ae_le hpω
 
-#print axioms restrict_absolutelyContinuous_of_singular_weight
-#print axioms absolutelyContinuous_of_singular_weight_of_origin_null
-#print axioms IsWholePlaneGFF.ae_singular_restrict_absolutelyContinuous
-#print axioms IsWholePlaneGFF.ae_ae_singular_of_regular_away_zero
-#print axioms IsWholePlaneGFF.ae_singular_absolutelyContinuous_of_volumeGrowth
-#print axioms IsWholePlaneGFF.ae_ae_singular_of_regular_of_volumeGrowth
-
 end HarmonicBalls

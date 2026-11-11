@@ -63,9 +63,4 @@ theorem shiftedRootReferenceLaw_eq_field_first
   · exact hshift.prodMk measurable_fst
   · exact measurable_swap
 
-#print axioms measurable_wholePlane_root_insertion
-#print axioms measurable_wholePlane_inserted_pairings
-#print axioms IsWholePlaneGFF.measurable_wholePlane_inserted_pairings
-#print axioms shiftedRootReferenceLaw_eq_field_first
-
 end HarmonicBalls

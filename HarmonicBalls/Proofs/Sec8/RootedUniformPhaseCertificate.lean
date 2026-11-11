@@ -102,6 +102,4 @@ theorem IsWholePlaneGFF.exists_rooted_uniform_phaseFrequency_certificate
   rw [← funext (hverω n z)]
   exact hn.2
 
-#print axioms IsWholePlaneGFF.exists_rooted_uniform_phaseFrequency_certificate
-
 end HarmonicBalls

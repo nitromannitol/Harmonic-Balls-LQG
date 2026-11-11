@@ -376,12 +376,4 @@ theorem IsWholePlaneGFF.exists_global_field_frequency_certificate_of_regular_roo
   filter_upwards [hω, hc] with z hz hcz
   exact hcz.mp hz
 
-#print axioms IsWholePlaneGFF.exists_global_field_frequency_certificate_of_regular_root_reference
-#print axioms IsWholePlaneGFF.exists_global_field_frequency_certificate_of_root_reference
-#print axioms IsWholePlaneGFF.exists_raw_rooted_field_normalizedLQGApprox
-#print axioms IsWholePlaneGFF.exists_ball_rooted_field_mass_approximations
-#print axioms IsWholePlaneGFF.exists_ball_observed_field_frequency_certificate
-#print axioms IsWholePlaneGFF.exists_ball_field_frequency_certificate
-#print axioms IsWholePlaneGFF.exists_global_field_frequency_certificate
-
 end HarmonicBalls

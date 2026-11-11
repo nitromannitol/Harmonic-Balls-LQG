@@ -55,6 +55,4 @@ theorem IsWholePlaneGFF.exists_rooted_observed_frequency_of_unnormalized_joint_d
   exact (gGFF.rooted_centeredCircle_laws_mutually_absolutelyContinuous
     hμ hm B hB w hw hfin (Y ε) (hY ε) n z).1.trans (hdom ε hε n z hz)
 
-#print axioms IsWholePlaneGFF.exists_rooted_observed_frequency_of_unnormalized_joint_domination
-
 end HarmonicBalls

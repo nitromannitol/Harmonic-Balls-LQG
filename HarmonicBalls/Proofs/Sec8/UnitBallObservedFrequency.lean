@@ -71,6 +71,4 @@ theorem IsWholePlaneGFF.exists_unitBall_observed_frequency_certificate
   filter_upwards with z
   exact one_ne_zero
 
-#print axioms IsWholePlaneGFF.exists_unitBall_observed_frequency_certificate
-
 end HarmonicBalls

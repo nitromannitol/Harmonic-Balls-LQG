@@ -79,6 +79,4 @@ theorem ae_ae_veryGoodComparableScaleFrequency_of_common_approximations
     (S n) (hcount n) (hgen n) (hpi n) (hsets n) (huniv n) (f n) (hf n)
     (href n) (hroot n) β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit (hfreq n)
 
-#print axioms ae_ae_veryGoodComparableScaleFrequency_of_common_approximations
-
 end HarmonicBalls

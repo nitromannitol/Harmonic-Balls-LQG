@@ -131,9 +131,4 @@ theorem exists_universal_singular_phaseVeryGoodComparable_probability
     _ ≤ δ + δ + δ + δ := add_le_add hgood
       (hcomp Ω P hC hcirc μ hgff hμ hAff hCCα 0)
 
-#print axioms exists_universal_singular_phaseVeryGoodComparable_probability
-#print axioms measurable_measure_map_sub
-#print axioms measurableSet_phaseCriterion_fixed
-#print axioms exists_universal_phaseCriterion_probability
-
 end HarmonicBalls

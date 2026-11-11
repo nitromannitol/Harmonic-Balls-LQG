@@ -202,11 +202,4 @@ theorem IsWholePlaneGFF.rooted_origin_logarithmic_shift_equivalence
   rw [hxeq, norm_neg] at hxnorm
   exact (not_lt_of_ge hz) hxnorm
 
-#print axioms IsWholePlaneGFF.local_smooth_shift_pairing_equivalence
-#print axioms IsWholePlaneGFF.local_logarithmic_shift_pairing_equivalence
-#print axioms IsWholePlaneGFF.rooted_local_smooth_shift_equivalence
-#print axioms IsWholePlaneGFF.rooted_local_smooth_insertion_equivalence
-#print axioms IsWholePlaneGFF.rooted_local_logarithmic_shift_equivalence
-#print axioms IsWholePlaneGFF.rooted_origin_logarithmic_shift_equivalence
-
 end HarmonicBalls

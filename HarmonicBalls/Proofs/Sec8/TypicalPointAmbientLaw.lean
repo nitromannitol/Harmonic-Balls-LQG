@@ -68,6 +68,4 @@ theorem exists_uniform_typicalPoint_frequency_of_centered_measureLaw
   filter_upwards [h] with ω hω
   exact ae_restrict_of_ae hω
 
-#print axioms exists_uniform_typicalPoint_frequency_of_centered_measureLaw
-
 end HarmonicBalls

@@ -85,9 +85,4 @@ theorem shiftedRootReferenceLaw_local_shift_of_measurable_functions
     exact hfirst.add ((measurable_integral_test_mul_root_function k hk φ.1.1).comp measurable_fst)
   · exact measurable_local_pairing_add_root_integral X hX k hk
 
-#print axioms measurable_integral_test_mul_root_function
-#print axioms measurable_local_pairing_add_root_integral
-#print axioms measurable_local_pairing_add_log_insertions
-#print axioms shiftedRootReferenceLaw_local_shift_of_measurable_functions
-
 end HarmonicBalls

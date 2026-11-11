@@ -90,7 +90,4 @@ theorem IsWholePlaneGFF.exists_ae_ae_rooted_singular_veryGoodComparableScaleFreq
     P hμ hloc S hPdom hμS hlocS w hw hpos hfin ρ hρ shift hshift R hrooted hac hdom
     F hF hlaw hcenter hζ
 
-#print axioms IsWholePlaneGFF.ae_singular_weight_of_existing_regular_measure
-#print axioms IsWholePlaneGFF.exists_ae_ae_rooted_singular_veryGoodComparableScaleFrequency_of_existing_regular_measure
-
 end HarmonicBalls

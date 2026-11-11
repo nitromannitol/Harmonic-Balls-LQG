@@ -79,8 +79,4 @@ theorem ae_ae_of_observed_events_on_weighted_cover
     filter_upwards [hac.ae_le hsource, hac.ae_le hequiv] with x hx hx'
     exact hx'.mp hx
 
-#print axioms ae_ae_of_observed_events_on_weighted_cover
-
-#print axioms exists_observed_frequency_event_unnormalizedWeightedRestriction_compProd
-
 end HarmonicBalls

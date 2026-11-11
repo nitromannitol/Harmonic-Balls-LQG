@@ -147,8 +147,4 @@ theorem IsWholePlaneGFF.rooted_canonical_distribution_normalization_equivalence
     (measurable_meanZeroDistributionVersion.comp (Section6.measurable_pairingProc hh))
     hh.canonical_distribution_version_pairing ρ hr hrR a b hside
 
-#print axioms IsWholePlaneGFF.canonical_distribution_version_pairing
-#print axioms IsWholePlaneGFF.rooted_canonical_distribution_normalization_equivalence
-#print axioms IsWholePlaneGFF.rooted_translated_distribution_normalization_equivalence
-
 end HarmonicBalls

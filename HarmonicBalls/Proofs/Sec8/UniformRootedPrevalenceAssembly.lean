@@ -92,6 +92,4 @@ theorem exists_uniform_rooted_frequency_of_subrange
   intro q
   simpa only [hδsum, D] using hfail N hN Ξ P₁ hC hcirc μ₁ hGFF hμ₁ hEx hW hAff hCC hCCα q
 
-#print axioms exists_uniform_rooted_frequency_of_subrange
-
 end HarmonicBalls

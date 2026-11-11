@@ -52,6 +52,4 @@ theorem ae_ae_veryGoodComparableScaleFrequency_of_dominated_rooted_law
   filter_upwards [hz] with z hz
   exact (hω z).1 hz
 
-#print axioms ae_ae_veryGoodComparableScaleFrequency_of_dominated_rooted_law
-
 end HarmonicBalls

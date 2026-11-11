@@ -59,6 +59,4 @@ theorem exists_uniform_singular_phase_probability_of_subrange
     obtain ⟨ν, hν⟩ := hEx hgff hγ hγ₂ hQ
     exact hex ⟨Ω, mΩ, P, hC, hcirc, ν, hgff, hν, hAff, hCC⟩
 
-#print axioms exists_uniform_singular_phase_probability_of_subrange
-
 end HarmonicBalls

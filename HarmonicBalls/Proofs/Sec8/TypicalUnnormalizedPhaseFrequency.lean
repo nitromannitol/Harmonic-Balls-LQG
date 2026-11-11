@@ -69,6 +69,4 @@ theorem ae_ae_veryGoodComparableScaleFrequency_of_unnormalized_observation
     S hcount hgen hpi hsets huniv f hf href hroot
     β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit hfreq
 
-#print axioms ae_ae_veryGoodComparableScaleFrequency_of_unnormalized_observation
-
 end HarmonicBalls

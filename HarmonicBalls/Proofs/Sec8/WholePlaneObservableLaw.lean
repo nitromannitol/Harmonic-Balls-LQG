@@ -89,7 +89,4 @@ theorem IsWholePlaneGFF.exists_common_centeredCircle_decoder
   simpa only [A, mem_ofPred_eq, L, wholePlaneObservableProc, t, t₀,
     GFFObservable.eval, fieldCircleAverage] using hω
 
-#print axioms IsWholePlaneGFF.map_wholePlaneObservableProc_eq
-#print axioms IsWholePlaneGFF.exists_common_centeredCircle_decoder
-
 end HarmonicBalls

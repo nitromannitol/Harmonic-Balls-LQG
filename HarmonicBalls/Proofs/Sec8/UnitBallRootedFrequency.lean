@@ -97,8 +97,4 @@ theorem IsWholePlaneGFF.ae_ae_singular_unitBall_blockFrequency_of_regular_of_vol
   filter_upwards [hω, hz] with z hωz hz hzball
   exact hωz hzball hz
 
-#print axioms IsWholePlaneGFF.ae_ae_regular_unitBall_blockFrequency_of_root_reference
-#print axioms IsWholePlaneGFF.ae_ae_singular_unitBall_blockFrequency_of_regular
-#print axioms IsWholePlaneGFF.ae_ae_singular_unitBall_blockFrequency_of_regular_of_volumeGrowth
-
 end HarmonicBalls

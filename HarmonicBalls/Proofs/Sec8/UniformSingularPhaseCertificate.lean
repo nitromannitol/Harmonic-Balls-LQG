@@ -89,6 +89,4 @@ theorem IsWholePlaneGFF.exists_uniform_singular_inserted_phaseFrequency_certific
   filter_upwards [Measure.quasiMeasurePreserving_snd.ae hEeq, hfreq] with p hp hf
   exact (hp p.1).2 hf
 
-#print axioms IsWholePlaneGFF.exists_uniform_singular_inserted_phaseFrequency_certificate
-
 end HarmonicBalls

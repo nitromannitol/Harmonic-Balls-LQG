@@ -88,6 +88,4 @@ theorem exists_universal_rooted_singular_veryGoodComparableScaleFrequency
   intro q
   simpa only [hδsum] using hfail N hN Ξ P₁ hC hcirc μ₁ hGFF hμ₁ hEx hW hAff hCC hCCα q
 
-#print axioms exists_universal_rooted_singular_veryGoodComparableScaleFrequency
-
 end HarmonicBalls
