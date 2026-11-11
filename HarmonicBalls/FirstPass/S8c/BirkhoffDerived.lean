@@ -1,5 +1,5 @@
 import HarmonicBalls.FirstPass.Frozen.S8c
-import HarmonicBalls.LPStage.BirkhoffErgodic
+import LatticeProb.Prob.BirkhoffErgodic
 
 /-!
 # Birkhoff's pointwise ergodic theorem, derived from Lattice-Probability

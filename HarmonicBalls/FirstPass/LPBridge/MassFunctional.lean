@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.MassFunctional
+import LatticeProb.LQG.MassFunctional
 
 /-!
 # Measurability of the LQG mass of a closed set: frozen Prop from the LP stage

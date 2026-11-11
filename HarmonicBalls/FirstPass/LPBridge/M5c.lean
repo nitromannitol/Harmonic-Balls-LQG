@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.FirstPass.Frozen.S11g
-import HarmonicBalls.LPStage.LengthMetricDerived
+import LatticeProb.LQG.LengthMetricDerived
 
 /-!
 # Bridge: the staged LP derived length-metric statements give the frozen HB statements (module M5c)

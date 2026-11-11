@@ -6,7 +6,7 @@ import HarmonicBalls.Defs.Notation
 import HarmonicBalls.Proofs.GFF.MeasurableContinuousCircleVersion
 import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
 import HarmonicBalls.Proofs.Sec11.ModConstPairingLaw
-import HarmonicBalls.LPStage.GFF
+import LatticeProb.Gauss.GFF
 
 /-!
 # Bridge to the staged whole-plane GFF definitions (module M1)

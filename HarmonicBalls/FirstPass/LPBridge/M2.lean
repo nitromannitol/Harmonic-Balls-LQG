@@ -4,8 +4,8 @@ import HarmonicBalls.FirstPass.S8c.LocalObservation
 import HarmonicBalls.Proofs.Sec8.PhaseTorus
 import HarmonicBalls.Proofs.Sec8.MeasurableStartingAtoms
 import HarmonicBalls.Proofs.Sec11.PinchRootedKernel
-import HarmonicBalls.LPStage.PhaseTorus
-import HarmonicBalls.LPStage.LocalObservation
+import LatticeProb.Prob.PhaseTorus
+import LatticeProb.Prob.LocalObservation
 
 /-!
 # Bridge to the staged phase-torus and local-observation definitions

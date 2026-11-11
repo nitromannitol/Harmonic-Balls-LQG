@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S8d
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGMeasureDerived
+import LatticeProb.LQG.LQGMeasureDerived
 
 /-!
 # LP-stage bridge for the profile-decoder measurability

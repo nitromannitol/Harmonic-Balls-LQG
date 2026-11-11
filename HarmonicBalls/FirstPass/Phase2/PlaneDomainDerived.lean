@@ -1,5 +1,5 @@
 import HarmonicBalls.FirstPass.Frozen.S11d
-import HarmonicBalls.LPStage.PlaneDomainConvexCompact
+import LatticeProb.Topology.PlaneDomainConvexCompact
 
 /-! # The plane-domain input of result 11.9 is derived (Phase 2, item B, module M0)
 

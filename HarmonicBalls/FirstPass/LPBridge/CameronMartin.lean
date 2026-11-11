@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S11aj
 import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.LPBridge.M1
-import HarmonicBalls.LPStage.CameronMartinDerived2
+import LatticeProb.Gauss.CameronMartinDerived2
 
 /-!
 # Cameron-Martin frozen inputs from the LP stage

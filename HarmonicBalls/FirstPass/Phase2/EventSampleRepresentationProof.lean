@@ -16,7 +16,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import HarmonicBalls.Proofs.Sec6.ContinuousWeylCircleAverage
-import HarmonicBalls.LPStage.WeylSupMeasurable
+import LatticeProb.Prob.WeylSupMeasurable
 
 /-!
 # Row 17: the event sample representation, derived from the three frozen metric inputs

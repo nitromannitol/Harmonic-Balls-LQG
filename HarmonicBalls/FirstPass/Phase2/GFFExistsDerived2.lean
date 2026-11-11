@@ -1,5 +1,5 @@
 import HarmonicBalls.FirstPass.Phase2.GFFExistsConstructed
-import HarmonicBalls.LPStage.GFFCovPSD7
+import LatticeProb.Gauss.GFFCovPSD7
 
 /-!
 # Whole-plane GFF existence with the covariance positivity input proved

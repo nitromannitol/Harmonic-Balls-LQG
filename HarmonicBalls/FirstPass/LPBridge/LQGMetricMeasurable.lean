@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Frozen.S11k
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M5a
 import HarmonicBalls.FirstPass.LPBridge.M5b
-import HarmonicBalls.LPStage.LQGMetricMeasurable2
+import LatticeProb.LQG.LQGMetricMeasurable2
 
 /-!
 # LP-stage bridge for the inner measurability of the LQG metric

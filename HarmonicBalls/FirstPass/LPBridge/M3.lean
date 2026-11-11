@@ -3,8 +3,8 @@ import HarmonicBalls.Defs.Green
 import HarmonicBalls.Draft.Section2
 import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.Frozen.S1S10
-import HarmonicBalls.LPStage.PlaneTopology
-import HarmonicBalls.LPStage.PlanarGreen
+import LatticeProb.Topology.PlaneTopology
+import LatticeProb.Analysis.PlanarGreen
 
 /-!
 # Bridge to the staged plane-topology and planar-Green definitions

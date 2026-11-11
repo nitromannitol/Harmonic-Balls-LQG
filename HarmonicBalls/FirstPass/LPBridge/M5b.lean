@@ -2,10 +2,10 @@ import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Defs.Notation
 import HarmonicBalls.Proposed.LQG
-import HarmonicBalls.LPStage.GFF
-import HarmonicBalls.LPStage.LQGMeasure
-import HarmonicBalls.LPStage.LengthMetric
-import HarmonicBalls.LPStage.LQGMetric
+import LatticeProb.Gauss.GFF
+import LatticeProb.LQG.LQGMeasure
+import LatticeProb.LQG.LengthMetric
+import LatticeProb.LQG.LQGMetric
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M5a
 

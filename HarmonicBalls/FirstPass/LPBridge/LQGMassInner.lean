@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S11k
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGMassInner
+import LatticeProb.LQG.LQGMassInner
 
 /-!
 # LP-stage bridge for the inner measurability of the LQG mass

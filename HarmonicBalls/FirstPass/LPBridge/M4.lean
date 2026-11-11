@@ -1,8 +1,8 @@
 import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Defs.Notation
-import HarmonicBalls.LPStage.GFF
-import HarmonicBalls.LPStage.LQGMeasure
+import LatticeProb.Gauss.GFF
+import LatticeProb.LQG.LQGMeasure
 
 /-!
 # Bridge to the staged γ-LQG area measure definitions (module M4)

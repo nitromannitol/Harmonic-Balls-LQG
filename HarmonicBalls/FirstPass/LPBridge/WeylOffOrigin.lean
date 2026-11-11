@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.WeylOffOrigin
+import LatticeProb.LQG.WeylOffOrigin
 
 /-!
 # Bridge: the LP Weyl relation off the origin to the frozen HB statement

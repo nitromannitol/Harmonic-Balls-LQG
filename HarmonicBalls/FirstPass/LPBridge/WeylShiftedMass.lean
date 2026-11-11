@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
 import HarmonicBalls.FirstPass.LPBridge.M5b
-import HarmonicBalls.LPStage.WeylShiftedMass
+import LatticeProb.LQG.WeylShiftedMass
 
 /-!
 # LP-stage bridge for the Weyl-shifted LQG mass

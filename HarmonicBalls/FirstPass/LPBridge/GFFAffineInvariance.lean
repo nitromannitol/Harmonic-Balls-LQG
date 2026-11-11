@@ -1,6 +1,6 @@
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.LPBridge.M1
-import HarmonicBalls.LPStage.GFFAffineInvariance
+import LatticeProb.Gauss.GFFAffineInvariance
 
 /-!
 # Bridge: the LP affine invariance of the whole-plane GFF to the HB statement `WholePlaneGFFAffineInvariance`

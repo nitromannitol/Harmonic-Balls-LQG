@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M5a
 import HarmonicBalls.FirstPass.LPBridge.M5b
-import HarmonicBalls.LPStage.LQGMetricUniv
+import LatticeProb.LQG.LQGMetricUniv
 
 /-!
 # LP-stage bridge for the universe transport of the LQG metric axioms

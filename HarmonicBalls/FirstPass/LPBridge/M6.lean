@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.LQGGraphDistance
 import HarmonicBalls.Proposed.LQGDimension
-import HarmonicBalls.LPStage.LiouvilleGraph
+import LatticeProb.LQG.LiouvilleGraph
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
 

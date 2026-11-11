@@ -1,7 +1,7 @@
 import HarmonicBalls.Draft.Section2
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGMeasureFullSupport3
+import LatticeProb.LQG.LQGMeasureFullSupport3
 
 /-!
 # LP-stage bridge for the full support of the LQG measure

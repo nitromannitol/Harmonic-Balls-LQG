@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGMeasureSquarePositive
+import LatticeProb.LQG.LQGMeasureSquarePositive
 
 /-!
 # LP-stage bridge for the square positivity of the LQG measure

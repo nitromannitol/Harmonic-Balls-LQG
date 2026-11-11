@@ -1,5 +1,5 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
-import HarmonicBalls.LPStage.WeylMassMeasurable
+import LatticeProb.Prob.WeylMassMeasurable
 
 /-!
 # The Weyl-shifted LQG mass is AE-measurable (derived, no hypothesis)

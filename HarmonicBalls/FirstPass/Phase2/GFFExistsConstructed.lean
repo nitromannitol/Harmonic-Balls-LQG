@@ -1,8 +1,8 @@
 import HarmonicBalls.FirstPass.S11u.Kernel
-import HarmonicBalls.LPStage.GFFExistence
+import LatticeProb.Gauss.GFFExistence
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.Phase2.GFFExistsDerived
-import HarmonicBalls.LPStage.GFFCovSymm
+import LatticeProb.Gauss.GFFCovSymm
 
 /-!
 # Constructed whole-plane GFF: covariance of circle averages and the increment variance bound (HB level)

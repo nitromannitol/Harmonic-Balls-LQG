@@ -1,8 +1,8 @@
 import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Draft.Section11
 import HarmonicBalls.FirstPass.Frozen.S11c
-import HarmonicBalls.LPStage.LengthMetric
-import HarmonicBalls.LPStage.WeylInternalClosed
+import LatticeProb.LQG.LengthMetric
+import LatticeProb.LQG.WeylInternalClosed
 
 /-!
 # Bridge to the staged length-metric definitions (module M5, deterministic half)

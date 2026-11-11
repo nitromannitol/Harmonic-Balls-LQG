@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.S11r.Frozen
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LocalMeasureKernel5
+import LatticeProb.LQG.LocalMeasureKernel5
 
 /-!
 # LP-stage bridge for the local measure kernel

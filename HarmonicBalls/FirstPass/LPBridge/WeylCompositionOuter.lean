@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.FirstPass.LPBridge.M5c
-import HarmonicBalls.LPStage.WeylCompositionOuter2
+import LatticeProb.LQG.WeylCompositionOuter2
 
 /-!
 # Bridge: the LP derived Weyl composition gives the frozen HB statement

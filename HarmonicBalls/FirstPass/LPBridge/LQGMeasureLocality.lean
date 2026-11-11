@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGMeasureLocality2
+import LatticeProb.LQG.LQGMeasureLocality2
 import HarmonicBalls.Proposed.LQG
 
 /-!

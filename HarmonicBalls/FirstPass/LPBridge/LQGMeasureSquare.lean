@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGMeasureSquare
+import LatticeProb.LQG.LQGMeasureSquare
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
 

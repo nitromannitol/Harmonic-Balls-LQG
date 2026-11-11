@@ -1,7 +1,7 @@
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGWeylScaling
+import LatticeProb.LQG.LQGWeylScaling
 
 /-!
 # Bridge: the LP Weyl scaling statement to the HB statement `LQGMeasureWeylScaling`

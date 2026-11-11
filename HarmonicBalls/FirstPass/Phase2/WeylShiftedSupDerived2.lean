@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.Phase2.WeylShiftedSupDerived
 import HarmonicBalls.FirstPass.Phase2.WeylScaledEuclideanDerived
 import HarmonicBalls.FirstPass.Phase2.InternalMetricClosedDerived
 import HarmonicBalls.Steps.Sec11.InternalMetricContinuity
-import HarmonicBalls.LPStage.WeylSupMeasurable
+import LatticeProb.Prob.WeylSupMeasurable
 
 /-!
 # The supremum of the Weyl-shifted internal metric over a closed dyadic square is a.e. measurable

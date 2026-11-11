@@ -2,7 +2,7 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.S11n.MeasureDecoder
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
-import HarmonicBalls.LPStage.LQGMeasureNonatomicAll
+import LatticeProb.LQG.LQGMeasureNonatomicAll
 
 /-!
 # Bridge: the LP non-atomicity statements to the HB statements
