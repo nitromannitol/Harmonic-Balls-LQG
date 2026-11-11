@@ -8,7 +8,7 @@ import HarmonicBalls.Proposed.LQG
 
 `HarmonicBalls.lqgMeasureLocality_of_lpStage` is the HB Proposed input `LQGMeasureLocality` (`Proposed/LQG.lean:97`,
 Fact 2.1 II), obtained from the unconditional LP statement `LatticeProb.LQG.lqgLocality_of_gff`
-(`LPStage/LQGMeasureLocality2.lean`) through the bridge equivalences of `FirstPass/LPBridge/M1.lean` and `M4.lean`.
+(`LatticeProb/LQG/LQGMeasureLocality2.lean`) through the bridge equivalences of `FirstPass/LPBridge/M1.lean` and `M4.lean`.
 
 The LP statement carries no circle-average link hypothesis: the link is proved in LP stage by
 `LatticeProb.LQG.lqgCircleAverageLink_of_gff` from the whole-plane GFF premise. So this bridge is binder-free and uses no

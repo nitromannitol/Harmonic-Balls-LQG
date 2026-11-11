@@ -5,9 +5,9 @@ import LatticeProb.Gauss.GFFCovPSD7
 # Whole-plane GFF existence with the covariance positivity input proved
 
 `wholePlaneGFFExistsFrozen_derived` takes the two named inputs `WholePlaneCovPSDStmt` (B2) and
-`WholePlaneCovSymmStmt`. Both are now proved in `LPStage`: `LatticeProb.Gauss.wholePlaneCovPSD_proved`
-(`LPStage/GFFCovPSD1.lean` to `GFFCovPSD7.lean`) and `LatticeProb.Gauss.wholePlaneCovSymm_proved`
-(`LPStage/GFFCovSymm.lean`, theorem after `end GFFCovSymm`). No named input remains in this file.
+`WholePlaneCovSymmStmt`. Both are now proved in the library: `LatticeProb.Gauss.wholePlaneCovPSD_proved`
+(`LatticeProb/Gauss/GFFCovPSD1.lean` to `GFFCovPSD7.lean`) and `LatticeProb.Gauss.wholePlaneCovSymm_proved`
+(`LatticeProb/Gauss/GFFCovSymm.lean`, theorem after `end GFFCovSymm`). No named input remains in this file.
 -/
 
 namespace HarmonicBalls

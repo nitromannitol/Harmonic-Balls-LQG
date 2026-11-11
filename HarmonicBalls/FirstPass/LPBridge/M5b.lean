@@ -12,7 +12,7 @@ import HarmonicBalls.FirstPass.LPBridge.M5a
 /-!
 # Bridge to the staged random half of the γ-LQG metric (module M5b)
 
-For each of the four staged definitions of `HarmonicBalls/LPStage/LQGMetric.lean` there is a bridge between the HB
+For each of the four staged definitions of `LatticeProb/LQG/LQGMetric.lean` there is a bridge between the HB
 definition (`HarmonicBalls.*`, Defs/LQGMetric.lean, and `HarmonicBalls.LQGMetricFieldAxioms`, Proposed/LQG.lean) and its
 LP copy (`LatticeProb.LQG.*`). The HB definitions are kept, and no counted statement is changed.
 

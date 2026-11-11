@@ -9,7 +9,7 @@ import LatticeProb.LQG.LQGMetricUniv
 # LP-stage bridge for the universe transport of the LQG metric axioms
 
 * `HarmonicBalls.lqgMetricSatisfiesAxiomsUniv_of_lpStage : LQGMetricSatisfiesAxiomsUnivFrozen.{u}` (`FirstPass/Frozen/S11g.lean:31`),
-  from the LP theorem `LatticeProb.LQG.lqgMetricSatisfiesAxiomsUniv` (`LPStage/LQGMetricUniv.lean`).
+  from the LP theorem `LatticeProb.LQG.lqgMetricSatisfiesAxiomsUniv` (`LatticeProb/LQG/LQGMetricUniv.lean`).
 * `HarmonicBalls.lqgMetricLengthUniv_of_lpStage : LQGMetricLengthUnivFrozen.{u}` (`FirstPass/Frozen/S11j.lean:133`),
   from `LatticeProb.LQG.lqgMetricLengthUniv`.
 

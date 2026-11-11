@@ -22,7 +22,7 @@ supremum `⨆ u ∈ S, ⨆ v ∈ S, internalMetric (weylShiftPair γ ξ f (μ, D
    (`weylScaledEuclidean_derived`, `FirstPass/Phase2/WeylScaledEuclideanDerived.lean`). Its a.s. lower semicontinuity on
    `S ×ˢ S` follows from 2.
 4. A countable dense `D₀ ⊆ S` reduces the supremum to `D₀ ×ˢ D₀`
-   (`LatticeProb.Prob.aemeasurable_iSup_mem_of_lowerSemicontinuousOn`, `HarmonicBalls/LPStage/WeylSupMeasurable.lean`), and
+   (`LatticeProb.Prob.aemeasurable_iSup_mem_of_lowerSemicontinuousOn`, `LatticeProb/Prob/WeylSupMeasurable.lean`), and
    each term is a.e. measurable (`weylShiftInternalMetric_aemeasurable_closed`, `FirstPass/Phase2/WeylShiftedSupDerived.lean`).
 
 Inputs. The Euclidean length property of `D ω` (clause I of `LQGMetricFieldAxiomsUnivFrozen`), the Weyl composition

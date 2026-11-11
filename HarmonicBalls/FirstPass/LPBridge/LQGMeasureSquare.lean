@@ -10,7 +10,7 @@ import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
 
 `HarmonicBalls.lqgMeasureSquareMeasurable_of_lpStage` is the HB Prop `LQGMeasureSquareMeasurableFrozen`
 (`FirstPass/Frozen/S11c.lean:117`), obtained from the LP general statement
-`LatticeProb.LQG.aemeasurable_lqgMeasure_closedDyadicSquare` (`LPStage/LQGMeasureSquare.lean`) through the bridge
+`LatticeProb.LQG.aemeasurable_lqgMeasure_closedDyadicSquare` (`LatticeProb/LQG/LQGMeasureSquare.lean`) through the bridge
 equivalences of `FirstPass/LPBridge/M1.lean` and `M4.lean`.
 
 The only input is the locality of the γ-LQG measure, the Proposed input `LQGMeasureLocality` (Fact 2.1 II,

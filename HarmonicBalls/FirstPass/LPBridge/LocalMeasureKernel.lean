@@ -11,7 +11,7 @@ import LatticeProb.LQG.LocalMeasureKernel5
 (`FirstPass/S11r/Frozen.lean:144`), with the binders of `localMeasureKernelStmt_derived` (`γ c₁ c₂ r₁ r₂`).
 `HarmonicBalls.localLQGDecoderCommonFrozen_of_lpStage` is the HB statement `LocalLQGDecoderCommonFrozen`
 (`FirstPass/Frozen/S11c.lean:388`), binder-free. Both are obtained from the unconditional LP statements
-`localMeasureKernelStmt_lp` and `localLQGDecoderCommonFrozen_lp` (`LPStage/LocalMeasureKernel5.lean`) through the bridge
+`localMeasureKernelStmt_lp` and `localLQGDecoderCommonFrozen_lp` (`LatticeProb/LQG/LocalMeasureKernel5.lean`) through the bridge
 equivalences `isWholePlaneGFF_iff` (M1), `isLQGMeasureOfField_iff` and `isLQGMeasure_iff` (M4). The HB and LP definitions of
 the observables (`localMeanZeroObs`, `campbellReferenceObs`, `rootedCircleAverage`, `rootedMeanZeroObs`, `addCircleAverage`)
 have the same bodies, so they agree by unfolding.

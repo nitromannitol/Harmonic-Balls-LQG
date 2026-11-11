@@ -10,8 +10,8 @@ import LatticeProb.Prob.LocalObservation
 /-!
 # Bridge to the staged phase-torus and local-observation definitions
 
-Each staged definition of `LatticeProb.Prob` (files `HarmonicBalls/LPStage/PhaseTorus.lean` and
-`HarmonicBalls/LPStage/LocalObservation.lean`) is the same object as the corresponding `HarmonicBalls` definition:
+Each staged definition of `LatticeProb.Prob` (files `LatticeProb/Prob/PhaseTorus.lean` and
+`LatticeProb/Prob/LocalObservation.lean`) is the same object as the corresponding `HarmonicBalls` definition:
 the bodies agree, so each equality holds by `rfl`. The staged names differ from the `HarmonicBalls` names only for
 `PhaseTorusDoublingProductErgodicFrozen`, renamed `PhaseTorusDoublingProductErgodic`.
 

@@ -9,7 +9,7 @@ import LatticeProb.LQG.WeylShiftedMass
 
 `HarmonicBalls.weylShiftedMassMeasurable_of_lpStage` is the HB frozen statement `WeylShiftedMassMeasurableFrozen`
 (`FirstPass/Frozen/S11c.lean:233`), obtained from the unconditional LP statement
-`LatticeProb.LQG.weylShiftedMassMeasurable_lp` (`LPStage/WeylShiftedMass.lean`) through the bridge equivalences
+`LatticeProb.LQG.weylShiftedMassMeasurable_lp` (`LatticeProb/LQG/WeylShiftedMass.lean`) through the bridge equivalences
 `isWholePlaneGFF_iff` (M1), `isLQGMeasureOfField_iff` (M4) and `isLQGMetricOfField_iff` (M5b). The HB and LP definitions
 of `weylShiftPair` and of `IsClosedDyadicSquare` agree by unfolding (same bodies). Binder-free.
 -/

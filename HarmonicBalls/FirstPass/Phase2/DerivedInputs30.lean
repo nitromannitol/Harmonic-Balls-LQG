@@ -11,7 +11,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs29
 `LQGMeasureSquarePositiveFrozen` (FirstPass/Frozen/S11c.lean:130). The LP route is
 `lqgMeasureSquarePositiveFrozen_of_lpStage` (FirstPass/LPBridge/LQGMeasureSquarePositive.lean:30), which takes the LP forms of
 rows 1, 2, 3 (`LatticeProb.LQG.LQGMeasureExistenceLP`, `LQGMeasureCoordChangeLP`, `WholePlaneLQGBallMassBoundsLP`,
-LPStage/LQGMeasureInputs.lean). The HB Props of Proposed/LQG.lean are transported to the LP forms here:
+LatticeProb/LQG/LQGMeasureInputs.lean). The HB Props of Proposed/LQG.lean are transported to the LP forms here:
 the definitions `PolyHighProb`, `lqgQ`, `fieldCircleAverage` and `IsClosedDyadicSquare` have identical bodies in both copies,
 and `IsWholePlaneGFF`, `IsLQGMeasureOfField`, `IsLQGLimit` are transported by the bridge equivalences
 `isWholePlaneGFF_iff` (M1), `isLQGMeasureOfField_iff` and `isLQGLimit_iff` (M4).

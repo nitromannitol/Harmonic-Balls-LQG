@@ -8,13 +8,13 @@ import LatticeProb.LQG.LengthMetricDerived
 `HarmonicBalls.weylScaledEuclideanFrozen_of_lpStage` and `HarmonicBalls.internalMetricClosedEqIInfThickeningFrozen_of_lpStage`
 prove the frozen statements `WeylScaledEuclideanFrozen` and `InternalMetricClosedEqIInfThickeningFrozen`
 (`FirstPass/Frozen/S11g.lean`) from the LP statements `LatticeProb.LQG.weylScaledEuclidean_derived` and
-`LatticeProb.LQG.internalMetricClosedEqIInfThickening_derived` (`LPStage/LengthMetricDerived.lean`). No hypothesis is added.
+`LatticeProb.LQG.internalMetricClosedEqIInfThickening_derived` (`LatticeProb/LQG/LengthMetricDerived.lean`). No hypothesis is added.
 
 The transfer uses the definitional equalities of the HB and LP copies of the length-metric definitions (`rfl`, as in
 `FirstPass/LPBridge/M5a.lean`) and the bridge `isEuclideanLengthMetric_iff_lpStage` below. That bridge is a copy of
 `HarmonicBalls.LPBridge.isEuclideanLengthMetric_iff` (`FirstPass/LPBridge/M5a.lean`). M5a is not imported here, because M5a
-imports `LPStage/WeylInternalClosed.lean`, and the declarations of that file clash with those of
-`LPStage/LengthMetricDerived.lean` (which copies them; "environment already contains ..." on import).
+imports `LatticeProb/LQG/WeylInternalClosed.lean`, and the declarations of that file clash with those of
+`LatticeProb/LQG/LengthMetricDerived.lean` (which copies them; "environment already contains ..." on import).
 -/
 
 namespace HarmonicBalls

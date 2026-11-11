@@ -7,7 +7,7 @@ import HarmonicBalls.FirstPass.LPBridge.M4
 /-!
 # Bridge to the staged Liouville graph-distance objects (module M6)
 
-For each of the five staged definitions of `HarmonicBalls/LPStage/LiouvilleGraph.lean` there is a bridge lemma relating
+For each of the five staged definitions of `LatticeProb/LQG/LiouvilleGraph.lean` there is a bridge lemma relating
 the HB definition (`HarmonicBalls.*`, Defs/LQGGraphDistance.lean) to its LP copy (`LatticeProb.LQG.*`), and the staged
 input `WholePlaneLQGGraphDimension` (Proposed/LQGDimension.lean) has an equivalence with its LP copy. The HB definitions
 are kept, and no HB statement is changed.

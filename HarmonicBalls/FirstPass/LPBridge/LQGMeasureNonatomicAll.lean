@@ -7,9 +7,9 @@ import LatticeProb.LQG.LQGMeasureNonatomicAll
 /-!
 # Bridge: the LP non-atomicity statements to the HB statements
 
-`LatticeProb.LQG.LQGMeasureNonatomicLP` (`HarmonicBalls/LPStage/LQGMeasureNonatomic.lean`) is the LP form of
+`LatticeProb.LQG.LQGMeasureNonatomicLP` (`LatticeProb/LQG/LQGMeasureNonatomic.lean`) is the LP form of
 `HarmonicBalls.LQGMeasureNonatomic` (`HarmonicBalls/Proposed/LQG.lean:86`), and `LQGMeasureNonatomicAllLP`
-(`LPStage/LQGMeasureNonatomicAll.lean`) is the LP form of `HarmonicBalls.S11n.MeasureDecoder.LQGMeasureNonatomicAll`
+(`LatticeProb/LQG/LQGMeasureNonatomicAll.lean`) is the LP form of `HarmonicBalls.S11n.MeasureDecoder.LQGMeasureNonatomicAll`
 (`HarmonicBalls/FirstPass/S11n/MeasureDecoder.lean:39`). The hypothesis predicates and the conclusion are transported along the
 existing equivalences of the bridges: `isWholePlaneGFF_iff` (`LPBridge/M1.lean`) and `isLQGMeasureOfField_iff`
 (`LPBridge/M4.lean`), as in `LPBridge/LQGWeylScaling.lean`.

@@ -8,7 +8,7 @@ import LatticeProb.LQG.LQGMassInner
 
 `HarmonicBalls.lqgMassInnerMeasurable_of_lpStage` is the HB frozen statement `LQGMassInnerMeasurableFrozen`
 (`FirstPass/Frozen/S11k.lean:66`), obtained from the unconditional LP statement
-`LatticeProb.LQG.lqgMassInnerMeasurable_of_gff` (`LPStage/LQGMassInner.lean`) through the bridge equivalences of
+`LatticeProb.LQG.lqgMassInnerMeasurable_of_gff` (`LatticeProb/LQG/LQGMassInner.lean`) through the bridge equivalences of
 `FirstPass/LPBridge/M1.lean` and `M4.lean`. Binder-free.
 -/
 

@@ -8,10 +8,10 @@ import LatticeProb.LQG.LQGMeasureFullSupport3
 
 `HarmonicBalls.lqgMeasureFullSupportStmt_of_lpStage` is the HB statement `LQGMeasureFullSupportStmt`
 (`HarmonicBalls/Draft/Section2.lean:109`, I1), obtained from the LP statement `LQGMeasureFullSupportStmtLP`
-(`LPStage/LQGMeasureFullSupport.lean`) through the bridge equivalences `isWholePlaneGFF_iff` (M1) and
+(`LatticeProb/LQG/LQGMeasureFullSupport.lean`) through the bridge equivalences `isWholePlaneGFF_iff` (M1) and
 `isLQGMeasureOfField_iff` (M4); the conclusion is the same Prop on both sides.
 
-The LP-stage proof is `LatticeProb.LQG.lqgMeasureFullSupportStmt_of_scaled_lp` (`LPStage/LQGMeasureFullSupport3.lean`),
+The LP-stage proof is `LatticeProb.LQG.lqgMeasureFullSupportStmt_of_scaled_lp` (`LatticeProb/LQG/LQGMeasureFullSupport3.lean`),
 fed by the LP scaled step `WholePlaneScaledBallMassStepLP` (derived from the inputs by the proved LP lemmas
 `rescaledBallMassUniformStep_lp`, `wholePlaneScaledBallMassStep_of_uniform_lp`, `circleAverageDyadicTailStep_lp`),
 the non-atomicity `lqgMeasureNonatomic_lp` and the existence `LQGMeasureExistenceLP` at `α₀ = 0`. The three LP

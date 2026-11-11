@@ -9,8 +9,8 @@ import LatticeProb.Analysis.PlanarGreen
 /-!
 # Bridge to the staged plane-topology and planar-Green definitions
 
-Each definition of `LatticeProb.Topology` (file `HarmonicBalls/LPStage/PlaneTopology.lean`) and of
-`LatticeProb.Analysis` (file `HarmonicBalls/LPStage/PlanarGreen.lean`) is the same object as the corresponding
+Each definition of `LatticeProb.Topology` (file `LatticeProb/Topology/PlaneTopology.lean`) and of
+`LatticeProb.Analysis` (file `LatticeProb/Analysis/PlanarGreen.lean`) is the same object as the corresponding
 `HarmonicBalls` definition: the bodies agree, so each equality holds by `rfl`. The staged names differ from the
 `HarmonicBalls` names only for `newtonKernel`, `newtonKernelEReal` (renamed `planarNewtonKernel`,
 `planarNewtonKernelEReal`, since `elliptic_regularity` already has a `PDE.newtonKernel` of another type) and

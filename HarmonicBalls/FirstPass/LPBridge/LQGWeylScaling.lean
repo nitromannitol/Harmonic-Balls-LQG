@@ -6,7 +6,7 @@ import LatticeProb.LQG.LQGWeylScaling
 /-!
 # Bridge: the LP Weyl scaling statement to the HB statement `LQGMeasureWeylScaling`
 
-`LatticeProb.LQG.LQGWeylScalingDerived.LQGMeasureWeylScalingLP` (`HarmonicBalls/LPStage/LQGWeylScaling.lean`) is the LP form
+`LatticeProb.LQG.LQGWeylScalingDerived.LQGMeasureWeylScalingLP` (`LatticeProb/LQG/LQGWeylScaling.lean`) is the LP form
 of `HarmonicBalls.LQGMeasureWeylScaling` (`HarmonicBalls/Proposed/LQG.lean:107`). Its hypothesis predicates and its
 conclusion are transported along the equivalences of the existing bridges:
 

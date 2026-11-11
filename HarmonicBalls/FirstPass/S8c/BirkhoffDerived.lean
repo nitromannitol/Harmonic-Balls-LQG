@@ -5,7 +5,7 @@ import LatticeProb.Prob.BirkhoffErgodic
 # Birkhoff's pointwise ergodic theorem, derived from Lattice-Probability
 
 The frozen Prop `BirkhoffPointwiseErgodic` (`HarmonicBalls/FirstPass/Frozen/S8c.lean`) is proved for every universe
-from `LatticeProb.ae_tendsto_birkhoffAverage_integral_of_ergodic` (`HarmonicBalls/LPStage/BirkhoffErgodic.lean`).
+from `LatticeProb.ae_tendsto_birkhoffAverage_integral_of_ergodic` (`LatticeProb/Prob/BirkhoffErgodic.lean`).
 The frozen statement is not edited here.
 -/
 

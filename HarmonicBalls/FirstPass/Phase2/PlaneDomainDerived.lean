@@ -4,7 +4,7 @@ import LatticeProb.Topology.PlaneDomainConvexCompact
 /-! # The plane-domain input of result 11.9 is derived (Phase 2, item B, module M0)
 
 `PlaneDomainMinusConvexCompactPreconnectedFrozen` (`FirstPass/Frozen/S11d.lean:26`) is derived from the general plane
-topology lemma `LatticeProb.Topology.isPreconnected_diff_of_convex_compact` (`LPStage/PlaneDomainConvexCompact.lean`):
+topology lemma `LatticeProb.Topology.isPreconnected_diff_of_convex_compact` (`LatticeProb/Topology/PlaneDomainConvexCompact.lean`):
 for open connected `V ⊆ ℂ` and compact convex `K ⊆ V`, the set `V \ K` is preconnected. No hypothesis is added. The
 frozen Prop itself is not edited. -/
 

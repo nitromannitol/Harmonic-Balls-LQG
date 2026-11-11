@@ -11,7 +11,7 @@ import LatticeProb.Gauss.GFF
 /-!
 # Bridge to the staged whole-plane GFF definitions (module M1)
 
-Each definition of `LatticeProb.Gauss` in `HarmonicBalls/LPStage/GFF.lean` is the same object as the corresponding
+Each definition of `LatticeProb.Gauss` in `LatticeProb/Gauss/GFF.lean` is the same object as the corresponding
 `HarmonicBalls` definition. For the definitions whose bodies do not mention the observable type, the bridge is `rfl`:
 `fieldPairing`, `fieldCircleAverage`, `fieldSigmaAlgebra`, `wholePlaneCov`, `IsTestFunction`, `addFunPairing`,
 `affinePullbackPairing`, `distributionMeasurableSpace`, `pairingSigmaAlgebra`, `addCircleAverage`, `PolyHighProb`,

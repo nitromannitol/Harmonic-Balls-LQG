@@ -10,7 +10,7 @@ import LatticeProb.LQG.LQGMetricMeasurable2
 
 * `HarmonicBalls.lqgMetricPointwiseAEMeasurable_of_lp`: the HB frozen Prop `LQGMetricPointwiseAEMeasurableFrozen`
   (`FirstPass/Frozen/S11e.lean:27`), from the LP theorem `LatticeProb.LQG.lqgMetricPointwiseAEMeasurable_lp`
-  (`LPStage/LQGMetricMeasurable2.lean`).
+  (`LatticeProb/LQG/LQGMetricMeasurable2.lean`).
 * `HarmonicBalls.lqgInternalDiamInnerMeasurable_of_lp`: the HB frozen Prop `LQGInternalDiamInnerMeasurableFrozen`
   (`FirstPass/Frozen/S11k.lean:89`), from `LatticeProb.LQG.lqgInternalDiamInnerMeasurable_lp`.
 

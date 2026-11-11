@@ -8,7 +8,7 @@ import LatticeProb.LQG.MassFunctional
 
 Binder-free proof of the frozen Prop `HarmonicBalls.LQGMassFunctionalMeasurableFrozen` (`HarmonicBalls/FirstPass/Frozen/S11d.lean:155`)
 from the LP-stage theorem `LatticeProb.LQG.MassFunctionalDerived.lqgMassFunctionalMeasurable_lp`
-(`HarmonicBalls/LPStage/MassFunctional.lean`). The HB and LP copies of the hypotheses and of the conclusion are
+(`LatticeProb/LQG/MassFunctional.lean`). The HB and LP copies of the hypotheses and of the conclusion are
 equivalent by `isWholePlaneGFF_iff` (`FirstPass/LPBridge/M1.lean`) and `isLQGMeasureOfField_iff`
 (`FirstPass/LPBridge/M4.lean`); the functional spaces and the pairings agree by `rfl`
 (`distributionMeasurableSpace_eq`, `addFunPairing_eq`).

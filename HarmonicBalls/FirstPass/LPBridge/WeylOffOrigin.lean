@@ -6,7 +6,7 @@ import LatticeProb.LQG.WeylOffOrigin
 /-!
 # Bridge: the LP Weyl relation off the origin to the frozen HB statement
 
-The LP statement `LatticeProb.LQG.LocalLQGInsertionWeylOffOriginLP` (`HarmonicBalls/LPStage/WeylOffOrigin.lean`) is the
+The LP statement `LatticeProb.LQG.LocalLQGInsertionWeylOffOriginLP` (`LatticeProb/LQG/WeylOffOrigin.lean`) is the
 LP form of `HarmonicBalls.LocalLQGInsertionWeylOffOrigin` (`HarmonicBalls/FirstPass/Frozen/S8c.lean:85`). Its two
 hypothesis predicates are transported along the equivalences of the existing bridges:
 

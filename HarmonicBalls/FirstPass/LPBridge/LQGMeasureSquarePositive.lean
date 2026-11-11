@@ -8,7 +8,7 @@ import LatticeProb.LQG.LQGMeasureSquarePositive
 
 `HarmonicBalls.lqgMeasureSquarePositiveFrozen_of_lpStage` is the HB statement `LQGMeasureSquarePositiveFrozen`
 (`FirstPass/Frozen/S11c.lean:130`), obtained from the LP statement `LQGMeasureSquarePositiveLP`
-(`LPStage/LQGMeasureSquarePositive.lean`) through the bridge equivalences `isWholePlaneGFF_iff` (M1) and
+(`LatticeProb/LQG/LQGMeasureSquarePositive.lean`) through the bridge equivalences `isWholePlaneGFF_iff` (M1) and
 `isLQGMeasureOfField_iff` (M4). The HB and LP definitions of `IsClosedDyadicSquare` agree by unfolding.
 
 The LP-stage proof is `LatticeProb.LQG.lqgMeasureSquarePositiveLP_of_inputs`, from the three LP literature inputs

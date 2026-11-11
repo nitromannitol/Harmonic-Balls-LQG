@@ -7,7 +7,7 @@ import LatticeProb.LQG.LQGMeasure
 /-!
 # Bridge to the staged γ-LQG area measure definitions (module M4)
 
-For each of the six staged definitions of `HarmonicBalls/LPStage/LQGMeasure.lean` there is a bridge lemma
+For each of the six staged definitions of `LatticeProb/LQG/LQGMeasure.lean` there is a bridge lemma
 relating the HB definition (`HarmonicBalls.*`, Defs/LQG.lean and Defs/Notation.lean) to its LP copy
 (`LatticeProb.LQG.*`). The HB definitions are kept, and the counted theorems are unchanged.
 

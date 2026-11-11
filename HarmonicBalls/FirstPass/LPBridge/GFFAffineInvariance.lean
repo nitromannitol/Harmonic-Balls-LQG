@@ -6,7 +6,7 @@ import LatticeProb.Gauss.GFFAffineInvariance
 # Bridge: the LP affine invariance of the whole-plane GFF to the HB statement `WholePlaneGFFAffineInvariance`
 
 
-`LatticeProb.LQG.AffineDerived.WholePlaneGFFAffineInvarianceLP` (`HarmonicBalls/LPStage/GFFAffineInvariance.lean`) is the
+`LatticeProb.LQG.AffineDerived.WholePlaneGFFAffineInvarianceLP` (`LatticeProb/Gauss/GFFAffineInvariance.lean`) is the
 LP form of `HarmonicBalls.WholePlaneGFFAffineInvariance` (`HarmonicBalls/Proposed/LQG.lean:56`). The hypothesis and the
 conclusion are the structure `IsWholePlaneGFF` of the two copies, transported along `isWholePlaneGFF_iff`
 (`LPBridge/M1.lean`). The pairings and circle averages of the transformed field are the same expressions in both

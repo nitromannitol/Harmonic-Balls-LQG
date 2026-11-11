@@ -568,7 +568,7 @@ noncomputable def limFunctionalX {ν : ℕ → Measure X} (hν : ∀ k, IsLocall
     have := hν k
     exact integral_mono (integrable_of_ccX f _) (integrable_of_ccX g _) (fun x => hfg x)
 
-/-- Open-set test functions on `X` (port of `exists_open_mass_test_functions`, `LPStage/LQGMeasureDerived.lean:286`):
+/-- Open-set test functions on `X` (port of `exists_open_mass_test_functions`, `LatticeProb/LQG/LQGMeasureDerived.lean:286`):
 for an open `U`, continuous compactly supported `f n` with `μ U = ⨆ n, ∫ f n dμ` for every locally finite `μ`. -/
 theorem exists_open_mass_test_functionsX {U : Set X} (hU : IsOpen U) :
     ∃ f : ℕ → X → ℝ, (∀ n, Continuous (f n)) ∧ (∀ n, HasCompactSupport (f n)) ∧
@@ -611,7 +611,7 @@ theorem exists_open_mass_test_functionsX {U : Set X} (hU : IsOpen U) :
       exact le_of_eq (hgZero n hx)
 
 /-- A family of locally finite measures on `X` is measurable once its values on open sets are measurable
-(port of `measurable_measure_of_isOpen`, `LPStage/LQGMeasureDerived.lean:328`, with the balls replaced by the
+(port of `measurable_measure_of_isOpen`, `LatticeProb/LQG/LQGMeasureDerived.lean:328`, with the balls replaced by the
 interiors of a compact exhaustion of `X`). -/
 theorem measurable_measure_of_isOpenX {Ω : Type*} [MeasurableSpace Ω] {ν : Ω → Measure X}
     (hloc : ∀ ω, IsLocallyFiniteMeasure (ν ω))

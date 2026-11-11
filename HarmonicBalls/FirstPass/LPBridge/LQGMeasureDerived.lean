@@ -8,7 +8,7 @@ import LatticeProb.LQG.LQGMeasureDerived
 
 `HarmonicBalls.lqgMeasureOfProfileMeasurable_of_lpStage` is the HB Prop `LQGMeasureOfProfileMeasurableFrozen`
 (`FirstPass/Frozen/S8d.lean:33`), obtained from the LP theorem
-`LatticeProb.LQG.ProfileDerived.lqgMeasureOfProfileMeasurable_lp` (`LPStage/LQGMeasureDerived.lean`) through the
+`LatticeProb.LQG.ProfileDerived.lqgMeasureOfProfileMeasurable_lp` (`LatticeProb/LQG/LQGMeasureDerived.lean`) through the
 bridge equivalences of `FirstPass/LPBridge/M1.lean` and `M4.lean`. No other input is used.
 -/
 

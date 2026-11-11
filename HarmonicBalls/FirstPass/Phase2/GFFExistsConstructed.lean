@@ -113,7 +113,7 @@ theorem wholePlaneGFFCov_circle_increment_le {a r s : ℝ} (ha : 0 < a) (har : a
 
 /-! ### Row 29: `WholePlaneGFFExistsFrozen` from the LP construction
 
-Conditional on the two named inputs of `HarmonicBalls/LPStage/GFFExistence.lean`: `WholePlaneCovPSDStmt` (positive semidefiniteness of the covariance) and `WholePlaneCovSymmStmt` (symmetry of the covariance). The Kolmogorov
+Conditional on the two named inputs of `LatticeProb/Gauss/GFFExistence.lean`: `WholePlaneCovPSDStmt` (positive semidefiniteness of the covariance) and `WholePlaneCovSymmStmt` (symmetry of the covariance). The Kolmogorov
 extension (B1) is proved (`LatticeProb.exists_isProjectiveLimit_real`). The kernel increment bound is discharged here from
 `wholePlaneGFFCov_circle_increment_le`. -/
 
@@ -189,7 +189,7 @@ theorem wholePlaneGFFExistsFrozen_derived (hB2 : LatticeProb.Gauss.WholePlaneCov
 
 
 /-- Row 29, universe `0`, with the symmetry input discharged by `LatticeProb.Gauss.wholePlaneCovSymm_proved`
-(`LPStage/GFFCovSymm.lean`): conditional on the single named input `WholePlaneCovPSDStmt` (B2). The earlier
+(`LatticeProb/Gauss/GFFCovSymm.lean`): conditional on the single named input `WholePlaneCovPSDStmt` (B2). The earlier
 `wholePlaneGFFExistsFrozen_zero_derived` (with the named symmetry input) is kept. -/
 theorem wholePlaneGFFExistsFrozen_zero_derived_of_psd (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt) :
     WholePlaneGFFExistsFrozen.{0} := by

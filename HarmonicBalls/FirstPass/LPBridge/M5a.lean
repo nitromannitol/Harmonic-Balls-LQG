@@ -7,7 +7,7 @@ import LatticeProb.LQG.WeylInternalClosed
 /-!
 # Bridge to the staged length-metric definitions (module M5, deterministic half)
 
-Each definition of `LatticeProb.LQG` in `HarmonicBalls/LPStage/LengthMetric.lean` is the same object as the corresponding
+Each definition of `LatticeProb.LQG` in `LatticeProb/LQG/LengthMetric.lean` is the same object as the corresponding
 `HarmonicBalls` definition. The copies have the same bodies, so the bridges are `rfl`:
 `curveLength`, `pathLength`, `internalMetric`, `internalDiam`, `IsLengthParametrized`, `weylScaling`, `weylShiftPair`.
 
@@ -49,7 +49,7 @@ theorem isEuclideanLengthMetric_iff (D : ℂ → ℂ → ℝ) :
 
 /-- The closed-set Weyl comparison: the frozen statement `HarmonicBalls.WeylInternalClosedFrozen`
 (`FirstPass/Frozen/S11c.lean`) and the staged statement `LatticeProb.LQG.WeylInternalClosed`
-(`LPStage/WeylInternalClosed.lean`) are equivalent. The two statements differ only in the length-metric structure in their
+(`LatticeProb/LQG/WeylInternalClosed.lean`) are equivalent. The two statements differ only in the length-metric structure in their
 hypotheses, so the bridge transports that hypothesis by `isEuclideanLengthMetric_iff`. -/
 theorem weylInternalClosed_iff :
     HarmonicBalls.WeylInternalClosedFrozen ↔ LatticeProb.LQG.WeylInternalClosed := by
