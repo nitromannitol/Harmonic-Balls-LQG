@@ -1332,6 +1332,102 @@ theorem tendsto_circleApprox_rootShift (γ : ℝ) {r : ℝ} (hr : 0 < r) (x z : 
     rw [integral_add (i1.const_mul (-γ)) (i2.const_mul γ), integral_const_mul, integral_const_mul]
   exact (e1.trans e2).symm
 
+/-- The observation of the rooted field `h + f_z` on the mean-zero tests of `D` (route step 8; the second component of
+`campbellReferenceObs`, by `campbellReferenceObs_snd_eq_rootedObs`). -/
+noncomputable def rootedObs (γ α : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    {φ : ℂ → ℝ // IsTestFunction D φ ∧ ∫ x, φ x = 0} → ℝ :=
+  fun φ => fieldPairing α hC φ.1 + ∫ w, rootShift γ z w * φ.1 w
+
+theorem campbellReferenceObs_snd_eq_rootedObs (γ α : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    (campbellReferenceObs γ α D hC z).2 = rootedObs γ α D hC z :=
+  funext fun φ => campbellReferenceObs_eq γ α φ.1 hC z
+
+/-- `bumpRho · log|· - z|` is integrable (the logarithmic singularity at `z` is locally integrable). -/
+theorem integrable_bump_mul_log_sub (c : ℂ) {R : ℝ} (hR : 0 < R) (z : ℂ) :
+    Integrable fun w => bumpRho c hR w * Real.log ‖w - z‖ := by
+  have hcs : HasCompactSupport fun t : ℂ => bumpRho c hR (t + z) :=
+    (bumpRho_isTest c hR).2.1.comp_homeomorph (Homeomorph.addRight z)
+  have hl : LocallyIntegrable (fun t : ℂ => bumpRho c hR (t + z) * Real.log ‖t‖) volume :=
+    (locallyIntegrable_log_norm_complex).continuous_mul
+      ((bumpRho_isTest c hR).1.continuous.comp (continuous_id.add continuous_const))
+  have hcs2 : HasCompactSupport (fun t : ℂ => bumpRho c hR (t + z) * Real.log ‖t‖) := hcs.mul_right
+  have hg : Integrable (fun t : ℂ => bumpRho c hR (t + z) * Real.log ‖t‖) volume :=
+    (integrableOn_iff_integrable_of_support_subset (subset_tsupport _)).1
+      (hl.integrableOn_isCompact hcs2.isCompact)
+  have h2 := hg.comp_sub_right z
+  simp only [sub_add_cancel] at h2
+  exact h2
+
+theorem integrable_rootShift_mul_bump (γ : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (z : ℂ) :
+    Integrable fun w => rootShift γ z w * bumpRho c hR w := by
+  have h1 := (integrable_bump_mul_log_sub c hR z).const_mul (-γ)
+  have hc2 : Continuous fun w => bumpRho c hR w * Real.log (max 1 ‖w‖) :=
+    (bumpRho_isTest c hR).1.continuous.mul continuous_log_max_one
+  have h2 : Integrable fun w => bumpRho c hR w * Real.log (max 1 ‖w‖) :=
+    hc2.integrable_of_hasCompactSupport (bumpRho_isTest c hR).2.1.mul_right
+  refine (h1.add (h2.const_mul γ)).congr (Filter.Eventually.of_forall fun w => ?_)
+  simp only [Pi.add_apply, rootShift]
+  ring
+
+theorem integrable_circleApprox_mul_rootShift {r : ℝ} (hr : 0 < r) (γ : ℝ) (x z : ℂ) (j : ℕ) :
+    Integrable fun y => circleApprox hr x j y * rootShift γ z y := by
+  have hδ : 0 < r * approxEta r j := mul_pos hr (approxEta_pos hr j)
+  have i1 : Integrable fun y => unitCircleDensity r (r * approxEta r j) hδ x y * Real.log ‖y - z‖ :=
+    integrable_unitCircleDensity_mul_log hr.le hδ x z
+  have i2 : Integrable fun y => unitCircleDensity r (r * approxEta r j) hδ x y * Real.log (max 1 ‖y‖) :=
+    integrable_unitCircleDensity_mul hr.le hδ x continuous_log_max_one
+  refine ((i1.const_mul (-γ)).add (i2.const_mul γ)).congr (Filter.Eventually.of_forall fun y => ?_)
+  simp only [Pi.add_apply, rootShift, circleApprox]
+  ring
+
+/-- Route step 8 (a.s.): the coordinates of the rooted observation converge to the centred rooted circle profile
+`h_r(x) - α log max(r,|x|) + (circle average of f_z) - (pairing of h and f_z with ρ)`. -/
+theorem ae_tendsto_localRooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (z : ℂ) (p : LocalParam c R) :
+    ∀ᵐ ω ∂P, Tendsto (fun j => obsAt (rootedObs γ α (ball c R) (hC ω) z) (localTest c hR p j)) atTop
+      (𝓝 (hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) - fieldPairing α (hC ω) (bumpRho c hR) +
+        (Real.circleAverage (rootShift γ z) p.1.2 p.1.1 - ∫ w, rootShift γ z w * bumpRho c hR w))) := by
+  have hρ := integrable_rootShift_mul_bump γ c hR z
+  have hD : Tendsto (fun j : ℕ => ∫ w, rootShift γ z w * localTest c hR p j w) atTop
+      (𝓝 (Real.circleAverage (rootShift γ z) p.1.2 p.1.1 - ∫ w, rootShift γ z w * bumpRho c hR w)) := by
+    have hsplit : ∀ j : ℕ, (∫ w, rootShift γ z w * localTest c hR p j w) =
+        (∫ w, circleApprox (localParam_radius_pos p) p.1.2 (j + localShift c p) w * rootShift γ z w) -
+          ∫ w, rootShift γ z w * bumpRho c hR w := by
+      intro j
+      rw [← integral_sub (integrable_circleApprox_mul_rootShift (localParam_radius_pos p) γ p.1.2 z _) hρ]
+      congr 1
+      funext w
+      simp only [localTest, Pi.sub_apply]
+      ring
+    have hfun : (fun j : ℕ => ∫ w, rootShift γ z w * localTest c hR p j w) = fun j : ℕ =>
+        (∫ w, circleApprox (localParam_radius_pos p) p.1.2 (j + localShift c p) w * rootShift γ z w) -
+          ∫ w, rootShift γ z w * bumpRho c hR w := funext hsplit
+    rw [hfun]
+    exact (tendsto_circleApprox_rootShift γ (localParam_radius_pos p) p.1.2 z (localShift c p)).sub_const _
+  filter_upwards [ae_tendsto_localPairing hGFF α c hR h0 p] with ω hω
+  have hobs : ∀ j : ℕ, obsAt (rootedObs γ α (ball c R) (hC ω) z) (localTest c hR p j) =
+      obsAt (localMeanZeroObs α (ball c R) (hC ω)) (localTest c hR p j) +
+        ∫ w, rootShift γ z w * localTest c hR p j w := fun j => by
+    have hadm := localTest_isTest c hR p j
+    simp only [obsAt, hadm, and_self, ↓reduceDIte, rootedObs, localMeanZeroObs]
+  have heq : (fun j => obsAt (rootedObs γ α (ball c R) (hC ω) z) (localTest c hR p j)) =
+      fun j => obsAt (localMeanZeroObs α (ball c R) (hC ω)) (localTest c hR p j) +
+        ∫ w, rootShift γ z w * localTest c hR p j w := funext hobs
+  rw [heq]
+  exact hω.add hD
+
+/-- Route step 8 (a.s.): the rooted circle coordinate of the observation of `h + f_z` at `p`. -/
+theorem ae_localCoord_rooted {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (z : ℂ) (p : LocalParam c R) :
+    ∀ᵐ ω ∂P, localCoord c hR p (rootedObs γ α (ball c R) (hC ω) z) =
+      hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) - fieldPairing α (hC ω) (bumpRho c hR) +
+        (Real.circleAverage (rootShift γ z) p.1.2 p.1.1 - ∫ w, rootShift γ z w * bumpRho c hR w) := by
+  filter_upwards [ae_tendsto_localRooted hGFF γ α c hR h0 z p] with ω hω
+  unfold localCoord
+  exact hω.limUnder_eq
+
 end Approximants
 
 end LocalDecoderCommon
