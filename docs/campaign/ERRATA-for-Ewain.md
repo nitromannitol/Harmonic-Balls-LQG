@@ -77,6 +77,11 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Problem:* the component and odometer argument uses the whole closed ball, which must stay in $B_1$ and away from the pole.
 - *Correction:* assume $\overline B_\rho(x_0)\subset B_1\setminus\{z\}$.
 
+**Lemma 6.10 iteration, choice of $b$ (eq:choice-of-b; consequence at eq:choice-of-b-and-m0)** <!-- eq:choice-of-b -->
+- *Printed:* $b:=2^{-2\beta^-/((C'\times C_3)\vee 1)}$, so that $b^{C'C_3N_0}=2^{-2\beta^-N_0\min(C'C_3,1)}$.
+- *Problem:* when $C'C_3<1$ the first inequality of eq:choice-of-b-and-m0 is false. The radius count (at most $m\log_2/(2\log 7)+1<m/2$ radii, $m=N_0+j\ge 200$) makes $C'C_3<1/2$ unavoidable, and for $C'C_3\le 1/2$ the final bound fails for every $N_0$.
+- *Correction:* $b:=2^{-2\beta^-/(C'\times C_3)}$. This gives $b^{C'C_3N_0}=2^{-2\beta^-N_0}$ and the Step 3 bound $b^{C'C_3(N_0+j)}\le 2^{-\beta^-}$. Replacing $\vee$ by $\wedge$ also works. The quantifier order is unaffected, since $C_3$ is given before $b$. If $C_3$ is treated as an input, the dependence statement should read "on $\gamma$, $\boldsymbol\alpha_0$ and $C_3$".
+
 ### Section 7: continuity of clusters
 
 **Proposition 7.2 (continuity of clusters)** <!-- C18 -->
