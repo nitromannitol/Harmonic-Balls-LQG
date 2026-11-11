@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11al
 import HarmonicBalls.FirstPass.S11i.CertDilate
 
 /-!
-# Locality of the rooted decoded pair up to positive constants (fp-S11as, round 8)
+# Locality of the rooted decoded pair up to positive constants
 
 The decoders `Dμ`, `Dd` of `LQGCanonicalIdentificationStmt` identify the LQG measure and metric of a model only up to
 positive constants, and these constants depend on `ω`: `μ ω = ofReal a • Dμ (L ω)` with `a = a(ω) > 0`. Two rooted
@@ -106,7 +106,7 @@ theorem certificateEvent_of_restrict_scalar (μ μ' : Measure ℂ) (D D' : ℂ �
     hr hU hμ) ?_
   exact certificateEvent_smul_iff μ' D' Ostar U V W T Q' Q η M r 0 ha hb
 
-/-- **A.s. certificate equivalence from local constant-locality.** The interface for `hCov` of n1: if for almost every `ω` the
+/-- **A.s. certificate equivalence from local constant-locality.** The interface for `hCov`: if for almost every `ω` the
 physical pair `(μ ω, D ω)` and the canonical pair `(μ' ω, D' ω)` agree on the window `closedBall 0 (7 r)` up to positive
 constants (mass and metric), then the certificate events at `(r, 0)` agree almost surely. -/
 theorem ae_certificateEvent_iff {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}

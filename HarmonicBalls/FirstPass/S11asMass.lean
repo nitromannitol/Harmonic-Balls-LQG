@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11asMeasure
 
 /-!
-# Almost-sure Block 2 for the mass clause (fp-S11as, round 7)
+# Almost-sure Block 2 for the mass clause
 
 Applies `FirstPassS11asMeasure.rootedMeasure_restrict_proportional` with the rooted centre `z` and the disc `ball z b`
 (`0 ∉ closedBall z b` since `2b < ‖z‖`), to the physical rooted mass at background `α₀` and the Cameron–Martin shifted

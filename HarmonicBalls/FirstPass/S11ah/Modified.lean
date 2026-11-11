@@ -4,12 +4,11 @@ import HarmonicBalls.FirstPass.S11al
 import HarmonicBalls.FirstPass.S11ao
 
 /-!
-# Step 5 for the local decoders, almost surely (fp-S11ah-11-13-steps-4-5b, owner n4; wave 31)
+# Step 5 for the local decoders, almost surely
 
 * `certificateEventLocality_of_containments`: the locality hypothesis `CertificateEventLocality` of
-  `S11ah/LocalMeasurable.lean` is derived from q1's `FirstPassS11i.certificateEvent_congr_of_eqOn_closedBall`
-  (`HarmonicBalls/FirstPass/S11al.lean`, commit 8f2a2a5), given the containments `CertificateContainments`
-  (taken as a hypothesis; proved by fp-S11ap).
+  `S11ah/LocalMeasurable.lean` is derived from `FirstPassS11i.certificateEvent_congr_of_eqOn_closedBall`
+  (`HarmonicBalls/FirstPass/S11al.lean`, commit 8f2a2a5), given the containments `CertificateContainments`.
 * `LocalLengthModification P c R D`: the `P`-almost-sure modification of a family of local length metrics on the disc
   `ball c R`. Its existence is proved here from the almost-sure length property (`localLengthModification_of_ae`,
   via `FirstPassS11ao.exists_measurable_localLengthModification`, S11ao.lean:44); no named input.
@@ -30,8 +29,7 @@ namespace FirstPassS11ah
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
-/-- **Locality, derived (operator item (a)).** The containments `CertificateContainments η Ostar V W T Q' Q` (taken
-as a hypothesis; fp-S11ap) give `CertificateEventLocality` through q1's congruence lemma. -/
+/-- **Locality, derived.** The containments `CertificateContainments η Ostar V W T Q' Q` give `CertificateEventLocality` through the congruence lemma. -/
 theorem certificateEventLocality_of_containments {η M : ℝ} {Ostar U V W T Q' Q : Set ℂ}
     (hC : FirstPassS11i.CertificateContainments η Ostar V W T Q' Q) :
     CertificateEventLocality Ostar U V W T Q' Q η M := by
@@ -39,13 +37,12 @@ theorem certificateEventLocality_of_containments {η M : ℝ} {Ostar U V W T Q' 
   exact FirstPassS11i.certificateEvent_congr_of_eqOn_closedBall (μ := μ) hC hr
     (fun p hp => h p.1 hp.1 p.2 hp.2)
 
-/-- **The a.s. modification of a family of local length metrics on `ball c R`** (the statement of fp-S11ao,
-`FirstPassS11ao.exists_measurable_localLengthModification`). -/
+/-- **The a.s. modification of a family of local length metrics on `ball c R`**. -/
 def LocalLengthModification (P : Measure Ω) (c : ℂ) (R : ℝ) (D : Ω → ℂ → ℂ → ℝ) : Prop :=
   ∃ D' : Ω → ℂ → ℂ → ℝ, (∀ x ∈ ball c R, ∀ y ∈ ball c R, Measurable fun ω => D' ω x y) ∧
     (∀ ω, IsLengthMetricOn (ball c R) (D' ω)) ∧ ∀ᵐ ω ∂P, D' ω = D ω
 
-/-- The a.s. modification exists (fp-S11ao, Option A of Lemma 11.13): from the almost-sure length property of `D` on the
+/-- The a.s. modification exists: from the almost-sure length property of `D` on the
 disc, a family `D'` measurable in each pair of points, an `IsLengthMetricOn` metric for every sample and `P`-a.s. equal
 to `D`. -/
 theorem localLengthModification_of_ae {c : ℂ} {R : ℝ} (P : Measure Ω) (D : Ω → ℂ → ℂ → ℝ)
@@ -120,7 +117,7 @@ theorem failureSetLoc_ae_agree {c : ℂ} {R : ℝ} (κ : Kernel Ω ℂ) {P : Mea
   unfold localCertPt
   exact (localCertLoc_congr κ n (ω, z) hω).symm
 
-/-- **Step 5 interface for the local decoder, almost surely (wave 31).** Let `D ω` be a local length metric on
+/-- **Step 5 interface for the local decoder, almost surely.** Let `D ω` be a local length metric on
 `ball c R` for `P`-a.e. `ω` (`hLen`), measurable in `ω`; the `P`-a.s. modification comes from `hLen`
 (`localLengthModification_of_ae`).
 Then there is a modified family `D'`, with the length property for every `ω`, whose Step 5 failure set is measurable

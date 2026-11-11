@@ -10,7 +10,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Discharge of the named hypotheses of the local event `E₁ ∩ E₂ ∩ E₃` (fp-S11an, Lemma 11.12)
+# Discharge of the named hypotheses of the local event `E₁ ∩ E₂ ∩ E₃`
 
 Corollary `HarmonicBalls.S11an.pinchLocal_events_pos_discharged` of `HarmonicBalls.S11ad.pinchLocal_events_pos`
 (FirstPass/S11ad.lean), in which all four named hypotheses are discharged:

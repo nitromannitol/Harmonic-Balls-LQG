@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S11i.CanonicalLawUniversal
 
-/-! # Observable laws and the two-copy mixture of whole-plane GFF models (fp-S11aj)
+/-! # Observable laws and the two-copy mixture of whole-plane GFF models
 
 * `observable_map_eq`: two whole-plane GFF models (on possibly different spaces) have the same law of the vector of
   their admissible observables (pairings with test functions and circle averages). Proof as in

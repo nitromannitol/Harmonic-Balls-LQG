@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.Steps.Sec11.MetricArcLength
 
-/-! # Base comparison of LQG metric assignments at insertion zero (fp-S11ak, owner z6)
+/-! # Base comparison of LQG metric assignments at insertion zero
 
-`LQGMetricBaseComparisonStmt` (CHATGPT-lh-R4-R5.md §R5b.1): two γ-LQG metric assignments `𝔇₀`, `𝔇` (Gwynne-Miller
+`LQGMetricBaseComparisonStmt`: two γ-LQG metric assignments `𝔇₀`, `𝔇` (Gwynne-Miller
 arXiv:1905.00383v3, Theorem 1.2, p. 6) differ, on a whole-plane GFF model, by one random positive factor for all
 endpoint pairs.
 
@@ -26,7 +26,7 @@ open MeasureTheory
 
 universe u
 
-/-- The base comparison statement (CHATGPT-lh-R4-R5.md §R5b.1, exact form): for `0 < γ < 2` and two γ-LQG metrics
+/-- The base comparison statement: for `0 < γ < 2` and two γ-LQG metrics
 `𝔇₀`, `𝔇` of the same Weyl exponent `ξ`, almost surely on every whole-plane GFF model there is a positive constant `b`
 with `𝔇(h^ℂ) = b · 𝔇₀(h^ℂ)` on all endpoint pairs. -/
 def LQGMetricBaseComparisonStmt.{v} : Prop :=

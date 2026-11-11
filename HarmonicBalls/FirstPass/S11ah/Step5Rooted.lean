@@ -2,11 +2,11 @@ import HarmonicBalls.FirstPass.S11ah.Step5Local
 import HarmonicBalls.FirstPass.S11r.RootedJoint
 
 /-!
-# Step 5 for the rooted decoders, Ω-indexed form (fp-S11ah-11-13-steps-4-5e, owner n4)
+# Step 5 for the rooted decoders, Ω-indexed form
 
 Rooted analogue of `exists_modified_failureSet_closed_localCert` (`S11ah/Step5Local.lean`), for the rooted decoders
 `ω ↦ decoderOn (ball c₂ r₂) (m (campbellReferenceObs γ α (ball c₂ r₂) (hC ω) z).2)` at a root `z`. The index is the sample
-point `ω`: no pushforward of `P` to the observables is used (operator decision, wave 36).
+point `ω`: no pushforward of `P` to the observables is used.
 
 Input: `RootedLengthPropertyStmt` (the rooted length property, for Lebesgue-a.e. root and `P`-a.s. sample). It is
 proved in `S11ah/RootedLengthProperty.lean` (`rootedLengthProperty`) from identity (20) of `LocalMetricReplacementStmt`,

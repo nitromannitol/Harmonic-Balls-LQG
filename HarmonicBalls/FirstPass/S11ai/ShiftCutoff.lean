@@ -7,7 +7,7 @@ import Mathlib.MeasureTheory.Integral.CircleAverage
 /-!
 # Step 2 of the rooted decoder identification: the smooth shift `u_z`
 
-Notes: `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` section 1.3, Step 2, equations (3)-(4).
+Step 2, equations (3)-(4).
 For a root `z` and radii with `2 b < ‖z‖` and `2 b < 1`, the function
 `u_z(w) = -α₀ χ(w) log ‖z + w‖`, with `χ` a smooth bump equal to `1` on `ball 0 b`
 and supported in `closedBall 0 (2 b)`, is smooth, compactly supported, has unit circle average zero,
@@ -20,7 +20,7 @@ open scoped ContDiff
 
 namespace FirstPassS11ai
 
-/-- The shift `u_z(w) = -α₀ χ(w) log ‖z + w‖` of Step 2 of `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`,
+/-- The shift `u_z(w) = -α₀ χ(w) log ‖z + w‖` of Step 2,
 with `χ` a smooth bump equal to `1` on `closedBall 0 b` and supported in `closedBall 0 (2 b)`. -/
 theorem exists_shift_cutoff (z : ℂ) (α₀ : ℝ) {b : ℝ} (hb : 0 < b) (hbz : 2 * b < ‖z‖) (hb1 : 2 * b < 1) :
     ∃ u : ℂ → ℝ, ContDiff ℝ (⊤ : ℕ∞) u ∧ HasCompactSupport u ∧ Real.circleAverage u 0 1 = 0 ∧

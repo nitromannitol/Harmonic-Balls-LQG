@@ -3,7 +3,7 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.FirstPass.S11i.LogPotential
 import HarmonicBalls.Proofs.Sec5.LaplacianScaling
 
-/-! # Coordinate scaling for the dilation step (fp-S11ak, owner z6)
+/-! # Coordinate scaling for the dilation step
 
 Deterministic lemmas used to transport the punctured-ball decoder from `ball 0 7` to `ball 0 1`
 (`Dilation.lean`):

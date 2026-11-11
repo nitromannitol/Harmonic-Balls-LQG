@@ -1,8 +1,7 @@
 import Mathlib
 
 /-!
-# Radial homeomorphism `ℂ ≃ₜ ball c R`, the identity on `closedBall c ρ`
-(fp-S11ah-11-13-steps-4-5, owner n4; auxiliary to `S11ah/LocalMeasurable.lean`).
+# Radial homeomorphism `ℂ ≃ₜ ball c R`, the identity on `closedBall c ρ`.
 
 For `0 < ρ < R` and a centre `c`, the radial profile `radialG` is the identity on `[0, ρ]` and increases
 homeomorphically from `[ρ, ∞)` onto `[ρ, R)`; `radialH` is its inverse on `[0, R)`. Their radial lifts

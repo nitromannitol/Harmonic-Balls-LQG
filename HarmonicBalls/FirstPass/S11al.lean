@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11i.Certificate
 
 /-!
-# Locality of the common certificate (Lemma 11.13; blocker (a) of n4)
+# Locality of the common certificate (Lemma 11.13)
 
 `CertificateEvent μ D …` (`FirstPass/S11i/Certificate.lean:42`) depends on the length metric `D` only through the
 internal metrics `internalMetric D U` on the domains `U` below and the set distances `setDist D A B`. Each of these
@@ -29,7 +29,7 @@ open HarmonicBalls
 
 /-- The buffered containments of Lemma 11.13 in scale one (`B_7 = closedBall 0 7`), for the sets `Ostar`, `Q'`, `Q`,
 `V`, `W`, `T` and the buffer `η`. Each field is used by the locality argument only in the form stated; the fields are
-hypotheses (the buffered path-domain properties of the construction, `notes/fp-gaps/CHATGPT-n3-Q1-eq34.md` §5, Step 1):
+hypotheses:
 * `Ostar_sub`: the domain `O_*` lies in `B_7` (its rescaled copies lie in `closedBall z (7r)`);
 * `Qprime_sub`, `Q_sub`: the clearance sets `Q'`, `Q` lie in `B_7` (`closure`, `frontier` of their rescalings then lie in
   `closedBall z (7r)` since the balls are closed);
@@ -150,7 +150,7 @@ lemma internalDiam_congr_of_subset {D D' : ℂ → ℂ → ℝ} {δ : ℝ} {A B 
   exact iSup_congr fun x => iSup_congr fun _ => iSup_congr fun y => iSup_congr fun _ =>
     internalMetric_congr_of_subset hU hEq x y
 
-/-- **Locality of the common certificate (Lemma 11.13, step 2; n4 blocker (a)).** Under the buffered containments
+/-- **Locality of the common certificate (Lemma 11.13, step 2).** Under the buffered containments
 `CertificateContainments η Ostar V W T Q' Q` in `B_7`, the certificate event at centre `z` and radius `r > 0` is
 unchanged when the length metric is changed on `closedBall z (7r) ×ˢ closedBall z (7r)`. -/
 theorem certificateEvent_congr_of_eqOn_closedBall {μ : Measure ℂ} {D D' : ℂ → ℂ → ℝ}

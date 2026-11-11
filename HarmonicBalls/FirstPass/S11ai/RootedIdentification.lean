@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11ai
 import HarmonicBalls.FirstPass.S11ai.ShiftCutoff
 
 /-!
-# Rooted decoder identification `hId` from the termwise certificate identity (fp-S11ai, operator note 03:55 UTC)
+# Rooted decoder identification `hId` from the termwise certificate identity
 
-Source: `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` section 1. The `hId` of `ae_window_limit_at_root` is false for
+The `hId` of `ae_window_limit_at_root` is false for
 arbitrary `c` and `F` (§1.1), so the certificate identification is made explicit (§1.2) and `hId` is derived (§1.3).
 
 What is proved here (Lean-sized steps of §1.3):

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11aa
 import HarmonicBalls.FirstPass.S11q.Metric
 
-/-! # Universe lift of the random-constant affine Weyl identity (fp-S11ak, owner z6)
+/-! # Universe lift of the random-constant affine Weyl identity
 
 The Type-`0` identity `HarmonicBalls.ae_weylScaling_affinePullback_background` (`FirstPass/S11q/Metric.lean`; the random
 constant shift `ae_metric_background_add_random_constant` of `Steps/Sec11/ContinuousFieldShift.lean` is its ingredient)
@@ -32,7 +32,7 @@ lemma sample_circle_apply {Ω : Type*} [MeasurableSpace Ω] {hC : Ω → (ℂ �
   rw [FirstPassS11aa.sampleFun_of_mem hω]
   simp [FirstPassS11aa.posCircle, hR]
 
-/-- **Universe lift of the random-constant affine Weyl identity** (fp-S11ak, owner z6). For `Ω : Type u` with a whole-plane
+/-- **Universe lift of the random-constant affine Weyl identity**. For `Ω : Type u` with a whole-plane
 GFF `(P, hC, hcirc)`, an LQG metric `𝔇` of exponent `ξ`, `R > 0` and a real `q`, almost surely for all `u v`, the Weyl
 scaling of the metric of `h(R·) + (Q_γ log R - (hcirc R 0 + q))` at weight `-α₀ log|·|` equals
 `e^{-ξ (hcirc R 0 + q - α₀ log R)}` times the Weyl scaling of the metric of `h` at `(R u, R v)`. -/

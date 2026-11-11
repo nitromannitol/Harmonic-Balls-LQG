@@ -2,7 +2,7 @@ import Mathlib
 import HarmonicBalls.FirstPass.S11ah.LengthTransport
 
 /-!
-# First pass, Euclidean reference metric on a convex open set (fp-S11ao, owner q3)
+# Euclidean reference metric on a convex open set
 
 For a convex open set `B ⊆ ℂ` (in particular a disc `ball c R`) the Euclidean distance `dist` is the
 internal metric of `B`: the segment joining two points of `B` lies in `B` and has `dist`-length `dist z w`,

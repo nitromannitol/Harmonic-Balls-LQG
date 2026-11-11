@@ -4,21 +4,18 @@ import HarmonicBalls.FirstPass.S11at
 
 /-!
 # Rooted instance of the shared certificate identification, and the termwise identity `hT` from it
-(fp-S11ai-11-13-steps-6-7, operator note 04:20 UTC; fp-S11ai-11-13-steps-6-7d, operator note 2026-11-10 07:59 UTC)
 
-Source: `notes/fp-gaps/CHATGPT-n3-identification.md` §5.2 and §5.3, with §1.2-§1.3 of
-`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md`; decoded-pair instantiation: `notes/fp-gaps/CHATGPT-hb-11-13-blockers.md` §1.2
-(chat 196).
+Decoded-pair instantiation of the rooted identification.
 
 The rooted physical pair is the decoded pair `decodedRootMeasure κ`, `decodedRootMetric m` (S11at.lean; the
 Campbell reference observation). With this choice the fitting clause `hFit` is
-definitional (`Iff.rfl`), so it is no longer a hypothesis and no longer depends on n3.
+definitional (`Iff.rfl`), so it is no longer a hypothesis.
 The clauses that remain are:
 * `hSeq` (sequence_eq): `c` is the truncated `localCert` sequence (J) of Step 4;
 * `hCov` (covariance, §1.3 Step 6): the eventual-in-`n` covariance of the decoded rooted pair, stated as the named
-  hypothesis `FirstPassS11at.RootedCertificateEventualCovarianceStmt` (q1, `S11at.lean`). The cutoff is inside the a.s.
-  quantifier (operator note 2026-11-10 07:10 UTC, ChatGPT chat 195, `notes/fp-gaps/CHATGPT-hb-hCov-locality.md` §2). It is a
-  hypothesis until q1 proves it;
+  hypothesis `FirstPassS11at.RootedCertificateEventualCovarianceStmt` (`S11at.lean`). The cutoff is inside the a.s.
+  quantifier. It is a
+  hypothesis until it is proved;
 * `hG` (scale_one_eq, transferred): the unit-scale coding identity `unitObs ∈ F ↔ 𝓔_1(μ₀, d₀)` at the dilated, translated
   canonical pairing, almost surely. A hypothesis here; `RootedTransfer.lean` derives it from named inputs.
 
@@ -133,7 +130,7 @@ theorem ae_termwise_of_identification
         (translatedPairing hC hcirc z ω) u))) ∈ F) := fun h => hE (hkey.2 h)
     simp only [hE, hF, ite_false]
 
-/-- **Entry for n3 with the shared identification in place of `hT`.** Same conclusion as
+/-- **Entry with the shared identification in place of `hT`.** Same conclusion as
 `ae_quantum_bad_mass_eq_zero_of_termwise`; the termwise identity is `ae_termwise_of_identification` applied to the
 clauses `hSeq`, `hCov`, `hG` (`hFit` is definitional for the decoded pair). -/
 theorem ae_quantum_bad_mass_eq_zero_of_identification

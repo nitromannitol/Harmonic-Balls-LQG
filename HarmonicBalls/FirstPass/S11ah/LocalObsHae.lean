@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11r.RootedJoint
 import HarmonicBalls.FirstPass.S11ah.FiniteLocalKernel
 
 /-!
-# The almost-sure length property of the local decoders on the observation space (fp-S11i-11-13g, item (b), n3)
+# The almost-sure length property of the local decoders on the observation space 
 
-Operator ruling (notes/fp-gaps/CHATGPT-217-hb-11-13-n3-hBad-G4-PRO.md, section (b)): `hae` for the local decoder
+Construction: `hae` for the local decoder
 `m : LocalObs c₂ r₂ → C(ball c₂ r₂ × ball c₂ r₂, ℝ)` is the observation-space form of the rooted length property. The
 joint rooted-reference observation law is the pushforward `Pm = ((volume.restrict (ball c₁ r₁)).prod P).map obs₂`, with
 `obs₂ (z, ω) = (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z).2`.

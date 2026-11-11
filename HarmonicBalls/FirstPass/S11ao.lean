@@ -1,13 +1,13 @@
 import HarmonicBalls.FirstPass.S11ao.EuclideanBall
 
 /-!
-# First pass, P-a.s. modification of the local metric decoders (fp-S11ao, owner q3; n4's Option A)
+# P-a.s. modification of the local metric decoders
 
-Device for Lemma 11.13 (n4's blocker 1, Option A). Given a family of local decoders `D ω : ℂ → ℂ → ℝ`, measurable in
+Device for Lemma 11.13. Given a family of local decoders `D ω : ℂ → ℂ → ℝ`, measurable in
 `ω` for `x, y` in a disc `B = ball c R`, and an almost-sure statement that each `D ω` is a Euclidean length metric on `B`
 (`FirstPassS11ah.IsLengthMetricOn B`), we build a modification `D'` such that:
 
-* `D' ω` is a `IsLengthMetricOn B` metric for **every** `ω` (the input n4 needs in `measurable_localCertLoc`,
+* `D' ω` is a `IsLengthMetricOn B` metric for **every** `ω` (the input needed in `measurable_localCertLoc`,
   `S11ah/LocalMeasurable.lean`, and in `measurable_liftMetric_family`, `S11ah/LengthTransport.lean`);
 * `D'` is measurable in `ω` for `x, y ∈ B` (the input `hDm`);
 * there is a measurable set `H` with `P Hᶜ = 0` (full measure) inside the almost-sure set, on which `D' ω = D ω`;
@@ -15,8 +15,7 @@ Device for Lemma 11.13 (n4's blocker 1, Option A). Given a family of local decod
 
 What this file does NOT do: it does not derive the almost-sure input `∀ᵐ ω, IsLengthMetricOn B (D ω)` from the
 identities (18) and (20) of `LocalMetricReplacementStmt` (`S11r/LocalMetricReplacement.lean`). The identity fixes the
-decoder only where the internal metric is positive, and the length axioms need more (see the report and
-`notes/q3-for-n4.md`). The input is therefore a named hypothesis `hae`.
+decoder only where the internal metric is positive, and the length axioms need more. The input is therefore a named hypothesis `hae`.
 -/
 
 open MeasureTheory Set Metric

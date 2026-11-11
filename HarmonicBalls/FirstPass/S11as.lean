@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11i.CertDilate
 import HarmonicBalls.FirstPass.S11ah.Cutoff
 
 /-!
-# Rooted covariance of the certificate event: reduction of `hCov` to a local rescaling identity (fp-S11as)
+# Rooted covariance of the certificate event: reduction of `hCov` to a local rescaling identity
 
-Deterministic half of the covariance clause `hCov` of n1 (`HarmonicBalls/FirstPass/S11ai/RootedInstance.lean`).
+Deterministic half of the covariance clause `hCov` (`HarmonicBalls/FirstPass/S11ai/RootedInstance.lean`).
 The physical rooted pair `(μR z ω, dR z ω)` at scale `2^{-n}` about `z` is compared with the canonical pair
 `(μC n, dC n)` (`μC n = Dμ (dilOp^[n] L)`, `dC n = Dd (dilOp^[n] L)`) at unit scale about `0`, through the affine map
 `w ↦ z + 2^{-n} w`. Three deterministic facts are used:

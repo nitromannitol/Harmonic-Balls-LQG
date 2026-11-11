@@ -1,10 +1,10 @@
 import HarmonicBalls.FirstPass.S11ac
 import HarmonicBalls.FirstPass.S11ak.Dilation
 
-/-! # The punctured-ball metric decoder on the ball of radius 7 (fp-S11ak, owner z6)
+/-! # The punctured-ball metric decoder on the ball of radius 7
 
 Corollary of `S11ac.metricDecoder_punctured_ball` with `R = 7`. Its local metric replacement hypothesis `hLoc` on the disks
-of `ball 0 7` is discharged by the dilation `S11ak.localMetricReplacement_dilate` (`Dilation.lean`) from n2's
+of `ball 0 7` is discharged by the dilation `S11ak.localMetricReplacement_dilate` (`Dilation.lean`) from the
 `LocalMetricReplacementStmt` (FirstPass/S11r/LocalMetricReplacement.lean), which is stated on the disks of `ball 0 1`.
 Same shape as `S11ac/Unit.lean` (the unit ball).
 -/
@@ -17,7 +17,7 @@ open MeasureTheory Set Metric
 open scoped ENNReal
 
 /-- **Punctured-ball metric decoder, ball of radius 7.** The statement of `S11ac.metricDecoder_punctured_ball` with `R = 7`,
-the local metric replacement being the dilation of n2's `LocalMetricReplacementStmt`. -/
+the local metric replacement being the dilation of `LocalMetricReplacementStmt`. -/
 theorem metricDecoder_punctured_ball_seven (hAx : HarmonicBalls.LQGMetricFieldAxiomsUnivFrozen.{u}) (γ ξ : ℝ)
     (hγ : 0 < γ) (hγ2 : γ < 2) (hξ : 0 < ξ)
     (hN2 : ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ, HarmonicBalls.LocalMetricReplacementStmt.{u} γ ξ c₁ c₂ r₁ r₂) :

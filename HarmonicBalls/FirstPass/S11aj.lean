@@ -4,12 +4,11 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 import HarmonicBalls.FirstPass.Frozen.S11aj
 import HarmonicBalls.FirstPass.S11aj.Mixture
 
-/-! # Shifted clause of the metric and pair event certificates (fp-S11aj)
+/-! # Shifted clause of the metric and pair event certificates
 
 The shifted clause `hshift` of `metric_event_transfer_of_rule` (`FirstPass/S11ab.lean`) and its pair version for
 `MetricMeasureEventCertificateStmt` (`FirstPass/S11ag.lean`), for the shifted field `h^C + f` of a smooth compactly
-supported `f` with zero unit-circle average. Route (Lh answer `notes/fp-gaps/CHATGPT-lh-R4-R5.md`, §R4 and its pair
-follow-up): a Cameron-Martin reweighting `P'` of the GFF (named hypothesis `CameronMartinGFFReweighting`), and a two-copy
+supported `f` with zero unit-circle average. Route: a Cameron-Martin reweighting `P'` of the GFF (named hypothesis `CameronMartinGFFReweighting`), and a two-copy
 model on `Ω ⊕ Ω` with the mixture `½ P.map inl + ½ P'.map inr` (`FirstPass/S11aj/Mixture.lean`), to which the universally
 quantified certificate is applied once. The frozen null-set input `CameronMartinGFFMutualAbsCont` transfers the
 measurable discrepancy set from the base copy to the shifted copy.

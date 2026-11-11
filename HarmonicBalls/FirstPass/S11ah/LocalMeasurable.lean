@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11ah.Cutoff
 import HarmonicBalls.FirstPass.S11ah.LengthTransport
 
 /-!
-# Local-domain measurability of the certificate event (fp-S11ah-11-13-steps-4-5, owner n4)
+# Local-domain measurability of the certificate event
 
-Operator note (03:42 UTC): the local decoders `m_D` give a metric only on a disc `B = ball c R`. The whole-plane
+The local decoders `m_D` give a metric only on a disc `B = ball c R`. The whole-plane
 `FirstPassS11i.measurableSet_certificateEvent` needs a length metric on all of `ℂ`. This file proves the local-domain
 version through the radial lift (`S11ah/Radial.lean`, `S11ah/LengthTransport.lean`):
 
@@ -14,7 +14,7 @@ version through the radial lift (`S11ah/Radial.lean`, `S11ah/LengthTransport.lea
   through the lift at some admissible radius `radialSeq R j` whose disc contains `closedBall z (7 r)`;
 * `measurableSet_localCertSet`: it is measurable (no locality needed: a countable union of measurable pieces);
 * `localCertSet_eq_of_locality`: under the named locality hypothesis `CertificateEventLocality` (operator's item (a),
-  split off to fp-S11al / q1; taken as a hypothesis here), the membership does not depend on the admissible lift.
+  taken as a hypothesis here), the membership does not depend on the admissible lift.
 
 The buffered containments of the sets `Ostar, U, V, W, T, Q', Q` in `B_7` are not reproved here; they enter only
 through `CertificateEventLocality`.
@@ -80,9 +80,8 @@ def localCertSet (c : ℂ) (R : ℝ) (κ : Kernel Ω ℂ) (D : Ω → ℂ → �
       FirstPassS11i.CertificateEvent (κ p.1) (liftMetric c (radialSeq R j) R (D p.1))
         Ostar U V W T Q' Q η M r p.2}
 
-/-- **Named hypothesis (operator item (a), locality; split off to fp-S11al / q1, lemma name pending in
-`notes/q1-for-n4.md`, which does not exist yet).** Under the buffered containments of `Ostar, U, V, W, T, Q', Q`
-in `B_7` (Step 1 of notes/fp-gaps/CHATGPT-n3-Q1-eq34.md section 5), the certificate event at `(z, r)` depends only on
+/-- **Named hypothesis (locality; lemma name pending).** Under the buffered containments of `Ostar, U, V, W, T, Q', Q`
+in `B_7`, the certificate event at `(z, r)` depends only on
 the metric on `closedBall z (7 r)`. Taken as a hypothesis, not proved here. -/
 def CertificateEventLocality (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) : Prop :=
   ∀ (μ : Measure ℂ) (r : ℝ), 0 < r → ∀ (z : ℂ) (D D' : ℂ → ℂ → ℝ),

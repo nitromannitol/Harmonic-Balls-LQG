@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11ah.LocalCert
 import HarmonicBalls.FirstPass.S11ao
 
 /-!
-# Steps 4-5 in the form of the local certificate sequence (J) (fp-S11ah-11-13-steps-4-5d, owner n4)
+# Steps 4-5 in the form of the local certificate sequence (J)
 
-Step 4 (formula (J), `notes/fp-gaps/CHATGPT-n3-Q1-eq34.md` section 5): `localCert` (`S11ah/LocalCert.lean`) is
+Step 4 (formula (J)): `localCert` (`S11ah/LocalCert.lean`) is
 `c_n(ℓ, z) = 1_{E_{2^{-n}}(κ ℓ, D ℓ; z, M)}` when `closedBall z (7 · 2^{-n}) ⊆ ball c R`, and `0` otherwise, for a local
 decoder `D ℓ` on the disc `ball c R` and a local measure `κ ℓ`. Step 5: the failure set `S = {(z, ℓ) | z ∈ A, the window
 averages of c_n(·, ℓ) at z do not converge to q}` (`failureSet`, `S11ah/FailureSet.lean`) is measurable.
@@ -26,7 +26,7 @@ This file gives the observable-indexed form used by `FirstPass/S11ai/RootedInsta
   input (the LQG length property, `ae_isLengthMetricOn_decoderOn`, and the cutoff R1 `cutoffInternalLengthStmt` are proved).
 
 Not covered here: the rooted decoders (identity (20) of `LocalMetricReplacementStmt`), whose length property for a.e. root
-is not yet available (see the report of fp-S11ah-11-13-steps-4-5d).
+is not yet available.
 -/
 
 open MeasureTheory ProbabilityTheory Metric Set Filter Topology HarmonicBalls

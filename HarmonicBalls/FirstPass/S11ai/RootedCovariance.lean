@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11i.CertDilate
 import HarmonicBalls.FirstPass.S11ah.Cutoff
 
 /-!
-# Deterministic covariance of the rooted certificate (fp-S11ai-11-13-steps-6-7c, hCov)
+# Deterministic covariance of the rooted certificate
 
 The rooted physical pair `(μ, D)` at root `z` is the translate by `-z` of a canonical pair `(ν, E)`; the certificate at
 scale `2^{-n}` about `z` of `(μ, D)` is then the certificate of `(ν, E)` at scale `2^{-n}` about `0` (translation,

@@ -3,13 +3,10 @@ import HarmonicBalls.FirstPass.S11ah.LocalObsHae
 import HarmonicBalls.FirstPass.S11ah.LengthBorelFinal
 
 /-!
-# Discharging `hGood` of the almost-sure length property (B1 wiring, owner n3)
+# Discharging `hGood` of the almost-sure length property
 
 `ae_isLengthMetricOn_rootedRefLaw` (`LocalObsHae.lean`) takes the good set of observations as the named
-input `hGood`. Ruling chat 236, section 7: `hGood` is the preimage of the Borel set of decoders
-`{d | IsLengthMetricOn (ball c₂ r₂) (decoderOn (ball c₂ r₂) d)}` (`measurableSet_isLengthMetricOn_decoderOn`)
-under the local decoder `m`, whose measurability `Measurable m` is a conjunct of `LocalMetricReplacementStmt`.
-The lemma below is that wiring; it needs no new named input.
+input `hGood`. The lemma below is that wiring; it needs no new named input.
 -/
 
 open MeasureTheory Set Metric

@@ -5,17 +5,16 @@ import HarmonicBalls.FirstPass.S11ai.RootedTransfer
 import HarmonicBalls.FirstPass.S11at
 
 /-!
-# Steps 6-7 assembly: the covariance clause from q1's decoded wrapper (fp-S11ai-11-13-steps-6-7g)
+# Steps 6-7 assembly: the covariance clause from the decoded wrapper
 
 What is proved here: `ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent`, the entry of the chain with the covariance clause
-discharged by q1's wrapper `FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent`
+discharged by the wrapper `FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent`
 (`HarmonicBalls/FirstPass/S11at.lean`). The rooted local identification families and clauses (`uc dc ur dr κj mj`, `hbuf`,
-`hsubj`, `hκmeas`, `hmmeas`, `hwin`, `hRLI`, `hRLIm`, `hκj`) are the output of n2's `HarmonicBalls.ae_rootedLocalIdent_assembled_kernel`
+`hsubj`, `hκmeas`, `hmmeas`, `hwin`, `hRLI`, `hRLIm`, `hκj`) are the output of `HarmonicBalls.ae_rootedLocalIdent_assembled_kernel`
 (`HarmonicBalls/FirstPass/S11r/RootedBufferKernel.lean`), taken at one kernel family `κj`. They are not binders of the entry.
 
-Named hypotheses (not discharged here): `hFdef` (Step 7 scale-one identity, chat 243 Q1; the pointwise `hG` is derived from it by
-`ae_of_all`; `RootedTransfer.hG_of_scaleOne` and `ScaleOneAll` are NOT used), `hLenAll` (the all-z form of the length-metric
-clause `hLenC` of n2's family, flagged to the operator), `hOuter` (`closedBall c₂ r₂ ⊆ ball 0 1`), `hProf`, and the frozen Props.
+Named hypotheses (not discharged here): `hFdef`, `hLenAll` (the all-z form of the length-metric
+clause `hLenC` of the family), `hOuter` (`closedBall c₂ r₂ ⊆ ball 0 1`), `hProf`, and the frozen Props.
 
 Instantiations (not hypotheses): `Adm := AdmissibleRootShift α₀`, `rR := rootRadius`, `mD`-decoder through
 `FirstPassS11at.windowMetric (ball c₂ r₂) mD`, `hTr` from `isWholePlaneGFF_translatedPairing` (affine invariance `hAff`), and the
@@ -31,7 +30,7 @@ open scoped ENNReal
 open HarmonicBalls
 open HarmonicBalls.S11c
 
-/-- **Steps 6-7 entry with q1's decoded covariance wrapper and n2's rooted local identification.** Bad quantum mass vanishes
+/-- **Steps 6-7 entry with the decoded covariance wrapper and the rooted local identification.** Bad quantum mass vanishes
 (`ae_quantum_bad_mass_eq_zero_of_identification` conclusion). The families `uc dc ur dr κj mj` and the clauses `hbuf`, `hwin`,
 `hRLI`, `hRLIm`, `hκj` come from `HarmonicBalls.ae_rootedLocalIdent_assembled_kernel`, with one kernel `κj` for all of them. -/
 theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
@@ -110,7 +109,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
     have hzc : z ∈ closedBall c₂ r₂ := ball_subset_closedBall (hsub (ball_subset_closedBall hz))
     have hz0 : z ≠ 0 := fun h => h0 (h ▸ hzc)
     exact rootRadius_pos (norm_pos_iff.2 hz0)
-  -- Step 6a: the families of n2's buffered rooted local identification, with the window kernel clause hκj
+  -- Step 6a: the families of buffered rooted local identification, with the window kernel clause hκj
   obtain ⟨uc, dc, ur, dr, κj, mj, hbuf, hsubj, hκmeas, hmmeas, hwin, hRLI, hRLIm, hκj⟩ :=
     HarmonicBalls.ae_rootedLocalIdent_assembled_kernel (γ := γ) (ξ := ξ) (α₀ := α₀) (hCM := hCM) (hG := hh)
       (hγ0 := hγ0) (hγ2 := hγ2) (hα := hα) (hc1 := hc1) (hr₂ := hr₂) (hOuter := hOuter)
@@ -140,7 +139,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
     filter_upwards [hLenAll] with z hz hA b u hadm using hz b u hadm
   have hDj : ∀ j, ball (dc j) (dr j) ⊆ ball c₂ r₂ := fun j => ball_subset_closedBall.trans (hsubj j)
   have hDjO : ∀ j, IsOpen (ball (dc j) (dr j)) := fun j => isOpen_ball
-  -- Step 7: pointwise coding identity, derived from hFdef (ChatGPT 243, Q1)
+  -- Step 7: pointwise coding identity, derived from hFdef
   have hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
       AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
         (FirstPassS11i.CertificateEvent
@@ -150,7 +149,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
           ballRestrictPairing 7 (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))) ∈ F) := by
     refine ae_of_all _ fun z _ b u _ => ?_
     exact ae_of_all _ fun ω n => hFdef _
-  -- Step 6: the eventual covariance clause, from q1's decoded wrapper
+  -- Step 6: the eventual covariance clause, from the decoded wrapper
   have hCov :=FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent
     (γ := γ) (α₀ := α₀) (ξ := ξ) (𝔇 := 𝔇) (hCM := hCM) (hC := hC) (hcirc := hcirc) (hh := hh) (hTr := hTr)
     (c₁ := c₁) (c₂ := c₂) (r₁ := r₁) (r₂ := r₂) (A := A) (Ostar := Ostar) (U := U) (V := V) (W := W) (T := T)
@@ -168,9 +167,9 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
 
 #print axioms ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent
 
-/-- **Steps 6-7 entry, guarded length clause (fp-S11r-guarded-converse).** The same conclusion as
+/-- **Steps 6-7 entry, guarded length clause.** The same conclusion as
 `ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent`, with the length-metric binder `hLenAll` in the guarded form
-`z ∈ A → …` (the operator's decision of 2026-11-10). The families `uc dc ur dr κj mj` and the clauses `hbuf`, `hwin`,
+`z ∈ A → …`. The families `uc dc ur dr κj mj` and the clauses `hbuf`, `hwin`,
 `hRLI`, `hRLIm`, `hκj` come from the guarded kernel `HarmonicBalls.ae_rootedLocalIdent_assembled_kernel_guarded`
 (`HarmonicBalls/FirstPass/S11r/RootedBufferKernelGuarded.lean`), with one kernel `κj` for all of them. -/
 theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent_guarded
@@ -249,7 +248,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent_guarded
     have hzc : z ∈ closedBall c₂ r₂ := ball_subset_closedBall (hsub (ball_subset_closedBall hz))
     have hz0 : z ≠ 0 := fun h => h0 (h ▸ hzc)
     exact rootRadius_pos (norm_pos_iff.2 hz0)
-  -- Step 6a: the families of n2's guarded buffered rooted local identification, with the window kernel clause hκj
+  -- Step 6a: the families of guarded buffered rooted local identification, with the window kernel clause hκj
   obtain ⟨uc, dc, ur, dr, κj, mj, hbuf, hsubj, hκmeas, hmmeas, hwin, hRLI, hRLIm, hκj⟩ :=
     HarmonicBalls.ae_rootedLocalIdent_assembled_kernel_guarded (γ := γ) (ξ := ξ) (α₀ := α₀) (hCM := hCM) (hG := hh)
       (hγ0 := hγ0) (hγ2 := hγ2) (hα := hα) (hc1 := hc1) (hr₂ := hr₂) (hOuter := hOuter)
@@ -275,7 +274,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent_guarded
     filter_upwards [hRLIm] with z hz hA b u hadm using hz hA b u hadm
   have hDj : ∀ j, ball (dc j) (dr j) ⊆ ball c₂ r₂ := fun j => ball_subset_closedBall.trans (hsubj j)
   have hDjO : ∀ j, IsOpen (ball (dc j) (dr j)) := fun j => isOpen_ball
-  -- Step 7: pointwise coding identity, derived from hFdef (ChatGPT 243, Q1)
+  -- Step 7: pointwise coding identity, derived from hFdef
   have hG : ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), z ∈ A → ∀ (b : ℝ) (u : ℂ → ℝ),
       AdmissibleRootShift α₀ z b u → ∀ᵐ ω ∂P, ∀ n : ℕ,
         (FirstPassS11i.CertificateEvent
@@ -285,7 +284,7 @@ theorem ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent_guarded
           ballRestrictPairing 7 (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u))) ∈ F) := by
     refine ae_of_all _ fun z _ b u _ => ?_
     exact ae_of_all _ fun ω n => hFdef _
-  -- Step 6: the eventual covariance clause, from q1's decoded wrapper (guarded length and window clauses)
+  -- Step 6: the eventual covariance clause, from the decoded wrapper (guarded length and window clauses)
   have hCov :=FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent
     (γ := γ) (α₀ := α₀) (ξ := ξ) (𝔇 := 𝔇) (hCM := hCM) (hC := hC) (hcirc := hcirc) (hh := hh) (hTr := hTr)
     (c₁ := c₁) (c₂ := c₂) (r₁ := r₁) (r₂ := r₂) (A := A) (Ostar := Ostar) (U := U) (V := V) (W := W) (T := T)

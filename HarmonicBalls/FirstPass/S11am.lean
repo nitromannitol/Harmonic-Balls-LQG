@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11m.LocalRule
 import HarmonicBalls.Steps.Sec11.PinchNormalizedLocalEvent
 
 /-!
-# Decoded local rule: countable form and identification with the true rule (fp-S11am, owner z7)
+# Decoded local rule: countable form and identification with the true rule
 
-Route `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md`: equation (2) (the local certificate
+Equation (2) (the local certificate
 `E₁ ∩ E₂(M) ∩ E₃`) and section 5 (one measurable rule; nonfinite outputs rejected, l.383-409).
 
 Let `X` be a measurable space of observations. The decoded data are values `Φ O x y ℓ : ℝ≥0∞`, indexed by open domains

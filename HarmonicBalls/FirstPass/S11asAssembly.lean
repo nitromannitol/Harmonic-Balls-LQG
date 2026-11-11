@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11as
 import HarmonicBalls.FirstPass.S11asZoom
 
 /-!
-# Mass clause of the rooted local rescaling: deterministic assembly (fp-S11as, round 7)
+# Mass clause of the rooted local rescaling: deterministic assembly
 
 For one sample point, the mass half of `RootedLocalRescaling` (`HarmonicBalls/FirstPass/S11as.lean`) follows from five
 pointwise identities, each produced by an almost-sure lemma of this task:

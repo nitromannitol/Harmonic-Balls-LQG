@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11ai.RootedIdentification
 /-!
 # Step 3 of the rooted decoder identification: the local pairing identity
 
-Notes: `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` section 1.3, Step 3, equation (5).
+Step 3, equation (5).
 For a root `z` and a test function `φ` supported in `ball z b`, the reference observation `campbellReferenceObs`
 (the field `g - γ log|· - z| + b` of the Campbell marking, with insertion `α₀`) pairs with `φ` exactly as the
 window pairing `canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u)` pairs with the translate

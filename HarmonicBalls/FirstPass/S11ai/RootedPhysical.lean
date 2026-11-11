@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11ap
 import HarmonicBalls.FirstPass.S11aq
 
 /-!
-# Local rooted covariance: the physical rooted pair from the frozen decoders (fp-S11ai-11-13-steps-6-7c, hCov)
+# Local rooted covariance: the physical rooted pair from the frozen decoders
 
-Operator note 05:52 UTC (chat 181): no new decoder hypothesis. The physical rooted pair at a root `z` is defined from the
+No new decoder hypothesis. The physical rooted pair at a root `z` is defined from the
 canonical decoders `Dμ`, `Dd` (`LQGCanonicalDecodersExistStmt` at `α₀ := γ`), applied to the root-shifted canonical field
 `canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) v)`, where `v` is a smooth shift equal to `-α₀ log|z + ·|`
 on a ball about `0` (`rootShift`). Its certificate at scale `2^{-n}` about `z` is compared with the unit-scale certificate of

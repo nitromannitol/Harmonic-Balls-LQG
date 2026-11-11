@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11c.GreenTranslate11_7
 import HarmonicBalls.Steps.Sec11.InternalMetricHomeomorph
 
 /-!
-# Translation covariance and measure-side locality of the certificate event (fp-S11aq, Lemma 11.13)
+# Translation covariance and measure-side locality of the certificate event
 
 Deterministic inputs for Steps 6-7 of Lemma 11.13 (the rooted identification; `FirstPass/S11ai/RootedInstance.lean`,
 the hypotheses `hCov` and `hG` there):

@@ -4,15 +4,14 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.S11ak.RandomConstant
 import HarmonicBalls.FirstPass.S11r.LocalMetricReplacement
 
-/-! # The dilated normalised field for the punctured-ball decoder (fp-S11ak, owner z6)
+/-! # The dilated normalised field for the punctured-ball decoder
 
-For `R > 0` the dilated, normalised whole-plane field `g(w) = h^ℂ(R w) - h^ℂ_R(0)` (CHATGPT-lh-R4-R5.md §R5a,
+For `R > 0` the dilated, normalised whole-plane field `g(w) = h^ℂ(R w) - h^ℂ_R(0)`,
 "Explicit dilation proof") is again a whole-plane GFF (`WholePlaneGFFAffineInvariance`, Proposed `LQG.lean:53`,
 derived in `S11v/Affine.lean`). Its mean-zero observations on the disk `ball (c/R) (r/R)` are the rescaled
 mean-zero observations of `h^ℂ` on `ball c r` (`fieldPairing_dilate`).
 
-This file proves the deterministic and GFF-level parts, and the transport of the local metric replacement (n2's
-`LocalMetricReplacementStmt`, on the disks of `ball 0 1`) to the disks of `ball 0 R` (`localMetricReplacement_dilate`, the
+This file proves the deterministic and GFF-level parts, and the transport of the local metric replacement (`LocalMetricReplacementStmt`, on the disks of `ball 0 1`) to the disks of `ball 0 R` (`localMetricReplacement_dilate`, the
 hypothesis `hLoc` of `S11ac.metricDecoder_punctured_ball`). The metric identity for the dilated field is the Type-`u` affine
 Weyl identity `ae_weylScaling_affinePullback_circle_universe` (`RandomConstant.lean`), with the random constant
 `hcirc(R,0) + Q log R`.
@@ -74,7 +73,7 @@ theorem mem_ball_div_iff_smul {c : ℂ} {r R : ℝ} (hR : 0 < R) (z : ℂ) :
     rw [mul_sub, mul_div_cancel₀ c hR0]
   rw [hz, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hR, lt_div_iff₀ hR, mul_comm]
 
-/-! ### Transport of the local metric replacement to the dilated disks (fp-S11ak, owner z6)
+/-! ### Transport of the local metric replacement to the dilated disks
 
 `hN2` (`LocalMetricReplacementStmt`) is stated on disks in `ball 0 1`. For `R > 0` and a disk `ball c₂ r₂ ⊆ ball 0 R`, the
 rescaled disk `ball (c₂/R) (r₂/R)` lies in `ball 0 1`. The decoder `m'` of the rescaled disk, applied to the mean-zero
@@ -134,7 +133,7 @@ noncomputable def dilPointMap {R : ℝ} (hR : 0 < R) (c : ℂ) (r : ℝ) :
     apply Continuous.subtype_mk
     fun_prop
 
-/-- **Local metric replacement on the disks of `ball 0 R`** (fp-S11ak, owner z6). From `hN2` (the local metric replacement
+/-- **Local metric replacement on the disks of `ball 0 R`**. From `hN2` (the local metric replacement
 on the disks of `ball 0 1`) and the dilation by `R > 0`, the local metric replacement on the disks of `ball 0 R` holds: this
 is the hypothesis `hLoc` of `S11ac.metricDecoder_punctured_ball`. -/
 theorem localMetricReplacement_dilate {γ ξ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {R : ℝ} (hR : 0 < R)

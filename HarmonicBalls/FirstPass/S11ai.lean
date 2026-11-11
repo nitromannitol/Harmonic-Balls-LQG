@@ -3,15 +3,15 @@ import HarmonicBalls.FirstPass.S11i.RootedLocalLimit
 import HarmonicBalls.FirstPass.S11w
 
 /-!
-# Steps 6 and 7 of the Lean route for equation (34) (fp-S11ai-11-13-steps-6-7, owner n1)
+# Steps 6 and 7 of the Lean route for equation (34)
 
-Source: `notes/fp-gaps/CHATGPT-n3-Q1-eq34.md` §5. Step 6 is the reference-nullity (L) of the failure set; Step 7 is its
-transfer to zero quantum bad mass (M), through the Campbell glue. Consumers: n3 (`Assembly13.lean`, Step 8 and up).
+Step 6 is the reference-nullity (L) of the failure set; Step 7 is its
+transfer to zero quantum bad mass (M), through the Campbell glue. Consumers: `Assembly13.lean` (Step 8 and up).
 
 Notation. `D = ball c₂ r₂` is the observation domain, `B = ball c₁ r₁` the root domain, `A` the set of roots of Step 4.
 `c n` is the cutoff certificate indicator of Step 4 (eq. (J)) at a marked observation `(z, ℓ)`; `q` is the limit of Step 2.
 
-The failure set `S` of Step 5 (eq. (K), owned by n4) enters as a named hypothesis: a measurable set `S` (`hS`) with the
+The failure set `S` of Step 5 (eq. (K)) enters as a named hypothesis: a measurable set `S` (`hS`) with the
 characterisation `hSfail : x ∈ S ↔ x.1 ∈ A ∧ ¬ Tendsto (window averages of c at x) (𝓝 q)`.
 
 Named inputs, none proved here:
@@ -124,8 +124,8 @@ theorem ae_quantum_bad_mass_eq_zero
       S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellMarkedObs α₀ (ball c₂ r₂) (hC ω) z) ∂(μ ω) = 0 :=
   HarmonicBalls.S11w.ae_marked_null_of_reference_null_discharged hCamp hγ0 hγ2 hα hh hμ hE hr₁ hr₂ hsub h0 hS href
 
-/-- **Steps 6 and 7 together** (the form n3 imports). From the rooted decoder identification `hId` and the measurable failure
-set `S` (Step 5, n4), the zero quantum bad mass holds almost surely. -/
+/-- **Steps 6 and 7 together** From the rooted decoder identification `hId` and the measurable failure
+set `S` (Step 5), the zero quantum bad mass holds almost surely. -/
 theorem ae_quantum_bad_mass_eq_zero_of_rooted_identification
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (hB : BirkhoffPointwiseErgodic.{0})
     (hCamp : HarmonicBalls.LocalCampbellMarkedRestrictionFrozen.{u})

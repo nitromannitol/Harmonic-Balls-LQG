@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11ah.LQGDecoder
 import HarmonicBalls.FirstPass.S11ao
 
 /-!
-# First pass, the P-a.s. modification of the Step 5 decoders (fp-S11ao-11-13-as-modification-b, owner q3)
+# The P-a.s. modification of the Step 5 decoders
 
 This file closes the link between the almost-sure length property `hae` and the device
 `FirstPassS11ao.exists_measurable_localLengthModification` (`S11ao.lean`).

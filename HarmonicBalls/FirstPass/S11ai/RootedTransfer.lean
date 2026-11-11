@@ -7,7 +7,6 @@ import HarmonicBalls.FirstPass.S11i.MixingCanonical
 
 /-!
 # Transfer of the unit-scale coding clause to the rooted field: `hG` of `RootedInstance.lean`
-(fp-S11ai-11-13-steps-6-7, B3)
 
 Proves the hypothesis `hG` of `ae_termwise_of_identification` from the following named inputs:
 * `ScaleOneAll`: the unit-scale coding clause (`scale_one_eq` of `FirstPassS11i.CertificateIdentification`,

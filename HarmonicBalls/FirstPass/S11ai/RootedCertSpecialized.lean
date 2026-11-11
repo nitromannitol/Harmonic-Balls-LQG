@@ -3,15 +3,15 @@ import HarmonicBalls.FirstPass.S11ai.RootedInstance
 import HarmonicBalls.FirstPass.S11ah.LocalCert
 
 /-!
-# Specialized rooted certificate identity (fp-S11i-11-13d, n3; operator note 2026-11-10 06:52 UTC)
+# Specialized rooted certificate identity
 
 `ae_rootedId_of_termwise` (RootedIdentification.lean:62) takes the termwise identity `hT` for an arbitrary sequence `c` and an
-arbitrary event `F`. That generic form is false (chat 191: `c = 1`, `F = ∅`). This file states it for the actual Step 8
+arbitrary event `F`. That generic form is false. This file states it for the actual Step 8
 certificate: `c n (z, ℓ) = localCert (ball c₂ r₂) κ m … n ℓ z`, the decoded local certificate of the Campbell reference
-observation at the root `z` (sequence (J) of `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` §1.3; the field `sequence_eq` of
+observation at the root `z` (sequence (J); the field `sequence_eq` of
 `CertificateIdentification`, `FirstPass/S11i/Identification.lean:33`). The coding event `F` stays a parameter: it is the
-scale-one event of the Step 8 identification. The eventual covariance lemma (`RootedCertificateEventualCovarianceStmt`, q1,
-S11at.lean) is not yet in the repository; the statement below is the hypothesis until it lands. No new input.
+scale-one event of the Step 8 identification. The eventual covariance lemma (`RootedCertificateEventualCovarianceStmt`,
+FirstPass/S11at.lean) is not yet in the repository; the statement below is the hypothesis until it lands. No new input.
 -/
 
 universe u
@@ -38,7 +38,7 @@ noncomputable def localCertSeq {c₂ : ℂ} {r₂ : ℝ}
 `u` smooth with compact support, zero circle average, `u = -α₀ log‖z + ·‖` on `ball 0 b`), almost surely the decoded local
 certificate of the Campbell reference observation at `z` is eventually equal to the coding event `F` evaluated at the
 dilated, shifted canonical field. Source: corrected draft lines 3873-3880; ingredients the certificate definitions, local
-decoder identification, Cameron-Martin, translation and dyadic covariance (chat 191 §3-§4, notes/fp-gaps/CHATGPT-n3-hT.md). -/
+decoder identification, Cameron-Martin, translation and dyadic covariance. -/
 def RootedCertificateTermwiseIdentificationStmt {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ) (A : Set ℂ)
     (F : Set (ModConstTestPairings (ball (0 : ℂ) 7)))
@@ -53,11 +53,10 @@ def RootedCertificateTermwiseIdentificationStmt {Ω : Type u} [MeasurableSpace �
         (ballRestrictPairing 7 ⁻¹' F).indicator (fun _ => (1 : ℝ))
           (dilOp^[n] (canonFieldOf γ (addFunPairing (translatedPairing hC hcirc z ω) u)))
 
-/-- **Specialized termwise identity `hT` with the decoded rooted pair (operator note 2026-11-10 07:59 UTC; ChatGPT chat 196,
-`notes/fp-gaps/CHATGPT-hb-11-13-blockers.md` §1.2 and final dependency decision item 1).** The rooted pair is the decoded
+/-- **Specialized termwise identity `hT` with the decoded rooted pair.** The rooted pair is the decoded
 pair `(rootedMeasDec, rootedMetricDec)` of `RootedInstance.lean`, so the fitting clause holds by reflexivity and is not an
-input. The sequence is the Step 8 local certificate `localCertSeq` (`hSeq` holds by definition). Named input: `hCov`, q1's
-`RootedCertificateEventualCovarianceStmt` for the decoded pair (R1, pending: q1 blocker A, mcrt reports/q1.md). `hFdef` says
+input. The sequence is the Step 8 local certificate `localCertSeq` (`hSeq` holds by definition). Named input: `hCov`,
+`RootedCertificateEventualCovarianceStmt` for the decoded pair (pending). `hFdef` says
 that the coding event `F` is the scale-one certificate event (defining identity of `F`), so `hG` holds pointwise. The proof is
 `ae_termwise_of_identification`. -/
 theorem rootedCertTermwise_of_decoded {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]

@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11h.LocalEvents
 import HarmonicBalls.FirstPass.S11j.C42Six
 
 /-!
-# Certificate containments for the paper's pinch geometry (fp-S11ap, Lemma 11.13)
+# Certificate containments for the paper's pinch geometry
 
 Paper `paper/lqg_harmonic_ball-corrected.tex`:
 * the component `Ω` of `0` in `B₇ \ (closure B_{2δ}(Q) ∪ closure B_{2δ}(W))` (lines 3180-3191), i.e.
@@ -21,7 +21,7 @@ Results (no hypothesis beyond `IsBufferedPinchGeometry`):
 
 Not provided here: the containment for an arbitrary `Ostar` with the geometric clauses of `GammaZoomIdentityStmt`
 (`Assembly13.lean`, the existential `∃ Ostar`). That existential does not fix `Ostar`, so `Ostar ⊆ closedBall 0 7`
-does not follow for it (gap report in `notes/q1.md`).
+does not follow for it.
 -/
 
 namespace FirstPassS11ap

@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11ap
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Step 5 for the local decoders, with no named input (fp-S11ah-11-13-steps-4-5c, owner n4; wave 32)
+# Step 5 for the local decoders, with no named input
 
 Closed forms of the Step 5 interface of `S11ah/LQGDecoder.lean` and `S11ah/Modified.lean`:
 

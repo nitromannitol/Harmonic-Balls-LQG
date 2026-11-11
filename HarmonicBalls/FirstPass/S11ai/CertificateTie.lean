@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11i.CertDilate
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Certificate identification for `hId` (fp-S11ai-11-13-steps-6-7, operator note 03:55 UTC)
+# Certificate identification for `hId`
 
-Source: `notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` §1.2 (identifications (1)-(4)) and §1.3 (Steps 4-6).
+Identifications (1)-(4) and Steps 4-6 of the rooted certificate.
 
 Deterministic lemmas proved here:
 * `certificateEvent_scale_iff`: the certificate event `𝓔_r(μ, D; z, M)` is invariant under independent positive scalings of

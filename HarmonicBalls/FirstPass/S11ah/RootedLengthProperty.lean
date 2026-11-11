@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.S11r.RootedDecoder
 import HarmonicBalls.FirstPass.S11r.Frozen
 
 /-!
-# The rooted length property, and Step 5 for the rooted decoders with it discharged (fp-S11ah-11-13-steps-4-5e, owner n4)
+# The rooted length property, and Step 5 for the rooted decoders with it discharged
 
 Proves the named hypothesis `RootedLengthPropertyStmt` (`S11ah/Step5Rooted.lean`) from three inputs that are in the
 repository: identity (20) of `LocalMetricReplacementStmt` (`S11r/LocalMetricReplacement.lean`), taken as an explicit
@@ -14,13 +14,13 @@ hypothesis `hid` (its clause for the insertion `α < Q_γ`); the frozen continui
 insertion, `RootedPhysicalMetricContinuousAtInsertionFrozen` (`S11r/Frozen.lean`, DFGPS Proposition 3.17); and the LQG
 axiom I, `ae_isEuclideanLengthMetric_of_lqg` (`S11ah/LQGDecoder.lean`). No new input.
 
-Route (ChatGPT PRO verdict on the rooted length property, section 5.1, operator note 2026-11-10):
-* `internalPhysicalMetric_lengthFields_full` (n2, `S11r/RootedLengthFields.lean`) gives the seven fields of
+Route:
+* `internalPhysicalMetric_lengthFields_full` (`S11r/RootedLengthFields.lean`) gives the seven fields of
   `IsLengthMetricOn B (internalReal (weylPhysicalE d ξ f) B)` for the physical internal metric of the rooted field `f`;
 * identity (20) gives `ofReal (decoder p) = ofReal b · internalMetric (weylPhysicalE d ξ f) B p` on `B × B`;
 * `isLengthMetricOn_decoderOn` (`S11ah/LQGDecoder.lean`) transports the length property to the decoder. Its proof treats the
   sign of the decoder (positivity off the diagonal, continuity on the diagonal), so identity (20) is not reduced to real
-  numbers by a bare `toReal`, as the PRO verdict requires.
+  numbers by a bare `toReal`.
 -/
 
 open MeasureTheory ProbabilityTheory Metric Set Filter Topology HarmonicBalls
