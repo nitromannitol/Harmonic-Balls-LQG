@@ -90,7 +90,7 @@ def WeylMetricCompositionFrozen : Prop :=
     ∀ x y, weylScaling (fun u v => (weylScaling D ξ g u v).toReal) ξ f x y =
       weylScaling D ξ (fun z => g z + f z) x y
 
-/-- FROZEN (EXTERNAL; truth check TRUE; ). The Weyl exponent
+/-- FROZEN (EXTERNAL; truth check TRUE). The Weyl exponent
 of an LQG metric is positive: `ξ > 0` for `IsLQGMetric γ ξ 𝔇`, `0 < γ < 2`, the only range used. The statement is TRUE.
 Its source is the positivity argument, not Ding-Gwynne Theorem 1.9 (which assumes `ξ > 0`): normalized whole-plane GFF
 scaling, constant Weyl scaling, coordinate change and the Euclidean topology (Bou-Rabee-Gwynne arXiv:2208.11795, Section
