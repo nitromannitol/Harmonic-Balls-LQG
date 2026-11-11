@@ -179,3 +179,15 @@ Kept: paper citations, `Proposed` and `Frozen` names and status words, mathemati
 - Step-3 recipe re-run before the HB commit: empty for all 13 modules.
 - Batch 2 (36 LQG modules): LP commit `79351f7`; HB comment cleanup `e84472dd`; `lake build LatticeProb.LQG` OK.
 - Batch 3 (GFFCovSymm, GFFExistence): LP commit `3338fbe`; HB comment cleanup `7f42025f`; `lake build LatticeProb.Gauss.GFFCovSymm LatticeProb.Gauss.GFFExistence` OK.
+
+## HB rewire (prepared, not applied)
+
+Prepared for the pin switch window (LP-MOVE-PLAN section 2). No repository file was modified by the preparation; the scripts and outputs live in the fleet scratch area, not in the repository.
+
+- Map: `scratch-k4/rewire/map.tsv`, 53 lines (one per moved module, `HarmonicBalls.LPStage.X` to `LatticeProb.<Dir>.X`): batches 1-3 (51 modules) and `WeylMassMeasurable`, `WeylSupMeasurable` to `LatticeProb.Prob.*` (committed by lr on `idla/phase2` in `f6c0d7e`). All 53 LP targets exist at LP HEAD; all 53 HB sources exist; none pending.
+- Targets: every tracked `.lean` outside `HarmonicBalls/LPStage/` (`lakefile.lean` excluded), plus the non-moved LPStage files that import a moved module: `All`, `GFFCovPSD1`, `GFFCovPSD2`, `LocalMeasureKernel2`, `LocalMeasureKernel4`, `WeylShiftedMass`. The moved LPStage mirrors are not touched.
+- Dry-run result (working tree at preparation time): 34 files, 34 hunks, 103 import lines removed and 103 added, 0 other changed lines, 0 files under `HarmonicBalls/External` or `HarmonicBalls/Draft`, 0 target files with uncommitted changes. `git apply --check` OK. A forward and a reverse `patch` round trip on a copy of the 34 files restores the originals byte for byte.
+- After the rewrite: 0 target files import a moved module from LPStage. Targets that still import a non-moved LPStage module: 8 (`LPStage/All`, `LPStage/GFFCovPSD2`, `LPStage/LocalMeasureKernel2`, `LocalMeasureKernel3`, `LocalMeasureKernel4`, `LocalMeasureKernel5`, `FirstPass/LPBridge/WeylShiftedMass.lean` (imports `HarmonicBalls.LPStage.WeylShiftedMass`), `checks/AxiomGate.lean` (imports `HarmonicBalls.LPStage.All`)). Expected for the non-moved files; the last two are outside LPStage and need a decision when the non-moved files retire.
+- The 41 moved LPStage mirrors still import LPStage modules (their own chain). They are not rewritten by design and retire with the HB rewire.
+- How to run (after the pin switch, operator, with the HB owners quiescent): `rewire.sh dry` (writes `rewire.patch`, modifies nothing), `rewire.sh check` (dry, residual imports, `git apply --check`), `rewire.sh apply` (dry, refuses target files with uncommitted changes unless `FORCE=1`, then `git apply`). Re-run `dry` before `apply` if the tree has changed.
+- How to reverse: `git apply -R rewire.patch` from the repository root, after an apply of that patch (the reverse check is meaningful only on the applied tree).
