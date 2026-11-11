@@ -3,7 +3,7 @@
 Umbrella: `HarmonicBalls/LPStage/All.lean` imports the 54 LPStage modules of the table below (build with
 `lb HarmonicBalls.LPStage.All`, BUILD OK 2026-11-11): the 37 earlier ones plus, added 2026-11-11, the 12 LQGMeasureNonatomic*
 modules (z7), LQGMeasureFullSupport{,2,3} and LQGMeasureSquarePositive (z3, DONE 11:49) and WeylShiftedMass (z4, 10de7ef9).
-Not imported: z4's LocalMeasureKernel{,2} (open items at the end of this file).
+Not imported: z4's LocalMeasureKernel{,2,3,4,5} (move-status notes and open items at the end of this file).
 Row numbers are those of `docs/campaign/PHASE2-INVENTORY.md` section 2 (the 57 inputs; as in PHASE2-DERIVATION-STATUS.md).
 "HB row" = the staged input; "support" = definitions or lemmas used by a staged result, no row of their own.
 "Hypotheses": "none" = the main result takes no literature Prop; a definitional predicate (e.g. `IsWholePlaneGFF`) is not counted.
@@ -63,7 +63,7 @@ Line numbers are those of the committed files at the time of the row-56 commit.
 | WeylInternalClosed | `weylInternalClosed_derived` :38 (helpers imported from LengthMetricDerived) | 26 | none | FirstPass/LPBridge/M5a.lean | READY |
 | WeylMassMeasurable | `measurable_lintegral_of_caratheodory` :28 (general measure theory) | support (27) | none | - | READY |
 | WeylOffOrigin | `localLQGInsertionWeylOffOrigin_lp` :587 (def :574); `radonUniqueLP` :181 | 11 | none | FirstPass/LPBridge/WeylOffOrigin.lean | READY |
-| WeylShiftedMass | `weylShiftedMassMeasurable_lp` :131 (def `WeylShiftedMassMeasurableLP` :40) | 27 (LP form) | none (proved) | FirstPass/LPBridge/WeylShiftedMass.lean | HOLD (z4 owns it: `tasks/z4.md` OWNS line) |
+| WeylShiftedMass | `weylShiftedMassMeasurable_lp` :131 (def `WeylShiftedMassMeasurableLP` :40) | 27 (LP form) | none (proved) | FirstPass/LPBridge/WeylShiftedMass.lean | HOLD (condition 2: `lb HarmonicBalls.LPStage.All` not re-run since commit 1bc9a7c5; see move-status notes) |
 | WeylSupMeasurable | `aemeasurable_iSup_mem_of_lowerSemicontinuousOn` :43 | 28 | none | - | READY |
 
 **Move status notes** (column `move`; task fp-lpstage-move-status-then-clean-c5-steps, 2026-11-11). READY means the four conditions hold: (1) imported by `All.lean`; (2) `lb HarmonicBalls.LPStage.All` passes; (3) no task other than the owner's edits or owns the module (`tasks/*.md`); (4) imports only Mathlib, `LatticeProb.*` or `HarmonicBalls.LPStage.*`.
@@ -71,12 +71,16 @@ Line numbers are those of the committed files at the time of the row-56 commit.
 - Condition (4) reading: `import Mathlib` is treated as allowed (the LP library is Mathlib-based). Any other import would be HOLD; none of the 54 modules has one.
 - Condition (3): z4 (`tasks/z4.md`) only REUSEs `LQGMeasure` and `WeylMassMeasurable`; z6 (`tasks/z6.md`) only reads `LQGMeasureInputs` and cites `FirstPass/LPBridge/LQGMeasureSquarePositive.lean` (same basename, not this module). No task edits them: READY.
 - Uncommitted working-tree changes (`git status` M, not made by this task, not named in any `tasks/*.md`): `CameronMartinDerived`, `CameronMartinDerived2`, `CircleAverageApprox`, `CircleAverageApprox2`, `GFF`, `GFFAffineInvariance`, `KolmogorovExtension`, `PhaseTorus`, `PlaneDomainConvexCompact`. Their rows are READY by the four conditions; the lead decides whether the move waits for their commit.
-- Not in the table, not imported by `All.lean`, owned by z4 (`tasks/z4.md` OWNS): `LocalMeasureKernel`, `LocalMeasureKernel2` (committed, b01b9b8c), `LocalMeasureKernel3` (tracked), `LocalMeasureKernel4` and `LocalMeasureKernel5` (untracked). All HOLD (z4 in progress). LP-MOVE-PLAN.md names only `LocalMeasureKernel{,2}`, as "not moved".
+- Round `fp-phase2-event-sub-then-lpindex` (2026-11-11; z4 DONE with these six modules), conditions (1)-(4) as above:
+  - `WeylShiftedMass`: HOLD. (1) imported by `All.lean:55`; (3) no task owns it now; (4) imports only Mathlib and `LPStage.*`. Condition (2) is NOT verified: the last `lb HarmonicBalls.LPStage.All` BUILD OK (log `123123-3580497.log`, 13:41:35 UTC) predates commit `1bc9a7c5` (14:53 UTC, "sync mirror docstrings", 47 LPStage files, including its dependencies `GFF`, `LQGMeasure`, `LQGMetric`, `LengthMetric`, `WeylMassMeasurable`, `CircleAverageApprox2`). Re-run `lb HarmonicBalls.LPStage.All`; READY once it passes.
+  - `LocalMeasureKernel`, `LocalMeasureKernel2`, `LocalMeasureKernel3`, `LocalMeasureKernel4`, `LocalMeasureKernel5`: HOLD. All committed and clean (b01b9b8c; a130e763 for 2 and 3; 7607f2f4 for 4 and 5). Condition (4) holds for each (Mathlib and `LPStage.*` imports only). Condition (1) fails: none is imported by `All.lean`. Adding them to the umbrella is the lead's decision; condition (2) cannot be checked before that.
+  - Ownership: no `tasks/k4*.md` lists any of the six, so none is skipped. `tasks/k5.md` owns `LatticeProb/LQG/LocalMeasureKernel5.lean` in the LP worktree, a different file with the same basename; this does not affect condition (3).
+  - LP-MOVE-PLAN.md names only `LocalMeasureKernel{,2}`, as "not moved".
 - Cross-check with LP-MOVE-PLAN.md section 1: the same 54 module names as this table; the only difference is the LocalMeasureKernel files above.
 
 Open items (not in `All.lean`):
-- z4 `LPStage/LocalMeasureKernel.lean`, `LocalMeasureKernel2.lean`: committed by z4 (b01b9b8c), not imported; the umbrella
-  decision is the lead's.
+- z4 `LPStage/LocalMeasureKernel{,2,3,4,5}.lean`: committed by z4 (b01b9b8c, a130e763, 7607f2f4), not imported by `All.lean`; the
+  umbrella decision is the lead's.
 - Done 2026-11-11: the `LQGMetricMeasurable.lean:5` header now cites row 32 (`LQGInternalDiamInnerMeasurableFrozen`) for the
   support and says that PointwiseAE has no inventory row (row 33 is `LQGMassInnerMeasurableFrozen`).
 - Row 50 (`lqgVolumeGrowthAllScalesStmt_of_scaled_lp`, LQGMeasureFullSupport3:386): no FirstPass bridge file yet.
