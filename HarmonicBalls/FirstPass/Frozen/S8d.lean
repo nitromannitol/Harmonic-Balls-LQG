@@ -24,7 +24,7 @@ its approximations `ε^{γ²/2} e^{γ ŷ_ε(z)} dz` along the dyadic scales, wit
 In words: the LQG measure is a measurable function of the circle-average profile (Duplantier–Sheffield, LQG and KPZ,
 arXiv:0808.1560; Duplantier–Sheffield 2011, Prop. 1.1 for the vague limit). The repository proves only the Ω-level
 measurability (Proofs/Sec5/OpenMeasureLaw.lean:130 `IsWholePlaneGFF.aemeasurable_lqgMeasure`), not this profile form.
-Source locator: standard; locator pending. Used by: firstPass_8_2 (through FirstPass/S8d.lean, the profile instance). Truth check TRUE: the positive-radius profile
+Source locator: standard; locator pending. Used by: firstPass_8_2 (through FirstPass/S8d.lean, the profile instance). Truth check TRUE (an earlier verdict read it as UNCLEAR while `CircleParameter` and `circleProfile` were missing): the positive-radius profile
 space and the reconstruction give a measurable vague-limit decoder, and coordinatewise almost-sure agreement becomes
 simultaneous agreement by continuity. Source: Duplantier-Sheffield, Liouville Quantum Gravity
 and KPZ, arXiv:0808.1560v2, p. 5, Proposition 1.1, and p. 17, Proposition 3.1; the decoder statement is a
@@ -45,7 +45,7 @@ ergodic for the product of the uniform phase measure with `ν`. The doubling map
 mixing), and the product of a weakly mixing map with an ergodic map is ergodic (Walters, An Introduction to Ergodic
 Theory, GTM 79, §1.6 and Thm 1.27). Mathlib has no such product lemma (checked: no `Ergodic` product lemma under
 `Mathlib/Dynamics/Ergodic`). Locator: PENDING (source check). Used by: firstPass_8_2 (the phase tail of
-FirstPass/S8d.lean, through `ae_frequency_of_torus_dilation`). Truth check TRUE: the doubling map on both coordinates of (ℝ/ℤ)² with
+FirstPass/S8d.lean, through `ae_frequency_of_torus_dilation`). Truth check TRUE (an earlier verdict read it as UNCLEAR while the helpers were missing): the doubling map on both coordinates of (ℝ/ℤ)² with
 the Haar-product measure is weakly mixing, and its product with any ergodic probability-preserving map is ergodic.
 The argument assumes `phaseTorusFieldMeasure ν = (volume ⊗ volume) ⊗ ν`; the repository abbrev
 (HarmonicBalls/FirstPass/S8c/TorusTail.lean:25) and `phaseTorusDouble`

@@ -11,7 +11,7 @@ events to the level-`0` good event: `Gn n = T^[n]⁻¹' G` (G-8-2 section 3, eq.
 probability at least `1 - ζ/2` on every phase section, the Birkhoff ergodic theorem for an ergodic `T` gives, almost
 surely on the torus times the field space, eventually `(1 - ζ) N` good levels in each block `[N+1, 2N]`.
 This is the torus form of the phase tail (`hphase` of Proofs/Sec8/PhaseTorusLebesgue.lean). The two named inputs are
-the ergodicity of `T` (G-8-2 section 3, mixing of the GFF dilation) and the identity (10).
+the ergodicity of `T` (mixing of the GFF dilation, pending) and the identity (10).
 -/
 
 open MeasureTheory ProbabilityTheory Filter
