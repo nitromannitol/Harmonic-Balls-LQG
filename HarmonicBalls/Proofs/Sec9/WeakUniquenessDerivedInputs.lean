@@ -79,8 +79,6 @@ end HarmonicBalls
 
 /-! ## Guards: printed axioms, binder shape and the provider closure -/
 
-#check @HarmonicBalls.lqgVolumeGrowthAllScalesStmt_of_staged_inputs
-#check @HarmonicBalls.subharmonicBallUniquenessWeak_of_stronger_singularity_typicalScales
 open Lean Meta Elab Command in
 #eval show CommandElabM Unit from do
   let env ← getEnv
