@@ -211,7 +211,7 @@ Co-Authored-By: Claude Haiku 5.5 <noreply@anthropic.com>
 
 ## Batch 5: local decoder measure kernel and Weyl-shifted mass (6 modules)
 
-- LP repository: `/home/nitro/lean/LP-idla-phase2`, branch `idla/phase2` (not pushed). LP commit `52e2f5f` (parent `0155c34`): `LatticeProb/LQG/LocalMeasureKernel.lean` to `LocalMeasureKernel5.lean` and `LatticeProb/LQG/WeylShiftedMass.lean` (6 files, 2,427 insertions; no other LP file touched).
+- LP repository: `/home/nitro/lean/LP-idla-phase2`, branch `idla/phase2` (not pushed). LP commit `7b38ebb` (parent `e4696ce`): `LatticeProb/LQG/LocalMeasureKernel.lean` to `LocalMeasureKernel5.lean` and `LatticeProb/LQG/WeylShiftedMass.lean` (6 files, 2,427 insertions; no other LP file touched).
 - Modules: `LocalMeasureKernel` to `LocalMeasureKernel5`, `WeylShiftedMass`. The HB mirrors are unchanged. Imports: Mathlib, `LatticeProb.Topology.PlaneTopology`, the LP modules of batches 1-4, and the batch members (`LocalMeasureKernel` to `LocalMeasureKernel4`). Dropped: none.
 - Checks before the copy: (a) every import of the six files is Mathlib or an LPStage module of batches 1-4 or of this batch, so none was skipped; (b) no file name and no short declaration name (137 names) of the six files occurs in the LP tree, including the IDLA-side modules.
 - Code identity: the LP copies and the HB mirrors have the same code lines after comment and import stripping (6 of 6).
