@@ -5,7 +5,7 @@ import HarmonicBalls.Proposed.LQG
 /-!
 # Null-set transfer from the no-insertion LQG measure to the insertion measure (Step 8, Weyl transfer)
 
-Generic piece of the physical hypothesis `hphys` of Step 8 (route: notes/fp-gaps/CHATGPT-n3-marked-A10.md, end of section 2).
+Generic piece of the physical hypothesis `hphys` of Step 8.
 Let `lam` be the LQG measure of a whole-plane GFF with no insertion (`IsLQGMeasureOfField P γ 0 hcirc lam`, the measure
 `μ_g` of the route) and `μ` the LQG measure with insertion `α₀` (`IsLQGMeasureOfField P γ α₀ hcirc μ`, the measure `μ_h`).
 The frozen Weyl relation `LocalLQGInsertionWeylOffOrigin` (FirstPass/Frozen/S8c.lean:73) gives, almost surely,
@@ -15,7 +15,7 @@ holds `μ`-almost everywhere, provided the origin is an atom-free point of `μ`.
 
 The origin is removed by non-atomicity: `μ ω {0} = 0` almost surely. This is the Proposed input
 `HarmonicBalls.LQGMeasureNonatomic` (Proposed/LQG.lean:77, Fact 2.1 I of Bou-Rabee-Gwynne, arXiv:2208.11795, p. 9) at
-exponent `α₀`, pending operator source-check; the first theorem keeps `μ ω {0} = 0` as a separate hypothesis.
+exponent `α₀`, pending source-check; the first theorem keeps `μ ω {0} = 0` as a separate hypothesis.
 -/
 
 open MeasureTheory
@@ -62,7 +62,7 @@ theorem ae_ae_of_ae_ae_noInsertion (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
 
 /-- **Removal of the origin by non-atomicity (Step 8).** Same conclusion as `ae_ae_of_ae_ae_noInsertion`, with the
 hypothesis `μ ω {0} = 0` a.s. discharged by the non-atomicity of the insertion LQG measure, `hNa`, which is the Proposed
-input `HarmonicBalls.LQGMeasureNonatomic` at exponent `α₀` (Proposed/LQG.lean:77; pending operator source-check). -/
+input `HarmonicBalls.LQGMeasureNonatomic` at exponent `α₀` (Proposed/LQG.lean:77). -/
 theorem ae_ae_of_ae_ae_noInsertion_of_nonatomic (hWeyl : LocalLQGInsertionWeylOffOrigin.{u})
     {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ lam : Ω → Measure ℂ)

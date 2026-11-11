@@ -1,10 +1,9 @@
 import Mathlib
 
 /-!
-# A positive box of finitely many a.s. positive variables (first pass, fp-S11m, owner z4)
+# A positive box of finitely many a.s. positive variables
 
-FIRST-PASS NEW (measure theory only, no external input). Write-up Step 4.3 of
-`notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` (lines 380-412) chooses deterministic thresholds `c > 0` with
+Step 4.3 of the written proof chooses deterministic thresholds `c > 0` with
 `P(F) > 0` "by countable exhaustion of positive finite variables". Steps 4.4 and 4.5 use the same choice.
 This file proves that choice: if finitely many measurable real functions are almost surely strictly positive, one
 common threshold `c > 0` gives an event of positive probability on which all of them are at least `c`.
@@ -57,4 +56,3 @@ theorem exists_pos_measure_box {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω
 
 end HarmonicBalls.S11m
 
-#print axioms HarmonicBalls.S11m.exists_pos_measure_box

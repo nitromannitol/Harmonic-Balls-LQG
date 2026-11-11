@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.AlphaCanonical
 import HarmonicBalls.FirstPass.S11c.TranslateField11_7
 
 /-!
-# Translation invariance of the canonical law (fp-S11i-11-13, write-up Step 11)
+# Translation invariance of the canonical law (write-up Step 11)
 
 Mirrors `MixingCanonical.map_dilate_eq`. For a whole-plane GFF `hC` and `z : ℂ` the translated carrier
 `translatedPairing hC hcirc z` (S11c: `φ ↦ hC (φ(· - z)) - hcirc 1 z · ∫φ`) has the same canonical law on mean-zero
@@ -12,7 +12,7 @@ test functions as `hC`:
 * the Gaussian laws agree on cylinders (`map_eq_of_gaussian_cov`), hence on the σ-algebra.
 Consequence (Step 11, first reduction): Step 9 applied to the translated carrier gives the window frequency of the field
 rooted at `z`, with the same limit `P{alphaCanon α hC ∈ E}`.
-Source: `notes/fp-gaps/CHATGPT-11-13-proof.md` Step 11 (l.464-487), corrected paper translation invariance modulo constants.
+Source: Step 11 of the written proof, corrected paper translation invariance modulo constants.
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set

@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11n
 import HarmonicBalls.Proofs.Sec11.PuncturedMetricExhaustionLocality
 
 /-!
-# Measurability of the certificate event on the canonical space (fp-S11i-step8-cert-measurable, owner z4)
+# Measurability of the certificate event on the canonical space
 
-Step 5 of the measurability chain of `notes/fp-gaps/CHATGPT-n3-hT.md` (§7, lines 221-317): the event
+Step 5 of the measurability chain: the event
 `CertificateEvent (K L) (d L) Ostar U V W T Q' Q η M r z` is measurable in `(L, z) ∈ CanonSpace × ℂ`, where `K` is the
 canonical measure decoder and `d` the canonical metric decoder of `LQGCanonicalDecodersMeasurableExistStmt`
 (`FirstPass/Frozen/S11n.lean`). The metric decoder is a Euclidean length metric only on a measurable set `G`, so the

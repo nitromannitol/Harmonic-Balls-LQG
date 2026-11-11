@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11i.Step8MarkedMem
 import HarmonicBalls.FirstPass.S11i.Step8Frequency
 
 /-!
-# `href` on a ball for the normalized pair (Step 8, fp-S11i-11-13k, owner n3)
+# `href` on a ball for the normalized pair (Step 8)
 
-Chat 238 (`notes/fp-gaps/CHATGPT-238-hb-11-13-n4-per-ball-PRO.md`, section 2 and handoff steps 7-8): the reference
+The reference
 hypothesis `href` of the per-ball Step 8 route, for the normalized finite kernel `κ = discNormalizedKernel κ₀` and a
 modified decoder `m`, at the reference observations `campbellReferenceObs γ 0`. The chain is
 
@@ -19,7 +19,7 @@ modified decoder `m`, at the reference observations `campbellReferenceObs γ 0`.
 * the limit is `P{α_γ ∈ F}`, which is the canonical unit-scale frequency `qF` (model independence:
   `canonical_frequency_eq_of_models`, a corollary of `step8Frequency_eq_of_isWholePlaneGFF`).
 
-Named inputs: the rooted covariance `hCov` (the output of n1's `rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent`,
+Named inputs: the rooted covariance `hCov` (the output of `rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent`,
 `S11at.lean:1070`, for the raw pair `(κ₀, m₀)`), the identification `hFdef`, the frozen containments `hCC`, and the a.s.
 finiteness `hkappa` of the raw kernel on the disc (`Step8Modified.lean`, `hkappa`). Nothing about `m` beyond
 `m = m₀` on `H` is used. The decoder disc is `ball c₂ r₂`; the roots are in `ball c₁ r₁`, and `closedBall c₁ r₁ ⊆ ball c₂ r₂`.
@@ -38,7 +38,7 @@ open HarmonicBalls HarmonicBalls.S11c FirstPassS11ah FirstPassS11ai FirstPassS11
   HarmonicBalls.FirstPassS11ahLocalHae HarmonicBalls.FirstPassS11iStep8Href
   HarmonicBalls.FirstPassS11iStep8Normalized HarmonicBalls.FirstPassS11iStep8Modified
 
-/-- **`href` of the normalized modified pair on a ball (chat 238, section 2).** Let `κ₀` be a measurable raw kernel on the
+/-- **`href` of the normalized modified pair on a ball (section 2).** Let `κ₀` be a measurable raw kernel on the
 decoder disc `ball c₂ r₂` with rooted covariance `hCov` for `(κ₀, m₀)`, and let `κ = discNormalizedKernel κ₀` be its
 normalized finite kernel, with `m` a decoder agreeing with `m₀` on the observation set `H` of full rooted reference law
 (`hPH`). Then for a.e. root `z` in the root disc `ball c₁ r₁`, almost surely the reference observation of `z` at insertion `0`
@@ -91,11 +91,11 @@ theorem canonical_frequency_eq_of_models {Ω : Type*} [MeasurableSpace Ω] {P : 
       (P {ω | alphaCanon γ hC' ω ∈ ballRestrictPairing 7 ⁻¹' F}).toReal :=
   FirstPassS11iStep8Frequency.step8Frequency_eq_of_isWholePlaneGFF hh hh' γ hF
 
-/-- **`href` in the doubled-disc instance (n4, `S11i/HzoomUnitBall.lean`, field `Step8UnitBallInputs.href`).** The roots
-lie in `ball c r` and the decoders live on the doubled disc `ball c (2 * r)`; n4 takes `c = ballCen p` and `r = ballRad p`
+/-- **`href` in the doubled-disc instance (`S11i/HzoomUnitBall.lean`, field `Step8UnitBallInputs.href`).** The roots
+lie in `ball c r` and the decoders live on the doubled disc `ball c (2 * r)`; here `c = ballCen p` and `r = ballRad p`
 for a valid ball `p` (`ValidBall p` gives `0 < ballRad p`). The inclusion `closedBall c r ⊆ ball c (2 * r)` is
 `closedBall_subset_ball` with `r < 2 * r`. This is `href_discNormalized_of_covariance` specialised to
-`c₁ = c₂ = c`, `r₁ = r`, `r₂ = 2 * r`; the hypotheses are the same, and `hkappa` stays a named binder (chat 243 Q2). -/
+`c₁ = c₂ = c`, `r₁ = r`, `r₂ = 2 * r`; the hypotheses are the same, and `hkappa` stays a named binder. -/
 theorem href_discNormalized_doubledDisc {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     (hCM : CameronMartinGFFMutualAbsCont.{u}) (hB : BirkhoffPointwiseErgodic.{0})
     {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
@@ -126,7 +126,7 @@ theorem href_discNormalized_doubledDisc {Ω : Type u} [MeasurableSpace Ω] {P : 
   have hsub : closedBall c r ⊆ ball c (2 * r) := closedBall_subset_ball (by linarith)
   exact href_discNormalized_of_covariance hCM hB hG hsub hF hCC hU Dμ Dd hFdef κ₀ hκ₀m m₀ hCov m H hH hPH hagree hkappa
 
-/-- **`href` in the doubled-disc instance with the finite decoder kernel (chat 243 Q2, fp-S11i-11-13m).** This is
+/-- **`href` in the doubled-disc instance with the finite decoder kernel.** This is
 `href_discNormalized_doubledDisc` at the finite kernel `κF` of `FirstPassS11ahFinite.exists_finite_localMeasureKernel`
 (`κF : Kernel (LocalObs c (2 * r)) ℂ`, `[IsFiniteKernel κF]`), with the binder `hkappa` discharged: for every observation
 code `ℓ` and every set `s`, `κF ℓ s ≤ κF.bound < ⊤` (`ProbabilityTheory.Kernel.measure_le_bound`,
@@ -168,7 +168,3 @@ theorem href_discNormalized_doubledDisc_finiteKernel {Ω : Type u} [MeasurableSp
 
 end HarmonicBalls.FirstPassS11iStep8HrefBall
 
-#print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.href_discNormalized_of_covariance
-#print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.canonical_frequency_eq_of_models
-#print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.href_discNormalized_doubledDisc
-#print axioms HarmonicBalls.FirstPassS11iStep8HrefBall.href_discNormalized_doubledDisc_finiteKernel

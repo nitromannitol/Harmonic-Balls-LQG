@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11ah.Cutoff
 import HarmonicBalls.FirstPass.S11i.Step8Locality
 
 /-!
-# Centred fitting identity of the decoded certificate (Step 8, fp-S11i-11-13f, n3)
+# Centred fitting identity of the decoded certificate (Step 8)
 
 The fitting identity `hfit` of `ae_unitScale_of_ball` (`FirstPass/S11i/Step8Exhaustion.lean`) compares the
 certificate event of a decoded pair `(κ(obs), m(obs))` with that of the physical pair `(μα, Dα)` at every
@@ -156,6 +156,3 @@ theorem ae_fitting_eventually_of_decoders {Ω : Type*} [MeasurableSpace Ω] {P :
 
 end HarmonicBalls.FirstPassS11iStep8Fitting
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Fitting.certificateEvent_of_restrict_scalar_at
-#print axioms HarmonicBalls.FirstPassS11iStep8Fitting.ae_fitting_of_decoders
-#print axioms HarmonicBalls.FirstPassS11iStep8Fitting.ae_fitting_eventually_of_decoders

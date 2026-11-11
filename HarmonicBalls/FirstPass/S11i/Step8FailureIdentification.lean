@@ -6,9 +6,8 @@ import HarmonicBalls.FirstPass.S11n
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Identification of the physical failure event with the canonical one (Step 8, section 8 of the n3-hT route)
+# Identification of the physical failure event with the canonical one (Step 8)
 
-Route: notes/fp-gaps/CHATGPT-n3-hT.md, section 8 ("why this really gives the physical failure event").
 On the canonical-identification conull set (`LQGCanonicalIdentificationStmt`, FirstPass/S11n.lean:61), the physical LQG
 measure and LQG metric are positive rescalings of their canonical counterparts:
 `μ ω = ofReal a • Dμ (alphaCanon α₀ hC ω)` and `D ω = b * Dd (alphaCanon α₀ hC ω)` with `a, b > 0`.

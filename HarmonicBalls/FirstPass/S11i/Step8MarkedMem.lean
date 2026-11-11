@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11ah.LocalObsHae
 import HarmonicBalls.FirstPass.S11i.Step8CorrectedMarked
 
 /-!
-# Marked observations lie in the modification set (Stage B3 of fp-S11i-11-13h, owner n3)
+# Marked observations lie in the modification set
 
 * `ae_refObs_mem_of_rootedRefLaw_compl_null`: `rootedRefLaw Hᶜ = 0` for a measurable set `H` of observations gives,
   for a.e. root `z` in `ball c₁ r₁`, `P`-a.s. membership of the reference observation in `H` (Fubini, `Measure.ae_prod_iff_ae_ae`).
@@ -76,5 +76,3 @@ theorem ae_markedObs_mem_modificationSet {Ω : Type u} [MeasurableSpace Ω] {P :
 
 end HarmonicBalls.FirstPassS11iStep8MarkedMem
 
-#print axioms HarmonicBalls.FirstPassS11iStep8MarkedMem.ae_markedObs_mem_modificationSet
-#print axioms HarmonicBalls.FirstPassS11iStep8MarkedMem.ae_refObs_mem_of_rootedRefLaw_compl_null

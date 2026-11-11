@@ -5,7 +5,6 @@ import HarmonicBalls.FirstPass.S11m.Final11_12
 /-!
 # Lemma 11.12 in the corrected form, without the component premise (clean statement)
 
-Operator note 07:44 UTC, item (4). Route: `notes/fp-gaps/CHATGPT-hb-11-12-audit-PRO.md`, section 3.2 ("the component clause").
 The corrected statement `CorrectedLemma11_12Stmt` (FirstPass/S11i/Faithful.lean:61) carries the component premise
 `insert 0 (sphere 0 5) ⊆ pinchOmegaGeom W Q δ₀`. That premise follows from `IsBufferedPinchGeometry` alone by
 `FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom` (FirstPass/S11ap.lean:93), so it is redundant.
@@ -22,8 +21,7 @@ namespace HarmonicBalls.S11m.Clean11_12
 
 universe u
 
-/-- Lemma 11.12 in the corrected form, without the component premise (operator note 07:44 UTC, item (4); audit
-`notes/fp-gaps/CHATGPT-hb-11-12-audit-PRO.md`, section 3.2). This is the body of `CorrectedLemma11_12Stmt`
+/-- Lemma 11.12 in the corrected form, without the component premise. This is the body of `CorrectedLemma11_12Stmt`
 (FirstPass/S11i/Faithful.lean:61) with the single premise `insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ₀`
 deleted. Under `IsBufferedPinchGeometry` that premise holds by `FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom`. -/
 def CorrectedLemma11_12CleanStmt : Prop :=
@@ -50,7 +48,7 @@ theorem correctedLemma11_12Clean_of_stmt : CorrectedLemma11_12Stmt.{u} → Corre
   fun H U V W T Q' Q δ₀ hgeo =>
     H U V W T Q' Q δ₀ hgeo (FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom hgeo)
 
-/-- The premise-free statement and `CorrectedLemma11_12Stmt` are equivalent (operator note 07:44 UTC, item (4)). -/
+/-- The premise-free statement and `CorrectedLemma11_12Stmt` are equivalent. -/
 theorem correctedLemma11_12CleanStmt_iff :
     CorrectedLemma11_12CleanStmt.{u} ↔ CorrectedLemma11_12Stmt.{u} :=
   ⟨correctedLemma11_12Stmt_of_clean, correctedLemma11_12Clean_of_stmt⟩

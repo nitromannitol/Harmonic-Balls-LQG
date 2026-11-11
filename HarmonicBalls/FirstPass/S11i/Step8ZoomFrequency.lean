@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.Corrected11_13
 import HarmonicBalls.FirstPass.S11i.CertZoom
 
 /-!
-# Step 8 zoom family from the physical window frequency (fp-S11i-11-13c, owner n3)
+# Step 8 zoom family from the physical window frequency
 
 Deterministic part of Step 8 of the corrected proof of `lemma:mu_h-pinch-bad` (corrected paper, proof, dilation paragraph
 "Apply this argument after deterministic dilation by `R = 2^k`"). Suppose that for every `k` and almost every `ω`, for

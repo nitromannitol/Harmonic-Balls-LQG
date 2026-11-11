@@ -87,7 +87,7 @@ theorem windowMetric_eq_decoderOn {c : ℂ} {r : ℝ}
   unfold FirstPassS11at.windowMetric FirstPassS11ah.decoderOn
   by_cases h : (x, y) ∈ ball c r ×ˢ ball c r <;> simp [h]
 
-/-- **Bridge from n1's decoded covariance to the reference failure set.** The covariance input is stated for the decoded
+/-- **Bridge from the decoded covariance to the reference failure set.** The covariance input is stated for the decoded
 pair of `FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent` (`decodedRootMeasure κ`,
 `decodedRootMetric (windowMetric (ball c₂ r₂) mC)`) with the continuous decoder `mC`; the certificate uses the decoder
 function `decoderOn (ball c₂ r₂) (mC ·)`, which is the same function (`windowMetric_eq_decoderOn`). -/
@@ -121,8 +121,8 @@ theorem ae_href_of_decoded_covariance {Ω : Type u} [MeasurableSpace Ω] {P : Me
   exact ae_href_of_covariance hCM hB hh hsub hF κ (fun ℓ => FirstPassS11ah.decoderOn (ball c₂ r₂) (mC ℓ)) Ostar U V W T Q' Q η M
     Dμ Dd hFdef hCov
 
-/-- **The Step-8 frequency is the certificate frequency (B4).** Under `hFdef`, `q_F = step8Frequency P γ hC F` is the
-probability of the certificate event of the canonical model at insertion `γ` (chat 228, section B4). -/
+/-- **The Step-8 frequency is the certificate frequency.** Under `hFdef`, `q_F = step8Frequency P γ hC F` is the
+probability of the certificate event of the canonical model at insertion `γ` -/
 theorem step8Frequency_eq_certificateFrequency {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) {F : Set (ModConstTestPairings (ball (0 : ℂ) 7))}
     (Dμ : ModConstTestPairings (Set.univ : Set ℂ) → Measure ℂ)
@@ -139,7 +139,3 @@ theorem step8Frequency_eq_certificateFrequency {Ω : Type*} [MeasurableSpace Ω]
 
 end HarmonicBalls.FirstPassS11iStep8Href
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Href.ae_href_of_termwise
-#print axioms HarmonicBalls.FirstPassS11iStep8Href.ae_href_of_covariance
-#print axioms HarmonicBalls.FirstPassS11iStep8Href.ae_href_of_decoded_covariance
-#print axioms HarmonicBalls.FirstPassS11iStep8Href.step8Frequency_eq_certificateFrequency

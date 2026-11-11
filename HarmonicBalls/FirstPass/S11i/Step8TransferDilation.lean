@@ -1,11 +1,9 @@
 import HarmonicBalls.FirstPass.S11i.Step8ZoomFrequency
 
 /-!
-# Step 8 transfer and dilation: the converse of `zoom_ae_frequency` (fp-S11i-step8-transfer-dilation, owner z4)
+# Step 8 transfer and dilation: the converse of `zoom_ae_frequency`
 
-Deterministic per-`ω` dilation step of Step 8 of the corrected proof of `lemma:mu_h-pinch-bad` (corrected paper, proof,
-dilation paragraph "Apply this argument after deterministic dilation by `R = 2^k`"; route
-`notes/fp-gaps/CHATGPT-n3-marked-A10.md`, end of §2). `Step8ZoomFrequency.lean` proves that a physical window frequency
+Deterministic per-`ω` dilation step of Step 8 of the corrected proof of `lemma:mu_h-pinch-bad` (corrected paper, proof, dilation paragraph "Apply this argument after deterministic dilation by `R = 2^k`", end of §2). `Step8ZoomFrequency.lean` proves that a physical window frequency
 at scale `2^k` transfers to the zoomed pair `(zoomMeasure μ k, zoomMetric D k)` almost everywhere on `B₁(0)`. This file
 proves the converse, so that the hypothesis `hphys` of `step8_zoom_family_of_ae_frequency` can be produced from a
 unit-scale statement for the zoomed pair.

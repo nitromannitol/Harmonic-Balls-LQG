@@ -1,9 +1,9 @@
 import HarmonicBalls.Defs.Notation
 
 /-!
-# Step 8 of the corrected proof of `lemma:mu_h-pinch-bad`: countable disk cover (fp-S11i, owner n3)
+# Step 8 of the corrected proof of `lemma:mu_h-pinch-bad`: countable disk cover
 
-Q1 answer (`notes/fp-gaps/CHATGPT-n3-Q1-eq34.md`, Step 8): the identification of decoded and physical certificates holds for
+Q1 answer (Step 8): the identification of decoded and physical certificates holds for
 `μ`-almost every centre, simultaneously for all centres and scales, on the whole-object identification event. A countable disk
 cover of `B₁(0) \ {0}` then gives the unit-ball statement (N), and nonatomicity of the measure removes the origin.
 
@@ -96,4 +96,3 @@ theorem ae_ball_of_disk_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (�
 
 end HarmonicBalls.FirstPassS11iStep8
 
-#print axioms HarmonicBalls.FirstPassS11iStep8.ae_ball_of_disk_ae

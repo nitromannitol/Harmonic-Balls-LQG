@@ -3,7 +3,7 @@ import HarmonicBalls.Steps.Sec11.ApproximatePaths
 import HarmonicBalls.Steps.Sec11.PinchInequalities
 
 /-!
-# Locality of the internal metric on a cutoff ball (Step 8, fp-S11i-11-13f, n3)
+# Locality of the internal metric on a cutoff ball (Step 8)
 
 Source: Bou-Rabee-Gwynne, `paper/lqg_harmonic_ball-corrected.tex` l.3410-3420 (the internal-metric remark in the
 certificate section): in a length metric inducing the Euclidean topology, nearly shortest paths between points of a
@@ -121,6 +121,3 @@ theorem eventually_eqOn_of_internal {D : ℂ → ℂ → ℝ} (hD : IsEuclideanL
 
 end HarmonicBalls.FirstPassS11iStep8Locality
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Locality.internalMetric_eq_ofReal_of_gap
-#print axioms HarmonicBalls.FirstPassS11iStep8Locality.exists_radius_internalMetric_eq
-#print axioms HarmonicBalls.FirstPassS11iStep8Locality.eventually_eqOn_of_internal

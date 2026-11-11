@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11i.Step8FailureIdentification
 import HarmonicBalls.FirstPass.S11ai.RootedCertSpecialized
 
 /-!
-# Local decoder compatibility of the unit-scale window frequency (Step 8, fp-S11i-11-13f, n3)
+# Local decoder compatibility of the unit-scale window frequency (Step 8)
 
-Deterministic part of the local-to-physical step of the corrected marked transfer (ruling l.336-340, "local decoder
+Deterministic part of the local-to-physical step of the corrected marked transfer ("local decoder
 fitting/compatibility"). For a fixed decoded observation `ℓ` and a fixed physical pair `(μ, d)` at a root `z`:
 if the decoded certificate agrees with the physical one at every scale `certScale n` whose cutoff ball
 `closedBall z (cutRadius n)` lies in `Dloc` (the `fitting_eq` field of `CertificateIdentification`,
@@ -76,4 +76,3 @@ theorem tendsto_localWindow_iff_unitScale {c₂ z : ℂ} {r₂ : ℝ}
 
 end HarmonicBalls.FirstPassS11iStep8LocalCompat
 
-#print axioms HarmonicBalls.FirstPassS11iStep8LocalCompat.tendsto_localWindow_iff_unitScale

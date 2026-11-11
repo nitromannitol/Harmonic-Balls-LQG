@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11ai.RootedCertSpecialized
 import HarmonicBalls.FirstPass.S11ah.FailureSet
 
 /-!
-# Local failure set of the Step 8 window frequency, and the reference hypothesis `href` (fp-S11i-11-13f, round 64, n3)
+# Local failure set of the Step 8 window frequency, and the reference hypothesis `href`
 
-Source: operator ruling `notes/fp-gaps/CHATGPT-hb-11-13-step8-Q1-Q2.md` (chat 198, Q2, lines 243-260): the reference
+The reference
 observation `campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z` avoids the local failure set, obtained from
 `ae_window_limit_at_root` and `ae_rootedId_of_localCert`, with the specialized termwise identity `hT`.
 
@@ -32,7 +32,7 @@ open MeasureTheory Filter Topology Set Metric ProbabilityTheory
 open scoped ENNReal
 open HarmonicBalls HarmonicBalls.S11c
 
-/-- **Reference hypothesis `href` from the rooted route (Step 8, ruling Q2).** For `volume`-a.e. root `z` in the unit ball,
+/-- **Reference hypothesis `href` from the rooted route (Step 8).** For `volume`-a.e. root `z` in the unit ball,
 almost surely the Campbell reference observation at `z` is not in the local failure set of the window averages of the
 local certificate sequence, whose limit is `q = P{alphaCanon ∈ F}.toReal` (`ae_window_limit_at_root`). The proof: the termwise
 identity `hT` gives the eventual identity of window averages for a.e. root (`ae_rootedId_of_localCert`), then the window
@@ -59,7 +59,7 @@ theorem ae_not_mem_failureSet_of_localCert {Ω : Type u} [MeasurableSpace Ω] {P
   intro hmem
   exact ((FirstPassS11ah.mem_failureSet_iff _).mp hmem).2 hω
 
-/-- **Corrected marked transfer with the local failure set (Step 8, ruling Q2, fp-S11i-11-13f round 64).** Applies
+/-- **Corrected marked transfer with the local failure set (Step 8).** Applies
 `ae_marked_local_transfer_landed` to the local failure set of the window averages of `localCertSeq`, with the reference
 hypothesis `href` discharged by `ae_not_mem_failureSet_of_localCert`. The remaining named input is `hBad`: measurability of
 the local failure set. -/
@@ -92,5 +92,3 @@ theorem ae_marked_local_transfer_localFailure {Ω : Type u} [MeasurableSpace Ω]
 
 end HarmonicBalls.FirstPassS11iStep8LocalFailure
 
-#print axioms HarmonicBalls.FirstPassS11iStep8LocalFailure.ae_not_mem_failureSet_of_localCert
-#print axioms HarmonicBalls.FirstPassS11iStep8LocalFailure.ae_marked_local_transfer_localFailure

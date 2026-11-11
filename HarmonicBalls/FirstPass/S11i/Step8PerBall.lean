@@ -65,4 +65,3 @@ theorem ae_unitScale_of_covariance {Ω : Type u} [MeasurableSpace Ω] {P : Measu
 
 end HarmonicBalls.FirstPassS11iStep8PerBall
 
-#print axioms HarmonicBalls.FirstPassS11iStep8PerBall.ae_unitScale_of_covariance

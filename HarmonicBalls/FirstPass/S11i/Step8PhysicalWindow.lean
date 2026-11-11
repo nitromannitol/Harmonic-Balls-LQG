@@ -2,7 +2,7 @@ import Mathlib
 import HarmonicBalls.FirstPass.S11i.Step8LocalCompat
 
 /-!
-# Almost-sure local-to-physical window limit (Step 8, fp-S11i-11-13f, n3)
+# Almost-sure local-to-physical window limit (Step 8)
 
 Combines the deterministic compatibility `tendsto_localWindow_iff_unitScale` (dc64724) with the almost-sure fitting
 identity and the almost-sure local good set. The fitting identity is the `fitting_eq` field of `CertificateIdentification`
@@ -52,4 +52,3 @@ theorem ae_unitScale_of_local_good {Ω : Type u} [MeasurableSpace Ω] {P : Measu
 
 end HarmonicBalls.FirstPassS11iStep8PhysicalWindow
 
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysicalWindow.ae_unitScale_of_local_good

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11.Frequency
 
 /-!
-# The exact cardinality bound of write-up Step 7.5 (fp-S11i, owner n3)
+# The exact cardinality bound of write-up Step 7.5
 
-FIRST-PASS NEW (combinatorics only). If a predicate `b` on `ℕ` has a positive limiting frequency `q` (write-up Step 7.1)
+If a predicate `b` on `ℕ` has a positive limiting frequency `q` (write-up Step 7.1)
 and `b n` implies `P n`, then eventually in `N` the set `{n | N+1 ≤ n ≤ 2N ∧ P n}` has at least `q/2 · N` elements.
 This is the `Set.ncard` form that `firstPass_11_13_corrected` needs (`CorrectedLemma11_13Stmt`,
 `HarmonicBalls/FirstPass/S11i/Faithful.lean:72`); the window count of `b` is `eventually_window_count_ge`

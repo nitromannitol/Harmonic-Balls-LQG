@@ -11,9 +11,9 @@ import HarmonicBalls.FirstPass.S11i.Step8MarkedMem
 import HarmonicBalls.FirstPass.S11i.Step8Frequency
 
 /-!
-# Modified local decoder and the marked transfer of the failure set (Step 8 chain, owner n3)
+# Modified local decoder and the marked transfer of the failure set (Step 8 chain)
 
-Assembly of the Stage-B pieces for fp-S11i-11-13h, round fp-S11i-11-13j. Given the local decoder `mC` (a family of
+Assembly of the Stage-B pieces. Given the local decoder `mC` (a family of
 continuous functions on `ball c₂ r₂ × ball c₂ r₂`, measurable in the observation, with identity (20) of
 `LocalMetricReplacementStmt` at `α₀` for the rooted reference observations), and the measure kernel `κ` (measurable):
 
@@ -190,4 +190,3 @@ theorem ae_marked_modified_failureSet {Ω : Type} [MeasurableSpace Ω] {P : Meas
 
 end HarmonicBalls.FirstPassS11iStep8Modified
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Modified.ae_marked_modified_failureSet

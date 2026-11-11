@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Window counts of eventually equal predicates (fp-S11i-11-13d, owner n3)
+# Window counts of eventually equal predicates
 
 For predicates `P Q : ℕ → Prop` that agree from `n₀` on, the window counts `#{n : N+1 ≤ n ≤ 2N, P n}` and
 `#{n : N+1 ≤ n ≤ 2N, Q n}` differ by at most `n₀`. Hence the window frequencies `#/N` of `P` and `Q` have the same limit.

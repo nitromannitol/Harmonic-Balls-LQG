@@ -5,17 +5,16 @@ import HarmonicBalls.FirstPass.S11r.MarkedObs
 import HarmonicBalls.FirstPass.S11i.AnnularWeylAbsCont
 
 /-!
-# Corrected marked transfer with a zero-insertion DMS measure (Step 8, fp-S11i-11-13f, n3)
+# Corrected marked transfer with a zero-insertion DMS measure (Step 8)
 
-Operator ruling (chat 198, `notes/fp-gaps/CHATGPT-hb-11-13-step8-Q1-Q2.md`):
 * The marked DMS identity `DMSLemmaA10WholePlaneMarked` is applied to the zero-insertion measure `μ0`
   (`IsLQGMeasureOfField P γ 0`), not to the target measure `μα` (`IsLQGMeasureOfField P γ α₀`).
 * The DMS test set is the pullback `dmsLocalGood α₀ D Bad` of a measurable LOCAL failure set `Bad` of marked
   observations (`campbellMarkedObs`), not the global `canonicalFailure` complement.
 * The shifted raw pairing is identified with the reference observation by the exact mean-zero identity
-  `campbellMarkedObs_dmsShiftedPairing` (n2, S11r/MarkedObs.lean; NOT YET LANDED). It enters here as the
+  `campbellMarkedObs_dmsShiftedPairing` (S11r/MarkedObs.lean, NOT YET LANDED). It enters here as the
   hypothesis `hDshift`.
-* The transfer `μ0 → μα` on the unit ball uses the annular Weyl-scaling absolute continuity (lh's z-worker; NOT YET
+* The transfer `μ0 → μα` on the unit ball uses the annular Weyl-scaling absolute continuity (NOT YET
   LANDED). It enters here as the hypothesis `hac`.
 
 No new frozen input; the file is placeholder-free. The Tonelli step is `ae_ae_ball_of_marked_of_ae_volume'`
@@ -31,7 +30,7 @@ open scoped ENNReal
 open HarmonicBalls HarmonicBalls.S11c
 open HarmonicBalls.FirstPassS11iStep8Transfer
 
-/-- The good set of raw pairings for the DMS step (ruling Q2): `(T, z)` is good when the local marked observation
+/-- The good set of raw pairings for the DMS step: `(T, z)` is good when the local marked observation
 `campbellMarkedObs α₀ D T z = (z, mod-constant pairings of h = T - α₀ log|·| with mean-zero tests in D)` is not in the local
 failure set `Bad`. It is the pullback of the complement of `Bad` by the marked observation. -/
 def dmsLocalGood (α₀ : ℝ) (D : Set ℂ)
@@ -67,10 +66,9 @@ theorem measurableSet_dmsLocalGood (α₀ : ℝ) (D : Set ℂ)
   hBad.compl.preimage (measurable_campbellMarkedObs α₀ D)
 
 /-- **Corrected marked transfer to the target measure (Step 8, zero-insertion DMS).**
-Input: the marked DMS identity for the zero-insertion measure `μ0`; the mean-zero identity `hDshift` (n2,
-`campbellMarkedObs_dmsShiftedPairing`, for every domain); the reference-observation statement `href` (a.e. root `z` in the
+Input: the marked DMS identity for the zero-insertion measure `μ0`; the mean-zero identity `hDshift` (`campbellMarkedObs_dmsShiftedPairing`, for every domain); the reference-observation statement `href` (a.e. root `z` in the
 unit ball, `P`-a.s., the reference observation avoids the local failure set `Bad`); and the absolute continuity `hac` of the
-target unit-ball restriction of `μα` with respect to that of `μ0` (annular Weyl scaling, lh's z-worker).
+target unit-ball restriction of `μα` with respect to that of `μ0` (annular Weyl scaling).
 Output: `P`-a.s., for `μα`-a.e. `z` in the unit ball, the target marked observation avoids `Bad`. -/
 theorem ae_marked_local_transfer {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     (γ α₀ : ℝ) (D : Set ℂ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -102,9 +100,9 @@ theorem ae_marked_local_transfer {Ω : Type u} [MeasurableSpace Ω] {P : Measure
   rw [ae_restrict_iff' measurableSet_ball] at h2
   exact h2
 
-/-- **Corrected marked transfer with the landed inputs (Step 8, fp-S11i-11-13f round 63).** Same conclusion as
+/-- **Corrected marked transfer with the landed inputs (Step 8).** Same conclusion as
 `ae_marked_local_transfer`; its two named inputs are discharged by landed lemmas:
-* the mean-zero identity `hDshift` is `campbellMarkedObs_dmsShiftedPairing` (n2, `S11r/MarkedObs.lean`);
+* the mean-zero identity `hDshift` is `campbellMarkedObs_dmsShiftedPairing` (`S11r/MarkedObs.lean`);
 * the absolute continuity `hac` is `insertedMeasure_ac_zeroInsertion_on_unitBall` (`S11i/AnnularWeylAbsCont.lean`),
   which uses the frozen Weyl relation `hWeyl` (`Frozen/S8c.lean:73`).
 Remaining inputs: the frozen DMS marked identity `hA10` for the zero-insertion measure `μ0`; `hμ0`, `hμα`; the atom-at-zero
@@ -130,5 +128,3 @@ theorem ae_marked_local_transfer_landed {Ω : Type u} [MeasurableSpace Ω] {P : 
 
 end HarmonicBalls.FirstPassS11iStep8Corrected
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Corrected.ae_marked_local_transfer
-#print axioms HarmonicBalls.FirstPassS11iStep8Corrected.ae_marked_local_transfer_landed

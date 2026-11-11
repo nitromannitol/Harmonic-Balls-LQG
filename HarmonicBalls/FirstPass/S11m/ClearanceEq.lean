@@ -7,10 +7,9 @@ import HarmonicBalls.Steps.Sec11.WeylPathConcatenation
 import HarmonicBalls.FirstPass.S11m.Finiteness
 
 /-!
-# Internalization of the localized clearance chains (fp-S11m, owner z4)
+# Internalization of the localized clearance chains
 
-Route: `notes/fp-gaps/CHATGPT-z4-11-12-local-certificate.md`, section 4.3 (internalization is a countable operation),
-deterministic identity (L-EQ). Let `D` be a Euclidean length metric, `V` open, `O ⊆ V` open, `S ⊆ V` with `O ⊆ closure S`
+Route: internalization is a countable operation; deterministic identity (L-EQ). Let `D` be a Euclidean length metric, `V` open, `O ⊆ V` open, `S ⊆ V` with `O ⊆ closure S`
 (the vertices) and `Q ⊆ V \ O` with `V \ O ⊆ closure Q` (the clearance set). Then the localized chain infimum with cost
 `internalMetric D V` (the internal, i.e. path, distance of `D` in `V`; Armitage-Gardiner terminology) equals the
 internal distance `internalMetric D O` on `O`.
@@ -531,5 +530,3 @@ theorem localClearanceInf_eq_internalMetric_of_isConnected (hD : IsEuclideanLeng
 
 end HarmonicBalls.S11m
 
-#print axioms HarmonicBalls.S11m.localClearanceInf_eq_internalMetric
-#print axioms HarmonicBalls.S11m.localClearanceInf_eq_internalMetric_of_isConnected

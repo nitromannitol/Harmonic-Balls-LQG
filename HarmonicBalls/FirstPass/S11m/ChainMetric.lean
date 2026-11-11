@@ -8,7 +8,7 @@ import HarmonicBalls.FirstPass.S11h.SetDistPos
 /-!
 # Countable recovery of internal metrics by permitted chains (route Step 3.4)
 
-FIRST-PASS fp-S11m, deterministic part of Step 3.4 of `notes/fp-gaps/CHATGPT-11-12-11-13-fixes.md` (lines 261-285).
+Deterministic part of Step 3.4 of the written proof.
 
 Let `D` be a Euclidean length metric (`IsEuclideanLengthMetric D`), `O` open, `Q` a countable set with `Q ⊆ Oᶜ` and
 `Oᶜ ⊆ closure Q` (the set `𝒟_{V∖O}` of the route, with `V = ℂ`), and `S` a set with `O ⊆ closure S` (the vertex set).
@@ -358,5 +358,3 @@ theorem chainDistance_eq_internalMetric (hD : IsEuclideanLengthMetric D) {O S Q 
 
 end HarmonicBalls.S11m
 
-#print axioms HarmonicBalls.S11m.chainDistance_eq_internalMetric
-#print axioms HarmonicBalls.S11m.chainDistance_le_pathLength

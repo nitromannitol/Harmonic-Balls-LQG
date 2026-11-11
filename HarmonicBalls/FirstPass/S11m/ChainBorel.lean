@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11m.ChainMetric
 /-!
 # Borel measurability of the chain formula (route Step 3.4, "its Borelness")
 
-FIRST-PASS fp-S11m. For countable `S` and `Q`, the chain formula `chainDistance S (D ω) Q x y` is a measurable function of
+For countable `S` and `Q`, the chain formula `chainDistance S (D ω) Q x y` is a measurable function of
 `ω` as soon as every evaluation `ω ↦ D ω a b` with `a, b ∈ S ∪ Q ∪ {x, y}` is measurable (route Step 3.4, and the decoder
 of Step 3.2 which factors the metric evaluations at a countable dense set). No property of `D ω` as a length metric is
 used: the infimum over chains is reindexed by a countable index set (`Fin (n+1) → S ∪ {x, y}`), and each term is a
@@ -176,4 +176,3 @@ theorem measurable_chainDistance {D : Ω → ℂ → ℂ → ℝ} {S Q : Set ℂ
 
 end HarmonicBalls.S11m
 
-#print axioms HarmonicBalls.S11m.measurable_chainDistance

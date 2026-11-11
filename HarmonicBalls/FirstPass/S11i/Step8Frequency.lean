@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.HzoomScale
 import HarmonicBalls.FirstPass.S11i.CertificateCanonical
 
 /-!
-# The Step-8 frequency at the unit-scale event `F` (Stage B4 of fp-S11i-11-13h, owner n3)
+# The Step-8 frequency at the unit-scale event `F`
 
 * `step8Frequency P γ hC F = P[alphaCanon γ hC ∈ ballRestrictPairing 7 ⁻¹' F]`: the corrected limit `q_F` of the
   unit-ball frequency at insertion `γ` (paper: `p = P_can[E^{h^γ}_1(0;M)]`).
@@ -52,5 +52,3 @@ theorem unitBallFrequencyModels_at_step8Frequency {Ω : Type*} [MeasurableSpace 
 
 end HarmonicBalls.FirstPassS11iStep8Frequency
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Frequency.step8Frequency_eq_of_isWholePlaneGFF
-#print axioms HarmonicBalls.FirstPassS11iStep8Frequency.unitBallFrequencyModels_at_step8Frequency

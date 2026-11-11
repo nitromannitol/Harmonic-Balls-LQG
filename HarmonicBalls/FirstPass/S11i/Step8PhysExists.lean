@@ -5,25 +5,25 @@ import HarmonicBalls.FirstPass.S11i.HzoomScale
 import HarmonicBalls.FirstPass.S11i.ZoomMetricAlpha0
 
 /-!
-# Step 8 physical frequency with an existential event (fp-S11-13-physExists-adapter, owner n3)
+# Step 8 physical frequency with an existential event
 
-Codex (`notes/fp-gaps/CODEX-hPhys-sol-20261110.md`, lines 1-51) shows that `Step8PhysStmt` and
+`Step8PhysStmt` and
 `Step8UnitScaleAlpha0Stmt` (`S11i/Step8PhysReduction.lean`) are FALSE as typed: they quantify over EVERY pinch event `E`,
 while the physical frequency does not depend on `E`. Two measurable subsets `E₀ ⊇ E₁` of positive probability ratio `p` and
 `p/2` both satisfy the pinch premise, so the same frequency would converge to `p` and to `p/2`. The counted consumer
 `Step8IdentityGivenPinchEventCanonicalStmt` needs only an EXISTENTIAL choice of the event. This file gives that corrected
 provider and its adapter.
 
-* `Step8PhysExistsStmt.{v}` (Codex step 6): from a pinch event, there is a pinch event `E` such that for every common
+* `Step8PhysExistsStmt.{v}`: from a pinch event, there is a pinch event `E` such that for every common
   probability `q` of `E`, the physical frequency holds at every scale `k` for all insertion-`α` models (`AllModelsAt`).
-* `step8Identity_given_pinchEvent_canonical_of_physExists` (Codex step 7; no binder beyond the provider): the common
+* `step8Identity_given_pinchEvent_canonical_of_physExists` (no binder beyond the provider): the common
   probability of `E` is `exists_localModConstField_prob`, the second conjunct is `step8_zoom_family_of_ae_frequency`.
 * Route 2 (universe 0): `Step8PhysExistsStmt.{0}` from
   (a) `allModelsAt_zero_of_unit` (PROVED): insertion-zero physical frequency for every scale from the insertion-zero unit
       statement, via `hphys_of_unit_models`, `zoomMetricNormStmt_of_isLQGMetricOfField` (α = 0, proved),
       and the coordinate change `CoordChangeZeroStmt` (Proposed, Fact 2.1 IV);
-  (b) `Step8InsertionTransferStmt` (NAMED BINDER, n4 proves): insertion-zero to insertion-`α` for `AllModelsAt`;
-  (c) `Step8EventCalibrationStmt` (NAMED BINDER, n1 checks): a pinch event `E` calibrated to a coding event `F` whose
+  (b) `Step8InsertionTransferStmt` (NAMED BINDER): insertion-zero to insertion-`α` for `AllModelsAt`;
+  (c) `Step8EventCalibrationStmt` (NAMED BINDER): a pinch event `E` calibrated to a coding event `F` whose
       insertion-zero unit frequency is its own probability.
   No singular α metric normalization (`hMet`) is used.
 
@@ -88,25 +88,23 @@ def InsertionZeroUnitStmt.{w} (γ : ℝ) (F : Set Step8Code) (U V W T Q' Q : Set
     IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ → IsLQGMetricOfField P γ (lqgXi γ) 0 hC D →
       ∀ q : ℝ, CommonProb.{w} γ F q → UnitBallFrequencyStmt P q U V W T Q' Q δ M μ D
 
-/-- **NAMED BINDER (route 2, (b)): insertion transfer of the physical frequency** (Codex step 3,
-`allModelsAt_insertion_of_zero`). From insertion zero to insertion `α < Q_γ`, for every scale `k`, uniformly over laws.
-Source: the local Cameron-Martin argument of the Codex note (lines 131-190) with `localLQGInsertionWeylOffOrigin_derived`,
-`ae_fitting_eventually_of_decoders`, `ae_unitScale_of_decoded_ball`, `ae_forall_of_cover`. Owner of the proof: n4. -/
+/-- **NAMED BINDER (route 2, (b)): insertion transfer of the physical frequency** (`allModelsAt_insertion_of_zero`). From insertion zero to insertion `α < Q_γ`, for every scale `k`, uniformly over laws.
+Source: the local Cameron-Martin argument with `localLQGInsertionWeylOffOrigin_derived`,
+`ae_fitting_eventually_of_decoders`, `ae_unitScale_of_decoded_ball`, `ae_forall_of_cover`. -/
 def Step8InsertionTransferStmt : Prop :=
   ∀ (γ α q δ M : ℝ) (U V W T Q' Q : Set ℂ) (k : ℕ), IsBufferedPinchGeometry U V W T Q' Q δ →
     0 < γ → γ < 2 → α < lqgQ γ →
     AllModelsAt.{0} γ (lqgXi γ) 0 q U V W T Q' Q δ M k → AllModelsAt.{0} γ (lqgXi γ) α q U V W T Q' Q δ M k
 
-/-- The coordinate change of the LQG measure at insertion zero for every whole-plane model (`LQGMeasureCoordChange`,
-Proposed input, Fact 2.1 IV, `Proposed/LQG.lean:116`, pending operator source-check). -/
+/-- The coordinate change of the LQG measure at insertion zero for every whole-plane model (`LQGMeasureCoordChange`, Proposed input, Fact 2.1 IV, `Proposed/LQG.lean:116`). -/
 def CoordChangeZeroStmt : Prop :=
   ∀ (γ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ 0 hC hcirc
 
-/-- **NAMED BINDER (route 2, (c)): event calibration** (n1 checks). From the existence of some pinch event at `γ`, there is
+/-- **NAMED BINDER (route 2, (c)): event calibration**. From the existence of some pinch event at `γ`, there is
 a pinch event `E` and a coding event `F` with the same common probability (`EventCalibration`), and `F` has the insertion-zero
 unit frequency `InsertionZeroUnitStmt`. The probability of `F` is not prescribed in advance: `E` is chosen so that the
-calibration holds (the Codex counterexample excludes a universal choice of `E`). -/
+calibration holds. -/
 def Step8EventCalibrationStmt.{w} : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ M γ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
     0 < γ → γ < 2 → 0 < M →
@@ -114,7 +112,7 @@ def Step8EventCalibrationStmt.{w} : Prop :=
     ∃ E F : Set Step8Code, PinchEventGammaCanonicalStmt.{w} U T Q' Q γ M E ∧ EventCalibration.{w} γ E F ∧
       InsertionZeroUnitStmt.{w} γ F U V W T Q' Q δ M
 
-/-- **Corrected existential provider (Codex step 6).** From the existence of a pinch event, there is a pinch event `E` such
+/-- **Corrected existential provider.** From the existence of a pinch event, there is a pinch event `E` such
 that every common probability `q` of `E` gives the physical frequency at every scale, for every insertion-`α` model. This
 replaces the false universal-event binder `Step8PhysStmt` (`S11i/Step8PhysReduction.lean`). -/
 def Step8PhysExistsStmt.{w} : Prop :=
@@ -124,7 +122,7 @@ def Step8PhysExistsStmt.{w} : Prop :=
     ∃ E : Set Step8Code, PinchEventGammaCanonicalStmt.{w} U T Q' Q γ M E ∧
       ∀ q : ℝ, CommonProb.{w} γ E q → ∀ k : ℕ, AllModelsAt.{w} γ (lqgXi γ) α q U V W T Q' Q δ M k
 
-/-- **Consumer adapter (Codex step 7).** The corrected existential provider gives the counted consumer
+/-- **Consumer adapter.** The corrected existential provider gives the counted consumer
 `Step8IdentityGivenPinchEventCanonicalStmt`: the common probability of the selected event comes from
 `exists_localModConstField_prob`, and the zoom family from `step8_zoom_family_of_ae_frequency`. -/
 theorem step8Identity_given_pinchEvent_canonical_of_physExists.{w} (hPhys : Step8PhysExistsStmt.{w}) :
@@ -172,15 +170,15 @@ theorem step8Identity_given_pinchEvent_canonical_of_route2 (hCC0 : CoordChangeZe
     Step8IdentityGivenPinchEventCanonicalStmt.{0} :=
   step8Identity_given_pinchEvent_canonical_of_physExists (step8PhysExists_of_route2 hCC0 hCal hIns)
 
-/-! ### Route 1 (fp-S11-13-route1-scales): scale transfer at insertion `α` by normalization
+/-! ### Route 1: scale transfer at insertion `α` by normalization
 
-Route 1 (Codex note, eq. (3)) gives the scale `k` of the insertion-`α` statement from the scale-`0` statement of the normalized
+Route 1 gives the scale `k` of the insertion-`α` statement from the scale-`0` statement of the normalized
 insertion-`α` model. The normalization is `normMeasureAlpha` (measure, `Q - α` coefficient, `S11i/Step8PhysReduction.lean`) and
 `zoomMetricNormAlpha_of_isLQGMetricOfField` (metric, `S11i/ZoomMetricAlpha0.lean`). The only insertion transfer needed is at
 `k = 0`, the named binder `Step8InsertionTransferK0Stmt`. No decoder outside `ball 0 1` is used. -/
 
-/-- **NAMED BINDER (route 1, k = 0 insertion transfer, owner n4).** `Step8InsertionTransferStmt` at the unit scale only: the
-insertion-zero scale-`0` statement implies the insertion-`α` scale-`0` statement. Until n4's `allModelsAt_insertion_of_zero_k0`
+/-- **NAMED BINDER (route 1, k = 0 insertion transfer).** `Step8InsertionTransferStmt` at the unit scale only: the
+insertion-zero scale-`0` statement implies the insertion-`α` scale-`0` statement. Until `allModelsAt_insertion_of_zero_k0`
 lands, this Prop is the input. -/
 def Step8InsertionTransferK0Stmt : Prop :=
   ∀ (γ α q δ M : ℝ) (U V W T Q' Q : Set ℂ), IsBufferedPinchGeometry U V W T Q' Q δ →
@@ -278,12 +276,5 @@ theorem step8Identity_given_pinchEvent_canonical_of_route1
 
 end HarmonicBalls.FirstPassS11iStep8PhysExists
 
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_physExists
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route1
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8PhysExists_of_route1
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.allModelsAt_all_scales_of_scale_zero
 
 
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.allModelsAt_zero_of_unit
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8PhysExists_of_route2
-#print axioms HarmonicBalls.FirstPassS11iStep8PhysExists.step8Identity_given_pinchEvent_canonical_of_route2

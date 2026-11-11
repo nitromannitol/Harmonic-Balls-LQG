@@ -6,14 +6,14 @@ import HarmonicBalls.FirstPass.S11i.HzoomScale
 import HarmonicBalls.FirstPass.S11r.MarkedObs
 
 /-!
-# Exhaustion of the punctured unit disc and the unit-ball frequency (Step 8, fp-S11i-11-13f, n3)
+# Exhaustion of the punctured unit disc and the unit-ball frequency (Step 8)
 
 * `exists_validBall_of_ne_zero`: a countable family of rational balls `ball (ballCen p) (ballRad p)` covers `ball 0 1 \ {0}`, each
   with `ball (ballCen p) (2 ballRad p) ⊆ ball 0 1` and `0 ∉ ball (ballCen p) (2 ballRad p)` (`ValidBall`).
 * `ae_forall_of_cover`: a countable exhaustion of almost-sure statements over the cover, with the atom at `0` removed.
 * `ae_marked_local_transfer_on`: the corrected marked transfer (`Step8CorrectedMarked.lean`) on a measurable `U ⊆ ball 0 1`.
   The good set is enlarged by `{p | p.2 ∉ U}`, so the DMS hypothesis `hleb` holds on all of `ball 0 1`. The identity is
-  `campbellMarkedObs_dmsShiftedPairing` (n2, `S11r/MarkedObs.lean`, landed); the absolute continuity is
+  `campbellMarkedObs_dmsShiftedPairing` (`S11r/MarkedObs.lean`, landed); the absolute continuity is
   `insertedMeasure_ac_zeroInsertion_on_unitBall` (z7, `S11i/AnnularWeylAbsCont.lean`, landed).
 * `ae_unitScale_of_ball`: one local ball (chain output `href`, measurability `hBad`, fitting `hfit`).
 * `unitBallFrequencyStmt_of_cover`: the exhaustion gives `UnitBallFrequencyStmt` from the per-ball statements `hloc`.
@@ -108,7 +108,7 @@ def dmsGoodOn (α₀ : ℝ) (D U : Set ℂ)
   {p | p.2 ∉ U} ∪ dmsLocalGood α₀ D Bad
 
 /-- **Corrected marked transfer on `U`.** Same as `ae_marked_local_transfer` (Step8CorrectedMarked.lean), with the DMS
-identity `campbellMarkedObs_dmsShiftedPairing` (n2, landed) and the reference statement needed only on `U ⊆ ball 0 1`. -/
+identity `campbellMarkedObs_dmsShiftedPairing` (landed) and the reference statement needed only on `U ⊆ ball 0 1`. -/
 theorem ae_marked_local_transfer_on {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
     (γ α₀ : ℝ) (D : Set ℂ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (μ0 μα : Ω → Measure ℂ)
@@ -196,7 +196,3 @@ theorem unitBallFrequencyStmt_of_cover {Ω : Type*} [MeasurableSpace Ω] (P : Me
 
 end HarmonicBalls.FirstPassS11iStep8Exhaustion
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Exhaustion.ae_forall_of_cover
-#print axioms HarmonicBalls.FirstPassS11iStep8Exhaustion.ae_marked_local_transfer_on
-#print axioms HarmonicBalls.FirstPassS11iStep8Exhaustion.ae_unitScale_of_ball
-#print axioms HarmonicBalls.FirstPassS11iStep8Exhaustion.unitBallFrequencyStmt_of_cover

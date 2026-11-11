@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11i.MixingCanonical
 import HarmonicBalls.FirstPass.Frozen.S8c
 
 /-!
-# Window frequencies of the canonical dilation (fp-S11i, owner n3; write-up Step 7.1, eqs. (16)-(17))
+# Window frequencies of the canonical dilation
 
-FIRST-PASS NEW (general measure theory, with one external input). For an ergodic measure-preserving map `T` of a
+For an ergodic measure-preserving map `T` of a
 probability space `ν` and a measurable set `E`, the window frequency `#{n ∈ [N+1, 2N] : T^[n] y ∈ E} / N` tends to `ν E`
 for almost every `y`. The external input is Birkhoff's pointwise ergodic theorem, the frozen Prop
 `BirkhoffPointwiseErgodic` (`HarmonicBalls/FirstPass/Frozen/S8c.lean:72`; Birkhoff 1931; Walters, GTM 79, Thm 1.14),

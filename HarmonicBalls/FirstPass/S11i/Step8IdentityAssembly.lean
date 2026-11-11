@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11i.Step8Event
 import HarmonicBalls.FirstPass.S11i.Step8ZoomFrequency
 
 /-!
-# Step 8 identification of Lemma 11.13 from its providers (fp-S11-13-hId-assembly, owner n3)
+# Step 8 identification of Lemma 11.13 from its providers
 
 `HarmonicBalls.FirstPassS11iStep8IdentityAssembly.step8Identity_given_pinchEvent_canonical_of_phys` concludes
 `Step8IdentityGivenPinchEventCanonicalStmt` (`HarmonicBalls/FirstPass/S11i/Corrected11_13.lean:109`, the OPEN binder
@@ -14,7 +14,7 @@ import HarmonicBalls.FirstPass.S11i.Step8ZoomFrequency
 
 Conjunct map (A) and (B) of `Step8IdentityStmt`, with `E` the Lemma 11.12 event of the premise:
 * (A) first conjunct, `q` is the same in every whole-plane model: PROVIDED by
-  `HarmonicBalls.exists_localModConstField_prob` (`HarmonicBalls/FirstPass/S11i/Step8Event.lean:75`, B3). It needs
+  `HarmonicBalls.exists_localModConstField_prob` (`HarmonicBalls/FirstPass/S11i/Step8Event.lean:75`). It needs
   `MeasurableSet E`, which is the first conjunct of the premise `PinchEventGammaStmt` (`S11i/Assembly13.lean:120`).
 * (B) second conjunct, the zoom family `μk`, `Dk` with the window frequency converging to `q`: PROVIDED by
   `HarmonicBalls.FirstPassS11iStep8Zoom.step8_zoom_family_of_ae_frequency`
@@ -29,11 +29,10 @@ Conjunct map (A) and (B) of `Step8IdentityStmt`, with `E` the Lemma 11.12 event 
     (`S11i/Step8Exhaustion.lean:185`): unit scale only (`UnitBallFrequencyStmt`);
   - `unitBallFrequencyModels_at_step8Frequency` (`S11i/Step8Frequency.lean:40`): unit scale, for whole-plane models at
     `α = 0`, with the named model-level input `hPer` (pending);
-  - `unitBallFrequencyModels_at_step8Frequency` and `unitBallFrequencyModels_of_inputs2` (`S11i/HzoomUnitBallDoubled.lean:143`,
-    `:117`; n4, uncommitted): unit scale, from `Step8UnitBallInputs2`;
-  - `ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent` (`S11ai/RootedAssembly.lean:36`, n1): the quantum bad mass in
+  - `unitBallFrequencyModels_at_step8Frequency` and `unitBallFrequencyModels_of_inputs2` (`S11i/HzoomUnitBallDoubled.lean:143`, `:117`, uncommitted): unit scale, from `Step8UnitBallInputs2`;
+  - `ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent` (`S11ai/RootedAssembly.lean:36`): the quantum bad mass in
     `ball c₁ r₁` vanishes almost surely;
-  - `ae_rootedLocalIdent_assembled_kernel` (`S11r/RootedBufferKernel.lean:27`, n2): kernel clauses of the buffered family;
+  - `ae_rootedLocalIdent_assembled_kernel` (`S11r/RootedBufferKernel.lean:27`): kernel clauses of the buffered family;
   - `href_discNormalized_doubledDisc_finiteKernel` (`S11i/Step8HrefBall.lean:135`): reference observations avoid the
     failure set at `q` (href), with the finite decoder kernel.
   The all-scale statement needs the unit-scale statement for the `α₀`-model, its zoom at scale `2^k`, and the identification
@@ -79,4 +78,3 @@ theorem step8Identity_given_pinchEvent_canonical_of_phys
 
 end HarmonicBalls.FirstPassS11iStep8IdentityAssembly
 
-#print axioms HarmonicBalls.FirstPassS11iStep8IdentityAssembly.step8Identity_given_pinchEvent_canonical_of_phys

@@ -3,14 +3,14 @@ import HarmonicBalls.FirstPass.S11i.CanonicalLawUniversal
 import HarmonicBalls.FirstPass.S11ap
 
 /-!
-# The 11.12 event at the insertion `γ` and the model-independent probability (fp-S11i-11-13d, owner n3)
+# The 11.12 event at the insertion `γ` and the model-independent probability
 
 Two route-independent pieces of `Step8IdentityStmt` (Corrected11_13.lean) for the Lemma 11.12 event `E`:
 
-* `pinchEventGamma_exists` (B4): `CorrectedLemma11_12Stmt` (Faithful.lean) gives, for every buffered geometry and
+* `pinchEventGamma_exists`: `CorrectedLemma11_12Stmt` (Faithful.lean) gives, for every buffered geometry and
   `0 < γ < 2`, `0 < M`, an event `E` with `PinchEventGammaStmt U T Q' Q γ ξ M E`. The insertion `α = γ` is admissible
   because `γ < Q(γ) = 2/γ + γ/2` (`lqgQ`, Defs/Notation.lean:19). No new input.
-* `exists_localModConstField_prob` (B3): for a measurable `E`, the probability `P{h^α|_{B₇} mod const ∈ E}` of a
+* `exists_localModConstField_prob`: for a measurable `E`, the probability `P{h^α|_{B₇} mod const ∈ E}` of a
   whole-plane GFF model is the same for every whole-plane GFF model. Proof: the field modulo constants is a fixed
   measurable function of the canonical law (`modConstOfCanon`), the probability of its preimage is the canonical law
   of `E`, and the canonical law is model-independent (`canonicalLaw_eq_of_isWholePlaneGFF`, CanonicalLawUniversal.lean:59).
@@ -69,7 +69,7 @@ theorem localModConstField_prob_indep {Ω Ω' : Type u} [MeasurableSpace Ω] [Me
   rw [prob_localModConstField_mem_eq_map hh α hE, prob_localModConstField_mem_eq_map hh' α hE,
     canonicalLaw_eq_of_isWholePlaneGFF hh hh']
 
-/-- **B3: the constant `q` of the first conjunct of `Step8IdentityStmt`.** For a measurable event `E` there is a real `q`
+/-- **The constant `q` of the first conjunct of `Step8IdentityStmt`.** For a measurable event `E` there is a real `q`
 such that every whole-plane GFF model gives `P{h^α|_{B₇} mod const ∈ E}.toReal = q`. (If no model exists, `q = 0` is
 vacuous.) -/
 theorem exists_localModConstField_prob (α : ℝ) {E : Set (ModConstTestPairings (ball (0 : ℂ) 7))}
@@ -84,7 +84,7 @@ theorem exists_localModConstField_prob (α : ℝ) {E : Set (ModConstTestPairings
       fun Ω m P hC hcirc hh => localModConstField_prob_indep hh hh₀ α hE⟩
   · exact ⟨0, fun Ω m P hC hcirc hh => absurd ⟨Ω, m, P, hC, hcirc, hh⟩ h⟩
 
-/-- **B4: the 11.12 event at the insertion `γ`.** `CorrectedLemma11_12Stmt` gives `PinchEventGammaStmt` for every buffered
+/-- **The 11.12 event at the insertion `γ`.** `CorrectedLemma11_12Stmt` gives `PinchEventGammaStmt` for every buffered
 geometry, `0 < γ < 2` and `M > 0` (the insertion `α = γ` satisfies `α < lqgQ γ`). -/
 theorem pinchEventGamma_exists (h12 : CorrectedLemma11_12Stmt.{u}) {U V W T Q' Q : Set ℂ} {δ₀ : ℝ}
     (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ₀) {γ ξ M : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hM : 0 < M) :

@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11i.Certificate
 import HarmonicBalls.FirstPass.S11h.LocalEvents
 
 /-!
-# Step 8 event calibration: the certificate seed (fp-S11i-certificate-seed, owner n1)
+# Step 8 event calibration: the certificate seed
 
 The Lemma 11.12 witness built by the proof of `pinchLocalCertificate_of_inputs` (`S11m/CertificateAssembly.lean:235`) is the decoded
 pinch rule `decodedPinchRuleBall I (decodedFamily Ψc) (decGreen Φμ) (decMassU Φμ U) M`. Its probability is positive
@@ -15,7 +15,7 @@ pinch rule `decodedPinchRuleBall I (decodedFamily Ψc) (decGreen Φμ) (decMassU
   the certificate event `FirstPassS11i.CertificateEvent` (`S11i/Certificate.lean:42`) is exactly the conjunction of the three local
   pinch events. This is a set identity, checked clause by clause against `S11h/LocalEvents.lean:39-51`.
 * `pinchLocalCertificate_seed_of_inputs`: the witness of `pinchLocalCertificate_of_inputs`, with the almost-sure EQUIVALENCE to the
-  scale-one certificate event (both directions, Codex step 2 of fp-S11i-event-equivalence). Its hypotheses are exactly those of
+  scale-one certificate event (both directions). Its hypotheses are exactly those of
   `pinchLocalCertificate_of_inputs`.
 
 The hypotheses are unchanged. The proof of the seed is the proof of `pinchLocalCertificate_of_inputs` with the final inclusion
@@ -194,7 +194,5 @@ theorem pinchLocalCertificate_seed_of_inputs
     obtain ⟨𝔇, h𝔇, -⟩ := hD
     exact (hex ⟨𝔇, h𝔇⟩).elim
 
-#print axioms certificateEvent_iff_pinchLocalRule
-#print axioms pinchLocalCertificate_seed_of_inputs
 
 end HarmonicBalls.S11i.Step8Calibration

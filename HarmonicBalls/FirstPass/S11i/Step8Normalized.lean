@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.Step8Fitting
 import HarmonicBalls.FirstPass.S11ai.RootedCertSpecialized
 
 /-!
-# Normalized local kernel and the transfer of `hT` (Stage B2 of fp-S11i-11-13h, owner n3)
+# Normalized local kernel and the transfer of `hT`
 
 * `restrict_window_eq`: a restriction identity on `Dloc` gives the same identity on a measurable window `S ⊆ Dloc`.
 * `localCert_normalized_restrict_eq`: if `κ' ℓ` and `κ ℓ` are proportional on `Dloc` (positive factor) and the
@@ -90,5 +90,3 @@ theorem rootedCertTermwise_of_normalized_modified {Ω : Type u} [MeasurableSpace
 
 end HarmonicBalls.FirstPassS11iStep8Normalized
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Normalized.localCert_normalized_restrict_eq
-#print axioms HarmonicBalls.FirstPassS11iStep8Normalized.rootedCertTermwise_of_normalized_modified

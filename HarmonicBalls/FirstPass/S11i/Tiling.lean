@@ -3,8 +3,7 @@ import Mathlib
 /-!
 # Tiles, expanded squares and parity classes (Lemma 11.12 replacement, Theorem 2)
 
-Deterministic geometry of the proof of Theorem 2 in `notes/fp-gaps/G-11-12.md` (section 3, "Proof of unconditional
-positivity"). The square `S_0` is tiled by closed squares of side `ℓ`; each tile `S` has the concentric closed square
+Deterministic geometry of the proof of Theorem 2 of the written proof. The square `S_0` is tiled by closed squares of side `ℓ`; each tile `S` has the concentric closed square
 `H_S` of side `3ℓ/2`; the tiles are split into four classes by the parities of their two indices. Within one class the
 expanded squares have pairwise disjoint closures, and some class carries at least a quarter of the total weight.
 -/

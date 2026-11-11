@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11i.Corrected11_13
 
 /-!
 # Step 8 calibration at the canonical exponent: the Lemma 11.12 event with its almost-sure equivalence
-(fp-S11i-event-equivalence, owner n1; Codex step 2 of `notes/fp-gaps/CODEX-ASTRA-11-13-diagnosis-20261110.md`)
+
 
 `pinchLocalCertificate_canonical_of_inputs` exports one Borel set `E` of pairings on `B₇(0)` that is simultaneously:
 
@@ -93,6 +93,5 @@ theorem pinchLocalCertificate_canonical_of_inputs
   obtain ⟨_, hiff⟩ := hE γ hαQ Ω P hC hcirc μ D hgff hμ hD
   exact hiff
 
-#print axioms pinchLocalCertificate_canonical_of_inputs
 
 end HarmonicBalls.S11i.Step8CalibrationCanonical

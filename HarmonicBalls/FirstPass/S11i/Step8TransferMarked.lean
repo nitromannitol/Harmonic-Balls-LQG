@@ -18,7 +18,7 @@ vanishes for a.e. `z ∈ B₁`. So the outer `P`-integral of the inner `μ_ω`-i
 Extra hypothesis `hGae`: the outer integrand is `P`-AEMeasurable. This is the AEMeasurable form, as in
 `LQGMeasureSquareMeasurableFrozen` (`FirstPass/Frozen/S11c.lean`), because the LQG measure is specified only almost surely.
 It is NOT derivable from `IsLQGMeasureOfField`, `IsWholePlaneGFF` or `hS`: measurability of `ω ↦ μ ω S` is not implied
-by the field-level inputs. It is an open item for the operator source-check.
+by the field-level inputs. It is an open item for the source-check.
 -/
 
 namespace HarmonicBalls.FirstPassS11iStep8Transfer

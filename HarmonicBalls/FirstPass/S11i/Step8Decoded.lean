@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11i.Step8Fitting
 import HarmonicBalls.FirstPass.S11i.Step8LengthMetric
 
 /-!
-# Step 8: the per-ball unit-scale limit with the decoded fitting identity discharged (fp-S11i-11-13f, n3)
+# Step 8: the per-ball unit-scale limit with the decoded fitting identity discharged
 
 `ae_unitScale_of_covariance` (`Step8PerBall.lean`) takes the fitting identity `hfit` as a named input. Here `hfit` is
 produced from the decoder clauses:
@@ -99,4 +99,3 @@ theorem ae_unitScale_of_decoded_ball {Ω : Type u} [MeasurableSpace Ω] {P : Mea
 
 end HarmonicBalls.FirstPassS11iStep8Decoded
 
-#print axioms HarmonicBalls.FirstPassS11iStep8Decoded.ae_unitScale_of_decoded_ball

@@ -4,11 +4,9 @@ import HarmonicBalls.Steps.Sec11.WeylMetricConstantScaling
 import HarmonicBalls.Steps.Sec11.CurveConstantFiber
 
 /-!
-# Zoom of the insertion-`α` LQG metric with coefficient `Q - α` (fp-S11-13-route1-scales, owner n3)
+# Zoom of the insertion-`α` LQG metric with coefficient `Q - α`
 
-`zoomMetricNormAlpha0_stmt : ZoomMetricNormAlpha0Stmt.{0}` (`FirstPass/S11i/Step8PhysReduction.lean`, the metric target of
-the route-2 notes) is proved for every insertion `α`, over probability spaces in `Type`. This is route 1 of the Codex note
-(`notes/fp-gaps/CODEX-hPhys-sol-20261110.md`, eq. (3)): with `R = 2^k` and `C_{α,R} = h_R(0) + (Q_γ - α) log R`, the zoom of the
+`zoomMetricNormAlpha0_stmt : ZoomMetricNormAlpha0Stmt.{0}` (`FirstPass/S11i/Step8PhysReduction.lean`, the metric target) is proved for every insertion `α`, over probability spaces in `Type`. This is route 1: with `R = 2^k` and `C_{α,R} = h_R(0) + (Q_γ - α) log R`, the zoom of the
 insertion-`α` metric is `D^α(R x, R y) = e^{ξ C_{α,R}} · D^{(R),α}(x, y)`, where `D^{(R),α}` is the Weyl scaling of the
 normalized field `normField R` (`FirstPass/S11i/HzoomScale.lean:40`) with the same weight `-α log|·|`.
 
@@ -74,7 +72,7 @@ lemma weylScaling_congr_of_ne_zero {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLe
 
 /-- **Zoom identity of the insertion-`α` metric, one scale, almost surely.** For `R > 0` and almost every `ω`, for all `x, y`:
 `D(R x, R y) = e^{ξ C} · weylScaling (𝔇 (normField R hC hcirc ω)) ξ (-α log|·|) (x, y)` in `ENNReal`, with
-`C = h_R(0) + (Q_γ - α) log R` (`hcirc ω R 0 + (lqgQ γ - α) log R`). Codex eq. (3). -/
+`C = h_R(0) + (Q_γ - α) log R` (`hcirc ω R 0 + (lqgQ γ - α) log R`). -/
 theorem zoom_metric_alpha_identity {Ω₀ : Type} [MeasurableSpace Ω₀] {P : Measure Ω₀} {γ ξ α : ℝ}
     {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (hM : IsLQGMetric γ ξ 𝔇)
     {hC : Ω₀ → (ℂ → ℝ) → ℝ} {hcirc : Ω₀ → ℝ → ℂ → ℝ} {D : Ω₀ → ℂ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
@@ -174,7 +172,7 @@ theorem zoomMetricNormAlpha_of_isLQGMetricOfField {Ω₀ : Type} [MeasurableSpac
     exact (ENNReal.ofReal_eq_ofReal_iff (hDω _ _).1
       (mul_nonneg (Real.exp_pos _).le ENNReal.toReal_nonneg)).mp h
 
-/-- **`ZoomMetricNormAlpha0Stmt`, proved** (fp-S11-13-route1-scales). The insertion-`α₀` metric normalization for every whole-plane
+/-- **`ZoomMetricNormAlpha0Stmt`, proved**. The insertion-`α₀` metric normalization for every whole-plane
 model and every insertion `α₀`, over probability spaces in `Type` (`IsLQGMetric` quantifies over `Type`), that is, at `v = 0`. -/
 theorem zoomMetricNormAlpha0_stmt : ZoomMetricNormAlpha0Stmt.{0} := by
   intro γ ξ α₀ Ω _ P hC hcirc D hG hD
@@ -182,4 +180,3 @@ theorem zoomMetricNormAlpha0_stmt : ZoomMetricNormAlpha0Stmt.{0} := by
 
 end HarmonicBalls.FirstPassS11iZoomMetricAlpha0
 
-#print axioms HarmonicBalls.FirstPassS11iZoomMetricAlpha0.zoomMetricNormAlpha0_stmt
