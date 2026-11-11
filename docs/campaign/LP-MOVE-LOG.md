@@ -134,6 +134,42 @@ Kept: paper citations, `Proposed` and `Frozen` names and status words, mathemati
 - LP build, under the shared `mcrt/lp.lock`: `lake build LatticeProb.LQG` (the aggregator; builds the 36 modules and their closure): `Build completed successfully (8974 jobs)`; no errors, no warnings in the log. The batch files contain no `sorry`, `admit`, `native_decide`, `set_option maxHeartbeats` and no `axiom` declaration.
 - Not run: `lake build LatticeProb` and `lake build LatticeProbV435` (whole libraries; the LP tree carries other uncommitted work); `lb HarmonicBalls.LPStage.All` (HB imports are unchanged; the HB side is checked per file with `lc`).
 
+## Batch 3: GFF covariance and existence (2 modules)
+
+- LP repository: `/home/nitro/lean/LP-idla-phase2`, branch `idla/phase2` (not pushed).
+- LP commit: `3338fbe` (`LatticeProb/Gauss/GFFCovSymm.lean`, `LatticeProb/Gauss/GFFExistence.lean`; 1,189 insertions; no other LP file touched; the root `LatticeProb.lean` and the LQG aggregator are unchanged).
+- HB commit of the comment cleanup (2 mirror files): `7f42025f`.
+
+### Modules and LP paths
+
+- `GFFCovSymm` goes to `LatticeProb/Gauss/GFFCovSymm.lean`; it imports `LatticeProb.Gauss.GFFExistence`.
+- `GFFExistence` goes to `LatticeProb/Gauss/GFFExistence.lean`; it imports `LatticeProb.Gauss.GFF`, `LatticeProb.Prob.KolmogorovExtension` (rewritten from the HB mirror import) and `LatticeProb.Prob.ChentsovPiModification` (unchanged).
+- Dropped: none.
+
+### Gates
+
+- (1) No active task (hb z3 z4 z6 z7 n1; mcrt) names either file in its OWNS section; the z6 task reads `WholePlaneCovPSDStmt` in place and does not edit these files. No other worker has an uncommitted change in either file.
+- (2) `docs/campaign/LP-STAGE-INDEX.md` rows 21-22 read READY both before the LP commit and at the re-check.
+- (3) Clash probe: 79 batch-3 declarations, 0 inside the batch, 0 against the LP tree at `f6c0d7e` (14,857 declarations in 1,512 files), run before the LP copies existed and again before the LP commit.
+- (4) No mcrt task names `LatticeProb/Gauss/GFFCovSymm.lean` or `GFFExistence.lean`.
+
+### Mirror, hygiene and fidelity checks
+
+- The LP copies differ from the HB mirrors only in the rewritten import lines (`diff` checked); no hygiene hit (no `HarmonicBalls`, `FirstPass`, notes path, owner or task label) in the LP copies.
+- HB comment cleanup: `commentonly.py` OK against HEAD for both files; `lc` CHECK OK for both. The declarations and their types are unchanged.
+- No `sorry`, `admit`, `axiom`, `native_decide` or heartbeat option in either file.
+
+### Build
+
+- `lake build LatticeProb.Gauss.GFFCovSymm LatticeProb.Gauss.GFFExistence` under the shared `mcrt/lp.lock`: `Build completed successfully (8942 jobs)`; no errors. The 12 warning lines in the log are deprecations in replayed Prob modules (`Chentsov`, `ChentsovPi`, `KolmogorovPi`, `ChentsovPiModification`); none is in the two new files.
+
+### Judgment calls for the lead
+
+- Aggregator: the task asked for import lines in `LatticeProb.lean` or a Gauss aggregator, "in the same style as batch 1". Batch 1 added none (there is no Gauss aggregator, and the `LatticeProb` lib glob covers the directory), so no aggregator line was added. Lead to confirm.
+- Held-row wording: the operator note of 13:50 UTC says "GFFExistence and GFFCovSymm stay held (row 29)". The 14:05 task assigns the move and the gate is READY, so the move went ahead on the 14:05 task. Lead to confirm.
+- Fidelity: `WholePlaneCovPSDStmt` (the B2 Prop, `GFFExistence.lean`) is defined in that file, not in `HarmonicBalls/External` or `HarmonicBalls/Proposed`; its docstring says only a sketch exists. It is the named hypothesis of `exists_isWholePlaneGFF` and `exists_isWholePlaneGFF_of_psd`. The move carries it unchanged, as the task asks. It needs an operator source-check before any consumer is unconditional.
+- Docstring correction (comments only): the B1 bullet said Kolmogorov extension was absent from `LatticeProb`; it is now stated as proved below (`kolmogorovExtensionStmt_proved`).
+
 ## Status lines
 
 - HB commit (comment cleanup, 9 mirror files): `70f3786b`, "LPStage batch 1: comment-only cleanup of workflow metacommentary".
@@ -142,3 +178,4 @@ Kept: paper citations, `Proposed` and `Frozen` names and status words, mathemati
 - LP commit: `a6b767d` on `idla/phase2` (unpushed).
 - Step-3 recipe re-run before the HB commit: empty for all 13 modules.
 - Batch 2 (36 LQG modules): LP commit `79351f7`; HB comment cleanup `e84472dd`; `lake build LatticeProb.LQG` OK.
+- Batch 3 (GFFCovSymm, GFFExistence): LP commit `3338fbe`; HB comment cleanup `7f42025f`; `lake build LatticeProb.Gauss.GFFCovSymm LatticeProb.Gauss.GFFExistence` OK.
