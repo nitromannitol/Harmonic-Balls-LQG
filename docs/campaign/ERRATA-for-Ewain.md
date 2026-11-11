@@ -6,7 +6,31 @@ they change a statement or replace a proof. The minor corrections (notation and 
 
 ## Part 1. Substantive corrections
 
+### Section 1: main results
+
+**Theorem 1.1 (harmonic balls: test class)** <!-- C7 -->
+- *Printed:* the test functions $f_2$ range over $\tilde H_O(\Lambda(z))$ for some open set $O$ with $\Lambda(z)\subset\overline O$.
+- *Problem:* with this class, no bounded open set containing $z$ satisfies the defining identity, because a Green function of a suitable domain with a pole at a boundary point of $\Lambda(z)$ is admissible but violates it. Theorem 1.1 as printed is therefore false.
+- *Correction:* $O$ is a bounded open set with $\overline{\Lambda(z)}\subset O$.
+
+### Section 2: volume growth and heat kernel
+
+**Lemma 2.4 (volume growth of $\mu_h$-balls)** <!-- C1 -->
+- *Printed:* for each $\beta^+\in(0,(2-\gamma)^2/2)$ and $\beta^->(2+\gamma)^2/2$, the bounds $\varepsilon^{\beta^-}\le\mu_h(B_\varepsilon(z))\le\varepsilon^{\beta^+}$ hold for all $z\in B_1$, and similarly for annuli.
+- *Problem:* at $z=0$, $\log\mu_h(B_\varepsilon(0))/\log\varepsilon\to\gamma(Q-\boldsymbol\alpha_0)$. The upper bound fails when $\boldsymbol\alpha_0>2$ and the lower bound fails when $\boldsymbol\alpha_0<-2$; both values are admissible, since $\boldsymbol\alpha_0\in(-\infty,Q)$.
+- *Correction:* $\beta^+\in\bigl(0,\min\{(2-\gamma)^2/2,\gamma(Q-\boldsymbol\alpha_0)\}\bigr)$ and $\beta^->\max\{(2+\gamma)^2/2,\gamma(Q-\boldsymbol\alpha_0)\}$, in the statement and in both displays.
+
+**Proposition 2.5 (heat kernel of the reflected LBM)** <!-- C5 -->
+- *Printed:* $\mathbb P[\mathcal B^x_t\in dy\mid h]=p^K_t(x,y)\,dy$ (equation (2.13)).
+- *Problem:* the heat kernel is a density with respect to $\mu_h$, the measure for which the process is reversible. The measure $\mu_h$ is singular with respect to Lebesgue measure, so Lebesgue measure is the wrong reference measure.
+- *Correction:* $\mathbb P[\mathcal B^x_t\in dy\mid h]=p^K_t(x,y)\,\mu_h(dy)$.
+
 ### Section 3: clusters
+
+**Equations (3.3) and (3.4) (cluster and odometer)** <!-- C3 -->
+- *Printed:* the cluster and the odometer are defined with $G_{B_r;z}$, evaluated as $G_{B_r;z}(z,x)$ in (3.3) and as $G_{B_r;z}(0,\cdot)$ in (3.4).
+- *Problem:* $G_{B_r;z}$ is not a defined object. The identity $\Delta u=-t\delta_z+\dots$ in Lemma 3.2 needs the Green function of $B_r$ with its pole at $z$.
+- *Correction:* use $G_{B_r}(z,x)$ in (3.3) and $t\,G_{B_r}(z,\cdot)$ in (3.4).
 
 **Lemma 3.3 (monotonicity of clusters)** <!-- C52 -->
 - *Printed:* the statement omits the pole $z$ from both clusters and does not require $t>0$.
@@ -54,6 +78,11 @@ they change a statement or replace a proof. The minor corrections (notation and 
 
 ### Section 6: annuli and odometer comparison
 
+**Proposition 6.2 (good annuli) and the proof of Lemma 6.4** <!-- C23 -->
+- *Printed:* the good-annulus event asks that "$\mathcal B^u$ exits $\mathcal A_{3r,5r}(z)$ before exiting $Y$", for Borel sets $Y\subset\mathcal A_{3r,5r}(z)$; the proof of Lemma 6.4 uses the same wording.
+- *Problem:* when $Y\subset\mathcal A_{3r,5r}(z)$, the strict event is empty, so the condition does not express what is intended.
+- *Correction:* "exits $\mathcal A_{3r,5r}(z)$ no later than exiting $Y$", that is, the exit time of the annulus is at most the exit time of $Y$.
+
 **Lemma 6.4 (annuli are hit)** <!-- C61 -->
 - *Printed:* $a=a(b,p,\gamma)$, and the constants in the proof depend only on $\gamma$.
 - *Problem:* the comparison with the log-singular field depends on $\boldsymbol\alpha_0$.
@@ -74,7 +103,19 @@ they change a statement or replace a proof. The minor corrections (notation and 
 - *Problem:* the component and odometer argument uses the whole closed ball, which must stay in $B_1$ and away from the pole.
 - *Correction:* assume $\overline B_\rho(x_0)\subset B_1\setminus\{z\}$.
 
+### Section 7: continuity of clusters
+
+**Proposition 7.2 (continuity of clusters)** <!-- C18 -->
+- *Printed:* $\Lambda_{t+\varepsilon}(z)\Subset\Lambda_t(z)+B_\delta(z)$, with $\delta=C\varepsilon^{1/(4\beta^-)}$.
+- *Problem:* the ball $B_\delta(z)$ is centred at $z$. For $z\neq0$ and small $t$ the cluster lies in $B_{|z|/2}(z)$, so every $\lambda\in\Lambda_t(z)$ has $|\lambda|>\delta$ and $z\notin\Lambda_t(z)+B_\delta(z)$, although $z\in\Lambda_{t+\varepsilon}(z)$.
+- *Correction:* $\Lambda_t(z)+B_\delta$, the ordinary $\delta$-neighbourhood, as in Proposition 5.2.
+
 ### Section 9: sub-harmonic balls
+
+**Section 9.2, introduction to Lemma 9.3 (harmonic balls)** <!-- C22 -->
+- *Printed:* every harmonic ball "in the sense of eq:harmonic-ball" has boundary in the closure of a regularised cluster.
+- *Problem:* the printed class of test functions is too narrow. Under it, sets such as $B_1\setminus[1/2,3/4]$, or $\{x\in B_1:|x|\notin C\}$ with $C$ a fat Cantor set, satisfy the defining identity, while Lemma 9.1(2) and Lemma 9.3 fail for them.
+- *Correction:* "in the sense of Theorem 1.1", the class enlarged as in the correction of Theorem 1.1.
 
 **Proposition 9.2 (uniqueness of sub-harmonic balls)** <!-- C51 -->
 - *Printed:* the inclusion $\widehat\Lambda\subset A$ for the sub-harmonic ball $A$ of mass $t$.
@@ -169,6 +210,12 @@ they change a statement or replace a proof. The minor corrections (notation and 
 
 ## Part 2. Minor corrections
 
+### Section 1
+
+**Theorem 1.1(a)** <!-- C6 -->
+- *Printed:* $\mu_h(\partial\Lambda_t(x))=0$.
+- *Correction:* $\mu_h(\partial\Lambda_t(z))=0$ (the variable $x$ is not bound).
+
 ### Section 3
 
 **Lemma 3.4 (conservation of mass)** <!-- C53 -->
@@ -176,6 +223,10 @@ they change a statement or replace a proof. The minor corrections (notation and 
 - *Correction:* use $\mu_h$, the LQG measure used throughout Lemma 3.4.
 
 ### Section 11
+
+**Definition 11.1 (Lipschitz domain)** <!-- C12 -->
+- *Printed:* the local graph description uses $U\cap B_r(x_0)$, where $U$ is not defined in the definition.
+- *Correction:* $A\cap B_r(x_0)$, the set being defined.
 
 **Lemma 11.6 (comparison chain)** <!-- C38 -->
 - *Printed:* the reference is to the fixed-aspect-ratio definition of the annular potential.
@@ -186,3 +237,26 @@ they change a statement or replace a proof. The minor corrections (notation and 
 **Annular potential shorthands** <!-- C47 -->
 - *Printed:* the shorthands $SG_{s_1\rho,s_2\rho}$ and $SG_{3r,6r}$ link to the fixed-aspect-ratio definition.
 - *Correction:* link them to the variable-aspect-ratio definition.
+
+## INTERNAL - NOT FOR THE EMAIL
+
+Early items [C1]-[C36] that are not in the email above, one line each with the reason. Patches of the email items are in CORRECTIONS.md (applied in commit 4568f76f).
+
+- [C2]: superseded by [C65] (the same Appendix A volume-growth correction; upper exponent beta+).
+- [C4]: superseded by [C53] (Lemma 3.4, equality case) and [C67] (Lemma A.5).
+- [C8]: superseded by [C55] (Lemma 4.2 exponent depends on gamma and alpha_0).
+- [C9]: superseded by [C58] (Proposition 5.4: T = T(z), delete "for all r > 0").
+- [C10]: superseded by [C51]; the weak form Lambda subset A is part of [C51]. Operator 04:35: the Stmt of Prop 9.2 stays as printed (PARTIAL), the weak form is proved separately; the printed conclusion is not shown false.
+- [C11]: superseded by [C43] (Lemma 11.12 for every alpha < Q with the hat-G event; operator E13).
+- [C13]: superseded by [C52] (Lemma 3.3).
+- [C14]: superseded by [C54] (Lemma 3.5) and [C68] (Lemma A.6).
+- [C15]: superseded by [C64] (Lemma 6.13).
+- [C16]: superseded by [C49] (Proposition 10.6: components of C minus the closure).
+- [C17]: not adopted (operator 04:35: proof gap only, no statement change).
+- [C19]: superseded by [C57] (Proposition 5.3).
+- [C20]: superseded by [C58] (Proposition 5.4 containment).
+- [C21]: superseded by [C60] (Lemma 5.8: z in U).
+- [C24]: superseded by [C63] (finite-supremum premise; the early text "z not in closure(A)" is an equivalent alternative).
+- [C25]: superseded by [C61]. The early text names a(b,gamma); the counterexample (docs/campaign/cex/AlphaUniformity.md section 2) refutes Lemma 6.4, whose constant is a(b,p,gamma). Lemma 6.3 with a(b,gamma) is true (section 6.2 of the same file).
+- [C26]: superseded by [C62] (AlphaUniformity.md section 5).
+- [C27]-[C36]: UNCLEAR. No correction text, analysis or adoption exists for these tags in CORRECTIONS-PROPOSED.md, FROZEN.md, ESCALATIONS.md, GAPS-HB-1106.md or docs/campaign/cex/. The adopted early set is C1-C9, C11-C16, C18-C26 (C10 in weak form only).
