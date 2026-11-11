@@ -1,6 +1,7 @@
 import Mathlib
 import HarmonicBalls.LPStage.GFF
 import LatticeProb.Prob.ChentsovPiModification
+import HarmonicBalls.LPStage.KolmogorovExtension
 
 /-!
 # Existence of the whole-plane GFF: named ingredients and the elementary moment bound (LP stage)
@@ -37,6 +38,12 @@ def KolmogorovExtensionStmt : Prop :=
   ∀ (ι : Type) (P : ∀ J : Finset ι, Measure (∀ _ : J, ℝ)),
     IsProjectiveMeasureFamily (α := fun _ : ι => ℝ) P → (∀ J : Finset ι, IsProbabilityMeasure (P J)) →
       ∃ μ : Measure (ι → ℝ), IsProbabilityMeasure μ ∧ IsProjectiveLimit (α := fun _ : ι => ℝ) μ P
+
+/-- B1 is discharged: the Kolmogorov extension for real coordinates on an arbitrary index set is proved in
+`HarmonicBalls/LPStage/KolmogorovExtension.lean` (`LatticeProb.exists_isProjectiveLimit_real`, source Anderson,
+Advanced Probability II Notes, Thm 6.0.6, p. 60). -/
+theorem kolmogorovExtensionStmt_proved : KolmogorovExtensionStmt :=
+  fun ι P hP h1 => LatticeProb.exists_isProjectiveLimit_real ι P hP h1
 
 /-- Positive semidefiniteness of the whole-plane covariance on admissible observables: for every finite family of
 admissible observables `o_i` and real `c_i`, `∑ c_i c_j wholePlaneGFFCov o_i o_j ≥ 0`.
