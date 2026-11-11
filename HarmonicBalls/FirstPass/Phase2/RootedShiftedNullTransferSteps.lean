@@ -2,6 +2,7 @@ import HarmonicBalls.Defs.GFF
 import HarmonicBalls.Proofs.Sec8.CircleLogPotential
 import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmDMSConstant
 import HarmonicBalls.FirstPass.S8c.LocalObservation
+import HarmonicBalls.Proofs.Sec8.LocalSmoothShiftCutoff
 
 /-! # Shifted-root null transfer: the local steps L1, L2 and L5 (MQ-lh-29)
 
@@ -79,5 +80,67 @@ theorem massNormalize_smul_const {r : ℝ} {c : ℝ≥0∞} (η : Measure ℂ) (
   calc c⁻¹ * (η (ball 0 (r / 2)))⁻¹ * (c * η s)
       = (η (ball 0 (r / 2)))⁻¹ * (c⁻¹ * c) * η s := by ring
     _ = (η (ball 0 (r / 2)))⁻¹ * η s := by rw [ENNReal.inv_mul_cancel hc0 hct, mul_one]
+
+/-- **L3 (smooth Cameron-Martin shift).** For `3r < |z|`, the function `y ↦ -a₀ log|y + z|` is smooth on
+`B_{2r}(0)` (it avoids `-z`), so the cutoff lemma `exists_testFunction_eqOn_closedBall_of_contDiffOn_ball`
+gives a test function supported in `B_{2r}(0)` that equals it on `B_{3r/2}(0)`. -/
+theorem exists_testFunction_logShift {a0 r : ℝ} {z : ℂ} (hr : 0 < r) (hz : 3 * r < ‖z‖) :
+    ∃ gt : ℂ → ℝ, IsTestFunction (ball (0 : ℂ) (2 * r)) gt ∧
+      EqOn gt (fun y => -a0 * Real.log ‖y + z‖) (closedBall (0 : ℂ) (3 * r / 2)) := by
+  have hne : ∀ y ∈ ball (0 : ℂ) (2 * r), y + z ≠ 0 := by
+    intro y hy h
+    rw [mem_ball_zero_iff] at hy
+    have h3 : ‖z‖ ≤ ‖y + z‖ + ‖y‖ := by
+      calc ‖z‖ = ‖(y + z) - y‖ := by simp
+        _ ≤ ‖y + z‖ + ‖y‖ := norm_sub_le _ _
+    rw [h, norm_zero] at h3
+    linarith
+  have hg : ContDiffOn ℝ (⊤ : ℕ∞) (fun y : ℂ => -a0 * Real.log ‖y + z‖) (ball (0 : ℂ) (2 * r)) := by
+    intro y hy
+    have h1 : ContDiffAt ℝ (⊤ : ℕ∞) (fun w : ℂ => ‖w + z‖) y :=
+      (contDiffAt_norm ℝ (n := (⊤ : ℕ∞)) (hne y hy)).comp y (contDiffAt_id.add contDiffAt_const)
+    have h2 : ContDiffAt ℝ (⊤ : ℕ∞) (fun w : ℂ => Real.log ‖w + z‖) y :=
+      h1.log (norm_ne_zero_iff.2 (hne y hy))
+    exact (contDiffAt_const.mul h2).contDiffWithinAt
+  obtain ⟨f, hf, hfg⟩ := exists_testFunction_eqOn_closedBall_of_contDiffOn_ball (c := 0)
+    (r := 3 * r / 2) (R := 2 * r) (by linarith) (by linarith) hg
+  exact ⟨f, hf, hfg⟩
+
+/-- The test shift of L3 has zero unit-circle average: its support lies in `B_{2r}(0)` with `2r ≤ 1`. -/
+theorem circleAverage_testShift_unit {r : ℝ} {gt : ℂ → ℝ}
+    (hgt : IsTestFunction (ball (0 : ℂ) (2 * r)) gt) (h2r : 2 * r ≤ 1) :
+    Real.circleAverage gt 0 1 = 0 := by
+  have h0 : Set.EqOn gt (fun _ => (0 : ℝ)) (sphere (0 : ℂ) |1|) := by
+    intro w hw
+    rw [mem_sphere, dist_zero_right, abs_one] at hw
+    by_contra h
+    have hmem : w ∈ tsupport gt := subset_tsupport gt (Function.mem_support.2 h)
+    have hball := hgt.2.2 hmem
+    rw [mem_ball_zero_iff, hw] at hball
+    linarith
+  rw [Real.circleAverage_congr_sphere h0, Real.circleAverage_const]
+
+/-- The test shift of L3 is the logarithm on small spheres: for `|y| < 5r/4` and `0 < e < r/4`, its circle
+average is `-a₀ log|y + z|`, because the sphere `∂B_e(y)` lies in `B_{3r/2}(0)` and `e < |y + z|`. -/
+theorem circleAverage_testShift_eq {a0 r : ℝ} {z : ℂ} {gt : ℂ → ℝ} (hz : 3 * r < ‖z‖)
+    (hEq : EqOn gt (fun y => -a0 * Real.log ‖y + z‖) (closedBall (0 : ℂ) (3 * r / 2)))
+    {y : ℂ} {e : ℝ} (hy : ‖y‖ < 5 * r / 4) (he : 0 < e) (he' : e < r / 4) :
+    Real.circleAverage gt y e = -a0 * Real.log ‖y + z‖ := by
+  have hs : Set.EqOn gt (fun w => (-a0) • Real.log ‖w - -z‖) (sphere y |e|) := by
+    intro w hw
+    rw [mem_sphere, dist_eq_norm, abs_of_pos he] at hw
+    have hw' : w ∈ closedBall (0 : ℂ) (3 * r / 2) := by
+      rw [mem_closedBall_zero_iff]
+      calc ‖w‖ = ‖y + (w - y)‖ := by simp
+        _ ≤ ‖y‖ + ‖w - y‖ := norm_add_le _ _
+        _ ≤ 3 * r / 2 := by rw [hw]; linarith
+    rw [hEq hw']
+    simp [smul_eq_mul, sub_neg_eq_add]
+  have h3 : ‖z‖ ≤ ‖y + z‖ + ‖y‖ := by
+    calc ‖z‖ = ‖(y + z) - y‖ := by simp
+      _ ≤ ‖y + z‖ + ‖y‖ := norm_sub_le _ _
+  have hle : e ≤ ‖y + z‖ := by linarith
+  rw [Real.circleAverage_congr_sphere hs, Real.circleAverage_fun_smul,
+    circleAverage_log_norm_sub_eq_log_max he y (-z), smul_eq_mul, sub_neg_eq_add, max_eq_right hle]
 
 end HarmonicBalls
