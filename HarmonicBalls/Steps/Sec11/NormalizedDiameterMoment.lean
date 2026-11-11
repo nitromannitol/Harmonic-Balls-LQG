@@ -113,9 +113,6 @@ theorem exists_scaled_ball_criterion_of_normalized_moments
     _ ≤ C * q ^ n := measure_exp_threshold_le_of_lintegral_le P (X n i) C
       (η - κ) n (hmeas n i hi) (hmoment n i hi)
 
-#print axioms exists_scaled_ball_criterion_of_normalized_moments
 
-#print axioms measure_exp_threshold_le_of_lintegral_le
-#print axioms internalMetric_exceedance_subset_exp_threshold
 
 end HarmonicBalls

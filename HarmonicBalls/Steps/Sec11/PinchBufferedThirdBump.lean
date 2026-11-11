@@ -66,6 +66,5 @@ theorem IsPinchPointProofConfiguration.exists_smooth_weight_for_internal_pinch
     hzeroE hreverse hfirst hsecond hthird hclear
   simpa only [hfactor] using hmargin
 
-#print axioms IsPinchPointProofConfiguration.exists_smooth_weight_for_internal_pinch
 
 end HarmonicBalls

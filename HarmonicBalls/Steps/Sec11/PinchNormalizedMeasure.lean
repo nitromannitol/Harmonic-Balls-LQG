@@ -88,7 +88,5 @@ theorem exists_local_pinchEvent_representative_of_normalized_borel_mass
   exact @exists_local_pinchEvent_representative_of_normalized_data Ω mΩ P m D μ G U T Q' Q
     hconfig M z r hr c a hscale hD hG hGeq hgreen (hmass _ hUm hU6)
 
-#print axioms exists_local_annulusGreenPotentialSup_of_borel_mass
-#print axioms exists_local_pinchEvent_representative_of_normalized_borel_mass
 
 end HarmonicBalls

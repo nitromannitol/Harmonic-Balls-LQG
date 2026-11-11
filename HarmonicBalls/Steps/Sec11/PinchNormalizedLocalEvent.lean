@@ -70,7 +70,5 @@ theorem exists_local_pinchEvent_representative_of_normalized_data
   exact (pinchPointEventWithInternalBounds_const_mul (μ ω) (D ω) U T Q' Q M r z
     hscale.1 hscale.2.1 hscale.2.2).symm.trans heq
 
-#print axioms IsEuclideanLengthMetric.const_mul
-#print axioms exists_local_pinchEvent_representative_of_normalized_data
 
 end HarmonicBalls

@@ -126,9 +126,6 @@ theorem exists_positive_measure_pinch_buffer_parameters
   refine ⟨q, b, hq, hq1, ?_⟩
   simpa only [A, L, C, H, B, mem_ofPred_eq, and_assoc] using hp
 
-#print axioms exists_positive_measure_pinch_buffer_parameters
 
-#print axioms exists_rat_buffer_parameters
-#print axioms exists_positive_measure_buffer_parameters
 
 end HarmonicBalls

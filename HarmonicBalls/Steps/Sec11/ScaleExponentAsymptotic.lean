@@ -68,9 +68,5 @@ theorem eventually_exponential_scale_bound_of_exponent_error
   eventually_exponential_scale_power_bound a s θ C
     (eventually_power_bound_of_exponent_error a q θ e C hθ he ha)
 
-#print axioms eventually_power_bound_of_exponent_error
-#print axioms tendsto_exponential_radii
-#print axioms eventually_exponential_scale_power_bound
-#print axioms eventually_exponential_scale_bound_of_exponent_error
 
 end HarmonicBalls

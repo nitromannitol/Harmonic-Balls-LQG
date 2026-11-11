@@ -72,6 +72,5 @@ theorem ae_eventually_block_density_of_local_absolutelyContinuous
   filter_upwards [hrepP, hPA] with ω hrep hω
   exact (hequiv ω hrep).1 hω
 
-#print axioms ae_eventually_block_density_of_local_absolutelyContinuous
 
 end HarmonicBalls

@@ -101,9 +101,5 @@ theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_summable_shells
   hD.internalMetric_sdiff_zero_eq_of_small_detours hx hy
     (hD.small_detours_of_summable_shells V A z c hz hdiam hsum hcover)
 
-#print axioms IsEuclideanLengthMetric.internalMetric_le_sum_shell_chain
-#print axioms sum_shell_chain_le_tsum_tail
-#print axioms IsEuclideanLengthMetric.small_detours_of_summable_shells
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_summable_shells
 
 end HarmonicBalls

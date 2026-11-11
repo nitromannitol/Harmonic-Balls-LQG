@@ -65,6 +65,5 @@ theorem ae_positive_internal_pinchBlockDensity_of_stationary_lqg_event
     (fun ε => fieldSigmaAlgebra α₀ hC (ball z ε))
     (fun ε _ => hgff.fieldSigmaAlgebra_le α₀ (ball z ε)) hXgerm htrivial hXm hbound hX hb hs hpos
 
-#print axioms ae_positive_internal_pinchBlockDensity_of_stationary_lqg_event
 
 end HarmonicBalls

@@ -64,6 +64,5 @@ theorem ae_eventually_internal_pinch_block_density_of_ae_rep_of_lt_prob
   filter_upwards [hf] with N hN
   simpa only [Set.mem_Icc, and_assoc] using hN
 
-#print axioms ae_eventually_internal_pinch_block_density_of_ae_rep_of_lt_prob
 
 end HarmonicBalls

@@ -65,7 +65,5 @@ theorem measure_pos_pinchPointEventWithInternalBounds_of_boundaryClearance
   intro ω hω
   exact pinchPointEventWithInternalBounds_of_boundaryClearance hω.1 hω.2.1 hω.2.2.1 hω.2.2.2
 
-#print axioms pinchPointEventWithInternalBounds_of_boundaryClearance
-#print axioms measure_pos_pinchPointEventWithInternalBounds_of_boundaryClearance
 
 end HarmonicBalls

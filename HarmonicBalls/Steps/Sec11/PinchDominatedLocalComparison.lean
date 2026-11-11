@@ -50,6 +50,5 @@ theorem exists_pinch_tail_local_comparison_of_dominating_gff
   refine ⟨A, (fieldSigmaAlgebra_mono α₀ hC (ball_subset_ball (le_of_lt (hK k hk)))) _ hA, ?_⟩
   exact ae_add_measure_iff.mpr ⟨hPS.ae_le hAeq, hQS.ae_le hAeq⟩
 
-#print axioms exists_pinch_tail_local_comparison_of_dominating_gff
 
 end HarmonicBalls

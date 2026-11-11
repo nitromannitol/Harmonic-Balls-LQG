@@ -59,7 +59,5 @@ theorem measurable_internalMetric_translate
   ext p
   exact (internalMetric_comp_homeomorph (D p.1) (Homeomorph.addRight p.2) U x y).symm
 
-#print axioms IsEuclideanLengthMetric.comp_homeomorph
-#print axioms measurable_internalMetric_translate
 
 end HarmonicBalls

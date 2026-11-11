@@ -134,9 +134,5 @@ theorem exists_scaled_ball_criterion_of_ae_normalized_moments
   · intro n i hi
     exact hpoint n i hi
 
-#print axioms aemeasurable_iSup_internalMetric_of_ae_lengthMetric
-#print axioms normalized_internalDiameter_measurable_and_bound
-#print axioms exists_pointwise_diameter_envelope
-#print axioms exists_scaled_ball_criterion_of_ae_normalized_moments
 
 end HarmonicBalls

@@ -112,10 +112,5 @@ theorem measurable_kernel_rescaledSet_mass
     ((κ p.1).map (fun y : ℂ => y - p.2)) (rescaledSet U r 0)
   rw [Measure.map_apply (show Measurable (fun y : ℂ => y - p.2) from by fun_prop) hU0, hpre]
 
-#print axioms annulusGreenPotentialSup_map_sub
-#print axioms measurable_kernel_annulusGreenPotentialSup
-#print axioms measurable_kernel_rescaledSet_mass
-#print axioms measurable_kernel_map_sub
-#print axioms measurable_kernel_recentered_annulusGreenPotentialSup
 
 end HarmonicBalls

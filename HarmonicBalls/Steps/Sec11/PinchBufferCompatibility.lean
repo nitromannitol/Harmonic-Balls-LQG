@@ -54,7 +54,6 @@ theorem pinch_contraction_iff_product_bound
   · rintro ⟨hab, hprod⟩
     exact exists_pinch_contraction_of_product_bound ha hc hh hb hab hprod
 
-#print axioms pinch_contraction_iff_product_bound
 
 /-- Extended nonnegative path and diameter quantities satisfy the buffered
 inequalities when their finite real values meet the product criterion. -/
@@ -137,9 +136,6 @@ theorem IsPinchPointProofConfiguration.exists_positive_measure_buffer_of_radial_
   intro w hw
   exact hm.center_to_complement_lower_bound hnonneg (by norm_num) (by norm_num) hw
 
-#print axioms IsPinchPointProofConfiguration.exists_positive_measure_buffer_of_radial_product
 
-#print axioms exists_pinch_contraction_of_product_bound
-#print axioms exists_pinch_contraction_of_finite_product_bound
 
 end HarmonicBalls

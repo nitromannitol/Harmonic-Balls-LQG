@@ -38,6 +38,5 @@ theorem measurableSet_pinchPointEventWithInternalBounds_on_lengthMetrics
       measurable_fst
   exact measurableSet_pinchPointEventWithInternalBounds hconfig M z hr hm hnonneg hdist hgreen hmass
 
-#print axioms measurableSet_pinchPointEventWithInternalBounds_on_lengthMetrics
 
 end HarmonicBalls

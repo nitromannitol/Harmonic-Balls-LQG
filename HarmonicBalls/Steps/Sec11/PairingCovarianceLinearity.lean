@@ -199,10 +199,5 @@ theorem IsWholePlaneGFF.ae_centeredTestPairing_eq_countable
       hC ω (φ i) - (∫ x, φ i x) * hC ω ψ := by
   exact ae_all_iff.mpr (fun i => h.ae_centeredTestPairing_eq (hφ i) hψ)
 
-#print axioms continuous_wholePlaneCov_potential_general
-#print axioms wholePlaneGFFCov_pairing_linear_left
-#print axioms wholePlaneGFFCov_pairing_linear_right
-#print axioms IsWholePlaneGFF.ae_pairing_linear_combination
-#print axioms IsWholePlaneGFF.ae_centeredTestPairing_eq_countable
 
 end HarmonicBalls

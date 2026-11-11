@@ -49,6 +49,5 @@ theorem exists_scaled_ball_criterion_of_power_and_compact_moments
     exists_uniform_scale_ratio_of_eventually_power_bound a s η θ hθ hafin C hCfin hpower
   exact hcriterion a A ha0 hafin hAfin hratio hmom
 
-#print axioms exists_scaled_ball_criterion_of_power_and_compact_moments
 
 end HarmonicBalls

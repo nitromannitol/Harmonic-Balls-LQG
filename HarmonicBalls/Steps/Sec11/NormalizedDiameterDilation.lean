@@ -92,8 +92,5 @@ theorem IsWholePlaneGFF.scaledCompactInternalDiameter_lintegral_le_of_affine
         hAff 𝔇 h𝔇 K U (Real.exp_pos _))
     _ ≤ B := hmom n
 
-#print axioms IsWholePlaneGFF.scaledCompactInternalDiameter_lintegral_le_of_affine
-#print axioms IsWholePlaneGFF.ae_scaledCompactInternalDiameter_eq_affine
-#print axioms scaledCompactInternalDiameter_eq_normalized_pullback
 
 end HarmonicBalls

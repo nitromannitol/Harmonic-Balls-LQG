@@ -144,6 +144,5 @@ theorem IsEuclideanLengthMetric.weylScaling_zero
     simpa only [Pi.zero_apply, mul_zero, Real.exp_zero, ENNReal.ofReal_one,
       lintegral_const, one_mul, Measure.restrict_apply_univ, Real.volume_Icc, sub_zero] using hbound
 
-#print axioms IsEuclideanLengthMetric.exists_lengthParametrized_with_tracking
 
 end HarmonicBalls

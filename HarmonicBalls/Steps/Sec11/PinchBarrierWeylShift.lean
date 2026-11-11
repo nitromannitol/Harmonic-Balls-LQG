@@ -156,9 +156,5 @@ theorem IsPinchPointProofConfiguration.exists_smooth_third_weyl_weight_with_lowe
     have hxsmall : dist x (0 : ℂ) ≤ 3 * δ := hx
     linarith [h.δ₀_mem.2]
 
-#print axioms IsPinchPointProofConfiguration.exists_smooth_third_weyl_weight_with_lower_bound
-#print axioms IsPinchPointProofConfiguration.pinchPointEventWithInternalBounds_of_weyl_barrier
-#print axioms IsEuclideanLengthMetric.pinchConstrainedPaths_of_metric_comparison
-#print axioms IsEuclideanLengthMetric.pinchConstrainedPaths_of_weyl_barrier
 
 end HarmonicBalls

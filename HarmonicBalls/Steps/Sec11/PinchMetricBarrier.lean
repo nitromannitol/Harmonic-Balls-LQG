@@ -102,9 +102,5 @@ theorem IsEuclideanLengthMetric.pinchPointEventWithInternalBounds_of_radial_gaps
   intro w hw
   exact hD.center_to_complement_lower_bound hnonneg (by positivity) (by linarith) hw
 
-#print axioms IsEuclideanLengthMetric.pinchPointEventWithInternalBounds_of_radial_gaps
-#print axioms IsEuclideanLengthMetric.center_to_complement_lower_bound
-#print axioms IsEuclideanLengthMetric.pinchBoundaryClearance_of_metric_barrier
-#print axioms IsEuclideanLengthMetric.pinchPointEventWithInternalBounds_of_metric_barrier
 
 end HarmonicBalls

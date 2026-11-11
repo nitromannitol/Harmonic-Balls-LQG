@@ -77,6 +77,3 @@ theorem eventually_pinch_window_shift_density
   nlinarith
 
 end HarmonicBalls
-
-#print axioms HarmonicBalls.pinch_window_filter_card_le
-#print axioms HarmonicBalls.eventually_pinch_window_shift_density

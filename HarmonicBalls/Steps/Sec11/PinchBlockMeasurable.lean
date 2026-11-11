@@ -67,7 +67,5 @@ theorem measurableSet_eventually_pinchPointEvent_block_density
         pinchPointEvent (μ x.1) (D x.1) U T Q' Q M ((2 : ℝ)⁻¹ ^ n) x.2}.ncard : ℝ)} :=
   measurableSet_eventually_blockEvent_ncard _ hE q
 
-#print axioms measurable_blockEvent_ncard
-#print axioms measurableSet_eventually_pinchPointEvent_block_density
 
 end HarmonicBalls

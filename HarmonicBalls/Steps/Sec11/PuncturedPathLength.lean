@@ -141,8 +141,5 @@ theorem IsEuclideanLengthMetric.internalMetric_eq_of_arbitrarily_short_middle_de
       (add_le_add le_rfl hlen)
   · exact internalMetric_anti D hUV x y
 
-#print axioms IsEuclideanLengthMetric.pathLength_initial_add_final_le
-#print axioms IsEuclideanLengthMetric.internalMetric_le_of_middle_detour
-#print axioms IsEuclideanLengthMetric.internalMetric_eq_of_arbitrarily_short_middle_detours
 
 end HarmonicBalls

@@ -178,8 +178,5 @@ theorem IsEuclideanLengthMetric.small_detours_of_internalMetric_sdiff_zero_eq
     b ⟨hb, by simpa only [mem_singleton_iff] using hb0⟩]
   exact hlt
 
-#print axioms Path.exists_bracketing_origin
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_small_detours
-#print axioms IsEuclideanLengthMetric.small_detours_of_internalMetric_sdiff_zero_eq
 
 end HarmonicBalls

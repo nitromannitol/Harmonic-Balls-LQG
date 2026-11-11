@@ -83,8 +83,5 @@ theorem fieldSigmaAlgebra_trim_absolutelyContinuous_of_pairing_law
   rw [← Measure.map_apply hf ht] at hQs ⊢
   exact hAC hQs
 
-#print axioms fieldSigmaAlgebra_eq_comap_localFieldPairings
-#print axioms trim_comap_absolutelyContinuous_iff
-#print axioms fieldSigmaAlgebra_trim_absolutelyContinuous_of_pairing_law
 
 end HarmonicBalls

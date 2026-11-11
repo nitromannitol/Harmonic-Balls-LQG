@@ -147,8 +147,5 @@ theorem exists_scaled_ball_criterion_of_explicit_positive_moments
   · intro n i _
     exact (hnorm n i).2
 
-#print axioms measure_exp_threshold_le_of_lintegral_rpow_le
-#print axioms exists_scaled_ball_criterion_of_normalized_positive_moments
-#print axioms exists_scaled_ball_criterion_of_explicit_positive_moments
 
 end HarmonicBalls

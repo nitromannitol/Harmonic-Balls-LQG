@@ -54,6 +54,5 @@ theorem exists_pinch_tail_local_comparison_of_pairing_law
     (fieldSigmaAlgebra α₀ hC (ball z ε)) D μ G U T Q' V hconfig M z
     ((2 : ℝ)⁻¹ ^ k) (by positivity) hD hG hGeq hgreen hmass
 
-#print axioms exists_pinch_tail_local_comparison_of_pairing_law
 
 end HarmonicBalls

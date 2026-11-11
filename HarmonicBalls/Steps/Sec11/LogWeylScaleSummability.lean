@@ -74,7 +74,5 @@ theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_log_scale_bounds
     hWopen hWsub (fun _ => Real.exp_pos _) hinner hbase ?_ hx hy
   exact logWeyl_weighted_exponential_tsum_ne_top hgap hC
 
-#print axioms logWeyl_weighted_exponential_tsum_ne_top
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_log_scale_bounds
 
 end HarmonicBalls

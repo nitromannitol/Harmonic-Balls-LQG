@@ -83,7 +83,5 @@ theorem measurableSet_kernel_pinchPointEventWithInternalBounds
   ext p
   exact (pinchPointEventWithInternalBounds_translate (κ p.1) (D p.1) U T Q' Q M r p.2).symm
 
-#print axioms measurableSet_kernel_pinchPointEventWithInternalBounds
-#print axioms pinchPointEventWithInternalBounds_translate
 
 end HarmonicBalls

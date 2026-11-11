@@ -30,7 +30,5 @@ theorem measurable_euclideanLengthMetric_translate
       (measurable_const.add measurable_snd))
   exact (measurable_euclideanLengthMetric_pair hD hmetric).comp hm
 
-#print axioms measurable_euclideanLengthMetric_pair
-#print axioms measurable_euclideanLengthMetric_translate
 
 end HarmonicBalls

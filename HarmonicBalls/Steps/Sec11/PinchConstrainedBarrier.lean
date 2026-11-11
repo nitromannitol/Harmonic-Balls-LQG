@@ -77,8 +77,5 @@ theorem IsEuclideanLengthMetric.pinchConstrainedPaths_of_radial_gaps
   intro w hw
   exact hD.center_to_complement_lower_bound hnonneg (by norm_num) (by norm_num) hw
 
-#print axioms IsEuclideanLengthMetric.pinchConstrainedPaths_of_radial_gaps
-#print axioms IsEuclideanLengthMetric.pinchConstrainedPaths_of_barrier
-#print axioms IsPinchPointProofConfiguration.pinchPointEventWithInternalBounds_of_barrier
 
 end HarmonicBalls

@@ -72,8 +72,5 @@ theorem exists_positive_pinch_rate_of_clearance_failure_bound
       U T Q' Q M r z}).toReal := ENNReal.toReal_pos (ne_of_gt hp) (measure_ne_top P _)
   exact ⟨_, half_pos hreal, half_lt_self hreal⟩
 
-#print axioms measure_inter_pos_of_measure_diff_lt
-#print axioms measure_pos_internal_pinch_of_clearance_failure_bound
-#print axioms exists_positive_pinch_rate_of_clearance_failure_bound
 
 end HarmonicBalls

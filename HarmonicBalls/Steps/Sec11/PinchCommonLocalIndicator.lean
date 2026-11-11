@@ -54,6 +54,5 @@ theorem exists_common_local_tail_indicators
   exact ⟨X, fun k _ => hX k, (ae_add_measure_iff.mp hboth).1,
     (ae_add_measure_iff.mp hboth).2⟩
 
-#print axioms exists_common_local_tail_indicators
 
 end HarmonicBalls

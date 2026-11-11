@@ -49,7 +49,5 @@ theorem exists_small_dyadic_scale_of_positive_block_density
     hlim.eventually (Iio_mem_nhds hr)
   exact (hsmall.and_frequently (frequently_of_positive_block_density hq hfreq)).exists
 
-#print axioms frequently_of_positive_block_density
-#print axioms exists_small_dyadic_scale_of_positive_block_density
 
 end HarmonicBalls

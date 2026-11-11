@@ -74,6 +74,5 @@ theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_subset
     iInf_le_of_le p (iInf_le _ hpW0)
   exact (hle.trans_lt hplen).trans_le (by exact_mod_cast (min_le_left ε τ))
 
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_subset
 
 end HarmonicBalls
