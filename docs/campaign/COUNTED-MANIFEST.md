@@ -95,7 +95,6 @@ not counted, so a `PROOFS` row can understate its binders. Its binder list shows
 | 11.13 | `ManyPinchScalesStmt` | `manyPinchScales_of_corrected` | HarmonicBalls/FirstPass/Closure/Bridge12.lean:322 | 1 | h |
 | 11.14 | `PinchEventMetricBallConsequenceStmt` | `closure_11_14` | HarmonicBalls/FirstPass/Closure/Sec11.lean:139 | 1 | hAx |
 | 11.15 | `PinchFirstEventPositiveStmt` | `firstPass_11_15_derivedInputs3` | HarmonicBalls/FirstPass/Phase2/DerivedInputs3.lean:945 | 1 | hFA |
-| 11.16 | `PinchSecondEventPositiveStmt` | `firstPass_11_16_of_11_17` | HarmonicBalls/FirstPass/S11e.lean:29 | 1 | h |
 | A.1 | `ObstacleLeastSuperharmonicMajorantStmt` | `closure_A_1` | HarmonicBalls/FirstPass/Closure/SecA45.lean:37 | 0 |  |
 | A.2 | `ObstacleNonCoincidenceHarmonicStmt` | `closure_A_2` | HarmonicBalls/FirstPass/Closure/SecA45.lean:40 | 0 |  |
 | A.3 | `ObstacleMonotoneStmt` | `closure_A_3` | HarmonicBalls/FirstPass/Closure/SecA45.lean:43 | 0 |  |
@@ -122,25 +121,38 @@ the counted status. Classes: CORRECTED-FORM (the corrected or faithful statement
 | 9.1 | `ObstacleComparisonStmt` | cited | declaration outside scan, unconditional | HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32 `obstacleComparison` | 0 | - | axioms propext, Classical.choice, Quot.sound (checked); Steps route `obstacleComparison_of_steps` (Steps/Sec9/ObstacleComparison.lean:72) takes `hsymm hclass` |
 | 9.2 | `SubharmonicBallUniquenessStmt` | paper-owned | CORRECTED-FORM [C51] | HarmonicBalls/FirstPass/Phase2/DerivedInputs19.lean:172 `Closure.closure_9_2_derivedInputs19` (namespace HarmonicBalls.Closure) | 5 | `hL1 hE3 hDG hCC hE` | concludes `SubharmonicBallUniquenessC51Stmt` (S9c.lean:41). Fewest-binder rule over the 7 C51 candidates; others: `closure_9_2_derivedInputs17` (6), `firstPass_9_2_corrected` (FirstPass/S9c.lean:116, 6: `hDG hCC hW hE hN h82`), `closure_9_2_derivedInputs5` (9), `closure_9_2_derivedInputs` (9), `closure_9_2_noWeyl` (10), `closure_9_2` (11). Earlier round used `firstPass_9_2_corrected`; changed by the rule. Axioms not checked: scratch `#print axioms` is blocked (the DerivedInputs19 and S9c import chains have missing oleans, e.g. Proofs/Sec6/GoodPrevalenceAffine and Proofs/Sec6/PrevalenceGridUnion; the lb of S9c waits on lake.lock). The file has no sorry, admit, native_decide, axiom or maxHeartbeats (static grep). |
 | 10.5 | `CrossingComponentContainsClusterCrossingStmt` | paper-owned | CORRECTED-FORM [C48] | HarmonicBalls/FirstPass/S1S10/CrossingLemma.lean:38 `firstPass_10_5_corrected` | 6 (+ implicit `G`) | `hGne hGb hGo hGc hEcross hTor` (`hTor : TorhorstSimpleLoopFrozen`) | conclusion is inline (`IsLocallyConnectedSet (closure G) ∧ ¬IsCutPoint … ∧ IsSimpleLoop (frontier C)`), so no Stmt name; `closure_10_5` (FirstPass/Closure/Sec78910.lean:254) is a wrapper with the same 6 binders; axioms propext, Classical.choice, Quot.sound (checked) |
+| 11.16 | `PinchSecondEventPositiveStmt` | paper-owned | CORRECTED-FORM (faithful; switched from `firstPass_11_16_of_11_17`, see the 11.16 paragraph below) | HarmonicBalls/FirstPass/S11k/FirstLExterior.lean:260 `firstPass_11_16_corrected : PinchSecondEventFaithfulStmt.{u}` (S11h/Faithful.lean:80) | 12 | `hAx hK1 hholder hEx hWeyl hNa0 hNa hPos hD hM hDiam hMk` | FROZEN: hAx (Frozen/S11j.lean:149), hK1 (Frozen/S11g.lean:126), hM (Frozen/S11k.lean:65), hDiam (Frozen/S11k.lean:87), hMk (Frozen/S11k.lean:44); cited: hholder (GreenPotentialHolderStmt, Draft/Section2.lean:190, ruling tasks/lh.md:39); PROPOSED: hEx (LQGMeasureExistence, Proposed/LQG.lean:74), hWeyl (LQGMeasureWeylScaling, :107), hNa0, hNa (LQGMeasureNonatomic, :86); counted numbered results: hPos (faithful 11.15, PinchFirstEventFaithfulStmt, S11h/Faithful.lean:71; counted by firstPass_11_15_corrected, S11j/FieldAssembly11_15.lean:276), hD (11.9, SmallMetricDiameterLargeMassStmt, Draft/Section11.lean:201; counted by firstPass_11_9, S11d.lean:39). Scratch `#print axioms` (2026-11-11): propext, Classical.choice, Quot.sound. |
 | 11.17 | `PinchThirdEventPositiveStmt` | paper-owned | CORRECTED-FORM (faithful) | HarmonicBalls/FirstPass/S11h/PinchCertificateProof11_17.lean:293 `firstPass_11_17_corrected : PinchThirdEventFaithfulStmt.{u}` (S11h/Faithful.lean:96) | 8 | `h16 hAx hCMGFF hComp hdec hF hK1 hN2` | axioms propext, Classical.choice, Quot.sound (checked). The fewest-binder faithful candidate is `firstPass_11_17_of_11_16` (S11h/Assemble11_17.lean:64, 4: `h16 hAx hCMGFF hCert`), but its `hCert : PinchCertificateStmt` is an intermediate Prop, not a frozen input; the counted form is the 8-binder one (lead decision; audit notes/fp-gaps/CHATGPT-hb-11-15-11-17-audit.md, l.4, l.133-153) |
 
-**Faithful siblings not counted by the draft-name rule.** The rescan of `FirstPass/**` for non-draft `Stmt` conclusions finds
-`PinchSecondEventFaithfulStmt` (11.16; 14 declarations, fewest binders `firstPass_11_16_corrected_of_steps`,
-FirstPass/S11k.lean:117, 2: `hX hM`) and `PinchFirstEventFaithfulStmt` (11.15; 2 declarations, fewest `closure_11_15`,
-FirstPass/Closure/Sec11.lean, 5 binders). The counted 11.16 row `firstPass_11_16_of_11_17` (FirstPass/S11e.lean:29, binder
-`h`) binds the draft `PinchThirdEventPositiveStmt`, so it is conditional on the draft 11.17 statement; the 11.17 corrected
-form consumes the faithful 11.16 as `h16`. Recorded here, not changed; flagged for the lead.
+**11.16 switch (fp-phase2-window-commit-ledger-manifest, item 2, 2026-11-11).** The counted 11.16 row was `firstPass_11_16_of_11_17` (FirstPass/S11e.lean:29), whose only binder is the draft 11.17 `PinchThirdEventPositiveStmt`, a numbered result with no counted declaration of its own. Under the fewest-binder rule restricted to declarations whose binders are literature inputs (FROZEN, PROPOSED, cited) or counted numbered results, the minimum is `firstPass_11_16_corrected` (FirstPass/S11k/FirstLExterior.lean:260, 12 binders). The row is switched to it (lead's rule). The candidates with fewer binders are not eligible: each binds an open paper step (`PinchSecondExteriorStep`, `PinchSecondConditionalMassFaithfulStep`, `PinchSecondOpenSteps`, `PinchSecondExteriorEventStep`, `PinchSecondExteriorVersionsStep`, `PinchFirstLExteriorStep`, `PinchSecondAnnulusStep`; all docstrings say OPEN or NEW, OPEN) or the uncounted draft 11.17. The seven closure and derivedInputs declarations have 17 to 26 binders, so they are not minimal.
 
-**Summary (X1, corrected).** The 71 numbered rows of `INVENTORY.tsv` with a draft statement are **64 paper-owned and 7
-cited**. The cited rows are 2.1, 2.2, 2.4, 2.5, 2.6, 6.5, 9.1: the six of the kind column plus 2.5 by the operator ruling
-(the earlier summary said 65 paper-owned and 6 cited). Every one of the 64 paper-owned rows has a counted declaration:
-61 with the exact draft name (table above) and 3 in corrected form (9.2, 10.5, 11.17). So the count is 64 = 61 + 3, and
-the only rows that differ from an exact-name count are 9.2, 10.5 and 11.17. Among the cited rows, 2.4, 6.5 and 9.1 have a
-Lean declaration (2.4 conditional on `LiouvilleBallMassBoundStep`; 6.5 and 9.1 with no binder), while 2.1, 2.2, 2.5 and 2.6
-have none (2.5 enters as the hypothesis `hholder`).
+**11.16 declaration audit (all declarations concluding a draft or faithful 11.16 statement; grep only, no new proof).** Codes: F FROZEN (FirstPass/Frozen), P PROPOSED (Proposed/LQG.lean), C cited literature input, N counted numbered result (draft or corrected form), S open paper step, D draft statement with no counted declaration. Eligible = no S and no D binder.
+
+| declaration | file:line | concl | binders | binder classes | eligible |
+|---|---|---|---|---|---|
+| `firstPass_11_16_corrected` | FirstPass/S11k/FirstLExterior.lean:260 | faithful | 12 | F x5, C x1, P x4, N x2 | yes; switched to |
+| `firstPass_11_16_corrected_of_frozen` | FirstPass/S11k/FirstLExterior.lean:243 | faithful | 8 | hS: S (PinchSecondAnnulusStep, S11k/BundleParts.lean:41, OPEN) | no |
+| `firstPass_11_16_corrected_of_parts` | FirstPass/S11k/BundleParts.lean:160 | faithful | 8 | hL: S (PinchFirstLExteriorStep, BundleParts.lean:31, OPEN); hS: S | no |
+| `firstPass_11_16_corrected_of_versions` | FirstPass/S11k.lean:364 | faithful | 7 | hV: S (PinchSecondExteriorVersionsStep, S11k.lean:308, open) | no |
+| `firstPass_11_16_corrected_of_event` | FirstPass/S11k.lean:294 | faithful | 5 | hE: S (PinchSecondExteriorEventStep, S11k.lean:76, OPEN) | no |
+| `firstPass_11_16_corrected_of_exterior` | FirstPass/S11k.lean:286 | faithful | 5 | hX: S (PinchSecondExteriorStep, S11k.lean:39) | no |
+| `firstPass_11_16_corrected_of_steps` | FirstPass/S11k.lean:117 | faithful | 2 | hX: S (S11k.lean:39); hM: S (PinchSecondConditionalMassFaithfulStep, S11k.lean:99, NEW OPEN) | no |
+| `pinchSecondEvent_of_openSteps` | FirstPass/S11f.lean:73 | draft | 1 | h: S (PinchSecondOpenSteps, S11f.lean:65, two NEW open steps) | no |
+| `firstPass_11_16_of_11_17` (old row) | FirstPass/S11e.lean:29 | draft | 1 | h: D (PinchThirdEventPositiveStmt, Draft/Section11.lean:312) | no |
+| `closure_11_16` | FirstPass/Closure/Sec11.lean:288 | faithful | 26 | not minimal | - |
+| `closure_11_16_derivedInputs2` | FirstPass/Phase2/DerivedInputs2.lean:67 | faithful | 25 | not minimal | - |
+| `closure_11_16_derivedInputs3` | FirstPass/Phase2/DerivedInputs3.lean:81 | faithful | 24 | not minimal | - |
+| `closure_11_16_derivedInputs17` | FirstPass/Phase2/DerivedInputs17.lean:348 | faithful | 20 | not minimal | - |
+| `closure_11_16_derivedInputs19` | FirstPass/Phase2/DerivedInputs19.lean:271 | faithful | 20 | not minimal | - |
+| `closure_11_16_derivedInputs21` | FirstPass/Phase2/DerivedInputs21.lean:35 | faithful | 18 | not minimal | - |
+| `closure_11_16_derivedInputs22` | FirstPass/Phase2/DerivedInputs22.lean:23 | faithful | 17 | not minimal | - |
+
+Note: `firstPass_11_16_corrected` binds `hholder` (Draft-defined cited input), which the fidelity rule would place in External/Proposed; flagged, not changed. The derived-input theorem for row 39 (`InternalMetricClosedEqIInfThickeningFrozen`, now DERIVED) is not used to drop `hK1` here.
+
+**Summary (X1, corrected again, 2026-11-11).** The 71 numbered rows of `INVENTORY.tsv` with a draft statement are **64 paper-owned and 7 cited**. The cited rows are 2.1, 2.2, 2.4, 2.5, 2.6, 6.5, 9.1: the six of the kind column plus 2.5 by the operator ruling. Every one of the 64 paper-owned rows has a counted declaration: 60 with the exact draft name (table above) and 4 in corrected form (9.2, 10.5, 11.16, 11.17). So the count is 64 = 60 + 4, and the rows that differ from an exact-name count are 9.2, 10.5, 11.16 and 11.17. Among the cited rows, 2.4, 6.5 and 9.1 have a Lean declaration (2.4 conditional on `LiouvilleBallMassBoundStep`; 6.5 and 9.1 with no binder), while 2.1, 2.2, 2.5 and 2.6 have none (2.5 enters as the hypothesis `hholder`).
 
 **Retirement check (fp-phase2-retire-gffexists-manifest, Part 1, 2026-11-11).** No counted declaration of this file
-(the 61 table rows, the six forall-xi and canonical rows and the rows above) has a binder of type
+(the 60 table rows, the six forall-xi and canonical rows and the rows above) has a binder of type
 `WholePlaneGFFExistsFrozen`, `WholePlaneCovPSDStmt` or `WholePlaneCovSymmStmt`, and none mentions these names in its
 text. The declarations that do take `WholePlaneGFFExistsFrozen` (DerivedInputs*, the Closure variants, S11m, S11x, S11r)
 are not counted. So no `DerivedInputs31` wrapper is needed, the manifest is unchanged, and the counts above stand.
