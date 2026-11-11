@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11d.ShiftCore
 /-!
 # Proposition 11.9, the shifted event for a fixed realisation
 
-FIRST-PASS NEW. For one realisation, the metric `E` of the shifted field `h~` satisfies `E(·,·; W) ≤ ε` on `V`, given
+For one realisation, the metric `E` of the shifted field `h~` satisfies `E(·,·; W) ≤ ε` on `V`, given
 (i) the square bound `D(·,·; S₂) ≤ ε/2` of `h` (from the 11.10 event), (ii) the exterior bound `D(·,·; O) ≤ n` on
 `V \ S₂` (from `exists_measurable_internal_metric_bound`), (iii) the Weyl weight `ξ g ≤ 0` on an open `U ⊇ S₂` with `U ⊆ W`, and
 `ξ g ≤ -c` on `O`, with `e^{-c} n ≤ ε/2`. This is the paper's chain (corrected paper lines 3127-3137).

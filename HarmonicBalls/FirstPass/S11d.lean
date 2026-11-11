@@ -9,7 +9,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 
 `firstPass_11_9` proves `SmallMetricDiameterLargeMassStmt` (Draft/Section11.lean) from:
 * the 11.10 input `SmallMetricDiameterLargeMassSquareStmt`;
-* FIRST-PASS FROZEN inputs: `LQGMetricContinuousShiftFactI`, `WeylScalingCompositionFrozen`,
+* FROZEN inputs: `LQGMetricContinuousShiftFactI`, `WeylScalingCompositionFrozen`,
   `CameronMartinGFFMutualAbsCont`, `PlaneDomainMinusConvexCompactPreconnectedFrozen`,
   `LQGInternalMetricWeylAeMeasurableFrozen`, `LQGMassFunctionalMeasurableFrozen`;
 * the Proposed input `LQGMetricFieldAxioms` (pending operator source-check), taken as a hypothesis.

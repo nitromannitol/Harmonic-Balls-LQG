@@ -20,7 +20,7 @@ CONDITIONAL. The printed proof of `lemma:mass-diam` (paper lines 3071-3112) asse
 `FirstPass/S11c/`: the square `S₁ ⊆ S₂` on a grid of mesh `2^{-(N+3)}`, the four parity classes of `S₁`, the piece event of
 `DyadicCellDiamSmallFrozen`, the exterior bound, the Weyl shift by `a·φ`, and the Cameron-Martin transfer. The two
 measurability premises `hM1`, `hM2` of the shifted event (blockers M1 and M2) are explicit hypotheses: this is
-NOT a first-pass theorem until their source or frozen form is ruled.
+NOT a theorem until their source or frozen form is ruled.
 -/
 
 open MeasureTheory Set Filter Metric

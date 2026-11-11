@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Proposition 11.9, countable suprema for the exterior bound
 
-FIRST-PASS NEW. Deterministic and measure-theoretic tools for the exterior bound
+Deterministic and measure-theoretic tools for the exterior bound
 `sup_{u,v ∈ V \ S₂} D_h(u,v; O) ≤ A` (corrected paper, proof of `prop:mass-diam-gen`, lines 3120-3125):
 * `le_on_closure_of_continuousOn`: a bound on a set `A` transfers to `closure A` for a continuous `ℝ≥0∞`-valued
   function on `O × O` (the general form of `internalMetric_le_on_closure`, `Core.lean:54`);

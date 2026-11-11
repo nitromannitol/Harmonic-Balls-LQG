@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11d.ShiftBound
 /-!
 # Proposition 11.9, smooth cutoff for the shift
 
-FIRST-PASS NEW. The smooth function `φ` of the shift `h~ = h - (φ/ξ) log(2A/ε)` (paper proof of `prop:mass-diam-gen`,
+The smooth function `φ` of the shift `h~ = h - (φ/ξ) log(2A/ε)` (paper proof of `prop:mass-diam-gen`,
 lines 3125-3131): `φ = 1` on the compact set `K = closure(V \ S₂)` (through the open set `O`), `0 ≤ φ ≤ 1`, and compact
 support inside the bounded open set `U = W \ S₁`. Built from Mathlib's `exists_contDiff_support_eq_eq_one_iff`
 (Geometry/Manifold/PartitionOfUnity.lean) and `exists_open_between_of_compact` (ShiftBound.lean).

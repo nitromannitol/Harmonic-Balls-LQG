@@ -19,47 +19,47 @@ Route (the one closest to done): `HarmonicBalls.Closure.closure_11_13_canonical`
   (`HarmonicBalls/FirstPass/S11r/RootedBufferKernel.lean:27`), `href_discNormalized_doubledDisc_finiteKernel`
   (`HarmonicBalls/FirstPass/S11i/Step8HrefBall.lean:135`); their conclusions are not `Step8IdentityGivenPinchEventCanonicalStmt`.
 
-Binder classes. Abbreviation `FP/` = `HarmonicBalls/FirstPass/`.
-* FROZEN: a first-pass frozen axiom (`FP/Frozen/*.lean`, `FP/S11r/Frozen.lean`), or a cited Draft statement
+Binder classes. Abbreviation `FirstPass/` = `HarmonicBalls/FirstPass/`.
+* FROZEN: a frozen axiom (`FirstPass/Frozen/*.lean`, `FirstPass/S11r/Frozen.lean`), or a cited Draft statement
  (`GreenPotentialHolderStmt`, `Draft/Section2.lean:190`, Proposition 2.5, Green clause).
   No repository theorem concludes any of these Props.
 * PROPOSED: a literature input staged in `HarmonicBalls/Proposed/LQG.lean`, pending source-check.
 * OPEN: no provider, not frozen.
 
 The 32 binders, in order:
-1. `hAx` `LQGMetricFieldAxiomsUnivFrozen`: FROZEN, `FP/Frozen/S11j.lean:155`.
-2. `hLen` `LQGMetricLengthUnivFrozen`: FROZEN, `FP/Frozen/S11j.lean:133`.
-3. `hN2` `LocalMetricReplacementStmt` (all `γ ξ`, disks in `ball 0 1` form): OPEN. Not in a `Frozen/` file; it is kept as an input; the target `FP/S11r/LocalMetricReplacement.lean:58` is unproved.
+1. `hAx` `LQGMetricFieldAxiomsUnivFrozen`: FROZEN, `FirstPass/Frozen/S11j.lean:155`.
+2. `hLen` `LQGMetricLengthUnivFrozen`: FROZEN, `FirstPass/Frozen/S11j.lean:133`.
+3. `hN2` `LocalMetricReplacementStmt` (all `γ ξ`, disks in `ball 0 1` form): OPEN. Not in a `Frozen/` file; it is kept as an input; the target `FirstPass/S11r/LocalMetricReplacement.lean:58` is unproved.
 4. `hμW` `LQGMeasureWeylScaling`: PROPOSED, `Proposed/LQG.lean:95`.
-5. `hLoc` `LocalLQGDecoderCommonFrozen`: FROZEN, `FP/Frozen/S11c.lean:388`.
-6. `hCanon` `LQGCanonicalDecodersExistStmt`: FROZEN, `FP/Frozen/S11n.lean:33`.
-7. `hNonat` `LQGMeasureNonatomicAll`: PROPOSED, `FP/S11n/MeasureDecoder.lean:39` (of `Proposed/LQG.lean:77`).
-8. `hExists` `WholePlaneGFFExistsFrozen`: FROZEN, `FP/S11r/Frozen.lean:39`.
+5. `hLoc` `LocalLQGDecoderCommonFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:388`.
+6. `hCanon` `LQGCanonicalDecodersExistStmt`: FROZEN, `FirstPass/Frozen/S11n.lean:33`.
+7. `hNonat` `LQGMeasureNonatomicAll`: PROPOSED, `FirstPass/S11n/MeasureDecoder.lean:39` (of `Proposed/LQG.lean:77`).
+8. `hExists` `WholePlaneGFFExistsFrozen`: FROZEN, `FirstPass/S11r/Frozen.lean:39`.
 9. `hDG` `WholePlaneLQGBallMassBounds`: PROPOSED, `Proposed/LQG.lean:154`.
 10. `hCC` `LQGMeasureCoordChange P γ 0`: PROPOSED, `Proposed/LQG.lean:116`.
 11. `hE` `LQGMeasureExistence P γ α`: PROPOSED, `Proposed/LQG.lean:68`.
-12. `hfr` `LQGInternalMetricWeylAeMeasurableFrozen`: FROZEN, `FP/Frozen/S11d.lean:130`.
-13. `hmass` `LQGMassFunctionalMeasurableFrozen`: FROZEN, `FP/Frozen/S11d.lean:155`.
-14. `hCMAbs` `CameronMartinGFFMutualAbsCont`: FROZEN, `FP/Frozen/S11d.lean:74`.
-15. `hCMRew` `S11aj.CameronMartinGFFReweighting`: FROZEN, `FP/Frozen/S11aj.lean:33`.
-16. `hComp` `WeylScalingCompositionFrozen`: FROZEN, `FP/Frozen/S11d.lean:91`.
-17. `hMf` `LQGMassInnerMeasurableFrozen`: FROZEN, `FP/Frozen/S11k.lean:66`.
-18. `hDiam` `LQGInternalDiamInnerMeasurableFrozen`: FROZEN, `FP/Frozen/S11k.lean:89`.
-19. `hMk` `DomainMarkovConditionalPositiveFrozen`: FROZEN, `FP/Frozen/S11k.lean:45`.
+12. `hfr` `LQGInternalMetricWeylAeMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11d.lean:130`.
+13. `hmass` `LQGMassFunctionalMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11d.lean:155`.
+14. `hCMAbs` `CameronMartinGFFMutualAbsCont`: FROZEN, `FirstPass/Frozen/S11d.lean:74`.
+15. `hCMRew` `S11aj.CameronMartinGFFReweighting`: FROZEN, `FirstPass/Frozen/S11aj.lean:33`.
+16. `hComp` `WeylScalingCompositionFrozen`: FROZEN, `FirstPass/Frozen/S11d.lean:91`.
+17. `hMf` `LQGMassInnerMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11k.lean:66`.
+18. `hDiam` `LQGInternalDiamInnerMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11k.lean:89`.
+19. `hMk` `DomainMarkovConditionalPositiveFrozen`: FROZEN, `FirstPass/Frozen/S11k.lean:45`.
 20. `hholder` `GreenPotentialHolderStmt`: FROZEN (cited), `Draft/Section2.lean:190`.
-21. `hShift` `LQGMetricContinuousShiftFactI`: FROZEN, `FP/Frozen/S11d.lean:34`.
-22. `hFD` `PlaneDomainMinusConvexCompactPreconnectedFrozen`: FROZEN, `FP/Frozen/S11d.lean:26`.
-23. `hDC` `DyadicCellDiamSmallFrozen`: FROZEN, `FP/Frozen/S11c.lean:67`.
-24. `hCMT` `CameronMartinEventTransferFrozen`: FROZEN, `FP/Frozen/S11c.lean:149`.
-25. `hPos10` `LQGMeasureSquarePositiveFrozen`: FROZEN, `FP/Frozen/S11c.lean:130`.
-26. `hMassM` `LQGMeasureSquareMeasurableFrozen`: FROZEN, `FP/Frozen/S11c.lean:117`.
-27. `hSupM` `LQGMetricSupMeasurableFrozen`: FROZEN, `FP/Frozen/S11c.lean:105`.
-28. `hFin` `ConnectedSquareUnionDiamFiniteFrozen`: FROZEN, `FP/Frozen/S11c.lean:91`.
-29. `hW` `WeylInternalClosedFrozen`: FROZEN, `FP/Frozen/S11c.lean:180`.
-30. `hM1` `WeylShiftedSupMeasurableFrozen`: FROZEN, `FP/Frozen/S11c.lean:217`.
-31. `hM2` `WeylShiftedMassMeasurableFrozen`: FROZEN, `FP/Frozen/S11c.lean:233`.
+21. `hShift` `LQGMetricContinuousShiftFactI`: FROZEN, `FirstPass/Frozen/S11d.lean:34`.
+22. `hFD` `PlaneDomainMinusConvexCompactPreconnectedFrozen`: FROZEN, `FirstPass/Frozen/S11d.lean:26`.
+23. `hDC` `DyadicCellDiamSmallFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:67`.
+24. `hCMT` `CameronMartinEventTransferFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:149`.
+25. `hPos10` `LQGMeasureSquarePositiveFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:130`.
+26. `hMassM` `LQGMeasureSquareMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:117`.
+27. `hSupM` `LQGMetricSupMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:105`.
+28. `hFin` `ConnectedSquareUnionDiamFiniteFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:91`.
+29. `hW` `WeylInternalClosedFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:180`.
+30. `hM1` `WeylShiftedSupMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:217`.
+31. `hM2` `WeylShiftedMassMeasurableFrozen`: FROZEN, `FirstPass/Frozen/S11c.lean:233`.
 32. `hId` `Step8IdentityGivenPinchEventCanonicalStmt`: OPEN, part (d) of Lemma 11.13 (Step 8 of the corrected proof of
-   `lemma:mu_h-pinch-bad`, corrected lines 3848-3930), `FP/S11i/Corrected11_13.lean:109`. No provider.
+   `lemma:mu_h-pinch-bad`, corrected lines 3848-3930), `FirstPass/S11i/Corrected11_13.lean:109`. No provider.
 
 Binders 1 to 31 are exactly the binders of `closure_11_13_canonical`; binder 32 is its only open input. The proof is the
 call of `closure_11_13_canonical`; nothing is weakened.
@@ -74,7 +74,7 @@ open MeasureTheory
 /-- **Lemma 11.13 (canonical), assembly.** `CorrectedLemma11_13CanonicalStmt` from the frozen and proposed inputs
 (binders 1 to 31, classes in the module docstring) and the single OPEN named input `hId`, part (d) of the Step 8
 identification at the canonical Weyl exponent `ξ = lqgXi γ`. Part (c), the Lemma 11.12 event, is provided by `closure_11_12`
-and `pinchEventGamma_exists`; the glue is `firstPass_11_13_canonical` (`FP/S11i/Corrected11_13.lean:127`). -/
+and `pinchEventGamma_exists`; the glue is `firstPass_11_13_canonical` (`FirstPass/S11i/Corrected11_13.lean:127`). -/
 theorem firstPass_11_13_canonical
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
     (hLen : LQGMetricLengthUnivFrozen.{u})

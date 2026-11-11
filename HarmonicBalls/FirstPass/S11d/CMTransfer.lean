@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Frozen.S11d
 /-!
 # Proposition 11.9, Cameron-Martin transfer of positive probability
 
-FIRST-PASS NEW. The last step of `prop:mass-diam-gen` (corrected paper, line 3131): a positive-probability event for the
+The last step of `prop:mass-diam-gen` (corrected paper, line 3131): a positive-probability event for the
 shifted field `h~ = h - (φ/ξ) log(2A/ε)` gives a positive-probability event for `h`, because the laws are mutually absolutely
 continuous. Here the shifted field is the whole-plane GFF `hC + g` with `g = -(φ/ξ) c` (smooth, compactly supported, zero
 unit-circle average since `φ = 0` on `∂B₁`); the input is the frozen `CameronMartinGFFMutualAbsCont`.

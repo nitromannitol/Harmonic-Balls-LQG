@@ -14,7 +14,7 @@ universe u
 /-!
 # Proposition 11.9, the shifted event with positive probability
 
-FIRST-PASS NEW (assembly R2). For the Draft statement `SmallMetricDiameterLargeMassStmt` (paper `prop:mass-diam-gen`,
+(assembly R2). For the Draft statement `SmallMetricDiameterLargeMassStmt` (paper `prop:mass-diam-gen`,
 corrected draft lines 3110-3137), the shifted field `h~ = h - (φ/ξ) log(2(n+ε)/ε)` has, with positive probability, the
 metric bound `E(·,·; W) ≤ ε` on `V` together with `μ_h(S₁) ≥ C`. The unshifted field `h` enters only through the 11.10 event
 (`SmallMetricDiameterLargeMassSquareStmt`), the exterior event (Fact 2.2 II, Proposed `LQGMetricFieldAxioms`), and the frozen

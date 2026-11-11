@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11d.ExteriorBound
 /-!
 # Proposition 11.9, the measurable exterior bound
 
-FIRST-PASS NEW. The exterior bound of `prop:mass-diam-gen` (corrected paper, lines 3120-3125): with positive probability,
+The exterior bound of `prop:mass-diam-gen` (corrected paper, lines 3120-3125): with positive probability,
 `sup_{u,v ∈ V \ S₂} D_h(u,v; O) ≤ n` for a deterministic `n : ℕ`, with the event measurable. The inputs are the
 consequences of Fact 2.2 I and II (`LQGMetricFieldAxioms` in `Proposed/LQG.lean`) for the metric `Dr = (D_h).toReal`:
 an a.s. length metric (I) and an a.s. identification of `D_h(·,·; O)` with a function `G` measurable on `O` (II);

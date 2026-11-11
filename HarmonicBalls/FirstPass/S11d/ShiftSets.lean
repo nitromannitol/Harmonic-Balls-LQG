@@ -4,7 +4,7 @@ import HarmonicBalls.Proposed.LQG
 /-!
 # Proposition 11.9, sets and almost-sure bookkeeping
 
-FIRST-PASS NEW. Support lemmas for the assembly of the shifted event (paper lines 3110-3137): closed dyadic squares are
+Support lemmas for the assembly of the shifted event (paper lines 3110-3137): closed dyadic squares are
 compact and convex (the frozen plane-topology input applies to `K = S₂`); an almost-sure property yields a measurable
 subset of a given positive-measure set carrying it, of the same measure; the field σ-algebra of a window is contained in
 the ambient σ-algebra (measurable pairings of the whole-plane GFF, `IsWholePlaneGFF.measurable_pairing`).

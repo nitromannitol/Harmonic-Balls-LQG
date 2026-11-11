@@ -5,7 +5,7 @@ import HarmonicBalls.Defs.Geometry
 /-!
 # Proposition 11.9, the geometric set-up of the shift
 
-FIRST-PASS NEW. The deterministic set-up of `prop:mass-diam-gen` (corrected paper, lines 3110-3131): closed dyadic squares
+The deterministic set-up of `prop:mass-diam-gen` (corrected paper, lines 3110-3131): closed dyadic squares
 `S₁ ⊆ int S₂ ⊆ S₂ ⊆ U`; the open set `O` with `closure(V \ S₂) ⊆ O` and `closure O ⊆ W \ S₁`; and a smooth cutoff `φ`
 with `φ = 1` on `O` and support in `W \ S₁`.
 -/

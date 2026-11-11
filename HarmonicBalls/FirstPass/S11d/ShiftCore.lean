@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11d.ShiftBound
 /-!
 # Proposition 11.9, the core and the square bound for the shifted metric
 
-FIRST-PASS NEW. Three deterministic steps of the proof of `prop:mass-diam-gen` (corrected paper, lines 3127-3137) for the
+Three deterministic steps of the proof of `prop:mass-diam-gen` (corrected paper, lines 3127-3137) for the
 Weyl-shifted metric `E` of `h~`:
 * `shifted_bound_on_square`: on the closed dyadic square `S₂` the metric `E(·,·; W)` is bounded by the metric `D(·,·; S₂)`
   of `h`, because the weight of the shift is `≤ 0` on an open `U` with `S₂ ⊆ U ⊆ W` (the closed-set comparison is avoided:

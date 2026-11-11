@@ -31,7 +31,7 @@ theorem iSup_sphere_eq_of_dense {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengt
     (⨆ y ∈ sphere (0 : ℂ) r, internalMetric D C x y) = ⨆ y ∈ S, internalMetric D C x y :=
   iSup_eq_iSup_of_dense_of_continuousOn hO hsph hSK hKS (hD.continuousOn_internalMetric_of_subset hO hOC x)
 
-/-- Coordinate 0 of `pinchScalars` as a field functional (NEW step N1 of the first-pass plan, now proved). For a closed set
+/-- Coordinate 0 of `pinchScalars` as a field functional (NEW step N1 of the plan, now proved). For a closed set
 `C ∋ 0` and an open set `O` with `∂B₅(0) ⊆ O ⊆ C`, there is a measurable functional `Φ` of the field whose value at the
 shifted field `addFunPairing (hC ω) g` is, almost surely, the supremum over `∂B₅(0)` of the internal metric of `C` of the
 shifted metric, for every continuous `g` whose shifted metric is almost surely Euclidean. -/

@@ -5,7 +5,7 @@ import HarmonicBalls.Steps.Sec11.WeylPathConcatenation
 /-!
 # Lemma 11.14: the pinch-point event forces a metric-ball consequence (deterministic part)
 
-FIRST-PASS NEW (lemma:geometric-event-consequence, paper line 3264; proof lines 3266-3300). The printed proof uses
+(lemma:geometric-event-consequence, paper line 3264; proof lines 3266-3300). The printed proof uses
 LQG geodesics. Here the same inequalities are obtained for arbitrary Euclidean-continuous paths: for a path `γ`
 from `0` to `y`, its `D`-length dominates `D(0, q₁) + D(q₂, y)` with `q₁ ∈ ∂B_{5r}(z)` met before `q₂ ∈ ∂Q_r(z)`
 (intermediate value theorem on `|γ - z|`, then additivity of the curve length). The argument is deterministic in

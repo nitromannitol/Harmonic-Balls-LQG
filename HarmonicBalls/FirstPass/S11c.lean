@@ -18,7 +18,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls.S11c
 
-/-- FIRST-PASS, Lemma 11.10 (`SmallMetricDiameterLargeMassSquareStmt`, Draft/Section11.lean:214). For closed dyadic
+/-- Lemma 11.10 (`SmallMetricDiameterLargeMassSquareStmt`, Draft/Section11.lean:214). For closed dyadic
 squares `S₁ ⊆ S₂` with `S₂` disjoint from the unit circle and `C > ε > 0`, the event that the internal diameter of `S₂`
 is at most `ε` and the mass of `S₁` is at least `C` has a measurable subset of positive probability.
 

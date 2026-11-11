@@ -3,7 +3,7 @@ import HarmonicBalls.Defs.Geometry
 /-!
 # Proposition 11.9, dyadic squares inside an open set
 
-FIRST-PASS NEW. The first line of the proof of `prop:mass-diam-gen` (corrected paper, line 3111): since `U` is open, there
+The first line of the proof of `prop:mass-diam-gen` (corrected paper, line 3111): since `U` is open, there
 are deterministic closed dyadic squares `S₁ ⊆ S₂ ⊆ U` with `S₁` contained in the interior of `S₂`. Here `S₂` is the
 dyadic square of side `2⁻ⁿ` containing a point `x ∈ U`, with `2⁻ⁿ < r/2` for a ball `B(x, r) ⊆ U`, and `S₁` is the
 dyadic square of side `2⁻ⁿ⁻²` in the middle of `S₂` (indices `4j+1`, `4k+1`).

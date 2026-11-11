@@ -10,7 +10,7 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 Let `K` be a set and `D ω` the internal metric data
 of a realisation `ω`. If the internal diameter `⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v` is an a.e.-measurable random
 variable which is almost surely finite, then for every `η > 0` there are an integer `n` and a measurable event `B` with
-`1 - η < P B` on which the internal diameter of `K` is at most `n`. This is step S3 of the first-pass proof of Proposition
+`1 - η < P B` on which the internal diameter of `K` is at most `n`. This is step S3 of the proof of Proposition
 11.10 (the exterior set `K₁`, paper lines 3127-3137): the bound is chosen from the probability `1 - η`.
 The measurable event is obtained by discarding a measurable null set from the a.e. equality with a measurable version.
 -/

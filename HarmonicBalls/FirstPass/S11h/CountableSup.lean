@@ -2,7 +2,7 @@ import Mathlib
 
 /-! # Countable reduction of pair suprema
 
-FIRST-PASS NEW, general measure theory and topology (no pinch-specific content). Used for the measurability of the
+NEW, general measure theory and topology (no pinch-specific content). Used for the measurability of the
 pinch events `Ẽ₁, Ẽ₂, Ẽ₃` as functions of the field (paper line 3630: "each event is measurable with respect to the
 field in `B_7`"): a supremum over pairs `x, y ∈ A` of a function continuous on `A × A` equals the supremum over a
 countable subset `t ⊆ A` depending only on `A`. Then the supremum is almost everywhere measurable in `ω`.

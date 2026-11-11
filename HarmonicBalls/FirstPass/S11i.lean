@@ -8,7 +8,7 @@ import HarmonicBalls.FirstPass.S11i.CanonicalGood
 import HarmonicBalls.FirstPass.S11i.PinchMeasurable
 
 /-!
-# Lemma 11.13 (`ManyPinchScalesStmt`, lemma:mu_h-pinch-bad): first-pass status
+# Lemma 11.13 (`ManyPinchScalesStmt`, lemma:mu_h-pinch-bad): status
 
 Status: OPEN. Module contents:
 

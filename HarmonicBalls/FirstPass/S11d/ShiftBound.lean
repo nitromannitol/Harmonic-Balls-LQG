@@ -5,7 +5,7 @@ import HarmonicBalls.Steps.Sec11.WeylInversePath
 /-!
 # Proposition 11.9, bounds for the Weyl-shifted metric
 
-FIRST-PASS NEW. Wrappers for the shift step of `prop:mass-diam-gen` (corrected paper, lines 3127-3131): with
+Wrappers for the shift step of `prop:mass-diam-gen` (corrected paper, lines 3127-3131): with
 `h~ = h - (φ/ξ) log(2A/ε)`, the metric of `h~` is the Weyl scaling of the metric of `h` by the weight `e^{-φ c}` (`c = log(2A/ε)`),
 so on the open set where `φ ≡ 1` its internal metric is `ε/(2A)` times that of `h`, and on `S₂` (where the weight is at most `1`) it is
 at most that of `h`. Also the existence of the open set `O` with `closure(V \ S₂) ⊆ O ⊆ closure O ⊆ W \ S₁`.

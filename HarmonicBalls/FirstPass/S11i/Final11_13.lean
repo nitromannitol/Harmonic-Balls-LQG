@@ -23,7 +23,7 @@ Nothing is weakened; no hypothesis is added beyond the named inputs below.
 
 OPEN list (no provider; the theorem is complete once these are discharged):
 1. `hN2` `LocalMetricReplacementStmt` (all `γ ξ`, disks in `ball 0 1` form): OPEN, classification pending. Not in a `Frozen/`
-   file; its target `FP/S11r/LocalMetricReplacement.lean:58` is unproved.
+   file; its target `FirstPass/S11r/LocalMetricReplacement.lean:58` is unproved.
 2. `hCal` `Step8EventCalibrationStmt.{0}` (route 2 (c), `S11i/Step8PhysExists.lean:109`): OPEN, math pending. Needs a
    pinch event `E` whose common probability equals that of a coding event `F` with the insertion-zero unit frequency.
 3. `hIns` `Step8InsertionTransferStmt` (route 2 (b), `S11i/Step8PhysExists.lean:94`): OPEN
@@ -31,7 +31,7 @@ OPEN list (no provider; the theorem is complete once these are discharged):
 4. `hCC0` `CoordChangeZeroStmt` (`S11i/Step8PhysExists.lean:101`): PROPOSED, `Proposed/LQG.lean:116`, pending source-check.
 5. PROPOSED, pending source-check: `hμW` (`Proposed/LQG.lean:95`), `hNonat` (`Proposed/LQG.lean:77`), `hDG`
    (`Proposed/LQG.lean:154`), `hE` (`Proposed/LQG.lean:68`).
-6. FROZEN (`FP/S11r/Frozen.lean`, `FP/S11n`, or the cited Draft statement
+6. FROZEN (`FirstPass/S11r/Frozen.lean`, `FirstPass/S11n`, or the cited Draft statement
    `GreenPotentialHolderStmt`, `Draft/Section2.lean:190`): `hAx`, `hLen`, `hLoc`, `hCanon`,
    `hExists`, `hfr`, `hmass`, `hCMAbs`, `hCMRew`, `hComp`, `hMf`, `hDiam`, `hMk`, `hholder`, `hShift`, `hFD`, `hDC`, `hCMT`,
    `hPos10`, `hMassM`, `hSupM`, `hFin`, `hW`, `hM1`, `hM2`. Per-binder file:line as in `S11i/Assembly11_13.lean` (module docstring).

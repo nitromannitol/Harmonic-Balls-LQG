@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11d.Finite
 /-!
 # Proposition 11.9, finiteness of the exterior internal diameter
 
-FIRST-PASS NEW. Deterministic input to the exterior bound of `prop:mass-diam-gen` (corrected paper, lines 3120-3125):
+Deterministic input to the exterior bound of `prop:mass-diam-gen` (corrected paper, lines 3120-3125):
 for a Euclidean length metric `D`, an open set `O`, and an open preconnected `A` with `closure A ⊆ O` and compact
 `closure A`, the internal distance `D(·,·; O)` is finite on `closure A × closure A` and its supremum over `A` is finite.
 Proof: every point `x ∈ closure A` has a point `y ∈ A` joined to `x` by a path in a ball `B(x,r) ⊆ O`

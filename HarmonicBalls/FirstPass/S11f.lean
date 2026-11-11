@@ -66,7 +66,7 @@ def PinchSecondOpenSteps : Prop :=
   ∃ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsPinchPointProofConfiguration U V W T Q' Q δ ∧
     PinchSecondOutsideStep.{u} W T Q' Q δ ∧ PinchSecondMassStep.{u} U V W δ
 
-/-- Lemma 11.16 (`lemma:second-event-proof`, paper line 3281), first-pass form, CONDITIONAL on `PinchSecondOpenSteps`
+/-- Lemma 11.16 (`lemma:second-event-proof`, paper line 3281), form, CONDITIONAL on `PinchSecondOpenSteps`
 (OPEN). Proof: for `M > 0` take the thresholds and the outside-measurable set `F` of `PinchSecondOutsideStep`, and the
 conditional mass set `H` of `PinchSecondMassStep` with the same thresholds; `P (F ∩ H) > 0` by
 `measure_inter_pos_of_condExp_indicator_pos`, and `F ∩ H ⊆ Ẽ₁ ∩ Ẽ₂(M)` by `pinchSecondEvent_of_thresholds`. -/

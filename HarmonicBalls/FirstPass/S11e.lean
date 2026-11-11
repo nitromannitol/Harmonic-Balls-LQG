@@ -23,7 +23,7 @@ open MeasureTheory Metric Set
 
 universe u
 
-/-- Lemma 11.16 (`lemma:second-event-proof`, paper line 3281), first-pass form. It follows from Lemma 11.17
+/-- Lemma 11.16 (`lemma:second-event-proof`, paper line 3281), form. It follows from Lemma 11.17
 (`PinchThirdEventPositiveStmt`, paper line 3285): the same configuration `U, V, W, T, Q', Q, δ₀` and the same
 measurable witnesses `A`, because `Ẽ₁ ∩ Ẽ₂ ∩ Ẽ₃ ⊆ Ẽ₁ ∩ Ẽ₂` and `P A > 0` is unchanged. -/
 theorem firstPass_11_16_of_11_17 (h : PinchThirdEventPositiveStmt.{u}) : PinchSecondEventPositiveStmt.{u} := by
@@ -34,7 +34,7 @@ theorem firstPass_11_16_of_11_17 (h : PinchThirdEventPositiveStmt.{u}) : PinchSe
   exact ⟨A, fun ω hω => ⟨(hA hω).1, (hA hω).2.1⟩, hmeas, hp⟩
 
 /-- Lemma 11.12 (`PinchEventPositiveProbabilityStmt`, `Draft/Section11.lean:246`, the `α₀ = 0` inner-measure form),
-first-pass form. Hypotheses: Lemma 11.17 (`PinchThirdEventPositiveStmt`, paper line 3285) and the Proposed input
+form. Hypotheses: Lemma 11.17 (`PinchThirdEventPositiveStmt`, paper line 3285) and the Proposed input
 `LQGMetricFieldAxioms` (Fact 2.2 I, the a.s. length-metric property of the LQG metric; `Proposed/LQG.lean:199-204`), for
 every carrier `Ω : Type u` and every exponent. Proof: on the event where `D ω` is a Euclidean length metric with
 nonnegative values, `Ẽ₁ ∩ Ẽ₂(M) ∩ Ẽ₃ ⊆ Ĝ₁(0; M)` by `pinchPointEvent_of_auxiliary_events`; the bad set is contained in a
@@ -74,7 +74,7 @@ theorem firstPass_11_12
   · rw [measure_sdiff_null hN0]
     exact hp
 
-/-- Lemma 11.15 (`lemma:first-event-proof`, paper line 3277), first-pass form: `P[Ẽ₁] > 0` for the fixed corrected pinch
+/-- Lemma 11.15 (`lemma:first-event-proof`, paper line 3277), form: `P[Ẽ₁] > 0` for the fixed corrected pinch
 configuration (`isCorrectedPinchConfiguration_fixed`). The only hypothesis is the frozen field-level measurability
 `LQGMetricPointwiseAEMeasurableFrozen` (`FirstPass/Frozen/S11e.lean`, EXTERNAL, a.e. form on realized LQG metrics). Proof:
 `pinchFirst_positive_of_frozen` (`FirstPass/S11e/FirstPositive.lean`). -/

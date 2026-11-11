@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11d.SmoothCutoff
 /-!
 # Proposition 11.9, the shift function `g = -(c/ξ) φ`
 
-FIRST-PASS NEW. The shift of the field, `h~ = h - (φ/ξ) c` with `c = log(2A/ε) ≥ 0`, as a function `g = -(c/ξ) φ`
+The shift of the field, `h~ = h - (φ/ξ) c` with `c = log(2A/ε) ≥ 0`, as a function `g = -(c/ξ) φ`
 (paper proof, lines 3125-3131). Properties used downstream: smooth and compactly supported (Cameron-Martin hypothesis of
 `CameronMartinGFFMutualAbsCont`); zero unit-circle average when `φ = 0` on the unit circle (`W ∩ ∂B₁ = ∅`); the Weyl weight
 `ξ g = -c φ` is `-c` on `O` where `φ = 1`, and `≤ 0` everywhere.

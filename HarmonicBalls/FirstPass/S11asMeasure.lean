@@ -11,7 +11,7 @@ Block 2 (from the frozen common local decoder, `LocalLQGDecoderCommonFrozen` cla
 rooted mean-zero observations on the disc `D` coincide are, almost surely, proportional on `D`. The second model is taken
 under a measure `P'` with `P ≪ P'`, so that the almost sure statement transfers back to `P` (Cameron–Martin reweighting).
 
-Named inputs (hypotheses, not proved here): `LocalLQGDecoderCommonFrozen` (FIRST-PASS FROZEN).
+Named inputs (hypotheses, not proved here): `LocalLQGDecoderCommonFrozen` (FROZEN).
 -/
 
 namespace FirstPassS11asMeasure
