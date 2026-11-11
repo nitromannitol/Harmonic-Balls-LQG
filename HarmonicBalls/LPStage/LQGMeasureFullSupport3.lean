@@ -1,5 +1,10 @@
 import Mathlib
 import HarmonicBalls.LPStage.LQGMeasureFullSupport2
+import HarmonicBalls.LPStage.LQGMeasureFullSupport
+import HarmonicBalls.LPStage.LQGMeasureInputs
+import HarmonicBalls.LPStage.LQGMeasureNonatomic
+import HarmonicBalls.LPStage.LQGMeasureNonatomicMassScaled
+import HarmonicBalls.LPStage.LQGMeasureNonatomicMassWeight
 
 /-!
 # The ball clause of Lemma 2.4 from the multiscale bound: LP form, part A (LP stage, z3)
@@ -272,5 +277,133 @@ theorem ballMass_lower_of_scaled
       _ ≤ ENNReal.ofReal ((ε / 4) ^ max e 0) * m₀ (ball w (ε / 4)) := mul_le_mul_right hm₀ _
       _ ≤ m (ball w (ε / 4)) := le_measure_of_le_rpow_norm hW measurableSet_ball h0A hweight
       _ ≤ m (ball z ε) := measure_mono hsub
+
+/-! ### The reduction of Lemma 2.4 (ball clause) and of I2, I1 to the scaled step -/
+
+section Scaled
+
+open LatticeProb.Gauss LatticeProb.LQG.LQGMeasureNonatomicMass
+
+/-- Reduction for Lemma 2.4 (LP form of `HarmonicBalls/Proofs/Sec2/BallMassReduction.lean:290`):
+`LiouvilleBallMassBoundStepLP` (eq:ball-volume on every `B_R` with the exponent ranges of [C1]) from the multiscale ball
+bound for `h^ℂ` (`WholePlaneScaledBallMassStepLP`, hypothesis `hS`), the singular weight `μ_h = |x|^{-γα₀} μ_{h^ℂ}` off `0`
+(`singularWeightStep_lp`, proved), the existence of `μ_{h^ℂ}` on the same probability space (`hE`, at `α₀ = 0`) and
+`μ_h({0}) = 0` (`hN`, `LQGMeasureNonatomicLP`). -/
+theorem liouvilleBallMassBoundStep_of_scaled_lp
+    (hS : WholePlaneScaledBallMassStepLP.{u})
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistenceLP P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomicLP P γ α₀ hC hcirc) :
+    LiouvilleBallMassBoundStepLP.{u} := by
+  intro γ α₀ hγ hγ2 hα₀ Ω _ P hC hcirc μ hGFF hμ R hR βp βm hβp hβpT hβm
+  have hQ : 0 < lqgQ γ := by unfold lqgQ; positivity
+  obtain ⟨μ₀, hμ₀⟩ := hE Ω P γ hC hcirc hGFF hγ hγ2 hQ
+  have hTe : γ * (lqgQ γ - α₀) = γ * lqgQ γ + -(γ * α₀) := by ring
+  rw [hTe] at hβpT hβm
+  set G := γ * lqgQ γ with hG
+  set e := -(γ * α₀) with he
+  have hGeq : G = 2 + γ ^ 2 / 2 := by rw [hG]; unfold lqgQ; field_simp
+  have hGAm : G < (2 + γ) ^ 2 / 2 := by rw [hGeq]; nlinarith
+  have hm1 := min_le_left ((2 - γ) ^ 2 / 2) (G + e)
+  have hm2 := min_le_right ((2 - γ) ^ 2 / 2) (G + e)
+  have hM1 := le_max_left ((2 + γ) ^ 2 / 2) (G + e)
+  have hM2 := le_max_right ((2 + γ) ^ 2 / 2) (G + e)
+  set βp₀ := (βp + min ((2 - γ) ^ 2 / 2) (G + e)) / 2 with hβp₀
+  set βm₀ := (max ((2 + γ) ^ 2 / 2) (G + e) + βm) / 2 with hβm₀
+  have hp1 : βp < βp₀ := by rw [hβp₀]; linarith
+  have hp2 : βp₀ < (2 - γ) ^ 2 / 2 := by rw [hβp₀]; linarith
+  have hp3 : βp₀ < G + e := by rw [hβp₀]; linarith
+  have hq1 : βm₀ < βm := by rw [hβm₀]; linarith
+  have hq2 : (2 + γ) ^ 2 / 2 < βm₀ := by rw [hβm₀]; linarith
+  have hq3 : G + e < βm₀ := by rw [hβm₀]; linarith
+  have hGe : max e 0 + G < βm := by
+    rcases le_total 0 e with h | h
+    · rw [max_eq_left h]; linarith
+    · rw [max_eq_right h]; linarith
+  -- the parameter `ζ` of the multiscale bound
+  have hev : ∀ᶠ ζ in 𝓝 (0 : ℝ), ζ < 1 ∧ ζ < βp₀ - βp ∧ 0 < (1 - ζ) * G + ζ * βp₀ - ζ + e ∧
+      βp < (1 - ζ) * ((1 - ζ) * G + ζ * βp₀ - ζ + e) ∧ ζ < βm - βm₀ ∧
+      max e 0 + ((1 - ζ) * G + ζ * βm₀ + ζ) < βm := by
+    refine (eventually_lt_nhds (by norm_num : (0 : ℝ) < 1)).and
+      ((eventually_lt_nhds (by linarith : (0 : ℝ) < βp₀ - βp)).and
+      ((ContinuousAt.eventually_lt (f := fun _ => (0 : ℝ))
+          (g := fun ζ => (1 - ζ) * G + ζ * βp₀ - ζ + e) (by fun_prop) (by fun_prop)
+          (by show (0 : ℝ) < (1 - 0) * G + 0 * βp₀ - 0 + e; linarith)).and
+      ((ContinuousAt.eventually_lt (f := fun _ => βp)
+          (g := fun ζ => (1 - ζ) * ((1 - ζ) * G + ζ * βp₀ - ζ + e)) (by fun_prop) (by fun_prop)
+          (by show βp < (1 - 0) * ((1 - 0) * G + 0 * βp₀ - 0 + e); linarith)).and
+      ((eventually_lt_nhds (by linarith : (0 : ℝ) < βm - βm₀)).and
+      (ContinuousAt.eventually_lt (f := fun ζ => max e 0 + ((1 - ζ) * G + ζ * βm₀ + ζ))
+          (g := fun _ => βm) (by fun_prop) (by fun_prop)
+          (by show max e 0 + ((1 - 0) * G + 0 * βm₀ + 0) < βm; linarith))))))
+  obtain ⟨ζ, ⟨hζ1, hz2, hz3, hz4, hz5, hz6⟩, hζ0⟩ :=
+    ((hev.filter_mono nhdsWithin_le_nhds).and
+      (self_mem_nhdsWithin : Ioi (0 : ℝ) ∈ 𝓝[>] (0 : ℝ))).exists
+  have hζ0' : 0 < ζ := hζ0
+  -- the events
+  set R₁ := R + 8 with hR₁
+  set E : ℝ → Set Ω := fun δ => {ω | ScaledBallBound (μ₀ ω) G R₁ βp₀ βm₀ ζ δ} with hE_def
+  have hstep : PolyHighProb P E :=
+    hS γ hγ hγ2 Ω P hC hcirc μ₀ hGFF hμ₀ R₁ (by positivity) βp₀ βm₀ ζ (by linarith) hp2 hq2 hζ0' hζ1
+  have h4 : PolyHighProb P fun r => E (r / 4) :=
+    polyHighProb_mono (polyHighProb_comp_mul hstep (by norm_num : (0 : ℝ) < 1 / 4)) fun r ω h => by
+      rwa [show (1 / 4 : ℝ) * r = r / 4 by ring] at h
+  have htail := polyHighProb_dyadic_tail hstep (a := 1 - ζ) (c := 4) (by linarith) (by norm_num)
+  set W : Set Ω := {ω | (μ ω).restrict {0}ᶜ =
+      ((μ₀ ω).withDensity fun x => ENNReal.ofReal (‖x‖ ^ e)).restrict {0}ᶜ ∧ μ ω {0} = 0} with hW_def
+  have hW : ∀ᵐ ω ∂P, ω ∈ W := by
+    filter_upwards [singularWeightStep_lp.{u} γ α₀ hγ hγ2 hα₀ Ω P hC hcirc μ μ₀ hGFF hμ hμ₀,
+      hN Ω P γ α₀ hC hcirc hGFF hγ hγ2 hα₀ μ hμ] with ω h1 h2
+    exact ⟨h1, h2 0⟩
+  -- smallness of `ε`
+  have hC₁ := eventually_mul_rpow_le (2 ^ |e| * max 1 R ^ |e|) (a := βp₀ - ζ) (b := βp) (by linarith)
+  have hC₂ := eventually_mul_rpow_le (2 ^ |e| * 4 ^ ((1 - ζ) * G + ζ * βp₀ - ζ + e) /
+      (1 - (2 : ℝ)⁻¹ ^ ((1 - ζ) * G + ζ * βp₀ - ζ + e))) hz4
+  have hc₁ := eventually_rpow_le_mul (c := (2 ^ |e|)⁻¹ * (max 1 R ^ |e|)⁻¹) (by positivity)
+    (a := βm₀ + ζ) (b := βm) (by linarith)
+  have hc₂ := eventually_rpow_le_mul (c := ((4 : ℝ) ^ (max e 0 + ((1 - ζ) * G + ζ * βm₀ + ζ)))⁻¹)
+    (by positivity) hz6
+  have h2ε := eventually_mul_rpow_le 2 (a := 1) (b := 1 - ζ) (by linarith)
+  have h2ε' := eventually_mul_rpow_le 2 (a := 1 - ζ) (b := 0) (by linarith)
+  refine (polyHighProb_mono_of_eventually
+    (polyHighProb_inter_ae (polyHighProb_inter (polyHighProb_inter hstep h4) htail) hW) ?_)
+  filter_upwards [Ioo_mem_nhdsGT (zero_lt_one' ℝ), hC₁, hC₂, hc₁, hc₂, h2ε, h2ε'] with
+    ε hε hε₁ hε₂ hε₃ hε₄ hε₅ hε₆
+  rintro ω ⟨⟨⟨hF, hF4⟩, hFj⟩, hWω, h0ω⟩ z hz
+  rw [Real.rpow_one] at hε₅
+  rw [Real.rpow_zero] at hε₆
+  constructor
+  · refine le_trans (ENNReal.ofReal_le_ofReal ?_) (ballMass_lower_of_scaled hWω hε.1 hε.2 hζ0'.le hζ1
+      (by linarith) (by linarith) hq3.le hε₅ hε₆ hF hF4 hz)
+    refine le_min hε₃ ?_
+    rw [Real.div_rpow hε.1.le (by norm_num), div_eq_inv_mul]
+    exact hε₄
+  · exact (ballMass_upper_of_scaled hWω h0ω hε.1 hε.2 hζ1 (by linarith) (by linarith) hp3.le hz3 hε₅ hε₆
+      hF hFj hz).trans (ENNReal.ofReal_le_ofReal (max_le hε₁ hε₂))
+
+/-- I2 (`LQGVolumeGrowthAllScalesStmtLP`) from the scaled step `hS`, the existence `hE` and the non-atomicity `hN`. -/
+theorem lqgVolumeGrowthAllScalesStmt_of_scaled_lp
+    (hS : WholePlaneScaledBallMassStepLP.{u})
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistenceLP P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomicLP P γ α₀ hC hcirc) :
+    LQGVolumeGrowthAllScalesStmtLP.{u} :=
+  lqgVolumeGrowthAllScalesStmt_of_ballMass_lp (liouvilleBallMassBoundStep_of_scaled_lp hS hE hN)
+
+/-- I1 (`LQGMeasureFullSupportStmtLP`, the LP form of the full-support statement of row 40) from the scaled step
+`hS`, the existence `hE` and the non-atomicity `hN`. The singular-weight input of the HB route
+(`hW : LQGMeasureWeylScaling`) is discharged by the proved `singularWeightStep_lp`, so it is not a hypothesis here. -/
+theorem lqgMeasureFullSupportStmt_of_scaled_lp
+    (hS : WholePlaneScaledBallMassStepLP.{u})
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistenceLP P γ 0 hC hcirc)
+    (hN : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureNonatomicLP P γ α₀ hC hcirc) :
+    LQGMeasureFullSupportStmtLP.{u} :=
+  lqgMeasureFullSupportStmt_of_volumeGrowth_lp (lqgVolumeGrowthAllScalesStmt_of_scaled_lp hS hE hN)
+
+end Scaled
 
 end LatticeProb.LQG
