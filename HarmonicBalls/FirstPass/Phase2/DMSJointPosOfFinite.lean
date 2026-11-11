@@ -3,19 +3,18 @@ import HarmonicBalls.FirstPass.Phase2.RootedDominationJointPos
 import HarmonicBalls.FirstPass.Phase2.DMSJointPosCylinder
 
 /-!
-# The positive-radius joint marked identity from the finite-family tilt identity (MQ-lh-30 (a))
+# The positive-radius joint marked identity from the finite-family tilt identity
 
 `dMSJointPos_of_finiteTiltPos` derives `DMSLemmaA10WholePlaneMarkedJointPosStmt`
 (FirstPass/Phase2/RootedDominationJointPos.lean:64) from `DMSFiniteTiltPosStmt`
-(FirstPass/Phase2/RootedDominationJointPosDerived.lean:28). Route: notes/fp-gaps/MATH-ANSWERS.md, section MQ-lh-30,
-LEAN PLAN (a), steps J1-J7. The observation space is `PosObs = pairing × positive-radius profile × mark`, with the
+(FirstPass/Phase2/RootedDominationJointPosDerived.lean:28). The observation space is `PosObs = pairing × positive-radius profile × mark`, with the
 σ-algebra `posObsSigma` (pairing σ-algebra tensor product σ-algebra). The two observation maps `obsG` (the field at the
 mark, Duplantier-Miller-Sheffield Lemma A.10, left side) and `obsGs` (the DMS-shifted field at the mark, right side)
 induce the two measures `leftMeas` and `rightMeas`; their agreement on cylinders gives the identity for every
 measurable test (π-λ, `ext_of_generate_finite`).
 
-This file holds J4 (measurability of the observation maps), J5 (the kernels and measures, their measurability) and
-J7 step 1 (the finite-mass version `μ ↦ finRestr (Dec ∘ F)` of the LQG measure restricted to `B₁`).
+This file holds the measurability of the observation maps, the kernels and measures with their measurability, and
+the finite-mass version `μ ↦ finRestr (Dec ∘ F)` of the LQG measure restricted to `B₁`.
 -/
 
 open MeasureTheory ProbabilityTheory Metric Set Filter Topology
@@ -27,7 +26,7 @@ universe u
 
 namespace DMSJointPosOfFinite
 
-/-- The observation space of the positive-radius marked identity (plan J1): the pairing, the positive-radius circle
+/-- The observation space of the positive-radius marked identity: the pairing, the positive-radius circle
 profile, and the mark. -/
 abbrev PosObs : Type := ((ℂ → ℝ) → ℝ) × (CircleParameter → ℝ) × ℂ
 
@@ -38,19 +37,19 @@ noncomputable abbrev posObsSigma : MeasurableSpace PosObs :=
 
 attribute [local instance] posObsSigma
 
-/-- The observation `G (ω, z)` of the field at the mark `z` (plan J4): the pairing and the positive-radius circle
+/-- The observation `G (ω, z)` of the field at the mark `z`: the pairing and the positive-radius circle
 profile of `ω`, with the mark `z`. -/
 noncomputable def obsG {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (q : Ω × ℂ) : PosObs :=
   (hC q.1, fun p : CircleParameter => hcirc q.1 p.1 p.2, q.2)
 
-/-- The DMS-shifted observation `Gs (z, ω)` (plan J4): the shifted pairing and the shifted positive-radius circle
+/-- The DMS-shifted observation `Gs (z, ω)`: the shifted pairing and the shifted positive-radius circle
 profile of `ω` at the shift `z`, with the mark `z`. -/
 noncomputable def obsGs {Ω : Type*} (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (q : ℂ × Ω) :
     PosObs :=
   (dmsShiftedPairing γ q.1 (hC q.2) (hcirc q.2 1 0),
     fun p : CircleParameter => dmsShiftedCircle γ q.1 (hcirc q.2) p.1 p.2, q.1)
 
-/-- **J4, the field observation is measurable.** -/
+/-- **The field observation is measurable.** -/
 theorem measurable_obsG {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} (hW : IsWholePlaneGFF P hC hcirc) : Measurable (obsG hC hcirc) := by
   refine Measurable.prodMk ?_ (Measurable.prodMk ?_ measurable_snd)
@@ -59,7 +58,7 @@ theorem measurable_obsG {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC :
   · refine measurable_pi_iff.2 fun p => ?_
     exact (hW.measurable_circle p.1 p.2 p.1.2).comp measurable_fst
 
-/-- **J4, the DMS-shifted observation is measurable.** The first factor is the pairing-level measurability of
+/-- **The DMS-shifted observation is measurable.** The first factor is the pairing-level measurability of
 `FirstPassS11atProducers.measurable_dmsShiftedPairing`; the profile is the coordinatewise sum of the three terms of
 `dmsShiftedCircle`, as in `DMSFiniteTiltPosDerived` (lines 299-313). -/
 theorem measurable_obsGs {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} (γ : ℝ) {hC : Ω → (ℂ → ℝ) → ℝ}
@@ -76,27 +75,27 @@ theorem measurable_obsGs {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} (γ 
         (hW.measurable_circle 1 0 one_pos)
     exact (h1.add h2).add h3
 
-/-- The kernel `ω ↦ (ρ ω).map (G (ω, ·))` of plan J5. -/
+/-- The kernel `ω ↦ (ρ ω).map (G (ω, ·))`. -/
 noncomputable def leftKernel {Ω : Type*} (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (ρ : Ω → Measure ℂ)
     (ω : Ω) : Measure PosObs :=
   (ρ ω).map fun z => obsG hC hcirc (ω, z)
 
-/-- The kernel `z ↦ P.map (Gs (z, ·))` of plan J5. -/
+/-- The kernel `z ↦ P.map (Gs (z, ·))`. -/
 noncomputable def rightKernel {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ) : Measure PosObs :=
   P.map fun ω => obsGs γ hC hcirc (z, ω)
 
-/-- The left measure `L := P.bind (ω ↦ (ρ ω).map (G (ω, ·)))` of plan J5. -/
+/-- The left measure `L := P.bind (ω ↦ (ρ ω).map (G (ω, ·)))`. -/
 noncomputable def leftMeas {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (ρ : Ω → Measure ℂ) : Measure PosObs :=
   P.bind (leftKernel hC hcirc ρ)
 
-/-- The right measure `R := (volume.restrict B₁).bind (z ↦ P.map (Gs (z, ·)))` of plan J5. -/
+/-- The right measure `R := (volume.restrict B₁).bind (z ↦ P.map (Gs (z, ·)))`. -/
 noncomputable def rightMeas {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) : Measure PosObs :=
   (volume.restrict (ball (0 : ℂ) 1)).bind (rightKernel P γ hC hcirc)
 
-/-- **J5, the left kernel is measurable** (`Measure.measurable_of_measurable_coe`; the mass of a measurable set is a
+/-- **The left kernel is measurable** (`Measure.measurable_of_measurable_coe`; the mass of a measurable set is a
 finite-family lintegral, `DMSFiniteTiltPosDerived.measurable_lintegral_finite_family`). -/
 theorem measurable_leftKernel {Ω : Type*} [MeasurableSpace Ω] {hC : Ω → (ℂ → ℝ) → ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} {ρ : Ω → Measure ℂ} (hρ : Measurable ρ) (hfin : ∀ ω, IsFiniteMeasure (ρ ω))
@@ -118,7 +117,7 @@ theorem measurable_leftKernel {Ω : Type*} [MeasurableSpace Ω] {hC : Ω → (�
   exact DMSFiniteTiltPosDerived.measurable_lintegral_finite_family ρ hρ hfin
     (measurable_one.indicator hA)
 
-/-- **J5, the right kernel is measurable** (`Measure.measurable_measure_prodMk_left`). -/
+/-- **The right kernel is measurable** (`Measure.measurable_measure_prodMk_left`). -/
 theorem measurable_rightKernel {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsFiniteMeasure P]
     {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGs : Measurable (obsGs γ hC hcirc)) :
     Measurable (rightKernel P γ hC hcirc) := by
@@ -146,7 +145,7 @@ theorem rightMeas_apply {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ :
     rightMeas P γ hC hcirc S = ∫⁻ z in ball (0 : ℂ) 1, rightKernel P γ hC hcirc z S ∂volume :=
   Measure.bind_apply hS hk.aemeasurable
 
-/-- **J7 step 1 (finite-mass version of the LQG measure on `B₁`).** For an `α = 0` LQG measure `μ` of a whole-plane
+/-- **Finite-mass version of the LQG measure on `B₁`.** For an `α = 0` LQG measure `μ` of a whole-plane
 GFF, there is a measurable family of finite measures `ρ` with `(μ ω).restrict B₁ = ρ ω` almost surely. The family is
 `finRestr (Dec ∘ F)`, where `F` is the measurable continuous circle version and `Dec ∘ F` the decoded measure
 (`lqgMeasureOfProfileMeasurable_derived`). Its total mass is the mass identity of `DMSFiniteTiltPosStmt` with `n = m = 0`
@@ -181,7 +180,7 @@ theorem exists_restrict_eq_finRestr {Ω : Type u} [MeasurableSpace Ω] {P : Meas
   rw [h1]
   simp [DMSFiniteTiltPosDerived.finRestr, h2]
 
-/-- **J7 step 3 (reduction to the measure identity).** If the left and right measures agree, the integrals of every
+/-- **Reduction to the measure identity.** If the left and right measures agree, the integrals of every
 measurable `Ψ` agree. The left side is first replaced by the finite family `ρ` (`hρμ`), then the three
 `lintegral_map` and `Measure.lintegral_bind` steps move the integral to `PosObs`. -/
 theorem lintegral_joint_eq_of_measures_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -210,13 +209,13 @@ theorem lintegral_joint_eq_of_measures_eq {Ω : Type*} [MeasurableSpace Ω] {P :
     rw [rightKernel, lintegral_map hΨ hm]
   rw [hA, ← hL, hLR, hR]
 
-/-! ### J6: `L = R` on a generating π-system of cylinders
+/-! ### `L = R` on a generating π-system of cylinders
 
 The finite identity `hT` is `DMSFiniteTiltPosStmt` for the fixed `μ`. It is transported to `ρ` by `(μ ω).restrict B₁ = ρ ω`
 almost surely. The cylinder family is an argument `C`, so this file does not import `DMSJointPosCylinder`; the final
-theorem (J7) supplies `hPi`, `hgen`, `hCm`, `hCform` for its `cyl` (plan steps J2-J3, `isPiSystem_cyl`, `generateFrom_cyl`). -/
+theorem supplies `hPi`, `hgen`, `hCm`, `hCform` for its `cyl` (`isPiSystem_cyl`, `generateFrom_cyl`). -/
 
-/-- **J6, one cylinder.** For test functions `φ`, circle parameters `c` and a measurable `E`, the left and the right measures
+/-- **One cylinder.** For test functions `φ`, circle parameters `c` and a measurable `E`, the left and the right measures
 agree on `{x | obs φ c x ∈ E}`: the finite identity `hT` with `Φ = E.indicator 1` (Duplantier-Miller-Sheffield Lemma A.10). -/
 theorem leftMeas_cyl_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ ρ : Ω → Measure ℂ}
@@ -260,7 +259,7 @@ theorem leftMeas_cyl_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsPr
   rw [hL, hR]
   exact hT n m φ c (E.indicator 1) hφ hΦ
 
-/-- **J6, `L = R` on a generating π-system.** If `C` is a π-system generating `posObsSigma`, consisting of measurable
+/-- **`L = R` on a generating π-system.** If `C` is a π-system generating `posObsSigma`, consisting of measurable
 cylinders of the form `{x | obs φ c x ∈ E}` with test functions `φ`, then `leftMeas = rightMeas`. The proof is
 `ext_of_generate_finite`; finiteness of `L` comes from `L univ = R univ < ∞`. -/
 theorem leftMeas_eq_rightMeas_of_cyl {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -299,9 +298,9 @@ theorem leftMeas_eq_rightMeas_of_cyl {Ω : Type*} [MeasurableSpace Ω] {P : Meas
   have : IsFiniteMeasure (leftMeas P hC hcirc ρ) := ⟨by rw [huniv]; exact hRuniv⟩
   exact ext_of_generate_finite C hgen hPi hcyl huniv
 
-/-! ### J7: the joint identity from the finite-family identity -/
+/-! ### The joint identity from the finite-family identity -/
 
-/-- **J7, the joint marked identity from the finite-family tilt identity (MQ-lh-30 (a)).** The left measure `L` of plan J5
+/-- **The joint marked identity from the finite-family tilt identity.** The left measure `L`
 equals the right measure `R` by `leftMeas_eq_rightMeas_of_cyl`, on the cylinders `DMSJointPosCylinder.cyl`
 (`isPiSystem_cyl`, `generateFrom_cyl`), and `lintegral_joint_eq_of_measures_eq` gives the identity for every measurable `Ψ`. -/
 theorem dMSJointPos_of_finiteTiltPos (hFin : DMSFiniteTiltPosStmt.{u}) :
@@ -322,7 +321,7 @@ theorem dMSJointPos_of_finiteTiltPos (hFin : DMSFiniteTiltPosStmt.{u}) :
       exact ⟨n, m, φ, c, E, hφ, hE, hSeq⟩)
   exact lintegral_joint_eq_of_measures_eq hρ hfin hρμ hG hGs hLR Ψ hΨ
 
-/-- **J7, the joint identity from the subcritical pairing input (MQ-lh-30 (a)).** `dMSFiniteTiltPos_of_sub` gives the finite
+/-- **The joint identity from the subcritical pairing input.** `dMSFiniteTiltPos_of_sub` gives the finite
 family identity from `DMSLemmaA10WholePlaneMarkedSub`, which is the pending input `hSub` (its source-check is open). -/
 theorem dMSJointPos_of_sub
     (hSub : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)

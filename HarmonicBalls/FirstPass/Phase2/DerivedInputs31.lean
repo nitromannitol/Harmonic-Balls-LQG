@@ -2,10 +2,10 @@ import HarmonicBalls.FirstPass.S11k.FirstLExterior
 import HarmonicBalls.FirstPass.Phase2.InternalMetricClosedDerived
 
 /-!
-# Trade wrapper of the counted result 11.16 with row 39 derived
+# Trade wrapper of the counted result 11.16 with the closed-domain identity derived
 
 `firstPass_11_16_corrected` (`FirstPass/S11k/FirstLExterior.lean:260`) binds the frozen closed-domain identity
-`InternalMetricClosedEqIInfThickeningFrozen` (`FirstPass/Frozen/S11g.lean:126`, ledger row 39). That identity is
+`InternalMetricClosedEqIInfThickeningFrozen` (`FirstPass/Frozen/S11g.lean:126`). That identity is
 derived with no hypothesis by `internalMetricClosedEqIInfThickening_derived`
 (`FirstPass/Phase2/InternalMetricClosedDerived.lean:408`). The wrapper `firstPass_11_16_corrected_derivedInputs`
 discharges `hK1` by this binder-free theorem and keeps the other eleven binders of `firstPass_11_16_corrected` with

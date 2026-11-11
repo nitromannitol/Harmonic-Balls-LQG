@@ -1,9 +1,7 @@
 import HarmonicBalls.FirstPass.S11i.Step8CorrectedMarked
 import HarmonicBalls.FirstPass.S11at.Producers
 
-/-! # Cylinder π-system for the joint law of (field, circle profile, root) (MQ-lh-30, steps J1–J3)
-
-Steps J1–J3 of the Lean plan for MQ-lh-30 (a) (`notes/fp-gaps/MATH-ANSWERS.md`, lines 948–972).
+/-! # Cylinder π-system for the joint law of (field, circle profile, root)
 
 On the joint sample space `DMSJointX := ((ℂ → ℝ) → ℝ) × (CircleParameter → ℝ) × ℂ` (a field `T`, a circle-average profile,
 and a root `z`), `mX` is the product of the pairing σ-algebra on the field factor (the σ-algebra of the test-function
@@ -42,7 +40,7 @@ def cyl : Set (Set DMSJointX) :=
       (E : Set ((Fin n → ℝ) × (Fin m → ℝ) × ℂ)),
       (∀ i, IsTestFunction Set.univ (φ i)) ∧ MeasurableSet E ∧ S = obs φ c ⁻¹' E}
 
-/-- **J1.** The observation map is `mX`-measurable when every `φ i` is a test function on `univ`. -/
+/-- The observation map is `mX`-measurable when every `φ i` is a test function on `univ`. -/
 theorem measurable_obs {n m : ℕ} {φ : Fin n → ℂ → ℝ} {c : Fin m → CircleParameter}
     (hφ : ∀ i, IsTestFunction Set.univ (φ i)) : Measurable[mX] (obs φ c) := by
   let _ : MeasurableSpace ((ℂ → ℝ) → ℝ) := pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ
@@ -52,7 +50,7 @@ theorem measurable_obs {n m : ℕ} {φ : Fin n → ℂ → ℝ} {c : Fin m → C
   · exact (measurable_eval_pairingSigmaAlgebra (φ i) (hφ i)).comp measurable_fst
   · exact (measurable_pi_apply (c k)).comp (measurable_fst.comp measurable_snd)
 
-/-- **J1.** The whole space is a cylinder (`n = m = 0`, `E = univ`). -/
+/-- The whole space is a cylinder (`n = m = 0`, `E = univ`). -/
 theorem univ_mem_cyl : (Set.univ : Set DMSJointX) ∈ cyl :=
   ⟨0, 0, Fin.elim0, Fin.elim0, Set.univ, fun i => Fin.elim0 i, MeasurableSet.univ, Set.preimage_univ.symm⟩
 
@@ -109,13 +107,13 @@ theorem measurable_id_cyl :
   · exact measurable_pi_iff.2 fun p A hA => measurableSet_profile_cyl hA p
   · exact fun A hA => measurableSet_root_cyl hA
 
-/-- **J3.** The cylinder family generates the joint σ-algebra: `mX = generateFrom cyl`. -/
+/-- The cylinder family generates the joint σ-algebra: `mX = generateFrom cyl`. -/
 theorem generateFrom_cyl : mX = MeasurableSpace.generateFrom cyl := by
   refine le_antisymm (fun s hs => measurable_id_cyl hs) (MeasurableSpace.generateFrom_le fun s hs => ?_)
   obtain ⟨n, m, φ, c, E, hφ, hE, rfl⟩ := hs
   exact measurable_obs hφ hE
 
-/-- **J2.** The cylinders form a π-system. The intersection of two cylinders is the cylinder of the concatenated families
+/-- The cylinders form a π-system. The intersection of two cylinders is the cylinder of the concatenated families
 `Fin.append φ φ'`, `Fin.append c c'`, with the set cut out by the two reindexings `Fin.castAdd` and `Fin.natAdd`. -/
 theorem isPiSystem_cyl : IsPiSystem cyl := by
   rintro _ ⟨n, m, φ, c, E, hφ, hE, rfl⟩ _ ⟨n', m', φ', c', E', hφ', hE', rfl⟩ _

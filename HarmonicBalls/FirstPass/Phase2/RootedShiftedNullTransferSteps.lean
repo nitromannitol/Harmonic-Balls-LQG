@@ -4,19 +4,19 @@ import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmDMSConstant
 import HarmonicBalls.FirstPass.S8c.LocalObservation
 import HarmonicBalls.Proofs.Sec8.LocalSmoothShiftCutoff
 
-/-! # Shifted-root null transfer: the local steps L1, L2 and L5 (MQ-lh-29)
+/-! # Shifted-root null transfer: the local steps
 
 Steps of the corrected null-transfer statement `RootedShiftedDecoderNullTransfer`
-(`FirstPass/Phase2/RootedDominationJoint.lean`), following `notes/fp-gaps/MATH-ANSWERS.md`, section MQ-lh-29:
+(`FirstPass/Phase2/RootedDominationJoint.lean`):
 
-* L1: almost surely the DMS constant vanishes, so the DMS-shifted circle profile is the field plus the
+* Almost surely the DMS constant vanishes, so the DMS-shifted circle profile is the field plus the
   shift `Av_{∂B_s(x)} dmsShift`; the unit-circle average of `dmsShift γ z` is zero (Duplantier-Miller-Sheffield,
   arXiv:1409.7055, Lemma A.10; `dmsConstant_ae_zero`).
-* L2: on a small sphere inside the unit disc the normalisation `γ log max(|w|,1)` vanishes, so the circle
+* On a small sphere inside the unit disc the normalisation `γ log max(|w|,1)` vanishes, so the circle
   average of `dmsShift γ z` is `-γ log max(ρ, |c - z|)` (Jensen's formula for `log|w - z|`, which is
   `circleAverage_log_norm_sub_eq_log_max`), and the α₀-field of the shifted profile is an explicit local
   expression (Lemma 8.2 of Bou-Rabee and Gwynne, proof, printed `h̃|_{B_r}` decomposition).
-* L5: mass normalisation `N_r(η) = η(B_{r/2}(0))⁻¹ • η` removes a constant factor `c ∈ (0, ∞)`.
+* Mass normalisation `N_r(η) = η(B_{r/2}(0))⁻¹ • η` removes a constant factor `c ∈ (0, ∞)`.
 
 Terminology: Duplantier-Sheffield (LQG measures from the GFF), Armitage-Gardiner (circle averages).
 -/
@@ -26,7 +26,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls
 
-/-- **L1.** Almost surely the DMS constant `dmsConstant γ z (h₁(0))` vanishes for `|z| ≤ 1`, so the DMS-shifted
+/-- Almost surely the DMS constant `dmsConstant γ z (h₁(0))` vanishes for `|z| ≤ 1`, so the DMS-shifted
 circle profile `hc r x + Av_{∂B_r(x)} dmsShift γ z + κ` equals the field plus the shift. -/
 theorem ae_dmsShiftedCircle_eq_field {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hG : IsWholePlaneGFF P hC hcirc)
@@ -38,7 +38,7 @@ theorem ae_dmsShiftedCircle_eq_field {Ω : Type*} [MeasurableSpace Ω] {P : Meas
   funext s x
   simp [hω]
 
-/-- **L2 (sphere average of the DMS shift).** On a sphere `∂B_ρ(c)` contained in the closed unit disc, the
+/-- **Sphere average of the DMS shift.** On a sphere `∂B_ρ(c)` contained in the closed unit disc, the
 normalisation `γ log max(|w|,1)` of `dmsShift γ z` vanishes, and the circle average is
 `-γ log max(ρ, |c - z|)`. -/
 theorem circleAverage_dmsShift_of_sphere_le_one {γ : ℝ} {z c : ℂ} {ρ : ℝ} (hρ : 0 < ρ)
@@ -55,7 +55,7 @@ theorem circleAverage_dmsShift_of_sphere_le_one {γ : ℝ} {z c : ℂ} {ρ : ℝ
   rw [Real.circleAverage_congr_sphere hs, Real.circleAverage_fun_smul,
     circleAverage_log_norm_sub_eq_log_max hρ c z, smul_eq_mul]
 
-/-- **L2 (local form of the shifted α₀-field).** For a sphere `∂B_ρ(c)` in the unit disc, with `ρ ≤ |c|`, the
+/-- **Local form of the shifted α₀-field.** For a sphere `∂B_ρ(c)` in the unit disc, with `ρ ≤ |c|`, the
 α₀-field circle average of the DMS-shifted profile is `p ρ c - γ log max(ρ, |c - z|) - α₀ log |c|`. -/
 theorem fieldCircleAverage_dmsShift_add {α₀ γ : ℝ} {z c : ℂ} (p : ℝ → ℂ → ℝ) {ρ : ℝ} (hρ : 0 < ρ)
     (hcρ : ρ ≤ ‖c‖) (hc : ‖c‖ + ρ ≤ 1) :
@@ -70,7 +70,7 @@ theorem fieldCircleAverage_dmsShift_add {α₀ γ : ℝ} {z c : ℂ} (p : ℝ �
   rw [hA, hB]
   ring
 
-/-- **L5 (mass normalisation removes constants).** For a constant `c ∈ (0, ∞)`, `N_r(c • η) = N_r(η)`. -/
+/-- **Mass normalisation removes constants.** For a constant `c ∈ (0, ∞)`, `N_r(c • η) = N_r(η)`. -/
 theorem massNormalize_smul_const {r : ℝ} {c : ℝ≥0∞} (η : Measure ℂ) (hc0 : c ≠ 0) (hct : c ≠ ⊤) :
     massNormalize r (c • η) = massNormalize r η := by
   unfold massNormalize
@@ -81,7 +81,7 @@ theorem massNormalize_smul_const {r : ℝ} {c : ℝ≥0∞} (η : Measure ℂ) (
       = (η (ball 0 (r / 2)))⁻¹ * (c⁻¹ * c) * η s := by ring
     _ = (η (ball 0 (r / 2)))⁻¹ * η s := by rw [ENNReal.inv_mul_cancel hc0 hct, mul_one]
 
-/-- **L3 (smooth Cameron-Martin shift).** For `3r < |z|`, the function `y ↦ -a₀ log|y + z|` is smooth on
+/-- **Smooth Cameron-Martin shift.** For `3r < |z|`, the function `y ↦ -a₀ log|y + z|` is smooth on
 `B_{2r}(0)` (it avoids `-z`), so the cutoff lemma `exists_testFunction_eqOn_closedBall_of_contDiffOn_ball`
 gives a test function supported in `B_{2r}(0)` that equals it on `B_{3r/2}(0)`. -/
 theorem exists_testFunction_logShift {a0 r : ℝ} {z : ℂ} (hr : 0 < r) (hz : 3 * r < ‖z‖) :
@@ -106,7 +106,7 @@ theorem exists_testFunction_logShift {a0 r : ℝ} {z : ℂ} (hr : 0 < r) (hz : 3
     (r := 3 * r / 2) (R := 2 * r) (by linarith) (by linarith) hg
   exact ⟨f, hf, hfg⟩
 
-/-- The test shift of L3 has zero unit-circle average: its support lies in `B_{2r}(0)` with `2r ≤ 1`. -/
+/-- The test shift has zero unit-circle average: its support lies in `B_{2r}(0)` with `2r ≤ 1`. -/
 theorem circleAverage_testShift_unit {r : ℝ} {gt : ℂ → ℝ}
     (hgt : IsTestFunction (ball (0 : ℂ) (2 * r)) gt) (h2r : 2 * r ≤ 1) :
     Real.circleAverage gt 0 1 = 0 := by
@@ -120,7 +120,7 @@ theorem circleAverage_testShift_unit {r : ℝ} {gt : ℂ → ℝ}
     linarith
   rw [Real.circleAverage_congr_sphere h0, Real.circleAverage_const]
 
-/-- The test shift of L3 is the logarithm on small spheres: for `|y| < 5r/4` and `0 < e < r/4`, its circle
+/-- The test shift is the logarithm on small spheres: for `|y| < 5r/4` and `0 < e < r/4`, its circle
 average is `-a₀ log|y + z|`, because the sphere `∂B_e(y)` lies in `B_{3r/2}(0)` and `e < |y + z|`. -/
 theorem circleAverage_testShift_eq {a0 r : ℝ} {z : ℂ} {gt : ℂ → ℝ} (hz : 3 * r < ‖z‖)
     (hEq : EqOn gt (fun y => -a0 * Real.log ‖y + z‖) (closedBall (0 : ℂ) (3 * r / 2)))

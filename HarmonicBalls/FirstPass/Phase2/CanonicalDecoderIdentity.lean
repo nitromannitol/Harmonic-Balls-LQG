@@ -3,7 +3,7 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.Phase2.RootedShiftedNullTransferLaw
 
 /-!
-# Canonical decoder identity (MQ-lh-29, input (c) of the canonical domination)
+# Canonical decoder identity
 
 The α₀-LQG measure `μ` of the whole-plane GFF `hcirc` is almost surely the decoder of the
 canonical profile: `μ ω = decoder canonicalTest γ α₀ (canonicalSel (posPart (hcirc ω)))`.
@@ -25,7 +25,7 @@ universe u
 
 open RootedShiftedNullTransferLaw
 
-/-- **Canonical decoder identity** (MQ-lh-29, input (c)). For every whole-plane GFF `hcirc` with
+/-- **Canonical decoder identity.** For every whole-plane GFF `hcirc` with
 `0 < γ < 2`, `α₀ < Q(γ)`, and every α₀-LQG measure `μ` of `hcirc`, the measure `μ` is almost surely the
 canonical decoder `decoder canonicalTest γ α₀` applied to the canonical selector of the positive-radius part of
 `hcirc`. -/
@@ -38,7 +38,7 @@ def CanonicalDecoderIdentityStmt : Prop :=
 
 
 /-- **Almost sure identification of an α-LQG measure with the decoder of the selected profile**
-(the α-version of `ae_reference_eq_decoder`, MQ-lh-29 step (iv), with the LQG parameter `γ` and the
+(the α-version of `ae_reference_eq_decoder`, with the LQG parameter `γ` and the
 α-parameter `α₀` of the field circle averages kept apart). For a selector `Sel` with `Sel (posExtend y) = y`,
 almost surely `μ ω = Dec(Sel(posPart(hcirc ω)))`: the circle-average profile of `ω` is continuous on positive radii
 (`ae_continuousOn_circle`), `Sel` recovers it, its convergence-locus membership follows from the LQG limit property
@@ -78,7 +78,7 @@ lemma ae_lqgMeasure_eq_decoder {Ω : Type u} [MeasurableSpace Ω] (P : Measure �
   rw [hSel]
   exact hω.unique hdec'
 
-/-- **Canonical decoder identity** (`CanonicalDecoderIdentityStmt`, MQ-lh-29 input (c)). The α₀-LQG measure `μ` of
+/-- **Canonical decoder identity** (`CanonicalDecoderIdentityStmt`). The α₀-LQG measure `μ` of
 the whole-plane GFF `hcirc` is almost surely the decoder of the canonical selected profile. Proof: the α-version
 `ae_lqgMeasure_eq_decoder` with the canonical test family `canonicalTest` and the canonical selector `canonicalSel`,
 whose recovery property is `canonicalSel_posExtend`. The existence hypothesis `LQGMeasureExistence` is not used. -/

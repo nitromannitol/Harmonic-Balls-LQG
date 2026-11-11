@@ -5,14 +5,13 @@ import HarmonicBalls.FirstPass.S11at.Producers
 import HarmonicBalls.FirstPass.S8c.LocalObservation
 import HarmonicBalls.Proofs.Sec11.ClosureScales.PalmDMSConstant
 
-/-! # Probability-one event of the shifted-root null transfer (MQ-lh-29, items (a), (b), (c))
+/-! # Probability-one event of the shifted-root null transfer (items (a), (b), (c))
 
-Items (a), (b) and (c) of the probability-one event `E_z` of `notes/fp-gaps/MATH-ANSWERS.md`, section `## MQ-lh-29`
-(lines 769-780), for a whole-plane GFF `hcirc` under a probability measure `P`:
+Items (a), (b) and (c) of the probability-one event `E_z` for a whole-plane GFF `hcirc` under a probability measure `P`:
 
 * (a) `hcirc ω 1 0 = 0` almost surely: the circle average of the field at radius `1` about `0` vanishes
   (`IsWholePlaneGFF.ae_circleAverage_one_zero`). Consequently the DMS constant `dmsConstant γ z (hcirc ω 1 0)` vanishes
-  for `‖z‖ ≤ 1` (`dmsConstant_ae_zero`, the L1 step).
+  for `‖z‖ ≤ 1` (`dmsConstant_ae_zero`).
 * (b) the circle-average profile `(r, x) ↦ hcirc ω r x` is continuous on `(0, ∞) × ℂ` almost surely
   (`IsWholePlaneGFF.ae_continuousOn_circle`); this is the input of the canonical selector.
 * (c) for Lebesgue-a.e. root `z` in `localDomain j`, almost surely every continuous profile `y` whose zero extension is the
@@ -23,8 +22,7 @@ Items (a), (b) and (c) of the probability-one event `E_z` of `notes/fp-gaps/MATH
   vanishes; the dyadic-scale comparison `isLQGLimit_congr_of_pos` transfers the LQG limit to `y`; and the convergence
   membership is read off from the LQG limit, as in the proof of `lqgMeasureOfProfileMeasurable_derived`.
 
-The joint identity `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, pending truth check) is not used: this route is the
-`α₀`-version of step 5 and needs only the subcritical marked input `DMSLemmaA10WholePlaneMarkedSub`
+The joint identity `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, pending truth check) is not used: this route needs only the subcritical marked input `DMSLemmaA10WholePlaneMarkedSub`
 (`FirstPass/Frozen/S11i.lean:59`, range `0 < γ < 2`), through the producer `shifted_rootedLQGMeasure_ae_exists_sub`
 (`B2ShiftedProfileDecoder2.lean`). The unrestricted marked form `DMSLemmaA10WholePlaneMarked` (false as universally typed) is not used.
 

@@ -4,13 +4,13 @@ import HarmonicBalls.FirstPass.S11at.Producers
 import HarmonicBalls.FirstPass.Phase2.ProfileDecoderDerived
 import HarmonicBalls.FirstPass.Phase2.B2ShiftedProfileDecoder
 
-/-! # Finite-family marked tilt identity from the Sub input (MQ-lh-22)
+/-! # Finite-family marked tilt identity from the Sub input
 
 `dMSFiniteTiltPos_of_sub` derives `DMSFiniteTiltPosStmt` (RootedDominationJointPosDerived.lean:27) from the
 pairing-level marked identity `DMSLemmaA10WholePlaneMarkedSub` (FirstPass/Frozen/S11i.lean:59), which is the
 Duplantier-Miller-Sheffield Lemma A.10 input (arXiv:1409.7055v4, p. 184-185). No further input is used.
 
-Route (notes/fp-gaps/MATH-ANSWERS.md, section MQ-lh-22). Circle averages enter as a.s. limits of pairings with
+Circle averages enter as a.s. limits of pairings with
 the explicit annular tests `circleApprox`. (A) bounded continuous tests on the finite observation: the Sub identity
 for the approximating tests, then limits in both sides by dominated convergence. (B) every measurable test: two
 finite measures on the observation space agree on bounded continuous tests, hence are equal.
@@ -378,7 +378,7 @@ theorem keyMeasure {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabi
     _ = ∫⁻ x, Φ x ∂MR := by rw [hext]
     _ = _ := hMR Φ hΦ
 
-/-- **MQ-lh-22: the finite-family marked tilt identity from the Sub input.** For every whole-plane GFF `(hC, hcirc)`
+/-- **The finite-family marked tilt identity from the Sub input.** For every whole-plane GFF `(hC, hcirc)`
 and every `α = 0` LQG measure `μ` of `hcirc` at `0 < γ < 2`, the identity of `DMSFiniteTiltPosStmt`
 (RootedDominationJointPosDerived.lean:27) follows from the pairing-level marked identity `DMSLemmaA10WholePlaneMarkedSub`
 (FirstPass/Frozen/S11i.lean:59; DMS arXiv:1409.7055v4, Lemma A.10). The circle profile is measurable and the LQG measure

@@ -10,13 +10,13 @@ import HarmonicBalls.FirstPass.S11v.Affine
 import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Proofs.Sec2.AffineField
 
-/-! # Law comparison for the rooted shifted null transfer (MQ-lh-29, step L6)
+/-! # Law comparison for the rooted shifted null transfer
 
-Step L6 of `notes/fp-gaps/MATH-ANSWERS.md` (section MQ-lh-29): the law of the rooted output `W` built from the
+The law of the rooted output `W` built from the
 Cameron-Martin shifted field is absolutely continuous with respect to the law of the reference observation.
 
 * `rootOutputOfProfile` is the rooted output `(z, N_r((Dec (Sel (posPart c))) restricted to B_r(0)))` of a profile `c`;
-* `rootShiftOutput` is the map `W` of step L5: the output of the profile `c_ω(s, x) = h_s(x - z) - h_1(z) + Av_x(gt)_s`,
+* `rootShiftOutput` is the map `W`: the output of the profile `c_ω(s, x) = h_s(x - z) - h_1(z) + Av_x(gt)_s`,
   the Gaussian circle-average process of the affine pullback shifted by the test function `gt`.
 
 The positive-radius part of a profile is `posPart` (`RootedDominationJoint.lean`); `extPos` is its inverse on the
@@ -43,7 +43,7 @@ noncomputable def rootOutputOfProfile (T : ProfileDecoderDerived.TestFamily) (γ
     (Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)) (r : ℝ) (z : ℂ) (c : ℝ → ℂ → ℝ) : ℂ × Measure ℂ :=
   (z, massNormalize r ((ProfileDecoderDerived.decoder T γ γ (Sel (posPart c))).restrict (ball (0 : ℂ) r)))
 
-/-- The map `W` of step L5 of MQ-lh-29: `W ω = rootOutputOfProfile` of the Cameron-Martin shifted circle-average
+/-- The map `W`: `W ω = rootOutputOfProfile` of the Cameron-Martin shifted circle-average
 profile `s x ↦ affineCircle hcirc 1 z ω s x + Av_x(gt)_s` (the circle averages of `h'(· + z) + gt`, with `h'` the
 affine pullback of the whole-plane GFF `hcirc` at the root `z`). -/
 noncomputable def rootShiftOutput {Ω : Type*} (T : ProfileDecoderDerived.TestFamily) (γ : ℝ)
@@ -93,7 +93,7 @@ lemma rootOutputOfProfile_posPart (T : ProfileDecoderDerived.TestFamily) (γ : �
   unfold rootOutputOfProfile
   rw [posPart_posPart]
 
-/-- Measurability of the rooted output `W` of step L5 (step (iii) of MQ-lh-29 L6). Only the coordinates of positive
+/-- Measurability of the rooted output `W`. Only the coordinates of positive
 radius of the circle-average process enter, through `posPart`, so the measurability of `hcirc` at positive radii
 (`IsWholePlaneGFF.measurable_circle`) suffices. -/
 lemma measurable_rootShiftOutput {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω}
@@ -180,7 +180,7 @@ lemma fieldCircleAverage_circleProfile_of_pos (γ : ℝ) (y : C(CircleParameter,
     fieldCircleAverage γ (circleProfile y) r z = fieldCircleAverage γ c r z := by
   rw [ProfileDecoderDerived.fca_circleProfile_eq γ y hr z, fieldCircleAverage, hy]
 
-/-- **Step (iv) of MQ-lh-29 L6.** Almost surely the reference measure `ν ω` is the decoded measure
+/-- Almost surely the reference measure `ν ω` is the decoded measure
 `Dec(Sel(posPart(hcirc ω)))`: the circle-average profile of `ω` is continuous on positive radii (the
 `ae_continuousOn_circle` field of `IsWholePlaneGFF`), `Sel` recovers it, its convergence locus membership follows
 from the LQG limit property of `ν ω`, and `IsLQGLimit.unique` identifies the two limits. -/
@@ -219,8 +219,8 @@ lemma ae_reference_eq_decoder {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω
   rw [hSel]
   exact hω.unique hdec'
 
-/-- **Step L6 of MQ-lh-29 (law comparison).** Let `j ≥ 1`, `r = r_j`, and let `gt` be a test function supported in
-`B_{2r}(0)` (the output of step L3). For every root `z`, the law of the rooted output `W` (`rootShiftOutput`) is
+/-- **Law comparison.** Let `j ≥ 1`, `r = r_j`, and let `gt` be a test function supported in
+`B_{2r}(0)` (the smooth Cameron-Martin test shift). For every root `z`, the law of the rooted output `W` (`rootShiftOutput`) is
 absolutely continuous with respect to the law of the reference observation `V_j(z, ·)`
 (`localReferenceObservation`). Proof: Cameron-Martin reweighting of the affine pullback
 `(affinePairing, affineCircle) hC hcirc 1 z` by `gt` (`cameronMartin_profileLaw_map_eq`, with the derived
@@ -243,14 +243,14 @@ theorem rootShiftOutput_map_absolutelyContinuous_referenceObservation {Ω : Type
     rw [mul_one_div, div_le_one (by linarith)]
     linarith
   have hgt0 : Real.circleAverage gt 0 1 = 0 := circleAverage_testShift_unit hgt hr2
-  -- the reference side (step (iv)): `V_j(z, ·) = rootOutputOfProfile (hcirc ·)` almost surely
+  -- the reference side: `V_j(z, ·) = rootOutputOfProfile (hcirc ·)` almost surely
   have href := ae_reference_eq_decoder P T γ Sel hSelRec hGFF ν hν
   have hYref : P.map (fun ω => localReferenceObservation ν j (z, ω)) =
       P.map (fun ω => rootOutputOfProfile T γ Sel (localRadius j) z (hcirc ω)) := by
     refine Measure.map_congr ?_
     filter_upwards [href] with ω hω
     simp only [localReferenceObservation, rootOutputOfProfile, hω]
-  -- the Cameron-Martin shift of the affine pullback (steps (i)-(ii))
+  -- the Cameron-Martin shift of the affine pullback
   have hP' : IsWholePlaneGFF P (affinePairing hC hcirc 1 z) (affineCircle hcirc 1 z) :=
     wholePlaneGFFAffineInvariance_derived P hC hcirc hGFF 1 one_ne_zero z
   have hjoint : P.map (GFFJointLaw.jointSample (affinePairing hC hcirc 1 z) (affineCircle hcirc 1 z)) =

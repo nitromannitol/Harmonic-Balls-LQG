@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.Phase2.RootedDominationJointPos
 import HarmonicBalls.FirstPass.Frozen.S11i
 import HarmonicBalls.FirstPass.Phase2.DMSJointPosOfFinite
 
-/-! # Canonical form of the B2 rooted domination (fp-phase2-canonical-domination)
+/-! # Canonical form of the rooted domination
 
 * `rootedFieldMeasureDomination_of_ae_null`: the conditional rooted domination of
   `localRootedFieldMeasureDomination_of_jointPos_of_shifted` for an arbitrary measurable decoder `Dec` and selector `Sel`
@@ -170,7 +170,7 @@ theorem localRootedFieldMeasureDomination_canonical_data
       (fun _ _ _ _ => ⟨lam, hlam⟩) (fun _ _ _ _ => ⟨μ, hμ⟩)
       (fun μ' => hSub Ω P γ hC hcirc μ') hId j)
 
-/-- **Canonical rooted domination, conditional form (MQ-lh-29; MQ-lh-30).** The conditional theorem
+/-- **Canonical rooted domination, conditional form.** The conditional theorem
 `localRootedFieldMeasureDomination_of_jointPos_of_shifted` in its canonical form: the decoder and selector of the
 α₀-measure are the canonical `ProfileDecoderDerived.decoder canonicalTest γ α₀` and `canonicalSel`, identified by
 `CanonicalDecoderIdentityStmt` (its existence premise is witnessed by `μ`), and the null transfer is the canonical

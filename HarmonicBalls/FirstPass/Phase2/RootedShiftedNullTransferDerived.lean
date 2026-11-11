@@ -10,9 +10,9 @@ import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
 import HarmonicBalls.FirstPass.S11v.Affine
 import HarmonicBalls.FirstPass.Phase2.RootedShiftedNullTransferLaw
 
-/-! # Shifted-root null transfer: the local identification (MQ-lh-29, step L4)
+/-! # Shifted-root null transfer: the local identification
 
-Step L4 of the corrected `RootedShiftedDecoderNullTransfer` (`notes/fp-gaps/MATH-ANSWERS.md`, section MQ-lh-29).
+Local identification for the corrected `RootedShiftedDecoderNullTransfer`.
 On the ball `B_{5r/4}` around the root, the profile decoder applied to the DMS-shifted α₀-profile, recentred at `z`,
 equals `exp(γ h(1,z))` times the γ-decoded profile of the affine-plus-test-function field (Duplantier-Sheffield, LQG
 measure of a field with an insertion; Armitage-Gardiner, circle averages). The identity is local: it is obtained by
@@ -53,7 +53,7 @@ theorem continuousOn_circleAverage_dmsShift (γ : ℝ) (z : ℂ) :
 /-- **L4a, local profile identity.** For `0 < ε < r/4` and `|y| < 5r/4`, the α₀-field of the profile `G1`
 (the DMS-shifted field `hc + Av dmsShift`) at the point `y + z` equals the γ-field of the profile `G2`
 (the affine profile `hc(·, · + z) - hc(1, z)` plus the smooth shift `Av gt`) at `y`, plus the constant `hc(1,z)`.
-Uses `fieldCircleAverage_dmsShift_add` (L2) and `circleAverage_testShift_eq` (L3). -/
+Uses `fieldCircleAverage_dmsShift_add` and `circleAverage_testShift_eq`. -/
 theorem fieldCircleAverage_local_identity {a0 γ r : ℝ} {z : ℂ} {hc : ℝ → ℂ → ℝ} {G1 G2 : ℝ → ℂ → ℝ}
     {gt : ℂ → ℝ} (hz : 3 * r < ‖z‖) (hzu : ‖z‖ < 1 - 3 * r)
     (hEq : Set.EqOn gt (fun y => -a0 * Real.log ‖y + z‖) (closedBall (0 : ℂ) (3 * r / 2)))
@@ -83,7 +83,7 @@ theorem fieldCircleAverage_local_identity {a0 γ r : ℝ} {z : ℂ} {hc : ℝ �
   rw [hG1', hA, hG2', hB, add_sub_cancel_right]
   ring
 
-/-- **L4, local identification of the decoded shifted measure.** If the α₀-profile `F1` of the DMS-shifted field and
+/-- **Local identification of the decoded shifted measure.** If the α₀-profile `F1` of the DMS-shifted field and
 the γ-profile `F2` of the affine-plus-test field lie in the convergence locus of the test family `T`, then the
 decoded α₀-measure of `F1`, recentred at `z`, agrees on `B_{5r/4}` with `exp(γ h(1,z))` times the decoded γ-measure of
 `F2`. Proof: `IsLQGLimit.restrict_eq` for the translated α₀-limit and the `add_const` γ-limit. -/
@@ -118,7 +118,7 @@ universe u
 
 open GFFJointLaw
 
-/-! ## Selector recovery and the per-sample step (MQ-lh-29, steps L4 and E_z(d)) -/
+/-! ## Selector recovery and the per-sample step -/
 
 /-- The zero extension of a profile on the positive-radius subtype of the joint sample (`jointSample`):
 `extSub F r z = F (r, z)` for `r > 0` and `0` otherwise. -/
@@ -153,9 +153,9 @@ theorem sel_posPart_of_continuousOn {Sel : (ℝ → ℂ → ℝ) → C(CirclePar
     by_cases h : 0 < r <;> simp [posPart, posExtend, y, h]
   exact ⟨y, hpp, by rw [hpp]; exact hRec y, fun s x hs => by simp [circleProfile, y, hs]⟩
 
-/-- **L4, one sample.** Step L4 of MQ-lh-29 for a fixed sample: the α₀-decoder of the selected DMS-shifted profile, recentred
+/-- **One sample.** For a fixed sample: the α₀-decoder of the selected DMS-shifted profile, recentred
 at `z`, equals `exp(γ h(1,z))` times the γ-decoder of the selected affine-plus-test profile, on `B_{5r/4}`. The
-hypotheses `hA` (the α₀ membership, E_z(c)) and `hB` (the γ membership, E_z(d)) are almost-sure facts. -/
+hypotheses `hA` (the α₀ membership) and `hB` (the γ membership) are almost-sure facts. -/
 theorem decoder_shifted_of_selector {a0 γ r : ℝ} {z : ℂ} {hc : ℝ → ℂ → ℝ} {gt : ℂ → ℝ}
     {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)} (T : ProfileDecoderDerived.TestFamily)
     (hRec : ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y)
@@ -232,7 +232,7 @@ theorem ae_mem_of_map_eq {Ω β : Type*} [MeasurableSpace Ω] [MeasurableSpace �
     exact h1
   exact ae_iff.mpr (hac h2)
 
-/-- **E_z(d), the γ-profile of the shifted field.** Let `gt` be a smooth compactly supported test function with mean zero on
+/-- **The γ-profile of the shifted field.** Let `gt` be a smooth compactly supported test function with mean zero on
 the unit circle. Under the Cameron-Martin reweighting `P'` of the affine pullback `h' = (affinePairing hC hcirc 1 z,
 affineCircle hcirc 1 z)` by `gt` (`cameronMartinGFFReweighting_derived`), the selected profile of `h' + Av gt` lies in
 `convSet T γ γ` almost surely, whenever the selected profile of `hcirc` does. -/
@@ -273,7 +273,7 @@ theorem ae_sel_affine_shift_mem_convSet {Ω : Type u} [MeasurableSpace Ω] {P : 
       ProfileDecoderDerived.convSet T γ γ := hω
   rwa [extSub_restrict (fun s x => affineCircle hcirc 1 z ω s x + Real.circleAverage gt x s)] at hω'
 
-/-! ## Canonical data and the corrected statement (MQ-lh-29; MQ-lh-15 item 7) -/
+/-! ## Canonical data and the corrected statement -/
 
 /-- Selection of a continuous profile: a point of `convSet` for the selected profile. -/
 theorem sel_mem_of_ext {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)}
@@ -285,7 +285,7 @@ theorem sel_mem_of_ext {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)}
   rw [hsel]
   exact hA y hpp
 
-/-- **Measure algebra of the shifted root (L5).** If the recentred measure of `μ` agrees on `B_R(0)` with `c • η`
+/-- **Measure algebra of the shifted root.** If the recentred measure of `μ` agrees on `B_R(0)` with `c • η`
 (`c ≠ 0, ⊤`, `r ≤ R`), then the recentred output at radius `r` is `(z, N_r(η|B_r(0)))`. -/
 theorem recentredOutput_of_restrict_eq {μ η : Measure ℂ} [IsLocallyFiniteMeasure μ] {z : ℂ} {r R : ℝ}
     (hrR : r ≤ R) {c : ℝ≥0∞} (hc0 : c ≠ 0) (hct : c ≠ ⊤)
@@ -304,8 +304,8 @@ theorem recentredOutput_of_restrict_eq {μ η : Measure ℂ} [IsLocallyFiniteMea
     Measure.restrict_restrict measurableSet_ball, Set.inter_eq_left.2 (Metric.ball_subset_ball hrR),
     Measure.restrict_smul, massNormalize_smul_const _ hc0 hct]
 
-/-- **L4 with L5, one sample.** The recentred α₀-output of the selected DMS-shifted profile equals the shifted-root output
-`(z, N_r(Dg(Sel(posPart G2))|B_r(0)))` (step L4 of MQ-lh-29 followed by step L5). -/
+/-- **One sample, after mass normalisation.** The recentred α₀-output of the selected DMS-shifted profile equals the shifted-root output
+`(z, N_r(Dg(Sel(posPart G2))|B_r(0)))`. -/
 theorem recentredOutput_decoder_shift {γ α₀ r : ℝ} {z : ℂ} {hc : ℝ → ℂ → ℝ} {gt : ℂ → ℝ}
     {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)} (T : ProfileDecoderDerived.TestFamily)
     (hRec : ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y)
@@ -337,7 +337,7 @@ theorem recentredOutput_decoder_shift {γ α₀ r : ℝ} {z : ℂ} {hc : ℝ →
 noncomputable def canonicalTest : ProfileDecoderDerived.TestFamily :=
   Classical.choice ProfileDecoderDerived.exists_testFamily
 
-/-- The canonical profile selector (MQ-lh-15 item 3): the selector of `canonicalProfileSelector`
+/-- The canonical profile selector: the selector of `canonicalProfileSelector`
 (`B2ShiftedProfileDecoder.lean:74`). -/
 noncomputable def canonicalSel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ) :=
   Classical.choose canonicalProfileSelector
@@ -348,7 +348,7 @@ theorem canonicalSel_measurable : Measurable canonicalSel :=
 theorem canonicalSel_posExtend (y : C(CircleParameter, ℝ)) : canonicalSel (posExtend ⇑y) = y :=
   (Classical.choose_spec canonicalProfileSelector).2 y
 
-/-- **Corrected `RootedShiftedDecoderNullTransfer` (MQ-lh-29; MQ-lh-15 item 7).** The decoder is the canonical
+/-- **Corrected `RootedShiftedDecoderNullTransfer`.** The decoder is the canonical
 `decoder canonicalTest γ α₀` applied to the canonical selector, and the root quantifier is almost everywhere for the
 Lebesgue measure restricted to the local domain `D_j` (Duplantier-Miller-Sheffield, Lemma A.10, a.e.-root form). The
 original `RootedShiftedDecoderNullTransfer` (`RootedDominationJoint.lean:126`) is left unchanged. -/
@@ -374,9 +374,9 @@ def ShiftedDecoderNullTransferCanonicalStmt : Prop :=
       (canonicalSel (posPart (hcirc ω)))) →
     ∀ j : ℕ, RootedShiftedDecoderNullTransferCanonical P γ α₀ hcirc ν j
 
-/-! ## Assembly (MQ-lh-29, steps L4-L6 and E_z) -/
+/-! ## Assembly -/
 
-/-- The shifted-root output `W` of step L5, with the affine circle profile written through `hcirc`. -/
+/-- The shifted-root output `W`, with the affine circle profile written through `hcirc`. -/
 theorem rootShiftOutput_eq_hc {Ω : Type*} (T : ProfileDecoderDerived.TestFamily) (γ : ℝ)
     (Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)) (r : ℝ) (z : ℂ) (hcirc : Ω → ℝ → ℂ → ℝ) (gt : ℂ → ℝ)
     (ω : Ω) :
@@ -400,8 +400,8 @@ theorem localReferenceObservation_localRadius_zero {Ω : Type*} (ν : Ω → Mea
     localReferenceObservation ν 0 (z, ω) = (z, 0) := by
   simp [localReferenceObservation, massNormalize, localRadius_zero_ball_empty]
 
-/-- **Corrected null transfer (MQ-lh-29), for every root class `j`.** The canonical shifted-root output is absolutely
-continuous with respect to the reference observation for almost every root (E_z, L4-L6), so a null reference event is a
+/-- **Corrected null transfer, for every root class `j`.** The canonical shifted-root output is absolutely
+continuous with respect to the reference observation for almost every root, so a null reference event is a
 null canonical shifted event. The named inputs are the Proposed existence and Lemma A.10 hypotheses of
 `ae_rootedShiftedNullEvent`. -/
 theorem rootedShiftedNullTransferCanonical {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
