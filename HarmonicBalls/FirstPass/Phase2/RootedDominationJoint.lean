@@ -3,6 +3,8 @@ import HarmonicBalls.FirstPass.Frozen.S8c
 import HarmonicBalls.FirstPass.Frozen.S11aj
 import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.Closure.LocalRootKernelAc
+import HarmonicBalls.FirstPass.Frozen.S8d
+import HarmonicBalls.FirstPass.S8c.Measurability
 
 /-! # Joint marked DMS identity: conditional derivation of `LocalRootedFieldMeasureDomination` (Lemma 8.2)
 
@@ -75,5 +77,137 @@ theorem rootedLaw_apply_eq_zero_of_palm {Ω X : Type*} [MeasurableSpace Ω] [Mea
     filter_upwards [localRootKernel_ac_ae P lam hlam, hzero] with ω hac hz
     exact hac hz
   rw [lintegral_congr_ae hae, lintegral_zero]
+
+/-! ## Steps 4-12 (conditional): helpers for the joint-identity route
+
+Route: section 5 of `notes/fp-gaps/CHATGPT-219-hb-8-2-R9-hL1-hWeyl-PRO.md`. The conditional theorem takes the joint
+identity `DMSLemmaA10WholePlaneMarkedJointStmt` (candidate, PENDING R26), the frozen profile decoder
+`LQGMeasureOfProfileMeasurableFrozen` (`FirstPass/Frozen/S8d.lean:33`), a named measurable circle-profile selector
+(`CircleProfileSelectorStmt`, operator ruling 2) and the intermediate pointwise claim `ShiftedDecoderNullTransferStmt`
+(PENDING RULING R29). -/
+
+/-- The positive-radius part of a circle-average profile, as a pure function (cf. `posCircle`,
+`FirstPass/S11aa.lean:72`). -/
+noncomputable def posPart (hc : ℝ → ℂ → ℝ) : ℝ → ℂ → ℝ :=
+  fun r z => if 0 < r then hc r z else 0
+
+lemma measurable_posPart : Measurable (fun hc : ℝ → ℂ → ℝ => posPart hc) := by
+  refine measurable_pi_iff.mpr fun r => measurable_pi_iff.mpr fun z => ?_
+  by_cases hr : 0 < r
+  · simp only [posPart, hr, ↓reduceIte]
+    exact (measurable_pi_apply z).comp (measurable_pi_apply r)
+  · simp only [posPart, hr, ↓reduceIte]
+    exact measurable_const
+
+lemma measurable_posPart_comp {Ω : Type*} [MeasurableSpace Ω] {hcirc : Ω → ℝ → ℂ → ℝ}
+    (h : ∀ r z, 0 < r → Measurable fun ω => hcirc ω r z) :
+    Measurable fun ω => posPart (hcirc ω) := by
+  refine measurable_pi_iff.mpr fun r => measurable_pi_iff.mpr fun z => ?_
+  by_cases hr : 0 < r
+  · simp only [posPart, hr, ↓reduceIte]
+    exact h r z hr
+  · simp only [posPart, hr, ↓reduceIte]
+    exact measurable_const
+
+/-- **Measurable circle-profile selector (named input, operator ruling 2, PENDING).** For every whole-plane GFF there is
+a measurable map `Sel` from positive-radius circle-average profiles to continuous functions on `CircleParameter` that
+agrees almost surely with the circle averages at each parameter. Measurable-selection device for `hProf`; its content
+is the a.s. continuity of the circle-average process (`IsWholePlaneGFF.ae_continuousOn_circle`) together with a countable
+dense family of parameters. Not in the repository. -/
+def CircleProfileSelectorStmt : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+    IsWholePlaneGFF P hC hcirc → ∃ Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ), Measurable Sel ∧
+      ∀ p : CircleParameter, (fun ω => Sel (posPart (hcirc ω)) p) =ᵐ[P] fun ω => hcirc ω p.1 p.2
+
+/-- **Intermediate pointwise claim (PENDING RULING R29; not a frozen input).** Steps 10-11 of route section 5: for a
+fixed root `z ∈ D`, a null local reference event of `ν` forces a null event of the decoded DMS-shifted profile,
+recentred at `z`. `Dec` and `Sel` are the profile decoder and selector of the identification. -/
+def RootedShiftedDecoderNullTransfer {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (ν : Ω → Measure ℂ) (Dec : C(CircleParameter, ℝ) → Measure ℂ)
+    (Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)) (j : ℕ) : Prop :=
+  ∀ z ∈ localDomain j, ∀ S : Set (ℂ × Measure ℂ), MeasurableSet S →
+    P {ω | localReferenceObservation ν j (z, ω) ∈ S} = 0 →
+      P {ω | recentredOutput (localRadius j)
+        (Dec (Sel (posPart (dmsShiftedCircle γ z (hcirc ω)))), z) ∈ S} = 0
+
+/-- **Intermediate hypothesis (PENDING RULING R29; not a frozen input).** The pointwise claim
+`RootedShiftedDecoderNullTransfer` for every measurable decoder and selector that identify the α₀-measure `μ` through
+the circle profile. Open point for the operator: whether this universal form is true (decoders are not unique on
+DMS-shifted profiles; see the canonical-decoder option (a) of BLOCKED-STEP-C). -/
+def ShiftedDecoderNullTransferStmt : Prop :=
+  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ α₀ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ ν : Ω → Measure ℂ),
+    IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
+    IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMeasureOfField P γ γ hcirc ν →
+    ∀ (Dec : C(CircleParameter, ℝ) → Measure ℂ) (Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)),
+      Measurable Dec → Measurable Sel → (∀ᵐ ω ∂P, μ ω = Dec (Sel (posPart (hcirc ω)))) →
+      ∀ j : ℕ, RootedShiftedDecoderNullTransfer P γ hcirc ν Dec Sel j
+
+lemma measurableSet_localDomain (j : ℕ) : MeasurableSet (localDomain j) :=
+  (measurableSet_lt measurable_const measurable_norm).inter
+    (measurableSet_lt measurable_norm measurable_const)
+
+/-- A property holding almost surely in `ω` holds almost surely in `x` for the first marginal of `P ⊗ₘ K`. -/
+lemma ae_fst_of_compProd {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X] {P : Measure Ω} [SFinite P]
+    (K : Kernel Ω X) [IsSFiniteKernel K] {p : Ω → Prop} (h : ∀ᵐ ω ∂P, p ω) :
+    ∀ᵐ x ∂(P ⊗ₘ K), p x.1 := by
+  obtain ⟨t, hsub, htm, ht0⟩ := exists_measurable_superset_of_null (ae_iff.mp h)
+  have hae0 : (fun ω => K ω (Prod.mk ω ⁻¹' (t ×ˢ (Set.univ : Set X)))) =ᵐ[P] fun _ => 0 := by
+    filter_upwards [measure_eq_zero_iff_ae_notMem.mp ht0] with ω hω
+    have hempty : Prod.mk ω ⁻¹' (t ×ˢ (Set.univ : Set X)) = ∅ := by
+      ext x; simp [hω]
+    simp [hempty]
+  have hset : (P ⊗ₘ K) (t ×ˢ (Set.univ : Set X)) = 0 := by
+    rw [Measure.compProd_apply (htm.prod MeasurableSet.univ), lintegral_congr_ae hae0, lintegral_zero]
+  filter_upwards [measure_eq_zero_iff_ae_notMem.mp hset] with x hx
+  by_contra hpx
+  exact hx ⟨hsub hpx, Set.mem_univ _⟩
+
+/-- Fubini on the rooted reference product: a null set of `(vol|D) ⊗ P` has `P`-null sections for a.e. root. -/
+lemma ae_section_null_of_prod_null {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {D : Set ℂ} {T : Set (ℂ × Ω)} (hT : MeasurableSet T) (h : (volume.restrict D).prod P T = 0) :
+    ∀ᵐ z ∂(volume.restrict D), P (Prod.mk z ⁻¹' T) = 0 := by
+  rw [Measure.prod_apply hT] at h
+  exact (lintegral_eq_zero_iff (measurable_measure_prodMk_left hT)).mp h
+
+/-- On a locally finite value `m = μ ω`, the root observation is the recentred output of `m` (`finitePart` is the
+identity on locally finite measures). -/
+lemma localRootObservation_eq_recentredOutput {Ω : Type*} (μ : Ω → Measure ℂ) (j : ℕ) (ω : Ω) (m : Measure ℂ)
+    (hm : μ ω = m) [IsLocallyFiniteMeasure m] (z : ℂ) :
+    localRootObservation μ j (ω, z) = recentredOutput (localRadius j) (m, z) := by
+  simp only [localRootObservation, recentredOutput, hm, finitePart_eq_of_locallyFinite]
+
+lemma measurable_restrict_fn (B : Set ℂ) (hB : MeasurableSet B) :
+    Measurable (fun m : Measure ℂ => m.restrict B) :=
+  Measure.measurable_of_measurable_coe _ fun s hs => by
+    simp only [Measure.restrict_apply hs]
+    exact Measure.measurable_coe (hs.inter hB)
+
+lemma measurable_localReferenceObservation' {Ω : Type*} [MeasurableSpace Ω] {ν : Ω → Measure ℂ}
+    (hν : Measurable ν) (j : ℕ) :
+    Measurable (localReferenceObservation ν j) :=
+  measurable_fst.prodMk ((measurable_massNormalize _).comp
+    ((measurable_restrict_fn (ball 0 (localRadius j)) measurableSet_ball).comp (hν.comp measurable_snd)))
+
+/-- The test function of Step 4: the indicator of `D` in the root times the indicator of `S` at the recentred
+decoded observation. It depends on the profile only through `Sel (posPart hc)` and on the root through `z`. -/
+noncomputable def rootedTestFn (r : ℝ) (D : Set ℂ) (S : Set (ℂ × Measure ℂ))
+    (Dec : C(CircleParameter, ℝ) → Measure ℂ) (Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ))
+    (x : ((ℂ → ℝ) → ℝ) × (ℝ → ℂ → ℝ) × ℂ) : ℝ≥0∞ :=
+  D.indicator (fun _ => (1 : ℝ≥0∞)) x.2.2 *
+    S.indicator (fun _ => (1 : ℝ≥0∞)) (recentredOutput r (Dec (Sel (posPart x.2.1)), x.2.2))
+
+lemma measurable_rootedTestFn {r : ℝ} {D : Set ℂ} {S : Set (ℂ × Measure ℂ)}
+    {Dec : C(CircleParameter, ℝ) → Measure ℂ} {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)}
+    (hD : MeasurableSet D) (hS : MeasurableSet S) (hDec : Measurable Dec) (hSel : Measurable Sel) :
+    Measurable[(pairingSigmaAlgebra (fun T : (ℂ → ℝ) → ℝ => T) Set.univ).prod inferInstance]
+      (rootedTestFn r D S Dec Sel) := by
+  have h1 : Measurable (fun y : (ℝ → ℂ → ℝ) × ℂ => D.indicator (fun _ => (1 : ℝ≥0∞)) y.2 *
+      S.indicator (fun _ => (1 : ℝ≥0∞)) (recentredOutput r (Dec (Sel (posPart y.1)), y.2))) :=
+    ((measurable_const.indicator hD).comp measurable_snd).mul
+      ((measurable_const.indicator hS).comp
+        ((measurable_recentredOutput r).comp
+          ((hDec.comp (hSel.comp (measurable_posPart.comp measurable_fst))).prodMk measurable_snd)))
+  exact h1.comp measurable_snd
 
 end HarmonicBalls
