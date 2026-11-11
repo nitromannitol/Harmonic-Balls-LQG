@@ -41,5 +41,4 @@ theorem exists_pinchEvent_continuous_observable_representative
       (isOpen_rescaledSet hconfig.isOpen_U (ne_of_gt hr) z).measurableSet).comp measurable_fst,
       ae_of_all _ fun _ => rfl⟩
 
-#print axioms exists_pinchEvent_continuous_observable_representative
 end HarmonicBalls

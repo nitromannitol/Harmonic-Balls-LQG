@@ -42,5 +42,4 @@ theorem IsWholePlaneGFF.ae_fullSupport_and_pinchGreen_of_existence
   · exact ae_annulusGreenPotentialSup_ne_top_of_lqgVolumeGrowth
       (lqgVolumeGrowthAllScalesStmt_of_existence hDG hCC hE) hγ hγ₂ hα h hμ 3 (by norm_num)
 
-#print axioms IsWholePlaneGFF.ae_fullSupport_and_pinchGreen_of_existence
 end HarmonicBalls

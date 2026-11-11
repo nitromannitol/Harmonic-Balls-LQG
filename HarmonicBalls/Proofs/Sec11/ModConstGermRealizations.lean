@@ -308,11 +308,5 @@ theorem ae_internal_pinchBlockDensity_of_shifted_gff_realization
   exact ae_internal_pinchBlockDensity_of_trivial_reference P Q α hr hP hQmap hz hAC
     μ D U T Q' V M X hXm hbound hX hXgerm hstat δ hδ
 
-#print axioms origin_modConst_germ_trivial_of_trivial_reference
-#print axioms origin_modConst_germ_trivial_of_pairing_law_realizations
-#print axioms origin_modConst_germ_trivial_of_shifted_gff_realization
-#print axioms ae_internal_pinchBlockDensity_of_trivial_reference
-#print axioms ae_internal_pinchBlockDensity_of_pairing_law_realizations
-#print axioms ae_internal_pinchBlockDensity_of_shifted_gff_realization
 
 end HarmonicBalls

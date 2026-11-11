@@ -57,6 +57,5 @@ theorem IsWholePlaneGFF.ae_internal_pinch_frequency_of_normalizedLQG
   exact h.ae_internal_pinch_frequency_of_normalized_metric P hμ hfull hm hconfig M
     hmetric hs δ hδ
 
-#print axioms IsWholePlaneGFF.ae_internal_pinch_frequency_of_normalizedLQG
 
 end HarmonicBalls

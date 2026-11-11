@@ -122,9 +122,5 @@ theorem exists_jointlyMeasurable_pinch_mass_potential_event
   intro z
   simp only [hg z, hf z]
 
-#print axioms exists_jointlyMeasurable_pinch_mass_potential_event
-#print axioms exists_jointlyMeasurable_annulusGreenPotentialSup
-#print axioms exists_jointlyMeasurable_rescaledSet_mass
-#print axioms ae_locallyFiniteRandomMeasureKernel_eq
 
 end HarmonicBalls

@@ -93,7 +93,5 @@ theorem ae_positive_pinchBlockDensity_of_unitScale_stationary_lqg_event
   exact ae_positive_pinchBlockDensity_of_stationary_lqg_event_birkhoff hconfig M z
     hγ hγ₂ hα hgff hμ hD hmloc haxioms htrivial hstat' hpos'
 
-#print axioms stationary_sequence_first_law_and_tail
-#print axioms ae_positive_pinchBlockDensity_of_unitScale_stationary_lqg_event
 
 end HarmonicBalls

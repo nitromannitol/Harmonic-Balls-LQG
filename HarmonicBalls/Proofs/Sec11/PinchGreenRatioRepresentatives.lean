@@ -36,5 +36,4 @@ theorem exists_pinchGreen_representative_of_ae_mass_ratios
     simp only [← mul_assoc ((μ ω) (annulus 0 3 6)),
       ENNReal.mul_inv_cancel hp.1 hp.2, one_mul]
 
-#print axioms exists_pinchGreen_representative_of_ae_mass_ratios
 end HarmonicBalls

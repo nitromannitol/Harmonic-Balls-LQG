@@ -62,7 +62,4 @@ theorem condExp_indicator_pos_of_interior_field_shift
   intro F hF
   exact ae_fieldSigmaAlgebra_event_iff_of_interior_shift P α hC U τ g hg hshift F hF
 
-#print axioms condExp_indicator_pos_of_interior_field_shift
-#print axioms ae_fieldSigmaAlgebra_event_iff_of_localPairings_eq
-#print axioms ae_fieldSigmaAlgebra_event_iff_of_interior_shift
 end HarmonicBalls

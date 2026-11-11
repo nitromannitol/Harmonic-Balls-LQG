@@ -54,5 +54,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch
   exact hgff.measure_scaled_power_tail_of_optimized_moment _ c _ ξ (lqgQ γ) s _
     hc hr hξ hsQ (hn i).1 (hn i).2
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_moment
 end HarmonicBalls

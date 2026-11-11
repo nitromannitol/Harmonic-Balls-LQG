@@ -125,6 +125,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch
   exact dyadicIntermediateInternalDiameter_le_closedSquareDiameter
     (fun ω => 𝔇 (hC ω)) z L hL n i ω
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_open_moment
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_closed_moment
 end HarmonicBalls

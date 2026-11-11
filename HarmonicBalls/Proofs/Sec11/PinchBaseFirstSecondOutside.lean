@@ -48,5 +48,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_base_first_second
     rw [hw]
   rwa [measure_congr heq] at hpos
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_first_second
 end HarmonicBalls

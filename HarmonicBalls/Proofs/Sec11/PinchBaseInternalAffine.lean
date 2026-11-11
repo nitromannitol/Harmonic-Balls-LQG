@@ -42,5 +42,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch
   exact h.exists_square_positive_base_internal_pinch_of_closed_tail
     hgrowth hγ hγ2 hξ hgff hμ (wholePlaneGFFAffineInvariance_proved P hC hcirc) 𝔇 h𝔇 M
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_closed_tail_proved_affine
 end HarmonicBalls

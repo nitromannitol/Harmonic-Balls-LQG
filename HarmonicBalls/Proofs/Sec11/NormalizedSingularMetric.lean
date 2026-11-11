@@ -104,7 +104,5 @@ theorem IsWholePlaneGFF.ae_normalized_affine_singularMetric_representation
   rw [ENNReal.ofReal_mul (mul_nonneg hc.le hdpos), ENNReal.ofReal_mul hc.le]
   exact hscaled.symm
 
-#print axioms IsWholePlaneGFF.ae_normalized_affine_singularMetric
-#print axioms IsWholePlaneGFF.ae_normalized_affine_singularMetric_representation
 
 end HarmonicBalls

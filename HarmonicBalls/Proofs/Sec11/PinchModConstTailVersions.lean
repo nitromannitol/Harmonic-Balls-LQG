@@ -84,6 +84,5 @@ theorem IsWholePlaneGFF.exists_modConst_local_pinch_tail_versions
     filter_upwards [hAeq n hn] with ω hω
     simp only [Y, hω]
 
-#print axioms IsWholePlaneGFF.exists_modConst_local_pinch_tail_versions
 
 end HarmonicBalls

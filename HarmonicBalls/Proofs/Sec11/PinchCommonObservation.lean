@@ -35,6 +35,5 @@ theorem exists_common_pinchEvent_representative_of_continuous_observations
   have hh := ae_add_measure_iff.mp hEq
   exact ⟨A, hA, he₀.ae_map_iff.mp hh.1, he₁.ae_map_iff.mp hh.2⟩
 
-#print axioms exists_common_pinchEvent_representative_of_continuous_observations
 
 end HarmonicBalls

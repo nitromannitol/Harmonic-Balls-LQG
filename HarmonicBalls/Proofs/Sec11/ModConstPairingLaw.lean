@@ -162,10 +162,5 @@ theorem ae_internal_pinchBlockDensity_of_modConst_pairing_law
     (origin_modConst_germ_trivial_of_modConst_pairing_law P Q hQ α hr hAC)
     hXm hbound hX (pointwiseBirkhoff_of_latticeProb _ _ _) hstat δ hδ
 
-#print axioms fieldSigmaAlgebraModConst_eq_comap_localModConstPairings
-#print axioms fieldSigmaAlgebraModConst_trim_ac_iff_pairing_law
-#print axioms localModConstPairings_ac_of_localFieldPairings_ac
-#print axioms origin_modConst_germ_trivial_of_modConst_pairing_law
-#print axioms ae_internal_pinchBlockDensity_of_modConst_pairing_law
 
 end HarmonicBalls

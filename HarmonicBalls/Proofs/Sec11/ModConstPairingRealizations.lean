@@ -88,8 +88,5 @@ theorem localModConstPairings_shifted_ac_of_dominated_gff
   apply localModConstPairings_ac_of_localFieldPairings_ac_realizations P Q β β _ _ U hp hq
   exact localFieldPairings_shifted_ac_of_dominated_gff P S Q hS hQ hPS α β d U
 
-#print axioms localModConstPairings_ac_of_localFieldPairings_ac_realizations
-#print axioms localModConstPairings_ac_mono
-#print axioms localModConstPairings_shifted_ac_of_dominated_gff
 
 end HarmonicBalls

@@ -82,7 +82,5 @@ theorem localFieldPairings_shifted_ac_of_dominated_gff
   rw [← wholePlaneGFF_localFieldPairings_map_eq hS hQ α U]
   exact hPS.map hp
 
-#print axioms localFieldPairings_map_ac_iff_of_common_shift
-#print axioms localFieldPairings_shifted_ac_of_dominated_gff
 
 end HarmonicBalls

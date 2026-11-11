@@ -121,6 +121,5 @@ theorem ae_internal_pinch_block_density_of_ae_local_versions
   filter_upwards [hf] with N hN
   simpa only [Set.mem_Icc, and_assoc] using hN
 
-#print axioms ae_internal_pinch_block_density_of_ae_local_versions
 
 end HarmonicBalls

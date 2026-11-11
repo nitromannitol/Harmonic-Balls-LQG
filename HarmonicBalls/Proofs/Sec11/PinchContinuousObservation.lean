@@ -56,6 +56,5 @@ theorem exists_pinchEvent_representative_of_continuous_observation
   filter_upwards [hEq] with ω hω
   simpa only [← hAE, mem_preimage, obs] using hω
 
-#print axioms exists_pinchEvent_representative_of_continuous_observation
 
 end HarmonicBalls

@@ -65,7 +65,5 @@ theorem exists_jointlyMeasurable_internal_pinch_block_density
     simp only [mem_ofPred_eq, hω n z]
   simp only [hsets]
 
-#print axioms exists_jointlyMeasurable_internal_pinch_block_density
-#print axioms exists_jointlyMeasurable_pinchPointEventWithInternalBounds
 
 end HarmonicBalls

@@ -88,8 +88,5 @@ theorem pinchEventPositiveProbabilityStmt_of_internal_outer_positive
       hD hmetric hμ hloc hpos
   exact ⟨E, fun ω hω => (hsub hω).1, hE, hEpos⟩
 
-#print axioms pinchEventPositiveProbabilityStmt_of_internal_outer_positive
-#print axioms exists_measurable_pos_subset_internal_pinch
-#print axioms exists_measurable_pos_subset_pinch
 
 end HarmonicBalls

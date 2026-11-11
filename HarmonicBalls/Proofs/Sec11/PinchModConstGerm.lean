@@ -100,9 +100,6 @@ theorem ae_internal_pinchBlockDensity_of_modConst_germ
     (origin_modConst_germ_trivial_of_local_absoluteContinuous P Q hQ α₀ hr hAC)
     hXm hbound hX (pointwiseBirkhoff_of_latticeProb _ _ _) hstat δ hδ
 
-#print axioms ae_internal_pinchBlockDensity_of_modConst_germ
 
-#print axioms fieldSigmaAlgebraModConst_eq_of_deterministic_pairing_shift
-#print axioms origin_modConst_germ_trivial_of_local_absoluteContinuous
 
 end HarmonicBalls

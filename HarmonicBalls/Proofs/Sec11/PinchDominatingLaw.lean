@@ -67,7 +67,5 @@ theorem ae_ae_pinch_block_density_of_countably_dominated_rooted_law
   exact ae_ae_pinch_block_density_of_dominated_rooted_law P hμ hloc S hPS hμS hlocS
     hD hmetricS hconfig M q w hw hpos hfin ρ shift hshift R hrooted hac hRS hfixed
 
-#print axioms ae_ae_pinch_block_density_of_countably_dominated_rooted_law
-#print axioms exists_common_dominating_law
 
 end HarmonicBalls

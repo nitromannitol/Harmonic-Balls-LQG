@@ -118,7 +118,5 @@ theorem ae_internal_pinchBlockDensity_of_modConst_local_representatives
   exact ae_internal_pinchBlockDensity_of_modConst_germ P R hR α₀ hr hAC μ D U T Q V M X
     hXm hbound hX hXgerm htail δ hδ'
 
-#print axioms exists_modConst_germ_pinchIndicators
-#print axioms ae_internal_pinchBlockDensity_of_modConst_local_representatives
 
 end HarmonicBalls

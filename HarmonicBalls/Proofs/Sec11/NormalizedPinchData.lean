@@ -40,7 +40,5 @@ theorem measurable_mass_green_metric (A : Set ℂ) (hA : MeasurableSet A)
   exact (((Measure.measurable_coe hA).comp measurable_fst).prodMk
     ((measurable_annulusGreenPotentialSup z a b).comp measurable_fst)).prodMk measurable_snd
 
-#print axioms normalizedRestriction_mass_green
-#print axioms measurable_mass_green_metric
 
 end HarmonicBalls

@@ -61,6 +61,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_green_of_annulus_mass
     simp only [← mul_assoc ((μ ω) (annulus 0 3 6)),
       ENNReal.mul_inv_cancel hp.ne' hf, one_mul]
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_normalized_green_annulus
-#print axioms IsCorrectedPinchConfiguration.exists_outside_green_of_annulus_mass
 end HarmonicBalls

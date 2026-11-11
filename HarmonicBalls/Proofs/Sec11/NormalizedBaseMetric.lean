@@ -85,7 +85,5 @@ theorem IsWholePlaneGFF.ae_normalized_affine_baseMetric
     Real.exp_zero, one_mul]
   rfl
 
-#print axioms affinePairing_add_normalization
-#print axioms IsWholePlaneGFF.ae_normalized_affine_baseMetric
 
 end HarmonicBalls

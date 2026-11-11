@@ -25,6 +25,4 @@ theorem condExp_localModConstPairings_log_shift_eq {Ω : Type*} [MeasurableSpace
       P[f | MeasurableSpace.comap (localModConstPairings 0 hC U) inferInstance] := by
   rw [comap_localModConstPairings_log_shift_eq α hC U]
 
-#print axioms comap_localModConstPairings_log_shift_eq
-#print axioms condExp_localModConstPairings_log_shift_eq
 end HarmonicBalls

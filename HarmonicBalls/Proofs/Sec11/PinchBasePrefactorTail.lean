@@ -60,5 +60,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch
   exact hpos (fun n => ENNReal.ofReal (c * (3 * L / (2 * (2 : ℝ) ^ n)) ^ s))
     p' hp' (fun _ => 0) tendsto_const_nhds hsmall (by simpa using htail)
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_prefactor_tail
 end HarmonicBalls

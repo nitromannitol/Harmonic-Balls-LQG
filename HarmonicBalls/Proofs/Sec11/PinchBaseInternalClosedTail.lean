@@ -52,5 +52,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch
   exact h.positive_internal_pinch_of_open_first_second hξ P M hC hcirc 𝔇 μ
     h𝔇 hgff hμ hfull ψ hψ hψint (hpos c s p hs hp e he hbound)
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_base_internal_pinch_of_closed_tail
 end HarmonicBalls
