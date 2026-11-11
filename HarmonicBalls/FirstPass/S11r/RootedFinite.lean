@@ -7,10 +7,10 @@ import HarmonicBalls.Steps.Sec11.WeylPathReverse
 import HarmonicBalls.Steps.Sec11.WeylPathConcatenation
 
 /-!
-# First pass, finiteness of the Weyl-scaled physical metric on a disk (fp-S11r, owner n2; R2 Step B-C-G)
+# finiteness of the Weyl-scaled physical metric on a disk (R2 Step B-C-G)
 
 Deterministic finiteness for the physical metric `e := fun a b => (weylScaling d ξ f a b).toReal` of the rooted field,
-on an open connected set `D` where the weight `exp (ξ f)` is bounded (CHATGPT-n2-R2-rooted-length.md section 3, Steps
+on an open connected set `D` where the weight `exp (ξ f)` is bounded (Steps
 B-C-G). The weight `f` is only bounded on `D`, so the arclength reparametrization of a competitor must stay in `D`:
 its image is the image of the curve (`cumulative_curveLength_properties`: the cumulative length maps `[0, T]` onto
 `[0, L]`), which lies in `D`.

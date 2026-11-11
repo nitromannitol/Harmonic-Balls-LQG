@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Sign and diagonal of a decoded length metric (fp-S11r-rooted-local-ident-c, ruling (c))
+# Sign and diagonal of a decoded length metric
 
 The frozen local clauses are stated in `ENNReal`: `ENNReal.ofReal (m x y) = ENNReal.ofReal b * ENNReal.ofReal (D x y)`.
 `ENNReal.ofReal` forgets the sign of `m`. Here `D` is a Euclidean length metric, `m` is continuous on an open window, and

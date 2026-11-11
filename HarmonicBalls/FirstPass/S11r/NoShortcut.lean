@@ -1,7 +1,7 @@
 import HarmonicBalls.Steps.Sec11.BoundaryClearance
 
 /-!
-# No shortcut near a point of an open set (fp-S11r-11-13-no-shortcut, step 6b of ChatGPT chat 195)
+# No shortcut near a point of an open set
 
 Deterministic length-space lemma. For a Euclidean length metric `D` (in the sense of Armstrong, Kuusi and Mourrat:
 `IsEuclideanLengthMetric`) and an open set `U ∋ 0`, the ambient length metric equals the internal metric of `U`
@@ -24,7 +24,7 @@ open scoped ENNReal
 set containing `0`. There is a Euclidean radius `ρ > 0` such that for all `x, y` in the closed Euclidean ball of radius
 `ρ` about `0`, the ambient length metric equals the internal metric of `U`:
 `ENNReal.ofReal (D x y) = internalMetric D U x y`. This is the locality used to replace the ambient metric by the
-internal metric on a small window (ChatGPT chat 195, step 6b). -/
+internal metric on a small window (step 6b). -/
 theorem eq_internalMetric_on_small_ball {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
     {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U) :
     ∃ ρ : ℝ, 0 < ρ ∧ ∀ x ∈ closedBall (0 : ℂ) ρ, ∀ y ∈ closedBall (0 : ℂ) ρ,

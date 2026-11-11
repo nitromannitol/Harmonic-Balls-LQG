@@ -2,10 +2,9 @@ import HarmonicBalls.FirstPass.S11r.RootedFinite
 import HarmonicBalls.FirstPass.S11r.RootedLocality
 
 /-!
-# First pass, triangle inequality of the internal metric of a symmetric function on a set (fp-S11r, owner n2)
+# triangle inequality of the internal metric of a symmetric function on a set
 
-Deterministic input for `he_tri` of `eq_const_mul_internal_of_local_agreement` (R2 Step C of
-CHATGPT-n2-R2-rooted-length.md, section 3). For a symmetric `E` with `E x x = 0` and the triangle inequality on `D`:
+Deterministic input for `he_tri` of `eq_const_mul_internal_of_local_agreement` (section 3). For a symmetric `E` with `E x x = 0` and the triangle inequality on `D`:
 
 * `curveLength_affine`: affine reparametrization `τ ↦ c τ + d` (`c > 0`) does not change the curve length;
 * `pathLength_trans_le_of_symm`: the `E`-length of a concatenation of paths in `D` is at most the sum of the lengths;

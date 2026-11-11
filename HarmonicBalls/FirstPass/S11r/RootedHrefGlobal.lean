@@ -7,7 +7,7 @@ import HarmonicBalls.FirstPass.S11i.OnGTermwise
 import HarmonicBalls.FirstPass.S11i.Step8CalibrationCanonical
 
 /-!
-# The rooted `href` with the global decoders on the agreement set (fp-S11r-href-global, n2)
+# The rooted `href` with the global decoders on the agreement set
 
 Two layers.
 
@@ -16,11 +16,10 @@ Two layers.
   `G = globalG D Ostar U V W T Q' Q η M E` (GlobalG.lean). The rooted membership `hGroot` is derived from
   `hGroot_of_wholePlane` (OnGTermwise.lean), the certificate identity `hFdefG` by construction, the regularity from `D.regular_G`,
   and the last step is `ae_href_of_covariance_G` (HFdefOnG.lean). The almost sure membership `hGa` of the canonical field in `G`
-  and the B1 set `G0` are inputs of this layer.
+  and the covariance set `G0` are inputs of this layer.
 
 * `hHref_of_global` (layer B): the exact named `hHref` of `insertionZeroUnit_of_href` (InsertionZeroUnitE.lean:52), for an
-  arbitrary coding set `E` with the Lemma 11.12 a.s. equivalence `hEEU` (n1, `pinchLocalCertificate_canonical_of_inputs`,
-  Step8CalibrationCanonical.lean). For an insertion-zero model `(P, hC', hcirc', μ')` the insertion-`γ` model needed for `hEEU`
+  arbitrary coding set `E` with the Lemma 11.12 a.s. equivalence `hEEU` (`pinchLocalCertificate_canonical_of_inputs`, Step8CalibrationCanonical.lean). For an insertion-zero model `(P, hC', hcirc', μ')` the insertion-`γ` model needed for `hEEU`
   and for `canonG0_of_model` is built on the field translated by `z = 0`, which has the same canonical field
   (`alphaCanon_translatedPairing_zero`). The insertion-`γ` measure comes from the universal existence `hνexU` (`LQGMeasureExistence`,
   Proposed/LQG.lean:68), the insertion-`γ` metric from `exists_isLQGMetricOfField_translatedPairing_derived`.
@@ -230,5 +229,3 @@ theorem hHref_of_global {γ δ M : ℝ} {U V W T Q' Q : Set ℂ} {E : Set Step8C
 
 end HarmonicBalls.FirstPassS11rRootedHrefGlobal
 
-#print axioms HarmonicBalls.FirstPassS11rRootedHrefGlobal.href_ballMetric_global_of_inputs
-#print axioms HarmonicBalls.FirstPassS11rRootedHrefGlobal.hHref_of_global

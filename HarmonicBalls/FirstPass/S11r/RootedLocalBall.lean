@@ -1,13 +1,13 @@
 import HarmonicBalls.FirstPass.S11m.WeylLengthCompact
 import HarmonicBalls.Steps.Sec11.WeylLocalEdges
 
-/-! # Local Weyl comparison near a point (fp-S11r, R1, part 1)
+/-! # Local Weyl comparison near a point (R1, part 1)
 
 Let `d` be a Euclidean length metric (`IsEuclideanLengthMetric d`) and let two weights `f`, `g` agree on a Euclidean
 neighbourhood of a point `q`. Then the Weyl-scaled distances `weylScaling d ξ f` and `weylScaling d ξ g` agree on all
 pairs of points in a small `d`-ball around `q`, and are finite there.
 
-The proof is the exit argument of `CHATGPT-n1-n2-11-13-inputs.md` §3.2 (Step 3), made per curve: a length-parametrized
+The proof is the exit argument (Step 3), made per curve: a length-parametrized
 curve from a point of the small ball which leaves the larger `d`-ball `{d q · < s}` has weighted cost at least
 `e^{Lb} (s - t)`, where `Lb` is a lower bound of `ξ · f` on that ball. Only the weights on the `d`-ball are used; the
 weight `g` may be singular (for instance `g = -α log |· - z|` with `z` outside the ball), and no global finiteness or
@@ -282,5 +282,3 @@ end RootedLocal
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.RootedLocal.weylScaling_eq_near
-#print axioms HarmonicBalls.RootedLocal.weylScaling_le_short

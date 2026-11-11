@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.S11d.Dyadic
 import HarmonicBalls.Proofs.GFF.BackgroundChargeParameter
 
 /-!
-# Assembly of the buffered rooted local identification (fp-S11r-rooted-local-ident-e)
+# Assembly of the buffered rooted local identification
 
 Stage 1 (deterministic inputs): a dense countable family of Gaussian rationals (`hXd`), the radii `R` and reference
 pairs `pq` of a buffered window, and a measurable countable π-system generating the Borel sets.
@@ -334,9 +334,5 @@ theorem ae_rootedLocalIdent_assembled {Ω : Type u} [MeasurableSpace Ω] {P : Me
     hEuc hwin hLenC
   exact ⟨uc, dc, ur, dr, κ, m, hbuf, hWin, hκm, hmm, hwin, hRLI, hRLIm⟩
 
-#print axioms gaussRatSeq_dense
-#print axioms bufferPQ_mem
-#print axioms window_hbase
-#print axioms ae_rootedLocalIdent_assembled
 
 end HarmonicBalls

@@ -1,10 +1,9 @@
 import HarmonicBalls.FirstPass.S11r.RootedConverse
 
 /-!
-# Guarded converse of the rooted metric identification on buffered windows (fp-S11r-guarded-converse)
+# Guarded converse of the rooted metric identification on buffered windows
 
-The guarded form of `ae_rootedLocalIdent_windowConverse_buffered` (RootedConverse.lean), adopted by the operator on
-2026-11-10. The length-metric clause `hLenC` is assumed only for the roots `z ∈ A`, and the window identity is concluded
+The guarded form of `ae_rootedLocalIdent_windowConverse_buffered` (RootedConverse.lean). The length-metric clause `hLenC` is assumed only for the roots `z ∈ A`, and the window identity is concluded
 only for the roots `z ∈ A`, for an arbitrary set `A`. The unguarded converse is the case `A = univ` and is kept unchanged.
 The proof is that of the unguarded converse, with the guard `z ∈ A` carried through `filter_upwards`.
 -/
@@ -96,6 +95,5 @@ theorem ae_rootedLocalIdent_windowConverse_buffered_guarded {Ω : Type u} [Measu
   rw [← hobs]
   exact hid x hx y hy
 
-#print axioms ae_rootedLocalIdent_windowConverse_buffered_guarded
 
 end HarmonicBalls

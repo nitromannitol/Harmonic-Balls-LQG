@@ -1,14 +1,14 @@
 import HarmonicBalls.FirstPass.S11r.RootedRootContinuity
 
 /-!
-# First pass, finiteness of the rooted physical metric (fp-S11r, owner n2; R2 Steps B-C)
+# finiteness of the rooted physical metric (R2 Steps B-C)
 
 Replaces the hypothesis `hfM : ∀ w ∈ D, exp (ξ f w) ≤ M` of `RootedFinite.lean` and `RootedHe.lean` by the two hypotheses
 that hold for the rooted weight: `ContinuousOn f (D \ {z})` and the ambient limit `weylScaling d ξ f x z → 0` as `x → z`
 (the frozen input `RootedPhysicalMetricContinuousAtInsertionFrozen`, instantiated). The old hypothesis is false there: for
 `z ∈ D` and `ξ γ > 0` the weight `exp (ξ f)` is unbounded near `z`, since `f ∼ -γ log|w - z|`.
 
-Route (R2 answer, Steps B-C; notes/fp-gaps/CHATGPT-n2-R2-rooted-length.md section 3):
+Route (R2 answer, Steps B-C):
 (B) On `O = D ∖ {z}`, open and connected (`isPreconnected_diff_singleton_of_root`), two points are joined by a path of finite
 `d`-length whose compact range carries a bound on the weight: their Weyl distance and internal physical metric are finite
 (`finite_on_punctured`).

@@ -1,10 +1,10 @@
 import HarmonicBalls.Defs.LQGMetric
 
 /-!
-# Measurability of a pointwise identity set (fp-S11r, owner n2)
+# Measurability of a pointwise identity set
 
-Generic measure theory for the Cameron-Martin transfer of the metric identity (step (d) of the plan for (20),
-CHATGPT-n3-B1-B2.md section 4.2; `ae_mem_addFunPairing_of_ae_mem` in CMShift.lean needs a measurable set of
+Generic measure theory for the Cameron-Martin transfer of the metric identity (step (d) of the rooted identity (20),
+`ae_mem_addFunPairing_of_ae_mem` in CMShift.lean needs a measurable set of
 distributions). The identity of (18) and (20) is required for all endpoints `p ∈ V × V`, an uncountable family.
 If both sides are continuous in the endpoint for the distributions in a measurable set `S`, the set of distributions
 where they agree at every endpoint is measurable (on `S`): it equals the intersection over a countable dense set of

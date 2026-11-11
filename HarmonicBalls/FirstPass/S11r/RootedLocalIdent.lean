@@ -12,10 +12,8 @@ import HarmonicBalls.FirstPass.S11r.MetricSign
 import HarmonicBalls.FirstPass.S11r.RootedTranslate
 
 /-!
-# Rooted local identification event (fp-S11r-rooted-local-ident)
+# Rooted local identification event
 
-Source: ChatGPT chat 201 (PRO), `notes/fp-gaps/CHATGPT-hb-11-13-q1-rooted-ident.md`, Ruling and Section 4 (lines 244-423),
-implementation decision (section 7).
 
 Let `T` be a centred raw pairing (a whole-plane field seen from the root `z`, centred at `0`), `D` a local window,
 `κ` the local measure decoder and `m` the local metric decoder (`LocalMeasureKernelStmt`, `LocalMetricReplacementStmt`).
@@ -171,7 +169,7 @@ theorem measurableSet_forall_nat {P : ℕ → ((ℂ → ℝ) → ℝ) → Prop}
   rw [hset]
   exact MeasurableSet.iInter h
 
-/-- **Measurability of the rooted local identification event** (Section 4.3, fp-S11r-rooted-local-ident).
+/-- **Measurability of the rooted local identification event** (Section 4.3).
 The decoders `κ`, `m` are measurable (`LocalMeasureKernelStmt`, `LocalMetricReplacementStmt`), `Dμ` is measurable and
 each `Dd · x y` is measurable on canonical fields. The event is a countable Boolean combination of measurable maps. -/
 theorem measurableSet_rootedLocalIdentEvent (D : Set ℂ) (κ : (MeanZeroTest D → ℝ) → Measure ℂ)
@@ -311,9 +309,9 @@ theorem ae_rootedLocalIdent_shifted {Ω : Type u} [MeasurableSpace Ω] (P : Meas
     ∀ᵐ ω ∂P, addFunPairing (S11c.translatedPairing hC hcirc z ω) u ∈ E :=
   ae_addFunPairing_of_ae P hCM hTr hadm.2.2.2.1 hadm.2.2.2.2.1 hadm.2.2.2.2.2.1 hE hbase
 
-/-! ### Section 4.4, measure clause of the base conullity (round 2)
+/-! ### Section 4.4, measure clause of the base conullity
 
-Route (notes/n2.md): the rooted LQG measure at the root `z` of the physical field, with the `(max 1 |·|)`
+Route: the rooted LQG measure at the root `z` of the physical field, with the `(max 1 |·|)`
 normalisation, is the Weyl density `exp(γ v)` (v = γ log max(1,|·|), continuous) times the translate of the
 centred LQG measure `ν` (coordinate change, `ae_isLQGLimit_rooted_translate`); the rooted clause of
 `LocalMeasureKernelStmt` at background `0` then identifies `κ` with it on the window; the centred measure is
@@ -655,7 +653,7 @@ theorem ae_rootedMetricIdent_base {Ω : Type u} [MeasurableSpace Ω] {P : Measur
     (fun u v => Dd (canonFieldOf γ (S11c.translatedPairing hC hcirc z ω)) u v) b b' κ hb'
     (hI'.2) hDcnn hDcd hcl (fun x y hx hy => hlocω x y hx hy) X R pq hRlim (hpq z hzU)
 
-/-! ### Section 4.4, joint base conullity and transfer to admissible shifts (round 4)
+/-! ### Section 4.4, joint base conullity and transfer to admissible shifts
 
 `ae_rootedLocalIdent_base` assembles the measure and metric clauses. `ae_rootedLocalIdent_shifted_all` transfers the event
 to all admissible root shifts, the null set of roots not depending on the shift. The converse `rootedMeasureIdent_restrict`
@@ -912,11 +910,10 @@ theorem ae_rootedLocalIdent_restrict {Ω : Type u} [MeasurableSpace Ω] {P : Mea
   rw [hobs] at hrestr
   exact hrestr
 
-/-! ### Section 4.2, countable family of buffered local windows (round 5)
+/-! ### Section 4.2, countable family of buffered local windows
 
 Concentric rational windows `ball c r/2 ⊆ ball c r` with `closedBall c r ⊆ W` and `0 ∉ closedBall c r`, indexed by
-rational triples. An enumeration of the (countable) index set by `ℕ` gives the family `(U_j, D_j)` of ruling
-Section 4.2: each `D_j = ball (dc j) (dr j)` satisfies the hypotheses of `LocalMeasureKernelStmt`
+rational triples. An enumeration of the (countable) index set by `ℕ` gives the family `(U_j, D_j)`: each `D_j = ball (dc j) (dr j)` satisfies the hypotheses of `LocalMeasureKernelStmt`
 (`closedBall c₁ r₁ ⊆ ball c₂ r₂`, `0 ∉ closedBall c₂ r₂`), and for every root `z ≠ 0` and `b > 0` some `j` has
 `z ∈ U_j` and `closedBall (dc j) (dr j) ⊆ ball z b`. -/
 
@@ -987,7 +984,7 @@ theorem exists_bufferedIndex_mem {W : Set ℂ} (hW : IsOpen W) {z : ℂ} (hz : z
     have := dist_triangle w (ratComplex p) z
     linarith
 
-/-- **The countable family of buffered windows (ruling Section 4.2).** For an open set `W` containing a point
+/-- **The countable family of buffered windows.** For an open set `W` containing a point
 `z ≠ 0`, there are concentric rational windows `U_j = ball (uc j) (ur j)` inside `D_j = ball (dc j) (dr j)`, with
 `closedBall (dc j) (dr j) ⊆ W`, `0 ∉ closedBall (dc j) (dr j)`, the buffer inequality `ur j + dist (uc j) (dc j) < dr j`,
 and the approximation property: every `z ∈ W \ {0}` and `b > 0` have some `j` with `z ∈ U_j` and
@@ -1108,7 +1105,7 @@ theorem ae_rootedLocalIdent_buffered {Ω : Type u} [MeasurableSpace Ω] {P : Mea
     closedBall_bufferRadius_subset hzj, heq⟩
 
 
-/-! ### Metric converse on a window (fp-S11r-rooted-local-ident-c, ruling (c) of chat 228)
+/-! ### Metric converse on a window
 
 The frozen clauses are `ENNReal`-valued; the real window identity is recovered by `eq_const_mul_of_dense_family`
 (MetricSign.lean). `windowDecodedMetric` has the same body as `FirstPassS11at.windowMetric` (S11at.lean:761), which

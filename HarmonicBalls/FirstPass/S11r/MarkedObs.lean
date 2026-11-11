@@ -2,9 +2,8 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.Proposed.DuplantierMillerSheffield
 
 /-!
-# Marked local observation of the Duplantier-Miller-Sheffield shifted field (fp-S11r-marked-obs)
+# Marked local observation of the Duplantier-Miller-Sheffield shifted field
 
-Source: ChatGPT chat 198 (PRO), `notes/fp-gaps/CHATGPT-hb-11-13-step8-Q1-Q2.md`, Ruling Q2 (lines 109-185).
 
 Let `T` be the raw pairing functional of a whole-plane field `h = h^ℂ - α₀ log|·|` and let `z` be a root. The sampling
 procedure of Duplantier-Miller-Sheffield (Lemma A.10, whole-plane clause) shifts the field by `dmsShift γ z`, whose raw
@@ -16,7 +15,7 @@ test functions `φ` the additive constant `dmsConstant γ z h10` multiplies `∫
 `w`-dependent term of `dmsShift` equals `-γ (log|w - z| - log max(1, |w|))`, the term carried by `campbellReferenceObs`.
 
 This file does NOT assert the raw global identity `dmsShiftedPairing γ z T h10 = addFunPairing (translatedPairing hC hcirc z ω) u`:
-that identity is false (Ruling Q2) and is not sought.
+that identity is false and is not sought.
 -/
 
 namespace HarmonicBalls

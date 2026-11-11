@@ -11,11 +11,11 @@ import HarmonicBalls.Proposed.LQG
 import HarmonicBalls.FirstPass.S11aa
 
 /-!
-# The unrooted identity (18) for a fixed metric assignment (fp-S11r part (b) P3, owner n2)
+# The unrooted identity (18) for a fixed metric assignment
 
 For a fixed LQG metric `𝔇` (`IsLQGMetric γ ξ 𝔇`), a disk `D = ball c r` with `0 ∉ closedBall c r`, and the
 decoder `M` and bump `ρ` of the corrected frozen input `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`, the
-identity (18) of CHATGPT-n3-B1-B2.md section 4.1 holds for every `α < Q_γ`: almost surely there is a positive constant
+identity (18) holds for every `α < Q_γ`: almost surely there is a positive constant
 `b` with `M (obs_D h^α) = b · D_{h^α}(·,·;D)` on `D × D`, where `D_{h^α}` is the internal metric of the Weyl scaling
 `weylScaling (𝔇 (h^ℂ)) ξ (-α log|·|)`.
 
@@ -23,12 +23,12 @@ Proof (Cameron-Martin, the paper's sentence "a smooth compactly supported functi
 1. `f = χ · (-α log|·|)` (`exists_negLog_cutoff`) is smooth with compact support and equals `-α log|·|` on `D`.
 2. The B-set `B = {g | ∀ q ∈ Q, M(obs_D g) q = e^{-ξ⟨g,ρ⟩} Φ_q(g)}` over a countable dense `Q ⊆ D × D`, with
    measurable `Φ_q` (`LQGInternalMetricWeylAeMeasurableFrozen` with `α₀ = 0`); almost surely `h^ℂ ∈ B` by the
-   corrected B1 identity; Cameron-Martin (`ae_mem_addFunPairing_of_ae_mem`) gives `h^ℂ + f ∈ B` almost surely.
+   corrected identity; Cameron-Martin (`ae_mem_addFunPairing_of_ae_mem`) gives `h^ℂ + f ∈ B` almost surely.
 3. Continuity of both sides in the endpoint (`continuousOn_internalMetric_pair`) extends the identity from `Q` to `D × D`.
 4. The observation of `h^α` is that of `h^ℂ + f` (`localMeanZeroObs_eq_addFunPairing`), and the internal metric of
    `𝔇 (h^ℂ + f)` on `D` is that of the Weyl scaling by `-α log|·|` on `D` (`internalMetric_weylScaling_eq_of_eqOn`).
 
-Axioms I and III at universe `u` are `FirstPassS11aa.ae_isEuclideanLengthMetric_universe` and `FirstPassS11aa.ae_weylScaling_universe` (task fp-S11aa, commit b44b873). The length
+Axioms I and III at universe `u` are `FirstPassS11aa.ae_isEuclideanLengthMetric_universe` and `FirstPassS11aa.ae_weylScaling_universe` (commit b44b873). The length
 property of `h^α` is item I of the Proposed `LQGMetricFieldAxioms` (Proposed/LQG.lean, pending source-check).
 -/
 
@@ -141,7 +141,7 @@ theorem unrooted_identity_fixedMetric
     exact measurableSet_eq_fun hLHS (hρm.mul (hΦm q))
   have hBm : MeasurableSet[distributionMeasurableSpace] B :=
     MeasurableSet.biInter hQc fun q _ => hSm q
-  -- a.s. `h^ℂ ∈ B`: the corrected B1 identity at `h^ℂ` and the Φ-values at `h^ℂ`
+  -- a.s. `h^ℂ ∈ B`: the corrected identity at `h^ℂ` and the Φ-values at `h^ℂ`
   have hmem : ∀ᵐ ω ∂P, hC ω ∈ B := by
     have hval : ∀ᵐ ω ∂P, ∀ q ∈ Q, Φ q (hC ω) = internalMetric (𝔇 (hC ω)) (ball c r) q.1.1 q.1.2 :=
       (ae_ball_iff hQc).2 fun q _ => by

@@ -8,7 +8,7 @@ import HarmonicBalls.FirstPass.S11ap
 
 
 /-!
-# The global agreement set `G` for the rooted `href` (fp-S11r-G-global-and-href, step 3, n2)
+# The global agreement set `G` for the rooted `href` (step 3)
 
 For the canonical decoders `K`, `d` of `CanonDecoderData γ ξ γ` (FrozenCanonDecoders.lean), and a pinch data
 `(Ostar, U, V, W, T, Q', Q, η, M)` and a coding set `E` of `Step8Code`, the set
@@ -35,7 +35,7 @@ variable {γ ξ : ℝ}
 def globalCertSet (D : CanonDecoderData γ ξ γ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) : Set S11n.CanonSpace :=
   {L | L ∈ D.G ∧ CertificateEvent (D.K L) (fun x y => D.d L (x, y)) Ostar U V W T Q' Q η M 1 0}
 
-/-- **The global agreement set `G`** (Codex route of fp-S11r-G-global-and-href, step 3): the regular canonical fields on
+/-- **The global agreement set `G`** (step 3): the regular canonical fields on
 which the certificate identity with the global decoders agrees with the coding event `E`. -/
 def globalG (D : CanonDecoderData γ ξ γ) (Ostar U V W T Q' Q : Set ℂ) (η M : ℝ) (E : Set Step8Code) :
     Set S11n.CanonSpace :=
@@ -75,7 +75,7 @@ theorem hFdefG_globalG (D : CanonDecoderData γ ξ γ) {Ostar U V W T Q' Q : Set
 
 /-- **Almost sure membership in `G` from the event identity of one model.** For a whole-plane model with the LQG measure
 `μ` and metric `Dm` at insertion `γ`, if the coding event of the canonical field agrees almost surely with the certificate
-event of `(μ, Dm)` (the a.s. event equivalence of Lemma 11.12, step 2 of the Codex plan, input `hEv`), then the canonical field
+event of `(μ, Dm)` (the a.s. event equivalence of Lemma 11.12, input `hEv`), then the canonical field
 lies in `globalG` almost surely. The identification constants `a, b` of `LQGCanonicalIdentificationStmt` cancel. -/
 theorem ae_alphaCanon_mem_globalG (D : CanonDecoderData γ ξ γ) {Ostar U V W T Q' Q : Set ℂ} {η M : ℝ} {E : Set Step8Code}
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -99,6 +99,3 @@ theorem ae_alphaCanon_mem_globalG (D : CanonDecoderData γ ξ γ) {Ostar U V W T
 
 end HarmonicBalls.FirstPassS11rGlobalG
 
-#print axioms HarmonicBalls.FirstPassS11rGlobalG.measurableSet_globalG
-#print axioms HarmonicBalls.FirstPassS11rGlobalG.ae_alphaCanon_mem_globalG
-#print axioms HarmonicBalls.FirstPassS11rGlobalG.hFdefG_globalG

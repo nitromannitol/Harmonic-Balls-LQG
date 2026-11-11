@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11r.RootedRootFinite
 import HarmonicBalls.Steps.Sec11.MetricArcLength
 
 /-!
-# First pass, length-metric fields of the rooted internal physical metric (fp-S11r-11-13-rooted-length-fields, n2)
+# length-metric fields of the rooted internal physical metric
 
-Fields for the rooted decoder metric of n4 (`IsLengthMetricOn B D`, `FirstPass/S11ah/LengthTransport.lean:25`) on an open
+Fields for the rooted decoder metric (`IsLengthMetricOn B D`, `FirstPass/S11ah/LengthTransport.lean:25`) on an open
 connected `D`, for the Weyl-scaled physical metric `e = weylPhysicalE d ξ f` of an `IsEuclideanLengthMetric` `d`
 (internal metric `I = internalPhysicalMetric e D`):
 
@@ -15,8 +15,7 @@ connected `D`, for the Weyl-scaled physical metric `e = weylPhysicalE d ξ f` of
   (RootedRootContinuity.lean), with the weight bounded near `x` instead of the root hypothesis; at the root `z` it is
   `internalPhysicalMetric_tendsto_root` (he_cont). The joint continuity follows from the triangle inequality.
 
-Not here: `eq_of_eq_zero` (non-degeneracy) and `isOpen_iff` (Euclidean topology); both wait for ChatGPT chat 192
-(notes/fp-gaps/CHATGPT-n4-rooted-length.md).
+Not here: `eq_of_eq_zero` (non-degeneracy) and `isOpen_iff` (Euclidean topology); both are not proved in this file.
 -/
 
 namespace HarmonicBalls
@@ -216,10 +215,10 @@ theorem internalPhysicalMetric_continuousOn_root {d : ℂ → ℂ → ℝ} (hd :
     have s1 := hsym y q.2
     linarith
 
-/-- **Length-metric fields of the rooted internal physical metric** (for n4's `IsLengthMetricOn (ball c₂ r₂)`). On an open
+/-- **Length-metric fields of the rooted internal physical metric** (for `IsLengthMetricOn (ball c₂ r₂)`). On an open
 connected `D ∋ z`, with `d` an `IsEuclideanLengthMetric` and `f` continuous on `D ∖ {z}` with the insertion limit `hW`:
 `I x x = 0`, `I` symmetric, the triangle inequality on `D`, `ofReal (I x y) = internalMetric I D x y` on `D`, and joint
-continuity on `D × D`. Not included: `eq_of_eq_zero` and `isOpen_iff` (ChatGPT chat 192). -/
+continuity on `D × D`. Not included: `eq_of_eq_zero` and `isOpen_iff`. -/
 theorem internalPhysicalMetric_lengthFields {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ)
     {f : ℂ → ℝ} {D : Set ℂ} (hD : IsOpen D) (hDc : IsConnected D) {z : ℂ} (hz : z ∈ D)
     (hfc : ContinuousOn f (D \ {z}))
@@ -394,7 +393,7 @@ theorem internalPhysicalMetric_isOpen_iff {d : ℂ → ℂ → ℝ} (hd : IsEucl
     exact hw hwD
 
 /-- **Full length-metric fields of the rooted internal physical metric**: all fields of `IsLengthMetricOn D I` except the
-ones for the decoder identity (which n4 derives from (20)): self-distance, symmetry, triangle inequality, length identity,
+ones for the decoder identity (which is derived from (20)): self-distance, symmetry, triangle inequality, length identity,
 joint continuity on `D × D`, non-degeneracy, and the Euclidean topology. -/
 theorem internalPhysicalMetric_lengthFields_full {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ)
     {f : ℂ → ℝ} {D : Set ℂ} (hD : IsOpen D) (hDc : IsConnected D) {z : ℂ} (hz : z ∈ D)

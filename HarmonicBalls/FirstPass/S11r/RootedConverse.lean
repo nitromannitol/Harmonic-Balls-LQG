@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11r.RootedLocalIdent
 import HarmonicBalls.Steps.Sec11.ProperMetricDyadic
 
 /-!
-# Converse of the rooted metric identification on buffered windows (fp-S11r-rooted-local-ident-d)
+# Converse of the rooted metric identification on buffered windows
 
 * `internalMetric_pos_of_isEuclideanLengthMetric`: the internal metric of a Euclidean length metric is positive off the
   diagonal (the internal metric dominates `ofReal (E x y)` by the triangle inequality; Duplantier-Sheffield Fact 2.2).
@@ -139,8 +139,5 @@ theorem ae_rootedLocalIdent_windowConverse_buffered {Ω : Type u} [MeasurableSpa
   rw [← hobs]
   exact hid x hx y hy
 
-#print axioms internalMetric_pos_of_isEuclideanLengthMetric
-#print axioms windowDecodedMetric_pos_of_clause
-#print axioms ae_rootedLocalIdent_windowConverse_buffered
 
 end HarmonicBalls

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11r.CMShift
 
 /-!
-# Rooted observation as an α = 0 observation of a shifted field (fp-S11r, owner n2)
+# Rooted observation as an α = 0 observation of a shifted field
 
-Step (d) of the plan for (20) (CHATGPT-n3-B1-B2.md section 4.2): on a disk `V` with `0 ∉ V` and `z ∉ V`, the rooted
+Step (d) of the rooted identity (20): on a disk `V` with `0 ∉ V` and `z ∉ V`, the rooted
 reference observation `campbellReferenceObs γ α V (hC) z` (the Campbell-Palm observation of `f_z`, Lebesgue-a.e. root)
 equals the observation at `α = 0` of `h^ℂ + f`, whenever `f = -α log|·| - γ log|· - z|` on `V`, `V ⊆ B₁` (so
 `log max(1, |·|) = 0` on `V`). This is the Cameron-Martin shift input of `ae_mem_addFunPairing_of_ae_mem`.

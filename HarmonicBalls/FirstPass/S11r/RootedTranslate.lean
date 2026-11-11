@@ -18,8 +18,7 @@ For a whole-plane field `h^ℂ = hC ω` with circle averages `hcirc`, a root `z 
 Translating by `z` and normalising the field at `z` (`S11c.translatedPairing`, circle average `c = hcirc ω 1 z`),
 the translated rooted metric equals `e^{ξ c}` times the Weyl scaling of the centred metric by the continuous weight
 `γ log max(1,|· + z|)`. This weight vanishes on the preimage of a window `B ⊆ B₁(0)`, so on that window the
-internal metrics agree up to `e^{ξ c}` (Steps A-D of the chat 235 ruling; Bou-Rabee-Gwynne, arXiv:2208.11795,
-Fact 2.2 I-IV, corrected draft lines 418-457, and Fact 2.2 III for the continuous outer weight, line 445).
+internal metrics agree up to `e^{ξ c}` (Bou-Rabee-Gwynne, arXiv:2208.11795, Fact 2.2 I-IV, corrected draft lines 418-457, and Fact 2.2 III for the continuous outer weight, line 445).
 
 Frozen inputs (existing, none new): `LQGMetricFieldAxiomsUnivFrozen` (I), `LQGMetricSatisfiesAxiomsUnivFrozen`
 (IV coordinate change; III for random continuous shifts), `LQGMetricLengthUnivFrozen`,

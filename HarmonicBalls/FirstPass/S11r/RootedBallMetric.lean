@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11r.RootedCovGiven
 import HarmonicBalls.FirstPass.S11i.HzoomUnitBallDecoders
 
 /-!
-# Rooted covariance inputs for the ball decoders (fp-S11r-n4-instance-gaps, n2)
+# Rooted covariance inputs for the ball decoders
 
 * GAP 1. `ballMetric p ℓ` (HzoomUnitBallDecoders) is the window metric of `metricCont p` on every observation `ℓ` for which
   its `if`-branch holds (`ballMetric_eq_windowMetric_of_length`). Under the rooted reference law this branch holds for
@@ -154,8 +154,3 @@ theorem hLenC_of_dilation_data {Ω : Type u} [MeasurableSpace Ω] {P : Measure �
 
 end HarmonicBalls.FirstPassS11rRootedBallMetric
 
-#print axioms HarmonicBalls.FirstPassS11rRootedBallMetric.ae_ballMetric_decodedRoot_eq
-#print axioms HarmonicBalls.FirstPassS11rRootedBallMetric.rootedCert_congr_dR
-#print axioms HarmonicBalls.FirstPassS11rRootedBallMetric.kernelF_clause
-#print axioms HarmonicBalls.FirstPassS11rRootedBallMetric.kernelF_isFiniteKernel
-#print axioms HarmonicBalls.FirstPassS11rRootedBallMetric.hLenC_of_dilation_data

@@ -2,12 +2,12 @@ import HarmonicBalls.FirstPass.S11r.RootedBallMetric
 import HarmonicBalls.FirstPass.S11i.Step8HrefBall
 
 /-!
-# The `href` field of `Step8UnitBallInputs2`, for the ball decoders (fp-S11r-n4-instance-gaps, n2)
+# The `href` field of `Step8UnitBallInputs2`, for the ball decoders
 
 For a valid ball `p` (root disc `ball c r`, decoder disc `ball c (2r)`), the kernel `ballKernel p` and the metric `ballMetric p`
 of HzoomUnitBallDecoders.lean satisfy the rooted covariance for the decoded pair, by
 `rootedCertificateEventualCovarianceStmt_of_given_families` (with `κ = kernelF`, `mD = metricCont`, the clauses `kernelF_clause`
-and `metricCont_clause20`), transferred from `windowMetric` to `ballMetric` by `ae_ballMetric_decodedRoot_eq`. Then n3's
+and `metricCont_clause20`), transferred from `windowMetric` to `ballMetric` by `ae_ballMetric_decodedRoot_eq`. Then
 `href_discNormalized_doubledDisc_finiteKernel` (Step8HrefBall.lean) with `m₀ = m = ballMetric p` and `H = univ` gives `href`.
 
 The binders are those of `rootedCertificateEventualCovarianceStmt_of_given_families` for this model, except: `hLenC` is derived
@@ -89,4 +89,3 @@ theorem href_ballMetric_of_inputs {γ ξ q η M : ℝ}
 
 end HarmonicBalls.FirstPassS11rRootedHrefBall
 
-#print axioms HarmonicBalls.FirstPassS11rRootedHrefBall.href_ballMetric_of_inputs

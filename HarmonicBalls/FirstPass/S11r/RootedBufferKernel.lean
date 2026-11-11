@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11r.RootedBuffer
 import HarmonicBalls.FirstPass.S11at
 
 /-!
-# Kernel clause of the assembled rooted local identification (fp-S11r-rooted-local-ident-f)
+# Kernel clause of the assembled rooted local identification
 
 `ae_rootedLocalIdent_assembled` (RootedBuffer.lean, kept unchanged) with one further conjunct `hκj`: the kernel `κ j`
 of each buffered window satisfies the rooted kernel clause of `LocalMeasureKernelStmt` at the background insertion
@@ -142,6 +142,5 @@ theorem ae_rootedLocalIdent_assembled_kernel {Ω : Type u} [MeasurableSpace Ω] 
     (ae_restrict_iff' (measurableSet_ball : MeasurableSet (ball (uc j) (ur j)))).1 (hκ2 j α₀ hα Ω P hC hcirc hG)
   exact ⟨uc, dc, ur, dr, κ, m, hbuf, hWin, hκm, hmm, hwin, hRLI, hRLIm, hκA⟩
 
-#print axioms ae_rootedLocalIdent_assembled_kernel
 
 end HarmonicBalls

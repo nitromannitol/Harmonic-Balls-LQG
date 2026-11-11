@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11r.CurveLengthPieces
 import HarmonicBalls.Steps.Sec11.InternalMetricPaths
 
 /-!
-# The subdomain identity for iterated internal metrics, hII (fp-S11r part (b) P2, owner n2)
+# The subdomain identity for iterated internal metrics, hII
 
 For a Euclidean length metric `I` on `ℂ`, an open set `D` on which the internal metric is finite on `D × D` (`hfin`),
 and `V ⊆ D`, the internal metric on `V` of the real function `(u, v) ↦ (internalMetric I D u v).toReal` equals the
@@ -10,8 +10,7 @@ internal metric of `I` on `V`:
 
 `internalMetric (fun u v => (internalMetric I D u v).toReal) V x y = internalMetric I V x y`.
 
-This is `hII` of CHATGPT-n2-hII.md, section 1.3 (the shorter proof, using `hfin`); the statement is TRUE by the
-operator's ruling of 01:57 UTC. Proof: both sides are infima over paths in `V`. For a path `P` in `V`, the `D`-internal
+This is `hII` (the shorter proof, using `hfin`); the statement is TRUE. Proof: both sides are infima over paths in `V`. For a path `P` in `V`, the `D`-internal
 distances between consecutive points of a partition of `P` are bounded by the `I`-lengths of the corresponding
 sub-curves (`internalMetric_le_curveLength_of_subset`), and these sum to at most the `I`-length of `P`
 (superadditivity, `curveLength_add_le_general`). Conversely the `I`-length is at most the length of the
@@ -110,6 +109,5 @@ theorem internalMetric_internalMetric_toReal_of_finite {I : ℂ → ℂ → ℝ}
   · unfold internalMetric
     exact le_iInf₂ fun P hP => le_trans (iInf₂_le P hP) (subdomain_pathLength_le_toReal hI hVD hfin P hP)
 
-#print axioms HarmonicBalls.internalMetric_internalMetric_toReal_of_finite
 
 end HarmonicBalls

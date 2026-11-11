@@ -4,7 +4,7 @@ import HarmonicBalls.FirstPass.S11ai.RootedTransfer
 import HarmonicBalls.FirstPass.S11at
 
 /-!
-# Rooted eventual covariance for GIVEN kernel and metric families (fp-S11r-covariance-given-families)
+# Rooted eventual covariance for GIVEN kernel and metric families
 
 The rooted eventual covariance clause `FirstPassS11at.RootedCertificateEventualCovarianceStmt` for a GIVEN decoder pair
 on the decoder disc `D = ball c₂ r₂` with root window `ball c₁ r₁`: a kernel `κ` and a metric replacement `mD`, which enter
@@ -19,7 +19,7 @@ and the affine invariance is `wholePlaneGFFAffineInvariance_derived`, so no affi
 
 The proof repeats the steps 6a and 6 of `ae_quantum_bad_mass_eq_zero_of_rootedLocalIdent_guarded`, with the producer
 `FirstPassS11at.rootedCertificateEventualCovarianceStmt_decoded_of_rootedLocalIdent`. The length clause `hLenC` is guarded
-by `A` (the operator's guarded form, 2026-11-10).
+by `A` (the guarded form).
 -/
 
 universe u
@@ -162,6 +162,5 @@ theorem rootedCertificateEventualCovarianceStmt_of_given_families
     (hFieldFr := hFieldFr) (hRootFr := hRootFr) (h𝔇 := h𝔇) (hγ0 := hγ0) (hγ2 := hγ2) (hα := hα)
     (hRLIm := hRLIm') (hLenC := hLenC)
 
-#print axioms rootedCertificateEventualCovarianceStmt_of_given_families
 
 end FirstPassS11ai

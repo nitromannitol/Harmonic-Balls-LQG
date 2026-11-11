@@ -1,16 +1,15 @@
 import HarmonicBalls.FirstPass.S11r.RootedGluing
 
 /-!
-# First pass, rooted gluing with the internal physical metric (fp-S11r, owner n2; R2 repair)
+# rooted gluing with the internal physical metric (R2 repair)
 
-Repair of the rooted gluing after the answer to R2 (notes/fp-gaps/CHATGPT-n2-R2-rooted-length.md, sections 4-5; operator
-note 04:29 UTC). The ambient Weyl distance `e` of the rooted field is NOT a length metric on the disk `D ∋ z` (it may
+Repair of the rooted gluing after the answer to R2 (sections 4-5). The ambient Weyl distance `e` of the rooted field is NOT a length metric on the disk `D ∋ z` (it may
 be singular at `z`, and its paths may leave `D`), so `eq_const_mul_of_local_agreement` cannot take it as `e` (its
 hypothesis `he_len` is false for the ambient distance). The repair applies the same gluing to the internal metric
 `internalPhysicalMetric e D x y := (internalMetric e D x y).toReal` on `D`, whose length property is the internalization
 (section 4 Step H) and whose root continuity is Steps E-F. This file proves the reduction: the gluing for the internal
 physical metric, with its internal-side properties as explicit hypotheses. The Weyl-side proofs of those hypotheses
-(Steps A-G of section 3) are the next step; see notes/n2.md.
+(Steps A-G) are the next step.
 
 Conventions: `internalMetric e D x y` is the `ℝ≥0∞`-valued infimum of `pathLength e` over paths from `x` to `y` in `D`
 (Defs/LQGMetric.lean:65); `internalPhysicalMetric e D` is its real part, defined on all of `ℂ × ℂ`.
@@ -22,7 +21,7 @@ open Set Filter Topology Metric
 open scoped ENNReal
 
 /-- The internal physical metric on `D`: the real part of the internal metric of `e` on `D`. Its values are meaningful
-(finite) on `D × D` only when `internalMetric e D` is finite there (Steps B-C of CHATGPT-n2-R2-rooted-length.md). -/
+(finite) on `D × D` only when `internalMetric e D` is finite there. -/
 noncomputable def internalPhysicalMetric (e : ℂ → ℂ → ℝ) (D : Set ℂ) : ℂ → ℂ → ℝ :=
   fun x y => (internalMetric e D x y).toReal
 
@@ -36,7 +35,7 @@ theorem internalPhysicalMetric_symm_of {e : ℂ → ℂ → ℝ} {D : Set ℂ}
 
 /-- The triangle inequality of the internal physical metric on `D`, from the `ℝ≥0∞` triangle inequality of the internal
 metric on `D` and its finiteness there (`ENNReal.toReal` is monotone and additive on finite values). This is the
-argument of section 3 Step C (`he_tri`) of CHATGPT-n2-R2-rooted-length.md, where finiteness is essential. -/
+argument (Step C, `he_tri`), where finiteness is essential. -/
 theorem internalPhysicalMetric_tri_of {e : ℂ → ℂ → ℝ} {D : Set ℂ}
     (htri : ∀ x ∈ D, ∀ y ∈ D, ∀ w ∈ D, internalMetric e D x w ≤ internalMetric e D x y + internalMetric e D y w)
     (hfin : ∀ x ∈ D, ∀ y ∈ D, internalMetric e D x y ≠ ⊤) :
@@ -49,8 +48,7 @@ theorem internalPhysicalMetric_tri_of {e : ℂ → ℂ → ℝ} {D : Set ℂ}
   rw [← ENNReal.toReal_add hf2 hf3]
   exact ENNReal.toReal_mono (ENNReal.add_ne_top.2 ⟨hf2, hf3⟩) (htri x hx y hy w hw)
 
-/-- **Rooted gluing for the internal physical metric** (CHATGPT-n2-R2-rooted-length.md section 4, the proposed signature,
-with its hypotheses proved in the file as the reduction). Let `d` be a symmetric length-type function on an open disk
+/-- **Rooted gluing for the internal physical metric** (the proposed signature, with its hypotheses proved in the file as the reduction). Let `d` be a symmetric length-type function on an open disk
 `D ∋ z` (the decoder output), and `e` the ambient physical metric. If the internal physical metric `internalPhysicalMetric e D`
 satisfies the four internal-side properties (symmetry, triangle inequality on `D`, its length property
 `ofReal = internalMetric` on `D`, and continuity at `z` within `D`), and `d` tends to `0` at `z`, and the internal metric of

@@ -1,10 +1,10 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# First-pass frozen input: the marked rooting identity (fp-S11r, owner n2)
+# First-pass frozen input: the marked rooting identity
 
 One EXTERNAL identity for the rooted (Campbell-Palm) law of the LQG measure of a whole-plane GFF, used in
-the proof of the local metric replacement (CHATGPT-n3-B1-B2.md, section 4.2, equation (24), marked form).
+the proof of the local metric replacement (marked form).
 The second input of section 4.2, the measurable metric decoder, is already frozen as
 `LQGCanonicalDecodersMeasurableExistStmt` (`FirstPass/Frozen/S11n.lean`) and is reused, not restated.
 A `def ... : Prop`, never an axiom.
@@ -17,11 +17,11 @@ open scoped ENNReal
 
 universe u
 
-/-- RETIRED (FALSE, ChatGPT 01:48 UTC; CHATGPT-n2-frozen-S11r.md section 2.1): the unweighted Lebesgue mixture over the
+/-- RETIRED (FALSE): the unweighted Lebesgue mixture over the
 root has the wrong total mass. Superseded by `LocalMarkedRootingIdentityWeightedFrozen` below; do not use. The text below
 is the retired statement.
 
-FIRST-PASS FROZEN, EXTERNAL. The marked rooting identity for the LQG measure `μ_h` of
+FROZEN, EXTERNAL. The marked rooting identity for the LQG measure `μ_h` of
 `h = h^ℂ - α₀ log|·|` (Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma A.10, marked form, printed p. 184,
 proof pp. 184-185; Duplantier-Sheffield, arXiv:0808.1560v2, Proposition 1.1 for the LQG measure). For disks
 `U = ball c₁ r₁` with `closedBall c₁ r₁ ⊆ D = ball c₂ r₂` and `0 ∉ closedBall c₂ r₂`, and every Borel set `S` of
@@ -33,7 +33,7 @@ the unmarked identity (24): `∫_U P[obs_D f_z ∈ A] dz = E[μ_h(U) 1{obs_D h �
 This is an EQUALITY of unnormalised measures. The one-sided statement `LocalCampbellMarkedRestrictionFrozen`
 (Frozen/S11c.lean) only transfers null sets from the reference mixture to the normalised Campbell law, and does
 not give this equality; this is why the answer names the marked identity as a separate input.
-Retired (truth check FALSE, ChatGPT 01:48 UTC, section 2.1: wrong total mass); the replacement is
+Retired (truth check FALSE: wrong total mass); the replacement is
 `LocalMarkedRootingIdentityWeightedFrozen`. -/
 def LocalMarkedRootingIdentityFrozen : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
@@ -48,13 +48,12 @@ def LocalMarkedRootingIdentityFrozen : Prop :=
         (∫⁻ ω, S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z) ∂P)
 
 /-- The root density `q_{γ,α₀}(z) = |z|^{-γ α₀} · max(1, |z|)^{γ²}` of the corrected marked rooting identity
-(CHATGPT-n2-frozen-S11r.md section 2.4), as `exp` of a real number: a positive value in `ℝ≥0∞` for every root `z`. -/
+, as `exp` of a real number: a positive value in `ℝ≥0∞` for every root `z`. -/
 noncomputable def rootWeight (γ α₀ : ℝ) (z : ℂ) : ℝ≥0∞ :=
   ENNReal.ofReal (Real.exp (-γ * α₀ * Real.log ‖z‖ + γ ^ 2 * Real.log (max ‖z‖ 1)))
 
-/-- FIRST-PASS FROZEN, EXTERNAL. Truth check TRUE (ChatGPT, 02:49 UTC; notes/fp-gaps/CHATGPT-n2-frozen-corrected.md
-section 2). The marked rooting identity with the root density
-(CHATGPT-n2-frozen-S11r.md section 2.4, equation (9): the minimal correction of the retired `LocalMarkedRootingIdentityFrozen`,
+/-- FROZEN, EXTERNAL. Truth check TRUE. The marked rooting identity with the root density
+(the minimal correction of the retired `LocalMarkedRootingIdentityFrozen`,
 retaining the current scope of arbitrary disks away from zero). For `h = h^ℂ - α₀ log|·|` with
 `IsLQGMeasureOfField P γ α₀ hcirc μ`, disks `U = ball c₁ r₁` and `D = ball c₂ r₂` with `closedBall c₁ r₁ ⊆ D`,
 `0 ∉ closedBall c₂ r₂`, and every measurable set `S` of marked observations `(z, obs_D)`,

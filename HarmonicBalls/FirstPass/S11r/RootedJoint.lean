@@ -1,12 +1,12 @@
 import HarmonicBalls.FirstPass.S11r.RootedNull
 
 /-!
-# Joint measurability of the rooted observation; the rooted null transfer without `hmeas` (fp-S11r, owner n2)
+# Joint measurability of the rooted observation; the rooted null transfer without `hmeas`
 
 `ae_root_rootedObs_eq_zero_of_obs_null` (RootedNull.lean) keeps the joint measurability of
 `(z, ω) ↦ 1_A(obs_D f_z(ω))` as a side hypothesis `hmeas`. Here that hypothesis is proved from the measurability of
 the pairings of a whole-plane GFF (`IsWholePlaneGFF.measurable_pairing`) and Tonelli (`Measurable.lintegral_prod_right'`),
-so the Lebesgue-a.e. root statement of CHATGPT-n3-B1-B2.md section 4.2 needs no extra hypothesis.
+so the Lebesgue-a.e. root statement needs no extra hypothesis.
 
 The root enters the reference observation (`campbellReferenceObs`) only through the deterministic kernel
 `z ↦ ∫ (log|w - z| - log max(1,|w|)) φ(w) dw`, whose joint measurability in `(z, w)` is clear, and the sample point
@@ -73,7 +73,5 @@ theorem ae_root_rootedObs_eq_zero_of_obs_null_noMeas (hI1 : LocalMarkedRootingId
   exact ae_root_rootedObs_eq_zero_of_obs_null hI1 hγ0 hγ2 hα Ω P hC hcirc μ hGFF hμ hr₁ hr₂ hsub h0 A hA hnull
     (hG.lintegral_prod_right'.aemeasurable)
 
-#print axioms HarmonicBalls.measurable_campbellReferenceObs_joint
-#print axioms HarmonicBalls.ae_root_rootedObs_eq_zero_of_obs_null_noMeas
 
 end HarmonicBalls

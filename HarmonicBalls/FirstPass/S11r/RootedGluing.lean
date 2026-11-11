@@ -2,10 +2,10 @@ import HarmonicBalls.FirstPass.S11r.InternalDeletion
 import HarmonicBalls.Steps.Sec11.MetricConstantScaling
 
 /-!
-# First pass, rooted gluing across the root (fp-S11r part (b), owner n2)
+# rooted gluing across the root
 
 Deterministic step from the local identities (26) to the rooted identity (20) of `LocalMetricReplacementStmt`
-(CHATGPT-n3-B1-B2.md sections 4.2-4.3). Let `d` be the decoder output and `e` the physical metric of the rooted field,
+. Let `d` be the decoder output and `e` the physical metric of the rooted field,
 both length metrics on an open disk `D` containing the root `z`. If the internal metric of `d` is the constant `c > 0`
 times the internal metric of `e` on each member of a cover of `D ∖ {z}` by open sets, and both `d` and `e` tend to `0`
 at `z` within `D`, then `d = c · e` on `D`. The constant `c = c(z, ω)` is the scalar `b` of (20).
@@ -21,7 +21,7 @@ namespace HarmonicBalls
 open Set Filter Topology Metric
 open scoped ENNReal
 
-/-- **Rooted gluing, local form** (CHATGPT-n3-B1-B2.md section 4.3): two length metrics on an open `D ∋ z`, which are
+/-- **Rooted gluing, local form**: two length metrics on an open `D ∋ z`, which are
 `c`-proportional on a neighbourhood of each point of `D ∖ {z}`, and tend to `0` at `z`, are `c`-proportional on `D`. -/
 theorem eq_const_mul_of_local_agreement {D : Set ℂ} (hD : IsOpen D) {z : ℂ} (hz : z ∈ D)
     {d e : ℂ → ℂ → ℝ} {c : ℝ} (hc : 0 < c)

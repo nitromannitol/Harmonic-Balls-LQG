@@ -3,11 +3,11 @@ import HarmonicBalls.FirstPass.S11m.ClearanceEq
 import HarmonicBalls.Steps.Sec11.WeylPathSegments
 
 /-!
-# First pass, physical side of the rooted gluing: symmetry and length property (fp-S11r, owner n2)
+# physical side of the rooted gluing: symmetry and length property
 
 Deterministic lemmas on the internal physical metric `internalPhysicalMetric e D` (RootedRepair.lean) for a symmetric
 function `e`. They supply the hypotheses `he_symm` and `he_len` of `eq_const_mul_internal_of_local_agreement`
-(CHATGPT-n2-R2-rooted-length.md section 3, Steps A and H):
+ (Steps A and H):
 
 * `internalMetric_symm_of_symm`: the internal metric of a symmetric function is symmetric (path reversal);
 * `internalPhysicalMetric_length_eq` (Step H): if the internal metric of `e` on `D` is finite on `D × D`, the internal
@@ -131,7 +131,7 @@ theorem pathLength_internalPhysicalMetric_le {e : ℂ → ℂ → ℝ} {D : Set 
 /-- **Step H (length property of the internal physical metric).** If the internal metric of a symmetric `e` on `D` is
 finite on `D × D`, then for `x y ∈ D` the internal physical metric `internalPhysicalMetric e D` satisfies
 `ENNReal.ofReal (internalPhysicalMetric e D x y) = internalMetric (internalPhysicalMetric e D) D x y`, i.e. it is a
-length metric on `D` (CHATGPT-n2-R2-rooted-length.md section 3, Step H). Lower bound: each path in `D` has
+length metric on `D` (Step H). Lower bound: each path in `D` has
 `D`-length at least the one-piece distance. Upper bound: `pathLength_internalPhysicalMetric_le`. -/
 theorem internalPhysicalMetric_length_eq {e : ℂ → ℂ → ℝ} {D : Set ℂ} (hs : ∀ x y, e x y = e y x)
     (hfin : ∀ x ∈ D, ∀ y ∈ D, internalMetric e D x y ≠ ⊤) :

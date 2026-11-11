@@ -4,9 +4,9 @@ import HarmonicBalls.FirstPass.S11r.RootedObsShift
 import HarmonicBalls.FirstPass.S11r.RootedLocality
 
 /-!
-# The disk identity for a continuous shift (fp-S11r part (b), step (d); owner n2)
+# The disk identity for a continuous shift
 
-Step (d) of the rooted identity (20) (CHATGPT-n3-B1-B2.md section 4.1-4.2, identities (22) and (26)). For a disk
+Step (d) of the rooted identity (20). For a disk
 `V = ball c r` with `0 ∉ closedBall c r`, let `M` and `ρ` be the decoder and bump of the corrected frozen input
 `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` for `V` and the fixed metric `𝔇`. The proof of
 `unrooted_identity_fixedMetric` (UnrootedFixed.lean:75) uses the α-cutoff only through the Cameron-Martin shift and
@@ -218,7 +218,7 @@ theorem vIdentity_rooted {γ ξ α : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c z :
   rw [hm]
   exact hω p
 
-/-- **Rooted identity (20) in Weyl-scaled form, for a root outside the disk** (fp-S11r, bridge of step (d)). Under the
+/-- **Rooted identity (20) in Weyl-scaled form, for a root outside the disk**. Under the
 hypotheses of `vIdentity_rooted` (a root `z` with `r < R < dist z c`, `0 < r`), almost surely there is a scalar `b > 0`
 with `M (obs_D f_z) p = b · D_{f_z}(p)` for all `p ∈ D × D`, where `D_{f_z}` is the internal metric on `D = ball c r` of the
 Weyl scaling of `𝔇 (hC ω)` by the rooted weight `f_z = -α log|·| - γ log|· - z| + γ log max(1, |·|)` (the metric of `f_z`,
@@ -288,6 +288,3 @@ theorem vIdentity_rooted_weylScaling {γ ξ α : ℝ} (hγ0 : 0 < γ) (hγ2 : γ
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.vIdentity_rooted_weylScaling
-#print axioms HarmonicBalls.vIdentity_rooted
-#print axioms HarmonicBalls.vIdentity_of_shift

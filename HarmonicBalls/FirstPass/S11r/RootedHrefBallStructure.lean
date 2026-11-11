@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11i.HzoomUnitBallDoubled
 import HarmonicBalls.FirstPass.S11r.RootedHrefBall
 
 /-!
-# The `Step8UnitBallInputs2` instance with the ball-metric `href` (fp-S11r-n4-instance-gaps, n2)
+# The `Step8UnitBallInputs2` instance with the ball-metric `href`
 
 `step8UnitBallInputs2_ballMetric` is `HzoomUnitBallDoubled.step8UnitBallInputs2_of` with its `href` field supplied by
 `HarmonicBalls.FirstPassS11rRootedHrefBall.href_ballMetric_of_inputs` (RootedHrefBall.lean), for every whole-plane model.
@@ -78,4 +78,3 @@ noncomputable def step8UnitBallInputs2_ballMetric {Î© : Type} [MeasurableSpace Î
 
 end HarmonicBalls.FirstPassS11rRootedHrefBallStructure
 
-#print axioms HarmonicBalls.FirstPassS11rRootedHrefBallStructure.step8UnitBallInputs2_ballMetric

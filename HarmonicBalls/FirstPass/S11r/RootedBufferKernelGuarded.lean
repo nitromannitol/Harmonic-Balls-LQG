@@ -2,10 +2,9 @@ import HarmonicBalls.FirstPass.S11r.RootedBufferKernel
 import HarmonicBalls.FirstPass.S11r.RootedConverseGuarded
 
 /-!
-# Guarded kernel clause of the assembled rooted local identification (fp-S11r-guarded-converse)
+# Guarded kernel clause of the assembled rooted local identification
 
-`ae_rootedLocalIdent_assembled_kernel` (RootedBufferKernel.lean, kept unchanged) in the guarded form adopted by the
-operator on 2026-11-10: the length clause `hLenC` is assumed, and the window identity `hRLIm` concluded, only for the
+`ae_rootedLocalIdent_assembled_kernel` (RootedBufferKernel.lean, kept unchanged) in the guarded form: the length clause `hLenC` is assumed, and the window identity `hRLIm` concluded, only for the
 roots `z ∈ A` of an arbitrary set `A`. The window families, the buffered identity `hRLI` (which uses no length clause)
 and the kernel clause `hκj` are unchanged. The proof repeats the body of `ae_rootedLocalIdent_assembled_kernel`, with the
 guarded converse `ae_rootedLocalIdent_windowConverse_buffered_guarded` in place of the unguarded one.
@@ -143,6 +142,5 @@ theorem ae_rootedLocalIdent_assembled_kernel_guarded {Ω : Type u} [MeasurableSp
     (ae_restrict_iff' (measurableSet_ball : MeasurableSet (ball (uc j) (ur j)))).1 (hκ2 j α₀ hα Ω P hC hcirc hG)
   exact ⟨uc, dc, ur, dr, κ, m, hbuf, hWin, hκm, hmm, hwin, hRLI, hRLIm, hκA⟩
 
-#print axioms ae_rootedLocalIdent_assembled_kernel_guarded
 
 end HarmonicBalls

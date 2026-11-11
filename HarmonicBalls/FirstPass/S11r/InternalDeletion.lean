@@ -1,6 +1,6 @@
 import HarmonicBalls.FirstPass.S11r.CurveLengthPieces
 
-/-! # Deleting one point from a length metric (CHATGPT-n3-B1-B2.md, section 4.3)
+/-! # Deleting one point from a length metric (section 4.3)
 
 Local-to-global step for two length metrics `d`, `e` on an open set `U` whose internal metrics agree
 on a neighbourhood of each point of `U \ {p}`. Terminology: internal metric `D(z, w; U)` as in
@@ -322,7 +322,7 @@ theorem le_of_local_agreement {d e : ℂ → ℂ → ℝ} {U : Set ℂ} {p : ℂ
   exact (ENNReal.ofReal_le_ofReal_iff (he_nonneg x hx y hy)).1 hle
 
 /-- A real function on `U × U` which is symmetric and satisfies the triangle inequality on `U` is nonnegative on `U`:
-`d x x ≤ d x x + d x x` gives `0 ≤ d x x`, and `d x x ≤ d x y + d y x = 2 d x y` (CHATGPT-n2-hII.md, section 3.1). -/
+`d x x ≤ d x x + d x x` gives `0 ≤ d x x`, and `d x x ≤ d x y + d y x = 2 d x y` (section 3.1). -/
 theorem nonneg_of_symm_triangle_on {X : Type*} {U : Set X} {d : X → X → ℝ}
     (hsymm : ∀ x y, d x y = d y x)
     (htri : ∀ x ∈ U, ∀ y ∈ U, ∀ z ∈ U, d x z ≤ d x y + d y z) :
@@ -333,7 +333,7 @@ theorem nonneg_of_symm_triangle_on {X : Type*} {U : Set X} {d : X → X → ℝ}
   rw [hsymm y x] at hloop
   linarith
 
-/-- Deleting one point (CHATGPT-n3-B1-B2.md, section 4.3): two length metrics `d`, `e` (symmetric, with the
+/-- Deleting one point (section 4.3): two length metrics `d`, `e` (symmetric, with the
 triangle inequality on `U`, and internal-metric identities on `U`) on an open `U` whose internal metrics agree on a
 neighbourhood of each point of `U \ {p}`, and which tend to `0` at `p` (within `U`), coincide on `U`. Nonnegativity
 is not assumed: it follows from symmetry and the triangle inequality (`nonneg_of_symm_triangle_on`). -/

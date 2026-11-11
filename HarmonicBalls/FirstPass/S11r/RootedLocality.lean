@@ -2,7 +2,7 @@ import HarmonicBalls.FirstPass.S11r.RootedLocalBall
 import Mathlib.Topology.EMetricSpace.BoundedVariation
 import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
 
-/-! # Internal Weyl metrics agree on a connected open set (fp-S11r, R1, part 2)
+/-! # Internal Weyl metrics agree on a connected open set (R1, part 2)
 
 Main result `internalMetric_weylScaling_eq_of_eventuallyEq`: let `d` be a Euclidean length metric, `ξ ∈ ℝ`, `f`
 continuous with compact support, and `g` any function with `f = g` near each point of an open connected set `V`.
@@ -15,7 +15,7 @@ subdivision into pieces on which the two metrics coincide pointwise (`curveLengt
 `curveLength` over adjacent intervals is read as additivity of a variation on the subtype `V`
 (`curveLength_add_on`, same device as `S11ac/PathSubdivision.lean`).
 
-CHATGPT-n1-n2-11-13-inputs.md §3.1-3.3 (statement (18), application (20)); the local comparison is
+The local comparison is
 `RootedLocal.weylScaling_eq_near` (RootedLocalBall.lean). -/
 
 namespace HarmonicBalls
@@ -225,8 +225,7 @@ theorem curveLength_eq_of_local_on {E1 E2 : ℂ → ℂ → ℝ} {V : Set ℂ}
 
 /-- **Internal Weyl metrics agree on a connected open set.** Let `d` be a Euclidean length metric, `f` continuous with
 compact support, and `g` with `f = g` near each point of an open connected `V`. Then for `x, y ∈ V` the internal
-distances on `V` of the Weyl-scaled metrics of `g` and of `f` coincide. (CHATGPT-n1-n2-11-13-inputs.md §3.1, eq. (18);
-the length property of the scaled metric of `f` is supplied by `weylScaling_continuous_compactSupport_length`.) -/
+distances on `V` of the Weyl-scaled metrics of `g` and of `f` coincide. (the length property of the scaled metric of `f` is supplied by `weylScaling_continuous_compactSupport_length`.) -/
 theorem internalMetric_weylScaling_eq_of_eventuallyEq (hd : IsEuclideanLengthMetric d) {ξ : ℝ}
     {f g : ℂ → ℝ} (hf : Continuous f) (hfc : HasCompactSupport f)
     {V : Set ℂ} (hV : IsOpen V) (hVc : IsConnected V) (hfg : ∀ x ∈ V, f =ᶠ[𝓝 x] g)
@@ -294,5 +293,3 @@ end RootedLocal
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.RootedLocal.internalMetric_weylScaling_eq_of_eventuallyEq
-#print axioms HarmonicBalls.RootedLocal.weylScaling_eq_near

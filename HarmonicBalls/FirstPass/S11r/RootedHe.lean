@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11r.RootedTriangle
 
 /-!
-# First pass, internal-side hypotheses of the rooted gluing for the Weyl-scaled physical metric (fp-S11r, owner n2)
+# internal-side hypotheses of the rooted gluing for the Weyl-scaled physical metric
 
 For a length metric `d` and a weight `f`, the physical metric of the rooted field is `e := weylPhysicalE d ξ f`, the
 real part of the Weyl scaling `weylScaling d ξ f`. On an open connected `D` where `exp (ξ f) ≤ M`, this file proves the
@@ -96,8 +96,7 @@ theorem weylPhysicalE_internal_ne_top {d : ℂ → ℂ → ℝ} (hd : IsEuclidea
     ∀ x ∈ D, ∀ y ∈ D, internalMetric (weylPhysicalE d ξ f) D x y ≠ ⊤ :=
   fun _ hx _ hy => internalMetric_weylScaling_toReal_ne_top hd ξ hD hDc hM hfM hx hy
 
-/-- **Internal-side hypotheses `he_symm`, `he_tri`, `he_len` for the Weyl-scaled physical metric** (Steps A, C, H of
-CHATGPT-n2-R2-rooted-length.md section 3): the internal physical metric of `weylPhysicalE d ξ f` on `D` is symmetric,
+/-- **Internal-side hypotheses `he_symm`, `he_tri`, `he_len` for the Weyl-scaled physical metric** (Steps A, C): the internal physical metric of `weylPhysicalE d ξ f` on `D` is symmetric,
 satisfies the triangle inequality on `D`, and is a length metric on `D`. -/
 theorem weylPhysicalE_internalPhysical_props {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ}
     {D : Set ℂ} (hD : IsOpen D) (hDc : IsConnected D) {M : ℝ} (hM : 0 < M)

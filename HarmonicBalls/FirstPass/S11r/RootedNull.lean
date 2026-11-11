@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11r.FrozenMetricReplacement
 
 /-!
-# Rooted null transfer from the marked rooting identity (fp-S11r, owner n2)
+# Rooted null transfer from the marked rooting identity
 
-The Tonelli step of CHATGPT-n3-B1-B2.md section 4.2: the frozen marked identity `LocalMarkedRootingIdentityWeightedFrozen` (CHATGPT-n2-frozen-S11r.md section 2.4; the unweighted `LocalMarkedRootingIdentityFrozen` is RETIRED)
+The Tonelli step: the frozen marked identity `LocalMarkedRootingIdentityWeightedFrozen` (the unweighted `LocalMarkedRootingIdentityFrozen` is RETIRED)
 (equation (24), marked form) tested with the set `S = univ ×ˢ A` of marked observations. If the ordinary local
 observation `obs_D h = (φ ↦ fieldPairing α₀ (hC ω) φ)` of the LQG-weighted field lies a.s. outside `A`, then the
 reference mixture over the root `z ∈ U` gives mass zero to `A`, that is `∫_U P[obs_D f_z ∈ A] dz = 0` (the domination
@@ -63,7 +63,7 @@ theorem lintegral_rootedObs_eq_zero_of_obs_null (hI1 : LocalMarkedRootingIdentit
   rw [hL] at key
   exact key.symm
 
-/-- **Lebesgue-a.e. root** (the form used in section 4.2 of CHATGPT-n3-B1-B2.md). Under the same hypotheses, if the
+/-- **Lebesgue-a.e. root**. Under the same hypotheses, if the
 root-wise rooted probabilities are AE-measurable in `z` (hypothesis `hmeas`: joint measurability of
 `(z, ω) ↦ 1_A(obs_D f_z(ω))`, a Fubini step not yet formalised here, kept explicit), then for Lebesgue-a.e. root
 `z ∈ U` the reference observation `obs_D f_z` is P-null on `A`. -/
@@ -92,6 +92,5 @@ theorem ae_root_rootedObs_eq_zero_of_obs_null (hI1 : LocalMarkedRootingIdentityW
   · exact absurd h (rootWeight_ne_zero γ α₀ z)
   · exact h
 
-#print axioms HarmonicBalls.ae_root_rootedObs_eq_zero_of_obs_null
 
 end HarmonicBalls

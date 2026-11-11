@@ -4,9 +4,9 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.MeasureTheory.Integral.CircleAverage
 
 /-!
-# Smooth cut-off of a logarithmic singularity at a point (fp-S11r, owner n2)
+# Smooth cut-off of a logarithmic singularity at a point
 
-Pure analysis for step (d) of the plan for (20) (CHATGPT-n3-B1-B2.md section 4.2): on a disk `V` avoiding the root `z`,
+Pure analysis for step (d) of the rooted identity (20): on a disk `V` avoiding the root `z`,
 the rooted field `f_z = h^ℂ - α log|·| - γ log|· - z| + γ log max(1,|·|)` equals `h^ℂ + f` for a smooth compactly
 supported `f` with zero unit-circle average (the Cameron-Martin shift of `ae_mem_addFunPairing_of_ae_mem`,
 CMShift.lean). The singularity is `-β log|· - p|`; the cut-off is `χ · (-β log|· - p|)` with `χ` a `ContDiffBump`

@@ -1,7 +1,7 @@
 import HarmonicBalls.FirstPass.S11r.RootedRootFinite
 
 /-!
-# First pass, rooted decoder: side conditions of the rooted gluing (fp-S11r, owner n2; R2 steps D-A..D-C)
+# rooted decoder: side conditions of the rooted gluing (R2 steps D-A..D-C)
 
 Two side conditions of `eq_const_mul_internal_of_local_agreement` (RootedRepair.lean) that do not depend on the open
 decoder-length question (D-A):

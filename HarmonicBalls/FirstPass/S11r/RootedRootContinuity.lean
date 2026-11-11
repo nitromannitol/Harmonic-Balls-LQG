@@ -3,9 +3,9 @@ import HarmonicBalls.Steps.Sec11.WeylPathSegments
 import HarmonicBalls.Steps.Sec11.WeylLocalCurveLength
 
 /-!
-# First pass, root continuity of the internal physical metric (fp-S11r, owner n2; R2 Steps E-F)
+# root continuity of the internal physical metric (R2 Steps E-F)
 
-Steps E-F of notes/fp-gaps/CHATGPT-n2-R2-rooted-length.md (section 3), proved as the input `he_cont` of
+Steps E-F, proved as the input `he_cont` of
 `eq_const_mul_internal_of_local_agreement` (RootedRepair.lean). Let `d` be an `IsEuclideanLengthMetric`, `D` an open set
 containing `z`, and `f` a weight continuous on `D ∖ {z}`. If the Weyl distance `W(x,z) = weylScaling d ξ f x z` tends to `0`
 as `x → z`, then the internal physical metric of `e = weylPhysicalE d ξ f` on `D` tends to `0` at `z` within `D`.
@@ -252,7 +252,7 @@ theorem exists_exit_data {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric
   intro τ hτ
   exact hρD (ball_subset_closedBall (hc2ball _ (hall τ hτ)))
 
-/-- **Eventual Step F** (R2 Steps E-F, section 3 of CHATGPT-n2-R2-rooted-length.md). Near the root, the internal physical
+/-- **Eventual Step F** (R2 Steps E-F). Near the root, the internal physical
 metric of `weylPhysicalE d ξ f` on `D` is bounded by the Weyl distance: `I_D(x,z) ≤ W(x,z)` for `x` close to `z`. This is the
 core of `internalPhysicalMetric_tendsto_root`, and the source of finiteness near the root (`RootedRootFinite.lean`). -/
 theorem internalMetric_le_weylScaling_eventually {d : ℂ → ℂ → ℝ} (hd : IsEuclideanLengthMetric d) (ξ : ℝ) {f : ℂ → ℝ}

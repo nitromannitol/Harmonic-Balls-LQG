@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 import HarmonicBalls.FirstPass.S11v.Affine
 
 /-!
-# Existence of the translated LQG metric (fp-S11r-hDex-source)
+# Existence of the translated LQG metric
 
 The binder `hDex` of the rooted assembly (RootedBuffer.lean, `ae_rootedLocalIdent_assembled`):
 for every `z : ℂ` there is a function `D` with `IsLQGMetricOfField P γ ξ γ (translatedPairing hC hcirc z) D`,
@@ -56,7 +56,6 @@ theorem exists_isLQGMetricOfField_translatedPairing {Ω : Type u} [MeasurableSpa
   intro u v
   exact ⟨ENNReal.toReal_nonneg, ENNReal.ofReal_toReal (hω.1 u v).ne⟩
 
-#print axioms exists_isLQGMetricOfField_translatedPairing
 
 /-- **Translated LQG metric exists, without the affine-invariance binder.** The same statement as
 `exists_isLQGMetricOfField_translatedPairing` with the binder `hAff` removed: the affine invariance of the whole-plane GFF
@@ -71,6 +70,5 @@ theorem exists_isLQGMetricOfField_translatedPairing_derived {Ω : Type u} [Measu
   exists_isLQGMetricOfField_translatedPairing hγ0 hγ2
     (fun Q C K => HarmonicBalls.wholePlaneGFFAffineInvariance_derived Q C K) hG h𝔇 hField z
 
-#print axioms exists_isLQGMetricOfField_translatedPairing_derived
 
 end HarmonicBalls
