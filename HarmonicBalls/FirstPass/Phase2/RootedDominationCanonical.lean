@@ -1,3 +1,4 @@
+import HarmonicBalls.FirstPass.Phase2.CanonicalDecoderIdentity
 import HarmonicBalls.FirstPass.Phase2.RootedShiftedNullTransferDerived
 import HarmonicBalls.FirstPass.Phase2.RootedDominationJointPos
 import HarmonicBalls.FirstPass.Frozen.S11i
@@ -167,5 +168,34 @@ theorem localRootedFieldMeasureDomination_canonical_data
     (hShift Ω P γ α₀ hC hcirc μ ν hGFF hγ0 hγ2 hα hμ hν
       (fun _ _ _ _ => ⟨lam, hlam⟩) (fun _ _ _ _ => ⟨μ, hμ⟩)
       (fun μ' => hSub Ω P γ hC hcirc μ') hId j)
+
+/-- **Canonical rooted domination, conditional form (MQ-lh-29; MQ-lh-30).** The conditional theorem
+`localRootedFieldMeasureDomination_of_jointPos_of_shifted` in its canonical form: the decoder and selector of the
+α₀-measure are the canonical `ProfileDecoderDerived.decoder canonicalTest γ α₀` and `canonicalSel`, identified by
+`CanonicalDecoderIdentityStmt` (its existence premise is witnessed by `μ`), and the null transfer is the canonical
+`ShiftedDecoderNullTransferCanonicalStmt`. The joint identity `hJoint` and the Lemma A.10 input `hSub` stay hypotheses.
+The conclusion is that of `LocalRootedFieldMeasureDomination`. -/
+theorem localRootedFieldMeasureDomination_canonical_of_shifted
+    (hJoint : DMSLemmaA10WholePlaneMarkedJointPosStmt.{u})
+    (hSub : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
+    (hId : CanonicalDecoderIdentityStmt.{u})
+    (hShift : ShiftedDecoderNullTransferCanonicalStmt.{u}) :
+    LocalRootedFieldMeasureDomination.{u} := by
+  intro Ω _ P _ γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα hμ hν hlam _ _ _ j _
+  exact localRootedFieldMeasureDomination_canonical_data hJoint hSub hShift P γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα
+    hμ hν hlam (hId Ω P γ α₀ hC hcirc μ hGFF hγ0 hγ2 hα hμ (fun _ _ _ _ => ⟨μ, hμ⟩)) j
+
+/-- **Canonical rooted domination with the derived canonical null transfer.** Same as
+`localRootedFieldMeasureDomination_canonical_of_shifted`, with `hShift` discharged by
+`shiftedDecoderNullTransferCanonicalStmt_derived` (RootedShiftedNullTransferDerived.lean). Only `hJoint`, `hSub` and the
+canonical identity `hId` remain hypotheses. -/
+theorem localRootedFieldMeasureDomination_canonical
+    (hJoint : DMSLemmaA10WholePlaneMarkedJointPosStmt.{u})
+    (hSub : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
+    (hId : CanonicalDecoderIdentityStmt.{u}) :
+    LocalRootedFieldMeasureDomination.{u} :=
+  localRootedFieldMeasureDomination_canonical_of_shifted hJoint hSub hId shiftedDecoderNullTransferCanonicalStmt_derived
 
 end HarmonicBalls
