@@ -2,6 +2,7 @@ import HarmonicBalls.FirstPass.S11u.Kernel
 import HarmonicBalls.LPStage.GFFExistence
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.Phase2.GFFExistsDerived
+import HarmonicBalls.LPStage.GFFCovSymm
 
 /-!
 # Constructed whole-plane GFF: covariance of circle averages and the increment variance bound (HB level)
@@ -186,5 +187,20 @@ universe u
 theorem wholePlaneGFFExistsFrozen_derived (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
     (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt) : WholePlaneGFFExistsFrozen.{u} :=
   wholePlaneGFFExists_ulift (wholePlaneGFFExistsFrozen_zero_derived hB2 hsymm)
+
+
+/-- Row 29, universe `0`, with the symmetry input discharged by `LatticeProb.Gauss.wholePlaneCovSymm_proved`
+(`LPStage/GFFCovSymm.lean`): conditional on the single named input `WholePlaneCovPSDStmt` (B2). The earlier
+`wholePlaneGFFExistsFrozen_zero_derived` (with the named symmetry input) is kept. -/
+theorem wholePlaneGFFExistsFrozen_zero_derived_of_psd (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt) :
+    WholePlaneGFFExistsFrozen.{0} := by
+  obtain ⟨Ω, mΩ, P, hP, hC, hcirc, h⟩ :=
+    LatticeProb.Gauss.exists_isWholePlaneGFF_of_psd hB2 lp_increment_bound
+  exact ⟨Ω, mΩ, P, hP, hC, hcirc, (HarmonicBalls.LPBridge.isWholePlaneGFF_iff P hC hcirc).mpr h⟩
+
+/-- Row 29, every universe `u`, conditional on `WholePlaneCovPSDStmt` only (`ULift` of the universe-`0` statement). -/
+theorem wholePlaneGFFExistsFrozen_derived_of_psd (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt) :
+    WholePlaneGFFExistsFrozen.{u} :=
+  wholePlaneGFFExists_ulift (wholePlaneGFFExistsFrozen_zero_derived_of_psd hB2)
 
 end HarmonicBalls

@@ -1,15 +1,16 @@
-import HarmonicBalls.FirstPass.Phase2.DerivedInputs23
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs26
 import HarmonicBalls.FirstPass.Phase2.GFFExistsConstructed
 
 /-!
-# Derived inputs, round 25 (worker z6, fp-phase2-gff-existence-row29)
+# Round-25 wrappers of the DerivedInputs26 counted forms, with the row-29 existence binder discharged
+(task fp-phase2-gff-cov-symm, worker z6)
 
-Wrappers of the round-23 counted forms that bind `WholePlaneGFFExistsFrozen.{0}` (row 29). The binder `hExists` is
-discharged by `HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived` (`FirstPass/Phase2/GFFExistsConstructed.lean`),
-which is conditional on two named inputs of `HarmonicBalls/LPStage/GFFExistence.lean`:
-`LatticeProb.Gauss.WholePlaneCovPSDStmt` (B2, MQ-lh-25) and `LatticeProb.Gauss.WholePlaneCovSymmStmt` (symmetry of the
-covariance, derived by Fubini and not yet formalized). So each wrapper binds `hB2` and `hsymm` in place of `hExists`;
-the other binders are unchanged, and each proof is the round-23 theorem applied to the same arguments.
+Each wrapper `..._derivedInputs25` is the counted form `..._derivedInputs26` with its binder
+`hExists : WholePlaneGFFExistsFrozen.{0}` (row 29) replaced by the single named input `hB2 : WholePlaneCovPSDStmt`
+(B2: the whole-plane covariance is positive semidefinite; MQ-lh-25, still open). The symmetry input is no longer a
+binder: `LatticeProb.Gauss.wholePlaneCovSymm_proved` (LPStage/GFFCovSymm.lean) proves `WholePlaneCovSymmStmt`, and
+`HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived_of_psd hB2` (GFFExistsConstructed.lean) gives `hExists`.
+Binder count: equal to DerivedInputs26 (`hExists` replaced by `hB2`).
 -/
 
 universe u
@@ -19,7 +20,7 @@ open scoped ENNReal
 
 namespace HarmonicBalls.Closure
 
-/-- Round-25 wrapper of `closure_1_2_canonical_of_11_13_universe0_derivedInputs23` with `hExists` discharged (conditional on `hB2`, `hsymm`). -/
+/-- Binder-trade wrapper `closure_1_2_canonical_of_11_13_universe0_derivedInputs25` of `closure_1_2_canonical_of_11_13_universe0_derivedInputs22` (fp-phase2-reducible-trades-di26, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs25
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -36,7 +37,6 @@ theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs25
       LocalMetricReplacementFrozen.{0} γ ξ c₁ c₂ r₁ r₂)
     (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0})
     (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
-    (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt)
     (hCC : ∀ (γ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
     (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{0})
@@ -51,19 +51,20 @@ theorem closure_1_2_canonical_of_11_13_universe0_derivedInputs25
     (hPos10 : LQGMeasureSquarePositiveFrozen.{0})
     (hSupM : LQGMetricSupMeasurableFrozen.{0})
     (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
-    (hM1 : WeylShiftedSupMeasurableFrozen.{0})
     (hRootCont : RootedPhysicalMetricContinuousAtInsertionFrozen.{0})
     (hA10 : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
     (hK : ∀ (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), LocalMeasureKernelStmt.{0} γ c₁ c₂ r₁ r₂)
-    : HarmonicBallNoveltyCanonicalStmt.{0}
-    := by
-  apply closure_1_2_canonical_of_11_13_universe0_derivedInputs23
-  all_goals first
-    | assumption
-    | exact HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived hB2 hsymm
+   : HarmonicBallNoveltyCanonicalStmt.{0}
 
-/-- Round-25 wrapper of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs23` with `hExists` discharged (conditional on `hB2`, `hsymm`). -/
+  := HarmonicBalls.Closure.closure_1_2_canonical_of_11_13_universe0_derivedInputs22 (hDG := hDG) (hE := hE)
+    (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := hDec) (hCM := hCM) (hAx := hAx) (hTor := hTor)
+    (hN2 := hN2) (hLoc := hDec) (hCanonM := hCanonM) (hExists := HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived_of_psd hB2) (hCC := hCC) (hfr := hfr)
+    (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC)
+    (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10)
+    (hK := hK)
+
+/-- Binder-trade wrapper `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs25` of `closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs22` (fp-phase2-reducible-trades-di26, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs25
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -80,7 +81,6 @@ theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs25
       LocalMetricReplacementFrozen.{0} γ ξ c₁ c₂ r₁ r₂)
     (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0})
     (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
-    (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt)
     (hCC : ∀ (γ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
     (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{0})
@@ -95,19 +95,20 @@ theorem closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs25
     (hPos10 : LQGMeasureSquarePositiveFrozen.{0})
     (hSupM : LQGMetricSupMeasurableFrozen.{0})
     (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
-    (hM1 : WeylShiftedSupMeasurableFrozen.{0})
     (hRootCont : RootedPhysicalMetricContinuousAtInsertionFrozen.{0})
     (hA10 : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
     (hK : ∀ (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), LocalMeasureKernelStmt.{0} γ c₁ c₂ r₁ r₂)
-    : HarmonicBallNoveltyFaithfulStmt.{0}
-    := by
-  apply closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs23
-  all_goals first
-    | assumption
-    | exact HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived hB2 hsymm
+   : HarmonicBallNoveltyFaithfulStmt.{0}
 
-/-- Round-25 wrapper of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs23` with `hExists` discharged (conditional on `hB2`, `hsymm`). -/
+  := HarmonicBalls.Closure.closure_1_2_faithful_canonical_of_11_13_universe0_derivedInputs22 (hDG := hDG)
+    (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := hDec) (hCM := hCM) (hAx := hAx)
+    (hTor := hTor) (hN2 := hN2) (hLoc := hDec) (hCanonM := hCanonM) (hExists := HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived_of_psd hB2) (hCC := hCC)
+    (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift)
+    (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont)
+    (hA10 := hA10) (hK := hK)
+
+/-- Binder-trade wrapper `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs25` of `closure_1_2_paperExponent_of_11_13_universe0_derivedInputs22` (fp-phase2-reducible-trades-di26, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs25
     (_hDim : WholePlaneLQGGraphDimension)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -125,7 +126,6 @@ theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs25
       LocalMetricReplacementFrozen.{0} γ ξ c₁ c₂ r₁ r₂)
     (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0})
     (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
-    (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt)
     (hCC : ∀ (γ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
     (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{0})
@@ -140,19 +140,20 @@ theorem closure_1_2_paperExponent_of_11_13_universe0_derivedInputs25
     (hPos10 : LQGMeasureSquarePositiveFrozen.{0})
     (hSupM : LQGMetricSupMeasurableFrozen.{0})
     (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
-    (hM1 : WeylShiftedSupMeasurableFrozen.{0})
     (hRootCont : RootedPhysicalMetricContinuousAtInsertionFrozen.{0})
     (hA10 : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
     (hK : ∀ (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), LocalMeasureKernelStmt.{0} γ c₁ c₂ r₁ r₂)
-    : HarmonicBallNoveltyFaithfulStmt.{0}
-    := by
-  apply closure_1_2_paperExponent_of_11_13_universe0_derivedInputs23
-  all_goals first
-    | assumption
-    | exact HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived hB2 hsymm
+   : HarmonicBallNoveltyFaithfulStmt.{0}
 
-/-- Round-25 wrapper of `firstPass_1_2_faithful_universe0_derivedInputs23` with `hExists` discharged (conditional on `hB2`, `hsymm`). -/
+  := HarmonicBalls.Closure.closure_1_2_paperExponent_of_11_13_universe0_derivedInputs22 (_hDim := _hDim)
+    (hDG := hDG) (hE := hE) (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := hDec) (hCM := hCM)
+    (hAx := hAx) (hTor := hTor) (hN2 := hN2) (hLoc := hDec) (hCanonM := hCanonM) (hExists := HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived_of_psd hB2)
+    (hCC := hCC) (hfr := hfr) (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder)
+    (hShift := hShift) (hDC := hDC) (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin)
+    (hRootCont := hRootCont) (hA10 := hA10) (hK := hK)
+
+/-- Binder-trade wrapper `firstPass_1_2_faithful_universe0_derivedInputs25` of `firstPass_1_2_faithful_universe0_derivedInputs22` (fp-phase2-reducible-trades-di26, worker z7): `hLoc` is discharged by `hDec` (same Prop, as in DerivedInputs23). -/
 theorem firstPass_1_2_faithful_universe0_derivedInputs25
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
@@ -169,7 +170,6 @@ theorem firstPass_1_2_faithful_universe0_derivedInputs25
       LocalMetricReplacementFrozen.{0} γ ξ c₁ c₂ r₁ r₂)
     (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0})
     (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
-    (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt)
     (hCC : ∀ (γ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc)
     (hfr : LQGInternalMetricWeylAeMeasurableFrozen.{0})
@@ -184,23 +184,24 @@ theorem firstPass_1_2_faithful_universe0_derivedInputs25
     (hPos10 : LQGMeasureSquarePositiveFrozen.{0})
     (hSupM : LQGMetricSupMeasurableFrozen.{0})
     (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
-    (hM1 : WeylShiftedSupMeasurableFrozen.{0})
     (hRootCont : RootedPhysicalMetricContinuousAtInsertionFrozen.{0})
     (hA10 : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
     (hK : ∀ (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), LocalMeasureKernelStmt.{0} γ c₁ c₂ r₁ r₂)
-    : HarmonicBallNoveltyFaithfulStmt.{0}
-    := by
-  apply firstPass_1_2_faithful_universe0_derivedInputs23
-  all_goals first
-    | assumption
-    | exact HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived hB2 hsymm
+   : HarmonicBallNoveltyFaithfulStmt.{0}
+
+  := HarmonicBalls.Closure.firstPass_1_2_faithful_universe0_derivedInputs22 (hDG := hDG) (hE := hE)
+    (hL1 := hL1) (hE3 := hE3) (hCamp := hCamp) (hDec := hDec) (hCM := hCM) (hAx := hAx) (hTor := hTor)
+    (hN2 := hN2) (hLoc := hDec) (hCanonM := hCanonM) (hExists := HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived_of_psd hB2) (hCC := hCC) (hfr := hfr)
+    (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC)
+    (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (hRootCont := hRootCont) (hA10 := hA10)
+    (hK := hK)
 
 end HarmonicBalls.Closure
 
 namespace HarmonicBalls.FirstPassS11iFinal11_13
 
-/-- Round-25 wrapper of `firstPass_11_13_derivedInputs23` with `hExists` discharged (conditional on `hB2`, `hsymm`). -/
+/-- Binder-trade wrapper `firstPass_11_13_derivedInputs25` of `firstPass_11_13_derivedInputs22` (fp-phase2-reducible-trades-di26, worker z7): `_hWCont` is discharged by `HarmonicBalls.weylMetricCompositionContinuousOuter_derived` (as in DerivedInputs23). -/
 theorem firstPass_11_13_derivedInputs25
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
@@ -208,7 +209,6 @@ theorem firstPass_11_13_derivedInputs25
     (hLoc : LocalLQGDecoderCommonFrozen.{0})
     (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0})
     (hB2 : LatticeProb.Gauss.WholePlaneCovPSDStmt)
-    (hsymm : LatticeProb.Gauss.WholePlaneCovSymmStmt)
     (hDG : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)
     (hCC : ∀ (γ α₀ : ℝ) (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
@@ -227,22 +227,18 @@ theorem firstPass_11_13_derivedInputs25
     (hPos10 : LQGMeasureSquarePositiveFrozen.{0})
     (hSupM : LQGMetricSupMeasurableFrozen.{0})
     (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0})
-    (hM1 : WeylShiftedSupMeasurableFrozen.{0})
     (_hRootCont : RootedPhysicalMetricContinuousAtInsertionFrozen.{0})
     (_hA10 : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ)
     (hCal : HarmonicBalls.FirstPassS11iStep8PhysExists.Step8EventCalibrationStmt.{0})
     (hK : ∀ (γ : ℝ) (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), LocalMeasureKernelStmt.{0} γ c₁ c₂ r₁ r₂)
-    : CorrectedLemma11_13CanonicalStmt.{0}
-    := by
-  apply firstPass_11_13_derivedInputs23
-  all_goals first
-    | assumption
-    | exact HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived hB2 hsymm
+   : CorrectedLemma11_13CanonicalStmt.{0}
+
+  := HarmonicBalls.FirstPassS11iFinal11_13.firstPass_11_13_derivedInputs22 (hAx := hAx) (hN2 := hN2)
+    (hLoc := hLoc) (hCanonM := hCanonM) (hExists := HarmonicBalls.wholePlaneGFFExistsFrozen_zero_derived_of_psd hB2) (hDG := hDG) (hCC := hCC) (hE := hE) (hfr := hfr)
+    (hComp := hComp) (hFA := hFA) (hMk := hMk) (hholder := hholder) (hShift := hShift) (hDC := hDC)
+    (hCMT := hCMT) (hPos10 := hPos10) (hSupM := hSupM) (hFin := hFin) (_hRootCont := _hRootCont)
+    (_hWCont := HarmonicBalls.weylMetricCompositionContinuousOuter_derived) (_hA10 := _hA10) (hCal := hCal)
+    (hK := hK)
 
 end HarmonicBalls.FirstPassS11iFinal11_13
-
-namespace HarmonicBalls
-
-end HarmonicBalls
-
