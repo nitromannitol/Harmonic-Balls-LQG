@@ -210,4 +210,185 @@ lemma measurable_rootedTestFn {r : ℝ} {D : Set ℂ} {S : Set (ℂ × Measure �
           ((hDec.comp (hSel.comp (measurable_posPart.comp measurable_fst))).prodMk measurable_snd)))
   exact h1.comp measurable_snd
 
+/-! ## Conditional rooted domination (route Steps 2-6 and 12; PENDING R26 and R29) -/
+
+/-- Normalised restriction times the mass recovers the restriction: `m(B) · (m(B)⁻¹ • m|_B)(A) = m|_B(A)` when
+`m(B) < ∞`. -/
+lemma mass_mul_normalized_restrict {m : Measure ℂ} {B : Set ℂ} (hfin : m B ≠ ⊤) (A : Set ℂ) :
+    m B * ((m B)⁻¹ • m.restrict B) A = m.restrict B A := by
+  by_cases h0 : m B = 0
+  · have hr : m.restrict B = 0 := Measure.restrict_eq_zero.mpr h0
+    simp [hr, h0]
+  · rw [Measure.smul_apply, smul_eq_mul, ← mul_assoc, ENNReal.mul_inv_cancel h0 hfin, one_mul]
+
+/-- Almost surely the normalised root kernel is the normalised restriction of `λ_ω` to the unit ball (unit weight
+of `ae_weightedRestrictionKernel_eq`). -/
+lemma ae_localRootKernel_eq_normalized {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (lam : Ω → Measure ℂ) (hlam : AEMeasurable lam P) :
+    ∀ᵐ ω ∂P, localRootKernel P lam hlam ω = ((lam ω) (ball 0 1))⁻¹ • (lam ω).restrict (ball 0 1) := by
+  filter_upwards [ae_weightedRestrictionKernel_eq P lam hlam (ball 0 1) measurableSet_ball
+    (fun _ => 1) measurable_const] with ω hω
+  have hk : localRootKernel P lam hlam ω =
+      normalizedRestriction ((lam ω).withDensity (fun _ => 1)) (ball 0 1) := hω
+  have hd : (lam ω).withDensity (fun _ => 1) = lam ω := withDensity_one
+  rw [hk, hd]
+  rfl
+
+/-- The section masses of the normalised root kernel are measurable in `ω` (it is a finite kernel). -/
+lemma measurable_localRootKernel_section {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (lam : Ω → Measure ℂ) (hlam : AEMeasurable lam P) {t : Set (Ω × ℂ)} (ht : MeasurableSet t) :
+    Measurable fun ω => localRootKernel P lam hlam ω (Prod.mk ω ⁻¹' t) :=
+  Kernel.measurable_kernel_prodMk_left ht
+
+/-- **Vanishing of the Palm integral (route Steps 10-12).** If the `λ_ω|B₁`-masses of the sections of a measurable
+`t` integrate to zero over `P`, these masses vanish `P`-a.s. The normalised root kernel is `λ_ω|B₁` divided by
+`λ_ω(B₁)`, which is finite `P`-a.s., and it is a finite kernel, so the section masses are measurable. -/
+lemma ae_restrict_section_zero_of_lintegral {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    [IsProbabilityMeasure P] (lam : Ω → Measure ℂ) (hlam : AEMeasurable lam P)
+    (hfin : ∀ᵐ ω ∂P, lam ω (ball 0 1) ≠ ⊤) {t : Set (Ω × ℂ)} (ht : MeasurableSet t)
+    (hint : ∫⁻ ω, (lam ω).restrict (ball 0 1) (Prod.mk ω ⁻¹' t) ∂P = 0) :
+    ∀ᵐ ω ∂P, (lam ω).restrict (ball 0 1) (Prod.mk ω ⁻¹' t) = 0 := by
+  have hc : AEMeasurable (fun ω => lam ω (ball 0 1)) P :=
+    (Measure.measurable_coe measurableSet_ball).comp_aemeasurable hlam
+  have hZ : AEMeasurable (fun ω => localRootKernel P lam hlam ω (Prod.mk ω ⁻¹' t)) P :=
+    (measurable_localRootKernel_section P lam hlam ht).aemeasurable
+  have hG : (fun ω => (lam ω).restrict (ball 0 1) (Prod.mk ω ⁻¹' t)) =ᵐ[P]
+      fun ω => lam ω (ball 0 1) * localRootKernel P lam hlam ω (Prod.mk ω ⁻¹' t) := by
+    filter_upwards [ae_localRootKernel_eq_normalized P lam hlam, hfin] with ω hk hf
+    rw [hk, mass_mul_normalized_restrict hf]
+  have h0 : ∫⁻ ω, lam ω (ball 0 1) * localRootKernel P lam hlam ω (Prod.mk ω ⁻¹' t) ∂P = 0 :=
+    (lintegral_congr_ae hG.symm).trans hint
+  have hcZ := (lintegral_eq_zero_iff' (hc.mul hZ)).mp h0
+  filter_upwards [hG, hcZ] with ω hGω hω
+  exact hGω.trans hω
+
+/-- **Fubini on the rooted reference product (route Step 5).** A `((vol|D_j) ⊗ P)`-null set of reference observations
+has `P`-null sections for almost every root `z ∈ D_j`. The `P`-a.s. identity `ν = ν'` (`ν'` measurable) transfers to
+the reference observations. -/
+lemma ae_section_ref_null {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P] (j : ℕ)
+    {ν ν' : Ω → Measure ℂ} (hν' : Measurable ν') (hae : ν =ᵐ[P] ν') {T : Set (ℂ × Measure ℂ)}
+    (hT : MeasurableSet T)
+    (h0 : ((volume.restrict (localDomain j)).prod P).map (localReferenceObservation ν j) T = 0) :
+    ∀ᵐ z ∂(volume.restrict (localDomain j)), P {ω | localReferenceObservation ν j (z, ω) ∈ T} = 0 := by
+  have hV' : Measurable (localReferenceObservation ν' j) := measurable_localReferenceObservation' hν' j
+  have hXY : localReferenceObservation ν j =ᵐ[(volume.restrict (localDomain j)).prod P]
+      localReferenceObservation ν' j := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := volume.restrict (localDomain j)) (ν := P)).ae hae]
+      with x hx
+    simp only [localReferenceObservation, hx]
+  rw [Measure.map_congr hXY, Measure.map_apply hV' hT] at h0
+  filter_upwards [ae_section_null_of_prod_null (hV' hT) h0] with z hz
+  have hset : {ω | localReferenceObservation ν j (z, ω) ∈ T} =ᵐ[P]
+      {ω | localReferenceObservation ν' j (z, ω) ∈ T} := by
+    refine Filter.eventuallyEqSet_iff.mpr ?_
+    filter_upwards [hae] with ω hω
+    simp only [localReferenceObservation, hω]
+  rw [measure_congr hset]
+  exact hz
+
+/-- **Conditional rooted domination (fp-audit-r1-b2; route Steps 2-6 and 12 of section 5, CHATGPT-219).** From the
+joint marked DMS identity `hJoint` (Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10; PENDING R26), the
+measurable profile decoder `hProf` (`LQGMeasureOfProfileMeasurableFrozen`), the circle-profile selector `hSel`
+(PENDING ruling 2) and the shifted decoder transfer `hShift` (PENDING R29), the local rooted comparison
+`LocalRootedFieldMeasureDomination` (Lemma 8.2 of arXiv:2208.11795, proof) follows. -/
+theorem localRootedFieldMeasureDomination_of_joint_of_shifted
+    (hJoint : DMSLemmaA10WholePlaneMarkedJointStmt.{u})
+    (hProf : LQGMeasureOfProfileMeasurableFrozen.{u})
+    (hSel : CircleProfileSelectorStmt.{u})
+    (hShift : ShiftedDecoderNullTransferStmt.{u}) :
+    LocalRootedFieldMeasureDomination.{u} := by
+  intro Ω _ P _ γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα hμ hν hlam _ _ _ j _
+  -- Selector and measurable profile decoder (Steps 1-2).
+  obtain ⟨Sel, hSelM, hSelAe⟩ := hSel Ω P hC hcirc hGFF
+  have hFM : Measurable fun ω => Sel (posPart (hcirc ω)) :=
+    hSelM.comp (measurable_posPart_comp fun r z hr => hGFF.measurable_circle r z hr)
+  obtain ⟨Dec, hDecM, hDecAe, -⟩ :=
+    hProf Ω P γ α₀ hC hcirc μ (fun ω => Sel (posPart (hcirc ω))) hGFF hμ hFM hSelAe
+  have hlamA : AEMeasurable lam P := hGFF.aemeasurable_lqgMeasure hlam
+  obtain ⟨ν', hν'M, hν'ae⟩ := hGFF.aemeasurable_lqgMeasure hν
+  have hD : MeasurableSet (localDomain j) := measurableSet_localDomain j
+  have hfin : ∀ᵐ ω ∂P, lam ω (ball 0 1) ≠ ⊤ :=
+    hlam.mono fun ω h => by
+      have := h.isLocallyFiniteMeasure
+      exact measure_ball_lt_top.ne
+  have hloc : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω) := hμ.mono fun _ h => h.isLocallyFiniteMeasure
+  -- The measurable version `Ostar` of the root observation of the decoded measure (Step 4).
+  obtain ⟨Ostar, hOstar⟩ : ∃ O : Ω × ℂ → ℂ × Measure ℂ,
+      ∀ x, O x = recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc x.1))), x.2) :=
+    ⟨fun x => recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc x.1))), x.2), fun _ => rfl⟩
+  have hOM : Measurable Ostar := by
+    have hfun : Ostar = fun x => recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc x.1))), x.2) :=
+      funext hOstar
+    rw [hfun]
+    exact (measurable_recentredOutput _).comp
+      ((hDecM.comp (hFM.comp measurable_fst)).prodMk measurable_snd)
+  have hDecAe' : ∀ᵐ ω ∂P, μ ω = Dec (Sel (posPart (hcirc ω))) := hDecAe
+  have hgood : ∀ᵐ ω ∂P, μ ω = Dec (Sel (posPart (hcirc ω))) ∧ IsLocallyFiniteMeasure (μ ω) :=
+    hDecAe'.and hloc
+  have hOeq : localRootObservation μ j =ᵐ[(P ⊗ₘ localRootKernel P lam hlamA).restrict
+      (Prod.snd ⁻¹' localDomain j)] Ostar := by
+    filter_upwards [ae_restrict_of_ae (ae_fst_of_compProd (localRootKernel P lam hlamA) hgood)] with x hx
+    obtain ⟨hμx, hlx⟩ := hx
+    have := hlx
+    rw [hOstar, ← hμx]
+    exact localRootObservation_eq_recentredOutput μ j x.1 (μ x.1) rfl x.2
+  -- Null transfer of the reference observations (Step 5-6) and the target set.
+  refine Measure.AbsolutelyContinuous.mk fun T hTM hT0 => ?_
+  have hzN := ae_section_ref_null j hν'M hν'ae hTM hT0
+  have htM : MeasurableSet (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j) :=
+    (hOM hTM).inter (measurable_snd hD)
+  have hind : ∀ ω z, rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) =
+      (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)).indicator 1 z := by
+    intro ω z
+    have hO : Ostar (ω, z) = recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc ω))), z) :=
+      hOstar (ω, z)
+    by_cases hz : z ∈ localDomain j <;> by_cases hT' : recentredOutput (localRadius j)
+        (Dec (Sel (posPart (hcirc ω))), z) ∈ T <;>
+      simp [rootedTestFn, hO, hz, hT']
+  have hLHS : ∀ ω, ∫⁻ z in ball (0 : ℂ) 1,
+      rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) ∂(lam ω) =
+        (lam ω).restrict (ball 0 1) (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)) := by
+    intro ω
+    calc ∫⁻ z in ball (0 : ℂ) 1,
+          rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) ∂(lam ω)
+        = ∫⁻ z, (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)).indicator 1 z
+            ∂((lam ω).restrict (ball 0 1)) := lintegral_congr fun z => hind ω z
+      _ = _ := lintegral_indicator_one (measurable_prodMk_left htM)
+  -- The joint identity (Step 7) and the vanishing of its right-hand side (Steps 8-9).
+  have hint : ∫⁻ ω, (lam ω).restrict (ball 0 1)
+      (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)) ∂P = 0 := by
+    have hJ := hJoint Ω P γ hC hcirc lam hGFF hlam hγ0 hγ2
+      (rootedTestFn (localRadius j) (localDomain j) T Dec Sel)
+      (measurable_rootedTestFn hD hTM hDecM hSelM)
+    have hRHS : ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
+        (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P ∂volume = 0 := by
+      have hH : ∀ᵐ z ∂(volume : Measure ℂ), ∫⁻ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
+          (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P = 0 := by
+        filter_upwards [(ae_restrict_iff' hD).mp hzN] with z hz
+        by_cases hzD : z ∈ localDomain j
+        · have hS := hShift Ω P γ α₀ hC hcirc μ ν hGFF hγ0 hγ2 hα hμ hν Dec Sel hDecM hSelM hDecAe' j z hzD
+            T hTM (hz hzD)
+          have hae : ∀ᵐ ω ∂P, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
+              (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) = 0 := by
+            filter_upwards [measure_eq_zero_iff_ae_notMem.mp hS] with ω hω
+            simp [rootedTestFn, hzD, hω]
+          rw [lintegral_congr_ae hae, lintegral_zero]
+        · have h0 : ∀ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
+              (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) = 0 :=
+            fun ω => by simp [rootedTestFn, hzD]
+          simp [h0]
+      rw [lintegral_congr_ae (ae_restrict_of_ae hH), lintegral_zero]
+    calc ∫⁻ ω, (lam ω).restrict (ball 0 1)
+          (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)) ∂P
+        = ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1,
+            rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) ∂(lam ω) ∂P :=
+          lintegral_congr fun ω => (hLHS ω).symm
+      _ = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
+            (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P ∂volume := hJ
+      _ = 0 := hRHS
+  -- Palm replacement (Step 10-12) and the transfer from `Ostar` to the root observation.
+  have hzero := ae_restrict_section_zero_of_lintegral P lam hlamA hfin htM hint
+  rw [Measure.map_congr hOeq]
+  exact rootedLaw_apply_eq_zero_of_palm P lam hlamA hD Ostar hOM hTM hzero
+
 end HarmonicBalls
