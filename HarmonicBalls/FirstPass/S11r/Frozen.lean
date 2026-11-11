@@ -26,7 +26,7 @@ universe u
 
 /-- FROZEN. Truth check TRUE,
 in every universe `u` (ULift for larger universes).
-Existence of the whole-plane Gaussian free field (EXTERNAL, general): for every universe `u` there
+RETIRED (derived: FirstPass/Phase2/GFFExistsDerived2.lean, `wholePlaneGFFExistsFrozen_derived'`, commit 03c0acd4; the frozen statement is unchanged). Existence of the whole-plane Gaussian free field (EXTERNAL, general): for every universe `u` there
 are a probability space `Ω : Type u`, a pairing `hC` and a circle-average process `hcirc` with `IsWholePlaneGFF P hC hcirc`,
 that is a centred Gaussian field with covariance `wholePlaneCov` (`log (max(|z|,1) max(|w|,1) / |z-w|)`, normalised so that
 the average on the unit circle vanishes), whose circle averages are a.s. continuous in `(r, z) ∈ (0, ∞) × ℂ`.
