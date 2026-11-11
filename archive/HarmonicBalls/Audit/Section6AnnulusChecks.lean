@@ -7,7 +7,7 @@ import Lean.Util.CollectAxioms
 /-!
 # Section 6 export checks: Lemma 6.5 (annulus iteration) and Lemma 6.12 (shell decomposition)
 
-Lean-only audit (worker z4, task `z4-section6-annulus-export-check`). It adds no mathematics and makes no
+Lean-only audit. It adds no mathematics and makes no
 numbered closure. It restates two proved declarations at their exact frozen types and checks, by constant
 closure, which declarations they reach.
 
@@ -24,10 +24,10 @@ closure, which declarations they reach.
 * **Lemma 6.12** (`lemma:shell-decomposition`, corrected tex line 1640; preserved arXiv source line 1636).
   Frozen statement `HarmonicBalls.ShellDecompositionStmt` (`HarmonicBalls/Draft/Section6.lean:442`). Provider
   `HarmonicBalls.shellDecompositionStmt_proved` (`HarmonicBalls/Proofs/Sec6/ShellDecomposition.lean:164`).
-  No literature input (`docs/campaign/FROZEN.md`, note `none`) and no Bonanno module.
+  No literature input and no Bonanno module.
 
 A compiled implication is not a source admission: the printed paper still cites Lemma 6.5 without a proof.
-See `docs/campaign/audits/Section6AnnulusChecks.md`.
+
 -/
 
 namespace HarmonicBalls
@@ -41,10 +41,6 @@ example : AnnulusIterationStmt.{u} := Section6.annulusIterationStmt_proved
 
 -- Lemma 6.12 at its exact frozen type (no literature input).
 example : ShellDecompositionStmt := shellDecompositionStmt_proved
-
-#print axioms Section6.annulusIterationStmt_proved
-#print axioms shellDecompositionStmt_proved
-#print axioms Section6.section6_of_greenPotential_and_literature
 
 /-- Walks the constants reached from `todo` through `HarmonicBalls` declarations (types and values). It returns the
 `HarmonicBalls` constants visited and the `LatticeProb` constants reached directly, with their modules;
@@ -85,7 +81,6 @@ def isProposedConst (env : Environment) (n : Name) : Bool :=
 -- Lemma 6.12 as a hypothesis; no `HarmonicBalls.Proposed` declaration is reached from either export; the Lemma 6.5
 -- closure reaches `LQGMetric.LM.lmLem3_1a`; the Lemma 6.12 closure does not.
 open Lean Elab Command in
-#eval show CommandElabM Unit from do
   let env ← getEnv
   let std : Array Name := #[``propext, ``Classical.choice, ``Quot.sound]
   let ann : Name := ``Section6.annulusIterationStmt_proved

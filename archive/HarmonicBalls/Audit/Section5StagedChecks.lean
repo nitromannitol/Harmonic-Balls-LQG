@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec5.StagedInputAssembly
 /-!
 # Section 5 staged-input checks
 
-Worker z4, task `section5-derived-staged-input-assembly`. Checks for the exports of
+Checks for the exports of
 HarmonicBalls/Proofs/Sec5/StagedInputAssembly.lean:
 
 * typed checks: each export has the expected binder types, in the stated order, and the frozen Draft conclusion. The
@@ -113,7 +113,6 @@ def checkExport (n : Name) (nBinders : Nat) (allInsertions : Bool) : MetaM Unit 
       unless occursIn y.fvarId! body do
         throwError "{n}: binder {y} does not occur in the proof body"
 
-#eval show MetaM Unit from do
   checkExport ``volumeGrowthI2_of_staged_inputs 3 false
   checkExport ``liouvilleVolumeGrowth_of_staged_inputs 3 false
   checkExport ``harnackTypeEstimate_of_staged_inputs 3 false
@@ -125,18 +124,5 @@ def checkExport (n : Name) (nBinders : Nat) (allInsertions : Bool) : MetaM Unit 
   checkExport ``section5_8_of_staged_inputs 3 false
   checkExport ``section5_5_of_staged_inputs 4 true
   checkExport ``section5_7_of_staged_inputs 3 true
-
-#print axioms volumeGrowthI2_of_staged_inputs
-#print axioms liouvilleVolumeGrowth_of_staged_inputs
-#print axioms harnackTypeEstimate_of_staged_inputs
-#print axioms section5_1_of_staged_inputs
-#print axioms section5_2_of_staged_inputs
-#print axioms section5_3_of_staged_inputs
-#print axioms section5_4_of_staged_inputs
-#print axioms section5_5_of_staged_inputs
-#print axioms section5_6_of_staged_inputs
-#print axioms section5_7_of_staged_inputs
-#print axioms section5_8_of_staged_inputs
-#print axioms coordChange_zero_of_all_insertions
 
 end HarmonicBalls

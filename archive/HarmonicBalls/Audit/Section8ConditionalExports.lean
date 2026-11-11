@@ -130,7 +130,4 @@ example (hI2 : LQGVolumeGrowthAllScalesStmt.{u})
   boundaryMeasureZeroOfCompactClusterStmt_of_steps (clusterOpenLaplacian_proved hI2)
     (Section6.veryGoodAnnulusHarnackTypeStmt_of_volumeGrowth_only hI2) h82
 
-#print axioms originManyGoodScalesStmt_of_explicit_inputs
-#print axioms boundaryMeasureZeroOfCompactClusterStmt_of_steps
-
 end HarmonicBalls

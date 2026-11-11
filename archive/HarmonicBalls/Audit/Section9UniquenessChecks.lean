@@ -10,7 +10,7 @@ Typed examples that instantiate the existing Section 9 producers at their litera
 premise is a binder of the example; no hypothesis is added and no carrier is changed. The `#print axioms`
 lines record the axioms each producer depends on; only the standard axioms (`propext`, `Classical.choice`,
 `Quot.sound`) are expected. Compiling this file is not closure of any numbered result: the remaining premises
-are the binders below, and the audit note is `docs/campaign/audits/Section9UniquenessChecks.md`.
+are the binders below.
 
 Credit: the imported Section 6 and Section 8 proofs consume Leonardo Bonanno's work in `LatticeProb.Bonanno`
 and `LatticeProb.Prob.Birkhoff`; this file inherits that dependency through its imports.
@@ -59,12 +59,5 @@ example (hI2 : LQGVolumeGrowthAllScalesStmt.{u}) (h611 : VeryGoodAnnulusHarnackT
 example : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneGFFAffineInvariance P hC hcirc :=
   fun _ _ P hC hcirc => wholePlaneGFFAffineInvariance_proved P hC hcirc
-
-#print axioms obstacleComparison
-#print axioms IsSubharmonicBall.weak_uniqueness_of_volumeGrowth
-#print axioms subharmonicBallUniquenessWeak_of_boundaryNull
-#print axioms subharmonicBallUniquenessWeak_of_volumeGrowth_typicalScales
-#print axioms clusterBoundaryNullAllRadii_of_dyadic_typical_scales
-#print axioms wholePlaneGFFAffineInvariance_proved
 
 end HarmonicBalls

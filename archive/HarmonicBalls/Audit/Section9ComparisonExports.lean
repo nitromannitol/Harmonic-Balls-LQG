@@ -97,7 +97,4 @@ example (h : SubharmonicBallUniquenessWeakStmt.{u}) :
     closure A ⊆ ball (0 : ℂ) R → IsSubharmonicBall (μ ω) A z → μ ω A = ENNReal.ofReal t →
     cluster (μ ω) R z t ⊆ A ∧ μ ω (A \ regularizedCluster (μ ω) R z t) = 0 := h
 
-#print axioms section9_comparison_lemmas_of_existence
-#print axioms subharmonicBallUniquenessWeak_of_volumeGrowth_typicalScales
-
 end HarmonicBalls

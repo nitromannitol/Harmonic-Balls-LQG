@@ -4,7 +4,7 @@ import HarmonicBalls.Proofs.Sec9.ThreeInputAssembly
 /-!
 # Section 9 three-input checks
 
-Worker z4, task `section9-three-input-numbered-export-assembly`. Checks for the exports of
+Checks for the exports of
 HarmonicBalls/Proofs/Sec9/ThreeInputAssembly.lean:
 
 * typed examples: each export accepts the staged inputs at their restated types (`hDG` as stated, `hCC` at insertion
@@ -97,7 +97,6 @@ def s9CheckInsertionZero (n : Name) : MetaM Unit := do
     throwError "{n}: coordinate change is not applied at insertion 0"
   logInfo m!"{n}: coordinate change at insertion 0"
 
-#eval show MetaM Unit from do
   let comparisonRequired := [``ObstacleComparisonStmt, ``HarmonicBallBoundarySubsetStmt, ``RegularOpenEqOfAEEqStmt]
   s9CheckExport ``section9_comparison_results_of_three_inputs [`hDG, `hCC, `hE] comparisonRequired
     (s9Forbidden ++ [``TypicalPointManyGoodScalesStmt, ``SubharmonicBallUniquenessWeakStmt])
@@ -107,8 +106,5 @@ def s9CheckInsertionZero (n : Name) : MetaM Unit := do
   s9CheckInsertionZero ``section9_numbered_results_of_three_inputs
 
 /-! ## Printed axioms -/
-
-#print axioms section9_comparison_results_of_three_inputs
-#print axioms section9_numbered_results_of_three_inputs
 
 end HarmonicBalls

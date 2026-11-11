@@ -50,9 +50,4 @@ example (hgrowth : LQGVolumeGrowthAllScalesStmt.{u})
     HarnackTypeEstimateStmt.{u} :=
   harnackTypeEstimateStmt_of_volumeGrowth_zero_existence hgrowth hex
 
-#print axioms manyGoodAnnuliStmt_of_volumeGrowth_zero_existence
-#print axioms manyVeryGoodAnnuliStmt_of_volumeGrowth_zero_existence
-#print axioms harnackTypeComponentStmt_of_volumeGrowth_zero_existence
-#print axioms harnackTypeEstimateStmt_of_volumeGrowth_zero_existence
-
 end HarmonicBalls.Section6

@@ -11,23 +11,7 @@ staged I2 export and the volume-growth producer, consumption of each premise, an
 the closure producers of every reached Prop head and of every frozen statement.
 -/
 
-#print axioms HarmonicBalls.Section6Full.section6Full_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.harnackTypeEstimateStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.harnackTypeComponentStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.manyGoodAnnuliStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.goodAnnulusProbabilityStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.annulusIterationStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.manyVeryGoodAnnuliStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.veryGoodAnnulusProbabilityStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.annulusMassBoundByOdometerStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.odometerHarmonicMeasureBoundStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.odometerBoundByAnnulusMassStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.veryGoodAnnulusHarnackTypeStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.shellDecompositionStmt_of_three_inputs
-#print axioms HarmonicBalls.Section6Full.lowMassSmallOdometerStmt_of_three_inputs
-
 open Lean Meta Elab Command in
-#eval show CommandElabM Unit from do
   let env ← getEnv
   let std : List Name := [``propext, ``Classical.choice, ``Quot.sound]
   let main := ``HarmonicBalls.Section6Full.section6Full_of_three_inputs
