@@ -52,8 +52,8 @@ Credit: Leonardo Bonanno. Two modules of his `LatticeProb` library, `LatticeProb
 `HarmonicBalls/Proofs/Sec6/LQGWeylScaling.lean` (the provider of the Weyl premise), as recorded in
 `HarmonicBalls/Proofs/Sec6/DerivedInputAssembly.lean`. The constant closure of the four exports reaches no LatticeProb
 declaration (guard: no LatticeProb module reached). By contrast, `section6_of_volumeGrowth` applied to I2 reaches the annulus
-iteration and about 194 LatticeProb modules, among them `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`, which holds his
-proof of the Gwynne–Miller lemma (recorded in `docs/campaign/audits/Section6ThreeInputAssembly.md`). These
+iteration and about 194 LatticeProb modules, among them `LatticeProb.Bonanno.LQGMetric.Papers.LM.L3_4M6`, which holds the
+proof of the Gwynne–Miller lemma. These
 exports do not use that route.
 -/
 

@@ -13,7 +13,7 @@ measurable functional of a metric. The only analytic content is therefore the fo
 NOT PROVED. `LQGWeightedInternalDetMeasurable` below is the exact missing ingredient. The written argument sketches it through lower semicontinuity of the
 constrained weighted distance in the continuous metric and a Borel exhaustion, but leaves the lower semicontinuity
 claim unproved (l.389-391), does not treat the vertex `0` of the singular weight by a chain argument, and does not
-verify the Borel-ness on the space of metrics. The operator's route for this fact is not yet fixed. -/
+verify the Borel-ness on the space of metrics. -/
 
 namespace HarmonicBalls
 

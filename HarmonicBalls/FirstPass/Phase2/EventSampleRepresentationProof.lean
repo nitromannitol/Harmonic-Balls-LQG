@@ -28,7 +28,7 @@ Target: `CMEventTransfer.eventSampleRepresentation_of_inputs`, i.e. `EventSample
 (`FirstPass/Frozen/S11c.lean:146`) with the Cameron-Martin reweighting discharged by
 `S11aj.cameronMartinGFFReweighting_derived`.
 
-Route (MQ-lh-21, Oct-Nov 2026 math desk, TRUE as typed): the event set is
+Route (TRUE as typed): the event set is
 `E = {s | A (rawFunctional s) ≤ c ∧ C ≤ Dec s S₁}`, where
 * `rawFunctional s` is the functional of the sample `s` on test pairings (extended by `0`);
 * `A` is the countable supremum `⨆ p ∈ D₀ × D₀, ⨅ n, ⨆ k, Φ p n k` of the measurable functionals from

@@ -19,7 +19,7 @@ right-hand side and every mass required to be finite.
 * `decodedPinchRule_iff`: if the decoded metric equals `b` times the internal metric of a Euclidean length metric `D` on
   the countable point sets (`DecodesOnSets`) and the decoded masses equal `c` times the `μ`-masses (`0 < b`, `0 < c`), then
   `ℓ` lies in the decoded rule iff the true local certificate `pinchLocalRule μ D` holds and the two mass quantities are
-  finite. The only inputs are the geometry `IsBufferedPinchGeometry` and the inclusion `hΩ` of the operator gap G1.
+  finite. The only inputs are the geometry `IsBufferedPinchGeometry` and the inclusion `hΩ`.
 -/
 
 namespace HarmonicBalls.S11am
