@@ -45,7 +45,7 @@ space `(Y, ν)` with a measure-preserving ergodic map `T`, the map `(θ, y) ↦ 
 ergodic for the product of the uniform phase measure with `ν`. The doubling map on the torus is mixing (hence weakly
 mixing), and the product of a weakly mixing map with an ergodic map is ergodic (Walters, An Introduction to Ergodic
 Theory, GTM 79, §1.6 and Thm 1.27). Mathlib has no such product lemma (checked: no `Ergodic` product lemma under
-`Mathlib/Dynamics/Ergodic`). Source locator: standard; locator pending. Used by: firstPass_8_2 (the phase tail of
+`Mathlib/Dynamics/Ergodic`). Locator: PENDING (operator source check). Used by: firstPass_8_2 (the phase tail of
 FirstPass/S8d.lean, through `ae_frequency_of_torus_dilation`). Truth check TRUE (ChatGPT, turn 2, batch file 02:58 UTC, `notes/fp-gaps/CHATGPT-hb-frozen-batch.md`, §2; turn 1 at
 02:49 UTC read it as UNCLEAR while the helpers were missing): the doubling map on both coordinates of (ℝ/ℤ)² with
 the Haar-product measure is weakly mixing, and its product with any ergodic probability-preserving map is ergodic.

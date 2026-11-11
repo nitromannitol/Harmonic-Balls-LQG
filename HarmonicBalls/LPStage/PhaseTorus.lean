@@ -40,7 +40,8 @@ noncomputable abbrev phaseTorusFieldMeasure {Ω : Type u} [MeasurableSpace Ω] (
   ((volume : Measure PhaseCircle).prod (volume : Measure PhaseCircle)).prod P
 
 /-- Ergodicity of the doubling product: for every probability space `(Y, ν)` and every measure-preserving ergodic map
-`T : Y → Y`, the map `(θ, y) ↦ (2θ, T y)` on `PhaseTorus × Y` is ergodic for `phaseTorusFieldMeasure ν`. -/
+`T : Y → Y`, the map `(θ, y) ↦ (2θ, T y)` on `PhaseTorus × Y` is ergodic for `phaseTorusFieldMeasure ν`.
+Locator: PENDING (operator source check). Sources as cited in the module header. -/
 def PhaseTorusDoublingProductErgodic : Prop :=
   ∀ (Y : Type u) [MeasurableSpace Y] (ν : Measure Y) [IsProbabilityMeasure ν] (T : Y → Y),
     MeasurePreserving T ν ν → Ergodic T ν →

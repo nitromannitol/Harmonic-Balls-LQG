@@ -118,7 +118,7 @@ All verdict words in the table: TRUE 53, FALSE AS TYPED 12, none 49. Structural 
 | 69 | `LocalLQGInsertionWeylOffOrigin`* | FirstPass/Frozen/S8c.lean:85 | RETIRED (truth: TRUE) → derived: localLQGInsertionWeylOffOrigin_derived, FirstPass/S8c/WeylOffOriginDerived.lean:88 | chat 219; notes/fp-gaps/G-8-2.md; notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma 8.2, p. 9 |
 | 70 | `BirkhoffPointwiseErgodic`* | FirstPass/Frozen/S8c.lean:100 | TRUE | notes/fp-gaps/G-8-2.md; notes/fp-gaps/CHATGPT-hb-frozen-batch.md | June, Theorem 2.30., p. 44 |
 | 71 | `LQGMeasureOfProfileMeasurableFrozen`* | FirstPass/Frozen/S8d.lean:33 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Sheffield, arXiv:0808.1560, Proposition 1.1, p. 1 |
-| 72 | `PhaseTorusDoublingProductErgodicFrozen`* | FirstPass/Frozen/S8d.lean:58 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Walters, Proposition 1.5, p.1 |
+| 72 | `PhaseTorusDoublingProductErgodicFrozen`* | FirstPass/Frozen/S8d.lean:58 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | PENDING (operator source check) |
 | 73 | `RadonIntegralUniqueFrozen` | FirstPass/Frozen/S8d.lean:72 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-batch.md | Theorem 2.14, p. 40-41 |
 | 74 | `WholePlaneGFFExistsFrozen`* | FirstPass/S11r/Frozen.lean:39 | TRUE | notes/fp-gaps/CHATGPT-hb-frozen-truth-S11r-S11j.md | Duplantier-Sheffield, arXiv:1302.4738v2, p. 46-47 |
 | 75 | `LocalLQGMetricNormalizedMeasurableFrozen` | FirstPass/S11r/Frozen.lean:61 | RETIRED (truth: FALSE AS TYPED) → superseded by LocalLQGMetricNormalizedMeasurableFixedMetricFrozen | ChatGPT 01:48 UTC | Gwynne-Miller, arXiv:1905.00383v3, Theorem 1.2, p. 6 |
@@ -164,7 +164,7 @@ All verdict words in the table: TRUE 53, FALSE AS TYPED 12, none 49. Structural 
 
 ## 4. Hand checks
 
-Mechanical checks (scratch-z6/gen_status.py and a verification pass, both uncommitted): all 112 evidence references and all 42 quoted verdict phrases occur verbatim in their docstrings; the 92 literature locators were checked part by part (author, arXiv id, theorem, page) against the docstring text, 0 mismatches; every TRUE or FALSE status has its verdict word in the docstring. Limits: a locator part is the first match in the docstring, so a theorem number may be the paper's own (e.g. `Lemma 11.7`) rather than the literature's; quotes are copied, not interpreted.
+Mechanical checks (scratch-z6/gen_status.py and a verification pass, both uncommitted): all 112 evidence references and all 42 quoted verdict phrases occur verbatim in their docstrings; the 91 literature locators were checked part by part (author, arXiv id, theorem, page) against the docstring text, 0 mismatches; every TRUE or FALSE status has its verdict word in the docstring. Limits: a locator part is the first match in the docstring, so a theorem number may be the paper's own (e.g. `Lemma 11.7`) rather than the literature's; quotes are copied, not interpreted.
 
 Hand checks against the source, 10 rows:
 1. `CameronMartinGFFReweighting` (FirstPass/Frozen/S11aj.lean:33): DERIVED INTERFACE, truth TRUE, chat 179 and chat 151; locator Miller-Sheffield, arXiv:1302.4738v2, Proposition 2.9, printed p. 49. As written.
