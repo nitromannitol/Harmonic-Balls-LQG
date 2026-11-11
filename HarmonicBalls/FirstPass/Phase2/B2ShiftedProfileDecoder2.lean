@@ -83,4 +83,19 @@ theorem shifted_rootedLQGMeasure_ae_exists {Ω : Type u} [MeasurableSpace Ω] (P
   FirstPassS11atProducers.ae_exists_rootedLQGMeasure_derived P γ α₀ hC hcirc c₁ r₁ hh hγ0 hγ2 hα hExist0 hExistα hA10
     lqgMeasureOfProfileMeasurable_derived hWin
 
+/-- **Step 5, subcritical form (MQ-lh-15, operator item (1)).** Same statement as `shifted_rootedLQGMeasure_ae_exists`,
+with the universally typed marked input `hA10` replaced by its subcritical form
+`hSub : ∀ μ, DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ` (`FirstPass/Frozen/S11i.lean:59`), whose statement carries the
+range `0 < γ`, `γ < 2`. At the given `γ`, the marked form is recovered by `dmsA10Marked_of_sub` (`S11i.lean:69`) from
+`hγ0`, `hγ2`. The old theorem `shifted_rootedLQGMeasure_ae_exists` is kept unchanged (no own downstream use of it exists). -/
+theorem shifted_rootedLQGMeasure_ae_exists_sub {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
+    [IsProbabilityMeasure P] (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c₁ : ℂ) (r₁ : ℝ)
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
+    (hSub : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ) (hWin : ball c₁ r₁ ⊆ ball (0 : ℂ) 1) :
+    ∀ᵐ z ∂(volume.restrict (ball c₁ r₁)), ∃ μz : Ω → Measure ℂ,
+      IsLQGMeasure P γ (rootedCircleFieldP α₀ γ hcirc z) μz :=
+  shifted_rootedLQGMeasure_ae_exists P γ α₀ hC hcirc c₁ r₁ hh hγ0 hγ2 hα hExist0 hExistα
+    (fun μ => dmsA10Marked_of_sub P γ hC hcirc μ (hSub μ) hγ0 hγ2) hWin
+
 end HarmonicBalls
