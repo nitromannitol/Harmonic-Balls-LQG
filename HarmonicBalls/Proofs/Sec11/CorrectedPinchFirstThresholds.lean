@@ -94,6 +94,5 @@ theorem IsCorrectedPinchConfiguration.exists_first_certificate_thresholds
   intro ω hω
   exact ⟨hω.1.1.1, hω.1.2.1, hω.1.2.2, hω.2.1, hω.2.2⟩
 
-#print axioms IsCorrectedPinchConfiguration.exists_first_certificate_thresholds
 
 end HarmonicBalls

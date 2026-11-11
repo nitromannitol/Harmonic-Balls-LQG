@@ -70,5 +70,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_first_second_of_clo
   exact hpos (fun n => ENNReal.ofReal (c * (3 * L / (2 * (2 : ℝ) ^ n)) ^ s))
     p' hp' (fun _ => 0) tendsto_const_nhds hsmall htail
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_first_second_of_closed_tail
 end HarmonicBalls

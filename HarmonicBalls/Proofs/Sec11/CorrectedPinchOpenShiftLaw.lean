@@ -56,5 +56,4 @@ theorem IsCorrectedPinchConfiguration.positive_internal_pinch_of_open_shiftLaw
     exact (ne_of_gt hYpos) (hac hz)
   rwa [Measure.map_apply_of_aemeasurable hX hE, measure_congr hXeq] at hXpos
 
-#print axioms IsCorrectedPinchConfiguration.positive_internal_pinch_of_open_shiftLaw
 end HarmonicBalls

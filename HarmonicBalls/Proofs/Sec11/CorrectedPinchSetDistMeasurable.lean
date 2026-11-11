@@ -31,6 +31,5 @@ theorem measurable_ofReal_setDist_of_lengthMetric
   rw [ofReal_setDist_eq_iInf hA hB]
   simp only [iInf_apply, f, iInf_subtype, iInf_prod]
 
-#print axioms measurable_ofReal_setDist_of_lengthMetric
 
 end HarmonicBalls

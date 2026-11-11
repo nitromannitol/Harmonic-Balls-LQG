@@ -37,6 +37,5 @@ theorem IsPinchPointProofConfiguration.exists_uniform_first_event_shift
   exact h.first_event_of_thresholds hD hE hEnonneg hforward hreverse
     hcorridor hQ hroot houter hgapQ hpath hgap0 hdiam hnumQ hnum0
 
-#print axioms IsPinchPointProofConfiguration.exists_uniform_first_event_shift
 
 end HarmonicBalls

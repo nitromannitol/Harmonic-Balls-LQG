@@ -73,6 +73,5 @@ theorem IsCorrectedPinchConfiguration.exists_positive_wholePlane_open_first_shif
     hω.1.2.1.le hω.1.2.2.1.le hω.1.2.2.2.1.le hω.1.2.2.2.2.le
   exact ⟨hω.1.1, hopen, hfirst.2⟩
 
-#print axioms IsCorrectedPinchConfiguration.exists_positive_wholePlane_open_first_shift
 
 end HarmonicBalls

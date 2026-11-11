@@ -40,6 +40,5 @@ theorem IsPinchPointProofConfiguration.first_event_of_thresholds
     exact lt_of_lt_of_le hnumQ (by gcongr)
   · exact lt_of_le_of_lt hdiam (lt_of_lt_of_le hnum0 (by gcongr))
 
-#print axioms IsPinchPointProofConfiguration.first_event_of_thresholds
 
 end HarmonicBalls

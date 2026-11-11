@@ -57,5 +57,4 @@ theorem IsCorrectedPinchConfiguration.exists_square_positive_first_second_of_dya
   exact h.positive_first_second_of_dyadic_existence hDG hCC hE P hC hcirc μ hg hμ hγ hγ₂ hα
     hξ 𝔇 h𝔇 M A hA hArep ha hb z L hL hSU hfront b p hp e he hsmall hbound
 
-#print axioms IsCorrectedPinchConfiguration.exists_square_positive_first_second_of_dyadic_existence
 end HarmonicBalls

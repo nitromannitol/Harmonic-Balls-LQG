@@ -58,6 +58,5 @@ theorem IsWholePlaneGFF.exists_modConst_countable_internal_baseMetric
   rw [← heq, hg (p n).1 (hp n).1 (p n).2 (hp n).2]
   exact (congrFun hh n).symm
 
-#print axioms IsWholePlaneGFF.exists_modConst_countable_internal_baseMetric
 
 end HarmonicBalls

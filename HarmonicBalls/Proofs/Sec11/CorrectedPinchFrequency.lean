@@ -335,14 +335,5 @@ theorem correctedManyPinchScales_of_internalBlockDensity
   filter_upwards [h] with N hN
   exact (mul_le_mul_of_nonneg_right hδq (Nat.cast_nonneg N)).trans hN
 
-#print axioms pinchBlockDensity_of_internal
-#print axioms correctedLocalPinchCertificate_innerWitness
-#print axioms exists_local_internal_pinch_representative_and_original_witness
-#print axioms exists_local_internal_pinch_of_metric_locality
-#print axioms exists_local_internal_pinch_zeroCharge
-#print axioms exists_local_internal_pinch_liouvilleCharge_of_diameter_moments
-#print axioms eventually_shifted_index_block_density
-#print axioms eventually_block_density_of_shifted_event_implication
-#print axioms correctedManyPinchScales_of_internalBlockDensity
 
 end HarmonicBalls

@@ -103,7 +103,5 @@ theorem IsEuclideanLengthMetric.first_weight_metric_bounds
       simp [houter z hz])
   simpa using hd
 
-#print axioms IsPinchPointProofConfiguration.exists_first_weight_corridor_bound
-#print axioms IsEuclideanLengthMetric.first_weight_metric_bounds
 
 end HarmonicBalls

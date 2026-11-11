@@ -56,6 +56,4 @@ theorem IsPinchPointProofConfiguration.pinchPointEventWithInternalBounds_of_open
     exact le_iSup_of_le y (le_iSup_of_le hy (internalMetric_anti D inter_subset_left 0 y))
   exact h.pinchPointEventWithInternalBounds hD hnonneg μ M hf hsecond hthird hpaths
 
-#print axioms correctedOpenFirstCertificate.constrained_paths
-#print axioms IsPinchPointProofConfiguration.pinchPointEventWithInternalBounds_of_open_first
 end HarmonicBalls

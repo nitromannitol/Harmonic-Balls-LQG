@@ -26,5 +26,4 @@ theorem IsCorrectedPinchConfiguration.exists_continuity_mass_core_square
   exact ⟨z, L, hL, hSU, hSU.trans h.closure_V_core.2.2,
     fun n x hx => h.mass_buffer n x (hSU hx), hfront⟩
 
-#print axioms IsCorrectedPinchConfiguration.exists_continuity_mass_core_square
 end HarmonicBalls

@@ -48,7 +48,5 @@ theorem exists_first_pinch_weyl_heights {ξ : ℝ} (hξ : 0 < ξ)
       ENNReal.ofReal_natCast, ENNReal.ofReal_natCast] at hh'
     exact hh'
 
-#print axioms exists_nonneg_weyl_height_above
-#print axioms exists_first_pinch_weyl_heights
 
 end HarmonicBalls

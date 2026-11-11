@@ -46,7 +46,4 @@ theorem IsCorrectedPinchConfiguration.measurable_green_of_outside_measure
     exact (h.green_potential_restrict_outside (μ ω)).symm
   exact measurable_const.mul hg'
 
-#print axioms IsCorrectedPinchConfiguration.green_annulus_subset_outside
-#print axioms IsCorrectedPinchConfiguration.green_potential_restrict_outside
-#print axioms IsCorrectedPinchConfiguration.measurable_green_of_outside_measure
 end HarmonicBalls

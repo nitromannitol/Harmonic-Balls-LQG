@@ -59,6 +59,4 @@ theorem IsCorrectedPinchConfiguration.positive_wholePlane_first
   exact hx.2 (hmem.elim (fun hq => Or.inl (subset_closure hq))
     (fun hw => Or.inr (subset_closure hw)))
 
-#print axioms IsCorrectedPinchConfiguration.positive_wholePlane_first
-#print axioms IsCorrectedPinchConfiguration.positive_wholePlane_open_first
 end HarmonicBalls

@@ -85,7 +85,6 @@ theorem complex_closed_square_subset_dyadic_classes
     (L / (2 : ℝ) ^ n) hr
   simpa only [Nat.cast_pow, Nat.cast_ofNat, mul_div_cancel₀ _ (by positivity : (2 : ℝ) ^ n ≠ 0)] using h
 
-#print axioms complex_closed_square_subset_dyadic_classes
 
 /-- Distinct complex enlarged squares in one parity class are disjoint. -/
 theorem complex_enlarged_grid_squares_disjoint {N : ℕ} (a : ℂ) (r : ℝ) (hr : 0 < r)
@@ -93,10 +92,5 @@ theorem complex_enlarged_grid_squares_disjoint {N : ℕ} (a : ℂ) (r : ℝ) (hr
     Disjoint (complexEnlargedGridSquare a r i) (complexEnlargedGridSquare a r j) :=
   (enlarged_grid_squares_disjoint r hr i j hpar hne).preimage (squareCoordinates a)
 
-#print axioms complex_closed_square_subset_grid_classes
-#print axioms complex_enlarged_grid_squares_disjoint
 
-#print axioms exists_unit_interval_index
-#print axioms closed_square_subset_grid_union
-#print axioms closed_square_subset_grid_classes
 end HarmonicBalls

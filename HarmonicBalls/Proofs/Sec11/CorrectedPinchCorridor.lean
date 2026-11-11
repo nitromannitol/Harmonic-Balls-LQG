@@ -174,8 +174,5 @@ theorem IsCorrectedPinchConfiguration.corridor_internalMetric_lt_top
   exact iSup_le fun y => iSup_le fun hy =>
     le_iSup_of_le y (le_iSup_of_le hy (internalMetric_anti D hsub 0 y))
 
-#print axioms IsCorrectedPinchConfiguration.corridor_internalMetric_lt_top
-#print axioms IsPinchPointProofConfiguration.sphere_five_avoids_obstacle_closures
-#print axioms IsCorrectedPinchConfiguration.six_corridor_internalMetric_lt_top
 
 end HarmonicBalls

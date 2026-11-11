@@ -93,8 +93,4 @@ theorem dyadicIntermediateInternalDiameter_thresholds_of_closed_square
       ENNReal.ofReal (Real.exp (ξ * hcirc ω 1 0))) p p' (by linarith) hpp e he hbound
   simpa only [add_zero] using ht
 
-#print axioms dyadicIntermediateInternalDiameter_thresholds_of_closed_square
-#print axioms tendsto_intermediate_square_side
-#print axioms tendsto_intermediate_square_error
-#print axioms dyadicIntermediateInternalDiameter_tail_of_closed_square
 end HarmonicBalls

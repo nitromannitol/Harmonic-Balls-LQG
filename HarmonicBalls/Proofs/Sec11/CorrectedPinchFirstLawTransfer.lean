@@ -65,6 +65,5 @@ theorem IsCorrectedPinchConfiguration.positive_open_first_of_ac
   have hz : (P.map D₀) E = 0 := nonpos_iff_eq_zero.mp (not_lt.mp hn)
   exact (ne_of_gt hp) (hac hz)
 
-#print axioms IsCorrectedPinchConfiguration.positive_open_first_of_ac
 
 end HarmonicBalls

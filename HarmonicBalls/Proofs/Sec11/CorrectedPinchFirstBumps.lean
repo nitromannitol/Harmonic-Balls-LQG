@@ -55,6 +55,5 @@ theorem IsPinchPointProofConfiguration.exists_first_weyl_bumps
   exact ⟨φQ, φ0, hQs, hQc, hQr, hQone, hQzero,
     h0s, h0c, h0r, h0one, h0zero⟩
 
-#print axioms IsPinchPointProofConfiguration.exists_first_weyl_bumps
 
 end HarmonicBalls

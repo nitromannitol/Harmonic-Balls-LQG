@@ -61,5 +61,4 @@ theorem IsCorrectedPinchConfiguration.exists_outside_crossing_distances
       h.closure_Q_subset_outside hQne hfront]
     exact hLω.symm
 
-#print axioms IsCorrectedPinchConfiguration.exists_outside_crossing_distances
 end HarmonicBalls

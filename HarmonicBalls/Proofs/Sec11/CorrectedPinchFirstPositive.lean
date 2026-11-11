@@ -35,6 +35,4 @@ theorem IsCorrectedPinchConfiguration.positive_first
     0 < P {ω | pinchFirstEvent (𝔇 (hC ω)) W T Q' Q δ} :=
   h.positive_wholePlane_first hξ P γ hC hcirc 𝔇 h𝔇 hgff h.outer_piece_isConnected
 
-#print axioms IsCorrectedPinchConfiguration.positive_open_first
-#print axioms IsCorrectedPinchConfiguration.positive_first
 end HarmonicBalls

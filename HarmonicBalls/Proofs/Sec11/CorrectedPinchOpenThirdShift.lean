@@ -45,6 +45,4 @@ theorem IsCorrectedPinchConfiguration.exists_positive_open_first_internal_pinch_
   intro ω hω
   exact ⟨hω.1.first_event, hω.2, hω.1.constrained_paths⟩
 
-#print axioms correctedOpenFirstCertificate.first_event
-#print axioms IsCorrectedPinchConfiguration.exists_positive_open_first_internal_pinch_shift
 end HarmonicBalls

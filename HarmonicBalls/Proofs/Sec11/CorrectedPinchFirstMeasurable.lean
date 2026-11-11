@@ -58,6 +58,5 @@ theorem IsCorrectedPinchConfiguration.measurableSet_open_first_certificate
   ext ω
   simp only [mem_inter_iff, mem_ofPred_eq, iSup_singleton, internalDiam, F, A]
 
-#print axioms IsCorrectedPinchConfiguration.measurableSet_open_first_certificate
 
 end HarmonicBalls

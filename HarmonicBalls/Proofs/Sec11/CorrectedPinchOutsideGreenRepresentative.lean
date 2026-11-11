@@ -49,6 +49,4 @@ theorem IsCorrectedPinchConfiguration.positive_second_of_outside_measure_represe
   exact positive_pinchSecondEvent_of_conditional_null_massDiameter_representatives
     P m hm A D μ U V hδ M a b hA hAp ha hb hae hbe hmetric hgreen hinside
 
-#print axioms IsCorrectedPinchConfiguration.exists_green_outside_representative
-#print axioms IsCorrectedPinchConfiguration.positive_second_of_outside_measure_representative
 end HarmonicBalls

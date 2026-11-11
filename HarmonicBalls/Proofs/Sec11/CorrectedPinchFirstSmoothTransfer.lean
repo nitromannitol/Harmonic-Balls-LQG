@@ -84,5 +84,4 @@ theorem IsCorrectedPinchConfiguration.positive_open_first_of_wholePlane_smooth_s
     (hF.comp hX) (hF.comp hY) (hw.mono fun _ hw => hw.1)
     (hw.mono fun _ hw => hw.2.1) _ _ hn₀ hn₁ hac hp
 
-#print axioms IsCorrectedPinchConfiguration.positive_open_first_of_wholePlane_smooth_shift
 end HarmonicBalls

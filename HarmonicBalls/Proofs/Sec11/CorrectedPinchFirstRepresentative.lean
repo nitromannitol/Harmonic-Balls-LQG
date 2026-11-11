@@ -111,6 +111,5 @@ theorem IsCorrectedPinchConfiguration.exists_open_first_representative
   rw [h₁, ← h₂]
   rfl
 
-#print axioms IsCorrectedPinchConfiguration.exists_open_first_representative
 
 end HarmonicBalls

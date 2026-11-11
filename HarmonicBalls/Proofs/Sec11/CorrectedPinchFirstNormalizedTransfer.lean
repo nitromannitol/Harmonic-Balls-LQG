@@ -54,6 +54,5 @@ theorem IsCorrectedPinchConfiguration.positive_open_first_of_normalized_ac
   rw [measure_congr he₁]
   exact hp
 
-#print axioms IsCorrectedPinchConfiguration.positive_open_first_of_normalized_ac
 
 end HarmonicBalls

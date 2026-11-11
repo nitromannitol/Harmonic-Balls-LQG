@@ -67,6 +67,5 @@ theorem IsCorrectedPinchConfiguration.exists_positive_wholePlane_first_shift
   exact ⟨hω.1.1, hshift _ _ hD hE hEnonneg hforward hreverse
     hω.1.2.1.le hω.1.2.2.1.le hω.1.2.2.2.1.le hω.1.2.2.2.2.le⟩
 
-#print axioms IsCorrectedPinchConfiguration.exists_positive_wholePlane_first_shift
 
 end HarmonicBalls

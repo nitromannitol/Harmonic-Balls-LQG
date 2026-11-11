@@ -39,5 +39,4 @@ theorem IsCorrectedPinchConfiguration.positive_wholePlane_first_second_of_growth
     hArep ha hb (ae_annulusGreenPotentialSup_ne_top_of_lqgVolumeGrowth
       hgrowth hγ hγ₂ hα hgff hμ 3 (b := 6) (by norm_num)) hinside
 
-#print axioms IsCorrectedPinchConfiguration.positive_wholePlane_first_second_of_growth
 end HarmonicBalls

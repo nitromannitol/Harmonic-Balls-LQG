@@ -28,5 +28,4 @@ theorem IsCorrectedPinchConfiguration.exists_outer_removed_disk
       exact hball.trans (thickening_subset_of_subset (10 * δ) subset_closure)
     exact (closure_mono hsub).trans (fun x hx => (h.buffer_W hx).1)
 
-#print axioms IsCorrectedPinchConfiguration.exists_outer_removed_disk
 end HarmonicBalls

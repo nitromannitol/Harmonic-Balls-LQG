@@ -76,7 +76,5 @@ theorem IsPinchPointProofConfiguration.first_event_of_buffered_weyl_bounds
       (internalMetric_anti E (inter_subset_left) 0 y))
   · exact lt_of_le_of_lt hb.2 (lt_of_lt_of_le hsecond (hr.trans hm))
 
-#print axioms IsEuclideanLengthMetric.ofReal_setDist_center_sphere_mono
-#print axioms IsPinchPointProofConfiguration.first_event_of_buffered_weyl_bounds
 
 end HarmonicBalls

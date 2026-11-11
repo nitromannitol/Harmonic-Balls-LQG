@@ -69,6 +69,5 @@ theorem IsPinchPointProofConfiguration.exists_uniform_open_first_event_shift
     exact lt_of_le_of_lt hub (lt_of_lt_of_le hnumQ
       (hscaleQ.trans (h.obstacle_boundary_weyl_lower_bound hD hE hQ hreverse)))
 
-#print axioms IsPinchPointProofConfiguration.exists_uniform_open_first_event_shift
 
 end HarmonicBalls

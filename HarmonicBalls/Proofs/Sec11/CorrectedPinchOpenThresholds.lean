@@ -139,7 +139,5 @@ theorem IsEuclideanLengthMetric.six_corridor_weyl_upper_bound
       gcongr
       exact le_iSup_of_le y (le_iSup_of_le hy le_rfl)
 
-#print axioms IsCorrectedPinchConfiguration.exists_open_first_certificate_thresholds
-#print axioms IsEuclideanLengthMetric.six_corridor_weyl_upper_bound
 
 end HarmonicBalls

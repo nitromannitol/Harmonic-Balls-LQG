@@ -52,5 +52,4 @@ theorem IsCorrectedPinchConfiguration.positive_wholePlane_first_second_null
     rw [hω]
   rwa [measure_congr heq] at hpos
 
-#print axioms IsCorrectedPinchConfiguration.positive_wholePlane_first_second_null
 end HarmonicBalls

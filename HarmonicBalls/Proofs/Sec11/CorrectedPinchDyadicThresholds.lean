@@ -96,6 +96,4 @@ theorem IsCorrectedPinchConfiguration.positive_first_second_of_dyadic_thresholds
     (h.conditional_dyadic_thresholds hg hμ hγ hξ 𝔇 h𝔇 z L hL hSU hfront hfull
       b p hp e he hsmall hbound)
 
-#print axioms IsCorrectedPinchConfiguration.conditional_dyadic_thresholds
-#print axioms IsCorrectedPinchConfiguration.positive_first_second_of_dyadic_thresholds
 end HarmonicBalls

@@ -30,6 +30,5 @@ theorem correctedPinch_open_first_const_mul
     ENNReal.ofReal_mul hc.le, ← ENNReal.mul_iSup,
     ENNReal.mul_lt_mul_iff_right hc0 hct]
 
-#print axioms correctedPinch_open_first_const_mul
 
 end HarmonicBalls
