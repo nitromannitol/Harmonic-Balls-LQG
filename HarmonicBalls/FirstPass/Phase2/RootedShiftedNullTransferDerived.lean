@@ -369,7 +369,7 @@ def ShiftedDecoderNullTransferCanonicalStmt : Prop :=
     IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ →
     IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMeasureOfField P γ γ hcirc ν →
     LQGMeasureExistence P γ 0 hC hcirc → LQGMeasureExistence P γ α₀ hC hcirc →
-    (∀ μ' : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ') →
+    (∀ μ' : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ') →
     (∀ᵐ ω ∂P, μ ω = ProfileDecoderDerived.decoder canonicalTest γ α₀
       (canonicalSel (posPart (hcirc ω)))) →
     ∀ j : ℕ, RootedShiftedDecoderNullTransferCanonical P γ α₀ hcirc ν j
@@ -409,7 +409,7 @@ theorem rootedShiftedNullTransferCanonical {Ω : Type u} [MeasurableSpace Ω] (P
     (ν : Ω → Measure ℂ) (hGFF : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
     (hν : IsLQGMeasureOfField P γ γ hcirc ν)
     (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
-    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ) (j : ℕ) :
+    (hSub : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarkedSub P γ hC hcirc μ) (j : ℕ) :
     RootedShiftedDecoderNullTransferCanonical P γ α₀ hcirc ν j := by
   unfold RootedShiftedDecoderNullTransferCanonical
   have hmem := ae_sel_mem_convSet hGFF canonicalSel_posExtend canonicalTest γ γ ν hν
@@ -422,7 +422,7 @@ theorem rootedShiftedNullTransferCanonical {Ω : Type u} [MeasurableSpace Ω] (P
       unfold localRadius
       rw [show 2 * (1 / (16 * (j : ℝ))) = 1 / (8 * j) by ring, div_le_one (by positivity)]
       linarith
-    have hE := ae_rootedShiftedNullEvent P canonicalTest γ α₀ hγ0 hγ2 hα hC hcirc hGFF hExist0 hExistα hA10 j
+    have hE := ae_rootedShiftedNullEvent P canonicalTest γ α₀ hγ0 hγ2 hα hC hcirc hGFF hExist0 hExistα hSub j
     filter_upwards [hE, ae_restrict_mem (measurableSet_localDomain j)] with z hz hzD
     obtain ⟨hz1, hz2⟩ := hzD
     obtain ⟨gt, hgt, hEq⟩ := exists_testFunction_logShift (a0 := α₀) hr hz1
