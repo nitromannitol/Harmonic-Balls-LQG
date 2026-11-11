@@ -49,14 +49,11 @@ theorem transfer_of_law {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
   rw [measure_congr hA, ← key]
   exact h2
 
-/-- **BLOCKED-STEP R4 (named, NOT derived).** The unshifted and the Cameron-Martin shifted closed events are, almost
-surely, preimages of one measurable set `E` of the joint sample space, for every admissible shift `f`.
-Missing ingredient: a jointly measurable version of the canonical event functional
-`(μ, D) ↦ (sup_{u,v ∈ S₂} internalMetric D S₂ u v ≤ c ∧ C ≤ μ S₁)` on `Sample`, valid for the field and for its
-Weyl-shifted field. `AEMeasurable` of the observables (the frozen hypotheses) does not supply it: the shift law
-transfers only sets that are measurable in the sample. The Weyl identities (`LQGMeasureWeylScaling`,
-`LQGMetricFieldAxioms` III together with `IsLQGMetric.satisfiesLQGMetricAxioms`) identify the shifted observables
-with the observables of the shifted sample, but the single set `E` is what is not available in Lean. -/
+/-- **Derived (row 17).** The unshifted and the Cameron-Martin shifted closed events are, almost surely, preimages of
+one measurable set `E` of the joint sample space, for every admissible shift `f`. The set `E` is the countable-sup
+event `{s | A (rawFunctional s) ≤ c ∧ C ≤ Dec s S₁}` of `CMEventTransfer.eventSampleRepresentation_of_inputs`
+(`FirstPass/Phase2/EventSampleRepresentationProof.lean`), which proves this statement from the three frozen metric
+inputs `LQGMetricFieldAxiomsUnivFrozen`, `WeylScalingCompositionFrozen` and `LQGInternalMetricWeylAeMeasurableFrozen`. -/
 def EventSampleRepresentation : Prop :=
   ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ) (S₁ S₂ : Set ℂ) (c C : ℝ≥0∞),
