@@ -157,9 +157,13 @@ theorem closure_5_8
     ClusterStrongCompatibilityStmt.{u} :=
   firstPass_5_8 hDG hCC hE
 
-/-- Proposition 5.2 (prop:continuity, line 824). Hypotheses: the Proposed inputs `hDG hCC hE hW hN`, and the five
-FIRST-PASS FROZEN Props `hL1 hWeyl hE1 hE3 hB` that the discharge of Lemma 8.2 needs
-(`typicalPointManyGoodScales_closed`). -/
+/-- Proposition 5.2 (prop:continuity-of-clusters, line 2088 of the corrected draft). Hypotheses: the Proposed inputs
+`hDG hCC hE hW hN`, and the five FIRST-PASS FROZEN Props `hL1 hWeyl hE1 hE3 hB` that the discharge of Lemma 8.2 needs
+(`typicalPointManyGoodScales_closed`).
+Scope (audit R1, MINOR HB): the conclusion `ClusterContinuityStmt` quantifies over all `t > 0` (the all-t form). It is
+stronger than the printed Proposition 5.2 at line 2088, which requires `cluster z t ⋐ B₁` and writes `cluster + B_δ(z)`.
+The docstring of `ClusterContinuityStmt` (Draft/Section5.lean) says the later `t` are unproved (GRAPH G12); that note is
+not reconciled here. -/
 theorem closure_5_2
     (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ : ℝ)
       (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBounds P γ hC hcirc)

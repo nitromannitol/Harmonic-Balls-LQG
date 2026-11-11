@@ -101,7 +101,12 @@ def IsWholePlaneLQGDimension (γ dimension : ℝ) : Prop :=
     IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ →
     ∀ᵐ ω ∂P, IsLiouvilleGraphDimension (μ ω) 0 1 dimension
 
-/-- The graph-distance choice of LQG dimension; the default is used only without a witness. -/
+/-- The graph-distance choice of LQG dimension; the default is used only without a witness.
+Reading (audit R1, MINOR HB): the value is `Classical.choose` of a witness of `IsWholePlaneLQGDimension γ ·`, an
+arbitrary chosen witness rather than a canonical number. Non-vacuity rests on the input `WholePlaneLQGGraphDimension`
+(Proposed/LQGDimension.lean:19), taken as the binder `_hDim` of the wrappers (for example
+`DerivedInputsSec11A.lean:106`); that binder is unused in the proofs. The almost-sure dyadic form of the characterization
+(`IsWholePlaneLQGDimension`, in this file) is pending source-check. -/
 noncomputable def lqgGraphDimension (γ : ℝ) : ℝ := by
   classical
   exact if h : ∃ dimension, IsWholePlaneLQGDimension γ dimension then Classical.choose h else 1
