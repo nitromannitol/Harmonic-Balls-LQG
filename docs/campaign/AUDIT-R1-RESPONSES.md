@@ -16,7 +16,7 @@ Commits: `3518c8f8`, `987564de` (z7, email and ledger); `04195351` (z3, tex mark
 | A3 [C42] "Printed" claim false | FIXED (3518c8f8, 04195351) | Email item reduced: the printed buffers exist, and the missing one is B₁₀δ₀(W) ⋐ T plus the component Ω. Tex marker at corrected:3216 now states this (z3). Ledger C42 updated. |
 | A4 Lemma 6.4 proof after [C61] | FIXED (04195351, z3; 987564de, z7) | Tex marker at corrected:1247: transfer ratio `a=(C₁/C₂)a'`, and the `|z|^{-α₀γ}` factor replaced by the sup/inf ratio (≤ 1001^{γ\|α₀\|}). Email C61 item and ledger C61 updated. |
 | A5 α₀/β⁻ dependence inconsistent | FIXED in tex (04195351, z3; [C69] at corrected:389) | z3 lists the sites it changed: Prop 6.1, Lemma 6.3, Lemma 6.7 (A₁, A₂), Lemma 6.11, Prop 7.2, Lemma 10.1. CAVEAT (z3): the Prop 6.1 and Lemma 10.1 proofs were not re-read for α₀ dependence. I did not re-check corrected:1126, 1350, 1389, 1978, 2094, 2572 line by line; that check is z3's. Email: C55, C61, C62 tagged minor; Part 2 "Standing convention" C69 (987564de). |
-| A6 Prop 11.2 gap, and the gap list | FIXED for Prop 11.2 (04195351, z3; email 987564de, z7); other gaps listed, not repaired | Prop 11.2 routed through the boundary-union identity (`[C70]` at corrected:3061); z3: the arrival-time argument is cited, not re-proved. Email Part 3 lists G1, G2, G3, G5, G7, G13, G15, G27/G29, G38 (3518c8f8). z3: none of these G-items is repaired in the tex; the G7 fix is a candidate that changes a claim used elsewhere, not made. Operator to route. |
+| A6 Prop 11.2 gap, and the gap list | FIXED for Prop 11.2 (04195351, z3; email 987564de, z7); other gaps listed, not repaired | Prop 11.2 routed through the boundary-union identity (`[C70]` at corrected:3061); z3: the arrival-time argument is cited, not re-proved. Email Part 3 lists G1, G2, G3, G5, G7, G13, G15, G27/G29, G38 (3518c8f8). z3: none of these G-items is repaired in the tex; the G7 fix is a candidate that changes a claim used elsewhere, not made. Operator to route. G1-G44 stay unpatched (operator Q4). G7 is queued as a truth check (math queue, operator 05:10). |
 
 ## Per-item rows, part A (audit l.173–212)
 
@@ -35,7 +35,7 @@ Commits: `3518c8f8`, `987564de` (z7, email and ledger); `04195351` (z3, tex mark
 | C62 | FIXED (3518c8f8) | "N₁ displayed in the proof" → "in the statement" (corrected:1376). Tagged minor. |
 | C56 | FIXED (3518c8f8; tex 04195351) | Email matches corrected:833. Ledger rewritten to the adopted text (not the all-t alternative). Second marker at corrected:2173 (z3). |
 | C57 | FIXED (3518c8f8) | "the radius r is unbound". |
-| C58 | NO CHANGE (partly) | The audit's "unbounded → unbound" note was applied to C57 (the free radius). "an unbounded T" is kept; the audit gives no fix for it. |
+| C58 | DISPUTED (the audit note "unbounded → unbound" was applied to C57; "an unbounded T" is kept, the audit gives no fix for it) | The audit's "unbounded → unbound" note was applied to C57 (the free radius). "an unbounded T" is kept; the audit gives no fix for it. |
 | C60 | FIXED (3518c8f8) | Added: for z ∉ U the cluster is empty (Λ = ∅). |
 | C63, C64 | NO CHANGE | Audit: Y, no note. |
 | C59 | FIXED (3518c8f8) | Rephrased: Lemma 5.7 is a fixed-centre equality in law; cites Prop 10.6 (via Prop 10.7 correction). |
@@ -49,7 +49,7 @@ Commits: `3518c8f8`, `987564de` (z7, email and ledger); `04195351` (z3, tex mark
 | C37, C39, C40, C41, C45, C46 | NO CHANGE | Audit: Y or P, fix right, no note. C46's Prop 11.2 gap is A6 (FIXED). |
 | C43 | FIXED (3518c8f8) | Email aligned to the certificate form: event E^α(M) ⊂ Ĝ, measurable w.r.t. h^α|_{B₇}, P > 0. |
 | C42 | FIXED (3518c8f8, 04195351) | See A3. |
-| C44 | See X1 | |
+| C44 | FIXED (see X1; the item moved to ERRATA-INTERNAL.md on the operator 05:10 ruling) | |
 | C65 | NO EMAIL CHANGE | Hunk damage is A1 and A2 (FIXED, 04195351). |
 
 ## Unmarked damage
@@ -65,7 +65,7 @@ Commits: `3518c8f8`, `987564de` (z7, email and ledger); `04195351` (z3, tex mark
 | Item | Status | Note |
 |---|---|---|
 | Stripped from the email | FIXED (3518c8f8) | Moved to `docs/campaign/ERRATA-INTERNAL.md`. |
-| [C10] "not shown false" vs [C51] | OPEN (operator) | Contradiction recorded in ERRATA-INTERNAL.md. The email follows [C51]. Operator to reconcile with the 04:35 ruling on Prop 9.2. |
+| [C10] "not shown false" vs [C51] | math queued (notes/fp-gaps/MATH-QUEUE.md, MQ-lh, operator 05:10) | Contradiction recorded in ERRATA-INTERNAL.md. The email follows [C51]. Operator to reconcile with the 04:35 ruling on Prop 9.2. |
 | [C24] "equivalent alternative" | FIXED (3518c8f8) | Now "strictly stronger". |
 | [C27]–[C36] | FIXED (3518c8f8) | "no record in this repository; never assigned here (operator asked, R21)". |
 
@@ -73,9 +73,9 @@ Commits: `3518c8f8`, `987564de` (z7, email and ledger); `04195351` (z3, tex mark
 
 | Item | Status | Note |
 |---|---|---|
-| B1 Section 11 bridge inputs | IN PROGRESS (z4, task fp-audit-r1-b1-measurability-inputs; earlier task fp-audit-r1-b1-local-metric-replacement) | Partial commit 95e4ac15 (z4): the unrooted clause (18) of `LocalMetricReplacementStmt` is derived from `unrooted_identity_fixedMetric` in `HarmonicBalls/FirstPass/Phase2/LocalMetricReplacementDerived.lean`; binders hFA (Proposed), hB1, hCM, hPhi (unprinted frozen). z4 report: BLOCKED-partial; the rooted clause and the full bridge are blocked by unprinted steps. |
-| B2 `hL1` (Lemma 8.2 step) | IN PROGRESS (z3, task fp-audit-r1-b2-rooted-domination) | No commit yet; uncommitted `HarmonicBalls/FirstPass/Phase2/RootedDominationDerived.lean`. Not an email item. |
-| B3 I1 `hFull`, I2 `hgrowth` | IN PROGRESS (z6, task fp-audit-r1-b2-b3-lean, step DerivedInputs4) | No commit yet; uncommitted `HarmonicBalls/FirstPass/Phase2/DerivedInputs4.lean`. The repo already derives them (audit). |
+| B1 Section 11 bridge inputs | IN PROGRESS (z4 and z7, task fp-audit-r1-b1-measurability-inputs; partial commits z4 95e4ac15, 7ff9bcbd, 1d4f884b and z7 d3fa97ab) | Partial commit 95e4ac15 (z4): the unrooted clause (18) of `LocalMetricReplacementStmt` is derived from `unrooted_identity_fixedMetric` in `HarmonicBalls/FirstPass/Phase2/LocalMetricReplacementDerived.lean`; binders hFA (Proposed), hB1, hCM, hPhi (unprinted frozen). z4 report: BLOCKED-partial; the rooted clause and the full bridge are blocked by unprinted steps. Later partial commits: 7ff9bcbd and 1d4f884b (z4), d3fa97ab (z7). |
+| B2 `hL1` (Lemma 8.2 step) | IN PROGRESS (z3, task fp-audit-r1-b2-rooted-domination; partial commits fcb8b9e9, ad473745, f8aff1d2, 3c5d98c0) | Conditional route `localRootedFieldMeasureDomination_of_joint_of_shifted` (HarmonicBalls/FirstPass/Phase2/RootedDominationJoint.lean:294, commit 3c5d98c0); its hProf is now derived (b242f836). Not an email item. |
+| B3 I1 `hFull`, I2 `hgrowth` | IN PROGRESS (z6, task fp-audit-r1-b2-b3-lean, step DerivedInputs4) | Committed 94d0850b (z6, DerivedInputs4.lean). The repo already derives them (audit). Not an email item. |
 | B3 `hholder` (Prop 2.5) | DISPUTED | Lead ruling (operator 04:40 UTC): Prop 2.5 / hholder stays a cited input; the paper proves it by citation to Ponce §16.2. No change. |
 | MINOR (B) HB list | IN PROGRESS (z6, fp-audit-r1-b2-b3-lean) | Retired `hWeyl` and duplicate binders; universe-0 corollary of 11.13; ξ via `Classical.choice` (record); Lean Prop 5.2 docstring (all-t form); `greenPotentialClass` reading (record). |
 
@@ -87,17 +87,18 @@ A7, A8, A9, A10, B4, B5, B6, B7 concern `idla/MatedCRT`. They are not HB rows an
 
 | Prop (file:line) | Status | Note |
 |---|---|---|
-| `LocalMeasureKernelStmt` (`FirstPass/S11r/Frozen.lean:144`) | BLOCKED-STEP | Cites DS arXiv:0808.1560 Prop 1.1, Sheffield–Wang, paper §2.2–2.3. Written route is a sketch only (`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` §2 Step 2): a countable measurable code, then the dyadic GMC limit. No written proof that the limit map is Borel. |
-| `LocalLQGDecoderCommonFrozen` (`FirstPass/Frozen/S11c.lean:388`) | BLOCKED-STEP | Its docstring says "not stated verbatim" in DS. Route sketch in `CHATGPT-11-7-G1-G2-Q1.md` (line 32, "one Borel operation taking the local dyadic GMC limit"). Same missing step. |
-| `LQGCanonicalDecodersExistStmt` (`FirstPass/Frozen/S11n.lean:33`) | BLOCKED-STEP | Docstring: "no single printed theorem with this exact Lean type". Measure step as above. Metric step needs the free-ξ reduction (`CHATGPT-hb-decoders-weyl.md` §2.3), which says a further theorem is needed, not in External/Proposed. |
-| `LQGCanonicalDecodersMeasurableExistStmt` (`FirstPass/Frozen/S11n.lean:71`) | BLOCKED-STEP | Same two missing steps, plus Borel measurability of the measure kernel (`CHATGPT-hb-decoders-weyl.md` §3, "can be constructed", not written). |
+| `LocalMeasureKernelStmt` (`FirstPass/S11r/Frozen.lean:144`) | math queued (notes/fp-gaps/MATH-QUEUE.md, MQ-lh, operator 05:10) | Cites DS arXiv:0808.1560 Prop 1.1, Sheffield–Wang, paper §2.2–2.3. Written route is a sketch only (`notes/fp-gaps/CHATGPT-n1-n2-11-13-inputs.md` §2 Step 2): a countable measurable code, then the dyadic GMC limit. No written proof that the limit map is Borel. |
+| `LocalLQGDecoderCommonFrozen` (`FirstPass/Frozen/S11c.lean:388`) | math queued (notes/fp-gaps/MATH-QUEUE.md, MQ-lh, operator 05:10) | Its docstring says "not stated verbatim" in DS. Route sketch in `CHATGPT-11-7-G1-G2-Q1.md` (line 32, "one Borel operation taking the local dyadic GMC limit"). Same missing step. |
+| `LQGCanonicalDecodersExistStmt` (`FirstPass/Frozen/S11n.lean:33`) | math queued (notes/fp-gaps/MATH-QUEUE.md, MQ-lh, operator 05:10) | Docstring: "no single printed theorem with this exact Lean type". Measure step as above. Metric step needs the free-ξ reduction (`CHATGPT-hb-decoders-weyl.md` §2.3), which says a further theorem is needed, not in External/Proposed. |
+| `LQGCanonicalDecodersMeasurableExistStmt` (`FirstPass/Frozen/S11n.lean:71`) | math queued (notes/fp-gaps/MATH-QUEUE.md, MQ-lh, operator 05:10) | Same two missing steps, plus Borel measurability of the measure kernel (`CHATGPT-hb-decoders-weyl.md` §3, "can be constructed", not written). |
 
 Detail: reports/z7.md.
 
 ## Open after this round
 
-1. Decoder inputs: four BLOCKED-STEP rows above; no `_derived` theorem yet (missing: Borel dyadic GMC-limit map; free-ξ metric reduction).
-2. Operator: steps4-final.tex attachment or relocation (C48, C51); INTERNAL [C10] vs [C51]; A2 volume-growth step (z3 observation).
-3. z3: A5 site check (Prop 6.1 and Lemma 10.1 proofs); G-item repairs routed by operator.
-4. z4 (B1, rooted clause and full bridge), z3 (B2 hL1), z6 (B3 I1/I2, MINOR Lean): pending their reports.
-5. Round 2 (this file): tex markers C44 (corrected:3670) and C22 (corrected:2408) reworded in 13f73d62; ledger in 1db565b3.
+1. Decoder inputs: four rows "math queued" (notes/fp-gaps/MATH-QUEUE.md, MQ-lh, operator 05:10). That file is in the fleet notes (MQ-lh, appended 05:30 UTC; MQ-lh-10 for [C10]/[C51], MQ-lh-11 and MQ-lh-12 for the decoder rows). No `_derived` theorem yet (missing: Borel dyadic GMC-limit map; free-xi metric reduction).
+2. Operator: steps4-final.tex attachment or relocation (C48, C51); INTERNAL [C10] vs [C51] (math queued); A2 volume-growth step (z3 observation).
+3. G1-G44 stay unpatched in the gaps section (operator Q4). G7 is queued as a truth check (math queue, operator 05:10). z3: A5 site check (Prop 6.1 and Lemma 10.1 proofs).
+4. B1 (z4, z7) and B2 (z3): IN PROGRESS, partial commits as listed above. B3 I1/I2 and MINOR (B) (z6): IN PROGRESS, pending their reports.
+5. Operator 05:10: the [C44] O2 item is moved from the email to ERRATA-INTERNAL.md ("our own text, not a printed error"); X1 is not added to the email.
+6. Marker AUDIT-R1-FIXED.done: not yet created. The rows marked NO CHANGE (audit verdict Y, no finding) are awaiting the lead decision (reports/z6.md).

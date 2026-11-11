@@ -5,6 +5,10 @@ Moved out of ERRATA-for-Ewain.md on the audit R1 response (fp-audit-r1-hb-errata
 ## Internal items
 
 - [C44] O_2 amendment (author-approved 2026-11-09): the closure of O_2 lies in the closed 4delta-neighbourhood of W, which lies in B_{5delta}(W). This is our own replacement text, not a printed error: the printed paper contains no O_2 (grep of paper/lqg_harmonic_ball.tex is empty). The marker at paper/lqg_harmonic_ball-corrected.tex:3670 said "Printed in the corrected draft"; it was reworded to "Not printed: ... amendment of this draft" (z7, this round). The email therefore cites no O_2 sentence.
+- [C44] Lemma 11.17 and its three-event proof: moved out of ERRATA-for-Ewain.md on the operator 05:10 ruling; reason: our own text, not a printed error (operator 05:10).
+  - *Printed:* the bump proof of the three events uses unbuffered supports and an incorrect shrinking factor.
+  - *Problem:* the supports and the strict inequalities do not suffice.
+  - *Correction:* replace the bump proof by local certificates and a joint large-mass, small-diameter construction. The inner separation $(v-\delta)-(u+\delta)>8\delta$ is unchanged.
 - [C48], [C51]: the positive-probability existence of such holes is constructed in §3 of steps4-final.tex. That note lives in the fleet notes (hb/notes/wpn-steps4/steps4-final.tex), not in this repository. The email cites it and says it is to be attached; the operator must decide whether to attach it or move the construction into the paper (the same principle as audit A7 for IDLA).
 - [C42]: reduced, not dropped. The printed eq:metric-delta0-choice does give buffers (audit A3 checked at the printed lines 3243-3247). The only buffer missing is B_{10delta0}(W) inside T; the connected component Omega is also unspecified.
 

@@ -157,11 +157,6 @@ bookkeeping) follow. Part 3 lists gaps in printed proofs that are not statement 
 - *Problem:* the tilde denotes a different event, and the rooted transfer needs $\alpha=\gamma$.
 - *Correction:* for every $\alpha<Q$ and every $M>0$ there is an event $E^\alpha(M)\subset\widehat G_1^{h^\alpha}(0;M)$, measurable with respect to $h^\alpha|_{B_7}$ and invariant under additive constants, with $P[E^\alpha(M)]>0$; proved with local certificates.
 
-**Lemma 11.17 and its three-event proof** <!-- C44 -->
-- *Printed:* the bump proof of the three events uses unbuffered supports and an incorrect shrinking factor.
-- *Problem:* the supports and the strict inequalities do not suffice.
-- *Correction:* replace the bump proof by local certificates and a joint large-mass, small-diameter construction. The inner separation $(v-\delta)-(u+\delta)>8\delta$ is unchanged.
-
 **Lemma 11.13 (many pinch scales)** <!-- C45 -->
 - *Printed:* the proof uses positive probability at $\alpha=0$ directly for typical points, and transfers the frequency from the unrooted field; global metric events are treated as if they were annular-local.
 - *Problem:* the rooted law has a logarithmic singularity, and global metric events are not annular-local.
