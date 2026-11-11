@@ -1198,6 +1198,37 @@ theorem kernelMeas_restrict_eq (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) 
     Measure.restrict_restrict measurableSet_ball, Set.inter_self, hres, smul_smul,
     ENNReal.ofReal_toReal hKtop]
 
+/-- Route step 7, clause A (unrooted), almost surely: for a whole-plane GFF `h^ℂ` and a γ-LQG measure `μ` of
+`h^ℂ - α log|·|` (`IsLQGMeasureOfField`), the kernel `kernelMeas` of the local mean-zero observation is a positive
+multiple of `μ` restricted to the disc. -/
+theorem clauseA_unrooted (γ α : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R)
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (μ : Ω → Measure ℂ) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (d : ℕ → LocalParam c R) (decode : (ℕ → ℝ) → C(LocalParam c R, ℝ))
+    {K : ℕ → Set (ball c R)} (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (hdec : ∀ f : C(LocalParam c R, ℝ), decode (fun n => f (d n)) = f) :
+    ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+      (kernelMeas (γ := γ) hKs T (fun y => decode (fun n => localCoord c hR (d n) y))
+        (localMeanZeroObs α (ball c R) (hC ω))).restrict (ball c R) =
+        ENNReal.ofReal a • (μ ω).restrict (ball c R) := by
+  have hμ' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (hcirc ω)) (μ ω) := hμ
+  filter_upwards [ae_decode_localCoord_eq hGFF α c hR h0 d decode hdec, hGFF.ae_continuousOn_circle, hμ']
+    with ω hdecω hcontω hμω
+  obtain ⟨G, hG, hGeq⟩ := hdecω
+  have hcont' : ∀ ε : ℝ, 0 < ε → Continuous (hcirc ω ε) := fun ε hε =>
+    hcontω.comp_continuous (continuous_const.prodMk continuous_id) fun z => ⟨hε, Set.mem_univ z⟩
+  have hF : ∀ p : LocalParam c R,
+      (fun y => decode (fun n => localCoord c hR (d n) y)) (localMeanZeroObs α (ball c R) (hC ω)) p =
+        fieldCircleAverage α (hcirc ω) p.1.1 p.1.2 - fieldPairing α (hC ω) (bumpRho c hR) := by
+    intro p
+    show decode (fun n => localCoord c hR (d n) (localMeanZeroObs α (ball c R) (hC ω))) p = _
+    rw [hGeq, hG p]
+    unfold fieldCircleAverage
+    rw [circleAverage_log_norm_eq_max (localParam_radius_pos p) p.1.2]
+  exact kernelMeas_restrict_eq γ α (fieldPairing α (hC ω) (bumpRho c hR)) hR (hcirc ω) hcont' (μ ω) hμω hKs T
+    (fun y => decode (fun n => localCoord c hR (d n) y)) (localMeanZeroObs α (ball c R) (hC ω)) hF
+
 end Approximants
 
 end LocalDecoderCommon
