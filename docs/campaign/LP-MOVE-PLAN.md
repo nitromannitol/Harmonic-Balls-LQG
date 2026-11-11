@@ -1,75 +1,84 @@
 # LP move plan: `HarmonicBalls/LPStage` into the pinned Lattice-Probability tree
 
-Planning only (z7, task fp-lpstage-umbrella-refresh-2-and-lp-move-plan, decision R61). No edit in the LP repository, no LP git action.
-Probes are read-only; scripts are in `local/` of the worker scratch area (not committed); outputs in `/home/nitro/paper-fleets/hb/scratch-z7/`.
+Status at HB `HEAD` 1e37db5f (2026-11-11). The 66 modules were moved into the LP repository by five batches of commits on
+branch `idla/phase2` (section 1). This file records what was done and what remains. The one-step plan that stood here before
+(never run) is superseded by the batches.
 
-Pinned LP: `.lake/packages/lattice-probability`, commit `3912597` (= `inputRev` of `lake-manifest.json`), 1,485 `.lean` files
-(under `LatticeProb/`, `LatticeProbAudit/`, plus `LatticeProb.lean`), root `LatticeProb.lean` with 817 imports.
-Lakefile: `lean_lib LatticeProb` globs `andSubmodules LatticeProb`; `lean_lib LatticeProbV435` globs `LatticeProb.LQG`, `.MatedCRT`, `.Bonanno`.
-HB side: `HarmonicBalls/LPStage/All.lean` (54 imports, `lb HarmonicBalls.LPStage.All` BUILD OK).
+Pin: `lakefile.lean` and `lake-manifest.json` still pin LP at `3912597` (`inputRev`). The switch to `52e2f5f` is not done (section 7, step 1).
 
-## 1. Target paths (file name = module name; 54 files moved, `All.lean` retired)
+## 1. Target paths and batches
 
-- `LatticeProb/Gauss/` (8): GFF, GFFAffineInvariance, GFFCovSymm, GFFExistence, CameronMartinDerived, CameronMartinDerived2,
-  CircleAverageApprox, CircleAverageApprox2
-- `LatticeProb/Prob/` (6): BirkhoffErgodic, KolmogorovExtension, LocalObservation, PhaseTorus, WeylMassMeasurable, WeylSupMeasurable
-- `LatticeProb/Analysis/` (1): PlanarGreen
-- `LatticeProb/Topology/` (2): PlaneDomainConvexCompact, PlaneTopology
-- `LatticeProb/LQG/` (37, new directory; the aggregator `LatticeProb/LQG.lean` exists, 3 lines, no imports): LQGMassInner, LQGMeasure,
-  LQGMeasureDerived, LQGMeasureFullSupport, LQGMeasureFullSupport2, LQGMeasureFullSupport3, LQGMeasureInputs, LQGMeasureLocality,
-  LQGMeasureLocality2, LQGMeasureNonatomic, LQGMeasureNonatomicAll, LQGMeasureNonatomicOrigin, LQGMeasureNonatomicMassAffine,
-  LQGMeasureNonatomicMassLocality, LQGMeasureNonatomicMassMixture, LQGMeasureNonatomicMassPoly, LQGMeasureNonatomicMassRescaled,
-  LQGMeasureNonatomicMassScaled, LQGMeasureNonatomicMassTail, LQGMeasureNonatomicMassWeight, LQGMeasureNonatomicMassWholePlane,
-  LQGMeasureSquare, LQGMeasureSquarePositive, LQGMetric, LQGMetricMeasurable, LQGMetricMeasurable2, LQGMetricUniv, LQGWeylScaling,
-  LengthMetric, LengthMetricDerived, LiouvilleGraph, MassFunctional, WeylCompositionOuter, WeylCompositionOuter2,
-  WeylInternalClosed, WeylOffOrigin, WeylShiftedMass
-- Not moved: `All.lean` (its role passes to the LP aggregator); `LocalMeasureKernel{,2}` (z4, committed b01b9b8c; lead decides).
-- Topic directories follow the LP README "Repository layout" (`Gauss/` Gaussian measures, `Prob/`, `Topology/`, `Analysis/`) and the
-  `LQG` line of the `LatticeProbV435` lib.
-- Namespaces are NOT changed by the move (one mechanical step; renames are a later, separate step). Example: MassFunctional keeps
-  `LatticeProb.Gauss.Section6`; LQGMeasureLocality keeps `LatticeProb.Gauss`.
+66 modules are in LP at `52e2f5f` (pushed; an ancestor of `origin/idla/phase2`). The batch of a file is the LP commit that first
+added it. Each LP file is the HB mirror with its imports rewritten (section 3).
 
-## 2. Import rewrites
+- **Batch 1, a6b767d (13)**: `Gauss/` CameronMartinDerived, CameronMartinDerived2, CircleAverageApprox, CircleAverageApprox2, GFF,
+  GFFAffineInvariance; `Prob/` BirkhoffErgodic, KolmogorovExtension, LocalObservation, PhaseTorus; `Analysis/` PlanarGreen;
+  `Topology/` PlaneDomainConvexCompact, PlaneTopology.
+- **Batch 2, 79351f7 (36, `LQG/`)**: LQGMassInner, LQGMeasure, LQGMeasureDerived, LQGMeasureFullSupport, LQGMeasureFullSupport2,
+  LQGMeasureFullSupport3, LQGMeasureInputs, LQGMeasureLocality, LQGMeasureLocality2, LQGMeasureNonatomic, LQGMeasureNonatomicAll,
+  LQGMeasureNonatomicOrigin, LQGMeasureNonatomicMassAffine, LQGMeasureNonatomicMassLocality, LQGMeasureNonatomicMassMixture,
+  LQGMeasureNonatomicMassPoly, LQGMeasureNonatomicMassRescaled, LQGMeasureNonatomicMassScaled, LQGMeasureNonatomicMassTail,
+  LQGMeasureNonatomicMassWeight, LQGMeasureNonatomicMassWholePlane, LQGMeasureSquare, LQGMeasureSquarePositive, LQGMetric,
+  LQGMetricMeasurable, LQGMetricMeasurable2, LQGMetricUniv, LQGWeylScaling, LengthMetric, LengthMetricDerived, LiouvilleGraph,
+  MassFunctional, WeylCompositionOuter, WeylCompositionOuter2, WeylInternalClosed, WeylOffOrigin.
+- **Batch 3, 3338fbe (2, `Gauss/`)**: GFFCovSymm, GFFExistence.
+- **f6c0d7e (2, `Prob/`; not a numbered batch)**: WeylMassMeasurable, WeylSupMeasurable. Both belong to the first plan's 54 files,
+  added in their own commit.
+- **Batch 4, 9453dd0 (7, `Gauss/`)**: GFFCovPSD1 to GFFCovPSD7.
+- **Batch 5, 7b38ebb (6, `LQG/`)**: LocalMeasureKernel to LocalMeasureKernel5, WeylShiftedMass.
 
-- Rule: `import HarmonicBalls.LPStage.X` becomes `import LatticeProb.<Dir>.X`, with `<Dir>` from section 1 (file names unchanged).
-- Inside LPStage (checked): 0 import lines of any HB module outside `HarmonicBalls.LPStage`; 116 LPStage-internal import lines
-  (outside `All.lean`, which has 54). Other imports are already LP or Mathlib: BirkhoffErgodic imports `LatticeProb.Prob.Birkhoff`,
-  GFFExistence imports `LatticeProb.Prob.ChentsovPiModification`.
-- HB side (after the pin bump, lead): 29 HB files outside LPStage import LPStage modules; they need the same rule.
-- LP registration: `LatticeProb/LQG.lean` gains 37 `import LatticeProb.LQG.X` lines (aggregator role). The root `LatticeProb.lean`
-  needs no change (it imports 817 of the 1,485 files; the lib globs cover the rest). The lakefile needs no change.
+Count: 13 + 36 + 2 + 2 + 7 + 6 = 66. The first plan had 54 files; batch 4 (7) and batch 5 (5 new) add 12. `All.lean` is not moved
+(section 6, e).
 
-## 3. Name-clash probe (read-only, 2026-11-11)
+## 2. Status
 
-- Method: awk over the LP files; qualified names of `theorem|lemma|def|abbrev|structure|class|inductive|opaque`, with the
-  `namespace`/`section`/`end` stack tracked; `private` declarations skipped (mangled, cannot clash).
-- LP: 14,467 declarations. LPStage (57 tracked files, all of `HarmonicBalls/LPStage`): 955 declarations.
-- Clashes LPStage vs LP (qualified names): 0. Duplicates inside LPStage: 0. Duplicates inside the 54-module umbrella: 0
-  (also confirmed by `lb HarmonicBalls.LPStage.All`, BUILD OK).
-- Target paths: none of the 17 probed `Gauss/`, `Prob/`, `Analysis/`, `Topology/` target files exists in LP; `LatticeProb/LQG/`
-  is absent, so none of the 37 LQG targets exists.
-- Limits: the probe is textual. It does not see `instance`, `notation`, `@[to_additive]`-generated names, or projections and
-  constructors. Decisive check: `lake build` of the LP library on the new branch (section 6, step 4).
+- LP at `52e2f5f`: 66 of 66 modules present, identical to the HB mirrors after the import rewrite
+  (mirror identity table, fleet scratch area, column `identical_52e2f5f`).
+- LP tip of `idla/phase2`: 65 of 66 identical. The one difference is `LQG/LocalMeasureKernel5`: the statement is renamed,
+  `LocalLQGDecoderCommonFrozenLP` to `LocalLQGDecoderCommon` and `localLQGDecoderCommonFrozen_lp` to `localLQGDecoderCommon`,
+  with deprecated aliases for the old names. Its commit is the one titled "LQG: rename the common local decoder statement" in
+  `git log --oneline origin/idla/phase2..idla/phase2`. HB consumers switch at the pin bump.
+- LP aggregator `LatticeProb/LQG.lean` at `52e2f5f` imports 36 of the 42 `LQG/` modules. The six missing are LocalMeasureKernel,
+  LocalMeasureKernel2 to LocalMeasureKernel5 and WeylShiftedMass (batch 5 added no aggregator lines). The default library
+  glob covers them; the LP library build at the rename commit passed (10506 jobs).
+- HB at `1e37db5f`: the pin is still `3912597`. 32 HB files outside `HarmonicBalls/LPStage/` still import
+  `HarmonicBalls.LPStage` modules. `HarmonicBalls/LPStage/` holds all 67 `.lean` files (66 mirrors and `All.lean`); none is archived yet.
 
-## 4. Other LP files
+## 3. Import rewrites
 
-- `LatticeProb/PORT-PROVENANCE.json`: 0 mentions of `HarmonicBalls` or `LPStage`; no entry is proposed for the moved files.
-- `LatticeProbAudit/`: not affected by the move (its files are not LPStage modules).
+- Rule: `import HarmonicBalls.LPStage.X` becomes `import LatticeProb.<Dir>.X`, with `<Dir>` from section 1; file names are unchanged.
+  Applied in the LP copies: 130 rewritten import lines in total (mirror identity table, column `import_rewrites`).
+- HB side (pin switch step): 32 HB files outside LPStage, 40 import lines, from a dry run of the rewrite script (fleet scratch area).
+- The LPStage mirrors keep their own LPStage imports until retirement. The archive copies are not built.
+- The root `LatticeProb.lean` and the lakefile need no change. The LP aggregator needs six lines (section 2).
 
-## 5. Decisions for the lead (not taken here)
+## 4. Name-clash probe (before the moves, at `3912597`)
 
-a. `LQGMeasureInputs.lean` defines the LP forms of the three Proposed inputs (`WholePlaneLQGBallMassBoundsLP`,
-   `LQGMeasureCoordChangeLP`, `LQGMeasureExistenceLP`; defined Props, not proved). Moving it puts them in the LP library
-   with their Proposed status (operator source-check pending). Keep it in HB or move it?
-b. `LocalMeasureKernel{,2}` (z4): move in this step or later?
-c. Whether the LP README "Repository layout" should get an `LQG/` line in the same branch.
-d. The HB pin bump (`lakefile.lean` require rev, `lake-manifest.json`) is the lead's; workers never edit those files.
+- Textual probe over qualified declaration names (namespace stack tracked): LP 14,467 declarations, LPStage 955,
+  0 clashes between them, 0 duplicates inside LPStage.
+- The probe does not see `instance`, `notation`, generated names, constructors or projections. The decisive check is the LP
+  library build (section 2).
 
-## 6. One-step LP branch move (for the operator or lead; not run)
+## 5. Other LP files
 
-1. In the LP repository, create a new branch from `3912597` (never LP main).
-2. Copy (do not move in HB) the 54 files of section 1 from `HarmonicBalls/LPStage/` to their LP paths, and apply the rule of section 2.
-3. Add the 37 aggregator imports to `LatticeProb/LQG.lean`.
-4. `lake build LatticeProb` (default lib) and `lake build LatticeProbV435`; both must pass, with no sorry, admit, axiom or native_decide.
-5. One commit on the branch. Push only by the operator.
-6. HB side: pin bump (decision 5d), rewrite the 29 importing files, then rebuild the HB modules that import LP (replaces `lb HarmonicBalls.LPStage.All`).
+- `LatticeProb/PORT-PROVENANCE.json` at `3912597`: no mention of `HarmonicBalls` or `LPStage`; no entry is proposed for the moved files.
+- `LatticeProbAudit/` is not affected by the move.
+- The LP README "Repository layout" has no `LQG/` line at `52e2f5f` (decision c).
+
+## 6. Decisions
+
+a. `LQGMeasureInputs.lean` (LP forms of three Proposed inputs, defined Props, not proved): taken. Moved in batch 2. Its Proposed
+   status stays pending the source check.
+b. `LocalMeasureKernel` and `LocalMeasureKernel2`: taken. Moved in batch 5, together with LocalMeasureKernel3 to LocalMeasureKernel5.
+c. LP README `LQG/` line: open.
+d. Pin bump (`lakefile.lean` require rev, `lake-manifest.json`): open. The maintainer makes these edits.
+e. `All.lean`: taken. Archived unchanged with the other mirrors in the retirement step (section 7, step 2). Not yet moved.
+
+## 7. Next steps
+
+1. Pin switch: set the LP rev to `52e2f5f` in `lakefile.lean` and `lake-manifest.json`; then the HB import rewrite of the 32 modules
+   (dry run, check, apply, build of the 32 modules, one commit).
+2. Retire `HarmonicBalls/LPStage/` (67 files) to `archive/` with `git mv`, in one commit, after step 1 and after the last IDLA importer
+   is gone: `MatedCRT/FirstPass/LPBridge/LQGMeasureLocalityLP.lean:1` in the IDLA repository still imports `HarmonicBalls.LPStage`.
+3. LP repository: add the six missing aggregator lines to `LatticeProb/LQG.lean`.
+4. LP README: add the `LQG/` line under "Repository layout" (decision c), if taken.
