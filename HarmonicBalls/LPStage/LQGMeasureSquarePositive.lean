@@ -2,16 +2,18 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.PlaneTopology
+import HarmonicBalls.LPStage.LQGMeasureInputs
+import HarmonicBalls.LPStage.LQGMeasureNonatomic
+import HarmonicBalls.LPStage.LQGMeasureNonatomicMassRescaled
+import HarmonicBalls.LPStage.LQGMeasureNonatomicMassTail
+import HarmonicBalls.LPStage.LQGMeasureFullSupport3
 
 /-!
 # LP stage: square positivity of the LQG measure (row 23; z3, task `fp-lpstage-lqg-metric-univ-and-square-positive`, item 3)
 
-Status (partial; see the report): the LP form of the frozen row 23 is defined, and the elementary part of its derivation is
-proved. The LP-stage proof of the square positivity itself is NOT here: the HB derivation
-`HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived` (`FirstPass/Phase2/SquarePositiveDerived.lean:40`) passes through the
-full-support statement `lqgMeasureFullSupportStmt_of_existence` (`Proofs/Sec9/LQGExistenceConsequences.lean:46`), whose HB
-closure is larger than the copy budget (see the report). The three binders of the HB derivation are given LP forms in
-`LPStage/LQGMeasureInputs.lean`.
+Status: the LP form of the frozen row 23 is defined, and its proof from the three LP input binders of the HB derivation
+(`hDG`, `hCC`, `hE`, as in `LPStage/LQGMeasureInputs.lean`) is `lqgMeasureSquarePositiveLP_of_inputs`, through the LP
+full-support statement `LQGMeasureFullSupportStmtLP` (row 40, `LQGMeasureFullSupport3.lean`).
 
 * `LatticeProb.Topology.exists_isOpen_nonempty_subset_closedDyadicSquare`: LP port of
   `HarmonicBalls.exists_isOpen_nonempty_subset_closedDyadicSquare` (`SquarePositiveDerived.lean:24`).
@@ -49,7 +51,7 @@ open LatticeProb.Gauss LatticeProb.Topology
 
 /-- **LP form of `LQGMeasureSquarePositiveFrozen`** (`FirstPass/Frozen/S11c.lean:130`): for `0 < γ < 2` and `α₀ < Q`, on every
 whole-plane GFF space in `Type u` and for every LQG measure `μ` of the field, almost surely every closed dyadic square has
-positive mass. A definition only: this Prop is not proved in the LP stage yet (row 23 is open). -/
+positive mass. Proved from the LP inputs by `lqgMeasureSquarePositiveLP_of_inputs` (below). -/
 def LQGMeasureSquarePositiveLP : Prop :=
   ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -72,5 +74,30 @@ theorem ae_pos_isClosedDyadicSquare_of_charges {Ω : Type*} [MeasurableSpace Ω]
     (hS : LatticeProb.Topology.IsClosedDyadicSquare S) : ∀ᵐ ω ∂P, 0 < μ ω S := by
   obtain ⟨n, j, k, rfl⟩ := hS
   exact ae_pos_closedDyadicSquare_of_charges h n j k
+
+open LatticeProb.LQG.LQGMeasureNonatomicMass in
+/-- **Row 23 from the LP inputs** (LP copy of `HarmonicBalls.lqgMeasureSquarePositiveFrozen_derived`,
+`FirstPass/Phase2/SquarePositiveDerived.lean:40`, with the same three binders `hDG`, `hCC`, `hE`). The scaled
+multiscale step `WholePlaneScaledBallMassStepLP` and the non-atomicity `LQGMeasureNonatomicLP` are derived from the
+binders by the proved LP lemmas `rescaledBallMassUniformStep_lp`, `wholePlaneScaledBallMassStep_of_uniform_lp`,
+`circleAverageDyadicTailStep_lp` and `lqgMeasureNonatomic_lp`; the full-support statement `LQGMeasureFullSupportStmtLP`
+(row 40) is `lqgMeasureFullSupportStmt_of_scaled_lp`; square positivity is the elementary step
+`ae_pos_isClosedDyadicSquare_of_charges`. No hypothesis beyond the three binders. -/
+theorem lqgMeasureSquarePositiveLP_of_inputs
+    (hDG : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), WholePlaneLQGBallMassBoundsLP P γ hC hcirc)
+    (hCC : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChangeLP P γ 0 hC hcirc)
+    (hE : ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ α : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistenceLP P γ α hC hcirc) :
+    LQGMeasureSquarePositiveLP.{u} := by
+  intro γ α₀ hγ hγ2 hα Ω _ P hC hcirc μ hG hμ S hS
+  have hS' : WholePlaneScaledBallMassStepLP.{u} :=
+    wholePlaneScaledBallMassStep_of_uniform_lp (rescaledBallMassUniformStep_lp hDG hCC)
+      circleAverageDyadicTailStep_lp
+  have hFull : LQGMeasureFullSupportStmtLP.{u} :=
+    lqgMeasureFullSupportStmt_of_scaled_lp hS' (fun Ω _ P γ hC hcirc => hE Ω P γ 0 hC hcirc)
+      (lqgMeasureNonatomic_lp hDG hCC hE)
+  exact ae_pos_isClosedDyadicSquare_of_charges (hFull γ α₀ hγ hγ2 hα Ω P hC hcirc μ hG hμ) hS
 
 end LatticeProb.LQG
