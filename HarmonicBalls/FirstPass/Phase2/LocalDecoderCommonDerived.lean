@@ -1685,6 +1685,206 @@ theorem ae_tendsto_localRooted0 {Ω : Type*} [MeasurableSpace Ω] {P : Measure �
   rw [heq]
   exact hω.add hD
 
+/-- The rooted circle profile of `h - γ log|·-z|`: `hc0 r x = h^ℂ_r(x) + circleAverage(-γ log|·-z|)(x,r)`. -/
+noncomputable def rootedHc0 (γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ → ℝ) : ℝ → ℂ → ℝ :=
+  fun r x => hcirc r x + Real.circleAverage (rootShift0 γ z) x r
+
+theorem rootedCircleAverage_eq_fieldCircleAverage (γ α₀ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ → ℝ) {r : ℝ} (hr : 0 < r)
+    (x : ℂ) : rootedCircleAverage α₀ γ z hcirc r x = fieldCircleAverage α₀ (rootedHc0 γ z hcirc) r x := by
+  unfold rootedCircleAverage fieldCircleAverage rootedHc0
+  rw [circleAverage_rootShift0 γ hr z x, circleAverage_log_norm_sub_eq x z hr]
+  ring
+
+theorem continuous_rootedHc0 (γ : ℝ) (z : ℂ) (hcirc : ℝ → ℂ → ℝ)
+    (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hcirc ε)) :
+    ∀ ε : ℝ, 0 < ε → Continuous (rootedHc0 γ z hcirc ε) := fun ε hε => by
+  have h2 : Continuous fun x : ℂ => Real.circleAverage (rootShift0 γ z) x ε := by
+    have hfun : (fun x : ℂ => Real.circleAverage (rootShift0 γ z) x ε) =
+        fun x : ℂ => -γ * Real.log (max ε ‖x - z‖) :=
+      funext fun x => circleAverage_rootShift0 γ hε z x
+    rw [hfun]
+    exact continuous_const.mul
+      ((continuous_const.max (continuous_id.sub continuous_const).norm).log fun x => (lt_max_of_lt_left hε).ne')
+  exact (hcont ε hε).add h2
+
+/-- The γ-LQG limit property is invariant under changing the circle profile at positive radii (only the dyadic scales
+enter `lqgApprox`). -/
+theorem isLQGLimit_congr {γ : ℝ} {f g : ℝ → ℂ → ℝ} (h : ∀ r : ℝ, 0 < r → ∀ x : ℂ, f r x = g r x) {m : Measure ℂ}
+    (hm : IsLQGLimit γ f m) : IsLQGLimit γ g m := by
+  refine ⟨hm.isLocallyFiniteMeasure, fun φ hφc hφs => ?_⟩
+  have hfg : ∀ k : ℕ, lqgApprox γ g (dyadicScale k) = lqgApprox γ f (dyadicScale k) := by
+    intro k
+    unfold lqgApprox
+    congr 1
+    funext x
+    rw [← h (dyadicScale k) (dyadicScale_pos k) x]
+  simp only [hfg]
+  exact hm.tendsto_integral φ hφc hφs
+
+theorem ae_localCoord_rooted0 {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (z : ℂ) (p : LocalParam c R) :
+    ∀ᵐ ω ∂P, localCoord c hR p (rootedObs0 γ α (ball c R) (hC ω) z) =
+      hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) - fieldPairing α (hC ω) (bumpRho c hR) +
+        (Real.circleAverage (rootShift0 γ z) p.1.2 p.1.1 - ∫ w, rootShift0 γ z w * bumpRho c hR w) := by
+  filter_upwards [ae_tendsto_localRooted0 hGFF γ α c hR h0 z p] with ω hω
+  unfold localCoord
+  exact hω.limUnder_eq
+
+theorem ae_decode_rooted0 {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (z : ℂ)
+    (d : ℕ → LocalParam c R) (decode : (ℕ → ℝ) → C(LocalParam c R, ℝ))
+    (hdec : ∀ f : C(LocalParam c R, ℝ), decode (fun n => f (d n)) = f) :
+    ∀ᵐ ω ∂P, ∃ G : C(LocalParam c R, ℝ),
+      (∀ p : LocalParam c R, G p = hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) -
+        fieldPairing α (hC ω) (bumpRho c hR) +
+        (Real.circleAverage (rootShift0 γ z) p.1.2 p.1.1 - ∫ w, rootShift0 γ z w * bumpRho c hR w)) ∧
+      decode (fun n => localCoord c hR (d n) (rootedObs0 γ α (ball c R) (hC ω) z)) = G := by
+  have hco : ∀ᵐ ω ∂P, ∀ n, localCoord c hR (d n) (rootedObs0 γ α (ball c R) (hC ω) z) =
+      hcirc ω (d n).1.1 (d n).1.2 - α * Real.log (max (d n).1.1 ‖(d n).1.2‖) -
+        fieldPairing α (hC ω) (bumpRho c hR) +
+        (Real.circleAverage (rootShift0 γ z) (d n).1.2 (d n).1.1 - ∫ w, rootShift0 γ z w * bumpRho c hR w) :=
+    ae_all_iff.2 fun n => ae_localCoord_rooted0 hGFF γ α c hR h0 z (d n)
+  filter_upwards [hGFF.ae_continuousOn_circle, hco] with ω hω hωn
+  have hpos : ∀ p : LocalParam c R, 0 < p.1.1 := fun p => localParam_radius_pos p
+  have hmem : ∀ p : LocalParam c R, ((p.1.1, p.1.2) : ℝ × ℂ) ∈ Set.Ioi (0 : ℝ) ×ˢ (Set.univ : Set ℂ) :=
+    fun p => ⟨hpos p, Set.mem_univ _⟩
+  have hpair : Continuous fun p : LocalParam c R => ((p.1.1, p.1.2) : ℝ × ℂ) :=
+    (continuous_fst.comp continuous_subtype_val).prodMk (continuous_snd.comp continuous_subtype_val)
+  have hcirc_c : Continuous fun p : LocalParam c R => hcirc ω p.1.1 p.1.2 :=
+    hω.comp_continuous hpair hmem
+  have hlog : Continuous fun p : LocalParam c R => Real.log (max p.1.1 ‖p.1.2‖) :=
+    Continuous.log ((continuous_fst.comp continuous_subtype_val).max
+      (continuous_norm.comp (continuous_snd.comp continuous_subtype_val)))
+      fun p => ne_of_gt (lt_of_lt_of_le (hpos p) (le_max_left _ _))
+  have hA : Continuous fun p : LocalParam c R => Real.log (max p.1.1 ‖p.1.2 - z‖) :=
+    Continuous.log ((continuous_fst.comp continuous_subtype_val).max
+      (continuous_norm.comp ((continuous_snd.comp continuous_subtype_val).sub continuous_const)))
+      fun p => ne_of_gt (lt_of_lt_of_le (hpos p) (le_max_left _ _))
+  have hrsEq : (fun p : LocalParam c R => Real.circleAverage (rootShift0 γ z) p.1.2 p.1.1) = fun p =>
+      -γ * Real.log (max p.1.1 ‖p.1.2 - z‖) :=
+    funext fun p => circleAverage_rootShift0 γ (hpos p) z p.1.2
+  have hrs : Continuous fun p : LocalParam c R => Real.circleAverage (rootShift0 γ z) p.1.2 p.1.1 := by
+    rw [hrsEq]
+    exact continuous_const.mul hA
+  have hgc : Continuous fun p : LocalParam c R => hcirc ω p.1.1 p.1.2 - α * Real.log (max p.1.1 ‖p.1.2‖) -
+      fieldPairing α (hC ω) (bumpRho c hR) +
+      (Real.circleAverage (rootShift0 γ z) p.1.2 p.1.1 - ∫ w, rootShift0 γ z w * bumpRho c hR w) :=
+    (((hcirc_c.sub (continuous_const.mul hlog)).sub continuous_const).add (hrs.sub continuous_const))
+  refine ⟨⟨_, hgc⟩, fun p => rfl, ?_⟩
+  have hfun : (fun n => localCoord c hR (d n) (rootedObs0 γ α (ball c R) (hC ω) z)) =
+      fun n => (⟨_, hgc⟩ : C(LocalParam c R, ℝ)) (d n) :=
+    funext fun n => hωn n
+  rw [hfun, hdec]
+
+theorem rootedMeanZeroObs_eq_rootedObs0 (γ α : ℝ) (D : Set ℂ) (hC : (ℂ → ℝ) → ℝ) (z : ℂ) :
+    rootedMeanZeroObs α γ D z hC = rootedObs0 γ α D hC z :=
+  funext fun φ => rootedMeanZeroObs_eq γ α φ.1 hC z
+
+/-- Route step 8, clause 2 (rooted, almost surely): the kernel of `rootedMeanZeroObs` (the observation of
+`h - γ log|·-z|`) is a positive multiple of the rooted γ-LQG measure `μz` on the disc. -/
+theorem clauseA_rooted0 {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (c : ℂ) {R : ℝ} (hR : 0 < R) (h0 : (0 : ℂ) ∉ ball c R) (z : ℂ)
+    (μz : Ω → Measure ℂ)
+    (hμz : IsLQGMeasure P γ (fun ω => rootedCircleAverage α γ z (hcirc ω)) μz)
+    (d : ℕ → LocalParam c R) (decode : (ℕ → ℝ) → C(LocalParam c R, ℝ))
+    {K : ℕ → Set (ball c R)} (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (hdec : ∀ f : C(LocalParam c R, ℝ), decode (fun n => f (d n)) = f) :
+    ∀ᵐ ω ∂P, ∃ a : ℝ, 0 < a ∧
+      (kernelMeas (γ := γ) hKs T (fun y => decode (fun n => localCoord c hR (d n) y))
+        (rootedMeanZeroObs α γ (ball c R) z (hC ω))).restrict (ball c R) =
+        ENNReal.ofReal a • (μz ω).restrict (ball c R) := by
+  have hμ' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (rootedHc0 γ z (hcirc ω))) (μz ω) := by
+    filter_upwards [hμz] with ω hω
+    exact isLQGLimit_congr (fun r hr x => rootedCircleAverage_eq_fieldCircleAverage γ α z (hcirc ω) hr x) hω
+  filter_upwards [ae_decode_rooted0 hGFF γ α c hR h0 z d decode hdec, hGFF.ae_continuousOn_circle, hμ']
+    with ω hdecω hcontω hμω
+  obtain ⟨G, hG, hGeq⟩ := hdecω
+  have hcont' : ∀ ε : ℝ, 0 < ε → Continuous (rootedHc0 γ z (hcirc ω) ε) := by
+    refine continuous_rootedHc0 γ z (hcirc ω) fun ε hε => ?_
+    have h := hcontω.comp_continuous (continuous_const.prodMk continuous_id)
+      (fun x : ℂ => (⟨hε, Set.mem_univ x⟩ : (ε, x) ∈ Set.Ioi (0 : ℝ) ×ˢ (Set.univ : Set ℂ)))
+    exact h
+  have hF : ∀ p : LocalParam c R,
+      (fun y => decode (fun n => localCoord c hR (d n) y)) (rootedMeanZeroObs α γ (ball c R) z (hC ω)) p =
+        fieldCircleAverage α (rootedHc0 γ z (hcirc ω)) p.1.1 p.1.2 -
+          (fieldPairing α (hC ω) (bumpRho c hR) + ∫ w, rootShift0 γ z w * bumpRho c hR w) := by
+    intro p
+    show decode (fun n => localCoord c hR (d n) (rootedMeanZeroObs α γ (ball c R) z (hC ω))) p = _
+    rw [rootedMeanZeroObs_eq_rootedObs0, hGeq, hG p]
+    unfold fieldCircleAverage rootedHc0
+    rw [circleAverage_log_norm_eq_max (localParam_radius_pos p) p.1.2]
+    ring
+  exact kernelMeas_restrict_eq γ α
+    (fieldPairing α (hC ω) (bumpRho c hR) + ∫ w, rootShift0 γ z w * bumpRho c hR w)
+    hR (rootedHc0 γ z (hcirc ω)) hcont' (μz ω) hμω hKs T
+    (fun y => decode (fun n => localCoord c hR (d n) y)) (rootedMeanZeroObs α γ (ball c R) z (hC ω)) hF
+
+/-- The kernel measure has total mass at most `1` (`κ(y)(ℂ) = (1+m)⁻¹ m ≤ 1`): the kernel is finite. -/
+theorem kernelMeas_univ_le {Y : Type*} [MeasurableSpace Y] (γ : ℝ) {c : ℂ} {R : ℝ} {K : ℕ → Set (ball c R)}
+    (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (decodeF : Y → C(LocalParam c R, ℝ)) (y : Y) : kernelMeas (γ := γ) hKs T decodeF y univ ≤ 1 := by
+  unfold kernelMeas
+  rw [Measure.smul_apply, Measure.map_apply measurable_subtype_coe MeasurableSet.univ, Set.preimage_univ,
+    smul_eq_mul]
+  rcases eq_or_ne (discDecoder (γ := γ) hKs T decodeF y univ) ⊤ with h | h
+  · simp [h]
+  · have h1 : (1 + discDecoder (γ := γ) hKs T decodeF y univ) ≠ ⊤ :=
+      ENNReal.add_ne_top.2 ⟨ENNReal.one_ne_top, h⟩
+    have h0 : (1 + discDecoder (γ := γ) hKs T decodeF y univ) ≠ 0 := by simp
+    calc (1 + discDecoder (γ := γ) hKs T decodeF y univ)⁻¹ * discDecoder (γ := γ) hKs T decodeF y univ
+        ≤ (1 + discDecoder (γ := γ) hKs T decodeF y univ)⁻¹ *
+            (1 + discDecoder (γ := γ) hKs T decodeF y univ) :=
+          by gcongr; exact le_add_self
+      _ = 1 := ENNReal.inv_mul_cancel h0 h1
+
+/-- The kernel measure is concentrated on the disc: `κ(y) = κ(y).restrict D`. -/
+theorem kernelMeas_eq_restrict {Y : Type*} [MeasurableSpace Y] (γ : ℝ) {c : ℂ} {R : ℝ}
+    {K : ℕ → Set (ball c R)} (hKs : ∀ s : Set (ball c R), IsCompact s → ∃ n, s ⊆ K n) (T : TestFamilyX K)
+    (decodeF : Y → C(LocalParam c R, ℝ)) (y : Y) :
+    kernelMeas (γ := γ) hKs T decodeF y = (kernelMeas (γ := γ) hKs T decodeF y).restrict (ball c R) := by
+  have hzero : kernelMeas (γ := γ) hKs T decodeF y (ball c R)ᶜ = 0 := by
+    unfold kernelMeas
+    rw [Measure.smul_apply, Measure.map_apply measurable_subtype_coe measurableSet_ball.compl]
+    have hpre : (Subtype.val : ball c R → ℂ) ⁻¹' (ball c R)ᶜ = ∅ := by
+      ext x
+      exact ⟨fun h => absurd x.2 h, fun h => h.elim⟩
+    rw [hpre, measure_empty, smul_zero]
+  exact (Measure.restrict_eq_self_of_ae_mem (ae_iff.2 hzero)).symm
+
+/-- Route steps 1-8 assembled for `LocalLQGDecoderCommonFrozen`: the single kernel `κ` (the same as in
+`localMeasureKernelStmt_derived`) satisfies both clauses (unrooted and rooted) and is finite. -/
+theorem localLQGDecoderCommonFrozen_derived : LocalLQGDecoderCommonFrozen := by
+  intro γ _ _ c₂ r₂ hr₂ h0
+  have h0b : (0 : ℂ) ∉ ball c₂ r₂ := fun h => h0 (ball_subset_closedBall h)
+  obtain ⟨d, decode, hdm, hdec⟩ := exists_localDecoder c₂ hr₂
+  obtain ⟨K, hKc, hKs⟩ := ball_exhaustion c₂ r₂
+  obtain ⟨T⟩ := exists_testFamilyX K hKc
+  have hdm' : Measurable fun y => decode (fun n => localCoord c₂ hr₂ (d n) y) :=
+    hdm.comp (measurable_pi_iff.mpr fun n => measurable_localCoord c₂ hr₂ (d n))
+  have hmK := measurable_kernelMeas γ hKs T (fun y => decode (fun n => localCoord c₂ hr₂ (d n) y)) hdm'
+  refine ⟨⟨kernelMeas (γ := γ) hKs T (fun y => decode (fun n => localCoord c₂ hr₂ (d n) y)), hmK⟩, ?_, ?_, ?_⟩
+  · haveI : ProbabilityTheory.IsFiniteKernel
+        (⟨kernelMeas (γ := γ) hKs T (fun y => decode (fun n => localCoord c₂ hr₂ (d n) y)), hmK⟩ :
+          ProbabilityTheory.Kernel _ ℂ) :=
+      ⟨⟨1, ENNReal.one_lt_top, fun y => kernelMeas_univ_le γ hKs T
+        (fun y => decode (fun n => localCoord c₂ hr₂ (d n) y)) y⟩⟩
+    infer_instance
+  · intro α₀ _ Ω _ P _ hC hcirc μ hGFF hμ
+    filter_upwards [clauseA_unrooted γ α₀ hr₂ h0b hGFF μ hμ d decode hKs T hdec] with ω ⟨a, ha, hres⟩
+    refine ⟨ENNReal.ofReal a, ENNReal.ofReal_pos.2 ha, ENNReal.ofReal_lt_top, ?_⟩
+    change kernelMeas (γ := γ) hKs T (fun y => decode (fun n => localCoord c₂ hr₂ (d n) y))
+      (localMeanZeroObs α₀ (ball c₂ r₂) (hC ω)) = _
+    rw [kernelMeas_eq_restrict, hres]
+  · intro α₀ _ z Ω _ P _ hC hcirc μz hGFF hμz
+    filter_upwards [clauseA_rooted0 hGFF γ α₀ c₂ hr₂ h0b z μz hμz d decode hKs T hdec] with ω ⟨a, ha, hres⟩
+    refine ⟨ENNReal.ofReal a, ENNReal.ofReal_pos.2 ha, ENNReal.ofReal_lt_top, ?_⟩
+    change kernelMeas (γ := γ) hKs T (fun y => decode (fun n => localCoord c₂ hr₂ (d n) y))
+      (rootedMeanZeroObs α₀ γ (ball c₂ r₂) z (hC ω)) = _
+    rw [kernelMeas_eq_restrict, hres]
+
 end Approximants
 
 end LocalDecoderCommon
