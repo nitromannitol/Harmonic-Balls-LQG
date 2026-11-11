@@ -18,6 +18,11 @@ Sections:
 1. Euclidean Laplacian test function `cmTestFn f = -(2π)⁻¹ Δ f`; logarithmic potential `∫ log‖x - y‖ q(y) dy = -f(x)`.
 2. Circle averages of `log‖· - y‖` and the identity `∫ log⁺‖y‖ q(y) dy = -Av_{∂B_1} f`.
 3. The covariance identity `∫ wholePlaneCov x y q(y) dy = f x` for `Av_{∂B_1} f = 0`.
+4. The one-dimensional Gaussian tilt of a centered Gaussian pair (`tilt_core`): `E[exp(-X - v/2) exp(iW)]`
+   equals `exp(-i Cov(W,X) - Var W / 2)`, via the independent residual `W - βX`.
+
+The finite-dimensional law of the tilted family, the assembly of `IsWholePlaneGFF` and the theorem
+`cameronMartinGFFReweighting_derived` are in `CameronMartinReweightingDerived2.lean`.
 -/
 
 namespace HarmonicBalls.S11aj
@@ -273,5 +278,129 @@ theorem integral_wholePlaneCov_mul_cmTestFn {f : ℂ → ℝ} (hf : ContDiff ℝ
           integral_log_norm_mul_cmTestFn hf hc x]
         ring
 
+
+/-! ### Gaussian tilt of a centered Gaussian pair -/
+
+section Tilt
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+
+omit [IsProbabilityMeasure P] in
+/-- A centered Gaussian real variable of zero variance vanishes almost surely. -/
+theorem ae_eq_zero_of_variance_eq_zero {X : Ω → ℝ} (hX : HasGaussianLaw X P) (hX0 : P[X] = 0)
+    (hv : Var[X; P] = 0) : ∀ᵐ x ∂P, X x = 0 := by
+  have hlaw := hX.map_eq_gaussianReal
+  rw [hX0, hv, Real.toNNReal_zero, gaussianReal_zero_var] at hlaw
+  have h1 : ∀ᵐ x ∂(P.map X), x = 0 := by
+    rw [hlaw]
+    exact (ae_dirac_iff (measurableSet_singleton (0 : ℝ))).2 rfl
+  exact (ae_map_iff hX.aemeasurable (measurableSet_singleton (0 : ℝ))).1 h1
+
+omit [IsProbabilityMeasure P] in
+/-- A covariance with a variable which vanishes almost surely is zero. -/
+theorem covariance_eq_zero_of_ae_eq_zero {W X : Ω → ℝ} (hX : ∀ᵐ x ∂P, X x = 0) : cov[W, X; P] = 0 := by
+  have hX0 : P[X] = 0 := by
+    rw [integral_congr_ae (g := fun _ => (0 : ℝ)) hX]
+    simp
+  unfold covariance
+  have h0 : (fun x => (W x - P[W]) * (X x - P[X])) =ᵐ[P] fun _ => (0 : ℝ) := by
+    filter_upwards [hX] with x hx
+    simp [hx, hX0]
+  rw [integral_congr_ae h0]
+  simp
+
+/-- **Gaussian tilt, one-dimensional core.** For a centered Gaussian pair `(X, W)` with `Var X = v` and
+`Cov(W, X) = c`, the tilt `exp(-X - v/2)` gives `E[exp(-X - v/2) exp(i W)] = exp(-i c - Var W / 2)`. -/
+theorem tilt_core {X W : Ω → ℝ} (hXW : HasGaussianLaw (fun x => (X x, W x)) P) (hX0 : P[X] = 0)
+    (hW0 : P[W] = 0) :
+    ∫ x, ((Real.exp (-X x - Var[X; P] / 2) : ℝ) : ℂ) * Complex.exp (Complex.I * (W x : ℂ)) ∂P
+      = Complex.exp (-(Complex.I * (cov[W, X; P] : ℂ)) - ((Var[W; P] : ℝ) : ℂ) / 2) := by
+  have hX : HasGaussianLaw X P := hXW.map (ContinuousLinearMap.fst ℝ ℝ ℝ)
+  have hW : HasGaussianLaw W P := hXW.map (ContinuousLinearMap.snd ℝ ℝ ℝ)
+  have hXm : MemLp X 2 P := hX.memLp_two
+  have hWm : MemLp W 2 P := hW.memLp_two
+  obtain ⟨β, hβv⟩ : ∃ β : ℝ, β * Var[X; P] = cov[W, X; P] := by
+    by_cases hv : Var[X; P] = 0
+    · exact ⟨0, by rw [zero_mul]; exact (covariance_eq_zero_of_ae_eq_zero
+        (ae_eq_zero_of_variance_eq_zero hX hX0 hv)).symm⟩
+    · exact ⟨cov[W, X; P] / Var[X; P], div_mul_cancel₀ _ hv⟩
+  -- the residual W' = W - β X
+  have hjoint : HasGaussianLaw (fun x => (X x, (W - β • X) x)) P :=
+    hXW.map ((ContinuousLinearMap.fst ℝ ℝ ℝ).prod
+      ((ContinuousLinearMap.snd ℝ ℝ ℝ) - β • ContinuousLinearMap.fst ℝ ℝ ℝ))
+  have hW'G : HasGaussianLaw (W - β • X) P := hjoint.map (ContinuousLinearMap.snd ℝ ℝ ℝ)
+  have hW'm : MemLp (W - β • X) 2 P := hW'G.memLp_two
+  have hcov : cov[X, (W - β • X); P] = 0 := by
+    rw [covariance_comm, covariance_sub_left hWm (hXm.const_smul β) hXm, covariance_smul_left,
+      covariance_self hX.aemeasurable, hβv, sub_self]
+  have hind : IndepFun X (W - β • X) P := HasGaussianLaw.indepFun_of_covariance_eq_zero hjoint hcov
+  -- Laws of X and of the residual
+  have hXint : Integrable X P := hXm.integrable one_le_two
+  have hWint : Integrable W P := hWm.integrable one_le_two
+  have hlawX : HasLaw X (gaussianReal 0 (Var[X; P]).toNNReal) P := by
+    refine ⟨hX.aemeasurable, ?_⟩
+    have h := hX.map_eq_gaussianReal
+    rwa [hX0] at h
+  have hW'0 : P[W - β • X] = 0 := by
+    simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+    rw [integral_sub hWint (hXint.const_mul β), integral_const_mul, hW0, hX0, mul_zero, sub_zero]
+  have hW'law : HasLaw (W - β • X) (gaussianReal 0 (Var[W - β • X; P]).toNNReal) P := by
+    refine ⟨hW'G.aemeasurable, ?_⟩
+    have h := hW'G.map_eq_gaussianReal
+    rwa [hW'0] at h
+  -- Variance decomposition Var W = Var W' + β² Var X
+  have hβX : MemLp (β • X) 2 P := hXm.const_smul β
+  have hVar : Var[W; P] = Var[W - β • X; P] + β ^ 2 * Var[X; P] := by
+    have e : W = (W - β • X) + β • X := by funext x; simp
+    have h1 := variance_add hW'm hβX
+    rw [← e] at h1
+    have hc0 : cov[W - β • X, X; P] = 0 := by rw [covariance_comm]; exact hcov
+    rw [h1, covariance_smul_right, hc0, variance_smul]
+    ring
+  -- Characteristic functions of the two independent pieces
+  have hv0 : 0 ≤ Var[X; P] := variance_nonneg _ _
+  have hf_eval : ∫ x, Complex.exp ((-1 + Complex.I * β) * (X x : ℂ)) ∂P
+      = Complex.exp (((Var[X; P] : ℝ) : ℂ) * (-1 + Complex.I * β) ^ 2 / 2) := by
+    have h := complexMGF_gaussianReal hlawX (-1 + Complex.I * β)
+    unfold complexMGF at h
+    rw [h]
+    congr 1
+    simp [Real.coe_toNNReal _ hv0]
+  have hg_eval : ∫ x, Complex.exp (Complex.I * ((W - β • X) x : ℂ)) ∂P
+      = Complex.exp (-((Var[W - β • X; P] : ℝ) : ℂ) / 2) := by
+    have h1 : ∫ x, Complex.exp (Complex.I * ((W - β • X) x : ℂ)) ∂P = charFun (P.map (W - β • X)) 1 := by
+      rw [charFun_apply_real, integral_map hW'G.aemeasurable (by fun_prop)]
+      apply integral_congr_ae
+      filter_upwards with x
+      push_cast
+      ring_nf
+    rw [h1, hW'law.map_eq, charFun_gaussianReal]
+    congr 1
+    simp [Real.coe_toNNReal _ (variance_nonneg _ _)]
+    ring
+  -- Pointwise factorisation of the tilted integrand
+  have hpt : ∀ x : Ω, ((Real.exp (-X x - Var[X; P] / 2) : ℝ) : ℂ) * Complex.exp (Complex.I * (W x : ℂ))
+      = Complex.exp (-((Var[X; P] : ℝ) : ℂ) / 2)
+        * (Complex.exp ((-1 + Complex.I * β) * (X x : ℂ)) * Complex.exp (Complex.I * ((W - β • X) x : ℂ))) := by
+    intro x
+    simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Complex.ofReal_exp, ← Complex.exp_add]
+    congr 1
+    push_cast
+    ring
+  rw [integral_congr_ae (ae_of_all _ hpt), integral_const_mul]
+  have hprod := hind.integral_comp_mul_comp
+    (f := fun x : ℝ => Complex.exp ((-1 + Complex.I * β) * (x : ℂ)))
+    (g := fun x : ℝ => Complex.exp (Complex.I * (x : ℂ)))
+    hX.aemeasurable hW'G.aemeasurable (by fun_prop) (by fun_prop)
+  have hprod' : ∫ x, Complex.exp ((-1 + Complex.I * β) * (X x : ℂ)) * Complex.exp (Complex.I * ((W - β • X) x : ℂ)) ∂P
+      = (∫ x, Complex.exp ((-1 + Complex.I * β) * (X x : ℂ)) ∂P)
+        * ∫ x, Complex.exp (Complex.I * ((W - β • X) x : ℂ)) ∂P := hprod
+  rw [hprod', hf_eval, hg_eval, ← Complex.exp_add, ← Complex.exp_add, ← hβv]
+  congr 1
+  rw [hVar]
+  push_cast
+  linear_combination (↑β ^ 2 * ↑(Var[X; P]) / 2 : ℂ) * Complex.I_sq
+
+end Tilt
 
 end HarmonicBalls.S11aj
