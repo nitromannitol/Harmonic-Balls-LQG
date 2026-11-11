@@ -1020,6 +1020,62 @@ theorem eventually_two_dyadicScale_lt {t : ℝ} (ht : 0 < t) :
     simpa using h.const_mul 2
   exact h2.eventually (gt_mem_nhds ht)
 
+/-- Route step 7 (Riesz limit on the disc): if the centred profile `F` is `fieldCircleAverage - P` and `μ` is the
+γ-LQG measure of `hc` (`IsLQGLimit`), the approximants integrate every `g ∈ C_c(ball c R)` to
+`∫ g d(comap val (e^{-γP} • μ))`. -/
+theorem tendsto_approxX_integral (γ α P : ℝ) {c : ℂ} {R : ℝ} (hR : 0 < R) (hc : ℝ → ℂ → ℝ)
+    (hcont : ∀ ε : ℝ, 0 < ε → Continuous (hc ε)) (μ : Measure ℂ)
+    (hμ : IsLQGLimit γ (fieldCircleAverage α hc) μ)
+    (F : C(LocalParam c R, ℝ))
+    (hF : ∀ p : LocalParam c R, F p = fieldCircleAverage α hc p.1.1 p.1.2 - P)
+    (g : C_c(ball c R, ℝ)) :
+    Tendsto (fun k => ∫ x, g x ∂(approxX γ c R F k)) atTop
+      (𝓝 (∫ x, g x ∂(Measure.comap (Subtype.val : ball c R → ℂ)
+        (ENNReal.ofReal (Real.exp (-(γ * P))) • μ)))) := by
+  obtain ⟨fc, hfg, hfz⟩ := exists_extend_zero_ball g
+  have hcompact : IsCompact (Subtype.val '' tsupport g) :=
+    (g.hasCompactSupport.isCompact).image continuous_subtype_val
+  have hKb : Subtype.val '' tsupport g ⊆ ball c R := by
+    rintro _ ⟨x, -, rfl⟩
+    exact x.2
+  obtain ⟨s, hs0, hsR, hsK⟩ := exists_radius_of_compact hR hcompact hKb
+  have hfsupp : ∀ z, fc z ≠ 0 → dist z c ≤ s := fun z hz =>
+    hsK z (by
+      by_contra hK
+      exact hz (hfz z hK))
+  have hev : ∀ᶠ k : ℕ in atTop, 2 * dyadicScale k < R - s :=
+    eventually_two_dyadicScale_lt (by linarith)
+  have hgf : ∀ x : ball c R, g x = fc x.1 := fun x => (hfg x).symm
+  have hL : ∫ x, g x ∂(Measure.comap (Subtype.val : ball c R → ℂ)
+      (ENNReal.ofReal (Real.exp (-(γ * P))) • μ)) = Real.exp (-(γ * P)) * ∫ z, fc z ∂μ := by
+    simp only [hgf]
+    rw [integral_subtype_comap measurableSet_ball (fun z => fc z)]
+    rw [setIntegral_eq_integral_of_forall_compl_eq_zero (fun z hz => by
+      by_contra hne
+      exact hz (mem_ball.2 (lt_of_le_of_lt (hfsupp z hne) hsR)))]
+    rw [integral_smul_measure, smul_eq_mul, ENNReal.toReal_ofReal (Real.exp_pos _).le]
+  have hexp : Real.exp (-(γ * P)) * Real.exp (γ * P) = 1 := by
+    rw [← Real.exp_add]
+    simp
+  have heq : (fun k => ∫ x, g x ∂(approxX γ c R F k)) =ᶠ[atTop] fun k =>
+      Real.exp (-(γ * P)) * ∫ z, fc z ∂(lqgApprox γ (fieldCircleAverage α hc) (dyadicScale k)) := by
+    filter_upwards [hev] with k hk
+    have hk2 : 2 * dyadicScale k < R := by linarith
+    have hsupp1 : ∀ z, fc z ≠ 0 → dist z c ≤ R - 2 * dyadicScale k := fun z hz => by
+      linarith [hfsupp z hz]
+    have hsupp2 : ∀ z, fc z ≠ 0 → dist z c < R := fun z hz => by
+      linarith [hfsupp z hz]
+    rw [integral_lqgApprox_eq_approx γ α P hc hcont F hF k hk2 hsupp1, ← mul_assoc, hexp, one_mul]
+    rw [integral_approxX γ c R F k (fun x => g x)]
+    have hcongr : (fun x : ball c R => g x * approxDens γ c R F k x.1) =
+        fun x : ball c R => fc x.1 * approxDens γ c R F k x.1 := by
+      funext x
+      rw [hgf x]
+    rw [hcongr, integral_approxX_eq_ball γ c R F k hsupp2]
+  have hT := (hμ.tendsto_integral (⇑fc) fc.continuous fc.hasCompactSupport).const_mul (Real.exp (-(γ * P)))
+  rw [hL]
+  exact Tendsto.congr' heq.symm hT
+
 end Approximants
 
 end LocalDecoderCommon
