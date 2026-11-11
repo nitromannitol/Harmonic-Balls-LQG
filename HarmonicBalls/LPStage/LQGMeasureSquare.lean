@@ -2,6 +2,7 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.LQGMeasure
 import HarmonicBalls.LPStage.PlaneTopology
+import HarmonicBalls.LPStage.LQGMeasureLocality
 
 /-! # Square measurability of the γ-Liouville quantum gravity area measure (LP stage)
 
@@ -94,16 +95,6 @@ theorem aemeasurable_measure_of_open_evaluations
 
 /-! ### Locality of the γ-LQG measure and the field σ-algebras -/
 
-/-- **Locality of the γ-LQG area measure** (Duplantier-Sheffield 2011, locality; Fact 2.1 II of the source paper). Under
-whole-plane GFF, for `0 < γ < 2` and `α₀ < lqgQ γ`, and for every γ-LQG area measure `μ` of the field
-`h = h^ℂ - α₀ log |·|`, every open set `U` has a mass `μ(U)` which is a.s. equal to a `σ(h|_U)`-measurable random variable
-(`fieldSigmaAlgebra α₀ hC U`). Hypothesis form: the statements below take it as an explicit input. -/
-def LQGLocality {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
-  IsWholePlaneGFF P hC hcirc → 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ μ : Ω → Measure ℂ,
-    IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ U : Set ℂ, IsOpen U →
-      ∃ Y : Ω → ℝ≥0∞, Measurable[fieldSigmaAlgebra α₀ hC U] Y ∧ ∀ᵐ ω ∂P, μ ω U = Y ω
-
 /-- The σ-algebra `σ(h|_U)` of the logarithmically shifted field is contained in the ambient σ-algebra: the pairings
 `hC ω φ` with test functions are random variables (`IsWholePlaneGFF.measurable_pairing`), and the shift is a constant. -/
 theorem fieldSigmaAlgebra_le_ambient {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω}
@@ -154,5 +145,21 @@ theorem aemeasurable_lqgMeasure_closedDyadicSquare {Ω : Type*} [MeasurableSpace
     (hloc : LQGLocality P γ α₀ hC hcirc) {S : Set ℂ} (hS : LatticeProb.Topology.IsClosedDyadicSquare S) :
     AEMeasurable (fun ω => μ ω S) P :=
   aemeasurable_lqgMeasure_borel hγ hγ2 hα hGFF hμ hloc S (isClosed_of_isClosedDyadicSquare hS).measurableSet
+
+/-- **Square measurability without the locality hypothesis (circle-average link form).** The locality hypothesis of
+`aemeasurable_lqgMeasure_closedDyadicSquare` is replaced by the GFF-relativised circle-average link `hlink`
+(`LQGCircleAverageLink`, LP form), from which locality follows by `lqgLocality_of_circleLink`
+(`LPStage/LQGMeasureLocality.lean`). The unconditional link is NOT proved in LP stage: its HB derivation
+`HarmonicBalls.lqgCircleAverageLocalityLink_derived` needs `wholePlaneCircleAverageLimit_derived`, whose import closure
+exceeds the copy budget (see the header of `LPStage/LQGMeasureLocality.lean`). -/
+theorem aemeasurable_lqgMeasure_closedDyadicSquare_of_circleLink {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ α₀ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hGFF : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    (hlink : IsWholePlaneGFF P hC hcirc → LQGCircleAverageLink P α₀ hC hcirc) {S : Set ℂ}
+    (hS : LatticeProb.Topology.IsClosedDyadicSquare S) :
+    AEMeasurable (fun ω => μ ω S) P :=
+  aemeasurable_lqgMeasure_closedDyadicSquare hγ hγ2 hα hGFF hμ
+    (lqgLocality_of_circleLink P γ α₀ hC hcirc hlink) hS
 
 end LatticeProb.LQG
