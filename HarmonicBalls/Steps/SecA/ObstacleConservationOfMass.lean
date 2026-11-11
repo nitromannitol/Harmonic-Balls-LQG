@@ -16,10 +16,10 @@ form eq:laplacian-of-v-general (lines 3840-3846), used by Lemma A.6.
 * `ObstacleConservationOfMassStep1` — **gap G1** (GRAPH.md): the odometer is subharmonic off the pole,
   `Δ v_t ≥ 0` on `B_R \ {z}`. The printed proof asserts `0 ≤ ν` in eq:laplacian-of-v without proof; Lemmas A.1
   and A.2 give only `Δ ṽ_t ≤ 0` on `B_R` and `Δ ṽ_t = 0` on `Λ_t`. Repair by the subharmonic gluing I7 (the
-  argument of lines 1418-1421, AG01 Thm 3.2.2). [medium, 1-2 rounds]
+  argument of lines 1418-1421, AG01 Thm 3.2.2).
 * `ObstacleConservationOfMassStep2` — eq:laplacian-of-v: from `Δ ṽ_t ≤ 0` on `B_R`, `Δ ṽ_t = 0` on `Λ_t`,
   `Δ G = -δ_z`, `Δ q = -μ`, Step 1 and `v_t = 0` off `Λ_t`, there is `0 ≤ ν ≤ μ` with
-  `Δ v_t = -t δ_z + μ|_{Λ_t} + ν|_{∂Λ_t}` (stated for general open `U ⊇ Λ`). [hard, 2-3 rounds: positive
+  `Δ v_t = -t δ_z + μ|_{Λ_t} + ν|_{∂Λ_t}` (stated for general open `U ⊇ Λ`). [positive
   distributions are Radon measures (Riesz–Markov–Kakutani, Mathlib `RealRMK`), comparison of measures on open sets]
 * `ObstacleConservationOfMassStep3` — eq:weak-integration-by-parts and the sign of the normal derivative
   (lines 3804-3820): if `v ≥ 0` is continuous on `closedBall 0 R \ {z}`, vanishes on `∂B_R` and
@@ -27,7 +27,7 @@ form eq:laplacian-of-v-general (lines 3840-3846), used by Lemma A.6.
   The printed proof cites Pon16 Prop 7.3 and Lemma 12.15 (no External input exists for them); the step is stated
   as a self-contained claim. An elementary route: for `|z| < r < R`, `r d/dr M(v; 0, r) = (2π)⁻¹ (σ(B_r) - t)`,
   `M(v; 0, r) → 0` as `r → R` and `M(v; 0, r) ≥ 0`; for the equality case test against `φ = 1` near the compact
-  set. [hard, 2-3 rounds]
+  set.
 
 Shared steps used by the reduction (Basic.lean): `GreenPotentialBallContinuousStep`,
 `GreenPotentialBallLaplacianStep`; also Lemmas A.1, A.2, A.4 (general forms) and Prop 2.3
@@ -81,7 +81,7 @@ inequality on small circles centred in `Λ_t \ {z}`; where `v_t = 0` the sub-mea
 since `v_t ≥ 0`; by the local characterization of subharmonicity (AG01 Thm 3.2.2, cited at line 3672) `v_t` is
 subharmonic on `B_R \ {z}`; pass to the distributional notion with `LaplacianLEOfSuperharmonicStep` applied to
 `-v_t`. Uses: Lemmas A.1, A.2 (general forms), `SuperharmonicOfLaplacianLEStep`,
-`LaplacianLEOfSuperharmonicStep`. Difficulty: medium (1-2 rounds). -/
+`LaplacianLEOfSuperharmonicStep`. -/
 def ObstacleConservationOfMassStep1 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →
@@ -93,7 +93,7 @@ def ObstacleConservationOfMassStep1 : Prop :=
 `Δv ≥ 0` on `U \ {z}` (Step 1) and `v = 0` on `U \ Λ`, then `Δv = -t δ_z + μ|_Λ + ν|_{∂Λ}` on `U` for a measure
 `ν ≤ μ`. Route: `σ = Δv + t δ_z = Δw + μ` satisfies `σ ≤ μ` on `U`, `σ ≥ 0` on `U \ {z}` and `σ = μ` on `Λ ∋ z`,
 so `σ` is a positive distribution, hence a Radon measure (Riesz–Markov–Kakutani), with `σ ≤ μ`, `σ = μ` on `Λ`
-and `σ = 0` on `U \ closure Λ` (where `v = 0`); take `ν = σ|_{∂Λ ∩ U}`. Difficulty: hard (2-3 rounds). -/
+and `σ = 0` on `U \ closure Λ` (where `v = 0`); take `ν = σ|_{∂Λ ∩ U}`. -/
 def ObstacleConservationOfMassStep2 : Prop :=
   ∀ (U Λ : Set ℂ) (z : ℂ) (μ : Measure ℂ) (t : ℝ) (w G q : ℂ → ℝ),
     IsOpen U → IsOpen Λ → Λ ⊆ U → z ∈ Λ → IsLocallyFiniteMeasure μ → 0 ≤ t →
@@ -113,8 +113,7 @@ on `B_R` off a compact subset of `B_R`. Printed argument: the weak normal deriva
 when `v` vanishes near `∂B_R` (lines 3812-3815). No External input exists for Pon16; the step is a self-contained
 claim. Elementary route: for `|z| < r < R`, `r d/dr M(v; 0, r) = (2π)⁻¹ (σ(B_r) - t)` (a.e. `r`), `M(v; 0, r) ≥ 0`
 and `M(v; 0, r) → 0` as `r → R` (uniform continuity on an annulus at `∂B_R`), so `σ(B_r) ≤ t` for all `r < R`;
-for the equality case test `Δv = σ - t δ_z` against `φ = 1` near the compact set. Difficulty: hard
-(2-3 rounds). -/
+for the equality case test `Δv = σ - t δ_z` against `φ = 1` near the compact set. -/
 def ObstacleConservationOfMassStep3 : Prop :=
   ∀ (R : ℝ) (z : ℂ) (t : ℝ) (σ : Measure ℂ) (v : ℂ → ℝ), 0 < R → z ∈ ball (0 : ℂ) R → 0 ≤ t →
     HasLaplacian v σ (ENNReal.ofReal t • Measure.dirac z) (ball 0 R) →

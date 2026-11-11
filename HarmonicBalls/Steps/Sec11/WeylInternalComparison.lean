@@ -69,7 +69,5 @@ theorem ae_singularField_internalMetric_weylScaling_two_sided
   exact hm.internalMetric_weylScaling_two_sided (hi f hf hc hn).1 hU
     (fun u v => (hfinite f hn u v).2) (hi f hf hc hn).2.2 hl hu x y
 
-#print axioms IsEuclideanLengthMetric.internalMetric_weylScaling_two_sided
-#print axioms ae_singularField_internalMetric_weylScaling_two_sided
 
 end HarmonicBalls

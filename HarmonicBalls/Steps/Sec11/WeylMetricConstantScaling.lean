@@ -107,9 +107,5 @@ theorem IsEuclideanLengthMetric.weylScaling_const_mul
       rw [← mul_assoc, ← ENNReal.ofReal_mul hc.le, mul_inv_cancel₀ hc.ne',
         ENNReal.ofReal_one, one_mul]
 
-#print axioms IsLengthParametrized.const_mul_reparam
-#print axioms lintegral_Icc_div_const
-#print axioms IsEuclideanLengthMetric.weylScaling_const_mul_le
-#print axioms IsEuclideanLengthMetric.weylScaling_const_mul
 
 end HarmonicBalls

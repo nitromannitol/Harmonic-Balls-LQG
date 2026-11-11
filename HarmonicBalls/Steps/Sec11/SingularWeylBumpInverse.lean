@@ -37,6 +37,5 @@ theorem ae_singularField_weylBump_identities_of_metricFieldAxioms
   obtain ⟨hE, hzero⟩ := hshift f hf ‹HasCompactSupport f› hu
   exact ⟨hE, hzero, fun x y => hmetric.inverse_weylScaling hξ f hf hc hu hE x y⟩
 
-#print axioms ae_singularField_weylBump_identities_of_metricFieldAxioms
 
 end HarmonicBalls

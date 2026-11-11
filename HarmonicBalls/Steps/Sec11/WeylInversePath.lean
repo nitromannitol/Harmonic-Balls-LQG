@@ -107,7 +107,5 @@ theorem IsEuclideanLengthMetric.inverse_weylScaling_le
   simpa only [Pi.zero_apply, mul_zero, Real.exp_zero, ENNReal.ofReal_one,
     lintegral_const, one_mul, Measure.restrict_apply_univ, Real.volume_Icc, sub_zero, hcost] using h
 
-#print axioms IsEuclideanLengthMetric.inverse_weylScaling_le
-#print axioms IsEuclideanLengthMetric.exists_inverse_weyl_path
 
 end HarmonicBalls

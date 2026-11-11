@@ -132,7 +132,5 @@ theorem IsEuclideanLengthMetric.weylScaling_local_comparison
     h₂ y z (lt_of_lt_of_le hy (min_le_right _ _))
       (lt_of_lt_of_le hz (min_le_right _ _))⟩
 
-#print axioms IsEuclideanLengthMetric.weylScaling_local_edge_lower_bound
-#print axioms IsEuclideanLengthMetric.weylScaling_local_comparison
 
 end HarmonicBalls

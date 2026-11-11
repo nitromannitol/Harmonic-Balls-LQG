@@ -94,9 +94,5 @@ theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_log_corridors
   intro n z hz
   exact logSingularity_weylExponent_le hξ hα (hr n) (hinner n z hz)
 
-#print axioms IsEuclideanLengthMetric.internalMetric_weylScaling_le
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_weyl_corridors
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_log_corridors
-#print axioms logSingularity_weylExponent_le
 
 end HarmonicBalls

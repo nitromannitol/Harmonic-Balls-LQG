@@ -44,7 +44,7 @@ factor. `WholePlaneLQGBallMassBounds` quantifies over fields and then over const
 uniformity directly. It does give it through a mixture: the field `(k, ω) ↦ h^{(k)}(ω)` under
 `∑ₖ wₖ δₖ ⊗ P`, with `wₖ ∝ (k+1)⁻²`, is again a whole-plane GFF, since every `h^{(k)}` has the law of `h^ℂ`.
 This is `WholePlaneScaledBallMassStep` (BG20, Lemma A.1, scale invariance on the annuli around `0`). Besides the
-inputs named in the task, the route uses `LQGMeasureExistence` at `α₀ = 0` (a measure `μ_{h^ℂ}` on the same
+inputs named in the statement, the route uses `LQGMeasureExistence` at `α₀ = 0` (a measure `μ_{h^ℂ}` on the same
 probability space) and `LQGMeasureNonatomic` (`μ_h({0}) = 0`; the comparison does not reach the point `0`).
 -/
 

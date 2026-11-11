@@ -11,16 +11,15 @@ with `μ` in place of `μ_h` (line 3838). Printed proof: lines 3856-3895.
 ## Steps (difficulty in brackets)
 
 * `ObstacleCompatibilityStep1` — eq:monotonicity-domains (lines 3862-3880): `u^{B_{r₁}}_t ≤ u^{B_{r₂}}_t` on
-  `B_{r₁}` for `r₁ ≤ r₂ ≤ R` (competitor `ŵ_t`). [medium, 1-2 rounds]
+  `B_{r₁}` for `r₁ ≤ r₂ ≤ R` (competitor `ŵ_t`).
 * `ObstacleCompatibilityStep2` — eq:monotonicity-domains-two (lines 3882-3890): under the hypothesis
   `closure Λ^{B_{s₂}}_t ⊂ B_{s₁}`, `u^{B_R}_t ≤ u^{B_{s₁}}_t` on `B_{s₁}` and `u^{B_R}_t ≤ 0` on `B_R \ B_{s₁}`
-  (the extension of `u^{B_{s₁}}_t` by `0`; subharmonic comparison on `Λ^{B_R}_t`). [hard, 2-3 rounds]
+  (the extension of `u^{B_{s₁}}_t` by `0`; subharmonic comparison on `Λ^{B_R}_t`).
 * `ObstacleCompatibilityShiftStep` — auxiliary, used inside Steps 1-2 (and by the Section 3 lemmas), not by the
   reduction: the substitution of lines 3574-3578, `v_{B_R;z}(t) = ṽ_t - q_{B_R}`, `Λ_{B_R;z}(t) = Λ_t`,
   `u_{B_R;z}(t) = v_t`, which transfers Lemmas A.1, A.4 and eq:laplacian-of-v-general (`ShiftedOdometerLaplacianGeneral`,
   ObstacleConservationOfMass.lean) to the unshifted problem on every `B_s`, `s ≤ R` ("the results proved so far in
-  this appendix apply to `v^{B_R}, Λ^{B_R}, u^{B_R}`", line 3838; `VolumeGrowth.mono`, line 3858). [easy-medium,
-  1 round]
+  this appendix apply to `v^{B_R}, Λ^{B_R}, u^{B_R}`", line 3838; `VolumeGrowth.mono`, line 3858).
 
 ## The reduction (proved)
 
@@ -40,7 +39,7 @@ open MeasureTheory Metric Set
 the cluster is the non-coincidence set and the odometers agree on the closed ball. Route: `Δ q_{B_R} = -μ` and the
 continuity of `q_{B_R}` (`GreenPotentialBallLaplacianStep`, `GreenPotentialBallContinuousStep`); at the pole the
 identity of the infima needs their finiteness (Lemma A.1, general form). Used inside Steps 1-2 and by the
-Section 3 lemmas; not a hypothesis of the reduction. Difficulty: easy-medium (1 round). -/
+Section 3 lemmas; not a hypothesis of the reduction. -/
 def ObstacleCompatibilityShiftStep : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →
@@ -59,8 +58,7 @@ def ObstacleCompatibilityShiftStep : Prop :=
 Lean take `ŵ_t = v^{B_{r₂}}_t + (t/2π) log (r₂/r₁)` (the printed formula differs at the pole by the junk value of
 `greenFunction`). Uses: `ObstacleCompatibilityShiftStep` with Lemma A.1 (general form) at radius `r₂`
 (`v^{B_{r₂}}_t ∈ S_{B_{r₂}}(t)`), the explicit Green function of a centred disc
-`G_{B_r}(0,x) = (2π)⁻¹ log (r/|x|)` (cf. `greenBall`, Defs/Green.lean), `Δ (const) = 0`. Difficulty: medium
-(1-2 rounds). -/
+`G_{B_r}(0,x) = (2π)⁻¹ log (r/|x|)` (cf. `greenBall`, Defs/Green.lean), `Δ (const) = 0`. -/
 def ObstacleCompatibilityStep1 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ t : ℝ, 0 < t → ∀ r₁ r₂ : ℝ, 0 < r₁ → r₁ ≤ r₂ → r₂ ≤ R →
@@ -75,7 +73,7 @@ on `B_R`; by eq:laplacian-of-v-general at `s₁` and `R` (`ν_{s₁} ≤ μ`), `
 (`u^{B_R}_t = 0` there, by Lemma A.4 on `∂B_R`, and `ū ≥ 0`); the maximum principle gives `u^{B_R}_t ≤ ū` on
 `Λ^{B_R}_t`, and off `Λ^{B_R}_t`, `u^{B_R}_t = 0 ≤ ū`. Uses: Step 1, `ObstacleCompatibilityShiftStep`,
 Lemmas A.1, A.4 and `ShiftedOdometerLaplacianGeneral` (general forms, at radii `s₁` and `R`), the maximum
-principle for continuous subharmonic functions. Difficulty: hard (2-3 rounds). -/
+principle for continuous subharmonic functions. -/
 def ObstacleCompatibilityStep2 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ t : ℝ, 0 < t → ∀ s₁ s₂ : ℝ, 0 < s₁ → s₁ ≤ s₂ → s₂ ≤ R →

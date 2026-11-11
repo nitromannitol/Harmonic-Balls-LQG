@@ -80,7 +80,5 @@ theorem exists_scaled_ball_criterion_of_log_normalization
     exact measure_internalMetric_exceedance_le_of_log_normalization P D A
       (fun ω => H ω n i) _ _ κ β n (p n) (q n) (htail n i hi) (hlog n i hi)
 
-#print axioms measure_internalMetric_exceedance_le_of_log_normalization
-#print axioms exists_scaled_ball_criterion_of_log_normalization
 
 end HarmonicBalls

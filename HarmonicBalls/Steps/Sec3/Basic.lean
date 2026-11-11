@@ -19,7 +19,7 @@ Shared material for the reductions of Lemmas 3.1-3.5 (subsec:basic-properties, l
   fixed in the ranges of [C1] (`ae_isLocallyFiniteMeasure_volumeGrowth`). Since the Appendix A statements are
   deterministic in `μ`, the Section 3 statements hold on that event for all `t, r, z` simultaneously.
 * **The substitution** (lines 3574-3578): `v_{B_r;z}(t) = ṽ_t - q_{B_r}`, `Λ_{B_r;z}(t) = Λ_t`, `u_{B_r;z}(t) = v_t`
-  ("each of the lemmas in Section 3.2 will follow via this substitution"). This is c4's
+  ("each of the lemmas in Section 3.2 will follow via this substitution"). This is
   `ObstacleCompatibilityShiftStep` (Steps/SecA/ObstacleCompatibility.lean), consumed here as an explicit step.
 
 ## Gap (general radius and pole)
@@ -31,7 +31,7 @@ rescaling by `r` handles the radius, but for `z ≠ 0` the obstacle `-t G_{B_r}(
 `-t G_{B_1}(0,·)` under any similarity of `B_r`, and the disc automorphism moving `z` to `0` changes `μ` into its
 pushforward (with distorted volume growth near `∂B_1`) and needs the conformal covariance of the distributional
 Laplacian, none of which is in the paper. The reductions of this directory consume the general forms
-(`...General`, any `R > 0` and pole `z ∈ B_R`; c4's carving of Appendix A proves them from general steps) and, for
+(`...General`, any `R > 0` and pole `z ∈ B_R`; the carving of Appendix A proves them from general steps) and, for
 Lemma A.6, the general-pole steps `ObstacleCompatibilityPoleStep1/2` of ClusterCompatibility.lean.
 
 ## Contents

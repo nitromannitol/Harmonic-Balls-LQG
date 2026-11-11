@@ -66,7 +66,5 @@ theorem weylScaling_comp_homeomorph (D : ℂ → ℂ → ℝ) (ξ : ℝ)
     have hpv : (e ∘ p) T = e v := by simp [hv]
     exact iInf_le_of_le hpu (iInf_le_of_le hpv (by simp only [Function.comp_apply, le_refl]))
 
-#print axioms IsLengthParametrized.comp_homeomorph_symm
-#print axioms weylScaling_comp_homeomorph
 
 end HarmonicBalls

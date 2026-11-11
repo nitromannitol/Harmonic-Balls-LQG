@@ -190,9 +190,5 @@ theorem IsEuclideanLengthMetric.weylScaling_curveLength_eq_cost
       MeasureTheory.Measure.restrict_congr_set (MeasureTheory.Ioc_ae_eq_Icc (μ := MeasureTheory.volume))]
   rw [← ENNReal.ofReal_toReal hfin, hreal, hinterval, hconvert]
 
-#print axioms IsEuclideanLengthMetric.weylScaling_curveLength_eq_cost
-#print axioms IsEuclideanLengthMetric.weylScaling_curveLength_toReal_eq_integral
-#print axioms IsEuclideanLengthMetric.hasDerivAt_weylScaling_curveLength
-#print axioms IsEuclideanLengthMetric.weylScaling_cumulative_slope_bounds
 
 end HarmonicBalls

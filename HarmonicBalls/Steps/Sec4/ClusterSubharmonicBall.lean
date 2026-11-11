@@ -21,8 +21,7 @@ Let `Λ = Λ_{B_r;z}(t)` with `closure Λ ⊆ B_r` and `μ_h(∂Λ) = 0`, `O ⊇
 
 The printed computation integrates `ν` over `Λ` only and writes `v(z)` for `u(x)` (line 785). But `ν` lives on a
 compact subset of `O`, not of `Λ`, and the identity needed is
-`t G_O(z,x) - ∫_Λ G_O(y,x) μ_h(dy) = ũ(x)` for all `x ∈ O \ {z}`, where `ũ = 1_Λ u` is the odometer extended by `0`
-(docs/campaign/GRAPH.md G5). It holds for every open `O ⊇ closure Λ` (for non-Greenian `O`, `G_O` is the Newtonian
+`t G_O(z,x) - ∫_Λ G_O(y,x) μ_h(dy) = ũ(x)` for all `x ∈ O \ {z}`, where `ũ = 1_Λ u` is the odometer extended by `0`. It holds for every open `O ⊇ closure Λ` (for non-Greenian `O`, `G_O` is the Newtonian
 kernel, Defs/Green.lean): `ũ` has compact support and `Δũ = -t δ_z + μ_h|_Λ` on `ℂ`, so `ũ` is the Newtonian
 potential of that measure (total mass `0`); the harmonic correction `G_O = N - H` contributes
 `t H(z,x) - ∫_Λ H(y,x) μ_h(dy) = 0` by step 1 applied to the harmonic function `H(·,x)`. Then `ν = ν₁ - ν₂` with
@@ -78,7 +77,7 @@ Printed argument: integration by parts of `∫ Δq · u` on a smooth `Λ' ⊇ Λ
 `χ = 1` near the compact `closure Λ`; test `Δu = -t δ_z + μ|_Λ` against `φ = q χ` (a test function: `q` is
 `C^∞` on `O`, harmonic functions being real-analytic, although `HarmonicAt` only asks for `C²`): `φ = q` on `Λ` (integrability
 from the definition of `HasLaplacian`), `φ(z) = q(z)`, and `u Δφ = 0` everywhere (`Δφ = Δq = 0` near `closure Λ`,
-`u = 0` on `B_R \ Λ`, `φ = 0` off `B_R`). Difficulty: medium (1-2 rounds; smooth Urysohn cut-off). -/
+`u = 0` on `B_R \ Λ`, `φ = 0` off `B_R`). Ingredient: smooth Urysohn cut-off. -/
 def ClusterHarmonicQuadratureStep : Prop :=
   ∀ (μ : Measure ℂ) (R : ℝ) (Λ : Set ℂ) (z : ℂ) (t : ℝ) (u : ℂ → ℝ), IsClusterOdometer μ R Λ z t u →
     ∀ (O : Set ℂ) (q : ℂ → ℝ), IsOpen O → closure Λ ⊆ O → InnerProductSpace.HarmonicOnNhd q O →
@@ -94,7 +93,7 @@ Newtonian potential `t N(z,·) - ∫_Λ N(x,·) μ(dx)` off `z` (continuity of t
 the volume growth bound); the harmonic part `H` of `G_O = N - H` contributes `0` by Step 1 applied to `H(·,y)`
 (symmetry of `G_O`); (ii) Fubini on `Λ × K`, `G_O` being jointly measurable and bounded below on bounded sets
 (`G_O ≥ min (0, N)`), with `∫_Λ |log |x - y|| μ(dx)` bounded in `y` by the volume growth bound.
-Difficulty: hard (3+ rounds). -/
+ -/
 def ClusterGreenPotentialIdentityStep : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, VolumeGrowth μ R βminus βplus →
   ∀ (Λ : Set ℂ) (z : ℂ) (t : ℝ) (u : ℂ → ℝ), IsClusterOdometer μ R Λ z t u →
@@ -106,7 +105,7 @@ def ClusterGreenPotentialIdentityStep : Prop :=
 /-- **Lemma 4.3, auxiliary step (the Green function is bounded away from its pole).** For `O` open, `z ∈ O` and a
 finite measure `ν` concentrated on a compact `K ⊆ O` with `z ∉ K`, `G_O(z,·)` is `ν`-integrable.
 Route: `G_O(z,·)` is continuous on `O \ {z}` (harmonic there for Greenian `O`, AG01 Thm 4.1.9 / Cor 4.1.5; the
-Newtonian kernel otherwise), hence bounded and measurable on `K`. Difficulty: medium (1-2 rounds). -/
+Newtonian kernel otherwise), hence bounded and measurable on `K`. -/
 def GreenFunctionIntegrableAwayFromPoleStep : Prop :=
   ∀ (O K : Set ℂ) (z : ℂ) (ν : Measure ℂ), IsOpen O → z ∈ O → IsCompact K → K ⊆ O → z ∉ K →
     IsFiniteMeasure ν → ν Kᶜ = 0 → Integrable (greenFunction O z) ν

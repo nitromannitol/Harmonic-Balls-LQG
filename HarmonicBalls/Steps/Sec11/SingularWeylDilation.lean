@@ -86,8 +86,5 @@ theorem weylScaling_log_comp_real_smul_of_base_zero_occupation
   apply ht
   rw [hpt, smul_zero]
 
-#print axioms weylScaling_congr_path_ae
-#print axioms weylScaling_log_comp_real_smul
-#print axioms weylScaling_log_comp_real_smul_of_base_zero_occupation
 
 end HarmonicBalls

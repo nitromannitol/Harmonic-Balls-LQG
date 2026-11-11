@@ -140,9 +140,5 @@ theorem exists_scaled_ball_criterion_of_centerwise_diameter_moments
     (scaledBallDiameterWithScale D hcirc s ξ ε c a) N hmoment
   exact hcriterion a A C ha0 hatop hAtop hCfin hratio hbound
 
-#print axioms scaledBallNormalizedInternalDiameter_lintegral_le
-#print axioms exists_uniform_lintegral_bound_of_finite_centers
-#print axioms exists_scaled_ball_criterion_of_scale_diameter_moments
-#print axioms exists_scaled_ball_criterion_of_centerwise_diameter_moments
 
 end HarmonicBalls

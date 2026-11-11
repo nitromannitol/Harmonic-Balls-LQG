@@ -50,6 +50,5 @@ theorem exists_scaled_ball_criterion_for_puncture_removal
     (fun n => (hgeometry s n).1) (fun n => (hgeometry s n).2.1)
     (fun n => (hgeometry s n).2.2) hlocal hp
 
-#print axioms exists_scaled_ball_criterion_for_puncture_removal
 
 end HarmonicBalls

@@ -15,17 +15,16 @@ the case where `z` is the origin", line 3546); Lemma 3.5 needs every pole `z ∈
 printed `ObstacleCompatibilityStmt` (pole `0`) does not imply Lemma 3.5. The printed proof does carry over, with one
 change in its first step: for `z ≠ 0` the difference `G_{B_{r₁}}(z,·) - G_{B_{r₂}}(z,·)` entering the competitor
 `ŵ_t` of eq:intermediate-inequality-monotonicity (line 3868) is harmonic on `B_{r₁}` but no longer constant (for
-`z = 0` it is `(2π)⁻¹ log (r₁/r₂)`). This file states the general-pole forms of c4's Steps 1-2 of Lemma A.6
-(Steps/SecA/ObstacleCompatibility.lean) as explicit steps, proves the general-pole Lemma A.6 from them (c4's reduction,
+`z = 0` it is `(2π)⁻¹ log (r₁/r₂)`). This file states the general-pole forms of Steps 1-2 of Lemma A.6
+(Steps/SecA/ObstacleCompatibility.lean) as explicit steps, proves the general-pole Lemma A.6 from them (the reduction,
 with the pole `z` in place of `0`), and reduces Lemma 3.5 to it. The pole-`0` steps and statement are special cases
 (`obstacleCompatibilityStep1_of_pole`, `obstacleCompatibilityStep2_of_pole`, `obstacleCompatibility_of_general`).
 
 ## Steps (difficulty in brackets)
 
 * `ObstacleCompatibilityPoleStep1` — eq:monotonicity-domains (lines 3862-3880) with pole `z`:
-  `u_{B_{r₁};z}(t) ≤ u_{B_{r₂};z}(t)` on `B_{r₁}` off the pole for `z ∈ B_{r₁}`, `r₁ ≤ r₂ ≤ R`. [medium-hard,
-  2 rounds]
-* `ObstacleCompatibilityPoleStep2` — eq:monotonicity-domains-two (lines 3882-3890) with pole `z`. [hard, 2-3 rounds]
+  `u_{B_{r₁};z}(t) ≤ u_{B_{r₂};z}(t)` on `B_{r₁}` off the pole for `z ∈ B_{r₁}`, `r₁ ≤ r₂ ≤ R`.
+* `ObstacleCompatibilityPoleStep2` — eq:monotonicity-domains-two (lines 3882-3890) with pole `z`.
 
 ## The reductions (proved)
 
@@ -66,7 +65,7 @@ and `ŵ_t` takes that extension's value at `z` (the printed formula is junk at t
 `ŵ_t ≥ -t G_{B_{r₂}}(z,·) - t h_z = -t G_{B_{r₁}}(z,·)` off the pole. Uses: `ObstacleCompatibilityShiftStep` and
 Lemma A.1 (general form, `ObstacleLeastSuperharmonicMajorantGeneral`) at radius `r₂` (`v_{B_{r₂};z}(t) ∈ S_{B_{r₂};z}(t)`,
 continuous on the closed ball), Prop 2.3 (`GreenFunctionBallStmt`), `LaplacianLE.mono_set`,
-`LaplacianLE.congr_eqOn` (Steps/SecA/Basic.lean). Difficulty: medium-hard (2 rounds). -/
+`LaplacianLE.congr_eqOn` (Steps/SecA/Basic.lean). -/
 def ObstacleCompatibilityPoleStep1 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ t : ℝ, 0 < t → ∀ r₁ r₂ : ℝ, r₁ ≤ r₂ → r₂ ≤ R → ∀ z ∈ ball (0 : ℂ) r₁,
@@ -80,7 +79,7 @@ def ObstacleCompatibilityPoleStep1 : Prop :=
 (`ν_{s₁} ≤ μ`), `u_{B_R;z}(t) - ū` is subharmonic on `Λ_{B_R;z}(t)` (the poles `-t δ_z` cancel) and `≤ 0` on its
 boundary (Lemma A.4 on `∂B_R`, `ū ≥ 0`); the maximum principle concludes. Uses: `ObstacleCompatibilityPoleStep1`,
 `ObstacleCompatibilityShiftStep`, Lemmas A.1, A.4 and `ShiftedOdometerLaplacianGeneral` (general forms, radii `s₁`
-and `R`, pole `z`), the maximum principle for continuous subharmonic functions. Difficulty: hard (2-3 rounds). -/
+and `R`, pole `z`), the maximum principle for continuous subharmonic functions. -/
 def ObstacleCompatibilityPoleStep2 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ t : ℝ, 0 < t → ∀ s₁ s₂ : ℝ, s₁ ≤ s₂ → s₂ ≤ R → ∀ z ∈ ball (0 : ℂ) s₁,
@@ -122,12 +121,12 @@ theorem obstacleCompatibility_of_general (h : ObstacleCompatibilityGeneral) : Ob
   fun μ hμ R βm βp hV t ht s₁ hs₁ hs₁R s₂ hs₂ hcl s hs =>
     h μ hμ R βm βp hV t ht s₁ hs₁R 0 (mem_ball_self hs₁) s₂ hs₂ hcl s hs
 
-/-- c4's pole-`0` Step 1 of Lemma A.6 is the case `z = 0` of `ObstacleCompatibilityPoleStep1`. -/
+/-- The pole-`0` Step 1 of Lemma A.6 is the case `z = 0` of `ObstacleCompatibilityPoleStep1`. -/
 theorem obstacleCompatibilityStep1_of_pole (h : ObstacleCompatibilityPoleStep1) : ObstacleCompatibilityStep1 :=
   fun μ hμ R βm βp hR hV t ht r₁ r₂ hr₁ hr₁₂ hr₂R x hx hx0 =>
     h μ hμ R βm βp hR hV t ht r₁ r₂ hr₁₂ hr₂R 0 (mem_ball_self hr₁) x hx hx0
 
-/-- c4's pole-`0` Step 2 of Lemma A.6 is the case `z = 0` of `ObstacleCompatibilityPoleStep2`. -/
+/-- The pole-`0` Step 2 of Lemma A.6 is the case `z = 0` of `ObstacleCompatibilityPoleStep2`. -/
 theorem obstacleCompatibilityStep2_of_pole (h : ObstacleCompatibilityPoleStep2) : ObstacleCompatibilityStep2 :=
   fun μ hμ R βm βp hR hV t ht s₁ s₂ hs₁ hs₁₂ hs₂R hcl =>
     h μ hμ R βm βp hR hV t ht s₁ s₂ hs₁₂ hs₂R 0 (mem_ball_self hs₁) hcl

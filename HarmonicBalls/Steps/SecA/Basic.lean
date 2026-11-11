@@ -23,19 +23,17 @@ printed proofs, the potential-theory steps they cite, and small proved glue lemm
 ## Shared steps (each a `def ... : Prop`; difficulty in brackets)
 
 * `SuperharmonicOfLaplacianLEStep` — Weyl's lemma, superharmonic form (I4): a continuous `w` with
-  `Δw ≤ 0` distributionally on open `U` is classically superharmonic on `U`. [medium-hard, 2 rounds:
-  mollification, the mean-value formula for smooth functions, locally uniform limits]
+  `Δw ≤ 0` distributionally on open `U` is classically superharmonic on `U`. [mollification, the mean-value formula for smooth functions, locally uniform limits]
 * `LaplacianLEOfSuperharmonicStep` — converse: a continuous classically superharmonic `w` has `Δw ≤ 0` on `U`.
-  [medium, 1-2 rounds: `∫ (M_r w - w) φ = ∫ w (M_r φ - φ)` and `(M_r φ - φ)/r² → Δφ/4`]
+  [`∫ (M_r w - w) φ = ∫ w (M_r φ - φ)` and `(M_r φ - φ)/r² → Δφ/4`]
 * `HasLaplacianOfLaplacianLEGEStep` — `Δw ≤ 0` and `Δw ≥ 0` on open `U` give `Δw = 0` on `U` (all test functions,
-  not only nonnegative ones). [easy-medium, 1 round: a smooth cut-off `χ = 1` on `tsupport φ`]
+  not only nonnegative ones). [a smooth cut-off `χ = 1` on `tsupport φ`]
 * `GreenPotentialBallContinuousStep` — property 1 of `q_{B_R}` (line 3538): continuity on `closedBall 0 R`
-  under the volume growth condition ("same argument as Prop 2.5", line 3542). [medium-hard, 2 rounds]
+  under the volume growth condition ("same argument as Prop 2.5", line 3542).
 * `GreenPotentialBallLaplacianStep` — property 2 of `q_{B_R}` (line 3539): `Δ q_{B_R} = -μ` on `B_R`
-  (AG01 Thm 4.3.8, line 3543). [hard, 2-3 rounds: symmetry of `G_{B_R}`, Prop 2.3, Fubini]
+  (AG01 Thm 4.3.8, line 3543). [symmetry of `G_{B_R}`, Prop 2.3, Fubini]
 * `ObstacleTendstoAtBotStep` — the obstacle `β_t` tends to `-∞` at the pole (`β_t(z) = -∞` in the paper, line
-  3551). Used for the openness of `Λ_t` at the pole and in the repair G2 of Lemma A.1, Step 3. [easy, ≤ 1 round:
-  `log_div_le_greenFunction`, Proofs/Potential/GreenPositivity.lean]
+  3551). Used for the openness of `Λ_t` at the pole and in the repair G2 of Lemma A.1, Step 3. [`log_div_le_greenFunction`, Proofs/Potential/GreenPositivity.lean]
 
 Properties 3 (zero boundary values of `q_{B_R}`) and 4 (positivity) of line 3540-3541: 3 is proved below
 (`greenPotentialBall_eq_zero_of_notMem`); 4 is not used by Lemmas A.1-A.6.
@@ -76,7 +74,7 @@ classical sense. This is how the printed proofs pass from the supersolutions of 
 (line 3556, defined with `Δw ≤ 0`) to the superharmonic functions of AG01 (lines 3594-3600, 3666, 3672).
 Route: mollify (`w * ρ_ε` is smooth with `Δ ≤ 0` on `U_ε`), apply the mean-value formula
 `d/dr M(u; x, r) = (2πr)⁻¹ ∫_{B_r(x)} Δu` for smooth `u`, and let `ε → 0` (locally uniform convergence).
-Difficulty: medium-hard (2 rounds). -/
+ -/
 def SuperharmonicOfLaplacianLEStep : Prop :=
   ∀ (U : Set ℂ) (w : ℂ → ℝ), IsOpen U → ContinuousOn w U → LaplacianLE w 0 U → IsSuperharmonicOn U w
 
@@ -84,14 +82,14 @@ def SuperharmonicOfLaplacianLEStep : Prop :=
 open set `U` satisfies `Δw ≤ 0` on `U` in the distributional sense. Used to put the functions built in the printed
 proofs (the lower semicontinuous infimum `f_t` of Lemma A.1, line 3600) back into `S̃(t)`.
 Route: for a nonnegative test function `φ` and small `r`, `∫ w (M_r φ - φ) = ∫ (M_r w - w) φ ≤ 0`, and
-`(M_r φ - φ)/r² → Δφ/4` uniformly. Difficulty: medium (1-2 rounds). -/
+`(M_r φ - φ)/r² → Δφ/4` uniformly. -/
 def LaplacianLEOfSuperharmonicStep : Prop :=
   ∀ (U : Set ℂ) (w : ℂ → ℝ), IsOpen U → ContinuousOn w U → IsSuperharmonicOn U w → LaplacianLE w 0 U
 
 /-- **Shared step.** On an open set `U`, `Δw ≤ 0` and `Δw ≥ 0` (tested against nonnegative test functions) give
 `Δw = 0` against all test functions (`HasLaplacian w 0 0 U`). Used for the conclusion `Δ ṽ_t = 0` on `Λ_t` of
 Lemma A.2 (line 3654). Route: for a test function `φ`, choose a smooth cut-off `0 ≤ χ ≤ 1` with `χ = 1` on
-`tsupport φ` and `tsupport χ ⊆ U` compact; test with `C χ ± φ ≥ 0`. Difficulty: easy-medium (1 round). -/
+`tsupport φ` and `tsupport χ ⊆ U` compact; test with `C χ ± φ ≥ 0`. -/
 def HasLaplacianOfLaplacianLEGEStep : Prop :=
   ∀ (U : Set ℂ) (w : ℂ → ℝ), IsOpen U → LaplacianLE w 0 U → LaplacianGE w 0 U → HasLaplacian w 0 0 U
 
@@ -99,7 +97,7 @@ def HasLaplacianOfLaplacianLEGEStep : Prop :=
 line 3526) the potential `q_{B_R}` (eq:expected-exit-time, line 3532) is continuous on `closedBall 0 R`. The paper
 asserts Hölder continuity "by the same argument outlined in the proof of Proposition 2.5" (line 3542); only
 continuity is used in Appendix A. Route: the upper bound `μ(B_r(x)) ≤ r^{β⁺}` makes the logarithmic singularity of
-`G_{B_R}(·, x)` uniformly integrable; `G_{B_R}(y, x) → 0` as `x → ∂B_R`. Difficulty: medium-hard (2 rounds). -/
+`G_{B_R}(·, x)` uniformly integrable; `G_{B_R}(y, x) → 0` as `x → ∂B_R`. -/
 def GreenPotentialBallContinuousStep : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
     ContinuousOn (greenPotentialBall μ R) (closedBall 0 R)
@@ -107,7 +105,7 @@ def GreenPotentialBallContinuousStep : Prop :=
 /-- **Shared step (property 2 of `q_{B_R}`, line 3539).** Under the volume growth condition, `Δ q_{B_R} = -μ` on
 `B_R` in the distributional sense (`HasLaplacian q 0 μ (B_R)`); in particular `q_{B_R}` is superharmonic. The paper
 cites AG01 Thm 4.3.8 (line 3543). Route: symmetry `G_{B_R}(y, x) = G_{B_R}(x, y)`, `ΔG_{B_R}(y, ·) = -δ_y`
-(Prop 2.3, `GreenFunctionBallStmt`) and Fubini. Difficulty: hard (2-3 rounds). -/
+(Prop 2.3, `GreenFunctionBallStmt`) and Fubini. -/
 def GreenPotentialBallLaplacianStep : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
     HasLaplacian (greenPotentialBall μ R) 0 μ (ball 0 R)
@@ -117,7 +115,7 @@ def GreenPotentialBallLaplacianStep : Prop :=
 Used for the openness of `Λ_t` at the pole (Lemma A.2, Step 1, line 3658) and in the repair G2 of Lemma A.1,
 Step 3 (lines 3626-3628). Route: `G_{B_R}(z, x) ≥ (2π)⁻¹ log (r / |x - z|)` near `z`
 (`log_div_le_greenFunction`, Proofs/Potential/GreenPositivity.lean) and `q_{B_R}` bounded near `z`.
-Difficulty: easy (≤ 1 round). -/
+ -/
 def ObstacleTendstoAtBotStep : Prop :=
   ∀ (μ : Measure ℂ) (R : ℝ) (z : ℂ) (t : ℝ), 0 < R → z ∈ ball (0 : ℂ) R → 0 < t →
     ContinuousOn (greenPotentialBall μ R) (closedBall 0 R) →

@@ -29,6 +29,5 @@ theorem IsEuclideanLengthMetric.weylScaling_log_const_mul_comp_real_smul
       (fun _ _ hp => hD.ae_ne_of_lengthParametrized hp 0),
     mul_assoc]
 
-#print axioms IsEuclideanLengthMetric.weylScaling_log_const_mul_comp_real_smul
 
 end HarmonicBalls

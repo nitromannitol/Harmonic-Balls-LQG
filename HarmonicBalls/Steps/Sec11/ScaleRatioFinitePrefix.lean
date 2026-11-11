@@ -45,7 +45,5 @@ theorem exists_uniform_exponential_scale_ratio_of_eventually_le
   intro n
   exact ENNReal.div_ne_top (ha n) (ENNReal.ofReal_pos.mpr (Real.exp_pos _)).ne'
 
-#print axioms exists_finite_uniform_bound_of_eventually_le
-#print axioms exists_uniform_exponential_scale_ratio_of_eventually_le
 
 end HarmonicBalls

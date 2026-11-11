@@ -127,9 +127,5 @@ theorem ae_singularField_nonpositive_weyl_point_removal
   exact hm.internalMetric_sdiff_zero_eq_of_nonpositive_weyl (hi f hf hc hn).1 hξ hn hV
     (fun u v => (hfinite f hn u v).2) hR hq hq1 c hdiam hsum hx hy
 
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_weyl_point_removal
-#print axioms ae_singularField_nonpositive_weyl_point_removal_of_point_removal
-#print axioms IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_nonpositive_weyl
-#print axioms ae_singularField_nonpositive_weyl_point_removal
 
 end HarmonicBalls

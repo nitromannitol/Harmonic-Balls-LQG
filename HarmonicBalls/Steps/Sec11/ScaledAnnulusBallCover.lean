@@ -157,10 +157,5 @@ theorem exists_scaled_finite_ball_cover :
     rw [← hcorr]
     exact ⟨y, hball hy, rfl⟩
 
-#print axioms image_smul_unit_geometricShell
-#print axioms image_smul_unit_exponentialAnnulusCorridor
-#print axioms isConnected_exponential_geometricShell
-#print axioms isConnected_unit_geometricShell
-#print axioms exists_scaled_finite_ball_cover
 
 end HarmonicBalls

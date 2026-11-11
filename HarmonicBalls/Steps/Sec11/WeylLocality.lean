@@ -119,7 +119,5 @@ theorem IsEuclideanLengthMetric.internalMetric_weylScaling_eq_of_eqOn
     simpa only [ENNReal.ofReal_one, one_mul] using hh
   exact le_antisymm hEF hFE
 
-#print axioms IsEuclideanLengthMetric.weylScaling_le_of_eqOn_near
-#print axioms IsEuclideanLengthMetric.internalMetric_weylScaling_eq_of_eqOn
 
 end HarmonicBalls

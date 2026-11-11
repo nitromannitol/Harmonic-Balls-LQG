@@ -46,7 +46,5 @@ theorem lintegral_normalized_diameter_le_of_scale_ratio
     _ = A * (∫⁻ ω, F ω / (c * B ω) ∂P) := lintegral_const_mul' A _ hAtop
     _ ≤ A * C := by gcongr
 
-#print axioms normalized_diameter_change_scale
-#print axioms lintegral_normalized_diameter_le_of_scale_ratio
 
 end HarmonicBalls

@@ -20,8 +20,8 @@ Lemma A.6 (ClusterCompatibility.lean), Prop 2.3 (`GreenFunctionBallStmt`) and In
 | Lemma 3.4 | `clusterConservationOfMass_of_steps` | A.4 general, A.5 general, shift, I2 |
 | Lemma 3.5 | `clusterCompatibility_of_steps` | `ObstacleCompatibilityPoleStep1/2` (A.6, pole `z`), I2 |
 
-New leaves of this directory: `ObstacleCompatibilityPoleStep1` [medium-hard] and `ObstacleCompatibilityPoleStep2`
-[hard], which supersede c4's pole-`0` Steps 1-2 of Lemma A.6 (`obstacleCompatibilityStep1_of_pole`,
+New leaves of this directory: `ObstacleCompatibilityPoleStep1` and `ObstacleCompatibilityPoleStep2`
+which supersede the pole-`0` Steps 1-2 of Lemma A.6 (`obstacleCompatibilityStep1_of_pole`,
 `obstacleCompatibilityStep2_of_pole`).
 -/
 

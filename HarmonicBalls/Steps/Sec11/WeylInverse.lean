@@ -84,7 +84,5 @@ theorem IsEuclideanLengthMetric.inverse_weylScaling
     rwa [hq0, hqT] at h
   · exact hD.inverse_weylScaling_le hξ f hf hl hu hE x y
 
-#print axioms IsEuclideanLengthMetric.ofReal_le_inverse_weyl_cost
-#print axioms IsEuclideanLengthMetric.inverse_weylScaling
 
 end HarmonicBalls

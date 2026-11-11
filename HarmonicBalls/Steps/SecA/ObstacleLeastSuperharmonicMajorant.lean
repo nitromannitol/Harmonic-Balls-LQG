@@ -13,18 +13,15 @@ Section 3 needs general `z`): `ObstacleLeastSuperharmonicMajorantGeneral`.
 ## Steps (difficulty in brackets)
 
 * `ObstacleLeastSuperharmonicMajorantStep1` — Step 1 (finiteness, lines 3602-3604): every superharmonic majorant
-  `g ≥ β_t` is `≥ 0` on the closed ball (minimum principle; `β_t → 0` at `∂B_R`). [medium, 1-2 rounds]
+  `g ≥ β_t` is `≥ 0` on the closed ball (minimum principle; `β_t → 0` at `∂B_R`).
 * `ObstacleLeastSuperharmonicMajorantStep2` — Step 2 (lines 3606-3620): `f_t` is superharmonic on `B_R`
   (AG01 Thm 3.7.5 on the lower semicontinuous regularization `f̂_t`, and `f̂_t ≥ β_t` gives `f̂_t = f_t`).
-  [hard, 2-3 rounds]
 * `ObstacleLeastSuperharmonicMajorantStep3` — Step 3 off the pole (lines 3622-3647): `f_t` is upper
   semicontinuous at every `x₀ ∈ B_R \ {z}` (Poisson modification of `ε + f_t` on a small disc).
-  [hard, 2-3 rounds]
 * `ObstacleLeastSuperharmonicMajorantStep4` — **gap G2**, Step 3 at the pole: the printed choice of `δ`
   (lines 3626-3628, "`β_t(x) + ε/2 ≥ β_t(y)` on `B_δ(x₀)`") is impossible at `x₀ = z`, where `β_t(z) = -∞`.
   Repair: on a small disc `B_δ(z)`, `β_t < 0 ≤ f_t` (Step 1, `ObstacleTendstoAtBotStep`), so the Poisson
-  modification of `ε + f_t` on `B_δ(z)` is still admissible; then conclude as in Step 3. [medium, 1-2 rounds,
-  shares the Poisson modification with Step 3]
+  modification of `ε + f_t` on `B_δ(z)` is still admissible; then conclude as in Step 3. [shares the Poisson modification with Step 3]
 
 Shared steps used by the reduction (Basic.lean): `SuperharmonicOfLaplacianLEStep`,
 `LaplacianLEOfSuperharmonicStep`, `GreenPotentialBallContinuousStep`, `GreenPotentialBallLaplacianStep`.
@@ -71,7 +68,7 @@ def ObstacleLeastSuperharmonicMajorantGeneral : Prop :=
 inside; the minimum principle is applied with `liminf_{y → ξ} g(y) ≥ lim_{y → ξ} β_t(y) = 0` at `ξ ∈ ∂B_R`
 (continuity of `q_{B_R}`, `GreenPotentialBallContinuousStep`, and the zero boundary values of `G_{B_R}(z, ·)`,
 Prop 2.3), and on `∂B_R` itself `g ≥ β_t = 0`. Uses: the minimum principle for `IsSuperharmonicOn` on bounded
-open sets (AG01, Chapter 3), `GreenPotentialBallContinuousStep`, Prop 2.3. Difficulty: medium (1-2 rounds). -/
+open sets (AG01, Chapter 3), `GreenPotentialBallContinuousStep`, Prop 2.3. -/
 def ObstacleLeastSuperharmonicMajorantStep1 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →
@@ -83,8 +80,7 @@ superharmonic majorants is superharmonic on `B_R`. Printed argument: by AG01 Thm
 infimum of a family of superharmonic functions bounded below (Step 1: `f_t ≥ 0`; `f_t ≤ q_{B_R}`) is
 superharmonic; since `β_t` is continuous off the pole, `f̂_t ≥ β_t`, so `f̂_t` (extended by `f_t` on `∂B_R`) is
 admissible and `f_t ≤ f̂_t ≤ f_t`. Uses: Step 1, `GreenPotentialBallContinuousStep`, Prop 2.3 (continuity of
-`G_{B_R}(z, ·)` off the pole), AG01 Thm 3.7.5 (to be proved for `IsSuperharmonicOn`). Difficulty: hard
-(2-3 rounds). -/
+`G_{B_R}(z, ·)` off the pole), AG01 Thm 3.7.5 (to be proved for `IsSuperharmonicOn`). -/
 def ObstacleLeastSuperharmonicMajorantStep2 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →
@@ -99,7 +95,7 @@ to `ε + f_t` outside, `g ≤ ε + f_t` by eq:superharmonic-poisson-inequality) 
 modification of a lower semicontinuous superharmonic function on a disc (Poisson integral of a lower
 semicontinuous boundary function; Mathlib `Mathlib/Analysis/Complex/Harmonic/Poisson.lean` for the Poisson
 integral).
-Difficulty: hard (2-3 rounds). -/
+ -/
 def ObstacleLeastSuperharmonicMajorantStep3 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →
@@ -111,8 +107,7 @@ printed choice of `δ` (lines 3626-3628) is impossible at `x₀ = z`, where `β_
 `β_t < 0` on `B_δ(z) \ {z}` (`ObstacleTendstoAtBotStep`; `β_t ≤ sup q_{B_R} + (t/2π) log (δ/r)` there); by Step 1,
 `ε + f_t ≥ ε > 0` on `∂B_δ(z)`, so the Poisson modification `g` of `ε + f_t` on `B_δ(z)` satisfies `g ≥ ε > β_t`
 on `B_δ(z)` and is admissible; conclude as in Step 3. Uses: Steps 1-2, `ObstacleTendstoAtBotStep`,
-`GreenPotentialBallContinuousStep`, the Poisson modification of Step 3. Difficulty: medium (1-2 rounds, given the
-Poisson modification of Step 3). -/
+`GreenPotentialBallContinuousStep`, the Poisson modification of Step 3. -/
 def ObstacleLeastSuperharmonicMajorantStep4 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →

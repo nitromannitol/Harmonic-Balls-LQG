@@ -154,12 +154,7 @@ theorem IsEuclideanLengthMetric.internalMetric_weylScaling_twice_eq_of_eqOn
   apply hE.weylScaling_internalMetric_eq_of_local_eq hF hξ k hk hl hu hEk hFk hU
   exact fun z hz => hD.weylScaling_locally_eq_of_eqOn hE hF ξ f g hEscale hFscale hU hfg z hz
 
-#print axioms IsEuclideanLengthMetric.weylScaling_locally_eq_of_eqOn
-#print axioms IsEuclideanLengthMetric.internalMetric_weylScaling_twice_eq_of_eqOn
 
-#print axioms IsEuclideanLengthMetric.weylScaling_local_exp_comparison_of_local_eq
-#print axioms IsEuclideanLengthMetric.weylScaling_internalMetric_eq_of_local_eq
 
-#print axioms IsEuclideanLengthMetric.internalMetric_le_of_local_exp_comparison
 
 end HarmonicBalls

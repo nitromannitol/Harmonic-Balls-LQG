@@ -195,13 +195,5 @@ theorem IsEuclideanLengthMetric.cumulative_curveLength_lipschitzOn
       abs_of_nonneg (sub_nonneg.mpr hba)]
     exact hbound
 
-#print axioms IsEuclideanLengthMetric.cumulative_curveLength_lipschitzOn
-#print axioms curveLength_le_of_lengthParametrized_of_le
-#print axioms IsEuclideanLengthMetric.cumulative_curveLength_sub
-#print axioms IsEuclideanLengthMetric.weylScaling_local_segment_comparison
-#print axioms IsEuclideanLengthMetric.dist_le_of_lengthParametrized
-#print axioms IsEuclideanLengthMetric.weylScaling_local_curveLength_comparison
-#print axioms curveLength_le_mul_of_boundOn
-#print axioms mul_curveLength_le_of_boundOn
 
 end HarmonicBalls

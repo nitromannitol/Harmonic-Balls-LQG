@@ -13,10 +13,10 @@ pole `z ∈ B_R`: `ObstacleNonCoincidenceHarmonicGeneral`.
   off the pole (Prop 2.3, `GreenPotentialBallContinuousStep`); at the pole the printed "`ṽ_t` and `β_t` are
   continuous" does not apply (`β_t(z) = -∞`) and `ObstacleTendstoAtBotStep` is used.
 * `ObstacleNonCoincidenceHarmonicStep2` — Step 2 (lines 3661-3712): `ṽ_t` is subharmonic on `Λ_t` (AG01
-  Thm 3.2.2 and the lowering `ψ = min (H, ṽ_t)`). [hard, 2-3 rounds]
+  Thm 3.2.2 and the lowering `ψ = min (H, ṽ_t)`).
 * `ObstacleNonCoincidenceHarmonicStep3` — Step 3 (connected, lines 3714-3716): no nonempty open `W ⊆ Λ_t` with
   `z ∉ closure W` and `∂W ∩ Λ_t = ∅` (the odometer is subharmonic on `W`, vanishes on `∂W`, by Lemma A.4 on the
-  part of `∂W` in `∂B_R`, and is positive on `W`: maximum principle). [medium, 1-2 rounds]
+  part of `∂W` in `∂B_R`, and is positive on `W`: maximum principle).
 
 Shared steps used by the reduction (Basic.lean): `LaplacianLEOfSuperharmonicStep`,
 `HasLaplacianOfLaplacianLEGEStep`, `GreenPotentialBallContinuousStep`, `ObstacleTendstoAtBotStep`.
@@ -49,7 +49,7 @@ small, `inf_{∂B_r(x)} ṽ_t > sup_{closedBall x r} β_t` (eq:lies-way-above), 
 (eq:above-obstacle) and `ψ = min (H, ṽ_t)` on the disc, `ṽ_t` outside, is an element of `S̃(t)` below `ṽ_t` at
 `x₀`, contradicting minimality. Uses: Lemma A.1 (general form), Step 1 (openness, in the reduction),
 `SuperharmonicOfLaplacianLEStep`, `LaplacianLEOfSuperharmonicStep`, the Poisson integral on discs
-(Mathlib `Mathlib/Analysis/Complex/Harmonic/Poisson.lean`). Difficulty: hard (2-3 rounds). -/
+(Mathlib `Mathlib/Analysis/Complex/Harmonic/Poisson.lean`). -/
 def ObstacleNonCoincidenceHarmonicStep2 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →
@@ -63,8 +63,7 @@ Prop 2.3), `v_t` is continuous on `closure W ⊆ closedBall 0 R \ {z}`, `v_t = 0
 outside `Λ_t`; on `∂W ∩ ∂B_R` use Lemma A.4, which the printed proof uses implicitly), and `v_t > 0` on `W`; the
 maximum principle for continuous subharmonic functions on bounded open sets gives `v_t ≤ 0` on `W`, so `W = ∅`.
 Uses: Lemmas A.1, A.4 (general forms), Step 2, `GreenPotentialBallLaplacianStep`,
-`GreenPotentialBallContinuousStep`, Prop 2.3, `SuperharmonicOfLaplacianLEStep`. Difficulty: medium
-(1-2 rounds). -/
+`GreenPotentialBallContinuousStep`, Prop 2.3, `SuperharmonicOfLaplacianLEStep`. -/
 def ObstacleNonCoincidenceHarmonicStep3 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t : ℝ, 0 < t →

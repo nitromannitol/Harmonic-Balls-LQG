@@ -70,9 +70,5 @@ theorem one_lt_four_mul_dimension_div_gamma_sq {γ d : ℝ}
   apply (lt_div_iff₀ (sq_pos_of_pos hγ)).2
   nlinarith
 
-#print axioms exists_uniform_scale_ratio_of_eventually_power_bound
-#print axioms gamma_lt_lqgQ
-#print axioms exists_subcritical_exponent_margins
-#print axioms one_lt_four_mul_dimension_div_gamma_sq
 
 end HarmonicBalls

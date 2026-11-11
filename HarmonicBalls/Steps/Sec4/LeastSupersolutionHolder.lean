@@ -22,7 +22,7 @@ the claim follows by Proposition 2.5."
    absolute continuity clause of Lemma 3.2 is implied by `ν ≤ μ_h`.
 3. **Quantitative Proposition 2.5 (gap G4)** (`GreenPotentialBallHolderStep`). The Hölder seminorm of the Green
    potential of `ρ μ_h` is `≤ C ‖ρ‖_∞ ≤ C` with `C = C(μ_h)` and exponent `min (β⁺, 1) / 2`: the same `C` for all
-   `t > 0` and `z ∈ B_1`. The step is proved in Steps/Sec4/GreenPotentialBallHolder.lean from c1's
+   `t > 0` and `z ∈ B_1`. The step is proved in Steps/Sec4/GreenPotentialBallHolder.lean from
    `VolumeGrowth.greenPotential_ball_holder`, but cannot be imported here (name clash with Steps/SecA).
 4. **The exponent** ([C8]). `β⁺ = volumeGrowthExponentPlus γ α₀ = min {(2-γ)²/2, γ(Q-α₀)} / 2` is fixed before the
    probability space; the a.s. event is that of Input I2 for this `β⁺` (and `β⁻ = volumeGrowthExponentMinus γ α₀`).
@@ -45,7 +45,7 @@ a measure with `σ(B_R) < ∞` and `w` continuous on `closedBall 0 R`, zero on `
 distributional sense. Then for `x ∈ B_R`, `y ↦ G_{B_R}(x,y)` is `σ`-integrable on `B_R` and
 `w(x) = -∫_{B_R} G_{B_R}(x,y) σ(dy)`.
 
-Re-carved (c1, 2026-11-03): `σ` is dominated on `B_R` by a measure `μ` with the volume growth condition, as in its
+`σ` is dominated on `B_R` by a measure `μ` with the volume growth condition, as in its
 only use (`holder_of_hasLaplacian_le`, where `σ = Δ v^z_t ≤ μ_h`); then `σ(B_R) < ∞` and the Green potential of `σ`
 is continuous with `Δ = -σ` (proved in Proofs/Sec4/GreenRepresentation.lean).
 
@@ -53,7 +53,7 @@ Used implicitly in the proof of Lemma 4.2 (line 732: `v^z_t` is minus the Green 
 Route: `p(x) = ∫_{B_R} G_{B_R}(x,y) σ(dy)` satisfies `Δp = -σ` (Prop 2.3 and Fubini); `w` is subharmonic and
 continuous, hence `p < ∞` wherever `w > -∞`, i.e. everywhere (Riesz decomposition `w = -p + h` with `h` the least
 harmonic majorant of `w`); `h` is the Poisson integral of `w|_{∂B_R} = 0`, so `h = 0`. Atoms of `σ` are excluded by
-the finiteness of `w` (the junk value `G_{B_R}(x,x) = 0` is irrelevant). Difficulty: hard (2-3 rounds). -/
+the finiteness of `w` (the junk value `G_{B_R}(x,x) = 0` is irrelevant). -/
 def GreenRepresentationBallStep : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ (σ : Measure ℂ) (w : ℂ → ℝ), σ.restrict (ball 0 R) ≤ μ.restrict (ball 0 R) → ContinuousOn w (closedBall 0 R) →

@@ -15,7 +15,7 @@ ball and not in `S̃(t₁) ⊆ C(closedBall)`, contrary to line 3763. Repair (St
 ## Steps (difficulty in brackets)
 
 * `ObstacleMonotoneStep1` — the truncated competitor: for `t₁ < t₂` some `w ∈ S̃(t₁)` satisfies
-  `w ≤ ṽ_{t₂} + (t₂ - t₁) G_{B_R}(z,·)` on the closed ball off the pole. [medium, 1-2 rounds]
+  `w ≤ ṽ_{t₂} + (t₂ - t₁) G_{B_R}(z,·)` on the closed ball off the pole.
 
 ## The reduction (proved)
 
@@ -45,7 +45,7 @@ there), the minimum of two superharmonic functions is superharmonic, `w` is cons
 superharmonicity is local (AG01 §3.2); pass between the distributional and the classical notions with
 `SuperharmonicOfLaplacianLEStep` and `LaplacianLEOfSuperharmonicStep`. Obstacle: `β_{t₁} ≤ q_{B_R} ≤ M` and
 `β_{t₁} = β_{t₂} + (t₂ - t₁) G ≤ s̃`. Uses: Lemma A.1 (general form), Prop 2.3,
-`GreenPotentialBallContinuousStep`. Difficulty: medium (1-2 rounds). -/
+`GreenPotentialBallContinuousStep`. -/
 def ObstacleMonotoneStep1 : Prop :=
   ∀ μ : Measure ℂ, IsLocallyFiniteMeasure μ → ∀ R βminus βplus : ℝ, 0 < R → VolumeGrowth μ R βminus βplus →
   ∀ z ∈ ball (0 : ℂ) R, ∀ t₁ t₂ : ℝ, 0 < t₁ → t₁ < t₂ →
