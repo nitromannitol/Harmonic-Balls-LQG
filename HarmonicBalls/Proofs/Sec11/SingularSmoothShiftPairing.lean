@@ -73,7 +73,5 @@ theorem IsWholePlaneGFF.singular_smooth_shift_modConst_law_of_dominated
     exact ((hh.measurable_pairing φ.1 (φ.2.1.mono_set (subset_univ _))).add_const _).sub_const _
   exact (hPQ.map hm).trans (hh.singular_smooth_shift_modConst_pairing_laws hg α U).1
 
-#print axioms IsWholePlaneGFF.singular_smooth_shift_modConst_pairing_laws
-#print axioms IsWholePlaneGFF.singular_smooth_shift_modConst_law_of_dominated
 
 end HarmonicBalls

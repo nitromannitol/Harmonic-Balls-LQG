@@ -85,7 +85,5 @@ theorem IsWholePlaneGFF.ae_eq_modConst_decoders_after_smooth_shift
   have hac := (hh.singular_smooth_shift_modConst_pairing_laws hg α U).1
   exact (ae_map_iff hB.aemeasurable hs).1 (hac.ae_le hbase)
 
-#print axioms IsWholePlaneGFF.exists_smooth_shift_modConst_observable
-#print axioms IsWholePlaneGFF.ae_eq_modConst_decoders_after_smooth_shift
 
 end HarmonicBalls

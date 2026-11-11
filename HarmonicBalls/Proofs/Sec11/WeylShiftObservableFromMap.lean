@@ -75,7 +75,5 @@ theorem exists_canonicalWeylShiftObservable_of_shiftMap
     hgff hγ hγ₂ hα hμ hf X hX hdecode τ hτ hc hd
   exact ⟨X, Y, hX, hY, hac, hdecode, hYdecode⟩
 
-#print axioms canonicalWeylShiftObservable_of_shiftMap
-#print axioms exists_canonicalWeylShiftObservable_of_shiftMap
 
 end HarmonicBalls

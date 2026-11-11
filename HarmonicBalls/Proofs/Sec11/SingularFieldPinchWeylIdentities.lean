@@ -42,6 +42,5 @@ theorem IsPinchPointProofConfiguration.exists_positive_measure_singularField_int
     P γ ξ α₀ hC hcirc D haxioms hgff hγ hγ₂ hα hD hξ.le] with ω hω
   exact hω f htest.1.continuous htest.2.1 hfneg
 
-#print axioms IsPinchPointProofConfiguration.exists_positive_measure_singularField_internal_pinch_shift_of_metricFieldAxioms
 
 end HarmonicBalls

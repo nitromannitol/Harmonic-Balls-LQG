@@ -153,9 +153,5 @@ theorem IsWholePlaneGFF.exists_countable_local_singular_circle_shift_decoders
     hGFF.exists_local_singular_circle_smooth_shift_decoder (α := α) (hr i) (z i) (hz i)
   exact ⟨F, hFm, ae_all_iff.mpr hFeq⟩
 
-#print axioms IsWholePlaneGFF.exists_countable_local_singular_circle_shift_decoders
-#print axioms circleDensityDifference_integral_tendsto_circleAverage
-#print axioms IsWholePlaneGFF.exists_local_singular_circle_smooth_shift_decoder
-#print axioms IsWholePlaneGFF.exists_local_circleDensity_smooth_shift_approximation
 
 end HarmonicBalls

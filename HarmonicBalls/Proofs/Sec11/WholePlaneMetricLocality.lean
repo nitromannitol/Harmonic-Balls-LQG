@@ -96,8 +96,5 @@ theorem IsWholePlaneGFF.exists_modConst_dyadic_internalMetrics_zeroCharge
   rw [hb]
   exact hg x hx y hy
 
-#print axioms IsWholePlaneGFF.exists_modConst_dyadic_internal_baseMetrics
-#print axioms IsWholePlaneGFF.ae_zeroCharge_metric_eq_base
-#print axioms IsWholePlaneGFF.exists_modConst_dyadic_internalMetrics_zeroCharge
 
 end HarmonicBalls

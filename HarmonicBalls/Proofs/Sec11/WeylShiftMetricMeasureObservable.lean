@@ -42,6 +42,5 @@ theorem exists_canonicalWeylShiftObservable_of_metric_modification
     (measurable_measure_withDensity _ hw).comp_aemeasurable (hgff.aemeasurable_lqgMeasure hμ)
   exact exists_canonicalMetricMeasureObservable hD' hEq hm hmeasure
 
-#print axioms exists_canonicalWeylShiftObservable_of_metric_modification
 
 end HarmonicBalls

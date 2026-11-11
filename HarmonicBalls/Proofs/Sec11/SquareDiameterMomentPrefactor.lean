@@ -86,7 +86,4 @@ theorem IsWholePlaneGFF.measure_scaled_power_tail_of_optimized_moment_prefactor
     _ ≤ _ := measure_power_threshold_le_of_optimized_moment_prefactor P _ r ξ Q s e A
       hr hξ hs hX hmoment
 
-#print axioms measure_power_threshold_le_of_lintegral_rpow_le_prefactor
-#print axioms measure_power_threshold_le_of_optimized_moment_prefactor
-#print axioms IsWholePlaneGFF.measure_scaled_power_tail_of_optimized_moment_prefactor
 end HarmonicBalls

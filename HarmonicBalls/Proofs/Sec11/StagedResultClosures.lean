@@ -106,6 +106,3 @@ theorem harmonicBallNotMetricBallStmt_of_stagedInputs
 
 end HarmonicBalls
 
-#print axioms HarmonicBalls.noConeConditionStmt_of_stagedInputs
-#print axioms HarmonicBalls.harmonicBallNotLipschitzStmt_of_stagedInputs
-#print axioms HarmonicBalls.harmonicBallNotMetricBallStmt_of_stagedInputs

@@ -107,11 +107,7 @@ theorem IsWholePlaneGFF.ae_internal_singularMetric_weylShift_punctured_eq_iInf
   filter_upwards [hres] with ω hω n x y
   simpa only [V, punctured_open_exhaustion] using hω n x y
 
-#print axioms IsWholePlaneGFF.ae_internal_singularMetric_weylShift_punctured_eq_iInf
 
-#print axioms punctured_open_exhaustion
-#print axioms punctured_open_exhaustion_mono
 
-#print axioms IsWholePlaneGFF.ae_internal_singularMetric_weylShift_eq_iInf_cutoff
 
 end HarmonicBalls

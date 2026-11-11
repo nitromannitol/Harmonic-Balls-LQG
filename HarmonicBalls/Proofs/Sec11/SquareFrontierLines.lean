@@ -37,6 +37,4 @@ theorem measure_frontier_closedSquare_eq_zero (μ : Measure ℂ) (z : ℂ)
   apply measure_mono_null (frontier_closedSquare_subset_lines z hL)
   exact measure_union_null (measure_union_null (measure_union_null h₁ h₂) h₃) h₄
 
-#print axioms measure_frontier_closedSquare_eq_zero
-#print axioms countable_positive_coordinate_lines
 end HarmonicBalls

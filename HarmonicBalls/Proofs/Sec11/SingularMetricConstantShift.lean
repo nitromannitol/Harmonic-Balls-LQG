@@ -90,8 +90,5 @@ theorem IsWholePlaneGFF.ae_internal_singularMetric_add_random_constant
       ENNReal.toReal_ofReal (Real.exp_nonneg _), ENNReal.toReal_ofReal (hd x y).1]
   rw [heq, internalMetric_const_mul (D ω) (Real.exp_pos _)]
 
-#print axioms IsWholePlaneGFF.ae_baseMetric_add_random_constant
-#print axioms IsWholePlaneGFF.ae_weylScaling_add_random_constant
-#print axioms IsWholePlaneGFF.ae_internal_singularMetric_add_random_constant
 
 end HarmonicBalls

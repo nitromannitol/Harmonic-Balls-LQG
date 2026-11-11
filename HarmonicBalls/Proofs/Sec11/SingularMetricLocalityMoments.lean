@@ -86,7 +86,5 @@ theorem IsWholePlaneGFF.exists_modConst_locality_at_liouville_charge
   exact ⟨𝔇, h𝔇, h.exists_modConst_internal_singularMetric_of_diameter_moments
     hAff 𝔇 h𝔇 hrepr hmetric s hs hξ hγ.le hγQ hV hne hVU hball ψ hψ hψint⟩
 
-#print axioms IsWholePlaneGFF.exists_modConst_locality_at_liouville_charge
-#print axioms IsWholePlaneGFF.exists_modConst_internal_singularMetric_of_diameter_moments
 
 end HarmonicBalls

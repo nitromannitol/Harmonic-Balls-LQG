@@ -52,6 +52,5 @@ theorem IsWholePlaneGFF.ae_internal_pinch_frequency_zeroCharge
   exact h.ae_internal_pinch_frequency_of_normalizedLQG hAff hCC hγ hγ₂ hα hμ hfull
     𝔇 h𝔇 hD haxioms hconfig M hmetric δ hδ
 
-#print axioms IsWholePlaneGFF.ae_internal_pinch_frequency_zeroCharge
 
 end HarmonicBalls

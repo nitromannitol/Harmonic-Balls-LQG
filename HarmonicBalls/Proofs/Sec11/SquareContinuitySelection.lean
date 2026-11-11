@@ -136,8 +136,4 @@ theorem exists_ae_null_frontier_closedSquare_subset
   change dist x c < R
   linarith [hr.2]
 
-#print axioms exists_centered_square_null_frontier
-#print axioms exists_ae_centered_square_null_frontier_of_bounded
-#print axioms exists_ae_centered_square_null_frontier
-#print axioms exists_ae_null_frontier_closedSquare_subset
 end HarmonicBalls
