@@ -20,7 +20,7 @@ The rows `none` have no declaration in those directories concluding S.
 
 **Draft names.** Row 11.13 of INVENTORY.tsv names `ManyPinchScalesStmt`; the corrected Lemma 11.13 of the audit is
 `CorrectedLemma11_13Stmt`, shown in the forall-xi table. Row 2.5 names `GreenPotentialLiouvilleHolderStmt`, the
-printed Prop 2.5; the Green clause `GreenPotentialHolderStmt` (Draft/Section2.lean:190) is the one that `hholder` binds.
+printed Prop 2.5; the Green clause `GreenPotentialHolderStmt` (Draft/Section2.lean:190) is the one that `hholder` binds. Prop 2.5 is therefore a cited input, not paper-owned (operator ruling, tasks/lh.md:39).
 
 **Forall-xi forms (M11).** The statements of Theorem 1.2 (`HarmonicBallNoveltyStmt`), Proposition 11.11
 (`HarmonicBallNotMetricBallStmt`) and Lemma 11.13 (`CorrectedLemma11_13Stmt`) quantify over every xi; the canonical
@@ -103,33 +103,41 @@ not counted, so a `PROOFS` row can understate its binders. Its binder list shows
 | A.5 | `ObstacleConservationOfMassStmt` | `closure_A_5` | HarmonicBalls/FirstPass/Closure/SecA45.lean:49 | 0 |  |
 | A.6 | `ObstacleCompatibilityStmt` | `closure_A_6` | HarmonicBalls/FirstPass/Closure/SecA45.lean:52 | 0 |  |
 
-## Numbered results without a counted declaration (X1 classification, z6, 2026-11-11)
+## Numbered results without an exact-name counted declaration (X1, z6, 2026-11-11, corrected)
 
-Each row was checked by grep of all of `HarmonicBalls/` (not only `FirstPass/` and `Closure/`) for a theorem whose
-conclusion is the draft statement or its corrected form. Classes: COUNTED (exact draft statement, found outside the
-FirstPass/Closure scan), CORRECTED-FORM (the corrected statement of the named `[Cn]`), CITED (a literature input of the
-repository, with no Lean statement under the draft name), NONE (no declaration; stated plainly).
+Each row was checked by grep of all of `HarmonicBalls/`, and by a rescan of every file under `HarmonicBalls/FirstPass/`
+(including `S11h/` and all other subdirectories) for a declaration whose conclusion is the draft statement or a
+corrected/faithful name (`scratch-z6/manifest.py`, `scratch-z6/faithful_scan.py`). Two properties are kept in separate
+columns. **kind** is the INVENTORY kind column, with the operator ruling for 2.5 (`tasks/lh.md:39`). **declaration** is
+the counted status. Classes: CORRECTED-FORM (the corrected or faithful statement of the named `[Cn]` or audit).
 
-| number | draft statement | class | file:line (declaration) | binders | note |
-|---|---|---|---|---|---|
-| 2.1 | `LiouvilleMeasureFactStmt` | CITED | none (no Lean statement of this name) | - | literature inputs for clauses I-III: `LQGMeasureNonatomic` (Proposed/LQG.lean:86), `LQGMeasureLocality` (:97), `LQGMeasureWeylScaling` (:107); mapping by inspection |
-| 2.2 | `LQGMetricFactStmt` | CITED | none (no Lean statement of this name) | - | literature input: `LQGMetricFieldAxioms` (Proposed/LQG.lean:225); mapping by inspection |
-| 2.4 | `LiouvilleVolumeGrowthStmt` | COUNTED (outside scan) | HarmonicBalls/Steps/Sec2/VolumeGrowth.lean:80 `liouvilleVolumeGrowthStmt_of_ballMass` | 1 | `h : LiouvilleBallMassBoundStep`; conditional on that binder |
-| 2.5 | `GreenPotentialLiouvilleHolderStmt` | NONE (paper-owned) | none | - | the printed Prop 2.5 is concluded by no declaration; `Steps/Sec4/GreenPotentialBallHolderStep.lean` is a quantitative variant for `O = B_R`, not the printed statement |
-| 2.6 | `ReflectedLBMHeatKernelStmt` | NONE (cited, no Lean input) | none | - | Kigami 2019 Thm 13.1 has no Prop in Proposed/ or External/; the draft definition (Draft/Section2.lean:225) has no uses |
-| 6.5 | `AnnulusIterationStmt` | COUNTED (outside scan) | HarmonicBalls/Proofs/Sec6/AnnulusLawTransfer.lean:207 `annulusIterationStmt_proved` | 0 | axioms: propext, Classical.choice, Quot.sound (checked); the three-input route `annulusIterationStmt_of_three_inputs` (Proofs/Sec6/FullThreeInputAssembly.lean:72) has `hDG hCC hE` as section variables (`include`) |
-| 9.1 | `ObstacleComparisonStmt` | COUNTED (outside scan) | HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32 `obstacleComparison` | 0 | axioms: propext, Classical.choice, Quot.sound (checked); Steps route `obstacleComparison_of_steps` (Steps/Sec9/ObstacleComparison.lean:72) takes `hsymm hclass` |
-| 9.2 | `SubharmonicBallUniquenessStmt` | CORRECTED-FORM [C51] | HarmonicBalls/FirstPass/S9c.lean:116 `firstPass_9_2_corrected` | 6 | `hDG hCC hW hE hN h82`; conclusion `SubharmonicBallUniquenessC51Stmt` |
-| 10.5 | `CrossingComponentContainsClusterCrossingStmt` | CORRECTED-FORM [C48] | HarmonicBalls/FirstPass/S1S10/CrossingLemma.lean:38 `firstPass_10_5_corrected` | 6 (+ implicit `G`) | `hGne hGb hGo hGc hEcross hTor` (`hTor : TorhorstSimpleLoopFrozen`) |
-| 11.17 | `PinchThirdEventPositiveStmt` | NONE (paper-owned) | none | - | defined at Draft/Section11.lean:312 only; its consumer `firstPass_11_16_of_11_17` (FirstPass/S11e.lean:29) takes it as a hypothesis |
+| number | draft statement | kind | declaration | file:line (declaration) | binders | binder names | note |
+|---|---|---|---|---|---|---|---|
+| 2.1 | `LiouvilleMeasureFactStmt` | cited | none | - | - | - | literature inputs `LQGMeasureNonatomic` (Proposed/LQG.lean:86), `LQGMeasureLocality` (:97), `LQGMeasureWeylScaling` (:107); mapping by inspection |
+| 2.2 | `LQGMetricFactStmt` | cited | none | - | - | - | literature input `LQGMetricFieldAxioms` (Proposed/LQG.lean:225); mapping by inspection |
+| 2.4 | `LiouvilleVolumeGrowthStmt` | cited | declaration outside scan, conditional | HarmonicBalls/Steps/Sec2/VolumeGrowth.lean:80 `liouvilleVolumeGrowthStmt_of_ballMass` | 1 | `h : LiouvilleBallMassBoundStep` | conditional on that binder; the step is the ball clause eq:ball-volume, attributed to Ding-Gwynne 2020 Lemma 3.8 (VolumeGrowth.lean:29); not checked against Proposed/ |
+| 2.5 | `GreenPotentialLiouvilleHolderStmt` | cited (ruling, tasks/lh.md:39) | none (no declaration concludes it) | - | - | - | the paper proves Prop 2.5 by citation to Ponce 2016 Sec 16.2; bound as `hholder : GreenPotentialHolderStmt` (Draft/Section2.lean:190); `Steps/Sec4/GreenPotentialBallHolderStep.lean` is a variant for `O = B_R` |
+| 2.6 | `ReflectedLBMHeatKernelStmt` | cited | none | - | - | - | Kigami 2019 Thm 13.1 has no input in Proposed/ or External/; the draft definition (Draft/Section2.lean:225) has no uses |
+| 6.5 | `AnnulusIterationStmt` | cited | declaration outside scan, unconditional | HarmonicBalls/Proofs/Sec6/AnnulusLawTransfer.lean:207 `annulusIterationStmt_proved` | 0 | - | axioms propext, Classical.choice, Quot.sound (checked); the three-input route `annulusIterationStmt_of_three_inputs` (Proofs/Sec6/FullThreeInputAssembly.lean:72) has `hDG hCC hE` as section variables |
+| 9.1 | `ObstacleComparisonStmt` | cited | declaration outside scan, unconditional | HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32 `obstacleComparison` | 0 | - | axioms propext, Classical.choice, Quot.sound (checked); Steps route `obstacleComparison_of_steps` (Steps/Sec9/ObstacleComparison.lean:72) takes `hsymm hclass` |
+| 9.2 | `SubharmonicBallUniquenessStmt` | paper-owned | CORRECTED-FORM [C51] | HarmonicBalls/FirstPass/Phase2/DerivedInputs19.lean:172 `Closure.closure_9_2_derivedInputs19` (namespace HarmonicBalls.Closure) | 5 | `hL1 hE3 hDG hCC hE` | concludes `SubharmonicBallUniquenessC51Stmt` (S9c.lean:41). Fewest-binder rule over the 7 C51 candidates; others: `closure_9_2_derivedInputs17` (6), `firstPass_9_2_corrected` (FirstPass/S9c.lean:116, 6: `hDG hCC hW hE hN h82`), `closure_9_2_derivedInputs5` (9), `closure_9_2_derivedInputs` (9), `closure_9_2_noWeyl` (10), `closure_9_2` (11). Earlier round used `firstPass_9_2_corrected`; changed by the rule. Axioms not checked: scratch `#print axioms` is blocked (the DerivedInputs19 and S9c import chains have missing oleans, e.g. Proofs/Sec6/GoodPrevalenceAffine and Proofs/Sec6/PrevalenceGridUnion; the lb of S9c waits on lake.lock). The file has no sorry, admit, native_decide, axiom or maxHeartbeats (static grep). |
+| 10.5 | `CrossingComponentContainsClusterCrossingStmt` | paper-owned | CORRECTED-FORM [C48] | HarmonicBalls/FirstPass/S1S10/CrossingLemma.lean:38 `firstPass_10_5_corrected` | 6 (+ implicit `G`) | `hGne hGb hGo hGc hEcross hTor` (`hTor : TorhorstSimpleLoopFrozen`) | conclusion is inline (`IsLocallyConnectedSet (closure G) ∧ ¬IsCutPoint … ∧ IsSimpleLoop (frontier C)`), so no Stmt name; `closure_10_5` (FirstPass/Closure/Sec78910.lean:254) is a wrapper with the same 6 binders; axioms propext, Classical.choice, Quot.sound (checked) |
+| 11.17 | `PinchThirdEventPositiveStmt` | paper-owned | CORRECTED-FORM (faithful) | HarmonicBalls/FirstPass/S11h/PinchCertificateProof11_17.lean:293 `firstPass_11_17_corrected : PinchThirdEventFaithfulStmt.{u}` (S11h/Faithful.lean:96) | 8 | `h16 hAx hCMGFF hComp hdec hF hK1 hN2` | axioms propext, Classical.choice, Quot.sound (checked). The fewest-binder faithful candidate is `firstPass_11_17_of_11_16` (S11h/Assemble11_17.lean:64, 4: `h16 hAx hCMGFF hCert`), but its `hCert : PinchCertificateStmt` is an intermediate Prop, not a frozen input; the counted form is the 8-binder one (lead decision; audit notes/fp-gaps/CHATGPT-hb-11-15-11-17-audit.md, l.4, l.133-153) |
 
-**Summary (X1).** The 71 numbered rows of `INVENTORY.tsv` with a draft statement are 65 paper-owned and 6 cited (kind
-column). The counted table above has 61 rows (the FirstPass/Closure scan), all paper-owned. The 10 rows without a counted
-declaration are 4 paper-owned (2.5, 9.2, 10.5, 11.17) and 6 cited (2.1, 2.2, 2.4, 2.6, 6.5, 9.1), so 65 = 61 + 4.
-Of the four paper-owned rows, 9.2 and 10.5 are proved only in corrected form ([C51], [C48]), and 2.5 and 11.17 have no
-declaration at all. The status claim "64/64 paper-owned PROVED-FP" therefore does not match this table: it is one less
-than the 65 paper-owned rows, and it treats 2.5 and 11.17 as proved, which the repository does not show. Recorded here,
-not changed; the lead decides the ledger wording.
+**Faithful siblings not counted by the draft-name rule.** The rescan of `FirstPass/**` for non-draft `Stmt` conclusions finds
+`PinchSecondEventFaithfulStmt` (11.16; 14 declarations, fewest binders `firstPass_11_16_corrected_of_steps`,
+FirstPass/S11k.lean:117, 2: `hX hM`) and `PinchFirstEventFaithfulStmt` (11.15; 2 declarations, fewest `closure_11_15`,
+FirstPass/Closure/Sec11.lean, 5 binders). The counted 11.16 row `firstPass_11_16_of_11_17` (FirstPass/S11e.lean:29, binder
+`h`) binds the draft `PinchThirdEventPositiveStmt`, so it is conditional on the draft 11.17 statement; the 11.17 corrected
+form consumes the faithful 11.16 as `h16`. Recorded here, not changed; flagged for the lead.
+
+**Summary (X1, corrected).** The 71 numbered rows of `INVENTORY.tsv` with a draft statement are **64 paper-owned and 7
+cited**. The cited rows are 2.1, 2.2, 2.4, 2.5, 2.6, 6.5, 9.1: the six of the kind column plus 2.5 by the operator ruling
+(the earlier summary said 65 paper-owned and 6 cited). Every one of the 64 paper-owned rows has a counted declaration:
+61 with the exact draft name (table above) and 3 in corrected form (9.2, 10.5, 11.17). So the count is 64 = 61 + 3, and
+the only rows that differ from an exact-name count are 9.2, 10.5 and 11.17. Among the cited rows, 2.4, 6.5 and 9.1 have a
+Lean declaration (2.4 conditional on `LiouvilleBallMassBoundStep`; 6.5 and 9.1 with no binder), while 2.1, 2.2, 2.5 and 2.6
+have none (2.5 enters as the hypothesis `hholder`).
 
 **Retirement check (fp-phase2-retire-gffexists-manifest, Part 1, 2026-11-11).** No counted declaration of this file
 (the 61 table rows, the six forall-xi and canonical rows and the rows above) has a binder of type
