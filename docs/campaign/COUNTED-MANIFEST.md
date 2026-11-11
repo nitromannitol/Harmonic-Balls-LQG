@@ -33,6 +33,10 @@ forms (`...CanonicalStmt`, xi = lqgXi gamma) are listed too. Fewest-binder candi
   `closure_11_13` (FirstPass/Closure/Sec11.lean:128) and `firstPass_11_13_corrected` (FirstPass/S11i/Corrected11_13.lean:65)
   take `hStep8 : Step8IdentificationStmt` (Corrected11_13.lean:57), a named input with no proof in the repository.
 
+**Counting caveat.** A binder count is the number of explicit binders of the signature. Section variables that a
+file brings in with `include` (for example `Proofs/Sec9/LQGExistenceConsequences.lean:26`, `include hDG hCC hE`) are
+not counted, so a `PROOFS` row can understate its binders. Its binder list shows the explicit binders only.
+
 ## Counted declaration per numbered result
 
 | number | draft statement | counted declaration | file:line | binders | binder names |
@@ -103,16 +107,16 @@ forms (`...CanonicalStmt`, xi = lqgXi gamma) are listed too. Fewest-binder candi
 
 | number | draft statement | counted | file:line | binders | binder names |
 |---|---|---|---|---|---|
-| 2.1 | `LiouvilleMeasureFactStmt` | none | | 0 | |
-| 2.2 | `LQGMetricFactStmt` | none | | 0 | |
-| 2.4 | `LiouvilleVolumeGrowthStmt` | none | | 0 | |
-| 2.5 | `GreenPotentialLiouvilleHolderStmt` | none | | 0 | |
-| 2.6 | `ReflectedLBMHeatKernelStmt` | none | | 0 | |
-| 6.5 | `AnnulusIterationStmt` | none | | 0 | |
-| 9.1 | `ObstacleComparisonStmt` | none | | 0 | |
-| 9.2 | `SubharmonicBallUniquenessStmt` | none | | 0 | |
-| 10.5 | `CrossingComponentContainsClusterCrossingStmt` | none | | 0 | |
-| 11.17 | `PinchThirdEventPositiveStmt` | none | | 0 | |
+| 2.1 | `LiouvilleMeasureFactStmt` | none |  | 0 |  |
+| 2.2 | `LQGMetricFactStmt` | none |  | 0 |  |
+| 2.4 | `LiouvilleVolumeGrowthStmt` | PROOFS liouvilleVolumeGrowthStmt_of_existence (only in Proofs/) | HarmonicBalls/Proofs/Sec9/LQGExistenceConsequences.lean:30 | 0 |  |
+| 2.5 | `GreenPotentialLiouvilleHolderStmt` | none |  | 0 |  |
+| 2.6 | `ReflectedLBMHeatKernelStmt` | none |  | 0 |  |
+| 6.5 | `AnnulusIterationStmt` | PROOFS annulusIterationStmt_of_three_inputs (only in Proofs/) | HarmonicBalls/Proofs/Sec6/FullThreeInputAssembly.lean:73 | 0 |  |
+| 9.1 | `ObstacleComparisonStmt` | PROOFS obstacleComparison (only in Proofs/) | HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32 | 0 |  |
+| 9.2 | `SubharmonicBallUniquenessStmt` | none |  | 0 |  |
+| 10.5 | `CrossingComponentContainsClusterCrossingStmt` | none |  | 0 |  |
+| 11.17 | `PinchThirdEventPositiveStmt` | none |  | 0 |  |
 
 ## Forall-xi and canonical-xi forms (Theorem 1.2, Proposition 11.11, Lemma 11.13)
 
