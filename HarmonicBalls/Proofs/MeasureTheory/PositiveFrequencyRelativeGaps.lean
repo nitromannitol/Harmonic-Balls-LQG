@@ -15,7 +15,7 @@ increasing enumeration of the good positive indices, that is of `{n ∈ S : 0 < 
 * `nᵢ₊₁ / nᵢ → 1`.
 
 No bound on the absolute gaps `nᵢ₊₁ - nᵢ` is assumed. This is the relative-gap step of
-`notes/sec11-proof/sec11-proof-r10.tex`, lines 491–510. There the frequency is obtained from the
+the Section 11 proof. There the frequency is obtained from the
 ergodic theorem (Walters, Theorem 1.14); that input is not used here, only the frequency
 hypothesis is.
 

@@ -95,8 +95,5 @@ theorem ae_lqg_transposedGreen_integrable
   let : IsFiniteMeasure ν := hf
   exact ae_transposedGreen_integrable_of_local_upper_growth_global hup hV hVb hK hν
 
-#print axioms ae_transposedGreen_integrable_of_local_upper_growth
-#print axioms ae_transposedGreen_integrable_of_local_upper_growth_global
-#print axioms ae_lqg_transposedGreen_integrable
 
 end HarmonicBalls

@@ -81,10 +81,6 @@ theorem hasLaplacian_neg_newtonKernel (a : ℂ) (U : Set ℂ) :
   rw [integral_newtonKernel_mul_laplacian (hφ.1.of_le (by norm_num)) hφ.2.1]
   simp
 
-#print axioms HasLaplacian.congr_ae_restrict_volume
-#print axioms rieszMeasure_eq_of_hasLaplacian_ae
-#print axioms rieszMeasure_singleton_eq_one_of_hasLaplacian_ae
-#print axioms hasLaplacian_neg_newtonKernel
 
 /-- A finite positive source which vanishes on an open observation set has an
 integrable Green kernel at every point of that set, even for an unbounded
@@ -108,7 +104,6 @@ theorem integrable_greenFunction_of_source_null_on_open
     (hΛO hx) (hK.diff isOpen_ball) (sdiff_subset.trans hKO)
     (fun h => h.2 (mem_ball_self hr)) hν hνK'
 
-#print axioms integrable_greenFunction_of_source_null_on_open
 
 /-- A smooth annular source has constant logarithmic potential in the disc
 enclosed by its support. This includes all points of the inner disc, not merely
@@ -133,7 +128,6 @@ theorem circleDensity_log_potential_eq_center_of_mem_inner_ball
       linarith [hnear.1]
     simp only [max_eq_left hbound, sub_self, norm_zero, max_eq_left hρpos.le]
 
-#print axioms circleDensity_log_potential_eq_center_of_mem_inner_ball
 
 /-- For a measurable observation set, requiring representatives for every measure is
 exactly the pointwise representative problem. Counting measure tests every point. -/
@@ -153,7 +147,6 @@ theorem forall_hasBoundedSubharmonicRepresentatives_iff_pointwise
     obtain ⟨g, hg, hz, hpoint⟩ := h f hf
     exact ⟨g, hg, hz, ae_restrict_of_forall_mem hΛ hpoint⟩
 
-#print axioms forall_hasBoundedSubharmonicRepresentatives_iff_pointwise
 
 /-- Representatives for a dominating observation measure also work for every
 absolutely continuous observation measure. -/
@@ -166,7 +159,6 @@ theorem hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous
   obtain ⟨g, hg, hz, hae⟩ := hν f hf
   exact ⟨g, hg, hz, hμν.ae_eq hae⟩
 
-#print axioms hasBoundedSubharmonicRepresentatives_of_absolutelyContinuous
 
 /-- Multiplying a bounded-domain test by a nonnegative constant preserves its
 source, support and pole conditions. -/
@@ -188,7 +180,6 @@ theorem boundedSubharmonicBallTestClass_smul {Λ : Set ℂ} {z : ℂ} {f : ℂ �
     ext x
     simp [greenPotential, smul_eq_mul, NNReal.smul_def, mul_sub, mul_add]
 
-#print axioms boundedSubharmonicBallTestClass_smul
 
 /-- Subtracting a constant preserves bounded-domain subharmonic tests. -/
 theorem boundedSubharmonicBallTestClass_sub_const {Λ : Set ℂ} {z : ℂ} {f : ℂ → ℝ}
@@ -202,7 +193,6 @@ theorem boundedSubharmonicBallTestClass_sub_const {Λ : Set ℂ} {z : ℂ} {f : 
   simp only [Pi.sub_apply, hf, Pi.add_apply]
   ring
 
-#print axioms boundedSubharmonicBallTestClass_sub_const
 
 /-- Nonnegative scaling preserves the frozen class of subharmonic tests. -/
 theorem subharmonicBallTestClass_smul {Λ : Set ℂ} {z : ℂ} {f : ℂ → ℝ}
@@ -223,7 +213,6 @@ theorem subharmonicBallTestClass_smul {Λ : Set ℂ} {z : ℂ} {f : ℂ → ℝ}
     ext x
     simp [greenPotential, smul_eq_mul, NNReal.smul_def, mul_sub, mul_add]
 
-#print axioms subharmonicBallTestClass_smul
 
 /-- Nonnegative scaling transports an individual bounded representative, including
 its value at the pole and its almost-everywhere observation values. -/
@@ -238,7 +227,6 @@ theorem boundedSubharmonicRepresentative_smul
   · filter_upwards [hae] with x hx
     simp [hx]
 
-#print axioms boundedSubharmonicRepresentative_smul
 
 /-- A finitely supported observation measure admits bounded representatives for the
 whole frozen test class. The real part of a complex interpolating polynomial agrees
@@ -266,7 +254,6 @@ theorem hasBoundedSubharmonicRepresentatives_of_ae_mem_finset
   · filter_upwards [hS] with x hx
     exact (heval x (Finset.mem_insert_of_mem hx)).symm
 
-#print axioms hasBoundedSubharmonicRepresentatives_of_ae_mem_finset
 
 /-- Every test admits a bounded representative when the observation measure is a
 single point mass, independently of the point's location. -/
@@ -277,7 +264,6 @@ theorem hasBoundedSubharmonicRepresentatives_dirac {Λ : Set ℂ} {z x : ℂ}
   apply ae_restrict_of_ae
   simp only [ae_dirac_eq, Filter.eventually_pure, Finset.mem_singleton]
 
-#print axioms hasBoundedSubharmonicRepresentatives_dirac
 
 /-- A bounded observation set and a compact source fit in a bounded open subset of
 any given open witness. -/
@@ -354,7 +340,6 @@ theorem bounded_representative_of_changed_sources
     dsimp [g, Pi.add_apply, Pi.sub_apply] at hx ⊢
     linarith
 
-#print axioms bounded_representative_of_changed_sources
 
 /-- The diagonal convention forces a source-by-source correction for a Dirac mass
     to vanish at its atom, for any two domains. -/
@@ -386,8 +371,6 @@ theorem greenFunction_univ_eq_newtonKernel (x y : ℂ) :
       simp [greatestHarmonicMinorant, not_isHarmonicMinorant_univ_newtonKernel]
     simp [greenFunction, hxy, hb]
 
-#print axioms not_isHarmonicMinorant_univ_newtonKernel
-#print axioms greenFunction_univ_eq_newtonKernel
 
 /-- A replacement agreeing almost everywhere with a whole-plane negative
 Dirac potential has a unit Riesz atom if its local distributional Laplacian
@@ -403,7 +386,6 @@ theorem negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
   filter_upwards [heq] with x hx
   simpa [greenPotential, greenFunction_univ_eq_newtonKernel, newtonKernel_comm x a] using hx
 
-#print axioms negative_source_unit_atom_of_ae_dirac_and_hasLaplacian
 
 /-- Under the local Riesz identity, a replacement agreeing almost everywhere
 with the negative Dirac potential has no other negative source mass in the
@@ -460,9 +442,6 @@ theorem integrable_negative_source_of_ae_dirac_and_hasLaplacian
   rw [hsplit]
   exact (integrable_dirac enorm_lt_top).add_measure hrest
 
-#print axioms negative_source_restrict_eq_dirac_of_ae_and_hasLaplacian
-#print axioms negative_source_residual_null_of_ae_and_hasLaplacian
-#print axioms integrable_negative_source_of_ae_dirac_and_hasLaplacian
 
 /-- The whole-plane Green potential of a smooth annular source is constant
 inside its inner disc, including pointwise values for arbitrary observers. -/
@@ -494,7 +473,6 @@ theorem greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball
   simpa only [norm_sub_rev] using
     circleDensity_log_potential_eq_center_of_mem_inner_ball hr hδ hwidth hw
 
-#print axioms greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball
 
 /-- The whole-plane kernel is integrable against a smooth annular density at
 every pole, including poles in the annulus. -/
@@ -518,7 +496,6 @@ theorem integrable_greenFunction_univ_circleDensity
     newtonKernel, density, norm_sub_rev]
   ring
 
-#print axioms integrable_greenFunction_univ_circleDensity
 
 /-- A whole-plane annular source can be removed entirely when the pole and
 observation set lie inside the shell. The observation measure is arbitrary. -/
@@ -545,7 +522,6 @@ theorem univ_circleDensity_has_bounded_representative
     change -greenPotential univ ν x = -greenPotential univ ν z
     rw [greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball hr hδ hwidth (hΛ x hx)]
 
-#print axioms univ_circleDensity_has_bounded_representative
 
 /-- An existing representative for an arbitrary negative source survives the
 addition of an annular source surrounding the observations. Integrability of
@@ -587,7 +563,6 @@ theorem univ_add_circleDensity_has_bounded_representative
     rw [hsum, greenPotential_univ_circleDensity_eq_center_of_mem_inner_ball hr hδ hwidth hx]
     linarith
 
-#print axioms univ_add_circleDensity_has_bounded_representative
 
 open Classical in
 /-- Adding an integrable source has a different effect at points where the
@@ -638,9 +613,6 @@ theorem neg_greenPotential_add_zero_source_has_bounded_representative
   · filter_upwards [hσae, hzae, hgae] with x hσx hzx hx
     simpa only [Pi.neg_apply, greenPotential_add_zero_source hσx hzx] using hx
 
-#print axioms greenPotential_add_integrable_source
-#print axioms greenPotential_add_zero_source
-#print axioms neg_greenPotential_add_zero_source_has_bounded_representative
 
 /-- Angular measure on the unit circle centered at `z`. -/
 noncomputable def unitCircleSource (z : ℂ) : Measure ℂ :=
@@ -774,14 +746,6 @@ theorem univ_add_unitCircleSource_has_bounded_representative
   · exact ae_restrict_of_forall_mem hΛm fun x hx =>
       greenPotential_univ_unitCircleSource_eq_zero (hΛ x hx)
 
-#print axioms integrable_greenFunction_univ_unitCircleSource
-#print axioms greenPotential_univ_unitCircleSource_eq_zero
-#print axioms unitCircleSource_apply_univ
-#print axioms unitCircleSource_finite_and_concentrated
-#print axioms unitCircleSource_singleton_eq_zero
-#print axioms neg_univ_unitCircleSource_mem_subharmonicBallTestClass
-#print axioms neg_univ_add_unitCircleSource_mem_subharmonicBallTestClass
-#print axioms univ_add_unitCircleSource_has_bounded_representative
 
 /-- The annular whole-plane potential is a valid frozen test for every pole;
 the source is compactly supported, finite, and non-atomic. -/
@@ -818,7 +782,6 @@ theorem neg_univ_circleDensity_mem_subharmonicBallTestClass
   ext x
   simp [greenPotential]
 
-#print axioms neg_univ_circleDensity_mem_subharmonicBallTestClass
 
 /-- The annular source used above is a probability measure. -/
 theorem circleDensity_source_isProbabilityMeasure
@@ -838,7 +801,6 @@ theorem circleDensity_source_isProbabilityMeasure
     ← ofReal_integral_eq_lintegral_ofReal hi hn]
   simp only [density, circleDensity_normalized_integral hr.le hδ z, ENNReal.ofReal_one]
 
-#print axioms circleDensity_source_isProbabilityMeasure
 
 /-- The potential of a point mass at the centre of a disc. -/
 theorem greenPotential_dirac_zero_ball {R : ℝ} (hR : 0 < R) {x : ℂ}
@@ -868,7 +830,6 @@ theorem greenPotential_univ_dirac_zero_eq_unitDisc {x : ℂ}
   · rw [greenPotential_dirac_zero_ball (by norm_num) hx hx0]
     simp [greenPotential, integral_dirac, greenFunction_univ_eq_newtonKernel, newtonKernel]
 
-#print axioms greenPotential_univ_dirac_zero_eq_unitDisc
 
 /-- Off the source atom, the disc and whole-plane point potentials differ by
 the harmonic minorant, without a condition on its diagonal value. -/
@@ -885,7 +846,6 @@ theorem greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne
     greenFunction_ball ha hx (Ne.symm hxa)]
   linarith
 
-#print axioms greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne
 
 /-- If the disc's harmonic correction vanishes at the source atom, the
 whole-plane and disc point potentials agree after harmonic correction even at the
@@ -908,7 +868,6 @@ theorem greenPotential_univ_dirac_eq_ball_add_harmonic
       greenFunction_ball ha hx (Ne.symm hxa)]
     linarith
 
-#print axioms greenPotential_univ_dirac_eq_ball_add_harmonic
 
 /-- The negative whole-plane Dirac potential is a test whenever the pole is distinct
 from the source atom. -/
@@ -926,7 +885,6 @@ theorem neg_univ_dirac_zero_mem_subharmonicBallTestClass {Λ : Set ℂ} {z : ℂ
   · ext x
     simp [greenPotential]
 
-#print axioms neg_univ_dirac_zero_mem_subharmonicBallTestClass
 
 /-- A whole-plane negative Dirac test has a bounded representative for every
 observation measure when the cluster lies strictly inside the unit disc and the pole
@@ -958,7 +916,6 @@ theorem univ_dirac_zero_has_bounded_representative
     simp only [g, Pi.neg_apply]
     rw [greenPotential_univ_dirac_zero_eq_unitDisc hx]
 
-#print axioms univ_dirac_zero_has_bounded_representative
 
 /-- An annular non-atomic source can be removed even when a second negative
 source is an observed atom at the centre of the unit disc. -/
@@ -1005,7 +962,6 @@ theorem univ_circleDensity_add_dirac_has_bounded_representative
   filter_upwards [ae_restrict_mem isOpen_ball.measurableSet] with x hx
   exact heq x hx
 
-#print axioms univ_circleDensity_add_dirac_has_bounded_representative
 
 /-- The mixed annular and atomic negative source is an admissible frozen test
 when the pole differs from the atom. -/
@@ -1049,7 +1005,6 @@ theorem neg_univ_circleDensity_add_dirac_mem_subharmonicBallTestClass
     ext x
     simp [greenPotential]
 
-#print axioms neg_univ_circleDensity_add_dirac_mem_subharmonicBallTestClass
 
 /-- The difference of two whole-plane point potentials is an admissible test
 when the positive atom is outside the observation set and the negative atom is
@@ -1070,7 +1025,6 @@ theorem univ_dirac_sub_dirac_mem_subharmonicBallTestClass
   · ext x
     simp
 
-#print axioms univ_dirac_sub_dirac_mem_subharmonicBallTestClass
 
 /-- A whole-plane two-source test has a bounded representative with its positive
 source removed, provided the disc correction vanishes at the negative atom. -/
@@ -1119,7 +1073,6 @@ theorem univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
     rw [greenPotential_univ_dirac_eq_ball_add_harmonic hR ha hdiag hx]
     ring
 
-#print axioms univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
 
 /-- A whole-plane two-source test has a bounded representative with its positive
 source removed, when the observation measure does not charge the negative atom. -/
@@ -1173,7 +1126,6 @@ theorem univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
     rw [greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR ha hx hxa]
     ring
 
-#print axioms univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
 
 /-- The Green potential of two point masses is the sum of their potentials.
 Each point-mass integral is integrable, including on the diagonal. -/
@@ -1182,7 +1134,6 @@ theorem greenPotential_add_dirac (O : Set ℂ) (a c x : ℂ) :
       greenPotential O (Measure.dirac a) x + greenPotential O (Measure.dirac c) x := by
   exact integral_add_measure (integrable_dirac enorm_lt_top) (integrable_dirac enorm_lt_top)
 
-#print axioms greenPotential_add_dirac
 
 /-- The Green potential of finitely many point masses is the sum of the point
 potentials, including at the diagonal under the frozen convention. -/
@@ -1193,7 +1144,6 @@ theorem greenPotential_finset_sum_dirac (O : Set ℂ) (S : Finset ℂ) (x : ℂ)
   unfold greenPotential
   rw [integral_finsetSum_measure (fun _ _ => integrable_dirac enorm_lt_top)]
 
-#print axioms greenPotential_finset_sum_dirac
 
 /-- Away from finitely many point sources, the difference between the whole-plane
 and disc potentials is the sum of the disc harmonic corrections. -/
@@ -1212,7 +1162,6 @@ theorem greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_not_mem
     greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR (hS a ha) hx
       (fun h => hxs (h ▸ ha))
 
-#print axioms greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_not_mem
 
 /-- The finite-source correction also holds at a source whose diagonal
 harmonic correction vanishes. -/
@@ -1233,7 +1182,6 @@ theorem greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_diagonal
   · simpa only [add_comm] using
       greenPotential_univ_dirac_eq_ball_add_harmonic_of_ne hR (hS a ha) hx hxa
 
-#print axioms greenPotential_univ_finset_sum_dirac_eq_ball_add_harmonic_of_diagonal
 
 /-- A finite sum of disc harmonic minorants is harmonic when all sources lie
 inside the disc. -/
@@ -1252,7 +1200,6 @@ theorem harmonicOnNhd_finset_sum_greatestHarmonicMinorantBall {R : ℝ} (S : Fin
       (hS a (Finset.mem_insert_self a S))).1).add
       (ih (fun c hc => hS c (Finset.mem_insert_of_mem hc)))
 
-#print axioms harmonicOnNhd_finset_sum_greatestHarmonicMinorantBall
 
 /-- A whole-plane negative potential of finitely many point sources belongs
 to the full test class when the pole avoids those sources. -/
@@ -1271,7 +1218,6 @@ theorem neg_univ_finset_sum_dirac_mem_subharmonicBallTestClass
   · ext x
     simp [greenPotential]
 
-#print axioms neg_univ_finset_sum_dirac_mem_subharmonicBallTestClass
 
 /-- A whole-plane potential with finitely many negative point sources admits a
 bounded disc representative when the observation measure charges none of the sources. -/
@@ -1323,7 +1269,6 @@ theorem neg_univ_finset_sum_dirac_has_bounded_representative
   filter_upwards [hball, hne] with x hx hxS
   exact heq x hx hxS
 
-#print axioms neg_univ_finset_sum_dirac_has_bounded_representative
 
 /-- A whole-plane test with finitely many negative point sources and one
 positive point source satisfies the full frozen class conditions. -/
@@ -1344,7 +1289,6 @@ theorem univ_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass
   · ext x
     simp
 
-#print axioms univ_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass
 
 /-- A positive point source outside the disc can be removed from a whole-plane
 test with finitely many negative point sources not charged by the observation measure. -/
@@ -1409,7 +1353,6 @@ theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative
   filter_upwards [hball, hne] with x hx hxS
   exact heq x hx hxS
 
-#print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative
 
 /-- A positive point source outside the disc can be removed; observation measures
 may charge negative source atoms where the diagonal correction vanishes. -/
@@ -1477,7 +1420,6 @@ theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
     by_contra hdiag
     exact hxgood (by simpa [hxa] using ⟨ha, hdiag⟩)
 
-#print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_diagonal
 
 /-- Whole-plane potentials of finite positive and negative point sources are
 admissible when positive sources avoid the cluster and negative sources avoid the pole. -/
@@ -1501,7 +1443,6 @@ theorem univ_finset_sum_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass
   · ext x
     simp
 
-#print axioms univ_finset_sum_dirac_sub_finset_sum_dirac_mem_subharmonicBallTestClass
 
 /-- A finite positive source outside the disc can be absorbed into the harmonic part. -/
 theorem univ_finset_sum_dirac_sub_finset_sum_dirac_has_bounded_representative
@@ -1587,7 +1528,6 @@ theorem univ_finset_sum_dirac_sub_finset_sum_dirac_has_bounded_representative
     by_contra hdiag
     exact hxgood (by simpa [hxa] using ⟨ha, hdiag⟩)
 
-#print axioms univ_finset_sum_dirac_sub_finset_sum_dirac_has_bounded_representative
 
 /-- If each source has zero diagonal correction, the finite-source construction
 works for every observation measure, including measures charging the sources. -/
@@ -1611,7 +1551,6 @@ theorem univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diago
     S hR hΛ hz hzS hS hb
   simp [hs]
 
-#print axioms univ_dirac_sub_finset_sum_dirac_has_bounded_representative_of_zero_diagonal
 
 /-- The finite-source construction also works with any common nonnegative mass. -/
 theorem univ_smul_dirac_sub_finset_sum_dirac_has_bounded_representative
@@ -1630,7 +1569,6 @@ theorem univ_smul_dirac_sub_finset_sum_dirac_has_bounded_representative
       S hR hΛ hz hzS hS hb hμ
   exact boundedSubharmonicRepresentative_smul hg hz' hae c
 
-#print axioms univ_smul_dirac_sub_finset_sum_dirac_has_bounded_representative
 
 /-- A whole-plane potential with two negative point sources is a test when
 its positive atom is outside the observation set and its negative atoms avoid the pole. -/
@@ -1651,7 +1589,6 @@ theorem univ_dirac_sub_two_dirac_mem_subharmonicBallTestClass
   · ext x
     simp
 
-#print axioms univ_dirac_sub_two_dirac_mem_subharmonicBallTestClass
 
 /-- A whole-plane test with two negative atoms has a bounded representative for
 observation measures charging neither atom. The positive source outside the disc
@@ -1722,7 +1659,6 @@ theorem univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
   filter_upwards [hball, hne_a, hne_c] with x hx hxa hxc
   exact heq x hx hxa hxc
 
-#print axioms univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
 
 /-- The two-negative-atom construction applies to observation measures absolutely
 continuous with respect to planar area. -/
@@ -1746,7 +1682,6 @@ theorem univ_three_dirac_has_bounded_representative_of_ac_volume
   exact univ_three_dirac_has_bounded_representative_of_measure_atoms_eq_zero
     hR hΛ hz hza hzc ha hc hb hμa hμc
 
-#print axioms univ_three_dirac_has_bounded_representative_of_ac_volume
 
 /-- The construction applies to every observation measure absolutely continuous
 with respect to area measure. -/
@@ -1765,7 +1700,6 @@ theorem univ_two_dirac_has_bounded_representative_of_ac_volume
   exact univ_two_dirac_has_bounded_representative_of_measure_atom_eq_zero
     hR hΛ hz hza ha hb hrestrict
 
-#print axioms univ_two_dirac_has_bounded_representative_of_ac_volume
 
 /-- For radius two, the diagonal correction vanishes at the real atom √2. -/
 theorem radius_two_sqrt_two_diagonal_correction :
@@ -1776,7 +1710,6 @@ theorem radius_two_sqrt_two_diagonal_correction :
   rw [heq]
   norm_num
 
-#print axioms radius_two_sqrt_two_diagonal_correction
 
 /-- A non-centred negative atom at √2 admits the radius-two witness, with the
 positive atom removed and with arbitrary observation measure. -/
@@ -1796,7 +1729,6 @@ theorem univ_two_dirac_sqrt_two_has_bounded_representative
   exact univ_two_dirac_has_bounded_representative_of_zero_diagonal_correction
     (by norm_num) hΛ hz hzatom ha hb radius_two_sqrt_two_diagonal_correction
 
-#print axioms univ_two_dirac_sqrt_two_has_bounded_representative
 
 /-- The two-source whole-plane function satisfies the frozen test-class conditions. -/
 theorem univ_two_dirac_mem_subharmonicBallTestClass
@@ -1815,7 +1747,6 @@ theorem univ_two_dirac_mem_subharmonicBallTestClass
   · ext x
     simp
 
-#print axioms univ_two_dirac_mem_subharmonicBallTestClass
 
 /-- A whole-plane test with a positive point source outside the unit disc and a
 negative point source at its centre has a bounded representative obtained by
@@ -1860,7 +1791,6 @@ theorem univ_two_dirac_has_bounded_representative
     simp only [g, q, Pi.sub_apply]
     rw [greenPotential_univ_dirac_zero_eq_unitDisc hx]
 
-#print axioms univ_two_dirac_has_bounded_representative
 
 /-- Away from the source atom, a whole-plane point potential has a bounded
 witness with zero source measures. The harmonic part itself is unchanged. -/
@@ -1884,7 +1814,6 @@ theorem neg_univ_dirac_mem_bounded_of_source_outside_closure
     apply harmonicAt_newtonKernel
     simpa only [mem_compl_iff, mem_singleton_iff] using hx
 
-#print axioms neg_univ_dirac_mem_bounded_of_source_outside_closure
 
 /-- The negative Dirac potential used in the obstruction is an admissible frozen test. -/
 theorem neg_dirac_disc_mem_subharmonicBallTestClass :
@@ -1904,7 +1833,6 @@ theorem neg_dirac_disc_mem_subharmonicBallTestClass :
   · ext x
     simp [greenPotential]
 
-#print axioms neg_dirac_disc_mem_subharmonicBallTestClass
 
 /-- An atom visible to the observation measure obstructs an unchanged-source harmonic
 correction between the two discs. This does not exclude representatives with new sources. -/
@@ -1975,7 +1903,6 @@ theorem no_dirac_harmonic_correction_univ_to_ball {ρ R : ℝ}
   have hl := Real.log_ne_zero_of_pos_of_ne_one hRpos hR1
   exact mul_ne_zero hp hl (by linarith)
 
-#print axioms no_dirac_harmonic_correction_univ_to_ball
 
 /-- On any bounded domain containing a disc of radius greater than one, the
 unchanged-source correction of the whole-plane Dirac potential cannot be continuous
@@ -2023,7 +1950,6 @@ theorem no_bounded_domain_continuousAt_source_correction_for_large_observation
   have hxb : -c < a x := htnear hx
   exact (not_lt_of_ge hxa) hxb
 
-#print axioms no_bounded_domain_continuousAt_source_correction_for_large_observation
 
 /-- Even after adding arbitrary positive and negative residual sources, a
 bounded-domain witness cannot match the whole-plane point-source potential on
@@ -2054,7 +1980,6 @@ theorem no_changed_source_continuous_residual_for_large_observation
   rw [hsum] at hx
   linarith
 
-#print axioms no_changed_source_continuous_residual_for_large_observation
 
 /-- A measure with a unit atom splits into that atom and its restriction to
 the complement, without any global finiteness assumption. -/
@@ -2089,8 +2014,6 @@ theorem no_changed_source_unit_atom_for_large_observation
   apply no_changed_source_continuous_residual_for_large_observation hV hsub hq h₁ h₂ hirest
   simpa only [← hsplit] using heq
 
-#print axioms measure_eq_dirac_add_restrict_compl_of_singleton_eq_one
-#print axioms no_changed_source_unit_atom_for_large_observation
 
 /-- A local Riesz identity forces the negative source atom and its kernel
 integrability, so continuous residual potentials cannot yield a representative
@@ -2128,7 +2051,6 @@ theorem no_changed_source_of_local_riesz_for_large_observation
     (hVopen.mem_nhds (hsub hzero))
   exact no_changed_source_unit_atom_for_large_observation hV hsub hatom hqc h₁ h₂ hi heq
 
-#print axioms no_changed_source_of_local_riesz_for_large_observation
 
 /-- In particular, a correction continuous on the observation disc cannot exist. -/
 theorem no_bounded_domain_continuous_source_correction_for_large_observation
@@ -2142,7 +2064,6 @@ theorem no_bounded_domain_continuous_source_correction_for_large_observation
     (by norm_num) (by norm_num) (by norm_num) hV hsub ⟨a, (ha 0 (mem_ball_self (by norm_num : (0 : ℝ) < 2))).continuousAt
       (isOpen_ball.mem_nhds (mem_ball_self (by norm_num : (0 : ℝ) < 2))), hae⟩
 
-#print axioms no_bounded_domain_continuous_source_correction_for_large_observation
 
 /-- No bounded domain containing the radius-two observation disc admits an
 unchanged-source harmonic correction for the whole-plane Dirac potential. -/
@@ -2156,7 +2077,6 @@ theorem no_bounded_domain_source_correction_for_large_observation
   exact no_bounded_domain_continuous_source_correction_for_large_observation hV hsub
     ⟨a, ha.continuousOn.mono hsub, hae⟩
 
-#print axioms no_bounded_domain_source_correction_for_large_observation
 
 /-- The same obstruction holds when equality is required pointwise on the disc,
 as it is in the universal-measure representative reduction. -/
@@ -2169,7 +2089,6 @@ theorem no_bounded_domain_pointwise_source_correction_for_large_observation
   exact no_bounded_domain_continuous_source_correction_for_large_observation hV hsub
     ⟨a, ha, ae_restrict_of_forall_mem measurableSet_ball heq⟩
 
-#print axioms no_bounded_domain_pointwise_source_correction_for_large_observation
 
 /-- For the radius-two observation disc, no concentric disc satisfying the actual
 closure-containment condition admits an unchanged-source harmonic correction. -/
@@ -2189,7 +2108,6 @@ theorem no_concentric_disc_source_correction_for_large_observation :
   exact no_dirac_harmonic_correction_univ_to_ball (by norm_num : (0 : ℝ) < 2)
     hR.le (by linarith) ⟨a, ha, hae⟩
 
-#print axioms no_concentric_disc_source_correction_for_large_observation
 
 /-- For a whole-plane point source, replacing the witness by the disc of radius two
 cannot be achieved with an unchanged source and a harmonic correction when the
@@ -2201,12 +2119,6 @@ theorem no_dirac_harmonic_correction_univ_to_disc :
           a x + greenPotential (ball 0 2) (Measure.dirac 0) x) :=
   no_dirac_harmonic_correction_univ_to_ball (by norm_num) (by norm_num) (by norm_num)
 
-#print axioms no_dirac_harmonic_correction_univ_to_disc
 
-#print axioms no_dirac_harmonic_correction_on_discs
-#print axioms greenPotential_dirac_zero_ball
-#print axioms dirac_source_correction_at_atom
-#print axioms exists_bounded_open_containing_closure_and_compact
-#print axioms bounded_representative_of_source_corrections
 
 end HarmonicBalls

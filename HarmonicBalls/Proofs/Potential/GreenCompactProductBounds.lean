@@ -92,8 +92,5 @@ theorem exists_pos_lower_bound_greenPotential_of_ae_mem_compact
   intro z hz
   simpa only [Measure.restrict_eq_self_of_ae_mem hsupport] using hbound z hz
 
-#print axioms exists_pos_bounds_greenFunction_compact_product
-#print axioms exists_pos_lower_bound_integral_greenFunction_compact
-#print axioms exists_pos_lower_bound_greenPotential_of_ae_mem_compact
 
 end HarmonicBalls

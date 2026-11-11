@@ -587,28 +587,5 @@ theorem IsEuclideanLengthMetric.uniform_weylScaling_small_closedBall
     (ENNReal.ofReal_le_ofReal (hN i hi).le)
 
 
-#print axioms IsEuclideanLengthMetric.uniform_weylScaling_small_closedBall
-#print axioms IsEuclideanLengthMetric.weylScaling_le_smallPathCost_tail
-#print axioms IsEuclideanLengthMetric.smallWeightedPathExistence
-#print axioms IsEuclideanLengthMetric.isLengthParametrized_const_zero
-#print axioms IsEuclideanLengthMetric.exists_smallWeightedPath_in_band
-#print axioms IsEuclideanLengthMetric.exists_weighted_annular_pieces
-#print axioms IsEuclideanLengthMetric.reverse_summablePath
-#print axioms IsEuclideanLengthMetric.summablePath_ne_zero_before_end
-#print axioms IsEuclideanLengthMetric.summablePath_mem_before_end
-#print axioms IsEuclideanLengthMetric.summablePath_before_end_eq_piece
-#print axioms IsEuclideanLengthMetric.exists_short_weighted_annular_piece
-#print axioms IsEuclideanLengthMetric.exists_short_annular_piece
-#print axioms IsEuclideanLengthMetric.exists_lengthParametrized_with_image
-#print axioms tsum_tail_le
-#print axioms smallPathCost_nonneg
-#print axioms exists_radius_band
-#print axioms annular_path_cost_le
-#print axioms exp_neg_mul_log_le_annulus
-#print axioms exists_first_sphere_subpath
-#print axioms path_first_sphere
-#print axioms exists_path_of_internalMetric_le
-#print axioms tendsto_smallPath_tail
-#print axioms weylScaling_le_of_smallWeightedPath
 
 end HarmonicBalls

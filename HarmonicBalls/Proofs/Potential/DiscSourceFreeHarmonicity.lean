@@ -115,12 +115,6 @@ theorem continuousOn_greenPotential_ball_of_source_free_open
     ContinuousOn (greenPotential (ball 0 R) ν) U :=
   (harmonicOnNhd_greenPotential_ball_of_source_free_open hK hKB hν hU hUB hνU).continuousOn
 
-#print axioms continuousOn_greenPotential_ball_of_compact_source
-#print axioms harmonicOnNhd_greenPotential_ball_of_compact_source
-#print axioms harmonicOnNhd_greenPotential_ball_of_source_free_open
-#print axioms continuousOn_greenPotential_ball_of_source_free_open
 
-#print axioms continuousOn_restricted_greenPotential_ball
-#print axioms harmonicOnNhd_restricted_greenPotential_ball
 
 end HarmonicBalls

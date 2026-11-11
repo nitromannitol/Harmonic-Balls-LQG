@@ -38,7 +38,5 @@ theorem integrable_greenFunction_of_source_free_open
   exact integrable_greenFunction_of_compact_source hV hKU (sdiff_subset.trans hKV) hcon
     ⟨hUV hx, fun h => h.2 hx⟩
 
-#print axioms integrable_greenFunction_of_compact_source
-#print axioms integrable_greenFunction_of_source_free_open
 
 end HarmonicBalls

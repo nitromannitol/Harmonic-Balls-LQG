@@ -354,14 +354,5 @@ theorem IsEuclideanLengthMetric.exists_summable_path_concatenation
     exact hD.summablePath_dist_le hp hjoin hsum hend hs hst ht
   · exact hD.summablePath_curveLength_le hp hjoin hsum hend
 
-#print axioms IsEuclideanLengthMetric.exists_summable_path_concatenation
-#print axioms IsEuclideanLengthMetric.pathPrefix_parametrized
-#print axioms pathPrefix_eqOn
-#print axioms IsEuclideanLengthMetric.summablePath_dist_le_before
-#print axioms IsEuclideanLengthMetric.summablePath_dist_le
-#print axioms IsEuclideanLengthMetric.summablePath_eq_succ_piece
-#print axioms IsEuclideanLengthMetric.summablePath_eq_prefix
-#print axioms IsEuclideanLengthMetric.summablePath_continuousOn
-#print axioms IsEuclideanLengthMetric.summablePath_curveLength_le
 
 end HarmonicBalls

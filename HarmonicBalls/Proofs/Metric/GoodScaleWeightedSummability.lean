@@ -156,7 +156,5 @@ theorem summable_goodScaleWeightedLength {M ξ Q α : ℝ} {n : ℕ → ℕ} {b 
     rw [heq]
     exact hs.mul_left (2 * M * Real.exp (-α * ξ * Real.log 2))
 
-#print axioms summable_goodScaleLength
-#print axioms summable_goodScaleWeightedLength
 
 end HarmonicBalls

@@ -14,7 +14,7 @@ cluster `Λ_t(z)`, `t > 0`, `z ∈ B_1`, is compactly contained in `B_1`
 in `t` (Lemma A.3), small clusters are compactly contained in `B_1`, so the printed statement contradicts
 Proposition 5.2. The draft
 (`ComplementComponentBoundarySimpleLoopStmt`, `Draft/Section10.lean`) uses the components of `ℂ \ closure Λ_t(z)`,
-as the proof (line 2628) and Proposition 10.7 do (correction C16, operator decision E17).
+as the proof (line 2628) and Proposition 10.7 do (correction C16).
 
 ## The argument (`exists_connectedComponentIn_ball_sdiff_not_isSimpleLoop`)
 

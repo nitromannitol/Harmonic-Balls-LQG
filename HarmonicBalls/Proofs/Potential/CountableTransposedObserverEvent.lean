@@ -112,7 +112,5 @@ theorem ae_lqg_countable_transposed_observer_exceptional_set
   exact fun V ν hV hVb hf hν =>
     exists_countable_transposed_observer_exceptional_set hup V ν hV hVb hf hν
 
-#print axioms exists_countable_transposed_observer_exceptional_set
-#print axioms ae_lqg_countable_transposed_observer_exceptional_set
 
 end HarmonicBalls

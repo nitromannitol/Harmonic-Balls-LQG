@@ -64,6 +64,5 @@ theorem exists_continuousAt_fixedPole_correction_iff
       simp [greenPotential, greenFunction_self, H, hzero]
     · exact hoff x hx hxz
 
-#print axioms exists_continuousAt_fixedPole_correction_iff
 
 end HarmonicBalls

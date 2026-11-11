@@ -52,6 +52,5 @@ theorem hasLaplacian_greenFunction_bounded_domain {V : Set ℂ}
     (integrable_mul_laplacian_of_test hhL.1 hφ), hhφ, add_zero]
   exact hdφ
 
-#print axioms hasLaplacian_greenFunction_bounded_domain
 
 end HarmonicBalls

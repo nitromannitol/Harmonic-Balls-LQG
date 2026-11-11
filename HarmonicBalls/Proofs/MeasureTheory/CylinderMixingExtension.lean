@@ -525,20 +525,3 @@ theorem cylinderMixingExtensionStatement_holds {Î© I : Type*} [MeasurableSpace Î
     cylinderMixingExtensionStatement P X T :=
   fun hX hT hfact => coordinateSigmaMixing_of_cylinderFactorization P X hX T hT hfact
 
-#print axioms tendsto_measure_inter_preimage_iterate_of_cylinderFactorization
-#print axioms cylinderMixingExtensionStatement_holds
-#print axioms coordinateSigmaMixing_of_cylinderFactorization
-#print axioms measurableCylinder_eq_fin_preimage
-#print axioms tendsto_measure_coordinate_events
-#print axioms tendsto_indicator_cylinder_product
-#print axioms abs_integral_mul_sub_le
-#print axioms exists_unit_boundedContinuous_indicator_approx
-#print axioms coordinateSigmaMixing_of_cylinder_events
-#print axioms abs_measureReal_mul_sub_le
-#print axioms abs_measureReal_inter_preimage_sub_le
-#print axioms abs_measureReal_inter_sub_le_symmDiff
-#print axioms exists_coordinateCylinder_symmDiff_lt
-#print axioms exists_measurableCylinder_symmDiff_lt
-#print axioms coordinateSigma_eq_generateFrom_cylinders
-#print axioms coordinateSigma_eq_comap
-#print axioms measurable_coordinate_vector

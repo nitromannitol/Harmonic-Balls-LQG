@@ -112,8 +112,6 @@ theorem ae_lqg_finiteSource_disc_representative
   let : IsFiniteMeasure ν₂ := hf₂
   exact ae_finiteSource_disc_representative hup hR hK₁ hK₂ hKB₁ hKB₂ hν₁ hν₂ hq
 
-#print axioms ae_lqg_finiteSource_disc_representative
 
-#print axioms ae_finiteSource_disc_representative
 
 end HarmonicBalls

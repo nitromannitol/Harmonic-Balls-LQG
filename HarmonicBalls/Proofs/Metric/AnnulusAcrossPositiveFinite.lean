@@ -113,10 +113,5 @@ theorem IsEuclideanLengthMetric.internalAcross_spheres_pos_lt_top
   · exact (iInf_le_of_le x (iInf_le_of_le hx (iInf_le_of_le y
       (iInf_le_of_le hy (hbounds x hx y hy).2)))).trans_lt hb
 
-#print axioms IsEuclideanLengthMetric.internalDistance_compact_separated_bounds
-#print axioms pfefferAcross_eq_ofReal_setDist
-#print axioms IsEuclideanLengthMetric.pfefferAcross_pos_lt_top
-#print axioms IsEuclideanLengthMetric.internalDistance_spheres_uniform_bounds
-#print axioms IsEuclideanLengthMetric.internalAcross_spheres_pos_lt_top
 
 end HarmonicBalls

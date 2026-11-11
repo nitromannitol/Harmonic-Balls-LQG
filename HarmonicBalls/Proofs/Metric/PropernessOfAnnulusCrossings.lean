@@ -385,16 +385,5 @@ theorem IsEuclideanLengthMetric.isBounded_of_radialCrossing_lowerBounds
   refine ⟨n, hn.trans_le ?_⟩
   exact Finset.sum_le_sum fun i _ => ha i
 
-#print axioms exists_interval_crossing
-#print axioms exists_ordered_interval_crossings
-#print axioms exists_monotone_interleaving
-#print axioms exists_path_ordered_radial_crossings
-#print axioms radialAnnulusCrossingLength_le_pathLength
-#print axioms IsEuclideanLengthMetric.sum_pathLength_subpaths_le
-#print axioms IsEuclideanLengthMetric.sum_radialAnnulusCrossingLength_le_pathLength
-#print axioms IsEuclideanLengthMetric.sum_radialAnnulusCrossingLength_le_of_crossings
-#print axioms IsEuclideanLengthMetric.sum_radialAnnulusCrossingLength_le_of_spans
-#print axioms IsEuclideanLengthMetric.isBounded_of_divergent_radialCrossings
-#print axioms IsEuclideanLengthMetric.isBounded_of_radialCrossing_lowerBounds
 
 end HarmonicBalls

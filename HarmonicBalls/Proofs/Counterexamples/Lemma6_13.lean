@@ -5,12 +5,12 @@ import HarmonicBalls.Draft.Section6
 import HarmonicBalls.Proofs.Potential.GreenBall
 
 /-!
-# Lemma 6.13 as printed is false (ESCALATIONS E16, GRAPH F6, correction [C15])
+# Lemma 6.13 as printed is false (correction [C15])
 
 Lemma 6.13 (lemma:low-mass-implies-small-odometer, lines 1710-1726) assumes only that the annulus
 `𝔸_{ρ/2,ρ}(x₀)` does not contain the pole `z`. This allows `z = x₀`. The correction [C15] (used by
 `LowMassSmallOdometerStmt`) assumes `closure B_ρ(x₀) ⊆ B_1 \ {z}`. This file certifies the counterexample to the
-printed form; the rigorous write-up with all references is docs/campaign/cex/Lemma6_13.md.
+printed form.
 
 ## Structure
 

@@ -81,8 +81,5 @@ theorem hasLaplacian_disc_greenPotential {ν : Measure ℂ} [IsFiniteMeasure ν]
           simpa using h
     _ = (∫ x, φ x ∂(0 : Measure ℂ)) - ∫ x, φ x ∂ν := by rw [integral_zero_measure, zero_sub, integral_neg]
 
-#print axioms hasLaplacian_disc_greenPotential
-#print axioms disc_green_integrable_product_volume
-#print axioms integrableOn_disc_greenPotential
 
 end HarmonicBalls

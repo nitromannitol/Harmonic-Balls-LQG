@@ -129,12 +129,5 @@ theorem SatisfiesLQGMetricAxioms.exists_local_internalDiameter_representative
   exact iSup_congr fun n => iSup_congr fun m =>
     heq (u n) (hKU (u n).property) (u m) (hKU (u m).property)
 
-#print axioms IsEuclideanLengthMetric.continuousOn_internalDistance_pair
-#print axioms IsEuclideanLengthMetric.iSup_internalDistance_eq_dense_seq
-#print axioms IsEuclideanLengthMetric.compact_internalDiameter_eq_dense_seq_lt_top
-#print axioms measurable_iSup_internalDistance_of_dense_seq
-#print axioms aemeasurable_iSup_internalDistance_of_dense_seq
-#print axioms exists_measurable_iSup_internalDistance_representative
-#print axioms SatisfiesLQGMetricAxioms.exists_local_internalDiameter_representative
 
 end HarmonicBalls

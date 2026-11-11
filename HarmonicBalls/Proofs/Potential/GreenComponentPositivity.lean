@@ -137,8 +137,5 @@ theorem greenFunction_eq_zero_iff_not_mem_component_or_eq
   classical
   tauto
 
-#print axioms greenFunction_pos_of_mem_connectedComponentIn
-#print axioms greenFunction_pos_iff_mem_connectedComponentIn
-#print axioms greenFunction_eq_zero_iff_not_mem_component_or_eq
 
 end HarmonicBalls

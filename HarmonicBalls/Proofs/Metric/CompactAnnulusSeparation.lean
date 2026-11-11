@@ -75,7 +75,5 @@ theorem IsEuclideanLengthMetric.compact_family_pfefferAcross_pos
     linarith
   exact ENNReal.ofReal_le_ofReal (hcK x hxK y hyK hxy)
 
-#print axioms compact_euclidean_separation
-#print axioms IsEuclideanLengthMetric.compact_family_pfefferAcross_pos
 
 end HarmonicBalls

@@ -45,7 +45,5 @@ theorem IsEuclideanLengthMetric.exists_geodesic_of_radialCrossing_lowerBounds
   exact hD.exists_geodesic_of_bounded_sets
     (hD.isBounded_of_radialCrossing_lowerBounds center r R a hr hband hordered ha hdiv) x y
 
-#print axioms IsEuclideanLengthMetric.isCompact_of_radialCrossing_lowerBounds
-#print axioms IsEuclideanLengthMetric.exists_geodesic_of_radialCrossing_lowerBounds
 
 end HarmonicBalls

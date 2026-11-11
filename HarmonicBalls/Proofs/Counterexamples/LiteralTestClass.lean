@@ -13,9 +13,9 @@ line 146) defines a harmonic ball `Λ(z)` by the mean value property eq:harmonic
 nonempty open sets (Lebesgue measure; `μ_h` almost surely), no bounded open set is a harmonic ball for it
 (`not_isPublishedHarmonicBall`). Since Theorem 1.1(b) (line 157) asserts that the harmonic balls `Λ_t(z)` are bounded,
 Theorem 1.1 as printed is false. The corrected class (`harmonicBallTestClass`, `Defs/HarmonicBall.lean`) requires
-`closure Λ ⊆ O` (correction C7, docs/campaign/CORRECTIONS.md).
+`closure Λ ⊆ O` (correction C7).
 
-## The construction (CORRECTIONS-PROPOSED.md, [C7])
+## The construction ([C7])
 
 Let `Λ` be bounded open and `z ∈ Λ`. Choose `ε > 0` with `closedBall z ε ⊆ Λ` and let
 `S = closedBall z ε ∩ {w | w.im = z.im}` be the horizontal slit of length `2ε` centered at `z`. Choose `R` with
@@ -151,7 +151,7 @@ theorem not_isPublishedHarmonicBall {μ : Measure ℂ} [μ.IsOpenPosMeasure] {Λ
   exact hnot (h f hf)
 
 /-- The Lebesgue case: no bounded open set is a harmonic ball for Lebesgue measure in the sense printed at
-line 146 (the example of ESCALATIONS.md E8, `Λ = B_1(0)`). -/
+line 146 (the example `Λ = B_1(0)`). -/
 theorem not_isPublishedHarmonicBall_volume {Λ : Set ℂ} (hΛb : Bornology.IsBounded Λ) (z : ℂ) :
     ¬ IsPublishedHarmonicBall volume Λ z :=
   not_isPublishedHarmonicBall hΛb z

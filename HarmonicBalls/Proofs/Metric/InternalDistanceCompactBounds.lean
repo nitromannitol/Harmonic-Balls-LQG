@@ -47,9 +47,5 @@ theorem IsEuclideanLengthMetric.internalDistance_compact_uniform_lt_top
     (⨆ x ∈ K, ⨆ y ∈ K, internalMetric D U x y) < ∞ :=
   hD.iSup_pair_internalMetric_lt_top_of_isCompact hD.distance_nonneg hU hconn hK hKU
 
-#print axioms IsEuclideanLengthMetric.distance_nonneg
-#print axioms IsEuclideanLengthMetric.internalDistance_eq_near
-#print axioms IsEuclideanLengthMetric.internalDistance_lt_top_of_connected_open
-#print axioms IsEuclideanLengthMetric.internalDistance_compact_uniform_lt_top
 
 end HarmonicBalls

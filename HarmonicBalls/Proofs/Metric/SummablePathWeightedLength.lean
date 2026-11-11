@@ -213,7 +213,5 @@ theorem IsEuclideanLengthMetric.lintegral_summablePath_of_norm_le
   hD.lintegral_summablePath hp hjoin hsum
     (tendsto_piece_endpoints_of_norm_le (fun n => (hp n).1) hr hball) F
 
-#print axioms IsEuclideanLengthMetric.summablePath_parametrized_of_norm_le
-#print axioms IsEuclideanLengthMetric.lintegral_summablePath_of_norm_le
 
 end HarmonicBalls

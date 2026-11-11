@@ -132,13 +132,5 @@ theorem aemeasurable_pfefferAcross_of_dense_seq
     exact hω.continuous_pair
   · exact hmeas
 
-#print axioms ofReal_setDist_eq_iInf_dense_seq
-#print axioms measurable_ofReal_setDist_of_dense_seq
-#print axioms aemeasurable_ofReal_setDist_of_dense_seq
-#print axioms ae_eq_iInf_dense_seq_of_ae_eq
-#print axioms exists_dense_seq_of_nonempty
-#print axioms exists_measurable_ofReal_setDist_representative
-#print axioms pfefferAcross_eq_iInf_dense_seq
-#print axioms aemeasurable_pfefferAcross_of_dense_seq
 
 end HarmonicBalls

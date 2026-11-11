@@ -851,38 +851,6 @@ theorem greenFunction_bounded_open_comm {U : Set ℂ}
   greenFunction_reciprocity_of_finite_disc_reciprocity
     greenFunction_finite_discs_comm hU hUb x y
 
-#print axioms isHarmonicMinorant_greenHarmonicCorrection_pole
-#print axioms greenHarmonicCorrection_comm
-#print axioms greenFunction_finite_discs_comm
-#print axioms greenFunction_bounded_open_comm
 
-#print axioms exists_harmonicOnNhd_greenFunction_transpose_difference
-#print axioms hasLaplacian_greenFunction_pole
-#print axioms harmonicOnNhd_of_localSuperMean_both
-#print axioms harmonicOnNhd_of_circleAverage_eq
-#print axioms harmonicOnNhd_greenHarmonicCorrection_pole
-#print axioms harmonicAt_greenFunction_pole
-#print axioms normalizedCircleMeasure_finite_and_supported
-#print axioms integral_normalizedCircleMeasure_of_measurable
-#print axioms normalizedCircleMeasure_regularizedNewtonKernel
-#print axioms greenHarmonicCorrection_circleAverage_pole
-#print axioms greenFunction_circleAverage_pole
-#print axioms greenFunction_finite_disc_union_eq_isolated_disc
-#print axioms greenFunction_pairwise_disjoint_finite_discs_comm
-#print axioms greenFunction_finite_discs_comm_of_intersections_contained
-#print axioms greenFunction_laminar_finite_discs_comm
-#print axioms greenFunction_disjoint_union_ball_comm_of_mem
-#print axioms greenFunction_finite_discs_comm_of_disc_component
-#print axioms greenHarmonicCorrection_pole_shift_le
-#print axioms continuousAt_greenHarmonicCorrection_pole
-#print axioms continuousAt_greenHarmonicCorrection_uncurry
-#print axioms continuousAt_greenFunction_pole
-#print axioms continuousAt_greenFunction_uncurry
-#print axioms greenFunction_countably_punctured_ball_comm
-#print axioms greenFunction_neg
-#print axioms greenFunction_neg_pair_comm
-#print axioms greenFunction_point_reflection
-#print axioms greenFunction_point_reflection_pair_comm
-#print axioms greenFunction_two_congruent_discs_centres_comm
 
 end HarmonicBalls

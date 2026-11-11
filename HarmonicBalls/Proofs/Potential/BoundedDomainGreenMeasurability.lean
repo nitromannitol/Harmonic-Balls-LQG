@@ -79,7 +79,5 @@ theorem measurable_greenFunction_uncurry_swap {O : Set ℂ} (hO : IsOpen O) :
     Measurable (fun p : ℂ × ℂ => greenFunction O p.2 p.1) :=
   (measurable_greenFunction_uncurry hO).comp measurable_swap
 
-#print axioms measurable_greenFunction_uncurry
-#print axioms measurable_greenFunction_uncurry_swap
 
 end HarmonicBalls

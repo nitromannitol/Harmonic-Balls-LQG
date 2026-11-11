@@ -46,8 +46,5 @@ theorem locallyIntegrableOn_generalDomain_transposedGreenPotential {V : Set ℂ}
     LocallyIntegrableOn (fun x => ∫ y, greenFunction V y x ∂ν) V :=
   (integrableOn_generalDomain_transposedGreenPotential hV hVb hν).locallyIntegrableOn
 
-#print axioms generalDomain_green_integrable_product_volume
-#print axioms integrableOn_generalDomain_transposedGreenPotential
-#print axioms locallyIntegrableOn_generalDomain_transposedGreenPotential
 
 end HarmonicBalls

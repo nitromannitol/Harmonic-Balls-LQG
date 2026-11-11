@@ -51,6 +51,5 @@ theorem hasLaplacian_generalDomain_transposedGreenPotential {V : Set ℂ}
           simpa using h
     _ = (∫ x, φ x ∂(0 : Measure ℂ)) - ∫ x, φ x ∂ν := by rw [integral_zero_measure, zero_sub, integral_neg]
 
-#print axioms hasLaplacian_generalDomain_transposedGreenPotential
 
 end HarmonicBalls

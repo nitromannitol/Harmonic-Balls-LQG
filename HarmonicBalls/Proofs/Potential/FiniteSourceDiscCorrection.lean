@@ -163,10 +163,5 @@ theorem ae_greenPotential_univ_eq_ball_add_discSourceCorrection
     simpa only [Function.comp_apply, Prod.swap_prod_mk, greenFunction_ball_comm R] using hbx
   exact ⟨hu, hi, hx.2, greenPotential_univ_eq_ball_add_discSourceCorrection hR hν hxR hx.2 hu hi⟩
 
-#print axioms continuousOn_discCorrectionKernel
-#print axioms integrable_discCorrectionKernel
-#print axioms harmonicOnNhd_discSourceCorrection
-#print axioms greenPotential_univ_eq_ball_add_discSourceCorrection
-#print axioms ae_greenPotential_univ_eq_ball_add_discSourceCorrection
 
 end HarmonicBalls

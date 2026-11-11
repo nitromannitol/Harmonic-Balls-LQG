@@ -55,8 +55,5 @@ theorem IsEuclideanLengthMetric.exists_geodesic_of_bounded_sets
   intro z R
   exact hbounded _ ⟨z, R, fun _ hw => hw⟩
 
-#print axioms IsEuclideanLengthMetric.isCompact_closedBall_of_isBounded
-#print axioms IsEuclideanLengthMetric.exists_geodesic_of_isBounded_closedBalls
-#print axioms IsEuclideanLengthMetric.exists_geodesic_of_bounded_sets
 
 end HarmonicBalls

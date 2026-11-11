@@ -113,8 +113,5 @@ theorem continuousOn_transposed_greenIntegral_of_finite_source
     ContinuousOn (fun x => ∫ y, greenFunction V y x ∂ν) U :=
   (harmonicOnNhd_transposed_greenIntegral_of_finite_source hV hVb hνV hU hUV hνU).continuousOn
 
-#print axioms exists_uniform_bound_transposed_green_of_source_free
-#print axioms harmonicOnNhd_transposed_greenIntegral_of_finite_source
-#print axioms continuousOn_transposed_greenIntegral_of_finite_source
 
 end HarmonicBalls

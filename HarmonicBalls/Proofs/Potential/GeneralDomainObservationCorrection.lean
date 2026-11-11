@@ -153,8 +153,5 @@ theorem ae_lqg_exists_harmonic_generalDomain_transposed_correction
     simpa only [newtonKernel_comm] using hx.2.1
   exact ⟨hx.1, hi, hx.2.2, heq x hxV hx.2.2 hi hx.1⟩
 
-#print axioms exists_harmonic_generalDomain_transposed_correction_pointwise
-#print axioms exists_harmonic_generalDomain_transposed_correction_of_local_upper_growth
-#print axioms ae_lqg_exists_harmonic_generalDomain_transposed_correction
 
 end HarmonicBalls

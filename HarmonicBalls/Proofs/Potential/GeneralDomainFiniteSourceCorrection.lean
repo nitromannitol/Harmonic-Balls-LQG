@@ -124,6 +124,5 @@ theorem exists_harmonic_generalDomain_transposed_correction
   congr 1
   simp only [greenPotential, greenFunction_univ_eq_newtonKernel, newtonKernel_comm]
 
-#print axioms exists_harmonic_generalDomain_transposed_correction
 
 end HarmonicBalls

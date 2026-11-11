@@ -140,8 +140,5 @@ theorem no_changed_source_translatedDisc_for_large_observation
     (h₁c.continuousAt (isOpen_ball.mem_nhds h0))
     (h₂c.continuousAt (isOpen_ball.mem_nhds h0)) hΔ heq
 
-#print axioms continuousOn_greenPotential_translatedDisc_of_source_free_open
-#print axioms hasLaplacian_changedSource_on_source_free
-#print axioms no_changed_source_translatedDisc_for_large_observation
 
 end HarmonicBalls

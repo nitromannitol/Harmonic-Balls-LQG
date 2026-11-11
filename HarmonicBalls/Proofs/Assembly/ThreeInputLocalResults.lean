@@ -12,7 +12,7 @@ import Lean.Util.CollectAxioms
 /-!
 # Lemmas 3.1-3.5, Proposition 4.1 and Lemmas 4.2-4.3 from the three staged measure inputs
 
-Worker z4, task `section3-section4-three-measure-input-assembly`. Pure assembly: this module adds no mathematics.
+Pure assembly: this module adds no mathematics.
 It is a conditional reduction, not source-audited closure of any numbered result.
 
 Exports. Eight theorems at the frozen statements of `HarmonicBalls/Draft/Section3.lean` and
@@ -29,7 +29,7 @@ Exports. Eight theorems at the frozen statements of `HarmonicBalls/Draft/Section
 
 Premises. Exactly three, in this order: `hDG` (`WholePlaneLQGBallMassBounds`, Ding-Gwynne Lemma 3.8), `hCC`
 (`LQGMeasureCoordChange` at insertion `0`, Fact 2.1 IV) and `hE` (`LQGMeasureExistence` at EVERY insertion `α : ℝ`,
-Section 2.2 of the paper). All three are staged in `HarmonicBalls/Proposed/LQG.lean` and remain pending operator
+Section 2.2 of the paper). All three are staged in `HarmonicBalls/Proposed/LQG.lean` and remain pending
 source-check. The quantifier over every insertion `α` in `hE` is kept as written; it is the premise of
 `lqgVolumeGrowthAllScalesStmt_of_staged_inputs` (`HarmonicBalls/Proofs/Sec9/WeakUniquenessDerivedInputs.lean:53`).
 
@@ -124,14 +124,6 @@ example : ClusterSubharmonicBallStmt.{u} := clusterSubharmonicBall_of_three_stag
 
 end ThreeStagedInputs
 
-#print axioms HarmonicBalls.leastSupersolutionMem_of_three_staged_inputs
-#print axioms HarmonicBalls.clusterOpenLaplacian_of_three_staged_inputs
-#print axioms HarmonicBalls.clusterMonotone_of_three_staged_inputs
-#print axioms HarmonicBalls.clusterConservationOfMass_of_three_staged_inputs
-#print axioms HarmonicBalls.clusterCompatibility_of_three_staged_inputs
-#print axioms HarmonicBalls.clusterLowerBound_of_three_staged_inputs
-#print axioms HarmonicBalls.leastSupersolutionHolder_of_three_staged_inputs
-#print axioms HarmonicBalls.clusterSubharmonicBall_of_three_staged_inputs
 
 -- Guard: standard axioms only; binder shape of each export (hDG, hCC, hE, frozen conclusion); the hE binder is the
 -- all-insertion form and equals the premise of the staged I2 export; closure of the exports reaches no theorem that

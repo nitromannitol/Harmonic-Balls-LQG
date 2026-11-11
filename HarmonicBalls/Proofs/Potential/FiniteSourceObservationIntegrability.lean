@@ -92,8 +92,5 @@ theorem ae_lqg_finiteSource_transposedGreen_observation_integrability
   let : IsFiniteMeasure ν := hf
   exact finiteSource_transposedGreen_observation_integrability hup hV hVb hν
 
-#print axioms ae_lqg_finiteSource_transposedGreen_observation_integrability
-#print axioms generalDomain_green_integrable_product_of_local_upper_growth
-#print axioms finiteSource_transposedGreen_observation_integrability
 
 end HarmonicBalls
