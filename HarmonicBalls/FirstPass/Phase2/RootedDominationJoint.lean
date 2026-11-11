@@ -45,7 +45,10 @@ def DMSLemmaA10WholePlaneMarkedJoint {Ω : Type*} [MeasurableSpace Ω] (P : Meas
           = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω,
               Ψ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P ∂volume
 
-/-- The joint marked identity for every whole-plane GFF and every `α = 0` LQG measure, in the universe of the
+/-- FALSE AS TYPED (MQ-lh-13, Codex 2026-11-11, MATH-ANSWERS.md l.104-123: zero/negative-radius circle values are
+unconstrained by `IsWholePlaneGFF`); use `DMSLemmaA10WholePlaneMarkedJointPosStmt` (RootedDominationJointPos.lean).
+
+The joint marked identity for every whole-plane GFF and every `α = 0` LQG measure, in the universe of the
 counted statements. This is the shape of the input `hJoint` of the conditional theorem. -/
 def DMSLemmaA10WholePlaneMarkedJointStmt : Prop :=
   ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
