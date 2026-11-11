@@ -1,11 +1,12 @@
 # LP staging area: index of `HarmonicBalls/LPStage`
 
-Task fp-lpstage-umbrella-dedupe (worker z6). Umbrella module: `HarmonicBalls/LPStage/All.lean` imports the 31 committed
-LPStage modules that are not owned by an active task (builds with `lb HarmonicBalls.LPStage.All`).
+Umbrella: `HarmonicBalls/LPStage/All.lean` imports the 37 committed LPStage modules whose tasks are finished (build with
+`lb HarmonicBalls.LPStage.All`). Not yet imported: the z7 LQGMeasureNonatomic* modules and the z3 LQGMeasureFullSupport*
+and LQGMeasureSquarePositive modules (their reports are not DONE; see the open items at the end of this file).
 Row numbers are those of `docs/campaign/PHASE2-INVENTORY.md` section 2 (the 57 inputs; as in PHASE2-DERIVATION-STATUS.md).
 "HB row" = the staged input; "support" = definitions or lemmas used by a staged result, no row of their own.
 "Hypotheses": "none" = the main result takes no literature Prop; a definitional predicate (e.g. `IsWholePlaneGFF`) is not counted.
-Line numbers are those of the committed files at HEAD of this round (51cb41ee plus the dedupe commit).
+Line numbers are those of the committed files at the time of the row-56 commit.
 
 | LPStage module | main result(s) (file:line) | HB row(s) | hypotheses | LPBridge file |
 |---|---|---|---|---|
@@ -22,10 +23,14 @@ Line numbers are those of the committed files at HEAD of this round (51cb41ee pl
 | LQGMassInner | `lqgMassInnerMeasurable_of_gff` :33 | 33 | none | FirstPass/LPBridge/LQGMassInner.lean |
 | LQGMeasure | support: `lqgQ` :34, `dyadicScale` :38, `lqgApprox` :43, `IsLQGLimit` :49, `IsLQGMeasure` :58 | support | none | M4 |
 | LQGMeasureDerived | `lqgMeasureOfProfileMeasurable_lp` :575 (def `LQGMeasureOfProfileMeasurableLP` :31) | 6 | none | FirstPass/LPBridge/LQGMeasureDerived.lean |
+| LQGMeasureInputs | LP forms of the Proposed inputs, as definitions: `LQGMeasureExistenceLP` :52, `LQGMeasureCoordChangeLP` :40, `WholePlaneLQGBallMassBoundsLP` :27 (no theorem) | 1; 2; 3 | LP literature Props, defined not proved | - |
 | LQGMeasureLocality | conditional `lqgLocality_of_circleLink` :410; defs `LQGLocality` :88, `LQGCircleAverageLink` :99 | 49 (conditional form) | `LQGCircleAverageLink` (:99); discharged by `lqgCircleAverageLink_of_gff` (LQGMeasureLocality2:151) | via LQGMeasureLocality2 bridge |
 | LQGMeasureLocality2 | unconditional `lqgLocality_of_gff` :171; `lqgCircleAverageLink_of_gff` :151 | 49 (unconditional) | none beyond `IsWholePlaneGFF` | FirstPass/LPBridge/LQGMeasureLocality.lean |
 | LQGMeasureSquare | `aemeasurable_lqgMeasure_borel` :121; `aemeasurable_lqgMeasure_open` :109 | 22 | `LQGLocality` (LP form of row 49 input) | FirstPass/LPBridge/LQGMeasureSquare.lean |
 | LQGMetric | support: `SatisfiesLQGMetricAxioms` :47, `IsLQGMetric` :73, `LQGMetricFieldAxioms` :117 | support | none | M5b |
+| LQGMetricMeasurable | support: deterministic continuity of the internal metric (`IsEuclideanLengthMetric.continuousAt_internalMetric_self` :329) | support (32) | none | FirstPass/LPBridge/LQGMetricMeasurable.lean |
+| LQGMetricMeasurable2 | `lqgMetricPointwiseAEMeasurable_lp` :85 (def :63); `lqgInternalDiamInnerMeasurable_lp` :116 (def :72) | 32; PointwiseAE (no table row) | none | FirstPass/LPBridge/LQGMetricMeasurable.lean |
+| LQGMetricUniv | `lqgMetricSatisfiesAxiomsUniv` :315 (def `LQGMetricSatisfiesAxiomsUnivLP` :297); `lqgMetricLengthUniv` :346 (def :307) | 42 (length); axioms: see z3 report | none | FirstPass/LPBridge/LQGMetricUniv.lean |
 | LQGWeylScaling | `lqgMeasureWeylScaling_lp` :300 (def `LQGMeasureWeylScalingLP` :291) | 5 | none | FirstPass/LPBridge/LQGWeylScaling.lean |
 | LengthMetric | support: `curveLength` :34, `pathLength` :39, `internalMetric` :44, `internalDiam` :49, `IsEuclideanLengthMetric` :54 | support (39, 57) | none | M5a, M5b |
 | LengthMetricDerived | `weylScaledEuclidean_derived` :1426; `internalMetricClosedEqIInfThickening_derived` :1517 | 57; 39 | `IsEuclideanLengthMetric` (definition, LengthMetric:54) | M5c |
@@ -36,15 +41,13 @@ Line numbers are those of the committed files at HEAD of this round (51cb41ee pl
 | PlanarGreen | support: `planarNewtonKernel` :30, `IsHarmonicMinorant` :41, `greenFunction` :56 | support | none | M3 |
 | PlaneDomainConvexCompact | `isPreconnected_diff_of_convex_compact` :135 | 35 | none | - |
 | PlaneTopology | def `TorhorstSimpleLoop` :72 (no theorem) | 36 | none | M3 |
+| WeylCompositionOuter | support: `IsEuclideanLengthMetric.weylScaling_nhds` :166, `innerDist` :242, `IsEuclideanLengthMetric.weylScaling_le_iterated` :657 | support (56) | none | - (via WeylCompositionOuter2) |
+| WeylCompositionOuter2 | `weylMetricCompositionContinuousOuter_lp` :543 (def `WeylMetricCompositionContinuousOuterLP` :534); `riemann_arc` :293, `weylScaling_innerDist_le_direct` :482 | 56 | none | FirstPass/LPBridge/WeylCompositionOuter.lean |
 | WeylInternalClosed | `weylInternalClosed_derived` :38 (helpers imported from LengthMetricDerived) | 26 | none | FirstPass/LPBridge/M5a.lean |
 | WeylMassMeasurable | `measurable_lintegral_of_caratheodory` :28 (general measure theory) | support (27) | none | - |
 | WeylOffOrigin | `localLQGInsertionWeylOffOrigin_lp` :587 (def :574); `radonUniqueLP` :181 | 11 | none | FirstPass/LPBridge/WeylOffOrigin.lean |
 | WeylSupMeasurable | `aemeasurable_iSup_mem_of_lowerSemicontinuousOn` :43 | 28 | none | - |
 
-Not in `All.lean` (files of active tasks; the index is updated when they land):
-- LQGMetricMeasurable, LQGMetricMeasurable2 (z7, committed 2476d07b): LP forms of `LQGMetricPointwiseAEMeasurableFrozen`
-  (header cites FirstPass/Frozen/S11e.lean:27; no row in the 57-input table) and `LQGInternalDiamInnerMeasurableFrozen` (row 32).
-  Header of LQGMetricMeasurable.lean:5 cites "row 33"; row 33 of the table is `LQGMassInnerMeasurableFrozen`. To be checked by z7.
-  Bridge: FirstPass/LPBridge/LQGMetricMeasurable.lean.
-- LQGMetricUniv (z3, untracked): bridge FirstPass/LPBridge/LQGMetricUniv.lean (untracked).
-- LQGMeasureSquarePositive, LQGMeasureInputs (z3, untracked, not committed).
+Open items (not in `All.lean`):
+- z7 LQGMeasureNonatomic* (report IN_PROGRESS) and z3 LQGMeasureFullSupport*, LQGMeasureSquarePositive (report BLOCKED): add when DONE.
+- LQGMetricMeasurable.lean:5 header cites "row 33" for the PointwiseAE form; row 33 of the table is `LQGMassInnerMeasurableFrozen`, and no table row names PointwiseAE. Note to be corrected by z7.
