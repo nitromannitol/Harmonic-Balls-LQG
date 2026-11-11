@@ -187,11 +187,4 @@ theorem IsWholePlaneGFF.exists_canonical_inserted_phaseFrequency_event
   filter_upwards [heq, hEeq] with ω hω he t
   exact (he t).trans (hω t)
 
-#print axioms ae_forall_mem_iff_of_coordinatewise_ae_eq
-#print axioms map_prod_eq_of_coordinatewise_ae_eq
-#print axioms IsWholePlaneGFF.map_canonical_localPairingProd_eq
-#print axioms IsWholePlaneGFF.map_rooted_canonical_localPairingProd_eq
-#print axioms IsWholePlaneGFF.map_rooted_canonical_pairingProd_eq
-#print axioms IsWholePlaneGFF.exists_canonical_inserted_phaseFrequency_event
-
 end HarmonicBalls

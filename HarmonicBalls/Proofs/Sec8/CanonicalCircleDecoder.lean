@@ -92,8 +92,4 @@ theorem IsWholePlaneGFF.exists_rooted_canonical_local_circle_decoders
   rw [hp n (z + p.2) hz, hp n p.2 hroot]
   ring
 
-#print axioms ae_forall_joint_functional_eq_of_coordinatewise_ae_eq
-#print axioms IsWholePlaneGFF.exists_canonical_local_centeredCircle_decoders
-#print axioms IsWholePlaneGFF.exists_rooted_canonical_local_circle_decoders
-
 end HarmonicBalls

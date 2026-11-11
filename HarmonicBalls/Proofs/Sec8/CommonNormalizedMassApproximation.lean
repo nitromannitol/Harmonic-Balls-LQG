@@ -118,8 +118,4 @@ theorem IsWholePlaneGFF.map_localPairingProc_eq
     Measure.map_map hL gGFF.measurable_wholePlaneObservableProc] at hh
   exact hh
 
-#print axioms IsWholePlaneGFF.map_localPairingProc_eq
-#print axioms IsWholePlaneGFF.tendstoInMeasure_normalizedMass_of_approximation
-#print axioms IsWholePlaneGFF.exists_common_normalizedMass_approximations
-
 end HarmonicBalls

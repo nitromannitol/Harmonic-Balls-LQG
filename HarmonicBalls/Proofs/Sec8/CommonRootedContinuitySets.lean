@@ -75,6 +75,4 @@ theorem exists_common_continuity_system_of_ae_locallyFinite
     filter_upwards [hω, hνeq] with ξ hξ he
     simpa only [he] using (hsplit ω ξ hξ).2
 
-#print axioms exists_common_continuity_system_of_ae_locallyFinite
-
 end HarmonicBalls

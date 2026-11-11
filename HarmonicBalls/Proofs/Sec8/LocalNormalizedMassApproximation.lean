@@ -62,6 +62,4 @@ theorem IsWholePlaneGFF.exists_localPairing_normalizedMass_approximations
     simp_rw [heqω]
     exact hlim'
 
-#print axioms IsWholePlaneGFF.exists_localPairing_normalizedMass_approximations
-
 end HarmonicBalls

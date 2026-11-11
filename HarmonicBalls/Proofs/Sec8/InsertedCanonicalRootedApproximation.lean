@@ -75,6 +75,4 @@ theorem IsWholePlaneGFF.exists_common_inserted_canonical_rooted_mass_approximati
     convert hfversion H₀ hversion₀ A using 1
     simp only [undo, add_sub_cancel_right]
 
-#print axioms IsWholePlaneGFF.exists_common_inserted_canonical_rooted_mass_approximations
-
 end HarmonicBalls

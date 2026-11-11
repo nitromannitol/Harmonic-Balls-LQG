@@ -93,7 +93,4 @@ theorem IsWholePlaneGFF.exists_canonical_global_frequency_of_root_reference
   filter_upwards [hω, hc] with z hz hcz
   exact hcz.mp hz
 
-#print axioms IsWholePlaneGFF.exists_canonical_global_field_frequency_certificate
-#print axioms IsWholePlaneGFF.exists_canonical_global_frequency_of_root_reference
-
 end HarmonicBalls

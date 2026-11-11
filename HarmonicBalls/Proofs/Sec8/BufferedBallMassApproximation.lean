@@ -135,8 +135,4 @@ theorem IsWholePlaneGFF.exists_localPairing_normalizedMass_continuity_system_ins
   exact ⟨r 0, hr 0,
     hGFF.exists_localPairing_normalizedMass_continuity_system hμ (hr 0).1 hfront' hpos'⟩
 
-#print axioms IsWholePlaneGFF.exists_buffered_lqg_ball_exhaustion
-#print axioms IsWholePlaneGFF.exists_localPairing_normalizedMass_continuity_system
-#print axioms IsWholePlaneGFF.exists_localPairing_normalizedMass_continuity_system_inside
-
 end HarmonicBalls

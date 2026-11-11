@@ -120,8 +120,4 @@ theorem ae_phaseFrequency_of_common_mass_approximations
     P Q X Y hX hY hdom μ ν hμ hν (ball 0 ε) measurableSet_ball
     S hcount hgen hpi hsets huniv f hf hu hv
 
-#print axioms ae_phaseFrequency_of_common_mass_approximations
-
-#print axioms ae_phaseFrequency_of_joint_normalizedRestriction_law
-
 end HarmonicBalls

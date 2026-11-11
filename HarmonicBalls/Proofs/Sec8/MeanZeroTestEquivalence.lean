@@ -95,11 +95,4 @@ theorem IsWholePlaneGFF.map_raw_root_insertion_law
     shiftedRootReferenceLaw_eq_field_first ρ P _ (hh.measurable_wholePlane_inserted_pairings γ)]
   rfl
 
-#print axioms meanZeroTestEquiv
-#print axioms meanZeroFieldEquiv
-#print axioms meanZeroFieldEquiv_pairings
-#print axioms meanZeroFieldEquiv_root_insertion
-#print axioms IsWholePlaneGFF.measurable_raw_root_inserted_pairings
-#print axioms IsWholePlaneGFF.map_raw_root_insertion_law
-
 end HarmonicBalls

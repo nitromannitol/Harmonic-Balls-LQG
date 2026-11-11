@@ -81,8 +81,4 @@ theorem joint_normalizedRestriction_law_ac_of_asymptotic_decoder_agreement
   exact joint_normalizedRestriction_law_absolutelyContinuous_of_common_approximations
     P Q X Y hX hY hdom μ ν hμ hν W hW S hcount hgen hpi hsets huniv f hf hP hQ
 
-#print axioms joint_normalizedRestriction_law_ac_of_asymptotic_decoder_agreement
-#print axioms tendstoInMeasure_of_sub_tendsto_zero
-#print axioms common_mass_approximation_of_asymptotic_decoder_agreement
-
 end HarmonicBalls

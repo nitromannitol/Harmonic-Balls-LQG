@@ -156,7 +156,4 @@ theorem IsWholePlaneGFF.exists_rooted_inserted_phaseFrequency_certificate
   exact ⟨E, hE, heq, hh.ae_ae_localized_recentered_phase_event μ hμ A B hA hB
     hfin ρ hρ γ hr hrR hside hrooted E hE hphase⟩
 
-#print axioms IsWholePlaneGFF.exists_rooted_inserted_phaseFrequency_certificate
-#print axioms IsWholePlaneGFF.exists_inserted_phaseFrequency_event
-
 end HarmonicBalls

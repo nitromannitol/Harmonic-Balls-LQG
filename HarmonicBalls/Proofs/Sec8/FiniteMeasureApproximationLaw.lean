@@ -114,7 +114,4 @@ theorem normalizedRestriction_law_absolutelyContinuous_of_common_approximations
   exact finiteMeasure_law_absolutelyContinuous_of_common_approximations P Q X Y hX hY hdom
     U V hU hV S hcount hgen hpi hsets huniv f hf hu hv
 
-#print axioms finiteMeasure_law_absolutelyContinuous_of_common_approximations
-#print axioms normalizedRestriction_law_absolutelyContinuous_of_common_approximations
-
 end HarmonicBalls

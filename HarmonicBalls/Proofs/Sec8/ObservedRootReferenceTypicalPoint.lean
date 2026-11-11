@@ -59,7 +59,4 @@ theorem IsWholePlaneGFF.ae_ae_mem_unitBall_of_root_reference
   exact hrooted.ae_le (ae_shiftedRootReferenceLaw_of_ae_comparison
     ρ Q shift hshift R hp hac hfixed)
 
-#print axioms ae_ae_of_observed_root_reference_cover
-#print axioms IsWholePlaneGFF.ae_ae_mem_unitBall_of_root_reference
-
 end HarmonicBalls

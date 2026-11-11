@@ -89,7 +89,4 @@ theorem ae_ae_veryGoodComparableScaleFrequency_of_observed_local_ball_rooted_law
   filter_upwards [hz'] with N hN
   simpa only [veryGoodComparableScaleCount_eq_centered_torus] using hN
 
-#print axioms ae_recentered_ball_mass_ne_zero_ne_top
-#print axioms ae_ae_veryGoodComparableScaleFrequency_of_observed_local_ball_rooted_law
-
 end HarmonicBalls

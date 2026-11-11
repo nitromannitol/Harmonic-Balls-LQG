@@ -116,7 +116,4 @@ theorem IsWholePlaneGFF.exists_localPairing_tests_for_joint_circle_law
   rw [hrootmap, hrefmap, ← Measure.map_map hG hY, ← Measure.map_map hG hX]
   exact hdom.map hG
 
-#print axioms IsWholePlaneGFF.exists_localPairing_centeredCircle_approximation
-#print axioms IsWholePlaneGFF.exists_localPairing_tests_for_joint_circle_law
-
 end HarmonicBalls

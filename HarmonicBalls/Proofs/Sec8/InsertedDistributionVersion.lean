@@ -175,8 +175,4 @@ theorem IsWholePlaneGFF.rooted_inserted_reconstruction_local_equivalence
   rw [hcomm]
   exact h
 
-#print axioms IsWholePlaneGFF.rooted_inserted_reconstruction_local_equivalence
-#print axioms IsWholePlaneGFF.ae_canonical_root_insertion_translated_pairing
-#print axioms IsWholePlaneGFF.ae_canonical_inserted_translated_pairing
-
 end HarmonicBalls

@@ -68,7 +68,4 @@ theorem exists_smooth_cutoff_for_local_pairing_law
   intro Ω _ P X hX hdom k
   exact local_shifted_pairing_laws_of_global_domination P X hX f g heq k hdom
 
-#print axioms local_shifted_pairing_laws_of_global_domination
-#print axioms exists_smooth_cutoff_for_local_pairing_law
-
 end HarmonicBalls

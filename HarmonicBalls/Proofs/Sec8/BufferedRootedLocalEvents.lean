@@ -128,9 +128,4 @@ theorem IsWholePlaneGFF.ae_ae_exists_buffered_local_event
   · exact ⟨n, Or.inl hn, hz hzA n (Or.inl hn)⟩
   · exact ⟨n, Or.inr hn, hz hzA n (Or.inr hn)⟩
 
-#print axioms IsWholePlaneGFF.ae_ae_exists_buffered_local_event
-#print axioms ae_shiftedRootReferenceLaw_of_field_event
-#print axioms ae_bufferedRoots_side
-#print axioms IsWholePlaneGFF.ae_ae_buffered_local_events
-
 end HarmonicBalls

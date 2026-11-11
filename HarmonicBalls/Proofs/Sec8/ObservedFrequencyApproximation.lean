@@ -52,6 +52,4 @@ theorem exists_observed_frequency_event_of_mass_approximations
     simpa only [normalizedRestriction, Measure.smul_apply, smul_eq_mul,
       Measure.restrict_apply (hsets V hV), ENNReal.div_eq_inv_mul] using he
 
-#print axioms exists_observed_frequency_event_of_mass_approximations
-
 end HarmonicBalls

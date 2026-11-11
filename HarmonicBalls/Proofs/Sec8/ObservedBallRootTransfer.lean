@@ -98,8 +98,4 @@ theorem ae_ae_veryGoodComparableScaleFrequency_of_observed_ball_rooted_law
   simpa only [p, heq, veryGoodComparableScaleCount_smul _ β z N₀
     a b C₁m C₁p C₂m C₂p C₃ m _ hc hct] using hz
 
-#print axioms veryGoodComparableScaleCount_smul
-#print axioms ae_ae_of_observed_unweighted_ball_rooted_law
-#print axioms ae_ae_veryGoodComparableScaleFrequency_of_observed_ball_rooted_law
-
 end HarmonicBalls

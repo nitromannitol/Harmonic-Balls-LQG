@@ -59,6 +59,4 @@ theorem IsWholePlaneGFF.exists_common_continuity_reference_approximations
   exact ⟨ε, hε, S, hc, hp, hu, hsets, hg, E, hEm, hmono, hunion, hbuffer,
     hfrontν, f, hfm, hflim⟩
 
-#print axioms IsWholePlaneGFF.exists_common_continuity_reference_approximations
-
 end HarmonicBalls

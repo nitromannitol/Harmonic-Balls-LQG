@@ -108,8 +108,4 @@ theorem IsWholePlaneGFF.exists_common_normalizedLQGApprox
       (fieldCircleAverage α₀ (gcirc ω)) (dyadicScale_pos n) 0 (hEm n)
       (D n (Section6.localPairingProc (ball 0 ε) gC ω)) (hω n)).symm
 
-#print axioms IsWholePlaneGFF.ae_ae_centeredCircle_decoder
-#print axioms normalizedRestriction_lqgApprox_eq_of_centered_ae
-#print axioms IsWholePlaneGFF.exists_common_normalizedLQGApprox
-
 end HarmonicBalls

@@ -155,11 +155,4 @@ theorem ae_unitBallBufferedRoots_side (ρ : Measure ℂ) (n : ℕ) :
   filter_upwards [ae_restrict_mem (measurableSet_unitBallBufferedRoots n)] with z hz
   exact Or.inl (le_of_lt hz)
 
-#print axioms unitBallBufferedRoots_cover
-#print axioms ae_unitBallBufferedRoots_side
-#print axioms shiftedRootReferenceLaw_restrict_root
-#print axioms IsWholePlaneGFF.localized_recentered_observation_ac_origin_insertion
-#print axioms IsWholePlaneGFF.ae_ae_localized_recentered_observation
-#print axioms IsWholePlaneGFF.ae_ae_countable_localized_recentered_observations
-
 end HarmonicBalls

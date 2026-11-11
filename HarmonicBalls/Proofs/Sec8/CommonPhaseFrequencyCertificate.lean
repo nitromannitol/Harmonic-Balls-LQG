@@ -246,9 +246,4 @@ theorem IsWholePlaneGFF.exists_inserted_phaseFrequency_common_certificate
     (fun q => phaseTorusOfComplex (-q.2)) hphase Prod.fst measurable_fst C hC'
     β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit href
 
-#print axioms IsWholePlaneGFF.exists_inserted_phaseFrequency_common_certificate
-#print axioms ae_projected_phaseFrequency_certificate_iff
-#print axioms ae_phaseFrequency_certificate_iff_of_common_mass_approximations
-#print axioms ae_phaseFrequency_certificate_iff_of_joint_normalizedRestriction_law
-
 end HarmonicBalls

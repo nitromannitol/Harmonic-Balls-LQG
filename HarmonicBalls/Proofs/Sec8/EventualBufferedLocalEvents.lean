@@ -66,7 +66,4 @@ theorem IsWholePlaneGFF.ae_ae_eventually_buffered_local_events
   have hzn := bufferedRoots_mono hn hN
   exact ⟨hzn, hz hzA n hzn⟩
 
-#print axioms bufferedRoots_mono
-#print axioms IsWholePlaneGFF.ae_ae_eventually_buffered_local_events
-
 end HarmonicBalls

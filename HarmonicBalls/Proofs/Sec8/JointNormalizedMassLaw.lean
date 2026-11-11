@@ -161,10 +161,4 @@ theorem joint_normalizedRestriction_law_absolutelyContinuous_of_common_approxima
   exact joint_finiteMeasure_law_absolutelyContinuous_of_common_approximations P Q X Y hX hY hdom
     U V hU hV S hcount hgen hpi hsets huniv f hf hu hv
 
-#print axioms joint_normalizedRestriction_law_absolutelyContinuous_of_common_approximations
-
-#print axioms joint_finiteMeasure_law_absolutelyContinuous_of_common_approximations
-
-#print axioms joint_countable_limit_law_absolutelyContinuous
-
 end HarmonicBalls

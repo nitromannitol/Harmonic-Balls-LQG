@@ -108,9 +108,4 @@ theorem law_absolutelyContinuous_of_countable_approximations
   have hq := h hz
   rwa [hencode.map_apply, hencode.injective.preimage_image] at hq
 
-#print axioms exists_common_limit_of_tendstoInMeasure
-#print axioms exists_common_countable_limits_of_tendstoInMeasure
-#print axioms countable_limit_law_absolutelyContinuous
-#print axioms law_absolutelyContinuous_of_countable_approximations
-
 end HarmonicBalls

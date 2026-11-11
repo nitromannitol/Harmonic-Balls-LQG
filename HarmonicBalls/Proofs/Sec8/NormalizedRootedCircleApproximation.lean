@@ -53,6 +53,4 @@ theorem IsWholePlaneGFF.exists_normalized_rooted_tests_for_joint_circle_law
   exact ((gGFF.rooted_centeredCircle_laws_mutually_absolutelyContinuous hμ hm B hB w hw
     hfin Y hY n z).2).trans hnormalized
 
-#print axioms IsWholePlaneGFF.exists_normalized_rooted_tests_for_joint_circle_law
-
 end HarmonicBalls

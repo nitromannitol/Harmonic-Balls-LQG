@@ -70,6 +70,4 @@ theorem boundary_and_timeContinuity_of_literature
   exact clusterBoundary_and_timeContinuity_of_literature hholder hDG hAff hCC0 hW hE0 hN
     (typicalPointManyGoodScalesStmt_of_literature hDG hAff hCC hW hEx hN hcomparison)
 
-#print axioms boundary_and_timeContinuity_of_literature
-
 end HarmonicBalls

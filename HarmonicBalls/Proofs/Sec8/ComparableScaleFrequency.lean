@@ -146,11 +146,4 @@ theorem IsWholePlaneGFF.ae_ae_singular_blockFrequency_of_regular
   filter_upwards [hdomω.ae_le hvω, hz] with z hvz hz
   exact veryGoodComparable_blockFrequency_of_singular_weight hz hweightω hN₀ hvz
 
-#print axioms annulusBallComparison_of_comparable
-#print axioms eventually_veryGoodComparable_of_comparable
-#print axioms veryGoodComparable_blockFrequency_of_comparable
-#print axioms exists_comparableOn_ball_of_singular_weight
-#print axioms veryGoodComparable_blockFrequency_of_singular_weight
-#print axioms IsWholePlaneGFF.ae_ae_singular_blockFrequency_of_regular
-
 end HarmonicBalls

@@ -91,7 +91,4 @@ theorem IsWholePlaneGFF.exists_dominated_circle_pairing_limit
     change D (Y ξ) z + c = g ξ + c
     rw [hξ]
 
-#print axioms tendstoInMeasure_of_dominated_observation
-#print axioms IsWholePlaneGFF.exists_dominated_circle_pairing_limit
-
 end HarmonicBalls

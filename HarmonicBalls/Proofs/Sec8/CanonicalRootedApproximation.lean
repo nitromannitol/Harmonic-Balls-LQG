@@ -144,8 +144,4 @@ theorem IsWholePlaneGFF.exists_canonical_unitBall_rooted_mass_approximations
       (ball 0 1) measurableSet_ball (fun _ => 1) measurable_const hmass' hε E hmono hunion
       S hsets hfront _ hX F hFm hFeq
 
-#print axioms IsWholePlaneGFF.exists_canonical_rooted_normalizedLQGApprox
-#print axioms IsWholePlaneGFF.exists_sampled_canonical_normalizedLQGApprox
-#print axioms IsWholePlaneGFF.exists_canonical_unitBall_rooted_mass_approximations
-
 end HarmonicBalls

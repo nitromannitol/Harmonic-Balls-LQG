@@ -129,8 +129,4 @@ theorem IsWholePlaneGFF.exists_canonical_local_normalizedLQGApprox_measure
   · obtain ⟨k, hk⟩ : univ ∈ range A := hA ▸ huniv
     simpa only [hk] using (hω n k).symm
 
-#print axioms ae_measurable_functional_eq_of_coordinatewise_ae_eq
-#print axioms IsWholePlaneGFF.exists_canonical_local_normalizedLQGApprox
-#print axioms IsWholePlaneGFF.exists_canonical_local_normalizedLQGApprox_measure
-
 end HarmonicBalls

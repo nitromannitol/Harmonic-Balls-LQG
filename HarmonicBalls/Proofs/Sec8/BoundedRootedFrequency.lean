@@ -306,11 +306,4 @@ theorem IsWholePlaneGFF.exists_global_frequency_certificate_of_root_reference
   filter_upwards [hω, hc] with z hz hcz
   exact hcz.mp hz
 
-#print axioms ball_rooted_dyadic_buffer
-#print axioms IsWholePlaneGFF.exists_ball_rooted_mass_approximations
-#print axioms IsWholePlaneGFF.exists_ball_observed_frequency_certificate
-#print axioms IsWholePlaneGFF.exists_ball_frequency_certificate
-#print axioms IsWholePlaneGFF.exists_global_frequency_certificate
-#print axioms IsWholePlaneGFF.exists_global_frequency_certificate_of_root_reference
-
 end HarmonicBalls

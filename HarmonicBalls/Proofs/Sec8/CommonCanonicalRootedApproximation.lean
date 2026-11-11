@@ -88,6 +88,4 @@ theorem IsWholePlaneGFF.exists_common_canonical_rooted_mass_approximations
     (fun x (_ : Unit) => f A n x) ((hfm A n).comp measurable_fst)
   exact heq.mono (fun _ h => h ())
 
-#print axioms IsWholePlaneGFF.exists_common_canonical_rooted_mass_approximations
-
 end HarmonicBalls

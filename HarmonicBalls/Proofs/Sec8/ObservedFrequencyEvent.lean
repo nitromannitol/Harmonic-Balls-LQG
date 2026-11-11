@@ -117,7 +117,4 @@ theorem exists_observed_frequency_event_of_countable_ratios
   exact exists_observed_frequency_event_of_local_version P obs μ ε hε ν hν hνeq hmass
     β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ hunit
 
-#print axioms exists_observed_frequency_event_of_countable_ratios
-#print axioms exists_observed_frequency_event_of_local_version
-
 end HarmonicBalls

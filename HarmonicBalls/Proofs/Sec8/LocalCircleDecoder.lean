@@ -82,8 +82,4 @@ theorem IsWholePlaneGFF.exists_localPairing_normalizedLQGApprox
       (D n (Section6.localPairingProc (ball 0 ε) hC ω))
       (fun z hz => hω n z (hbuffer n z hz))).symm
 
-#print axioms exists_joint_measurable_factor_of_comap
-#print axioms IsWholePlaneGFF.exists_localPairing_centeredCircle_decoder
-#print axioms IsWholePlaneGFF.exists_localPairing_normalizedLQGApprox
-
 end HarmonicBalls

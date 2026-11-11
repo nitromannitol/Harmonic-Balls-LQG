@@ -62,8 +62,4 @@ theorem centeredSubtypeLaw_absolutelyContinuous_of_measureLaw
   have heq₂ : P.map (Subtype.val ∘ U) = P.map ν := Measure.map_congr hUeq
   rwa [heq₁, heq₂]
 
-#print axioms absolutelyContinuous_subtype_of_map
-#print axioms exists_jointlyMeasurable_centeredMeasure
-#print axioms centeredSubtypeLaw_absolutelyContinuous_of_measureLaw
-
 end HarmonicBalls

@@ -56,6 +56,4 @@ theorem IsWholePlaneGFF.exists_centeredCircle_decoder_for_joint_law
   rw [hrootmap, hrefmap, ← Measure.map_map hF hY, ← Measure.map_map hF hX]
   exact hdom.map hF
 
-#print axioms IsWholePlaneGFF.exists_centeredCircle_decoder_for_joint_law
-
 end HarmonicBalls
