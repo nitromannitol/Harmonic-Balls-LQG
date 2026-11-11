@@ -1,60 +1,54 @@
-# Clean audit: residual workflow metacommentary
+# Clean audit: final residual classification
 
-Date: 2026-11-11. Scope: `git ls-files '*.lean'` (3,062 files) and `README.md`, 3,063 files in total, scanned after commit 8cdec65a.
-Method: PHASE2-CLEAN-PLAN.md section 2 (cleaning rule), applied line by line with a Python scan (fleet scratch, not committed). Edits are comment-only and were checked with `scratch-lk/commentonly.py`. No `lc` or `lb` was run (K2: one final build later).
+Date: 2026-11-11. HEAD: 89eb098a (tracked files of HarmonicBalls/, checks/ and README.md; 3,039 files). Matching lines: 267 in 89 files. Each line is in exactly one class, by the first rule that applies in the order F, R, H, K, O.
+Method: the section 2 greps of PHASE2-CLEAN-PLAN.md, applied to `git show HEAD:<path>` by a Python scan (fleet scratch, not committed). Held: named in the OWNS line of an active task file, or with uncommitted changes. Comment-only audit: no edit, no build.
 
-## Greps
+## Greps (a line can match several codes)
 
-Applied line by line to each tracked file (a Python equivalent of `grep -n -E`):
+    A  external-assistant product names                              0
+    B  chat-number labels                                            0
+    C  campaign id prefixes, the word "task"                        43
+    D  notes/, reports/, docs/campaign, home and fleet paths        47
+    E  first-pass labels and prose                                   5
+    F  UTC and 2026 date stamps                                     13
+    G  role words: worker, owner, operator note/fix/decision/audit, lead labels   16
+    H  #print, #check, #eval, #reduce, #synth command lines         96
+    I  model-family names, LLM, AI                                   1
+    J  the word "operator" (overcount; read in K and O)             83
 
-    ChatGPT|CHATGPT|Codex|CODEX
-    [Cc]hat [0-9]+
-    \bfp-|MQ-|\btask [a-z0-9]
-    notes/|reports/|docs/campaign|/home/|paper-fleets|scratch-
-    FIRST[ -]PASS|first-pass
-    \bUTC\b|\b202[56]-1[01]
-    \b[Ww]orker\b|\boperator (note|fix|decision|audit)|\blead (lk|lh)|\bOwner\b
-    ^\s*#(print|check|eval|reduce|synth)\b
+Exact patterns and the scan script: fleet scratch (not committed).
 
-## Table: files and lines still matching, by directory
+## Classes (267 lines)
 
-Lines count matching lines (a line with two patterns counts once). Four uncommitted files of other workers (all in FirstPass) were scanned; none has a hit.
-
-| Directory | Files | Lines | Status |
+| Class | Lines / files | Rule | Examples (file:line) |
 |---|---|---|---|
-| HarmonicBalls/Defs, Assembly, Proposed, Proofs/Sec5 | 0 | 0 | cleaned (0334976f, f5011389, 8cdec65a) |
-| all other directories (Steps, Proofs except below, Assembly, archive) | 0 | 0 | clean |
-| HarmonicBalls/Proofs/Sec3, Sec4, Sec9 | 3 | 3 | one `#eval` guard block each, kept (decision 1) |
-| README.md | 1 | 3 | `docs/campaign` links, kept (decision 2) |
-| HarmonicBalls/FirstPass | 6 | 8 | S9c.lean held (1 line); Phase2 5 files, 7 lines (hard skip) |
-| HarmonicBalls/Draft | 12 | 45 | frozen (D2), not edited |
-| HarmonicBalls/LPStage | 13 | 18 | hard skip |
-| HarmonicBalls/Proofs/GFF | 35 | 237 | n4 (C4) |
-| HarmonicBalls/Proofs/Sec6 | 1 | 7 | n4 |
-| HarmonicBalls/Proofs/Sec11 | 1 | 3 | z7 |
-| checks/AxiomGate.lean | 1 | 95 | gate: 92 `#print axioms` kept (D6); line 1 and 3-4 (decision 3) |
+| F frozen | 47 / 12 | Draft/, External/: operator-editable only | Draft/Section1.lean:42, :93; Draft/Section6.lean:54 |
+| R retire | 18 / 13 | LPStage/: retires to archive after the pin switch | LPStage/GFFCovPSD1.lean:7, GFFCovPSD3.lean:6, GFFCovPSD4.lean:8 |
+| H held | 109 / 6 | OWNS of an active task, or uncommitted | checks/AxiomGate.lean:3; FirstPass/Phase2/CanonicalDecoderIdentity.lean:5; FirstPass/Phase2/RootedShiftedNullTransferDerived.lean:13 |
+| K kept | 78 / 52 | by decision (below) | Proofs/Sec3/DerivedInputAssembly.lean:102; FirstPass/LPBridge/LQGMeasureFullSupport.lean:19; Defs/StrongMetricSpaces.lean:75 |
+| O clean | 15 / 7 | none of the above | list below |
 
-Total: 73 files, 419 lines still matching. The `#print axioms` and `#check`/`#eval` lines in Draft, GFF, LPStage, Sec6 and Sec11 belong to frozen or other-owned files and were not touched.
+H detail: checks/AxiomGate.lean 92 (90 `#print axioms` lines, lines 3-4 `docs/campaign` pointers); FirstPass/Phase2/RootedShiftedNullTransferDerived.lean 10, RootedShiftedNullTransferSteps.lean 2, RootedShiftedNullTransferEvent.lean 2, RootedDominationJoint.lean 1, CanonicalDecoderIdentity.lean 2 (uncommitted).
 
-## Commits
+K detail:
+- guard blocks `#eval show CommandElabM Unit from do`: 3 (Proofs/Sec3/DerivedInputAssembly.lean:102, Proofs/Sec4/DerivedInputAssembly.lean:87, Proofs/Sec9/WeakUniquenessDerivedInputs.lean:83).
+- status phrase "pending operator source-check" and variants (input provenance): 30 in 29 files, e.g. FirstPass/LPBridge/LQGMeasureSquare.lean:19.
+- mathematical "operator" (operator norm, pullback, Green, transition): 36 in 16 files, e.g. Proofs/Potential/GreenPotentialFunctionalContinuity.lean:17, Proofs/Brownian/PlanarHeatFeller.lean:11.
+- citation titles containing "first passage percolation": 5 in 4 files, e.g. Defs/LQGMetric.lean:195, Proposed/LQG.lean:187, FirstPass/Frozen/S11c.lean:62.
+- `[C51]` pointer to docs/campaign/CORRECTIONS.md: FirstPass/S9c.lean:11.
+- README links to docs/campaign (reader-facing): README.md:22, :24, :52.
 
-- Residual batches (this round): 4df4be3d (39 files), b2e502df (8), 8d19377f (31), 93c408de (2); 8667057f and 4cb7c286 are the audit file.
-- C2 batch 1, 0334976f: 14 files of Defs (5), Assembly (3) and Proposed (6), comment-only, all OK.
-- C2 batch 2, f5011389: Defs/LBM.lean (fleet path removed), Defs/Green.lean (`docs/campaign` pointer removed), Assembly/ExistenceUniqueness.lean (two `#print axioms` lines removed).
-- Residual batch 5, 8cdec65a: README.md (two "first-pass" wording edits), Proofs/Sec3 and Sec4 DerivedInputAssembly (`#check` lines removed), Proofs/Sec5/StagedInputAssembly.lean (three pointers rewritten), Proofs/Sec9/ThreeInputAssembly.lean (one pointer removed).
+## Stale globs (not held)
 
-## Kept items (not workflow metacommentary by rule; lines / files at scan time)
+Task files closed or untouched since 2026-11-06 reserve no file. Their globs: Proofs/Sec3/*, Proofs/Sec4/*, Proofs/Sec6/*, Proofs/Sec11/*, Proposed/MetricProperness.lean, Proofs/Brownian/*.lean. Their hits are classified above by content.
 
-- "staged": 514 / 263, input provenance under Proposed/External.
-- "source-check" (pending operator source-check): 74 / 57, input provenance.
-- Correction ids `[Cn]`: 174 / 67, correction provenance.
-- FROZEN, EXTERNAL and DERIVED status labels: 250 / 58, mathematical input status.
-- "candidate" status word: 22 / 14.
+## Still to clean (O): every line
 
-## Decisions for the lead
-
-1. Guard blocks (`#eval show CommandElabM Unit from do`, code not comments) in Proofs/Sec3/DerivedInputAssembly.lean (line 102), Proofs/Sec4/DerivedInputAssembly.lean (line 87) and Proofs/Sec9/WeakUniquenessDerivedInputs.lean (line 83) are deliberate in-file checks, not stray commands. Kept. Remove them only if the gate is to be the sole check.
-2. `docs/campaign` paths were removed from Lean comments (Defs/Green.lean, Proofs/Sec5/StagedInputAssembly.lean, Proofs/Sec9/ThreeInputAssembly.lean). README keeps its three links to `docs/campaign` (reader-facing; section 3 decision).
-3. `checks/AxiomGate.lean` line 1 names a task and a worker, and lines 3-4 point to `docs/campaign`. The file is outside this scope; its owner should clean it (comment-only).
-4. `FirstPass/S9c.lean` line 11 (`form [C51] of docs/campaign/CORRECTIONS.md`): held, as in the previous refresh.
-5. `FirstPass/S11am.lean:22` "operator gap G1" is not matched by the greps. Kept: it may denote a spectral gap or a campaign id.
+1. FirstPass/Phase2/DMSFiniteTiltPosDerived.lean:7, :13, :381: campaign question id; notes/ path at :13.
+2. FirstPass/Phase2/EventSampleRepresentationProof.lean:31: campaign question id; "math desk" note.
+3. FirstPass/Phase2/RootedShiftedNullTransferLaw.lean:13, :15, :46, :96, :183, :222: campaign question id; notes/ path at :15.
+4. FirstPass/Phase2/WeylAeMeasurableDerived.lean:16: status sentence naming the operator's route.
+5. FirstPass/S11am.lean:22: campaign gap label G1.
+6. Proofs/Sec6/ThreeInputAssembly.lean:56: docs/campaign/audits pointer.
+7. Proofs/Sec6/ThreeInputAssembly.lean:150: `#eval` guard block; the kept list covers Sec3, Sec4 and Sec9 only.
+8. README.md:57: sentence on the development process; no class covers it.
