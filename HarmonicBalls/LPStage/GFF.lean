@@ -4,7 +4,7 @@ import Mathlib
 # Whole-plane Gaussian free field on `ℂ`: observables, covariance kernel, circle averages and pairings
 
 General definitions of the whole-plane Gaussian free field (GFF) on `ℂ` and of its pairings, circle averages and
-σ-algebras, staged for `LatticeProb.Gauss`. Only Mathlib is imported.
+σ-algebras, in the namespace `LatticeProb.Gauss`. Only Mathlib is imported.
 
 * `wholePlaneCov z w = log (max(|z|,1) max(|w|,1) / |z - w|)`: the covariance kernel of the whole-plane GFF normalized
   so that its average over the unit circle vanishes (Duplantier-Sheffield, arXiv:0808.1560, Section 3).
@@ -30,7 +30,7 @@ and the general parts of `Proofs/GFF/*` and `Proofs/Sec11/ModConstPairingLaw.lea
 layer of `LatticeProb/Bonanno` (Leonardo Bonanno, adapted from leobon12/lean-formalizations) was consulted for the
 naming of the same object; no code of it is imported or copied, and nothing here depends on it.
 
-Not staged (paper-specific Campbell–Palm observations of the rooted field, Section 11 of the Harmonic-Balls paper):
+Not included here (paper-specific Campbell–Palm observations of the rooted field, Section 11 of the Harmonic-Balls paper):
 `campbellMarkedObs`, `campbellReferenceObs`.
 -/
 

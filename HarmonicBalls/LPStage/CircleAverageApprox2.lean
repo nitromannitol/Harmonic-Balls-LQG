@@ -2,13 +2,13 @@ import Mathlib
 import HarmonicBalls.LPStage.CircleAverageApprox
 import HarmonicBalls.LPStage.CameronMartinDerived2
 
-/-! # Circle-average approximants and their almost sure convergence (LP stage, z7), part 2
+/-! # Circle-average approximants and their almost sure convergence
 
 LP copy of the approximant chain of the whole-plane GFF: the covariance kernel of an annular density against the
 logarithmic kernel `wholePlaneCov` (`FirstPass/S11u/Mixed.lean`, Duplantier-Sheffield 2011, Section 3.1), the variance
 of a pairing minus a circle average (`FirstPass/S11u/Variance.lean`), the annular approximants (`FirstPass/S11u.lean`,
 `FirstPass/S11at/Producers.lean`), ending with `ae_tendsto_circleApprox`: almost surely the pairings with the explicit
-annular approximants converge to the circle average. Mechanical transcription in the LP-stage definitions.
+annular approximants converge to the circle average. Mechanical transcription in the definitions of `LatticeProb.Gauss`.
 -/
 
 open MeasureTheory ProbabilityTheory Filter Set Metric Topology
@@ -310,7 +310,7 @@ end LatticeProb.Gauss
 -- ===== FirstPass/S11u/Kernel (part)
 
 /-!
-# Kernel identities for the whole-plane covariance on circles (fp-S11u, owner n4)
+# Kernel identities for the whole-plane covariance on circles
 
 The whole-plane kernel `wholePlaneCov x y = log (max |x| 1 * max |y| 1 / |x - y|)` (Defs/GFF.lean) splits as
 `a x + a y - log |x - y|` off the diagonal, with `a x = log max(|x|, 1)`. Averaging over a circle `∂B_ρ(z)` in the
@@ -376,7 +376,7 @@ end LatticeProb.Gauss
 -- ===== FirstPass/S11u/Mixed
 
 /-!
-# Mixed covariances of a unit annular density and a circle average (fp-S11u, owner n4)
+# Mixed covariances of a unit annular density and a circle average
 
 For the normalized Section 8 bump `unitCircleDensity r δ z` (unit mass, supported in an annulus around `∂B_r(z)`),
 the three whole-plane covariances of `hC(μ)` and `hcirc(r, z)` are expressed through the logarithmic potentials
@@ -712,7 +712,7 @@ end LatticeProb.Gauss
 -- ===== FirstPass/S11u/Variance
 
 /-!
-# Variance of a pairing minus a circle average, and a.s. convergence from summable second moments (fp-S11u, owner n4)
+# Variance of a pairing minus a circle average, and a.s. convergence from summable second moments
 
 For a whole-plane GFF `(P, hC, hcirc)` and a test function `φ`, the variance of `hC φ - hcirc(r, z)` is the
 combination `Kpp + Kzz - 2 Kpc` of the three kernel integrals (`IsWholePlaneGFF.covariance_eq`, `wholePlaneGFFCov`).
@@ -807,7 +807,7 @@ end LatticeProb.Gauss
 -- ===== FirstPass/S11u (through log_add_sub_log_sub_le_four_mul)
 
 /-!
-# First pass: the circle-average limit derived from the whole-plane GFF (fp-S11u, owner n4)
+# The circle-average limit derived from the whole-plane GFF
 
 `WholePlaneCircleAverageLimitFrozen` (Frozen/S11p.lean) is proved as the theorem
 `wholePlaneCircleAverageLimit_derived`, from `IsWholePlaneGFF` alone. The unit-mass test functions are the normalized

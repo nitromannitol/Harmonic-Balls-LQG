@@ -2,12 +2,12 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.CameronMartinDerived
 
-/-! # Circle-density approximants of the whole-plane GFF circle averages (LP stage, z7), part 1
+/-! # Circle-density approximants of the whole-plane GFF circle averages
 
 LP copy of the Section 8 circle-density chain of Bou-Rabee and Gwynne (arXiv:2208.11795): smooth annular bumps
 `circleDensity`, their local, radial and logarithmic-potential estimates. Source files:
 `Proofs/Sec8/CircleDensity.lean`, `CircleDensityLocal.lean`, `CircleDensityRadial.lean`, `CircleLogPotential.lean`.
-Mechanical transcription in the LP-stage definitions of `HarmonicBalls/LPStage/GFF.lean` (namespace
+Mechanical transcription in the definitions of `HarmonicBalls/LPStage/GFF.lean` (namespace
 `LatticeProb.Gauss`); the test-function combination lemma is ported from `Proofs/SecA/Basic.lean`; the integrability
 lemmas come from `HarmonicBalls/LPStage/CameronMartinDerived.lean`. The Section 6 statement of
 `CircleDensityLocal.lean` (joint centred circle version) is not transcribed (not used by the approximant chain).

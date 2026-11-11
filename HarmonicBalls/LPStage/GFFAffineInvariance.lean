@@ -2,14 +2,14 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 import HarmonicBalls.LPStage.CircleAverageApprox2
 
-/-! # Affine invariance of the whole-plane GFF: LP form (LP stage, z6)
+/-! # Affine invariance of the whole-plane GFF: LP form
 
 LP form of the Proposed statement `WholePlaneGFFAffineInvariance` (`HarmonicBalls/Proposed/LQG.lean:56`, eq:gff-scaling,
 arXiv:2208.11795 line 369; Gwynne-Holden-Sun 2019, Section 3.2.2; Berestycki-Powell, Corollary 5.7 and Lemma 6.26): for
 `a ∈ ℂ ∖ {0}` and `b ∈ ℂ`, the transformed pairings `φ ↦ |a|⁻² hC(φ ∘ F⁻¹) - hcirc |a| b · ∫ φ` and circle averages
 `(r, z) ↦ hcirc (|a| r) (a z + b) - hcirc |a| b` (with `F z = a z + b`) again form a whole-plane GFF.
 
-The statement is the same expression, stated for the LP-stage definitions of `HarmonicBalls/LPStage/GFF.lean`
+The statement is the same expression, stated for the definitions of `HarmonicBalls/LPStage/GFF.lean`
 (`IsWholePlaneGFF`, `GFFObservable`, `wholePlaneCov`, `wholePlaneGFFCov`, `IsTestFunction`). The proof is the derivation
 of `wholePlaneGFFAffineInvariance_derived` (`HarmonicBalls/FirstPass/S11v/Affine.lean`), copied in LP form together with the
 closure of declarations it uses (`HarmonicBalls/FirstPass/S11v/AffineCore.lean`, `AffineKernel.lean`, `AffineAlg.lean`,

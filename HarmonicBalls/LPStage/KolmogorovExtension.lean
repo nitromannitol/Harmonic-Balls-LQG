@@ -1,9 +1,7 @@
 import Mathlib
 
 /-!
-# Kolmogorov extension theorem: real coordinates, arbitrary index set (LP stage)
-
-Owner: worker z7, task fp-lpstage-kolmogorov-extension (row 29, ingredient B1 of z6).
+# Kolmogorov extension theorem: real coordinates, arbitrary index set
 
 Statement: `LatticeProb.exists_isProjectiveLimit_real`, the body of `KolmogorovExtensionStmt`
 (`HarmonicBalls/LPStage/GFFExistence.lean`). Source: William J. Anderson, *Advanced Probability II Notes*,

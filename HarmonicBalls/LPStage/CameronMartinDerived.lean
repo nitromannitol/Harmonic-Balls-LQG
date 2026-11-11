@@ -2,9 +2,9 @@ import Mathlib
 import HarmonicBalls.LPStage.GFF
 
 /-!
-# Cameron-Martin facts for the whole-plane GFF (LP stage)
+# Cameron-Martin facts for the whole-plane GFF
 
-LP forms of the two derived Cameron-Martin facts of the Harmonic-balls draft, stated on the LP-stage whole-plane GFF
+LP forms of the two derived Cameron-Martin facts of the Harmonic-balls draft, stated on the whole-plane GFF
 (`LatticeProb.Gauss.IsWholePlaneGFF`, `HarmonicBalls/LPStage/GFF.lean`):
 
 * `LatticeProb.Gauss.CameronMartinGFFReweighting`: the Cameron-Martin theorem for the whole-plane GFF
@@ -17,8 +17,8 @@ LP forms of the two derived Cameron-Martin facts of the Harmonic-balls draft, st
 This file holds the statements, and the copied LP versions of the Gaussian-law helpers that the derivation of the second
 statement from the first uses (`gaussian_process_map_eq_of_mean_covariance`, `wholePlaneGFF_localFieldPairings_map_eq`,
 copied from `HarmonicBalls/Steps/Sec11/GaussianProcessLaw.lean:17` and `:68`). The derivation of
-`CameronMartinGFFReweighting` (`HarmonicBalls/FirstPass/Phase2/CameronMartinReweightingDerived2.lean:267`) is not yet
-copied: its closure exceeds the copy budget (see `notes/z7.md`). Neither statement is proved in this file yet.
+`CameronMartinGFFReweighting` (`HarmonicBalls/FirstPass/Phase2/CameronMartinReweightingDerived2.lean:267`) is not copied
+into this file. Neither statement is proved in this file yet.
 -/
 
 namespace LatticeProb.Gauss
@@ -126,7 +126,7 @@ theorem wholePlaneGFF_localFieldPairings_map_eq
   rw [Measure.map_map hF hPX, Measure.map_map hF hQY] at hmap
   exact hmap
 
-/-! ### The logarithmic kernel and the Laplacian of test functions (copied for the LP stage)
+/-! ### The logarithmic kernel and the Laplacian of test functions (copied for `LatticeProb.Gauss`)
 
 Copies of `HarmonicBalls.newtonKernel` (`HarmonicBalls/Defs/Green.lean:43`) and of the Green identity of
 `HarmonicBalls/Proofs/Potential/Fundamental.lean` (copyright of the Harmonic-balls formalization, same author).

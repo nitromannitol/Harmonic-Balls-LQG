@@ -3,8 +3,7 @@ import Mathlib
 /-!
 # Removing a convex compact set from a connected plane domain keeps it preconnected
 
-Phase 2, item B, module M0 (task fp-phase2-plane-domain-convex-derive, worker z3). General plane topology, no
-Harnack or LQG input. The frozen Prop `PlaneDomainMinusConvexCompactPreconnectedFrozen` (`FirstPass/Frozen/S11d.lean`)
+General plane topology, no Harnack or LQG input. The frozen Prop `PlaneDomainMinusConvexCompactPreconnectedFrozen` (`FirstPass/Frozen/S11d.lean`)
 asserts: for open connected `V ⊆ ℂ`, compact convex `K ⊆ V`, the set `V \ K` is preconnected.
 
 Main theorem `LatticeProb.Topology.isPreconnected_diff_of_convex_compact`. Route (all steps in Mathlib):
@@ -131,7 +130,7 @@ theorem isPreconnected_collar_of_convex {K L : Set ℂ} (hKcv : Convex ℝ K) (h
       ⟨y, hyc, rfl⟩⟩ (hSpre y) hFpre
 
 /-- Preconnectedness of `V \ K` for an open connected `V ⊆ ℂ` and a compact convex `K ⊆ V`
-(Phase 2 item B: plane domain minus a convex compact set). -/
+(plane domain minus a convex compact set). -/
 theorem isPreconnected_diff_of_convex_compact {V K : Set ℂ} (hVo : IsOpen V) (hVc : IsConnected V)
     (hKc : IsCompact K) (hKcv : Convex ℝ K) (hKV : K ⊆ V) : IsPreconnected (V \ K) := by
   rcases K.eq_empty_or_nonempty with rfl | hKne

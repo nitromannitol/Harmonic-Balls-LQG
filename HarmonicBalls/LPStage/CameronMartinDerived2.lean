@@ -1,18 +1,18 @@
 import HarmonicBalls.LPStage.CameronMartinDerived
 
 /-!
-# Cameron-Martin derivations for the whole-plane GFF (LP stage, part 2)
+# Cameron-Martin derivations for the whole-plane GFF
 
-Proves, in the LP stage, the Cameron-Martin reweighting `cameronMartinGFFReweighting_derived` (for
+Proves the Cameron-Martin reweighting `cameronMartinGFFReweighting_derived` (for
 `LatticeProb.Gauss.CameronMartinGFFReweighting`, `HarmonicBalls/LPStage/CameronMartinDerived.lean`) and the mutual
 absolute continuity `cameronMartinGFFMutualAbsCont_derived` (for `LatticeProb.Gauss.CameronMartinGFFMutualAbsCont`).
 
-The proofs are copies, with the names adapted to the LP stage, of the Harmonic-balls derivations
+The proofs are copies, with the names adapted to `LatticeProb.Gauss`, of the Harmonic-balls derivations
 `FirstPass/Phase2/CameronMartinReweightingDerived.lean` (test functions, Green identity, covariance identity and the
 Gaussian tilt), `FirstPass/Phase2/CameronMartinReweightingDerived2.lean` (law of the shifted family and the assembly of
 `IsWholePlaneGFF`) and `FirstPass/Phase2/CameronMartinMutualDerived.lean` (mutual absolute continuity). The mathematics is
 Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2, Proposition 2.9, with the normalization of
-`HarmonicBalls/LPStage/GFF.lean`. Imports: Mathlib and `HarmonicBalls.LPStage` only.
+`HarmonicBalls/LPStage/GFF.lean`. Imports: `CameronMartinDerived` only.
 -/
 
 namespace LatticeProb.Gauss
