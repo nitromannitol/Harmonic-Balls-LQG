@@ -13,7 +13,7 @@ The statements follow the corrected draft, [`paper/lqg_harmonic_ball-corrected.t
 - `HarmonicBalls/Proposed/`: literature inputs, each a Prop-valued definition with its published source.
 - `HarmonicBalls/Assembly/`: the results of Section 1 (existence, uniqueness and novelty of harmonic balls), assembled from their inputs.
 - `HarmonicBalls/Steps/` and `HarmonicBalls/Proofs/`: the reduction of each result to its inputs, and the proofs of the lemmas used, by section.
-- `HarmonicBalls/FirstPass/`: earlier proofs of the numbered results, with the input statements they use.
+- `HarmonicBalls/FirstPass/`: the canonical first-pass proofs of the numbered results, with the input statements they use; `HarmonicBalls/FirstPass/ClosureAll.lean` imports the counted closure theorems.
 
 ## Status
 
@@ -43,7 +43,7 @@ HarmonicBalls/Proposed/   Literature inputs as Prop-valued definitions, with the
 HarmonicBalls/Assembly/   Section 1 results assembled from their inputs
 HarmonicBalls/Steps/      Reduction of each result to its inputs, by section
 HarmonicBalls/Proofs/     Proofs of the lemmas used by the reductions, by section
-HarmonicBalls/FirstPass/  Earlier proofs and the input statements they use
+HarmonicBalls/FirstPass/  Canonical first-pass proofs and the input statements they use (ClosureAll.lean imports the counted closure theorems)
 HarmonicBalls/LPStage/    General lemmas staged for Lattice-Probability
 HarmonicBalls/Audit/      Checks of the inputs and exports of the results
 checks/                   Axiom gate, outside the default build
