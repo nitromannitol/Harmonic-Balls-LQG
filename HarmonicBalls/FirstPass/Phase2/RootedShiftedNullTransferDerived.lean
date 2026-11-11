@@ -8,6 +8,7 @@ import HarmonicBalls.FirstPass.Phase2.RootedShiftedNullTransferEvent
 import HarmonicBalls.FirstPass.Phase2.GFFJointLaw
 import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
 import HarmonicBalls.FirstPass.S11v.Affine
+import HarmonicBalls.FirstPass.Phase2.RootedShiftedNullTransferLaw
 
 /-! # Shifted-root null transfer: the local identification (MQ-lh-29, step L4)
 
@@ -274,6 +275,64 @@ theorem ae_sel_affine_shift_mem_convSet {Ω : Type u} [MeasurableSpace Ω] {P : 
 
 /-! ## Canonical data and the corrected statement (MQ-lh-29; MQ-lh-15 item 7) -/
 
+/-- Selection of a continuous profile: a point of `convSet` for the selected profile. -/
+theorem sel_mem_of_ext {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)}
+    (hRec : ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y) {G : ℝ → ℂ → ℝ}
+    (hG : ContinuousOn (fun p : ℝ × ℂ => G p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ))
+    {A : Set C(CircleParameter, ℝ)} (hA : ∀ y : C(CircleParameter, ℝ), posPart G = posExtend ⇑y → y ∈ A) :
+    Sel (posPart G) ∈ A := by
+  obtain ⟨y, hpp, hsel, -⟩ := sel_posPart_of_continuousOn hRec hG
+  rw [hsel]
+  exact hA y hpp
+
+/-- **Measure algebra of the shifted root (L5).** If the recentred measure of `μ` agrees on `B_R(0)` with `c • η`
+(`c ≠ 0, ⊤`, `r ≤ R`), then the recentred output at radius `r` is `(z, N_r(η|B_r(0)))`. -/
+theorem recentredOutput_of_restrict_eq {μ η : Measure ℂ} [IsLocallyFiniteMeasure μ] {z : ℂ} {r R : ℝ}
+    (hrR : r ≤ R) {c : ℝ≥0∞} (hc0 : c ≠ 0) (hct : c ≠ ⊤)
+    (h : (μ.map (fun w => w - z)).restrict (ball (0 : ℂ) R) = (c • η).restrict (ball (0 : ℂ) R)) :
+    recentredOutput r (μ, z) = (z, massNormalize r (η.restrict (ball (0 : ℂ) r))) := by
+  have hpre : (fun w : ℂ => w - z) ⁻¹' ball (0 : ℂ) r = ball z r := by
+    ext w
+    simp [dist_eq_norm]
+  have hrec : recenteredRestriction μ r z = (μ.map (fun w => w - z)).restrict (ball (0 : ℂ) r) := by
+    unfold recenteredRestriction
+    rw [Measure.restrict_map (measurable_sub_const z) measurableSet_ball, hpre]
+  have hsub : (μ.map (fun w => w - z)).restrict (ball (0 : ℂ) r) =
+      ((μ.map (fun w => w - z)).restrict (ball (0 : ℂ) R)).restrict (ball (0 : ℂ) r) := by
+    rw [Measure.restrict_restrict measurableSet_ball, Set.inter_eq_left.2 (Metric.ball_subset_ball hrR)]
+  rw [recentredOutput, finitePart_eq_of_locallyFinite, hrec, hsub, h,
+    Measure.restrict_restrict measurableSet_ball, Set.inter_eq_left.2 (Metric.ball_subset_ball hrR),
+    Measure.restrict_smul, massNormalize_smul_const _ hc0 hct]
+
+/-- **L4 with L5, one sample.** The recentred α₀-output of the selected DMS-shifted profile equals the shifted-root output
+`(z, N_r(Dg(Sel(posPart G2))|B_r(0)))` (step L4 of MQ-lh-29 followed by step L5). -/
+theorem recentredOutput_decoder_shift {γ α₀ r : ℝ} {z : ℂ} {hc : ℝ → ℂ → ℝ} {gt : ℂ → ℝ}
+    {Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)} (T : ProfileDecoderDerived.TestFamily)
+    (hRec : ∀ y : C(CircleParameter, ℝ), Sel (posExtend ⇑y) = y)
+    (hz : 3 * r < ‖z‖) (hzu : ‖z‖ < 1 - 3 * r) (hr : 0 < r)
+    (hcont : ContinuousOn (fun p : ℝ × ℂ => hc p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ))
+    (hL1 : ∀ s x, dmsShiftedCircle γ z hc s x = hc s x + Real.circleAverage (dmsShift γ z) x s)
+    (hgt : Continuous gt) (hEq : EqOn gt (fun y => -α₀ * Real.log ‖y + z‖) (closedBall (0 : ℂ) (3 * r / 2)))
+    (hA : ∀ y : C(CircleParameter, ℝ), posPart (dmsShiftedCircle γ z hc) = posExtend ⇑y →
+      y ∈ ProfileDecoderDerived.convSet T γ α₀)
+    (hB : Sel (posPart (fun s x => hc s (x + z) - hc 1 z + Real.circleAverage gt x s)) ∈
+      ProfileDecoderDerived.convSet T γ γ) :
+    recentredOutput r (ProfileDecoderDerived.decoder T γ α₀ (Sel (posPart (dmsShiftedCircle γ z hc))), z) =
+      (z, massNormalize r ((ProfileDecoderDerived.decoder T γ γ
+        (Sel (posPart (fun s x => hc s (x + z) - hc 1 z + Real.circleAverage gt x s)))).restrict
+        (ball (0 : ℂ) r))) := by
+  have hcontDms : ContinuousOn (fun p : ℝ × ℂ => dmsShiftedCircle γ z hc p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) :=
+    (hcont.add (continuousOn_circleAverage_dmsShift γ z)).add continuousOn_const
+  have hF1 : Sel (posPart (dmsShiftedCircle γ z hc)) ∈ ProfileDecoderDerived.convSet T γ α₀ :=
+    sel_mem_of_ext hRec hcontDms hA
+  have : IsLocallyFiniteMeasure
+      (ProfileDecoderDerived.decoder T γ α₀ (Sel (posPart (dmsShiftedCircle γ z hc)))) :=
+    (ProfileDecoderDerived.isLQGLimit_decoder T γ α₀ hF1).isLocallyFiniteMeasure
+  have key := decoder_shifted_of_selector (a0 := α₀) (gt := gt) T hRec hz hzu hr hcont hL1 hgt hEq hA hB
+  refine recentredOutput_of_restrict_eq (by linarith) ?_ ?_ key
+  · exact (ENNReal.ofReal_pos.2 (Real.exp_pos _)).ne'
+  · exact ENNReal.ofReal_ne_top
+
 /-- The canonical test family of the decoder: `Classical.choice` of `exists_testFamily`. -/
 noncomputable def canonicalTest : ProfileDecoderDerived.TestFamily :=
   Classical.choice ProfileDecoderDerived.exists_testFamily
@@ -314,5 +373,102 @@ def ShiftedDecoderNullTransferCanonicalStmt : Prop :=
     (∀ᵐ ω ∂P, μ ω = ProfileDecoderDerived.decoder canonicalTest γ α₀
       (canonicalSel (posPart (hcirc ω)))) →
     ∀ j : ℕ, RootedShiftedDecoderNullTransferCanonical P γ α₀ hcirc ν j
+
+/-! ## Assembly (MQ-lh-29, steps L4-L6 and E_z) -/
+
+/-- The shifted-root output `W` of step L5, with the affine circle profile written through `hcirc`. -/
+theorem rootShiftOutput_eq_hc {Ω : Type*} (T : ProfileDecoderDerived.TestFamily) (γ : ℝ)
+    (Sel : (ℝ → ℂ → ℝ) → C(CircleParameter, ℝ)) (r : ℝ) (z : ℂ) (hcirc : Ω → ℝ → ℂ → ℝ) (gt : ℂ → ℝ)
+    (ω : Ω) :
+    RootedShiftedNullTransferLaw.rootShiftOutput T γ Sel r z hcirc gt ω =
+      (z, massNormalize r ((ProfileDecoderDerived.decoder T γ γ
+        (Sel (posPart (fun s x => hcirc ω s (x + z) - hcirc ω 1 z + Real.circleAverage gt x s)))).restrict
+        (ball (0 : ℂ) r))) := by
+  unfold RootedShiftedNullTransferLaw.rootShiftOutput RootedShiftedNullTransferLaw.rootOutputOfProfile
+  simp [affineCircle]
+
+theorem localRadius_zero_ball_empty (z : ℂ) : Metric.ball z (localRadius 0) = ∅ :=
+  Metric.ball_eq_empty.2 (by simp [localRadius])
+
+/-- At the zero radius the recentred output is the constant `(z, 0)`. -/
+theorem recentredOutput_localRadius_zero (μ : Measure ℂ) (z : ℂ) :
+    recentredOutput (localRadius 0) (μ, z) = (z, 0) := by
+  simp [recentredOutput, recenteredRestriction, massNormalize, localRadius_zero_ball_empty]
+
+/-- At the zero radius the reference observation is the constant `(z, 0)`. -/
+theorem localReferenceObservation_localRadius_zero {Ω : Type*} (ν : Ω → Measure ℂ) (z : ℂ) (ω : Ω) :
+    localReferenceObservation ν 0 (z, ω) = (z, 0) := by
+  simp [localReferenceObservation, massNormalize, localRadius_zero_ball_empty]
+
+/-- **Corrected null transfer (MQ-lh-29), for every root class `j`.** The canonical shifted-root output is absolutely
+continuous with respect to the reference observation for almost every root (E_z, L4-L6), so a null reference event is a
+null canonical shifted event. The named inputs are the Proposed existence and Lemma A.10 hypotheses of
+`ae_rootedShiftedNullEvent`. -/
+theorem rootedShiftedNullTransferCanonical {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω)
+    [IsProbabilityMeasure P] (γ α₀ : ℝ) {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (ν : Ω → Measure ℂ) (hGFF : IsWholePlaneGFF P hC hcirc) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α₀ < lqgQ γ)
+    (hν : IsLQGMeasureOfField P γ γ hcirc ν)
+    (hExist0 : LQGMeasureExistence P γ 0 hC hcirc) (hExistα : LQGMeasureExistence P γ α₀ hC hcirc)
+    (hA10 : ∀ μ : Ω → Measure ℂ, DMSLemmaA10WholePlaneMarked P γ hC hcirc μ) (j : ℕ) :
+    RootedShiftedDecoderNullTransferCanonical P γ α₀ hcirc ν j := by
+  unfold RootedShiftedDecoderNullTransferCanonical
+  have hmem := ae_sel_mem_convSet hGFF canonicalSel_posExtend canonicalTest γ γ ν hν
+  rcases Nat.eq_zero_or_pos j with rfl | hj
+  · refine ae_of_all _ fun z S _ h => ?_
+    simpa only [recentredOutput_localRadius_zero, localReferenceObservation_localRadius_zero] using h
+  · have hr : 0 < localRadius j := by unfold localRadius; positivity
+    have hj1 : (1 : ℝ) ≤ j := by exact_mod_cast hj
+    have hr16 : 2 * localRadius j ≤ 1 := by
+      unfold localRadius
+      rw [show 2 * (1 / (16 * (j : ℝ))) = 1 / (8 * j) by ring, div_le_one (by positivity)]
+      linarith
+    have hE := ae_rootedShiftedNullEvent P canonicalTest γ α₀ hγ0 hγ2 hα hC hcirc hGFF hExist0 hExistα hA10 j
+    filter_upwards [hE, ae_restrict_mem (measurableSet_localDomain j)] with z hz hzD
+    obtain ⟨hz1, hz2⟩ := hzD
+    obtain ⟨gt, hgt, hEq⟩ := exists_testFunction_logShift (a0 := α₀) hr hz1
+    have hgtc : Continuous gt := hgt.1.continuous
+    have hgt0 : Real.circleAverage gt 0 1 = 0 := circleAverage_testShift_unit hgt hr16
+    have hd := ae_sel_affine_shift_mem_convSet hGFF canonicalSel_measurable canonicalTest γ z hgt.1 hgt.2.1
+      hgt0 hmem
+    have hL1 := ae_dmsShiftedCircle_eq_field hGFF γ (show ‖z‖ ≤ 1 by linarith)
+    have hL6 := RootedShiftedNullTransferLaw.rootShiftOutput_map_absolutelyContinuous_referenceObservation P
+      canonicalTest γ canonicalSel canonicalSel_measurable canonicalSel_posExtend hGFF ν hν j hj z gt hgt
+    have hW := RootedShiftedNullTransferLaw.measurable_rootShiftOutput canonicalTest γ canonicalSel_measurable
+      hGFF (localRadius j) z gt
+    have hXW : ∀ᵐ ω ∂P, recentredOutput (localRadius j) (ProfileDecoderDerived.decoder canonicalTest γ α₀
+        (canonicalSel (posPart (dmsShiftedCircle γ z (hcirc ω)))), z) =
+        RootedShiftedNullTransferLaw.rootShiftOutput canonicalTest γ canonicalSel (localRadius j) z hcirc gt ω := by
+      filter_upwards [hz, hd, hL1] with ω hω hdω hL1ω
+      obtain ⟨-, hcb, hcc⟩ := hω
+      have e : (fun s x => affineCircle hcirc 1 z ω s x + Real.circleAverage gt x s) =
+          (fun s x => hcirc ω s (x + z) - hcirc ω 1 z + Real.circleAverage gt x s) := by
+        funext s x
+        simp [affineCircle]
+      rw [e] at hdω
+      rw [rootShiftOutput_eq_hc]
+      exact recentredOutput_decoder_shift canonicalTest canonicalSel_posExtend hz1 hz2 hr hcb
+        (fun s x => congrFun (congrFun hL1ω s) x) hgtc hEq hcc hdω
+    intro S hS h0
+    have hYm : AEMeasurable (fun ω => localReferenceObservation ν j (z, ω)) P := by
+      obtain ⟨ν', hν'M, hν'ae⟩ := hGFF.aemeasurable_lqgMeasure hν
+      have hm : Measurable fun ω => (z, massNormalize (localRadius j)
+          ((ν' ω).restrict (ball (0 : ℂ) (localRadius j)))) :=
+        measurable_const.prodMk ((measurable_massNormalize _).comp
+          ((RootedShiftedNullTransferLaw.measurable_restrict_ball (localRadius j)).comp hν'M))
+      refine AEMeasurable.congr hm.aemeasurable ?_
+      filter_upwards [hν'ae] with ω hω
+      simp only [localReferenceObservation, hω]
+    have hYS : (P.map (fun ω => localReferenceObservation ν j (z, ω))) S = 0 := by
+      rw [Measure.map_apply_of_aemeasurable hYm hS]
+      exact h0
+    have hWS := hL6 hYS
+    rw [Measure.map_apply_of_aemeasurable hW.aemeasurable hS] at hWS
+    refine (measure_congr (Filter.eventuallyEqSet_iff.2 (hXW.mono fun ω hω => ?_))).trans hWS
+    simp [hω]
+
+/-- **The canonical shifted decoder null transfer** (`ShiftedDecoderNullTransferCanonicalStmt`). -/
+theorem shiftedDecoderNullTransferCanonicalStmt_derived : ShiftedDecoderNullTransferCanonicalStmt.{u} := by
+  intro Ω _ P _ γ α₀ hC hcirc μ ν hGFF hγ0 hγ2 hα _ hν hE0 hEα hA _ j
+  exact rootedShiftedNullTransferCanonical P γ α₀ ν hGFF hγ0 hγ2 hα hν hE0 hEα hA j
 
 end HarmonicBalls
