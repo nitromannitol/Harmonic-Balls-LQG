@@ -25,7 +25,7 @@ import HarmonicBalls.Steps.Sec5.ContinuityAssembly
 
 This module exports the Section 5 results 5.1-5.8 of Draft/Section5.lean from the three staged Proposed inputs
 `WholePlaneLQGBallMassBounds` (`hDG`), `LQGMeasureCoordChange` (`hCC`) and `LQGMeasureExistence` (`hE`) of
-HarmonicBalls/Proposed/LQG.lean. Their source-check status is recorded in docs/campaign/audits/Section5StagedInputAssembly.md.
+HarmonicBalls/Proposed/LQG.lean. Their source-check is pending.
 
 Derived here, not taken as binders:
 * I2, `LQGVolumeGrowthAllScalesStmt` (Draft/Section2.lean:122), from `hDG`, `hCC` at insertion `0` and `hE`
@@ -37,8 +37,7 @@ Derived here, not taken as binders:
 
 Open leaves, kept as binders under their frozen names:
 * `hTyp : TypicalPointManyGoodScalesStmt` (Lemma 8.2, Draft/Section8.lean:74), used by 5.2-5.5;
-* `hBT : ClusterBoundaryTouchingRightContinuityStep` (Steps/Sec5/ContinuityAssembly.lean:19; docs/campaign/GRAPH.md
-  G12), used by 5.2.
+* `hBT : ClusterBoundaryTouchingRightContinuityStep` (Steps/Sec5/ContinuityAssembly.lean:19; step G12), used by 5.2.
 
 Coordinate-change hypotheses. Results 5.1, 5.2, 5.3, 5.4, 5.6 and 5.8 take `hCC` at insertion `0`. Results 5.5 and 5.7
 take `hCC` at every insertion; its insertion-zero restriction `coordChange_zero_of_all_insertions` feeds only the
@@ -48,8 +47,8 @@ Credit: Leonardo Bonanno. His potential-theoretic and LatticeProb work enters th
 his credit (for example Proofs/Sec6/FullThreeInputAssembly.lean for Proposition 6.1 and
 Proofs/Sec9/WeakUniquenessDerivedInputs.lean for I2).
 
-This is a reduction, not a numbered closure. It gives no source-fidelity verdict; the open semantic point E51 is
-recorded in docs/campaign/audits/Section5StagedInputAssembly.md.
+This is a reduction, not a numbered closure. It gives no source-fidelity verdict; the open semantic point E51 remains
+open.
 -/
 
 namespace HarmonicBalls

@@ -80,11 +80,6 @@ example : ClusterSubharmonicBallStmt.{u} := clusterSubharmonicBall_of_remaining_
 
 end DerivedInputs
 
-#check @clusterLowerBound_of_remaining_literature
-#check @leastSupersolutionHolder_of_remaining_literature
-#check @clusterSubharmonicBall_of_remaining_literature
-
-
 -- Guards (an error fails the check): the three exports depend only on the standard constants, take exactly the four
 -- retained premises and neither derived premise nor I2, and apply the two providers; the provider closure reaches no
 -- Section 2 assembly, Section 3 or 4 declaration, and no theorem or opaque constant of Proposed or External.

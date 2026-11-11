@@ -14,7 +14,7 @@ Results (Draft/Section9.lean, frozen statements):
 * Lemma 9.1, `ObstacleComparisonStmt` (lemma:obstacle-comp, line 2279): unconditional, `obstacleComparison`.
 * Lemmas 9.3 and 9.4, `HarmonicBallBoundarySubsetStmt` (line 2336) and `RegularOpenEqOfAEEqStmt` (line 2394):
   need only `hDG hCC hE`.
-* Weak Proposition 9.2, `SubharmonicBallUniquenessWeakStmt` ([C10], E33(a) in docs/campaign/FROZEN.md): needs, in addition,
+* Weak Proposition 9.2, `SubharmonicBallUniquenessWeakStmt` ([C10], E33(a)): needs, in addition,
   the typical-point leaf `h82 : TypicalPointManyGoodScalesStmt` (Lemma 8.2), an explicit binder.
 
 Discharged inside the producers, not binders: the all-scales volume growth I2 (`LQGVolumeGrowthAllScalesStmt`),
