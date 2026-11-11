@@ -1,8 +1,7 @@
 import HarmonicBalls.FirstPass.S11c.BadEventMeasurable11_7
 
 /-!
-# First pass, Lemma 11.7: measurability of the local bad set (task fp-S11c-11-7-redo-11-10, owner n1; B2 route,
-CHATGPT-11-7-B2.md section 4.2, eqs. (4.6)-(4.7))
+# Lemma 11.7: measurability of the local bad set
 
 For an s-finite kernel `K` from a measurable space `X` (the observations of `Σ_D`) to measures on `ℂ` (the decoded local
 measures, `LocalLQGDecoderFrozen`), and a deterministic disk-index set `U`, the set of pairs `(z, x)` with `z ∈ U` such
@@ -38,7 +37,7 @@ theorem measurableSet_localConeSet (K : Kernel X ℂ) [IsSFiniteKernel K] {Q : S
     rw [hEq]
     exact MeasurableSet.empty
 
-/-- The local bad set (B2 eq. (4.6)): pairs `(z, x)` with `z ∈ U` such that for every `k` there is `N ≥ max(k, n_D)`
+/-- The local bad set: pairs `(z, x)` with `z ∈ U` such that for every `k` there is `N ≥ max(k, n_D)`
 with window sum `∑_{n=N+1}^{2N} 1_{localConeSet} (z, x) < a N`. -/
 def localBadSet (K : Kernel X ℂ) (Q : Set ℂ) (M a : ℝ) (U : Set ℂ) (nD : ℕ) : Set (ℂ × X) :=
   {p | p.1 ∈ U ∧ ∀ k : ℕ, ∃ N : ℕ, max k nD ≤ N ∧

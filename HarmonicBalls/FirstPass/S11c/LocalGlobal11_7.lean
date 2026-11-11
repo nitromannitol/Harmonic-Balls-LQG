@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# First pass, Lemma 11.7: local-to-global step (fp-S11c, owner n1)
+# Lemma 11.7: local-to-global step
 
-Step S5c of the transfer (CHATGPT-11-7-proof.md, sec 4, "On U ⋐ D ..."): the frozen local Campbell statement
+Step S5c of the transfer: the frozen local Campbell statement
 (`LocalCampbellMarkedRestrictionFrozen`, Frozen/S11c.lean) is applied to rational discs `U = B(c, s)` with
 `closedBall c s ⊆ B(c, t)` and `0 ∉ closedBall c t`. These discs cover `ℂ ∖ {0}`; the point `0` is `μ`-null by
 non-atomicity (`LQGMeasureNonatomic`, Proposed/LQG.lean:75). This file proves the countable cover and the passage from

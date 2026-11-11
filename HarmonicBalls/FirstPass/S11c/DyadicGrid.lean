@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.Identify
 
 /-!
-# Proposition 11.10, nested closed dyadic squares on a common grid (fp-S11c, owner n1)
+# Proposition 11.10, nested closed dyadic squares on a common grid
 
-FIRST-PASS NEW (bookkeeping). The first-pass proof of Proposition 11.10 works on the integer grid of mesh `h = 2^{-(N+3)}`
+The proof of Proposition 11.10 works on the integer grid of mesh `h = 2^{-(N+3)}`
 (the cells of `Cover`, `Classes`, `Exterior`). The statement concerns closed dyadic squares `S₁ ⊆ S₂` of levels `m₁`, `m₂`.
 For a level `N` deep enough, both squares are integer boxes of this grid, with the corner conditions used by the shifted
 bound: the endpoints of `S₁` are divisible by eight and `S₁` has width at least sixteen cells; `S₂` contains `S₁` with width at

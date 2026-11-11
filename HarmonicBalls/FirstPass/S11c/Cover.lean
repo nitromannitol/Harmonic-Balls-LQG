@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.Exterior
 
 /-!
-# Proposition 11.10, covering of the box by `K₁` and the enlarged blocks (fp-S11c, owner n1)
+# Proposition 11.10, covering of the box by `K₁` and the enlarged blocks
 
-FIRST-PASS NEW. The covering hypothesis of the chain bound `internalMetric_le_three_pieces` (Chain.lean) for the
+The covering hypothesis of the chain bound `internalMetric_le_three_pieces` (Chain.lean) for the
 square `S₂`: the box `gridBox` is covered by the exterior set `K₁` and by the enlarged blocks `Ŝ_{j,k} ∩ S₂`, `j ∈ Jx`,
 `k ∈ Jy`. The point outside `K₀ = box \ (Xs ×ℂ Ys)` lies in `Xs ×ℂ Ys`, which is the union of the enlarged blocks.
 -/

@@ -2,14 +2,14 @@ import HarmonicBalls.FirstPass.S11c.IdentifyBad11_7
 import HarmonicBalls.FirstPass.S11c.WindowTransfer11_7
 
 /-!
-# Lemma 11.7, fixed-root null section from the origin window (B2 sec 5.1 glue, deterministic given its inputs)
+# Lemma 11.7, fixed-root null section from the origin window (deterministic given its inputs)
 
 For a fixed root `z ∈ U` and the decoded observation `x` of the rooted field, suppose almost surely:
-* the decoder identity `K (x ω) = c ω • (μ_z ω).restrict D` with `c ω ∈ (0, ∞)` (decoder clause, B2 Claim 3.1);
+* the decoder identity `K (x ω) = c ω • (μ_z ω).restrict D` with `c ω ∈ (0, ∞)` (decoder clause);
 * the rooted measure is a translate of the origin measure, `μ_z ω = c' ω • (ν ω).map (· + z)` (CoordRooted11_7.lean);
 * the origin window bound of `origin_window_visits` (Origin11_7.lean:192) for `ν ω`, at the shifted scales `N₀ + n`.
 Then almost surely `(z, x ω)` is not in the local bad set `localBadSet K Q M (p/8) U nD` (BadSetMeasurable11_7.lean:43),
-the constant `δ = p/8` of B2 sec 1. This is the deterministic core of the fixed-root null (B2 (5.1)); the decoder and the
+the constant `δ = p/8`. This is the deterministic core of the fixed-root null; the decoder and the
 origin window are inputs, so no decision on the decoder's α₀-dependence is used here.
 -/
 

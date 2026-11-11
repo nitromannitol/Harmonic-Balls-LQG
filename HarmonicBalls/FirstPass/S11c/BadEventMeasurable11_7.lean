@@ -2,12 +2,11 @@ import HarmonicBalls.Draft.Section11
 import HarmonicBalls.Steps.Sec11.PinchJointMeasure
 
 /-!
-# First pass, Lemma 11.7: joint measurability of the cone-mass event in the sample and the root (task fp-S11c-11-7-redo-11-10,
-owner n1; B2 route, CHATGPT-11-7-B2.md section 4, referee notes §2.1-2.2)
+# Lemma 11.7: joint measurability of the cone-mass event in the sample and the root
 
 For an s-finite kernel `κ` from a measurable space `Ω` to measures on `ℂ` (the random measure `μ_ω`, or a decoded
 version of it), the set `{(ω, z) | coneMassEvent (κ ω) Q M r z}` is measurable, for any measurable cone `Q`. This is the
-measurability of the single local bad set of B2 section 4 once the random measure is a kernel.
+measurability of the single local bad set once the random measure is a kernel.
 
 Ingredients: `measurable_kernel_annulusGreenPotentialSup` (Steps/Sec11/PinchJointMeasure.lean:85, the extended Green
 potential supremum over the annulus, jointly measurable in the sample and the centre), and the kernel section-mass lemma

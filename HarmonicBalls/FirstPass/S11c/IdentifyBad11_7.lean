@@ -2,8 +2,7 @@ import HarmonicBalls.FirstPass.S11c.BadSetMeasurable11_7
 import HarmonicBalls.FirstPass.S11c.LocalScale11_7
 
 /-!
-# First pass, Lemma 11.7: identification of the local bad set (task fp-S11c-11-7-redo-11-10, owner n1; B2 route,
-CHATGPT-11-7-B2.md eq. (4.8); referee §2.2)
+# Lemma 11.7: identification of the local bad set
 
 On the event where the local decoder identity `K x = c • μ|_D` holds with `c ∈ (0,∞)`, and for a root `z ∈ U` such that
 the closed balls `B̄_{6·2^{-n}}(z)` lie in `D` for `n ≥ n_D`, the local bad set (4.6) at `(z, x)` is the complement of the
@@ -18,7 +17,7 @@ namespace HarmonicBalls.S11c
 
 variable {X : Type*} [MeasurableSpace X]
 
-/-- The global window sum of the cone-mass events `C_M(ν, 2^{-n}, z)` over `n ∈ [N+1, 2N]` (B2 window sums, no local
+/-- The global window sum of the cone-mass events `C_M(ν, 2^{-n}, z)` over `n ∈ [N+1, 2N]` (no local
 restriction). -/
 noncomputable def globalWindowSum (Q : Set ℂ) (M : ℝ) (z : ℂ) (ν : Measure ℂ) (N : ℕ) : ℝ :=
   ∑ n ∈ Finset.Icc (N + 1) (2 * N),
@@ -49,7 +48,7 @@ theorem localWindow_eq_global {K : Kernel X ℂ} {Q : Set ℂ} {M : ℝ} {D : Se
     rw [Set.indicator_of_notMem hmem, Set.indicator_of_notMem (show ν ∉ {ν' : Measure ℂ |
       coneMassEvent ν' Q M ((2 : ℝ)⁻¹ ^ n) z} from h)]
 
-/-- Set-level identification (B2 (4.8), pointwise in the observation): for `z ∈ U`, the pair `(z, x)` lies in the local
+/-- Set-level identification (pointwise in the observation): for `z ∈ U`, the pair `(z, x)` lies in the local
 bad set (4.6) iff there is no `N₀` with `a N ≤` the global window sum of `ν` for all `N ≥ N₀`. -/
 theorem mem_localBadSet_iff {K : Kernel X ℂ} {Q : Set ℂ} {M a : ℝ} {D U : Set ℂ} (hDm : MeasurableSet D)
     {nD : ℕ} {z : ℂ} {x : X} {c : ℝ≥0∞} (hc0 : c ≠ 0) (hcT : c ≠ ⊤) {ν : Measure ℂ}
@@ -73,7 +72,7 @@ theorem mem_localBadSet_iff {K : Kernel X ℂ} {Q : Set ℂ} {M a : ℝ} {D U : 
     rw [localWindow_eq_global hDm hc0 hcT hK hD hnD] at this
     exact this
 
-/-- A.s. identification (B2 (4.8)): if the decoder identity `K(obs ω) = c • (μ ω)|_D`, `c ∈ (0,∞)`, holds almost surely,
+/-- A.s. identification: if the decoder identity `K(obs ω) = c • (μ ω)|_D`, `c ∈ (0,∞)`, holds almost surely,
 then almost surely, simultaneously for all `z ∈ U`, `(z, obs ω)` lies in the local bad set iff the global window sums
 of `μ ω` are not eventually at least `a N`. -/
 theorem ae_forall_mem_localBadSet_iff {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} (obs : Ω → X)

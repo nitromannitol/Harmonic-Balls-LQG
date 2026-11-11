@@ -2,9 +2,9 @@ import HarmonicBalls.Defs.LQGMetric
 import HarmonicBalls.Steps.Sec11.InternalMetricPaths
 
 /-!
-# Proposition 11.10, deterministic chain bound (fp-S11c, owner n1)
+# Proposition 11.10, deterministic chain bound
 
-FIRST-PASS NEW. Written source: corrected paper lines 3041-3044 (the triangle bound of the proof of
+Written source: corrected paper lines 3041-3044 (the triangle bound of the proof of
 `lemma:mass-diam`), with the constant repaired to `ε/3` (defect (a), GRAPH G39): a set `K` (the closure of the
 exterior set `G`) and pieces `P j` (the enlarged cells `Ŝ ∩ S₂`) each carry a bound `ε/3`, and every piece meets `K`.
 Then the internal metric of the big set `W` (`= S₂`) is at most `ε` on `W`.

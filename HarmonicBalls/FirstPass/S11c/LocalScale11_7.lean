@@ -1,8 +1,7 @@
 import HarmonicBalls.Draft.Section11
 
 /-!
-# First pass, Lemma 11.7: scale and restriction invariance of the cone-mass event (task fp-S11c-11-7-redo-11-10, owner n1;
-B2 route, CHATGPT-11-7-B2.md section 4.2 and (4.3); referee §2.2)
+# Lemma 11.7: scale and restriction invariance of the cone-mass event
 
 For a deterministic disk `D` and a scalar `c ∈ (0,∞)`, the measure `c • μ|_D` agrees with `μ` on the closed ball
 `B̄_{6r}(z) ⊆ D` up to the factor `c`. The cone-mass event at `(r,z)` for the scaled restricted measure is therefore the

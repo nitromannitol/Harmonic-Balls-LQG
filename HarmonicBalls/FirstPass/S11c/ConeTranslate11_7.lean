@@ -2,7 +2,7 @@ import HarmonicBalls.Draft.Section11
 import HarmonicBalls.FirstPass.S11c.GreenTranslate11_7
 
 /-!
-# Lemma 11.7, translation covariance of the cone-mass event (B2 sec 5.1 support, deterministic)
+# Lemma 11.7, translation covariance of the cone-mass event (deterministic)
 
 For the translate `ν.map (· + z)` of a measure, the cone-mass event at the root `z` (`coneMassEvent`,
 Draft/Section11.lean:72) is equivalent to the cone-mass event of `ν` at the root `0`. The proof uses only the bijection

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Proposition 11.10: the measurable event of the conclusion from the Cameron-Martin transfer (fp-S11c, owner n1)
+# Proposition 11.10: the measurable event of the conclusion from the Cameron-Martin transfer
 
-FIRST-PASS NEW (measure theory). The conclusion of Proposition 11.10 asks for a measurable event `A` of positive probability
+The conclusion of Proposition 11.10 asks for a measurable event `A` of positive probability
 on which `sup_{u,v ∈ S₂} D(u,v; S₂) ≤ c` and `C ≤ μ(S₁)`. The frozen Cameron-Martin event transfer
 `CameronMartinEventTransferFrozen` gives positive probability of the unshifted event, which is null-measurable under the
 measurability hypotheses; this file passes from a null-measurable event of positive probability to a measurable subset of

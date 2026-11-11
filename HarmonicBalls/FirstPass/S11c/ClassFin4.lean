@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.Classes
 
 /-!
-# Proposition 11.10, the four classes indexed by `Fin 4` (fp-S11c, owner n1)
+# Proposition 11.10, the four classes indexed by `Fin 4`
 
-FIRST-PASS NEW (bookkeeping). The class selection of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) and
+The class selection of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) and
 `Assembly.exists_class_and_good_set` index the four parity classes `(j mod 2, k mod 2) ∈ {0,1}²` by `Fin 4`. This file
 defines the class `classFin4 i` (index `i = 2p + q`) and shows that the square `[P₁ h, P₂ h] × [Q₁ h, Q₂ h]` is covered by
 the four classes, using `Classes.gridS1_subset_classes`.

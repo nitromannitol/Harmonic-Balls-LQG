@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.S11c.GridK0Connect
 import HarmonicBalls.FirstPass.S11c.ProbAssembly
 
 /-!
-# Proposition 11.10, the quantitative class choice (fp-S11c, owner n1)
+# Proposition 11.10, the quantitative class choice
 
-FIRST-PASS NEW (measure theory). In the printed proof of `lemma:mass-diam` (paper lines 3091-3112) one of the four classes
+In the printed proof of `lemma:mass-diam` (paper lines 3091-3112) one of the four classes
 of the level-`N` squares carries mass above `2c` on the event of positive probability `p₀ = P(8c < μ(S₁))`, and this class
 has probability at least `p₀ / 4`, uniformly in `N`. That uniformity is what allows the level `N` to be chosen after the
 probability `η` of the piece and exterior events. This file proves (i) the deterministic pigeonhole on four classes covering a

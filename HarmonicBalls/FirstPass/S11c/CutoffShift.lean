@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11d.SmoothCutoff
 
 /-!
-# Proposition 11.10, smooth shifts constant on a square (fp-S11c, owner n1)
+# Proposition 11.10, smooth shifts constant on a square
 
-FIRST-PASS NEW (deterministic). For a compact set `S` disjoint from the unit circle and a real `a`, there is a smooth,
+For a compact set `S` disjoint from the unit circle and a real `a`, there is a smooth,
 compactly supported function `f` with `f = a` on `S` and `f = 0` on the unit circle (the admissible shifts of the
 Cameron-Martin transfer, `CameronMartinEventTransferFrozen`, Frozen/S11c.lean). This is the bump `φ₁` of the paper's proof of
 `lemma:mass-diam` (corrected line 3050: `φ ≡ 1` on `S₁`, `φ ≡ 0` near the unit circle) times the constant `a`, built from

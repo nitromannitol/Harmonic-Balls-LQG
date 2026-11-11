@@ -2,9 +2,9 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.S11c.Exterior
 
 /-!
-# Proposition 11.10, identification of the dyadic data with the grid (fp-S11c, owner n1)
+# Proposition 11.10, identification of the dyadic data with the grid
 
-FIRST-PASS NEW. The Draft's dyadic squares and the frozen enlarged cells `enlargedDyadicCell` (Frozen/S11c.lean) are
+The Draft's dyadic squares and the frozen enlarged cells `enlargedDyadicCell` (Frozen/S11c.lean) are
 rewritten in the unit `h = 2^{-(N+3)}` of the grid bookkeeping (`Grid.lean`, `Exterior.lean`):
 * the level-`N` enlargement `Ŝ_{j,k}` is the block `[(8j-1)h, (8j+9)h] × [(8k-1)h, (8k+9)h]`
   (paper line 3010: side `2^{-N} + 2^{-N-2}`, same centre; `2^{-N} = 8h`, `2^{-N-2} = 2h`);

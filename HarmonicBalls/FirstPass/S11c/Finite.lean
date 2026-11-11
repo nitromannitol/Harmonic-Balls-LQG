@@ -4,9 +4,9 @@ import HarmonicBalls.Proofs.GFF.MetricXiSign
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Finiteness of the Weyl-scaled LQG metric for weights bounded above (fp-S11c, owner n1)
+# Finiteness of the Weyl-scaled LQG metric for weights bounded above
 
-FIRST-PASS NEW (deterministic reduction). Let `D` be the LQG metric of a field with the staged Fact 2.2 I-IV
+Let `D` be the LQG metric of a field with the staged Fact 2.2 I-IV
 (`LQGMetricFieldAxioms`, `Proposed/LQG.lean`). Almost surely, every Weyl weight `f` bounded above has finite
 Weyl-scaled distances, and its real representative satisfies the forward identity `ofReal (toReal d) = d`.
 This supplies the `hscale` input of `shifted_sup_le_of_good` (`FirstPass/S11c/Shifted.lean`) for the shift

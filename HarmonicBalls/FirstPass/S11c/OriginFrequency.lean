@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.WindowErgodic
 
 /-!
-# Proposition 11.7, window visits transported from the profile law (fp-S11c, owner n1)
+# Proposition 11.7, window visits transported from the profile law
 
-FIRST-PASS NEW (composition of compiled steps, no Props). Let `F : Ω → X` be measurable with law `ν = P.map F`, and let
+Let `F : Ω → X` be measurable with law `ν = P.map F`, and let
 `T : X → X` be ergodic for `ν` (for the circle profiles, `T` is the continuous circle dilation and `ν` the law of the
 measurable circle version, `IsWholePlaneGFF.ergodic_continuousCircleDilation`, `Proofs/GFF/ContinuousCircleDilationMixing.lean:172`).
 If a measurable set `E` of profiles has `ν E ≥ p > 0`, then almost surely the number of visits of the dilated profile orbit

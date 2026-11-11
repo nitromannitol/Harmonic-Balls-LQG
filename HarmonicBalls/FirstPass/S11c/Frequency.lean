@@ -3,9 +3,9 @@ import Mathlib.Dynamics.Ergodic.Function
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
-# Proposition 11.7, the ergodic frequency of visits (fp-S11c, owner n1)
+# Proposition 11.7, the ergodic frequency of visits
 
-FIRST-PASS NEW (general measure theory). For an ergodic measure-preserving map `T` of a probability space and a
+For an ergodic measure-preserving map `T` of a probability space and a
 measurable set `E`, almost every orbit visits `E` with frequency `P(E)`: `#{n < N : T^[n] ω ∈ E} / N → P(E)` for almost
 every `ω`. Proof: the repo's pointwise Birkhoff theorem `pointwiseBirkhoff_of_latticeProb` (Proposed/Birkhoff.lean) gives an
 almost-sure limit `L`; `L` is invariant (the Birkhoff averages of `T ω` differ from those of `ω` by `O(1/n)`), hence

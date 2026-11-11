@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.Exterior
 
 /-!
-# Proposition 11.10, parity classes of the level-`N` cells (fp-S11c, owner n1)
+# Proposition 11.10, parity classes of the level-`N` cells
 
-FIRST-PASS NEW. The class cells `U` of the paper's proof of `lemma:mass-diam` (corrected lines 3046-3055): the level-`N`
+The class cells `U` of the paper's proof of `lemma:mass-diam` (corrected lines 3046-3055): the level-`N`
 cells `[8jh, (8j+8)h] × [8kh, (8k+8)h]` of `S₁` split into four parity classes `(j mod 2, k mod 2)`. Lemmas:
 * `gridK1_disjoint_gridClassCells`: the exterior set `K₁` misses every class cell (a unit cell that meets a class cell
   is inside the enlarged interval of that cell in both directions, hence not in the family);

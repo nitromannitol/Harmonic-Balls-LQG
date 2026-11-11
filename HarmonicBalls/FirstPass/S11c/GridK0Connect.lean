@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11c.Grid
 import HarmonicBalls.FirstPass.S11c.Exterior
 
 /-!
-# Proposition 11.10, the core `gridK0` is preconnected for the class index sets (fp-S11c, owner n1)
+# Proposition 11.10, the core `gridK0` is preconnected for the class index sets
 
-FIRST-PASS NEW (topology). The exterior set `gridK1` is connected once its core `gridK0` is preconnected and nonempty
+The exterior set `gridK1` is connected once its core `gridK0` is preconnected and nonempty
 (`Exterior.isPreconnected_gridK1`, `ExteriorBound.isConnected_gridK1`); the preconnectedness of `gridK0` was a hypothesis
 until now. For the class index sets `{j | j mod 2 = p, P₁ ≤ 8j, 8j + 8 ≤ P₂}` and `{k | k mod 2 = q, Q₁ ≤ 8k, 8k + 8 ≤ Q₂}`, the
 core is the box minus the product of the two sets of enlarged abscissas, and each abscissa set misses a point of the box

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.ProbAssembly
 
 /-!
-# Proposition 11.10, the numerical bounds of the probability step (fp-S11c, owner n1)
+# Proposition 11.10, the numerical bounds of the probability step
 
-FIRST-PASS NEW (bookkeeping). In the probability step of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) the
+In the probability step of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) the
 piece event and the exterior event have complements of measure at most `δ`, where `δ = p₀ / 16` and `p₀ = P(8c < μ(S₁))` is
 independent of the level `N`. The quantitative class choice gives `p₀ ≤ 4 P(X_i)`. Two elementary consequences are used:
 the inequality `2 δ < P(X_i)` (so the four-fold intersection has positive probability), and the conversion of the exterior

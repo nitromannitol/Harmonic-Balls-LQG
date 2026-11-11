@@ -2,9 +2,9 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Topology.Connected.Basic
 
 /-!
-# Proposition 11.10, connectivity of the exterior set (fp-S11c, owner n1)
+# Proposition 11.10, connectivity of the exterior set
 
-FIRST-PASS NEW. The paper (corrected lines 3022-3024) asserts that `G = S₂ \ ⋃ Ŝ` is connected, with a reason that does
+The paper (corrected lines 3022-3024) asserts that `G = S₂ \ ⋃ Ŝ` is connected, with a reason that does
 not imply it (separation of the squares alone). This file proves the connectivity from the grid structure: a box
 `[a₁,a₂] × [b₁,b₂]` minus a product `Xs ×ˢ Ys` is connected when there are a free abscissa `xh ∉ Xs` and a free
 ordinate `yh ∉ Ys` inside the box. Every point of the complement is joined to the hub `xh + i yh` by two segments

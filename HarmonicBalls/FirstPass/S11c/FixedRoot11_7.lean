@@ -7,19 +7,18 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.Draft.Section11
 
 /-!
-# Lemma 11.7, the fixed-root null section on the origin route (B2 (5.1), assembled)
+# Lemma 11.7, the fixed-root null section on the origin route (assembled)
 
 Inputs (all explicit):
-* `LQGMeasureOfProfileMeasurableFrozen` (FirstPass/Frozen/S8d.lean:28, approved for this task, decision 2026-11-09 20:14);
+* `LQGMeasureOfProfileMeasurableFrozen`;
 * `ConeBadEventAt γ γ p Q M`: the body of Draft Lemma 11.8 (`ConeBadEventProbabilityStmt`, Draft/Section11.lean:186,
   `lemma:positive-probability`, corrected paper lines 2903-2908) at one fixed constant `p`, insertion `α₀ = γ`. It is used at
   `z = 0` only, and its proof (paper lines 2903-2934) does not cite Lemma 11.7 (`lemma:mu_h-bad-and-harnack`, line 2896), so
-  it is admissible as a hypothesis (operator decision 4). The constant `p` is passed in, so that one `p` serves all discs and
+  it is admissible as a hypothesis. The constant `p` is passed in, so that one `p` serves all discs and
   all `Ω` (the Draft requires `δ` fixed before `Ω`);
-* the whole-plane GFF `hW'` of the translated field (`WholePlaneGFFAffineInvariance`, Proposed; pending operator approval);
-* the coordinate change `LQGMeasureCoordChange` (Proposed; approved as hypothesis, decision N3);
-* the decoder identity `hdec0` for the rooted observation at insertion `0` (the decoder kernel `K` is supplied by the caller;
-  the decision on its α₀-dependence, G1 of notes/n1.md, is not made here).
+* the whole-plane GFF `hW'` of the translated field (`WholePlaneGFFAffineInvariance`, Proposed; pending approval);
+* the coordinate change `LQGMeasureCoordChange` (Proposed, approved as hypothesis);
+* the decoder identity `hdec0` for the rooted observation at insertion `0` (the decoder kernel `K` is supplied by the caller, the decision on its α₀-dependence, is not made here).
 -/
 
 universe u
@@ -80,7 +79,7 @@ theorem origin_window_of_translate {Ω : Type u} [MeasurableSpace Ω] {P : Measu
   obtain ⟨Dec, hDecM, hμD, hlim⟩ := hDecFrozen Ω P γ γ hC' hcirc' ν F hW' hν hFm hversion
   exact ⟨N0, origin_window_visits hW' hQ hFm hversion hDecM hμD hlim N0 hp hAsub hPA⟩
 
-/-- **Fixed-root null section on the origin route (B2 (5.1)).** Assume the translated field `hcirc'` is a whole-plane GFF with
+/-- **Fixed-root null section on the origin route.** Assume the translated field `hcirc'` is a whole-plane GFF with
 the coordinate change, `ν` is its γ-LQG measure, `μz` is the γ-LQG measure of the rooted profile at `z` (insertion `0`), and
 the decoder identity holds for the rooted observation. Then, for the constant `p` of Lemma 11.8 and `δ = p/8`, the rooted
 observation at `z` is almost surely outside the local bad set `localBadSet K Q M (p/8) U nD` (BadSetMeasurable11_7.lean:43). -/

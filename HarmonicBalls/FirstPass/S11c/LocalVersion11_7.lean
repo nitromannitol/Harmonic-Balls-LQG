@@ -2,13 +2,12 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.Proofs.Sec8.ContinuousLocalVersions
 
 /-!
-# First pass, Lemma 11.7: jointly measurable local circle averages (task fp-S11c-11-7-redo-11-10, owner n1; B2 route,
-CHATGPT-11-7-B2.md section 3.1.3; referee notes CHATGPT-11-7-B2-referee.md §1.3)
+# Lemma 11.7: jointly measurable local circle averages
 
 On a disk `D`, the centred-by-a-fixed-bump circle averages `z ↦ h_r(z) - (h, ρ)` of the whole-plane GFF have a version
 `d(ω, z)` that is measurable for the observation σ-algebra of `D` (`Section6.fieldSigmaAlgebraModConst α₀ hC D`, the
 σ-algebra of the mean-zero pairings with test functions in `D`, i.e. constants drop out). This is the measurability
-input of the common local decoder `K_D` (B2 sec 3). The argument is the generic version of
+input of the common local decoder `K_D`. The argument is the generic version of
 `IsWholePlaneGFF.exists_joint_centered_circle_version_of_pairing_approximation` (Proofs/Sec8/ContinuousLocalVersions.lean:153),
 with the centre `0` replaced by an arbitrary open disk `D` and the base point `0` replaced by a fixed bump `ρ`
 (so that the base is itself a pairing with a test function in `D`, and no circle outside `D` is used).
@@ -24,7 +23,7 @@ namespace HarmonicBalls.S11c
 
 universe u
 
-/-- Joint measurable version of the local circle averages of the whole-plane GFF on an open set `D` (B2 sec 3.1.3).
+/-- Joint measurable version of the local circle averages of the whole-plane GFF on an open set `D`.
 If each circle average `h_r(z)` (with `closedBall z r ⊆ D`), shifted by a fixed bump pairing `(h, ρ)`, is an in-probability
 limit of mean-zero pairings with test functions in `D`, then there is a version `d` of `(ω, z) ↦ h_r(z) - (h, ρ)`,
 jointly measurable for the observation σ-algebra of `D`, which is a.s. equal to it for all admissible `z`. -/

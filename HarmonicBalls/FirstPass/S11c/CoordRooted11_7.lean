@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Lemma 11.7, the rooted LQG measure is a translate of the origin measure (B2 sec 5.1, coordinate change)
+# Lemma 11.7, the rooted LQG measure is a translate of the origin measure (coordinate change)
 
 Let `hcirc' r x = hcirc r (x + z) - hcirc 1 z` be the translate of the whole-plane GFF by `z`, normalized on the unit
 circle (the field of `WholePlaneGFFAffineInvariance` with `a = 1`, `b = z`). The rooted circle averages
@@ -12,7 +12,7 @@ circle (the field of `WholePlaneGFFAffineInvariance` with `a = 1`, `b = z`). The
 `z` of the LQG measure `ν` of `hcirc'` at parameter `γ`, times `exp(γ hcirc(1,z))` (`ae_rootedMeasure_eq_translate`).
 The proof combines the coordinate change `LQGMeasureCoordChange` (Proposed/LQG.lean:114, a = 1, b = -z), the constant
 shift `isLQGLimit_sub_const` (Translate11_7.lean:42) and the uniqueness of vague limits `IsLQGLimit.unique`
-(Defs/LQG.lean:107). Here the coordinate change is a hypothesis (Proposed input, first pass).
+(Defs/LQG.lean:107). Here the coordinate change is a hypothesis (Proposed input).
 -/
 
 open MeasureTheory Filter Set

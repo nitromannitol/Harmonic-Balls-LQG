@@ -1,8 +1,7 @@
 import HarmonicBalls.FirstPass.S11c.CampbellLocal11_7
 
 /-!
-# First pass, Lemma 11.7: measurability of the Campbell integrand (task fp-S11c-11-7-redo-11-10, owner n1; B2 sec 6;
-discharges the hypothesis `hF` of `campbell_local_eventual`)
+# Lemma 11.7: measurability of the Campbell integrand (discharges the hypothesis `hF` of `campbell_local_eventual`)
 
 Let `U = B_{r₁}(c₁) ⊆ D = B_{r₂}(c₂)` and let `S` be the local bad set (measurable, `measurableSet_localBadSet`).
 On the decoder event `K(obs ω) = c • (μ ω)|_D` with `c ∈ (0,∞)`, the Campbell integrand
@@ -56,7 +55,7 @@ theorem measurable_campbellRatio {X : Type*} [MeasurableSpace X] (K : Kernel X �
     exact Measurable.lintegral_kernel_prod_right' h2
   exact ((Kernel.measurable_coe K hU).inv).mul hI
 
-/-- The Campbell integrand is almost everywhere measurable, given the decoder identity (B2 sec 6, hypothesis `hF` of
+/-- The Campbell integrand is almost everywhere measurable, given the decoder identity (hypothesis `hF` of
 `campbell_local_eventual`). -/
 theorem aemeasurable_campbell_integrand
     {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]

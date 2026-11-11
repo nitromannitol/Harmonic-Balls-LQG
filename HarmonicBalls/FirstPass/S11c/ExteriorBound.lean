@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11c.Closed
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Proposition 11.10, the exterior diameter bound with probability (fp-S11c, owner n1)
+# Proposition 11.10, the exterior diameter bound with probability
 
-FIRST-PASS NEW (probabilistic, generic in the metric and the set). Let `K` be a set and `D ω` the internal metric data
+Let `K` be a set and `D ω` the internal metric data
 of a realisation `ω`. If the internal diameter `⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v` is an a.e.-measurable random
 variable which is almost surely finite, then for every `η > 0` there are an integer `n` and a measurable event `B` with
 `1 - η < P B` on which the internal diameter of `K` is at most `n`. This is step S3 of the first-pass proof of Proposition

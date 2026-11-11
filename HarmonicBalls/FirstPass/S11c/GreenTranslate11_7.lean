@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.Annuli
 
 /-!
-# Translation covariance of the Green function and of the annulus Green potential (B2 sec 5.1 support, deterministic)
+# Translation covariance of the Green function and of the annulus Green potential (deterministic)
 
 `greenFunction O x y` (Defs/Green.lean:70) is `newtonKernel x y` minus the value at `y` of the greatest harmonic
 minorant of `newtonKernelEReal x` on `O` (Defs/Green.lean:61). Both ingredients are covariant under the translation

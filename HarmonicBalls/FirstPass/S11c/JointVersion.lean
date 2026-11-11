@@ -2,9 +2,9 @@ import HarmonicBalls.Defs.LQG
 import HarmonicBalls.Steps.Sec11.PinchNormalizedMeasure
 
 /-!
-# Proposition 11.7, almost-sure measurability of the scale-event ingredients (fp-S11c, owner n1)
+# Proposition 11.7, almost-sure measurability of the scale-event ingredients
 
-FIRST-PASS NEW (no new Props). Let `M : Ω × ℝ → Measure ℂ` be jointly measurable and such that, almost surely, for every
+Let `M : Ω × ℝ → Measure ℂ` be jointly measurable and such that, almost surely, for every
 `α < lqgQ γ`, `M (ω, α)` is the γ-LQG measure of the circle averages `fieldCircleAverage α (hcirc ω)` (the conclusion of
 `exists_jointly_measurable_subcritical_lqgMeasures`, `HarmonicBalls/Proofs/Sec6/JointSingularMeasureMeasurability.lean`).
 If `μ` is the LQG measure of the field `h = h^ℂ - α₀ log|·|` (`IsLQGMeasureOfField`, `α₀ < lqgQ γ`), then `μ ω = M (ω, α₀)`

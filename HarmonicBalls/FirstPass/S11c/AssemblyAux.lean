@@ -5,9 +5,9 @@ import HarmonicBalls.FirstPass.S11c.Classes
 import HarmonicBalls.FirstPass.S11c.ClassClosed
 
 /-!
-# Proposition 11.10, auxiliary facts for the shift and the length metric (fp-S11c, owner n1)
+# Proposition 11.10, auxiliary facts for the shift and the length metric
 
-FIRST-PASS NEW (bookkeeping). The assembly of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) needs:
+The assembly of the printed proof of `lemma:mass-diam` (paper lines 3091-3112) needs:
 (i) the LQG metric `D ω` is almost surely a Euclidean length metric (`hDl` of `Shifted.shifted_sup_le_of_good`), from item I of
 `LQGMetricFieldAxioms` and the representation of `D` in `IsLQGMetricOfField`; (ii) the exterior set `gridK1` is compact (the
 support of the shift); (iii) the union of a class cell and the unit circle is closed, and is disjoint from `gridK1` when

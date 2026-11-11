@@ -4,15 +4,14 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.Proposed.LQG
 
 /-!
-# Lemma 11.7, conditional assembly over the rational discs (B2 sections 7-8)
+# Lemma 11.7, conditional assembly over the rational discs
 
-Conditional on the fixed-root input `hRef` (B2 (5.3): on each rational disc the Campbell-reference bad section is
-null; not yet proved, see the report), this file derives from `campbell_local_eventual` the almost-sure statement
+Conditional on the fixed-root input `hRef` (not yet proved, see the report), this file derives from `campbell_local_eventual` the almost-sure statement
 that, for `μ_h`-a.e. `z` and all large `N`, `a N ≤ #{n ∈ [N+1, 2N] : coneMassEvent (μ ω) Q M 2^{-n} z}`.
 
 Inputs: `LocalCampbellMarkedRestrictionFrozen` (hCamp, Frozen/S11c.lean; a frozen EXTERNAL input);
-`LQGMeasureNonatomic` (hNA, Proposed/LQG.lean:75, HB Fact 2.1 I: `μ_h({x}) = 0` a.s.; pending operator source-check);
-`hRef` (per rational disc: a decoder kernel and the null fixed-root bad section; NEW, to be discharged from B2 5.1-5.2).
+`LQGMeasureNonatomic` (hNA, Proposed/LQG.lean:75, HB Fact 2.1 I: `μ_h({x}) = 0` a.s.; pending source-check);
+`hRef` (per rational disc: a decoder kernel and the null fixed-root bad section; to be discharged).
 The local-to-global step is `ae_forall_of_ratDiscs` (LocalGlobal11_7.lean); the window comparison is
 `globalWindowSum_le_ncard` (CampbellLocal11_7.lean) at `M' = M`.
 -/
@@ -43,7 +42,7 @@ lemma zero_not_mem_closedBall_ratDiscOuter (k : RatDiscIdx) :
   rw [Metric.mem_closedBall, dist_comm, dist_zero_right] at h
   exact absurd h (not_le.mpr (ratDisc_lt_norm k))
 
-/-- Conditional Lemma 11.7 (fixed-root form, B2 sections 7-8). Assume the frozen Campbell restriction `hCamp`, the
+/-- Conditional Lemma 11.7 (fixed-root form). Assume the frozen Campbell restriction `hCamp`, the
 non-atomicity `hNA` of the LQG measure, and the fixed-root input `hRef` on each rational disc. Then almost surely, for
 `μ`-a.e. `z`, the cone-mass window count at threshold `M` is at least `a N` for all large `N`. -/
 theorem ae_eventually_ncard_of_fixedRoot

@@ -1,9 +1,9 @@
 import HarmonicBalls.FirstPass.S11c.Classes
 
 /-!
-# Proposition 11.10, the class cells: closedness and containment in the square S₁ (fp-S11c, owner n1)
+# Proposition 11.10, the class cells: closedness and containment in the square S₁
 
-FIRST-PASS NEW (bookkeeping). In the printed proof of `lemma:mass-diam` (paper lines 3091-3112) the class `i` of the small
+In the printed proof of `lemma:mass-diam` (paper lines 3091-3112) the class `i` of the small
 squares `S ∈ 𝒮_N^i` is a finite union of closed squares of mesh `h`, contained in `S₁`; the shift is zero on it, so the mass
 of the class is unchanged, and the shift is zero on the unit circle. This file records that the class cell set indexed by
 parities `(p, q)` is closed, and that it is contained in the square `[P₁ h, P₂ h] × [Q₁ h, Q₂ h]` of `S₁`.

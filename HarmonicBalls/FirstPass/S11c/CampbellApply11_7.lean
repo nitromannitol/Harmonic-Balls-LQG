@@ -1,8 +1,7 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# First pass, Lemma 11.7: applying the frozen local Campbell input to a measurable bad set (task fp-S11c-11-7-redo-11-10,
-owner n1; B2 route of notes/fp-gaps/CHATGPT-11-7-B2.md, sections 6-7)
+# Lemma 11.7: applying the frozen local Campbell input to a measurable bad set (sections 6-7)
 
 Given a measurable set `S` of marked observations `(z, o)` (`z ∈ ℂ`, `o` a mean-zero observation of `h^ℂ` on the disk `D`),
 suppose that the reference bad section has zero `z`-integral over `U` (Lebesgue measure). Then the frozen input
@@ -21,7 +20,7 @@ namespace HarmonicBalls.S11c
 
 universe u
 
-/-- Section 6 of CHATGPT-11-7-B2.md: from the zero reference lintegral over `U` and the frozen local Campbell input,
+/-- From the zero reference lintegral over `U` and the frozen local Campbell input,
 almost every field has `μ_ω`-almost no `z ∈ U` with marked observation in `S`. -/
 theorem campbell_marked_ae_notMem
     {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]

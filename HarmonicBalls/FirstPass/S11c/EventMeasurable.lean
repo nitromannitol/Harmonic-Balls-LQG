@@ -5,9 +5,8 @@ import Mathlib.MeasureTheory.PiSystem
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!
-# Proposition 11.7, measurability of the scale events (fp-S11c, owner n1)
+# Proposition 11.7, measurability of the scale events
 
-FIRST-PASS NEW (generic measure theory, no Props).
 * `measurable_lintegral_of_mass`: if `ω ↦ μ ω B` is measurable for every measurable `B`, then `ω ↦ ∫⁻ y, f y ∂(μ ω)` is
   measurable for every measurable `f`.
 * `measurable_mass_borel_of_open`: if `ω ↦ μ ω U` is measurable for every open `U` and every `μ ω` is finite on balls,

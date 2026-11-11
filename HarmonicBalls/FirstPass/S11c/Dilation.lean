@@ -3,9 +3,9 @@ import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.MeasureTheory.Integral.Lebesgue.Map
 
 /-!
-# Proposition 11.7, dilation of the LQG approximations (fp-S11c, owner n1)
+# Proposition 11.7, dilation of the LQG approximations
 
-FIRST-PASS NEW (deterministic). The approximation `ε^{γ²/2} e^{γ h_ε(z)} dz` of the LQG measure (paper eq:measure-lim,
+The approximation `ε^{γ²/2} e^{γ h_ε(z)} dz` of the LQG measure (paper eq:measure-lim,
 line 396; `lqgApprox`, Defs/LQG.lean:46) is covariant under the dilation `z ↦ z/2` of the circle profile, up to a constant
 (paper line 422: the first properties of the LQG measure are immediate from the definition). Precisely, with the
 normalized dilation `h'_e(z) = h_e(z/2) - c` of the circle profile (`continuousCircleAffine (1/2) 0`, which subtracts the

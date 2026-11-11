@@ -2,15 +2,14 @@ import HarmonicBalls.FirstPass.S11c.IdentifyBad11_7
 import HarmonicBalls.FirstPass.S11c.CampbellApply11_7
 
 /-!
-# First pass, Lemma 11.7: from the Campbell null section to the eventual window bound (task fp-S11c-11-7-redo-11-10,
-owner n1; CHATGPT-11-7-B2.md sections 6-7 and the referee notes)
+# Lemma 11.7: from the Campbell null section to the eventual window bound
 
 Given the frozen Campbell input (`LocalCampbellMarkedRestrictionFrozen`), the decoder identity on the local
-observations, and the fixed-root null sections (B2 (5.3), integrated over the root in `U`), the local bad set
-`B_{U,D}` (B2 (4.6)) is `μ`-a.e. avoided by the marked root. By the identification (B2 (4.8)) this means that for
+observations, and the fixed-root null sections (integrated over the root in `U`), the local bad set
+`B_{U,D}` is `μ`-a.e. avoided by the marked root. By the identification this means that for
 `μ`-a.e. root `z ∈ U` the global window sums of the cone-mass events are eventually at least `a N`.
 
-The fixed-root null section (B2 (5.3)) is a hypothesis `hRef` of `campbell_local_eventual`: it is not yet proved
+The fixed-root null section is a hypothesis `hRef` of `campbell_local_eventual`: it is not yet proved
 (it needs the translated origin statement and the Cameron-Martin transfer). The measurability `hF` of the Campbell
 integrand is also a hypothesis, to be derived from the decoder identity.
 -/
@@ -28,7 +27,7 @@ theorem measurableSet_of_isCone {Q : Set ℂ} (hQ : IsCone Q) : MeasurableSet Q 
   · exact h.2.1.measurableSet
   · exact (isOpen_compl_iff.mp h.2.1).measurableSet
 
-/-- Conditional transfer (B2 sections 6-7): if the fixed-root reference null sections hold on `U = B_{r₁}(c₁)` and
+/-- Conditional transfer: if the fixed-root reference null sections hold on `U = B_{r₁}(c₁)` and
 the Campbell integrand is measurable, then almost surely, for `μ`-a.e. root `z ∈ U`, the window sums of the global
 cone-mass events of `μ` at `z` are eventually at least `a N`. -/
 theorem campbell_local_eventual
@@ -66,7 +65,7 @@ theorem campbell_local_eventual
   exact hz hzU ((hbadω z hzU).mpr hcon)
 
 /-- The window count of the cone-mass events at threshold `M` (the Draft count, over `n ∈ [N+1, 2N]`) is at least the
-window sum at a larger threshold `M' ≥ M` (B2 (4.8), monotonicity of the cone-mass event in the threshold). -/
+window sum at a larger threshold `M' ≥ M` (monotonicity of the cone-mass event in the threshold). -/
 theorem globalWindowSum_le_ncard {Q : Set ℂ} {M M' : ℝ} (hMM' : M ≤ M') (z : ℂ) (ν : Measure ℂ) (N : ℕ) :
     globalWindowSum Q M' z ν N ≤
       ({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧ coneMassEvent ν Q M ((2 : ℝ)⁻¹ ^ n) z}.ncard : ℝ) := by

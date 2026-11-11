@@ -2,9 +2,9 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Order.Interval.Set.Basic
 
 /-!
-# Proposition 11.10, grid bookkeeping of the exterior set (fp-S11c, owner n1)
+# Proposition 11.10, grid bookkeeping of the exterior set
 
-FIRST-PASS NEW. Work in units `h = 2^{-(N+3)}`, so that a level-`N` dyadic cell has side `8h`, and the enlargement
+Work in units `h = 2^{-(N+3)}`, so that a level-`N` dyadic cell has side `8h`, and the enlargement
 `Ŝ_j` of the level-`N` cell with index `j` (paper line 3010, side `2^{-N} + 2^{-N-2}` with the same centre) has
 abscissa interval `[(8j-1)h, (8j+9)h]`. Integers `J` index the cells of one parity class inside `S₁`.
 

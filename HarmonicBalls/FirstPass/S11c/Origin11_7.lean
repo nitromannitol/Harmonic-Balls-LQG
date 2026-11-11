@@ -8,9 +8,9 @@ import HarmonicBalls.Proofs.GFF.CommonContinuousCircleLQGVersion
 import HarmonicBalls.Steps.Sec11.PinchNormalizedMeasure
 
 /-!
-# First pass, Lemma 11.7: the origin-level window frequency (fp-S11c, owner n1)
+# Lemma 11.7: the origin-level window frequency
 
-Steps S1-S4 of the route in `notes/fp-gaps/CHATGPT-11-7-proof.md` (paper `lemma:mu_h-bad-and-harnack`, line 2896).
+Steps S1-S4 of the written proof (paper `lemma:mu_h-bad-and-harnack`, line 2896).
 For the `γ`-rooted LQG measure `μ` of a whole-plane GFF, the cone event at the origin occurs at a positive proportion of
 the scales of every window `[N+1, 2N]`, almost surely. Ingredients: the ergodicity of the profile dilation
 (`IsWholePlaneGFF.ergodic_continuousCircleDilation`), Birkhoff's theorem (`ae_window_visits_of_map`), the stationarity of
@@ -254,6 +254,5 @@ theorem origin_window_visits {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} 
   rw [hfilt N] at hN
   exact hN
 
-#print axioms origin_window_visits
 
 end HarmonicBalls.S11c

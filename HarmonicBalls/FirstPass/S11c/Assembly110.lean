@@ -14,12 +14,12 @@ import HarmonicBalls.FirstPass.S11c.ClassClosed
 import HarmonicBalls.FirstPass.S11c.ProbAssembly
 
 /-!
-# Proposition 11.10, the assembly of the shifted event (fp-S11c, owner n1)
+# Proposition 11.10, the assembly of the shifted event
 
-FIRST-PASS NEW, CONDITIONAL. The printed proof of `lemma:mass-diam` (paper lines 3071-3112) assembled from the lemmas of
+CONDITIONAL. The printed proof of `lemma:mass-diam` (paper lines 3071-3112) assembled from the lemmas of
 `FirstPass/S11c/`: the square `S₁ ⊆ S₂` on a grid of mesh `2^{-(N+3)}`, the four parity classes of `S₁`, the piece event of
 `DyadicCellDiamSmallFrozen`, the exterior bound, the Weyl shift by `a·φ`, and the Cameron-Martin transfer. The two
-measurability premises `hM1`, `hM2` of the shifted event (reports/n1.md, blockers M1 and M2) are explicit hypotheses: this is
+measurability premises `hM1`, `hM2` of the shifted event (blockers M1 and M2) are explicit hypotheses: this is
 NOT a first-pass theorem until their source or frozen form is ruled.
 -/
 

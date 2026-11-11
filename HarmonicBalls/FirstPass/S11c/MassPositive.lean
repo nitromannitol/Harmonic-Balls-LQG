@@ -3,9 +3,9 @@ import HarmonicBalls.FirstPass.S11c.CutoffShift
 import HarmonicBalls.FirstPass.Frozen.S11c
 
 /-!
-# Proposition 11.10, positive probability of a large mass on a dyadic square (fp-S11c, owner n1)
+# Proposition 11.10, positive probability of a large mass on a dyadic square
 
-FIRST-PASS NEW (assembly of compiled steps, with the Cameron-Martin event transfer as a hypothesis of the frozen form
+(assembly of compiled steps, with the Cameron-Martin event transfer as a hypothesis of the frozen form
 `CameronMartinEventTransferFrozen`). For a closed dyadic square `S₁` and any finite positive level `C₀`, the event
 `{μ_h(S₁) ≥ C₀}` has positive probability. Proof (paper line 3050): the mass is at least `C₁` with probability at least `1/2`
 (`exists_lower_of_ae_pos`, from the almost-sure positivity of the mass); the Weyl shift by the constant `a` on `S₁`
