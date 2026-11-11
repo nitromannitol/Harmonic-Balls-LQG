@@ -229,6 +229,4 @@ theorem exists_open_connected_zero_area_boundary_jump :
       exact neg_one_mem_closure_family (lt_add_of_pos_right _ (by positivity))
     · simpa [family_one] using neg_one_not_mem_closure_base
 
-#print axioms exists_open_connected_zero_area_boundary_jump
-
 end HarmonicBalls

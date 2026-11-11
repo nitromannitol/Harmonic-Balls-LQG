@@ -81,8 +81,4 @@ theorem ae_small_time_punctured_disc_infimum_not_admissible
   exact punctured_disc_infimum_not_admissible_of_not_mem_cluster hV.1 zero_lt_one
     (hV.2 1 zero_lt_one) ha hz ht.1 hnot
 
-#print axioms punctured_disc_infimum_not_admissible_of_not_mem_cluster
-#print axioms clusterOn_punctured_disc_subset_cluster
-#print axioms ae_small_time_punctured_disc_infimum_not_admissible
-
 end HarmonicBalls

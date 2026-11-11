@@ -141,12 +141,4 @@ theorem regularizedFamily_strongCompatibility_punctured_disc
     exact regularizedFamily_closure_eq_discCluster_of_compact_containment
       hR hz.1 ht hΛ hopen hv hdisc
 
-#print axioms leastSupersolution_eq_zero_of_punctured_admissible
-#print axioms regularizedFamily_strongCompatibility_punctured_disc
-#print axioms tendsto_leastSupersolutionOn_punctured_disc_at_puncture
-#print axioms continuousWithinAt_punctured_infimum_iff
-#print axioms closure_sdiff_singleton_of_isOpen
-#print axioms closure_clusterOn_punctured_disc_eq
-#print axioms regularizedFamily_closure_eq_clusterOn_punctured_disc
-
 end HarmonicBalls

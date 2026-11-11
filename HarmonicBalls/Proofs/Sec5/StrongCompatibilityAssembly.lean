@@ -18,6 +18,4 @@ theorem clusterStrongCompatibilityStmt_of_volumeGrowth
   intro U hU hUb z hz
   exact exists_greenRegular_exhaustion hU hUb hz
 
-#print axioms clusterStrongCompatibilityStmt_of_volumeGrowth
-
 end HarmonicBalls

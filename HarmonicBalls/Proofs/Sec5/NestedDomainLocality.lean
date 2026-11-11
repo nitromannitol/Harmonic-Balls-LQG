@@ -139,8 +139,4 @@ theorem exists_fieldLocal_nested_bounded_open_families
     F ω (z, t) = F ω (z, τ) := (hHUω z).2.2.2.2.2.1 t τ ht hτ.ge
     _ = G ω (z', τ) := heq τ hτ.le
 
-#print axioms exact_containment_horizon_mono
-#print axioms exists_fieldLocal_nested_open_families_through_contact
-#print axioms exists_fieldLocal_nested_bounded_open_families
-
 end HarmonicBalls

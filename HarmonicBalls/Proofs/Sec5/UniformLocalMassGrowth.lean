@@ -186,9 +186,4 @@ theorem cluster_compact_mass_le_after_no_entry_uniform
     exact disjoint_left.mp (hbefore q ⟨hq0, hqt⟩) hx hqx
   exact hb t ht hdis s hs
 
-#print axioms cluster_compact_mass_le_after_no_entry_uniform
-#print axioms cluster_compact_mass_le_time_increment_uniform
-#print axioms cluster_closedBall_mass_le_time_increment_uniform
-#print axioms cluster_test_mass_le_time_increment_uniform
-
 end HarmonicBalls

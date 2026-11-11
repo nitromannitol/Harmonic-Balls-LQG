@@ -105,10 +105,4 @@ theorem IsLQGLimit.regularizedFamily_containment_iff_of_relative_countable
   regularizedFamily_containment_iff_of_restrict_sdiff_relative_countable hμ hν hVμ hVν
     hU hK (hμlim.restrict_eq hνlim hD hloc) ht hΛ hΛ'
 
-#print axioms regularizedFamily_containment_iff_of_restrict_sdiff_relative_countable
-#print axioms IsLQGLimit.regularizedFamily_containment_iff_of_relative_countable
-#print axioms restrict_eq_of_restrict_sdiff_relative_countable
-#print axioms regularizedFamily_eq_of_restrict_sdiff_relative_countable
-#print axioms IsLQGLimit.regularizedFamily_eq_of_relative_countable_measure_locality
-
 end HarmonicBalls

@@ -101,6 +101,4 @@ theorem ae_radiusFour_cluster_small_all_centres
   refine ⟨σ, hσ, hcl'.trans (ball_subset_ball ?_)⟩
   linarith
 
-#print axioms ae_radiusFour_cluster_small_all_centres
-
 end HarmonicBalls

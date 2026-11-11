@@ -68,7 +68,4 @@ theorem not_admissible_punctured_disc_of_compact_compatibility
   exact not_mem_supersolutionsOn_of_regularized_compact_compatibility
     hz hac haU ht hc hG hA heq
 
-#print axioms frequently_green_pos_punctured_disc_of_green_eq
-#print axioms not_admissible_punctured_disc_of_compact_compatibility
-
 end HarmonicBalls

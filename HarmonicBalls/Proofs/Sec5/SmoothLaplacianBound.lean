@@ -63,8 +63,4 @@ theorem exists_laplacianLE_smooth_compactSupport
       (le_max_right _ _)))
   exact ⟨C, hC, laplacianLE_of_smooth_compactSupport_of_bound hf hfc hC.le hbound⟩
 
-#print axioms integral_mul_laplacian_eq_laplacian_mul_of_compactSupport
-#print axioms laplacianLE_of_smooth_compactSupport_of_bound
-#print axioms exists_laplacianLE_smooth_compactSupport
-
 end HarmonicBalls

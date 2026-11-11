@@ -127,11 +127,4 @@ theorem not_admissible_punctured_disc_of_compact_containment
   have haU := hcl (puncture_mem_closure_clusterOn_of_admissible ha hz ht hv)
   simp at haU
 
-#print axioms tendsto_greenFunction_punctured_ball_at_puncture
-#print axioms not_continuousWithinAt_greenFunction_punctured_ball
-#print axioms eventually_mem_clusterOn_punctured_disc_of_admissible
-#print axioms exists_ball_sdiff_subset_clusterOn_punctured_disc_of_admissible
-#print axioms puncture_mem_closure_clusterOn_of_admissible
-#print axioms not_admissible_punctured_disc_of_compact_containment
-
 end HarmonicBalls

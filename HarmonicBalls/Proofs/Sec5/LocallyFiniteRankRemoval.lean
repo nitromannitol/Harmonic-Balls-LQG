@@ -138,9 +138,4 @@ theorem leastSupersolutionOn_le_locallyFiniteRankOn_punctured
     exact leastSupersolutionOn_le_of_mem
       (locallyFiniteRankOn_punctured_supersolution_mem_domain hμ hU hUb hK hqc hq ht hw) hx hxz
 
-#print axioms leastSupersolutionOn_le_locallyFiniteRankOn_punctured
-#print axioms countable_inter_open_of_locallyFiniteRankOn
-#print axioms laplacianLE_of_locallyFiniteRankOn_removal
-#print axioms exists_capped_barrier_of_locallyFiniteRankOn
-
 end HarmonicBalls

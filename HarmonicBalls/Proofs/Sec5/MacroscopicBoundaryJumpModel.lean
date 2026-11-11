@@ -209,6 +209,4 @@ theorem exists_open_connected_arc_boundary_jump :
   · intro t
     exact ⟨modelOpenFamily_open t, modelOpenFamily_connected t, inter_subset_left⟩
 
-#print axioms exists_open_connected_arc_boundary_jump
-
 end HarmonicBalls

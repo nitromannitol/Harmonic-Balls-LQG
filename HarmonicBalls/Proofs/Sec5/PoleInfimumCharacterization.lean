@@ -116,11 +116,4 @@ theorem closure_clusterOn_eq_closure_strict_noncontact
   rw [closure_clusterOn_eq_insert_pole hz,
     insert_eq_of_mem (pole_mem_closure_strict_noncontact hμ hR hV hU hsub hz ht)]
 
-#print axioms bddBelow_supersolutionsOn_values_pole
-#print axioms isGLB_supersolutionsOn_values_pole
-#print axioms coe_leastSupersolutionOn_eq_sInf_ereal_pole
-#print axioms eventually_strict_noncontact_nhdsWithin_pole
-#print axioms pole_mem_closure_strict_noncontact
-#print axioms closure_clusterOn_eq_closure_strict_noncontact
-
 end HarmonicBalls

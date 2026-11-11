@@ -210,15 +210,4 @@ theorem IsLQGLimit.regularizedFamily_eq_of_relative_local_rank
   regularizedFamily_eq_of_restrict_eq_of_relative_local_rank hμ hν hVμ hVν hU hUb hUR
     hD hK (hμlim.restrict_eq hνlim hD hloc) hqc hq ht hz hw hopenU hΛ hΛ' hcl
 
-#print axioms regularizedFamily_closure_eq_clusterOn_sdiff_of_relative_local_rank
-#print axioms regularizedFamily_strongCompatibility_sdiff_of_relative_local_rank
-#print axioms regularizedFamily_eq_of_restrict_eq_of_relative_local_rank
-#print axioms IsLQGLimit.regularizedFamily_eq_of_relative_local_rank
-#print axioms closure_inter_eq_inter_of_isOpen_sdiff
-#print axioms locallyFiniteRankOn_closure_inter_of_isOpen_sdiff
-#print axioms sdiff_closure_inter_eq_of_isOpen_sdiff
-#print axioms greenFunction_sdiff_of_relative_local_rank
-#print axioms clusterOn_sdiff_of_relative_local_rank
-#print axioms closure_clusterOn_sdiff_of_relative_local_rank
-
 end HarmonicBalls

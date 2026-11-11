@@ -100,8 +100,4 @@ theorem ae_right_continuous_at_fixed_time_of_quasiInvariant_scaling
   by_contra hfail
   exact hω ⟨ht, hfail⟩
 
-#print axioms ae_not_mem_of_countable_time_sections_and_quasiInvariant_scaling
-#print axioms right_continuity_of_time_rescaling
-#print axioms ae_right_continuous_at_fixed_time_of_quasiInvariant_scaling
-
 end HarmonicBalls

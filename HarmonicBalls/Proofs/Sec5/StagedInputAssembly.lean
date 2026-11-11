@@ -23,11 +23,9 @@ import HarmonicBalls.Steps.Sec5.ContinuityAssembly
 /-!
 # Section 5 results from the staged measure inputs
 
-Worker z4, task `section5-derived-staged-input-assembly`.
-
 This module exports the Section 5 results 5.1-5.8 of Draft/Section5.lean from the three staged Proposed inputs
 `WholePlaneLQGBallMassBounds` (`hDG`), `LQGMeasureCoordChange` (`hCC`) and `LQGMeasureExistence` (`hE`) of
-HarmonicBalls/Proposed/LQG.lean. Those inputs were source-checked by the operator on 2026-11-08 (05:00 UTC).
+HarmonicBalls/Proposed/LQG.lean. Their source-check status is recorded in docs/campaign/audits/Section5StagedInputAssembly.md.
 
 Derived here, not taken as binders:
 * I2, `LQGVolumeGrowthAllScalesStmt` (Draft/Section2.lean:122), from `hDG`, `hCC` at insertion `0` and `hE`

@@ -222,10 +222,4 @@ theorem ae_lqg_cluster_right_continuous_at_fixed_time_of_quasiInvariant_scaling
   exact ae_cluster_right_continuous_at_fixed_time_of_aemeasurable_quasiInvariant_scaling
     P μ (hGFF.aemeasurable_lqgMeasure hμ) hz hgood T hquasi hscale ht
 
-#print axioms not_right_continuous_iff_dense_tests
-#print axioms exists_measurableSet_right_discontinuity_joint_time_of_volumeGrowth
-#print axioms ae_cluster_right_continuous_at_fixed_time_of_quasiInvariant_scaling
-#print axioms ae_cluster_right_continuous_at_fixed_time_of_aemeasurable_quasiInvariant_scaling
-#print axioms ae_lqg_cluster_right_continuous_at_fixed_time_of_quasiInvariant_scaling
-
 end HarmonicBalls

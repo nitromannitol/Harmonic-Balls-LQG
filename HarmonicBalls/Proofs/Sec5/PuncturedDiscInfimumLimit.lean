@@ -73,7 +73,4 @@ theorem tendsto_leastSupersolutionOn_punctured_disc_at_inactive_puncture
         (nhdsWithin_le_nhds : 𝓝[ball (0 : ℂ) R \ {a}] a ≤ 𝓝 a)] with x hx hxz
     exact leastSupersolutionOn_punctured_disc_le_supersolution ha hz hw hx hxz
 
-#print axioms leastSupersolutionOn_punctured_disc_eq_obstacle_of_not_mem_cluster
-#print axioms tendsto_leastSupersolutionOn_punctured_disc_at_inactive_puncture
-
 end HarmonicBalls

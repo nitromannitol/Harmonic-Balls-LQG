@@ -82,8 +82,4 @@ theorem regularizedClusterFamily_isHarmonicBallFamily
     (h : IsRegularizedClusterFamily μ Λ z) : IsHarmonicBallFamily μ Λ z :=
   ⟨fun t ht => (h.2.1 t ht).isHarmonicBallGen, h.1⟩
 
-#print axioms IsSubharmonicBall.hasMeanValueProperty_of_mem_and_neg_mem
-#print axioms IsSubharmonicBall.isHarmonicBall
-#print axioms regularizedClusterFamily_isHarmonicBallFamily
-
 end HarmonicBalls

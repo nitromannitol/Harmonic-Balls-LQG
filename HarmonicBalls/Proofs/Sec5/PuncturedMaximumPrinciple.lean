@@ -92,7 +92,4 @@ theorem IsHarmonicMinorant.add_log_sub_le_of_boundary
   exact harmonicOnNhd_punctured_ball_le_of_tendsto_atBot hg.continuousOn
     (hg.mono (fun _ hx => ⟨ball_subset_closedBall hx.1, hx.2⟩)) hlim hbd
 
-#print axioms IsHarmonicMinorant.add_log_sub_le_of_boundary
-#print axioms harmonicOnNhd_punctured_ball_le_of_tendsto_atBot
-
 end HarmonicBalls

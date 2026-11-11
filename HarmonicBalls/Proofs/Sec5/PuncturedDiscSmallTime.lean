@@ -63,8 +63,4 @@ theorem ae_small_time_punctured_disc_ne_of_admissible
   obtain ⟨n, hn⟩ := hω.exists
   exact ⟨(2 : ℝ)⁻¹ ^ n, by positivity, hn⟩
 
-#print axioms polyHighProb_small_time_punctured_disc_ne_of_admissible
-
-#print axioms ae_small_time_punctured_disc_ne_of_admissible
-
 end HarmonicBalls

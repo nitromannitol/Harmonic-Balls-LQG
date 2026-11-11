@@ -168,9 +168,4 @@ theorem isSubharmonicOn_punctured_ball_le_of_continuousOn
     exact hpunct y ⟨hy, hya⟩
   · exact hpunct x ⟨hxball, by simpa using hxa⟩
 
-#print axioms isSubharmonicOn_punctured_ball_le_of_continuousOn
-#print axioms IsSubharmonicOn.add_harmonicOnNhd
-
-#print axioms isSubharmonicOn_punctured_ball_le_of_tendsto_atBot
-
 end HarmonicBalls

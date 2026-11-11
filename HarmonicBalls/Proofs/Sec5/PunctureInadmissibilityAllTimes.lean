@@ -148,11 +148,4 @@ theorem ae_locally_finite_puncture_discontinuous_all_times
     (hvol.2 1 zero_lt_one) K hKloc hKR ha hzU ht).mp hc
   exact (ne_of_lt (hneg z hz a (hKR ha) haz t ht)) heq
 
-#print axioms ae_leastSupersolution_lt_zero_all_times
-#print axioms ae_locally_finite_puncture_discontinuous_all_times
-
-#print axioms leastSupersolution_antitone_time
-#print axioms locally_finite_puncture_inadmissible_mono_time
-#print axioms ae_locally_finite_puncture_inadmissible_all_times
-
 end HarmonicBalls

@@ -198,11 +198,4 @@ theorem not_mem_supersolutionsOn_sdiff_of_relative_countable_compact_containment
     exact subset_closure ha
   exact (hcl ha').2 haK
 
-#print axioms supersolution_mem_sdiff_of_relative_countable_interior_zero
-#print axioms leastSupersolutionOn_eq_zero_of_relative_countable_admissible
-#print axioms leastSupersolutionOn_mem_sdiff_iff_relative_countable_interior_zero
-#print axioms mem_clusterOn_of_relative_countable_admissible_of_green_pos
-#print axioms not_mem_supersolutionsOn_sdiff_of_relative_countable_green_pos
-#print axioms not_mem_supersolutionsOn_sdiff_of_relative_countable_compact_containment
-
 end HarmonicBalls

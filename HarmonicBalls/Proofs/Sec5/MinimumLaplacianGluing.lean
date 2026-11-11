@@ -308,13 +308,4 @@ theorem regularizedFamily_closure_eq_clusterOn_of_disc_intersection
     (tendsto_greenFunction_zero_of_enclosing_discs hz
       (exists_enclosing_disc_of_eq_iInter_ball hdisc)) hΛ hcl
 
-#print axioms LaplacianLE.min_of_potential
-#print axioms LaplacianLE.glue_of_open_cover
-#print axioms exists_disc_supersolution_le_shift_of_compact_cluster
-#print axioms leastSupersolutionOn_mem_of_compact_disc_cluster
-#print axioms leastSupersolutionOn_mem_of_compact_disc_cluster_of_volumeGrowth
-#print axioms clusterOn_eq_cluster_of_compact_disc_cluster_of_volumeGrowth
-#print axioms regularizedFamily_closure_eq_clusterOn_of_boundary_of_volumeGrowth
-#print axioms regularizedFamily_closure_eq_clusterOn_of_disc_intersection
-
 end HarmonicBalls

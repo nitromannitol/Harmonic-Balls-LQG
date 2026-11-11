@@ -196,11 +196,4 @@ theorem ae_encard_large_cluster_right_discontinuities_le
   · exact fun _ _ => ⟨z, self_mem_cluster hz⟩
   · exact fun t ht => hinter t ht z hz
 
-#print axioms ofReal_le_hausdorffMeasure_one_iInter_sdiff
-#print axioms ofReal_le_boundary_future_jump_of_separated_point
-#print axioms encard_separated_future_points_le
-#print axioms encard_large_right_discontinuities_le
-#print axioms ae_encard_separated_cluster_future_points_le
-#print axioms ae_encard_large_cluster_right_discontinuities_le
-
 end HarmonicBalls

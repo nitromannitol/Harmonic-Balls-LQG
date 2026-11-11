@@ -263,10 +263,4 @@ theorem exists_fieldLocal_bounded_open_horizons_positive
   have hpos : 0 < H ω z := lt_trans (ENNReal.ofReal_pos.mpr ht) ((hchar z).2.2.1 t ht |>.mpr hsub)
   exact ⟨hpos, (hchar z).1, (hchar z).2.1, (hchar z).2.2.1, (hchar z).2.2.2 hpos⟩
 
-#print axioms ae_regularizedFamily_small_open_neighborhoods
-#print axioms exists_fieldLocal_open_horizons_positive_on_halfDisc
-#print axioms ae_regularizedFamily_small_open_neighborhoods_all_centres
-#print axioms exists_fieldLocal_open_horizons_positive
-#print axioms exists_fieldLocal_bounded_open_horizons_positive
-
 end HarmonicBalls

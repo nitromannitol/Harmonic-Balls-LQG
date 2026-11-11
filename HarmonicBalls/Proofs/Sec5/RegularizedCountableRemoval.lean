@@ -115,10 +115,4 @@ theorem IsLQGLimit.regularizedFamily_closure_eq_sdiff_of_boundary
     hμ hν hVμ hVν hU hUK hUb ht hz hK (hμlim.restrict_eq hνlim hD hloc)
     hboundary hΛ hcl
 
-#print axioms regularizedFamily_closure_eq_sdiff_of_compact_original_of_boundary
-#print axioms regularizedFamily_closure_eq_sdiff_of_restrict_eq_of_boundary
-
-#print axioms regularizedFamily_closure_eq_sdiff_of_compact_original_of_disc_intersection
-#print axioms IsLQGLimit.regularizedFamily_closure_eq_sdiff_of_boundary
-
 end HarmonicBalls

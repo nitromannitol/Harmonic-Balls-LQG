@@ -55,8 +55,4 @@ theorem IsLQGLimit.regularizedFamily_eq_of_null_deletion
   regularizedFamily_eq_of_restrict_sdiff_null hμ hν hVμ hVν hU hμK hνK
     (hμlim.restrict_eq hνlim (hU.sdiff hKc) hloc) ht hΛ hΛ' hcl
 
-#print axioms cluster_eq_of_restrict_sdiff_null
-#print axioms regularizedFamily_eq_of_restrict_sdiff_null
-#print axioms IsLQGLimit.regularizedFamily_eq_of_null_deletion
-
 end HarmonicBalls

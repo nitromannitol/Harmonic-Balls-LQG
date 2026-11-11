@@ -93,9 +93,4 @@ theorem ae_uniform_centre_late_time_future_bound
   intro R hR K hK ε hε
   exact uniform_centre_late_time_future_bound_of_volumeGrowth hω.1 hR (hω.2 R hR) hK hε
 
-#print axioms uniform_centre_late_time_hausdorff_of_volumeGrowth
-#print axioms ae_uniform_centre_late_time_hausdorff
-#print axioms uniform_centre_late_time_future_bound_of_volumeGrowth
-#print axioms ae_uniform_centre_late_time_future_bound
-
 end HarmonicBalls

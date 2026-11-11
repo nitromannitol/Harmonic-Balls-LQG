@@ -88,9 +88,4 @@ theorem clusterOn_punctured_disc_eq_sdiff_of_zero_point_removal
   · exact hw.1.mono (by rw [closure_punctured_disc ha]; exact ball_subset_closedBall)
   · exact hw.2.1
 
-#print axioms laplacianLE_iff_add_potential
-#print axioms HasLaplacian.mono_domain
-#print axioms laplacianLE_punctured_disc_of_zero_point_removal
-#print axioms clusterOn_punctured_disc_eq_sdiff_of_zero_point_removal
-
 end HarmonicBalls

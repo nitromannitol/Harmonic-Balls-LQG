@@ -135,11 +135,4 @@ theorem tendsto_cappedGreenBarrier_coefficient_zero {R M : ℝ} {a x : ℂ}
   simpa [cappedGreenBarrier, hxa, min_eq_left hM] using
     hcont.tendsto.mono_left (nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0)
 
-#print axioms cappedGreenBarrier_nonneg
-#print axioms tendsto_cappedGreenBarrier_coefficient_zero
-
-#print axioms cappedGreenBarrier_eventually_eq
-#print axioms continuousOn_cappedGreenBarrier
-#print axioms laplacianLE_cappedGreenBarrier
-
 end HarmonicBalls

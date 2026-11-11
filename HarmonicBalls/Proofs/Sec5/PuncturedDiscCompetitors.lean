@@ -126,11 +126,4 @@ theorem leastSupersolutionOn_punctured_disc_not_mem_of_negative
   exact not_continuousWithinAt_leastSupersolutionOn_punctured_disc ha hz ht hw hneg
     ((hv.1 a hac).mono subset_closure)
 
-#print axioms not_continuousWithinAt_leastSupersolutionOn_punctured_disc
-#print axioms leastSupersolutionOn_punctured_disc_not_mem_of_negative
-
-#print axioms LaplacianLE.add_of_nonpos
-#print axioms add_cappedGreenBarrier_mem_supersolutionsOn
-#print axioms leastSupersolutionOn_punctured_disc_le_supersolution
-
 end HarmonicBalls

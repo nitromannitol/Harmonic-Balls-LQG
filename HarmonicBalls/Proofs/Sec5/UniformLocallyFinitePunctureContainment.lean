@@ -128,9 +128,4 @@ theorem ae_uniform_locally_finite_puncture_compact_not_admissible_all_separation
   have h := hsep a ha
   linarith
 
-#print axioms ae_uniform_locally_finite_puncture_compact_not_admissible_all_separations
-
-#print axioms polyHighProb_uniform_locally_finite_puncture_compact_not_admissible
-#print axioms ae_uniform_locally_finite_puncture_compact_not_admissible
-
 end HarmonicBalls

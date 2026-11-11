@@ -164,16 +164,4 @@ theorem ae_cluster_rightClosedEnvelope_properties
   exact ⟨fun _ ht => rightClosedEnvelope_right_continuous ht hm (fun _ _ => cluster_subset_ball),
     countable_rightClosedEnvelope_ne hm (fun _ _ => cluster_subset_ball)⟩
 
-#print axioms ae_cluster_rightClosedEnvelope_properties
-
-#print axioms isClosed_rightClosedEnvelope
-#print axioms closure_subset_rightClosedEnvelope
-#print axioms rightClosedEnvelope_subset_closure_of_lt
-#print axioms rightClosedEnvelope_mono
-#print axioms rightClosedEnvelope_right_continuous
-#print axioms rightClosedEnvelope_subset_of_dyadic_identity
-#print axioms rightClosedEnvelope_subset_of_right_continuity
-#print axioms rightClosedEnvelope_idempotent
-#print axioms countable_rightClosedEnvelope_ne
-
 end HarmonicBalls

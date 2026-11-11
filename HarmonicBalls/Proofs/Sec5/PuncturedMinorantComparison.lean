@@ -142,14 +142,4 @@ theorem not_admissible_punctured_disc_of_compact_compatibility_proved
   not_admissible_punctured_disc_of_compact_compatibility ha hz ht
     (fun _ hx hxz => greenFunction_punctured_ball ha hz hx hxz) hA heq
 
-#print axioms frequently_green_pos_punctured_disc
-#print axioms not_admissible_punctured_disc_of_compact_compatibility_proved
-
-#print axioms greatestHarmonicMinorant_punctured_ball
-#print axioms greenFunction_punctured_ball
-
-#print axioms IsHarmonicMinorant.le_greatestHarmonicMinorantBall_punctured
-
-#print axioms IsHarmonicMinorant.sub_le_of_boundary_punctured
-
 end HarmonicBalls

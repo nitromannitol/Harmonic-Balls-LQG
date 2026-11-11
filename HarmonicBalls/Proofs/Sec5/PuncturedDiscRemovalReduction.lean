@@ -101,9 +101,4 @@ theorem clusterOn_punctured_disc_eq_sdiff_of_point_removal
     · have hxU : x ∉ ball (0 : ℂ) R \ {a} := fun h => hx h.1
       simp only [hx, false_and]
 
-#print axioms closure_punctured_disc
-#print axioms punctured_disc_supersolution_mem_disc_of_laplacianLE
-#print axioms leastSupersolutionOn_punctured_disc_eq_of_point_removal
-#print axioms clusterOn_punctured_disc_eq_sdiff_of_point_removal
-
 end HarmonicBalls

@@ -113,8 +113,4 @@ theorem ae_encard_cluster_containment_exceptions_le
     exact le_antisymm (mem_closedBall.mp hclosed)
       (le_of_not_gt (by simpa only [mem_ball] using hnot))
 
-#print axioms exists_future_point_separated_of_not_eventually_subset
-#print axioms encard_not_eventually_subset_le
-#print axioms ae_encard_cluster_containment_exceptions_le
-
 end HarmonicBalls
