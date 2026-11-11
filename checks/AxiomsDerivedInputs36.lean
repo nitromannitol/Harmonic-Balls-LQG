@@ -1,0 +1,26 @@
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs36
+
+-- Axiom audit of the derived-input forms of round 36 (checks/ is not a lean_lib: compile with lc).
+
+#print axioms HarmonicBalls.firstPass_8_2_S8d_noWeyl_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_11_6_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_8_1_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_1_2_faithful_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_5_3_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_5_2_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_7_2_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_5_5_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_1_1_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_10_7_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_1_3_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_11_2_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_11_11_canonical_of_11_13_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_11_11_paperExponent_of_11_13_derivedInputs36
+#print axioms HarmonicBalls.Closure.firstPass_11_11_faithful_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_11_11_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_1_2_canonical_of_11_13_clean_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_1_2_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_11_5_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_5_4_derivedInputs36
+#print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs36
+#print axioms HarmonicBalls.Closure.typicalPointManyGoodScales_closed_derivedInputs36
