@@ -1,2 +1,17 @@
 .lake/
 *.olean
+
+# Scratch areas of the development workers (never committed)
+scratch/
+scratch-*/
+
+# LaTeX build products of the corrected paper (the tracked sources and paper/lqg_harmonic_ball.bbl stay tracked)
+paper/lqg_harmonic_ball-corrected.aux
+paper/lqg_harmonic_ball-corrected.bbl
+paper/lqg_harmonic_ball-corrected.blg
+paper/lqg_harmonic_ball-corrected.log
+paper/lqg_harmonic_ball-corrected.out
+paper/lqg_harmonic_ball-corrected.pdf
+paper/*.synctex.gz
+paper/*.fls
+paper/*.fdb_latexmk
