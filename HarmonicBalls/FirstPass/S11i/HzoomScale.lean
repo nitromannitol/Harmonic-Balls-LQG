@@ -76,7 +76,7 @@ theorem isLQGLimit_add_const {γ c : ℝ} {hε : ℝ → ℂ → ℝ} {m : Measu
     simp only [hden, integral_smul_measure, ENNReal.toReal_ofReal (Real.exp_pos _).le, smul_eq_mul]
     exact hT.const_mul _
 
-/-- **LQG measure of the normalized field (ruling 4.1, measure side).** `normMeasure γ μ hcirc k ω` is
+/-- **LQG measure of the normalized field (measure side).** `normMeasure γ μ hcirc k ω` is
 `e^{-γ C_k(ω)} · zoomMeasure (μ ω) k`, with `C_k(ω) = hcirc ω 2^k 0 + Q log 2^k`. It is the LQG measure of the renormalized
 field `normCirc (2^k) hcirc`. -/
 noncomputable def normMeasure (γ : ℝ) (μ : Ω → Measure ℂ) (hcirc : Ω → ℝ → ℂ → ℝ) (k : ℕ) (ω : Ω) : Measure ℂ :=
@@ -133,7 +133,7 @@ def ZoomMetricNormStmt (P : Measure Ω) (γ ξ : ℝ) (hC : Ω → (ℂ → ℝ)
   ∀ k : ℕ, ∃ Dk : Ω → ℂ → ℂ → ℝ, IsLQGMetricOfField P γ ξ 0 (normField ((2 : ℝ) ^ k) hC hcirc) Dk ∧
     ∀ᵐ ω ∂P, ∃ B : ℝ, 0 < B ∧ ∀ x y, zoomMetric (D ω) k x y = B * Dk ω x y
 
-/-- **Every `hzoom(k)`, from the unit-ball frequency of the normalized models (ruling 4.2).** For each `k`, almost surely
+/-- **Every `hzoom(k)`, from the unit-ball frequency of the normalized models.** For each `k`, almost surely
 there are positive constants `a, b` such that the zoomed pair `(a · zoomMeasure (μ ω) k, b · zoomMetric (D ω) k)` has the
 unit-ball frequency `q` on `B₁(0)`. This is the family hypothesis `hzoom` of `hphys_of_zoom_const_family`. The constants are
 `a = e^{-γ C_k}` (measure) and `b = B⁻¹` (metric). -/
@@ -167,7 +167,7 @@ theorem hzoom_all_of_unit_models {P : Measure Ω} {γ ξ q δ M : ℝ} {U V W T 
   rw [hmeas, hmet]
   exact hω
 
-/-- **The composite consumed by `hphys` (ruling 4.2 with `hphys_of_zoom_const_family`).** The unit-ball frequency of the
+/-- **The composite consumed by `hphys` (with `hphys_of_zoom_const_family`).** The unit-ball frequency of the
 normalized models gives, for every `k` and `P`-a.e. `ω`, the physical window frequency of `(μ ω, D ω)` on `B_{2^k}(0)`. -/
 theorem hphys_of_unit_models {P : Measure Ω} {γ ξ q δ M : ℝ} {U V W T Q' Q : Set ℂ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
