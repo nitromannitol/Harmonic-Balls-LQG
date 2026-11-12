@@ -179,7 +179,7 @@ hD = 11.9, h16 = 11.16). Composed with the closed-square form of 11.10 (S11c.fir
 hDC hFin hAx) they hold from the LQG metric inputs alone: firstPass_11_9_derivedInputsMetric,
 firstPass_11_16_corrected_derivedInputsMetric, firstPass_11_17_corrected_derivedInputsMetric, each binding
 hDC : DyadicCellDiamSmallFrozen, hFin : ConnectedSquareUnionDiamFiniteFrozen, hAx : LQGMetricFieldAxiomsUnivFrozen.
-11.12 still binds the uncorrected PinchThirdEventPositiveStmt (no bridge from the faithful 11.17 form).
+11.12 binds the uncorrected PinchThirdEventPositiveStmt (Draft 11.17, every real ξ). Bridge (2026-11-12): pinchThirdEventPositiveStmt_of_faithful (FirstPass/Phase2/PinchExplicitGeometry.lean, 26cf4914; explicit keyhole geometry) needs the corrected 11.17 and ξ > 0; isLQGMetric_xi_pos (FirstPass/Phase2/LQGMetricXiPos.lean, 7af13578; IsLQGMetric γ ξ 𝔇, 0 < γ < 2 ⇒ 0 < ξ, by scaling at the origin, no new input; desk MQ-fw-4: TRUE, no retype) supplies ξ > 0. Hence firstPass_11_12_derivedInputsMetric and pinchThirdEventPositiveStmt_derivedInputsMetric hold from hDC hFin hAx alone (axioms propext, Classical.choice, Quot.sound): 11.12 now binds only the LQG metric inputs, like 11.9, 11.16, 11.17.
 - 2026-11-12 status pass: rows 8, 30, 31, 34, 46 set to DERIVED (theorems named in the evidence column; the commits are those of the proofs). The count lines at the top of this file are not recomputed in this pass.
 - 2026-11-12 Lemma 11.7 closed (def7ce84): HarmonicBalls.manyConeBadScalesStmt_holds : ManyConeBadScalesStmt.{u}
 (FirstPass/Phase2/ConeBadScalesHolds.lean) has no hypothesis. It is S11c.firstPass_11_7 (the internal dilation-ergodic
