@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.Phase2.DyadicCellDiamSmallAwayFromZero
 import LatticeProb.LQG.GridRectangleSmallOfSubsquare
+import LatticeProb.LQG.InternalMetricWeylScalingCornerDyadic
 
 /-!
 # Small internal diameters of the clipped enlarged dyadic cells of a square containing the singularity
@@ -25,6 +26,8 @@ exponent `δ` of the unit-square tail is raised to a positive `δ' < ξ (Q - 2) 
 * `HarmonicBalls.exists_measurableSet_enlargedDyadicCell_internalMetric_le_of_zero_mem`
 * `HarmonicBalls.dyadicCellDiamSmallFrozen_of_unitTail_of_corner`: `DyadicCellDiamSmallFrozen` from the positivity of
   the Weyl exponent, the uniform unit-square crossing tail of `𝔇` and the corner tail.
+* `HarmonicBalls.dyadicCellDiamSmallFrozen_of_unitTail_derived`: the same, with the corner tail supplied by
+  `LatticeProb.LQG.IsLQGMetric.tendsto_measure_not_forall_internalMetric_weylScaling_closedDyadicSubsquare_le_of_corner`.
 -/
 
 universe u
@@ -212,5 +215,24 @@ theorem dyadicCellDiamSmallFrozen_of_unitTail_of_corner (hXi : LQGMetricExponent
     fun _ _ _ hγ0 hγ2 hα _ _ _ _ _ _ hW hD _ hS2 _ h0 _ _ hε hη =>
       exists_measurableSet_enlargedDyadicCell_internalMetric_le_of_zero_mem hXi hUniv hCorner hγ0 hγ2 hα hW hD hS2
         h0 hε hη
+
+/-- **Derived.** `DyadicCellDiamSmallFrozen` (small internal diameters of the clipped enlarged dyadic cells, proof of
+Lemma 11.10, paper lines 3010-3016) from the positivity of the Weyl exponent and the uniform unit-square crossing tail
+of `𝔇` (Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.1, p. 13) alone. The corner tail
+`hCorner` of `dyadicCellDiamSmallFrozen_of_unitTail_of_corner` is the Lattice-Probability theorem
+`LatticeProb.LQG.IsLQGMetric.tendsto_measure_not_forall_internalMetric_weylScaling_closedDyadicSubsquare_le_of_corner`
+(DFGPS, Proposition 3.17, pp. 43-44, for the closed dyadic subsquares of a square with the singularity at a corner). -/
+theorem dyadicCellDiamSmallFrozen_of_unitTail_derived (hXi : LQGMetricExponentPositive)
+    (hUniv : ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 →
+      ∃ δ : ℝ, δ < ξ * (lqgQ γ - 2) * Real.log 2 ∧ ∃ p : ℕ → ℝ≥0∞, ∑' n, 4 ^ n * p n ≠ ⊤ ∧
+        ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+          IsWholePlaneGFF P hC hcirc → ∀ n : ℕ,
+            P {ω | ¬ LatticeProb.LQG.HasShortHalfCrossings (𝔇 (hC ω)) 0 1 0 1
+              (ENNReal.ofReal (Real.exp (δ * n)))} ≤ p n) :
+    DyadicCellDiamSmallFrozen.{u} :=
+  dyadicCellDiamSmallFrozen_of_unitTail_of_corner hXi hUniv
+    fun _ _ _ _ _ _ _ _ h𝔇 hG hξ _ _ hθ hδ hδ0 _ huniv hp _ hα _ hE _ _ _ hs ha hb _ hε =>
+      h𝔇.tendsto_measure_not_forall_internalMetric_weylScaling_closedDyadicSubsquare_le_of_corner hG hξ hθ hδ hδ0
+        huniv hp hα hE hs ha hb hε
 
 end HarmonicBalls
