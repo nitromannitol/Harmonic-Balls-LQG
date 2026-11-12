@@ -72,6 +72,7 @@ import HarmonicBalls.FirstPass.Phase2.LQGMetricXiPos
 import HarmonicBalls.FirstPass.Phase2.Lemma1110LeafForms
 import HarmonicBalls.FirstPass.Phase2.NotMetricBallCanonicalLeafForms
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsLeafForms
+import HarmonicBalls.FirstPass.Phase2.DerivedInputsStep8Calibration
 
 /-!
 # Axiom gate
@@ -587,3 +588,5 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_15_fieldAxioms
 -- 2.4 (cited, no hypothesis): liouvilleVolumeGrowthStmt_of_ballMass_derivedInputs44 (HarmonicBalls/FirstPass/Phase2/DerivedInputs44.lean:23)
 #print axioms HarmonicBalls.liouvilleVolumeGrowthStmt_of_ballMass_derivedInputs44
+-- 11.13 canonical-xi: firstPass_11_13_canonical_derivedInputsCalibration (HarmonicBalls/FirstPass/Phase2/DerivedInputsStep8Calibration.lean:30)
+#print axioms HarmonicBalls.firstPass_11_13_canonical_derivedInputsCalibration
