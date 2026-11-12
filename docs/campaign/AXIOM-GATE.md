@@ -8,7 +8,7 @@ Owner: worker z3 (task fp-clean-d6-axiom-gate, item D6 of the clean-up, lead dec
 
 **What it does not show.** `#print axioms` does not list hypotheses. A declaration that depends only on `propext`, `Classical.choice`, `Quot.sound` can still be conditional: its explicit binders (literature Props such as `hDG`, `hCC`, `hE`, or frozen inputs) are part of its signature. The binder columns of COUNTED-MANIFEST.md and the remaining-input column of PHASE2-DERIVATION-STATUS.md give that information. "Standard axioms only" therefore means "no extra axiom", not "unconditional".
 
-**Result.** 125 declarations (rechecked 2026-11-11 20:56 UTC at HEAD 5c7fe11e, Lattice-Probability pin 2aa40e3), all with axiom output (0 missing). The first run of this gate had 92; the updates below record the additions. 0 declarations use an axiom beyond `propext`, `Classical.choice`, `Quot.sound`.
+**Result.** 125 declarations (rechecked 2026-11-12 03:07 UTC at HEAD 3188e332, Lattice-Probability pin 1dd6dc9), all with axiom output (0 missing). The first run of this gate had 92; the updates below record the additions. 0 declarations use an axiom beyond `propext`, `Classical.choice`, `Quot.sound`.
 
 Distinct axiom sets over all declarations: 125 with [propext, Classical.choice, Quot.sound].
 
