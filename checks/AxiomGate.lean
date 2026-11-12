@@ -74,6 +74,7 @@ import HarmonicBalls.FirstPass.Phase2.NotMetricBallCanonicalLeafForms
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsLeafForms
 import HarmonicBalls.FirstPass.Phase2.DerivedInputsStep8Calibration
 import HarmonicBalls.FirstPass.Phase2.Step8PerModelFrequency
+import HarmonicBalls.FirstPass.Phase2.Step8PerModelUniv
 
 /-!
 # Axiom gate
@@ -593,3 +594,6 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_13_canonical_derivedInputsCalibration
 -- 11.13 canonical-xi: firstPass_11_13_canonical_of_perModelFrequency (HarmonicBalls/FirstPass/Phase2/Step8PerModelFrequency.lean:56)
 #print axioms HarmonicBalls.firstPass_11_13_canonical_of_perModelFrequency
+-- 11.13 canonical-xi, Step 8 at every universe (HarmonicBalls/FirstPass/Phase2/Step8PerModelUniv.lean)
+#print axioms HarmonicBalls.step8CertificateFrequencyPerModel_univ_of_zero
+#print axioms HarmonicBalls.firstPass_11_13_canonical_univ_of_seedInputs_metricInputs
