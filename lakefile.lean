@@ -15,7 +15,7 @@ require elliptic_regularity from git
 
 -- The lean-v4.35 line of Lattice-Probability: LQG, GFF and mated-CRT library adapted from Leonardo Bonanno's lean-formalizations.
 require «lattice-probability» from git
-  "https://github.com/nitromannitol/Lattice-Probability.git" @ "21dfbca30afd396a7537dc5a0b1d5eae3883f920"
+  "https://github.com/nitromannitol/Lattice-Probability.git" @ "1b203be38a287baab91a548d466ae74222d7ce3b"
 
 @[default_target]
 lean_lib «HarmonicBalls» where
