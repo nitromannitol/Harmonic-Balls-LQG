@@ -141,7 +141,7 @@ All verdict words in the table: TRUE 53, FALSE AS TYPED 12, none 49. Structural 
 | 92 | `LQGMeasureNonatomic`* | Proposed/LQG.lean:86 | TRUE | Codex truth check 2026-11-1 | arXiv:2404.16642v2, Fact 2.1, p. 9 |
 | 93 | `LQGMeasureLocality`* | Proposed/LQG.lean:97 | TRUE | Codex truth check 2026-11-1 | Fact 2.1 |
 | 94 | `LQGMeasureWeylScaling`* | Proposed/LQG.lean:107 | other: "Fact 2.1 III (Weyl scaling)" | - | Fact 2.1, p. 9 |
-| 95 | `LQGMeasureCoordChange`* | Proposed/LQG.lean:131 | TRUE | Codex truth check 2026-11-1 | Duplantier-Sheffield, arXiv:1605.06171v2, Fact 2.1, p. 13 |
+| 95 | `LQGMeasureCoordChange`* | Proposed/LQG.lean:131 | TRUE; at α₀ = 0 DERIVED (2026-11-12): `lqgMeasureCoordChange_zero_holds` (FirstPass/Phase2/CoordChangeZeroHolds.lean, from Lattice-Probability `LatticeProb.LQG.lqgMeasureCoordChangeLP_zero`), supplied in 22 counted forms (Phase2/DerivedInputs40.lean); α₀ ≠ 0 open (reduced in the library to the a.s. near-origin mass bound along all ratio scales, `coordChangeLP_of_ae_origin_ratio`, not yet in the pin) | Codex truth check 2026-11-1 | Duplantier-Sheffield, arXiv:1605.06171v2, Fact 2.1, p. 13 |
 | 96 | `WholePlaneLQGBallMassBounds`* | Proposed/LQG.lean:172 | TRUE | Codex truth check 2026-11-1 | arXiv:1807.01072, Lemma 3.8, p. 25 |
 | 97 | `LQGMetricExistenceUniqueness` | Proposed/LQG.lean:196 | TRUE | Codex truth check 2026-11-1 | Gwynne-Miller, arXiv:1905.00383, Theorem 1.2, p. 6 |
 | 98 | `LQGMetricFieldAxioms` | Proposed/LQG.lean:225 | TRUE | Codex truth check 2026-11-1 | Gwynne-Miller, arXiv:1905.00380, Fact 2.2, p. 6 |
