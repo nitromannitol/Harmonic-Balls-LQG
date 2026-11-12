@@ -39,7 +39,7 @@ theorem circleAverage_logMaxAbs_le (z : ℂ) (r : ℝ) :
 /-- The variance of a circle average of the whole-plane GFF: `Var(h_r(z)) ≤ 2 (|z| + r) - log r`. -/
 theorem wholePlaneGFFCov_circle_self_le {r : ℝ} (hr : 0 < r) (z : ℂ) :
     wholePlaneGFFCov (.circle r z) (.circle r z) ≤ 2 * (‖z‖ + r) - Real.log r := by
-  rw [wholePlaneGFFCov_circle_self_eq hr z]
+  rw [wholePlaneGFFCov_circle_self_eq_sub_log hr z]
   have h := circleAverage_logMaxAbs_le z r
   rw [abs_of_pos hr] at h
   linarith

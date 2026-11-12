@@ -14,7 +14,7 @@ circle averages with different centers and radii, the input of the moment bound.
   `Cov(h_r(z), h_s(w)) = A_r(z) + A_s(w) - avg_{x in ∂B_r(z)} log max(s, |x - w|)`, where `A_r(z)` is the average of
   `log max(|·|, 1)` over `∂B_r(z)`. The mean value identity is `circleAverage_wholePlaneCov` (S11u/Kernel.lean:42), the
   Jensen formula of Duplantier-Sheffield (arXiv:0808.1560 Section 3.1) and Armitage-Gardiner (potential theory).
-* `wholePlaneGFFCov_circle_self_eq`: the variance `Var(h_r(z)) = 2 A_r(z) - log r`.
+* `wholePlaneGFFCov_circle_self_eq_sub_log`: the variance `Var(h_r(z)) = 2 A_r(z) - log r`.
 * `wholePlaneGFFCov_circle_increment_le`: the variance of `h_r(z) - h_s(w)` is at most
   `2 log(max r s + |z - w|) - log r - log s ≤ (|r - s| + 2 |z - w|) / a` for `a ≤ r, s`.
 -/
@@ -59,7 +59,7 @@ theorem wholePlaneGFFCov_circle_circle_eq {r s : ℝ} (hs : 0 < s) (z w : ℂ) :
     Real.circleAverage_const]
 
 /-- The variance of a circle average: `Var(h_r(z)) = 2 A_r(z) - log r`, `A_r(z)` the average of `logMaxAbs` on `∂B_r(z)`. -/
-theorem wholePlaneGFFCov_circle_self_eq {r : ℝ} (hr : 0 < r) (z : ℂ) :
+theorem wholePlaneGFFCov_circle_self_eq_sub_log {r : ℝ} (hr : 0 < r) (z : ℂ) :
     wholePlaneGFFCov (GFFObservable.circle r z) (GFFObservable.circle r z) =
       2 * Real.circleAverage logMaxAbs z r - Real.log r := by
   rw [wholePlaneGFFCov_circle_circle_eq (r := r) (s := r) hr z z]
@@ -84,7 +84,7 @@ theorem wholePlaneGFFCov_circle_increment_le {a r s : ℝ} (ha : 0 < a) (har : a
       ≤ (|r - s| + 2 * ‖z - w‖) / a := by
   have hr : 0 < r := lt_of_lt_of_le ha har
   have hs : 0 < s := lt_of_lt_of_le ha has
-  rw [wholePlaneGFFCov_circle_self_eq hr z, wholePlaneGFFCov_circle_self_eq hs w,
+  rw [wholePlaneGFFCov_circle_self_eq_sub_log hr z, wholePlaneGFFCov_circle_self_eq_sub_log hs w,
     wholePlaneGFFCov_circle_circle_eq (r := r) hs z w]
   have hcLog : Continuous (fun x : ℂ => Real.log (max s ‖x - w‖)) :=
     (continuous_const.max (continuous_id.sub continuous_const).norm).log
