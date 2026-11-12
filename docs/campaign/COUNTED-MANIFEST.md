@@ -110,15 +110,15 @@ binder `hI2 : LQGVolumeGrowthAllScalesStmt`); they are not counted declarations 
 | 11.6 | `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6_derivedInputs43` | HarmonicBalls/FirstPass/Phase2/DerivedInputs43.lean:432 | 0 |  |
 | 11.7 | `ManyConeBadScalesStmt` | `manyConeBadScalesStmt_holds` | HarmonicBalls/FirstPass/Phase2/ConeBadScalesHolds.lean:31 | 0 |  |
 | 11.8 | `ConeBadEventProbabilityStmt` | `closure_11_8_derivedInputs43` | HarmonicBalls/FirstPass/Phase2/DerivedInputs43.lean:438 | 0 |  |
-| 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9_derivedInputsFieldAxioms` | HarmonicBalls/FirstPass/Phase2/WeylLogTruncationDerivedInputs.lean:50 | 2 | hAx h1110 |
-| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `S11c.firstPass_11_10_derivedUnitTail` | HarmonicBalls/FirstPass/Phase2/UnitSquareCrossingTailDerived.lean:87 | 1 | hAx |
+| 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9_derived` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsConsequencesDerived.lean:68 | 0 |  |
+| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `S11c.firstPass_11_10_derived` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsDerived.lean:56 | 0 |  |
 | 11.11 | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11_fieldAxioms` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsLeafForms.lean:28 | 2 | h13 hAx |
-| 11.12 | `PinchEventPositiveProbabilityStmt` | `firstPass_11_12_derivedInputsAlphaZero` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsAlphaZero.lean:166 | 1 | h |
+| 11.12 | `PinchEventPositiveProbabilityStmt` | `firstPass_11_12_derived` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsDerived.lean:48 | 0 |  |
 | 11.13 | `ManyPinchScalesStmt` | `manyPinchScales_of_corrected` | HarmonicBalls/FirstPass/Closure/Bridge12.lean:322 | 1 | h |
-| 11.14 | `PinchEventMetricBallConsequenceStmt` | `closure_11_14` | HarmonicBalls/FirstPass/Closure/Sec11.lean:138 | 1 | hAx |
-| 11.15 | `PinchFirstEventPositiveStmt` | `firstPass_11_15_fieldAxioms` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsLeafForms.lean:35 | 1 | hAx |
-| 11.16 | `PinchSecondEventPositiveStmt` | `firstPass_11_16_of_11_17` | HarmonicBalls/FirstPass/S11e.lean:29 | 1 | h |
-| 11.17 | `PinchThirdEventPositiveStmt` | `pinchThirdEventPositiveStmt_derivedUnitTail` | HarmonicBalls/FirstPass/Phase2/UnitSquareCrossingTailDerived.lean:67 | 1 | hAx |
+| 11.14 | `PinchEventMetricBallConsequenceStmt` | `firstPass_11_14_derived` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsConsequencesDerived.lean:72 | 0 |  |
+| 11.15 | `PinchFirstEventPositiveStmt` | `firstPass_11_15_derived` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsConsequencesDerived.lean:76 | 0 |  |
+| 11.16 | `PinchSecondEventPositiveStmt` | `firstPass_11_16_derived` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsDerived.lean:44 | 0 |  |
+| 11.17 | `PinchThirdEventPositiveStmt` | `pinchThirdEventPositiveStmt_derived` | HarmonicBalls/FirstPass/Phase2/FieldAxiomsDerived.lean:40 | 0 |  |
 | A.1 | `ObstacleLeastSuperharmonicMajorantStmt` | `closure_A_1` | HarmonicBalls/FirstPass/Closure/SecA45.lean:37 | 0 |  |
 | A.2 | `ObstacleNonCoincidenceHarmonicStmt` | `closure_A_2` | HarmonicBalls/FirstPass/Closure/SecA45.lean:40 | 0 |  |
 | A.3 | `ObstacleMonotoneStmt` | `closure_A_3` | HarmonicBalls/FirstPass/Closure/SecA45.lean:43 | 0 |  |
