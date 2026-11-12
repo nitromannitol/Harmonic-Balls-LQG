@@ -1,6 +1,6 @@
 import HarmonicBalls.Proofs.GFF.FullObservableDilationMixing
 import HarmonicBalls.Proofs.Sec6.ContinuousWeylCircleAverage
-import HarmonicBalls.Proofs.Sec11.ClosureScales.CircleGaussianMoment
+import HarmonicBalls.Proofs.Sec8.CircleLogPotential
 import HarmonicBalls.Proposed.DuplantierMillerSheffield
 
 /-!
@@ -27,12 +27,35 @@ namespace HarmonicBalls
 
 /-- Inside the closed unit disk the variance of a circle average is `-log ε`. -/
 theorem wholePlaneGFFCov_circle_self_eq_neg_log {ε : ℝ} (hε : 0 < ε) {z : ℂ} (hz : ‖z‖ + ε ≤ 1) :
-    wholePlaneGFFCov (.circle ε z) (.circle ε z) = -Real.log ε :=
-  wholePlaneGFFCov_circle_self_eq hε z fun x hx => by
+    wholePlaneGFFCov (.circle ε z) (.circle ε z) = -Real.log ε := by
+  have hdisk : ∀ x ∈ Metric.sphere z ε, ‖x‖ ≤ 1 := fun x hx => by
     rw [mem_sphere_iff_norm] at hx
     calc ‖x‖ = ‖(x - z) + z‖ := by rw [sub_add_cancel]
       _ ≤ ‖x - z‖ + ‖z‖ := norm_add_le _ _
       _ ≤ 1 := by linarith
+  have hN0 : Real.circleAverage wholePlaneNormalization z ε = 0 := by
+    have hEq : Set.EqOn wholePlaneNormalization (fun _ => (0 : ℝ)) (Metric.sphere z |ε|) := by
+      intro y hy
+      rw [abs_of_pos hε] at hy
+      simp [wholePlaneNormalization, max_eq_right (hdisk y hy)]
+    rw [Real.circleAverage_congr_sphere hEq, Real.circleAverage_const]
+  have hinner : ∀ x ∈ Metric.sphere z ε,
+      Real.circleAverage (fun y => wholePlaneCov x y) z ε = -Real.log ε := by
+    intro x hx
+    have hx0 : wholePlaneNormalization x = 0 := by
+      simp [wholePlaneNormalization, max_eq_right (hdisk x hx)]
+    have hzx : ‖z - x‖ = ε := by
+      rw [← dist_eq_norm, dist_comm]
+      exact mem_sphere.1 hx
+    rw [circleAverage_wholePlaneCov_eq hε z x, hx0, hN0, hzx, max_self]
+    ring
+  have hEq : Set.EqOn (fun x => Real.circleAverage (fun y => wholePlaneCov x y) z ε)
+      (fun _ => -Real.log ε) (Metric.sphere z |ε|) := by
+    rw [abs_of_pos hε]
+    exact hinner
+  show Real.circleAverage (fun x => Real.circleAverage (fun y => wholePlaneCov x y) z ε) z ε
+    = -Real.log ε
+  rw [Real.circleAverage_congr_sphere hEq, Real.circleAverage_const]
 
 /-- Inside the closed unit disk, `Var(h_ε(z)) = -log ε`. -/
 theorem IsWholePlaneGFF.variance_circle_eq_neg_log {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
