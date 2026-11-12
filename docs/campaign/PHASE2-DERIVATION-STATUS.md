@@ -127,7 +127,7 @@ DERIVED rows that counted declarations still bind (the Prop is a theorem; the bi
 
 Binders of counted declarations whose Prop is not a row of this table (head of the binder type, number of counted declarations, results). The `...Stmt` names are numbered results of the paper or their corrected forms taken as hypotheses; 10.5 states its own geometric hypotheses inline:
 
-- LQGMetricFieldAxioms: 5 (11.9 11.10 11.11 11.12 11.15)
+- LQGMetricFieldAxioms: 4 (11.9 11.10 11.11 11.15). 11.12 takes it only at `α₀ = 0`, which is a theorem (`lqgMetricFieldAxioms_alpha_zero_univ`, FirstPass/Phase2/FieldAxiomsAlphaZero.lean, from `IsLQGMetric` alone); the counted form `firstPass_11_12_derivedInputsAlphaZero` binds only `PinchThirdEventPositiveStmt` (2026-11-12).
 - AnnulusMassBoundByHarmonicChainStmt: 2 (11.5 11.11)
 - ExistenceHarmonicBallsStmt: 2 (1.1 1.2)
 - UniquenessHarmonicBallsStmt: 2 (1.1 1.2)
