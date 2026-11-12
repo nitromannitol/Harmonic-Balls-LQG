@@ -13,7 +13,9 @@ inverse `contMetricOfSample`.
 Composing with the pairing functional of a distribution, a map `𝔇` on pairing functionals whose
 evaluations are measurable for the σ-algebra of test-function evaluations induces a Borel map
 `distributionMetric 𝔇 : DistC → ContMetric`, equal to `𝔇` at every distribution where `𝔇` is a
-continuous metric. This is the measurability part of the comparison of the γ-LQG metrics of
+continuous metric. The sampled values are `(ENNReal.ofReal (𝔇 T u v)).toReal`, the positive part of
+`𝔇`, so that `distributionMetric 𝔇 T = d` already when `ENNReal.ofReal (𝔇 T u v) = ENNReal.ofReal (d (u, v))`
+for all `u, v` (the form in which Weyl scaling determines `𝔇`). This is the measurability part of the comparison of the γ-LQG metrics of
 `IsLQGMetric` with the strong γ-LQG metrics of Gwynne-Miller 2021 (Section 1.2, p. 6). -/
 
 noncomputable section
@@ -72,13 +74,13 @@ theorem contMetricOfSample_contMetricSample (d : LQGMetric.ContMetric) :
   contMetricSample_injective.extend_apply id _ d
 
 /-- The metric assignment on distributions induced by a map `𝔇` on pairing functionals: the
-continuous metric with the values of `𝔇` at the pairing functional of `T` along the dense sequence
-(the Euclidean metric if there is none). -/
+continuous metric with the values of the positive part of `𝔇` at the pairing functional of `T`
+along the dense sequence (the Euclidean metric if there is none). -/
 def distributionMetric (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (T : LQGMetric.DistC) :
     LQGMetric.ContMetric :=
   contMetricOfSample fun n =>
-    𝔇 (distributionPairingExtension T) (TopologicalSpace.denseSeq (ℂ × ℂ) n).1
-      (TopologicalSpace.denseSeq (ℂ × ℂ) n).2
+    (ENNReal.ofReal (𝔇 (distributionPairingExtension T) (TopologicalSpace.denseSeq (ℂ × ℂ) n).1
+      (TopologicalSpace.denseSeq (ℂ × ℂ) n).2)).toReal
 
 /-- `distributionMetric 𝔇` is Borel when the evaluations of `𝔇` are measurable for the σ-algebra
 of test-function evaluations. -/
@@ -86,23 +88,37 @@ theorem measurable_distributionMetric {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ �
     (h𝔇 : ∀ z w, Measurable[distributionMeasurableSpace] fun T => 𝔇 T z w) :
     Measurable (distributionMetric 𝔇) :=
   measurable_contMetricOfSample.comp <| measurable_pi_iff.2 fun _ =>
-    (h𝔇 _ _).comp measurable_distributionPairingExtension
+    ENNReal.measurable_toReal.comp <| ENNReal.measurable_ofReal.comp <|
+      (h𝔇 _ _).comp measurable_distributionPairingExtension
 
-/-- At a distribution where `𝔇` is a continuous metric, `distributionMetric 𝔇` is that metric. -/
+/-- At a distribution where the positive part of `𝔇` is a continuous metric,
+`distributionMetric 𝔇` is that metric. -/
 theorem distributionMetric_eq {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} {T : LQGMetric.DistC}
     {d : LQGMetric.ContMetric}
-    (hd : ∀ u v, 𝔇 (distributionPairingExtension T) u v = d.1 (u, v)) :
+    (hd : ∀ u v, ENNReal.ofReal (𝔇 (distributionPairingExtension T) u v) =
+      ENNReal.ofReal (d.1 (u, v))) :
     distributionMetric 𝔇 T = d := by
-  have hs : (fun n => 𝔇 (distributionPairingExtension T) (TopologicalSpace.denseSeq (ℂ × ℂ) n).1
-      (TopologicalSpace.denseSeq (ℂ × ℂ) n).2) = contMetricSample d :=
-    funext fun _ => hd _ _
+  have hs : (fun n => (ENNReal.ofReal (𝔇 (distributionPairingExtension T)
+      (TopologicalSpace.denseSeq (ℂ × ℂ) n).1 (TopologicalSpace.denseSeq (ℂ × ℂ) n).2)).toReal) =
+      contMetricSample d := by
+    funext n
+    have h0 : ∀ p : ℂ × ℂ, 0 ≤ d.1 p := fun p => (dist_nonneg : 0 ≤ dist (d.pt p.1) (d.pt p.2))
+    rw [hd, ENNReal.toReal_ofReal (h0 _)]
+    rfl
   rw [distributionMetric, hs, contMetricOfSample_contMetricSample]
+
+/-- At a distribution where `𝔇` is a continuous metric, `distributionMetric 𝔇` is that metric. -/
+theorem distributionMetric_eq_of_eq {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} {T : LQGMetric.DistC}
+    {d : LQGMetric.ContMetric}
+    (hd : ∀ u v, 𝔇 (distributionPairingExtension T) u v = d.1 (u, v)) :
+    distributionMetric 𝔇 T = d :=
+  distributionMetric_eq fun u v => by rw [hd]
 
 /-- The evaluations of `distributionMetric 𝔇` at a distribution where `𝔇` is a continuous metric. -/
 theorem distributionMetric_apply_eq {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} {T : LQGMetric.DistC}
     {d : LQGMetric.ContMetric}
     (hd : ∀ u v, 𝔇 (distributionPairingExtension T) u v = d.1 (u, v)) (u v : ℂ) :
     (distributionMetric 𝔇 T).1 (u, v) = 𝔇 (distributionPairingExtension T) u v := by
-  rw [distributionMetric_eq hd, hd]
+  rw [distributionMetric_eq_of_eq hd, hd]
 
 end HarmonicBalls

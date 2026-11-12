@@ -1,0 +1,105 @@
+import HarmonicBalls.Proofs.GFF.BonannoFieldProjection
+import HarmonicBalls.Proofs.GFF.DistributionMetricDecoder
+import LatticeProb.LQG.LengthMetric
+import LatticeProb.LQG.ContMetricWeyl
+import LatticeProb.Bonanno.LQGMetric.Metric.WeylMetric
+import LatticeProb.Bonanno.LQGMetric.Statement.LQGMetric
+
+/-! # The metric assignment on distributions: length space and Weyl scaling
+
+Let `𝔇` be a γ-LQG metric on pairing functionals with Weyl exponent `ξ` (`IsLQGMetric γ ξ 𝔇`), and
+let `distributionMetric 𝔇 : DistC → ContMetric` be the induced Borel metric assignment on
+distributions. For a whole-plane GFF plus a continuous function `h` in the sense of
+`LQGMetric.IsGFFPlusCont` (Gwynne-Miller 2021, Section 1.2, p. 6), almost surely:
+* Axiom I (length space): `(ℂ, distributionMetric 𝔇 (h ω))` is a length space
+  (`ae_isLength_distributionMetric`);
+* Axiom III (Weyl scaling): for every continuous `f`,
+  `e^{ξ f} · distributionMetric 𝔇 (h ω) = distributionMetric 𝔇 (h ω + f)`
+  (`ae_weylScale_distributionMetric`).
+
+The field `h` has the same test pairings as `h^ℂ + g` for a project whole-plane GFF `h^ℂ` and a
+random continuous function `g` (`exists_projectGFF_of_isGFFPlusCont`), so the axioms of
+`IsLQGMetric` apply to it. The deterministic input `hcm` is the fact that a Euclidean length
+metric is a continuous length metric (in the sense of `LQGMetric.ContMetric`); it is stated as a
+hypothesis in the form of `LatticeProb.LQG.exists_contMetric_of_isEuclideanLengthMetric`.
+
+Weyl scaling determines `𝔇 (h + f)` only through `ENNReal.ofReal`, i.e. through its positive
+part; `distributionMetric` samples the positive part, so no sign information is needed off the
+almost sure event where axiom I holds. -/
+
+open MeasureTheory ProbabilityTheory
+
+namespace HarmonicBalls
+
+variable {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+
+/-- The paper's Euclidean length metrics are those of the library. -/
+theorem IsEuclideanLengthMetric.toLatticeProb {D : ℂ → ℂ → ℝ} (h : IsEuclideanLengthMetric D) :
+    LatticeProb.LQG.IsEuclideanLengthMetric D :=
+  ⟨h.self_eq_zero, h.eq_of_eq_zero, h.symm, h.triangle, h.isOpen_iff, h.ofReal_eq_internalMetric⟩
+
+/-- If the distribution `T` has the test pairings of the pairing functional `H`, and the positive
+part of `𝔇 H` is the continuous metric `d`, then `distributionMetric 𝔇 T = d`. -/
+theorem distributionMetric_eq_of_testPairing
+    (h𝔇 : ∀ z w, Measurable[distributionMeasurableSpace] fun T => 𝔇 T z w)
+    {T : LQGMetric.DistC} {H : (ℂ → ℝ) → ℝ} (hTH : ∀ φ : LQGMetric.TestC, T φ = H φ)
+    {d : LQGMetric.ContMetric}
+    (hd : ∀ u v, ENNReal.ofReal (𝔇 H u v) = ENNReal.ofReal (d.1 (u, v))) :
+    distributionMetric 𝔇 T = d := by
+  refine distributionMetric_eq fun u v => ?_
+  have e : 𝔇 (distributionPairingExtension T) u v = 𝔇 H u v :=
+    eq_of_distribution_measurable_of_testPairing_eq (fun T => 𝔇 T u v) (h𝔇 u v) fun φ hφ => by
+      simp only [distributionPairingExtension, hφ, ↓reduceDIte]
+      exact hTH _
+  rw [e, hd]
+
+/-- **Axiom I for the metric assignment on distributions.** For a γ-LQG metric `𝔇` on pairing
+functionals and a whole-plane GFF plus a continuous function `h`, almost surely
+`(ℂ, distributionMetric 𝔇 (h ω))` is a length space. -/
+theorem ae_isLength_distributionMetric (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hcm : ∀ D : ℂ → ℂ → ℝ, LatticeProb.LQG.IsEuclideanLengthMetric D →
+      ∃ d : LQGMetric.ContMetric, (∀ u v, d.1 (u, v) = D u v) ∧ d.IsLength)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsGFFPlusCont h P) :
+    ∀ᵐ ω ∂P, (distributionMetric 𝔇 (h ω)).IsLength := by
+  obtain ⟨hC, hcirc, g, hG, hgc, hgm, hpair⟩ := exists_projectGFF_of_isGFFPlusCont hh
+  have ax := h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc g hG hgc hgm
+  filter_upwards [ax.ae_isEuclideanLengthMetric] with ω hω
+  obtain ⟨d, hd, hlen⟩ := hcm _ hω.toLatticeProb
+  rw [distributionMetric_eq_of_testPairing h𝔇.measurable_apply
+    (H := addFunPairing (hC ω) (g ω)) (fun φ => hpair ω φ) fun u v => by rw [hd]]
+  exact hlen
+
+/-- **Axiom III for the metric assignment on distributions.** For a γ-LQG metric `𝔇` on pairing
+functionals with Weyl exponent `ξ` and a whole-plane GFF plus a continuous function `h`, almost
+surely, for every continuous `f`, `e^{ξ f} · distributionMetric 𝔇 (h ω) =
+distributionMetric 𝔇 (h ω + f)`. -/
+theorem ae_weylScale_distributionMetric (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hcm : ∀ D : ℂ → ℂ → ℝ, LatticeProb.LQG.IsEuclideanLengthMetric D →
+      ∃ d : LQGMetric.ContMetric, (∀ u v, d.1 (u, v) = D u v) ∧ d.IsLength)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsGFFPlusCont h P) :
+    ∀ᵐ ω ∂P, ∀ f : C(ℂ, ℝ), ∀ z w : ℂ,
+      LQGMetric.weylScale ξ f (distributionMetric 𝔇 (h ω)) z w =
+        ENNReal.ofReal ((distributionMetric 𝔇 (LQGMetric.addFun (h ω) f)).1 (z, w)) := by
+  obtain ⟨hC, hcirc, g, hG, hgc, hgm, hpair⟩ := exists_projectGFF_of_isGFFPlusCont hh
+  have ax := h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc g hG hgc hgm
+  filter_upwards [ax.ae_isEuclideanLengthMetric, ax.ae_weylScaling] with ω hω hW
+  intro f z w
+  obtain ⟨d, hd, hlen⟩ := hcm _ hω.toLatticeProb
+  have hD : distributionMetric 𝔇 (h ω) = d :=
+    distributionMetric_eq_of_testPairing h𝔇.measurable_apply
+      (H := addFunPairing (hC ω) (g ω)) (fun φ => hpair ω φ) fun u v => by rw [hd]
+  have hH : 𝔇 (addFunPairing (hC ω) (g ω)) = fun u v => d.1 (u, v) :=
+    funext fun u => funext fun v => (hd u v).symm
+  have hDf : distributionMetric 𝔇 (LQGMetric.addFun (h ω) f) = LQGMetric.weylMetric ξ f d hlen := by
+    refine distributionMetric_eq_of_testPairing h𝔇.measurable_apply
+      (H := addFunPairing (addFunPairing (hC ω) (g ω)) f) (fun φ => ?_) fun u v => ?_
+    · show h ω φ + LQGMetric.ofCont f φ = _
+      rw [hpair ω φ, ofCont_apply_mul]
+      rfl
+    · rw [hW f f.continuous u v, LQGMetric.weylMetric_spec, hH]
+      exact LatticeProb.LQG.weylScaling_contMetric d ξ f u v
+  rw [hD, hDf, LQGMetric.weylMetric_spec]
+
+end HarmonicBalls
