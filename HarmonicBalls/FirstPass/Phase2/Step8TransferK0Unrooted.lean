@@ -4,6 +4,7 @@ import HarmonicBalls.FirstPass.Phase2.LocalMetricReplacementDerived
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs9
 import HarmonicBalls.FirstPass.Phase2.InternalMetricWeylAeMeasurableDerived
 import HarmonicBalls.FirstPass.Phase2.WeylLogTruncationDerivedInputs
+import HarmonicBalls.FirstPass.Phase2.FixedMetricDecoderUniv
 
 /-!
 # Insertion transfer at unit scale (Lemma 11.13, Step 8) from the normalized decoder of a fixed LQG metric
@@ -303,5 +304,18 @@ theorem step8Identity_given_pinchEvent_canonical_of_calibration_normalizedMetric
     Step8IdentityGivenPinchEventCanonicalStmt.{0} :=
   step8Identity_given_pinchEvent_canonical_of_route1 coordChangeAlpha0Stmt_holds.{0} hCal
     (step8InsertionTransferK0Stmt_of_normalizedMetric hB1 hLF)
+
+/-- **Insertion transfer at unit scale from the metric field axioms alone.** The normalized decoder of a fixed LQG
+metric is the theorem `localLQGMetricNormalizedMeasurableFixedMetric_derived`. -/
+theorem step8InsertionTransferK0Stmt_of_fieldAxioms (hLF : LQGMetricFieldAxiomsUnivFrozen.{0}) :
+    Step8InsertionTransferK0Stmt :=
+  step8InsertionTransferK0Stmt_of_normalizedMetric localLQGMetricNormalizedMeasurableFixedMetric_derived.{0} hLF
+
+/-- **The Step 8 identity at universe `0` from the event calibration and the metric field axioms.** -/
+theorem step8Identity_given_pinchEvent_canonical_of_calibration_fieldAxioms
+    (hCal : Step8EventCalibrationStmt.{0}) (hLF : LQGMetricFieldAxiomsUnivFrozen.{0}) :
+    Step8IdentityGivenPinchEventCanonicalStmt.{0} :=
+  step8Identity_given_pinchEvent_canonical_of_calibration_normalizedMetric hCal
+    localLQGMetricNormalizedMeasurableFixedMetric_derived.{0} hLF
 
 end HarmonicBalls.FirstPassS11iStep8PhysExists
