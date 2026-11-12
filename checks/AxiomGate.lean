@@ -53,6 +53,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs37
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs38
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs39
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs41
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs42
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -414,3 +415,11 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs41
 -- 11.10: firstPass_11_10_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:349)
 #print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputs41
+
+-- Round 42: counted forms with the further hypotheses removed (supersede the round-41 forms of the same rows)
+-- 8.3: closure_8_3_derivedInputs42 (HarmonicBalls/FirstPass/Phase2/DerivedInputs42.lean:24)
+#print axioms HarmonicBalls.Closure.closure_8_3_derivedInputs42
+-- 11.10: firstPass_11_10_derivedInputs42 (HarmonicBalls/FirstPass/Phase2/DerivedInputs42.lean:37)
+#print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputs42
+-- 11.10: firstPass_11_10_derivedInputsWeylShiftedSup (HarmonicBalls/FirstPass/Phase2/WeylShiftedChainDerived.lean:108)
+#print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputsWeylShiftedSup

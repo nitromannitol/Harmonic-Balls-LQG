@@ -99,7 +99,7 @@ binder `hI2 : LQGVolumeGrowthAllScalesStmt`); they are not counted declarations 
 | 7.2 | `ClusterTimeContinuityStmt` | `closure_7_2_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:282 | 2 | hL1 hDG |
 | 8.1 | `BoundaryMeasureZeroOfCompactClusterStmt` | `closure_8_1_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:291 | 2 | hL1 hDG |
 | 8.2 | `TypicalPointManyGoodScalesStmt` | `firstPass_8_2_S8d_noWeyl_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:24 | 2 | hSub hDG |
-| 8.3 | `OriginManyGoodScalesStmt` | `closure_8_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:300 | 3 | hholder hDG hN |
+| 8.3 | `OriginManyGoodScalesStmt` | `closure_8_3_derivedInputs42` | HarmonicBalls/FirstPass/Phase2/DerivedInputs42.lean:24 | 2 | hholder hDG |
 | 9.3 | `HarmonicBallBoundarySubsetStmt` | `firstPass_9_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:33 | 1 | hDG |
 | 9.4 | `RegularOpenEqOfAEEqStmt` | `firstPass_9_4_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:40 | 1 | hDG |
 | 10.1 | `ClusterBoundedCrossingsStmt` | `firstPass_10_1` | HarmonicBalls/FirstPass/S1S10.lean:64 | 2 | hI2 hE0 |
@@ -111,7 +111,7 @@ binder `hI2 : LQGVolumeGrowthAllScalesStmt`); they are not counted declarations 
 | 11.7 | `ManyConeBadScalesStmt` | `firstPass_11_7_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:77 | 3 | h8 hFreq hTr |
 | 11.8 | `ConeBadEventProbabilityStmt` | `closure_11_8_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:329 | 1 | hDG |
 | 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:47 | 3 | hMet hAx h1110 |
-| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `firstPass_11_10_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:349 | 6 | hDC hCM hPos hFin hM1 hAx |
+| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `firstPass_11_10_derivedInputs42` | HarmonicBalls/FirstPass/Phase2/DerivedInputs42.lean:37 | 5 | hDC hCM hPos hFin hAx |
 | 11.11 | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11.{u}` | HarmonicBalls/FirstPass/S11.lean:110 | 4 | h6 h13 hI2 hmetricAxioms |
 | 11.12 | `PinchEventPositiveProbabilityStmt` | `firstPass_11_12` | HarmonicBalls/FirstPass/S11e.lean:42 | 2 | hAx h |
 | 11.13 | `ManyPinchScalesStmt` | `manyPinchScales_of_corrected` | HarmonicBalls/FirstPass/Closure/Bridge12.lean:322 | 1 | h |
