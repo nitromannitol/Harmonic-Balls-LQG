@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.Phase2.LQGMetricAxiomsUniv
 import HarmonicBalls.FirstPass.Phase2.Step8PerModelWholePlane
 import HarmonicBalls.FirstPass.Phase2.Lemma1110LeafForms
+import HarmonicBalls.FirstPass.Phase2.FieldAxiomsUniv
 
 /-!
 # Step 8 of Lemma 11.13 on probability spaces of every universe
@@ -190,5 +191,21 @@ theorem firstPass_11_13_canonical_univ_of_seedInputs_metricInputs
           (firstPass_11_9_derivedInputsFieldAxioms (fun γ ξ α₀ Ω _ P hC hcirc => hAx0 Ω P γ ξ α₀ hC hcirc)
             (S11c.firstPass_11_10_derivedInputsSquarePositive hDC hFin
               fun γ ξ α₀ Ω _ P hC hcirc => hAx0 Ω P γ ξ α₀ hC hcirc)))))
+
+/-- **Lemma 11.13 (canonical exponent) at every universe, from the literature inputs on sample spaces in `Type`.** As
+`firstPass_11_13_canonical_univ_of_seedInputs_metricInputs`, with the field axioms in `Type u` obtained from those in
+`Type` by `lqgMetricFieldAxiomsUnivFrozen_of_zero`. Inputs: the field axioms of the LQG metric `hAx0`, the local metric
+replacement `hN2`, the continuity of the rooted physical metric at the insertion `hfr`, and the dyadic diameter inputs
+`hDC`, `hFin`, all on probability spaces in `Type`. -/
+theorem firstPass_11_13_canonical_univ_of_metricInputsZero
+    (hAx0 : LQGMetricFieldAxiomsUnivFrozen.{0})
+    (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
+      LocalMetricReplacementStmt.{0} γ ξ c₁ c₂ r₁ r₂)
+    (hfr : HarmonicBalls.RootedPhysicalMetricContinuousAtInsertionFrozen.{0})
+    (hDC : DyadicCellDiamSmallFrozen.{0})
+    (hFin : ConnectedSquareUnionDiamFiniteFrozen.{0}) :
+    CorrectedLemma11_13CanonicalStmt.{u} :=
+  firstPass_11_13_canonical_univ_of_seedInputs_metricInputs (lqgMetricFieldAxiomsUnivFrozen_of_zero hAx0) hAx0 hN2
+    hfr hDC hFin
 
 end HarmonicBalls

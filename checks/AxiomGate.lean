@@ -597,3 +597,6 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- 11.13 canonical-xi, Step 8 at every universe (HarmonicBalls/FirstPass/Phase2/Step8PerModelUniv.lean)
 #print axioms HarmonicBalls.step8CertificateFrequencyPerModel_univ_of_zero
 #print axioms HarmonicBalls.firstPass_11_13_canonical_univ_of_seedInputs_metricInputs
+-- field axioms at every universe from Type (HarmonicBalls/FirstPass/Phase2/FieldAxiomsUniv.lean)
+#print axioms HarmonicBalls.lqgMetricFieldAxiomsUnivFrozen_of_zero
+#print axioms HarmonicBalls.firstPass_11_13_canonical_univ_of_metricInputsZero
