@@ -1,0 +1,13 @@
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs45
+
+-- Axiom audit of the derived-input forms of round 45 (checks/ is not a lean_lib: compile with lc).
+
+#print axioms HarmonicBalls.Closure.closure_8_3_derivedInputs45
+#print axioms HarmonicBalls.firstPass_11_7_derivedInputs45
+#print axioms HarmonicBalls.liouvilleVolumeGrowthStmt_of_ballMass_derivedInputs45
+#print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs45
+#print axioms HarmonicBalls.firstPass_9_2_corrected_derivedInputs45
+#print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs45
+#print axioms HarmonicBalls.firstPass_11_17_corrected_derivedInputs45
+#print axioms HarmonicBalls.harmonicBallNoveltyStmt_of_existence_and_results_canonical_derivedInputs45
+#print axioms HarmonicBalls.harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth_derivedInputs45
