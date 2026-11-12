@@ -3,6 +3,8 @@ import LatticeProb.Bonanno.LQGMetric.Field.GFFInvariance
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgRate
 import LatticeProb.Bonanno.LQGMetric.Field.MeasurableAvg
 import LatticeProb.Bonanno.LQGMetric.Field.Measurable
+import HarmonicBalls.Proofs.GFF.FullTestDistributionVersion
+import HarmonicBalls.Steps.Sec11.ContinuousFieldShift
 
 /-!
 # A whole-plane GFF plus a continuous function, in project coordinates
@@ -18,6 +20,11 @@ measurable random constant keeps the whole-plane GFF property
 (`LQGMetric.CircleAvg.ae_circleAvg_addConst_one_zero`). The normalized field is identified with a
 project whole-plane GFF by `normalizedGFF_exists_projectGFF`, and the subtracted circle average
 is moved into the continuous part.
+
+Consequently, for a γ-LQG metric `𝔇` on pairing functionals (`IsLQGMetric`), whose evaluations
+are measurable for the σ-algebra of test-function evaluations, the metric of such a field equals,
+at every sample point, the metric of the project whole-plane GFF shifted by the continuous part
+(`exists_projectGFF_metric_eq_of_isGFFPlusCont`).
 -/
 
 open MeasureTheory ProbabilityTheory
@@ -74,5 +81,29 @@ theorem exists_projectGFF_of_isGFFPlusCont {Ω : Type} [MeasurableSpace Ω] {P :
     have hG : G ω φ = h ω φ - LQGMetric.ofCont (f0 ω) φ := rfl
     rw [hCeq, LQGMetric.GFFInv.addConst_apply, hsplit, hconst, hG]
     ring
+
+/-- **The metric of a whole-plane GFF plus a continuous function, in project coordinates.**
+For a γ-LQG metric `𝔇` on pairing functionals and a Bonanno field `h` (a whole-plane GFF plus a
+continuous function), there are a project whole-plane GFF `(hC, hcirc)` and a random continuous
+function `g` on the same probability space with `𝔇 (h ω) = 𝔇 (hC ω + g ω)` at every sample point:
+the two pairing functionals have the same pairings with all test functions, and the evaluations
+of `𝔇` depend only on those pairings. -/
+theorem exists_projectGFF_metric_eq_of_isGFFPlusCont {γ ξ : ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsGFFPlusCont h P) :
+    ∃ (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (g : Ω → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc ∧ (∀ ω, Continuous (g ω)) ∧
+      (∀ x, Measurable fun ω => g ω x) ∧
+      ∀ ω, 𝔇 (distributionPairingExtension (h ω)) = 𝔇 (addFunPairing (hC ω) (g ω)) := by
+  obtain ⟨hC, hcirc, g, hG, hgc, hgm, hpair⟩ := exists_projectGFF_of_isGFFPlusCont hh
+  refine ⟨hC, hcirc, g, hG, hgc, hgm, fun ω => ?_⟩
+  funext u v
+  refine eq_of_distribution_measurable_of_testPairing_eq (fun T => 𝔇 T u v)
+    (h𝔇.measurable_apply u v) fun φ hφ => ?_
+  have he : distributionPairingExtension (h ω) φ = h ω ⟨φ, hφ.1, hφ.2.1, hφ.2.2⟩ := by
+    simp only [distributionPairingExtension, hφ, ↓reduceDIte]
+  rw [he, hpair]
+  rfl
 
 end HarmonicBalls
