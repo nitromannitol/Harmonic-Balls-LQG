@@ -7,7 +7,7 @@ Legend: DERIVED = theorem of the exact Prop, arguments universally quantified, n
 
 | # | input | file:line | uses | status | evidence (theorem file:line, commit; or request) | remaining inputs (REDUCIBLE) | wrapper (DI commit) |
 |---|---|---|---|---|---|---|---|
-| 1 | LQGMeasureExistence [P] | Proposed/LQG.lean:74 | 43 | OPEN-LITERATURE | DS 0808.1560 Prop 1.1; BP 2404.16642 Thm 2.1. lqgMeasureExistence_of_stronger (Proofs/Sec6/WeakerSingularityExistence.lean:139) takes hypotheses | - | - |
+| 1 | LQGMeasureExistence [P] | Proposed/LQG.lean:74 | 43 | DERIVED | HarmonicBalls.lqgMeasureExistence_derived (FirstPass/Phase2/LQGMeasureExistenceDerived.lean:25; every Ω, γ, α₀) from Lattice-Probability `LatticeProb.LQG.lqgMeasureExistenceLP_proved` (LQG/LQGMeasureExistenceProved.lean, LP 277b0c4, pin 1dd6dc9) via the M1/M4 bridges; closed forms `lqgMeasureExistence_forall_field`, `_forall_exponents`, `_forall_zero` for the binder orders of `hE`/`hEx`; axioms std | - | 42 counted forms `*_derivedInputs39` (FirstPass/Phase2/DerivedInputs39.lean) |
 | 2 | LQGMeasureCoordChange [P] | Proposed/LQG.lean:131 | 40 | OPEN-LITERATURE | DS 2011 Prop 2.1; Sheffield-Wang 1605.06171 | - | - |
 | 3 | WholePlaneLQGBallMassBounds [P] | Proposed/LQG.lean:172 | 40 | OPEN-LITERATURE | Ding-Gwynne 1807.01072 Lemma 3.8; no theorem | - | - |
 | 4 | LQGMeasureNonatomic [P] | Proposed/LQG.lean:86 | 12 | REDUCIBLE | singular_nonatomic_of_existence_and_wholePlane (Proofs/Sec2/SingularAtomAtZero.lean:48), hDG=row 3, hAff=row 10, hCC=row 2, hE=row 1  z6 FLAG (reports/z6.md:31): row 4 reduces to rows 1-3 only with row 1 at every alpha, the form the DI wrappers bind (Assembly.lean FromLiterature takes row 1 at alpha0 = 0).| rows 1, 2, 3 [P] | DI19 4ba49c1e |

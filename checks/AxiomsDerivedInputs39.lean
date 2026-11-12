@@ -1,0 +1,46 @@
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs39
+
+-- Axiom audit of the derived-input forms of round 39 (checks/ is not a lean_lib: compile with lc).
+
+#print axioms HarmonicBalls.Closure.closure_1_3_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_3_1_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_3_2_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_3_3_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_3_4_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_3_5_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_4_1_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_4_2_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_4_3_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_1_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_2_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_3_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_4_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_5_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_6_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_7_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_5_8_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_1_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_2_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_3_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_4_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_6_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_7_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_8_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_9_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_10_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_11_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_6_13_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_7_1_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_7_2_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_8_1_derivedInputs39
+#print axioms HarmonicBalls.firstPass_8_2_S8d_noWeyl_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_8_3_derivedInputs39
+#print axioms HarmonicBalls.firstPass_9_3_derivedInputs39
+#print axioms HarmonicBalls.firstPass_9_4_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_10_7_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_11_6_derivedInputs39
+#print axioms HarmonicBalls.firstPass_11_7_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_11_8_derivedInputs39
+#print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs39
+#print axioms HarmonicBalls.firstPass_9_2_corrected_derivedInputs39
+#print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs39
