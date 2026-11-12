@@ -189,3 +189,9 @@ hDec = LocalDecoderCommon.localLQGDecoderCommonFrozen_derived, hCM = cameronMart
 hCC = lqgMeasureCoordChange_holds, hE = lqgMeasureExistence_forall_exponents, hNA = lqgMeasureNonatomic_holds; axioms
 std. The counted form firstPass_11_7_derivedInputs43 (COUNTED-MANIFEST row 11.7) binds the RETIRED
 OriginRootedConeFrequencyFrozen and RootedConeFrequencyTransferFrozen; manyConeBadScalesStmt_holds replaces it.
+- 2026-11-12 Lemma 9.2 closed (c7458093): HarmonicBalls.Closure.closure_9_2_derivedInputs45 :
+S9c.SubharmonicBallUniquenessC51Stmt.{u} (FirstPass/Phase2/DerivedInputs45.lean:80) has no hypothesis: the binder hSub of
+closure_9_2_derivedInputs43 (COUNTED-MANIFEST row 9.2 cites the DI41 form, binders hSub hDG) is supplied by
+dmsLemmaA10WholePlaneMarkedSub_forall (CampbellDerivedWrappers.lean:26; row 46 DERIVED). DerivedInputs45 also restates
+11.7 (firstPass_11_7_derivedInputs45 = manyConeBadScalesStmt_holds), 8.3, 2.4 and the minimal forms of 11.16, 11.17,
+novelty and not-metric-ball; checks/AxiomsDerivedInputs45.lean: all 9 forms std axioms.
