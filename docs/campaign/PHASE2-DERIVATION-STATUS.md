@@ -172,3 +172,11 @@ Quot.sound (`checks/AxiomsDerivedInputs38.lean`, and `checks/AxiomGate.lean`: 12
 
 No reduction was found by this search for 4.1-4.3 (5 binders) nor for any other counted form (68 declarations
 examined in all).
+
+Chained forms (2026-11-12, FirstPass/Phase2/PinchChainedForms.lean; axioms propext, Classical.choice, Quot.sound):
+the counted forms of 11.9 (hAx h1110), 11.16 (hAx hD) and 11.17 (h16 hAx) bind results of this paper (h1110 = 11.10,
+hD = 11.9, h16 = 11.16). Composed with the closed-square form of 11.10 (S11c.firstPass_11_10_derivedInputsSquarePositive,
+hDC hFin hAx) they hold from the LQG metric inputs alone: firstPass_11_9_derivedInputsMetric,
+firstPass_11_16_corrected_derivedInputsMetric, firstPass_11_17_corrected_derivedInputsMetric, each binding
+hDC : DyadicCellDiamSmallFrozen, hFin : ConnectedSquareUnionDiamFiniteFrozen, hAx : LQGMetricFieldAxiomsUnivFrozen.
+11.12 still binds the uncorrected PinchThirdEventPositiveStmt (no bridge from the faithful 11.17 form).
