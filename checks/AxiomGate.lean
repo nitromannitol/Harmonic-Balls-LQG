@@ -69,6 +69,7 @@ import HarmonicBalls.Proofs.Sec9.ObstacleComparison
 import HarmonicBalls.Steps.Sec2.VolumeGrowth
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsAlphaZero
 import HarmonicBalls.FirstPass.Phase2.LQGMetricXiPos
+import HarmonicBalls.FirstPass.Phase2.Lemma1110LeafForms
 
 /-!
 # Axiom gate
@@ -570,3 +571,9 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.Closure.closure_8_3_derivedInputs44
 -- 11.7: manyConeBadScalesStmt_holds (HarmonicBalls/FirstPass/Phase2/ConeBadScalesHolds.lean:31)
 #print axioms HarmonicBalls.manyConeBadScalesStmt_holds
+-- 11.10: firstPass_11_10_derivedInputsClosedSquarePositive (HarmonicBalls/FirstPass/Phase2/Lemma1110LeafForms.lean:28)
+#print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputsClosedSquarePositive
+-- 11.13 canonical-xi at universe 0: firstPass_11_13_canonical_of_seedInputs_metricInputs (HarmonicBalls/FirstPass/Phase2/Lemma1110LeafForms.lean:47)
+#print axioms HarmonicBalls.FirstPassPhase2Step8WholePlaneFromSeed.firstPass_11_13_canonical_of_seedInputs_metricInputs
+-- 11.13 canonical-xi at universe 0: firstPass_11_13_canonical_of_seedInputs_lemma11_10 (HarmonicBalls/FirstPass/Phase2/Step8WholePlaneFromSeed.lean:128)
+#print axioms HarmonicBalls.FirstPassPhase2Step8WholePlaneFromSeed.firstPass_11_13_canonical_of_seedInputs_lemma11_10
