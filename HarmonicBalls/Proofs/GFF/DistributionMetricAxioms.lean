@@ -4,8 +4,10 @@ import LatticeProb.LQG.LengthMetric
 import LatticeProb.LQG.ContMetricWeyl
 import LatticeProb.Bonanno.LQGMetric.Metric.WeylMetric
 import LatticeProb.Bonanno.LQGMetric.Statement.LQGMetric
+import LatticeProb.Bonanno.LQGMetric.Metric.WeylScaling
+import HarmonicBalls.Proofs.GFF.DistMetricPairingCoord
 
-/-! # The metric assignment on distributions: length space and Weyl scaling
+/-! # The metric assignment on distributions: length space, Weyl scaling, coordinate change
 
 Let `𝔇` be a γ-LQG metric on pairing functionals with Weyl exponent `ξ` (`IsLQGMetric γ ξ 𝔇`), and
 let `distributionMetric 𝔇 : DistC → ContMetric` be the induced Borel metric assignment on
@@ -15,7 +17,10 @@ distributions. For a whole-plane GFF plus a continuous function `h` in the sense
   (`ae_isLength_distributionMetric`);
 * Axiom III (Weyl scaling): for every continuous `f`,
   `e^{ξ f} · distributionMetric 𝔇 (h ω) = distributionMetric 𝔇 (h ω + f)`
-  (`ae_weylScale_distributionMetric`).
+  (`ae_weylScale_distributionMetric`);
+* Axiom IV (coordinate change): for fixed `r > 0` and `z`, `distributionMetric 𝔇 (h ω)` at
+  `(r u + z, r v + z)` equals `distributionMetric 𝔇 (h(r · + z) + Q log r)` at `(u, v)`
+  (`ae_coord_distributionMetric`).
 
 The field `h` has the same test pairings as `h^ℂ + g` for a project whole-plane GFF `h^ℂ` and a
 random continuous function `g` (`exists_projectGFF_of_isGFFPlusCont`), so the axioms of
@@ -101,5 +106,45 @@ theorem ae_weylScale_distributionMetric (h𝔇 : IsLQGMetric γ ξ 𝔇)
     · rw [hW f f.continuous u v, LQGMetric.weylMetric_spec, hH]
       exact LatticeProb.LQG.weylScaling_contMetric d ξ f u v
   rw [hD, hDf, LQGMetric.weylMetric_spec]
+
+/-- **Axiom IV for the metric assignment on distributions.** For a γ-LQG metric `𝔇` on pairing
+functionals and a whole-plane GFF plus a continuous function `h`, for fixed `r > 0` and `z ∈ ℂ`,
+almost surely `D_h(r u + z, r v + z) = D_{h(r · + z) + Q log r}(u, v)` for all `u, v`, where
+`D = distributionMetric 𝔇`. -/
+theorem ae_coord_distributionMetric (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hcm : ∀ D : ℂ → ℂ → ℝ, LatticeProb.LQG.IsEuclideanLengthMetric D →
+      ∃ d : LQGMetric.ContMetric, (∀ u v, d.1 (u, v) = D u v) ∧ d.IsLength)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {h : Ω → LQGMetric.DistC} (hh : LQGMetric.IsGFFPlusCont h P) {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    ∀ᵐ ω ∂P, ∀ u v : ℂ,
+      (distributionMetric 𝔇 (h ω)).1 (r * u + z, r * v + z) =
+        (distributionMetric 𝔇 (LQGMetric.addConst (LQGMetric.affineComp r z (h ω))
+          (LQGMetric.Q γ * Real.log r))).1 (u, v) := by
+  obtain ⟨hC, hcirc, g, hG, hgc, hgm, hpair⟩ := exists_projectGFF_of_isGFFPlusCont hh
+  have ax := h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc g hG hgc hgm
+  filter_upwards [ax.ae_isEuclideanLengthMetric, ax.coordChange r hr z] with ω hω hco
+  intro u v
+  obtain ⟨d, hd, -⟩ := hcm _ hω.toLatticeProb
+  have hD : distributionMetric 𝔇 (h ω) = d :=
+    distributionMetric_eq_of_testPairing h𝔇.measurable_apply
+      (H := addFunPairing (hC ω) (g ω)) (fun φ => hpair ω φ) fun u v => by rw [hd]
+  have hD' : distributionMetric 𝔇 (LQGMetric.addConst (LQGMetric.affineComp r z (h ω))
+      (LQGMetric.Q γ * Real.log r)) = LQGMetric.ContMetric.affine r hr.ne' z d := by
+    refine distributionMetric_eq_of_testPairing h𝔇.measurable_apply
+      (H := addFunPairing (affinePullbackPairing (addFunPairing (hC ω) (g ω)) r z)
+        fun _ => lqgQ γ * Real.log r) (fun φ => ?_) fun u v => ?_
+    · have hψ : (fun y => (φ : ℂ → ℝ) ((y - z) / r)) = ⇑(LQGMetric.testAffinePull r z φ) :=
+        funext fun y => by rw [LQGMetric.testAffinePull_apply r z hr.ne']
+      show LQGMetric.affineComp r z (h ω) φ +
+        LQGMetric.ofCont (ContinuousMap.const ℂ (LQGMetric.Q γ * Real.log r)) φ = _
+      rw [← affinePullbackPairing_distributionPairingExtension_test (h ω) hr z φ, ofCont_apply_mul]
+      simp only [affinePullbackPairing, addFunPairing]
+      rw [hψ, distributionPairingExtension_test, hpair]
+      simp only [LQGMetric.testAffinePull_apply r z hr.ne']
+      rfl
+    · rw [← hco u v, ← hd]
+      rfl
+  rw [hD, hD']
+  rfl
 
 end HarmonicBalls
