@@ -52,6 +52,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs36
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs37
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs38
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs39
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs41
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -327,3 +328,89 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.Closure.closure_11_13_canonical_derived
 -- closure_11_11_canonical_derived (HarmonicBalls/FirstPass/Closure/RetiredInputs.lean:511)
 #print axioms HarmonicBalls.Closure.closure_11_11_canonical_derived
+
+-- Round 41: counted forms with the further hypotheses removed (supersede the round-39 forms of the same rows; COUNTED-MANIFEST.md, round-41 refresh)
+-- 8.2: firstPass_8_2_S8d_noWeyl_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:24)
+#print axioms HarmonicBalls.firstPass_8_2_S8d_noWeyl_derivedInputs41
+-- 9.3: firstPass_9_3_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:33)
+#print axioms HarmonicBalls.firstPass_9_3_derivedInputs41
+-- 9.4: firstPass_9_4_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:40)
+#print axioms HarmonicBalls.firstPass_9_4_derivedInputs41
+-- 11.9: firstPass_11_9_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:47)
+#print axioms HarmonicBalls.firstPass_11_9_derivedInputs41
+-- 9.2 corrected: firstPass_9_2_corrected_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:56)
+#print axioms HarmonicBalls.firstPass_9_2_corrected_derivedInputs41
+-- 1.3: closure_1_3_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:68)
+#print axioms HarmonicBalls.Closure.closure_1_3_derivedInputs41
+-- 3.1: closure_3_1_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:77)
+#print axioms HarmonicBalls.Closure.closure_3_1_derivedInputs41
+-- 3.2: closure_3_2_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:84)
+#print axioms HarmonicBalls.Closure.closure_3_2_derivedInputs41
+-- 3.3: closure_3_3_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:91)
+#print axioms HarmonicBalls.Closure.closure_3_3_derivedInputs41
+-- 3.4: closure_3_4_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:98)
+#print axioms HarmonicBalls.Closure.closure_3_4_derivedInputs41
+-- 3.5: closure_3_5_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:105)
+#print axioms HarmonicBalls.Closure.closure_3_5_derivedInputs41
+-- 4.1: closure_4_1_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:112)
+#print axioms HarmonicBalls.Closure.closure_4_1_derivedInputs41
+-- 4.2: closure_4_2_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:119)
+#print axioms HarmonicBalls.Closure.closure_4_2_derivedInputs41
+-- 4.3: closure_4_3_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:126)
+#print axioms HarmonicBalls.Closure.closure_4_3_derivedInputs41
+-- 5.1: closure_5_1_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:133)
+#print axioms HarmonicBalls.Closure.closure_5_1_derivedInputs41
+-- 5.2: closure_5_2_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:140)
+#print axioms HarmonicBalls.Closure.closure_5_2_derivedInputs41
+-- 5.3: closure_5_3_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:149)
+#print axioms HarmonicBalls.Closure.closure_5_3_derivedInputs41
+-- 5.4: closure_5_4_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:158)
+#print axioms HarmonicBalls.Closure.closure_5_4_derivedInputs41
+-- 5.5: closure_5_5_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:167)
+#print axioms HarmonicBalls.Closure.closure_5_5_derivedInputs41
+-- 5.6: closure_5_6_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:176)
+#print axioms HarmonicBalls.Closure.closure_5_6_derivedInputs41
+-- 5.7: closure_5_7_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:183)
+#print axioms HarmonicBalls.Closure.closure_5_7_derivedInputs41
+-- 5.8: closure_5_8_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:191)
+#print axioms HarmonicBalls.Closure.closure_5_8_derivedInputs41
+-- 6.1: closure_6_1_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:198)
+#print axioms HarmonicBalls.Closure.closure_6_1_derivedInputs41
+-- 6.2: closure_6_2_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:205)
+#print axioms HarmonicBalls.Closure.closure_6_2_derivedInputs41
+-- 6.3: closure_6_3_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:212)
+#print axioms HarmonicBalls.Closure.closure_6_3_derivedInputs41
+-- 6.4: closure_6_4_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:219)
+#print axioms HarmonicBalls.Closure.closure_6_4_derivedInputs41
+-- 6.6: closure_6_6_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:226)
+#print axioms HarmonicBalls.Closure.closure_6_6_derivedInputs41
+-- 6.7: closure_6_7_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:233)
+#print axioms HarmonicBalls.Closure.closure_6_7_derivedInputs41
+-- 6.8: closure_6_8_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:240)
+#print axioms HarmonicBalls.Closure.closure_6_8_derivedInputs41
+-- 6.9: closure_6_9_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:247)
+#print axioms HarmonicBalls.Closure.closure_6_9_derivedInputs41
+-- 6.10: closure_6_10_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:254)
+#print axioms HarmonicBalls.Closure.closure_6_10_derivedInputs41
+-- 6.11: closure_6_11_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:261)
+#print axioms HarmonicBalls.Closure.closure_6_11_derivedInputs41
+-- 6.13: closure_6_13_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:268)
+#print axioms HarmonicBalls.Closure.closure_6_13_derivedInputs41
+-- 7.1: closure_7_1_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:275)
+#print axioms HarmonicBalls.Closure.closure_7_1_derivedInputs41
+-- 7.2: closure_7_2_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:282)
+#print axioms HarmonicBalls.Closure.closure_7_2_derivedInputs41
+-- 8.1: closure_8_1_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:291)
+#print axioms HarmonicBalls.Closure.closure_8_1_derivedInputs41
+-- 8.3: closure_8_3_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:300)
+#print axioms HarmonicBalls.Closure.closure_8_3_derivedInputs41
+-- 10.7: closure_10_7_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:310)
+#print axioms HarmonicBalls.Closure.closure_10_7_derivedInputs41
+-- 11.6: closure_11_6_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:320)
+#print axioms HarmonicBalls.Closure.closure_11_6_derivedInputs41
+-- 11.8: closure_11_8_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:329)
+#print axioms HarmonicBalls.Closure.closure_11_8_derivedInputs41
+-- 9.2: closure_9_2_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:336)
+#print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs41
+-- 11.10: firstPass_11_10_derivedInputs41 (HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:349)
+#print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputs41

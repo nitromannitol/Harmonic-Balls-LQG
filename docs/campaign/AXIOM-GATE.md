@@ -8,9 +8,9 @@ Owner: worker z3 (task fp-clean-d6-axiom-gate, item D6 of the clean-up, lead dec
 
 **What it does not show.** `#print axioms` does not list hypotheses. A declaration that depends only on `propext`, `Classical.choice`, `Quot.sound` can still be conditional: its explicit binders (literature Props such as `hDG`, `hCC`, `hE`, or frozen inputs) are part of its signature. The binder columns of COUNTED-MANIFEST.md and the remaining-input column of PHASE2-DERIVATION-STATUS.md give that information. "Standard axioms only" therefore means "no extra axiom", not "unconditional".
 
-**Result.** 125 declarations (rechecked 2026-11-12 03:07 UTC at HEAD 3188e332, Lattice-Probability pin 1dd6dc9), all with axiom output (0 missing). The first run of this gate had 92; the updates below record the additions. 0 declarations use an axiom beyond `propext`, `Classical.choice`, `Quot.sound`.
+**Result.** 167 declarations (rechecked 2026-11-12 06:10 UTC at the Lattice-Probability pin 8275377; the 42 added are the round-41 forms of DerivedInputs41.lean, listed at the end of the gate), all with axiom output (0 missing). The first run of this gate had 92; the updates below record the additions. 0 declarations use an axiom beyond `propext`, `Classical.choice`, `Quot.sound`.
 
-Distinct axiom sets over all declarations: 125 with [propext, Classical.choice, Quot.sound].
+Distinct axiom sets over all declarations: 167 with [propext, Classical.choice, Quot.sound].
 
 **Update 2026-11-11 (round-36 counted forms).** `checks/AxiomGate.lean` now has 112 `#print axioms` lines: 11 were added for the `_derivedInputs36` counted forms of 1.3, 5.2, 5.3, 5.4, 5.5, 7.2, 8.1, 8.2, 9.2, 10.7, 11.6 (`HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean`; COUNTED-MANIFEST.md, round-36 refresh), in which the input `PhaseTorusDoublingProductErgodicFrozen` is supplied by a theorem. All 112 declarations print [propext, Classical.choice, Quot.sound]. The tables below are as of the earlier check and still name the previous counted forms of those results.
 

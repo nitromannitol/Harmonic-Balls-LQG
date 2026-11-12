@@ -65,53 +65,53 @@ binder `hI2 : LQGVolumeGrowthAllScalesStmt`); they are not counted declarations 
 |---|---|---|---|---|---|
 | 1.1 | `ExistenceUniquenessHarmonicBallsStmt` | `firstPass_1_1` | HarmonicBalls/FirstPass/S1S10.lean:35 | 2 | h55 h56 |
 | 1.2 | `HarmonicBallNoveltyStmt` | `firstPass_1_2` | HarmonicBalls/FirstPass/S1S10.lean:43 | 5 | h55 h56 hjordan hlip hmetric |
-| 1.3 | `HarmonicBallLocalSetStmt` | `closure_1_3_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:115 | 3 | hL1 hDG hCC |
+| 1.3 | `HarmonicBallLocalSetStmt` | `closure_1_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:68 | 2 | hL1 hDG |
 | 2.3 | `GreenFunctionBallStmt` | `closure_2_3` | HarmonicBalls/FirstPass/Closure.lean:112 | 0 |  |
-| 3.1 | `LeastSupersolutionMemStmt` | `closure_3_1_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:125 | 2 | hDG hCC |
-| 3.2 | `ClusterOpenLaplacianStmt` | `closure_3_2_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:135 | 2 | hDG hCC |
-| 3.3 | `ClusterMonotoneStmt` | `closure_3_3_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:149 | 2 | hDG hCC |
-| 3.4 | `ClusterConservationOfMassStmt` | `closure_3_4_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:159 | 2 | hDG hCC |
-| 3.5 | `ClusterCompatibilityStmt` | `closure_3_5_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:172 | 2 | hDG hCC |
-| 4.1 | `ClusterLowerBoundStmt` | `closure_4_1_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:182 | 2 | hDG hCC |
-| 4.2 | `LeastSupersolutionHolderStmt` | `closure_4_2_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:192 | 2 | hDG hCC |
-| 4.3 | `ClusterSubharmonicBallStmt` | `closure_4_3_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:202 | 2 | hDG hCC |
-| 5.1 | `ClusterUpperBoundStmt` | `closure_5_1_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:212 | 2 | hDG hCC |
-| 5.2 | `ClusterContinuityStmt` | `closure_5_2_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:221 | 3 | hDG hCC hSub |
-| 5.3 | `ClusterBoundaryMeasureZeroStmt` | `closure_5_3_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:231 | 3 | hDG hCC hL1 |
-| 5.4 | `RegularizedClusterHarmonicBallsStmt` | `closure_5_4_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:241 | 3 | hDG hCC hL1 |
-| 5.5 | `ExistenceHarmonicBallsStmt` | `closure_5_5_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:251 | 3 | hDG hCC hL1 |
-| 5.6 | `UniquenessHarmonicBallsStmt` | `closure_5_6_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:261 | 2 | hDG hCC |
-| 5.7 | `ClusterScaleInvarianceStmt` | `closure_5_7_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:270 | 2 | hDG hCC |
-| 5.8 | `ClusterStrongCompatibilityStmt` | `closure_5_8_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:279 | 2 | hDG hCC |
-| 6.1 | `HarnackTypeEstimateStmt` | `closure_6_1_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:288 | 2 | hDG hCC |
-| 6.2 | `HarnackTypeComponentStmt` | `closure_6_2_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:297 | 2 | hDG hCC |
-| 6.3 | `ManyGoodAnnuliStmt` | `closure_6_3_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:306 | 2 | hDG hCC |
-| 6.4 | `GoodAnnulusProbabilityStmt` | `closure_6_4_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:315 | 2 | hDG hCC |
-| 6.6 | `ManyVeryGoodAnnuliStmt` | `closure_6_6_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:324 | 2 | hDG hCC |
-| 6.7 | `VeryGoodAnnulusProbabilityStmt` | `closure_6_7_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:333 | 2 | hDG hCC |
-| 6.8 | `AnnulusMassBoundByOdometerStmt` | `closure_6_8_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:342 | 2 | hDG hCC |
-| 6.9 | `OdometerHarmonicMeasureBoundStmt` | `closure_6_9_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:351 | 2 | hDG hCC |
-| 6.10 | `OdometerBoundByAnnulusMassStmt` | `closure_6_10_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:360 | 2 | hDG hCC |
-| 6.11 | `VeryGoodAnnulusHarnackTypeStmt` | `closure_6_11_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:369 | 2 | hDG hCC |
+| 3.1 | `LeastSupersolutionMemStmt` | `closure_3_1_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:77 | 1 | hDG |
+| 3.2 | `ClusterOpenLaplacianStmt` | `closure_3_2_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:84 | 1 | hDG |
+| 3.3 | `ClusterMonotoneStmt` | `closure_3_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:91 | 1 | hDG |
+| 3.4 | `ClusterConservationOfMassStmt` | `closure_3_4_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:98 | 1 | hDG |
+| 3.5 | `ClusterCompatibilityStmt` | `closure_3_5_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:105 | 1 | hDG |
+| 4.1 | `ClusterLowerBoundStmt` | `closure_4_1_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:112 | 1 | hDG |
+| 4.2 | `LeastSupersolutionHolderStmt` | `closure_4_2_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:119 | 1 | hDG |
+| 4.3 | `ClusterSubharmonicBallStmt` | `closure_4_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:126 | 1 | hDG |
+| 5.1 | `ClusterUpperBoundStmt` | `closure_5_1_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:133 | 1 | hDG |
+| 5.2 | `ClusterContinuityStmt` | `closure_5_2_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:140 | 2 | hDG hSub |
+| 5.3 | `ClusterBoundaryMeasureZeroStmt` | `closure_5_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:149 | 2 | hDG hL1 |
+| 5.4 | `RegularizedClusterHarmonicBallsStmt` | `closure_5_4_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:158 | 2 | hDG hL1 |
+| 5.5 | `ExistenceHarmonicBallsStmt` | `closure_5_5_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:167 | 2 | hDG hL1 |
+| 5.6 | `UniquenessHarmonicBallsStmt` | `closure_5_6_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:176 | 1 | hDG |
+| 5.7 | `ClusterScaleInvarianceStmt` | `closure_5_7_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:183 | 1 | hDG |
+| 5.8 | `ClusterStrongCompatibilityStmt` | `closure_5_8_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:191 | 1 | hDG |
+| 6.1 | `HarnackTypeEstimateStmt` | `closure_6_1_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:198 | 1 | hDG |
+| 6.2 | `HarnackTypeComponentStmt` | `closure_6_2_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:205 | 1 | hDG |
+| 6.3 | `ManyGoodAnnuliStmt` | `closure_6_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:212 | 1 | hDG |
+| 6.4 | `GoodAnnulusProbabilityStmt` | `closure_6_4_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:219 | 1 | hDG |
+| 6.6 | `ManyVeryGoodAnnuliStmt` | `closure_6_6_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:226 | 1 | hDG |
+| 6.7 | `VeryGoodAnnulusProbabilityStmt` | `closure_6_7_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:233 | 1 | hDG |
+| 6.8 | `AnnulusMassBoundByOdometerStmt` | `closure_6_8_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:240 | 1 | hDG |
+| 6.9 | `OdometerHarmonicMeasureBoundStmt` | `closure_6_9_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:247 | 1 | hDG |
+| 6.10 | `OdometerBoundByAnnulusMassStmt` | `closure_6_10_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:254 | 1 | hDG |
+| 6.11 | `VeryGoodAnnulusHarnackTypeStmt` | `closure_6_11_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:261 | 1 | hDG |
 | 6.12 | `ShellDecompositionStmt` | `closure_6_12_derivedInputs38` | HarmonicBalls/FirstPass/Phase2/DerivedInputs38.lean:141 | 0 |  |
-| 6.13 | `LowMassSmallOdometerStmt` | `closure_6_13_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:378 | 2 | hDG hCC |
-| 7.1 | `ClusterUpperBoundPolyHighProbStmt` | `closure_7_1_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:387 | 2 | hDG hCC |
-| 7.2 | `ClusterTimeContinuityStmt` | `closure_7_2_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:396 | 3 | hL1 hDG hCC |
-| 8.1 | `BoundaryMeasureZeroOfCompactClusterStmt` | `closure_8_1_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:406 | 3 | hL1 hDG hCC |
-| 8.2 | `TypicalPointManyGoodScalesStmt` | `firstPass_8_2_S8d_noWeyl_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:46 | 3 | hSub hDG hCC |
-| 8.3 | `OriginManyGoodScalesStmt` | `closure_8_3_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:416 | 4 | hholder hDG hN hCC |
-| 9.3 | `HarmonicBallBoundarySubsetStmt` | `firstPass_9_3_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:57 | 2 | hDG hCC |
-| 9.4 | `RegularOpenEqOfAEEqStmt` | `firstPass_9_4_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:67 | 2 | hDG hCC |
+| 6.13 | `LowMassSmallOdometerStmt` | `closure_6_13_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:268 | 1 | hDG |
+| 7.1 | `ClusterUpperBoundPolyHighProbStmt` | `closure_7_1_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:275 | 1 | hDG |
+| 7.2 | `ClusterTimeContinuityStmt` | `closure_7_2_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:282 | 2 | hL1 hDG |
+| 8.1 | `BoundaryMeasureZeroOfCompactClusterStmt` | `closure_8_1_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:291 | 2 | hL1 hDG |
+| 8.2 | `TypicalPointManyGoodScalesStmt` | `firstPass_8_2_S8d_noWeyl_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:24 | 2 | hSub hDG |
+| 8.3 | `OriginManyGoodScalesStmt` | `closure_8_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:300 | 3 | hholder hDG hN |
+| 9.3 | `HarmonicBallBoundarySubsetStmt` | `firstPass_9_3_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:33 | 1 | hDG |
+| 9.4 | `RegularOpenEqOfAEEqStmt` | `firstPass_9_4_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:40 | 1 | hDG |
 | 10.1 | `ClusterBoundedCrossingsStmt` | `firstPass_10_1` | HarmonicBalls/FirstPass/S1S10.lean:64 | 2 | hI2 hE0 |
 | 10.6 | `ComplementComponentBoundarySimpleLoopStmt` | `firstPass_10_6` | HarmonicBalls/FirstPass/S1S10.lean:92 | 3 | h10 h32 hTor |
-| 10.7 | `HarmonicBallComplementBoundaryJordanStmt` | `closure_10_7_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:427 | 4 | hL1 hDG hCC hTor |
+| 10.7 | `HarmonicBallComplementBoundaryJordanStmt` | `closure_10_7_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:310 | 3 | hL1 hDG hTor |
 | 11.2 | `HarmonicBallNotLipschitzStmt` | `firstPass_11_2.{u}` | HarmonicBalls/FirstPass/S11.lean:58 | 1 | h5 |
 | 11.5 | `NoConeConditionStmt` | `firstPass_11_5.{u}` | HarmonicBalls/FirstPass/S11.lean:66 | 3 | h6 h7 hI2 |
-| 11.6 | `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:438 | 3 | hDG hCC hSub |
+| 11.6 | `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:320 | 2 | hDG hSub |
 | 11.7 | `ManyConeBadScalesStmt` | `firstPass_11_7_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:77 | 3 | h8 hFreq hTr |
-| 11.8 | `ConeBadEventProbabilityStmt` | `closure_11_8_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:448 | 2 | hDG hCC |
-| 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9_derivedInputs38` | HarmonicBalls/FirstPass/Phase2/DerivedInputs38.lean:62 | 4 | hMet hShift hAx h1110 |
-| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `firstPass_11_10_derivedInputs38` | HarmonicBalls/FirstPass/Phase2/DerivedInputs38.lean:151 | 8 | hDC hCM hPos hSupM hFin hFactI hM1 hAx |
+| 11.8 | `ConeBadEventProbabilityStmt` | `closure_11_8_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:329 | 1 | hDG |
+| 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:47 | 3 | hMet hAx h1110 |
+| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `firstPass_11_10_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:349 | 6 | hDC hCM hPos hFin hM1 hAx |
 | 11.11 | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11.{u}` | HarmonicBalls/FirstPass/S11.lean:110 | 4 | h6 h13 hI2 hmetricAxioms |
 | 11.12 | `PinchEventPositiveProbabilityStmt` | `firstPass_11_12` | HarmonicBalls/FirstPass/S11e.lean:42 | 2 | hAx h |
 | 11.13 | `ManyPinchScalesStmt` | `manyPinchScales_of_corrected` | HarmonicBalls/FirstPass/Closure/Bridge12.lean:322 | 1 | h |
@@ -141,7 +141,7 @@ the counted status. Classes: CORRECTED-FORM (the corrected or faithful statement
 | 2.6 | `ReflectedLBMHeatKernelStmt` | cited | none | - | - | - | Kigami 2019 Thm 13.1 has no input in Proposed/ or External/; the draft definition (Draft/Section2.lean:225) has no uses |
 | 6.5 | `AnnulusIterationStmt` | cited | declaration outside scan, unconditional | HarmonicBalls/Proofs/Sec6/AnnulusLawTransfer.lean:207 `annulusIterationStmt_proved` | 0 | - | axioms propext, Classical.choice, Quot.sound (checked); the three-input route `annulusIterationStmt_of_three_inputs` (Proofs/Sec6/FullThreeInputAssembly.lean:72) has `hDG hCC hE` as section variables |
 | 9.1 | `ObstacleComparisonStmt` | cited | declaration outside scan, unconditional | HarmonicBalls/Proofs/Sec9/ObstacleComparison.lean:32 `obstacleComparison` | 0 | - | axioms propext, Classical.choice, Quot.sound (checked); Steps route `obstacleComparison_of_steps` (Steps/Sec9/ObstacleComparison.lean:72) takes `hsymm hclass` |
-| 9.2 | `SubharmonicBallUniquenessStmt` | paper-owned | CORRECTED-FORM [C51] | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:457 `Closure.closure_9_2_derivedInputs39` (namespace HarmonicBalls.Closure; round 39: `hE` supplied by `lqgMeasureExistence_forall_field`, Phase2/LQGMeasureExistenceDerived.lean; it wraps `closure_9_2_derivedInputs36`, DerivedInputs36.lean:347) | 3 | `hSub hDG hCC` | concludes `SubharmonicBallUniquenessC51Stmt` (S9c.lean:41). Round 36 (d5e3499d): `hE3 : PhaseTorusDoublingProductErgodicFrozen` is supplied by the theorem `phaseTorusDoublingProductErgodicFrozen_holds` (FirstPass/Phase2/PhaseTorusErgodicDerived.lean:139), applied to `closure_9_2_derivedInputs33` (5 binders, the previous row). Row-8 trade (DI33, 8e495bcb): hL1 replaced by hSub; the same-count DI19 form `closure_9_2_derivedInputs19` (binders `hL1 hE3 hDG hCC hE`) is superseded by the newer round. Fewest-binder rule over the 7 C51 candidates; others: `closure_9_2_derivedInputs17` (6), `firstPass_9_2_corrected` (FirstPass/S9c.lean:116, 6: `hDG hCC hW hE hN h82`), `closure_9_2_derivedInputs5` (9), `closure_9_2_derivedInputs` (9), `closure_9_2_noWeyl` (10), `closure_9_2` (11). Earlier round used `firstPass_9_2_corrected`; changed by the rule. Axioms: propext, Classical.choice, Quot.sound (checks/AxiomsDerivedInputs36.lean and checks/AxiomGate.lean). |
+| 9.2 | `SubharmonicBallUniquenessStmt` | paper-owned | CORRECTED-FORM [C51] | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:336 `Closure.closure_9_2_derivedInputs41` (namespace HarmonicBalls.Closure; round 41: `hCC` of the round-39 form `closure_9_2_derivedInputs39` (DerivedInputs39.lean:457) is supplied by `lqgMeasureCoordChange_holds`) | 2 | `hSub hDG` | concludes `SubharmonicBallUniquenessC51Stmt` (S9c.lean:41). Round 36 (d5e3499d): `hE3 : PhaseTorusDoublingProductErgodicFrozen` is supplied by the theorem `phaseTorusDoublingProductErgodicFrozen_holds` (FirstPass/Phase2/PhaseTorusErgodicDerived.lean:139), applied to `closure_9_2_derivedInputs33` (5 binders, the previous row). Row-8 trade (DI33, 8e495bcb): hL1 replaced by hSub; the same-count DI19 form `closure_9_2_derivedInputs19` (binders `hL1 hE3 hDG hCC hE`) is superseded by the newer round. Fewest-binder rule over the 7 C51 candidates; others: `closure_9_2_derivedInputs17` (6), `firstPass_9_2_corrected` (FirstPass/S9c.lean:116, 6: `hDG hCC hW hE hN h82`), `closure_9_2_derivedInputs5` (9), `closure_9_2_derivedInputs` (9), `closure_9_2_noWeyl` (10), `closure_9_2` (11). Earlier round used `firstPass_9_2_corrected`; changed by the rule. Axioms: propext, Classical.choice, Quot.sound (checks/AxiomsDerivedInputs36.lean and checks/AxiomGate.lean). Round 41: counted form `closure_9_2_derivedInputs41`, 2 binders. The corrected-form theorem `firstPass_9_2_corrected_derivedInputs41` (DerivedInputs41.lean:56, binders `hDG h82`, conclusion `SubharmonicBallUniquenessWeakStmt`) is checked in checks/AxiomGate.lean. |
 | 10.5 | `CrossingComponentContainsClusterCrossingStmt` | paper-owned | CORRECTED-FORM [C48] | HarmonicBalls/FirstPass/S1S10/CrossingLemma.lean:38 `firstPass_10_5_corrected` | 6 (+ implicit `G`) | `hGne hGb hGo hGc hEcross hTor` (`hTor : TorhorstSimpleLoopFrozen`) | conclusion is inline (`IsLocallyConnectedSet (closure G) ∧ ¬IsCutPoint … ∧ IsSimpleLoop (frontier C)`), so no Stmt name; `closure_10_5` (FirstPass/Closure/Sec78910.lean:254) is a wrapper with the same 6 binders; axioms propext, Classical.choice, Quot.sound (checked) |
 | 11.16 | `PinchSecondEventPositiveStmt` | paper-owned | CORRECTED-FORM (faithful; switched from `firstPass_11_16_of_11_17`, see the 11.16 paragraph below) | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:97 `firstPass_11_16_corrected_derivedInputs39 : PinchSecondEventFaithfulStmt.{u}` (round 39: `hEx` supplied by `lqgMeasureExistence_forall_zero`, Phase2/LQGMeasureExistenceDerived.lean; it wraps DerivedInputs35.lean:54 `firstPass_11_16_corrected_derivedInputs35`, DI35 commit 1306e242; wraps `firstPass_11_16_corrected_derivedInputs34`, DerivedInputs34.lean:35, which wraps DerivedInputs31.lean:24; S11h/Faithful.lean:80; wrapper of `firstPass_11_16_corrected`, FirstPass/S11k/FirstLExterior.lean:260; hK1 discharged by the binder-free `internalMetricClosedEqIInfThickening_derived`, FirstPass/Phase2/InternalMetricClosedDerived.lean:408) | 6 | `hAx hholder hNa0 hNa hPos hD` (hWeyl dropped by DI35; hM, hDiam dropped by DI34) | FROZEN: hAx (Frozen/S11j.lean:149), hM (Frozen/S11k.lean:65), hDiam (Frozen/S11k.lean:87), hMk (Frozen/S11k.lean:44); cited: hholder (GreenPotentialHolderStmt, Draft/Section2.lean:190, ruling tasks/lh.md:39); PROPOSED: hEx (LQGMeasureExistence, Proposed/LQG.lean:74), hWeyl (LQGMeasureWeylScaling, :107), hNa0, hNa (LQGMeasureNonatomic, :86); counted numbered results: hPos (faithful 11.15, PinchFirstEventFaithfulStmt, S11h/Faithful.lean:71; counted by firstPass_11_15_corrected, S11j/FieldAssembly11_15.lean:276), hD (11.9, SmallMetricDiameterLargeMassStmt, Draft/Section11.lean:201; counted by firstPass_11_9, S11d.lean:39). Scratch `#print axioms` (2026-11-11): propext, Classical.choice, Quot.sound. |
 | 11.17 | `PinchThirdEventPositiveStmt` | paper-owned | CORRECTED-FORM (faithful) | HarmonicBalls/FirstPass/Phase2/DerivedInputs38.lean:75 `firstPass_11_17_corrected_derivedInputs38 : PinchThirdEventFaithfulStmt.{u}` (S11h/Faithful.lean:96; it is `firstPass_11_17_corrected`, S11h/PinchCertificateProof11_17.lean:293, with `hComp`, `hCMGFF`, `hF`, `hK1`, `hN2` supplied by their derivations) | 3 | `h16 hAx hdec` | axioms propext, Classical.choice, Quot.sound (checked). The fewest-binder faithful candidate is `firstPass_11_17_of_11_16` (S11h/Assemble11_17.lean:64, 4: `h16 hAx hCMGFF hCert`), but its `hCert : PinchCertificateStmt` is an intermediate Prop, not a frozen input; the counted form is the 8-binder one (lead decision; audit notes/fp-gaps/CHATGPT-hb-11-15-11-17-audit.md, l.4, l.133-153) |
