@@ -53,7 +53,9 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs37
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs38
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs39
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs41
+import HarmonicBalls.FirstPass.Phase2.ConnectedSquareUnionDiamDerived
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs42
+import HarmonicBalls.FirstPass.Phase2.WeylLogTruncationDerivedInputs
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -423,3 +425,9 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputs42
 -- 11.10: firstPass_11_10_derivedInputsWeylShiftedSup (HarmonicBalls/FirstPass/Phase2/WeylShiftedChainDerived.lean:108)
 #print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputsWeylShiftedSup
+
+-- Round 43: counted forms with the closed-square case in place of hFin (11.10) and without hMet (11.9)
+-- 11.10: firstPass_11_10_derivedInputsClosedSquare (HarmonicBalls/FirstPass/Phase2/ConnectedSquareUnionDiamDerived.lean:94)
+#print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputsClosedSquare
+-- 11.9: firstPass_11_9_derivedInputsFieldAxioms (HarmonicBalls/FirstPass/Phase2/WeylLogTruncationDerivedInputs.lean:50)
+#print axioms HarmonicBalls.firstPass_11_9_derivedInputsFieldAxioms

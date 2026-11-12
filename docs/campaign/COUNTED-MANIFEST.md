@@ -110,8 +110,8 @@ binder `hI2 : LQGVolumeGrowthAllScalesStmt`); they are not counted declarations 
 | 11.6 | `AnnulusMassBoundByHarmonicChainStmt` | `closure_11_6_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:320 | 2 | hDG hSub |
 | 11.7 | `ManyConeBadScalesStmt` | `firstPass_11_7_derivedInputs39` | HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:77 | 3 | h8 hFreq hTr |
 | 11.8 | `ConeBadEventProbabilityStmt` | `closure_11_8_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:329 | 1 | hDG |
-| 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9_derivedInputs41` | HarmonicBalls/FirstPass/Phase2/DerivedInputs41.lean:47 | 3 | hMet hAx h1110 |
-| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `firstPass_11_10_derivedInputs42` | HarmonicBalls/FirstPass/Phase2/DerivedInputs42.lean:37 | 5 | hDC hCM hPos hFin hAx |
+| 11.9 | `SmallMetricDiameterLargeMassStmt` | `firstPass_11_9_derivedInputsFieldAxioms` | HarmonicBalls/FirstPass/Phase2/WeylLogTruncationDerivedInputs.lean:50 | 2 | hAx h1110 |
+| 11.10 | `SmallMetricDiameterLargeMassSquareStmt` | `firstPass_11_10_derivedInputsClosedSquare` | HarmonicBalls/FirstPass/Phase2/ConnectedSquareUnionDiamDerived.lean:94 | 4 | hDC hPos hSq hAx |
 | 11.11 | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11.{u}` | HarmonicBalls/FirstPass/S11.lean:110 | 4 | h6 h13 hI2 hmetricAxioms |
 | 11.12 | `PinchEventPositiveProbabilityStmt` | `firstPass_11_12` | HarmonicBalls/FirstPass/S11e.lean:42 | 2 | hAx h |
 | 11.13 | `ManyPinchScalesStmt` | `manyPinchScales_of_corrected` | HarmonicBalls/FirstPass/Closure/Bridge12.lean:322 | 1 | h |
@@ -194,3 +194,5 @@ are not counted. So no `DerivedInputs31` wrapper is needed, the manifest is unch
 | 1.2 canonical-xi | `HarmonicBallNoveltyCanonicalStmt` | `harmonicBallNoveltyStmt_of_existence_and_results_canonical` (29 candidates) | HarmonicBalls/FirstPass/Canonical/Novelty.lean:23 | 4 | hex hjordan hlip hmetric |
 | 11.11 canonical-xi | `HarmonicBallNotMetricBallCanonicalStmt` | `harmonicBallNotMetricBallCanonicalStmt_of_comparison_pinch_and_volumeGrowth` (63 candidates) | HarmonicBalls/FirstPass/Canonical/NotMetricBall.lean:129 | 4 | hbound hmany hgrowth hmetricAxioms |
 | 11.13 canonical-xi | `CorrectedLemma11_13CanonicalStmt` | `firstPass_11_13_canonical` (89 candidates) | HarmonicBalls/FirstPass/S11i/Corrected11_13.lean:127 | 4 | hAx hMeas hPE hId |
+
+**Round-43 refresh (2026-11-12).** Two counted rows move to forms with fewer or replaced binders: 11.9 to `firstPass_11_9_derivedInputsFieldAxioms` (3 binders to 2, `hMet` supplied from `hAx`), and 11.10 to `S11c.firstPass_11_10_derivedInputsClosedSquare` (5 binders to 4: `hCM` supplied from `hAx`, `hFin` replaced by the closed-square case `hSq`). Both are in `checks/AxiomGate.lean` with axiom set [propext, Classical.choice, Quot.sound].
