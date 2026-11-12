@@ -1,5 +1,5 @@
 import HarmonicBalls.Defs.LQGMetric
-import HarmonicBalls.Steps.Sec11.GFFMeasurePreserving
+import HarmonicBalls.Proofs.GFF.CoordinateModification
 
 /-!
 # The axioms of an LQG metric on probability spaces of every universe
