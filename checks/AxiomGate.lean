@@ -56,6 +56,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs41
 import HarmonicBalls.FirstPass.Phase2.ConnectedSquareUnionDiamDerived
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs42
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs43
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs46
 import HarmonicBalls.FirstPass.Phase2.WeylLogTruncationDerivedInputs
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
@@ -540,3 +541,11 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.Closure.closure_11_8_derivedInputs43
 -- closure_9_2_derivedInputs43 (HarmonicBalls/FirstPass/Phase2/DerivedInputs43.lean:445)
 #print axioms HarmonicBalls.Closure.closure_9_2_derivedInputs43
+
+-- Round 46: counted forms with the input TorhorstSimpleLoopFrozen supplied (supersede the earlier forms of the same rows)
+-- 10.6: firstPass_10_6_derivedInputs46 (HarmonicBalls/FirstPass/Phase2/DerivedInputs46.lean:27)
+#print axioms HarmonicBalls.firstPass_10_6_derivedInputs46
+-- 10.7: closure_10_7_derivedInputs46 (HarmonicBalls/FirstPass/Phase2/DerivedInputs46.lean:118)
+#print axioms HarmonicBalls.Closure.closure_10_7_derivedInputs46
+-- 10.5 corrected form [C48]: firstPass_10_5_corrected_derivedInputs46 (HarmonicBalls/FirstPass/Phase2/DerivedInputs46.lean:82)
+#print axioms HarmonicBalls.firstPass_10_5_corrected_derivedInputs46
