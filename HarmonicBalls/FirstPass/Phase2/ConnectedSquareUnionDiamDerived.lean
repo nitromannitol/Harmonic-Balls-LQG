@@ -3,6 +3,7 @@ import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.FirstPass.LPBridge.M5a
 import HarmonicBalls.FirstPass.Phase2.WeylLogTruncationDerivedInputs
 import LatticeProb.LQG.InternalDiamRectangleUnion
+import LatticeProb.LQG.InternalMetricClosure
 
 /-!
 # Finite internal diameters of connected unions of rectangles for the singular LQG metric
@@ -20,8 +21,12 @@ closed square.
   (`LatticeProb.Topology.exists_finset_closedSquare_cover_biUnion`) and chains the internal metrics of the squares
   through the connected intersection graph (`LatticeProb.LQG.ae_exists_internalMetric_rectangleUnion_le_ofReal`).
 * `S11c.firstPass_11_10_derivedInputsClosedSquare`: Lemma 11.10 with the closed-square case in place of `hFin`.
+* `connectedSquareUnionDiamFiniteFrozen_of_openSquare`: under the field axioms, the closed-square case follows from the
+  open-square case, the finite internal diameter of the interior of a closed square in its own internal metric
+  (`LatticeProb.LQG.IsEuclideanLengthMetric.exists_internalMetric_closedSquare_le_ofReal`, same constant).
+* `S11c.firstPass_11_10_derivedInputsOpenSquare`: Lemma 11.10 with the open-square case in place of `hFin`.
 
-The closed-square case itself is the internal boundary estimate of Dubédat-Falconet-Gwynne-Pfeffer-Sun,
+The open-square case is the internal diameter estimate of Dubédat-Falconet-Gwynne-Pfeffer-Sun,
 arXiv:1905.00380v2, Proposition 3.10 (p. 34), with Proposition 3.17 (pp. 43-44) for squares meeting the singularity at
 `0`; it is not proved here.
 -/
@@ -105,5 +110,49 @@ theorem S11c.firstPass_11_10_derivedInputsClosedSquare
   S11c.firstPass_11_10_derivedInputsFieldAxioms hDC hPos
     ((connectedSquareUnionDiamFiniteFrozen_iff_closedSquare
       fun Ω _ P γ ξ α₀ hC hcirc => hAx γ ξ α₀ Ω P hC hcirc).mpr hSq) hAx
+
+/-- The finite internal diameter of compact connected finite unions of closed rectangles for the singular LQG metric
+(`ConnectedSquareUnionDiamFiniteFrozen`) follows, under the field axioms of the LQG metric, from the open-square case:
+for every closed square `Q`, almost surely `sup_{x, y ∈ int Q} D_h(x, y; int Q) < ∞`
+(Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.10, p. 34, for the open square `𝕣 𝕊`).
+Route: almost surely `D_h` is a Euclidean length metric (`ae_isEuclideanLengthMetric_of_isLQGMetricOfField`); for such a
+metric the bound on the interior gives the same bound on the closed square
+(`LatticeProb.LQG.IsEuclideanLengthMetric.exists_internalMetric_closedSquare_le_ofReal`); then
+`connectedSquareUnionDiamFiniteFrozen_iff_closedSquare`. -/
+theorem connectedSquareUnionDiamFiniteFrozen_of_openSquare (hAx : LQGMetricFieldAxiomsUnivFrozen.{u})
+    (hOpen : ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+        (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
+      ∀ Q : Set ℂ, LatticeProb.Topology.IsClosedSquare Q →
+      ∀ᵐ ω ∂P, ∃ A : ℝ, ∀ x ∈ interior Q, ∀ y ∈ interior Q,
+        internalMetric (D ω) (interior Q) x y ≤ ENNReal.ofReal A) :
+    ConnectedSquareUnionDiamFiniteFrozen.{u} := by
+  refine (connectedSquareUnionDiamFiniteFrozen_iff_closedSquare hAx).mpr ?_
+  intro γ α₀ ξ hγ0 hγ2 hα Ω _ P hC hcirc D hW hD Q hQ
+  filter_upwards [ae_isEuclideanLengthMetric_of_isLQGMetricOfField hAx hW hγ0 hγ2 hα hD,
+    hOpen γ α₀ ξ hγ0 hγ2 hα Ω P hC hcirc D hW hD Q hQ] with ω hL hO
+  exact ((LPBridge.isEuclideanLengthMetric_iff _).mp hL).exists_internalMetric_closedSquare_le_ofReal hQ hO
+
+/-- **Derived.** Lemma 11.10 with the finite internal diameter of compact connected finite unions of closed rectangles
+(`hFin : ConnectedSquareUnionDiamFiniteFrozen`) replaced by its open-square case `hOpen`: for every closed square `Q`,
+almost surely the interior of `Q` has finite diameter in its own internal metric of `D_h`
+(Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380v2, Proposition 3.10, p. 34, and Proposition 3.17, pp. 43-44).
+The hypothesis `hFin` of `S11c.firstPass_11_10_derivedInputsFieldAxioms` is supplied by
+`connectedSquareUnionDiamFiniteFrozen_of_openSquare`; the other hypotheses are unchanged. -/
+theorem S11c.firstPass_11_10_derivedInputsOpenSquare
+    (hDC : DyadicCellDiamSmallFrozen.{u})
+    (hPos : LQGMeasureSquarePositiveFrozen.{u})
+    (hOpen : ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
+      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+        (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
+      ∀ Q : Set ℂ, LatticeProb.Topology.IsClosedSquare Q →
+      ∀ᵐ ω ∂P, ∃ A : ℝ, ∀ x ∈ interior Q, ∀ y ∈ interior Q,
+        internalMetric (D ω) (interior Q) x y ≤ ENNReal.ofReal A)
+    (hAx : ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace.{u} Ω] (P : Measure.{u} Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ), LQGMetricFieldAxioms.{u} P γ ξ α₀ hC hcirc) :
+    SmallMetricDiameterLargeMassSquareStmt.{u} :=
+  S11c.firstPass_11_10_derivedInputsFieldAxioms hDC hPos
+    (connectedSquareUnionDiamFiniteFrozen_of_openSquare
+      (fun Ω _ P γ ξ α₀ hC hcirc => hAx γ ξ α₀ Ω P hC hcirc) hOpen) hAx
 
 end HarmonicBalls
