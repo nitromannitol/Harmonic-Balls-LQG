@@ -243,4 +243,12 @@ theorem firstPass_11_12_derivedInputsMetric (hDC : DyadicCellDiamSmallFrozen.{u}
     PinchEventPositiveProbabilityStmt.{u} :=
   firstPass_11_12_derivedInputsMetricOfXiPos hDC hFin hAx isLQGMetric_xi_pos
 
+/-- Draft Lemma 11.16 (`PinchSecondEventPositiveStmt`) from the metric inputs `hDC hFin hAx` alone: the draft
+Lemma 11.17 (`pinchThirdEventPositiveStmt_derivedInputsMetric`) and `firstPass_11_16_of_11_17` (the second event
+contains the third, with the same configuration and witnesses). -/
+theorem firstPass_11_16_derivedInputsMetric (hDC : DyadicCellDiamSmallFrozen.{u})
+    (hFin : ConnectedSquareUnionDiamFiniteFrozen.{u}) (hAx : LQGMetricFieldAxiomsUnivFrozen.{u}) :
+    PinchSecondEventPositiveStmt.{u} :=
+  firstPass_11_16_of_11_17 (pinchThirdEventPositiveStmt_derivedInputsMetric hDC hFin hAx)
+
 end HarmonicBalls

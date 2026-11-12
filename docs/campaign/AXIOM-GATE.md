@@ -15,7 +15,7 @@ Distinct axiom sets over all declarations: 225 with [propext, Classical.choice, 
 **Update 2026-11-11 (round-36 counted forms).** `checks/AxiomGate.lean` now has 112 `#print axioms` lines: 11 were added for the `_derivedInputs36` counted forms of 1.3, 5.2, 5.3, 5.4, 5.5, 7.2, 8.1, 8.2, 9.2, 10.7, 11.6 (`HarmonicBalls/FirstPass/Phase2/DerivedInputs36.lean`; COUNTED-MANIFEST.md, round-36 refresh), in which the input `PhaseTorusDoublingProductErgodicFrozen` is supplied by a theorem. All 112 declarations print [propext, Classical.choice, Quot.sound]. The tables below are as of the earlier check and still name the previous counted forms of those results.
 
 **Not gated, by design or by status.**
-- Numbered results with no declaration in `HarmonicBalls/FirstPass/` or `HarmonicBalls/Closure/` (COUNTED-MANIFEST.md, second table): 2.1, 2.2, 2.5, 2.6, 9.2, 10.5, 11.17. The manifest records no declaration for them, so nothing is gated for these results.
+- Numbered results with no declaration in `HarmonicBalls/FirstPass/` or `HarmonicBalls/Closure/` (COUNTED-MANIFEST.md, second table): 2.1, 2.2, 2.5, 2.6, 9.2, 10.5 (11.17 is gated since the round-51 refresh of COUNTED-MANIFEST.md). The manifest records no declaration for them, so nothing is gated for these results.
 - Row 6 LP-stage route (`LPStage/LQGMeasureDerived.lean` and its bridge): not gated, because its staging is parked (R41). Rows 15 and 51 (LP PARTIAL): only the HB-route theorem is gated.
 - Row 28 (DERIVED conditional, `weylShiftedSupMeasurable_derived`): its axioms are clean, but it is conditional on the frozen inputs `LQGMetricFieldAxiomsUnivFrozen`, `WeylScalingCompositionFrozen`, `LQGInternalMetricWeylAeMeasurableFrozen` (PHASE2-DERIVATION-STATUS.md row 28). They are hypotheses, not axioms, so this gate does not show them.
 - Declarations of the counted table whose binders are named literature Props (hDG, hCC, hE, hTyp, hholder, ...): the Props are in `HarmonicBalls/Proposed/` or `HarmonicBalls/External/`, and the gate does not show them. See COUNTED-MANIFEST.md, binder columns.
@@ -80,6 +80,7 @@ Distinct axiom sets over all declarations: 225 with [propext, Classical.choice, 
 | 11.14 | `HarmonicBalls.Closure.closure_11_14` | `HarmonicBalls/FirstPass/Closure/Sec11.lean:139` | propext, Classical.choice, Quot.sound |
 | 11.15 | `HarmonicBalls.firstPass_11_15_derivedInputs3` | `HarmonicBalls/FirstPass/Phase2/DerivedInputs3.lean:945` | propext, Classical.choice, Quot.sound |
 | 11.16 | `HarmonicBalls.firstPass_11_16_of_11_17` | `HarmonicBalls/FirstPass/S11e.lean:29` | propext, Classical.choice, Quot.sound |
+| 11.17 | `HarmonicBalls.pinchThirdEventPositiveStmt_derivedInputsMetric` | `HarmonicBalls/FirstPass/Phase2/LQGMetricXiPos.lean:233` | propext, Classical.choice, Quot.sound |
 | A.1 | `HarmonicBalls.Closure.closure_A_1` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:37` | propext, Classical.choice, Quot.sound |
 | A.2 | `HarmonicBalls.Closure.closure_A_2` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:40` | propext, Classical.choice, Quot.sound |
 | A.3 | `HarmonicBalls.Closure.closure_A_3` | `HarmonicBalls/FirstPass/Closure/SecA45.lean:43` | propext, Classical.choice, Quot.sound |

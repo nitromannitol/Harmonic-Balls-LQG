@@ -68,6 +68,7 @@ import HarmonicBalls.Proofs.Sec9.LQGExistenceConsequences
 import HarmonicBalls.Proofs.Sec9.ObstacleComparison
 import HarmonicBalls.Steps.Sec2.VolumeGrowth
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsAlphaZero
+import HarmonicBalls.FirstPass.Phase2.LQGMetricXiPos
 
 /-!
 # Axiom gate
@@ -180,6 +181,8 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_11
 -- 11.12: firstPass_11_12_derivedInputsAlphaZero (HarmonicBalls/FirstPass/Phase2/FieldAxiomsAlphaZero.lean:166)
 #print axioms HarmonicBalls.firstPass_11_12_derivedInputsAlphaZero
+-- 11.12 (metric inputs hDC hFin hAx only): firstPass_11_12_derivedInputsMetric (HarmonicBalls/FirstPass/Phase2/LQGMetricXiPos.lean:241)
+#print axioms HarmonicBalls.firstPass_11_12_derivedInputsMetric
 -- 11.12 (with the field-axiom binder): firstPass_11_12 (HarmonicBalls/FirstPass/S11e.lean:42)
 #print axioms HarmonicBalls.firstPass_11_12
 -- 11.13: manyPinchScales_of_corrected (HarmonicBalls/FirstPass/Closure/Bridge12.lean:322)
@@ -190,12 +193,16 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_15_derivedInputs3
 -- 11.16: firstPass_11_16_of_11_17 (HarmonicBalls/FirstPass/S11e.lean:29)
 #print axioms HarmonicBalls.firstPass_11_16_of_11_17
+-- 11.16 (draft form, metric inputs hDC hFin hAx only): firstPass_11_16_derivedInputsMetric (HarmonicBalls/FirstPass/Phase2/LQGMetricXiPos.lean:249)
+#print axioms HarmonicBalls.firstPass_11_16_derivedInputsMetric
 -- 11.16: firstPass_11_16_corrected_derivedInputs39 (HarmonicBalls/FirstPass/Phase2/DerivedInputs39.lean:97)
 #print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs39
 -- 11.16 audit row: firstPass_11_16_corrected_derivedInputs (HarmonicBalls/FirstPass/Phase2/DerivedInputs31.lean:24)
 #print axioms HarmonicBalls.firstPass_11_16_corrected_derivedInputs
 -- 11.17 corrected form: firstPass_11_17_corrected_derivedInputs38 (HarmonicBalls/FirstPass/Phase2/DerivedInputs38.lean:75)
 #print axioms HarmonicBalls.firstPass_11_17_corrected_derivedInputs38
+-- 11.17 (draft form): pinchThirdEventPositiveStmt_derivedInputsMetric (HarmonicBalls/FirstPass/Phase2/LQGMetricXiPos.lean:233)
+#print axioms HarmonicBalls.pinchThirdEventPositiveStmt_derivedInputsMetric
 -- A.1: closure_A_1 (HarmonicBalls/FirstPass/Closure/SecA45.lean:37)
 #print axioms HarmonicBalls.Closure.closure_A_1
 -- A.2: closure_A_2 (HarmonicBalls/FirstPass/Closure/SecA45.lean:40)
