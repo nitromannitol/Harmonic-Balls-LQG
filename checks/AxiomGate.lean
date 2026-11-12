@@ -58,6 +58,8 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs42
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs43
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs46
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs47
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs44
+import HarmonicBalls.FirstPass.Phase2.ConeBadScalesHolds
 import HarmonicBalls.FirstPass.Phase2.WeylLogTruncationDerivedInputs
 import HarmonicBalls.Proofs.Sec6.AnnulusLawTransfer
 import HarmonicBalls.Proofs.Sec6.FullThreeInputAssembly
@@ -554,3 +556,7 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_1_2_derivedInputs47
 -- 1.2 canonical-xi: harmonicBallNoveltyStmt_of_existence_and_results_canonical_derivedInputs47 (HarmonicBalls/FirstPass/Phase2/DerivedInputs47.lean:30)
 #print axioms HarmonicBalls.harmonicBallNoveltyStmt_of_existence_and_results_canonical_derivedInputs47
+-- 8.3: closure_8_3_derivedInputs44 (HarmonicBalls/FirstPass/Phase2/DerivedInputs44.lean:70)
+#print axioms HarmonicBalls.Closure.closure_8_3_derivedInputs44
+-- 11.7: manyConeBadScalesStmt_holds (HarmonicBalls/FirstPass/Phase2/ConeBadScalesHolds.lean:31)
+#print axioms HarmonicBalls.manyConeBadScalesStmt_holds
