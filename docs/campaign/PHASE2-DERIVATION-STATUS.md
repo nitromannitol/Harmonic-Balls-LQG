@@ -181,3 +181,11 @@ firstPass_11_16_corrected_derivedInputsMetric, firstPass_11_17_corrected_derived
 hDC : DyadicCellDiamSmallFrozen, hFin : ConnectedSquareUnionDiamFiniteFrozen, hAx : LQGMetricFieldAxiomsUnivFrozen.
 11.12 still binds the uncorrected PinchThirdEventPositiveStmt (no bridge from the faithful 11.17 form).
 - 2026-11-12 status pass: rows 8, 30, 31, 34, 46 set to DERIVED (theorems named in the evidence column; the commits are those of the proofs). The count lines at the top of this file are not recomputed in this pass.
+- 2026-11-12 Lemma 11.7 closed (def7ce84): HarmonicBalls.manyConeBadScalesStmt_holds : ManyConeBadScalesStmt.{u}
+(FirstPass/Phase2/ConeBadScalesHolds.lean) has no hypothesis. It is S11c.firstPass_11_7 (the internal dilation-ergodic
+proof) with its eight hypotheses supplied: hPos = closure_11_8_derivedInputs40 (hDG = wholePlaneLQGBallMassBounds_holds),
+hCamp = localCampbellMarkedRestriction_holds, hDecFrozen = lqgMeasureOfProfileMeasurable_derived,
+hDec = LocalDecoderCommon.localLQGDecoderCommonFrozen_derived, hCM = cameronMartinLocallyLipschitzShiftAbsCont_holds,
+hCC = lqgMeasureCoordChange_holds, hE = lqgMeasureExistence_forall_exponents, hNA = lqgMeasureNonatomic_holds; axioms
+std. The counted form firstPass_11_7_derivedInputs43 (COUNTED-MANIFEST row 11.7) binds the RETIRED
+OriginRootedConeFrequencyFrozen and RootedConeFrequencyTransferFrozen; manyConeBadScalesStmt_holds replaces it.
