@@ -70,6 +70,7 @@ import HarmonicBalls.Steps.Sec2.VolumeGrowth
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsAlphaZero
 import HarmonicBalls.FirstPass.Phase2.LQGMetricXiPos
 import HarmonicBalls.FirstPass.Phase2.Lemma1110LeafForms
+import HarmonicBalls.FirstPass.Phase2.UnitTailCountedForms
 import HarmonicBalls.FirstPass.Phase2.NotMetricBallCanonicalLeafForms
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsLeafForms
 import HarmonicBalls.FirstPass.Phase2.DerivedInputsStep8Calibration
@@ -600,3 +601,11 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- field axioms at every universe from Type (HarmonicBalls/FirstPass/Phase2/FieldAxiomsUniv.lean)
 #print axioms HarmonicBalls.lqgMetricFieldAxiomsUnivFrozen_of_zero
 #print axioms HarmonicBalls.firstPass_11_13_canonical_univ_of_metricInputsZero
+-- 11.10 and 11.17 (field axioms and unit-square crossing tail; HarmonicBalls/FirstPass/Phase2/UnitTailCountedForms.lean)
+#print axioms HarmonicBalls.dyadicCellDiamSmallFrozen_of_unitTail_xiPos
+#print axioms HarmonicBalls.connectedSquareUnionDiamFiniteFrozen_of_unitTail_xiPos
+#print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputsUnitTail
+#print axioms HarmonicBalls.pinchThirdEventPositiveStmt_derivedInputsUnitTail
+#print axioms HarmonicBalls.firstPass_11_16_derivedInputsUnitTail
+#print axioms HarmonicBalls.firstPass_11_12_derivedInputsUnitTail
+#print axioms HarmonicBalls.FirstPassPhase2Step8WholePlaneFromSeed.firstPass_11_13_canonical_of_seedInputs_unitTail
