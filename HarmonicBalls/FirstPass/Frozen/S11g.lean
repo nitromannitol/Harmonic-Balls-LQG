@@ -59,35 +59,8 @@ def LQGMetricLengthIdentityFrozen : Prop :=
     (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), IsLQGMetricOfField P γ ξ 0 hC D →
     ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
 
-/-- RETIRED (truth check: FALSE as typed, IsWholePlaneGFF missing, kept, do not use). FROZEN. Continuity of the internal metric on open sets for an LQG metric with insertion `α₀ < Q`: the
-alpha-general form of `LQGInternalMetricContinuousFrozen` (which is the case `α₀ = 0`). For `0 < γ < 2`, `α₀ < lqgQ γ` and
-an LQG metric `D` of `hC` (`IsLQGMetricOfField`, log-singular field `h^ℂ - α₀ log|·|`), every open `W ⊆ ℂ` and almost surely
-in `ω`, `(z, w) ↦ D^W(z, w)` is continuous on `W ×ˢ W` (the value `∞` is allowed). Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun
-2020, arXiv:1905.00380, Theorem 1.10 (p. 10) and Proposition 3.17 (p. 43), with the internal metric of Bou-Rabee-Gwynne
-arXiv:2208.11795, Fact 2.2 I (corrected draft line 428). EXTERNAL; truth check
-pending. Used by: `ae_continuous_metric_alpha`, `nullMeasurableSet_pinchThirdEvent_alpha` (FirstPass/S11h/ThirdEventAlpha.lean),
-and through them `firstPass_11_17_corrected`. -/
-def LQGInternalMetricContinuousAlphaFrozen : Prop :=
-  ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-    IsLQGMetricOfField P γ ξ α₀ hC D →
-    ∀ W : Set ℂ, IsOpen W →
-      ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
-
-/-- RETIRED (truth check: FALSE as typed, IsWholePlaneGFF missing, kept, do not use). FROZEN. The length identity of an LQG metric with insertion `α₀ < Q`: the alpha-general form of
-`LQGMetricLengthIdentityFrozen` (the case `α₀ = 0`). For `0 < γ < 2`, `α₀ < lqgQ γ` and an LQG metric `D` of `hC`
-(`IsLQGMetricOfField`), almost surely for all `z w ∈ ℂ`, `ENNReal.ofReal (D z w)` is the internal metric of `D` on `ℂ`, i.e. the
-infimum of the `D`-lengths of paths from `z` to `w`. Source: Dubédat-Falconet-Gwynne-Pfeffer-Sun 2020, arXiv:1905.00380,
-Theorem 1.10 (p. 10); Gwynne-Miller 2021, arXiv:1905.00383v3, Section 1.2 (metric axioms). EXTERNAL; truth check pending. Used by: `ae_continuous_metric_alpha`, `nullMeasurableSet_pinchThirdEvent_alpha`
-(FirstPass/S11h/ThirdEventAlpha.lean), and through them `firstPass_11_17_corrected`. -/
-def LQGMetricLengthIdentityAlphaFrozen : Prop :=
-  ∀ (γ ξ α₀ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-    IsLQGMetricOfField P γ ξ α₀ hC D →
-    ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
-
 /-- FROZEN. Continuity of the internal metric on open sets for an LQG metric with insertion `α₀ < Q`, with the
-whole-plane GFF hypothesis. Corrected form of the RETIRED `LQGInternalMetricContinuousAlphaFrozen`. For `0 < γ < 2`,
+whole-plane GFF hypothesis. For `0 < γ < 2`,
 `α₀ < lqgQ γ`, if `∃ hcirc, IsWholePlaneGFF P hC hcirc` and `D` is an LQG metric of `hC` (`IsLQGMetricOfField`, log-singular
 field `h^ℂ - α₀ log|·|`), then for every open `W ⊆ ℂ` and almost surely in `ω`, `(z, w) ↦ D^W(z, w)` is continuous on
 `W ×ˢ W` (the value `∞` is allowed). Source: HB Fact 2.2(I) (arXiv:2208.11795, `fact:lqg-metric`: Euclidean topology and
@@ -103,7 +76,7 @@ def LQGInternalMetricContinuousAlphaGFFFrozen : Prop :=
       ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
 
 /-- FROZEN. The length identity of an LQG metric with insertion `α₀ < Q`, with the whole-plane GFF hypothesis.
-Corrected form of the RETIRED `LQGMetricLengthIdentityAlphaFrozen`. If `∃ hcirc, IsWholePlaneGFF P hC hcirc`, `0 < γ < 2`, `α₀ < lqgQ γ` and `D` is
+If `∃ hcirc, IsWholePlaneGFF P hC hcirc`, `0 < γ < 2`, `α₀ < lqgQ γ` and `D` is
 an LQG metric of `hC`, then almost surely for all `z w ∈ ℂ`, `ENNReal.ofReal (D z w)` is the internal metric of `D` on `ℂ`,
 i.e. the infimum of the `D`-lengths of paths from `z` to `w`. Source: HB Fact 2.2(I) (arXiv:2208.11795, length-metric property);
 Gwynne-Miller 2021, arXiv:1905.00383v3, Section 1.2 (axioms I-IV) and Theorem 1.2 (p. 6); Dubédat-Falconet-Gwynne-Pfeffer-Sun

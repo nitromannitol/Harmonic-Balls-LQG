@@ -31,30 +31,6 @@ def enlargedDyadicCell (n j k : ℤ) : Set ℂ :=
   {z : ℂ | |z.re - ((j : ℝ) + 1 / 2) * (2 : ℝ) ^ (-n)| ≤ ((2 : ℝ) ^ (-n) + (2 : ℝ) ^ (-n - 2)) / 2 ∧
     |z.im - ((k : ℝ) + 1 / 2) * (2 : ℝ) ^ (-n)| ≤ ((2 : ℝ) ^ (-n) + (2 : ℝ) ^ (-n - 2)) / 2}
 
-/-- RETIRED (FALSE, not an outer probability on the raw carrier). Superseded by `CameronMartinEventTransferFrozen`. Former statement
-FROZEN: Cameron-Martin positivity transfer for the joint law of the LQG measure and LQG metric
- (the metric component is corrected to `weylScaling`, see
-`weylShiftPair`). Let `f` be smooth, compactly supported and zero on the unit circle. If the event that the shifted
-pair `weylShiftPair γ ξ f (μ, D)` lies in a measurable set `B` has positive probability, then so does the event that
-`(μ, D)` lies in `B`. Measurability of `ω ↦ (μ ω, D ω)` is an explicit hypothesis.
-Why it holds: the Weyl scaling of the LQG measure and metric under `h ↦ h + f` (paper Facts 2.1, 2.2) identifies the
-pair for `h + f` with `weylShiftPair γ ξ f (μ_h, D_h)`, and the laws of the whole-plane GFF `h` and `h + f` are
-mutually absolutely continuous (Cameron-Martin for smooth compactly supported `f` vanishing on the unit circle).
-Source: Miller-Sheffield, Imaginary Geometry IV, arXiv:1302.4738v2, Proposition 2.9 (printed page 49; the cited form
-`MillerSheffieldIG4Prop29` in `Proposed/MillerSheffieldIG4.lean` is Hilbert-space level only), with the Weyl scaling
-of Duplantier-Sheffield 2011 for the LQG measure and of the LQG metric (paper Facts 2.1, 2.2; locator pending).
-Used by: firstPass_11_10. -/
-def CameronMartinPositivityTransferFrozen : Prop :=
-  ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
-    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ ξ α₀ hC D →
-    Measurable (fun ω => (μ ω, D ω)) →
-    ∀ B : Set (Measure ℂ × (ℂ → ℂ → ℝ)), MeasurableSet B →
-      0 < (P.map (fun ω => (μ ω, D ω))) (weylShiftPair γ ξ f ⁻¹' B) →
-      0 < (P.map (fun ω => (μ ω, D ω))) B
-
 /-- FROZEN. Small internal diameter of the enlarged dyadic cells, simultaneously for all cells of one
 level inside a closed dyadic square `S2` disjoint from the unit circle, in inner-probability form.
 Why it holds (as printed): each cell has internal diameter tending to zero in probability as the level grows
@@ -178,30 +154,6 @@ def WeylInternalClosedFrozen : Prop :=
   ∀ (D E : ℂ → ℂ → ℝ) (ξ B : ℝ) (f : ℂ → ℝ) (U : Set ℂ), IsEuclideanLengthMetric D →
     (∀ x y, 0 ≤ E x y) → (∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y) → IsClosed U →
     (∀ z ∈ U, ξ * f z ≤ B) → ∀ x y, internalMetric E U x y ≤ ENNReal.ofReal (Real.exp B) * internalMetric D U x y
-
-/-- RETIRED (FALSE). The metric and the LQG measure are specified only
-almost everywhere (`IsLQGMetricOfField`, `IsLQGMeasureOfField`), so a `Measurable` conclusion does not follow from the
-field-level inputs. Replaced by the AEMeasurable form `LQGMetricSupMeasurableFrozen`. Former text kept for the record; NOT used.
-(Former FROZEN: `∀ γ α₀ ξ, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc D, IsWholePlaneGFF P hC hcirc →
-IsLQGMetricOfField P γ ξ α₀ hC D → ∀ K, (∃ F, (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
-Measurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v)`.) -/
-def LQGMetricSupMeasurableRetiredFalseFrozen : Prop :=
-  ∀ (γ α₀ ξ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (D : Ω → ℂ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
-  ∀ K : Set ℂ, (∃ F : Finset (Set ℂ), (∀ R ∈ F, IsClosedRectangle R) ∧ K = ⋃ R ∈ F, R) →
-    Measurable (fun ω => ⨆ u ∈ K, ⨆ v ∈ K, internalMetric (D ω) K u v)
-
-/-- RETIRED (FALSE). The LQG measure is specified only almost everywhere,
-so `Measurable (fun ω => μ ω S)` is not implied by the field-level inputs. Replaced by `LQGMeasureSquareMeasurableFrozen`
-(AEMeasurable form). Former text kept for the record; NOT used.
-(Former FROZEN: `∀ γ α₀, 0 < γ → γ < 2 → α₀ < lqgQ γ → ∀ Ω P hC hcirc μ, IsWholePlaneGFF P hC hcirc →
-IsLQGMeasureOfField P γ α₀ hcirc μ → ∀ S, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)`.) -/
-def LQGMeasureSquareMeasurableRetiredFalseFrozen : Prop :=
-  ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
-  ∀ S : Set ℂ, IsClosedDyadicSquare S → Measurable (fun ω => μ ω S)
 
 /-- FROZEN (truth check queued). EXTERNAL GFF/LQG
 measurability, in AEMeasurable form, for the Weyl-shifted metric of the field: for the LQG measure `μ` and the LQG metric `D`
