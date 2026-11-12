@@ -67,6 +67,7 @@ import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import HarmonicBalls.Proofs.Sec9.LQGExistenceConsequences
 import HarmonicBalls.Proofs.Sec9.ObstacleComparison
 import HarmonicBalls.Steps.Sec2.VolumeGrowth
+import HarmonicBalls.FirstPass.Phase2.FieldAxiomsAlphaZero
 
 /-!
 # Axiom gate
@@ -177,7 +178,9 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.S11c.firstPass_11_10_derivedInputs38
 -- 11.11: firstPass_11_11 (HarmonicBalls/FirstPass/S11.lean:111)
 #print axioms HarmonicBalls.firstPass_11_11
--- 11.12: firstPass_11_12 (HarmonicBalls/FirstPass/S11e.lean:42)
+-- 11.12: firstPass_11_12_derivedInputsAlphaZero (HarmonicBalls/FirstPass/Phase2/FieldAxiomsAlphaZero.lean:166)
+#print axioms HarmonicBalls.firstPass_11_12_derivedInputsAlphaZero
+-- 11.12 (with the field-axiom binder): firstPass_11_12 (HarmonicBalls/FirstPass/S11e.lean:42)
 #print axioms HarmonicBalls.firstPass_11_12
 -- 11.13: manyPinchScales_of_corrected (HarmonicBalls/FirstPass/Closure/Bridge12.lean:322)
 #print axioms HarmonicBalls.Closure.manyPinchScales_of_corrected
