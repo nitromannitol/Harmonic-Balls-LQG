@@ -3,6 +3,7 @@ import HarmonicBalls.Proofs.Potential.GreenPoleL1Continuity
 import HarmonicBalls.Proofs.Potential.FiniteDiscGreenReciprocity
 import HarmonicBalls.Proofs.Potential.GreenRegularBoundaryGeometry
 import HarmonicBalls.Proofs.Potential.SmoothDomainExteriorSphere
+import HarmonicBalls.Proofs.Potential.BoundedDomainGreenMeasurability
 
 /-!
 # Green potentials on a smooth bounded open set: the logarithmic potential
@@ -434,6 +435,203 @@ theorem VolumeGrowth.continuousOn_greenPotential {μ : Measure ℂ} [IsLocallyFi
   exact tendsto_integral_mul_of_sq_integral_le (abs_nonneg M)
     (eventually_nhdsWithin_of_forall hsq) (hsq x₀ hx₀).1 (hsq x₀ hx₀).2.1 (hsq x₀ hx₀).2.2 hlim hf
     (hfM.mono fun y hy => hy.trans (le_abs_self M))
+
+/-! ### Harmonicity of the logarithmic potential minus the Green potential (blueprint G6)
+
+For `ξ, y ∈ O` with `ξ ≠ y`, Green reciprocity identifies `N(ξ, y) - G_O(ξ, y)` with the greatest harmonic minorant
+`h_y(ξ)` of the Newton kernel with pole `y`, which is harmonic in `ξ ∈ O`. Hence `V - q = ∫_O h_y(·) f(y) μ(dy)` on
+`O`; the kernel is dominated by `A + B ‖ξ - y‖^(-α)`, so the circle mean-value property passes through the
+integral by Fubini, and `V - q` is harmonic on `O`. -/
+
+section Harmonic
+
+open InnerProductSpace
+
+/-- Off the diagonal in `O`, `N(ξ, y) - G_O(ξ, y)` is the greatest harmonic minorant of the Newton kernel with
+pole `y`, evaluated at `ξ` (Green reciprocity). -/
+theorem newtonKernel_sub_greenFunction_eq {O : Set ℂ} (hOo : IsOpen O) (hOb : Bornology.IsBounded O)
+    {ξ y : ℂ} (hξ : ξ ∈ O) (hy : y ∈ O) (hne : ξ ≠ y) :
+    newtonKernel ξ y - greenFunction O ξ y =
+      (greatestHarmonicMinorant O (newtonKernelEReal y) ξ).toReal := by
+  have hc : y ∈ O ∧ ξ ∈ O ∧ y ≠ ξ := ⟨hy, hξ, Ne.symm hne⟩
+  rw [greenFunction_bounded_open_comm hOo hOb ξ y, newtonKernel_comm ξ y]
+  unfold greenFunction
+  split_ifs
+  ring
+
+/-- Kernel bound: `|N(ξ, y) - G_O(ξ, y)| ≤ A + B ‖ξ - y‖^(-α) + c ‖ξ - y‖^(-α)` for `‖ξ‖, ‖y‖ ≤ R`, `O ⊆ B_R`,
+with `A = (2π)⁻¹ α⁻¹ (2R)^α`, `B = (2π)⁻¹ α⁻¹`, `c = (2π)⁻¹ α⁻¹ (2R)^α`. -/
+theorem abs_newtonKernel_sub_greenFunction_le {O : Set ℂ} {R α : ℝ} (hR : 0 < R)
+    (hO : O ⊆ ball (0 : ℂ) R) (hα : 0 < α) {ξ y : ℂ} (hξ : ‖ξ‖ ≤ R) (hy : ‖y‖ ≤ R) :
+    |newtonKernel ξ y - greenFunction O ξ y| ≤
+      (2 * Real.pi)⁻¹ * α⁻¹ * (2 * R) ^ α + (2 * Real.pi)⁻¹ * α⁻¹ * ‖ξ - y‖ ^ (-α) +
+        (2 * Real.pi)⁻¹ * (α⁻¹ * (2 * R) ^ α) * ‖ξ - y‖ ^ (-α) := by
+  have hOb : Bornology.IsBounded O := isBounded_ball.subset hO
+  have hπ : 0 ≤ (2 * Real.pi)⁻¹ := inv_nonneg.2 (by positivity)
+  rcases eq_or_ne ξ y with rfl | hne
+  · have h0 : newtonKernel ξ ξ - greenFunction O ξ ξ = 0 := by simp [newtonKernel, greenFunction]
+    rw [h0, abs_zero]
+    positivity
+  have hpos : 0 < ‖ξ - y‖ := norm_pos_iff.2 (sub_ne_zero.2 hne)
+  have hG0 := greenFunction_nonneg hOb ξ y
+  have hG := greenFunction_le_mul_rpow_neg hR hO hα (Ne.symm hne)
+  have hN : |newtonKernel ξ y| ≤ (2 * Real.pi)⁻¹ * (α⁻¹ * (‖ξ - y‖ ^ (-α) + ‖ξ - y‖ ^ α)) := by
+    unfold newtonKernel
+    rw [abs_mul, abs_neg, abs_of_nonneg hπ]
+    exact mul_le_mul_of_nonneg_left (abs_log_le_rpow_neg_add_rpow hpos hα) hπ
+  have hle : ‖ξ - y‖ ^ α ≤ (2 * R) ^ α :=
+    Real.rpow_le_rpow (norm_nonneg _) ((norm_sub_le _ _).trans (by linarith)) hα.le
+  have h1 := mul_le_mul_of_nonneg_left hle (mul_nonneg hπ (inv_nonneg.2 hα.le))
+  have e : (2 * Real.pi)⁻¹ * (α⁻¹ * (‖ξ - y‖ ^ (-α) + ‖ξ - y‖ ^ α)) =
+      (2 * Real.pi)⁻¹ * α⁻¹ * ‖ξ - y‖ ^ (-α) + (2 * Real.pi)⁻¹ * α⁻¹ * ‖ξ - y‖ ^ α := by ring
+  calc |newtonKernel ξ y - greenFunction O ξ y| ≤ |newtonKernel ξ y| + |greenFunction O ξ y| :=
+        abs_sub _ _
+    _ ≤ _ := by rw [abs_of_nonneg hG0]; linarith
+
+/-- For `r ≠ 0`, almost every `θ` has `circleMap x r θ ≠ y` (the preimage of a point is a coset of `2πℤ`). -/
+theorem ae_circleMap_ne {x y : ℂ} {r : ℝ} (hr : r ≠ 0) :
+    ∀ᵐ θ ∂(volume : Measure ℝ), circleMap x r θ ≠ y := by
+  by_cases h : ∃ θ₀, circleMap x r θ₀ = y
+  · obtain ⟨θ₀, hθ₀⟩ := h
+    rw [ae_iff]
+    refine measure_mono_null (fun θ hθ => ?_) ((countable_range fun n : ℤ => θ₀ + n * (2 * Real.pi)).measure_zero _)
+    have hθ' : circleMap x r θ = circleMap x r θ₀ := (not_not.1 hθ).trans hθ₀.symm
+    obtain ⟨n, hn⟩ := (circleMap_eq_circleMap_iff x hr).1 hθ'
+    refine ⟨n, ?_⟩
+    have him := congrArg Complex.im hn
+    simp at him
+    linarith
+  · simp only [not_exists] at h
+    exact ae_of_all _ h
+
+/-- **Harmonicity of `V - q`** (blueprint G6). For `O` a smooth bounded open subset of `B_R`, `μ` with the
+volume growth condition on `B_R` and `|f| ≤ M` `μ`-a.e. on `O`, the logarithmic potential minus the Green
+potential, `x ↦ ∫_O N(x,y) f(y) μ(dy) - ∫_O G_O(x,y) f(y) μ(dy)`, is harmonic on `O`. -/
+theorem VolumeGrowth.harmonicOnNhd_newtonPotential_sub_greenPotential {μ : Measure ℂ}
+    [IsLocallyFiniteMeasure μ] {R βminus βplus : ℝ} (hR : 0 < R) (hμ : VolumeGrowth μ R βminus βplus)
+    {O : Set ℂ} (hO : IsSmoothBoundedOpen O) (hOR : O ⊆ ball (0 : ℂ) R) {f : ℂ → ℝ} {M : ℝ}
+    (hf : AEStronglyMeasurable f (μ.restrict O)) (hfM : ∀ᵐ y ∂μ.restrict O, |f y| ≤ M) :
+    HarmonicOnNhd (fun x => ∫ y in O, newtonKernel x y * f y ∂μ -
+      ∫ y in O, greenFunction O x y * f y ∂μ) O := by
+  have hOo := isOpen_of_isSmoothBoundedOpen hO
+  have hOb : Bornology.IsBounded O := hO.1
+  have hβ : 0 < βplus := hμ.2.1
+  obtain ⟨K, hK0, hK⟩ := VolumeGrowth.negMoment_restrict hR hμ hOR
+  have := isFiniteMeasure_restrict_of_subset_ball (μ := μ) hOR
+  set α := greenPotentialHolderExponent βplus with hα_def
+  have hα : 0 < α := greenPotentialHolderExponent_pos hβ
+  have hcl : closure O ⊆ closedBall (0 : ℂ) R :=
+    (closure_mono hOR).trans closure_ball_subset_closedBall
+  have hOcl : O ⊆ closedBall (0 : ℂ) R := subset_closure.trans hcl
+  have hfM' : ∀ᵐ y ∂μ.restrict O, |f y| ≤ |M| := hfM.mono fun y hy => hy.trans (le_abs_self M)
+  obtain ⟨C, -, hVC⟩ := VolumeGrowth.newtonPotential_holder hR hμ hOo.measurableSet hOR
+  obtain ⟨hVint, hVhol⟩ := hVC f |M| hf (abs_nonneg M) hfM'
+  have hGint := VolumeGrowth.integrableOn_greenFunction_mul hR hμ hOo hOR hf hfM
+  have hW : ∀ ξ ∈ closedBall (0 : ℂ) R, (∫ y in O, newtonKernel ξ y * f y ∂μ -
+      ∫ y in O, greenFunction O ξ y * f y ∂μ) =
+        ∫ y in O, (newtonKernel ξ y - greenFunction O ξ y) * f y ∂μ := by
+    intro ξ hξ
+    rw [← integral_sub (hVint ξ hξ) (hGint ξ hξ)]
+    congr 1
+    funext y
+    ring
+  -- continuity of `V` on `closedBall 0 R` from the Hölder bound, and of `q` on `closure O` (G4 + G5)
+  have hVcont : ContinuousOn (fun x => ∫ y in O, newtonKernel x y * f y ∂μ) (closedBall (0 : ℂ) R) := by
+    intro x₀ hx₀
+    rw [ContinuousWithinAt, tendsto_iff_norm_sub_tendsto_zero]
+    refine squeeze_zero' (g := fun x => C * |M| * ‖x - x₀‖ ^ α) (Filter.Eventually.of_forall fun _ => norm_nonneg _)
+      (eventually_nhdsWithin_of_forall fun x hx => ?_) ?_
+    · rw [Real.norm_eq_abs]
+      exact hVhol x hx x₀ hx₀
+    · have h : Filter.Tendsto (fun x => C * |M| * ‖x - x₀‖ ^ α) (nhdsWithin x₀ (closedBall (0 : ℂ) R))
+          (nhds (C * |M| * ‖x₀ - x₀‖ ^ α)) :=
+        (((continuous_id.sub continuous_const).norm.rpow_const fun _ => Or.inr hα.le).tendsto x₀
+          |>.const_mul _).mono_left nhdsWithin_le_nhds
+      simpa [Real.zero_rpow hα.ne'] using h
+  have hcont : ContinuousOn (fun x => ∫ y in O, newtonKernel x y * f y ∂μ -
+      ∫ y in O, greenFunction O x y * f y ∂μ) O :=
+    (hVcont.mono hOcl).sub
+      ((VolumeGrowth.continuousOn_greenPotential hR hμ hO hOR hf hfM).mono subset_closure)
+  refine harmonicOnNhd_of_circleAverage_eq hOo hcont fun x hx r hr hxr => ?_
+  have hpi : (0 : ℝ) ≤ 2 * Real.pi := by positivity
+  have hpi' : (2 * Real.pi) ≠ 0 := by positivity
+  have hcm : ∀ θ, circleMap x r θ ∈ O := fun θ =>
+    hxr (sphere_subset_closedBall (circleMap_mem_sphere x hr.le θ))
+  set A := (2 * Real.pi)⁻¹ * α⁻¹ * (2 * R) ^ α with hA_def
+  set B := (2 * Real.pi)⁻¹ * α⁻¹ with hB_def
+  set c := (2 * Real.pi)⁻¹ * (α⁻¹ * (2 * R) ^ α) with hc_def
+  have hA : 0 ≤ A := by positivity
+  have hBc : 0 ≤ B + c := by positivity
+  have hmeas1 : Measurable fun p : ℝ × ℂ => (circleMap x r p.1, p.2) :=
+    ((continuous_circleMap x r).measurable.comp measurable_fst).prodMk measurable_snd
+  have hNm : Measurable fun p : ℂ × ℂ => newtonKernel p.1 p.2 := by
+    unfold newtonKernel
+    fun_prop
+  have hDm : Measurable fun p : ℝ × ℂ =>
+      newtonKernel (circleMap x r p.1) p.2 - greenFunction O (circleMap x r p.1) p.2 :=
+    (hNm.comp hmeas1).sub ((measurable_greenFunction_uncurry hOo).comp hmeas1)
+  have htm : Measurable fun p : ℝ × ℂ => ‖circleMap x r p.1 - p.2‖ ^ (-α) :=
+    ((((continuous_circleMap x r).measurable.comp measurable_fst).sub measurable_snd).norm).pow_const _
+  have hmom : ∀ θ, Integrable (fun y => ‖circleMap x r θ - y‖ ^ (-α)) (μ.restrict O) ∧
+      ∫ y, ‖circleMap x r θ - y‖ ^ (-α) ∂μ.restrict O ≤ K := fun θ =>
+    integrable_norm_sub_rpow_neg hK0 (hK _ (hOcl (hcm θ))).1
+  have htint : Integrable (fun p : ℝ × ℂ => ‖circleMap x r p.1 - p.2‖ ^ (-α))
+      ((volume.restrict (Ioc 0 (2 * Real.pi))).prod (μ.restrict O)) := by
+    refine (integrable_prod_iff htm.aestronglyMeasurable).2 ⟨ae_of_all _ fun θ => (hmom θ).1, ?_⟩
+    refine (integrable_const K).mono' htm.aestronglyMeasurable.norm.integral_prod_right'
+      (ae_of_all _ fun θ => ?_)
+    have hnn : ∀ y : ℂ, ‖‖circleMap x r θ - y‖ ^ (-α)‖ = ‖circleMap x r θ - y‖ ^ (-α) := fun y =>
+      Real.norm_of_nonneg (Real.rpow_nonneg (norm_nonneg _) _)
+    simp only [hnn]
+    rw [Real.norm_of_nonneg (integral_nonneg fun y => Real.rpow_nonneg (norm_nonneg _) _)]
+    exact (hmom θ).2
+  have hFint : Integrable (Function.uncurry fun θ y =>
+      (newtonKernel (circleMap x r θ) y - greenFunction O (circleMap x r θ) y) * f y)
+      ((volume.restrict (Ioc 0 (2 * Real.pi))).prod (μ.restrict O)) := by
+    refine ((htint.const_mul (|M| * (B + c))).add (integrable_const (|M| * A))).mono'
+      (hDm.aestronglyMeasurable.mul
+      (hf.comp_quasiMeasurePreserving Measure.quasiMeasurePreserving_snd)) ?_
+    filter_upwards [Measure.quasiMeasurePreserving_snd.ae hfM',
+      Measure.quasiMeasurePreserving_snd.ae (ae_restrict_mem hOo.measurableSet)] with p hp hpO
+    have hb := abs_newtonKernel_sub_greenFunction_le hR hOR hα
+      (mem_closedBall_zero_iff.1 (hOcl (hcm p.1))) (mem_ball_zero_iff.1 (hOR hpO)).le
+    rw [← hA_def, ← hB_def, ← hc_def] at hb
+    rw [Real.norm_eq_abs]
+    change |(newtonKernel (circleMap x r p.1) p.2 - greenFunction O (circleMap x r p.1) p.2) * f p.2| ≤ _
+    rw [abs_mul]
+    calc |newtonKernel (circleMap x r p.1) p.2 - greenFunction O (circleMap x r p.1) p.2| * |f p.2|
+        ≤ (A + B * ‖circleMap x r p.1 - p.2‖ ^ (-α) + c * ‖circleMap x r p.1 - p.2‖ ^ (-α)) * |M| :=
+          mul_le_mul hb hp (abs_nonneg _) (by positivity)
+      _ = |M| * (B + c) * ‖circleMap x r p.1 - p.2‖ ^ (-α) + |M| * A := by ring
+  have hinner : ∀ᵐ y ∂μ.restrict O, ∫ θ in Ioc 0 (2 * Real.pi),
+      (newtonKernel (circleMap x r θ) y - greenFunction O (circleMap x r θ) y) * f y =
+        2 * Real.pi * ((newtonKernel x y - greenFunction O x y) * f y) := by
+    have hne : ∀ᵐ y ∂μ.restrict O, y ≠ x := ae_iff.2 (by simpa using (hK x (hOcl hx)).2)
+    filter_upwards [hne, ae_restrict_mem hOo.measurableSet] with y hyx hyO
+    have hh := harmonicOnNhd_greatestHarmonicMinorant_newtonKernel hOo hOb hyO
+    have hball : HarmonicOnNhd (fun ξ => (greatestHarmonicMinorant O (newtonKernelEReal y) ξ).toReal)
+        (closedBall x |r|) := fun z hz => hh z (hxr (by rwa [abs_of_pos hr] at hz))
+    have hmv := hball.circleAverage_eq
+    rw [Real.circleAverage_def, smul_eq_mul, intervalIntegral.integral_of_le hpi] at hmv
+    have hI : ∫ θ in Ioc 0 (2 * Real.pi),
+        (newtonKernel (circleMap x r θ) y - greenFunction O (circleMap x r θ) y) =
+          ∫ θ in Ioc 0 (2 * Real.pi),
+            (greatestHarmonicMinorant O (newtonKernelEReal y) (circleMap x r θ)).toReal :=
+      integral_congr_ae ((ae_restrict_of_ae (ae_circleMap_ne hr.ne')).mono fun θ hθ =>
+        newtonKernel_sub_greenFunction_eq hOo hOb (hcm θ) hyO hθ)
+    rw [integral_mul_const, hI, ← mul_inv_cancel_left₀ hpi' (∫ θ in Ioc 0 (2 * Real.pi), _), hmv,
+      newtonKernel_sub_greenFunction_eq hOo hOb hx hyO (Ne.symm hyx)]
+    ring
+  rw [Real.circleAverage_def, smul_eq_mul, intervalIntegral.integral_of_le hpi]
+  have h1 : ∫ θ in Ioc 0 (2 * Real.pi), (∫ y in O, newtonKernel (circleMap x r θ) y * f y ∂μ -
+      ∫ y in O, greenFunction O (circleMap x r θ) y * f y ∂μ) =
+        ∫ θ in Ioc 0 (2 * Real.pi), ∫ y in O,
+          (newtonKernel (circleMap x r θ) y - greenFunction O (circleMap x r θ) y) * f y ∂μ :=
+    integral_congr_ae (ae_of_all _ fun θ => hW _ (hOcl (hcm θ)))
+  rw [h1, integral_integral_swap hFint, integral_congr_ae hinner, integral_const_mul,
+    hW x (hOcl hx), inv_mul_cancel_left₀ hpi']
+
+end Harmonic
 
 end GreenGeneral
 
