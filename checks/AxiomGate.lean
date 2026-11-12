@@ -70,6 +70,7 @@ import HarmonicBalls.Steps.Sec2.VolumeGrowth
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsAlphaZero
 import HarmonicBalls.FirstPass.Phase2.LQGMetricXiPos
 import HarmonicBalls.FirstPass.Phase2.Lemma1110LeafForms
+import HarmonicBalls.FirstPass.Phase2.NotMetricBallCanonicalLeafForms
 
 /-!
 # Axiom gate
@@ -577,3 +578,5 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.FirstPassPhase2Step8WholePlaneFromSeed.firstPass_11_13_canonical_of_seedInputs_metricInputs
 -- 11.13 canonical-xi at universe 0: firstPass_11_13_canonical_of_seedInputs_lemma11_10 (HarmonicBalls/FirstPass/Phase2/Step8WholePlaneFromSeed.lean:128)
 #print axioms HarmonicBalls.FirstPassPhase2Step8WholePlaneFromSeed.firstPass_11_13_canonical_of_seedInputs_lemma11_10
+-- 11.11 canonical-xi: harmonicBallNotMetricBallCanonicalStmt_of_pinch_fieldAxioms (HarmonicBalls/FirstPass/Phase2/NotMetricBallCanonicalLeafForms.lean:24)
+#print axioms HarmonicBalls.harmonicBallNotMetricBallCanonicalStmt_of_pinch_fieldAxioms
