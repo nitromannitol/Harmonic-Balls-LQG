@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.GreenPotentialHolder
+import HarmonicBalls.Proofs.Potential.GreenPoleL1Continuity
 
 /-!
 # Green potentials on a smooth bounded open set: the logarithmic potential
@@ -125,6 +126,106 @@ theorem newtonPotential_integrable_and_sub_le {ν : Measure ℂ} [IsFiniteMeasur
           (add_le_add (hint x hx).2 (hint x' hx').2) (Real.rpow_nonneg (norm_nonneg _) _)) hc) hM
     _ = (Real.pi * α)⁻¹ * K * M * ‖x - x'‖ ^ α := by
         rw [hc_def, mul_inv, mul_inv]; ring
+
+/-- `log⁺ s ≤ α⁻¹ s^α` for `s ≥ 0` and `α > 0`. -/
+theorem posLog_le_inv_mul_rpow {s α : ℝ} (hs : 0 ≤ s) (hα : 0 < α) :
+    Real.posLog s ≤ α⁻¹ * s ^ α := by
+  rw [Real.posLog_def, Pi.sup_apply, Pi.zero_apply, sup_le_iff]
+  refine ⟨mul_nonneg (inv_nonneg.2 hα.le) (Real.rpow_nonneg hs _), ?_⟩
+  rw [inv_mul_eq_div]
+  exact Real.log_le_rpow_div hs hα
+
+/-- **Uniform negative moment under upper volume growth** (blueprint G1). If `μ` has the volume growth of
+exponents `β⁻, β⁺` on `B_R` and `O ⊆ B_R`, then `ν = μ|_O` has no atoms in `closedBall 0 R` and
+`∫ ‖x - y‖^(-α) ν(dy) ≤ K` uniformly in `x ∈ closedBall 0 R`, with `α = greenPotentialHolderExponent β⁺`. -/
+theorem VolumeGrowth.negMoment_restrict {μ : Measure ℂ} [IsLocallyFiniteMeasure μ] {R βminus βplus : ℝ}
+    (hR : 0 < R) (hμ : VolumeGrowth μ R βminus βplus) {O : Set ℂ} (hO : O ⊆ ball (0 : ℂ) R) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ x ∈ closedBall (0 : ℂ) R,
+      ∫⁻ y, ENNReal.ofReal (‖x - y‖ ^ (-greenPotentialHolderExponent βplus)) ∂(μ.restrict O) ≤
+        ENNReal.ofReal K ∧ μ.restrict O {x} = 0 := by
+  obtain ⟨-, hβ, r₀, hr₀, hgr⟩ := hμ
+  have hup : ∀ r, 0 < r → r < r₀ → ∀ z ∈ ball (0 : ℂ) R, μ (ball z r) ≤ ENNReal.ofReal (r ^ βplus) :=
+    fun r hr hrr z hz => (hgr r hr hrr z hz).2
+  have hfin : μ (ball (0 : ℂ) R) ≠ ⊤ := measure_ball_lt_top.ne
+  set m := (μ (ball (0 : ℂ) R)).toReal with hm_def
+  have hm : 0 ≤ m := ENNReal.toReal_nonneg
+  have hα := greenPotentialHolderExponent_pos hβ
+  have hball := fun x (hx : x ∈ closedBall (0 : ℂ) R) r (hr : 0 < r) =>
+    restrict_ball_closedBall_le hR hr₀ hβ hup hfin hx hr
+  have hν : μ.restrict (ball 0 R) univ ≤ ENNReal.ofReal m := by
+    rw [Measure.restrict_apply_univ, hm_def, ENNReal.ofReal_toReal hfin]
+  have hle : μ.restrict O ≤ μ.restrict (ball 0 R) := Measure.restrict_mono hO le_rfl
+  refine ⟨greenPotentialRieszBound βplus r₀ m, greenPotentialRieszBound_nonneg hβ hr₀ hm,
+    fun x hx => ⟨?_, ?_⟩⟩
+  · exact (lintegral_mono' hle le_rfl).trans (lintegral_norm_sub_rpow_neg_le hα
+      (greenPotentialHolderExponent_lt hβ) hm (volumeGrowthAllScalesConstant_nonneg hr₀ hm) hν (hball x hx))
+  · exact nonpos_iff_eq_zero.1 ((Measure.le_iff'.1 hle {x}).trans
+      (measure_singleton_eq_zero_of_le_rpow hβ (hball x hx)).le)
+
+/-- `μ|_O` is finite when `O` lies in a ball and `μ` is locally finite. -/
+theorem isFiniteMeasure_restrict_of_subset_ball {μ : Measure ℂ} [IsLocallyFiniteMeasure μ] {R : ℝ}
+    {O : Set ℂ} (hO : O ⊆ ball (0 : ℂ) R) : IsFiniteMeasure (μ.restrict O) :=
+  ⟨by rw [Measure.restrict_apply_univ]; exact (measure_mono hO).trans_lt measure_ball_lt_top⟩
+
+/-- **The logarithmic potential under the volume growth condition** (blueprint G1 + G2). For `O ⊆ B_R`
+measurable, the logarithmic potential `x ↦ ∫_O N(x,y) f(y) μ(dy)` of a density with `|f| ≤ M` `μ`-a.e. on `O`
+converges absolutely on `closedBall 0 R` and is Hölder there with exponent `min(β⁺,1)/2` and constant `C M`,
+`C` independent of `f`. -/
+theorem VolumeGrowth.newtonPotential_holder {μ : Measure ℂ} [IsLocallyFiniteMeasure μ]
+    {R βminus βplus : ℝ} (hR : 0 < R) (hμ : VolumeGrowth μ R βminus βplus) {O : Set ℂ}
+    (hOm : MeasurableSet O) (hO : O ⊆ ball (0 : ℂ) R) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (f : ℂ → ℝ) (M : ℝ), AEStronglyMeasurable f (μ.restrict O) → 0 ≤ M →
+      (∀ᵐ y ∂μ.restrict O, |f y| ≤ M) →
+      (∀ x ∈ closedBall (0 : ℂ) R, Integrable (fun y => newtonKernel x y * f y) (μ.restrict O)) ∧
+      ∀ x ∈ closedBall (0 : ℂ) R, ∀ x' ∈ closedBall (0 : ℂ) R,
+        |∫ y, newtonKernel x y * f y ∂(μ.restrict O) - ∫ y, newtonKernel x' y * f y ∂(μ.restrict O)| ≤
+          C * M * ‖x - x'‖ ^ greenPotentialHolderExponent βplus := by
+  have hβ : 0 < βplus := hμ.2.1
+  obtain ⟨K, hK0, hK⟩ := VolumeGrowth.negMoment_restrict hR hμ hO
+  have := isFiniteMeasure_restrict_of_subset_ball (μ := μ) hO
+  have hα := greenPotentialHolderExponent_pos hβ
+  have hsupp : ∀ᵐ y ∂μ.restrict O, ‖y‖ ≤ R :=
+    (ae_restrict_iff' hOm).2 (Filter.Eventually.of_forall fun y hy => (mem_ball_zero_iff.1 (hO hy)).le)
+  refine ⟨(Real.pi * greenPotentialHolderExponent βplus)⁻¹ * K,
+    mul_nonneg (inv_nonneg.2 (mul_nonneg Real.pi_pos.le hα.le)) hK0, fun f M hf hM hfM => ?_⟩
+  exact newtonPotential_integrable_and_sub_le hα (greenPotentialHolderExponent_le_one βplus) hK0 hsupp
+    (fun x hx => (hK x hx).1) (fun x hx => (hK x hx).2) hf hM hfM
+
+/-- **Absolute convergence of the Green potential** (blueprint G3; first conjunct of the general-domain step).
+For `O ⊆ B_R` open and `μ` with the volume growth condition on `B_R`, `y ↦ G_O(x,y) f(y)` is `μ`-integrable on
+`O` for every `x ∈ closedBall 0 R` and every density with `|f| ≤ M` `μ`-a.e. on `O`, using
+`0 ≤ G_O(x,y) ≤ (2π)⁻¹ log⁺ (2R/‖y - x‖)`. -/
+theorem VolumeGrowth.integrableOn_greenFunction_mul {μ : Measure ℂ} [IsLocallyFiniteMeasure μ]
+    {R βminus βplus : ℝ} (hR : 0 < R) (hμ : VolumeGrowth μ R βminus βplus) {O : Set ℂ}
+    (hOo : IsOpen O) (hO : O ⊆ ball (0 : ℂ) R) {f : ℂ → ℝ} {M : ℝ}
+    (hf : AEStronglyMeasurable f (μ.restrict O)) (hfM : ∀ᵐ y ∂μ.restrict O, |f y| ≤ M) :
+    ∀ x ∈ closedBall (0 : ℂ) R, IntegrableOn (fun y => greenFunction O x y * f y) O μ := by
+  intro x hx
+  have hβ : 0 < βplus := hμ.2.1
+  obtain ⟨K, hK0, hK⟩ := VolumeGrowth.negMoment_restrict hR hμ hO
+  set α := greenPotentialHolderExponent βplus with hα_def
+  have hα : 0 < α := greenPotentialHolderExponent_pos hβ
+  have hint := (integrable_norm_sub_rpow_neg hK0 (hK x hx).1).1
+  have hne : ∀ᵐ y ∂μ.restrict O, y ≠ x := ae_iff.2 (by simpa using (hK x hx).2)
+  have hOb : Bornology.IsBounded O := isBounded_ball.subset hO
+  have hπ : 0 ≤ (2 * Real.pi)⁻¹ := inv_nonneg.2 (by positivity)
+  set c := (2 * Real.pi)⁻¹ * (α⁻¹ * (2 * R) ^ α) with hc_def
+  have hc : 0 ≤ c := mul_nonneg hπ (mul_nonneg (inv_nonneg.2 hα.le) (Real.rpow_nonneg (by positivity) _))
+  have hdom : Integrable (fun y => |M| * (c * ‖x - y‖ ^ (-α))) (μ.restrict O) :=
+    (hint.const_mul _).const_mul _
+  refine hdom.mono' ((measurable_greenFunction hOo x).aestronglyMeasurable.mul hf) ?_
+  filter_upwards [hne, hfM] with y hyx hy
+  have hpos : 0 < ‖y - x‖ := norm_pos_iff.2 (sub_ne_zero.2 hyx)
+  have hG0 := greenFunction_nonneg hOb x y
+  have hG : greenFunction O x y ≤ c * ‖x - y‖ ^ (-α) := by
+    refine (greenFunction_le_posLog_div_norm hR hO x y).trans ?_
+    rw [hc_def, mul_assoc]
+    refine mul_le_mul_of_nonneg_left ?_ hπ
+    refine (posLog_le_inv_mul_rpow (by positivity) hα).trans (le_of_eq ?_)
+    rw [Real.div_rpow (by positivity) hpos.le, Real.rpow_neg (norm_nonneg _), norm_sub_rev, div_eq_mul_inv]
+    ring
+  rw [norm_mul, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hG0, mul_comm]
+  exact mul_le_mul (hy.trans (le_abs_self M)) hG hG0 (abs_nonneg M)
 
 end GreenGeneral
 
