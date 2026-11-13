@@ -10,7 +10,7 @@ Target `lqgMeasureLocality_derived` (`LQGMeasureLocality P γ α₀ hC hcirc`, P
 Route: measurable limits of local approximations (triage row FPLQGMeasureLocality).
 For open `U`, cut-offs `f_n ↑ 1_U` give `μ(U) = ⨆ n, ∫ f_n dμ`; each `∫ f_n dμ` is the a.s. limit
 along dyadic scales of `∫ f_n d(lqgApprox ...)`, and each of those is `σ(h|_U)`-measurable once the
-circle averages inside `U` are (the BLOCKED-STEP `LQGCircleAverageLocalityLink`).
+circle averages inside `U` are (`LQGCircleAverageLocalityLink`, proved for a whole-plane GFF in CircleAverageLocalityLinkDerived.lean).
 -/
 
 open MeasureTheory Set Filter Topology
@@ -20,12 +20,11 @@ namespace HarmonicBalls
 
 noncomputable section
 
-/-- FALSE AS TYPED (counterexample: no IsWholePlaneGFF premise); use lqgCircleAverageLocalityLink_derived (CircleAverageLocalityLinkDerived.lean).
-BLOCKED-STEP (not a source input). The circle averages of `h = h^ℂ - α₀ log|·|`
+/-- The circle averages of `h = h^ℂ - α₀ log|·|`
 over a circle `∂B_r(z)` with `closedBall z r ⊆ U`, `U` open, are `σ(h|_U)`-measurable up to null sets.
 This is the precise form of "immediate from the definition" (paper line 424, Fact 2.1 II; the sentence
-at Proposed/LQG.lean:90-95). `IsWholePlaneGFF` does not link `hcirc` to `hC` pointwise (only through
-`covariance_eq`), so this link is not derivable from the structure in Defs/GFF.lean. -/
+at Proposed/LQG.lean:90-95). For a whole-plane GFF it holds by `lqgCircleAverageLocalityLink_derived`
+(CircleAverageLocalityLinkDerived.lean). -/
 def LQGCircleAverageLocalityLink {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (α₀ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) : Prop :=
   ∀ U : Set ℂ, IsOpen U → ∀ (r : ℝ) (z : ℂ), 0 < r → Metric.closedBall z r ⊆ U →
@@ -318,7 +317,8 @@ def densityIntegral {Ω : Type*} (γ : ℝ) (U : Set ℂ) (n k : ℕ) (Ψk : Ω 
     ENNReal.ofReal (exhaustFn U n z)
 
 /-- Fact 2.1 II (locality) of the LQG measure, conditional on the circle-average link
-`LQGCircleAverageLocalityLink` (BLOCKED-STEP). Every other step is proved. -/
+`LQGCircleAverageLocalityLink`, which `lqgCircleAverageLocalityLink_derived` proves for a whole-plane GFF. Every other step
+is proved. -/
 theorem lqgMeasureLocality_of_circleLink {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (hlink : LQGCircleAverageLocalityLink P α₀ hC hcirc) :
