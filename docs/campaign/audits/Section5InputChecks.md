@@ -50,7 +50,7 @@ binder beyond I2. Consumption from the staged Proposed inputs is typed as well, 
 | Lemma 8.1 `BoundaryMeasureZeroOfCompactClusterStmt` (Draft/Section8.lean:55) | derived from 3.2, 6.11, 8.2 | `boundaryMeasureZeroOfCompactClusterStmt_of_steps` (Proofs/Sec8/ClusterBoundary.lean:89) |
 | Lemma 2.4 `LiouvilleVolumeGrowthStmt` (Draft/Section2.lean:89) | binder, leaf | providers `liouvilleVolumeGrowthStmt_of_DG` (Proofs/Sec2/Assembly.lean:80, takes hDG, hAff, hCC, hMix, hW, hE, hN) and `_of_literature` (:116); no I2-only provider found |
 | Prop 6.1 `HarnackTypeEstimateStmt` (Draft/Section6.lean:206) | binder, leaf | `harnackTypeEstimateStmt_of_three_inputs` (Proofs/Sec6/FullThreeInputAssembly.lean:56, hDG hCC hE; Section 6 task, not consumed here); `harnackTypeEstimateStmt_of_volumeGrowth` (Proofs/Sec6/VolumeGrowthAssembly.lean:70, extra binders hsub, hex, hW, hdec) |
-| Lemma 8.2 `TypicalPointManyGoodScalesStmt` (Draft/Section8.lean:74) | OPEN | providers take hDG, hCC, hE and the proof obligation `hcomparison` (Proofs/Sec9/RootedComparisonWeakUniqueness.lean:34-52, include at :53; Proofs/Sec8/TypicalPointStatement.lean:34). The module doc (TypicalPointStatement.lean:4-7) says the comparison hypothesis is a proof obligation, not an external literature input. |
+| Lemma 8.2 `TypicalPointManyGoodScalesStmt` (Draft/Section8.lean:74) | OPEN | needs the local rooted comparison (`audits/LocalRootedComparisonRepair.md`). |
 | step `ClusterBoundaryTouchingRightContinuityStep` (Steps/Sec5/ContinuityAssembly.lean:19-26) | OPEN, no producer | right continuity at times with `closure (cluster ..)` not in B1; G12 (docs/campaign/GRAPH.md:1352): Prop 7.2 needs `Λ ⋐ B1` |
 
 ## Reciprocity, bounded representatives, regular boundary
@@ -92,7 +92,7 @@ this chain. Operator decision needed; no Draft edit.
 
 1. `ClusterBoundaryTouchingRightContinuityStep` (Steps/Sec5/ContinuityAssembly.lean:19) has no producer. 5.2 cannot
    be closed from the repository. This is the G12 scope gap.
-2. `TypicalPointManyGoodScalesStmt` (Lemma 8.2) is open through `hcomparison` (RootedComparisonWeakUniqueness.lean:34-52).
+2. `TypicalPointManyGoodScalesStmt` (Lemma 8.2) is open: it needs the local rooted comparison (`audits/LocalRootedComparisonRepair.md`).
    It blocks 5.3 directly and 5.2, 5.4, 5.5 through Lemma 8.1 and Proposition 7.2.
 3. Lemma 2.4 and Proposition 6.1 are leaves with providers that need Section 2 and Section 6 inputs. They are not consumed here.
 4. The all-insertion `LQGMeasureCoordChange` (Proposed/LQG.lean:114) is needed for 5.5 and 5.7. The staged I2 provider takes insertion `0` only.
@@ -101,5 +101,4 @@ this chain. Operator decision needed; no Draft edit.
 ## Credit
 
 Leonardo Bonanno's potential-theoretic and LatticeProb work is consumed through the imported modules. The module
-docstring names Leonardo Bonanno, and so do the credited modules (for example `Proofs/Potential/FiniteDiscGreenReciprocity.lean`
-and `Proofs/Sec8/TypicalPointStatement.lean`, which credits the `LatticeProb.Prob.Birkhoff` formalization).
+docstring names Leonardo Bonanno, and so do the credited modules (for example `Proofs/Potential/FiniteDiscGreenReciprocity.lean`).

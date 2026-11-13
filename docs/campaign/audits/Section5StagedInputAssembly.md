@@ -74,8 +74,8 @@ the staged inputs as written in `Proofs/Sec9/WeakUniquenessDerivedInputs.lean:53
 
 * B1 `ClusterBoundaryTouchingRightContinuityStep` (`Steps/Sec5/ContinuityAssembly.lean:19`, G12): no producer in the
   repository. It blocks 5.2. Owned by task `post-contact-boundary-control`.
-* B2 `TypicalPointManyGoodScalesStmt` (Lemma 8.2, `Draft/Section8.lean:74`): no producer. Its providers need the proof
-  obligation `hcomparison` (`Proofs/Sec9/RootedComparisonWeakUniqueness.lean:34-52`). It blocks 5.3, and 5.2, 5.4, 5.5 through
+* B2 `TypicalPointManyGoodScalesStmt` (Lemma 8.2, `Draft/Section8.lean:74`): no producer. It needs the local rooted comparison
+  (`audits/LocalRootedComparisonRepair.md`). It blocks 5.3, and 5.2, 5.4, 5.5 through
   Lemma 8.1.
 * Lemma 2.4 is consumed in its Draft form, which carries the corrected exponent ranges [C1]
   (`Draft/Section2.lean:89-108`: `min ((2-γ)²/2) (γ(Q-α₀))` and `max ((2+γ)²/2) (γ(Q-α₀))`). The operator's

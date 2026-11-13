@@ -52,7 +52,7 @@ The axiom sets came from the `lc` log of the module: each of the six `#print axi
 | Predecessor | Location | Status |
 |---|---|---|
 | I2 `LQGVolumeGrowthAllScalesStmt` | `Draft/Section2.lean:122` (docstring 112-121: "a consequence, not a literature input", from Lemma 2.4 and scaling) | Explicit premise of the export. Two Lean producers, each conditional. (i) `lqgVolumeGrowthAllScalesStmt_of_ballMass` (`Steps/Sec2/VolumeGrowth.lean:164`) from `LiouvilleBallMassBoundStep` (`:69`), which `liouvilleBallMassBoundStep_of_scaled` (`Proofs/Sec2/BallMassReduction.lean:296`) derives from `WholePlaneScaledBallMassStep`, `SingularWeightStep`, `hE`, `hN`. (ii) `lqgVolumeGrowthAllScalesStmt_of_literature` (`Proofs/Sec2/Assembly.lean:120`) from the staged literature inputs `hDG` (Ding-Gwynne 2020, Lemma 3.8), `hAff`, `hCC`, `hW`, `hE`, `hN` (section variables, `Proofs/Sec2/Assembly.lean:61-73`). |
-| Lemma 8.2 `TypicalPointManyGoodScalesStmt` | `Draft/Section8.lean:74` | Explicit premise of the export (through `clusterBoundaryNullAllRadii_of_dyadic_typical_scales`). Three Lean producers, each conditional. `typicalPointManyGoodScalesStmt_of_literature` (`Proofs/Sec8/TypicalPointLiteratureAssembly.lean:24`) from `hDG`, `hAff`, `hCC`, `hW`, `hEx` and the rooted and centred measure-law comparison `hcomparison`. `typicalPointManyGoodScalesStmt_of_ambientLaw` (`Proofs/Sec8/TypicalPointStatement.lean:19`) from `hgrowth` (I2), `hfull` (I1), `hsub` (`GoodAnnuliSubRangeStep`), `hEx`, `hW`, `hAff`, `hCC` and an explicit ambient-law comparison premise. `typicalPointManyGoodScalesStmt_of_staged_inputs_and_comparison` (`Proofs/Sec9/RootedComparisonWeakUniqueness.lean:57`) from `hDG`, `hCC`, `hE` and `hcomparison` (`:32`). |
+| Lemma 8.2 `TypicalPointManyGoodScalesStmt` | `Draft/Section8.lean:74` | Explicit premise of the export (through `clusterBoundaryNullAllRadii_of_dyadic_typical_scales`). |
 | `WholePlaneGFFAffineInvariance` | `Proposed/LQG.lean:51` | Not a premise: proved from the covariance field `complex_affine` of `IsWholePlaneGFF` (`wholePlaneGFFAffineInvariance_proved`). Its definition sits in the Proposed file, so the operator's source-check of `IsWholePlaneGFF` covers it. |
 | Lemma 6.11 `VeryGoodAnnulusHarnackTypeStmt` | `Draft/Section6.lean:415` | Not a premise of the top-level export: derived from `hI2` in the Section 6 chain. |
 | Lemma 3.2, Lemma 3.4 | `Proofs/Sec3/OpenLaplacian.lean:25`, `Proofs/Sec3/ConservationOfMassLemma.lean:30` | Proved from `hI2` alone. |
@@ -60,8 +60,8 @@ The axiom sets came from the `lc` log of the module: each of the six `#print axi
 
 Remaining premises for the frozen weak Prop 9.2 export: **I2 and Lemma 8.2 as explicit binders, and nothing else**
 (the typed examples compile with exactly these two). Neither is discharged unconditionally here: their Lean producers take the
-staged items named above (`hDG`, `hAff`, `hCC`, `hW`, `hE`, `hN`, `hEx`, `hcomparison`, `WholePlaneScaledBallMassStep`,
-`SingularWeightStep`, `GoodAnnuliSubRangeStep`, and an ambient-law comparison), all pending operator source-check or
+staged items named above (`hDG`, `hAff`, `hCC`, `hW`, `hE`, `hN`, `hEx`, `WholePlaneScaledBallMassStep`,
+`SingularWeightStep` and `GoodAnnuliSubRangeStep`), all pending operator source-check or
 rooted-law work.
 
 ## What this audit does not claim

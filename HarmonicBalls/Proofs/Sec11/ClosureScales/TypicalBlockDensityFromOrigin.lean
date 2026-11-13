@@ -14,8 +14,8 @@ comparison data (`hrooted`, `hac`, `hdom`, `hcomp`, `heq`, the recentering `rece
 probability law `Q` on the sample space: measurability and germ-measurability of the internal indicators, germ
 triviality, stationarity of the indicator law, and the rate bound `δ < Q(internal pinch at scale 1)`.
 
-Explicit hypotheses (open, not literature inputs): all of the above. The rooted comparison families are the
-obligations shared with Lemma 8.2 (`RootedComparisonWeakUniqueness.lean`), extended to the metric in `heq`
+Explicit hypotheses (open, not literature inputs): all of the above. The rooted comparison families are those of
+the rooted law at a typical point (Lemma 8.2), extended to the metric in `heq`
 (draft 583-634). The pointwise ergodic theorem is LatticeProb's (Leonardo Bonanno), used in
 `HarmonicBalls.Proposed.Birkhoff`.
 -/

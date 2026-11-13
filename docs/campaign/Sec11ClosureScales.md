@@ -59,8 +59,6 @@ lemma does not yet give `ManyPinchScalesStmt`.
 * `ae_ae_pinch_block_density_of_recentered_observation` (`Proofs/Sec11/PinchRecenteredObservation.lean:67`) is the
   typical-point transfer (`∀ᵐ ω, ∀ᵐ z ∂μ ω`). Its premises are the rooted comparisons (`hrooted`, `hac`, `hdom`, `hcomp`)
   and `hfixed`, the origin density under the observed law `Q` for the INTERNAL event.
-* The rooted comparison shape is shared with Lemma 8.2 (`Proofs/Sec9/RootedComparisonWeakUniqueness.lean:32`,
-  `hcomparison`), which the repository treats as an open proof obligation.
 * `Steps/Sec11/PinchLocalDensityTransfer.lean:18` (`ae_eventually_block_density_of_local_absolutelyContinuous`) is generic
   in the event `E` and transfers an origin density across a local absolute-continuity hypothesis.
 

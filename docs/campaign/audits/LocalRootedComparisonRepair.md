@@ -1,6 +1,6 @@
 # Local rooted comparison for Lemma 8.2
 
-Task `local-rooted-comparison-mathematical-repair`, 2026-11-06. This is a source-level repair and an exact proposed interface, not a Lean theorem or a new literature input. It does not establish the missing joint laws or close Lemma 8.2. The obstruction in `RootedLawSourceCheck.md` concerns the previous global interface and does not refute the paper.
+Task `local-rooted-comparison-mathematical-repair`, 2026-11-06. This is a source-level repair and an exact proposed interface, not a Lean theorem or a new literature input. It does not establish the missing joint laws or close Lemma 8.2.
 
 ## Sources and scope
 
@@ -21,7 +21,7 @@ It is a measure supported in `B_{r_j}(0)`, not the global translated μ. Use the
 `O_j(ω,z) = (z, N_j(L_j(ω,z)))`,
 `V_j(z,ω) = (z, N_j(ν(ω)|B_{r_j}(0)))`,
 
-where `ν = μ_{H−γ log|·|}` uses a whole-plane GFF normalized at 0. No measure is reconstructed by definition of `O_j`. Both maps must be proved measurable (or replaced by measurable versions with a.e. equality for the relevant laws). Let `κ` be the kernel `λ|B/M` and let `ρ_j = volume.restrict D_j`. The concrete Lean-shaped replacement for the old global `hcomparison` is, for every `j`,
+where `ν = μ_{H−γ log|·|}` uses a whole-plane GFF normalized at 0. No measure is reconstructed by definition of `O_j`. Both maps must be proved measurable (or replaced by measurable versions with a.e. equality for the relevant laws). Let `κ` be the kernel `λ|B/M` and let `ρ_j = volume.restrict D_j`. The concrete Lean-shaped local comparison is, for every `j`,
 
 ```lean
 (P ⊗ₘ κ).restrict (Prod.snd ⁻¹' D j) |>.map (O j) ≪
@@ -49,6 +49,6 @@ There is an additional phase obligation. The printed lattice in (VG-iii) is anch
 ## Unresolved leaves and handoff
 
 * Establish the marked DMS formula and its simultaneous joint LQG measure/Weyl interpretation for the repository's `IsWholePlaneGFF` and `IsLQGMeasureOfField` representations; cite DMS A.10 above. The existing `RootedObservedBindLaw.lean:19,71` only handles bind and normalized-law measure theory.
-* Prove the displayed local observed-measure domination, including measurable actual restrictions, projective normalization, local GMC identification and translation modulo constants; field-only local domination is already available. No global comparison is required.
+* Prove the displayed local observed-measure domination, including measurable actual restrictions, projective normalization, local GMC identification and translation modulo constants; field-only local domination is already available.
 * Prove measurability of the actual good-annulus predicate (or an adequate measurable completion/witness theorem) and the phase-sensitive reference tail event with matching constants. `RootedJointObservedFrequency.lean:19` shows one conditional joint-observation route, but assumes its joint domination and unit good-event measurability.
 * Assemble the deterministic locality, positivity, atomlessness and Fubini steps above in Lean. The mathematical transfer conditional on these leaves is explicit; no numbered result is claimed closed.

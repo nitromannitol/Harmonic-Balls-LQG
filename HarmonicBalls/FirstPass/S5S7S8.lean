@@ -21,8 +21,7 @@ The proofs compose the committed reductions of `Proofs/Sec5/StagedInputAssembly.
 `Proofs/Sec7/ClusterUpperBound.lean`, `Proofs/Sec7/ClusterContinuity.lean`, `Proofs/Sec8/ClusterBoundary.lean` and
 `Proofs/Sec8/OriginLiteratureAssembly.lean`.
 `wholePlaneGFFAffineInvariance_proved` (`Proofs/Sec9/AffineInvarianceAssembly.lean`) discharges the affine-invariance input.
-Lemma 8.2 is not closed here: its literature assembly still takes the rooted comparison binder `hcomparison`
-(`Proofs/Sec8/TypicalPointLiteratureAssembly.lean`), which is a new step with no Lean proof.
+Lemma 8.2 enters here as the hypothesis `TypicalPointManyGoodScalesStmt`.
 -/
 
 namespace HarmonicBalls

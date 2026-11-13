@@ -37,9 +37,6 @@ Lemma 6.11 from I2, and a second source would only duplicate it.
 
 * `h82 : TypicalPointManyGoodScalesStmt` (Lemma 8.2, `Draft/Section8.lean:74`). This is the one genuine
   missing leaf of the numbered export. It is an explicit binder, not a literature input.
-  Lemma 8.2 reduces further to `hcomparison` through `typicalPointManyGoodScalesStmt_of_literature`
-  (`Proofs/Sec8/TypicalPointLiteratureAssembly.lean:24`). That route is not used: the task forbids assuming
-  `hcomparison`, and it takes the coordinate change at every insertion `α`, not at `0`.
 * No boundary-nullity binder. The dyadic route needs only I2 and `h82`; `ClusterBoundaryNullAllRadii` and
   `BoundaryMeasureZeroOfCompactClusterStmt` are not binders of any export.
 
@@ -67,7 +64,7 @@ Lemma 6.11 from I2, and a second source would only duplicate it.
 ## Open items for the operator
 
 1. Operator to confirm the all-α₀ scope of `LQGMeasureCoordChange` (source-check row 14 and the round-10 note).
-   These exports do not use it. The `hcomparison` route above would need it.
+   These exports do not use it.
 2. `ExistenceResultsAssembly.lean` header says the three inputs "await source review". They are now source-checked.
    That file is not owned by this task and was not edited.
 3. `Audit/Section9ComparisonExports.lean` (another worker's file) audits the same existence producers conditionally.

@@ -33,7 +33,7 @@ of Proposition 5.2 at times with `closure Λ ⊄ B₁`), and the all-insertion c
 input `LQGMeasureCoordChange` (Proposed).
 
 Leonardo Bonanno's potential-theoretic and LatticeProb work is consumed through the imported modules, which carry Leonardo Bonanno's
-credit (for example Proofs/Potential/FiniteDiscGreenReciprocity.lean and Proofs/Sec8/TypicalPointStatement.lean). No
+credit (for example Proofs/Potential/FiniteDiscGreenReciprocity.lean). No
 frozen statement, definition or input is changed here; no numbered result is closed by a helper.
 -/
 

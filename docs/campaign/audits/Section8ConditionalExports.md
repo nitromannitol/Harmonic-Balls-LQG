@@ -116,16 +116,14 @@ settle them.
 * 3.2 and 6.11 each have a proved I2-conditional producer
   (`Sec3/OpenLaplacian.lean:25`, `Sec6/VolumeGrowthConsequences.lean:19`). The
   additional Lean composition checks these exact applications while **keeping
-  8.2 as a hypothesis**. `TypicalPointStatement.lean:19–57` instead retains a
-  substantive `hcomparison` rooted/centered law hypothesis; it is not an
-  unconditional 8.2 proof or an admitted literature input.
+  8.2 as a hypothesis**.
 
 ## Circularity and outstanding semantic obligations
 
 A recursive project-import scan found 436 project modules reachable from the
 8.3 provider and 20 from the 8.1 provider; none of their dependencies referenced
-any of these three provider exports: the audited 8.3 export, the audited 8.1
-export, or `typicalPointManyGoodScalesStmt_of_ambientLaw`. Direct proof tracing
+any of these provider exports: the audited 8.3 export and the audited 8.1
+export. Direct proof tracing
 also confirms the 8.1 assembly assumes 8.2 and the 8.3 assembly does not call
 8.1 or 8.2. This is a bounded name/import search, not a full theorem-level
 transitive dependency certificate, and it does not establish that all
