@@ -58,6 +58,8 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputs42
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs43
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs46
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs47
+import HarmonicBalls.FirstPass.Phase2.PinchScalesLocalReplacementDerived
+import HarmonicBalls.FirstPass.Phase2.NoveltyCanonicalLocalReplacementDerived
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs44
 import HarmonicBalls.FirstPass.Phase2.ConeBadScalesHolds
 import HarmonicBalls.FirstPass.Phase2.WeylLogTruncationDerivedInputs
@@ -609,3 +611,7 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.firstPass_11_16_derivedInputsUnitTail
 #print axioms HarmonicBalls.firstPass_11_12_derivedInputsUnitTail
 #print axioms HarmonicBalls.FirstPassPhase2Step8WholePlaneFromSeed.firstPass_11_13_canonical_of_seedInputs_unitTail
+-- canonical-xi from the local metric replacement alone (binder hN2): 11.13, 11.11 (HarmonicBalls/FirstPass/Phase2/PinchScalesLocalReplacementDerived.lean), 1.2 (HarmonicBalls/FirstPass/Phase2/NoveltyCanonicalLocalReplacementDerived.lean:21)
+#print axioms HarmonicBalls.correctedLemma11_13Canonical_of_localMetricReplacement_derived
+#print axioms HarmonicBalls.harmonicBallNotMetricBallCanonical_of_localMetricReplacement_derived
+#print axioms HarmonicBalls.harmonicBallNoveltyCanonical_of_localMetricReplacement_derived
