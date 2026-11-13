@@ -44,10 +44,10 @@ functional `T = (h, ·)` of `h` and the value `h_1(0)`. -/
 noncomputable def dmsShiftedPairing (γ : ℝ) (z : ℂ) (T : (ℂ → ℝ) → ℝ) (h10 : ℝ) : (ℂ → ℝ) → ℝ :=
   fun φ => T φ + (∫ w, dmsShift γ z w * φ w) + dmsConstant γ z h10 * ∫ w, φ w
 
-/-- **RETIRED: do not use.** This normalized form is dead code: no counted chain uses it. The
-counted chain uses `DMSLemmaA10WholePlaneUnnormalized` (this file) and `DMSLemmaA10WholePlaneMarked`
-(`FirstPass/Frozen/S11i.lean:39`). The test `F ≡ 1 ⇒ 1 = π` does not apply to the text below: its
-right side divides by `(volume (ball 0 1)).toReal`, so `F ≡ 1` gives `1 = 1`. The status of the statement is open.
+/-- No counted chain uses this normalized form; the counted chain uses
+`DMSLemmaA10WholePlaneUnnormalized` (this file) and `DMSLemmaA10WholePlaneMarked`
+(`FirstPass/Frozen/S11i.lean`). The right side divides by `(volume (ball 0 1)).toReal`, so for `F ≡ 1`
+both sides equal `1`.
 
 **Duplantier-Miller-Sheffield, Lemma A.10, whole-plane clause, for `D = B_1`** (arXiv:1409.7055v4, Appendix A,
 p. 184), as a property of the whole-plane GFF `(P, hC, hcirc)` and of its γ-LQG measure `μ` with `α₀ = 0`.

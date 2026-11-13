@@ -139,12 +139,12 @@ All verdict words in the table: TRUE 53, none 49. Structural labels: RETIRED 7, 
 
 ## 4. Hand checks
 
-Mechanical checks (scratch-z6/gen_status.py and a verification pass, both uncommitted): all evidence references and all 42 quoted verdict phrases occur verbatim in their docstrings; the literature locators were checked part by part (author, arXiv id, theorem, page) against the docstring text, 0 mismatches; every TRUE or FALSE status has its verdict word in the docstring. Limits: a locator part is the first match in the docstring, so a theorem number may be the paper's own (e.g. `Lemma 11.7`) rather than the literature's; quotes are copied, not interpreted.
+Mechanical checks (scratch-z6/gen_status.py and a verification pass, both uncommitted): all evidence references and all 42 quoted verdict phrases occur verbatim in their docstrings; the literature locators were checked part by part (author, arXiv id, theorem, page) against the docstring text, 0 mismatches; every TRUE status has its verdict word in the docstring. Limits: a locator part is the first match in the docstring, so a theorem number may be the paper's own (e.g. `Lemma 11.7`) rather than the literature's; quotes are copied, not interpreted.
 
 Hand checks against the source, 8 rows:
 1. `CameronMartinGFFReweighting` (FirstPass/Frozen/S11aj.lean:33): DERIVED INTERFACE, truth TRUE, chat 179 and chat 151; locator Miller-Sheffield, arXiv:1302.4738v2, Proposition 2.9, printed p. 49. As written.
 2. `LocalLQGInsertionWeylOffOrigin` (FirstPass/Frozen/S8c.lean:85): RETIRED, truth TRUE, target `localLQGInsertionWeylOffOrigin_derived` at FirstPass/S8c/WeylOffOriginDerived.lean:88 (line confirmed by grep).
-3. `DMSLemmaA10WholePlaneMarkedSub` (FirstPass/Frozen/S11i.lean:58): TRUE (operator ruling 2026-11-10; chat 241, notes/fp-gaps/CHATGPT-241-hb-DMS-A10-marked-truth-PRO.md §4). The docstring states "Truth check: TRUE" for the Sub form, which inserts `0 < γ`, `γ < 2` into the statement. The FALSE verdict of that note applies to the unrestricted `DMSLemmaA10WholePlaneMarked` only (FirstPass/Frozen/S11i.lean, old def, unchanged).
+3. `DMSLemmaA10WholePlaneMarkedSub` (FirstPass/Frozen/S11i.lean:58): TRUE (operator ruling 2026-11-10; chat 241, notes/fp-gaps/CHATGPT-241-hb-DMS-A10-marked-truth-PRO.md §4). The docstring states "Truth check: TRUE" for the Sub form, which inserts `0 < γ`, `γ < 2` into the statement. The docstring of `DMSLemmaA10WholePlaneMarked` (FirstPass/Frozen/S11i.lean) states it TRUE for `0 < γ < 2`, the range of the paper.
 4. `WholePlaneGFFExistsFrozen` (FirstPass/S11r/Frozen.lean:39): TRUE, ChatGPT 01:17 UTC, notes/fp-gaps path. As written.
 5. `LQGMeasureExistence` (Proposed/LQG.lean:74): TRUE; Codex truth check 2026-11-1x; locator arXiv:2208.11795v3, Proposition 1.1, p. 9. As written.
 6. `PfefferBackgroundScaling` (Proposed/PfefferMetricScaling.lean:146): other, no verdict word; quote and locator (Proposition 1.9, p. 8) as written.

@@ -44,7 +44,7 @@ Each line: occurrences i/ii/iii, files, five samples (file:line, relative to `Ha
 
 Cleaning rule for every edit task:
 - Delete: task ids, worker names and chat numbers, model names, operator and lead notes with their dates, `notes/` and `CHATGPT-`/`CODEX-` paths, PRO tags, "FIRST PASS" labels, RETIRED/SUPERSEDED history.
-- Keep: paper citations (`line N`, `eq:`, `lemma:` labels, per CONVENTIONS.md line 5), hypothesis provenance (Proposed or External name, theorem, page), mathematical content, and mathematical truth status ("FALSE AS TYPED"). Truth status moves to docs (D8); it is not dropped.
+- Keep: paper citations (`line N`, `eq:`, `lemma:` labels, per CONVENTIONS.md line 5), hypothesis provenance (Proposed or External name, theorem, page), mathematical content, and mathematical truth status ("Truth check: TRUE"). Truth status moves to docs (D8); it is not dropped.
 - Never change the type or body of a frozen Draft statement (FROZEN.md, 96 lines).
 
 ## 3. Docs: campaign-internal versus reader-facing
@@ -85,7 +85,7 @@ Shared rules: (a) each file has exactly one owner task; (b) the B-files are the 
 - D5: paper products (untrack `texput.log`, `tikz.aux`, `bbl`, `oldd.pdf`); move the 35 unreferenced figures to `paper/Figures/unused/`; keep or strip `% CORRECTION` markers in a release copy.
 - D6: home of the axiom gate (one module outside the default lib, e.g. `checks/`).
 - D7: fate of `HarmonicBalls/FirstPass/` (609 files, 0 reached): keep, fold into Proofs, or archive by move. Depends on how B rewires `HarmonicBalls.lean`.
-- D8: destination of mathematical status notes in docstrings ("FALSE AS TYPED", "RETIRED", "derived interface"): a status file under docs/, written before C6 strips the workflow context.
+- D8: destination of mathematical status notes in docstrings ("Truth check", "RETIRED", "derived interface"): a status file under docs/, written before C6 strips the workflow context.
 - D9: `HarmonicBalls/Audit/` moves out of the default build.
 - D10: renames of `Frozen`, `FirstPass`, `Proposed` to `External`, `closure_*`, `firstPass_*`. Operator only, last, one worker; touches every import.
 
