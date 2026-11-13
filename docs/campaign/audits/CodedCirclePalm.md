@@ -15,9 +15,9 @@ the numbered results, and any frozen declaration.
   `profileMeasure_eq_of_eq_on_circleIndexSet`, the characterization `circleProfileMeasure_eq`, measurability, the
   actual profile `circleCodedProfile`, and `ae_lqgMeasure_eq_circleProfileMeasure`.
 - `HarmonicBalls/Proofs/Sec11/ClosureScales/PalmStepM.lean`. `StepM` and `RawToProfileStep` kept verbatim. Real
-  Ω-consumer `palm_circle_omega_of_stepM`. Quarantined `palm_omega_of_stepM_stepB_quarantined` (historical, unchanged body).
+  Ω-consumer `palm_circle_omega_of_stepM`. Canonical-profile form `palm_omega_of_stepM_rawToProfile` (body unchanged).
 - `HarmonicBalls/Proofs/Sec11/ClosureScales/PalmLambdaMeasurable.lean`. Real λ-consumer
-  `eq_r6_palm_circle_lambda_of_stepM`. Quarantined `eq_r6_palm_lambda_of_stepM_stepB_quarantined`.
+  `eq_r6_palm_circle_lambda_of_stepM`. Canonical-profile form `eq_r6_palm_lambda_of_stepM_rawToProfile`.
 
 ## Statements (binders as in the files)
 
@@ -54,9 +54,9 @@ the numbered results, and any frozen declaration.
 
 ## Quarantine and naming
 
-- `RawToProfileStep` (PalmStepM.lean) is kept verbatim, as the operator required. The canonical consumers that take it
-  are renamed `palm_omega_of_stepM_stepB_quarantined` and `eq_r6_palm_lambda_of_stepM_stepB_quarantined`, with
-  unchanged bodies, as historical evidence only. No new declaration uses them.
+- `RawToProfileStep` (PalmStepM.lean) is unchanged. The canonical-profile consumers that take it are
+  `palm_omega_of_stepM_rawToProfile` and `eq_r6_palm_lambda_of_stepM_rawToProfile`, with unchanged bodies. No new
+  declaration uses them.
 - The two generic kernel lemmas `measurable_lintegral_kernel_of_pointwise_finite` and
   `measurable_lintegral_indicator_const_of_pointwise_finite` are moved unchanged from PalmLambdaMeasurable.lean to
   CodedCirclePalm.lean, so that both carriers use them.

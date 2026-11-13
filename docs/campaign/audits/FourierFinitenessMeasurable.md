@@ -70,8 +70,8 @@ written literally as in `IsWholePlaneGFF.exists_measurable_conull_cutoffFourier`
   the equalities `χ_i T_j = χ_j T_i`, the gluing into `𝓗`, the Fourier partial-sum reconstruction `R`, and the
   intersection of all these conditions with the finiteness set. This file gives only the finite weighted square-sum component.
 - Weighted finiteness alone does not validate a distribution code, and it does not discharge the open consumers:
-  E56 `RawToProfileStep` (`PalmStepM.lean:42`), its consumers `palm_omega_of_stepM_stepB` (`PalmStepM.lean:56`) and
-  `eq_r6_palm_lambda_of_stepM_stepB` (`PalmLambdaMeasurable.lean:88`, consumption at line 94), and the open items recorded at
+  E56 `RawToProfileStep` (`PalmStepM.lean:42`), its consumers `palm_omega_of_stepM_rawToProfile` (`PalmStepM.lean:56`) and
+  `eq_r6_palm_lambda_of_stepM_rawToProfile` (`PalmLambdaMeasurable.lean:88`, consumption at line 94), and the open items recorded at
   `docs/campaign/GAPS-HB-1106.md:116,129`.
 - No samplewise GFF linearity or continuity hypothesis, no probability estimate, and no new standing Step is introduced.
   The pullback uses only the countable-cut-off conull theorem and the structure field `measurable_pairing`.

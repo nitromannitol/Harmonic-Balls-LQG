@@ -13,12 +13,11 @@ Source: the marked whole-plane GMC identity on `B_1` and the coded identity.
   It is the genuine staged DMS input and stays an explicit hypothesis of every consumer below. Stated, not proved.
 * `RawToProfileStep` (Step B): the canonical profile is a measurable function of the raw pairings, compatible with the
   shift `h ↦ h + f_z`. The written argument gives only the profile-to-raw direction `R(Γ_z c) = g^{[z]}`.
-  Historical evidence only: no production consumer uses it. Its consumer
-  `palm_omega_of_stepM_stepB_quarantined` is retained for the record only.
+  `palm_omega_of_stepM_rawToProfile` derives the coded Palm identity on canonical profiles from Step M and Step B.
 
-The real consumer is `palm_circle_omega_of_stepM`. It replaces Step B by the proved measurable circle decoder
-`circleCompatDecoder` and its common-event GFF/DMS compatibility `circleCompatDecoder_gff_identification`, on the actual
-carrier `C(CircleDomain, ℝ)` (CodedCirclePalm.lean). It does not use `RawToProfileStep`.
+The coded Palm identity on the actual carrier `C(CircleDomain, ℝ)` is `palm_circle_omega_of_stepM`. It replaces Step B
+by the proved measurable circle decoder `circleCompatDecoder` and its common-event GFF/DMS compatibility
+`circleCompatDecoder_gff_identification` (CodedCirclePalm.lean). It does not use `RawToProfileStep`.
 
 Credit (Leonardo Bonanno): the imports `LQGProfileMeasureAE` and `CodedCirclePalm` reach his Lattice-Probability LQG field
 modules `LatticeProb.Bonanno.LQGMetric.Field.*` (pinned lean-v4.35 port); this file uses them only through those imports.
@@ -44,9 +43,10 @@ def StepM {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω
       ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1, Ψ (hC ω) z ∂(μ ω) ∂P
         = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, Ψ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) z ∂P ∂volume
 
-/-- **Step B** (raw-to-profile bridge; NOT in r8). For a whole-plane GFF whose canonical profile is `c`, there is a
-measurable map `ρ` from raw pairing functionals to canonical profiles with `ρ(h) = c` a.s., and `ρ(h + f_z) = Γ_z c`
-a.s. for every `z ∈ B_1` (`Γ_z` is `shiftedProfile`). Stated, not proved. -/
+/-- **Step B** (raw-to-profile bridge). For a whole-plane GFF and a canonical profile `c` that agrees with the circle
+averages on `circleIndexSet`, there is a measurable map `ρ` from raw pairing functionals to canonical profiles with
+`ρ(h) = c` a.s., and `ρ(h + f_z) = Γ_z c` a.s. for every `z ∈ B_1` (`Γ_z` is `shiftedProfile`). The equalities are
+between full profiles, so `ρ` also recovers the coordinates of `c` off `circleIndexSet`. Stated, not proved. -/
 def RawToProfileStep {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (c : Ω → CanonicalProfile) : Prop :=
   IsWholePlaneGFF P hC hcirc → (∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c ω).1 p = hcirc ω p.1 p.2) →
@@ -56,11 +56,12 @@ def RawToProfileStep {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : �
       ∀ z ∈ ball (0 : ℂ) 1,
         ∀ᵐ ω ∂P, ρ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0)) = shiftedProfile γ z (c ω)
 
-/-- **QUARANTINED historical consumer (no production use).** The Ω-form of the coded Palm identity derived from the
-quarantined Step B `RawToProfileStep` through the canonical `profileMeasure`: for a nonnegative jointly measurable `Ψ` on
+/-- **The coded Palm identity, Ω-form, on canonical profiles.** Derived from Step M and Step B `RawToProfileStep`
+through the canonical `profileMeasure`: for a nonnegative jointly measurable `Ψ` on
 canonical profiles times the marked point, the integral of `Ψ(c, z)` against `profileMeasure γ 0 c` over `B_1` equals
-the integral over `B_1` of `Ψ(Γ_z c, z)`. Kept as evidence only; the real Ω-form is `palm_circle_omega_of_stepM`. -/
-theorem palm_omega_of_stepM_stepB_quarantined {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+the integral over `B_1` of `Ψ(Γ_z c, z)`. The Ω-form on the actual carrier, without Step B, is
+`palm_circle_omega_of_stepM`. -/
+theorem palm_omega_of_stepM_rawToProfile {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P]
     {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
     (hG : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ 0 hcirc μ)

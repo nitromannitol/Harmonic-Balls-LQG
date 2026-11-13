@@ -10,9 +10,8 @@ of the actual profile: `eq_r6_palm_circle_lambda_of_stepM`. The only extra ingre
 `measurable_lintegral_kernel_of_pointwise_finite` (Mathlib's `Measurable.lintegral_kernel_prod_right` needs an s-finite
 kernel; the kernel `F ↦ (circleProfileMeasure γ 0 F).restrict B_1` is only pointwise finite).
 
-The canonical-profile λ-form `eq_r6_palm_lambda_of_stepM_stepB_quarantined` is retained as QUARANTINED historical
-evidence: it depends on the quarantined `RawToProfileStep`. Its helpers `profileMeasureBall` and
-`measurable_profile_palm_lintegral` are kept for it.
+The canonical-profile λ-form `eq_r6_palm_lambda_of_stepM_rawToProfile` takes Step B (`RawToProfileStep`) in
+addition; it uses the helpers `profileMeasureBall` and `measurable_profile_palm_lintegral`.
 
 Credit (Leonardo Bonanno): the Lattice-Probability LQG field modules `LatticeProb.Bonanno.LQGMetric.Field.*` (pinned
 lean-v4.35 port) reach this file through `PalmStepM`; see the credit line in PalmStepM.lean.
@@ -25,8 +24,8 @@ open scoped ENNReal
 
 namespace HarmonicBalls
 
-/-- The coded LQG measure restricted to the unit disc, as a kernel on canonical profiles (`B_1` of the quarantined
-λ-form). Each value is a finite measure (`profileMeasure` is locally finite and `B_1` is bounded). -/
+/-- The coded LQG measure restricted to the unit disc, as a kernel on canonical profiles (`B_1` of the
+canonical-profile λ-form). Each value is a finite measure (`profileMeasure` is locally finite and `B_1` is bounded). -/
 def profileMeasureBall (γ : ℝ) : Kernel CanonicalProfile ℂ where
   toFun c' := (profileMeasure γ 0 c').restrict (ball (0 : ℂ) 1)
   measurable' := by
@@ -46,10 +45,10 @@ theorem measurable_profile_palm_lintegral (γ : ℝ) {Ψ : CanonicalProfile → 
   measurable_lintegral_kernel_of_pointwise_finite (profileMeasureBall γ)
     (fun _ => inferInstance) (f := fun c' z => Ψ c' z) hΨ
 
-/-- **Historical evidence, not used in the proof chain.** Canonical-profile λ-form, with
-`λ = Measure.map c P`. It is derived from `RawToProfileStep` through
-`palm_omega_of_stepM_stepB_quarantined`. The real λ-form is `eq_r6_palm_circle_lambda_of_stepM`. -/
-theorem eq_r6_palm_lambda_of_stepM_stepB_quarantined {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+/-- **Canonical-profile λ-form** of the coded Palm identity, with `λ = Measure.map c P`. It is derived from Step M
+and Step B (`RawToProfileStep`) through `palm_omega_of_stepM_rawToProfile`. The λ-form on the actual carrier is
+`eq_r6_palm_circle_lambda_of_stepM`. -/
+theorem eq_r6_palm_lambda_of_stepM_rawToProfile {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] {γ : ℝ} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     {μ : Ω → Measure ℂ}
     (hG : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ 0 hcirc μ)
@@ -67,7 +66,7 @@ theorem eq_r6_palm_lambda_of_stepM_stepB_quarantined {Ω : Type*} [MeasurableSpa
     exact lintegral_map (hΨ.comp (hs.prodMk measurable_const)) hc
   rw [lintegral_map (measurable_profile_palm_lintegral γ hΨ) hc]
   simp_rw [hR]
-  exact palm_omega_of_stepM_stepB_quarantined hG hμ hcJ hM hB Ψ hΨ
+  exact palm_omega_of_stepM_rawToProfile hG hμ hcJ hM hB Ψ hΨ
 
 /-- **The coded Palm identity, λ-form on the actual carrier.** With `λ = Measure.map F P` the law of the actual
 profile `F ω = circleCodedProfile hρ q (hC ω)`, for a nonnegative jointly measurable `Ψ` on actual profiles times the

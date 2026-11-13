@@ -83,8 +83,8 @@ are exactly `[propext, Classical.choice, Quot.sound]`. Committed with this audit
 ## 7. Remaining consumers (not discharged here)
 
 - E56 `RawToProfileStep` and its coded-Palm consumers. `docs/campaign/GAPS-HB-1106.md:116` and `:129` name the hypothesis
-  `RawToProfileStep P gamma ...`, consumed as `hB` by `palm_omega_of_stepM_stepB` and by
-  `eq_r6_palm_lambda_of_stepM_stepB` (`PalmLambdaMeasurable.lean:94`). The results here are deterministic analysis on
+  `RawToProfileStep P gamma ...`, consumed as `hB` by `palm_omega_of_stepM_rawToProfile` and by
+  `eq_r6_palm_lambda_of_stepM_rawToProfile` (`PalmLambdaMeasurable.lean:94`). The results here are deterministic analysis on
   `C(CircleDomain, ℝ)`; they supply no GFF identification and no Palm identity, so E56 is not discharged.
 - The displayed limit of `sec11-proof-r10.tex:1052` on the canonical GFF (`(g, φ*σ_{2^{-n}})`, lines 1055-1062) and the
   H^-2 reconstruction (`sec11-proof-r10.tex:1060`, `:1363-1365`) are outside this file.
