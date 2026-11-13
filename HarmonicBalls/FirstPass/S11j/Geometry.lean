@@ -8,9 +8,8 @@ import HarmonicBalls.Proofs.Sec11.CorrectedPinchUniformFirstShift
 corpus structure `IsPinchPointProofConfiguration` (`Draft/Section11.lean`) once `U` is nonempty. The deterministic
 shift core `IsPinchPointProofConfiguration.exists_uniform_first_event_shift` then applies to the faithful geometry.
 
-The hypothesis `U.Nonempty` is NOT part of `IsBufferedPinchGeometry`. The paper's `U` is an open disk. Without it the
-conversion fails, and `PinchSecondEventFaithfulStmt` is false for `U = ∅`: `pinchSecondEvent` then requires
-`ofReal M * _ < μ ∅ = 0`.
+The hypothesis `U.Nonempty` is not part of `IsBufferedPinchGeometry`; it is assumed separately, since the paper's `U`
+is an open disk.
 -/
 
 namespace HarmonicBalls

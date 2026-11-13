@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.S11ah.LocalCert
 # Specialized rooted certificate identity
 
 `ae_rootedId_of_termwise` (RootedIdentification.lean:62) takes the termwise identity `hT` for an arbitrary sequence `c` and an
-arbitrary event `F`. That generic form is false. This file states it for the actual Step 8
+arbitrary event `F`. This file states it for the actual Step 8
 certificate: `c n (z, ℓ) = localCert (ball c₂ r₂) κ m … n ℓ z`, the decoded local certificate of the Campbell reference
 observation at the root `z` (sequence (J); the field `sequence_eq` of
 `CertificateIdentification`, `FirstPass/S11i/Identification.lean:33`). The coding event `F` stays a parameter: it is the

@@ -10,9 +10,8 @@ scale `2^{-n}` about `z` of `(μ, D)` is then the certificate of `(ν, E)` at sc
 `FirstPassS11aq.certificateEvent_translate_iff`), and the latter is the certificate of the dilated pair at scale one
 (`HarmonicBalls.FirstPassS11iCertDilate.certificateEvent_dilate_iff`). The coordinate-change constants (`a`, `b`) are positive.
 
-This file contains the deterministic core only. The global "identities" version of hCov was removed (its identities are
-false as stated: physical and canonical fields agree only on the root's buffered ball); the local version is
-`RootedPhysical.lean` (`FirstPassS11ai.rooted_covariance_window`).
+This file contains the deterministic core only. Physical and canonical fields agree on the root's buffered ball; the
+covariance on that ball is `RootedPhysical.lean` (`FirstPassS11ai.rooted_covariance_window`).
 -/
 
 namespace FirstPassS11ai

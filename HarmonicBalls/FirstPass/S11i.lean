@@ -30,9 +30,7 @@ universe u
 /-- NEW statement, open (not frozen, not assumed): repaired positivity of the pinch event at every exponent `α < lqgQ γ`.
 For each `α`, `M > 0` and model `(P, hC, hcirc, μ, D)` there is an event `E` of the field σ-algebra on `B_7` modulo
 additive constants with `0 < P E`, on which the pinch holds almost surely, and an ambient measurable `A ⊆ E` with
-`A` contained pointwise in the raw pinch event and `P A = P E`.
-
-The pointwise local containment `E ⊆ {pinch}` is refuted by the flag construction of G-11-12 section 6, so it is not used. -/
+`A` contained pointwise in the raw pinch event and `P A = P E`. -/
 def PinchPositiveRepairedStmt : Prop :=
   ∃ U T Q' Q : Set ℂ, IsPinchPointConfiguration U T Q' Q ∧
   ∀ γ ξ α : ℝ, 0 < γ → γ < 2 → α < lqgQ γ →

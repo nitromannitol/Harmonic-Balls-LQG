@@ -45,8 +45,7 @@ structure IsBufferedPinchGeometry (U V W T Q' Q : Set ℂ) (δ : ℝ) : Prop whe
   isConnected_Q : IsConnected Q
   concentric : ∃ (c : ℂ) (ρU ρV ρW : ℝ), U = ball c ρU ∧ V = ball c ρV ∧ W = ball c ρW
   /-- `U` is an open disk of positive radius (corrected paper line 3238), so it is nonempty. Given `concentric`,
-  this is `0 < ρU`. Without it `PinchSecondEventFaithfulStmt` and `PinchThirdEventFaithfulStmt` are false for `U = ∅`
-. -/
+  this is `0 < ρU`. -/
   U_nonempty : U.Nonempty
   U_subset : U ⊆ annulus 0 1 2
   V_subset : V ⊆ annulus 0 1 2

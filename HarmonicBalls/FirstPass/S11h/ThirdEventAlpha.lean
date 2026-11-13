@@ -5,8 +5,7 @@ import HarmonicBalls.FirstPass.S11h.ThirdEventMeasurable
 
 Alpha-general measurability (with the corrected GFF hypothesis) of `aemeasurable_internalDiam`, `ae_continuous_metric` and `nullMeasurableSet_pinchThirdEvent`
 for an LQG metric `D` of the log-singular field `h^ℂ - α₀ log|·|`, with `0 < γ < 2` and `α₀ < lqgQ γ` (corrected context
-`h^α`, paper lines 3236-3238, correction `[C43]`). The α = 0 theorems that used the false inputs were removed from
-`ThirdEventMeasurable.lean`.
+`h^α`, paper lines 3236-3238, correction `[C43]`).
 
 Frozen inputs (`FirstPass/Frozen`): `LQGInternalMetricWeylAeMeasurableFrozen` (`S11d.lean`, alpha-general),
 `LQGInternalMetricContinuousAlphaGFFFrozen` and `LQGMetricLengthIdentityAlphaGFFFrozen` (`S11g.lean`); each takes the

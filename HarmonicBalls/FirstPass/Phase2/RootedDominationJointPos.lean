@@ -43,8 +43,7 @@ Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10, in the marked form tha
 positive radii: for a whole-plane GFF `(hC, hcirc)` and the `α = 0` LQG measure `μ` of `hcirc` at parameter `0 < γ < 2`,
 and for every measurable test `Ψ` of the triple (pairing, positive-radius circle profile, mark), integrating `Ψ`
 against `μ_ω` restricted to the unit ball and against `P` equals integrating the DMS-shifted triple over the mark `z` in
-`B₁` and over `P`. Replaces the false-as-typed `DMSLemmaA10WholePlaneMarkedJoint`
-. -/
+`B₁` and over `P`. -/
 def DMSLemmaA10WholePlaneMarkedJointPos {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
   IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ 0 hcirc μ → 0 < γ → γ < 2 →

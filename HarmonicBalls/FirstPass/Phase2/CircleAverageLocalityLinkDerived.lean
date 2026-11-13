@@ -10,10 +10,8 @@ import HarmonicBalls.FirstPass.Phase2.InnerMeasurableDerived
 
 * `lqgCircleAverageLocalityLink_derived`: `LQGCircleAverageLocalityLink` (the link hypothesis of
   `lqgMeasureLocality_of_circleLink`) under the whole-plane GFF premise `IsWholePlaneGFF P hC hcirc`.
-  The premise is added because the Prop, as typed (`LQGMeasureLocalityDerived.lean:28`), has no GFF premise and is
-  then false: for `Ω = Bool`, `P` uniform, `hC := fun _ _ => 0`, `hcirc ω _ _ := if ω then 1 else 0`, the
-  σ-algebra `fieldSigmaAlgebra α₀ hC U` is trivial while the circle average is not a.s. constant.
-  `LQGMeasureLocality` itself carries `IsWholePlaneGFF` as a premise, so nothing is lost for it.
+  The link is a predicate of the model (`LQGMeasureLocalityDerived.lean:28`); it is proved here for whole-plane GFF
+  models. `LQGMeasureLocality` itself carries `IsWholePlaneGFF` as a premise.
 * `lqgMeasureLocality_of_gffCircleLink`: the proof of `lqgMeasureLocality_of_circleLink` with the link
   relativised to the GFF premise (the only use of `hlink` is in `hWk`, where `hGFF` is in scope).
 * `lqgMeasureLocality_derived`: the forall-closure of `LQGMeasureLocality` (`Proposed/LQG.lean:97`).

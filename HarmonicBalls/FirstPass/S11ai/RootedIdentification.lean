@@ -4,8 +4,8 @@ import HarmonicBalls.FirstPass.S11ai.ShiftCutoff
 /-!
 # Rooted decoder identification `hId` from the termwise certificate identity
 
-The `hId` of `ae_window_limit_at_root` is false for
-arbitrary `c` and `F` (§1.1), so the certificate identification is made explicit (§1.2) and `hId` is derived (§1.3).
+The `hId` of `ae_window_limit_at_root` depends on the sequence `c` and the event `F`, so the certificate identification
+is made explicit (§1.2) and `hId` is derived (§1.3).
 
 What is proved here (Lean-sized steps of §1.3):
 * Step 2 (`FirstPassS11ai.exists_shift_cutoff`, ShiftCutoff.lean): the smooth shift `u_z`.
