@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.Frozen.S11c
 import HarmonicBalls.Proofs.Sec3.ConservationOfMassStep2
+import HarmonicBalls.FirstPass.S11r.RootedLocalIdent
 
 /-!
 # Restriction of mean-zero observations from a disk `D` to a subdomain `V ⊆ D` (step 3 of the local-agreement route for `hN2`)
@@ -20,9 +21,6 @@ namespace HarmonicBalls
 
 open MeasureTheory Set
 open scoped ContDiff
-
-/-- The mean-zero test functions supported in `U`: the index set of the local mean-zero observations on `U`. -/
-abbrev MeanZeroTest (U : Set ℂ) : Type := {φ : ℂ → ℝ // IsTestFunction U φ ∧ ∫ x, φ x = 0}
 
 /-- A mean-zero test function supported in `V ⊆ D` is one supported in `D`. -/
 def meanZeroTestIncl {V D : Set ℂ} (h : V ⊆ D) (φ : MeanZeroTest V) : MeanZeroTest D :=
