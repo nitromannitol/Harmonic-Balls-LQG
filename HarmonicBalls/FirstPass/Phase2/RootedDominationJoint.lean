@@ -8,7 +8,6 @@ import HarmonicBalls.FirstPass.S8c.Measurability
 
 /-! # Joint marked DMS identity: conditional derivation of `LocalRootedFieldMeasureDomination` (Lemma 8.2)
 
-
 The pairings-only marked identity `DMSLemmaA10WholePlaneMarkedSub` (`FirstPass/Frozen/S11i.lean:59`) sees the field only
 through `hC`, while the rooted observation of the α₀-measure needs the circle profile `hcirc` as well. This file states the joint marked identity
 `DMSLemmaA10WholePlaneMarkedJoint` (Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10, marked and with the
@@ -43,15 +42,6 @@ def DMSLemmaA10WholePlaneMarkedJoint {Ω : Type*} [MeasurableSpace Ω] (P : Meas
           = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω,
               Ψ (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P ∂volume
 
-/-- FALSE AS TYPED (zero/negative-radius circle values are
-unconstrained by `IsWholePlaneGFF`); use `DMSLemmaA10WholePlaneMarkedJointPosStmt` (RootedDominationJointPos.lean).
-
-The joint marked identity for every whole-plane GFF and every `α = 0` LQG measure, in the universe of the
-counted statements. This is the shape of the input `hJoint` of the conditional theorem. -/
-def DMSLemmaA10WholePlaneMarkedJointStmt : Prop :=
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), DMSLemmaA10WholePlaneMarkedJoint P γ hC hcirc μ
-
 /-- The normalised root kernel is a finite kernel (it is `weightedRestrictionKernel` with unit weight). -/
 instance localRootKernel_isFiniteKernel {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     (lam : Ω → Measure ℂ) (hlam : AEMeasurable lam P) : IsFiniteKernel (localRootKernel P lam hlam) := by
@@ -81,8 +71,9 @@ theorem rootedLaw_apply_eq_zero_of_palm {Ω X : Type*} [MeasurableSpace Ω] [Mea
 
 /-! ## Steps 4-12 (conditional): helpers for the joint-identity route
 
-The conditional theorem takes the joint
-identity `DMSLemmaA10WholePlaneMarkedJointStmt` (candidate, PENDING TRUTH CHECK), the frozen profile decoder
+The conditional theorem `localRootedFieldMeasureDomination_of_jointPos_of_shifted` (RootedDominationJointPos.lean) takes
+the positive-radius joint identity `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, PENDING TRUTH CHECK), the frozen
+profile decoder
 `LQGMeasureOfProfileMeasurableFrozen` (`FirstPass/Frozen/S8d.lean:33`), a named measurable circle-profile selector
 (`CircleProfileSelectorStmt`) and the intermediate pointwise claim `ShiftedDecoderNullTransferStmt`
 (PENDING TRUTH CHECK). -/
@@ -286,113 +277,5 @@ lemma ae_section_ref_null {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [Is
     simp only [localReferenceObservation, hω]
   rw [measure_congr hset]
   exact hz
-
-/-- SUPERSEDED: takes the FALSE hJoint; use `localRootedFieldMeasureDomination_of_jointPos_of_shifted`
-(RootedDominationJointPos.lean).
-
-**Conditional rooted domination.** From the
-joint marked DMS identity `hJoint` (Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10; PENDING TRUTH CHECK), the
-measurable profile decoder `hProf` (`LQGMeasureOfProfileMeasurableFrozen`), the circle-profile selector `hSel`
-(PENDING TRUTH CHECK) and the shifted decoder transfer `hShift` (PENDING TRUTH CHECK), the local rooted comparison
-`LocalRootedFieldMeasureDomination` (Lemma 8.2 of arXiv:2208.11795, proof) follows. -/
-theorem localRootedFieldMeasureDomination_of_joint_of_shifted
-    (hJoint : DMSLemmaA10WholePlaneMarkedJointStmt.{u})
-    (hProf : LQGMeasureOfProfileMeasurableFrozen.{u})
-    (hSel : CircleProfileSelectorStmt.{u})
-    (hShift : ShiftedDecoderNullTransferStmt.{u}) :
-    LocalRootedFieldMeasureDomination.{u} := by
-  intro Ω _ P _ γ α₀ hC hcirc μ ν lam hGFF hγ0 hγ2 hα hμ hν hlam _ _ _ j _
-  -- Selector and measurable profile decoder (Steps 1-2).
-  obtain ⟨Sel, hSelM, hSelAe⟩ := hSel Ω P hC hcirc hGFF
-  have hFM : Measurable fun ω => Sel (posPart (hcirc ω)) :=
-    hSelM.comp (measurable_posPart_comp fun r z hr => hGFF.measurable_circle r z hr)
-  obtain ⟨Dec, hDecM, hDecAe, -⟩ :=
-    hProf Ω P γ α₀ hC hcirc μ (fun ω => Sel (posPart (hcirc ω))) hGFF hμ hFM hSelAe
-  have hlamA : AEMeasurable lam P := hGFF.aemeasurable_lqgMeasure hlam
-  obtain ⟨ν', hν'M, hν'ae⟩ := hGFF.aemeasurable_lqgMeasure hν
-  have hD : MeasurableSet (localDomain j) := measurableSet_localDomain j
-  have hfin : ∀ᵐ ω ∂P, lam ω (ball 0 1) ≠ ⊤ :=
-    hlam.mono fun ω h => by
-      have := h.isLocallyFiniteMeasure
-      exact measure_ball_lt_top.ne
-  have hloc : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω) := hμ.mono fun _ h => h.isLocallyFiniteMeasure
-  -- The measurable version `Ostar` of the root observation of the decoded measure (Step 4).
-  obtain ⟨Ostar, hOstar⟩ : ∃ O : Ω × ℂ → ℂ × Measure ℂ,
-      ∀ x, O x = recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc x.1))), x.2) :=
-    ⟨fun x => recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc x.1))), x.2), fun _ => rfl⟩
-  have hOM : Measurable Ostar := by
-    have hfun : Ostar = fun x => recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc x.1))), x.2) :=
-      funext hOstar
-    rw [hfun]
-    exact (measurable_recentredOutput _).comp
-      ((hDecM.comp (hFM.comp measurable_fst)).prodMk measurable_snd)
-  have hDecAe' : ∀ᵐ ω ∂P, μ ω = Dec (Sel (posPart (hcirc ω))) := hDecAe
-  have hgood : ∀ᵐ ω ∂P, μ ω = Dec (Sel (posPart (hcirc ω))) ∧ IsLocallyFiniteMeasure (μ ω) :=
-    hDecAe'.and hloc
-  have hOeq : localRootObservation μ j =ᵐ[(P ⊗ₘ localRootKernel P lam hlamA).restrict
-      (Prod.snd ⁻¹' localDomain j)] Ostar := by
-    filter_upwards [ae_restrict_of_ae (ae_fst_of_compProd (localRootKernel P lam hlamA) hgood)] with x hx
-    obtain ⟨hμx, hlx⟩ := hx
-    have := hlx
-    rw [hOstar, ← hμx]
-    exact localRootObservation_eq_recentredOutput μ j x.1 (μ x.1) rfl x.2
-  -- Null transfer of the reference observations (Step 5-6) and the target set.
-  refine Measure.AbsolutelyContinuous.mk fun T hTM hT0 => ?_
-  have hzN := ae_section_ref_null j hν'M hν'ae hTM hT0
-  have htM : MeasurableSet (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j) :=
-    (hOM hTM).inter (measurable_snd hD)
-  have hind : ∀ ω z, rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) =
-      (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)).indicator 1 z := by
-    intro ω z
-    have hO : Ostar (ω, z) = recentredOutput (localRadius j) (Dec (Sel (posPart (hcirc ω))), z) :=
-      hOstar (ω, z)
-    by_cases hz : z ∈ localDomain j <;> by_cases hT' : recentredOutput (localRadius j)
-        (Dec (Sel (posPart (hcirc ω))), z) ∈ T <;>
-      simp [rootedTestFn, hO, hz, hT']
-  have hLHS : ∀ ω, ∫⁻ z in ball (0 : ℂ) 1,
-      rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) ∂(lam ω) =
-        (lam ω).restrict (ball 0 1) (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)) := by
-    intro ω
-    calc ∫⁻ z in ball (0 : ℂ) 1,
-          rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) ∂(lam ω)
-        = ∫⁻ z, (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)).indicator 1 z
-            ∂((lam ω).restrict (ball 0 1)) := lintegral_congr fun z => hind ω z
-      _ = _ := lintegral_indicator_one (measurable_prodMk_left htM)
-  -- The joint identity (Step 7) and the vanishing of its right-hand side (Steps 8-9).
-  have hint : ∫⁻ ω, (lam ω).restrict (ball 0 1)
-      (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)) ∂P = 0 := by
-    have hJ := hJoint Ω P γ hC hcirc lam hGFF hlam hγ0 hγ2
-      (rootedTestFn (localRadius j) (localDomain j) T Dec Sel)
-      (measurable_rootedTestFn hD hTM hDecM hSelM)
-    have hRHS : ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
-        (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P ∂volume = 0 := by
-      have hH : ∀ᵐ z ∂(volume : Measure ℂ), ∫⁻ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
-          (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P = 0 := by
-        filter_upwards [(ae_restrict_iff' hD).mp hzN] with z hz
-        by_cases hzD : z ∈ localDomain j
-        · have hS := hShift Ω P γ α₀ hC hcirc μ ν hGFF hγ0 hγ2 hα hμ hν Dec Sel hDecM hSelM hDecAe' j z hzD
-            T hTM (hz hzD)
-          have hae : ∀ᵐ ω ∂P, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
-              (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) = 0 := by
-            filter_upwards [measure_eq_zero_iff_ae_notMem.mp hS] with ω hω
-            simp [rootedTestFn, hzD, hω]
-          rw [lintegral_congr_ae hae, lintegral_zero]
-        · have h0 : ∀ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
-              (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) = 0 :=
-            fun ω => by simp [rootedTestFn, hzD]
-          simp [h0]
-      rw [lintegral_congr_ae (ae_restrict_of_ae hH), lintegral_zero]
-    calc ∫⁻ ω, (lam ω).restrict (ball 0 1)
-          (Prod.mk ω ⁻¹' (Ostar ⁻¹' T ∩ Prod.snd ⁻¹' localDomain j)) ∂P
-        = ∫⁻ ω, ∫⁻ z in ball (0 : ℂ) 1,
-            rootedTestFn (localRadius j) (localDomain j) T Dec Sel (hC ω, hcirc ω, z) ∂(lam ω) ∂P :=
-          lintegral_congr fun ω => (hLHS ω).symm
-      _ = ∫⁻ z in ball (0 : ℂ) 1, ∫⁻ ω, rootedTestFn (localRadius j) (localDomain j) T Dec Sel
-            (dmsShiftedPairing γ z (hC ω) (hcirc ω 1 0), dmsShiftedCircle γ z (hcirc ω), z) ∂P ∂volume := hJ
-      _ = 0 := hRHS
-  -- Palm replacement (Step 10-12) and the transfer from `Ostar` to the root observation.
-  have hzero := ae_restrict_section_zero_of_lintegral P lam hlamA hfin htM hint
-  rw [Measure.map_congr hOeq]
-  exact rootedLaw_apply_eq_zero_of_palm P lam hlamA hD Ostar hOM hTM hzero
 
 end HarmonicBalls

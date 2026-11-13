@@ -2,16 +2,12 @@ import HarmonicBalls.FirstPass.Phase2.RootedDominationJoint
 
 /-! # Positive-radius joint marked DMS identity and the B2 conditional theorem
 
-The joint identity `DMSLemmaA10WholePlaneMarkedJointStmt`
-(RootedDominationJoint.lean:50) is FALSE AS TYPED: the circle profile is read at radii `r ≤ 0`, where `IsWholePlaneGFF`
-leaves `hcirc` unconstrained. This file states the corrected identity, which reads only the
-positive-radius circles, parametrised by `CircleParameter = Set.Ioi 0 × ℂ`:
+This file states the joint marked DMS identity on the positive-radius circles, parametrised by `CircleParameter = Set.Ioi 0 × ℂ`:
 
 * `DMSLemmaA10WholePlaneMarkedJointPos` / `DMSLemmaA10WholePlaneMarkedJointPosStmt`: the candidate input (PENDING TRUTH CHECK; Duplantier-Miller-Sheffield, arXiv:1409.7055, Lemma A.10, marked form). Not a binder of any counted
   theorem and not staged in `Frozen/` or `Proposed/`.
-* `localRootedFieldMeasureDomination_of_jointPos_of_shifted`: the B2 conditional theorem with `hJoint` replaced by the
-  positive-radius form. Its proof is that of `localRootedFieldMeasureDomination_of_joint_of_shifted`; the only change is
-  that the test function is read through the positive-radius extension `posExtend`, which agrees with `posPart`.
+* `localRootedFieldMeasureDomination_of_jointPos_of_shifted`: the B2 conditional theorem, with the joint
+  identity `hJoint` in its positive-radius form. The test function is read through the positive-radius extension `posExtend`, which agrees with `posPart`.
 -/
 
 open MeasureTheory ProbabilityTheory Metric Set
@@ -84,10 +80,9 @@ lemma measurable_rootedTestFnPos {r : ℝ} {D : Set ℂ} {S : Set (ℂ × Measur
     (measurable_fst.prodMk ((measurable_posExtend.comp (measurable_fst.comp measurable_snd)).prodMk
       (measurable_snd.comp measurable_snd)))
 
-/-- **Conditional rooted domination, positive-radius form.** The conditional
-theorem `localRootedFieldMeasureDomination_of_joint_of_shifted` with the joint identity replaced by its positive-radius
-form `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate input, PENDING TRUTH CHECK). The other hypotheses (`hProf`, `hSel`,
-`hShift`) and the conclusion are those of the original theorem. -/
+/-- **Conditional rooted domination, positive-radius form.** Under the
+positive-radius joint identity `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate input, PENDING TRUTH CHECK) and the
+hypotheses `hProf`, `hSel` and `hShift`. -/
 theorem localRootedFieldMeasureDomination_of_jointPos_of_shifted
     (hJoint : DMSLemmaA10WholePlaneMarkedJointPosStmt.{u})
     (hProf : LQGMeasureOfProfileMeasurableFrozen.{u})

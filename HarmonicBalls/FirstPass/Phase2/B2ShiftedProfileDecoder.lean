@@ -11,8 +11,7 @@ Status: TRUE after the fix, for the explicit canonical decoder `ProfileDecoderDe
   step 2 (existence of a limit gives membership in `convSet`, then `isLQGLimit_decoder`).
 * `shifted_selected_lintegral_eq_zero` and `shifted_selected_mem_convSet_ae_root`: step 4 of l.170-183, the joint identity
   applied to the complement of the Borel convergence locus. The joint identity is the positive-radius form
-  `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, PENDING TRUTH CHECK), taken as an explicit hypothesis; the false
-  `DMSLemmaA10WholePlaneMarkedJointStmt` is not used. The joint identity is stated for the `α = 0` measure only, so
+  `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, PENDING TRUTH CHECK), taken as an explicit hypothesis. The joint identity is stated for the `α = 0` measure only, so
   the convergence locus is `convSet T γ 0`.
 * `measurable_selected_dmsShiftedCircle`: the joint measurability `hJM` needed by step 4, proved by composition from the
   `IsWholePlaneGFF` circle measurability and the Producers DMS-shift lemmas (the answer gave no argument; this is
