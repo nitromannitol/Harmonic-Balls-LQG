@@ -37,6 +37,7 @@ graph-distance exponent.
 ## Main results
 
 * `HarmonicBalls.normalizedModel_circleAvg`: the normalized model.
+* `HarmonicBalls.isWholePlaneLQGDimension_dGamma`: the dimension is `d_γ = 2 / chiDZZ γ`.
 * `HarmonicBalls.wholePlaneLQGGraphDimension_derived`: `WholePlaneLQGGraphDimension`.
 -/
 
@@ -80,22 +81,29 @@ theorem normalizedModel_circleAvg :
   rw [hω, LQGMetric.CircleAvg.cInc, hrz, h10]
   ring
 
-/-- **The Liouville graph-distance dimension of the whole-plane GFF** (Ding--Gwynne,
+/-- **The Liouville graph-distance dimension of the whole-plane GFF is `d_γ`** (Ding--Gwynne,
 arXiv:1807.01072v3, Theorem 1.4 and Theorem 1.1): for `0 < γ < 2`, the dimension
-`d_γ = 2 / χ`, with `χ = chiDZZ γ` the Ding--Zeitouni--Zhang exponent, characterizes the Liouville
-graph distance between `0` and `1` almost surely, for every normalized whole-plane GFF and its
-`γ`-LQG measure. -/
-theorem wholePlaneLQGGraphDimension_derived : WholePlaneLQGGraphDimension := by
-  intro γ hγ hγ2
+`d_γ = 2 / χ` (`LQGMetric.dGamma γ`), with `χ = chiDZZ γ` the Ding--Zeitouni--Zhang exponent,
+characterizes the Liouville graph distance between `0` and `1` almost surely, for every normalized
+whole-plane GFF and its `γ`-LQG measure. -/
+theorem isWholePlaneLQGDimension_dGamma {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) :
+    IsWholePlaneLQGDimension γ (LQGMetric.dGamma γ) := by
   obtain ⟨W, h₀, hC₀, hcirc₀, hW, hh₀, hae, hG₀, hcirc₀_eq⟩ := normalizedModel_circleAvg
   have := hW.isProbabilityMeasure
   have hχ : 0 < LQGMetric.chiDZZ γ := LQGMetric.DG.chiDZZ_pos γ
-  refine ⟨2 / LQGMetric.chiDZZ γ, div_pos two_pos hχ, ?_⟩
+  unfold LQGMetric.dGamma
+  refine ⟨div_pos two_pos hχ, ?_⟩
   intro Ω _ P _ hC hcirc μ hG hμ
   have hlim := LatticeProb.LQG.ae_tendsto_lgdRatio_zero_one_of_model hW hh₀ hh₀.measurable hae
     hG₀ hcirc₀_eq ((LPBridge.isWholePlaneGFF_iff P hC hcirc).1 hG) hγ hγ2
     ((LPBridge.isLQGMeasureOfField_iff P γ 0 hcirc μ).1 hμ)
   filter_upwards [hlim] with ω hω
   exact isLiouvilleGraphDimension_of_tendsto_lgdDZZ hχ hω
+
+/-- **The Liouville graph-distance dimension of the whole-plane GFF** (Ding--Gwynne,
+arXiv:1807.01072v3, Theorem 1.4 and Theorem 1.1): `WholePlaneLQGGraphDimension`, with the
+dimension `d_γ = LQGMetric.dGamma γ` of `isWholePlaneLQGDimension_dGamma`. -/
+theorem wholePlaneLQGGraphDimension_derived : WholePlaneLQGGraphDimension :=
+  fun _ hγ hγ2 => ⟨_, isWholePlaneLQGDimension_dGamma hγ hγ2⟩
 
 end HarmonicBalls
