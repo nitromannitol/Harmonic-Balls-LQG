@@ -24,7 +24,7 @@ Items (a), (b) and (c) of the probability-one event `E_z` for a whole-plane GFF 
 
 The joint identity `DMSLemmaA10WholePlaneMarkedJointPosStmt` (candidate, pending truth check) is not used: this route needs only the subcritical marked input `DMSLemmaA10WholePlaneMarkedSub`
 (`FirstPass/Frozen/S11i.lean:59`, range `0 < γ < 2`), through the producer `shifted_rootedLQGMeasure_ae_exists_sub`
-(`B2ShiftedProfileDecoder2.lean`). The unrestricted marked form `DMSLemmaA10WholePlaneMarked` (false as universally typed) is not used.
+(`B2ShiftedProfileDecoder2.lean`). The marked form `DMSLemmaA10WholePlaneMarked` (for `0 < γ < 2` a consequence of the Sub form) is not used.
 
 Terminology: Duplantier-Sheffield (LQG measures of the GFF), Armitage-Gardiner (circle averages).
 -/

@@ -35,8 +35,8 @@ regularized weighting `ε^{γ²/2} e^{γ h_ε(u)} du dh` and conditions on the c
 arXiv:0808.1560, §3.3 (rooted random measures; the rooted measure Θ on pairs `(z, h)`).
 NOT verbatim: the printed lemma states the field marginal only, as `DMSLemmaA10WholePlaneUnnormalized`
 (Proposed/DuplantierMillerSheffield.lean:73), which discards the mark `z`; the marked identity is read off the proof.
-Truth check: FALSE as universally typed
-(missing `0 < γ` and `γ < 2`). At a fixed `0 < γ < 2` it follows from `DMSLemmaA10WholePlaneMarkedSub` by
+Truth check: TRUE for `0 < γ < 2`, the range of the paper.
+At a fixed `0 < γ < 2` it follows from `DMSLemmaA10WholePlaneMarkedSub` by
 `dmsA10Marked_of_sub`; top-level theorems take the Sub form. -/
 def DMSLemmaA10WholePlaneMarked {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
