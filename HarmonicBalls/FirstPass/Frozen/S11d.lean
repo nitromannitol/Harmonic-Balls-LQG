@@ -94,21 +94,6 @@ def WeylScalingCompositionFrozen : Prop :=
         weylScaling (𝔇 (addFunPairing (hC ω) g)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
           weylScaling (𝔇 (hC ω)) ξ (fun z => g z - α₀ * Real.log ‖z‖) x y
 
-/-- RETIRED (FALSE, use LQGInternalMetricWeylAeMeasurableFrozen). FROZEN. Field-level measurability of the Weyl-scaled internal metric, uniform form (standard; locator
-pending). For every LQG metric `𝔇` (`IsLQGMetric`, Weyl exponent `ξ`), an open set `W` and fixed `q q' : ℂ`, the map
-`T ↦ D^W_T(q, q')` is measurable for the σ-algebra of pairings, where `D_T = e^{-ξ α₀ log|·|} · 𝔇 T` and `D^W_T` is its
-internal metric on `W`. Source: measurability of `h ↦ D_h` (Gwynne-Miller 2021, Section 1.2, p. 6; locator pending), transported
-to the internal metric on `W`. Field level, EXTERNAL. Used by:
-FirstPass/S11e/CertMeasurable.lean (`measurableSet_certificate_certMetricOn`, line 38). Not used by firstPass_11_9, which uses
-the weaker a.s. form `LQGInternalMetricWeylAeMeasurableFrozen` below. Truth check FALSE: measurability of every fixed
-evaluation `T ↦ 𝔇 T z w` does not give measurability of the displayed path operation on the entire raw carrier; explicit
-counterexample preserving every field of `IsLQGMetric`. Minimal correction: `LQGInternalMetricWeylAeMeasurableFrozen`
-below, whose order `∀ 𝔇, ∃ Φ, ∀ f, a.s.` is marked as correct. -/
-def LQGInternalMetricWeylMeasurableFrozen : Prop :=
-  ∀ (γ ξ α₀ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), IsLQGMetric γ ξ 𝔇 → ∀ W : Set ℂ, IsOpen W → ∀ q q' : ℂ,
-    Measurable[distributionMeasurableSpace] fun T : (ℂ → ℝ) → ℝ =>
-      internalMetric (fun u v => (weylScaling (𝔇 T) ξ (fun z => -α₀ * Real.log ‖z‖) u v).toReal) W q q'
-
 /-- DERIVED INTERFACE. "Field-level measurable
 factorization of the Weyl-scaled internal metric is not the literal statement of Axiom II; it requires a version/factorization argument."
 FROZEN. Field-level measurable version of the Weyl-scaled internal metric (standard; locator pending). For an
@@ -119,7 +104,7 @@ of `h^ℂ + f - α₀ log|·|` and `D^W` its internal metric on `W`. Only this a
 `D^W` need not be measurable as a function of the distribution off the support of the carrier. Source: measurability of
 `h ↦ D_h` (Gwynne-Miller 2021, Section 1.2, p. 6; locator pending), with the internal metric on an open set as in Fact 2.2 I
 (Bou-Rabee-Gwynne arXiv:2208.11795, p. 9, lines 432-457). Field-level measurability is
-EXTERNAL and is frozen at field level. Truth check TRUE for this a.s. form (row `LQGInternalMetricWeylAeMeasurableFrozen`). The plain-`Measurable` version is FALSE (row `LQGInternalMetricWeylMeasurableFrozen`), so the a.s. form is the one stated here.
+EXTERNAL and is frozen at field level. Truth check TRUE for this a.s. form (row `LQGInternalMetricWeylAeMeasurableFrozen`).
 Truth check TRUE: reconstruct the
 continuous base metric from countably many evaluations; radial Weyl weighting and internalization on an open set admit a Borel
 construction using compact families of rectifiable paths; this supplies one `Φ` for every fixed continuous shift.

@@ -25,35 +25,15 @@ namespace HarmonicBalls
 open MeasureTheory
 
 
-/-- FROZEN (EXTERNAL, FALSE AS WRITTEN). Superseded by
-`CameronMartinMetricEventTransferMeasurableFrozen` below; kept unchanged, not used by the assembly.
-
-Cameron-Martin transfer of a metric event under a smooth shift. For `0 < γ < 2`,
-`α₀ < Q_γ`, a smooth compactly supported `f` vanishing on the unit circle, and a predicate `B` on metrics: if the event
-that the Weyl-shifted metric `e^{ξ f} D_h` lies in `B` has positive probability, and both events are null-measurable,
-then the event that `D_h` lies in `B` has positive probability. Truth check FALSE: null-measurability of the two events on the sample space does not
-replace measurability of the predicate `B` on the space of metrics; counterexample (a nonmeasurable set with alternating
-translates, on an extended probability space). Source: Miller-Sheffield arXiv:1302.4738v2, Proposition
-2.9, p. 49, equation (2.8), proof p. 50 (Cameron-Martin equivalence modulo additive constants; no transfer for arbitrary
-nonmeasurable metric predicates). Minimal correction: the added hypothesis `MeasurableSet {d | B d}`, which is the
-hypothesis of `CameronMartinMetricEventTransferMeasurableFrozen` below. -/
-def CameronMartinMetricEventTransferFrozen : Prop :=
-  ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (D : Ω → ℂ → ℂ → ℝ) (B : (ℂ → ℂ → ℝ) → Prop),
-  IsWholePlaneGFF P hC hcirc → IsLQGMetricOfField P γ ξ α₀ hC D →
-  NullMeasurableSet {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} P →
-  NullMeasurableSet {ω | B (D ω)} P →
-  0 < P {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} → 0 < P {ω | B (D ω)}
-
 /-- RETIRED: superseded by `cameronMartinFieldCertificateTransfer` (proved, FirstPass/S11j/
 CertificateTransfer.lean); not used by any proof; kept, never deleted.
 
-FROZEN (EXTERNAL, proposed minimal correction of `CameronMartinMetricEventTransferFrozen`: add the measurability of the predicate `B` in the product
-σ-algebra on metrics; the Cameron-Martin absolute continuity `Law(e^{ξ f} D_h) ≪ Law(D_h)` gives the stated direction).
-Acceptance is pending. Same content as the superseded predicate, plus
-`MeasurableSet {d | B d}`. -/
+FROZEN (EXTERNAL). Cameron-Martin transfer of a metric event under a smooth shift. For `0 < γ < 2`,
+`α₀ < Q_γ`, a smooth compactly supported `f` vanishing on the unit circle, and a predicate `B` on metrics, measurable for
+the product σ-algebra on metrics: if the event that the Weyl-shifted metric `e^{ξ f} D_h` lies in `B` has positive
+probability, and both events are null-measurable, then the event that `D_h` lies in `B` has positive probability. The
+Cameron-Martin absolute continuity `Law(e^{ξ f} D_h) ≪ Law(D_h)` gives this direction. Source: Miller-Sheffield
+arXiv:1302.4738v2, Proposition 2.9, p. 49, equation (2.8), proof p. 50. Acceptance is pending. -/
 def CameronMartinMetricEventTransferMeasurableFrozen : Prop :=
   ∀ (γ α₀ ξ : ℝ) (f : ℂ → ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
   ContDiff ℝ (⊤ : ℕ∞) f → HasCompactSupport f → (∀ z : ℂ, ‖z‖ = 1 → f z = 0) →
@@ -65,31 +45,6 @@ def CameronMartinMetricEventTransferMeasurableFrozen : Prop :=
   NullMeasurableSet {ω | B (D ω)} P →
   0 < P {ω | B (fun x y => (weylScaling (D ω) ξ f x y).toReal)} → 0 < P {ω | B (D ω)}
 
-/-- RETIRED (FALSE as written, and a weight singular at `0` lets a path
-of infinite `D`-length become essential). Not used by any proof. Superseded
-by `WeylMetricCompositionContinuousOuterFrozen` below.
-
-FROZEN (EXTERNAL, truth check FALSE as a proposition, see the last sentences). Metric-level Weyl composition
-(not to be confused with the field-level `WeylScalingCompositionFrozen` of `Frozen/S11d.lean`):
-scaling a metric `D` by `g` and then by `f` is scaling it by `g + f`, for an exponent `ξ > 0`, an Euclidean length
-metric `D`, weights `f, g` continuous on `ℂ \ {0}` (the log singularity `-α₀ log|·|` is continuous there), and finite
-inner scaling. Here `weylScaling D ξ g` is the infimum over `D`-length parametrized paths of `∫ e^{ξ g(P t)} dt`
-(`Defs/LQGMetric.lean`), and the inner metric enters only through `toReal`.
-
-Source: Bou-Rabee-Gwynne (arXiv:2208.11795) Fact 2.2 III, corrected paper line 445, which defines `e^{ξ f} · D` as this
-infimum; GM21 = Gwynne-Miller, (1.8), p. 6. The composition is the weighted-length identity: the `D'`-length of a
-`D`-parametrized path is `∫ e^{ξ g} dℓ_D`, and the change of parameter `dσ = e^{ξ g} dr` gives the weight `g + f`.
-Truth check FALSE as a proposition: the
-singular outer weight permits additional rectifiable paths after the first scaling (the iterated scaling is finite, the direct
-scaling is infinite). Source: Gwynne-Miller (1.8), p. 6, defines Weyl scaling for a continuous shift
-and does not state a composition theorem with a punctured-plane-continuous weight. Used by the common-field identification of the shifted metric (`FirstPass/S11j/FieldLevel11_15.lean`). -/
-def WeylMetricCompositionFrozen : Prop :=
-  ∀ ξ : ℝ, 0 < ξ → ∀ (D : ℂ → ℂ → ℝ) (g f : ℂ → ℝ), IsEuclideanLengthMetric D →
-    ContinuousOn g {z | z ≠ 0} → ContinuousOn f {z | z ≠ 0} →
-    (∀ x y, weylScaling D ξ g x y ≠ ⊤) →
-    ∀ x y, weylScaling (fun u v => (weylScaling D ξ g u v).toReal) ξ f x y =
-      weylScaling D ξ (fun z => g z + f z) x y
-
 /-- FROZEN (EXTERNAL; truth check TRUE). The Weyl exponent
 of an LQG metric is positive: `ξ > 0` for `IsLQGMetric γ ξ 𝔇`, `0 < γ < 2`, the only range used. The statement is TRUE.
 Its source is the positivity argument, not Ding-Gwynne Theorem 1.9 (which assumes `ξ > 0`): normalized whole-plane GFF
@@ -100,8 +55,7 @@ derived: lqgMetricExponentPositive_of_inputs (FirstPass/S11x.lean) -/
 def LQGMetricExponentPositive : Prop :=
   ∀ (γ ξ : ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ), 0 < γ → γ < 2 → IsLQGMetric γ ξ 𝔇 → 0 < ξ
 
-/-- FROZEN (EXTERNAL, truth check TRUE, replacing the retired
-`WeylMetricCompositionFrozen`). Metric-level Weyl composition with a CONTINUOUS outer shift: for `ξ > 0`, an Euclidean
+/-- FROZEN (EXTERNAL, truth check TRUE). Metric-level Weyl composition with a CONTINUOUS outer shift: for `ξ > 0`, an Euclidean
 length metric `D`, a weight `g` continuous on `ℂ ∖ {0}` (the log singularity is continuous there) with finite inner
 scaling, and a continuous weight `f`, scaling by `g` and then by `f` is scaling by `g + f`. Here `weylScaling D ξ g` is
 the infimum of `∫ e^{ξ g}` over `D`-length parametrized paths (`Defs/LQGMetric.lean`), the inner metric enters via `toReal`.

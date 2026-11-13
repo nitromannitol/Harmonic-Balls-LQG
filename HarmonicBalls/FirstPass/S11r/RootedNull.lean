@@ -3,7 +3,7 @@ import HarmonicBalls.FirstPass.S11r.FrozenMetricReplacement
 /-!
 # Rooted null transfer from the marked rooting identity
 
-The Tonelli step: the frozen marked identity `LocalMarkedRootingIdentityWeightedFrozen` (the unweighted `LocalMarkedRootingIdentityFrozen` is RETIRED)
+The Tonelli step: the frozen marked identity `LocalMarkedRootingIdentityWeightedFrozen`
 (equation (24), marked form) tested with the set `S = univ ×ˢ A` of marked observations. If the ordinary local
 observation `obs_D h = (φ ↦ fieldPairing α₀ (hC ω) φ)` of the LQG-weighted field lies a.s. outside `A`, then the
 reference mixture over the root `z ∈ U` gives mass zero to `A`, that is `∫_U P[obs_D f_z ∈ A] dz = 0` (the domination

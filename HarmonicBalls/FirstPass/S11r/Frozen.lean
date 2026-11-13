@@ -11,7 +11,7 @@ Four EXTERNAL facts, all general mathematics, not specific to this paper, all `d
 (FirstPass/S11r.lean, the model hypothesis of Lemma 11.13 in FirstPass/S11i/CertificateCanonical.lean).
 (2) `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`: the fixed-metric measurable local metric decoder (section
 4.1, equation (21), corrected order), the external input of the local metric replacement (`LocalMetricReplacementStmt`,
-S11r/LocalMetricReplacement.lean). The retired unnormalised `LocalLQGMetricNormalizedMeasurableFrozen` is kept only for the record.
+S11r/LocalMetricReplacement.lean).
 (3) `RootedPhysicalMetricContinuousAtInsertionFrozen`: continuity of the physical metric of the rooted field `f_z` at its
 insertion `z` (DFGPS Prop 3.17), the external input `he_cont` of `eq_const_mul_of_rat_disk_agreement` (RootedGluing.lean).
 (4) `LocalMeasureKernelStmt`: the whole-measure local kernel identity (A), the measure companion of (2)-(3) on the same disks
@@ -40,40 +40,8 @@ def WholePlaneGFFExistsFrozen : Prop :=
   ∃ (Ω : Type u) (_ : MeasurableSpace Ω) (P : Measure Ω) (_ : IsProbabilityMeasure P)
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc
 
-/-- RETIRED (FALSE): the decoder is chosen before the metric
-assignment, but the equality fixes the normalisation of the metric, and `2 𝔇` is also an LQG metric. Superseded by
-`LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` below; do not use. The text below is the retired statement.
-
-FROZEN, EXTERNAL (retired, truth check FALSE). The measurable normalised local metric decoder
-of the ordinary GFF (equation (21)). For `0 < γ < 2`, `ξ ∈ ℝ` and a disk `D = ball c r` with
-`0 ∉ closedBall c r` there are a smooth probability bump `ρ` supported in `D` (`∫ ρ = 1`) and a Borel map `M` from the
-mean-zero observables of `D` (`localMeanZeroObs 0 D`) to continuous functions on `D × D` such that, for every whole-plane
-GFF `(Ω, P, hC, hcirc)` and every LQG metric `𝔇` of exponent `ξ` (`IsLQGMetric γ ξ 𝔇`), almost surely
-`M (obs_D g) = e^{-ξ ⟨g,ρ⟩} D_g(·,·;D)` on `D × D`, where `D_g = 𝔇 (hC ω)`, `⟨g,ρ⟩ = fieldPairing 0 (hC ω) ρ` and
-`D_g(·,·;D)` is the internal metric on `D` (`internalMetric`).
-Reading: `e^{-ξ⟨g,ρ⟩} D_g` is the metric `D_{g_D}` of the normalised field `g_D = g - ⟨g,ρ⟩` (`D_{h+c} = e^{ξc} D_h`),
-a function of the mean-zero local observation; the statement is that this metric is a Borel function of that observation,
-with the normalisation fixed by `ρ`. Continuity of `D_g` on `D × D` is part of the cited proper-domain statement.
-Sources: Gwynne-Miller, arXiv:1905.00383v3 §1.2, p. 6 (the metric as a measurable map from distributions to continuous
-metrics), Theorem 1.2, p. 6 (existence and uniqueness), Remark 1.5, p. 8 (proper domains); §4.1, eq. (21).
-Used by: the local metric replacement (`LocalMetricReplacementStmt`, S11r/LocalMetricReplacement.lean), via the
-countable consistency (22) and the rooted identity (20). -/
-def LocalLQGMetricNormalizedMeasurableFrozen : Prop :=
-  ∀ (γ ξ : ℝ) (c : ℂ) (r : ℝ), 0 < γ → γ < 2 → 0 < r → (0 : ℂ) ∉ closedBall c r →
-    ∃ (ρ : ℂ → ℝ) (M : ({φ : ℂ → ℝ // IsTestFunction (ball c r) φ ∧ ∫ x, φ x = 0} → ℝ) →
-        ContinuousMap ↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ)) ℝ),
-      IsTestFunction (ball c r) ρ ∧ ∫ x, ρ x = 1 ∧ Measurable M ∧
-      ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-        (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ),
-        IsWholePlaneGFF P hC hcirc → IsLQGMetric γ ξ 𝔇 →
-        ∀ᵐ ω ∂P, ∀ p : ↥(ball c r ×ˢ ball c r : Set (ℂ × ℂ)),
-          ENNReal.ofReal (M (localMeanZeroObs 0 (ball c r) (hC ω)) p) =
-            ENNReal.ofReal (Real.exp (-ξ * fieldPairing 0 (hC ω) ρ)) *
-              internalMetric (𝔇 (hC ω)) (ball c r) p.1.1 p.1.2
-
 /-- FROZEN, EXTERNAL. Truth check TRUE.
-The fixed-metric normalised local metric decoder of the ordinary GFF (the minimal correction of the retired `LocalLQGMetricNormalizedMeasurableFrozen`,
-used with the write-up equation (21)). The metric assignment `𝔇` is fixed BEFORE the decoder is
+The fixed-metric normalised local metric decoder of the ordinary GFF (used with the write-up equation (21)). The metric assignment `𝔇` is fixed BEFORE the decoder is
 chosen: for every LQG metric `𝔇` of exponent `ξ` (`IsLQGMetric γ ξ 𝔇`) there are a smooth probability bump `ρ` supported in
 `D = ball c r` and a Borel map `M` from the mean-zero observables of `D` to continuous functions on `D × D` such that, for
 every whole-plane GFF `(Ω, P, hC, hcirc)`, almost surely, for all endpoints `p ∈ D × D`,

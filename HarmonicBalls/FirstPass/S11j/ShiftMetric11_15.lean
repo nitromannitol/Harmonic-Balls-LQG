@@ -6,7 +6,7 @@ import HarmonicBalls.FirstPass.Frozen.S11j
 
 Identification of the Weyl-shifted metric `e^{ξ f} · D_h` with the LQG metric of the shifted field `h + f`, used in the
 Cameron-Martin transfer. The metric-level composition is the frozen input `WeylMetricCompositionContinuousOuterFrozen`
-(`FirstPass/Frozen/S11j.lean`; replaces the retired, false `WeylMetricCompositionFrozen`). Terminology: Duplantier-Sheffield and Berestycki-Powell
+(`FirstPass/Frozen/S11j.lean`). Terminology: Duplantier-Sheffield and Berestycki-Powell
 (Weyl scaling `e^{ξ h} D`, LQG metric), Armitage-Gardiner (internal distance).
 -/
 

@@ -8,10 +8,9 @@ import HarmonicBalls.Draft.Section11
 
 Step N2 of `firstPass_11_17` (paper `lemma:third-event-proof`, corrected draft lines 3630-3633: each pinch event is measurable
 with respect to the field). This file holds the field-level helpers and the α = 0 internal-metric measurability. The
-third-event null-measurability for insertion `α₀ < Q` is in `FirstPass/S11h/ThirdEventAlpha.lean`. The former α = 0
-measurability theorems that used `LQGInternalMetricContinuousFrozen` and `LQGMetricLengthIdentityFrozen` were removed
-(those inputs are false as typed; corrected forms `LQGInternalMetricContinuousAlphaGFFFrozen`,
-`LQGMetricLengthIdentityAlphaGFFFrozen` in `Frozen/S11g.lean`). General steps: `CountableSup.lean`.
+third-event null-measurability for insertion `α₀ < Q` is in `FirstPass/S11h/ThirdEventAlpha.lean`, from the inputs
+`LQGInternalMetricContinuousAlphaGFFFrozen` and `LQGMetricLengthIdentityAlphaGFFFrozen` (`Frozen/S11g.lean`). General
+steps: `CountableSup.lean`.
 The Cameron-Martin transfer is not in this file.
 -/
 

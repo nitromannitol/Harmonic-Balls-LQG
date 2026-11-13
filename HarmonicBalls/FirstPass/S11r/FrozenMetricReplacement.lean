@@ -17,44 +17,13 @@ open scoped ENNReal
 
 universe u
 
-/-- RETIRED (FALSE): the unweighted Lebesgue mixture over the
-root has the wrong total mass. Superseded by `LocalMarkedRootingIdentityWeightedFrozen` below; do not use. The text below
-is the retired statement.
-
-FROZEN, EXTERNAL. The marked rooting identity for the LQG measure `μ_h` of
-`h = h^ℂ - α₀ log|·|` (Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma A.10, marked form, printed p. 184,
-proof pp. 184-185; Duplantier-Sheffield, arXiv:0808.1560v2, Proposition 1.1 for the LQG measure). For disks
-`U = ball c₁ r₁` with `closedBall c₁ r₁ ⊆ D = ball c₂ r₂` and `0 ∉ closedBall c₂ r₂`, and every Borel set `S` of
-marked observations `(z, obs_D)`, the mass-weighted marked law equals the Lebesgue mixture of the reference laws:
-`E[∫_U 1_S(z, obs_D h) μ_h(dz)] = ∫_U E[1_S(z, obs_D f_z)] dz`, where `f_z = g - γ log|·-z| + b` is the rooted field
-(`campbellReferenceObs`) and `obs_D h` is the marked observation (`campbellMarkedObs`). Taking `S = ℂ × A` gives
-the unmarked identity (24): `∫_U P[obs_D f_z ∈ A] dz = E[μ_h(U) 1{obs_D h ∈ A}]`.
-
-This is an EQUALITY of unnormalised measures. The one-sided statement `LocalCampbellMarkedRestrictionFrozen`
-(Frozen/S11c.lean) only transfers null sets from the reference mixture to the normalised Campbell law, and does
-not give this equality; this is why the answer names the marked identity as a separate input.
-Retired (truth check FALSE: wrong total mass); the replacement is
-`LocalMarkedRootingIdentityWeightedFrozen`. -/
-def LocalMarkedRootingIdentityFrozen : Prop :=
-  ∀ (γ α₀ : ℝ), 0 < γ → γ < 2 → α₀ < lqgQ γ →
-  ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
-  IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ →
-  ∀ (c₁ c₂ : ℂ) (r₁ r₂ : ℝ), 0 < r₁ → 0 < r₂ → closedBall c₁ r₁ ⊆ ball c₂ r₂ → (0 : ℂ) ∉ closedBall c₂ r₂ →
-  ∀ S : Set (ℂ × ({φ : ℂ → ℝ // IsTestFunction (ball c₂ r₂) φ ∧ ∫ x, φ x = 0} → ℝ)), MeasurableSet S →
-    (∫⁻ ω, ∫⁻ z in ball c₁ r₁,
-        S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellMarkedObs α₀ (ball c₂ r₂) (hC ω) z) ∂(μ ω) ∂P)
-      = ∫⁻ z in ball c₁ r₁,
-        (∫⁻ ω, S.indicator (fun _ => (1 : ℝ≥0∞)) (campbellReferenceObs γ α₀ (ball c₂ r₂) (hC ω) z) ∂P)
-
 /-- The root density `q_{γ,α₀}(z) = |z|^{-γ α₀} · max(1, |z|)^{γ²}` of the corrected marked rooting identity
 , as `exp` of a real number: a positive value in `ℝ≥0∞` for every root `z`. -/
 noncomputable def rootWeight (γ α₀ : ℝ) (z : ℂ) : ℝ≥0∞ :=
   ENNReal.ofReal (Real.exp (-γ * α₀ * Real.log ‖z‖ + γ ^ 2 * Real.log (max ‖z‖ 1)))
 
 /-- FROZEN, EXTERNAL. Truth check TRUE. The marked rooting identity with the root density
-(the minimal correction of the retired `LocalMarkedRootingIdentityFrozen`,
-retaining the current scope of arbitrary disks away from zero). For `h = h^ℂ - α₀ log|·|` with
+(for arbitrary disks away from zero). For `h = h^ℂ - α₀ log|·|` with
 `IsLQGMeasureOfField P γ α₀ hcirc μ`, disks `U = ball c₁ r₁` and `D = ball c₂ r₂` with `closedBall c₁ r₁ ⊆ D`,
 `0 ∉ closedBall c₂ r₂`, and every measurable set `S` of marked observations `(z, obs_D)`,
 `E[∫_U 1_S(z, obs_D h) μ_h(dz)] = ∫_U q_{γ,α₀}(z) · E[1_S(R_D(g, z))] dz`, where `q_{γ,α₀} = rootWeight γ α₀` and

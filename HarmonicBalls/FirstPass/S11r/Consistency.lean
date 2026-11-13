@@ -7,7 +7,7 @@ import HarmonicBalls.FirstPass.S11r.InternalSubdomain
 
 For a fixed field with metric `I` (on `D`, and on the smaller disk `V ⊆ D`), if the normalised local metric decoders
 satisfy `ofReal (M x y) = e^a · D_I(x,y;D)` on `D` and `ofReal (MV x y) = e^b · D_I(x,y;V)` on `V` (the local decoder
-identity of `LocalLQGMetricNormalizedMeasurableFrozen`, with the constants `e^a = e^{-ξ⟨g,ρ_D⟩}`, `e^b = e^{-ξ⟨g,ρ_V⟩}`),
+identity of `LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`, with the constants `e^a = e^{-ξ⟨g,ρ_D⟩}`, `e^b = e^{-ξ⟨g,ρ_V⟩}`),
 then the internal metric of `M` on `V` is `e^{a-b}` times `MV`, which is the identity (22),
 at the level of one field and one pair of points.
 

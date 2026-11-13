@@ -14,7 +14,7 @@ Conditional assembly, kept separate from `firstPass_11_15_corrected`. For one fi
 `α₀ < Q`, one exponent `ξ > 0` and one LQG metric of a whole-plane GFF, it proves the positive-measure conclusion of
 corrected Lemma 11.15 (`pinchFirstEvent`, paper lines 3347-3349, 3659-3696) from:
 
-* the Cameron-Martin event transfer `CameronMartinMetricEventTransferFrozen` (`FirstPass/Frozen/S11j.lean:32`,
+* the Cameron-Martin event transfer `CameronMartinMetricEventTransferMeasurableFrozen` (`FirstPass/Frozen/S11j.lean:37`,
   EXTERNAL, truth check pending);
 * the named measurability and positivity inputs (M1)-(M3) below (paper line 3664-3667 asserts that the four variables
   are positive and finite; measurability is not proven in the paper).

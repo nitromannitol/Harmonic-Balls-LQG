@@ -35,30 +35,6 @@ def LQGMetricSatisfiesAxiomsUnivFrozen : Prop :=
     (∀ x, Measurable fun ω => f ω x) →
     SatisfiesLQGMetricAxioms P γ ξ 𝔇 (fun ω => addFunPairing (hC ω) (f ω))
 
-/-- RETIRED (truth check: FALSE as typed, IsWholePlaneGFF missing, kept, do not use). FROZEN. Continuity of the internal metric on open sets (internal metric of Fact 2.2 I, Bou-Rabee-Gwynne
-arXiv:2208.11795, corrected draft line 428, `Defs/LQGMetric.lean:65`): for a whole-plane LQG
-metric `D` of a field `hC` (`IsLQGMetricOfField`, `α₀ = 0`, so `D = 𝔇(h^ℂ)` almost surely), every open `W ⊆ ℂ` and almost
-surely in `ω`, the ENNReal-valued internal metric `(z, w) ↦ D^W(z, w)` is continuous on `W ×ˢ W` (the value `∞` is allowed
-and is locally constant across components of `W`). The statement is per open `W` and almost surely (the weakest form used
-by the countable reductions of pinch events). Standard; locator pending. (continuity on open sets, EXTERNAL). Used by: the measurability of the third event in `firstPass_11_17` (step N2). -/
-def LQGInternalMetricContinuousFrozen : Prop :=
-  ∀ (γ ξ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), IsLQGMetricOfField P γ ξ 0 hC D →
-    ∀ W : Set ℂ, IsOpen W →
-      ∀ᵐ ω ∂P, ContinuousOn (fun p : ℂ × ℂ => internalMetric (D ω) W p.1 p.2) (W ×ˢ W)
-
-/-- RETIRED (truth check: FALSE as typed, IsWholePlaneGFF missing, kept, do not use). FROZEN. The length identity of an LQG metric (Fact 2.2 I, Bou-Rabee-Gwynne arXiv:2208.11795, corrected draft
-line 428; the Euclidean length metric axiom `ofReal_eq_internalMetric` of `IsEuclideanLengthMetric`, `Defs/LQGMetric.lean`):
-for an LQG metric `D` of a whole-plane field `hC` (`IsLQGMetricOfField`, `α₀ = 0`), almost surely for all `z w ∈ ℂ`,
-`ENNReal.ofReal (D z w)` is the internal metric of `D` on the whole plane, i.e. the infimum of the `D`-lengths of paths
-from `z` to `w` in `ℂ`. The statement is for the metric `D` itself (not for an arbitrary function). Standard; locator
-pending. Used by: the measurability and continuity of the distance `ofReal (setDist D S₁ S₂)` in the third pinch event
-(`FirstPass/S11h/ThirdEventMeasurable.lean`, step N2 of `firstPass_11_17`). -/
-def LQGMetricLengthIdentityFrozen : Prop :=
-  ∀ (γ ξ : ℝ) (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (D : Ω → ℂ → ℂ → ℝ), IsLQGMetricOfField P γ ξ 0 hC D →
-    ∀ᵐ ω ∂P, ∀ z w : ℂ, ENNReal.ofReal (D ω z w) = internalMetric (D ω) Set.univ z w
-
 /-- FROZEN. Continuity of the internal metric on open sets for an LQG metric with insertion `α₀ < Q`, with the
 whole-plane GFF hypothesis. For `0 < γ < 2`,
 `α₀ < lqgQ γ`, if `∃ hcirc, IsWholePlaneGFF P hC hcirc` and `D` is an LQG metric of `hC` (`IsLQGMetricOfField`, log-singular
