@@ -7,12 +7,8 @@ import HarmonicBalls.FirstPass.S11i.ZoomMetricAlpha0
 /-!
 # Step 8 physical frequency with an existential event
 
-`Step8PhysStmt` and
-`Step8UnitScaleAlpha0Stmt` (`S11i/Step8PhysReduction.lean`) are FALSE as typed: they quantify over EVERY pinch event `E`,
-while the physical frequency does not depend on `E`. Two measurable subsets `E₀ ⊇ E₁` of positive probability ratio `p` and
-`p/2` both satisfy the pinch premise, so the same frequency would converge to `p` and to `p/2`. The counted consumer
-`Step8IdentityGivenPinchEventCanonicalStmt` needs only an EXISTENTIAL choice of the event. This file gives that corrected
-provider and its adapter.
+The counted consumer `Step8IdentityGivenPinchEventCanonicalStmt` needs the physical frequency for one choice of the
+pinch event. This file gives the existential provider and its adapter.
 
 * `Step8PhysExistsStmt.{v}`: from a pinch event, there is a pinch event `E` such that for every common
   probability `q` of `E`, the physical frequency holds at every scale `k` for all insertion-`α` models (`AllModelsAt`).
@@ -56,8 +52,7 @@ def CommonProb.{w} (γ : ℝ) (E : Set Step8Code) (q : ℝ) : Prop :=
     (P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal = q
 
 /-- `PhysicalAt P q U V W T Q' Q δ M k μ D`: almost surely, for `μ`-almost every centre `z ∈ B_{2^k}(0)`, the window
-frequency of the certificate events (`pinchOmegaGeom W Q δ`, `η = δ`) at radii `2^k 2^{-n}` tends to `q`. This is the
-conclusion of `hPhys` (`S11i/Step8PhysReduction.lean`) at a fixed scale. -/
+frequency of the certificate events (`pinchOmegaGeom W Q δ`, `η = δ`) at radii `2^k 2^{-n}` tends to `q`. -/
 def PhysicalAt.{w} {Ω : Type w} [MeasurableSpace Ω] (P : Measure Ω) (q : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ)
     (k : ℕ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ) : Prop :=
   ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), z ∈ ball (0 : ℂ) ((2 : ℝ) ^ k) →
@@ -112,9 +107,8 @@ def Step8EventCalibrationStmt.{w} : Prop :=
     ∃ E F : Set Step8Code, PinchEventGammaCanonicalStmt.{w} U T Q' Q γ M E ∧ EventCalibration.{w} γ E F ∧
       InsertionZeroUnitStmt.{w} γ F U V W T Q' Q δ M
 
-/-- **Corrected existential provider.** From the existence of a pinch event, there is a pinch event `E` such
-that every common probability `q` of `E` gives the physical frequency at every scale, for every insertion-`α` model. This
-replaces the false universal-event binder `Step8PhysStmt` (`S11i/Step8PhysReduction.lean`). -/
+/-- **Existential provider.** From the existence of a pinch event, there is a pinch event `E` such
+that every common probability `q` of `E` gives the physical frequency at every scale, for every insertion-`α` model. -/
 def Step8PhysExistsStmt.{w} : Prop :=
   ∀ (U V W T Q' Q : Set ℂ) (δ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
     ∀ γ α M : ℝ, 0 < γ → γ < 2 → α < lqgQ γ → 0 < M →

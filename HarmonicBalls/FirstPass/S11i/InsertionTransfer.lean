@@ -21,9 +21,8 @@ import HarmonicBalls.FirstPass.S11h.Faithful
 
 
 
-`PhysicalAt` and `AllModelsAt` are the proposed interfaces of that note, written with the same bodies as the existing
-binder `Step8PhysStmt` (`S11i/Step8PhysReduction.lean:84`). `Step8PhysExists.lean` is not in the repository yet, so the
-two definitions are declared here locally (the bodies are unchanged).
+`PhysicalAt` and `AllModelsAt` are the interfaces of that note; they are declared here locally, with the same bodies
+as in `S11i/Step8PhysExists.lean`.
 
 Ingredients of the transfer, in the order of the note:
 * a finite cover of `B_{2^k} \ {0}` by root balls whose decoder discs avoid `0` (dilates of the valid balls);
@@ -45,8 +44,7 @@ open HarmonicBalls FirstPassS11i
 
 universe u
 
-/-- **Physical window frequency of one insertion-`α` model on `B_{2^k}(0)`** (body of `Step8PhysStmt`,
-`S11i/Step8PhysReduction.lean:84`). Almost surely, for almost every `z` in `B_{2^k}(0)`, the window count of the
+/-- **Physical window frequency of one insertion-`α` model on `B_{2^k}(0)`.** Almost surely, for almost every `z` in `B_{2^k}(0)`, the window count of the
 certificate events at radii `2^k 2^{-n}`, `n ∈ [N+1, 2N]`, divided by `N`, tends to `q`. -/
 def PhysicalAt {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) (q : ℝ) (U V W T Q' Q : Set ℂ) (δ M : ℝ) (k : ℕ)
     (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ) : Prop :=

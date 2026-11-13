@@ -1,27 +1,23 @@
 import HarmonicBalls.FirstPass.S11i.HzoomScale
 import HarmonicBalls.FirstPass.S11i.Step8TransferDilation
 import HarmonicBalls.FirstPass.S11i.Step8Frequency
-import HarmonicBalls.FirstPass.S11i.Step8IdentityAssembly
+import HarmonicBalls.FirstPass.S11i.Corrected11_13
+import HarmonicBalls.FirstPass.S11i.Step8Event
+import HarmonicBalls.FirstPass.S11i.Step8ZoomFrequency
 
 /-!
-# Step 8 physical frequency `hPhys`: reduction to the unit-scale statement
+# Step 8 physical frequency: the zoom of an insertion-`α₀` model
 
-`Step8PhysStmt` is the binder `hPhys` of `step8Identity_given_pinchEvent_canonical_of_phys`
-(`S11i/Step8IdentityAssembly.lean`): for every insertion-`α₀` model and every `k`, almost surely the physical window
-frequency on `B_{2^k}(0)` tends to `q`. Corrected paper, Step 8 of `lemma:mu_h-pinch-bad` (lines 3848-3930), dilation
-paragraph.
-
-Reduction (no new mathematics). The zoom route of `hzoom_all_of_unit_models` / `hphys_of_zoom_const_family`, written for
-the insertion `α₀` (the existing chain is for `α₀ = 0` only):
-* zoom at `2^k` (ii): the normalized model `(normField 2^k, normCirc 2^k, normMeasureAlpha, Dk)` is an insertion-`α₀` model.
+Corrected paper, Step 8 of `lemma:mu_h-pinch-bad` (lines 3848-3930), dilation paragraph. The zoom route of
+`hzoom_all_of_unit_models` / `hphys_of_zoom_const_family`, written for the insertion `α₀` (the existing chain is for
+`α₀ = 0` only):
+* zoom at `2^k`: the normalized model `(normField 2^k, normCirc 2^k, normMeasureAlpha, Dk)` is an insertion-`α₀` model.
   The measure part is `isLQGMeasureOfField_normMeasure_alpha` (proved here, from `LQGMeasureCoordChange` at `α₀`, a
-  Proposed input, Fact 2.1 IV, pending source-check). The metric part is `ZoomMetricNormAlpha0Stmt` (NAMED BINDER, MISSING).
-* unit scale (i): `Step8UnitScaleAlpha0Stmt` (NAMED BINDER, MISSING): the unit-ball frequency at `q` for every
-  insertion-`α₀` model.
+  Proposed input, Fact 2.1 IV, pending source-check). The metric part is `ZoomMetricNormAlpha0Stmt`.
 * transfer to the physical frequency: `hphys_of_zoom_const_family` (existing, proved).
 
-The identification `F = E` is definitional at the level of the frequency (`step8Frequency_eq_localModConst`), but NOT at
-the level of the decoded certificate event; that identity is inside `Step8UnitScaleAlpha0Stmt` (see its docstring).
+The identification `F = E` is definitional at the level of the frequency (`step8Frequency_eq_localModConst`). The
+physical frequency for a chosen pinch event is assembled in `S11i/Step8PhysExists.lean`.
 -/
 
 universe u
@@ -32,32 +28,7 @@ open MeasureTheory Filter Topology Set Metric FirstPassS11i HarmonicBalls
 open HarmonicBalls.FirstPassS11iHzoom HarmonicBalls.FirstPassS11iStep8Zoom
 open scoped ENNReal
 
-/-! ### Named binders (MISSING inputs, exact types) -/
-
-/-- **MISSING input (route (i)): unit-scale statement for every insertion-`α₀` model.** Let `E` be the premise event of
-`PinchEventGammaCanonicalStmt` at `γ`, and let `q` satisfy the `(A)` property: `P{localModConstField γ hC (ball 0 7) ∈ E}`
-has value `q` in every whole-plane model. Then every insertion-`α₀` LQG model `(μ, D)` (`IsLQGMeasureOfField P γ α₀`,
-`IsLQGMetricOfField P γ (lqgXi γ) α₀`) has the unit-ball frequency `q` (`UnitBallFrequencyStmt`, radii `2⁻ⁿ`,
-Ostar `pinchOmegaGeom W Q δ₀`, `η = δ₀`). The insertion-`0` analogue is `UnitBallFrequencyModelsStmt`
- (`S11i/HzoomScale.lean:124`).
-
-Not supplied by the premise: the decoded certificate event of `ae_unitScale_of_decoded_ball` (`S11i/Step8Decoded.lean:43`,
-`hFdef`) must equal `E`, i.e. `∀ L, CertificateEvent (Dμ L) (Dd L) Ostar U' V W T Q' Q η M 1 0 ↔ ballRestrictPairing 7 L ∈ E`
-for the decoded models. `PinchEventGammaStmt` (`S11i/Assembly13.lean:120`) gives only measurability, positivity, and
-`E ⇒ pinchPointEvent` a.s. (one-sided). -/
--- SUPERSEDED, FALSE AS TYPED (universal over the event `E`).
--- Do not use. The corrected provider is `Step8PhysExistsStmt` (S11i/Step8PhysExists.lean).
-def Step8UnitScaleAlpha0Stmt.{v} : Prop :=
-  ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
-    ∀ γ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
-    ∀ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaCanonicalStmt.{v} U T Q' Q γ M E →
-    ∀ q : ℝ, (∀ (Ω : Type v) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
-        (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
-        (P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal = q) →
-    ∀ (Ω : Type v) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-      (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
-      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ (lqgXi γ) α₀ hC D →
-      UnitBallFrequencyStmt P q U V W T Q' Q δ₀ M μ D
+/-! ### Named binders (exact types) -/
 
 /-- The zoom of the LQG metric at scale `2^k` is, up to a positive constant, the metric of the normalized field, for the
 insertion `α₀` (`IsLQGMetricOfField`). At `α₀ = 0` this is `ZoomMetricNormStmt` (`S11i/HzoomScale.lean:132`, proved). -/
@@ -81,24 +52,6 @@ def ZoomMetricNormAlpha0Stmt.{v} : Prop :=
 def CoordChangeAlpha0Stmt.{v} : Prop :=
   ∀ (γ α₀ : ℝ) (Ω : Type v) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureCoordChange P γ α₀ hC hcirc
-
-/-- The binder `hPhys` of `step8Identity_given_pinchEvent_canonical_of_phys` (`S11i/Step8IdentityAssembly.lean`), named. -/
--- SUPERSEDED, FALSE AS TYPED (universal over the event `E`).
--- Do not use. The corrected provider is `Step8PhysExistsStmt` (S11i/Step8PhysExists.lean).
-def Step8PhysStmt.{v} : Prop :=
-  ∀ (U V W T Q' Q : Set ℂ) (δ₀ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ₀ →
-    ∀ γ α₀ M : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ → 0 < M →
-    ∀ E : Set (ModConstTestPairings (ball (0 : ℂ) 7)), PinchEventGammaCanonicalStmt.{v} U T Q' Q γ M E →
-    ∀ q : ℝ, (∀ (Ω : Type v) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
-        (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
-        (P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal = q) →
-    ∀ (Ω : Type v) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-      (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
-      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α₀ hcirc μ → IsLQGMetricOfField P γ (lqgXi γ) α₀ hC D →
-      ∀ k : ℕ, ∀ᵐ ω ∂P, ∀ᵐ z ∂(μ ω), z ∈ ball (0 : ℂ) ((2 : ℝ) ^ k) →
-        Tendsto (fun N : ℕ => (({n : ℕ | N + 1 ≤ n ∧ n ≤ 2 * N ∧
-          CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ₀) U V W T Q' Q δ₀ M
-            ((2 : ℝ) ^ k * (2 : ℝ)⁻¹ ^ n) z}.ncard : ℕ) : ℝ) / (N : ℝ)) atTop (𝓝 q)
 
 /-! ### (iii) The identification `F = E` at the level of the frequency -/
 
@@ -213,27 +166,6 @@ theorem hzoom_all_of_unit_models_alpha {Ω : Type*} [MeasurableSpace Ω] {P : Me
         normMeasureAlpha γ α₀ μ hcirc k ω := rfl
   rw [hmeas, hmet]
   exact hω
-
-/-! ### The reduction of `hPhys` -/
-
-/-- **Reduction of `hPhys` to the unit-scale statement.** From the unit-scale binder `hUnit` (route (i)), the coordinate
-change at `α₀` (`hCC`, Proposed) and the metric zoom `hMet` (route (ii), MISSING), the physical window frequency
-`Step8PhysStmt` follows: zoom at each `2^k` (`hzoom_all_of_unit_models_alpha`), then `hphys_of_zoom_const_family`. -/
-theorem hPhys_of_unit_models.{v} (hUnit : Step8UnitScaleAlpha0Stmt.{v}) (hCC : CoordChangeAlpha0Stmt.{v})
-    (hMet : ZoomMetricNormAlpha0Stmt.{v}) : Step8PhysStmt.{v} := by
-  intro U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM E hPG q hq Ω _ P hC hcirc μ D hG hμ hD
-  exact HarmonicBalls.FirstPassS11iStep8Transfer.hphys_of_zoom_const_family P U V W T Q' Q δ₀ M q μ D
-    (hzoom_all_of_unit_models_alpha hγ0 hγ2 hα hG hμ (hCC γ α₀ Ω P hC hcirc)
-      (hMet γ (lqgXi γ) α₀ Ω P hC hcirc D hG hD)
-      (fun hC' hcirc' μ' D' h1 h2 h3 =>
-        hUnit U V W T Q' Q δ₀ hgeom γ α₀ M hγ0 hγ2 hα hM E hPG q hq Ω P hC' hcirc' μ' D' h1 h2 h3))
-
-/-- **Step 8 identification (Lemma 11.13) from the unit-scale statement.** `hPhys_of_unit_models` fed into
-`step8Identity_given_pinchEvent_canonical_of_phys`. Missing inputs: `hUnit` (route (i)) and `hMet` (route (ii)). -/
-theorem step8Identity_of_unit_scale.{v} (hUnit : Step8UnitScaleAlpha0Stmt.{v}) (hCC : CoordChangeAlpha0Stmt.{v})
-    (hMet : ZoomMetricNormAlpha0Stmt.{v}) : Step8IdentityGivenPinchEventCanonicalStmt.{v} :=
-  HarmonicBalls.FirstPassS11iStep8IdentityAssembly.step8Identity_given_pinchEvent_canonical_of_phys
-    (hPhys_of_unit_models hUnit hCC hMet)
 
 end HarmonicBalls.FirstPassS11iStep8PhysReduction
 
