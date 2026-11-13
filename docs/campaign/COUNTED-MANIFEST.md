@@ -190,9 +190,9 @@ are not counted. So no `DerivedInputs31` wrapper is needed, the manifest is unch
 
 | result | draft statement | declaration (fewest binders) | file:line | binders | binder names |
 |---|---|---|---|---|---|
-| 1.2 forall-xi | `HarmonicBallNoveltyStmt` | `firstPass_1_2_derivedInputs47` | HarmonicBalls/FirstPass/Phase2/DerivedInputs47.lean:20 | 1 | hmetric |
-| 11.11 forall-xi | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11_derived` | HarmonicBalls/FirstPass/Phase2/PinchScalesSeedInputsDerived.lean:50 | 1 | h13 |
-| 11.13 forall-xi | `CorrectedLemma11_13Stmt` | `correctedLemma11_13_of_identity` (4 candidates) | HarmonicBalls/FirstPass/S11i/Assembly13.lean:79 | 2 | hAx hZ |
+| 1.2 forall-xi | `HarmonicBallNoveltyStmt` | `firstPass_1_2_derivedStep8` | HarmonicBalls/FirstPass/Phase2/ForallXiStep8Derived.lean:45 | 1 | hStep8 |
+| 11.11 forall-xi | `HarmonicBallNotMetricBallStmt` | `firstPass_11_11_derivedStep8` | HarmonicBalls/FirstPass/Phase2/ForallXiStep8Derived.lean:40 | 1 | hStep8 |
+| 11.13 forall-xi | `CorrectedLemma11_13Stmt` | `correctedLemma11_13_derivedStep8` | HarmonicBalls/FirstPass/Phase2/ForallXiStep8Derived.lean:34 | 1 | hStep8 |
 | 1.2 canonical-xi | `HarmonicBallNoveltyCanonicalStmt` | `harmonicBallNoveltyCanonical_of_localMetricReplacement_derived` | HarmonicBalls/FirstPass/Phase2/NoveltyCanonicalLocalReplacementDerived.lean:21 | 1 | hN2 |
 | 11.11 canonical-xi | `HarmonicBallNotMetricBallCanonicalStmt` | `harmonicBallNotMetricBallCanonical_of_localMetricReplacement_derived` | HarmonicBalls/FirstPass/Phase2/PinchScalesLocalReplacementDerived.lean:26 | 1 | hN2 |
 | 11.13 canonical-xi | `CorrectedLemma11_13CanonicalStmt` | `correctedLemma11_13Canonical_of_localMetricReplacement_derived` | HarmonicBalls/FirstPass/Phase2/PinchScalesLocalReplacementDerived.lean:18 | 1 | hN2 |
@@ -233,3 +233,6 @@ are not counted. So no `DerivedInputs31` wrapper is needed, the manifest is unch
 **Refresh of 2026-11-12, canonical 11.11 and 11.13 with `hfr` supplied.** `RootedPhysicalMetricContinuousAtInsertionFrozen` (`hfr`) is a theorem without hypothesis (`rootedPhysicalMetricContinuousAtInsertion_derived`, FirstPass/Phase2/RootedInsertionContinuityDerived.lean:118). Supplying it, `HarmonicBalls/FirstPass/Phase2/PinchScalesLocalReplacementDerived.lean` states both canonical forms with the single binder `hN2` (`LocalMetricReplacementStmt.{0}`), at every universe; rows 11.11 canonical-xi and 11.13 canonical-xi now name these forms.
 
 **Refresh of 2026-11-12, canonical 1.2 from the local metric replacement.** Theorem 1.2 at the canonical exponent no longer binds Proposition 11.11 (`hmetric`, a numbered result of the paper): `harmonicBallNoveltyCanonical_of_localMetricReplacement_derived` (FirstPass/Phase2/NoveltyCanonicalLocalReplacementDerived.lean:21) composes `harmonicBallNoveltyStmt_of_existence_and_results_canonical_derivedInputs47` with `harmonicBallNotMetricBallCanonical_of_localMetricReplacement_derived`, so its one hypothesis is the literature input `hN2` (`LocalMetricReplacementStmt`), as for canonical 11.11 and 11.13. Axioms: propext, Classical.choice, Quot.sound.
+
+
+**Refresh of 2026-11-13, the forall-xi rows on the Step 8 identification.** `HarmonicBalls/FirstPass/Phase2/ForallXiStep8Derived.lean` (HB 65426150) supplies the field axioms (`lqgMetricFieldAxiomsUnivFrozen_derived`) and the existence of the LQG measure (`lqgMeasureExistence_forall_field`) to `Closure.closure_11_13`. The three forall-xi rows now bind the one named input `hStep8 : Step8IdentificationStmt` (FirstPass/S11i/Corrected11_13.lean:57, the gamma-insertion target of `GammaZoomIdentityStmt`): 11.13 (2 binders `hAx hZ` to 1; the previous form `correctedLemma11_13_of_identity` bound the superseded `ZoomIdentityStmt`), 11.11 (`h13` replaced by `hStep8`, through `Closure.manyPinchScales_of_corrected`) and 1.2 (`hmetric` replaced by `hStep8`). Axiom set of the three declarations: [propext, Classical.choice, Quot.sound].
