@@ -16,8 +16,8 @@ Status: FROZEN, EXTERNAL (docstring only, no statement change). DERIVED BRIDGE, 
 l.142-172 (five steps); phase-2 obligation. Closest printed statements: Gwynne-Miller, arXiv:1905.00383,
 Axiom II, Theorem 1.2, Remark 1.5; Dubédat-Falconet-Gwynne-Pfeffer-Sun, arXiv:1905.00380, Theorem 1.10, Proposition 3.17.
 The bridge theorem is to be proved in phase 2 by the route of section 1 (normalize, Axiom II, Doob-Dynkin factorization, ...).
-Its proof needs (i) the fixed-metric decoder of the corrected frozen input
-`LocalLQGMetricNormalizedMeasurableFixedMetricFrozen` (the retired unnormalised version was FALSE),
+Its proof needs (i) the fixed-metric decoder of the normalized frozen input
+`LocalLQGMetricNormalizedMeasurableFixedMetricFrozen`,
 (ii) the unrooted identity (18) for a fixed metric, `unrooted_identity_fixedMetric` (FirstPass/S11r/UnrootedFixed.lean,
 with the named universe-u shift axioms `LQGShiftAxiomI` / `LQGShiftAxiomIII`), (iii) the countable reconstruction (22)
 (`internalMetric_normalised_consistency`, Consistency.lean, hII proved), (iv) the rooted identity (20) via
