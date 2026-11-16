@@ -1,5 +1,6 @@
 import HarmonicBalls.FirstPass.S11an
 import HarmonicBalls.FirstPass.S11ap
+import HarmonicBalls.FirstPass.S11ad.ExteriorE1
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsConsequencesDerived
 import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs9
@@ -42,5 +43,29 @@ theorem IsWholePlaneGFF.pinchLocal_first_positive_by_shift
     (hshift _ ⟨b, bQ, hb, hbQ, φQ, φ0, hφQ, hφQc, hφQ1, hφQ0, hφQI,
       hφ0, hφ0c, hφ01, hφ00, hφ0I, rfl⟩) hpos
   exact hAp.trans_le (measure_mono hAsub)
+
+/-- The first local event admits a positive-probability representative measurable
+with respect to the field outside the buffered disk. -/
+theorem IsWholePlaneGFF.exists_positive_outside_pinchLocal_first
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α δ : ℝ} {D : Ω → ℂ → ℂ → ℝ} {U V W T Q' Q : Set ℂ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α hC D)
+    (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) :
+    ∃ A : Set Ω,
+      MeasurableSet[MeasurableSpace.comap (localModConstPairings α hC (closure W)ᶜ)
+        inferInstance] A ∧ 0 < P A ∧
+      A =ᵐ[P] {ω | pinchFirstEventLocal (D ω) W T Q' Q δ} := by
+  obtain ⟨A, hA, hAe⟩ := S11ad.pinchFirstEventLocal_exterior_version
+    lqgMetricFieldAxiomsUnivFrozen_derived
+    U V W T Q' Q δ hgeo γ ξ α hγ hγ₂ hα Ω P hC hcirc D hh hD
+    (FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom hgeo)
+  have heq : A =ᵐ[P] {ω | pinchFirstEventLocal (D ω) W T Q' Q δ} := by
+    filter_upwards [hAe] with ω hω
+    exact propext hω
+  refine ⟨A, hA, ?_, heq⟩
+  rw [measure_congr heq]
+  exact hh.pinchLocal_first_positive_by_shift hγ hγ₂ hα hD hgeo
 
 end HarmonicBalls
