@@ -1168,4 +1168,125 @@ theorem IsEuclideanLengthMetric.puncturedDistanceFrom_eq
       exact (hD.internalMetric_eq_min_punctured_scaled O c x y).symm
 
 
+
+/-- A local punctured-distance decoder can be indexed by any nonempty
+countable set of endpoint pairs with nonzero first endpoint in the domain. -/
+theorem IsWholePlaneGFF.exists_local_punctured_singularMetric_compactShift_decoder_countable
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {U V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ U)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction U ψ) (hψint : ∫ z, ψ z = 1)
+    (S : Set (ℂ × ℂ)) (hS : S.Countable) (hSne : S.Nonempty)
+    (hSV : ∀ q ∈ S, q.1 ∈ V ∧ q.1 ≠ 0) (hξ : 0 ≤ ξ) :
+    ∃ F : (LocalZeroMeanTest U → ℝ) → (ℂ × ℂ) → ℝ≥0∞, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ q ∈ S, F (localModConstPairings α hC U ω) q =
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) (V \ {0}) q.1 q.2) ∧
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        ∀ᵐ ω ∂P, ∀ q ∈ S, F (localModConstPairings α
+          (fun ω => addFunPairing (hC ω) g) U ω) q =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              (V \ {0}) q.1 q.2 := by
+  classical
+  obtain ⟨p, hp⟩ := hS.exists_eq_range hSne
+  have hpV : ∀ n, (p n).1 ∈ V ∧ (p n).1 ≠ 0 := by
+    intro n
+    apply hSV
+    rw [hp]
+    exact mem_range_self n
+  obtain ⟨F, hF, hFb, hFs⟩ := h.exists_local_punctured_singularMetric_compactShift_decoder
+    𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p hpV hξ
+  let i : ℂ × ℂ → ℕ := fun q => if hq : q ∈ S then Classical.choose (hp ▸ hq) else 0
+  have hi : ∀ q ∈ S, p (i q) = q := by
+    intro q hq
+    simp only [i, dite_eq_left hq]
+    exact Classical.choose_spec (hp ▸ hq)
+  refine ⟨fun v q => F v (i q), ?_, ?_, ?_⟩
+  · exact measurable_pi_iff.mpr (fun q => (measurable_pi_apply (i q)).comp hF)
+  · filter_upwards [hFb] with ω hb q hq
+    simpa only [hi q hq] using hb (i q)
+  · intro g hg
+    filter_upwards [hFs g hg] with ω hs q hq
+    simpa only [hi q hq] using hs (i q)
+
+
+/-- Countably many local full internal distances have a common decoder,
+provided the punctured coordinate set contains the required circle and
+endpoint pairs. -/
+theorem IsWholePlaneGFF.exists_local_singularMetric_compactShift_decoder_of_coordinates
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {U V : Set ℂ} (hV : IsOpen V) (hconn : IsConnected V) (h0 : (0 : ℂ) ∈ V)
+    (hVU : V ⊆ U) (ψ : ℂ → ℝ) (hψ : IsTestFunction U ψ)
+    (hψint : ∫ z, ψ z = 1) (p : ℕ → ℂ × ℂ)
+    (hp : ∀ n, (p n).1 ∈ V ∧ (p n).2 ∈ V)
+    {ε : ℝ} (hball : ball (0 : ℂ) ε ⊆ V)
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n)
+    (hsε : ∀ n, s n < ε) (C : ℕ → Set ℂ)
+    (hcircle : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧
+      sphere (0 : ℂ) (s n) ⊆ closure (C n))
+    (S : Set (ℂ × ℂ)) (hS : S.Countable) (hSne : S.Nonempty)
+    (hSV : ∀ q ∈ S, q.1 ∈ V ∧ q.1 ≠ 0)
+    (hSx : ∀ n k z, z ∈ C k → (p n).1 ≠ 0 → (z, (p n).1) ∈ S)
+    (hSy : ∀ n k z, z ∈ C k → (p n).2 ≠ 0 → (z, (p n).2) ∈ S)
+    (hSp : ∀ n, (p n).1 ≠ 0 → (p n).2 ≠ 0 → p n ∈ S)
+    (hξ : 0 ≤ ξ) :
+    ∃ F : (LocalZeroMeanTest U → ℝ) → ℕ → ℝ≥0∞, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α hC U ω) n =
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) V (p n).1 (p n).2) ∧
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        ∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α
+          (fun ω => addFunPairing (hC ω) g) U ω) n =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              V (p n).1 (p n).2 := by
+  obtain ⟨G, hG, hGb, hGs⟩ := h.exists_local_punctured_singularMetric_compactShift_decoder_countable
+    𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint S hS hSne hSV hξ
+  let F := fun v n => puncturedDistanceFrom C (fun x y => G v (x, y)) (p n).1 (p n).2
+  have hF : Measurable F := by
+    apply measurable_pi_iff.mpr
+    intro n
+    exact measurable_puncturedDistanceFrom C (fun k => (hcircle k).2.1)
+      (fun v x y => G v (x, y))
+      (fun x y => (measurable_pi_apply (x, y)).comp hG) _ _
+  have hdecode : ∀ (E : ℂ → ℂ → ℝ) (c : ℝ≥0∞) (v : LocalZeroMeanTest U → ℝ),
+      IsEuclideanLengthMetric E → c ≠ 0 → c ≠ ∞ →
+      (∀ q ∈ S, G v q = c * internalMetric E (V \ {0}) q.1 q.2) →
+      ∀ n, F v n = c * internalMetric E V (p n).1 (p n).2 := by
+    intro E c v he hc0 hct heq n
+    apply he.puncturedDistanceFrom_eq hV hconn h0 hball (hp n).1 (hp n).2
+      s hs hpos hsε C hcircle hc0 hct
+    · intro hx k z hz
+      exact heq (z, (p n).1) (hSx n k z hz hx)
+    · intro hy k z hz
+      exact heq (z, (p n).2) (hSy n k z hz hy)
+    · intro hx hy
+      exact heq (p n) (hSp n hx hy)
+  refine ⟨F, hF, ?_, ?_⟩
+  · filter_upwards [hmetric, hGb] with ω hm hb
+    apply hdecode (D ω) _ _ hm
+    · exact ENNReal.ofReal_ne_zero_iff.mpr (Real.exp_pos _)
+    · exact ENNReal.ofReal_ne_top
+    · exact hb
+  · intro g hg
+    filter_upwards [hmetric, hGs g hg] with ω hm hs'
+    apply hdecode _ _ _ (hm.weylScaling_compact_isLengthMetric hξ g hg.1.continuous hg.2.1)
+    · exact ENNReal.ofReal_ne_zero_iff.mpr (Real.exp_pos _)
+    · exact ENNReal.ofReal_ne_top
+    · exact hs'
+
 end HarmonicBalls
