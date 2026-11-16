@@ -9,6 +9,7 @@ import HarmonicBalls.Proofs.Sec6.StoppedPotentialIntegrability
 import HarmonicBalls.Proofs.Sec3.ConservationOfMassStep3
 import MarkovProcess.Trajectory.DynkinStopping
 import MarkovProcess.Trajectory.ExpectedExitTime
+import MarkovProcess.Trajectory.FeynmanKacFunctional
 import MarkovProcess.Killed.ExitTimeIdentification
 import MarkovProcess.Killed.GluingPotential
 
@@ -420,6 +421,65 @@ theorem lintegral_occupationMeasure {D : Set ℂ} (hD : IsOpen D) (x : ℂ)
     ← planarBrownianMotion_eq_continuousProcess]
   simp only [zero_mul, neg_zero, Real.exp_zero, ENNReal.ofReal_one, one_mul]
 
+/-- For a finite exit time, the nonnegative time integral along a continuous path
+is the extended-real image of its real stopped integral. -/
+theorem lintegral_before_exit_eq_ofReal_intervalIntegral (D : Set ℂ) (p : ContinuousPath ℂ) {g : ℂ → ℝ}
+    (hg : Continuous g) (hg0 : ∀ y, 0 ≤ g y)
+    (hfin : ContinuousPath.exitTime D p ≠ ⊤) :
+    (∫⁻ t in Set.Ioi (0 : ℝ),
+      {t : ℝ | ((Real.toNNReal t : ℝ≥0) : ℝ≥0∞) < ContinuousPath.exitTime D p}.indicator
+        (fun t => ENNReal.ofReal (g (p (Real.toNNReal t)))) t) =
+      ENNReal.ofReal (∫ t in (0 : ℝ)..((ContinuousPath.exitTime D p).toNNReal : ℝ),
+        g (p (Real.toNNReal t))) := by
+  let τ := ContinuousPath.exitTime D p
+  have hS : MeasurableSet {t : ℝ | ((Real.toNNReal t : ℝ≥0) : ℝ≥0∞) < τ} :=
+    measurableSet_lt (measurable_coe_nnreal_ennreal.comp measurable_real_toNNReal) measurable_const
+  rw [lintegral_indicator hS, Measure.restrict_restrict hS, ContinuousPath.survivalSet τ,
+    ite_eq_right hfin]
+  have hcont : Continuous (fun t : ℝ => g (p (Real.toNNReal t))) :=
+    hg.comp (p.continuous.comp continuous_real_toNNReal)
+  have ht : (0 : ℝ) ≤ (τ.toNNReal : ℝ) := NNReal.coe_nonneg _
+  have hi : IntegrableOn (fun t : ℝ => g (p (Real.toNNReal t))) (Ioc 0 (τ.toNNReal : ℝ)) :=
+    (intervalIntegrable_iff_integrableOn_Ioc_of_le ht).mp (hcont.intervalIntegrable _ _)
+  rw [intervalIntegral.integral_of_le ht,
+    ofReal_integral_eq_lintegral_ofReal hi (Eventually.of_forall fun _ => hg0 _)]
+  congr 1
+  rw [← ENNReal.coe_toNNReal_eq_toReal]
+  exact restrict_Ioo_eq_restrict_Ioc
+
+/-- The occupation measure integrates a nonnegative continuous observable as
+the expected extended-real image of its stopped path integral. -/
+theorem lintegral_occupationMeasure_eq_stopped_integral {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) (x : ℂ) {g : ℂ → ℝ} (hg : Continuous g)
+    (hg0 : ∀ y, 0 ≤ g y) :
+    ∫⁻ y, ENNReal.ofReal (g y) ∂occupationMeasure D hD x =
+      ∫⁻ p, ENNReal.ofReal (∫ t in (0 : ℝ)..((ContinuousPath.exitTime D p).toNNReal : ℝ),
+        g (p (Real.toNNReal t))) ∂(planarBrownianMotion x) := by
+  rw [lintegral_occupationMeasure hD x hg.measurable.ennreal_ofReal]
+  apply lintegral_congr_ae
+  filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x hDb] with p hfin
+  exact lintegral_before_exit_eq_ofReal_intervalIntegral D p hg hg0 hfin.ne
+
+/-- Integration of a nonnegative continuous observable against the occupation
+measure equals its expected stopped path integral. -/
+theorem integral_occupationMeasure_eq_stopped_integral {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) (x : ℂ) {g : ℂ → ℝ} (hg : Continuous g)
+    (hg0 : ∀ y, 0 ≤ g y) :
+    ∫ y, g y ∂occupationMeasure D hD x =
+      ∫ p, (∫ t in (0 : ℝ)..((ContinuousPath.exitTime D p).toNNReal : ℝ),
+        g (p (Real.toNNReal t))) ∂(planarBrownianMotion x) := by
+  have hm : Measurable (fun p : ContinuousPath ℂ =>
+      ∫ t in (0 : ℝ)..((ContinuousPath.exitTime D p).toNNReal : ℝ),
+        g (p (Real.toNNReal t))) := by
+    exact (SubMarkovKernelSemigroup.stronglyMeasurable_feynmanKacAdditiveFunctional_joint hg.measurable).measurable.comp
+      ((ContinuousPath.measurable_exitTime D hD).ennreal_toNNReal.prodMk measurable_id)
+  rw [integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall hg0)
+    hg.stronglyMeasurable.aestronglyMeasurable,
+    integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall fun p =>
+      intervalIntegral.integral_nonneg_of_forall (NNReal.coe_nonneg _) (fun _ => hg0 _))
+      hm.stronglyMeasurable.aestronglyMeasurable,
+    lintegral_occupationMeasure_eq_stopped_integral hD hDb x hg hg0]
+
 /-- The occupation measure assigns zero mass to the complement of the domain. -/
 theorem occupationMeasure_compl {D : Set ℂ} (hD : IsOpen D) (x : ℂ) :
     occupationMeasure D hD x Dᶜ = 0 := by
@@ -498,5 +558,16 @@ theorem integral_greenMeasure_eq_occupation {D : Set ℂ} (hD : IsSmoothBoundedO
         ∂(planarBrownianMotion x) := by
   rw [integral_greenMeasure (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) hD.1,
     integral_occupation_exitTime_eq_greenPotential hD hg hgc hgs hx]
+
+/-- The occupation and Green measures agree on nonnegative smooth tests
+supported in the domain. -/
+theorem integral_occupationMeasure_eq_integral_greenMeasure
+    {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {g : ℂ → ℝ}
+    (hg : ContDiff ℝ ∞ g) (hgc : HasCompactSupport g)
+    (hgs : Function.support g ⊆ D) (hg0 : ∀ y, 0 ≤ g y) {x : ℂ} (hx : x ∈ D) :
+    ∫ y, g y ∂occupationMeasure D (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) x =
+      ∫ y, g y ∂greenMeasure D x := by
+  rw [integral_occupationMeasure_eq_stopped_integral _ hD.1 x hg.continuous hg0,
+    integral_greenMeasure_eq_occupation hD hg hgc hgs hx]
 
 end HarmonicBalls.GreenOccupation
