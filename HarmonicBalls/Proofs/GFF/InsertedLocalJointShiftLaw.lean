@@ -1289,4 +1289,301 @@ theorem IsWholePlaneGFF.exists_local_singularMetric_compactShift_decoder_of_coor
     · exact ENNReal.ofReal_ne_top
     · exact hs'
 
+
+/-- Countable circles and endpoints admit a countable family of punctured
+coordinate pairs containing all pairs used in full-distance reconstruction. -/
+theorem exists_punctured_coordinate_set
+    {V : Set ℂ} {ε : ℝ} (hball : ball (0 : ℂ) ε ⊆ V)
+    (s : ℕ → ℝ) (hpos : ∀ n, 0 < s n) (hsε : ∀ n, s n < ε)
+    (C : ℕ → Set ℂ) (hC : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable)
+    (p : ℕ → ℂ × ℂ) (a : ℂ) (haV : a ∈ V) (ha0 : a ≠ 0) :
+    ∃ S : Set (ℂ × ℂ), S.Countable ∧ S.Nonempty ∧
+      (∀ q ∈ S, q.1 ∈ V ∧ q.1 ≠ 0) ∧
+      (∀ n k z, z ∈ C k → (p n).1 ≠ 0 → (z, (p n).1) ∈ S) ∧
+      (∀ n k z, z ∈ C k → (p n).2 ≠ 0 → (z, (p n).2) ∈ S) ∧
+      (∀ n, (p n).1 ∈ V → (p n).1 ≠ 0 → (p n).2 ≠ 0 → p n ∈ S) := by
+  let T : Set ℂ := {a} ∪ (⋃ n, C n) ∪ range (fun n => (p n).1) ∪ range (fun n => (p n).2)
+  have hT : T.Countable := by
+    exact (((countable_singleton a).union (countable_iUnion fun n => (hC n).2)).union
+      (countable_range _)).union (countable_range _)
+  let S := ((V \ {0}) ∩ T) ×ˢ T
+  have haT : a ∈ T := Or.inl (Or.inl (Or.inl (mem_singleton a)))
+  have hSa : (a, a) ∈ S := ⟨⟨⟨haV, by simpa using ha0⟩, haT⟩, haT⟩
+  have hcirc : ∀ k z, z ∈ C k → z ∈ V ∧ z ≠ 0 ∧ z ∈ T := by
+    intro k z hz
+    have hzs := (hC k).1 hz
+    have hzV : z ∈ V := hball (sphere_subset_ball (hsε k) hzs)
+    have hzn : ‖z‖ = s k := by simpa only [mem_sphere_zero_iff_norm] using hzs
+    have hz0 : z ≠ 0 := by
+      intro he
+      subst z
+      simp only [norm_zero] at hzn
+      linarith [hpos k]
+    refine ⟨hzV, hz0, ?_⟩
+    exact Or.inl (Or.inl (Or.inr (mem_iUnion.mpr ⟨k, hz⟩)))
+  have hxT : ∀ n, (p n).1 ∈ T := fun n => Or.inl (Or.inr ⟨n, rfl⟩)
+  have hyT : ∀ n, (p n).2 ∈ T := fun n => Or.inr ⟨n, rfl⟩
+  refine ⟨S, (hT.mono inter_subset_right).prod hT, ⟨(a, a), hSa⟩, ?_, ?_, ?_, ?_⟩
+  · intro q hq
+    exact ⟨hq.1.1.1, hq.1.1.2⟩
+  · intro n k z hz _
+    have hz' := hcirc k z hz
+    exact ⟨⟨⟨hz'.1, hz'.2.1⟩, hz'.2.2⟩, hxT n⟩
+  · intro n k z hz _
+    have hz' := hcirc k z hz
+    exact ⟨⟨⟨hz'.1, hz'.2.1⟩, hz'.2.2⟩, hyT n⟩
+  · intro n hn hn0 _
+    exact ⟨⟨⟨hn, hn0⟩, hxT n⟩, hyT n⟩
+
+/-- The normalized full internal distances at countably many endpoints admit
+a local decoder under each smooth compact shift. -/
+theorem IsWholePlaneGFF.exists_local_singularMetric_compactShift_decoder
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {U V : Set ℂ} (hV : IsOpen V) (hconn : IsConnected V) (h0 : (0 : ℂ) ∈ V)
+    (hVU : V ⊆ U) (ψ : ℂ → ℝ) (hψ : IsTestFunction U ψ)
+    (hψint : ∫ z, ψ z = 1) (p : ℕ → ℂ × ℂ)
+    (hp : ∀ n, (p n).1 ∈ V ∧ (p n).2 ∈ V)
+    {ε : ℝ} (hball : ball (0 : ℂ) ε ⊆ V)
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n)
+    (hsε : ∀ n, s n < ε) (C : ℕ → Set ℂ)
+    (hcircle : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧
+      sphere (0 : ℂ) (s n) ⊆ closure (C n))
+    (hξ : 0 ≤ ξ) :
+    ∃ F : (LocalZeroMeanTest U → ℝ) → ℕ → ℝ≥0∞, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α hC U ω) n =
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) V (p n).1 (p n).2) ∧
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        ∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α
+          (fun ω => addFunPairing (hC ω) g) U ω) n =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              V (p n).1 (p n).2 := by
+  have haV : ((s 0 : ℝ) : ℂ) ∈ V := by
+    apply hball
+    apply sphere_subset_ball (hsε 0)
+    rw [mem_sphere_zero_iff_norm, Complex.norm_real, Real.norm_of_nonneg (hpos 0).le]
+  have ha0 : ((s 0 : ℝ) : ℂ) ≠ 0 := by
+    exact_mod_cast (ne_of_gt (hpos 0))
+  obtain ⟨S, hS, hSne, hSV, hSx, hSy, hSp⟩ :=
+    exists_punctured_coordinate_set hball s hpos hsε C (fun n => ⟨(hcircle n).1, (hcircle n).2.1⟩)
+      p ((s 0 : ℝ) : ℂ) haV ha0
+  exact h.exists_local_singularMetric_compactShift_decoder_of_coordinates
+    𝔇 h𝔇 hD hmetric hV hconn h0 hVU ψ hψ hψint p hp hball s hs hpos hsε C hcircle
+    S hS hSne hSV hSx hSy (fun n hx hy => hSp n (hp n).1 hx hy) hξ
+
+/-- The local centered field, normalized measure and full internal distances
+on a connected domain containing the origin have equivalent joint laws under
+smooth compact shifts. -/
+theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_of_circles
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ W : Set ℂ, IsOpen W → W.Nonempty → 0 < μ ω W)
+    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ ball 0 ε)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction (ball 0 ε) ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V ∧ (p n).2 ∈ V)
+    (hconn : IsConnected V) (h0 : (0 : ℂ) ∈ V)
+    {δ : ℝ} (hball : ball (0 : ℂ) δ ⊆ V)
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n)
+    (hsδ : ∀ n, s n < δ) (C : ℕ → Set ℂ)
+    (hcircle : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧
+      sphere (0 : ℂ) (s n) ⊆ closure (C n)) (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo (0 : ℝ) ε,
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ∧
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) := by
+  obtain ⟨N, hN, hNb, hNs⟩ := h.exists_local_singularMetric_compactShift_decoder
+    𝔇 h𝔇 hD hmetric hV hconn h0 hVU ψ hψ hψint p hp hball s hs hpos hsδ C hcircle hξ
+  obtain ⟨R, hR, M, hM, _, hMeq⟩ := h.exists_shifted_normalized_measure_decoder hμ hfull hε
+  let F := fun v => (v, M v, N v)
+  have hF : Measurable F := measurable_id.prodMk (hM.prodMk hN)
+  have hzero : (fun ω => addFunPairing (hC ω) (fun _ => 0)) = hC := by
+    funext ω φ
+    simp [addFunPairing]
+  have hzeroTest : IsTestFunction univ (fun _ : ℂ => (0 : ℝ)) :=
+    ⟨contDiff_const, HasCompactSupport.zero, by simp⟩
+  have hbase := hMeq (fun _ => 0) hzeroTest
+  simp only [hzero, mul_zero, Real.exp_zero, ENNReal.ofReal_one] at hbase
+  have hwone (ω : Ω) : (μ ω).withDensity (fun _ => 1) = μ ω := withDensity_one
+  simp only [hwone] at hbase
+  refine ⟨R, hR, ?_⟩
+  intro g hg
+  let X := localModConstPairings α hC (ball 0 ε)
+  let Y := localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε)
+  have hX : Measurable X := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    change Measurable (fun ω => hC ω φ.1 - α * ∫ z, φ.1 z * Real.log ‖z‖)
+    exact (h.measurable_pairing φ.1 (φ.2.1.mono_set (subset_univ _))).sub_const _
+  have hY : Measurable Y := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    change Measurable (fun ω => (hC ω φ.1 + ∫ z, g z * φ.1 z) -
+      α * ∫ z, φ.1 z * Real.log ‖z‖)
+    exact ((h.measurable_pairing φ.1 (φ.2.1.mono_set (subset_univ _))).add_const _).sub_const _
+  have hac := h.singular_smooth_shift_modConst_pairing_laws hg α (ball 0 ε)
+  change P.map Y ≪ P.map X ∧ P.map X ≪ P.map Y at hac
+  have hf := hac.1.map hF
+  have hb := hac.2.map hF
+  rw [Measure.map_map hF hY, Measure.map_map hF hX] at hf
+  rw [Measure.map_map hF hX, Measure.map_map hF hY] at hb
+  have hbaseMap : P.map (F ∘ X) = P.map (fun ω =>
+      (X ω, normalizedRestriction (μ ω) (ball 0 R), fun n =>
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) V (p n).1 (p n).2)) := by
+    apply Measure.map_congr
+    filter_upwards [hbase, hNb] with ω hm hn
+    exact Prod.ext rfl (Prod.ext hm (funext hn))
+  have hshiftMap : P.map (F ∘ Y) = P.map (fun ω =>
+      (Y ω, normalizedRestriction ((μ ω).withDensity
+        (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R), fun n =>
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              V (p n).1 (p n).2)) := by
+    apply Measure.map_congr
+    filter_upwards [hMeq g hg, hNs g hg] with ω hm hn
+    exact Prod.ext rfl (Prod.ext hm (funext hn))
+  rw [hbaseMap, hshiftMap] at hf hb
+  exact ⟨hf, hb⟩
+
+/-- On a connected open domain containing the origin, the local centered
+field, normalized measure and countably many normalized full internal distances
+have equivalent joint laws under each smooth compact shift. -/
+theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_on_connected
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ W : Set ℂ, IsOpen W → W.Nonempty → 0 < μ ω W)
+    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ ball 0 ε)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction (ball 0 ε) ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V ∧ (p n).2 ∈ V)
+    (hconn : IsConnected V) (h0 : (0 : ℂ) ∈ V)
+    (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo (0 : ℝ) ε,
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ∧
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) := by
+  obtain ⟨δ, hδ, hball⟩ := Metric.isOpen_iff.mp hV 0 h0
+  have hs : Tendsto (fun n : ℕ => δ / ((n : ℝ) + 2)) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop (tendsto_atTop_add_const_right _ 2 tendsto_natCast_atTop_atTop)
+  exact h.exists_local_joint_smooth_shift_law_of_circles hμ hfull hε 𝔇 h𝔇 hD hmetric
+    hV hVU ψ hψ hψint p hp hconn h0 hball (fun n => δ / ((n : ℝ) + 2)) hs
+    (fun n => by positivity)
+    (fun n => div_lt_self hδ (by linarith [(Nat.cast_nonneg n : (0 : ℝ) ≤ n)]))
+    (S11m.decCircle δ) (fun n => S11m.decCircle_spec δ n) hξ
+
+/-- The connected-domain joint law for subcritical inserted LQG. -/
+theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_on_connected_of_subcritical
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ ball 0 ε)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction (ball 0 ε) ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V ∧ (p n).2 ∈ V)
+    (hconn : IsConnected V) (h0 : (0 : ℂ) ∈ V)
+    (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo (0 : ℝ) ε,
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ∧
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) := by
+  exact h.exists_local_joint_smooth_shift_law_on_connected hμ
+    (lqgMeasureFullSupportStmt_holds γ α hγ hγ2 hα Ω P hC hcirc μ h hμ)
+    hε 𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p hp hconn h0 hξ
+
 end HarmonicBalls
