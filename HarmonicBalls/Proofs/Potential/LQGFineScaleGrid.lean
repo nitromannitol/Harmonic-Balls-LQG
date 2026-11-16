@@ -1,5 +1,6 @@
 import LatticeProb.LQG.GMCDilatedGrid
 import LatticeProb.LQG.LQGBallMassRatioUniform
+import LatticeProb.Gauss.CircleAverageModulusUniform
 
 /-! # Summability for fine-scale grids
 
@@ -419,5 +420,42 @@ theorem exists_fine_scale_grid_rate {c : ℝ} (hc : 0 < c) :
     ← Real.rpow_mul (by norm_num)]
   congr 1
   ring
+
+/-- A common radial modulus holds for all affine fields centered in a fixed
+bounded disk, uniformly over dyadic bands and points of the unit cutoff disk. -/
+theorem ae_affine_circle_radial_modulus
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {a : ℝ} (ha : 0 < a) (R : ℝ) :
+    ∀ᵐ ω ∂P, ∀ᶠ j in atTop, ∀ n : ℕ, ∀ x : ℂ, ‖x‖ ≤ R + 1 →
+      ∀ w : ℂ, ‖w‖ ≤ 2 → ∀ s t : ℝ,
+        dyadicScale (n + j) / 2 ≤ dyadicScale j * s →
+        dyadicScale j * s ≤ dyadicScale (n + j) →
+        dyadicScale (n + j) / 2 ≤ dyadicScale j * t →
+        dyadicScale j * t ≤ dyadicScale (n + j) →
+        |dyadicScale j * s - dyadicScale j * t| <
+          dyadicScale (n + j) * dyadicScale (n + j) ^ a →
+        |affineRecentredCircle (hcirc ω) (dyadicScale j) x s w -
+          affineRecentredCircle (hcirc ω) (dyadicScale j) x t w| ≤ 1 := by
+  obtain ⟨β, hβ, hmod⟩ := hh.ae_eventually_abs_circle_sub_le ha (R + 3)
+  filter_upwards [hmod] with ω hω
+  obtain ⟨J, hJ⟩ := eventually_atTop.mp hω
+  refine eventually_atTop.mpr ⟨J, fun j hj n x hx w hw s t h1 h2 h3 h4 h5 => ?_⟩
+  have hd0 : 0 ≤ dyadicScale j := (show 0 < dyadicScale j from pow_pos (by norm_num) j).le
+  have hd1 : dyadicScale j ≤ 1 := by
+    unfold dyadicScale
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  have hnorm : ‖(dyadicScale j : ℂ) * w + x‖ ≤ R + 3 := by
+    have hm : ‖(dyadicScale j : ℂ) * w‖ ≤ 2 := by
+      rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hd0]
+      nlinarith [norm_nonneg w]
+    linarith [norm_add_le ((dyadicScale j : ℂ) * w) x]
+  have h := hJ (n + j) (by omega) _ hnorm _ _ h1 h2 h3 h4 h5
+  have hpow : dyadicScale (n + j) ^ β ≤ 1 :=
+    Real.rpow_le_one (show 0 < dyadicScale (n + j) from pow_pos (by norm_num) _).le
+      (by unfold dyadicScale; exact pow_le_one₀ (by norm_num) (by norm_num)) hβ.le
+  apply le_trans ?_ hpow
+  simpa only [affineRecentredCircle, sub_sub_sub_cancel_right] using h
 
 end HarmonicBalls
