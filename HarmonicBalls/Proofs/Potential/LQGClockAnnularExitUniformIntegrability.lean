@@ -1218,4 +1218,70 @@ theorem integrable_annular_exit_block_increment_field {Ω : Type*} [MeasurableSp
     rw [hz]
     exact integrable_zero _ _ _
 
+/-- The field-averaged annular increment up to a stopped integer horizon. -/
+noncomputable def annularExitHorizonIncrement {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (γ α δ ε : ℝ) (D : Set ℂ) (N : ℕ)
+    (b : ContinuousPath ℂ) : ℝ :=
+  ∫ ω, |∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+    {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+      (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+      ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+        (b t.toNNReal)| ∂P
+
+/-- The field-averaged stopped increment is bounded by its unit-block increments. -/
+theorem annular_exit_horizon_increment_le_sum_blocks {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε δ : ℝ}
+    (hε : 0 < ε) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    (γ α : ℝ) (D : Set ℂ) (N : ℕ) (b : ContinuousPath ℂ)
+    (hfin : ContinuousPath.exitTime D b ≠ ⊤) :
+    annularExitHorizonIncrement P hcirc γ α δ ε D N b ≤
+      ∑ k ∈ Finset.range N, annularExitBlockIncrement P hcirc γ α δ ε D k b := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let G : Ω → ℂ → ℝ := fun ω z =>
+    (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+    ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)
+  let F : Ω → ℝ := fun ω => ∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+    A.indicator (G ω) (b t.toNNReal)
+  let B : ℕ → Ω → ℝ := fun k ω => ∫ t in Ioc (k : ℝ)
+      (min ((k : ℝ) + 1) (ContinuousPath.exitTime D b).toReal), A.indicator (G ω) (b t.toNNReal)
+  have hB : ∀ k, Integrable (B k) P := by
+    intro k
+    exact integrable_annular_exit_block_increment_field hh hε hεhalf hεδ γ α D k b hfin
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hcont : ∀ᵐ ω ∂P, ∀ r, 0 < r → Continuous (hcirc ω r) := by
+    filter_upwards [hHae] with ω hω r hr
+    rw [← funext (hω r)]
+    exact hHc ω r hr
+  have hsum : F =ᵐ[P] fun ω => ∑ k ∈ Finset.range N, B k ω := by
+    filter_upwards [hcont, ae_recentered_inserted_circle_average hh α] with ω hcont hrec
+    have hc (r : ℝ) (hr : 0 < r) : Continuous (fun z =>
+        r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)) := by
+      have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) =
+          fun z => hcirc ω r z - hcirc ω 1 0 - α * Real.log (max r ‖z‖) := by
+        funext z
+        exact (hrec r z hr).symm
+      have hc' : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) := by
+        rw [heq]
+        exact ((hcont r hr).sub continuous_const).sub (continuous_const.mul
+          ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hr).ne')))
+      exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc'))
+    have hG : Continuous (G ω) := (hc (ε/2) (half_pos hε)).sub (hc ε hε)
+    have hint := intervalIntegrable_annular_density (G ω) hG δ b 0
+      (ContinuousPath.exitTime D b).toReal
+    exact intervalIntegral_stopped_eq_sum_blocks _ _ ENNReal.toReal_nonneg N hint
+  have hsumint : Integrable (fun ω => ∑ k ∈ Finset.range N, B k ω) P := by
+    exact integrable_finsetSum _ (fun k hk => hB k)
+  have hF : Integrable F P := hsumint.congr hsum.symm
+  have hsumabs : Integrable (fun ω => ∑ k ∈ Finset.range N, |B k ω|) P := by
+    exact integrable_finsetSum _ (fun k hk => (hB k).abs)
+  change (∫ ω, |F ω| ∂P) ≤ ∑ k ∈ Finset.range N, ∫ ω, |B k ω| ∂P
+  calc
+    _ ≤ ∫ ω, ∑ k ∈ Finset.range N, |B k ω| ∂P := by
+      apply integral_mono_ae hF.abs hsumabs
+      filter_upwards [hsum] with ω hω
+      rw [hω]
+      exact Finset.abs_sum_le_sum_abs _ _
+    _ = _ := integral_finsetSum _ (fun k hk => (hB k).abs)
+
 end HarmonicBalls
