@@ -126,13 +126,12 @@ theorem exists_uniform_planarBrownianMotion_exitTime_mean_le {D : Set ℂ} (hD :
   simpa [ENNReal.coe_nnreal_eq, Real.toNNReal_of_nonneg (show 0 ≤ 2 * M from mul_nonneg (by norm_num) hM0)] using
     ENNReal.ofReal_le_ofReal hi
 
-/-- A bounded open domain has a positive Brownian exit-time exponential moment,
-with a rate independent of the starting point. -/
-theorem exists_planarBrownianMotion_exitTime_exponential_moment {D : Set ℂ} (hD : IsOpen D)
+/-- The exponential moments of Brownian exit times are uniformly bounded over starting points. -/
+theorem exists_uniform_planarBrownianMotion_exitTime_exponential_moment {D : Set ℂ} (hD : IsOpen D)
     (hDb : Bornology.IsBounded D) :
-    ∃ lam : ℝ, 0 < lam ∧ ∀ x : ℂ,
+    ∃ lam : ℝ, 0 < lam ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧ ∀ x : ℂ,
       (∫⁻ b, ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
-        ∂planarBrownianMotion x) < ⊤ := by
+        ∂planarBrownianMotion x) ≤ C := by
   obtain ⟨M, hM⟩ := exists_uniform_planarBrownianMotion_exitTime_mean_le hD hDb
   let lam : ℝ := Real.log 2 / (4 * ((M : ℝ) + 1))
   have hl : 0 < lam := by dsimp [lam]; positivity
@@ -148,24 +147,38 @@ theorem exists_planarBrownianMotion_exitTime_exponential_moment {D : Set ℂ} (h
     rw [div_mul_eq_mul_div, div_lt_iff₀ hd]
     have hsmall : 2 * (M : ℝ) < 4 * ((M : ℝ) + 1) := by linarith
     nlinarith [mul_lt_mul_of_pos_left hsmall hlog]
-  refine ⟨lam, hl, ?_⟩
-  intro x
-  rw [planarBrownianMotion_eq_continuousProcess]
-  have hb := isConservative_planarHeatSemigroup.lintegral_exponentialStoppingWeight_exitTime_le_of_lintegral_le
-    _ isFellerKernelSemigroup_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup
-    D hD M (by intro y; simpa only [← planarBrownianMotion_eq_continuousProcess] using hM y)
-    lam hl.le hrate x
-  refine lt_of_le_of_lt hb ?_
-  apply ENNReal.mul_lt_top ENNReal.ofReal_lt_top
-  apply ENNReal.inv_lt_top.mpr
-  apply tsub_pos_of_lt
-  have he : ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))) < 2 := by
-    simpa using (ENNReal.ofReal_lt_ofReal_iff (by norm_num : (0:ℝ) < 2)).2 hrate
-  have : (2 : ℝ≥0∞)⁻¹ * ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))) < 1 := by
-    have hh := ENNReal.mul_lt_mul_left (show (2 : ℝ≥0∞)⁻¹ ≠ 0 by simp)
-      (show (2 : ℝ≥0∞)⁻¹ ≠ ⊤ by simp) he
-    rw [ENNReal.mul_inv_cancel (by norm_num) (by norm_num)] at hh
-    simpa only [mul_comm] using hh
-  exact this
+  let C : ℝ≥0∞ := ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))) *
+    (1 - 2⁻¹ * ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))))⁻¹
+  refine ⟨lam, hl, C, ?_, ?_⟩
+  · dsimp [C]
+    apply ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+    apply ENNReal.inv_lt_top.mpr
+    apply tsub_pos_of_lt
+    have he : ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))) < 2 := by
+      simpa using (ENNReal.ofReal_lt_ofReal_iff (by norm_num : (0:ℝ) < 2)).2 hrate
+    have : (2 : ℝ≥0∞)⁻¹ * ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))) < 1 := by
+      have hh := ENNReal.mul_lt_mul_left (show (2 : ℝ≥0∞)⁻¹ ≠ 0 by simp)
+        (show (2 : ℝ≥0∞)⁻¹ ≠ ⊤ by simp) he
+      rw [ENNReal.mul_inv_cancel (by norm_num) (by norm_num)] at hh
+      simpa only [mul_comm] using hh
+    exact this
+
+  · intro x
+    rw [planarBrownianMotion_eq_continuousProcess]
+    exact isConservative_planarHeatSemigroup.lintegral_exponentialStoppingWeight_exitTime_le_of_lintegral_le
+      _ isFellerKernelSemigroup_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup
+      D hD M (by intro y; simpa only [← planarBrownianMotion_eq_continuousProcess] using hM y)
+      lam hl.le hrate x
+
+/-- A bounded open domain has a positive Brownian exit-time exponential moment,
+with a rate independent of the starting point. -/
+theorem exists_planarBrownianMotion_exitTime_exponential_moment {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) :
+    ∃ lam : ℝ, 0 < lam ∧ ∀ x : ℂ,
+      (∫⁻ b, ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
+        ∂planarBrownianMotion x) < ⊤ := by
+  obtain ⟨lam, hlam, C, hC, hbound⟩ :=
+    exists_uniform_planarBrownianMotion_exitTime_exponential_moment hD hDb
+  exact ⟨lam, hlam, fun x => (hbound x).trans_lt hC⟩
 
 end HarmonicBalls
