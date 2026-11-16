@@ -994,4 +994,54 @@ theorem planarBrownianMotion_dyadic_occupation {q d : ℝ}
   obtain ⟨K, hK, hdy⟩ := planarBrownianMotion_dyadic_occupation_of_summable hq0 hq1
   exact hdy x N n d (dyadic_occupation_tail_summable N n q d K hK hp).ne
 
+
+/-- The unit-time range of a continuous path is bounded. -/
+theorem continuousPath_bounded_unit_time (b : ContinuousPath ℂ) :
+    ∃ N : ℕ, ∀ t : ℝ≥0, t ≤ 1 → ‖b t‖ ≤ N := by
+  have hc : IsCompact (b '' Icc (0 : ℝ≥0) 1) := isCompact_Icc.image b.continuous
+  obtain ⟨R, hR⟩ := hc.isBounded.exists_norm_le
+  obtain ⟨N, hN⟩ := exists_nat_gt R
+  refine ⟨N, ?_⟩
+  intro t ht
+  exact (hR (b t) ⟨t, ⟨zero_le, ht⟩, rfl⟩).trans hN.le
+
+/-- Almost surely, the dyadic occupation bound holds eventually at all centres. -/
+theorem planarBrownianMotion_dyadic_occupation_global {d : ℝ}
+    (hd0 : 0 < d) (hd2 : d < 2) (x : ℂ) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∀ᵐ b ∂(planarBrownianMotion x), ∀ᶠ k in Filter.atTop, ∀ z : ℂ,
+      ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} ≤ ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let q : ℝ := (d + 2) / 4
+  have hq0 : 0 < q := by dsimp [q]; linarith
+  have hq1 : q < 1 := by dsimp [q]; linarith
+  have hdq : d < 2 * q := by dsimp [q]; linarith
+  have hN : ∀ N : ℕ, ∀ᵐ b ∂(planarBrownianMotion x), ∀ᶠ k in Filter.atTop, ∀ z : ℂ, ‖z‖ ≤ N →
+      ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} ≤ ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d) :=
+    fun N => planarBrownianMotion_dyadic_occupation hq0 hq1 hdq x N
+  have hs : ∀ᵐ y ∂ν, y ≤ 1 := by
+    dsimp [ν]
+    apply (ae_map_iff continuous_real_toNNReal.measurable.aemeasurable
+      (measurableSet_le measurable_id measurable_const)).2
+    filter_upwards [ae_restrict_mem measurableSet_Icc] with y hy
+    exact Real.toNNReal_le_iff_le_coe.mpr (by simpa using hy.2)
+  filter_upwards [ae_all_iff.mpr hN] with b hb
+  obtain ⟨N, hN⟩ := continuousPath_bounded_unit_time b
+  filter_upwards [hb (N + 2)] with k hk z
+  by_cases hz : ‖z‖ ≤ (N + 2 : ℕ)
+  · exact hk z hz
+  · have hδ : (2 : ℝ)⁻¹ ^ k ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+    have hnil : ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} = 0 := by
+      apply measure_eq_zero_iff_ae_notMem.mpr
+      filter_upwards [hs] with t ht
+      have htri := norm_add_le (z - b t) (b t)
+      have hnorm : ‖z‖ ≤ ‖z - b t‖ + ‖b t‖ := by
+        simpa using htri
+      have heq : ‖z - b t‖ = ‖b t - z‖ := norm_sub_rev _ _
+      push_cast at hz
+      rw [heq] at hnorm
+      linarith [hN t ht]
+    rw [hnil]
+    exact zero_le
+
 end HarmonicBalls
