@@ -1,5 +1,7 @@
 import HarmonicBalls.FirstPass.S11.MetricBall
 import HarmonicBalls.Proposed.MetricProperness
+import HarmonicBalls.FirstPass.Phase2.MetricPropernessCrossing
+import HarmonicBalls.FirstPass.S11aa
 import HarmonicBalls.FirstPass.Phase2.WeylExponentOfDG20
 import HarmonicBalls.Proofs.GFF.LQGMetricUniquenessDerived
 import LatticeProb.Bonanno.LQGMetric.Papers.GM.S1.Eq115
@@ -72,5 +74,46 @@ theorem IsWholePlaneGFF.ae_distributionMetric_reconstructedGFF
     (fun X Y hXY F hF => ae_eq_comp_of_ae_eq_testPairing X Y hXY F hF)
     (fun _ _ => 0) hf hm
   simpa only [shiftedReconstructedGFF, continuousShift, show (⟨fun _ : ℂ => (0 : ℝ), continuous_const⟩ : C(ℂ, ℝ)) = 0 from rfl, LQGMetric.GM.ofCont_zero_eq, add_zero, addFunPairing_const_zero] using h
+
+/-- Closed balls of a whole-plane LQG metric are compact almost surely. -/
+theorem ae_isCompact_closedBall_wholePlane
+    {Ω : Type} [MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇) :
+    ∀ᵐ ω ∂P, ∀ z : ℂ, ∀ R : ℝ, IsCompact {w : ℂ | 𝔇 (hC ω) z w ≤ R} := by
+  let : MeasureTheory.IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hfar := ae_far_crossing_power hγ (isWeakLQGMetric_distributionMetric hγ hγ₂ h𝔇)
+    P (reconstructedGFF hC) hh.reconstructedGFF_normalized
+  have heq := hh.ae_distributionMetric_reconstructedGFF h𝔇
+  have hmetric := FirstPassS11aa.ae_isEuclideanLengthMetric_universe h𝔇 hh 0 continuous_zero
+  filter_upwards [hfar, heq, hmetric] with ω hfar heq hmetric
+  have hmetric' : IsEuclideanLengthMetric (𝔇 (hC ω)) := by
+    change IsEuclideanLengthMetric (𝔇 (addFunPairing (hC ω) (fun _ => 0))) at hmetric
+    rwa [addFunPairing_const_zero] at hmetric
+  apply hmetric'.isCompact_closedBall_of_far_crossing
+  intro N R
+  obtain ⟨ρ, hρ, hcross⟩ := hfar N R
+  refine ⟨ρ, hρ, ?_⟩
+  intro x y hx hy
+  rw [← heq x y]
+  exact hcross x y hx hy
+
+/-- Bounded compactness of the whole-plane LQG metric. -/
+theorem wholePlaneLQGMetricBoundedlyCompact
+    {Ω : Type*} [MeasurableSpace Ω] (P : MeasureTheory.Measure Ω) (γ ξ : ℝ)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) :
+    WholePlaneLQGMetricBoundedlyCompact P γ ξ hC hcirc := by
+  intro hh hγ hγ₂ 𝔇 h𝔇
+  obtain ⟨G0, hG0m, hG0, hG0c⟩ := FirstPassS11aa.exists_good_set hh.ae_continuousOn_circle
+  have hGFF' := FirstPassS11aa.isWholePlaneGFF_map_sample hh hG0m hG0 hG0c
+  have hproper := ae_isCompact_closedBall_wholePlane hGFF' hγ hγ₂ h𝔇
+  have h1 := MeasureTheory.ae_of_ae_map
+    (FirstPassS11aa.measurable_sample hG0m hh.measurable_pairing hh.measurable_circle hG0c).aemeasurable
+    (p := fun s : FirstPassS11aa.CircleSample => ∀ z : ℂ, ∀ R : ℝ,
+      IsCompact {w : ℂ | 𝔇 s.1.1 z w ≤ R}) hproper
+  filter_upwards [h1, hG0] with ω hω hωG
+  simpa only [FirstPassS11aa.sample_fst_eq hG0c hωG] using hω
 
 end HarmonicBalls
