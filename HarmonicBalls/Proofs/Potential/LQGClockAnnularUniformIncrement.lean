@@ -10,7 +10,7 @@ mesh oscillation of one clock.
 
 namespace HarmonicBalls
 
-open MeasureTheory Set
+open MeasureTheory Set MarkovProcess
 open scoped ENNReal BigOperators
 
 /-- The expected uniform difference of two monotone clocks is bounded by the sum of
@@ -123,5 +123,39 @@ theorem lintegral_iSup_le_mesh_rpow {Ω : Type*} [MeasurableSpace Ω]
       congr 1
       congr 1
       field_simp
+
+/-- An annular clock cell is jointly measurable in the field and Brownian path. -/
+theorem measurable_annular_clock_cell {Ω : Type*} [MeasurableSpace Ω]
+    (H : Ω → ℝ → ℂ → ℝ) {ε : ℝ} (hε : 0 < ε) (γ α δ a b : ℝ)
+    (hH : ∀ r : ℝ, 0 < r → Measurable (fun p : Ω × ℂ => H p.1 r p.2)) :
+    Measurable (fun p : Ω × ContinuousPath ℂ =>
+      ∫⁻ s in Ioc a b, ENNReal.ofReal
+        ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ * (H p.1 ε z - H p.1 1 0 -
+            α * Real.log (max ε ‖z‖)))) (p.2 s.toNNReal))) := by
+  have hev : Measurable fun p : (Ω × ContinuousPath ℂ) × ℝ => p.1.2 p.2.toNNReal :=
+    (continuous_eval.comp (continuous_fst.prodMk (continuous_real_toNNReal.comp continuous_snd))).measurable.comp
+      (measurable_fst.snd.prodMk measurable_snd)
+  have h1 : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => H p.1.1 1 0) :=
+    (hH 1 zero_lt_one).comp (measurable_fst.fst.prodMk measurable_const)
+  have he : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => H p.1.1 ε (p.1.2 p.2.toNNReal)) :=
+    (hH ε hε).comp (measurable_fst.fst.prodMk hev)
+  have hA : MeasurableSet {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2} :=
+    (measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
+  have hf : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ =>
+      ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ * (H p.1.1 ε z - H p.1.1 1 0 -
+          α * Real.log (max ε ‖z‖)))) (p.1.2 p.2.toNNReal))) := by
+    apply ENNReal.measurable_ofReal.comp
+    have hm : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ * (H p.1.1 ε (p.1.2 p.2.toNNReal) -
+          H p.1.1 1 0 - α * Real.log (max ε ‖p.1.2 p.2.toNNReal‖)))) :=
+      measurable_const.mul (measurable_const.mul ((he.sub h1).sub
+        (measurable_const.mul ((measurable_const.max hev.norm).log)))).exp
+    convert hm.indicator (hev hA) using 1
+    ext p
+    rfl
+  exact hf.lintegral_prod_right'
 
 end HarmonicBalls
