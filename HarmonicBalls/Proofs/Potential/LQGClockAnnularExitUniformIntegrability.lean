@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularUniformIntegrability
 import HarmonicBalls.Proofs.Potential.BrownianExpectedExitGreen
+import MarkovProcess.Trajectory.ExitTimeExponentialMoment
 
 /-! # Annular clock integrability at Brownian exit
 
@@ -7,8 +8,8 @@ Continuous densities restricted to a compact annulus have integrable occupation
 up to the exit time of a bounded open domain.
 -/
 
-open MeasureTheory ProbabilityTheory MarkovProcess Filter Set
-open scoped NNReal ENNReal Topology
+open MeasureTheory ProbabilityTheory MarkovProcess Filter Set HarmonicBalls.Section6
+open scoped NNReal ENNReal Topology ZeroAtInfty
 
 namespace HarmonicBalls
 
@@ -94,5 +95,77 @@ theorem ae_integrable_annular_clock_exit
         (fun _ => (lt_max_of_lt_left hr).ne')))
   exact integrable_annular_clock_exit_of_continuous hD hDb x _
     (continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc))) δ
+
+/-- The expected Brownian exit time is uniformly bounded over the starting point. -/
+theorem exists_uniform_planarBrownianMotion_exitTime_mean_le {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) :
+    ∃ M : ℝ≥0, ∀ x : ℂ,
+      (∫⁻ b, ContinuousPath.exitTime D b ∂planarBrownianMotion x) ≤ (M : ℝ≥0∞) := by
+  obtain ⟨g, hg, hgc, hΔ⟩ := GreenOccupation.exists_contDiff_hasCompactSupport_laplacian_eq_neg_two hDb
+  obtain ⟨f, hfg, hgen⟩ := exists_planarBrownian_generator_eq_half_laplacian g hg hgc
+  obtain ⟨M, hM⟩ := hgc.exists_bound_of_continuous hg.continuous
+  have hM0 : 0 ≤ M := (norm_nonneg (g 0)).trans (hM 0)
+  have hLf : ∀ y ∈ D,
+      (isFellerKernelSemigroup_planarHeatSemigroup.c0Semigroup.generator f) y ≤ -1 := by
+    intro y hy
+    rw [hgen y, hΔ y hy]
+    norm_num
+  have hm : ∀ y, -M ≤ (f : C₀(ℂ, ℝ)) y := by
+    intro y
+    rw [hfg y]
+    exact (abs_le.mp (by simpa only [Real.norm_eq_abs] using hM y)).1
+  refine ⟨Real.toNNReal (2 * M), ?_⟩
+  intro x
+  rw [planarBrownianMotion_eq_continuousProcess]
+  refine le_trans (isFellerKernelSemigroup_planarHeatSemigroup.lintegral_exitTime_le
+    isConservative_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup f D hD hLf hm x) ?_
+  have hi : (f : C₀(ℂ, ℝ)) x - -M ≤ 2 * M := by
+    have hx := (abs_le.mp (by simpa only [Real.norm_eq_abs] using hM x)).2
+    rw [hfg x]
+    linarith
+  simpa [ENNReal.coe_nnreal_eq, Real.toNNReal_of_nonneg (show 0 ≤ 2 * M from mul_nonneg (by norm_num) hM0)] using
+    ENNReal.ofReal_le_ofReal hi
+
+/-- A bounded open domain has a positive Brownian exit-time exponential moment,
+with a rate independent of the starting point. -/
+theorem exists_planarBrownianMotion_exitTime_exponential_moment {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) :
+    ∃ lam : ℝ, 0 < lam ∧ ∀ x : ℂ,
+      (∫⁻ b, ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
+        ∂planarBrownianMotion x) < ⊤ := by
+  obtain ⟨M, hM⟩ := exists_uniform_planarBrownianMotion_exitTime_mean_le hD hDb
+  let lam : ℝ := Real.log 2 / (4 * ((M : ℝ) + 1))
+  have hl : 0 < lam := by dsimp [lam]; positivity
+  have hrate : Real.exp (lam * (2 * (M : ℝ))) < 2 := by
+    calc
+      Real.exp (lam * (2 * (M : ℝ))) < Real.exp (Real.log 2) := ?_
+      _ = 2 := Real.exp_log (by norm_num)
+    apply Real.exp_lt_exp.mpr
+    dsimp [lam]
+    have hM0 : 0 ≤ (M : ℝ) := M.coe_nonneg
+    have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
+    have hd : 0 < 4 * ((M : ℝ) + 1) := by positivity
+    rw [div_mul_eq_mul_div, div_lt_iff₀ hd]
+    have hsmall : 2 * (M : ℝ) < 4 * ((M : ℝ) + 1) := by linarith
+    nlinarith [mul_lt_mul_of_pos_left hsmall hlog]
+  refine ⟨lam, hl, ?_⟩
+  intro x
+  rw [planarBrownianMotion_eq_continuousProcess]
+  have hb := isConservative_planarHeatSemigroup.lintegral_exponentialStoppingWeight_exitTime_le_of_lintegral_le
+    _ isFellerKernelSemigroup_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup
+    D hD M (by intro y; simpa only [← planarBrownianMotion_eq_continuousProcess] using hM y)
+    lam hl.le hrate x
+  refine lt_of_le_of_lt hb ?_
+  apply ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+  apply ENNReal.inv_lt_top.mpr
+  apply tsub_pos_of_lt
+  have he : ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))) < 2 := by
+    simpa using (ENNReal.ofReal_lt_ofReal_iff (by norm_num : (0:ℝ) < 2)).2 hrate
+  have : (2 : ℝ≥0∞)⁻¹ * ENNReal.ofReal (Real.exp (lam * (2 * (M : ℝ)))) < 1 := by
+    have hh := ENNReal.mul_lt_mul_left (show (2 : ℝ≥0∞)⁻¹ ≠ 0 by simp)
+      (show (2 : ℝ≥0∞)⁻¹ ≠ ⊤ by simp) he
+    rw [ENNReal.mul_inv_cancel (by norm_num) (by norm_num)] at hh
+    simpa only [mul_comm] using hh
+  exact this
 
 end HarmonicBalls
