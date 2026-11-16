@@ -1290,7 +1290,7 @@ theorem IsWholePlaneGFF.exists_local_singularMetric_compactShift_decoder_of_coor
     · exact hs'
 
 
-/-- Countable circles and endpoints admit a countable family of punctured
+/-- Countable circles and endpoints have a countable family of punctured
 coordinate pairs containing all pairs used in full-distance reconstruction. -/
 theorem exists_punctured_coordinate_set
     {V : Set ℂ} {ε : ℝ} (hball : ball (0 : ℂ) ε ⊆ V)
@@ -1335,7 +1335,7 @@ theorem exists_punctured_coordinate_set
   · intro n hn hn0 _
     exact ⟨⟨⟨hn, hn0⟩, hxT n⟩, hyT n⟩
 
-/-- The normalized full internal distances at countably many endpoints admit
+/-- The normalized full internal distances at countably many endpoints have
 a local decoder under each smooth compact shift. -/
 theorem IsWholePlaneGFF.exists_local_singularMetric_compactShift_decoder
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
@@ -1584,6 +1584,53 @@ theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_on_connected_of_subc
                V (p n).1 (p n).2)) := by
   exact h.exists_local_joint_smooth_shift_law_on_connected hμ
     (lqgMeasureFullSupportStmt_holds γ α hγ hγ2 hα Ω P hC hcirc μ h hμ)
+    hε 𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p hp hconn h0 hξ
+
+/-- The connected-domain joint shift law for an inserted metric of the
+same field and its associated measure. -/
+theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_on_connected_of_field
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hε : 0 < ε) (hDfield : IsLQGMetricOfField P γ ξ α hC D)
+    (haxioms : LQGMetricFieldAxioms P γ ξ α hC hcirc)
+    {V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ ball 0 ε)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction (ball 0 ε) ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V ∧ (p n).2 ∈ V)
+    (hconn : IsConnected V) (h0 : (0 : ℂ) ∈ V)
+    (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo (0 : ℝ) ε,
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ∧
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) := by
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms P γ ξ α hC hcirc D
+    haxioms h hγ hγ2 hα hDfield
+  obtain ⟨𝔇, h𝔇, hD⟩ := hDfield
+  exact h.exists_local_joint_smooth_shift_law_on_connected_of_subcritical hμ hγ hγ2 hα
     hε 𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p hp hconn h0 hξ
 
 end HarmonicBalls
