@@ -175,6 +175,70 @@ theorem HarmonicBalls.IsWholePlaneGFF.exists_joint_smooth_shift_law_for_pinch_co
     (fun n => (hv n).1) (fun n => (hv n).2.1) ψ hψ hψint pair (fun n => (hv n).2.2) hξ
   exact ⟨domain, pair, R, hR, hv, hm, hd, hlaw⟩
 
+/-- The actual local field, normalized measure, and the metric coordinates of all three local events have equivalent
+joint laws after each smooth compact perturbation; both observations are almost everywhere measurable. -/
+theorem HarmonicBalls.IsWholePlaneGFF.exists_joint_smooth_shift_law_and_aemeasurable_for_pinch_coordinates
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hDfield : IsLQGMetricOfField P γ ξ α hC D)
+    (haxioms : LQGMetricFieldAxioms P γ ξ α hC hcirc)
+    {U V W T Q' Q : Set ℂ} {δ : ℝ} (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ)
+    (I : S11am.PinchCountSets V W T Q' Q δ)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ z, ψ z = 1) (hξ : 0 ≤ ξ) :
+    ∃ (domain : ℕ → Set ℂ) (pair : ℕ → ℂ × ℂ) (R : ℝ),
+      R ∈ Ioo (6 : ℝ) 7 ∧
+      (∀ n, IsOpen (domain n) ∧ ((0 : ℂ) ∈ domain n → IsConnected (domain n)) ∧
+        (pair n).1 ∈ domain n ∧ (pair n).2 ∈ domain n) ∧
+      (∀ O x y, Measurable (coordinateReadout domain pair (O, (x, y)))) ∧
+      (∀ (d : ℂ → ℂ → ℝ) (b : ℝ), S11am.DecodesOnSets I
+        (fun O x y a => coordinateReadout domain pair (O, (x, y)) a) d b
+        (fun n => ENNReal.ofReal b * internalMetric d (domain n) (pair n).1 (pair n).2)) ∧
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 7) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               (domain n) (pair n).1 (pair n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 7) ω,
+           normalizedRestriction (μ ω) (ball 0 R), fun n =>
+             ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+               internalMetric (D ω) (domain n) (pair n).1 (pair n).2)) ∧
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 7) ω,
+           normalizedRestriction (μ ω) (ball 0 R), fun n =>
+             ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+               internalMetric (D ω) (domain n) (pair n).1 (pair n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 7) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               (domain n) (pair n).1 (pair n).2)) ∧
+        AEMeasurable (fun ω =>
+          (localModConstPairings α hC (ball 0 7) ω,
+           normalizedRestriction (μ ω) (ball 0 R), fun n =>
+             ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+               internalMetric (D ω) (domain n) (pair n).1 (pair n).2)) P ∧
+        AEMeasurable (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 7) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R), fun n =>
+             ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+               internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+                 (domain n) (pair n).1 (pair n).2)) P := by
+  obtain ⟨domain, pair, hv, hm, hd⟩ := exists_pinch_countable_metric_coordinates hgeo I
+  obtain ⟨R, hR, hlaw⟩ := h.exists_joint_smooth_shift_law_and_aemeasurable_on_domains_between_of_field hμ hγ hγ2 hα
+    (a := 6) (ε := 7) (by norm_num) (by norm_num) hDfield haxioms domain
+    (fun n => (hv n).1) (fun n => (hv n).2.1) ψ hψ hψint pair (fun n => (hv n).2.2) hξ
+  exact ⟨domain, pair, R, hR, hv, hm, hd, hlaw⟩
+
 /-- The local pinch rule evaluated on a normalized measure and metric coordinates. -/
 noncomputable def pinchCoordinateEvent {U V W T Q' Q : Set ℂ} {δ : ℝ}
     (I : S11am.PinchCountSets V W T Q' Q δ) (domain : ℕ → Set ℂ) (pair : ℕ → ℂ × ℂ)
