@@ -33,6 +33,28 @@ def Step8EventCalibrationWithCertificate : Prop :=
           ∀ᵐ ω ∂P, (localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E ↔
             CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)
 
+/-- Calibration with a common physical certificate at every admissible insertion. -/
+def Step8EventCalibrationWithAllCertificates : Prop :=
+    ∀ (U V W T Q' Q : Set ℂ) (δ M γ : ℝ), IsBufferedPinchGeometry U V W T Q' Q δ →
+      0 < γ → γ < 2 → 0 < M →
+      (∃ E : Set Step8Code, PinchEventGammaCanonicalStmt.{0} U T Q' Q γ M E) →
+      ∃ E F : Set Step8Code, PinchEventGammaCanonicalStmt.{0} U T Q' Q γ M E ∧
+        EventCalibration.{0} γ E F ∧ InsertionZeroUnitStmt.{0} γ F U V W T Q' Q δ M ∧
+        (∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+          (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+          IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ →
+          IsLQGMetricOfField P γ (lqgXi γ) γ hC D →
+          ∀ᵐ ω ∂P, (localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E ↔
+            CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)) ∧
+        ∀ α : ℝ, α < lqgQ γ →
+          ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+            (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+            IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ →
+            IsLQGMetricOfField P γ (lqgXi γ) α hC D →
+            0 < P {ω | localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E} ∧
+            ∀ᵐ ω ∂P, (localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E ↔
+              CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)
+
 private theorem step8EventCalibrationWithCertificate
     (hAx : LQGMetricFieldAxiomsUnivFrozen.{0})
     (hLen : LQGMetricLengthUnivFrozen.{0})
@@ -68,14 +90,45 @@ private theorem step8EventCalibrationWithCertificate
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ α hC hcirc)
     (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0})
     (hExists : WholePlaneGFFExistsFrozen.{0}) :
-    Step8EventCalibrationWithCertificate := by
+    Step8EventCalibrationWithAllCertificates := by
   intro U V W T Q' Q δ M γ hgeo hγ0 hγ2 hM _
   have hξ : 0 < lqgXi γ := div_pos hγ0 (HarmonicBalls.lqgGraphDimension_pos γ)
   have hαQ : γ < lqgQ γ := lt_lqgQ_of_mem_Ioo hγ0 hγ2
   have hΩ : insert (0 : ℂ) (sphere (0 : ℂ) 5) ⊆ pinchOmegaGeom W Q δ :=
     FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom hgeo
-  obtain ⟨E, hPG, hEq⟩ := pinchLocalCertificate_canonical_of_inputs hAx hLen hN2 hBase hμW hLoc hNonat hFull hgrowth hWeylAe
-    hmass hCMAbs hCMRew hCompW hDsm hMf hDiam hMk hS U V W T Q' Q δ hgeo hΩ γ M hγ0 hγ2 hM
+  obtain ⟨E, hEm, hSeed⟩ := S11i.Step8Calibration.pinchLocalCertificate_seed_of_inputs
+    hAx hLen hN2 hBase hμW hLoc hNonat hFull hgrowth hWeylAe hmass hCMAbs hCMRew hCompW
+    hDsm hMf hDiam hMk hS U V W T Q' Q δ hgeo hΩ γ (lqgXi γ) hγ0 hγ2 hξ M hM
+  have hEq := hSeed γ hαQ
+  have hPG : PinchEventGammaCanonicalStmt.{0} U T Q' Q γ M E := by
+    unfold PinchEventGammaCanonicalStmt PinchEventGammaStmt
+    refine ⟨hEm, ?_⟩
+    intro Ω _ P hC hcirc μ D hgff hμ hD
+    obtain ⟨hSpos, hiff⟩ := hEq Ω P hC hcirc μ D hgff hμ hD
+    refine ⟨localModConstField_measurable γ hC (ball (0 : ℂ) 7) hEm, hSpos, ?_⟩
+    have hgood : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω) ∧ ∀ x y, 0 ≤ D ω x y := by
+      obtain ⟨𝔇, h𝔇, hDω⟩ := hD
+      filter_upwards [((hAx Ω P γ (lqgXi γ) γ hC hcirc) hgff hγ0 hγ2 hαQ 𝔇 h𝔇).1, hDω] with ω hω hDωω
+      have hD_eq : (fun x y => (weylScaling (𝔇 (hC ω)) (lqgXi γ) (fun z => -γ * Real.log ‖z‖) x y).toReal) = D ω := by
+        funext x y
+        rw [← (hDωω x y).2, ENNReal.toReal_ofReal (hDωω x y).1]
+      refine ⟨?_, fun x y => (hDωω x y).1⟩
+      rw [← hD_eq]
+      exact hω.2
+    filter_upwards [hiff, hgood] with ω hω hgoodω hmem
+    obtain ⟨h1, h2, h3⟩ := (S11i.Step8Calibration.certificateEvent_iff_pinchLocalRule
+      (μ ω) (D ω) U V W T Q' Q δ M).mp (hω.mp hmem)
+    exact pinchPointEvent_of_auxiliary_events (hgeo.toPinchPointProofConfiguration hgeo.U_nonempty)
+      hgoodω.1 hgoodω.2 (μ ω) M (pinchFirstEventLocal_subset (D ω) hgoodω.2 W T Q' Q δ h1)
+      (pinchSecondEventLocal_subset (μ ω) (D ω) U V δ M h2)
+      (pinchThirdEventLocal_subset (D ω) V W δ h3)
+  have hEq' : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+      (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+      IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ →
+      IsLQGMetricOfField P γ (lqgXi γ) γ hC D →
+      ∀ᵐ ω ∂P, (localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E ↔
+        CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0) :=
+    fun Ω _ P hC hcirc μ D hgff hμ hD => (hEq Ω P hC hcirc μ D hgff hμ hD).2
   obtain ⟨D⟩ := canonDecoderData_of_frozen (ξ := lqgXi γ) (α₀ := γ) hCanonM hγ0 hγ2 hαQ
   have hEm : MeasurableSet E := by
     unfold PinchEventGammaCanonicalStmt PinchEventGammaStmt at hPG
@@ -97,8 +150,8 @@ private theorem step8EventCalibrationWithCertificate
       (hcirc : Ω → ℝ → ℂ → ℝ), LQGMeasureExistence P γ γ hC hcirc :=
     fun Ω _ P hC hcirc => hνex Ω P γ γ hC hcirc
   have hHref := hHref_of_global hγ0 hγ2 hgeo (hK γ) hR hRootFr hPos hCMAbs hBirk hProf hLen hAx hRootFr hUax hXi hWCont
-    D hEm hνexU hEq hCCU (fun Ω _ P hC hcirc μ => hA10 Ω P γ hC hcirc μ)
-  refine ⟨E, E, hPG, (fun q hq => hq), ?_, hEq⟩
+    D hEm hνexU hEq' hCCU (fun Ω _ P hC hcirc μ => hA10 Ω P γ hC hcirc μ)
+  refine ⟨E, E, hPG, (fun q hq => hq), ?_, hEq', hSeed⟩
   exact insertionZeroUnit_of_href hγ0 hγ2 hgeo (hK γ) hR hRootFr hPos hNon
     (fun Ω _ P hC hcirc μ => hA10 Ω P γ hC hcirc μ) hHref
 
@@ -107,7 +160,7 @@ private theorem step8EventCalibrationWithCertificate_zero_of_decoders
     (hN2 : ∀ γ ξ : ℝ, 0 < γ → γ < 2 → 0 < ξ → ∀ c₁ c₂ : ℂ, ∀ r₁ r₂ : ℝ,
       LocalMetricReplacementStmt.{0} γ ξ c₁ c₂ r₁ r₂)
     (hCanonM : LQGCanonicalDecodersMeasurableExistStmt.{0}) :
-    Step8EventCalibrationWithCertificate := by
+    Step8EventCalibrationWithAllCertificates := by
   have hS : BundleParts.PinchSecondAnnulusStep.{0} :=
     HarmonicBalls.PinchSecondAnnulusS11t.pinchSecondAnnulusStep_of_N2_inputs lqgMassInnerMeasurable_derived'
       greenPotentialHolderStmt_holds
@@ -162,6 +215,47 @@ theorem step8_uniform_insertion_canonical_zero
       localLQGMetricNormalizedMeasurableFixedMetric_derived lqgMetricFieldAxiomsUnivFrozen_derived
       (allModelsAt_zero_scale_zero_of_unit_univ hU (hcal q hq))) k
 
+/-- One local certificate has positive probability at every insertion and the same rooted frequencies. -/
+theorem step8_uniform_source_certificate_canonical_zero
+    (U V W T Q' Q : Set ℂ) (δ : ℝ) (hgeom : IsBufferedPinchGeometry U V W T Q' Q δ)
+    (γ M : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hM : 0 < M) :
+    ∃ E : Set Step8Code, ∃ q : ℝ,
+      PinchEventGammaCanonicalStmt.{0} U T Q' Q γ M E ∧ CommonProb.{0} γ E q ∧
+      (∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ →
+        IsLQGMetricOfField P γ (lqgXi γ) γ hC D →
+        ∀ᵐ ω ∂P, (localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E ↔
+          CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)) ∧
+      (∀ α : ℝ, α < lqgQ γ →
+        ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+          (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+          IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ →
+          IsLQGMetricOfField P γ (lqgXi γ) α hC D →
+          0 < P {ω | localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E} ∧
+          ∀ᵐ ω ∂P, (localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E ↔
+            CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)) ∧
+      ∀ α : ℝ, α < lqgQ γ → ∀ k : ℕ,
+        AllModelsAt.{0} γ (lqgXi γ) α q U V W T Q' Q δ M k := by
+  have hN2 := localMetricReplacement_zero_derived
+  have hCanonM := lqgCanonicalDecodersMeasurableExist_of_xi_derived xi_eq_xiGamma_derived
+  have hPE := step8PinchEventCanonical_zero_of_decoders hN2 hCanonM
+  have hCal := step8EventCalibrationWithCertificate_zero_of_decoders hN2 hCanonM
+  obtain ⟨E, F, hPG, hcal, hU, hEq, hSeed⟩ :=
+    hCal U V W T Q' Q δ M γ hgeom hγ0 hγ2 hM (hPE U V W T Q' Q δ hgeom γ M hγ0 hγ2 hM)
+  obtain ⟨q, hq⟩ := exists_localModConstField_prob γ hPG.1
+  refine ⟨E, q, hPG, hq, hEq, hSeed, ?_⟩
+  intro α hα k
+  exact allModelsAt_all_scales_of_scale_zero_univ hγ0 hγ2 hα coordChangeAlpha0Stmt_holds
+    (FirstPassS11iInsertionTransfer.allModelsAt_insertion_of_zero_k0_of_normalizedMetric_univ hgeom hγ0 hγ2 hα
+      S11aj.cameronMartinGFFReweighting_derived
+      (fun Ω _ P hC hcirc => lqgMeasureExistence_forall_zero γ Ω P hC hcirc)
+      (fun Ω _ P hC hcirc => lqgMeasureNonatomic_holds Ω P γ α hC hcirc)
+      (fun c₁ c₂ r₁ r₂ => LocalDecoderCommon.localMeasureKernelStmt_derived γ c₁ c₂ r₁ r₂)
+      localLQGMetricNormalizedMeasurableFixedMetric_derived lqgMetricFieldAxiomsUnivFrozen_derived
+      (allModelsAt_zero_scale_zero_of_unit_univ hU (hcal q hq))) k
+
+
 /-- The uniform canonical event is the physical scale-one certificate. -/
 theorem step8_uniform_insertion_certificate_canonical_zero
     (U V W T Q' Q : Set ℂ) (δ : ℝ) (hgeom : IsBufferedPinchGeometry U V W T Q' Q δ)
@@ -176,24 +270,9 @@ theorem step8_uniform_insertion_certificate_canonical_zero
           CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)) ∧
       ∀ α : ℝ, α < lqgQ γ → ∀ k : ℕ,
         AllModelsAt.{0} γ (lqgXi γ) α q U V W T Q' Q δ M k := by
-  have hN2 := localMetricReplacement_zero_derived
-  have hCanonM := lqgCanonicalDecodersMeasurableExist_of_xi_derived xi_eq_xiGamma_derived
-  have hPE := step8PinchEventCanonical_zero_of_decoders hN2 hCanonM
-  have hCal := step8EventCalibrationWithCertificate_zero_of_decoders hN2 hCanonM
-  obtain ⟨E, F, hPG, hcal, hU, hEq⟩ :=
-    hCal U V W T Q' Q δ M γ hgeom hγ0 hγ2 hM (hPE U V W T Q' Q δ hgeom γ M hγ0 hγ2 hM)
-  obtain ⟨q, hq⟩ := exists_localModConstField_prob γ hPG.1
-  refine ⟨E, q, hPG, hq, hEq, ?_⟩
-  intro α hα k
-  exact allModelsAt_all_scales_of_scale_zero_univ hγ0 hγ2 hα coordChangeAlpha0Stmt_holds
-    (FirstPassS11iInsertionTransfer.allModelsAt_insertion_of_zero_k0_of_normalizedMetric_univ hgeom hγ0 hγ2 hα
-      S11aj.cameronMartinGFFReweighting_derived
-      (fun Ω _ P hC hcirc => lqgMeasureExistence_forall_zero γ Ω P hC hcirc)
-      (fun Ω _ P hC hcirc => lqgMeasureNonatomic_holds Ω P γ α hC hcirc)
-      (fun c₁ c₂ r₁ r₂ => LocalDecoderCommon.localMeasureKernelStmt_derived γ c₁ c₂ r₁ r₂)
-      localLQGMetricNormalizedMeasurableFixedMetric_derived lqgMetricFieldAxiomsUnivFrozen_derived
-      (allModelsAt_zero_scale_zero_of_unit_univ hU (hcal q hq))) k
-
+  obtain ⟨E, q, hPG, hq, hEq, _, hall⟩ :=
+    step8_uniform_source_certificate_canonical_zero U V W T Q' Q δ hgeom γ M hγ0 hγ2 hM
+  exact ⟨E, q, hPG, hq, hEq, hall⟩
 
 /-- The same calibrated event witnesses the Step 8 identity for all admissible insertions. -/
 theorem step8_uniform_identity_canonical_zero
@@ -293,8 +372,8 @@ private theorem commonProb_pos_of_pinch {U T Q' Q : Set ℂ} {γ M q : ℝ} {E :
   rw [← hq Ω P hC hcirc hG]
   exact ENNReal.toReal_pos hpos.ne' (measure_ne_top P _)
 
-/-- The common event is the physical scale-one certificate and gives all insertion frequencies. -/
-theorem step8_uniform_insertion_certificate
+/-- A single local certificate has positive probability at every insertion and gives rooted frequencies. -/
+theorem step8_uniform_source_certificate
     (U V W T Q' Q : Set ℂ) (δ : ℝ) (hgeom : IsBufferedPinchGeometry U V W T Q' Q δ)
     (γ ξ M : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hM : 0 < M) :
     ∃ E : Set Step8Code, ∃ q : ℝ,
@@ -310,11 +389,19 @@ theorem step8_uniform_insertion_certificate
         IsLQGMetricOfField P γ ξ γ hC D →
         ∀ᵐ ω ∂P, (localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E ↔
           CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)) ∧
+      (∀ α : ℝ, α < lqgQ γ →
+        ∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+          (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+          IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ →
+          IsLQGMetricOfField P γ ξ α hC D →
+          0 < P {ω | localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E} ∧
+          ∀ᵐ ω ∂P, (localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E ↔
+            CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)) ∧
       ∀ α : ℝ, α < lqgQ γ → ∀ k : ℕ, AllModelsAt.{u} γ ξ α q U V W T Q' Q δ M k := by
   by_cases hcan : ξ = lqgXi γ
   · subst ξ
-    obtain ⟨E, q, hPG, hq, hEq, hall⟩ := step8_uniform_insertion_certificate_canonical_zero U V W T Q' Q δ hgeom γ M hγ0 hγ2 hM
-    refine ⟨E, q, commonProb_pos_of_pinch hγ0 hγ2 hPG hq, ⟨hPG.1, ?_⟩, ?_, ?_, ?_⟩
+    obtain ⟨E, q, hPG, hq, hEq, hSeed, hall⟩ := step8_uniform_source_certificate_canonical_zero U V W T Q' Q δ hgeom γ M hγ0 hγ2 hM
+    refine ⟨E, q, commonProb_pos_of_pinch hγ0 hγ2 hPG hq, ⟨hPG.1, ?_⟩, ?_, ?_, ?_, ?_⟩
     · intro Ω _ P hC hcirc μ D hG hμ hD
       have hG' := isWholePlaneGFF_modelRangeMeasure (P := P) μ D hG
       have hμ' : IsLQGMeasureOfField (modelRangeMeasure P (modelPoint hC hcirc μ D)) γ γ
@@ -356,6 +443,25 @@ theorem step8_uniform_insertion_certificate
       have hD' : IsLQGMetricOfField (modelRangeMeasure P (modelPoint hC hcirc μ D)) γ (lqgXi γ) γ
           (fun y => y.1.pairing) (fun y => y.1.metric) := ⟨𝔇, h𝔇, ae_modelRangeMeasure_iff.2 hDae⟩
       exact ae_modelRangeMeasure_iff.1 (hEq _ _ _ _ _ _ hG' hμ' hD')
+    · intro α hα Ω _ P hC hcirc μ D hG hμ hD
+      have hG' := isWholePlaneGFF_modelRangeMeasure (P := P) μ D hG
+      have hμ' : IsLQGMeasureOfField (modelRangeMeasure P (modelPoint hC hcirc μ D)) γ α
+          (fun y => y.1.circle) (fun y => y.1.measure) := by
+        unfold IsLQGMeasureOfField IsLQGMeasure at hμ ⊢
+        exact ae_modelRangeMeasure_iff.2 hμ
+      obtain ⟨𝔇, h𝔇, hDae⟩ := hD
+      have hD' : IsLQGMetricOfField (modelRangeMeasure P (modelPoint hC hcirc μ D)) γ (lqgXi γ) α
+          (fun y => y.1.pairing) (fun y => y.1.metric) := ⟨𝔇, h𝔇, ae_modelRangeMeasure_iff.2 hDae⟩
+      obtain ⟨hpos, hae⟩ := hSeed α hα _ _ _ _ _ _ hG' hμ' hD'
+      let : IsProbabilityMeasure P := FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hG
+      let : IsProbabilityMeasure (modelRangeMeasure P (modelPoint hC hcirc μ D)) :=
+        FirstPassS11af.isProbabilityMeasure_of_isWholePlaneGFF hG'
+      have heq : P {ω | localModConstField α hC (ball (0 : ℂ) 7) ω ∈ E} =
+          modelRangeMeasure P (modelPoint hC hcirc μ D)
+            {y | localModConstField α (fun y => y.1.pairing) (ball (0 : ℂ) 7) y ∈ E} := by
+        have h := S11iCert.prob_ballRestrict_alphaCanon_indep hG hG' α E hPG.1
+        simpa only [S11iCert.ballRestrict_alphaCanon_eq] using h
+      exact ⟨heq.symm ▸ hpos, ae_modelRangeMeasure_iff.1 hae⟩
     · intro α hα k Ω _ P hC hcirc μ D hG hμ hD
       have hG' := isWholePlaneGFF_modelRangeMeasure (P := P) μ D hG
       have hμ' : IsLQGMeasureOfField (modelRangeMeasure P (modelPoint hC hcirc μ D)) γ α
@@ -371,16 +477,40 @@ theorem step8_uniform_insertion_certificate
         (D : Ω → ℂ → ℂ → ℝ), ¬ IsLQGMetricOfField P γ ξ α hC D := by
       rintro Ω _ P α hC D ⟨𝔇, h𝔇, -⟩
       exact hcan (hξ γ ξ hγ0 hγ2 𝔇 h𝔇)
-    refine ⟨univ, 1, by norm_num, ⟨MeasurableSet.univ, ?_⟩, ?_, ?_, ?_⟩
+    refine ⟨univ, 1, by norm_num, ⟨MeasurableSet.univ, ?_⟩, ?_, ?_, ?_, ?_⟩
     · intro Ω _ P hC _ _ D _ _ hD
       exact (hno P γ hC D hD).elim
     · intro Ω _ P hC _ _ D _ _ hD
       exact (hno P γ hC D hD).elim
     · intro Ω _ P hC _ _ D _ _ hD
       exact (hno P γ hC D hD).elim
+    · intro α _ Ω _ P hC _ _ D _ _ hD
+      exact (hno P α hC D hD).elim
     · intro α _ k Ω _ P hC _ _ D _ _ hD
       exact (hno P α hC D hD).elim
 
+
+/-- The common event is the physical scale-one certificate and gives all insertion frequencies. -/
+theorem step8_uniform_insertion_certificate
+    (U V W T Q' Q : Set ℂ) (δ : ℝ) (hgeom : IsBufferedPinchGeometry U V W T Q' Q δ)
+    (γ ξ M : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hM : 0 < M) :
+    ∃ E : Set Step8Code, ∃ q : ℝ,
+      0 < q ∧ PinchEventGammaStmt.{u} U T Q' Q γ ξ M E ∧
+      (∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ →
+        IsLQGMetricOfField P γ ξ γ hC D →
+        (P {ω | localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E}).toReal = q) ∧
+      (∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
+        IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ →
+        IsLQGMetricOfField P γ ξ γ hC D →
+        ∀ᵐ ω ∂P, (localModConstField γ hC (ball (0 : ℂ) 7) ω ∈ E ↔
+          CertificateEvent (μ ω) (D ω) (pinchOmegaGeom W Q δ) U V W T Q' Q δ M 1 0)) ∧
+      ∀ α : ℝ, α < lqgQ γ → ∀ k : ℕ, AllModelsAt.{u} γ ξ α q U V W T Q' Q δ M k := by
+  obtain ⟨E, q, hpos, hPG, hq, hEq, _, hall⟩ :=
+    step8_uniform_source_certificate U V W T Q' Q δ hgeom γ ξ M hγ0 hγ2 hM
+  exact ⟨E, q, hpos, hPG, hq, hEq, hall⟩
 
 /-- A common event witnesses the Step 8 identity for every admissible insertion. -/
 theorem step8_uniform_identity
