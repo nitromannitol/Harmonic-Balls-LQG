@@ -1044,4 +1044,116 @@ theorem planarBrownianMotion_dyadic_occupation_global {d : ℝ}
     rw [hnil]
     exact zero_le
 
+
+/-- An eventual dyadic bound extends to all radii with a finite positive constant. -/
+theorem occupation_bound_of_dyadic (ν : Measure ℝ≥0) [IsProbabilityMeasure ν]
+    (b : ContinuousPath ℂ) {d : ℝ} (hd : 0 < d) (k₀ : ℕ)
+    (h : ∀ k ≥ k₀, ∀ z : ℂ,
+      ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} ≤ ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d)) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (z : ℂ) (r : ℝ), 0 < r → r ≤ 1 →
+      ν {t | ‖b t - z‖ < r} ≤ ENNReal.ofReal (C * r ^ d) := by
+  let a : ℝ := ((2 : ℝ)⁻¹ ^ k₀) ^ d
+  let C : ℝ := (2 : ℝ) ^ d + a⁻¹
+  have ha : 0 < a := by dsimp [a]; positivity
+  have hC : 0 < C := by dsimp [C]; positivity
+  have hC1 : (2 : ℝ) ^ d ≤ C := le_add_of_nonneg_right (inv_nonneg.mpr ha.le)
+  have hC2 : a⁻¹ ≤ C := le_add_of_nonneg_left (Real.rpow_nonneg (by norm_num) _)
+  refine ⟨C, hC, ?_⟩
+  intro z r hr hr1
+  obtain ⟨k, hk1, hk2⟩ := exists_nat_pow_near_of_lt_one hr hr1
+    (by norm_num : (0 : ℝ) < 2⁻¹) (by norm_num : (2 : ℝ)⁻¹ < 1)
+  by_cases hk : k₀ ≤ k
+  · have hδ : (2 : ℝ)⁻¹ ^ k ≤ 2 * r := by
+      rw [pow_succ] at hk1
+      linarith
+    have hp : ((2 : ℝ)⁻¹ ^ k) ^ d ≤ (2 * r) ^ d :=
+      Real.rpow_le_rpow (by positivity) hδ hd.le
+    have hCr : (2 * r) ^ d ≤ C * r ^ d := by
+      rw [Real.mul_rpow (by norm_num) hr.le]
+      exact mul_le_mul_of_nonneg_right hC1 (Real.rpow_nonneg hr.le _)
+    calc
+      _ ≤ ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} := measure_mono (fun t ht => lt_of_lt_of_le ht hk2)
+      _ ≤ ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d) := h k hk z
+      _ ≤ _ := ENNReal.ofReal_le_ofReal (hp.trans hCr)
+  · have hkk : k + 1 ≤ k₀ := by omega
+    have hpow : (2 : ℝ)⁻¹ ^ k₀ ≤ (2 : ℝ)⁻¹ ^ (k + 1) :=
+      pow_le_pow_of_le_one (by norm_num) (by norm_num) hkk
+    have har : a ≤ r ^ d := by
+      dsimp [a]
+      exact Real.rpow_le_rpow (by positivity) (hpow.trans hk1.le) hd.le
+    have hone : 1 ≤ C * r ^ d := by
+      calc
+        1 = a⁻¹ * a := (inv_mul_cancel₀ (ne_of_gt ha)).symm
+        _ ≤ a⁻¹ * r ^ d := mul_le_mul_of_nonneg_left har (inv_nonneg.mpr ha.le)
+        _ ≤ C * r ^ d := mul_le_mul_of_nonneg_right hC2 (Real.rpow_nonneg hr.le _)
+    calc
+      _ ≤ ν Set.univ := measure_mono (subset_univ _)
+      _ = 1 := measure_univ
+      _ ≤ ENNReal.ofReal (C * r ^ d) := by simpa using ENNReal.ofReal_le_ofReal hone
+
+/-- A subcritical occupation exponent has an almost-sure uniform ball bound. -/
+theorem planarBrownianMotion_uniform_ball_occupation_for_exponent (x : ℂ) {d : ℝ}
+    (hd0 : 0 < d) (hd2 : d < 2) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∀ᵐ b ∂(planarBrownianMotion x), ∃ C : ℝ, 0 < C ∧ ∀ (z : ℂ) (r : ℝ),
+      0 < r → r ≤ 1 → ν {t | ‖b t - z‖ < r} ≤ ENNReal.ofReal (C * r ^ d) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  have hp : IsProbabilityMeasure ν := by
+    constructor
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := hp
+  filter_upwards [planarBrownianMotion_dyadic_occupation_global hd0 hd2 x] with b hb
+  obtain ⟨k₀, hk₀⟩ := Filter.eventually_atTop.mp hb
+  exact occupation_bound_of_dyadic ν b hd0 k₀ hk₀
+
+/-- Almost surely, all subcritical exponents admit uniform unit-time ball bounds. -/
+theorem planarBrownianMotion_uniform_ball_occupation (x : ℂ) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∀ᵐ b ∂(planarBrownianMotion x), ∀ d : ℝ, 0 < d → d < 2 →
+      ∃ C : ℝ, 0 < C ∧ ∀ (z : ℂ) (r : ℝ),
+        0 < r → r ≤ 1 → ν {t | ‖b t - z‖ < r} ≤ ENNReal.ofReal (C * r ^ d) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  have hq : ∀ q : ℚ, ∀ᵐ b ∂(planarBrownianMotion x),
+      0 < (q : ℝ) → (q : ℝ) < 2 →
+      ∃ C : ℝ, 0 < C ∧ ∀ (z : ℂ) (r : ℝ),
+        0 < r → r ≤ 1 → ν {t | ‖b t - z‖ < r} ≤ ENNReal.ofReal (C * r ^ (q : ℝ)) := by
+    intro q
+    by_cases h : 0 < (q : ℝ) ∧ (q : ℝ) < 2
+    · filter_upwards [planarBrownianMotion_uniform_ball_occupation_for_exponent x h.1 h.2] with b hb _ _
+      exact hb
+    · exact Filter.Eventually.of_forall (fun _ h1 h2 => (h ⟨h1, h2⟩).elim)
+  filter_upwards [ae_all_iff.mpr hq] with b hb d hd0 hd2
+  obtain ⟨q, hdq, hq2⟩ := exists_rat_btwn hd2
+  obtain ⟨C, hC, hbound⟩ := hb q (hd0.trans hdq) hq2
+  refine ⟨C, hC, ?_⟩
+  intro z r hr hr1
+  exact (hbound z r hr hr1).trans (ENNReal.ofReal_le_ofReal
+    (mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_ge hr hr1 hdq.le) hC.le))
+
+
+/-- The uniform ball bound in terms of Lebesgue measure on the closed unit interval. -/
+theorem planarBrownianMotion_uniform_ball_occupation_real_time (x : ℂ) :
+    ∀ᵐ b ∂(planarBrownianMotion x), ∀ d : ℝ, 0 < d → d < 2 →
+      ∃ C : ℝ, 0 < C ∧ ∀ (z : ℂ) (r : ℝ), 0 < r → r ≤ 1 →
+        volume {t : ℝ | t ∈ Icc (0 : ℝ) 1 ∧ ‖b (Real.toNNReal t) - z‖ < r} ≤
+          ENNReal.ofReal (C * r ^ d) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  filter_upwards [planarBrownianMotion_uniform_ball_occupation x] with b hb d hd0 hd2
+  obtain ⟨C, hC, hbound⟩ := hb d hd0 hd2
+  refine ⟨C, hC, ?_⟩
+  intro z r hr hr1
+  have hm : MeasurableSet {t : ℝ≥0 | ‖b t - z‖ < r} := by
+    apply isOpen_lt _ continuous_const |>.measurableSet
+    fun_prop
+  have heq : volume {t : ℝ | t ∈ Icc (0 : ℝ) 1 ∧ ‖b (Real.toNNReal t) - z‖ < r} =
+      ν {t | ‖b t - z‖ < r} := by
+    dsimp [ν]
+    rw [Measure.map_apply continuous_real_toNNReal.measurable hm,
+      Measure.restrict_apply (continuous_real_toNNReal.measurable hm)]
+    congr 1
+    ext t
+    simp only [mem_ofPred_eq, mem_inter_iff, mem_preimage]
+    tauto
+  rw [heq]
+  exact hbound z r hr hr1
 end HarmonicBalls
