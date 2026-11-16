@@ -158,4 +158,41 @@ theorem measurable_annular_clock_cell {Ω : Type*} [MeasurableSpace Ω]
     rfl
   exact hf.lintegral_prod_right'
 
+/-- A jointly measurable annular cell version agrees with the inserted-field cell
+on one field event, simultaneously for positive scales, paths, and intervals. -/
+theorem exists_measurable_annular_inserted_clock_cell {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (γ α δ : ℝ) :
+    ∃ H : Ω → ℝ → ℂ → ℝ,
+      (∀ ε : ℝ, 0 < ε → ∀ a b : ℝ,
+        Measurable (fun p : Ω × ContinuousPath ℂ =>
+          ∫⁻ s in Ioc a b, ENNReal.ofReal
+            ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+              ε ^ (γ ^ 2 / 2) * Real.exp (γ * (H p.1 ε z - H p.1 1 0 -
+                α * Real.log (max ε ‖z‖)))) (p.2 s.toNNReal)))) ∧
+      (∀ᵐ ω ∂P, ∀ (ε : ℝ), 0 < ε → ∀ (b : ContinuousPath ℂ) (a c : ℝ),
+        (∫⁻ s in Ioc a c, ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ * (H ω ε z - H ω 1 0 -
+              α * Real.log (max ε ‖z‖)))) (b s.toNNReal))) =
+        ∫⁻ s in Ioc a c, ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b s.toNNReal))) := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  refine ⟨H, ?_, ?_⟩
+  · intro ε hε a b
+    apply HarmonicBalls.measurable_annular_clock_cell H hε γ α δ a b
+    intro r hr
+    exact (hHm r hr).comp (measurable_snd.prodMk measurable_fst)
+  · filter_upwards [hHae, HarmonicBalls.ae_recentered_inserted_circle_average hh α] with ω hω hrec
+    intro ε hε b a c
+    apply lintegral_congr
+    intro s
+    simp only [Set.indicator_apply]
+    split_ifs
+    · rw [hω, hω, hrec ε _ hε]
+    · rfl
+
 end HarmonicBalls
