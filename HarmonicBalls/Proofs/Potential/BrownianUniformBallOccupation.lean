@@ -357,4 +357,25 @@ theorem exists_uniform_unit_interval_rpow_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q
       rw [LatticeProb.PegdenSmart.lintegral_ball_enorm_sub_rpow volume y (by norm_num)]
       simp [K, Module.finrank_self, sub_eq_add_neg]
 
+
+/-- The unit-time measure has uniformly bounded subcritical kernel integrals. -/
+theorem exists_uniform_unit_time_rpow_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ y : ℝ≥0, (y : ℝ) ≤ 1 →
+      (∫⁻ t : ℝ≥0, ENNReal.ofReal (|(t : ℝ) - (y : ℝ)| ^ (-q))
+        ∂(Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))) ≤ K := by
+  obtain ⟨K, hK, hbound⟩ := exists_uniform_unit_interval_rpow_bound hq0 hq1
+  refine ⟨K, hK, ?_⟩
+  intro y hy
+  have hm : Measurable (fun t : ℝ≥0 => ENNReal.ofReal (|(t : ℝ) - (y : ℝ)| ^ (-q))) := by
+    fun_prop
+  rw [lintegral_map hm continuous_real_toNNReal.measurable]
+  have heq : (∫⁻ t : ℝ, ENNReal.ofReal (|((Real.toNNReal t : ℝ≥0) : ℝ) - (y : ℝ)| ^ (-q))
+      ∂(volume.restrict (Icc (0 : ℝ) 1))) =
+      ∫⁻ t in Icc (0 : ℝ) 1, ENNReal.ofReal (|t - (y : ℝ)| ^ (-q)) := by
+    apply lintegral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_Icc] with t ht
+    simp [Real.toNNReal_of_nonneg ht.1]
+  rw [heq]
+  exact hbound (y : ℝ) ⟨y.2, hy⟩
+
 end HarmonicBalls
