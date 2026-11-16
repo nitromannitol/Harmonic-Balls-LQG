@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularUniformIntegrability
+import HarmonicBalls.Proofs.Potential.LQGClockAnnularUniformIncrement
 
 /-! # Annular clock increments under the product law
 
@@ -143,5 +144,49 @@ theorem lintegral_prod_annular_increment_le_uniform_horizon
   intro τ hτ ε hε hεhalf hεδ
   rw [lintegral_prod_annularIncrementSample_eq hh hγ0 hγ2 α x hε hεhalf hεδ τ hτ]
   exact ENNReal.ofReal_le_ofReal (hb τ hτ ε hε hεhalf hεδ).2
+
+/-- The grid reduction remains valid when monotonicity and the cell bound hold
+almost everywhere and the grid differences are almost everywhere measurable. -/
+theorem lintegral_iSup_abs_sub_le_grid_of_ae {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    (f g : Ω → ℝ → ℝ) {T : ℝ} (hT : 0 ≤ T) {m : ℕ} (hm : 0 < m)
+    (hmono : ∀ᵐ ω ∂μ, MonotoneOn (f ω) (Set.Icc 0 T) ∧
+      MonotoneOn (g ω) (Set.Icc 0 T))
+    (hgrid : ∀ j : ℕ, AEMeasurable (fun ω => |f ω (j * T / m) - g ω (j * T / m)|) μ)
+    (K : Ω → ℝ) (hK : ∀ᵐ ω ∂μ, 0 ≤ K ω ∧
+      ∀ j, j < m → g ω ((j + 1) * T / m) - g ω (j * T / m) ≤ K ω) :
+    (∫⁻ ω, ⨆ t : Set.Icc (0 : ℝ) T, ENNReal.ofReal |f ω t - g ω t| ∂μ) ≤
+      (∑ j ∈ Finset.range (m + 1), ∫⁻ ω, ENNReal.ofReal |f ω (j * T / m) - g ω (j * T / m)| ∂μ) +
+        ∫⁻ ω, ENNReal.ofReal (K ω) ∂μ := by
+  let D : Ω → ℝ := fun ω => ∑ j ∈ Finset.range (m + 1),
+    |f ω (j * T / m) - g ω (j * T / m)|
+  have hD0 (ω : Ω) : 0 ≤ D ω := Finset.sum_nonneg (fun _ _ => abs_nonneg _)
+  have hDm : AEMeasurable D μ := by
+    convert Finset.aemeasurable_sum (Finset.range (m + 1)) (fun j _ => hgrid j) using 1
+    ext ω
+    simp [D]
+  have hpoint : ∀ᵐ ω ∂μ,
+      (⨆ t : Set.Icc (0 : ℝ) T, ENNReal.ofReal |f ω t - g ω t|) ≤
+        ENNReal.ofReal (D ω) + ENNReal.ofReal (K ω) := by
+    filter_upwards [hmono, hK] with ω hω hκ
+    apply iSup_le
+    intro t
+    rw [← ENNReal.ofReal_add (hD0 ω) hκ.1]
+    apply ENNReal.ofReal_le_ofReal
+    apply LatticeProb.abs_sub_le_of_grid hm hT hω.1 hω.2 ?_ hκ.2 t t.property
+    intro j hj
+    change |f ω (j * T / m) - g ω (j * T / m)| ≤
+      ∑ i ∈ Finset.range (m + 1), |f ω (i * T / m) - g ω (i * T / m)|
+    exact Finset.single_le_sum (s := Finset.range (m + 1)) (a := j)
+      (f := fun i : ℕ => |f ω (i * T / m) - g ω (i * T / m)|)
+      (fun i _ => abs_nonneg (f ω (i * T / m) - g ω (i * T / m)))
+      (Finset.mem_range.mpr (by omega))
+  calc
+    _ ≤ ∫⁻ ω, (ENNReal.ofReal (D ω) + ENNReal.ofReal (K ω)) ∂μ := lintegral_mono_ae hpoint
+    _ = (∫⁻ ω, ENNReal.ofReal (D ω) ∂μ) + ∫⁻ ω, ENNReal.ofReal (K ω) ∂μ :=
+      lintegral_add_left' hDm.ennreal_ofReal _
+    _ = _ := by
+      congr 1
+      simp only [D, ENNReal.ofReal_sum_of_nonneg (fun _ _ => abs_nonneg _)]
+      exact lintegral_finsetSum' (Finset.range (m + 1)) (fun j _ => (hgrid j).ennreal_ofReal)
 
 end HarmonicBalls
