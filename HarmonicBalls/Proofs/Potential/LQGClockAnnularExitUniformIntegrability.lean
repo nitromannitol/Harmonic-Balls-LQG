@@ -1168,4 +1168,54 @@ theorem intervalIntegrable_annular_density (f : ℂ → ℝ) (hf : Continuous f)
   filter_upwards with t
   exact hgK (b t.toNNReal)
 
+/-- A stopped annular block increment is integrable over the field. -/
+theorem integrable_annular_exit_block_increment_field {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε δ : ℝ}
+    (hε : 0 < ε) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    (γ α : ℝ) (D : Set ℂ) (s : ℝ≥0) (b : ContinuousPath ℂ)
+    (hfin : ContinuousPath.exitTime D b ≠ ⊤) :
+    Integrable (fun ω => ∫ t in Ioc (s : ℝ)
+      (min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal),
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal)) P := by
+  by_cases hs : (s : ℝ≥0∞) < ContinuousPath.exitTime D b
+  · let τ : ContinuousPath ℂ → ℝ≥0 := fun p => (ContinuousPath.exitTime D p).toNNReal
+    let q := ContinuousPath.shift s b
+    have hi := integrable_stopped_annular_increment_field hh hε hεhalf hεδ γ α τ q
+    apply hi.congr
+    filter_upwards [ae_annular_inserted_occupation_eq_time_integral hh hε γ α δ,
+      ae_recentered_inserted_circle_average hh α] with ω htime hrec
+    have hraw : (∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        (ε/2)^(γ^2/2) * Real.exp (γ*(hcirc ω (ε/2) z-hcirc ω 1 0 - α*Real.log (max (ε/2) ‖z‖))) -
+        ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0 - α*Real.log (max ε ‖z‖)))) z
+      ∂(Measure.map (fun t => q t) ((Measure.map Real.toNNReal
+        (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τ q))))) =
+      ∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+        ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) z
+      ∂(Measure.map (fun t => q t) ((Measure.map Real.toNNReal
+        (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τ q)))) := by
+      apply integral_congr_ae
+      filter_upwards with z
+      simp only [Set.indicator_apply]
+      split_ifs
+      · rw [hrec (ε/2) z (half_pos hε), hrec ε z hε]
+      · rfl
+    rw [hraw, htime q (τ q)]
+    exact (setIntegral_exit_stopped_block_eq D b s hfin _).trans (ite_eq_left hs) |>.symm
+  · have hz : (fun ω => ∫ t in Ioc (s : ℝ)
+        (min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal),
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal)) = 0 := by
+      funext ω
+      rw [setIntegral_exit_stopped_block_eq D b s hfin _, ite_eq_right hs]
+      rfl
+    rw [hz]
+    exact integrable_zero _ _ _
+
 end HarmonicBalls
