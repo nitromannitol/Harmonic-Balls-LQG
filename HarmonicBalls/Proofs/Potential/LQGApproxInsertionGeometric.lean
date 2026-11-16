@@ -110,4 +110,58 @@ theorem ae_singular_approximant_contained_ball_power
   rw [heq]
   exact hbound m k z s hzs hr hm
 
+
+/-- Near the insertion, the mass is bounded by a positive power of the ball
+radius, uniformly over all dyadic regularization scales. -/
+theorem ae_singular_approximant_near_origin_ball_power
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc)
+    {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
+    (hδ : 0 < δ) (hr : 0 < r) (hρ : ρ ∈ Ioo (0 : ℝ) 1) (hrρ : r < ρ) :
+    ∀ᵐ ω ∂P, ∃ C β r₀ : ℝ, 0 < C ∧ 0 < β ∧ 0 < r₀ ∧
+      ∀ k : ℕ, ∀ z : ℂ, ∀ s : ℝ, 0 < s → s ≤ r₀ → ‖z‖ ≤ s →
+        lqgApprox γ (fieldCircleAverage α (hcirc ω)) (dyadicScale k) (ball z s) ≤
+          ENNReal.ofReal (C * s ^ β) := by
+  filter_upwards [ae_singular_approximant_contained_ball_power
+    hh hγ hγ2 hαQ hδ hρ hrρ] with ω hω
+  obtain ⟨A, β, hA, hβ, n, J₀, hn, hbound⟩ := hω
+  let b : ℝ := (2⁻¹ : ℝ) ^ n
+  have hb : 0 < b := by dsimp [b]; positivity
+  have hb1 : b < 1 := by
+    dsimp [b]
+    exact pow_lt_one₀ (by norm_num) (by norm_num) hn.ne'
+  let r₀ : ℝ := min (r * b) (b ^ J₀) / 2
+  have hr₀ : 0 < r₀ := by dsimp [r₀]; positivity
+  refine ⟨A * (2 / b) ^ β, β, r₀, by positivity, hβ, hr₀, ?_⟩
+  intro k z s hs hs₀ hz
+  have hx : 0 < 2 * s := by positivity
+  have hxrb : 2 * s ≤ r * b := by dsimp [r₀] at hs₀; linarith [min_le_left (r * b) (b ^ J₀)]
+  have hxJ : 2 * s ≤ b ^ J₀ := by dsimp [r₀] at hs₀; linarith [min_le_right (r * b) (b ^ J₀)]
+  have hx1 : 2 * s ≤ 1 := hxJ.trans (pow_le_one₀ hb.le hb1.le)
+  obtain ⟨m, hmlo, hmhi⟩ := exists_nat_pow_near_of_lt_one hx hx1 hb hb1
+  have hm : J₀ ≤ m := by
+    by_contra h
+    have hle : m + 1 ≤ J₀ := by omega
+    have hp := pow_le_pow_of_le_one hb.le hb1.le hle
+    linarith
+  have hscale : dyadicScale (n * m) = b ^ m := by
+    dsimp [dyadicScale, b]
+    rw [pow_mul]
+  have hscale_r : dyadicScale (n * m) ≤ r := by
+    rw [hscale]
+    rw [pow_succ] at hmlo
+    nlinarith
+  have hzs : ‖z‖ + s ≤ dyadicScale (n * m) := by rw [hscale]; linarith
+  refine (hbound m k z s hzs hscale_r hm).trans ?_
+  apply ENNReal.ofReal_le_ofReal
+  have hscale_le : dyadicScale (n * m) ≤ (2 / b) * s := by
+    rw [hscale]
+    rw [pow_succ] at hmlo
+    have hle : b ^ m ≤ (2 * s) / b := (le_div_iff₀ hb).2 (by nlinarith)
+    convert hle using 1; ring
+  have hp := Real.rpow_le_rpow (by rw [hscale]; positivity) hscale_le hβ.le
+  rw [Real.mul_rpow (by positivity : (0 : ℝ) ≤ 2 / b) hs.le] at hp
+  nlinarith [Real.rpow_nonneg hs.le β, Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ 2 / b) β]
+
 end HarmonicBalls
