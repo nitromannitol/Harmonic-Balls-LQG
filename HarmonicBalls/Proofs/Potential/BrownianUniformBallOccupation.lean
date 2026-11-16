@@ -863,4 +863,19 @@ theorem planarBrownianMotion_dyadic_occupation_of_summable {q : ℝ}
   intro w hw
   exact (hk w hw).le
 
+
+/-- Positive powers of the dyadic radii form a summable sequence. -/
+theorem tsum_dyadic_rpow_lt_top {p : ℝ} (hp : 0 < p) :
+    (∑' k : ℕ, ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ p)) < ∞ := by
+  have h : (2 : ℝ)⁻¹ ^ p < 1 := Real.rpow_lt_one (by norm_num) (by norm_num) hp
+  have h0 : 0 ≤ (2 : ℝ)⁻¹ ^ p := Real.rpow_nonneg (by norm_num) _
+  have hb : ENNReal.ofReal ((2 : ℝ)⁻¹ ^ p) < 1 := by
+    exact ENNReal.ofReal_lt_one.mpr h
+  have heq (k : ℕ) : ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ p) =
+      (ENNReal.ofReal ((2 : ℝ)⁻¹ ^ p)) ^ k := by
+    rw [← Real.rpow_natCast_mul (by norm_num) k p,
+      show (k : ℝ) * p = p * k by ring, Real.rpow_mul_natCast (by norm_num), ENNReal.ofReal_pow h0]
+  simp_rw [heq]
+  exact tsum_geometric_lt_top.mpr hb
+
 end HarmonicBalls
