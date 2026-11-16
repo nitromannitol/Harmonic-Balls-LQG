@@ -3,9 +3,9 @@ import HarmonicBalls.Proofs.Sec6.PlanarIncrementBlocks
 import Mathlib.Data.Fin.Tuple.Sort
 import LatticeProb.Analysis.RieszKernelHolder
 
-/-! # Uniform-centre Brownian increment estimates
+/-! # Uniform-centre Brownian occupation estimates
 
-Planar Brownian increments satisfy a small-ball bound uniform in the centre.
+Planar Brownian occupation moments and finite-grid tails admit bounds uniform in the centre.
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Set Metric
@@ -785,5 +785,50 @@ theorem squareGrid_covers (N m : ℕ) (hm : 0 < m) (z : ℂ) (hz : ‖z‖ ≤ N
     change ‖z - w‖ ≤ |z.re - ((i : ℝ) / m - N)| + |z.im - ((j : ℝ) / m - N)| at h
     rw [show (2 : ℝ) / m = 1 / m + 1 / m by ring]
     linarith
+
+
+/-- Dyadic square grids have quadratic growth in the inverse mesh. -/
+theorem squareGrid_dyadic_card_le (N k : ℕ) :
+    (squareGrid N (2 ^ (k + 1))).card ≤ (4 * N + 1) ^ 2 * (2 ^ k) ^ 2 := by
+  have hp : 1 ≤ 2 ^ k := Nat.one_le_pow k 2 (by norm_num)
+  have hh : 2 * N * 2 ^ (k + 1) + 1 ≤ (4 * N + 1) * 2 ^ k := by
+    rw [pow_succ]
+    nlinarith
+  calc
+    _ ≤ (2 * N * 2 ^ (k + 1) + 1) ^ 2 := squareGrid_card_le N _
+    _ ≤ ((4 * N + 1) * 2 ^ k) ^ 2 := Nat.pow_le_pow_left hh _
+    _ = _ := mul_pow _ _ _
+
+/-- Dyadic square grids cover bounded balls at the corresponding dyadic scale. -/
+theorem squareGrid_dyadic_covers (N k : ℕ) (z : ℂ) (hz : ‖z‖ ≤ N) :
+    ∃ w ∈ squareGrid N (2 ^ (k + 1)), dist z w < (2 : ℝ)⁻¹ ^ k := by
+  obtain ⟨w, hw, hd⟩ := squareGrid_covers N (2 ^ (k + 1)) (by positivity) z hz
+  refine ⟨w, hw, ?_⟩
+  convert hd using 1
+  push_cast
+  rw [pow_succ]
+  have h : (2 : ℝ) ^ k ≠ 0 := by positivity
+  field_simp
+  rw [show (1 / 2 : ℝ) ^ k = ((2 : ℝ) ^ k)⁻¹ by rw [one_div, inv_pow], inv_mul_cancel₀ h]
+
+
+/-- Bounds on enlarged grid-centred balls extend to every centre in the region. -/
+theorem occupation_le_of_squareGrid (ν : Measure ℝ≥0) (b : ContinuousPath ℂ)
+    (N k : ℕ) (M : ℝ≥0∞)
+    (h : ∀ w ∈ squareGrid N (2 ^ (k + 1)),
+      ν {t | ‖b t - w‖ < 2 * (2 : ℝ)⁻¹ ^ k} ≤ M)
+    (z : ℂ) (hz : ‖z‖ ≤ N) :
+    ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} ≤ M := by
+  obtain ⟨w, hw, hd⟩ := squareGrid_dyadic_covers N k z hz
+  calc
+    _ ≤ ν {t | ‖b t - w‖ < 2 * (2 : ℝ)⁻¹ ^ k} := by
+      apply measure_mono
+      intro t ht
+      have ht' : dist (b t) z < (2 : ℝ)⁻¹ ^ k := by simpa [dist_eq_norm] using ht
+      have hx := dist_triangle (b t) z w
+      change ‖b t - w‖ < 2 * (2 : ℝ)⁻¹ ^ k
+      rw [← dist_eq_norm]
+      linarith
+    _ ≤ M := h w hw
 
 end HarmonicBalls
