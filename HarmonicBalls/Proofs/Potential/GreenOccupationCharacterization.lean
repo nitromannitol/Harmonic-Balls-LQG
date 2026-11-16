@@ -3,6 +3,8 @@ import HarmonicBalls.Proofs.Potential.GreenPoleL1Continuity
 import HarmonicBalls.Proofs.Potential.GreenGeneralIdentification
 import HarmonicBalls.Proofs.Sec6.BoundedHarmonicExit
 import Mathlib.Topology.TietzeExtension
+import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
+import Mathlib.MeasureTheory.Measure.OpenPos
 import Mathlib.Geometry.Manifold.SmoothApprox
 import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.NNReal
 import Mathlib.Analysis.Calculus.ContDiff.Convolution
@@ -769,5 +771,29 @@ theorem lintegral_brownian_occupation_eq_green_integral {D : Set ℂ}
     _ = ∫⁻ y, f y ∂occupationMeasure D hDo x := (lintegral_occupationMeasure hDo x hf).symm
     _ = ∫⁻ y, f y ∂greenMeasure D x := by rw [occupationMeasure_eq_greenMeasure hD hx]
     _ = _ := lintegral_withDensity_eq_lintegral_mul₀' hmeas hf.aemeasurable
+
+/-- Any continuous off-diagonal representative of the killed occupation density
+agrees pointwise with twice the Green kernel away from the starting point. -/
+theorem occupation_density_eq_green_off_pole {D : Set ℂ} (hD : IsSmoothBoundedOpen D)
+    {x : ℂ} (hx : x ∈ D) {k : ℂ → ℝ≥0∞} (hk : AEMeasurable k volume)
+    (hkc : ContinuousOn k (D \ {x}))
+    (hkocc : volume.withDensity k =
+      occupationMeasure D (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) x) :
+    Set.EqOn k (fun y => ENNReal.ofReal (2 * greenFunction D x y)) (D \ {x}) := by
+  let hDo := GreenGeneral.isOpen_of_isSmoothBoundedOpen hD
+  have hgm : AEMeasurable (fun y => ENNReal.ofReal (2 * greenFunction D x y)) volume :=
+    ((integrable_greenFunction_pole hDo hD.1 x).const_mul 2).aestronglyMeasurable.aemeasurable.ennreal_ofReal
+  have heq : volume.withDensity k = volume.withDensity
+      (fun y => ENNReal.ofReal (2 * greenFunction D x y)) := by
+    rw [hkocc, occupationMeasure_eq_greenMeasure hD hx, greenMeasure]
+  have hae := (withDensity_eq_iff_of_sigmaFinite hk hgm).mp heq
+  apply MeasureTheory.Measure.eqOn_open_of_ae_eq (ae_restrict_of_ae hae)
+    (hDo.inter isClosed_singleton.isOpen_compl) hkc
+  intro y hy
+  have hxy : x ≠ y := by simpa using Ne.symm (show y ≠ x by simpa using hy.2)
+  have hcont := continuousAt_greenFunction_uncurry hDo hD.1 hx hy.1 hxy
+  exact (ENNReal.continuous_ofReal.continuousAt.comp
+    ((continuousAt_const.mul (hcont.comp (continuousAt_const.prodMk continuousAt_id))))).continuousWithinAt
+
 
 end HarmonicBalls.GreenOccupation
