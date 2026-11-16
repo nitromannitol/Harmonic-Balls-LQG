@@ -252,4 +252,75 @@ theorem planarBrownianMotion_joint_ball_le_sum_permutations (x z : ℂ) {n : ℕ
       exact bot_le
     · exact Finset.mem_univ σ
   exact h.trans (by simpa only [Function.comp_apply] using hs)
+
+/-- A finite independent sample from an atomless probability measure has distinct values. -/
+theorem ae_injective_pi_of_atomless (n : ℕ) (ν : Measure ℝ≥0) [IsProbabilityMeasure ν] [NullSingletonClass ν] :
+    ∀ᵐ t : Fin n → ℝ≥0 ∂(Measure.pi (fun _ : Fin n => ν)), Function.Injective t := by
+  classical
+  let μ : Measure (Fin n → ℝ≥0) := Measure.pi (fun _ : Fin n => ν)
+  have hi : iIndepFun (fun i (t : Fin n → ℝ≥0) => t i) μ :=
+    iIndepFun_pi (X := fun _ => id) (fun _ => aemeasurable_id)
+  have hd : (ν.prod ν) (Set.diagonal ℝ≥0) = 0 := by
+    apply Measure.measure_prod_null_of_ae_null measurableSet_diagonal
+    filter_upwards [] with t
+    simp [Set.diagonal]
+  have hpair (i j : Fin n) (hij : i ≠ j) : ∀ᵐ t ∂μ, t i ≠ t j := by
+    have hmap : μ.map (fun t => (t i, t j)) = ν.prod ν := by
+      rw [IndepFun.map_prod_eq_prod_map_map (measurable_pi_apply i).aemeasurable (measurable_pi_apply j).aemeasurable (hi.indepFun hij)]
+      rw [(measurePreserving_eval (fun _ : Fin n => ν) i).map_eq,
+        (measurePreserving_eval (fun _ : Fin n => ν) j).map_eq]
+    have h := measure_eq_zero_iff_ae_notMem.1 hd
+    have hm : AEMeasurable (fun t : Fin n → ℝ≥0 => (t i, t j)) μ := by fun_prop
+    have hh := ae_of_ae_map hm (hmap.symm ▸ h)
+    simpa [Set.diagonal] using hh
+  have h : ∀ᵐ t ∂μ, ∀ i j : Fin n, i ≠ j → t i ≠ t j := by
+    apply Filter.eventually_all.mpr
+    intro i
+    apply Filter.eventually_all.mpr
+    intro j
+    by_cases hij : i = j
+    · simp [hij]
+    · exact (hpair i j hij).mono (fun _ ht _ => ht)
+  filter_upwards [h] with t ht i j hij
+  by_contra hne
+  exact ht i j hne hij
+
+/-- Product unit-time Lebesgue measure gives distinct times almost everywhere. -/
+theorem ae_injective_unit_time_pi (n : ℕ) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∀ᵐ t : Fin n → ℝ≥0 ∂(Measure.pi (fun _ : Fin n => ν)), Function.Injective t := by
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  have hp : IsProbabilityMeasure ν := by
+    constructor
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  have ha : NullSingletonClass ν := by
+    constructor
+    intro t
+    dsimp [ν]
+    rw [Measure.map_apply continuous_real_toNNReal.measurable (measurableSet_singleton t),
+      Measure.restrict_apply (continuous_real_toNNReal.measurable (measurableSet_singleton t))]
+    apply measure_mono_null _ (measure_singleton (t : ℝ))
+    intro z hz
+    have ht := congrArg (fun v : ℝ≥0 => (v : ℝ)) hz.1
+    have hz0 : 0 ≤ z := hz.2.1
+    simpa [Real.toNNReal_of_nonneg hz0] using ht
+  let : IsProbabilityMeasure ν := hp
+  let : NullSingletonClass ν := ha
+  exact ae_injective_pi_of_atomless n ν
+
+/-- An occupation moment is bounded by the integral of the increment kernels. -/
+theorem planarBrownianMotion_occupation_moment_le_kernel (x z : ℂ) {n : ℕ} {r q : ℝ} (hr : 0 < r) (hq0 : 0 < q) (hq1 : q < 1)
+    (ν : Measure ℝ≥0) [IsProbabilityMeasure ν] [NullSingletonClass ν] :
+    (∫⁻ b : MarkovProcess.ContinuousPath ℂ, (ν {t | ‖b t - z‖ < r}) ^ (n + 1)
+      ∂(HarmonicBalls.planarBrownianMotion x)) ≤
+    ∫⁻ t : Fin (n + 1) → ℝ≥0,
+      ∑ σ : Equiv.Perm (Fin (n + 1)), ∏ i : Fin n,
+        ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q) *
+          |(t (σ i.succ) : ℝ) - (t (σ i.castSucc) : ℝ)| ^ (-q))
+      ∂(Measure.pi (fun _ : Fin (n + 1) => ν)) := by
+  rw [planarBrownianMotion_occupation_moment_eq]
+  apply lintegral_mono_ae
+  filter_upwards [ae_injective_pi_of_atomless (n + 1) ν] with t ht
+  exact planarBrownianMotion_joint_ball_le_sum_permutations x z t ht hr hq0 hq1
+
 end HarmonicBalls
