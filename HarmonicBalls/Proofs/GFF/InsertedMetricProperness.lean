@@ -122,4 +122,62 @@ theorem IsWholePlaneGFF.ae_frequently_normalized_far_crossing
   rw [hc j, ← heq x y]
   exact hjcross x y hx hy
 
+/-- The logarithmic Weyl exponent has a uniform lower bound on a scaled
+annulus, for insertions of either sign. -/
+theorem log_weight_lower_on_scaled_annulus {ξ α R : ℝ} (hR : 0 < R)
+    {z : ℂ} (hz₁ : R / 4 < ‖z‖) (hz₂ : ‖z‖ < 3 * R / 8) :
+    -(ξ * α) * Real.log R - |ξ * α| * Real.log 4 ≤
+      ξ * (-α * Real.log ‖z‖) := by
+  have hz : 0 < ‖z‖ := (show 0 < R / 4 by positivity).trans hz₁
+  have hlow : Real.log R - Real.log 4 ≤ Real.log ‖z‖ := by
+    have h := Real.log_le_log (show 0 < R / 4 by positivity) hz₁.le
+    rw [Real.log_div hR.ne' (by norm_num)] at h
+    exact h
+  have hupp : Real.log ‖z‖ ≤ Real.log R :=
+    Real.log_le_log hz (by linarith)
+  have habs : |Real.log ‖z‖ - Real.log R| ≤ Real.log 4 :=
+    abs_le.mpr ⟨by linarith, by linarith⟩
+  have hmul : ξ * α * (Real.log ‖z‖ - Real.log R) ≤ |ξ * α| * Real.log 4 := by
+    calc ξ * α * (Real.log ‖z‖ - Real.log R)
+        ≤ |ξ * α * (Real.log ‖z‖ - Real.log R)| := le_abs_self _
+      _ = |ξ * α| * |Real.log ‖z‖ - Real.log R| := abs_mul _ _
+      _ ≤ |ξ * α| * Real.log 4 := mul_le_mul_of_nonneg_left habs (abs_nonneg _)
+  nlinarith
+
+/-- The inserted metric has normalized lower bounds on arbitrarily large
+annular crossings, using the same field and metric assignment. -/
+theorem IsWholePlaneGFF.ae_frequently_normalized_inserted_far_crossing
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α : ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hD : IsLQGMetricOfField P γ ξ α hC D) :
+    ∃ s : ℝ, 0 < s ∧ ∀ᵐ ω ∂P, ∀ m : ℕ, ∃ j : ℕ, m ≤ j ∧
+      ∀ x y : ℂ, ‖x‖ < 8 ^ j / 4 → 3 * 8 ^ j / 8 ≤ ‖y‖ →
+        Real.exp (-(ξ * α) * Real.log (8 ^ j) - |ξ * α| * Real.log 4) *
+          (s * (8 ^ j : ℝ) ^ (xiGamma γ * Q γ) *
+            Real.exp (xiGamma γ * hcirc ω (8 ^ j) 0)) ≤ D ω y x := by
+  obtain ⟨𝔇, h𝔇, hrepr⟩ := hD
+  obtain ⟨s, hs, hcross⟩ := hh.ae_frequently_normalized_far_crossing hγ hγ₂ h𝔇
+  refine ⟨s, hs, ?_⟩
+  filter_upwards [hcross, hrepr] with ω hcross hrepr
+  intro m
+  obtain ⟨j, hj, hjcross⟩ := hcross m
+  refine ⟨j, hj, ?_⟩
+  intro x y hx hy
+  have hR : (0 : ℝ) < 8 ^ j := by positivity
+  have hbound := ofReal_exp_mul_le_weylScaling_of_annulus_crossing
+    (D := 𝔇 (hC ω)) (ξ := ξ) (f := fun z => -α * Real.log ‖z‖)
+    (r := (8 : ℝ) ^ j / 4) (r' := 3 * (8 : ℝ) ^ j / 8)
+    (m := -(ξ * α) * Real.log (8 ^ j) - |ξ * α| * Real.log 4)
+    (c := s * (8 ^ j : ℝ) ^ (xiGamma γ * Q γ) *
+      Real.exp (xiGamma γ * hcirc ω (8 ^ j) 0))
+    (by linarith) (fun z hz₁ hz₂ => log_weight_lower_on_scaled_annulus hR hz₁ hz₂)
+    (fun a b ha hb => hjcross a b (by linarith) (by linarith)) (x := y) (y := x) hy hx
+  have heq : ENNReal.ofReal (D ω y x) =
+      LatticeProb.LQG.weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) y x :=
+    (hrepr y x).2
+  rw [← heq] at hbound
+  exact (ENNReal.ofReal_le_ofReal_iff (hrepr y x).1).mp hbound
+
 end HarmonicBalls
