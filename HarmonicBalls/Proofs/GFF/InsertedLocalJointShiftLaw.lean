@@ -1633,4 +1633,69 @@ theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_on_connected_of_fiel
   exact h.exists_local_joint_smooth_shift_law_on_connected_of_subcritical hμ hγ hγ2 hα
     hε 𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p hp hconn h0 hξ
 
+/-- A countable family of open domains, connected whenever they contain the
+origin, has a common decoder for normalized internal distances. -/
+theorem IsWholePlaneGFF.exists_singularMetric_compactShift_decoder_on_connected_domains
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (V : ℕ → Set ℂ) (hV : ∀ n, IsOpen (V n))
+    (hconn : ∀ n, (0 : ℂ) ∈ V n → IsConnected (V n))
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V n ∧ (p n).2 ∈ V n)
+    (hξ : 0 ≤ ξ) :
+    ∃ F : (LocalZeroMeanTest univ → ℝ) → ℕ → ℝ≥0∞, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α hC univ ω) n =
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) (V n) (p n).1 (p n).2) ∧
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        ∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α
+          (fun ω => addFunPairing (hC ω) g) univ ω) n =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              (V n) (p n).1 (p n).2 := by
+  have hex (n : ℕ) :
+      ∃ G : (LocalZeroMeanTest univ → ℝ) → ℕ → ℝ≥0∞, Measurable G ∧
+        (∀ᵐ ω ∂P, ∀ k, G (localModConstPairings α hC univ ω) k =
+          ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+            internalMetric (D ω) (V n) (p n).1 (p n).2) ∧
+        ∀ g : ℂ → ℝ, IsTestFunction univ g →
+          ∀ᵐ ω ∂P, ∀ k, G (localModConstPairings α
+            (fun ω => addFunPairing (hC ω) g) univ ω) k =
+            ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+              internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+                (V n) (p n).1 (p n).2 := by
+    by_cases hzero : (0 : ℂ) ∈ V n
+    · obtain ⟨δ, hδ, hball⟩ := Metric.isOpen_iff.mp (hV n) 0 hzero
+      have hs : Tendsto (fun k : ℕ => δ / ((k : ℝ) + 2)) atTop (𝓝 0) :=
+        tendsto_const_nhds.div_atTop (tendsto_atTop_add_const_right _ 2 tendsto_natCast_atTop_atTop)
+      exact h.exists_local_singularMetric_compactShift_decoder 𝔇 h𝔇 hD hmetric
+        (hV n) (hconn n hzero) hzero (subset_univ _) ψ hψ hψint (fun _ => p n)
+        (fun _ => hp n) hball (fun k => δ / ((k : ℝ) + 2)) hs
+        (fun k => by positivity)
+        (fun k => div_lt_self hδ (by linarith [(Nat.cast_nonneg k : (0 : ℝ) ≤ k)]))
+        (S11m.decCircle δ) (fun k => S11m.decCircle_spec δ k) hξ
+    · have hp0 : (p n).1 ≠ 0 := by
+        intro heq
+        exact hzero (heq ▸ (hp n).1)
+      have hdiff : V n \ {0} = V n := sdiff_singleton_eq_self hzero
+      simpa only [hdiff] using
+        h.exists_local_punctured_singularMetric_compactShift_decoder 𝔇 h𝔇 hD hmetric
+          (hV n) (subset_univ _) ψ hψ hψint (fun _ => p n)
+          (fun _ => ⟨(hp n).1, hp0⟩) hξ
+  choose G hG hGb hGs using hex
+  let F := fun v n => G n v 0
+  refine ⟨F, ?_, ?_, ?_⟩
+  · exact measurable_pi_iff.mpr fun n => (measurable_pi_apply 0).comp (hG n)
+  · filter_upwards [ae_all_iff.mpr hGb] with ω hb n
+    exact hb n 0
+  · intro g hg
+    filter_upwards [ae_all_iff.mpr (fun n => hGs n g hg)] with ω hs n
+    exact hs n 0
+
 end HarmonicBalls
