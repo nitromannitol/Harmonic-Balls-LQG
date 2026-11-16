@@ -90,4 +90,38 @@ theorem lintegral_iSup_le_rpow_sum_lintegral_rpow {Ω : Type*} [MeasurableSpace 
       congr 1
       exact lintegral_finsetSum _ (fun j _ => (hX j).pow_const p)
 
+
+/-- A power bound on each cell moment controls the expected maximum by the
+corresponding mesh power. -/
+theorem lintegral_iSup_le_mesh_rpow {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {m : ℕ} (hm : 0 < m)
+    (X : Fin m → Ω → ℝ≥0∞) (hX : ∀ j, Measurable (X j))
+    {p β : ℝ} (hp : 1 ≤ p) (C : ℝ≥0∞)
+    (hcell : ∀ j, (∫⁻ ω, X j ω ^ p ∂μ) ≤ C * (m : ℝ≥0∞) ^ (-(1 + p * β))) :
+    (∫⁻ ω, ⨆ j, X j ω ∂μ) ≤ C ^ (1 / p) * (m : ℝ≥0∞) ^ (-β) := by
+  have hp0 : 0 < p := lt_of_lt_of_le zero_lt_one hp
+  have hm0 : (m : ℝ≥0∞) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hm)
+  have hmt : (m : ℝ≥0∞) ≠ ∞ := ENNReal.natCast_ne_top m
+  have hsum : (∑ j, ∫⁻ ω, X j ω ^ p ∂μ) ≤
+      (m : ℝ≥0∞) * (C * (m : ℝ≥0∞) ^ (-(1 + p * β))) := by
+    calc
+      _ ≤ ∑ _j : Fin m, C * (m : ℝ≥0∞) ^ (-(1 + p * β)) :=
+        Finset.sum_le_sum (fun j _ => hcell j)
+      _ = _ := by simp
+  calc
+    _ ≤ (∑ j, ∫⁻ ω, X j ω ^ p ∂μ) ^ (1 / p) :=
+      lintegral_iSup_le_rpow_sum_lintegral_rpow μ X hX hp
+    _ ≤ ((m : ℝ≥0∞) * (C * (m : ℝ≥0∞) ^ (-(1 + p * β)))) ^ (1 / p) :=
+      ENNReal.rpow_le_rpow hsum (one_div_nonneg.mpr hp0.le)
+    _ = C ^ (1 / p) * (m : ℝ≥0∞) ^ (-β) := by
+      have he : -(1 + p * β) = -1 + -(p * β) := by ring
+      rw [he, ENNReal.rpow_add _ _ hm0 hmt, ENNReal.rpow_neg_one]
+      rw [show (m : ℝ≥0∞) * (C * ((m : ℝ≥0∞)⁻¹ * (m : ℝ≥0∞) ^ (-(p * β)))) =
+        C * ((m : ℝ≥0∞) * (m : ℝ≥0∞)⁻¹) * (m : ℝ≥0∞) ^ (-(p * β)) by ac_rfl]
+      rw [ENNReal.mul_inv_cancel hm0 hmt, mul_one,
+        ENNReal.mul_rpow_of_nonneg _ _ (one_div_nonneg.mpr hp0.le), ← ENNReal.rpow_mul]
+      congr 1
+      congr 1
+      field_simp
+
 end HarmonicBalls
