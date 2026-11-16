@@ -529,4 +529,61 @@ theorem integral_unitOccupationRieszEnergy_eq (x y : ℂ) {β : ℝ} (hβ0 : 0 <
       rw [show (∫⁻ b, E b ∂planarBrownianMotion y) = _ from
         lintegral_planarBrownianMotion_pair_enorm_rpow_neg y β ν]]
 
+/-- The expected extended unit Riesz energy is invariant under deterministic time shifts. -/
+theorem lintegral_shift_unitOccupationRieszEnergy (x : ℂ) (s : ℝ≥0) (β : ℝ) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal ‖(ContinuousPath.shift s b) p.1 - (ContinuousPath.shift s b) p.2‖) ^ (-β)
+        ∂(ν.prod ν) ∂planarBrownianMotion x) =
+    ∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-β) ∂(ν.prod ν) ∂planarBrownianMotion x := by
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  dsimp only
+  have hf : Measurable (fun q : ContinuousPath ℂ × (ℝ≥0 × ℝ≥0) =>
+      (ENNReal.ofReal ‖(ContinuousPath.shift s q.1) q.2.1 -
+        (ContinuousPath.shift s q.1) q.2.2‖) ^ (-β)) := by
+    simp only [ContinuousPath.shift_apply]
+    fun_prop
+  have hg : Measurable (fun q : ContinuousPath ℂ × (ℝ≥0 × ℝ≥0) =>
+      (ENNReal.ofReal ‖q.1 q.2.1 - q.1 q.2.2‖) ^ (-β)) := by fun_prop
+  conv_lhs => rw [lintegral_lintegral_swap hf.aemeasurable]
+  conv_rhs => rw [lintegral_lintegral_swap hg.aemeasurable]
+  apply lintegral_congr
+  intro p
+  simp only [ContinuousPath.shift_apply]
+  rw [lintegral_planarBrownianMotion_increment_enorm_rpow_neg_eq,
+      lintegral_planarBrownianMotion_increment_enorm_rpow_neg_eq]
+  congr 3
+  simp
+
+/-- Shifted unit energy is integrable with the same expectation. -/
+theorem integrable_shift_unitOccupationRieszEnergy (x : ℂ) (s : ℝ≥0) {β : ℝ} (hβ0 : 0 < β) (hβ2 : β < 2) :
+    Integrable (fun b => unitOccupationRieszEnergy β (ContinuousPath.shift s b))
+        (planarBrownianMotion x) ∧
+      (∫ b, unitOccupationRieszEnergy β (ContinuousPath.shift s b) ∂planarBrownianMotion x) =
+        ∫ b, unitOccupationRieszEnergy β b ∂planarBrownianMotion x := by
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let E : ContinuousPath ℂ → ℝ≥0∞ := fun b => ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-β) ∂(ν.prod ν)
+  have hE : Measurable E := by
+    apply Measurable.lintegral_prod_right
+    fun_prop
+  have hEs : Measurable (fun b => E (ContinuousPath.shift s b)) :=
+    hE.comp (ContinuousPath.measurable_shift_fixed s)
+  have hfin : (∫⁻ b, E b ∂planarBrownianMotion x) < ⊤ :=
+    planarBrownianMotion_unit_occupation_riesz_energy_lt_top x hβ0 hβ2
+  have heq : (∫⁻ b, E (ContinuousPath.shift s b) ∂planarBrownianMotion x) =
+      ∫⁻ b, E b ∂planarBrownianMotion x := lintegral_shift_unitOccupationRieszEnergy x s β
+  have hfs : (∫⁻ b, E (ContinuousPath.shift s b) ∂planarBrownianMotion x) < ⊤ := by
+    rw [heq]
+    exact hfin
+  have haes : ∀ᵐ b ∂planarBrownianMotion x, E (ContinuousPath.shift s b) < ⊤ :=
+    ae_lt_top hEs hfs.ne
+  have hae : ∀ᵐ b ∂planarBrownianMotion x, E b < ⊤ := ae_lt_top hE hfin.ne
+  constructor
+  · exact integrable_toReal_of_lintegral_ne_top hEs.aemeasurable hfs.ne
+  · change (∫ b, (E (ContinuousPath.shift s b)).toReal ∂planarBrownianMotion x) =
+      ∫ b, (E b).toReal ∂planarBrownianMotion x
+    rw [integral_toReal hEs.aemeasurable haes, integral_toReal hE.aemeasurable hae, heq]
+
 end HarmonicBalls
