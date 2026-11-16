@@ -62,4 +62,40 @@ theorem ae_singular_approximant_uniform_dyadic_ball_bound
   exact ⟨C, hC, LatticeProb.LQG.exists_singular_approximant_uniform_dyadic_bound
     hγ hαQ (hcirc ω) hc' hZ⟩
 
+/-- The same event controls balls whose centers are at most their radius from
+    the insertion. -/
+theorem ae_singular_approximant_near_origin_dyadic_ball_bound
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc)
+    {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
+    (hδ : 0 < δ) (hρ : ρ ∈ Ioo (0 : ℝ) 1) (hrρ : r < ρ) :
+    ∀ᵐ ω ∂P, ∃ C : ℝ, 0 ≤ C ∧ ∃ n : ℕ, 0 < n ∧ ∃ J₀ : ℕ,
+      ∀ J k : ℕ, ∀ z : ℂ, ‖z‖ ≤ dyadicScale (J + 1) →
+      dyadicScale J ≤ r → J₀ ≤ J / n →
+      lqgApprox γ (fieldCircleAverage α (hcirc ω)) (dyadicScale k)
+          (ball z (dyadicScale (J + 1))) ≤
+        max (ENNReal.ofReal (Real.pi * Real.exp (γ * C) *
+          Real.exp (-(Real.log 2) * J)))
+          (ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2)) *
+            (Real.exp (-(γ * (lqgQ γ - α) * Real.log 2 / 2)) ^ (J / n) /
+              (1 - Real.exp (-(γ * (lqgQ γ - α) * Real.log 2 / 2)))))) := by
+  filter_upwards [ae_singular_approximant_uniform_dyadic_ball_bound
+    hh hγ hγ2 hαQ hδ hρ hrρ] with ω hω
+  obtain ⟨C, hC, n, hn, J₀, hJ₀⟩ := hω
+  refine ⟨C, hC, n, hn, J₀, fun J k z hz hr hJ => ?_⟩
+  refine (measure_mono ?_).trans (hJ₀ J k hr hJ)
+  intro x hx
+  have hxz : ‖x - z‖ < dyadicScale (J + 1) := by
+    simpa only [Metric.mem_ball, dist_eq_norm] using hx
+  have htri := norm_add_le (x - z) z
+  have hs : dyadicScale (J + 1) = dyadicScale J / 2 := by
+    simp only [dyadicScale, pow_succ]
+    ring
+  have hx0 : ‖x‖ < dyadicScale J := by
+    have heq : x - z + z = x := sub_add_cancel x z
+    rw [heq] at htri
+    linarith
+  simpa only [Metric.mem_ball, dist_zero_right] using hx0
+
 end HarmonicBalls
