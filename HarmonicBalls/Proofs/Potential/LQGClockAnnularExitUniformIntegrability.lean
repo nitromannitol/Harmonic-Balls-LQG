@@ -943,4 +943,39 @@ theorem brownian_shift_stopped_annular_increment_annealed_le {Ω : Type*} [Measu
   ring_nf
   exact le_rfl
 
+/-- Annular density increments up to the shifted Brownian exit have a common rate bound. -/
+theorem brownian_shift_exit_annular_increment_annealed_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (x : ℂ) (s : ℝ≥0) (ε : ℝ), 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        Integrable (fun b => ∫ ω, |∫ t in (0 : ℝ)..
+          (min (1 : ℝ≥0) (ContinuousPath.exitTime D (ContinuousPath.shift s b)).toNNReal : ℝ),
+          {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+            (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+            ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+              ((ContinuousPath.shift s b) t.toNNReal)| ∂P) (planarBrownianMotion x) ∧
+        (∫ b, ∫ ω, |∫ t in (0 : ℝ)..
+          (min (1 : ℝ≥0) (ContinuousPath.exitTime D (ContinuousPath.shift s b)).toNNReal : ℝ),
+          {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+            (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+            ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+              ((ContinuousPath.shift s b) t.toNNReal)| ∂P ∂planarBrownianMotion x) ≤
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_shift_stopped_annular_increment_annealed_le hh hγ0 hγ2 α hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro x s ε hε hεhalf hεδ
+  let τ : ContinuousPath ℂ → ℝ≥0 := fun b => (ContinuousPath.exitTime D b).toNNReal
+  have hτ : Measurable τ := (ContinuousPath.measurable_exitTime D hD).ennreal_toNNReal
+  have h := hb x s τ hτ ε hε hεhalf hεδ
+  convert h using 1 <;>
+    simp only [stoppedAnnularIncrement_eq_time_integral hh hε γ α δ τ, τ]
+
 end HarmonicBalls
