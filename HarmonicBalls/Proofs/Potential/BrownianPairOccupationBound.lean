@@ -1,14 +1,15 @@
 import HarmonicBalls.Proofs.Sec6.BrownianScaling
 import HarmonicBalls.Proofs.Brownian.PlanarHeatSemigroup
 import HarmonicBalls.Defs.Brownian
+import LatticeProb.Prob.GaussianFreezing
 
 /-! # Planar Brownian increments
 
-The increments of planar Brownian motion have centered planar Gaussian laws.
+Planar Brownian increments have centered Gaussian laws and satisfy a small-ball bound.
 -/
 
-open MeasureTheory ProbabilityTheory MarkovProcess
-open scoped NNReal
+open MeasureTheory ProbabilityTheory MarkovProcess Set Metric
+open scoped NNReal ENNReal
 
 namespace HarmonicBalls
 
@@ -38,5 +39,52 @@ theorem planarBrownianMotion_map_increment (x : ℂ) (s t : ℝ≥0) :
   funext p
   simp only [Function.comp_apply, complexPathOfReIm_apply, f]
   apply Complex.ext <;> simp [Complex.measurableEquivRealProd]
+
+/-- A planar Gaussian assigns a ball at most the product of the coordinate interval bounds. -/
+theorem planarGaussian_ball_le {v : ℝ≥0} (hv : v ≠ 0) {r : ℝ} (hr : 0 ≤ r) :
+    planarGaussian 0 v (ball 0 r) ≤
+      (ENNReal.ofReal (2 * r / Real.sqrt (2 * Real.pi * v))) ^ 2 := by
+  let I : Set ℝ := Icc (-r) r
+  have hsub : Complex.measurableEquivRealProd.symm ⁻¹' (ball (0 : ℂ) r) ⊆ I ×ˢ I := by
+    intro p hp
+    have hn : ‖Complex.measurableEquivRealProd.symm p‖ < r := by
+      simpa [Metric.mem_ball, dist_zero_right] using hp
+    have hre : |p.1| ≤ r := (Complex.abs_re_le_norm _).trans (le_of_lt hn)
+    have him : |p.2| ≤ r := (Complex.abs_im_le_norm _).trans (le_of_lt hn)
+    exact ⟨abs_le.mp hre, abs_le.mp him⟩
+  have hI : gaussianReal 0 v I ≤ ENNReal.ofReal (2 * r / Real.sqrt (2 * Real.pi * v)) := by
+    have h := LatticeProb.gaussianReal_Icc_le hv (c := -r) (d := r) (by linarith)
+    simpa [I, show r - -r = 2 * r by ring] using h
+  rw [planarGaussian, Complex.zero_re, Complex.zero_im,
+    Measure.map_apply Complex.measurableEquivRealProd.symm.measurable isOpen_ball.measurableSet]
+  calc
+    _ ≤ ((gaussianReal 0 v).prod (gaussianReal 0 v)) (I ×ˢ I) := measure_mono hsub
+    _ = gaussianReal 0 v I * gaussianReal 0 v I := Measure.prod_prod _ _
+    _ ≤ (ENNReal.ofReal (2 * r / Real.sqrt (2 * Real.pi * v))) ^ 2 := by
+      simpa [pow_two] using mul_le_mul' hI hI
+
+/-- A planar Brownian increment satisfies a two-dimensional small-ball bound. -/
+theorem planarBrownianMotion_increment_smallBall_le (x : ℂ) {s t : ℝ≥0} (hts : t ≠ s) {r : ℝ} (hr : 0 ≤ r) :
+    planarBrownianMotion x {b | ‖b t - b s‖ < r} ≤
+      min 1 ((ENNReal.ofReal (2 * r / Real.sqrt (2 * Real.pi *
+        (nndist (t : ℝ) (s : ℝ) : ℝ)))) ^ 2) := by
+  have hv : nndist (t : ℝ) (s : ℝ) ≠ 0 := by
+    intro hzero
+    apply hts
+    exact_mod_cast (nndist_eq_zero.mp hzero)
+  apply le_min
+  · exact prob_le_one
+  · have hm : Measurable (fun b : MarkovProcess.ContinuousPath ℂ => b t - b s) :=
+      (MarkovProcess.ContinuousPath.measurable_coordinateProcess _).sub
+        (MarkovProcess.ContinuousPath.measurable_coordinateProcess _)
+    have h := congrArg (fun μ : Measure ℂ => μ (ball 0 r))
+      (planarBrownianMotion_map_increment x s t)
+    rw [Measure.map_apply hm isOpen_ball.measurableSet] at h
+    have hh : planarBrownianMotion x {b | ‖b t - b s‖ < r} =
+        planarGaussian 0 (nndist (t : ℝ) (s : ℝ)) (ball 0 r) := by
+      change planarBrownianMotion x {b | dist (b t - b s) 0 < r} = _ at h
+      simpa only [dist_zero_right] using h
+    rw [hh]
+    exact planarGaussian_ball_le hv hr
 
 end HarmonicBalls
