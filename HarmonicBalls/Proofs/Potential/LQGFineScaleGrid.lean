@@ -1,6 +1,7 @@
 import LatticeProb.LQG.GMCDilatedGrid
 import LatticeProb.LQG.LQGBallMassRatioUniform
 import LatticeProb.Gauss.CircleAverageModulusUniform
+import LatticeProb.LQG.GMCRatioLimit
 
 /-! # Summability for fine-scale grids
 
@@ -324,7 +325,7 @@ theorem exists_spatial_radial_enumeration (S : ℕ → Finset ℂ) (Q : ℕ → 
     · exact congrArg Prod.snd hval
 
 
-open LatticeProb.LQG LatticeProb.LQG.GMCScaleGrid
+open LatticeProb.LQG LatticeProb.LQG.GMCScaleGrid LatticeProb.LQG.GMCRatioLimit
 
 /-- The dyadic spatial grids can be chosen with uniformly bounded centers. -/
 theorem exists_bounded_dyadic_ball_grids (R : ℝ) (hR : 0 < R) :
@@ -457,5 +458,65 @@ theorem ae_affine_circle_radial_modulus
       (by unfold dyadicScale; exact pow_le_one₀ (by norm_num) (by norm_num)) hβ.le
   apply le_trans ?_ hpow
   simpa only [affineRecentredCircle, sub_sub_sub_cancel_right] using h
+
+/-- A radial grid point in the same dyadic band lies within the mesh required
+by the circle-average modulus after affine rescaling. -/
+theorem exists_fine_scale_grid_near {a : ℝ} (ha : 0 < a) {j n : ℕ}
+    (hj : 1 ≤ j) {t : ℝ} (ht1 : dyadicScale n / 2 ≤ t)
+    (ht2 : t ≤ dyadicScale n) :
+    ∃ i ≤ gridCount a (n + j),
+      dyadicScale (n + j) / 2 ≤ dyadicScale j * t ∧
+      dyadicScale j * t ≤ dyadicScale (n + j) ∧
+      dyadicScale (n + j) / 2 ≤
+        dyadicScale j * gridScale (fun k => gridCount a (k + j)) n i ∧
+      dyadicScale j * gridScale (fun k => gridCount a (k + j)) n i ≤
+        dyadicScale (n + j) ∧
+      |dyadicScale j * t -
+        dyadicScale j * gridScale (fun k => gridCount a (k + j)) n i| <
+          dyadicScale (n + j) * dyadicScale (n + j) ^ (a / 4) := by
+  have hdj : 0 < dyadicScale j := pow_pos (by norm_num) j
+  obtain ⟨hN, hmesh⟩ := one_le_gridCount_and_mesh_le ha.le (n + j)
+  obtain ⟨i, hi, hti⟩ := exists_gridScale_near
+    (fun k => gridCount a (k + j)) hN ht1 ht2
+  obtain ⟨hs1, hs2⟩ := gridScale_mem_Icc (fun k => gridCount a (k + j)) hi
+  have hk : dyadicScale (n + j) = dyadicScale j * dyadicScale n := by
+    rw [add_comm]; exact dyadicScale_add j n
+  have hk0 : 0 < dyadicScale (n + j) := pow_pos (by norm_num) _
+  have hk1 : dyadicScale (n + j) < 1 := by
+    unfold dyadicScale
+    exact pow_lt_one₀ (by norm_num) (by norm_num) (by omega)
+  refine ⟨i, hi, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hk, mul_div_assoc]; exact mul_le_mul_of_nonneg_left ht1 hdj.le
+  · rw [hk]; exact mul_le_mul_of_nonneg_left ht2 hdj.le
+  · rw [hk, mul_div_assoc]; exact mul_le_mul_of_nonneg_left hs1 hdj.le
+  · rw [hk]; exact mul_le_mul_of_nonneg_left hs2 hdj.le
+  · rw [← mul_sub, abs_mul, abs_of_pos hdj]
+    calc
+      dyadicScale j * |t - gridScale (fun k => gridCount a (k + j)) n i| ≤
+          dyadicScale j * (dyadicScale n / (2 * gridCount a (n + j))) :=
+        mul_le_mul_of_nonneg_left hti hdj.le
+      _ = dyadicScale (n + j) / (2 * gridCount a (n + j)) := by rw [hk]; ring
+      _ ≤ dyadicScale (n + j) * dyadicScale (n + j) ^ (a / 2) := hmesh
+      _ < dyadicScale (n + j) * dyadicScale (n + j) ^ (a / 4) :=
+        mul_lt_mul_of_pos_left (Real.rpow_lt_rpow_of_exponent_gt hk0 hk1 (by linarith)) hk0
+
+/-- On one field event, a nearby radial grid point controls all affine
+circle averages on the cutoff disk, uniformly over bounded centers. -/
+theorem ae_fine_scale_grid_circle_comparison
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {a : ℝ} (ha : 0 < a) (R : ℝ) :
+    ∀ᵐ ω ∂P, ∀ᶠ j in atTop, ∀ n : ℕ, ∀ t : ℝ,
+      dyadicScale n / 2 ≤ t → t ≤ dyadicScale n →
+      ∃ i ≤ gridCount a (n + j), ∀ x : ℂ, ‖x‖ ≤ R + 1 →
+        ∀ w : ℂ, ‖w‖ ≤ 2 →
+          |affineRecentredCircle (hcirc ω) (dyadicScale j) x t w -
+            affineRecentredCircle (hcirc ω) (dyadicScale j) x
+              (gridScale (fun k => gridCount a (k + j)) n i) w| ≤ 1 := by
+  filter_upwards [ae_affine_circle_radial_modulus hh (a := a / 4) (div_pos ha (by norm_num)) R] with ω hω
+  filter_upwards [hω, eventually_ge_atTop 1] with j hj hj1 n t ht1 ht2
+  obtain ⟨i, hi, h1, h2, h3, h4, h5⟩ := exists_fine_scale_grid_near ha hj1 ht1 ht2
+  exact ⟨i, hi, fun x hx w hw => hj n x hx w hw _ _ h1 h2 h3 h4 h5⟩
 
 end HarmonicBalls
