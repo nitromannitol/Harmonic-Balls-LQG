@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.Potential.LQGClockAnnularUniformIntegrability
 import HarmonicBalls.Proofs.Potential.BrownianExpectedExitGreen
 import MarkovProcess.Trajectory.ExitTimeExponentialMoment
 import LatticeProb.LQG.LQGCircleMoments
+import HarmonicBalls.Proofs.Potential.BrownianIncrementRieszMoment
 
 /-! # Annular clock integrability at Brownian exit
 
@@ -503,5 +504,29 @@ theorem exists_annular_exit_time_tail_le_exp {Ω : Type*} [MeasurableSpace Ω] {
         filter_upwards [htime] with ω hω
         exact (hω b T).symm
     _ ≤ _ := hbound x T hT hε hεδ hεhalf
+
+/-- The expected unit Brownian Riesz energy does not depend on the starting point. -/
+theorem integral_unitOccupationRieszEnergy_eq (x y : ℂ) {β : ℝ} (hβ0 : 0 < β) (hβ2 : β < 2) :
+    (∫ b, unitOccupationRieszEnergy β b ∂planarBrownianMotion x) =
+    ∫ b, unitOccupationRieszEnergy β b ∂planarBrownianMotion y := by
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let E : ContinuousPath ℂ → ℝ≥0∞ := fun b => ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-β) ∂(ν.prod ν)
+  have hE : Measurable E := by
+    apply Measurable.lintegral_prod_right
+    fun_prop
+  have hEx : ∀ᵐ b ∂planarBrownianMotion x, E b < ⊤ :=
+    planarBrownianMotion_ae_unit_occupation_riesz_energy_lt_top x hβ0 hβ2
+  have hEy : ∀ᵐ b ∂planarBrownianMotion y, E b < ⊤ :=
+    planarBrownianMotion_ae_unit_occupation_riesz_energy_lt_top y hβ0 hβ2
+  change (∫ b, (E b).toReal ∂planarBrownianMotion x) =
+    ∫ b, (E b).toReal ∂planarBrownianMotion y
+  rw [integral_toReal hE.aemeasurable hEx, integral_toReal hE.aemeasurable hEy]
+  rw [show (∫⁻ b, E b ∂planarBrownianMotion x) =
+    (∫⁻ b, E b ∂planarBrownianMotion y) from by
+      rw [show (∫⁻ b, E b ∂planarBrownianMotion x) = _ from
+        lintegral_planarBrownianMotion_pair_enorm_rpow_neg x β ν]
+      rw [show (∫⁻ b, E b ∂planarBrownianMotion y) = _ from
+        lintegral_planarBrownianMotion_pair_enorm_rpow_neg y β ν]]
 
 end HarmonicBalls
