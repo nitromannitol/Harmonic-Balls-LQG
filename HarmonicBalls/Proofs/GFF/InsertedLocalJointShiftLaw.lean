@@ -1698,6 +1698,81 @@ theorem IsWholePlaneGFF.exists_singularMetric_compactShift_decoder_on_connected_
     filter_upwards [ae_all_iff.mpr (fun n => hGs n g hg)] with ω hs n
     exact hs n 0
 
+/-- A common measurable decoder recovers the actual joint observations of the
+field and each of its fixed smooth shifts. -/
+theorem IsWholePlaneGFF.exists_joint_smooth_shift_decoder_on_domains_between
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α a ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ W : Set ℂ, IsOpen W → W.Nonempty → 0 < μ ω W)
+    (ha : 0 ≤ a) (haε : a < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (V : ℕ → Set ℂ) (hV : ∀ n, IsOpen (V n))
+    (hconn : ∀ n, (0 : ℂ) ∈ V n → IsConnected (V n))
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V n ∧ (p n).2 ∈ V n)
+    (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo a ε, ∃ F : (LocalZeroMeanTest univ → ℝ) →
+      (LocalZeroMeanTest (ball 0 ε) → ℝ) × (Measure ℂ × (ℕ → ℝ≥0∞)),
+      Measurable F ∧
+      (∀ᵐ ω ∂P, F (localModConstPairings α hC univ ω) =
+        (localModConstPairings α hC (ball 0 ε) ω,
+         normalizedRestriction (μ ω) (ball 0 R), fun n =>
+           ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) (V n) (p n).1 (p n).2)) ∧
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        ∀ᵐ ω ∂P, F (localModConstPairings α
+          (fun ω => addFunPairing (hC ω) g) univ ω) =
+        (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+         normalizedRestriction ((μ ω).withDensity
+           (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+         fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+           internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+             (V n) (p n).1 (p n).2) := by
+  obtain ⟨G, hG, hGb, hGs⟩ := h.exists_singularMetric_compactShift_decoder_on_connected_domains
+    𝔇 h𝔇 hD hmetric V hV hconn ψ hψ hψint p hp hξ
+  obtain ⟨R, hR, M, hM, _, hMeq⟩ :=
+    h.exists_shifted_normalized_measure_decoder_between hμ hfull ha haε
+  let Q : (LocalZeroMeanTest univ → ℝ) → LocalZeroMeanTest (ball 0 ε) → ℝ :=
+    fun v φ => v ⟨φ.1, φ.2.1.mono_set (subset_univ _), φ.2.2⟩
+  have hQ : Measurable Q := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    exact measurable_pi_apply (⟨φ.1, φ.2.1.mono_set (subset_univ _), φ.2.2⟩ :
+      LocalZeroMeanTest univ)
+  have hQeq (T : (ℂ → ℝ) → ℝ) :
+      Q (localModConstPairings α id univ T) = localModConstPairings α id (ball 0 ε) T := by
+    funext φ
+    rfl
+  let F := fun v => (Q v, M (Q v), G v)
+  have hF : Measurable F := hQ.prodMk ((hM.comp hQ).prodMk hG)
+  have hzero : (fun ω => addFunPairing (hC ω) (fun _ => 0)) = hC := by
+    funext ω φ
+    simp [addFunPairing]
+  have hzeroTest : IsTestFunction univ (fun _ : ℂ => (0 : ℝ)) :=
+    ⟨contDiff_const, HasCompactSupport.zero, by simp⟩
+  have hbase := hMeq (fun _ => 0) hzeroTest
+  simp only [hzero, mul_zero, Real.exp_zero, ENNReal.ofReal_one] at hbase
+  have hwone (ω : Ω) : (μ ω).withDensity (fun _ => 1) = μ ω := withDensity_one
+  simp only [hwone] at hbase
+  refine ⟨R, hR, F, hF, ?_, ?_⟩
+  · filter_upwards [hbase, hGb] with ω hm hn
+    change (Q (localModConstPairings α id univ (hC ω)),
+      M (Q (localModConstPairings α id univ (hC ω))), _) = _
+    rw [hQeq]
+    exact Prod.ext rfl (Prod.ext hm (funext hn))
+  · intro g hg
+    filter_upwards [hMeq g hg, hGs g hg] with ω hm hn
+    change (Q (localModConstPairings α id univ (addFunPairing (hC ω) g)),
+      M (Q (localModConstPairings α id univ (addFunPairing (hC ω) g))), _) = _
+    rw [hQeq]
+    exact Prod.ext rfl (Prod.ext hm (funext hn))
+
 /-- The local field, normalized measure and normalized internal distances on
 countably many open domains have equivalent joint laws under smooth shifts.
 The measure reference radius can be chosen above a prescribed lower bound. -/
