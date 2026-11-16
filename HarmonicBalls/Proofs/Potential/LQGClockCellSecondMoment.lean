@@ -7,8 +7,8 @@ Tonelli's theorem transfers a two-point bound to the second moment of an
 integrated nonnegative density.
 -/
 
-open MeasureTheory
-open scoped ENNReal
+open MeasureTheory MarkovProcess
+open scoped ENNReal NNReal
 
 namespace HarmonicBalls
 
@@ -127,5 +127,111 @@ theorem lintegral_annular_inserted_mass_sq_le_riesz
           exact lintegral_const_mul C (hk1 z)
     _ = _ := lintegral_const_mul C hk.lintegral_prod_right'
 
+
+/-- Pulling the annular density back along a measurable path preserves the
+second-moment bound, with the path's pair energy on the right. -/
+theorem lintegral_annular_inserted_path_sq_le_riesz
+    {Ω T : Type*} [MeasurableSpace Ω] [MeasurableSpace T] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (ν : Measure T) [SFinite ν] (g : T → ℂ) (hg : Measurable g)
+    {ε δ : ℝ} (hε : 0 < ε) (hεδ : ε ≤ δ) {γ : ℝ} (hγ : γ ≠ 0) (α : ℝ) :
+    (∫⁻ ω, (∫⁻ t, ENNReal.ofReal
+        ({u : ℂ | δ ≤ ‖u‖ ∧ ‖u‖ ≤ 1 / 2}.indicator (fun u =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε u)) (g t)) ∂ν) ^ 2 ∂P) ≤
+      ENNReal.ofReal (Real.exp (|γ * α| * |Real.log δ|) ^ 2 * 2 ^ (γ ^ 2)) *
+        ∫⁻ p : T × T, (ENNReal.ofReal ‖g p.1 - g p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν) := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := {u : ℂ | δ ≤ ‖u‖ ∧ ‖u‖ ≤ 1 / 2}
+  have hA : MeasurableSet A :=
+    (measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
+  have hmeas : ∀ᵐ ω ∂P, Measurable (fun z => ENNReal.ofReal
+      (A.indicator (fun u => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε u)) z)) := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec
+    have hm : Measurable (fun z : ℂ => ENNReal.ofReal
+        (A.indicator (fun u => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          (H ω ε u - H ω 1 0 - α * Real.log (max ε ‖u‖)))) z)) := by
+      apply ENNReal.measurable_ofReal.comp
+      exact (measurable_const.mul (measurable_const.mul
+        ((((hHm ε hε).comp (measurable_id.prodMk measurable_const)).sub measurable_const).sub
+          (measurable_const.mul ((measurable_const.max measurable_norm).log)))).exp).indicator hA
+    convert hm using 1
+    ext z
+    simp only [Set.indicator_apply]
+    split_ifs
+    · rw [hω, hω, hrec ε z hε]
+    · rfl
+  let μ : Measure ℂ := Measure.map g ν
+  have hmain := lintegral_annular_inserted_mass_sq_le_riesz hh μ hε hεδ hγ α
+  have hleft : (∫⁻ ω, (∫⁻ z, ENNReal.ofReal
+        (A.indicator (fun u => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε u)) z) ∂μ) ^ 2 ∂P) =
+      ∫⁻ ω, (∫⁻ t, ENNReal.ofReal
+        (A.indicator (fun u => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε u)) (g t)) ∂ν) ^ 2 ∂P := by
+    apply lintegral_congr_ae
+    filter_upwards [hmeas] with ω hω
+    rw [show (∫⁻ z, ENNReal.ofReal (A.indicator (fun u =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε u)) z) ∂μ) =
+      ∫⁻ t, ENNReal.ofReal (A.indicator (fun u =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε u)) (g t)) ∂ν from
+      lintegral_map hω hg]
+  rw [hleft] at hmain
+  convert hmain using 1
+  rw [show μ.prod μ = Measure.map (Prod.map g g) (ν.prod ν) from
+    Measure.map_prod_map ν ν hg hg]
+  rw [lintegral_map (by fun_prop) (hg.prodMap hg)]
+  rfl
+
+/-- For squared coupling below two, the annealed annular second moment on a
+Brownian time interval is bounded by its length to the corresponding power. -/
+theorem exists_lintegral_brownian_annular_inserted_cell_sq_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ : γ ≠ 0) (hγ2 : γ ^ 2 < 2) (α δ : ℝ) :
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ {ε : ℝ}, 0 < ε → ε ≤ δ →
+      ∀ (u h : ℝ), 0 ≤ u → 0 < h →
+        let ν := Measure.map Real.toNNReal (volume.restrict (Set.Icc u (u + h)))
+        (∫⁻ b, ∫⁻ ω, (∫⁻ t, ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b t)) ∂ν) ^ 2 ∂P
+          ∂(planarBrownianMotion x)) ≤ C * (ENNReal.ofReal h) ^ (2 - γ ^ 2 / 2) := by
+  obtain ⟨D, hD, henergy⟩ :=
+    exists_planarBrownianMotion_interval_pair_enorm_rpow_neg x (sq_pos_of_ne_zero hγ) hγ2
+  let A : ℝ≥0∞ := ENNReal.ofReal
+    (Real.exp (|γ * α| * |Real.log δ|) ^ 2 * 2 ^ (γ ^ 2))
+  refine ⟨A * D, ENNReal.mul_lt_top ENNReal.ofReal_lt_top hD, ?_⟩
+  intro ε hε hεδ u h hu hhpos
+  let ν := Measure.map Real.toNNReal (volume.restrict (Set.Icc u (u + h)))
+  have hbound (b : ContinuousPath ℂ) :
+      (∫⁻ ω, (∫⁻ t, ENNReal.ofReal
+        ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b t)) ∂ν) ^ 2 ∂P) ≤
+      A * ∫⁻ p : ℝ≥0 × ℝ≥0,
+        (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν) :=
+    lintegral_annular_inserted_path_sq_le_riesz hh ν b b.continuous.measurable hε hεδ hγ α
+  have hm : Measurable (fun b : ContinuousPath ℂ => ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν)) := by
+    have hk : Measurable (fun q : ContinuousPath ℂ × (ℝ≥0 × ℝ≥0) =>
+        (ENNReal.ofReal ‖q.1 q.2.1 - q.1 q.2.2‖) ^ (-(γ ^ 2))) := by fun_prop
+    exact hk.lintegral_prod_right'
+  calc
+    _ ≤ ∫⁻ b, A * (∫⁻ p : ℝ≥0 × ℝ≥0,
+        (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν))
+          ∂(planarBrownianMotion x) := lintegral_mono hbound
+    _ = A * (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+        (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν)
+          ∂(planarBrownianMotion x)) := lintegral_const_mul A hm
+    _ = (A * D) * (ENNReal.ofReal h) ^ (2 - γ ^ 2 / 2) := by
+      rw [henergy u h hu hhpos]
+      ac_rfl
 
 end HarmonicBalls
