@@ -195,4 +195,22 @@ theorem exists_measurable_annular_inserted_clock_cell {Ω : Type*} [MeasurableSp
     · rw [hω, hω, hrec ε _ hε]
     · rfl
 
+/-- The actual inserted annular clock cell is almost everywhere measurable
+under the product of the field law and an s-finite path law. -/
+theorem aemeasurable_annular_inserted_clock_cell {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (ν : Measure (ContinuousPath ℂ)) [SFinite ν]
+    {ε : ℝ} (hε : 0 < ε) (γ α δ a b : ℝ) :
+    AEMeasurable (fun p : Ω × ContinuousPath ℂ =>
+      ∫⁻ s in Ioc a b, ENNReal.ofReal
+        ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal)))
+      (P.prod ν) := by
+  obtain ⟨H, hHm, hHae⟩ := HarmonicBalls.exists_measurable_annular_inserted_clock_cell hh γ α δ
+  apply (hHm ε hε a b).aemeasurable.congr
+  filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := ν)).ae hHae] with p hp
+  exact hp ε hε p.2 a b
+
 end HarmonicBalls
