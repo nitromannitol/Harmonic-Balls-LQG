@@ -9,7 +9,7 @@ Dyadic circle averages of a whole-plane field admit simultaneous spatial bounds.
 -/
 
 noncomputable section
-open MeasureTheory Filter Set Metric
+open MeasureTheory Filter Set Metric LatticeProb.LQG
 
 namespace HarmonicBalls
 
@@ -140,6 +140,85 @@ theorem IsWholePlaneGFF.ae_compact_dyadic_circle_le
     linarith
   obtain ⟨C, hC, hbound⟩ := hω N
   exact ⟨C, hC, fun k z hz => hbound k z (hz.trans hR)⟩
+
+
+
+/-- The affine recentering error has a uniform dyadic power bound on
+bounded sets of centers. -/
+theorem IsWholePlaneGFF.ae_compact_affine_circle_error_le
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ δ : ℝ} (hγ : 0 < γ) (hδ : 0 < δ) :
+    ∀ᵐ ω ∂P, ∀ R : ℝ, ∃ C : ℝ, 0 < C ∧ ∀ k z, ‖z‖ ≤ R →
+      LQGDyadicScaling.dyadicFactor γ (k + 2) (hcirc ω (LatticeProb.LQG.dyadicScale (k + 2)) z) *
+        ENNReal.ofReal (Real.exp (γ * affineRecentredCircle (hcirc ω)
+          (LatticeProb.LQG.dyadicScale (k + 2)) z 4 0)) ≤
+      ENNReal.ofReal (C * LatticeProb.LQG.dyadicScale (k + 2) ^
+        (2 + γ ^ 2 / 2 - γ * (2 + δ))) := by
+  filter_upwards [hh.ae_compact_dyadic_circle_le hδ] with ω hω R
+  obtain ⟨B, hB, hbound⟩ := hω R
+  refine ⟨Real.exp (γ * B), Real.exp_pos _, ?_⟩
+  intro k z hz
+  rw [dyadicFactor_mul_affine_circle_exp]
+  have hd : 0 < LatticeProb.LQG.dyadicScale (k + 2) := by unfold LatticeProb.LQG.dyadicScale; positivity
+  have hscale : LatticeProb.LQG.dyadicScale (k + 2) * 4 = LatticeProb.LQG.dyadicScale k := by
+    rw [LatticeProb.LQG.dyadicScale_add_two]
+    ring
+  have hlog : Real.log (LatticeProb.LQG.dyadicScale k)⁻¹ ≤
+      Real.log (LatticeProb.LQG.dyadicScale (k + 2))⁻¹ := by
+    simp only [LatticeProb.LQG.dyadicScale, LatticeProb.LQG.dyadicScale, inv_pow, inv_inv, Real.log_pow,
+      Nat.cast_add, Nat.cast_ofNat]
+    have hp : 0 ≤ Real.log 2 := (Real.log_pos (by norm_num)).le
+    nlinarith
+  have hhbound := hbound k z hz
+  have hcircle : hcirc ω (LatticeProb.LQG.dyadicScale (k + 2) * 4) z ≤
+      B + (2 + δ) * Real.log (LatticeProb.LQG.dyadicScale (k + 2))⁻¹ := by
+    rw [hscale]
+    have hm := mul_le_mul_of_nonneg_left hlog (show 0 ≤ 2 + δ by linarith)
+    linarith
+  apply ENNReal.ofReal_le_ofReal
+  have hexp := Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left hcircle hγ.le)
+  calc
+    LatticeProb.LQG.dyadicScale (k + 2) ^ (2 + γ ^ 2 / 2) *
+        Real.exp (γ * hcirc ω (LatticeProb.LQG.dyadicScale (k + 2) * 4) z)
+        ≤ LatticeProb.LQG.dyadicScale (k + 2) ^ (2 + γ ^ 2 / 2) *
+          Real.exp (γ * (B + (2 + δ) * Real.log (LatticeProb.LQG.dyadicScale (k + 2))⁻¹)) := by
+            gcongr
+    _ = Real.exp (γ * B) * LatticeProb.LQG.dyadicScale (k + 2) ^
+          (2 + γ ^ 2 / 2 - γ * (2 + δ)) := by
+      rw [Real.rpow_def_of_pos hd, Real.rpow_def_of_pos hd, ← Real.exp_add, ← Real.exp_add,
+        Real.log_inv]
+      congr 1
+      ring
+
+
+
+/-- In the subcritical range the affine recentering error has a positive
+dyadic power uniformly on bounded sets of centers. -/
+theorem IsWholePlaneGFF.ae_compact_affine_circle_error_positive_power
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) :
+    ∀ᵐ ω ∂P, ∀ R : ℝ, ∃ C κ : ℝ, 0 < C ∧ 0 < κ ∧ ∀ k z, ‖z‖ ≤ R →
+      LQGDyadicScaling.dyadicFactor γ (k + 2)
+          (hcirc ω (LatticeProb.LQG.dyadicScale (k + 2)) z) *
+        ENNReal.ofReal (Real.exp (γ * affineRecentredCircle (hcirc ω)
+          (LatticeProb.LQG.dyadicScale (k + 2)) z 4 0)) ≤
+      ENNReal.ofReal (C * LatticeProb.LQG.dyadicScale (k + 2) ^ κ) := by
+  let δ : ℝ := (2 - γ) ^ 2 / (4 * γ)
+  have hδ : 0 < δ := by
+    dsimp [δ]
+    positivity
+  have hκ : 0 < 2 + γ ^ 2 / 2 - γ * (2 + δ) := by
+    dsimp [δ]
+    have hs : 0 < (2 - γ) ^ 2 := sq_pos_of_pos (by linarith)
+    have he : γ * ((2 - γ) ^ 2 / (4 * γ)) = (2 - γ) ^ 2 / 4 := by
+      field_simp
+    rw [mul_add, he]
+    nlinarith
+  filter_upwards [hh.ae_compact_affine_circle_error_le hγ hδ] with ω hω R
+  obtain ⟨C, hC, hbound⟩ := hω R
+  exact ⟨C, 2 + γ ^ 2 / 2 - γ * (2 + δ), hC, hκ, hbound⟩
 
 end HarmonicBalls
 
