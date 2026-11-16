@@ -344,4 +344,94 @@ theorem lintegral_prod_stoppedAnnularClock_sub_le_uniform_horizon
   rw [lintegral_congr_ae heq]
   exact hbound τ hτ (dyadicScale k) (dyadicScale_pos k) hhalf hδk
 
+/-- A nonnegative continuous annular density has nonnegative clock increments,
+and their extended values equal the corresponding time-cell integrals. -/
+theorem stoppedAnnularClock_sub_nonneg_and_ofReal_eq_lintegral (f : ℂ → ℝ) (hf : Continuous f) (hf0 : ∀ z, 0 ≤ f z)
+    (δ : ℝ) (b : ContinuousPath ℂ) {u v : ℝ} (hu : 0 ≤ u) (huv : u ≤ v) (hv : v ≤ 1) :
+    0 ≤ stoppedAnnularClock f δ (fun _ => v.toNNReal) b -
+      stoppedAnnularClock f δ (fun _ => u.toNNReal) b ∧
+    ENNReal.ofReal (stoppedAnnularClock f δ (fun _ => v.toNNReal) b -
+      stoppedAnnularClock f δ (fun _ => u.toNNReal) b) =
+      ∫⁻ s in Ioc u v, ENNReal.ofReal
+        ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal)) := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let g : ℝ → ℝ := fun s => A.indicator f (b s.toNNReal)
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  have hgm : Measurable g := (hf.measurable.indicator hA).comp
+    (b.continuous.measurable.comp continuous_real_toNNReal.measurable)
+  obtain ⟨K, hK⟩ := (isCompact_closedBall (0 : ℂ) (1/2 : ℝ)).bddAbove_image hf.norm.continuousOn
+  have hgK : ∀ s, ‖g s‖ ≤ max K 0 := by
+    intro s
+    by_cases hs : b s.toNNReal ∈ A
+    · have hs' : b s.toNNReal ∈ Metric.closedBall (0 : ℂ) (1/2 : ℝ) := by
+        simpa only [Metric.mem_closedBall, dist_zero_right] using hs.2
+      rw [show g s = f (b s.toNNReal) from Set.indicator_of_mem hs _]
+      exact (hK ⟨_, hs', rfl⟩).trans (le_max_left K 0)
+    · rw [show g s = 0 from Set.indicator_of_notMem hs _, norm_zero]
+      exact le_max_right K 0
+  have hgi (a c : ℝ) : IntervalIntegrable g volume a c := by
+    have hc : IntervalIntegrable (fun _ : ℝ => max K 0) volume a c := intervalIntegrable_const
+    apply hc.mono_fun' hgm.aestronglyMeasurable.restrict
+    exact Filter.Eventually.of_forall hgK
+  have hg0 (s : ℝ) : 0 ≤ g s := by
+    simp only [g, Set.indicator_apply]
+    split_ifs with hs
+    · exact hf0 _
+    · exact le_rfl
+  have hv0 : 0 ≤ v := hu.trans huv
+  rw [stoppedAnnularClock_eq_time_integral _ hf.measurable,
+    stoppedAnnularClock_eq_time_integral _ hf.measurable]
+  simp only [NNReal.coe_one, Real.coe_toNNReal', max_eq_left hu, max_eq_left hv0,
+    min_eq_right hv, min_eq_right (huv.trans hv)]
+  change 0 ≤ (∫ s in (0 : ℝ)..v, g s) - (∫ s in (0 : ℝ)..u, g s) ∧
+    ENNReal.ofReal ((∫ s in (0 : ℝ)..v, g s) - (∫ s in (0 : ℝ)..u, g s)) = _
+  rw [intervalIntegral.integral_interval_sub_left (hgi 0 v) (hgi 0 u)]
+  refine ⟨intervalIntegral.integral_nonneg_of_forall huv hg0, ?_⟩
+  rw [intervalIntegral.integral_of_le huv,
+    ofReal_integral_eq_lintegral_ofReal (hgi u v).1 (Filter.Eventually.of_forall hg0)]
+
+/-- A nonnegative continuous density gives a nondecreasing annular clock. -/
+theorem monotoneOn_stoppedAnnularClock (f : ℂ → ℝ) (hf : Continuous f)
+    (hf0 : ∀ z, 0 ≤ f z) (δ : ℝ) (b : ContinuousPath ℂ) :
+    MonotoneOn (fun t : ℝ => stoppedAnnularClock f δ (fun _ => t.toNNReal) b)
+      (Icc (0 : ℝ) 1) := by
+  intro u hu v hv huv
+  exact sub_nonneg.mp (stoppedAnnularClock_sub_nonneg_and_ofReal_eq_lintegral
+    f hf hf0 δ b hu.1 huv hv.2).1
+
+
+/-- On one full-measure field event, each actual dyadic annular clock is
+nondecreasing and its increments are the corresponding density-cell integrals. -/
+theorem ae_dyadic_stoppedAnnularClock_monotone_and_cell
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α δ : ℝ) :
+    ∀ᵐ ω ∂P, ∀ (k : ℕ) (b : ContinuousPath ℂ),
+      let f : ℂ → ℝ := fun z => (dyadicScale k)^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z)
+      MonotoneOn (fun t : ℝ => stoppedAnnularClock f δ (fun _ => t.toNNReal) b) (Icc 0 1) ∧
+      ∀ {u v : ℝ}, 0 ≤ u → u ≤ v → v ≤ 1 →
+        ENNReal.ofReal (stoppedAnnularClock f δ (fun _ => v.toNNReal) b -
+          stoppedAnnularClock f δ (fun _ => u.toNNReal) b) =
+        ∫⁻ s in Ioc u v, ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal)) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec
+  intro k b
+  let f : ℂ → ℝ := fun z => (dyadicScale k)^(γ^2/2) *
+    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z)
+  have hc : Continuous (hcirc ω (dyadicScale k)) := by
+    rw [← funext (hω (dyadicScale k))]
+    exact hHc ω (dyadicScale k) (dyadicScale_pos k)
+  have hf : Continuous f := grid_continuous_inserted_density (hcirc ω) γ α (dyadicScale k)
+    (dyadicScale_pos k) hc (fun z => hrec _ z (dyadicScale_pos k))
+  have hf0 : ∀ z, 0 ≤ f z := by
+    intro z
+    dsimp [f]
+    exact mul_nonneg (Real.rpow_nonneg (dyadicScale_pos k).le _) (Real.exp_pos _).le
+  refine ⟨monotoneOn_stoppedAnnularClock f hf hf0 δ b, ?_⟩
+  intro u v hu huv hv
+  exact (stoppedAnnularClock_sub_nonneg_and_ofReal_eq_lintegral f hf hf0 δ b hu huv hv).2
+
 end HarmonicBalls
