@@ -98,4 +98,34 @@ theorem ae_singular_approximant_near_origin_dyadic_ball_bound
     linarith
   simpa only [Metric.mem_ball, dist_zero_right] using hx0
 
+/-- The insertion-centered estimate also controls every ball contained in the
+corresponding dyadic ball, simultaneously at every dyadic smoothing scale. -/
+theorem ae_singular_approximant_contained_ball_bound
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc)
+    {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
+    (hδ : 0 < δ) (hρ : ρ ∈ Ioo (0 : ℝ) 1) (hrρ : r < ρ) :
+    ∀ᵐ ω ∂P, ∃ C : ℝ, 0 ≤ C ∧ ∃ n : ℕ, 0 < n ∧ ∃ J₀ : ℕ,
+      ∀ J k : ℕ, ∀ z : ℂ, ∀ s : ℝ, ‖z‖ + s ≤ dyadicScale J →
+      dyadicScale J ≤ r → J₀ ≤ J / n →
+      lqgApprox γ (fieldCircleAverage α (hcirc ω)) (dyadicScale k) (ball z s) ≤
+        max (ENNReal.ofReal (Real.pi * Real.exp (γ * C) *
+          Real.exp (-(Real.log 2) * J)))
+          (ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2)) *
+            (Real.exp (-(γ * (lqgQ γ - α) * Real.log 2 / 2)) ^ (J / n) /
+              (1 - Real.exp (-(γ * (lqgQ γ - α) * Real.log 2 / 2)))))) := by
+  filter_upwards [ae_singular_approximant_uniform_dyadic_ball_bound
+    hh hγ hγ2 hαQ hδ hρ hrρ] with ω hω
+  obtain ⟨C, hC, n, hn, J₀, hJ₀⟩ := hω
+  refine ⟨C, hC, n, hn, J₀, fun J k z s hzs hr hJ => ?_⟩
+  refine (measure_mono ?_).trans (hJ₀ J k hr hJ)
+  intro x hx
+  have hxz : ‖x - z‖ < s := by
+    simpa only [Metric.mem_ball, dist_eq_norm] using hx
+  have htri := norm_add_le (x - z) z
+  rw [sub_add_cancel] at htri
+  have hx0 : ‖x‖ < dyadicScale J := by linarith
+  simpa only [Metric.mem_ball, dist_zero_right] using hx0
+
 end HarmonicBalls
