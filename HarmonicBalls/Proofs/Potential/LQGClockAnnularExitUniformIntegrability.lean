@@ -1623,4 +1623,85 @@ theorem enorm_intervalIntegral_sub_le_horizon_add_tails (p q : ℝ → ℝ) (hp 
       simpa only [add_assoc, add_comm, add_left_comm] using
         add_le_add_left htail ‖∫ t in (0 : ℝ)..T, (p t - q t)‖ₑ)
 
+/-- Actual annular exit increments are bounded by the horizon increment and two tails. -/
+theorem ae_annular_exit_increment_le_horizon_add_tails {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α δ : ℝ) (D : Set ℂ) :
+    ∀ᵐ ω ∂P, ∀ (b : ContinuousPath ℂ) (T : ℝ), 0 ≤ T →
+      ‖∫ t in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal)‖ₑ ≤
+      ‖∫ t in (0 : ℝ)..min T (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal)‖ₑ +
+      (∫⁻ t in Ioc T (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z => ENNReal.ofReal (
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z)))
+            (b t.toNNReal)) +
+      ∫⁻ t in Ioc T (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z => ENNReal.ofReal (
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)))
+            (b t.toNNReal) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hcont : ∀ᵐ ω ∂P, ∀ r, 0 < r → Continuous (hcirc ω r) := by
+    filter_upwards [hHae] with ω hω r hr
+    rw [← funext (hω r)]
+    exact hHc ω r hr
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  filter_upwards [hcont, ae_recentered_inserted_circle_average hh α] with ω hcont hrec b T hT
+  let Z : ℝ → ℂ → ℝ := fun r z => r^(γ^2/2) *
+    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)
+  have hc (r : ℝ) (hr : 0 < r) : Continuous (Z r) := by
+    have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) =
+        fun z => hcirc ω r z - hcirc ω 1 0 - α * Real.log (max r ‖z‖) := by
+      funext z
+      exact (hrec r z hr).symm
+    have hc' : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) := by
+      rw [heq]
+      exact ((hcont r hr).sub continuous_const).sub (continuous_const.mul
+        ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hr).ne')))
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc'))
+  let p : ℝ → ℝ := fun t => A.indicator (Z (ε/2)) (b t.toNNReal)
+  let q : ℝ → ℝ := fun t => A.indicator (Z ε) (b t.toNNReal)
+  have hp : Measurable p := ((hc (ε/2) (half_pos hε)).measurable.indicator hA).comp
+    (b.continuous.measurable.comp measurable_real_toNNReal)
+  have hp0 : ∀ t, 0 ≤ p t := by
+    intro t
+    simp only [p, Set.indicator_apply]
+    split_ifs <;> positivity
+  have hq0 : ∀ t, 0 ≤ q t := by
+    intro t
+    simp only [q, Set.indicator_apply]
+    split_ifs <;> positivity
+  have hpi : IntervalIntegrable p volume 0 (ContinuousPath.exitTime D b).toReal :=
+    intervalIntegrable_annular_density (Z (ε/2)) (hc (ε/2) (half_pos hε)) δ b 0 _
+  have hqi : IntervalIntegrable q volume 0 (ContinuousPath.exitTime D b).toReal :=
+    intervalIntegrable_annular_density (Z ε) (hc ε hε) δ b 0 _
+  have h := enorm_intervalIntegral_sub_le_horizon_add_tails p q hp hp0 hq0 T _ hT
+    ENNReal.toReal_nonneg hpi hqi
+  have hsub (t : ℝ) : A.indicator (fun z => Z (ε/2) z - Z ε z) (b t.toNNReal) = p t - q t := by
+    simp only [p, q, Set.indicator_apply]
+    split_ifs <;> simp
+  have hoff (r t : ℝ) : A.indicator (fun z => ENNReal.ofReal (Z r z)) (b t.toNNReal) =
+      ENNReal.ofReal (A.indicator (Z r) (b t.toNNReal)) := by
+    simp only [Set.indicator_apply]
+    split_ifs <;> simp
+  change ‖∫ t in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal,
+      A.indicator (fun z => Z (ε/2) z - Z ε z) (b t.toNNReal)‖ₑ ≤
+    ‖∫ t in (0 : ℝ)..min T (ContinuousPath.exitTime D b).toReal,
+      A.indicator (fun z => Z (ε/2) z - Z ε z) (b t.toNNReal)‖ₑ +
+    (∫⁻ t in Ioc T (ContinuousPath.exitTime D b).toReal,
+      A.indicator (fun z => ENNReal.ofReal (Z (ε/2) z)) (b t.toNNReal)) +
+    ∫⁻ t in Ioc T (ContinuousPath.exitTime D b).toReal,
+      A.indicator (fun z => ENNReal.ofReal (Z ε z)) (b t.toNNReal)
+  simp_rw [hsub, hoff]
+  exact h
+
 end HarmonicBalls
