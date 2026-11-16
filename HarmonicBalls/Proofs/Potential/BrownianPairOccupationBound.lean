@@ -114,4 +114,26 @@ theorem lintegral_pair_occupation_eq (x : ℂ) (r : ℝ) (ν : Measure ℝ≥0) 
         fun_prop
       convert lintegral_indicator_one hm using 1; simp [F, E, Set.indicator_apply]
 
+/-- For an atomless time measure, the expected pair occupation is bounded by the
+integral of the two-dimensional Gaussian small-ball bound. -/
+theorem lintegral_pair_occupation_le (x : ℂ) {r : ℝ} (hr : 0 ≤ r)
+    (ν : Measure ℝ≥0) [SFinite ν] [NullSingletonClass ν] :
+    (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (if ‖b p.1 - b p.2‖ < r then 1 else 0 : ℝ≥0∞) ∂(ν.prod ν)
+        ∂(planarBrownianMotion x)) ≤
+    ∫⁻ p : ℝ≥0 × ℝ≥0, min 1
+      ((ENNReal.ofReal (2 * r / Real.sqrt (2 * Real.pi *
+        (nndist (p.1 : ℝ) (p.2 : ℝ) : ℝ)))) ^ 2) ∂(ν.prod ν) := by
+  rw [lintegral_pair_occupation_eq]
+  have hd : (ν.prod ν) (Set.diagonal ℝ≥0) = 0 := by
+    apply Measure.measure_prod_null_of_ae_null measurableSet_diagonal
+    filter_upwards [] with t
+    simp [Set.diagonal]
+  have hae : ∀ᵐ p ∂(ν.prod ν), p.1 ≠ p.2 := by
+    have h := measure_eq_zero_iff_ae_notMem.1 hd
+    simpa [Set.diagonal] using h
+  apply lintegral_mono_ae
+  filter_upwards [hae] with p hp
+  exact planarBrownianMotion_increment_smallBall_le x hp hr
+
 end HarmonicBalls
