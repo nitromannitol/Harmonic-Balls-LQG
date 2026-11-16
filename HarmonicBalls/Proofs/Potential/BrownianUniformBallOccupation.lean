@@ -897,4 +897,30 @@ theorem dyadic_tail_real_factor (δ C q d : ℝ) (hδ : 0 < δ) (n : ℕ) :
       rw [← Real.rpow_sub hδ, ← Real.rpow_add hδ]
       congr 1
 
+
+/-- The dyadic grid cardinality is bounded by the inverse mesh squared. -/
+theorem dyadic_grid_card_bound_real (N k : ℕ) :
+    (((squareGrid N (2 ^ (k + 1))).card : ℕ) : ℝ) ≤
+      ((4 * N + 1 : ℕ) : ℝ) ^ 2 * (((2 : ℝ)⁻¹ ^ k)⁻¹) ^ 2 := by
+  have h := squareGrid_dyadic_card_le N k
+  have h' : (((squareGrid N (2 ^ (k + 1))).card : ℕ) : ℝ) ≤
+      (((4 * N + 1) ^ 2 * (2 ^ k) ^ 2 : ℕ) : ℝ) := by exact_mod_cast h
+  convert h' using 1
+  push_cast
+  simp only [← inv_pow, inv_inv]
+
+/-- The scaled tail power identity also holds in the extended nonnegative reals. -/
+theorem ofReal_tail_factor (δ C q d : ℝ) (hδ : 0 < δ) (hC : 0 ≤ C) (n : ℕ) :
+    ENNReal.ofReal ((δ⁻¹) ^ 2) *
+      ((ENNReal.ofReal (C * (4 * δ) ^ (2 * q))) ^ n /
+        (ENNReal.ofReal (δ ^ d)) ^ (n + 1)) =
+    ENNReal.ofReal ((C * (4 : ℝ) ^ (2 * q)) ^ n) *
+      ENNReal.ofReal (δ ^ ((2 * q) * n - d * (n + 1) - 2)) := by
+  have hCd : 0 ≤ C * (4 * δ) ^ (2 * q) := mul_nonneg hC (Real.rpow_nonneg (by positivity) _)
+  have hd : 0 < δ ^ d := Real.rpow_pos_of_pos hδ _
+  have hconst : 0 ≤ (C * (4 : ℝ) ^ (2 * q)) ^ n := by positivity
+  rw [← ENNReal.ofReal_pow hCd, ← ENNReal.ofReal_pow hd.le,
+    ← ENNReal.ofReal_div_of_pos (pow_pos hd _), ← ENNReal.ofReal_mul (sq_nonneg _),
+    dyadic_tail_real_factor δ C q d hδ n, ENNReal.ofReal_mul hconst]
+
 end HarmonicBalls
