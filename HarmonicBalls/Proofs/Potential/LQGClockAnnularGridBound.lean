@@ -63,4 +63,85 @@ theorem lintegral_prod_annularIncrementSample_eq
   · exact (hb ε hε hεhalf hεδ).1
   · exact Filter.Eventually.of_forall (fun b => integral_nonneg (fun ω => abs_nonneg _))
 
+/-- The annealed increment bound has constants independent of the measurable horizon. -/
+theorem brownian_stopped_annular_inserted_increment_annealed_le_uniform_horizon
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ)
+    : ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (τ : ContinuousPath ℂ → ℝ≥0), Measurable τ →
+      ∀ ε : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        Integrable (stoppedAnnularIncrement P hcirc γ α δ ε τ) (planarBrownianMotion x) ∧
+        (∫ b, stoppedAnnularIncrement P hcirc γ α δ ε τ b ∂(planarBrownianMotion x)) ≤
+          ((Real.exp (γ^2*Real.log 2)-1) *
+            (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂(planarBrownianMotion x)) * 2^d)+1)/2 *
+              Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+          2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    ae_brownian_stopped_annular_inserted_increment_le_riesz_energy hh hγ0 hγ2 α x hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro τ hτ ε hε hεhalf hεδ
+  let E : ContinuousPath ℂ → ℝ := unitOccupationRieszEnergy d
+  let a : ℝ := Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2))
+  let c : ℝ := Real.exp (Real.log ε * ((θ-γ)^2/2))
+  let B : ℝ := Real.exp (γ^2*Real.log 2)-1
+  let G : ContinuousPath ℂ → ℝ := fun b => ((B*(M^2 * E b * 2^d)+1)/2)*a + 2*M*c
+  have hE : Integrable E (planarBrownianMotion x) := integrable_unitOccupationRieszEnergy x hd0 hd2
+  have hG : Integrable G (planarBrownianMotion x) := by
+    dsimp [G]
+    fun_prop
+  have hm : Measurable (stoppedAnnularIncrement P hcirc γ α δ ε τ) :=
+    measurable_stopped_annular_inserted_field_expectation hh hε γ α δ τ hτ
+  have hle : ∀ᵐ b ∂(planarBrownianMotion x), stoppedAnnularIncrement P hcirc γ α δ ε τ b ≤ G b := by
+    filter_upwards [hb] with b hb
+    exact hb (τ b) ε hε hεhalf hεδ
+  have hnonneg : ∀ b, 0 ≤ stoppedAnnularIncrement P hcirc γ α δ ε τ b := by
+    intro b
+    apply integral_nonneg
+    intro ω
+    exact abs_nonneg _
+  have hi : Integrable (stoppedAnnularIncrement P hcirc γ α δ ε τ) (planarBrownianMotion x) := by
+    apply hG.mono' hm.aestronglyMeasurable
+    filter_upwards [hle] with b hb
+    simpa [Real.norm_eq_abs, abs_of_nonneg (hnonneg b)] using hb
+  refine ⟨hi, (integral_mono_ae hi hG hle).trans ?_⟩
+  change (∫ b, G b ∂(planarBrownianMotion x)) ≤
+    ((B*(M^2 * (∫ b, E b ∂(planarBrownianMotion x)) * 2^d)+1)/2)*a + 2*M*c
+  have hGeq : G = fun b => (B*M^2*2^d*a/2)*E b + (a/2 + 2*M*c) := by
+    funext b
+    dsimp [G]
+    ring
+  rw [hGeq, integral_add (hE.const_mul _) (integrable_const _), integral_const_mul]
+  simp only [integral_const, smul_eq_mul, Measure.real, measure_univ, ENNReal.toReal_one, one_mul]
+  ring_nf
+  exact le_rfl
+
+
+/-- The product-law increment estimate is uniform over measurable horizons. -/
+theorem lintegral_prod_annular_increment_le_uniform_horizon
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ)
+    : ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (τ : ContinuousPath ℂ → ℝ≥0), Measurable τ →
+      ∀ ε : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal
+          |annularIncrementSample hcirc γ α δ ε τ p.2 p.1|
+          ∂(P.prod (planarBrownianMotion x))) ≤ ENNReal.ofReal (
+          ((Real.exp (γ^2*Real.log 2)-1) *
+            (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂(planarBrownianMotion x)) * 2^d)+1)/2 *
+              Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+          2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_stopped_annular_inserted_increment_annealed_le_uniform_horizon
+      hh hγ0 hγ2 α x hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro τ hτ ε hε hεhalf hεδ
+  rw [lintegral_prod_annularIncrementSample_eq hh hγ0 hγ2 α x hε hεhalf hεδ τ hτ]
+  exact ENNReal.ofReal_le_ofReal (hb τ hτ ε hε hεhalf hεδ).2
+
 end HarmonicBalls
