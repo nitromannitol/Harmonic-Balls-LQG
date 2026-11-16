@@ -586,4 +586,36 @@ theorem integrable_shift_unitOccupationRieszEnergy (x : ℂ) (s : ℝ≥0) {β :
       ∫ b, (E b).toReal ∂planarBrownianMotion x
     rw [integral_toReal hEs.aemeasurable haes, integral_toReal hE.aemeasurable hae, heq]
 
+/-- Annular exit-time tails are summable along integer horizons and small scales. -/
+theorem tsum_annular_exit_time_tails_lt_top {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {D : Set ℂ}
+    (hD : IsOpen D) (hDb : Bornology.IsBounded D) {δ : ℝ} (hδ : 0 < δ)
+    (γ α : ℝ) (x : ℂ) (ε : ℕ → ℝ)
+    (hε : ∀ n, 0 < ε n ∧ ε n ≤ δ ∧ ε n ≤ 1/2) :
+    (∑' n : ℕ, ∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc (n : ℝ) (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal ((ε n) ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε n) z))) (b t.toNNReal)
+        ∂volume ∂P ∂planarBrownianMotion x) < ⊤ := by
+  obtain ⟨lam, M, hlam, hM, C, hC, hbound⟩ :=
+    exists_annular_exit_time_tail_le_exp hh hD hDb hδ γ α
+  have hs : Summable (fun n : ℕ => lam⁻¹ * Real.exp (-lam * n)) := by
+    have hgeom : Summable (fun n : ℕ => Real.exp ((-lam) * (n : ℝ))) :=
+      by simpa only [mul_comm] using
+        (Real.summable_exp_nat_mul_iff.mpr (neg_lt_zero.mpr hlam))
+    exact hgeom.mul_left lam⁻¹
+  have ht : (∑' n : ℕ, ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * n))) < ⊤ :=
+    hs.tsum_ofReal_lt_top
+  calc
+    _ ≤ ∑' n : ℕ, ENNReal.ofReal M *
+        (ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * n)) * C) := by
+      apply ENNReal.tsum_le_tsum
+      intro n
+      exact hbound x n (Nat.cast_nonneg n) (hε n).1 (hε n).2.1 (hε n).2.2
+    _ = ENNReal.ofReal M * ((∑' n : ℕ,
+        ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * n))) * C) := by
+      rw [ENNReal.tsum_mul_left, ENNReal.tsum_mul_right]
+    _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top (ENNReal.mul_lt_top ht hC)
+
 end HarmonicBalls
