@@ -495,8 +495,8 @@ theorem IsWholePlaneGFF.exists_punctured_singularMetric_compactShift_decoder
       simp only [mem_singleton_iff]
       intro hz0
       have hpos := (hr n m).trans hzm.2
-      have hfalse : (0 : ℝ) < 0 := by simpa only [hz0, norm_zero] using hpos
-      exact (lt_irrefl 0) hfalse
+      have hcontradiction : (0 : ℝ) < 0 := by simpa only [hz0, norm_zero] using hpos
+      exact (lt_irrefl 0) hcontradiction
     · intro z hz
       have hz' : z ∈ ⋃ m : ℕ, U n ∩ {z : ℂ | 1 / (m + 1 : ℝ) < ‖z‖} := by
         rw [punctured_open_exhaustion]
@@ -516,7 +516,7 @@ theorem IsWholePlaneGFF.exists_punctured_singularMetric_compactShift_decoder
 
 
 
-/-- The normalized measure and punctured singular internal distances admit
+/-- The normalized measure and punctured singular internal distances have
     a common whole-plane field decoder for compact smooth shifts. -/
 theorem IsWholePlaneGFF.exists_joint_punctured_singular_compact_weyl_shift_decoder
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
