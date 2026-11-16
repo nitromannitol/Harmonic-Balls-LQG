@@ -1,5 +1,7 @@
 import HarmonicBalls.FirstPass.Phase2.MetricPropernessProved
 import LatticeProb.LQG.WeylScalingAnnulusCrossing
+import HarmonicBalls.FirstPass.Phase2.FieldAxiomsDerived
+import HarmonicBalls.Steps.Sec11.MetricField
 
 /-!
 # Large-scale crossings for a logarithmic insertion
@@ -179,5 +181,99 @@ theorem IsWholePlaneGFF.ae_frequently_normalized_inserted_far_crossing
     (hrepr y x).2
   rw [← heq] at hbound
   exact (ENNReal.ofReal_le_ofReal_iff (hrepr y x).1).mp hbound
+
+/-- The normalized inserted crossing factors diverge when the circle
+averages grow sublinearly and the insertion is subcritical. -/
+theorem tendsto_inserted_crossing_factor_atTop (s ξ Q α : ℝ) (v : ℕ → ℝ)
+    (hs : 0 < s) (hξ : 0 < ξ) (hα : α < Q)
+    (hv : ∀ᶠ n : ℕ in atTop, -(((Q - α) * Real.log 8 / 2) * n) ≤ v n) :
+    Tendsto (fun j : ℕ => Real.exp (-(ξ * α) * Real.log (8 ^ j) - |ξ * α| * Real.log 4) *
+      (s * (8 ^ j : ℝ) ^ (ξ * Q) * Real.exp (ξ * v j))) atTop atTop := by
+  let a : ℝ := (Q - α) * Real.log 8 / 2
+  have ha : 0 < a := by dsimp [a]; exact div_pos (mul_pos (sub_pos.mpr hα) (Real.log_pos (by norm_num))) (by norm_num)
+  let k : ℝ := ξ * a
+  have hk : 0 < k := mul_pos hξ ha
+  let C : ℝ := s * Real.exp (-|ξ * α| * Real.log 4)
+  have hC : 0 < C := mul_pos hs (Real.exp_pos _)
+  have hlim : Tendsto (fun j : ℕ => C * Real.exp (k * j)) atTop atTop :=
+    ((Real.tendsto_exp_atTop.comp (tendsto_natCast_atTop_atTop.const_mul_atTop hk)).const_mul_atTop hC)
+  refine tendsto_atTop_mono' _ ?_ hlim
+  filter_upwards [hv] with j hj
+  have hj' : -(a * j) ≤ v j := hj
+  have hprod := mul_le_mul_of_nonneg_left hj' hξ.le
+  have harg : -|ξ * α| * Real.log 4 + k * j ≤
+      (-(ξ * α) * (j * Real.log 8) - |ξ * α| * Real.log 4) +
+        (ξ * Q * (j * Real.log 8) + ξ * v j) := by
+    dsimp [k, a] at *
+    nlinarith
+  have hpow : (8 ^ j : ℝ) ^ (ξ * Q) = Real.exp (ξ * Q * (j * Real.log 8)) := by
+    rw [Real.rpow_def_of_pos (by positivity), Real.log_pow]
+    congr 1
+    ring
+  have hexp := Real.exp_le_exp.mpr harg
+  rw [Real.exp_add, Real.exp_add, Real.exp_add] at hexp
+  rw [hpow, Real.log_pow]
+  dsimp [C]
+  nlinarith [Real.exp_pos (-|ξ * α| * Real.log 4), Real.exp_pos (k * j),
+    Real.exp_pos (-(ξ * α) * (j * Real.log 8) - |ξ * α| * Real.log 4),
+    Real.exp_pos (ξ * Q * (j * Real.log 8)), Real.exp_pos (ξ * v j)]
+
+/-- Closed balls of the logarithmically inserted whole-plane metric are
+almost surely compact when the insertion is subcritical. -/
+theorem IsWholePlaneGFF.ae_isCompact_closedBall_inserted
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α : ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α hC D) :
+    ∀ᵐ ω ∂P, ∀ z : ℂ, ∀ R : ℝ, IsCompact {w : ℂ | D ω z w ≤ R} := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨𝔇, h𝔇, hrepr⟩ := hD
+  have hxi : ξ = xiGamma γ := xi_eq_xiGamma_derived γ ξ hγ hγ₂ 𝔇 h𝔇
+  have hξ : 0 < ξ := by rw [hxi]; exact LQGMetric.GM.xiGamma_pos hγ
+  have hα' : α < Q γ := hα
+  let a : ℝ := (Q γ - α) * Real.log 8 / 2
+  have ha : 0 < a := by dsimp [a]; exact div_pos (mul_pos (sub_pos.mpr hα')
+    (Real.log_pos (by norm_num))) (by norm_num)
+  have hgood := ae_eventually_circleAvg_good P (reconstructedGFF hC)
+    hh.reconstructedGFF_normalized.1 ha
+  have hcircle : ∀ᵐ ω ∂P, ∀ j : ℕ,
+      hcirc ω (8 ^ j) 0 = circleAvg (reconstructedGFF hC ω) (8 ^ j) 0 :=
+    ae_all_iff.2 fun j => hh.ae_circleAvg_reconstructedGFF (by positivity) 0
+  have hzero := hh.ae_circleAvg_one_zero_reconstructedGFF
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms P γ ξ α hC hcirc D
+    (lqgMetricFieldAxiomsUnivFrozen_derived Ω P γ ξ α hC hcirc) hh hγ hγ₂ hα
+    ⟨𝔇, h𝔇, hrepr⟩
+  obtain ⟨s, hs, hcross⟩ := hh.ae_frequently_normalized_inserted_far_crossing hγ hγ₂
+    (D := D) ⟨𝔇, h𝔇, hrepr⟩
+  filter_upwards [hgood, hcircle, hzero, hmetric, hcross] with ω hgood hcircle hzero hmetric hcross
+  have havg : ∀ᶠ j : ℕ in atTop, -(a * j) ≤ hcirc ω (8 ^ j) 0 := by
+    filter_upwards [hgood] with j hj
+    rw [hcircle j]
+    simpa only [mul_one, hzero, sub_zero] using hj.le
+  have hgrowth := tendsto_inserted_crossing_factor_atTop s ξ (Q γ) α
+    (fun j => hcirc ω (8 ^ j) 0) hs hξ hα' havg
+  intro z R
+  obtain ⟨j₁, hj₁⟩ := (hgrowth.eventually_gt_atTop (R + 1)).exists_forall_of_atTop
+  obtain ⟨j₂, hj₂⟩ :=
+    ((tendsto_pow_atTop_atTop_of_one_lt (by norm_num : (1 : ℝ) < 8)).eventually
+      (eventually_gt_atTop (4 * ‖z‖))).exists_forall_of_atTop
+  obtain ⟨j, hj, hjcross⟩ := hcross (max j₁ j₂)
+  have hj₁' : j₁ ≤ j := (le_max_left _ _).trans hj
+  have hj₂' : j₂ ≤ j := (le_max_right _ _).trans hj
+  have hinside : ‖z‖ < (8 : ℝ) ^ j / 4 := by linarith [hj₂ j hj₂']
+  refine Metric.isCompact_of_isClosed_isBounded
+    (isClosed_le (FirstPassS11.continuous_dist_right hmetric z) continuous_const) ?_
+  refine (Metric.isBounded_closedBall (x := (0 : ℂ)) (r := 3 * 8 ^ j / 8)).subset ?_
+  intro w hw
+  rw [Metric.mem_closedBall, dist_zero_right]
+  by_contra hn
+  push Not at hn
+  have hlow := hjcross z w hinside hn.le
+  rw [hmetric.symm w z] at hlow
+  have hlarge := hj₁ j hj₁'
+  rw [← hxi] at hlow
+  change D ω z w ≤ R at hw
+  linarith
 
 end HarmonicBalls
