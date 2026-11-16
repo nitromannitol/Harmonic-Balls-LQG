@@ -3,6 +3,7 @@ import HarmonicBalls.FirstPass.S11c.MassPositive
 import HarmonicBalls.FirstPass.S11c.ProbAssembly
 import HarmonicBalls.FirstPass.S11d.Dyadic
 import HarmonicBalls.FirstPass.Phase2.SquarePositiveHolds
+import HarmonicBalls.FirstPass.Phase2.DomainMarkovConditionalPositiveHolds
 import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
 import HarmonicBalls.Proofs.Sec11.PinchSecondAnnulusVersionProved
 import HarmonicBalls.FirstPass.S11ap
@@ -212,5 +213,58 @@ theorem IsWholePlaneGFF.exists_pinch_square_large_mass
   refine hp.trans_le (measure_mono ?_)
   intro ω hω
   exact (ENNReal.ofReal_lt_ofReal_iff_of_nonneg hC₀).2 (by linarith) |>.trans_le hω
+
+/-- The inner disk has conditionally positive probability of carrying any
+prescribed finite mass, given the exterior field. -/
+theorem IsWholePlaneGFF.pinch_inner_mass_condExp_pos
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α δ : ℝ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    {U V W T Q' Q : Set ℂ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hD : IsLQGMetricOfField P γ ξ α hC D)
+    (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) (C : ℝ) (hC₀ : 0 ≤ C) :
+    ∀ᵐ ω ∂P, 0 < (P[({ω | ENNReal.ofReal C < μ ω U}).indicator
+      (fun _ => (1 : ℝ)) |
+      MeasurableSpace.comap (localModConstPairings α hC (closure W)ᶜ) inferInstance]) ω := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hδ : 0 < 10 * δ := by linarith [hgeo.delta_pos]
+  have hUV : closure U ⊆ V := fun x hx => hgeo.buffer_U
+    (subset_closure (self_subset_thickening hδ (closure U) hx))
+  have hVW : closure V ⊆ W := fun x hx => hgeo.buffer_V
+    (subset_closure (self_subset_thickening hδ (closure V) hx))
+  obtain ⟨c, rU, rV, rW, hU, _, hW⟩ := hgeo.concentric
+  have hUb : Bornology.IsBounded U := by rw [hU]; exact isBounded_ball
+  obtain ⟨x, hx⟩ := hgeo.U_nonempty
+  have hxW : x ∈ W := hVW (subset_closure (hUV (subset_closure hx)))
+  have hrW : 0 < rW := by
+    rw [hW] at hxW
+    exact dist_nonneg.trans_lt (mem_ball.1 hxW)
+  obtain ⟨S, _, hSU, hSpos⟩ := hh.exists_pinch_square_large_mass hγ hγ₂ hα hμ hD hgeo
+  have hpos : 0 < P {ω | ENNReal.ofReal C < μ ω U} :=
+    (hSpos C hC₀).trans_le (measure_mono fun ω hω => hω.trans_le (measure_mono hSU))
+  obtain ⟨g, hgm, hge⟩ := lqgMassInnerMeasurable_derived' γ α Ω P hC hcirc μ hh
+    hγ hγ₂ hα hμ V U hgeo.isOpen_V hgeo.isOpen_U hUb hUV
+  let A : Set Ω := {ω | ENNReal.ofReal C < g ω}
+  have hAm : MeasurableSet[fieldSigmaAlgebra α hC V] A := measurableSet_lt measurable_const hgm
+  have hAe : {ω | ENNReal.ofReal C < μ ω U} =ᵐ[P] A := by
+    filter_upwards [hge] with ω hω
+    simp [A, hω]
+  have hAp : 0 < P A := by rw [← measure_congr hAe]; exact hpos
+  have hp := domainMarkovConditionalPositive_holds α Ω P hC hcirc hh W V
+    ⟨c, rW, hrW, hW⟩ hgeo.isOpen_V hVW A hAm hAp
+  have hi : ({ω | ENNReal.ofReal C < μ ω U}).indicator (fun _ => (1 : ℝ)) =ᵐ[P]
+      A.indicator (fun _ => (1 : ℝ)) := by
+    filter_upwards [hAe] with ω hω
+    have hiff := iff_of_eq hω
+    by_cases hmem : ω ∈ {ω | ENNReal.ofReal C < μ ω U}
+    · simp [hmem, hiff.mp hmem]
+    · have hnot : ω ∉ A := fun h => hmem (hiff.mpr h)
+      simp [hmem, hnot]
+  filter_upwards [hp, condExp_congr_ae (m := MeasurableSpace.comap
+    (localModConstPairings α hC (closure W)ᶜ) inferInstance) hi] with ω hpω he
+  rw [he]
+  exact hpω
 
 end HarmonicBalls
