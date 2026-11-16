@@ -7,6 +7,7 @@ import HarmonicBalls.Steps.Sec11.InternalMetricExhaustion
 import HarmonicBalls.Proofs.Sec11.ExhaustionDecoder
 import HarmonicBalls.Proofs.Sec11.SingularWeylExhaustion
 import HarmonicBalls.Proofs.Sec11.JointPuncturedSingularShift
+import HarmonicBalls.Proofs.Sec11.PuncturedMetricExhaustionLocality
 
 /-! # Local field and normalized measure under smooth shifts
 
@@ -620,5 +621,232 @@ theorem IsWholePlaneGFF.exists_joint_punctured_singular_compact_weyl_shift_decod
     · funext n
       exact hg' n
 
+
+
+/-- Countably many punctured internal distances have a local field decoder
+with the normalization determined by a fixed unit-integral test function. -/
+theorem IsWholePlaneGFF.exists_local_punctured_singularMetric_decoder
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {U V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ U)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction U ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) :
+    ∃ F : (LocalZeroMeanTest U → ℝ) → ℕ → ℝ≥0∞, Measurable F ∧
+      ∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α hC U ω) n =
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) (V \ {0}) (p n).1 (p n).2 := by
+  let c : Ω → ℝ := fun ω => -hC ω ψ
+  have hc : Measurable c := (h.measurable_pairing ψ (hψ.mono_set (subset_univ _))).neg
+  obtain ⟨G, hG, hGeq⟩ := h.exists_shifted_internal_singularMetric_punctured
+    𝔇 h𝔇 hD hmetric c hc hV hVU
+  have hGmeas : Measurable[fieldSigmaAlgebra α
+      (fun ω => addFunPairing (hC ω) (fun _ => -hC ω ψ)) U]
+      (fun ω n => G ω (p n).1 (p n).2) := by
+    let : MeasurableSpace Ω := fieldSigmaAlgebra α
+      (fun ω => addFunPairing (hC ω) (fun _ => -hC ω ψ)) U
+    exact measurable_pi_iff.mpr (fun n => hG (p n).1 (p n).2)
+  obtain ⟨H, hH, hHeq⟩ := h.exists_modConst_observable_of_reference_shift ψ hψ hψint
+    (fun ω n => G ω (p n).1 (p n).2) hGmeas
+  let X := localModConstPairings α hC U
+  have hHlocal : Measurable[MeasurableSpace.comap X inferInstance] H := by
+    rw [← fieldSigmaAlgebraModConst_eq_comap_localModConstPairings]
+    exact hH
+  obtain ⟨F, hF, hFeq⟩ := hHlocal.exists_eq_measurable_comp
+  refine ⟨F, hF, ?_⟩
+  have hscale := h.ae_internal_singularMetric_add_random_constant 𝔇 h𝔇 hD c hc
+  filter_upwards [hscale, hGeq, hHeq] with ω hs hg hh n
+  change F (X ω) n = _
+  calc
+    F (X ω) n = H ω n := congrFun (congrFun hFeq ω).symm n
+    _ = G ω (p n).1 (p n).2 := congrFun hh n
+    _ = _ := (hg (p n).1 (p n).2).symm
+    _ = _ := hs _ _ _
+
+
+/-- The local decoder of normalized punctured distances also represents the
+Weyl-shifted distances for every fixed smooth compactly supported shift. -/
+theorem IsWholePlaneGFF.exists_local_punctured_singularMetric_compactShift_decoder
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {U V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ U)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction U ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V ∧ (p n).1 ≠ 0)
+    (hξ : 0 ≤ ξ) :
+    ∃ F : (LocalZeroMeanTest U → ℝ) → ℕ → ℝ≥0∞, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α hC U ω) n =
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) (V \ {0}) (p n).1 (p n).2) ∧
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        ∀ᵐ ω ∂P, ∀ n, F (localModConstPairings α
+          (fun ω => addFunPairing (hC ω) g) U ω) n =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              (V \ {0}) (p n).1 (p n).2 := by
+  obtain ⟨F, hF, hFb⟩ := h.exists_local_punctured_singularMetric_decoder
+    𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p
+  obtain ⟨G, hG, hGb, hGs⟩ := h.exists_punctured_singularMetric_compactShift_decoder
+    𝔇 h𝔇 hD hmetric ψ (hψ.mono_set (subset_univ _)) hψint
+    (fun _ => 0) continuous_const (fun _ => V) (fun _ => hV) p hp hξ
+  let X := localModConstPairings 0 hC univ
+  let Q : (LocalZeroMeanTest univ → ℝ) → LocalZeroMeanTest U → ℝ :=
+    fun v φ => v ⟨φ.1, φ.2.1.mono_set (subset_univ _), φ.2.2⟩ -
+      α * ∫ z, φ.1 z * Real.log ‖z‖
+  have hQ : Measurable Q := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    exact (measurable_pi_apply
+      (⟨φ.1, φ.2.1.mono_set (subset_univ _), φ.2.2⟩ : LocalZeroMeanTest univ)).sub_const _
+  have hQeq (T : (ℂ → ℝ) → ℝ) :
+      Q (localModConstPairings 0 id univ T) = localModConstPairings α id U T := by
+    funext φ
+    simp [Q, localModConstPairings, fieldPairing]
+  have hX : Measurable X := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    change Measurable (fun ω => hC ω φ.1 - 0 * ∫ z, φ.1 z * Real.log ‖z‖)
+    exact (h.measurable_pairing φ.1 φ.2.1).sub_const _
+  have hbase : G =ᵐ[P.map X] F ∘ Q := by
+    apply (ae_map_iff hX.aemeasurable (measurableSet_eq_fun hG (hF.comp hQ))).2
+    filter_upwards [hGb, hFb] with ω hg hf
+    funext n
+    change G (localModConstPairings 0 id univ (hC ω)) n =
+      F (Q (localModConstPairings 0 id univ (hC ω))) n
+    rw [hQeq]
+    change G (localModConstPairings 0 hC univ ω) n =
+      F (localModConstPairings α hC U ω) n
+    rw [hf n]
+    simpa using hg n
+  refine ⟨F, hF, hFb, ?_⟩
+  intro g hg
+  let Y := localModConstPairings 0 (fun ω => addFunPairing (hC ω) g) univ
+  have hY : Measurable Y := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    change Measurable (fun ω => (hC ω φ.1 + ∫ z, g z * φ.1 z) -
+      0 * ∫ z, φ.1 z * Real.log ‖z‖)
+    exact ((h.measurable_pairing φ.1 φ.2.1).add_const _).sub_const _
+  have hac := (h.singular_smooth_shift_modConst_pairing_laws hg 0 univ).1
+  change P.map Y ≪ P.map X at hac
+  have heq := ae_eq_comp' hY.aemeasurable hbase hac
+  filter_upwards [heq, hGs g hg.1.continuous hg.2.1] with ω he hs n
+  have he' := congrFun he n
+  change G (localModConstPairings 0 id univ (addFunPairing (hC ω) g)) n =
+    F (Q (localModConstPairings 0 id univ (addFunPairing (hC ω) g))) n at he'
+  rw [hQeq] at he'
+  change G (localModConstPairings 0 (fun ω => addFunPairing (hC ω) g) univ ω) n =
+    F (localModConstPairings α (fun ω => addFunPairing (hC ω) g) U ω) n at he'
+  rw [← he']
+  simpa using hs n
+
+
+/-- The local centered field, normalized measure, and normalized punctured
+internal distances have equivalent joint laws under smooth compact shifts. -/
+theorem IsWholePlaneGFF.exists_local_joint_punctured_smooth_shift_law
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ W : Set ℂ, IsOpen W → W.Nonempty → 0 < μ ω W)
+    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ ball 0 ε)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction (ball 0 ε) ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V ∧ (p n).1 ≠ 0)
+    (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo (0 : ℝ) ε,
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               (V \ {0}) (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) (V \ {0}) (p n).1 (p n).2)) ∧
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) (V \ {0}) (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               (V \ {0}) (p n).1 (p n).2)) := by
+  obtain ⟨N, hN, hNb, hNs⟩ := h.exists_local_punctured_singularMetric_compactShift_decoder
+    𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p hp hξ
+  obtain ⟨R, hR, M, hM, _, hMeq⟩ := h.exists_shifted_normalized_measure_decoder hμ hfull hε
+  let F := fun v => (v, M v, N v)
+  have hF : Measurable F := measurable_id.prodMk (hM.prodMk hN)
+  have hzero : (fun ω => addFunPairing (hC ω) (fun _ => 0)) = hC := by
+    funext ω φ
+    simp [addFunPairing]
+  have hzeroTest : IsTestFunction univ (fun _ : ℂ => (0 : ℝ)) :=
+    ⟨contDiff_const, HasCompactSupport.zero, by simp⟩
+  have hbase := hMeq (fun _ => 0) hzeroTest
+  simp only [hzero, mul_zero, Real.exp_zero, ENNReal.ofReal_one] at hbase
+  have hwone (ω : Ω) : (μ ω).withDensity (fun _ => 1) = μ ω := withDensity_one
+  simp only [hwone] at hbase
+  refine ⟨R, hR, ?_⟩
+  intro g hg
+  let X := localModConstPairings α hC (ball 0 ε)
+  let Y := localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε)
+  have hX : Measurable X := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    change Measurable (fun ω => hC ω φ.1 - α * ∫ z, φ.1 z * Real.log ‖z‖)
+    exact (h.measurable_pairing φ.1 (φ.2.1.mono_set (subset_univ _))).sub_const _
+  have hY : Measurable Y := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    change Measurable (fun ω => (hC ω φ.1 + ∫ z, g z * φ.1 z) -
+      α * ∫ z, φ.1 z * Real.log ‖z‖)
+    exact ((h.measurable_pairing φ.1 (φ.2.1.mono_set (subset_univ _))).add_const _).sub_const _
+  have hac := h.singular_smooth_shift_modConst_pairing_laws hg α (ball 0 ε)
+  change P.map Y ≪ P.map X ∧ P.map X ≪ P.map Y at hac
+  have hf := hac.1.map hF
+  have hb := hac.2.map hF
+  rw [Measure.map_map hF hY, Measure.map_map hF hX] at hf
+  rw [Measure.map_map hF hX, Measure.map_map hF hY] at hb
+  have hbaseMap : P.map (F ∘ X) = P.map (fun ω =>
+      (X ω, normalizedRestriction (μ ω) (ball 0 R), fun n =>
+        ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+          internalMetric (D ω) (V \ {0}) (p n).1 (p n).2)) := by
+    apply Measure.map_congr
+    filter_upwards [hbase, hNb] with ω hm hn
+    exact Prod.ext rfl (Prod.ext hm (funext hn))
+  have hshiftMap : P.map (F ∘ Y) = P.map (fun ω =>
+      (Y ω, normalizedRestriction ((μ ω).withDensity
+        (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R), fun n =>
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              (V \ {0}) (p n).1 (p n).2)) := by
+    apply Measure.map_congr
+    filter_upwards [hMeq g hg, hNs g hg] with ω hm hn
+    exact Prod.ext rfl (Prod.ext hm (funext hn))
+  rw [hbaseMap, hshiftMap] at hf hb
+  exact ⟨hf, hb⟩
 
 end HarmonicBalls
