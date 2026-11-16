@@ -1098,4 +1098,45 @@ theorem brownian_annular_exit_block_increment_annealed_le {Ω : Type*} [Measurab
     intro ω
     exact abs_nonneg _
 
+/-- A stopped time integral decomposes over integer unit blocks. -/
+theorem intervalIntegral_stopped_eq_sum_blocks (f : ℝ → ℝ) (τ : ℝ) (hτ : 0 ≤ τ) (N : ℕ)
+    (hf : IntervalIntegrable f volume 0 τ) :
+    (∫ t in (0 : ℝ)..min (N : ℝ) τ, f t) =
+    ∑ k ∈ Finset.range N, ∫ t in Ioc (k : ℝ) (min ((k : ℝ) + 1) τ), f t := by
+  let a : ℕ → ℝ := fun k => min (k : ℝ) τ
+  have hmono : Monotone a := by
+    intro k l hkl
+    exact min_le_min_right τ (Nat.cast_le.mpr hkl)
+  have hbound : ∀ k, 0 ≤ a k ∧ a k ≤ τ := by
+    intro k
+    exact ⟨le_min (Nat.cast_nonneg k) hτ, min_le_right _ _⟩
+  have hint : ∀ k < N, IntervalIntegrable f volume (a k) (a (k+1)) := by
+    intro k hk
+    apply hf.mono_set
+    rw [uIcc_of_le (hmono (Nat.le_succ k)), uIcc_of_le hτ]
+    exact Icc_subset_Icc (hbound k).1 (hbound (k+1)).2
+  have heq := intervalIntegral.sum_integral_adjacent_intervals hint
+  have ha0 : a 0 = 0 := by simp [a, min_eq_left hτ]
+  rw [ha0] at heq
+  change (∑ k ∈ Finset.range N, ∫ t in a k..a (k+1), f t) =
+    ∫ t in (0 : ℝ)..min (N : ℝ) τ, f t at heq
+  rw [← heq]
+  apply Finset.sum_congr rfl
+  intro k hk
+  by_cases hkτ : (k : ℝ) ≤ τ
+  · rw [show a k = k from min_eq_left hkτ]
+    rw [intervalIntegral.integral_of_le (by
+      dsimp [a]
+      refine le_min ?_ hkτ
+      exact_mod_cast Nat.le_succ k)]
+    congr 1
+    simp [a, Nat.cast_add]
+  · have hτk : τ ≤ (k : ℝ) := le_of_not_ge hkτ
+    have hτk1 : τ ≤ ((k + 1 : ℕ) : ℝ) := by push_cast; linarith
+    have h1 : a k = τ := min_eq_right hτk
+    have h2 : a (k+1) = τ := min_eq_right hτk1
+    rw [h1, h2, intervalIntegral.integral_same]
+    have h' : min ((k : ℝ) + 1) τ ≤ (k : ℝ) := (min_le_right _ _).trans hτk
+    simp [Ioc_eq_empty (not_lt.mpr h')]
+
 end HarmonicBalls
