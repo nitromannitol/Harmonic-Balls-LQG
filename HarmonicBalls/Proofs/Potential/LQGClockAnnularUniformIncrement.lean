@@ -213,4 +213,25 @@ theorem aemeasurable_annular_inserted_clock_cell {Ω : Type*} [MeasurableSpace �
   filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := ν)).ae hHae] with p hp
   exact hp ε hε p.2 a b
 
+/-- A cell moment bound controls the expected mesh maximum when the cells
+are almost everywhere measurable. -/
+theorem lintegral_iSup_le_mesh_rpow_of_aemeasurable {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {m : ℕ} (hm : 0 < m)
+    (X : Fin m → Ω → ℝ≥0∞) (hX : ∀ j, AEMeasurable (X j) μ)
+    {p β : ℝ} (hp : 1 ≤ p) (C : ℝ≥0∞)
+    (hcell : ∀ j, (∫⁻ ω, X j ω ^ p ∂μ) ≤ C * (m : ℝ≥0∞) ^ (-(1 + p * β))) :
+    (∫⁻ ω, ⨆ j, X j ω ∂μ) ≤ C ^ (1 / p) * (m : ℝ≥0∞) ^ (-β) := by
+  let Y : Fin m → Ω → ℝ≥0∞ := fun j => (hX j).mk (X j)
+  have hYm : ∀ j, Measurable (Y j) := fun j => (hX j).measurable_mk
+  have hXY : ∀ j, X j =ᵐ[μ] Y j := fun j => (hX j).ae_eq_mk
+  have hsup : (fun ω => ⨆ j, X j ω) =ᵐ[μ] (fun ω => ⨆ j, Y j ω) := by
+    filter_upwards [Filter.eventually_all.mpr hXY] with ω hω
+    simp only [hω]
+  have hmoment : ∀ j, (∫⁻ ω, Y j ω ^ p ∂μ) ≤ C * (m : ℝ≥0∞) ^ (-(1 + p * β)) := by
+    intro j
+    rw [lintegral_congr_ae ((hXY j).mono fun ω hω => congrArg (fun z : ℝ≥0∞ => z ^ p) hω.symm)]
+    exact hcell j
+  rw [lintegral_congr_ae hsup]
+  exact HarmonicBalls.lintegral_iSup_le_mesh_rpow μ hm Y hYm hp C hmoment
+
 end HarmonicBalls
