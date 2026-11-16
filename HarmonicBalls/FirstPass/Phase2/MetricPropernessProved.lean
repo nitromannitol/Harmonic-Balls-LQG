@@ -1,6 +1,7 @@
 import HarmonicBalls.FirstPass.S11.MetricBall
 import HarmonicBalls.Proposed.MetricProperness
 import HarmonicBalls.FirstPass.Phase2.WeylExponentOfDG20
+import HarmonicBalls.Proofs.GFF.LQGMetricUniquenessDerived
 import LatticeProb.Bonanno.LQGMetric.Papers.GM.S1.Eq115
 
 /-!
@@ -52,5 +53,24 @@ theorem isWeakLQGMetric_distributionMetric {γ ξ : ℝ} (hγ : 0 < γ) (hγ₂ 
     simpa only [hξ] using ae_weylScale_distributionMetric h𝔇 hcm hh
   · intro Ω _ P _ h hh r hr z
     exact ae_coord_distributionMetric h𝔇 hcm hh hr z
+
+/-- The distribution-valued assignment agrees almost surely with the metric
+of the original whole-plane field. -/
+theorem IsWholePlaneGFF.ae_distributionMetric_reconstructedGFF
+    {Ω : Type} [MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (h𝔇 : IsLQGMetric γ ξ 𝔇) :
+    ∀ᵐ ω ∂P, ∀ u v : ℂ,
+      (distributionMetric 𝔇 (reconstructedGFF hC ω)).1 (u, v) = 𝔇 (hC ω) u v := by
+  have hcm : ∀ D : ℂ → ℂ → ℝ, LatticeProb.LQG.IsEuclideanLengthMetric D →
+      ∃ d : LQGMetric.ContMetric, (∀ u v, d.1 (u, v) = D u v) ∧ d.IsLength :=
+    fun _ hD => LatticeProb.LQG.exists_contMetric_of_isEuclideanLengthMetric hD
+  have hf : ∀ ω : Ω, Continuous (fun _ : ℂ => (0 : ℝ)) := fun _ => continuous_const
+  have hm : ∀ z : ℂ, Measurable (fun _ : Ω => (0 : ℝ)) := fun _ => measurable_const
+  have h := hh.ae_distributionMetric_shiftedReconstructedGFF h𝔇 hcm
+    (fun X Y hXY F hF => ae_eq_comp_of_ae_eq_testPairing X Y hXY F hF)
+    (fun _ _ => 0) hf hm
+  simpa only [shiftedReconstructedGFF, continuousShift, show (⟨fun _ : ℂ => (0 : ℝ), continuous_const⟩ : C(ℂ, ℝ)) = 0 from rfl, LQGMetric.GM.ofCont_zero_eq, add_zero, addFunPairing_const_zero] using h
 
 end HarmonicBalls
