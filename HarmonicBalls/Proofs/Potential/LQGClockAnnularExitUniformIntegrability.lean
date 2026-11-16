@@ -1284,4 +1284,75 @@ theorem annular_exit_horizon_increment_le_sum_blocks {Ω : Type*} [MeasurableSpa
       exact Finset.abs_sum_le_sum_abs _ _
     _ = _ := integral_finsetSum _ (fun k hk => (hB k).abs)
 
+/-- The stopped annular increment has a jointly measurable field-path version. -/
+theorem exists_measurable_annular_exit_horizon_sample {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α δ : ℝ) {D : Set ℂ} (hD : IsOpen D) (N : ℕ) :
+    ∃ F : ContinuousPath ℂ × Ω → ℝ, Measurable F ∧ ∀ᵐ ω ∂P, ∀ b,
+      F (b,ω) = ∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal) := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let J : Ω × ℂ → ℝ := fun q => A.indicator (fun z =>
+    (ε/2)^(γ^2/2) * Real.exp (γ*(H q.1 (ε/2) z-H q.1 1 0 - α*Real.log (max (ε/2) ‖z‖))) -
+    ε^(γ^2/2) * Real.exp (γ*(H q.1 ε z-H q.1 1 0 - α*Real.log (max ε ‖z‖)))) q.2
+  have h1 : Measurable (fun q : Ω × ℂ => H q.1 (ε/2) q.2) :=
+    (hHm (ε/2) (half_pos hε)).comp measurable_swap
+  have h2 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) := (hHm ε hε).comp measurable_swap
+  have h3 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+    (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+  have hJ : Measurable J := by
+    apply Measurable.indicator _ (hA.preimage measurable_snd)
+    exact (measurable_const.mul (measurable_const.mul ((h1.sub h3).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp).sub
+      (measurable_const.mul (measurable_const.mul ((h2.sub h3).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp)
+  let U : ContinuousPath ℂ → ℝ := fun b => min (N : ℝ) (ContinuousPath.exitTime D b).toReal
+  have hU : Measurable U := measurable_const.min ((ContinuousPath.measurable_exitTime D hD).ennreal_toReal)
+  have heval : Measurable (fun q : (ContinuousPath ℂ × Ω) × ℝ => q.1.1 q.2.toNNReal) := by
+    exact (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_fst.comp measurable_fst))
+  let S : Set ((ContinuousPath ℂ × Ω) × ℝ) := {q | 0 < q.2 ∧ q.2 ≤ U q.1.1}
+  have hS : MeasurableSet S := (measurableSet_lt measurable_const measurable_snd).inter
+    (measurableSet_le measurable_snd (hU.comp (measurable_fst.comp measurable_fst)))
+  let Q : (ContinuousPath ℂ × Ω) × ℝ → ℝ := fun q =>
+    S.indicator (fun q => J (q.1.2, q.1.1 q.2.toNNReal)) q
+  have hQ : Measurable Q := by
+    exact (hJ.comp ((measurable_snd.comp measurable_fst).prodMk heval)).indicator hS
+  refine ⟨fun q => ∫ t, Q (q,t), hQ.stronglyMeasurable.integral_prod_right'.measurable, ?_⟩
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec b
+  have hU0 : 0 ≤ U b := le_min (Nat.cast_nonneg N) ENNReal.toReal_nonneg
+  rw [intervalIntegral.integral_of_le hU0, ← integral_indicator measurableSet_Ioc]
+  apply integral_congr_ae
+  filter_upwards with t
+  simp only [Q, S, U, Set.indicator_apply, Set.mem_ofPred_eq, Set.mem_Ioc, J, A]
+  split_ifs with ht hz
+  · rw [hω (ε/2) (b t.toNNReal), hω ε (b t.toNNReal), hω 1 0,
+      hrec (ε/2) (b t.toNNReal) (half_pos hε), hrec ε (b t.toNNReal) hε]
+  · rfl
+  · rfl
+
+/-- The field-averaged stopped annular horizon increment is measurable. -/
+theorem measurable_annular_exit_horizon_increment {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α δ : ℝ) {D : Set ℂ} (hD : IsOpen D) (N : ℕ) :
+    Measurable (annularExitHorizonIncrement P hcirc γ α δ ε D N) := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨F, hFm, hFae⟩ := exists_measurable_annular_exit_horizon_sample hh hε γ α δ hD N
+  have hm : Measurable (fun b => ∫ ω, |F (b,ω)| ∂P) :=
+    (hFm.abs.stronglyMeasurable.integral_prod_right' (ν := P)).measurable
+  convert hm using 1
+  funext b
+  unfold annularExitHorizonIncrement
+  apply integral_congr_ae
+  filter_upwards [hFae] with ω hω
+  rw [hω b]
+
 end HarmonicBalls
