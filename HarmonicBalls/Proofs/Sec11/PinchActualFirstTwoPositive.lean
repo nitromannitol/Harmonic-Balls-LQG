@@ -13,8 +13,9 @@ import HarmonicBalls.FirstPass.Phase2.CameronMartinReweightingDerived2
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs9
 import HarmonicBalls.FirstPass.Phase2.WeylScalingCompositionDerived
 import HarmonicBalls.FirstPass.Phase2.LQGMetricXiPos
+import HarmonicBalls.Proofs.Sec11.StrictMassDiameter
 
-/-! # Positivity of the first local pinch event -/
+/-! # Positivity of the first two local pinch events -/
 
 namespace HarmonicBalls
 
@@ -266,5 +267,58 @@ theorem IsWholePlaneGFF.pinch_inner_mass_condExp_pos
     (localModConstPairings α hC (closure W)ᶜ) inferInstance) hi] with ω hpω he
   rw [he]
   exact hpω
+
+/-- The inner region has simultaneously small internal diameter and large
+mass with positive probability for the inserted field. -/
+theorem IsWholePlaneGFF.pinch_inner_mass_diameter_positive
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α δ : ℝ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    {U V W T Q' Q : Set ℂ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hD : IsLQGMetricOfField P γ ξ α hC D)
+    (hconfig : IsPinchPointProofConfiguration U V W T Q' Q δ)
+    (C ε : ℝ) (hC₀ : 0 ≤ C) (hε : 0 < ε) :
+    0 < P {ω | internalDiam (D ω) δ V < ENNReal.ofReal ε ∧
+      ENNReal.ofReal C < μ ω U} := by
+  obtain ⟨A, hA, _, hAp⟩ := hconfig.strict_internalDiam_largeMass
+    firstPass_11_9_derived hγ hγ₂ hα P hC hcirc μ D hh hμ hD C ε hC₀ hε
+  exact hAp.trans_le (measure_mono hA)
+
+/-- The first two local pinch events have positive joint probability for the
+inserted measure and metric of the same field. -/
+theorem IsWholePlaneGFF.pinchLocal_first_two_positive
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α δ M : ℝ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    {U V W T Q' Q : Set ℂ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hD : IsLQGMetricOfField P γ ξ α hC D)
+    (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) :
+    0 < P {ω | pinchFirstEventLocal (D ω) W T Q' Q δ ∧
+      pinchSecondEventLocal (μ ω) (D ω) U V δ M} := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨F, c₁, c₂, hFm, hFp, hc₁, hc₂, hF⟩ :=
+    hh.exists_positive_outside_pinchLocal_thresholds hγ hγ₂ hα hμ hD hgeo
+  have hmass := pinchSecondConditionalMass_of_frozen firstPass_11_9_derived
+    lqgMassInnerMeasurable_derived' lqgInternalDiamInnerMeasurableFrozen_derived
+    domainMarkovConditionalPositive_holds
+  obtain ⟨H, hHm, hH, hcond⟩ := hmass U V W T Q' Q δ hgeo γ α ξ hγ hγ₂ hα
+    Ω P hC hcirc μ D hh hμ hD c₁ c₂ hc₁ hc₂
+  have hpos : 0 < P (F ∩ H) :=
+    measure_inter_pos_of_condExp_indicator_pos P
+      (localModConstPairings_comap_le hh (closure W)ᶜ) hFm hHm hFp hcond
+  refine hpos.trans_le (measure_mono_ae ?_)
+  filter_upwards [hF] with ω hFω hω
+  obtain ⟨hfirst, hcross, hgreen⟩ := hFω hω.1
+  obtain ⟨hmassω, hdiamω⟩ := hH hω.2
+  refine ⟨hfirst, ?_, ?_⟩
+  · exact hdiamω.trans ((ENNReal.ofReal_lt_ofReal_iff_of_nonneg
+      (by linarith : 0 ≤ c₁ / 2)).2 (by linarith) |>.trans_le
+      (ENNReal.ofReal_le_ofReal hcross))
+  · exact hgreen.trans_lt (((ENNReal.ofReal_lt_ofReal_iff_of_nonneg hc₂.le).2
+      (by linarith)).trans hmassω)
 
 end HarmonicBalls
