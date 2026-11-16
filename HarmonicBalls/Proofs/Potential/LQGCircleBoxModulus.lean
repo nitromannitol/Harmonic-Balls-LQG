@@ -125,4 +125,25 @@ theorem ae_eventually_not_circleBadEvent
     exact ENNReal.tsum_le_tsum fun k => (hE k).trans (ENNReal.ofReal_le_ofReal (hterm k))
   simpa only [E, L, M, R, c, b] using ae_eventually_notMem htsum
 
+/-- On one event the modulus estimate holds in every relevant rescaled box. -/
+theorem ae_eventually_circleRescaled_sub_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {a : ℝ} (ha : 0 < a) (R : ℝ) :
+    ∀ᵐ ω ∂P, ∀ᶠ k : ℕ in atTop,
+      ∀ mn ∈ Finset.Icc (-(⌈max R 0 * 2 ^ k⌉₊ : ℤ)) ⌈max R 0 * 2 ^ k⌉₊ ×ˢ
+          Finset.Icc (-(⌈max R 0 * 2 ^ k⌉₊ : ℤ)) ⌈max R 0 * 2 ^ k⌉₊,
+      ∀ x ∈ Set.Icc circleBoxLower circleBoxUpper,
+      ∀ y ∈ Set.Icc circleBoxLower circleBoxUpper,
+        dist x y < 1 / 2 ^ (max ⌊a * k⌋₊ 1) →
+        |circleRescaled hcirc (dyadicScale k)
+            (circleBoxCentre (dyadicScale k) mn.1 mn.2) x ω -
+          circleRescaled hcirc (dyadicScale k)
+            (circleBoxCentre (dyadicScale k) mn.1 mn.2) y ω| ≤
+          7 * ((2⁻¹ : ℝ) ^ (1 / 4 : ℝ)) ^ (max ⌊a * k⌋₊ 1) /
+            (1 - (2⁻¹ : ℝ) ^ (1 / 4 : ℝ)) := by
+  filter_upwards [ae_eventually_not_circleBadEvent hh ha R] with ω hω
+  filter_upwards [hω] with k hk mn hmn x hx y hy hdist
+  exact not_lt.mp fun h => hk (Set.mem_iUnion₂.mpr ⟨mn, hmn, x, hx, y, hy, hdist, h⟩)
+
 end HarmonicBalls
