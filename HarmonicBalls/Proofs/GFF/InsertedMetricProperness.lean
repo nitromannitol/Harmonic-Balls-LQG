@@ -1,10 +1,13 @@
 import HarmonicBalls.FirstPass.Phase2.MetricPropernessCrossing
+import LatticeProb.LQG.WeylScalingAnnulusCrossing
 
 /-!
 # Large-scale crossings for a logarithmic insertion
 
 The normalized crossing estimate retains the scale factor and the circle
 average needed to compare the metric with a logarithmic Weyl scaling.
+The annulus comparison adapts the crossing argument in
+`LatticeProb.LQG.WeylScalingAnnulusCrossing`.
 -/
 
 noncomputable section
@@ -59,5 +62,36 @@ theorem ae_frequently_normalized_far_crossing {γ : ℝ} {D : DistC → ContMetr
     constructor <;> linarith [hw.1, hw.2, show (0 : ℝ) < 8 ^ j by positivity]
   exact le_of_forall_internal_crossing (y := y) hlen (by linarith [show (0 : ℝ) < 8 ^ j by positivity]) hU
     (by simpa only [sub_zero] using hx) (by simpa only [sub_zero] using hy) (hcross j hjE)
+
+/-- A lower bound on the Weyl weight and on the unweighted distance between
+annular boundaries gives a lower bound on every crossing of the annulus. -/
+theorem ofReal_exp_mul_le_weylScaling_of_annulus_crossing
+    {D : ℂ → ℂ → ℝ} {ξ : ℝ} {f : ℂ → ℝ} {r r' m c : ℝ}
+    (hrr' : r < r')
+    (hm : ∀ z : ℂ, r < ‖z‖ → ‖z‖ < r' → m ≤ ξ * f z)
+    (hc : ∀ a b : ℂ, ‖a‖ = r → ‖b‖ = r' → c ≤ D a b)
+    {x y : ℂ} (hx : r' ≤ ‖x‖) (hy : ‖y‖ < r) :
+    ENNReal.ofReal (Real.exp m * c) ≤ LatticeProb.LQG.weylScaling D ξ f x y := by
+  unfold LatticeProb.LQG.weylScaling
+  refine le_iInf₂ fun T p => le_iInf₂ fun hp h0 => le_iInf fun hT => ?_
+  have h0' : r' ≤ ‖p 0‖ := by rw [h0]; exact hx
+  have hTy : ‖p T‖ < r := by rw [hT]; exact hy
+  obtain ⟨s₀, s₁, hs₀, hs₀₁, hs₁, hn₀, hn₁, hmid⟩ :=
+    LatticeProb.LQG.exists_norm_crossing_interval hp.2.1 hrr' h0' ⟨hp.1, le_rfl⟩ hTy
+  have hlen : LatticeProb.LQG.curveLength D p s₀ s₁ = ENNReal.ofReal (s₁ - s₀) :=
+    hp.2.2 s₀ s₁ hs₀ hs₀₁ hs₁
+  have hcD : ENNReal.ofReal c ≤ ENNReal.ofReal (s₁ - s₀) :=
+    (ENNReal.ofReal_le_ofReal (hc _ _ hn₁ hn₀)).trans
+      ((LatticeProb.LQG.two_point_le_curveLength (D := D) p hs₀₁).trans hlen.le)
+  calc ENNReal.ofReal (Real.exp m * c) = ENNReal.ofReal (Real.exp m) * ENNReal.ofReal c :=
+        ENNReal.ofReal_mul (Real.exp_pos m).le
+    _ ≤ ENNReal.ofReal (Real.exp m) * ENNReal.ofReal (s₁ - s₀) := by gcongr
+    _ = ∫⁻ _ in Ioo s₀ s₁, ENNReal.ofReal (Real.exp m) := by
+        rw [setLIntegral_const, Real.volume_Ioo, mul_comm]
+    _ ≤ ∫⁻ t in Ioo s₀ s₁, ENNReal.ofReal (Real.exp (ξ * f (p t))) :=
+        setLIntegral_mono' measurableSet_Ioo fun t ht =>
+          ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 (hm _ (hmid t ht).1 (hmid t ht).2))
+    _ ≤ ∫⁻ t in Icc 0 T, ENNReal.ofReal (Real.exp (ξ * f (p t))) :=
+        lintegral_mono_set (Ioo_subset_Icc_self.trans (Icc_subset_Icc hs₀ hs₁))
 
 end HarmonicBalls
