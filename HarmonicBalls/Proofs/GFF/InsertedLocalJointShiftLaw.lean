@@ -139,4 +139,43 @@ theorem IsEuclideanLengthMetric.weylScaling_compact_isLengthMetric
   rw [heq]
   exact hE.const_mul (Real.exp_pos _)
 
+/-- A compact continuous Weyl shift has the inverse shift as its inverse. -/
+theorem IsEuclideanLengthMetric.inverse_weylScaling_compact
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) {ξ : ℝ} (hξ : 0 ≤ ξ)
+    (f : ℂ → ℝ) (hf : Continuous f) (hc : HasCompactSupport f) (x y : ℂ) :
+    ENNReal.ofReal (D x y) =
+      weylScaling (fun u v => (weylScaling D ξ f u v).toReal) ξ (fun z => -f z) x y := by
+  obtain ⟨m, hm⟩ := exists_lower_bound_of_continuous_compactSupport f hf hc
+  obtain ⟨c, hc'⟩ := exists_lower_bound_of_continuous_compactSupport (fun z => -f z) hf.neg hc.neg
+  let M := -c
+  let g : ℂ → ℝ := fun z => f z - M
+  have hglo : ∀ z, m - M ≤ g z := fun z => by dsimp [g]; linarith [hm z]
+  have hghi : ∀ z, g z ≤ 0 := fun z => by dsimp [g, M]; linarith [hc' z]
+  have hg : Continuous g := hf.sub continuous_const
+  have hzero := hD.weylScaling_zero ξ
+  obtain ⟨hdiag, hsep, htop⟩ := hD.weylScaling_negative_bump_topology hξ g hglo hghi hzero
+  have hfin : ∀ u v, weylScaling D ξ g u v ≠ ⊤ :=
+    fun u v => (weylScaling_negative_bump_real_bounds hD hξ g hglo hghi hzero u v).1.ne
+  have hsymm : ∀ u v, (weylScaling D ξ g u v).toReal = (weylScaling D ξ g v u).toReal :=
+    fun u v => congrArg ENNReal.toReal (hD.weylScaling_symm ξ g u v)
+  have hE : IsEuclideanLengthMetric (fun u v => (weylScaling D ξ g u v).toReal) :=
+    ⟨hdiag, hsep, hsymm, hD.weylScaling_toReal_triangle ξ g hfin, htop,
+      hD.weylScaling_internalMetric ξ g (fun u v => ENNReal.ofReal_toReal (hfin u v)) hsymm⟩
+  have heq : (fun u v => (weylScaling D ξ f u v).toReal) =
+      fun u v => Real.exp (ξ * M) * (weylScaling D ξ g u v).toReal := by
+    funext u v
+    rw [weylScaling_eq_exp_mul_of_shift D ξ M f g (fun z => by dsimp [g]; ring),
+      ENNReal.toReal_mul, ENNReal.toReal_ofReal (Real.exp_pos _).le]
+  have hneg : (fun z => -f z) = fun z => -g z + -M := by
+    funext z
+    dsimp [g]
+    ring
+  have hinv := hD.inverse_weylScaling hξ g hg hglo hghi hE x y
+  have hone : ENNReal.ofReal (Real.exp (ξ * M)) * ENNReal.ofReal (Real.exp (ξ * (-M))) = 1 := by
+    rw [← ENNReal.ofReal_mul (Real.exp_pos _).le, ← Real.exp_add,
+      show ξ * M + ξ * (-M) = 0 by ring, Real.exp_zero, ENNReal.ofReal_one]
+  rw [heq, hE.weylScaling_const_mul (Real.exp_pos _), hneg,
+    weylScaling_add_const, ← mul_assoc, hone, one_mul]
+  exact hinv
+
 end HarmonicBalls
