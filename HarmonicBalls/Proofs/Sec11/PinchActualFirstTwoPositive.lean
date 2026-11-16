@@ -1,4 +1,9 @@
 import HarmonicBalls.FirstPass.S11an
+import HarmonicBalls.FirstPass.S11c.MassPositive
+import HarmonicBalls.FirstPass.S11c.ProbAssembly
+import HarmonicBalls.FirstPass.S11d.Dyadic
+import HarmonicBalls.FirstPass.Phase2.SquarePositiveHolds
+import HarmonicBalls.FirstPass.Phase2.CircleAverageLocalityLinkDerived
 import HarmonicBalls.Proofs.Sec11.PinchSecondAnnulusVersionProved
 import HarmonicBalls.FirstPass.S11ap
 import HarmonicBalls.FirstPass.S11ad.ExteriorE1
@@ -164,5 +169,48 @@ theorem IsWholePlaneGFF.exists_positive_outside_pinchLocal_thresholds
     hFm.inter (hEm n), hn, by positivity, by positivity, ?_⟩
   filter_upwards [hFe, hae, hGe] with ω hFω haω hGω hω
   exact ⟨hFω.mp hω.1, haω ▸ hω.2.1, hGω ▸ hω.2.2⟩
+
+/-- A deterministic dyadic square in the inner disk carries arbitrarily large
+mass with positive probability. -/
+theorem IsWholePlaneGFF.exists_pinch_square_large_mass
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α δ : ℝ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    {U V W T Q' Q : Set ℂ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hD : IsLQGMetricOfField P γ ξ α hC D)
+    (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) :
+    ∃ S : Set ℂ, IsClosedDyadicSquare S ∧ S ⊆ U ∧
+      ∀ C : ℝ, 0 ≤ C → 0 < P {ω | ENNReal.ofReal C < μ ω S} := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨x, hx⟩ := hgeo.U_nonempty
+  obtain ⟨S₁, S₂, hS₁, hS₂, hS12, hS₂U⟩ :=
+    exists_closedDyadicSquare_pair hgeo.isOpen_U hx
+  have hS12' : S₁ ⊆ S₂ := hS12.trans interior_subset
+  have hdis : Disjoint S₂ (sphere (0 : ℂ) 1) := by
+    refine Set.disjoint_left.mpr fun z hz hs => ?_
+    have hz' := hgeo.U_subset (hS₂U hz)
+    exact hz'.2 (sphere_subset_closedBall hs)
+  have hsup : AEMeasurable (fun ω => ⨆ u ∈ S₂, ⨆ v ∈ S₂,
+      internalMetric (D ω) S₂ u v) P := by
+    refine lqgMetricSupMeasurableFrozen_derived γ α ξ hγ hγ₂ hα Ω P hC hcirc D hh hD S₂
+      ⟨{S₂}, ?_, ?_⟩
+    · intro R hR
+      rw [Finset.mem_singleton] at hR
+      obtain ⟨n, j, k, he⟩ := hS₂
+      rw [hR, he]
+      exact isClosedRectangle_closedDyadicSquare n j k
+    · simp
+  have hmass := lqgMeasureSquareMeasurable_derived' γ α hγ hγ₂ hα Ω P hC hcirc μ hh hμ S₁ hS₁
+  have hpos := lqgMeasureSquarePositiveFrozen_holds γ α hγ hγ₂ hα Ω P hC hcirc μ hh hμ S₁ hS₁
+  refine ⟨S₁, hS₁, hS12'.trans hS₂U, ?_⟩
+  intro C hC₀
+  have hc : 0 < ENNReal.ofReal (C + 1) := ENNReal.ofReal_pos.2 (by linarith)
+  have hp := mass_event_pos_of_shift hγ hγ₂ hα cameronMartinEventTransferFrozen_derived P
+    hS₁ hS₂ hS12' hdis hh hμ hD hsup hmass hpos hc ENNReal.ofReal_ne_top
+  refine hp.trans_le (measure_mono ?_)
+  intro ω hω
+  exact (ENNReal.ofReal_lt_ofReal_iff_of_nonneg hC₀).2 (by linarith) |>.trans_le hω
 
 end HarmonicBalls
