@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularAnnealedIncrement
 import LatticeProb.Analysis.MonotoneGridApprox
+import LatticeProb.LQG.LQGMassAlgebra
 
 /-! # Expected uniform increments of monotone clocks
 
@@ -56,5 +57,37 @@ theorem lintegral_iSup_abs_sub_le_grid {Ω : Type*} [MeasurableSpace Ω] (μ : M
       exact lintegral_finsetSum (Finset.range (m + 1))
         (f := fun j ω => ENNReal.ofReal |f ω (j * T / m) - g ω (j * T / m)|)
         (fun j _ => ENNReal.measurable_ofReal.comp (hgrid j))
+
+/-- The expected maximum of finitely many nonnegative variables is controlled by
+ their summed moments of any order at least one. -/
+theorem lintegral_iSup_le_rpow_sum_lintegral_rpow {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {m : ℕ} (X : Fin m → Ω → ℝ≥0∞)
+    (hX : ∀ j, Measurable (X j)) {p : ℝ} (hp : 1 ≤ p) :
+    (∫⁻ ω, ⨆ j, X j ω ∂μ) ≤
+      (∑ j, ∫⁻ ω, X j ω ^ p ∂μ) ^ (1 / p) := by
+  have hp0 : 0 < p := lt_of_lt_of_le zero_lt_one hp
+  have hq0 : 0 < 1 / p := one_div_pos.mpr hp0
+  have hq1 : 1 / p ≤ 1 := (div_le_one hp0).2 hp
+  let Y : Ω → ℝ≥0∞ := fun ω => (⨆ j, X j ω) ^ p
+  have hYm : Measurable Y := (Measurable.iSup hX).pow_const p
+  have hpoint (ω : Ω) : Y ω ≤ ∑ j, X j ω ^ p := by
+    dsimp [Y]
+    rw [(ENNReal.monotone_rpow_of_nonneg hp0.le).map_iSup_of_continuousAt
+      (ENNReal.continuous_rpow_const (y := p)).continuousAt (by simp [hp0])]
+    exact iSup_le fun j => Finset.single_le_sum (s := Finset.univ)
+      (f := fun i : Fin m => X i ω ^ p) (fun _ _ => zero_le) (Finset.mem_univ j)
+  calc
+    _ = ∫⁻ ω, Y ω ^ (1 / p) ∂μ := by
+      congr 1
+      funext ω
+      dsimp [Y]
+      rw [← ENNReal.rpow_mul, mul_one_div_cancel hp0.ne', ENNReal.rpow_one]
+    _ ≤ (∫⁻ ω, Y ω ∂μ) ^ (1 / p) :=
+      LatticeProb.lintegral_rpow_le_rpow_lintegral μ hq0 hq1 hYm.aemeasurable
+    _ ≤ (∫⁻ ω, ∑ j, X j ω ^ p ∂μ) ^ (1 / p) :=
+      ENNReal.rpow_le_rpow (lintegral_mono hpoint) hq0.le
+    _ = _ := by
+      congr 1
+      exact lintegral_finsetSum _ (fun j _ => (hX j).pow_const p)
 
 end HarmonicBalls
