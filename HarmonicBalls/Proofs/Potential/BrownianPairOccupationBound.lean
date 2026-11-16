@@ -208,4 +208,112 @@ theorem lintegral_unit_time_abs_sub_rpow_lt_top {q : ℝ} (hq0 : 0 < q) (hq1 : q
   rw [heq]
   exact lintegral_unit_square_abs_sub_rpow_lt_top hq0 hq1
 
+/-- A subcritical power bound for the small-ball probability of a Brownian increment. -/
+theorem planarBrownianMotion_increment_smallBall_rpow_le (x : ℂ)
+    {s t : ℝ≥0} (hts : t ≠ s) {r q : ℝ} (hr : 0 < r) (hq0 : 0 < q) (hq1 : q < 1) :
+    planarBrownianMotion x {b | ‖b t - b s‖ < r} ≤
+      ENNReal.ofReal ((2 / Real.pi) ^ q * r ^ (2 * q) *
+        |(t : ℝ) - (s : ℝ)| ^ (-q)) := by
+  let u : ℝ := |(t : ℝ) - (s : ℝ)|
+  have hu : 0 < u := by
+    dsimp [u]
+    apply abs_pos.mpr
+    exact sub_ne_zero.mpr (by exact_mod_cast hts)
+  let a : ℝ := 2 * r / Real.sqrt (2 * Real.pi * u)
+  have ha : 0 ≤ a := by dsimp [a]; positivity
+  have hs : (Real.sqrt (2 * Real.pi * u)) ^ 2 = 2 * Real.pi * u :=
+    Real.sq_sqrt (by positivity)
+  have hs0 : Real.sqrt (2 * Real.pi * u) ≠ 0 := by positivity
+  have hpi : Real.pi ≠ 0 := ne_of_gt Real.pi_pos
+  have hu0 : u ≠ 0 := ne_of_gt hu
+  have haeq : a ^ 2 = (2 / Real.pi) * r ^ 2 / u := by
+    dsimp [a]
+    field_simp
+    nlinarith [hs]
+  have hpower : (a ^ 2) ^ q =
+      (2 / Real.pi) ^ q * r ^ (2 * q) * u ^ (-q) := by
+    rw [haeq, Real.div_rpow (by positivity) (le_of_lt hu),
+      Real.mul_rpow (by positivity) (sq_nonneg r),
+      ← Real.rpow_natCast r 2, ← Real.rpow_mul (le_of_lt hr),
+      Real.rpow_neg (le_of_lt hu)]
+    ring
+  have hmin : min 1 (ENNReal.ofReal (a ^ 2)) ≤ ENNReal.ofReal ((a ^ 2) ^ q) := by
+    by_cases h : a ^ 2 ≤ 1
+    · exact (min_le_right _ _).trans
+        (ENNReal.ofReal_le_ofReal (Real.self_le_rpow_of_le_one (sq_nonneg a) h hq1.le))
+    · have hh : 1 ≤ (a ^ 2) ^ q := Real.one_le_rpow (le_of_not_ge h) hq0.le
+      exact (min_le_left _ _).trans (by simpa using ENNReal.ofReal_le_ofReal hh)
+  have hsmall := planarBrownianMotion_increment_smallBall_le x hts hr.le
+  have hsmall' : planarBrownianMotion x {b | ‖b t - b s‖ < r} ≤
+      min 1 (ENNReal.ofReal (a ^ 2)) := by
+    simpa only [a, u, coe_nndist, Real.dist_eq, ENNReal.ofReal_pow ha] using hsmall
+  exact hsmall'.trans (by simpa [hpower, u] using hmin)
+
+/-- Expected unit-time pair occupation of planar Brownian motion obeys every power
+bound of exponent strictly between zero and two. -/
+theorem planarBrownianMotion_unit_pair_occupation_le (x : ℂ) {d : ℝ}
+    (hd0 : 0 < d) (hd2 : d < 2) :
+    ∃ C : ℝ, 0 < C ∧ ∀ r : ℝ, 0 < r →
+      let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+      (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+        (if ‖b p.1 - b p.2‖ < r then 1 else 0 : ℝ≥0∞) ∂(ν.prod ν)
+          ∂(planarBrownianMotion x)) ≤ ENNReal.ofReal (C * r ^ d) := by
+  let q : ℝ := d / 2
+  have hq0 : 0 < q := by dsimp [q]; linarith
+  have hq1 : q < 1 := by dsimp [q]; linarith
+  have hqd : 2 * q = d := by dsimp [q]; ring
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let K : ℝ≥0∞ := ∫⁻ p : ℝ≥0 × ℝ≥0,
+    ENNReal.ofReal (|(p.1 : ℝ) - (p.2 : ℝ)| ^ (-q)) ∂(ν.prod ν)
+  have hK : K < ∞ := lintegral_unit_time_abs_sub_rpow_lt_top hq0 hq1
+  let C : ℝ := (2 / Real.pi) ^ q * (K.toReal + 1)
+  have hC : 0 < C := by
+    dsimp [C]
+    exact mul_pos (Real.rpow_pos_of_pos (by positivity) _) (by positivity)
+  refine ⟨C, hC, ?_⟩
+  intro r hr
+  have hν : NullSingletonClass ν := by
+    constructor
+    intro t
+    dsimp [ν]
+    rw [Measure.map_apply continuous_real_toNNReal.measurable (measurableSet_singleton t),
+      Measure.restrict_apply (continuous_real_toNNReal.measurable (measurableSet_singleton t))]
+    apply measure_mono_null _ (measure_singleton (t : ℝ))
+    intro z hz
+    have ht := congrArg (fun v : ℝ≥0 => (v : ℝ)) hz.1
+    have hz0 : 0 ≤ z := hz.2.1
+    simpa [Real.toNNReal_of_nonneg hz0] using ht
+  let : NullSingletonClass ν := hν
+  have hd : (ν.prod ν) (Set.diagonal ℝ≥0) = 0 := by
+    apply Measure.measure_prod_null_of_ae_null measurableSet_diagonal
+    filter_upwards [] with t
+    simp [Set.diagonal]
+  have hae : ∀ᵐ p ∂(ν.prod ν), p.1 ≠ p.2 := by
+    have h := measure_eq_zero_iff_ae_notMem.1 hd
+    simpa [Set.diagonal] using h
+  have hA : 0 ≤ (2 / Real.pi) ^ q * r ^ d := by positivity
+  have hKbound : K ≤ ENNReal.ofReal (K.toReal + 1) := by
+    calc
+      K = ENNReal.ofReal K.toReal := (ENNReal.ofReal_toReal hK.ne).symm
+      _ ≤ ENNReal.ofReal (K.toReal + 1) := ENNReal.ofReal_le_ofReal (by linarith)
+  calc
+    _ = ∫⁻ p : ℝ≥0 × ℝ≥0,
+        planarBrownianMotion x {b | ‖b p.1 - b p.2‖ < r} ∂(ν.prod ν) :=
+      lintegral_pair_occupation_eq x r ν
+    _ ≤ ∫⁻ p : ℝ≥0 × ℝ≥0, ENNReal.ofReal ((2 / Real.pi) ^ q * r ^ d *
+        |(p.1 : ℝ) - (p.2 : ℝ)| ^ (-q)) ∂(ν.prod ν) := by
+      apply lintegral_mono_ae
+      filter_upwards [hae] with p hp
+      simpa [hqd] using planarBrownianMotion_increment_smallBall_rpow_le x hp hr hq0 hq1
+    _ = ENNReal.ofReal ((2 / Real.pi) ^ q * r ^ d) * K := by
+      simp_rw [ENNReal.ofReal_mul hA]
+      rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+    _ ≤ ENNReal.ofReal ((2 / Real.pi) ^ q * r ^ d) *
+        ENNReal.ofReal (K.toReal + 1) := by gcongr
+    _ = ENNReal.ofReal (C * r ^ d) := by
+      rw [← ENNReal.ofReal_mul hA]
+      congr 1
+      dsimp [C]
+      ring
+
 end HarmonicBalls
