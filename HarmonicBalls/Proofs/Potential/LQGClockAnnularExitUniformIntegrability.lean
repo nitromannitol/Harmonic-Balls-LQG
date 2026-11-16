@@ -1139,4 +1139,33 @@ theorem intervalIntegral_stopped_eq_sum_blocks (f : ℝ → ℝ) (τ : ℝ) (hτ
     have h' : min ((k : ℝ) + 1) τ ≤ (k : ℝ) := (min_le_right _ _).trans hτk
     simp [Ioc_eq_empty (not_lt.mpr h')]
 
+/-- Continuous annular densities are integrable on every bounded time interval. -/
+theorem intervalIntegrable_annular_density (f : ℂ → ℝ) (hf : Continuous f) (δ : ℝ)
+    (b : ContinuousPath ℂ) (a c : ℝ) :
+    IntervalIntegrable (fun t : ℝ =>
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b t.toNNReal)) volume a c := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let g : ℂ → ℝ := A.indicator f
+  have hg : Measurable g := hf.measurable.indicator hA
+  obtain ⟨K, hK⟩ := (isCompact_closedBall (0 : ℂ) (1/2 : ℝ)).bddAbove_image hf.norm.continuousOn
+  have hgK : ∀ z, ‖g z‖ ≤ max K 0 := by
+    intro z
+    by_cases hz : z ∈ A
+    · have hzk : z ∈ Metric.closedBall (0 : ℂ) (1/2 : ℝ) := by
+        simpa only [Metric.mem_closedBall, dist_zero_right] using hz.2
+      rw [show g z = f z from Set.indicator_of_mem hz _]
+      exact (hK ⟨z, hzk, rfl⟩).trans (le_max_left K 0)
+    · rw [show g z = 0 from Set.indicator_of_notMem hz _, norm_zero]
+      exact le_max_right K 0
+  have ht : Measurable (fun t : ℝ => g (b t.toNNReal)) :=
+    hg.comp (b.continuous.measurable.comp measurable_real_toNNReal)
+  rw [intervalIntegrable_iff]
+  let : IsFiniteMeasure (volume.restrict (uIoc a c)) :=
+    Real.isFiniteMeasure_restrict_Ioc _ _
+  apply (integrable_const (max K 0)).mono' ht.aestronglyMeasurable
+  filter_upwards with t
+  exact hgK (b t.toNNReal)
+
 end HarmonicBalls
