@@ -434,4 +434,74 @@ theorem exists_annular_exit_occupation_tail_le_exp {Ω : Type*} [MeasurableSpace
       rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
     _ ≤ _ := by gcongr; exact htail x T hT
 
+/-- Annular tail occupation is the annular density integral over the time interval. -/
+theorem ae_annular_exit_tail_occupation_eq_time {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α δ : ℝ) (D : Set ℂ) :
+    ∀ᵐ ω ∂P, ∀ (b : ContinuousPath ℂ) (T : ℝ),
+      (∫⁻ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z
+        ∂annularExitTailOccupation D T b) =
+      ∫⁻ t in Ioc T (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) (b t.toNNReal) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hcont : ∀ᵐ ω ∂P, Continuous (hcirc ω ε) := by
+    filter_upwards [hHae] with ω hω
+    rw [← funext (hω ε)]
+    exact hHc ω ε hε
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  filter_upwards [hcont, ae_recentered_inserted_circle_average hh α] with ω hcont hrec b T
+  have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z) =
+      fun z => hcirc ω ε z - hcirc ω 1 0 - α * Real.log (max ε ‖z‖) := by
+    funext z
+    exact (hrec ε z hε).symm
+  have hc : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z) := by
+    rw [heq]
+    exact (hcont.sub continuous_const).sub
+      (continuous_const.mul ((continuous_const.max continuous_norm).log
+        (fun _ => (lt_max_of_lt_left hε).ne')))
+  have hf : Measurable (A.indicator (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) *
+      Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)))) :=
+    ((continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc))).measurable.ennreal_ofReal).indicator hA
+  have hm : Measurable (fun t : ℝ => b t.toNNReal) :=
+    b.continuous.measurable.comp measurable_real_toNNReal
+  exact lintegral_map hf hm
+
+/-- The annealed annular clock tail decays exponentially at Brownian exit. -/
+theorem exists_annular_exit_time_tail_le_exp {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {D : Set ℂ}
+    (hD : IsOpen D) (hDb : Bornology.IsBounded D) {δ : ℝ} (hδ : 0 < δ)
+    (γ α : ℝ) :
+    ∃ lam M : ℝ, 0 < lam ∧ 0 ≤ M ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧
+      ∀ x : ℂ, ∀ T : ℝ, 0 ≤ T → ∀ {ε : ℝ}, 0 < ε → ε ≤ δ → ε ≤ 1/2 →
+      (∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc T (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) (b t.toNNReal)
+        ∂volume ∂P ∂planarBrownianMotion x) ≤
+      ENNReal.ofReal M * (ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * T)) * C) := by
+  obtain ⟨lam, M, hlam, hM, C, hC, hbound⟩ :=
+    exists_annular_exit_occupation_tail_le_exp hh hD hDb hδ γ α
+  refine ⟨lam, M, hlam, hM, C, hC, ?_⟩
+  intro x T hT ε hε hεδ hεhalf
+  have htime := ae_annular_exit_tail_occupation_eq_time hh hε γ α δ D
+  calc
+    _ = ∫⁻ b, ∫⁻ ω, ∫⁻ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+      (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z
+      ∂annularExitTailOccupation D T b ∂P ∂planarBrownianMotion x := by
+        apply lintegral_congr
+        intro b
+        apply lintegral_congr_ae
+        filter_upwards [htime] with ω hω
+        exact (hω b T).symm
+    _ ≤ _ := hbound x T hT hε hεδ hεhalf
+
 end HarmonicBalls
