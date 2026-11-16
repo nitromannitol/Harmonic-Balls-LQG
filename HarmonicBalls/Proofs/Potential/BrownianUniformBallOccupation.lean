@@ -651,4 +651,56 @@ theorem planarBrownianMotion_occupation_moment_bound {q : ℝ} (hq0 : 0 < q) (hq
   have hh := lintegral_sum_chain_perm_prod_le ν k (Iic 1) (ENNReal.ofReal A * K) hk hs hK' n
   exact h.trans hh
 
+
+/-- Occupation moments bound the probability of a large ball occupation. -/
+theorem planarBrownianMotion_occupation_tail_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ (x z : ℂ) (n : ℕ) (r : ℝ), 0 < r →
+      ∀ ε : ℝ≥0∞, ε ≠ 0 → ε ≠ ∞ →
+      planarBrownianMotion x {b | ε ≤ ν {t | ‖b t - z‖ < r}} ≤
+      ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+        (ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q)) * K) ^ n) / ε ^ (n + 1) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  obtain ⟨K, hK, hmoment⟩ := planarBrownianMotion_occupation_moment_bound hq0 hq1
+  refine ⟨K, hK, ?_⟩
+  intro x z n r hr ε hε0 hεtop
+  have hm : Measurable (fun b : ContinuousPath ℂ => (ν {t | ‖b t - z‖ < r}) ^ (n + 1)) :=
+    (measurable_ball_occupation z r ν).pow_const _
+  calc
+    _ ≤ planarBrownianMotion x {b | ε ^ (n + 1) ≤ (ν {t | ‖b t - z‖ < r}) ^ (n + 1)} := by
+      apply measure_mono
+      intro b hb
+      change ε ≤ ν {t | ‖b t - z‖ < r} at hb
+      exact pow_le_pow_left₀ (show (0 : ℝ≥0∞) ≤ ε from zero_le) hb _
+    _ ≤ (∫⁻ b : ContinuousPath ℂ, (ν {t | ‖b t - z‖ < r}) ^ (n + 1)
+        ∂(planarBrownianMotion x)) / ε ^ (n + 1) :=
+      meas_ge_le_lintegral_div hm.aemeasurable (pow_ne_zero _ hε0) (ENNReal.pow_ne_top hεtop)
+    _ ≤ _ := by gcongr; exact hmoment x z n r hr
+
+
+/-- A finite family of balls satisfies a uniform occupation tail bound. -/
+theorem planarBrownianMotion_occupation_finite_union_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ (x : ℂ) (G : Finset ℂ) (n : ℕ) (r : ℝ), 0 < r →
+      ∀ ε : ℝ≥0∞, ε ≠ 0 → ε ≠ ∞ →
+      planarBrownianMotion x {b | ∃ z ∈ G, ε ≤ ν {t | ‖b t - z‖ < r}} ≤
+      (G.card : ℝ≥0∞) * (((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+        (ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q)) * K) ^ n) / ε ^ (n + 1)) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  obtain ⟨K, hK, htail⟩ := planarBrownianMotion_occupation_tail_bound hq0 hq1
+  refine ⟨K, hK, ?_⟩
+  intro x G n r hr ε hε0 hεtop
+  let R := ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+        (ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q)) * K) ^ n) / ε ^ (n + 1)
+  calc
+    _ = planarBrownianMotion x (⋃ z ∈ G, {b | ε ≤ ν {t | ‖b t - z‖ < r}}) := by
+      congr 1; ext b; simp [ν]
+    _ ≤ ∑ z ∈ G, planarBrownianMotion x {b | ε ≤ ν {t | ‖b t - z‖ < r}} :=
+      measure_biUnion_finset_le G _
+    _ ≤ ∑ _z ∈ G, R := by
+      apply Finset.sum_le_sum
+      intro z hz
+      exact htail x z n r hr ε hε0 hεtop
+    _ = _ := by simp [R]
+
 end HarmonicBalls
