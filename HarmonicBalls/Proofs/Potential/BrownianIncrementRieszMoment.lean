@@ -66,4 +66,24 @@ theorem lintegral_planarBrownianMotion_increment_enorm_rpow_neg_eq (x : ℂ) (s 
   congr 2
   ring
 
+/-- The expected inverse-power energy of Brownian increments is the Gaussian inverse
+moment times the corresponding time-lag energy. -/
+theorem lintegral_planarBrownianMotion_pair_enorm_rpow_neg (x : ℂ) (a : ℝ)
+    (ν : Measure ℝ≥0) [SFinite ν] :
+    (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-a) ∂(ν.prod ν)
+        ∂(planarBrownianMotion x)) =
+    (∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal (nndist (p.1 : ℝ) (p.2 : ℝ))) ^ (-a / 2) ∂(ν.prod ν)) *
+      ∫⁻ z, (ENNReal.ofReal ‖z‖) ^ (-a) ∂stdPlanarGaussian := by
+  have hf : Measurable (fun q : ContinuousPath ℂ × (ℝ≥0 × ℝ≥0) =>
+      (ENNReal.ofReal ‖q.1 q.2.1 - q.1 q.2.2‖) ^ (-a)) := by
+    fun_prop
+  have hg : Measurable (fun p : ℝ≥0 × ℝ≥0 =>
+      (ENNReal.ofReal (nndist (p.1 : ℝ) (p.2 : ℝ))) ^ (-a / 2)) := by
+    fun_prop
+  rw [lintegral_lintegral_swap hf.aemeasurable]
+  simp_rw [lintegral_planarBrownianMotion_increment_enorm_rpow_neg_eq]
+  exact lintegral_mul_const _ hg
+
 end HarmonicBalls
