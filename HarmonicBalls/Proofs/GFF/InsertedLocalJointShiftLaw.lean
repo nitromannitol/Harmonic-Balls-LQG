@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Sec11.ShiftedNormalizedMeasureDecoder
 import HarmonicBalls.FirstPass.Phase2.SquarePositiveHolds
+import HarmonicBalls.FirstPass.S11j.PositiveWeylInverse
 
 /-! # Local field and normalized measure under smooth shifts
 
@@ -108,5 +109,34 @@ theorem IsWholePlaneGFF.exists_local_field_normalizedMeasure_shift_law_of_subcri
   exact hGFF.exists_local_field_normalizedMeasure_shift_law hμ
     (lqgMeasureFullSupportStmt_holds γ α hγ hγ2 hα Ω P hC hcirc μ hGFF hμ) hε
 
+
+/-- A continuous compactly supported Weyl shift of a Euclidean length metric
+is a Euclidean length metric. -/
+theorem IsEuclideanLengthMetric.weylScaling_compact_isLengthMetric
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) {ξ : ℝ} (hξ : 0 ≤ ξ)
+    (f : ℂ → ℝ) (hf : Continuous f) (hc : HasCompactSupport f) :
+    IsEuclideanLengthMetric (fun x y => (weylScaling D ξ f x y).toReal) := by
+  obtain ⟨m, hm⟩ := exists_lower_bound_of_continuous_compactSupport f hf hc
+  obtain ⟨c, hc'⟩ := exists_lower_bound_of_continuous_compactSupport (fun z => -f z) hf.neg hc.neg
+  let M := -c
+  let g : ℂ → ℝ := fun z => f z - M
+  have hglo : ∀ z, m - M ≤ g z := fun z => by dsimp [g]; linarith [hm z]
+  have hghi : ∀ z, g z ≤ 0 := fun z => by dsimp [g, M]; linarith [hc' z]
+  have hzero := hD.weylScaling_zero ξ
+  obtain ⟨hdiag, hsep, htop⟩ := hD.weylScaling_negative_bump_topology hξ g hglo hghi hzero
+  have hfin : ∀ x y, weylScaling D ξ g x y ≠ ⊤ :=
+    fun x y => (weylScaling_negative_bump_real_bounds hD hξ g hglo hghi hzero x y).1.ne
+  have hsymm : ∀ x y, (weylScaling D ξ g x y).toReal = (weylScaling D ξ g y x).toReal :=
+    fun x y => congrArg ENNReal.toReal (hD.weylScaling_symm ξ g x y)
+  have hE : IsEuclideanLengthMetric (fun x y => (weylScaling D ξ g x y).toReal) :=
+    ⟨hdiag, hsep, hsymm, hD.weylScaling_toReal_triangle ξ g hfin, htop,
+      hD.weylScaling_internalMetric ξ g (fun x y => ENNReal.ofReal_toReal (hfin x y)) hsymm⟩
+  have heq : (fun x y => (weylScaling D ξ f x y).toReal) =
+      fun x y => Real.exp (ξ * M) * (weylScaling D ξ g x y).toReal := by
+    funext x y
+    rw [weylScaling_eq_exp_mul_of_shift D ξ M f g (fun z => by dsimp [g]; ring),
+      ENNReal.toReal_mul, ENNReal.toReal_ofReal (Real.exp_pos _).le]
+  rw [heq]
+  exact hE.const_mul (Real.exp_pos _)
 
 end HarmonicBalls
