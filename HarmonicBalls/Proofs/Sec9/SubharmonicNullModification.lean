@@ -25,7 +25,7 @@ theorem measure_singleton_eq_zero_of_extended_green_integral_lt_top
 whose two source integrals are finite on the witness closure. -/
 theorem punctured_signed_green_submean
     {μ : Measure ℂ} {G : Set ℂ} {z : ℂ}
-    (hG : IsOpen G) (hz : z ∈ G) (hμz : μ {z} = 0)
+    (hG : IsOpen G) (hz : z ∈ G) (hμ : ∀ x : ℂ, μ {x} = 0)
     (hpos : 0 < μ G) (hfinite : μ G < ⊤)
     (hmean : ∀ (O K : Set ℂ) (ν₁ ν₂ : Measure ℂ) (q : ℂ → ℝ),
       IsOpen O → closure G ⊆ O → IsCompact K → K ⊆ O →
@@ -54,7 +54,7 @@ theorem punctured_signed_green_submean
     apply le_antisymm (closure_mono sdiff_subset)
     apply closure_minimal _ isClosed_closure
     simpa only [sdiff_eq] using (dense_compl_singleton z).open_subset_closure_inter hG
-  have hae : (G \ {z}) =ᵐ[μ] G := sdiff_null_ae_eq_self hμz
+  have hae : (G \ {z}) =ᵐ[μ] G := sdiff_null_ae_eq_self (hμ z)
   have hm : μ (G \ {z}) = μ G := measure_congr hae
   have hr : μ.restrict (G \ {z}) = μ.restrict G := Measure.restrict_congr_set hae
   refine ⟨hG.sdiff isClosed_singleton, by simp, by simpa [hm] using hpos,
