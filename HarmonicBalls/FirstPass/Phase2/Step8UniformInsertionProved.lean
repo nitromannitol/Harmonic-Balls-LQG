@@ -1,4 +1,5 @@
 import HarmonicBalls.FirstPass.Phase2.Step8IdentificationProved
+import HarmonicBalls.FirstPass.Phase2.HModelAtGammaDerived
 
 /-!
 # Step 8 frequencies for all insertion parameters
@@ -279,12 +280,25 @@ theorem step8_uniform_insertion
     · intro α _ k Ω _ P hC _ _ D _ _ hD
       exact (hno P α hC D hD).elim
 
+private theorem commonProb_pos_of_pinch {U T Q' Q : Set ℂ} {γ M q : ℝ} {E : Set Step8Code}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    (hPG : PinchEventGammaCanonicalStmt.{0} U T Q' Q γ M E) (hq : CommonProb.{0} γ E q) : 0 < q := by
+  obtain ⟨ξ, _, Ω, hΩ, P, hP, hC, hcirc, μ, D, hG, hμ, hD⟩ := hmodel_at_gamma_derived.{0} hγ0 hγ2
+  let : MeasurableSpace Ω := hΩ
+  let : IsProbabilityMeasure P := hP
+  obtain ⟨𝔇, h𝔇, hDae⟩ := hD
+  have hξ := weylExponentEq_lqgXi_of_xiGamma xi_eq_xiGamma_derived lqgXi_eq_xiGamma_derived γ ξ hγ0 hγ2 𝔇 h𝔇
+  subst ξ
+  obtain ⟨_, hpos, _⟩ := hPG.2 Ω P hC hcirc μ D hG hμ ⟨𝔇, h𝔇, hDae⟩
+  rw [← hq Ω P hC hcirc hG]
+  exact ENNReal.toReal_pos hpos.ne' (measure_ne_top P _)
+
 /-- The common event is the physical scale-one certificate and gives all insertion frequencies. -/
 theorem step8_uniform_insertion_certificate
     (U V W T Q' Q : Set ℂ) (δ : ℝ) (hgeom : IsBufferedPinchGeometry U V W T Q' Q δ)
     (γ ξ M : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hM : 0 < M) :
     ∃ E : Set Step8Code, ∃ q : ℝ,
-      PinchEventGammaStmt.{u} U T Q' Q γ ξ M E ∧
+      0 < q ∧ PinchEventGammaStmt.{u} U T Q' Q γ ξ M E ∧
       (∀ (Ω : Type u) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
         (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ),
         IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ γ hcirc μ →
@@ -300,7 +314,7 @@ theorem step8_uniform_insertion_certificate
   by_cases hcan : ξ = lqgXi γ
   · subst ξ
     obtain ⟨E, q, hPG, hq, hEq, hall⟩ := step8_uniform_insertion_certificate_canonical_zero U V W T Q' Q δ hgeom γ M hγ0 hγ2 hM
-    refine ⟨E, q, ⟨hPG.1, ?_⟩, ?_, ?_, ?_⟩
+    refine ⟨E, q, commonProb_pos_of_pinch hγ0 hγ2 hPG hq, ⟨hPG.1, ?_⟩, ?_, ?_, ?_⟩
     · intro Ω _ P hC hcirc μ D hG hμ hD
       have hG' := isWholePlaneGFF_modelRangeMeasure (P := P) μ D hG
       have hμ' : IsLQGMeasureOfField (modelRangeMeasure P (modelPoint hC hcirc μ D)) γ γ
@@ -357,7 +371,7 @@ theorem step8_uniform_insertion_certificate
         (D : Ω → ℂ → ℂ → ℝ), ¬ IsLQGMetricOfField P γ ξ α hC D := by
       rintro Ω _ P α hC D ⟨𝔇, h𝔇, -⟩
       exact hcan (hξ γ ξ hγ0 hγ2 𝔇 h𝔇)
-    refine ⟨univ, 0, ⟨MeasurableSet.univ, ?_⟩, ?_, ?_, ?_⟩
+    refine ⟨univ, 1, by norm_num, ⟨MeasurableSet.univ, ?_⟩, ?_, ?_, ?_⟩
     · intro Ω _ P hC _ _ D _ _ hD
       exact (hno P γ hC D hD).elim
     · intro Ω _ P hC _ _ D _ _ hD
