@@ -56,15 +56,15 @@ The source, binder, definition, consumer and transitive verdicts below are indep
 | 9.3 | lemma :2420 | lemma:contains-boundary | paper-owned | firstPass_9_3 @ HarmonicBalls/FirstPass/S2S3S4S9SA.lean:94 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 9.4 | lemma :2478 | lemma:regular-open-ae | paper-owned | firstPass_9_4 @ HarmonicBalls/FirstPass/S2S3S4S9SA.lean:99 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 10.1 | lemma :2580 | lemma:cannot-cross | paper-owned | firstPass_10_1 @ HarmonicBalls/FirstPass/S1S10.lean:64 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
-| 10.2 | definition :2634 | NOT YET CHECKED | definition | IsLoop / IsArc / IsSimpleLoop / IsSimpleArc @ HarmonicBalls/Defs/Geometry.lean:82,88,93,98 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
-| 10.3 | definition :2644 | NOT YET CHECKED | definition | IsLocallyConnectedSet @ HarmonicBalls/Defs/Geometry.lean:104 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
-| 10.4 | definition :2650 | NOT YET CHECKED | definition | IsCutPoint @ HarmonicBalls/Defs/Geometry.lean:110 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
+| 10.2 | definition :2634 | NOT YET CHECKED | definition | IsLoop / IsArc / IsSimpleLoop / IsSimpleArc @ HarmonicBalls/Defs/Geometry.lean:82,87,92,97 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
+| 10.3 | definition :2644 | NOT YET CHECKED | definition | IsLocallyConnectedSet @ HarmonicBalls/Defs/Geometry.lean:103 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
+| 10.4 | definition :2650 | NOT YET CHECKED | definition | IsCutPoint @ HarmonicBalls/Defs/Geometry.lean:108 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 10.5 | lemma :2674 | lemma:crossing-connected | paper-owned | NOT YET CHECKED | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 10.6 | prop :2783 | prop:boundary-simple-loop | paper-owned | firstPass_10_6 @ HarmonicBalls/FirstPass/S1S10.lean:92 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 10.7 | prop :2798 | prop:boundary-simple-loop-full-cluster | paper-owned | firstPass_10_7 @ HarmonicBalls/FirstPass/S1S10.lean:75 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 11.1 | definition :2881 | def:lipschitz | definition | IsLipschitzDomain @ HarmonicBalls/Defs/Geometry.lean:133 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 11.2 | prop :2893 | prop:not-balls | paper-owned | firstPass_11_2.{u} @ HarmonicBalls/FirstPass/S11.lean:58 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
-| 11.3 | definition :2899 | NOT YET CHECKED | definition | IsOpenCone / IsCone @ HarmonicBalls/Defs/Geometry.lean:145,151 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
+| 11.3 | definition :2899 | NOT YET CHECKED | definition | IsOpenCone / IsCone @ HarmonicBalls/Defs/Geometry.lean:144,149 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 11.4 | definition :2906 | def:cone-condition | definition | SatisfiesInteriorConeCondition / SatisfiesExteriorConeCondition / SatisfiesConeCondition @ HarmonicBalls/Defs/Geometry.lean:158,163,168 | OPEN | OPEN | Body printed; correspondence OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 11.5 | lemma :2923 | lemma:no-exterior-cone-condition | paper-owned | firstPass_11_5.{u} @ HarmonicBalls/FirstPass/S11.lean:66 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
 | 11.6 | lemma :2933 | lemma:harmonic-comparison-chain | paper-owned | closure_11_6_derivedInputs19 @ HarmonicBalls/FirstPass/Phase2/DerivedInputs19.lean:240 | OPEN | OPEN | OPEN | OPEN | OPEN | NOT YET CHECKED |
