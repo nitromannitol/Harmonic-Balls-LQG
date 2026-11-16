@@ -276,4 +276,24 @@ theorem IsWholePlaneGFF.ae_isCompact_closedBall_inserted
   change D ω z w ≤ R at hw
   linarith
 
+/-- All positive spatial rescalings and positive multiples of the inserted
+metric have compact closed balls on the same full-measure event. -/
+theorem IsWholePlaneGFF.ae_isCompact_closedBall_inserted_rescale
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α : ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α hC D) :
+    ∀ᵐ ω ∂P, ∀ r : ℝ, 0 < r → ∀ c : ℝ, 0 < c → ∀ z : ℂ, ∀ R : ℝ,
+      IsCompact {w : ℂ | c * D ω ((r : ℂ) * z) ((r : ℂ) * w) ≤ R} := by
+  filter_upwards [hh.ae_isCompact_closedBall_inserted hγ hγ₂ hα hD] with ω hcompact
+  intro r hr c hc z R
+  let e : ℂ ≃ₜ ℂ := Homeomorph.mulLeft₀ (r : ℂ) (Complex.ofReal_ne_zero.mpr hr.ne')
+  have h := e.isCompact_preimage.mpr (hcompact ((r : ℂ) * z) (R / c))
+  convert h using 1
+  ext w
+  change (c * D ω ((r : ℂ) * z) ((r : ℂ) * w) ≤ R) ↔
+    (D ω ((r : ℂ) * z) ((r : ℂ) * w) ≤ R / c)
+  rw [le_div_iff₀ hc, mul_comm]
+
 end HarmonicBalls
