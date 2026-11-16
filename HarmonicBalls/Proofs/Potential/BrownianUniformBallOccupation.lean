@@ -168,4 +168,56 @@ theorem planarBrownianMotion_joint_ball_le (x z : ℂ) {n : ℕ}
       ext b
       simp [f, A, Metric.mem_ball, dist_zero_right]
 
+/-- Every occupation moment is the integral of the joint visit probability. -/
+theorem planarBrownianMotion_occupation_moment_eq (x z : ℂ) (r : ℝ) (n : ℕ)
+    (ν : Measure ℝ≥0) [SigmaFinite ν] :
+    (∫⁻ b : ContinuousPath ℂ, (ν {t | ‖b t - z‖ < r}) ^ n ∂(planarBrownianMotion x)) =
+    ∫⁻ t : Fin n → ℝ≥0, planarBrownianMotion x {b | ∀ i, ‖b (t i) - z‖ < r}
+      ∂(Measure.pi (fun _ : Fin n => ν)) := by
+  let E : Set (ContinuousPath ℂ × (Fin n → ℝ≥0)) :=
+    {p | ∀ i, ‖p.1 (p.2 i) - z‖ < r}
+  have hE : MeasurableSet E := by
+    simp only [E, ofPred_forall]
+    apply MeasurableSet.iInter
+    intro i
+    apply isOpen_lt _ continuous_const |>.measurableSet
+    fun_prop
+  let F : ContinuousPath ℂ × (Fin n → ℝ≥0) → ℝ≥0∞ := E.indicator 1
+  have hF : Measurable F := measurable_const.indicator hE
+  calc
+    _ = ∫⁻ b, ∫⁻ t, F (b,t) ∂(Measure.pi (fun _ : Fin n => ν))
+        ∂(planarBrownianMotion x) := by
+      congr 1; funext b
+      let A : Set ℝ≥0 := {t | ‖b t - z‖ < r}
+      have hA : MeasurableSet A := by
+        apply isOpen_lt _ continuous_const |>.measurableSet
+        fun_prop
+      have hpi : {t : Fin n → ℝ≥0 | ∀ i, ‖b (t i) - z‖ < r} = Set.univ.pi (fun _ => A) := by
+        ext t; simp [A]
+      have hm : MeasurableSet {t : Fin n → ℝ≥0 | ∀ i, ‖b (t i) - z‖ < r} := by
+        rw [hpi]; exact MeasurableSet.univ_pi (fun _ => hA)
+      rw [show (fun t => F (b,t)) = ({t : Fin n → ℝ≥0 | ∀ i, ‖b (t i) - z‖ < r}).indicator 1 by
+        funext t; simp [F, E, Set.indicator_apply]]
+      rw [lintegral_indicator_one hm, hpi, Measure.pi_pi]
+      simp [A]
+    _ = ∫⁻ t, ∫⁻ b, F (b,t) ∂(planarBrownianMotion x)
+        ∂(Measure.pi (fun _ : Fin n => ν)) := lintegral_lintegral_swap hF.aemeasurable
+    _ = _ := by
+      congr 1; funext t
+      have hm : MeasurableSet {b : ContinuousPath ℂ | ∀ i, ‖b (t i) - z‖ < r} := by
+        simp only [ofPred_forall]
+        apply MeasurableSet.iInter
+        intro i
+        apply isOpen_lt _ continuous_const |>.measurableSet
+        fun_prop
+      convert lintegral_indicator_one hm using 1; simp [F, E, Set.indicator_apply]
+/-- Ball occupation is measurable as a function of the continuous path. -/
+theorem measurable_ball_occupation (z : ℂ) (r : ℝ)
+    (ν : Measure ℝ≥0) [SFinite ν] :
+    Measurable (fun b : ContinuousPath ℂ => ν {t | ‖b t - z‖ < r}) := by
+  let E : Set (ContinuousPath ℂ × ℝ≥0) := {p | ‖p.1 p.2 - z‖ < r}
+  have hE : MeasurableSet E := by
+    apply isOpen_lt _ continuous_const |>.measurableSet
+    fun_prop
+  exact measurable_measure_prodMk_left (ν := ν) hE
 end HarmonicBalls
