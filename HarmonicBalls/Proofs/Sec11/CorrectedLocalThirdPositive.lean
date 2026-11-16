@@ -1,4 +1,5 @@
 import HarmonicBalls.FirstPass.S11h.LocalEvents
+import HarmonicBalls.FirstPass.Phase2.Step8UniformInsertionProved
 import HarmonicBalls.Steps.Sec11.PinchInternalDiam
 import HarmonicBalls.FirstPass.S11an
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsConsequencesDerived
@@ -6,7 +7,7 @@ import HarmonicBalls.FirstPass.Phase2.MassFunctionalDerived
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs9
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 
-/-! # Local pinch certificates and conditional positivity -/
+/-! # Positive probability for local pinch certificates -/
 
 namespace HarmonicBalls
 
@@ -91,5 +92,28 @@ theorem pinchLocal_three_positive_conditional
       (μ ω).withDensity fun x => ENNReal.ofReal (Real.exp (γ * f x))))
     B hB (hiff.mono fun _ h => h.mp) (hshift f hf B hB hiff) hposS
   exact lt_of_lt_of_le hAp (measure_mono hAsub)
+
+/-- The three local pinch certificates have positive probability for every
+admissible logarithmic insertion. -/
+theorem pinchLocal_three_positive
+    {U V W T Q' Q : Set ℂ} {δ γ α ξ M : ℝ}
+    (hG : IsBufferedPinchGeometry U V W T Q' Q δ)
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hM : 0 < M) (hα : α < lqgQ γ)
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ) (D : Ω → ℂ → ℂ → ℝ)
+    (hGFF : IsWholePlaneGFF P hC hcirc)
+    (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hDm : IsLQGMetricOfField P γ ξ α hC D) :
+    0 < P {ω | pinchFirstEventLocal (D ω) W T Q' Q δ ∧
+      pinchSecondEventLocal (μ ω) (D ω) U V δ M ∧
+      pinchThirdEventLocal (D ω) V W δ} := by
+  obtain ⟨E, _, _, _, _, _, hseed, _⟩ :=
+    step8_uniform_source_certificate U V W T Q' Q δ hG γ ξ M hγ0 hγ2 hM
+  obtain ⟨hpos, hcert⟩ := hseed α hα Ω P hC hcirc μ D hGFF hμ hDm
+  refine hpos.trans_le (measure_mono_ae ?_)
+  filter_upwards [hcert] with ω hω hmem
+  exact (S11i.Step8Calibration.certificateEvent_iff_pinchLocalRule
+    (μ ω) (D ω) U V W T Q' Q δ M).mp (hω.mp hmem)
 
 end HarmonicBalls
