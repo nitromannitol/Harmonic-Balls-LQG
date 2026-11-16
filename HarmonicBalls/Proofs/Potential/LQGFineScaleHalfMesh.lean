@@ -332,5 +332,77 @@ theorem IsWholePlaneGFF.ae_fine_smoothing_ball_power
     field_simp
   simpa only [he] using hband
 
+
+/-- On bounded disks, ordinary masses of arbitrary sufficiently small balls
+have a positive power bound when the smoothing scale is sufficiently fine. -/
+theorem IsWholePlaneGFF.ae_fine_smoothing_small_ball_power
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ R : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :
+    ∃ m : ℕ, ∀ᵐ ω ∂P, ∃ C κ r₀ : ℝ, 0 < C ∧ 0 < κ ∧ 0 < r₀ ∧
+      ∀ z ∈ ball (0 : ℂ) R, ∀ r, 0 < r → r < r₀ → ∀ s, 0 < s →
+        s < r ^ (m + 1) →
+        LatticeProb.LQG.lqgApprox γ (hcirc ω) s (ball z r) ≤
+          ENNReal.ofReal (C * r ^ κ) := by
+  obtain ⟨m, hm⟩ := hh.ae_fine_smoothing_ball_power hγ hγ2 hR
+  refine ⟨m, ?_⟩
+  filter_upwards [hm] with ω hω
+  obtain ⟨C, κ, hC, hκ, hω⟩ := hω
+  obtain ⟨J, hJ⟩ := eventually_atTop.1 hω
+  refine ⟨C * (4 : ℝ) ^ κ, κ, LatticeProb.LQG.dyadicScale (J + 2), by positivity,
+    hκ, by unfold LatticeProb.LQG.dyadicScale; positivity, ?_⟩
+  intro z hz r hr hr0 s hs hsr
+  have hd1 : LatticeProb.LQG.dyadicScale (J + 2) ≤ 1 := by
+    unfold LatticeProb.LQG.dyadicScale
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  obtain ⟨n, hn1, hn2⟩ := LatticeProb.LQG.exists_dyadicScale_bracket hr (hr0.trans_le hd1)
+  have hn : J + 2 ≤ n := by
+    by_contra h
+    have hle : n + 1 ≤ J + 2 := by omega
+    have hmono := LatticeProb.LQG.dyadicScale_le_of_le hle
+    linarith
+  let j := n - 1
+  have hj : J ≤ j := by dsimp [j]; omega
+  have hn' : j + 1 = n := by dsimp [j]; omega
+  have hd : 0 < LatticeProb.LQG.dyadicScale j := by
+    unfold LatticeProb.LQG.dyadicScale
+    positivity
+  have hrad : r ≤ LatticeProb.LQG.dyadicScale j / 2 := by
+    rw [← LatticeProb.LQG.dyadicScale_succ_eq_half, hn']
+    exact hn2.le
+  have hrle : r ≤ LatticeProb.LQG.dyadicScale j := by linarith
+  have hdle : LatticeProb.LQG.dyadicScale j ≤ 4 * r := by
+    have hnext : LatticeProb.LQG.dyadicScale (n + 1) =
+        LatticeProb.LQG.dyadicScale j / 4 := by
+      rw [← hn', LatticeProb.LQG.dyadicScale_succ_eq_half,
+        LatticeProb.LQG.dyadicScale_succ_eq_half]
+      ring
+    rw [hnext] at hn1
+    linarith
+  have hscale : LatticeProb.LQG.dyadicScale j *
+      LatticeProb.LQG.dyadicScale (m * j) =
+        LatticeProb.LQG.dyadicScale j ^ (m + 1) := by
+    unfold LatticeProb.LQG.dyadicScale
+    rw [pow_mul, pow_succ]
+    ring
+  have hs' : s < LatticeProb.LQG.dyadicScale j *
+      LatticeProb.LQG.dyadicScale (m * j) := by
+    rw [hscale]
+    exact hsr.trans_le (pow_le_pow_left₀ hr.le hrle _)
+  have hmass := hJ j hj z hz s hs hs'
+  have hpow : LatticeProb.LQG.dyadicScale j ^ κ ≤ (4 * r) ^ κ :=
+    Real.rpow_le_rpow hd.le hdle hκ.le
+  have hsub : ball z r ⊆ ball z (LatticeProb.LQG.dyadicScale j / 2) :=
+    ball_subset_ball hrad
+  calc
+    _ ≤ LatticeProb.LQG.lqgApprox γ (hcirc ω) s
+        (ball z (LatticeProb.LQG.dyadicScale j / 2)) := measure_mono hsub
+    _ ≤ ENNReal.ofReal (C * LatticeProb.LQG.dyadicScale j ^ κ) := hmass
+    _ ≤ ENNReal.ofReal (C * (4 * r) ^ κ) := ENNReal.ofReal_le_ofReal (by gcongr)
+    _ = ENNReal.ofReal (C * (4 : ℝ) ^ κ * r ^ κ) := by
+      rw [Real.mul_rpow (by norm_num) hr.le]
+      ring
+
 end HarmonicBalls
 
