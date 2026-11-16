@@ -156,7 +156,7 @@ theorem greenPotential_restrict_le_of_circle_tests
     {R : ℝ} {z : ℂ} {A : Set ℂ} {μ : Measure ℂ}
     (hz : z ∈ ball (0 : ℂ) R) (hA : closure A ⊆ ball 0 R)
     (hfin : μ A ≠ ⊤) (hatom : ∀ x, μ {x} = 0)
-    (htest : ∀ x ∈ ball (0 : ℂ) R, ∀ r : ℝ, 0 < r →
+    (htest : ∀ x ∈ ball (0 : ℂ) R, x ≠ z → ∀ r : ℝ, 0 < r →
       closedBall x r ⊆ ball 0 R →
       μ.real A * (-greenPotential (ball 0 R) (Section6.normalizedCircleMeasure x r) z) ≤
         ∫ y in A, -greenPotential (ball 0 R) (Section6.normalizedCircleMeasure x r) y ∂μ) :
@@ -180,7 +180,7 @@ theorem greenPotential_restrict_le_of_circle_tests
     · exact bot_le
   have h := greenPotential_le_of_all_circle_tests hx hz hxz hsupport hxatom (by
     intro r hr hsub
-    simpa only [measureReal_restrict_apply_univ] using htest x hx r hr hsub)
+    simpa only [measureReal_restrict_apply_univ] using htest x hx hxz r hr hsub)
   exact ⟨h.1, h.2.1, by simpa only [measureReal_restrict_apply_univ] using h.2.2⟩
 
 end HarmonicBalls
