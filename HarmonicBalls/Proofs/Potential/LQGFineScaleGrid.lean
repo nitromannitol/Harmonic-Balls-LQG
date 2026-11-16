@@ -148,4 +148,57 @@ theorem ae_fine_scale_gff_increment {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
   · intro j n i _ _
     exact hinc (hG j n i) _ _ (hd n) (hd1 n) (hs j n i).1 (hs j n i).2
 
+
+/-- Circle averages in affine coordinates, recentered at the unit circle. -/
+noncomputable def affineRecentredCircle (h : ℝ → ℂ → ℝ) (a : ℝ) (z : ℂ)
+    (r : ℝ) (w : ℂ) : ℝ :=
+  h (a * r) ((a : ℂ) * w + z) - h a z
+
+/-- Fine-scale increment control applies simultaneously to affine rescalings
+of one whole-plane field at arbitrary indexed centers. -/
+theorem ae_fine_scale_affine_gff_increment {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {g : ℂ → ℝ} (hgc : Continuous g) (hgs : HasCompactSupport g)
+    {R : ℝ} (hR : 0 < R) (hgR : ∀ z, g z ≠ 0 → ‖z‖ + 1 ≤ R) :
+    ∃ K c : ℝ, 0 ≤ K ∧ 0 < c ∧ ∀ (A D t B : ℝ), 0 ≤ A → 0 ≤ D → 0 ≤ B →
+      0 ≤ t → t < 1 → D * ((2 : ℝ)⁻¹ ^ c) ≤ t ^ 2 →
+      ∃ m : ℕ, ∀ {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+      (_hG : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+      (N : ℕ → ℕ → ℕ) (s : ℕ → ℕ → ℕ → ℝ) (z : ℕ → ℕ → ℕ → ℂ),
+      (∀ j n, ((N j n : ℝ) + 1) ≤ B * (A ^ j * D ^ n)) →
+      (∀ j n i, LatticeProb.LQG.dyadicScale n / 2 ≤ s j n i ∧
+        s j n i ≤ LatticeProb.LQG.dyadicScale n) →
+      ∀ᵐ ω ∂P, ∀ᶠ j in atTop, ∀ n, m * j ≤ n → ∀ i ≤ N j n,
+        |∫ w, g w * (s j n i ^ (γ ^ 2 / 2) * exp (γ *
+          (affineRecentredCircle (hcirc ω) (LatticeProb.LQG.dyadicScale j) (z j n i) (s j n i) w -
+            affineRecentredCircle (hcirc ω) (LatticeProb.LQG.dyadicScale j) (z j n i) R 0)) -
+          LatticeProb.LQG.dyadicScale n ^ (γ ^ 2 / 2) * exp (γ *
+          (affineRecentredCircle (hcirc ω) (LatticeProb.LQG.dyadicScale j) (z j n i)
+            (LatticeProb.LQG.dyadicScale n) w -
+            affineRecentredCircle (hcirc ω) (LatticeProb.LQG.dyadicScale j) (z j n i) R 0)))| < 1 := by
+  obtain ⟨K, c, hK, hc, hgrid⟩ := ae_fine_scale_gff_increment hγ hγ2 hgc hgs hR hgR
+  refine ⟨K, c, hK, hc, ?_⟩
+  intro A D t B hA hD hB ht ht1 hDt
+  obtain ⟨m, hm⟩ := hgrid A D t B hA hD hB ht ht1 hDt
+  refine ⟨m, ?_⟩
+  intro Ω _ P hC hcirc hG N s z hN hs
+  let H : ℕ → ℕ → ℕ → Ω → ℝ → ℂ → ℝ := fun j n i ω =>
+    affineRecentredCircle (hcirc ω) (LatticeProb.LQG.dyadicScale j) (z j n i)
+  have hex : ∀ j n i, ∃ hC', LatticeProb.Gauss.IsWholePlaneGFF P hC' (H j n i) := by
+    intro j n i
+    have hj : 0 < LatticeProb.LQG.dyadicScale j := by
+      unfold LatticeProb.LQG.dyadicScale
+      positivity
+    have h := LatticeProb.LQG.AffineDerived.wholePlaneGFFAffineInvariance_lp P hC hcirc hG
+      (LatticeProb.LQG.dyadicScale j : ℂ) (Complex.ofReal_ne_zero.2 hj.ne') (z j n i)
+    have heq : (fun ω r w => hcirc ω (‖(LatticeProb.LQG.dyadicScale j : ℂ)‖ * r)
+        ((LatticeProb.LQG.dyadicScale j : ℂ) * w + z j n i) -
+        hcirc ω ‖(LatticeProb.LQG.dyadicScale j : ℂ)‖ (z j n i)) = H j n i := by
+      funext ω r w
+      simp [H, affineRecentredCircle, Complex.norm_real, Real.norm_of_nonneg hj.le]
+    rw [heq] at h
+    exact ⟨_, h⟩
+  choose hC' hH using hex
+  exact hm P hC' H hH N s hN hs
+
 end HarmonicBalls
