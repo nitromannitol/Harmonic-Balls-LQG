@@ -6,6 +6,7 @@ import LatticeProb.Prob.GaussianFreezing
 /-! # Planar Brownian increments
 
 Planar Brownian increments have centered Gaussian laws and satisfy a small-ball bound.
+A Tonelli identity expresses expected pair occupation in terms of increment probabilities.
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Set Metric
@@ -86,5 +87,31 @@ theorem planarBrownianMotion_increment_smallBall_le (x : ℂ) {s t : ℝ≥0} (h
       simpa only [dist_zero_right] using h
     rw [hh]
     exact planarGaussian_ball_le hv hr
+
+/-- Expected pair occupation is the integral of the two-time small-ball probabilities. -/
+theorem lintegral_pair_occupation_eq (x : ℂ) (r : ℝ) (ν : Measure ℝ≥0) [SFinite ν] :
+    (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (if ‖b p.1 - b p.2‖ < r then 1 else 0 : ℝ≥0∞) ∂(ν.prod ν)
+        ∂(planarBrownianMotion x)) =
+    ∫⁻ p : ℝ≥0 × ℝ≥0,
+      planarBrownianMotion x {b | ‖b p.1 - b p.2‖ < r} ∂(ν.prod ν) := by
+  let E : Set (ContinuousPath ℂ × (ℝ≥0 × ℝ≥0)) :=
+    {p | ‖p.1 p.2.1 - p.1 p.2.2‖ < r}
+  have hE : MeasurableSet E := by
+    apply isOpen_lt _ continuous_const |>.measurableSet
+    fun_prop
+  let F : ContinuousPath ℂ × (ℝ≥0 × ℝ≥0) → ℝ≥0∞ := E.indicator 1
+  have hF : Measurable F := measurable_const.indicator hE
+  calc
+    _ = ∫⁻ b, ∫⁻ p, F (b,p) ∂(ν.prod ν) ∂(planarBrownianMotion x) := by
+      simp [F, E, Set.indicator_apply]
+    _ = ∫⁻ p, ∫⁻ b, F (b,p) ∂(planarBrownianMotion x) ∂(ν.prod ν) :=
+      lintegral_lintegral_swap hF.aemeasurable
+    _ = _ := by
+      congr 1; funext p
+      have hm : MeasurableSet {b : ContinuousPath ℂ | ‖b p.1 - b p.2‖ < r} := by
+        apply isOpen_lt _ continuous_const |>.measurableSet
+        fun_prop
+      convert lintegral_indicator_one hm using 1; simp [F, E, Set.indicator_apply]
 
 end HarmonicBalls
