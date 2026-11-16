@@ -831,4 +831,36 @@ theorem occupation_le_of_squareGrid (ν : Measure ℝ≥0) (b : ContinuousPath �
       linarith
     _ ≤ M := h w hw
 
+
+/-- Summable dyadic tails imply bounds at all centres in each bounded region. -/
+theorem planarBrownianMotion_dyadic_occupation_of_summable {q : ℝ}
+    (hq0 : 0 < q) (hq1 : q < 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ (x : ℂ) (N n : ℕ) (d : ℝ),
+      (∑' k, ((squareGrid N (2 ^ (k + 1))).card : ℝ≥0∞) *
+        (((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          (ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * (2 * (2 : ℝ)⁻¹ ^ k)) ^ (2 * q)) * K) ^ n) /
+            (ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d)) ^ (n + 1))) ≠ ∞ →
+      ∀ᵐ b ∂(planarBrownianMotion x), ∀ᶠ k in Filter.atTop, ∀ z : ℂ, ‖z‖ ≤ N →
+        ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} ≤ ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  obtain ⟨K, hK, hbc⟩ := planarBrownianMotion_occupation_eventually_lt_of_summable hq0 hq1
+  refine ⟨K, hK, ?_⟩
+  intro x N n d hsum
+  let G : ℕ → Finset ℂ := fun k => squareGrid N (2 ^ (k + 1))
+  let r : ℕ → ℝ := fun k => 2 * (2 : ℝ)⁻¹ ^ k
+  let ε : ℕ → ℝ≥0∞ := fun k => ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d)
+  have hr : ∀ k, 0 < r k := by intro k; dsimp [r]; positivity
+  have hε0 : ∀ k, ε k ≠ 0 := by
+    intro k
+    dsimp [ε]
+    exact ne_of_gt (ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos (by positivity) _))
+  have hεtop : ∀ k, ε k ≠ ∞ := by intro k; exact ENNReal.ofReal_ne_top
+  have ha := hbc x G n r ε hr hε0 hεtop hsum
+  filter_upwards [ha] with b hb
+  filter_upwards [hb] with k hk z hz
+  apply occupation_le_of_squareGrid ν b N k (ε k) _ z hz
+  intro w hw
+  exact (hk w hw).le
+
 end HarmonicBalls
