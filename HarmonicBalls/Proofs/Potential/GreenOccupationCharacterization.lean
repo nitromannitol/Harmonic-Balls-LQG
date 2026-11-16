@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.Fundamental
+import HarmonicBalls.Proofs.Potential.GreenPoleL1Continuity
 import HarmonicBalls.Proofs.Potential.GreenGeneralIdentification
 import HarmonicBalls.Proofs.Sec6.BoundedHarmonicExit
 import Mathlib.Topology.TietzeExtension
@@ -9,6 +10,7 @@ import HarmonicBalls.Proofs.Sec3.ConservationOfMassStep3
 import MarkovProcess.Trajectory.DynkinStopping
 import MarkovProcess.Trajectory.ExpectedExitTime
 import MarkovProcess.Killed.ExitTimeIdentification
+import MarkovProcess.Killed.GluingPotential
 
 /-! # Brownian occupation and the logarithmic potential
 
@@ -390,5 +392,84 @@ theorem killedResolvent_zero_one_lt_top {D : Set ℂ} (hD : IsOpen D)
     planarHeatSemigroup isConservative_planarHeatSemigroup D hD x,
     ← planarBrownianMotion_eq_continuousProcess]
   exact lintegral_exitTime_planarBrownianMotion_lt_top hD hDb x
+
+/-- The zero-shift killed potential is the expected occupation measure. -/
+noncomputable def occupationMeasure (D : Set ℂ) (hD : IsOpen D) (x : ℂ) : Measure ℂ :=
+  SubMarkovKernelSemigroup.IsConservative.killedPotential
+    planarHeatSemigroup isConservative_planarHeatSemigroup D hD 0 x
+
+/-- The occupation measure has finite total mass for bounded open sets. -/
+theorem isFiniteMeasure_occupationMeasure {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) (x : ℂ) : IsFiniteMeasure (occupationMeasure D hD x) := by
+  refine ⟨?_⟩
+  rw [← lintegral_one, occupationMeasure,
+    SubMarkovKernelSemigroup.IsConservative.lintegral_killedPotential _ _ _ _ _ measurable_const]
+  exact killedResolvent_zero_one_lt_top hD hDb x
+
+/-- Nonnegative measurable observables of the occupation measure are given by
+integration along the source Brownian paths before exit. -/
+theorem lintegral_occupationMeasure {D : Set ℂ} (hD : IsOpen D) (x : ℂ)
+    {f : ℂ → ℝ≥0∞} (hf : Measurable f) :
+    ∫⁻ y, f y ∂occupationMeasure D hD x =
+      ∫⁻ p, (∫⁻ t in Set.Ioi (0 : ℝ),
+        {t : ℝ | ((Real.toNNReal t : ℝ≥0) : ℝ≥0∞) < ContinuousPath.exitTime D p}.indicator
+          (fun t => f (p (Real.toNNReal t))) t) ∂(planarBrownianMotion x) := by
+  rw [occupationMeasure,
+    SubMarkovKernelSemigroup.IsConservative.lintegral_killedPotential _ _ _ _ _ hf,
+    SubMarkovKernelSemigroup.IsConservative.killedResolvent_eq_lintegral _ _ _ _ _ hf,
+    ← planarBrownianMotion_eq_continuousProcess]
+  simp only [zero_mul, neg_zero, Real.exp_zero, ENNReal.ofReal_one, one_mul]
+
+/-- The occupation measure assigns zero mass to the complement of the domain. -/
+theorem occupationMeasure_compl {D : Set ℂ} (hD : IsOpen D) (x : ℂ) :
+    occupationMeasure D hD x Dᶜ = 0 := by
+  rw [← lintegral_indicator_one hD.measurableSet.compl]
+  change (∫⁻ y, Dᶜ.indicator (fun _ => (1 : ℝ≥0∞)) y ∂occupationMeasure D hD x) = 0
+  rw [lintegral_occupationMeasure hD x (measurable_const.indicator hD.measurableSet.compl)]
+  apply lintegral_eq_zero_of_ae_eq_zero
+  filter_upwards [] with p
+  apply lintegral_eq_zero_of_ae_eq_zero
+  filter_upwards [] with t
+  by_cases ht : ((Real.toNNReal t : ℝ≥0) : ℝ≥0∞) < ContinuousPath.exitTime D p
+  · have hp := ContinuousPath.mem_of_lt_exitTime D p (Real.toNNReal t) ht
+    simp [ht, hp]
+  · simp [ht]
+
+/-- The measure with density twice the zero-extended Green function. -/
+noncomputable def greenMeasure (D : Set ℂ) (x : ℂ) : Measure ℂ :=
+  volume.withDensity (fun y => ENNReal.ofReal (2 * greenFunction D x y))
+
+/-- The Green density is integrable on bounded open domains. -/
+theorem isFiniteMeasure_greenMeasure {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) (x : ℂ) : IsFiniteMeasure (greenMeasure D x) := by
+  exact isFiniteMeasure_withDensity_ofReal
+    ((integrable_greenFunction_pole hD hDb x).const_mul 2).2
+
+/-- Integration against the Green measure uses the normalization `2 G_D`. -/
+theorem integral_greenMeasure {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) (x : ℂ) (g : ℂ → ℝ) :
+    ∫ y, g y ∂greenMeasure D x = 2 * ∫ y in D, greenFunction D x y * g y := by
+  have hmeas : AEMeasurable (fun y => ENNReal.ofReal (2 * greenFunction D x y)) volume :=
+    ((integrable_greenFunction_pole hD hDb x).const_mul 2).aestronglyMeasurable.aemeasurable.ennreal_ofReal
+  rw [greenMeasure, integral_withDensity_eq_integral_toReal_smul₀ hmeas
+    (Filter.Eventually.of_forall fun _ => ENNReal.ofReal_lt_top),
+    ← integral_indicator hD.measurableSet, ← integral_const_mul]
+  apply integral_congr_ae
+  filter_upwards [] with y
+  by_cases hy : y ∈ D
+  · rw [ENNReal.toReal_ofReal (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2)
+      (greenFunction_nonneg hDb x y))]
+    simp [hy, smul_eq_mul, mul_assoc]
+  · simp [hy, greenFunction_of_notMem_right hy]
+
+/-- Smooth tests of the Green measure equal expected occupation before exit. -/
+theorem integral_greenMeasure_eq_occupation {D : Set ℂ} (hD : IsSmoothBoundedOpen D)
+    {g : ℂ → ℝ} (hg : ContDiff ℝ ∞ g) (hgc : HasCompactSupport g)
+    (hgs : Function.support g ⊆ D) {x : ℂ} (hx : x ∈ D) :
+    ∫ y, g y ∂greenMeasure D x =
+      ∫ p, (∫ s in (0 : ℝ)..((ContinuousPath.exitTime D p).toNNReal : ℝ), g (p s.toNNReal))
+        ∂(planarBrownianMotion x) := by
+  rw [integral_greenMeasure (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) hD.1,
+    integral_occupation_exitTime_eq_greenPotential hD hg hgc hgs hx]
 
 end HarmonicBalls.GreenOccupation
