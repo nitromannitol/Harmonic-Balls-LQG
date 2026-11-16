@@ -8,6 +8,7 @@ import HarmonicBalls.Proofs.Sec6.StoppedPotentialIntegrability
 import HarmonicBalls.Proofs.Sec3.ConservationOfMassStep3
 import MarkovProcess.Trajectory.DynkinStopping
 import MarkovProcess.Trajectory.ExpectedExitTime
+import MarkovProcess.Killed.ExitTimeIdentification
 
 /-! # Brownian occupation and the logarithmic potential
 
@@ -378,5 +379,16 @@ theorem integral_occupation_exitTime_eq_greenPotential
   rw [hexit] at hrep
   rw [integral_occupation_exitTime_eq_logPotential hDo hDb hg hgc hx]
   linarith
+
+/-- The total mass of the zero-shift killed resolvent is finite on bounded
+open sets. -/
+theorem killedResolvent_zero_one_lt_top {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) (x : ℂ) :
+    SubMarkovKernelSemigroup.IsConservative.killedResolvent
+      planarHeatSemigroup isConservative_planarHeatSemigroup D hD 0 (fun _ => 1) x < ⊤ := by
+  rw [← SubMarkovKernelSemigroup.IsConservative.lintegral_exitTime_eq_killedResolvent_zero
+    planarHeatSemigroup isConservative_planarHeatSemigroup D hD x,
+    ← planarBrownianMotion_eq_continuousProcess]
+  exact lintegral_exitTime_planarBrownianMotion_lt_top hD hDb x
 
 end HarmonicBalls.GreenOccupation
