@@ -1,4 +1,4 @@
-import HarmonicBalls.FirstPass.Phase2.MetricPropernessCrossing
+import HarmonicBalls.FirstPass.Phase2.MetricPropernessProved
 import LatticeProb.LQG.WeylScalingAnnulusCrossing
 
 /-!
@@ -49,7 +49,7 @@ theorem ae_frequently_normalized_far_crossing {γ : ℝ} {D : DistC → ContMetr
       ∀ u ∈ sphere (0 : ℂ) (8 ^ j / 4), ∀ v ∈ sphere (0 : ℂ) (3 * 8 ^ j / 8),
         ENNReal.ofReal (s * (8 ^ j : ℝ) ^ (xiGamma γ * Q γ) *
           Real.exp (xiGamma γ * circleAvg (h ω) (8 ^ j) 0)) ≤
-          (D (h ω)).internal (annulus 0 (1 / 8 * 8 ^ j) (1 / 2 * 8 ^ j)) u v :=
+          (D (h ω)).internal (LQGMetric.Blueprint.annulus 0 (1 / 8 * 8 ^ j) (1 / 2 * 8 ^ j)) u v :=
     ae_all_iff.2 fun j => hEae ⟨8 ^ j, by positivity⟩
   filter_upwards [HA P h hh E hEm hEp,
     hD.length P h (isGFFPlusCont_of_wp hwp), hEall] with ω hfreq hlen hcross
@@ -57,7 +57,7 @@ theorem ae_frequently_normalized_far_crossing {γ : ℝ} {D : DistC → ContMetr
   obtain ⟨j, hj, hjE⟩ := hfreq m
   refine ⟨j, hj, fun x y hx hy => ?_⟩
   have hU : {w : ℂ | 8 ^ j / 4 ≤ ‖w - 0‖ ∧ ‖w - 0‖ ≤ 3 * 8 ^ j / 8} ⊆
-      (annulus 0 (1 / 8 * 8 ^ j) (1 / 2 * 8 ^ j) : Set ℂ) := fun w hw => by
+      (LQGMetric.Blueprint.annulus 0 (1 / 8 * 8 ^ j) (1 / 2 * 8 ^ j) : Set ℂ) := fun w hw => by
     show 1 / 8 * 8 ^ j < ‖w - 0‖ ∧ ‖w - 0‖ < 1 / 2 * (8 : ℝ) ^ j
     constructor <;> linarith [hw.1, hw.2, show (0 : ℝ) < 8 ^ j by positivity]
   exact le_of_forall_internal_crossing (y := y) hlen (by linarith [show (0 : ℝ) < 8 ^ j by positivity]) hU
@@ -93,5 +93,33 @@ theorem ofReal_exp_mul_le_weylScaling_of_annulus_crossing
           ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 (hm _ (hmid t ht).1 (hmid t ht).2))
     _ ≤ ∫⁻ t in Icc 0 T, ENNReal.ofReal (Real.exp (ξ * f (p t))) :=
         lintegral_mono_set (Ioo_subset_Icc_self.trans (Icc_subset_Icc hs₀ hs₁))
+
+/-- The normalized crossing estimate holds for the original field and its
+metric, with the circle-average factors of the same field. -/
+theorem IsWholePlaneGFF.ae_frequently_normalized_far_crossing
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ : ℝ} {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇) :
+    ∃ s : ℝ, 0 < s ∧ ∀ᵐ ω ∂P, ∀ m : ℕ, ∃ j : ℕ, m ≤ j ∧
+      ∀ x y : ℂ, ‖x‖ ≤ 8 ^ j / 4 → 3 * 8 ^ j / 8 ≤ ‖y‖ →
+        s * (8 ^ j : ℝ) ^ (xiGamma γ * Q γ) *
+          Real.exp (xiGamma γ * hcirc ω (8 ^ j) 0) ≤ 𝔇 (hC ω) x y := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨s, hs, hcross⟩ := HarmonicBalls.ae_frequently_normalized_far_crossing
+    (isWeakLQGMetric_distributionMetric hγ hγ₂ h𝔇) P (reconstructedGFF hC)
+    hh.reconstructedGFF_normalized
+  refine ⟨s, hs, ?_⟩
+  have hcircle : ∀ᵐ ω ∂P, ∀ j : ℕ,
+      hcirc ω (8 ^ j) 0 = circleAvg (reconstructedGFF hC ω) (8 ^ j) 0 :=
+    ae_all_iff.2 fun j => hh.ae_circleAvg_reconstructedGFF (by positivity) 0
+  filter_upwards [hcross, hh.ae_distributionMetric_reconstructedGFF h𝔇, hcircle] with ω hcross heq hc
+  intro m
+  obtain ⟨j, hj, hjcross⟩ := hcross m
+  refine ⟨j, hj, ?_⟩
+  intro x y hx hy
+  rw [hc j, ← heq x y]
+  exact hjcross x y hx hy
 
 end HarmonicBalls
