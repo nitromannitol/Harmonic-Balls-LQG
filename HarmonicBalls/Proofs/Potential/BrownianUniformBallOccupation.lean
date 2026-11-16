@@ -923,4 +923,61 @@ theorem ofReal_tail_factor (δ C q d : ℝ) (hδ : 0 < δ) (hC : 0 ≤ C) (n : �
     ← ENNReal.ofReal_div_of_pos (pow_pos hd _), ← ENNReal.ofReal_mul (sq_nonneg _),
     dyadic_tail_real_factor δ C q d hδ n, ENNReal.ofReal_mul hconst]
 
+
+/-- The dyadic finite-grid occupation tail bounds are summable when the power is positive. -/
+theorem dyadic_occupation_tail_summable (N n : ℕ) (q d : ℝ) (K : ℝ≥0∞)
+    (hK : K < ∞) (hp : 0 < (2 * q) * n - d * (n + 1) - 2) :
+    (∑' k, ((squareGrid N (2 ^ (k + 1))).card : ℝ≥0∞) *
+        (((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          (ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * (2 * (2 : ℝ)⁻¹ ^ k)) ^ (2 * q)) * K) ^ n) /
+            (ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d)) ^ (n + 1))) < ∞ := by
+  let A : ℝ := (2 / Real.pi) ^ q
+  let C : ℝ := A * K.toReal
+  let p : ℝ := (2 * q) * n - d * (n + 1) - 2
+  let D : ℝ≥0∞ := ENNReal.ofReal (((4 * N + 1 : ℕ) : ℝ) ^ 2) *
+    (Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+      ENNReal.ofReal ((C * (4 : ℝ) ^ (2 * q)) ^ n)
+  have hA : 0 ≤ A := by dsimp [A]; positivity
+  have hC : 0 ≤ C := mul_nonneg hA ENNReal.toReal_nonneg
+  have hD : D < ∞ := by
+    dsimp [D]
+    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top ENNReal.ofReal_lt_top (by simp)) ENNReal.ofReal_lt_top
+  have hsum : (∑' k : ℕ, D * ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ p)) < ∞ := by
+    rw [ENNReal.tsum_mul_left]
+    exact ENNReal.mul_lt_top hD (tsum_dyadic_rpow_lt_top hp)
+  apply lt_of_le_of_lt _ hsum
+  apply ENNReal.tsum_le_tsum
+  intro k
+  let δ : ℝ := (2 : ℝ)⁻¹ ^ k
+  have hδ : 0 < δ := by dsimp [δ]; positivity
+  have hδle : 0 ≤ (δ⁻¹) ^ 2 := sq_nonneg _
+  have hcard : ((squareGrid N (2 ^ (k + 1))).card : ℝ≥0∞) ≤
+      ENNReal.ofReal (((4 * N + 1 : ℕ) : ℝ) ^ 2) * ENNReal.ofReal ((δ⁻¹) ^ 2) := by
+    have h := ENNReal.ofReal_le_ofReal (dyadic_grid_card_bound_real N k)
+    simpa [δ, ENNReal.ofReal_mul (sq_nonneg _)] using h
+  have hscaled : ENNReal.ofReal (A * (2 * (2 * δ)) ^ (2 * q)) * K =
+      ENNReal.ofReal (C * (4 * δ) ^ (2 * q)) := by
+    rw [← ENNReal.ofReal_toReal hK.ne, ← ENNReal.ofReal_mul (by positivity : 0 ≤ A * (2 * (2 * δ)) ^ (2 * q))]
+    congr 1
+    dsimp [C]
+    ring
+  calc
+    _ ≤ (ENNReal.ofReal (((4 * N + 1 : ℕ) : ℝ) ^ 2) * ENNReal.ofReal ((δ⁻¹) ^ 2)) *
+      (((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+        (ENNReal.ofReal (C * (4 * δ) ^ (2 * q))) ^ n) /
+          (ENNReal.ofReal (δ ^ d)) ^ (n + 1)) := by
+      rw [← hscaled]
+      exact mul_le_mul_left hcard _
+    _ = (ENNReal.ofReal (((4 * N + 1 : ℕ) : ℝ) ^ 2) *
+        (Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞)) *
+          (ENNReal.ofReal ((δ⁻¹) ^ 2) *
+            ((ENNReal.ofReal (C * (4 * δ) ^ (2 * q))) ^ n /
+              (ENNReal.ofReal (δ ^ d)) ^ (n + 1))) := by
+      simp only [div_eq_mul_inv]
+      ac_rfl
+    _ = D * ENNReal.ofReal (δ ^ p) := by
+      rw [ofReal_tail_factor δ C q d hδ hC n]
+      dsimp [D, p]
+      ac_rfl
+
 end HarmonicBalls
