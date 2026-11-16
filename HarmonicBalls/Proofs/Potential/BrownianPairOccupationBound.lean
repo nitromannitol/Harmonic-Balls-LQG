@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.Sec6.BrownianScaling
 import HarmonicBalls.Proofs.Brownian.PlanarHeatSemigroup
 import HarmonicBalls.Defs.Brownian
 import LatticeProb.Prob.GaussianFreezing
+import LatticeProb.Analysis.ExpDampedRieszKernelQuadrant
 
 /-! # Planar Brownian increments
 
@@ -135,5 +136,76 @@ theorem lintegral_pair_occupation_le (x : ℂ) {r : ℝ} (hr : 0 ≤ r)
   apply lintegral_mono_ae
   filter_upwards [hae] with p hp
   exact planarBrownianMotion_increment_smallBall_le x hp hr
+
+/-- The subcritical Riesz kernel has finite Lebesgue energy on the unit square. -/
+theorem lintegral_unit_square_abs_sub_rpow_lt_top {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    (∫⁻ p : ℝ × ℝ, ENNReal.ofReal (|p.1 - p.2| ^ (-q))
+      ∂((volume.restrict (Icc (0 : ℝ) 1)).prod (volume.restrict (Icc (0 : ℝ) 1)))) < ∞ := by
+  let μ : Measure ℝ := volume.restrict (Icc (0 : ℝ) 1)
+  let ν : Measure ℝ := volume.restrict (Ici (0 : ℝ))
+  have hμν : μ ≤ ν := Measure.restrict_mono_set volume (by intro x hx; exact hx.1)
+  have hdamp : (∫⁻ p : ℝ × ℝ,
+      ENNReal.ofReal (Real.exp (-max p.1 p.2) * |p.1 - p.2| ^ (-q)) ∂(ν.prod ν)) < ∞ := by
+    simpa [ν, show (1 - q) - 1 = -q by ring] using
+      (LatticeProb.Analysis.lintegral_exp_neg_max_mul_abs_sub_rpow_lt_top
+        (c := 1) (θ := 1 - q) (by norm_num) (by linarith) (by linarith))
+  have hmem : ∀ᵐ p ∂(μ.prod μ), p ∈ Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1 := by
+    dsimp [μ]
+    rw [Measure.prod_restrict]
+    exact ae_restrict_mem (measurableSet_Icc.prod measurableSet_Icc)
+  have hbound : ∀ᵐ p ∂(μ.prod μ),
+      ENNReal.ofReal (|p.1 - p.2| ^ (-q)) ≤
+        ENNReal.ofReal (Real.exp 1) *
+          ENNReal.ofReal (Real.exp (-max p.1 p.2) * |p.1 - p.2| ^ (-q)) := by
+    filter_upwards [hmem] with p hp
+    rw [← ENNReal.ofReal_mul (Real.exp_pos _).le]
+    apply ENNReal.ofReal_le_ofReal
+    have hexp : 1 ≤ Real.exp 1 * Real.exp (-max p.1 p.2) := by
+      rw [← Real.exp_add]
+      have h : 0 ≤ (1 : ℝ) + -max p.1 p.2 := by
+        linarith [max_le hp.1.2 hp.2.2]
+      simpa using Real.exp_le_exp.mpr h
+    nlinarith [Real.rpow_nonneg (abs_nonneg (p.1 - p.2)) (-q)]
+  calc
+    _ ≤ ∫⁻ p, ENNReal.ofReal (Real.exp 1) *
+        ENNReal.ofReal (Real.exp (-max p.1 p.2) * |p.1 - p.2| ^ (-q)) ∂(μ.prod μ) :=
+      lintegral_mono_ae hbound
+    _ ≤ ∫⁻ p, ENNReal.ofReal (Real.exp 1) *
+        ENNReal.ofReal (Real.exp (-max p.1 p.2) * |p.1 - p.2| ^ (-q)) ∂(ν.prod ν) :=
+      lintegral_mono' (Measure.prod_mono hμν hμν) le_rfl
+    _ = ENNReal.ofReal (Real.exp 1) * ∫⁻ p,
+        ENNReal.ofReal (Real.exp (-max p.1 p.2) * |p.1 - p.2| ^ (-q)) ∂(ν.prod ν) :=
+      lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
+    _ < ∞ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hdamp
+
+/-- The unit-time occupation measure has finite subcritical time energy. -/
+theorem lintegral_unit_time_abs_sub_rpow_lt_top {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    (∫⁻ p : ℝ≥0 × ℝ≥0, ENNReal.ofReal (|(p.1 : ℝ) - (p.2 : ℝ)| ^ (-q))
+      ∂(ν.prod ν)) < ∞ := by
+  let μ : Measure ℝ := volume.restrict (Icc (0 : ℝ) 1)
+  have hm : Measurable Real.toNNReal := continuous_real_toNNReal.measurable
+  have hf : Measurable (fun p : ℝ≥0 × ℝ≥0 =>
+      ENNReal.ofReal (|(p.1 : ℝ) - (p.2 : ℝ)| ^ (-q))) := by
+    fun_prop
+  change (∫⁻ p : ℝ≥0 × ℝ≥0, ENNReal.ofReal (|(p.1 : ℝ) - (p.2 : ℝ)| ^ (-q))
+    ∂((Measure.map Real.toNNReal μ).prod (Measure.map Real.toNNReal μ))) < ∞
+  rw [Measure.map_prod_map _ _ hm hm, lintegral_map hf (hm.prodMap hm)]
+  have hmem : ∀ᵐ p ∂(μ.prod μ), p ∈ Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1 := by
+    dsimp [μ]
+    rw [Measure.prod_restrict]
+    exact ae_restrict_mem (measurableSet_Icc.prod measurableSet_Icc)
+  have heq : (∫⁻ p : ℝ × ℝ,
+      ENNReal.ofReal (|((Real.toNNReal p.1 : ℝ≥0) : ℝ) -
+        ((Real.toNNReal p.2 : ℝ≥0) : ℝ)| ^ (-q)) ∂(μ.prod μ)) =
+      ∫⁻ p : ℝ × ℝ, ENNReal.ofReal (|p.1 - p.2| ^ (-q)) ∂(μ.prod μ) := by
+    apply lintegral_congr_ae
+    filter_upwards [hmem] with p hp
+    simp [Real.toNNReal_of_nonneg hp.1.1, Real.toNNReal_of_nonneg hp.2.1]
+  change (∫⁻ p : ℝ × ℝ,
+      ENNReal.ofReal (|((Real.toNNReal p.1 : ℝ≥0) : ℝ) -
+        ((Real.toNNReal p.2 : ℝ≥0) : ℝ)| ^ (-q)) ∂(μ.prod μ)) < ∞
+  rw [heq]
+  exact lintegral_unit_square_abs_sub_rpow_lt_top hq0 hq1
 
 end HarmonicBalls
