@@ -1,4 +1,4 @@
-import HarmonicBalls.Proofs.Sec11.ShiftedNormalizedMeasureDecoder
+import HarmonicBalls.Proofs.Sec11.ShiftedNormalizedMeasureBetween
 import HarmonicBalls.FirstPass.Phase2.SquarePositiveHolds
 import HarmonicBalls.FirstPass.S11j.PositiveWeylInverse
 import HarmonicBalls.Steps.Sec11.WeylLocalComposition
@@ -1699,14 +1699,15 @@ theorem IsWholePlaneGFF.exists_singularMetric_compactShift_decoder_on_connected_
     exact hs n 0
 
 /-- The local field, normalized measure and normalized internal distances on
-countably many open domains have equivalent joint laws under smooth shifts. -/
-theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+countably many open domains have equivalent joint laws under smooth shifts.
+The measure reference radius can be chosen above a prescribed lower bound. -/
+theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains_between
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α a ε : ℝ}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
     (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
     (hfull : ∀ᵐ ω ∂P, ∀ W : Set ℂ, IsOpen W → W.Nonempty → 0 < μ ω W)
-    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (ha : 0 ≤ a) (haε : a < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
     (h𝔇 : IsLQGMetric γ ξ 𝔇)
     (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
       ENNReal.ofReal (D ω u v) =
@@ -1717,7 +1718,7 @@ theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains
     (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ z, ψ z = 1)
     (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V n ∧ (p n).2 ∈ V n)
     (hξ : 0 ≤ ξ) :
-    ∃ R ∈ Ioo (0 : ℝ) ε, ∀ g : ℂ → ℝ, IsTestFunction univ g →
+    ∃ R ∈ Ioo a ε, ∀ g : ℂ → ℝ, IsTestFunction univ g →
       P.map (fun ω =>
         (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
          normalizedRestriction ((μ ω).withDensity
@@ -1744,7 +1745,7 @@ theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains
              (V n) (p n).1 (p n).2)) := by
   obtain ⟨G, hG, hGb, hGs⟩ := h.exists_singularMetric_compactShift_decoder_on_connected_domains
     𝔇 h𝔇 hD hmetric V hV hconn ψ hψ hψint p hp hξ
-  obtain ⟨R, hR, M, hM, _, hMeq⟩ := h.exists_shifted_normalized_measure_decoder hμ hfull hε
+  obtain ⟨R, hR, M, hM, _, hMeq⟩ := h.exists_shifted_normalized_measure_decoder_between hμ hfull ha haε
   let Q : (LocalZeroMeanTest univ → ℝ) → LocalZeroMeanTest (ball 0 ε) → ℝ :=
     fun v φ => v ⟨φ.1, φ.2.1.mono_set (subset_univ _), φ.2.2⟩
   have hQ : Measurable Q := by
@@ -1814,5 +1815,52 @@ theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains
     exact Prod.ext rfl (Prod.ext hm (funext hn))
   rw [hbaseMap, hshiftMap] at hf hb
   exact ⟨hf, hb⟩
+
+/-- The local field, normalized measure and normalized internal distances on
+countably many open domains have equivalent joint laws under smooth shifts. -/
+theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ W : Set ℂ, IsOpen W → W.Nonempty → 0 < μ ω W)
+    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (V : ℕ → Set ℂ) (hV : ∀ n, IsOpen (V n))
+    (hconn : ∀ n, (0 : ℂ) ∈ V n → IsConnected (V n))
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V n ∧ (p n).2 ∈ V n)
+    (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo (0 : ℝ) ε, ∀ g : ℂ → ℝ, IsTestFunction univ g →
+      P.map (fun ω =>
+        (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+         normalizedRestriction ((μ ω).withDensity
+           (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+         fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+           internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+             (V n) (p n).1 (p n).2)) ≪
+      P.map (fun ω =>
+        (localModConstPairings α hC (ball 0 ε) ω,
+         normalizedRestriction (μ ω) (ball 0 R), fun n =>
+           ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) (V n) (p n).1 (p n).2)) ∧
+      P.map (fun ω =>
+        (localModConstPairings α hC (ball 0 ε) ω,
+         normalizedRestriction (μ ω) (ball 0 R), fun n =>
+           ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) (V n) (p n).1 (p n).2)) ≪
+      P.map (fun ω =>
+        (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+         normalizedRestriction ((μ ω).withDensity
+           (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+         fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+           internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+             (V n) (p n).1 (p n).2)) := by
+  exact h.exists_joint_smooth_shift_law_on_domains_between hμ hfull le_rfl hε
+    𝔇 h𝔇 hD hmetric V hV hconn ψ hψ hψint p hp hξ
 
 end HarmonicBalls
