@@ -878,4 +878,23 @@ theorem tsum_dyadic_rpow_lt_top {p : ℝ} (hp : 0 < p) :
   simp_rw [heq]
   exact tsum_geometric_lt_top.mpr hb
 
+
+/-- The radius-dependent part of a dyadic tail bound is a single power. -/
+theorem dyadic_tail_real_factor (δ C q d : ℝ) (hδ : 0 < δ) (n : ℕ) :
+    (δ⁻¹) ^ 2 * ((C * (4 * δ) ^ (2 * q)) ^ n / (δ ^ d) ^ (n + 1)) =
+      (C * (4 : ℝ) ^ (2 * q)) ^ n * δ ^ ((2 * q) * n - d * (n + 1) - 2) := by
+  rw [Real.mul_rpow (by norm_num : (0 : ℝ) ≤ 4) hδ.le]
+  rw [← mul_assoc C]
+  rw [mul_pow, ← Real.rpow_mul_natCast hδ.le, ← Real.rpow_mul_natCast hδ.le]
+  have h2 : (δ⁻¹) ^ 2 = δ ^ (-(2 : ℝ)) := by
+    rw [Real.rpow_neg hδ.le]
+    norm_num [inv_pow]
+  rw [h2]
+  calc
+    _ = (C * (4 : ℝ) ^ (2 * q)) ^ n *
+      ((δ ^ ((2 * q) * n) / δ ^ (d * (n + 1))) * δ ^ (-(2 : ℝ))) := by push_cast; ring
+    _ = _ := by
+      rw [← Real.rpow_sub hδ, ← Real.rpow_add hδ]
+      congr 1
+
 end HarmonicBalls
