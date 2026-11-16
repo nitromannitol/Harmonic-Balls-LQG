@@ -439,6 +439,33 @@ theorem occupationMeasure_compl {D : Set ℂ} (hD : IsOpen D) (x : ℂ) :
 noncomputable def greenMeasure (D : Set ℂ) (x : ℂ) : Measure ℂ :=
   volume.withDensity (fun y => ENNReal.ofReal (2 * greenFunction D x y))
 
+/-- The Green measure is absolutely continuous with respect to planar volume. -/
+theorem greenMeasure_absolutelyContinuous (D : Set ℂ) (x : ℂ) :
+    greenMeasure D x ≪ volume :=
+  withDensity_absolutelyContinuous volume _
+
+/-- Changing the density at the pole leaves the Green measure unchanged. -/
+theorem greenMeasure_eq_withDensity_of_eq_off_pole (D : Set ℂ) (x : ℂ)
+    {f : ℂ → ℝ≥0∞} (hf : ∀ y, y ≠ x → f y = ENNReal.ofReal (2 * greenFunction D x y)) :
+    greenMeasure D x = volume.withDensity f := by
+  apply withDensity_congr_ae
+  filter_upwards [show ∀ᵐ y : ℂ, y ≠ x by
+    rw [ae_iff]
+    simpa only [Ne, not_not, Set.ofPred_eq_eq_singleton] using (measure_singleton x)] with y hy
+  exact (hf y hy).symm
+
+/-- The Green measure gives no mass to individual points. -/
+theorem greenMeasure_singleton (D : Set ℂ) (x y : ℂ) : greenMeasure D x {y} = 0 :=
+  greenMeasure_absolutelyContinuous D x (measure_singleton y)
+
+/-- The Green measure is concentrated on the domain. -/
+theorem greenMeasure_compl {D : Set ℂ} (hD : IsOpen D) (x : ℂ) :
+    greenMeasure D x Dᶜ = 0 := by
+  rw [greenMeasure, withDensity_apply _ hD.measurableSet.compl]
+  apply lintegral_eq_zero_of_ae_eq_zero
+  filter_upwards [ae_restrict_mem hD.measurableSet.compl] with y hy
+  simp only [greenFunction_of_notMem_right hy, mul_zero, ENNReal.ofReal_zero, Pi.zero_apply]
+
 /-- The Green density is integrable on bounded open domains. -/
 theorem isFiniteMeasure_greenMeasure {D : Set ℂ} (hD : IsOpen D)
     (hDb : Bornology.IsBounded D) (x : ℂ) : IsFiniteMeasure (greenMeasure D x) := by
