@@ -8,6 +8,7 @@ import HarmonicBalls.Proofs.Sec11.ExhaustionDecoder
 import HarmonicBalls.Proofs.Sec11.SingularWeylExhaustion
 import HarmonicBalls.Proofs.Sec11.JointPuncturedSingularShift
 import HarmonicBalls.Proofs.Sec11.PuncturedMetricExhaustionLocality
+import HarmonicBalls.Steps.Sec11.WeylPointRemoval
 
 /-! # Local field and normalized measure under smooth shifts
 
@@ -16,7 +17,7 @@ laws after a deterministic smooth compactly supported perturbation.
 -/
 
 open MeasureTheory Filter Set Metric
-open scoped ENNReal
+open scoped ENNReal NNReal
 
 namespace HarmonicBalls
 
@@ -848,5 +849,186 @@ theorem IsWholePlaneGFF.exists_local_joint_punctured_smooth_shift_law
     exact Prod.ext rfl (Prod.ext hm (funext hn))
   rw [hbaseMap, hshiftMap] at hf hb
   exact ⟨hf, hb⟩
+
+/-- An upper bound for a Weyl weight transfers point removal between
+Euclidean length metrics. -/
+theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_weyl_bounded_above
+    {D E : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    (hE : IsEuclideanLengthMetric E) {ξ B : ℝ} {f : ℂ → ℝ}
+    {V : Set ℂ} (hV : IsOpen V)
+    (hscale : ∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y)
+    (hupper : ∀ z ∈ V \ {0}, ξ * f z ≤ B)
+    (hremove : ∀ a ∈ V \ {0}, ∀ b ∈ V \ {0},
+      internalMetric D (V \ {0}) a b = internalMetric D V a b)
+    {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) :
+    internalMetric E (V \ {0}) x y = internalMetric E V x y := by
+  by_cases h0 : (0 : ℂ) ∈ V
+  · have hcheap := hD.small_detours_of_internalMetric_sdiff_zero_eq hV h0 hremove
+    have hnonneg (u v : ℂ) : 0 ≤ E u v := by
+      have ht := hE.triangle u v u
+      rw [hE.self_eq_zero, hE.symm v u] at ht
+      linarith
+    apply hE.internalMetric_sdiff_zero_eq_of_small_detours hx hy
+    intro ε hε
+    let k : ℝ≥0 := ⟨Real.exp B, (Real.exp_pos B).le⟩
+    have hk : 0 < k := Real.exp_pos B
+    obtain ⟨r, hr, hbound⟩ := hcheap (ε / k) (div_pos hε hk)
+    refine ⟨r, hr, ?_⟩
+    intro a b ha hb ha0 hb0 har hbr
+    have hcomp := hD.internalMetric_weylScaling_le hE hnonneg
+      (U := V \ {0}) (hV.sdiff isClosed_singleton) (hD.weylScaling_zero ξ) hscale
+      (B := B) hupper a b
+    have ht := hbound a b ha hb ha0 hb0 har hbr
+    have hk0 : (k : ℝ≥0∞) ≠ 0 := by exact_mod_cast (ne_of_gt hk)
+    have hktop : (k : ℝ≥0∞) ≠ ∞ := ENNReal.coe_ne_top
+    have hlt : (k : ℝ≥0∞) * internalMetric D (V \ {0}) a b <
+        (k : ℝ≥0∞) * ((ε / k : ℝ≥0) : ℝ≥0∞) :=
+      by simpa only [mul_comm] using ENNReal.mul_lt_mul_left hk0 hktop ht
+    have hcancel : (k : ℝ≥0∞) * ((ε / k : ℝ≥0) : ℝ≥0∞) = ε := by
+      rw [← ENNReal.coe_mul, mul_div_cancel₀ _ (ne_of_gt hk)]
+    have hkof : ENNReal.ofReal (Real.exp B) = (k : ℝ≥0∞) := by
+      change ENNReal.ofReal (k : ℝ) = (k : ℝ≥0∞)
+      exact ENNReal.ofReal_coe_nnreal
+    rw [hkof] at hcomp
+    exact hcomp.trans_lt (hcancel ▸ hlt)
+  · have hs : V \ {0} = V := by
+      ext z
+      simp only [Set.mem_sdiff, mem_singleton_iff]
+      constructor
+      · exact fun hz => hz.1
+      · intro hz
+        exact ⟨hz, fun hz0 => h0 (hz0 ▸ hz)⟩
+    rw [hs]
+
+/-- Point removal persists under every continuous compactly supported
+Weyl shift, including shifts of either sign. -/
+theorem IsEuclideanLengthMetric.internalMetric_sdiff_zero_eq_of_compact_weyl
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) {ξ : ℝ} (hξ : 0 ≤ ξ)
+    (f : ℂ → ℝ) (hf : Continuous f) (hc : HasCompactSupport f)
+    {V : Set ℂ} (hV : IsOpen V)
+    (hremove : ∀ a ∈ V \ {0}, ∀ b ∈ V \ {0},
+      internalMetric D (V \ {0}) a b = internalMetric D V a b)
+    {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) :
+    internalMetric (fun a b => (weylScaling D ξ f a b).toReal) (V \ {0}) x y =
+      internalMetric (fun a b => (weylScaling D ξ f a b).toReal) V x y := by
+  obtain ⟨m, hm⟩ := exists_lower_bound_of_continuous_compactSupport f hf hc
+  obtain ⟨c, hc'⟩ := exists_lower_bound_of_continuous_compactSupport (fun z => -f z) hf.neg hc.neg
+  let M := -c
+  let g : ℂ → ℝ := fun z => f z - M
+  have hglo : ∀ z, m - M ≤ g z := fun z => by dsimp [g]; linarith [hm z]
+  have hghi : ∀ z, g z ≤ 0 := fun z => by dsimp [g, M]; linarith [hc' z]
+  have hfg : ∀ z, f z = g z + M := fun z => by dsimp [g]; ring
+  have hfinite (u v : ℂ) : weylScaling D ξ f u v ≠ ∞ := by
+    rw [weylScaling_eq_exp_mul_of_shift D ξ M f g hfg u v]
+    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top
+      (weylScaling_negative_bump_real_bounds hD hξ g hglo hghi (hD.weylScaling_zero ξ) u v).1.ne
+  apply hD.internalMetric_sdiff_zero_eq_of_weyl_bounded_above
+    (hD.weylScaling_compact_isLengthMetric hξ f hf hc) hV
+    (fun u v => ENNReal.ofReal_toReal (hfinite u v)) (B := ξ * M) ?_ hremove hx hy
+  intro z hz
+  exact mul_le_mul_of_nonneg_left (by have := hc' z; dsimp [M]; linarith) hξ
+
+/-- Point removal extends the local joint shift law to internal distances
+on the full observation domain between nonzero endpoints. -/
+theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_of_point_removal
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ W : Set ℂ, IsOpen W → W.Nonempty → 0 < μ ω W)
+    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    {V : Set ℂ} (hV : IsOpen V) (hVU : V ⊆ ball 0 ε)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction (ball 0 ε) ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V ∧ (p n).1 ≠ 0)
+    (hp₂ : ∀ n, (p n).2 ≠ 0) (hξ : 0 ≤ ξ)
+    (hremove : ∀ᵐ ω ∂P, ∀ a ∈ V \ {0}, ∀ b ∈ V \ {0},
+      internalMetric (D ω) (V \ {0}) a b = internalMetric (D ω) V a b) :
+    ∃ R ∈ Ioo (0 : ℝ) ε,
+      ∀ g : ℂ → ℝ, IsTestFunction univ g →
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ∧
+        P.map (fun ω =>
+          (localModConstPairings α hC (ball 0 ε) ω,
+           normalizedRestriction (μ ω) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) V (p n).1 (p n).2)) ≪
+        P.map (fun ω =>
+          (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+           normalizedRestriction ((μ ω).withDensity
+             (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+           fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+             internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+               V (p n).1 (p n).2)) := by
+  obtain ⟨R, hR, hlaw⟩ := h.exists_local_joint_punctured_smooth_shift_law
+    hμ hfull hε 𝔇 h𝔇 hD hmetric hV hVU ψ hψ hψint p hp hξ
+  refine ⟨R, hR, ?_⟩
+  intro g hg
+  have hb : ∀ᵐ ω ∂P, ∀ n,
+      internalMetric (D ω) (V \ {0}) (p n).1 (p n).2 =
+        internalMetric (D ω) V (p n).1 (p n).2 := by
+    filter_upwards [hmetric, hremove] with ω hm hr n
+    exact hm.internalMetric_sdiff_zero_eq_of_weyl_bounded_above hm hV
+      (fun u v => (hm.weylScaling_zero ξ u v).symm)
+      (B := 0) (f := fun _ => 0) (by simp) hr (hp n).2 (hp₂ n)
+  have hs : ∀ᵐ ω ∂P, ∀ n,
+      internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+        (V \ {0}) (p n).1 (p n).2 =
+      internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+        V (p n).1 (p n).2 := by
+    filter_upwards [hmetric, hremove] with ω hm hr n
+    exact hm.internalMetric_sdiff_zero_eq_of_compact_weyl hξ g hg.1.continuous hg.2.1
+      hV hr (hp n).2 (hp₂ n)
+  have hbase : P.map (fun ω =>
+      (localModConstPairings α hC (ball 0 ε) ω,
+       normalizedRestriction (μ ω) (ball 0 R), fun n =>
+         ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+           internalMetric (D ω) (V \ {0}) (p n).1 (p n).2)) =
+      P.map (fun ω =>
+      (localModConstPairings α hC (ball 0 ε) ω,
+       normalizedRestriction (μ ω) (ball 0 R), fun n =>
+         ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+           internalMetric (D ω) V (p n).1 (p n).2)) := by
+    apply Measure.map_congr
+    filter_upwards [hb] with ω he
+    simp only [Prod.mk.injEq, true_and]
+    funext n
+    rw [he n]
+  have hshift : P.map (fun ω =>
+      (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+       normalizedRestriction ((μ ω).withDensity
+         (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R), fun n =>
+         ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+           internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+             (V \ {0}) (p n).1 (p n).2)) =
+      P.map (fun ω =>
+      (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+       normalizedRestriction ((μ ω).withDensity
+         (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R), fun n =>
+         ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+           internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+             V (p n).1 (p n).2)) := by
+    apply Measure.map_congr
+    filter_upwards [hs] with ω he
+    simp only [Prod.mk.injEq, true_and]
+    funext n
+    rw [he n]
+  have hh := hlaw g hg
+  rw [hbase, hshift] at hh
+  exact hh
 
 end HarmonicBalls
