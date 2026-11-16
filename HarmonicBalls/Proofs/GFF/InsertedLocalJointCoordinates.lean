@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.GFF.InsertedLocalJointShiftLaw
 import HarmonicBalls.FirstPass.S11am
 import HarmonicBalls.FirstPass.S11ba
 import HarmonicBalls.FirstPass.S11ap
+import HarmonicBalls.FirstPass.S11m.DecodedMass
 
 /-!
 # Coordinates for local pinch events
@@ -173,3 +174,56 @@ theorem HarmonicBalls.IsWholePlaneGFF.exists_joint_smooth_shift_law_for_pinch_co
     (a := 6) (ε := 7) (by norm_num) (by norm_num) hDfield haxioms domain
     (fun n => (hv n).1) (fun n => (hv n).2.1) ψ hψ hψint pair (fun n => (hv n).2.2) hξ
   exact ⟨domain, pair, R, hR, hv, hm, hd, hlaw⟩
+
+/-- The local pinch rule evaluated on a normalized measure and metric coordinates. -/
+noncomputable def pinchCoordinateEvent {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (I : S11am.PinchCountSets V W T Q' Q δ) (domain : ℕ → Set ℂ) (pair : ℕ → ℂ × ℂ)
+    (M : ℝ) : Set (Measure ℂ × (ℕ → ℝ≥0∞)) :=
+  S11am.decodedPinchRule I
+    (fun O x y a => coordinateReadout domain pair (O, (x, y)) a.2)
+    (fun a => annulusGreenPotentialSup a.1 0 3 6) (fun a => a.1 U) M
+
+/-- The local pinch rule is measurable in its measure and metric coordinates. -/
+theorem measurableSet_pinchCoordinateEvent {U V W T Q' Q : Set ℂ} {δ : ℝ}
+    (hU : MeasurableSet U) (I : S11am.PinchCountSets V W T Q' Q δ)
+    (domain : ℕ → Set ℂ) (pair : ℕ → ℂ × ℂ) (M : ℝ) :
+    MeasurableSet (pinchCoordinateEvent (U := U) I domain pair M) := by
+  apply S11am.measurableSet_decodedPinchRule I
+  · intro O hO x y
+    exact (measurable_coordinateReadout domain pair (O, (x, y))).comp measurable_snd
+  · exact (HarmonicBalls.measurable_annulusGreenPotentialSup 0 3 6).comp measurable_fst
+  · exact (Measure.measurable_measure.mp measurable_fst) U hU
+
+/-- The coordinate rule identifies the local event when the reference mass is positive and finite. -/
+theorem pinchCoordinateEvent_iff {U V W T Q' Q : Set ℂ} {δ R : ℝ}
+    (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) (hR : 6 < R)
+    (I : S11am.PinchCountSets V W T Q' Q δ)
+    (domain : ℕ → Set ℂ) (pair : ℕ → ℂ × ℂ)
+    (hd : ∀ (d : ℂ → ℂ → ℝ) (b : ℝ), S11am.DecodesOnSets I
+      (fun O x y a => coordinateReadout domain pair (O, (x, y)) a) d b
+      (fun n => ENNReal.ofReal b * internalMetric d (domain n) (pair n).1 (pair n).2))
+    (μ : Measure ℂ) (hμ0 : μ (ball 0 R) ≠ 0) (hμtop : μ (ball 0 R) ≠ ⊤)
+    (D : ℂ → ℂ → ℝ) (hD : IsEuclideanLengthMetric D) (hnn : ∀ x y, 0 ≤ D x y)
+    (b : ℝ) (hb : 0 < b) (M : ℝ) :
+    (normalizedRestriction μ (ball 0 R),
+      fun n => ENNReal.ofReal b * internalMetric D (domain n) (pair n).1 (pair n).2) ∈
+      pinchCoordinateEvent (U := U) I domain pair M ↔
+    S11m.LocalRule.pinchLocalRule μ D W T Q' Q U V δ M ∧
+      annulusGreenPotentialSup μ 0 3 6 ≠ ⊤ ∧ μ U ≠ ⊤ := by
+  have hU : U ⊆ ball (0 : ℂ) R := by
+    intro z hz
+    exact ball_subset_ball (by linarith) ((hgeo.U_subset hz).1)
+  have hA : annulus (0 : ℂ) 3 6 ⊆ ball 0 R := fun z hz => ball_subset_ball hR.le hz.1
+  have hpos : 0 < (μ (ball 0 R)).toReal := ENNReal.toReal_pos hμ0 hμtop
+  have hscale : ENNReal.ofReal ((μ (ball 0 R)).toReal⁻¹) = (μ (ball 0 R))⁻¹ := by
+    rw [ENNReal.ofReal_inv_of_pos hpos, ENNReal.ofReal_toReal hμtop]
+  have hm := S11m.decodedMasses_of_restrict measurableSet_ball hU hA
+    (μ := μ) (c := (μ (ball 0 R))⁻¹) (ν := normalizedRestriction μ (ball 0 R)) rfl
+  have hΩ : sphere (0 : ℂ) 5 ⊆ pinchOmegaGeom W Q δ := by
+    intro z hz
+    exact FirstPassS11ap.zero_union_sphere_subset_pinchOmegaGeom hgeo (Or.inr hz)
+  apply S11am.decodedPinchRule_iff hD hnn hb (inv_pos.mpr hpos) hgeo hΩ I
+  · exact hd D b
+  · simpa [hscale] using hm.2
+  · simpa [hscale] using hm.1
+
