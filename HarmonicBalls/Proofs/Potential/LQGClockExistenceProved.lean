@@ -34,4 +34,34 @@ theorem exists_clock_truncation_exponents {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
     linarith
   · positivity
 
+open MeasureTheory Set
+open scoped Interval
+
+/-- The time-difference kernel occurring in a finite-horizon pair occupation estimate. -/
+theorem integral_unit_triangle_rpow {q : ℝ} (hq : q < 1) :
+    (∫ u in (0 : ℝ)..1, (1 - u) * u ^ (-q)) = 1 / ((1 - q) * (2 - q)) := by
+  have h1 : IntervalIntegrable (fun u : ℝ => u ^ (-q)) volume 0 1 :=
+    intervalIntegral.intervalIntegrable_rpow' (by linarith)
+  have h2 : IntervalIntegrable (fun u : ℝ => u ^ (1 - q)) volume 0 1 :=
+    intervalIntegral.intervalIntegrable_rpow' (by linarith)
+  have heq : (∫ u in (0 : ℝ)..1, (1 - u) * u ^ (-q)) =
+      ∫ u in (0 : ℝ)..1, (u ^ (-q) - u ^ (1 - q)) := by
+    apply intervalIntegral.integral_congr_ae_restrict
+    filter_upwards [ae_restrict_mem measurableSet_Ioc] with u hu
+    have hu0 : 0 < u := by simpa using hu.1
+    rw [show 1 - q = 1 + (-q) by ring, Real.rpow_add hu0, Real.rpow_one]
+    ring
+  rw [heq, intervalIntegral.integral_sub h1 h2,
+    integral_rpow (Or.inl (show -1 < -q by linarith)),
+    integral_rpow (Or.inl (show -1 < 1 - q by linarith))]
+  rw [Real.one_rpow, Real.one_rpow, Real.zero_rpow (by linarith : -q + 1 ≠ 0),
+    Real.zero_rpow (by linarith : 1 - q + 1 ≠ 0)]
+  have he1 : -q + 1 = 1 - q := by ring
+  have he2 : 1 - q + 1 = 2 - q := by ring
+  rw [he1, he2]
+  have hn1 : 1 - q ≠ 0 := by linarith
+  have hn2 : 2 - q ≠ 0 := by linarith
+  field_simp [hn1, hn2]
+  ring
+
 end HarmonicBalls
