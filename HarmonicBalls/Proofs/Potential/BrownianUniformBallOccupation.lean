@@ -378,4 +378,128 @@ theorem exists_uniform_unit_time_rpow_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1
   rw [heq]
   exact hbound (y : ℝ) ⟨y.2, hy⟩
 
+
+/-- Iterated integration of a nonnegative kernel along a chain. -/
+noncomputable def kernelChainIntegral {α : Type*} [MeasurableSpace α]
+    (μ : Measure α) (k : α → α → ℝ≥0∞) : ℕ → α → ℝ≥0∞
+  | 0, _ => 1
+  | n + 1, x => ∫⁻ y, k y x * kernelChainIntegral μ k n y ∂μ
+
+/-- A uniform one-step bound controls all iterated chain integrals. -/
+theorem kernelChainIntegral_le {α : Type*} [MeasurableSpace α]
+    (μ : Measure α) (k : α → α → ℝ≥0∞) (S : Set α) (K : ℝ≥0∞)
+    (hk : ∀ x, Measurable (fun y => k y x))
+    (hS : ∀ᵐ y ∂μ, y ∈ S)
+    (hK : ∀ x ∈ S, (∫⁻ y, k y x ∂μ) ≤ K) :
+    ∀ n x, x ∈ S → kernelChainIntegral μ k n x ≤ K ^ n := by
+  intro n
+  induction n with
+  | zero => intro x hx; simp [kernelChainIntegral]
+  | succ n ih =>
+      intro x hx
+      calc
+        kernelChainIntegral μ k (n + 1) x =
+            ∫⁻ y, k y x * kernelChainIntegral μ k n y ∂μ := rfl
+        _ ≤ ∫⁻ y, k y x * K ^ n ∂μ := by
+          apply lintegral_mono_ae
+          filter_upwards [hS] with y hy
+          exact mul_le_mul_right (ih y hy) _
+        _ ≤ (∫⁻ y, k y x ∂μ) * K ^ n := (lintegral_mul_const _ (hk x)).le
+        _ ≤ K * K ^ n := mul_le_mul_left (hK x hx) _
+        _ = K ^ (n + 1) := by rw [pow_succ, mul_comm]
+
+/-- Product of a kernel along a finite chain starting at a fixed point. -/
+noncomputable def kernelChainProduct {α : Type*} (k : α → α → ℝ≥0∞) :
+    (n : ℕ) → α → (Fin n → α) → ℝ≥0∞
+  | 0, _, _ => 1
+  | n + 1, x, t => k (t 0) x * kernelChainProduct k n (t 0) (fun i => t i.succ)
+
+/-- The finite chain product of a measurable kernel is measurable. -/
+theorem measurable_kernelChainProduct {α : Type*} [MeasurableSpace α]
+    (k : α → α → ℝ≥0∞) (hk : Measurable (fun p : α × α => k p.1 p.2)) :
+    ∀ n, Measurable (fun p : α × (Fin n → α) => kernelChainProduct k n p.1 p.2) := by
+  intro n
+  induction n with
+  | zero => simp [kernelChainProduct]
+  | succ n ih =>
+      simp only [kernelChainProduct]
+      apply Measurable.mul
+      · have hm : Measurable (fun p : α × (Fin (n + 1) → α) => (p.2 0, p.1)) := by fun_prop
+        simpa only [Function.comp_def] using hk.comp hm
+      · have hm : Measurable (fun p : α × (Fin (n + 1) → α) =>
+            (p.2 0, fun i : Fin n => p.2 i.succ)) := by fun_prop
+        simpa only [Function.comp_def] using ih.comp hm
+
+/-- The integral over a product space equals the iterated chain integral. -/
+theorem lintegral_kernelChainProduct {α : Type*} [MeasurableSpace α]
+    (μ : Measure α) [IsProbabilityMeasure μ] (k : α → α → ℝ≥0∞)
+    (hk : Measurable (fun p : α × α => k p.1 p.2)) :
+    ∀ n x, (∫⁻ t : Fin n → α, kernelChainProduct k n x t ∂(Measure.pi (fun _ => μ))) =
+      kernelChainIntegral μ k n x := by
+  intro n
+  induction n with
+  | zero =>
+      intro x
+      simp [kernelChainProduct, kernelChainIntegral]
+  | succ n ih =>
+      intro x
+      let e := (MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => α) 0).symm
+      have hp := (measurePreserving_piFinSuccAbove (fun _ : Fin (n + 1) => μ) 0).symm
+      rw [MeasurePreserving.lintegral_map_equiv _ e hp]
+      have he : (fun p : α × (Fin n → α) => kernelChainProduct k (n + 1) x (e p)) =
+          fun p => k p.1 x * kernelChainProduct k n p.1 p.2 := by
+        funext p
+        simp [kernelChainProduct, e, MeasurableEquiv.piFinSuccAbove_symm_apply,
+          Fin.insertNthEquiv]
+      rw [he]
+      have hm : Measurable (fun p : α × (Fin n → α) => k p.1 x * kernelChainProduct k n p.1 p.2) := by
+        exact (hk.comp (measurable_fst.prodMk measurable_const)).mul (measurable_kernelChainProduct k hk n)
+      rw [lintegral_prod _ hm.aemeasurable]
+      simp only [kernelChainIntegral]
+      congr 1
+      funext y
+      have hm' : Measurable (fun t : Fin n → α => kernelChainProduct k n y t) := by
+        simpa only [Function.comp_def, id_eq] using
+          (measurable_kernelChainProduct k hk n).comp (measurable_const.prodMk measurable_id)
+      rw [lintegral_const_mul _ hm']
+      rw [ih]
+
+/-- Subcritical time-kernel chain integrals have uniform geometric bounds. -/
+theorem exists_unit_time_chain_kernel_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    let k : ℝ≥0 → ℝ≥0 → ℝ≥0∞ :=
+      fun t y => ENNReal.ofReal (|(t : ℝ) - (y : ℝ)| ^ (-q))
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ (n : ℕ) (y : ℝ≥0), (y : ℝ) ≤ 1 →
+      (∫⁻ t : Fin n → ℝ≥0, kernelChainProduct k n y t ∂(Measure.pi (fun _ => ν))) ≤ K ^ n := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let k : ℝ≥0 → ℝ≥0 → ℝ≥0∞ :=
+    fun t y => ENNReal.ofReal (|(t : ℝ) - (y : ℝ)| ^ (-q))
+  have hp : IsProbabilityMeasure ν := by
+    constructor
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := hp
+  have hs : ∀ᵐ y ∂ν, y ∈ Iic (1 : ℝ≥0) := by
+    dsimp [ν]
+    change ∀ᵐ y ∂(Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))), y ≤ 1
+    apply (ae_map_iff continuous_real_toNNReal.measurable.aemeasurable
+      (measurableSet_le measurable_id measurable_const)).2
+    filter_upwards [ae_restrict_mem measurableSet_Icc] with y hy
+    change Real.toNNReal y ≤ 1
+    exact Real.toNNReal_le_iff_le_coe.mpr (by simpa using hy.2)
+  have hk : Measurable (fun p : ℝ≥0 × ℝ≥0 => k p.1 p.2) := by
+    dsimp [k]
+    fun_prop
+  obtain ⟨K, hK, hbound⟩ := exists_uniform_unit_time_rpow_bound hq0 hq1
+  refine ⟨K, hK, ?_⟩
+  intro n y hy
+  rw [lintegral_kernelChainProduct ν k hk]
+  have hksec : ∀ x, Measurable (fun y => k y x) := by
+    intro x
+    change Measurable (fun y : ℝ≥0 => ENNReal.ofReal (|(y : ℝ) - (x : ℝ)| ^ (-q)))
+    fun_prop
+  have hKS : ∀ x ∈ Iic (1 : ℝ≥0), (∫⁻ y, k y x ∂ν) ≤ K := by
+    intro x hx
+    exact hbound x (by exact_mod_cast hx)
+  exact kernelChainIntegral_le ν k (Iic 1) K hksec hs hKS n y (by exact_mod_cast hy)
+
 end HarmonicBalls
