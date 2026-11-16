@@ -703,4 +703,33 @@ theorem planarBrownianMotion_occupation_finite_union_bound {q : ℝ} (hq0 : 0 < 
       exact htail x z n r hr ε hε0 hεtop
     _ = _ := by simp [R]
 
+
+/-- Summable occupation tails give eventual bounds simultaneously on each finite set. -/
+theorem planarBrownianMotion_occupation_eventually_lt_of_summable {q : ℝ}
+    (hq0 : 0 < q) (hq1 : q < 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ (x : ℂ) (G : ℕ → Finset ℂ) (n : ℕ)
+      (r : ℕ → ℝ) (ε : ℕ → ℝ≥0∞),
+      (∀ j, 0 < r j) → (∀ j, ε j ≠ 0) → (∀ j, ε j ≠ ∞) →
+      (∑' j, ((G j).card : ℝ≥0∞) *
+        (((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          (ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r j) ^ (2 * q)) * K) ^ n) /
+            ε j ^ (n + 1))) ≠ ∞ →
+      ∀ᵐ b ∂(planarBrownianMotion x), ∀ᶠ j in Filter.atTop, ∀ z ∈ G j,
+        ν {t | ‖b t - z‖ < r j} < ε j := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  obtain ⟨K, hK, hbound⟩ := planarBrownianMotion_occupation_finite_union_bound hq0 hq1
+  refine ⟨K, hK, ?_⟩
+  intro x G n r ε hr hε0 hεtop hsum
+  let E : ℕ → Set (ContinuousPath ℂ) :=
+    fun j => {b | ∃ z ∈ G j, ε j ≤ ν {t | ‖b t - z‖ < r j}}
+  have hsum' : (∑' j, planarBrownianMotion x (E j)) ≠ ∞ := by
+    apply ne_top_of_le_ne_top hsum
+    apply ENNReal.tsum_le_tsum
+    intro j
+    exact hbound x (G j) n (r j) (hr j) (ε j) (hε0 j) (hεtop j)
+  filter_upwards [ae_eventually_notMem hsum'] with b hb
+  filter_upwards [hb] with j hj z hz
+  exact lt_of_not_ge (fun h => hj ⟨z, hz, h⟩)
+
 end HarmonicBalls
