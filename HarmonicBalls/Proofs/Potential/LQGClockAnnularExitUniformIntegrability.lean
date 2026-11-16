@@ -1036,4 +1036,66 @@ theorem setIntegral_exit_stopped_block_eq (D : Set ℂ) (b : ContinuousPath ℂ)
       simpa only [ENNReal.coe_toReal] using this
     simp [Set.Ioc_eq_empty (not_lt.mpr (le_trans (min_le_right _ _) hle))]
 
+/-- The field-averaged absolute annular increment on a stopped unit block. -/
+noncomputable def annularExitBlockIncrement {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (γ α δ ε : ℝ) (D : Set ℂ) (s : ℝ≥0)
+    (b : ContinuousPath ℂ) : ℝ :=
+  ∫ ω, |∫ t in Ioc (s : ℝ) (min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal),
+    {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+      (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+      ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+        (b t.toNNReal)| ∂P
+
+/-- Stopped annular block increments obey a shared annealed rate bound. -/
+theorem brownian_annular_exit_block_increment_annealed_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (x : ℂ) (s : ℝ≥0) (ε : ℝ), 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        Integrable (annularExitBlockIncrement P hcirc γ α δ ε D s) (planarBrownianMotion x) ∧
+        (∫ b, annularExitBlockIncrement P hcirc γ α δ ε D s b ∂planarBrownianMotion x) ≤
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_shift_stopped_annular_increment_annealed_le hh hγ0 hγ2 α hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro x s ε hε hεhalf hεδ
+  let τ : ContinuousPath ℂ → ℝ≥0 := fun b => (ContinuousPath.exitTime D b).toNNReal
+  have hτ : Measurable τ := (ContinuousPath.measurable_exitTime D hD).ennreal_toNNReal
+  let F : ContinuousPath ℂ → ℝ := fun b =>
+    stoppedAnnularIncrement P hcirc γ α δ ε τ (ContinuousPath.shift s b)
+  let S : Set (ContinuousPath ℂ) := {b | (s : ℝ≥0∞) < ContinuousPath.exitTime D b}
+  have hS : MeasurableSet S := measurableSet_lt measurable_const (ContinuousPath.measurable_exitTime D hD)
+  have hF := hb x s τ hτ ε hε hεhalf hεδ
+  have heq : annularExitBlockIncrement P hcirc γ α δ ε D s =ᵐ[planarBrownianMotion x] S.indicator F := by
+    filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x hDb] with b hfin
+    by_cases hs : (s : ℝ≥0∞) < ContinuousPath.exitTime D b
+    · rw [Set.indicator_of_mem (show b ∈ S from hs)]
+      rw [show F b = _ from stoppedAnnularIncrement_eq_time_integral hh hε γ α δ τ _]
+      apply integral_congr_ae
+      filter_upwards with ω
+      congr 1
+      exact setIntegral_exit_stopped_block_eq D b s hfin.ne _ |>.trans (ite_eq_left hs)
+    · rw [Set.indicator_of_notMem (show b ∉ S from hs)]
+      dsimp [annularExitBlockIncrement]
+      apply integral_eq_zero_of_ae
+      filter_upwards with ω
+      rw [setIntegral_exit_stopped_block_eq D b s hfin.ne _, ite_eq_right hs, abs_zero]
+      rfl
+  have hi := (hF.1.indicator hS).congr heq.symm
+  refine ⟨hi, (integral_mono_ae hi hF.1 ?_).trans hF.2⟩
+  filter_upwards [heq] with b heq
+  rw [heq]
+  by_cases hs : b ∈ S
+  · rw [Set.indicator_of_mem hs]
+  · rw [Set.indicator_of_notMem hs]
+    apply integral_nonneg
+    intro ω
+    exact abs_nonneg _
+
 end HarmonicBalls
