@@ -1,4 +1,5 @@
 import HarmonicBalls.FirstPass.S11an
+import HarmonicBalls.Proofs.Sec11.PinchSecondAnnulusVersionProved
 import HarmonicBalls.FirstPass.S11ap
 import HarmonicBalls.FirstPass.S11ad.ExteriorE1
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsConsequencesDerived
@@ -12,6 +13,7 @@ import HarmonicBalls.FirstPass.Phase2.LQGMetricXiPos
 namespace HarmonicBalls
 
 open MeasureTheory Metric Set Filter
+open scoped ENNReal
 
 /-- The first local pinch event has positive probability for the inserted metric. -/
 theorem IsWholePlaneGFF.pinchLocal_first_positive_by_shift
@@ -101,5 +103,66 @@ theorem IsWholePlaneGFF.exists_positive_outside_pinchLocal_crossing
   filter_upwards [hae, hmetric] with ω hω hm
   rw [hω]
   exact IsEuclideanLengthMetric.setDist_spheres_pos hm 0 hgeo.delta_pos (by linarith [hgeo.delta_pos])
+
+/-- A positive-probability exterior event simultaneously bounds the crossing distance
+away from zero and the annular Green-potential term from above. -/
+theorem IsWholePlaneGFF.exists_positive_outside_pinchLocal_thresholds
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α δ M : ℝ} {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    {U V W T Q' Q : Set ℂ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hD : IsLQGMetricOfField P γ ξ α hC D)
+    (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) :
+    ∃ (A : Set Ω) (c₁ c₂ : ℝ),
+      MeasurableSet[MeasurableSpace.comap (localModConstPairings α hC (closure W)ᶜ)
+        inferInstance] A ∧ 0 < P A ∧ 0 < c₁ ∧ 0 < c₂ ∧
+      ∀ᵐ ω ∂P, ω ∈ A → pinchFirstEventLocal (D ω) W T Q' Q δ ∧
+        c₁ ≤ setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ)) ∧
+        ENNReal.ofReal M * annulusGreenPotentialSup (μ ω) 0 3 6 ≤ ENNReal.ofReal c₂ := by
+  obtain ⟨F, hFm, hFp, hFe⟩ := hh.exists_positive_outside_pinchLocal_first hγ hγ₂ hα hD hgeo
+  obtain ⟨a, ham, hae, hap⟩ := hh.exists_positive_outside_pinchLocal_crossing hγ hγ₂ hα hD hgeo
+  obtain ⟨G, hGm, hGe, hGf⟩ :=
+    BundleParts.exists_exterior_annulusGreenPotentialSup_version hgeo hγ hγ₂ hα hh hμ
+  let E : ℕ → Set Ω := fun n =>
+    {ω | 1 / ((n : ℝ) + 1) ≤ a ω ∧
+      ENNReal.ofReal M * G ω ≤ ENNReal.ofReal ((n : ℝ) + 1)}
+  have hEm : ∀ n, MeasurableSet[MeasurableSpace.comap
+      (localModConstPairings α hC (closure W)ᶜ) inferInstance] (E n) := by
+    intro n
+    exact (measurableSet_le measurable_const ham).inter
+      (measurableSet_le (hGm.const_mul _) measurable_const)
+  have hcover : ∀ᵐ ω ∂P, ω ∈ F → ∃ n, ω ∈ E n := by
+    filter_upwards [hap, hGf] with ω hωa hωG _
+    have hfin : ENNReal.ofReal M * G ω ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top hωG
+    obtain ⟨n₀, hn₀⟩ := exists_nat_one_div_lt hωa
+    obtain ⟨n₁, hn₁⟩ := ENNReal.exists_nat_gt hfin
+    refine ⟨n₀ + n₁, ?_, ?_⟩
+    · have hle : (1 : ℝ) / (((n₀ + n₁ : ℕ) : ℝ) + 1) ≤ 1 / ((n₀ : ℝ) + 1) := by
+        apply one_div_le_one_div_of_le (by positivity)
+        push_cast
+        linarith [Nat.cast_nonneg n₁ (α := ℝ)]
+      exact hle.trans hn₀.le
+    · have h₁ : (n₁ : ℝ≥0∞) = ENNReal.ofReal (n₁ : ℝ) := (ENNReal.ofReal_natCast n₁).symm
+      have h₂ : ENNReal.ofReal (n₁ : ℝ) ≤ ENNReal.ofReal (((n₀ + n₁ : ℕ) : ℝ) + 1) :=
+        ENNReal.ofReal_le_ofReal (by push_cast; linarith [Nat.cast_nonneg n₀ (α := ℝ)])
+      exact hn₁.le.trans (h₁ ▸ h₂)
+  have hex : ∃ n, 0 < P (F ∩ E n) := by
+    by_contra hcon
+    have hU : P (⋃ n : ℕ, F ∩ E n) = 0 :=
+      measure_iUnion_null_iff.2 fun n => le_antisymm (not_lt.1 fun h => hcon ⟨n, h⟩) zero_le
+    have hsub : F ≤ᵐ[P] ⋃ n : ℕ, F ∩ E n := by
+      filter_upwards [hcover] with ω hω hωF
+      obtain ⟨n, hn⟩ := hω hωF
+      exact mem_iUnion.2 ⟨n, hωF, hn⟩
+    have h := measure_mono_ae hsub
+    rw [hU] at h
+    exact hFp.ne' (le_antisymm h zero_le)
+  obtain ⟨n, hn⟩ := hex
+  refine ⟨F ∩ E n, 1 / ((n : ℝ) + 1), (n : ℝ) + 1,
+    hFm.inter (hEm n), hn, by positivity, by positivity, ?_⟩
+  filter_upwards [hFe, hae, hGe] with ω hFω haω hGω hω
+  exact ⟨hFω.mp hω.1, haω ▸ hω.2.1, hGω ▸ hω.2.2⟩
 
 end HarmonicBalls
