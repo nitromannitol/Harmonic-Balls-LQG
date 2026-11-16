@@ -286,4 +286,100 @@ theorem lintegral_inserted_clock_density_eq {Ω : Type*} [MeasurableSpace Ω] {P
   · filter_upwards with ω
     positivity
 
+/-- Field-averaged annular occupation equals the insertion-weighted spatial measure. -/
+theorem lintegral_annular_inserted_density_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε δ : ℝ}
+    (hε : 0 < ε) (hεδ : ε ≤ δ) (hεhalf : ε ≤ 1/2)
+    (γ α : ℝ) (ν : Measure ℂ) [SFinite ν] :
+    (∫⁻ ω, ∫⁻ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+      (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z ∂ν ∂P) =
+    ∫⁻ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+      (fun z => ENNReal.ofReal (Real.exp (-(γ * α) * Real.log ‖z‖))) z ∂ν := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let F : Ω × ℂ → ℝ≥0∞ := fun q => A.indicator (fun z =>
+    ENNReal.ofReal (ε ^ (γ^2/2) * Real.exp (γ*(H q.1 ε z - H q.1 1 0 -
+      α*Real.log (max ε ‖z‖))))) q.2
+  have h1 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) :=
+    (hHm ε hε).comp measurable_swap
+  have h2 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+    (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+  have hF : Measurable F := by
+    apply Measurable.indicator _ (hA.preimage measurable_snd)
+    exact (measurable_const.mul (measurable_const.mul ((h1.sub h2).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp).ennreal_ofReal
+  have heq : ∀ᵐ ω ∂P, ∀ z, F (ω,z) = A.indicator (fun z =>
+      ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec z
+    dsimp [F]
+    simp only [Set.indicator_apply]
+    split_ifs with hz
+    · rw [hω ε z, hω 1 0, hrec ε z hε]
+    · rfl
+  calc
+    _ = ∫⁻ ω, ∫⁻ z, F (ω,z) ∂ν ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [heq] with ω hω
+      apply lintegral_congr
+      intro z
+      exact (hω z).symm
+    _ = ∫⁻ z, ∫⁻ ω, F (ω,z) ∂P ∂ν := lintegral_lintegral_swap hF.aemeasurable
+    _ = _ := by
+      apply lintegral_congr
+      intro z
+      by_cases hz : z ∈ A
+      · have hz1 : ‖z‖ + ε ≤ 1 := by dsimp [A] at hz; linarith [hz.2]
+        have hz2 : max ε ‖z‖ = ‖z‖ := max_eq_right (hεδ.trans hz.1)
+        rw [Set.indicator_of_mem hz]
+        calc
+          (∫⁻ ω, F (ω,z) ∂P) = ∫⁻ ω, ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) ∂P := by
+              apply lintegral_congr_ae
+              filter_upwards [heq] with ω hω
+              rw [hω z, Set.indicator_of_mem hz]
+          _ = _ := by rw [lintegral_inserted_clock_density_eq hh hε γ α hz1, hz2]
+      · rw [Set.indicator_of_notMem hz]
+        simp [F, Set.indicator_of_notMem hz]
+
+/-- Annular density occupation is bounded uniformly over small smoothing scales. -/
+theorem exists_lintegral_annular_inserted_density_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {δ : ℝ} (hδ : 0 < δ)
+    (γ α : ℝ) :
+    ∃ M : ℝ, 0 ≤ M ∧ ∀ {ε : ℝ}, 0 < ε → ε ≤ δ → ε ≤ 1/2 →
+      ∀ (ν : Measure ℂ) [SFinite ν],
+      (∫⁻ ω, ∫⁻ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z ∂ν ∂P) ≤
+      ENNReal.ofReal M * ν univ := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let f : ℂ → ℝ := fun z => Real.exp (-(γ * α) * Real.log (max δ ‖z‖))
+  have hf : Continuous f := Real.continuous_exp.comp (continuous_const.mul
+    ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hδ).ne')))
+  obtain ⟨K, hK⟩ := (isCompact_closedBall (0 : ℂ) (1/2 : ℝ)).bddAbove_image hf.continuousOn
+  refine ⟨max K 0, le_max_right _ _, ?_⟩
+  intro ε hε hεδ hεhalf ν _
+  rw [lintegral_annular_inserted_density_eq hh hε hεδ hεhalf γ α ν]
+  calc
+    _ ≤ ∫⁻ _ : ℂ, ENNReal.ofReal (max K 0) ∂ν := by
+      apply lintegral_mono
+      intro z
+      by_cases hz : z ∈ A
+      · rw [Set.indicator_of_mem hz]
+        have hzk : z ∈ Metric.closedBall (0 : ℂ) (1/2 : ℝ) := by
+          simpa only [Metric.mem_closedBall, dist_zero_right] using hz.2
+        have hle : f z ≤ K := hK ⟨z, hzk, rfl⟩
+        dsimp [f] at hle
+        rw [max_eq_right hz.1] at hle
+        exact ENNReal.ofReal_le_ofReal (hle.trans (le_max_left _ _))
+      · rw [Set.indicator_of_notMem hz]
+        exact bot_le
+    _ = _ := by simp
+
 end HarmonicBalls
