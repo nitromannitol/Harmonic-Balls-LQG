@@ -7,7 +7,7 @@ The product-law expectation of an annular increment agrees with its iterated
 field and Brownian expectation.
 -/
 
-open MeasureTheory MarkovProcess
+open MeasureTheory MarkovProcess Set
 open scoped ENNReal NNReal
 
 namespace HarmonicBalls
@@ -146,7 +146,7 @@ theorem lintegral_prod_annular_increment_le_uniform_horizon
   exact ENNReal.ofReal_le_ofReal (hb τ hτ ε hε hεhalf hεδ).2
 
 /-- The grid reduction remains valid when monotonicity and the cell bound hold
-almost everywhere and the grid differences are almost everywhere measurable. -/
+almost everywhere and the grid differences arealmost everywhere measurable. -/
 theorem lintegral_iSup_abs_sub_le_grid_of_ae {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (f g : Ω → ℝ → ℝ) {T : ℝ} (hT : 0 ≤ T) {m : ℕ} (hm : 0 < m)
     (hmono : ∀ᵐ ω ∂μ, MonotoneOn (f ω) (Set.Icc 0 T) ∧
@@ -188,5 +188,122 @@ theorem lintegral_iSup_abs_sub_le_grid_of_ae {Ω : Type*} [MeasurableSpace Ω] (
       congr 1
       simp only [D, ENNReal.ofReal_sum_of_nonneg (fun _ _ => abs_nonneg _)]
       exact lintegral_finsetSum' (Finset.range (m + 1)) (fun j _ => (hgrid j).ennreal_ofReal)
+
+private theorem grid_integrable_annular_density (f : ℂ → ℝ) (hf : Continuous f) (δ : ℝ)
+    (μ : Measure ℂ) [IsFiniteMeasure μ] :
+    Integrable ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f) μ := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  obtain ⟨K, hK⟩ := (isCompact_closedBall (0 : ℂ) (1/2 : ℝ)).bddAbove_image hf.norm.continuousOn
+  apply (integrable_const (max K 0)).mono' (hf.measurable.indicator hA).aestronglyMeasurable
+  filter_upwards with z
+  by_cases hz : z ∈ A
+  · have hzk : z ∈ Metric.closedBall (0 : ℂ) (1/2 : ℝ) := by
+      simpa only [Metric.mem_closedBall, dist_zero_right] using hz.2
+    rw [show A.indicator f z = f z from Set.indicator_of_mem hz _]
+    exact (hK ⟨z, hzk, rfl⟩).trans (le_max_left K 0)
+  · rw [show A.indicator f z = 0 from Set.indicator_of_notMem hz _, norm_zero]
+    exact le_max_right K 0
+
+private theorem grid_continuous_inserted_density (hcirc : ℝ → ℂ → ℝ) (γ α r : ℝ)
+    (hr : 0 < r) (hc : Continuous (hcirc r))
+    (hrec : ∀ z, hcirc r z - hcirc 1 0 - α * Real.log (max r ‖z‖) =
+      LatticeProb.Gauss.fieldCircleAverage α hcirc r z) :
+    Continuous (fun z => r^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α hcirc r z)) := by
+  have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α hcirc r z) =
+      fun z => hcirc r z - hcirc 1 0 - α * Real.log (max r ‖z‖) := by
+    funext z
+    exact (hrec z).symm
+  have hc' : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α hcirc r z) := by
+    rw [heq]
+    exact (hc.sub continuous_const).sub
+      (continuous_const.mul ((continuous_const.max continuous_norm).log
+        (fun _ => (lt_max_of_lt_left hr).ne')))
+  exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc'))
+
+private theorem grid_annular_clock_increment_eq
+    (hcirc : ℝ → ℂ → ℝ) (γ α δ : ℝ) (τ : ContinuousPath ℂ → ℝ≥0)
+    (hcont : ∀ r, 0 < r → Continuous (hcirc r))
+    (hrec : ∀ r z, 0 < r → hcirc r z - hcirc 1 0 - α * Real.log (max r ‖z‖) =
+      LatticeProb.Gauss.fieldCircleAverage α hcirc r z)
+    (k : ℕ) (b : ContinuousPath ℂ) :
+    stoppedAnnularClock (fun z => (dyadicScale (k+1))^(γ^2/2) *
+      Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α hcirc (dyadicScale (k+1)) z)) δ τ b -
+    stoppedAnnularClock (fun z => (dyadicScale k)^(γ^2/2) *
+      Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α hcirc (dyadicScale k) z)) δ τ b =
+    annularIncrementSample (fun _ : Unit => hcirc) γ α δ (dyadicScale k) τ b () := by
+  let D : ℕ → ℂ → ℝ := fun k z => (dyadicScale k)^(γ^2/2) *
+    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α hcirc (dyadicScale k) z)
+  have hD (j : ℕ) : Continuous (D j) := grid_continuous_inserted_density hcirc γ α _
+    (dyadicScale_pos j) (hcont _ (dyadicScale_pos j)) (fun z => hrec _ z (dyadicScale_pos j))
+  have hscale : dyadicScale (k+1) = dyadicScale k / 2 := by
+    simp only [dyadicScale, pow_succ]
+    ring
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let μ : Measure ℂ := Measure.map (fun t => b t) (ν.restrict (Iic (τ b)))
+  have hν : ν univ = 1 := by
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := ⟨hν⟩
+  have hμ : μ ≤ Measure.map (fun t => b t) ν :=
+    Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+  let : IsFiniteMeasure μ := isFiniteMeasure_of_le (Measure.map (fun t => b t) ν) hμ
+  change (∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (D (k+1)) z ∂μ) -
+    (∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (D k) z ∂μ) = _
+  rw [← integral_sub (grid_integrable_annular_density _ (hD (k+1)) δ μ)
+    (grid_integrable_annular_density _ (hD k) δ μ)]
+  apply integral_congr_ae
+  filter_upwards with z
+  simp only [Set.indicator_apply]
+  split_ifs
+  · dsimp [D]
+    rw [hscale, ← hrec _ z (half_pos (dyadicScale_pos k)),
+      ← hrec _ z (dyadicScale_pos k)]
+  · ring
+
+/-- On one full-measure field event, every dyadic clock difference equals its
+annular increment sample, simultaneously for all paths and horizons. -/
+theorem ae_stoppedAnnularClock_sub_eq_annularIncrementSample
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α δ : ℝ) :
+    ∀ᵐ ω ∂P, ∀ (τ : ContinuousPath ℂ → ℝ≥0) (k : ℕ) (b : ContinuousPath ℂ),
+      stoppedAnnularClock (fun z => (dyadicScale (k+1))^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (k+1)) z)) δ τ b -
+      stoppedAnnularClock (fun z => (dyadicScale k)^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z)) δ τ b =
+      annularIncrementSample hcirc γ α δ (dyadicScale k) τ b ω := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec
+  have hcont : ∀ r, 0 < r → Continuous (hcirc ω r) := by
+    intro r hr
+    rw [← funext (hω r)]
+    exact hHc ω r hr
+  intro τ k b
+  exact grid_annular_clock_increment_eq (hcirc ω) γ α δ τ hcont hrec k b
+
+/-- Each actual dyadic clock difference at a measurable horizon is almost
+ everywhere measurable under the field-path product law. -/
+theorem aemeasurable_stoppedAnnularClock_sub
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) (γ α δ : ℝ)
+    (τ : ContinuousPath ℂ → ℝ≥0) (hτ : Measurable τ) (k : ℕ) :
+    AEMeasurable (fun p : Ω × ContinuousPath ℂ =>
+      stoppedAnnularClock (fun z => (dyadicScale (k+1))^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) δ τ p.2 -
+      stoppedAnnularClock (fun z => (dyadicScale k)^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale k) z)) δ τ p.2)
+      (P.prod (planarBrownianMotion x)) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨F, hF, hFae⟩ := exists_measurable_annularIncrementSample hh (dyadicScale_pos k) γ α δ τ hτ
+  apply (hF.comp measurable_swap).aemeasurable.congr
+  filter_upwards [(Measure.quasiMeasurePreserving_fst
+    (μ := P) (ν := planarBrownianMotion x)).ae
+      (ae_stoppedAnnularClock_sub_eq_annularIncrementSample hh γ α δ),
+    (Measure.quasiMeasurePreserving_fst
+    (μ := P) (ν := planarBrownianMotion x)).ae hFae] with p hp hq
+  exact (hq p.2).trans (hp τ k p.2).symm
 
 end HarmonicBalls
