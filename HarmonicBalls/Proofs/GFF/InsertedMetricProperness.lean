@@ -296,4 +296,61 @@ theorem IsWholePlaneGFF.ae_isCompact_closedBall_inserted_rescale
     (D ω ((r : ℂ) * z) ((r : ℂ) * w) ≤ R / c)
   rw [le_div_iff₀ hc, mul_comm]
 
+/-- Closed balls of the inserted metric are compact for a whole-plane field
+on a sample space in any universe. -/
+theorem IsWholePlaneGFF.ae_isCompact_closedBall_inserted_univ
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α : ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α hC D) :
+    ∀ᵐ ω ∂P, ∀ z : ℂ, ∀ R : ℝ, IsCompact {w : ℂ | D ω z w ≤ R} := by
+  obtain ⟨𝔇, h𝔇, hrepr⟩ := hD
+  obtain ⟨G0, hG0m, hG0, hG0c⟩ := FirstPassS11aa.exists_good_set hh.ae_continuousOn_circle
+  have hGFF' := FirstPassS11aa.isWholePlaneGFF_map_sample hh hG0m hG0 hG0c
+  let S := FirstPassS11aa.sample hC hcirc G0 hG0c
+  let P' := P.map S
+  let D' : FirstPassS11aa.CircleSample → ℂ → ℂ → ℝ := fun t u v =>
+    (weylScaling (𝔇 t.1.1) ξ (fun z => -α * Real.log ‖z‖) u v).toReal
+  have hfin := (lqgMetricFieldAxiomsUnivFrozen_derived FirstPassS11aa.CircleSample P' γ ξ α
+    (fun t => t.1.1) (fun t => t.1.2) hGFF' hγ hγ₂ hα 𝔇 h𝔇).1
+  have hD' : IsLQGMetricOfField P' γ ξ α (fun t => t.1.1) D' := by
+    refine ⟨𝔇, h𝔇, ?_⟩
+    filter_upwards [hfin] with t ht u v
+    exact ⟨ENNReal.toReal_nonneg, ENNReal.ofReal_toReal (ht.1 u v).ne⟩
+  have hcompact := hGFF'.ae_isCompact_closedBall_inserted hγ hγ₂ hα hD'
+  have hlift := ae_of_ae_map
+    (FirstPassS11aa.measurable_sample hG0m hh.measurable_pairing hh.measurable_circle hG0c).aemeasurable
+    (p := fun t : FirstPassS11aa.CircleSample => ∀ z : ℂ, ∀ R : ℝ,
+      IsCompact {w : ℂ | D' t z w ≤ R}) hcompact
+  filter_upwards [hlift, hG0, hrepr] with ω hcompact hω hrepr
+  have heq : D ω = D' (S ω) := by
+    funext u v
+    dsimp [D', S]
+    rw [FirstPassS11aa.sample_fst_eq hG0c hω, ← (hrepr u v).2,
+      ENNReal.toReal_ofReal (hrepr u v).1]
+  rw [heq]
+  exact hcompact
+
+
+/-- All positive spatial rescalings and positive multiples of the inserted
+metric have compact closed balls on one event, in any universe. -/
+theorem IsWholePlaneGFF.ae_isCompact_closedBall_inserted_rescale_univ
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α : ℝ} {D : Ω → ℂ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α hC D) :
+    ∀ᵐ ω ∂P, ∀ r : ℝ, 0 < r → ∀ c : ℝ, 0 < c → ∀ z : ℂ, ∀ R : ℝ,
+      IsCompact {w : ℂ | c * D ω ((r : ℂ) * z) ((r : ℂ) * w) ≤ R} := by
+  filter_upwards [hh.ae_isCompact_closedBall_inserted_univ hγ hγ₂ hα hD] with ω hcompact
+  intro r hr c hc z R
+  let e : ℂ ≃ₜ ℂ := Homeomorph.mulLeft₀ (r : ℂ) (Complex.ofReal_ne_zero.mpr hr.ne')
+  have h := e.isCompact_preimage.mpr (hcompact ((r : ℂ) * z) (R / c))
+  convert h using 1
+  ext w
+  change (c * D ω ((r : ℂ) * z) ((r : ℂ) * w) ≤ R) ↔
+    (D ω ((r : ℂ) * z) ((r : ℂ) * w) ≤ R / c)
+  rw [le_div_iff₀ hc, mul_comm]
+
 end HarmonicBalls
