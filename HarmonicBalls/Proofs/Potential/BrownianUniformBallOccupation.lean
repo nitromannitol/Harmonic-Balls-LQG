@@ -552,4 +552,103 @@ theorem lintegral_chain_prod_le {α : Type*} [MeasurableSpace α] (μ : Measure 
       exact kernelChainIntegral_le μ k S K hksec hS hK n y hy
     _ = K ^ n := by simp
 
+
+/-- The chain bound is invariant under permutation of the coordinates. -/
+theorem lintegral_chain_perm_prod_le {α : Type*} [MeasurableSpace α] (μ : Measure α)
+    [IsProbabilityMeasure μ] (k : α → α → ℝ≥0∞) (S : Set α) (K : ℝ≥0∞)
+    (hk : Measurable (fun p : α × α => k p.1 p.2)) (hS : ∀ᵐ y ∂μ, y ∈ S)
+    (hK : ∀ x ∈ S, (∫⁻ y, k y x ∂μ) ≤ K) (n : ℕ) (σ : Equiv.Perm (Fin (n + 1))) :
+    (∫⁻ t : Fin (n + 1) → α, ∏ i : Fin n, k (t (σ i.succ)) (t (σ i.castSucc))
+      ∂(Measure.pi (fun _ => μ))) ≤ K ^ n := by
+  have h := lintegral_chain_prod_le μ k S K hk hS hK n
+  let e := MeasurableEquiv.piCongrLeft (fun _ : Fin (n + 1) => α) σ
+  have hp := measurePreserving_piCongrLeft (fun _ : Fin (n + 1) => μ) σ
+  have he : (∫⁻ t : Fin (n + 1) → α, ∏ i : Fin n, k (t (σ i.succ)) (t (σ i.castSucc))
+      ∂(Measure.pi (fun _ => μ))) =
+      ∫⁻ t : Fin (n + 1) → α, ∏ i : Fin n, k (t i.succ) (t i.castSucc)
+      ∂(Measure.pi (fun _ => μ)) := by
+    rw [MeasurePreserving.lintegral_map_equiv _ e hp]
+    congr 1
+    funext t
+    simp [e, MeasurableEquiv.piCongrLeft_apply_apply]
+  exact he.le.trans h
+
+/-- The sum of all permuted chain integrals is bounded by their number. -/
+theorem lintegral_sum_chain_perm_prod_le {α : Type*} [MeasurableSpace α] (μ : Measure α)
+    [IsProbabilityMeasure μ] (k : α → α → ℝ≥0∞) (S : Set α) (K : ℝ≥0∞)
+    (hk : Measurable (fun p : α × α => k p.1 p.2)) (hS : ∀ᵐ y ∂μ, y ∈ S)
+    (hK : ∀ x ∈ S, (∫⁻ y, k y x ∂μ) ≤ K) (n : ℕ) :
+    (∫⁻ t : Fin (n + 1) → α, ∑ σ : Equiv.Perm (Fin (n + 1)),
+      ∏ i : Fin n, k (t (σ i.succ)) (t (σ i.castSucc)) ∂(Measure.pi (fun _ => μ))) ≤
+      (Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) * K ^ n := by
+  classical
+  have hm (σ : Equiv.Perm (Fin (n + 1))) : Measurable
+      (fun t : Fin (n + 1) → α => ∏ i : Fin n, k (t (σ i.succ)) (t (σ i.castSucc))) := by
+    apply Finset.measurable_prod
+    intro i hi
+    have hp : Measurable (fun t : Fin (n + 1) → α => (t (σ i.succ), t (σ i.castSucc))) := by fun_prop
+    simpa only [Function.comp_def] using hk.comp hp
+  rw [lintegral_finsetSum Finset.univ (fun σ hσ => hm σ)]
+  calc
+    _ ≤ ∑ _σ : Equiv.Perm (Fin (n + 1)), K ^ n := by
+      apply Finset.sum_le_sum
+      intro σ hσ
+      exact lintegral_chain_perm_prod_le μ k S K hk hS hK n σ
+    _ = _ := by simp
+
+
+/-- All unit-time occupation moments have bounds uniform in the start and centre. -/
+theorem planarBrownianMotion_occupation_moment_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ (x z : ℂ) (n : ℕ) (r : ℝ), 0 < r →
+      (∫⁻ b : ContinuousPath ℂ, (ν {t | ‖b t - z‖ < r}) ^ (n + 1)
+        ∂(planarBrownianMotion x)) ≤
+      (Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+        (ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q)) * K) ^ n := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  have hp : IsProbabilityMeasure ν := by
+    constructor
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := hp
+  have ha : NullSingletonClass ν := by
+    constructor
+    intro t
+    dsimp [ν]
+    rw [Measure.map_apply continuous_real_toNNReal.measurable (measurableSet_singleton t),
+      Measure.restrict_apply (continuous_real_toNNReal.measurable (measurableSet_singleton t))]
+    apply measure_mono_null _ (measure_singleton (t : ℝ))
+    intro z hz
+    have ht := congrArg (fun v : ℝ≥0 => (v : ℝ)) hz.1
+    have hz0 : 0 ≤ z := hz.2.1
+    simpa [Real.toNNReal_of_nonneg hz0] using ht
+  let : NullSingletonClass ν := ha
+  have hs : ∀ᵐ y ∂ν, y ∈ Iic (1 : ℝ≥0) := by
+    dsimp [ν]
+    change ∀ᵐ y ∂(Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))), y ≤ 1
+    apply (ae_map_iff continuous_real_toNNReal.measurable.aemeasurable
+      (measurableSet_le measurable_id measurable_const)).2
+    filter_upwards [ae_restrict_mem measurableSet_Icc] with y hy
+    change Real.toNNReal y ≤ 1
+    exact Real.toNNReal_le_iff_le_coe.mpr (by simpa using hy.2)
+  obtain ⟨K, hK, hbound⟩ := exists_uniform_unit_time_rpow_bound hq0 hq1
+  refine ⟨K, hK, ?_⟩
+  intro x z n r hr
+  let A : ℝ := (2 / Real.pi) ^ q * (2 * r) ^ (2 * q)
+  have hA : 0 ≤ A := by dsimp [A]; positivity
+  let k : ℝ≥0 → ℝ≥0 → ℝ≥0∞ :=
+    fun t y => ENNReal.ofReal (A * |(t : ℝ) - (y : ℝ)| ^ (-q))
+  have hk : Measurable (fun p : ℝ≥0 × ℝ≥0 => k p.1 p.2) := by
+    dsimp [k]; fun_prop
+  have hK' : ∀ y ∈ Iic (1 : ℝ≥0), (∫⁻ t, k t y ∂ν) ≤ ENNReal.ofReal A * K := by
+    intro y hy
+    have hm : Measurable (fun t : ℝ≥0 => ENNReal.ofReal (|(t : ℝ) - (y : ℝ)| ^ (-q))) := by fun_prop
+    have heq : (∫⁻ t, k t y ∂ν) = ENNReal.ofReal A *
+        (∫⁻ t : ℝ≥0, ENNReal.ofReal (|(t : ℝ) - (y : ℝ)| ^ (-q)) ∂ν) := by
+      simp only [k, ENNReal.ofReal_mul hA, lintegral_const_mul _ hm]
+    rw [heq]
+    exact mul_le_mul_right (hbound y (by exact_mod_cast hy)) _
+  have h := planarBrownianMotion_occupation_moment_le_kernel x z (n := n) hr hq0 hq1 ν
+  have hh := lintegral_sum_chain_perm_prod_le ν k (Iic 1) (ENNReal.ofReal A * K) hk hs hK' n
+  exact h.trans hh
+
 end HarmonicBalls
