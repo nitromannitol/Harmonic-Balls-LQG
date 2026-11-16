@@ -9,7 +9,8 @@ and covariance of the normalized whole-plane field.
 
 noncomputable section
 
-open MeasureTheory ProbabilityTheory Filter Set
+open MeasureTheory ProbabilityTheory Filter Set Metric
+open scoped ENNReal
 
 namespace HarmonicBalls
 
@@ -54,5 +55,45 @@ theorem IsWholePlaneGFF.exists_measurable_gff_circle_average
         (measurable_const : Measurable (fun _ : Ω => (0 : ℝ)))
   · filter_upwards [hh.ae_circle_map_eq_raw hF] with ω hω r hr z
     simpa only [H, circleProfile, dite_eq_left hr] using hω (⟨r, hr⟩, z)
+
+/-- Subcriticality admits two moments strictly between one and the critical moment. -/
+theorem exists_lqg_moment_parameters {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) :
+    ∃ p q : ℝ, 1 < p ∧ p < q ∧ q < 4 / γ ^ 2 := by
+  have hs : 0 < γ ^ 2 := sq_pos_of_pos hγ
+  have hfour : γ ^ 2 < 4 := by nlinarith
+  have ht : (1 : ℝ) < 4 / γ ^ 2 := by rw [lt_div_iff₀ hs]; linarith
+  obtain ⟨q, hq1, hq⟩ := exists_between ht
+  obtain ⟨p, hp, hpq⟩ := exists_between hq1
+  exact ⟨p, q, hp, hpq, hq⟩
+
+/-- A finite compact-center power bound transfers across agreement of positive
+circle averages, including zero-radius balls. -/
+theorem lqgApprox_ball_power_transfer_of_circle_eq
+    {γ κ R : ℝ} {H h : ℝ → ℂ → ℝ} {C : ℝ≥0∞}
+    (hC : C < ⊤)
+    (heq : ∀ r, 0 < r → ∀ z, H r z = h r z)
+    (hbound : ∀ z : ℂ, ‖z‖ ≤ R → ∀ s : ℝ, 0 < s → s ≤ 1 → ∀ k : ℕ,
+      lqgApprox γ H (dyadicScale k) (ball z s) ≤ C * ENNReal.ofReal (s ^ κ)) :
+    ∃ C₁ : ℝ, 0 < C₁ ∧ ∀ k : ℕ, ∀ z : ℂ, ‖z‖ ≤ R → ∀ s : ℝ,
+      0 ≤ s → s ≤ 1 → lqgApprox γ h (dyadicScale k) (ball z s) ≤
+        ENNReal.ofReal (C₁ * s ^ κ) := by
+  refine ⟨C.toReal + 1, by positivity, ?_⟩
+  intro k z hz s hs hs1
+  by_cases hs0 : s = 0
+  · subst s
+    simp
+  have hspos : 0 < s := lt_of_le_of_ne hs (Ne.symm hs0)
+  have he : lqgApprox γ H (dyadicScale k) = lqgApprox γ h (dyadicScale k) := by
+    unfold lqgApprox
+    congr 1
+    funext w
+    rw [heq _ (dyadicScale_pos k) w]
+  rw [← he]
+  refine (hbound z hz s hspos hs1 k).trans ?_
+  rw [ENNReal.ofReal_mul (by positivity : 0 ≤ C.toReal + 1)]
+  have hc : C ≤ ENNReal.ofReal (C.toReal + 1) := by
+    rw [ENNReal.ofReal_add ENNReal.toReal_nonneg (by norm_num), ENNReal.ofReal_toReal hC.ne]
+    simp
+  gcongr
 
 end HarmonicBalls
