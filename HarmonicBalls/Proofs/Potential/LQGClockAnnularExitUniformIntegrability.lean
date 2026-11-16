@@ -382,4 +382,56 @@ theorem exists_lintegral_annular_inserted_density_le {Ω : Type*} [MeasurableSpa
         exact bot_le
     _ = _ := by simp
 
+/-- The spatial occupation measure from a deterministic time to Brownian exit. -/
+noncomputable def annularExitTailOccupation (D : Set ℂ) (T : ℝ) (b : ContinuousPath ℂ) : Measure ℂ :=
+  Measure.map (fun t : ℝ => b t.toNNReal)
+    (volume.restrict (Ioc T (ContinuousPath.exitTime D b).toReal))
+
+/-- The annealed annular occupation after a horizon decays exponentially. -/
+theorem exists_annular_exit_occupation_tail_le_exp {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {D : Set ℂ}
+    (hD : IsOpen D) (hDb : Bornology.IsBounded D) {δ : ℝ} (hδ : 0 < δ)
+    (γ α : ℝ) :
+    ∃ lam M : ℝ, 0 < lam ∧ 0 ≤ M ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧
+      ∀ x : ℂ, ∀ T : ℝ, 0 ≤ T → ∀ {ε : ℝ}, 0 < ε → ε ≤ δ → ε ≤ 1/2 →
+      (∫⁻ b, ∫⁻ ω, ∫⁻ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z
+        ∂(annularExitTailOccupation D T b) ∂P ∂planarBrownianMotion x) ≤
+      ENNReal.ofReal M * (ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * T)) * C) := by
+  obtain ⟨M, hM, hbound⟩ := exists_lintegral_annular_inserted_density_le hh hδ γ α
+  obtain ⟨lam, hlam, C, hC, htail⟩ :=
+    exists_uniform_planarBrownianMotion_exitTime_excess_le_exp hD hDb
+  refine ⟨lam, M, hlam, hM, C, hC, ?_⟩
+  intro x T hT ε hε hεδ hεhalf
+  calc
+    _ ≤ ∫⁻ b, ENNReal.ofReal M *
+        (ContinuousPath.exitTime D b - ENNReal.ofReal T) ∂planarBrownianMotion x := by
+      apply lintegral_mono
+      intro b
+      let : IsFiniteMeasure (annularExitTailOccupation D T b) := by
+        dsimp [annularExitTailOccupation]
+        infer_instance
+      have hν := hbound hε hεδ hεhalf (annularExitTailOccupation D T b)
+      refine hν.trans ?_
+      change ENNReal.ofReal M * annularExitTailOccupation D T b univ ≤
+        ENNReal.ofReal M * (ContinuousPath.exitTime D b - ENNReal.ofReal T)
+      gcongr
+      have hm : annularExitTailOccupation D T b univ =
+          ENNReal.ofReal ((ContinuousPath.exitTime D b).toReal - T) := by
+        unfold annularExitTailOccupation
+        have hmeas : Measurable (fun t : ℝ => b t.toNNReal) :=
+          b.continuous.measurable.comp measurable_real_toNNReal
+        rw [Measure.map_apply hmeas MeasurableSet.univ]
+        simp [Real.volume_Ioc]
+      rw [hm]
+      by_cases hb : ContinuousPath.exitTime D b = ⊤
+      · simp [hb]
+      · rw [ENNReal.ofReal_sub _ hT, ENNReal.ofReal_toReal hb]
+    _ = ENNReal.ofReal M *
+        (∫⁻ b, ContinuousPath.exitTime D b - ENNReal.ofReal T ∂planarBrownianMotion x) := by
+      rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+    _ ≤ _ := by gcongr; exact htail x T hT
+
 end HarmonicBalls
