@@ -1355,4 +1355,54 @@ theorem measurable_annular_exit_horizon_increment {Ω : Type*} [MeasurableSpace 
   filter_upwards [hFae] with ω hω
   rw [hω b]
 
+/-- Finite-horizon annular increments satisfy a linear-in-horizon rate bound. -/
+theorem brownian_annular_exit_horizon_increment_annealed_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (x : ℂ) (N : ℕ) (ε : ℝ), 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        Integrable (annularExitHorizonIncrement P hcirc γ α δ ε D N) (planarBrownianMotion x) ∧
+        (∫ b, annularExitHorizonIncrement P hcirc γ α δ ε D N b ∂planarBrownianMotion x) ≤
+        (N : ℝ) * (((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_annular_exit_block_increment_annealed_le hh hγ0 hγ2 α hδ hD hDb
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro x N ε hε hεhalf hεδ
+  let F := annularExitHorizonIncrement P hcirc γ α δ ε D N
+  let B : ℕ → ContinuousPath ℂ → ℝ := fun k => annularExitBlockIncrement P hcirc γ α δ ε D k
+  have hB : ∀ k, Integrable (B k) (planarBrownianMotion x) := fun k =>
+    (hb x k ε hε hεhalf hεδ).1
+  have hS : Integrable (fun b => ∑ k ∈ Finset.range N, B k b) (planarBrownianMotion x) :=
+    integrable_finsetSum _ (fun k hk => hB k)
+  have hm : Measurable F := measurable_annular_exit_horizon_increment hh hε γ α δ hD N
+  have hF0 : ∀ b, 0 ≤ F b := by
+    intro b
+    apply integral_nonneg
+    intro ω
+    exact abs_nonneg _
+  have hle : ∀ᵐ b ∂planarBrownianMotion x, F b ≤ ∑ k ∈ Finset.range N, B k b := by
+    filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x hDb] with b hfin
+    exact annular_exit_horizon_increment_le_sum_blocks hh hε hεhalf hεδ γ α D N b hfin.ne
+  have hi : Integrable F (planarBrownianMotion x) := by
+    apply hS.mono' hm.aestronglyMeasurable
+    filter_upwards [hle] with b h
+    simpa only [Real.norm_eq_abs, abs_of_nonneg (hF0 b)] using h
+  refine ⟨hi, (integral_mono_ae hi hS hle).trans ?_⟩
+  rw [integral_finsetSum _ (fun k hk => hB k)]
+  calc
+    _ ≤ ∑ k ∈ Finset.range N, (((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+      apply Finset.sum_le_sum
+      intro k hk
+      exact (hb x k ε hε hεhalf hεδ).2
+    _ = _ := by simp [mul_add]
+
 end HarmonicBalls
