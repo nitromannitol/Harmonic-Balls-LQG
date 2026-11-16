@@ -712,4 +712,23 @@ theorem ae_fine_scale_ball_le_band
       simp only [mul_add]
       ac_rfl
 
+
+/-- The scaled recentring error is the dyadic area factor times the
+circle-average exponential at four times the grid scale. -/
+theorem dyadicFactor_mul_affine_circle_exp (γ : ℝ) (h : ℝ → ℂ → ℝ)
+    (j : ℕ) (x : ℂ) :
+    LQGDyadicScaling.dyadicFactor γ j (h (dyadicScale j) x) *
+        ENNReal.ofReal (rexp (γ * affineRecentredCircle h (dyadicScale j) x 4 0)) =
+      ENNReal.ofReal (dyadicScale j ^ (2 + γ ^ 2 / 2) *
+        rexp (γ * h (dyadicScale j * 4) x)) := by
+  unfold LQGDyadicScaling.dyadicFactor affineRecentredCircle
+  rw [← ENNReal.ofReal_mul (mul_nonneg
+    (Real.rpow_nonneg (show 0 ≤ dyadicScale j from (pow_pos (by norm_num) j).le) _)
+    (Real.exp_pos _).le)]
+  congr 1
+  simp only [mul_zero, zero_add, mul_sub]
+  rw [mul_assoc, ← Real.exp_add]
+  congr 1
+  ring
+
 end HarmonicBalls
