@@ -1,6 +1,7 @@
 import HarmonicBalls.Proofs.Potential.BrownianPairOccupationBound
 import HarmonicBalls.Proofs.Sec6.PlanarIncrementBlocks
 import Mathlib.Data.Fin.Tuple.Sort
+import LatticeProb.Analysis.RieszKernelHolder
 
 /-! # Uniform-centre Brownian increment estimates
 
@@ -322,5 +323,38 @@ theorem planarBrownianMotion_occupation_moment_le_kernel (x z : ℂ) {n : ℕ} {
   apply lintegral_mono_ae
   filter_upwards [ae_injective_pi_of_atomless (n + 1) ν] with t ht
   exact planarBrownianMotion_joint_ball_le_sum_permutations x z t ht hr hq0 hq1
+
+
+/-- The subcritical time kernel has uniformly bounded unit-interval integrals. -/
+theorem exists_uniform_unit_interval_rpow_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    ∃ K : ℝ≥0∞, K < ∞ ∧ ∀ y ∈ Icc (0 : ℝ) 1,
+      (∫⁻ t in Icc (0 : ℝ) 1, ENNReal.ofReal (|t - y| ^ (-q))) ≤ K := by
+  let K : ℝ≥0∞ := ENNReal.ofReal 2 ^ ((1 : ℝ) - q) *
+    ∫⁻ v in ball (0 : ℝ) 1, ‖v‖ₑ ^ (-q)
+  have hk : K < ∞ := by
+    dsimp [K]
+    apply ENNReal.mul_lt_top
+    · exact ENNReal.rpow_lt_top_of_nonneg (by linarith) ENNReal.ofReal_ne_top
+    · apply LatticeProb.PegdenSmart.lintegral_ball_enorm_rpow_lt_top volume
+      simp only [Module.finrank_self, Nat.cast_one]
+      linarith
+  refine ⟨K, hk, ?_⟩
+  intro y hy
+  have hsub : Icc (0 : ℝ) 1 ⊆ ball y 2 := by
+    intro t ht
+    rw [Metric.mem_ball, Real.dist_eq]
+    rw [abs_lt]
+    constructor <;> linarith [ht.1, ht.2, hy.1, hy.2]
+  calc
+    _ ≤ ∫⁻ t in Icc (0 : ℝ) 1, ‖t - y‖ₑ ^ (-q) := by
+      apply lintegral_mono_ae
+      filter_upwards [ae_restrict_of_ae (volume.ae_ne y)] with t ht
+      have hpos : 0 < ‖t - y‖ := norm_pos_iff.mpr (sub_ne_zero.mpr ht)
+      change ENNReal.ofReal (‖t - y‖ ^ (-q)) ≤ ‖t - y‖ₑ ^ (-q)
+      rw [← ofReal_norm, ENNReal.ofReal_rpow_of_pos hpos]
+    _ ≤ ∫⁻ t in ball y 2, ‖t - y‖ₑ ^ (-q) := lintegral_mono_set hsub
+    _ = K := by
+      rw [LatticeProb.PegdenSmart.lintegral_ball_enorm_sub_rpow volume y (by norm_num)]
+      simp [K, Module.finrank_self, sub_eq_add_neg]
 
 end HarmonicBalls
