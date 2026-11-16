@@ -796,4 +796,31 @@ theorem occupation_density_eq_green_off_pole {D : Set ℂ} (hD : IsSmoothBounded
     ((continuousAt_const.mul (hcont.comp (continuousAt_const.prodMk continuousAt_id))))).continuousWithinAt
 
 
+/-- A continuous occupation density can be integrated against any measure with
+no atom at the pole, including measures singular to planar volume. Its potential
+is twice the potential in the Laplacian normalization. -/
+theorem occupation_density_potential_eq_green {D : Set ℂ} (hD : IsSmoothBoundedOpen D)
+    {x : ℂ} (hx : x ∈ D) {k : ℂ → ℝ≥0∞} (hk : AEMeasurable k volume)
+    (hkc : ContinuousOn k (D \ {x}))
+    (hkocc : volume.withDensity k =
+      occupationMeasure D (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) x)
+    (μ : Measure ℂ) (hμ : μ {x} = 0) (f : ℂ → ℝ) :
+    (IntegrableOn (fun y => (k y).toReal * f y) D μ ↔
+      IntegrableOn (fun y => (2 * greenFunction D x y) * f y) D μ) ∧
+    (∫ y in D, (k y).toReal * f y ∂μ) =
+      2 * ∫ y in D, greenFunction D x y * f y ∂μ := by
+  have heq := occupation_density_eq_green_off_pole hD hx hk hkc hkocc
+  have hae : ∀ᵐ y ∂μ.restrict D, (k y).toReal * f y =
+      (2 * greenFunction D x y) * f y := by
+    filter_upwards [ae_restrict_mem (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD).measurableSet,
+      ae_restrict_of_ae (show ∀ᵐ y ∂μ, y ≠ x from compl_mem_ae_iff.2 hμ)] with y hy hyx
+    rw [heq ⟨hy, by simpa using hyx⟩,
+      ENNReal.toReal_ofReal (mul_nonneg (by norm_num) (greenFunction_nonneg hD.1 x y))]
+  constructor
+  · exact integrable_congr hae
+  · calc
+      _ = ∫ y in D, (2 * greenFunction D x y) * f y ∂μ := integral_congr_ae hae
+      _ = _ := by simp only [mul_assoc, integral_const_mul]
+
+
 end HarmonicBalls.GreenOccupation
