@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.BrownianPairOccupationBound
+import HarmonicBalls.Proofs.Sec6.PlanarIncrementBlocks
 
 /-! # Uniform-centre Brownian increment estimates
 
@@ -69,5 +70,102 @@ theorem planarBrownianMotion_increment_smallBall_le_uniform_center (x z : ℂ)
       simpa only [Metric.ball, Set.preimage_ofPred_eq, dist_eq_norm] using h
     rw [hh]
     exact planarGaussian_ball_le_uniform_center hv z hr
+
+/-- A subcritical power bound for Brownian increment probabilities, uniform in the centre. -/
+theorem planarBrownianMotion_increment_smallBall_rpow_le_uniform_center (x z : ℂ)
+    {s t : ℝ≥0} (hts : t ≠ s) {r q : ℝ} (hr : 0 < r) (hq0 : 0 < q) (hq1 : q < 1) :
+    planarBrownianMotion x {b | ‖b t - b s - z‖ < r} ≤
+      ENNReal.ofReal ((2 / Real.pi) ^ q * r ^ (2 * q) *
+        |(t : ℝ) - (s : ℝ)| ^ (-q)) := by
+  let u : ℝ := |(t : ℝ) - (s : ℝ)|
+  have hu : 0 < u := by
+    dsimp [u]
+    apply abs_pos.mpr
+    exact sub_ne_zero.mpr (by exact_mod_cast hts)
+  let a : ℝ := 2 * r / Real.sqrt (2 * Real.pi * u)
+  have ha : 0 ≤ a := by dsimp [a]; positivity
+  have hs : (Real.sqrt (2 * Real.pi * u)) ^ 2 = 2 * Real.pi * u :=
+    Real.sq_sqrt (by positivity)
+  have hs0 : Real.sqrt (2 * Real.pi * u) ≠ 0 := by positivity
+  have hpi : Real.pi ≠ 0 := ne_of_gt Real.pi_pos
+  have hu0 : u ≠ 0 := ne_of_gt hu
+  have haeq : a ^ 2 = (2 / Real.pi) * r ^ 2 / u := by
+    dsimp [a]
+    field_simp
+    nlinarith [hs]
+  have hpower : (a ^ 2) ^ q =
+      (2 / Real.pi) ^ q * r ^ (2 * q) * u ^ (-q) := by
+    rw [haeq, Real.div_rpow (by positivity) (le_of_lt hu),
+      Real.mul_rpow (by positivity) (sq_nonneg r),
+      ← Real.rpow_natCast r 2, ← Real.rpow_mul (le_of_lt hr),
+      Real.rpow_neg (le_of_lt hu)]
+    ring
+  have hmin : min 1 (ENNReal.ofReal (a ^ 2)) ≤ ENNReal.ofReal ((a ^ 2) ^ q) := by
+    by_cases h : a ^ 2 ≤ 1
+    · exact (min_le_right _ _).trans
+        (ENNReal.ofReal_le_ofReal (Real.self_le_rpow_of_le_one (sq_nonneg a) h hq1.le))
+    · have hh : 1 ≤ (a ^ 2) ^ q := Real.one_le_rpow (le_of_not_ge h) hq0.le
+      exact (min_le_left _ _).trans (by simpa using ENNReal.ofReal_le_ofReal hh)
+  have hsmall := planarBrownianMotion_increment_smallBall_le_uniform_center x z hts hr.le
+  have hsmall' : planarBrownianMotion x {b | ‖b t - b s - z‖ < r} ≤
+      min 1 (ENNReal.ofReal (a ^ 2)) := by
+    simpa only [a, u, coe_nndist, Real.dist_eq, ENNReal.ofReal_pow ha] using hsmall
+  exact hsmall'.trans (by simpa [hpower, u] using hmin)
+
+
+/-- Successive increments at ordered times of planar Brownian motion are independent. -/
+theorem planarBrownianMotion_hasIndepIncrements (x : ℂ) :
+    ProbabilityTheory.HasIndepIncrements (fun t (b : ContinuousPath ℂ) => b t) (planarBrownianMotion x) := by
+  intro n t ht
+  have h := Section6.iIndepFun_planarBrownian_increment_blocks x
+    (fun i (_ : Unit) => t i.castSucc) (fun i (_ : Unit) => t i.succ)
+    (fun i _ => ht (Fin.castSucc_le_succ i))
+    (fun i j hij _ _ => by
+      rcases lt_or_gt_of_ne hij with hij | hji
+      · exact Or.inl (ht (Fin.succ_le_castSucc_iff.mpr hij))
+      · exact Or.inr (ht (Fin.succ_le_castSucc_iff.mpr hji)))
+  have heval := h.comp (fun _ f => f ()) (fun _ => measurable_pi_apply ())
+  exact heval
+
+
+/-- Simultaneous visits at ordered times are controlled by independent increments. -/
+theorem planarBrownianMotion_joint_ball_le (x z : ℂ) {n : ℕ}
+    (t : Fin (n + 1) → ℝ≥0) (ht : StrictMono t) {r q : ℝ}
+    (hr : 0 < r) (hq0 : 0 < q) (hq1 : q < 1) :
+    planarBrownianMotion x {b | ∀ i, ‖b (t i) - z‖ < r} ≤
+      ∏ i : Fin n, ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q) *
+        |(t i.succ : ℝ) - (t i.castSucc : ℝ)| ^ (-q)) := by
+  let f : Fin n → ContinuousPath ℂ → ℂ :=
+    fun i b => b (t i.succ) - b (t i.castSucc)
+  let A : Set ℂ := ball 0 (2 * r)
+  have hi : iIndepFun f (planarBrownianMotion x) :=
+    planarBrownianMotion_hasIndepIncrements x n t ht.monotone
+  have hsub : {b : ContinuousPath ℂ | ∀ i, ‖b (t i) - z‖ < r} ⊆
+      ⋂ i : Fin n, f i ⁻¹' A := by
+    intro b hb
+    simp only [mem_iInter, mem_preimage]
+    intro i
+    simp only [f, A, Metric.mem_ball, dist_zero_right]
+    have hnorm := norm_sub_le (b (t i.succ) - z) (b (t i.castSucc) - z)
+    have heq : (b (t i.succ) - z) - (b (t i.castSucc) - z) =
+        b (t i.succ) - b (t i.castSucc) := by abel
+    rw [heq] at hnorm
+    linarith [hb i.succ, hb i.castSucc]
+  calc
+    _ ≤ planarBrownianMotion x (⋂ i : Fin n, f i ⁻¹' A) := measure_mono hsub
+    _ = ∏ i : Fin n, planarBrownianMotion x (f i ⁻¹' A) := by
+      simpa using hi.measure_inter_preimage_eq_mul Finset.univ
+        (sets := fun _ => A) (fun _ _ => isOpen_ball.measurableSet)
+    _ ≤ _ := by
+      apply Finset.prod_le_prod
+      intro i _
+      have hne : t i.succ ≠ t i.castSucc :=
+        ne_of_gt (ht (Fin.castSucc_lt_succ (i := i)))
+      have hbound := planarBrownianMotion_increment_smallBall_rpow_le x hne
+        (show 0 < 2 * r by positivity) hq0 hq1
+      convert hbound using 1
+      congr 1
+      ext b
+      simp [f, A, Metric.mem_ball, dist_zero_right]
 
 end HarmonicBalls
