@@ -10,8 +10,8 @@ import LatticeProb.LQG.GMCRatioLimitMeasure
 The circle-average approximations of a whole-plane Gaussian free field converge at all positive
 radii to the dyadic LQG measure when tested against a fixed continuous compactly supported function.
 The convergence holds on one event for all such tests. For logarithmic insertions it holds on one
-event for all tests that vanish near the insertion. The singular approximations also have
-uniformly small mass near the insertion at all sufficiently small positive radii.
+event for all tests that vanish near the insertion. For a subcritical logarithmic insertion,
+the singular approximations converge against all such tests on one common event.
 -/
 
 open MeasureTheory Filter Topology Set Metric
@@ -425,5 +425,75 @@ theorem ae_exists_lqgApprox_fieldCircleAverage_ball_le_continuum
       lqgApprox γ (fieldCircleAverage α (hcirc ω)) s (ball 0 δ) ≤ ENNReal.ofReal η := by
   filter_upwards [hh.ae_continuumOriginGrowth hγ0 hγ2] with ω hω
   exact exists_lqgApprox_fieldCircleAverage_ball_le_continuum hγ0 hαQ hω
+
+/-- For a whole-plane field with a subcritical logarithmic insertion, the singular
+circle-average approximations converge at all positive radii to the dyadic measure,
+simultaneously for every continuous compactly supported test function. -/
+theorem ae_tendsto_integral_singular_lqgApprox_continuum_all
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+    {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
+    {γ α : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
+    {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ) :
+    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      Tendsto (fun s : ℝ => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) s))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂(μ ω))) := by
+  obtain ⟨μ₀, hμ₀⟩ := hh.exists_isLQGMeasure hγ0 hγ2
+  filter_upwards [ae_tendsto_integral_lqgApprox_continuum_all hh hγ0 hγ2 hμ₀,
+    ae_exists_lqgApprox_fieldCircleAverage_ball_le_continuum hh hγ0 hγ2 hαQ,
+    hh.ae_continuousOn_circle, hμ] with ω hregular horigin hc hm f hf hfs
+  apply tendsto_iff_seq_tendsto.mpr
+  intro σ hσ
+  have hσpos : ∀ᶠ n in atTop, 0 < σ n := hσ.eventually self_mem_nhdsWithin
+  let τ : ℕ → ℝ := fun n => if 0 < σ n then σ n else 1
+  have hτpos : ∀ n, 0 < τ n := by
+    intro n
+    simp only [τ]
+    split <;> positivity
+  have hτσ : τ =ᶠ[atTop] σ := hσpos.mono fun n hn => ite_eq_left hn
+  have hτ : Tendsto τ atTop (𝓝[>] (0 : ℝ)) := hσ.congr' hτσ.symm
+  let ρ : ℕ → ℝ := fun n => if n % 2 = 0 then dyadicScale (n / 2) else τ (n / 2)
+  have hρeven : ∀ n, ρ (2 * n) = dyadicScale n := by
+    intro n
+    simp [ρ]
+  have hρodd : ∀ n, ρ (2 * n + 1) = τ n := by
+    intro n
+    simp [ρ]
+    congr 1
+    omega
+  have hρpos : ∀ n, 0 < ρ n := by
+    intro n
+    simp only [ρ]
+    split
+    · exact dyadicScale_pos_bracket _
+    · exact hτpos _
+  have hρ0 : Tendsto ρ atTop (𝓝 (0 : ℝ)) :=
+    LQGSingularScaledLimit.tendsto_of_tendsto_even_odd
+      (by simpa only [hρeven] using LQGSingularScaledLimit.tendsto_dyadicScale_zero)
+      (by simpa only [hρodd] using hτ.mono_right nhdsWithin_le_nhds)
+  have hρ : Tendsto ρ atTop (𝓝[>] (0 : ℝ)) :=
+    tendsto_nhdsWithin_iff.mpr ⟨hρ0, Filter.Eventually.of_forall hρpos⟩
+  have hρorigin : ∀ η : ℝ, 0 < η → ∃ δ : ℝ, 0 < δ ∧ ∃ K : ℕ, ∀ k ≥ K,
+      lqgApprox γ (fieldCircleAverage α (hcirc ω)) (ρ k) (ball 0 δ) ≤ ENNReal.ofReal η := by
+    intro η hη
+    obtain ⟨δ, hδ, hδbound⟩ := horigin η hη
+    obtain ⟨K, hK⟩ := eventually_atTop.mp (hρ0.eventually (Iio_mem_nhds hδ))
+    exact ⟨δ, hδ, K, fun k hk => hδbound (ρ k) (hρpos k) (hK k hk)⟩
+  obtain ⟨L, hL⟩ := LQGSingularScaledLimit.exists_tendsto_integral_lqgApprox_fieldCircleAverage_seq
+    hρpos hρ0 (fun g hg hgs => ⟨_, (hregular g hg hgs).comp hρ⟩)
+    (fun n => GMCRatioLimit.continuous_slice hc (hρpos n)) hρorigin hf hfs
+  have he : Tendsto (fun k : ℕ => 2 * k) atTop atTop :=
+    StrictMono.tendsto_atTop fun _ _ h => by omega
+  have ho : Tendsto (fun k : ℕ => 2 * k + 1) atTop atTop :=
+    StrictMono.tendsto_atTop fun _ _ h => by omega
+  have hL0 : Tendsto (fun k => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) (dyadicScale k)))
+      atTop (𝓝 L) := by simpa only [Function.comp_def, hρeven] using hL.comp he
+  have hLeq : L = ∫ z, f z ∂(μ ω) := tendsto_nhds_unique hL0 (hm.tendsto_integral f hf hfs)
+  have hL1 : Tendsto (fun k => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) (τ k)))
+      atTop (𝓝 (∫ z, f z ∂(μ ω))) := by
+    rw [← hLeq]
+    simpa only [Function.comp_def, hρodd] using hL.comp ho
+  apply hL1.congr'
+  filter_upwards [hτσ] with n hn
+  simp only [Function.comp_def, hn]
 
 end HarmonicBalls
