@@ -732,4 +732,58 @@ theorem planarBrownianMotion_occupation_eventually_lt_of_summable {q : ℝ}
   filter_upwards [hb] with j hj z hz
   exact lt_of_not_ge (fun h => hj ⟨z, hz, h⟩)
 
+
+/-- A finite square grid of mesh size `1 / m` on a bounded region. -/
+noncomputable def squareGrid (N m : ℕ) : Finset ℂ :=
+  ((Finset.range (2 * N * m + 1)).product (Finset.range (2 * N * m + 1))).image
+    (fun p => Complex.mk ((p.1 : ℝ) / m - N) ((p.2 : ℝ) / m - N))
+
+/-- The number of grid points is bounded by the number of pairs of coordinates. -/
+theorem squareGrid_card_le (N m : ℕ) :
+    (squareGrid N m).card ≤ (2 * N * m + 1) ^ 2 := by
+  classical
+  calc
+    _ ≤ ((Finset.range (2 * N * m + 1)).product (Finset.range (2 * N * m + 1))).card :=
+      Finset.card_image_le
+    _ = _ := by simp [pow_two]
+
+/-- Every point of a bounded interval is within one mesh of a grid coordinate. -/
+theorem exists_grid_coordinate (N m : ℕ) (hm : 0 < m) (x : ℝ)
+    (hx1 : -(N : ℝ) ≤ x) (hx2 : x ≤ N) :
+    ∃ i ∈ Finset.range (2 * N * m + 1), |x - ((i : ℝ) / m - N)| < 1 / m := by
+  let i := ⌊(x + N) * m⌋₊
+  have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+  have ha : 0 ≤ (x + N) * m := mul_nonneg (by linarith) hm'.le
+  have hf : (i : ℝ) ≤ (x + N) * m := Nat.floor_le ha
+  have hf' : (x + N) * m < (i : ℝ) + 1 := Nat.lt_floor_add_one _
+  have hi : i ≤ 2 * N * m := by
+    have hf'' : (i : ℝ) ≤ (2 * N * m : ℕ) := by
+      push_cast
+      nlinarith
+    exact_mod_cast hf''
+  refine ⟨i, Finset.mem_range.mpr (by omega), ?_⟩
+  have hnonneg : 0 ≤ x - ((i : ℝ) / m - N) := by
+    have hdiv : (i : ℝ) / m ≤ x + N := (div_le_iff₀ hm').2 hf
+    linarith
+  rw [abs_of_nonneg hnonneg]
+  apply (lt_div_iff₀ hm').2
+  have hcancel : ((i : ℝ) / m) * m = i := div_mul_cancel₀ _ (ne_of_gt hm')
+  nlinarith
+
+/-- The square grid covers every bounded complex ball at twice its mesh size. -/
+theorem squareGrid_covers (N m : ℕ) (hm : 0 < m) (z : ℂ) (hz : ‖z‖ ≤ N) :
+    ∃ w ∈ squareGrid N m, dist z w < 2 / m := by
+  have hre := (Complex.abs_re_le_norm z).trans hz
+  have him := (Complex.abs_im_le_norm z).trans hz
+  obtain ⟨i, hi, hdi⟩ := exists_grid_coordinate N m hm z.re (abs_le.mp hre).1 (abs_le.mp hre).2
+  obtain ⟨j, hj, hdj⟩ := exists_grid_coordinate N m hm z.im (abs_le.mp him).1 (abs_le.mp him).2
+  let w := Complex.mk ((i : ℝ) / m - N) ((j : ℝ) / m - N)
+  refine ⟨w, ?_, ?_⟩
+  · exact Finset.mem_image.mpr ⟨(i, j), Finset.mem_product.mpr ⟨hi, hj⟩, rfl⟩
+  · rw [dist_eq_norm]
+    have h := Complex.norm_le_abs_re_add_abs_im (z - w)
+    change ‖z - w‖ ≤ |z.re - ((i : ℝ) / m - N)| + |z.im - ((j : ℝ) / m - N)| at h
+    rw [show (2 : ℝ) / m = 1 / m + 1 / m by ring]
+    linarith
+
 end HarmonicBalls
