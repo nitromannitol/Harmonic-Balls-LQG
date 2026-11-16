@@ -1,6 +1,7 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularUniformIntegrability
 import HarmonicBalls.Proofs.Potential.BrownianExpectedExitGreen
 import MarkovProcess.Trajectory.ExitTimeExponentialMoment
+import LatticeProb.LQG.LQGCircleMoments
 
 /-! # Annular clock integrability at Brownian exit
 
@@ -225,5 +226,64 @@ theorem exists_uniform_planarBrownianMotion_exitTime_excess_le_exp {D : Set ℂ}
           ∂planarBrownianMotion x) := by
       rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
     _ ≤ _ := by gcongr; exact hbound x
+
+/-- The first moment of the normalized inserted density is its insertion weight. -/
+theorem integral_inserted_clock_density_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α : ℝ) {z : ℂ} (hz : ‖z‖ + ε ≤ 1) :
+    (∫ ω, ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z) ∂P) =
+      Real.exp (-(γ * α) * Real.log (max ε ‖z‖)) := by
+  let A := Real.exp (-(γ * α) * Real.log (max ε ‖z‖))
+  have heq : (∫ ω, ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z) ∂P) =
+      A * ∫ ω, ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω ε z) ∂P := by
+    rw [← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards [ae_recentered_inserted_circle_average hh α, hh.ae_circleAverage_one_zero] with ω hω hzero
+    rw [← hω ε z hε, hzero]
+    simp only [sub_zero]
+    have hz' : γ * (hcirc ω ε z - α * Real.log (max ε ‖z‖)) =
+        γ * hcirc ω ε z + (-(γ * α) * Real.log (max ε ‖z‖)) := by ring
+    rw [hz', Real.exp_add]
+    dsimp [A]
+    ring
+  rw [heq, hh.integral_rpow_mul_exp_circle hε hz γ, mul_one]
+
+/-- The inserted circle-average density is integrable at a positive scale. -/
+theorem integrable_inserted_clock_density {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α : ℝ) (z : ℂ) :
+    Integrable (fun ω => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) P := by
+  let A := Real.exp (-(γ * α) * Real.log (max ε ‖z‖))
+  have h : Integrable (fun ω => ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω ε z)) P := by
+    have hi := hh.integrable_exp_sum_circle hε (fun _ : Fin 1 => z) (fun _ => γ)
+    simp only [Finset.univ_unique, Fin.default_eq_zero, Finset.sum_singleton] at hi
+    exact hi.const_mul _
+  apply (h.const_mul A).congr
+  filter_upwards [ae_recentered_inserted_circle_average hh α, hh.ae_circleAverage_one_zero] with ω hω hzero
+  rw [← hω ε z hε, hzero]
+  simp only [sub_zero]
+  have hz' : γ * (hcirc ω ε z - α * Real.log (max ε ‖z‖)) =
+      γ * hcirc ω ε z + (-(γ * α) * Real.log (max ε ‖z‖)) := by ring
+  rw [hz', Real.exp_add]
+  dsimp [A]
+  ring
+
+/-- The extended first moment of the inserted density equals its insertion weight. -/
+theorem lintegral_inserted_clock_density_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α : ℝ) {z : ℂ} (hz : ‖z‖ + ε ≤ 1) :
+    (∫⁻ ω, ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) ∂P) =
+      ENNReal.ofReal (Real.exp (-(γ * α) * Real.log (max ε ‖z‖))) := by
+  rw [← ofReal_integral_eq_lintegral_ofReal (integrable_inserted_clock_density hh hε γ α z)]
+  · rw [integral_inserted_clock_density_eq hh hε γ α hz]
+  · filter_upwards with ω
+    positivity
 
 end HarmonicBalls
