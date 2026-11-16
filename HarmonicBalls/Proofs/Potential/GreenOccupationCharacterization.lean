@@ -753,4 +753,21 @@ theorem lintegral_brownian_occupation_eq_green {D : Set ℂ}
   rw [lintegral_occupationMeasure _ x (measurable_const.indicator hA)] at h
   exact h
 
+/-- Every nonnegative Borel observable of the killed Brownian path has the
+Green density `2 * G_D(x, ·)`. -/
+theorem lintegral_brownian_occupation_eq_green_integral {D : Set ℂ}
+    (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
+    {f : ℂ → ℝ≥0∞} (hf : Measurable f) :
+    (∫⁻ p, (∫⁻ t in Set.Ioi (0 : ℝ),
+        {t : ℝ | ((Real.toNNReal t : ℝ≥0) : ℝ≥0∞) < ContinuousPath.exitTime D p}.indicator
+          (fun t => f (p (Real.toNNReal t))) t) ∂(planarBrownianMotion x)) =
+      ∫⁻ y, ENNReal.ofReal (2 * greenFunction D x y) * f y := by
+  let hDo := GreenGeneral.isOpen_of_isSmoothBoundedOpen hD
+  have hmeas : AEMeasurable (fun y => ENNReal.ofReal (2 * greenFunction D x y)) volume :=
+    ((integrable_greenFunction_pole hDo hD.1 x).const_mul 2).aestronglyMeasurable.aemeasurable.ennreal_ofReal
+  calc
+    _ = ∫⁻ y, f y ∂occupationMeasure D hDo x := (lintegral_occupationMeasure hDo x hf).symm
+    _ = ∫⁻ y, f y ∂greenMeasure D x := by rw [occupationMeasure_eq_greenMeasure hD hx]
+    _ = _ := lintegral_withDensity_eq_lintegral_mul₀' hmeas hf.aemeasurable
+
 end HarmonicBalls.GreenOccupation
