@@ -1405,4 +1405,53 @@ theorem brownian_annular_exit_horizon_increment_annealed_le {Ω : Type*} [Measur
       exact (hb x k ε hε hεhalf hεδ).2
     _ = _ := by simp [mul_add]
 
+private theorem summable_nat_mul_exp_log_dyadicScale {c : ℝ} (hc : 0 < c) :
+    Summable (fun k : ℕ => (k : ℝ) * Real.exp (Real.log (dyadicScale k) * c)) := by
+  change Summable (fun k : ℕ => (k : ℝ) * Real.exp (Real.log (LatticeProb.LQG.dyadicScale k) * c))
+  simp_rw [LatticeProb.Gauss.exp_log_dyadicScale_mul]
+  have hq : ‖Real.exp (Real.log 2⁻¹ * c)‖ < 1 := by
+    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
+    exact (Real.exp_lt_exp.mpr (mul_neg_of_neg_of_pos (Real.log_neg (by norm_num) (by norm_num)) hc)).trans_eq Real.exp_zero
+  simpa only [pow_one] using (summable_pow_mul_geometric_of_norm_lt_one 1 hq)
+
+/-- Annealed annular horizon increments are summable at dyadic scales. -/
+theorem summable_brownian_annular_exit_horizon_increment {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    Summable (fun k : ℕ => ∫ b, annularExitHorizonIncrement P hcirc γ α δ
+      (dyadicScale k) D k b ∂planarBrownianMotion x) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_annular_exit_horizon_increment_annealed_le hh hγ0 hγ2 α hδ hD hDb
+  let A : ℝ := ((Real.exp (γ^2*Real.log 2)-1) *
+    (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2
+  let c : ℝ := (d-γ^2+(2*γ-θ)^2/2)/2
+  let e : ℝ := (θ-γ)^2/2
+  have hc : 0 < c := by dsimp [c]; positivity
+  have he : 0 < e := by dsimp [e]; positivity
+  have hsum : Summable (fun k : ℕ => (k : ℝ) *
+      (A * Real.exp (Real.log (dyadicScale k) * c) +
+      2*M*Real.exp (Real.log (dyadicScale k) * e))) := by
+    have h1 := (summable_nat_mul_exp_log_dyadicScale hc).mul_left A
+    have h2 := (summable_nat_mul_exp_log_dyadicScale he).mul_left (2*M)
+    apply (h1.add h2).congr
+    intro k
+    ring
+  have hlim : Tendsto dyadicScale atTop (𝓝 0) := by
+    unfold dyadicScale
+    exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have hev : ∀ᶠ k in atTop, dyadicScale k < min (1/2) δ :=
+    hlim.eventually (Iio_mem_nhds (lt_min (by norm_num) hδ))
+  obtain ⟨N, hN⟩ := eventually_atTop.1 hev
+  apply (summable_nat_add_iff N).1
+  apply Summable.of_nonneg_of_le
+    (fun k => integral_nonneg (fun b => integral_nonneg (fun ω => abs_nonneg _)))
+    _ ((summable_nat_add_iff N).2 hsum)
+  intro k
+  have hk := hN (k + N) (by omega)
+  exact (hb x (k+N) _ (dyadicScale_pos _)
+    (le_of_lt (lt_of_lt_of_le hk (min_le_left _ _)))
+    (le_of_lt (lt_of_lt_of_le hk (min_le_right _ _)))).2
+
 end HarmonicBalls
