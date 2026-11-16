@@ -980,4 +980,18 @@ theorem dyadic_occupation_tail_summable (N n : ℕ) (q d : ℝ) (K : ℝ≥0∞)
       dsimp [D, p]
       ac_rfl
 
+
+/-- Almost surely, fine dyadic occupation bounds hold at every centre in a bounded region. -/
+theorem planarBrownianMotion_dyadic_occupation {q d : ℝ}
+    (hq0 : 0 < q) (hq1 : q < 1) (hdq : d < 2 * q) (x : ℂ) (N : ℕ) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    ∀ᵐ b ∂(planarBrownianMotion x), ∀ᶠ k in Filter.atTop, ∀ z : ℂ, ‖z‖ ≤ N →
+      ν {t | ‖b t - z‖ < (2 : ℝ)⁻¹ ^ k} ≤ ENNReal.ofReal (((2 : ℝ)⁻¹ ^ k) ^ d) := by
+  have hpos : 0 < 2 * q - d := by linarith
+  obtain ⟨n, hn⟩ := exists_nat_gt ((d + 2) / (2 * q - d))
+  have hn' : d + 2 < (n : ℝ) * (2 * q - d) := (div_lt_iff₀ hpos).mp hn
+  have hp : 0 < (2 * q) * n - d * (n + 1) - 2 := by nlinarith
+  obtain ⟨K, hK, hdy⟩ := planarBrownianMotion_dyadic_occupation_of_summable hq0 hq1
+  exact hdy x N n d (dyadic_occupation_tail_summable N n q d K hK hp).ne
+
 end HarmonicBalls
