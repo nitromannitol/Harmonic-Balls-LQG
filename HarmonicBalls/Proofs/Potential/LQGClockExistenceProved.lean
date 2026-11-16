@@ -1,4 +1,6 @@
 import Mathlib
+import HarmonicBalls.Proofs.Potential.LQGClockSummableConstruction
+import LatticeProb.Gauss.RegressionDualCauchy
 
 /-! # Subcritical exponents for Liouville clock estimates
 
@@ -63,5 +65,32 @@ theorem integral_unit_triangle_rpow {q : ℝ} (hq : q < 1) :
   have hn2 : 2 - q ≠ 0 := by linarith
   field_simp [hn1, hn2]
   ring
+
+
+open MarkovProcess Filter Topology
+open scoped NNReal
+
+/-- Summable expected uniform increment bounds construct a clock with locally uniform
+almost sure convergence of the dyadic approximations. -/
+theorem exists_lqgClock_of_summable_expected_uniform_increments
+    {γ : ℝ} {hε : ℝ → ℂ → ℝ} {x : ℂ}
+    (a : ℕ → ℕ → ContinuousPath ℂ → ℝ)
+    (ha : ∀ N k, Measurable (a N k))
+    (ha0 : ∀ N k b, 0 ≤ a N k b)
+    (hint : ∀ N k, Integrable (a N k) (planarBrownianMotion x))
+    (hsum : ∀ N, Summable (fun k => ∫ b, a N k b ∂(planarBrownianMotion x)))
+    (hbound : ∀ᵐ b ∂(planarBrownianMotion x), ∀ (N k : ℕ) (t : ℝ≥0), t ≤ (N : ℝ≥0) →
+      |lqgClockApprox γ hε (dyadicScale (k + 1)) b t -
+        lqgClockApprox γ hε (dyadicScale k) b t| ≤ a N k b) :
+    ∃ F : ContinuousPath ℂ → ℝ≥0 → ℝ,
+      IsLQGClock planarBrownianMotion γ hε x F ∧
+      ∀ᵐ b ∂(planarBrownianMotion x), ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+        ∀ᶠ k in atTop, ∀ t ≤ T,
+          |lqgClockApprox γ hε (dyadicScale k) b t - F b t| < η := by
+  apply exists_lqgClock_of_summable_uniform_increments a ha
+  have hs : ∀ N, ∀ᵐ b ∂(planarBrownianMotion x), Summable (fun k => a N k b) :=
+    fun N => LatticeProb.Gauss.ae_summable_of_summable_integral (hint N) (ha0 N) (hsum N)
+  filter_upwards [ae_all_iff.mpr hs, hbound] with b hb hc N
+  exact ⟨hb N, hc N⟩
 
 end HarmonicBalls
