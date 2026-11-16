@@ -73,7 +73,7 @@ theorem greenPotential_le_of_circle_tests
     linarith
   have ht := lintegral_circleAverage_greenFunction_ball_tendsto hx hμ hr hanti hrlim hsub
   have hzt := (circleAverage_greenFunction_ball_monotone_tendsto hx hz hr hanti hrlim hsub).2
-  simp only [hxz, ite_false] at hzt
+  simp [hxz] at hzt
   have hbound : (∫⁻ y, if x = y then ⊤ else
       ENNReal.ofReal (greenFunction (ball 0 R) y x) ∂μ) ≤
       ENNReal.ofReal (μ.real univ) * ENNReal.ofReal (greenFunction (ball 0 R) z x) := by
