@@ -306,4 +306,42 @@ theorem aemeasurable_stoppedAnnularClock_sub
     (μ := P) (ν := planarBrownianMotion x)).ae hFae] with p hp hq
   exact (hq p.2).trans (hp τ k p.2).symm
 
+/-- The actual dyadic annular clock differences have an annealed bound with
+constants uniform over measurable horizons. -/
+theorem lintegral_prod_stoppedAnnularClock_sub_le_uniform_horizon
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (τ : ContinuousPath ℂ → ℝ≥0), Measurable τ →
+      ∀ k : ℕ, dyadicScale k ≤ 1/2 → dyadicScale k ≤ δ →
+        (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal (|stoppedAnnularClock (fun z => (dyadicScale (k+1))^(γ^2/2) *
+            Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) δ τ p.2 -
+          stoppedAnnularClock (fun z => (dyadicScale k)^(γ^2/2) *
+            Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale k) z)) δ τ p.2|)
+          ∂(P.prod (planarBrownianMotion x))) ≤ ENNReal.ofReal (
+          ((Real.exp (γ^2*Real.log 2)-1) *
+            (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂(planarBrownianMotion x)) * 2^d)+1)/2 *
+              Real.exp (Real.log (dyadicScale k) * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+          2*M*Real.exp (Real.log (dyadicScale k) * ((θ-γ)^2/2))) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hbound⟩ :=
+    lintegral_prod_annular_increment_le_uniform_horizon hh hγ0 hγ2 α x hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro τ hτ k hhalf hδk
+  have heq : (fun p : Ω × ContinuousPath ℂ => ENNReal.ofReal (|stoppedAnnularClock (fun z => (dyadicScale (k+1))^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) δ τ p.2 -
+      stoppedAnnularClock (fun z => (dyadicScale k)^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale k) z)) δ τ p.2|)) =ᵐ[
+        P.prod (planarBrownianMotion x)]
+      (fun p => ENNReal.ofReal |annularIncrementSample hcirc γ α δ (dyadicScale k) τ p.2 p.1|) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion x)).ae
+        (ae_stoppedAnnularClock_sub_eq_annularIncrementSample hh γ α δ)] with p hp
+    rw [hp τ k p.2]
+  rw [lintegral_congr_ae heq]
+  exact hbound τ hτ (dyadicScale k) (dyadicScale_pos k) hhalf hδk
+
 end HarmonicBalls
