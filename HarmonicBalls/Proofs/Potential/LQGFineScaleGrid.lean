@@ -325,6 +325,31 @@ theorem exists_spatial_radial_enumeration (S : ℕ → Finset ℂ) (Q : ℕ → 
 
 open LatticeProb.LQG LatticeProb.LQG.GMCScaleGrid
 
+/-- The dyadic spatial grids can be chosen with uniformly bounded centers. -/
+theorem exists_bounded_dyadic_ball_grids (R : ℝ) (hR : 0 < R) :
+    ∃ S : ℕ → Finset ℂ, ∀ j,
+      ((S j).card : ℝ) ≤ (4 * R + 1) ^ 2 * (4 : ℝ) ^ j ∧
+      (∀ x ∈ S j, ‖x‖ ≤ R + 1) ∧
+      ∀ z ∈ Metric.ball (0 : ℂ) R, ∃ x ∈ S j, dist z x < dyadicScale j := by
+  classical
+  obtain ⟨S, hS⟩ := exists_dyadic_ball_grids R hR
+  refine ⟨fun j => (S j).filter (fun x => ‖x‖ ≤ R + 1), fun j => ⟨?_, ?_, ?_⟩⟩
+  · have hc : (((S j).filter (fun x => ‖x‖ ≤ R + 1)).card : ℝ) ≤ (S j).card := by
+      exact_mod_cast Finset.card_filter_le (S j) (fun x => ‖x‖ ≤ R + 1)
+    exact hc.trans (hS j).1
+  · intro x hx
+    exact (Finset.mem_filter.mp hx).2
+  · intro z hz
+    obtain ⟨x, hx, hdist⟩ := (hS j).2 z hz
+    have hd1 : dyadicScale j ≤ 1 := by
+      unfold dyadicScale
+      exact pow_le_one₀ (by norm_num) (by norm_num)
+    have hzR : ‖z‖ < R := by simpa [Metric.mem_ball, dist_zero_right] using hz
+    have htri := dist_triangle x z (0 : ℂ)
+    rw [dist_zero_right, dist_comm x z, dist_zero_right] at htri
+    have hbound : ‖x‖ ≤ R + 1 := by linarith
+    exact ⟨x, Finset.mem_filter.mpr ⟨hx, hbound⟩, hdist⟩
+
 /-- Fine-scale increments are controlled on concrete spatial and radial grids. -/
 theorem ae_fine_scale_affine_gff_increment_on_ball_grid
     {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
@@ -335,6 +360,7 @@ theorem ae_fine_scale_affine_gff_increment_on_ball_grid
       ((2 : ℝ)⁻¹ ^ (-(a / 2))) * ((2 : ℝ)⁻¹ ^ c) ≤ t ^ 2 →
       ∃ m : ℕ, ∃ S : ℕ → Finset ℂ,
         (∀ j, ((S j).card : ℝ) ≤ (4 * R + 1) ^ 2 * (4 : ℝ) ^ j) ∧
+        (∀ j x, x ∈ S j → ‖x‖ ≤ R + 1) ∧
         (∀ j z, z ∈ Metric.ball (0 : ℂ) R →
           ∃ x ∈ S j, dist z x < dyadicScale j) ∧
         ∀ {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
@@ -357,8 +383,9 @@ theorem ae_fine_scale_affine_gff_increment_on_ball_grid
   have hq : 0 < q := Real.rpow_pos_of_pos (by norm_num) _
   obtain ⟨m, hm⟩ := hgrid (4 * q) q t (2 * ((4 * R + 1) ^ 2 + 1))
     (by positivity) hq.le (by positivity) ht ht1 hdecay
-  obtain ⟨S, hS⟩ := exists_dyadic_ball_grids R hR
-  refine ⟨m, S, fun j => (hS j).1, fun j z hz => (hS j).2 z hz, ?_⟩
+  obtain ⟨S, hS⟩ := exists_bounded_dyadic_ball_grids R hR
+  refine ⟨m, S, fun j => (hS j).1, fun j x hx => (hS j).2.1 x hx,
+    fun j z hz => (hS j).2.2 z hz, ?_⟩
   intro Ω _ P hC hcirc hG
   let Q : ℕ → ℕ → ℕ := fun j n => gridCount a (n + j)
   obtain ⟨z, k, hk, hcover⟩ := exists_spatial_radial_enumeration S Q
@@ -378,6 +405,7 @@ theorem ae_fine_scale_affine_gff_increment_on_ball_grid
   obtain ⟨i, hi, hzi, hki⟩ := hcover j n x hx l hl
   have hi0 := hj n hn i hi
   simpa [s, hzi, hki] using hi0
+
 
 
 /-- The radial grid can be chosen slowly enough for any positive decay rate. -/
