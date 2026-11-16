@@ -3,6 +3,8 @@ import HarmonicBalls.Proofs.Potential.GreenPoleL1Continuity
 import HarmonicBalls.Proofs.Potential.GreenGeneralIdentification
 import HarmonicBalls.Proofs.Sec6.BoundedHarmonicExit
 import Mathlib.Topology.TietzeExtension
+import Mathlib.Geometry.Manifold.SmoothApprox
+import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.NNReal
 import Mathlib.Analysis.Calculus.ContDiff.Convolution
 import HarmonicBalls.Proofs.Sec6.PlanarBrownianGenerator
 import HarmonicBalls.Proofs.Sec6.StoppedPotentialIntegrability
@@ -569,5 +571,186 @@ theorem integral_occupationMeasure_eq_integral_greenMeasure
       ∫ y, g y ∂greenMeasure D x := by
   rw [integral_occupationMeasure_eq_stopped_integral _ hD.1 x hg.continuous hg0,
     integral_greenMeasure_eq_occupation hD hg hgc hgs hx]
+
+/-- Equality on nonnegative smooth compactly supported tests extends to
+nonnegative continuous compactly supported tests with the same support restriction. -/
+theorem integral_eq_of_nonneg_continuous_tests (D : Set ℂ) (μ ν : Measure ℂ) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
+    (htest : ∀ g : ℂ → ℝ, ContDiff ℝ ∞ g → HasCompactSupport g →
+      Function.support g ⊆ D → (∀ y, 0 ≤ g y) → ∫ y, g y ∂μ = ∫ y, g y ∂ν)
+    {f : ℂ → ℝ} (hf : Continuous f) (hfc : HasCompactSupport f)
+    (hfs : Function.support f ⊆ D) (hf0 : ∀ y, 0 ≤ f y) :
+    ∫ y, f y ∂μ = ∫ y, f y ∂ν := by
+  have hsqrt : Continuous (fun y => Real.sqrt (f y)) := Real.continuous_sqrt.comp hf
+  have hsupp : Function.support (fun y => Real.sqrt (f y)) ⊆ Function.support f := by
+    intro y hy
+    contrapose! hy
+    simp only [Function.mem_support, not_ne_iff] at hy ⊢
+    rw [hy, Real.sqrt_zero]
+  have hsqrtc : HasCompactSupport (fun y => Real.sqrt (f y)) := hfc.mono hsupp
+  choose g hg hdist hgs using fun n : ℕ =>
+    hsqrt.exists_contDiff_approx (⊤ : ℕ∞) (ε := fun _ => (1 : ℝ) / (n + 1))
+      continuous_const (by intro; positivity)
+  let G : ℕ → ℂ → ℝ := fun n y => (g n y) ^ 2
+  have hGc (n : ℕ) : ContDiff ℝ ∞ (G n) := (hg n).pow 2
+  have hGsupport (n : ℕ) : Function.support (G n) ⊆ Function.support f := by
+    intro y hy
+    apply hsupp (hgs n ?_)
+    intro hz
+    exact hy (by change (g n y)^2 = 0; rw [hz]; norm_num)
+  have hGcompact (n : ℕ) : HasCompactSupport (G n) := hfc.mono (hGsupport n)
+  have heq (n : ℕ) : ∫ y, G n y ∂μ = ∫ y, G n y ∂ν :=
+    htest (G n) (hGc n) (hGcompact n) ((hGsupport n).trans hfs) (fun y => sq_nonneg _)
+  obtain ⟨M, hM⟩ := hsqrtc.exists_bound_of_continuous hsqrt
+  have hM0 : 0 ≤ M := (norm_nonneg _).trans (hM 0)
+  have hbound (n : ℕ) (y : ℂ) : ‖G n y‖ ≤ (M + 1)^2 := by
+    have hd : ‖g n y - Real.sqrt (f y)‖ < 1 := by
+      have h := hdist n y
+      rw [Real.dist_eq] at h
+      rw [Real.norm_eq_abs]
+      calc |g n y - Real.sqrt (f y)| < 1 / ((n : ℝ) + 1) := h
+        _ ≤ 1 := by
+          exact (div_le_one₀ (by positivity)).2 (by linarith [Nat.cast_nonneg (α := ℝ) n])
+    have hb : ‖g n y‖ ≤ M + 1 := by
+      have := norm_add_le (g n y - Real.sqrt (f y)) (Real.sqrt (f y))
+      have : ‖g n y‖ ≤ ‖g n y - Real.sqrt (f y)‖ + ‖Real.sqrt (f y)‖ := by simpa using this
+      linarith [hM y]
+    simp only [G, norm_pow]
+    exact pow_le_pow_left₀ (norm_nonneg _) hb 2
+  have hlim (y : ℂ) : Tendsto (fun n => G n y) atTop (𝓝 (f y)) := by
+    have hsmall : Tendsto (fun n : ℕ => (1 : ℝ) / (n + 1)) atTop (𝓝 0) := by
+      exact tendsto_one_div_add_atTop_nhds_zero_nat
+    have hgconv : Tendsto (fun n => g n y) atTop (𝓝 (Real.sqrt (f y))) := by
+      apply tendsto_iff_dist_tendsto_zero.mpr
+      refine squeeze_zero (fun n => dist_nonneg) (fun n => (hdist n y).le) hsmall
+    simpa [G, Real.sq_sqrt (hf0 y)] using hgconv.pow 2
+  have hμ := tendsto_integral_of_dominated_convergence (μ := μ) (fun _ => (M + 1)^2)
+    (fun n => (hGc n).continuous.stronglyMeasurable.aestronglyMeasurable)
+    (integrable_const _) (fun n => Eventually.of_forall (hbound n)) (Eventually.of_forall hlim)
+  have hν := tendsto_integral_of_dominated_convergence (μ := ν) (fun _ => (M + 1)^2)
+    (fun n => (hGc n).continuous.stronglyMeasurable.aestronglyMeasurable)
+    (integrable_const _) (fun n => Eventually.of_forall (hbound n)) (Eventually.of_forall hlim)
+  exact tendsto_nhds_unique (hμ.congr (fun n => heq n)) hν
+
+/-- The occupation and Green measures agree on nonnegative continuous compactly
+supported tests supported in the domain. -/
+theorem integral_occupationMeasure_eq_integral_greenMeasure_of_continuous
+    {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {f : ℂ → ℝ}
+    (hf : Continuous f) (hfc : HasCompactSupport f) (hfs : Function.support f ⊆ D)
+    (hf0 : ∀ y, 0 ≤ f y) {x : ℂ} (hx : x ∈ D) :
+    ∫ y, f y ∂occupationMeasure D (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) x =
+      ∫ y, f y ∂greenMeasure D x := by
+  let hDo := GreenGeneral.isOpen_of_isSmoothBoundedOpen hD
+  let : IsFiniteMeasure (occupationMeasure D hDo x) := isFiniteMeasure_occupationMeasure hDo hD.1 x
+  let : IsFiniteMeasure (greenMeasure D x) := isFiniteMeasure_greenMeasure hDo hD.1 x
+  exact integral_eq_of_nonneg_continuous_tests D _ _
+    (fun g hg hgc hgs hg0 => integral_occupationMeasure_eq_integral_greenMeasure
+      hD hg hgc hgs hg0 hx) hf hfc hfs hf0
+
+/-- Finite measures concentrated on an open set are determined by nonnegative
+continuous compactly supported tests supported in that set. -/
+theorem measure_eq_of_nonneg_continuous_tests {D : Set ℂ} (hD : IsOpen D) (μ ν : Measure ℂ)
+    [IsFiniteMeasure μ] [IsFiniteMeasure ν] (hμD : μ Dᶜ = 0) (hνD : ν Dᶜ = 0)
+    (htest : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      Function.support f ⊆ D → (∀ y, 0 ≤ f y) → ∫ y, f y ∂μ = ∫ y, f y ∂ν) : μ = ν := by
+  obtain ⟨ρ, hρsupp, hρsmooth, hρrange⟩ := hD.exists_contDiff_support_eq (n := (⊤ : ℕ∞))
+  have hρ0 (y : ℂ) : 0 ≤ ρ y := (hρrange ⟨y, rfl⟩).1
+  have hρpos {y : ℂ} (hy : y ∈ D) : 0 < ρ y := by
+    have hn : ρ y ≠ 0 := by
+      have : y ∈ Function.support ρ := hρsupp.symm ▸ hy
+      exact this
+    exact lt_of_le_of_ne (hρ0 y) (Ne.symm hn)
+  apply Measure.ext_of_integral_eq_on_compactlySupported_nnreal
+  intro f
+  let F : ℂ → ℝ := fun y => f y
+  have hF : Continuous F := NNReal.continuous_coe.comp f.continuous
+  have hFc : HasCompactSupport F := f.hasCompactSupport'.mono (by
+    intro y hy
+    change (f y : ℝ) ≠ 0 at hy
+    change f y ≠ 0
+    exact fun h => hy (by rw [h]; rfl))
+  let w : ℕ → ℂ → ℝ := fun n y => min 1 ((n : ℝ) * ρ y)
+  let G : ℕ → ℂ → ℝ := fun n y => F y * w n y
+  have hw (n : ℕ) : Continuous (w n) := continuous_const.min (continuous_const.mul hρsmooth.continuous)
+  have hw0 (n : ℕ) (y : ℂ) : 0 ≤ w n y := le_min (by norm_num) (mul_nonneg (Nat.cast_nonneg n) (hρ0 y))
+  have hw1 (n : ℕ) (y : ℂ) : w n y ≤ 1 := min_le_left _ _
+  have hG (n : ℕ) : Continuous (G n) := hF.mul (hw n)
+  have hGcompact (n : ℕ) : HasCompactSupport (G n) := hFc.mul_right
+  have hGsupport (n : ℕ) : Function.support (G n) ⊆ D := by
+    intro y hy
+    by_contra hyn
+    have hz : ρ y = 0 := by
+      have : y ∉ Function.support ρ := by rw [hρsupp]; exact hyn
+      simpa only [Function.mem_support, not_not] using this
+    apply hy
+    simp [G, w, hz]
+  have hGeq (n : ℕ) : ∫ y, G n y ∂μ = ∫ y, G n y ∂ν :=
+    htest (G n) (hG n) (hGcompact n) (hGsupport n)
+      (fun y => mul_nonneg (f y).coe_nonneg (hw0 n y))
+  have hlim {y : ℂ} (hy : y ∈ D) : Tendsto (fun n => G n y) atTop (𝓝 (F y)) := by
+    have hp := hρpos hy
+    obtain ⟨N, hN⟩ := exists_nat_gt (1 / ρ y)
+    have hevent : ∀ᶠ n : ℕ in atTop, G n y = F y := by
+      filter_upwards [eventually_ge_atTop N] with n hn
+      have hle : (1 : ℝ) ≤ (n : ℝ) * ρ y := by
+        have hn' : (N : ℝ) ≤ n := by exact_mod_cast hn
+        have hh : (1 : ℝ) / ρ y ≤ n := le_trans hN.le hn'
+        exact (div_le_iff₀ hp).mp hh
+      simp [G, w, min_eq_left hle]
+    exact tendsto_const_nhds.congr' (hevent.mono fun _ h => h.symm)
+  have hbound (n : ℕ) (y : ℂ) : ‖G n y‖ ≤ ‖F y‖ := by
+    have hF0 : 0 ≤ F y := (f y).coe_nonneg
+    rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg hF0 (hw0 n y)),
+      Real.norm_eq_abs, abs_of_nonneg hF0]
+    exact mul_le_of_le_one_right hF0 (hw1 n y)
+  have haμ : ∀ᵐ y ∂μ, y ∈ D := by rw [ae_iff]; exact hμD
+  have haν : ∀ᵐ y ∂ν, y ∈ D := by rw [ae_iff]; exact hνD
+  have hintμ : Integrable (fun y => ‖F y‖) μ := (hF.integrable_of_hasCompactSupport hFc).norm
+  have hintν : Integrable (fun y => ‖F y‖) ν := (hF.integrable_of_hasCompactSupport hFc).norm
+  have hμ := tendsto_integral_of_dominated_convergence (fun y => ‖F y‖)
+    (fun n => (hG n).stronglyMeasurable.aestronglyMeasurable) hintμ
+    (fun n => Eventually.of_forall (hbound n)) (haμ.mono fun _ hy => hlim hy)
+  have hν := tendsto_integral_of_dominated_convergence (fun y => ‖F y‖)
+    (fun n => (hG n).stronglyMeasurable.aestronglyMeasurable) hintν
+    (fun n => Eventually.of_forall (hbound n)) (haν.mono fun _ hy => hlim hy)
+  exact tendsto_nhds_unique (hμ.congr (fun n => hGeq n)) hν
+
+/-- The occupation measure of standard planar Brownian motion killed on leaving
+a smooth bounded open set has density `2 * greenFunction D x` with respect to
+planar Lebesgue measure. The starting point is any point of the set; no
+connectivity assumption is required. -/
+theorem occupationMeasure_eq_greenMeasure {D : Set ℂ} (hD : IsSmoothBoundedOpen D)
+    {x : ℂ} (hx : x ∈ D) :
+    occupationMeasure D (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) x = greenMeasure D x := by
+  let hDo := GreenGeneral.isOpen_of_isSmoothBoundedOpen hD
+  let : IsFiniteMeasure (occupationMeasure D hDo x) := isFiniteMeasure_occupationMeasure hDo hD.1 x
+  let : IsFiniteMeasure (greenMeasure D x) := isFiniteMeasure_greenMeasure hDo hD.1 x
+  exact measure_eq_of_nonneg_continuous_tests hDo _ _ (occupationMeasure_compl hDo x)
+    (greenMeasure_compl hDo x) (fun f hf hfc hfs hf0 =>
+      integral_occupationMeasure_eq_integral_greenMeasure_of_continuous hD hf hfc hfs hf0 hx)
+
+/-- The killed occupation time of a Borel set is the integral of `2 G_D(x, y)`
+over that set. -/
+theorem occupationMeasure_apply {D : Set ℂ} (hD : IsSmoothBoundedOpen D)
+    {x : ℂ} (hx : x ∈ D) {A : Set ℂ} (hA : MeasurableSet A) :
+    occupationMeasure D (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) x A =
+      ∫⁻ y in A, ENNReal.ofReal (2 * greenFunction D x y) := by
+  rw [occupationMeasure_eq_greenMeasure hD hx, greenMeasure, withDensity_apply _ hA]
+
+/-- For every Borel set, the expected time spent there by a planar Brownian
+path before exiting the domain is the integral of the Green density. -/
+theorem lintegral_brownian_occupation_eq_green {D : Set ℂ}
+    (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
+    {A : Set ℂ} (hA : MeasurableSet A) :
+    (∫⁻ p, (∫⁻ t in Set.Ioi (0 : ℝ),
+        {t : ℝ | ((Real.toNNReal t : ℝ≥0) : ℝ≥0∞) < ContinuousPath.exitTime D p}.indicator
+          (fun t => A.indicator (fun _ => (1 : ℝ≥0∞)) (p (Real.toNNReal t))) t)
+        ∂(planarBrownianMotion x)) =
+      ∫⁻ y in A, ENNReal.ofReal (2 * greenFunction D x y) := by
+  have h := occupationMeasure_apply hD hx hA
+  rw [← lintegral_indicator_one hA] at h
+  change (∫⁻ y, A.indicator (fun _ => (1 : ℝ≥0∞)) y ∂occupationMeasure D
+    (GreenGeneral.isOpen_of_isSmoothBoundedOpen hD) x) = _ at h
+  rw [lintegral_occupationMeasure _ x (measurable_const.indicator hA)] at h
+  exact h
 
 end HarmonicBalls.GreenOccupation
