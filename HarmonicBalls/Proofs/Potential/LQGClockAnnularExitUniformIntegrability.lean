@@ -1574,4 +1574,53 @@ theorem exists_measurable_annular_exit_sample {Ω : Type*} [MeasurableSpace Ω] 
   · rfl
   · rfl
 
+/-- The norm of a signed stopped integral is bounded by its horizon and positive tails. -/
+theorem enorm_intervalIntegral_sub_le_horizon_add_tails (p q : ℝ → ℝ) (hp : Measurable p)
+    (hp0 : ∀ t, 0 ≤ p t) (hq0 : ∀ t, 0 ≤ q t) (T τ : ℝ)
+    (hT : 0 ≤ T) (hτ : 0 ≤ τ)
+    (hpi : IntervalIntegrable p volume 0 τ) (hqi : IntervalIntegrable q volume 0 τ) :
+    ‖∫ t in (0 : ℝ)..τ, (p t - q t)‖ₑ ≤
+      ‖∫ t in (0 : ℝ)..min T τ, (p t - q t)‖ₑ +
+      (∫⁻ t in Ioc T τ, ENNReal.ofReal (p t)) +
+      ∫⁻ t in Ioc T τ, ENNReal.ofReal (q t) := by
+  by_cases h : τ ≤ T
+  · rw [min_eq_right h]
+    exact le_trans (le_add_of_nonneg_right (show (0 : ℝ≥0∞) ≤ _ from bot_le))
+      (le_add_of_nonneg_right (show (0 : ℝ≥0∞) ≤ _ from bot_le))
+  · have hTτ : T ≤ τ := (lt_of_not_ge h).le
+    rw [min_eq_left hTτ]
+    have hi : IntervalIntegrable (fun t => p t - q t) volume 0 τ := hpi.sub hqi
+    have hi1 : IntervalIntegrable (fun t => p t - q t) volume 0 T := by
+      apply hi.mono_set
+      rw [uIcc_of_le hT, uIcc_of_le hτ]
+      exact Icc_subset_Icc le_rfl hTτ
+    have hi2 : IntervalIntegrable (fun t => p t - q t) volume T τ := by
+      apply hi.mono_set
+      rw [uIcc_of_le hTτ, uIcc_of_le hτ]
+      exact Icc_subset_Icc hT le_rfl
+    have heq := intervalIntegral.integral_add_adjacent_intervals hi1 hi2
+    rw [← heq]
+    have htail : ‖∫ t in T..τ, (p t - q t)‖ₑ ≤
+        (∫⁻ t in Ioc T τ, ENNReal.ofReal (p t)) +
+        ∫⁻ t in Ioc T τ, ENNReal.ofReal (q t) := by
+      rw [intervalIntegral.integral_of_le hTτ]
+      calc
+        _ ≤ ∫⁻ t in Ioc T τ, ‖p t - q t‖ₑ := enorm_integral_le_lintegral_enorm _
+        _ ≤ ∫⁻ t in Ioc T τ, ENNReal.ofReal (p t) + ENNReal.ofReal (q t) := by
+          apply lintegral_mono
+          intro t
+          change ‖p t - q t‖ₑ ≤ ENNReal.ofReal (p t) + ENNReal.ofReal (q t)
+          rw [Real.enorm_eq_ofReal_abs]
+          calc
+            _ ≤ ENNReal.ofReal (p t + q t) := ENNReal.ofReal_le_ofReal (by
+              calc
+                |p t - q t| ≤ |p t| + |q t| := abs_sub _ _
+                _ = p t + q t := by rw [abs_of_nonneg (hp0 t), abs_of_nonneg (hq0 t)])
+            _ = _ := ENNReal.ofReal_add (hp0 t) (hq0 t)
+        _ = _ := lintegral_add_left hp.ennreal_ofReal _
+
+    exact (enorm_add_le _ _).trans (by
+      simpa only [add_assoc, add_comm, add_left_comm] using
+        add_le_add_left htail ‖∫ t in (0 : ℝ)..T, (p t - q t)‖ₑ)
+
 end HarmonicBalls
