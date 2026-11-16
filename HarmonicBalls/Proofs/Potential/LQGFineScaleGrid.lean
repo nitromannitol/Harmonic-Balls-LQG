@@ -2,6 +2,8 @@ import LatticeProb.LQG.GMCDilatedGrid
 import LatticeProb.LQG.LQGBallMassRatioUniform
 import LatticeProb.Gauss.CircleAverageModulusUniform
 import LatticeProb.LQG.GMCRatioLimit
+import LatticeProb.LQG.GMCContinuumMaximal
+import LatticeProb.LQG.LQGOnePieceScaling
 
 /-! # Summability for fine-scale grids
 
@@ -518,5 +520,196 @@ theorem ae_fine_scale_grid_circle_comparison
   filter_upwards [hω, eventually_ge_atTop 1] with j hj hj1 n t ht1 ht2
   obtain ⟨i, hi, h1, h2, h3, h4, h5⟩ := exists_fine_scale_grid_near ha hj1 ht1 ht2
   exact ⟨i, hi, fun x hx w hw => hj n x hx w hw _ _ h1 h2 h3 h4 h5⟩
+
+open ProbabilityTheory Function Topology Metric Set
+open scoped ENNReal NNReal
+open LatticeProb LatticeProb.Gauss LatticeProb.LQG LatticeProb.LQG.GMCScaleSandwich
+  LatticeProb.LQG.GMCContinuumMaximal
+
+/-- A grid comparison in one dyadic band controls the ball mass at every
+nearby scale by the mass at that band's upper endpoint. The proof adapts
+LatticeProb.LQG.GMCContinuumMaximal.lqgApprox_ball_le_of_grid. -/
+theorem lqgApprox_ball_le_of_band_grid {γ E t s : ℝ} {n : ℕ}
+    {H : ℝ → ℂ → ℝ} (hγ : 0 < γ)
+    (hcont : ∀ r, 0 < r → Continuous (H r))
+    (hn1 : dyadicScale n / 2 ≤ t) (hn2 : t ≤ dyadicScale n)
+    (hs1 : dyadicScale n / 2 ≤ s) (hs2 : s ≤ dyadicScale n)
+    (hη : ∀ z, Gauss.ballCutoff z ≠ 0 → |H t z - H s z| ≤ 1)
+    (hgi : |∫ z, Gauss.ballCutoff z *
+      (s ^ (γ ^ 2 / 2) * rexp (γ * (H s z - H 4 0)) -
+       dyadicScale n ^ (γ ^ 2 / 2) * rexp (γ * (H (dyadicScale n) z - H 4 0)))| < E) :
+    lqgApprox γ H t (ball 0 1) ≤
+      ENNReal.ofReal (rexp (γ ^ 2 / 2 * Real.log 2 + γ)) *
+        (lqgApprox γ H (dyadicScale n) (ball 0 2) +
+          ENNReal.ofReal (rexp (γ * H 4 0) * E)) := by
+  have hdn : 0 < dyadicScale n := pow_pos (by norm_num) n
+  have ht0 : 0 < t := lt_of_lt_of_le (by positivity) hn1
+  have hs0 : 0 < s := lt_of_lt_of_le (by positivity) hs1
+  have hint : ∀ r, 0 < r →
+      Integrable (fun z => Gauss.ballCutoff z * (r ^ (γ ^ 2 / 2) * rexp (γ * (H r z - H 4 0)))) :=
+    fun r hr => (Gauss.ballCutoff_continuous.mul (continuous_const.mul (Real.continuous_exp.comp
+      (continuous_const.mul ((hcont r hr).sub continuous_const))))).integrable_of_hasCompactSupport
+      Gauss.ballCutoff_hasCompactSupport.mul_right
+  have hHc := hcont
+  have hE : 0 ≤ E := (abs_nonneg _).trans hgi.le
+  have hlog : |Real.log t - Real.log s| ≤ Real.log 2 := by
+    have h1 : Real.log t ≤ Real.log (dyadicScale n) := Real.log_le_log ht0 hn2
+    have h2 : Real.log s ≤ Real.log (dyadicScale n) := Real.log_le_log hs0 hs2
+    have h3 : Real.log (dyadicScale n / 2) ≤ Real.log t := Real.log_le_log (by positivity) hn1
+    have h4 : Real.log (dyadicScale n / 2) ≤ Real.log s := Real.log_le_log (by positivity) hs1
+    rw [Real.log_div hdn.ne' two_ne_zero] at h3 h4
+    rw [abs_le]; constructor <;> linarith
+  have hcmp := abs_integral_recentred_sub_le (μ := volume) (γ := γ) (η := 1) (H₀ := H 4 0) ht0 hs0 hη
+    (hint t ht0) (hint s hs0)
+  have habs : ∫ z, |Gauss.ballCutoff z| * (s ^ (γ ^ 2 / 2) * rexp (γ * (H s z - H 4 0))) =
+      ∫ z, Gauss.ballCutoff z * (s ^ (γ ^ 2 / 2) * rexp (γ * (H s z - H 4 0))) := by
+    congr 1; funext z; rw [abs_of_nonneg (Gauss.ballCutoff_nonneg z)]
+  rw [habs] at hcmp
+  have hsplit : (∫ z, Gauss.ballCutoff z * (s ^ (γ ^ 2 / 2) * rexp (γ * (H s z - H 4 0)))) -
+      ∫ z, Gauss.ballCutoff z * (dyadicScale n ^ (γ ^ 2 / 2) * rexp (γ * (H (dyadicScale n) z - H 4 0))) =
+      ∫ z, Gauss.ballCutoff z * (s ^ (γ ^ 2 / 2) * rexp (γ * (H s z - H 4 0)) -
+        dyadicScale n ^ (γ ^ 2 / 2) * rexp (γ * (H (dyadicScale n) z - H 4 0))) := by
+    rw [← integral_sub (hint s hs0) (hint _ hdn)]
+    congr 1; funext z; ring
+  rw [← hsplit] at hgi
+  set It := ∫ z, Gauss.ballCutoff z * (t ^ (γ ^ 2 / 2) * rexp (γ * (H t z - H 4 0))) with hIt
+  set Is := ∫ z, Gauss.ballCutoff z * (s ^ (γ ^ 2 / 2) * rexp (γ * (H s z - H 4 0))) with hIs
+  set Id := ∫ z, Gauss.ballCutoff z * (dyadicScale n ^ (γ ^ 2 / 2) *
+    rexp (γ * (H (dyadicScale n) z - H 4 0))) with hId
+  have hIs0 : 0 ≤ Is := integral_nonneg fun z => mul_nonneg (Gauss.ballCutoff_nonneg z) (by positivity)
+  have hId0 : 0 ≤ Id := integral_nonneg fun z => mul_nonneg (Gauss.ballCutoff_nonneg z) (by positivity)
+  have hexp : rexp (γ ^ 2 / 2 * |Real.log t - Real.log s| + |γ| * 1) ≤
+      rexp (γ ^ 2 / 2 * Real.log 2 + γ) := by
+    rw [abs_of_pos hγ, mul_one]
+    have := mul_le_mul_of_nonneg_left hlog (by positivity : (0 : ℝ) ≤ γ ^ 2 / 2)
+    exact Real.exp_le_exp.mpr (by linarith)
+  have hc0 := Real.exp_pos (γ ^ 2 / 2 * Real.log 2 + γ)
+  have hIt_le : It ≤ rexp (γ ^ 2 / 2 * Real.log 2 + γ) * Is := by
+    have h1 := (abs_le.mp hcmp).2
+    have h2 := mul_le_mul_of_nonneg_right hexp hIs0
+    linarith
+  have hIs_le : Is ≤ Id + E := by linarith [(abs_lt.mp hgi).2]
+  have hball := Gauss.lqgApprox_ball_le (γ := γ) (h := H) 4 ht0 (hHc t ht0)
+  have hd2 := ofReal_exp_mul_integral_ballCutoff_le (γ := γ) (H := H) 4 hdn (hHc _ hdn)
+  refine hball.trans ?_
+  have he0 := Real.exp_pos (γ * H 4 0)
+  have hreal : rexp (γ * H 4 0) * It ≤
+      rexp (γ ^ 2 / 2 * Real.log 2 + γ) * (rexp (γ * H 4 0) * Id + rexp (γ * H 4 0) * E) := by
+    calc rexp (γ * H 4 0) * It ≤ rexp (γ * H 4 0) * (rexp (γ ^ 2 / 2 * Real.log 2 + γ) * (Id + E)) :=
+          mul_le_mul_of_nonneg_left (hIt_le.trans (mul_le_mul_of_nonneg_left hIs_le hc0.le)) he0.le
+      _ = rexp (γ ^ 2 / 2 * Real.log 2 + γ) * (rexp (γ * H 4 0) * Id + rexp (γ * H 4 0) * E) := by ring
+  refine (ENNReal.ofReal_le_ofReal hreal).trans ?_
+  rw [ENNReal.ofReal_mul hc0.le, ENNReal.ofReal_add (mul_nonneg he0.le hId0) (mul_nonneg he0.le hE)]
+  gcongr
+
+
+/-- At sufficiently fine scales, the mass in each grid cell is controlled by
+the mass at the upper endpoint of the same radial band and a recentred error.
+The estimate is simultaneous over all cells and all radii in those bands. -/
+theorem ae_fine_scale_affine_ball_le_band
+    {γ R : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :
+    ∃ m : ℕ, ∃ S : ℕ → Finset ℂ,
+      (∀ j x, x ∈ S j → ‖x‖ ≤ R + 1) ∧
+      (∀ j z, z ∈ Metric.ball (0 : ℂ) R →
+        ∃ x ∈ S j, dist z x < dyadicScale j) ∧
+      ∀ {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+        (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+        LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc →
+        ∀ᵐ ω ∂P, ∀ᶠ j in atTop, ∀ n, m * j ≤ n → ∀ x ∈ S j,
+          ∀ t, dyadicScale n / 2 ≤ t → t ≤ dyadicScale n →
+            lqgApprox γ (affineRecentredCircle (hcirc ω) (dyadicScale j) x) t (ball 0 1) ≤
+              ENNReal.ofReal (rexp (γ ^ 2 / 2 * Real.log 2 + γ)) *
+                (lqgApprox γ (affineRecentredCircle (hcirc ω) (dyadicScale j) x)
+                    (dyadicScale n) (ball 0 2) +
+                  ENNReal.ofReal (rexp (γ *
+                    affineRecentredCircle (hcirc ω) (dyadicScale j) x 4 0))) := by
+  have hg : ∀ z, Gauss.ballCutoff z ≠ 0 → ‖z‖ + 1 ≤ (4 : ℝ) := by
+    intro z hz
+    have hz2 : ‖z‖ < 2 := by
+      by_contra h
+      exact hz (Gauss.ballCutoff_eq_zero (not_lt.mp h))
+    linarith
+  obtain ⟨K, c, hK, hc, hinc⟩ :=
+    ae_fine_scale_affine_gff_increment_on_ball_grid hγ hγ2
+      Gauss.ballCutoff_continuous Gauss.ballCutoff_hasCompactSupport (by norm_num : (0 : ℝ) < 4) hg
+  obtain ⟨a, q, ha, hq, hq1, hdec⟩ := exists_fine_scale_grid_rate hc
+  obtain ⟨m, S, hcard, hbound, hcover, hgrid⟩ := hinc a q R ha.le hR hq hq1 hdec
+  refine ⟨m, S, hbound, hcover, ?_⟩
+  intro Ω _ P hC hcirc hh
+  filter_upwards [hgrid P hC hcirc hh, ae_fine_scale_grid_circle_comparison hh ha R,
+    hh.ae_continuousOn_circle] with ω hgridω hmodω hcontω
+  filter_upwards [hgridω, hmodω] with j hj hmj n hn x hx t ht1 ht2
+  obtain ⟨i, hi, hmod⟩ := hmj n t ht1 ht2
+  have hs := gridScale_mem_Icc (fun k => gridCount a (k + j)) hi
+  have hη : ∀ z, Gauss.ballCutoff z ≠ 0 →
+      |affineRecentredCircle (hcirc ω) (dyadicScale j) x t z -
+        affineRecentredCircle (hcirc ω) (dyadicScale j) x
+          (gridScale (fun k => gridCount a (k + j)) n i) z| ≤ 1 := by
+    intro z hz
+    have hz2 : ‖z‖ ≤ 2 := by
+      by_contra h
+      exact hz (Gauss.ballCutoff_eq_zero (not_le.mp h).le)
+    exact hmod x (hbound j x hx) z hz2
+  have hcont : ∀ r, 0 < r →
+      Continuous (affineRecentredCircle (hcirc ω) (dyadicScale j) x r) := by
+    intro r hr
+    have hd : 0 < dyadicScale j := pow_pos (by norm_num) j
+    have hslice := LatticeProb.LQG.GMCRatioLimit.continuous_slice hcontω (mul_pos hd hr)
+    exact (hslice.comp ((continuous_const.mul continuous_id).add continuous_const)).sub continuous_const
+  have h := lqgApprox_ball_le_of_band_grid hγ hcont ht1 ht2 hs.1 hs.2 hη (hj n hn x hx i hi)
+  simpa only [mul_one] using h
+
+
+/-- The affine band comparison, expressed for the original field and balls
+at the spatial grid scale. -/
+theorem ae_fine_scale_ball_le_band
+    {γ R : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :
+    ∃ m : ℕ, ∃ S : ℕ → Finset ℂ,
+      (∀ j x, x ∈ S j → ‖x‖ ≤ R + 1) ∧
+      (∀ j z, z ∈ Metric.ball (0 : ℂ) R →
+        ∃ x ∈ S j, dist z x < dyadicScale j) ∧
+      ∀ {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+        (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+        LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc →
+        ∀ᵐ ω ∂P, ∀ᶠ j in atTop, ∀ n, m * j ≤ n → ∀ x ∈ S j,
+          ∀ t, dyadicScale n / 2 ≤ t → t ≤ dyadicScale n →
+            lqgApprox γ (hcirc ω) (dyadicScale j * t) (ball x (dyadicScale j)) ≤
+              ENNReal.ofReal (rexp (γ ^ 2 / 2 * Real.log 2 + γ)) *
+                (lqgApprox γ (hcirc ω) (dyadicScale j * dyadicScale n)
+                    (ball x (dyadicScale j * 2)) +
+                  LQGDyadicScaling.dyadicFactor γ j (hcirc ω (dyadicScale j) x) *
+                    ENNReal.ofReal (rexp (γ *
+                      affineRecentredCircle (hcirc ω) (dyadicScale j) x 4 0))) := by
+  obtain ⟨m, S, hb, hc, h⟩ := ae_fine_scale_affine_ball_le_band hγ hγ2 hR
+  refine ⟨m, S, hb, hc, ?_⟩
+  intro Ω _ P hC hcirc hh
+  filter_upwards [h P hC hcirc hh] with ω hω
+  filter_upwards [hω] with j hj n hn x hx t ht1 ht2
+  have ht : 0 ≤ t := le_trans (div_nonneg (show 0 ≤ dyadicScale n from (pow_pos (by norm_num) n).le) (by norm_num)) ht1
+  have hd : 0 ≤ dyadicScale n := (show 0 < dyadicScale n from pow_pos (by norm_num) n).le
+  have hscale := lqgApprox_ball_dyadic hγ.ne' (hcirc ω) j x ht 1
+  have hscale' := lqgApprox_ball_dyadic hγ.ne' (hcirc ω) j x hd 2
+  simp only [mul_one] at hscale
+  change lqgApprox γ (hcirc ω) (dyadicScale j * t) (ball x (dyadicScale j)) =
+    LQGDyadicScaling.dyadicFactor γ j (hcirc ω (dyadicScale j) x) *
+      lqgApprox γ (affineRecentredCircle (hcirc ω) (dyadicScale j) x) t (ball 0 1) at hscale
+  change lqgApprox γ (hcirc ω) (dyadicScale j * dyadicScale n) (ball x (dyadicScale j * 2)) =
+    LQGDyadicScaling.dyadicFactor γ j (hcirc ω (dyadicScale j) x) *
+      lqgApprox γ (affineRecentredCircle (hcirc ω) (dyadicScale j) x) (dyadicScale n) (ball 0 2) at hscale'
+  rw [hscale]
+  calc
+    _ ≤ LQGDyadicScaling.dyadicFactor γ j (hcirc ω (dyadicScale j) x) *
+        (ENNReal.ofReal (rexp (γ ^ 2 / 2 * Real.log 2 + γ)) *
+          (lqgApprox γ (affineRecentredCircle (hcirc ω) (dyadicScale j) x)
+            (dyadicScale n) (ball 0 2) +
+           ENNReal.ofReal (rexp (γ * affineRecentredCircle (hcirc ω) (dyadicScale j) x 4 0)))) :=
+      mul_le_mul_right (hj n hn x hx t ht1 ht2) _
+    _ = ENNReal.ofReal (rexp (γ ^ 2 / 2 * Real.log 2 + γ)) *
+        (lqgApprox γ (hcirc ω) (dyadicScale j * dyadicScale n) (ball x (dyadicScale j * 2)) +
+          LQGDyadicScaling.dyadicFactor γ j (hcirc ω (dyadicScale j) x) *
+            ENNReal.ofReal (rexp (γ * affineRecentredCircle (hcirc ω) (dyadicScale j) x 4 0))) := by
+      rw [hscale']
+      simp only [mul_add]
+      ac_rfl
 
 end HarmonicBalls
