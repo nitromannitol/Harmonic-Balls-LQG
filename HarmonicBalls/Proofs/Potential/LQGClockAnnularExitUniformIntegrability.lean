@@ -181,4 +181,49 @@ theorem exists_planarBrownianMotion_exitTime_exponential_moment {D : Set ℂ} (h
     exists_uniform_planarBrownianMotion_exitTime_exponential_moment hD hDb
   exact ⟨lam, hlam, fun x => (hbound x).trans_lt hC⟩
 
+private theorem real_excess_le_exp (lam t T : ℝ) (hlam : 0 < lam) :
+    max (t - T) 0 ≤ (lam⁻¹ * Real.exp (-lam * T)) * Real.exp (lam * t) := by
+  have hle : lam * (t - T) ≤ Real.exp (lam * (t - T)) := by
+    linarith [Real.add_one_le_exp (lam * (t - T))]
+  have heq : Real.exp (lam * (t - T)) = Real.exp (-lam * T) * Real.exp (lam * t) := by
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  rw [heq] at hle
+  apply max_le
+  · have h : t - T ≤ (Real.exp (-lam * T) * Real.exp (lam * t)) / lam :=
+      (le_div_iff₀ hlam).2 (by simpa [mul_comm] using hle)
+    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using h
+  · positivity
+
+/-- Expected exit-time excess decays exponentially, uniformly over starting points. -/
+theorem exists_uniform_planarBrownianMotion_exitTime_excess_le_exp {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ lam : ℝ, 0 < lam ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧ ∀ x : ℂ, ∀ T : ℝ, 0 ≤ T →
+      (∫⁻ b, ContinuousPath.exitTime D b - ENNReal.ofReal T ∂planarBrownianMotion x) ≤
+        ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * T)) * C := by
+  obtain ⟨lam, hlam, C, hC, hbound⟩ :=
+    exists_uniform_planarBrownianMotion_exitTime_exponential_moment hD hDb
+  refine ⟨lam, hlam, C, hC, ?_⟩
+  intro x T hT
+  have ht := ContinuousPath.ae_lt_top_of_lintegral_exponentialStoppingWeight_ne_top lam
+    (ContinuousPath.measurable_exitTime D hD) ((hbound x).trans_lt hC).ne
+  calc
+    (∫⁻ b, ContinuousPath.exitTime D b - ENNReal.ofReal T ∂planarBrownianMotion x) ≤
+        ∫⁻ b, ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * T)) *
+          ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
+          ∂planarBrownianMotion x := by
+      apply lintegral_mono_ae
+      filter_upwards [ht] with b hb
+      rw [ContinuousPath.exponentialStoppingWeight_of_ne_top lam _ hb.ne,
+        ← ENNReal.ofReal_mul (by positivity)]
+      nth_rewrite 1 [← ENNReal.ofReal_toReal hb.ne]
+      rw [← ENNReal.ofReal_sub _ hT]
+      exact ENNReal.ofReal_le_ofReal ((max_le_iff.mp (real_excess_le_exp lam
+        (ContinuousPath.exitTime D b).toReal T hlam)).1)
+    _ = ENNReal.ofReal (lam⁻¹ * Real.exp (-lam * T)) *
+        (∫⁻ b, ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
+          ∂planarBrownianMotion x) := by
+      rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+    _ ≤ _ := by gcongr; exact hbound x
+
 end HarmonicBalls
