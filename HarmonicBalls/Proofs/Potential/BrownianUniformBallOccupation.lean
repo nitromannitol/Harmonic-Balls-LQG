@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.BrownianPairOccupationBound
 import HarmonicBalls.Proofs.Sec6.PlanarIncrementBlocks
+import Mathlib.Data.Fin.Tuple.Sort
 
 /-! # Uniform-centre Brownian increment estimates
 
@@ -220,4 +221,35 @@ theorem measurable_ball_occupation (z : ℂ) (r : ℝ)
     apply isOpen_lt _ continuous_const |>.measurableSet
     fun_prop
   exact measurable_measure_prodMk_left (ν := ν) hE
+/-- Joint visits at distinct times are bounded by the sum over all time orders. -/
+theorem planarBrownianMotion_joint_ball_le_sum_permutations (x z : ℂ) {n : ℕ} (t : Fin (n + 1) → ℝ≥0)
+    (ht : Function.Injective t) {r q : ℝ} (hr : 0 < r) (hq0 : 0 < q) (hq1 : q < 1) :
+    planarBrownianMotion x {b | ∀ i, ‖b (t i) - z‖ < r} ≤
+      ∑ σ : Equiv.Perm (Fin (n + 1)), ∏ i : Fin n,
+        ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q) *
+          |(t (σ i.succ) : ℝ) - (t (σ i.castSucc) : ℝ)| ^ (-q)) := by
+  classical
+  let σ := Tuple.sort t
+  have hmono : StrictMono (t ∘ σ) :=
+    (Tuple.monotone_sort t).strictMono_of_injective (ht.comp σ.injective)
+  have h := planarBrownianMotion_joint_ball_le x z (t ∘ σ) hmono hr hq0 hq1
+  have hsets : {b : ContinuousPath ℂ | ∀ i, ‖b (t (σ i)) - z‖ < r} =
+      {b : ContinuousPath ℂ | ∀ i, ‖b (t i) - z‖ < r} := by
+    ext b
+    simp only [mem_ofPred_eq]
+    exact (σ.surjective.forall (p := fun i => ‖b (t i) - z‖ < r)).symm
+  change planarBrownianMotion x {b | ∀ i, ‖b (t (σ i)) - z‖ < r} ≤ _ at h
+  rw [hsets] at h
+  have hs : (∏ i : Fin n, ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q) *
+      |(t (σ i.succ) : ℝ) - (t (σ i.castSucc) : ℝ)| ^ (-q))) ≤
+      ∑ τ : Equiv.Perm (Fin (n + 1)), ∏ i : Fin n,
+        ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q) *
+          |(t (τ i.succ) : ℝ) - (t (τ i.castSucc) : ℝ)| ^ (-q)) := by
+    apply Finset.single_le_sum (f := fun τ : Equiv.Perm (Fin (n + 1)) =>
+      ∏ i : Fin n, ENNReal.ofReal ((2 / Real.pi) ^ q * (2 * r) ^ (2 * q) *
+        |(t (τ i.succ) : ℝ) - (t (τ i.castSucc) : ℝ)| ^ (-q)))
+    · intro τ hτ
+      exact bot_le
+    · exact Finset.mem_univ σ
+  exact h.trans (by simpa only [Function.comp_apply] using hs)
 end HarmonicBalls
