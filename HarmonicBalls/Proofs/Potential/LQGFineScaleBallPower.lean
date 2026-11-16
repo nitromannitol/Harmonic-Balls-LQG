@@ -114,4 +114,3 @@ theorem exists_bounded_half_mesh_grids (R : ℝ) (hR : 0 < R) :
     simpa [LatticeProb.LQG.dyadicScale_succ_eq_half] using hdist
 
 end HarmonicBalls
-

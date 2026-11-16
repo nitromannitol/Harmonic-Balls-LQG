@@ -136,7 +136,7 @@ theorem IsWholePlaneGFF.ae_compact_dyadic_circle_le
   obtain ⟨N, hN⟩ := eventually_atTop.1 ht
   have hR : R ≤ (LatticeProb.LQG.dyadicScale N)⁻¹ / 8 := by
     have hp := hN N le_rfl
-    simp only [LatticeProb.LQG.dyadicScale, inv_pow, inv_inv] 
+    simp only [LatticeProb.LQG.dyadicScale, inv_pow, inv_inv]
     linarith
   obtain ⟨C, hC, hbound⟩ := hω N
   exact ⟨C, hC, fun k z hz => hbound k z (hz.trans hR)⟩
@@ -221,4 +221,3 @@ theorem IsWholePlaneGFF.ae_compact_affine_circle_error_positive_power
   exact ⟨C, 2 + γ ^ 2 / 2 - γ * (2 + δ), hC, hκ, hbound⟩
 
 end HarmonicBalls
-

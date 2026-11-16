@@ -405,4 +405,3 @@ theorem IsWholePlaneGFF.ae_fine_smoothing_small_ball_power
       ring
 
 end HarmonicBalls
-
