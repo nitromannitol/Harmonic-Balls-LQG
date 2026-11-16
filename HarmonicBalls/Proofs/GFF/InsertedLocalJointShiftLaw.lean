@@ -1,6 +1,12 @@
 import HarmonicBalls.Proofs.Sec11.ShiftedNormalizedMeasureDecoder
 import HarmonicBalls.FirstPass.Phase2.SquarePositiveHolds
 import HarmonicBalls.FirstPass.S11j.PositiveWeylInverse
+import HarmonicBalls.Steps.Sec11.WeylLocalComposition
+import HarmonicBalls.Proofs.Sec11.SingularCutoffWeylComparison
+import HarmonicBalls.Steps.Sec11.InternalMetricExhaustion
+import HarmonicBalls.Proofs.Sec11.ExhaustionDecoder
+import HarmonicBalls.Proofs.Sec11.SingularWeylExhaustion
+import HarmonicBalls.Proofs.Sec11.JointPuncturedSingularShift
 
 /-! # Local field and normalized measure under smooth shifts
 
@@ -177,5 +183,442 @@ theorem IsEuclideanLengthMetric.inverse_weylScaling_compact
   rw [heq, hE.weylScaling_const_mul (Real.exp_pos _), hneg,
     weylScaling_add_const, ← mul_assoc, hone, one_mul]
   exact hinv
+
+/-- Two Weyl-scaled length metrics that agree locally remain locally equal
+    in internal distance after a continuous compactly supported shift. -/
+theorem IsEuclideanLengthMetric.internalMetric_weylScaling_twice_eq_of_eqOn_compact
+    {D E F : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    (hE : IsEuclideanLengthMetric E) (hF : IsEuclideanLengthMetric F)
+    {ξ : ℝ} (hξ : 0 ≤ ξ) (f g k : ℂ → ℝ)
+    (hk : Continuous k) (hc : HasCompactSupport k)
+    (hEscale : ∀ x y, ENNReal.ofReal (E x y) = weylScaling D ξ f x y)
+    (hFscale : ∀ x y, ENNReal.ofReal (F x y) = weylScaling D ξ g x y)
+    {U : Set ℂ} (hU : IsOpen U) (hfg : ∀ z ∈ U, f z = g z) (x y : ℂ) :
+    internalMetric (fun a b => (weylScaling E ξ k a b).toReal) U x y =
+      internalMetric (fun a b => (weylScaling F ξ k a b).toReal) U x y := by
+  obtain ⟨m, hm⟩ := exists_lower_bound_of_continuous_compactSupport k hk hc
+  obtain ⟨c, hc'⟩ := exists_lower_bound_of_continuous_compactSupport (fun z => -k z) hk.neg hc.neg
+  let M := -c
+  let j : ℂ → ℝ := fun z => k z - M
+  have hjlo : ∀ z, m - M ≤ j z := fun z => by dsimp [j]; linarith [hm z]
+  have hjhi : ∀ z, j z ≤ 0 := fun z => by dsimp [j, M]; linarith [hc' z]
+  have hj : Continuous j := hk.sub continuous_const
+  have hlength (B : ℂ → ℂ → ℝ) (hB : IsEuclideanLengthMetric B) :
+      IsEuclideanLengthMetric (fun a b => (weylScaling B ξ j a b).toReal) := by
+    have hzero := hB.weylScaling_zero ξ
+    obtain ⟨hdiag, hsep, htop⟩ := hB.weylScaling_negative_bump_topology hξ j hjlo hjhi hzero
+    have hfin : ∀ u v, weylScaling B ξ j u v ≠ ⊤ :=
+      fun u v => (weylScaling_negative_bump_real_bounds hB hξ j hjlo hjhi hzero u v).1.ne
+    have hsymm : ∀ u v, (weylScaling B ξ j u v).toReal =
+        (weylScaling B ξ j v u).toReal :=
+      fun u v => congrArg ENNReal.toReal (hB.weylScaling_symm ξ j u v)
+    exact ⟨hdiag, hsep, hsymm, hB.weylScaling_toReal_triangle ξ j hfin, htop,
+      hB.weylScaling_internalMetric ξ j (fun u v => ENNReal.ofReal_toReal (hfin u v)) hsymm⟩
+  have heq (B : ℂ → ℂ → ℝ) :
+      (fun a b => (weylScaling B ξ k a b).toReal) =
+        fun a b => Real.exp (ξ * M) * (weylScaling B ξ j a b).toReal := by
+    funext a b
+    rw [weylScaling_eq_exp_mul_of_shift B ξ M k j (fun z => by dsimp [j]; ring),
+      ENNReal.toReal_mul, ENNReal.toReal_ofReal (Real.exp_pos _).le]
+  have hlocal := hD.internalMetric_weylScaling_twice_eq_of_eqOn hE hF hξ f g j hj
+    hjlo hjhi hEscale hFscale (hlength E hE) (hlength F hF) hU hfg x y
+  rw [heq E, heq F, internalMetric_const_mul _ (Real.exp_pos _) U,
+    internalMetric_const_mul _ (Real.exp_pos _) U, hlocal]
+
+/-- Away from the insertion, compact smooth shifts of the singular metric
+    agree on internal distances with the corresponding shifted cutoff metric. -/
+theorem IsWholePlaneGFF.ae_internal_singularMetric_weylShift_eq_cutoff_compact
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, ENNReal.ofReal (D ω u v) =
+      weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (g : ℂ → ℝ) (hg : Continuous g) (hc : HasCompactSupport g) (hξ : 0 ≤ ξ)
+    {r : ℝ} (hr : 0 < r) (U : ℕ → Set ℂ) (hU : ∀ n, IsOpen (U n))
+    (haway : ∀ n z, z ∈ U n → r ≤ ‖z‖) :
+    let f : ℂ → ℝ := fun z => -α * Real.log (max ‖z‖ r)
+    ∀ᵐ ω ∂P, ∀ n x y,
+      internalMetric (fun a b => (weylScaling (D ω) ξ g a b).toReal) (U n) x y =
+      internalMetric (fun a b =>
+        (weylScaling (𝔇 (hC ω)) ξ (fun z => g z + f z) a b).toReal) (U n) x y := by
+  let f : ℂ → ℝ := fun z => -α * Real.log (max ‖z‖ r)
+  have hf : Continuous f := by
+    apply continuous_const.mul
+    apply (continuous_norm.max continuous_const).log
+    intro z
+    exact ne_of_gt (lt_of_lt_of_le hr (le_max_right _ _))
+  have hbase := ae_wholePlane_weylScaling_shift P γ ξ hC hcirc 𝔇 h𝔇 h
+    (fun _ => f) (fun _ => hf) (fun _ => measurable_const)
+  have hsum := ae_wholePlane_weylScaling_shift P γ ξ hC hcirc 𝔇 h𝔇 h
+    (fun _ z => g z + f z) (fun _ => hg.add hf) (fun _ => measurable_const)
+  have hshift := (h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc (fun _ => f) h
+    (fun _ => hf) (fun _ => measurable_const)).ae_weylScaling
+  filter_upwards [hD, hmetric, hbase, hsum, hshift] with ω hd hm hb hs hw n x y
+  have hcomp : (fun a b => (weylScaling (𝔇 (addFunPairing (hC ω) f)) ξ g a b).toReal) =
+      𝔇 (addFunPairing (hC ω) (fun z => g z + f z)) := by
+    funext a b
+    have hn : 0 ≤ 𝔇 (addFunPairing (hC ω) (fun z => g z + f z)) a b := by
+      have ht := hs.2.1.triangle a b a
+      rw [hs.2.1.self_eq_zero, hs.2.1.symm b a] at ht
+      linarith
+    have hw' := hw g hg a b
+    rw [h𝔇.addFunPairing_addFunPairing (hC ω) hf hg] at hw'
+    have hcomm : (fun z => f z + g z) = (fun z => g z + f z) := by
+      funext z
+      exact add_comm _ _
+    rw [hcomm] at hw'
+    rw [← hw', ENNReal.toReal_ofReal hn]
+  have hsumcomp : (fun a b =>
+      (weylScaling (𝔇 (hC ω)) ξ (fun z => g z + f z) a b).toReal) =
+      𝔇 (addFunPairing (hC ω) (fun z => g z + f z)) := by
+    funext a b
+    have hn : 0 ≤ 𝔇 (addFunPairing (hC ω) (fun z => g z + f z)) a b := by
+      have ht := hs.2.1.triangle a b a
+      rw [hs.2.1.self_eq_zero, hs.2.1.symm b a] at ht
+      linarith
+    rw [← hs.2.2.2.1 a b, ENNReal.toReal_ofReal hn]
+  have heq := hb.1.internalMetric_weylScaling_twice_eq_of_eqOn_compact hm hb.2.1 hξ
+    (fun z => -α * Real.log ‖z‖) f g hg hc hd hb.2.2.2.1
+    (hU n) (fun z hz => by simp only [f, max_eq_left (haway n z hz)]) x y
+  rw [hcomp] at heq
+  rwa [hsumcomp]
+
+/-- A countable open exhaustion identifies the shifted singular internal
+    metric with the infimum of its shifted cutoff internal metrics. -/
+theorem IsWholePlaneGFF.ae_internal_singularMetric_weylShift_eq_iInf_cutoff_compact
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, ENNReal.ofReal (D ω u v) =
+      weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (g : ℂ → ℝ) (hg : Continuous g) (hc : HasCompactSupport g) (hξ : 0 ≤ ξ)
+    (r : ℕ → ℕ → ℝ) (hr : ∀ n m, 0 < r n m) (U : ℕ → ℕ → Set ℂ)
+    (hU : ∀ n m, IsOpen (U n m)) (hmono : ∀ n, Monotone (U n))
+    (haway : ∀ n m z, z ∈ U n m → r n m ≤ ‖z‖) :
+    ∀ᵐ ω ∂P, ∀ n x y,
+      internalMetric (fun a b => (weylScaling (D ω) ξ g a b).toReal)
+          (⋃ m, U n m) x y =
+      ⨅ m, internalMetric (fun a b =>
+        (weylScaling (𝔇 (hC ω)) ξ
+          (fun z => g z + -α * Real.log (max ‖z‖ (r n m))) a b).toReal) (U n m) x y := by
+  have heach : ∀ n m, ∀ᵐ ω ∂P, ∀ x y,
+      internalMetric (fun a b => (weylScaling (D ω) ξ g a b).toReal) (U n m) x y =
+        internalMetric (fun a b => (weylScaling (𝔇 (hC ω)) ξ
+          (fun z => g z + -α * Real.log (max ‖z‖ (r n m))) a b).toReal) (U n m) x y := by
+    intro n m
+    have ht := h.ae_internal_singularMetric_weylShift_eq_cutoff_compact 𝔇 h𝔇 hD hmetric
+      g hg hc hξ (hr n m) (fun _ => U n m) (fun _ => hU n m)
+      (fun _ z hz => haway n m z hz)
+    filter_upwards [ht] with ω hω x y
+    exact hω 0 x y
+  have hall : ∀ᵐ ω ∂P, ∀ n m x y,
+      internalMetric (fun a b => (weylScaling (D ω) ξ g a b).toReal) (U n m) x y =
+        internalMetric (fun a b => (weylScaling (𝔇 (hC ω)) ξ
+          (fun z => g z + -α * Real.log (max ‖z‖ (r n m))) a b).toReal) (U n m) x y :=
+    ae_all_iff.mpr fun n => ae_all_iff.mpr (heach n)
+  filter_upwards [hall] with ω hω n x y
+  rw [internalMetric_iUnion_of_monotone_isOpen _ (U n) (hU n) (hmono n)]
+  exact iInf_congr fun m => hω n m x y
+
+/-- A single decoder identifies countably many singular internal distances on
+    an open exhaustion after each continuous compactly supported shift. -/
+theorem IsWholePlaneGFF.exists_exhausted_singularMetric_compactShift_decoder
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ x, ψ x = 1)
+    (f₀ : ℂ → ℝ) (hf₀ : Continuous f₀)
+    (r : ℕ → ℕ → ℝ) (hr : ∀ n m, 0 < r n m)
+    (U : ℕ → ℕ → Set ℂ) (hU : ∀ n m, IsOpen (U n m))
+    (hmono : ∀ n, Monotone (U n))
+    (haway : ∀ n m z, z ∈ U n m → r n m ≤ ‖z‖)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n m, (p n).1 ∈ U n m) (hξ : 0 ≤ ξ) :
+    ∃ F : (LocalZeroMeanTest univ → ℝ) → ℕ → ℝ≥0∞, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ n, F (localModConstPairings 0 hC univ ω) n =
+        ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, f₀ z * ψ z)))) *
+          internalMetric (D ω) (⋃ m, U n m) (p n).1 (p n).2) ∧
+      ∀ g : ℂ → ℝ, Continuous g → HasCompactSupport g →
+        ∀ᵐ ω ∂P, ∀ n, F (localModConstPairings 0
+          (fun ω => addFunPairing (hC ω) g) univ ω) n =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, (g z + f₀ z) * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              (⋃ m, U n m) (p n).1 (p n).2 := by
+  let f : ℕ → ℕ → ℂ → ℝ := fun n m z => -α * Real.log (max ‖z‖ (r n m))
+  have hf (n m : ℕ) : Continuous (f n m) := by
+    apply continuous_const.mul
+    apply (continuous_norm.max continuous_const).log
+    intro z
+    exact ne_of_gt (lt_of_lt_of_le (hr n m) (le_max_right _ _))
+  have hex (n m : ℕ) := h.exists_internal_singularMetric_cutoff_shift_decoder
+    𝔇 h𝔇 hD hmetric ψ hψ hψint (hr n m) (fun _ => U n m)
+    (fun _ => hU n m) (fun _ z hz => haway n m z hz) (fun _ => p n) (fun _ => hp n m)
+  choose A hA hAbase hAshift using hex
+  let a : ℕ → ℕ → ℝ≥0∞ := fun n m => ENNReal.ofReal
+    (Real.exp (ξ * ((∫ z, f n m z * ψ z) - ∫ z, f₀ z * ψ z)))
+  let F : (LocalZeroMeanTest univ → ℝ) → ℕ → ℝ≥0∞ :=
+    fun v n => ⨅ m, a n m * A n m v 0
+  have hF : Measurable F := by
+    apply measurable_pi_iff.mpr
+    intro n
+    apply Measurable.iInf
+    intro m
+    exact measurable_const.mul ((measurable_pi_apply 0).comp (hA n m))
+  refine ⟨F, hF, ?_, ?_⟩
+  · have hall : ∀ᵐ ω ∂P, ∀ n m,
+        A n m (localModConstPairings 0 hC univ ω) 0 =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, f n m z * ψ z)))) *
+            internalMetric (D ω) (U n m) (p n).1 (p n).2 := by
+      apply (ae_all_iff).2
+      intro n
+      apply (ae_all_iff).2
+      intro m
+      filter_upwards [hAbase n m] with ω hω
+      exact hω 0
+    filter_upwards [hall] with ω hω n
+    change (⨅ m, a n m * A n m (localModConstPairings 0 hC univ ω) 0) = _
+    have hn (m : ℕ) : a n m * ENNReal.ofReal
+        (Real.exp (ξ * (-(hC ω ψ + ∫ z, f n m z * ψ z)))) =
+        ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, f₀ z * ψ z)))) := by
+      simpa only [a, zero_add] using cutoff_normalization_factor_pairing ξ (hC ω ψ)
+        ψ (fun _ => 0) f₀ (f n m) hψ continuous_const hf₀ (hf n m)
+    calc
+      (⨅ m, a n m * A n m (localModConstPairings 0 hC univ ω) 0) =
+          ⨅ m, ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, f₀ z * ψ z)))) *
+            internalMetric (D ω) (U n m) (p n).1 (p n).2 := by
+        apply iInf_congr
+        intro m
+        rw [hω n m, ← mul_assoc, hn m]
+      _ = ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, f₀ z * ψ z)))) *
+          internalMetric (D ω) (⋃ m, U n m) (p n).1 (p n).2 := by
+        rw [internalMetric_iUnion_of_monotone_isOpen _ (U n) (hU n) (hmono n),
+          ENNReal.mul_iInf (fun ht _ => (ENNReal.ofReal_ne_top ht).elim)]
+  · intro g hg hgc
+    have hall : ∀ᵐ ω ∂P, ∀ n m,
+        A n m (localModConstPairings 0 (fun ω => addFunPairing (hC ω) g) univ ω) 0 =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, (g z + f n m z) * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (𝔇 (hC ω)) ξ
+              (fun z => g z + f n m z) x y).toReal) (U n m) (p n).1 (p n).2 := by
+      apply (ae_all_iff).2
+      intro n
+      apply (ae_all_iff).2
+      intro m
+      filter_upwards [hAshift n m g hg] with ω hω
+      exact hω 0
+    have hrepr : ∀ᵐ ω ∂P, ∀ x y, ENNReal.ofReal (D ω x y) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) x y := by
+      filter_upwards [hD] with ω hω x y
+      exact (hω x y).2
+    have hcomp : ∀ᵐ ω ∂P, ∀ n x y,
+        internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+          (⋃ m, U n m) x y =
+        ⨅ m, internalMetric (fun x y => (weylScaling (𝔇 (hC ω)) ξ
+          (fun z => g z + f n m z) x y).toReal) (U n m) x y := by
+      exact h.ae_internal_singularMetric_weylShift_eq_iInf_cutoff_compact 𝔇 h𝔇 hrepr hmetric
+        g hg hgc hξ r hr U hU hmono haway
+    filter_upwards [hall, hcomp] with ω hω hωcomp n
+    change (⨅ m, a n m * A n m
+      (localModConstPairings 0 (fun ω => addFunPairing (hC ω) g) univ ω) 0) = _
+    calc
+      (⨅ m, a n m * A n m
+          (localModConstPairings 0 (fun ω => addFunPairing (hC ω) g) univ ω) 0) =
+          ⨅ m, ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, (g z + f₀ z) * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (𝔇 (hC ω)) ξ
+              (fun z => g z + f n m z) x y).toReal) (U n m) (p n).1 (p n).2 := by
+        apply iInf_congr
+        intro m
+        rw [hω n m, ← mul_assoc]
+        rw [show a n m * ENNReal.ofReal
+          (Real.exp (ξ * (-(hC ω ψ + ∫ z, (g z + f n m z) * ψ z)))) = _ from
+            cutoff_normalization_factor_pairing ξ (hC ω ψ) ψ g f₀ (f n m) hψ hg hf₀ (hf n m)]
+      _ = ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, (g z + f₀ z) * ψ z)))) *
+          internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+            (⋃ m, U n m) (p n).1 (p n).2 := by
+        rw [hωcomp n, ENNReal.mul_iInf (fun ht _ => (ENNReal.ofReal_ne_top ht).elim)]
+
+/-- A common decoder represents punctured internal singular metrics after
+    every continuous compactly supported shift. -/
+theorem IsWholePlaneGFF.exists_punctured_singularMetric_compactShift_decoder
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {D : Ω → ℂ → ℂ → ℝ} (h : IsWholePlaneGFF P hC hcirc)
+    (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α * Real.log ‖z‖) u v)
+    (hmetric : ∀ᵐ ω ∂P, IsEuclideanLengthMetric (D ω))
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ x, ψ x = 1)
+    (f₀ : ℂ → ℝ) (hf₀ : Continuous f₀) (U : ℕ → Set ℂ) (hU : ∀ n, IsOpen (U n))
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ U n ∧ (p n).1 ≠ 0) (hξ : 0 ≤ ξ) :
+    ∃ F : (LocalZeroMeanTest univ → ℝ) → ℕ → ℝ≥0∞, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ n, F (localModConstPairings 0 hC univ ω) n =
+        ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, f₀ z * ψ z)))) *
+          internalMetric (D ω) (U n \ {0}) (p n).1 (p n).2) ∧
+      ∀ g : ℂ → ℝ, Continuous g → HasCompactSupport g →
+        ∀ᵐ ω ∂P, ∀ n, F (localModConstPairings 0
+          (fun ω => addFunPairing (hC ω) g) univ ω) n =
+          ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, (g z + f₀ z) * ψ z)))) *
+            internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+              (U n \ {0}) (p n).1 (p n).2 := by
+  let r : ℕ → ℕ → ℝ := fun n m => min (‖(p n).1‖ / 2) (1 / (m + 1 : ℝ))
+  let V : ℕ → ℕ → Set ℂ := fun n m => U n ∩ {z | r n m < ‖z‖}
+  have hr (n m : ℕ) : 0 < r n m := by
+    exact lt_min (div_pos (norm_pos_iff.mpr (hp n).2) (by norm_num)) (by positivity)
+  have hopen (n m : ℕ) : IsOpen (V n m) :=
+    (hU n).inter (isOpen_lt continuous_const continuous_norm)
+  have hmono (n : ℕ) : Monotone (V n) := by
+    intro m k hmk z hz
+    refine ⟨hz.1, ?_⟩
+    change r n k < ‖z‖
+    apply lt_of_le_of_lt ?_ hz.2
+    apply min_le_min_left
+    gcongr
+  have haway (n m : ℕ) (z : ℂ) (hz : z ∈ V n m) : r n m ≤ ‖z‖ := hz.2.le
+  have hpV (n m : ℕ) : (p n).1 ∈ V n m := by
+    refine ⟨(hp n).1, ?_⟩
+    change r n m < ‖(p n).1‖
+    have hpos := norm_pos_iff.mpr (hp n).2
+    exact lt_of_le_of_lt (min_le_left _ _) (by linarith)
+  have hunion (n : ℕ) : (⋃ m, V n m) = U n \ {0} := by
+    apply subset_antisymm
+    · intro z hz
+      obtain ⟨m, hzm⟩ := mem_iUnion.mp hz
+      refine ⟨hzm.1, ?_⟩
+      simp only [mem_singleton_iff]
+      intro hz0
+      have hpos := (hr n m).trans hzm.2
+      have hfalse : (0 : ℝ) < 0 := by simpa only [hz0, norm_zero] using hpos
+      exact (lt_irrefl 0) hfalse
+    · intro z hz
+      have hz' : z ∈ ⋃ m : ℕ, U n ∩ {z : ℂ | 1 / (m + 1 : ℝ) < ‖z‖} := by
+        rw [punctured_open_exhaustion]
+        exact hz
+      obtain ⟨m, hzm⟩ := mem_iUnion.mp hz'
+      refine mem_iUnion.mpr ⟨m, hzm.1, ?_⟩
+      change r n m < ‖z‖
+      exact lt_of_le_of_lt (min_le_right _ _) hzm.2
+  obtain ⟨F, hF, hb, hs⟩ := h.exists_exhausted_singularMetric_compactShift_decoder
+    𝔇 h𝔇 hD hmetric ψ hψ hψint f₀ hf₀ r hr V hopen hmono haway p hpV hξ
+  refine ⟨F, hF, ?_, ?_⟩
+  · filter_upwards [hb] with ω hω n
+    simpa only [hunion] using hω n
+  · intro g hg hc
+    filter_upwards [hs g hg hc] with ω hω n
+    simpa only [hunion] using hω n
+
+
+
+/-- The normalized measure and punctured singular internal distances admit
+    a common whole-plane field decoder for compact smooth shifts. -/
+theorem IsWholePlaneGFF.exists_joint_punctured_singular_compact_weyl_shift_decoder
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hfull : ∀ᵐ ω ∂P, ∀ U : Set ℂ, IsOpen U → U.Nonempty → 0 < μ ω U)
+    (hε : 0 < ε) (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ)
+    (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hD : ∀ᵐ ω ∂P, ∀ u v, 0 ≤ D ω u v ∧
+      ENNReal.ofReal (D ω u v) =
+        weylScaling (𝔇 (hC ω)) ξ (fun x => -α * Real.log ‖x‖) u v)
+    (hDfield : IsLQGMetricOfField P γ ξ α hC D)
+    (haxioms : LQGMetricFieldAxioms P γ ξ α hC hcirc)
+    (hγ : 0 < γ) (hγ₂ : γ < 2) (hα : α < lqgQ γ) (hξ : 0 ≤ ξ)
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ x, ψ x = 1)
+    (f : ℂ → ℝ) (hf : Continuous f) (U : ℕ → Set ℂ) (hU : ∀ n, IsOpen (U n))
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ U n ∧ (p n).1 ≠ 0) :
+    ∃ R ∈ Ioo (0 : ℝ) ε,
+      ∃ F : (LocalZeroMeanTest univ → ℝ) → Measure ℂ × (ℕ → ℝ≥0∞), Measurable F ∧
+        (∀ᵐ ω ∂P, F (localModConstPairings 0 hC univ ω) =
+          (normalizedRestriction (μ ω) (ball 0 R), fun n =>
+            ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, f z * ψ z)))) *
+              internalMetric (D ω) (U n \ {0}) (p n).1 (p n).2)) ∧
+        ∀ g : ℂ → ℝ, IsTestFunction univ g →
+          (∀ᵐ ω ∂P, F (localModConstPairings 0
+            (fun ω => addFunPairing (hC ω) g) univ ω) =
+            (normalizedRestriction ((μ ω).withDensity
+              (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R), fun n =>
+                ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, (g z + f z) * ψ z)))) *
+                  internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+                    (U n \ {0}) (p n).1 (p n).2)) ∧
+          P.map (F ∘ localModConstPairings 0
+            (fun ω => addFunPairing (hC ω) g) univ) ≪
+            P.map (F ∘ localModConstPairings 0 hC univ) ∧
+          P.map (F ∘ localModConstPairings 0 hC univ) ≪
+            P.map (F ∘ localModConstPairings 0
+              (fun ω => addFunPairing (hC ω) g) univ) := by
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms P γ ξ α hC hcirc D
+    haxioms h hγ hγ₂ hα hDfield
+  obtain ⟨G, hG, hGbase, hGshift⟩ :=
+    h.exists_punctured_singularMetric_compactShift_decoder 𝔇 h𝔇 hD hmetric ψ hψ hψint f hf U hU p hp hξ
+  obtain ⟨R, hR, M, hM, _, hMeq⟩ := h.exists_shifted_normalized_measure_decoder hμ hfull hε
+  let Q : (LocalZeroMeanTest univ → ℝ) → LocalZeroMeanTest (ball 0 ε) → ℝ :=
+    fun v φ => v ⟨φ.1, φ.2.1.mono_set (subset_univ _), φ.2.2⟩ -
+      α * ∫ x, φ.1 x * Real.log ‖x‖
+  have hQ : Measurable Q := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    exact (measurable_pi_apply
+      (⟨φ.1, φ.2.1.mono_set (subset_univ _), φ.2.2⟩ : LocalZeroMeanTest univ)).sub_const _
+  have hQeq (T : (ℂ → ℝ) → ℝ) :
+      Q (localModConstPairings 0 id univ T) = localModConstPairings α id (ball 0 ε) T := by
+    funext φ
+    simp [Q, localModConstPairings, fieldPairing]
+  let F := fun v => (M (Q v), G v)
+  have hF : Measurable F := (hM.comp hQ).prodMk hG
+  have hzero : (fun ω => addFunPairing (hC ω) (fun _ => 0)) = hC := by
+    funext ω φ
+    simp [addFunPairing]
+  have hzeroTest : IsTestFunction univ (fun _ : ℂ => (0 : ℝ)) :=
+    ⟨contDiff_const, HasCompactSupport.zero, by simp⟩
+  have hbase := hMeq (fun _ => 0) hzeroTest
+  simp only [hzero, mul_zero, Real.exp_zero, ENNReal.ofReal_one] at hbase
+  have hwone (ω : Ω) : (μ ω).withDensity (fun _ => 1) = μ ω := withDensity_one
+  simp only [hwone] at hbase
+  refine ⟨R, hR, F, hF, ?_, ?_⟩
+  · filter_upwards [hbase, hGbase] with ω hm hg
+    apply Prod.ext
+    · change M (Q (localModConstPairings 0 id univ (hC ω))) = _
+      rw [hQeq]
+      exact hm
+    · funext n
+      exact hg n
+  · intro g hg
+    let X := localModConstPairings 0 hC univ
+    let Y := localModConstPairings 0 (fun ω => addFunPairing (hC ω) g) univ
+    have hX : Measurable X := by
+      apply measurable_pi_iff.mpr
+      intro φ
+      change Measurable (fun ω => hC ω φ.1 - 0 * ∫ x, φ.1 x * Real.log ‖x‖)
+      exact (h.measurable_pairing φ.1 φ.2.1).sub_const _
+    have hY : Measurable Y := by
+      apply measurable_pi_iff.mpr
+      intro φ
+      change Measurable (fun ω => (hC ω φ.1 + ∫ x, g x * φ.1 x) -
+        0 * ∫ x, φ.1 x * Real.log ‖x‖)
+      exact ((h.measurable_pairing φ.1 φ.2.1).add_const _).sub_const _
+    have hac := h.singular_smooth_shift_modConst_pairing_laws hg 0 univ
+    change P.map Y ≪ P.map X ∧ P.map X ≪ P.map Y at hac
+    have hf := hac.1.map hF
+    have hb := hac.2.map hF
+    rw [Measure.map_map hF hY, Measure.map_map hF hX] at hf
+    rw [Measure.map_map hF hX, Measure.map_map hF hY] at hb
+    refine ⟨?_, hf, hb⟩
+    filter_upwards [hMeq g hg, hGshift g hg.1.continuous hg.2.1] with ω hm hg'
+    apply Prod.ext
+    · change M (Q (localModConstPairings 0 id univ (addFunPairing (hC ω) g))) = _
+      rw [hQeq]
+      exact hm
+    · funext n
+      exact hg' n
+
 
 end HarmonicBalls
