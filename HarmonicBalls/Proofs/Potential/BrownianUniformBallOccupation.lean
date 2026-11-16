@@ -502,4 +502,54 @@ theorem exists_unit_time_chain_kernel_bound {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1
     exact hbound x (by exact_mod_cast hx)
   exact kernelChainIntegral_le ν k (Iic 1) K hksec hs hKS n y (by exact_mod_cast hy)
 
+
+/-- A chain product is the product over consecutive coordinates. -/
+theorem kernelChainProduct_eq_prod {α : Type*} (k : α → α → ℝ≥0∞) :
+    ∀ (n : ℕ) (t : Fin (n + 1) → α),
+      kernelChainProduct k n (t 0) (fun i => t i.succ) =
+        ∏ i : Fin n, k (t i.succ) (t i.castSucc) := by
+  intro n
+  induction n with
+  | zero => intro t; simp [kernelChainProduct]
+  | succ n ih =>
+      intro t
+      rw [Fin.prod_univ_succ]
+      simp only [kernelChainProduct, Fin.succ_zero_eq_one, Fin.castSucc_zero]
+      have h := ih (fun i => t i.succ)
+      simp only [Fin.succ_zero_eq_one] at h
+      rw [h]
+      congr 1
+
+/-- Uniform one-step bounds control the product over an entire random chain. -/
+theorem lintegral_chain_prod_le {α : Type*} [MeasurableSpace α] (μ : Measure α)
+    [IsProbabilityMeasure μ] (k : α → α → ℝ≥0∞) (S : Set α) (K : ℝ≥0∞)
+    (hk : Measurable (fun p : α × α => k p.1 p.2))
+    (hS : ∀ᵐ y ∂μ, y ∈ S)
+    (hK : ∀ x ∈ S, (∫⁻ y, k y x ∂μ) ≤ K) (n : ℕ) :
+    (∫⁻ t : Fin (n + 1) → α, ∏ i : Fin n, k (t i.succ) (t i.castSucc)
+      ∂(Measure.pi (fun _ => μ))) ≤ K ^ n := by
+  have hksec : ∀ x, Measurable (fun y => k y x) := by
+    intro x
+    have hm : Measurable (fun y : α => (y, x)) := by fun_prop
+    simpa only [Function.comp_def] using hk.comp hm
+  calc
+    _ = ∫⁻ t : Fin (n + 1) → α,
+        kernelChainProduct k n (t 0) (fun i => t i.succ) ∂(Measure.pi (fun _ => μ)) := by
+      congr 1; funext t; exact (kernelChainProduct_eq_prod k n t).symm
+    _ = ∫⁻ p : α × (Fin n → α), kernelChainProduct k n p.1 p.2
+        ∂(μ.prod (Measure.pi (fun _ => μ))) := by
+      let e := (MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => α) 0).symm
+      have hp := (measurePreserving_piFinSuccAbove (fun _ : Fin (n + 1) => μ) 0).symm
+      rw [MeasurePreserving.lintegral_map_equiv _ e hp]
+      congr 1
+    _ = ∫⁻ y, ∫⁻ t : Fin n → α, kernelChainProduct k n y t
+        ∂(Measure.pi (fun _ => μ)) ∂μ := by
+      rw [lintegral_prod _ (measurable_kernelChainProduct k hk n).aemeasurable]
+    _ ≤ ∫⁻ _y, K ^ n ∂μ := by
+      apply lintegral_mono_ae
+      filter_upwards [hS] with y hy
+      rw [lintegral_kernelChainProduct μ k hk n y]
+      exact kernelChainIntegral_le μ k S K hksec hS hK n y hy
+    _ = K ^ n := by simp
+
 end HarmonicBalls
