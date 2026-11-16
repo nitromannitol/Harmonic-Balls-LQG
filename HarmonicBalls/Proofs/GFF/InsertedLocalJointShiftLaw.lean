@@ -1863,4 +1863,51 @@ theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains
   exact h.exists_joint_smooth_shift_law_on_domains_between hμ hfull le_rfl hε
     𝔇 h𝔇 hD hmetric V hV hconn ψ hψ hψint p hp hξ
 
+/-- The joint law on countably many domains for a subcritical measure and
+an inserted metric of the same field. -/
+theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains_between_of_field
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α a ε : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} {D : Ω → ℂ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (ha : 0 ≤ a) (haε : a < ε) (hDfield : IsLQGMetricOfField P γ ξ α hC D)
+    (haxioms : LQGMetricFieldAxioms P γ ξ α hC hcirc)
+    (V : ℕ → Set ℂ) (hV : ∀ n, IsOpen (V n))
+    (hconn : ∀ n, (0 : ℂ) ∈ V n → IsConnected (V n))
+    (ψ : ℂ → ℝ) (hψ : IsTestFunction univ ψ) (hψint : ∫ z, ψ z = 1)
+    (p : ℕ → ℂ × ℂ) (hp : ∀ n, (p n).1 ∈ V n ∧ (p n).2 ∈ V n)
+    (hξ : 0 ≤ ξ) :
+    ∃ R ∈ Ioo a ε, ∀ g : ℂ → ℝ, IsTestFunction univ g →
+      P.map (fun ω =>
+        (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+         normalizedRestriction ((μ ω).withDensity
+           (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+         fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+           internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+             (V n) (p n).1 (p n).2)) ≪
+      P.map (fun ω =>
+        (localModConstPairings α hC (ball 0 ε) ω,
+         normalizedRestriction (μ ω) (ball 0 R), fun n =>
+           ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) (V n) (p n).1 (p n).2)) ∧
+      P.map (fun ω =>
+        (localModConstPairings α hC (ball 0 ε) ω,
+         normalizedRestriction (μ ω) (ball 0 R), fun n =>
+           ENNReal.ofReal (Real.exp (ξ * (-hC ω ψ))) *
+             internalMetric (D ω) (V n) (p n).1 (p n).2)) ≪
+      P.map (fun ω =>
+        (localModConstPairings α (fun ω => addFunPairing (hC ω) g) (ball 0 ε) ω,
+         normalizedRestriction ((μ ω).withDensity
+           (fun z => ENNReal.ofReal (Real.exp (γ * g z)))) (ball 0 R),
+         fun n => ENNReal.ofReal (Real.exp (ξ * (-(hC ω ψ + ∫ z, g z * ψ z)))) *
+           internalMetric (fun x y => (weylScaling (D ω) ξ g x y).toReal)
+             (V n) (p n).1 (p n).2)) := by
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms P γ ξ α hC hcirc D
+    haxioms h hγ hγ2 hα hDfield
+  obtain ⟨𝔇, h𝔇, hD⟩ := hDfield
+  exact h.exists_joint_smooth_shift_law_on_domains_between hμ
+    (lqgMeasureFullSupportStmt_holds γ α hγ hγ2 hα Ω P hC hcirc μ h hμ)
+    ha haε 𝔇 h𝔇 hD hmetric V hV hconn ψ hψ hψint p hp hξ
+
 end HarmonicBalls
