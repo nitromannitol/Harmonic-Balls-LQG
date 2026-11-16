@@ -291,5 +291,46 @@ theorem IsWholePlaneGFF.ae_fine_scale_ball_power
     linarith
   exact (measure_mono hsub).trans (hj n hn x hx t ht1 ht2)
 
+
+/-- The fine-band estimate controls every positive smoothing radius below
+the scale-dependent threshold. -/
+theorem IsWholePlaneGFF.ae_fine_smoothing_ball_power
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ R : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :
+    ∃ m : ℕ, ∀ᵐ ω ∂P, ∃ C κ : ℝ, 0 < C ∧ 0 < κ ∧ ∀ᶠ j in atTop,
+      ∀ z ∈ ball (0 : ℂ) R, ∀ s, 0 < s →
+        s < LatticeProb.LQG.dyadicScale j * LatticeProb.LQG.dyadicScale (m * j) →
+        LatticeProb.LQG.lqgApprox γ (hcirc ω) s
+            (ball z (LatticeProb.LQG.dyadicScale j / 2)) ≤
+          ENNReal.ofReal (C * LatticeProb.LQG.dyadicScale j ^ κ) := by
+  obtain ⟨m, hm⟩ := hh.ae_fine_scale_ball_power hγ hγ2 hR
+  refine ⟨m, ?_⟩
+  filter_upwards [hm] with ω hω
+  obtain ⟨C, κ, hC, hκ, hω⟩ := hω
+  refine ⟨C, κ, hC, hκ, ?_⟩
+  filter_upwards [hω] with j hj z hz s hs hsbound
+  have hd : 0 < LatticeProb.LQG.dyadicScale j := by
+    unfold LatticeProb.LQG.dyadicScale
+    positivity
+  have ht : 0 < s / LatticeProb.LQG.dyadicScale j := div_pos hs hd
+  have htd : s / LatticeProb.LQG.dyadicScale j <
+      LatticeProb.LQG.dyadicScale (m * j) := (div_lt_iff₀ hd).2 (by simpa [mul_comm] using hsbound)
+  have hd1 : LatticeProb.LQG.dyadicScale (m * j) ≤ 1 := by
+    unfold LatticeProb.LQG.dyadicScale
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  obtain ⟨n, hn1, hn2⟩ := LatticeProb.LQG.exists_dyadicScale_bracket ht (htd.trans_le hd1)
+  have hn : m * j ≤ n := by
+    by_contra h
+    have hle : n + 1 ≤ m * j := by omega
+    have hmono := LatticeProb.LQG.dyadicScale_le_of_le hle
+    linarith
+  have hband := hj n hn z hz (s / LatticeProb.LQG.dyadicScale j)
+    (by simpa [LatticeProb.LQG.dyadicScale_succ_eq_half] using hn1) hn2.le
+  have he : LatticeProb.LQG.dyadicScale j * (s / LatticeProb.LQG.dyadicScale j) = s := by
+    field_simp
+  simpa only [he] using hband
+
 end HarmonicBalls
 
