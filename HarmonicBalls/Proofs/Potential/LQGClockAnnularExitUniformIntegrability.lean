@@ -823,4 +823,59 @@ theorem ae_brownian_stopped_annular_increment_le_riesz_energy_uniform_start
 
 
 
+/-- Events holding for Brownian motion from every start also hold after a time shift. -/
+theorem ae_planarBrownianMotion_shift_of_forall_ae (x : ℂ) (s : ℝ≥0) (S : Set (ContinuousPath ℂ)) (hS : MeasurableSet S)
+    (h : ∀ y : ℂ, ∀ᵐ b ∂planarBrownianMotion y, b ∈ S) :
+    ∀ᵐ b ∂planarBrownianMotion x, ContinuousPath.shift s b ∈ S := by
+  have ha : ∀ᵐ b ∂(planarBrownianMotion x).map (ContinuousPath.shift s), b ∈ S := by
+    rw [planarBrownianMotion_eq_continuousProcess]
+    have hshift := congrArg (fun K => K x)
+      (SubMarkovKernelSemigroup.IsFellerKernelSemigroup.continuousProcess_map_shift
+        planarHeatSemigroup isConservative_planarHeatSemigroup
+        isFellerKernelSemigroup_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup s)
+    rw [ProbabilityTheory.Kernel.map_apply _ (ContinuousPath.measurable_shift_fixed s) x] at hshift
+    rw [hshift]
+    apply ProbabilityTheory.Kernel.ae_comp_of_ae_ae hS
+    filter_upwards with y
+    change ∀ᵐ b ∂(SubMarkovKernelSemigroup.IsConservative.continuousProcess
+      planarHeatSemigroup isConservative_planarHeatSemigroup y), b ∈ S
+    rw [← planarBrownianMotion_eq_continuousProcess]
+    exact h y
+  exact (ae_map_iff (ContinuousPath.measurable_shift_fixed s).aemeasurable hS).mp ha
+
+/-- Shifted annular increments satisfy the shared Riesz-energy envelope. -/
+theorem ae_shift_stopped_annular_increment_le_riesz_energy {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (x : ℂ) (s : ℝ≥0) (τ : ContinuousPath ℂ → ℝ≥0), Measurable τ →
+      ∀ ε : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        ∀ᵐ b ∂planarBrownianMotion x,
+        stoppedAnnularIncrement P hcirc γ α δ ε τ (ContinuousPath.shift s b) ≤
+        ((Real.exp (γ^2*Real.log 2)-1)*(M^2 *
+          unitOccupationRieszEnergy d (ContinuousPath.shift s b) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    ae_brownian_stopped_annular_increment_le_riesz_energy_uniform_start hh hγ0 hγ2 α hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro x s τ hτ ε hε hεhalf hεδ
+  let F := stoppedAnnularIncrement P hcirc γ α δ ε τ
+  let G : ContinuousPath ℂ → ℝ := fun b =>
+    ((Real.exp (γ^2*Real.log 2)-1)*(M^2 * unitOccupationRieszEnergy d b * 2^d)+1)/2 *
+      Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+    2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))
+  have hF : Measurable F := measurable_stopped_annular_inserted_field_expectation hh hε γ α δ τ hτ
+  have hG : Measurable G := by
+    dsimp [G]
+    have hE := measurable_unitOccupationRieszEnergy d
+    fun_prop
+  have hS : MeasurableSet {b | F b ≤ G b} := measurableSet_le hF hG
+  apply ae_planarBrownianMotion_shift_of_forall_ae x s _ hS
+  intro y
+  filter_upwards [hb y] with b hb'
+  exact hb' (τ b) ε hε hεhalf hεδ
+
 end HarmonicBalls
