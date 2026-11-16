@@ -1910,4 +1910,58 @@ theorem IsWholePlaneGFF.exists_joint_smooth_shift_law_on_domains_between_of_fiel
     (lqgMeasureFullSupportStmt_holds γ α hγ hγ2 hα Ω P hC hcirc μ h hμ)
     ha haε 𝔇 h𝔇 hD hmetric V hV hconn ψ hψ hψint p hp hξ
 
+/-- A countable family of admissible metric coordinates can be indexed by natural numbers, even when the family is empty. -/
+theorem exists_countable_admissible_metric_coordinates
+    (S : Set (Set ℂ × (ℂ × ℂ))) (hS : S.Countable)
+    (hvalid : ∀ t ∈ S, IsOpen t.1 ∧ ((0 : ℂ) ∈ t.1 → IsConnected t.1) ∧
+      t.2.1 ∈ t.1 ∧ t.2.2 ∈ t.1) :
+    ∃ V : ℕ → Set ℂ, ∃ p : ℕ → ℂ × ℂ,
+      (∀ n, IsOpen (V n) ∧ ((0 : ℂ) ∈ V n → IsConnected (V n)) ∧
+        (p n).1 ∈ V n ∧ (p n).2 ∈ V n) ∧
+      ∀ t ∈ S, ∃ n, V n = t.1 ∧ p n = t.2 := by
+  let t₀ : Set ℂ × (ℂ × ℂ) := (univ, (0, 0))
+  let T := insert t₀ S
+  have hT : T.Countable := hS.insert t₀
+  have : Countable T := hT.to_subtype
+  have : Nonempty T := ⟨⟨t₀, mem_insert _ _⟩⟩
+  obtain ⟨e, he⟩ := exists_surjective_nat T
+  refine ⟨fun n => (e n).1.1, fun n => (e n).1.2, ?_, ?_⟩
+  · intro n
+    dsimp only
+    have ht : (e n).1 = t₀ ∨ (e n).1 ∈ S := (mem_insert_iff).mp (e n).2
+    rcases ht with ht | ht
+    · rw [ht]
+      exact ⟨isOpen_univ, fun _ => isConnected_univ, mem_univ _, mem_univ _⟩
+    · exact hvalid _ ht
+  · intro t ht
+    obtain ⟨n, hn⟩ := he ⟨t, mem_insert_of_mem t₀ ht⟩
+    have heq : (e n).1 = t := congrArg Subtype.val hn
+    exact ⟨n, congrArg Prod.fst heq, congrArg Prod.snd heq⟩
+
+
+/-- Read a listed metric coordinate from a sequence, using zero outside the list. -/
+noncomputable def coordinateReadout (V : ℕ → Set ℂ) (p : ℕ → ℂ × ℂ)
+    (t : Set ℂ × (ℂ × ℂ)) (a : ℕ → ℝ≥0∞) : ℝ≥0∞ :=
+  by
+    classical
+    exact if h : ∃ n, (V n, p n) = t then a (Classical.choose h) else 0
+
+/-- Each coordinate readout is measurable. -/
+theorem measurable_coordinateReadout (V : ℕ → Set ℂ) (p : ℕ → ℂ × ℂ)
+    (t : Set ℂ × (ℂ × ℂ)) : Measurable (coordinateReadout V p t) := by
+  classical
+  unfold coordinateReadout
+  split
+  · exact measurable_pi_apply _
+  · exact measurable_const
+
+/-- The readout recovers any function evaluated along the coordinate sequence. -/
+theorem coordinateReadout_apply (V : ℕ → Set ℂ) (p : ℕ → ℂ × ℂ)
+    (t : Set ℂ × (ℂ × ℂ)) (ht : ∃ n, (V n, p n) = t)
+    (F : Set ℂ × (ℂ × ℂ) → ℝ≥0∞) :
+    coordinateReadout V p t (fun n => F (V n, p n)) = F t := by
+  classical
+  simp [coordinateReadout, ht, Classical.choose_spec ht]
+
+
 end HarmonicBalls
