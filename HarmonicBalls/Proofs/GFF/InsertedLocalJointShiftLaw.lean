@@ -9,6 +9,7 @@ import HarmonicBalls.Proofs.Sec11.SingularWeylExhaustion
 import HarmonicBalls.Proofs.Sec11.JointPuncturedSingularShift
 import HarmonicBalls.Proofs.Sec11.PuncturedMetricExhaustionLocality
 import HarmonicBalls.Steps.Sec11.WeylPointRemoval
+import HarmonicBalls.FirstPass.S11m.DecodedDomain
 
 /-! # Local field and normalized measure under smooth shifts
 
@@ -16,7 +17,7 @@ A local centered field and its normalized LQG measure have equivalent joint
 laws after a deterministic smooth compactly supported perturbation.
 -/
 
-open MeasureTheory Filter Set Metric
+open MeasureTheory Filter Set Metric Topology
 open scoped ENNReal NNReal
 
 namespace HarmonicBalls
@@ -1030,5 +1031,141 @@ theorem IsWholePlaneGFF.exists_local_joint_smooth_shift_law_of_point_removal
   have hh := hlaw g hg
   rw [hbase, hshift] at hh
   exact hh
+
+
+/-- A positive finite multiple of the internal root distance is determined by
+countably many punctured distances. -/
+theorem IsEuclideanLengthMetric.root_eq_limsup_punctured_scaled
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    {O : Set ℂ} (hO : IsOpen O) (hconn : IsConnected O) (h0 : (0 : ℂ) ∈ O)
+    {ε : ℝ} (hball : ball (0 : ℂ) ε ⊆ O) {x : ℂ} (hx : x ∈ O) (hx0 : x ≠ 0)
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n)
+    (hsε : ∀ n, s n < ε) (C : ℕ → Set ℂ)
+    (hC : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧
+      sphere (0 : ℂ) (s n) ⊆ closure (C n))
+    {c : ℝ≥0∞} (hc0 : c ≠ 0) (hct : c ≠ ∞) :
+    c * internalMetric D O 0 x =
+      limsup (fun n => ⨅ z ∈ C n, c * internalMetric D (O \ {0}) z x) atTop := by
+  have hfin := S11m.internalMetric_ne_top_of_isConnected hD hO hconn h0 hx
+  have hroot := S11m.internalMetric_root_eq_limsup_of_dense hD
+    (S11m.isEuclideanLengthMetric_nonneg hD) hO h0 hball hx hx0 hfin s hs hpos hsε C hC
+  calc
+    c * internalMetric D O 0 x =
+        c * limsup (fun n => ⨅ z ∈ C n, internalMetric D (O \ {0}) z x) atTop := by rw [hroot]
+    _ = limsup (fun n => c * ⨅ z ∈ C n, internalMetric D (O \ {0}) z x) atTop := by
+      rw [ENNReal.limsup_const_mul_of_ne_top hct]
+    _ = _ := by
+      congr 1
+      funext n
+      simp only [ENNReal.mul_iInf_of_ne hc0 hct]
+
+/-- Reconstruct a root distance from a fixed family of punctured distances. -/
+noncomputable def puncturedRootFrom (C : ℕ → Set ℂ) (F : ℂ → ℂ → ℝ≥0∞) (x : ℂ) : ℝ≥0∞ :=
+  limsup (fun n => ⨅ z ∈ C n, F z x) atTop
+
+/-- Root reconstruction is measurable in the punctured distances. -/
+theorem measurable_puncturedRootFrom {A : Type*} [MeasurableSpace A]
+    (C : ℕ → Set ℂ) (hC : ∀ n, (C n).Countable)
+    (F : A → ℂ → ℂ → ℝ≥0∞) (hF : ∀ z x, Measurable fun a => F a z x) (x : ℂ) :
+    Measurable fun a => puncturedRootFrom C (F a) x := by
+  unfold puncturedRootFrom
+  refine S11m.measurable_limsup_nat _ fun n => ?_
+  exact S11m.measurable_biInf_of_countable (hC n) (fun z a => F a z x) fun z => hF z x
+
+/-- Internal distances between nonzero points are recovered from punctured
+and root distances without a point-removal hypothesis. -/
+theorem IsEuclideanLengthMetric.internalMetric_eq_min_punctured_scaled
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D) (O : Set ℂ)
+    (c : ℝ≥0∞) (x y : ℂ) :
+    c * internalMetric D O x y =
+      min (c * internalMetric D (O \ {0}) x y)
+        (c * internalMetric D O 0 x + c * internalMetric D O 0 y) := by
+  rw [S11m.internalMetric_eq_min_punctured hD O, hD.internalMetric_symm O x 0, ← mul_add]
+  have hmono : Monotone (fun t : ℝ≥0∞ => c * t) := fun a b hab => by dsimp only; gcongr
+  exact Monotone.map_min hmono
+
+/-- A countable punctured-distance decoder determines the normalized root
+internal distance. -/
+theorem IsEuclideanLengthMetric.puncturedRootFrom_eq
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    {O : Set ℂ} (hO : IsOpen O) (hconn : IsConnected O) (h0 : (0 : ℂ) ∈ O)
+    {ε : ℝ} (hball : ball (0 : ℂ) ε ⊆ O) {x : ℂ} (hx : x ∈ O) (hx0 : x ≠ 0)
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n)
+    (hsε : ∀ n, s n < ε) (C : ℕ → Set ℂ)
+    (hC : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧
+      sphere (0 : ℂ) (s n) ⊆ closure (C n))
+    {c : ℝ≥0∞} (hc0 : c ≠ 0) (hct : c ≠ ∞) (F : ℂ → ℂ → ℝ≥0∞)
+    (hF : ∀ n z, z ∈ C n → F z x = c * internalMetric D (O \ {0}) z x) :
+    puncturedRootFrom C F x = c * internalMetric D O 0 x := by
+  rw [hD.root_eq_limsup_punctured_scaled hO hconn h0 hball hx hx0 s hs hpos hsε C hC hc0 hct]
+  unfold puncturedRootFrom
+  congr 1
+  funext n
+  refine iInf_congr fun z => ?_
+  by_cases hz : z ∈ C n
+  · rw [iInf_pos hz, iInf_pos hz, hF n z hz]
+  · rw [iInf_neg hz, iInf_neg hz]
+
+
+
+/-- Reconstruct full internal distances from punctured distances. -/
+noncomputable def puncturedDistanceFrom (C : ℕ → Set ℂ) (F : ℂ → ℂ → ℝ≥0∞) (x y : ℂ) : ℝ≥0∞ :=
+  if x = 0 then
+    if y = 0 then 0 else puncturedRootFrom C F y
+  else if y = 0 then puncturedRootFrom C F x
+  else min (F x y) (puncturedRootFrom C F x + puncturedRootFrom C F y)
+
+/-- Reconstructed internal distances are measurable in punctured distances. -/
+theorem measurable_puncturedDistanceFrom {A : Type*} [MeasurableSpace A]
+    (C : ℕ → Set ℂ) (hC : ∀ n, (C n).Countable)
+    (F : A → ℂ → ℂ → ℝ≥0∞) (hF : ∀ z x, Measurable fun a => F a z x) (x y : ℂ) :
+    Measurable fun a => puncturedDistanceFrom C (F a) x y := by
+  unfold puncturedDistanceFrom
+  split_ifs
+  · exact measurable_const
+  · exact measurable_puncturedRootFrom C hC F hF y
+  · exact measurable_puncturedRootFrom C hC F hF x
+  · exact (hF x y).min ((measurable_puncturedRootFrom C hC F hF x).add
+      (measurable_puncturedRootFrom C hC F hF y))
+
+/-- A countable collection of punctured distances determines full internal
+ distances on a connected open set. -/
+theorem IsEuclideanLengthMetric.puncturedDistanceFrom_eq
+    {D : ℂ → ℂ → ℝ} (hD : IsEuclideanLengthMetric D)
+    {O : Set ℂ} (hO : IsOpen O) (hconn : IsConnected O) (h0 : (0 : ℂ) ∈ O)
+    {ε : ℝ} (hball : ball (0 : ℂ) ε ⊆ O) {x y : ℂ} (hx : x ∈ O) (hy : y ∈ O)
+    (s : ℕ → ℝ) (hs : Tendsto s atTop (𝓝 0)) (hpos : ∀ n, 0 < s n)
+    (hsε : ∀ n, s n < ε) (C : ℕ → Set ℂ)
+    (hC : ∀ n, C n ⊆ sphere (0 : ℂ) (s n) ∧ (C n).Countable ∧
+      sphere (0 : ℂ) (s n) ⊆ closure (C n))
+    {c : ℝ≥0∞} (hc0 : c ≠ 0) (hct : c ≠ ∞) (F : ℂ → ℂ → ℝ≥0∞)
+    (hFx : x ≠ 0 → ∀ n z, z ∈ C n → F z x = c * internalMetric D (O \ {0}) z x)
+    (hFy : y ≠ 0 → ∀ n z, z ∈ C n → F z y = c * internalMetric D (O \ {0}) z y)
+    (hFxy : x ≠ 0 → y ≠ 0 → F x y = c * internalMetric D (O \ {0}) x y) :
+    puncturedDistanceFrom C F x y = c * internalMetric D O x y := by
+  have hroot (z : ℂ) (hz : z ∈ O) (hz0 : z ≠ 0)
+      (hFz : ∀ n w, w ∈ C n → F w z = c * internalMetric D (O \ {0}) w z) :
+      puncturedRootFrom C F z = c * internalMetric D O 0 z :=
+    hD.puncturedRootFrom_eq hO hconn h0 hball hz hz0 s hs hpos hsε C hC hc0 hct F hFz
+  unfold puncturedDistanceFrom
+  by_cases hx0 : x = 0
+  · subst x
+    simp only [↓reduceIte]
+    by_cases hy0 : y = 0
+    · subst y
+      simp only [↓reduceIte]
+      rw [hD.internalMetric_self_of_mem_open (S11m.isEuclideanLengthMetric_nonneg hD) hO h0, mul_zero]
+    · simp only [hy0, ↓reduceIte]
+      exact hroot y hy hy0 (hFy hy0)
+  · simp only [hx0, ↓reduceIte]
+    by_cases hy0 : y = 0
+    · subst y
+      simp only [↓reduceIte]
+      rw [hD.internalMetric_symm O x 0]
+      exact hroot x hx hx0 (hFx hx0)
+    · simp only [hy0, ↓reduceIte]
+      rw [hFxy hx0 hy0, hroot x hx hx0 (hFx hx0), hroot y hy hy0 (hFy hy0)]
+      exact (hD.internalMetric_eq_min_punctured_scaled O c x y).symm
+
 
 end HarmonicBalls
