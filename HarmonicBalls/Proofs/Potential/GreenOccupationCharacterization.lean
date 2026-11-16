@@ -1,4 +1,7 @@
 import HarmonicBalls.Proofs.Potential.Fundamental
+import HarmonicBalls.Proofs.Potential.GreenGeneralIdentification
+import HarmonicBalls.Proofs.Sec6.BoundedHarmonicExit
+import Mathlib.Topology.TietzeExtension
 import Mathlib.Analysis.Calculus.ContDiff.Convolution
 import HarmonicBalls.Proofs.Sec6.PlanarBrownianGenerator
 import HarmonicBalls.Proofs.Sec6.StoppedPotentialIntegrability
@@ -283,5 +286,97 @@ theorem integral_occupation_exitTime_eq_logPotential {D : Set ℂ} (hD : IsOpen 
   rw [hend, hfeq y (hclD (subset_closure hy))] at hdyn
   simp only [hdrift, integral_neg] at hdyn
   linarith [hdyn]
+
+/-- A function harmonic in a bounded open set and continuous on its closure is
+represented by its values at the Brownian exit point. -/
+theorem harmonic_eq_integral_exitTime_of_continuousOn_closure
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D)
+    {q : ℂ → ℝ} (hq : ContinuousOn q (closure D)) (hharm : HarmonicOnNhd q D)
+    {x : ℂ} (hx : x ∈ D) :
+    q x = ∫ p : ContinuousPath ℂ,
+      q (p ((ContinuousPath.exitTime D p).toNNReal)) ∂(planarBrownianMotion x) := by
+  let : CompactSpace (closure D) := isCompact_iff_compactSpace.mp hDb.isCompact_closure
+  let f : C(closure D, ℝ) := ⟨fun z => q z, hq.domRestrict⟩
+  let fb : BoundedContinuousFunction (closure D) ℝ := BoundedContinuousFunction.mkOfCompact f
+  obtain ⟨g, -, hg⟩ := fb.exists_norm_eq_domRestrict_eq_of_closed isClosed_closure
+  have heq : ∀ z ∈ closure D, g z = q z := by
+    intro z hz
+    have h := congrArg (fun k : BoundedContinuousFunction (closure D) ℝ => k ⟨z, hz⟩) hg
+    exact h
+  have hgh : HarmonicOnNhd g D := by
+    intro z hz
+    apply (harmonicAt_congr_nhds ?_).2 (hharm z hz)
+    filter_upwards [hD.mem_nhds hz] with w hw
+    exact heq w (subset_closure hw)
+  have hrep := harmonic_eq_integral_planarBrownian_exitTime hD hDb g.continuous hgh
+    (fun z => g.norm_coe_le_norm z) hx
+  rw [heq x (subset_closure hx)] at hrep
+  refine hrep.trans (integral_congr_ae ?_)
+  filter_upwards [ae_planarBrownianMotion_eval_zero x,
+    ae_planarBrownian_exitTime_bounded_lt_top x hDb] with p h0 hfin
+  have hstart : p 0 ∈ D := by rw [h0]; exact hx
+  exact heq _ (frontier_subset_closure
+    (ContinuousPath.coordinate_exitTime_mem_frontier D hD p hstart hfin.ne))
+
+/-- The occupation identity for smooth tests supported in a smooth bounded
+open domain. The factor two corresponds to the standard Brownian generator
+`Δ / 2`. -/
+theorem integral_occupation_exitTime_eq_greenPotential
+    {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {g : ℂ → ℝ}
+    (hg : ContDiff ℝ ∞ g) (hgc : HasCompactSupport g)
+    (hgs : Function.support g ⊆ D) {x : ℂ} (hx : x ∈ D) :
+    ∫ p, (∫ s in (0 : ℝ)..((ContinuousPath.exitTime D p).toNNReal : ℝ), g (p s.toNNReal))
+        ∂(planarBrownianMotion x) =
+      2 * ∫ y in D, greenFunction D x y * g y := by
+  have hDo := GreenGeneral.isOpen_of_isSmoothBoundedOpen hD
+  have hDb := hD.1
+  obtain ⟨r, hr⟩ := hDb.subset_ball (0 : ℂ)
+  let R := max r 1
+  have hR : 0 < R := lt_of_lt_of_le zero_lt_one (le_max_right _ _)
+  have hDR : D ⊆ Metric.ball (0 : ℂ) R := hr.trans (Metric.ball_subset_ball (le_max_left _ _))
+  obtain ⟨M, hM⟩ := hgc.exists_bound_of_continuous hg.continuous
+  have hM' : ∀ᵐ y ∂(volume.restrict D), |g y| ≤ M :=
+    ae_of_all _ (fun y => by simpa only [Real.norm_eq_abs] using hM y)
+  have hmeas : AEStronglyMeasurable g (volume.restrict D) :=
+    hg.continuous.stronglyMeasurable.aestronglyMeasurable
+  have hrestrict : ∀ z, (∫ y in D, newtonKernel z y * g y) = logPotential g z := by
+    intro z
+    rw [← integral_indicator hDo.measurableSet, logPotential]
+    congr 1
+    funext y
+    by_cases hy : y ∈ D
+    · simp only [indicator_of_mem hy]
+    · have hzero : g y = 0 := by
+        by_contra hn
+        exact hy (hgs hn)
+      simp only [indicator_of_notMem hy, hzero, mul_zero]
+  have hcont : ContinuousOn (fun z => logPotential g z -
+      ∫ y in D, greenFunction D z y * g y) (closure D) :=
+    (contDiff_logPotential hg hgc).continuous.continuousOn.sub
+      (GreenGeneral.VolumeGrowth.continuousOn_greenPotential hR (volumeGrowth_volume R) hD hDR hmeas hM')
+  have hharm : HarmonicOnNhd (fun z => logPotential g z -
+      ∫ y in D, greenFunction D z y * g y) D := by
+    have h := GreenGeneral.VolumeGrowth.harmonicOnNhd_newtonPotential_sub_greenPotential
+      hR (volumeGrowth_volume R) hD hDR hmeas hM'
+    simpa only [hrestrict] using h
+  have hrep := harmonic_eq_integral_exitTime_of_continuousOn_closure hDo hDb hcont hharm hx
+  have hexit : (∫ p : ContinuousPath ℂ,
+      (logPotential g (p ((ContinuousPath.exitTime D p).toNNReal)) -
+        ∫ y in D, greenFunction D (p ((ContinuousPath.exitTime D p).toNNReal)) y * g y)
+        ∂(planarBrownianMotion x)) =
+      ∫ p : ContinuousPath ℂ, logPotential g (p ((ContinuousPath.exitTime D p).toNNReal))
+        ∂(planarBrownianMotion x) := by
+    refine integral_congr_ae ?_
+    filter_upwards [ae_planarBrownianMotion_eval_zero x,
+      ae_planarBrownian_exitTime_bounded_lt_top x hDb] with p h0 hfin
+    have hstart : p 0 ∈ D := by rw [h0]; exact hx
+    have hfront := ContinuousPath.coordinate_exitTime_mem_frontier D hDo p hstart hfin.ne
+    have hnot : p ((ContinuousPath.exitTime D p).toNNReal) ∉ D := by
+      rw [hDo.frontier_eq] at hfront
+      exact hfront.2
+    simp only [greenFunction_of_notMem_left hnot, zero_mul, integral_zero, sub_zero]
+  rw [hexit] at hrep
+  rw [integral_occupation_exitTime_eq_logPotential hDo hDb hg hgc hx]
+  linarith
 
 end HarmonicBalls.GreenOccupation
