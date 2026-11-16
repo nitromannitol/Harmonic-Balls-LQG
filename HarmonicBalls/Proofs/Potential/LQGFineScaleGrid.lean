@@ -85,14 +85,14 @@ families of whole-plane fields when the index counts have geometric growth. -/
 theorem ae_fine_scale_gff_increment {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     {g : ℂ → ℝ} (hgc : Continuous g) (hgs : HasCompactSupport g)
     {R : ℝ} (hR : 0 < R) (hgR : ∀ z, g z ≠ 0 → ‖z‖ + 1 ≤ R) :
-    ∃ K c : ℝ, 0 ≤ K ∧ 0 < c ∧ ∀ (A D t : ℝ), 0 ≤ A → 0 ≤ D →
+    ∃ K c : ℝ, 0 ≤ K ∧ 0 < c ∧ ∀ (A D t B : ℝ), 0 ≤ A → 0 ≤ D → 0 ≤ B →
       0 ≤ t → t < 1 → D * ((2 : ℝ)⁻¹ ^ c) ≤ t ^ 2 →
       ∃ m : ℕ, ∀ {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
       (hC : ℕ → ℕ → ℕ → Ω → (ℂ → ℝ) → ℝ)
       (H : ℕ → ℕ → ℕ → Ω → ℝ → ℂ → ℝ)
       (_hG : ∀ j n i, LatticeProb.Gauss.IsWholePlaneGFF P (hC j n i) (H j n i))
       (N : ℕ → ℕ → ℕ) (s : ℕ → ℕ → ℕ → ℝ),
-      (∀ j n, ((N j n : ℝ) + 1) ≤ A ^ j * D ^ n) →
+      (∀ j n, ((N j n : ℝ) + 1) ≤ B * (A ^ j * D ^ n)) →
       (∀ j n i, LatticeProb.LQG.dyadicScale n / 2 ≤ s j n i ∧
         s j n i ≤ LatticeProb.LQG.dyadicScale n) →
       ∀ᵐ ω ∂P, ∀ᶠ j in atTop, ∀ n, m * j ≤ n → ∀ i ≤ N j n,
@@ -101,11 +101,11 @@ theorem ae_fine_scale_gff_increment {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
             exp (γ * (H j n i ω (LatticeProb.LQG.dyadicScale n) z - H j n i ω R 0)))| < 1 := by
   obtain ⟨K, c, hK, hc, hinc⟩ := LatticeProb.Gauss.exists_scaleIncrement_bound_uniform hγ hγ2 hgc hgs hR hgR
   refine ⟨K, c, hK, hc, ?_⟩
-  intro A D t hA hD ht ht1 hDt
+  intro A D t B hA hD hB ht ht1 hDt
   have hlim : Tendsto (fun m : ℕ => A * t ^ m) atTop (nhds 0) := by
     simpa using (tendsto_pow_atTop_nhds_zero_of_lt_one ht ht1).const_mul A
   obtain ⟨m, hm⟩ := eventually_atTop.1 (hlim.eventually_lt_const (by norm_num : (0 : ℝ) < 1))
-  have hsum := (summable_fine_scale_grid hA ht ht1 (hm m le_rfl)).mul_left K
+  have hsum := (summable_fine_scale_grid hA ht ht1 (hm m le_rfl)).mul_left (K * B)
   refine ⟨m, ?_⟩
   intro Ω _ P hC H hG N s hN hs
   let X : ℕ → ℕ → ℕ → Ω → ℝ := fun j n i ω =>
@@ -132,9 +132,9 @@ theorem ae_fine_scale_gff_increment {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
       · simp only [h, ↓reduceIte, div_one]
         rw [hpow n]
         calc ((N j n : ℝ) + 1) * (K * ((2 : ℝ)⁻¹ ^ c) ^ n)
-            ≤ (A ^ j * D ^ n) * (K * ((2 : ℝ)⁻¹ ^ c) ^ n) := by gcongr; exact hN j n
-          _ = K * (A ^ j * (D * ((2 : ℝ)⁻¹ ^ c)) ^ n) := by rw [mul_pow]; ring
-          _ ≤ K * (A ^ j * (t ^ 2) ^ n) := by gcongr
+            ≤ (B * (A ^ j * D ^ n)) * (K * ((2 : ℝ)⁻¹ ^ c) ^ n) := by gcongr; exact hN j n
+          _ = (K * B) * (A ^ j * (D * ((2 : ℝ)⁻¹ ^ c)) ^ n) := by rw [mul_pow]; ring
+          _ ≤ (K * B) * (A ^ j * (t ^ 2) ^ n) := by gcongr
       · simp [h]
   apply ae_eventually_fine_scale_grid_abs_lt (X := X) (N := N)
     (b := fun _ n => K * LatticeProb.LQG.dyadicScale n ^ c) (δ := fun _ _ => 1)
