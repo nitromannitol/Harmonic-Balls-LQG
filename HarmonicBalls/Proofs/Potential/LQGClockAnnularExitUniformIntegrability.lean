@@ -1,6 +1,7 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularUniformIntegrability
 import HarmonicBalls.Proofs.Potential.BrownianExpectedExitGreen
 import MarkovProcess.Trajectory.ExitTimeExponentialMoment
+import MarkovProcess.Path.ExitTimeShift
 import LatticeProb.LQG.LQGCircleMoments
 import HarmonicBalls.Proofs.Potential.BrownianIncrementRieszMoment
 
@@ -977,5 +978,62 @@ theorem brownian_shift_exit_annular_increment_annealed_le {Ω : Type*} [Measurab
   have h := hb x s τ hτ ε hε hεhalf hεδ
   convert h using 1 <;>
     simp only [stoppedAnnularIncrement_eq_time_integral hh hε γ α δ τ, τ]
+
+/-- Before exit, the shifted exit integral equals the corresponding stopped block. -/
+theorem intervalIntegral_shift_exit_eq_stopped_block (D : Set ℂ) (b : ContinuousPath ℂ) (s : ℝ≥0)
+    (hfin : ContinuousPath.exitTime D b ≠ ⊤)
+    (hs : (s : ℝ≥0∞) < ContinuousPath.exitTime D b) (f : ℂ → ℝ) :
+    (∫ t in (0 : ℝ)..(min (1 : ℝ≥0) (ContinuousPath.exitTime D
+        (ContinuousPath.shift s b)).toNNReal : ℝ), f ((ContinuousPath.shift s b) t.toNNReal)) =
+    ∫ t in (s : ℝ)..min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal, f (b t.toNNReal) := by
+  have hadd := ContinuousPath.exitTime_shift_add D b s hs
+  have hshiftfin : ContinuousPath.exitTime D (ContinuousPath.shift s b) ≠ ⊤ := by
+    intro h
+    rw [h] at hadd
+    simp only [top_add] at hadd
+    exact hfin hadd.symm
+  have hr : (ContinuousPath.exitTime D (ContinuousPath.shift s b)).toReal + (s : ℝ) =
+      (ContinuousPath.exitTime D b).toReal := by
+    have h := congrArg ENNReal.toReal hadd
+    simpa only [ENNReal.toReal_add hshiftfin ENNReal.coe_ne_top, ENNReal.coe_toReal] using h
+  let u : ℝ := (min (1 : ℝ≥0) (ContinuousPath.exitTime D
+      (ContinuousPath.shift s b)).toNNReal : ℝ)
+  have hu : 0 ≤ u := by dsimp [u]; positivity
+  have huend : (s : ℝ) + u = min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal := by
+    dsimp [u]
+    rw [ENNReal.coe_toNNReal_eq_toReal, add_min]
+    rw [add_comm (s : ℝ) (ContinuousPath.exitTime D (ContinuousPath.shift s b)).toReal, hr]
+  calc
+    _ = ∫ t in (0 : ℝ)..u, f (b (((s : ℝ) + t).toNNReal)) := by
+      apply intervalIntegral.integral_congr
+      intro t ht
+      rw [uIcc_of_le hu] at ht
+      simp only [ContinuousPath.shift_apply, Real.toNNReal_add s.coe_nonneg ht.1, Real.toNNReal_coe]
+    _ = ∫ t in (s : ℝ)..(s : ℝ) + u, f (b t.toNNReal) := by
+      simpa only [add_zero] using (intervalIntegral.integral_comp_add_left
+        (fun t : ℝ => f (b t.toNNReal)) (s : ℝ) (a := 0) (b := u))
+    _ = _ := by rw [huend]
+
+/-- A stopped block is empty after exit and equals the shifted integral before exit. -/
+theorem setIntegral_exit_stopped_block_eq (D : Set ℂ) (b : ContinuousPath ℂ) (s : ℝ≥0)
+    (hfin : ContinuousPath.exitTime D b ≠ ⊤) (f : ℂ → ℝ) :
+    (∫ t in Ioc (s : ℝ) (min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal),
+      f (b t.toNNReal)) =
+    if (s : ℝ≥0∞) < ContinuousPath.exitTime D b then
+      ∫ t in (0 : ℝ)..(min (1 : ℝ≥0) (ContinuousPath.exitTime D
+        (ContinuousPath.shift s b)).toNNReal : ℝ), f ((ContinuousPath.shift s b) t.toNNReal)
+    else 0 := by
+  by_cases hs : (s : ℝ≥0∞) < ContinuousPath.exitTime D b
+  · rw [ite_eq_left hs]
+    have hle : (s : ℝ) ≤ (ContinuousPath.exitTime D b).toReal := by
+      have := (ENNReal.toReal_le_toReal ENNReal.coe_ne_top hfin).2 hs.le
+      simpa only [ENNReal.coe_toReal] using this
+    rw [← intervalIntegral.integral_of_le (le_min (by linarith) hle)]
+    exact (intervalIntegral_shift_exit_eq_stopped_block D b s hfin hs f).symm
+  · rw [ite_eq_right hs]
+    have hle : (ContinuousPath.exitTime D b).toReal ≤ (s : ℝ) := by
+      have := (ENNReal.toReal_le_toReal hfin ENNReal.coe_ne_top).2 (not_lt.mp hs)
+      simpa only [ENNReal.coe_toReal] using this
+    simp [Set.Ioc_eq_empty (not_lt.mpr (le_trans (min_le_right _ _) hle))]
 
 end HarmonicBalls
