@@ -1,4 +1,5 @@
 import LatticeProb.LQG.GMCDilatedGrid
+import LatticeProb.LQG.LQGBallMassRatioUniform
 
 /-! # Summability for fine-scale grids
 
@@ -200,5 +201,195 @@ theorem ae_fine_scale_affine_gff_increment {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ 
     exact ⟨_, h⟩
   choose hC' hH using hex
   exact hm P hC' H hH N s hN hs
+
+
+/-- A bounded disk admits dyadic spatial grids with quadratic cardinality. -/
+theorem exists_dyadic_ball_grids (R : ℝ) (hR : 0 < R) :
+    ∃ S : ℕ → Finset ℂ, ∀ j,
+      ((S j).card : ℝ) ≤ (4 * R + 1) ^ 2 * (4 : ℝ) ^ j ∧
+      ∀ z ∈ Metric.ball (0 : ℂ) R, ∃ x ∈ S j,
+        dist z x < LatticeProb.LQG.dyadicScale j := by
+  have hd (j : ℕ) : 0 < LatticeProb.LQG.dyadicScale j := by
+    unfold LatticeProb.LQG.dyadicScale
+    positivity
+  have hd1 (j : ℕ) : LatticeProb.LQG.dyadicScale j ≤ 1 := by
+    unfold LatticeProb.LQG.dyadicScale
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  choose S hcard hcover using fun j =>
+    LatticeProb.LQG.LQGBallMassRatioUniform.exists_ball_grid hR (hd j)
+  refine ⟨S, fun j => ⟨?_, hcover j⟩⟩
+  have hratio : 4 * R / LatticeProb.LQG.dyadicScale j + 1 ≤
+      (4 * R + 1) / LatticeProb.LQG.dyadicScale j := by
+    rw [add_div]
+    have h : (1 : ℝ) ≤ 1 / LatticeProb.LQG.dyadicScale j :=
+      (le_div_iff₀ (hd j)).2 (by linarith [hd1 j])
+    linarith
+  calc
+    ((S j).card : ℝ) ≤ (4 * R / LatticeProb.LQG.dyadicScale j + 1) ^ 2 := hcard j
+    _ ≤ ((4 * R + 1) / LatticeProb.LQG.dyadicScale j) ^ 2 :=
+      pow_le_pow_left₀ (by have := hd j; positivity) hratio 2
+    _ = (4 * R + 1) ^ 2 * (4 : ℝ) ^ j := by
+      rw [div_pow, LatticeProb.LQG.dyadicScale, ← pow_mul]
+      simp only [inv_pow]
+      field_simp
+      rw [show (4 : ℝ) = 2 ^ 2 by norm_num, ← pow_mul, Nat.mul_comm j 2]
+
+
+/-- The number of standard radial grid points has geometric growth. -/
+theorem radial_grid_count_le {a : ℝ} (ha : 0 ≤ a) (j n : ℕ) :
+    ((LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) : ℝ) + 1) ≤
+      2 * ((2 : ℝ)⁻¹ ^ (-(a / 2))) ^ j * ((2 : ℝ)⁻¹ ^ (-(a / 2))) ^ n := by
+  let d := LatticeProb.LQG.dyadicScale (n + j)
+  have hd : 0 < d := by dsimp [d, LatticeProb.LQG.dyadicScale]; positivity
+  have hd1 : d ≤ 1 := by
+    dsimp [d, LatticeProb.LQG.dyadicScale]
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  have hone : 1 ≤ d ^ (-(a / 2)) :=
+    Real.one_le_rpow_of_pos_of_le_one_of_nonpos hd hd1 (by linarith)
+  have hfloor : (LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) : ℝ) ≤ d ^ (-(a / 2)) :=
+    Nat.floor_le (Real.rpow_pos_of_pos hd _).le
+  have hp : d ^ (-(a / 2)) = ((2 : ℝ)⁻¹ ^ (-(a / 2))) ^ (n + j) := by
+    dsimp [d, LatticeProb.LQG.dyadicScale]
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num), mul_comm,
+      Real.rpow_mul (by norm_num), Real.rpow_natCast]
+  rw [pow_add] at hp
+  calc
+    _ ≤ 2 * d ^ (-(a / 2)) := by linarith
+    _ = _ := by rw [hp]; ring
+
+
+/-- The product of spatial and radial grid counts has geometric growth. -/
+theorem spatial_radial_grid_count_le {a R : ℝ} (ha : 0 ≤ a) (hR : 0 < R)
+    {S : ℕ → Finset ℂ}
+    (hS : ∀ j, ((S j).card : ℝ) ≤ (4 * R + 1) ^ 2 * (4 : ℝ) ^ j) (j n : ℕ) :
+    (((S j).card * (LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) + 1) : ℕ) : ℝ) + 1 ≤
+      (2 * ((4 * R + 1) ^ 2 + 1)) *
+        ((4 : ℝ) * ((2 : ℝ)⁻¹ ^ (-(a / 2)))) ^ j *
+          ((2 : ℝ)⁻¹ ^ (-(a / 2))) ^ n := by
+  let q : ℝ := (2 : ℝ)⁻¹ ^ (-(a / 2))
+  have hq : 0 < q := Real.rpow_pos_of_pos (by norm_num) _
+  have h4 : (1 : ℝ) ≤ 4 ^ j := one_le_pow₀ (by norm_num)
+  have hs : ((S j).card : ℝ) + 1 ≤ ((4 * R + 1) ^ 2 + 1) * (4 : ℝ) ^ j := by
+    nlinarith [hS j]
+  have hn := radial_grid_count_le ha j n
+  change ((LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) : ℝ) + 1) ≤
+    2 * q ^ j * q ^ n at hn
+  have hp := mul_le_mul hs hn (by positivity : 0 ≤
+    ((LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) : ℝ) + 1)) (by positivity :
+      0 ≤ ((4 * R + 1) ^ 2 + 1) * (4 : ℝ) ^ j)
+  have haux : (((S j).card : ℝ) *
+      ((LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) : ℝ) + 1) + 1) ≤
+      (((S j).card : ℝ) + 1) *
+        ((LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) : ℝ) + 1) := by
+    nlinarith [Nat.cast_nonneg (α := ℝ) (LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j))]
+  calc
+    _ ≤ (((S j).card : ℝ) + 1) *
+        ((LatticeProb.LQG.GMCScaleGrid.gridCount a (n + j) : ℝ) + 1) := by
+          push_cast
+          exact haux
+    _ ≤ (((4 * R + 1) ^ 2 + 1) * (4 : ℝ) ^ j) * (2 * q ^ j * q ^ n) := hp
+    _ = _ := by rw [mul_pow]; ring
+
+
+/-- A finite family of centers and radial indices can be enumerated together. -/
+theorem exists_spatial_radial_enumeration (S : ℕ → Finset ℂ) (Q : ℕ → ℕ → ℕ) :
+    ∃ z : ℕ → ℕ → ℕ → ℂ, ∃ k : ℕ → ℕ → ℕ → ℕ,
+      (∀ j n i, k j n i ≤ Q j n) ∧
+      ∀ (j n : ℕ) (x : ℂ), x ∈ S j → ∀ l ≤ Q j n,
+        ∃ i ≤ (S j).card * (Q j n + 1), z j n i = x ∧ k j n i = l := by
+  classical
+  let E : ℕ → ℕ → Finset (ℂ × ℕ) := fun j n => S j ×ˢ Finset.range (Q j n + 1)
+  let v : ℕ → ℕ → ℕ → ℂ × ℕ := fun j n i =>
+    if h : i < (E j n).card then ((E j n).equivFin.symm ⟨i, h⟩).val else (0, 0)
+  refine ⟨fun j n i => (v j n i).1, fun j n i => (v j n i).2, ?_, ?_⟩
+  · intro j n i
+    by_cases hi : i < (E j n).card
+    · have hm := ((E j n).equivFin.symm ⟨i, hi⟩).property
+      have hm2 : (((E j n).equivFin.symm ⟨i, hi⟩).val).2 < Q j n + 1 := by
+        simpa [E] using (Finset.mem_product.mp hm).2
+      simpa [v, hi] using Nat.lt_succ_iff.mp hm2
+    · simp [v, hi]
+  · intro j n x hx l hl
+    have hm : (x, l) ∈ E j n := by simp [E, hx, Nat.lt_succ_iff.mpr hl]
+    let i : Fin (E j n).card := (E j n).equivFin ⟨(x, l), hm⟩
+    have hi : i.val < (E j n).card := i.isLt
+    have hval : v j n i.val = (x, l) := by
+      simp [v, hi, i]
+    refine ⟨i.val, ?_, ?_, ?_⟩
+    · have hc : (E j n).card = (S j).card * (Q j n + 1) := by
+        simp [E]
+      omega
+    · exact congrArg Prod.fst hval
+    · exact congrArg Prod.snd hval
+
+
+open LatticeProb.LQG LatticeProb.LQG.GMCScaleGrid
+
+/-- Fine-scale increments are controlled on concrete spatial and radial grids. -/
+theorem ae_fine_scale_affine_gff_increment_on_ball_grid
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {g : ℂ → ℝ} (hgc : Continuous g) (hgs : HasCompactSupport g)
+    {T : ℝ} (hT : 0 < T) (hgT : ∀ z, g z ≠ 0 → ‖z‖ + 1 ≤ T) :
+    ∃ K c : ℝ, 0 ≤ K ∧ 0 < c ∧ ∀ (a t R : ℝ), 0 ≤ a → 0 < R →
+      0 ≤ t → t < 1 →
+      ((2 : ℝ)⁻¹ ^ (-(a / 2))) * ((2 : ℝ)⁻¹ ^ c) ≤ t ^ 2 →
+      ∃ m : ℕ, ∃ S : ℕ → Finset ℂ,
+        (∀ j, ((S j).card : ℝ) ≤ (4 * R + 1) ^ 2 * (4 : ℝ) ^ j) ∧
+        (∀ j z, z ∈ Metric.ball (0 : ℂ) R →
+          ∃ x ∈ S j, dist z x < dyadicScale j) ∧
+        ∀ {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+          (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+          LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc →
+          ∀ᵐ ω ∂P, ∀ᶠ j in atTop, ∀ n, m * j ≤ n → ∀ x ∈ S j,
+            ∀ l ≤ gridCount a (n + j),
+              |∫ w, g w *
+                (gridScale (fun k => gridCount a (k + j)) n l ^ (γ ^ 2 / 2) * exp (γ *
+                  (affineRecentredCircle (hcirc ω) (dyadicScale j) x
+                    (gridScale (fun k => gridCount a (k + j)) n l) w -
+                   affineRecentredCircle (hcirc ω) (dyadicScale j) x T 0)) -
+                 dyadicScale n ^ (γ ^ 2 / 2) * exp (γ *
+                  (affineRecentredCircle (hcirc ω) (dyadicScale j) x (dyadicScale n) w -
+                   affineRecentredCircle (hcirc ω) (dyadicScale j) x T 0)))| < 1 := by
+  obtain ⟨K, c, hK, hc, hgrid⟩ := ae_fine_scale_affine_gff_increment hγ hγ2 hgc hgs hT hgT
+  refine ⟨K, c, hK, hc, ?_⟩
+  intro a t R ha hR ht ht1 hdecay
+  let q : ℝ := (2 : ℝ)⁻¹ ^ (-(a / 2))
+  have hq : 0 < q := Real.rpow_pos_of_pos (by norm_num) _
+  obtain ⟨m, hm⟩ := hgrid (4 * q) q t (2 * ((4 * R + 1) ^ 2 + 1))
+    (by positivity) hq.le (by positivity) ht ht1 hdecay
+  obtain ⟨S, hS⟩ := exists_dyadic_ball_grids R hR
+  refine ⟨m, S, fun j => (hS j).1, fun j z hz => (hS j).2 z hz, ?_⟩
+  intro Ω _ P hC hcirc hG
+  let Q : ℕ → ℕ → ℕ := fun j n => gridCount a (n + j)
+  obtain ⟨z, k, hk, hcover⟩ := exists_spatial_radial_enumeration S Q
+  let s : ℕ → ℕ → ℕ → ℝ := fun j n i =>
+    gridScale (fun r => gridCount a (r + j)) n (k j n i)
+  have hs : ∀ j n i, dyadicScale n / 2 ≤ s j n i ∧ s j n i ≤ dyadicScale n := by
+    intro j n i
+    exact gridScale_mem_Icc _ (hk j n i)
+  have hN : ∀ j n, (((S j).card * (Q j n + 1) : ℕ) : ℝ) + 1 ≤
+      (2 * ((4 * R + 1) ^ 2 + 1)) * ((4 * q) ^ j * q ^ n) := by
+    intro j n
+    simpa only [Q, q, mul_assoc] using
+      spatial_radial_grid_count_le ha hR (fun j => (hS j).1) j n
+  have he := hm P hC hcirc hG (fun j n => (S j).card * (Q j n + 1)) s z hN hs
+  filter_upwards [he] with ω hω
+  filter_upwards [hω] with j hj n hn x hx l hl
+  obtain ⟨i, hi, hzi, hki⟩ := hcover j n x hx l hl
+  have hi0 := hj n hn i hi
+  simpa [s, hzi, hki] using hi0
+
+
+/-- The radial grid can be chosen slowly enough for any positive decay rate. -/
+theorem exists_fine_scale_grid_rate {c : ℝ} (hc : 0 < c) :
+    ∃ a t : ℝ, 0 < a ∧ 0 ≤ t ∧ t < 1 ∧
+      ((2 : ℝ)⁻¹ ^ (-(a / 2))) * ((2 : ℝ)⁻¹ ^ c) ≤ t ^ 2 := by
+  refine ⟨c, (2 : ℝ)⁻¹ ^ (c / 4), hc, (Real.rpow_pos_of_pos (by norm_num) _).le,
+    Real.rpow_lt_one (by norm_num) (by norm_num) (by linarith), ?_⟩
+  apply le_of_eq
+  rw [← Real.rpow_add (by norm_num), ← Real.rpow_natCast,
+    ← Real.rpow_mul (by norm_num)]
+  congr 1
+  ring
 
 end HarmonicBalls
