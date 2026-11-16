@@ -92,5 +92,26 @@ theorem IsWholePlaneGFF.ae_fine_scale_grid_ball_power
       congr 1
       ring
 
+
+/-- A half-mesh cover retains quadratic grid growth at the original scale. -/
+theorem exists_bounded_half_mesh_grids (R : ℝ) (hR : 0 < R) :
+    ∃ S : ℕ → Finset ℂ, ∀ j,
+      ((S j).card : ℝ) ≤ (4 * (2 * R + 1) + 1) ^ 2 * (4 : ℝ) ^ j ∧
+      (∀ x ∈ S j, ‖x‖ ≤ R + 1) ∧
+      ∀ z ∈ ball (0 : ℂ) R, ∃ x ∈ S j,
+        dist z x < LatticeProb.LQG.dyadicScale j / 2 := by
+  obtain ⟨S, hS⟩ := exists_bounded_dyadic_ball_grids R hR
+  refine ⟨fun j => S (j + 1), fun j => ⟨?_, (hS (j + 1)).2.1, ?_⟩⟩
+  · have hcoeff : 4 * (4 * R + 1) ^ 2 ≤ (4 * (2 * R + 1) + 1) ^ 2 := by
+      nlinarith
+    calc
+      ((S (j + 1)).card : ℝ) ≤ (4 * R + 1) ^ 2 * (4 : ℝ) ^ (j + 1) := (hS (j + 1)).1
+      _ = (4 * (4 * R + 1) ^ 2) * (4 : ℝ) ^ j := by rw [pow_succ]; ring
+      _ ≤ (4 * (2 * R + 1) + 1) ^ 2 * (4 : ℝ) ^ j := by gcongr
+  · intro z hz
+    obtain ⟨x, hx, hdist⟩ := (hS (j + 1)).2.2 z hz
+    refine ⟨x, hx, ?_⟩
+    simpa [LatticeProb.LQG.dyadicScale_succ_eq_half] using hdist
+
 end HarmonicBalls
 
