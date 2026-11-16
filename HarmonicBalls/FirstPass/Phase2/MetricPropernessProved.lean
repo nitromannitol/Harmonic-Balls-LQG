@@ -1,5 +1,7 @@
 import HarmonicBalls.FirstPass.S11.MetricBall
 import HarmonicBalls.Proposed.MetricProperness
+import HarmonicBalls.FirstPass.Phase2.WeylExponentOfDG20
+import LatticeProb.Bonanno.LQGMetric.Papers.GM.S1.Eq115
 
 /-!
 # Compactness from large-scale metric crossings
@@ -29,5 +31,26 @@ theorem IsEuclideanLengthMetric.isCompact_closedBall_of_far_crossing
   have h := hρ z w hz hn.le
   change D z w ≤ R at hw
   linarith
+
+/-- The distribution-valued form of an LQG metric satisfies the weak metric
+axioms with its natural scaling constants. -/
+theorem isWeakLQGMetric_distributionMetric {γ ξ : ℝ} (hγ : 0 < γ) (hγ₂ : γ < 2)
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇) :
+    LQGMetric.IsWeakLQGMetric γ (distributionMetric 𝔇)
+      (fun r => r ^ (LQGMetric.xiGamma γ * LQGMetric.Q γ)) := by
+  have hξ := xi_eq_xiGamma_derived γ ξ hγ hγ₂ 𝔇 h𝔇
+  have hcm : ∀ D : ℂ → ℂ → ℝ, LatticeProb.LQG.IsEuclideanLengthMetric D →
+      ∃ d : LQGMetric.ContMetric, (∀ u v, d.1 (u, v) = D u v) ∧ d.IsLength :=
+    fun _ hD => LatticeProb.LQG.exists_contMetric_of_isEuclideanLengthMetric hD
+  apply LQGMetric.GM.gm_eq1_15 hγ
+  refine ⟨measurable_distributionMetric h𝔇.measurable_apply, ?_, ?_, ?_, ?_⟩
+  · intro Ω _ P _ h hh
+    exact ae_isLength_distributionMetric h𝔇 hcm hh
+  · intro Ω _ P _ h hh U
+    exact locality_distributionMetric h𝔇 hcm hh U
+  · intro Ω _ P _ h hh
+    simpa only [hξ] using ae_weylScale_distributionMetric h𝔇 hcm hh
+  · intro Ω _ P _ h hh r hr z
+    exact ae_coord_distributionMetric h𝔇 hcm hh hr z
 
 end HarmonicBalls
