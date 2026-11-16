@@ -1,3 +1,4 @@
+import LatticeProb.LQG.GMCContinuumMaximal
 import LatticeProb.LQG.GMCRatioLimit
 import LatticeProb.LQG.LQGBallMassGrid2
 import LatticeProb.LQG.LQGSingularScaledLimit
@@ -9,10 +10,12 @@ import LatticeProb.LQG.GMCRatioLimitMeasure
 The circle-average approximations of a whole-plane Gaussian free field converge at all positive
 radii to the dyadic LQG measure when tested against a fixed continuous compactly supported function.
 The convergence holds on one event for all such tests. For logarithmic insertions it holds on one
-event for all tests that vanish near the insertion.
+event for all tests that vanish near the insertion. The singular approximations also have
+uniformly small mass near the insertion at all sufficiently small positive radii.
 -/
 
-open MeasureTheory Filter Topology Set
+open MeasureTheory Filter Topology Set Metric
+open scoped ENNReal
 open LatticeProb.LQG LatticeProb.Gauss
 
 namespace HarmonicBalls
@@ -187,5 +190,240 @@ theorem ae_tendsto_integral_singular_lqgApprox_continuum_off_origin
   filter_upwards [ae_tendsto_integral_singular_lqgApprox_continuum_all_off_origin
     hh hγ0 hγ2 hμ] with ω hω
   exact hω f hf hfs ⟨δ, hδ, hfδ⟩
+
+/-- On a set where the regularized distance from the insertion lies between one half and one,
+the singular approximation is bounded by a fixed multiple of the nonsingular approximation. -/
+theorem lqgApprox_fieldCircleAverage_le_of_max_norm_bounds {γ : ℝ} (hγ : 0 ≤ γ)
+    (α : ℝ) (h : ℝ → ℂ → ℝ) {t : ℝ} (ht : 0 < t) {A : Set ℂ}
+    (hA : MeasurableSet A) (hbound : ∀ z ∈ A, (1 / 2 : ℝ) ≤ max t ‖z‖ ∧ max t ‖z‖ ≤ 1) :
+    lqgApprox γ (fieldCircleAverage α h) t A ≤
+      ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) * lqgApprox γ h t A := by
+  refine lqgApprox_apply_le_of_le_add hγ ht.le hA ?_
+  intro z hz
+  obtain ⟨hlow, hhigh⟩ := hbound z hz
+  have hlog : |Real.log (max t ‖z‖)| ≤ Real.log 2 := by
+    rw [abs_le]
+    constructor
+    · have h := Real.log_le_log (by norm_num : (0 : ℝ) < 1 / 2) hlow
+      rwa [one_div, Real.log_inv] at h
+    · exact (Real.log_nonpos (le_of_lt (lt_of_lt_of_le (by norm_num) hlow)) hhigh).trans
+        (Real.log_nonneg one_le_two)
+  have hmul : |α * Real.log (max t ‖z‖)| ≤ |α| * Real.log 2 := by
+    rw [abs_mul]
+    exact mul_le_mul_of_nonneg_left hlog (abs_nonneg α)
+  have hc := circleAverage_log_norm_sub_eq_log_max ht z 0
+  simp only [sub_zero] at hc
+  simp only [fieldCircleAverage, hc]
+  linarith [(abs_le.mp hmul).1]
+
+/-- The singular mass of a ball at a comparable radius is controlled by the continuum
+maximal mass of the dilated field. -/
+theorem lqgApprox_fieldCircleAverage_ball_le_continuum_iSup {γ : ℝ} (hγ : 0 < γ)
+    (α : ℝ) (h : ℝ → ℂ → ℝ) {c t : ℝ} (hc : 0 < c)
+    (htlo : (1 / 2 : ℝ) ≤ t) (hthi : t ≤ 1) :
+    lqgApprox γ (fieldCircleAverage α h) (c * t) (ball 0 c) ≤
+      ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) *
+        (ENNReal.ofReal (c ^ (γ * (lqgQ γ - α)) * Real.exp (γ * h c 0)) *
+          ⨆ u ∈ Ioc (0 : ℝ) 1, lqgApprox γ (dilateRecentre c h) u (ball 0 1)) := by
+  have ht : 0 < t := by linarith
+  have hcomp := lqgApprox_fieldCircleAverage_le_of_max_norm_bounds hγ.le α
+    (dilateRecentre c h) ht measurableSet_ball (A := ball 0 1) (by
+      intro z hz
+      have hz1 : ‖z‖ ≤ 1 := (mem_ball_zero_iff.mp hz).le
+      exact ⟨htlo.trans (le_max_left _ _), max_le hthi hz1⟩)
+  have hsup : lqgApprox γ (dilateRecentre c h) t (ball 0 1) ≤
+      ⨆ u ∈ Ioc (0 : ℝ) 1, lqgApprox γ (dilateRecentre c h) u (ball 0 1) :=
+    le_iSup₂_of_le (f := fun u (_ : u ∈ Ioc (0 : ℝ) 1) =>
+      lqgApprox γ (dilateRecentre c h) u (ball 0 1)) t ⟨ht, hthi⟩ le_rfl
+  calc
+    lqgApprox γ (fieldCircleAverage α h) (c * t) (ball 0 c) =
+        ENNReal.ofReal (c ^ (γ * (lqgQ γ - α)) * Real.exp (γ * h c 0)) *
+          lqgApprox γ (fieldCircleAverage α (dilateRecentre c h)) t (ball 0 1) := by
+            simpa only [mul_one] using
+              lqgApprox_fieldCircleAverage_dilation_ball hγ.ne' α h hc ht 1
+    _ ≤ ENNReal.ofReal (c ^ (γ * (lqgQ γ - α)) * Real.exp (γ * h c 0)) *
+          (ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) *
+            lqgApprox γ (dilateRecentre c h) t (ball 0 1)) := mul_le_mul' le_rfl hcomp
+    _ ≤ _ := by
+      rw [mul_left_comm]
+      exact mul_le_mul' le_rfl (mul_le_mul' le_rfl hsup)
+
+/-- The singular mass of a dyadic annulus is controlled by the continuum maximal mass
+of the corresponding dilated field. -/
+theorem lqgApprox_fieldCircleAverage_annulus_le_continuum_iSup {γ : ℝ} (hγ : 0 < γ)
+    (α : ℝ) (h : ℝ → ℂ → ℝ) {c t : ℝ} (hc : 0 < c)
+    (ht : 0 < t) (hthi : t ≤ 1) :
+    lqgApprox γ (fieldCircleAverage α h) (c * t) (ball 0 c \ ball 0 (c / 2)) ≤
+      ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) *
+        (ENNReal.ofReal (c ^ (γ * (lqgQ γ - α)) * Real.exp (γ * h c 0)) *
+          ⨆ u ∈ Ioc (0 : ℝ) 1, lqgApprox γ (dilateRecentre c h) u (ball 0 1)) := by
+  have hcomp := lqgApprox_fieldCircleAverage_le_of_max_norm_bounds hγ.le α
+    (dilateRecentre c h) ht (measurableSet_ball.diff measurableSet_ball)
+    (A := ball 0 1 \ ball 0 (1 / 2)) (by
+      intro z hz
+      have hzlo : (1 / 2 : ℝ) ≤ ‖z‖ := by simpa using hz.2
+      have hzhi : ‖z‖ ≤ 1 := (mem_ball_zero_iff.mp hz.1).le
+      exact ⟨hzlo.trans (le_max_right _ _), max_le hthi hzhi⟩)
+  have hsup : lqgApprox γ (dilateRecentre c h) t (ball 0 1 \ ball 0 (1 / 2)) ≤
+      ⨆ u ∈ Ioc (0 : ℝ) 1, lqgApprox γ (dilateRecentre c h) u (ball 0 1) :=
+    (measure_mono sdiff_subset).trans (le_iSup₂_of_le (f := fun u (_ : u ∈ Ioc (0 : ℝ) 1) =>
+      lqgApprox γ (dilateRecentre c h) u (ball 0 1)) t ⟨ht, hthi⟩ le_rfl)
+  calc
+    lqgApprox γ (fieldCircleAverage α h) (c * t) (ball 0 c \ ball 0 (c / 2)) =
+        ENNReal.ofReal (c ^ (γ * (lqgQ γ - α)) * Real.exp (γ * h c 0)) *
+          lqgApprox γ (fieldCircleAverage α (dilateRecentre c h)) t (ball 0 1 \ ball 0 (1 / 2)) := by
+            simpa only [mul_one, div_eq_mul_inv, one_mul] using
+              lqgApprox_fieldCircleAverage_dilation_annulus hγ.ne' α h hc ht (1 / 2) 1
+    _ ≤ ENNReal.ofReal (c ^ (γ * (lqgQ γ - α)) * Real.exp (γ * h c 0)) *
+          (ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) *
+            lqgApprox γ (dilateRecentre c h) t (ball 0 1 \ ball 0 (1 / 2))) := mul_le_mul' le_rfl hcomp
+    _ ≤ _ := by
+      rw [mul_left_comm]
+      exact mul_le_mul' le_rfl (mul_le_mul' le_rfl hsup)
+
+/-- A dyadic decomposition bounds the singular mass at every scale in a dyadic band. -/
+theorem lqgApprox_fieldCircleAverage_ball_le_continuum_sum {γ : ℝ} (hγ : 0 < γ)
+    (α : ℝ) (h : ℝ → ℂ → ℝ) {J k : ℕ} (hJk : J ≤ k) {s : ℝ}
+    (hslo : dyadicScale k / 2 ≤ s) (hshi : s ≤ dyadicScale k) :
+    lqgApprox γ (fieldCircleAverage α h) s (ball 0 (dyadicScale J)) ≤
+      ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) *
+        ∑ j ∈ Finset.Ico J (k + 1),
+          ENNReal.ofReal (dyadicScale j ^ (γ * (lqgQ γ - α)) *
+            Real.exp (γ * h (dyadicScale j) 0)) *
+              ⨆ u ∈ Ioc (0 : ℝ) 1,
+                lqgApprox γ (dilateRecentre (dyadicScale j) h) u (ball 0 1) := by
+  have hd : ∀ j : ℕ, 0 < dyadicScale j := dyadicScale_pos_bracket
+  have hs : 0 < s := lt_of_lt_of_le (div_pos (hd k) (by norm_num)) hslo
+  have hscale : ∀ j ≤ k, s / dyadicScale j ≤ 1 := by
+    intro j hj
+    exact (div_le_one (hd j)).2 (hshi.trans (dyadicScale_le_of_le hj))
+  suffices H : ∀ d J : ℕ, J + d = k →
+      lqgApprox γ (fieldCircleAverage α h) s (ball 0 (dyadicScale J)) ≤
+        ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) *
+          ∑ j ∈ Finset.Ico J (k + 1),
+            ENNReal.ofReal (dyadicScale j ^ (γ * (lqgQ γ - α)) *
+              Real.exp (γ * h (dyadicScale j) 0)) *
+                ⨆ u ∈ Ioc (0 : ℝ) 1,
+                  lqgApprox γ (dilateRecentre (dyadicScale j) h) u (ball 0 1) from
+    H (k - J) J (by omega)
+  intro d
+  induction d with
+  | zero =>
+    intro J hJ
+    rw [add_zero] at hJ
+    subst hJ
+    rw [Nat.Ico_succ_singleton, Finset.sum_singleton]
+    have hlo : (1 / 2 : ℝ) ≤ s / dyadicScale J := by
+      apply (le_div_iff₀ (hd J)).2
+      linarith
+    have hbound := lqgApprox_fieldCircleAverage_ball_le_continuum_iSup hγ α h (hd J)
+      hlo (hscale J le_rfl)
+    simpa only [mul_div_cancel₀ _ (hd J).ne'] using hbound
+  | succ d ih =>
+    intro J hJ
+    have hsplit : ball (0 : ℂ) (dyadicScale J) ⊆
+        (ball 0 (dyadicScale J) \ ball 0 (dyadicScale (J + 1))) ∪ ball 0 (dyadicScale (J + 1)) := by
+      rw [sdiff_union_self]
+      exact subset_union_left
+    have hann := lqgApprox_fieldCircleAverage_annulus_le_continuum_iSup hγ α h (hd J)
+      (div_pos hs (hd J)) (hscale J (by omega))
+    have hann' : lqgApprox γ (fieldCircleAverage α h) s
+        (ball 0 (dyadicScale J) \ ball 0 (dyadicScale (J + 1))) ≤
+        ENNReal.ofReal (Real.exp (γ * (|α| * Real.log 2))) *
+          (ENNReal.ofReal (dyadicScale J ^ (γ * (lqgQ γ - α)) *
+            Real.exp (γ * h (dyadicScale J) 0)) *
+              ⨆ u ∈ Ioc (0 : ℝ) 1,
+                lqgApprox γ (dilateRecentre (dyadicScale J) h) u (ball 0 1)) := by
+      simpa only [mul_div_cancel₀ _ (hd J).ne', dyadicScale_succ_eq_half] using hann
+    calc
+      lqgApprox γ (fieldCircleAverage α h) s (ball 0 (dyadicScale J)) ≤
+          lqgApprox γ (fieldCircleAverage α h) s
+              (ball 0 (dyadicScale J) \ ball 0 (dyadicScale (J + 1))) +
+            lqgApprox γ (fieldCircleAverage α h) s (ball 0 (dyadicScale (J + 1))) :=
+        (measure_mono hsplit).trans (measure_union_le _ _)
+      _ ≤ _ := add_le_add hann' (ih (J + 1) (by omega))
+      _ = _ := by
+        rw [← mul_add, Finset.sum_eq_sum_Ico_succ_bot (by omega : J < k + 1)]
+
+/-- Subexponential growth of continuum maximal masses implies uniform smallness of the
+singular approximation masses near the insertion at every sufficiently small radius. -/
+theorem exists_lqgApprox_fieldCircleAverage_ball_le_continuum {γ α : ℝ} (hγ : 0 < γ)
+    (hαQ : α < lqgQ γ) {h : ℝ → ℂ → ℝ} (hZ : ContinuumOriginGrowth γ h) :
+    ∀ η : ℝ, 0 < η → ∃ δ : ℝ, 0 < δ ∧ ∀ s : ℝ, 0 < s → s < δ →
+      lqgApprox γ (fieldCircleAverage α h) s (ball 0 δ) ≤ ENNReal.ofReal η := by
+  intro η hη
+  have hσ : 0 < γ * (lqgQ γ - α) := mul_pos hγ (sub_pos.2 hαQ)
+  have hl2 : 0 < Real.log 2 := Real.log_pos one_lt_two
+  set σ := γ * (lqgQ γ - α) with hσdef
+  set c := Real.exp (γ * (|α| * Real.log 2)) with hc
+  set r := Real.exp (-(σ * Real.log 2 / 2)) with hr
+  have hr0 : 0 ≤ r := (Real.exp_pos _).le
+  have hr1 : r < 1 := by
+    have : 0 < σ * Real.log 2 / 2 := by positivity
+    calc r < Real.exp 0 := Real.exp_lt_exp.2 (by linarith)
+      _ = 1 := Real.exp_zero
+  have hev := hZ (σ * Real.log 2 / 2) (by positivity)
+  have hsmall : ∀ᶠ J : ℕ in atTop, c * (r ^ J / (1 - r)) ≤ η := by
+    have ht : Tendsto (fun J : ℕ => c * (r ^ J / (1 - r))) atTop (𝓝 (c * (0 / (1 - r)))) :=
+      ((tendsto_pow_atTop_nhds_zero_of_lt_one hr0 hr1).div_const _).const_mul _
+    rw [zero_div, mul_zero] at ht
+    exact ht.eventually (ge_mem_nhds hη)
+  obtain ⟨J₀, hJ₀⟩ := eventually_atTop.1 hev
+  obtain ⟨J, hJ⟩ := eventually_atTop.1 (hsmall.and (eventually_ge_atTop J₀))
+  obtain ⟨hJη, hJJ₀⟩ := hJ J le_rfl
+  refine ⟨dyadicScale J, dyadicScale_pos_bracket J, ?_⟩
+  intro s hs hsJ
+  have hJ1 : dyadicScale J ≤ 1 := by
+    unfold dyadicScale
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  obtain ⟨k, hk₁, hk₂⟩ := exists_dyadicScale_bracket hs (hsJ.trans_le hJ1)
+  have hJk : J ≤ k := by
+    by_contra h
+    have hle : k + 1 ≤ J := by omega
+    have hmono := dyadicScale_le_of_le hle
+    linarith
+  refine (lqgApprox_fieldCircleAverage_ball_le_continuum_sum hγ α h hJk
+    (by simpa only [dyadicScale_succ_eq_half] using hk₁) hk₂.le).trans ?_
+  have hterm : ∀ j ∈ Finset.Ico J (k + 1),
+      ENNReal.ofReal (dyadicScale j ^ σ * Real.exp (γ * h (dyadicScale j) 0)) *
+          (⨆ u ∈ Ioc (0 : ℝ) 1, lqgApprox γ (dilateRecentre (dyadicScale j) h) u (ball 0 1)) ≤
+        ENNReal.ofReal (r ^ j) := by
+    intro j hj
+    have hjJ : J₀ ≤ j := hJJ₀.trans (Finset.mem_Ico.1 hj).1
+    rw [ENNReal.ofReal_mul (Real.rpow_nonneg (dyadicScale_pos_bracket j).le _), mul_assoc]
+    calc ENNReal.ofReal (dyadicScale j ^ σ) *
+          (ENNReal.ofReal (Real.exp (γ * h (dyadicScale j) 0)) *
+            ⨆ u ∈ Ioc (0 : ℝ) 1, lqgApprox γ (dilateRecentre (dyadicScale j) h) u (ball 0 1))
+        ≤ ENNReal.ofReal (dyadicScale j ^ σ) * ENNReal.ofReal (Real.exp (σ * Real.log 2 / 2 * j)) := by
+          gcongr
+          exact hJ₀ j hjJ
+      _ = ENNReal.ofReal (r ^ j) := by
+          rw [← ENNReal.ofReal_mul (Real.rpow_nonneg (dyadicScale_pos_bracket j).le _), hr,
+            ← Real.exp_nat_mul, Real.rpow_def_of_pos (dyadicScale_pos_bracket j), ← Real.exp_add]
+          congr 2
+          simp only [dyadicScale, Real.log_pow, Real.log_inv]
+          ring
+  calc ENNReal.ofReal c * ∑ j ∈ Finset.Ico J (k + 1),
+          ENNReal.ofReal (dyadicScale j ^ σ * Real.exp (γ * h (dyadicScale j) 0)) *
+            ⨆ u ∈ Ioc (0 : ℝ) 1, lqgApprox γ (dilateRecentre (dyadicScale j) h) u (ball 0 1)
+      ≤ ENNReal.ofReal c * ∑ j ∈ Finset.Ico J (k + 1), ENNReal.ofReal (r ^ j) := by
+        gcongr with j hj
+        exact hterm j hj
+    _ = ENNReal.ofReal (c * ∑ j ∈ Finset.Ico J (k + 1), r ^ j) := by
+        rw [ENNReal.ofReal_mul (Real.exp_pos _).le,
+          ENNReal.ofReal_sum_of_nonneg (fun j _ => pow_nonneg hr0 j)]
+    _ ≤ ENNReal.ofReal η := ENNReal.ofReal_le_ofReal
+        ((mul_le_mul_of_nonneg_left (geom_sum_Ico_le_of_lt_one hr0 hr1) (Real.exp_pos _).le).trans hJη)
+
+/-- Almost surely, the singular circle-average masses are uniformly small near the
+insertion at every sufficiently small positive radius. -/
+theorem ae_exists_lqgApprox_fieldCircleAverage_ball_le_continuum
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+    {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc)
+    {γ α : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ) :
+    ∀ᵐ ω ∂P, ∀ η : ℝ, 0 < η → ∃ δ : ℝ, 0 < δ ∧ ∀ s : ℝ, 0 < s → s < δ →
+      lqgApprox γ (fieldCircleAverage α (hcirc ω)) s (ball 0 δ) ≤ ENNReal.ofReal η := by
+  filter_upwards [hh.ae_continuumOriginGrowth hγ0 hγ2] with ω hω
+  exact exists_lqgApprox_fieldCircleAverage_ball_le_continuum hγ0 hαQ hω
 
 end HarmonicBalls
