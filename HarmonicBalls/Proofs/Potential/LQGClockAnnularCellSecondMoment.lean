@@ -115,4 +115,35 @@ theorem exists_lintegral_prod_annular_mesh_cell_sq_le
   rw [hend, hrpow] at hmain
   simpa only [ENNReal.rpow_ofNat] using hmain
 
+/-- For squared coupling below two, the expected maximum annular mesh-cell
+mass has a negative power bound, uniform over scales at most the inner radius. -/
+theorem exists_lintegral_prod_annular_mesh_max_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ : γ ≠ 0) (hγ2 : γ ^ 2 < 2) (α δ : ℝ) :
+    ∃ (C : ℝ≥0∞) (β : ℝ), C < ∞ ∧ 0 < β ∧ ∀ {ε : ℝ}, 0 < ε → ε ≤ δ →
+      ∀ (m : ℕ), 0 < m →
+      (∫⁻ p : Ω × ContinuousPath ℂ, (⨆ j : Fin m,
+        ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+          ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) ≤ C * (m : ℝ≥0∞) ^ (-β) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨C, β, hC, hβ, hbound⟩ :=
+    exists_lintegral_prod_annular_mesh_cell_sq_le hh x hγ hγ2 α δ
+  refine ⟨C ^ (1 / 2 : ℝ), β, ENNReal.rpow_lt_top_of_nonneg (by norm_num) hC.ne, hβ, ?_⟩
+  intro ε hε hεδ m hm
+  let X : Fin m → Ω × ContinuousPath ℂ → ℝ≥0∞ := fun j p =>
+    ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+      ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal))
+  have hX (j : Fin m) : AEMeasurable (X j) (P.prod (planarBrownianMotion x)) :=
+    aemeasurable_annular_inserted_clock_cell hh (planarBrownianMotion x) hε γ α δ
+      ((j : ℝ) / m) (((j : ℝ) + 1) / m)
+  exact lintegral_iSup_le_mesh_rpow_of_aemeasurable (P.prod (planarBrownianMotion x)) hm X hX
+    (by norm_num : (1 : ℝ) ≤ 2) C (hbound hε hεδ m hm)
+
 end HarmonicBalls
