@@ -185,4 +185,41 @@ theorem exists_lintegral_prod_annular_all_dyadic_mesh_cell_sq_le
   · exact (hlarge k (lt_of_not_ge hk) x m hm j).trans
       (mul_le_mul' (le_max_right _ _) le_rfl)
 
+/-- The uniform dyadic cell bound also holds at zero coupling. -/
+theorem exists_lintegral_prod_annular_all_dyadic_mesh_cell_sq_le_of_sq_lt_two
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ2 : γ ^ 2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ C : ℝ≥0∞, C < ∞ ∧ 0 < (1 - γ ^ 2 / 2) / 2 ∧
+      ∀ (k : ℕ) (x : ℂ) (m : ℕ), 0 < m → ∀ j : Fin m,
+      (∫⁻ p : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+        ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          (dyadicScale k) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale k) z))
+              (p.2 s.toNNReal))) ^ (2 : ℝ) ∂(P.prod (planarBrownianMotion x))) ≤
+        C * (m : ℝ≥0∞) ^ (-(1 + 2 * ((1 - γ ^ 2 / 2) / 2))) := by
+  by_cases hγ : γ = 0
+  · subst γ
+    refine ⟨2, by norm_num, by norm_num, ?_⟩
+    intro k x m hm j
+    have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
+    have hk1 : dyadicScale k ≤ 1 := by
+      unfold dyadicScale
+      exact pow_le_one₀ (by norm_num) (by norm_num)
+    have hend : ((j : ℝ) / m) + 1 / (m : ℝ) = ((j : ℝ) + 1) / m := by ring
+    have hrpow : (ENNReal.ofReal (1 / (m : ℝ))) ^ (2 : ℝ) =
+        (m : ℝ≥0∞) ^ (-(1 + 2 * ((1 - (0 : ℝ) ^ 2 / 2) / 2))) := by
+      rw [one_div, ENNReal.ofReal_inv_of_pos hm0, ENNReal.ofReal_natCast,
+        ENNReal.inv_rpow, ← ENNReal.rpow_neg]
+      congr 1
+      norm_num
+    have hmain := lintegral_prod_brownian_annular_cell_sq_le_of_scale_lower_bound
+      hh x (dyadicScale_pos k) (le_refl (dyadicScale k)) hk1 0 α δ
+      ((j : ℝ) / m) (1 / (m : ℝ))
+    rw [hend] at hmain
+    rw [← hrpow]
+    simpa [ENNReal.rpow_ofNat] using hmain
+  · exact exists_lintegral_prod_annular_all_dyadic_mesh_cell_sq_le hh hγ hγ2 α hδ
+
 end HarmonicBalls
