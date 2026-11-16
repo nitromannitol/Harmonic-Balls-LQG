@@ -71,4 +71,43 @@ theorem ae_singular_approximant_contained_ball_geometric
       (pow_le_pow_left₀ hq.le (le_max_right u q) m) (pow_nonneg hq.le _) hA.le
     convert hmul using 1; ring
 
+
+/-- The geometric bound can be written as a positive power of each enclosing
+radius in the same sequence. -/
+theorem ae_singular_approximant_contained_ball_power
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc)
+    {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
+    (hδ : 0 < δ) (hρ : ρ ∈ Ioo (0 : ℝ) 1) (hrρ : r < ρ) :
+    ∀ᵐ ω ∂P, ∃ A β : ℝ, 0 < A ∧ 0 < β ∧ ∃ n J₀ : ℕ, 0 < n ∧
+      ∀ m k : ℕ, ∀ z : ℂ, ∀ s : ℝ,
+        ‖z‖ + s ≤ dyadicScale (n * m) → dyadicScale (n * m) ≤ r → J₀ ≤ m →
+        lqgApprox γ (fieldCircleAverage α (hcirc ω)) (dyadicScale k) (ball z s) ≤
+          ENNReal.ofReal (A * dyadicScale (n * m) ^ β) := by
+  filter_upwards [ae_singular_approximant_contained_ball_geometric
+    hh hγ hγ2 hαQ hδ hρ hrρ] with ω hω
+  obtain ⟨A, t, hA, ht, ht1, n, J₀, hn, hbound⟩ := hω
+  let β : ℝ := -Real.log t / (n * Real.log 2)
+  have hn' : (0 : ℝ) < n := by exact_mod_cast hn
+  have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have hβ : 0 < β := by
+    dsimp [β]
+    exact div_pos (neg_pos.mpr (Real.log_neg ht ht1)) (mul_pos hn' hlog)
+  refine ⟨A, β, hA, hβ, n, J₀, hn, ?_⟩
+  intro m k z s hzs hr hm
+  have heq : dyadicScale (n * m) ^ β = t ^ m := by
+    rw [Real.rpow_def_of_pos (by unfold dyadicScale; positivity)]
+    unfold dyadicScale
+    rw [Real.log_pow, Real.log_inv]
+    have hcancel : -(Real.log 2) * (n : ℝ) * β = Real.log t := by
+      dsimp [β]
+      field_simp
+    rw [Nat.cast_mul]
+    rw [← Real.exp_log ht, ← Real.exp_nat_mul]
+    congr 1
+    nlinarith [hcancel]
+  rw [heq]
+  exact hbound m k z s hzs hr hm
+
 end HarmonicBalls
