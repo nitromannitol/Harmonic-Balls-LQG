@@ -878,4 +878,69 @@ theorem ae_shift_stopped_annular_increment_le_riesz_energy {Ω : Type*} [Measura
   filter_upwards [hb y] with b hb'
   exact hb' (τ b) ε hε hεhalf hεδ
 
+/-- Shifted stopped annular increments have a common annealed geometric-rate bound. -/
+theorem brownian_shift_stopped_annular_increment_annealed_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (x : ℂ) (s : ℝ≥0) (τ : ContinuousPath ℂ → ℝ≥0), Measurable τ →
+      ∀ ε : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        Integrable (fun b => stoppedAnnularIncrement P hcirc γ α δ ε τ
+          (ContinuousPath.shift s b)) (planarBrownianMotion x) ∧
+        (∫ b, stoppedAnnularIncrement P hcirc γ α δ ε τ (ContinuousPath.shift s b)
+          ∂planarBrownianMotion x) ≤
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    ae_shift_stopped_annular_increment_le_riesz_energy hh hγ0 hγ2 α hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro x s τ hτ ε hε hεhalf hεδ
+  let E : ContinuousPath ℂ → ℝ := fun b => unitOccupationRieszEnergy d (ContinuousPath.shift s b)
+  let a : ℝ := Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2))
+  let c : ℝ := Real.exp (Real.log ε * ((θ-γ)^2/2))
+  let B : ℝ := Real.exp (γ^2*Real.log 2)-1
+  let G : ContinuousPath ℂ → ℝ := fun b => ((B*(M^2 * E b * 2^d)+1)/2)*a + 2*M*c
+  have hE : Integrable E (planarBrownianMotion x) :=
+    (integrable_shift_unitOccupationRieszEnergy x s hd0 hd2).1
+  have hG : Integrable G (planarBrownianMotion x) := by
+    dsimp [G]
+    fun_prop
+  have hm : Measurable (fun b => stoppedAnnularIncrement P hcirc γ α δ ε τ
+      (ContinuousPath.shift s b)) :=
+    (measurable_stopped_annular_inserted_field_expectation hh hε γ α δ τ hτ).comp
+      (ContinuousPath.measurable_shift_fixed s)
+  have hle : ∀ᵐ b ∂planarBrownianMotion x,
+      stoppedAnnularIncrement P hcirc γ α δ ε τ (ContinuousPath.shift s b) ≤ G b :=
+    hb x s τ hτ ε hε hεhalf hεδ
+  have hn : ∀ b, 0 ≤ stoppedAnnularIncrement P hcirc γ α δ ε τ b := by
+    intro b
+    apply integral_nonneg
+    intro ω
+    exact abs_nonneg _
+  have hi : Integrable (fun b => stoppedAnnularIncrement P hcirc γ α δ ε τ
+      (ContinuousPath.shift s b)) (planarBrownianMotion x) := by
+    apply hG.mono' hm.aestronglyMeasurable
+    filter_upwards [hle] with b hb
+    simpa [Real.norm_eq_abs, abs_of_nonneg (hn _)] using hb
+  refine ⟨hi, (integral_mono_ae hi hG hle).trans ?_⟩
+  change (∫ b, G b ∂planarBrownianMotion x) ≤
+    ((B*(M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2)*a + 2*M*c
+  have hGeq : G = fun b => (B*M^2*2^d*a/2)*E b + (a/2 + 2*M*c) := by
+    funext b
+    dsimp [G]
+    ring
+  rw [hGeq, integral_add (hE.const_mul _) (integrable_const _), integral_const_mul]
+  have hEx : (∫ b, E b ∂planarBrownianMotion x) =
+      ∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0 :=
+    (integrable_shift_unitOccupationRieszEnergy x s hd0 hd2).2.trans
+      (integral_unitOccupationRieszEnergy_eq x 0 hd0 hd2)
+  rw [hEx]
+  simp only [integral_const, smul_eq_mul, Measure.real, measure_univ, ENNReal.toReal_one, one_mul]
+  ring_nf
+  exact le_rfl
+
 end HarmonicBalls
