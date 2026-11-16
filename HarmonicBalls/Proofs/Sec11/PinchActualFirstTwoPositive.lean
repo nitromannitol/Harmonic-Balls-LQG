@@ -68,4 +68,38 @@ theorem IsWholePlaneGFF.exists_positive_outside_pinchLocal_first
   rw [measure_congr heq]
   exact hh.pinchLocal_first_positive_by_shift hγ hγ₂ hα hD hgeo
 
+/-- The crossing distance between the two small circles has an almost surely
+positive representative measurable outside the buffered disk. -/
+theorem IsWholePlaneGFF.exists_positive_outside_pinchLocal_crossing
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {γ ξ α δ : ℝ} {D : Ω → ℂ → ℂ → ℝ} {U V W T Q' Q : Set ℂ}
+    (hh : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α < lqgQ γ) (hD : IsLQGMetricOfField P γ ξ α hC D)
+    (hgeo : IsBufferedPinchGeometry U V W T Q' Q δ) :
+    ∃ a : Ω → ℝ,
+      Measurable[MeasurableSpace.comap (localModConstPairings α hC (closure W)ᶜ)
+        inferInstance] a ∧
+      (∀ᵐ ω ∂P, a ω = setDist (D ω) (sphere 0 δ) (sphere 0 (2 * δ))) ∧
+      ∀ᵐ ω ∂P, 0 < a ω := by
+  have hE : IsOpen (closure W)ᶜ := isClosed_closure.isOpen_compl
+  have hsph : sphere (0 : ℂ) 1 ⊆ (closure W)ᶜ := by
+    intro z hz hzW
+    have h := BundleParts.closure_W_norm_gt_one hgeo hzW
+    rw [mem_sphere_zero_iff_norm] at hz
+    linarith
+  have hBE : ball (0 : ℂ) (3 * δ) ⊆ (closure W)ᶜ := by
+    intro z hz hzW
+    have h := BundleParts.closure_W_norm_gt_one hgeo hzW
+    rw [mem_ball_zero_iff] at hz
+    linarith [hgeo.delta_lt]
+  obtain ⟨hmetric, hloc⟩ := S11ad.metric_locality_of_frozen
+    lqgMetricFieldAxiomsUnivFrozen_derived γ ξ α hγ hγ₂ hα Ω P hC hcirc D hh hD
+  obtain ⟨a, ha, hae⟩ := ExteriorDistances.exists_exterior_setDist_spheres hh α hE hsph hmetric
+    (fun V' hV' _ => hloc V' hV') hgeo.delta_pos hBE
+  refine ⟨a, ha, hae, ?_⟩
+  filter_upwards [hae, hmetric] with ω hω hm
+  rw [hω]
+  exact IsEuclideanLengthMetric.setDist_spheres_pos hm 0 hgeo.delta_pos (by linarith [hgeo.delta_pos])
+
 end HarmonicBalls
