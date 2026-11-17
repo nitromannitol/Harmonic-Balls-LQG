@@ -2261,4 +2261,190 @@ theorem integral_rpow_annularSquare_atoms_le_nonneg {Ω ι : Type*} [MeasurableS
       (le_of_not_gt (fun hj => hpos ⟨j, hj⟩)) (ha j)
     simp [hz, Real.zero_rpow (by linarith : q ≠ 0)]
 
+
+/-- A weighted finite family of normalized Gaussian exponentials has a moment
+bounded by the corresponding one-point moment. -/
+theorem integral_rpow_sum_exp_gaussian_le_of_sum_eq_one
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι] {P : Measure Ω}
+    (X : ι → Ω → ℝ) (hX : ∀ i, HasGaussianLaw (X i) P)
+    (hmean : ∀ i, ∫ ω, X i ω ∂P = 0) (V : ℝ)
+    (hvar : ∀ i, variance (X i) P = V)
+    (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i) (ha1 : ∑ i, a i = 1)
+    {p : ℝ} (hp : 1 ≤ p) :
+    (∫ ω, (∑ i, a i * Real.exp (X i ω - V / 2)) ^ p ∂P) ≤
+      Real.exp ((p ^ 2 - p) * V / 2) := by
+  classical
+  let F : Ω → ι → ℝ := fun ω i => Real.exp (X i ω - V / 2)
+  have hI (i : ι) : Integrable (fun ω => F ω i ^ p) P := by
+    have hL : HasLaw (X i) (gaussianReal (∫ ω, X i ω ∂P) (variance (X i) P).toNNReal) P :=
+      ⟨(hX i).aemeasurable, (hX i).map_eq_gaussianReal⟩
+    have hi := hL.integrable_comp (f := fun y : ℝ => Real.exp (p * y))
+      (integrable_exp_mul_gaussianReal p)
+    have heq : (fun ω => F ω i ^ p) =
+        (fun ω => Real.exp (-(p * V / 2)) * Real.exp (p * X i ω)) := by
+      funext ω
+      dsimp [F]
+      rw [← Real.exp_mul, ← Real.exp_add]
+      congr 1
+      ring
+    rw [heq]
+    exact hi.const_mul _
+  have hsum : Integrable (fun ω => ∑ i, a i * F ω i ^ p) P :=
+    integrable_finsetSum _ (fun i _ => (hI i).const_mul (a i))
+  have hle (ω) : (∑ i, a i * F ω i) ^ p ≤ ∑ i, a i * F ω i ^ p :=
+    Real.rpow_arith_mean_le_arith_mean_rpow Finset.univ a (F ω)
+      (fun i _ => ha i) ha1 (fun i _ => (Real.exp_pos _).le) hp
+  have hint : Integrable (fun ω => (∑ i, a i * F ω i) ^ p) P := by
+    simpa only [F] using integrable_rpow_sum_exp_gaussian X hX a (fun _ => V / 2) ha (by linarith : 0 < p)
+  calc
+    _ ≤ ∫ ω, ∑ i, a i * F ω i ^ p ∂P := integral_mono hint hsum hle
+    _ = ∑ i, a i * ∫ ω, F ω i ^ p ∂P := by
+      rw [integral_finsetSum _ (fun i _ => (hI i).const_mul _)]
+      simp only [integral_const_mul]
+    _ = _ := by
+      have hmoment (i : ι) : (∫ ω, F ω i ^ p ∂P) =
+          Real.exp ((p ^ 2 - p) * V / 2) := by
+        have hV : 0 ≤ V := (hvar i) ▸ variance_nonneg (X i) P
+        have hL : HasLaw (X i) (gaussianReal 0 V.toNNReal) P :=
+          ⟨(hX i).aemeasurable, by rw [(hX i).map_eq_gaussianReal, hmean i, hvar i]⟩
+        have hm := mgf_gaussianReal hL p
+        simp only [mgf, zero_mul, zero_add, Real.coe_toNNReal V hV] at hm
+        simp_rw [F, ← Real.exp_mul, show ∀ ω, Real.exp ((X i ω - V / 2) * p) =
+            Real.exp (-(p * V / 2)) * Real.exp (p * X i ω) by
+          intro ω
+          rw [← Real.exp_add]
+          congr 1
+          ring]
+        rw [integral_const_mul, hm, ← Real.exp_add]
+        congr 1
+        ring
+      simp_rw [hmoment, ← Finset.sum_mul, ha1, one_mul]
+
+/-- A finite atomic Gaussian mass has a moment bounded by its total weight. -/
+theorem integral_rpow_sum_exp_gaussian_le
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι] {P : Measure Ω}
+    (X : ι → Ω → ℝ) (hX : ∀ i, HasGaussianLaw (X i) P)
+    (hmean : ∀ i, ∫ ω, X i ω ∂P = 0) (V : ℝ)
+    (hvar : ∀ i, variance (X i) P = V)
+    (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i) {p : ℝ} (hp : 1 ≤ p) :
+    (∫ ω, (∑ i, a i * Real.exp (X i ω - V / 2)) ^ p ∂P) ≤
+      (∑ i, a i) ^ p * Real.exp ((p ^ 2 - p) * V / 2) := by
+  classical
+  let M := ∑ i, a i
+  have hM : 0 ≤ M := Finset.sum_nonneg (fun i _ => ha i)
+  rcases hM.eq_or_lt with hzero | hpos
+  · have ha0 (i : ι) : a i = 0 := by
+      have hi : a i ≤ M := Finset.single_le_sum (fun j _ => ha j) (Finset.mem_univ i)
+      exact le_antisymm (by simpa [← hzero] using hi) (ha i)
+    simp [ha0, Real.zero_rpow (by linarith : p ≠ 0)]
+  · let b : ι → ℝ := fun i => a i / M
+    have hb (i : ι) : 0 ≤ b i := div_nonneg (ha i) hpos.le
+    have hb1 : ∑ i, b i = 1 := by
+      simp only [b, ← Finset.sum_div]
+      exact div_self (ne_of_gt hpos)
+    have hn := integral_rpow_sum_exp_gaussian_le_of_sum_eq_one X hX hmean V hvar b hb hb1 hp
+    have hscale (ω : Ω) :
+        (∑ i, a i * Real.exp (X i ω - V / 2)) ^ p =
+        M ^ p * (∑ i, b i * Real.exp (X i ω - V / 2)) ^ p := by
+      have heq : (∑ i, a i * Real.exp (X i ω - V / 2)) =
+          M * (∑ i, b i * Real.exp (X i ω - V / 2)) := by
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro i _
+        dsimp [b]
+        field_simp
+      rw [heq, Real.mul_rpow hpos.le (Finset.sum_nonneg (fun i _ =>
+        mul_nonneg (hb i) (Real.exp_pos _).le))]
+    simp_rw [hscale, integral_const_mul]
+    exact mul_le_mul_of_nonneg_left hn (Real.rpow_nonneg hM _)
+
+/-- At a fixed smoothing scale, moments of finite atomic circle-average masses
+are controlled by their total weight. -/
+theorem integral_rpow_sum_circle_atoms_le
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) (pt : ι → ℂ)
+    (hpt : ∀ i, ‖pt i‖ + ε ≤ 1) (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i)
+    {p : ℝ} (hp : 1 ≤ p) :
+    (∫ ω, (∑ i, a i * Real.exp (γ * hcirc ω ε (pt i) -
+      (γ ^ 2 * (-Real.log ε)) / 2)) ^ p ∂P) ≤
+    (∑ i, a i) ^ p * Real.exp ((p ^ 2 - p) * (γ ^ 2 * (-Real.log ε)) / 2) := by
+  let X : ι → Ω → ℝ := fun i ω => γ * hcirc ω ε (pt i)
+  have hX (i : ι) : HasGaussianLaw (X i) P := by
+    simpa only [X, smul_eq_mul] using (hh.hasGaussianLaw_circle hε (pt i)).fun_smul γ
+  have hm (i : ι) : ∫ ω, X i ω ∂P = 0 := by
+    have h := hh.integral_eq_zero (.circle ε (pt i)) hε
+    change (∫ ω, hcirc ω ε (pt i) ∂P) = 0 at h
+    simp only [X, integral_const_mul, h, mul_zero]
+  have hv (i : ι) : variance (X i) P = γ ^ 2 * (-Real.log ε) := by
+    rw [show variance (X i) P = cov[X i, X i; P] from
+      (covariance_self (hX i).aemeasurable).symm]
+    dsimp [X]
+    rw [covariance_const_mul_left, covariance_const_mul_right,
+      covariance_self (hh.hasGaussianLaw_circle hε (pt i)).aemeasurable,
+      hh.variance_circle_inside hε (hpt i)]
+    ring
+  exact integral_rpow_sum_exp_gaussian_le X hX hm _ hv a ha hp
+
+
+/-- At a fixed smoothing scale, powers of bounded-mass atomic circle-average
+masses form a uniformly integrable family. -/
+theorem uniformIntegrable_rpow_sum_circle_atoms
+    {Ω J : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ)
+    (ι : J → Type*) [∀ j, Fintype (ι j)] (pt : ∀ j, ι j → ℂ)
+    (hpt : ∀ j i, ‖pt j i‖ + ε ≤ 1)
+    (a : ∀ j, ι j → ℝ) (ha : ∀ j i, 0 ≤ a j i)
+    (M : ℝ) (hmass : ∀ j, ∑ i, a j i ≤ M)
+    {q : ℝ} (hq : 1 ≤ q) :
+    UniformIntegrable (fun j ω => (∑ i, a j i * Real.exp
+      (γ * hcirc ω ε (pt j i) - (γ ^ 2 * (-Real.log ε)) / 2)) ^ q) 1 P := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let V := γ ^ 2 * (-Real.log ε)
+  let X : J → Ω → ℝ := fun j ω => ∑ i, a j i * Real.exp
+    (γ * hcirc ω ε (pt j i) - V / 2)
+  let K : ℝ := M ^ (2*q) * Real.exp (((2*q) ^ 2 - 2*q) * V / 2)
+  have hX0 (j ω) : 0 ≤ X j ω := Finset.sum_nonneg (fun i _ =>
+    mul_nonneg (ha j i) (Real.exp_pos _).le)
+  have hI (j) (p : ℝ) (hp : 0 < p) : Integrable (fun ω => X j ω ^ p) P := by
+    apply integrable_rpow_sum_exp_gaussian (fun i ω => γ * hcirc ω ε (pt j i)) _
+      (a j) (fun _ => V / 2) (ha j) hp
+    intro i
+    simpa only [smul_eq_mul] using (hh.hasGaussianLaw_circle hε (pt j i)).fun_smul γ
+  have hsq (j) : Integrable (fun ω => (X j ω ^ q) ^ 2) P := by
+    convert hI j (2*q) (by linarith) using 1
+    funext ω
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (hX0 j ω)]
+    congr 1
+    ring
+  have hbound (j) : (∫ ω, (X j ω ^ q) ^ 2 ∂P) ≤ K := by
+    have hh' := integral_rpow_sum_circle_atoms_le hh hε γ (pt j) (hpt j)
+      (a j) (ha j) (p := 2*q) (by linarith)
+    change (∫ ω, X j ω ^ (2*q) ∂P) ≤ _ at hh'
+    calc
+      _ = ∫ ω, X j ω ^ (2*q) ∂P := by
+        apply integral_congr_ae
+        filter_upwards [] with ω
+        rw [← Real.rpow_natCast, ← Real.rpow_mul (hX0 j ω)]
+        congr 1
+        ring
+      _ ≤ _ := hh'
+      _ ≤ K := by
+        dsimp [K]
+        gcongr
+        · exact Finset.sum_nonneg (fun i _ => ha j i)
+        · exact hmass j
+  let D : ℝ≥0∞ := (ENNReal.ofReal K) ^ (1 / 2 : ℝ)
+  have hD : D ≠ ∞ := by dsimp [D]; finiteness
+  refine uniformIntegrable_of_bounded_two _ (fun j => (hI j q (by linarith)).aestronglyMeasurable)
+    D.toNNReal (fun j => ?_)
+  rw [ENNReal.coe_toNNReal hD]
+  exact eLpNorm_two_le_of_integral_sq_le (fun ω => X j ω ^ q)
+    (hI j q (by linarith)).aestronglyMeasurable (fun ω => Real.rpow_nonneg (hX0 j ω) q)
+    (hsq j) K (hbound j)
+
 end HarmonicBalls
