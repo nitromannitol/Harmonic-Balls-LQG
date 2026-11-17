@@ -2218,4 +2218,47 @@ theorem integral_rpow_annularSquare_atoms_le {Ω ι : Type*} [MeasurableSpace Ω
     exact le_rfl
   exact LatticeProb.Kahane.kahane_rpow_le_add_const (Or.inr hq) ha hX hY hXm hYm C hcov
 
+
+/-- The square comparison permits zero weights and empty atomic families. -/
+theorem integral_rpow_annularSquare_atoms_le_nonneg {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ) (pt : ι → ℂ)
+    (hpt : ∀ j, pt j ∈ LatticeProb.LQG.lqgSquare)
+    (a : ι → ℝ) (ha : ∀ j, 0 ≤ a j) {q : ℝ} (hq : 1 ≤ q) :
+    let X := fun ω j => γ * hcirc ω (4 * r * δ)
+      (((4 * r : ℝ) : ℂ) * pt j + LatticeProb.dyadicSquareCentre r i)
+    let Y := fun ω j => γ * hcirc ω δ (pt j)
+    (∫ ω, (∑ j, a j * Real.exp (X ω j - variance (fun ω => X ω j) P / 2)) ^ q ∂P) ≤
+      Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) *
+        ∫ ω, (∑ j, a j * Real.exp (Y ω j - variance (fun ω => Y ω j) P / 2)) ^ q ∂P := by
+  classical
+  dsimp only
+  by_cases hpos : ∃ j, 0 < a j
+  · let : Nonempty {j : ι // 0 < a j} := ⟨⟨hpos.choose, hpos.choose_spec⟩⟩
+    have hsum (f : ι → ℝ) : (∑ j : {j : ι // 0 < a j}, a j * f j) = ∑ j, a j * f j := by
+      rw [← Finset.sum_subtype (p := fun j => 0 < a j)
+        (Finset.univ.filter (fun j => 0 < a j)) (by simp) (fun j => a j * f j)]
+      apply Finset.sum_subset (Finset.filter_subset _ _)
+      intro j _ hj
+      have hz : a j = 0 := le_antisymm (le_of_not_gt (by simpa using hj)) (ha j)
+      simp [hz]
+    have h := integral_rpow_annularSquare_atoms_le hh hr hr10 hδ hδ2 hi γ
+      (fun j : {j : ι // 0 < a j} => pt j) (fun j => hpt j) (fun j => a j)
+      (fun j => j.property) hq
+    dsimp only at h
+    have hx (ω : Ω) := hsum (fun j => Real.exp
+      (γ * hcirc ω (4 * r * δ)
+        (((4 * r : ℝ) : ℂ) * pt j + LatticeProb.dyadicSquareCentre r i) -
+        variance (fun ω => γ * hcirc ω (4 * r * δ)
+          (((4 * r : ℝ) : ℂ) * pt j + LatticeProb.dyadicSquareCentre r i)) P / 2))
+    have hy (ω : Ω) := hsum (fun j => Real.exp
+      (γ * hcirc ω δ (pt j) - variance (fun ω => γ * hcirc ω δ (pt j)) P / 2))
+    simp_rw [hx, hy] at h
+    exact h
+  · have hz : ∀ j, a j = 0 := fun j => le_antisymm
+      (le_of_not_gt (fun hj => hpos ⟨j, hj⟩)) (ha j)
+    simp [hz, Real.zero_rpow (by linarith : q ≠ 0)]
+
 end HarmonicBalls
