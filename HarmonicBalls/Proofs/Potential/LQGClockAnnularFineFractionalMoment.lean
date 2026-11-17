@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
+import HarmonicBalls.Proofs.Sec6.BrownianScaling
 import LatticeProb.LQG.LQGMassMoment
 import LatticeProb.LQG.LQGMassSquares
 import LatticeProb.LQG.LQGSubSquareGaussian
@@ -18,6 +19,7 @@ its smoothing scale and the insertion point.
 open MeasureTheory ProbabilityTheory MarkovProcess Set
 open scoped ENNReal NNReal Topology
 open Filter
+open HarmonicBalls.Section6
 
 namespace HarmonicBalls
 
@@ -2842,5 +2844,85 @@ theorem lintegral_annular_mass_rpow_le_rescaled_square_moments_add_far
   refine hb.trans (add_le_add ?_ le_rfl)
   gcongr with i hi
   exact lintegral_rpow_annularSquare_gmcDensity_le hh hr hr10 hδ hδ2 hi γ b u v a hq
+
+/-- A nonnegative integral over a measurable time set under positive dilation. -/
+theorem lintegral_time_dilation {c : ℝ} (hc : 0 < c) (A : Set ℝ) (hA : MeasurableSet A)
+    (f : ℝ → ℝ≥0∞) (hf : Measurable f) :
+    (∫⁻ t in A, f t) = ENNReal.ofReal c * ∫⁻ s in (fun s : ℝ => c * s) ⁻¹' A, f (c * s) := by
+  have hm : Measurable (fun t : ℝ => c⁻¹ * t) := by fun_prop
+  have hmap : Measure.map (fun t : ℝ => c⁻¹ * t) volume = ENNReal.ofReal c • volume := by
+    rw [Real.map_volume_mul_left (inv_ne_zero hc.ne'), inv_inv, abs_of_pos hc]
+  let g : ℝ → ℝ≥0∞ := fun s => A.indicator f (c * s)
+  have hg : Measurable g := (hf.indicator hA).comp (measurable_const_mul c)
+  have heq : (∫⁻ s, g s ∂Measure.map (fun t : ℝ => c⁻¹ * t) volume) =
+      ∫⁻ t in A, f t := by
+    rw [lintegral_map hg hm]
+    simp only [g, ← mul_assoc, mul_inv_cancel₀ hc.ne', one_mul, lintegral_indicator hA]
+  rw [hmap, lintegral_smul_measure] at heq
+  rw [← heq]
+  congr 1
+  rw [← lintegral_indicator (hA.preimage (measurable_const_mul c))]
+  apply lintegral_congr
+  intro s
+  by_cases hs : c * s ∈ A <;> simp [g, hs]
+
+/-- Rescaling space and time preserves restricted path occupation integrals. -/
+theorem lintegral_rescaled_path_occupation (x z : ℂ) (c : ℝ≥0) (hc : 0 < c) (b : ContinuousPath ℂ)
+    (A : Set ℝ) (hA : MeasurableSet A) (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ) :
+    (∫⁻ t in A, φ ((b t.toNNReal - z) / (Real.sqrt c : ℂ))) =
+      ENNReal.ofReal c * ∫⁻ s in (fun s : ℝ => (c : ℝ) * s) ⁻¹' A,
+        φ (scaledCenteredPlanarPath x c b s.toNNReal +
+          (x - z) / (Real.sqrt c : ℂ)) := by
+  have hcR : (0 : ℝ) < c := by exact_mod_cast hc
+  have hf : Measurable (fun t : ℝ => φ ((b t.toNNReal - z) / (Real.sqrt c : ℂ))) := by
+    apply hφ.comp
+    fun_prop
+  rw [lintegral_time_dilation hcR A hA _ hf]
+  congr 1
+  apply lintegral_congr
+  intro s
+  congr 1
+  have ht : Real.toNNReal ((c : ℝ) * s) = c * Real.toNNReal s := by
+    rw [Real.toNNReal_mul (by positivity : (0 : ℝ) ≤ c), Real.toNNReal_coe]
+  rw [ht]
+  simp only [scaledCenteredPlanarPath, ContinuousMap.coe_mk]
+  simp only [div_eq_mul_inv, Complex.real_smul, Complex.ofReal_inv]
+  ring
+
+
+/-- Brownian scaling transfers restricted occupation moments to the standard law. -/
+theorem lintegral_planarBrownianMotion_rescaled_occupation_rpow (x z : ℂ) (c : ℝ≥0) (hc : 0 < c)
+    (A : Set ℝ) (hA : MeasurableSet A) (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ)
+    (q : ℝ) (hq : 0 ≤ q) :
+    (∫⁻ b, (∫⁻ t in A, φ ((b t.toNNReal - z) / (Real.sqrt c : ℂ))) ^ q
+      ∂planarBrownianMotion x) =
+    (ENNReal.ofReal c) ^ q * ∫⁻ b,
+      (∫⁻ s in (fun s : ℝ => (c : ℝ) * s) ⁻¹' A,
+        φ (b s.toNNReal + (x - z) / (Real.sqrt c : ℂ))) ^ q
+      ∂planarBrownianMotion 0 := by
+  let B : Set ℝ := (fun s : ℝ => (c : ℝ) * s) ⁻¹' A
+  let F : ContinuousPath ℂ → ℝ≥0∞ := fun b =>
+    (∫⁻ s in B, φ (b s.toNNReal + (x - z) / (Real.sqrt c : ℂ))) ^ q
+  have hF : Measurable F := by
+    dsimp [F]
+    apply Measurable.pow_const
+    apply Measurable.lintegral_prod_right
+    apply hφ.comp
+    fun_prop
+  calc
+    _ = ∫⁻ b, (ENNReal.ofReal c) ^ q * F (scaledCenteredPlanarPath x c b)
+        ∂planarBrownianMotion x := by
+      apply lintegral_congr
+      intro b
+      rw [lintegral_rescaled_path_occupation x z c hc b A hA φ hφ,
+        ENNReal.mul_rpow_of_nonneg _ _ hq]
+    _ = (ENNReal.ofReal c) ^ q * ∫⁻ b, F (scaledCenteredPlanarPath x c b)
+        ∂planarBrownianMotion x := by
+      simpa only [Function.comp_def] using
+        (lintegral_const_mul ((ENNReal.ofReal c) ^ q)
+          (hF.comp (continuous_scaledCenteredPlanarPath x c).measurable))
+    _ = _ := by
+      rw [← lintegral_map hF (continuous_scaledCenteredPlanarPath x c).measurable,
+        planarBrownianMotion_map_scaledCenteredPlanarPath x hc.ne']
 
 end HarmonicBalls
