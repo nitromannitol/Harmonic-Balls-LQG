@@ -3041,4 +3041,119 @@ theorem lintegral_rpow_annularSquare_gmcDensity_le_reference
   rw [← heq]
   exact lintegral_rpow_annularSquare_gmcDensity_le hh hr hr10 hδ hδ2 hi γ b u v a hq
 
+/-- Field and Brownian integration commute for a reference-square occupation moment. -/
+theorem lintegral_brownian_field_annularSquare_reference_swap {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {δ : ℝ} (hδ : 0 < δ) (γ : ℝ) (x : ℂ) (r a u v : ℝ)
+    (i : ℤ × ℤ) (q : ℝ) :
+    let φ : Ω → ℂ → ℝ≥0∞ := fun ω w => ENNReal.ofReal
+      (Real.exp (γ * hcirc ω δ w - γ ^ 2 * (-Real.log δ) / 2))
+    (∫⁻ b, ∫⁻ ω, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+      φ ω ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ))) ^ q ∂P
+      ∂planarBrownianMotion x) =
+    ∫⁻ ω, ∫⁻ b, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+      φ ω ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ))) ^ q
+      ∂planarBrownianMotion x ∂P := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := LatticeProb.dyadicSquare r i ∩ {z | a ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}
+  have hA : MeasurableSet A := (LatticeProb.measurableSet_dyadicSquare r i).inter
+    ((measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const))
+  let F : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun p =>
+    (∫⁻ t in Ioc u v, A.indicator (fun z => ENNReal.ofReal
+      (Real.exp (γ * H p.1 δ ((z - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+        γ ^ 2 * (-Real.log δ) / 2))) (p.2 t.toNNReal)) ^ q
+  have hF : Measurable F := by
+    dsimp [F]
+    apply Measurable.pow_const
+    have hb : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => p.1.2 p.2.toNNReal) := by
+      exact (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+        ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_snd.comp measurable_fst))
+    have hφ : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => ENNReal.ofReal
+        (Real.exp (γ * H p.1.1 δ ((p.1.2 p.2.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+          γ ^ 2 * (-Real.log δ) / 2))) := by
+      apply Measurable.ennreal_ofReal
+      apply Measurable.exp
+      exact (measurable_const.mul ((hHm δ hδ).comp
+        (((hb.sub measurable_const).div_const _).prodMk measurable_fst.fst))).sub measurable_const
+    have hm := (hφ.indicator (hA.preimage hb)).lintegral_prod_right' (ν := volume.restrict (Ioc u v))
+    convert hm using 1
+    ext p
+    apply lintegral_congr
+    intro t
+    by_cases ht : p.2 t.toNNReal ∈ A <;> simp [ht]
+  have heq (ω : Ω) (hω : ∀ ε z, H ω ε z = hcirc ω ε z) (b : ContinuousPath ℂ) : F (ω,b) =
+      (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v, ENNReal.ofReal
+        (Real.exp (γ * hcirc ω δ ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+          γ ^ 2 * (-Real.log δ) / 2))) ^ q := by
+    dsimp [F]
+    congr 1
+    have hm : MeasurableSet (annularSquareTimeSet b a r i) :=
+      measurableSet_annularSquareTimeSet b a r i
+    change (∫⁻ t in Ioc u v, (annularSquareTimeSet b a r i).indicator
+      (fun t => ENNReal.ofReal (Real.exp (γ * H ω δ
+        ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+          γ ^ 2 * (-Real.log δ) / 2))) t) = _
+    rw [lintegral_indicator hm, Measure.restrict_restrict hm]
+    apply lintegral_congr
+    intro t
+    rw [hω]
+  calc
+    _ = ∫⁻ b, ∫⁻ ω, F (ω,b) ∂P ∂planarBrownianMotion x := by
+      apply lintegral_congr; intro b
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      exact (heq ω hω b).symm
+    _ = ∫⁻ ω, ∫⁻ b, F (ω,b) ∂planarBrownianMotion x ∂P :=
+      lintegral_lintegral_swap (hF.comp measurable_swap).aemeasurable
+    _ = _ := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      apply lintegral_congr
+      intro b
+      exact heq ω hω b
+/-- Averaging the diagonal comparison permits Brownian rescaling. -/
+theorem lintegral_brownian_field_annularSquare_le_rescaled
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ) (x : ℂ)
+    (u v a : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    let c : ℝ≥0 := ⟨(4 * r) ^ 2, by positivity⟩
+    let z := LatticeProb.dyadicSquareCentre r i
+    let φ : Ω → ℂ → ℝ≥0∞ := fun ω w => ENNReal.ofReal
+      (Real.exp (γ * hcirc ω δ w - γ ^ 2 * (-Real.log δ) / 2))
+    (∫⁻ b, ∫⁻ ω, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P
+      ∂planarBrownianMotion x) ≤
+      ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ∫⁻ ω, (ENNReal.ofReal c) ^ q * ∫⁻ b,
+          (∫⁻ s in (fun s : ℝ => (c : ℝ) * s) ⁻¹' Ioc u v,
+            (LatticeProb.LQG.lqgSquare.indicator (φ ω))
+              (b s.toNNReal + (x - z) / (Real.sqrt c : ℂ))) ^ q
+          ∂planarBrownianMotion 0 ∂P := by
+  let C := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2))
+  calc
+    _ ≤ ∫⁻ b, C * ∫⁻ ω, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+          ENNReal.ofReal (Real.exp (γ * hcirc ω δ
+            ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+              γ ^ 2 * (-Real.log δ) / 2))) ^ q ∂P ∂planarBrownianMotion x := by
+      exact lintegral_mono (fun b =>
+        lintegral_rpow_annularSquare_gmcDensity_le_reference hh hr hr10 hδ hδ2 hi γ b u v a hq)
+    _ = C * ∫⁻ b, ∫⁻ ω, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+          ENNReal.ofReal (Real.exp (γ * hcirc ω δ
+            ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+              γ ^ 2 * (-Real.log δ) / 2))) ^ q ∂P ∂planarBrownianMotion x :=
+      lintegral_const_mul' C _ ENNReal.ofReal_ne_top
+    _ = C * ∫⁻ ω, ∫⁻ b, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+          ENNReal.ofReal (Real.exp (γ * hcirc ω δ
+            ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+              γ ^ 2 * (-Real.log δ) / 2))) ^ q ∂planarBrownianMotion x ∂P := by
+      rw [lintegral_brownian_field_annularSquare_reference_swap hh hδ γ x r a u v i q]
+    _ ≤ _ := by
+      exact mul_le_mul_right (lintegral_field_annularSquare_occupation_rpow_le_rescaled
+        hh hδ γ x hr i a u v q (by linarith)) C
 end HarmonicBalls
