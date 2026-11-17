@@ -1596,4 +1596,45 @@ theorem exists_uniform_annealed_nonpositive_halfDisc_radius_iSup_le
   have h := hmesh x α hα hr hε hεhalf m hm
   exact h.trans (add_le_add hsum le_rfl)
 
+
+/-- Positive time and radius grid exponents can be chosen below the field,
+small-ball, and mesh decay rates. -/
+theorem exists_nonpositive_halfDisc_grid_exponents {u v β : ℝ}
+    (hu : 0 < u) (hv : 0 < v) (hβ : 0 < β) :
+    ∃ p b c : ℝ, 0 < p ∧ p ≤ u ∧ p ≤ v ∧ p ≤ 1/2 ∧
+      0 < b ∧ 0 < c ∧ c ≤ p - b/2 ∧ c ≤ b*β/2 := by
+  let p : ℝ := min u (min v (1/2))
+  let b : ℝ := p
+  let c : ℝ := min (p/4) (p*β/4)
+  have hp : 0 < p := by dsimp [p]; positivity
+  have hpu : p ≤ u := min_le_left _ _
+  have hpv : p ≤ v := (min_le_right _ _).trans (min_le_left _ _)
+  have hp2 : p ≤ 1/2 := (min_le_right _ _).trans (min_le_right _ _)
+  have hc : 0 < c := by dsimp [c]; positivity
+  refine ⟨p, b, c, hp, hpu, hpv, hp2, by simpa [b] using hp, hc, ?_, ?_⟩
+  · have h := min_le_left (p/4) (p*β/4)
+    dsimp [b, c] at *
+    linarith
+  · have h := min_le_right (p/4) (p*β/4)
+    have hpb : 0 < p*β := mul_pos hp hβ
+    dsimp [b, c] at *
+    linarith
+
+
+/-- The combined time and radius grid rate is summable after shifting the
+dyadic index. -/
+theorem summable_nonpositive_halfDisc_grid_mesh {p β b c A D : ℝ}
+    (hβ : 0 < β) (hb : 0 < b) (hc : 0 < c)
+    (hcp : c ≤ p - b / 2) (hcβ : c ≤ b * β / 2)
+    (hA : 0 ≤ A) (hD : 0 ≤ D) :
+    Summable (fun n : ℕ => ((gridCount c (n+1) : ℝ) + 1) *
+      ((((gridCount b (n+1) : ℝ) + 1) + 1) *
+        (A * LatticeProb.LQG.dyadicScale (n+1) ^ p) +
+          D * (((gridCount b (n+1) : ℝ) + 1) ^ (-β)))) := by
+  have hs := summable_annular_grid_mesh (p := p) (q := p) (β := β)
+    (b := b) (c := c) (A := A) (B := 0) (D := D)
+    hβ hb hc hcp hcp hcβ hA le_rfl hD
+  have hs' := (summable_nat_add_iff 1).2 hs
+  simpa only [zero_mul, add_zero] using hs'
+
 end HarmonicBalls
