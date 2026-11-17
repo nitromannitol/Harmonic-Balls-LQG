@@ -2047,4 +2047,55 @@ theorem lintegral_annular_mass_rpow_le_square_moments_add_far {Ω : Type*} [Meas
     _ ≤ _ := by
       gcongr with i hi j hj
       exact hfar i j (Finset.mem_filter.mp hj).2
+
+/-- The separated contribution has a path-independent time-cell bound. -/
+theorem lintegral_annular_mass_rpow_le_square_moments_add_cell {Ω : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (b : ContinuousPath ℂ) (u v δ : ℝ) {ε r : ℝ}
+    (hε : 0 < ε) (hε2 : ε ≤ 1 / 2) (hr : 0 < r) (γ : ℝ)
+    {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    let S := LatticeProb.squareIndex r
+    let T := fun i => annularSquareTimeSet b δ r i ∩ Ioc u v
+    let M := fun i ω => ∫⁻ t in T i,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)
+    (∫⁻ ω, (∫⁻ t in {t | δ ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2} ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) ^ q ∂P) ≤
+      18 * (∑ i ∈ S, ∫⁻ ω, (M i ω) ^ q ∂P) +
+      (S.card : ℝ≥0∞) * ((S.card : ℝ≥0∞) *
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+          (ENNReal.ofReal (v - u) * ENNReal.ofReal (v - u))) ^ (q / 2)) := by
+  classical
+  dsimp only
+  let S := LatticeProb.squareIndex r
+  let T := fun i => annularSquareTimeSet b δ r i ∩ Ioc u v
+  let B := (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+    (ENNReal.ofReal (v - u) * ENNReal.ofReal (v - u))) ^ (q / 2)
+  have hvol (i : ℤ × ℤ) : volume (T i) ≤ ENNReal.ofReal (v - u) :=
+    (measure_mono (inter_subset_right : T i ⊆ Ioc u v)).trans_eq Real.volume_Ioc
+  have hterm (i j : ℤ × ℤ) :
+      (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (volume (T i) * volume (T j))) ^ (q / 2) ≤ B := by
+    apply ENNReal.rpow_le_rpow _ (by positivity)
+    exact mul_le_mul' le_rfl (mul_le_mul' (hvol i) (hvol j))
+  have hrow (i : ℤ × ℤ) :
+      (∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (volume (T i) * volume (T j))) ^ (q / 2)) ≤
+        (S.card : ℝ≥0∞) * B := by
+    calc
+      _ ≤ ∑ _j ∈ S.filter (fun j => ¬ squareGridAdjacent i j), B :=
+        Finset.sum_le_sum fun j _ => hterm i j
+      _ = ((S.filter (fun j => ¬ squareGridAdjacent i j)).card : ℝ≥0∞) * B := by simp
+      _ ≤ (S.card : ℝ≥0∞) * B := by
+        gcongr
+        exact Finset.filter_subset _ _
+  have hsum :
+      (∑ i ∈ S, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (volume (T i) * volume (T j))) ^ (q / 2)) ≤
+        (S.card : ℝ≥0∞) * ((S.card : ℝ≥0∞) * B) := by
+    calc
+      _ ≤ ∑ _i ∈ S, (S.card : ℝ≥0∞) * B := Finset.sum_le_sum fun i _ => hrow i
+      _ = _ := by simp
+  exact (lintegral_annular_mass_rpow_le_square_moments_add_far hh b u v δ hε hε2 hr γ hq hq2).trans
+    (add_le_add le_rfl hsum)
+
 end HarmonicBalls
