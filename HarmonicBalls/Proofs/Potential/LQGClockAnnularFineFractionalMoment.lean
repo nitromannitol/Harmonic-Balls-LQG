@@ -719,4 +719,68 @@ theorem integral_rpow_sum_subSquareField_le {Ω : Type*} [MeasurableSpace Ω] {P
   exact (integral_rpow_subSquareField_le_explicit_nonneg hh γ hk hδ hδ2 piece pt hpt ha hr).trans
     (integral_rpow_sum_subSquareComparison_le hh γ hR hδ piece pt hc hn a ha hr)
 
+
+/-- A positive power of a finite nonnegative sum of lognormal variables is integrable. -/
+theorem integrable_rpow_sum_exp_gaussian {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {ι : Type*} [Fintype ι] (X : ι → Ω → ℝ)
+    (hX : ∀ i, HasGaussianLaw (X i) P) (a v : ι → ℝ) (ha : ∀ i, 0 ≤ a i)
+    {r : ℝ} (hr : 0 < r) :
+    Integrable (fun ω => (∑ i, a i * Real.exp (X i ω - v i)) ^ r) P := by
+  classical
+  let F : ι → Ω → ℝ := fun i ω => a i * Real.exp (X i ω - v i)
+  have hF (i : ι) : AEStronglyMeasurable (F i) P :=
+    ((hX i).aemeasurable.sub aemeasurable_const).exp.aestronglyMeasurable.const_mul _
+  have hI (i : ι) : Integrable (fun ω => ‖F i ω‖ ^ r) P := by
+    have hL : HasLaw (X i) (gaussianReal (∫ ω, X i ω ∂P) (variance (X i) P).toNNReal) P :=
+      ⟨(hX i).aemeasurable, (hX i).map_eq_gaussianReal⟩
+    have hi := hL.integrable_comp (f := fun y : ℝ => Real.exp (r * y))
+      (integrable_exp_mul_gaussianReal r)
+    have heq : (fun ω => ‖F i ω‖ ^ r) =
+        (fun ω => (a i ^ r * Real.exp (-(r * v i))) * Real.exp (r * X i ω)) := by
+      funext ω
+      dsimp [F]
+      rw [abs_of_nonneg (mul_nonneg (ha i) (Real.exp_pos _).le),
+        Real.mul_rpow (ha i) (Real.exp_pos _).le, ← Real.exp_mul, mul_assoc, ← Real.exp_add]
+      congr 2
+      ring
+    rw [heq]
+    exact hi.const_mul _
+  have hM (i : ι) : MemLp (F i) (ENNReal.ofReal r) P := by
+    apply (integrable_norm_rpow_iff (hF i) (by simp [hr]) (by simp)).1
+    simpa [ENNReal.toReal_ofReal hr.le] using hI i
+  have hsum : MemLp (fun ω => ∑ i, F i ω) (ENNReal.ofReal r) P := by
+    exact memLp_finsetSum Finset.univ (fun i _ => hM i)
+  have := hsum.integrable_norm_rpow (by simp [hr]) (by simp)
+  simpa only [ENNReal.toReal_ofReal hr.le, Real.norm_eq_abs,
+    abs_of_nonneg (Finset.sum_nonneg (fun i _ => mul_nonneg (ha i) (Real.exp_pos _).le)), F] using this
+
+/-- Positive powers of finite atomic masses of the field are integrable. -/
+theorem integrable_rpow_sum_subSquareField {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {R ε : ℝ} (hε : 0 < ε) (piece : ι → Fin 2) (pt : ι → ℂ)
+    (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i) (v : ι → ℝ) {r : ℝ} (hr : 0 < r) :
+    Integrable (fun ω => (∑ i, a i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc R ε piece pt ω i - v i)) ^ r) P := by
+  apply integrable_rpow_sum_exp_gaussian (fun i ω =>
+    LatticeProb.Gauss.subSquareField γ hcirc R ε piece pt ω i) _ a v ha hr
+  intro i
+  exact (hh.hasGaussianLaw_subSquareField γ hε piece pt).eval i
+
+/-- Positive powers of finite atomic masses of the comparison field are integrable. -/
+theorem integrable_rpow_sum_subSquareComparison {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {R δ : ℝ} (hR : 0 < R) (hδ : 0 < δ) (piece : ι → Fin 2) (pt : ι → ℂ)
+    (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i) (v : ι → ℝ) {r : ℝ} (hr : 0 < r) :
+    Integrable (fun x => (∑ i, a i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i - v i)) ^ r)
+      (LatticeProb.Gauss.subSquareMeasure P) := by
+  apply integrable_rpow_sum_exp_gaussian (fun i x =>
+    LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i) _ a v ha hr
+  intro i
+  exact (hh.hasGaussianLaw_subSquareComparison γ hR hδ piece pt).eval i
+
 end HarmonicBalls
