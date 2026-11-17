@@ -568,4 +568,129 @@ theorem integral_exp_subSquareComparison_normalized_mul
   rw [integral_const_mul, hmgf, ← Real.exp_add]
   congr 1
   ring
+
+/-- A normalized finite atomic comparison mass has an explicit moment bound. -/
+theorem integral_rpow_sum_subSquareComparison_le_of_sum_eq_one {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {R δ : ℝ} (hR : 0 < R) (hδ : 0 < δ)
+    (piece : ι → Fin 2) (pt : ι → ℂ)
+    (hc : ∀ i, ‖LatticeProb.LQG.lqgSquareCentre (piece i)‖ + R ≤ 1)
+    (hpt : ∀ i, ‖pt i‖ + δ ≤ 1) (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i)
+    (ha1 : ∑ i, a i = 1) {r : ℝ} (hr : 1 ≤ r) :
+    (∫ x, (∑ i, a i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i -
+        γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)) ^ r
+      ∂(LatticeProb.Gauss.subSquareMeasure P)) ≤
+    Real.exp ((r ^ 2 - r) * (γ ^ 2 * (1 - Real.log R - Real.log δ)) / 2) := by
+  classical
+  let μ := LatticeProb.Gauss.subSquareMeasure P
+  let X := fun x i => LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i
+  let V := γ ^ 2 * (1 - Real.log R - Real.log δ)
+  let F := fun x i => Real.exp (X x i - V / 2)
+  have hI (i : ι) : Integrable (fun x => F x i ^ r) μ := by
+    let G := fun x => X x i
+    have hG : HasGaussianLaw G μ :=
+      (hh.hasGaussianLaw_subSquareComparison γ hR hδ piece pt).eval i
+    have hL : HasLaw G (gaussianReal (∫ x, G x ∂μ) (variance G μ).toNNReal) μ :=
+      ⟨hG.aemeasurable, hG.map_eq_gaussianReal⟩
+    have hi := hL.integrable_comp (f := fun y : ℝ => Real.exp (r * y))
+      (integrable_exp_mul_gaussianReal r)
+    have heq : (fun x => F x i ^ r) =
+        (fun x => Real.exp (-(r * V / 2)) * Real.exp (r * G x)) := by
+      funext x
+      dsimp [F, G]
+      rw [← Real.exp_mul, ← Real.exp_add]
+      congr 1
+      ring
+    rw [heq]
+    exact hi.const_mul _
+  have hsum : Integrable (fun x => ∑ i, a i * F x i ^ r) μ := by
+    exact integrable_finsetSum _ (fun i _ => (hI i).const_mul (a i))
+  have hle (x) : (∑ i, a i * F x i) ^ r ≤ ∑ i, a i * F x i ^ r :=
+    Real.rpow_arith_mean_le_arith_mean_rpow Finset.univ a (F x)
+      (fun i _ => ha i) ha1 (fun i _ => (Real.exp_pos _).le) hr
+  have hmeas : AEStronglyMeasurable (fun x => (∑ i, a i * F x i) ^ r) μ := by
+    have hf (i : ι) : AEStronglyMeasurable (fun x => F x i) μ := by
+      have hg := ((hh.hasGaussianLaw_subSquareComparison γ hR hδ piece pt).eval i).aemeasurable
+      exact ((hg.sub aemeasurable_const).exp).aestronglyMeasurable
+    have hs : AEStronglyMeasurable (fun x => ∑ i, a i * F x i) μ := by
+      convert Finset.aestronglyMeasurable_sum Finset.univ (fun i _ => (hf i).const_mul (a i)) using 1
+      ext x
+      simp only [Finset.sum_apply]
+    exact (Real.continuous_rpow_const (by linarith : 0 ≤ r)).comp_aestronglyMeasurable hs
+  have hint : Integrable (fun x => (∑ i, a i * F x i) ^ r) μ := by
+    apply hsum.mono' hmeas
+    filter_upwards [] with x
+    rw [Real.norm_eq_abs, abs_of_nonneg (Real.rpow_nonneg (Finset.sum_nonneg (fun i _ =>
+      mul_nonneg (ha i) (Real.exp_pos _).le)) _)]
+    exact hle x
+  calc
+    _ ≤ ∫ x, ∑ i, a i * F x i ^ r ∂μ := integral_mono hint hsum hle
+    _ = ∑ i, a i * ∫ x, F x i ^ r ∂μ := by
+      rw [integral_finsetSum _ (fun i _ => (hI i).const_mul _)]
+      simp only [integral_const_mul]
+    _ = _ := by
+      have hmoment (i : ι) : (∫ x, F x i ^ r ∂μ) =
+          Real.exp ((r ^ 2 - r) * V / 2) := by
+        simp_rw [F, ← Real.exp_mul]
+        simpa only [X, V, mul_comm] using
+          integral_exp_subSquareComparison_normalized_mul hh γ hR hδ piece pt i (hc i) (hpt i) r
+      simp_rw [hmoment, ← Finset.sum_mul, ha1, one_mul]
+      rfl
+
+/-- The moment of a finite atomic comparison mass is bounded by the
+power of its total weight times the one-point moment. -/
+theorem integral_rpow_sum_subSquareComparison_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {R δ : ℝ} (hR : 0 < R) (hδ : 0 < δ)
+    (piece : ι → Fin 2) (pt : ι → ℂ)
+    (hc : ∀ i, ‖LatticeProb.LQG.lqgSquareCentre (piece i)‖ + R ≤ 1)
+    (hpt : ∀ i, ‖pt i‖ + δ ≤ 1) (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i)
+    {r : ℝ} (hr : 1 ≤ r) :
+    (∫ x, (∑ i, a i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i -
+        γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)) ^ r
+      ∂(LatticeProb.Gauss.subSquareMeasure P)) ≤
+    (∑ i, a i) ^ r *
+      Real.exp ((r ^ 2 - r) * (γ ^ 2 * (1 - Real.log R - Real.log δ)) / 2) := by
+  classical
+  let M := ∑ i, a i
+  have hM : 0 ≤ M := Finset.sum_nonneg (fun i _ => ha i)
+  rcases hM.eq_or_lt with hzero | hpos
+  · have ha0 (i : ι) : a i = 0 := by
+      have hi : a i ≤ M := Finset.single_le_sum (fun j _ => ha j) (Finset.mem_univ i)
+      exact le_antisymm (by simpa [← hzero] using hi) (ha i)
+    simp [ha0, Real.zero_rpow (by linarith : r ≠ 0)]
+  · let b : ι → ℝ := fun i => a i / M
+    have hb (i : ι) : 0 ≤ b i := div_nonneg (ha i) hpos.le
+    have hb1 : ∑ i, b i = 1 := by
+      simp only [b, ← Finset.sum_div]
+      exact div_self (ne_of_gt hpos)
+    have hn := integral_rpow_sum_subSquareComparison_le_of_sum_eq_one hh γ hR hδ piece pt hc hpt b hb hb1 hr
+    have hscale (x : (Ω × ℝ) × (Fin 2 → Ω)) :
+        (∑ i, a i * Real.exp
+          (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i -
+            γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)) ^ r =
+        M ^ r * (∑ i, b i * Real.exp
+          (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i -
+            γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)) ^ r := by
+      have heq : (∑ i, a i * Real.exp
+          (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i -
+            γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)) =
+          M * (∑ i, b i * Real.exp
+          (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i -
+            γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)) := by
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro i _
+        dsimp [b]
+        field_simp
+      rw [heq, Real.mul_rpow hpos.le (Finset.sum_nonneg (fun i _ =>
+        mul_nonneg (hb i) (Real.exp_pos _).le))]
+    simp_rw [hscale, integral_const_mul]
+    exact mul_le_mul_of_nonneg_left hn (Real.rpow_nonneg hM _)
 end HarmonicBalls
