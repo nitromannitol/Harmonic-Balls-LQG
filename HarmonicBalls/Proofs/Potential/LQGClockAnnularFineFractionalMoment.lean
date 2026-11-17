@@ -443,4 +443,42 @@ theorem integral_rpow_subSquareField_le
     (fun i => hh.integral_subSquareComparison γ hR hδ piece pt i)
     (fun i j => hh.covariance_subSquareField_le γ hk hδ hδ2 piece pt hpt i j)
 
+
+/-- The two-piece comparison with the normalization constants written in
+terms of the coarse and fine smoothing scales. -/
+theorem integral_rpow_subSquareField_le_explicit
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι] [Nonempty ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (piece : ι → Fin 2) (pt : ι → ℂ)
+    (hpt : ∀ i, pt i ∈ LatticeProb.LQG.lqgSquare)
+    {p : ι → ℝ} (hp : ∀ i, 0 < p i) {q : ℝ} (hq : 1 ≤ q) :
+    ∫ ω, (∑ i, p i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) piece pt ω i -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)) ^ q ∂P ≤
+    ∫ x, (∑ i, p i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc (LatticeProb.LQG.dyadicScale k)
+        δ piece pt x i - γ ^ 2 *
+        (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2)) ^ q
+      ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  have hR := LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k
+  have hz : ∀ s : Fin 2, ‖LatticeProb.LQG.lqgSquareCentre s‖ +
+      LatticeProb.LQG.dyadicScale k ≤ 1 := fun s =>
+    LatticeProb.LQG.norm_lqgSquareCentre_add_dyadicScale_le_one hk s
+  have hn : ∀ i, ‖pt i‖ + δ ≤ 1 := fun i => by
+    have hi : ‖pt i‖ ≤ 1 / 4 := by
+      simpa using LatticeProb.LQG.lqgSquare_subset_closedBall (hpt i)
+    linarith
+  have hx : ∀ i, ‖(LatticeProb.LQG.dyadicScale k : ℂ) * pt i +
+      LatticeProb.LQG.lqgSquareCentre (piece i)‖ +
+        LatticeProb.LQG.dyadicScale k * δ ≤ 1 := fun i =>
+    LatticeProb.Gauss.norm_rescaled_add_le hR (hz _) (hn i)
+  have hvarX (i : ι) := hh.variance_subSquareField γ (mul_pos hR hδ) piece pt i (hx i)
+  have hvarY (i : ι) := hh.variance_subSquareComparison γ hR hδ piece pt i (hz _) (hn i)
+  simpa only [hvarX, hvarY] using
+    integral_rpow_subSquareField_le hh γ hk hδ hδ2 piece pt hpt hp hq
+
 end HarmonicBalls
