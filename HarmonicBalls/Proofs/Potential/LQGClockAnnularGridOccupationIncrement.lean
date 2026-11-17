@@ -1247,4 +1247,165 @@ theorem brownian_annular_exit_radius_horizon_increment_annealed_le {Ω : Type*} 
       exact (hb x k ε r hε hεhalf hεδ hr hrε hr2).2
     _ = _ := by simp [mul_add]
 
+private theorem summable_nat_mul_exp_log_dyadicScale_radius {c : ℝ} (hc : 0 < c) :
+    Summable (fun k : ℕ => (k : ℝ) * Real.exp (Real.log (dyadicScale k) * c)) := by
+  change Summable (fun k : ℕ => (k : ℝ) * Real.exp (Real.log (LatticeProb.LQG.dyadicScale k) * c))
+  simp_rw [LatticeProb.Gauss.exp_log_dyadicScale_mul]
+  have hq : ‖Real.exp (Real.log 2⁻¹ * c)‖ < 1 := by
+    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
+    exact (Real.exp_lt_exp.mpr (mul_neg_of_neg_of_pos (Real.log_neg (by norm_num) (by norm_num)) hc)).trans_eq Real.exp_zero
+  simpa only [pow_one] using (summable_pow_mul_geometric_of_norm_lt_one 1 hq)
+
+/-- Annealed annular horizon increments are summable for any choice of same-shell radii. -/
+theorem summable_brownian_annular_exit_radius_horizon_increment {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) (r : ℕ → ℝ)
+    (hr0 : ∀ k, 0 < r k) (hr1 : ∀ k, r k ≤ dyadicScale k)
+    (hr2 : ∀ k, dyadicScale k / 2 ≤ r k) :
+    Summable (fun k : ℕ => ∫ b, annularExitRadiusHorizonIncrement P hcirc γ α δ
+      (dyadicScale k) (r k) D k b ∂planarBrownianMotion x) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_annular_exit_radius_horizon_increment_annealed_le hh hγ0 hγ2 α hδ hD hDb
+  let A : ℝ := ((Real.exp (γ^2*Real.log 2)-1) *
+    (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2
+  let c : ℝ := (d-γ^2+(2*γ-θ)^2/2)/2
+  let e : ℝ := (θ-γ)^2/2
+  have hc : 0 < c := by dsimp [c]; positivity
+  have he : 0 < e := by dsimp [e]; positivity
+  have hsum : Summable (fun k : ℕ => (k : ℝ) *
+      (A * Real.exp (Real.log (dyadicScale k) * c) +
+      2*M*Real.exp (Real.log (dyadicScale k) * e))) := by
+    have h1 := (summable_nat_mul_exp_log_dyadicScale_radius hc).mul_left A
+    have h2 := (summable_nat_mul_exp_log_dyadicScale_radius he).mul_left (2*M)
+    apply (h1.add h2).congr
+    intro k
+    ring
+  have hlim : Tendsto dyadicScale atTop (𝓝 0) := by
+    unfold dyadicScale
+    exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have hev : ∀ᶠ k in atTop, dyadicScale k < min (1/2) δ :=
+    hlim.eventually (Iio_mem_nhds (lt_min (by norm_num) hδ))
+  obtain ⟨N, hN⟩ := eventually_atTop.1 hev
+  apply (summable_nat_add_iff N).1
+  apply Summable.of_nonneg_of_le
+    (fun k => integral_nonneg (fun b => integral_nonneg (fun ω => abs_nonneg _)))
+    _ ((summable_nat_add_iff N).2 hsum)
+  intro k
+  have hk := hN (k + N) (by omega)
+  exact (hb x (k+N) _ (r (k+N)) (dyadicScale_pos _)
+    (le_of_lt (lt_of_lt_of_le hk (min_le_left _ _)))
+    (le_of_lt (lt_of_lt_of_le hk (min_le_right _ _)))
+    (hr0 _) (hr1 _) (hr2 _)).2
+
+/-- A stopped finite-horizon annular increment is integrable over the field. -/
+theorem integrable_annular_exit_radius_horizon_sample_field {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε r δ : ℝ}
+    (hε : 0 < ε) (hr : 0 < r) (hrε : r ≤ ε) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    (γ α : ℝ) (D : Set ℂ) (N : ℕ) (b : ContinuousPath ℂ)
+    (hfin : ContinuousPath.exitTime D b ≠ ⊤) :
+    Integrable (fun ω => ∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+        ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+          (b t.toNNReal)) P := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let G : Ω → ℂ → ℝ := fun ω z =>
+    r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+    ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)
+  let F : Ω → ℝ := fun ω => ∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+    A.indicator (G ω) (b t.toNNReal)
+  let B : ℕ → Ω → ℝ := fun k ω => ∫ t in Ioc (k : ℝ)
+      (min ((k : ℝ) + 1) (ContinuousPath.exitTime D b).toReal), A.indicator (G ω) (b t.toNNReal)
+  have hB : ∀ k, Integrable (B k) P := by
+    intro k
+    exact integrable_annular_exit_radius_block_increment_field hh hε hr hrε hεhalf hεδ γ α D k b hfin
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hcont : ∀ᵐ ω ∂P, ∀ r, 0 < r → Continuous (hcirc ω r) := by
+    filter_upwards [hHae] with ω hω r hr
+    rw [← funext (hω r)]
+    exact hHc ω r hr
+  have hsum : F =ᵐ[P] fun ω => ∑ k ∈ Finset.range N, B k ω := by
+    filter_upwards [hcont, ae_recentered_inserted_circle_average hh α] with ω hcont hrec
+    have hc (r : ℝ) (hr : 0 < r) : Continuous (fun z =>
+        r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)) := by
+      have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) =
+          fun z => hcirc ω r z - hcirc ω 1 0 - α * Real.log (max r ‖z‖) := by
+        funext z
+        exact (hrec r z hr).symm
+      have hc' : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) := by
+        rw [heq]
+        exact ((hcont r hr).sub continuous_const).sub (continuous_const.mul
+          ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hr).ne')))
+      exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc'))
+    have hG : Continuous (G ω) := (hc r hr).sub (hc ε hε)
+    have hint := intervalIntegrable_annular_density (G ω) hG δ b 0
+      (ContinuousPath.exitTime D b).toReal
+    exact intervalIntegral_stopped_eq_sum_blocks _ _ ENNReal.toReal_nonneg N hint
+  have hsumint : Integrable (fun ω => ∑ k ∈ Finset.range N, B k ω) P := by
+    exact integrable_finsetSum _ (fun k hk => hB k)
+  have hF : Integrable F P := hsumint.congr hsum.symm
+  exact hF
+
+
+/-- The product-law expectation of a stopped same-shell horizon increment
+agrees with its iterated field and Brownian expectation. -/
+theorem lintegral_prod_annular_exit_radius_horizon_increment_eq
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ ε r : ℝ}
+    (hε : 0 < ε) (hr : 0 < r) (hrε : r ≤ ε) (hr2 : ε / 2 ≤ r)
+    (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) (N : ℕ) :
+    (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal |∫ t in (0 : ℝ)..
+      min (N : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z) -
+        ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z))
+          (p.2 t.toNNReal)| ∂(P.prod (planarBrownianMotion x))) =
+    ENNReal.ofReal (∫ b, annularExitRadiusHorizonIncrement P hcirc γ α δ ε r D N b
+      ∂planarBrownianMotion x) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨F, hFm, hFae⟩ :=
+    exists_measurable_annular_exit_radius_horizon_sample hh hε hr γ α δ hD N
+  have heq : (fun p : Ω × ContinuousPath ℂ => ENNReal.ofReal |∫ t in (0 : ℝ)..
+      min (N : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z) -
+        ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z))
+          (p.2 t.toNNReal)|) =ᵐ[P.prod (planarBrownianMotion x)]
+      (fun p => ENNReal.ofReal |F (p.2,p.1)|) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion x)).ae hFae] with p hp
+    rw [hp p.2]
+  rw [lintegral_congr_ae heq]
+  have hmeas : Measurable (fun p : Ω × ContinuousPath ℂ => ENNReal.ofReal |F (p.2,p.1)|) :=
+    ENNReal.measurable_ofReal.comp ((hFm.comp measurable_swap).abs)
+  rw [lintegral_prod_symm _ hmeas.aemeasurable]
+  obtain ⟨θ, d, M, h1, h2, h3, h4, h5, h6, hb⟩ :=
+    brownian_annular_exit_radius_horizon_increment_annealed_le hh hγ0 hγ2 α
+      (hε.trans_le hεδ) hD hDb
+  rw [ofReal_integral_eq_lintegral_ofReal (hb x N ε r hε hεhalf hεδ hr hrε hr2).1]
+  · apply lintegral_congr_ae
+    filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x hDb] with b hfin
+    have hi := integrable_annular_exit_radius_horizon_sample_field hh hε hr hrε hεhalf hεδ γ α D N b hfin.ne
+    have hFi : Integrable (fun ω => F (b,ω)) P := hi.congr (by
+      filter_upwards [hFae] with ω hω
+      exact (hω b).symm)
+    rw [show annularExitRadiusHorizonIncrement P hcirc γ α δ ε r D N b =
+        ∫ ω, ‖F (b,ω)‖ ∂P from by
+      unfold annularExitRadiusHorizonIncrement
+      apply integral_congr_ae
+      filter_upwards [hFae] with ω hω
+      rw [hω b, Real.norm_eq_abs]]
+    simp_rw [← Real.enorm_eq_ofReal_abs]
+    exact (ofReal_integral_norm_eq_lintegral_enorm hFi).symm
+  · filter_upwards with b
+    apply integral_nonneg
+    intro ω
+    exact abs_nonneg _
+
 end HarmonicBalls
