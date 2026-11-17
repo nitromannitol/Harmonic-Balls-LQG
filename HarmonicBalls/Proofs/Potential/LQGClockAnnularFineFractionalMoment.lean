@@ -3345,4 +3345,117 @@ theorem exists_annular_square_ennreal_coefficient_lt_half {γ q : ℝ}
   norm_num at he ⊢
   exact he
 
+/-- Atomic circle-average masses have a common moment bound above a positive smoothing cutoff. -/
+theorem integral_rpow_sum_circle_atoms_le_of_scale_lower_bound
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (γ : ℝ) (pt : ι → ℂ)
+    (hpt : ∀ i, ‖pt i‖ + ε ≤ 1) (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i)
+    {M p : ℝ} (hM : ∑ i, a i ≤ M) (hp : 1 ≤ p) :
+    (∫ ω, (∑ i, a i * Real.exp (γ * hcirc ω ε (pt i) -
+      (γ ^ 2 * (-Real.log ε)) / 2)) ^ p ∂P) ≤
+    M ^ p * Real.exp ((p ^ 2 - p) * (γ ^ 2 * (-Real.log η)) / 2) := by
+  have hsum : 0 ≤ ∑ i, a i := Finset.sum_nonneg fun i _ => ha i
+  have hM0 : 0 ≤ M := hsum.trans hM
+  have hlog : Real.log η ≤ Real.log ε := Real.log_le_log hη hηε
+  have hfac : 0 ≤ (p ^ 2 - p) * γ ^ 2 := by
+    have : 0 ≤ p ^ 2 - p := by nlinarith
+    positivity
+  calc
+    _ ≤ (∑ i, a i) ^ p * Real.exp ((p ^ 2 - p) * (γ ^ 2 * (-Real.log ε)) / 2) :=
+      integral_rpow_sum_circle_atoms_le hh (hη.trans_le hηε) γ pt hpt a ha hp
+    _ ≤ M ^ p * Real.exp ((p ^ 2 - p) * (γ ^ 2 * (-Real.log η)) / 2) := by
+      apply mul_le_mul (Real.rpow_le_rpow hsum hM (by linarith)) _ (by positivity) (by positivity)
+      apply Real.exp_le_exp.mpr
+      nlinarith [mul_nonneg hfac (sub_nonneg.mpr hlog)]
+
+/-- A common cutoff moment bound passes to almost-sure limits of atomic masses. -/
+theorem integral_rpow_circle_limit_le_of_scale_lower_bound
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (γ : ℝ)
+    (ι : ℕ → Type*) [∀ n, Fintype (ι n)] (pt : ∀ n, ι n → ℂ)
+    (hpt : ∀ n i, ‖pt n i‖ + ε ≤ 1) (a : ∀ n, ι n → ℝ)
+    (ha : ∀ n i, 0 ≤ a n i) (M : ℝ) (hmass : ∀ n, ∑ i, a n i ≤ M)
+    {p : ℝ} (hp : 1 ≤ p) (F : Ω → ℝ)
+    (hF : ∀ᵐ ω ∂P, Tendsto (fun n => ∑ i, a n i * Real.exp
+      (γ * hcirc ω ε (pt n i) - (γ ^ 2 * (-Real.log ε)) / 2)) atTop (𝓝 (F ω))) :
+    Integrable (fun ω => F ω ^ p) P ∧
+    (∫ ω, F ω ^ p ∂P) ≤ M ^ p * Real.exp ((p ^ 2 - p) * (γ ^ 2 * (-Real.log η)) / 2) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let X : ℕ → Ω → ℝ := fun n ω => (∑ i, a n i * Real.exp
+      (γ * hcirc ω ε (pt n i) - (γ ^ 2 * (-Real.log ε)) / 2)) ^ p
+  have hUI : UniformIntegrable X 1 P :=
+    uniformIntegrable_rpow_sum_circle_atoms hh (hη.trans_le hηε) γ ι pt hpt a ha M hmass hp
+  have hFX : ∀ᵐ ω ∂P, Tendsto (fun n => X n ω) atTop (𝓝 (F ω ^ p)) := by
+    filter_upwards [hF] with ω hω
+    exact (Real.continuous_rpow_const (by linarith : 0 ≤ p)).continuousAt.tendsto.comp hω
+  have hFi := hUI.integrable_of_ae_tendsto hFX
+  have hXL := tendsto_Lp_finite_of_tendsto_ae (p := 1) le_rfl (by simp)
+    (fun n => hUI.aestronglyMeasurable n) (memLp_one_iff_integrable.mpr hFi) hUI.1 hFX
+  have hXI := tendsto_integral_of_L1' (fun ω => F ω ^ p)
+    (Eventually.of_forall (fun n => memLp_one_iff_integrable.mp (hUI.memLp n))) hXL
+  refine ⟨hFi, le_of_tendsto hXI ?_⟩
+  exact Eventually.of_forall fun n =>
+    integral_rpow_sum_circle_atoms_le_of_scale_lower_bound hh hη hηε γ (pt n) (hpt n)
+      (a n) (ha n) (hmass n) hp
+
+/-- Finite reference-square masses have a common moment bound above a positive smoothing cutoff. -/
+theorem integral_rpow_circle_mass_le_of_scale_lower_bound
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε : ε ≤ 1 / 2) (γ : ℝ)
+    (ν : Measure ℂ) [IsFiniteMeasure ν]
+    (hν : ∀ᵐ z ∂ν, z ∈ LatticeProb.LQG.lqgSquare) {p : ℝ} (hp : 1 ≤ p) :
+    Integrable (fun ω => (∫ z, Real.exp
+      (γ * hcirc ω ε z - γ ^ 2 * (-Real.log ε) / 2) ∂ν) ^ p) P ∧
+    (∫ ω, (∫ z, Real.exp (γ * hcirc ω ε z - γ ^ 2 * (-Real.log ε) / 2) ∂ν) ^ p ∂P) ≤
+      (ν.real univ) ^ p * Real.exp ((p ^ 2 - p) * (γ ^ 2 * (-Real.log η)) / 2) := by
+  classical
+  have hK : IsCompact LatticeProb.LQG.lqgSquare := by
+    have hc : IsClosed LatticeProb.LQG.lqgSquare := by
+      have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+      have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+      exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+    exact (isCompact_closedBall (0 : ℂ) (1 / 4)).of_isClosed_subset hc
+      LatticeProb.LQG.lqgSquare_subset_closedBall
+  have h0 : (0 : ℂ) ∈ LatticeProb.LQG.lqgSquare := by simp [LatticeProb.LQG.lqgSquare]
+  let T := fun n => SimpleFunc.approxOn id measurable_id LatticeProb.LQG.lqgSquare 0 h0 n
+  let ι : ℕ → Type := fun n => ↥(T n).range
+  let pt : ∀ n, ι n → ℂ := fun _ j => j.1
+  let a : ∀ n, ι n → ℝ := fun n j => ν.real ((T n) ⁻¹' {j.1})
+  have hpt : ∀ n j, pt n j ∈ LatticeProb.LQG.lqgSquare := by
+    intro n j
+    obtain ⟨z, hz⟩ := SimpleFunc.mem_range.mp j.2
+    change j.1 ∈ LatticeProb.LQG.lqgSquare
+    rw [← hz]
+    exact SimpleFunc.approxOn_mem measurable_id h0 n z
+  have hpt' (n j) : ‖pt n j‖ + ε ≤ 1 := by
+    have h : ‖pt n j‖ ≤ 1 / 4 := by
+      simpa using LatticeProb.LQG.lqgSquare_subset_closedBall (hpt n j)
+    linarith
+  have ha : ∀ n j, 0 ≤ a n j := fun _ _ => ENNReal.toReal_nonneg
+  have hmass : ∀ n, ∑ j, a n j ≤ ν.real univ := by
+    intro n
+    apply le_of_eq
+    change (∑ j : ↥(T n).range, ν.real ((T n) ⁻¹' {j.1})) = ν.real univ
+    calc
+      _ = ∑ z ∈ (T n).range, ν.real ((T n) ⁻¹' {z}) :=
+        Finset.sum_coe_sort (T n).range (fun z : ℂ => ν.real ((T n) ⁻¹' {z}))
+      _ = _ := by
+        simp only [measureReal_def, ← ENNReal.toReal_sum (fun z _ => measure_ne_top ν _),
+          (T n).sum_range_measure_preimage_singleton]
+  apply integral_rpow_circle_limit_le_of_scale_lower_bound hh hη hηε γ ι pt hpt' a ha
+    (ν.real univ) hmass hp
+  filter_upwards [hh.ae_continuous_circle_fixed (hη.trans_le hηε)] with ω hω
+  have htest : Continuous (fun z : ℂ => Real.exp
+      (γ * hcirc ω ε z - γ ^ 2 * (-Real.log ε) / 2)) := by fun_prop
+  have hquad := tendsto_sum_fiber_mass_mul hK h0 ν hν _ htest
+  convert hquad using 1
+  ext n
+  exact Finset.sum_coe_sort (T n).range (fun z : ℂ => ν.real ((T n) ⁻¹' {z}) *
+    Real.exp (γ * hcirc ω ε z - γ ^ 2 * (-Real.log ε) / 2))
 end HarmonicBalls
