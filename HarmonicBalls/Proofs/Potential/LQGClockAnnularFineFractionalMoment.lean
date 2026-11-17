@@ -1737,4 +1737,58 @@ theorem rpow_sum_le_sum_diagonal_add_cross {ι : Type*} [DecidableEq ι] (s : Fi
   ring
 
 
+/-- A fractional pair interaction is bounded by the two diagonal powers. -/
+theorem rpow_mul_le_add_rpow (a b : ℝ≥0∞) {q : ℝ} (hq : 0 ≤ q) :
+    (a * b) ^ (q / 2) ≤ a ^ q + b ^ q := by
+  have hmul : a * b ≤ max a b * max a b := mul_le_mul' (le_max_left _ _) (le_max_right _ _)
+  have h := ENNReal.rpow_le_rpow hmul (show 0 ≤ q / 2 by positivity)
+  have hm : (max a b * max a b) ^ (q / 2) = (max a b) ^ q := by
+    rw [← pow_two, ← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
+    congr 1
+    ring
+  rw [hm] at h
+  rcases le_total a b with hab | hba
+  · rw [max_eq_right hab] at h
+    exact h.trans (le_add_left le_rfl)
+  · rw [max_eq_left hba] at h
+    exact h.trans (le_add_right le_rfl)
+
+/-- A bounded-degree symmetric relation controls its total fractional interaction. -/
+theorem sum_rpow_mul_le_degree_mul_sum_rpow {ι : Type*} (s : Finset ι) (a : ι → ℝ≥0∞) (R : ι → ι → Prop)
+    [DecidableRel R] (hsym : ∀ ⦃i j⦄, R i j → R j i) (D : ℕ)
+    (hdegree : ∀ i ∈ s, (s.filter (R i)).card ≤ D) {q : ℝ} (hq : 0 ≤ q) :
+    (∑ i ∈ s, ∑ j ∈ s.filter (R i), (a i * a j) ^ (q / 2)) ≤
+      (2 * (D : ℝ≥0∞)) * ∑ i ∈ s, a i ^ q := by
+  classical
+  have hsum : (∑ i ∈ s, ∑ j ∈ s.filter (R i), a j ^ q) =
+      ∑ i ∈ s, ∑ j ∈ s.filter (R i), a i ^ q := by
+    simp only [Finset.sum_filter]
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro i hi
+    apply Finset.sum_congr rfl
+    intro j hj
+    by_cases h : R i j
+    · simp [h, hsym h]
+    · have hn : ¬ R j i := fun hji => h (hsym hji)
+      simp [h, hn]
+  have hrow : (∑ i ∈ s, ∑ j ∈ s.filter (R i), a i ^ q) ≤
+      (D : ℝ≥0∞) * ∑ i ∈ s, a i ^ q := by
+    rw [Finset.mul_sum]
+    apply Finset.sum_le_sum
+    intro i hi
+    simp only [Finset.sum_const, nsmul_eq_mul]
+    gcongr
+    exact_mod_cast hdegree i hi
+  calc
+    _ ≤ ∑ i ∈ s, ∑ j ∈ s.filter (R i), (a i ^ q + a j ^ q) := by
+      exact Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => rpow_mul_le_add_rpow _ _ hq
+    _ = (∑ i ∈ s, ∑ j ∈ s.filter (R i), a i ^ q) +
+        (∑ i ∈ s, ∑ j ∈ s.filter (R i), a j ^ q) := by
+      simp only [Finset.sum_add_distrib]
+    _ ≤ _ := by rw [hsum]; calc
+      _ ≤ (D : ℝ≥0∞) * (∑ i ∈ s, a i ^ q) +
+          (D : ℝ≥0∞) * (∑ i ∈ s, a i ^ q) := add_le_add hrow hrow
+      _ = _ := by simp only [two_mul]; rw [add_mul]
+
 end HarmonicBalls
