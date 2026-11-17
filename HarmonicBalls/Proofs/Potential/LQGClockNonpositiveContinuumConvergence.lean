@@ -378,7 +378,7 @@ theorem exists_uniform_annealed_nonpositive_radius_insertion_correction_le
         gcongr
         exact le_add_right le_rfl)
 
-/-- Same-shell field increments with bounded weights admit one energy bound
+/-- Same-shell field increments with bounded weights satisfy one energy bound
 for every Brownian start, weight, radius and occupation submeasure. -/
 theorem exists_uniform_exponents_brownian_weighted_radius_increment_le_riesz_energy
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
