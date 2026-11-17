@@ -1750,4 +1750,116 @@ theorem exists_measurable_annular_exit_positive_tail {Ω : Type*} [MeasurableSpa
   · rfl
   · rfl
 
+/-- The annealed exit increment is bounded by the horizon estimate and two tails. -/
+theorem exists_annular_exit_sample_annealed_le_horizon_add_tails {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ ε : ℝ} (hδ : 0 < δ)
+    (hε : 0 < ε) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) (x : ℂ) (N : ℕ) :
+    ∃ F : ContinuousPath ℂ × Ω → ℝ, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ b, F (b,ω) = ∫ t in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal)) ∧
+      (∫⁻ b, ∫⁻ ω, ‖F (b,ω)‖ₑ ∂P ∂planarBrownianMotion x) ≤
+        ENNReal.ofReal (∫ b, annularExitHorizonIncrement P hcirc γ α δ ε D N b ∂planarBrownianMotion x) +
+        (∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+          {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z => ENNReal.ofReal (
+            (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z)))
+              (b t.toNNReal) ∂volume ∂P ∂planarBrownianMotion x) +
+        ∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+          {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z => ENNReal.ofReal (
+            ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)))
+              (b t.toNNReal) ∂volume ∂P ∂planarBrownianMotion x := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨F, hFm, hFae⟩ := exists_measurable_annular_exit_sample hh hε γ α δ hD
+  obtain ⟨G, hGm, hGae⟩ := exists_measurable_annular_exit_horizon_sample hh hε γ α δ hD N
+  obtain ⟨U, hUm, hUae⟩ := exists_measurable_annular_exit_positive_tail hh (half_pos hε) γ α δ hD N
+  obtain ⟨V, hVm, hVae⟩ := exists_measurable_annular_exit_positive_tail hh hε γ α δ hD N
+  refine ⟨F, hFm, hFae, ?_⟩
+  have hpoint : ∀ b, ∀ᵐ ω ∂P, ‖F (b,ω)‖ₑ ≤ ‖G (b,ω)‖ₑ + U (b,ω) + V (b,ω) := by
+    intro b
+    filter_upwards [hFae, hGae, hUae, hVae,
+      ae_annular_exit_increment_le_horizon_add_tails hh hε γ α δ D] with ω hf hg hu hv hs
+    rw [hf b, hg b, hu b, hv b]
+    exact hs b N (Nat.cast_nonneg N)
+  have hGnonneg : Measurable (fun q : ContinuousPath ℂ × Ω => ‖G q‖ₑ) := hGm.enorm
+  have hGint : Measurable (fun b => ∫⁻ ω, ‖G (b,ω)‖ₑ ∂P) :=
+    Measurable.lintegral_prod_right hGnonneg
+  have hUint : Measurable (fun b => ∫⁻ ω, U (b,ω) ∂P) := Measurable.lintegral_prod_right hUm
+  have hVint : Measurable (fun b => ∫⁻ ω, V (b,ω) ∂P) := Measurable.lintegral_prod_right hVm
+  have hbase : (∫⁻ b, ∫⁻ ω, ‖F (b,ω)‖ₑ ∂P ∂planarBrownianMotion x) ≤
+      (∫⁻ b, ∫⁻ ω, ‖G (b,ω)‖ₑ ∂P ∂planarBrownianMotion x) +
+      (∫⁻ b, ∫⁻ ω, U (b,ω) ∂P ∂planarBrownianMotion x) +
+      ∫⁻ b, ∫⁻ ω, V (b,ω) ∂P ∂planarBrownianMotion x := by
+    calc
+      _ ≤ ∫⁻ b, ((∫⁻ ω, ‖G (b,ω)‖ₑ ∂P) + (∫⁻ ω, U (b,ω) ∂P)) +
+          ∫⁻ ω, V (b,ω) ∂P ∂planarBrownianMotion x := by
+        apply lintegral_mono
+        intro b
+        calc
+          _ ≤ ∫⁻ ω, (‖G (b,ω)‖ₑ + U (b,ω)) + V (b,ω) ∂P := lintegral_mono_ae (hpoint b)
+          _ = _ := by
+            have hg : Measurable (fun ω => ‖G (b,ω)‖ₑ) :=
+              hGnonneg.comp (measurable_const.prodMk measurable_id)
+            have hu : Measurable (fun ω => U (b,ω)) :=
+              hUm.comp (measurable_const.prodMk measurable_id)
+            change (∫⁻ ω, ((fun ω => ‖G (b,ω)‖ₑ) + (fun ω => U (b,ω))) ω + V (b,ω) ∂P) = _
+            rw [lintegral_add_left (hg.add hu)]
+            change (∫⁻ ω, ‖G (b,ω)‖ₑ + U (b,ω) ∂P) + _ = _
+            rw [lintegral_add_left hg]
+      _ = _ := by
+        change (∫⁻ b, ((fun b => ∫⁻ ω, ‖G (b,ω)‖ₑ ∂P) +
+          (fun b => ∫⁻ ω, U (b,ω) ∂P)) b + (∫⁻ ω, V (b,ω) ∂P)
+            ∂planarBrownianMotion x) = _
+        rw [lintegral_add_left (hGint.add hUint)]
+        change (∫⁻ b, (∫⁻ ω, ‖G (b,ω)‖ₑ ∂P) +
+          (∫⁻ ω, U (b,ω) ∂P) ∂planarBrownianMotion x) + _ = _
+        rw [lintegral_add_left hGint]
+  have htailU : (∫⁻ b, ∫⁻ ω, U (b,ω) ∂P ∂planarBrownianMotion x) =
+      ∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z => ENNReal.ofReal (
+          (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z)))
+            (b t.toNNReal) ∂volume ∂P ∂planarBrownianMotion x := by
+    apply lintegral_congr
+    intro b
+    apply lintegral_congr_ae
+    filter_upwards [hUae] with ω hω
+    exact hω b
+  have htailV : (∫⁻ b, ∫⁻ ω, V (b,ω) ∂P ∂planarBrownianMotion x) =
+      ∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z => ENNReal.ofReal (
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)))
+            (b t.toNNReal) ∂volume ∂P ∂planarBrownianMotion x := by
+    apply lintegral_congr
+    intro b
+    apply lintegral_congr_ae
+    filter_upwards [hVae] with ω hω
+    exact hω b
+  have hGreal : (∫⁻ b, ∫⁻ ω, ‖G (b,ω)‖ₑ ∂P ∂planarBrownianMotion x) =
+      ENNReal.ofReal (∫ b, annularExitHorizonIncrement P hcirc γ α δ ε D N b ∂planarBrownianMotion x) := by
+    obtain ⟨θ, d, M, h1, h2, h3, h4, h5, h6, hb⟩ :=
+      brownian_annular_exit_horizon_increment_annealed_le hh hγ0 hγ2 α hδ hD hDb
+    rw [ofReal_integral_eq_lintegral_ofReal (hb x N ε hε hεhalf hεδ).1]
+    · apply lintegral_congr_ae
+      filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x hDb] with b hfin
+      have hi := integrable_annular_exit_horizon_sample_field hh hε hεhalf hεδ γ α D N b hfin.ne
+      rw [show annularExitHorizonIncrement P hcirc γ α δ ε D N b =
+        ∫ ω, ‖G (b,ω)‖ ∂P from by
+          unfold annularExitHorizonIncrement
+          apply integral_congr_ae
+          filter_upwards [hGae] with ω hω
+          rw [hω b, Real.norm_eq_abs]]
+      have hGi : Integrable (fun ω => G (b,ω)) P := hi.congr (by
+        filter_upwards [hGae] with ω hω
+        exact (hω b).symm)
+      exact (ofReal_integral_norm_eq_lintegral_enorm hGi).symm
+    · filter_upwards with b
+      apply integral_nonneg
+      intro ω
+      exact abs_nonneg _
+  rwa [hGreal, htailU, htailV] at hbase
+
 end HarmonicBalls
