@@ -1787,4 +1787,53 @@ theorem exists_tsum_nonpositive_halfDisc_radius_grid_clock_lt_top
       _ = _ := by dsimp [N, m, e, k]; push_cast; rfl
   · exact hseries.tsum_ofReal_lt_top
 
+
+/-- At every Brownian start, the unit-time radius-grid errors are summable
+on a product-full event. -/
+theorem exists_ae_tsum_nonpositive_halfDisc_radius_grid_clock_lt_top
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (α : ℝ) (hα : α ≤ 0) :
+    ∃ c : ℝ, 0 < c ∧ ∀ x : ℂ,
+      ∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      let F : ℝ → ℝ → ℝ := fun v t =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) 0
+            (fun _ => t.toNNReal) p.2
+      (∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1) + 1),
+        ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal
+          |F (gridScale (gridCount c) (n+1) i) t -
+            F (LatticeProb.LQG.dyadicScale (n+1)) t|) < ⊤ := by
+  obtain ⟨c, hc, hbound⟩ :=
+    exists_tsum_nonpositive_halfDisc_radius_grid_clock_lt_top hh hγ hγ2 α hα
+  refine ⟨c, hc, ?_⟩
+  intro x
+  let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+    stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) 0
+        (fun _ => t.toNNReal) p.2
+  let S : ℕ → ℕ → (Ω × ContinuousPath ℂ) → ℝ≥0∞ := fun n i p =>
+    ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal
+      |F (gridScale (gridCount c) (n+1) i) p t -
+        F (LatticeProb.LQG.dyadicScale (n+1)) p t|
+  have hS (n i : ℕ) (hi : i ∈ Finset.range (gridCount c (n+1) + 1)) :
+      AEMeasurable (S n i) (P.prod (planarBrownianMotion x)) := by
+    have hi' : i ≤ gridCount c (n+1) := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+    have he : 0 < LatticeProb.LQG.dyadicScale (n+1) := by
+      dsimp [LatticeProb.LQG.dyadicScale]; positivity
+    have hr : 0 < gridScale (gridCount c) (n+1) i :=
+      (half_pos he).trans_le (gridScale_mem_Icc (gridCount c) hi').1
+    simpa only [S, F, ContinuousPath.shift_zero] using
+      (aemeasurable_shift_annular_radius_iSup hh x 0 γ α 0 hr he)
+  have hm (n : ℕ) : AEMeasurable (fun p => ∑ i ∈ Finset.range (gridCount c (n+1) + 1), S n i p)
+      (P.prod (planarBrownianMotion x)) :=
+    Finset.aemeasurable_fun_sum _ fun i hi => hS n i hi
+  have hint : (∫⁻ p, ∑' n, ∑ i ∈ Finset.range (gridCount c (n+1) + 1), S n i p
+      ∂(P.prod (planarBrownianMotion x))) < ⊤ := by
+    rw [lintegral_tsum hm]
+    simp_rw [lintegral_finsetSum' _ (fun i hi => hS _ i hi)]
+    exact hbound x
+  exact ae_lt_top' (AEMeasurable.tsum hm) hint.ne
+
 end HarmonicBalls
