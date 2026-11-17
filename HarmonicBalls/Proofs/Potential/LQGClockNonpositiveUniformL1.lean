@@ -819,4 +819,133 @@ theorem ae_planarBrownianMotion_halfDisc_integral_eq_open (x : ℂ) :
     · exact le_of_lt
   simp only [Set.indicator_apply, Set.mem_ofPred_eq, norm_nonneg, true_and, h]
 
+/-- A starting-point-uniform product-law bound survives every deterministic
+Brownian time shift, with the independent field unchanged. -/
+theorem lintegral_shift_prod_le_uniform {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [SFinite P] (x : ℂ) (s : ℝ≥0)
+    (F : ContinuousPath ℂ × Ω → ℝ≥0∞) (hF : Measurable F) (C : ℝ≥0∞)
+    (hbound : ∀ y, (∫⁻ q, F q ∂((planarBrownianMotion y).prod P)) ≤ C) :
+    (∫⁻ q, F (ContinuousPath.shift s q.1, q.2) ∂((planarBrownianMotion x).prod P)) ≤ C := by
+  let K := SubMarkovKernelSemigroup.IsConservative.continuousProcess
+    planarHeatSemigroup isConservative_planarHeatSemigroup
+  let : IsFiniteKernel (planarHeatSemigroup.kernel s) :=
+    (planarHeatSemigroup.isSubMarkovKernel s).isFiniteKernel
+  let ν := planarHeatSemigroup.kernel s x
+  have hs : (planarBrownianMotion x).map (ContinuousPath.shift s) = K ∘ₘ ν := by
+    rw [planarBrownianMotion_eq_continuousProcess]
+    have hshift := congrArg (fun K => K x)
+      (SubMarkovKernelSemigroup.IsFellerKernelSemigroup.continuousProcess_map_shift
+        planarHeatSemigroup isConservative_planarHeatSemigroup
+        isFellerKernelSemigroup_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup s)
+    rw [Kernel.map_apply _ (ContinuousPath.measurable_shift_fixed s) x,
+      Kernel.comp_apply] at hshift
+    exact hshift
+  have hG : Measurable (fun b => ∫⁻ ω, F (b,ω) ∂P) := hF.lintegral_prod_right'
+  have hFs : Measurable (fun q : ContinuousPath ℂ × Ω => F (ContinuousPath.shift s q.1, q.2)) :=
+    hF.comp (((ContinuousPath.measurable_shift_fixed s).comp measurable_fst).prodMk measurable_snd)
+  calc
+    _ = ∫⁻ b, ∫⁻ ω, F (ContinuousPath.shift s b,ω) ∂P ∂planarBrownianMotion x :=
+      lintegral_prod _ hFs.aemeasurable
+    _ = ∫⁻ b, ∫⁻ ω, F (b,ω) ∂P ∂((planarBrownianMotion x).map (ContinuousPath.shift s)) :=
+      (lintegral_map hG (ContinuousPath.measurable_shift_fixed s)).symm
+    _ = ∫⁻ y, ∫⁻ b, ∫⁻ ω, F (b,ω) ∂P ∂K y ∂ν := by
+      rw [hs, Measure.lintegral_bind (Kernel.aemeasurable K) hG.aemeasurable]
+    _ ≤ ∫⁻ _y, C ∂ν := by
+      apply lintegral_mono
+      intro y
+      dsimp only [K]
+      rw [← planarBrownianMotion_eq_continuousProcess]
+      rw [← lintegral_prod _ hF.aemeasurable]
+      exact hbound y
+    _ = C := by simp [ν]
+
+/-- The actual inserted inner increments admit jointly measurable versions,
+simultaneously on one full-field event. -/
+theorem exists_measurable_nonpositive_inserted_inner_time_increments
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ : 0 ≤ γ) (hα : α ≤ 0) (δ : ℕ → ℝ) (hδ : ∀ n, δ n ≤ 1/2) :
+    ∃ F : ℕ → ContinuousPath ℂ × Ω → ℝ, (∀ n, Measurable (F n)) ∧
+      ∀ᵐ ω ∂P, ∀ b n, F n (b,ω) =
+        nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n (b,ω) := by
+  let g : ℕ → ℂ → ℝ := fun n => {z : ℂ | ‖z‖ < δ n}.indicator
+    (fun z => (max (((2 : ℝ)⁻¹ ^ (n+1))/2) ‖z‖) ^ (-γ*α))
+  have hg (n : ℕ) : Measurable (g n) := by
+    have hp : 0 < (2 : ℝ)⁻¹ ^ (n+1) := by positivity
+    have hhf : (2 : ℝ)⁻¹ ^ (n+1) ≤ 1/2 := by
+      rw [pow_succ]
+      have h : (2 : ℝ)⁻¹ ^ n ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+      nlinarith
+    exact (nonpositive_insertion_inner_weight_properties hγ hα hp hhf (hδ n)).1
+  obtain ⟨F, hFm, hFae, _⟩ := exists_measurable_weighted_inner_time_increments hh γ g hg
+  obtain ⟨G, hGm, hGae⟩ := exists_measurable_nonpositive_insertion_corrections hh γ α δ
+  have heq := ae_nonpositive_inserted_inner_time_increment_eq hh hγ hα δ hδ
+  refine ⟨fun n q => F n q - G n q, fun n => (hFm n).sub (hGm n), ?_⟩
+  filter_upwards [hFae, hGae, heq] with ω hF hG hI b n
+  rw [hF b n, hG b n, hI b n]
+
+/-- Actual inserted unit-block increments have one summable annealed bound
+for all Brownian starts and deterministic time shifts. -/
+theorem exists_uniform_summable_annealed_shifted_nonpositive_inserted_inner_increments
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α ≤ 0)
+    (δ : ℕ → ℝ) (hδ : ∀ n, δ n ≤ 1/2) :
+    ∃ A : ℕ → ℝ, Summable A ∧ (∀ n, 0 ≤ A n) ∧ ∀ (x : ℂ) (s : ℝ≥0) n,
+      Integrable (fun q => nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n
+        (ContinuousPath.shift s q.1,q.2)) ((planarBrownianMotion x).prod P) ∧
+      (∫ q, |nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n
+        (ContinuousPath.shift s q.1,q.2)| ∂((planarBrownianMotion x).prod P)) ≤ A n := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨A, hAs, hA0, hA⟩ :=
+    exists_uniform_summable_annealed_nonpositive_inserted_inner_increments hh hγ0 hγ2 hα δ hδ
+  obtain ⟨F, hFm, hFae⟩ := exists_measurable_nonpositive_inserted_inner_time_increments hh hγ0.le hα δ hδ
+  refine ⟨A, hAs, hA0, ?_⟩
+  intro x s n
+  let μ := (planarBrownianMotion x).prod P
+  have hFs : Measurable (fun q : ContinuousPath ℂ × Ω => F n (ContinuousPath.shift s q.1,q.2)) :=
+    (hFm n).comp (((ContinuousPath.measurable_shift_fixed s).comp measurable_fst).prodMk measurable_snd)
+  have hprod (y : ℂ) : ∀ᵐ q ∂((planarBrownianMotion y).prod P),
+      F n q = nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n q := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion y) (ν := P)).ae hFae] with q hq
+    exact hq q.1 n
+  have hbound (y : ℂ) : (∫⁻ q, ENNReal.ofReal |F n q|
+      ∂((planarBrownianMotion y).prod P)) ≤ ENNReal.ofReal (A n) := by
+    have hi : Integrable (fun q => F n q) ((planarBrownianMotion y).prod P) :=
+      ((hA y n).1).congr ((hprod y).mono fun q hq => hq.symm)
+    rw [← ofReal_integral_eq_lintegral_ofReal hi.abs (Filter.Eventually.of_forall (fun _ => abs_nonneg _))]
+    apply ENNReal.ofReal_le_ofReal
+    calc
+      _ = ∫ q, |nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n q|
+          ∂((planarBrownianMotion y).prod P) := by
+        apply integral_congr_ae
+        filter_upwards [hprod y] with q hq
+        rw [hq]
+      _ ≤ _ := (hA y n).2
+  have hlin := lintegral_shift_prod_le_uniform P x s
+    (fun q => ENNReal.ofReal |F n q|) ((hFm n).abs.ennreal_ofReal) (ENNReal.ofReal (A n)) hbound
+  have hfin : (∫⁻ q, ENNReal.ofReal |F n (ContinuousPath.shift s q.1,q.2)| ∂μ) ≠ ∞ :=
+    ne_of_lt (lt_of_le_of_lt hlin ENNReal.ofReal_lt_top)
+  have habs : Integrable (fun q => |F n (ContinuousPath.shift s q.1,q.2)|) μ :=
+    (lintegral_ofReal_ne_top_iff_integrable hFs.abs.aestronglyMeasurable
+      (Filter.Eventually.of_forall (fun _ => abs_nonneg _))).1 hfin
+  have hi : Integrable (fun q => F n (ContinuousPath.shift s q.1,q.2)) μ :=
+    (integrable_norm_iff hFs.aestronglyMeasurable).1 (by simpa only [Real.norm_eq_abs] using habs)
+  have heq : ∀ᵐ q ∂μ, F n (ContinuousPath.shift s q.1,q.2) =
+      nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n (ContinuousPath.shift s q.1,q.2) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hFae] with q hq
+    exact hq (ContinuousPath.shift s q.1) n
+  refine ⟨hi.congr heq, ?_⟩
+  have hreal := ENNReal.toReal_mono ENNReal.ofReal_ne_top hlin
+  rw [← ofReal_integral_eq_lintegral_ofReal habs (Filter.Eventually.of_forall (fun _ => abs_nonneg _)),
+    ENNReal.toReal_ofReal (integral_nonneg (fun _ => abs_nonneg _)), ENNReal.toReal_ofReal (hA0 n)] at hreal
+  calc
+    _ = ∫ q, |F n (ContinuousPath.shift s q.1,q.2)| ∂μ := by
+      apply integral_congr_ae
+      filter_upwards [heq] with q hq
+      rw [hq]
+    _ ≤ _ := hreal
+
 end HarmonicBalls
