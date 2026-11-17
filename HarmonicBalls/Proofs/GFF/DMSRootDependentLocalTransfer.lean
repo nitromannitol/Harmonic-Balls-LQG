@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.GFF.DMSInsertedLocalAbsoluteContinuity
 import HarmonicBalls.Proofs.Sec8.MeanZeroDistributionVersion
+import HarmonicBalls.Proofs.Sec8.TranslatedDistributionInsertion
 
 /-!
 # Root-dependent local event transfer
@@ -618,5 +619,118 @@ theorem chartedLocalEvent_pairings
     (bufferedChartCenter u n) (bufferedChartScale n) (bufferedChartScale n / 2)
     (bufferedChartScale_pos n).le (bufferedChart_buffer u n) (E n) h z
     (ball_subset_closedBall hzn.1)
+
+/-- View a local mean-zero test as a global mean-zero test. -/
+def globalLocalTest (U : Opens ℂ)
+    (φ : {ψ : ℂ → ℝ // IsTestFunction U ψ ∧ ∫ x, ψ x = 0}) :
+    LQGMetric.TestC0 :=
+  ⟨⟨φ.1, φ.2.1.1, φ.2.1.2.1, subset_univ _⟩, φ.2.2⟩
+
+/-- Agreement on the countable local reconstruction coordinates persists
+after adding any distribution. -/
+theorem localGaugeVersion_add_of_coordinates
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (F : (ℂ → ℝ) → ℝ) (h k : LQGMetric.DistC)
+    (hcoords : ∀ c : LQGMetric.CoordJ,
+      F (localGaugeTest U ρ (LQGMetric.comb U c) hρ).1 =
+        h (globalLocalTest U (localGaugeTest U ρ (LQGMetric.comb U c) hρ)).1) :
+    localGaugeVersion U ρ hρ (fun φ => F φ.1 + k (globalLocalTest U φ).1) =
+      localGaugeVersion U ρ hρ (fun φ => (h + k) (globalLocalTest U φ).1) := by
+  unfold localGaugeVersion
+  congr 1
+  funext c
+  dsimp only
+  rw [hcoords c]
+  rfl
+
+/-- On one probability-one event, the local reconstruction on every chart
+agrees with the canonical global distribution after any distributional insertion. -/
+theorem IsWholePlaneGFF.ae_chartGauge_add_of_canonical
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (u : ℕ → ℂ) :
+    ∀ᵐ ω ∂P, ∀ (n : ℕ) (k : LQGMetric.DistC),
+      localGaugeVersion (bufferedChartOpen u n) (bufferedChartGauge u n)
+          (integral_bufferedChartGauge u n)
+          (fun φ => hC ω φ.1 + k (globalLocalTest (bufferedChartOpen u n) φ).1) =
+      localGaugeVersion (bufferedChartOpen u n) (bufferedChartGauge u n)
+          (integral_bufferedChartGauge u n)
+          (fun φ => (meanZeroDistributionVersion (Section6.pairingProc hC ω) + k)
+            (globalLocalTest (bufferedChartOpen u n) φ).1) := by
+  filter_upwards [ae_all_iff.mpr (fun n : ℕ => ae_all_iff.mpr (fun c : LQGMetric.CoordJ =>
+    hh.canonical_distribution_version_pairing
+      (globalLocalTest (bufferedChartOpen u n)
+        (localGaugeTest (bufferedChartOpen u n) (bufferedChartGauge u n)
+          (LQGMetric.comb (bufferedChartOpen u n) c) (integral_bufferedChartGauge u n)))))] with ω hω
+  intro n k
+  apply localGaugeVersion_add_of_coordinates
+  intro c
+  exact (hω n c).symm
+
+/-- On one field event, the charted event for raw pairings plus any
+distribution agrees with the selected phase event for the translated canonical
+distribution plus that insertion, simultaneously for all charts and roots. -/
+theorem IsWholePlaneGFF.ae_chartedLocalEvent_add_of_canonical
+    {Ω T : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (θ : ℂ → T) (u : ℕ → ℂ)
+    (E : ∀ n, Set (T × (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ))) :
+    ∀ᵐ ω ∂P, ∀ (n : ℕ) (z : ℂ), z ∈ disjointed (bufferedChartRoots u) n →
+      ∀ k : LQGMetric.DistC,
+      ((fun ψ : {φ : ℂ → ℝ // IsTestFunction univ φ ∧ ∫ x, φ x = 0} =>
+        hC ω ψ.1 + k ⟨ψ.1, ψ.2.1.1, ψ.2.1.2.1, subset_univ _⟩), z) ∈
+          chartedLocalEvent θ u E ↔
+      (θ z, fun φ => (meanZeroDistributionVersion (Section6.pairingProc hC ω) + k)
+        (LQGMetric.testAffinePull 1 z φ.1.1)) ∈ E n := by
+  filter_upwards [hh.ae_chartGauge_add_of_canonical u] with ω hω
+  intro n z hz k
+  have hzn : z ∈ bufferedChartRoots u n := disjointed_subset _ n hz
+  have hclosed : z ∈ closedBall (bufferedChartCenter u n) (bufferedChartScale n) :=
+    ball_subset_closedBall hzn.1
+  have hroot : bufferedRoot (bufferedChartCenter u n) (bufferedChartScale n)
+      (bufferedChartScale_pos n).le z = ⟨z, hclosed⟩ := by
+    classical
+    apply Subtype.ext
+    change (if z ∈ closedBall (bufferedChartCenter u n) (bufferedChartScale n)
+      then z else bufferedChartCenter u n) = z
+    split_ifs
+    rfl
+  have hobs : localTranslatedObservation (bufferedChartOpen u n) (bufferedChartGauge u n)
+      (integral_bufferedChartGauge u n) (bufferedChartCenter u n) (bufferedChartScale n)
+      (bufferedChartScale n / 2) (bufferedChart_buffer u n)
+      (fun φ => hC ω φ.1 + k (globalLocalTest (bufferedChartOpen u n) φ).1, ⟨z, hclosed⟩) =
+      fun φ => (meanZeroDistributionVersion (Section6.pairingProc hC ω) + k)
+        (LQGMetric.testAffinePull 1 z φ.1.1) := by
+    have heq : localTranslatedObservation (bufferedChartOpen u n) (bufferedChartGauge u n)
+        (integral_bufferedChartGauge u n) (bufferedChartCenter u n) (bufferedChartScale n)
+        (bufferedChartScale n / 2) (bufferedChart_buffer u n)
+        (fun φ => hC ω φ.1 + k (globalLocalTest (bufferedChartOpen u n) φ).1, ⟨z, hclosed⟩) =
+      localTranslatedObservation (bufferedChartOpen u n) (bufferedChartGauge u n)
+        (integral_bufferedChartGauge u n) (bufferedChartCenter u n) (bufferedChartScale n)
+        (bufferedChartScale n / 2) (bufferedChart_buffer u n)
+        (fun φ => (meanZeroDistributionVersion (Section6.pairingProc hC ω) + k)
+          (globalLocalTest (bufferedChartOpen u n) φ).1, ⟨z, hclosed⟩) := by
+      funext φ
+      change (localGaugeVersion (bufferedChartOpen u n) (bufferedChartGauge u n)
+        (integral_bufferedChartGauge u n) _) _ =
+        (localGaugeVersion (bufferedChartOpen u n) (bufferedChartGauge u n)
+          (integral_bufferedChartGauge u n) _) _
+      rw [hω n k]
+    rw [heq]
+    exact localTranslatedObservation_pairings (bufferedChartOpen u n) (bufferedChartGauge u n)
+      (integral_bufferedChartGauge u n) (bufferedChartCenter u n) (bufferedChartScale n)
+      (bufferedChartScale n / 2) (bufferedChart_buffer u n)
+      (meanZeroDistributionVersion (Section6.pairingProc hC ω) + k) ⟨z, hclosed⟩
+  unfold chartedLocalEvent
+  rw [firstChartEvent_iff (bufferedChartRoots u) _ n z hz]
+  change (z ∈ closedBall (bufferedChartCenter u n) (bufferedChartScale n) ∧
+    (θ z, localTranslatedObservation (bufferedChartOpen u n) (bufferedChartGauge u n)
+      (integral_bufferedChartGauge u n) (bufferedChartCenter u n) (bufferedChartScale n)
+      (bufferedChartScale n / 2) (bufferedChart_buffer u n)
+      (fun φ => hC ω φ.1 + k (globalLocalTest (bufferedChartOpen u n) φ).1,
+        bufferedRoot (bufferedChartCenter u n) (bufferedChartScale n)
+          (bufferedChartScale_pos n).le z)) ∈ E n) ↔ _
+  rw [hroot, hobs]
+  exact and_iff_right hclosed
 
 end HarmonicBalls
