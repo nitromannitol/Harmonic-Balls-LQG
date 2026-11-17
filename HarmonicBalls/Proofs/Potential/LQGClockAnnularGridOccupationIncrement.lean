@@ -268,15 +268,15 @@ private theorem radius_annular_weight_bound {δ γ α : ℝ} (hδ : 0 < δ) :
 
 
 
-/-- General same-shell annular increments admit a uniform field-averaged
-rate for stopped unit Brownian occupation. -/
-theorem ae_brownian_stopped_annular_inserted_radius_increment_le_riesz_energy
+/-- Same-shell estimates have constants uniform over Brownian starting points. -/
+theorem ae_brownian_stopped_annular_inserted_radius_increment_le_riesz_energy_uniform_start
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ) :
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
     ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
       0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ x : ℂ,
       let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
       ∀ᵐ b ∂(planarBrownianMotion x),
         ∀ T : ℝ≥0, ∀ ε s : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ →
@@ -304,9 +304,10 @@ theorem ae_brownian_stopped_annular_inserted_radius_increment_le_riesz_energy
     have hn : z ∉ A := fun hzA => h hzA.2
     exact hz (Set.indicator_of_notMem hn _)
   obtain ⟨θ, d, hγθ, hθ, hd0, hd2, hp, _⟩ := exists_clock_truncation_exponents hγ0 hγ2
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro x
   have hb := ae_brownian_field_submeasure_radius_increment_le_rate
     hh x hgm hM hgM hgs θ d hγθ hθ hd0 hd2
-  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
   filter_upwards [hb] with b hb
   intro T ε s hε hεhalf hεδ hs hsε hs2
   let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
@@ -333,6 +334,30 @@ theorem ae_brownian_stopped_annular_inserted_radius_increment_le_riesz_energy
   · rw [show A.indicator _ z = _ from Set.indicator_of_notMem hz _,
       show g z = _ from Set.indicator_of_notMem hz _, zero_mul]
 
+/-- General same-shell annular increments admit a uniform field-averaged
+rate for stopped unit Brownian occupation. -/
+theorem ae_brownian_stopped_annular_inserted_radius_increment_le_riesz_energy
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+      ∀ᵐ b ∂(planarBrownianMotion x),
+        ∀ T : ℝ≥0, ∀ ε s : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        0 < s → s ≤ ε → ε / 2 ≤ s →
+        let μ := Measure.map (fun t => b t) (ν.restrict (Iic T))
+        (∫ ω, |∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          s^(γ^2/2) * Real.exp (γ*(hcirc ω s z-hcirc ω 1 0 - α*Real.log (max s ‖z‖))) -
+          ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0 - α*Real.log (max ε ‖z‖)))) z ∂μ| ∂P) ≤
+        ((Real.exp (γ^2*Real.log 2)-1)*(M^2 * unitOccupationRieszEnergy d b * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, h⟩ :=
+    ae_brownian_stopped_annular_inserted_radius_increment_le_riesz_energy_uniform_start
+      hh hγ0 hγ2 α hδ
+  exact ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, h x⟩
 
 
 end HarmonicBalls
