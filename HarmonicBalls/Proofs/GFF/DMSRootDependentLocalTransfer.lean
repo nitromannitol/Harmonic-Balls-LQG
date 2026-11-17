@@ -4,6 +4,7 @@ import HarmonicBalls.Proofs.Sec8.TranslatedDistributionInsertion
 import HarmonicBalls.Proofs.Sec8.PhaseTorusLebesgue
 import HarmonicBalls.Proofs.Sec8.UniformSingularPhaseCertificate
 import HarmonicBalls.Proofs.GFF.LogInsertionReconstruction
+import HarmonicBalls.FirstPass.S8c.TailTransfer
 
 /-!
 # Root-dependent local event transfer
@@ -926,5 +927,199 @@ theorem IsWholePlaneGFF.exists_charted_phaseFrequency_event
   exact ⟨E, hE, heq, hS, href,
     hh.ae_singular_root_local_of_reference hγ hγ2 hα hμ hν
       (chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) hS href⟩
+
+
+/-- A Haar-valid origin certificate gives the corresponding good normalized
+reference observation on every positive-index root domain. -/
+theorem IsWholePlaneGFF.ae_localReference_good_of_phase_certificate
+    (hfull : LQGMeasureFullSupportStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ν : Ω → Measure ℂ} (hh : IsWholePlaneGFF P hC hcirc)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hγQ : γ < lqgQ γ)
+    (hν : IsLQGMeasureOfField P γ γ hcirc ν)
+    {R : ℝ} (E : Set (PhaseTorus × (Section6.LocalTest (ball 0 R) → ℝ)))
+    (β : ℝ) (N₀ : ℕ) (a b C₁m C₁p C₂m C₂p C₃ m ζ : ℝ)
+    (hcert : ∀ᵐ ω ∂P, ∀ t : PhaseTorus,
+      ((t, fun φ : Section6.LocalTest (ball 0 R) =>
+        hC ω φ.1.1 + ∫ x, φ.1.1 x * (-γ * Real.log ‖x‖)) ∈ E ↔
+      ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+        ({n : ℕ | n ∈ Icc (K + 1) (2 * K) ∧
+          PhaseVeryGoodAnnulus (ν ω) β (dyadicScale n) 0 N₀
+            a b C₁m C₁p C₂m C₂p C₃ (torusPhase t) ∧
+          AnnulusBallComparison (ν ω) n 0 m}.ncard : ℝ)))
+    (hphase : ∀ᵐ p ∂(((volume : Measure PhaseCircle).prod volume).prod P),
+      (p.1, fun φ : Section6.LocalTest (ball 0 R) =>
+        hC p.2 φ.1.1 + ∫ x, φ.1.1 x * (-γ * Real.log ‖x‖)) ∈ E) :
+    ∀ j : ℕ, 1 ≤ j → ∀ᵐ p ∂((volume.restrict (localDomain j)).prod P),
+      localReferenceObservation ν j p ∈
+        recentredGoodSet β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hfreq : ∀ᵐ p ∂(((volume : Measure PhaseCircle).prod volume).prod P),
+      ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+        ({n : ℕ | n ∈ Icc (K + 1) (2 * K) ∧
+          PhaseVeryGoodAnnulus (ν p.2) β (dyadicScale n) 0 N₀
+            a b C₁m C₁p C₂m C₂p C₃ (torusPhase p.1) ∧
+          AnnulusBallComparison (ν p.2) n 0 m}.ncard : ℝ) := by
+    filter_upwards [hphase, Measure.quasiMeasurePreserving_snd.ae hcert] with p hp hc
+    exact (hc p.1).1 hp
+  have hmap := MeasureTheory.QuasiMeasurePreserving.prodMap quasiMeasurePreserving_phaseTorusOfComplex
+    (MeasurePreserving.id P).quasiMeasurePreserving
+  have hfreq' := hmap.ae hfreq
+  have htail : ∀ᵐ p ∂((volume : Measure ℂ).prod P), ∀ᶠ K : ℕ in atTop,
+      (1 - ζ) * (K : ℝ) ≤ ({n : ℕ | n ∈ Icc (K + 1) (2 * K) ∧
+        PhaseVeryGoodAnnulus (ν p.2) β (dyadicScale n) 0 N₀
+          a b C₁m C₁p C₂m C₂p C₃ p.1 ∧
+        AnnulusBallComparison (ν p.2) n 0 m}.ncard : ℝ) := by
+    filter_upwards [hfreq'] with p hp
+    dsimp only [Prod.map, id] at hp
+    filter_upwards [hp] with K hK
+    convert hK using 1
+    congr 2
+    ext n
+    simp only [mem_ofPred_eq, phaseVeryGoodAnnulus_torusPhase_ofComplex]
+  have hpos : ∀ᵐ ω ∂P, ∀ r : ℝ, 0 < r → 0 < ν ω (ball 0 r) := by
+    filter_upwards [hfull γ γ hγ hγ2 hγQ Ω P hC hcirc ν hh hν] with ω hω r hr
+    exact hω _ isOpen_ball (nonempty_ball.mpr hr)
+  have hloc : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (ν ω) :=
+    hν.mono fun _ h => h.isLocallyFiniteMeasure
+  intro j hj
+  exact localReference_ae_mem_of_tail P ν β N₀ a b C₁m C₁p C₂m C₂p C₃ m ζ
+    htail hpos hloc j hj
+
+
+/-- Uniform phase-frequency estimates give good normalized reference
+observations on every local root domain. -/
+theorem IsWholePlaneGFF.exists_uniform_good_localReference
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ β : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hβ : (2 + γ) ^ 2 / 2 < β)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ₀ ν : Ω → Measure ℂ} {b : ℝ} (hb : b ∈ Ioo (0 : ℝ) 1)
+    (hh : IsWholePlaneGFF P hC hcirc)
+    (hμ₀ : IsLQGMeasureOfField P γ γ hcirc μ₀)
+    (hν : IsLQGMeasureOfField P γ 0 hcirc ν)
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC₀ : LQGMeasureCoordChange P γ 0 hC hcirc)
+    (hCCγ : LQGMeasureCoordChange P γ γ hC hcirc)
+    {ζ : ℝ} (hζ : 0 < ζ) :
+    ∃ c a : ℝ, 0 < c ∧ a ∈ Ioo (0 : ℝ) 1 ∧
+    ∃ C₁m C₁p C₂m C₂p : ℝ,
+      0 < C₁m ∧ 0 < C₁p ∧ 0 < C₂m ∧ 0 < C₂p ∧
+    ∃ N₀ : ℕ, 9 ≤ N₀ ∧ ∃ m ∈ Ioo (0 : ℝ) 1,
+    ∀ N : ℕ, N₀ ≤ N → ∀ j : ℕ, 1 ≤ j →
+      ∀ᵐ p ∂((volume.restrict (localDomain j)).prod P),
+        localReferenceObservation μ₀ j p ∈ recentredGoodSet β N
+          (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b
+          C₁m C₁p C₂m C₂p c m ζ := by
+  have hγQ : γ < lqgQ γ := by
+    have hsq : γ ^ 2 < 4 := by nlinarith
+    have hdiv : γ / 2 < 2 / γ := by
+      apply (lt_div_iff₀ hγ).2
+      nlinarith
+    unfold lqgQ
+    linarith
+  obtain ⟨c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, hcert⟩ :=
+    hh.exists_uniform_singular_inserted_phaseFrequency_certificate hgrowth hfull
+      hγ hγ2 hγQ hβ hb hμ₀ hν hAff hCC₀ hCCγ hζ
+  refine ⟨c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, ?_⟩
+  intro N hN
+  obtain ⟨E, _, heq, hphase⟩ := hcert N hN 1 zero_lt_one
+  exact hh.ae_localReference_good_of_phase_certificate hfull hγ hγ2 hγQ hμ₀ E
+    β N _ b C₁m C₁p C₂m C₂p c m ζ heq hphase
+
+
+/-- The charted marked event and the normalized reference observations
+share the same frequency parameters at every admissible index. -/
+theorem IsWholePlaneGFF.exists_charted_phaseFrequency_event_with_reference
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α β : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hβ : (2 + γ) ^ 2 / 2 < β)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ μ₀ ν : Ω → Measure ℂ} {b : ℝ} (hb : b ∈ Ioo (0 : ℝ) 1)
+    (hh : IsWholePlaneGFF P hC hcirc)
+    (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hμ₀ : IsLQGMeasureOfField P γ γ hcirc μ₀)
+    (hν : IsLQGMeasureOfField P γ 0 hcirc ν)
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC₀ : LQGMeasureCoordChange P γ 0 hC hcirc)
+    (hCCγ : LQGMeasureCoordChange P γ γ hC hcirc)
+    {ζ : ℝ} (hζ : 0 < ζ) :
+    ∃ u : ℕ → ℂ, DenseRange u ∧
+    ∃ c a : ℝ, 0 < c ∧ a ∈ Ioo (0 : ℝ) 1 ∧
+    ∃ C₁m C₁p C₂m C₂p : ℝ,
+      0 < C₁m ∧ 0 < C₁p ∧ 0 < C₂m ∧ 0 < C₂p ∧
+    ∃ N₀ : ℕ, 9 ≤ N₀ ∧ ∃ m ∈ Ioo (0 : ℝ) 1,
+    ∀ N : ℕ, N₀ ≤ N →
+    ∃ E : ∀ n, Set (PhaseTorus ×
+        (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ)),
+      (∀ n, MeasurableSet (E n)) ∧
+      (∀ n, ∀ᵐ ω ∂P, ∀ t : PhaseTorus,
+        ((t, fun φ : Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) =>
+          hC ω φ.1.1 + ∫ x, φ.1.1 x * (-γ * Real.log ‖x‖)) ∈ E n ↔
+        ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+          ({k : ℕ | k ∈ Icc (K + 1) (2 * K) ∧
+            PhaseVeryGoodAnnulus (μ₀ ω) β (dyadicScale k) 0 N
+              (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b
+              C₁m C₁p C₂m C₂p c (torusPhase t) ∧
+            AnnulusBallComparison (μ₀ ω) k 0 m}.ncard : ℝ))) ∧
+      MeasurableSet (chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) ∧
+      (∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (0 : ℂ) 1 →
+        ∃ R : ℝ, 0 < R ∧ R < ‖z‖ ∧ ‖z‖ + R < 1 ∧
+          ∃ F : Set (ModConstTestPairings (ball z R)), MeasurableSet F ∧
+            (∀ v, (v, z) ∈ chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E ↔
+              restrictGlobalPairings (ball z R) v ∈ F) ∧
+            ∀ᵐ ω ∂P, (fun φ => hC ω φ.1 +
+              ∫ x, φ.1 x * (-γ * Real.log ‖x - z‖)) ∈ F) ∧
+      (∀ᵐ ω ∂P, ∀ᵐ z ∂μ ω, z ∈ ball (0 : ℂ) 1 →
+        (localModConstField α hC univ ω, z) ∈
+          chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) ∧
+      (∀ j : ℕ, 1 ≤ j → ∀ᵐ p ∂((volume.restrict (localDomain j)).prod P),
+        localReferenceObservation μ₀ j p ∈ recentredGoodSet β N
+          (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b
+          C₁m C₁p C₂m C₂p c m ζ) := by
+  have hαγ : γ < lqgQ γ := by
+    have hsq : γ ^ 2 < 4 := by nlinarith
+    have hdiv : γ / 2 < 2 / γ := by
+      apply (lt_div_iff₀ hγ).2
+      nlinarith
+    unfold lqgQ
+    linarith
+  obtain ⟨u, hu⟩ := exists_dense_seq ℂ
+  obtain ⟨c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, hcert⟩ :=
+    hh.exists_uniform_singular_inserted_phaseFrequency_certificate hgrowth hfull
+      hγ hγ2 hαγ hβ hb hμ₀ hν hAff hCC₀ hCCγ hζ
+  refine ⟨u, hu, c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, ?_⟩
+  intro N hN
+  choose E hE heq hphase using fun n : ℕ =>
+    hcert N hN (bufferedChartScale n / 2) (half_pos (bufferedChartScale_pos n))
+  have hS := measurableSet_chartedLocalEvent (fun z => phaseTorusOfComplex (-z))
+    (measurable_phaseTorusOfComplex.comp measurable_neg) u E hE
+  have hvalid := hh.ae_ae_chartedLocalEvent_logInsertion (-γ) u hu E hE hphase
+  have href : ∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (0 : ℂ) 1 →
+      ∃ R : ℝ, 0 < R ∧ R < ‖z‖ ∧ ‖z‖ + R < 1 ∧
+        ∃ F : Set (ModConstTestPairings (ball z R)), MeasurableSet F ∧
+          (∀ v, (v, z) ∈ chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E ↔
+            restrictGlobalPairings (ball z R) v ∈ F) ∧
+          ∀ᵐ ω ∂P, (fun φ => hC ω φ.1 +
+            ∫ x, φ.1 x * (-γ * Real.log ‖x - z‖)) ∈ F := by
+    filter_upwards [hvalid, Measure.ae_ne (volume : Measure ℂ) 0] with z hz hz0 hzball
+    obtain ⟨R, hR, hRz, hR1, F, hF, hlocal⟩ :=
+      chartedLocalEvent_admissible_section (fun z => phaseTorusOfComplex (-z))
+        u hu E hE z hzball hz0
+    refine ⟨R, hR, hRz, hR1, F, hF, hlocal, ?_⟩
+    filter_upwards [hz hzball] with ω hω
+    exact (hlocal _).1 hω
+  exact ⟨E, hE, heq, hS, href,
+    hh.ae_singular_root_local_of_reference hγ hγ2 hα hμ hν
+      (chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) hS href,
+    hh.ae_localReference_good_of_phase_certificate hfull hγ hγ2 hαγ hμ₀ (E 0)
+      β N _ b C₁m C₁p C₂m C₂p c m ζ (heq 0) (hphase 0)⟩
+
 
 end HarmonicBalls
