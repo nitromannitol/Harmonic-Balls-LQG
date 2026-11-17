@@ -732,4 +732,37 @@ theorem brownian_annular_exit_radius_block_increment_annealed_le {Ω : Type*} [M
 
 
 
+/-- At every positive smoothing radius, the annular clock is nondecreasing
+and its increments are integrals of the nonnegative density. -/
+theorem ae_stoppedAnnularClock_radius_monotone_and_cell
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α δ : ℝ) :
+    ∀ᵐ ω ∂P, ∀ (r : ℝ), 0 < r → ∀ (b : ContinuousPath ℂ),
+      let f : ℂ → ℝ := fun z => r^(γ^2/2) *
+        Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)
+      MonotoneOn (fun t : ℝ => stoppedAnnularClock f δ (fun _ => t.toNNReal) b) (Icc 0 1) ∧
+      ∀ {u v : ℝ}, 0 ≤ u → u ≤ v → v ≤ 1 →
+        ENNReal.ofReal (stoppedAnnularClock f δ (fun _ => v.toNNReal) b -
+          stoppedAnnularClock f δ (fun _ => u.toNNReal) b) =
+        ∫⁻ s in Ioc u v, ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal)) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec
+  intro r hr b
+  let f : ℂ → ℝ := fun z => r^(γ^2/2) *
+    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)
+  have hc : Continuous (hcirc ω r) := by
+    rw [← funext (hω r)]
+    exact hHc ω r hr
+  have hf : Continuous f := continuous_inserted_density_at_radius (hcirc ω) γ α r hr hc
+    (fun z => hrec r z hr)
+  have hf0 : ∀ z, 0 ≤ f z := by
+    intro z
+    dsimp [f]
+    exact mul_nonneg (Real.rpow_nonneg hr.le _) (Real.exp_pos _).le
+  refine ⟨monotoneOn_stoppedAnnularClock f hf hf0 δ b, ?_⟩
+  intro u v hu huv hv
+  exact (stoppedAnnularClock_sub_nonneg_and_ofReal_eq_lintegral f hf hf0 δ b hu huv hv).2
+
 end HarmonicBalls
