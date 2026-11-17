@@ -2733,4 +2733,85 @@ theorem integral_rpow_annularSquare_le_of_time_integrals
     exact h.2.2⟩
 
 
+/-- The log-variance normalization equals the circle-average GMC density. -/
+theorem gmcDensity_eq_exp_normalized {Ω : Type*} (hcirc : Ω → ℝ → ℂ → ℝ)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) (z : ℂ) (ω : Ω) :
+    LatticeProb.Gauss.gmcDensity hcirc γ ε z ω =
+      Real.exp (γ * hcirc ω ε z - γ ^ 2 * (-Real.log ε) / 2) := by
+  rw [LatticeProb.Gauss.gmcDensity, Real.rpow_def_of_pos hε, ← Real.exp_add]
+  congr 1
+  ring
+
+/-- The nonnegative time integral equals the extended occupation mass. -/
+theorem ofReal_integral_annularSquare_gmcDensity_eq
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) (b : ContinuousPath ℂ)
+    (u v a r : ℝ) (i : ℤ × ℤ) :
+    ∀ᵐ ω ∂P, ENNReal.ofReal (∫ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+      LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω) =
+      ∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω) := by
+  filter_upwards [hh.ae_continuous_circle_fixed hε] with ω hω
+  have hc : Continuous (fun t : ℝ => LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω) := by
+    simp only [LatticeProb.Gauss.gmcDensity]
+    fun_prop
+  have hi : IntegrableOn (fun t : ℝ => LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)
+      (annularSquareTimeSet b a r i ∩ Ioc u v) :=
+    hc.integrableOn_Ioc.mono_set inter_subset_right
+  exact ofReal_integral_eq_lintegral_ofReal hi
+    (Filter.Eventually.of_forall fun t => LatticeProb.Gauss.gmcDensity_nonneg hcirc hε γ _ _)
+
+/-- The annular-square scaling comparison bounds the extended GMC occupation moment. -/
+theorem lintegral_rpow_annularSquare_gmcDensity_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ)
+    (b : ContinuousPath ℂ) (u v a : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    let T := annularSquareTimeSet b a r i ∩ Ioc u v
+    let G : Ω → ℝ := fun ω => ∫ t in T, Real.exp
+      (γ * hcirc ω δ ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+        γ ^ 2 * (-Real.log δ) / 2)
+    (∫⁻ ω, (∫⁻ t in T, ENNReal.ofReal
+      (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P) ≤
+      ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ENNReal.ofReal (∫ ω, G ω ^ q ∂P) := by
+  let T := annularSquareTimeSet b a r i ∩ Ioc u v
+  let g : ℝ → ℂ := fun t => (b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)
+  let F : Ω → ℝ := fun ω => ∫ t in T, Real.exp
+    (γ * hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * g t + LatticeProb.dyadicSquareCentre r i) -
+      γ ^ 2 * (-Real.log (4 * r * δ)) / 2)
+  let G : Ω → ℝ := fun ω => ∫ t in T, Real.exp
+    (γ * hcirc ω δ (g t) - γ ^ 2 * (-Real.log δ) / 2)
+  have hε : 0 < 4 * r * δ := by positivity
+  have hR : (((4 * r : ℝ) : ℂ)) ≠ 0 := by exact_mod_cast (show 4 * r ≠ 0 by positivity)
+  have hF (ω : Ω) : F ω = ∫ t in T,
+      LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω := by
+    apply integral_congr_ae
+    filter_upwards [] with t
+    rw [gmcDensity_eq_exp_normalized hcirc hε]
+    dsimp only [g]
+    rw [mul_div_cancel₀ _ hR, sub_add_cancel]
+  have hnonneg (ω : Ω) : 0 ≤ F ω := integral_nonneg (fun t => (Real.exp_pos _).le)
+  have ht := integral_rpow_annularSquare_le_of_time_integrals hh hr hr10 hδ hδ2 hi γ b u v a hq
+  dsimp only at ht
+  simp only [inter_comm (Ioc u v) (annularSquareTimeSet b a r i)] at ht
+  change Integrable (fun ω => F ω ^ q) P ∧ Integrable (fun ω => G ω ^ q) P ∧
+    (∫ ω, F ω ^ q ∂P) ≤
+      Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) * ∫ ω, G ω ^ q ∂P at ht
+  have heq : ENNReal.ofReal (∫ ω, F ω ^ q ∂P) =
+      ∫⁻ ω, (∫⁻ t in T, ENNReal.ofReal
+        (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P := by
+    rw [ofReal_integral_eq_lintegral_ofReal ht.1
+      (Filter.Eventually.of_forall fun ω => Real.rpow_nonneg (hnonneg ω) q)]
+    apply lintegral_congr_ae
+    filter_upwards [ofReal_integral_annularSquare_gmcDensity_eq hh hε γ b u v a r i] with ω hω
+    rw [← ENNReal.ofReal_rpow_of_nonneg (hnonneg ω) (by linarith : 0 ≤ q), hF ω, hω]
+  dsimp only
+  rw [← heq, ← ENNReal.ofReal_mul (Real.exp_pos _).le]
+  exact ENNReal.ofReal_le_ofReal ht.2.2
+
 end HarmonicBalls
