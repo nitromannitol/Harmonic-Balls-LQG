@@ -1,3 +1,6 @@
+import HarmonicBalls.FirstPass.LPBridge.WeylCompositionOuter
+import HarmonicBalls.FirstPass.Phase2.WeylScalingCompositionDerived
+import HarmonicBalls.Steps.Sec11.WholePlaneWeylShift
 import HarmonicBalls.Proofs.GFF.PfefferSourceMetricCoordinates
 import HarmonicBalls.Proofs.GFF.PfefferAroundJointMeasurable
 import HarmonicBalls.FirstPass.Phase2.FieldAxiomsDerived
@@ -802,5 +805,136 @@ theorem IsWholePlaneGFF.exists_measurable_singular_weyl_inf_coordinates
       funext p
       rw [hω p.1 p.2]
     rw [he]
+
+
+private theorem weylScaling_eq_one_mul (D : ℂ → ℂ → ℝ) (ξ : ℝ) (g : ℂ → ℝ) (x y : ℂ) :
+    weylScaling D ξ g x y = weylScaling D 1 (fun z => ξ * g z) x y := by
+  simp only [weylScaling, one_mul]
+
+/-- Inserting a logarithmic singularity after a continuous random shift gives
+the same metric as continuously shifting the inserted metric. The equality is
+simultaneous in all pairs for the fixed shift. -/
+theorem IsLQGMetric.ae_shifted_inserted_weyl_eq
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hgff : IsWholePlaneGFF P hC hcirc) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : ∀ᵐ ω ∂P, ∀ x y, 0 ≤ D ω x y ∧
+      ENNReal.ofReal (D ω x y) = weylScaling (𝔇 (hC ω)) ξ (fun z => -α₀ * Real.log ‖z‖) x y)
+    {f : Ω → ℂ → ℝ} (hf : ∀ ω, Continuous (f ω))
+    (hfm : ∀ z, Measurable fun ω => f ω z) :
+    ∀ᵐ ω ∂P, ∀ x y,
+      weylScaling (𝔇 (pfefferField hC f ω)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
+        weylScaling (D ω) ξ (f ω) x y := by
+  filter_upwards [ae_wholePlane_weylScaling_shift P γ ξ hC hcirc 𝔇 h𝔇 hgff f hf hfm, hD]
+    with ω h hDω x y
+  let g : ℂ → ℝ := fun z => -α₀ * Real.log ‖z‖
+  have hval : ∀ u v, (weylScaling (𝔇 (hC ω)) ξ g u v).toReal = D ω u v := by
+    intro u v
+    rw [← (hDω u v).2, ENNReal.toReal_ofReal (hDω u v).1]
+  have hfin : ∀ u v, weylScaling (𝔇 (hC ω)) 1 (fun z => ξ * g z) u v ≠ ⊤ := by
+    intro u v
+    rw [← weylScaling_eq_one_mul, ← (hDω u v).2]
+    exact ENNReal.ofReal_ne_top
+  have hg : ContinuousOn (fun z => ξ * g z) {z : ℂ | z ≠ 0} := by
+    apply continuousOn_const.mul
+    exact continuousOn_const.mul (continuous_norm.continuousOn.log (fun z hz => norm_ne_zero_iff.mpr hz))
+  have hout := weylMetricCompositionContinuousOuterFrozen_of_lpStage 1 (by norm_num)
+    (𝔇 (hC ω)) (fun z => ξ * g z) (fun z => ξ * f ω z) h.1 hg
+    (continuous_const.mul (hf ω)) hfin x y
+  have houter : weylScaling (D ω) ξ (f ω) x y =
+      weylScaling (𝔇 (hC ω)) ξ (fun z => f ω z + g z) x y := by
+    rw [weylScaling_eq_one_mul]
+    convert hout using 1
+    · congr 1
+      funext u v
+      rw [← weylScaling_eq_one_mul, hval]
+    · rw [weylScaling_eq_one_mul]
+      congr 2
+      funext z
+      ring
+  have hin := h.1.weylScaling_eq_of_mutual h.2.1 (hf ω) h.2.2.2.1 h.2.2.2.2.2 g x y
+  exact hin.trans houter.symm
+
+/-- The inserted metric of a continuously shifted field has measurable
+infimum coordinates and an all-pairs representative on one field event. -/
+theorem IsWholePlaneGFF.exists_measurable_shifted_inserted_inf_coordinates
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfm : ∀ z, Measurable fun ω => f ω z) :
+    ∃ (𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ) (G : Ω → C(ℂ × ℂ, ℝ)),
+      IsLQGMetric γ ξ 𝔇 ∧ Measurable G ∧
+      (∀ ω, IsEuclideanLengthMetric fun x y => G ω (x, y)) ∧
+      Measurable (fun q : Ω × (ℂ × ℂ) => G q.1 q.2) ∧
+      (∀ U : Set (ℂ × ℂ), Measurable fun ω =>
+        sInf (Set.image (fun p : ℂ × ℂ => ENNReal.ofReal (G ω p)) U)) ∧
+      ∀ᵐ ω ∂P, (∀ x y, 0 ≤ D ω x y ∧ ENNReal.ofReal (D ω x y) =
+        weylScaling (𝔇 (hC ω)) ξ (fun z => -α₀ * Real.log ‖z‖) x y) ∧
+      (∀ x y, G ω (x, y) =
+        (weylScaling (𝔇 (pfefferField hC f ω)) ξ
+          (fun z => -α₀ * Real.log ‖z‖) x y).toReal) ∧
+      ∀ U : Set (ℂ × ℂ),
+        sInf (Set.image (fun p : ℂ × ℂ => ENNReal.ofReal (G ω p)) U) =
+        sInf (Set.image (fun p : ℂ × ℂ => ENNReal.ofReal
+          ((weylScaling (𝔇 (pfefferField hC f ω)) ξ
+            (fun z => -α₀ * Real.log ‖z‖) p.1 p.2).toReal)) U) := by
+  obtain ⟨𝔇, h𝔇, hrepr⟩ := hD
+  have hident := h𝔇.ae_shifted_inserted_weyl_eq hgff hrepr hf hfm
+  have hD : IsLQGMetricOfField P γ ξ α₀ hC D := ⟨𝔇, h𝔇, hrepr⟩
+  obtain ⟨G, hG, hmetric, hjoint, hcoord, heq⟩ :=
+    hgff.exists_measurable_singular_weyl_inf_coordinates hγ hγ₂ hα hD hf hfm
+  refine ⟨𝔇, G, h𝔇, hG, hmetric, hjoint, hcoord, ?_⟩
+  filter_upwards [hident, heq, hrepr] with ω hi he hr
+  refine ⟨hr, ?_, ?_⟩
+  · intro x y
+    rw [hi x y]
+    exact he.1 x y
+  · intro U
+    rw [he.2 U]
+    have hefun : (fun p : ℂ × ℂ => ENNReal.ofReal
+        ((weylScaling (𝔇 (pfefferField hC f ω)) ξ
+          (fun z => -α₀ * Real.log ‖z‖) p.1 p.2).toReal)) =
+        (fun p : ℂ × ℂ => ENNReal.ofReal
+          ((weylScaling (D ω) ξ (f ω) p.1 p.2).toReal)) := by
+      funext p
+      rw [hi p.1 p.2]
+    rw [hefun]
+
+
+
+/-- The around distance obtained by logarithmic insertion after a
+continuous random field shift is jointly almost everywhere measurable. -/
+theorem IsLQGMetric.aemeasurable_shifted_inserted_around_joint
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {𝔇 : ((ℂ → ℝ) → ℝ) → ℂ → ℂ → ℝ} (h𝔇 : IsLQGMetric γ ξ 𝔇)
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hrepr : ∀ᵐ ω ∂P, ∀ x y, 0 ≤ D ω x y ∧
+      ENNReal.ofReal (D ω x y) = weylScaling (𝔇 (hC ω)) ξ (fun z => -α₀ * Real.log ‖z‖) x y)
+    {f : Ω → ℂ → ℝ} (hf : ∀ ω, Continuous (f ω))
+    (hfm : ∀ z, Measurable fun ω => f ω z)
+    (ν : Measure (ℂ × ℝ × ℝ)) [SFinite ν] :
+    AEMeasurable (fun q : Ω × (ℂ × ℝ × ℝ) =>
+      pfefferAround (fun x y =>
+        (weylScaling (𝔇 (pfefferField hC f q.1)) ξ
+          (fun z => -α₀ * Real.log ‖z‖) x y).toReal)
+        q.2.1 q.2.2.1 q.2.2.2) (P.prod ν) := by
+  let : IsProbabilityMeasure P := hgff.isGaussianProcess.isProbabilityMeasure
+  have hD : IsLQGMetricOfField P γ ξ α₀ hC D := ⟨𝔇, h𝔇, hrepr⟩
+  have hi := h𝔇.ae_shifted_inserted_weyl_eq hgff hrepr hf hfm
+  have hp : ∀ᵐ q ∂(P.prod ν), ∀ x y,
+      weylScaling (𝔇 (pfefferField hC f q.1)) ξ (fun z => -α₀ * Real.log ‖z‖) x y =
+        weylScaling (D q.1) ξ (f q.1) x y :=
+    (Measure.quasiMeasurePreserving_fst (μ := P) (ν := ν)).ae hi
+  apply (hgff.aemeasurable_singular_random_continuous_weyl_around_joint
+    hγ hγ₂ hα hD hf hfm ν).congr
+  filter_upwards [hp] with q hq
+  congr 1
+  funext x y
+  exact congrArg ENNReal.toReal (hq x y).symm
 
 end HarmonicBalls
