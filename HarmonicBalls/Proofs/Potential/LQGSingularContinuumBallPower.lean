@@ -276,4 +276,24 @@ theorem IsWholePlaneGFF.ae_singular_continuum_small_ball_power
     rw [he]
     nlinarith [mul_nonneg (show 0 ≤ A * (2 : ℝ) ^ β by positivity) hpow]
 
+/-- One event provides the continuum small-ball bound for every bounded disk. -/
+theorem IsWholePlaneGFF.ae_singular_continuum_small_ball_power_all_disks
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ) :
+    ∀ᵐ ω ∂P, ∀ R : ℝ, ∃ C κ r₀ : ℝ, 0 < C ∧ 0 < κ ∧ 0 < r₀ ∧
+      ∀ z : ℂ, ‖z‖ ≤ R → ∀ r, 0 < r → r < r₀ → ∀ s, 0 < s → s ≤ 1 →
+        lqgApprox γ (fieldCircleAverage α (hcirc ω)) s (ball z r) ≤
+          ENNReal.ofReal (C * r ^ κ) := by
+  filter_upwards [ae_all_iff.mpr (fun n : ℕ =>
+    hh.ae_singular_continuum_small_ball_power hγ hγ2 hαQ
+      (R := (n : ℝ) + 1) (by positivity))] with ω hω R
+  obtain ⟨n, hn⟩ := exists_nat_ge R
+  obtain ⟨C, κ, r₀, hC, hκ, hr₀, hbound⟩ := hω n
+  refine ⟨C, κ, r₀, hC, hκ, hr₀, ?_⟩
+  intro z hz r hr hrr s hs hs1
+  apply hbound z ?_ r hr hrr s hs hs1
+  simpa [mem_ball, dist_zero_right] using (show ‖z‖ < (n : ℝ) + 1 by linarith)
+
 end HarmonicBalls
