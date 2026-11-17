@@ -1,6 +1,7 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
 import LatticeProb.LQG.LQGMassMoment
 import LatticeProb.LQG.LQGSubSquareGaussian
+import LatticeProb.LQG.LQGSubSquareLimit
 import LatticeProb.Prob.GaussKahaneRpow
 import Mathlib.MeasureTheory.Function.UniformIntegrable
 
@@ -1015,5 +1016,59 @@ theorem integral_rpow_subSquareField_le_of_ae_atomic_tendsto
   exact Eventually.of_forall (fun n =>
     integral_rpow_subSquareField_le_explicit_nonneg hh γ hk hδ hδ2
       (piece n) (pt n) (hpt n) (ha n) hq)
+
+/-- A deterministic quadrature approximation for continuous tests yields the
+fixed-scale comparison for the corresponding integrals against both fields. -/
+theorem integral_rpow_subSquareField_le_of_quadrature
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (ι : ℕ → Type*) [∀ n, Fintype (ι n)] (piece : ∀ n, ι n → Fin 2)
+    (pt : ∀ n, ι n → ℂ) (hpt : ∀ n i, pt n i ∈ LatticeProb.LQG.lqgSquare)
+    (a : ∀ n, ι n → ℝ) (ha : ∀ n i, 0 ≤ a n i)
+    (M : ℝ) (hmass : ∀ n, ∑ i, a n i ≤ M)
+    (ν : Fin 2 → Measure ℂ)
+    (hquad : ∀ f : Fin 2 → ℂ → ℝ, (∀ s, Continuous (f s)) →
+      Tendsto (fun n => ∑ i, a n i * f (piece n i) (pt n i)) atTop
+        (𝓝 (∑ s, ∫ z, f s z ∂(ν s))))
+    {q : ℝ} (hq : 1 ≤ q) :
+    let R := LatticeProb.LQG.dyadicScale k
+    let F : Ω → ℝ := fun ω => ∑ s, ∫ z, Real.exp
+      (γ * hcirc ω (R * δ) ((R : ℂ) * z + LatticeProb.LQG.lqgSquareCentre s) -
+        γ ^ 2 * (-Real.log (R * δ)) / 2) ∂(ν s)
+    let G : ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun x => ∑ s, ∫ z, Real.exp
+      (γ * (hcirc x.1.1 R (LatticeProb.LQG.lqgSquareCentre s) + hcirc (x.2 s) δ z + x.1.2) -
+        γ ^ 2 * (1 - Real.log R - Real.log δ) / 2) ∂(ν s)
+    Integrable (fun ω => F ω ^ q) P ∧
+      Integrable (fun x => G x ^ q) (LatticeProb.Gauss.subSquareMeasure P) ∧
+      (∫ ω, F ω ^ q ∂P) ≤ ∫ x, G x ^ q ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hR := LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k
+  have hε : 0 < LatticeProb.LQG.dyadicScale k * δ := mul_pos hR hδ
+  apply integral_rpow_subSquareField_le_of_ae_atomic_tendsto hh γ hk hδ hδ2 ι piece pt hpt a ha M hmass hq
+  · filter_upwards [hh.ae_continuous_circle_fixed hε] with ω hω
+    have htest : ∀ s : Fin 2, Continuous (fun z : ℂ => Real.exp
+        (γ * hcirc ω (LatticeProb.LQG.dyadicScale k * δ)
+          ((LatticeProb.LQG.dyadicScale k : ℂ) * z + LatticeProb.LQG.lqgSquareCentre s) -
+          γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)) := by
+      intro s
+      fun_prop
+    simpa only [LatticeProb.Gauss.subSquareField] using hquad _ htest
+  · have hae : ∀ᵐ x ∂(LatticeProb.Gauss.subSquareMeasure P), ∀ s : Fin 2,
+        Continuous (hcirc (x.2 s) δ) := by
+      rw [ae_all_iff]
+      intro s
+      exact (LatticeProb.Gauss.measurePreserving_subSquare_eval s).quasiMeasurePreserving.ae
+        (hh.ae_continuous_circle_fixed hδ)
+    filter_upwards [hae] with x hx
+    have htest : ∀ s : Fin 2, Continuous (fun z : ℂ => Real.exp
+        (γ * (hcirc x.1.1 (LatticeProb.LQG.dyadicScale k) (LatticeProb.LQG.lqgSquareCentre s) +
+          hcirc (x.2 s) δ z + x.1.2) -
+          γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2)) := by
+      intro s
+      fun_prop
+    simpa only [LatticeProb.Gauss.subSquareComparison] using hquad _ htest
 
 end HarmonicBalls
