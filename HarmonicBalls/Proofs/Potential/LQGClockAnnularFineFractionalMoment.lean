@@ -2447,4 +2447,290 @@ theorem uniformIntegrable_rpow_sum_circle_atoms
     (hI j q (by linarith)).aestronglyMeasurable (fun ω => Real.rpow_nonneg (hX0 j ω) q)
     (hsq j) K (hbound j)
 
+
+/-- A rescaled reference-square circle lies in the unit disc. -/
+theorem norm_annularSquare_rescaled_add_le_one {r δ : ℝ}
+    (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) {w : ℂ}
+    (hw : w ∈ LatticeProb.LQG.lqgSquare) :
+    ‖(((4 * r : ℝ) : ℂ) * w + LatticeProb.dyadicSquareCentre r i)‖ + 4 * r * δ ≤ 1 := by
+  have hw' : ‖w‖ ≤ 1 / 4 := by
+    simpa using LatticeProb.LQG.lqgSquare_subset_closedBall hw
+  have hc := norm_dyadicSquareCentre_add_four_mul_le_one hr hr10 hi
+  have ht := norm_add_le (((4 * r : ℝ) : ℂ) * w) (LatticeProb.dyadicSquareCentre r i)
+  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (by positivity : 0 ≤ 4 * r)] at ht
+  nlinarith
+
+/-- Variance of a scalar multiple of a circle average inside the unit disc. -/
+theorem variance_mul_circle_inside {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    {z : ℂ} (hz : ‖z‖ + ε ≤ 1) (γ : ℝ) :
+    variance (fun ω => γ * hcirc ω ε z) P = γ ^ 2 * (-Real.log ε) := by
+  have hg : HasGaussianLaw (fun ω => γ * hcirc ω ε z) P := by
+    simpa only [smul_eq_mul] using (hh.hasGaussianLaw_circle hε z).fun_smul γ
+  rw [← covariance_self hg.aemeasurable, covariance_const_mul_left,
+    covariance_const_mul_right, covariance_self (hh.hasGaussianLaw_circle hε z).aemeasurable,
+    hh.variance_circle_inside hε hz]
+  ring
+
+/-- Almost-sure limits of atomic masses preserve the square scaling comparison. -/
+theorem integral_rpow_annularSquare_le_of_ae_atomic_tendsto
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ)
+    (ι : ℕ → Type*) [∀ n, Fintype (ι n)] (pt : ∀ n, ι n → ℂ)
+    (hpt : ∀ n j, pt n j ∈ LatticeProb.LQG.lqgSquare)
+    (a : ∀ n, ι n → ℝ) (ha : ∀ n j, 0 ≤ a n j)
+    (M : ℝ) (hmass : ∀ n, ∑ j, a n j ≤ M) {q : ℝ} (hq : 1 ≤ q)
+    (F G : Ω → ℝ)
+    (hF : ∀ᵐ ω ∂P, Tendsto (fun n => ∑ j, a n j * Real.exp
+      (γ * hcirc ω (4 * r * δ)
+        (((4 * r : ℝ) : ℂ) * pt n j + LatticeProb.dyadicSquareCentre r i) -
+        (γ ^ 2 * (-Real.log (4 * r * δ))) / 2)) atTop (𝓝 (F ω)))
+    (hG : ∀ᵐ ω ∂P, Tendsto (fun n => ∑ j, a n j * Real.exp
+      (γ * hcirc ω δ (pt n j) - (γ ^ 2 * (-Real.log δ)) / 2)) atTop (𝓝 (G ω))) :
+    Integrable (fun ω => F ω ^ q) P ∧ Integrable (fun ω => G ω ^ q) P ∧
+      (∫ ω, F ω ^ q ∂P) ≤
+        Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) *
+          ∫ ω, G ω ^ q ∂P := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let z : ∀ n, ι n → ℂ := fun n j =>
+    (((4 * r : ℝ) : ℂ) * pt n j + LatticeProb.dyadicSquareCentre r i)
+  let X : ℕ → Ω → ℝ := fun n ω => (∑ j, a n j * Real.exp
+      (γ * hcirc ω (4 * r * δ) (z n j) -
+        (γ ^ 2 * (-Real.log (4 * r * δ))) / 2)) ^ q
+  let Y : ℕ → Ω → ℝ := fun n ω => (∑ j, a n j * Real.exp
+      (γ * hcirc ω δ (pt n j) - (γ ^ 2 * (-Real.log δ)) / 2)) ^ q
+  have hz (n j) : ‖z n j‖ + 4 * r * δ ≤ 1 :=
+    norm_annularSquare_rescaled_add_le_one hr hr10 hδ2 hi (hpt n j)
+  have hw (n j) : ‖pt n j‖ + δ ≤ 1 := by
+    have h : ‖pt n j‖ ≤ 1 / 4 := by
+      simpa using LatticeProb.LQG.lqgSquare_subset_closedBall (hpt n j)
+    linarith
+  have hε : 0 < 4 * r * δ := by positivity
+  have hUIX : UniformIntegrable X 1 P :=
+    uniformIntegrable_rpow_sum_circle_atoms hh hε γ ι z hz a ha M hmass hq
+  have hUIY : UniformIntegrable Y 1 P :=
+    uniformIntegrable_rpow_sum_circle_atoms hh hδ γ ι pt hw a ha M hmass hq
+  have hFX : ∀ᵐ ω ∂P, Tendsto (fun n => X n ω) atTop (𝓝 (F ω ^ q)) := by
+    filter_upwards [hF] with ω hω
+    exact (Real.continuous_rpow_const (by linarith : 0 ≤ q)).continuousAt.tendsto.comp hω
+  have hGY : ∀ᵐ ω ∂P, Tendsto (fun n => Y n ω) atTop (𝓝 (G ω ^ q)) := by
+    filter_upwards [hG] with ω hω
+    exact (Real.continuous_rpow_const (by linarith : 0 ≤ q)).continuousAt.tendsto.comp hω
+  have hFi := hUIX.integrable_of_ae_tendsto hFX
+  have hGi := hUIY.integrable_of_ae_tendsto hGY
+  have hXL := tendsto_Lp_finite_of_tendsto_ae (p := 1) le_rfl (by simp)
+    (fun n => hUIX.aestronglyMeasurable n) (memLp_one_iff_integrable.mpr hFi) hUIX.1 hFX
+  have hYL := tendsto_Lp_finite_of_tendsto_ae (p := 1) le_rfl (by simp)
+    (fun n => hUIY.aestronglyMeasurable n) (memLp_one_iff_integrable.mpr hGi) hUIY.1 hGY
+  have hXI := tendsto_integral_of_L1' (fun ω => F ω ^ q)
+    (Eventually.of_forall (fun n => memLp_one_iff_integrable.mp (hUIX.memLp n))) hXL
+  have hYI := tendsto_integral_of_L1' (fun ω => G ω ^ q)
+    (Eventually.of_forall (fun n => memLp_one_iff_integrable.mp (hUIY.memLp n))) hYL
+  refine ⟨hFi, hGi, le_of_tendsto_of_tendsto hXI (tendsto_const_nhds.mul hYI) ?_⟩
+  apply Eventually.of_forall
+  intro n
+  have hc := integral_rpow_annularSquare_atoms_le_nonneg hh hr hr10 hδ hδ2 hi γ
+    (pt n) (hpt n) (a n) (ha n) hq
+  dsimp only at hc
+  have hvx (j : ι n) : variance (fun ω => γ * hcirc ω (4 * r * δ) (z n j)) P =
+      γ ^ 2 * (-Real.log (4 * r * δ)) := variance_mul_circle_inside hh hε (hz n j) γ
+  have hvy (j : ι n) : variance (fun ω => γ * hcirc ω δ (pt n j)) P =
+      γ ^ 2 * (-Real.log δ) := variance_mul_circle_inside hh hδ (hw n j) γ
+  dsimp only [z] at hvx
+  simp only [hvx, hvy] at hc
+  exact hc
+
+
+
+/-- Fixed-scale moment comparison for a finite measure on a grid square. -/
+theorem integral_rpow_annularSquare_le_of_finite_measure
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ)
+    (ν : Measure ℂ) [IsFiniteMeasure ν]
+    (hν : ∀ᵐ z ∂ν, z ∈ LatticeProb.LQG.lqgSquare) {q : ℝ} (hq : 1 ≤ q) :
+    let F : Ω → ℝ := fun ω => ∫ z, Real.exp
+      (γ * hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * z + LatticeProb.dyadicSquareCentre r i) -
+        γ ^ 2 * (-Real.log (4 * r * δ)) / 2) ∂ν
+    let G : Ω → ℝ := fun ω => ∫ z, Real.exp
+      (γ * hcirc ω δ z - γ ^ 2 * (-Real.log δ) / 2) ∂ν
+    Integrable (fun ω => F ω ^ q) P ∧ Integrable (fun ω => G ω ^ q) P ∧
+      (∫ ω, F ω ^ q ∂P) ≤
+        Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) * ∫ ω, G ω ^ q ∂P := by
+  classical
+  have hK : IsCompact LatticeProb.LQG.lqgSquare := by
+    have hc : IsClosed LatticeProb.LQG.lqgSquare := by
+      have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+      have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+      exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+    exact (isCompact_closedBall (0 : ℂ) (1 / 4)).of_isClosed_subset hc
+      LatticeProb.LQG.lqgSquare_subset_closedBall
+  have h0 : (0 : ℂ) ∈ LatticeProb.LQG.lqgSquare := by simp [LatticeProb.LQG.lqgSquare]
+  let T := fun n => SimpleFunc.approxOn id measurable_id LatticeProb.LQG.lqgSquare 0 h0 n
+  let ι : ℕ → Type := fun n => ↥(T n).range
+  let pt : ∀ n, ι n → ℂ := fun _ j => j.1
+  let a : ∀ n, ι n → ℝ := fun n j => ν.real ((T n) ⁻¹' {j.1})
+  have hpt : ∀ n j, pt n j ∈ LatticeProb.LQG.lqgSquare := by
+    intro n j
+    obtain ⟨z, hz⟩ := SimpleFunc.mem_range.mp j.2
+    change j.1 ∈ LatticeProb.LQG.lqgSquare
+    rw [← hz]
+    exact SimpleFunc.approxOn_mem measurable_id h0 n z
+  have ha : ∀ n j, 0 ≤ a n j := fun _ _ => ENNReal.toReal_nonneg
+  have hmass : ∀ n, ∑ j, a n j ≤ ν.real univ := by
+    intro n
+    apply le_of_eq
+    change (∑ j : ↥(T n).range, ν.real ((T n) ⁻¹' {j.1})) = ν.real univ
+    calc
+      _ = ∑ z ∈ (T n).range, ν.real ((T n) ⁻¹' {z}) :=
+        Finset.sum_coe_sort (T n).range (fun z : ℂ => ν.real ((T n) ⁻¹' {z}))
+      _ = _ := by
+        simp only [measureReal_def, ← ENNReal.toReal_sum (fun z _ => measure_ne_top ν _),
+          (T n).sum_range_measure_preimage_singleton]
+  have hquad (f : ℂ → ℝ) (hf : Continuous f) :
+      Tendsto (fun n => ∑ j, a n j * f (pt n j)) atTop (𝓝 (∫ z, f z ∂ν)) := by
+    have h := tendsto_sum_fiber_mass_mul hK h0 ν hν f hf
+    convert h using 1
+    ext n
+    exact Finset.sum_coe_sort (T n).range (fun z : ℂ => ν.real ((T n) ⁻¹' {z}) * f z)
+  have hε : 0 < 4 * r * δ := by positivity
+  apply integral_rpow_annularSquare_le_of_ae_atomic_tendsto hh hr hr10 hδ hδ2 hi γ
+    ι pt hpt a ha (ν.real univ) hmass hq
+  · filter_upwards [hh.ae_continuous_circle_fixed hε] with ω hω
+    have htest : Continuous (fun z : ℂ => Real.exp
+        (γ * hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * z + LatticeProb.dyadicSquareCentre r i) -
+          γ ^ 2 * (-Real.log (4 * r * δ)) / 2)) := by fun_prop
+    exact hquad _ htest
+  · filter_upwards [hh.ae_continuous_circle_fixed hδ] with ω hω
+    have htest : Continuous (fun z : ℂ => Real.exp
+        (γ * hcirc ω δ z - γ ^ 2 * (-Real.log δ) / 2)) := by fun_prop
+    exact hquad _ htest
+
+
+
+/-- The reference-square image of an annular grid-square occupation measure. -/
+noncomputable def annularSquareOccupation (b : ContinuousPath ℂ) (u v δ r : ℝ)
+    (i : ℤ × ℤ) : Measure ℂ :=
+  Measure.map (fun t : ℝ => (b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ))
+    (volume.restrict (Ioc u v ∩ annularSquareTimeSet b δ r i))
+
+instance (b : ContinuousPath ℂ) (u v δ r : ℝ) (i : ℤ × ℤ) :
+    IsFiniteMeasure (annularSquareOccupation b u v δ r i) := by
+  dsimp [annularSquareOccupation]
+  let : IsFiniteMeasure (volume.restrict (Ioc u v ∩ annularSquareTimeSet b δ r i)) :=
+    isFiniteMeasure_of_le (volume.restrict (Ioc u v))
+      (Measure.restrict_mono_set volume inter_subset_left)
+  infer_instance
+
+/-- The rescaled annular occupation measure is carried by the reference square. -/
+theorem ae_mem_annularSquareOccupation (b : ContinuousPath ℂ) (u v δ : ℝ)
+    {r : ℝ} (hr : 0 < r) (i : ℤ × ℤ) :
+    ∀ᵐ z ∂(annularSquareOccupation b u v δ r i), z ∈ LatticeProb.LQG.lqgSquare := by
+  let g : ℝ → ℂ := fun t => (b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)
+  have hg : Continuous g := by dsimp [g]; fun_prop
+  have hQ : MeasurableSet LatticeProb.LQG.lqgSquare := by
+    apply IsClosed.measurableSet
+    have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+    have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+    exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+  change ∀ᵐ z ∂(Measure.map g (volume.restrict (Ioc u v ∩ annularSquareTimeSet b δ r i))),
+    z ∈ LatticeProb.LQG.lqgSquare
+  apply (ae_map_iff (p := fun z => z ∈ LatticeProb.LQG.lqgSquare)
+    hg.measurable.aemeasurable hQ).2
+  filter_upwards [ae_restrict_mem (measurableSet_Ioc.inter
+    (measurableSet_annularSquareTimeSet b δ r i))] with t ht
+  exact dyadicSquare_rescaled_mem_lqgSquare hr ht.2.1
+
+/-- Continuous tests of the rescaled occupation measure are time integrals. -/
+theorem integral_annularSquareOccupation (b : ContinuousPath ℂ) (u v δ r : ℝ) (i : ℤ × ℤ)
+    (f : ℂ → ℝ) (hf : Continuous f) :
+    ∫ z, f z ∂(annularSquareOccupation b u v δ r i) =
+      ∫ t in Ioc u v ∩ annularSquareTimeSet b δ r i,
+        f ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) := by
+  apply integral_map
+  · fun_prop
+  · exact hf.aestronglyMeasurable
+
+/-- Fixed-scale Gaussian comparison for a rescaled annular path occupation measure. -/
+theorem integral_rpow_annularSquare_le_of_occupation
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ)
+    (b : ContinuousPath ℂ) (u v a : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    let ν := annularSquareOccupation b u v a r i
+    let F : Ω → ℝ := fun ω => ∫ z, Real.exp
+      (γ * hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * z + LatticeProb.dyadicSquareCentre r i) -
+        γ ^ 2 * (-Real.log (4 * r * δ)) / 2) ∂ν
+    let G : Ω → ℝ := fun ω => ∫ z, Real.exp
+      (γ * hcirc ω δ z - γ ^ 2 * (-Real.log δ) / 2) ∂ν
+    Integrable (fun ω => F ω ^ q) P ∧ Integrable (fun ω => G ω ^ q) P ∧
+      (∫ ω, F ω ^ q ∂P) ≤
+        Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) * ∫ ω, G ω ^ q ∂P := by
+  exact integral_rpow_annularSquare_le_of_finite_measure hh hr hr10 hδ hδ2 hi γ _
+    (ae_mem_annularSquareOccupation b u v a hr i) hq
+
+/-- Fixed-scale comparison for the time spent in an annular grid square. -/
+theorem integral_rpow_annularSquare_le_of_time_integrals
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ)
+    (b : ContinuousPath ℂ) (u v a : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    let g : ℝ → ℂ := fun t => (b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)
+    let I := Ioc u v ∩ annularSquareTimeSet b a r i
+    let F : Ω → ℝ := fun ω => ∫ t in I, Real.exp
+      (γ * hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * g t + LatticeProb.dyadicSquareCentre r i) -
+        γ ^ 2 * (-Real.log (4 * r * δ)) / 2)
+    let G : Ω → ℝ := fun ω => ∫ t in I, Real.exp
+      (γ * hcirc ω δ (g t) - γ ^ 2 * (-Real.log δ) / 2)
+    Integrable (fun ω => F ω ^ q) P ∧ Integrable (fun ω => G ω ^ q) P ∧
+      (∫ ω, F ω ^ q ∂P) ≤
+        Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) * ∫ ω, G ω ^ q ∂P := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let ν := annularSquareOccupation b u v a r i
+  let g : ℝ → ℂ := fun t => (b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)
+  let I := Ioc u v ∩ annularSquareTimeSet b a r i
+  let F : Ω → ℝ := fun ω => ∫ z, Real.exp
+    (γ * hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * z + LatticeProb.dyadicSquareCentre r i) -
+      γ ^ 2 * (-Real.log (4 * r * δ)) / 2) ∂ν
+  let G : Ω → ℝ := fun ω => ∫ z, Real.exp
+    (γ * hcirc ω δ z - γ ^ 2 * (-Real.log δ) / 2) ∂ν
+  let Ftime : Ω → ℝ := fun ω => ∫ t in I, Real.exp
+    (γ * hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * g t + LatticeProb.dyadicSquareCentre r i) -
+      γ ^ 2 * (-Real.log (4 * r * δ)) / 2)
+  let Gtime : Ω → ℝ := fun ω => ∫ t in I, Real.exp
+    (γ * hcirc ω δ (g t) - γ ^ 2 * (-Real.log δ) / 2)
+  have hε : 0 < 4 * r * δ := by positivity
+  have hF : F =ᵐ[P] Ftime := by
+    filter_upwards [hh.ae_continuous_circle_fixed hε] with ω hω
+    apply integral_annularSquareOccupation
+    fun_prop
+  have hG : G =ᵐ[P] Gtime := by
+    filter_upwards [hh.ae_continuous_circle_fixed hδ] with ω hω
+    apply integral_annularSquareOccupation
+    fun_prop
+  have h := integral_rpow_annularSquare_le_of_occupation hh hr hr10 hδ hδ2 hi γ b u v a hq
+  change Integrable (fun ω => F ω ^ q) P ∧ Integrable (fun ω => G ω ^ q) P ∧
+    (∫ ω, F ω ^ q ∂P) ≤
+      Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) * ∫ ω, G ω ^ q ∂P at h
+  have hFq : (fun ω => F ω ^ q) =ᵐ[P] (fun ω => Ftime ω ^ q) :=
+    hF.mono (fun _ h => congrArg (fun z : ℝ => z ^ q) h)
+  have hGq : (fun ω => G ω ^ q) =ᵐ[P] (fun ω => Gtime ω ^ q) :=
+    hG.mono (fun _ h => congrArg (fun z : ℝ => z ^ q) h)
+  exact ⟨h.1.congr hFq, h.2.1.congr hGq, by
+    rw [← integral_congr_ae hFq, ← integral_congr_ae hGq]
+    exact h.2.2⟩
+
+
 end HarmonicBalls
