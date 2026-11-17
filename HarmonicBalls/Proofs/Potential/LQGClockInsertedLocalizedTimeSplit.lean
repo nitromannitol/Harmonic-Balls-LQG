@@ -62,7 +62,7 @@ theorem ae_inserted_localized_increment_le_annulus_add_inner_time
     (fun z => ε^(γ^2/2) * Real.exp (γ *
       LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
     (hF (ε/2) (half_pos hε)) (hF ε hε) (hF0 (ε/2) (half_pos hε)) (hF0 ε hε)
-  simp_rw [hr (ε/2) _ (half_pos hε), hr ε _ hε] 
+  simp_rw [hr (ε/2) _ (half_pos hε), hr ε _ hε]
   exact hs
 
 end HarmonicBalls
