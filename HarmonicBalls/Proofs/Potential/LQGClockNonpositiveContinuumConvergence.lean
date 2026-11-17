@@ -1836,4 +1836,141 @@ theorem exists_ae_tsum_nonpositive_halfDisc_radius_grid_clock_lt_top
     exact hbound x
   exact ae_lt_top' (AEMeasurable.tsum hm) hint.ne
 
+
+private def nonpositiveUnitRationalTime (q : ℚ) : Icc (0 : ℝ) 1 :=
+  ⟨min 1 (max (q : ℝ) 0), ⟨le_min (by norm_num) (le_max_right _ _), min_le_left _ _⟩⟩
+
+private theorem nonpositive_unit_iSup_eq_rational (f : ℝ → ℝ≥0∞) (hf : Continuous f) :
+    (⨆ t : Icc (0 : ℝ) 1, f t) = ⨆ q : ℚ, f (nonpositiveUnitRationalTime q) := by
+  apply le_antisymm
+  · apply iSup_le
+    intro t
+    have hc : Continuous (fun x : ℝ => f (min 1 (max x 0))) :=
+      hf.comp (continuous_const.min (continuous_id.max continuous_const))
+    have hclosed : IsClosed {x : ℝ | f (min 1 (max x 0)) ≤ ⨆ q : ℚ, f (nonpositiveUnitRationalTime q)} :=
+      isClosed_le hc continuous_const
+    have hall : ∀ x : ℝ, f (min 1 (max x 0)) ≤ ⨆ q : ℚ, f (nonpositiveUnitRationalTime q) := by
+      intro x
+      refine Rat.denseRange_cast.induction_on x hclosed ?_
+      intro q
+      exact le_iSup (fun q : ℚ => f (nonpositiveUnitRationalTime q)) q
+    simpa only [max_eq_left t.property.1, min_eq_right t.property.2] using hall t
+  · apply iSup_le
+    intro q
+    exact le_iSup (fun t : Icc (0 : ℝ) 1 => f t) (nonpositiveUnitRationalTime q)
+
+/-- Radius-grid errors remain summable on every integer-shifted unit block. -/
+theorem exists_ae_tsum_nonpositive_halfDisc_shifted_radius_grid_clock_lt_top
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (α : ℝ) (hα : α ≤ 0) :
+    ∃ c : ℝ, 0 < c ∧ ∀ x : ℂ,
+      ∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)), ∀ j : ℕ,
+      let F : ℝ → ℝ → ℝ := fun v t =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) 0
+            (fun _ => t.toNNReal) (ContinuousPath.shift j p.2)
+      (∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1) + 1),
+        ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal
+          |F (gridScale (gridCount c) (n+1) i) t -
+            F (LatticeProb.LQG.dyadicScale (n+1)) t|) < ⊤ := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨c, hc, hbase⟩ :=
+    exists_ae_tsum_nonpositive_halfDisc_radius_grid_clock_lt_top hh hγ hγ2 α hα
+  let ε : ℕ → ℝ := fun n => LatticeProb.LQG.dyadicScale (n+1)
+  have hε (n : ℕ) : 0 < ε n := by dsimp [ε, LatticeProb.LQG.dyadicScale]; positivity
+  let r : ℕ → ℕ → ℝ := fun n i =>
+    if i ≤ gridCount c (n+1) then gridScale (gridCount c) (n+1) i else ε n
+  have hr (n i : ℕ) : 0 < r n i := by
+    dsimp [r]
+    split_ifs with hi
+    · exact (half_pos (hε n)).trans_le (gridScale_mem_Icc (gridCount c) hi).1
+    · exact hε n
+  let τ : ℚ → ContinuousPath ℂ → ℝ≥0 := fun q _ =>
+    ((nonpositiveUnitRationalTime q : Icc (0 : ℝ) 1) : ℝ).toNNReal
+  have hexists (n i : ℕ) (q : ℚ) : ∃ F : ContinuousPath ℂ × Ω → ℝ, Measurable F ∧
+      ∀ᵐ ω ∂P, ∀ b, F (b,ω) =
+        annularRadiusIncrementSample hcirc γ α 0 (ε n) (r n i) (τ q) b ω :=
+    exists_measurable_annularRadiusIncrementSample hh (hε n) (hr n i) γ α 0 (τ q) measurable_const
+  choose G hGm hGae using hexists
+  have hGall : ∀ᵐ ω ∂P, ∀ n i q b, G n i q (b,ω) =
+      annularRadiusIncrementSample hcirc γ α 0 (ε n) (r n i) (τ q) b ω := by
+    exact ae_all_iff.mpr fun n => ae_all_iff.mpr fun i => ae_all_iff.mpr fun q => hGae n i q
+  let M : ℕ → ℕ → (Ω × ContinuousPath ℂ) → ℝ≥0∞ := fun n i p =>
+    ⨆ q : ℚ, ENNReal.ofReal |G n i q (p.2,p.1)|
+  have hMm (n i : ℕ) : Measurable (M n i) := by
+    apply Measurable.iSup
+    intro q
+    exact ENNReal.measurable_ofReal.comp ((hGm n i q).comp measurable_swap).abs
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hMfield : ∀ᵐ ω ∂P, ∀ b n i, i ≤ gridCount c (n+1) →
+      M n i (ω,b) = ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |stoppedAnnularClock
+        (fun z => (gridScale (gridCount c) (n+1) i)^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (gridScale (gridCount c) (n+1) i) z)) 0
+          (fun _ => ((t : ℝ).toNNReal)) b -
+        stoppedAnnularClock (fun z => (ε n)^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε n) z)) 0
+          (fun _ => ((t : ℝ).toNNReal)) b| := by
+    filter_upwards [hGall, hHae, ae_stoppedAnnularClock_sub_eq_annularRadiusIncrementSample hh γ α 0]
+      with ω hG hω hsub
+    intro b n i hi
+    have hre : r n i = gridScale (gridCount c) (n+1) i := by simp [r, hi]
+    have hcont (v : ℝ) (hv : 0 < v) : Continuous (fun t : ℝ =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) v z)) 0 (fun _ => t.toNNReal) b) := by
+      have hc : Continuous (hcirc ω v) := by
+        rw [← funext (hω v)]
+        exact hHc ω v hv
+      have hd : Continuous (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) v z)) :=
+        continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
+          (continuous_fieldCircleAverage_of_continuous (hcirc ω) α hv hc)))
+      exact continuous_stoppedAnnularClock_time _ hd 0 b
+    have hcF : Continuous (fun t : ℝ => ENNReal.ofReal |stoppedAnnularClock
+        (fun z => (r n i)^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (r n i) z)) 0 (fun _ => t.toNNReal) b -
+        stoppedAnnularClock (fun z => (ε n)^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε n) z)) 0 (fun _ => t.toNNReal) b|) :=
+      ENNReal.continuous_ofReal.comp (((hcont (r n i) (hr n i)).sub (hcont (ε n) (hε n))).abs)
+    rw [← hre, nonpositive_unit_iSup_eq_rational _ hcF]
+    apply iSup_congr
+    intro q
+    dsimp [M]
+    rw [hG n i q b, ← hsub (ε n) (r n i) (hε n) (hr n i) (τ q) b]
+  let S : Set (Ω × ContinuousPath ℂ) := {p | (∑' n : ℕ,
+    ∑ i ∈ Finset.range (gridCount c (n+1) + 1), M n i p) < ⊤}
+  have hSm : MeasurableSet S := by
+    apply measurableSet_lt _ measurable_const
+    apply Measurable.tsum
+    intro n
+    exact Finset.measurable_fun_sum _ (fun i _ => hMm n i)
+  have hS (y : ℂ) : ∀ᵐ p ∂(P.prod (planarBrownianMotion y)), p ∈ S := by
+    filter_upwards [hbase y, (Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion y)).ae hMfield] with p hp hω
+    change (∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1) + 1), M n i p) < ⊤
+    convert hp using 2
+    ext n
+    apply Finset.sum_congr rfl
+    intro i hi
+    exact hω p.2 n i (Nat.lt_succ_iff.mp (Finset.mem_range.mp hi))
+  refine ⟨c, hc, ?_⟩
+  intro x
+  apply ae_all_iff.mpr
+  intro j
+  have hshift := ae_prod_planarBrownianMotion_shift_of_forall_ae P x j S hSm hS
+  filter_upwards [hshift, (Measure.quasiMeasurePreserving_fst
+    (μ := P) (ν := planarBrownianMotion x)).ae hMfield] with p hp hω
+  change (∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1) + 1),
+    ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |stoppedAnnularClock _ 0 (fun _ => ((t : ℝ).toNNReal))
+      (ContinuousPath.shift j p.2) - stoppedAnnularClock _ 0 (fun _ => ((t : ℝ).toNNReal))
+      (ContinuousPath.shift j p.2)|) < ⊤
+  change (∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1) + 1), M n i
+    (p.1, ContinuousPath.shift j p.2)) < ⊤ at hp
+  convert hp using 2
+  ext n
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact (hω (ContinuousPath.shift j p.2) n i (Nat.lt_succ_iff.mp (Finset.mem_range.mp hi))).symm
+
 end HarmonicBalls
