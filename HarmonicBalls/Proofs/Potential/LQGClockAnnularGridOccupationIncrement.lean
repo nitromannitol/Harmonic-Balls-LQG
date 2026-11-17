@@ -1787,4 +1787,53 @@ theorem lintegral_prod_shift_stoppedAnnularClock_radius_sub_le_uniform_horizon
   apply ENNReal.ofReal_le_ofReal
   exact (hb x u τ hτ ε r hε hεhalf hεδ hr hrε hr2).2
 
+/-- Annular mesh-cell maxima have a uniform power bound on every interval
+of unit length beginning at a nonnegative time. -/
+theorem exists_lintegral_prod_annular_shifted_mesh_max_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ : γ ≠ 0) (hγ2 : γ ^ 2 < 2) (α δ : ℝ) :
+    ∃ (C : ℝ≥0∞) (β : ℝ), C < ∞ ∧ 0 < β ∧ ∀ {ε : ℝ}, 0 < ε → ε ≤ δ →
+      ∀ (u : ℝ), 0 ≤ u → ∀ (m : ℕ), 0 < m →
+      (∫⁻ p : Ω × ContinuousPath ℂ, (⨆ j : Fin m,
+        ∫⁻ s in Ioc (u + (j : ℝ) / m) (u + ((j : ℝ) + 1) / m),
+          ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) ≤ C * (m : ℝ≥0∞) ^ (-β) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨C, hC, hbound⟩ :=
+    exists_lintegral_prod_brownian_annular_inserted_cell_sq_le hh x hγ hγ2 α δ
+  let β : ℝ := (1 - γ ^ 2 / 2) / 2
+  have hβ : 0 < β := by dsimp [β]; linarith
+  refine ⟨C ^ (1 / 2 : ℝ), β, ENNReal.rpow_lt_top_of_nonneg (by norm_num) hC.ne, hβ, ?_⟩
+  intro ε hε hεδ u hu m hm
+  let X : Fin m → Ω × ContinuousPath ℂ → ℝ≥0∞ := fun j p =>
+    ∫⁻ s in Ioc (u + (j : ℝ) / m) (u + ((j : ℝ) + 1) / m),
+      ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal))
+  have hX (j : Fin m) : AEMeasurable (X j) (P.prod (planarBrownianMotion x)) :=
+    aemeasurable_annular_inserted_clock_cell hh (planarBrownianMotion x) hε γ α δ
+      (u + (j : ℝ) / m) (u + ((j : ℝ) + 1) / m)
+  have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
+  have hrpow : (ENNReal.ofReal (1 / (m : ℝ))) ^ (2 - γ ^ 2 / 2) =
+      (m : ℝ≥0∞) ^ (-(1 + 2 * β)) := by
+    rw [one_div, ENNReal.ofReal_inv_of_pos hm0, ENNReal.ofReal_natCast,
+      ENNReal.inv_rpow, ← ENNReal.rpow_neg]
+    congr 1
+    dsimp [β]
+    ring
+  have hcell (j : Fin m) :
+      (∫⁻ p, (X j p) ^ (2 : ℝ) ∂(P.prod (planarBrownianMotion x))) ≤
+        C * (m : ℝ≥0∞) ^ (-(1 + 2 * β)) := by
+    have hend : (u + (j : ℝ) / m) + 1 / (m : ℝ) = u + ((j : ℝ) + 1) / m := by ring
+    have hmain := hbound hε hεδ (u + (j : ℝ) / m) (1 / (m : ℝ))
+      (by positivity) (one_div_pos.mpr hm0)
+    rw [hend, hrpow] at hmain
+    simpa only [ENNReal.rpow_ofNat, X] using hmain
+  exact lintegral_iSup_le_mesh_rpow_of_aemeasurable (P.prod (planarBrownianMotion x)) hm X hX
+    (by norm_num : (1 : ℝ) ≤ 2) C hcell
+
 end HarmonicBalls
