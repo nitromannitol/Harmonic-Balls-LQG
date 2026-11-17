@@ -1007,4 +1007,244 @@ theorem integrable_stopped_annular_radius_increment_field
   · rw [show A.indicator _ z = _ from Set.indicator_of_notMem hz _,
       show g z = _ from Set.indicator_of_notMem hz _, zero_mul]
 
+
+/-- A same-shell annular increment on an exit-stopped block is integrable
+with respect to the field law. -/
+theorem integrable_annular_exit_radius_block_increment_field
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε r δ : ℝ}
+    (hε : 0 < ε) (hr : 0 < r) (hrε : r ≤ ε) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    (γ α : ℝ) (D : Set ℂ) (s : ℝ≥0) (b : ContinuousPath ℂ)
+    (hfin : ContinuousPath.exitTime D b ≠ ⊤) :
+    Integrable (fun ω => ∫ t in Ioc (s : ℝ)
+      (min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal),
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal)) P := by
+  by_cases hs : (s : ℝ≥0∞) < ContinuousPath.exitTime D b
+  · let τ : ContinuousPath ℂ → ℝ≥0 := fun p => (ContinuousPath.exitTime D p).toNNReal
+    let q := ContinuousPath.shift s b
+    have hi := integrable_stopped_annular_radius_increment_field hh hε hr hrε hεhalf hεδ γ α τ q
+    apply hi.congr
+    filter_upwards [ae_annular_inserted_radius_occupation_eq_time_integral hh hε hr γ α δ,
+      ae_recentered_inserted_circle_average hh α] with ω htime hrec
+    have hraw : (∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0 - α*Real.log (max r ‖z‖))) -
+        ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0 - α*Real.log (max ε ‖z‖)))) z
+      ∂(Measure.map (fun t => q t) ((Measure.map Real.toNNReal
+        (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τ q))))) =
+      ∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+        ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) z
+      ∂(Measure.map (fun t => q t) ((Measure.map Real.toNNReal
+        (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τ q)))) := by
+      apply integral_congr_ae
+      filter_upwards with z
+      simp only [Set.indicator_apply]
+      split_ifs
+      · rw [hrec r z hr, hrec ε z hε]
+      · rfl
+    rw [hraw, htime q (τ q)]
+    exact (setIntegral_exit_stopped_block_eq D b s hfin _).trans (ite_eq_left hs) |>.symm
+  · have hz : (fun ω => ∫ t in Ioc (s : ℝ)
+        (min ((s : ℝ) + 1) (ContinuousPath.exitTime D b).toReal),
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal)) = 0 := by
+      funext ω
+      rw [setIntegral_exit_stopped_block_eq D b s hfin _, ite_eq_right hs]
+      rfl
+    rw [hz]
+    exact integrable_zero _ _ _
+
+/-- The field-averaged annular increment up to a stopped integer horizon. -/
+noncomputable def annularExitRadiusHorizonIncrement {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (γ α δ ε r : ℝ) (D : Set ℂ) (N : ℕ)
+    (b : ContinuousPath ℂ) : ℝ :=
+  ∫ ω, |∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+    {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+      r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+      ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+        (b t.toNNReal)| ∂P
+
+/-- The field-averaged stopped increment is bounded by its unit-block increments. -/
+theorem annular_exit_radius_horizon_increment_le_sum_blocks {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε r δ : ℝ}
+    (hε : 0 < ε) (hr : 0 < r) (hrε : r ≤ ε) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    (γ α : ℝ) (D : Set ℂ) (N : ℕ) (b : ContinuousPath ℂ)
+    (hfin : ContinuousPath.exitTime D b ≠ ⊤) :
+    annularExitRadiusHorizonIncrement P hcirc γ α δ ε r D N b ≤
+      ∑ k ∈ Finset.range N, annularExitRadiusBlockIncrement P hcirc γ α δ ε r D k b := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let G : Ω → ℂ → ℝ := fun ω z =>
+    r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+    ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)
+  let F : Ω → ℝ := fun ω => ∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+    A.indicator (G ω) (b t.toNNReal)
+  let B : ℕ → Ω → ℝ := fun k ω => ∫ t in Ioc (k : ℝ)
+      (min ((k : ℝ) + 1) (ContinuousPath.exitTime D b).toReal), A.indicator (G ω) (b t.toNNReal)
+  have hB : ∀ k, Integrable (B k) P := by
+    intro k
+    exact integrable_annular_exit_radius_block_increment_field hh hε hr hrε hεhalf hεδ γ α D k b hfin
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hcont : ∀ᵐ ω ∂P, ∀ r, 0 < r → Continuous (hcirc ω r) := by
+    filter_upwards [hHae] with ω hω r hr
+    rw [← funext (hω r)]
+    exact hHc ω r hr
+  have hsum : F =ᵐ[P] fun ω => ∑ k ∈ Finset.range N, B k ω := by
+    filter_upwards [hcont, ae_recentered_inserted_circle_average hh α] with ω hcont hrec
+    have hc (r : ℝ) (hr : 0 < r) : Continuous (fun z =>
+        r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)) := by
+      have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) =
+          fun z => hcirc ω r z - hcirc ω 1 0 - α * Real.log (max r ‖z‖) := by
+        funext z
+        exact (hrec r z hr).symm
+      have hc' : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) := by
+        rw [heq]
+        exact ((hcont r hr).sub continuous_const).sub (continuous_const.mul
+          ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hr).ne')))
+      exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc'))
+    have hG : Continuous (G ω) := (hc r hr).sub (hc ε hε)
+    have hint := intervalIntegrable_annular_density (G ω) hG δ b 0
+      (ContinuousPath.exitTime D b).toReal
+    exact intervalIntegral_stopped_eq_sum_blocks _ _ ENNReal.toReal_nonneg N hint
+  have hsumint : Integrable (fun ω => ∑ k ∈ Finset.range N, B k ω) P := by
+    exact integrable_finsetSum _ (fun k hk => hB k)
+  have hF : Integrable F P := hsumint.congr hsum.symm
+  have hsumabs : Integrable (fun ω => ∑ k ∈ Finset.range N, |B k ω|) P := by
+    exact integrable_finsetSum _ (fun k hk => (hB k).abs)
+  change (∫ ω, |F ω| ∂P) ≤ ∑ k ∈ Finset.range N, ∫ ω, |B k ω| ∂P
+  calc
+    _ ≤ ∫ ω, ∑ k ∈ Finset.range N, |B k ω| ∂P := by
+      apply integral_mono_ae hF.abs hsumabs
+      filter_upwards [hsum] with ω hω
+      rw [hω]
+      exact Finset.abs_sum_le_sum_abs _ _
+    _ = _ := integral_finsetSum _ (fun k hk => (hB k).abs)
+
+/-- The stopped annular increment has a jointly measurable field-path version. -/
+theorem exists_measurable_annular_exit_radius_horizon_sample {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r)
+    (γ α δ : ℝ) {D : Set ℂ} (hD : IsOpen D) (N : ℕ) :
+    ∃ F : ContinuousPath ℂ × Ω → ℝ, Measurable F ∧ ∀ᵐ ω ∂P, ∀ b,
+      F (b,ω) = ∫ t in (0 : ℝ)..min (N : ℝ) (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))
+            (b t.toNNReal) := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let J : Ω × ℂ → ℝ := fun q => A.indicator (fun z =>
+    r^(γ^2/2) * Real.exp (γ*(H q.1 r z-H q.1 1 0 - α*Real.log (max r ‖z‖))) -
+    ε^(γ^2/2) * Real.exp (γ*(H q.1 ε z-H q.1 1 0 - α*Real.log (max ε ‖z‖)))) q.2
+  have h1 : Measurable (fun q : Ω × ℂ => H q.1 r q.2) :=
+    (hHm r hr).comp measurable_swap
+  have h2 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) := (hHm ε hε).comp measurable_swap
+  have h3 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+    (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+  have hJ : Measurable J := by
+    apply Measurable.indicator _ (hA.preimage measurable_snd)
+    exact (measurable_const.mul (measurable_const.mul ((h1.sub h3).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp).sub
+      (measurable_const.mul (measurable_const.mul ((h2.sub h3).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp)
+  let U : ContinuousPath ℂ → ℝ := fun b => min (N : ℝ) (ContinuousPath.exitTime D b).toReal
+  have hU : Measurable U := measurable_const.min ((ContinuousPath.measurable_exitTime D hD).ennreal_toReal)
+  have heval : Measurable (fun q : (ContinuousPath ℂ × Ω) × ℝ => q.1.1 q.2.toNNReal) := by
+    exact (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_fst.comp measurable_fst))
+  let S : Set ((ContinuousPath ℂ × Ω) × ℝ) := {q | 0 < q.2 ∧ q.2 ≤ U q.1.1}
+  have hS : MeasurableSet S := (measurableSet_lt measurable_const measurable_snd).inter
+    (measurableSet_le measurable_snd (hU.comp (measurable_fst.comp measurable_fst)))
+  let Q : (ContinuousPath ℂ × Ω) × ℝ → ℝ := fun q =>
+    S.indicator (fun q => J (q.1.2, q.1.1 q.2.toNNReal)) q
+  have hQ : Measurable Q := by
+    exact (hJ.comp ((measurable_snd.comp measurable_fst).prodMk heval)).indicator hS
+  refine ⟨fun q => ∫ t, Q (q,t), hQ.stronglyMeasurable.integral_prod_right'.measurable, ?_⟩
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec b
+  have hU0 : 0 ≤ U b := le_min (Nat.cast_nonneg N) ENNReal.toReal_nonneg
+  rw [intervalIntegral.integral_of_le hU0, ← integral_indicator measurableSet_Ioc]
+  apply integral_congr_ae
+  filter_upwards with t
+  simp only [Q, S, U, Set.indicator_apply, Set.mem_ofPred_eq, Set.mem_Ioc, J, A]
+  split_ifs with ht hz
+  · rw [hω r (b t.toNNReal), hω ε (b t.toNNReal), hω 1 0,
+      hrec r (b t.toNNReal) hr, hrec ε (b t.toNNReal) hε]
+  · rfl
+  · rfl
+
+/-- The field-averaged stopped annular horizon increment is measurable. -/
+theorem measurable_annular_exit_radius_horizon_increment {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r)
+    (γ α δ : ℝ) {D : Set ℂ} (hD : IsOpen D) (N : ℕ) :
+    Measurable (annularExitRadiusHorizonIncrement P hcirc γ α δ ε r D N) := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨F, hFm, hFae⟩ := exists_measurable_annular_exit_radius_horizon_sample hh hε hr γ α δ hD N
+  have hm : Measurable (fun b => ∫ ω, |F (b,ω)| ∂P) :=
+    (hFm.abs.stronglyMeasurable.integral_prod_right' (ν := P)).measurable
+  convert hm using 1
+  funext b
+  unfold annularExitRadiusHorizonIncrement
+  apply integral_congr_ae
+  filter_upwards [hFae] with ω hω
+  rw [hω b]
+
+/-- Finite-horizon annular increments satisfy a linear-in-horizon rate bound. -/
+theorem brownian_annular_exit_radius_horizon_increment_annealed_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (x : ℂ) (N : ℕ) (ε r : ℝ), 0 < ε → ε ≤ 1/2 → ε ≤ δ → 0 < r → r ≤ ε → ε / 2 ≤ r →
+        Integrable (annularExitRadiusHorizonIncrement P hcirc γ α δ ε r D N) (planarBrownianMotion x) ∧
+        (∫ b, annularExitRadiusHorizonIncrement P hcirc γ α δ ε r D N b ∂planarBrownianMotion x) ≤
+        (N : ℝ) * (((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_annular_exit_radius_block_increment_annealed_le hh hγ0 hγ2 α hδ hD hDb
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro x N ε r hε hεhalf hεδ hr hrε hr2
+  let F := annularExitRadiusHorizonIncrement P hcirc γ α δ ε r D N
+  let B : ℕ → ContinuousPath ℂ → ℝ := fun k => annularExitRadiusBlockIncrement P hcirc γ α δ ε r D k
+  have hB : ∀ k, Integrable (B k) (planarBrownianMotion x) := fun k =>
+    (hb x k ε r hε hεhalf hεδ hr hrε hr2).1
+  have hS : Integrable (fun b => ∑ k ∈ Finset.range N, B k b) (planarBrownianMotion x) :=
+    integrable_finsetSum _ (fun k hk => hB k)
+  have hm : Measurable F := measurable_annular_exit_radius_horizon_increment hh hε hr γ α δ hD N
+  have hF0 : ∀ b, 0 ≤ F b := by
+    intro b
+    apply integral_nonneg
+    intro ω
+    exact abs_nonneg _
+  have hle : ∀ᵐ b ∂planarBrownianMotion x, F b ≤ ∑ k ∈ Finset.range N, B k b := by
+    filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x hDb] with b hfin
+    exact annular_exit_radius_horizon_increment_le_sum_blocks hh hε hr hrε hεhalf hεδ γ α D N b hfin.ne
+  have hi : Integrable F (planarBrownianMotion x) := by
+    apply hS.mono' hm.aestronglyMeasurable
+    filter_upwards [hle] with b h
+    simpa only [Real.norm_eq_abs, abs_of_nonneg (hF0 b)] using h
+  refine ⟨hi, (integral_mono_ae hi hS hle).trans ?_⟩
+  rw [integral_finsetSum _ (fun k hk => hB k)]
+  calc
+    _ ≤ ∑ k ∈ Finset.range N, (((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+      apply Finset.sum_le_sum
+      intro k hk
+      exact (hb x k ε r hε hεhalf hεδ hr hrε hr2).2
+    _ = _ := by simp [mul_add]
+
 end HarmonicBalls
