@@ -1692,4 +1692,99 @@ theorem lintegral_prod_stoppedAnnularClock_radius_exit_iSup_le
   simp only [Real.toNNReal_coe, u, stoppedAnnularClock] at h ⊢
   exact h
 
+/-- The joint nonnegative integral of the annular increment is the annealed
+expectation of its field-averaged absolute value. -/
+theorem lintegral_prod_shift_annularRadiusIncrementSample_eq
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) (u : ℝ≥0) {δ ε r : ℝ}
+    (hε : 0 < ε) (hr : 0 < r) (hrε : r ≤ ε) (hr2 : ε / 2 ≤ r) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    (τ : ContinuousPath ℂ → ℝ≥0) (hτ : Measurable τ) :
+    (∫⁻ p : Ω × ContinuousPath ℂ,
+      ENNReal.ofReal |annularRadiusIncrementSample hcirc γ α δ ε r τ (ContinuousPath.shift u p.2) p.1|
+      ∂(P.prod (planarBrownianMotion x))) =
+      ENNReal.ofReal (∫ b, stoppedAnnularRadiusIncrement P hcirc γ α δ ε r τ (ContinuousPath.shift u b)
+        ∂(planarBrownianMotion x)) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨F, hFm, hFae⟩ :=
+    exists_measurable_annularRadiusIncrementSample hh hε hr γ α δ τ hτ
+  have heq : (fun p : Ω × ContinuousPath ℂ =>
+      ENNReal.ofReal |annularRadiusIncrementSample hcirc γ α δ ε r τ (ContinuousPath.shift u p.2) p.1|) =ᵐ[
+        P.prod (planarBrownianMotion x)]
+      (fun p => ENNReal.ofReal |F (ContinuousPath.shift u p.2,p.1)|) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion x)).ae hFae] with p hp
+    rw [hp (ContinuousPath.shift u p.2)]
+  rw [lintegral_congr_ae heq]
+  have hmeas : Measurable (fun p : Ω × ContinuousPath ℂ => ENNReal.ofReal |F (ContinuousPath.shift u p.2,p.1)|) :=
+    ENNReal.measurable_ofReal.comp ((hFm.comp
+      (((ContinuousPath.measurable_shift_fixed u).comp measurable_snd).prodMk measurable_fst)).abs)
+  rw [lintegral_prod_symm _ hmeas.aemeasurable]
+  have hfield (b : ContinuousPath ℂ) : Integrable (fun ω => F (ContinuousPath.shift u b, ω)) P := by
+    apply (integrable_stopped_annular_radius_increment_field hh hε hr hrε hεhalf hεδ γ α τ (ContinuousPath.shift u b)).congr
+    filter_upwards [hFae] with ω hω
+    exact (hω (ContinuousPath.shift u b)).symm
+  have hinner (b : ContinuousPath ℂ) :
+      (∫⁻ ω, ENNReal.ofReal |F (ContinuousPath.shift u b,ω)| ∂P) =
+        ENNReal.ofReal (stoppedAnnularRadiusIncrement P hcirc γ α δ ε r τ (ContinuousPath.shift u b)) := by
+    simp_rw [← Real.norm_eq_abs]
+    rw [← ofReal_integral_eq_lintegral_ofReal (hfield b).norm
+      (Filter.Eventually.of_forall (fun _ => norm_nonneg _))]
+    congr 1
+    unfold stoppedAnnularRadiusIncrement
+    apply integral_congr_ae
+    filter_upwards [hFae] with ω hω
+    rw [hω (ContinuousPath.shift u b)]
+    rfl
+  simp_rw [hinner]
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_shift_stopped_annular_radius_increment_annealed_le hh hγ0 hγ2 α
+      (hε.trans_le hεδ)
+  rw [← ofReal_integral_eq_lintegral_ofReal]
+  · exact (hb x u τ hτ ε r hε hεhalf hεδ hr hrε hr2).1
+  · exact Filter.Eventually.of_forall (fun b => integral_nonneg (fun ω => abs_nonneg _))
+
+/-- Same-shell annular clock differences satisfy a product-law rate bound
+uniformly over measurable unit horizons. -/
+theorem lintegral_prod_shift_stoppedAnnularClock_radius_sub_le_uniform_horizon
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) (u : ℝ≥0) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (τ : ContinuousPath ℂ → ℝ≥0), Measurable τ →
+      ∀ ε r : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ → 0 < r → r ≤ ε → ε / 2 ≤ r →
+        (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal |stoppedAnnularClock
+          (fun z => r^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) δ τ (ContinuousPath.shift u p.2) -
+          stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) δ τ (ContinuousPath.shift u p.2)|
+          ∂(P.prod (planarBrownianMotion x))) ≤ ENNReal.ofReal (
+          ((Real.exp (γ^2*Real.log 2)-1) *
+            (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+            Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+          2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_shift_stopped_annular_radius_increment_annealed_le hh hγ0 hγ2 α hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro τ hτ ε r hε hεhalf hεδ hr hrε hr2
+  have heq : (fun p : Ω × ContinuousPath ℂ => ENNReal.ofReal |stoppedAnnularClock
+      (fun z => r^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) δ τ (ContinuousPath.shift u p.2) -
+      stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) δ τ (ContinuousPath.shift u p.2)|) =ᵐ[
+        P.prod (planarBrownianMotion x)]
+      (fun p => ENNReal.ofReal |annularRadiusIncrementSample hcirc γ α δ ε r τ (ContinuousPath.shift u p.2) p.1|) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion x)).ae
+        (ae_stoppedAnnularClock_sub_eq_annularRadiusIncrementSample hh γ α δ)] with p hp
+    rw [hp ε r hε hr τ (ContinuousPath.shift u p.2)]
+  rw [lintegral_congr_ae heq,
+    lintegral_prod_shift_annularRadiusIncrementSample_eq hh hγ0 hγ2 α x u hε hr hrε hr2 hεhalf hεδ τ hτ]
+  apply ENNReal.ofReal_le_ofReal
+  exact (hb x u τ hτ ε r hε hεhalf hεδ hr hrε hr2).2
+
 end HarmonicBalls
