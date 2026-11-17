@@ -213,4 +213,78 @@ theorem exists_measurable_harmonic_minorant_family_of_exists
   · intro z hz x hx
     simp [F, H, hz, hx]
 
+/-- Existence of a Newtonian harmonic minorant at one interior pole implies
+existence at every interior pole of an open set. -/
+theorem exists_harmonicMinorant_newtonKernel_of_exists_at_pole
+    {U : Set ℂ} (hU : IsOpen U) {z z' : ℂ} (hz : z ∈ U) (hz' : z' ∈ U)
+    (hex : ∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal z) h) :
+    ∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal z') h := by
+  obtain ⟨r, hr, hrU⟩ := Metric.isOpen_iff.mp hU z hz
+  obtain ⟨s, hs, hsU⟩ := Metric.isOpen_iff.mp hU z' hz'
+  let ε : ℝ := min r s / 4
+  have hε : 0 < ε := by dsimp [ε]; positivity
+  have hball : closedBall z (2 * ε) ⊆ U := by
+    apply (closedBall_subset_ball ?_).trans hrU
+    dsimp [ε]
+    have := min_le_left r s
+    linarith
+  have hball' : closedBall z' (2 * ε) ⊆ U := by
+    apply (closedBall_subset_ball ?_).trans hsU
+    dsimp [ε]
+    have := min_le_right r s
+    linarith
+  obtain ⟨h, hh⟩ := hex
+  have hreg := (isHarmonicMinorant_regularized_iff hε hball).1 hh
+  refine ⟨fun w => h w - (2 * Real.pi)⁻¹ * Real.log (1 + ‖z' - z‖ / ε),
+    (isHarmonicMinorant_regularized_iff hε hball').2 ⟨fun w hw =>
+      (hreg.1 w hw).sub (harmonicAt_const _), fun w hw => ?_⟩⟩
+  have h1 := EReal.coe_le_coe_iff.1 (hreg.2 w hw)
+  have h2 := regularizedNewtonKernel_sub_le hε z' z w
+  exact EReal.coe_le_coe_iff.2 (by linarith)
+
+/-- The literal real-valued greatest-minorant correction is jointly
+continuous on every open domain. -/
+theorem continuousOn_greenHarmonicCorrection_uncurry
+    {U : Set ℂ} (hU : IsOpen U) :
+    ContinuousOn (fun p : ℂ × ℂ =>
+      (greatestHarmonicMinorant U (newtonKernelEReal p.1) p.2).toReal) (U ×ˢ U) := by
+  classical
+  by_cases hex : ∃ z ∈ U, ∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal z) h
+  · obtain ⟨z, hz, h⟩ := hex
+    exact continuousOn_greenHarmonicCorrection_uncurry_of_exists hU
+      (fun z' hz' => exists_harmonicMinorant_newtonKernel_of_exists_at_pole hU hz hz' h)
+  · have hzero : ∀ p ∈ U ×ˢ U,
+        (greatestHarmonicMinorant U (newtonKernelEReal p.1) p.2).toReal = 0 := by
+      intro p hp
+      have hnone : ¬∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal p.1) h :=
+        fun h => hex ⟨p.1, hp.1, h⟩
+      have hnone' : ∀ h, ¬IsHarmonicMinorant U (newtonKernelEReal p.1) h :=
+        fun h hh => hnone ⟨h, hh⟩
+      simp [greatestHarmonicMinorant, hnone']
+    exact continuousOn_const.congr (fun p hp => hzero p hp)
+
+/-- A jointly measurable, locally bounded harmonic family represents the
+literal correction on a compact set of poles in any open domain. -/
+theorem exists_measurable_harmonic_minorant_family
+    {U K : Set ℂ} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U) :
+    ∃ F : ℂ → ℂ → ℝ,
+      Measurable (Function.uncurry F) ∧
+      (∀ z, HarmonicOnNhd (F z) U) ∧
+      (∀ L, IsCompact L → L ⊆ U → ∃ C : ℝ, ∀ z x, x ∈ L → |F z x| ≤ C) ∧
+      ∀ z ∈ K, ∀ x ∈ U,
+        (greatestHarmonicMinorant U (newtonKernelEReal z) x).toReal = F z x := by
+  classical
+  by_cases hex : ∃ z ∈ U, ∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal z) h
+  · obtain ⟨z, hz, h⟩ := hex
+    exact exists_measurable_harmonic_minorant_family_of_exists hU hK hKU
+      (fun z' hz' => exists_harmonicMinorant_newtonKernel_of_exists_at_pole hU hz hz' h)
+  · refine ⟨fun _ _ => 0, measurable_const, fun _ => harmonicOnNhd_const 0,
+      fun _ _ _ => ⟨0, by simp⟩, ?_⟩
+    intro z hz x hx
+    have hnone : ¬∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal z) h :=
+      fun h => hex ⟨z, hKU hz, h⟩
+    have hnone' : ∀ h, ¬IsHarmonicMinorant U (newtonKernelEReal z) h :=
+      fun h hh => hnone ⟨h, hh⟩
+    simp [greatestHarmonicMinorant, hnone']
+
 end HarmonicBalls
