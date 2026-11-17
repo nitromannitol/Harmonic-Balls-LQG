@@ -2,6 +2,7 @@ import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
 import LatticeProb.LQG.LQGMassMoment
 import LatticeProb.LQG.LQGSubSquareGaussian
 import LatticeProb.Prob.GaussKahaneRpow
+import Mathlib.MeasureTheory.Function.UniformIntegrable
 
 /-! # Fine-scale moments of inserted circle averages
 
@@ -10,7 +11,8 @@ its smoothing scale and the insertion point.
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Set
-open scoped ENNReal
+open scoped ENNReal NNReal Topology
+open Filter
 
 namespace HarmonicBalls
 
@@ -782,5 +784,175 @@ theorem integrable_rpow_sum_subSquareComparison {Ω : Type*} [MeasurableSpace Ω
     LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i) _ a v ha hr
   intro i
   exact (hh.hasGaussianLaw_subSquareComparison γ hR hδ piece pt).eval i
+
+private theorem uniformIntegrable_of_bounded_two {Ω ι : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    (F : ι → Ω → ℝ) (hF : ∀ i, AEStronglyMeasurable (F i) P)
+    (C : ℝ≥0) (hC : ∀ i, eLpNorm (F i) 2 P ≤ C) :
+    UniformIntegrable F 1 P := by
+  have hbound (i : ι) (s : Set Ω) (hs : MeasurableSet s) :
+      eLpNorm (F i) 1 (P.restrict s) ≤ (C : ℝ≥0∞) * (P s) ^ (1 / 2 : ℝ) := by
+    have h := eLpNorm_le_eLpNorm_mul_rpow_measure_univ (p := 1) (q := 2)
+      (by norm_num) ((hF i).restrict (s := s))
+    simp only [ENNReal.toReal_one, ENNReal.toReal_ofNat, one_div, inv_one,
+      show (1 : ℝ) - (2 : ℝ)⁻¹ = 1 / 2 by norm_num, Measure.restrict_apply_univ] at h
+    have h2 : eLpNorm (F i) 1 (P.restrict s) ≤
+        eLpNorm (F i) 2 (P.restrict s) * (P s) ^ (1 / 2 : ℝ) := by
+      convert h using 1
+      norm_num
+    refine h2.trans ?_
+    gcongr
+    exact (eLpNorm_mono_measure _ Measure.restrict_le_self).trans (hC i)
+  have ht : Tendsto (fun t : ℝ≥0∞ => (C : ℝ≥0∞) * t ^ (1 / 2 : ℝ)) (𝓝 0) (𝓝 0) :=
+    ENNReal.tendsto_const_mul_rpow_nhds_zero_of_pos ENNReal.coe_ne_top (by norm_num)
+  refine ⟨unifIntegrable_iff'.2 ?_, ⟨C, ?_⟩⟩
+  · intro ε hε
+    have he := (ENNReal.tendsto_nhds_zero.1 ht) ε hε
+    rw [ENNReal.nhds_zero_basis_Iic.eventually_iff] at he
+    obtain ⟨δ, hδ, hδbound⟩ := he
+    exact ⟨δ, hδ, fun i s hs hsδ => (hbound i s hs).trans (hδbound hsδ)⟩
+  · intro i
+    simpa only [measure_univ, ENNReal.one_rpow, mul_one, Measure.restrict_univ] using hbound i Set.univ MeasurableSet.univ
+
+private theorem eLpNorm_two_le_of_integral_sq_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (F : Ω → ℝ) (hF : AEStronglyMeasurable F P)
+    (hF0 : ∀ ω, 0 ≤ F ω) (hFi : Integrable (fun ω => F ω ^ 2) P)
+    (K : ℝ) (hK : (∫ ω, F ω ^ 2 ∂P) ≤ K) :
+    eLpNorm F 2 P ≤ (ENNReal.ofReal K) ^ (1 / 2 : ℝ) := by
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hF]
+  simp only [ENNReal.toReal_ofNat]
+  have heq : (∫⁻ ω, ‖F ω‖ₑ ^ (2 : ℝ) ∂P) = ENNReal.ofReal (∫ ω, F ω ^ 2 ∂P) := by
+    rw [ofReal_integral_eq_lintegral_ofReal hFi (Filter.Eventually.of_forall (fun ω => sq_nonneg _))]
+    apply lintegral_congr
+    intro ω
+    rw [Real.enorm_eq_ofReal (hF0 ω), ENNReal.rpow_two, ← ENNReal.ofReal_pow (hF0 ω)]
+  rw [heq]
+  gcongr
+
+/-- Powers of normalized finite atomic field masses form a uniformly integrable
+family when their total weights are uniformly bounded at a fixed smoothing scale. -/
+theorem uniformIntegrable_rpow_sum_subSquareField {Ω J : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (ι : J → Type*) [∀ j, Fintype (ι j)] (piece : ∀ j, ι j → Fin 2)
+    (pt : ∀ j, ι j → ℂ) (hpt : ∀ j i, pt j i ∈ LatticeProb.LQG.lqgSquare)
+    (a : ∀ j, ι j → ℝ) (ha : ∀ j i, 0 ≤ a j i)
+    (M : ℝ) (hmass : ∀ j, ∑ i, a j i ≤ M)
+    {q : ℝ} (hq : 1 ≤ q) :
+    UniformIntegrable (fun j ω => (∑ i, a j i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) (piece j) (pt j) ω i -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)) ^ q) 1 P := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let X : J → Ω → ℝ := fun j ω => ∑ i, a j i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) (piece j) (pt j) ω i -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)
+  let K : ℝ := M ^ (2*q) * Real.exp (((2*q) ^ 2 - 2*q) *
+      (γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ)) / 2)
+  have hX0 (j ω) : 0 ≤ X j ω := Finset.sum_nonneg (fun i _ => mul_nonneg (ha j i) (Real.exp_pos _).le)
+  have hI (j) (r : ℝ) (hr : 0 < r) : Integrable (fun ω => X j ω ^ r) P :=
+    HarmonicBalls.integrable_rpow_sum_subSquareField hh γ
+      (mul_pos (LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k) hδ) (piece j) (pt j)
+      (a j) (ha j) (fun _ => γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2) hr
+  have hsq (j) : Integrable (fun ω => (X j ω ^ q) ^ 2) P := by
+    convert hI j (2*q) (by linarith) using 1
+    funext ω
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (hX0 j ω)]
+    congr 1
+    ring
+  have hbound (j) : (∫ ω, (X j ω ^ q) ^ 2 ∂P) ≤ K := by
+    have hh' := HarmonicBalls.integral_rpow_sum_subSquareField_le hh γ hk hδ hδ2
+      (piece j) (pt j) (hpt j) (a j) (ha j) (r := 2*q) (by linarith)
+    change (∫ ω, X j ω ^ (2*q) ∂P) ≤ _ at hh'
+    calc
+      _ = ∫ ω, X j ω ^ (2*q) ∂P := by
+        apply integral_congr_ae
+        filter_upwards [] with ω
+        rw [← Real.rpow_natCast, ← Real.rpow_mul (hX0 j ω)]
+        congr 1
+        ring
+      _ ≤ _ := hh'
+      _ ≤ K := by
+        dsimp [K]
+        gcongr
+        · exact Finset.sum_nonneg (fun i _ => ha j i)
+        · exact hmass j
+  let D : ℝ≥0∞ := (ENNReal.ofReal K) ^ (1 / 2 : ℝ)
+  have hD : D ≠ ∞ := by dsimp [D]; finiteness
+  refine uniformIntegrable_of_bounded_two _ (fun j => (hI j q (by linarith)).aestronglyMeasurable)
+      D.toNNReal (fun j => ?_)
+  rw [ENNReal.coe_toNNReal hD]
+  exact eLpNorm_two_le_of_integral_sq_le (fun ω => X j ω ^ q)
+    (hI j q (by linarith)).aestronglyMeasurable (fun ω => Real.rpow_nonneg (hX0 j ω) q)
+    (hsq j) K (hbound j)
+
+/-- Powers of normalized finite atomic comparison masses form a uniformly
+integrable family when their total weights are uniformly bounded at fixed scales. -/
+theorem uniformIntegrable_rpow_sum_subSquareComparison {Ω J : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (ι : J → Type*) [∀ j, Fintype (ι j)] (piece : ∀ j, ι j → Fin 2)
+    (pt : ∀ j, ι j → ℂ) (hpt : ∀ j i, pt j i ∈ LatticeProb.LQG.lqgSquare)
+    (a : ∀ j, ι j → ℝ) (ha : ∀ j i, 0 ≤ a j i)
+    (M : ℝ) (hmass : ∀ j, ∑ i, a j i ≤ M)
+    {q : ℝ} (hq : 1 ≤ q) :
+    UniformIntegrable (fun j ω => (∑ i, a j i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc (LatticeProb.LQG.dyadicScale k) δ (piece j) (pt j) ω i -
+        γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2)) ^ q) 1 (LatticeProb.Gauss.subSquareMeasure P) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let μ := LatticeProb.Gauss.subSquareMeasure P
+  let X : J → ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun j ω => ∑ i, a j i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc (LatticeProb.LQG.dyadicScale k) δ (piece j) (pt j) ω i -
+        γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2)
+  let K : ℝ := M ^ (2*q) * Real.exp (((2*q) ^ 2 - 2*q) *
+      (γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ)) / 2)
+  have hX0 (j ω) : 0 ≤ X j ω := Finset.sum_nonneg (fun i _ => mul_nonneg (ha j i) (Real.exp_pos _).le)
+  have hI (j) (r : ℝ) (hr : 0 < r) : Integrable (fun ω => X j ω ^ r) μ :=
+    HarmonicBalls.integrable_rpow_sum_subSquareComparison hh γ
+      (LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k) hδ (piece j) (pt j)
+      (a j) (ha j) (fun _ => γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2) hr
+  have hsq (j) : Integrable (fun ω => (X j ω ^ q) ^ 2) μ := by
+    convert hI j (2*q) (by linarith) using 1
+    funext ω
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (hX0 j ω)]
+    congr 1
+    ring
+  have hbound (j) : (∫ ω, (X j ω ^ q) ^ 2 ∂μ) ≤ K := by
+    have hc : ∀ i, ‖LatticeProb.LQG.lqgSquareCentre (piece j i)‖ +
+        LatticeProb.LQG.dyadicScale k ≤ 1 := fun i =>
+      LatticeProb.LQG.norm_lqgSquareCentre_add_dyadicScale_le_one hk (piece j i)
+    have hp : ∀ i, ‖pt j i‖ + δ ≤ 1 := fun i => by
+      have hi : ‖pt j i‖ ≤ 1 / 4 := by
+        simpa using LatticeProb.LQG.lqgSquare_subset_closedBall (hpt j i)
+      linarith
+    have hh' := HarmonicBalls.integral_rpow_sum_subSquareComparison_le hh γ
+      (LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k) hδ
+      (piece j) (pt j) hc hp (a j) (ha j) (r := 2*q) (by linarith)
+    change (∫ ω, X j ω ^ (2*q) ∂μ) ≤ _ at hh'
+    calc
+      _ = ∫ ω, X j ω ^ (2*q) ∂μ := by
+        apply integral_congr_ae
+        filter_upwards [] with ω
+        rw [← Real.rpow_natCast, ← Real.rpow_mul (hX0 j ω)]
+        congr 1
+        ring
+      _ ≤ _ := hh'
+      _ ≤ K := by
+        dsimp [K]
+        gcongr
+        · exact Finset.sum_nonneg (fun i _ => ha j i)
+        · exact hmass j
+  let D : ℝ≥0∞ := (ENNReal.ofReal K) ^ (1 / 2 : ℝ)
+  have hD : D ≠ ∞ := by dsimp [D]; finiteness
+  refine uniformIntegrable_of_bounded_two _ (fun j => (hI j q (by linarith)).aestronglyMeasurable)
+      D.toNNReal (fun j => ?_)
+  rw [ENNReal.coe_toNNReal hD]
+  exact eLpNorm_two_le_of_integral_sq_le (fun ω => X j ω ^ q)
+    (hI j q (by linarith)).aestronglyMeasurable (fun ω => Real.rpow_nonneg (hX0 j ω) q)
+    (hsq j) K (hbound j)
 
 end HarmonicBalls
