@@ -2098,4 +2098,60 @@ theorem lintegral_annular_mass_rpow_le_square_moments_add_cell {Ω : Type*} [Mea
   exact (lintegral_annular_mass_rpow_le_square_moments_add_far hh b u v δ hε hε2 hr γ hq hq2).trans
     (add_le_add le_rfl hsum)
 
+/-- A grid square maps into the reference square under rescaling about its centre. -/
+theorem dyadicSquare_rescaled_mem_lqgSquare {r : ℝ} (hr : 0 < r)
+    {i : ℤ × ℤ} {z : ℂ} (hz : z ∈ LatticeProb.dyadicSquare r i) :
+    (z - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ) ∈ LatticeProb.LQG.lqgSquare := by
+  rw [LatticeProb.mem_dyadicSquare] at hz
+  rcases hz with ⟨⟨h1, h2⟩, h3, h4⟩
+  simp only [LatticeProb.LQG.lqgSquare, Set.mem_ofPred_eq, Complex.div_ofReal_re,
+    Complex.div_ofReal_im, Complex.sub_re, Complex.sub_im,
+    LatticeProb.dyadicSquareCentre]
+  constructor <;> rw [abs_le] <;> constructor <;>
+    (first | apply (le_div_iff₀ (by positivity : 0 < 4 * r)).2 | apply (div_le_iff₀ (by positivity : 0 < 4 * r)).2) <;> nlinarith
+
+/-- The comparison circle around each square centre lies in the unit disc. -/
+theorem norm_dyadicSquareCentre_add_four_mul_le_one {r : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) :
+    ‖LatticeProb.dyadicSquareCentre r i‖ + 4 * r ≤ 1 := by
+  have h := LatticeProb.norm_dyadicSquareCentre_lt hr hi
+  linarith
+
+/-- Circle-average covariance scales around every centre in the square cover. -/
+theorem covariance_circle_annularSquare_rescaled
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) {w w' : ℂ}
+    (hw : w ∈ LatticeProb.LQG.lqgSquare) (hw' : w' ∈ LatticeProb.LQG.lqgSquare) :
+    cov[fun ω => hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * w + LatticeProb.dyadicSquareCentre r i),
+        fun ω => hcirc ω (4 * r * δ) (((4 * r : ℝ) : ℂ) * w' + LatticeProb.dyadicSquareCentre r i); P] =
+      -Real.log (4 * r) + cov[fun ω => hcirc ω δ w, fun ω => hcirc ω δ w'; P] := by
+  apply hh.covariance_circle_rescaled (by positivity) hδ (norm_dyadicSquareCentre_add_four_mul_le_one hr hr10 hi)
+  · have h := LatticeProb.LQG.lqgSquare_subset_closedBall hw
+    simp only [Metric.mem_closedBall, dist_zero_right] at h
+    linarith
+  · have h := LatticeProb.LQG.lqgSquare_subset_closedBall hw'
+    simp only [Metric.mem_closedBall, dist_zero_right] at h
+    linarith
+
+
+/-- Circle-average covariance for two points in a square of the cover. -/
+theorem covariance_circle_annularSquare
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) {z z' : ℂ}
+    (hz : z ∈ LatticeProb.dyadicSquare r i) (hz' : z' ∈ LatticeProb.dyadicSquare r i) :
+    cov[fun ω => hcirc ω (4 * r * δ) z, fun ω => hcirc ω (4 * r * δ) z'; P] =
+      -Real.log (4 * r) + cov[
+        fun ω => hcirc ω δ ((z - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)),
+        fun ω => hcirc ω δ ((z' - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)); P] := by
+  have h := covariance_circle_annularSquare_rescaled hh hr hr10 hδ hδ2 hi
+    (dyadicSquare_rescaled_mem_lqgSquare hr hz) (dyadicSquare_rescaled_mem_lqgSquare hr hz')
+  have hR : (((4 * r : ℝ) : ℂ)) ≠ 0 := by exact_mod_cast (show 4 * r ≠ 0 by positivity)
+  simpa only [mul_div_cancel₀ _ hR, sub_add_cancel] using h
+
 end HarmonicBalls
