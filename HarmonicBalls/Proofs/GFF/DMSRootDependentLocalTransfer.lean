@@ -464,4 +464,68 @@ theorem firstChartEvent_section
   obtain ⟨F, hF, heq⟩ := hlocal
   exact ⟨F, hF, fun v => (firstChartEvent_iff A S n z hz v).trans (heq v)⟩
 
+/-- Centre of a chart indexed by a pair of natural numbers. -/
+def bufferedChartCenter (u : ℕ → ℂ) (n : ℕ) : ℂ :=
+  u (Nat.unpair n).1
+
+/-- Positive reciprocal scale of a chart indexed by a pair of natural numbers. -/
+def bufferedChartScale (n : ℕ) : ℝ :=
+  1 / (((Nat.unpair n).2 : ℝ) + 1)
+
+/-- Roots whose chart and local-law disk fit inside the punctured unit disk. -/
+def bufferedChartRoots (u : ℕ → ℂ) (n : ℕ) : Set ℂ :=
+  ball (bufferedChartCenter u n) (bufferedChartScale n) ∩
+    {z | 4 * bufferedChartScale n < ‖z‖ ∧ ‖z‖ + 4 * bufferedChartScale n < 1}
+
+/-- Each root chart is measurable. -/
+theorem measurableSet_bufferedChartRoots (u : ℕ → ℂ) (n : ℕ) :
+    MeasurableSet (bufferedChartRoots u n) := by
+  apply measurableSet_ball.inter
+  exact (measurableSet_lt measurable_const measurable_norm).inter
+    (measurableSet_lt (measurable_norm.add_const _) measurable_const)
+
+/-- Reciprocal chart scales are strictly positive. -/
+theorem bufferedChartScale_pos (n : ℕ) : 0 < bufferedChartScale n := by
+  unfold bufferedChartScale
+  positivity
+
+/-- Dense chart centres and reciprocal scales cover the punctured unit disk. -/
+theorem exists_bufferedChart_of_mem
+    (u : ℕ → ℂ) (hu : DenseRange u) (z : ℂ) (hz : z ∈ ball (0 : ℂ) 1)
+    (hz0 : z ≠ 0) : ∃ n, z ∈ bufferedChartRoots u n := by
+  have hnorm : 0 < ‖z‖ := norm_pos_iff.mpr hz0
+  have hunit : ‖z‖ < 1 := by simpa only [mem_ball, dist_zero_right] using hz
+  have hε : 0 < min ‖z‖ (1 - ‖z‖) / 4 := by positivity
+  obtain ⟨n, hn⟩ := exists_nat_one_div_lt hε
+  let s : ℝ := 1 / ((n : ℝ) + 1)
+  have hs : 0 < s := by dsimp [s]; positivity
+  have hsmall : 4 * s < ‖z‖ ∧ ‖z‖ + 4 * s < 1 := by
+    have h₁ := min_le_left ‖z‖ (1 - ‖z‖)
+    have h₂ := min_le_right ‖z‖ (1 - ‖z‖)
+    dsimp [s] at hn ⊢
+    constructor <;> linarith
+  obtain ⟨w, hw, hw'⟩ := Metric.dense_iff.mp hu z s hs
+  obtain ⟨m, rfl⟩ := hw'
+  refine ⟨Nat.pair m n, ?_⟩
+  have hball : z ∈ ball (u m) s := by simpa only [mem_ball, dist_comm] using hw
+  change z ∈ ball (u (Nat.unpair (Nat.pair m n)).1)
+    (1 / (((Nat.unpair (Nat.pair m n)).2 : ℝ) + 1)) ∧
+    4 * (1 / (((Nat.unpair (Nat.pair m n)).2 : ℝ) + 1)) < ‖z‖ ∧
+    ‖z‖ + 4 * (1 / (((Nat.unpair (Nat.pair m n)).2 : ℝ) + 1)) < 1
+  simpa only [Nat.unpair_pair] using And.intro hball hsmall
+
+/-- A chart around a root fits in a buffered admissible local-law disk. -/
+theorem bufferedChart_geometry
+    (c z : ℂ) (s : ℝ) (hs : 0 < s) (hz : z ∈ ball c s)
+    (hzero : 4 * s < ‖z‖) (hunit : ‖z‖ + 4 * s < 1) :
+    closedBall c (s + s / 2) ⊆ ball c (2 * s) ∧
+      ball c (2 * s) ⊆ ball z (4 * s) ∧
+      0 < 4 * s ∧ 4 * s < ‖z‖ ∧ ‖z‖ + 4 * s < 1 := by
+  refine ⟨closedBall_subset_ball (by linarith), ?_, by positivity, hzero, hunit⟩
+  intro y hy
+  rw [mem_ball] at hz hy ⊢
+  have ht := dist_triangle y c z
+  rw [dist_comm c z] at ht
+  linarith
+
 end HarmonicBalls
