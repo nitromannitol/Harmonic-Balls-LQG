@@ -15,7 +15,7 @@ whole-plane Gaussian free field and its unrestricted around observable.
 namespace HarmonicBalls
 
 open Set Filter MeasureTheory
-open scoped ENNReal
+open scoped ENNReal Topology
 
 /-- Countably many almost everywhere measurable basis infima determine a
 jointly measurable version of a random Euclidean length metric. -/
@@ -237,5 +237,128 @@ theorem IsWholePlaneGFF.aemeasurable_singular_countable_weyl_around_joint
       q.2.1 q.2.2.1 q.2.2.2) (hN.comp measurable_fst)
   intro n
   exact hgff.aemeasurable_singular_weyl_around_joint hγ hγ₂ hα hD (hf n) (hfc n) ν
+
+/-- A weighted chain infimum remains measurable when its weight is random. -/
+theorem aemeasurable_random_weightedChainInf
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (D : Ω → ℂ → ℂ → ℝ) (g : Ω → ℂ → ℝ)
+    (hg : ∀ z, Measurable fun ω => g ω z)
+    (U : Set ℂ) {Q : Set ℂ} (hQ : Q.Countable) (δ : ℝ) (x y : ℂ)
+    (hloc : ∀ a b, AEMeasurable (fun ω =>
+      LatticeProb.LQG.internalMetric (D ω) (Metric.ball a δ ∩ U) a b) P) :
+    AEMeasurable (fun ω => LatticeProb.LQG.weightedChainInf (D ω) (g ω) U Q δ x y) P := by
+  have := hQ.to_subtype
+  unfold LatticeProb.LQG.weightedChainInf LatticeProb.LQG.weightedChainSum
+  refine AEMeasurable.iInf fun m => AEMeasurable.iInf fun w => ?_
+  apply Finset.aemeasurable_fun_sum
+  intro i hi
+  exact (((hg _).exp.ennreal_ofReal).aemeasurable).mul (hloc _ _)
+
+/-- A random continuous Weyl weight with a common oscillation modulus has an
+almost everywhere measurable internal metric. -/
+theorem aemeasurable_internalMetric_random_weyl
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {D E : Ω → ℂ → ℂ → ℝ} {ξ : ℝ} {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfm : ∀ z, Measurable fun ω => f ω z)
+    (hK : ∀ ω, ∃ K, ∀ z, ξ * f ω z ≤ K)
+    {δ η : ℕ → ℝ} (hδ : ∀ n, 0 < δ n)
+    (hη : ∀ ω n a b, dist a b < δ n → |ξ * f ω a - ξ * f ω b| ≤ η n)
+    (hη0 : Tendsto η atTop (𝓝 0)) {U : Set ℂ} (hU : IsOpen U)
+    (hloc : ∀ a b r, 0 < r → AEMeasurable (fun ω =>
+      LatticeProb.LQG.internalMetric (D ω) (Metric.ball a r ∩ U) a b) P)
+    (hD : ∀ᵐ ω ∂P, LatticeProb.LQG.IsEuclideanLengthMetric (D ω))
+    (hE : ∀ᵐ ω ∂P, LatticeProb.LQG.IsEuclideanLengthMetric (E ω))
+    (hE0 : ∀ᵐ ω ∂P, ∀ x y, 0 ≤ E ω x y)
+    (hscale : ∀ᵐ ω ∂P, ∀ x y, ENNReal.ofReal (E ω x y) =
+      LatticeProb.LQG.weylScaling (D ω) ξ (f ω) x y) (x y : ℂ) :
+    AEMeasurable (fun ω => LatticeProb.LQG.internalMetric (E ω) U x y) P := by
+  by_cases hx : x ∈ U
+  swap
+  · simp_rw [LatticeProb.LQG.internalMetric_eq_top_of_not_mem _ hx y]
+    exact aemeasurable_const
+  obtain ⟨Q, hQc, hQd⟩ := TopologicalSpace.exists_countable_dense ℂ
+  have hm : AEMeasurable (fun ω => ⨅ n, ENNReal.ofReal (Real.exp (η n)) *
+      LatticeProb.LQG.weightedChainInf (D ω) (fun z => ξ * f ω z) U Q (δ n) x y) P :=
+    AEMeasurable.iInf fun n => (aemeasurable_random_weightedChainInf D
+      (fun ω z => ξ * f ω z) (fun z => (hfm z).const_mul ξ) U hQc (δ n) x y
+      (fun a b => hloc a b (δ n) (hδ n))).const_mul _
+  refine hm.congr ?_
+  filter_upwards [hD, hE, hE0, hscale] with ω hDω hEω hE0ω hsω
+  obtain ⟨K, hKω⟩ := hK ω
+  exact (LatticeProb.LQG.internalMetric_weylScaling_eq_iInf_weightedChainInf
+    hDω hEω hE0ω (hf ω) hKω hsω hU hQd hδ (hη ω) hη0 hx y).symm
+
+/-- Random compactly supported shifts with a common oscillation modulus have
+almost everywhere measurable Weyl-scaled point distances. -/
+theorem IsWholePlaneGFF.aemeasurable_singular_random_weyl_point_of_modulus
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfc : ∀ ω, HasCompactSupport (f ω))
+    (hfm : ∀ z, Measurable fun ω => f ω z)
+    {δ η : ℕ → ℝ} (hδ : ∀ n, 0 < δ n)
+    (hη : ∀ ω n a b, dist a b < δ n → |ξ * f ω a - ξ * f ω b| ≤ η n)
+    (hη0 : Tendsto η atTop (𝓝 0)) (x y : ℂ) :
+    AEMeasurable (fun ω => (weylScaling (D ω) ξ (f ω) x y).toReal) P := by
+  have haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc :=
+    lqgMetricFieldAxiomsUnivFrozen_derived Ω P γ ξ α₀ hC hcirc
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms
+    P γ ξ α₀ hC hcirc D haxioms hgff hγ hγ₂ hα hD
+  have hshift : ∀ᵐ ω ∂P, IsEuclideanLengthMetric
+      (fun a b => (weylScaling (D ω) ξ (f ω) a b).toReal) := by
+    filter_upwards [hmetric] with ω hm
+    exact (hm.weylScaling_continuous_isEuclideanLengthMetric ξ (hf ω)).2
+  have hopen := aemeasurable_internalMetric_random_weyl
+    (D := D) (E := fun ω a b => (weylScaling (D ω) ξ (f ω) a b).toReal)
+    hf hfm (fun ω => exists_const_mul_le_of_hasCompactSupport (hf ω) (hfc ω) ξ)
+    hδ hη hη0 isOpen_univ
+    (fun a b r _ => aemeasurable_internalMetric_of_fieldAxioms
+      lqgMetricFieldAxiomsUnivFrozen_derived hγ hγ₂ hα hgff hD
+      (Metric.isOpen_ball.inter isOpen_univ) a b)
+    (by filter_upwards [hmetric] with ω hm; exact (LPBridge.isEuclideanLengthMetric_iff _).1 hm)
+    (by filter_upwards [hshift] with ω hm; exact (LPBridge.isEuclideanLengthMetric_iff _).1 hm)
+    (Eventually.of_forall fun _ _ _ => ENNReal.toReal_nonneg)
+    (by
+      filter_upwards [hmetric] with ω hm
+      intro a b
+      exact ENNReal.ofReal_toReal ((hm.weylScaling_continuous_isEuclideanLengthMetric ξ (hf ω)).1 a b).ne)
+    x y
+  have hp : AEMeasurable (fun ω => ENNReal.ofReal
+      ((weylScaling (D ω) ξ (f ω) x y).toReal)) P := by
+    apply hopen.congr
+    filter_upwards [hshift] with ω hm
+    exact (hm.ofReal_eq_internalMetric x y).symm
+  simpa using hp.ennreal_toReal
+
+/-- The around distance of random compactly supported Weyl shifts with a
+common oscillation modulus is jointly almost everywhere measurable. -/
+theorem IsWholePlaneGFF.aemeasurable_singular_random_weyl_around_joint_of_modulus
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfc : ∀ ω, HasCompactSupport (f ω))
+    (hfm : ∀ z, Measurable fun ω => f ω z)
+    {δ η : ℕ → ℝ} (hδ : ∀ n, 0 < δ n)
+    (hη : ∀ ω n a b, dist a b < δ n → |ξ * f ω a - ξ * f ω b| ≤ η n)
+    (hη0 : Tendsto η atTop (𝓝 0)) (ν : Measure (ℂ × ℝ × ℝ)) [SFinite ν] :
+    AEMeasurable (fun q : Ω × (ℂ × ℝ × ℝ) =>
+      pfefferAround (fun x y => (weylScaling (D q.1) ξ (f q.1) x y).toReal)
+        q.2.1 q.2.2.1 q.2.2.2) (P.prod ν) := by
+  let : IsProbabilityMeasure P := hgff.isGaussianProcess.isProbabilityMeasure
+  apply aemeasurable_pfefferAround_joint_of_ae_pointwise ν
+    (D := fun ω x y => (weylScaling (D ω) ξ (f ω) x y).toReal)
+  · intro x y
+    exact hgff.aemeasurable_singular_random_weyl_point_of_modulus hγ hγ₂ hα hD hf hfc hfm
+      hδ hη hη0 x y
+  · have haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc :=
+      lqgMetricFieldAxiomsUnivFrozen_derived Ω P γ ξ α₀ hC hcirc
+    have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms
+      P γ ξ α₀ hC hcirc D haxioms hgff hγ hγ₂ hα hD
+    filter_upwards [hmetric] with ω hm
+    exact (hm.weylScaling_continuous_isEuclideanLengthMetric ξ (hf ω)).2
 
 end HarmonicBalls
