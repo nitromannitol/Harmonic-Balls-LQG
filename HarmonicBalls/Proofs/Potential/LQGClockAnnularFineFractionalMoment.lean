@@ -3942,5 +3942,204 @@ theorem planarBrownianMotion_joint_ball_le_initial_inv_time (x z : ℂ) {n : ℕ
       congr 1
       ext b
       cases i using Fin.cases <;> simp [f, A, centers, Metric.mem_ball, dist_eq_norm]
+/-- Distinct positive visits are bounded by permuted chains from time zero. -/
+theorem planarBrownianMotion_joint_ball_le_sum_initial_inv_time (x z : ℂ) {n : ℕ} (t : Fin (n + 1) → ℝ≥0)
+    (ht : Function.Injective t) (ht0 : ∀ i, 0 < t i) {r : ℝ} (hr : 0 < r) :
+    planarBrownianMotion x {b | ∀ i, ‖b (t i) - z‖ < r} ≤
+      ∑ σ : Equiv.Perm (Fin (n + 1)),
+        kernelChainProduct (fun s u : ℝ≥0 => min 1 (ENNReal.ofReal
+          ((2 / Real.pi) * (2 * r) ^ 2 / |(s : ℝ) - (u : ℝ)|)))
+          (n + 1) 0 (t ∘ σ) := by
+  classical
+  let σ := Tuple.sort t
+  have hmono : StrictMono (t ∘ σ) :=
+    (Tuple.monotone_sort t).strictMono_of_injective (ht.comp σ.injective)
+  have h := planarBrownianMotion_joint_ball_le_initial_inv_time x z (t ∘ σ) hmono (ht0 _) hr
+  have hsets : {b : ContinuousPath ℂ | ∀ i, ‖b (t (σ i)) - z‖ < r} =
+      {b : ContinuousPath ℂ | ∀ i, ‖b (t i) - z‖ < r} := by
+    ext b
+    simp only [mem_ofPred_eq]
+    exact (σ.surjective.forall (p := fun i => ‖b (t i) - z‖ < r)).symm
+  change planarBrownianMotion x {b | ∀ i, ‖b (t (σ i)) - z‖ < r} ≤ _ at h
+  rw [hsets] at h
+  let k : ℝ≥0 → ℝ≥0 → ℝ≥0∞ := fun s u => min 1 (ENNReal.ofReal
+    ((2 / Real.pi) * (2 * r) ^ 2 / |(s : ℝ) - (u : ℝ)|))
+  let u : Fin (n + 2) → ℝ≥0 := Fin.cons 0 (t ∘ σ)
+  have heq : (∏ i : Fin (n + 1), k (u i.succ) (u i.castSucc)) =
+      kernelChainProduct k (n + 1) 0 (t ∘ σ) := by
+    simpa [u, Function.comp_def] using (kernelChainProduct_eq_prod k (n + 1) u).symm
+  change planarBrownianMotion x {b | ∀ i, ‖b (t i) - z‖ < r} ≤
+    ∏ i : Fin (n + 1), k (u i.succ) (u i.castSucc) at h
+  rw [heq] at h
+  refine h.trans ?_
+  change kernelChainProduct k (n + 1) 0 (t ∘ σ) ≤ ∑ τ : Equiv.Perm (Fin (n + 1)), kernelChainProduct k (n + 1) 0 (t ∘ τ)
+  exact Finset.single_le_sum (f := fun τ : Equiv.Perm (Fin (n + 1)) => kernelChainProduct k (n + 1) 0 (t ∘ τ)) (fun _ _ => bot_le) (Finset.mem_univ σ)
+
+/-- A one-step kernel bound controls occupation moments with the initial transition. -/
+theorem planarBrownianMotion_occupation_moment_le_initial_kernel (x z : ℂ) {n : ℕ} {r : ℝ} (hr : 0 < r)
+    (ν : Measure ℝ≥0) [IsProbabilityMeasure ν] [NullSingletonClass ν]
+    (S : Set ℝ≥0) (K : ℝ≥0∞) (h0 : (0 : ℝ≥0) ∈ S)
+    (hS : ∀ᵐ y ∂ν, y ∈ S)
+    (hK : ∀ y ∈ S, (∫⁻ t, min 1 (ENNReal.ofReal
+      ((2 / Real.pi) * (2 * r) ^ 2 / |(t : ℝ) - (y : ℝ)|)) ∂ν) ≤ K) :
+    (∫⁻ b : ContinuousPath ℂ, (ν {t | ‖b t - z‖ < r}) ^ (n + 1)
+      ∂planarBrownianMotion x) ≤
+      (Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) * K ^ (n + 1) := by
+  classical
+  let k : ℝ≥0 → ℝ≥0 → ℝ≥0∞ := fun s u => min 1 (ENNReal.ofReal
+    ((2 / Real.pi) * (2 * r) ^ 2 / |(s : ℝ) - (u : ℝ)|))
+  have hk : Measurable (fun p : ℝ≥0 × ℝ≥0 => k p.1 p.2) := by dsimp [k]; fun_prop
+  have hksec : ∀ x, Measurable (fun y => k y x) := by
+    intro x
+    have hm : Measurable (fun y : ℝ≥0 => (y, x)) := by fun_prop
+    simpa only [Function.comp_def] using hk.comp hm
+  have hpositive : ∀ᵐ t : Fin (n + 1) → ℝ≥0 ∂(Measure.pi (fun _ => ν)), ∀ i, 0 < t i := by
+    apply Filter.eventually_all.mpr
+    intro i
+    have hz : ∀ᵐ y ∂ν, y ≠ 0 := by
+      simpa using (measure_eq_zero_iff_ae_notMem.mp (measure_singleton (0 : ℝ≥0)))
+    have h := (measurePreserving_eval (fun _ : Fin (n + 1) => ν) i).quasiMeasurePreserving.ae hz
+    filter_upwards [h] with t ht
+    exact pos_iff_ne_zero.mpr ht
+  have hcomp (σ : Equiv.Perm (Fin (n + 1))) :
+      (∫⁻ t : Fin (n + 1) → ℝ≥0, kernelChainProduct k (n + 1) 0 (t ∘ σ)
+        ∂(Measure.pi (fun _ => ν))) ≤ K ^ (n + 1) := by
+    let e := MeasurableEquiv.piCongrLeft (fun _ : Fin (n + 1) => ℝ≥0) σ
+    have hp := measurePreserving_piCongrLeft (fun _ : Fin (n + 1) => ν) σ
+    have he : (∫⁻ t : Fin (n + 1) → ℝ≥0, kernelChainProduct k (n + 1) 0 (t ∘ σ)
+        ∂(Measure.pi (fun _ => ν))) = ∫⁻ t : Fin (n + 1) → ℝ≥0,
+        kernelChainProduct k (n + 1) 0 t ∂(Measure.pi (fun _ => ν)) := by
+      rw [MeasurePreserving.lintegral_map_equiv _ e hp]
+      congr 1
+      funext t
+      simp [e, MeasurableEquiv.piCongrLeft_apply_apply, Function.comp_def]
+    rw [he, lintegral_kernelChainProduct ν k hk]
+    exact kernelChainIntegral_le ν k S K hksec hS hK (n + 1) 0 h0
+  have hm (σ : Equiv.Perm (Fin (n + 1))) : Measurable
+      (fun t : Fin (n + 1) → ℝ≥0 => kernelChainProduct k (n + 1) 0 (t ∘ σ)) := by
+    have hf : Measurable (fun t : Fin (n + 1) → ℝ≥0 => ((0 : ℝ≥0), t ∘ σ)) := by fun_prop
+    change Measurable ((fun p : ℝ≥0 × (Fin (n + 1) → ℝ≥0) =>
+      kernelChainProduct k (n + 1) p.1 p.2) ∘ (fun t => (0, t ∘ σ)))
+    exact (measurable_kernelChainProduct k hk (n + 1)).comp hf
+  calc
+    _ = ∫⁻ t : Fin (n + 1) → ℝ≥0,
+        planarBrownianMotion x {b | ∀ i, ‖b (t i) - z‖ < r} ∂(Measure.pi (fun _ => ν)) :=
+      planarBrownianMotion_occupation_moment_eq x z r (n + 1) ν
+    _ ≤ ∫⁻ t : Fin (n + 1) → ℝ≥0, ∑ σ : Equiv.Perm (Fin (n + 1)),
+        kernelChainProduct k (n + 1) 0 (t ∘ σ) ∂(Measure.pi (fun _ => ν)) := by
+      apply lintegral_mono_ae
+      filter_upwards [ae_injective_pi_of_atomless (n + 1) ν, hpositive] with t ht ht0
+      exact planarBrownianMotion_joint_ball_le_sum_initial_inv_time x z t ht ht0 hr
+    _ = ∑ σ : Equiv.Perm (Fin (n + 1)), ∫⁻ t : Fin (n + 1) → ℝ≥0,
+        kernelChainProduct k (n + 1) 0 (t ∘ σ) ∂(Measure.pi (fun _ => ν)) := by
+      rw [lintegral_finsetSum Finset.univ (fun σ _ => hm σ)]
+    _ ≤ _ := by
+      calc
+        _ ≤ ∑ _σ : Equiv.Perm (Fin (n + 1)), K ^ (n + 1) := Finset.sum_le_sum (fun σ _ => hcomp σ)
+        _ = _ := by simp
+
+/-- Unit-time occupation moments retain the initial logarithmic kernel factor. -/
+theorem planarBrownianMotion_occupation_moment_le_initial_log_kernel (x z : ℂ) (n : ℕ) {r : ℝ} (hr : 0 < r)
+    (ha1 : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    let a := (2 / Real.pi) * (2 * r) ^ 2
+    (∫⁻ b : ContinuousPath ℂ, (ν {t | ‖b t - z‖ < r}) ^ (n + 1)
+      ∂(planarBrownianMotion x)) ≤
+      (Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+        ENNReal.ofReal (2 * (a * (1 + Real.log (1 / a)))) ^ (n + 1) := by
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let a : ℝ := (2 / Real.pi) * (2 * r) ^ 2
+  have ha : 0 < a := by dsimp [a]; positivity
+  have hp : IsProbabilityMeasure ν := by
+    constructor
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := hp
+  have hatom : NullSingletonClass ν := by
+    constructor
+    intro t
+    dsimp [ν]
+    rw [Measure.map_apply continuous_real_toNNReal.measurable (measurableSet_singleton t),
+      Measure.restrict_apply (continuous_real_toNNReal.measurable (measurableSet_singleton t))]
+    apply measure_mono_null _ (measure_singleton (t : ℝ))
+    intro w hw
+    have ht := congrArg (fun v : ℝ≥0 => (v : ℝ)) hw.1
+    have hw0 : 0 ≤ w := hw.2.1
+    simpa [Real.toNNReal_of_nonneg hw0] using ht
+  let : NullSingletonClass ν := hatom
+  have hs : ∀ᵐ y ∂ν, y ∈ Iic (1 : ℝ≥0) := by
+    dsimp [ν]
+    change ∀ᵐ y ∂(Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))), y ≤ 1
+    apply (ae_map_iff continuous_real_toNNReal.measurable.aemeasurable
+      (measurableSet_le measurable_id measurable_const)).2
+    filter_upwards [ae_restrict_mem measurableSet_Icc] with y hy
+    exact Real.toNNReal_le_iff_le_coe.mpr (by simpa using hy.2)
+  let k : ℝ≥0 → ℝ≥0 → ℝ≥0∞ :=
+    fun t y => min 1 (ENNReal.ofReal (a / |(t : ℝ) - (y : ℝ)|))
+  have hK : ∀ y ∈ Iic (1 : ℝ≥0), (∫⁻ t, k t y ∂ν) ≤
+      ENNReal.ofReal (2 * (a * (1 + Real.log (1 / a)))) := by
+    intro y hy
+    exact truncatedInvTime_unit_time_lintegral_le ha ha1 y (by exact_mod_cast hy)
+  exact planarBrownianMotion_occupation_moment_le_initial_kernel x z (n := n) hr ν (Iic 1)
+    (ENNReal.ofReal (2 * (a * (1 + Real.log (1 / a))))) (by simp) hs hK
+
+/-- Scaled-horizon occupation moments retain the initial logarithmic kernel factor. -/
+theorem planarBrownianMotion_scaled_ball_occupation_moment_le_initial_log_kernel (x z : ℂ) (c : ℝ≥0)
+    (hc : 0 < c) (n : ℕ) {r : ℝ} (hr : 0 < r)
+    (ha : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) :
+    (∫⁻ b, (∫⁻ t in Ioc (0 : ℝ) c,
+      (Metric.ball (0 : ℂ) r).indicator (fun _ => (1 : ℝ≥0∞))
+        ((b t.toNNReal - z) / (Real.sqrt c : ℂ))) ^ (n + 1)
+      ∂planarBrownianMotion x) ≤
+      ENNReal.ofReal c ^ (n + 1) *
+        ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+            (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ (n + 1)) := by
+  let φ : ℂ → ℝ≥0∞ := (Metric.ball (0 : ℂ) r).indicator (fun _ => 1)
+  have hφ : Measurable φ := measurable_const.indicator Metric.isOpen_ball.measurableSet
+  have hcR : (0 : ℝ) < c := by exact_mod_cast hc
+  have hpre : (fun s : ℝ => (c : ℝ) * s) ⁻¹' Ioc (0 : ℝ) c = Ioc 0 1 := by
+    ext s
+    simp only [mem_preimage, mem_Ioc]
+    constructor
+    · rintro ⟨hs, ht⟩
+      exact ⟨(mul_pos_iff_of_pos_left hcR).mp hs, (mul_le_iff_le_one_left hcR).mp (by simpa [mul_comm] using ht)⟩
+    · rintro ⟨hs, ht⟩
+      exact ⟨mul_pos hcR hs, by simpa [mul_comm] using (mul_le_iff_le_one_left hcR).mpr ht⟩
+  have hscale := lintegral_planarBrownianMotion_rescaled_occupation_rpow x z c hc
+    (Ioc 0 c) measurableSet_Ioc φ hφ ((n + 1 : ℕ) : ℝ) (by positivity)
+  rw [hpre] at hscale
+  have hunit (b : ContinuousPath ℂ) :
+      (∫⁻ t in Ioc (0 : ℝ) 1,
+        φ (b t.toNNReal + (x - z) / (Real.sqrt c : ℂ))) =
+      (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))
+        {t | ‖b t - (z - x) / (Real.sqrt c : ℂ)‖ < r} := by
+    have hS : MeasurableSet {t : ℝ≥0 | ‖b t - (z - x) / (Real.sqrt c : ℂ)‖ < r} := by
+      apply isOpen_lt _ continuous_const |>.measurableSet
+      fun_prop
+    rw [Measure.map_apply continuous_real_toNNReal.measurable hS,
+      ← lintegral_indicator_one (hS.preimage continuous_real_toNNReal.measurable)]
+    rw [Measure.restrict_congr_set (Ioc_ae_eq_Icc : Ioc (0 : ℝ) 1 =ᵐ[volume] Icc 0 1).symm]
+    apply lintegral_congr
+    intro t
+    have heq : b t.toNNReal + (x - z) / (Real.sqrt c : ℂ) =
+        b t.toNNReal - (z - x) / (Real.sqrt c : ℂ) := by
+      rw [sub_div, sub_div]
+      ring
+    rw [heq]
+    by_cases h : ‖b t.toNNReal - (z - x) / (Real.sqrt c : ℂ)‖ < r <;>
+      simp [φ, Metric.mem_ball, dist_zero_right, h]
+  have hm := planarBrownianMotion_occupation_moment_le_initial_log_kernel 0
+    ((z - x) / (Real.sqrt c : ℂ)) n hr ha
+  dsimp only at hm
+  calc
+    _ = ENNReal.ofReal c ^ (n + 1) * ∫⁻ b,
+        (∫⁻ s in Ioc (0 : ℝ) 1,
+          φ (b s.toNNReal + (x - z) / (Real.sqrt c : ℂ))) ^ (n + 1)
+        ∂planarBrownianMotion 0 := by
+      simpa only [φ, ENNReal.rpow_natCast] using hscale
+    _ ≤ _ := by
+      gcongr
+      simpa only [hunit] using hm
+
 
 end HarmonicBalls
