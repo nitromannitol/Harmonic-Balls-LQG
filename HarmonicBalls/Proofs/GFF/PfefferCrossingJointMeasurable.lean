@@ -12,6 +12,31 @@ namespace HarmonicBalls
 open Set Filter MeasureTheory
 open scoped ENNReal
 
+/-- A point on a circle extends continuously to a point on each nearby
+circle of nonnegative radius. -/
+theorem exists_continuous_sphere_selection {z x : ℂ} {a : ℝ}
+    (hx : x ∈ Metric.sphere z a) :
+    ∃ f : ℂ × ℝ → ℂ, Continuous f ∧ f (z, a) = x ∧
+      ∀ (w : ℂ) (r : ℝ), 0 ≤ r → f (w, r) ∈ Metric.sphere w r := by
+  have hnorm : ‖x - z‖ = a := mem_sphere_iff_norm.mp hx
+  have ha : 0 ≤ a := hnorm ▸ norm_nonneg _
+  by_cases hzero : a = 0
+  · have hxz : x = z := sub_eq_zero.mp (norm_eq_zero.mp (hnorm.trans hzero))
+    refine ⟨fun q => q.1 + q.2 • (1 : ℂ), ?_, ?_, ?_⟩
+    · fun_prop
+    · simp [hzero, hxz]
+    · intro w r hr
+      simp [mem_sphere_iff_norm, Real.norm_eq_abs, abs_of_nonneg hr]
+  · let u : ℂ := a⁻¹ • (x - z)
+    have hu : ‖u‖ = 1 := by
+      simp [u, Real.norm_eq_abs, abs_of_nonneg ha, hnorm, hzero]
+    have hxu : z + a • u = x := by
+      simp [u, hzero]
+    refine ⟨fun q => q.1 + q.2 • u, ?_, hxu, ?_⟩
+    · fun_prop
+    · intro w r hr
+      simp [mem_sphere_iff_norm, Real.norm_eq_abs, abs_of_nonneg hr, hu]
+
 /-- Strict sublevels of the across observable are universally measurable
 jointly in a continuous distance function and the circle parameters. -/
 theorem uMeasurableSet_pfefferAcross_joint_lt (c : ℝ≥0∞) :
