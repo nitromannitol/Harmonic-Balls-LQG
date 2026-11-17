@@ -331,4 +331,60 @@ theorem exists_harmonic_unbounded_transposed_correction_of_newtonKernel
     (integrable_transposed_greenFunction_of_newtonKernel hV hK hKV hν hx ha hi)
     (integrable_transposed_greenFunction_of_newtonKernel hU hK (hKV.trans hVU) hν (hVU hx) ha hi)
 
+/-- For a finite compactly supported source, integrability of the
+observer-first Green kernel at an uncharged point implies Newtonian
+integrability at that point. -/
+theorem integrable_newtonKernel_of_greenFunction
+    {U K : Set ℂ} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
+    {ν : MeasureTheory.Measure ℂ} [MeasureTheory.IsFiniteMeasure ν] (hν : ν Kᶜ = 0)
+    {x : ℂ} (hx : x ∈ U) (ha : ν {x} = 0)
+    (hi : MeasureTheory.Integrable (greenFunction U x) ν) :
+    MeasureTheory.Integrable (newtonKernel x) ν := by
+  open MeasureTheory in
+  obtain ⟨F, hFm, _, hFb, hFag⟩ :=
+    exists_measurable_harmonic_minorant_family hU isCompact_singleton (singleton_subset_iff.mpr hx)
+  obtain ⟨C, hC⟩ := hFb K hK hKU
+  have hae : ∀ᵐ y ∂ν, y ∈ K := by rw [ae_iff]; exact hν
+  have hne : ∀ᵐ y ∂ν, y ≠ x := by rw [ae_iff]; simpa using ha
+  have hFi : Integrable (F x) ν := by
+    apply Integrable.of_bound (f := F x)
+      (hFm.comp ((measurable_const : Measurable (fun _ : ℂ => x)).prodMk measurable_id)).aestronglyMeasurable C
+    filter_upwards [hae] with y hy
+    simpa only [Real.norm_eq_abs] using hC x y hy
+  apply (hi.add hFi).congr
+  filter_upwards [hae, hne] with y hy hyx
+  have hxy : x ≠ y := Ne.symm hyx
+  simp only [Pi.add_apply]
+  rw [greenFunction, ite_eq_left ⟨hx, hKU hy, hxy⟩,
+    hFag x (mem_singleton x) y (hKU hy)]
+  ring
+
+/-- A finite source concentrated on a compact set and vanishing on an open
+set integrates the Newton kernel at every point of that open set. -/
+theorem integrable_newtonKernel_of_source_free_open
+    {K W : Set ℂ} {ν : MeasureTheory.Measure ℂ} [MeasureTheory.IsFiniteMeasure ν]
+    (hK : IsCompact K) (hν : ν Kᶜ = 0) (hW : IsOpen W) (hνW : ν W = 0)
+    {x : ℂ} (hx : x ∈ W) : MeasureTheory.Integrable (newtonKernel x) ν := by
+  open MeasureTheory in
+  have hKW : IsCompact (K \ W) := hK.inter_right hW.isClosed_compl
+  have hcon : ν (K \ W)ᶜ = 0 := by
+    apply measure_mono_null (show (K \ W)ᶜ ⊆ Kᶜ ∪ W from by
+      intro y hy
+      by_cases hyK : y ∈ K
+      · right
+        by_contra hyW
+        exact hy ⟨hyK, hyW⟩
+      · exact Or.inl hyK)
+    exact measure_union_null hν hνW
+  have hxc : x ∉ K \ W := fun h => h.2 hx
+  have hc : ContinuousOn (newtonKernel x) (K \ W) := by
+    unfold newtonKernel
+    refine continuousOn_const.mul (ContinuousOn.log (continuousOn_const.sub continuousOn_id).norm ?_)
+    intro y hy
+    exact norm_ne_zero_iff.2 (sub_ne_zero.2 (fun h => hxc (h ▸ hy)))
+  obtain ⟨C, hC⟩ := hKW.exists_bound_of_continuousOn hc
+  refine Integrable.of_bound (measurable_newtonKernel x).aestronglyMeasurable C ?_
+  filter_upwards [measure_eq_zero_iff_ae_notMem.1 hcon] with y hy
+  exact hC y (by simpa using hy)
+
 end HarmonicBalls
