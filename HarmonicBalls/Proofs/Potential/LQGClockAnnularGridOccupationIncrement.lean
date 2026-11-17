@@ -2001,4 +2001,43 @@ theorem exists_lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_rate
         hε hεhalf hεδ hr hrε hr2
     _ = _ := by simp
 
+/-- Stopping both shifted clocks at a common path-dependent time does not
+increase their unit-time supremum difference. -/
+theorem lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hcirc : Ω → ℝ → ℂ → ℝ} (x : ℂ) (u : ℝ≥0) (γ α δ r ε : ℝ)
+    (τ : ContinuousPath ℂ → ℝ≥0) :
+    let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+      stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) δ
+          (fun _ => t.toNNReal) (ContinuousPath.shift u p.2)
+    let G : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+      stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) δ
+          (fun _ => min t.toNNReal (τ p.2)) (ContinuousPath.shift u p.2)
+    (∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |G r p t - G ε p t|
+      ∂(P.prod (planarBrownianMotion x))) ≤
+    ∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |F r p t - F ε p t|
+      ∂(P.prod (planarBrownianMotion x)) := by
+  dsimp only
+  apply lintegral_mono
+  intro p
+  apply iSup_le
+  intro t
+  let s : ℝ≥0 := min t.val.toNNReal (τ p.2)
+  have hs : (s : ℝ) ∈ Icc (0 : ℝ) 1 := by
+    refine ⟨s.coe_nonneg, ?_⟩
+    have h : s ≤ t.val.toNNReal := min_le_left _ _
+    have h' : (s : ℝ) ≤ t.val := by
+      simpa [Real.coe_toNNReal', max_eq_left t.property.1] using (NNReal.coe_le_coe.mpr h)
+    exact h'.trans t.property.2
+  have h := le_iSup (fun v : Icc (0 : ℝ) 1 => ENNReal.ofReal |stoppedAnnularClock
+    (fun z => r^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) δ
+        (fun _ => v.val.toNNReal) (ContinuousPath.shift u p.2) -
+    stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) δ
+        (fun _ => v.val.toNNReal) (ContinuousPath.shift u p.2)|) ⟨s, hs⟩
+  simpa only [Real.toNNReal_coe, s, stoppedAnnularClock] using h
+
 end HarmonicBalls
