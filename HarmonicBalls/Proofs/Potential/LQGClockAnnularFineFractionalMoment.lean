@@ -481,4 +481,55 @@ theorem integral_rpow_subSquareField_le_explicit
   simpa only [hvarX, hvarY] using
     integral_rpow_subSquareField_le hh γ hk hδ hδ2 piece pt hpt hp hq
 
+
+/-- The finite two-piece moment comparison also permits vanishing weights. -/
+theorem integral_rpow_subSquareField_le_explicit_nonneg
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (piece : ι → Fin 2) (pt : ι → ℂ)
+    (hpt : ∀ i, pt i ∈ LatticeProb.LQG.lqgSquare)
+    {p : ι → ℝ} (hp : ∀ i, 0 ≤ p i) {q : ℝ} (hq : 1 ≤ q) :
+    ∫ ω, (∑ i, p i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) piece pt ω i -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)) ^ q ∂P ≤
+    ∫ x, (∑ i, p i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc (LatticeProb.LQG.dyadicScale k)
+        δ piece pt x i - γ ^ 2 *
+        (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2)) ^ q
+      ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  classical
+  by_cases hpos : ∃ i, 0 < p i
+  · let : Nonempty {i : ι // 0 < p i} := ⟨⟨hpos.choose, hpos.choose_spec⟩⟩
+    have hsum (f : ι → ℝ) : (∑ i : {i : ι // 0 < p i}, p i * f i) =
+        ∑ i, p i * f i := by
+      rw [← Finset.sum_subtype (p := fun i => 0 < p i)
+        (Finset.univ.filter (fun i => 0 < p i)) (by simp) (fun i => p i * f i)]
+      apply Finset.sum_subset (Finset.filter_subset _ _)
+      intro i _ hi
+      have hzero : p i = 0 := le_antisymm (le_of_not_gt (by simpa using hi)) (hp i)
+      simp [hzero]
+    have h := integral_rpow_subSquareField_le_explicit hh γ hk hδ hδ2
+      (fun i : {i : ι // 0 < p i} => piece i)
+      (fun i : {i : ι // 0 < p i} => pt i)
+      (fun i => hpt i) (fun i => i.property) hq
+    simp only [LatticeProb.Gauss.subSquareField,
+      LatticeProb.Gauss.subSquareComparison] at h ⊢
+    have hx (ω : Ω) := hsum (fun i => Real.exp
+      (γ * hcirc ω (LatticeProb.LQG.dyadicScale k * δ)
+        (↑(LatticeProb.LQG.dyadicScale k) * pt i +
+          LatticeProb.LQG.lqgSquareCentre (piece i)) -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2))
+    have hy (x : (Ω × ℝ) × (Fin 2 → Ω)) := hsum (fun i => Real.exp
+      (γ * (hcirc x.1.1 (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.lqgSquareCentre (piece i)) + hcirc (x.2 (piece i)) δ (pt i) +
+        x.1.2) - γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2))
+    simp_rw [hx, hy] at h
+    exact h
+  · have hz : ∀ i, p i = 0 := fun i => le_antisymm (le_of_not_gt (fun hi => hpos ⟨i, hi⟩)) (hp i)
+    simp [hz, Real.zero_rpow (by linarith : q ≠ 0)]
+
 end HarmonicBalls
