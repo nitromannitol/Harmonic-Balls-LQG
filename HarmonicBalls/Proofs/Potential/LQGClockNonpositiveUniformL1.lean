@@ -413,4 +413,346 @@ theorem planarBrownianMotion_unit_single_ball_occupation_le_uniform {d : ℝ}
       ring
 
 
+/-- Zero-insertion clock occupation obeys one subcritical power bound
+for every Brownian starting point. -/
+theorem exists_uniform_lintegral_prod_brownian_inner_zero_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ) :
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ (x : ℂ) {ε δ : ℝ}, 0 < ε → ε ≤ 1/2 →
+      0 < δ → δ ≤ 1/2 →
+      (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
+        ({z : ℂ | ‖z‖ < δ}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z)) (q.2 s.toNNReal)))
+        ∂(P.prod (planarBrownianMotion x))) ≤ (ENNReal.ofReal δ) ^ (1/2 : ℝ) * C := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨C, hC, hball⟩ := planarBrownianMotion_unit_single_ball_occupation_le_uniform
+    (d := (1/2 : ℝ)) (by norm_num) (by norm_num)
+  refine ⟨ENNReal.ofReal C, ENNReal.ofReal_lt_top, ?_⟩
+  intro x ε δ hε hεhalf hδ hδhalf
+  have hbound :
+      (∫⁻ b, ∫⁻ ω, ∫⁻ z, {z : ℂ | ‖z‖ < δ}.indicator
+        (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z))) z
+        ∂(Measure.map (fun t => b t) (Measure.map Real.toNNReal
+          (volume.restrict (Icc (0 : ℝ) 1)))) ∂P ∂(planarBrownianMotion x)) ≤
+        (ENNReal.ofReal δ) ^ (1/2 : ℝ) * ENNReal.ofReal C := by
+    calc
+      _ = ∫⁻ b, ∫⁻ t : ℝ≥0, (if ‖b t‖ < δ then 1 else 0 : ℝ≥0∞)
+          ∂(Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))
+          ∂(planarBrownianMotion x) := by
+        apply lintegral_congr
+        intro b
+        rw [lintegral_inner_inserted_density_eq hh hε hεhalf hδhalf γ 0]
+        rw [lintegral_map (by
+          apply Measurable.indicator
+          · fun_prop
+          · exact measurableSet_lt measurable_norm measurable_const) b.continuous.measurable]
+        apply lintegral_congr
+        intro t
+        simp [Set.indicator_apply]
+      _ ≤ ENNReal.ofReal (C * δ ^ (1/2 : ℝ)) := by
+        simpa using hball x 0 δ hδ
+      _ = _ := by
+        rw [ENNReal.ofReal_mul hC.le, ENNReal.ofReal_rpow_of_nonneg hδ.le]
+        · exact mul_comm _ _
+        · norm_num
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let A : Set ℂ := {z : ℂ | ‖z‖ < δ}
+  let F : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun q =>
+    ∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
+      (A.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage (0 : ℝ) (hcirc q.1) ε z)) (q.2 s.toNNReal))
+  have hF : AEMeasurable F (P.prod (planarBrownianMotion x)) :=
+    aemeasurable_inner_inserted_clock_cell hh (planarBrownianMotion x) hε γ (0 : ℝ) δ 0 1
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hA : MeasurableSet A := measurableSet_lt measurable_norm measurable_const
+  have hmeas : ∀ᵐ ω ∂P, Measurable (fun z => ENNReal.ofReal
+      (A.indicator (fun w => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage (0 : ℝ) (hcirc ω) ε w)) z)) := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh (0 : ℝ)] with ω hω hrec
+    have hm : Measurable (fun z : ℂ => ENNReal.ofReal
+        (A.indicator (fun w => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          (H ω ε w - H ω 1 0 - (0 : ℝ) * Real.log (max ε ‖w‖)))) z)) := by
+      apply ENNReal.measurable_ofReal.comp
+      exact (measurable_const.mul (measurable_const.mul
+        ((((hHm ε hε).comp (measurable_id.prodMk measurable_const)).sub measurable_const).sub
+          (measurable_const.mul ((measurable_const.max measurable_norm).log)))).exp).indicator hA
+    convert hm using 1
+    ext z
+    simp only [Set.indicator_apply]
+    split_ifs
+    · rw [hω, hω, hrec ε z hε]
+    · rfl
+  have heq (b : ContinuousPath ℂ) : ∀ᵐ ω ∂P,
+      F (ω,b) = ∫⁻ z, A.indicator (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage (0 : ℝ) (hcirc ω) ε z))) z ∂(ν.map b) := by
+    filter_upwards [hmeas] with ω hω
+    have heqfun : (fun z => ENNReal.ofReal (A.indicator (fun w => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage (0 : ℝ) (hcirc ω) ε w)) z)) =
+        A.indicator (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage (0 : ℝ) (hcirc ω) ε z))) := by
+      funext z
+      simp only [Set.indicator_apply]
+      split_ifs <;> simp
+    rw [← heqfun, lintegral_map hω b.continuous.measurable]
+    dsimp [F, ν]
+    rw [Measure.restrict_congr_set Ioc_ae_eq_Icc]
+    symm
+    exact lintegral_map (hω.comp b.continuous.measurable) continuous_real_toNNReal.measurable
+  change (∫⁻ q, F q ∂(P.prod (planarBrownianMotion x))) ≤ _
+  rw [lintegral_prod_symm _ hF]
+  refine (le_of_eq ?_).trans hbound
+  apply lintegral_congr
+  intro b
+  apply lintegral_congr_ae
+  filter_upwards [heq b] with ω hω
+  exact hω
+
+
+/-- The smoothing correction has a single annealed power bound for all
+Brownian starting points. -/
+theorem exists_uniform_annealed_nonpositive_insertion_correction_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (hγ : 0 < γ) (hα : α ≤ 0) :
+    ∃ C : ℝ≥0∞, 0 < C ∧ C < ∞ ∧ ∀ (x : ℂ) {ε δ : ℝ},
+      0 < ε → ε ≤ 1 / 2 → δ ≤ 1 / 2 →
+      (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (0 : ℝ) 1,
+        ENNReal.ofReal ({z : ℂ | ‖z‖ < δ}.indicator (fun z =>
+          ((max ε ‖z‖) ^ (-γ * α) - (max (ε / 2) ‖z‖) ^ (-γ * α)) *
+          (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z))) (q.2 s.toNNReal)))
+        ∂(P.prod (planarBrownianMotion x))) ≤
+      ENNReal.ofReal (ε ^ (-γ * α)) * ((ENNReal.ofReal ε) ^ (1 / 2 : ℝ) * C) := by
+  obtain ⟨C, hC, hbound⟩ := exists_uniform_lintegral_prod_brownian_inner_zero_le hh γ
+  refine ⟨C + 1, by positivity, ENNReal.add_lt_top.mpr ⟨hC, by simp⟩, ?_⟩
+  intro x ε δ hε hεhalf hδ
+  calc
+    _ ≤ ENNReal.ofReal (ε ^ (-γ * α)) *
+        (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (0 : ℝ) 1,
+          ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z)) (q.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) := by
+      rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+      apply lintegral_mono
+      intro q
+      dsimp only
+      rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+      apply lintegral_mono
+      intro s
+      let z := q.2 s.toNNReal
+      change ENNReal.ofReal ({z : ℂ | ‖z‖ < δ}.indicator _ z) ≤
+        ENNReal.ofReal (ε ^ (-γ * α)) * ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator _ z)
+      by_cases hzδ : ‖z‖ < δ
+      · have hzhalf : ‖z‖ ≤ 1 / 2 := le_trans (le_of_lt hzδ) hδ
+        have hstep := nonpositive_insertion_dyadic_density_increment
+          (hcirc q.1) γ α ε z hγ.le hα hε hεhalf hzhalf
+        dsimp only at hstep
+        by_cases hzε : ‖z‖ < ε
+        · rw [Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ < δ} from hzδ), Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ < ε} from hzε),
+            ← ENNReal.ofReal_mul (Real.rpow_nonneg hε.le _)]
+          exact ENNReal.ofReal_le_ofReal hstep.2.2.2.2.2.2.2.2
+        · have hzero := hstep.2.2.2.2.2.1 (le_of_not_gt hzε)
+          rw [Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ < δ} from hzδ), Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ < ε} from hzε), hzero, zero_mul,
+            ENNReal.ofReal_zero, mul_zero]
+      · rw [Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ < δ} from hzδ), ENNReal.ofReal_zero]
+        exact zero_le
+    _ ≤ _ := by
+      gcongr
+      exact (hbound x hε hεhalf hε hεhalf).trans (by
+        gcongr
+        exact le_add_right le_rfl)
+
+
+/-- Correction integrability and its geometric estimate hold with one
+constant for every Brownian start. -/
+theorem exists_uniform_integrable_nonpositive_insertion_corrections
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ0 : 0 < γ) (hα : α ≤ 0)
+    (δ : ℕ → ℝ) (hδ : ∀ n, δ n ≤ 1/2) :
+    ∃ C : ℝ≥0∞, 0 < C ∧ C < ∞ ∧ ∀ x : ℂ, ∀ n,
+      Integrable (nonpositiveInsertionCorrection hcirc γ α (δ n) n)
+        ((planarBrownianMotion x).prod P) ∧
+      (∫⁻ q, ENNReal.ofReal (nonpositiveInsertionCorrection hcirc γ α (δ n) n q)
+        ∂((planarBrownianMotion x).prod P)) ≤
+        ENNReal.ofReal (((2 : ℝ)⁻¹ ^ (n+1)) ^ (-γ*α)) *
+          ((ENNReal.ofReal ((2 : ℝ)⁻¹ ^ (n+1))) ^ (1/2 : ℝ) * C) := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨C, hC0, hC, hbound⟩ :=
+    exists_uniform_annealed_nonpositive_insertion_correction_le hh γ α hγ0 hα
+  refine ⟨C, hC0, hC, ?_⟩
+  intro x
+  obtain ⟨F, hFm, hFae⟩ := exists_measurable_nonpositive_insertion_corrections hh γ α δ
+  have hcae := ae_nonpositive_insertion_correction_lintegral hh hγ0.le hα δ hδ
+  let μ := (planarBrownianMotion x).prod P
+  have hFprod : ∀ᵐ q ∂μ, ∀ n, F n q =
+      nonpositiveInsertionCorrection hcirc γ α (δ n) n q := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hFae] with q hq n
+    exact hq q.1 n
+  have hcprod : ∀ᵐ q ∂μ, ∀ n,
+      0 ≤ nonpositiveInsertionCorrection hcirc γ α (δ n) n q ∧
+      ENNReal.ofReal (nonpositiveInsertionCorrection hcirc γ α (δ n) n q) =
+        ∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < δ n}.indicator (fun z =>
+            ((max ((2 : ℝ)⁻¹ ^ (n+1)) ‖z‖) ^ (-γ*α) -
+             (max (((2 : ℝ)⁻¹ ^ (n+1))/2) ‖z‖) ^ (-γ*α)) *
+            (((2 : ℝ)⁻¹ ^ (n+1))^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.2) ((2 : ℝ)⁻¹ ^ (n+1)) z)))
+          (q.1 s.toNNReal)) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hcae] with q hq n
+    exact hq q.1 n
+  intro n
+  have he : 0 < (2 : ℝ)⁻¹ ^ (n+1) := by positivity
+  have hehalf : (2 : ℝ)⁻¹ ^ (n+1) ≤ 1/2 := by
+    rw [pow_succ]
+    have h : (2 : ℝ)⁻¹ ^ n ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+    nlinarith
+  have hlin : (∫⁻ q, ENNReal.ofReal (nonpositiveInsertionCorrection hcirc γ α (δ n) n q) ∂μ) ≤
+      ENNReal.ofReal (((2 : ℝ)⁻¹ ^ (n+1)) ^ (-γ*α)) *
+        ((ENNReal.ofReal ((2 : ℝ)⁻¹ ^ (n+1))) ^ (1/2 : ℝ) * C) := by
+    calc
+      _ = ∫⁻ q : ContinuousPath ℂ × Ω, (∫⁻ s in Ioc (0 : ℝ) 1,
+          ENNReal.ofReal ({z : ℂ | ‖z‖ < δ n}.indicator (fun z =>
+            ((max ((2 : ℝ)⁻¹ ^ (n+1)) ‖z‖) ^ (-γ*α) -
+             (max (((2 : ℝ)⁻¹ ^ (n+1))/2) ‖z‖) ^ (-γ*α)) *
+            (((2 : ℝ)⁻¹ ^ (n+1))^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.2) ((2 : ℝ)⁻¹ ^ (n+1)) z)))
+          (q.1 s.toNNReal))) ∂μ := by
+        apply lintegral_congr_ae
+        filter_upwards [hcprod] with q hq
+        exact (hq n).2
+      _ = _ := (lintegral_prod_swap _).symm
+      _ ≤ _ := hbound x he hehalf (hδ n)
+  have hm : AEStronglyMeasurable (nonpositiveInsertionCorrection hcirc γ α (δ n) n) μ := by
+    apply (hFm n).aestronglyMeasurable.congr
+    filter_upwards [hFprod] with q hq
+    exact hq n
+  have hnonneg : 0 ≤ᵐ[μ] nonpositiveInsertionCorrection hcirc γ α (δ n) n := by
+    filter_upwards [hcprod] with q hq
+    exact (hq n).1
+  refine ⟨(lintegral_ofReal_ne_top_iff_integrable hm hnonneg).1 ?_, hlin⟩
+  apply ne_of_lt (lt_of_le_of_lt hlin ?_)
+  exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+    (ENNReal.mul_lt_top (ENNReal.rpow_lt_top_of_nonneg (by norm_num) ENNReal.ofReal_ne_top) hC)
+
+
+/-- The correction expectations have a summable bound independent of the
+Brownian starting point. -/
+theorem exists_uniform_summable_annealed_nonpositive_insertion_corrections
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ0 : 0 < γ) (hα : α ≤ 0)
+    (δ : ℕ → ℝ) (hδ : ∀ n, δ n ≤ 1/2) :
+    ∃ B : ℕ → ℝ, Summable B ∧ (∀ n, 0 ≤ B n) ∧ ∀ x : ℂ, ∀ n,
+      Integrable (nonpositiveInsertionCorrection hcirc γ α (δ n) n)
+        ((planarBrownianMotion x).prod P) ∧
+      (∫ q, |nonpositiveInsertionCorrection hcirc γ α (δ n) n q|
+        ∂((planarBrownianMotion x).prod P)) ≤ B n := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨C, _, hC, hbound⟩ :=
+    exists_uniform_integrable_nonpositive_insertion_corrections hh hγ0 hα δ hδ
+  let B : ℕ → ℝ := fun n => C.toReal *
+    Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * (1/2))
+  have hB : Summable B := by
+    exact (summable_nat_add_iff 1).2
+      ((LatticeProb.Gauss.summable_exp_log_dyadicScale_mul (by norm_num : (0 : ℝ) < 1/2)).mul_left C.toReal)
+  refine ⟨B, hB, fun n => mul_nonneg ENNReal.toReal_nonneg (Real.exp_pos _).le, ?_⟩
+  intro x n
+  have hc := ae_nonpositive_insertion_correction_lintegral hh hγ0.le hα δ hδ
+  let μ := (planarBrownianMotion x).prod P
+  have hbound := hbound x
+  have he : 0 < (2 : ℝ)⁻¹ ^ (n+1) := by positivity
+  have heone : (2 : ℝ)⁻¹ ^ (n+1) ≤ 1 := by
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  have hq : 0 ≤ -γ * α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ0.le) hα
+  have hweight : ((2 : ℝ)⁻¹ ^ (n+1)) ^ (-γ*α) ≤ 1 := Real.rpow_le_one he.le heone hq
+  have hnonneg : 0 ≤ᵐ[μ] nonpositiveInsertionCorrection hcirc γ α (δ n) n := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hc] with q hq
+    exact (hq q.1 n).1
+  have hi := (hbound n).1
+  have hlin := (hbound n).2
+  have hrhs : ENNReal.ofReal (((2 : ℝ)⁻¹ ^ (n+1)) ^ (-γ*α)) *
+      ((ENNReal.ofReal ((2 : ℝ)⁻¹ ^ (n+1))) ^ (1/2 : ℝ) * C) < ∞ :=
+    ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+      (ENNReal.mul_lt_top (ENNReal.rpow_lt_top_of_nonneg (by norm_num) ENNReal.ofReal_ne_top) hC)
+  have hreal := ENNReal.toReal_mono hrhs.ne hlin
+  rw [← ofReal_integral_eq_lintegral_ofReal hi hnonneg, ENNReal.toReal_ofReal
+    (integral_nonneg_of_ae hnonneg)] at hreal
+  have hn : (∫ q, |nonpositiveInsertionCorrection hcirc γ α (δ n) n q| ∂μ) =
+      ∫ q, nonpositiveInsertionCorrection hcirc γ α (δ n) n q ∂μ := by
+    apply integral_congr_ae
+    filter_upwards [hnonneg] with q hq
+    exact abs_of_nonneg hq
+  refine ⟨hi, ?_⟩
+  rw [hn]
+  calc
+    _ ≤ _ := hreal
+    _ = (((2 : ℝ)⁻¹ ^ (n+1)) ^ (-γ*α)) *
+        ((((2 : ℝ)⁻¹ ^ (n+1)) ^ (1/2 : ℝ)) * C.toReal) := by
+      rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ← ENNReal.toReal_rpow,
+        ENNReal.toReal_ofReal he.le, ENNReal.toReal_ofReal (Real.rpow_nonneg he.le _)]
+    _ ≤ 1 * ((((2 : ℝ)⁻¹ ^ (n+1)) ^ (1/2 : ℝ)) * C.toReal) := by
+      gcongr
+    _ = B n := by
+      rw [Real.rpow_def_of_pos he]
+      dsimp [B]
+      ring
+
+
+/-- Actual nonpositive inserted unit-time increments have summable
+annealed bounds shared by all Brownian starting points. -/
+theorem exists_uniform_summable_annealed_nonpositive_inserted_inner_increments
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hα : α ≤ 0)
+    (δ : ℕ → ℝ) (hδ : ∀ n, δ n ≤ 1/2) :
+    ∃ A : ℕ → ℝ, Summable A ∧ (∀ n, 0 ≤ A n) ∧ ∀ x : ℂ, ∀ n,
+      Integrable (nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n)
+        ((planarBrownianMotion x).prod P) ∧
+      (∫ q, |nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n q|
+        ∂((planarBrownianMotion x).prod P)) ≤ A n := by
+  have := hh.isProbabilityMeasure
+  let g : ℕ → ℂ → ℝ := fun n => {z : ℂ | ‖z‖ < δ n}.indicator
+    (fun z => (max (((2 : ℝ)⁻¹ ^ (n+1))/2) ‖z‖) ^ (-γ*α))
+  obtain ⟨A, hA, hA0, hinc⟩ :=
+    exists_uniform_summable_annealed_nonpositive_weighted_increments hh hγ0 hγ2 hα δ hδ
+  obtain ⟨B, hB, hB0, hcorr⟩ :=
+    exists_uniform_summable_annealed_nonpositive_insertion_corrections hh hγ0 hα δ hδ
+  have heq := ae_nonpositive_inserted_inner_time_increment_eq hh hγ0.le hα δ hδ
+  refine ⟨fun n => A n + B n, hA.add hB, fun n => add_nonneg (hA0 n) (hB0 n), ?_⟩
+  intro x n
+  let μ := (planarBrownianMotion x).prod P
+  have heqprod : ∀ᵐ q ∂μ, ∀ n,
+      nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n q =
+        weightedInnerZeroTimeIncrement hcirc γ (g n) n q -
+          nonpositiveInsertionCorrection hcirc γ α (δ n) n q := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae heq] with q hq n
+    exact hq q.1 n
+  have hW := (hinc x n).1
+  have hV := (hcorr x n).1
+  have hI : Integrable (nonpositiveInsertedInnerTimeIncrement hcirc γ α (δ n) n) μ := by
+    apply (hW.sub hV).congr
+    filter_upwards [heqprod] with q hq
+    exact (hq n).symm
+  refine ⟨hI, ?_⟩
+  calc
+    _ ≤ ∫ q, (|weightedInnerZeroTimeIncrement hcirc γ (g n) n q| +
+        |nonpositiveInsertionCorrection hcirc γ α (δ n) n q|) ∂μ := by
+      apply integral_mono_ae hI.abs (hW.abs.add hV.abs)
+      filter_upwards [heqprod] with q hq
+      rw [hq n]
+      exact abs_sub _ _
+    _ = (∫ q, |weightedInnerZeroTimeIncrement hcirc γ (g n) n q| ∂μ) +
+        (∫ q, |nonpositiveInsertionCorrection hcirc γ α (δ n) n q| ∂μ) :=
+      integral_add hW.abs hV.abs
+    _ ≤ _ := add_le_add (hinc x n).2 (hcorr x n).2
+
+
 end HarmonicBalls
