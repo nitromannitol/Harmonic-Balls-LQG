@@ -2925,4 +2925,75 @@ theorem lintegral_planarBrownianMotion_rescaled_occupation_rpow (x z : ℂ) (c :
       rw [← lintegral_map hF (continuous_scaledCenteredPlanarPath x c).measurable,
         planarBrownianMotion_map_scaledCenteredPlanarPath x hc.ne']
 
+/-- Brownian scaling bounds annular square occupations by reference-square occupations. -/
+theorem lintegral_annularSquare_occupation_rpow_le_rescaled (x : ℂ) {r : ℝ} (hr : 0 < r) (i : ℤ × ℤ) (a u v : ℝ)
+    (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ) (q : ℝ) (hq : 0 ≤ q) :
+    let c : ℝ≥0 := ⟨(4 * r) ^ 2, by positivity⟩
+    let z := LatticeProb.dyadicSquareCentre r i
+    let ψ := LatticeProb.LQG.lqgSquare.indicator φ
+    (∫⁻ b, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+      φ ((b t.toNNReal - z) / (4 * r : ℝ))) ^ q ∂planarBrownianMotion x) ≤
+    (ENNReal.ofReal c) ^ q * ∫⁻ b,
+      (∫⁻ s in (fun s : ℝ => (c : ℝ) * s) ⁻¹' Ioc u v,
+        ψ (b s.toNNReal + (x - z) / (Real.sqrt c : ℂ))) ^ q
+      ∂planarBrownianMotion 0 := by
+  classical
+  let c : ℝ≥0 := ⟨(4 * r) ^ 2, by positivity⟩
+  let z := LatticeProb.dyadicSquareCentre r i
+  let ψ := LatticeProb.LQG.lqgSquare.indicator φ
+  have hc : 0 < c := by
+    change (0 : ℝ) < (4 * r) ^ 2
+    positivity
+  have hscale : Real.sqrt (c : ℝ) = 4 * r := by
+    change Real.sqrt ((4 * r) ^ 2) = 4 * r
+    exact Real.sqrt_sq (by positivity : 0 ≤ 4 * r)
+  have hQ : MeasurableSet LatticeProb.LQG.lqgSquare := by
+    apply IsClosed.measurableSet
+    have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+    have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+    exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+  have hψ : Measurable ψ := hφ.indicator hQ
+  calc
+    _ ≤ ∫⁻ b, (∫⁻ t in Ioc u v,
+        ψ ((b t.toNNReal - z) / (Real.sqrt c : ℂ))) ^ q ∂planarBrownianMotion x := by
+      apply lintegral_mono
+      intro b
+      apply ENNReal.rpow_le_rpow _ hq
+      calc
+        _ = ∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+            ψ ((b t.toNNReal - z) / (Real.sqrt c : ℂ)) := by
+          apply lintegral_congr_ae
+          filter_upwards [ae_restrict_mem ((measurableSet_annularSquareTimeSet b a r i).inter measurableSet_Ioc)] with t ht
+          rw [hscale]
+          exact (Set.indicator_of_mem (dyadicSquare_rescaled_mem_lqgSquare hr ht.1.1) φ).symm
+        _ ≤ _ := lintegral_mono_set inter_subset_right
+    _ = _ := lintegral_planarBrownianMotion_rescaled_occupation_rpow x z c hc (Ioc u v)
+      measurableSet_Ioc ψ hψ q hq
+
+/-- The circle-average field preserves the annular square occupation bound after averaging. -/
+theorem lintegral_field_annularSquare_occupation_rpow_le_rescaled {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {δ : ℝ} (hδ : 0 < δ) (γ : ℝ) (x : ℂ) {r : ℝ} (hr : 0 < r)
+    (i : ℤ × ℤ) (a u v : ℝ) (q : ℝ) (hq : 0 ≤ q) :
+    let c : ℝ≥0 := ⟨(4 * r) ^ 2, by positivity⟩
+    let z := LatticeProb.dyadicSquareCentre r i
+    let φ : Ω → ℂ → ℝ≥0∞ := fun ω w => ENNReal.ofReal
+      (Real.exp (γ * hcirc ω δ w - γ ^ 2 * (-Real.log δ) / 2))
+    (∫⁻ ω, ∫⁻ b, (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+      φ ω ((b t.toNNReal - z) / (4 * r : ℝ))) ^ q ∂planarBrownianMotion x ∂P) ≤
+    ∫⁻ ω, (ENNReal.ofReal c) ^ q * ∫⁻ b,
+      (∫⁻ s in (fun s : ℝ => (c : ℝ) * s) ⁻¹' Ioc u v,
+        (LatticeProb.LQG.lqgSquare.indicator (φ ω))
+          (b s.toNNReal + (x - z) / (Real.sqrt c : ℂ))) ^ q
+      ∂planarBrownianMotion 0 ∂P := by
+  apply lintegral_mono_ae
+  filter_upwards [hh.ae_continuous_circle_fixed hδ] with ω hω
+  have hφ : Measurable (fun w : ℂ => ENNReal.ofReal
+      (Real.exp (γ * hcirc ω δ w - γ ^ 2 * (-Real.log δ) / 2))) := by
+    apply Measurable.ennreal_ofReal
+    apply Continuous.measurable
+    fun_prop
+  exact lintegral_annularSquare_occupation_rpow_le_rescaled x hr i a u v _ hφ q hq
+
 end HarmonicBalls
