@@ -1836,4 +1836,169 @@ theorem exists_lintegral_prod_annular_shifted_mesh_max_le
   exact lintegral_iSup_le_mesh_rpow_of_aemeasurable (P.prod (planarBrownianMotion x)) hm X hX
     (by norm_num : (1 : ℝ) ≤ 2) C hcell
 
+/-- A cell of a shifted annular clock is the corresponding cell on the
+original path. -/
+theorem stoppedAnnularClock_shift_sub_ofReal_eq_lintegral
+    (f : ℂ → ℝ) (hf : Continuous f) (hf0 : ∀ z, 0 ≤ f z) (δ : ℝ)
+    (b : ContinuousPath ℂ) (u : ℝ≥0) {a c : ℝ} (ha : 0 ≤ a) (hac : a ≤ c) (hc : c ≤ 1) :
+    ENNReal.ofReal (stoppedAnnularClock f δ (fun _ => c.toNNReal) (ContinuousPath.shift u b) -
+      stoppedAnnularClock f δ (fun _ => a.toNNReal) (ContinuousPath.shift u b)) =
+    ∫⁻ s in Ioc ((u : ℝ) + a) ((u : ℝ) + c), ENNReal.ofReal
+      ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal)) := by
+  let g : ℝ → ℝ := fun t =>
+    {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b t.toNNReal)
+  let q : ℝ → ℝ := fun t =>
+    {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f ((ContinuousPath.shift u b) t.toNNReal)
+  have hq0 (t : ℝ) : 0 ≤ q t := by
+    simp only [q, Set.indicator_apply]
+    split_ifs <;> simp_all
+  have hg0 (t : ℝ) : 0 ≤ g t := by
+    simp only [g, Set.indicator_apply]
+    split_ifs <;> simp_all
+  have hqint : IntervalIntegrable q volume a c :=
+    intervalIntegrable_annular_density f hf δ (ContinuousPath.shift u b) a c
+  have hgint : IntervalIntegrable g volume ((u : ℝ) + a) ((u : ℝ) + c) :=
+    intervalIntegrable_annular_density f hf δ b _ _
+  rw [(stoppedAnnularClock_sub_nonneg_and_ofReal_eq_lintegral f hf hf0 δ
+    (ContinuousPath.shift u b) ha hac hc).2]
+  change (∫⁻ t in Ioc a c, ENNReal.ofReal (q t)) =
+    ∫⁻ t in Ioc ((u : ℝ) + a) ((u : ℝ) + c), ENNReal.ofReal (g t)
+  rw [← ofReal_integral_eq_lintegral_ofReal hqint.1 (Filter.Eventually.of_forall hq0),
+    ← ofReal_integral_eq_lintegral_ofReal hgint.1 (Filter.Eventually.of_forall hg0)]
+  congr 1
+  rw [← intervalIntegral.integral_of_le hac,
+    ← intervalIntegral.integral_of_le (show (u : ℝ) + a ≤ (u : ℝ) + c by linarith)]
+  calc
+    (∫ t in a..c, q t) = ∫ t in a..c, g ((u : ℝ) + t) := by
+      apply intervalIntegral.integral_congr
+      intro t ht
+      rw [uIcc_of_le hac] at ht
+      simp only [q, g, ContinuousPath.shift_apply,
+        Real.toNNReal_add u.coe_nonneg (ha.trans ht.1), Real.toNNReal_coe]
+    _ = _ := intervalIntegral.integral_comp_add_left g (u : ℝ)
+
+/-- A shifted annular clock difference is controlled by its grid values and
+by the maximum original-path mesh-cell mass. -/
+theorem lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_grid_and_mesh
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) (u : ℝ≥0) (γ α δ : ℝ)
+    {r ε : ℝ} (hr : 0 < r) (hε : 0 < ε) (m : ℕ) (hm : 0 < m) :
+    let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+      stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) δ
+        (fun _ => t.toNNReal) (ContinuousPath.shift u p.2)
+    (∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |F r p t - F ε p t|
+      ∂(P.prod (planarBrownianMotion x))) ≤
+      (∑ j ∈ Finset.range (m + 1), ∫⁻ p, ENNReal.ofReal
+        |F r p (j / (m : ℝ)) - F ε p (j / (m : ℝ))|
+        ∂(P.prod (planarBrownianMotion x))) +
+      ∫⁻ p : Ω × ContinuousPath ℂ, (⨆ j : Fin m,
+        ∫⁻ t in Ioc ((u : ℝ) + (j : ℝ) / m) ((u : ℝ) + ((j : ℝ) + 1) / m),
+          ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+            ε^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z))
+                (p.2 t.toNNReal))) ∂(P.prod (planarBrownianMotion x)) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  dsimp only
+  let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+    stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) δ
+        (fun _ => t.toNNReal) (ContinuousPath.shift u p.2)
+  have hmono : ∀ᵐ p ∂(P.prod (planarBrownianMotion x)),
+      MonotoneOn (F r p) (Icc 0 1) ∧ MonotoneOn (F ε p) (Icc 0 1) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion x)).ae
+        (ae_stoppedAnnularClock_radius_monotone_and_cell hh γ α δ)] with p hp
+    exact ⟨(hp r hr (ContinuousPath.shift u p.2)).1, (hp ε hε (ContinuousPath.shift u p.2)).1⟩
+  have hgrid (j : ℕ) : AEMeasurable (fun p => |F r p (j / (m : ℝ)) -
+      F ε p (j / (m : ℝ))|) (P.prod (planarBrownianMotion x)) := by
+    let τ : ContinuousPath ℂ → ℝ≥0 := fun _ => ((j : ℝ) / m).toNNReal
+    obtain ⟨G, hGm, hGae⟩ := exists_measurable_annularRadiusIncrementSample hh hε hr γ α δ τ measurable_const
+    have hmG : Measurable (fun p : Ω × ContinuousPath ℂ => |G (ContinuousPath.shift u p.2, p.1)|) :=
+      (hGm.comp (((ContinuousPath.measurable_shift_fixed u).comp measurable_snd).prodMk measurable_fst)).abs
+    apply hmG.aemeasurable.congr
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae hGae,
+      (Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae
+        (ae_stoppedAnnularClock_sub_eq_annularRadiusIncrementSample hh γ α δ)] with p hp hsub
+    change |G (ContinuousPath.shift u p.2, p.1)| =
+      |stoppedAnnularClock _ δ τ (ContinuousPath.shift u p.2) -
+       stoppedAnnularClock _ δ τ (ContinuousPath.shift u p.2)|
+    rw [hp, hsub ε r hε hr τ (ContinuousPath.shift u p.2)]
+  have hcell : (fun p : Ω × ContinuousPath ℂ => ⨆ j : Fin m,
+      ENNReal.ofReal (F ε p (((j : ℝ) + 1) / m) - F ε p ((j : ℝ) / m))) =ᵐ[
+        P.prod (planarBrownianMotion x)] (fun p => ⨆ j : Fin m,
+      ∫⁻ t in Ioc ((u : ℝ) + (j : ℝ) / m) ((u : ℝ) + ((j : ℝ) + 1) / m), ENNReal.ofReal
+        ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          ε^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z))
+              (p.2 t.toNNReal))) := by
+    obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae hHae,
+      (Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae
+        (ae_recentered_inserted_circle_average hh α)] with p hp hrec
+    let f : ℂ → ℝ := fun z => ε^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)
+    have hc : Continuous (hcirc p.1 ε) := by
+      rw [← funext (hp ε)]
+      exact hHc p.1 ε hε
+    have hf : Continuous f := continuous_inserted_density_at_radius (hcirc p.1) γ α ε hε hc
+      (fun z => hrec ε z hε)
+    have hf0 (z : ℂ) : 0 ≤ f z := mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le
+    apply iSup_congr
+    intro j
+    have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
+    have hjm : (j : ℝ) + 1 ≤ m := by exact_mod_cast j.isLt
+    exact stoppedAnnularClock_shift_sub_ofReal_eq_lintegral f hf hf0 δ p.2 u
+      (by positivity) (div_le_div_of_nonneg_right (by linarith) hm0.le) ((div_le_one hm0).2 hjm)
+  have h := lintegral_iSup_abs_sub_le_grid_and_mesh (P.prod (planarBrownianMotion x))
+    (F r) (F ε) hm hmono hgrid
+  rw [lintegral_congr_ae hcell] at h
+  exact h
+
+/-- The expected same-shell clock supremum on a deterministic shifted unit
+interval has a time-mesh bound. -/
+theorem exists_lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_rate
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) (u : ℝ≥0)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ (θ d M β : ℝ) (C : ℝ≥0∞), γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧ 0 < β ∧ C < ∞ ∧
+      ∀ {r ε : ℝ}, 0 < r → 0 < ε → ε ≤ 1/2 → ε ≤ δ → r ≤ ε → ε / 2 ≤ r →
+      ∀ (m : ℕ), 0 < m →
+      let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) δ
+          (fun _ => t.toNNReal) (ContinuousPath.shift u p.2)
+      (∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |F r p t - F ε p t|
+        ∂(P.prod (planarBrownianMotion x))) ≤
+      (m + 1 : ℝ≥0∞) * ENNReal.ofReal (
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) + C * (m : ℝ≥0∞)^(-β) := by
+  have hγlt : γ < 2 := by nlinarith [sq_nonneg (γ - 1)]
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    lintegral_prod_shift_stoppedAnnularClock_radius_sub_le_uniform_horizon hh hγ0 hγlt α x u hδ
+  obtain ⟨C, β, hC, hβ, hmesh⟩ :=
+    exists_lintegral_prod_annular_shifted_mesh_max_le hh x (ne_of_gt hγ0) hγ2 α δ
+  refine ⟨θ, d, M, β, C, hγθ, hθ, hd0, hd2, hp, hM, hβ, hC, ?_⟩
+  intro r ε hr hε hεhalf hεδ hrε hr2 m hm
+  dsimp only
+  refine (lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_grid_and_mesh
+    hh x u γ α δ hr hε m hm).trans ?_
+  refine (add_le_add le_rfl (hmesh hε hεδ u u.coe_nonneg m hm)).trans (add_le_add ?_ le_rfl)
+  calc
+    _ ≤ ∑ _j ∈ Finset.range (m + 1), ENNReal.ofReal (
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+      apply Finset.sum_le_sum
+      intro j hj
+      exact hb (fun _ => ((j : ℝ) / m).toNNReal) measurable_const ε r
+        hε hεhalf hεδ hr hrε hr2
+    _ = _ := by simp
+
 end HarmonicBalls
