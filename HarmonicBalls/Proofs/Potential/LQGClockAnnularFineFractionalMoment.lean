@@ -3,6 +3,7 @@ import HarmonicBalls.Proofs.Brownian.PlanarHeatFeller
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
 import HarmonicBalls.Proofs.Potential.BrownianSharpLogOccupation
 import HarmonicBalls.Proofs.Sec6.BrownianScaling
+import HarmonicBalls.Proofs.Sec6.LogAnnulusHitting
 import LatticeProb.LQG.LQGMassMoment
 import LatticeProb.LQG.LQGMassSquares
 import LatticeProb.LQG.LQGSubSquareGaussian
@@ -4488,5 +4489,76 @@ theorem lintegral_field_brownian_time_shifted_occupation_rpow_le_log_kernel
       gcongr
       exact planarBrownianMotion_time_shifted_square_occupation_rpow_le x z s c hc h hcell n hr hcover ha
         (by linarith) hqk
+
+
+/-- Hitting the inner disc before leaving the outer disc forces inner annulus exit. -/
+theorem hit_closedBall_before_outer_exit_subset_inner_exit (a : ℂ) {r R : ℝ} :
+    {ω : ContinuousPath ℂ | ∃ t : ℝ≥0, ‖ω t - a‖ ≤ r ∧
+      (t : ℝ≥0∞) < ContinuousPath.exitTime (ball a R) ω} ⊆
+    {ω | ‖ω ((ContinuousPath.exitTime (annulus a r R) ω).toNNReal) - a‖ ≤ r} := by
+  intro ω ⟨t, ht, hout⟩
+  have hnot : ω t ∉ annulus a r R := by
+    simp only [annulus, Set.mem_sdiff, mem_closedBall, dist_eq_norm, not_and, not_not]
+    intro _
+    exact ht
+  have htime : ContinuousPath.exitTime (annulus a r R) ω ≤ (t : ℝ≥0∞) :=
+    ContinuousPath.exitTime_le_of_notMem _ ω t hnot
+  have hfin : ContinuousPath.exitTime (annulus a r R) ω ≠ ∞ :=
+    ne_top_of_le_ne_top ENNReal.coe_ne_top htime
+  have hlt : ContinuousPath.exitTime (annulus a r R) ω <
+      ContinuousPath.exitTime (ball a R) ω := htime.trans_lt hout
+  have hin : ω ((ContinuousPath.exitTime (annulus a r R) ω).toNNReal) ∈ ball a R := by
+    apply ContinuousPath.mem_of_lt_exitTime
+    simpa only [ENNReal.coe_toNNReal hfin] using hlt
+  have hnot' : ω ((ContinuousPath.exitTime (annulus a r R) ω).toNNReal) ∉ annulus a r R :=
+    coordinate_exitTime_notMem (isOpen_ball.sdiff isClosed_closedBall) ω hfin
+  have hclosed : ω ((ContinuousPath.exitTime (annulus a r R) ω).toNNReal) ∈ closedBall a r := by
+    by_contra h
+    exact hnot' ⟨hin, h⟩
+  change ‖ω ((ContinuousPath.exitTime (annulus a r R) ω).toNNReal) - a‖ ≤ r
+  simpa only [mem_closedBall, dist_eq_norm] using hclosed
+
+/-- A uniform logarithmic bound for an inner-disc return before an outer exit. -/
+theorem planarBrownian_hit_closedBall_before_exit_le (a : ℂ) {r b R : ℝ}
+    (hr : 0 < r) (hrb : r < b) (hbR : b < R) {x : ℂ}
+    (hbx : b ≤ ‖x - a‖) (hxR : ‖x - a‖ < R) :
+    planarBrownianMotion x {ω : ContinuousPath ℂ | ∃ t : ℝ≥0,
+      ‖ω t - a‖ ≤ r ∧ (t : ℝ≥0∞) < ContinuousPath.exitTime (ball a R) ω} ≤
+      ENNReal.ofReal (Real.log R - Real.log b) /
+        ENNReal.ofReal (Real.log R - Real.log r) := by
+  have hrR : r < R := hrb.trans hbR
+  have hx : x ∈ annulus a r R := by
+    simp only [annulus, Set.mem_sdiff, mem_ball, mem_closedBall, not_le, dist_eq_norm]
+    exact ⟨hxR, hrb.trans_le hbx⟩
+  have hlog : clippedAnnulusLog a r R x = Real.log ‖x - a‖ := by
+    simp only [clippedAnnulusLog, min_eq_right hxR.le, max_eq_right (hrb.le.trans hbx)]
+  calc
+    _ ≤ planarBrownianMotion x {ω : ContinuousPath ℂ |
+        ‖ω ((ContinuousPath.exitTime (annulus a r R) ω).toNNReal) - a‖ ≤ r} :=
+      measure_mono (hit_closedBall_before_outer_exit_subset_inner_exit a)
+    _ ≤ ENNReal.ofReal (Real.log R - clippedAnnulusLog a r R x) /
+        ENNReal.ofReal (Real.log R - Real.log r) :=
+      planarBrownian_exit_annulus_inner_le a hr hrR hx
+    _ ≤ _ := by
+      rw [hlog]
+      apply ENNReal.div_le_div_right _ _
+      apply ENNReal.ofReal_le_ofReal
+      have := Real.log_le_log (hr.trans hrb) hbx
+      linarith
+
+
+/-- The uniform disc-return bound has a strictly positive escape gap. -/
+theorem log_disc_return_ratio_lt_one {r b R : ℝ} (hr : 0 < r) (hrb : r < b)
+    (hbR : b < R) :
+    ENNReal.ofReal (Real.log R - Real.log b) /
+      ENNReal.ofReal (Real.log R - Real.log r) < 1 := by
+  have hd : 0 < Real.log R - Real.log r :=
+    sub_pos.mpr (Real.log_lt_log hr (hrb.trans hbR))
+  rw [← ENNReal.ofReal_div_of_pos hd]
+  have hl : (Real.log R - Real.log b) / (Real.log R - Real.log r) < 1 := by
+    rw [div_lt_one hd]
+    have hlog := Real.log_lt_log hr hrb
+    linarith
+  exact ENNReal.ofReal_lt_one.mpr hl
 
 end HarmonicBalls
