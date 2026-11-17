@@ -72,4 +72,35 @@ theorem PfefferIsLscMetric.eq_of_basis_inf_eq {D E : ℂ → ℂ → ℝ}
   simpa only [ENNReal.toReal_ofReal (hD.2.1 x y),
     ENNReal.toReal_ofReal (hE.2.1 x y)] using ht
 
+
+/-- Measurable basis infima give joint evaluation of a nonnegative lower
+semicontinuous family on the full plane-pair space. -/
+theorem measurable_lscMetric_of_basis_inf {Ω : Type*} [MeasurableSpace Ω]
+    {D : Ω → ℂ → ℂ → ℝ} (hD : ∀ ω, PfefferIsLscMetric (D ω))
+    (hcoord : ∀ U : TopologicalSpace.countableBasis (ℂ × ℂ),
+      Measurable fun ω => sInf (Set.image (fun p : ℂ × ℂ =>
+        ENNReal.ofReal (D ω p.1 p.2)) U.1)) :
+    Measurable fun q : Ω × (ℂ × ℂ) => D q.1 q.2.1 q.2.2 := by
+  classical
+  let : Countable (TopologicalSpace.countableBasis (ℂ × ℂ)) :=
+    (TopologicalSpace.countable_countableBasis (ℂ × ℂ)).to_subtype
+  have hm : Measurable fun q : Ω × (ℂ × ℂ) => ⨆ U : TopologicalSpace.countableBasis (ℂ × ℂ),
+      if q.2 ∈ U.1 then sInf (Set.image (fun p : ℂ × ℂ =>
+        ENNReal.ofReal (D q.1 p.1 p.2)) U.1) else 0 := by
+    refine Measurable.iSup fun U => Measurable.ite ?_ ((hcoord U).comp measurable_fst) measurable_const
+    exact (TopologicalSpace.isOpen_of_mem_countableBasis U.2).measurableSet.preimage measurable_snd
+  have heq : (fun q : Ω × (ℂ × ℂ) => ENNReal.ofReal (D q.1 q.2.1 q.2.2)) =
+      fun q => ⨆ U : TopologicalSpace.countableBasis (ℂ × ℂ),
+        if q.2 ∈ U.1 then sInf (Set.image (fun p : ℂ × ℂ =>
+          ENNReal.ofReal (D q.1 p.1 p.2)) U.1) else 0 := by
+    funext q
+    rw [(hD q.1).ofReal_eq_iSup_basis_inf q.2.1 q.2.2]
+    apply iSup_congr
+    intro U
+    by_cases h : q.2 ∈ U.1 <;> simp [h]
+  have hm2 : Measurable (fun q : Ω × (ℂ × ℂ) =>
+      ENNReal.ofReal (D q.1 q.2.1 q.2.2)) := heq ▸ hm
+  have hreal := hm2.ennreal_toReal
+  simpa only [ENNReal.toReal_ofReal ((hD _).2.1 _ _)] using hreal
+
 end HarmonicBalls
