@@ -99,4 +99,59 @@ theorem exists_ae_field_ae_path_continuous_monotone_limit_annularClock_stopped_u
     exists_ae_continuous_monotone_limit_annularClock_stopped_unit hh x hγ hγ2 α hδ hDb
   exact ⟨K, Measure.ae_ae_of_ae_prod hK⟩
 
+/-- Locally uniform limits on bounded time intervals determine one continuous,
+nonnegative and nondecreasing path. -/
+theorem exists_continuous_monotone_limit_of_uniform_on_nat_intervals (A : ℕ → ℝ≥0 → ℝ)
+    (hc : ∀ j, Continuous (A j)) (h0 : ∀ j t, 0 ≤ A j t)
+    (hm : ∀ j, Monotone (A j))
+    (h : ∀ N : ℕ, ∃ G : ℝ≥0 → ℝ, ∀ η : ℝ, 0 < η →
+      ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ N → |A j t - G t| < η) :
+    ∃ F : ℝ≥0 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+      ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+        ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T → |A j t - F t| < η := by
+  classical
+  let F : ℝ≥0 → ℝ := fun t => atTop.limUnder (fun j => A j t)
+  have hlimN (N : ℕ) (G : ℝ≥0 → ℝ)
+      (hG : ∀ η : ℝ, 0 < η → ∀ᶠ j in atTop, ∀ t : ℝ≥0,
+        t ≤ N → |A j t - G t| < η) (t : ℝ≥0) (ht : t ≤ N) :
+      Tendsto (fun j => A j t) atTop (𝓝 (G t)) := by
+    apply Metric.tendsto_nhds.mpr
+    intro η hη
+    filter_upwards [hG η hη] with j hj
+    simpa only [Real.dist_eq] using hj t ht
+  have heq (N : ℕ) (G : ℝ≥0 → ℝ)
+      (hG : ∀ η : ℝ, 0 < η → ∀ᶠ j in atTop, ∀ t : ℝ≥0,
+        t ≤ N → |A j t - G t| < η) (t : ℝ≥0) (ht : t ≤ N) : F t = G t :=
+    (hlimN N G hG t ht).limUnder_eq
+  have hlim (t : ℝ≥0) : Tendsto (fun j => A j t) atTop (𝓝 (F t)) := by
+    obtain ⟨N, hN⟩ := exists_nat_gt (t : ℝ)
+    have ht : t ≤ (N : ℝ≥0) := by exact_mod_cast hN.le
+    obtain ⟨G, hG⟩ := h N
+    rw [heq N G hG t ht]
+    exact hlimN N G hG t ht
+  have hunif (N : ℕ) : TendstoUniformlyOn A F atTop (Iic (N : ℝ≥0)) := by
+    obtain ⟨G, hG⟩ := h N
+    rw [Metric.tendstoUniformlyOn_iff]
+    intro η hη
+    filter_upwards [hG η hη] with j hj t ht
+    rw [heq N G hG t ht, dist_comm, Real.dist_eq]
+    exact hj t ht
+  refine ⟨F, ?_, (fun t => ge_of_tendsto' (hlim t) (fun j => h0 j t)), ?_, ?_⟩
+  · rw [continuous_iff_continuousAt]
+    intro t
+    obtain ⟨N, hN⟩ := exists_nat_gt (t : ℝ)
+    have ht : t < (N : ℝ≥0) := by exact_mod_cast hN
+    have hcont : ContinuousOn F (Iic (N : ℝ≥0)) :=
+      (hunif N).continuousOn (Eventually.of_forall fun j => (hc j).continuousOn).frequently
+    exact hcont.continuousAt (Iic_mem_nhds ht)
+  · intro s t hst
+    exact le_of_tendsto_of_tendsto' (hlim s) (hlim t) (fun j => hm j hst)
+  · intro T η hη
+    obtain ⟨N, hN⟩ := exists_nat_gt (T : ℝ)
+    have hTN : T ≤ (N : ℝ≥0) := by exact_mod_cast hN.le
+    obtain ⟨G, hG⟩ := h N
+    filter_upwards [hG η hη] with j hj t ht
+    rw [heq N G hG t (ht.trans hTN)]
+    exact hj t (ht.trans hTN)
+
 end HarmonicBalls
