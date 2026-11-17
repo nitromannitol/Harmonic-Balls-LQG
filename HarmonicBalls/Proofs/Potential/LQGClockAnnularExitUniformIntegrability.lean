@@ -1964,4 +1964,115 @@ theorem exists_summable_annular_exit_samples {Ω : Type*} [MeasurableSpace Ω] {
       rw [ENNReal.tsum_add, ENNReal.tsum_add]
       exact ENNReal.add_lt_top.mpr ⟨ENNReal.add_lt_top.mpr ⟨hs', ht1⟩, ht2⟩
 
+
+/-- Actual exit increments have summable Brownian norms for almost every field. -/
+theorem ae_summable_brownian_annular_exit_increments {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ N : ℕ, ∀ᵐ ω ∂P, Summable (fun k : ℕ => ∫ b, ‖∫ t in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (dyadicScale (k+N)/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (k+N)/2) z) -
+          (dyadicScale (k+N))^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (k+N)) z))
+            (b t.toNNReal)‖ ∂planarBrownianMotion x) := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨N, F, hFm, hFae, hsum⟩ := exists_summable_annular_exit_samples hh hγ0 hγ2 α x hδ hD hDb
+  have hFi (k : ℕ) : Integrable (F k) ((planarBrownianMotion x).prod P) := by
+    refine ⟨(hFm k).aestronglyMeasurable, ?_⟩
+    rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ (hFm k).enorm.aemeasurable]
+    exact lt_of_le_of_lt (ENNReal.le_tsum (f := fun j : ℕ => ∫⁻ b, ∫⁻ ω, ‖F j (b,ω)‖ₑ ∂P ∂planarBrownianMotion x) k) hsum
+  let g : ℕ → Ω → ℝ := fun k ω => ∫ b, ‖F k (b,ω)‖ ∂planarBrownianMotion x
+  have hg (k : ℕ) : Integrable (g k) P := (hFi k).integral_norm_prod_right
+  have hg0 (k : ℕ) (ω : Ω) : 0 ≤ g k ω := integral_nonneg fun _ => norm_nonneg _
+  have heq (k : ℕ) : (∫⁻ ω, ‖g k ω‖ₑ ∂P) = ∫⁻ b, ∫⁻ ω, ‖F k (b,ω)‖ₑ ∂P ∂planarBrownianMotion x := by
+    calc
+      _ = ENNReal.ofReal (∫ ω, g k ω ∂P) := by
+        rw [ofReal_integral_eq_lintegral_ofReal (hg k) (Filter.Eventually.of_forall (hg0 k))]
+        apply lintegral_congr
+        intro ω
+        exact (Real.enorm_eq_ofReal (hg0 k ω))
+      _ = ENNReal.ofReal (∫ p, ‖F k p‖ ∂((planarBrownianMotion x).prod P)) := by
+        congr 1
+        exact (integral_prod_symm (fun p => ‖F k p‖) (hFi k).norm).symm
+      _ = _ := by
+        rw [ofReal_integral_norm_eq_lintegral_enorm (hFi k), lintegral_prod _ (hFm k).enorm.aemeasurable]
+  have hfinite : (∫⁻ ω, ∑' k, ‖g k ω‖ₑ ∂P) ≠ ⊤ := by
+    rw [lintegral_tsum (fun k => (hg k).aestronglyMeasurable.enorm)]
+    simp_rw [heq]
+    exact hsum.ne
+  have hmeas : AEMeasurable (fun ω => ∑' k, ‖g k ω‖ₑ) P :=
+    AEMeasurable.tsum fun k => (hg k).aestronglyMeasurable.enorm
+  refine ⟨N, ?_⟩
+  filter_upwards [ae_lt_top' hmeas hfinite, ae_all_iff.mpr hFae] with ω hω hFω
+  have hs : Summable (fun k => ‖g k ω‖) := tsum_enorm_ne_top_iff_summable_norm.mp hω.ne
+  apply hs.congr
+  intro k
+  rw [Real.norm_eq_abs, abs_of_nonneg (hg0 k ω)]
+  unfold g
+  apply integral_congr_ae
+  filter_upwards with b
+  rw [hFω k b]
+
+
+/-- Actual-exit annular clocks are uniformly integrable for almost every field. -/
+theorem ae_uniformIntegrable_annular_clock_exit {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∀ᵐ ω ∂P, UniformIntegrable (fun k : ℕ => fun b : ContinuousPath ℂ =>
+      ∫ s in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (dyadicScale k)^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z))
+          (b s.toNNReal)) 1 (planarBrownianMotion x) := by
+  obtain ⟨N, hsum⟩ := ae_summable_brownian_annular_exit_increments hh hγ0 hγ2 α x hδ hD hDb
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hcont : ∀ᵐ ω ∂P, ∀ r, 0 < r → Continuous (hcirc ω r) := by
+    filter_upwards [hHae] with ω hω r hr
+    rw [← funext (hω r)]
+    exact hHc ω r hr
+  filter_upwards [hsum, hcont, ae_recentered_inserted_circle_average hh α,
+    ae_integrable_annular_clock_exit hh hD hDb γ α δ x] with ω hsum hcont hrec hint
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let Z : ℕ → ℂ → ℝ := fun k z => (dyadicScale k)^(γ^2/2) *
+    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z)
+  have hc (k : ℕ) : Continuous (Z k) := by
+    have hr := dyadicScale_pos k
+    have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z) =
+        fun z => hcirc ω (dyadicScale k) z - hcirc ω 1 0 - α * Real.log (max (dyadicScale k) ‖z‖) := by
+      funext z
+      exact (hrec _ z hr).symm
+    have hc' : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z) := by
+      rw [heq]
+      exact ((hcont _ hr).sub continuous_const).sub (continuous_const.mul
+        ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hr).ne')))
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc'))
+  apply LatticeProb.Prob.uniformIntegrable_of_summable_integral_norm_sub
+  · exact hint
+  · let f : ℕ → ℝ := fun k => ∫ b, ‖∫ t in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal,
+        A.indicator (fun z => (dyadicScale k / 2)^(γ^2/2) *
+          Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k / 2) z) -
+          (dyadicScale k)^(γ^2/2) *
+          Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z))
+          (b t.toNNReal)‖ ∂planarBrownianMotion x
+    change Summable (fun k => f (k+N)) at hsum
+    have hs : Summable f := (summable_nat_add_iff N).1 hsum
+    apply hs.congr
+    intro k
+    apply integral_congr_ae
+    filter_upwards with b
+    have hscale : dyadicScale (k+1) = dyadicScale k / 2 := by
+      simp only [dyadicScale, pow_succ]
+      ring
+    have hi1 := intervalIntegrable_annular_density (Z (k+1)) (hc (k+1)) δ b 0 (ContinuousPath.exitTime D b).toReal
+    have hi0 := intervalIntegrable_annular_density (Z k) (hc k) δ b 0 (ContinuousPath.exitTime D b).toReal
+    rw [← intervalIntegral.integral_sub hi1 hi0]
+    congr 1
+    apply intervalIntegral.integral_congr
+    intro t ht
+    simp only [A, Z, Set.indicator_apply]
+    split_ifs <;> simp [hscale]
+
 end HarmonicBalls
