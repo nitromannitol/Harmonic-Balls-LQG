@@ -270,7 +270,7 @@ end LogInsertion
 
 section Kernel
 
-lemma wholePlaneCov_eq_of_ne {x y : ℂ} (hxy : x ≠ y) :
+lemma wholePlaneCov_eq_logMaxOne_of_ne {x y : ℂ} (hxy : x ≠ y) :
     wholePlaneCov x y = logMaxOne x + logMaxOne y - Real.log ‖x - y‖ := by
   have hx : 0 < max 1 ‖x‖ := lt_of_lt_of_le zero_lt_one (le_max_left _ _)
   have hy : 0 < max 1 ‖y‖ := lt_of_lt_of_le zero_lt_one (le_max_left _ _)
@@ -278,12 +278,12 @@ lemma wholePlaneCov_eq_of_ne {x y : ℂ} (hxy : x ≠ y) :
   unfold wholePlaneCov logMaxOne
   rw [max_comm ‖x‖ 1, max_comm ‖y‖ 1, Real.log_div (mul_pos hx hy).ne' hd.ne', Real.log_mul hx.ne' hy.ne']
 
-lemma circleAverage_wholePlaneCov (w : ℂ) {r : ℝ} (hr : 0 < r) (x : ℂ) :
+lemma circleAverage_wholePlaneCov_eq_circleKernelMean (w : ℂ) {r : ℝ} (hr : 0 < r) (x : ℂ) :
     Real.circleAverage (fun y => wholePlaneCov x y) w r = circleKernelMean w r x := by
   have hcod : (fun y => wholePlaneCov x y) =ᶠ[codiscreteWithin (sphere w |r|)]
       fun y => (logMaxOne x + logMaxOne y) - Real.log ‖x - y‖ := by
     filter_upwards [compl_singleton_mem_codiscreteWithin (s := sphere w |r|) x] with y hy
-    exact wholePlaneCov_eq_of_ne (Set.mem_compl_singleton_iff.1 hy).symm
+    exact wholePlaneCov_eq_logMaxOne_of_ne (Set.mem_compl_singleton_iff.1 hy).symm
   rw [Real.circleAverage_congr_codiscreteWithin hcod hr.ne']
   have hf1 : CircleIntegrable (fun y : ℂ => logMaxOne x + logMaxOne y) w r :=
     circleIntegrable_of_continuousFn (continuous_const.add continuous_logMaxOne) w r
@@ -310,7 +310,7 @@ lemma wholePlaneGFFCov_circle_circle_eq (w : ℂ) {r : ℝ} (hr : 0 < r) :
   show Real.circleAverage (fun x => Real.circleAverage (fun y => wholePlaneCov x y) w r) w r = _
   congr 1
   funext x
-  exact circleAverage_wholePlaneCov w hr x
+  exact circleAverage_wholePlaneCov_eq_circleKernelMean w hr x
 
 lemma circleAverage_circleKernelMean (w : ℂ) {r : ℝ} (hr : 0 < r) :
     Real.circleAverage (circleKernelMean w r) w r =
@@ -341,7 +341,7 @@ lemma integral_circleMollifier_mul_wholePlaneCov {rho : ℂ → ℝ} (hρ : IsLi
   have hae : ∀ᵐ y ∂(volume : Measure ℂ), circleMollifier rho w r e y * wholePlaneCov x y =
       circleMollifier rho w r e y * (logMaxOne x + logMaxOne y - Real.log ‖x - y‖) := by
     filter_upwards [compl_mem_ae_iff.2 (measure_singleton x)] with y hy
-    rw [wholePlaneCov_eq_of_ne (Set.mem_compl_singleton_iff.1 hy).symm]
+    rw [wholePlaneCov_eq_logMaxOne_of_ne (Set.mem_compl_singleton_iff.1 hy).symm]
   rw [integral_congr_ae hae]
   have h1 : Integrable (fun y : ℂ => logMaxOne x * circleMollifier rho w r e y) :=
     (hφc.integrable_of_hasCompactSupport hφs).const_mul _
@@ -476,7 +476,7 @@ lemma tendsto_wholePlaneGFFCov_pairing_circle {rho : ℂ → ℝ} (hρ : IsLiter
     ∫ x : ℂ, circleMollifier rho w r e x * Real.circleAverage (fun y => wholePlaneCov x y) w r
   congr 1
   funext x
-  rw [circleAverage_wholePlaneCov w hr x, mul_comm]
+  rw [circleAverage_wholePlaneCov_eq_circleKernelMean w hr x, mul_comm]
 
 end Limits
 

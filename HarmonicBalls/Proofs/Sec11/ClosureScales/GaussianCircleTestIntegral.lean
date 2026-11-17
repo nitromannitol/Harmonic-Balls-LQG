@@ -136,7 +136,7 @@ lemma integral_circleKernelMean_mul_eq_kernelPairing {φ : ℂ → ℝ} (hφ : I
   have h := (CircleTestFubini.integral_circleAverage_mul_eq
     (g := fun y => wholePlaneCov x y) (locallyIntegrable_wholePlaneCov_right x) hφ hr1').2.2
   have hm : ∀ w : ℂ, Real.circleAverage (fun y => wholePlaneCov x y) w r = circleKernelMean w r x :=
-    fun w => circleAverage_wholePlaneCov w hr x
+    fun w => circleAverage_wholePlaneCov_eq_circleKernelMean w hr x
   simp only [hm] at h
   unfold kernelPairing
   rw [h]
@@ -464,7 +464,7 @@ lemma integral_circle_mul_circle {Ω : Type*} [MeasurableSpace Ω] {P : Measure 
   simp only [GFFObservable.smear]
   congr 1
   funext x
-  exact circleAverage_wholePlaneCov w' hr x
+  exact circleAverage_wholePlaneCov_eq_circleKernelMean w' hr x
 
 /-- The circle-average/pairing covariance: `E[h_r(w) h(ψ)] = ⨍_{∂B_r(w)} kernelPairing ψ`. -/
 lemma integral_circle_mul_pairing {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
