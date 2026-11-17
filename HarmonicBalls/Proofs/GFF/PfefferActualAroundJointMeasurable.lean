@@ -681,4 +681,26 @@ theorem IsWholePlaneGFF.aemeasurable_singular_random_continuous_weyl_around_join
     filter_upwards [hmetric] with ω hm
     exact (hm.weylScaling_continuous_isEuclideanLengthMetric ξ (hf ω)).2
 
+/-- A continuous random Weyl shift of a singular metric has a measurable
+continuous metric representative, equal at all pairs on one field event. -/
+theorem IsWholePlaneGFF.exists_measurable_singular_random_continuous_weyl_metric
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfm : ∀ z, Measurable fun ω => f ω z) :
+    ∃ G : Ω → C(ℂ × ℂ, ℝ), Measurable G ∧
+      (∀ ω, IsEuclideanLengthMetric fun x y => G ω (x, y)) ∧
+      ∀ᵐ ω ∂P, ∀ x y, G ω (x, y) = (weylScaling (D ω) ξ (f ω) x y).toReal := by
+  apply exists_measurable_continuousMap_of_ae_pointwise
+  · intro x y
+    exact hgff.aemeasurable_singular_random_continuous_weyl_point hγ hγ₂ hα hD hf hfm x y
+  · have haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc :=
+      lqgMetricFieldAxiomsUnivFrozen_derived Ω P γ ξ α₀ hC hcirc
+    have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms
+      P γ ξ α₀ hC hcirc D haxioms hgff hγ hγ₂ hα hD
+    filter_upwards [hmetric] with ω hm
+    exact (hm.weylScaling_continuous_isEuclideanLengthMetric ξ (hf ω)).2
+
 end HarmonicBalls
