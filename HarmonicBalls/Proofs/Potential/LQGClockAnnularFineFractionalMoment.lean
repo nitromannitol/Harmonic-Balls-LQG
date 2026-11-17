@@ -1,5 +1,7 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
 import LatticeProb.LQG.LQGMassMoment
+import LatticeProb.LQG.LQGSubSquareGaussian
+import LatticeProb.Prob.GaussKahaneRpow
 
 /-! # Fine-scale moments of inserted circle averages
 
@@ -407,5 +409,38 @@ theorem covariance_circle_le_log_max
     rw [max_eq_right (le_of_not_ge hdist)]
     exact h
 
+
+
+/-- Positive moments of finite weighted circle-average samples on two pieces
+are bounded by those of the independent-piece comparison field. -/
+theorem integral_rpow_subSquareField_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι] [Nonempty ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (piece : ι → Fin 2) (pt : ι → ℂ)
+    (hpt : ∀ i, pt i ∈ LatticeProb.LQG.lqgSquare)
+    {p : ι → ℝ} (hp : ∀ i, 0 < p i) {q : ℝ} (hq : 1 ≤ q) :
+    ∫ ω, (∑ i, p i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) piece pt ω i -
+      ProbabilityTheory.variance (fun ω => LatticeProb.Gauss.subSquareField γ hcirc
+        (LatticeProb.LQG.dyadicScale k) (LatticeProb.LQG.dyadicScale k * δ)
+        piece pt ω i) P / 2)) ^ q ∂P ≤
+    ∫ x, (∑ i, p i * Real.exp
+      (LatticeProb.Gauss.subSquareComparison γ hcirc (LatticeProb.LQG.dyadicScale k)
+        δ piece pt x i -
+      ProbabilityTheory.variance (fun x => LatticeProb.Gauss.subSquareComparison γ hcirc
+        (LatticeProb.LQG.dyadicScale k) δ piece pt x i)
+        (LatticeProb.Gauss.subSquareMeasure P) / 2)) ^ q
+      ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  have hR := LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k
+  exact LatticeProb.Kahane.kahane_convexity_rpow (Or.inr hq) hp
+    (hh.hasGaussianLaw_subSquareField γ (mul_pos hR hδ) piece pt)
+    (hh.hasGaussianLaw_subSquareComparison γ hR hδ piece pt)
+    (fun i => hh.integral_subSquareField γ (mul_pos hR hδ) piece pt i)
+    (fun i => hh.integral_subSquareComparison γ hR hδ piece pt i)
+    (fun i j => hh.covariance_subSquareField_le γ hk hδ hδ2 piece pt hpt i j)
 
 end HarmonicBalls
