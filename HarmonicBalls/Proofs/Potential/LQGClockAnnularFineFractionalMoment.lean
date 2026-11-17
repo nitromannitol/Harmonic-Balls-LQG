@@ -3156,4 +3156,120 @@ theorem lintegral_brownian_field_annularSquare_le_rescaled
     _ ≤ _ := by
       exact mul_le_mul_right (lintegral_field_annularSquare_occupation_rpow_le_rescaled
         hh hδ γ x hr i a u v q (by linarith)) C
+
+/-- A square occupation moment is measurable in the Brownian path. -/
+theorem aemeasurable_field_annularSquare_moment {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) (x : ℂ) (r a u v : ℝ) (i : ℤ × ℤ) (q : ℝ) :
+    AEMeasurable (fun b : ContinuousPath ℂ => ∫⁻ ω,
+      (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) ^ q ∂P)
+      (planarBrownianMotion x) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := LatticeProb.dyadicSquare r i ∩ {z | a ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}
+  have hA : MeasurableSet A := (LatticeProb.measurableSet_dyadicSquare r i).inter
+    ((measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const))
+  let F : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun p =>
+    (∫⁻ t in Ioc u v, A.indicator (fun z =>
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity (fun ω ε z => H ω ε z) γ ε z p.1))
+      (p.2 t.toNNReal)) ^ q
+  have hF : Measurable F := by
+    dsimp [F]
+    apply Measurable.pow_const
+    have hb : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => p.1.2 p.2.toNNReal) := by
+      exact (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+        ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_snd.comp measurable_fst))
+    have hφ : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ =>
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity (fun ω ε z => H ω ε z) γ ε
+          (p.1.2 p.2.toNNReal) p.1.1)) := by
+      dsimp only [LatticeProb.Gauss.gmcDensity]
+      apply Measurable.ennreal_ofReal
+      apply Measurable.mul measurable_const
+      apply Measurable.exp
+      exact measurable_const.mul ((hHm ε hε).comp (hb.prodMk measurable_fst.fst))
+    have hm := (hφ.indicator (hA.preimage hb)).lintegral_prod_right' (ν := volume.restrict (Ioc u v))
+    convert hm using 1
+    ext p
+    apply lintegral_congr
+    intro t
+    by_cases ht : p.2 t.toNNReal ∈ A <;> simp [ht]
+  have heq (ω : Ω) (hω : ∀ ε z, H ω ε z = hcirc ω ε z) (b : ContinuousPath ℂ) : F (ω,b) =
+      (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) ^ q := by
+    dsimp [F]
+    congr 1
+    have hm : MeasurableSet (annularSquareTimeSet b a r i) :=
+      measurableSet_annularSquareTimeSet b a r i
+    change (∫⁻ t in Ioc u v, (annularSquareTimeSet b a r i).indicator
+      (fun t => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity
+        (fun ω ε z => H ω ε z) γ ε (b t.toNNReal) ω)) t) = _
+    rw [lintegral_indicator hm, Measure.restrict_restrict hm]
+    apply lintegral_congr
+    intro t
+    simp only [LatticeProb.Gauss.gmcDensity, hω]
+  have hmeas : Measurable (fun b => ∫⁻ ω, F (ω,b) ∂P) :=
+    (hF.comp measurable_swap).lintegral_prod_right'
+  apply hmeas.aemeasurable.congr
+  filter_upwards with b
+  apply lintegral_congr_ae
+  filter_upwards [hHae] with ω hω
+  exact heq ω hω b
+
+
+/-- The averaged annular moment is bounded by scaled square moments and a separated term. -/
+theorem lintegral_brownian_field_annular_mass_le_rescaled_add_cell
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (γ : ℝ) (x : ℂ) (u v a : ℝ) {q : ℝ} (hq : 1 ≤ q) (hq2 : q ≤ 2) :
+    let S := LatticeProb.squareIndex r
+    let c : ℝ≥0 := ⟨(4 * r) ^ 2, by positivity⟩
+    let C := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2))
+    let φ : Ω → ℂ → ℝ≥0∞ := fun ω w => ENNReal.ofReal
+      (Real.exp (γ * hcirc ω δ w - γ ^ 2 * (-Real.log δ) / 2))
+    (∫⁻ b, ∫⁻ ω, (∫⁻ t in {t | a ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2} ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P
+      ∂planarBrownianMotion x) ≤
+      18 * (∑ i ∈ S, C * ∫⁻ ω, (ENNReal.ofReal c) ^ q * ∫⁻ b,
+        (∫⁻ s in (fun s : ℝ => (c : ℝ) * s) ⁻¹' Ioc u v,
+          (LatticeProb.LQG.lqgSquare.indicator (φ ω))
+            (b s.toNNReal + (x - LatticeProb.dyadicSquareCentre r i) / (Real.sqrt c : ℂ))) ^ q
+          ∂planarBrownianMotion 0 ∂P) +
+      (S.card : ℝ≥0∞) * ((S.card : ℝ≥0∞) *
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+          (ENNReal.ofReal (v - u) * ENNReal.ofReal (v - u))) ^ (q / 2)) := by
+  classical
+  let S := LatticeProb.squareIndex r
+  let D : (ℤ × ℤ) → ContinuousPath ℂ → ℝ≥0∞ := fun i b => ∫⁻ ω,
+    (∫⁻ t in annularSquareTimeSet b a r i ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P
+  let B := (S.card : ℝ≥0∞) * ((S.card : ℝ≥0∞) *
+    (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+      (ENNReal.ofReal (v - u) * ENNReal.ofReal (v - u))) ^ (q / 2))
+  have hε : 0 < 4 * r * δ := by positivity
+  have hε2 : 4 * r * δ ≤ 1 / 2 := by nlinarith
+  have hD (i : ℤ × ℤ) : AEMeasurable (D i) (planarBrownianMotion x) :=
+    aemeasurable_field_annularSquare_moment hh hε γ x r a u v i q
+  have hsum : AEMeasurable (fun b => ∑ i ∈ S, D i b) (planarBrownianMotion x) := by
+    convert Finset.aemeasurable_sum S (fun i _ => hD i) using 1
+    ext b
+    simp only [Finset.sum_apply]
+  calc
+    _ ≤ ∫⁻ b, 18 * (∑ i ∈ S, D i b) + B ∂planarBrownianMotion x := by
+      apply lintegral_mono
+      intro b
+      exact lintegral_annular_mass_rpow_le_square_moments_add_cell hh b u v a hε hε2 hr γ
+        (by linarith : 0 < q) hq2
+    _ = 18 * (∑ i ∈ S, ∫⁻ b, D i b ∂planarBrownianMotion x) + B := by
+      rw [lintegral_add_left' (hsum.const_mul 18), lintegral_const_mul'' _ hsum,
+        lintegral_finsetSum' S (fun i _ => hD i)]
+      simp
+    _ ≤ _ := by
+      gcongr with i hi
+      exact lintegral_brownian_field_annularSquare_le_rescaled hh hr hr10 hδ hδ2 hi γ x u v a hq
+
 end HarmonicBalls
