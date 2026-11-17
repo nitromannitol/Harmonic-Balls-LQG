@@ -2088,4 +2088,165 @@ theorem exists_ae_tsum_nonpositive_halfDisc_radius_grid_clock_all_horizons_lt_to
       Summable.tsum_finsetSum (fun _ _ => ENNReal.summable)
     _ < ⊤ := ENNReal.sum_lt_top.mpr (fun j _ => hq j)
 
+
+/-- The jointly measurable dyadic half-disc limit also controls every
+positive radius in each sufficiently small dyadic shell. -/
+theorem exists_measurable_nonpositive_halfDisc_clock_shell_limit
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) {γ α : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ^2 < 2) (hα : α ≤ 0) :
+    ∃ L : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable L ∧
+      (∀ p, Continuous (fun t => L (p,t)) ∧ (∀ t, 0 ≤ L (p,t)) ∧
+        Monotone (fun t => L (p,t))) ∧
+      ∀ᵐ p ∂(P.prod (planarBrownianMotion x)),
+        (∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+            (LatticeProb.LQG.dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (LatticeProb.LQG.dyadicScale (j+1)) z))
+                (p.2 s.toNNReal)) - L (p,t)| < η) ∧
+        ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ k in atTop,
+          ∀ s : ℝ, LatticeProb.LQG.dyadicScale k / 2 ≤ s → s ≤ LatticeProb.LQG.dyadicScale k →
+            ∀ t : ℝ≥0, t ≤ T →
+              |(∫ u in (0 : ℝ)..(t : ℝ), {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+                s^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) s z))
+                  (p.2 u.toNNReal)) - L (p,t)| < η := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨L, hLm, hLr, hL⟩ :=
+    exists_measurable_locally_uniform_limit_nonpositive_halfDiscClock hh x hγ hγ2 hα
+  obtain ⟨c, hc, hgrid⟩ :=
+    exists_ae_tsum_nonpositive_halfDisc_radius_grid_clock_all_horizons_lt_top hh hγ hγ2 α hα
+  obtain ⟨η, hη, hmod⟩ := ae_eventually_halfDisc_clock_grid_comparison hh α γ hc
+  refine ⟨L, hLm, hLr, ?_⟩
+  filter_upwards [hgrid x, (Measure.quasiMeasurePreserving_fst
+    (μ := P) (ν := planarBrownianMotion x)).ae hmod, hL] with p hgridp hmodω hdyad
+  simp only [norm_nonneg, true_and] at hgridp hdyad
+  refine ⟨hdyad, ?_⟩
+  intro T δ hδ
+  obtain ⟨N, hN⟩ := exists_nat_ge (T : ℝ)
+  let A : ℝ → ℝ → ℝ := fun v t => ∫ u in (0 : ℝ)..t,
+    {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+      v^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z))
+        (p.2 u.toNNReal)
+  let S : ℕ → ℝ≥0∞ := fun j => ∑ i ∈ Finset.range (gridCount c (j+1) + 1),
+    ⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+      |A (gridScale (gridCount c) (j+1) i) t - A (LatticeProb.LQG.dyadicScale (j+1)) t|
+  have hsum : (∑' j, S j) < ⊤ := hgridp N
+  have hfinite : ∀ j, S j ≠ ⊤ := ENNReal.ne_top_of_tsum_ne_top hsum.ne
+  have hS : Tendsto (fun j => (S j).toReal) atTop (𝓝 0) :=
+    (ENNReal.tendsto_toReal_zero_iff hfinite).2 (ENNReal.tendsto_atTop_zero_of_tsum_ne_top hsum.ne)
+  have hL0 : ∀ t, 0 ≤ L (p,t) := (hLr p).2.1
+  have hLmono : Monotone (fun t => L (p,t)) := (hLr p).2.2
+  have hM : 0 < L (p,T) + 2 := by linarith [hL0 T]
+  let a : ℝ := min 1 (δ / 4)
+  have ha : 0 < a := lt_min (by norm_num) (by positivity)
+  have hηsmall : ∀ᶠ k in atTop, |η k| < δ / (4 * (L (p,T) + 2)) := by
+    have hhη := hη.abs.eventually (Iio_mem_nhds (show |(0 : ℝ)| < δ / (4 * (L (p,T) + 2)) by
+      simpa using (show 0 < δ / (4 * (L (p,T) + 2)) by positivity)))
+    simpa using hhη
+  have hsmallS := hS.eventually (Iio_mem_nhds ha)
+  have hsmallF := hdyad T a ha
+  have hshift : Tendsto (fun j : ℕ => j + 1) atTop atTop := tendsto_add_atTop_nat 1
+  have hfinal : ∀ᶠ j in atTop, ∀ s : ℝ,
+      LatticeProb.LQG.dyadicScale (j+1) / 2 ≤ s → s ≤ LatticeProb.LQG.dyadicScale (j+1) →
+      ∀ t : ℝ≥0, t ≤ T → |A s t - L (p,t)| < δ := by
+    filter_upwards [hshift.eventually hmodω, hshift.eventually hηsmall, hsmallS, hsmallF]
+      with j hjmod hjη hjS hjF s hs1 hs2 t ht
+    obtain ⟨i, hi, hiComp⟩ := hjmod s hs1 hs2
+    let r := gridScale (gridCount c) (j+1) i
+    let z : Icc (0 : ℝ) N := ⟨t, ⟨t.coe_nonneg, le_trans (show (t : ℝ) ≤ T from ht) hN⟩⟩
+    have hle : ENNReal.ofReal |A r t - A (LatticeProb.LQG.dyadicScale (j+1)) t| ≤ S j := by
+      have ht' := le_iSup (fun z : Icc (0 : ℝ) N => ENNReal.ofReal
+        |A r z - A (LatticeProb.LQG.dyadicScale (j+1)) z|) z
+      apply ht'.trans
+      dsimp only [S, r]
+      exact Finset.single_le_sum (f := fun i : ℕ =>
+        ⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+          |A (gridScale (gridCount c) (j+1) i) t - A (LatticeProb.LQG.dyadicScale (j+1)) t|)
+        (fun _ _ => by positivity) (Finset.mem_range.mpr (Nat.lt_succ_of_le hi))
+    have hdiff : |A r t - A (LatticeProb.LQG.dyadicScale (j+1)) t| < a := by
+      have h := ENNReal.toReal_mono (hfinite j) hle
+      rw [ENNReal.toReal_ofReal (abs_nonneg _)] at h
+      exact h.trans_lt hjS
+    have hdy : |A (LatticeProb.LQG.dyadicScale (j+1)) t - L (p,t)| < a := hjF t ht
+    have har : |A r t| < L (p,T) + 2 := by
+      have hab := abs_add_le (A r t - A (LatticeProb.LQG.dyadicScale (j+1)) t)
+        (A (LatticeProb.LQG.dyadicScale (j+1)) t - L (p,t) + L (p,t))
+      have hab' := abs_add_le (A (LatticeProb.LQG.dyadicScale (j+1)) t - L (p,t)) (L (p,t))
+      have hft : |L (p,t)| ≤ L (p,T) := by rw [abs_of_nonneg (hL0 t)]; exact hLmono ht
+      have ha1 : a ≤ 1 := min_le_left _ _
+      have heq : A r t = (A r t - A (LatticeProb.LQG.dyadicScale (j+1)) t) +
+          (A (LatticeProb.LQG.dyadicScale (j+1)) t - L (p,t) + L (p,t)) := by ring
+      rw [heq]
+      linarith
+    have hcomp : |A s t - A r t| ≤ η (j+1) * A r t := hiComp p.2 t
+    have heta : η (j+1) * A r t < δ / 4 := by
+      calc
+        _ ≤ |η (j+1)| * |A r t| := by rw [← abs_mul]; exact le_abs_self _
+        _ ≤ |η (j+1)| * (L (p,T) + 2) := mul_le_mul_of_nonneg_left har.le (abs_nonneg _)
+        _ < (δ / (4 * (L (p,T) + 2))) * (L (p,T) + 2) :=
+          mul_lt_mul_of_pos_right hjη hM
+        _ = δ / 4 := by field_simp
+    have htriangle := abs_add_le (A s t - A r t) (A r t - A (LatticeProb.LQG.dyadicScale (j+1)) t)
+    have htriangle' := abs_add_le (A s t - A (LatticeProb.LQG.dyadicScale (j+1)) t)
+      (A (LatticeProb.LQG.dyadicScale (j+1)) t - L (p,t))
+    have heq : A s t - L (p,t) = (A s t - A (LatticeProb.LQG.dyadicScale (j+1)) t) +
+        (A (LatticeProb.LQG.dyadicScale (j+1)) t - L (p,t)) := by ring
+    have haδ : a ≤ δ / 4 := min_le_right _ _
+    rw [heq]
+    have heq' : A s t - A (LatticeProb.LQG.dyadicScale (j+1)) t =
+        (A s t - A r t) + (A r t - A (LatticeProb.LQG.dyadicScale (j+1)) t) := by ring
+    rw [heq'] at htriangle' ⊢
+    linarith
+  obtain ⟨J, hJ⟩ := eventually_atTop.mp hfinal
+  refine eventually_atTop.mpr ⟨J+1, ?_⟩
+  intro k hk s hs1 hs2 t ht
+  have hk1 : 1 ≤ k := by omega
+  have hkJ : J ≤ k-1 := by omega
+  have hhJ := hJ (k-1) hkJ
+  rw [Nat.sub_add_cancel hk1] at hhJ
+  exact hhJ s hs1 hs2 t ht
+
+
+/-- At each Brownian start, the actual nonpositive half-disc clocks converge
+locally uniformly as the positive smoothing radius tends to zero, to the
+same jointly measurable limit as the dyadic clocks. -/
+theorem exists_measurable_nonpositive_halfDisc_clock_continuum_limit
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) {γ α : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ^2 < 2) (hα : α ≤ 0) :
+    ∃ L : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable L ∧
+      (∀ p, Continuous (fun t => L (p,t)) ∧ (∀ t, 0 ≤ L (p,t)) ∧
+        Monotone (fun t => L (p,t))) ∧
+      ∀ᵐ p ∂(P.prod (planarBrownianMotion x)),
+        (∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+            (LatticeProb.LQG.dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (LatticeProb.LQG.dyadicScale (j+1)) z))
+                (p.2 s.toNNReal)) - L (p,t)| < η) ∧
+        ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∃ ρ : ℝ, 0 < ρ ∧
+          ∀ s : ℝ, 0 < s → s < ρ → ∀ t : ℝ≥0, t ≤ T →
+            |(∫ u in (0 : ℝ)..(t : ℝ), {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+              s^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) s z))
+                (p.2 u.toNNReal)) - L (p,t)| < η := by
+  obtain ⟨L, hLm, hLr, hL⟩ :=
+    exists_measurable_nonpositive_halfDisc_clock_shell_limit hh x hγ hγ2 hα
+  refine ⟨L, hLm, hLr, ?_⟩
+  filter_upwards [hL] with p hp
+  refine ⟨hp.1, ?_⟩
+  intro T η hη
+  obtain ⟨K, hK⟩ := eventually_atTop.mp (hp.2 T η hη)
+  refine ⟨LatticeProb.LQG.dyadicScale K, dyadicScale_pos K, ?_⟩
+  intro s hs hsmall t ht
+  obtain ⟨k, hk1, hk2⟩ := exists_dyadicScale_bracket hs
+    (hsmall.trans_le (dyadicScale_le_one' K))
+  change s < LatticeProb.LQG.dyadicScale K at hsmall
+  have hKk : K ≤ k := by
+    by_contra hn
+    have hle := dyadicScale_le_of_le (show k + 1 ≤ K by omega)
+    linarith
+  apply hK k hKk s _ hk2.le t ht
+  simpa only [dyadicScale_succ_eq_half] using hk1
+
 end HarmonicBalls
