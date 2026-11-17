@@ -103,4 +103,145 @@ theorem tendsto_integral_abs_sub_of_nonnegative_of_ae_tendsto
   filter_upwards [heq] with i hi
   exact hi.symm
 
+/-- Field-averaged occupation in the closed ball equals the regularized insertion weight. -/
+theorem lintegral_closedBall_inserted_density_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε δ : ℝ}
+    (hε : 0 < ε) (hεhalf : ε ≤ 1/2) (hδhalf : δ ≤ 1/2)
+    (γ α : ℝ) (ν : Measure ℂ) [SFinite ν] :
+    (∫⁻ ω, ∫⁻ z, {z : ℂ | ‖z‖ ≤ δ}.indicator
+      (fun z => ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z ∂ν ∂P) =
+    ∫⁻ z, {z : ℂ | ‖z‖ ≤ δ}.indicator
+      (fun z => ENNReal.ofReal (Real.exp (-(γ * α) * Real.log (max ε ‖z‖)))) z ∂ν := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := {z | ‖z‖ ≤ δ}
+  have hA : MeasurableSet A := measurableSet_le measurable_norm measurable_const
+  let F : Ω × ℂ → ℝ≥0∞ := fun q => A.indicator (fun z =>
+    ENNReal.ofReal (ε ^ (γ^2/2) * Real.exp (γ*(H q.1 ε z - H q.1 1 0 -
+      α*Real.log (max ε ‖z‖))))) q.2
+  have h1 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) :=
+    (hHm ε hε).comp measurable_swap
+  have h2 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+    (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+  have hF : Measurable F := by
+    apply Measurable.indicator _ (hA.preimage measurable_snd)
+    exact (measurable_const.mul (measurable_const.mul ((h1.sub h2).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp).ennreal_ofReal
+  have heq : ∀ᵐ ω ∂P, ∀ z, F (ω,z) = A.indicator (fun z =>
+      ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z))) z := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec z
+    dsimp [F]
+    simp only [Set.indicator_apply]
+    split_ifs with hz
+    · rw [hω ε z, hω 1 0, hrec ε z hε]
+    · rfl
+  calc
+    _ = ∫⁻ ω, ∫⁻ z, F (ω,z) ∂ν ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [heq] with ω hω
+      apply lintegral_congr
+      intro z
+      exact (hω z).symm
+    _ = ∫⁻ z, ∫⁻ ω, F (ω,z) ∂P ∂ν := lintegral_lintegral_swap hF.aemeasurable
+    _ = _ := by
+      apply lintegral_congr
+      intro z
+      by_cases hz : z ∈ A
+      · have hz1 : ‖z‖ + ε ≤ 1 := by dsimp [A] at hz; linarith
+        rw [Set.indicator_of_mem hz]
+        calc
+          (∫⁻ ω, F (ω,z) ∂P) = ∫⁻ ω, ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) ∂P := by
+              apply lintegral_congr_ae
+              filter_upwards [heq] with ω hω
+              rw [hω z, Set.indicator_of_mem hz]
+          _ = _ := by rw [lintegral_inserted_clock_density_eq hh hε γ α hz1]
+      · rw [Set.indicator_of_notMem hz]
+        simp [F, Set.indicator_of_notMem hz]
+
+/-- The product expectation of a closed-ball occupation equals the Brownian
+occupation of the regularized insertion weight. -/
+theorem lintegral_prod_closedBall_inserted_density_eq
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (Q : Measure (ContinuousPath ℂ)) [SFinite Q] (ρ : Measure ℝ) [SFinite ρ]
+    {ε δ : ℝ} (hε : 0 < ε) (hεhalf : ε ≤ 1/2) (hδhalf : δ ≤ 1/2)
+    (γ α : ℝ) :
+    (∫⁻ q : Ω × ContinuousPath ℂ, ∫⁻ s, ENNReal.ofReal
+      ({z : ℂ | ‖z‖ ≤ δ}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) ε z)) (q.2 s.toNNReal)) ∂ρ
+        ∂(P.prod Q)) =
+    ∫⁻ b, ∫⁻ s, {z : ℂ | ‖z‖ ≤ δ}.indicator
+      (fun z => ENNReal.ofReal (Real.exp (-(γ * α) * Real.log (max ε ‖z‖))))
+        (b s.toNNReal) ∂ρ ∂Q := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := {z | ‖z‖ ≤ δ}
+  have hA : MeasurableSet A := measurableSet_le measurable_norm measurable_const
+  let G : Ω × ℂ → ℝ≥0∞ := fun q => A.indicator (fun z =>
+    ENNReal.ofReal (ε ^ (γ^2/2) * Real.exp (γ * (H q.1 ε z - H q.1 1 0 -
+      α * Real.log (max ε ‖z‖))))) q.2
+  have hG : Measurable G := by
+    have h1 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) :=
+      (hHm ε hε).comp measurable_swap
+    have h2 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+      (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+    apply Measurable.indicator _ (hA.preimage measurable_snd)
+    exact (measurable_const.mul (measurable_const.mul ((h1.sub h2).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp).ennreal_ofReal
+  have heq : ∀ᵐ ω ∂P, ∀ z, G (ω,z) = ENNReal.ofReal
+      (A.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) z) := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hr z
+    dsimp [G]
+    simp only [Set.indicator_apply]
+    split_ifs with hz
+    · rw [hω ε z, hω 1 0, hr ε z hε]
+    · simp
+  have hev : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal) :=
+    (continuous_eval.comp (continuous_fst.prodMk (continuous_real_toNNReal.comp continuous_snd))).measurable
+  have hjoint : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ =>
+      G (p.1.1, p.1.2 p.2.toNNReal)) :=
+    hG.comp (measurable_fst.fst.prodMk (hev.comp (measurable_fst.snd.prodMk measurable_snd)))
+  have hrep : ∀ᵐ q ∂(P.prod Q), ∀ s : ℝ,
+      G (q.1, q.2 s.toNNReal) = ENNReal.ofReal
+        (A.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) ε z)) (q.2 s.toNNReal)) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := Q)).ae heq] with q hq s
+    exact hq _
+  calc
+    _ = ∫⁻ q : Ω × ContinuousPath ℂ, ∫⁻ s, G (q.1, q.2 s.toNNReal) ∂ρ ∂(P.prod Q) := by
+      apply lintegral_congr_ae
+      filter_upwards [hrep] with q hq
+      exact lintegral_congr fun s => (hq s).symm
+    _ = ∫⁻ b, ∫⁻ ω, ∫⁻ s, G (ω, b s.toNNReal) ∂ρ ∂P ∂Q :=
+      lintegral_prod_symm _ hjoint.lintegral_prod_right'.aemeasurable
+    _ = ∫⁻ b, ∫⁻ s, ∫⁻ ω, G (ω, b s.toNNReal) ∂P ∂ρ ∂Q := by
+      apply lintegral_congr
+      intro b
+      apply lintegral_lintegral_swap
+      exact (hG.comp (measurable_fst.prodMk
+        (b.continuous.measurable.comp (continuous_real_toNNReal.measurable.comp measurable_snd)))).aemeasurable
+    _ = _ := by
+      apply lintegral_congr
+      intro b
+      apply lintegral_congr
+      intro s
+      by_cases hz : ‖b s.toNNReal‖ ≤ δ
+      · rw [Set.indicator_of_mem (s := {z : ℂ | ‖z‖ ≤ δ}) hz]
+        calc
+          (∫⁻ ω, G (ω, b s.toNNReal) ∂P) = ∫⁻ ω, ENNReal.ofReal
+              (ε ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+                (hcirc ω) ε (b s.toNNReal))) ∂P := by
+            apply lintegral_congr_ae
+            filter_upwards [heq] with ω hω
+            simpa [A, Set.indicator_apply, hz] using hω (b s.toNNReal)
+          _ = _ := lintegral_inserted_clock_density_eq hh hε γ α (by linarith)
+      · rw [Set.indicator_of_notMem (s := {z : ℂ | ‖z‖ ≤ δ}) hz]
+        simp [G, A, Set.indicator_apply, hz]
+
 end HarmonicBalls
