@@ -1906,4 +1906,51 @@ theorem lintegral_rpow_mul_annularSquareTime_masses_le {Ω : Type*} [MeasurableS
   · exact hq
   · exact hq2
 
+/-- An annular time integral is the sum over the finite square cover. -/
+theorem lintegral_annular_time_eq_sum_square (b : ContinuousPath ℂ) (δ u v : ℝ)
+    {r : ℝ} (hr : 0 < r) (f : ℝ → ℝ≥0∞) :
+    (∫⁻ t in {t | δ ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2} ∩ Ioc u v, f t) =
+      ∑ i ∈ LatticeProb.squareIndex r, ∫⁻ t in annularSquareTimeSet b δ r i ∩ Ioc u v, f t := by
+  have hu : (⋃ i ∈ LatticeProb.squareIndex r, annularSquareTimeSet b δ r i ∩ Ioc u v) =
+      {t | δ ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2} ∩ Ioc u v := by
+    ext t
+    simp only [mem_iUnion, mem_inter_iff, mem_ofPred_eq, annularSquareTimeSet]
+    constructor
+    · rintro ⟨i, hi, ⟨⟨hmem, ha, hb⟩, ht⟩⟩
+      exact ⟨⟨ha, hb⟩, ht⟩
+    · rintro ⟨⟨ha, hb⟩, ht⟩
+      have hball : b t.toNNReal ∈ Metric.closedBall (0 : ℂ) (1 / 2) := by
+        simpa [Metric.mem_closedBall, dist_zero_right] using hb
+      have hcover := LatticeProb.closedBall_subset_iUnion_dyadicSquare hr hball
+      simp only [mem_iUnion] at hcover
+      obtain ⟨i, hi, hmem⟩ := hcover
+      exact ⟨i, hi, ⟨⟨hmem, ha, hb⟩, ht⟩⟩
+  rw [← hu]
+  apply lintegral_biUnion_finset
+  · intro i hi j hj hij
+    apply Set.disjoint_left.mpr
+    intro t hti htj
+    exact Set.disjoint_left.mp (LatticeProb.disjoint_dyadicSquare hr hij) hti.1.1 htj.1.1
+  · intro i hi
+    exact (measurableSet_annularSquareTimeSet b δ r i).inter measurableSet_Ioc
+
+/-- The fractional power of a grid mass separates adjacent and distant interactions. -/
+theorem rpow_sum_le_squareGridAdjacent_add_far (s : Finset (ℤ × ℤ))
+    (a : ℤ × ℤ → ℝ≥0∞) {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    (∑ i ∈ s, a i) ^ q ≤ 18 * (∑ i ∈ s, a i ^ q) +
+      ∑ i ∈ s, ∑ j ∈ s.filter (fun j => ¬ squareGridAdjacent i j),
+        (a i * a j) ^ (q / 2) := by
+  classical
+  have hs : (∑ i ∈ s, ∑ j ∈ s, (a i * a j) ^ (q / 2)) =
+      (∑ i ∈ s, ∑ j ∈ s.filter (squareGridAdjacent i), (a i * a j) ^ (q / 2)) +
+      (∑ i ∈ s, ∑ j ∈ s.filter (fun j => ¬ squareGridAdjacent i j),
+        (a i * a j) ^ (q / 2)) := by
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro i hi
+    exact (Finset.sum_filter_add_sum_filter_not s (squareGridAdjacent i) _).symm
+  exact (rpow_sum_le_sum_cross s a hq hq2).trans (by
+    rw [hs]
+    exact add_le_add (sum_rpow_mul_squareGridAdjacent_le s a hq.le) le_rfl)
+
 end HarmonicBalls
