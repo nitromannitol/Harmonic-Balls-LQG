@@ -1183,4 +1183,39 @@ theorem nonpositive_halfDisc_insertion_weight_properties
     have hnA : z ∉ A := hn
     exact hz (show g z = 0 from Set.indicator_of_notMem hnA _)
 
+
+/-- The half-disc density increment splits into a weighted field increment
+and a correction supported in the smoothing ball. -/
+theorem nonpositive_halfDisc_radius_density_increment_split
+    (h : ℝ → ℂ → ℝ) {γ α ε r : ℝ} (z : ℂ)
+    (hγ : 0 ≤ γ) (hα : α ≤ 0) (hε : 0 < ε) (hεhalf : ε ≤ 1/2)
+    (hr : 0 < r) (hrε : r ≤ ε) :
+    {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+      r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α h r z) -
+        ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α h ε z)) z =
+    {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+      (max r ‖z‖)^(-γ*α) *
+        (r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h r z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h ε z))) z -
+    {z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+      ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+        (ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h ε z))) z := by
+  by_cases hz : ‖z‖ ≤ 1/2
+  · have hs := nonpositive_insertion_radius_density_increment h γ α ε r z
+      hγ hα hε hεhalf hr hrε hz
+    dsimp only at hs
+    rw [Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ ≤ 1/2} from hz),
+      Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ ≤ 1/2} from hz)]
+    by_cases hzε : ‖z‖ < ε
+    · rw [Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ < ε} from hzε)]
+      exact hs.2.2.2.2.2.2.1
+    · rw [Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ < ε} from hzε), sub_zero]
+      have hzero := hs.2.2.2.2.2.1 (le_of_not_gt hzε)
+      rw [hzero, zero_mul, sub_zero] at hs
+      exact hs.2.2.2.2.2.2.1
+  · have hzε : ¬ ‖z‖ < ε := by linarith
+    rw [Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ ≤ 1/2} from hz),
+      Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ ≤ 1/2} from hz),
+      Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ < ε} from hzε), sub_zero]
+
 end HarmonicBalls
