@@ -103,4 +103,43 @@ theorem ae_field_ae_exists_uniform_limit_halfDiscClock
   Measure.ae_ae_of_ae_prod
     (ae_prod_exists_uniform_limit_halfDiscClock hh x hq0 hq2 hγ hγ2 hsub)
 
+
+/-- The half-disc limit has continuous, nonnegative and nondecreasing paths. -/
+theorem ae_prod_exists_regular_uniform_limit_halfDiscClock
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) {γ α : ℝ}
+    (hq0 : 0 < γ*α) (hq2 : γ*α < 2) (hγ : 0 < γ) (hγ2 : γ^2 < 2)
+    (hsub : γ ^ 2 / 2 < 2 * (2-γ*α) / (2+γ*α)) :
+    ∀ᵐ q : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      ∃ F : Icc (0 : ℝ) 1 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        TendstoUniformly
+          (fun i (t : Icc (0 : ℝ) 1) =>
+            stoppedAnnularClock (fun z => (dyadicScale (i+1))^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (i+1)) z)) 0
+                (fun _ => t.1.toNNReal) q.2) F atTop := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let hf := Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)
+  filter_upwards [ae_prod_exists_uniform_limit_halfDiscClock hh x hq0 hq2 hγ hγ2 hsub,
+    hf.ae (ae_continuous_stoppedAnnularClock_time hh γ α 0),
+    hf.ae (ae_dyadic_stoppedAnnularClock_monotone_and_cell hh γ α 0)] with q hq hc hm
+  obtain ⟨F, hF⟩ := hq
+  have hF' : ∀ η : ℝ, 0 < η → ∀ᶠ i in atTop, ∀ t,
+      |stoppedAnnularClock (fun z => (dyadicScale (i+1))^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (i+1)) z)) 0
+          (fun _ => t.1.toNNReal) q.2 - F t| < η := by
+    intro η hη
+    filter_upwards [(Metric.tendstoUniformly_iff.mp hF) η hη] with i hi t
+    simpa [Real.dist_eq, abs_sub_comm] using hi t
+  obtain ⟨hFc, hF0, hFm⟩ := continuous_nonneg_monotone_of_uniform_limit
+    (A := fun i (t : Icc (0 : ℝ) 1) => stoppedAnnularClock (fun z =>
+      (dyadicScale (i+1))^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (i+1)) z)) 0
+          (fun _ => t.1.toNNReal) q.2) (F := F)
+    (fun i => (hc (i+1) q.2).comp continuous_subtype_val)
+    (fun i t => stoppedAnnularClock_nonneg _ (fun z => mul_nonneg
+      (Real.rpow_nonneg (dyadicScale_pos (i+1)).le _) (Real.exp_pos _).le) _ _ _)
+    (fun i s t hst => (hm (i+1) q.2).1 s.2 t.2 hst) hF'
+  exact ⟨F, hFc, hF0, hFm, hF⟩
+
 end HarmonicBalls
