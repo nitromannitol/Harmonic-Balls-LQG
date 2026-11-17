@@ -5,6 +5,7 @@ import LatticeProb.LQG.LQGSubSquareLimit
 import LatticeProb.Prob.GaussKahaneRpow
 import Mathlib.MeasureTheory.Function.UniformIntegrable
 import Mathlib.MeasureTheory.Function.SimpleFuncDense
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 /-! # Fine-scale moments of inserted circle averages
 
@@ -1358,5 +1359,46 @@ theorem integral_rpow_subSquareField_le_of_time_integrals
   exact ⟨h.1.congr hFq, h.2.1.congr hGq, by
     rw [← integral_congr_ae hFq, ← integral_congr_ae hGq]
     exact h.2.2⟩
+
+/-- A subcritical parameter admits a moment order with negative recursion exponent. -/
+theorem exists_subcritical_clock_exponent {γ : ℝ} (hγ : γ ^ 2 < 4) :
+    ∃ q : ℝ, 1 < q ∧ q < 2 ∧ 2 + (q ^ 2 * γ ^ 2 / 2 - q * (2 + γ ^ 2 / 2)) < 0 := by
+  let a : ℝ := γ ^ 2
+  let q : ℝ := 1 + (4 - a) / 8
+  have ha0 : 0 ≤ a := sq_nonneg γ
+  have ha4 : a < 4 := hγ
+  have hq1 : 1 < q := by dsimp [q]; linarith
+  have hq2 : q < 2 := by dsimp [q]; linarith
+  have hmul : a * (q - 1) ≤ 4 * (q - 1) :=
+    mul_le_mul_of_nonneg_right ha4.le (by linarith)
+  have haq : a * q < 4 := by
+    dsimp [q] at hmul ⊢
+    nlinarith
+  have hneg : a * q / 2 - 2 < 0 := by linarith
+  have hprod := mul_neg_of_pos_of_neg (sub_pos.mpr hq1) hneg
+  refine ⟨q, hq1, hq2, ?_⟩
+  change 2 + (q ^ 2 * a / 2 - q * (2 + a / 2)) < 0
+  nlinarith [hprod]
+
+/-- A negative exponent makes the dyadic recursion coefficient arbitrarily small. -/
+theorem exists_dyadic_rpow_contraction {e : ℝ} (he : e < 0) (C : ℝ) :
+    ∃ m : ℕ, 4 ≤ m ∧ C * m * (2 : ℝ) ^ ((m : ℝ) * e) < 1 / 2 := by
+  let b : ℝ := -e * Real.log 2
+  have hb : 0 < b := mul_pos (neg_pos.mpr he) (Real.log_pos (by norm_num))
+  have hlim := (tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero 1 b hb).comp
+    (tendsto_natCast_atTop_atTop : Tendsto (fun n : ℕ => (n : ℝ)) atTop atTop)
+  have hlim' : Tendsto (fun n : ℕ => C * n * (2 : ℝ) ^ ((n : ℝ) * e)) atTop (𝓝 0) := by
+    have h := hlim.const_mul C
+    simp only [Real.rpow_one, mul_zero] at h
+    convert h using 1
+    funext n
+    simp only [Function.comp_apply]
+    rw [Real.rpow_def_of_pos (by norm_num : (0 : ℝ) < 2), mul_assoc]
+    dsimp [b]
+    congr 2
+    ring
+  have h := (tendsto_order.1 hlim').2 (1 / 2) (by norm_num)
+  obtain ⟨N, hN⟩ := eventually_atTop.1 h
+  exact ⟨max N 4, le_max_right _ _, hN _ (le_max_left _ _)⟩
 
 end HarmonicBalls
