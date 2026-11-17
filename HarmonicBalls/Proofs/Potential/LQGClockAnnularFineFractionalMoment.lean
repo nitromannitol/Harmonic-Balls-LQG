@@ -1691,4 +1691,50 @@ theorem lintegral_sum_rpow_mul_separated_time_masses_le_volume {Ω ι : Type*} [
   exact lintegral_rpow_mul_separated_time_masses_le_volume hh b u v (A i) (B i)
     (hA i hi) (hB i hi) hε hr γ (hx i hi) (hy i hi) (hxy i hi) hq hq2
 
+private theorem rpow_sum_le_sum_rpow {ι : Type*} (s : Finset ι) (a : ι → ℝ≥0∞)
+    {p : ℝ} (hp : 0 < p) (hp1 : p ≤ 1) :
+    (∑ i ∈ s, a i) ^ p ≤ ∑ i ∈ s, (a i) ^ p := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [hp]
+  | @insert i s hi ih =>
+      simp only [Finset.sum_insert hi]
+      exact (ENNReal.rpow_add_le_add_rpow _ _ hp.le hp1).trans (add_le_add_right ih _)
+
+/-- A fractional power of a finite mass is bounded by its pair interactions. -/
+theorem rpow_sum_le_sum_cross {ι : Type*} (s : Finset ι) (a : ι → ℝ≥0∞)
+    {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    (∑ i ∈ s, a i) ^ q ≤ ∑ i ∈ s, ∑ j ∈ s, (a i * a j) ^ (q / 2) := by
+  have h := rpow_sum_le_sum_rpow s (fun i => ∑ j ∈ s, a i * a j)
+    (p := q / 2) (by positivity) (by linarith)
+  have hsum : (∑ i ∈ s, (∑ j ∈ s, a i * a j) ^ (q / 2)) ≤
+      ∑ i ∈ s, ∑ j ∈ s, (a i * a j) ^ (q / 2) := by
+    apply Finset.sum_le_sum
+    intro i hi
+    exact rpow_sum_le_sum_rpow s (fun j => a i * a j) (by positivity) (by linarith)
+  have heq : (∑ i ∈ s, ∑ j ∈ s, a i * a j) = (∑ i ∈ s, a i) ^ (2 : ℕ) := by
+    rw [pow_two, Finset.sum_mul_sum]
+  rw [heq, ← ENNReal.rpow_natCast, ← ENNReal.rpow_mul] at h
+  have h' := h.trans hsum
+  convert h' using 1
+  congr 1
+  ring
+
+/-- A fractional power of a finite mass splits into diagonal and off-diagonal terms. -/
+theorem rpow_sum_le_sum_diagonal_add_cross {ι : Type*} [DecidableEq ι] (s : Finset ι) (a : ι → ℝ≥0∞)
+    {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    (∑ i ∈ s, a i) ^ q ≤ (∑ i ∈ s, (a i) ^ q) +
+      ∑ i ∈ s, ∑ j ∈ s.erase i, (a i * a j) ^ (q / 2) := by
+  classical
+  refine (rpow_sum_le_sum_cross s a hq hq2).trans_eq ?_
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [← Finset.sum_erase_add s (fun j => (a i * a j) ^ (q / 2)) hi, add_comm]
+  congr 1
+  rw [← pow_two, ← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
+  congr 1
+  ring
+
+
 end HarmonicBalls
