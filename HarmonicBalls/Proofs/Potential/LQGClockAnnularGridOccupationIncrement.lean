@@ -1956,6 +1956,93 @@ theorem lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_grid_and_mesh
   rw [lintegral_congr_ae hcell] at h
   exact h
 
+/-- Same-shell annular clock differences satisfy a product-law rate bound
+uniformly over deterministic shifts and measurable unit horizons. -/
+theorem lintegral_prod_shift_stoppedAnnularClock_radius_sub_le_uniform_shift_horizon
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      ∀ (u : ℝ≥0) (τ : ContinuousPath ℂ → ℝ≥0), Measurable τ →
+      ∀ ε r : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ → 0 < r → r ≤ ε → ε / 2 ≤ r →
+        (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal |stoppedAnnularClock
+          (fun z => r^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) δ τ (ContinuousPath.shift u p.2) -
+          stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) δ τ (ContinuousPath.shift u p.2)|
+          ∂(P.prod (planarBrownianMotion x))) ≤ ENNReal.ofReal (
+          ((Real.exp (γ^2*Real.log 2)-1) *
+            (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+            Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+          2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    brownian_shift_stopped_annular_radius_increment_annealed_le hh hγ0 hγ2 α hδ
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  intro u τ hτ ε r hε hεhalf hεδ hr hrε hr2
+  have heq : (fun p : Ω × ContinuousPath ℂ => ENNReal.ofReal |stoppedAnnularClock
+      (fun z => r^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) δ τ (ContinuousPath.shift u p.2) -
+      stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) δ τ (ContinuousPath.shift u p.2)|) =ᵐ[
+        P.prod (planarBrownianMotion x)]
+      (fun p => ENNReal.ofReal |annularRadiusIncrementSample hcirc γ α δ ε r τ (ContinuousPath.shift u p.2) p.1|) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion x)).ae
+        (ae_stoppedAnnularClock_sub_eq_annularRadiusIncrementSample hh γ α δ)] with p hp
+    rw [hp ε r hε hr τ (ContinuousPath.shift u p.2)]
+  rw [lintegral_congr_ae heq,
+    lintegral_prod_shift_annularRadiusIncrementSample_eq hh hγ0 hγ2 α x u hε hr hrε hr2 hεhalf hεδ τ hτ]
+  apply ENNReal.ofReal_le_ofReal
+  exact (hb x u τ hτ ε r hε hεhalf hεδ hr hrε hr2).2
+
+/-- The expected same-shell clock supremum on a deterministic shifted unit
+interval has a time-mesh bound uniform in the shift. -/
+theorem exists_lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_uniform_shift_rate
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ (θ d M β : ℝ) (C : ℝ≥0∞), γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧ 0 < β ∧ C < ∞ ∧
+      ∀ (u : ℝ≥0) {r ε : ℝ}, 0 < r → 0 < ε → ε ≤ 1/2 → ε ≤ δ → r ≤ ε → ε / 2 ≤ r →
+      ∀ (m : ℕ), 0 < m →
+      let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) δ
+          (fun _ => t.toNNReal) (ContinuousPath.shift u p.2)
+      (∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |F r p t - F ε p t|
+        ∂(P.prod (planarBrownianMotion x))) ≤
+      (m + 1 : ℝ≥0∞) * ENNReal.ofReal (
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) + C * (m : ℝ≥0∞)^(-β) := by
+  have hγlt : γ < 2 := by nlinarith [sq_nonneg (γ - 1)]
+  obtain ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, hb⟩ :=
+    lintegral_prod_shift_stoppedAnnularClock_radius_sub_le_uniform_shift_horizon hh hγ0 hγlt α x hδ
+  obtain ⟨C, β, hC, hβ, hmesh⟩ :=
+    exists_lintegral_prod_annular_shifted_mesh_max_le hh x (ne_of_gt hγ0) hγ2 α δ
+  refine ⟨θ, d, M, β, C, hγθ, hθ, hd0, hd2, hp, hM, hβ, hC, ?_⟩
+  intro u r ε hr hε hεhalf hεδ hrε hr2 m hm
+  dsimp only
+  refine (lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_grid_and_mesh
+    hh x u γ α δ hr hε m hm).trans ?_
+  refine (add_le_add le_rfl (hmesh hε hεδ u u.coe_nonneg m hm)).trans (add_le_add ?_ le_rfl)
+  calc
+    _ ≤ ∑ _j ∈ Finset.range (m + 1), ENNReal.ofReal (
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) := by
+      apply Finset.sum_le_sum
+      intro j hj
+      exact hb u (fun _ => ((j : ℝ) / m).toNNReal) measurable_const ε r
+        hε hεhalf hεδ hr hrε hr2
+    _ = _ := by simp
+
 /-- The expected same-shell clock supremum on a deterministic shifted unit
 interval has a time-mesh bound. -/
 theorem exists_lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_rate
@@ -2039,5 +2126,35 @@ theorem lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le
       LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) δ
         (fun _ => v.val.toNNReal) (ContinuousPath.shift u p.2)|) ⟨s, hs⟩
   simpa only [Real.toNNReal_coe, s, stoppedAnnularClock] using h
+
+/-- The expected same-shell clock supremum with a common path-dependent stop
+has a time-mesh bound uniform in the deterministic shift and stop. -/
+theorem exists_lintegral_prod_shift_stoppedAnnularClock_radius_stopped_iSup_le_uniform_shift_rate
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ (θ d M β : ℝ) (C : ℝ≥0∞), γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧ 0 < β ∧ C < ∞ ∧
+      ∀ (u : ℝ≥0) {r ε : ℝ}, 0 < r → 0 < ε → ε ≤ 1/2 → ε ≤ δ → r ≤ ε → ε / 2 ≤ r →
+      ∀ (τ : ContinuousPath ℂ → ℝ≥0) (m : ℕ), 0 < m →
+      let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) δ
+          (fun _ => min t.toNNReal (τ p.2)) (ContinuousPath.shift u p.2)
+      (∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |F r p t - F ε p t|
+        ∂(P.prod (planarBrownianMotion x))) ≤
+      (m + 1 : ℝ≥0∞) * ENNReal.ofReal (
+        ((Real.exp (γ^2*Real.log 2)-1) *
+          (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2))) + C * (m : ℝ≥0∞)^(-β) := by
+  obtain ⟨θ, d, M, β, C, hγθ, hθ, hd0, hd2, hp, hM, hβ, hC, hb⟩ :=
+    exists_lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le_uniform_shift_rate
+      hh x hγ0 hγ2 α hδ
+  refine ⟨θ, d, M, β, C, hγθ, hθ, hd0, hd2, hp, hM, hβ, hC, ?_⟩
+  intro u r ε hr hε hεhalf hεδ hrε hr2 τ m hm
+  exact (lintegral_prod_shift_stoppedAnnularClock_radius_iSup_le x u γ α δ r ε τ).trans
+    (hb u hr hε hεhalf hεδ hrε hr2 m hm)
 
 end HarmonicBalls
