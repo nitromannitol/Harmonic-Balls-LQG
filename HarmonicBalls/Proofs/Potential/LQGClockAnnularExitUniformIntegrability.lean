@@ -1920,4 +1920,48 @@ theorem exists_summable_dyadic_annular_exit_tails {Ω : Type*} [MeasurableSpace 
   · simpa only [Function.comp_apply, max_eq_left (Nat.le_add_left N _)] using ha'.trans_lt ha
   · simpa only [Function.comp_apply, max_eq_left (Nat.le_add_left N _)] using hb'.trans_lt hb
 
+
+/-- The annealed norms of actual exit increments have a finite dyadic tail sum. -/
+theorem exists_summable_annular_exit_samples {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ N : ℕ, ∃ F : ℕ → ContinuousPath ℂ × Ω → ℝ,
+      (∀ k, Measurable (F k)) ∧
+      (∀ k, ∀ᵐ ω ∂P, ∀ b, F k (b,ω) = ∫ t in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (dyadicScale (k+N)/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (k+N)/2) z) -
+          (dyadicScale (k+N))^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (k+N)) z))
+            (b t.toNNReal)) ∧
+      (∑' k, ∫⁻ b, ∫⁻ ω, ‖F k (b,ω)‖ₑ ∂P ∂planarBrownianMotion x) < ⊤ := by
+  obtain ⟨N, hsmall, ht1, ht2⟩ := exists_summable_dyadic_annular_exit_tails hh hD hDb hδ γ α x
+  have hex (k : ℕ) := exists_annular_exit_sample_annealed_le_horizon_add_tails hh hγ0 hγ2 α hδ
+    (dyadicScale_pos (k+N)) (hsmall k).2 (hsmall k).1 hD hDb x (k+N)
+  let F : ℕ → ContinuousPath ℂ × Ω → ℝ := fun k => Classical.choose (hex k)
+  have hFm (k : ℕ) : Measurable (F k) := (Classical.choose_spec (hex k)).1
+  have hFae (k : ℕ) := (Classical.choose_spec (hex k)).2.1
+  have hbound (k : ℕ) := (Classical.choose_spec (hex k)).2.2
+  refine ⟨N, F, hFm, hFae, ?_⟩
+  have hs := (summable_nat_add_iff N).2
+    (summable_brownian_annular_exit_horizon_increment hh hγ0 hγ2 α x hδ hD hDb)
+  have hs' : (∑' k : ℕ, ENNReal.ofReal (∫ b, annularExitHorizonIncrement P hcirc γ α δ
+      (dyadicScale (k+N)) D (k+N) b ∂planarBrownianMotion x)) < ⊤ := hs.tsum_ofReal_lt_top
+  calc
+    _ ≤ ∑' k : ℕ, ((ENNReal.ofReal (∫ b, annularExitHorizonIncrement P hcirc γ α δ
+      (dyadicScale (k+N)) D (k+N) b ∂planarBrownianMotion x) +
+      (∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc ((k+N : ℕ) : ℝ) (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal ((dyadicScale (k+N)/2) ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (k+N)/2) z))) (b t.toNNReal)
+        ∂volume ∂P ∂planarBrownianMotion x)) +
+      ∫⁻ b, ∫⁻ ω, ∫⁻ t in Ioc ((k+N : ℕ) : ℝ) (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal ((dyadicScale (k+N)) ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (k+N)) z))) (b t.toNNReal)
+        ∂volume ∂P ∂planarBrownianMotion x) := ENNReal.tsum_le_tsum hbound
+    _ < ⊤ := by
+      rw [ENNReal.tsum_add, ENNReal.tsum_add]
+      exact ENNReal.add_lt_top.mpr ⟨ENNReal.add_lt_top.mpr ⟨hs', ht1⟩, ht2⟩
+
 end HarmonicBalls
