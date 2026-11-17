@@ -3653,4 +3653,48 @@ theorem lintegral_field_brownian_shiftedReferenceOccupation_le
               _ ≤ _ := lintegral_rpow_shiftedReferenceOccupation_le hh hη hηε hε γ b z u v hq
         _ = _ := by simp
 
+/-- A positive cutoff bounds the reference occupation on a dilated time cell. -/
+theorem lintegral_field_brownian_dilated_reference_le_of_scale_lower_bound {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε : ε ≤ 1 / 2) (γ : ℝ)
+    (x z : ℂ) (u v c : ℝ) (hc : 0 < c) {q : ℝ} (hq : 1 ≤ q) :
+    (∫⁻ ω, ∫⁻ b, (∫⁻ t in (fun s : ℝ => c * s) ⁻¹' Ioc u v,
+      (LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+        (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z))) ^ q
+      ∂planarBrownianMotion x ∂P) ≤
+      ENNReal.ofReal ((max (v / c - u / c) 0) ^ q *
+        Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) := by
+  have hset : (fun s : ℝ => c * s) ⁻¹' Ioc u v = Ioc (u / c) (v / c) := by
+    ext s
+    simp only [mem_preimage, mem_Ioc, div_lt_iff₀ hc, le_div_iff₀ hc, mul_comm c s]
+  rw [hset]
+  exact lintegral_field_brownian_shiftedReferenceOccupation_le hh hη hηε hε γ x z (u / c) (v / c) hq
+
+/-- The time dilation cancels in the cutoff bound after Brownian scaling. -/
+theorem mul_rpow_lintegral_field_brownian_dilated_reference_le_of_scale_lower_bound {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε : ε ≤ 1 / 2) (γ : ℝ)
+    (x z : ℂ) (u v c : ℝ) (hc : 0 < c) {q : ℝ} (hq : 1 ≤ q) :
+    ENNReal.ofReal c ^ q * (∫⁻ ω, ∫⁻ b, (∫⁻ t in (fun s : ℝ => c * s) ⁻¹' Ioc u v,
+      (LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+        (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z))) ^ q
+      ∂planarBrownianMotion x ∂P) ≤
+      ENNReal.ofReal ((max (v - u) 0) ^ q *
+        Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) := by
+  have hmax : max (v / c - u / c) 0 = max (v - u) 0 / c := by
+    rw [← sub_div, ← max_div_div_right hc.le (v - u) 0, zero_div]
+  calc
+    _ ≤ ENNReal.ofReal c ^ q * ENNReal.ofReal ((max (v / c - u / c) 0) ^ q *
+        Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) := by
+      gcongr
+      exact lintegral_field_brownian_dilated_reference_le_of_scale_lower_bound hh hη hηε hε γ x z u v c hc hq
+    _ = _ := by
+      rw [hmax, ENNReal.ofReal_rpow_of_nonneg hc.le (by linarith : 0 ≤ q),
+        ← ENNReal.ofReal_mul (Real.rpow_nonneg hc.le _)]
+      congr 1
+      rw [← mul_assoc, ← Real.mul_rpow hc.le (div_nonneg (le_max_right _ _) hc.le),
+        mul_div_cancel₀ _ hc.ne']
+
 end HarmonicBalls
