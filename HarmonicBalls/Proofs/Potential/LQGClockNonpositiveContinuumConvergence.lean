@@ -1306,4 +1306,110 @@ theorem integral_nonpositive_halfDisc_radius_increment_split
   change D.indicator (fun z => Y r z - Y ε z) z = D.indicator U z - B.indicator V z at hs
   simpa only [Set.indicator_sub, Pi.sub_apply] using hs
 
+
+/-- On one field event, every stopped half-disc clock increment splits
+into its weighted field increment and its inner-ball correction. -/
+theorem ae_stopped_halfDisc_radius_increment_split
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ α : ℝ} (hγ : 0 ≤ γ) (hα : α ≤ 0) :
+    ∀ᵐ ω ∂P, ∀ (b : ContinuousPath ℂ) (T : ℝ≥0) (ε r : ℝ),
+      0 < ε → ε ≤ 1/2 → 0 < r → r ≤ ε →
+      let μ := Measure.map (fun t => b t) ((Measure.map Real.toNNReal
+        (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic T))
+      stoppedAnnularClock (fun z => r^(γ^2/2) * Real.exp
+        (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)) 0 (fun _ => T) b -
+      stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp
+        (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) 0 (fun _ => T) b =
+      (∫ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+        (max r ‖z‖)^(-γ*α) *
+          (r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0)) -
+            ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0)))) z ∂μ) -
+      (∫ z, {z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+        ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+          (ε^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z))) z ∂μ) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae, hh.ae_circleAverage_one_zero] with ω hω hzero
+  intro b T ε r hε hεhalf hr hrε
+  have hcont (s : ℝ) (hs : 0 < s) : Continuous (hcirc ω s) := by
+    rw [← funext (hω s)]
+    exact hHc ω s hs
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let μ : Measure ℂ := Measure.map (fun t => b t) (ν.restrict (Iic T))
+  have hν : ν univ = 1 := by
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := ⟨hν⟩
+  have hμ : μ ≤ Measure.map (fun t => b t) ν :=
+    Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+  let : IsFiniteMeasure μ := isFiniteMeasure_of_le (Measure.map (fun t => b t) ν) hμ
+  have hsplit := integral_nonpositive_halfDisc_radius_increment_split μ (hcirc ω)
+    hγ hα hε hεhalf hr hrε (hcont r hr) (hcont ε hε)
+  have hzero' (s : ℝ) (z : ℂ) : LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) s z =
+      hcirc ω s z - hcirc ω 1 0 := by
+    simp [LatticeProb.Gauss.fieldCircleAverage, hzero]
+  simp only [hzero'] at hsplit
+  change (∫ z, {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator _ z ∂μ) -
+    (∫ z, {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator _ z ∂μ) = _
+  simpa only [norm_nonneg, true_and, hzero'] using hsplit
+
+
+/-- The stopped spatial insertion correction is nonnegative and bounded by
+the nonnegative occupation of the entire unit interval. -/
+theorem ae_stopped_nonpositive_radius_correction_le_unit_occupation
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ α : ℝ} (hγ : 0 ≤ γ) (hα : α ≤ 0) :
+    ∀ᵐ ω ∂P, ∀ (b : ContinuousPath ℂ) (T : ℝ≥0) (ε r : ℝ),
+      0 < ε → ε ≤ 1/2 → 0 < r → r ≤ ε →
+      let f : ℂ → ℝ := fun z =>
+        ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+          (ε^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z))
+      let μ := Measure.map (fun t => b t) ((Measure.map Real.toNNReal
+        (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic T))
+      0 ≤ (∫ z, {z : ℂ | ‖z‖ < ε}.indicator f z ∂μ) ∧
+      ENNReal.ofReal (∫ z, {z : ℂ | ‖z‖ < ε}.indicator f z ∂μ) ≤
+        ∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < ε}.indicator f (b s.toNNReal)) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae] with ω hω
+  intro b T ε r hε hεhalf hr hrε
+  let f : ℂ → ℝ := fun z =>
+    ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+      (ε^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z))
+  have hc : Continuous (hcirc ω ε) := by
+    rw [← funext (hω ε)]
+    exact hHc ω ε hε
+  have hw (s : ℝ) (hs : 0 < s) : Continuous (fun z : ℂ => (max s ‖z‖)^(-γ*α)) :=
+    (continuous_const.max continuous_norm).rpow_const
+      (fun _ => Or.inl (ne_of_gt (lt_max_of_lt_left hs)))
+  have hf : Continuous f := by
+    dsimp [f]
+    exact ((hw ε hε).sub (hw r hr)).mul (continuous_const.mul
+      (Real.continuous_exp.comp (continuous_const.mul
+        (continuous_fieldCircleAverage_of_continuous (hcirc ω) 0 hε hc))))
+  have hq : 0 ≤ -γ * α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ) hα
+  have hf0 (z : ℂ) : 0 ≤ f z := by
+    dsimp [f]
+    apply mul_nonneg _ (mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le)
+    apply sub_nonneg.mpr
+    exact Real.rpow_le_rpow (le_of_lt (lt_max_of_lt_left hr)) (max_le_max_right _ hrε) hq
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let μ : Measure ℂ := Measure.map (fun t => b t) (ν.restrict (Iic T))
+  let ρ : Measure ℂ := Measure.map (fun t => b t) ν
+  have hμ : μ ≤ ρ := Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+  have hfull := inner_indicator_integrable_and_lintegral_eq b f hf hf0 hεhalf
+  have hnonneg (z : ℂ) : 0 ≤ {z : ℂ | ‖z‖ < ε}.indicator f z := by
+    by_cases hz : ‖z‖ < ε
+    · simpa [hz] using hf0 z
+    · simp [hz]
+  refine ⟨integral_nonneg hnonneg, ?_⟩
+  rw [hfull.2]
+  apply ENNReal.ofReal_le_ofReal
+  exact integral_mono_measure hμ (Filter.Eventually.of_forall hnonneg) hfull.1
+
 end HarmonicBalls
