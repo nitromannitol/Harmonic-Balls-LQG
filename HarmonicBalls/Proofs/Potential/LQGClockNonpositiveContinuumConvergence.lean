@@ -1973,4 +1973,119 @@ theorem exists_ae_tsum_nonpositive_halfDisc_shifted_radius_grid_clock_lt_top
   intro i hi
   exact (hω (ContinuousPath.shift j p.2) n i (Nat.lt_succ_iff.mp (Finset.mem_range.mp hi))).symm
 
+
+private theorem nonpositive_ofReal_abs_le_sum_unit_bounds (D : ℝ → ℝ) (hD : D 0 = 0) (B : ℕ → ℝ≥0∞)
+    (hB : ∀ (n : ℕ) (t : ℝ), 0 ≤ t → t ≤ 1 →
+      ENNReal.ofReal |D ((n : ℝ) + t) - D n| ≤ B n) :
+    ∀ (N : ℕ) (t : ℝ), 0 ≤ t → t ≤ N →
+      ENNReal.ofReal |D t| ≤ ∑ n ∈ Finset.range N, B n := by
+  intro N
+  induction N with
+  | zero =>
+    intro t ht0 htN
+    have htN' : t ≤ (0 : ℝ) := by simpa only [Nat.cast_zero] using htN
+    have ht : t = 0 := le_antisymm htN' ht0
+    simp only [ht, hD, abs_zero, ENNReal.ofReal_zero, Finset.range_zero, Finset.sum_empty, le_refl]
+  | succ N ih =>
+    intro t ht0 htN
+    rw [Finset.sum_range_succ]
+    by_cases htn : t ≤ N
+    · exact (ih t ht0 htn).trans (le_add_right le_rfl)
+    · have htN0 : (0 : ℝ) ≤ N := Nat.cast_nonneg N
+      have htn' : (N : ℝ) < t := lt_of_not_ge htn
+      have hsub0 : 0 ≤ t - N := by linarith
+      have hsub1 : t - N ≤ 1 := by push_cast at htN; linarith
+      have hprev := ih N htN0 le_rfl
+      have hlast := hB N (t - N) hsub0 hsub1
+      have hsum : (N : ℝ) + (t - N) = t := by ring
+      rw [hsum] at hlast
+      calc
+        ENNReal.ofReal |D t| = ENNReal.ofReal |D N + (D t - D N)| := by congr 1; ring
+        _ ≤ ENNReal.ofReal (|D N| + |D t - D N|) := ENNReal.ofReal_le_ofReal (abs_add_le _ _)
+        _ = ENNReal.ofReal |D N| + ENNReal.ofReal |D t - D N| := ENNReal.ofReal_add (abs_nonneg _) (abs_nonneg _)
+        _ ≤ _ := add_le_add hprev hlast
+
+/-- Radius-grid errors are summable uniformly on every finite time interval. -/
+theorem exists_ae_tsum_nonpositive_halfDisc_radius_grid_clock_all_horizons_lt_top
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (α : ℝ) (hα : α ≤ 0) :
+    ∃ c : ℝ, 0 < c ∧ ∀ x : ℂ,
+      ∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)), ∀ N : ℕ,
+      let F : ℝ → ℝ → ℝ := fun v t => ∫ s in (0 : ℝ)..t,
+        {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          v^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z))
+            (p.2 s.toNNReal)
+      (∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1) + 1),
+        ⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+          |F (gridScale (gridCount c) (n+1) i) t -
+            F (LatticeProb.LQG.dyadicScale (n+1)) t|) < ⊤ := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨c, hc, hgrid⟩ :=
+    exists_ae_tsum_nonpositive_halfDisc_shifted_radius_grid_clock_lt_top hh hγ hγ2 α hα
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  refine ⟨c, hc, ?_⟩
+  intro x
+  filter_upwards [hgrid x, (Measure.quasiMeasurePreserving_fst
+    (μ := P) (ν := planarBrownianMotion x)).ae hHae] with q hq hω
+  intro N
+  let A : ℝ → ℝ → ℝ := fun v t => ∫ s in (0 : ℝ)..t,
+    {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+      v^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) v z))
+        (q.2 s.toNNReal)
+  let F : ℝ → ℕ → ℝ → ℝ := fun v j t =>
+    stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) v z)) 0
+        (fun _ => t.toNNReal) (ContinuousPath.shift j q.2)
+  let B : ℕ → ℕ → ℕ → ℝ≥0∞ := fun j n i =>
+    ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal
+      |F (gridScale (gridCount c) (n+1) i) j t -
+        F (LatticeProb.LQG.dyadicScale (n+1)) j t|
+  have hdensity (v : ℝ) (hv : 0 < v) : Continuous (fun z => v^(γ^2/2) * Real.exp
+      (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) v z)) := by
+    have hcv : Continuous (hcirc q.1 v) := by
+      rw [← funext (hω v)]
+      exact hHc q.1 v hv
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
+      (continuous_fieldCircleAverage_of_continuous (hcirc q.1) α hv hcv)))
+  have hpoint (n i : ℕ) (hi : i ∈ Finset.range (gridCount c (n+1)+1)) :
+      (⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+        |A (gridScale (gridCount c) (n+1) i) t - A (LatticeProb.LQG.dyadicScale (n+1)) t|) ≤
+        ∑ j ∈ Finset.range N, B j n i := by
+    let r : ℝ := gridScale (gridCount c) (n+1) i
+    let ε : ℝ := LatticeProb.LQG.dyadicScale (n+1)
+    have he : 0 < ε := by dsimp [ε, LatticeProb.LQG.dyadicScale]; positivity
+    have hi' : i ≤ gridCount c (n+1) := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+    have hr : 0 < r := (half_pos he).trans_le (gridScale_mem_Icc (gridCount c) hi').1
+    let D : ℝ → ℝ := fun t => A r t - A ε t
+    have hD : D 0 = 0 := by simp [D, A]
+    have hblock (j : ℕ) (t : ℝ) (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+        ENNReal.ofReal |D ((j : ℝ) + t) - D j| ≤ B j n i := by
+      have h1 := stoppedAnnularClock_shift_eq_time_increment _ (hdensity r hr) 0 q.2 j ⟨t, ht0, ht1⟩
+      have h2 := stoppedAnnularClock_shift_eq_time_increment _ (hdensity ε he) 0 q.2 j ⟨t, ht0, ht1⟩
+      change F r j t = A r ((j : ℝ) + t) - A r j at h1
+      change F ε j t = A ε ((j : ℝ) + t) - A ε j at h2
+      have heq : D ((j : ℝ) + t) - D j = F r j t - F ε j t := by
+        dsimp [D]
+        rw [h1, h2]
+        ring
+      rw [heq]
+      exact le_iSup (fun t : Icc (0 : ℝ) 1 => ENNReal.ofReal |F r j t - F ε j t|) ⟨t, ht0, ht1⟩
+    apply iSup_le
+    intro t
+    exact nonpositive_ofReal_abs_le_sum_unit_bounds D hD (fun j => B j n i) hblock N t t.2.1 t.2.2
+  calc
+    _ ≤ ∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1)+1), ∑ j ∈ Finset.range N, B j n i := by
+      apply ENNReal.tsum_le_tsum
+      intro n
+      exact Finset.sum_le_sum (fun i hi => hpoint n i hi)
+    _ = ∑' n : ℕ, ∑ j ∈ Finset.range N, ∑ i ∈ Finset.range (gridCount c (n+1)+1), B j n i := by
+      apply tsum_congr
+      intro n
+      exact Finset.sum_comm
+    _ = ∑ j ∈ Finset.range N, ∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1)+1), B j n i :=
+      Summable.tsum_finsetSum (fun _ _ => ENNReal.summable)
+    _ < ⊤ := ENNReal.sum_lt_top.mpr (fun j _ => hq j)
+
 end HarmonicBalls
