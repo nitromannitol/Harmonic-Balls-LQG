@@ -1,6 +1,9 @@
 import HarmonicBalls.Proofs.GFF.DMSInsertedLocalAbsoluteContinuity
 import HarmonicBalls.Proofs.Sec8.MeanZeroDistributionVersion
 import HarmonicBalls.Proofs.Sec8.TranslatedDistributionInsertion
+import HarmonicBalls.Proofs.Sec8.PhaseTorusLebesgue
+import HarmonicBalls.Proofs.Sec8.UniformSingularPhaseCertificate
+import HarmonicBalls.Proofs.GFF.LogInsertionReconstruction
 
 /-!
 # Root-dependent local event transfer
@@ -11,7 +14,7 @@ root insertion to almost every root of the singular Liouville measure.
 
 noncomputable section
 
-open MeasureTheory Set Metric
+open MeasureTheory Set Metric Filter
 
 namespace HarmonicBalls
 
@@ -732,5 +735,196 @@ theorem IsWholePlaneGFF.ae_chartedLocalEvent_add_of_canonical
           (bufferedChartScale_pos n).le z)) ∈ E n) ↔ _
   rw [hroot, hobs]
   exact and_iff_right hclosed
+
+/-- Recentring a logarithmic insertion moves its singularity to the origin. -/
+theorem logInsertionDistribution_translated (z : ℂ) (a : ℝ) (φ : LQGMetric.TestC) :
+    logInsertionDistribution z a (LQGMetric.testAffinePull 1 z φ) =
+      ∫ x, φ x * (a * Real.log ‖x‖) := by
+  rw [logInsertionDistribution_apply]
+  have ht := integral_add_right_eq_self (μ := volume)
+    (fun x : ℂ => φ (x - z) * (a * Real.log ‖x - z‖)) z
+  simpa [LQGMetric.testAffinePull_apply] using ht.symm
+
+/-- A Haar-phase event for an origin insertion holds for almost every root
+and field after translating the corresponding root insertion. -/
+theorem IsWholePlaneGFF.ae_ae_translated_origin_phase
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (a r : ℝ)
+    (E : Set (PhaseTorus × (Section6.LocalTest (ball 0 r) → ℝ)))
+    (hE : MeasurableSet E)
+    (hphase : ∀ᵐ p ∂(((volume : Measure PhaseCircle).prod volume).prod P),
+      (p.1, fun φ : Section6.LocalTest (ball 0 r) =>
+        hC p.2 φ.1.1 + ∫ x, φ.1.1 x * (a * Real.log ‖x‖)) ∈ E) :
+    ∀ᵐ z ∂(volume : Measure ℂ), ∀ᵐ ω ∂P,
+      (phaseTorusOfComplex (-z), fun φ : Section6.LocalTest (ball 0 r) =>
+        (meanZeroDistributionVersion (Section6.pairingProc hC ω) + logInsertionDistribution z a)
+          (LQGMetric.testAffinePull 1 z φ.1.1)) ∈ E := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let H : Ω → LQGMetric.DistC := fun ω => meanZeroDistributionVersion (Section6.pairingProc hC ω)
+  let X : ℂ × Ω → (Section6.LocalTest (ball 0 r) → ℝ) := fun p φ =>
+    H p.2 (LQGMetric.testAffinePull 1 p.1 φ.1.1) + ∫ x, φ.1.1 x * (a * Real.log ‖x‖)
+  let Y : ℂ × Ω → (Section6.LocalTest (ball 0 r) → ℝ) := fun p φ =>
+    hC p.2 φ.1.1 + ∫ x, φ.1.1 x * (a * Real.log ‖x‖)
+  let T : Set ((Section6.LocalTest (ball 0 r) → ℝ) × ℂ) :=
+    {q | (phaseTorusOfComplex (-q.2), q.1) ∈ E}
+  have hT : MeasurableSet T := hE.preimage
+    ((measurable_phaseTorusOfComplex.comp measurable_snd.neg).prodMk measurable_fst)
+  have hH : Measurable H :=
+    measurable_meanZeroDistributionVersion.comp (Section6.measurable_pairingProc hh)
+  have hXm : Measurable X := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    exact ((measurable_translated_distribution_pairing φ.1.1).comp
+      ((hH.comp measurable_snd).prodMk measurable_fst)).add_const _
+  have hYm : Measurable Y := by
+    apply measurable_pi_iff.mpr
+    intro φ
+    exact ((hh.measurable_pairing φ.1.1 (Section6.isTestFunction_of_testC φ.1.1)).comp
+      measurable_snd).add_const _
+  have hg : Measurable (Function.uncurry (fun (_ : ℂ) (x : ℂ) => a * Real.log ‖x‖)) :=
+    (Real.measurable_log.comp measurable_snd.norm).const_mul a
+  have hdom : shiftedRootReferenceLaw (volume : Measure ℂ) P X ≪
+      shiftedRootReferenceLaw (volume : Measure ℂ) P Y :=
+    (hh.rooted_translated_distribution_insertion_equivalence H hH
+      (fun φ => hh.canonical_distribution_version_pairing φ) volume
+      (fun _ x => a * Real.log ‖x‖) hg).1
+  have hfib := ae_ae_negative_centerPhase_of_ae_prod P (volume : Measure ℂ)
+    Measure.AbsolutelyContinuous.rfl
+    (A := fun t ω => (t, fun φ : Section6.LocalTest (ball 0 r) =>
+      hC ω φ.1.1 + ∫ x, φ.1.1 x * (a * Real.log ‖x‖)) ∈ E) hphase
+  have hbase : ∀ᵐ q ∂shiftedRootReferenceLaw (volume : Measure ℂ) P Y, q ∈ T := by
+    apply (ae_map_iff (hYm.prodMk measurable_fst).aemeasurable hT).2
+    apply (Measure.ae_prod_iff_ae_ae ((hYm.prodMk measurable_fst) hT)).2
+    exact hfib
+  have hx : ∀ᵐ p ∂((volume : Measure ℂ).prod P), (X p, p.1) ∈ T :=
+    (ae_map_iff (hXm.prodMk measurable_fst).aemeasurable hT).1 (hdom.ae_le hbase)
+  have hf := (Measure.ae_prod_iff_ae_ae ((hXm.prodMk measurable_fst) hT)).1 hx
+  filter_upwards [hf] with z hz
+  filter_upwards [hz] with ω hω
+  change (phaseTorusOfComplex (-z), X (z, ω)) ∈ E at hω
+  convert hω using 1
+  congr 1
+  funext φ
+  change H ω (LQGMetric.testAffinePull 1 z φ.1.1) +
+      logInsertionDistribution z a (LQGMetric.testAffinePull 1 z φ.1.1) = _
+  rw [logInsertionDistribution_translated]
+
+/-- Haar-phase validity of the chart events gives validity of the assembled
+event under the actual root-inserted field at area-almost every root. -/
+theorem IsWholePlaneGFF.ae_ae_chartedLocalEvent_logInsertion
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) (a : ℝ) (u : ℕ → ℂ) (hu : DenseRange u)
+    (E : ∀ n, Set (PhaseTorus × (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ)))
+    (hE : ∀ n, MeasurableSet (E n))
+    (hphase : ∀ n, ∀ᵐ p ∂(((volume : Measure PhaseCircle).prod volume).prod P),
+      (p.1, fun φ : Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) =>
+        hC p.2 φ.1.1 + ∫ x, φ.1.1 x * (a * Real.log ‖x‖)) ∈ E n) :
+    ∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (0 : ℂ) 1 →
+      ∀ᵐ ω ∂P,
+        ((fun ψ : {φ : ℂ → ℝ // IsTestFunction univ φ ∧ ∫ x, φ x = 0} =>
+          hC ω ψ.1 + ∫ x, ψ.1 x * (a * Real.log ‖x - z‖)), z) ∈
+            chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E := by
+  have hf : ∀ n, ∀ᵐ z ∂(volume : Measure ℂ), ∀ᵐ ω ∂P,
+      (phaseTorusOfComplex (-z), fun φ : Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) =>
+        (meanZeroDistributionVersion (Section6.pairingProc hC ω) + logInsertionDistribution z a)
+          (LQGMetric.testAffinePull 1 z φ.1.1)) ∈ E n := fun n =>
+    hh.ae_ae_translated_origin_phase a (bufferedChartScale n / 2) (E n) (hE n) (hphase n)
+  filter_upwards [ae_all_iff.mpr hf, Measure.ae_ne (volume : Measure ℂ) 0] with z hz hz0 hzball
+  obtain ⟨n, hn⟩ := exists_bufferedChart_of_mem u hu z hzball hz0
+  have hzunion : z ∈ ⋃ n, bufferedChartRoots u n := mem_iUnion.mpr ⟨n, hn⟩
+  obtain ⟨n, hn⟩ := exists_firstChart_of_mem (bufferedChartRoots u) z hzunion
+  filter_upwards [hz n, hh.ae_chartedLocalEvent_add_of_canonical
+    (fun z => phaseTorusOfComplex (-z)) u E] with ω hω heq
+  have h := (heq n z hn (logInsertionDistribution z a)).2 hω
+  simpa only [logInsertionDistribution_apply, TestFunction.coe_mk] using h
+
+universe u
+
+/-- Uniform origin frequency certificates produce one measurable marked
+event whose local sections transfer to almost every root of the singular
+Liouville measure. The frequency interpretation at sampled roots is separate. -/
+theorem IsWholePlaneGFF.exists_charted_phaseFrequency_event
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α β : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hβ : (2 + γ) ^ 2 / 2 < β)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ μ₀ ν : Ω → Measure ℂ} {b : ℝ} (hb : b ∈ Ioo (0 : ℝ) 1)
+    (hh : IsWholePlaneGFF P hC hcirc)
+    (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hμ₀ : IsLQGMeasureOfField P γ γ hcirc μ₀)
+    (hν : IsLQGMeasureOfField P γ 0 hcirc ν)
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC₀ : LQGMeasureCoordChange P γ 0 hC hcirc)
+    (hCCγ : LQGMeasureCoordChange P γ γ hC hcirc)
+    {ζ : ℝ} (hζ : 0 < ζ) :
+    ∃ u : ℕ → ℂ, DenseRange u ∧
+    ∃ c a : ℝ, 0 < c ∧ a ∈ Ioo (0 : ℝ) 1 ∧
+    ∃ C₁m C₁p C₂m C₂p : ℝ,
+      0 < C₁m ∧ 0 < C₁p ∧ 0 < C₂m ∧ 0 < C₂p ∧
+    ∃ N₀ : ℕ, 9 ≤ N₀ ∧ ∃ m ∈ Ioo (0 : ℝ) 1,
+    ∀ N : ℕ, N₀ ≤ N →
+    ∃ E : ∀ n, Set (PhaseTorus ×
+        (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ)),
+      (∀ n, MeasurableSet (E n)) ∧
+      (∀ n, ∀ᵐ ω ∂P, ∀ t : PhaseTorus,
+        ((t, fun φ : Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) =>
+          hC ω φ.1.1 + ∫ x, φ.1.1 x * (-γ * Real.log ‖x‖)) ∈ E n ↔
+        ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+          ({k : ℕ | k ∈ Icc (K + 1) (2 * K) ∧
+            PhaseVeryGoodAnnulus (μ₀ ω) β (dyadicScale k) 0 N
+              (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b
+              C₁m C₁p C₂m C₂p c (torusPhase t) ∧
+            AnnulusBallComparison (μ₀ ω) k 0 m}.ncard : ℝ))) ∧
+      MeasurableSet (chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) ∧
+      (∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (0 : ℂ) 1 →
+        ∃ R : ℝ, 0 < R ∧ R < ‖z‖ ∧ ‖z‖ + R < 1 ∧
+          ∃ F : Set (ModConstTestPairings (ball z R)), MeasurableSet F ∧
+            (∀ v, (v, z) ∈ chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E ↔
+              restrictGlobalPairings (ball z R) v ∈ F) ∧
+            ∀ᵐ ω ∂P, (fun φ => hC ω φ.1 +
+              ∫ x, φ.1 x * (-γ * Real.log ‖x - z‖)) ∈ F) ∧
+      (∀ᵐ ω ∂P, ∀ᵐ z ∂μ ω, z ∈ ball (0 : ℂ) 1 →
+        (localModConstField α hC univ ω, z) ∈
+          chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) := by
+  have hαγ : γ < lqgQ γ := by
+    have hsq : γ ^ 2 < 4 := by nlinarith
+    have hdiv : γ / 2 < 2 / γ := by
+      apply (lt_div_iff₀ hγ).2
+      nlinarith
+    unfold lqgQ
+    linarith
+  obtain ⟨u, hu⟩ := exists_dense_seq ℂ
+  obtain ⟨c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, hcert⟩ :=
+    hh.exists_uniform_singular_inserted_phaseFrequency_certificate hgrowth hfull
+      hγ hγ2 hαγ hβ hb hμ₀ hν hAff hCC₀ hCCγ hζ
+  refine ⟨u, hu, c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, ?_⟩
+  intro N hN
+  choose E hE heq hphase using fun n : ℕ =>
+    hcert N hN (bufferedChartScale n / 2) (half_pos (bufferedChartScale_pos n))
+  have hS := measurableSet_chartedLocalEvent (fun z => phaseTorusOfComplex (-z))
+    (measurable_phaseTorusOfComplex.comp measurable_neg) u E hE
+  have hvalid := hh.ae_ae_chartedLocalEvent_logInsertion (-γ) u hu E hE hphase
+  have href : ∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (0 : ℂ) 1 →
+      ∃ R : ℝ, 0 < R ∧ R < ‖z‖ ∧ ‖z‖ + R < 1 ∧
+        ∃ F : Set (ModConstTestPairings (ball z R)), MeasurableSet F ∧
+          (∀ v, (v, z) ∈ chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E ↔
+            restrictGlobalPairings (ball z R) v ∈ F) ∧
+          ∀ᵐ ω ∂P, (fun φ => hC ω φ.1 +
+            ∫ x, φ.1 x * (-γ * Real.log ‖x - z‖)) ∈ F := by
+    filter_upwards [hvalid, Measure.ae_ne (volume : Measure ℂ) 0] with z hz hz0 hzball
+    obtain ⟨R, hR, hRz, hR1, F, hF, hlocal⟩ :=
+      chartedLocalEvent_admissible_section (fun z => phaseTorusOfComplex (-z))
+        u hu E hE z hzball hz0
+    refine ⟨R, hR, hRz, hR1, F, hF, hlocal, ?_⟩
+    filter_upwards [hz hzball] with ω hω
+    exact (hlocal _).1 hω
+  exact ⟨E, hE, heq, hS, href,
+    hh.ae_singular_root_local_of_reference hγ hγ2 hα hμ hν
+      (chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) hS href⟩
 
 end HarmonicBalls
