@@ -1,3 +1,5 @@
+import HarmonicBalls.Proofs.Brownian.PlanarBrownianMotion
+import HarmonicBalls.Proofs.Brownian.PlanarHeatFeller
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
 import HarmonicBalls.Proofs.Potential.BrownianSharpLogOccupation
 import HarmonicBalls.Proofs.Sec6.BrownianScaling
@@ -4338,6 +4340,153 @@ theorem lintegral_field_brownian_shiftedReferenceOccupation_rpow_le_log_kernel
     _ ≤ _ := by
       gcongr
       exact planarBrownianMotion_shifted_square_occupation_rpow_le x z c hc u v hu hv n hr hcover ha
+        (by linarith) hqk
+
+/-- A uniform Brownian bound is preserved by deterministic time shifts. -/
+theorem lintegral_planarBrownianMotion_shift_le_uniform (x : ℂ) (s : ℝ≥0) (F : ContinuousPath ℂ → ℝ≥0∞)
+    (hF : Measurable F) (C : ℝ≥0∞)
+    (hbound : ∀ y, (∫⁻ b, F b ∂planarBrownianMotion y) ≤ C) :
+    (∫⁻ b, F (ContinuousPath.shift s b) ∂planarBrownianMotion x) ≤ C := by
+  let K := SubMarkovKernelSemigroup.IsConservative.continuousProcess
+    planarHeatSemigroup isConservative_planarHeatSemigroup
+  let : IsFiniteKernel (planarHeatSemigroup.kernel s) :=
+    (planarHeatSemigroup.isSubMarkovKernel s).isFiniteKernel
+  let ν := planarHeatSemigroup.kernel s x
+  have hs : (planarBrownianMotion x).map (ContinuousPath.shift s) = K ∘ₘ ν := by
+    rw [planarBrownianMotion_eq_continuousProcess]
+    have hshift := congrArg (fun K => K x)
+      (SubMarkovKernelSemigroup.IsFellerKernelSemigroup.continuousProcess_map_shift
+        planarHeatSemigroup isConservative_planarHeatSemigroup
+        isFellerKernelSemigroup_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup s)
+    rw [Kernel.map_apply _ (ContinuousPath.measurable_shift_fixed s) x,
+      Kernel.comp_apply] at hshift
+    exact hshift
+  calc
+    _ = ∫⁻ b, F b ∂((planarBrownianMotion x).map (ContinuousPath.shift s)) :=
+      (lintegral_map hF (ContinuousPath.measurable_shift_fixed s)).symm
+    _ = ∫⁻ y, ∫⁻ b, F b ∂K y ∂ν := by
+      rw [hs, Measure.lintegral_bind (Kernel.aemeasurable K) hF.aemeasurable]
+    _ ≤ ∫⁻ _y, C ∂ν := by
+      apply lintegral_mono
+      intro y
+      dsimp only [K]
+      rw [← planarBrownianMotion_eq_continuousProcess]
+      exact hbound y
+    _ = C := by simp [ν]
+
+/-- Translation of time identifies shifted-path and shifted-interval occupations. -/
+theorem lintegral_shift_path_occupation (s : ℝ≥0) (h : ℝ) (b : ContinuousPath ℂ)
+    (φ : ℂ → ℝ≥0∞) :
+    (∫⁻ t in Ioc (0 : ℝ) h, φ ((ContinuousPath.shift s b) t.toNNReal)) =
+      ∫⁻ t in Ioc (s : ℝ) ((s : ℝ) + h), φ (b t.toNNReal) := by
+  let f : ℝ → ℝ≥0∞ := fun t => φ (b t.toNNReal)
+  have ht := lintegral_add_right_eq_self (μ := volume)
+    ((Ioc (s : ℝ) ((s : ℝ) + h)).indicator f) (s : ℝ)
+  rw [lintegral_indicator measurableSet_Ioc] at ht
+  calc
+    _ = ∫⁻ t, (Ioc (s : ℝ) ((s : ℝ) + h)).indicator f (t + (s : ℝ)) := by
+      rw [← lintegral_indicator measurableSet_Ioc]
+      apply lintegral_congr
+      intro t
+      by_cases hx : t ∈ Ioc (0 : ℝ) h
+      · have hy : t + (s : ℝ) ∈ Ioc (s : ℝ) ((s : ℝ) + h) := by
+          simp only [mem_Ioc] at *
+          constructor <;> linarith
+        simp only [indicator_of_mem hx, indicator_of_mem hy, f, ContinuousPath.shift_apply,
+          Real.toNNReal_add (le_of_lt hx.1) s.coe_nonneg, Real.toNNReal_coe]
+        congr 2
+        exact add_comm _ _
+      · have hy : t + (s : ℝ) ∉ Ioc (s : ℝ) ((s : ℝ) + h) := by
+          simp only [mem_Ioc] at *
+          intro hy
+          apply hx
+          constructor <;> linarith
+        simp [hx, hy]
+    _ = _ := ht
+
+/-- Square occupation moments depend on cell length uniformly in its starting time. -/
+theorem planarBrownianMotion_time_shifted_square_occupation_rpow_le
+    (x z : ℂ) (s c : ℝ≥0) (hc : 0 < c) (h : ℝ) (hh : h ≤ c)
+    (n : ℕ) {r q : ℝ} (hr : 0 < r) (hcover : (1 : ℝ) / 4 < Real.sqrt c * r)
+    (ha : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) (hq : 0 < q) (hqk : q ≤ (n + 1 : ℕ)) :
+    (∫⁻ b, (∫⁻ t in Ioc (s : ℝ) ((s : ℝ) + h),
+      LatticeProb.LQG.lqgSquare.indicator (fun _ => (1 : ℝ≥0∞))
+        (b t.toNNReal + z)) ^ q ∂planarBrownianMotion x) ≤
+      (ENNReal.ofReal c ^ (n + 1) *
+        ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+            (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ (n + 1))) ^
+        (q / (n + 1 : ℕ)) := by
+  let φ : ℂ → ℝ≥0∞ := fun w => LatticeProb.LQG.lqgSquare.indicator (fun _ => (1 : ℝ≥0∞)) (w + z)
+  let T : ContinuousPath ℂ → ℝ≥0∞ := fun b => ∫⁻ t in Ioc (0 : ℝ) h, φ (b t.toNNReal)
+  have hQ : MeasurableSet LatticeProb.LQG.lqgSquare := by
+    apply IsClosed.measurableSet
+    have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+    have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+    exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+  have hb : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal + z) := by
+    exact ((ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)).add_const z
+  have hT : Measurable T := by
+    have ht := ((measurable_const : Measurable (fun _ : ContinuousPath ℂ × ℝ => (1 : ℝ≥0∞))).indicator (hQ.preimage hb)).lintegral_prod_right'
+      (ν := volume.restrict (Ioc (0 : ℝ) h))
+    convert ht using 1
+    ext b
+    apply lintegral_congr
+    intro t
+    by_cases ht : b t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare <;> simp [φ, ht]
+  let C : ℝ≥0∞ := (ENNReal.ofReal c ^ (n + 1) *
+    ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+      ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+        (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ (n + 1))) ^
+    (q / (n + 1 : ℕ))
+  have hbound : ∀ y, (∫⁻ b, (T b) ^ q ∂planarBrownianMotion y) ≤ C := by
+    intro y
+    exact planarBrownianMotion_shifted_square_occupation_rpow_le y z c hc 0 h (le_refl 0) hh n hr hcover ha hq hqk
+  have hshift := lintegral_planarBrownianMotion_shift_le_uniform x s (fun b => T b ^ q) (hT.pow_const q) _ hbound
+  apply le_trans ?_ hshift
+  apply le_of_eq
+  apply lintegral_congr
+  intro b
+  congr 1
+  exact (lintegral_shift_path_occupation s h b φ).symm
+
+/-- Cutoff field moments on a shifted cell depend only on its length. -/
+theorem lintegral_field_brownian_time_shifted_occupation_rpow_le_log_kernel
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε : ε ≤ 1 / 2) (γ : ℝ)
+    (x z : ℂ) (s c : ℝ≥0) (hc : 0 < c) (h : ℝ) (hcell : h ≤ c)
+    (n : ℕ) {r q : ℝ} (hr : 0 < r) (hcover : (1 : ℝ) / 4 < Real.sqrt c * r)
+    (ha : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) (hq : 1 ≤ q) (hqk : q ≤ (n + 1 : ℕ)) :
+    (∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc (s : ℝ) ((s : ℝ) + h),
+      (LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+        (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z))) ^ q
+      ∂planarBrownianMotion x ∂P) ≤
+      ENNReal.ofReal (Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) *
+      (ENNReal.ofReal c ^ (n + 1) *
+        ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+            (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ (n + 1))) ^
+        (q / (n + 1 : ℕ)) := by
+  calc
+    _ ≤ ∫⁻ b, ENNReal.ofReal (((shiftedReferenceOccupation b z s ((s : ℝ) + h)).real univ) ^ q *
+        Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) ∂planarBrownianMotion x :=
+      lintegral_field_brownian_shiftedReferenceOccupation_le_occupation hh hη hηε hε γ x z s ((s : ℝ) + h) hq
+    _ = ENNReal.ofReal (Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) *
+        ∫⁻ b, (∫⁻ t in Ioc (s : ℝ) ((s : ℝ) + h), LatticeProb.LQG.lqgSquare.indicator
+          (fun _ => (1 : ℝ≥0∞)) (b t.toNNReal + z)) ^ q ∂planarBrownianMotion x := by
+      rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+      apply lintegral_congr
+      intro b
+      rw [ENNReal.ofReal_mul (Real.rpow_nonneg (measureReal_nonneg) _),
+        ← ENNReal.ofReal_rpow_of_nonneg measureReal_nonneg (by linarith), measureReal_def,
+        ENNReal.ofReal_toReal (measure_ne_top _ _), shiftedReferenceOccupation_mass_eq]
+      exact mul_comm _ _
+    _ ≤ _ := by
+      gcongr
+      exact planarBrownianMotion_time_shifted_square_occupation_rpow_le x z s c hc h hcell n hr hcover ha
         (by linarith) hqk
 
 end HarmonicBalls
