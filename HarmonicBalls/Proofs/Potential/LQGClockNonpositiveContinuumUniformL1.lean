@@ -244,4 +244,93 @@ theorem lintegral_prod_closedBall_inserted_density_eq
       · rw [Set.indicator_of_notMem (s := {z : ℂ | ‖z‖ ≤ δ}) hz]
         simp [G, A, Set.indicator_apply, hz]
 
+/-- Closed-ball insertion weights converge in mean for any finite spatial measure. -/
+theorem tendsto_lintegral_closedBall_insertion_weight
+    (ν : Measure ℂ) [IsFiniteMeasure ν] {γ α : ℝ}
+    (hγ : 0 ≤ γ) (hα : α ≤ 0) :
+    Tendsto (fun ε : ℝ => ∫⁻ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+      (fun z => ENNReal.ofReal (Real.exp (-(γ * α) * Real.log (max ε ‖z‖)))) z ∂ν)
+      (𝓝[>] (0 : ℝ))
+      (𝓝 (∫⁻ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal (‖z‖ ^ (-(γ * α)))) z ∂ν)) := by
+  have hp : 0 ≤ -(γ * α) := neg_nonneg.mpr (mul_nonpos_of_nonneg_of_nonpos hγ hα)
+  let f : ℝ → ℂ → ℝ≥0∞ := fun ε z => {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+    (fun z => ENNReal.ofReal (Real.exp (-(γ * α) * Real.log (max ε ‖z‖)))) z
+  let g : ℂ → ℝ≥0∞ := fun z => {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+    (fun z => ENNReal.ofReal (‖z‖ ^ (-(γ * α)))) z
+  have hA : MeasurableSet {z : ℂ | ‖z‖ ≤ 1/2} :=
+    measurableSet_le measurable_norm measurable_const
+  change Tendsto (fun ε => ∫⁻ z, f ε z ∂ν) _ (𝓝 (∫⁻ z, g z ∂ν))
+  apply tendsto_lintegral_filter_of_dominated_convergence (fun _ => 1)
+  · filter_upwards with ε
+    exact (measurable_const.mul ((measurable_const.max measurable_norm).log)).exp.ennreal_ofReal.indicator hA
+  · filter_upwards [self_mem_nhdsWithin,
+      mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds (show (0 : ℝ) < 1/2 by norm_num))] with ε hε hεhalf
+    filter_upwards with z
+    change ε < (1/2 : ℝ) at hεhalf
+    by_cases hz : ‖z‖ ≤ 1/2
+    · have he : 0 < max ε ‖z‖ := lt_max_of_lt_left hε
+      have hb : max ε ‖z‖ ≤ 1 := max_le (by linarith) (by linarith)
+      have hw : Real.exp (-(γ * α) * Real.log (max ε ‖z‖)) =
+          (max ε ‖z‖) ^ (-(γ * α)) := by
+        rw [Real.rpow_def_of_pos he]; congr 1; ring
+      simp only [f, Set.indicator_of_mem (s := {z : ℂ | ‖z‖ ≤ 1/2}) hz, hw]
+      simpa using ENNReal.ofReal_le_ofReal (Real.rpow_le_one he.le hb hp)
+    · simp only [f, Set.indicator_of_notMem (s := {z : ℂ | ‖z‖ ≤ 1/2}) hz, zero_le_one]
+  · simp
+  · filter_upwards with z
+    by_cases hz : ‖z‖ ≤ 1/2
+    · have hx : Tendsto (fun ε : ℝ => max ε ‖z‖) (𝓝[>] (0 : ℝ)) (𝓝 ‖z‖) := by
+        simpa [max_eq_right (norm_nonneg z)] using
+          ((tendsto_id.max tendsto_const_nhds).mono_left nhdsWithin_le_nhds :
+            Tendsto (fun ε : ℝ => max ε ‖z‖) (𝓝[>] (0 : ℝ)) (𝓝 (max 0 ‖z‖)))
+      have ht := ENNReal.continuous_ofReal.tendsto (‖z‖ ^ (-(γ * α))) |>.comp
+        ((Real.continuous_rpow_const hp).tendsto ‖z‖ |>.comp hx)
+      simp only [g, Set.indicator_of_mem (s := {z : ℂ | ‖z‖ ≤ 1/2}) hz]
+      apply ht.congr'
+      filter_upwards [self_mem_nhdsWithin] with ε hε
+      have he : 0 < max ε ‖z‖ := lt_max_of_lt_left hε
+      simp only [f, Set.indicator_of_mem (s := {z : ℂ | ‖z‖ ≤ 1/2}) hz]
+      change ENNReal.ofReal ((max ε ‖z‖) ^ (-(γ * α))) =
+        ENNReal.ofReal (Real.exp (-(γ * α) * Real.log (max ε ‖z‖)))
+      rw [Real.rpow_def_of_pos he]
+      congr 1
+      ring
+    · simp only [f, g, Set.indicator_of_notMem (s := {z : ℂ | ‖z‖ ≤ 1/2}) hz]
+      exact tendsto_const_nhds
+
+/-- Product expectations of nonpositive inserted closed-ball occupations
+converge as the smoothing radius tends to zero. -/
+theorem tendsto_lintegral_prod_closedBall_nonpositive_inserted_density
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (Q : Measure (ContinuousPath ℂ)) [IsFiniteMeasure Q]
+    (ρ : Measure ℝ) [IsFiniteMeasure ρ] {γ α : ℝ} (hγ : 0 ≤ γ) (hα : α ≤ 0) :
+    Tendsto (fun ε : ℝ => ∫⁻ q : Ω × ContinuousPath ℂ, ∫⁻ s, ENNReal.ofReal
+      ({z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) ε z)) (q.2 s.toNNReal)) ∂ρ ∂(P.prod Q))
+      (𝓝[>] (0 : ℝ))
+      (𝓝 (∫⁻ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+        (fun z => ENNReal.ofReal (‖z‖ ^ (-(γ * α)))) z
+        ∂((Q.prod ρ).map (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal)))) := by
+  let ev : ContinuousPath ℂ × ℝ → ℂ := fun p => p.1 p.2.toNNReal
+  have hev : Measurable ev :=
+    (continuous_eval.comp (continuous_fst.prodMk (continuous_real_toNNReal.comp continuous_snd))).measurable
+  let ν := (Q.prod ρ).map ev
+  let : IsFiniteMeasure ν := (Q.prod ρ).isFiniteMeasure_map ev
+  have ht := tendsto_lintegral_closedBall_insertion_weight ν hγ hα
+  apply ht.congr'
+  filter_upwards [self_mem_nhdsWithin,
+    mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds (show (0 : ℝ) < 1/2 by norm_num))] with ε hε hεhalf
+  have hw : Measurable (fun z : ℂ => {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+      (fun z => ENNReal.ofReal (Real.exp (-(γ * α) * Real.log (max ε ‖z‖)))) z) :=
+    (measurable_const.mul ((measurable_const.max measurable_norm).log)).exp.ennreal_ofReal.indicator
+      (measurableSet_le measurable_norm measurable_const)
+  rw [lintegral_prod_closedBall_inserted_density_eq hh Q ρ hε (le_of_lt hεhalf) le_rfl γ α]
+  change (∫⁻ z, _ ∂((Q.prod ρ).map ev)) = _
+  rw [lintegral_map hw hev]
+  simpa only [Function.comp_apply, ev] using
+    (lintegral_prod _ (hw.comp hev).aemeasurable)
+
 end HarmonicBalls
