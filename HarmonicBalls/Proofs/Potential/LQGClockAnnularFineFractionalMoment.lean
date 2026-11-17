@@ -259,4 +259,83 @@ theorem lintegral_prod_brownian_annular_cell_rpow_le
       simp only [lintegral_const, measure_univ, mul_one]
       rfl
 
+/-- On an annulus the insertion changes the clock density by at most a
+constant independent of the smoothing scale. -/
+theorem ae_annular_inserted_clock_density_le_uninserted
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε δ : ℝ} (hε : 0 < ε) (hεδ : ε ≤ δ) (γ α : ℝ) :
+    ∀ᵐ ω ∂P, ∀ z : ℂ,
+      ENNReal.ofReal ({w : ℂ | δ ≤ ‖w‖ ∧ ‖w‖ ≤ 1 / 2}.indicator (fun w =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε w)) z) ≤
+      ENNReal.ofReal (Real.exp (|γ * α| * |Real.log δ|)) *
+        ENNReal.ofReal ({w : ℂ | δ ≤ ‖w‖ ∧ ‖w‖ ≤ 1 / 2}.indicator (fun w =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε w)) z) := by
+  filter_upwards [ae_recentered_inserted_circle_average hh α,
+    ae_recentered_inserted_circle_average hh 0] with ω hα h0
+  intro z
+  by_cases hz : δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2
+  · simp only [Set.indicator_apply, Set.mem_ofPred_eq, ite_eq_left hz]
+    rw [← hα ε z hε, ← h0 ε z hε]
+    simp only [zero_mul, sub_zero]
+    have hδ : 0 < δ := hε.trans_le hεδ
+    have hz0 : 0 < ‖z‖ := hδ.trans_le hz.1
+    have hlog : Real.log δ ≤ Real.log ‖z‖ := Real.log_le_log hδ hz.1
+    have hlogz : Real.log ‖z‖ ≤ 0 := Real.log_nonpos hz0.le (by linarith [hz.2])
+    have hlogδ : Real.log δ ≤ 0 := hlog.trans hlogz
+    have hw : -(γ * α) * Real.log (max ε ‖z‖) ≤
+        |γ * α| * |Real.log δ| := by
+      rw [max_eq_right (hεδ.trans hz.1)]
+      calc
+        _ ≤ |-(γ * α) * Real.log ‖z‖| := le_abs_self _
+        _ = |γ * α| * |Real.log ‖z‖| := by rw [abs_mul, abs_neg]
+        _ ≤ |γ * α| * |Real.log δ| := by
+          apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
+          rw [abs_of_nonpos hlogz, abs_of_nonpos hlogδ]
+          linarith
+    rw [← ENNReal.ofReal_mul (by positivity)]
+    apply ENNReal.ofReal_le_ofReal
+    have he : Real.exp (γ * (hcirc ω ε z - hcirc ω 1 0 -
+        α * Real.log (max ε ‖z‖))) ≤
+        Real.exp (|γ * α| * |Real.log δ|) *
+          Real.exp (γ * (hcirc ω ε z - hcirc ω 1 0)) := by
+      rw [← Real.exp_add]
+      apply Real.exp_le_exp.mpr
+      linarith
+    have hs : 0 ≤ ε ^ (γ ^ 2 / 2) := Real.rpow_nonneg hε.le _
+    nlinarith
+  · simp only [Set.indicator_apply, Set.mem_ofPred_eq, ite_eq_right hz,
+      ENNReal.ofReal_zero, mul_zero, le_refl]
+
+/-- The annular occupation mass of the inserted field is bounded by a
+scale-independent multiple of that of the uninserted field. -/
+theorem ae_annular_inserted_clock_cell_le_uninserted
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε δ : ℝ} (hε : 0 < ε) (hεδ : ε ≤ δ) (γ α : ℝ)
+    (ν : Measure ℝ) :
+    ∀ᵐ ω ∂P, ∀ b : ℝ → ℂ,
+      (∫⁻ t, ENNReal.ofReal
+        ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b t)) ∂ν) ≤
+      ENNReal.ofReal (Real.exp (|γ * α| * |Real.log δ|)) *
+        (∫⁻ t, ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z)) (b t)) ∂ν) := by
+  filter_upwards [ae_annular_inserted_clock_density_le_uninserted hh hε hεδ γ α] with ω hω
+  intro b
+  calc
+    _ ≤ ∫⁻ t, ENNReal.ofReal (Real.exp (|γ * α| * |Real.log δ|)) *
+        ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z)) (b t)) ∂ν :=
+      lintegral_mono fun t => hω (b t)
+    _ = _ := lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
+
 end HarmonicBalls
