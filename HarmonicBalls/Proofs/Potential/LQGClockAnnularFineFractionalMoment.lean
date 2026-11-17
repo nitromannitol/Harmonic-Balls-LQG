@@ -3697,4 +3697,131 @@ theorem mul_rpow_lintegral_field_brownian_dilated_reference_le_of_scale_lower_bo
       rw [← mul_assoc, ← Real.mul_rpow hc.le (div_nonneg (le_max_right _ _) hc.le),
         mul_div_cancel₀ _ hc.ne']
 
+/-- The cutoff estimate retains the occupation time of the reference square. -/
+theorem lintegral_rpow_shiftedReferenceOccupation_le_occupation
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε : ε ≤ 1 / 2) (γ : ℝ)
+    (b : ContinuousPath ℂ) (z : ℂ) (u v : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    (∫⁻ ω, (∫⁻ t in Ioc u v,
+      (LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+        (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z))) ^ q ∂P) ≤
+      ENNReal.ofReal (((shiftedReferenceOccupation b z u v).real univ) ^ q *
+        Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) := by
+  let T : Set ℝ := Ioc u v ∩ {t : ℝ | b t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare}
+  let F : Ω → ℝ := fun ω => ∫ w, Real.exp
+    (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2) ∂shiftedReferenceOccupation b z u v
+  have hF (ω : Ω) : 0 ≤ F ω := integral_nonneg (fun _ => (Real.exp_pos _).le)
+  have ht := integral_rpow_circle_mass_le_of_scale_lower_bound hh hη hηε hε γ
+    (shiftedReferenceOccupation b z u v) (ae_mem_shiftedReferenceOccupation b z u v) hq
+  change Integrable (fun ω => F ω ^ q) P ∧ _ at ht
+  have hQ : MeasurableSet LatticeProb.LQG.lqgSquare := by
+    apply IsClosed.measurableSet
+    have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+    have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+    exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+  have hg : Continuous (fun t : ℝ => b t.toNNReal + z) := by fun_prop
+  have heq : ENNReal.ofReal (∫ ω, F ω ^ q ∂P) =
+      ∫⁻ ω, (∫⁻ t in Ioc u v, LatticeProb.LQG.lqgSquare.indicator
+        (fun w => ENNReal.ofReal (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2)))
+          (b t.toNNReal + z)) ^ q ∂P := by
+    rw [ofReal_integral_eq_lintegral_ofReal ht.1
+      (Filter.Eventually.of_forall fun ω => Real.rpow_nonneg (hF ω) q)]
+    apply lintegral_congr_ae
+    filter_upwards [hh.ae_continuous_circle_fixed (hη.trans_le hηε)] with ω hω
+    have hc : Continuous (fun t : ℝ => Real.exp
+      (γ * hcirc ω ε (b t.toNNReal + z) - γ ^ 2 * (-Real.log ε) / 2)) := by fun_prop
+    have hi : IntegrableOn (fun t : ℝ => Real.exp
+      (γ * hcirc ω ε (b t.toNNReal + z) - γ ^ 2 * (-Real.log ε) / 2)) T :=
+        hc.integrableOn_Ioc.mono_set inter_subset_left
+    have hmap : F ω = ∫ t in T, Real.exp
+      (γ * hcirc ω ε (b t.toNNReal + z) - γ ^ 2 * (-Real.log ε) / 2) := by
+      apply integral_map hg.measurable.aemeasurable
+      exact (by fun_prop : Continuous (fun w : ℂ => Real.exp
+        (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))).aestronglyMeasurable
+    rw [← ENNReal.ofReal_rpow_of_nonneg (hF ω) (by linarith : 0 ≤ q), hmap,
+      ofReal_integral_eq_lintegral_ofReal hi (Filter.Eventually.of_forall fun _ => (Real.exp_pos _).le)]
+    congr 1
+    change (∫⁻ t in T, ENNReal.ofReal (Real.exp
+      (γ * hcirc ω ε (b t.toNNReal + z) - γ ^ 2 * (-Real.log ε) / 2))) =
+      ∫⁻ t in Ioc u v, {t : ℝ | b t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare}.indicator
+        (fun t => ENNReal.ofReal (Real.exp
+          (γ * hcirc ω ε (b t.toNNReal + z) - γ ^ 2 * (-Real.log ε) / 2))) t
+    have hS : MeasurableSet {t : ℝ | b t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare} :=
+      hQ.preimage hg.measurable
+    rw [lintegral_indicator hS, Measure.restrict_restrict hS]
+    simp [T, inter_comm]
+  rw [← heq]
+  exact ENNReal.ofReal_le_ofReal ht.2
+/-- The averaged cutoff estimate retains the Brownian occupation of the reference square. -/
+theorem lintegral_field_brownian_shiftedReferenceOccupation_le_occupation
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε : ε ≤ 1 / 2) (γ : ℝ)
+    (x z : ℂ) (u v : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    (∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc u v,
+      (LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+        (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z))) ^ q
+      ∂planarBrownianMotion x ∂P) ≤
+      ∫⁻ b, ENNReal.ofReal (((shiftedReferenceOccupation b z u v).real univ) ^ q *
+        Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) ∂planarBrownianMotion x := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hQ : MeasurableSet LatticeProb.LQG.lqgSquare := by
+    apply IsClosed.measurableSet
+    have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+    have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+    exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+  let F : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun p =>
+    (∫⁻ t in Ioc u v, LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+      (Real.exp (γ * H p.1 ε w - γ ^ 2 * (-Real.log ε) / 2))) (p.2 t.toNNReal + z)) ^ q
+  have hF : Measurable F := by
+    dsimp [F]
+    apply Measurable.pow_const
+    have hb : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => p.1.2 p.2.toNNReal + z) := by
+      exact ((ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+        ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_snd.comp measurable_fst))).add_const z
+    have hφ : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => ENNReal.ofReal
+        (Real.exp (γ * H p.1.1 ε (p.1.2 p.2.toNNReal + z) - γ ^ 2 * (-Real.log ε) / 2))) := by
+      apply Measurable.ennreal_ofReal
+      apply Measurable.exp
+      exact (measurable_const.mul ((hHm ε (hη.trans_le hηε)).comp
+        (hb.prodMk measurable_fst.fst))).sub measurable_const
+    have hm := (hφ.indicator (hQ.preimage hb)).lintegral_prod_right' (ν := volume.restrict (Ioc u v))
+    convert hm using 1
+    ext p
+    apply lintegral_congr
+    intro t
+    by_cases ht : p.2 t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare <;> simp [ht]
+  have heq (ω : Ω) (hω : ∀ ε z, H ω ε z = hcirc ω ε z) (b : ContinuousPath ℂ) : F (ω,b) =
+      (∫⁻ t in Ioc u v, LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+        (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z)) ^ q := by
+    dsimp [F]
+    congr 1
+    apply lintegral_congr
+    intro t
+    by_cases ht : b t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare <;> simp [ht, hω]
+  calc
+    _ = ∫⁻ ω, ∫⁻ b, F (ω,b) ∂planarBrownianMotion x ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      apply lintegral_congr
+      intro b
+      exact (heq ω hω b).symm
+    _ = ∫⁻ b, ∫⁻ ω, F (ω,b) ∂P ∂planarBrownianMotion x :=
+      lintegral_lintegral_swap hF.aemeasurable
+    _ ≤ _ := by
+      apply lintegral_mono
+      intro b
+      calc
+        _ = ∫⁻ ω, (∫⁻ t in Ioc u v, LatticeProb.LQG.lqgSquare.indicator
+            (fun w => ENNReal.ofReal (Real.exp (γ * hcirc ω ε w -
+              γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z)) ^ q ∂P := by
+          apply lintegral_congr_ae
+          filter_upwards [hHae] with ω hω
+          exact heq ω hω b
+        _ ≤ _ := lintegral_rpow_shiftedReferenceOccupation_le_occupation hh hη hηε hε γ b z u v hq
+
 end HarmonicBalls
