@@ -215,4 +215,47 @@ theorem stopped_exterior_clock_eq_bounded (f : ℂ → ℝ) (b : ContinuousPath 
   · simp only [Set.indicator_of_mem, Set.mem_ofPred_eq, hb, hD _ hbD, and_self]
   · simp only [Set.indicator_of_notMem, Set.mem_ofPred_eq, hb, false_and, not_false_eq_true]
 
+/-- The two stopped pieces of a nonnegative continuous density are nonnegative
+and nondecreasing in time. -/
+theorem stopped_clock_halfDisc_exterior_nonneg_monotone (f : ℂ → ℝ)
+    (hf : Continuous f) (hf0 : ∀ z, 0 ≤ f z) (b : ContinuousPath ℂ) (D : Set ℂ) :
+    let I : Set ℂ := {z | ‖z‖ ≤ (1 : ℝ)/2}
+    let A : ℝ≥0 → ℝ := fun t => ∫ s in (0 : ℝ)..min (t : ℝ)
+      (ContinuousPath.exitTime D b).toReal, I.indicator f (b s.toNNReal)
+    let B : ℝ≥0 → ℝ := fun t => ∫ s in (0 : ℝ)..min (t : ℝ)
+      (ContinuousPath.exitTime D b).toReal, Iᶜ.indicator f (b s.toNNReal)
+    (∀ t, 0 ≤ A t ∧ 0 ≤ B t) ∧ Monotone A ∧ Monotone B := by
+  let I : Set ℂ := {z | ‖z‖ ≤ (1 : ℝ)/2}
+  let u : ℝ → ℝ := fun s => f (b s.toNNReal)
+  let v : ℝ → ℝ := fun s => I.indicator f (b s.toNNReal)
+  let w : ℝ → ℝ := fun s => Iᶜ.indicator f (b s.toNNReal)
+  have hu : Continuous u := hf.comp (b.continuous.comp continuous_real_toNNReal)
+  have hv (a c : ℝ) : IntervalIntegrable v volume a c := by
+    simpa only [v, I, norm_nonneg, true_and] using
+      intervalIntegrable_annular_density f hf 0 b a c
+  have hw_eq : w = u - v := by
+    funext s
+    by_cases h : b s.toNNReal ∈ I
+    · simp [w, u, v, h]
+    · simp [w, u, v, h]
+  have hw (a c : ℝ) : IntervalIntegrable w volume a c := by
+    rw [hw_eq]
+    exact (hu.intervalIntegrable a c).sub (hv a c)
+  have hv0 : ∀ s, 0 ≤ v s := fun s => Set.indicator_nonneg (fun z _ => hf0 z) _
+  have hw0 : ∀ s, 0 ≤ w s := fun s => Set.indicator_nonneg (fun z _ => hf0 z) _
+  refine ⟨?_, ?_, ?_⟩
+  · intro t
+    exact ⟨intervalIntegral.integral_nonneg_of_forall
+      (le_min t.coe_nonneg ENNReal.toReal_nonneg) hv0,
+      intervalIntegral.integral_nonneg_of_forall
+      (le_min t.coe_nonneg ENNReal.toReal_nonneg) hw0⟩
+  · intro s t hst
+    exact intervalIntegral.integral_mono_interval le_rfl
+      (le_min s.coe_nonneg ENNReal.toReal_nonneg) (min_le_min_right _ hst)
+      (Eventually.of_forall hv0) (hv 0 _)
+  · intro s t hst
+    exact intervalIntegral.integral_mono_interval le_rfl
+      (le_min s.coe_nonneg ENNReal.toReal_nonneg) (min_le_min_right _ hst)
+      (Eventually.of_forall hw0) (hw 0 _)
+
 end HarmonicBalls
