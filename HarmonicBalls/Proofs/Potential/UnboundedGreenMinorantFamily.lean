@@ -1,6 +1,8 @@
 import HarmonicBalls.Proofs.Potential.FiniteDiscGreenReciprocity
 import HarmonicBalls.Proofs.Potential.UnboundedGreenMinorantHarmonic
 import HarmonicBalls.Proofs.Potential.UnboundedTransposedSourceCorrection
+import HarmonicBalls.Proofs.Sec9.ActualLQGSignedWholePlanePotential
+import HarmonicBalls.Audit.GreenSubharmonicTestClass
 
 /-! # Joint regularity of Green minorants
 
@@ -386,5 +388,172 @@ theorem integrable_newtonKernel_of_source_free_open
   refine Integrable.of_bound (measurable_newtonKernel x).aestronglyMeasurable C ?_
   filter_upwards [measure_eq_zero_iff_ae_notMem.1 hcon] with y hy
   exact hC y (by simpa using hy)
+
+/-- The Green correction is harmonic in its pole on any open domain. -/
+theorem harmonicOnNhd_greenHarmonicCorrection_pole_open
+    {U : Set ℂ} (hU : IsOpen U) {y : ℂ} (hy : y ∈ U) :
+    HarmonicOnNhd (fun x =>
+      (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal) U := by
+  apply harmonicOnNhd_of_circleAverage_eq hU
+  · intro x hx
+    have hc : ContinuousAt (fun p : ℂ × ℂ =>
+        (greatestHarmonicMinorant U (newtonKernelEReal p.1) p.2).toReal) (x, y) :=
+      (continuousOn_greenHarmonicCorrection_uncurry hU).continuousAt
+      ((hU.prod hU).mem_nhds ⟨hx, hy⟩)
+    have hp : ContinuousAt (fun w : ℂ => (w, y)) x :=
+      continuousAt_id.prodMk continuousAt_const
+    exact (ContinuousAt.comp' (f := fun w : ℂ => (w, y)) hc hp).continuousWithinAt
+  · intro x hx r hr hs
+    obtain ⟨δ, hδ, hδU⟩ := (isCompact_closedBall x r).exists_cthickening_subset_open hU hs
+    have hε : 0 < δ / 3 := by positivity
+    have hthick : cthickening (3 * (δ / 3)) (closedBall x r) ⊆ U := by
+      simpa only [mul_div_cancel₀ _ (by norm_num : (3 : ℝ) ≠ 0)] using hδU
+    exact greenHarmonicCorrection_circleAverage_pole hU hr.le hε hthick hy
+
+/-- The literal Green correction is symmetric on every open domain. -/
+theorem greenHarmonicCorrection_open_comm {U : Set ℂ} (hU : IsOpen U)
+    {x y : ℂ} (hx : x ∈ U) (hy : y ∈ U) :
+    (greatestHarmonicMinorant U (newtonKernelEReal x) y).toReal =
+      (greatestHarmonicMinorant U (newtonKernelEReal y) x).toReal := by
+  classical
+  by_cases hex : ∃ z ∈ U, ∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal z) h
+  · obtain ⟨z, hz, hh⟩ := hex
+    have hall : ∀ a ∈ U, ∃ h : ℂ → ℝ, IsHarmonicMinorant U (newtonKernelEReal a) h :=
+      fun a ha => exists_harmonicMinorant_newtonKernel_of_exists_at_pole hU hz ha hh
+    have hbound : ∀ {a b : ℂ}, a ∈ U → b ∈ U → a ≠ b →
+        (greatestHarmonicMinorant U (newtonKernelEReal a) b).toReal ≤ newtonKernel a b := by
+      intro a b ha hb hab
+      have hub : greatestHarmonicMinorant U (newtonKernelEReal a) b ≤
+          (newtonKernel a b : EReal) := by
+        simpa [newtonKernelEReal, Ne.symm hab] using
+          (greatestHarmonicMinorant_le (u := newtonKernelEReal a) hb)
+      obtain ⟨h, hh⟩ := hall a ha
+      have hbot := ne_bot_of_le_ne_bot (EReal.coe_ne_bot _) (hh.le_greatestHarmonicMinorant b)
+      simpa only [EReal.toReal_coe] using EReal.toReal_le_toReal hub hbot (EReal.coe_ne_top _)
+    have hminor : ∀ {b : ℂ}, b ∈ U → IsHarmonicMinorant U (newtonKernelEReal b)
+        (fun a => (greatestHarmonicMinorant U (newtonKernelEReal a) b).toReal) := by
+      intro b hb
+      refine ⟨harmonicOnNhd_greenHarmonicCorrection_pole_open hU hb, ?_⟩
+      intro a ha
+      by_cases hab : a = b
+      · subst a
+        simp [newtonKernelEReal]
+      · simp only [newtonKernelEReal, hab, ite_false, EReal.coe_le_coe_iff]
+        rw [newtonKernel_comm b a]
+        exact hbound ha hb hab
+    have hle : ∀ {a b : ℂ}, a ∈ U → b ∈ U →
+        (greatestHarmonicMinorant U (newtonKernelEReal a) b).toReal ≤
+          (greatestHarmonicMinorant U (newtonKernelEReal b) a).toReal := by
+      intro a b ha hb
+      by_cases hab : a = b
+      · subst a
+        exact le_rfl
+      · have hlower := (hminor hb).le_greatestHarmonicMinorant a
+        have hupper : greatestHarmonicMinorant U (newtonKernelEReal b) a ≤
+            (newtonKernel b a : EReal) := by
+          simpa only [newtonKernelEReal, hab, ite_false] using
+            (greatestHarmonicMinorant_le (u := newtonKernelEReal b) ha)
+        have hr := EReal.toReal_le_toReal hlower (EReal.coe_ne_bot _)
+          (ne_top_of_le_ne_top (EReal.coe_ne_top _) hupper)
+        simpa only [EReal.toReal_coe] using hr
+    exact le_antisymm (hle hx hy) (hle hy hx)
+  · have hzero : ∀ a ∈ U, ∀ b, (greatestHarmonicMinorant U (newtonKernelEReal a) b).toReal = 0 := by
+      intro a ha b
+      have hnone : ∀ h, ¬IsHarmonicMinorant U (newtonKernelEReal a) h :=
+        fun h hh => hex ⟨a, ha, h, hh⟩
+      simp [greatestHarmonicMinorant, hnone]
+    rw [hzero x hx y, hzero y hy x]
+
+/-- Green reciprocity for the literal kernel on an open domain. -/
+theorem greenFunction_open_comm {U : Set ℂ} (hU : IsOpen U) (x y : ℂ) :
+    greenFunction U x y = greenFunction U y x := by
+  by_cases hx : x ∈ U
+  · by_cases hy : y ∈ U
+    · by_cases hxy : x = y
+      · subst y
+        rfl
+      · rw [greenFunction, ite_eq_left ⟨hx, hy, hxy⟩,
+          greenFunction, ite_eq_left ⟨hy, hx, Ne.symm hxy⟩,
+          newtonKernel_comm x y, greenHarmonicCorrection_open_comm hU hx hy]
+    · rw [greenFunction_of_notMem_right hy, greenFunction_of_notMem_left hy]
+  · rw [greenFunction_of_notMem_left hx, greenFunction_of_notMem_right hx]
+
+/-- A harmonic correction compares observer-first Green potentials on nested
+open domains at uncharged observers with integrable Newton kernel. -/
+theorem exists_harmonic_unbounded_greenPotential_correction_of_newtonKernel
+    {U V K : Set ℂ} (hU : IsOpen U) (hV : IsOpen V)
+    (hVb : Bornology.IsBounded V) (hK : IsCompact K) (hKV : K ⊆ V) (hVU : V ⊆ U)
+    {ν : MeasureTheory.Measure ℂ} [MeasureTheory.IsFiniteMeasure ν] (hν : ν Kᶜ = 0) :
+    ∃ H : ℂ → ℝ, HarmonicOnNhd H V ∧
+      ∀ x ∈ V, ν {x} = 0 → MeasureTheory.Integrable (fun y => newtonKernel y x) ν →
+        greenPotential U ν x = greenPotential V ν x + H x := by
+  obtain ⟨H, hH, hcorr⟩ :=
+    exists_harmonic_unbounded_transposed_correction_of_newtonKernel hU hV hVb hK hKV hVU hν
+  refine ⟨H, hH, fun x hx ha hi => ?_⟩
+  simpa only [greenPotential, greenFunction_open_comm hU x, greenFunction_open_comm hV x] using
+    hcorr x hx ha hi
+
+/-- On one actual-LQG event, every frozen signed test on a bounded open
+cluster has a bounded-domain representative at the centre and almost
+everywhere on the cluster. -/
+theorem IsWholePlaneGFF.ae_bounded_subharmonic_representatives
+    {Ω : Type} [MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
+    {μ : Ω → MeasureTheory.Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ) :
+    ∀ᵐ ω ∂P, ∀ (Λ : Set ℂ) (z : ℂ),
+      IsOpen Λ → Bornology.IsBounded Λ → z ∈ Λ →
+      HasBoundedSubharmonicRepresentatives (μ ω) Λ z := by
+  open MeasureTheory in
+  filter_upwards [hh.ae_singular_signed_wholePlane_potential hγ hγ2 hαQ hμ] with ω hp
+  intro Λ z hΛ hΛb hz f hf
+  obtain ⟨U, K, ν₁, ν₂, q, hU, hΛU, hK, hKU, hf₁, hf₂, hν₁, hν₂,
+    hνΛ, hq, ha₂, hi₂, hfrep⟩ := hf
+  let : IsFiniteMeasure ν₁ := hf₁
+  let : IsFiniteMeasure ν₂ := hf₂
+  obtain ⟨R, hR⟩ := (hΛb.closure.union hK.isBounded).subset_ball (0 : ℂ)
+  let V := U ∩ ball (0 : ℂ) R
+  have hV : IsOpen V := hU.inter isOpen_ball
+  have hVb : Bornology.IsBounded V := isBounded_ball.subset inter_subset_right
+  have hΛV : closure Λ ⊆ V := subset_inter hΛU (subset_union_left.trans hR)
+  have hKV : K ⊆ V := subset_inter hKU (subset_union_right.trans hR)
+  have hVU : V ⊆ U := inter_subset_left
+  have hzV : z ∈ V := hΛV (subset_closure hz)
+  have ha₁ : ν₁ {z} = 0 := measure_mono_null (singleton_subset_iff.mpr hz) hνΛ
+  have hn₁ : Integrable (newtonKernel z) ν₁ :=
+    integrable_newtonKernel_of_source_free_open hK hν₁ hΛ hνΛ hz
+  have hn₂ : Integrable (newtonKernel z) ν₂ :=
+    integrable_newtonKernel_of_greenFunction hU hK hKU hν₂ (hVU hzV) ha₂ hi₂
+  have hiV₂ : Integrable (greenFunction V z) ν₂ := by
+    have heq : (fun y => greenFunction V y z) = greenFunction V z :=
+      funext (fun y => greenFunction_open_comm hV y z)
+    rw [← heq]
+    exact integrable_transposed_greenFunction_of_newtonKernel hV hK hKV hν₂ hzV ha₂
+      (by simpa only [newtonKernel_comm] using hn₂)
+  obtain ⟨H₁, hH₁, hc₁⟩ :=
+    exists_harmonic_unbounded_greenPotential_correction_of_newtonKernel hU hV hVb hK hKV hVU hν₁
+  obtain ⟨H₂, hH₂, hc₂⟩ :=
+    exists_harmonic_unbounded_greenPotential_correction_of_newtonKernel hU hV hVb hK hKV hVU hν₂
+  let Q := q + H₁ - H₂
+  let g := Q + greenPotential V ν₁ - greenPotential V ν₂
+  have hQ : HarmonicOnNhd Q V := ((hq.mono hVU).add hH₁).sub hH₂
+  have hg : g ∈ boundedSubharmonicBallTestClass Λ z :=
+    ⟨V, K, ν₁, ν₂, Q, hV, hVb, hΛV, hK, hKV, hf₁, hf₂, hν₁, hν₂,
+      hνΛ, hQ, ha₂, hiV₂, rfl⟩
+  refine ⟨g, hg, ?_, ?_⟩
+  · have h₁ := hc₁ z hzV ha₁ (by simpa only [newtonKernel_comm] using hn₁)
+    have h₂ := hc₂ z hzV ha₂ (by simpa only [newtonKernel_comm] using hn₂)
+    rw [hfrep]
+    simp only [g, Q, Pi.add_apply, Pi.sub_apply]
+    linarith
+  · have hae := (hp K K Λ ν₁ ν₂ hK hK hν₁ hν₂ hf₁ hf₂ hΛb).2
+    filter_upwards [hae, ae_restrict_mem hΛ.measurableSet] with x hx hxΛ
+    have hxV : x ∈ V := hΛV (subset_closure hxΛ)
+    have h₁ := hc₁ x hxV hx.2.2.1 (by simpa only [newtonKernel_comm] using hx.1)
+    have h₂ := hc₂ x hxV hx.2.2.2.1 (by simpa only [newtonKernel_comm] using hx.2.1)
+    rw [hfrep]
+    simp only [g, Q, Pi.add_apply, Pi.sub_apply]
+    linarith
 
 end HarmonicBalls
