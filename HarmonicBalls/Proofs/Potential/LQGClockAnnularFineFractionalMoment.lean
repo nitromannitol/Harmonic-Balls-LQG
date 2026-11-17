@@ -3272,4 +3272,77 @@ theorem lintegral_brownian_field_annular_mass_le_rescaled_add_cell
       gcongr with i hi
       exact lintegral_brownian_field_annularSquare_le_rescaled hh hr hr10 hδ hδ2 hi γ x u v a hq
 
+
+/-- A subcritical order admits a grid with a small diagonal coefficient. -/
+theorem exists_annular_square_coefficient_lt_half {γ q : ℝ}
+    (hq : 1 < q) (hγq : q * γ ^ 2 < 4) :
+    ∃ r : ℝ, 0 < r ∧ r ≤ 1 / 10 ∧
+      18 * ((LatticeProb.squareIndex r).card : ℝ) *
+        ((4 * r) ^ 2) ^ q *
+        Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) < 1 / 2 := by
+  let ζ : ℝ := q * (2 + γ ^ 2 / 2) - q ^ 2 * γ ^ 2 / 2
+  have hζ : 0 < ζ - 2 := by
+    have heq : ζ - 2 = (q - 1) * (4 - q * γ ^ 2) / 2 := by dsimp [ζ]; ring
+    rw [heq]
+    positivity
+  have hRlim : Tendsto (fun n : ℕ => (1 / 2 : ℝ) ^ n) atTop (𝓝 0) :=
+    tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have hpowl : Tendsto (fun n : ℕ => ((1 / 2 : ℝ) ^ n) ^ (ζ - 2)) atTop (𝓝 0) := by
+    have h := (Real.continuousAt_rpow_const 0 (ζ - 2) (Or.inr hζ.le)).tendsto.comp hRlim
+    rwa [Real.zero_rpow hζ.ne'] at h
+  obtain ⟨n, hn⟩ := ((hRlim.eventually (gt_mem_nhds (by norm_num : (0 : ℝ) < 2 / 5))).and
+    (hpowl.eventually (gt_mem_nhds (by norm_num : (0 : ℝ) < 1 / 9216)))).exists
+  let R : ℝ := (1 / 2 : ℝ) ^ n
+  let r : ℝ := R / 4
+  have hR : 0 < R := by dsimp [R]; positivity
+  have hRsmall : R < 2 / 5 := hn.1
+  have hpowsmall : R ^ (ζ - 2) < 1 / 9216 := hn.2
+  have hr : 0 < r := by dsimp [r]; positivity
+  have hr10 : r ≤ 1 / 10 := by dsimp [r]; linarith
+  have hN : ((LatticeProb.squareIndex r).card : ℝ) ≤ 256 / R ^ 2 := by
+    have hc := LatticeProb.card_squareIndex_le hr (by linarith : r ≤ 1)
+    have heq : 16 / r ^ 2 = 256 / R ^ 2 := by dsimp [r]; field_simp; ring
+    rwa [heq] at hc
+  have hpow : R ^ ζ = R ^ (ζ - 2) * R ^ 2 := by
+    rw [← Real.rpow_two, ← Real.rpow_add hR]
+    congr 1
+    ring
+  have hcoef : 18 * ((LatticeProb.squareIndex r).card : ℝ) * R ^ ζ < 1 / 2 := by
+    calc
+      _ ≤ 18 * (256 / R ^ 2) * R ^ ζ := by gcongr
+      _ = 4608 * R ^ (ζ - 2) := by rw [hpow]; field_simp; norm_num
+      _ < 1 / 2 := by linarith
+  refine ⟨r, hr, hr10, ?_⟩
+  have h4r : 4 * r = R := by dsimp [r]; ring
+  rw [h4r]
+  have hid : (R ^ 2) ^ q * Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log R) / 2) = R ^ ζ := by
+    rw [← Real.rpow_natCast, ← Real.rpow_mul hR.le]
+    rw [Real.rpow_def_of_pos hR, Real.rpow_def_of_pos hR, ← Real.exp_add]
+    congr 1
+    dsimp [ζ]
+    ring
+  nlinarith [hcoef, hid]
+
+
+/-- The diagonal coefficient is small in the extended nonnegative reals. -/
+theorem exists_annular_square_ennreal_coefficient_lt_half {γ q : ℝ}
+    (hq : 1 < q) (hγq : q * γ ^ 2 < 4) :
+    ∃ r : ℝ, 0 < r ∧ r ≤ 1 / 10 ∧
+      18 * (LatticeProb.squareIndex r).card *
+        ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        (ENNReal.ofReal ((4 * r) ^ 2)) ^ q < 2⁻¹ := by
+  obtain ⟨r, hr, hr10, hc⟩ := exists_annular_square_coefficient_lt_half hq hγq
+  refine ⟨r, hr, hr10, ?_⟩
+  rw [ENNReal.ofReal_rpow_of_nonneg (sq_nonneg _) (by linarith)]
+  have hreal : 18 * ((LatticeProb.squareIndex r).card : ℝ) *
+        Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) *
+        ((4 * r) ^ 2) ^ q < 1 / 2 := by nlinarith [hc]
+  have he := (ENNReal.ofReal_lt_ofReal_iff (by norm_num : (0 : ℝ) < 1 / 2)).2 hreal
+  rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity),
+    ENNReal.ofReal_mul (by positivity)] at he
+  rw [show ENNReal.ofReal (1 / 2) = (2 : ℝ≥0∞)⁻¹ by
+    rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num)]; norm_num] at he
+  norm_num at he ⊢
+  exact he
+
 end HarmonicBalls
