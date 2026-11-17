@@ -955,4 +955,65 @@ theorem uniformIntegrable_rpow_sum_subSquareComparison {Ω J : Type*} [Measurabl
     (hI j q (by linarith)).aestronglyMeasurable (fun ω => Real.rpow_nonneg (hX0 j ω) q)
     (hsq j) K (hbound j)
 
+/-- Almost-sure limits of bounded-mass atomic approximations preserve the
+positive-moment comparison at fixed scales. -/
+theorem integral_rpow_subSquareField_le_of_ae_atomic_tendsto
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (ι : ℕ → Type*) [∀ n, Fintype (ι n)] (piece : ∀ n, ι n → Fin 2)
+    (pt : ∀ n, ι n → ℂ) (hpt : ∀ n i, pt n i ∈ LatticeProb.LQG.lqgSquare)
+    (a : ∀ n, ι n → ℝ) (ha : ∀ n i, 0 ≤ a n i)
+    (M : ℝ) (hmass : ∀ n, ∑ i, a n i ≤ M)
+    {q : ℝ} (hq : 1 ≤ q) (F : Ω → ℝ)
+    (G : ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ)
+    (hF : ∀ᵐ ω ∂P, Tendsto (fun n => ∑ i, a n i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) (piece n) (pt n) ω i -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)) atTop (𝓝 (F ω)))
+    (hG : ∀ᵐ x ∂(LatticeProb.Gauss.subSquareMeasure P), Tendsto (fun n => ∑ i,
+      a n i * Real.exp (LatticeProb.Gauss.subSquareComparison γ hcirc
+        (LatticeProb.LQG.dyadicScale k) δ (piece n) (pt n) x i -
+        γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2))
+      atTop (𝓝 (G x))) :
+    Integrable (fun ω => F ω ^ q) P ∧
+      Integrable (fun x => G x ^ q) (LatticeProb.Gauss.subSquareMeasure P) ∧
+      (∫ ω, F ω ^ q ∂P) ≤ ∫ x, G x ^ q ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let X : ℕ → Ω → ℝ := fun n ω => (∑ i, a n i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) (piece n) (pt n) ω i -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)) ^ q
+  let Y : ℕ → ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun n x => (∑ i,
+      a n i * Real.exp (LatticeProb.Gauss.subSquareComparison γ hcirc
+        (LatticeProb.LQG.dyadicScale k) δ (piece n) (pt n) x i -
+        γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ) / 2)) ^ q
+  have hUIX : UniformIntegrable X 1 P :=
+    uniformIntegrable_rpow_sum_subSquareField hh γ hk hδ hδ2 ι piece pt hpt a ha M hmass hq
+  have hUIY : UniformIntegrable Y 1 (LatticeProb.Gauss.subSquareMeasure P) :=
+    uniformIntegrable_rpow_sum_subSquareComparison hh γ hk hδ hδ2 ι piece pt hpt a ha M hmass hq
+  have hFX : ∀ᵐ ω ∂P, Tendsto (fun n => X n ω) atTop (𝓝 (F ω ^ q)) := by
+    filter_upwards [hF] with ω hω
+    exact (Real.continuous_rpow_const (by linarith : 0 ≤ q)).continuousAt.tendsto.comp hω
+  have hGY : ∀ᵐ x ∂(LatticeProb.Gauss.subSquareMeasure P),
+      Tendsto (fun n => Y n x) atTop (𝓝 (G x ^ q)) := by
+    filter_upwards [hG] with x hx
+    exact (Real.continuous_rpow_const (by linarith : 0 ≤ q)).continuousAt.tendsto.comp hx
+  have hFi := hUIX.integrable_of_ae_tendsto hFX
+  have hGi := hUIY.integrable_of_ae_tendsto hGY
+  have hXL := tendsto_Lp_finite_of_tendsto_ae (p := 1) le_rfl (by simp)
+    (fun n => hUIX.aestronglyMeasurable n) (memLp_one_iff_integrable.mpr hFi) hUIX.1 hFX
+  have hYL := tendsto_Lp_finite_of_tendsto_ae (p := 1) le_rfl (by simp)
+    (fun n => hUIY.aestronglyMeasurable n) (memLp_one_iff_integrable.mpr hGi) hUIY.1 hGY
+  have hXI := tendsto_integral_of_L1' (fun ω => F ω ^ q)
+    (Eventually.of_forall (fun n => memLp_one_iff_integrable.mp (hUIX.memLp n))) hXL
+  have hYI := tendsto_integral_of_L1' (fun x => G x ^ q)
+    (Eventually.of_forall (fun n => memLp_one_iff_integrable.mp (hUIY.memLp n))) hYL
+  refine ⟨hFi, hGi, le_of_tendsto_of_tendsto hXI hYI ?_⟩
+  exact Eventually.of_forall (fun n =>
+    integral_rpow_subSquareField_le_explicit_nonneg hh γ hk hδ hδ2
+      (piece n) (pt n) (hpt n) (ha n) hq)
+
 end HarmonicBalls
