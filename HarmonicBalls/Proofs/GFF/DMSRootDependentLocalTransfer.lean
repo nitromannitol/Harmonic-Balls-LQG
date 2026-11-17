@@ -528,4 +528,95 @@ theorem bufferedChart_geometry
   rw [dist_comm c z] at ht
   linarith
 
+/-- The open local-field region associated with a buffered chart. -/
+def bufferedChartOpen (u : ℕ → ℂ) (n : ℕ) : Opens ℂ :=
+  ⟨ball (bufferedChartCenter u n) (2 * bufferedChartScale n), isOpen_ball⟩
+
+/-- The translated observation buffer fits in its chart region. -/
+theorem bufferedChart_buffer (u : ℕ → ℂ) (n : ℕ) :
+    closedBall (bufferedChartCenter u n)
+      (bufferedChartScale n + bufferedChartScale n / 2) ⊆ bufferedChartOpen u n :=
+  closedBall_subset_ball (by have h := bufferedChartScale_pos n; linarith)
+
+/-- Every buffered chart has a unit-mass local test. -/
+theorem exists_bufferedChart_gauge (u : ℕ → ℂ) (n : ℕ) :
+    ∃ ρ : LQGMetric.TestOn (bufferedChartOpen u n), ∫ x, ρ x = 1 := by
+  apply exists_local_unitMass_test
+  exact ⟨bufferedChartCenter u n, mem_ball_self (by
+    have h := bufferedChartScale_pos n
+    positivity)⟩
+
+/-- A fixed unit-mass test for each buffered chart. -/
+def bufferedChartGauge (u : ℕ → ℂ) (n : ℕ) : LQGMetric.TestOn (bufferedChartOpen u n) :=
+  Classical.choose (exists_bufferedChart_gauge u n)
+
+/-- The chart gauge has unit mass. -/
+theorem integral_bufferedChartGauge (u : ℕ → ℂ) (n : ℕ) :
+    ∫ x, bufferedChartGauge u n x = 1 :=
+  Classical.choose_spec (exists_bufferedChart_gauge u n)
+
+/-- Assemble measurable phase events at the buffered chart radii. -/
+def chartedLocalEvent
+    {T : Type*} (θ : ℂ → T) (u : ℕ → ℂ)
+    (E : ∀ n, Set (T × (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ))) :
+    Set (ModConstTestPairings univ × ℂ) :=
+  firstChartEvent (bufferedChartRoots u) (fun n =>
+    bufferedLocalEvent θ (bufferedChartOpen u n) (bufferedChartGauge u n)
+      (integral_bufferedChartGauge u n) (bufferedChartCenter u n) (bufferedChartScale n)
+      (bufferedChartScale n / 2) (bufferedChartScale_pos n).le (bufferedChart_buffer u n) (E n))
+
+/-- The countable charted event is jointly measurable. -/
+theorem measurableSet_chartedLocalEvent
+    {T : Type*} [MeasurableSpace T] (θ : ℂ → T) (hθ : Measurable θ) (u : ℕ → ℂ)
+    (E : ∀ n, Set (T × (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ)))
+    (hE : ∀ n, MeasurableSet (E n)) :
+    MeasurableSet (chartedLocalEvent θ u E) := by
+  apply measurableSet_firstChartEvent _ _ (measurableSet_bufferedChartRoots u)
+  intro n
+  exact measurableSet_bufferedLocalEvent θ hθ (bufferedChartOpen u n)
+    (bufferedChartGauge u n) (integral_bufferedChartGauge u n)
+    (bufferedChartCenter u n) (bufferedChartScale n) (bufferedChartScale n / 2)
+    (bufferedChartScale_pos n).le (bufferedChart_buffer u n) (E n) (hE n)
+
+/-- At every nonzero root inside the unit disk, the assembled event has a
+measurable section in a disk admissible for the local-law comparison. -/
+theorem chartedLocalEvent_admissible_section
+    {T : Type*} [MeasurableSpace T] (θ : ℂ → T) (u : ℕ → ℂ) (hu : DenseRange u)
+    (E : ∀ n, Set (T × (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ)))
+    (hE : ∀ n, MeasurableSet (E n)) (z : ℂ) (hz : z ∈ ball (0 : ℂ) 1) (hz0 : z ≠ 0) :
+    ∃ R : ℝ, 0 < R ∧ R < ‖z‖ ∧ ‖z‖ + R < 1 ∧
+      ∃ F : Set (ModConstTestPairings (ball z R)), MeasurableSet F ∧
+        ∀ v, (v, z) ∈ chartedLocalEvent θ u E ↔ restrictGlobalPairings (ball z R) v ∈ F := by
+  obtain ⟨n, hn⟩ := exists_bufferedChart_of_mem u hu z hz hz0
+  have hzunion : z ∈ ⋃ n, bufferedChartRoots u n := mem_iUnion.mpr ⟨n, hn⟩
+  obtain ⟨n, hn⟩ := exists_firstChart_of_mem (bufferedChartRoots u) z hzunion
+  have hzn : z ∈ bufferedChartRoots u n := disjointed_subset _ n hn
+  have hgeo := bufferedChart_geometry (bufferedChartCenter u n) z (bufferedChartScale n)
+    (bufferedChartScale_pos n) hzn.1 hzn.2.1 hzn.2.2
+  refine ⟨4 * bufferedChartScale n, hgeo.2.2.1, hgeo.2.2.2.1, hgeo.2.2.2.2, ?_⟩
+  apply firstChartEvent_section (bufferedChartRoots u) _ n z hn (ball z (4 * bufferedChartScale n))
+  exact bufferedLocalEvent_section_of_subset θ (bufferedChartOpen u n)
+    (bufferedChartGauge u n) (integral_bufferedChartGauge u n)
+    (bufferedChartCenter u n) (bufferedChartScale n) (bufferedChartScale n / 2)
+    (bufferedChartScale_pos n).le (bufferedChart_buffer u n) (E n) (hE n)
+    z (ball_subset_closedBall hzn.1) (ball z (4 * bufferedChartScale n)) hgeo.2.1
+
+/-- On distribution pairings, the selected chart event is the corresponding
+phase event of the actual translated distribution. -/
+theorem chartedLocalEvent_pairings
+    {T : Type*} (θ : ℂ → T) (u : ℕ → ℂ)
+    (E : ∀ n, Set (T × (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ)))
+    (n : ℕ) (z : ℂ) (hz : z ∈ disjointed (bufferedChartRoots u) n)
+    (h : LQGMetric.DistC) :
+    ((fun ψ : {φ : ℂ → ℝ // IsTestFunction univ φ ∧ ∫ x, φ x = 0} =>
+      h ⟨ψ.1, ψ.2.1.1, ψ.2.1.2.1, subset_univ _⟩), z) ∈ chartedLocalEvent θ u E ↔
+    (θ z, fun φ => h (LQGMetric.testAffinePull 1 z φ.1.1)) ∈ E n := by
+  have hzn : z ∈ bufferedChartRoots u n := disjointed_subset _ n hz
+  apply (firstChartEvent_iff (bufferedChartRoots u) _ n z hz _).trans
+  exact bufferedLocalEvent_pairings θ (bufferedChartOpen u n)
+    (bufferedChartGauge u n) (integral_bufferedChartGauge u n)
+    (bufferedChartCenter u n) (bufferedChartScale n) (bufferedChartScale n / 2)
+    (bufferedChartScale_pos n).le (bufferedChart_buffer u n) (E n) h z
+    (ball_subset_closedBall hzn.1)
+
 end HarmonicBalls
