@@ -1,10 +1,10 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularContinuumUniformL1
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCellSecondMoment
 
-/-! # Product moments of annular clocks
+/-! # Product convergence of annular clocks
 
-The stopped annular clocks have a uniform product second-moment bound on
-finite time intervals.
+The exit-stopped annular clocks have uniformly bounded product second moments
+and converge in uniform-time product L¹ on finite time intervals.
 -/
 
 open MeasureTheory MarkovProcess Set Filter
