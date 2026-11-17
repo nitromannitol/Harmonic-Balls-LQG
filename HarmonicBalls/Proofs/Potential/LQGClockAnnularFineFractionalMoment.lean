@@ -4142,4 +4142,49 @@ theorem planarBrownianMotion_scaled_ball_occupation_moment_le_initial_log_kernel
       simpa only [hunit] using hm
 
 
+/-- A shifted reference-square occupation is bounded by a scaled ball occupation. -/
+theorem planarBrownianMotion_shifted_square_occupation_moment_le (x z : ℂ) (c : ℝ≥0)
+    (hc : 0 < c) (u v : ℝ) (hu : 0 ≤ u) (hv : v ≤ c) (n : ℕ) {r : ℝ}
+    (hr : 0 < r) (hcover : (1 : ℝ) / 4 < Real.sqrt c * r)
+    (ha : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) :
+    (∫⁻ b, (∫⁻ t in Ioc u v,
+      LatticeProb.LQG.lqgSquare.indicator (fun _ => (1 : ℝ≥0∞))
+        (b t.toNNReal + z)) ^ (n + 1) ∂planarBrownianMotion x) ≤
+      ENNReal.ofReal c ^ (n + 1) *
+        ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+            (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ (n + 1)) := by
+  have hcR : (0 : ℝ) < c := by exact_mod_cast hc
+  have hs : 0 < Real.sqrt c := Real.sqrt_pos.2 hcR
+  have htime : Ioc u v ⊆ Ioc (0 : ℝ) c := by
+    intro t ht
+    exact ⟨lt_of_le_of_lt hu ht.1, le_trans ht.2 hv⟩
+  calc
+    _ ≤ ∫⁻ b, (∫⁻ t in Ioc (0 : ℝ) c,
+      (Metric.ball (0 : ℂ) r).indicator (fun _ => (1 : ℝ≥0∞))
+        ((b t.toNNReal - (-z)) / (Real.sqrt c : ℂ))) ^ (n + 1)
+      ∂planarBrownianMotion x := by
+        apply lintegral_mono
+        intro b
+        apply pow_le_pow_left'
+        calc
+          _ ≤ ∫⁻ t in Ioc u v, (Metric.ball (0 : ℂ) r).indicator
+              (fun _ => (1 : ℝ≥0∞))
+              ((b t.toNNReal - (-z)) / (Real.sqrt c : ℂ)) := by
+            apply lintegral_mono
+            intro t
+            by_cases ht : b t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare
+            · have hz := LatticeProb.LQG.lqgSquare_subset_closedBall ht
+              simp only [Metric.mem_closedBall, dist_zero_right] at hz
+              have hnorm : ‖(b t.toNNReal - (-z)) / (Real.sqrt c : ℂ)‖ < r := by
+                rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hs]
+                apply (div_lt_iff₀ hs).2
+                simpa only [sub_neg_eq_add, mul_comm] using lt_of_le_of_lt hz hcover
+              have hball : (b t.toNNReal + z) / (Real.sqrt c : ℂ) ∈ Metric.ball (0 : ℂ) r := by
+                simpa only [Metric.mem_ball, dist_zero_right, sub_neg_eq_add] using hnorm
+              simp [ht, hball, sub_neg_eq_add]
+            · simp [ht]
+          _ ≤ _ := lintegral_mono_set htime
+    _ ≤ _ := planarBrownianMotion_scaled_ball_occupation_moment_le_initial_log_kernel x (-z) c hc n hr ha
+
 end HarmonicBalls
