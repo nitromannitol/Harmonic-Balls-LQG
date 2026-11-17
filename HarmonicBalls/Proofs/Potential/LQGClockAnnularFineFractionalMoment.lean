@@ -1953,4 +1953,98 @@ theorem rpow_sum_le_squareGridAdjacent_add_far (s : Finset (ℤ × ℤ))
     rw [hs]
     exact add_le_add (sum_rpow_mul_squareGridAdjacent_le s a hq.le) le_rfl)
 
+/-- The field moment of an annular mass is bounded by square moments and separated interactions. -/
+theorem lintegral_annular_mass_rpow_le_square_moments_add_far {Ω : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (b : ContinuousPath ℂ) (u v δ : ℝ) {ε r : ℝ}
+    (hε : 0 < ε) (hε2 : ε ≤ 1 / 2) (hr : 0 < r) (γ : ℝ)
+    {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    let S := LatticeProb.squareIndex r
+    let T := fun i => annularSquareTimeSet b δ r i ∩ Ioc u v
+    let M := fun i ω => ∫⁻ t in T i,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)
+    (∫⁻ ω, (∫⁻ t in {t | δ ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2} ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) ^ q ∂P) ≤
+      18 * (∑ i ∈ S, ∫⁻ ω, (M i ω) ^ q ∂P) +
+      ∑ i ∈ S, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (volume (T i) * volume (T j))) ^ (q / 2) := by
+  classical
+  dsimp only
+  let S := LatticeProb.squareIndex r
+  let T := fun i => annularSquareTimeSet b δ r i ∩ Ioc u v
+  let M := fun i ω => ∫⁻ t in T i,
+    ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)
+  change (∫⁻ ω, (∫⁻ t in {t | δ ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2} ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) ^ q ∂P) ≤
+      18 * (∑ i ∈ S, ∫⁻ ω, (M i ω) ^ q ∂P) +
+      ∑ i ∈ S, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (volume (T i) * volume (T j))) ^ (q / 2)
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let D : ℂ → Ω → ℝ≥0∞ := LatticeProb.Gauss.gmcDensityENN (fun z ω => H ω ε z) γ ε
+  have hD : Measurable (Function.uncurry D) :=
+    LatticeProb.Gauss.measurable_uncurry_gmcDensityENN (hHm ε hε) γ ε
+  have hb : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
+  have hmass (i : ℤ × ℤ) : AEMeasurable (M i) P := by
+    have hm : Measurable (fun p : Ω × ℝ => D (b p.2.toNNReal) p.1) :=
+      hD.comp ((hb.comp measurable_snd).prodMk measurable_fst)
+    have heq : M i =ᵐ[P] (fun ω => ∫⁻ t in T i, D (b t.toNNReal) ω) := by
+      filter_upwards [hHae] with ω hω
+      apply lintegral_congr
+      intro t
+      simp only [D, LatticeProb.Gauss.gmcDensityENN, LatticeProb.Gauss.gmcDensity, hω]
+    exact (hm.lintegral_prod_right' (ν := volume.restrict (T i))).aemeasurable.congr heq.symm
+  have hdiag : AEMeasurable (fun ω => ∑ i ∈ S, (M i ω) ^ q) P := by
+    convert Finset.aemeasurable_sum S (fun i _ => (hmass i).pow_const q) using 1
+    ext ω
+    simp only [Finset.sum_apply]
+  have hfar (i j : ℤ × ℤ) (hij : ¬ squareGridAdjacent i j) :
+      (∫⁻ ω, (M i ω * M j ω) ^ (q / 2) ∂P) ≤
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (volume (T i) * volume (T j))) ^ (q / 2) := by
+    apply lintegral_rpow_mul_separated_time_masses_le_volume hh b u v _ _
+      (measurableSet_annularSquareTimeSet b δ r i) (measurableSet_annularSquareTimeSet b δ r j)
+      hε hr γ
+    · intro t ht
+      exact add_le_of_le_sub_left (by linarith [ht.1.2.2])
+    · intro t ht
+      exact add_le_of_le_sub_left (by linarith [ht.1.2.2])
+    · intro t ht s hs
+      exact le_norm_sub_of_not_squareGridAdjacent hr hij ht.1.1 hs.1.1
+    · exact hq
+    · exact hq2
+  calc
+    _ ≤ ∫⁻ ω, 18 * (∑ i ∈ S, (M i ω) ^ q) +
+        ∑ i ∈ S, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+          (M i ω * M j ω) ^ (q / 2) ∂P := by
+      apply lintegral_mono
+      intro ω
+      dsimp only
+      rw [lintegral_annular_time_eq_sum_square b δ u v hr]
+      exact rpow_sum_le_squareGridAdjacent_add_far S (fun i => M i ω) hq hq2
+    _ = 18 * (∑ i ∈ S, ∫⁻ ω, (M i ω) ^ q ∂P) +
+        ∑ i ∈ S, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+          ∫⁻ ω, (M i ω * M j ω) ^ (q / 2) ∂P := by
+      have hrow (i : ℤ × ℤ) :
+          (∫⁻ ω, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+            (M i ω * M j ω) ^ (q / 2) ∂P) =
+          ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+            ∫⁻ ω, (M i ω * M j ω) ^ (q / 2) ∂P := by
+        exact lintegral_finsetSum' _ (fun j _ => ((hmass i).mul (hmass j)).pow_const _)
+      have houter :
+          (∫⁻ ω, ∑ i ∈ S, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+            (M i ω * M j ω) ^ (q / 2) ∂P) =
+          ∑ i ∈ S, ∫⁻ ω, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+            (M i ω * M j ω) ^ (q / 2) ∂P := by
+        apply lintegral_finsetSum'
+        intro i hi
+        convert Finset.aemeasurable_sum (S.filter (fun j => ¬ squareGridAdjacent i j))
+          (fun j _ => ((hmass i).mul (hmass j)).pow_const (q / 2)) using 1
+        ext ω
+        simp only [Finset.sum_apply, Pi.mul_apply]
+      rw [lintegral_add_left' (hdiag.const_mul 18), lintegral_const_mul'' _ hdiag, houter]
+      simp_rw [hrow]
+      rw [lintegral_finsetSum' S (fun i _ => (hmass i).pow_const _)]
+    _ ≤ _ := by
+      gcongr with i hi j hj
+      exact hfar i j (Finset.mem_filter.mp hj).2
 end HarmonicBalls
