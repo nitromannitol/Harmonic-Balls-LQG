@@ -440,4 +440,176 @@ theorem exists_uniform_exponents_brownian_weighted_radius_increment_le_riesz_ene
     hγθ.le hθ.le hA hI
 
 
+
+/-- The zero-insertion annular time-cell second moment has a constant
+independent of the smoothing radius and the Brownian starting point. -/
+theorem exists_uniform_brownian_zero_insertion_annular_cell_sq_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ : γ ≠ 0) (hγ2 : γ ^ 2 < 2) :
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ (x : ℂ) {ε : ℝ}, 0 < ε →
+      ∀ (u h : ℝ), 0 ≤ u → 0 < h →
+        let ν := Measure.map Real.toNNReal (volume.restrict (Icc u (u + h)))
+        (∫⁻ b, ∫⁻ ω, (∫⁻ t, ENNReal.ofReal
+          ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z)) (b t)) ∂ν) ^ 2 ∂P
+          ∂(planarBrownianMotion x)) ≤ C * (ENNReal.ofReal h) ^ (2 - γ ^ 2 / 2) := by
+  obtain ⟨D, hD, henergy⟩ :=
+    exists_planarBrownianMotion_interval_pair_enorm_rpow_neg 0 (sq_pos_of_ne_zero hγ) hγ2
+  let A : ℝ≥0∞ := ENNReal.ofReal (2 ^ (γ ^ 2))
+  refine ⟨A * D, ENNReal.mul_lt_top ENNReal.ofReal_lt_top hD, ?_⟩
+  intro x ε hε u h hu hhpos
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc u (u + h)))
+  have hbound (b : ContinuousPath ℂ) :
+      (∫⁻ ω, (∫⁻ t, ENNReal.ofReal
+        ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z)) (b t)) ∂ν) ^ 2 ∂P) ≤
+      A * ∫⁻ p : ℝ≥0 × ℝ≥0,
+        (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν) := by
+    simpa [A] using
+      (lintegral_annular_inserted_path_sq_le_riesz hh ν b b.continuous.measurable hε
+        (le_refl ε) hγ 0)
+  have hm : Measurable (fun b : ContinuousPath ℂ => ∫⁻ p : ℝ≥0 × ℝ≥0,
+      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν)) := by
+    have hk : Measurable (fun q : ContinuousPath ℂ × (ℝ≥0 × ℝ≥0) =>
+        (ENNReal.ofReal ‖q.1 q.2.1 - q.1 q.2.2‖) ^ (-(γ ^ 2))) := by fun_prop
+    exact hk.lintegral_prod_right'
+  calc
+    _ ≤ ∫⁻ b, A * (∫⁻ p : ℝ≥0 × ℝ≥0,
+        (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν))
+          ∂(planarBrownianMotion x) := lintegral_mono hbound
+    _ = A * (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0,
+        (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(γ ^ 2)) ∂(ν.prod ν)
+          ∂(planarBrownianMotion x)) := lintegral_const_mul A hm
+    _ ≤ (A * D) * (ENNReal.ofReal h) ^ (2 - γ ^ 2 / 2) := by
+      have heq := henergy u h hu hhpos
+      dsimp only at heq
+      rw [lintegral_planarBrownianMotion_interval_pair_enorm_rpow_neg 0 u h _ hu hhpos] at heq
+      rw [lintegral_planarBrownianMotion_interval_pair_enorm_rpow_neg x u h _ hu hhpos, heq]
+      exact le_of_eq (by ac_rfl)
+
+
+/-- The zero-insertion annular cell moment bound on the field-path product. -/
+theorem exists_uniform_prod_brownian_zero_insertion_annular_cell_sq_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ : γ ≠ 0) (hγ2 : γ ^ 2 < 2) :
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ (x : ℂ) {ε : ℝ}, 0 < ε →
+      ∀ (u h : ℝ), 0 ≤ u → 0 < h →
+      (∫⁻ p : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc u (u + h), ENNReal.ofReal
+        ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal))) ^ 2
+          ∂(P.prod (planarBrownianMotion x))) ≤
+        C * (ENNReal.ofReal h) ^ (2 - γ ^ 2 / 2) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨C, hC, hbound⟩ :=
+    exists_uniform_brownian_zero_insertion_annular_cell_sq_le hh hγ hγ2
+  refine ⟨C, hC, ?_⟩
+  intro x ε hε u h hu hhpos
+  let ν := Measure.map Real.toNNReal (volume.restrict (Icc u (u + h)))
+  let A : Set ℂ := {z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}
+  let F : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun p =>
+    ∫⁻ s in Ioc u (u + h), ENNReal.ofReal
+      (A.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal))
+  have hF : AEMeasurable (fun p => (F p) ^ 2) (P.prod (planarBrownianMotion x)) :=
+    (aemeasurable_annular_inserted_clock_cell hh (planarBrownianMotion x) hε γ 0 ε u (u+h)).pow_const 2
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hA : MeasurableSet A :=
+    (measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
+  have hmeas : ∀ᵐ ω ∂P, Measurable (fun z => ENNReal.ofReal
+      (A.indicator (fun w => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε w)) z)) := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh 0] with ω hω hrec
+    have hm : Measurable (fun z : ℂ => ENNReal.ofReal
+        (A.indicator (fun w => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          (H ω ε w - H ω 1 0 - 0 * Real.log (max ε ‖w‖)))) z)) := by
+      apply ENNReal.measurable_ofReal.comp
+      exact (measurable_const.mul (measurable_const.mul
+        ((((hHm ε hε).comp (measurable_id.prodMk measurable_const)).sub measurable_const).sub
+          (measurable_const.mul ((measurable_const.max measurable_norm).log)))).exp).indicator hA
+    convert hm using 1
+    ext z
+    simp only [Set.indicator_apply]
+    split_ifs
+    · rw [hω, hω, hrec ε z hε]
+    · rfl
+  have heq (b : ContinuousPath ℂ) : ∀ᵐ ω ∂P,
+      F (ω,b) = ∫⁻ t, ENNReal.ofReal (A.indicator (fun z =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage 0 (hcirc ω) ε z)) (b t)) ∂ν := by
+    filter_upwards [hmeas] with ω hω
+    dsimp [F, ν]
+    rw [Measure.restrict_congr_set Ioc_ae_eq_Icc]
+    symm
+    exact lintegral_map (hω.comp b.continuous.measurable) continuous_real_toNNReal.measurable
+  have hswap : (∫⁻ p, (F p)^2 ∂(P.prod (planarBrownianMotion x))) =
+      ∫⁻ b, ∫⁻ ω, (F (ω,b))^2 ∂P ∂(planarBrownianMotion x) :=
+    lintegral_prod_symm _ hF
+  change (∫⁻ p, (F p)^2 ∂(P.prod (planarBrownianMotion x))) ≤ _
+  rw [hswap]
+  refine (le_of_eq ?_).trans (hbound x hε u h hu hhpos)
+  apply lintegral_congr
+  intro b
+  apply lintegral_congr_ae
+  filter_upwards [heq b] with ω hω
+  rw [hω]
+
+
+/-- The expected maximum zero-insertion annular mesh cell decays uniformly
+in the smoothing radius and Brownian starting point. -/
+theorem exists_uniform_prod_zero_insertion_annular_mesh_max_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ : γ ≠ 0) (hγ2 : γ ^ 2 < 2) :
+    ∃ (C : ℝ≥0∞) (β : ℝ), C < ∞ ∧ 0 < β ∧
+      ∀ (x : ℂ) {ε : ℝ}, 0 < ε → ∀ (m : ℕ), 0 < m →
+      (∫⁻ p : Ω × ContinuousPath ℂ, (⨆ j : Fin m,
+        ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+          ENNReal.ofReal ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) ≤ C * (m : ℝ≥0∞) ^ (-β) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨C, hC, hbound⟩ :=
+    exists_uniform_prod_brownian_zero_insertion_annular_cell_sq_le hh hγ hγ2
+  let β : ℝ := (1 - γ ^ 2 / 2) / 2
+  have hβ : 0 < β := by dsimp [β]; linarith
+  refine ⟨C ^ (1 / 2 : ℝ), β, ENNReal.rpow_lt_top_of_nonneg (by norm_num) hC.ne, hβ, ?_⟩
+  intro x ε hε m hm
+  let X : Fin m → Ω × ContinuousPath ℂ → ℝ≥0∞ := fun j p =>
+    ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+      ENNReal.ofReal ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal))
+  have hX (j : Fin m) : AEMeasurable (X j) (P.prod (planarBrownianMotion x)) :=
+    aemeasurable_annular_inserted_clock_cell hh (planarBrownianMotion x) hε γ 0 ε
+      ((j : ℝ) / m) (((j : ℝ) + 1) / m)
+  have hcell (j : Fin m) :
+      (∫⁻ p, (X j p) ^ (2 : ℝ) ∂(P.prod (planarBrownianMotion x))) ≤
+        C * (m : ℝ≥0∞) ^ (-(1 + 2 * β)) := by
+    have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
+    have hj0 : (0 : ℝ) ≤ j := by positivity
+    have hend : ((j : ℝ) / m) + 1 / (m : ℝ) = ((j : ℝ) + 1) / m := by ring
+    have hrpow : (ENNReal.ofReal (1 / (m : ℝ))) ^ (2 - γ ^ 2 / 2) =
+        (m : ℝ≥0∞) ^ (-(1 + 2 * β)) := by
+      rw [one_div, ENNReal.ofReal_inv_of_pos hm0, ENNReal.ofReal_natCast,
+        ENNReal.inv_rpow, ← ENNReal.rpow_neg]
+      congr 1
+      dsimp [β]
+      ring
+    have hmain := hbound x hε ((j : ℝ) / m) (1 / (m : ℝ))
+      (div_nonneg hj0 hm0.le) (one_div_pos.mpr hm0)
+    rw [hend, hrpow] at hmain
+    simpa only [X, ENNReal.rpow_ofNat] using hmain
+  exact lintegral_iSup_le_mesh_rpow_of_aemeasurable (P.prod (planarBrownianMotion x)) hm X hX
+    (by norm_num : (1 : ℝ) ≤ 2) C hcell
+
 end HarmonicBalls
