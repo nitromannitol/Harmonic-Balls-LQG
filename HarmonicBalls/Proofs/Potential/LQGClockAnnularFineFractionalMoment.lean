@@ -4,6 +4,7 @@ import LatticeProb.LQG.LQGSubSquareGaussian
 import LatticeProb.LQG.LQGSubSquareLimit
 import LatticeProb.Prob.GaussKahaneRpow
 import Mathlib.MeasureTheory.Function.UniformIntegrable
+import Mathlib.MeasureTheory.Function.SimpleFuncDense
 
 /-! # Fine-scale moments of inserted circle averages
 
@@ -1070,5 +1071,155 @@ theorem integral_rpow_subSquareField_le_of_quadrature
       intro s
       fun_prop
     simpa only [LatticeProb.Gauss.subSquareComparison] using hquad _ htest
+
+/-- Finite-valued approximations converge under continuous tests and finite measures. -/
+theorem tendsto_integral_comp_approxOn {K : Set ℂ} (hK : IsCompact K)
+    {z₀ : ℂ} (hz₀ : z₀ ∈ K) (μ : Measure ℂ) [IsFiniteMeasure μ]
+    (hμ : ∀ᵐ z ∂μ, z ∈ K) (f : ℂ → ℝ) (hf : Continuous f) :
+    Tendsto (fun n => ∫ z, f (SimpleFunc.approxOn id measurable_id K z₀ hz₀ n z) ∂μ)
+      atTop (𝓝 (∫ z, f z ∂μ)) := by
+  obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hf.continuousOn
+  apply tendsto_integral_of_dominated_convergence (fun _ => C)
+  · intro n
+    exact (hf.measurable.comp (SimpleFunc.approxOn id measurable_id K z₀ hz₀ n).measurable).aestronglyMeasurable
+  · exact integrable_const C
+  · intro n
+    exact ae_of_all _ (fun z => hC _ (SimpleFunc.approxOn_mem measurable_id hz₀ n z))
+  · filter_upwards [hμ] with z hz
+    exact hf.continuousAt.tendsto.comp (SimpleFunc.tendsto_approxOn measurable_id hz₀ (subset_closure hz))
+
+/-- Integrating a function of a simple map is a sum over its fibers. -/
+theorem integral_comp_simple_eq_sum {α : Type*} [MeasurableSpace α]
+    (μ : Measure α) [IsFiniteMeasure μ] (T : SimpleFunc α ℂ) (hT : Integrable T μ)
+    (f : ℂ → ℝ) (hf : Integrable (fun x => f (T x)) μ) :
+    (∫ x, f (T x) ∂μ) = ∑ z ∈ T.range, μ.real (T ⁻¹' {z}) * f z := by
+  classical
+  have hmass : (∑ z ∈ T.range, μ.real (T ⁻¹' {z})) = μ.real univ := by
+    simp only [measureReal_def, ← ENNReal.toReal_sum (fun z _ => measure_ne_top μ _),
+      T.sum_range_measure_preimage_singleton]
+  let g : ℂ → ℝ := fun z => f z - f 0
+  have hg0 : g 0 = 0 := sub_self _
+  have hgi : Integrable (T.map g) μ := by
+    change Integrable (fun x => f (T x) - f 0) μ
+    exact hf.sub (integrable_const (f 0))
+  have hgi' : Integrable (fun x => g (T x)) μ := hgi
+  have hsum := T.map_integral g hT hg0
+  rw [SimpleFunc.integral_eq_integral _ hgi] at hsum
+  change (∫ x, g (T x) ∂μ) = _ at hsum
+  have heq : (∫ x, f (T x) ∂μ) = (∫ x, g (T x) ∂μ) + μ.real univ * f 0 := by
+    calc
+      (∫ x, f (T x) ∂μ) = ∫ x, (g (T x) + f 0) ∂μ := by simp only [g, sub_add_cancel]
+      _ = (∫ x, g (T x) ∂μ) + μ.real univ * f 0 := by
+        rw [integral_add hgi' (integrable_const _), integral_const]
+        rfl
+  rw [heq, hsum]
+  simp only [g, smul_eq_mul, mul_sub, Finset.sum_sub_distrib, ← Finset.sum_mul, hmass]
+  ring
+
+/-- Fiber-mass quadrature converges for continuous tests on a compact set. -/
+theorem tendsto_sum_fiber_mass_mul {K : Set ℂ} (hK : IsCompact K)
+    {z₀ : ℂ} (hz₀ : z₀ ∈ K) (μ : Measure ℂ) [IsFiniteMeasure μ]
+    (hμ : ∀ᵐ z ∂μ, z ∈ K) (f : ℂ → ℝ) (hf : Continuous f) :
+    let T := fun n => SimpleFunc.approxOn id measurable_id K z₀ hz₀ n
+    Tendsto (fun n => ∑ z ∈ (T n).range, μ.real ((T n) ⁻¹' {z}) * f z)
+      atTop (𝓝 (∫ z, f z ∂μ)) := by
+  dsimp only
+  have hconv := tendsto_integral_comp_approxOn hK hz₀ μ hμ f hf
+  convert hconv using 1
+  ext n
+  let T := SimpleFunc.approxOn id measurable_id K z₀ hz₀ n
+  obtain ⟨C, hC⟩ := hK.isBounded.exists_norm_le
+  have hTi : Integrable T μ := Integrable.of_bound T.stronglyMeasurable.aestronglyMeasurable C
+    (ae_of_all _ (fun z => hC _ (SimpleFunc.approxOn_mem measurable_id hz₀ n z)))
+  obtain ⟨D, hD⟩ := hK.exists_bound_of_continuousOn hf.continuousOn
+  have hFi : Integrable (fun z => f (T z)) μ := Integrable.of_bound
+    (hf.measurable.comp T.measurable).aestronglyMeasurable D
+    (ae_of_all _ (fun z => hD _ (SimpleFunc.approxOn_mem measurable_id hz₀ n z)))
+  exact (integral_comp_simple_eq_sum μ T hTi f hFi).symm
+
+/-- Fiber-mass quadrature converges simultaneously for two finite measures. -/
+theorem tendsto_sum_fiber_mass_mul_pair {K : Set ℂ} (hK : IsCompact K)
+    {z₀ : ℂ} (hz₀ : z₀ ∈ K) (ν : Fin 2 → Measure ℂ)
+    [∀ s, IsFiniteMeasure (ν s)] (hν : ∀ s, ∀ᵐ z ∂(ν s), z ∈ K)
+    (f : Fin 2 → ℂ → ℝ) (hf : ∀ s, Continuous (f s)) :
+    let T := fun n => SimpleFunc.approxOn id measurable_id K z₀ hz₀ n
+    Tendsto (fun n => ∑ i : Fin 2 × ↥(T n).range,
+      (ν i.1).real ((T n) ⁻¹' {i.2.1}) * f i.1 i.2.1)
+      atTop (𝓝 (∑ s, ∫ z, f s z ∂(ν s))) := by
+  dsimp only
+  have hconv : ∀ s : Fin 2, Tendsto (fun n => ∑ z ∈
+      (SimpleFunc.approxOn id measurable_id K z₀ hz₀ n).range,
+      (ν s).real ((SimpleFunc.approxOn id measurable_id K z₀ hz₀ n) ⁻¹' {z}) * f s z)
+      atTop (𝓝 (∫ z, f s z ∂(ν s))) := fun s =>
+    tendsto_sum_fiber_mass_mul hK hz₀ (ν s) (hν s) (f s) (hf s)
+  have hsum := tendsto_finsetSum Finset.univ (fun s _ => hconv s)
+  convert hsum using 1
+  ext n
+  rw [Fintype.sum_prod_type]
+  apply Finset.sum_congr rfl
+  intro s _
+  change (∑ y : ↥(SimpleFunc.approxOn id measurable_id K z₀ hz₀ n).range,
+    (ν s).real ((SimpleFunc.approxOn id measurable_id K z₀ hz₀ n) ⁻¹' {y.1}) * f s y.1) = _
+  exact Finset.sum_coe_sort (SimpleFunc.approxOn id measurable_id K z₀ hz₀ n).range
+    (fun z : ℂ => (ν s).real ((SimpleFunc.approxOn id measurable_id K z₀ hz₀ n) ⁻¹' {z}) * f s z)
+
+/-- Fixed-scale comparison for two finite measures carried by the reference square. -/
+theorem integral_rpow_subSquareField_le_of_finite_measures
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (ν : Fin 2 → Measure ℂ) [∀ s, IsFiniteMeasure (ν s)]
+    (hν : ∀ s, ∀ᵐ z ∂(ν s), z ∈ LatticeProb.LQG.lqgSquare)
+    {q : ℝ} (hq : 1 ≤ q) :
+    let R := LatticeProb.LQG.dyadicScale k
+    let F : Ω → ℝ := fun ω => ∑ s, ∫ z, Real.exp
+      (γ * hcirc ω (R * δ) ((R : ℂ) * z + LatticeProb.LQG.lqgSquareCentre s) -
+        γ ^ 2 * (-Real.log (R * δ)) / 2) ∂(ν s)
+    let G : ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun x => ∑ s, ∫ z, Real.exp
+      (γ * (hcirc x.1.1 R (LatticeProb.LQG.lqgSquareCentre s) + hcirc (x.2 s) δ z + x.1.2) -
+        γ ^ 2 * (1 - Real.log R - Real.log δ) / 2) ∂(ν s)
+    Integrable (fun ω => F ω ^ q) P ∧
+      Integrable (fun x => G x ^ q) (LatticeProb.Gauss.subSquareMeasure P) ∧
+      (∫ ω, F ω ^ q ∂P) ≤ ∫ x, G x ^ q ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  classical
+  have hK : IsCompact LatticeProb.LQG.lqgSquare := by
+    have hc : IsClosed LatticeProb.LQG.lqgSquare := by
+      have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+      have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+      exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+    exact (isCompact_closedBall (0 : ℂ) (1 / 4)).of_isClosed_subset hc
+      LatticeProb.LQG.lqgSquare_subset_closedBall
+  have h0 : (0 : ℂ) ∈ LatticeProb.LQG.lqgSquare := by
+    simp [LatticeProb.LQG.lqgSquare]
+  let T := fun n => SimpleFunc.approxOn id measurable_id LatticeProb.LQG.lqgSquare 0 h0 n
+  let ι : ℕ → Type := fun n => Fin 2 × ↥(T n).range
+  let piece : ∀ n, ι n → Fin 2 := fun _ i => i.1
+  let pt : ∀ n, ι n → ℂ := fun _ i => i.2.1
+  let a : ∀ n, ι n → ℝ := fun n i => (ν i.1).real ((T n) ⁻¹' {i.2.1})
+  have hpt : ∀ n i, pt n i ∈ LatticeProb.LQG.lqgSquare := by
+    intro n i
+    obtain ⟨z, hz⟩ := SimpleFunc.mem_range.mp i.2.2
+    change i.2.1 ∈ LatticeProb.LQG.lqgSquare
+    rw [← hz]
+    exact SimpleFunc.approxOn_mem measurable_id h0 n z
+  have ha : ∀ n i, 0 ≤ a n i := fun _ _ => ENNReal.toReal_nonneg
+  have hmass : ∀ n, ∑ i, a n i ≤ ∑ s, (ν s).real univ := by
+    intro n
+    rw [Fintype.sum_prod_type]
+    apply le_of_eq
+    apply Finset.sum_congr rfl
+    intro s _
+    change (∑ y : ↥(T n).range, (ν s).real ((T n) ⁻¹' {y.1})) = (ν s).real univ
+    calc
+      _ = ∑ z ∈ (T n).range, (ν s).real ((T n) ⁻¹' {z}) :=
+        Finset.sum_coe_sort (T n).range (fun z : ℂ => (ν s).real ((T n) ⁻¹' {z}))
+      _ = _ := by
+        simp only [measureReal_def, ← ENNReal.toReal_sum (fun z _ => measure_ne_top (ν s) _),
+          (T n).sum_range_measure_preimage_singleton]
+  apply integral_rpow_subSquareField_le_of_quadrature hh γ hk hδ hδ2 ι piece pt hpt a ha
+    (∑ s, (ν s).real univ) hmass ν ?_ hq
+  intro f hf
+  exact tendsto_sum_fiber_mass_mul_pair hK h0 ν hν f hf
 
 end HarmonicBalls
