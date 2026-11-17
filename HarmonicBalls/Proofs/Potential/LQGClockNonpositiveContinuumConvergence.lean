@@ -1150,4 +1150,37 @@ theorem exists_uniform_summable_annealed_weighted_radius_increments
     _ ≤ ∫ b, R n b ∂(planarBrownianMotion x) := integral_mono_ae hsec hRi hbound'
     _ = A n := (hA x n).2
 
+
+/-- The nonpositive insertion weight on the half-disc is measurable,
+bounded by one, and supported in the half-disc. -/
+theorem nonpositive_halfDisc_insertion_weight_properties
+    {γ α r : ℝ} (hγ : 0 ≤ γ) (hα : α ≤ 0) (hr : 0 < r) (hrhalf : r ≤ 1/2) :
+    let g : ℂ → ℝ := {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+      (fun z => (max r ‖z‖) ^ (-γ*α))
+    Measurable g ∧ (∀ z, |g z| ≤ 1) ∧ (∀ z, g z ≠ 0 → ‖z‖ ≤ 1/2) := by
+  let A : Set ℂ := {z : ℂ | ‖z‖ ≤ 1/2}
+  let g : ℂ → ℝ := A.indicator (fun z => (max r ‖z‖) ^ (-γ*α))
+  have hA : MeasurableSet A := measurableSet_le measurable_norm measurable_const
+  have hg : Measurable g := by
+    apply Measurable.indicator _ hA
+    exact ((continuous_const.max continuous_norm).rpow_const
+      (fun _ => Or.inl (ne_of_gt (lt_max_of_lt_left hr)))).measurable
+  have hq : 0 ≤ -γ * α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ) hα
+  change Measurable g ∧ (∀ z, |g z| ≤ 1) ∧ (∀ z, g z ≠ 0 → ‖z‖ ≤ 1/2)
+  refine ⟨hg, ?_, ?_⟩
+  · intro z
+    by_cases hz : z ∈ A
+    · rw [show g z = _ from Set.indicator_of_mem hz _]
+      rw [abs_of_nonneg (Real.rpow_nonneg (le_of_lt (lt_max_of_lt_left hr)) _)]
+      exact Real.rpow_le_one (le_of_lt (lt_max_of_lt_left hr))
+        (by
+          have hzhalf : ‖z‖ ≤ (1 : ℝ)/2 := hz
+          apply max_le <;> linarith) hq
+    · rw [show g z = 0 from Set.indicator_of_notMem hz _, abs_zero]
+      norm_num
+  · intro z hz
+    by_contra hn
+    have hnA : z ∉ A := hn
+    exact hz (show g z = 0 from Set.indicator_of_notMem hnA _)
+
 end HarmonicBalls
