@@ -924,4 +924,32 @@ theorem exists_uniform_nonpositive_weighted_radius_increment_le_riesz_energy
         show g z = _ from Set.indicator_of_notMem hz _, zero_mul]
   · simp
 
+
+/-- The nonnegative insertion correction is controlled uniformly in time
+by its entire unit-interval occupation. -/
+theorem exists_uniform_annealed_nonpositive_radius_correction_iSup_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (hγ : 0 < γ) (hα : α ≤ 0) :
+    ∃ C : ℝ≥0∞, 0 < C ∧ C < ∞ ∧ ∀ (x : ℂ) {ε r : ℝ},
+      0 < ε → ε ≤ 1 / 2 → 0 < r → r ≤ ε →
+      (∫⁻ q : Ω × ContinuousPath ℂ, (⨆ t : Icc (0 : ℝ) 1,
+        ∫⁻ s in Ioc (0 : ℝ) t.1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < 1 / 2}.indicator (fun z =>
+            ((max ε ‖z‖) ^ (-γ * α) - (max r ‖z‖) ^ (-γ * α)) *
+            (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z))) (q.2 s.toNNReal)))
+        ∂(P.prod (planarBrownianMotion x))) ≤
+      ENNReal.ofReal (ε ^ (-γ * α)) * ((ENNReal.ofReal ε) ^ (1 / 2 : ℝ) * C) := by
+  obtain ⟨C, hC0, hC, hbound⟩ :=
+    exists_uniform_annealed_nonpositive_radius_insertion_correction_le hh γ α hγ hα
+  refine ⟨C, hC0, hC, ?_⟩
+  intro x ε r hε hεhalf hr hrε
+  refine (lintegral_mono ?_).trans (hbound x hε hεhalf (le_refl (1/2 : ℝ)) hr hrε)
+  intro q
+  apply iSup_le
+  intro t
+  exact lintegral_mono_set (Ioc_subset_Ioc le_rfl t.2.2)
+
 end HarmonicBalls
