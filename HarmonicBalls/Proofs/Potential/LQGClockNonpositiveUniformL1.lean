@@ -755,4 +755,68 @@ theorem exists_uniform_summable_annealed_nonpositive_inserted_inner_increments
     _ ≤ _ := add_le_add (hinc x n).2 (hcorr x n).2
 
 
+/-- A positive-time planar Brownian marginal is absolutely continuous
+with respect to area measure. -/
+theorem planarBrownianMotion_map_eval_absolutelyContinuous (x : ℂ) (t : ℝ≥0) (ht : t ≠ 0) :
+    (planarBrownianMotion x).map (fun b => b t) ≪ volume := by
+  have hmap := isFellerKernelSemigroup_planarHeatSemigroup.continuousProcess_map_eval_nnreal
+    planarHeatSemigroup isConservative_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup t
+  rw [← planarBrownianMotion_eq_continuousProcess] at hmap
+  have hvalue := congrArg (fun ker : ProbabilityTheory.Kernel ℂ ℂ => ker x) hmap
+  change (planarBrownianMotion.map (ContinuousPath.coordinateProcess t)) x = _ at hvalue
+  rw [ProbabilityTheory.Kernel.map_apply _ (ContinuousPath.measurable_coordinateProcess t),
+    planarHeatSemigroup_apply] at hvalue
+  change (planarBrownianMotion x).map (ContinuousPath.coordinateProcess t) ≪ volume
+  rw [hvalue]
+  have h := (gaussianReal_absolutelyContinuous x.re ht).prod
+    (gaussianReal_absolutelyContinuous x.im ht)
+  have hm := h.map Complex.measurableEquivRealProd.symm.measurable
+  rw [← Measure.volume_eq_prod ℝ ℝ, Complex.volume_preserving_equiv_real_prod.symm.map_eq] at hm
+  exact hm
+
+/-- Almost every Brownian path spends almost every positive time outside
+a fixed area-null set. -/
+theorem ae_planarBrownianMotion_ae_positive_time_avoids_null_set (x : ℂ)
+    (S : Set ℂ) (hS : MeasurableSet S) (hnull : volume S = 0) :
+    ∀ᵐ b ∂planarBrownianMotion x, ∀ᵐ t ∂volume.restrict (Ioi (0 : ℝ)),
+      b t.toNNReal ∉ S := by
+  have hm : MeasurableSet {p : ContinuousPath ℂ × ℝ | p.1 p.2.toNNReal ∉ S} := by
+    apply (hS.preimage ?_).compl
+    fun_prop
+  apply (Measure.ae_ae_comm hm).2
+  filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
+  have ht0 : t.toNNReal ≠ 0 := ne_of_gt (Real.toNNReal_pos.mpr ht)
+  have h := planarBrownianMotion_map_eval_absolutelyContinuous x t.toNNReal ht0 hnull
+  change ((planarBrownianMotion x).map (ContinuousPath.coordinateProcess t.toNNReal)) S = 0 at h
+  rw [Measure.map_apply (ContinuousPath.measurable_coordinateProcess t.toNNReal) hS] at h
+  change (planarBrownianMotion x) {b | b t.toNNReal ∈ S} = 0 at h
+  apply (ae_iff).2
+  simpa only [not_not] using h
+
+/-- Almost every Brownian path spends zero positive time on a fixed circle. -/
+theorem ae_planarBrownianMotion_ae_positive_time_norm_ne (x : ℂ) (r : ℝ) :
+    ∀ᵐ b ∂planarBrownianMotion x, ∀ᵐ t ∂volume.restrict (Ioi (0 : ℝ)),
+      ‖b t.toNNReal‖ ≠ r := by
+  have h := ae_planarBrownianMotion_ae_positive_time_avoids_null_set x
+    (sphere (0 : ℂ) r) isClosed_sphere.measurableSet (Measure.addHaar_sphere volume 0 r)
+  simpa [Metric.mem_sphere, dist_zero_right] using h
+
+/-- Closed and open half-disc occupation integrals agree for every
+nonnegative horizon and spatial integrand, almost surely. -/
+theorem ae_planarBrownianMotion_halfDisc_integral_eq_open (x : ℂ) :
+    ∀ᵐ b ∂planarBrownianMotion x, ∀ (T : ℝ≥0) (f : ℂ → ℝ),
+      (∫ s in (0 : ℝ)..(T : ℝ),
+        {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal)) =
+      ∫ s in (0 : ℝ)..(T : ℝ), {z : ℂ | ‖z‖ < 1/2}.indicator f (b s.toNNReal) := by
+  filter_upwards [ae_planarBrownianMotion_ae_positive_time_norm_ne x (1/2)] with b hb T f
+  rw [intervalIntegral.integral_of_le T.coe_nonneg, intervalIntegral.integral_of_le T.coe_nonneg]
+  apply integral_congr_ae
+  filter_upwards [ae_restrict_of_ae_restrict_of_subset Ioc_subset_Ioi_self hb] with s hs
+  have h : ‖b s.toNNReal‖ ≤ (1/2 : ℝ) ↔ ‖b s.toNNReal‖ < 1/2 := by
+    constructor
+    · intro h
+      exact lt_of_le_of_ne h hs
+    · exact le_of_lt
+  simp only [Set.indicator_apply, Set.mem_ofPred_eq, norm_nonneg, true_and, h]
+
 end HarmonicBalls
