@@ -765,4 +765,53 @@ theorem ae_stoppedAnnularClock_radius_monotone_and_cell
   intro u v hu huv hv
   exact (stoppedAnnularClock_sub_nonneg_and_ofReal_eq_lintegral f hf hf0 δ b hu huv hv).2
 
+/-- A fixed-time annular clock is measurable under the field-path product
+law at any positive smoothing radius. -/
+theorem aemeasurable_stoppedAnnularClock_radius
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (ν : Measure (ContinuousPath ℂ)) [SFinite ν]
+    {r : ℝ} (hr : 0 < r) (γ α δ : ℝ) {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+    AEMeasurable (fun p : Ω × ContinuousPath ℂ =>
+      stoppedAnnularClock (fun z => r^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) δ
+        (fun _ => t.toNNReal) p.2) (P.prod ν) := by
+  let F : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun p =>
+    ∫⁻ s in Ioc (0 : ℝ) t, ENNReal.ofReal
+      ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        r^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) (p.2 s.toNNReal))
+  have hF : AEMeasurable F (P.prod ν) :=
+    aemeasurable_annular_inserted_clock_cell hh ν hr γ α δ 0 t
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  apply hF.ennreal_toReal.congr
+  filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := ν)).ae
+    (ae_stoppedAnnularClock_radius_monotone_and_cell hh γ α δ),
+    (Measure.quasiMeasurePreserving_fst (μ := P) (ν := ν)).ae hHae,
+    (Measure.quasiMeasurePreserving_fst (μ := P) (ν := ν)).ae
+      (ae_recentered_inserted_circle_average hh α)] with p hp hω hrec
+  let f : ℂ → ℝ := fun z => r^(γ^2/2) * Real.exp (γ *
+    LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)
+  have hc : Continuous (hcirc p.1 r) := by
+    rw [← funext (hω r)]
+    exact hHc p.1 r hr
+  have hf : Continuous f := continuous_inserted_density_at_radius (hcirc p.1) γ α r hr hc
+    (fun z => hrec r z hr)
+  have hz : stoppedAnnularClock f δ (fun _ => (0 : ℝ).toNNReal) p.2 = 0 := by
+    rw [stoppedAnnularClock_eq_time_integral f hf.measurable]
+    simp
+  have hnonneg : 0 ≤ stoppedAnnularClock f δ (fun _ => t.toNNReal) p.2 := by
+    have h := (hp r hr p.2).1 (show (0 : ℝ) ∈ Icc 0 1 by norm_num)
+      ⟨ht0, ht1⟩ ht0
+    change stoppedAnnularClock f δ (fun _ => (0 : ℝ).toNNReal) p.2 ≤
+      stoppedAnnularClock f δ (fun _ => t.toNNReal) p.2 at h
+    simpa only [hz] using h
+  have heq := (hp r hr p.2).2 (u := 0) (v := t) le_rfl ht0 ht1
+  change ENNReal.ofReal (stoppedAnnularClock f δ (fun _ => t.toNNReal) p.2 -
+    stoppedAnnularClock f δ (fun _ => (0 : ℝ).toNNReal) p.2) = F p at heq
+  rw [hz, sub_zero] at heq
+  change (F p).toReal = stoppedAnnularClock f δ (fun _ => t.toNNReal) p.2
+  rw [← heq, ENNReal.toReal_ofReal hnonneg]
+
 end HarmonicBalls
