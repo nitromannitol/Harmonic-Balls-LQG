@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.FiniteDiscGreenReciprocity
 import HarmonicBalls.Proofs.Potential.UnboundedGreenMinorantHarmonic
+import HarmonicBalls.Proofs.Potential.UnboundedTransposedSourceCorrection
 
 /-! # Joint regularity of Green minorants
 
@@ -286,5 +287,48 @@ theorem exists_measurable_harmonic_minorant_family
     have hnone' : ∀ h, ¬IsHarmonicMinorant U (newtonKernelEReal z) h :=
       fun h hh => hnone ⟨h, hh⟩
     simp [greatestHarmonicMinorant, hnone']
+
+/-- For a finite compactly supported source, Newtonian integrability at an
+uncharged observer implies integrability of the transposed Green kernel. -/
+theorem integrable_transposed_greenFunction_of_newtonKernel
+    {U K : Set ℂ} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
+    {ν : MeasureTheory.Measure ℂ} [MeasureTheory.IsFiniteMeasure ν] (hν : ν Kᶜ = 0)
+    {x : ℂ} (hx : x ∈ U) (ha : ν {x} = 0)
+    (hi : MeasureTheory.Integrable (fun y => newtonKernel y x) ν) :
+    MeasureTheory.Integrable (fun y => greenFunction U y x) ν := by
+  open MeasureTheory in
+  obtain ⟨F, hFm, _, hFb, hFag⟩ := exists_measurable_harmonic_minorant_family hU hK hKU
+  obtain ⟨C, hC⟩ := hFb {x} isCompact_singleton (singleton_subset_iff.mpr hx)
+  have hFi : Integrable (fun y => F y x) ν := by
+    apply Integrable.of_bound (f := fun y => F y x)
+      (hFm.comp (measurable_id.prodMk (measurable_const : Measurable (fun _ : ℂ => x)))).aestronglyMeasurable C
+    exact Filter.Eventually.of_forall fun y => by simpa only [Real.norm_eq_abs] using hC y x (mem_singleton x)
+  have hae : ∀ᵐ y ∂ν, y ∈ K := by rw [ae_iff]; exact hν
+  have hne : ∀ᵐ y ∂ν, y ≠ x := by rw [ae_iff]; simpa using ha
+  apply (hi.sub hFi).congr
+  filter_upwards [hae, hne] with y hy hyx
+  rw [greenFunction, ite_eq_left ⟨hKU hy, hx, hyx⟩, hFag y hy x hx]
+  rfl
+
+/-- One harmonic correction compares transposed potentials at every uncharged
+observer where the Newtonian source kernel is integrable. -/
+theorem exists_harmonic_unbounded_transposed_correction_of_newtonKernel
+    {U V K : Set ℂ} (hU : IsOpen U) (hV : IsOpen V)
+    (hVb : Bornology.IsBounded V) (hK : IsCompact K) (hKV : K ⊆ V) (hVU : V ⊆ U)
+    {ν : MeasureTheory.Measure ℂ} [MeasureTheory.IsFiniteMeasure ν] (hν : ν Kᶜ = 0) :
+    ∃ H : ℂ → ℝ, HarmonicOnNhd H V ∧
+      ∀ x ∈ V, ν {x} = 0 → MeasureTheory.Integrable (fun y => newtonKernel y x) ν →
+        (∫ y, greenFunction U y x ∂ν) = (∫ y, greenFunction V y x ∂ν) + H x := by
+  obtain ⟨F, hFm, hFh, hFb, hFag⟩ :=
+    exists_measurable_harmonic_minorant_family hU hK (hKV.trans hVU)
+  obtain ⟨H, hH, hcorr⟩ := exists_harmonic_unbounded_transposed_correction_of_minorant_family
+    hV hVb hK hKV hVU hν hFm (fun y => (hFh y).mono hVU)
+    (fun L hL hLV => hFb L hL (hLV.trans hVU))
+    (fun y hy x hx => hFag y hy x (hVU hx))
+  refine ⟨H, hH, ?_⟩
+  intro x hx ha hi
+  exact hcorr x hx ha hi
+    (integrable_transposed_greenFunction_of_newtonKernel hV hK hKV hν hx ha hi)
+    (integrable_transposed_greenFunction_of_newtonKernel hU hK (hKV.trans hVU) hν (hVU hx) ha hi)
 
 end HarmonicBalls
