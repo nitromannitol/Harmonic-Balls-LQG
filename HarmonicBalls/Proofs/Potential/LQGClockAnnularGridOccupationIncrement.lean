@@ -937,4 +937,74 @@ theorem exists_lintegral_prod_stoppedAnnularClock_radius_iSup_le_grid
   exact (lintegral_prod_stoppedAnnularClock_radius_iSup_le_grid_and_mesh
     hh x γ α δ hr hε m hm).trans (add_le_add le_rfl (hmesh hε hεδ m hm))
 
+/-- A stopped annular increment at two positive radii is field-integrable. -/
+theorem integrable_stopped_annular_radius_increment_field
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε r δ : ℝ}
+    (hε : 0 < ε) (hr : 0 < r) (hrε : r ≤ ε) (hεhalf : ε ≤ 1/2) (hεδ : ε ≤ δ)
+    (γ α : ℝ) (τ : ContinuousPath ℂ → ℝ≥0) (b : ContinuousPath ℂ) :
+    Integrable (fun ω => ∫ z,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0 - α*Real.log (max r ‖z‖))) -
+        ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0 - α*Real.log (max ε ‖z‖)))) z
+      ∂(Measure.map (fun t => b t) ((Measure.map Real.toNNReal
+        (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τ b))))) P := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let g : ℂ → ℝ := A.indicator (fun z => Real.exp (-γ*α*Real.log (max δ ‖z‖)))
+  have hδ : 0 < δ := hε.trans_le hεδ
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let f : ℂ → ℝ := fun z => Real.exp (-γ*α*Real.log (max δ ‖z‖))
+  have hf : Continuous f := Real.continuous_exp.comp (continuous_const.mul
+    ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hδ).ne')))
+  have hgm : Measurable g := hf.measurable.indicator hA
+  obtain ⟨K, hK⟩ := (isCompact_closedBall (0 : ℂ) (1/2 : ℝ)).bddAbove_image hf.continuousOn
+  have hgK : ∀ z, |g z| ≤ max K 0 := by
+    intro z
+    by_cases hz : z ∈ A
+    · have hzk : z ∈ Metric.closedBall (0 : ℂ) (1/2 : ℝ) := by
+        simpa only [Metric.mem_closedBall, dist_zero_right] using hz.2
+      rw [show g z = f z from Set.indicator_of_mem hz _, abs_of_pos (Real.exp_pos _)]
+      exact (hK ⟨z, hzk, rfl⟩).trans (le_max_left K 0)
+    · rw [show g z = 0 from Set.indicator_of_notMem hz _, abs_zero]
+      exact le_max_right K 0
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let μ : Measure ℂ := Measure.map (fun t => b t) (ν.restrict (Iic (τ b)))
+  have hν : ν univ = 1 := by
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := ⟨hν⟩
+  have hμ : μ ≤ Measure.map (fun t => b t) ν :=
+    Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+  let : IsFiniteMeasure μ := isFiniteMeasure_of_le (Measure.map (fun t => b t) ν) hμ
+  have hgi : Integrable g μ := by
+    apply (integrable_const (max K 0)).mono' hgm.aestronglyMeasurable
+    filter_upwards with z
+    simpa [Real.norm_eq_abs] using hgK z
+  have hgs : ∀ z, g z ≠ 0 → ‖z‖ + ε ≤ 1 := by
+    intro z hz
+    have hzA : z ∈ A := by
+      by_contra hn
+      exact hz (Set.indicator_of_notMem hn _)
+    linarith [hzA.2]
+  have hgsr : ∀ z, g z ≠ 0 → ‖z‖ + r ≤ 1 := by
+    intro z hz
+    linarith [hgs z hz]
+  have hi := hh.integrable_integral_increment_scales hr hε zero_lt_one μ hgm hgi hgsr hgs γ
+  refine hi.congr (Filter.Eventually.of_forall fun ω => ?_)
+  apply integral_congr_ae
+  filter_upwards with z
+  by_cases hz : z ∈ A
+  · have hδε : ε ≤ ‖z‖ := hεδ.trans hz.1
+    have hhalf : r ≤ ‖z‖ := by linarith
+    rw [show A.indicator _ z = _ from Set.indicator_of_mem hz _,
+      show g z = _ from Set.indicator_of_mem hz _, max_eq_right hz.1,
+      max_eq_right hδε, max_eq_right hhalf]
+    have heq (r : ℝ) : γ * (hcirc ω r z - hcirc ω 1 0 - α * Real.log ‖z‖) =
+        -γ*α*Real.log ‖z‖ + γ*(hcirc ω r z-hcirc ω 1 0) := by ring
+    rw [heq r, heq ε, Real.exp_add, Real.exp_add]
+    ring
+  · rw [show A.indicator _ z = _ from Set.indicator_of_notMem hz _,
+      show g z = _ from Set.indicator_of_notMem hz _, zero_mul]
+
 end HarmonicBalls
