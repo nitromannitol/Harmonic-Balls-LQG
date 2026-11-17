@@ -762,4 +762,45 @@ theorem IsWholePlaneGFF.nullMeasurableSet_scaled_normalized_singular_weyl_around
   exact (nullMeasurableSet_le aemeasurable_const h).inter
     (nullMeasurableSet_le h aemeasurable_const)
 
+/-- A random continuous shift of the inserted metric has measurable
+infimum coordinates on every set of point pairs, represented together with
+all point distances on one field event. -/
+theorem IsWholePlaneGFF.exists_measurable_singular_weyl_inf_coordinates
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfm : ∀ z, Measurable fun ω => f ω z) :
+    ∃ G : Ω → C(ℂ × ℂ, ℝ), Measurable G ∧
+      (∀ ω, IsEuclideanLengthMetric fun x y => G ω (x, y)) ∧
+      Measurable (fun q : Ω × (ℂ × ℂ) => G q.1 q.2) ∧
+      (∀ U : Set (ℂ × ℂ), Measurable fun ω =>
+        sInf (Set.image (fun p : ℂ × ℂ => ENNReal.ofReal (G ω p)) U)) ∧
+      ∀ᵐ ω ∂P, (∀ x y, G ω (x, y) = (weylScaling (D ω) ξ (f ω) x y).toReal) ∧
+        ∀ U : Set (ℂ × ℂ),
+          sInf (Set.image (fun p : ℂ × ℂ => ENNReal.ofReal (G ω p)) U) =
+          sInf (Set.image (fun p : ℂ × ℂ =>
+            ENNReal.ofReal ((weylScaling (D ω) ξ (f ω) p.1 p.2).toReal)) U) := by
+  obtain ⟨G, hG, hGmetric, heq⟩ :=
+    hgff.exists_measurable_singular_random_continuous_weyl_metric hγ hγ₂ hα hD hf hfm
+  refine ⟨G, hG, hGmetric, ?_, ?_, ?_⟩
+  · exact continuous_eval.measurable.comp
+      ((hG.comp measurable_fst).prodMk measurable_snd)
+  · intro U
+    obtain ⟨S, hSc, hSU, hUS⟩ := TopologicalSpace.exists_countable_dense_subset U
+    have hm : Measurable (fun ω => ⨅ p ∈ S, ENNReal.ofReal (G ω p)) :=
+      Measurable.biInf S hSc fun p _ => ((ContinuousMap.measurable_eval p).comp hG).ennreal_ofReal
+    convert hm using 1
+    funext ω
+    exact sInf_ofReal_image_eq_iInf_of_dense (D := fun x y => G ω (x, y)) (G ω).continuous hSU hUS
+  · filter_upwards [heq] with ω hω
+    refine ⟨hω, ?_⟩
+    intro U
+    have he : (fun p : ℂ × ℂ => ENNReal.ofReal (G ω p)) =
+        (fun p : ℂ × ℂ => ENNReal.ofReal ((weylScaling (D ω) ξ (f ω) p.1 p.2).toReal)) := by
+      funext p
+      rw [hω p.1 p.2]
+    rw [he]
+
 end HarmonicBalls
