@@ -1,4 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularLimitRegularity
+import HarmonicBalls.Proofs.Potential.LQGClockAnnularLimitJointMeasurable
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousMap
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularExitUniformIntegrability
 
 /-! # Stopped annular clock limits
@@ -216,5 +218,70 @@ theorem ae_prod_planarBrownianMotion_shift_of_forall_ae {Ω : Type*} [Measurable
   rw [Measure.map_id] at heq
   rw [heq] at ha
   exact (ae_map_iff (measurable_fst.prodMk ((ContinuousPath.measurable_shift_fixed s).comp measurable_snd)).aemeasurable hS).mp ha
+
+/-- For each start and deterministic shift, the actual annular clocks along the shifted
+Brownian path converge uniformly on the unit interval under the joint law. -/
+theorem ae_exists_uniform_limit_shift_stoppedAnnularClock {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) (s : ℝ≥0) :
+    ∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      ∃ F : Icc (0 : ℝ) 1 → ℝ, Continuous F ∧
+        ∀ η : ℝ, 0 < η → ∀ᶠ j in atTop, ∀ t : Icc (0 : ℝ) 1,
+          |stoppedAnnularClock (fun z => (dyadicScale j)^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale j) z)) δ
+              (fun _ => ((t : ℝ).toNNReal)) (ContinuousPath.shift s p.2) - F t| < η := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨M, hMm, hMc, hMae⟩ := exists_measurable_stoppedAnnularClock_time hh γ α δ
+  let A (j : ℕ) (p : Ω × ContinuousPath ℂ) : C(Icc (0 : ℝ) 1, ℝ) :=
+    ⟨fun t => M j (p, t), hMc j p⟩
+  have hAm (j : ℕ) : Measurable (A j) := by
+    apply ContinuousMap.measurable_iff_eval.mpr
+    intro t
+    exact (hMm j).comp (measurable_id.prodMk measurable_const)
+  let S : Set (Ω × ContinuousPath ℂ) := {p | ∃ F, Tendsto (fun j => A j p) atTop (𝓝 F)}
+  have hSm : MeasurableSet S := measurableSet_exists_tendsto hAm
+  have hS (y : ℂ) : ∀ᵐ p ∂(P.prod (planarBrownianMotion y)), p ∈ S := by
+    obtain ⟨K, hK⟩ := exists_ae_continuous_monotone_limit_stoppedAnnularClock hh y hγ hγ2 α hδ
+    filter_upwards [hK, (Measure.quasiMeasurePreserving_fst
+      (μ := P) (ν := planarBrownianMotion y)).ae hMae] with p hp hM
+    obtain ⟨F, hFc, _, _, hF⟩ := hp
+    let G : C(Icc (0 : ℝ) 1, ℝ) := ⟨F, hFc⟩
+    refine ⟨G, (tendsto_add_atTop_iff_nat K).mp ?_⟩
+    apply ContinuousMap.tendsto_iff_tendstoUniformly.mpr
+    rw [Metric.tendstoUniformly_iff]
+    intro η hη
+    filter_upwards [hF η hη] with j hj t
+    change dist (F t) (M (j+K) (p, t)) < η
+    rw [hM (j+K) p.2 t, dist_comm, Real.dist_eq]
+    exact hj t
+  have hshift := ae_prod_planarBrownianMotion_shift_of_forall_ae P x s S hSm hS
+  filter_upwards [hshift, (Measure.quasiMeasurePreserving_fst
+    (μ := P) (ν := planarBrownianMotion x)).ae hMae] with p hp hM
+  obtain ⟨F, hF⟩ := hp
+  refine ⟨F, F.continuous, ?_⟩
+  have hu := ContinuousMap.tendsto_iff_tendstoUniformly.mp hF
+  rw [Metric.tendstoUniformly_iff] at hu
+  intro η hη
+  filter_upwards [hu η hη] with j hj t
+  have heq := hM j (ContinuousPath.shift s p.2) t
+  change |stoppedAnnularClock _ _ _ _ - F t| < η
+  rw [← heq, ← Real.dist_eq, dist_comm]
+  exact hj t
+
+/-- The shifted unit-clock convergence holds simultaneously at every integer shift. -/
+theorem ae_exists_uniform_limit_integer_shift_stoppedAnnularClock
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      ∀ n : ℕ, ∃ F : Icc (0 : ℝ) 1 → ℝ, Continuous F ∧
+        ∀ η : ℝ, 0 < η → ∀ᶠ j in atTop, ∀ t : Icc (0 : ℝ) 1,
+          |stoppedAnnularClock (fun z => (dyadicScale j)^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale j) z)) δ
+              (fun _ => ((t : ℝ).toNNReal)) (ContinuousPath.shift (n : ℝ≥0) p.2) - F t| < η := by
+  exact ae_all_iff.mpr fun n =>
+    ae_exists_uniform_limit_shift_stoppedAnnularClock hh x hγ hγ2 α hδ n
 
 end HarmonicBalls
