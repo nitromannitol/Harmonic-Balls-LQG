@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
 import LatticeProb.LQG.LQGMassMoment
+import LatticeProb.LQG.LQGMassSquares
 import LatticeProb.LQG.LQGSubSquareGaussian
 import LatticeProb.LQG.LQGSubSquareLimit
 import LatticeProb.Prob.GaussKahaneRpow
@@ -1836,5 +1837,73 @@ theorem sum_rpow_mul_squareGridAdjacent_le (s : Finset (ℤ × ℤ))
   convert sum_rpow_mul_le_degree_mul_sum_rpow s a squareGridAdjacent
     (fun {_ _} h => squareGridAdjacent_symm h) 9
     (fun i _ => squareGridAdjacent_card_le s i) hq using 1; norm_num
+
+
+private theorem square_coordinate_separation {r : ℝ} (hr : 0 < r) {a b : ℤ}
+    (hab : a + 2 ≤ b ∨ b + 2 ≤ a) {u v : ℝ}
+    (hu : (a : ℝ) * r ≤ u ∧ u < ((a : ℝ) + 1) * r)
+    (hv : (b : ℝ) * r ≤ v ∧ v < ((b : ℝ) + 1) * r) : r ≤ |u - v| := by
+  rcases hab with hab | hab
+  · have h : (a : ℝ) + 2 ≤ b := by exact_mod_cast hab
+    have hm := mul_le_mul_of_nonneg_right h hr.le
+    have hvu : r ≤ v - u := by nlinarith [hu.2, hv.1]
+    exact hvu.trans (by rw [abs_sub_comm]; exact le_abs_self _)
+  · have h : (b : ℝ) + 2 ≤ a := by exact_mod_cast hab
+    have hm := mul_le_mul_of_nonneg_right h hr.le
+    have huv : r ≤ u - v := by nlinarith [hv.2, hu.1]
+    exact huv.trans (le_abs_self _)
+
+/-- Points in nonadjacent half-open squares are separated by the side length. -/
+theorem le_norm_sub_of_not_squareGridAdjacent {r : ℝ} (hr : 0 < r)
+    {i j : ℤ × ℤ} (hij : ¬ squareGridAdjacent i j) {x y : ℂ}
+    (hx : x ∈ LatticeProb.dyadicSquare r i) (hy : y ∈ LatticeProb.dyadicSquare r j) :
+    r ≤ ‖x - y‖ := by
+  have hd : (i.1 + 2 ≤ j.1 ∨ j.1 + 2 ≤ i.1) ∨
+      (i.2 + 2 ≤ j.2 ∨ j.2 + 2 ≤ i.2) := by
+    simp only [squareGridAdjacent, abs_le, not_and_or, not_le] at hij
+    omega
+  rw [LatticeProb.mem_dyadicSquare] at hx hy
+  rcases hd with h | h
+  · exact (square_coordinate_separation hr h hx.1 hy.1).trans
+      (by simpa using Complex.abs_re_le_norm (x - y))
+  · exact (square_coordinate_separation hr h hx.2 hy.2).trans
+      (by simpa using Complex.abs_im_le_norm (x - y))
+
+/-- Times at which a path visits one square inside the annulus. -/
+def annularSquareTimeSet (b : ContinuousPath ℂ) (δ r : ℝ) (i : ℤ × ℤ) : Set ℝ :=
+  {t | b t.toNNReal ∈ LatticeProb.dyadicSquare r i ∧
+    δ ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2}
+
+/-- The time set of a square inside the annulus is measurable. -/
+theorem measurableSet_annularSquareTimeSet (b : ContinuousPath ℂ) (δ r : ℝ) (i : ℤ × ℤ) :
+    MeasurableSet (annularSquareTimeSet b δ r i) := by
+  have hb : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
+  exact ((LatticeProb.measurableSet_dyadicSquare r i).preimage hb).inter
+    ((measurableSet_le measurable_const hb.norm).inter (measurableSet_le hb.norm measurable_const))
+
+/-- Nonadjacent annular square occupation masses have a uniform cross-moment bound. -/
+theorem lintegral_rpow_mul_annularSquareTime_masses_le {Ω : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (b : ContinuousPath ℂ) (u v δ : ℝ) {ε r : ℝ}
+    (hε : 0 < ε) (hε2 : ε ≤ 1 / 2) (hr : 0 < r) (γ : ℝ)
+    {i j : ℤ × ℤ} (hij : ¬ squareGridAdjacent i j) {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    (∫⁻ ω, ((∫⁻ t in annularSquareTimeSet b δ r i ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) *
+      (∫⁻ t in annularSquareTimeSet b δ r j ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω))) ^ (q / 2) ∂P) ≤
+      (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+        (ENNReal.ofReal (v - u) * ENNReal.ofReal (v - u))) ^ (q / 2) := by
+  apply lintegral_rpow_mul_separated_time_masses_le hh b u v _ _
+    (measurableSet_annularSquareTimeSet b δ r i) (measurableSet_annularSquareTimeSet b δ r j)
+    hε hr γ
+  · intro t ht
+    exact add_le_of_le_sub_left (by linarith [ht.1.2.2])
+  · intro t ht
+    exact add_le_of_le_sub_left (by linarith [ht.1.2.2])
+  · intro t ht s hs
+    exact le_norm_sub_of_not_squareGridAdjacent hr hij ht.1.1 hs.1.1
+  · exact hq
+  · exact hq2
 
 end HarmonicBalls
