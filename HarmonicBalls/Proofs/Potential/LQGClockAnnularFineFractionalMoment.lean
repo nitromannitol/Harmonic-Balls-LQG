@@ -1495,6 +1495,54 @@ theorem lintegral_rpow_mul_separated_gmc_masses_le {Ω X Y : Type*} [MeasurableS
     (by linarith : q / 2 ≤ 1) hm).trans
       (ENNReal.rpow_le_rpow (lintegral_mul_separated_gmc_masses_le hh μ ν hε hr γ x y hxm hym hx hy hxy) (by positivity))
 
+/-- Separated occupation masses are bounded using the volumes of their time sets. -/
+theorem lintegral_rpow_mul_separated_time_masses_le_volume {Ω : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (b : ContinuousPath ℂ) (u v : ℝ) (A B : Set ℝ)
+    (hA : MeasurableSet A) (hB : MeasurableSet B)
+    {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r) (γ : ℝ)
+    (hx : ∀ t ∈ A ∩ Ioc u v, ‖b t.toNNReal‖ + ε ≤ 1)
+    (hy : ∀ t ∈ B ∩ Ioc u v, ‖b t.toNNReal‖ + ε ≤ 1)
+    (hxy : ∀ t ∈ A ∩ Ioc u v, ∀ s ∈ B ∩ Ioc u v,
+      r ≤ ‖b t.toNNReal - b s.toNNReal‖) {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    (∫⁻ ω, ((∫⁻ t in A ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) *
+      (∫⁻ t in B ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω))) ^ (q / 2) ∂P) ≤
+      (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+        (volume (A ∩ Ioc u v) * volume (B ∩ Ioc u v))) ^ (q / 2) := by
+  let S := A ∩ Ioc u v
+  let T := B ∩ Ioc u v
+  have hS : MeasurableSet S := hA.inter measurableSet_Ioc
+  have hT : MeasurableSet T := hB.inter measurableSet_Ioc
+  let μ : Measure S := (volume : Measure ℝ).comap Subtype.val
+  let ν : Measure T := (volume : Measure ℝ).comap Subtype.val
+  have hμ : μ Set.univ = volume S := by
+    rw [show μ = (volume : Measure ℝ).comap Subtype.val from rfl, comap_subtype_coe_apply hS]
+    simp
+  have hν : ν Set.univ = volume T := by
+    rw [show ν = (volume : Measure ℝ).comap Subtype.val from rfl, comap_subtype_coe_apply hT]
+    simp
+  let : IsFiniteMeasure μ := ⟨by rw [hμ]; exact (measure_mono (inter_subset_right : S ⊆ Ioc u v)).trans_lt (by rw [Real.volume_Ioc]; exact ENNReal.ofReal_lt_top)⟩
+  let : IsFiniteMeasure ν := ⟨by rw [hν]; exact (measure_mono (inter_subset_right : T ⊆ Ioc u v)).trans_lt (by rw [Real.volume_Ioc]; exact ENNReal.ofReal_lt_top)⟩
+  have hb : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
+  have h := lintegral_rpow_mul_separated_gmc_masses_le hh μ ν hε hr γ
+    (fun t => b t.val.toNNReal) (fun t => b t.val.toNNReal)
+    (hb.comp measurable_subtype_coe) (hb.comp measurable_subtype_coe)
+    (fun t => hx t t.property) (fun t => hy t t.property)
+    (fun t s => hxy t t.property s s.property) hq hq2
+  have hleft (ω : Ω) : (∫⁻ t : S, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.val.toNNReal) ω) ∂μ) =
+      ∫⁻ t in S, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω) :=
+    lintegral_subtype_comap (μ := (volume : Measure ℝ)) hS
+      (fun t => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω))
+  have hright (ω : Ω) : (∫⁻ t : T, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.val.toNNReal) ω) ∂ν) =
+      ∫⁻ t in T, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω) :=
+    lintegral_subtype_comap (μ := (volume : Measure ℝ)) hT
+      (fun t => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω))
+  simp_rw [hleft, hright, hμ, hν] at h
+  exact h
+
 /-- Separated path occupation masses over time sets have a uniform fractional cross moment. -/
 theorem lintegral_rpow_mul_separated_time_masses_le {Ω : Type*} [MeasurableSpace Ω]
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -1595,5 +1643,52 @@ theorem lintegral_sum_rpow_mul_separated_time_masses_le {Ω ι : Type*} [Measura
       exact lintegral_rpow_mul_separated_time_masses_le hh b u v (A i) (B i)
         (hA i hi) (hB i hi) hε hr γ (hx i hi) (hy i hi) (hxy i hi) hq hq2
     _ = _ := by simp
+
+/-- A finite family of separated interactions is bounded by its time-set volumes. -/
+theorem lintegral_sum_rpow_mul_separated_time_masses_le_volume {Ω ι : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (b : ContinuousPath ℂ) (u v : ℝ) (F : Finset ι) (A B : ι → Set ℝ)
+    (hA : ∀ i ∈ F, MeasurableSet (A i)) (hB : ∀ i ∈ F, MeasurableSet (B i))
+    {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r) (γ : ℝ)
+    (hx : ∀ i ∈ F, ∀ t ∈ A i ∩ Ioc u v, ‖b t.toNNReal‖ + ε ≤ 1)
+    (hy : ∀ i ∈ F, ∀ t ∈ B i ∩ Ioc u v, ‖b t.toNNReal‖ + ε ≤ 1)
+    (hxy : ∀ i ∈ F, ∀ t ∈ A i ∩ Ioc u v, ∀ s ∈ B i ∩ Ioc u v,
+      r ≤ ‖b t.toNNReal - b s.toNNReal‖) {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    (∫⁻ ω, ∑ i ∈ F, ((∫⁻ t in A i ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) *
+      (∫⁻ t in B i ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω))) ^ (q / 2) ∂P) ≤
+      ∑ i ∈ F, (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+        (volume (A i ∩ Ioc u v) * volume (B i ∩ Ioc u v))) ^ (q / 2) := by
+  classical
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let D : ℂ → Ω → ℝ≥0∞ := LatticeProb.Gauss.gmcDensityENN (fun z ω => H ω ε z) γ ε
+  have hD : Measurable (Function.uncurry D) :=
+    LatticeProb.Gauss.measurable_uncurry_gmcDensityENN (hHm ε hε) γ ε
+  have hb : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
+  have hmass (S : Set ℝ) : AEMeasurable (fun ω => ∫⁻ t in S,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) P := by
+    have hm : Measurable (fun p : Ω × ℝ => D (b p.2.toNNReal) p.1) :=
+      hD.comp ((hb.comp measurable_snd).prodMk measurable_fst)
+    have heq : (fun ω => ∫⁻ t in S,
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) =ᵐ[P]
+        (fun ω => ∫⁻ t in S, D (b t.toNNReal) ω) := by
+      filter_upwards [hHae] with ω hω
+      apply lintegral_congr
+      intro t
+      simp only [D, LatticeProb.Gauss.gmcDensityENN, LatticeProb.Gauss.gmcDensity, hω]
+    exact (hm.lintegral_prod_right' (ν := volume.restrict S)).aemeasurable.congr heq.symm
+  have hf : ∀ i ∈ F, AEMeasurable (fun ω => ((∫⁻ t in A i ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω)) *
+      (∫⁻ t in B i ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω))) ^ (q / 2)) P := by
+    intro i _
+    exact ((hmass (A i ∩ Ioc u v)).mul (hmass (B i ∩ Ioc u v))).pow_const _
+  rw [lintegral_finsetSum' F hf]
+  apply Finset.sum_le_sum
+  intro i hi
+  exact lintegral_rpow_mul_separated_time_masses_le_volume hh b u v (A i) (B i)
+    (hA i hi) (hB i hi) hε hr γ (hx i hi) (hy i hi) (hxy i hi) hq hq2
 
 end HarmonicBalls
