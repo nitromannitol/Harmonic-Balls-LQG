@@ -466,4 +466,6 @@ These receipts are ordinary results and do not close any numbered source stateme
 
 - For 2.5, `5456e84a` constructs jointly measurable versions of actual closed-cutoff inserted occupations at a countable family of positive smoothing radii, on one field-full event for all paths, and proves actual occupation almost-everywhere measurability under any s-finite path law paired with the field law. Strict `wlc-hb-154920-3328105`, module `wlb-hb-154935-3329395`, and typed standard axioms `wlc-hb-154959-3332719` passed. The expected supremum, source clock and independent/source gates remain OPEN.
 
+- For 2.5, `f0519d20` bounds the absolute difference of actual closed-cutoff inserted occupations by the recentered annular increment and two inner time occupations, on one field-full event simultaneously for all continuous paths, outer cutoffs and 0 < ε ≤ 1/2. Strict `wlc-hb-155351-3355708`, module `wlb-hb-155409-3358310`, and exact typed standard axioms `wlc-hb-155435-3359928` passed. Expected-tail summation, initial cutoff control, product-order transfer, the expected supremum and the full source clock remain OPEN; independent and source gates are separate.
+
 These are ordinary prerequisites, not source closure. Source, definition, binder, consumer, transitive, independent and lead gates remain distinct. The Green convention remains OPEN.
