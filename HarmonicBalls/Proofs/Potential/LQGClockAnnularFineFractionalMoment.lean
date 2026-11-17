@@ -376,4 +376,36 @@ theorem lintegral_prod_brownian_annular_inserted_cell_rpow_le_uninserted
             (ENNReal.mul_rpow_of_nonneg _ _ hp)
     _ = _ := lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg hp ENNReal.ofReal_ne_top)
 
+/-- The circle-average covariance is bounded by the logarithmic kernel with
+cutoff at the smoothing scale, including coincident points. -/
+theorem covariance_circle_le_log_max
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ}
+    (hε : 0 < ε) {z w : ℂ} (hz : ‖z‖ + ε ≤ 1) (hw : ‖w‖ + ε ≤ 1) :
+    ProbabilityTheory.covariance (fun ω => hcirc ω ε z) (fun ω => hcirc ω ε w) P ≤
+      Real.log 2 - Real.log (max ε ‖z - w‖) := by
+  by_cases hdist : ‖z - w‖ ≤ ε
+  · have hp : Real.log ε ≤ LatticeProb.Gauss.circlePairPotential z ε w ε := by
+      have h := Real.circleAverage_mono (c := z) (R := ε)
+        (f₁ := fun _ : ℂ => Real.log ε)
+        (f₂ := fun a => Real.log (max ε ‖a - w‖))
+        (continuous_const.continuousOn.circleIntegrable')
+        (LatticeProb.Gauss.continuous_log_max_norm_sub hε w).continuousOn.circleIntegrable' ?_
+      · simpa [LatticeProb.Gauss.circlePairPotential, Real.circleAverage_const] using h
+      · intro a _ha
+        exact Real.log_le_log hε (le_max_left _ _)
+    rw [hh.covariance_circle_inside hε hε hz hw, max_eq_left hdist]
+    have hlog : 0 ≤ Real.log 2 := Real.log_nonneg (by norm_num)
+    linarith
+  · have hne : z ≠ w := by
+      intro heq
+      subst w
+      simp only [sub_self, norm_zero] at hdist
+      exact hdist hε.le
+    have h := hh.covariance_circle_le_log_two hε hz hw hne
+    rw [max_eq_right (le_of_not_ge hdist)]
+    exact h
+
+
 end HarmonicBalls
