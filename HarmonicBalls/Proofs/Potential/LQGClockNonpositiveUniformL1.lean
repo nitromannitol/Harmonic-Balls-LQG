@@ -6,8 +6,8 @@ import HarmonicBalls.Proofs.Potential.LQGClockNonpositiveInsertedAnnealedTail
 Brownian occupation energy bounds for nonpositive inserted clocks.
 -/
 
-open MeasureTheory ProbabilityTheory MarkovProcess Set Metric
-open scoped NNReal ENNReal
+open MeasureTheory ProbabilityTheory MarkovProcess Set Metric Filter
+open scoped NNReal ENNReal Topology
 
 namespace HarmonicBalls
 
@@ -1277,5 +1277,288 @@ theorem exists_integrable_bound_shifted_nonpositive_inner_unit_clocks
     _ ≤ |B 0 q| + |∑ n ∈ Finset.range j, D n q| := abs_add_le _ _
     _ ≤ |B 0 q| + ∑ n ∈ Finset.range j, |D n q| := add_le_add le_rfl (Finset.abs_sum_le_sum_abs _ _)
     _ ≤ |B 0 q| + R q := add_le_add le_rfl (hq j)
+
+private theorem intervalIntegrable_open_halfDisc (f : ℂ → ℝ) (hf : Continuous f)
+    (b : ContinuousPath ℂ) (a c : ℝ) :
+    IntervalIntegrable (fun t : ℝ => {z : ℂ | ‖z‖ < 1/2}.indicator f (b t.toNNReal)) volume a c := by
+  classical
+  let p : ℝ → ℂ := fun t => b t.toNNReal
+  have hp : Continuous p := b.continuous.comp continuous_real_toNNReal
+  have hA : MeasurableSet (p ⁻¹' {z : ℂ | ‖z‖ < 1/2}) :=
+    (measurableSet_lt measurable_norm measurable_const).preimage hp.measurable
+  have hi := (hf.comp hp).intervalIntegrable (μ := volume) a c
+  rw [intervalIntegrable_iff] at hi ⊢
+  convert hi.indicator hA using 1
+  funext t
+  rw [Set.indicator_apply, Set.indicator_apply]
+  rfl
+
+/-- An integer-horizon open-disc occupation is the sum of its shifted
+unit-block occupations. -/
+theorem open_halfDisc_clock_sum_shifted_blocks (f : ℂ → ℝ) (hf : Continuous f)
+    (b : ContinuousPath ℂ) (N : ℕ) :
+    (∫ t in (0 : ℝ)..(N : ℝ), {z : ℂ | ‖z‖ < 1/2}.indicator f (b t.toNNReal)) =
+    ∑ k ∈ Finset.range N, ∫ t in (0 : ℝ)..1,
+      {z : ℂ | ‖z‖ < 1/2}.indicator f ((ContinuousPath.shift k b) t.toNNReal) := by
+  let g : ℝ → ℝ := fun t => {z : ℂ | ‖z‖ < 1/2}.indicator f (b t.toNNReal)
+  have hi (k : ℕ) : IntervalIntegrable g volume (k : ℝ) (k+1 : ℕ) :=
+    intervalIntegrable_open_halfDisc f hf b k (k+1 : ℕ)
+  have hs := intervalIntegral.sum_integral_adjacent_intervals (n := N) (fun k hk => hi k)
+  have heq (k : ℕ) : (∫ t in (0 : ℝ)..1,
+      {z : ℂ | ‖z‖ < 1/2}.indicator f ((ContinuousPath.shift k b) t.toNNReal)) =
+      ∫ t in (k : ℝ)..((k : ℝ)+1), g t := by
+    have hshift : (∫ t in (0 : ℝ)..1,
+        {z : ℂ | ‖z‖ < 1/2}.indicator f ((ContinuousPath.shift k b) t.toNNReal)) =
+        ∫ t in (0 : ℝ)..1, g ((k : ℝ) + t) := by
+      apply intervalIntegral.integral_congr
+      intro t ht
+      rw [uIcc_of_le zero_le_one] at ht
+      dsimp only [g]
+      simp only [ContinuousPath.shift_apply, Real.toNNReal_add (Nat.cast_nonneg k) ht.1,
+        Real.toNNReal_natCast]
+    rw [hshift, intervalIntegral.integral_comp_add_left]
+    simp
+  simp only [heq]
+  simpa only [Nat.cast_add, Nat.cast_one, Nat.cast_zero, g] using hs.symm
+
+/-- At every finite horizon the actual nonpositive dyadic half-disc clocks
+have one integrable product-law bound, uniform in scale and time. -/
+theorem exists_integrable_bound_nonpositive_halfDisc_clocks
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α ≤ 0) (x : ℂ) (T : ℝ≥0) :
+    ∃ G : ContinuousPath ℂ × Ω → ℝ, Integrable G ((planarBrownianMotion x).prod P) ∧
+      ∀ᵐ q ∂((planarBrownianMotion x).prod P), ∀ (j : ℕ) (t : ℝ≥0), t ≤ T →
+        |∫ s in (0 : ℝ)..(t : ℝ),
+          {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+            (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc q.2) (dyadicScale (j+1)) z))
+                (q.1 s.toNNReal)| ≤ G q := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨N, hN⟩ := exists_nat_ge (T : ℝ)
+  let μ := (planarBrownianMotion x).prod P
+  have hunit (k : ℕ) := exists_integrable_bound_shifted_nonpositive_inner_unit_clocks hh hγ hγ2 hα x k
+  choose G hGi hGb using hunit
+  let E : ContinuousPath ℂ × Ω → ℝ := fun q => ∑ k ∈ Finset.range N, G k q
+  have hEi : Integrable E μ := by
+    dsimp [E]
+    exact integrable_finsetSum _ (fun k hk => hGi k)
+  have hGbAll : ∀ᵐ q ∂μ, ∀ k j : ℕ,
+      |innerInsertedUnitTimeClock hcirc γ α (dyadicScale (j+1)) (1/2)
+        (ContinuousPath.shift k q.1,q.2)| ≤ G k q := by
+    exact ae_all_iff.mpr (fun k => hGb k)
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hdensity : ∀ᵐ ω ∂P, ∀ j : ℕ, Continuous (fun z =>
+      (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (j+1)) z)) := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec j
+    have hc : Continuous (hcirc ω (dyadicScale (j+1))) := by
+      rw [← funext (hω (dyadicScale (j+1)))]
+      exact hHc ω (dyadicScale (j+1)) (dyadicScale_pos (j+1))
+    have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (j+1)) z) =
+        fun z => hcirc ω (dyadicScale (j+1)) z - hcirc ω 1 0 - α * Real.log (max (dyadicScale (j+1)) ‖z‖) := by
+      funext z
+      exact (hrec _ z (dyadicScale_pos (j+1))).symm
+    have hci : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (j+1)) z) := by
+      rw [heq]
+      exact (hc.sub continuous_const).sub (continuous_const.mul
+        ((continuous_const.max continuous_norm).log
+          (fun _ => (lt_max_of_lt_left (dyadicScale_pos (j+1))).ne')))
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hci))
+  refine ⟨E, hEi, ?_⟩
+  filter_upwards [hGbAll,
+    (Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hdensity,
+    (Measure.quasiMeasurePreserving_fst (μ := planarBrownianMotion x) (ν := P)).ae
+      (ae_planarBrownianMotion_halfDisc_integral_eq_open x)] with q hq hc hclose j t ht
+  let f : ℂ → ℝ := fun z => (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+    LatticeProb.Gauss.fieldCircleAverage α (hcirc q.2) (dyadicScale (j+1)) z)
+  let g : ℝ → ℝ := fun s => {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (q.1 s.toNNReal)
+  have hf0 (z : ℂ) : 0 ≤ f z := mul_nonneg (Real.rpow_nonneg (dyadicScale_pos (j+1)).le _)
+    (Real.exp_pos _).le
+  have hg0 (s : ℝ) : 0 ≤ g s := Set.indicator_nonneg (fun z _ => hf0 z) _
+  have hnonneg : 0 ≤ ∫ s in (0 : ℝ)..(t : ℝ), g s :=
+    intervalIntegral.integral_nonneg_of_forall t.coe_nonneg hg0
+  have htN : (t : ℝ) ≤ N := le_trans (by exact_mod_cast ht) hN
+  have hmono : (∫ s in (0 : ℝ)..(t : ℝ), g s) ≤ ∫ s in (0 : ℝ)..(N : ℝ), g s :=
+    intervalIntegral.integral_mono_interval le_rfl t.coe_nonneg htN (Filter.Eventually.of_forall hg0)
+      (intervalIntegrable_annular_density f (hc j) 0 q.1 0 N)
+  have hsum : (∫ s in (0 : ℝ)..(N : ℝ), g s) =
+      ∑ k ∈ Finset.range N, innerInsertedUnitTimeClock hcirc γ α (dyadicScale (j+1)) (1/2)
+        (ContinuousPath.shift k q.1,q.2) := by
+    have hcl : (∫ s in (0 : ℝ)..(N : ℝ), g s) =
+        ∫ s in (0 : ℝ)..(N : ℝ), {z : ℂ | ‖z‖ < 1/2}.indicator f (q.1 s.toNNReal) := by
+      simpa only [g, NNReal.coe_natCast] using hclose (N : ℝ≥0) f
+    rw [hcl]
+    simpa only [innerInsertedUnitTimeClock, f] using open_halfDisc_clock_sum_shifted_blocks f (hc j) q.1 N
+  change |∫ s in (0 : ℝ)..(t : ℝ), g s| ≤ E q
+  rw [abs_of_nonneg hnonneg]
+  calc
+    _ ≤ ∫ s in (0 : ℝ)..(N : ℝ), g s := hmono
+    _ = _ := hsum
+    _ ≤ ∑ k ∈ Finset.range N, G k q := by
+      apply Finset.sum_le_sum
+      intro k hk
+      exact (le_abs_self _).trans (hq k j)
+    _ = E q := rfl
+
+/-- At each fixed Brownian start, the nonpositive inserted dyadic half-disc
+clocks converge in uniform-time product-law L¹ on every finite horizon to the
+same jointly measurable locally uniform limit. -/
+theorem exists_measurable_uniform_L1_limit_nonpositive_halfDiscClock
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) {γ α : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ^2 < 2) (hα : α ≤ 0) :
+    ∃ F : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable F ∧
+      (∀ p, Continuous (fun t => F (p,t)) ∧ (∀ t, 0 ≤ F (p,t)) ∧
+        Monotone (fun t => F (p,t))) ∧
+      (∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+        ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ),
+            {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+              (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+                LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (j+1)) z))
+                  (p.2 s.toNNReal)) - F (p,t)| < η) ∧
+      ∀ T : ℝ≥0, ∃ (A : ℕ → (Ω × ContinuousPath ℂ) → C(Icc (0 : ℝ) (T : ℝ), ℝ))
+          (B : (Ω × ContinuousPath ℂ) → C(Icc (0 : ℝ) (T : ℝ), ℝ)),
+        (∀ j, Measurable (A j)) ∧ Measurable B ∧
+        (∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ j t,
+          A j p t = ∫ s in (0 : ℝ)..(t : ℝ),
+            {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+              (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+                LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (j+1)) z))
+                  (p.2 s.toNNReal)) ∧
+        (∀ p t, B p t = F (p,(t : ℝ).toNNReal)) ∧
+        (∀ j, Integrable (fun p => ‖A j p - B p‖) (P.prod (planarBrownianMotion x))) ∧
+        Tendsto (fun j => ∫ p, ‖A j p - B p‖ ∂(P.prod (planarBrownianMotion x))) atTop (𝓝 0) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hγlt : γ < 2 := by nlinarith [sq_nonneg (γ - 1)]
+  obtain ⟨F, hFm, hFc, hFlim⟩ :=
+    exists_measurable_locally_uniform_limit_nonpositive_halfDiscClock hh x hγ hγ2 hα
+  obtain ⟨H, hHc, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let R : Set ℂ := {z | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hR : MeasurableSet R := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let Z (j : ℕ) (ω : Ω) (z : ℂ) : ℝ := (dyadicScale (j+1))^(γ^2/2) *
+    Real.exp (γ * (H ω (dyadicScale (j+1)) z - α * Real.log (max (dyadicScale (j+1)) ‖z‖)))
+  have hZc (j : ℕ) (ω : Ω) : Continuous (Z j ω) := by
+    dsimp [Z]
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
+      ((hHc ω _ (dyadicScale_pos (j+1))).sub (continuous_const.mul
+        ((continuous_const.max continuous_norm).log
+          (fun _ => (lt_max_of_lt_left (dyadicScale_pos (j+1))).ne'))))))
+  have hZm (j : ℕ) : Measurable (fun p : Ω × ℂ => Z j p.1 p.2) := by
+    have he : Measurable (fun p : Ω × ℂ => H p.1 (dyadicScale (j+1)) p.2) :=
+      (hHm _ (dyadicScale_pos (j+1))).comp measurable_swap
+    exact measurable_const.mul (measurable_const.mul (he.sub (measurable_const.mul
+      ((measurable_const.max measurable_snd.norm).log)))).exp
+  let U (j : ℕ) (p : (Ω × ContinuousPath ℂ) × ℝ≥0) : ℝ :=
+    ∫ s in (0 : ℝ)..(p.2 : ℝ), R.indicator (Z j p.1.1) (p.1.2 s.toNNReal)
+  have hUm (j : ℕ) : Measurable (U j) := by
+    have hev : Measurable (fun p : ((Ω × ContinuousPath ℂ) × ℝ≥0) × ℝ =>
+        p.1.1.2 p.2.toNNReal) :=
+      (continuous_eval.comp (continuous_fst.prodMk (continuous_real_toNNReal.comp continuous_snd))).measurable.comp
+        (measurable_fst.fst.snd.prodMk measurable_snd)
+    have hI : Measurable (fun p : ((Ω × ContinuousPath ℂ) × ℝ≥0) × ℝ =>
+        R.indicator (Z j p.1.1.1) (p.1.1.2 p.2.toNNReal)) := by
+      convert (hZm j).comp (measurable_fst.fst.fst.prodMk hev) |>.indicator
+        (hev hR) using 1
+      ext p
+      rfl
+    have hS : MeasurableSet {p : ((Ω × ContinuousPath ℂ) × ℝ≥0) × ℝ |
+        0 < p.2 ∧ p.2 ≤ (p.1.2 : ℝ)} :=
+      (measurableSet_lt measurable_const measurable_snd).inter
+        (measurableSet_le measurable_snd (measurable_coe_nnreal_real.comp measurable_fst.snd))
+    have h := (hI.indicator hS).stronglyMeasurable.integral_prod_right' (ν := volume)
+    convert h.measurable using 1
+    ext p
+    dsimp only [U]
+    rw [intervalIntegral.integral_of_le p.2.coe_nonneg, ← integral_indicator measurableSet_Ioc]
+    rfl
+  have hUc (j : ℕ) (p : Ω × ContinuousPath ℂ) : Continuous (fun t => U j (p,t)) := by
+    exact (intervalIntegral.continuous_primitive
+      (fun a c => intervalIntegrable_annular_density (Z j p.1) (hZc j p.1) 0 p.2 a c) 0).comp
+        continuous_subtype_val
+  have hUae : ∀ᵐ ω ∂P, ∀ j b t,
+      U j ((ω,b),t) = ∫ s in (0 : ℝ)..(t : ℝ), R.indicator (fun z =>
+        (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (j+1)) z))
+            (b s.toNNReal) := by
+    filter_upwards [hHae] with ω hω j b t
+    apply intervalIntegral.integral_congr
+    intro s hs
+    apply congrArg (fun f : ℂ → ℝ => R.indicator f (b s.toNNReal))
+    funext z
+    have he : H ω (dyadicScale (j+1)) z = hcirc ω (dyadicScale (j+1)) z := hω _ _
+    have hl : Real.circleAverage (fun y : ℂ => Real.log ‖y‖) z (dyadicScale (j+1)) =
+        Real.log (max (dyadicScale (j+1)) ‖z‖) := by
+      simpa using LatticeProb.Gauss.circleAverage_log_norm_sub_eq z 0 (dyadicScale_pos (j+1))
+    simp only [Z, LatticeProb.Gauss.fieldCircleAverage, hl, he]
+  refine ⟨F, hFm, hFc, hFlim, ?_⟩
+  intro T
+  obtain ⟨G, hGi, hGb⟩ := exists_integrable_bound_nonpositive_halfDisc_clocks hh hγ hγlt hα x T
+  let G' : Ω × ContinuousPath ℂ → ℝ := fun p => G (p.2,p.1)
+  have hG'i : Integrable G' (P.prod (planarBrownianMotion x)) := hGi.swap
+  let AT : ℕ → (Ω × ContinuousPath ℂ) → C(Icc (0 : ℝ) (T : ℝ), ℝ) := fun j p =>
+    ⟨fun t => U j (p,(t : ℝ).toNNReal),
+      (hUc j p).comp (continuous_real_toNNReal.comp continuous_subtype_val)⟩
+  let BT : (Ω × ContinuousPath ℂ) → C(Icc (0 : ℝ) (T : ℝ), ℝ) := fun p =>
+    ⟨fun t => F (p,(t : ℝ).toNNReal),
+      (hFc p).1.comp (continuous_real_toNNReal.comp continuous_subtype_val)⟩
+  have hATm (j : ℕ) : Measurable (AT j) := by
+    apply ContinuousMap.measurable_iff_eval.mpr
+    intro t
+    exact (hUm j).comp (measurable_id.prodMk measurable_const)
+  have hBTm : Measurable BT := by
+    apply ContinuousMap.measurable_iff_eval.mpr
+    intro t
+    exact hFm.comp (measurable_id.prodMk measurable_const)
+  have hUprod : ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ j t,
+      U j (p,t) = ∫ s in (0 : ℝ)..(t : ℝ), R.indicator (fun z =>
+        (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (j+1)) z))
+            (p.2 s.toNNReal) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae hUae] with p hp
+    intro j t
+    exact hp j p.2 t
+  have hswap : MeasurePreserving Prod.swap (P.prod (planarBrownianMotion x))
+      ((planarBrownianMotion x).prod P) := Measure.measurePreserving_swap
+  have hGb' := hswap.quasiMeasurePreserving.ae hGb
+  have hATb : ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ j, ‖AT j p‖ ≤ G' p := by
+    filter_upwards [hGb', hUprod] with p hp he j
+    have hG0 : 0 ≤ G' p := (abs_nonneg _).trans (hp 0 0 (zero_le : (0 : ℝ≥0) ≤ T))
+    apply (ContinuousMap.norm_le (AT j p) hG0).2
+    intro t
+    have ht : (t : ℝ).toNNReal ≤ T := by
+      exact NNReal.coe_le_coe.mp (by simpa [Real.toNNReal_of_nonneg t.property.1] using t.property.2)
+    have hb := hp j ((t : ℝ).toNNReal) ht
+    change |U j (p,(t : ℝ).toNNReal)| ≤ G' p
+    rw [he j ((t : ℝ).toNNReal)]
+    simpa only [
+      Real.toNNReal_of_nonneg t.property.1, NNReal.coe_mk, R, G', Prod.swap] using hb
+  have hBT : ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), Tendsto (fun j => AT j p) atTop (𝓝 (BT p)) := by
+    filter_upwards [hFlim, hUprod] with p hp he
+    apply Metric.tendsto_nhds.mpr
+    intro ε hε
+    filter_upwards [hp T (ε/2) (half_pos hε)] with j hj
+    have hle : ‖AT j p - BT p‖ ≤ ε/2 := by
+      apply (ContinuousMap.norm_le (AT j p - BT p) (le_of_lt (half_pos hε))).2
+      intro t
+      have ht : (t : ℝ).toNNReal ≤ T := by
+        exact NNReal.coe_le_coe.mp (by simpa [Real.toNNReal_of_nonneg t.property.1] using t.property.2)
+      have hx := (hj ((t : ℝ).toNNReal) ht).le
+      change |U j (p,(t : ℝ).toNNReal) - F (p,(t : ℝ).toNNReal)| ≤ ε/2
+      rw [he j ((t : ℝ).toNNReal)]
+      simpa only [
+        Real.toNNReal_of_nonneg t.property.1, NNReal.coe_mk, R] using hx
+    rw [dist_eq_norm]
+    exact lt_of_le_of_lt hle (half_lt_self hε)
+  obtain ⟨hi, ht⟩ := integral_uniform_distance_tendsto_of_dominated AT hATm BT G' hG'i hATb hBT
+  refine ⟨AT, BT, hATm, hBTm, ?_, (fun _ _ => rfl), hi, ht⟩
+  filter_upwards [hUprod] with p hp j t
+  have he := hp j ((t : ℝ).toNNReal)
+  simpa only [AT, ContinuousMap.coe_mk, Real.toNNReal_of_nonneg t.property.1,
+    NNReal.coe_mk, R] using he
 
 end HarmonicBalls
