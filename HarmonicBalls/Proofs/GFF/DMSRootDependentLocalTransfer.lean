@@ -418,4 +418,50 @@ theorem bufferedLocalEvent_section_of_subset
   intro v
   exact heq v
 
+/-- Assemble countably many marked events by selecting the first root chart. -/
+def firstChartEvent (A : ℕ → Set ℂ) (S : ℕ → Set (ModConstTestPairings univ × ℂ)) :
+    Set (ModConstTestPairings univ × ℂ) :=
+  ⋃ n, {p | p.2 ∈ disjointed A n} ∩ S n
+
+/-- Countable first-chart assembly preserves joint measurability. -/
+theorem measurableSet_firstChartEvent
+    (A : ℕ → Set ℂ) (S : ℕ → Set (ModConstTestPairings univ × ℂ))
+    (hA : ∀ n, MeasurableSet (A n)) (hS : ∀ n, MeasurableSet (S n)) :
+    MeasurableSet (firstChartEvent A S) :=
+  MeasurableSet.iUnion fun n =>
+    ((MeasurableSet.disjointed hA n).preimage measurable_snd).inter (hS n)
+
+/-- On a selected chart, the assembled event is exactly that chart event. -/
+theorem firstChartEvent_iff
+    (A : ℕ → Set ℂ) (S : ℕ → Set (ModConstTestPairings univ × ℂ))
+    (n : ℕ) (z : ℂ) (hz : z ∈ disjointed A n) (v : ModConstTestPairings univ) :
+    (v, z) ∈ firstChartEvent A S ↔ (v, z) ∈ S n := by
+  constructor
+  · intro h
+    obtain ⟨m, hm, hS⟩ := mem_iUnion.mp h
+    have hmn : m = n := by
+      by_contra hne
+      exact (Set.disjoint_left.mp (disjoint_disjointed A hne)) hm hz
+    simpa only [hmn] using hS
+  · intro h
+    exact mem_iUnion.mpr ⟨n, hz, h⟩
+
+/-- The selected charts cover precisely the union of the original charts. -/
+theorem exists_firstChart_of_mem
+    (A : ℕ → Set ℂ) (z : ℂ) (hz : z ∈ ⋃ n, A n) :
+    ∃ n, z ∈ disjointed A n := by
+  have hz' : z ∈ ⋃ n, disjointed A n := by rwa [iUnion_disjointed]
+  exact mem_iUnion.mp hz'
+
+/-- A selected chart section remains a local section after countable assembly. -/
+theorem firstChartEvent_section
+    (A : ℕ → Set ℂ) (S : ℕ → Set (ModConstTestPairings univ × ℂ))
+    (n : ℕ) (z : ℂ) (hz : z ∈ disjointed A n) (V : Set ℂ)
+    (hlocal : ∃ F : Set (ModConstTestPairings V), MeasurableSet F ∧
+      ∀ v, (v, z) ∈ S n ↔ restrictGlobalPairings V v ∈ F) :
+    ∃ F : Set (ModConstTestPairings V), MeasurableSet F ∧
+      ∀ v, (v, z) ∈ firstChartEvent A S ↔ restrictGlobalPairings V v ∈ F := by
+  obtain ⟨F, hF, heq⟩ := hlocal
+  exact ⟨F, hF, fun v => (firstChartEvent_iff A S n z hz v).trans (heq v)⟩
+
 end HarmonicBalls
