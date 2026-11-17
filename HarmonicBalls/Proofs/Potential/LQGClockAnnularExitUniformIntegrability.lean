@@ -1704,4 +1704,50 @@ theorem ae_annular_exit_increment_le_horizon_add_tails {Ω : Type*} [MeasurableS
   simp_rw [hsub, hoff]
   exact h
 
+/-- Positive annular clock tails have a jointly measurable field-path version. -/
+theorem exists_measurable_annular_exit_positive_tail {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (γ α δ : ℝ) {D : Set ℂ} (hD : IsOpen D) (T : ℝ) :
+    ∃ F : ContinuousPath ℂ × Ω → ℝ≥0∞, Measurable F ∧ ∀ᵐ ω ∂P, ∀ b,
+      F (b,ω) = ∫⁻ t in Ioc T (ContinuousPath.exitTime D b).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z => ENNReal.ofReal (
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)))
+            (b t.toNNReal) := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  have hA : MeasurableSet A := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let J : Ω × ℂ → ℝ≥0∞ := fun q => A.indicator (fun z => ENNReal.ofReal (
+    ε^(γ^2/2) * Real.exp (γ*(H q.1 ε z-H q.1 1 0 - α*Real.log (max ε ‖z‖))))) q.2
+  have h1 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) := (hHm ε hε).comp measurable_swap
+  have h2 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+    (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+  have hJ : Measurable J := by
+    apply Measurable.indicator _ (hA.preimage measurable_snd)
+    exact (measurable_const.mul (measurable_const.mul ((h1.sub h2).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp).ennreal_ofReal
+  let U : ContinuousPath ℂ → ℝ := fun b => (ContinuousPath.exitTime D b).toReal
+  have hU : Measurable U := (ContinuousPath.measurable_exitTime D hD).ennreal_toReal
+  have heval : Measurable (fun q : (ContinuousPath ℂ × Ω) × ℝ => q.1.1 q.2.toNNReal) := by
+    exact (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_fst.comp measurable_fst))
+  let S : Set ((ContinuousPath ℂ × Ω) × ℝ) := {q | T < q.2 ∧ q.2 ≤ U q.1.1}
+  have hS : MeasurableSet S := (measurableSet_lt measurable_const measurable_snd).inter
+    (measurableSet_le measurable_snd (hU.comp (measurable_fst.comp measurable_fst)))
+  let Q : (ContinuousPath ℂ × Ω) × ℝ → ℝ≥0∞ := fun q =>
+    S.indicator (fun q => J (q.1.2, q.1.1 q.2.toNNReal)) q
+  have hQ : Measurable Q := by
+    exact (hJ.comp ((measurable_snd.comp measurable_fst).prodMk heval)).indicator hS
+  refine ⟨fun q => ∫⁻ t, Q (q,t), Measurable.lintegral_prod_right hQ, ?_⟩
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec b
+  rw [← lintegral_indicator measurableSet_Ioc]
+  apply lintegral_congr
+  intro t
+  simp only [Q, S, U, Set.indicator_apply, Set.mem_ofPred_eq, Set.mem_Ioc, J, A]
+  split_ifs
+  · rw [hω ε (b t.toNNReal), hω 1 0, hrec ε (b t.toNNReal) hε]
+  · rfl
+  · rfl
+
 end HarmonicBalls
