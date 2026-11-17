@@ -1,5 +1,7 @@
 import HarmonicBalls.Proofs.GFF.PfefferSourceMetricCoordinates
 import HarmonicBalls.Proofs.GFF.PfefferAroundJointMeasurable
+import HarmonicBalls.FirstPass.Phase2.FieldAxiomsDerived
+import HarmonicBalls.Steps.Sec11.PinchMetricMeasure
 
 /-! # Joint measurability of actual LQG metric observables
 
@@ -87,5 +89,30 @@ theorem IsLQGMetric.aemeasurable_pfefferField_around_joint
     (h𝔇.satisfiesLQGMetricAxioms Ω P hC hcirc f hgff hfcont hfmeas).ae_isEuclideanLengthMetric
   exact aemeasurable_pfefferAround_joint_of_ae_pointwise ν
     (D := fun ω => 𝔇 (pfefferField hC f ω)) hpoint hmetric
+
+/-- The around distance of a logarithmically inserted LQG field is almost
+ everywhere measurable jointly in the field, center and radii. -/
+theorem IsWholePlaneGFF.aemeasurable_singular_pfefferAround_joint
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D)
+    (ν : Measure (ℂ × ℝ × ℝ)) [SFinite ν] :
+    AEMeasurable (fun q : Ω × (ℂ × ℝ × ℝ) =>
+      pfefferAround (D q.1) q.2.1 q.2.2.1 q.2.2.2) (P.prod ν) := by
+  let : IsProbabilityMeasure P := hgff.isGaussianProcess.isProbabilityMeasure
+  have haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc :=
+    lqgMetricFieldAxiomsUnivFrozen_derived Ω P γ ξ α₀ hC hcirc
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms
+    P γ ξ α₀ hC hcirc D haxioms hgff hγ hγ₂ hα hD
+  obtain ⟨D', hD', heq⟩ :=
+    exists_measurable_metric_modification_of_metricFieldAxioms haxioms hgff hγ hγ₂ hα hD
+  have hpoint : ∀ x y, AEMeasurable (fun ω => D ω x y) P := by
+    intro x y
+    apply (hD' x y).aemeasurable.congr
+    filter_upwards [heq] with ω hω
+    rw [hω]
+  exact aemeasurable_pfefferAround_joint_of_ae_pointwise ν hpoint hmetric
 
 end HarmonicBalls
