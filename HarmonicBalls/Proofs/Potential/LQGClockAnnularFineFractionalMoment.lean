@@ -2996,4 +2996,49 @@ theorem lintegral_field_annularSquare_occupation_rpow_le_rescaled {Ω : Type*} [
     fun_prop
   exact lintegral_annularSquare_occupation_rpow_le_rescaled x hr i a u v _ hφ q hq
 
+/-- The diagonal comparison in nonnegative-integral form. -/
+theorem lintegral_rpow_annularSquare_gmcDensity_le_reference
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ)
+    (b : ContinuousPath ℂ) (u v a : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    let T := annularSquareTimeSet b a r i ∩ Ioc u v
+    let φ : Ω → ℂ → ℝ≥0∞ := fun ω w => ENNReal.ofReal
+      (Real.exp (γ * hcirc ω δ w - γ ^ 2 * (-Real.log δ) / 2))
+    (∫⁻ ω, (∫⁻ t in T, ENNReal.ofReal
+      (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P) ≤
+      ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ∫⁻ ω, (∫⁻ t in T, φ ω
+          ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ))) ^ q ∂P := by
+  let T := annularSquareTimeSet b a r i ∩ Ioc u v
+  let G : Ω → ℝ := fun ω => ∫ t in T, Real.exp
+    (γ * hcirc ω δ ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+      γ ^ 2 * (-Real.log δ) / 2)
+  have hG (ω : Ω) : 0 ≤ G ω := integral_nonneg (fun _ => (Real.exp_pos _).le)
+  have ht := integral_rpow_annularSquare_le_of_time_integrals hh hr hr10 hδ hδ2 hi γ b u v a hq
+  simp only [inter_comm (Ioc u v) (annularSquareTimeSet b a r i)] at ht
+  have hGi : Integrable (fun ω => G ω ^ q) P := ht.2.1
+  have heq : ENNReal.ofReal (∫ ω, G ω ^ q ∂P) =
+      ∫⁻ ω, (∫⁻ t in T, ENNReal.ofReal
+        (Real.exp (γ * hcirc ω δ ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) /
+          (4 * r : ℝ)) - γ ^ 2 * (-Real.log δ) / 2))) ^ q ∂P := by
+    rw [ofReal_integral_eq_lintegral_ofReal hGi
+      (Filter.Eventually.of_forall fun ω => Real.rpow_nonneg (hG ω) q)]
+    apply lintegral_congr_ae
+    filter_upwards [hh.ae_continuous_circle_fixed hδ] with ω hω
+    have hc : Continuous (fun t : ℝ => Real.exp
+        (γ * hcirc ω δ ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+          γ ^ 2 * (-Real.log δ) / 2)) := by fun_prop
+    have hi' : IntegrableOn (fun t : ℝ => Real.exp
+        (γ * hcirc ω δ ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+          γ ^ 2 * (-Real.log δ) / 2)) T := hc.integrableOn_Ioc.mono_set inter_subset_right
+    rw [← ENNReal.ofReal_rpow_of_nonneg (hG ω) (by linarith : 0 ≤ q),
+      ofReal_integral_eq_lintegral_ofReal hi'
+        (Filter.Eventually.of_forall fun _ => (Real.exp_pos _).le)]
+  dsimp only
+  rw [← heq]
+  exact lintegral_rpow_annularSquare_gmcDensity_le hh hr hr10 hδ hδ2 hi γ b u v a hq
+
 end HarmonicBalls
