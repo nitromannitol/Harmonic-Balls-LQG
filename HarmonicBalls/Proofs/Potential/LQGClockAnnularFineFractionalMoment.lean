@@ -1401,4 +1401,98 @@ theorem exists_dyadic_rpow_contraction {e : ℝ} (he : e < 0) (C : ℝ) :
   obtain ⟨N, hN⟩ := eventually_atTop.1 h
   exact ⟨max N 4, le_max_right _ _, hN _ (le_max_left _ _)⟩
 
+/-- Separated occupation masses have a smoothing-uniform cross moment. -/
+theorem lintegral_mul_separated_gmc_masses_le {Ω X Y : Type*} [MeasurableSpace Ω] [MeasurableSpace X] [MeasurableSpace Y]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (μ : Measure X) (ν : Measure Y) [SFinite μ] [SFinite ν]
+    {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r) (γ : ℝ)
+    (x : X → ℂ) (y : Y → ℂ) (hxm : Measurable x) (hym : Measurable y)
+    (hx : ∀ a, ‖x a‖ + ε ≤ 1) (hy : ∀ b, ‖y b‖ + ε ≤ 1)
+    (hxy : ∀ a b, r ≤ ‖x a - y b‖) :
+    (∫⁻ ω, (∫⁻ a, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (x a) ω) ∂μ) *
+      (∫⁻ b, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (y b) ω) ∂ν) ∂P) ≤
+      ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (μ Set.univ * ν Set.univ) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let D : ℂ → Ω → ℝ≥0∞ := LatticeProb.Gauss.gmcDensityENN (fun z ω => H ω ε z) γ ε
+  have hD : Measurable (Function.uncurry D) :=
+    LatticeProb.Gauss.measurable_uncurry_gmcDensityENN (hHm ε hε) γ ε
+  have hpoint (z : ℂ) (hz : ‖z‖ + ε ≤ 1) : (∫⁻ ω, D z ω ∂P) = 1 := by
+    have heq : (fun ω => D z ω) =ᵐ[P] (fun ω =>
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε z ω)) := by
+      filter_upwards [hHae] with ω hω
+      simp only [D, LatticeProb.Gauss.gmcDensityENN, LatticeProb.Gauss.gmcDensity, hω]
+    rw [lintegral_congr_ae heq, ← ofReal_integral_eq_lintegral_ofReal]
+    · change ENNReal.ofReal (∫ ω, ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω ε z) ∂P) = 1
+      rw [hh.integral_rpow_mul_exp_circle hε hz γ, ENNReal.ofReal_one]
+    · simpa only [Finset.univ_unique, Fin.default_eq_zero, Finset.prod_singleton] using
+        hh.integrable_prod_gmcDensity hε γ (fun _ : Fin 1 => z)
+    · exact Filter.Eventually.of_forall fun ω => LatticeProb.Gauss.gmcDensity_nonneg hcirc hε γ z ω
+  have hFx : Measurable (Function.uncurry (fun a ω => D (x a) ω)) :=
+    hD.comp (hxm.comp measurable_fst |>.prodMk measurable_snd)
+  have hGy : Measurable (Function.uncurry (fun b ω => D (y b) ω)) :=
+    hD.comp (hym.comp measurable_fst |>.prodMk measurable_snd)
+  have hdec (a : X) (b : Y) : (∫⁻ ω, D (x a) ω * D (y b) ω ∂P) ≤
+      ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+        ((∫⁻ ω, D (x a) ω ∂P) * ∫⁻ ω, D (y b) ω ∂P) := by
+    have h := hh.lintegral_prod_gmcDensityENN_two_le hε hr γ
+      (fun z => hHae.mono (fun ω hω => hω ε z))
+      (fun _ : Fin 1 => x a) (fun _ : Fin 1 => y b)
+      (fun _ => hx a) (fun _ => hy b) (fun _ _ => hxy a b)
+    simpa only [Finset.univ_unique, Fin.default_eq_zero, Finset.prod_singleton,
+      Fintype.card_fin, one_mul, pow_one, D] using h
+  have hmain := LatticeProb.lintegral_mul_lintegral_le_of_forall (P := P) (ν₁ := μ) (ν₂ := ν) hFx hGy
+    (ENNReal.ofReal ((2 / r) ^ (γ ^ 2))) hdec
+  have hleft : (∫⁻ ω, ∫⁻ a, D (x a) ω ∂μ ∂P) = μ Set.univ := by
+    have hm : Measurable (Function.uncurry (fun ω a => D (x a) ω)) := hFx.comp measurable_swap
+    rw [lintegral_lintegral_swap (μ := P) (ν := μ) hm.aemeasurable]
+    simp only [hpoint _ (hx _), lintegral_one]
+  have hright : (∫⁻ ω, ∫⁻ b, D (y b) ω ∂ν ∂P) = ν Set.univ := by
+    have hm : Measurable (Function.uncurry (fun ω b => D (y b) ω)) := hGy.comp measurable_swap
+    rw [lintegral_lintegral_swap (μ := P) (ν := ν) hm.aemeasurable]
+    simp only [hpoint _ (hy _), lintegral_one]
+  rw [hleft, hright] at hmain
+  convert hmain using 1
+  apply lintegral_congr_ae
+  filter_upwards [hHae] with ω hω
+  congr 1 <;> apply lintegral_congr <;> intro z <;>
+    simp only [D, LatticeProb.Gauss.gmcDensityENN, LatticeProb.Gauss.gmcDensity, hω]
+
+/-- Fractional cross moments of separated occupation masses are uniformly bounded. -/
+theorem lintegral_rpow_mul_separated_gmc_masses_le {Ω X Y : Type*} [MeasurableSpace Ω] [MeasurableSpace X] [MeasurableSpace Y]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (μ : Measure X) (ν : Measure Y) [SFinite μ] [SFinite ν]
+    {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r) (γ : ℝ)
+    (x : X → ℂ) (y : Y → ℂ) (hxm : Measurable x) (hym : Measurable y)
+    (hx : ∀ a, ‖x a‖ + ε ≤ 1) (hy : ∀ b, ‖y b‖ + ε ≤ 1)
+    (hxy : ∀ a b, r ≤ ‖x a - y b‖) {q : ℝ} (hq : 0 < q) (hq2 : q ≤ 2) :
+    (∫⁻ ω, ((∫⁻ a, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (x a) ω) ∂μ) *
+      (∫⁻ b, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (y b) ω) ∂ν)) ^ (q / 2) ∂P) ≤
+      (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (μ Set.univ * ν Set.univ)) ^ (q / 2) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let D : ℂ → Ω → ℝ≥0∞ := LatticeProb.Gauss.gmcDensityENN (fun z ω => H ω ε z) γ ε
+  have hD : Measurable (Function.uncurry D) :=
+    LatticeProb.Gauss.measurable_uncurry_gmcDensityENN (hHm ε hε) γ ε
+  have hFx : Measurable (fun ω => ∫⁻ a, D (x a) ω ∂μ) := by
+    have hm : Measurable (fun p : Ω × X => D (x p.2) p.1) :=
+      hD.comp ((hxm.comp measurable_snd).prodMk measurable_fst)
+    exact hm.lintegral_prod_right'
+  have hGy : Measurable (fun ω => ∫⁻ b, D (y b) ω ∂ν) := by
+    have hm : Measurable (fun p : Ω × Y => D (y p.2) p.1) :=
+      hD.comp ((hym.comp measurable_snd).prodMk measurable_fst)
+    exact hm.lintegral_prod_right'
+  have ha : (fun ω => (∫⁻ a, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (x a) ω) ∂μ) *
+      (∫⁻ b, ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (y b) ω) ∂ν)) =ᵐ[P]
+      (fun ω => (∫⁻ a, D (x a) ω ∂μ) * ∫⁻ b, D (y b) ω ∂ν) := by
+    filter_upwards [hHae] with ω hω
+    congr 1 <;> apply lintegral_congr <;> intro z <;>
+      simp only [D, LatticeProb.Gauss.gmcDensityENN, LatticeProb.Gauss.gmcDensity, hω]
+  have hm := (hFx.mul hGy).aemeasurable.congr ha.symm
+  exact (LatticeProb.lintegral_rpow_le_rpow_lintegral P (by positivity : 0 < q / 2)
+    (by linarith : q / 2 ≤ 1) hm).trans
+      (ENNReal.rpow_le_rpow (lintegral_mul_separated_gmc_masses_le hh μ ν hε hr γ x y hxm hym hx hy hxy) (by positivity))
+
 end HarmonicBalls
