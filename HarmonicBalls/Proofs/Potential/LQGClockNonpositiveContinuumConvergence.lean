@@ -1218,4 +1218,92 @@ theorem nonpositive_halfDisc_radius_density_increment_split
       Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ ≤ 1/2} from hz),
       Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ < ε} from hzε), sub_zero]
 
+
+/-- A continuous density restricted to a measurable subset of the half-disc
+is integrable against any finite spatial measure. -/
+theorem integrable_indicator_continuous_of_halfDisc
+    (μ : Measure ℂ) [IsFiniteMeasure μ] (S : Set ℂ) (hS : MeasurableSet S)
+    (hSdisc : ∀ z ∈ S, ‖z‖ ≤ 1/2) (f : ℂ → ℝ) (hf : Continuous f) :
+    Integrable (S.indicator f) μ := by
+  obtain ⟨K, hK⟩ := (isCompact_closedBall (0 : ℂ) (1/2 : ℝ)).bddAbove_image hf.norm.continuousOn
+  apply (integrable_const (max K 0)).mono' (hf.measurable.indicator hS).aestronglyMeasurable
+  filter_upwards with z
+  by_cases hz : z ∈ S
+  · have hzball : z ∈ Metric.closedBall (0 : ℂ) (1/2 : ℝ) := by
+      simpa only [Metric.mem_closedBall, dist_zero_right] using hSdisc z hz
+    rw [Set.indicator_of_mem hz]
+    exact (hK ⟨z, hzball, rfl⟩).trans (le_max_left K 0)
+  · rw [Set.indicator_of_notMem hz, norm_zero]
+    exact le_max_right K 0
+
+
+private theorem continuous_fieldCircleAverage_of_continuous
+    (h : ℝ → ℂ → ℝ) (α : ℝ) {r : ℝ} (hr : 0 < r) (hc : Continuous (h r)) :
+    Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α h r z) := by
+  have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α h r z) =
+      (fun z => h r z - α * Real.log (max r ‖z‖)) := by
+    funext z
+    have hlog : Real.circleAverage (fun y : ℂ => Real.log ‖y‖) z r =
+        Real.log (max r ‖z‖) := by
+      simpa using (LatticeProb.Gauss.circleAverage_log_norm_sub_eq z 0 hr)
+    dsimp [LatticeProb.Gauss.fieldCircleAverage]
+    rw [hlog]
+  rw [heq]
+  exact hc.sub (continuous_const.mul
+    ((continuous_const.max continuous_norm).log (fun _ => ne_of_gt (lt_max_of_lt_left hr))))
+
+/-- Integrating the density split against a finite measure preserves the
+weighted field term and the inner-ball correction. -/
+theorem integral_nonpositive_halfDisc_radius_increment_split
+    (μ : Measure ℂ) [IsFiniteMeasure μ] (h : ℝ → ℂ → ℝ) {γ α ε r : ℝ}
+    (hγ : 0 ≤ γ) (hα : α ≤ 0) (hε : 0 < ε) (hεhalf : ε ≤ 1/2)
+    (hr : 0 < r) (hrε : r ≤ ε) (hcr : Continuous (h r)) (hcε : Continuous (h ε)) :
+    (∫ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+      r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α h r z)) z ∂μ) -
+    (∫ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+      ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α h ε z)) z ∂μ) =
+    (∫ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+      (max r ‖z‖)^(-γ*α) *
+        (r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h r z) -
+          ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h ε z))) z ∂μ) -
+    (∫ z, {z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+      ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+        (ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h ε z))) z ∂μ) := by
+  let D : Set ℂ := {z : ℂ | ‖z‖ ≤ 1/2}
+  let B : Set ℂ := {z : ℂ | ‖z‖ < ε}
+  let Y : ℝ → ℂ → ℝ := fun s z => s^(γ^2/2) * Real.exp
+    (γ * LatticeProb.Gauss.fieldCircleAverage α h s z)
+  let X : ℝ → ℂ → ℝ := fun s z => s^(γ^2/2) * Real.exp
+    (γ * LatticeProb.Gauss.fieldCircleAverage 0 h s z)
+  let w : ℝ → ℂ → ℝ := fun s z => (max s ‖z‖)^(-γ*α)
+  let U : ℂ → ℝ := fun z => w r z * (X r z - X ε z)
+  let V : ℂ → ℝ := fun z => (w ε z - w r z) * X ε z
+  have hD : MeasurableSet D := measurableSet_le measurable_norm measurable_const
+  have hB : MeasurableSet B := measurableSet_lt measurable_norm measurable_const
+  have hY (s : ℝ) (hs : 0 < s) (hc : Continuous (h s)) : Continuous (Y s) :=
+    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
+      (continuous_fieldCircleAverage_of_continuous h α hs hc)))
+  have hX (s : ℝ) (hs : 0 < s) (hc : Continuous (h s)) : Continuous (X s) :=
+    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
+      (continuous_fieldCircleAverage_of_continuous h 0 hs hc)))
+  have hw (s : ℝ) (hs : 0 < s) : Continuous (w s) :=
+    (continuous_const.max continuous_norm).rpow_const
+      (fun _ => Or.inl (ne_of_gt (lt_max_of_lt_left hs)))
+  have hU : Continuous U := (hw r hr).mul ((hX r hr hcr).sub (hX ε hε hcε))
+  have hV : Continuous V := ((hw ε hε).sub (hw r hr)).mul (hX ε hε hcε)
+  have hDsub : ∀ z ∈ D, ‖z‖ ≤ 1/2 := fun _ hz => hz
+  have hBsub : ∀ z ∈ B, ‖z‖ ≤ 1/2 := fun _ hz => le_trans (le_of_lt hz) hεhalf
+  have hYr := integrable_indicator_continuous_of_halfDisc μ D hD hDsub (Y r) (hY r hr hcr)
+  have hYε := integrable_indicator_continuous_of_halfDisc μ D hD hDsub (Y ε) (hY ε hε hcε)
+  have hUi := integrable_indicator_continuous_of_halfDisc μ D hD hDsub U hU
+  have hVi := integrable_indicator_continuous_of_halfDisc μ B hB hBsub V hV
+  change (∫ z, D.indicator (Y r) z ∂μ) - (∫ z, D.indicator (Y ε) z ∂μ) =
+    (∫ z, D.indicator U z ∂μ) - (∫ z, B.indicator V z ∂μ)
+  rw [← integral_sub hYr hYε, ← integral_sub hUi hVi]
+  apply integral_congr_ae
+  filter_upwards with z
+  have hs := nonpositive_halfDisc_radius_density_increment_split h z hγ hα hε hεhalf hr hrε
+  change D.indicator (fun z => Y r z - Y ε z) z = D.indicator U z - B.indicator V z at hs
+  simpa only [Set.indicator_sub, Pi.sub_apply] using hs
+
 end HarmonicBalls
