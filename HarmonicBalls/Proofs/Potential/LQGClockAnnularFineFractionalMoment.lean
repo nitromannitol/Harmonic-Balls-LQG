@@ -4561,4 +4561,72 @@ theorem log_disc_return_ratio_lt_one {r b R : ℝ} (hr : 0 < r) (hrb : r < b)
     linarith
   exact ENNReal.ofReal_lt_one.mpr hl
 
+
+/-- The concentric open square with three times the side of a grid square. -/
+def tripleGridSquare (r : ℝ) (i : ℤ × ℤ) : Set ℂ :=
+  {z | |(z - LatticeProb.dyadicSquareCentre r i).re| < 3 * r / 2 ∧
+    |(z - LatticeProb.dyadicSquareCentre r i).im| < 3 * r / 2}
+
+/-- Every grid square lies inside its concentric triple. -/
+theorem dyadicSquare_subset_tripleGridSquare {r : ℝ} (hr : 0 < r) (i : ℤ × ℤ) :
+    LatticeProb.dyadicSquare r i ⊆ tripleGridSquare r i := by
+  intro x hx
+  have hn := LatticeProb.norm_sub_centre_lt hr hx
+  have hn' : ‖x - LatticeProb.dyadicSquareCentre r i‖ < 3 * r / 2 := by linarith
+  exact ⟨(Complex.abs_re_le_norm _).trans_lt hn', (Complex.abs_im_le_norm _).trans_lt hn'⟩
+
+/-- A triple grid square is open. -/
+theorem isOpen_tripleGridSquare (r : ℝ) (i : ℤ × ℤ) :
+    IsOpen (tripleGridSquare r i) := by
+  unfold tripleGridSquare
+  exact (isOpen_lt ((Complex.continuous_re.comp (continuous_id.sub continuous_const)).abs)
+    continuous_const).inter
+    (isOpen_lt ((Complex.continuous_im.comp (continuous_id.sub continuous_const)).abs)
+    continuous_const)
+
+/-- Points outside the triple square lie outside its inscribed disc. -/
+theorem tripleGridSquare_radius_le {r : ℝ} {i : ℤ × ℤ} {x : ℂ}
+    (hx : x ∉ tripleGridSquare r i) :
+    3 * r / 2 ≤ ‖x - LatticeProb.dyadicSquareCentre r i‖ := by
+  by_contra h
+  have hlt : ‖x - LatticeProb.dyadicSquareCentre r i‖ < 3 * r / 2 := not_le.mp h
+  apply hx
+  exact ⟨(Complex.abs_re_le_norm _).trans_lt hlt, (Complex.abs_im_le_norm _).trans_lt hlt⟩
+
+/-- At a finite exit from the triple square, the exit point is uniformly separated
+from the centre. -/
+theorem tripleGridSquare_exit_radius_le (r : ℝ) (i : ℤ × ℤ) (ω : ContinuousPath ℂ)
+    (hfin : ContinuousPath.exitTime (tripleGridSquare r i) ω ≠ ∞) :
+    3 * r / 2 ≤ ‖ω ((ContinuousPath.exitTime (tripleGridSquare r i) ω).toNNReal) -
+      LatticeProb.dyadicSquareCentre r i‖ := by
+  apply tripleGridSquare_radius_le
+  exact coordinate_exitTime_notMem (isOpen_tripleGridSquare r i) ω hfin
+
+/-- The return to a grid square before disc exit has a uniform logarithmic bound. -/
+theorem planarBrownian_hit_gridSquare_before_exit_le {r R : ℝ} (hr : 0 < r)
+    (hR : 3 * r / 2 < R) (i : ℤ × ℤ) {x : ℂ}
+    (hx : x ∉ tripleGridSquare r i)
+    (hxR : ‖x - LatticeProb.dyadicSquareCentre r i‖ < R) :
+    planarBrownianMotion x {ω : ContinuousPath ℂ | ∃ t : ℝ≥0,
+      ω t ∈ LatticeProb.dyadicSquare r i ∧
+      (t : ℝ≥0∞) < ContinuousPath.exitTime (ball (LatticeProb.dyadicSquareCentre r i) R) ω} ≤
+      ENNReal.ofReal (Real.log R - Real.log (3 * r / 2)) /
+        ENNReal.ofReal (Real.log R - Real.log r) := by
+  calc
+    _ ≤ planarBrownianMotion x {ω : ContinuousPath ℂ | ∃ t : ℝ≥0,
+        ‖ω t - LatticeProb.dyadicSquareCentre r i‖ ≤ r ∧
+        (t : ℝ≥0∞) < ContinuousPath.exitTime (ball (LatticeProb.dyadicSquareCentre r i) R) ω} := by
+          apply measure_mono
+          rintro ω ⟨t, ht, hexit⟩
+          exact ⟨t, (LatticeProb.norm_sub_centre_lt hr ht).le, hexit⟩
+    _ ≤ _ := planarBrownian_hit_closedBall_before_exit_le _ hr (by linarith) hR
+      (tripleGridSquare_radius_le hx) hxR
+
+/-- The logarithmic return bound for a grid square is strictly less than one. -/
+theorem gridSquare_return_bound_lt_one {r R : ℝ} (hr : 0 < r)
+    (hR : 3 * r / 2 < R) :
+    ENNReal.ofReal (Real.log R - Real.log (3 * r / 2)) /
+      ENNReal.ofReal (Real.log R - Real.log r) < 1 :=
+  log_disc_return_ratio_lt_one hr (by linarith) hR
+
 end HarmonicBalls
