@@ -860,4 +860,68 @@ theorem exists_uniform_prod_nonpositive_halfDisc_clock_iSup_le_grid
   simp only [norm_nonneg, true_and] at hbase
   exact hbase.trans (add_le_add le_rfl (hmesh x α hα hε hεhalf m hm))
 
+
+/-- The nonpositive insertion weight in a same-shell field increment is
+bounded by one uniformly over all occupation submeasures. -/
+theorem exists_uniform_nonpositive_weighted_radius_increment_le_riesz_energy
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) :
+    ∃ θ d : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧
+      let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+      ∀ x : ℂ, ∀ᵐ b ∂(planarBrownianMotion x),
+        ∀ α : ℝ, α ≤ 0 → ∀ μ : Measure ℂ, μ ≤ Measure.map (fun t => b t) ν →
+        ∀ ε r : ℝ, 0 < ε → ε ≤ 1/2 → 0 < r → r ≤ ε → ε/2 ≤ r →
+        (∫ ω, |∫ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (max r ‖z‖) ^ (-γ*α) *
+            (r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0)) -
+              ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0)))) z ∂μ| ∂P) ≤
+        ((Real.exp (γ^2*Real.log 2)-1)*(unitOccupationRieszEnergy d b * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, hγθ, hθ, hd0, hd2, hp, hbound⟩ :=
+    exists_uniform_exponents_brownian_weighted_radius_increment_le_riesz_energy hh hγ0 hγ2
+  refine ⟨θ, d, hγθ, hθ, hd0, hd2, hp, ?_⟩
+  dsimp only at hbound ⊢
+  intro x
+  filter_upwards [hbound x] with b hb
+  intro α hα μ hμ ε r hε hεhalf hr hrε hεr
+  let A : Set ℂ := {z : ℂ | ‖z‖ ≤ 1/2}
+  let g : ℂ → ℝ := A.indicator (fun z => (max r ‖z‖) ^ (-γ*α))
+  have hA : MeasurableSet A := measurableSet_le measurable_norm measurable_const
+  have hg : Measurable g := by
+    apply Measurable.indicator _ hA
+    exact ((continuous_const.max continuous_norm).rpow_const
+      (fun _ => Or.inl (ne_of_gt (lt_max_of_lt_left hr)))).measurable
+  have hq : 0 ≤ -γ * α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ0.le) hα
+  have hg1 (z : ℂ) : |g z| ≤ 1 := by
+    by_cases hz : z ∈ A
+    · rw [show g z = _ from Set.indicator_of_mem hz _]
+      rw [abs_of_nonneg (Real.rpow_nonneg (le_of_lt (lt_max_of_lt_left hr)) _)]
+      exact Real.rpow_le_one (le_of_lt (lt_max_of_lt_left hr))
+        (by
+          have hzhalf : ‖z‖ ≤ (1 : ℝ)/2 := hz
+          apply max_le <;> linarith) hq
+    · rw [show g z = 0 from Set.indicator_of_notMem hz _, abs_zero]
+      norm_num
+  have hgs (z : ℂ) (hz : g z ≠ 0) : ‖z‖ ≤ 1/2 := by
+    by_contra hn
+    have hnA : z ∉ A := hn
+    exact hz (show g z = 0 from Set.indicator_of_notMem hnA _)
+  have hhbound := hb g hg 1 (by norm_num) hg1 hgs μ hμ ε r hε hεhalf hr hrε hεr
+  convert hhbound using 1
+  · congr 1
+    funext ω
+    congr 1
+    apply integral_congr_ae
+    filter_upwards with z
+    by_cases hz : z ∈ A
+    · rw [show A.indicator _ z = _ from Set.indicator_of_mem hz _,
+        show g z = _ from Set.indicator_of_mem hz _]
+    · rw [show A.indicator _ z = _ from Set.indicator_of_notMem hz _,
+        show g z = _ from Set.indicator_of_notMem hz _, zero_mul]
+  · simp
+
 end HarmonicBalls
