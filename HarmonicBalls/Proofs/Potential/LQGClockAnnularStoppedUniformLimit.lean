@@ -6,7 +6,7 @@ import HarmonicBalls.Proofs.Potential.LQGClockAnnularExitUniformIntegrability
 Uniform convergence on the unit interval passes to the Brownian exit time.
 -/
 
-open MeasureTheory MarkovProcess Set Filter HarmonicBalls.Section6
+open MeasureTheory ProbabilityTheory MarkovProcess Set Filter HarmonicBalls.Section6
 open scoped NNReal ENNReal Topology
 
 namespace HarmonicBalls
@@ -153,5 +153,68 @@ theorem exists_continuous_monotone_limit_of_uniform_on_nat_intervals (A : ℕ �
     filter_upwards [hG η hη] with j hj t ht
     rw [heq N G hG t (ht.trans hTN)]
     exact hj t (ht.trans hTN)
+
+private theorem ae_prod_kernel_mixture {Ω Y B : Type*} [MeasurableSpace Ω] [MeasurableSpace Y] [MeasurableSpace B]
+    (P : Measure Ω) [SFinite P] (ν : Measure Y) [SFinite ν]
+    (κ : Kernel Y B) [IsSFiniteKernel κ] (S : Set (Ω × B)) (hS : MeasurableSet S)
+    (h : ∀ y, ∀ᵐ p ∂(P.prod (κ y)), p ∈ S) :
+    ∀ᵐ p ∂(P.prod (κ ∘ₘ ν)), p ∈ S := by
+  simp_rw [ae_iff] at h
+  rw [ae_iff]
+  have hSc : MeasurableSet Sᶜ := hS.compl
+  change (P.prod (κ ∘ₘ ν)) Sᶜ = 0
+  rw [Measure.prod_apply hSc]
+  simp_rw [Measure.bind_apply (hSc.preimage measurable_prodMk_left) (Kernel.aemeasurable κ)]
+  have hf : Measurable (fun p : Ω × Y => (κ p.2) (Prod.mk p.1 ⁻¹' Sᶜ)) := by
+    let κ' : Kernel (Ω × Y) B := κ.comap Prod.snd measurable_snd
+    have hset : MeasurableSet {p : (Ω × Y) × B | (p.1.1, p.2) ∈ Sᶜ} :=
+      hSc.preimage ((measurable_fst.comp measurable_fst).prodMk measurable_snd)
+    have hh := Kernel.measurable_kernel_prodMk_left (κ := κ') hset
+    convert hh using 1
+    funext p
+    congr 1
+  rw [lintegral_lintegral_swap hf.aemeasurable]
+  calc
+    _ = ∫⁻ _y, (0 : ℝ≥0∞) ∂ν := by
+      apply lintegral_congr
+      intro y
+      have hy := h y
+      change (P.prod (κ y)) Sᶜ = 0 at hy
+      simpa only [Measure.prod_apply hSc] using hy
+    _ = 0 := lintegral_zero
+
+/-- A measurable field-path event valid at every start remains valid after a Brownian
+time shift, with the independent field left unchanged. -/
+theorem ae_prod_planarBrownianMotion_shift_of_forall_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [SFinite P]
+    (x : ℂ) (s : ℝ≥0) (S : Set (Ω × ContinuousPath ℂ)) (hS : MeasurableSet S)
+    (h : ∀ y, ∀ᵐ p ∂(P.prod (planarBrownianMotion y)), p ∈ S) :
+    ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), (p.1, ContinuousPath.shift s p.2) ∈ S := by
+  let K := SubMarkovKernelSemigroup.IsConservative.continuousProcess
+    planarHeatSemigroup isConservative_planarHeatSemigroup
+  let : IsFiniteKernel (planarHeatSemigroup.kernel s) :=
+    (planarHeatSemigroup.isSubMarkovKernel s).isFiniteKernel
+  let ν := planarHeatSemigroup.kernel s x
+  have hs : (planarBrownianMotion x).map (ContinuousPath.shift s) = K ∘ₘ ν := by
+    rw [planarBrownianMotion_eq_continuousProcess]
+    have hshift := congrArg (fun K => K x)
+      (SubMarkovKernelSemigroup.IsFellerKernelSemigroup.continuousProcess_map_shift
+        planarHeatSemigroup isConservative_planarHeatSemigroup
+        isFellerKernelSemigroup_planarHeatSemigroup kolmogorovRegular_planarHeatSemigroup s)
+    rw [Kernel.map_apply _ (ContinuousPath.measurable_shift_fixed s) x,
+      Kernel.comp_apply] at hshift
+    exact hshift
+  have ha : ∀ᵐ p ∂(P.prod ((planarBrownianMotion x).map (ContinuousPath.shift s))), p ∈ S := by
+    rw [hs]
+    apply ae_prod_kernel_mixture P ν K S hS
+    intro y
+    change ∀ᵐ p ∂(P.prod (SubMarkovKernelSemigroup.IsConservative.continuousProcess
+      planarHeatSemigroup isConservative_planarHeatSemigroup y)), p ∈ S
+    rw [← planarBrownianMotion_eq_continuousProcess]
+    exact h y
+  have heq := Measure.map_prod_map P (planarBrownianMotion x) measurable_id
+    (ContinuousPath.measurable_shift_fixed s)
+  rw [Measure.map_id] at heq
+  rw [heq] at ha
+  exact (ae_map_iff (measurable_fst.prodMk ((ContinuousPath.measurable_shift_fixed s).comp measurable_snd)).aemeasurable hS).mp ha
 
 end HarmonicBalls
