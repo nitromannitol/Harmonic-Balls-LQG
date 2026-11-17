@@ -686,4 +686,178 @@ theorem exists_uniform_prod_nonpositive_annular_mesh_max_le
           ε ^ (γ ^ 2 / 2) * Real.exp (γ *
             LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal))) j
 
+
+/-- The expected maximum inner-ball mesh cell is bounded by the entire
+zero-insertion inner occupation, uniformly over the mesh. -/
+theorem exists_uniform_prod_nonpositive_inner_mesh_max_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ : 0 ≤ γ) :
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ (x : ℂ) (α : ℝ), α ≤ 0 →
+      ∀ {ε : ℝ}, 0 < ε → ε ≤ 1 / 2 → ∀ (m : ℕ), 0 < m →
+      (∫⁻ p : Ω × ContinuousPath ℂ, (⨆ j : Fin m,
+        ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+          ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) ≤ (ENNReal.ofReal ε) ^ (1 / 2 : ℝ) * C := by
+  obtain ⟨C, hC, hbound⟩ := exists_uniform_lintegral_prod_brownian_inner_zero_le hh γ
+  refine ⟨C, hC, ?_⟩
+  intro x α hα ε hε hεhalf m hm
+  refine (lintegral_mono ?_).trans (hbound x hε hεhalf hε hεhalf)
+  intro p
+  apply iSup_le
+  intro j
+  have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
+  have hjm : (j : ℝ) + 1 ≤ m := by exact_mod_cast j.isLt
+  calc
+    _ ≤ ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+        ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal)) := by
+      apply lintegral_mono
+      intro s
+      apply ENNReal.ofReal_le_ofReal
+      by_cases hz : p.2 s.toNNReal ∈ {z : ℂ | ‖z‖ < ε}
+      · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz]
+        exact nonpositive_halfDisc_density_le_zero_insertion (hcirc p.1) _ hγ hα hε hεhalf
+          (le_trans (le_of_lt hz) hεhalf)
+      · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem hz]
+    _ ≤ _ := by
+      dsimp only
+      apply lintegral_mono_set
+      exact Ioc_subset_Ioc (by positivity) ((div_le_one hm0).2 hjm)
+
+
+/-- The full half-disc mesh maximum has a uniform bound obtained by splitting
+the annulus from the inner ball. -/
+theorem exists_uniform_prod_nonpositive_halfDisc_mesh_max_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) :
+    ∃ (C D : ℝ≥0∞) (β : ℝ), C < ∞ ∧ D < ∞ ∧ 0 < β ∧
+      ∀ (x : ℂ) (α : ℝ), α ≤ 0 → ∀ {ε : ℝ}, 0 < ε → ε ≤ 1 / 2 →
+      ∀ (m : ℕ), 0 < m →
+      (∫⁻ p : Ω × ContinuousPath ℂ, (⨆ j : Fin m,
+        ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+          ENNReal.ofReal ({z : ℂ | ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) ≤
+        C * (m : ℝ≥0∞) ^ (-β) + (ENNReal.ofReal ε) ^ (1 / 2 : ℝ) * D := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨C, β, hC, hβ, houter⟩ := exists_uniform_prod_nonpositive_annular_mesh_max_le hh hγ hγ2
+  obtain ⟨D, hD, hinner⟩ := exists_uniform_prod_nonpositive_inner_mesh_max_le hh hγ.le
+  refine ⟨C, D, β, hC, hD, hβ, ?_⟩
+  intro x α hα ε hε hεhalf m hm
+  let A : Set ℂ := {z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}
+  let B : Set ℂ := {z : ℂ | ‖z‖ < ε}
+  let E : Set ℂ := {z : ℂ | ‖z‖ ≤ 1 / 2}
+  let f : Ω × ContinuousPath ℂ → ℂ → ℝ := fun p z =>
+    ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)
+  let O : Fin m → Ω × ContinuousPath ℂ → ℝ≥0∞ := fun j p =>
+    ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+      ENNReal.ofReal (A.indicator (f p) (p.2 s.toNNReal))
+  let I : Fin m → Ω × ContinuousPath ℂ → ℝ≥0∞ := fun j p =>
+    ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+      ENNReal.ofReal (B.indicator (f p) (p.2 s.toNNReal))
+  have hO : AEMeasurable (fun p => ⨆ j, O j p) (P.prod (planarBrownianMotion x)) := by
+    apply AEMeasurable.iSup
+    intro j
+    exact aemeasurable_annular_inserted_clock_cell hh (planarBrownianMotion x) hε γ α ε
+      ((j : ℝ) / m) (((j : ℝ) + 1) / m)
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hB : MeasurableSet B := measurableSet_lt measurable_norm measurable_const
+  have hf : ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), Measurable
+      (fun s : ℝ => ENNReal.ofReal (B.indicator (f p) (p.2 s.toNNReal))) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+      (ν := planarBrownianMotion x)).ae hHae,
+      (Measure.quasiMeasurePreserving_fst (μ := P)
+        (ν := planarBrownianMotion x)).ae (ae_recentered_inserted_circle_average hh α)] with p hp hrec
+    have hmz : Measurable (fun z : ℂ => ENNReal.ofReal
+        (B.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          (H p.1 ε z - H p.1 1 0 - α * Real.log (max ε ‖z‖)))) z)) := by
+      apply ENNReal.measurable_ofReal.comp
+      exact (measurable_const.mul (measurable_const.mul
+        ((((hHm ε hε).comp (measurable_id.prodMk measurable_const)).sub measurable_const).sub
+          (measurable_const.mul ((measurable_const.max measurable_norm).log)))).exp).indicator hB
+    have heq : (fun z : ℂ => ENNReal.ofReal (B.indicator (f p) z)) =
+        (fun z : ℂ => ENNReal.ofReal (B.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          (H p.1 ε z - H p.1 1 0 - α * Real.log (max ε ‖z‖)))) z)) := by
+      ext z
+      dsimp [f]
+      simp only [Set.indicator_apply]
+      split_ifs
+      · rw [hp, hp, hrec ε z hε]
+      · rfl
+    rw [← heq] at hmz
+    exact hmz.comp (p.2.continuous.measurable.comp continuous_real_toNNReal.measurable)
+  have hpoint : ∀ᵐ p ∂(P.prod (planarBrownianMotion x)),
+      (⨆ j : Fin m, ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+        ENNReal.ofReal (E.indicator (f p) (p.2 s.toNNReal))) ≤
+        (⨆ j, O j p) + (⨆ j, I j p) := by
+    filter_upwards [hf] with p hp
+    apply iSup_le
+    intro j
+    calc
+      _ = I j p + O j p := by
+        dsimp [I, O]
+        rw [← lintegral_add_left hp]
+        apply lintegral_congr
+        intro s
+        let z := p.2 s.toNNReal
+        have hpos : 0 ≤ f p z := mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le
+        by_cases hzB : z ∈ B
+        · have hzE : z ∈ E := le_trans (le_of_lt hzB) hεhalf
+          have hzA : z ∉ A := by exact fun hz => not_le_of_gt hzB hz.1
+          rw [Set.indicator_of_mem hzE, Set.indicator_of_mem hzB, Set.indicator_of_notMem hzA]
+          simp
+        · by_cases hzE : z ∈ E
+          · have hzA : z ∈ A := ⟨le_of_not_gt hzB, hzE⟩
+            rw [Set.indicator_of_mem hzE, Set.indicator_of_notMem hzB, Set.indicator_of_mem hzA]
+            simp
+          · have hzA : z ∉ A := fun hz => hzE hz.2
+            rw [Set.indicator_of_notMem hzE, Set.indicator_of_notMem hzB, Set.indicator_of_notMem hzA]
+            simp
+      _ ≤ _ := add_le_add (le_iSup (fun j => I j p) j) (le_iSup (fun j => O j p) j) |>.trans_eq (add_comm _ _)
+  calc
+    _ ≤ ∫⁻ p, ((⨆ j, O j p) + (⨆ j, I j p)) ∂(P.prod (planarBrownianMotion x)) :=
+      lintegral_mono_ae hpoint
+    _ = (∫⁻ p, ⨆ j, O j p ∂(P.prod (planarBrownianMotion x))) +
+        (∫⁻ p, ⨆ j, I j p ∂(P.prod (planarBrownianMotion x))) := lintegral_add_left' hO _
+    _ ≤ _ := add_le_add (houter x α hα hε hεhalf m hm) (hinner x α hα hε hεhalf m hm)
+
+
+/-- The uniform time difference of two half-disc clocks is controlled by
+its time-grid values and the full-disc mesh bound. -/
+theorem exists_uniform_prod_nonpositive_halfDisc_clock_iSup_le_grid
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) :
+    ∃ (C D : ℝ≥0∞) (β : ℝ), C < ∞ ∧ D < ∞ ∧ 0 < β ∧
+      ∀ (x : ℂ) (α : ℝ), α ≤ 0 → ∀ {r ε : ℝ}, 0 < r → 0 < ε → ε ≤ 1 / 2 →
+      ∀ (m : ℕ), 0 < m →
+      let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) 0
+          (fun _ => t.toNNReal) p.2
+      (∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |F r p t - F ε p t|
+        ∂(P.prod (planarBrownianMotion x))) ≤
+        (∑ j ∈ Finset.range (m + 1), ∫⁻ p, ENNReal.ofReal
+          |F r p (j / (m : ℝ)) - F ε p (j / (m : ℝ))|
+          ∂(P.prod (planarBrownianMotion x))) +
+          (C * (m : ℝ≥0∞) ^ (-β) + (ENNReal.ofReal ε) ^ (1 / 2 : ℝ) * D) := by
+  obtain ⟨C, D, β, hC, hD, hβ, hmesh⟩ :=
+    exists_uniform_prod_nonpositive_halfDisc_mesh_max_le hh hγ hγ2
+  refine ⟨C, D, β, hC, hD, hβ, ?_⟩
+  intro x α hα r ε hr hε hεhalf m hm
+  have hbase := lintegral_prod_stoppedAnnularClock_radius_iSup_le_grid_and_mesh
+    hh x γ α 0 hr hε m hm
+  simp only [norm_nonneg, true_and] at hbase
+  exact hbase.trans (add_le_add le_rfl (hmesh x α hα hε hεhalf m hm))
+
 end HarmonicBalls
