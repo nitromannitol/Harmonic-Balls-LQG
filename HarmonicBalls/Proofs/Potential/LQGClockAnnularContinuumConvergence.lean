@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularGridOccupationIncrement
 import LatticeProb.LQG.GMCRatioLimit
+import LatticeProb.LQG.LQGBallMassGrid2
 
 /-! # Annular clocks at continuum smoothing radii
 
@@ -274,5 +275,174 @@ theorem exists_ae_tsum_annular_grid_exit_clock_lt_top
     simp_rw [lintegral_finsetSum' _ (fun i hi => hS _ i hi)]
     exact (hK D hDb).2 N
   exact ae_lt_top' (AEMeasurable.tsum hm) hint.ne
+
+
+/-- On each finite time interval the exit-stopped annular clocks converge
+uniformly over every radius in sufficiently small dyadic shells. -/
+theorem ae_annular_exit_clock_shell_convergence
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      ContinuousPath.exitTime D p.2 < ⊤ ∧ ∃ F : ℝ≥0 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        ∀ T : ℝ≥0, ∀ ε : ℝ, 0 < ε → ∀ᶠ k in atTop,
+          ∀ s : ℝ, dyadicScale k / 2 ≤ s → s ≤ dyadicScale k →
+            ∀ t : ℝ≥0, t ≤ T →
+              |(∫ u in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+                {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+                  s^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) s z))
+                  (p.2 u.toNNReal)) - F t| < ε := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨c, hc, K, hgrid⟩ :=
+    exists_ae_tsum_annular_grid_exit_clock_lt_top hh x hγ0 hγ2 α hδ hD hDb
+  obtain ⟨η, hη, hmod⟩ := ae_eventually_annular_exit_clock_grid_comparison hh α γ hδ hc D
+  filter_upwards [hgrid,
+    (Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae hmod,
+    ae_exists_locally_uniform_limit_annularClock_stopped hh x hγ0 hγ2 α hδ hDb]
+    with ⟨ω, b⟩ hgridb hmodω hdyadb
+  obtain ⟨hfin, F, hFc, hF0, hFm, hF⟩ := hdyadb
+  refine ⟨hfin, F, hFc, hF0, hFm, ?_⟩
+  intro T ε hε
+  obtain ⟨N, hN⟩ := exists_nat_ge (T : ℝ)
+  let A : ℝ → ℝ → ℝ := fun v t =>
+    ∫ u in (0 : ℝ)..min t (ContinuousPath.exitTime D b).toReal,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        v^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) v z))
+        (b u.toNNReal)
+  let S : ℕ → ℝ≥0∞ := fun j => ∑ i ∈ Finset.range (gridCount c (j+K) + 1),
+    ⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+      |A (gridScale (gridCount c) (j+K) i) t - A (dyadicScale (j+K)) t|
+  have hsum : (∑' j, S j) < ⊤ := hgridb N
+  have hfinite : ∀ j, S j ≠ ⊤ := ENNReal.ne_top_of_tsum_ne_top hsum.ne
+  have hS : Tendsto (fun j => (S j).toReal) atTop (𝓝 0) :=
+    (ENNReal.tendsto_toReal_zero_iff hfinite).2 (ENNReal.tendsto_atTop_zero_of_tsum_ne_top hsum.ne)
+  have hM : 0 < F T + 2 := by linarith [hF0 T]
+  let a : ℝ := min 1 (ε / 4)
+  have ha : 0 < a := lt_min (by norm_num) (by positivity)
+  have hηsmall : ∀ᶠ k in atTop, |η k| < ε / (4 * (F T + 2)) := by
+    have hhη := hη.abs.eventually (Iio_mem_nhds (show |(0 : ℝ)| < ε / (4 * (F T + 2)) by simpa using (show 0 < ε / (4 * (F T + 2)) by positivity)))
+    simpa using hhη
+  have hsmallS := hS.eventually (Iio_mem_nhds ha)
+  have hsmallF := hF T a ha
+  have hshift : Tendsto (fun j : ℕ => j + K) atTop atTop := tendsto_add_atTop_nat K
+  have hfinal : ∀ᶠ j in atTop, ∀ s : ℝ,
+      dyadicScale (j+K) / 2 ≤ s → s ≤ dyadicScale (j+K) →
+      ∀ t : ℝ≥0, t ≤ T → |A s t - F t| < ε := by
+    filter_upwards [hshift.eventually hmodω, hshift.eventually hηsmall, hsmallS,
+      hshift.eventually hsmallF] with j hjmod hjη hjS hjF s hs1 hs2 t ht
+    obtain ⟨i, hi, hiComp⟩ := hjmod s hs1 hs2
+    let r := gridScale (gridCount c) (j+K) i
+    let u : Icc (0 : ℝ) N := ⟨t, ⟨t.coe_nonneg, le_trans (show (t : ℝ) ≤ T from ht) hN⟩⟩
+    have hle : ENNReal.ofReal |A r t - A (dyadicScale (j+K)) t| ≤ S j := by
+      have ht' := le_iSup (fun u : Icc (0 : ℝ) N => ENNReal.ofReal
+        |A r u - A (dyadicScale (j+K)) u|) u
+      apply ht'.trans
+      dsimp only [S, r]
+      exact Finset.single_le_sum (f := fun i : ℕ =>
+        ⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+          |A (gridScale (gridCount c) (j+K) i) t - A (dyadicScale (j+K)) t|)
+        (fun _ _ => by positivity) (Finset.mem_range.mpr (Nat.lt_succ_of_le hi))
+    have hdiff : |A r t - A (dyadicScale (j+K)) t| < a := by
+      have h := ENNReal.toReal_mono (hfinite j) hle
+      rw [ENNReal.toReal_ofReal (abs_nonneg _)] at h
+      exact h.trans_lt hjS
+    have hdyad : |A (dyadicScale (j+K)) t - F t| < a := hjF t ht
+    have har : |A r t| < F T + 2 := by
+      have hab := abs_add_le (A r t - A (dyadicScale (j+K)) t)
+        (A (dyadicScale (j+K)) t - F t + F t)
+      have hab' := abs_add_le (A (dyadicScale (j+K)) t - F t) (F t)
+      have hft : |F t| ≤ F T := by rw [abs_of_nonneg (hF0 t)]; exact hFm ht
+      have ha1 : a ≤ 1 := min_le_left _ _
+      have heq : A r t = (A r t - A (dyadicScale (j+K)) t) +
+          (A (dyadicScale (j+K)) t - F t + F t) := by ring
+      rw [heq]
+      linarith
+    have hcomp : |A s t - A r t| ≤ η (j+K) * A r t := hiComp b t
+    have heta : η (j+K) * A r t < ε / 4 := by
+      calc
+        _ ≤ |η (j+K)| * |A r t| := by rw [← abs_mul]; exact le_abs_self _
+        _ ≤ |η (j+K)| * (F T + 2) := mul_le_mul_of_nonneg_left har.le (abs_nonneg _)
+        _ < (ε / (4 * (F T + 2))) * (F T + 2) :=
+          mul_lt_mul_of_pos_right hjη hM
+        _ = ε / 4 := by field_simp
+    have htriangle := abs_add_le (A s t - A r t) (A r t - A (dyadicScale (j+K)) t)
+    have htriangle' := abs_add_le (A s t - A (dyadicScale (j+K)) t)
+      (A (dyadicScale (j+K)) t - F t)
+    have heq : A s t - F t = (A s t - A (dyadicScale (j+K)) t) +
+        (A (dyadicScale (j+K)) t - F t) := by ring
+    have haε : a ≤ ε / 4 := min_le_right _ _
+    rw [heq]
+    have heq' : A s t - A (dyadicScale (j+K)) t =
+        (A s t - A r t) + (A r t - A (dyadicScale (j+K)) t) := by ring
+    rw [heq'] at htriangle' ⊢
+    linarith
+  obtain ⟨J, hJ⟩ := eventually_atTop.mp hfinal
+  refine eventually_atTop.mpr ⟨J+K, ?_⟩
+  intro k hk s hs1 hs2 t ht
+  have hkK : K ≤ k := by omega
+  have hkJ : J ≤ k-K := by omega
+  have hhJ := hJ (k-K) hkJ
+  rw [Nat.sub_add_cancel hkK] at hhJ
+  exact hhJ s hs1 hs2 t ht
+
+
+/-- For a fixed Brownian starting point, the actual exit-stopped annular clocks
+converge uniformly on every finite time interval as the positive smoothing
+radius tends to zero. -/
+theorem ae_annular_exit_clock_continuum_convergence
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      ContinuousPath.exitTime D p.2 < ⊤ ∧
+      ∃ F : ℝ≥0 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        ∀ T : ℝ≥0, ∀ ε : ℝ, 0 < ε → ∃ ρ : ℝ, 0 < ρ ∧
+          ∀ s : ℝ, 0 < s → s < ρ → ∀ t : ℝ≥0, t ≤ T →
+            |(∫ u in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+              {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+                s^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) s z))
+                (p.2 u.toNNReal)) - F t| < ε := by
+  filter_upwards [ae_annular_exit_clock_shell_convergence hh x hγ0 hγ2 α hδ hD hDb]
+    with p hp
+  obtain ⟨hfin, F, hFc, hF0, hFm, hF⟩ := hp
+  refine ⟨hfin, F, hFc, hF0, hFm, ?_⟩
+  intro T ε hε
+  obtain ⟨K, hK⟩ := eventually_atTop.mp (hF T ε hε)
+  refine ⟨dyadicScale K, dyadicScale_pos K, ?_⟩
+  intro s hs hsmall t ht
+  obtain ⟨k, hk1, hk2⟩ := exists_dyadicScale_bracket hs
+    (hsmall.trans_le (dyadicScale_le_one' K))
+  change s < LatticeProb.LQG.dyadicScale K at hsmall
+  have hKk : K ≤ k := by
+    by_contra hn
+    have hle := dyadicScale_le_of_le (show k + 1 ≤ K by omega)
+    linarith
+  apply hK k hKk s _ hk2.le t ht
+  change LatticeProb.LQG.dyadicScale k / 2 ≤ s
+  simpa only [dyadicScale_succ_eq_half] using hk1
+
+/-- Field-then-path form of the locally uniform continuum-radius limit. -/
+theorem ae_field_ae_path_annular_exit_clock_continuum_convergence
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∀ᵐ ω ∂P, ∀ᵐ b ∂planarBrownianMotion x,
+      ContinuousPath.exitTime D b < ⊤ ∧
+      ∃ F : ℝ≥0 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        ∀ T : ℝ≥0, ∀ ε : ℝ, 0 < ε → ∃ ρ : ℝ, 0 < ρ ∧
+          ∀ s : ℝ, 0 < s → s < ρ → ∀ t : ℝ≥0, t ≤ T →
+            |(∫ u in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal,
+              {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+                s^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) s z))
+                (b u.toNNReal)) - F t| < ε := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  exact Measure.ae_ae_of_ae_prod
+    (ae_annular_exit_clock_continuum_convergence hh x hγ0 hγ2 α hδ hD hDb)
 
 end HarmonicBalls
