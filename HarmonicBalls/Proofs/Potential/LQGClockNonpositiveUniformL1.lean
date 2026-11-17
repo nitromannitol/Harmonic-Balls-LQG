@@ -948,4 +948,196 @@ theorem exists_uniform_summable_annealed_shifted_nonpositive_inserted_inner_incr
       rw [hq]
     _ ≤ _ := hreal
 
+/-- The inserted open-disc clock accumulated during one unit of time. -/
+noncomputable def innerInsertedUnitTimeClock {Ω : Type*}
+    (hcirc : Ω → ℝ → ℂ → ℝ) (γ α ε δ : ℝ) (q : ContinuousPath ℂ × Ω) : ℝ :=
+  ∫ s in (0 : ℝ)..1, {z : ℂ | ‖z‖ < δ}.indicator (fun z =>
+    ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc q.2) ε z))
+      (q.1 s.toNNReal)
+
+/-- The inserted unit clock has a nonnegative measurable version agreeing
+on one full-field event for every path. -/
+theorem exists_measurable_inner_inserted_unit_time_clock
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α : ℝ) {ε : ℝ}
+    (hε : 0 < ε) (δ : ℝ) :
+    ∃ F : ContinuousPath ℂ × Ω → ℝ, Measurable F ∧ (∀ q, 0 ≤ F q) ∧
+      ∀ᵐ ω ∂P, ∀ b, F (b,ω) = innerInsertedUnitTimeClock hcirc γ α ε δ (b,ω) := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let G : Ω × ℂ → ℝ := fun q => {z : ℂ | ‖z‖ < δ}.indicator
+    (fun z => ε^(γ^2/2) * Real.exp (γ * (H q.1 ε z - H q.1 1 0 -
+      α * Real.log (max ε ‖z‖)))) q.2
+  have hG : Measurable G := by
+    have h1 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) := (hHm ε hε).comp measurable_swap
+    have h2 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+      (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+    apply Measurable.indicator _ ((measurableSet_lt measurable_norm measurable_const).preimage measurable_snd)
+    exact measurable_const.mul (measurable_const.mul ((h1.sub h2).sub
+      (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let F : ContinuousPath ℂ × Ω → ℝ := fun q => ∫ z, G (q.2,z) ∂(Measure.map (fun t => q.1 t) ν)
+  have hF : Measurable F := by
+    have heval0 : Measurable (fun q : ContinuousPath ℂ × ℝ≥0 => q.1 q.2) := by fun_prop
+    have heval : Measurable (fun q : (ContinuousPath ℂ × Ω) × ℝ≥0 => q.1.1 q.2) :=
+      heval0.comp ((measurable_fst.comp measurable_fst).prodMk measurable_snd)
+    have h := hG.comp ((measurable_snd.comp measurable_fst).prodMk heval)
+    have hm := h.stronglyMeasurable.integral_prod_right' (ν := ν)
+    convert hm.measurable using 1
+    funext q
+    exact integral_map q.1.continuous.measurable.aemeasurable
+      (hG.comp (measurable_const.prodMk measurable_id)).aestronglyMeasurable
+  refine ⟨F, hF, ?_, ?_⟩
+  · intro q
+    apply integral_nonneg
+    intro z
+    dsimp [G]
+    simp only [Set.indicator_apply]
+    split_ifs <;> positivity
+  · filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec b
+    rw [show F (b,ω) = ∫ s in (0 : ℝ)..1, G (ω,b s.toNNReal) from
+      unit_path_occupation_integral_eq_time b (fun z => G (ω,z))
+        (hG.comp (measurable_const.prodMk measurable_id))]
+    apply intervalIntegral.integral_congr
+    intro s hs
+    simp only [G, hω, Set.indicator_apply]
+    split_ifs
+    · rw [← hrec ε _ hε]
+    · rfl
+/-- The real unit clock equals its nonnegative occupation integral on a
+full-field event. -/
+theorem ae_inner_inserted_unit_time_clock_lintegral
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α : ℝ) {ε δ : ℝ}
+    (hε : 0 < ε) (hδ : δ ≤ 1/2) :
+    ∀ᵐ ω ∂P, ∀ b,
+      0 ≤ innerInsertedUnitTimeClock hcirc γ α ε δ (b,ω) ∧
+      ENNReal.ofReal (innerInsertedUnitTimeClock hcirc γ α ε δ (b,ω)) =
+        ∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < δ}.indicator (fun z => ε^(γ^2/2) * Real.exp
+            (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b s.toNNReal)) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec b
+  let f : ℂ → ℝ := fun z => ε^(γ^2/2) * Real.exp
+    (γ * (H ω ε z - H ω 1 0 - α * Real.log (max ε ‖z‖)))
+  have hf : Continuous f := by
+    dsimp [f]
+    have hlog : Continuous (fun z : ℂ => Real.log (max ε ‖z‖)) :=
+      (continuous_const.max continuous_norm).log (fun _ => ne_of_gt (lt_max_of_lt_left hε))
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
+      (((hHc ω ε hε).sub continuous_const).sub (continuous_const.mul hlog))))
+  have hf0 (z : ℂ) : 0 ≤ f z := by dsimp [f]; positivity
+  have heq (z : ℂ) : {z : ℂ | ‖z‖ < δ}.indicator f z =
+      {z : ℂ | ‖z‖ < δ}.indicator (fun z => ε^(γ^2/2) * Real.exp
+        (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) z := by
+    simp only [f, hω, Set.indicator_apply]
+    split_ifs
+    · rw [← hrec ε z hε]
+    · rfl
+  have hint := inner_indicator_integrable_and_lintegral_eq b f hf hf0 hδ
+  have htime : innerInsertedUnitTimeClock hcirc γ α ε δ (b,ω) =
+      ∫ z, {z : ℂ | ‖z‖ < δ}.indicator f z ∂(Measure.map (fun t => b t)
+        (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))) := by
+    rw [unit_path_occupation_integral_eq_time b _
+      (hf.measurable.indicator (measurableSet_lt measurable_norm measurable_const))]
+    apply intervalIntegral.integral_congr
+    intro s hs
+    exact (heq _).symm
+  constructor
+  · rw [htime]
+    apply integral_nonneg
+    intro z
+    by_cases hz : ‖z‖ < δ
+    · simpa [hz] using hf0 z
+    · simp [hz]
+  · rw [htime, ← hint.2]
+    apply lintegral_congr
+    intro s
+    rw [heq]
+
+/-- Nonpositive base clocks are integrable with one bound for all Brownian
+starts and deterministic shifts. -/
+theorem exists_uniform_integrable_shifted_nonpositive_inner_base_clock
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ : 0 < γ) (hα : α ≤ 0) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (x : ℂ) (s : ℝ≥0),
+      Integrable (fun q => innerInsertedUnitTimeClock hcirc γ α (1/2) (1/2)
+        (ContinuousPath.shift s q.1,q.2)) ((planarBrownianMotion x).prod P) ∧
+      (∫ q, innerInsertedUnitTimeClock hcirc γ α (1/2) (1/2)
+        (ContinuousPath.shift s q.1,q.2) ∂((planarBrownianMotion x).prod P)) ≤ C := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨K, hK, hzero⟩ := exists_uniform_lintegral_prod_brownian_inner_zero_le hh γ
+  let L : ℝ≥0∞ := (ENNReal.ofReal (1/2 : ℝ)) ^ (1/2 : ℝ) * K
+  have hL : L < ∞ := ENNReal.mul_lt_top
+    (ENNReal.rpow_lt_top_of_nonneg (by norm_num) ENNReal.ofReal_ne_top) hK
+  obtain ⟨F, hFm, hF0, hFae⟩ := exists_measurable_inner_inserted_unit_time_clock hh γ α
+    (by norm_num : (0 : ℝ) < 1/2) (1/2)
+  have hlae := ae_inner_inserted_unit_time_clock_lintegral hh γ α
+    (by norm_num : (0 : ℝ) < 1/2) (by norm_num : (1/2 : ℝ) ≤ 1/2)
+  have hw : ENNReal.ofReal ((1/2 : ℝ)^(-γ*α)) ≤ 1 := by
+    have hp : 0 ≤ -γ * α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ.le) hα
+    have h := Real.rpow_le_one (by norm_num : (0 : ℝ) ≤ 1/2) (by norm_num) hp
+    simpa using ENNReal.ofReal_le_ofReal h
+  have hbound (x : ℂ) : (∫⁻ q, ENNReal.ofReal (F q) ∂((planarBrownianMotion x).prod P)) ≤ L := by
+    have heq : ∀ᵐ q ∂((planarBrownianMotion x).prod P), ENNReal.ofReal (F q) =
+        ∫⁻ t in Ioc (0 : ℝ) 1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < 1/2}.indicator (fun z => (1/2 : ℝ)^(γ^2/2) * Real.exp
+            (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc q.2) (1/2) z)) (q.1 t.toNNReal)) := by
+      filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hFae,
+        (Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hlae] with q hF hq
+      rw [hF q.1, (hq q.1).2]
+    calc
+      _ = ∫⁻ q : ContinuousPath ℂ × Ω, (∫⁻ t in Ioc (0 : ℝ) 1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < 1/2}.indicator (fun z => (1/2 : ℝ)^(γ^2/2) * Real.exp
+            (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc q.2) (1/2) z)) (q.1 t.toNNReal)))
+          ∂((planarBrownianMotion x).prod P) := lintegral_congr_ae heq
+      _ = ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ t in Ioc (0 : ℝ) 1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < 1/2}.indicator (fun z => (1/2 : ℝ)^(γ^2/2) * Real.exp
+            (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (1/2) z)) (q.2 t.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x)) := (lintegral_prod_swap _).symm
+      _ ≤ ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ t in Ioc (0 : ℝ) 1, ENNReal.ofReal
+          ({z : ℂ | ‖z‖ < 1/2}.indicator (fun z => (1/2 : ℝ)^(γ^2/2) * Real.exp
+            (γ * LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) (1/2) z)) (q.2 t.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x)) := by
+        apply lintegral_mono
+        intro q
+        have h := inner_nonpositive_inserted_clock_le_zero (hcirc q.1) γ α (1/2) (1/2) 0 1 q.2
+          hγ.le hα (by norm_num) le_rfl
+        exact h.trans (by
+          calc
+            _ ≤ 1 * (∫⁻ t in Ioc (0 : ℝ) 1, ENNReal.ofReal
+              ({z : ℂ | ‖z‖ < 1/2}.indicator (fun z => (1/2 : ℝ)^(γ^2/2) * Real.exp
+                (γ * LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) (1/2) z)) (q.2 t.toNNReal))) :=
+                mul_le_mul_left hw _
+            _ = _ := one_mul _)
+      _ ≤ L := hzero x (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+  refine ⟨L.toReal, ENNReal.toReal_nonneg, ?_⟩
+  intro x s
+  let μ := (planarBrownianMotion x).prod P
+  have hFs : Measurable (fun q : ContinuousPath ℂ × Ω => F (ContinuousPath.shift s q.1,q.2)) :=
+    hFm.comp (((ContinuousPath.measurable_shift_fixed s).comp measurable_fst).prodMk measurable_snd)
+  have hlin := lintegral_shift_prod_le_uniform P x s (fun q => ENNReal.ofReal (F q))
+    hFm.ennreal_ofReal L hbound
+  have hi : Integrable (fun q => F (ContinuousPath.shift s q.1,q.2)) μ :=
+    (lintegral_ofReal_ne_top_iff_integrable hFs.aestronglyMeasurable
+      (Filter.Eventually.of_forall (fun q => hF0 _))).1 (ne_of_lt (lt_of_le_of_lt hlin hL))
+  have heq : ∀ᵐ q ∂μ, F (ContinuousPath.shift s q.1,q.2) =
+      innerInsertedUnitTimeClock hcirc γ α (1/2) (1/2) (ContinuousPath.shift s q.1,q.2) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := planarBrownianMotion x) (ν := P)).ae hFae] with q hq
+    exact hq (ContinuousPath.shift s q.1)
+  refine ⟨hi.congr heq, ?_⟩
+  have hreal := ENNReal.toReal_mono hL.ne hlin
+  rw [← ofReal_integral_eq_lintegral_ofReal hi (Filter.Eventually.of_forall (fun q => hF0 _)),
+    ENNReal.toReal_ofReal (integral_nonneg (fun _ => hF0 _))] at hreal
+  calc
+    _ = ∫ q, F (ContinuousPath.shift s q.1,q.2) ∂μ := by
+      apply integral_congr_ae
+      filter_upwards [heq] with q hq
+      exact hq.symm
+    _ ≤ _ := hreal
+
+
 end HarmonicBalls
