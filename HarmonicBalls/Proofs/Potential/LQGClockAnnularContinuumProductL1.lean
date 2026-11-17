@@ -375,4 +375,197 @@ theorem exists_measurable_annular_exit_clock_continuum_limit
   rw [← heq t]
   exact hρbound r hr hrρ t ht
 
+/-- Uniformly integrable scalar bounds upgrade almost-everywhere convergence
+of Banach-valued functions to convergence of their expected distances. -/
+private theorem integral_norm_sub_tendsto_of_uniformIntegrable_bound
+    {X E : Type*} [MeasurableSpace X] {μ : Measure X} [IsFiniteMeasure μ]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    (A : ℕ → X → E) (hA : ∀ n, AEStronglyMeasurable (A n) μ)
+    (B : X → E) (H : ℕ → X → ℝ) (hH : UniformIntegrable H 1 μ)
+    (hbound : ∀ n, ∀ᵐ x ∂μ, ‖A n x‖ ≤ ‖H n x‖)
+    (hconv : ∀ᵐ x ∂μ, Tendsto (fun n => A n x) atTop (𝓝 (B x))) :
+    (∀ n, Integrable (fun x => ‖A n x - B x‖) μ) ∧
+      Tendsto (fun n => ∫ x, ‖A n x - B x‖ ∂μ) atTop (𝓝 0) := by
+  have hb (n : ℕ) : (‖A n ·‖ₑ) ≤ᵐ[μ] (‖H n ·‖ₑ) := by
+    filter_upwards [hbound n] with x hx
+    exact enorm_le_iff_norm_le.mpr hx
+  have hAu : UniformIntegrable A 1 μ := by
+    refine ⟨unifIntegrable_iff.mpr ?_, ?_⟩
+    · intro ε hε
+      obtain ⟨δ, hδ, hδb⟩ := unifIntegrable_iff.mp hH.1 ε hε
+      refine ⟨δ, hδ, fun n s hs => ?_⟩
+      exact (eLpNorm_mono_enorm_ae (hA n).restrict
+        ((hb n).filter_mono ae_restrict_le)).trans (hδb n s hs)
+    · obtain ⟨C, hC⟩ := hH.2
+      exact ⟨C, fun n => (eLpNorm_mono_enorm_ae (hA n) (hb n)).trans (hC n)⟩
+  have hB : MemLp B 1 μ := hAu.memLp_of_ae_tendsto hconv
+  have hAi (n : ℕ) : Integrable (A n - B) μ :=
+    memLp_one_iff_integrable.mp ((hAu.memLp n).sub hB)
+  have hLp := tendsto_Lp_finite_of_tendsto_ae (p := 1) le_rfl (by norm_num)
+    hA hB hAu.unifIntegrable hconv
+  have hreal := (ENNReal.tendsto_toReal ENNReal.zero_ne_top).comp hLp
+  have heq (n : ℕ) : (eLpNorm (A n - B) 1 μ).toReal =
+      ∫ x, ‖A n x - B x‖ ∂μ := by
+    rw [eLpNorm_one_eq_lintegral_enorm (hAi n).aestronglyMeasurable,
+      ← ofReal_integral_norm_eq_lintegral_enorm (hAi n),
+      ENNReal.toReal_ofReal (integral_nonneg (fun x : X => norm_nonneg ((A n - B) x)))]
+    rfl
+  refine ⟨fun n => (hAi n).norm, ?_⟩
+  simpa only [Function.comp_def, heq, ENNReal.toReal_zero] using hreal
+
+/-- A nonnegative continuous annular density gives a stopped clock bounded
+by its value at any later nonnegative time. -/
+private theorem stopped_annular_clock_le_at_horizon (f : ℂ → ℝ) (hf : Continuous f)
+    (hf0 : ∀ z, 0 ≤ f z) (δ : ℝ) (b : ContinuousPath ℂ) (D : Set ℂ)
+    {t T : ℝ} (ht : 0 ≤ t) (htT : t ≤ T) :
+    |∫ s in (0 : ℝ)..min t (ContinuousPath.exitTime D b).toReal,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal)| ≤
+    ∫ s in (0 : ℝ)..min T (ContinuousPath.exitTime D b).toReal,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal) := by
+  let g : ℝ → ℝ := fun s =>
+    {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f (b s.toNNReal)
+  have hg0 (s : ℝ) : 0 ≤ g s := by
+    simp only [g, Set.indicator_apply]
+    split_ifs
+    · exact hf0 _
+    · exact le_rfl
+  have hmin : 0 ≤ min t (ContinuousPath.exitTime D b).toReal :=
+    le_min ht ENNReal.toReal_nonneg
+  have hminT : min t (ContinuousPath.exitTime D b).toReal ≤
+      min T (ContinuousPath.exitTime D b).toReal := min_le_min_right _ htT
+  change |∫ s in (0 : ℝ)..min t (ContinuousPath.exitTime D b).toReal, g s| ≤
+    ∫ s in (0 : ℝ)..min T (ContinuousPath.exitTime D b).toReal, g s
+  rw [abs_of_nonneg (intervalIntegral.integral_nonneg_of_forall hmin hg0)]
+  exact intervalIntegral.integral_mono_interval le_rfl hmin hminT
+    (Filter.Eventually.of_forall hg0)
+    (intervalIntegrable_annular_density f hf δ b 0 _)
+
+/-- Along any positive radii bounded by the cutoff and tending to zero, the
+actual exit-stopped clocks converge in product-law uniform-time L¹. -/
+theorem exists_measurable_annular_exit_clock_sequence_uniformL1
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ F : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable F ∧
+      (∀ p, Continuous (fun t => F (p,t)) ∧ (∀ t, 0 ≤ F (p,t)) ∧
+        Monotone (fun t => F (p,t))) ∧
+      ∀ T : ℝ≥0, 0 < T → ∀ r : ℕ → Set.Ioc (0 : ℝ) δ,
+        Tendsto (fun n => (r n : ℝ)) atTop (𝓝 0) →
+        ∃ (A : ℕ → Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ))
+          (B : Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ)),
+          (∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ n t,
+            A n p t = ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+              {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+                (r n : ℝ)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+                  (hcirc p.1) (r n) z)) (p.2 s.toNNReal)) ∧
+          (∀ p t, B p t = F (p, (t : ℝ).toNNReal)) ∧
+          Measurable B ∧
+          (∀ n, Integrable (fun p => ‖A n p - B p‖) (P.prod (planarBrownianMotion x))) ∧
+          Tendsto (fun n => ∫ p, ‖A n p - B p‖ ∂(P.prod (planarBrownianMotion x)))
+            atTop (𝓝 0) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let μ := P.prod (planarBrownianMotion x)
+  obtain ⟨F, hFm, hFr, hFlim⟩ :=
+    exists_measurable_annular_exit_clock_continuum_limit hh x hγ hγ2 α hδ hD hDb
+  refine ⟨F, hFm, hFr, ?_⟩
+  intro T hT r hr
+  choose M hMm hMc hMae using fun n : ℕ =>
+    exists_measurable_stopped_annular_clock_prod_time hh (r n).property.1 γ α δ hD
+  let A : ℕ → Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ) := fun n p =>
+    ⟨fun t => M n (p, (t : ℝ).toNNReal),
+      (hMc n p).comp (continuous_real_toNNReal.comp continuous_subtype_val)⟩
+  let B : Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ) := fun p =>
+    ⟨fun t => F (p, (t : ℝ).toNNReal),
+      (hFr p).1.comp (continuous_real_toNNReal.comp continuous_subtype_val)⟩
+  have hAm (n : ℕ) : Measurable (A n) := by
+    apply ContinuousMap.measurable_iff_eval.mpr
+    intro t
+    exact (hMm n).comp (measurable_id.prodMk measurable_const)
+  have hBm : Measurable B := by
+    apply ContinuousMap.measurable_iff_eval.mpr
+    intro t
+    exact hFm.comp (measurable_id.prodMk measurable_const)
+  have hM : ∀ᵐ p : Ω × ContinuousPath ℂ ∂μ, ∀ n t,
+      M n (p,t) = ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (r n : ℝ)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+            (hcirc p.1) (r n) z)) (p.2 s.toNNReal) := by
+    have h := ae_all_iff.mpr hMae
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+      (ν := planarBrownianMotion x)).ae h] with p hp n t
+    exact hp n p.2 t
+  have hAeq : ∀ᵐ p ∂μ, ∀ n t,
+      A n p t = ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (r n : ℝ)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+            (hcirc p.1) (r n) z)) (p.2 s.toNNReal) := by
+    filter_upwards [hM] with p hp n t
+    simpa only [A, ContinuousMap.coe_mk, Real.toNNReal_of_nonneg t.property.1,
+      NNReal.coe_mk] using hp n ((t : ℝ).toNNReal)
+  let H : ℕ → Ω × ContinuousPath ℂ → ℝ := fun n p =>
+    ∫ s in (0 : ℝ)..min (T : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        (r n : ℝ)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+          (hcirc p.1) (r n) z)) (p.2 s.toNNReal)
+  have hTu : (0 : ℝ) < T := by exact_mod_cast hT
+  have hHu : UniformIntegrable H 1 μ := by
+    have hU := uniformIntegrable_stopped_annular_clock_prod hh x hγ.ne' hγ2 α δ hD hTu
+    refine ⟨hU.1.comp r, ?_⟩
+    obtain ⟨C, hC⟩ := hU.2
+    exact ⟨C, fun n => hC (r n)⟩
+  have hcont (n : ℕ) : ∀ᵐ ω ∂P, Continuous (fun z : ℂ =>
+      (r n : ℝ)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+        (hcirc ω) (r n) z)) := by
+    filter_upwards [hh.ae_continuous_circle_fixed (r n).property.1,
+      ae_recentered_inserted_circle_average hh α] with ω hc hrec
+    have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (r n) z) =
+        fun z => hcirc ω (r n) z - hcirc ω 1 0 - α * Real.log (max (r n : ℝ) ‖z‖) := by
+      funext z
+      exact (hrec _ z (r n).property.1).symm
+    have hci : Continuous (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (r n) z) := by
+      rw [heq]
+      exact (hc.sub continuous_const).sub (continuous_const.mul
+        ((continuous_const.max continuous_norm).log
+          (fun _ => (lt_max_of_lt_left (r n).property.1).ne')))
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hci))
+  have hbound (n : ℕ) : ∀ᵐ p ∂μ, ‖A n p‖ ≤ ‖H n p‖ := by
+    filter_upwards [hAeq, (Measure.quasiMeasurePreserving_fst (μ := P)
+      (ν := planarBrownianMotion x)).ae (hcont n)] with p hp hc
+    have hH0 : 0 ≤ H n p := by
+      apply intervalIntegral.integral_nonneg_of_forall (le_min hTu.le ENNReal.toReal_nonneg)
+      intro s
+      simp only [Set.indicator_apply]
+      split_ifs
+      · exact mul_nonneg (Real.rpow_nonneg (r n).property.1.le _) (Real.exp_pos _).le
+      · exact le_rfl
+    rw [Real.norm_eq_abs, abs_of_nonneg hH0]
+    apply (ContinuousMap.norm_le (A n p) hH0).2
+    intro t
+    rw [Real.norm_eq_abs, hp n t]
+    exact stopped_annular_clock_le_at_horizon _ hc
+      (fun z => mul_nonneg (Real.rpow_nonneg (r n).property.1.le _) (Real.exp_pos _).le)
+      δ p.2 D t.property.1 t.property.2
+  have hconv : ∀ᵐ p ∂μ, Tendsto (fun n => A n p) atTop (𝓝 (B p)) := by
+    filter_upwards [hFlim, hAeq] with p hp hpa
+    apply Metric.tendsto_nhds.mpr
+    intro η hη
+    obtain ⟨ρ, hρ, hρb⟩ := hp T (η / 2) (half_pos hη)
+    have hrs : ∀ᶠ n in atTop, (r n : ℝ) < ρ := hr.eventually (Iio_mem_nhds hρ)
+    filter_upwards [hrs] with n hn
+    have hle : ‖A n p - B p‖ ≤ η / 2 := by
+      apply (ContinuousMap.norm_le (A n p - B p) (le_of_lt (half_pos hη))).2
+      intro t
+      have ht : (t : ℝ).toNNReal ≤ T := by
+        exact NNReal.coe_le_coe.mp (by simpa [Real.toNNReal_of_nonneg t.property.1] using t.property.2)
+      have h := (hρb (r n) (r n).property.1 hn ((t : ℝ).toNNReal) ht).le
+      simpa only [ContinuousMap.sub_apply, Real.norm_eq_abs, B, ContinuousMap.coe_mk,
+        hpa n t, Real.toNNReal_of_nonneg t.property.1, NNReal.coe_mk] using h
+    rw [dist_eq_norm]
+    exact lt_of_le_of_lt hle (half_lt_self hη)
+  obtain ⟨hi, ht⟩ := integral_norm_sub_tendsto_of_uniformIntegrable_bound A
+    (fun n => (hAm n).aestronglyMeasurable) B H hHu hbound hconv
+  exact ⟨A, B, hAeq, fun _ _ => rfl, hBm, hi, ht⟩
+
 end HarmonicBalls
