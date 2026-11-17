@@ -189,4 +189,30 @@ theorem stopped_clock_halfDisc_exterior_split (f : ℂ → ℝ) (hf : Continuous
     ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal, (v+w) s
   rw [hsum]
 
+
+/-- A bounded spatial cutoff does not change the exterior occupation before exit. -/
+theorem stopped_exterior_clock_eq_bounded (f : ℂ → ℝ) (b : ContinuousPath ℂ)
+    (D : Set ℂ) (R : ℝ) (hD : ∀ z ∈ D, ‖z‖ ≤ R) (t : ℝ≥0) :
+    (∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal,
+      {z : ℂ | (1 : ℝ)/2 < ‖z‖}.indicator f (b s.toNNReal)) =
+    ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal,
+      {z : ℂ | (1 : ℝ)/2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator f (b s.toNNReal) := by
+  refine intervalIntegral.integral_congr_ae ?_
+  have hsingle : ∀ᵐ s : ℝ, s ≠ (ContinuousPath.exitTime D b).toReal := by
+    rw [ae_iff]
+    simpa only [Ne, not_not, Set.ofPred_eq_eq_singleton] using
+      measure_singleton (ContinuousPath.exitTime D b).toReal
+  filter_upwards [hsingle] with s hs hmem
+  rw [Set.uIoc_of_le (le_min t.coe_nonneg ENNReal.toReal_nonneg)] at hmem
+  have hslt : s < (ContinuousPath.exitTime D b).toReal :=
+    lt_of_le_of_ne (hmem.2.trans (min_le_right _ _)) hs
+  have hlt : s.toNNReal < (ContinuousPath.exitTime D b).toNNReal := by
+    apply (Real.toNNReal_lt_iff_lt_coe hmem.1.le).mpr
+    simpa only [ENNReal.coe_toNNReal_eq_toReal] using hslt
+  have hbD : b s.toNNReal ∈ D := ContinuousPath.mem_of_lt_exitTime D b _
+    (lt_of_lt_of_le (ENNReal.coe_lt_coe.mpr hlt) ENNReal.coe_toNNReal_le_self)
+  by_cases hb : (1 : ℝ)/2 < ‖b s.toNNReal‖
+  · simp only [Set.indicator_of_mem, Set.mem_ofPred_eq, hb, hD _ hbD, and_self]
+  · simp only [Set.indicator_of_notMem, Set.mem_ofPred_eq, hb, false_and, not_false_eq_true]
+
 end HarmonicBalls
