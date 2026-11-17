@@ -2376,4 +2376,70 @@ theorem exists_lintegral_prod_annular_clock_stopped_iSup_le_rate
       exact hb n hr hε hεhalf hεδ hrε hr2 m hm
     _ = _ := by simp [mul_add]
 
+/-- Geometric time meshes and radius grids give a summable bound. -/
+theorem summable_annular_grid_mesh {p q β b c A B D : ℝ}
+    (hβ : 0 < β) (hb : 0 < b) (hc : 0 < c)
+    (hcp : c ≤ p - b / 2) (hcq : c ≤ q - b / 2) (hcβ : c ≤ b * β / 2)
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hD : 0 ≤ D) :
+    Summable (fun k : ℕ => ((LatticeProb.LQG.GMCScaleGrid.gridCount c k : ℝ) + 1) *
+      ((((LatticeProb.LQG.GMCScaleGrid.gridCount b k : ℝ) + 1) + 1) *
+        (A * LatticeProb.LQG.dyadicScale k ^ p + B * LatticeProb.LQG.dyadicScale k ^ q) +
+          D * (((LatticeProb.LQG.GMCScaleGrid.gridCount b k : ℝ) + 1) ^ (-β)))) := by
+  have hs := LatticeProb.LQG.GMCScaleGrid.summable_gridCount (c := c) (θ := 0) (K := 3*A + 3*B + D)
+    (by norm_num) (by linarith)
+  simp only [Real.rpow_zero, div_one] at hs
+  apply Summable.of_nonneg_of_le ?_ ?_ hs
+  · intro k
+    have hscale := dyadicScale_pos k
+    positivity
+  ·
+    intro k
+    let e : ℝ := LatticeProb.LQG.dyadicScale k
+    let a : ℝ := e ^ (-(b / 2))
+    let m : ℝ := (LatticeProb.LQG.GMCScaleGrid.gridCount b k : ℝ) + 1
+    have he0 : 0 < e := dyadicScale_pos k
+    have he1 : e ≤ 1 := by
+      dsimp [e, LatticeProb.LQG.dyadicScale]
+      exact pow_le_one₀ (by norm_num) (by norm_num)
+    have ha0 : 0 < a := Real.rpow_pos_of_pos he0 _
+    have ha1 : 1 ≤ a := Real.one_le_rpow_of_pos_of_le_one_of_nonpos he0 he1 (by linarith)
+    have ham : a ≤ m := by
+      dsimp [m, a, LatticeProb.LQG.GMCScaleGrid.gridCount]
+      exact (Nat.lt_floor_add_one _).le
+    have hmle : m + 1 ≤ 3 * a := by
+      have hfloor : (LatticeProb.LQG.GMCScaleGrid.gridCount b k : ℝ) ≤ a := by
+        dsimp [a, LatticeProb.LQG.GMCScaleGrid.gridCount]
+        exact Nat.floor_le (Real.rpow_pos_of_pos he0 _).le
+      dsimp [m]
+      linarith
+    have hmp : m ^ (-β) ≤ e ^ c := by
+      calc
+        m ^ (-β) ≤ a ^ (-β) := Real.rpow_le_rpow_of_nonpos ha0 ham (by linarith)
+        _ = e ^ (b * β / 2) := by
+          dsimp [a]
+          rw [← Real.rpow_mul he0.le]
+          congr 1
+          ring
+        _ ≤ e ^ c := Real.rpow_le_rpow_of_exponent_ge he0 he1 hcβ
+    have hp : a * e ^ p ≤ e ^ c := by
+      dsimp only [a]
+      rw [← Real.rpow_add he0]
+      apply Real.rpow_le_rpow_of_exponent_ge he0 he1
+      linarith
+    have hq : a * e ^ q ≤ e ^ c := by
+      dsimp only [a]
+      rw [← Real.rpow_add he0]
+      apply Real.rpow_le_rpow_of_exponent_ge he0 he1
+      linarith
+    have hec : 0 ≤ e ^ c := (Real.rpow_pos_of_pos he0 c).le
+    have hp0 : 0 ≤ e ^ p := (Real.rpow_pos_of_pos he0 p).le
+    have hq0 : 0 ≤ e ^ q := (Real.rpow_pos_of_pos he0 q).le
+    have hsum : (m + 1) * (A * e ^ p + B * e ^ q) + D * m ^ (-β) ≤
+        (3*A + 3*B + D) * e ^ c := by
+      calc
+        _ ≤ (3*a) * (A * e ^ p + B * e ^ q) + D * e ^ c := by gcongr
+        _ = 3*A * (a * e ^ p) + 3*B * (a * e ^ q) + D * e ^ c := by ring
+        _ ≤ 3*A * e ^ c + 3*B * e ^ c + D * e ^ c := by gcongr
+        _ = _ := by ring
+    exact mul_le_mul_of_nonneg_left hsum (by positivity)
 end HarmonicBalls
