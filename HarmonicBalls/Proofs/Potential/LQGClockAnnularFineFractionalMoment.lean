@@ -2814,4 +2814,33 @@ theorem lintegral_rpow_annularSquare_gmcDensity_le
   rw [← heq, ← ENNReal.ofReal_mul (Real.exp_pos _).le]
   exact ENNReal.ofReal_le_ofReal ht.2.2
 
+/-- The annular moment is bounded by rescaled square moments and separated interactions. -/
+theorem lintegral_annular_mass_rpow_le_rescaled_square_moments_add_far
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (b : ContinuousPath ℂ) (u v a : ℝ) {r δ : ℝ}
+    (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2) (γ : ℝ)
+    {q : ℝ} (hq : 1 ≤ q) (hq2 : q ≤ 2) :
+    let S := LatticeProb.squareIndex r
+    let T := fun i => annularSquareTimeSet b a r i ∩ Ioc u v
+    let G := fun i ω => ∫ t in T i, Real.exp
+      (γ * hcirc ω δ ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
+        γ ^ 2 * (-Real.log δ) / 2)
+    (∫⁻ ω, (∫⁻ t in {t | a ≤ ‖b t.toNNReal‖ ∧ ‖b t.toNNReal‖ ≤ 1 / 2} ∩ Ioc u v,
+      ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P) ≤
+      18 * (∑ i ∈ S, ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ENNReal.ofReal (∫ ω, G i ω ^ q ∂P)) +
+      ∑ i ∈ S, ∑ j ∈ S.filter (fun j => ¬ squareGridAdjacent i j),
+        (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) * (volume (T i) * volume (T j))) ^ (q / 2) := by
+  classical
+  have hε : 0 < 4 * r * δ := by positivity
+  have hε2 : 4 * r * δ ≤ 1 / 2 := by nlinarith
+  have hb := lintegral_annular_mass_rpow_le_square_moments_add_far hh b u v a hε hε2 hr γ
+    (by linarith : 0 < q) hq2
+  dsimp only at hb ⊢
+  refine hb.trans (add_le_add ?_ le_rfl)
+  gcongr with i hi
+  exact lintegral_rpow_annularSquare_gmcDensity_le hh hr hr10 hδ hδ2 hi γ b u v a hq
+
 end HarmonicBalls
