@@ -1412,4 +1412,128 @@ theorem ae_stopped_nonpositive_radius_correction_le_unit_occupation
   apply ENNReal.ofReal_le_ofReal
   exact integral_mono_measure hμ (Filter.Eventually.of_forall hnonneg) hfull.1
 
+
+/-- Same-shell nonpositive half-disc clock differences satisfy an annealed
+geometric field bound plus a small-ball correction, uniformly in the start
+and deterministic stopping horizon. -/
+theorem exists_uniform_annealed_nonpositive_halfDisc_radius_increment_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) :
+    ∃ A : ℕ → ℝ, Summable A ∧ (∀ n, 0 ≤ A n) ∧
+      (∃ c u v : ℝ, 0 ≤ c ∧ 0 < u ∧ 0 < v ∧ ∀ n,
+        A n = c * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * u) +
+          2 * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * v)) ∧
+      ∀ α : ℝ, α ≤ 0 → ∃ C : ℝ≥0∞, 0 < C ∧ C < ∞ ∧
+      ∀ (n : ℕ) (x : ℂ) (r : ℝ), 0 < r → r ≤ (2 : ℝ)⁻¹ ^ (n+1) →
+        (2 : ℝ)⁻¹ ^ (n+1) / 2 ≤ r → ∀ T : ℝ≥0,
+        let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
+        (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal |stoppedAnnularClock
+          (fun z => r^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) 0 (fun _ => T) p.2 -
+          stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) 0 (fun _ => T) p.2|
+          ∂(P.prod (planarBrownianMotion x))) ≤
+        ENNReal.ofReal (A n) + ENNReal.ofReal (ε ^ (-γ*α)) *
+          ((ENNReal.ofReal ε) ^ (1/2 : ℝ) * C) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hγlt2 : γ < 2 := by nlinarith [sq_nonneg (γ - 2)]
+  obtain ⟨A, hAs, hA0, hAgeom, hweighted⟩ :=
+    exists_uniform_summable_annealed_weighted_radius_increments hh hγ hγlt2
+  refine ⟨A, hAs, hA0, hAgeom, ?_⟩
+  intro α hα
+  obtain ⟨C, hC0, hC, hcor⟩ :=
+    exists_uniform_annealed_nonpositive_radius_insertion_correction_le hh γ α hγ hα
+  refine ⟨C, hC0, hC, ?_⟩
+  intro n x r hr hrε hεr T
+  let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
+  have hε : 0 < ε := by dsimp [ε]; positivity
+  have hεhalf : ε ≤ 1/2 := by
+    dsimp [ε]
+    rw [pow_succ]
+    have h : (2 : ℝ)⁻¹ ^ n ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+    nlinarith
+  let g : ℂ → ℝ := {z : ℂ | ‖z‖ ≤ 1/2}.indicator
+    (fun z => (max r ‖z‖)^(-γ*α))
+  have hg := nonpositive_halfDisc_insertion_weight_properties hγ.le hα hr (le_trans hrε hεhalf)
+  obtain ⟨F, hFm, hFspatial, hFi, hFbound⟩ :=
+    hweighted n x g hg.1 hg.2.1 hg.2.2 r hr hrε hεr T
+  have hFmeas : Measurable (fun p : Ω × ContinuousPath ℂ =>
+      ENNReal.ofReal |F (p.2,p.1)|) := ENNReal.measurable_ofReal.comp ((hFm.comp measurable_swap).abs)
+  have hFbound' : (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal |F (p.2,p.1)|
+      ∂(P.prod (planarBrownianMotion x))) ≤ ENNReal.ofReal (A n) := by
+    rw [lintegral_prod_symm _ hFmeas.aemeasurable]
+    have hswap : (∫⁻ b, ∫⁻ ω, ENNReal.ofReal |F (b,ω)| ∂P ∂(planarBrownianMotion x)) =
+        ∫⁻ q : ContinuousPath ℂ × Ω, ENNReal.ofReal |F q|
+          ∂((planarBrownianMotion x).prod P) := by
+      symm
+      exact lintegral_prod _ ((ENNReal.measurable_ofReal.comp hFm.abs).aemeasurable)
+    rw [hswap, ← ofReal_integral_eq_lintegral_ofReal hFi.abs
+      (Filter.Eventually.of_forall (fun q => abs_nonneg (F q)))]
+    exact ENNReal.ofReal_le_ofReal hFbound
+  have hpoint : ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ENNReal.ofReal |stoppedAnnularClock
+      (fun z => r^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) r z)) 0 (fun _ => T) p.2 -
+      stoppedAnnularClock (fun z => ε^(γ^2/2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) 0 (fun _ => T) p.2| ≤
+      ENNReal.ofReal |F (p.2,p.1)| + ∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
+        ({z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+          ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+            (ε^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z))) (p.2 s.toNNReal)) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+      (ν := planarBrownianMotion x)).ae (ae_stopped_halfDisc_radius_increment_split hh hγ.le hα),
+      (Measure.quasiMeasurePreserving_fst (μ := P)
+        (ν := planarBrownianMotion x)).ae (ae_stopped_nonpositive_radius_correction_le_unit_occupation hh hγ.le hα),
+      (Measure.quasiMeasurePreserving_fst (μ := P)
+        (ν := planarBrownianMotion x)).ae hFspatial] with p hs hc hf
+    let μ : Measure ℂ := Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal
+      (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic T))
+    let V : ℂ → ℝ := fun z =>
+      ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+        (ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z))
+    let K : ℝ := ∫ z, {z : ℂ | ‖z‖ < ε}.indicator V z ∂μ
+    have hK : 0 ≤ K ∧ ENNReal.ofReal K ≤ ∫⁻ s in Ioc (0 : ℝ) 1,
+        ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator V (p.2 s.toNNReal)) :=
+      hc p.2 T ε r hε hεhalf hr hrε
+    have hF : F (p.2,p.1) = ∫ z, {z : ℂ | ‖z‖ ≤ 1/2}.indicator (fun z =>
+        (max r ‖z‖)^(-γ*α) *
+          (r^(γ^2/2) * Real.exp (γ*(hcirc p.1 r z-hcirc p.1 1 0)) -
+            ε^(γ^2/2) * Real.exp (γ*(hcirc p.1 ε z-hcirc p.1 1 0)))) z ∂μ := by
+      rw [hf p.2]
+      apply integral_congr_ae
+      filter_upwards with z
+      simp only [g, Set.indicator_apply]
+      split_ifs <;> simp [ε]
+    have hsplit := hs p.2 T ε r hε hεhalf hr hrε
+    change _ = _ - K at hsplit
+    rw [← hF] at hsplit
+    rw [hsplit]
+    calc
+      ENNReal.ofReal |F (p.2,p.1) - K| ≤ ENNReal.ofReal (|F (p.2,p.1)| + K) := by
+        apply ENNReal.ofReal_le_ofReal
+        calc
+          _ ≤ |F (p.2,p.1)| + |K| := by simpa using (abs_sub_le (F (p.2,p.1)) 0 K)
+          _ = _ := by rw [abs_of_nonneg hK.1]
+      _ = ENNReal.ofReal |F (p.2,p.1)| + ENNReal.ofReal K :=
+        ENNReal.ofReal_add (abs_nonneg _) hK.1
+      _ ≤ _ := add_le_add le_rfl hK.2
+  calc
+    _ ≤ ∫⁻ p : Ω × ContinuousPath ℂ, (ENNReal.ofReal |F (p.2,p.1)| +
+      ∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+        ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+          (ε^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z))) (p.2 s.toNNReal)))
+      ∂(P.prod (planarBrownianMotion x)) := lintegral_mono_ae hpoint
+    _ = (∫⁻ p : Ω × ContinuousPath ℂ, ENNReal.ofReal |F (p.2,p.1)|
+      ∂(P.prod (planarBrownianMotion x))) +
+      (∫⁻ p : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
+        ({z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+          ((max ε ‖z‖)^(-γ*α) - (max r ‖z‖)^(-γ*α)) *
+            (ε^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z))) (p.2 s.toNNReal)))
+        ∂(P.prod (planarBrownianMotion x))) := lintegral_add_left hFmeas _
+    _ ≤ _ := add_le_add hFbound' (hcor x hε hεhalf hεhalf hr hrε)
+
 end HarmonicBalls
