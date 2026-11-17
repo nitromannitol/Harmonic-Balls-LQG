@@ -9,7 +9,7 @@ The moment of the inserted density at a point has an explicit dependence on
 its smoothing scale and the insertion point.
 -/
 
-open MeasureTheory MarkovProcess Set
+open MeasureTheory ProbabilityTheory MarkovProcess Set
 open scoped ENNReal
 
 namespace HarmonicBalls
@@ -532,4 +532,40 @@ theorem integral_rpow_subSquareField_le_explicit_nonneg
   · have hz : ∀ i, p i = 0 := fun i => le_antisymm (le_of_not_gt (fun hi => hpos ⟨i, hi⟩)) (hp i)
     simp [hz, Real.zero_rpow (by linarith : q ≠ 0)]
 
+/-- The normalized comparison field has an explicit one-point moment. -/
+theorem integral_exp_subSquareComparison_normalized_mul
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {R δ : ℝ} (hR : 0 < R) (hδ : 0 < δ)
+    (piece : ι → Fin 2) (pt : ι → ℂ) (i : ι)
+    (hc : ‖LatticeProb.LQG.lqgSquareCentre (piece i)‖ + R ≤ 1)
+    (hp : ‖pt i‖ + δ ≤ 1) (r : ℝ) :
+    (∫ x, Real.exp (r * (LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i -
+      γ ^ 2 * (1 - Real.log R - Real.log δ) / 2))
+        ∂(LatticeProb.Gauss.subSquareMeasure P)) =
+    Real.exp ((r ^ 2 - r) * (γ ^ 2 * (1 - Real.log R - Real.log δ)) / 2) := by
+  let μ := LatticeProb.Gauss.subSquareMeasure P
+  let X := fun x => LatticeProb.Gauss.subSquareComparison γ hcirc R δ piece pt x i
+  let V := γ ^ 2 * (1 - Real.log R - Real.log δ)
+  have hG : HasGaussianLaw X μ :=
+    (hh.hasGaussianLaw_subSquareComparison γ hR hδ piece pt).eval i
+  have hm : ∫ x, X x ∂μ = 0 := hh.integral_subSquareComparison γ hR hδ piece pt i
+  have hv : variance X μ = V := hh.variance_subSquareComparison γ hR hδ piece pt i hc hp
+  have hv0 : 0 ≤ V := hv ▸ variance_nonneg X μ
+  have hlaw : HasLaw X (gaussianReal 0 V.toNNReal) μ :=
+    ⟨hG.aemeasurable, by rw [hG.map_eq_gaussianReal, hm, hv]⟩
+  have hmgf := mgf_gaussianReal hlaw r
+  simp only [mgf, zero_mul, zero_add, Real.coe_toNNReal V hv0] at hmgf
+  change (∫ x, Real.exp (r * (X x - V / 2)) ∂μ) = Real.exp ((r ^ 2 - r) * V / 2)
+  simp_rw [show ∀ x, Real.exp (r * (X x - V / 2)) =
+      Real.exp (-(r * V / 2)) * Real.exp (r * X x) by
+    intro x
+    rw [← Real.exp_add]
+    congr 1
+    ring]
+  rw [integral_const_mul, hmgf, ← Real.exp_add]
+  congr 1
+  ring
 end HarmonicBalls
