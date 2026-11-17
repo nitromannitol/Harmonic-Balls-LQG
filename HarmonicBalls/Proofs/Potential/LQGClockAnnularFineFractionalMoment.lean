@@ -1222,4 +1222,71 @@ theorem integral_rpow_subSquareField_le_of_finite_measures
   intro f hf
   exact tendsto_sum_fiber_mass_mul_pair hK h0 ν hν f hf
 
+/-- The rescaled occupation measure of a path in one comparison square. -/
+noncomputable def subSquareOccupation (b : ContinuousPath ℂ) (u v R : ℝ) (s : Fin 2) :
+    Measure ℂ :=
+  let g : ℝ → ℂ := fun t => (b t.toNNReal - LatticeProb.LQG.lqgSquareCentre s) / R
+  Measure.map g (volume.restrict (Ioc u v ∩ g ⁻¹' LatticeProb.LQG.lqgSquare))
+
+instance (b : ContinuousPath ℂ) (u v R : ℝ) (s : Fin 2) :
+    IsFiniteMeasure (subSquareOccupation b u v R s) := by
+  dsimp [subSquareOccupation]
+  let : IsFiniteMeasure (volume.restrict (Ioc u v ∩
+      (fun t : ℝ => (b t.toNNReal - LatticeProb.LQG.lqgSquareCentre s) / R) ⁻¹'
+        LatticeProb.LQG.lqgSquare)) :=
+    isFiniteMeasure_of_le (volume.restrict (Ioc u v))
+      (Measure.restrict_mono_set volume inter_subset_left)
+  infer_instance
+
+/-- Each rescaled occupation measure is carried by the reference square. -/
+theorem ae_mem_subSquareOccupation (b : ContinuousPath ℂ) (u v R : ℝ) (s : Fin 2) :
+    ∀ᵐ z ∂(subSquareOccupation b u v R s), z ∈ LatticeProb.LQG.lqgSquare := by
+  let g : ℝ → ℂ := fun t => (b t.toNNReal - LatticeProb.LQG.lqgSquareCentre s) / R
+  have hg : Continuous g := by
+    dsimp [g]
+    fun_prop
+  have hQ : MeasurableSet LatticeProb.LQG.lqgSquare := by
+    apply IsClosed.measurableSet
+    have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+    have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+    exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+  change ∀ᵐ z ∂(Measure.map g (volume.restrict (Ioc u v ∩ g ⁻¹' LatticeProb.LQG.lqgSquare))),
+    z ∈ LatticeProb.LQG.lqgSquare
+  apply (ae_map_iff (p := fun z => z ∈ LatticeProb.LQG.lqgSquare)
+    hg.measurable.aemeasurable hQ).2
+  filter_upwards [ae_restrict_mem (measurableSet_Ioc.inter (hg.measurable hQ))] with t ht
+  exact ht.2
+
+/-- Continuous tests against a rescaled occupation measure are time integrals. -/
+theorem integral_subSquareOccupation (b : ContinuousPath ℂ) (u v R : ℝ) (s : Fin 2)
+    (f : ℂ → ℝ) (hf : Continuous f) :
+    ∫ z, f z ∂(subSquareOccupation b u v R s) =
+      ∫ t in Ioc u v ∩ (fun t : ℝ => (b t.toNNReal -
+        LatticeProb.LQG.lqgSquareCentre s) / R) ⁻¹' LatticeProb.LQG.lqgSquare,
+        f ((b t.toNNReal - LatticeProb.LQG.lqgSquareCentre s) / R) := by
+  apply integral_map
+  · fun_prop
+  · exact hf.aestronglyMeasurable
+
+/-- Fixed-scale Gaussian comparison for two rescaled path occupation measures. -/
+theorem integral_rpow_subSquareField_le_of_occupation
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (b : ContinuousPath ℂ) (u v : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    let R := LatticeProb.LQG.dyadicScale k
+    let ν := fun s => subSquareOccupation b u v R s
+    let F : Ω → ℝ := fun ω => ∑ s, ∫ z, Real.exp
+      (γ * hcirc ω (R * δ) ((R : ℂ) * z + LatticeProb.LQG.lqgSquareCentre s) -
+        γ ^ 2 * (-Real.log (R * δ)) / 2) ∂(ν s)
+    let G : ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun x => ∑ s, ∫ z, Real.exp
+      (γ * (hcirc x.1.1 R (LatticeProb.LQG.lqgSquareCentre s) + hcirc (x.2 s) δ z + x.1.2) -
+        γ ^ 2 * (1 - Real.log R - Real.log δ) / 2) ∂(ν s)
+    Integrable (fun ω => F ω ^ q) P ∧
+      Integrable (fun x => G x ^ q) (LatticeProb.Gauss.subSquareMeasure P) ∧
+      (∫ ω, F ω ^ q ∂P) ≤ ∫ x, G x ^ q ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  exact integral_rpow_subSquareField_le_of_finite_measures hh γ hk hδ hδ2 _
+    (fun s => ae_mem_subSquareOccupation b u v _ s) hq
+
 end HarmonicBalls
