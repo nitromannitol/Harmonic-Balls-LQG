@@ -612,4 +612,78 @@ theorem exists_uniform_prod_zero_insertion_annular_mesh_max_le
   exact lintegral_iSup_le_mesh_rpow_of_aemeasurable (P.prod (planarBrownianMotion x)) hm X hX
     (by norm_num : (1 : ℝ) ≤ 2) C hcell
 
+
+/-- A nonpositive insertion reduces the normalized density in the half-disc. -/
+theorem nonpositive_halfDisc_density_le_zero_insertion
+    (h : ℝ → ℂ → ℝ) {γ α ε : ℝ} (z : ℂ)
+    (hγ : 0 ≤ γ) (hα : α ≤ 0) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2)
+    (hz : ‖z‖ ≤ 1 / 2) :
+    ε ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α h ε z) ≤
+      ε ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h ε z) := by
+  have hq : 0 ≤ -γ * α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ) hα
+  have hm : 0 < max ε ‖z‖ := lt_max_of_lt_left hε
+  have hmone : max ε ‖z‖ ≤ 1 := by apply max_le <;> linarith
+  have hweight : (max ε ‖z‖) ^ (-γ * α) ≤ 1 := Real.rpow_le_one hm.le hmone hq
+  have hlog : Real.circleAverage (fun y : ℂ => Real.log ‖y‖) z ε =
+      Real.log (max ε ‖z‖) := by
+    simpa using (LatticeProb.Gauss.circleAverage_log_norm_sub_eq z 0 hε)
+  have heq : γ * LatticeProb.Gauss.fieldCircleAverage α h ε z =
+      (-γ * α) * Real.log (max ε ‖z‖) +
+        γ * LatticeProb.Gauss.fieldCircleAverage 0 h ε z := by
+    dsimp [LatticeProb.Gauss.fieldCircleAverage]
+    rw [hlog]
+    ring_nf
+  have hfactor : ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α h ε z) =
+      (max ε ‖z‖) ^ (-γ * α) * (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage 0 h ε z)) := by
+    rw [heq, Real.exp_add, Real.rpow_def_of_pos hm]
+    ring_nf
+  rw [hfactor]
+  exact mul_le_of_le_one_left (mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le) hweight
+
+
+/-- Nonpositive-insertion annular mesh cells have the same uniform maximum
+bound as zero-insertion cells. -/
+theorem exists_uniform_prod_nonpositive_annular_mesh_max_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) :
+    ∃ (C : ℝ≥0∞) (β : ℝ), C < ∞ ∧ 0 < β ∧
+      ∀ (x : ℂ) (α : ℝ), α ≤ 0 → ∀ {ε : ℝ}, 0 < ε → ε ≤ 1 / 2 →
+      ∀ (m : ℕ), 0 < m →
+      (∫⁻ p : Ω × ContinuousPath ℂ, (⨆ j : Fin m,
+        ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+          ENNReal.ofReal ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) ε z)) (p.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) ≤ C * (m : ℝ≥0∞) ^ (-β) := by
+  obtain ⟨C, β, hC, hβ, hmesh⟩ :=
+    exists_uniform_prod_zero_insertion_annular_mesh_max_le hh hγ.ne' hγ2
+  refine ⟨C, β, hC, hβ, ?_⟩
+  intro x α hα ε hε hεhalf m hm
+  refine (lintegral_mono ?_).trans (hmesh x hε m hm)
+  intro p
+  apply iSup_le
+  intro j
+  calc
+    _ ≤ ∫⁻ s in Ioc ((j : ℝ) / m) (((j : ℝ) + 1) / m),
+        ENNReal.ofReal ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal)) := by
+      apply lintegral_mono
+      intro s
+      apply ENNReal.ofReal_le_ofReal
+      by_cases hz : p.2 s.toNNReal ∈ {z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}
+      · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz]
+        exact nonpositive_halfDisc_density_le_zero_insertion (hcirc p.1) _ hγ.le hα hε hεhalf hz.2
+      · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem hz]
+    _ ≤ _ := by
+      dsimp only
+      exact le_iSup (fun i : Fin m => ∫⁻ s in Ioc ((i : ℝ) / m) (((i : ℝ) + 1) / m),
+        ENNReal.ofReal ({z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc p.1) ε z)) (p.2 s.toNNReal))) j
+
 end HarmonicBalls
