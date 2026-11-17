@@ -1040,6 +1040,9 @@ theorem exists_uniform_summable_annealed_weighted_radius_increments
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
     (hγ0 : 0 < γ) (hγ2 : γ < 2) :
     ∃ A : ℕ → ℝ, Summable A ∧ (∀ n, 0 ≤ A n) ∧
+      (∃ c u v : ℝ, 0 ≤ c ∧ 0 < u ∧ 0 < v ∧ ∀ n,
+        A n = c * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * u) +
+          2 * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * v)) ∧
       ∀ (n : ℕ) (x : ℂ) (g : ℂ → ℝ), Measurable g →
         (∀ z, |g z| ≤ 1) → (∀ z, g z ≠ 0 → ‖z‖ ≤ 1/2) →
         ∀ r : ℝ, 0 < r → r ≤ (2 : ℝ)⁻¹ ^ (n+1) →
@@ -1072,10 +1075,31 @@ theorem exists_uniform_summable_annealed_weighted_radius_increments
       sub_nonneg.mpr (Real.one_le_exp (by positivity))
     have hE : 0 ≤ unitOccupationRieszEnergy d b := ENNReal.toReal_nonneg
     positivity
-  refine ⟨A, hAs, ?_, ?_⟩
+  refine ⟨A, hAs, ?_, ?_, ?_⟩
   · intro n
     rw [← (hA 0 n).2]
     exact integral_nonneg (hR0 n)
+  · let B : ContinuousPath ℂ → ℝ := fun b =>
+      ((Real.exp (γ^2*Real.log 2)-1)*(unitOccupationRieszEnergy d b * 2^d)+1)/2
+    have hB : Integrable B (planarBrownianMotion 0) := by
+      have hE := integrable_unitOccupationRieszEnergy 0 hd0 hd2
+      dsimp [B]
+      fun_prop
+    have hB0 (b : ContinuousPath ℂ) : 0 ≤ B b := by
+      dsimp [B]
+      have he : 0 ≤ Real.exp (γ^2*Real.log 2)-1 :=
+        sub_nonneg.mpr (Real.one_le_exp (by positivity))
+      have hE : 0 ≤ unitOccupationRieszEnergy d b := ENNReal.toReal_nonneg
+      positivity
+    refine ⟨∫ b, B b ∂(planarBrownianMotion 0), u, v,
+      integral_nonneg hB0, hu, hv, ?_⟩
+    intro n
+    rw [← (hA 0 n).2]
+    change (∫ b, B b * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * u) +
+      2 * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * v)
+      ∂(planarBrownianMotion 0)) = _
+    rw [integral_add (hB.mul_const _) (integrable_const _), integral_mul_const]
+    simp
   intro n x g hg hgm hgs r hr hrε hεr T
   let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
   have hε : 0 < ε := by dsimp [ε]; positivity
