@@ -2442,4 +2442,144 @@ theorem summable_annular_grid_mesh {p q β b c A B D : ℝ}
         _ ≤ 3*A * e ^ c + 3*B * e ^ c + D * e ^ c := by gcongr
         _ = _ := by ring
     exact mul_le_mul_of_nonneg_left hsum (by positivity)
+private theorem rate_to_ofReal (N m : ℕ) (hm : 0 < m) (A B D e p q β : ℝ)
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hD : 0 ≤ D) (he : 0 < e) :
+    (N : ℝ≥0∞) * ((m + 1 : ℝ≥0∞) * ENNReal.ofReal (A * e ^ p + B * e ^ q) +
+      ENNReal.ofReal D * (m : ℝ≥0∞) ^ (-β)) =
+    ENNReal.ofReal ((N : ℝ) * (((m : ℝ) + 1) * (A * e ^ p + B * e ^ q) +
+      D * ((m : ℝ) ^ (-β)))) := by
+  have hm0 : 0 < (m : ℝ) := by exact_mod_cast hm
+  have hS : 0 ≤ A * e ^ p + B * e ^ q := by positivity
+  have hR : 0 ≤ (m : ℝ) ^ (-β) := (Real.rpow_pos_of_pos hm0 _).le
+  rw [ENNReal.ofReal_mul (by positivity : (0 : ℝ) ≤ N),
+    ENNReal.ofReal_natCast, ENNReal.ofReal_add (by positivity) (mul_nonneg hD hR),
+    ENNReal.ofReal_mul (by positivity : 0 ≤ (m : ℝ) + 1),
+    ENNReal.ofReal_mul hD,
+    ← ENNReal.ofReal_rpow_of_pos hm0, ENNReal.ofReal_natCast]
+  rw [ENNReal.ofReal_add (by positivity : 0 ≤ (m : ℝ)) (by positivity : (0 : ℝ) ≤ 1),
+    ENNReal.ofReal_natCast, ENNReal.ofReal_one]
+
+
+/-- On a geometric grid of smoothing radii, finite-horizon stopped annular
+clock increments have summable product expectations. -/
+theorem exists_tsum_annular_grid_stopped_clock_lt_top
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ c : ℝ, 0 < c ∧ ∃ K : ℕ, ∀ (τ : ContinuousPath ℂ → ℝ≥0) (N : ℕ),
+      let A : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+        ∫ s in (0 : ℝ)..t, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          v^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) (p.2 s.toNNReal)
+      (∑' j : ℕ, ∑ i ∈ Finset.range (LatticeProb.LQG.GMCScaleGrid.gridCount c (j + K) + 1),
+        ∫⁻ p, ⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+          |A (LatticeProb.LQG.GMCScaleGrid.gridScale (LatticeProb.LQG.GMCScaleGrid.gridCount c) (j + K) i) p (min t (τ p.2)) -
+            A (LatticeProb.LQG.dyadicScale (j + K)) p (min t (τ p.2))|
+          ∂(P.prod (planarBrownianMotion x))) < ⊤ := by
+  obtain ⟨θ, d, M, β, C, hγθ, hθ, hd0, hd2, hp, hM, hβ, hC, hbound⟩ :=
+    exists_lintegral_prod_annular_clock_stopped_iSup_le_rate hh x hγ0 hγ2 α hδ
+  let p : ℝ := (d - γ^2 + (2*γ-θ)^2/2)/2
+  let q : ℝ := (θ-γ)^2/2
+  have hp0 : 0 < p := by dsimp [p]; linarith
+  have hq0 : 0 < q := by dsimp [q]; positivity
+  let b : ℝ := min p q
+  have hb : 0 < b := lt_min hp0 hq0
+  let c : ℝ := min (min (p-b/2) (q-b/2)) (b*β/2) / 2
+  have hb_p : b ≤ p := min_le_left _ _
+  have hb_q : b ≤ q := min_le_right _ _
+  have hp1 : 0 < p - b/2 := by linarith
+  have hq1 : 0 < q - b/2 := by linarith
+  have hbβ : 0 < b * β / 2 := by positivity
+  have hc : 0 < c := by dsimp [c]; positivity
+  have hcp : c ≤ p - b/2 := by dsimp [c]; have := min_le_left (min (p-b/2) (q-b/2)) (b*β/2); have := min_le_left (p-b/2) (q-b/2); linarith
+  have hcq : c ≤ q - b/2 := by dsimp [c]; have := min_le_left (min (p-b/2) (q-b/2)) (b*β/2); have := min_le_right (p-b/2) (q-b/2); linarith
+  have hcβ : c ≤ b*β/2 := by dsimp [c]; have := min_le_right (min (p-b/2) (q-b/2)) (b*β/2); linarith
+  let A : ℝ := ((Real.exp (γ^2*Real.log 2)-1) *
+    (M^2 * (∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0) * 2^d)+1)/2
+  let B : ℝ := 2*M
+  let D : ℝ := C.toReal
+  have henergy : 0 ≤ ∫ b, unitOccupationRieszEnergy d b ∂planarBrownianMotion 0 :=
+    integral_nonneg (fun _ => ENNReal.toReal_nonneg)
+  have hexp : 1 ≤ Real.exp (γ^2 * Real.log 2) := by
+    have hx : 0 ≤ γ^2 * Real.log 2 := by positivity
+    have := Real.add_one_le_exp (γ^2 * Real.log 2)
+    linarith
+  have hA : 0 ≤ A := by dsimp [A]; positivity
+  have hB : 0 ≤ B := by dsimp [B]; positivity
+  have hD : 0 ≤ D := ENNReal.toReal_nonneg
+  have hseries := summable_annular_grid_mesh hβ hb hc hcp hcq hcβ hA hB hD
+  have ht : Tendsto LatticeProb.LQG.dyadicScale atTop (𝓝 (0 : ℝ)) :=
+    tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have hcut : 0 < min (1/2 : ℝ) δ := lt_min (by norm_num) hδ
+  obtain ⟨K, hK⟩ := eventually_atTop.mp (ht.eventually (Iio_mem_nhds hcut))
+  refine ⟨c, hc, K, ?_⟩
+  intro τ N
+  dsimp only
+  refine lt_of_le_of_lt (ENNReal.tsum_le_tsum (g := fun j : ℕ =>
+    ENNReal.ofReal ((N : ℝ) * (((LatticeProb.LQG.GMCScaleGrid.gridCount c (j+K) : ℝ) + 1) *
+      ((((LatticeProb.LQG.GMCScaleGrid.gridCount b (j+K) : ℝ) + 1) + 1) *
+        (A * LatticeProb.LQG.dyadicScale (j+K) ^ p + B * LatticeProb.LQG.dyadicScale (j+K) ^ q) +
+          D * (((LatticeProb.LQG.GMCScaleGrid.gridCount b (j+K) : ℝ) + 1) ^ (-β)))))) (fun j => ?_)) ?_
+  · let k := j + K
+    let m := LatticeProb.LQG.GMCScaleGrid.gridCount b k + 1
+    let e := LatticeProb.LQG.dyadicScale k
+    have hm : 0 < m := by dsimp [m]; omega
+    have he : 0 < e := dyadicScale_pos k
+    have hecut : e < min (1/2 : ℝ) δ := hK k (by dsimp [k]; omega)
+    have hehalf : e ≤ 1/2 := (le_of_lt hecut).trans (min_le_left _ _)
+    have heδ : e ≤ δ := (le_of_lt hecut).trans (min_le_right _ _)
+    have hrate (i : ℕ) (hi : i ∈ Finset.range (LatticeProb.LQG.GMCScaleGrid.gridCount c k + 1)) := by
+      have hi' : i ≤ LatticeProb.LQG.GMCScaleGrid.gridCount c k := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+      have hgrid := LatticeProb.LQG.GMCScaleGrid.gridScale_mem_Icc (LatticeProb.LQG.GMCScaleGrid.gridCount c) hi'
+      have hr : 0 < LatticeProb.LQG.GMCScaleGrid.gridScale (LatticeProb.LQG.GMCScaleGrid.gridCount c) k i := lt_of_lt_of_le (half_pos he) hgrid.1
+      have h := hbound hr he hehalf heδ hgrid.2 hgrid.1 τ N m hm
+      have hpowp : Real.exp (Real.log e * p) = e ^ p := (Real.rpow_def_of_pos he p).symm
+      have hpowq : Real.exp (Real.log e * q) = e ^ q := (Real.rpow_def_of_pos he q).symm
+      change _ ≤ (N : ℝ≥0∞) * ((m+1 : ℝ≥0∞) * ENNReal.ofReal
+        (A * Real.exp (Real.log e * p) + B * Real.exp (Real.log e * q)) + C * (m : ℝ≥0∞)^(-β)) at h
+      rw [hpowp, hpowq, ← ENNReal.ofReal_toReal hC.ne] at h
+      rw [rate_to_ofReal N m hm A B D e p q β hA hB hD he] at h
+      exact h
+    calc
+      _ ≤ ∑ _i ∈ Finset.range (LatticeProb.LQG.GMCScaleGrid.gridCount c k + 1), ENNReal.ofReal
+          ((N : ℝ) * (((m : ℝ) + 1) * (A * e^p + B * e^q) + D * ((m : ℝ)^(-β)))) := by
+        exact Finset.sum_le_sum fun i hi => hrate i hi
+      _ = _ := by
+        rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul,
+          ← ENNReal.ofReal_natCast (LatticeProb.LQG.GMCScaleGrid.gridCount c k + 1),
+          ← ENNReal.ofReal_mul (by positivity : 0 ≤ ((LatticeProb.LQG.GMCScaleGrid.gridCount c k + 1 : ℕ) : ℝ))]
+        congr 1
+        dsimp [m, e, k]
+        push_cast
+        ring
+  · have hs := (hseries.mul_left (N : ℝ)).tsum_ofReal_lt_top
+    exact (ENNReal.tsum_comp_le_tsum_of_injective (f := fun j : ℕ => j+K)
+      (by intro a b h; exact Nat.add_right_cancel h) _).trans_lt hs
+/-- For a bounded domain, the actual exit time is finite almost surely and
+its finite-horizon annular grid increments have summable expectations. -/
+theorem exists_tsum_annular_grid_exit_clock_lt_top
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ c : ℝ, 0 < c ∧ ∃ K : ℕ, ∀ (D : Set ℂ), Bornology.IsBounded D →
+      (∀ᵐ path ∂planarBrownianMotion x, ContinuousPath.exitTime D path < ⊤) ∧ ∀ (N : ℕ),
+      let A : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+        ∫ s in (0 : ℝ)..t, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          v^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) (p.2 s.toNNReal)
+      (∑' j : ℕ, ∑ i ∈ Finset.range (LatticeProb.LQG.GMCScaleGrid.gridCount c (j + K) + 1),
+        ∫⁻ p, ⨆ t : Icc (0 : ℝ) N, ENNReal.ofReal
+          |A (LatticeProb.LQG.GMCScaleGrid.gridScale (LatticeProb.LQG.GMCScaleGrid.gridCount c) (j + K) i) p (min t (ContinuousPath.exitTime D p.2).toReal) -
+            A (LatticeProb.LQG.dyadicScale (j + K)) p (min t (ContinuousPath.exitTime D p.2).toReal)|
+          ∂(P.prod (planarBrownianMotion x))) < ⊤ := by
+  obtain ⟨c, hc, K, hsum⟩ :=
+    exists_tsum_annular_grid_stopped_clock_lt_top hh x hγ0 hγ2 α hδ
+  refine ⟨c, hc, K, ?_⟩
+  intro D hD
+  refine ⟨ae_planarBrownian_exitTime_bounded_lt_top x hD, ?_⟩
+  intro N
+  exact hsum (fun path => (ContinuousPath.exitTime D path).toNNReal) N
+
 end HarmonicBalls
