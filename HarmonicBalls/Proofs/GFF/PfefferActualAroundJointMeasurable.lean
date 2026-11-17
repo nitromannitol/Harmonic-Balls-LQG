@@ -7,6 +7,7 @@ import HarmonicBalls.FirstPass.Phase2.WeylContinuousShiftDerived
 import HarmonicBalls.Steps.Sec11.WeylLocality
 import HarmonicBalls.Steps.Sec11.InternalMetricExhaustion
 import HarmonicBalls.FirstPass.S11d.SmoothCutoff
+import HarmonicBalls.Proofs.GFF.PfefferRandomNormalizationMeasurable
 
 /-! # Joint measurability of actual LQG metric observables
 
@@ -702,5 +703,63 @@ theorem IsWholePlaneGFF.exists_measurable_singular_random_continuous_weyl_metric
       P γ ξ α₀ hC hcirc D haxioms hgff hγ hγ₂ hα hD
     filter_upwards [hmetric] with ω hm
     exact (hm.weylScaling_continuous_isEuclideanLengthMetric ξ (hf ω)).2
+
+/-- At a fixed positive scale, the normalized around distance of a
+continuously shifted logarithmically inserted field is almost everywhere measurable. -/
+theorem IsWholePlaneGFF.aemeasurable_scaled_normalized_singular_weyl_around
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfm : ∀ z, Measurable fun ω => f ω z)
+    (c : ℝ → ℝ) (z : ℂ) (a b : ℝ) {r : ℝ} (hr : 0 < r) :
+    AEMeasurable (fun ω => ENNReal.ofReal ((c r)⁻¹ * Real.exp
+      (-(ξ * (hcirc ω r 0 + pfefferCircleAverage (f ω) r 0 - α₀ * Real.log r)))) *
+      pfefferAround (fun x y => (weylScaling (D ω) ξ (f ω) x y).toReal)
+        ((r : ℂ) * z) (r * a) (r * b)) P := by
+  let : IsProbabilityMeasure P := hgff.isGaussianProcess.isProbabilityMeasure
+  have hfc : Measurable (Function.uncurry f) :=
+    (measurable_uncurry_of_continuous_of_measurable hf hfm).comp measurable_swap
+  have hn : Measurable (fun ω => ENNReal.ofReal ((c r)⁻¹ * Real.exp
+      (-(ξ * (hcirc ω r 0 + pfefferCircleAverage (f ω) r 0 - α₀ * Real.log r))))) := by
+    exact ((((((hgff.measurable_circle r 0 hr).add
+      (measurable_pfefferCircleAverage hfc r 0)).sub measurable_const).const_mul ξ).neg.exp).const_mul _).ennreal_ofReal
+  have hpoint : ∀ x y, AEMeasurable
+      (fun ω => (weylScaling (D ω) ξ (f ω) x y).toReal) P :=
+    fun x y => hgff.aemeasurable_singular_random_continuous_weyl_point hγ hγ₂ hα hD hf hfm x y
+  have haxioms : LQGMetricFieldAxioms P γ ξ α₀ hC hcirc :=
+    lqgMetricFieldAxiomsUnivFrozen_derived Ω P γ ξ α₀ hC hcirc
+  have hmetric := ae_isEuclideanLengthMetric_of_metricFieldAxioms
+    P γ ξ α₀ hC hcirc D haxioms hgff hγ hγ₂ hα hD
+  have hshift : ∀ᵐ ω ∂P, IsEuclideanLengthMetric
+      (fun x y => (weylScaling (D ω) ξ (f ω) x y).toReal) := by
+    filter_upwards [hmetric] with ω hm
+    exact (hm.weylScaling_continuous_isEuclideanLengthMetric ξ (hf ω)).2
+  exact hn.aemeasurable.mul (aemeasurable_pfefferAround_of_ae_pointwise _ _ _ hpoint hshift)
+
+/-- Each fixed-scale interval event for the normalized around distance of a
+shifted logarithmically inserted field is null measurable. -/
+theorem IsWholePlaneGFF.nullMeasurableSet_scaled_normalized_singular_weyl_around
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ ξ α₀ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hgff : IsWholePlaneGFF P hC hcirc) (hγ : 0 < γ) (hγ₂ : γ < 2)
+    (hα : α₀ < lqgQ γ) {D : Ω → ℂ → ℂ → ℝ}
+    (hD : IsLQGMetricOfField P γ ξ α₀ hC D) {f : Ω → ℂ → ℝ}
+    (hf : ∀ ω, Continuous (f ω)) (hfm : ∀ z, Measurable fun ω => f ω z)
+    (c : ℝ → ℝ) (z : ℂ) (a b : ℝ) {r : ℝ} (hr : 0 < r) (M : ℝ) :
+    NullMeasurableSet {ω | ENNReal.ofReal M⁻¹ ≤
+      ENNReal.ofReal ((c r)⁻¹ * Real.exp
+        (-(ξ * (hcirc ω r 0 + pfefferCircleAverage (f ω) r 0 - α₀ * Real.log r)))) *
+      pfefferAround (fun x y => (weylScaling (D ω) ξ (f ω) x y).toReal)
+        ((r : ℂ) * z) (r * a) (r * b) ∧
+      ENNReal.ofReal ((c r)⁻¹ * Real.exp
+        (-(ξ * (hcirc ω r 0 + pfefferCircleAverage (f ω) r 0 - α₀ * Real.log r)))) *
+      pfefferAround (fun x y => (weylScaling (D ω) ξ (f ω) x y).toReal)
+        ((r : ℂ) * z) (r * a) (r * b) ≤ ENNReal.ofReal M} P := by
+  have h := hgff.aemeasurable_scaled_normalized_singular_weyl_around
+    hγ hγ₂ hα hD hf hfm c z a b hr
+  exact (nullMeasurableSet_le aemeasurable_const h).inter
+    (nullMeasurableSet_le h aemeasurable_const)
 
 end HarmonicBalls
