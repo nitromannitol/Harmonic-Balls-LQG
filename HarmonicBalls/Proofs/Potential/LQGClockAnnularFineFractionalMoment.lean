@@ -3884,4 +3884,63 @@ theorem planarBrownianMotion_scaled_ball_occupation_moment_le (x z : ℂ) (c : �
       gcongr
       simpa only [hunit] using hm
 
+open Metric
+
+/-- Ordered ball visits retain the initial Brownian transition kernel. -/
+theorem planarBrownianMotion_joint_ball_le_initial_inv_time (x z : ℂ) {n : ℕ}
+    (t : Fin (n + 1) → ℝ≥0) (ht : StrictMono t) (ht0 : 0 < t 0)
+    {r : ℝ} (hr : 0 < r) :
+    let u : Fin (n + 2) → ℝ≥0 := Fin.cons 0 t
+    planarBrownianMotion x {b | ∀ i, ‖b (t i) - z‖ < r} ≤
+      ∏ i : Fin (n + 1), min 1 (ENNReal.ofReal ((2 / Real.pi) * (2 * r) ^ 2 /
+        |(u i.succ : ℝ) - (u i.castSucc : ℝ)|)) := by
+  let u : Fin (n + 2) → ℝ≥0 := Fin.cons 0 t
+  have hu : StrictMono u := by
+    apply Fin.strictMono_cons.mpr
+    exact ⟨fun i => lt_of_lt_of_le ht0 (ht.monotone (Fin.zero_le i)), ht⟩
+  let f : Fin (n + 1) → ContinuousPath ℂ → ℂ :=
+    fun i b => b (u i.succ) - b (u i.castSucc)
+  let A : Fin (n + 1) → Set ℂ :=
+    Fin.cons (ball (z - x) (2 * r)) (fun _ => ball 0 (2 * r))
+  have hi : iIndepFun f (planarBrownianMotion x) :=
+    planarBrownianMotion_hasIndepIncrements x (n + 1) u hu.monotone
+  have hsub : ∀ᵐ b ∂(planarBrownianMotion x),
+      b ∈ {b | ∀ i, ‖b (t i) - z‖ < r} → b ∈ ⋂ i, f i ⁻¹' A i := by
+    filter_upwards [ae_planarBrownianMotion_eval_zero x] with b hb0 hb
+    simp only [mem_iInter, mem_preimage]
+    intro i
+    refine Fin.cases ?_ ?_ i
+    · simp only [f, A, u, Fin.cons_succ, Fin.castSucc_zero,
+        Fin.cons_zero, Metric.mem_ball, dist_eq_norm]
+      rw [hb0]
+      have h := hb 0
+      have heq : (b (t 0) - x) - (z - x) = b (t 0) - z := by abel
+      rw [heq]
+      linarith
+    · intro j
+      simp only [f, A, u, Fin.cons_succ, Fin.castSucc_succ, Metric.mem_ball,
+        dist_zero_right]
+      have hn := norm_sub_le (b (t j.succ) - z) (b (t j.castSucc) - z)
+      have heq : (b (t j.succ) - z) - (b (t j.castSucc) - z) =
+          b (t j.succ) - b (t j.castSucc) := by abel
+      rw [heq] at hn
+      linarith [hb j.succ, hb j.castSucc]
+  calc
+    _ ≤ planarBrownianMotion x (⋂ i, f i ⁻¹' A i) := measure_mono_ae hsub
+    _ = ∏ i : Fin (n + 1), planarBrownianMotion x (f i ⁻¹' A i) := by
+      simpa using hi.measure_inter_preimage_eq_mul Finset.univ
+        (sets := A) (fun i _ => by cases i using Fin.cases <;> exact isOpen_ball.measurableSet)
+    _ ≤ _ := by
+      apply Finset.prod_le_prod
+      intro i _
+      have hne : u i.succ ≠ u i.castSucc :=
+        ne_of_gt (hu (Fin.castSucc_lt_succ (i := i)))
+      let centers : Fin (n + 1) → ℂ := Fin.cons (z-x) (fun _ => 0)
+      have hbound := planarBrownianMotion_increment_smallBall_le_inv_time x
+        (centers i) hne (show 0 ≤ 2 * r by positivity)
+      convert hbound using 1
+      congr 1
+      ext b
+      cases i using Fin.cases <;> simp [f, A, centers, Metric.mem_ball, dist_eq_norm]
+
 end HarmonicBalls
