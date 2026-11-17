@@ -4,6 +4,7 @@ import LatticeProb.LQG.LQGMassSquares
 import LatticeProb.LQG.LQGSubSquareGaussian
 import LatticeProb.LQG.LQGSubSquareLimit
 import LatticeProb.Prob.GaussKahaneRpow
+import LatticeProb.Prob.GaussKahane2Const
 import Mathlib.MeasureTheory.Function.UniformIntegrable
 import Mathlib.MeasureTheory.Function.SimpleFuncDense
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
@@ -2153,5 +2154,68 @@ theorem covariance_circle_annularSquare
     (dyadicSquare_rescaled_mem_lqgSquare hr hz) (dyadicSquare_rescaled_mem_lqgSquare hr hz')
   have hR : (((4 * r : ℝ) : ℂ)) ≠ 0 := by exact_mod_cast (show 4 * r ≠ 0 by positivity)
   simpa only [mul_div_cancel₀ _ hR, sub_add_cancel] using h
+
+/-- Finite atomic masses in any grid square admit a rescaled Gaussian comparison. -/
+theorem integral_rpow_annularSquare_atoms_le {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι]
+    [Nonempty ι] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+    {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ) (pt : ι → ℂ)
+    (hpt : ∀ j, pt j ∈ LatticeProb.LQG.lqgSquare)
+    (a : ι → ℝ) (ha : ∀ j, 0 < a j) {q : ℝ} (hq : 1 ≤ q) :
+    let X := fun ω j => γ * hcirc ω (4 * r * δ)
+      (((4 * r : ℝ) : ℂ) * pt j + LatticeProb.dyadicSquareCentre r i)
+    let Y := fun ω j => γ * hcirc ω δ (pt j)
+    (∫ ω, (∑ j, a j * Real.exp (X ω j - variance (fun ω => X ω j) P / 2)) ^ q ∂P) ≤
+      Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) *
+        ∫ ω, (∑ j, a j * Real.exp (Y ω j - variance (fun ω => Y ω j) P / 2)) ^ q ∂P := by
+  let X := fun ω j => γ * hcirc ω (4 * r * δ)
+    (((4 * r : ℝ) : ℂ) * pt j + LatticeProb.dyadicSquareCentre r i)
+  let Y := fun ω j => γ * hcirc ω δ (pt j)
+  have hP := hh.isProbabilityMeasure
+  have hR : 0 < 4 * r := by positivity
+  have hR1 : 4 * r ≤ 1 := by linarith
+  have hε : 0 < 4 * r * δ := mul_pos hR hδ
+  have hX : HasGaussianLaw X P := by
+    have h := LatticeProb.hasGaussianLaw_vector_of_isGaussianProcess hh.isGaussianProcess
+      (fun j : ι => (⟨.circle (4 * r * δ)
+        (((4 * r : ℝ) : ℂ) * pt j + LatticeProb.dyadicSquareCentre r i), hε⟩ :
+          LatticeProb.Gauss.GFFObservable.Admissible))
+    have hv := h.fun_smul γ
+    convert hv using 2 with ω
+    funext j
+    simp [X, LatticeProb.Gauss.GFFObservable.eval]
+  have hY : HasGaussianLaw Y P := by
+    have h := LatticeProb.hasGaussianLaw_vector_of_isGaussianProcess hh.isGaussianProcess
+      (fun j : ι => (⟨.circle δ (pt j), hδ⟩ : LatticeProb.Gauss.GFFObservable.Admissible))
+    have hv := h.fun_smul γ
+    convert hv using 2 with ω
+    funext j
+    simp [Y, LatticeProb.Gauss.GFFObservable.eval]
+  have hXm (j : ι) : ∫ ω, X ω j ∂P = 0 := by
+    have hm := hh.integral_eq_zero (.circle (4 * r * δ)
+      (((4 * r : ℝ) : ℂ) * pt j + LatticeProb.dyadicSquareCentre r i)) hε
+    change (∫ ω, hcirc ω (4 * r * δ) _ ∂P) = 0 at hm
+    simp only [X, integral_const_mul, hm, mul_zero]
+  have hYm (j : ι) : ∫ ω, Y ω j ∂P = 0 := by
+    have hm := hh.integral_eq_zero (.circle δ (pt j)) hδ
+    change (∫ ω, hcirc ω δ (pt j) ∂P) = 0 at hm
+    simp only [Y, integral_const_mul, hm, mul_zero]
+  let C : ℝ≥0 := ⟨-γ ^ 2 * Real.log (4 * r), mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr (sq_nonneg γ))
+    (Real.log_nonpos hR.le hR1)⟩
+  have hcov (j k : ι) : cov[fun ω => X ω j, fun ω => X ω k; P] ≤
+      cov[fun ω => Y ω j, fun ω => Y ω k; P] + (C : ℝ) := by
+    dsimp only [X, Y, C, NNReal.coe_mk]
+    rw [covariance_const_mul_left, covariance_const_mul_right,
+      covariance_const_mul_left, covariance_const_mul_right,
+      covariance_circle_annularSquare_rescaled hh hr hr10 hδ hδ2 hi (hpt j) (hpt k)]
+    change γ * (γ * (-Real.log (4 * r) +
+      cov[fun ω => hcirc ω δ (pt j), fun ω => hcirc ω δ (pt k); P])) ≤
+      γ * (γ * cov[fun ω => hcirc ω δ (pt j), fun ω => hcirc ω δ (pt k); P]) +
+        (-γ ^ 2 * Real.log (4 * r))
+    ring_nf
+    exact le_rfl
+  exact LatticeProb.Kahane.kahane_rpow_le_add_const (Or.inr hq) ha hX hY hXm hYm C hcov
 
 end HarmonicBalls
