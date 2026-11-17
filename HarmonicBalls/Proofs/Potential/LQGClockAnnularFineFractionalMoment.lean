@@ -4252,4 +4252,92 @@ theorem lintegral_field_brownian_shiftedReferenceOccupation_le_log_kernel
       gcongr
       exact planarBrownianMotion_shifted_square_occupation_moment_le x z c hc u v hu hv n hr hcover ha
 
+/-- Fractional shifted-square occupation moments follow from the initial kernel bound. -/
+theorem planarBrownianMotion_shifted_square_occupation_rpow_le (x z : ℂ) (c : ℝ≥0)
+    (hc : 0 < c) (u v : ℝ) (hu : 0 ≤ u) (hv : v ≤ c) (n : ℕ) {r q : ℝ}
+    (hr : 0 < r) (hcover : (1 : ℝ) / 4 < Real.sqrt c * r)
+    (ha : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) (hq : 0 < q)
+    (hqk : q ≤ (n + 1 : ℕ)) :
+    (∫⁻ b, (∫⁻ t in Ioc u v,
+      LatticeProb.LQG.lqgSquare.indicator (fun _ => (1 : ℝ≥0∞))
+        (b t.toNNReal + z)) ^ q ∂planarBrownianMotion x) ≤
+      (ENNReal.ofReal c ^ (n + 1) *
+        ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+            (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ (n + 1))) ^
+        (q / (n + 1 : ℕ)) := by
+  let T : ContinuousPath ℂ → ℝ≥0∞ := fun b => ∫⁻ t in Ioc u v,
+    LatticeProb.LQG.lqgSquare.indicator (fun _ => (1 : ℝ≥0∞)) (b t.toNNReal + z)
+  have hQ : MeasurableSet LatticeProb.LQG.lqgSquare := by
+    apply IsClosed.measurableSet
+    have hre : Continuous fun w : ℂ => |w.re| := Complex.continuous_re.abs
+    have him : Continuous fun w : ℂ => |w.im| := Complex.continuous_im.abs
+    exact (isClosed_le hre continuous_const).inter (isClosed_le him continuous_const)
+  have hb : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal + z) := by
+    exact ((ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)).add_const z
+  have hT : Measurable T := by
+    have h := ((measurable_const : Measurable (fun _ : ContinuousPath ℂ × ℝ => (1 : ℝ≥0∞))).indicator (hQ.preimage hb)).lintegral_prod_right'
+      (ν := volume.restrict (Ioc u v))
+    convert h using 1
+    ext b
+    apply lintegral_congr
+    intro t
+    by_cases ht : b t.toNNReal + z ∈ LatticeProb.LQG.lqgSquare <;> simp [ht]
+  have hk : (0 : ℝ) < (n + 1 : ℕ) := by exact_mod_cast Nat.zero_lt_succ n
+  have hs : 0 < q / (n + 1 : ℕ) := div_pos hq hk
+  have hs1 : q / (n + 1 : ℕ) ≤ 1 := (div_le_one hk).2 hqk
+  have hj := LatticeProb.lintegral_rpow_le_rpow_lintegral (planarBrownianMotion x) hs hs1
+    (hT.pow_const ((n + 1 : ℕ) : ℝ)).aemeasurable
+  have hmoment := planarBrownianMotion_shifted_square_occupation_moment_le x z c hc u v hu hv n hr hcover ha
+  calc
+    _ = ∫⁻ b, (T b ^ ((n + 1 : ℕ) : ℝ)) ^ (q / (n + 1 : ℕ)) ∂planarBrownianMotion x := by
+      apply lintegral_congr
+      intro b
+      rw [← ENNReal.rpow_mul]
+      congr 1
+      field_simp
+    _ ≤ (∫⁻ b, T b ^ ((n + 1 : ℕ) : ℝ) ∂planarBrownianMotion x) ^ (q / (n + 1 : ℕ)) := hj
+    _ ≤ _ := by
+      apply ENNReal.rpow_le_rpow _ hs.le
+      simpa only [T, ENNReal.rpow_natCast] using hmoment
+
+/-- A cutoff field moment admits a fractional initial-kernel occupation bound. -/
+theorem lintegral_field_brownian_shiftedReferenceOccupation_rpow_le_log_kernel
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε : ε ≤ 1 / 2) (γ : ℝ)
+    (x z : ℂ) (c : ℝ≥0) (hc : 0 < c) (u v : ℝ) (hu : 0 ≤ u) (hv : v ≤ c)
+    (n : ℕ) {r q : ℝ} (hr : 0 < r) (hcover : (1 : ℝ) / 4 < Real.sqrt c * r)
+    (ha : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) (hq : 1 ≤ q) (hqk : q ≤ (n + 1 : ℕ)) :
+    (∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc u v,
+      (LatticeProb.LQG.lqgSquare.indicator (fun w => ENNReal.ofReal
+        (Real.exp (γ * hcirc ω ε w - γ ^ 2 * (-Real.log ε) / 2))) (b t.toNNReal + z))) ^ q
+      ∂planarBrownianMotion x ∂P) ≤
+      ENNReal.ofReal (Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) *
+      (ENNReal.ofReal c ^ (n + 1) *
+        ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+            (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ (n + 1))) ^
+        (q / (n + 1 : ℕ)) := by
+  calc
+    _ ≤ ∫⁻ b, ENNReal.ofReal (((shiftedReferenceOccupation b z u v).real univ) ^ q *
+        Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) ∂planarBrownianMotion x :=
+      lintegral_field_brownian_shiftedReferenceOccupation_le_occupation hh hη hηε hε γ x z u v hq
+    _ = ENNReal.ofReal (Real.exp ((q ^ 2 - q) * (γ ^ 2 * (-Real.log η)) / 2)) *
+        ∫⁻ b, (∫⁻ t in Ioc u v, LatticeProb.LQG.lqgSquare.indicator
+          (fun _ => (1 : ℝ≥0∞)) (b t.toNNReal + z)) ^ q ∂planarBrownianMotion x := by
+      rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+      apply lintegral_congr
+      intro b
+      rw [ENNReal.ofReal_mul (Real.rpow_nonneg (measureReal_nonneg) _),
+        ← ENNReal.ofReal_rpow_of_nonneg measureReal_nonneg (by linarith), measureReal_def,
+        ENNReal.ofReal_toReal (measure_ne_top _ _), shiftedReferenceOccupation_mass_eq]
+      exact mul_comm _ _
+    _ ≤ _ := by
+      gcongr
+      exact planarBrownianMotion_shifted_square_occupation_rpow_le x z c hc u v hu hv n hr hcover ha
+        (by linarith) hqk
+
 end HarmonicBalls
