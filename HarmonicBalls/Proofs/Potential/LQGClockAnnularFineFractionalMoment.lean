@@ -1289,4 +1289,74 @@ theorem integral_rpow_subSquareField_le_of_occupation
   exact integral_rpow_subSquareField_le_of_finite_measures hh γ hk hδ hδ2 _
     (fun s => ae_mem_subSquareOccupation b u v _ s) hq
 
+
+/-- Fixed-scale comparison for the time spent in the two comparison squares. -/
+theorem integral_rpow_subSquareField_le_of_time_integrals
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (b : ContinuousPath ℂ) (u v : ℝ) {q : ℝ} (hq : 1 ≤ q) :
+    let R := LatticeProb.LQG.dyadicScale k
+    let g : Fin 2 → ℝ → ℂ := fun s t =>
+      (b t.toNNReal - LatticeProb.LQG.lqgSquareCentre s) / R
+    let I : Fin 2 → Set ℝ := fun s => Ioc u v ∩ g s ⁻¹' LatticeProb.LQG.lqgSquare
+    let F : Ω → ℝ := fun ω => ∑ s, ∫ t in I s, Real.exp
+      (γ * hcirc ω (R * δ) ((R : ℂ) * g s t + LatticeProb.LQG.lqgSquareCentre s) -
+        γ ^ 2 * (-Real.log (R * δ)) / 2)
+    let G : ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun x => ∑ s, ∫ t in I s, Real.exp
+      (γ * (hcirc x.1.1 R (LatticeProb.LQG.lqgSquareCentre s) + hcirc (x.2 s) δ (g s t) + x.1.2) -
+        γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)
+    Integrable (fun ω => F ω ^ q) P ∧
+      Integrable (fun x => G x ^ q) (LatticeProb.Gauss.subSquareMeasure P) ∧
+      (∫ ω, F ω ^ q ∂P) ≤ ∫ x, G x ^ q ∂(LatticeProb.Gauss.subSquareMeasure P) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let R := LatticeProb.LQG.dyadicScale k
+  let ν := fun s => subSquareOccupation b u v R s
+  let g : Fin 2 → ℝ → ℂ := fun s t =>
+    (b t.toNNReal - LatticeProb.LQG.lqgSquareCentre s) / R
+  let I : Fin 2 → Set ℝ := fun s => Ioc u v ∩ g s ⁻¹' LatticeProb.LQG.lqgSquare
+  let F : Ω → ℝ := fun ω => ∑ s, ∫ z, Real.exp
+    (γ * hcirc ω (R * δ) ((R : ℂ) * z + LatticeProb.LQG.lqgSquareCentre s) -
+      γ ^ 2 * (-Real.log (R * δ)) / 2) ∂(ν s)
+  let G : ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun x => ∑ s, ∫ z, Real.exp
+    (γ * (hcirc x.1.1 R (LatticeProb.LQG.lqgSquareCentre s) + hcirc (x.2 s) δ z + x.1.2) -
+      γ ^ 2 * (1 - Real.log R - Real.log δ) / 2) ∂(ν s)
+  let Ftime : Ω → ℝ := fun ω => ∑ s, ∫ t in I s, Real.exp
+    (γ * hcirc ω (R * δ) ((R : ℂ) * g s t + LatticeProb.LQG.lqgSquareCentre s) -
+      γ ^ 2 * (-Real.log (R * δ)) / 2)
+  let Gtime : ((Ω × ℝ) × (Fin 2 → Ω)) → ℝ := fun x => ∑ s, ∫ t in I s, Real.exp
+    (γ * (hcirc x.1.1 R (LatticeProb.LQG.lqgSquareCentre s) + hcirc (x.2 s) δ (g s t) + x.1.2) -
+      γ ^ 2 * (1 - Real.log R - Real.log δ) / 2)
+  have hε : 0 < R * δ := mul_pos (LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k) hδ
+  have hF : F =ᵐ[P] Ftime := by
+    filter_upwards [hh.ae_continuous_circle_fixed hε] with ω hω
+    apply Finset.sum_congr rfl
+    intro s _
+    apply integral_subSquareOccupation
+    fun_prop
+  have hG : G =ᵐ[LatticeProb.Gauss.subSquareMeasure P] Gtime := by
+    have hae : ∀ᵐ x ∂(LatticeProb.Gauss.subSquareMeasure P), ∀ s : Fin 2,
+        Continuous (hcirc (x.2 s) δ) := by
+      rw [ae_all_iff]
+      intro s
+      exact (LatticeProb.Gauss.measurePreserving_subSquare_eval s).quasiMeasurePreserving.ae
+        (hh.ae_continuous_circle_fixed hδ)
+    filter_upwards [hae] with x hx
+    apply Finset.sum_congr rfl
+    intro s _
+    apply integral_subSquareOccupation
+    fun_prop
+  have h := integral_rpow_subSquareField_le_of_occupation hh γ hk hδ hδ2 b u v hq
+  change Integrable (fun ω => F ω ^ q) P ∧
+    Integrable (fun x => G x ^ q) (LatticeProb.Gauss.subSquareMeasure P) ∧
+    (∫ ω, F ω ^ q ∂P) ≤ ∫ x, G x ^ q ∂(LatticeProb.Gauss.subSquareMeasure P) at h
+  have hFq : (fun ω => F ω ^ q) =ᵐ[P] (fun ω => Ftime ω ^ q) := hF.mono (fun _ h => congrArg (fun z : ℝ => z ^ q) h)
+  have hGq : (fun x => G x ^ q) =ᵐ[LatticeProb.Gauss.subSquareMeasure P]
+      (fun x => Gtime x ^ q) := hG.mono (fun _ h => congrArg (fun z : ℝ => z ^ q) h)
+  exact ⟨h.1.congr hFq, h.2.1.congr hGq, by
+    rw [← integral_congr_ae hFq, ← integral_congr_ae hGq]
+    exact h.2.2⟩
+
 end HarmonicBalls
