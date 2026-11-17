@@ -451,6 +451,13 @@ theorem exists_measurable_annular_exit_clock_sequence_uniformL1
     ∃ F : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable F ∧
       (∀ p, Continuous (fun t => F (p,t)) ∧ (∀ t, 0 ≤ F (p,t)) ∧
         Monotone (fun t => F (p,t))) ∧
+      (∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+        ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∃ ρ : ℝ, 0 < ρ ∧
+          ∀ r : ℝ, 0 < r → r < ρ → ∀ t : ℝ≥0, t ≤ T →
+            |(∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+              {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+                r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+                  (hcirc p.1) r z)) (p.2 s.toNNReal)) - F (p,t)| < η) ∧
       ∀ T : ℝ≥0, 0 < T → ∀ r : ℕ → Set.Ioc (0 : ℝ) δ,
         Tendsto (fun n => (r n : ℝ)) atTop (𝓝 0) →
         ∃ (A : ℕ → Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ))
@@ -469,7 +476,7 @@ theorem exists_measurable_annular_exit_clock_sequence_uniformL1
   let μ := P.prod (planarBrownianMotion x)
   obtain ⟨F, hFm, hFr, hFlim⟩ :=
     exists_measurable_annular_exit_clock_continuum_limit hh x hγ hγ2 α hδ hD hDb
-  refine ⟨F, hFm, hFr, ?_⟩
+  refine ⟨F, hFm, hFr, hFlim, ?_⟩
   intro T hT r hr
   choose M hMm hMc hMae using fun n : ℕ =>
     exists_measurable_stopped_annular_clock_prod_time hh (r n).property.1 γ α δ hD
@@ -567,5 +574,151 @@ theorem exists_measurable_annular_exit_clock_sequence_uniformL1
   obtain ⟨hi, ht⟩ := integral_norm_sub_tendsto_of_uniformIntegrable_bound A
     (fun n => (hAm n).aestronglyMeasurable) B H hHu hbound hconv
   exact ⟨A, B, hAeq, fun _ _ => rfl, hBm, hi, ht⟩
+
+/-- The exit-stopped annular clocks converge in product-law uniform-time L¹
+as the positive smoothing radius tends to zero. -/
+theorem exists_measurable_annular_exit_clock_uniformL1
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ^2 < 2) (α : ℝ) {δ : ℝ} (hδ : 0 < δ)
+    {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) :
+    ∃ F : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable F ∧
+      (∀ p, Continuous (fun t => F (p,t)) ∧ (∀ t, 0 ≤ F (p,t)) ∧
+        Monotone (fun t => F (p,t))) ∧
+      (∀ᵐ p : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+        ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∃ ρ : ℝ, 0 < ρ ∧
+          ∀ r : ℝ, 0 < r → r < ρ → ∀ t : ℝ≥0, t ≤ T →
+            |(∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+              {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+                r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+                  (hcirc p.1) r z)) (p.2 s.toNNReal)) - F (p,t)| < η) ∧
+      ∀ T : ℝ≥0,
+        ∃ (A : Set.Ioc (0 : ℝ) δ → Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ))
+          (B : Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ)),
+          (∀ r, ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ t,
+            A r p t = ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+              {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+                (r : ℝ)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+                  (hcirc p.1) r z)) (p.2 s.toNNReal)) ∧
+          (∀ p t, B p t = F (p, (t : ℝ).toNNReal)) ∧ Measurable B ∧
+          (∀ r, Measurable (A r)) ∧
+          (∀ r, Integrable (fun p => ‖A r p - B p‖) (P.prod (planarBrownianMotion x))) ∧
+          Tendsto (fun r => ∫ p, ‖A r p - B p‖ ∂(P.prod (planarBrownianMotion x)))
+            (Filter.comap (fun r : Set.Ioc (0 : ℝ) δ => (r : ℝ)) (𝓝[>] (0 : ℝ))) (𝓝 0) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let μ := P.prod (planarBrownianMotion x)
+  obtain ⟨F, hFm, hFr, hFlim, hseq⟩ :=
+    exists_measurable_annular_exit_clock_sequence_uniformL1 hh x hγ hγ2 α hδ hD hDb
+  refine ⟨F, hFm, hFr, hFlim, ?_⟩
+  intro T
+  choose M hMm hMc hMae using fun r : Set.Ioc (0 : ℝ) δ =>
+    exists_measurable_stopped_annular_clock_prod_time hh r.property.1 γ α δ hD
+  let A : Set.Ioc (0 : ℝ) δ → Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ) := fun r p =>
+    ⟨fun t => M r (p, (t : ℝ).toNNReal),
+      (hMc r p).comp (continuous_real_toNNReal.comp continuous_subtype_val)⟩
+  let B : Ω × ContinuousPath ℂ → C(Icc (0 : ℝ) (T : ℝ), ℝ) := fun p =>
+    ⟨fun t => F (p, (t : ℝ).toNNReal),
+      (hFr p).1.comp (continuous_real_toNNReal.comp continuous_subtype_val)⟩
+  have hAm (r : Set.Ioc (0 : ℝ) δ) : Measurable (A r) := by
+    apply ContinuousMap.measurable_iff_eval.mpr
+    intro t
+    exact (hMm r).comp (measurable_id.prodMk measurable_const)
+  have hBm : Measurable B := by
+    apply ContinuousMap.measurable_iff_eval.mpr
+    intro t
+    exact hFm.comp (measurable_id.prodMk measurable_const)
+  have hAeq (r : Set.Ioc (0 : ℝ) δ) : ∀ᵐ p ∂μ, ∀ t,
+      A r p t = ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D p.2).toReal,
+        {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (r : ℝ)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α
+            (hcirc p.1) r z)) (p.2 s.toNNReal) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+      (ν := planarBrownianMotion x)).ae (hMae r)] with p hp t
+    simpa only [A, ContinuousMap.coe_mk, Real.toNNReal_of_nonneg t.property.1,
+      NNReal.coe_mk] using hp p.2 ((t : ℝ).toNNReal)
+  by_cases hT : 0 < T
+  ·
+    have hAi (r : Set.Ioc (0 : ℝ) δ) : Integrable (fun p => ‖A r p - B p‖) μ := by
+      let u : ℕ → Set.Ioc (0 : ℝ) δ := fun n =>
+        ⟨(r : ℝ) * dyadicScale n, mul_pos r.property.1 (dyadicScale_pos n),
+          (mul_le_of_le_one_right r.property.1.le (LatticeProb.LQG.dyadicScale_le_one' n)).trans r.property.2⟩
+      have hu : Tendsto (fun n => (u n : ℝ)) atTop (𝓝 0) := by
+        simpa only [u, HarmonicBalls.dyadicScale, LatticeProb.LQG.dyadicScale, mul_zero] using
+          LatticeProb.LQG.LQGSingularScaledLimit.tendsto_dyadicScale_zero.const_mul (r : ℝ)
+      obtain ⟨C, G, hC, hG, _, hCi, _⟩ := hseq T hT u hu
+      have hu0 : u 0 = r := by
+        apply Subtype.ext
+        simp [u, HarmonicBalls.dyadicScale]
+      have hBG : B = G := by
+        funext p
+        ext t
+        exact (hG p t).symm
+      have heq : (fun p => ‖A r p - B p‖) =ᵐ[μ] (fun p => ‖C 0 p - G p‖) := by
+        filter_upwards [hAeq r, hC] with p hp hpc
+        have hAC : A r p = C 0 p := by
+          ext t
+          rw [hp t, hpc 0 t, hu0]
+        rw [hAC, hBG]
+      exact (hCi 0).congr heq.symm
+    refine ⟨A, B, hAeq, fun _ _ => rfl, hBm, hAm, hAi, ?_⟩
+    apply Filter.tendsto_iff_seq_tendsto.mpr
+    intro r hr
+    have hr' : Tendsto (fun n => (r n : ℝ)) atTop (𝓝 0) :=
+      tendsto_nhdsWithin_iff.mp (tendsto_comap_iff.mp hr) |>.1
+    obtain ⟨C, G, hC, hG, _, _, hlim⟩ := hseq T hT r hr'
+    have hBG : B = G := by
+      funext p
+      ext t
+      exact (hG p t).symm
+    have heq (n : ℕ) : (fun p => ‖A (r n) p - B p‖) =ᵐ[μ]
+        (fun p => ‖C n p - G p‖) := by
+      filter_upwards [hAeq (r n), hC] with p hp hpc
+      have hAC : A (r n) p = C n p := by
+        ext t
+        exact (hp t).trans (hpc n t).symm
+      rw [hAC, hBG]
+    have heq' (n : ℕ) : (∫ p, ‖A (r n) p - B p‖ ∂μ) =
+        ∫ p, ‖C n p - G p‖ ∂μ := integral_congr_ae (heq n)
+    change Tendsto (fun n => ∫ p, ‖A (r n) p - B p‖ ∂μ) atTop (𝓝 0)
+    rw [funext heq']
+    exact hlim
+  · have hT0 : T = 0 := le_antisymm (le_of_not_gt hT) zero_le
+    have hF0 : ∀ᵐ p ∂μ, F (p,0) = 0 := by
+      filter_upwards [hFlim] with p hp
+      by_contra hne
+      have hp0 : 0 < |F (p,0)| := abs_pos.mpr hne
+      obtain ⟨ρ, hρ, hρb⟩ := hp 0 (|F (p,0)| / 2) (half_pos hp0)
+      have h := hρb (ρ/2) (half_pos hρ) (half_lt_self hρ) 0 le_rfl
+      simp only [NNReal.coe_zero, min_eq_left ENNReal.toReal_nonneg,
+        intervalIntegral.integral_same, zero_sub, abs_neg] at h
+      linarith
+    have ht0 (t : Icc (0 : ℝ) (T : ℝ)) : (t : ℝ) = 0 := by
+      have ht := t.property
+      simp only [hT0, NNReal.coe_zero] at ht
+      linarith [ht.1, ht.2]
+    have hz (r : Set.Ioc (0 : ℝ) δ) :
+        (fun p => ‖A r p - B p‖) =ᵐ[μ] (fun _ => 0) := by
+      filter_upwards [hAeq r, hF0] with p hp hp0
+      have ha : A r p = 0 := by
+        ext t
+        rw [hp t, ht0 t]
+        simp only [min_eq_left ENNReal.toReal_nonneg, intervalIntegral.integral_same,
+          ContinuousMap.zero_apply]
+      have hb : B p = 0 := by
+        ext t
+        change F (p, (t : ℝ).toNNReal) = 0
+        rw [ht0 t]
+        simpa only [Real.toNNReal_zero] using hp0
+      simp only [ha, hb, sub_self, norm_zero]
+    refine ⟨A, B, hAeq, fun _ _ => rfl, hBm, hAm, ?_, ?_⟩
+    · intro r
+      exact (integrable_zero _ _ _).congr (hz r).symm
+    · have hi (r : Set.Ioc (0 : ℝ) δ) : ∫ p, ‖A r p - B p‖ ∂μ = 0 := by
+        rw [integral_congr_ae (hz r)]
+        exact integral_zero _ _
+      change Tendsto (fun r => ∫ p, ‖A r p - B p‖ ∂μ) _ (𝓝 0)
+      rw [funext hi]
+      exact tendsto_const_nhds
 
 end HarmonicBalls
