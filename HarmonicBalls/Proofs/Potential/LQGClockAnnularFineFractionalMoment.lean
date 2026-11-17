@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularCoarseCellMoment
+import HarmonicBalls.Proofs.Potential.BrownianSharpLogOccupation
 import HarmonicBalls.Proofs.Sec6.BrownianScaling
 import LatticeProb.LQG.LQGMassMoment
 import LatticeProb.LQG.LQGMassSquares
@@ -3823,5 +3824,64 @@ theorem lintegral_field_brownian_shiftedReferenceOccupation_le_occupation
           filter_upwards [hHae] with ω hω
           exact heq ω hω b
         _ ≤ _ := lintegral_rpow_shiftedReferenceOccupation_le_occupation hh hη hηε hε γ b z u v hq
+
+/-- Logarithmic moments for Brownian ball occupation on a scaled time horizon. -/
+theorem planarBrownianMotion_scaled_ball_occupation_moment_le (x z : ℂ) (c : ℝ≥0)
+    (hc : 0 < c) (n : ℕ) {r : ℝ} (hr : 0 < r)
+    (ha : (2 / Real.pi) * (2 * r) ^ 2 ≤ 1) :
+    (∫⁻ b, (∫⁻ t in Ioc (0 : ℝ) c,
+      (Metric.ball (0 : ℂ) r).indicator (fun _ => (1 : ℝ≥0∞))
+        ((b t.toNNReal - z) / (Real.sqrt c : ℂ))) ^ (n + 1)
+      ∂planarBrownianMotion x) ≤
+      ENNReal.ofReal c ^ (n + 1) *
+        ((Fintype.card (Equiv.Perm (Fin (n + 1))) : ℝ≥0∞) *
+          ENNReal.ofReal (2 * (((2 / Real.pi) * (2 * r) ^ 2) *
+            (1 + Real.log (1 / ((2 / Real.pi) * (2 * r) ^ 2))))) ^ n) := by
+  let φ : ℂ → ℝ≥0∞ := (Metric.ball (0 : ℂ) r).indicator (fun _ => 1)
+  have hφ : Measurable φ := measurable_const.indicator Metric.isOpen_ball.measurableSet
+  have hcR : (0 : ℝ) < c := by exact_mod_cast hc
+  have hpre : (fun s : ℝ => (c : ℝ) * s) ⁻¹' Ioc (0 : ℝ) c = Ioc 0 1 := by
+    ext s
+    simp only [mem_preimage, mem_Ioc]
+    constructor
+    · rintro ⟨hs, ht⟩
+      exact ⟨(mul_pos_iff_of_pos_left hcR).mp hs, (mul_le_iff_le_one_left hcR).mp (by simpa [mul_comm] using ht)⟩
+    · rintro ⟨hs, ht⟩
+      exact ⟨mul_pos hcR hs, by simpa [mul_comm] using (mul_le_iff_le_one_left hcR).mpr ht⟩
+  have hscale := lintegral_planarBrownianMotion_rescaled_occupation_rpow x z c hc
+    (Ioc 0 c) measurableSet_Ioc φ hφ ((n + 1 : ℕ) : ℝ) (by positivity)
+  rw [hpre] at hscale
+  have hunit (b : ContinuousPath ℂ) :
+      (∫⁻ t in Ioc (0 : ℝ) 1,
+        φ (b t.toNNReal + (x - z) / (Real.sqrt c : ℂ))) =
+      (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))
+        {t | ‖b t - (z - x) / (Real.sqrt c : ℂ)‖ < r} := by
+    have hS : MeasurableSet {t : ℝ≥0 | ‖b t - (z - x) / (Real.sqrt c : ℂ)‖ < r} := by
+      apply isOpen_lt _ continuous_const |>.measurableSet
+      fun_prop
+    rw [Measure.map_apply continuous_real_toNNReal.measurable hS,
+      ← lintegral_indicator_one (hS.preimage continuous_real_toNNReal.measurable)]
+    rw [Measure.restrict_congr_set (Ioc_ae_eq_Icc : Ioc (0 : ℝ) 1 =ᵐ[volume] Icc 0 1).symm]
+    apply lintegral_congr
+    intro t
+    have heq : b t.toNNReal + (x - z) / (Real.sqrt c : ℂ) =
+        b t.toNNReal - (z - x) / (Real.sqrt c : ℂ) := by
+      rw [sub_div, sub_div]
+      ring
+    rw [heq]
+    by_cases h : ‖b t.toNNReal - (z - x) / (Real.sqrt c : ℂ)‖ < r <;>
+      simp [φ, Metric.mem_ball, dist_zero_right, h]
+  have hm := planarBrownianMotion_occupation_moment_le_log_kernel 0
+    ((z - x) / (Real.sqrt c : ℂ)) n hr ha
+  dsimp only at hm
+  calc
+    _ = ENNReal.ofReal c ^ (n + 1) * ∫⁻ b,
+        (∫⁻ s in Ioc (0 : ℝ) 1,
+          φ (b s.toNNReal + (x - z) / (Real.sqrt c : ℂ))) ^ (n + 1)
+        ∂planarBrownianMotion 0 := by
+      simpa only [φ, ENNReal.rpow_natCast] using hscale
+    _ ≤ _ := by
+      gcongr
+      simpa only [hunit] using hm
 
 end HarmonicBalls
