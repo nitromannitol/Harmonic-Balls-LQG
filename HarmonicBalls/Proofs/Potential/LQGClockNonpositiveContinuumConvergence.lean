@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularGridOccupationIncrement
+import HarmonicBalls.Proofs.Potential.LQGClockNonpositiveUniformL1
 import LatticeProb.LQG.GMCRatioLimit
 import LatticeProb.LQG.LQGBallMassGrid2
 
@@ -7,9 +8,9 @@ import LatticeProb.LQG.LQGBallMassGrid2
 The insertion correction has a uniform radial modulus down to the origin.
 -/
 
-open MeasureTheory Filter LatticeProb.LQG MarkovProcess
+open MeasureTheory Filter LatticeProb.LQG MarkovProcess Set
 open LatticeProb.LQG.GMCScaleGrid LatticeProb.LQG.GMCRatioLimit
-open scoped Topology NNReal
+open scoped Topology NNReal ENNReal
 
 namespace HarmonicBalls
 
@@ -257,5 +258,186 @@ theorem ae_eventually_halfDisc_clock_grid_comparison
     refine ⟨i, hi, ?_⟩
     intro b T
     exact hk b T s _ hs1 hs2 hr1 hr2 hclose
+
+/-- The nonpositive insertion increment separates into a weighted zero-insertion
+increment and a correction supported inside the larger smoothing ball. -/
+theorem nonpositive_insertion_radius_density_increment
+    (h : ℝ → ℂ → ℝ) (γ α ε s : ℝ) (z : ℂ)
+    (hγ : 0 ≤ γ) (hα : α ≤ 0) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2) (hs : 0 < s) (hsε : s ≤ ε)
+    (hz : ‖z‖ ≤ 1 / 2) :
+    let q := -γ * α
+    let a := (max s ‖z‖) ^ q
+    let b := (max ε ‖z‖) ^ q
+    let X := fun r : ℝ => r ^ (γ ^ 2 / 2) * Real.exp
+      (γ * LatticeProb.Gauss.fieldCircleAverage 0 h r z)
+    let Y := fun r : ℝ => r ^ (γ ^ 2 / 2) * Real.exp
+      (γ * LatticeProb.Gauss.fieldCircleAverage α h r z)
+    0 ≤ a ∧ a ≤ b ∧ b ≤ 1 ∧
+      0 ≤ b - a ∧ b - a ≤ ε ^ q ∧
+      (ε ≤ ‖z‖ → b - a = 0) ∧
+      Y s - Y ε = a * (X s - X ε) - (b - a) * X ε ∧
+      0 ≤ (b - a) * X ε ∧ (b - a) * X ε ≤ ε ^ q * X ε := by
+  dsimp only
+  have hq : 0 ≤ -γ * α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ) hα
+  have he2 : 0 < s := hs
+  have hm1 : 0 < max s ‖z‖ := lt_max_of_lt_left he2
+  have hm2 : 0 < max ε ‖z‖ := lt_max_of_lt_left hε
+  have hmax : max s ‖z‖ ≤ max ε ‖z‖ := max_le_max_right _ hsε
+  have hmaxone : max ε ‖z‖ ≤ 1 := by apply max_le <;> linarith
+  have ha : 0 ≤ (max s ‖z‖) ^ (-γ * α) := Real.rpow_nonneg hm1.le _
+  have hab : (max s ‖z‖) ^ (-γ * α) ≤ (max ε ‖z‖) ^ (-γ * α) :=
+    Real.rpow_le_rpow hm1.le hmax hq
+  have hb : (max ε ‖z‖) ^ (-γ * α) ≤ 1 := Real.rpow_le_one hm2.le hmaxone hq
+  have herr : (max ε ‖z‖) ^ (-γ * α) - (max s ‖z‖) ^ (-γ * α) ≤
+      ε ^ (-γ * α) := by
+    by_cases hzε : ε ≤ ‖z‖
+    · rw [max_eq_right hzε, max_eq_right (by linarith : s ≤ ‖z‖), sub_self]
+      exact Real.rpow_nonneg hε.le _
+    · rw [max_eq_left (le_of_not_ge hzε)]
+      linarith
+  have hzero (hzε : ε ≤ ‖z‖) :
+      (max ε ‖z‖) ^ (-γ * α) - (max s ‖z‖) ^ (-γ * α) = 0 := by
+    rw [max_eq_right hzε, max_eq_right (by linarith : s ≤ ‖z‖), sub_self]
+  have hfactor (r : ℝ) (hr : 0 < r) :
+      r ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α h r z) =
+      (max r ‖z‖) ^ (-γ * α) *
+        (r ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage 0 h r z)) := by
+    have hlog : Real.circleAverage (fun y : ℂ => Real.log ‖y‖) z r =
+        Real.log (max r ‖z‖) := by
+      simpa using (LatticeProb.Gauss.circleAverage_log_norm_sub_eq z 0 hr)
+    have heq : γ * LatticeProb.Gauss.fieldCircleAverage α h r z =
+        (-γ * α) * Real.log (max r ‖z‖) +
+          γ * LatticeProb.Gauss.fieldCircleAverage 0 h r z := by
+      dsimp [LatticeProb.Gauss.fieldCircleAverage]
+      rw [hlog]
+      ring_nf
+    rw [heq, Real.exp_add, Real.rpow_def_of_pos (lt_max_of_lt_left hr)]
+    ring_nf
+  have hX : 0 ≤ ε ^ (γ ^ 2 / 2) * Real.exp
+      (γ * LatticeProb.Gauss.fieldCircleAverage 0 h ε z) :=
+    mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le
+  refine ⟨ha, hab, hb, sub_nonneg.mpr hab, herr, hzero, ?_, ?_, ?_⟩
+  · rw [hfactor s he2, hfactor ε hε]
+    ring_nf
+  · exact mul_nonneg (sub_nonneg.mpr hab) hX
+  · exact mul_le_mul_of_nonneg_right herr hX
+
+/-- The insertion correction has an annealed power bound uniformly over
+Brownian starts and all smaller positive smoothing radii. -/
+theorem exists_uniform_annealed_nonpositive_radius_insertion_correction_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (γ α : ℝ) (hγ : 0 < γ) (hα : α ≤ 0) :
+    ∃ C : ℝ≥0∞, 0 < C ∧ C < ∞ ∧ ∀ (x : ℂ) {ε δ r : ℝ},
+      0 < ε → ε ≤ 1 / 2 → δ ≤ 1 / 2 → 0 < r → r ≤ ε →
+      (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (0 : ℝ) 1,
+        ENNReal.ofReal ({z : ℂ | ‖z‖ < δ}.indicator (fun z =>
+          ((max ε ‖z‖) ^ (-γ * α) - (max r ‖z‖) ^ (-γ * α)) *
+          (ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z))) (q.2 s.toNNReal)))
+        ∂(P.prod (planarBrownianMotion x))) ≤
+      ENNReal.ofReal (ε ^ (-γ * α)) * ((ENNReal.ofReal ε) ^ (1 / 2 : ℝ) * C) := by
+  obtain ⟨C, hC, hbound⟩ := exists_uniform_lintegral_prod_brownian_inner_zero_le hh γ
+  refine ⟨C + 1, by positivity, ENNReal.add_lt_top.mpr ⟨hC, by simp⟩, ?_⟩
+  intro x ε δ r hε hεhalf hδ hr hrε
+  calc
+    _ ≤ ENNReal.ofReal (ε ^ (-γ * α)) *
+        (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (0 : ℝ) 1,
+          ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z)) (q.2 s.toNNReal)))
+          ∂(P.prod (planarBrownianMotion x))) := by
+      rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+      apply lintegral_mono
+      intro q
+      dsimp only
+      rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+      apply lintegral_mono
+      intro s
+      let z := q.2 s.toNNReal
+      change ENNReal.ofReal ({z : ℂ | ‖z‖ < δ}.indicator _ z) ≤
+        ENNReal.ofReal (ε ^ (-γ * α)) * ENNReal.ofReal ({z : ℂ | ‖z‖ < ε}.indicator _ z)
+      by_cases hzδ : ‖z‖ < δ
+      · have hzhalf : ‖z‖ ≤ 1 / 2 := le_trans (le_of_lt hzδ) hδ
+        have hstep := nonpositive_insertion_radius_density_increment
+          (hcirc q.1) γ α ε r z hγ.le hα hε hεhalf hr hrε hzhalf
+        dsimp only at hstep
+        by_cases hzε : ‖z‖ < ε
+        · rw [Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ < δ} from hzδ), Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ < ε} from hzε),
+            ← ENNReal.ofReal_mul (Real.rpow_nonneg hε.le _)]
+          exact ENNReal.ofReal_le_ofReal hstep.2.2.2.2.2.2.2.2
+        · have hzero := hstep.2.2.2.2.2.1 (le_of_not_gt hzε)
+          rw [Set.indicator_of_mem (show z ∈ {w : ℂ | ‖w‖ < δ} from hzδ), Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ < ε} from hzε), hzero, zero_mul,
+            ENNReal.ofReal_zero, mul_zero]
+      · rw [Set.indicator_of_notMem (show z ∉ {w : ℂ | ‖w‖ < δ} from hzδ), ENNReal.ofReal_zero]
+        exact zero_le
+    _ ≤ _ := by
+      gcongr
+      exact (hbound x hε hεhalf hε hεhalf).trans (by
+        gcongr
+        exact le_add_right le_rfl)
+
+/-- Same-shell field increments with bounded weights admit one energy bound
+for every Brownian start, weight, radius and occupation submeasure. -/
+theorem exists_uniform_exponents_brownian_weighted_radius_increment_le_riesz_energy
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) :
+    ∃ θ d : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧
+      let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+      ∀ x : ℂ, ∀ᵐ b ∂(planarBrownianMotion x),
+        ∀ (g : ℂ → ℝ), Measurable g → ∀ M : ℝ, 0 ≤ M →
+        (∀ z, |g z| ≤ M) → (∀ z, g z ≠ 0 → ‖z‖ ≤ 1 / 2) →
+        ∀ μ : Measure ℂ, μ ≤ Measure.map (fun t => b t) ν →
+        ∀ ε r : ℝ, 0 < ε → ε ≤ 1/2 → 0 < r → r ≤ ε → ε/2 ≤ r →
+        (∫ ω, |∫ z, g z * (r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0)) -
+          ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0))) ∂μ| ∂P) ≤
+        ((Real.exp (γ^2*Real.log 2)-1)*(M^2 * unitOccupationRieszEnergy d b * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  obtain ⟨θ, d, hγθ, hθ, hd0, hd2, hp, _⟩ := exists_clock_truncation_exponents hγ0 hγ2
+  refine ⟨θ, d, hγθ, hθ, hd0, hd2, hp, ?_⟩
+  dsimp only
+  intro x
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  have hν : ν univ = 1 := by
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := ⟨hν⟩
+  filter_upwards [planarBrownianMotion_ae_unit_weighted_occupation_le_riesz_energy x hd0 hd2] with b hb
+  intro g hg M hM hgM hgs μ hμ ε r hε hεhalf hr hrε hεr
+  let ρ : Measure ℂ := Measure.map (fun t => b t) ν
+  let : IsProbabilityMeasure ρ := inferInstance
+  let : IsFiniteMeasure μ := isFiniteMeasure_of_le ρ hμ
+  have hgρ : Integrable g ρ := by
+    refine (integrable_const M).mono' hg.aestronglyMeasurable ?_
+    filter_upwards with z
+    simpa [Real.norm_eq_abs] using hgM z
+  have hgi : Integrable g μ := hgρ.mono_measure hμ
+  have hA : (∫ z, |g z| ∂μ) ≤ M := by
+    calc
+      _ ≤ ∫ z, |g z| ∂ρ := integral_mono_measure hμ (Filter.Eventually.of_forall (fun _ => abs_nonneg _)) hgρ.abs
+      _ ≤ ∫ _ : ℂ, M ∂ρ := integral_mono hgρ.abs (integrable_const M) (fun z => hgM z)
+      _ = M := by simp
+  have hpair0 := hb g hg M hM hgM (2*ε) (by positivity)
+  have hpair : (∫ p : ℂ × ℂ, if ‖p.1-p.2‖ < 2*ε then |g p.1| * |g p.2| else 0
+      ∂(μ.prod μ)) ≤ M^2*(unitOccupationRieszEnergy d b*(2*ε)^d) := by
+    apply (integral_mono_measure (Measure.prod_mono hμ hμ) ?_ hpair0.1).trans hpair0.2.2
+    filter_upwards with p
+    split_ifs <;> positivity
+  have hI : (∫ p : ℂ × ℂ, {p : ℂ × ℂ | ‖p.1-p.2‖ < 2*ε}.indicator
+      (fun p => |g p.1| * |g p.2|) p ∂(μ.prod μ)) ≤
+      (M^2*unitOccupationRieszEnergy d b*2^d)*Real.exp (Real.log ε*d) := by
+    have hI' : (∫ p : ℂ × ℂ, {p : ℂ × ℂ | ‖p.1-p.2‖ < 2*ε}.indicator
+      (fun p => |g p.1| * |g p.2|) p ∂(μ.prod μ)) ≤ M^2*(unitOccupationRieszEnergy d b*(2*ε)^d) := by
+      simpa only [Set.indicator_apply, Set.mem_ofPred_eq] using hpair
+    rw [Real.mul_rpow (by norm_num : (0 : ℝ) ≤ 2) hε.le,
+      Real.rpow_def_of_pos hε] at hI'
+    convert hI' using 1; ring
+  exact field_radius_increment_le_rate hh hr hrε hεr μ hg hgi (fun z hz => by linarith [hgs z hz])
+    hγθ.le hθ.le hA hI
+
 
 end HarmonicBalls
