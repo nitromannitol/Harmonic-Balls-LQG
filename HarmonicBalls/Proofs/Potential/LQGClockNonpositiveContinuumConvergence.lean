@@ -1637,4 +1637,154 @@ theorem summable_nonpositive_halfDisc_grid_mesh {p β b c A D : ℝ}
   have hs' := (summable_nat_add_iff 1).2 hs
   simpa only [zero_mul, add_zero] using hs'
 
+
+/-- A common positive power absorbs the field, correction, and inner mesh
+rates in the uniform-time estimate. -/
+theorem nonpositive_halfDisc_mesh_rate_le
+    {e q p u v c β : ℝ} (he : 0 < e) (he1 : e ≤ 1) (hq : 0 ≤ q)
+    (hpu : p ≤ u) (hpv : p ≤ v) (hp2 : p ≤ 1/2) (hc : 0 ≤ c)
+    (C D E : ℝ≥0∞) (m : ℕ) :
+    (m + 1 : ℝ≥0∞) * (ENNReal.ofReal (c*e^u + 2*e^v) +
+      ENNReal.ofReal (e^q) * ((ENNReal.ofReal e) ^ (1/2 : ℝ) * E)) +
+      (C * (m : ℝ≥0∞)^(-β) + (ENNReal.ofReal e) ^ (1/2 : ℝ) * D) ≤
+    (m + 1 : ℝ≥0∞) *
+      ((ENNReal.ofReal c + 2 + E + D) * ENNReal.ofReal (e^p)) +
+      C * (m : ℝ≥0∞)^(-β) := by
+  let W : ℝ≥0∞ := ENNReal.ofReal (e^p)
+  have hu : e^u ≤ e^p := Real.rpow_le_rpow_of_exponent_ge he he1 hpu
+  have hv : e^v ≤ e^p := Real.rpow_le_rpow_of_exponent_ge he he1 hpv
+  have h2 : e^(1/2 : ℝ) ≤ e^p := Real.rpow_le_rpow_of_exponent_ge he he1 hp2
+  have hq1 : e^q ≤ 1 := Real.rpow_le_one he.le he1 hq
+  have hscale : (ENNReal.ofReal e) ^ (1/2 : ℝ) ≤ W := by
+    rw [ENNReal.ofReal_rpow_of_pos he]
+    exact ENNReal.ofReal_le_ofReal h2
+  have hweight : ENNReal.ofReal (e^q) ≤ 1 := by
+    simpa using ENNReal.ofReal_le_ofReal hq1
+  have hfield : ENNReal.ofReal (c*e^u + 2*e^v) ≤ (ENNReal.ofReal c + 2)*W := by
+    have hreal : c*e^u + 2*e^v ≤ (c+2)*e^p := by
+      nlinarith [mul_nonneg hc (sub_nonneg.mpr hu)]
+    calc
+      _ ≤ ENNReal.ofReal ((c+2)*e^p) := ENNReal.ofReal_le_ofReal hreal
+      _ = _ := by rw [ENNReal.ofReal_mul (by linarith : 0 ≤ c+2),
+        ENNReal.ofReal_add hc (by norm_num)]; norm_num [W]
+  have hcor : ENNReal.ofReal (e^q) * ((ENNReal.ofReal e) ^ (1/2 : ℝ) * E) ≤ E*W := by
+    calc
+      _ ≤ 1 * (W*E) := by gcongr
+      _ = _ := by ac_rfl
+  have hinner : (ENNReal.ofReal e) ^ (1/2 : ℝ) * D ≤
+      (m + 1 : ℝ≥0∞) * (D*W) := by
+    calc
+      _ ≤ W*D := by gcongr
+      _ = D*W := mul_comm _ _
+      _ ≤ (m + 1 : ℝ≥0∞) * (D*W) := by
+        calc
+          _ = 1 * (D*W) := by simp
+          _ ≤ _ := by gcongr; simp
+  calc
+    _ ≤ (m + 1 : ℝ≥0∞) * ((ENNReal.ofReal c + 2)*W + E*W) +
+        (C * (m : ℝ≥0∞)^(-β) + (m + 1 : ℝ≥0∞) * (D*W)) := by gcongr
+    _ = _ := by ring
+
+
+/-- Finite mesh coefficients convert the nonnegative extended-real rate
+to its real-valued expression. -/
+theorem nonpositive_halfDisc_grid_rate_to_ofReal
+    (N m : ℕ) (hm : 0 < m) (K C : ℝ≥0∞) (hK : K < ∞) (hC : C < ∞)
+    (e p β : ℝ) (he : 0 < e) :
+    (N : ℝ≥0∞) * ((m + 1 : ℝ≥0∞) * (K * ENNReal.ofReal (e^p)) +
+      C * (m : ℝ≥0∞)^(-β)) =
+    ENNReal.ofReal ((N : ℝ) * (((m : ℝ) + 1) * (K.toReal * e^p) +
+      C.toReal * ((m : ℝ)^(-β)))) := by
+  have hm0 : 0 < (m : ℝ) := by exact_mod_cast hm
+  have hepow : 0 ≤ e^p := (Real.rpow_pos_of_pos he _).le
+  have hmpow : 0 ≤ (m : ℝ)^(-β) := (Real.rpow_pos_of_pos hm0 _).le
+  rw [ENNReal.ofReal_mul (by positivity : (0 : ℝ) ≤ N),
+    ENNReal.ofReal_natCast, ENNReal.ofReal_add (by positivity)
+      (mul_nonneg ENNReal.toReal_nonneg hmpow),
+    ENNReal.ofReal_mul (by positivity : 0 ≤ (m : ℝ) + 1),
+    ENNReal.ofReal_mul ENNReal.toReal_nonneg,
+    ENNReal.ofReal_mul ENNReal.toReal_nonneg,
+    ENNReal.ofReal_toReal hK.ne, ENNReal.ofReal_toReal hC.ne,
+    ← ENNReal.ofReal_rpow_of_pos hm0, ENNReal.ofReal_natCast]
+  rw [ENNReal.ofReal_add (by positivity : 0 ≤ (m : ℝ)) (by positivity : (0 : ℝ) ≤ 1),
+    ENNReal.ofReal_natCast, ENNReal.ofReal_one]
+
+
+/-- Unit-time same-shell nonpositive clock increments have summable
+expectations over a geometric radius grid. -/
+theorem exists_tsum_nonpositive_halfDisc_radius_grid_clock_lt_top
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (α : ℝ) (hα : α ≤ 0) :
+    ∃ c : ℝ, 0 < c ∧ ∀ x : ℂ,
+      let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+        stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) 0
+            (fun _ => t.toNNReal) p.2
+      (∑' n : ℕ, ∑ i ∈ Finset.range (gridCount c (n+1) + 1),
+        ∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal
+          |F (gridScale (gridCount c) (n+1) i) p t -
+            F (LatticeProb.LQG.dyadicScale (n+1)) p t|
+          ∂(P.prod (planarBrownianMotion x))) < ⊤ := by
+  obtain ⟨A, C, D, β, hAs, hA0, hAgeom, hC, hD, hβ, hbound⟩ :=
+    exists_uniform_annealed_nonpositive_halfDisc_radius_iSup_le hh hγ hγ2
+  obtain ⟨a, u, v, ha, hu, hv, hAexpr⟩ := hAgeom
+  obtain ⟨p, b, c, hp, hpu, hpv, hp2, hb, hc, hcp, hcβ⟩ :=
+    exists_nonpositive_halfDisc_grid_exponents hu hv hβ
+  obtain ⟨E, hE0, hE, hclock⟩ := hbound α hα
+  let K : ℝ≥0∞ := ENNReal.ofReal a + 2 + E + D
+  have hK : K < ∞ := by
+    dsimp [K]
+    exact ENNReal.add_lt_top.mpr ⟨ENNReal.add_lt_top.mpr ⟨ENNReal.add_lt_top.mpr
+      ⟨ENNReal.ofReal_lt_top, by norm_num⟩, hE⟩, hD⟩
+  have hseries := summable_nonpositive_halfDisc_grid_mesh (p := p) (β := β)
+    (b := b) (c := c) (A := K.toReal) (D := C.toReal)
+    hβ hb hc hcp hcβ ENNReal.toReal_nonneg ENNReal.toReal_nonneg
+  have hq : 0 ≤ -γ*α := mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hγ.le) hα
+  refine ⟨c, hc, ?_⟩
+  intro x
+  dsimp only
+  refine lt_of_le_of_lt (ENNReal.tsum_le_tsum (g := fun n : ℕ =>
+    ENNReal.ofReal (((gridCount c (n+1) : ℝ) + 1) *
+      ((((gridCount b (n+1) : ℝ) + 1) + 1) *
+        (K.toReal * LatticeProb.LQG.dyadicScale (n+1) ^ p) +
+          C.toReal * (((gridCount b (n+1) : ℝ) + 1) ^ (-β))))) (fun n => ?_)) ?_
+  · let k : ℕ := n+1
+    let e : ℝ := LatticeProb.LQG.dyadicScale k
+    let m : ℕ := gridCount b k + 1
+    let N : ℕ := gridCount c k + 1
+    have he : 0 < e := by dsimp [e, LatticeProb.LQG.dyadicScale]; positivity
+    have he1 : e ≤ 1 := by
+      dsimp [e, LatticeProb.LQG.dyadicScale]
+      exact pow_le_one₀ (by norm_num) (by norm_num)
+    have hm : 0 < m := by dsimp [m]; omega
+    have hrate (i : ℕ) (hi : i ∈ Finset.range N) := by
+      have hi' : i ≤ gridCount c k := by
+        dsimp [N] at hi
+        exact Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+      have hgrid := gridScale_mem_Icc (gridCount c) hi'
+      have hr : 0 < gridScale (gridCount c) k i := (half_pos he).trans_le hgrid.1
+      have h := hclock n x (gridScale (gridCount c) k i) hr hgrid.2 hgrid.1 m hm
+      have hpowu : Real.exp (Real.log e * u) = e^u := (Real.rpow_def_of_pos he u).symm
+      have hpowv : Real.exp (Real.log e * v) = e^v := (Real.rpow_def_of_pos he v).symm
+      rw [hAexpr n] at h
+      change _ ≤ (m + 1 : ℝ≥0∞) * (ENNReal.ofReal
+        (a * Real.exp (Real.log e * u) + 2 * Real.exp (Real.log e * v)) +
+        ENNReal.ofReal (e^(-γ*α)) * ((ENNReal.ofReal e)^(1/2 : ℝ)*E)) +
+        (C * (m : ℝ≥0∞)^(-β) + (ENNReal.ofReal e)^(1/2 : ℝ)*D) at h
+      rw [hpowu, hpowv] at h
+      exact h.trans (nonpositive_halfDisc_mesh_rate_le he he1 hq hpu hpv hp2 ha C D E m)
+    calc
+      _ ≤ ∑ _i ∈ Finset.range N,
+          ((m + 1 : ℝ≥0∞) * (K * ENNReal.ofReal (e^p)) +
+            C * (m : ℝ≥0∞)^(-β)) := Finset.sum_le_sum (fun i hi => hrate i hi)
+      _ = (N : ℝ≥0∞) * ((m + 1 : ℝ≥0∞) * (K * ENNReal.ofReal (e^p)) +
+            C * (m : ℝ≥0∞)^(-β)) := by simp [nsmul_eq_mul, mul_add]
+      _ = ENNReal.ofReal ((N : ℝ) * (((m : ℝ) + 1) * (K.toReal * e^p) +
+          C.toReal * ((m : ℝ)^(-β)))) :=
+        nonpositive_halfDisc_grid_rate_to_ofReal N m hm K C hK hC e p β he
+      _ = _ := by dsimp [N, m, e, k]; push_cast; rfl
+  · exact hseries.tsum_ofReal_lt_top
+
 end HarmonicBalls
