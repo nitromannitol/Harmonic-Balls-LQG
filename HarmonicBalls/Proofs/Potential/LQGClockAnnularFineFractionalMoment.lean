@@ -693,4 +693,30 @@ theorem integral_rpow_sum_subSquareComparison_le {Ω : Type*} [MeasurableSpace �
         mul_nonneg (hb i) (Real.exp_pos _).le))]
     simp_rw [hscale, integral_const_mul]
     exact mul_le_mul_of_nonneg_left hn (Real.rpow_nonneg hM _)
+/-- A finite atomic mass of the field has an explicit moment bound. -/
+theorem integral_rpow_sum_subSquareField_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {ι : Type*} [Fintype ι]
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ)
+    {k : ℕ} (hk : 4 ≤ k) {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (piece : ι → Fin 2) (pt : ι → ℂ)
+    (hpt : ∀ i, pt i ∈ LatticeProb.LQG.lqgSquare)
+    (a : ι → ℝ) (ha : ∀ i, 0 ≤ a i) {r : ℝ} (hr : 1 ≤ r) :
+    (∫ ω, (∑ i, a i * Real.exp
+      (LatticeProb.Gauss.subSquareField γ hcirc (LatticeProb.LQG.dyadicScale k)
+        (LatticeProb.LQG.dyadicScale k * δ) piece pt ω i -
+        γ ^ 2 * (-Real.log (LatticeProb.LQG.dyadicScale k * δ)) / 2)) ^ r ∂P) ≤
+    (∑ i, a i) ^ r * Real.exp ((r ^ 2 - r) *
+      (γ ^ 2 * (1 - Real.log (LatticeProb.LQG.dyadicScale k) - Real.log δ)) / 2) := by
+  have hR := LatticeProb.LQG.LQGDyadicScaling.dyadicScale_pos' k
+  have hc : ∀ i, ‖LatticeProb.LQG.lqgSquareCentre (piece i)‖ +
+      LatticeProb.LQG.dyadicScale k ≤ 1 := fun i =>
+    LatticeProb.LQG.norm_lqgSquareCentre_add_dyadicScale_le_one hk (piece i)
+  have hn : ∀ i, ‖pt i‖ + δ ≤ 1 := fun i => by
+    have hi : ‖pt i‖ ≤ 1 / 4 := by
+      simpa using LatticeProb.LQG.lqgSquare_subset_closedBall (hpt i)
+    linarith
+  exact (integral_rpow_subSquareField_le_explicit_nonneg hh γ hk hδ hδ2 piece pt hpt ha hr).trans
+    (integral_rpow_sum_subSquareComparison_le hh γ hR hδ piece pt hc hn a ha hr)
+
 end HarmonicBalls
