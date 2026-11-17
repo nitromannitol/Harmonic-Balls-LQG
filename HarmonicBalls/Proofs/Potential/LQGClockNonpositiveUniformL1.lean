@@ -1140,4 +1140,142 @@ theorem exists_uniform_integrable_shifted_nonpositive_inner_base_clock
     _ ≤ _ := hreal
 
 
+/-- Summable integral bounds yield an integrable envelope for every partial
+sum of absolute values. -/
+theorem exists_integrable_bound_of_summable_integral_abs
+    {X : Type*} [MeasurableSpace X] (μ : Measure X) (f : ℕ → X → ℝ)
+    (hfi : ∀ n, Integrable (f n) μ) (A : ℕ → ℝ) (hA : Summable A)
+    (hbound : ∀ n, (∫ x, |f n x| ∂μ) ≤ A n) :
+    ∃ G : X → ℝ, Integrable G μ ∧ ∀ᵐ x ∂μ, ∀ N : ℕ,
+      (∑ n ∈ Finset.range N, |f n x|) ≤ G x := by
+  let S : X → ℝ≥0∞ := fun x => ∑' n, ENNReal.ofReal |f n x|
+  have hm (n : ℕ) : AEMeasurable (fun x => ENNReal.ofReal |f n x|) μ :=
+    (hfi n).abs.aestronglyMeasurable.aemeasurable.ennreal_ofReal
+  have hSm : AEMeasurable S μ := AEMeasurable.tsum hm
+  have hfin : (∫⁻ x, S x ∂μ) < ∞ := by
+    rw [show (fun x => S x) = (fun x => ∑' n, ENNReal.ofReal |f n x|) from rfl,
+      lintegral_tsum hm]
+    refine (ENNReal.tsum_le_tsum ?_).trans_lt hA.tsum_ofReal_lt_top
+    intro n
+    rw [← ofReal_integral_eq_lintegral_ofReal (hfi n).abs
+      (Filter.Eventually.of_forall (fun _ => abs_nonneg _))]
+    exact ENNReal.ofReal_le_ofReal (hbound n)
+  refine ⟨fun x => (S x).toReal, integrable_toReal_of_lintegral_ne_top hSm hfin.ne, ?_⟩
+  filter_upwards [ae_lt_top' hSm hfin.ne] with x hx N
+  have hp : ENNReal.ofReal (∑ n ∈ Finset.range N, |f n x|) ≤ S x := by
+    rw [ENNReal.ofReal_sum_of_nonneg (fun n hn => abs_nonneg _)]
+    exact ENNReal.sum_le_tsum _
+  have h := ENNReal.toReal_mono hx.ne hp
+  rw [ENNReal.toReal_ofReal (Finset.sum_nonneg fun n hn => abs_nonneg _)] at h
+  exact h
+
+private theorem intervalIntegrable_inner_clock_indicator (b : ContinuousPath ℂ)
+    (f : ℂ → ℝ) (hf : Continuous f) (δ : ℝ) :
+    IntervalIntegrable (fun s : ℝ => {z : ℂ | ‖z‖ < δ}.indicator f (b s.toNNReal))
+      volume 0 1 := by
+  rw [intervalIntegrable_iff_integrableOn_Ioc_of_le zero_le_one]
+  have hp : Continuous (fun s : ℝ => b s.toNNReal) :=
+    b.continuous.comp continuous_real_toNNReal
+  have hi : IntegrableOn (Set.indicator ((fun s : ℝ => b s.toNNReal) ⁻¹' {z : ℂ | ‖z‖ < δ}) (fun s => f (b s.toNNReal))) (Ioc (0 : ℝ) 1) volume :=
+    ((hf.comp hp).integrableOn_Icc.mono_set Ioc_subset_Icc_self).indicator
+    ((measurableSet_lt measurable_norm measurable_const).preimage hp.measurable)
+  convert hi using 1
+  funext s
+  by_cases hz : ‖b s.toNNReal‖ < δ <;> simp [hz]
+
+/-- Each inserted dyadic increment equals the difference of consecutive
+unit clocks on one full-field event. -/
+theorem ae_inner_inserted_increment_eq_clock_sub
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α δ : ℝ) :
+    ∀ᵐ ω ∂P, ∀ b n,
+      nonpositiveInsertedInnerTimeIncrement hcirc γ α δ n (b,ω) =
+        innerInsertedUnitTimeClock hcirc γ α (dyadicScale (n+2)) δ (b,ω) -
+        innerInsertedUnitTimeClock hcirc γ α (dyadicScale (n+1)) δ (b,ω) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec b n
+  let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
+  have he : 0 < ε := by dsimp [ε]; positivity
+  let f : ℝ → ℂ → ℝ := fun r z => r^(γ^2/2) * Real.exp
+    (γ * (H ω r z - H ω 1 0 - α * Real.log (max r ‖z‖)))
+  have hf (r : ℝ) (hr : 0 < r) : Continuous (f r) := by
+    dsimp [f]
+    have hlog : Continuous (fun z : ℂ => Real.log (max r ‖z‖)) :=
+      (continuous_const.max continuous_norm).log (fun _ => ne_of_gt (lt_max_of_lt_left hr))
+    exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
+      (((hHc ω r hr).sub continuous_const).sub (continuous_const.mul hlog))))
+  have heq (r : ℝ) (hr : 0 < r) (z : ℂ) : f r z =
+      r^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) := by
+    dsimp [f]
+    rw [hω, hω, ← hrec r z hr]
+  have hi1 := intervalIntegrable_inner_clock_indicator b (f (ε/2)) (hf _ (half_pos he)) δ
+  have hi2 := intervalIntegrable_inner_clock_indicator b (f ε) (hf _ he) δ
+  have hscale1 : dyadicScale (n+1) = ε := rfl
+  have hscale2 : dyadicScale (n+2) = ε/2 := by
+    dsimp [dyadicScale, ε]
+    rw [show n+2 = (n+1)+1 by omega, pow_succ]
+    ring
+  rw [hscale1, hscale2]
+  change (∫ s in (0 : ℝ)..1, {z : ℂ | ‖z‖ < δ}.indicator (fun z =>
+      (ε/2)^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (ε/2) z) -
+      ε^(γ^2/2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b s.toNNReal)) = _
+  calc
+    _ = ∫ s in (0 : ℝ)..1, ({z : ℂ | ‖z‖ < δ}.indicator (f (ε/2)) (b s.toNNReal) -
+        {z : ℂ | ‖z‖ < δ}.indicator (f ε) (b s.toNNReal)) := by
+      apply intervalIntegral.integral_congr
+      intro s hs
+      simp only [Set.indicator_apply]
+      split_ifs <;> simp [heq _ (half_pos he), heq _ he]
+    _ = (∫ s in (0 : ℝ)..1, {z : ℂ | ‖z‖ < δ}.indicator (f (ε/2)) (b s.toNNReal)) -
+        (∫ s in (0 : ℝ)..1, {z : ℂ | ‖z‖ < δ}.indicator (f ε) (b s.toNNReal)) :=
+      intervalIntegral.integral_sub hi1 hi2
+    _ = _ := by
+      congr 1 <;> apply intervalIntegral.integral_congr <;> intro s hs
+      · simp only [Set.indicator_apply]
+        split_ifs <;> simp [heq _ (half_pos he)]
+      · simp only [Set.indicator_apply]
+        split_ifs <;> simp [heq _ he]
+
+/-- All dyadic unit clocks along one deterministic Brownian shift have a
+common integrable product-law bound. -/
+theorem exists_integrable_bound_shifted_nonpositive_inner_unit_clocks
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α ≤ 0) (x : ℂ) (s : ℝ≥0) :
+    ∃ G : ContinuousPath ℂ × Ω → ℝ, Integrable G ((planarBrownianMotion x).prod P) ∧
+      ∀ᵐ q ∂((planarBrownianMotion x).prod P), ∀ j : ℕ,
+        |innerInsertedUnitTimeClock hcirc γ α (dyadicScale (j+1)) (1/2)
+          (ContinuousPath.shift s q.1,q.2)| ≤ G q := by
+  have := hh.isProbabilityMeasure
+  obtain ⟨A, hAs, _, hA⟩ :=
+    exists_uniform_summable_annealed_shifted_nonpositive_inserted_inner_increments
+      hh hγ hγ2 hα (fun _ => 1/2) (fun _ => le_rfl)
+  obtain ⟨C, _, hbase⟩ := exists_uniform_integrable_shifted_nonpositive_inner_base_clock hh hγ hα
+  let μ := (planarBrownianMotion x).prod P
+  let D : ℕ → ContinuousPath ℂ × Ω → ℝ := fun n q =>
+    nonpositiveInsertedInnerTimeIncrement hcirc γ α (1/2) n (ContinuousPath.shift s q.1,q.2)
+  let B : ℕ → ContinuousPath ℂ × Ω → ℝ := fun n q =>
+    innerInsertedUnitTimeClock hcirc γ α (dyadicScale (n+1)) (1/2) (ContinuousPath.shift s q.1,q.2)
+  have hD (n : ℕ) : Integrable (D n) μ := (hA x s n).1
+  have hDb (n : ℕ) : (∫ q, |D n q| ∂μ) ≤ A n := (hA x s n).2
+  obtain ⟨R, hR, hRb⟩ := exists_integrable_bound_of_summable_integral_abs μ D hD A hAs hDb
+  have hB0 : Integrable (B 0) μ := by
+    simpa [B, dyadicScale] using (hbase x s).1
+  refine ⟨fun q => |B 0 q| + R q, hB0.abs.add hR, ?_⟩
+  have heq := ae_inner_inserted_increment_eq_clock_sub hh γ α (1/2)
+  filter_upwards [hRb, (Measure.quasiMeasurePreserving_snd
+    (μ := planarBrownianMotion x) (ν := P)).ae heq] with q hq hinc j
+  have hD_eq (n : ℕ) : D n q = B (n+1) q - B n q := by
+    exact hinc (ContinuousPath.shift s q.1) n
+  have ht : (∑ n ∈ Finset.range j, D n q) = B j q - B 0 q := by
+    simp_rw [hD_eq]
+    exact Finset.sum_range_sub (fun n => B n q) j
+  calc
+    |B j q| = |B 0 q + ∑ n ∈ Finset.range j, D n q| := by rw [ht]; congr 1; ring
+    _ ≤ |B 0 q| + |∑ n ∈ Finset.range j, D n q| := abs_add_le _ _
+    _ ≤ |B 0 q| + ∑ n ∈ Finset.range j, |D n q| := add_le_add le_rfl (Finset.abs_sum_le_sum_abs _ _)
+    _ ≤ |B 0 q| + R q := add_le_add le_rfl (hq j)
+
 end HarmonicBalls
