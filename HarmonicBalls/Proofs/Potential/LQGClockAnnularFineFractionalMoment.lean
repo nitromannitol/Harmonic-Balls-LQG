@@ -1791,4 +1791,50 @@ theorem sum_rpow_mul_le_degree_mul_sum_rpow {ι : Type*} (s : Finset ι) (a : ι
           (D : ℝ≥0∞) * (∑ i ∈ s, a i ^ q) := add_le_add hrow hrow
       _ = _ := by simp only [two_mul]; rw [add_mul]
 
+/-- Two integer square indices are adjacent when both coordinate differences are at most one. -/
+def squareGridAdjacent (i j : ℤ × ℤ) : Prop :=
+  |i.1 - j.1| ≤ 1 ∧ |i.2 - j.2| ≤ 1
+
+instance (i j : ℤ × ℤ) : Decidable (squareGridAdjacent i j) := by
+  unfold squareGridAdjacent
+  infer_instance
+
+/-- Square-grid adjacency is symmetric. -/
+theorem squareGridAdjacent_symm {i j : ℤ × ℤ} (h : squareGridAdjacent i j) :
+    squareGridAdjacent j i := by
+  constructor <;> simp only [squareGridAdjacent] at *
+  · simpa [abs_sub_comm] using h.1
+  · simpa [abs_sub_comm] using h.2
+
+/-- A square has at most nine adjacent squares in any finite grid. -/
+theorem squareGridAdjacent_card_le (s : Finset (ℤ × ℤ)) (i : ℤ × ℤ) :
+    (s.filter (squareGridAdjacent i)).card ≤ 9 := by
+  let t : Finset (ℤ × ℤ) := (Finset.Icc (i.1 - 1) (i.1 + 1)).product
+    (Finset.Icc (i.2 - 1) (i.2 + 1))
+  have hsub : s.filter (squareGridAdjacent i) ⊆ t := by
+    intro j hj
+    have h := (Finset.mem_filter.mp hj).2
+    simp only [squareGridAdjacent, abs_le] at h
+    change j ∈ (Finset.Icc (i.1 - 1) (i.1 + 1)).product
+      (Finset.Icc (i.2 - 1) (i.2 + 1))
+    simp only [Finset.product_eq_sprod, Finset.mem_product, Finset.mem_Icc]
+    omega
+  calc
+    _ ≤ t.card := Finset.card_le_card hsub
+    _ = 9 := by
+      simp only [t, Finset.product_eq_sprod, Finset.card_product, Int.card_Icc]
+      have h1 : i.1 + 1 + 1 - (i.1 - 1) = (3 : ℤ) := by omega
+      have h2 : i.2 + 1 + 1 - (i.2 - 1) = (3 : ℤ) := by omega
+      rw [h1, h2]
+      decide
+
+/-- Adjacent square interactions are controlled by the diagonal powers. -/
+theorem sum_rpow_mul_squareGridAdjacent_le (s : Finset (ℤ × ℤ))
+    (a : ℤ × ℤ → ℝ≥0∞) {q : ℝ} (hq : 0 ≤ q) :
+    (∑ i ∈ s, ∑ j ∈ s.filter (squareGridAdjacent i), (a i * a j) ^ (q / 2)) ≤
+      18 * ∑ i ∈ s, a i ^ q := by
+  convert sum_rpow_mul_le_degree_mul_sum_rpow s a squareGridAdjacent
+    (fun {_ _} h => squareGridAdjacent_symm h) 9
+    (fun i _ => squareGridAdjacent_card_le s i) hq using 1; norm_num
+
 end HarmonicBalls
