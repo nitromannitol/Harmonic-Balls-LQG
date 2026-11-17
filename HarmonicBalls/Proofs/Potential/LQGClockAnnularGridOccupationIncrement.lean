@@ -244,4 +244,95 @@ theorem ae_brownian_field_submeasure_radius_increment_le_rate
   exact field_radius_increment_le_rate hh hs hsε hs2 μ hg hgi (fun z hz => by linarith [hgs z hz])
     hγθ.le hθ.le hA hI
 
+
+private theorem radius_annular_weight_bound {δ γ α : ℝ} (hδ : 0 < δ) :
+    ∃ M : ℝ, 0 ≤ M ∧ ∀ z : ℂ,
+      |({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+        (fun z => Real.exp (-γ*α*Real.log (max δ ‖z‖))) z)| ≤ M := by
+  let f : ℂ → ℝ := fun z => Real.exp (-γ*α*Real.log (max δ ‖z‖))
+  have hf : Continuous f := by
+    exact Real.continuous_exp.comp (continuous_const.mul
+      ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hδ).ne')))
+  obtain ⟨K, hK⟩ := (isCompact_closedBall (0 : ℂ) (1/2 : ℝ)).bddAbove_image hf.continuousOn
+  refine ⟨max K 0, le_max_right _ _, ?_⟩
+  intro z
+  by_cases hz : z ∈ {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  · have hzk : z ∈ Metric.closedBall (0 : ℂ) (1/2 : ℝ) := by
+      simpa only [Metric.mem_closedBall, dist_zero_right] using hz.2
+    have hle : f z ≤ K := hK ⟨z, hzk, rfl⟩
+    rw [Set.indicator_of_mem hz, abs_of_pos (Real.exp_pos _)]
+    exact hle.trans (le_max_left K 0)
+  · rw [Set.indicator_of_notMem hz, abs_zero]
+    exact le_max_right K 0
+
+
+
+
+/-- General same-shell annular increments admit a uniform field-averaged
+rate for stopped unit Brownian occupation. -/
+theorem ae_brownian_stopped_annular_inserted_radius_increment_le_riesz_energy
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ θ d M : ℝ, γ < θ ∧ θ < 2*γ ∧ 0 < d ∧ d < 2 ∧
+      0 < d - γ^2 + (2*γ-θ)^2/2 ∧ 0 ≤ M ∧
+      let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+      ∀ᵐ b ∂(planarBrownianMotion x),
+        ∀ T : ℝ≥0, ∀ ε s : ℝ, 0 < ε → ε ≤ 1/2 → ε ≤ δ →
+        0 < s → s ≤ ε → ε / 2 ≤ s →
+        let μ := Measure.map (fun t => b t) (ν.restrict (Iic T))
+        (∫ ω, |∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          s^(γ^2/2) * Real.exp (γ*(hcirc ω s z-hcirc ω 1 0 - α*Real.log (max s ‖z‖))) -
+          ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0 - α*Real.log (max ε ‖z‖)))) z ∂μ| ∂P) ≤
+        ((Real.exp (γ^2*Real.log 2)-1)*(M^2 * unitOccupationRieszEnergy d b * 2^d)+1)/2 *
+          Real.exp (Real.log ε * ((d-γ^2+(2*γ-θ)^2/2)/2)) +
+        2*M*Real.exp (Real.log ε * ((θ-γ)^2/2)) := by
+  let A : Set ℂ := {z | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}
+  let g : ℂ → ℝ := A.indicator (fun z => Real.exp (-γ*α*Real.log (max δ ‖z‖)))
+  have hA : MeasurableSet A :=
+    (measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
+  have hgm : Measurable g := by
+    apply Measurable.indicator _ hA
+    exact (Real.continuous_exp.comp (continuous_const.mul
+      ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hδ).ne')))).measurable
+  obtain ⟨M, hM, hgM⟩ := radius_annular_weight_bound (γ := γ) (α := α) hδ
+  have hgs : ∀ z, g z ≠ 0 → ‖z‖ ≤ 1/2 := by
+    intro z hz
+    by_contra h
+    have hn : z ∉ A := fun hzA => h hzA.2
+    exact hz (Set.indicator_of_notMem hn _)
+  obtain ⟨θ, d, hγθ, hθ, hd0, hd2, hp, _⟩ := exists_clock_truncation_exponents hγ0 hγ2
+  have hb := ae_brownian_field_submeasure_radius_increment_le_rate
+    hh x hgm hM hgM hgs θ d hγθ hθ hd0 hd2
+  refine ⟨θ, d, M, hγθ, hθ, hd0, hd2, hp, hM, ?_⟩
+  filter_upwards [hb] with b hb
+  intro T ε s hε hεhalf hεδ hs hsε hs2
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let μ := Measure.map (fun t => b t) (ν.restrict (Iic T))
+  have hμ : μ ≤ Measure.map (fun t => b t) ν :=
+    Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+  have hbound := hb μ hμ ε s hε hεhalf hs hsε hs2
+  refine (le_of_eq ?_).trans hbound
+  congr 1
+  funext ω
+  congr 1
+  apply integral_congr_ae
+  filter_upwards with z
+  by_cases hz : z ∈ A
+  · have hδε : ε ≤ ‖z‖ := hεδ.trans hz.1
+    have hhalf : s ≤ ‖z‖ := hsε.trans hδε
+    rw [show A.indicator _ z = _ from Set.indicator_of_mem hz _,
+      show g z = _ from Set.indicator_of_mem hz _, max_eq_right hz.1,
+      max_eq_right hδε, max_eq_right hhalf]
+    have heq (r : ℝ) : γ * (hcirc ω r z - hcirc ω 1 0 - α * Real.log ‖z‖) =
+        -γ*α*Real.log ‖z‖ + γ*(hcirc ω r z-hcirc ω 1 0) := by ring
+    rw [heq s, heq ε, Real.exp_add, Real.exp_add]
+    ring
+  · rw [show A.indicator _ z = _ from Set.indicator_of_notMem hz _,
+      show g z = _ from Set.indicator_of_notMem hz _, zero_mul]
+
+
+
 end HarmonicBalls
