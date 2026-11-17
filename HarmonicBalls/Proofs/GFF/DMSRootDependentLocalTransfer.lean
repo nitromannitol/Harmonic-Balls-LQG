@@ -5,6 +5,7 @@ import HarmonicBalls.Proofs.Sec8.PhaseTorusLebesgue
 import HarmonicBalls.Proofs.Sec8.UniformSingularPhaseCertificate
 import HarmonicBalls.Proofs.GFF.LogInsertionReconstruction
 import HarmonicBalls.FirstPass.S8c.TailTransfer
+import HarmonicBalls.Proofs.Sec8.JointVeryGoodAE
 
 /-!
 # Root-dependent local event transfer
@@ -1121,5 +1122,75 @@ theorem IsWholePlaneGFF.exists_charted_phaseFrequency_event_with_reference
     hh.ae_localReference_good_of_phase_certificate hfull hγ hγ2 hαγ hμ₀ (E 0)
       β N _ b C₁m C₁p C₂m C₂p c m ζ (heq 0) (hphase 0)⟩
 
+
+/-- The charted event and a jointly measurable actual-frequency event use the same parameters. -/
+theorem IsWholePlaneGFF.exists_charted_phaseFrequency_event_with_joint_frequency
+    (hgrowth : LQGVolumeGrowthAllScalesStmt.{u}) (hfull : LQGMeasureFullSupportStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {γ α β : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hα : α < lqgQ γ)
+    (hβ : (2 + γ) ^ 2 / 2 < β)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ μ₀ ν : Ω → Measure ℂ} {b : ℝ} (hb : b ∈ Ioo (0 : ℝ) 1)
+    (hh : IsWholePlaneGFF P hC hcirc)
+    (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hμ₀ : IsLQGMeasureOfField P γ γ hcirc μ₀)
+    (hν : IsLQGMeasureOfField P γ 0 hcirc ν)
+    (hAff : WholePlaneGFFAffineInvariance P hC hcirc)
+    (hCC₀ : LQGMeasureCoordChange P γ 0 hC hcirc)
+    (hCCγ : LQGMeasureCoordChange P γ γ hC hcirc)
+    {ζ : ℝ} (hζ : 0 < ζ) :
+    ∃ u : ℕ → ℂ, DenseRange u ∧
+    ∃ c a : ℝ, 0 < c ∧ a ∈ Ioo (0 : ℝ) 1 ∧
+    ∃ C₁m C₁p C₂m C₂p : ℝ,
+      0 < C₁m ∧ 0 < C₁p ∧ 0 < C₂m ∧ 0 < C₂p ∧
+    ∃ N₀ : ℕ, 9 ≤ N₀ ∧ ∃ m ∈ Ioo (0 : ℝ) 1,
+    ∀ N : ℕ, N₀ ≤ N →
+    ∃ E : ∀ n, Set (PhaseTorus ×
+        (Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) → ℝ)),
+      (∀ n, MeasurableSet (E n)) ∧
+      (∀ n, ∀ᵐ ω ∂P, ∀ t : PhaseTorus,
+        ((t, fun φ : Section6.LocalTest (ball 0 (bufferedChartScale n / 2)) =>
+          hC ω φ.1.1 + ∫ x, φ.1.1 x * (-γ * Real.log ‖x‖)) ∈ E n ↔
+        ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+          ({k : ℕ | k ∈ Icc (K + 1) (2 * K) ∧
+            PhaseVeryGoodAnnulus (μ₀ ω) β (dyadicScale k) 0 N
+              (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b
+              C₁m C₁p C₂m C₂p c (torusPhase t) ∧
+            AnnulusBallComparison (μ₀ ω) k 0 m}.ncard : ℝ))) ∧
+      MeasurableSet (chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) ∧
+      (∀ᵐ z ∂(volume : Measure ℂ), z ∈ ball (0 : ℂ) 1 →
+        ∃ R : ℝ, 0 < R ∧ R < ‖z‖ ∧ ‖z‖ + R < 1 ∧
+          ∃ F : Set (ModConstTestPairings (ball z R)), MeasurableSet F ∧
+            (∀ v, (v, z) ∈ chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E ↔
+              restrictGlobalPairings (ball z R) v ∈ F) ∧
+            ∀ᵐ ω ∂P, (fun φ => hC ω φ.1 +
+              ∫ x, φ.1 x * (-γ * Real.log ‖x - z‖)) ∈ F) ∧
+      (∀ᵐ ω ∂P, ∀ᵐ z ∂μ ω, z ∈ ball (0 : ℂ) 1 →
+        (localModConstField α hC univ ω, z) ∈
+          chartedLocalEvent (fun z => phaseTorusOfComplex (-z)) u E) ∧
+      (∀ j : ℕ, 1 ≤ j → ∀ᵐ p ∂((volume.restrict (localDomain j)).prod P),
+        localReferenceObservation μ₀ j p ∈ recentredGoodSet β N
+          (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b
+          C₁m C₁p C₂m C₂p c m ζ) ∧
+      ∃ F : Set (Ω × ℂ), MeasurableSet F ∧ ∀ᵐ ω ∂P, ∀ z : ℂ,
+        (ω, z) ∈ F ↔ ∀ᶠ K : ℕ in atTop, (1 - ζ) * (K : ℝ) ≤
+          (veryGoodComparableScaleCount (μ ω) β z N
+            (a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2)) b
+            C₁m C₁p C₂m C₂p c m K : ℝ) := by
+  obtain ⟨u, hu, c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, hcert⟩ :=
+    hh.exists_charted_phaseFrequency_event_with_reference hgrowth hfull hγ hγ2 hα hβ hb
+      hμ hμ₀ hν hAff hCC₀ hCCγ hζ
+  refine ⟨u, hu, c, a, hc, ha, C₁m, C₁p, C₂m, C₂p, h₁m, h₁p, h₂m, h₂p,
+    N₀, hN₀, m, hm, ?_⟩
+  intro N hN
+  obtain ⟨E, hE, heq, hS, href, hroot, hlocal⟩ := hcert N hN
+  refine ⟨E, hE, heq, hS, href, hroot, hlocal, ?_⟩
+  have hapos : 0 < a / (((401 : ℝ) ^ |-(γ * γ)|) ^ 2) := by
+    have := ha.1
+    positivity
+  exact exists_jointlyMeasurable_veryGoodComparableScaleFrequency P
+    (hh.aemeasurable_lqgMeasure hμ) (hμ.mono fun _ h => h.isLocallyFiniteMeasure)
+    β N _ b C₁m C₁p C₂m C₂p c m ζ (measurableSet_unitGoodAnnulus _ b hapos)
 
 end HarmonicBalls
