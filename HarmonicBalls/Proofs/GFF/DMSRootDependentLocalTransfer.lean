@@ -241,4 +241,181 @@ theorem translated_test_eq_zero_outside_closedBall
       _ ≤ _ := norm_add_le _ _
   linarith
 
+/-- Recenter every local mean-zero pairing using one buffered chart. -/
+def localTranslatedObservation
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (c : ℂ) (δ r : ℝ) (hKU : closedBall c (δ + r) ⊆ U)
+    (p : ModConstTestPairings U × closedBall c δ) :
+    Section6.LocalTest (ball 0 r) → ℝ :=
+  fun φ =>
+    localGaugeVersion U ρ hρ p.1
+      (localTranslatedTest U ⟨closedBall c (δ + r), isCompact_closedBall _ _⟩
+        hKU c δ φ.1 (translated_test_eq_zero_outside_closedBall c δ r φ.1
+          (φ.2.trans ball_subset_closedBall)) p.2)
+
+/-- The buffered recentered local pairing process is jointly measurable in
+the local pairings and the centre. -/
+theorem measurable_localTranslatedObservation
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (c : ℂ) (δ r : ℝ) (hKU : closedBall c (δ + r) ⊆ U) :
+    Measurable (localTranslatedObservation U ρ hρ c δ r hKU) := by
+  apply measurable_pi_iff.mpr
+  intro φ
+  exact measurable_localTranslated_pairing U ρ hρ
+    ⟨closedBall c (δ + r), isCompact_closedBall _ _⟩ hKU c δ φ.1
+      (translated_test_eq_zero_outside_closedBall c δ r φ.1
+        (φ.2.trans ball_subset_closedBall))
+
+/-- For the local pairings of a global distribution, the buffered process
+is its actual translated pairing process for every root in the chart. -/
+theorem localTranslatedObservation_pairings
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (c : ℂ) (δ r : ℝ) (hKU : closedBall c (δ + r) ⊆ U)
+    (h : LQGMetric.DistC) (z : closedBall c δ) :
+    localTranslatedObservation U ρ hρ c δ r hKU
+      (fun ψ => h ⟨ψ.1, ψ.2.1.1, ψ.2.1.2.1, subset_univ _⟩, z) =
+        fun φ => h (LQGMetric.testAffinePull 1 z φ.1.1) := by
+  funext φ
+  exact localTranslated_pairing_eq U ρ hρ
+    ⟨closedBall c (δ + r), isCompact_closedBall _ _⟩ hKU c δ φ.1
+      (translated_test_eq_zero_outside_closedBall c δ r φ.1
+        (φ.2.trans ball_subset_closedBall)) h z
+
+/-- A total measurable projection onto a closed root disk, using its centre
+outside the disk. -/
+def bufferedRoot (c : ℂ) (δ : ℝ) (hδ : 0 ≤ δ) (z : ℂ) : closedBall c δ := by
+  classical
+  exact ⟨if z ∈ closedBall c δ then z else c, by
+    split_ifs with hz
+    · exact hz
+    · exact mem_closedBall_self hδ⟩
+
+/-- The total root projection is measurable. -/
+theorem measurable_bufferedRoot (c : ℂ) (δ : ℝ) (hδ : 0 ≤ δ) :
+    Measurable (bufferedRoot c δ hδ) := by
+  classical
+  apply Measurable.subtype_mk
+  change Measurable (fun z : ℂ => if z ∈ closedBall c δ then z else c)
+  exact measurable_id.ite measurableSet_closedBall measurable_const
+
+/-- Restriction to local mean-zero pairings is measurable. -/
+theorem measurable_restrictGlobalPairings (U : Set ℂ) :
+    Measurable (restrictGlobalPairings U) := by
+  exact measurable_pi_iff.mpr fun _ => measurable_pi_apply _
+
+/-- A marked event on one buffered chart, expressed through local pairings. -/
+def bufferedLocalEvent
+    {T : Type*} (θ : ℂ → T) (U : Opens ℂ) (ρ : LQGMetric.TestOn U)
+    (hρ : ∫ x, ρ x = 1) (c : ℂ) (δ r : ℝ) (hδ : 0 ≤ δ)
+    (hKU : closedBall c (δ + r) ⊆ U)
+    (E : Set (T × (Section6.LocalTest (ball 0 r) → ℝ))) :
+    Set (ModConstTestPairings univ × ℂ) :=
+  {p | p.2 ∈ closedBall c δ ∧
+    (θ p.2, localTranslatedObservation U ρ hρ c δ r hKU
+      (restrictGlobalPairings U p.1, bufferedRoot c δ hδ p.2)) ∈ E}
+
+/-- A measurable phase event gives a jointly measurable marked chart event. -/
+theorem measurableSet_bufferedLocalEvent
+    {T : Type*} [MeasurableSpace T] (θ : ℂ → T) (hθ : Measurable θ)
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (c : ℂ) (δ r : ℝ) (hδ : 0 ≤ δ)
+    (hKU : closedBall c (δ + r) ⊆ U)
+    (E : Set (T × (Section6.LocalTest (ball 0 r) → ℝ))) (hE : MeasurableSet E) :
+    MeasurableSet (bufferedLocalEvent θ U ρ hρ c δ r hδ hKU E) := by
+  have hm : Measurable (fun p : ModConstTestPairings univ × ℂ =>
+      localTranslatedObservation U ρ hρ c δ r hKU
+        (restrictGlobalPairings U p.1, bufferedRoot c δ hδ p.2)) :=
+    (measurable_localTranslatedObservation U ρ hρ c δ r hKU).comp
+      (((measurable_restrictGlobalPairings U).comp measurable_fst).prodMk
+        ((measurable_bufferedRoot c δ hδ).comp measurable_snd))
+  exact (measurableSet_closedBall.preimage measurable_snd).inter
+    (hE.preimage ((hθ.comp measurable_snd).prodMk hm))
+
+/-- Every section of a chart event at a root in the chart is a measurable
+event of the local pairings, for all cylinder inputs. -/
+theorem bufferedLocalEvent_section
+    {T : Type*} [MeasurableSpace T] (θ : ℂ → T)
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (c : ℂ) (δ r : ℝ) (hδ : 0 ≤ δ)
+    (hKU : closedBall c (δ + r) ⊆ U)
+    (E : Set (T × (Section6.LocalTest (ball 0 r) → ℝ))) (hE : MeasurableSet E)
+    (z : ℂ) (hz : z ∈ closedBall c δ) :
+    ∃ F : Set (ModConstTestPairings U), MeasurableSet F ∧
+      ∀ v, (v, z) ∈ bufferedLocalEvent θ U ρ hρ c δ r hδ hKU E ↔
+        restrictGlobalPairings U v ∈ F := by
+  let F : Set (ModConstTestPairings U) :=
+    {v | (θ z, localTranslatedObservation U ρ hρ c δ r hKU (v, ⟨z, hz⟩)) ∈ E}
+  have hF : MeasurableSet F :=
+    hE.preimage (measurable_const.prodMk
+      ((measurable_localTranslatedObservation U ρ hρ c δ r hKU).comp
+        (measurable_id.prodMk measurable_const)))
+  refine ⟨F, hF, ?_⟩
+  intro v
+  have he : bufferedRoot c δ hδ z = ⟨z, hz⟩ := by
+    classical
+    apply Subtype.ext
+    change (if z ∈ closedBall c δ then z else c) = z
+    split_ifs
+    rfl
+  change (z ∈ closedBall c δ ∧ (θ z, localTranslatedObservation U ρ hρ c δ r hKU
+    (restrictGlobalPairings U v, bufferedRoot c δ hδ z)) ∈ E) ↔ _
+  rw [he]
+  simp only [hz, true_and, F, mem_ofPred_eq]
+
+/-- On global distribution pairings, the marked chart event is the event
+applied to the actual translated local pairing process. -/
+theorem bufferedLocalEvent_pairings
+    {T : Type*} (θ : ℂ → T)
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (c : ℂ) (δ r : ℝ) (hδ : 0 ≤ δ)
+    (hKU : closedBall c (δ + r) ⊆ U)
+    (E : Set (T × (Section6.LocalTest (ball 0 r) → ℝ)))
+    (h : LQGMetric.DistC) (z : ℂ) (hz : z ∈ closedBall c δ) :
+    ((fun ψ : {φ : ℂ → ℝ // IsTestFunction univ φ ∧ ∫ x, φ x = 0} =>
+      h ⟨ψ.1, ψ.2.1.1, ψ.2.1.2.1, subset_univ _⟩), z) ∈
+        bufferedLocalEvent θ U ρ hρ c δ r hδ hKU E ↔
+    (θ z, fun φ => h (LQGMetric.testAffinePull 1 z φ.1.1)) ∈ E := by
+  have he : bufferedRoot c δ hδ z = ⟨z, hz⟩ := by
+    classical
+    apply Subtype.ext
+    change (if z ∈ closedBall c δ then z else c) = z
+    split_ifs
+    rfl
+  change (z ∈ closedBall c δ ∧ (θ z, localTranslatedObservation U ρ hρ c δ r hKU
+    (restrictGlobalPairings U
+      (fun ψ => h ⟨ψ.1, ψ.2.1.1, ψ.2.1.2.1, subset_univ _⟩),
+      bufferedRoot c δ hδ z)) ∈ E) ↔ _
+  rw [he]
+  change (z ∈ closedBall c δ ∧ (θ z, localTranslatedObservation U ρ hρ c δ r hKU
+    (fun ψ => h ⟨ψ.1, ψ.2.1.1, ψ.2.1.2.1, subset_univ _⟩, ⟨z, hz⟩)) ∈ E) ↔ _
+  rw [localTranslatedObservation_pairings]
+  exact and_iff_right hz
+
+/-- Restrict mean-zero pairings from a larger local region to a smaller one. -/
+def restrictLocalPairings {U V : Set ℂ} (hUV : U ⊆ V)
+    (v : ModConstTestPairings V) : ModConstTestPairings U :=
+  fun φ => v ⟨φ.1, ⟨φ.2.1.1, φ.2.1.2.1, φ.2.1.2.2.trans hUV⟩, φ.2.2⟩
+
+/-- Restriction between local pairing spaces is measurable. -/
+theorem measurable_restrictLocalPairings {U V : Set ℂ} (hUV : U ⊆ V) :
+    Measurable (restrictLocalPairings hUV) :=
+  measurable_pi_iff.mpr fun _ => measurable_pi_apply _
+
+/-- A chart section factors through any larger region containing the chart. -/
+theorem bufferedLocalEvent_section_of_subset
+    {T : Type*} [MeasurableSpace T] (θ : ℂ → T)
+    (U : Opens ℂ) (ρ : LQGMetric.TestOn U) (hρ : ∫ x, ρ x = 1)
+    (c : ℂ) (δ r : ℝ) (hδ : 0 ≤ δ)
+    (hKU : closedBall c (δ + r) ⊆ U)
+    (E : Set (T × (Section6.LocalTest (ball 0 r) → ℝ))) (hE : MeasurableSet E)
+    (z : ℂ) (hz : z ∈ closedBall c δ) (V : Set ℂ) (hUV : (U : Set ℂ) ⊆ V) :
+    ∃ F : Set (ModConstTestPairings V), MeasurableSet F ∧
+      ∀ v, (v, z) ∈ bufferedLocalEvent θ U ρ hρ c δ r hδ hKU E ↔
+        restrictGlobalPairings V v ∈ F := by
+  obtain ⟨F, hF, heq⟩ := bufferedLocalEvent_section θ U ρ hρ c δ r hδ hKU E hE z hz
+  refine ⟨restrictLocalPairings hUV ⁻¹' F,
+    hF.preimage (measurable_restrictLocalPairings hUV), ?_⟩
+  intro v
+  exact heq v
+
 end HarmonicBalls
