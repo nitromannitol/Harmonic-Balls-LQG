@@ -952,4 +952,178 @@ theorem exists_uniform_annealed_nonpositive_radius_correction_iSup_le
   intro t
   exact lintegral_mono_set (Ioc_subset_Ioc le_rfl t.2.2)
 
+
+/-- A bounded weighted same-shell increment is integrable over the field
+for every submeasure of a unit Brownian occupation measure. -/
+theorem integrable_brownian_weighted_radius_increment_field
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε r : ℝ}
+    (hε : 0 < ε) (hεhalf : ε ≤ 1/2) (hr : 0 < r) (hrε : r ≤ ε)
+    (γ : ℝ) (b : ContinuousPath ℂ) (g : ℂ → ℝ) (hg : Measurable g)
+    (hgm : ∀ z, |g z| ≤ 1) (hgs : ∀ z, g z ≠ 0 → ‖z‖ ≤ 1/2)
+    (μ : Measure ℂ) (hμ : μ ≤ Measure.map (fun t => b t)
+      (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))) :
+    Integrable (fun ω => ∫ z, g z *
+      (r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0)) -
+        ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0))) ∂μ) P := by
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  have hν : ν univ = 1 := by
+    simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
+  let : IsProbabilityMeasure ν := ⟨hν⟩
+  let : IsFiniteMeasure μ := isFiniteMeasure_of_le (Measure.map (fun t => b t) ν) hμ
+  have hgi : Integrable g μ := by
+    apply (integrable_const (1 : ℝ)).mono' hg.aestronglyMeasurable
+    filter_upwards with z
+    simpa only [Real.norm_eq_abs] using hgm z
+  have hgr : ∀ z, g z ≠ 0 → ‖z‖ + r ≤ 1 := by
+    intro z hz
+    linarith [hgs z hz]
+  have hgε : ∀ z, g z ≠ 0 → ‖z‖ + ε ≤ 1 := by
+    intro z hz
+    linarith [hgs z hz]
+  exact hh.integrable_integral_increment_scales hr hε zero_lt_one μ hg hgi hgr hgε γ
+
+
+/-- A stopped, weighted radius increment has a jointly measurable
+path-field representative. -/
+theorem exists_measurable_brownian_weighted_radius_increment
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r) (γ : ℝ)
+    (g : ℂ → ℝ) (hg : Measurable g) (T : ℝ≥0) :
+    ∃ F : ContinuousPath ℂ × Ω → ℝ, Measurable F ∧
+      ∀ᵐ ω ∂P, ∀ b, F (b, ω) = ∫ z, g z *
+        (r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0)) -
+          ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0)))
+        ∂(Measure.map (fun t => b t) ((Measure.map Real.toNNReal
+          (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic T))) := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let G : Ω × ℂ → ℝ := fun q => g q.2 *
+    (r^(γ^2/2) * Real.exp (γ*(H q.1 r q.2-H q.1 1 0)) -
+      ε^(γ^2/2) * Real.exp (γ*(H q.1 ε q.2-H q.1 1 0)))
+  have hG : Measurable G := by
+    have h1 : Measurable (fun q : Ω × ℂ => H q.1 r q.2) :=
+      (hHm r hr).comp measurable_swap
+    have h2 : Measurable (fun q : Ω × ℂ => H q.1 ε q.2) :=
+      (hHm ε hε).comp measurable_swap
+    have h3 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+      (hHm 1 zero_lt_one).comp (measurable_const.prodMk measurable_fst)
+    exact (hg.comp measurable_snd).mul
+      ((measurable_const.mul (measurable_const.mul (h1.sub h3)).exp).sub
+        (measurable_const.mul (measurable_const.mul (h2.sub h3)).exp))
+  let ν : Measure ℝ≥0 := (Measure.map Real.toNNReal
+    (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic T)
+  let F : ContinuousPath ℂ × Ω → ℝ := fun q =>
+    ∫ z, G (q.2,z) ∂(Measure.map (fun t => q.1 t) ν)
+  have hF : Measurable F := by
+    have heval0 : Measurable (fun q : ContinuousPath ℂ × ℝ≥0 => q.1 q.2) := by fun_prop
+    have heval : Measurable (fun q : (ContinuousPath ℂ × Ω) × ℝ≥0 => q.1.1 q.2) :=
+      heval0.comp ((measurable_fst.comp measurable_fst).prodMk measurable_snd)
+    have h := hG.comp ((measurable_snd.comp measurable_fst).prodMk heval)
+    have hm := h.stronglyMeasurable.integral_prod_right' (ν := ν)
+    convert hm.measurable using 1
+    funext q
+    exact integral_map q.1.continuous.measurable.aemeasurable
+      (hG.comp (measurable_const.prodMk measurable_id)).aestronglyMeasurable
+  refine ⟨F, hF, ?_⟩
+  filter_upwards [hHae] with ω hω b
+  simp only [F, G, hω, ν]
+
+
+/-- A summable annealed bound controls every bounded weighted same-shell
+increment stopped at a deterministic unit-time horizon. -/
+theorem exists_uniform_summable_annealed_weighted_radius_increments
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) :
+    ∃ A : ℕ → ℝ, Summable A ∧ (∀ n, 0 ≤ A n) ∧
+      ∀ (n : ℕ) (x : ℂ) (g : ℂ → ℝ), Measurable g →
+        (∀ z, |g z| ≤ 1) → (∀ z, g z ≠ 0 → ‖z‖ ≤ 1/2) →
+        ∀ r : ℝ, 0 < r → r ≤ (2 : ℝ)⁻¹ ^ (n+1) →
+        (2 : ℝ)⁻¹ ^ (n+1) / 2 ≤ r → ∀ T : ℝ≥0,
+        ∃ F : ContinuousPath ℂ × Ω → ℝ, Measurable F ∧
+          (∀ᵐ ω ∂P, ∀ b, F (b, ω) = ∫ z, g z *
+            (r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0)) -
+              ((2 : ℝ)⁻¹ ^ (n+1))^(γ^2/2) * Real.exp (γ*
+                (hcirc ω ((2 : ℝ)⁻¹ ^ (n+1)) z-hcirc ω 1 0)))
+            ∂(Measure.map (fun t => b t) ((Measure.map Real.toNNReal
+              (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic T)))) ∧
+          Integrable F ((planarBrownianMotion x).prod P) ∧
+          (∫ q, |F q| ∂((planarBrownianMotion x).prod P)) ≤ A n := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨θ, d, hγθ, hθ, hd0, hd2, hp, hbound⟩ :=
+    exists_uniform_exponents_brownian_weighted_radius_increment_le_riesz_energy hh hγ0 hγ2
+  let u : ℝ := (d-γ^2+(2*γ-θ)^2/2)/2
+  let v : ℝ := (θ-γ)^2/2
+  have hu : 0 < u := by dsimp [u]; positivity
+  have hv : 0 < v := by dsimp [v]; positivity
+  let R : ℕ → ContinuousPath ℂ → ℝ := fun n b =>
+    ((Real.exp (γ^2*Real.log 2)-1)*(unitOccupationRieszEnergy d b * 2^d)+1)/2 *
+      Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * u) +
+      2 * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * v)
+  obtain ⟨A, hAs, hA⟩ := exists_uniform_summable_inner_energy_bound
+    (γ := γ) hd0 hd2 hu hv
+  have hR0 (n : ℕ) (b : ContinuousPath ℂ) : 0 ≤ R n b := by
+    dsimp [R]
+    have he : 0 ≤ Real.exp (γ^2*Real.log 2)-1 :=
+      sub_nonneg.mpr (Real.one_le_exp (by positivity))
+    have hE : 0 ≤ unitOccupationRieszEnergy d b := ENNReal.toReal_nonneg
+    positivity
+  refine ⟨A, hAs, ?_, ?_⟩
+  · intro n
+    rw [← (hA 0 n).2]
+    exact integral_nonneg (hR0 n)
+  intro n x g hg hgm hgs r hr hrε hεr T
+  let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
+  have hε : 0 < ε := by dsimp [ε]; positivity
+  have hεhalf : ε ≤ 1/2 := by
+    dsimp [ε]
+    rw [pow_succ]
+    have h : (2 : ℝ)⁻¹ ^ n ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+    nlinarith
+  obtain ⟨F, hFm, hFspatial⟩ :=
+    exists_measurable_brownian_weighted_radius_increment hh hε hr γ g hg T
+  have hfield (b : ContinuousPath ℂ) : Integrable (fun ω => F (b,ω)) P := by
+    let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    let μ : Measure ℂ := Measure.map (fun t => b t) (ν.restrict (Iic T))
+    have hμ : μ ≤ Measure.map (fun t => b t) ν :=
+      Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+    apply (integrable_brownian_weighted_radius_increment_field hh hε hεhalf hr hrε γ b g hg hgm hgs μ hμ).congr
+    filter_upwards [hFspatial] with ω hω
+    exact (hω b).symm
+  have hRi : Integrable (R n) (planarBrownianMotion x) := (hA x n).1
+  have hbound' : ∀ᵐ b ∂(planarBrownianMotion x), (∫ ω, ‖F (b,ω)‖ ∂P) ≤ R n b := by
+    filter_upwards [hbound x] with b hb
+    have heq : (∫ ω, ‖F (b,ω)‖ ∂P) = ∫ ω, |∫ z, g z *
+        (r^(γ^2/2) * Real.exp (γ*(hcirc ω r z-hcirc ω 1 0)) -
+          ε^(γ^2/2) * Real.exp (γ*(hcirc ω ε z-hcirc ω 1 0)))
+        ∂(Measure.map (fun t => b t) ((Measure.map Real.toNNReal
+          (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic T)))| ∂P := by
+      apply integral_congr_ae
+      filter_upwards [hFspatial] with ω hω
+      rw [hω b, Real.norm_eq_abs]
+    rw [heq]
+    let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    let μ : Measure ℂ := Measure.map (fun t => b t) (ν.restrict (Iic T))
+    have hμ : μ ≤ Measure.map (fun t => b t) ν :=
+      Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+    have h := hb g hg 1 zero_le_one hgm hgs μ hμ ε r hε hεhalf hr hrε hεr
+    simpa only [one_pow, one_mul, mul_one, R, u, v, ε, μ, ν] using h
+  have hsec : Integrable (fun b => ∫ ω, ‖F (b,ω)‖ ∂P) (planarBrownianMotion x) := by
+    apply hRi.mono' (hFm.stronglyMeasurable.norm.integral_prod_right').aestronglyMeasurable
+    filter_upwards [hbound'] with b hb
+    rw [Real.norm_eq_abs, abs_of_nonneg (integral_nonneg (fun _ => norm_nonneg _))]
+    exact hb
+  have hFi : Integrable F ((planarBrownianMotion x).prod P) :=
+    (integrable_prod_iff hFm.aestronglyMeasurable).2 ⟨Filter.Eventually.of_forall hfield, hsec⟩
+  refine ⟨F, hFm, hFspatial, hFi, ?_⟩
+  calc
+    _ = ∫ b, ∫ ω, ‖F (b,ω)‖ ∂P ∂(planarBrownianMotion x) := by
+      simpa only [Real.norm_eq_abs] using integral_prod (fun q => |F q|) hFi.abs
+    _ ≤ ∫ b, R n b ∂(planarBrownianMotion x) := integral_mono_ae hsec hRi hbound'
+    _ = A n := (hA x n).2
+
 end HarmonicBalls
