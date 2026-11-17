@@ -338,4 +338,42 @@ theorem ae_annular_inserted_clock_cell_le_uninserted
       lintegral_mono fun t => hω (b t)
     _ = _ := lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
 
+
+/-- The fractional moment of an inserted annular time cell is controlled by
+that of the corresponding uninserted cell, uniformly in the smoothing scale. -/
+theorem lintegral_prod_brownian_annular_inserted_cell_rpow_le_uninserted
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ)
+    {ε δ : ℝ} (hε : 0 < ε) (hεδ : ε ≤ δ) (γ α u h : ℝ)
+    {p : ℝ} (hp : 0 ≤ p) :
+    (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ t in Ioc u (u + h), ENNReal.ofReal
+      ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+        ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) ε z)) (q.2 t.toNNReal))) ^ p
+          ∂(P.prod (planarBrownianMotion x))) ≤
+      (ENNReal.ofReal (Real.exp (|γ * α| * |Real.log δ|))) ^ p *
+      (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ t in Ioc u (u + h), ENNReal.ofReal
+        ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z)) (q.2 t.toNNReal))) ^ p
+            ∂(P.prod (planarBrownianMotion x))) := by
+  have hae := ae_annular_inserted_clock_cell_le_uninserted hh hε hεδ γ α
+    (volume.restrict (Ioc u (u + h)))
+  have hprod := (Measure.quasiMeasurePreserving_fst (μ := P)
+    (ν := planarBrownianMotion x)).ae hae
+  calc
+    _ ≤ ∫⁻ q : Ω × ContinuousPath ℂ,
+        (ENNReal.ofReal (Real.exp (|γ * α| * |Real.log δ|))) ^ p *
+        (∫⁻ t in Ioc u (u + h), ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z =>
+            ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage 0 (hcirc q.1) ε z))
+                (q.2 t.toNNReal))) ^ p ∂(P.prod (planarBrownianMotion x)) := by
+          apply lintegral_mono_ae
+          filter_upwards [hprod] with q hq
+          exact (ENNReal.rpow_le_rpow (hq (fun t => q.2 t.toNNReal)) hp).trans_eq
+            (ENNReal.mul_rpow_of_nonneg _ _ hp)
+    _ = _ := lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg hp ENNReal.ofReal_ne_top)
+
 end HarmonicBalls
