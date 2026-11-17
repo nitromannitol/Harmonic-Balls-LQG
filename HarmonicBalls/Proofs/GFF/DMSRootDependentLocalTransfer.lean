@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.GFF.DMSInsertedLocalAbsoluteContinuity
+import HarmonicBalls.Proofs.Sec8.MeanZeroDistributionVersion
 
 /-!
 # Root-dependent local event transfer
@@ -60,5 +61,68 @@ theorem IsWholePlaneGFF.ae_singular_root_local_of_reference
   filter_upwards [hA] with ω hω
   apply (hlocal _).2
   exact hω
+
+end HarmonicBalls
+
+open MeasureTheory Set TopologicalSpace
+open scoped Distributions
+namespace HarmonicBalls
+
+/-- Form a mean-zero local test by subtracting its integral times a unit-mass test. -/
+def localGaugeTest (U : Opens ℂ) (ρ χ : LQGMetric.TestOn U)
+    (hρ : ∫ x, ρ x = 1) : {φ : ℂ → ℝ // IsTestFunction U φ ∧ ∫ x, φ x = 0} := by
+  let ψ : LQGMetric.TestOn U := χ - (∫ x, χ x) • ρ
+  let ψ' : LQGMetric.TestC := LQGMetric.MarkovGerm.extC U ψ
+  refine ⟨ψ', ⟨⟨ψ'.contDiff, ψ'.hasCompactSupport.isCompact, ?_⟩, ?_⟩⟩
+  · simpa [ψ', LQGMetric.MarkovGerm.coe_extC] using ψ.tsupport_subset
+  · simp only [ψ', LQGMetric.MarkovGerm.coe_extC]
+    change ∫ x, (χ x - (∫ y, χ y) * ρ x) = 0
+    rw [integral_sub (χ.continuous.integrable_of_hasCompactSupport χ.hasCompactSupport)
+      ((ρ.continuous.integrable_of_hasCompactSupport ρ.hasCompactSupport).const_mul _),
+      integral_const_mul, hρ, mul_one, sub_self]
+
+/-- Reconstruct a distribution on an open set from its local mean-zero pairings. -/
+def localGaugeVersion (U : Opens ℂ) (ρ : LQGMetric.TestOn U)
+    (hρ : ∫ x, ρ x = 1) (v : ModConstTestPairings U) : LQGMetric.DistOn U :=
+  LQGMetric.pairJInv U (fun c => v (localGaugeTest U ρ (LQGMetric.comb U c) hρ))
+
+/-- Local reconstruction is measurable for the cylinder sigma-algebra. -/
+theorem measurable_localGaugeVersion (U : Opens ℂ) (ρ : LQGMetric.TestOn U)
+    (hρ : ∫ x, ρ x = 1) : Measurable (localGaugeVersion U ρ hρ) := by
+  apply (LQGMetric.measurable_pairJInv U).comp
+  exact measurable_pi_iff.mpr fun c => measurable_pi_apply _
+
+/-- Reconstructing the local pairings of a distribution fixes its gauge locally. -/
+theorem localGaugeVersion_pairings (U : Opens ℂ) (ρ : LQGMetric.TestOn U)
+    (hρ : ∫ x, ρ x = 1) (h : LQGMetric.DistC) :
+    localGaugeVersion U ρ hρ (fun φ => h ⟨φ.1, φ.2.1.1, φ.2.1.2.1, subset_univ _⟩) =
+      LQGMetric.restrictTo U (LQGMetric.addConst h (-(h (LQGMetric.MarkovGerm.extC U ρ)))) := by
+  unfold localGaugeVersion
+  rw [show (fun c => h ⟨(localGaugeTest U ρ (LQGMetric.comb U c) hρ).1,
+      (localGaugeTest U ρ (LQGMetric.comb U c) hρ).2.1.1,
+      (localGaugeTest U ρ (LQGMetric.comb U c) hρ).2.1.2.1, subset_univ _⟩) =
+    LQGMetric.pairJ U (LQGMetric.restrictTo U
+      (LQGMetric.addConst h (-(h (LQGMetric.MarkovGerm.extC U ρ))))) by
+    funext c
+    change h (LQGMetric.MarkovGerm.extC U (LQGMetric.comb U c -
+      (∫ x, LQGMetric.comb U c x) • ρ)) = _
+    change _ = LQGMetric.addConst h (-(h (LQGMetric.MarkovGerm.extC U ρ)))
+      (LQGMetric.MarkovGerm.extC U (LQGMetric.comb U c))
+    rw [map_sub, map_smul, map_sub, map_smul, LQGMetric.GFFInv.addConst_apply]
+    simp only [smul_eq_mul, LQGMetric.MarkovGerm.coe_extC]
+    ring]
+  exact LQGMetric.pairJInv_pairJ U _
+
+/-- Local reconstruction preserves every mean-zero pairing of a distribution. -/
+theorem localGaugeVersion_apply (U : Opens ℂ) (ρ : LQGMetric.TestOn U)
+    (hρ : ∫ x, ρ x = 1) (h : LQGMetric.DistC) (φ : LQGMetric.TestOn U)
+    (hφ : ∫ x, φ x = 0) :
+    localGaugeVersion U ρ hρ (fun ψ => h ⟨ψ.1, ψ.2.1.1, ψ.2.1.2.1, subset_univ _⟩) φ =
+      h (LQGMetric.MarkovGerm.extC U φ) := by
+  rw [localGaugeVersion_pairings]
+  change LQGMetric.addConst h (-(h (LQGMetric.MarkovGerm.extC U ρ)))
+    (LQGMetric.MarkovGerm.extC U φ) = _
+  rw [LQGMetric.GFFInv.addConst_apply]
+  simp only [LQGMetric.MarkovGerm.coe_extC, hφ, zero_mul, add_zero]
 
 end HarmonicBalls
