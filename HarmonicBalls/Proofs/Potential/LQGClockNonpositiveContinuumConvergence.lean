@@ -1536,4 +1536,64 @@ theorem exists_uniform_annealed_nonpositive_halfDisc_radius_increment_le
         ∂(P.prod (planarBrownianMotion x))) := lintegral_add_left hFmeas _
     _ ≤ _ := add_le_add hFbound' (hcor x hε hεhalf hεhalf hr hrε)
 
+
+/-- A same-shell half-disc clock supremum has a time-mesh bound with
+explicit geometric field and small-ball terms. -/
+theorem exists_uniform_annealed_nonpositive_halfDisc_radius_iSup_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) :
+    ∃ (A : ℕ → ℝ) (C D : ℝ≥0∞) (β : ℝ), Summable A ∧ (∀ n, 0 ≤ A n) ∧
+      (∃ c u v : ℝ, 0 ≤ c ∧ 0 < u ∧ 0 < v ∧ ∀ n,
+        A n = c * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * u) +
+          2 * Real.exp (Real.log ((2 : ℝ)⁻¹ ^ (n+1)) * v)) ∧
+      C < ∞ ∧ D < ∞ ∧ 0 < β ∧
+      ∀ α : ℝ, α ≤ 0 → ∃ E : ℝ≥0∞, 0 < E ∧ E < ∞ ∧
+      ∀ (n : ℕ) (x : ℂ) (r : ℝ), 0 < r → r ≤ (2 : ℝ)⁻¹ ^ (n+1) →
+        (2 : ℝ)⁻¹ ^ (n+1) / 2 ≤ r → ∀ (m : ℕ), 0 < m →
+        let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
+        let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+          stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) 0
+            (fun _ => t.toNNReal) p.2
+        (∫⁻ p, ⨆ t : Icc (0 : ℝ) 1, ENNReal.ofReal |F r p t - F ε p t|
+          ∂(P.prod (planarBrownianMotion x))) ≤
+        (m + 1 : ℝ≥0∞) * (ENNReal.ofReal (A n) + ENNReal.ofReal (ε ^ (-γ*α)) *
+          ((ENNReal.ofReal ε) ^ (1/2 : ℝ) * E)) +
+          (C * (m : ℝ≥0∞) ^ (-β) + (ENNReal.ofReal ε) ^ (1/2 : ℝ) * D) := by
+  obtain ⟨A, hAs, hA0, hAgeom, hfixed⟩ :=
+    exists_uniform_annealed_nonpositive_halfDisc_radius_increment_le hh hγ hγ2
+  obtain ⟨C, D, β, hC, hD, hβ, hmesh⟩ :=
+    exists_uniform_prod_nonpositive_halfDisc_clock_iSup_le_grid hh hγ hγ2
+  refine ⟨A, C, D, β, hAs, hA0, hAgeom, hC, hD, hβ, ?_⟩
+  intro α hα
+  obtain ⟨E, hE0, hE, hbound⟩ := hfixed α hα
+  refine ⟨E, hE0, hE, ?_⟩
+  intro n x r hr hrε hεr m hm
+  let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
+  have hε : 0 < ε := by dsimp [ε]; positivity
+  have hεhalf : ε ≤ 1/2 := by
+    dsimp [ε]
+    rw [pow_succ]
+    have h : (2 : ℝ)⁻¹ ^ n ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+    nlinarith
+  let F : ℝ → (Ω × ContinuousPath ℂ) → ℝ → ℝ := fun v p t =>
+    stoppedAnnularClock (fun z => v^(γ^2/2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) v z)) 0 (fun _ => t.toNNReal) p.2
+  let B : ℝ≥0∞ := ENNReal.ofReal (A n) + ENNReal.ofReal (ε ^ (-γ*α)) *
+    ((ENNReal.ofReal ε) ^ (1/2 : ℝ) * E)
+  have hgrid (j : ℕ) :
+      (∫⁻ p, ENNReal.ofReal |F r p (j / (m : ℝ)) - F ε p (j / (m : ℝ))|
+        ∂(P.prod (planarBrownianMotion x))) ≤ B := by
+    exact hbound n x r hr hrε hεr ((j / (m : ℝ)).toNNReal)
+  have hsum : (∑ j ∈ Finset.range (m+1), ∫⁻ p, ENNReal.ofReal
+        |F r p (j / (m : ℝ)) - F ε p (j / (m : ℝ))|
+        ∂(P.prod (planarBrownianMotion x))) ≤ (m + 1 : ℝ≥0∞) * B := by
+    calc
+      _ ≤ ∑ _j ∈ Finset.range (m+1), B := Finset.sum_le_sum (fun j _ => hgrid j)
+      _ = _ := by simp [nsmul_eq_mul]
+  have h := hmesh x α hα hr hε hεhalf m hm
+  exact h.trans (add_le_add hsum le_rfl)
+
 end HarmonicBalls
