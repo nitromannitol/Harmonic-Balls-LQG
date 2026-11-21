@@ -1055,20 +1055,19 @@ part before it and the occupation of the path restarted at that time. -/
 theorem pathOccupationBefore_le_add_shift_of_le (g : ℂ → ℝ≥0∞) (hg : Measurable g)
     (T σ : ℝ≥0∞) (b : ContinuousPath ℂ) :
     pathOccupationBefore g T b ≤ pathOccupationBefore g (min σ T) b +
-      {b : ContinuousPath ℂ | σ ≤ T}.indicator
-        (fun b => pathOccupationBefore g T (ContinuousPath.shift σ.toNNReal b)) b := by
+      (if σ ≤ T then pathOccupationBefore g T (ContinuousPath.shift σ.toNNReal b) else 0) := by
   have huniv (b' : ContinuousPath ℂ) : ContinuousPath.exitTime (univ : Set ℂ) b' = ⊤ := by
     rw [exitTime_eq_iInf]
     simp
   by_cases hσT : σ ≤ T
-  · rw [Set.indicator_of_mem (show b ∈ {b : ContinuousPath ℂ | σ ≤ T} from hσT)]
+  · rw [if_pos hσT]
     by_cases hσ : σ = ⊤
     · rw [min_eq_right (hσ ▸ le_top : T ≤ σ)]
       exact le_self_add
     · have h := pathOccupationBefore_le_add_shift hg univ T σ.toNNReal b
       rw [huniv, huniv, min_eq_right le_top, ENNReal.coe_toNNReal hσ] at h
       exact h
-  · rw [Set.indicator_of_notMem (show b ∉ {b : ContinuousPath ℂ | σ ≤ T} from hσT), add_zero,
+  · rw [if_neg hσT, add_zero,
       min_eq_right (le_of_lt (not_le.mp hσT))]
 
 end HarmonicBalls
