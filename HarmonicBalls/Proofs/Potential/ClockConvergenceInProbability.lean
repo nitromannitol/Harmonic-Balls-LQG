@@ -15,7 +15,8 @@ open scoped ENNReal NNReal
 
 namespace HarmonicBalls
 
-private theorem exists_rat_seq_tendsto' (t : ℝ) :
+/-- Every real number is a limit of rationals. -/
+theorem exists_rat_seq_tendsto_real (t : ℝ) :
     ∃ r : ℕ → ℚ, Tendsto (fun n => (r n : ℝ)) atTop (𝓝 t) := by
   have h (n : ℕ) : ∃ q : ℚ, t - 1/((n : ℝ)+1) < q ∧ (q : ℝ) < t + 1/((n : ℝ)+1) := by
     have : (0 : ℝ) < 1/((n : ℝ)+1) := by positivity
@@ -33,12 +34,12 @@ private theorem exists_rat_seq_tendsto' (t : ℝ) :
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le hl hu (fun n => (hr n).1.le)
     (fun n => (hr n).2.le)
 
-/-- The supremum over times in `[0, T]` of the distance of two continuous functions is
+/-- The supremum over times in `[0, T]` of the absolute value of a continuous function is
 attained along the rational times clipped at `T`. -/
-private theorem ofReal_abs_le_iSup_rat {f : ℝ≥0 → ℝ} (hf : Continuous f) {T t : ℝ≥0}
+theorem ofReal_abs_le_iSup_rat {f : ℝ≥0 → ℝ} (hf : Continuous f) {T t : ℝ≥0}
     (ht : t ≤ T) :
     ENNReal.ofReal |f t| ≤ ⨆ r : ℚ, ENNReal.ofReal |f (min (Real.toNNReal r) T)| := by
-  obtain ⟨r, hr⟩ := exists_rat_seq_tendsto' (t : ℝ)
+  obtain ⟨r, hr⟩ := exists_rat_seq_tendsto_real (t : ℝ)
   have hτ : Tendsto (fun n => min (Real.toNNReal (r n)) T) atTop (𝓝 t) := by
     have h1 : Tendsto (fun n => Real.toNNReal (r n)) atTop (𝓝 (Real.toNNReal t)) :=
       (continuous_real_toNNReal.tendsto _).comp hr
