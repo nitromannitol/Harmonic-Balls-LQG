@@ -1071,4 +1071,77 @@ theorem pathOccupationBefore_le_add_shift_of_le (g : ℂ → ℝ≥0∞) (hg : M
     rw [add_zero,
       min_eq_right (le_of_lt (not_le.mp hσT))]
 
+/-- A ball of radius `r / 2` meets the half disc inside at most `36` grid squares of
+side `r`, each of whose centres is within `2 r` of the centre of the ball. -/
+theorem exists_square_cover_halfDisc_ball (y : ℂ) {r : ℝ} (hr : 0 < r) :
+    ∃ J : Finset (ℤ × ℤ), J.card ≤ 36 ∧ J ⊆ LatticeProb.squareIndex r ∧
+      (∀ i ∈ J, ‖y - LatticeProb.dyadicSquareCentre r i‖ < 2 * r) ∧
+      ∀ z : ℂ, ‖z - y‖ < r / 2 → ‖z‖ ≤ 1 / 2 → ∃ i ∈ J, z ∈ LatticeProb.dyadicSquare r i := by
+  classical
+  set k : ℤ := ⌊y.re / r⌋ with hk
+  set l : ℤ := ⌊y.im / r⌋ with hl
+  let J : Finset (ℤ × ℤ) := ((Finset.Icc (k - 3) (k + 2)) ×ˢ (Finset.Icc (l - 3) (l + 2))).filter
+    (fun i => i ∈ LatticeProb.squareIndex r ∧ ‖y - LatticeProb.dyadicSquareCentre r i‖ < 2 * r)
+  refine ⟨J, ?_, ?_, ?_, ?_⟩
+  · refine (Finset.card_filter_le _ _).trans ?_
+    rw [Finset.card_product, Int.card_Icc, Int.card_Icc]
+    have h1 : (k + 2 + 1 - (k - 3)).toNat = 6 := by omega
+    have h2 : (l + 2 + 1 - (l - 3)).toNat = 6 := by omega
+    rw [h1, h2]
+  · intro i hi
+    exact (Finset.mem_filter.mp hi).2.1
+  · intro i hi
+    exact (Finset.mem_filter.mp hi).2.2
+  · intro z hz hz2
+    have hball : z ∈ Metric.closedBall (0 : ℂ) (1 / 2) := by
+      rwa [Metric.mem_closedBall, dist_zero_right]
+    have hcover := LatticeProb.closedBall_subset_iUnion_dyadicSquare hr hball
+    simp only [Set.mem_iUnion] at hcover
+    obtain ⟨i, hi, hzi⟩ := hcover
+    have hzc := LatticeProb.norm_sub_centre_lt hr hzi
+    have hyc : ‖y - LatticeProb.dyadicSquareCentre r i‖ < 2 * r := by
+      calc ‖y - LatticeProb.dyadicSquareCentre r i‖ ≤
+          ‖y - z‖ + ‖z - LatticeProb.dyadicSquareCentre r i‖ := norm_sub_le_norm_sub_add_norm_sub _ _ _
+        _ < r / 2 + r := by rw [norm_sub_rev]; exact add_lt_add hz hzc
+        _ ≤ 2 * r := by linarith
+    refine ⟨i, ?_, hzi⟩
+    rw [Finset.mem_filter, Finset.mem_product, Finset.mem_Icc, Finset.mem_Icc]
+    refine ⟨⟨?_, ?_⟩, hi, hyc⟩
+    · have hre : |(y - LatticeProb.dyadicSquareCentre r i).re| < 2 * r :=
+        (Complex.abs_re_le_norm _).trans_lt hyc
+      have hre' : |y.re - ((i.1 : ℝ) + 1 / 2) * r| < 2 * r := by
+        simpa [LatticeProb.dyadicSquareCentre] using hre
+      rw [abs_lt] at hre'
+      have hk1 : (k : ℝ) ≤ y.re / r := Int.floor_le _
+      have hk2 : y.re / r < (k : ℝ) + 1 := Int.lt_floor_add_one _
+      rw [le_div_iff₀ hr] at hk1
+      rw [div_lt_iff₀ hr] at hk2
+      have hlo : ((k - 3 : ℤ) : ℝ) < (i.1 : ℝ) := by
+        push_cast
+        nlinarith
+      have hhi : (i.1 : ℝ) < ((k + 3 : ℤ) : ℝ) := by
+        push_cast
+        nlinarith
+      have := Int.cast_lt.mp hlo
+      have := Int.cast_lt.mp hhi
+      constructor <;> omega
+    · have him : |(y - LatticeProb.dyadicSquareCentre r i).im| < 2 * r :=
+        (Complex.abs_im_le_norm _).trans_lt hyc
+      have him' : |y.im - ((i.2 : ℝ) + 1 / 2) * r| < 2 * r := by
+        simpa [LatticeProb.dyadicSquareCentre] using him
+      rw [abs_lt] at him'
+      have hl1 : (l : ℝ) ≤ y.im / r := Int.floor_le _
+      have hl2 : y.im / r < (l : ℝ) + 1 := Int.lt_floor_add_one _
+      rw [le_div_iff₀ hr] at hl1
+      rw [div_lt_iff₀ hr] at hl2
+      have hlo : ((l - 3 : ℤ) : ℝ) < (i.2 : ℝ) := by
+        push_cast
+        nlinarith
+      have hhi : (i.2 : ℝ) < ((l + 3 : ℤ) : ℝ) := by
+        push_cast
+        nlinarith
+      have := Int.cast_lt.mp hlo
+      have := Int.cast_lt.mp hhi
+      constructor <;> omega
+
 end HarmonicBalls
