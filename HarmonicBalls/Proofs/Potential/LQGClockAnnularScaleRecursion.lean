@@ -1,6 +1,5 @@
-import HarmonicBalls.Proofs.Potential.LQGClockAnnularFineFractionalMoment
+import HarmonicBalls.Proofs.Potential.LQGClockSquareVisitComparison
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularExitUniformIntegrability
-import HarmonicBalls.Proofs.Sec8.ExitTimeScaling
 
 /-! # Scale recursion for stopped annular occupation moments
 
@@ -75,8 +74,7 @@ theorem exists_annular_square_return_coefficient_lt_half {γ q : ℝ}
     ∃ r : ℝ, 0 < r ∧ r ≤ 1 / 10 ∧
       18 * ((LatticeProb.squareIndex r).card : ℝ) * ((4 * r) ^ 2) ^ q *
         Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) *
-        ((1 - ((Real.log 2 - Real.log (3 * r / 2)) /
-          (Real.log 2 - Real.log r)) ^ (1 / q))⁻¹) ^ q < 1 / 2 := by
+        (q * (Real.log 2 - Real.log r) / (Real.log (3 * r / 2) - Real.log r)) ^ q < 1 / 2 := by
   let ζ : ℝ := q * (2 + γ ^ 2 / 2) - q ^ 2 * γ ^ 2 / 2
   have hζ : 0 < ζ - 2 := by
     have heq : ζ - 2 = (q - 1) * (4 - q * γ ^ 2) / 2 := by dsimp [ζ]; ring
@@ -134,46 +132,25 @@ theorem exists_annular_square_return_coefficient_lt_half {γ q : ℝ}
     congr 2
     ring
   -- the return factor
-  set t : ℝ := (Real.log 2 - Real.log (3 * r / 2)) / (Real.log 2 - Real.log r) with htdef
-  have hden : 0 < Real.log 2 - Real.log r := by rw [hlogr]; linarith
   have hlog32 : Real.log (3 * r / 2) = Real.log (3 / 2) + Real.log r := by
     rw [show 3 * r / 2 = (3 / 2) * r by ring, Real.log_mul (by norm_num) hr.ne']
-  have h1t : 1 - t = Real.log (3 / 2) / (Real.log 2 - Real.log r) := by
-    rw [htdef]
-    field_simp
-    rw [hlog32]
-    ring
-  have ht0 : 0 ≤ t := by
-    rw [htdef]
-    apply div_nonneg _ hden.le
+  have hfac : q * (Real.log 2 - Real.log r) / (Real.log (3 * r / 2) - Real.log r) ≤
+      2 * q / Real.log (3 / 2) * L := by
     rw [hlog32, hlogr]
-    have h3 : Real.log (3 / 2) ≤ Real.log 2 := Real.log_le_log (by norm_num) (by norm_num)
-    linarith
-  have ht1 : 0 < 1 - t := by rw [h1t]; positivity
-  have hbern : t ^ (1 / q) ≤ 1 + 1 / q * (t - 1) := by
-    have h := rpow_one_add_le_one_add_mul_self (s := t - 1) (by linarith)
-      (p := 1 / q) (by positivity) (by rw [div_le_one hq0]; linarith)
-    simpa using h
-  have hgap : (1 - t) / q ≤ 1 - t ^ (1 / q) := by
-    have : 1 / q * (t - 1) = -((1 - t) / q) := by ring
-    linarith
-  have hgap0 : 0 < (1 - t) / q := by positivity
-  have hinv : (1 - t ^ (1 / q))⁻¹ ≤ 2 * q / Real.log (3 / 2) * L := by
-    calc
-      (1 - t ^ (1 / q))⁻¹ ≤ ((1 - t) / q)⁻¹ := by
-        gcongr
-      _ = q * (Real.log 2 - Real.log r) / Real.log (3 / 2) := by
-        rw [h1t]
-        field_simp
-      _ ≤ q * (2 * L) / Real.log (3 / 2) := by
-        gcongr
-        rw [hlogr]
-        linarith
-      _ = 2 * q / Real.log (3 / 2) * L := by ring
-  have hinv0 : 0 ≤ (1 - t ^ (1 / q))⁻¹ := (inv_pos.mpr (lt_of_lt_of_le hgap0 hgap)).le
-  have hret : ((1 - t ^ (1 / q))⁻¹) ^ q ≤ (2 * q / Real.log (3 / 2)) ^ q * L ^ q := by
+    have h1 : Real.log (3 / 2) + -L - -L = Real.log (3 / 2) := by ring
+    rw [h1, div_le_iff₀ hl32]
+    have : q * (Real.log 2 - -L) ≤ q * (2 * L) := by
+      apply mul_le_mul_of_nonneg_left _ hq0.le
+      linarith
+    calc q * (Real.log 2 - -L) ≤ q * (2 * L) := this
+      _ = 2 * q / Real.log (3 / 2) * L * Real.log (3 / 2) := by field_simp
+  have hfac0 : 0 ≤ q * (Real.log 2 - Real.log r) / (Real.log (3 * r / 2) - Real.log r) := by
+    rw [hlog32, hlogr]
+    apply div_nonneg (mul_nonneg hq0.le (by linarith)) (by linarith)
+  have hret : (q * (Real.log 2 - Real.log r) / (Real.log (3 * r / 2) - Real.log r)) ^ q ≤
+      (2 * q / Real.log (3 / 2)) ^ q * L ^ q := by
     rw [← Real.mul_rpow (by positivity) hL.le]
-    exact Real.rpow_le_rpow hinv0 hinv hq0.le
+    exact Real.rpow_le_rpow hfac0 hfac hq0.le
   have hsq0 : 0 ≤ 18 * ((LatticeProb.squareIndex r).card : ℝ) * (R ^ 2) ^ q *
       Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log R) / 2) := by positivity
   calc
@@ -212,423 +189,202 @@ theorem lintegral_stopped_indicator_eq (b : ContinuousPath ℂ) (g : ℂ → ℝ
       exact ⟨h0, (ENNReal.ofReal_lt_iff_lt_toReal h0 hT).mpr h1⟩
   rw [hset, lintegral_indicator measurableSet_Ico, Measure.restrict_congr_set Ico_ae_eq_Ioc]
 
-/-- The field moment of a restricted circle-average occupation over a
-path-dependent horizon has a jointly measurable version off one field-null set. -/
-theorem exists_measurable_field_path_occupation_rpow
-    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
-    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
-    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε) (γ : ℝ)
-    (A : Set ℂ) (hA : MeasurableSet A) (κ : ContinuousPath ℂ → ℝ → ℂ)
-    (hκ : Measurable (Function.uncurry κ)) (T : ContinuousPath ℂ → ℝ) (hT : Measurable T)
-    (q : ℝ) :
-    ∃ F : Ω × ContinuousPath ℂ → ℝ≥0∞, Measurable F ∧ ∀ᵐ ω ∂P, ∀ b, F (ω, b) =
-      (∫⁻ t in Ioc 0 (T b), A.indicator (fun z =>
-        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε z ω)) (κ b t)) ^ q := by
-  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
-  let g : (Ω × ContinuousPath ℂ) × ℝ → ℝ≥0∞ := fun p =>
-    {p : (Ω × ContinuousPath ℂ) × ℝ | 0 < p.2 ∧ p.2 ≤ T p.1.2}.indicator (fun p =>
-      A.indicator (fun z => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity H γ ε z p.1.1))
-        (κ p.1.2 p.2)) p
-  have hκ' : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => κ p.1.2 p.2) :=
-    hκ.comp (measurable_fst.snd.prodMk measurable_snd)
-  have hg : Measurable g := by
-    apply Measurable.indicator _ ((measurableSet_lt measurable_const measurable_snd).inter
-      (measurableSet_le measurable_snd (hT.comp measurable_fst.snd)))
-    apply Measurable.indicator _ (hA.preimage hκ')
-    dsimp only [LatticeProb.Gauss.gmcDensity]
-    exact (measurable_const.mul (measurable_const.mul
-      ((hHm ε hε).comp (hκ'.prodMk measurable_fst.fst))).exp).ennreal_ofReal
-  refine ⟨fun p => (∫⁻ t, g (p, t)) ^ q, hg.lintegral_prod_right'.pow_const q, ?_⟩
-  filter_upwards [hHae] with ω hω b
-  congr 1
-  rw [← lintegral_indicator measurableSet_Ioc]
+/-- For a field that agrees with the circle averages, the occupation of a
+restricted normalized density before a finite time is the time integral of the
+circle-average density over the restricted times. -/
+theorem pathOccupationBefore_indicator_normalizedCircleDensity_eq {Ω : Type*}
+    {H hcirc : Ω → ℝ → ℂ → ℝ} {ω : Ω} (hω : ∀ ε z, H ω ε z = hcirc ω ε z)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) (A : Set ℂ) (hA : MeasurableSet A) (b : ContinuousPath ℂ)
+    {T : ℝ≥0∞} (hT : T ≠ ⊤) :
+    pathOccupationBefore (A.indicator (normalizedCircleDensity H γ ε ω)) T b =
+      ∫⁻ t in {t | b t.toNNReal ∈ A} ∩ Ioc 0 T.toReal,
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε (b t.toNNReal) ω) := by
+  have hb : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
+  unfold pathOccupationBefore
+  rw [lintegral_stopped_indicator_eq b _ hT, lintegral_Ioc_indicator_comp_eq _ hb A hA]
   apply lintegral_congr
   intro t
-  simp only [g, Set.indicator_apply, mem_ofPred_eq, mem_Ioc, LatticeProb.Gauss.gmcDensity, hω]
+  simp only [normalizedCircleDensity, hω]
+  rw [gmcDensity_eq_exp_normalized hcirc hε]
 
-/-- A field-path moment that agrees with a jointly measurable function off one
-field-null set may be integrated in either order. -/
-theorem lintegral_lintegral_swap_of_ae_eq {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
-    {P : Measure Ω} {μ : Measure X} [SFinite P] [SFinite μ] (G : Ω → X → ℝ≥0∞)
-    (F : Ω × X → ℝ≥0∞) (hF : Measurable F) (hFG : ∀ᵐ ω ∂P, ∀ x, F (ω, x) = G ω x) :
-    (∫⁻ x, ∫⁻ ω, G ω x ∂P ∂μ) = ∫⁻ ω, ∫⁻ x, G ω x ∂μ ∂P := by
-  calc
-    (∫⁻ x, ∫⁻ ω, G ω x ∂P ∂μ) = ∫⁻ x, ∫⁻ ω, F (ω, x) ∂P ∂μ := by
-      apply lintegral_congr
-      intro x
-      apply lintegral_congr_ae
-      filter_upwards [hFG] with ω hω
-      exact (hω x).symm
-    _ = ∫⁻ ω, ∫⁻ x, F (ω, x) ∂μ ∂P :=
-      lintegral_lintegral_swap (f := fun x ω => F (ω, x)) (hF.comp measurable_swap).aemeasurable
-    _ = ∫⁻ ω, ∫⁻ x, G ω x ∂μ ∂P := by
-      apply lintegral_congr_ae
-      filter_upwards [hFG] with ω hω
-      exact lintegral_congr hω
-
-/-- A field average that agrees with a jointly measurable function off one
-field-null set is measurable in the path. -/
-theorem measurable_lintegral_of_ae_eq {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
-    {P : Measure Ω} [SFinite P] (G : Ω → X → ℝ≥0∞)
-    (F : Ω × X → ℝ≥0∞) (hF : Measurable F) (hFG : ∀ᵐ ω ∂P, ∀ x, F (ω, x) = G ω x) :
-    Measurable (fun x => ∫⁻ ω, G ω x ∂P) := by
-  have h : (fun x => ∫⁻ ω, G ω x ∂P) = fun x => ∫⁻ ω, F (ω, x) ∂P := by
-    funext x
-    apply lintegral_congr_ae
-    filter_upwards [hFG] with ω hω
-    exact (hω x).symm
-  rw [h]
-  exact hF.lintegral_prod_left'
-
-/-- The affine homeomorphism `w ↦ (w - z) / R` of the plane, for a nonzero real `R`. -/
-noncomputable def affineRescaleHomeomorph (z : ℂ) {R : ℝ} (hR : R ≠ 0) : ℂ ≃ₜ ℂ where
-  toFun w := (w - z) / (R : ℂ)
-  invFun w := (R : ℂ) * w + z
-  left_inv w := by
-    have h : (R : ℂ) ≠ 0 := by exact_mod_cast hR
-    change (R : ℂ) * ((w - z) / (R : ℂ)) + z = w
-    rw [mul_div_cancel₀ _ h, sub_add_cancel]
-  right_inv w := by
-    have h : (R : ℂ) ≠ 0 := by exact_mod_cast hR
-    change ((R : ℂ) * w + z - z) / (R : ℂ) = w
-    rw [add_sub_cancel_right, mul_div_cancel_left₀ _ h]
-  continuous_toFun := by fun_prop
-  continuous_invFun := by fun_prop
-
-theorem affineRescaleHomeomorph_apply (z : ℂ) {R : ℝ} (hR : R ≠ 0) (w : ℂ) :
-    affineRescaleHomeomorph z hR w = (w - z) / (R : ℂ) := rfl
-
-/-- Space-time rescaling about a point carries planar Brownian motion to planar
-Brownian motion started at the rescaled point. -/
-theorem planarBrownianMotion_map_rescale_affine (x z : ℂ) {R : ℝ} (hR : 0 < R) :
-    (planarBrownianMotion x).map
-        (ContinuousPath.rescale (affineRescaleHomeomorph z hR.ne') ⟨R ^ 2, by positivity⟩) =
-      planarBrownianMotion ((x - z) / (R : ℂ)) := by
-  let c : ℝ≥0 := ⟨R ^ 2, by positivity⟩
-  have hc0 : c ≠ 0 := by
-    intro h
-    have h' : R ^ 2 = 0 := congrArg (fun u : ℝ≥0 => (u : ℝ)) h
-    have : 0 < R ^ 2 := by positivity
-    linarith
-  have hsq : Real.sqrt (c : ℝ) = R := Real.sqrt_sq hR.le
-  have hR' : (R : ℂ) ≠ 0 := by exact_mod_cast hR.ne'
-  let Tv := (Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight ((x - z) / (R : ℂ)))
-  have hcomp : ContinuousPath.rescale (affineRescaleHomeomorph z hR.ne') c =
-      Tv ∘ scaledCenteredPlanarPath x c := by
-    funext b
-    ext t
-    change (b (c * t) - z) / (R : ℂ) =
-      (Real.sqrt (c : ℝ))⁻¹ • (b (c * t) - x) + (x - z) / (R : ℂ)
-    rw [hsq, Complex.real_smul, Complex.ofReal_inv]
-    field_simp
-    ring
-  rw [hcomp, ← Measure.map_map Tv.measurable (continuous_scaledCenteredPlanarPath x c).measurable,
-    planarBrownianMotion_map_scaledCenteredPlanarPath x hc0, planarBrownianMotion_map_add]
-
-/-- An occupation integral up to a measurable path-dependent horizon is measurable
-in the path. -/
-theorem measurable_lintegral_Ioc_path (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ)
-    (T : ContinuousPath ℂ → ℝ) (hT : Measurable T) :
-    Measurable (fun b : ContinuousPath ℂ => ∫⁻ s in Ioc 0 (T b), φ (b s.toNNReal)) := by
-  have hev : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal) :=
-    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
-      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)
-  have hg : Measurable (fun p : ContinuousPath ℂ × ℝ =>
-      {p : ContinuousPath ℂ × ℝ | 0 < p.2 ∧ p.2 ≤ T p.1}.indicator (fun p => φ (p.1 p.2.toNNReal)) p) :=
-    (hφ.comp hev).indicator ((measurableSet_lt measurable_const measurable_snd).inter
-      (measurableSet_le measurable_snd (hT.comp measurable_fst)))
-  convert hg.lintegral_prod_right' (ν := (volume : Measure ℝ)) using 1
-  funext b
-  rw [← lintegral_indicator measurableSet_Ioc]
-  apply lintegral_congr
-  intro s
-  simp only [Set.indicator_apply, mem_ofPred_eq, mem_Ioc]
-
-/-- Rescaling space and time about a point carries the occupation up to an exit
-time to the occupation of the rescaled path up to the exit from the image set. -/
-theorem lintegral_exit_occupation_rescale (b : ContinuousPath ℂ) (z : ℂ) {R : ℝ} (hR : 0 < R)
-    (U : Set ℂ) (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ) :
-    let e := affineRescaleHomeomorph z hR.ne'
-    let c : ℝ≥0 := ⟨R ^ 2, by positivity⟩
-    (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal, φ ((b t.toNNReal - z) / (R : ℂ))) =
-      ENNReal.ofReal (R ^ 2) * ∫⁻ s in Ioc 0 (ContinuousPath.exitTime (e '' U)
-        (ContinuousPath.rescale e c b)).toReal, φ (ContinuousPath.rescale e c b s.toNNReal) := by
-  intro e c
-  have hc : (0 : ℝ) < R ^ 2 := by positivity
-  have hcpos : 0 < c := by
-    change (0 : ℝ) < R ^ 2
-    exact hc
-  have hf : Measurable (fun t : ℝ => φ ((b t.toNNReal - z) / (R : ℂ))) := by
-    apply hφ.comp
-    fun_prop
-  have hexit : ContinuousPath.exitTime U b =
-      (c : ℝ≥0∞) * ContinuousPath.exitTime (e '' U) (ContinuousPath.rescale e c b) := by
-    rw [exitTime_rescale_mul e c hcpos (e '' U) b, e.injective.preimage_image]
-  have hτ : (ContinuousPath.exitTime U b).toReal = R ^ 2 *
-      (ContinuousPath.exitTime (e '' U) (ContinuousPath.rescale e c b)).toReal := by
-    rw [hexit, ENNReal.toReal_mul, ENNReal.coe_toReal]
-    rfl
-  rw [lintegral_time_dilation hc _ measurableSet_Ioc _ hf]
-  congr 1
-  have hpre : (fun s : ℝ => R ^ 2 * s) ⁻¹' Ioc 0 (ContinuousPath.exitTime U b).toReal =
-      Ioc 0 (ContinuousPath.exitTime (e '' U) (ContinuousPath.rescale e c b)).toReal := by
-    ext s
-    simp only [mem_preimage, mem_Ioc, hτ]
-    constructor
-    · rintro ⟨h1, h2⟩
-      exact ⟨pos_of_mul_pos_right h1 hc.le, le_of_mul_le_mul_left h2 hc⟩
-    · rintro ⟨h1, h2⟩
-      exact ⟨mul_pos hc h1, mul_le_mul_of_nonneg_left h2 hc.le⟩
-  rw [hpre]
-  apply lintegral_congr
-  intro s
-  congr 1
-  have ht : Real.toNNReal (R ^ 2 * s) = c * Real.toNNReal s := by
-    rw [Real.toNNReal_mul hc.le]
-    congr 1
-    exact Real.toNNReal_of_nonneg hc.le
-  rw [ht]
-  rfl
-
-/-- Brownian scaling about a point transfers the moment of an occupation up to an
-exit time to the rescaled start and the image set. -/
-theorem lintegral_planarBrownianMotion_exit_occupation_rescale (x z : ℂ) {R : ℝ} (hR : 0 < R)
-    (U : Set ℂ) (hU : IsOpen U) (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ) {q : ℝ} (hq : 0 ≤ q) :
-    (∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-      φ ((b t.toNNReal - z) / (R : ℂ))) ^ q ∂planarBrownianMotion x) =
-      (ENNReal.ofReal (R ^ 2)) ^ q * ∫⁻ b, (∫⁻ s in Ioc 0 (ContinuousPath.exitTime
-        (affineRescaleHomeomorph z hR.ne' '' U) b).toReal, φ (b s.toNNReal)) ^ q
-        ∂planarBrownianMotion ((x - z) / (R : ℂ)) := by
-  let e := affineRescaleHomeomorph z hR.ne'
-  let c : ℝ≥0 := ⟨R ^ 2, by positivity⟩
-  have hV : IsOpen (e '' U) := e.isOpenMap U hU
-  let G : ContinuousPath ℂ → ℝ≥0∞ := fun b =>
-    (∫⁻ s in Ioc 0 (ContinuousPath.exitTime (e '' U) b).toReal, φ (b s.toNNReal)) ^ q
-  have hG : Measurable G :=
-    (measurable_lintegral_Ioc_path φ hφ _
-      (ContinuousPath.measurable_exitTime (e '' U) hV).ennreal_toReal).pow_const q
-  have hcpos : 0 < c := by
-    change (0 : ℝ) < R ^ 2
-    positivity
-  have hresc : Measurable (ContinuousPath.rescale e c) :=
-    (continuousPathRescaleHomeomorph e c hcpos).continuous.measurable
-  calc
-    _ = ∫⁻ b, (ENNReal.ofReal (R ^ 2)) ^ q * G (ContinuousPath.rescale e c b)
-        ∂planarBrownianMotion x := by
-      apply lintegral_congr
-      intro b
-      rw [lintegral_exit_occupation_rescale b z hR U φ hφ, ENNReal.mul_rpow_of_nonneg _ _ hq]
-    _ = (ENNReal.ofReal (R ^ 2)) ^ q * ∫⁻ b, G (ContinuousPath.rescale e c b)
-        ∂planarBrownianMotion x := lintegral_const_mul _ (hG.comp hresc)
-    _ = _ := by
-      rw [← lintegral_map hG hresc, planarBrownianMotion_map_rescale_affine x z hR]
-
-/-- The field-Brownian moment of the half-disc occupation of the normalized
+/-- The field-Brownian moment of the closed half-disc occupation of the normalized
 circle-average density before the exit from the unit disc. -/
 noncomputable def stoppedHalfDiscMoment {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
-    (hcirc : Ω → ℝ → ℂ → ℝ) (γ δ q : ℝ) (y : ℂ) : ℝ≥0∞ :=
-  ∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime (Metric.ball (0 : ℂ) 1) b).toReal,
-    {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator
-      (fun z => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ δ z ω)) (b t.toNNReal)) ^ q
+    (H : Ω → ℝ → ℂ → ℝ) (γ δ q : ℝ) (y : ℂ) : ℝ≥0∞ :=
+  ∫⁻ ω, ∫⁻ b, pathOccupationBefore ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator
+    (normalizedCircleDensity H γ δ ω)) (ContinuousPath.exitTime (Metric.ball (0 : ℂ) 1) b) b ^ q
     ∂planarBrownianMotion y ∂P
 
-/-- A triple grid square is bounded. -/
-theorem tripleGridSquare_subset_ball (r : ℝ) (i : ℤ × ℤ) :
-    tripleGridSquare r i ⊆ Metric.ball (LatticeProb.dyadicSquareCentre r i) (3 * r) := by
-  intro w ⟨h1, h2⟩
-  rw [Metric.mem_ball, dist_eq_norm]
-  have := Complex.norm_le_abs_re_add_abs_im (w - LatticeProb.dyadicSquareCentre r i)
-  linarith
-
-theorem isBounded_tripleGridSquare (r : ℝ) (i : ℤ × ℤ) :
-    Bornology.IsBounded (tripleGridSquare r i) :=
-  Metric.isBounded_ball.subset (tripleGridSquare_subset_ball r i)
-
-/-- The triple grid square is carried into the unit disc by the rescaling of its
-square onto the reference square. -/
-theorem affineRescale_image_tripleGridSquare_subset_ball {r : ℝ} (hr : 0 < r) (i : ℤ × ℤ) :
-    affineRescaleHomeomorph (LatticeProb.dyadicSquareCentre r i)
-      (show (4 * r : ℝ) ≠ 0 by positivity) '' tripleGridSquare r i ⊆ Metric.ball (0 : ℂ) 1 := by
-  rintro _ ⟨w, ⟨h1, h2⟩, rfl⟩
-  rw [affineRescaleHomeomorph_apply, mem_ball_zero_iff]
-  have h4 : (0 : ℝ) < 4 * r := by positivity
-  have hre : |((w - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ)).re| < 3 / 8 := by
-    rw [Complex.div_ofReal_re, abs_div, abs_of_pos h4, div_lt_iff₀ h4]
-    linarith
-  have him : |((w - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ)).im| < 3 / 8 := by
-    rw [Complex.div_ofReal_im, abs_div, abs_of_pos h4, div_lt_iff₀ h4]
-    linarith
-  have := Complex.norm_le_abs_re_add_abs_im
-    ((w - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ))
-  linarith
+/-- The stopped half-disc moment only depends on the field up to a null set. -/
+theorem stoppedHalfDiscMoment_congr {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {H H' : Ω → ℝ → ℂ → ℝ} (hHH : ∀ᵐ ω ∂P, ∀ ε z, H ω ε z = H' ω ε z) (γ δ q : ℝ) (y : ℂ) :
+    stoppedHalfDiscMoment P H γ δ q y = stoppedHalfDiscMoment P H' γ δ q y := by
+  unfold stoppedHalfDiscMoment
+  apply lintegral_congr_ae
+  filter_upwards [hHH] with ω hω
+  have h : normalizedCircleDensity H γ δ ω = normalizedCircleDensity H' γ δ ω := by
+    funext w
+    simp only [normalizedCircleDensity, hω]
+  rw [h]
 
 /-- The reference square lies in the closed half disc. -/
 theorem lqgSquare_subset_halfDisc :
     LatticeProb.LQG.lqgSquare ⊆ {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} := by
   intro w hw
   have h := LatticeProb.LQG.lqgSquare_subset_closedBall hw
-  rw [mem_closedBall_zero_iff] at h
+  rw [Metric.mem_closedBall, dist_zero_right] at h
   exact ⟨norm_nonneg _, by linarith⟩
 
-/-- One visit to a grid square, followed until the exit from its triple, has a
-field-Brownian moment bounded by the scale factor times the stopped half-disc
-moment at the reference smoothing radius and the rescaled start. -/
-theorem lintegral_field_brownian_square_visit_le
+/-- Exit times of a bounded open set have `q`-th moments bounded uniformly in the
+start, for `0 ≤ q ≤ 2`. -/
+theorem exists_uniform_lintegral_exitTime_rpow_le {D : Set ℂ} (hD : IsOpen D)
+    (hDb : Bornology.IsBounded D) {q : ℝ} (hq0 : 0 ≤ q) (hq2 : q ≤ 2) :
+    ∃ C : ℝ≥0∞, C < ⊤ ∧ ∀ x : ℂ,
+      (∫⁻ b, (ENNReal.ofReal (ContinuousPath.exitTime D b).toReal) ^ q
+        ∂planarBrownianMotion x) ≤ C := by
+  obtain ⟨lam, hlam, C, hC, hbound⟩ :=
+    exists_uniform_planarBrownianMotion_exitTime_exponential_moment hD hDb
+  refine ⟨ENNReal.ofReal (1 + 2 / lam ^ 2) * C, ENNReal.mul_lt_top ENNReal.ofReal_lt_top hC, ?_⟩
+  intro x
+  have hK0 : ENNReal.ofReal (1 + 2 / lam ^ 2) ≠ 0 :=
+    (ENNReal.ofReal_pos.mpr (by positivity)).ne'
+  calc
+    _ ≤ ∫⁻ b, ENNReal.ofReal (1 + 2 / lam ^ 2) *
+        ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
+        ∂planarBrownianMotion x := by
+      refine lintegral_mono fun b => ?_
+      show (ENNReal.ofReal (ContinuousPath.exitTime D b).toReal) ^ q ≤
+        ENNReal.ofReal (1 + 2 / lam ^ 2) *
+          ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
+      by_cases hb : ContinuousPath.exitTime D b = ⊤
+      · rw [ContinuousPath.exponentialStoppingWeight_of_eq_top lam _ hb, ENNReal.mul_top hK0]
+        exact le_top
+      · rw [ContinuousPath.exponentialStoppingWeight_of_ne_top lam _ hb]
+        set τ := (ContinuousPath.exitTime D b).toReal with hτdef
+        have hτ : 0 ≤ τ := ENNReal.toReal_nonneg
+        rw [ENNReal.ofReal_rpow_of_nonneg hτ hq0, ← ENNReal.ofReal_mul (by positivity)]
+        apply ENNReal.ofReal_le_ofReal
+        have h1 : τ ^ q ≤ 1 + τ ^ 2 := by
+          rcases le_total τ 1 with h | h
+          · have := Real.rpow_le_one hτ h hq0
+            nlinarith [sq_nonneg τ]
+          · have h' : τ ^ q ≤ τ ^ (2 : ℝ) := Real.rpow_le_rpow_of_exponent_le h hq2
+            rw [Real.rpow_two] at h'
+            linarith
+        have hlt : 0 ≤ lam * τ := mul_nonneg hlam.le hτ
+        have h2 : τ ^ 2 ≤ 2 / lam ^ 2 * Real.exp (lam * τ) := by
+          have hq := Real.quadratic_le_exp_of_nonneg hlt
+          have e : (lam * τ) ^ 2 = τ ^ 2 * lam ^ 2 := by ring
+          rw [div_mul_eq_mul_div, le_div_iff₀ (by positivity)]
+          nlinarith
+        have h3 : 1 ≤ Real.exp (lam * τ) := Real.one_le_exp hlt
+        nlinarith
+    _ = ENNReal.ofReal (1 + 2 / lam ^ 2) * ∫⁻ b,
+        ContinuousPath.exponentialStoppingWeight lam (ContinuousPath.exitTime D) b
+          ∂planarBrownianMotion x :=
+      lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
+    _ ≤ _ := mul_le_mul_right (hbound x) _
+
+/-- Above a positive smoothing cutoff, the stopped half-disc moment is bounded by
+the cutoff factor times the moment of the exit time. -/
+theorem stoppedHalfDiscMoment_le_of_scale_lower_bound
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
-    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
-    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ) (y : ℂ) {q : ℝ} (hq : 1 ≤ q)
-    (T : ContinuousPath ℂ → ℝ≥0∞)
-    (hTU : ∀ b, T b ≤ ContinuousPath.exitTime (tripleGridSquare r i) b) :
-    (∫⁻ ω, ∫⁻ b, (∫⁻ s, {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s < T b}.indicator (fun s =>
-      (LatticeProb.dyadicSquare r i ∩ {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}).indicator
-        (fun z => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) z ω))
-          (b s.toNNReal)) s) ^ q ∂planarBrownianMotion y ∂P) ≤
-      ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
-        ((ENNReal.ofReal ((4 * r) ^ 2)) ^ q *
-        stoppedHalfDiscMoment P hcirc γ δ q
-          ((y - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ))) := by
+    {η ε : ℝ} (hη : 0 < η) (hηε : η ≤ ε) (hε2 : ε ≤ 1 / 2) (γ : ℝ) {q : ℝ} (hq : 1 ≤ q)
+    (x : ℂ) :
+    stoppedHalfDiscMoment P hcirc γ ε q x ≤
+      ENNReal.ofReal (η ^ (-(γ ^ 2 * q * (q - 1) / 2))) *
+        ∫⁻ b, (ENNReal.ofReal (ContinuousPath.exitTime (Metric.ball (0 : ℂ) 1) b).toReal) ^ q
+          ∂planarBrownianMotion x := by
   let : IsProbabilityMeasure P := hh.isProbabilityMeasure
-  have hq0 : 0 ≤ q := by linarith
-  have h4r : (0 : ℝ) < 4 * r := by positivity
-  set z := LatticeProb.dyadicSquareCentre r i with hz
-  set U := tripleGridSquare r i with hUdef
-  set A := LatticeProb.dyadicSquare r i ∩ {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hAdef
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hε : 0 < ε := hη.trans_le hηε
+  have hq0 : 0 < q := by linarith
   set D : Set ℂ := Metric.ball (0 : ℂ) 1 with hDdef
-  set C := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) with hCdef
-  set e := affineRescaleHomeomorph z (show (4 * r : ℝ) ≠ 0 by positivity) with hedef
-  have hUo : IsOpen U := isOpen_tripleGridSquare r i
-  have hDo : IsOpen D := Metric.isOpen_ball
-  have hA : MeasurableSet A := (LatticeProb.measurableSet_dyadicSquare r i).inter
-    ((measurableSet_le measurable_const measurable_norm).inter
-      (measurableSet_le measurable_norm measurable_const))
-  have hB : MeasurableSet {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} :=
-    (measurableSet_le measurable_const measurable_norm).inter
-      (measurableSet_le measurable_norm measurable_const)
-  have hTm : Measurable (fun b : ContinuousPath ℂ => (ContinuousPath.exitTime U b).toReal) :=
-    (ContinuousPath.measurable_exitTime U hUo).ennreal_toReal
-  have hκ : Measurable (Function.uncurry (fun (b : ContinuousPath ℂ) (t : ℝ) => b t.toNNReal)) :=
-    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
-      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)
-  have hκ' : Measurable (Function.uncurry (fun (b : ContinuousPath ℂ) (t : ℝ) =>
-      (b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) :=
-    (hκ.sub measurable_const).div_const _
-  let g : ℝ → Ω → ℂ → ℝ≥0∞ := fun ε ω w =>
-    ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε w ω)
-  -- first reduction: horizon to the triple exit and interval form
-  have hstep1 : (∫⁻ ω, ∫⁻ b, (∫⁻ s, {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s < T b}.indicator
-      (fun s => A.indicator (g (4 * r * δ) ω) (b s.toNNReal)) s) ^ q
-        ∂planarBrownianMotion y ∂P) ≤
-      ∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-        A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q ∂planarBrownianMotion y ∂P := by
-    apply lintegral_mono
-    intro ω
-    apply lintegral_mono_ae
-    filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top y (isBounded_tripleGridSquare r i)]
-      with b hb
-    rw [← lintegral_stopped_indicator_eq b _ hb.ne]
-    apply ENNReal.rpow_le_rpow _ hq0
-    apply lintegral_mono
-    intro s
-    apply Set.indicator_le_indicator_of_subset _ (fun _ => zero_le)
-    intro s ⟨h0, h1⟩
-    exact ⟨h0, h1.trans_le (hTU b)⟩
-  obtain ⟨F₁, hF₁, hF₁e⟩ := exists_measurable_field_path_occupation_rpow hh
-    (show 0 < 4 * r * δ by positivity) γ A hA _ hκ _ hTm q
-  obtain ⟨F₂, hF₂, hF₂e⟩ := exists_measurable_field_path_occupation_rpow hh hδ γ
-    LatticeProb.LQG.lqgSquare LatticeProb.LQG.measurableSet_lqgSquare _ hκ' _ hTm q
-  -- pathwise comparison with the reference smoothing radius
-  have hpath (b : ContinuousPath ℂ) :
-      (∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-        A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q ∂P) ≤
-      C * ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
-          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂P := by
-    have hb : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
-    have hb' : Measurable (fun t : ℝ => (b t.toNNReal - z) / ((4 * r : ℝ) : ℂ)) := by fun_prop
-    have hcomp := lintegral_rpow_annularSquare_gmcDensity_le_reference hh hr hr10 hδ hδ2 hi γ b
-      0 (ContinuousPath.exitTime U b).toReal 0 hq
-    simp only at hcomp
-    calc
-      _ = ∫⁻ ω, (∫⁻ t in annularSquareTimeSet b 0 r i ∩ Ioc 0
-          (ContinuousPath.exitTime U b).toReal,
-          ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q
-            ∂P := by
-        apply lintegral_congr
-        intro ω
-        rw [lintegral_Ioc_indicator_comp_eq _ hb A hA]
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  have hTdm : MeasurableSet Td := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  set K := ENNReal.ofReal (η ^ (-(γ ^ 2 * q * (q - 1) / 2))) with hK
+  let f : Ω → ℂ → ℝ≥0∞ := fun ω => Td.indicator (normalizedCircleDensity H γ ε ω)
+  have hf : Measurable (Function.uncurry f) :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm ε hε) γ) hTdm
+  -- one-point moments
+  have hpt (w : ℂ) : (∫⁻ ω, f ω w ^ q ∂P) ≤ K := by
+    by_cases hw : w ∈ Td
+    · have hw1 : ‖w‖ + ε ≤ 1 := by have := hw.2; linarith
+      have heq : (∫⁻ ω, f ω w ^ q ∂P) = ∫⁻ ω,
+          (ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω ε w))) ^ q ∂P := by
+        apply lintegral_congr_ae
+        filter_upwards [hHae] with ω hω
+        simp only [f, Set.indicator_of_mem hw, normalizedCircleDensity, hω]
+        rw [← gmcDensity_eq_exp_normalized hcirc hε]
         rfl
-      _ ≤ _ := hcomp
-      _ ≤ _ := by
-        refine mul_le_mul_right ?_ C
-        apply lintegral_mono
-        intro ω
-        apply ENNReal.rpow_le_rpow _ hq0
-        rw [lintegral_Ioc_indicator_comp_eq _ hb' _ LatticeProb.LQG.measurableSet_lqgSquare]
-        calc
-          _ ≤ ∫⁻ t in {t | (b t.toNNReal - z) / ((4 * r : ℝ) : ℂ) ∈ LatticeProb.LQG.lqgSquare} ∩
-              Ioc 0 (ContinuousPath.exitTime U b).toReal,
-              ENNReal.ofReal (Real.exp (γ * hcirc ω δ ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ)) -
-                γ ^ 2 * (-Real.log δ) / 2)) := by
-            apply lintegral_mono_set
-            intro t ⟨ht, ht'⟩
-            exact ⟨dyadicSquare_rescaled_mem_lqgSquare hr ht.1, ht'⟩
-          _ = _ := by
-            apply lintegral_congr
-            intro t
-            simp only [g]
-            rw [gmcDensity_eq_exp_normalized hcirc hδ]
-  have hsub : e '' U ⊆ D := affineRescale_image_tripleGridSquare_subset_ball hr i
-  set y' := (y - z) / ((4 * r : ℝ) : ℂ) with hy'
+      rw [heq, hh.lintegral_rpow_mul_exp_circle hε hw1 (γ ^ 2 / 2) γ hq0.le, hK]
+      apply ENNReal.ofReal_le_ofReal
+      have he : q * (γ ^ 2 / 2) - q ^ 2 * γ ^ 2 / 2 = -(γ ^ 2 * q * (q - 1) / 2) := by ring
+      rw [he]
+      apply Real.rpow_le_rpow_of_nonpos hη hηε
+      have : 0 ≤ γ ^ 2 * q * (q - 1) := by
+        have := sq_nonneg γ
+        have : 0 ≤ q - 1 := by linarith
+        positivity
+      linarith
+    · simp only [f, Set.indicator_of_notMem hw, ENNReal.zero_rpow_of_pos hq0, lintegral_zero]
+      exact zero_le
+  have hocc : Measurable (fun p : Ω × ContinuousPath ℂ =>
+      pathOccupationBefore (f p.1) (ContinuousPath.exitTime D p.2) p.2 ^ q) :=
+    (measurable_pathOccupationBefore (fun p : Ω × ContinuousPath ℂ => f p.1)
+      (hf.comp (measurable_fst.fst.prodMk measurable_snd))
+      (fun p => ContinuousPath.exitTime D p.2)
+      ((ContinuousPath.measurable_exitTime D Metric.isOpen_ball).comp measurable_snd)
+      (fun p => p.2) measurable_snd).pow_const q
+  rw [stoppedHalfDiscMoment_congr (hHae.mono fun ω hω ε z => (hω ε z).symm)]
+  unfold stoppedHalfDiscMoment
+  change (∫⁻ ω, ∫⁻ b, pathOccupationBefore (f ω) (ContinuousPath.exitTime D b) b ^ q
+    ∂planarBrownianMotion x ∂P) ≤ _
+  rw [lintegral_lintegral_swap hocc.aemeasurable]
   calc
-    _ ≤ _ := hstep1
-    _ = ∫⁻ b, ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-        A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q ∂P ∂planarBrownianMotion y :=
-      (lintegral_lintegral_swap_of_ae_eq (fun ω b => (∫⁻ t in Ioc 0
-        (ContinuousPath.exitTime U b).toReal, A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q)
-        F₁ hF₁ hF₁e).symm
-    _ ≤ ∫⁻ b, C * ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
-          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂P ∂planarBrownianMotion y :=
-      lintegral_mono hpath
-    _ = C * ∫⁻ b, ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
-          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂P ∂planarBrownianMotion y :=
-      lintegral_const_mul' C _ ENNReal.ofReal_ne_top
-    _ = C * ∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
-        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
-          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂planarBrownianMotion y ∂P := by
-      rw [lintegral_lintegral_swap_of_ae_eq (fun ω b => (∫⁻ t in Ioc 0
-        (ContinuousPath.exitTime U b).toReal, LatticeProb.LQG.lqgSquare.indicator (g δ ω)
-          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q) F₂ hF₂ hF₂e]
-    _ ≤ C * ∫⁻ ω, (ENNReal.ofReal ((4 * r) ^ 2)) ^ q * ∫⁻ b,
-        (∫⁻ s in Ioc 0 (ContinuousPath.exitTime D b).toReal,
-          {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (g δ ω) (b s.toNNReal)) ^ q
-          ∂planarBrownianMotion y' ∂P := by
-      refine mul_le_mul_right ?_ C
+    _ ≤ ∫⁻ b, K * (ENNReal.ofReal (ContinuousPath.exitTime D b).toReal) ^ q
+        ∂planarBrownianMotion x := by
       apply lintegral_mono_ae
-      filter_upwards [hh.ae_continuous_circle_fixed hδ] with ω hω
-      have hgm : Measurable (LatticeProb.LQG.lqgSquare.indicator (g δ ω)) := by
-        apply Measurable.indicator _ LatticeProb.LQG.measurableSet_lqgSquare
-        show Measurable (fun w => ENNReal.ofReal (δ ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω δ w)))
-        exact (continuous_const.mul (Real.continuous_exp.comp
-          (continuous_const.mul hω))).measurable.ennreal_ofReal
-      rw [lintegral_planarBrownianMotion_exit_occupation_rescale y z h4r U hUo _ hgm hq0]
-      refine mul_le_mul_right ?_ _
-      apply lintegral_mono_ae
-      filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top y'
+      filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x
         (Metric.isBounded_ball : Bornology.IsBounded D)] with b hb
-      apply ENNReal.rpow_le_rpow _ hq0
+      set I := Ioc (0 : ℝ) (ContinuousPath.exitTime D b).toReal with hI
+      have hbm : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
+      have hvol : (volume.restrict I) univ = ENNReal.ofReal (ContinuousPath.exitTime D b).toReal := by
+        rw [Measure.restrict_apply_univ, Real.volume_Ioc, sub_zero]
+      have hjoint : Measurable (fun p : Ω × ℝ => f p.1 (b p.2.toNNReal) ^ q) :=
+        (hf.comp (measurable_fst.prodMk (hbm.comp measurable_snd))).pow_const q
       calc
-        _ ≤ ∫⁻ s in Ioc 0 (ContinuousPath.exitTime D b).toReal,
-            LatticeProb.LQG.lqgSquare.indicator (g δ ω) (b s.toNNReal) :=
-          lintegral_mono_set (Ioc_subset_Ioc le_rfl
-            (ENNReal.toReal_mono hb.ne (ContinuousPath.exitTime_mono hsub b)))
-        _ ≤ _ := lintegral_mono (fun s =>
-          Set.indicator_le_indicator_of_subset lqgSquare_subset_halfDisc (fun _ => zero_le) _)
-    _ = _ := by
-      rw [lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg hq0 ENNReal.ofReal_ne_top)]
-      rfl
+        (∫⁻ ω, pathOccupationBefore (f ω) (ContinuousPath.exitTime D b) b ^ q ∂P) =
+            ∫⁻ ω, (∫⁻ t in I, f ω (b t.toNNReal)) ^ q ∂P := by
+          apply lintegral_congr
+          intro ω
+          unfold pathOccupationBefore
+          rw [lintegral_stopped_indicator_eq b _ hb.ne]
+        _ ≤ ∫⁻ ω, (volume.restrict I) univ ^ (q - 1) *
+            (∫⁻ t in I, f ω (b t.toNNReal) ^ q) ∂P := by
+          apply lintegral_mono
+          intro ω
+          exact LatticeProb.lintegral_rpow_le_measure_univ_mul _ hq
+            ((hf.comp (measurable_const.prodMk hbm)).aemeasurable)
+        _ = (volume.restrict I) univ ^ (q - 1) *
+            ∫⁻ t in I, (∫⁻ ω, f ω (b t.toNNReal) ^ q ∂P) := by
+          rw [lintegral_const_mul _ (hjoint.lintegral_prod_right'), lintegral_lintegral_swap
+            hjoint.aemeasurable]
+        _ ≤ (volume.restrict I) univ ^ (q - 1) * ∫⁻ _ in I, K := by
+          gcongr with t
+          exact hpt _
+        _ = K * (ENNReal.ofReal (ContinuousPath.exitTime D b).toReal) ^ q := by
+          rw [lintegral_const, hvol]
+          set u := ENNReal.ofReal (ContinuousPath.exitTime D b).toReal
+          calc
+            _ = K * (u ^ (q - 1) * u) := by ring
+            _ = K * u ^ ((q - 1) + 1) := by
+              rw [ENNReal.rpow_add_of_nonneg (q - 1) 1 (by linarith) (by norm_num),
+                ENNReal.rpow_one]
+            _ = K * u ^ q := by congr 2; ring
+    _ = _ := lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
 
 end HarmonicBalls
