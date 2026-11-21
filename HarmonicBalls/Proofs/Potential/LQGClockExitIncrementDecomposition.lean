@@ -59,8 +59,9 @@ private theorem lt_exitTime_iff_lt_toReal {e : ℝ≥0∞} (he : e ≠ ⊤) (n :
 
 /-- An interval integral up to a finite exit time is bounded by the sum over integer times
 of the unit-horizon integrals of the shifted paths that have not yet exited. -/
-theorem ofReal_abs_integral_exit_le_tsum (D : Set ℂ) (g : ℂ → ℝ) (hg : Continuous g)
-    (b : ContinuousPath ℂ) (hb : ContinuousPath.exitTime D b ≠ ⊤) :
+theorem ofReal_abs_integral_exit_le_tsum (D : Set ℂ) (g : ℂ → ℝ) (b : ContinuousPath ℂ)
+    (hg : ∀ u v : ℝ, IntervalIntegrable (fun s : ℝ => g (b s.toNNReal)) volume u v)
+    (hb : ContinuousPath.exitTime D b ≠ ⊤) :
     ENNReal.ofReal |∫ s in (0 : ℝ)..(ContinuousPath.exitTime D b).toReal, g (b s.toNNReal)| ≤
       ∑' n : ℕ, {b' : ContinuousPath ℂ | ((n : ℝ≥0) : ℝ≥0∞) < ContinuousPath.exitTime D b'}.indicator
         (fun b' => ENNReal.ofReal |∫ s in (0 : ℝ)..min 1
@@ -69,13 +70,12 @@ theorem ofReal_abs_integral_exit_le_tsum (D : Set ℂ) (g : ℂ → ℝ) (hg : C
   set τ := (ContinuousPath.exitTime D b).toReal with hτdef
   have hτ0 : 0 ≤ τ := ENNReal.toReal_nonneg
   let f : ℝ → ℝ := fun s => g (b s.toNNReal)
-  have hf : Continuous f := hg.comp (b.continuous.comp continuous_real_toNNReal)
   let N : ℕ := ⌈τ⌉₊
   let a : ℕ → ℝ := fun n => min (n : ℝ) τ
   have ha0 : a 0 = 0 := by simp [a, hτ0]
   have haN : a N = τ := min_eq_right (Nat.le_ceil τ)
   have hsum : (∑ k ∈ Finset.range N, ∫ s in a k..a (k+1), f s) = ∫ s in a 0..a N, f s :=
-    intervalIntegral.sum_integral_adjacent_intervals (fun k _ => hf.intervalIntegrable _ _)
+    intervalIntegral.sum_integral_adjacent_intervals (fun k _ => hg _ _)
   let T : ℕ → ℝ≥0∞ := fun n =>
     {b' : ContinuousPath ℂ | ((n : ℝ≥0) : ℝ≥0∞) < ContinuousPath.exitTime D b'}.indicator
       (fun b' => ENNReal.ofReal |∫ s in (0 : ℝ)..min 1
@@ -197,7 +197,8 @@ theorem measurable_intervalIntegral_path {Ω : Type*} [MeasurableSpace Ω]
 theorem lintegral_ofReal_abs_exit_integral_le_of_unit
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [SFinite P]
     {D : Set ℂ} (hD : IsOpen D) (x : ℂ) (F : Ω × ℂ → ℝ) (hF : Measurable F)
-    (hFc : ∀ ω, Continuous (fun z => F (ω, z))) (c : ℝ≥0∞)
+    (hFi : ∀ (ω : Ω) (b : ContinuousPath ℂ) (u v : ℝ),
+      IntervalIntegrable (fun s : ℝ => F (ω, b s.toNNReal)) volume u v) (c : ℝ≥0∞)
     (hc : ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal |∫ s in (0 : ℝ)..min 1
         (ContinuousPath.exitTime D p.2).toReal, F (p.1, p.2 s.toNNReal)|
         ∂(P.prod (planarBrownianMotion y))) ≤ c)
@@ -228,7 +229,7 @@ theorem lintegral_ofReal_abs_exit_integral_le_of_unit
         ∑' n, term n p := by
     filter_upwards [(Measure.quasiMeasurePreserving_snd (μ := P)
       (ν := planarBrownianMotion x)).ae hfin] with p hp
-    have h := ofReal_abs_integral_exit_le_tsum D (fun z => F (p.1, z)) (hFc p.1) p.2 hp
+    have h := ofReal_abs_integral_exit_le_tsum D (fun z => F (p.1, z)) p.2 (hFi p.1 p.2) hp
     refine h.trans (le_of_eq ?_)
     congr 1
   have hn (n : ℕ) : (∫⁻ p, term n p ∂(P.prod (planarBrownianMotion x))) ≤

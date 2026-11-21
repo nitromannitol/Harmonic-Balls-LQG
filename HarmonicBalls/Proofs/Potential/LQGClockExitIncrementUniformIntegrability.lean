@@ -17,7 +17,8 @@ open MeasureTheory ProbabilityTheory MarkovProcess Real Set Filter Topology
 open scoped ENNReal NNReal
 namespace HarmonicBalls
 
-private theorem measurable_lqgClockApprox_exit {γ : ℝ} {hε : ℝ → ℂ → ℝ} {D : Set ℂ}
+/-- A clock approximation read at the exit time from an open set is measurable in the path. -/
+theorem measurable_lqgClockApprox_exit {γ : ℝ} {hε : ℝ → ℂ → ℝ} {D : Set ℂ}
     (hD : IsOpen D) (k : ℕ) (hc : Continuous (hε (dyadicScale k))) :
     Measurable (fun b => lqgClockApprox γ hε (dyadicScale k) b
       (ContinuousPath.exitTime D b).toNNReal) := by
@@ -79,7 +80,9 @@ theorem ae_uniformIntegrable_exit_clockApprox_of_unit_increments
     rw [happrox (k+2) ω b u hu, happrox (k+1) ω b u hu, ← intervalIntegral.integral_sub h1 h2]
   have hexit (k : ℕ) : (∫⁻ p, ENNReal.ofReal |∫ s in (0 : ℝ)..(τ p.2).toReal,
       d k (p.1, p.2 s.toNNReal)| ∂(P.prod μ)) ≤ c k * ∫⁻ b, (τ b + 1) ∂μ := by
-    apply lintegral_ofReal_abs_exit_integral_le_of_unit hD x (d k) (hdm k) (hdc k) (c k) _ hfin
+    apply lintegral_ofReal_abs_exit_integral_le_of_unit hD x (d k) (hdm k)
+      (fun ω b _ _ => ((hdc k ω).comp (b.continuous.comp continuous_real_toNNReal)).intervalIntegrable
+        _ _) (c k) _ hfin
     intro y hy
     refine le_trans (le_of_eq ?_) (hc k y hy)
     apply lintegral_congr
