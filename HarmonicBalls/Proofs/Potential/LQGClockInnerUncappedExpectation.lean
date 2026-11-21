@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockEnvelopeAnnularIncrement
+import HarmonicBalls.Proofs.Potential.BrownianSingularShiftedRieszEnergy
 import HarmonicBalls.Proofs.Potential.LQGClockFineInnerExpectation
 import HarmonicBalls.Proofs.Potential.LQGClockFullInnerExpectation
 import HarmonicBalls.Proofs.Potential.LQGClockCutoffGluing
@@ -41,88 +42,18 @@ theorem exists_summable_uniform_inserted_cutoff_increment_bound_of_lt_two_sub
           ∂(Measure.map (fun t => q.1 t) (Measure.map Real.toNNReal
             (volume.restrict (Icc (0 : ℝ) 1))))|
         ∂((planarBrownianMotion x).prod P)) ≤ B n := by
-  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
   have hq2 : γ*α < 2 := by linarith [sq_nonneg γ]
-  obtain ⟨A, hAs, hA⟩ :=
-    exists_summable_uniform_inserted_annular_increment_bound_of_lt_two_sub hh x hq0 hγ hsub
-  obtain ⟨C, hCs, hC⟩ := exists_summable_uniform_inner_inserted_expectation_bound hh x γ α
-    ((γ*α+2)/2) hq0 (by linarith) (by linarith)
-  refine ⟨fun n => ENNReal.ofReal (A n) + C n + C n, ?_, ?_⟩
-  · rw [ENNReal.tsum_add, ENNReal.tsum_add]
-    exact ENNReal.add_lt_top.mpr ⟨ENNReal.add_lt_top.mpr ⟨hAs.tsum_ofReal_ne_top.lt_top, hCs⟩, hCs⟩
-  · intro n δ
-    let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
-    have hε : 0 < ε := by dsimp [ε]; positivity
-    have hεhalf : ε ≤ 1/2 := by
-      dsimp [ε]
-      rw [pow_succ]
-      have h : (2 : ℝ)⁻¹ ^ n ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
-      nlinarith
-    let I (q : ContinuousPath ℂ × Ω) : ℝ := ∫ z,
-      {z : ℂ | ε ≤ ‖z‖ ∧ ‖z‖ ≤ δ ∧ ‖z‖ ≤ 1/2}.indicator
-        (fun z => (ε/2)^(γ^2/2) * Real.exp (γ*(hcirc q.2 (ε/2) z - hcirc q.2 1 0 -
-          α*Real.log (max (ε/2) ‖z‖))) -
-        ε^(γ^2/2) * Real.exp (γ*(hcirc q.2 ε z - hcirc q.2 1 0 -
-          α*Real.log (max ε ‖z‖)))) z
-        ∂(Measure.map (fun t => q.1 t) (Measure.map Real.toNNReal
-          (volume.restrict (Icc (0 : ℝ) 1))))
-    let K (r : ℝ) (q : Ω × ContinuousPath ℂ) : ℝ≥0∞ :=
-      ∫⁻ s in Ioc (0 : ℝ) 1, ENNReal.ofReal
-        ({z : ℂ | ‖z‖ < ε}.indicator (fun z => r^(γ^2/2) * Real.exp (γ *
-          LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) r z)) (q.2 s.toNNReal))
-    have hAn := hA n δ
-    dsimp only at hAn
-    have hI : Integrable I ((planarBrownianMotion x).prod P) := hAn.1
-    have hK (r : ℝ) (hr : 0 < r) : AEMeasurable (K r) (P.prod (planarBrownianMotion x)) :=
-      aemeasurable_inner_inserted_clock_cell hh (planarBrownianMotion x) hr γ α ε 0 1
-    have hKa (r : ℝ) (hr : 0 < r) :
-        AEMeasurable (fun q : ContinuousPath ℂ × Ω => K r (q.2,q.1))
-          ((planarBrownianMotion x).prod P) := (hK r hr).prod_swap
-    have hpoint : ∀ᵐ q : ContinuousPath ℂ × Ω ∂((planarBrownianMotion x).prod P),
-        ENNReal.ofReal |(∫ z, {z : ℂ | ‖z‖ ≤ δ ∧ ‖z‖ ≤ 1/2}.indicator
-          (fun z => (ε/2)^(γ^2/2) * Real.exp (γ *
-            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.2) (ε/2) z)) z
-          ∂(Measure.map (fun t => q.1 t) (Measure.map Real.toNNReal
-            (volume.restrict (Icc (0 : ℝ) 1))))) -
-          ∫ z, {z : ℂ | ‖z‖ ≤ δ ∧ ‖z‖ ≤ 1/2}.indicator
-          (fun z => ε^(γ^2/2) * Real.exp (γ *
-            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.2) ε z)) z
-          ∂(Measure.map (fun t => q.1 t) (Measure.map Real.toNNReal
-            (volume.restrict (Icc (0 : ℝ) 1))))| ≤
-          ENNReal.ofReal |I q| + K (ε/2) (q.2,q.1) + K ε (q.2,q.1) := by
-      filter_upwards [(Measure.quasiMeasurePreserving_snd
-        (μ := planarBrownianMotion x) (ν := P)).ae
-          (ae_inserted_closedBall_occupation_increment_le hh γ α)] with q hq
-      exact hq q.1 ε δ hε hεhalf
-    calc
-      _ ≤ ∫⁻ q, (ENNReal.ofReal |I q| + K (ε/2) (q.2,q.1) + K ε (q.2,q.1))
-          ∂((planarBrownianMotion x).prod P) := lintegral_mono_ae hpoint
-      _ = (∫⁻ q, ENNReal.ofReal |I q| ∂((planarBrownianMotion x).prod P)) +
-          (∫⁻ q, K (ε/2) (q.2,q.1) ∂((planarBrownianMotion x).prod P)) +
-          ∫⁻ q, K ε (q.2,q.1) ∂((planarBrownianMotion x).prod P) := by
-        change (∫⁻ q, ((fun q : ContinuousPath ℂ × Ω => ENNReal.ofReal |I q|) +
-          (fun q : ContinuousPath ℂ × Ω => K (ε/2) (q.2,q.1))) q + K ε (q.2,q.1)
-          ∂((planarBrownianMotion x).prod P)) = _
-        rw [lintegral_add_left' (hI.abs.aestronglyMeasurable.aemeasurable.ennreal_ofReal.add
-          (hKa (ε/2) (half_pos hε)))]
-        change (∫⁻ q, ENNReal.ofReal |I q| + K (ε/2) (q.2,q.1)
-          ∂((planarBrownianMotion x).prod P)) + _ = _
-        rw [lintegral_add_left' hI.abs.aestronglyMeasurable.aemeasurable.ennreal_ofReal]
-      _ ≤ ENNReal.ofReal (A n) + C n + C n := by
-        have hIA : (∫⁻ q, ENNReal.ofReal |I q| ∂((planarBrownianMotion x).prod P)) ≤
-            ENNReal.ofReal (A n) := by
-          rw [← ofReal_integral_eq_lintegral_ofReal hI.abs
-            (Filter.Eventually.of_forall fun _ => abs_nonneg _)]
-          exact ENNReal.ofReal_le_ofReal hAn.2
-        have hK1 : (∫⁻ q, K (ε/2) (q.2,q.1) ∂((planarBrownianMotion x).prod P)) ≤ C n := by
-          change (∫⁻ q, K (ε/2) q.swap ∂((planarBrownianMotion x).prod P)) ≤ C n
-          rw [lintegral_prod_swap]
-          exact hC n (ε/2) (half_pos hε) (by linarith)
-        have hK2 : (∫⁻ q, K ε (q.2,q.1) ∂((planarBrownianMotion x).prod P)) ≤ C n := by
-          change (∫⁻ q, K ε q.swap ∂((planarBrownianMotion x).prod P)) ≤ C n
-          rw [lintegral_prod_swap]
-          exact hC n ε hε hεhalf
-        exact add_le_add (add_le_add hIA hK1) hK2
+  obtain ⟨β, hβl, hβu⟩ := exists_between hsub
+  have hβ0 : 0 < β := lt_of_le_of_lt (by positivity) hβl
+  have hqβ : γ*α + β < 2 := by linarith
+  obtain ⟨hHi, hH⟩ := integrable_toReal_pair_envelope_of_lintegral x 0 (q := γ*α) (β := β)
+    (unitSingularWeightedPairEnergy 0 (γ*α) β)
+    (measurable_unitSingularWeightedPairEnergy 0 (γ*α) β).aemeasurable
+    (planarBrownianMotion_unitSingularWeightedPairEnergy_lt_top x 0 hq0 hβ0 hqβ).ne
+    (Filter.Eventually.of_forall fun b r hr _ =>
+      (unitSingularPairNear_le_rpow_mul_weightedPairEnergy 0 hβ0 hr b).trans_eq (mul_comm _ _))
+  exact exists_summable_uniform_inserted_cutoff_increment_bound_of_envelope hh x hq0 hq2 hγ hβl
+    _ hHi hH
 
 /-- For a fixed Brownian start, expected closed-ball occupations vanish uniformly
 over finer dyadic smoothing scales in the displayed parameter regime. -/
