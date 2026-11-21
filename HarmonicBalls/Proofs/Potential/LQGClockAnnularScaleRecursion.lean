@@ -1,4 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularFineFractionalMoment
+import HarmonicBalls.Proofs.Potential.LQGClockAnnularExitUniformIntegrability
+import HarmonicBalls.Proofs.Sec8.ExitTimeScaling
 
 /-! # Scale recursion for stopped annular occupation moments
 
@@ -11,6 +13,7 @@ logarithmic return factor, has a contracting coefficient.
 open MeasureTheory ProbabilityTheory MarkovProcess Set
 open scoped ENNReal NNReal Topology
 open Filter
+open HarmonicBalls.Section6
 
 namespace HarmonicBalls
 
@@ -179,5 +182,245 @@ theorem exists_annular_square_return_coefficient_lt_half {γ q : ℝ}
     _ = K * (L ^ q * Real.exp (-(ζ - 2) * L)) := by rw [hRpow]; ring
     _ < K * (1 / (2 * K)) := mul_lt_mul_of_pos_left hLsmall hK
     _ = 1 / 2 := by field_simp
+
+/-- An occupation integral of a restricted density over a time interval is the
+integral over the times at which the path lies in the restriction. -/
+theorem lintegral_Ioc_indicator_comp_eq (κ : ℝ → ℂ) (hκ : Measurable κ) (A : Set ℂ)
+    (hA : MeasurableSet A) (g : ℂ → ℝ≥0∞) (T : ℝ) :
+    (∫⁻ t in Ioc 0 T, A.indicator g (κ t)) = ∫⁻ t in {t | κ t ∈ A} ∩ Ioc 0 T, g (κ t) := by
+  have hS : MeasurableSet {t | κ t ∈ A} := hA.preimage hκ
+  have heq : (fun t => A.indicator g (κ t)) = {t | κ t ∈ A}.indicator (fun t => g (κ t)) := by
+    funext t
+    by_cases ht : κ t ∈ A
+    · rw [Set.indicator_of_mem ht, Set.indicator_of_mem (show t ∈ {t | κ t ∈ A} from ht)]
+    · rw [Set.indicator_of_notMem ht, Set.indicator_of_notMem (show t ∉ {t | κ t ∈ A} from ht)]
+  rw [heq, lintegral_indicator hS, Measure.restrict_restrict hS]
+
+/-- Before a finite time, the occupation of a restricted density is the restricted
+integral over a half-open time interval. -/
+theorem lintegral_stopped_indicator_eq (b : ContinuousPath ℂ) (g : ℂ → ℝ≥0∞) {T : ℝ≥0∞}
+    (hT : T ≠ ⊤) :
+    (∫⁻ s, {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s < T}.indicator (fun s => g (b s.toNNReal)) s) =
+      ∫⁻ t in Ioc 0 T.toReal, g (b t.toNNReal) := by
+  have hset : {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s < T} = Ico 0 T.toReal := by
+    ext s
+    simp only [mem_ofPred_eq, mem_Ico]
+    constructor
+    · rintro ⟨h0, h1⟩
+      exact ⟨h0, (ENNReal.ofReal_lt_iff_lt_toReal h0 hT).mp h1⟩
+    · rintro ⟨h0, h1⟩
+      exact ⟨h0, (ENNReal.ofReal_lt_iff_lt_toReal h0 hT).mpr h1⟩
+  rw [hset, lintegral_indicator measurableSet_Ico, Measure.restrict_congr_set Ico_ae_eq_Ioc]
+
+/-- The field moment of a restricted circle-average occupation over a
+path-dependent horizon has a jointly measurable version off one field-null set. -/
+theorem exists_measurable_field_path_occupation_rpow
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε) (γ : ℝ)
+    (A : Set ℂ) (hA : MeasurableSet A) (κ : ContinuousPath ℂ → ℝ → ℂ)
+    (hκ : Measurable (Function.uncurry κ)) (T : ContinuousPath ℂ → ℝ) (hT : Measurable T)
+    (q : ℝ) :
+    ∃ F : Ω × ContinuousPath ℂ → ℝ≥0∞, Measurable F ∧ ∀ᵐ ω ∂P, ∀ b, F (ω, b) =
+      (∫⁻ t in Ioc 0 (T b), A.indicator (fun z =>
+        ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε z ω)) (κ b t)) ^ q := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let g : (Ω × ContinuousPath ℂ) × ℝ → ℝ≥0∞ := fun p =>
+    {p : (Ω × ContinuousPath ℂ) × ℝ | 0 < p.2 ∧ p.2 ≤ T p.1.2}.indicator (fun p =>
+      A.indicator (fun z => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity H γ ε z p.1.1))
+        (κ p.1.2 p.2)) p
+  have hκ' : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => κ p.1.2 p.2) :=
+    hκ.comp (measurable_fst.snd.prodMk measurable_snd)
+  have hg : Measurable g := by
+    apply Measurable.indicator _ ((measurableSet_lt measurable_const measurable_snd).inter
+      (measurableSet_le measurable_snd (hT.comp measurable_fst.snd)))
+    apply Measurable.indicator _ (hA.preimage hκ')
+    dsimp only [LatticeProb.Gauss.gmcDensity]
+    exact (measurable_const.mul (measurable_const.mul
+      ((hHm ε hε).comp (hκ'.prodMk measurable_fst.fst))).exp).ennreal_ofReal
+  refine ⟨fun p => (∫⁻ t, g (p, t)) ^ q, hg.lintegral_prod_right'.pow_const q, ?_⟩
+  filter_upwards [hHae] with ω hω b
+  congr 1
+  rw [← lintegral_indicator measurableSet_Ioc]
+  apply lintegral_congr
+  intro t
+  simp only [g, Set.indicator_apply, mem_ofPred_eq, mem_Ioc, LatticeProb.Gauss.gmcDensity, hω]
+
+/-- A field-path moment that agrees with a jointly measurable function off one
+field-null set may be integrated in either order. -/
+theorem lintegral_lintegral_swap_of_ae_eq {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
+    {P : Measure Ω} {μ : Measure X} [SFinite P] [SFinite μ] (G : Ω → X → ℝ≥0∞)
+    (F : Ω × X → ℝ≥0∞) (hF : Measurable F) (hFG : ∀ᵐ ω ∂P, ∀ x, F (ω, x) = G ω x) :
+    (∫⁻ x, ∫⁻ ω, G ω x ∂P ∂μ) = ∫⁻ ω, ∫⁻ x, G ω x ∂μ ∂P := by
+  calc
+    (∫⁻ x, ∫⁻ ω, G ω x ∂P ∂μ) = ∫⁻ x, ∫⁻ ω, F (ω, x) ∂P ∂μ := by
+      apply lintegral_congr
+      intro x
+      apply lintegral_congr_ae
+      filter_upwards [hFG] with ω hω
+      exact (hω x).symm
+    _ = ∫⁻ ω, ∫⁻ x, F (ω, x) ∂μ ∂P :=
+      lintegral_lintegral_swap (f := fun x ω => F (ω, x)) (hF.comp measurable_swap).aemeasurable
+    _ = ∫⁻ ω, ∫⁻ x, G ω x ∂μ ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hFG] with ω hω
+      exact lintegral_congr hω
+
+/-- A field average that agrees with a jointly measurable function off one
+field-null set is measurable in the path. -/
+theorem measurable_lintegral_of_ae_eq {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
+    {P : Measure Ω} [SFinite P] (G : Ω → X → ℝ≥0∞)
+    (F : Ω × X → ℝ≥0∞) (hF : Measurable F) (hFG : ∀ᵐ ω ∂P, ∀ x, F (ω, x) = G ω x) :
+    Measurable (fun x => ∫⁻ ω, G ω x ∂P) := by
+  have h : (fun x => ∫⁻ ω, G ω x ∂P) = fun x => ∫⁻ ω, F (ω, x) ∂P := by
+    funext x
+    apply lintegral_congr_ae
+    filter_upwards [hFG] with ω hω
+    exact (hω x).symm
+  rw [h]
+  exact hF.lintegral_prod_left'
+
+/-- The affine homeomorphism `w ↦ (w - z) / R` of the plane, for a nonzero real `R`. -/
+noncomputable def affineRescaleHomeomorph (z : ℂ) {R : ℝ} (hR : R ≠ 0) : ℂ ≃ₜ ℂ where
+  toFun w := (w - z) / (R : ℂ)
+  invFun w := (R : ℂ) * w + z
+  left_inv w := by
+    have h : (R : ℂ) ≠ 0 := by exact_mod_cast hR
+    change (R : ℂ) * ((w - z) / (R : ℂ)) + z = w
+    rw [mul_div_cancel₀ _ h, sub_add_cancel]
+  right_inv w := by
+    have h : (R : ℂ) ≠ 0 := by exact_mod_cast hR
+    change ((R : ℂ) * w + z - z) / (R : ℂ) = w
+    rw [add_sub_cancel_right, mul_div_cancel_left₀ _ h]
+  continuous_toFun := by fun_prop
+  continuous_invFun := by fun_prop
+
+theorem affineRescaleHomeomorph_apply (z : ℂ) {R : ℝ} (hR : R ≠ 0) (w : ℂ) :
+    affineRescaleHomeomorph z hR w = (w - z) / (R : ℂ) := rfl
+
+/-- Space-time rescaling about a point carries planar Brownian motion to planar
+Brownian motion started at the rescaled point. -/
+theorem planarBrownianMotion_map_rescale_affine (x z : ℂ) {R : ℝ} (hR : 0 < R) :
+    (planarBrownianMotion x).map
+        (ContinuousPath.rescale (affineRescaleHomeomorph z hR.ne') ⟨R ^ 2, by positivity⟩) =
+      planarBrownianMotion ((x - z) / (R : ℂ)) := by
+  let c : ℝ≥0 := ⟨R ^ 2, by positivity⟩
+  have hc0 : c ≠ 0 := by
+    intro h
+    have h' : R ^ 2 = 0 := congrArg (fun u : ℝ≥0 => (u : ℝ)) h
+    have : 0 < R ^ 2 := by positivity
+    linarith
+  have hsq : Real.sqrt (c : ℝ) = R := Real.sqrt_sq hR.le
+  have hR' : (R : ℂ) ≠ 0 := by exact_mod_cast hR.ne'
+  let Tv := (Homeomorph.refl NNReal).arrowCongr (Homeomorph.addRight ((x - z) / (R : ℂ)))
+  have hcomp : ContinuousPath.rescale (affineRescaleHomeomorph z hR.ne') c =
+      Tv ∘ scaledCenteredPlanarPath x c := by
+    funext b
+    ext t
+    change (b (c * t) - z) / (R : ℂ) =
+      (Real.sqrt (c : ℝ))⁻¹ • (b (c * t) - x) + (x - z) / (R : ℂ)
+    rw [hsq, Complex.real_smul, Complex.ofReal_inv]
+    field_simp
+    ring
+  rw [hcomp, ← Measure.map_map Tv.measurable (continuous_scaledCenteredPlanarPath x c).measurable,
+    planarBrownianMotion_map_scaledCenteredPlanarPath x hc0, planarBrownianMotion_map_add]
+
+/-- An occupation integral up to a measurable path-dependent horizon is measurable
+in the path. -/
+theorem measurable_lintegral_Ioc_path (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ)
+    (T : ContinuousPath ℂ → ℝ) (hT : Measurable T) :
+    Measurable (fun b : ContinuousPath ℂ => ∫⁻ s in Ioc 0 (T b), φ (b s.toNNReal)) := by
+  have hev : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal) :=
+    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)
+  have hg : Measurable (fun p : ContinuousPath ℂ × ℝ =>
+      {p : ContinuousPath ℂ × ℝ | 0 < p.2 ∧ p.2 ≤ T p.1}.indicator (fun p => φ (p.1 p.2.toNNReal)) p) :=
+    (hφ.comp hev).indicator ((measurableSet_lt measurable_const measurable_snd).inter
+      (measurableSet_le measurable_snd (hT.comp measurable_fst)))
+  convert hg.lintegral_prod_right' (ν := (volume : Measure ℝ)) using 1
+  funext b
+  rw [← lintegral_indicator measurableSet_Ioc]
+  apply lintegral_congr
+  intro s
+  simp only [Set.indicator_apply, mem_ofPred_eq, mem_Ioc]
+
+/-- Rescaling space and time about a point carries the occupation up to an exit
+time to the occupation of the rescaled path up to the exit from the image set. -/
+theorem lintegral_exit_occupation_rescale (b : ContinuousPath ℂ) (z : ℂ) {R : ℝ} (hR : 0 < R)
+    (U : Set ℂ) (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ) :
+    let e := affineRescaleHomeomorph z hR.ne'
+    let c : ℝ≥0 := ⟨R ^ 2, by positivity⟩
+    (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal, φ ((b t.toNNReal - z) / (R : ℂ))) =
+      ENNReal.ofReal (R ^ 2) * ∫⁻ s in Ioc 0 (ContinuousPath.exitTime (e '' U)
+        (ContinuousPath.rescale e c b)).toReal, φ (ContinuousPath.rescale e c b s.toNNReal) := by
+  intro e c
+  have hc : (0 : ℝ) < R ^ 2 := by positivity
+  have hcpos : 0 < c := by
+    change (0 : ℝ) < R ^ 2
+    exact hc
+  have hf : Measurable (fun t : ℝ => φ ((b t.toNNReal - z) / (R : ℂ))) := by
+    apply hφ.comp
+    fun_prop
+  have hexit : ContinuousPath.exitTime U b =
+      (c : ℝ≥0∞) * ContinuousPath.exitTime (e '' U) (ContinuousPath.rescale e c b) := by
+    rw [exitTime_rescale_mul e c hcpos (e '' U) b, e.injective.preimage_image]
+  have hτ : (ContinuousPath.exitTime U b).toReal = R ^ 2 *
+      (ContinuousPath.exitTime (e '' U) (ContinuousPath.rescale e c b)).toReal := by
+    rw [hexit, ENNReal.toReal_mul, ENNReal.coe_toReal]
+    rfl
+  rw [lintegral_time_dilation hc _ measurableSet_Ioc _ hf]
+  congr 1
+  have hpre : (fun s : ℝ => R ^ 2 * s) ⁻¹' Ioc 0 (ContinuousPath.exitTime U b).toReal =
+      Ioc 0 (ContinuousPath.exitTime (e '' U) (ContinuousPath.rescale e c b)).toReal := by
+    ext s
+    simp only [mem_preimage, mem_Ioc, hτ]
+    constructor
+    · rintro ⟨h1, h2⟩
+      exact ⟨pos_of_mul_pos_right h1 hc.le, le_of_mul_le_mul_left h2 hc⟩
+    · rintro ⟨h1, h2⟩
+      exact ⟨mul_pos hc h1, mul_le_mul_of_nonneg_left h2 hc.le⟩
+  rw [hpre]
+  apply lintegral_congr
+  intro s
+  congr 1
+  have ht : Real.toNNReal (R ^ 2 * s) = c * Real.toNNReal s := by
+    rw [Real.toNNReal_mul hc.le]
+    congr 1
+    exact Real.toNNReal_of_nonneg hc.le
+  rw [ht]
+  rfl
+
+/-- Brownian scaling about a point transfers the moment of an occupation up to an
+exit time to the rescaled start and the image set. -/
+theorem lintegral_planarBrownianMotion_exit_occupation_rescale (x z : ℂ) {R : ℝ} (hR : 0 < R)
+    (U : Set ℂ) (hU : IsOpen U) (φ : ℂ → ℝ≥0∞) (hφ : Measurable φ) {q : ℝ} (hq : 0 ≤ q) :
+    (∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+      φ ((b t.toNNReal - z) / (R : ℂ))) ^ q ∂planarBrownianMotion x) =
+      (ENNReal.ofReal (R ^ 2)) ^ q * ∫⁻ b, (∫⁻ s in Ioc 0 (ContinuousPath.exitTime
+        (affineRescaleHomeomorph z hR.ne' '' U) b).toReal, φ (b s.toNNReal)) ^ q
+        ∂planarBrownianMotion ((x - z) / (R : ℂ)) := by
+  let e := affineRescaleHomeomorph z hR.ne'
+  let c : ℝ≥0 := ⟨R ^ 2, by positivity⟩
+  have hV : IsOpen (e '' U) := e.isOpenMap U hU
+  let G : ContinuousPath ℂ → ℝ≥0∞ := fun b =>
+    (∫⁻ s in Ioc 0 (ContinuousPath.exitTime (e '' U) b).toReal, φ (b s.toNNReal)) ^ q
+  have hG : Measurable G :=
+    (measurable_lintegral_Ioc_path φ hφ _
+      (ContinuousPath.measurable_exitTime (e '' U) hV).ennreal_toReal).pow_const q
+  have hcpos : 0 < c := by
+    change (0 : ℝ) < R ^ 2
+    positivity
+  have hresc : Measurable (ContinuousPath.rescale e c) :=
+    (continuousPathRescaleHomeomorph e c hcpos).continuous.measurable
+  calc
+    _ = ∫⁻ b, (ENNReal.ofReal (R ^ 2)) ^ q * G (ContinuousPath.rescale e c b)
+        ∂planarBrownianMotion x := by
+      apply lintegral_congr
+      intro b
+      rw [lintegral_exit_occupation_rescale b z hR U φ hφ, ENNReal.mul_rpow_of_nonneg _ _ hq]
+    _ = (ENNReal.ofReal (R ^ 2)) ^ q * ∫⁻ b, G (ContinuousPath.rescale e c b)
+        ∂planarBrownianMotion x := lintegral_const_mul _ (hG.comp hresc)
+    _ = _ := by
+      rw [← lintegral_map hG hresc, planarBrownianMotion_map_rescale_affine x z hR]
 
 end HarmonicBalls
