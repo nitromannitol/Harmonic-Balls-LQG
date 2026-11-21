@@ -2052,4 +2052,79 @@ theorem exists_inserted_annular_cell_rpow_le
           K ^ q * (2 * N * (N * (C * ENNReal.ofReal (h ^ a)))) := by gcongr
         _ = _ := by ring
 
+/-- Exponential moments of a circle average are finite. -/
+theorem lintegral_exp_mul_circle_lt_top
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {r : ℝ} (hr : 0 < r) (z : ℂ) (l : ℝ) :
+    (∫⁻ ω, ENNReal.ofReal (Real.exp (l * hcirc ω r z)) ∂P) < ⊤ := by
+  have hX := hh.hasLaw_circle hr z
+  have hm : Measurable (fun ω => hcirc ω r z) := hh.measurable_circle r z hr
+  have hf : Measurable (fun x : ℝ => ENNReal.ofReal (Real.exp (l * x))) := by fun_prop
+  rw [← lintegral_map hf hm, hX.map_eq, ← ofReal_integral_eq_lintegral_ofReal
+    (integrable_exp_mul_gaussianReal l) (ae_of_all _ fun x => (Real.exp_pos _).le)]
+  exact ENNReal.ofReal_lt_top
+
+/-- Outside the closed disc of radius `1/2` and inside the disc of radius `R`, the
+inserted density is bounded by a constant, the exponential of the circle average at
+radius `κ = 2 R`, and the normalized density of the field rescaled by `κ` at the
+rescaled point. -/
+theorem exterior_inserted_density_le {Ω : Type*} (hcirc H' : Ω → ℝ → ℂ → ℝ) (ω : Ω)
+    {γ α R ε : ℝ} (hR : 0 < R)
+    (hH' : ∀ r z, H' ω r z = hcirc ω (2 * R * r) (((2 * R : ℝ) : ℂ) * z) - hcirc ω (2 * R) 0)
+    (hone : hcirc ω 1 0 = 0)
+    (hrec : ∀ r z, 0 < r → hcirc ω r z - hcirc ω 1 0 - α * Real.log (max r ‖z‖) =
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z)
+    (hε : 0 < ε) (hε2 : ε ≤ 1 / 2) (z : ℂ) :
+    ENNReal.ofReal ({w : ℂ | 1 / 2 < ‖w‖ ∧ ‖w‖ ≤ R}.indicator (fun w => ε ^ (γ ^ 2 / 2) *
+      Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε w)) z) ≤
+      ENNReal.ofReal (Real.exp (|γ * α| * (Real.log 2 + |Real.log R|)) * (2 * R) ^ (γ ^ 2 / 2) *
+        Real.exp (γ * hcirc ω (2 * R) 0)) *
+      {u : ℂ | (0 : ℝ) ≤ ‖u‖ ∧ ‖u‖ ≤ 1 / 2}.indicator
+        (normalizedCircleDensity H' γ (ε / (2 * R)) ω)
+        (affineScaling (show (0 : ℝ) < 2 * R by positivity) 0 z) := by
+  have hκ : (0 : ℝ) < 2 * R := by positivity
+  by_cases hz : 1 / 2 < ‖z‖ ∧ ‖z‖ ≤ R
+  · rw [Set.indicator_of_mem (show z ∈ {w : ℂ | 1 / 2 < ‖w‖ ∧ ‖w‖ ≤ R} from hz)]
+    set u := affineScaling hκ 0 z with hu
+    have hu' : u = ((2 * R)⁻¹ : ℝ) • z := by rw [hu, affineScaling_apply, sub_zero]
+    have hun : ‖u‖ = ‖z‖ / (2 * R) := by
+      rw [hu', norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hκ, inv_mul_eq_div]
+    have huT : u ∈ {u : ℂ | (0 : ℝ) ≤ ‖u‖ ∧ ‖u‖ ≤ 1 / 2} := by
+      refine ⟨norm_nonneg _, ?_⟩
+      rw [hun, div_le_iff₀ hκ]
+      linarith [hz.2]
+    rw [Set.indicator_of_mem huT, normalizedCircleDensity]
+    have hκu : ((2 * R : ℝ) : ℂ) * u = z := by
+      rw [hu', Complex.real_smul, ← mul_assoc, ← Complex.ofReal_mul,
+        mul_inv_cancel₀ hκ.ne', Complex.ofReal_one, one_mul]
+    have hrad : 2 * R * (ε / (2 * R)) = ε := by field_simp
+    rw [hH', hrad, hκu, ← ENNReal.ofReal_mul (by positivity)]
+    apply ENNReal.ofReal_le_ofReal
+    have hz0 : 0 < ‖z‖ := by linarith [hz.1]
+    have hmax : max ε ‖z‖ = ‖z‖ := max_eq_right (by linarith [hz.1])
+    rw [← hrec ε z hε, hone, hmax]
+    have hlog : -(γ * α) * Real.log ‖z‖ ≤ |γ * α| * (Real.log 2 + |Real.log R|) := by
+      have h1 : |Real.log ‖z‖| ≤ Real.log 2 + |Real.log R| := by
+        rw [abs_le]
+        constructor
+        · have : Real.log (1 / 2) ≤ Real.log ‖z‖ := Real.log_le_log (by norm_num) hz.1.le
+          rw [one_div, Real.log_inv] at this
+          linarith [abs_nonneg (Real.log R)]
+        · have : Real.log ‖z‖ ≤ Real.log R := Real.log_le_log hz0 hz.2
+          have := le_abs_self (Real.log R)
+          have : 0 ≤ Real.log 2 := Real.log_nonneg (by norm_num)
+          linarith
+      calc -(γ * α) * Real.log ‖z‖ ≤ |-(γ * α) * Real.log ‖z‖| := le_abs_self _
+        _ = |γ * α| * |Real.log ‖z‖| := by rw [abs_mul, abs_neg]
+        _ ≤ _ := mul_le_mul_of_nonneg_left h1 (abs_nonneg _)
+    have hεκ : 0 < ε / (2 * R) := by positivity
+    rw [Real.rpow_def_of_pos hε, Real.rpow_def_of_pos hκ, Real.log_div hε.ne' hκ.ne']
+    rw [← Real.exp_add, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
+    apply Real.exp_le_exp.mpr
+    nlinarith [hlog]
+  · rw [Set.indicator_of_notMem (show z ∉ {w : ℂ | 1 / 2 < ‖w‖ ∧ ‖w‖ ≤ R} from hz),
+      ENNReal.ofReal_zero]
+    exact zero_le
+
 end HarmonicBalls
