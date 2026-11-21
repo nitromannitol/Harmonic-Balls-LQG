@@ -1627,4 +1627,69 @@ theorem exists_halfDisc_occupation_rpow_le_time
         exact iSup_le (fun w => hΦ δ hδ hδ2 w)
       _ ≤ (CA + CB) * ENNReal.ofReal (h ^ a) := mul_le_mul' le_add_self le_rfl
 
+/-- **Time cells.** A bound on the half-disc occupation moments up to time `h` that is
+uniform in the start bounds the moments over every time cell `(t, t + h]`. -/
+theorem lintegral_halfDisc_occupation_cell_rpow_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) {q : ℝ} (hq0 : 0 ≤ q) {h : ℝ} (hh0 : 0 ≤ h) (B : ℝ≥0∞)
+    (hB : ∀ y : ℂ, (∫⁻ ω, ∫⁻ b, pathOccupationBefore
+      ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (normalizedCircleDensity hcirc γ ε ω))
+        (ENNReal.ofReal h) b ^ q ∂planarBrownianMotion y ∂P) ≤ B) (x : ℂ) (t : ℝ≥0) :
+    (∫⁻ ω, ∫⁻ b, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+      {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (normalizedCircleDensity hcirc γ ε ω)
+        (b s.toNNReal)) ^ q ∂planarBrownianMotion x ∂P) ≤ B := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  have hTdm : MeasurableSet Td := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let f : Ω → ℂ → ℝ≥0∞ := fun ω => Td.indicator (normalizedCircleDensity H γ ε ω)
+  have hf : Measurable (Function.uncurry f) :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm ε hε) γ) hTdm
+  have hconv (ω : Ω) (hω : ∀ r z, H ω r z = hcirc ω r z) :
+      Td.indicator (normalizedCircleDensity hcirc γ ε ω) = f ω := by
+    have h' : normalizedCircleDensity hcirc γ ε ω = normalizedCircleDensity H γ ε ω := by
+      funext w
+      simp only [normalizedCircleDensity, hω]
+    simp only [f, h']
+  let G : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun p =>
+    pathOccupationBefore (f p.1) (ENNReal.ofReal h) p.2 ^ q
+  have hG : Measurable G :=
+    (measurable_pathOccupationBefore (fun p : Ω × ContinuousPath ℂ => f p.1)
+      (hf.comp (measurable_fst.fst.prodMk measurable_snd))
+      (fun _ => ENNReal.ofReal h) measurable_const (fun p => p.2) measurable_snd).pow_const q
+  have hshift : Measurable (ContinuousPath.shift (alpha := ℂ) t) :=
+    (ContinuousPath.continuous_shift_fixed t).measurable
+  have hGs : Measurable (fun p : Ω × ContinuousPath ℂ => G (p.1, ContinuousPath.shift t p.2)) :=
+    hG.comp (measurable_fst.prodMk (hshift.comp measurable_snd))
+  have hcell (ω : Ω) (b : ContinuousPath ℂ) : (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+      f ω (b s.toNNReal)) = pathOccupationBefore (f ω) (ENNReal.ofReal h)
+        (ContinuousPath.shift t b) := by
+    unfold pathOccupationBefore
+    rw [lintegral_stopped_indicator_eq _ _ ENNReal.ofReal_ne_top, ENNReal.toReal_ofReal hh0,
+      lintegral_shift_path_occupation]
+  calc
+    _ = ∫⁻ ω, ∫⁻ b, G (ω, ContinuousPath.shift t b) ∂planarBrownianMotion x ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      apply lintegral_congr
+      intro b
+      rw [hconv ω hω, hcell ω b]
+    _ = ∫⁻ b, ∫⁻ ω, G (ω, ContinuousPath.shift t b) ∂P ∂planarBrownianMotion x :=
+      lintegral_lintegral_swap hGs.aemeasurable
+    _ ≤ B := by
+      apply lintegral_planarBrownianMotion_shift_le_uniform x t (fun b' => ∫⁻ ω, G (ω, b') ∂P)
+        hG.lintegral_prod_left' B
+      intro y
+      calc (∫⁻ b', ∫⁻ ω, G (ω, b') ∂P ∂planarBrownianMotion y) =
+          ∫⁻ ω, ∫⁻ b', G (ω, b') ∂planarBrownianMotion y ∂P :=
+            (lintegral_lintegral_swap (hG.comp measurable_swap).aemeasurable)
+        _ = _ := by
+          apply lintegral_congr_ae
+          filter_upwards [hHae] with ω hω
+          rw [hconv ω hω]
+        _ ≤ B := hB y
+
 end HarmonicBalls
