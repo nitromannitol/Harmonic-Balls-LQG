@@ -569,4 +569,92 @@ theorem stoppedHalfDiscMoment_le_square_return_add
           (ENNReal.natCast_ne_top _))
           (ENNReal.rpow_ne_top_of_nonneg (by positivity) ENNReal.ofReal_ne_top)
 
+/-- **Smoothing-uniform stopped half-disc moment.** For `γ² < 4` there is an order
+`q ∈ (1, 2]` with `q γ² < 4` such that the stopped half-disc moments are bounded
+uniformly over all smoothing radii in `(0, 1/2]` and all Brownian starts. -/
+theorem exists_uniform_stoppedHalfDiscMoment_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ2 : γ ^ 2 < 4) :
+    ∃ q : ℝ, 1 < q ∧ q ≤ 2 ∧ q * γ ^ 2 < 4 ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧
+      ∀ ε, 0 < ε → ε ≤ 1 / 2 → ∀ x : ℂ, stoppedHalfDiscMoment P hcirc γ ε q x ≤ C := by
+  set q : ℝ := 1 + (4 - γ ^ 2) / (8 + γ ^ 2) with hqdef
+  have hγ0 : 0 ≤ γ ^ 2 := sq_nonneg γ
+  have hd : 0 < 8 + γ ^ 2 := by positivity
+  have hfrac : 0 < (4 - γ ^ 2) / (8 + γ ^ 2) := div_pos (by linarith) hd
+  have hfrac1 : (4 - γ ^ 2) / (8 + γ ^ 2) ≤ 1 := (div_le_one hd).mpr (by linarith)
+  have hq1 : 1 < q := by rw [hqdef]; linarith
+  have hq2 : q ≤ 2 := by rw [hqdef]; linarith
+  have hq0 : 0 < q := by linarith
+  have hqγ : q * γ ^ 2 < 4 := by
+    have heq : q * γ ^ 2 = 12 * γ ^ 2 / (8 + γ ^ 2) := by
+      rw [hqdef]
+      field_simp
+      ring
+    rw [heq, div_lt_iff₀ hd]
+    nlinarith
+  refine ⟨q, hq1, hq2, hqγ, ?_⟩
+  obtain ⟨r, hr, hr10, hcoef⟩ := exists_annular_square_return_coefficient_lt_half hq1 hqγ
+  obtain ⟨Cτ, hCτ, hτ⟩ := exists_uniform_lintegral_exitTime_rpow_le Metric.isOpen_ball
+    (Metric.isBounded_ball : Bornology.IsBounded (Metric.ball (0 : ℂ) 1)) hq0.le hq2
+  set N : ℝ≥0∞ := ((LatticeProb.squareIndex r).card : ℝ≥0∞) with hN
+  set f : ℝ := q * (Real.log 2 - Real.log r) / (Real.log (3 * r / 2) - Real.log r) with hf
+  set θ : ℝ≥0∞ := 18 * N *
+    (ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+      ENNReal.ofReal ((4 * r) ^ 2) ^ q * ENNReal.ofReal (f ^ q)) with hθdef
+  set A : ℝ≥0∞ := N * N * ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) ^ (q / 2) * Cτ with hA
+  set B : ℝ≥0∞ := ENNReal.ofReal ((2 * r) ^ (-(γ ^ 2 * q * (q - 1) / 2))) * Cτ with hB
+  have hθeq : θ = ENNReal.ofReal (18 * ((LatticeProb.squareIndex r).card : ℝ) *
+      ((4 * r) ^ 2) ^ q * Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) * f ^ q) := by
+    rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity),
+      ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by norm_num),
+      ENNReal.ofReal_natCast, ← ENNReal.ofReal_rpow_of_nonneg (by positivity) hq0.le, hθdef, hN]
+    norm_num
+    ring
+  have hθ : θ < 1 := by
+    rw [hθeq]
+    exact ENNReal.ofReal_lt_one.mpr (by linarith [hcoef])
+  let M : ℝ → ℝ≥0∞ := fun ε => ⨆ x, stoppedHalfDiscMoment P hcirc γ ε q x
+  have hrec : ∀ ε, 0 < ε → ε < 2 * r → M ε ≤ A + θ * M (ε / (4 * r)) := by
+    intro ε hε hεη
+    apply iSup_le
+    intro x
+    have h4r : 0 < 4 * r := by positivity
+    have hδ : 0 < ε / (4 * r) := by positivity
+    have hδ2 : ε / (4 * r) ≤ 1 / 2 := by
+      rw [div_le_iff₀ h4r]
+      linarith
+    have heq : 4 * r * (ε / (4 * r)) = ε := by field_simp
+    have h := stoppedHalfDiscMoment_le_square_return_add hh hr hr10 hδ hδ2 γ hq1.le hq2 x
+    rw [heq] at h
+    calc
+      _ ≤ _ := h
+      _ ≤ θ * M (ε / (4 * r)) + A := add_le_add le_rfl (mul_le_mul_right (hτ x) _)
+      _ = A + θ * M (ε / (4 * r)) := add_comm _ _
+  have hhalf : 2 * r / (4 * r) = 1 / 2 := by field_simp; ring
+  have hbase' : ∀ ε, 2 * r ≤ ε → ε ≤ 1 / 2 → M ε ≤ B := by
+    intro ε h1 h2
+    apply iSup_le
+    intro x
+    exact (stoppedHalfDiscMoment_le_of_scale_lower_bound hh (by positivity) h1 h2 γ hq1.le x).trans
+      (mul_le_mul_right (hτ x) _)
+  have hmain := le_of_scale_recursion (M := M) (by positivity : 0 < 4 * r)
+    (by linarith : 4 * r < 1) (by positivity : 0 < 2 * r) hθ hrec
+    (fun ε h1 h2 => hbase' ε h1 (by rw [hhalf] at h2; exact h2.le))
+  refine ⟨A * (1 - θ)⁻¹ + B, ?_, ?_⟩
+  · have hAt : A < ⊤ := ENNReal.mul_lt_top (ENNReal.mul_lt_top (ENNReal.mul_lt_top
+      (ENNReal.natCast_lt_top _) (ENNReal.natCast_lt_top _))
+      (ENNReal.rpow_lt_top_of_nonneg (by positivity) ENNReal.ofReal_ne_top)) hCτ
+    have hBt : B < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hCτ
+    have hinv : (1 - θ)⁻¹ < ⊤ := ENNReal.inv_lt_top.mpr (tsub_pos_of_lt hθ)
+    exact ENNReal.add_lt_top.mpr ⟨ENNReal.mul_lt_top hAt hinv, hBt⟩
+  · intro ε hε hε2 x
+    have hx : stoppedHalfDiscMoment P hcirc γ ε q x ≤ M ε :=
+      le_iSup (fun x => stoppedHalfDiscMoment P hcirc γ ε q x) x
+    rcases lt_or_eq_of_le hε2 with hlt | heq
+    · exact hx.trans (hmain ε hε (by rw [hhalf]; exact hlt))
+    · refine hx.trans ((hbase' ε ?_ hε2).trans le_add_self)
+      rw [heq]
+      linarith
+
 end HarmonicBalls
