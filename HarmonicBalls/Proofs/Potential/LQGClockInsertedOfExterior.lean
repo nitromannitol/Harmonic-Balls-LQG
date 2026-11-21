@@ -141,7 +141,7 @@ theorem intervalIntegrable_indicator_path {f : ℂ → ℝ} (hf : Continuous f) 
   · simp [Set.indicator_of_notMem hs]
 
 /-- For almost every field the dyadic densities of the inserted field are continuous. -/
-theorem ae_continuous_inserted_density {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+theorem ae_continuous_inserted_dyadic_density {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α : ℝ) :
     ∀ᵐ ω ∂P, ∀ k : ℕ, Continuous (fun z => (dyadicScale k) ^ (γ ^ 2 / 2) * Real.exp (γ *
@@ -220,7 +220,7 @@ theorem exists_ae_isLQGClock_fieldCircleAverage_at_origin_of_exterior
   obtain ⟨Fh, hFh⟩ := exists_ae_tendsto_measure_halfDiscClock_at_origin hh hγ hγ2 hα
   obtain ⟨G, hGm, hG⟩ := hext
   refine ⟨fun ω b t => Fh ω b t + G ((ω, b), t), ?_⟩
-  filter_upwards [hFh, Measure.ae_ae_of_ae_prod hG, ae_continuous_inserted_density hh γ α]
+  filter_upwards [hFh, Measure.ae_ae_of_ae_prod hG, ae_continuous_inserted_dyadic_density hh γ α]
     with ω hω hGω hc
   exact isLQGClock_of_halfDisc_tendsto_measure_of_exterior hc (Fh ω) (fun b t => G ((ω, b), t))
     (fun t => hGm.comp ((measurable_const.prodMk measurable_id).prodMk measurable_const))
@@ -252,7 +252,7 @@ theorem exists_ae_isLQGClock_fieldCircleAverage_of_exterior_of_ne_zero
     (measurableSet_le measurable_const measurable_norm).inter
       (measurableSet_le measurable_norm measurable_const)
   filter_upwards [Measure.ae_ae_of_ae_prod hFh, Measure.ae_ae_of_ae_prod hG,
-    ae_continuous_inserted_density hh γ α] with ω hFω hGω hc
+    ae_continuous_inserted_dyadic_density hh γ α] with ω hFω hGω hc
   refine isLQGClock_of_halfDisc_tendsto_measure_of_exterior hc (fun b t => Fh ((ω, b), t))
     (fun b t => G ((ω, b), t))
     (fun t => hGm.comp ((measurable_const.prodMk measurable_id).prodMk measurable_const))
