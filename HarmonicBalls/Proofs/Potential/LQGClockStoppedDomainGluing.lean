@@ -544,4 +544,99 @@ theorem ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment
   refine ⟨F, hFc, hFm, fun t ht => ?_, hFu.congr (Eventually.of_forall hEq)⟩
   exact ge_of_tendsto' (hFu.tendsto_at ht) fun n => (hMr n q).2.2 t.toNNReal
 
+/-- Conditional stopped-domain clock assembly. Suppose that the closed half-disc
+clocks converge uniformly on `[0, 1]` almost surely under the field-path product
+law, and that the dyadic time cells of the bounded exterior occupation satisfy
+the moment bound of `ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment`.
+Then almost surely the full inserted clocks stopped at the exit of `D` converge
+uniformly on `[0, 1]` to a continuous, nondecreasing and nonnegative limit. -/
+theorem ae_tendstoUniformlyOn_stopped_domain_clock_of_halfDisc_of_cell_moment
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ)
+    {D : Set ℂ} (hD : IsOpen D) {R : ℝ} (hR : 0 < R) (hDR : ∀ z ∈ D, ‖z‖ ≤ R)
+    (hin : ∀ᵐ q : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      ∃ F : Icc (0 : ℝ) 1 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        TendstoUniformly
+          (fun i (t : Icc (0 : ℝ) 1) =>
+            stoppedAnnularClock (fun z => (dyadicScale (i+1))^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (i+1)) z)) 0
+                (fun _ => t.1.toNNReal) q.2) F atTop)
+    {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
+    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+      ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
+        ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
+          dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+          (q.2 s.toNNReal))) ^ p ∂(P.prod (planarBrownianMotion x)) ≤
+        ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a)) :
+    ∀ᵐ q ∂(P.prod (planarBrownianMotion x)), ∃ F : ℝ → ℝ,
+      ContinuousOn F (Icc 0 1) ∧ MonotoneOn F (Icc 0 1) ∧ (∀ t ∈ Icc (0 : ℝ) 1, 0 ≤ F t) ∧
+      TendstoUniformlyOn (fun n (t : ℝ) =>
+        ∫ s in (0 : ℝ)..min t (ContinuousPath.exitTime D q.2).toReal,
+          dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1))
+              (q.2 s.toNNReal))) F atTop (Icc 0 1) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hcont := (Measure.quasiMeasurePreserving_fst (μ := P)
+    (ν := planarBrownianMotion x)).ae (ae_continuous_stopped_exterior_density hh γ α)
+  filter_upwards [hin, ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment hh hγ0 hγ2
+    α x hD hR hDR hp ha hmom, hcont] with q hqin hqex hqc
+  obtain ⟨Fi, hFic, hFi0, hFim, hFi⟩ := hqin
+  obtain ⟨Fe, hFec, hFem, hFe0, hFe⟩ := hqex
+  let dens (n : ℕ) (z : ℂ) : ℝ := dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+    LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z)
+  have hdc (n : ℕ) : Continuous (dens n) := hqc _ (dyadicScale_pos (n + 1))
+  have hτ0 : 0 ≤ (ContinuousPath.exitTime D q.2).toReal := ENNReal.toReal_nonneg
+  let c : ℝ → Icc (0 : ℝ) 1 := fun t =>
+    Set.projIcc 0 1 zero_le_one (min t (ContinuousPath.exitTime D q.2).toReal)
+  have hcc : Continuous c := continuous_projIcc.comp (continuous_id.min continuous_const)
+  have hcm : Monotone c := (Set.monotone_projIcc zero_le_one).comp
+    fun _ _ h => min_le_min_right _ h
+  have hI : MeasurableSet {z : ℂ | ‖z‖ ≤ (1 : ℝ) / 2} :=
+    measurableSet_le measurable_norm measurable_const
+  have hE : MeasurableSet {z : ℂ | (1 : ℝ) / 2 < ‖z‖} :=
+    measurableSet_lt measurable_const measurable_norm
+  have hin_eq (n : ℕ) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 1) :
+      stoppedAnnularClock (dens n) 0 (fun _ => (c t).1.toNNReal) q.2 =
+        ∫ s in (0 : ℝ)..min t (ContinuousPath.exitTime D q.2).toReal,
+          {z : ℂ | ‖z‖ ≤ (1 : ℝ) / 2}.indicator (dens n) (q.2 s.toNNReal) := by
+    have hmem : min t (ContinuousPath.exitTime D q.2).toReal ∈ Icc (0 : ℝ) 1 :=
+      ⟨le_min ht.1 hτ0, (min_le_left _ _).trans ht.2⟩
+    have hct : (c t).1 = min t (ContinuousPath.exitTime D q.2).toReal := by
+      rw [show c t = ⟨_, hmem⟩ from Set.projIcc_of_mem _ hmem]
+    have hup : min ((1 : ℝ≥0) : ℝ) ((c t).1.toNNReal : ℝ) =
+        min t (ContinuousPath.exitTime D q.2).toReal := by
+      rw [NNReal.coe_one, hct, Real.coe_toNNReal _ hmem.1, min_eq_right hmem.2]
+    rw [stoppedAnnularClock_eq_time_integral _ (hdc n).measurable]
+    simp only [hup, norm_nonneg, true_and]
+  have hsplit (n : ℕ) (u : ℝ) : (∫ s in (0 : ℝ)..u, dens n (q.2 s.toNNReal)) =
+      (∫ s in (0 : ℝ)..u, {z : ℂ | ‖z‖ ≤ (1 : ℝ) / 2}.indicator (dens n) (q.2 s.toNNReal)) +
+        ∫ s in (0 : ℝ)..u, {z : ℂ | (1 : ℝ) / 2 < ‖z‖}.indicator (dens n) (q.2 s.toNNReal) := by
+    rw [← intervalIntegral.integral_add
+      (intervalIntegrable_indicator_along_path _ (hdc n) hI q.2 0 u)
+      (intervalIntegrable_indicator_along_path _ (hdc n) hE q.2 0 u)]
+    refine intervalIntegral.integral_congr fun s _ => ?_
+    show dens n (q.2 s.toNNReal) =
+      {z : ℂ | ‖z‖ ≤ (1 : ℝ) / 2}.indicator (dens n) (q.2 s.toNNReal) +
+        {z : ℂ | (1 : ℝ) / 2 < ‖z‖}.indicator (dens n) (q.2 s.toNNReal)
+    by_cases h : ‖q.2 s.toNNReal‖ ≤ (1 : ℝ) / 2
+    · rw [Set.indicator_of_mem (show q.2 s.toNNReal ∈ {z : ℂ | ‖z‖ ≤ (1 : ℝ) / 2} from h),
+        Set.indicator_of_notMem
+          (show q.2 s.toNNReal ∉ {z : ℂ | (1 : ℝ) / 2 < ‖z‖} from not_lt.mpr h), add_zero]
+    · rw [Set.indicator_of_notMem (show q.2 s.toNNReal ∉ {z : ℂ | ‖z‖ ≤ (1 : ℝ) / 2} from h),
+        Set.indicator_of_mem
+          (show q.2 s.toNNReal ∈ {z : ℂ | (1 : ℝ) / 2 < ‖z‖} from not_le.mp h), zero_add]
+  have hsum := (hFi.comp c).tendstoUniformlyOn.add hFe
+  refine ⟨Fi ∘ c + Fe, ((hFic.comp hcc).continuousOn).add hFec,
+    MonotoneOn.add ((hFim.comp hcm).monotoneOn _) hFem,
+    fun t ht => add_nonneg (hFi0 (c t)) (hFe0 t ht), hsum.congr (Eventually.of_forall ?_)⟩
+  intro n t ht
+  show stoppedAnnularClock (dens n) 0 (fun _ => (c t).1.toNNReal) q.2 +
+      (∫ s in (0 : ℝ)..min t (ContinuousPath.exitTime D q.2).toReal,
+        {z : ℂ | (1 : ℝ) / 2 < ‖z‖}.indicator (dens n) (q.2 s.toNNReal)) =
+    ∫ s in (0 : ℝ)..min t (ContinuousPath.exitTime D q.2).toReal, dens n (q.2 s.toNNReal)
+  rw [hin_eq n t ht, hsplit]
+
 end HarmonicBalls
