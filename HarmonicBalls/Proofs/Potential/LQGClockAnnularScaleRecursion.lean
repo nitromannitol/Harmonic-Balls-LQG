@@ -387,4 +387,186 @@ theorem stoppedHalfDiscMoment_le_of_scale_lower_bound
             _ = K * u ^ q := by congr 2; ring
     _ = _ := lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
 
+/-- **Scale recursion.** The stopped half-disc moment at smoothing `4 r δ` is at most
+the square coefficient, including the logarithmic return factor, times the largest
+stopped half-disc moment at smoothing `δ`, plus a separated-pair term controlled by
+the moment of the exit time. -/
+theorem stoppedHalfDiscMoment_le_square_return_add
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (γ : ℝ) {q : ℝ} (hq : 1 ≤ q) (hq2 : q ≤ 2) (x : ℂ) :
+    stoppedHalfDiscMoment P hcirc γ (4 * r * δ) q x ≤
+      18 * ((LatticeProb.squareIndex r).card : ℝ≥0∞) *
+        (ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+          ENNReal.ofReal ((4 * r) ^ 2) ^ q *
+          ENNReal.ofReal ((q * (Real.log 2 - Real.log r) /
+            (Real.log (3 * r / 2) - Real.log r)) ^ q)) *
+        (⨆ y, stoppedHalfDiscMoment P hcirc γ δ q y) +
+      ((LatticeProb.squareIndex r).card : ℝ≥0∞) * ((LatticeProb.squareIndex r).card : ℝ≥0∞) *
+        ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) ^ (q / 2) *
+        ∫⁻ b, (ENNReal.ofReal (ContinuousPath.exitTime (Metric.ball (0 : ℂ) 1) b).toReal) ^ q
+          ∂planarBrownianMotion x := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hq0 : 0 < q := by linarith
+  have hε : 0 < 4 * r * δ := by positivity
+  have hε2 : 4 * r * δ ≤ 1 / 2 := by nlinarith
+  set S := LatticeProb.squareIndex r with hS
+  set D : Set ℂ := Metric.ball (0 : ℂ) 1 with hDdef
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  set C := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) with hCdef
+  set F := ENNReal.ofReal ((q * (Real.log 2 - Real.log r) /
+    (Real.log (3 * r / 2) - Real.log r)) ^ q) with hFdef
+  set Φ := ⨆ y, stoppedHalfDiscMoment P hcirc γ δ q y with hΦ
+  have hDo : IsOpen D := Metric.isOpen_ball
+  have hTdm : MeasurableSet Td := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  have hsqm (i : ℤ × ℤ) : MeasurableSet (LatticeProb.dyadicSquare r i ∩ Td) :=
+    (LatticeProb.measurableSet_dyadicSquare r i).inter hTdm
+  let fA : Set ℂ → Ω → ℂ → ℝ≥0∞ := fun A ω =>
+    A.indicator (normalizedCircleDensity H γ (4 * r * δ) ω)
+  have hfA (A : Set ℂ) (hA : MeasurableSet A) : Measurable (Function.uncurry (fA A)) :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm _ hε) γ) hA
+  have hocc (A : Set ℂ) (hA : MeasurableSet A) : Measurable (fun p : Ω × ContinuousPath ℂ =>
+      pathOccupationBefore (fA A p.1) (ContinuousPath.exitTime D p.2) p.2 ^ q) :=
+    (measurable_pathOccupationBefore (fun p : Ω × ContinuousPath ℂ => fA A p.1)
+      ((hfA A hA).comp (measurable_fst.fst.prodMk measurable_snd))
+      (fun p => ContinuousPath.exitTime D p.2)
+      ((ContinuousPath.measurable_exitTime D hDo).comp measurable_snd)
+      (fun p => p.2) measurable_snd).pow_const q
+  let G : ℤ × ℤ → ContinuousPath ℂ → ℝ≥0∞ := fun i b => ∫⁻ ω,
+    pathOccupationBefore (fA (LatticeProb.dyadicSquare r i ∩ Td) ω)
+      (ContinuousPath.exitTime D b) b ^ q ∂P
+  have hG (i : ℤ × ℤ) : Measurable (G i) := (hocc _ (hsqm i)).lintegral_prod_left'
+  let X : ContinuousPath ℂ → ℝ≥0∞ := fun b =>
+    ((LatticeProb.squareIndex r).card : ℝ≥0∞) * (((LatticeProb.squareIndex r).card : ℝ≥0∞) *
+      (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
+        (ENNReal.ofReal ((ContinuousPath.exitTime D b).toReal - 0) *
+          ENNReal.ofReal ((ContinuousPath.exitTime D b).toReal - 0))) ^ (q / 2))
+  -- pathwise square decomposition
+  have hpath : ∀ᵐ b ∂planarBrownianMotion x, (∫⁻ ω, pathOccupationBefore (fA Td ω)
+      (ContinuousPath.exitTime D b) b ^ q ∂P) ≤ 18 * ∑ i ∈ S, G i b + X b := by
+    filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x
+      (Metric.isBounded_ball : Bornology.IsBounded D)] with b hb
+    have hdec := lintegral_annular_mass_rpow_le_square_moments_add_cell hh b 0
+      (ContinuousPath.exitTime D b).toReal 0 hε hε2 hr γ hq0 hq2
+    dsimp only at hdec
+    have hconv (A : Set ℂ) (hA : MeasurableSet A) : (∫⁻ ω, pathOccupationBefore (fA A ω)
+        (ContinuousPath.exitTime D b) b ^ q ∂P) = ∫⁻ ω, (∫⁻ t in {t | b t.toNNReal ∈ A} ∩
+          Ioc 0 (ContinuousPath.exitTime D b).toReal, ENNReal.ofReal
+            (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      rw [pathOccupationBefore_indicator_normalizedCircleDensity_eq hω hε γ A hA b hb.ne]
+    rw [hconv Td hTdm]
+    refine hdec.trans (le_of_eq ?_)
+    congr 1
+    all_goals first
+      | rfl
+      | (congr 1
+         apply Finset.sum_congr rfl
+         intro i _
+         exact (hconv _ (hsqm i)).symm)
+  -- one visit and the disc return iteration for each square
+  have hsquare (i : ℤ × ℤ) (hi : i ∈ S) : (∫⁻ b, G i b ∂planarBrownianMotion x) ≤
+      C * ENNReal.ofReal ((4 * r) ^ 2) ^ q * Φ * F := by
+    set z := LatticeProb.dyadicSquareCentre r i with hz
+    have hz1 : ‖z‖ < 1 / 2 + r := LatticeProb.norm_dyadicSquareCentre_lt hr hi
+    have hDR : D ⊆ Metric.ball z 2 := by
+      intro w hw
+      rw [Metric.mem_ball, dist_zero_right] at hw
+      rw [Metric.mem_ball, dist_eq_norm]
+      calc ‖w - z‖ ≤ ‖w‖ + ‖z‖ := norm_sub_le _ _
+        _ < 2 := by linarith
+    have hfQ : ∀ ω w, w ∉ Metric.closedBall z r →
+        fA (LatticeProb.dyadicSquare r i ∩ Td) ω w = 0 := by
+      intro ω w hw
+      apply Set.indicator_of_notMem
+      intro hw'
+      apply hw
+      rw [Metric.mem_closedBall, dist_eq_norm]
+      exact (LatticeProb.norm_sub_centre_lt hr hw'.1).le
+    have hM : ∀ y ∈ Metric.closedBall z r, (∫⁻ ω, ∫⁻ b, pathOccupationBefore
+        (fA (LatticeProb.dyadicSquare r i ∩ Td) ω)
+        (min (ContinuousPath.exitTime (Metric.ball z (3 * r / 2)) b)
+          (ContinuousPath.exitTime D b)) b ^ q ∂planarBrownianMotion y ∂P) ≤
+        C * ENNReal.ofReal ((4 * r) ^ 2) ^ q * Φ := by
+      intro y _
+      have hvisit := lintegral_square_visit_rpow_le_reference hh hHm hHae hr hr10 hδ hδ2 hi γ hq y
+      calc
+        _ ≤ ∫⁻ ω, ∫⁻ b, pathOccupationBefore ((LatticeProb.dyadicSquare r i).indicator
+            (normalizedCircleDensity H γ (4 * r * δ) ω))
+            (ContinuousPath.exitTime (Metric.ball z (3 * r / 2)) b) b ^ q
+              ∂planarBrownianMotion y ∂P := by
+          refine lintegral_mono fun ω => lintegral_mono fun b => ?_
+          exact ENNReal.rpow_le_rpow (pathOccupationBefore_mono
+            (fun w => Set.indicator_le_indicator_of_subset inter_subset_left (fun _ => zero_le) w)
+            (min_le_left _ _) b) hq0.le
+        _ ≤ _ := hvisit
+        _ ≤ C * ENNReal.ofReal ((4 * r) ^ 2) ^ q * stoppedHalfDiscMoment P H γ δ q
+            ((4 * r)⁻¹ • (y - z)) := by
+          refine mul_le_mul_right ?_ _
+          refine lintegral_mono fun ω => lintegral_mono fun b => ?_
+          refine ENNReal.rpow_le_rpow (pathOccupationBefore_mono
+            (fun w => Set.indicator_le_indicator_of_subset lqgSquare_subset_halfDisc
+              (fun _ => zero_le) w) ?_ b) hq0.le
+          apply ContinuousPath.exitTime_mono
+          exact Metric.ball_subset_ball (by norm_num)
+        _ ≤ _ := by
+          rw [stoppedHalfDiscMoment_congr hHae]
+          exact mul_le_mul_right (le_iSup (fun y => stoppedHalfDiscMoment P hcirc γ δ q y) _) _
+    have hret := lintegral_pathOccupationBefore_rpow_le_of_disc_return
+      (fA (LatticeProb.dyadicSquare r i ∩ Td)) (hfA _ (hsqm i)) (c := z) hr
+      (by linarith : r < 3 * r / 2) (by linarith : 3 * r / 2 < 2) hDo hDR hfQ hq hM x
+    calc
+      (∫⁻ b, G i b ∂planarBrownianMotion x) = ∫⁻ ω, ∫⁻ b, pathOccupationBefore
+          (fA (LatticeProb.dyadicSquare r i ∩ Td) ω) (ContinuousPath.exitTime D b) b ^ q
+            ∂planarBrownianMotion x ∂P :=
+        (lintegral_lintegral_swap (hocc _ (hsqm i)).aemeasurable).symm
+      _ ≤ _ := hret
+  -- cross term
+  have hX (b : ContinuousPath ℂ) : X b = ((LatticeProb.squareIndex r).card : ℝ≥0∞) *
+      ((LatticeProb.squareIndex r).card : ℝ≥0∞) * ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) ^ (q / 2) *
+      (ENNReal.ofReal (ContinuousPath.exitTime D b).toReal) ^ q := by
+    simp only [X, sub_zero]
+    set u := ENNReal.ofReal (ContinuousPath.exitTime D b).toReal
+    have hq2' : 0 ≤ q / 2 := by positivity
+    rw [ENNReal.mul_rpow_of_nonneg _ _ hq2']
+    have hu : (u * u) ^ (q / 2) = u ^ q := by
+      rw [← pow_two, ← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
+      congr 1
+      push_cast
+      ring
+    rw [hu]
+    ring
+  -- assembly
+  have hsum : Measurable (fun b => ∑ i ∈ S, G i b) := Finset.measurable_sum S (fun i _ => hG i)
+  rw [stoppedHalfDiscMoment_congr (hHae.mono fun ω hω ε z => (hω ε z).symm)]
+  unfold stoppedHalfDiscMoment
+  change (∫⁻ ω, ∫⁻ b, pathOccupationBefore (fA Td ω) (ContinuousPath.exitTime D b) b ^ q
+    ∂planarBrownianMotion x ∂P) ≤ _
+  rw [lintegral_lintegral_swap (hocc Td hTdm).aemeasurable]
+  calc
+    _ ≤ ∫⁻ b, 18 * ∑ i ∈ S, G i b + X b ∂planarBrownianMotion x := lintegral_mono_ae hpath
+    _ = 18 * ∑ i ∈ S, ∫⁻ b, G i b ∂planarBrownianMotion x +
+        ∫⁻ b, X b ∂planarBrownianMotion x := by
+      rw [lintegral_add_left' (hsum.const_mul 18).aemeasurable, lintegral_const_mul _ hsum,
+        lintegral_finsetSum S (fun i _ => hG i)]
+    _ ≤ 18 * ∑ _i ∈ S, C * ENNReal.ofReal ((4 * r) ^ 2) ^ q * Φ * F +
+        ∫⁻ b, X b ∂planarBrownianMotion x := by
+      gcongr with i hi
+      exact hsquare i hi
+    _ = _ := by
+      rw [Finset.sum_const, nsmul_eq_mul]
+      congr 1
+      · ring
+      · simp only [hX]
+        rw [lintegral_const_mul' _ _ ?_]
+        exact ENNReal.mul_ne_top (ENNReal.mul_ne_top (ENNReal.natCast_ne_top _)
+          (ENNReal.natCast_ne_top _))
+          (ENNReal.rpow_ne_top_of_nonneg (by positivity) ENNReal.ofReal_ne_top)
+
 end HarmonicBalls
