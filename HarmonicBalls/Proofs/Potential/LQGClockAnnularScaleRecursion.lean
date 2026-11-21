@@ -1428,4 +1428,203 @@ theorem lintegral_halfDisc_occupation_rpow_le_ball_exit_add
       filter_upwards [hHae] with ω hω
       rw [hconv ω hω]
 
+/-- The Gaussian and time scale factors of a grid square combine into a single power. -/
+theorem exp_mul_sq_rpow_eq_rpow {γ q R : ℝ} (hR : 0 < R) :
+    (R ^ 2) ^ q * Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log R) / 2) =
+      R ^ (2 * q - γ ^ 2 * q * (q - 1) / 2) := by
+  rw [← Real.rpow_natCast, ← Real.rpow_mul hR.le]
+  rw [Real.rpow_def_of_pos hR, Real.rpow_def_of_pos hR, ← Real.exp_add]
+  congr 1
+  push_cast
+  ring
+
+/-- Powers of a multiple of the square root of `h`. -/
+theorem mul_sqrt_rpow_eq {s h x : ℝ} (hs : 0 ≤ s) (hh : 0 ≤ h) :
+    (s * Real.sqrt h) ^ x = s ^ x * h ^ (x / 2) := by
+  rw [Real.mul_rpow hs (Real.sqrt_nonneg h), Real.sqrt_eq_rpow, ← Real.rpow_mul hh]
+  congr 2
+  ring
+
+/-- **Smoothing-uniform half-disc time moments.** For `γ² < 4` there are an order
+`q ∈ (1, 2]` with `q γ² < 4`, a time scale `h₀ > 0` and a finite constant such that,
+for all times `h ≤ h₀`, all smoothing radii in `(0, 1/2]` and all Brownian starts, the
+field-Brownian `q`-th moment of the half-disc occupation up to time `h` is at most the
+constant times `h ^ (q - γ² q (q - 1) / 4)`. -/
+theorem exists_halfDisc_occupation_rpow_le_time
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ2 : γ ^ 2 < 4) :
+    ∃ q : ℝ, 1 < q ∧ q ≤ 2 ∧ q * γ ^ 2 < 4 ∧ ∃ h₀ : ℝ, 0 < h₀ ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧
+      ∀ h, 0 < h → h ≤ h₀ → ∀ ε, 0 < ε → ε ≤ 1 / 2 → ∀ y : ℂ,
+        (∫⁻ ω, ∫⁻ b, pathOccupationBefore ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator
+          (normalizedCircleDensity hcirc γ ε ω)) (ENNReal.ofReal h) b ^ q
+            ∂planarBrownianMotion y ∂P) ≤
+          C * ENNReal.ofReal (h ^ (q - γ ^ 2 * q * (q - 1) / 4)) := by
+  obtain ⟨q, hq1, hq2, hqγ, CΦ, hCΦ, hΦ⟩ := exists_uniform_stoppedHalfDiscMoment_le hh hγ2
+  have hq0 : 0 < q := by linarith
+  refine ⟨q, hq1, hq2, hqγ, ?_⟩
+  set e : ℝ := γ ^ 2 * q * (q - 1) / 2 with he
+  set ζ : ℝ := 2 * q - γ ^ 2 * q * (q - 1) / 2 with hζ
+  set a : ℝ := q - γ ^ 2 * q * (q - 1) / 4 with ha
+  have hζa : ζ / 2 = a := by rw [hζ, ha]; ring
+  have hea : q + -e / 2 = a := by rw [he, ha]; ring
+  -- a far displacement threshold
+  set ε₁ : ℝ≥0∞ := ENNReal.ofReal ((2 : ℝ) ^ (-q) / 4) with hε₁
+  have hε₁pos : 0 < ε₁ := ENNReal.ofReal_pos.mpr (by positivity)
+  obtain ⟨U₀, hU₀⟩ := eventually_atTop.mp
+    ((tendsto_planarBrownianMotion_le_norm_one.eventually (gt_mem_nhds hε₁pos)))
+  set s₀ : ℝ := max (4 * Real.sqrt 2 * U₀) 1 with hs₀
+  have hs₀pos : 0 < s₀ := lt_of_lt_of_le one_pos (le_max_right _ _)
+  set h₀ : ℝ := (1 / (10 * s₀)) ^ 2 with hh₀
+  have hh₀pos : 0 < h₀ := by positivity
+  set F : ℝ≥0∞ := ENNReal.ofReal ((q * Real.log (5 / 2) / Real.log (3 / 2)) ^ q) with hF
+  set CA : ℝ≥0∞ := ENNReal.ofReal ((2 * s₀) ^ (-e)) with hCA
+  set CB : ℝ≥0∞ := 2 ^ q * 2592 * (ENNReal.ofReal ((4 * s₀) ^ ζ) * CΦ * F) with hCB
+  refine ⟨h₀, hh₀pos, CA + CB, ?_, ?_⟩
+  · refine ENNReal.add_lt_top.mpr ⟨ENNReal.ofReal_lt_top, ?_⟩
+    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top (ENNReal.rpow_lt_top_of_nonneg hq0.le
+      (by norm_num)) (by norm_num)) (ENNReal.mul_lt_top (ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+        hCΦ) ENNReal.ofReal_lt_top)
+  intro h hh0 hhh₀ ε hε hε2 y
+  set r : ℝ := s₀ * Real.sqrt h with hrdef
+  have hsq : 0 < Real.sqrt h := Real.sqrt_pos.mpr hh0
+  have hr : 0 < r := mul_pos hs₀pos hsq
+  have hr10 : r ≤ 1 / 10 := by
+    have h1 : Real.sqrt h ≤ 1 / (10 * s₀) := by
+      rw [show 1 / (10 * s₀) = Real.sqrt ((1 / (10 * s₀)) ^ 2) from
+        (Real.sqrt_sq (by positivity)).symm]
+      exact Real.sqrt_le_sqrt hhh₀
+    calc r = s₀ * Real.sqrt h := rfl
+      _ ≤ s₀ * (1 / (10 * s₀)) := mul_le_mul_of_nonneg_left h1 hs₀pos.le
+      _ = 1 / 10 := by field_simp
+  set Cell : ℂ → ℝ≥0∞ := fun w => ∫⁻ ω, ∫⁻ b, pathOccupationBefore
+    ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (normalizedCircleDensity hcirc γ ε ω))
+      (ENNReal.ofReal h) b ^ q ∂planarBrownianMotion w ∂P with hCell
+  change Cell y ≤ _
+  by_cases hεr : 2 * r ≤ ε
+  · -- coarse smoothing
+    have hJ := lintegral_halfDisc_occupation_rpow_le_of_scale_lower_bound hh (by positivity) hεr hε2
+      γ hq1.le hh0.le y
+    have key : (2 * r) ^ (-(γ ^ 2 * q * (q - 1) / 2)) * h ^ q = (2 * s₀) ^ (-e) * h ^ a := by
+      rw [show 2 * r = (2 * s₀) * Real.sqrt h by rw [hrdef]; ring,
+        mul_sqrt_rpow_eq (by positivity) hh0.le, mul_assoc, ← Real.rpow_add hh0, he, ha]
+      congr 2
+      ring
+    refine hJ.trans (le_trans (le_of_eq ?_) (mul_le_mul' le_self_add le_rfl))
+    rw [ENNReal.ofReal_rpow_of_nonneg hh0.le hq0.le, ← ENNReal.ofReal_mul (by positivity), hCA,
+      ← ENNReal.ofReal_mul (by positivity), key]
+  · -- fine smoothing: restart at the exit from a ball of radius r / 2
+    replace hεr : ε < 2 * r := not_le.mp hεr
+    set δ : ℝ := ε / (4 * r) with hδdef
+    have hδ : 0 < δ := by positivity
+    have hδ2 : δ ≤ 1 / 2 := by
+      rw [hδdef, div_le_iff₀ (by positivity)]
+      linarith
+    have hεδ : 4 * r * δ = ε := by rw [hδdef]; field_simp
+    set W := ⨆ w, Cell w with hW
+    have hWfin : W < ⊤ := by
+      refine lt_of_le_of_lt (iSup_le fun w =>
+        lintegral_halfDisc_occupation_rpow_le_of_scale_lower_bound hh hε le_rfl hε2 γ hq1.le
+          hh0.le w) ?_
+      exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+        (ENNReal.rpow_lt_top_of_nonneg hq0.le ENNReal.ofReal_ne_top)
+    set Bsq := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+      ENNReal.ofReal ((4 * r) ^ 2) ^ q * (⨆ w, stoppedHalfDiscMoment P hcirc γ δ q w) *
+      ENNReal.ofReal ((q * (Real.log (5 * r / 2) - Real.log r) /
+        (Real.log (3 * r / 2) - Real.log r)) ^ q) with hBsq
+    -- the exit probability is small
+    have hexit (w : ℂ) : planarBrownianMotion w
+        {b | ContinuousPath.exitTime (Metric.ball w (r / 2)) b ≤ ENNReal.ofReal h} ≤
+        (2 : ℝ≥0∞) ^ (-q) := by
+      have hu : U₀ ≤ r / 2 / 2 / Real.sqrt (2 * h) := by
+        have h2 : Real.sqrt (2 * h) = Real.sqrt 2 * Real.sqrt h := by
+          rw [Real.sqrt_mul (by norm_num)]
+        rw [h2, hrdef]
+        have hs2 : 0 < Real.sqrt 2 := by positivity
+        rw [show s₀ * Real.sqrt h / 2 / 2 / (Real.sqrt 2 * Real.sqrt h) = s₀ / (4 * Real.sqrt 2) by
+          field_simp; ring]
+        rw [le_div_iff₀ (by positivity)]
+        have := le_max_left (4 * Real.sqrt 2 * U₀) 1
+        linarith
+      have hu' : r / 2 / 2 / Real.sqrt (2 * h) ≤ r / 2 / 2 / Real.sqrt h := by
+        apply div_le_div_of_nonneg_left (by positivity) hsq
+        exact Real.sqrt_le_sqrt (by linarith)
+      have hG1 := (hU₀ _ hu).le
+      have hG2 : planarBrownianMotion 0 {b | r / 2 / 2 / Real.sqrt h ≤ ‖b 1‖} ≤ 2⁻¹ := by
+        refine (measure_mono (fun b hb => le_trans hu' hb)).trans (hG1.trans ?_)
+        rw [hε₁]
+        have : (2 : ℝ) ^ (-q) / 4 ≤ 1 / 2 := by
+          have : (2 : ℝ) ^ (-q) ≤ 1 := Real.rpow_le_one_of_one_le_of_nonpos (by norm_num) (by linarith)
+          linarith
+        calc ENNReal.ofReal ((2 : ℝ) ^ (-q) / 4) ≤ ENNReal.ofReal (1 / 2) :=
+              ENNReal.ofReal_le_ofReal this
+          _ = 2⁻¹ := by rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num)]; norm_num
+      calc _ ≤ 4 * planarBrownianMotion 0 {b | r / 2 / 2 / Real.sqrt (2 * h) ≤ ‖b 1‖} :=
+            planarBrownianMotion_exitTime_ball_le_le w (by positivity) hh0 hG2
+        _ ≤ 4 * ε₁ := mul_le_mul' le_rfl hG1
+        _ = (2 : ℝ≥0∞) ^ (-q) := by
+          rw [hε₁, ENNReal.ofReal_div_of_pos (by norm_num), ← ENNReal.ofReal_rpow_of_pos
+            (by norm_num)]
+          norm_num
+          rw [ENNReal.mul_div_cancel (by norm_num) (by norm_num)]
+    have hcell (w : ℂ) : Cell w ≤ 2 ^ (q - 1) * (2592 * Bsq) + 2⁻¹ * W := by
+      have hrest := lintegral_halfDisc_occupation_rpow_le_ball_exit_add hh hε γ hq1.le h (r / 2) w
+      have hnear := lintegral_halfDisc_occupation_ball_exit_rpow_le hh hr hr10 hδ hδ2 γ hq1.le
+        hq2 w w
+      rw [hεδ] at hnear
+      calc Cell w ≤ _ := hrest
+        _ ≤ 2 ^ (q - 1) * (2592 * Bsq + (2 : ℝ≥0∞) ^ (-q) * W) :=
+          mul_le_mul' le_rfl (add_le_add hnear (mul_le_mul' (hexit w) le_rfl))
+        _ = 2 ^ (q - 1) * (2592 * Bsq) + 2 ^ (q - 1) * (2 : ℝ≥0∞) ^ (-q) * W := by ring
+        _ = 2 ^ (q - 1) * (2592 * Bsq) + 2⁻¹ * W := by
+          rw [← ENNReal.rpow_add _ _ (by norm_num) (by norm_num)]
+          congr 2
+          rw [show q - 1 + -q = (-1 : ℝ) by ring, ENNReal.rpow_neg_one]
+    have hWle : W ≤ 2 * (2 ^ (q - 1) * (2592 * Bsq)) := by
+      have h1 : W ≤ 2 ^ (q - 1) * (2592 * Bsq) + 2⁻¹ * W := iSup_le hcell
+      have hhalf : W = 2⁻¹ * W + 2⁻¹ * W := by
+        rw [← two_mul, ← mul_assoc, ENNReal.mul_inv_cancel (by norm_num) (by norm_num), one_mul]
+      have h2 : 2⁻¹ * W + 2⁻¹ * W ≤ 2 ^ (q - 1) * (2592 * Bsq) + 2⁻¹ * W := by
+        rw [← hhalf]
+        exact h1
+      have h3 : 2⁻¹ * W ≤ 2 ^ (q - 1) * (2592 * Bsq) :=
+        (ENNReal.add_le_add_iff_right (ENNReal.mul_ne_top (by norm_num) hWfin.ne)).mp h2
+      calc W = 2 * (2⁻¹ * W) := by
+            rw [← mul_assoc, ENNReal.mul_inv_cancel (by norm_num) (by norm_num), one_mul]
+        _ ≤ 2 * (2 ^ (q - 1) * (2592 * Bsq)) := mul_le_mul' le_rfl h3
+    have hlog5 : Real.log (5 * r / 2) - Real.log r = Real.log (5 / 2) := by
+      rw [show 5 * r / 2 = (5 / 2) * r by ring, Real.log_mul (by norm_num) hr.ne']
+      ring
+    have hlog3 : Real.log (3 * r / 2) - Real.log r = Real.log (3 / 2) := by
+      rw [show 3 * r / 2 = (3 / 2) * r by ring, Real.log_mul (by norm_num) hr.ne']
+      ring
+    have hreal : Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2) * ((4 * r) ^ 2) ^ q =
+        (4 * s₀) ^ ζ * h ^ a := by
+      rw [mul_comm, exp_mul_sq_rpow_eq_rpow (by positivity : (0 : ℝ) < 4 * r),
+        show 4 * r = (4 * s₀) * Real.sqrt h by rw [hrdef]; ring,
+        mul_sqrt_rpow_eq (by positivity) hh0.le, hζ, ha]
+      congr 2
+    have hfac : ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ENNReal.ofReal ((4 * r) ^ 2) ^ q =
+        ENNReal.ofReal ((4 * s₀) ^ ζ) * ENNReal.ofReal (h ^ a) := by
+      rw [ENNReal.ofReal_rpow_of_nonneg (by positivity) hq0.le, ← ENNReal.ofReal_mul (by positivity),
+        hreal, ENNReal.ofReal_mul (by positivity)]
+    have hFeq : ENNReal.ofReal ((q * (Real.log (5 * r / 2) - Real.log r) /
+        (Real.log (3 * r / 2) - Real.log r)) ^ q) = F := by
+      rw [hlog5, hlog3]
+    have h2q : (2 : ℝ≥0∞) ^ q = 2 * 2 ^ (q - 1) := by
+      conv_lhs => rw [show q = 1 + (q - 1) by ring]
+      rw [ENNReal.rpow_add _ _ (by norm_num) (by norm_num), ENNReal.rpow_one]
+    calc Cell y ≤ W := le_iSup (fun w => Cell w) y
+      _ ≤ 2 * (2 ^ (q - 1) * (2592 * Bsq)) := hWle
+      _ = 2 ^ q * 2592 * (ENNReal.ofReal ((4 * s₀) ^ ζ) *
+          (⨆ w, stoppedHalfDiscMoment P hcirc γ δ q w) * F) * ENNReal.ofReal (h ^ a) := by
+        rw [hBsq, hfac, hFeq, h2q]
+        ring
+      _ ≤ CB * ENNReal.ofReal (h ^ a) := by
+        rw [hCB]
+        gcongr
+        exact iSup_le (fun w => hΦ δ hδ hδ2 w)
+      _ ≤ (CA + CB) * ENNReal.ofReal (h ^ a) := mul_le_mul' le_add_self le_rfl
+
 end HarmonicBalls
