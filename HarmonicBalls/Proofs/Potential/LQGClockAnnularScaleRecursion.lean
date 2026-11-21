@@ -2380,4 +2380,60 @@ theorem exists_exterior_inserted_cell_rpow_le
             gcongr
         _ = _ := by rw [hKc]; ring
 
+/-- **Dyadic exterior cell moments.** For `γ² < 4`, any insertion `α` and any radius `R`,
+there are `p > 0`, `a > 1` and `C` such that, from every Brownian start, for all dyadic
+smoothing radii `dyadicScale (n + 1)` and all dyadic time cells `(j / 2^m, (j + 1) / 2^m]`
+with `j < 2^m`, the product-law `p`-th moment of the inserted clock increment of the
+region `1/2 < ‖z‖ ≤ R` is at most `C (2^m)⁻¹ ^ a`. -/
+theorem exists_exterior_dyadic_cell_moment
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ2 : γ ^ 2 < 4) (α : ℝ)
+    (R : ℝ) :
+    ∃ p a C : ℝ, 0 < p ∧ 1 < a ∧ ∀ y : ℂ, ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
+      ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
+        ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
+          dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+          (q.2 s.toNNReal))) ^ p ∂(P.prod (planarBrownianMotion y)) ≤
+        ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a) := by
+  obtain ⟨p, a, hp1, ha1, C, hC, hbound⟩ :=
+    exists_exterior_inserted_cell_rpow_le hh hγ2 α (le_max_right R (1 / 2))
+  have hp0 : 0 < p := by linarith
+  refine ⟨p, a, C.toReal, hp0, ha1, fun y => Eventually.of_forall fun n m j _ => ?_⟩
+  have hε : 0 < dyadicScale (n + 1) := dyadicScale_pos (n + 1)
+  have hε2 : dyadicScale (n + 1) ≤ 1 / 2 := by
+    show (2 : ℝ)⁻¹ ^ (n + 1) ≤ 1 / 2
+    rw [pow_succ]
+    have h : (2 : ℝ)⁻¹ ^ n ≤ 1 := pow_le_one₀ (by norm_num) (by norm_num)
+    nlinarith
+  have h2m : (0 : ℝ) < 2 ^ m := by positivity
+  set hcell : ℝ := ((2 : ℝ) ^ m)⁻¹ with hhcell
+  have hcell0 : 0 < hcell := by positivity
+  have hcell1 : hcell ≤ 1 := inv_le_one_of_one_le₀ (one_le_pow₀ (by norm_num))
+  obtain ⟨t, ht⟩ : ∃ t : ℝ≥0, (t : ℝ) = (j : ℝ) / 2 ^ m := ⟨⟨_, by positivity⟩, rfl⟩
+  have hend : (j + 1 : ℝ) / 2 ^ m = (t : ℝ) + hcell := by
+    rw [ht, hhcell]
+    field_simp
+  have hmono : (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
+        ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
+          dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+          (q.2 s.toNNReal))) ^ p ∂(P.prod (planarBrownianMotion y))) ≤
+      ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + hcell),
+        ENNReal.ofReal ({z : ℂ | 1 / 2 < ‖z‖ ∧ ‖z‖ ≤ max R (1 / 2)}.indicator (fun z =>
+          dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+          (q.2 s.toNNReal))) ^ p ∂(P.prod (planarBrownianMotion y)) := by
+    rw [← ht, hend]
+    refine lintegral_mono fun q => ENNReal.rpow_le_rpow (lintegral_mono fun s => ?_) hp0.le
+    apply ENNReal.ofReal_le_ofReal
+    apply Set.indicator_le_indicator_of_subset
+    · intro z hz
+      exact ⟨hz.1, hz.2.trans (le_max_left _ _)⟩
+    · intro z
+      exact mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le
+  refine hmono.trans ((hbound _ hε hε2 y t hcell hcell0 hcell1).trans (le_of_eq ?_))
+  rw [ENNReal.ofReal_mul ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hC.ne]
+
 end HarmonicBalls
