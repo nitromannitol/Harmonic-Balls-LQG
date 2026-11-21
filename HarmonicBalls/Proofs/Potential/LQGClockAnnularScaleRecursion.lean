@@ -1707,6 +1707,164 @@ theorem lintegral_Ioc_eq_sum_Ioc (f : ℝ → ℝ≥0∞) (t d : ℝ) (hd : 0 �
       ← Ioc_union_Ioc_eq_Ioc h1 h2, lintegral_union measurableSet_Ioc
         (Ioc_disjoint_Ioc_of_le le_rfl)]
 
+/-- **Smoothing-uniform half-disc cell moments.** For `γ² < 4` there are an order
+`p ∈ (1, 2]` with `p γ² < 4`, the exponent `a = p - γ² p (p - 1) / 4 > 1` and a finite
+constant such that, for every smoothing radius in `(0, 1/2]`, every Brownian start, every
+time `t ≥ 0` and every `h ∈ (0, 1]`, the field-Brownian `p`-th moment of the half-disc
+occupation of the normalized density over `(t, t + h]` is at most the constant times
+`h ^ a`. -/
+theorem exists_halfDisc_cell_rpow_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ2 : γ ^ 2 < 4) :
+    ∃ p a : ℝ, 1 < p ∧ p ≤ 2 ∧ p * γ ^ 2 < 4 ∧ a = p - γ ^ 2 * p * (p - 1) / 4 ∧ 1 < a ∧
+      ∃ C : ℝ≥0∞, C < ⊤ ∧
+      ∀ ε, 0 < ε → ε ≤ 1 / 2 → ∀ (x : ℂ) (t : ℝ≥0) (h : ℝ), 0 < h → h ≤ 1 →
+        (∫⁻ ω, ∫⁻ b, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+          {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (normalizedCircleDensity hcirc γ ε ω)
+            (b s.toNNReal)) ^ p ∂planarBrownianMotion x ∂P) ≤ C * ENNReal.ofReal (h ^ a) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  obtain ⟨q, hq1, hq2, hqγ, h₀, hh₀, C, hC, hcell⟩ := exists_halfDisc_occupation_rpow_le_time hh hγ2
+  have hq0 : 0 < q := by linarith
+  set a : ℝ := q - γ ^ 2 * q * (q - 1) / 4 with ha
+  have ha1 : 1 < a := by
+    have : a - 1 = (q - 1) * (4 - q * γ ^ 2) / 4 := by rw [ha]; ring
+    have : 0 < (q - 1) * (4 - q * γ ^ 2) / 4 := by
+      apply div_pos (mul_pos (by linarith) (by linarith)) (by norm_num)
+    linarith
+  obtain ⟨N, hNdef⟩ : ∃ N : ℕ, N = ⌈1 / h₀⌉₊ + 1 := ⟨_, rfl⟩
+  have hNpos : (0 : ℝ) < N := by rw [hNdef]; positivity
+  have hNh₀ : 1 / (N : ℝ) ≤ h₀ := by
+    have h1 : 1 / h₀ ≤ (N : ℝ) := by
+      have := Nat.le_ceil (1 / h₀)
+      rw [hNdef]
+      push_cast
+      linarith
+    rw [div_le_iff₀ hNpos]
+    rw [div_le_iff₀ hh₀] at h1
+    linarith
+  refine ⟨q, a, hq1, hq2, hqγ, ha, ha1, 2 * N * (N * C),
+    ENNReal.mul_lt_top (by finiteness) (ENNReal.mul_lt_top (by finiteness) hC), ?_⟩
+  intro ε hε hε2 x t h hh0 hh1
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  have hTdm : MeasurableSet Td := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let f : Ω → ℂ → ℝ≥0∞ := fun ω => Td.indicator (normalizedCircleDensity H γ ε ω)
+  have hf : Measurable (Function.uncurry f) :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm ε hε) γ) hTdm
+  have hev : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => p.1.2 p.2.toNNReal) :=
+    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_snd.comp measurable_fst))
+  have hYm (u v : ℝ) : Measurable (fun pr : Ω × ContinuousPath ℂ =>
+      (∫⁻ s in Ioc u v, f pr.1 (pr.2 s.toNNReal)) ^ q) := by
+    apply Measurable.pow_const
+    exact (hf.comp (measurable_fst.fst.prodMk hev)).lintegral_prod_right'
+  have hevb : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal) :=
+    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)
+  have hYω (ω : Ω) (u v : ℝ) : Measurable (fun b : ContinuousPath ℂ =>
+      (∫⁻ s in Ioc u v, f ω (b s.toNNReal)) ^ q) :=
+    ((hf.comp ((measurable_const (a := ω)).prodMk hevb)).lintegral_prod_right'
+      (ν := volume.restrict (Ioc u v))).pow_const q
+  have hconv (ω : Ω) (hω : ∀ r z, H ω r z = hcirc ω r z) :
+      Td.indicator (normalizedCircleDensity hcirc γ ε ω) = f ω := by
+    have h' : normalizedCircleDensity hcirc γ ε ω = normalizedCircleDensity H γ ε ω := by
+      funext w
+      simp only [normalizedCircleDensity, hω]
+    simp only [f, h']
+  -- subcells of length h / N
+  obtain ⟨d, hd⟩ : ∃ d : ℝ, d = h / N := ⟨_, rfl⟩
+  have hd0 : 0 < d := by rw [hd]; positivity
+  have hdh₀ : d ≤ h₀ := by
+    calc d = h * (1 / N) := by rw [hd]; ring
+      _ ≤ 1 * (1 / N) := by gcongr
+      _ ≤ h₀ := by linarith
+  have hdh : d ≤ h := by
+    rw [hd, div_le_iff₀ hNpos]
+    have : (1 : ℝ) ≤ N := by
+      rw [hNdef]
+      push_cast
+      have := Nat.cast_nonneg (α := ℝ) ⌈1 / h₀⌉₊
+      linarith
+    nlinarith
+  obtain ⟨tk, htk⟩ : ∃ tk : ℕ → ℝ≥0, ∀ k, (tk k : ℝ) = (t : ℝ) + k * d :=
+    ⟨fun k => ⟨(t : ℝ) + k * d, by positivity⟩, fun _ => rfl⟩
+  have hsub (k : ℕ) : (∫⁻ ω, ∫⁻ b, (∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d),
+      f ω (b s.toNNReal)) ^ q ∂planarBrownianMotion x ∂P) ≤ C * ENNReal.ofReal (d ^ a) := by
+    have hB : ∀ y : ℂ, (∫⁻ ω, ∫⁻ b, pathOccupationBefore
+        (Td.indicator (normalizedCircleDensity hcirc γ ε ω)) (ENNReal.ofReal d) b ^ q
+          ∂planarBrownianMotion y ∂P) ≤ C * ENNReal.ofReal (d ^ a) :=
+      fun y => hcell d hd0 hdh₀ ε hε hε2 y
+    have h := lintegral_halfDisc_occupation_cell_rpow_le hh hε γ q hd0.le _ hB x (tk k)
+    refine le_trans (le_of_eq ?_) h
+    apply lintegral_congr_ae
+    filter_upwards [hHae] with ω hω
+    rw [hconv ω hω]
+  have hsplit (ω : Ω) (b : ContinuousPath ℂ) : (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+      f ω (b s.toNNReal)) = ∑ k ∈ Finset.range N,
+        ∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal) := by
+    have hNd : (t : ℝ) + h = (t : ℝ) + N * d := by
+      rw [hd]
+      field_simp
+    rw [hNd, lintegral_Ioc_eq_sum_Ioc _ _ _ hd0.le]
+    simp only [htk]
+  have hpow (ω : Ω) (b : ContinuousPath ℂ) : (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+      f ω (b s.toNNReal)) ^ q ≤ 2 * N * ∑ k ∈ Finset.range N,
+        (∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal)) ^ q := by
+    rw [hsplit ω b]
+    set X : ℕ → ℝ≥0∞ := fun k => ∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal)
+    calc (∑ k ∈ Finset.range N, X k) ^ q ≤ ∑ i ∈ Finset.range N, ∑ j ∈ Finset.range N,
+          (X i * X j) ^ (q / 2) := rpow_sum_le_sum_cross _ X hq0 hq2
+      _ = ∑ i ∈ Finset.range N, ∑ j ∈ (Finset.range N).filter (fun _ => True),
+          (X i * X j) ^ (q / 2) := by
+        rw [Finset.filter_true_of_mem (fun _ _ => trivial)]
+      _ ≤ _ := sum_rpow_mul_le_degree_mul_sum_rpow _ X (fun _ _ => True)
+          (fun _ _ _ => trivial) N (fun i _ => by simp) hq0.le
+  calc
+    _ = ∫⁻ ω, ∫⁻ b, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), f ω (b s.toNNReal)) ^ q
+        ∂planarBrownianMotion x ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      rw [hconv ω hω]
+    _ ≤ ∫⁻ ω, ∫⁻ b, 2 * N * ∑ k ∈ Finset.range N,
+        (∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal)) ^ q
+          ∂planarBrownianMotion x ∂P :=
+      lintegral_mono fun ω => lintegral_mono fun b => hpow ω b
+    _ = (2 * N * ∑ k ∈ Finset.range N, ∫⁻ ω, ∫⁻ b,
+        (∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal)) ^ q
+          ∂planarBrownianMotion x ∂P) := by
+      have hne : 2 * (N : ℝ≥0∞) ≠ ⊤ := ENNReal.mul_ne_top (by norm_num) (ENNReal.natCast_ne_top N)
+      calc (∫⁻ ω, ∫⁻ b, 2 * (N : ℝ≥0∞) * ∑ k ∈ Finset.range N,
+            (∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal)) ^ q
+              ∂planarBrownianMotion x ∂P) =
+          ∫⁻ ω, 2 * (N : ℝ≥0∞) * ∑ k ∈ Finset.range N, ∫⁻ b,
+            (∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal)) ^ q
+              ∂planarBrownianMotion x ∂P := by
+            apply lintegral_congr
+            intro ω
+            rw [lintegral_const_mul' (2 * (N : ℝ≥0∞)) _ hne]
+            congr 1
+            exact lintegral_finsetSum' _ (fun k _ => (hYω ω _ _).aemeasurable)
+        _ = 2 * N * ∑ k ∈ Finset.range N, ∫⁻ ω, ∫⁻ b,
+            (∫⁻ s in Ioc ((tk k : ℝ)) ((tk k : ℝ) + d), f ω (b s.toNNReal)) ^ q
+              ∂planarBrownianMotion x ∂P := by
+            rw [lintegral_const_mul' (2 * (N : ℝ≥0∞)) _ hne]
+            congr 1
+            exact lintegral_finsetSum' _ (fun k _ => ((hYm _ _).lintegral_prod_right').aemeasurable)
+    _ ≤ (2 * N * ∑ _k ∈ Finset.range N, C * ENNReal.ofReal (d ^ a)) := by
+      gcongr with k hk
+      exact hsub k
+    _ ≤ (2 * N * (N * C)) * ENNReal.ofReal (h ^ a) := by
+      rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]
+      have hda : ENNReal.ofReal (d ^ a) ≤ ENNReal.ofReal (h ^ a) :=
+        ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow hd0.le hdh (by linarith))
+      calc (2 * N * (N * (C * ENNReal.ofReal (d ^ a)))) ≤
+          (2 * N * (N * (C * ENNReal.ofReal (h ^ a)))) := by gcongr
+        _ = _ := by ring
+
+
 /-- **Smoothing-uniform moments of inserted annular clock cells.** For `γ² < 4`, any
 insertion `α` and any inner radius `δ ∈ (0, 1/2]`, there are `p ∈ (1, 2]`, `a > 1` and
 a finite constant such that, for every smoothing radius `ε ∈ (0, δ]`, every Brownian
