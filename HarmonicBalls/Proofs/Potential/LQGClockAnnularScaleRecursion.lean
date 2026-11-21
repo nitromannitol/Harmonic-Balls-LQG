@@ -657,4 +657,83 @@ theorem exists_uniform_stoppedHalfDiscMoment_le
       rw [heq]
       linarith
 
+/-- **Stopped grid-square moments.** For a grid square of side `r` meeting the half
+disc and a smoothing radius `4 r δ` with `δ ≤ 1/2`, the field-Brownian moment of the
+occupation of the square before the exit from any open set inside a disc of radius `R`
+about its centre is bounded by the Gaussian and time scale factors, the logarithmic
+return factor and the largest stopped half-disc moment at smoothing `δ`. -/
+theorem lintegral_square_occupation_rpow_le_stoppedHalfDiscMoment
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ) {q : ℝ} (hq : 1 ≤ q)
+    {D : Set ℂ} (hD : IsOpen D) {R : ℝ} (hR : 3 * r / 2 < R)
+    (hDR : D ⊆ Metric.ball (LatticeProb.dyadicSquareCentre r i) R) (x : ℂ) :
+    (∫⁻ ω, ∫⁻ b, pathOccupationBefore ((LatticeProb.dyadicSquare r i).indicator
+      (normalizedCircleDensity hcirc γ (4 * r * δ) ω)) (ContinuousPath.exitTime D b) b ^ q
+        ∂planarBrownianMotion x ∂P) ≤
+      ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ENNReal.ofReal ((4 * r) ^ 2) ^ q * (⨆ y, stoppedHalfDiscMoment P hcirc γ δ q y) *
+        ENNReal.ofReal ((q * (Real.log R - Real.log r) /
+          (Real.log (3 * r / 2) - Real.log r)) ^ q) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hq0 : 0 < q := by linarith
+  have hε : 0 < 4 * r * δ := by positivity
+  set z := LatticeProb.dyadicSquareCentre r i with hz
+  set Φ := ⨆ y, stoppedHalfDiscMoment P hcirc γ δ q y with hΦ
+  set C := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) with hCdef
+  let f : Ω → ℂ → ℝ≥0∞ := fun ω =>
+    (LatticeProb.dyadicSquare r i).indicator (normalizedCircleDensity H γ (4 * r * δ) ω)
+  have hf : Measurable (Function.uncurry f) :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm _ hε) γ)
+      (LatticeProb.measurableSet_dyadicSquare r i)
+  have hfQ : ∀ ω w, w ∉ Metric.closedBall z r → f ω w = 0 := by
+    intro ω w hw
+    apply Set.indicator_of_notMem
+    intro hw'
+    apply hw
+    rw [Metric.mem_closedBall, dist_eq_norm]
+    exact (LatticeProb.norm_sub_centre_lt hr hw').le
+  have hM : ∀ y ∈ Metric.closedBall z r, (∫⁻ ω, ∫⁻ b, pathOccupationBefore (f ω)
+      (min (ContinuousPath.exitTime (Metric.ball z (3 * r / 2)) b)
+        (ContinuousPath.exitTime D b)) b ^ q ∂planarBrownianMotion y ∂P) ≤
+      C * ENNReal.ofReal ((4 * r) ^ 2) ^ q * Φ := by
+    intro y _
+    have hvisit := lintegral_square_visit_rpow_le_reference hh hHm hHae hr hr10 hδ hδ2 hi γ hq y
+    calc
+      _ ≤ ∫⁻ ω, ∫⁻ b, pathOccupationBefore (f ω)
+          (ContinuousPath.exitTime (Metric.ball z (3 * r / 2)) b) b ^ q
+            ∂planarBrownianMotion y ∂P := by
+        refine lintegral_mono fun ω => lintegral_mono fun b => ?_
+        exact ENNReal.rpow_le_rpow (pathOccupationBefore_mono (fun w => le_rfl)
+          (min_le_left _ _) b) hq0.le
+      _ ≤ _ := hvisit
+      _ ≤ C * ENNReal.ofReal ((4 * r) ^ 2) ^ q * stoppedHalfDiscMoment P H γ δ q
+          ((4 * r)⁻¹ • (y - z)) := by
+        refine mul_le_mul_right ?_ _
+        refine lintegral_mono fun ω => lintegral_mono fun b => ?_
+        refine ENNReal.rpow_le_rpow (pathOccupationBefore_mono
+          (fun w => Set.indicator_le_indicator_of_subset lqgSquare_subset_halfDisc
+            (fun _ => zero_le) w) ?_ b) hq0.le
+        apply ContinuousPath.exitTime_mono
+        exact Metric.ball_subset_ball (by norm_num)
+      _ ≤ _ := by
+        rw [stoppedHalfDiscMoment_congr hHae]
+        exact mul_le_mul_right (le_iSup (fun y => stoppedHalfDiscMoment P hcirc γ δ q y) _) _
+  have hret := lintegral_pathOccupationBefore_rpow_le_of_disc_return f hf (c := z) hr
+    (by linarith : r < 3 * r / 2) hR hD hDR hfQ hq hM x
+  calc
+    _ = ∫⁻ ω, ∫⁻ b, pathOccupationBefore (f ω) (ContinuousPath.exitTime D b) b ^ q
+        ∂planarBrownianMotion x ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      have h : normalizedCircleDensity hcirc γ (4 * r * δ) ω =
+          normalizedCircleDensity H γ (4 * r * δ) ω := by
+        funext w
+        simp only [normalizedCircleDensity, hω]
+      simp only [f, h]
+    _ ≤ _ := hret
+
 end HarmonicBalls
