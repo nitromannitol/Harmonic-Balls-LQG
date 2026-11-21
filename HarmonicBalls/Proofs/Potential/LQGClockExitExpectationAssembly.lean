@@ -260,7 +260,7 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_annular_exterior_inc
 
 /-- A clock approximation up to a time at most one splits into its parts in the open half disc
 and in the closed exterior of the half disc. -/
-theorem lqgClockApprox_eq_halfDisc_add_exterior {γ : ℝ} (h : ℝ → ℂ → ℝ) (j : ℕ)
+theorem lqgClockApprox_eq_halfDisc_add_exterior_occupation {γ : ℝ} (h : ℝ → ℂ → ℝ) (j : ℕ)
     (hc : Continuous (h (dyadicScale j))) (b : ContinuousPath ℂ) {τ : ℝ≥0} (hτ : τ ≤ 1) :
     lqgClockApprox γ h (dyadicScale j) b τ =
       (∫ z, {z : ℂ | ‖z‖ < 1/2}.indicator (fun z =>
@@ -363,9 +363,9 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_halfDisc_exterior_in
         ENNReal.ofReal |ΔI p| + ENNReal.ofReal |ΔE p| := by
       filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
         (ν := planarBrownianMotion y)).ae hcont] with p hp
-      rw [lqgClockApprox_eq_halfDisc_add_exterior _ (k+2) (hp _ (dyadicScale_pos _)) p.2
+      rw [lqgClockApprox_eq_halfDisc_add_exterior_occupation _ (k+2) (hp _ (dyadicScale_pos _)) p.2
           (hτD1 p.2),
-        lqgClockApprox_eq_halfDisc_add_exterior _ (k+1) (hp _ (dyadicScale_pos _)) p.2
+        lqgClockApprox_eq_halfDisc_add_exterior_occupation _ (k+1) (hp _ (dyadicScale_pos _)) p.2
           (hτD1 p.2),
         ← ENNReal.ofReal_add (abs_nonneg _) (abs_nonneg _)]
       apply ENNReal.ofReal_le_ofReal
