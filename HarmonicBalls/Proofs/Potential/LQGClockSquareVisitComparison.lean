@@ -46,7 +46,7 @@ theorem pathOccupationBefore_exitTime_rescale (e : ℂ ≃ₜ ℂ) {c : ℝ≥0}
       {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s <
         ContinuousPath.exitTime U (ContinuousPath.rescale e c b)} := by
     ext s
-    simp only [mem_preimage, mem_setOf_eq]
+    simp only [mem_preimage, mem_ofPred_eq]
     constructor
     · rintro ⟨h0, h1⟩
       have hs0 : 0 ≤ s := (mul_nonneg_iff_of_pos_left hcR).mp h0
@@ -110,12 +110,12 @@ theorem lintegral_rpow_square_gmcDensity_le_reference_of_timeSet
         ∫⁻ ω, (∫⁻ t in I, ENNReal.ofReal (Real.exp (γ * hcirc ω δ
           ((b t.toNNReal - LatticeProb.dyadicSquareCentre r i) / (4 * r : ℝ)) -
             γ ^ 2 * (-Real.log δ) / 2))) ^ q ∂P := by
-  haveI : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have : IsProbabilityMeasure P := hh.isProbabilityMeasure
   have hq0 : 0 ≤ q := by linarith
   let c := LatticeProb.dyadicSquareCentre r i
   let g : ℝ → ℂ := fun t => (b t.toNNReal - c) / (4 * r : ℝ)
   have hg : Continuous g := by dsimp [g]; fun_prop
-  haveI : IsFiniteMeasure (volume.restrict I) := ⟨by
+  have : IsFiniteMeasure (volume.restrict I) := ⟨by
     rw [Measure.restrict_apply MeasurableSet.univ, univ_inter]
     exact (measure_mono hIn).trans_lt measure_Icc_lt_top⟩
   let ν : Measure ℂ := Measure.map g (volume.restrict I)
@@ -251,7 +251,7 @@ theorem lintegral_square_visit_rpow_le_reference
         ∫⁻ ω, ∫⁻ b, pathOccupationBefore (LatticeProb.LQG.lqgSquare.indicator
           (normalizedCircleDensity H γ δ ω)) (ContinuousPath.exitTime (ball 0 (3 / 8)) b) b ^ q
           ∂planarBrownianMotion ((4 * r)⁻¹ • (y - LatticeProb.dyadicSquareCentre r i)) ∂P := by
-  haveI : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have : IsProbabilityMeasure P := hh.isProbabilityMeasure
   have hq0 : 0 < q := lt_of_lt_of_le zero_lt_one hq
   have hκ : 0 < 4 * r := by positivity
   have hε : 0 < 4 * r * δ := by positivity
