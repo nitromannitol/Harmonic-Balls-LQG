@@ -315,7 +315,8 @@ theorem ofReal_stopped_integral_sub_le_lintegral {g : ℝ → ℝ} (hg0 : ∀ s,
   have h1 : s ≤ min u τ := le_min (not_lt.mp h) (hs.2.trans (min_le_right _ _))
   exact absurd hs.1 (not_lt.mpr h1)
 
-private theorem ae_continuous_stopped_exterior_density
+/-- Almost surely, the inserted density is continuous at every positive smoothing scale. -/
+theorem ae_forall_continuous_inserted_density
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α : ℝ) :
@@ -482,7 +483,7 @@ theorem ae_tendstoUniformlyOn_bounded_exterior_clock_of_cell_moment
   have hgood : ∀ᵐ ω ∂P, (∀ (n : ℕ) (b : ContinuousPath ℂ) (t : ℝ≥0), M n ((ω, b), t) =
       ∫ s in (0 : ℝ)..min (t : ℝ) (σ b),
         A.indicator (dens ω n) (b s.toNNReal)) ∧ ∀ n, Continuous (dens ω n) := by
-    filter_upwards [ae_all_iff.mpr hMae, ae_continuous_stopped_exterior_density hh γ α]
+    filter_upwards [ae_all_iff.mpr hMae, ae_forall_continuous_inserted_density hh γ α]
       with ω h1 h2
     exact ⟨h1, fun n => h2 _ (dyadicScale_pos (n + 1))⟩
   have hgood' : ∀ᵐ q ∂μ, (∀ (n : ℕ) (b : ContinuousPath ℂ) (t : ℝ≥0), M n ((q.1, b), t) =
@@ -636,7 +637,7 @@ theorem ae_tendstoUniformlyOn_stopped_domain_clock_of_halfDisc_of_cell_moment
               (q.2 s.toNNReal))) F atTop (Icc 0 1) := by
   let : IsProbabilityMeasure P := hh.isProbabilityMeasure
   have hcont := (Measure.quasiMeasurePreserving_fst (μ := P)
-    (ν := planarBrownianMotion x)).ae (ae_continuous_stopped_exterior_density hh γ α)
+    (ν := planarBrownianMotion x)).ae (ae_forall_continuous_inserted_density hh γ α)
   filter_upwards [hin, ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment hh hγ0 hγ2
     α x hD hR hDR hp ha hmom, hcont] with q hqin hqex hqc
   obtain ⟨Fi, hFic, hFi0, hFim, hFi⟩ := hqin
