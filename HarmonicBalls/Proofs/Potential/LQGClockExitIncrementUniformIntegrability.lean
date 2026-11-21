@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockExitIncrementDecomposition
+import HarmonicBalls.Proofs.Potential.LQGClockAnnularAnnealedIncrement
 
 /-! # Uniform integrability of exit-time clocks from unit-horizon increments
 
@@ -223,4 +224,78 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_unit_increments
     tendsto_clockApprox_green_expectedLBMExitTime_of_uniformIntegrable hD hx
       (fun k => hεc k ω) h1 h2 h3
   exact ⟨hne, htend⟩
+
+/-- The expected exit-time identity for the inserted circle averages of the whole-plane
+Gaussian free field: under summable unit-horizon increment bounds for the actual clocks,
+uniform over starts in a smooth bounded domain, for almost every field every LQG clock from a
+fixed start in the domain that is almost surely a time-change clock has finite expected LBM
+exit time, equal to the limit of the expected Green integrals of the approximating measures. -/
+theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_fieldCircleAverage_of_unit_increments
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
+    (c : ℕ → ℝ≥0∞) (hcs : (∑' k, c k) ≠ ⊤)
+    (hc : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
+      |lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale (k+1))
+          p.2 (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal -
+        lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale k)
+          p.2 (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal|
+      ∂(P.prod (planarBrownianMotion y))) ≤ c k)
+    (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hclock : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ
+      (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω))
+    (hF : ∀ᵐ ω ∂P, ∀ᵐ b ∂(planarBrownianMotion x), IsTimeChangeClock (F ω b)) :
+    ∀ᵐ ω ∂P, expectedLBMExitTime (F ω) D x ≠ ⊤ ∧
+      Tendsto (fun k : ℕ => ∫⁻ y, ENNReal.ofReal (2 * greenFunction D x y) *
+        ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) y)))
+        atTop (𝓝 (expectedLBMExitTime (F ω) D x)) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, hHc, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let H' : Ω → ℝ → ℂ → ℝ := fun ω r z => H ω r z - H ω 1 0 - α * Real.log (max r ‖z‖)
+  have hH'm (k : ℕ) : Measurable (fun p : Ω × ℂ => H' p.1 (dyadicScale k) p.2) := by
+    have h1 : Measurable (fun p : Ω × ℂ => H p.1 (dyadicScale k) p.2) :=
+      (hHm _ (dyadicScale_pos k)).comp measurable_swap
+    have h2 : Measurable (fun p : Ω × ℂ => H p.1 1 0) :=
+      (hHm 1 one_pos).comp ((measurable_const : Measurable fun _ : Ω × ℂ => (0 : ℂ)).prodMk
+        measurable_fst)
+    have h3 : Measurable (fun p : Ω × ℂ => α * Real.log (max (dyadicScale k) ‖p.2‖)) :=
+      measurable_const.mul (Real.measurable_log.comp
+        (measurable_const.max (measurable_norm.comp measurable_snd)))
+    exact (h1.sub h2).sub h3
+  have hH'c (k : ℕ) (ω : Ω) : Continuous (H' ω (dyadicScale k)) :=
+    ((hHc ω _ (dyadicScale_pos k)).sub continuous_const).sub (continuous_const.mul
+      ((continuous_const.max continuous_norm).log
+        (fun _ => (lt_max_of_lt_left (dyadicScale_pos k)).ne')))
+  have hae : ∀ᵐ ω ∂P, ∀ k : ℕ, H' ω (dyadicScale k) =
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) := by
+    filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hr k
+    funext z
+    simp only [H', hω]
+    exact hr _ z (dyadicScale_pos k)
+  have happ : ∀ᵐ ω ∂P, ∀ k : ℕ, lqgClockApprox γ (H' ω) (dyadicScale k) =
+      lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) (dyadicScale k) := by
+    filter_upwards [hae] with ω hω k
+    funext b t
+    simp only [lqgClockApprox, hω k]
+  have hc' : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
+      |lqgClockApprox γ (H' p.1) (dyadicScale (k+1)) p.2
+          (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal -
+        lqgClockApprox γ (H' p.1) (dyadicScale k) p.2
+          (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal|
+      ∂(P.prod (planarBrownianMotion y))) ≤ c k := by
+    intro k y hy
+    refine le_trans (le_of_eq ?_) (hc k y hy)
+    apply lintegral_congr_ae
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+      (ν := planarBrownianMotion y)).ae happ] with p hp
+    rw [hp (k+1), hp k]
+  have hclock' : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ (H' ω) x (F ω) := by
+    filter_upwards [hclock, happ] with ω h hω
+    intro T η hη
+    simpa only [hω] using h T η hη
+  filter_upwards [ae_tendsto_clockApprox_green_expectedLBMExitTime_of_unit_increments H' hH'm
+    hH'c hD hx c hcs hc' F hclock' hF, hae] with ω h hω
+  simpa only [hω] using h
 end HarmonicBalls
