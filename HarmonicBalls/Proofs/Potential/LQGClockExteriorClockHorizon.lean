@@ -16,6 +16,8 @@ full clock on every finite horizon.
 * `ae_exists_locally_uniform_limit_bounded_exterior_clock_of_cell_moment`
 * `ae_exists_locally_uniform_limit_stopped_exterior_clock_of_cell_moment`
 * `ae_exists_locally_uniform_limit_stopped_domain_clock_of_halfDisc_of_cell_moment`
+* `ae_exists_locally_uniform_limit_clock_of_halfDisc_of_cell_moment`: the unstopped clock, by
+  exhausting the plane with discs.
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Set Filter Topology HarmonicBalls.Section6
@@ -331,5 +333,100 @@ theorem ae_exists_locally_uniform_limit_stopped_domain_clock_of_halfDisc_of_cell
   rw [← integral_halfDisc_add_exterior _ (hc _ (dyadicScale_pos (n + 1)))]
   rw [abs_lt] at h1 h2 ⊢
   constructor <;> linarith [h1.1, h1.2, h2.1, h2.2]
+
+/-- A path that stays in `U` up to time `T` exits `U` no earlier than `T`. -/
+theorem le_exitTime_of_forall_mem {U : Set ℂ} {b : ContinuousPath ℂ} {T : ℝ≥0}
+    (h : ∀ t : ℝ≥0, t ≤ T → b t ∈ U) : (T : ℝ≥0∞) ≤ ContinuousPath.exitTime U b := by
+  rw [ContinuousPath.exitTime]
+  apply le_sInf
+  rintro s ⟨t, rfl, ht⟩
+  exact ENNReal.coe_le_coe.mpr (le_of_lt (not_le.mp fun h' => ht (h t h')))
+
+/-- Conditional unstopped clock on finite horizons. Suppose that the closed half-disc
+clocks converge locally uniformly on `[0, ∞)` almost surely under the field-path product
+law, and that for every radius `R` the bounded exterior cell moment bound holds at every
+start, with exponents and constant depending on `R`. Then the full inserted clocks converge
+locally uniformly on `[0, ∞)` to a continuous, nonnegative and nondecreasing limit, almost
+surely under the field-path product law. -/
+theorem ae_exists_locally_uniform_limit_clock_of_halfDisc_of_cell_moment
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ)
+    (hin : ∀ᵐ q : Ω × ContinuousPath ℂ ∂(P.prod (planarBrownianMotion x)),
+      ∃ F : ℝ≥0 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ),
+            {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+              (dyadicScale (j+1))^(γ^2/2) * Real.exp (γ *
+                LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (j+1)) z))
+                  (q.2 s.toNNReal)) - F t| < η)
+    (hmom : ∀ R : ℝ, 0 < R → ∃ p a C : ℝ, 0 < p ∧ 1 < a ∧
+      ∀ y : ℂ, ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
+        ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
+          ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
+            dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+            (q.2 s.toNNReal))) ^ p ∂(P.prod (planarBrownianMotion y)) ≤
+          ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a)) :
+    ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
+      ∃ F : ℝ≥0 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ n in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ), dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1))
+              (q.2 s.toNNReal))) - F t| < η := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hk (k : ℕ) : ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
+      ContinuousPath.exitTime (Metric.ball (0 : ℂ) ((k : ℝ) + 1)) q.2 < ⊤ ∧
+      ∃ F : ℝ≥0 → ℝ, Continuous F ∧ (∀ t, 0 ≤ F t) ∧ Monotone F ∧
+        ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ n in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..min (t : ℝ)
+            (ContinuousPath.exitTime (Metric.ball (0 : ℂ) ((k : ℝ) + 1)) q.2).toReal,
+            dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1))
+                (q.2 s.toNNReal))) - F t| < η := by
+    obtain ⟨p, a, C, hp, ha, hm⟩ := hmom ((k : ℝ) + 1) (by positivity)
+    exact ae_exists_locally_uniform_limit_stopped_domain_clock_of_halfDisc_of_cell_moment hh hγ0
+      hγ2 α x (D := Metric.ball (0 : ℂ) ((k : ℝ) + 1)) (by positivity)
+      (fun z hz => (mem_ball_zero_iff.mp hz).le) hin hp ha hm
+  filter_upwards [ae_all_iff.mpr hk, (Measure.quasiMeasurePreserving_fst (μ := P)
+    (ν := planarBrownianMotion x)).ae (ae_forall_continuous_inserted_density hh γ α)]
+    with q hq hc
+  let f (n : ℕ) : ℂ → ℝ := fun z => dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+    LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z)
+  have hfc (n : ℕ) : Continuous (f n) := hc _ (dyadicScale_pos (n + 1))
+  have hf0 (n : ℕ) (z : ℂ) : 0 ≤ f n z :=
+    mul_nonneg (Real.rpow_nonneg (dyadicScale_pos (n + 1)).le _) (Real.exp_pos _).le
+  let B (n : ℕ) (t : ℝ≥0) : ℝ := ∫ s in (0 : ℝ)..(t : ℝ), f n (q.2 s.toNNReal)
+  have hgi (n : ℕ) (u v : ℝ) : IntervalIntegrable (fun s : ℝ => f n (q.2 s.toNNReal)) volume u v :=
+    ((hfc n).comp (q.2.continuous.comp continuous_real_toNNReal)).intervalIntegrable u v
+  have hBc (n : ℕ) : Continuous (B n) :=
+    (intervalIntegral.continuous_primitive (hgi n) 0).comp continuous_subtype_val
+  have hB0 (n : ℕ) (t : ℝ≥0) : 0 ≤ B n t :=
+    intervalIntegral.integral_nonneg_of_forall t.coe_nonneg fun s => hf0 n _
+  have hBm (n : ℕ) : Monotone (B n) := by
+    intro s t hst
+    exact intervalIntegral.integral_mono_interval le_rfl s.coe_nonneg hst
+      (Eventually.of_forall fun s => hf0 n _) (hgi n 0 t)
+  refine exists_continuous_monotone_limit_of_uniform_on_nat_intervals B hBc hB0 hBm fun N => ?_
+  obtain ⟨M, hM⟩ := (isCompact_Icc (a := (0 : ℝ≥0)) (b := (N : ℝ≥0))).bddAbove_image
+    (continuous_norm.comp q.2.continuous).continuousOn
+  let k : ℕ := ⌈M⌉₊
+  have hin_ball (t : ℝ≥0) (ht : t ≤ N) : q.2 t ∈ Metric.ball (0 : ℂ) ((k : ℝ) + 1) := by
+    have h1 : ‖q.2 t‖ ≤ M := hM ⟨t, ⟨zero_le, ht⟩, rfl⟩
+    have h2 : M ≤ (k : ℝ) := Nat.le_ceil M
+    rw [mem_ball_zero_iff]
+    linarith
+  obtain ⟨hfin, F, -, -, -, hF⟩ := hq k
+  have hτ : (N : ℝ) ≤ (ContinuousPath.exitTime (Metric.ball (0 : ℂ) ((k : ℝ) + 1)) q.2).toReal := by
+    have h := ENNReal.toReal_mono hfin.ne (le_exitTime_of_forall_mem hin_ball)
+    simpa only [ENNReal.coe_toReal, NNReal.coe_natCast] using h
+  refine ⟨F, fun η hη => ?_⟩
+  filter_upwards [hF N η hη] with n hn t ht
+  have hmin : min (t : ℝ) (ContinuousPath.exitTime (Metric.ball (0 : ℂ) ((k : ℝ) + 1)) q.2).toReal =
+      t := min_eq_left ((show (t : ℝ) ≤ N by exact_mod_cast ht).trans hτ)
+  have h := hn t ht
+  rw [hmin] at h
+  exact h
 
 end HarmonicBalls
