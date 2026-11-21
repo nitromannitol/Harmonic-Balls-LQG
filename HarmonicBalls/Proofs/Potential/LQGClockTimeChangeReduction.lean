@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockInsertedExistence
+import HarmonicBalls.Proofs.Potential.LQGClockExpectedExitFinite
 
 /-! # Time-change properties of LQG clocks
 
@@ -7,7 +8,9 @@ approximations, which are continuous, nondecreasing and vanish at time zero. Alo
 the convergence is almost surely locally uniform, so almost every path has a clock that vanishes
 at time zero, is continuous and is nondecreasing. Strict monotonicity then follows from strict
 increase over every pair of rational times, and the clock is a time-change clock as soon as it
-also tends to infinity.
+also tends to infinity. For a family of LQG clocks of the inserted field from every start, these
+two properties give, for almost every field, finite expected exit times of Liouville Brownian
+motion from every smooth bounded domain and every start in it.
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Real Set Filter Topology
@@ -155,5 +158,31 @@ theorem exists_ae_isLQGClock_fieldCircleAverage_zero_continuous_monotone
   refine ⟨F, ?_⟩
   filter_upwards [hF, ae_continuous_fieldCircleAverage hh α] with ω hω hc
   exact ⟨hω, ae_zero_continuous_monotone_of_isLQGClock (fun k => hc _ (dyadicScale_pos k)) hω⟩
+
+
+/-- For almost every field, the expected exit time of Liouville Brownian motion from every smooth
+bounded domain is finite from every start in it, for every family of LQG clocks of the inserted
+field from every start that almost surely increase strictly between rational times and tend to
+infinity. -/
+theorem ae_forall_expectedLBMExitTime_lt_top_of_strictly_increasing
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    (hα : α < lqgQ γ) {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hF : ∀ᵐ ω ∂P, ∀ x : ℂ, IsLQGClock planarBrownianMotion γ
+      (fieldCircleAverage α (hcirc ω)) x (F ω x))
+    (hpos : ∀ᵐ ω ∂P, ∀ x : ℂ, ∀ s t : ℚ, 0 ≤ s → s < t → ∀ᵐ b ∂(planarBrownianMotion x),
+      F ω x b (s : ℝ).toNNReal < F ω x b (t : ℝ).toNNReal)
+    (hdiv : ∀ᵐ ω ∂P, ∀ x : ℂ, ∀ᵐ b ∂(planarBrownianMotion x), Tendsto (F ω x b) atTop atTop) :
+    ∀ᵐ ω ∂P, ∀ O : Set ℂ, IsSmoothBoundedOpen O → ∀ x ∈ O,
+      expectedLBMExitTime (F ω x) O x < ⊤ := by
+  have hlp : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc :=
+    (LPBridge.isWholePlaneGFF_iff P hC hcirc).mp hh
+  have hT : ∀ᵐ ω ∂P, ∀ x : ℂ, ∀ᵐ b ∂(planarBrownianMotion x), IsTimeChangeClock (F ω x b) := by
+    filter_upwards [hF, hpos, hdiv, ae_continuous_fieldCircleAverage hlp α] with ω hω hp hd hc x
+    exact ae_isTimeChangeClock_of_isLQGClock (fun k => hc _ (dyadicScale_pos k)) (hω x) (hp x)
+      (hd x)
+  exact ae_forall_expectedLBMExitTime_lt_top hh hγ hγ2 hα hμ F hF hT
 
 end HarmonicBalls
