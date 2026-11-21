@@ -37,7 +37,7 @@ theorem ae_tendstoUniformlyOn_stopped_domain_clock_nonpositive_of_cell_moment
     (hγ0 : 0 < γ) (hγ2 : γ ^ 2 < 2) (hα : α ≤ 0) (x : ℂ)
     {D : Set ℂ} (hD : IsOpen D) {R : ℝ} (hR : 0 < R) (hDR : ∀ z ∈ D, ‖z‖ ≤ R)
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
         ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
           dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
@@ -67,7 +67,7 @@ theorem ae_tendstoUniformlyOn_stopped_domain_clock_of_cell_moment
     (hsub : γ ^ 2 / 2 < 2 * (2 - γ * α) / (2 + γ * α)) (x : ℂ)
     {D : Set ℂ} (hD : IsOpen D) {R : ℝ} (hR : 0 < R) (hDR : ∀ z ∈ D, ‖z‖ ≤ R)
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
         ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
           dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
@@ -96,7 +96,7 @@ theorem ae_exists_locally_uniform_limit_stopped_domain_clock_nonpositive_of_cell
     (hγ0 : 0 < γ) (hγ2 : γ ^ 2 < 2) (hα : α ≤ 0) (x : ℂ)
     {D : Set ℂ} {R : ℝ} (hR : 0 < R) (hDR : ∀ z ∈ D, ‖z‖ ≤ R)
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ y : ℂ, ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ y : ℂ, ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
         ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
           dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
@@ -128,7 +128,7 @@ theorem ae_exists_locally_uniform_limit_stopped_domain_clock_of_cell_moment
     (hsub : γ ^ 2 / 2 < 2 * (2 - γ * α) / (2 + γ * α)) (x : ℂ)
     {D : Set ℂ} {R : ℝ} (hR : 0 < R) (hDR : ∀ z ∈ D, ‖z‖ ≤ R)
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ y : ℂ, ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ y : ℂ, ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
         ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
           dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *

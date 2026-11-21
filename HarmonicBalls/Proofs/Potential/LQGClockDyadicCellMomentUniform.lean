@@ -15,7 +15,7 @@ Let `X n ω` be random functions that are nondecreasing on `[0, 1]`. Suppose tha
 their values at every dyadic point `j / 2 ^ m` converge as `n → ∞`, and that for some `p > 0`
 and `a > 1` the `p`-th moments of the dyadic cell increments satisfy
 `E[(X n ((j + 1) / 2 ^ m) - X n (j / 2 ^ m)) ^ p] ≤ C (2 ^ -m) ^ a` uniformly in `n`, `m` and
-`j < 2 ^ m`. Then almost surely `X n ω` converges uniformly on `[0, 1]`.
+`j < 2 ^ m`, for all large `n`. Then almost surely `X n ω` converges uniformly on `[0, 1]`.
 
 The proof sums the `p`-th powers of the `2 ^ m` cell increments of one level, passes to the
 limit in `n` by Fatou's lemma, and sums the resulting geometric bound over the levels. The sum
@@ -42,8 +42,9 @@ private theorem two_pow_mul_inv_two_pow_rpow (a : ℝ) (m : ℕ) :
     Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 2⁻¹), Real.rpow_natCast, ← mul_pow]
 
 /-- Nondecreasing random functions on `[0, 1]` whose values at the dyadic points converge
-almost surely, and whose dyadic cell increments have `p`-th moments bounded by `C h ^ a` for
-cells of length `h = 2 ^ -m` with `a > 1`, converge uniformly on `[0, 1]` almost surely. -/
+almost surely, and whose dyadic cell increments eventually have `p`-th moments bounded by
+`C h ^ a` for cells of length `h = 2 ^ -m` with `a > 1`, converge uniformly on `[0, 1]` almost
+surely. -/
 theorem ae_tendstoUniformlyOn_of_dyadic_cell_moment {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} (X : ℕ → Ω → ℝ → ℝ)
     (hmono : ∀ᵐ ω ∂μ, ∀ n, MonotoneOn (X n ω) (Icc 0 1))
@@ -51,7 +52,7 @@ theorem ae_tendstoUniformlyOn_of_dyadic_cell_moment {Ω : Type*} [MeasurableSpac
     (hconv : ∀ᵐ ω ∂μ, ∀ m j : ℕ, j ≤ 2 ^ m →
       ∃ L : ℝ, Tendsto (fun n => X n ω (j / 2 ^ m)) atTop (𝓝 L))
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ ω, ENNReal.ofReal (X n ω ((j + 1) / 2 ^ m) - X n ω (j / 2 ^ m)) ^ p ∂μ ≤
         ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a)) :
     ∀ᵐ ω ∂μ, ∃ F : ℝ → ℝ, TendstoUniformlyOn (fun n => X n ω) F atTop (Icc 0 1) := by
@@ -76,12 +77,13 @@ theorem ae_tendstoUniformlyOn_of_dyadic_cell_moment {Ω : Type*} [MeasurableSpac
   have hSm (n m : ℕ) : Measurable (S n m) :=
     Finset.measurable_sum _ fun j _ => hIm n m j
   have hGm (m : ℕ) : Measurable (G m) := Measurable.liminf fun n => hSm n m
-  have hS (n m : ℕ) : ∫⁻ ω, S n m ω ∂μ ≤ ENNReal.ofReal (C' * r ^ m) := by
+  have hS (m : ℕ) : ∀ᶠ n in atTop, ∫⁻ ω, S n m ω ∂μ ≤ ENNReal.ofReal (C' * r ^ m) := by
+    filter_upwards [hmom] with n hn
     calc ∫⁻ ω, S n m ω ∂μ
         = ∑ j ∈ Finset.range (2 ^ m), ∫⁻ ω, ENNReal.ofReal (I n m j ω) ^ p ∂μ :=
           lintegral_finsetSum _ fun j _ => hIm n m j
       _ ≤ ∑ _j ∈ Finset.range (2 ^ m), ENNReal.ofReal (C' * ((2 : ℝ) ^ m)⁻¹ ^ a) := by
-          refine Finset.sum_le_sum fun j hj => (hmom n m j (Finset.mem_range.mp hj)).trans ?_
+          refine Finset.sum_le_sum fun j hj => (hn m j (Finset.mem_range.mp hj)).trans ?_
           exact ENNReal.ofReal_le_ofReal
             (mul_le_mul_of_nonneg_right (le_max_left _ _) (by positivity))
       _ = ENNReal.ofReal (C' * r ^ m) := by
@@ -95,7 +97,7 @@ theorem ae_tendstoUniformlyOn_of_dyadic_cell_moment {Ω : Type*} [MeasurableSpac
     calc ∫⁻ ω, G m ω ∂μ ≤ liminf (fun n => ∫⁻ ω, S n m ω ∂μ) atTop :=
           lintegral_liminf_le' fun n => (hSm n m).aemeasurable
       _ ≤ liminf (fun _ : ℕ => ENNReal.ofReal (C' * r ^ m)) atTop :=
-          liminf_le_liminf (Eventually.of_forall fun n => hS n m)
+          liminf_le_liminf (hS m)
       _ = ENNReal.ofReal (C' * r ^ m) := liminf_const _
   have hsum : ∫⁻ ω, ∑' m, G m ω ∂μ ≠ ∞ := by
     rw [lintegral_tsum fun m => (hGm m).aemeasurable]
@@ -189,7 +191,7 @@ theorem ae_exists_continuousOn_monotoneOn_limit_of_dyadic_cell_moment {Ω : Type
     (hconv : ∀ᵐ ω ∂μ, ∀ m j : ℕ, j ≤ 2 ^ m →
       ∃ L : ℝ, Tendsto (fun n => X n ω (j / 2 ^ m)) atTop (𝓝 L))
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ ω, ENNReal.ofReal (X n ω ((j + 1) / 2 ^ m) - X n ω (j / 2 ^ m)) ^ p ∂μ ≤
         ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a)) :
     ∀ᵐ ω ∂μ, ∃ F : ℝ → ℝ, ContinuousOn F (Icc 0 1) ∧ MonotoneOn F (Icc 0 1) ∧

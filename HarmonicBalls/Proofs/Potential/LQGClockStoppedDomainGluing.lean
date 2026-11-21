@@ -437,7 +437,7 @@ theorem exists_measurable_stopped_indicator_clock_prod_time
 measurable nonnegative path functional `σ`. Suppose that the dyadic time cells
 `[j 2⁻ᵐ, (j + 1) 2⁻ᵐ]` of the unstopped inserted occupation of the bounded exterior
 `{1/2 < ‖z‖ ≤ R}` have `p`-th moments at most `C (2⁻ᵐ) ^ a` with `a > 1`, uniformly
-in the dyadic smoothing scale, under the field-path product law. Then almost
+over all small enough dyadic smoothing scales, under the field-path product law. Then almost
 surely the bounded exterior clocks stopped at time `σ` converge uniformly on
 `[0, 1]` to a continuous, nondecreasing and nonnegative limit. -/
 theorem ae_tendstoUniformlyOn_bounded_exterior_clock_of_cell_moment
@@ -447,7 +447,7 @@ theorem ae_tendstoUniformlyOn_bounded_exterior_clock_of_cell_moment
     (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ)
     {σ : ContinuousPath ℂ → ℝ} (hσ : Measurable σ) (hσ0 : ∀ b, 0 ≤ σ b) {R : ℝ} (hR : 0 < R)
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
         ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
           dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
@@ -524,11 +524,12 @@ theorem ae_tendstoUniformlyOn_bounded_exterior_clock_of_cell_moment
           A.indicator (dens ω n) (b s.toNNReal)) =
       M n ((ω, b), ((j : ℝ) / 2 ^ m).toNNReal)
     rw [hωg.1 n b, hmin]
-  have hmom' : ∀ n m j : ℕ, j < 2 ^ m →
+  have hmom' : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q, ENNReal.ofReal (X n q ((j + 1) / 2 ^ m) - X n q (j / 2 ^ m)) ^ p ∂μ ≤
         ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a) := by
-    intro n m j hj
-    refine le_trans (lintegral_mono_ae ?_) (hmom n m j hj)
+    filter_upwards [hmom] with n hn
+    intro m j hj
+    refine le_trans (lintegral_mono_ae ?_) (hn m j hj)
     filter_upwards [hgood'] with q hq
     have hu : (0 : ℝ) ≤ j / 2 ^ m := by positivity
     have huv : (j : ℝ) / 2 ^ m ≤ (j + 1) / 2 ^ m :=
@@ -565,7 +566,7 @@ theorem ae_tendstoUniformlyOn_bounded_exterior_clock_of_cell_moment
 disc of radius `R` and a Brownian start `x`. Suppose that the dyadic time cells
 `[j 2⁻ᵐ, (j + 1) 2⁻ᵐ]` of the unstopped inserted occupation of the bounded exterior
 `{1/2 < ‖z‖ ≤ R}` have `p`-th moments at most `C (2⁻ᵐ) ^ a` with `a > 1`, uniformly
-in the dyadic smoothing scale, under the field-path product law. Then almost
+over all small enough dyadic smoothing scales, under the field-path product law. Then almost
 surely the exterior clocks stopped at the exit of `D` converge uniformly on
 `[0, 1]` to a continuous, nondecreasing and nonnegative limit. -/
 theorem ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment
@@ -575,7 +576,7 @@ theorem ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment
     (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ)
     {D : Set ℂ} (hD : IsOpen D) {R : ℝ} (hR : 0 < R) (hDR : ∀ z ∈ D, ‖z‖ ≤ R)
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
         ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
           dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
@@ -621,7 +622,7 @@ theorem ae_tendstoUniformlyOn_stopped_domain_clock_of_halfDisc_of_cell_moment
               LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (i+1)) z)) 0
                 (fun _ => t.1.toNNReal) q.2) F atTop)
     {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
-    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+    (hmom : ∀ᶠ n in atTop, ∀ m j : ℕ, j < 2 ^ m →
       ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
         ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
           dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
