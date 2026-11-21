@@ -44,19 +44,18 @@ private theorem exterior_occupation_eq_time (b : ContinuousPath ℂ) (T : ℝ≥
   · rintro ⟨h0, h1, hT⟩
     exact ⟨(Real.toNNReal_le_iff_le_coe).mpr hT, h0, h1⟩
 
-/-- The actual exterior density has dyadic limits at any countable family of
-unit-time horizons, including horizons stopped at the exit of a domain. -/
-theorem ae_brownian_field_tendsto_countable_stopped_exterior_clocks
+/-- The actual bounded exterior density has dyadic limits at any countable family of
+path-dependent unit-time horizons. -/
+theorem ae_brownian_field_tendsto_countable_bounded_exterior_clocks
     {Ω ι : Type*} [MeasurableSpace Ω] [Countable ι] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
     (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ)
-    {R : ℝ} (hR : 0 < R) (D : Set ℂ) (T : ι → ContinuousPath ℂ → ℝ≥0) :
+    {R : ℝ} (hR : 0 < R) (T : ι → ContinuousPath ℂ → ℝ≥0) :
     ∀ᵐ b ∂planarBrownianMotion x, ∀ᵐ ω ∂P, ∀ i,
       ∃ L : ℝ, 0 ≤ L ∧ Tendsto (fun n : ℕ =>
         let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
-        ∫ s in (0 : ℝ)..(min (1 : ℝ≥0)
-          (min (T i b) (ContinuousPath.exitTime D b).toReal.toNNReal) : ℝ),
+        ∫ s in (0 : ℝ)..(min (1 : ℝ≥0) (T i b) : ℝ),
           {z : ℂ | (1 : ℝ)/2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
             ε^(γ^2/2) * Real.exp (γ *
               LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b s.toNNReal))
@@ -98,7 +97,7 @@ theorem ae_brownian_field_tendsto_countable_stopped_exterior_clocks
     exact ht.eventually (Iio_mem_nhds (by norm_num))
   filter_upwards [hs] with b hb
   let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
-  let τ (i : ι) : ℝ≥0 := min (T i b) (ContinuousPath.exitTime D b).toReal.toNNReal
+  let τ (i : ι) : ℝ≥0 := T i b
   let μ (i : ι) : Measure ℂ := Measure.map (fun t => b t) (ν.restrict (Iic (τ i)))
   have hμ (i : ι) : μ i ≤ Measure.map (fun t => b t) ν :=
     Measure.map_mono Measure.restrict_le_self b.continuous.measurable
@@ -155,6 +154,26 @@ theorem ae_brownian_field_tendsto_countable_stopped_exterior_clocks
         ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left he).ne')))
     exact (continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hi))).measurable
 
+
+/-- The actual exterior density has dyadic limits at any countable family of
+unit-time horizons, including horizons stopped at the exit of a domain. -/
+theorem ae_brownian_field_tendsto_countable_stopped_exterior_clocks
+    {Ω ι : Type*} [MeasurableSpace Ω] [Countable ι] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ)
+    {R : ℝ} (hR : 0 < R) (D : Set ℂ) (T : ι → ContinuousPath ℂ → ℝ≥0) :
+    ∀ᵐ b ∂planarBrownianMotion x, ∀ᵐ ω ∂P, ∀ i,
+      ∃ L : ℝ, 0 ≤ L ∧ Tendsto (fun n : ℕ =>
+        let ε : ℝ := (2 : ℝ)⁻¹ ^ (n+1)
+        ∫ s in (0 : ℝ)..(min (1 : ℝ≥0)
+          (min (T i b) (ContinuousPath.exitTime D b).toReal.toNNReal) : ℝ),
+          {z : ℂ | (1 : ℝ)/2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
+            ε^(γ^2/2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b s.toNNReal))
+        atTop (𝓝 L) :=
+  ae_brownian_field_tendsto_countable_bounded_exterior_clocks hh hγ0 hγ2 α x hR
+    (fun i b => min (T i b) (ContinuousPath.exitTime D b).toReal.toNNReal)
 
 /-- A continuous density splits at the closed half-disc, with both pieces
 continuous in the same exit-stopped time variable. -/
@@ -317,21 +336,22 @@ private theorem ae_continuous_stopped_exterior_density
       ((continuous_const.max continuous_norm).log (fun _ => (lt_max_of_lt_left hε).ne')))
   exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hi))
 
-/-- For a measurable set of the plane, the exit-stopped clock of the inserted
-density restricted to that set has a version that is jointly measurable in the
-field, the path and the time, whose time paths are continuous, nondecreasing
-and nonnegative, and which agrees with the clock off one field-null set. -/
+/-- For a measurable set of the plane and a measurable nonnegative path functional `σ`,
+the clock of the inserted density restricted to that set and stopped at time `σ` has a
+version that is jointly measurable in the field, the path and the time, whose time paths
+are continuous, nondecreasing and nonnegative, and which agrees with the clock off one
+field-null set. -/
 theorem exists_measurable_stopped_indicator_clock_prod_time
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
     {ε : ℝ} (hε : 0 < ε) (γ α : ℝ) {A : Set ℂ} (hA : MeasurableSet A)
-    {D : Set ℂ} (hD : IsOpen D) :
+    {σ : ContinuousPath ℂ → ℝ} (hσ : Measurable σ) (hσ0 : ∀ b, 0 ≤ σ b) :
     ∃ M : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable M ∧
       (∀ q, Continuous (fun t => M (q, t)) ∧ Monotone (fun t => M (q, t)) ∧
         ∀ t, 0 ≤ M (q, t)) ∧
       ∀ᵐ ω ∂P, ∀ (b : ContinuousPath ℂ) (t : ℝ≥0),
-        M ((ω, b), t) = ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal,
+        M ((ω, b), t) = ∫ s in (0 : ℝ)..min (t : ℝ) (σ b),
           A.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
             LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) (b s.toNNReal) := by
   obtain ⟨H, hHc, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
@@ -353,10 +373,9 @@ theorem exists_measurable_stopped_indicator_clock_prod_time
     exact measurable_const.mul (measurable_const.mul ((h1.sub h2).sub
       (measurable_const.mul ((measurable_const.max measurable_snd.norm).log)))).exp
   let U : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ := fun q =>
-    min (q.2 : ℝ) (ContinuousPath.exitTime D q.1.2).toReal
+    min (q.2 : ℝ) (σ q.1.2)
   have hU : Measurable U := measurable_subtype_coe.comp measurable_snd |>.min
-    (((ContinuousPath.measurable_exitTime D hD).ennreal_toReal).comp
-      (measurable_snd.comp measurable_fst))
+    (hσ.comp (measurable_snd.comp measurable_fst))
   have heval : Measurable (fun q : ((Ω × ContinuousPath ℂ) × ℝ≥0) × ℝ =>
       q.1.1.2 q.2.toNNReal) := by
     exact (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
@@ -372,10 +391,10 @@ theorem exists_measurable_stopped_indicator_clock_prod_time
   let M : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ := fun q => ∫ s, Q (q, s)
   have hM : Measurable M := hQ.stronglyMeasurable.integral_prod_right'.measurable
   have hMeq (ω : Ω) (b : ContinuousPath ℂ) (t : ℝ≥0) :
-      M ((ω, b), t) = ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal,
+      M ((ω, b), t) = ∫ s in (0 : ℝ)..min (t : ℝ) (σ b),
         A.indicator (f ω) (b s.toNNReal) := by
-    have ht : (0 : ℝ) ≤ min (t : ℝ) (ContinuousPath.exitTime D b).toReal :=
-      le_min t.property ENNReal.toReal_nonneg
+    have ht : (0 : ℝ) ≤ min (t : ℝ) (σ b) :=
+      le_min t.property (hσ0 b)
     rw [intervalIntegral.integral_of_le ht, ← integral_indicator measurableSet_Ioc]
     apply integral_congr_ae
     filter_upwards with s
@@ -387,7 +406,7 @@ theorem exists_measurable_stopped_indicator_clock_prod_time
     Set.indicator_nonneg (fun z _ => hf0 q.1 z) _
   refine ⟨M, hM, fun q => ⟨?_, ?_, ?_⟩, ?_⟩
   · have heq : (fun t => M (q, t)) = fun t : ℝ≥0 =>
-        ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D q.2).toReal,
+        ∫ s in (0 : ℝ)..min (t : ℝ) (σ q.2),
           A.indicator (f q.1) (q.2 s.toNNReal) := funext (hMeq q.1 q.2)
     rw [heq]
     exact (intervalIntegral.continuous_primitive (fun u v => hgi q u v) 0).comp
@@ -396,12 +415,12 @@ theorem exists_measurable_stopped_indicator_clock_prod_time
     change M (q, s) ≤ M (q, t)
     rw [show M (q, s) = _ from hMeq q.1 q.2 s, show M (q, t) = _ from hMeq q.1 q.2 t]
     exact intervalIntegral.integral_mono_interval le_rfl
-      (le_min s.coe_nonneg ENNReal.toReal_nonneg) (min_le_min_right _ hst)
+      (le_min s.coe_nonneg (hσ0 q.2)) (min_le_min_right _ hst)
       (Eventually.of_forall (hg0 q)) (hgi q 0 _)
   · intro t
     rw [show M (q, t) = _ from hMeq q.1 q.2 t]
     exact intervalIntegral.integral_nonneg_of_forall
-      (le_min t.coe_nonneg ENNReal.toReal_nonneg) (hg0 q)
+      (le_min t.coe_nonneg (hσ0 q.2)) (hg0 q)
   · filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec
     intro b t
     rw [hMeq]
@@ -412,6 +431,134 @@ theorem exists_measurable_stopped_indicator_clock_prod_time
     · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz]
       simp only [f, hω ε (b s.toNNReal), hω 1 0, hrec ε (b s.toNNReal) hε]
     · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem hz]
+
+/-- Conditional bounded exterior clock convergence. Fix a Brownian start `x` and a
+measurable nonnegative path functional `σ`. Suppose that the dyadic time cells
+`[j 2⁻ᵐ, (j + 1) 2⁻ᵐ]` of the unstopped inserted occupation of the bounded exterior
+`{1/2 < ‖z‖ ≤ R}` have `p`-th moments at most `C (2⁻ᵐ) ^ a` with `a > 1`, uniformly
+in the dyadic smoothing scale, under the field-path product law. Then almost
+surely the bounded exterior clocks stopped at time `σ` converge uniformly on
+`[0, 1]` to a continuous, nondecreasing and nonnegative limit. -/
+theorem ae_tendstoUniformlyOn_bounded_exterior_clock_of_cell_moment
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (α : ℝ) (x : ℂ)
+    {σ : ContinuousPath ℂ → ℝ} (hσ : Measurable σ) (hσ0 : ∀ b, 0 ≤ σ b) {R : ℝ} (hR : 0 < R)
+    {p a C : ℝ} (hp : 0 < p) (ha : 1 < a)
+    (hmom : ∀ n m j : ℕ, j < 2 ^ m →
+      ∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc ((j : ℝ) / 2 ^ m) ((j + 1) / 2 ^ m),
+        ENNReal.ofReal ({z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
+          dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+          (q.2 s.toNNReal))) ^ p ∂(P.prod (planarBrownianMotion x)) ≤
+        ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a)) :
+    ∀ᵐ q ∂(P.prod (planarBrownianMotion x)), ∃ F : ℝ → ℝ,
+      ContinuousOn F (Icc 0 1) ∧ MonotoneOn F (Icc 0 1) ∧ (∀ t ∈ Icc (0 : ℝ) 1, 0 ≤ F t) ∧
+      TendstoUniformlyOn (fun n (t : ℝ) =>
+        ∫ s in (0 : ℝ)..min t (σ q.2),
+          {z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z =>
+            dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+            (q.2 s.toNNReal)) F atTop (Icc 0 1) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  let μ := P.prod (planarBrownianMotion x)
+  let A : Set ℂ := {z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}
+  have hA : MeasurableSet A := (measurableSet_lt measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let dens (ω : Ω) (n : ℕ) (z : ℂ) : ℝ := dyadicScale (n + 1) ^ (γ ^ 2 / 2) *
+    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (n + 1)) z)
+  have hdens0 (ω : Ω) (n : ℕ) (z : ℂ) : 0 ≤ dens ω n z :=
+    mul_nonneg (Real.rpow_nonneg (dyadicScale_pos (n + 1)).le _) (Real.exp_pos _).le
+  choose M hMm hMr hMae using fun n : ℕ =>
+    exists_measurable_stopped_indicator_clock_prod_time hh (dyadicScale_pos (n + 1)) γ α hA hσ hσ0
+  let X : ℕ → Ω × ContinuousPath ℂ → ℝ → ℝ := fun n q t => M n (q, t.toNNReal)
+  have hXm (n : ℕ) (t : ℝ) : Measurable fun q => X n q t :=
+    (hMm n).comp (measurable_id.prodMk measurable_const)
+  have hXmono (q : Ω × ContinuousPath ℂ) (n : ℕ) : MonotoneOn (X n q) (Icc 0 1) :=
+    ((hMr n q).2.1.comp fun _ _ h => Real.toNNReal_le_toNNReal h).monotoneOn _
+  have hXcont (q : Ω × ContinuousPath ℂ) (n : ℕ) : ContinuousOn (X n q) (Icc 0 1) :=
+    ((hMr n q).1.comp continuous_real_toNNReal).continuousOn
+  have hgood : ∀ᵐ ω ∂P, (∀ (n : ℕ) (b : ContinuousPath ℂ) (t : ℝ≥0), M n ((ω, b), t) =
+      ∫ s in (0 : ℝ)..min (t : ℝ) (σ b),
+        A.indicator (dens ω n) (b s.toNNReal)) ∧ ∀ n, Continuous (dens ω n) := by
+    filter_upwards [ae_all_iff.mpr hMae, ae_continuous_stopped_exterior_density hh γ α]
+      with ω h1 h2
+    exact ⟨h1, fun n => h2 _ (dyadicScale_pos (n + 1))⟩
+  have hgood' : ∀ᵐ q ∂μ, (∀ (n : ℕ) (b : ContinuousPath ℂ) (t : ℝ≥0), M n ((q.1, b), t) =
+      ∫ s in (0 : ℝ)..min (t : ℝ) (σ b),
+        A.indicator (dens q.1 n) (b s.toNNReal)) ∧ ∀ n, Continuous (dens q.1 n) :=
+    (Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae hgood
+  have hconv : ∀ᵐ q ∂μ, ∀ m j : ℕ, j ≤ 2 ^ m →
+      ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L) := by
+    have he : {q : Ω × ContinuousPath ℂ | ∀ m j : ℕ, j ≤ 2 ^ m →
+        ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} =
+        ⋂ m : ℕ, ⋂ j : ℕ, {q | j ≤ 2 ^ m →
+          ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} := by
+      ext q
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
+    have hset : MeasurableSet {q : Ω × ContinuousPath ℂ | ∀ m j : ℕ, j ≤ 2 ^ m →
+        ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} := by
+      rw [he]
+      exact MeasurableSet.iInter fun m => MeasurableSet.iInter fun j =>
+        (MeasurableSet.const _).imp
+          (measurableSet_exists_tendsto fun n => hXm n _)
+    refine (Measure.ae_prod_iff_ae_ae hset).2 ((Measure.ae_ae_comm hset).2 ?_)
+    have h40 := ae_brownian_field_tendsto_countable_bounded_exterior_clocks (ι := ℕ × ℕ)
+      hh hγ0 hγ2 α x hR (fun i b => min (((i.2 : ℝ) / 2 ^ i.1).toNNReal) (σ b).toNNReal)
+    filter_upwards [h40] with b hb
+    filter_upwards [hb, hgood] with ω hω hωg
+    intro m j hj
+    obtain ⟨L, -, hL⟩ := hω (m, j)
+    have hT1 : ((j : ℝ) / 2 ^ m).toNNReal ≤ 1 := by
+      rw [Real.toNNReal_le_one]
+      exact div_le_one_of_le₀ (by exact_mod_cast hj) (by positivity)
+    have hmin : ((min (1 : ℝ≥0) (min (((j : ℝ) / 2 ^ m).toNNReal)
+        (σ b).toNNReal) : ℝ≥0) : ℝ) = min ((((j : ℝ) / 2 ^ m).toNNReal : ℝ≥0) : ℝ) (σ b) := by
+      rw [min_eq_right ((min_le_left _ _).trans hT1), NNReal.coe_min,
+        Real.coe_toNNReal _ (hσ0 b)]
+    refine ⟨L, Tendsto.congr (fun n => ?_) hL⟩
+    show (∫ s in (0 : ℝ)..((min (1 : ℝ≥0) (min (((j : ℝ) / 2 ^ m).toNNReal)
+        (σ b).toNNReal) : ℝ≥0) : ℝ),
+          A.indicator (dens ω n) (b s.toNNReal)) =
+      M n ((ω, b), ((j : ℝ) / 2 ^ m).toNNReal)
+    rw [hωg.1 n b, hmin]
+  have hmom' : ∀ n m j : ℕ, j < 2 ^ m →
+      ∫⁻ q, ENNReal.ofReal (X n q ((j + 1) / 2 ^ m) - X n q (j / 2 ^ m)) ^ p ∂μ ≤
+        ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a) := by
+    intro n m j hj
+    refine le_trans (lintegral_mono_ae ?_) (hmom n m j hj)
+    filter_upwards [hgood'] with q hq
+    have hu : (0 : ℝ) ≤ j / 2 ^ m := by positivity
+    have huv : (j : ℝ) / 2 ^ m ≤ (j + 1) / 2 ^ m :=
+      div_le_div_of_nonneg_right (by linarith) (by positivity)
+    have h1 : X n q ((j + 1) / 2 ^ m) =
+        ∫ s in (0 : ℝ)..min ((j + 1) / 2 ^ m) (σ q.2),
+          A.indicator (dens q.1 n) (q.2 s.toNNReal) := by
+      have h := hq.1 n q.2 (((j : ℝ) + 1) / 2 ^ m).toNNReal
+      rwa [Real.coe_toNNReal _ (hu.trans huv)] at h
+    have h0 : X n q (j / 2 ^ m) =
+        ∫ s in (0 : ℝ)..min (j / 2 ^ m) (σ q.2),
+          A.indicator (dens q.1 n) (q.2 s.toNNReal) := by
+      have h := hq.1 n q.2 ((j : ℝ) / 2 ^ m).toNNReal
+      rwa [Real.coe_toNNReal _ hu] at h
+    rw [h1, h0]
+    refine ENNReal.rpow_le_rpow ?_ hp.le
+    exact ofReal_stopped_integral_sub_le_lintegral
+      (fun s => Set.indicator_nonneg (fun z _ => hdens0 q.1 n z) _)
+      (fun u v => intervalIntegrable_indicator_along_path _ (hq.2 n) hA q.2 u v) huv
+  have hmain := ae_exists_continuousOn_monotoneOn_limit_of_dyadic_cell_moment (μ := μ) X
+    (Eventually.of_forall hXmono) (Eventually.of_forall hXcont) hXm hconv hp ha hmom'
+  filter_upwards [hmain, hgood'] with q hF hq
+  obtain ⟨F, hFc, hFm, hFu⟩ := hF
+  have hEq (n : ℕ) : EqOn (X n q) (fun t =>
+      ∫ s in (0 : ℝ)..min t (σ q.2), A.indicator (dens q.1 n) (q.2 s.toNNReal)) (Icc 0 1) := by
+    intro t ht
+    have h1 := hq.1 n q.2 t.toNNReal
+    rw [Real.coe_toNNReal t ht.1] at h1
+    exact h1
+  refine ⟨F, hFc, hFm, fun t ht => ?_, hFu.congr (Eventually.of_forall hEq)⟩
+  exact ge_of_tendsto' (hFu.tendsto_at ht) fun n => (hMr n q).2.2 t.toNNReal
 
 /-- Conditional exterior clock convergence. Fix a bounded open domain `D` in the
 disc of radius `R` and a Brownian start `x`. Suppose that the dyadic time cells
@@ -442,107 +589,16 @@ theorem ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment
             dyadicScale (n + 1) ^ (γ ^ 2 / 2) * Real.exp (γ *
               LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
             (q.2 s.toNNReal)) F atTop (Icc 0 1) := by
-  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
-  let μ := P.prod (planarBrownianMotion x)
-  let A : Set ℂ := {z : ℂ | (1 : ℝ) / 2 < ‖z‖ ∧ ‖z‖ ≤ R}
-  have hA : MeasurableSet A := (measurableSet_lt measurable_const measurable_norm).inter
-    (measurableSet_le measurable_norm measurable_const)
-  let dens (ω : Ω) (n : ℕ) (z : ℂ) : ℝ := dyadicScale (n + 1) ^ (γ ^ 2 / 2) *
-    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (n + 1)) z)
-  have hdens0 (ω : Ω) (n : ℕ) (z : ℂ) : 0 ≤ dens ω n z :=
-    mul_nonneg (Real.rpow_nonneg (dyadicScale_pos (n + 1)).le _) (Real.exp_pos _).le
-  choose M hMm hMr hMae using fun n : ℕ =>
-    exists_measurable_stopped_indicator_clock_prod_time hh (dyadicScale_pos (n + 1)) γ α hA hD
-  let X : ℕ → Ω × ContinuousPath ℂ → ℝ → ℝ := fun n q t => M n (q, t.toNNReal)
-  have hXm (n : ℕ) (t : ℝ) : Measurable fun q => X n q t :=
-    (hMm n).comp (measurable_id.prodMk measurable_const)
-  have hXmono (q : Ω × ContinuousPath ℂ) (n : ℕ) : MonotoneOn (X n q) (Icc 0 1) :=
-    ((hMr n q).2.1.comp fun _ _ h => Real.toNNReal_le_toNNReal h).monotoneOn _
-  have hXcont (q : Ω × ContinuousPath ℂ) (n : ℕ) : ContinuousOn (X n q) (Icc 0 1) :=
-    ((hMr n q).1.comp continuous_real_toNNReal).continuousOn
-  have hgood : ∀ᵐ ω ∂P, (∀ (n : ℕ) (b : ContinuousPath ℂ) (t : ℝ≥0), M n ((ω, b), t) =
-      ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal,
-        A.indicator (dens ω n) (b s.toNNReal)) ∧ ∀ n, Continuous (dens ω n) := by
-    filter_upwards [ae_all_iff.mpr hMae, ae_continuous_stopped_exterior_density hh γ α]
-      with ω h1 h2
-    exact ⟨h1, fun n => h2 _ (dyadicScale_pos (n + 1))⟩
-  have hgood' : ∀ᵐ q ∂μ, (∀ (n : ℕ) (b : ContinuousPath ℂ) (t : ℝ≥0), M n ((q.1, b), t) =
-      ∫ s in (0 : ℝ)..min (t : ℝ) (ContinuousPath.exitTime D b).toReal,
-        A.indicator (dens q.1 n) (b s.toNNReal)) ∧ ∀ n, Continuous (dens q.1 n) :=
-    (Measure.quasiMeasurePreserving_fst (μ := P) (ν := planarBrownianMotion x)).ae hgood
-  have hconv : ∀ᵐ q ∂μ, ∀ m j : ℕ, j ≤ 2 ^ m →
-      ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L) := by
-    have he : {q : Ω × ContinuousPath ℂ | ∀ m j : ℕ, j ≤ 2 ^ m →
-        ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} =
-        ⋂ m : ℕ, ⋂ j : ℕ, {q | j ≤ 2 ^ m →
-          ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} := by
-      ext q
-      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
-    have hset : MeasurableSet {q : Ω × ContinuousPath ℂ | ∀ m j : ℕ, j ≤ 2 ^ m →
-        ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} := by
-      rw [he]
-      exact MeasurableSet.iInter fun m => MeasurableSet.iInter fun j =>
-        (MeasurableSet.const _).imp
-          (measurableSet_exists_tendsto fun n => hXm n _)
-    refine (Measure.ae_prod_iff_ae_ae hset).2 ((Measure.ae_ae_comm hset).2 ?_)
-    have h40 := ae_brownian_field_tendsto_countable_stopped_exterior_clocks (ι := ℕ × ℕ)
-      hh hγ0 hγ2 α x hR D (fun i _ => ((i.2 : ℝ) / 2 ^ i.1).toNNReal)
-    filter_upwards [h40] with b hb
-    filter_upwards [hb, hgood] with ω hω hωg
-    intro m j hj
-    obtain ⟨L, -, hL⟩ := hω (m, j)
-    have hT1 : ((j : ℝ) / 2 ^ m).toNNReal ≤ 1 := by
-      rw [Real.toNNReal_le_one]
-      exact div_le_one_of_le₀ (by exact_mod_cast hj) (by positivity)
-    have hmin : ((min (1 : ℝ≥0) (min (((j : ℝ) / 2 ^ m).toNNReal)
-        (ContinuousPath.exitTime D b).toReal.toNNReal) : ℝ≥0) : ℝ) =
-        min ((((j : ℝ) / 2 ^ m).toNNReal : ℝ≥0) : ℝ) (ContinuousPath.exitTime D b).toReal := by
-      rw [min_eq_right ((min_le_left _ _).trans hT1), NNReal.coe_min,
-        Real.coe_toNNReal _ ENNReal.toReal_nonneg]
-    refine ⟨L, Tendsto.congr (fun n => ?_) hL⟩
-    show (∫ s in (0 : ℝ)..((min (1 : ℝ≥0) (min (((j : ℝ) / 2 ^ m).toNNReal)
-        (ContinuousPath.exitTime D b).toReal.toNNReal) : ℝ≥0) : ℝ),
-          A.indicator (dens ω n) (b s.toNNReal)) =
-      M n ((ω, b), ((j : ℝ) / 2 ^ m).toNNReal)
-    rw [hωg.1 n b, hmin]
-  have hmom' : ∀ n m j : ℕ, j < 2 ^ m →
-      ∫⁻ q, ENNReal.ofReal (X n q ((j + 1) / 2 ^ m) - X n q (j / 2 ^ m)) ^ p ∂μ ≤
-        ENNReal.ofReal (C * ((2 : ℝ) ^ m)⁻¹ ^ a) := by
-    intro n m j hj
-    refine le_trans (lintegral_mono_ae ?_) (hmom n m j hj)
-    filter_upwards [hgood'] with q hq
-    have hu : (0 : ℝ) ≤ j / 2 ^ m := by positivity
-    have huv : (j : ℝ) / 2 ^ m ≤ (j + 1) / 2 ^ m :=
-      div_le_div_of_nonneg_right (by linarith) (by positivity)
-    have h1 : X n q ((j + 1) / 2 ^ m) =
-        ∫ s in (0 : ℝ)..min ((j + 1) / 2 ^ m) (ContinuousPath.exitTime D q.2).toReal,
-          A.indicator (dens q.1 n) (q.2 s.toNNReal) := by
-      have h := hq.1 n q.2 (((j : ℝ) + 1) / 2 ^ m).toNNReal
-      rwa [Real.coe_toNNReal _ (hu.trans huv)] at h
-    have h0 : X n q (j / 2 ^ m) =
-        ∫ s in (0 : ℝ)..min (j / 2 ^ m) (ContinuousPath.exitTime D q.2).toReal,
-          A.indicator (dens q.1 n) (q.2 s.toNNReal) := by
-      have h := hq.1 n q.2 ((j : ℝ) / 2 ^ m).toNNReal
-      rwa [Real.coe_toNNReal _ hu] at h
-    rw [h1, h0]
-    refine ENNReal.rpow_le_rpow ?_ hp.le
-    exact ofReal_stopped_integral_sub_le_lintegral
-      (fun s => Set.indicator_nonneg (fun z _ => hdens0 q.1 n z) _)
-      (fun u v => intervalIntegrable_indicator_along_path _ (hq.2 n) hA q.2 u v) huv
-  have hmain := ae_exists_continuousOn_monotoneOn_limit_of_dyadic_cell_moment (μ := μ) X
-    (Eventually.of_forall hXmono) (Eventually.of_forall hXcont) hXm hconv hp ha hmom'
-  filter_upwards [hmain, hgood'] with q hF hq
-  obtain ⟨F, hFc, hFm, hFu⟩ := hF
-  have hEq (n : ℕ) : EqOn (X n q) (fun t =>
-      ∫ s in (0 : ℝ)..min t (ContinuousPath.exitTime D q.2).toReal,
-        {z : ℂ | (1 : ℝ) / 2 < ‖z‖}.indicator (dens q.1 n) (q.2 s.toNNReal)) (Icc 0 1) := by
-    intro t ht
-    have h1 := hq.1 n q.2 t.toNNReal
-    have h2 := stopped_exterior_clock_eq_bounded (dens q.1 n) q.2 D R hDR t.toNNReal
-    rw [Real.coe_toNNReal t ht.1] at h1 h2
-    exact h1.trans h2.symm
-  refine ⟨F, hFc, hFm, fun t ht => ?_, hFu.congr (Eventually.of_forall hEq)⟩
-  exact ge_of_tendsto' (hFu.tendsto_at ht) fun n => (hMr n q).2.2 t.toNNReal
+  filter_upwards [ae_tendstoUniformlyOn_bounded_exterior_clock_of_cell_moment hh hγ0 hγ2 α x
+    (ContinuousPath.measurable_exitTime D hD).ennreal_toReal (fun _ => ENNReal.toReal_nonneg)
+    hR hp ha hmom] with q hq
+  obtain ⟨F, hFc, hFm, hF0, hF⟩ := hq
+  refine ⟨F, hFc, hFm, hF0, hF.congr (Eventually.of_forall fun n t ht => ?_)⟩
+  have h := stopped_exterior_clock_eq_bounded (fun z => dyadicScale (n + 1) ^ (γ ^ 2 / 2) *
+    Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) (dyadicScale (n + 1)) z))
+    q.2 D R hDR t.toNNReal
+  rw [Real.coe_toNNReal t ht.1] at h
+  exact h.symm
 
 /-- Conditional stopped-domain clock assembly. Suppose that the closed half-disc
 clocks converge uniformly on `[0, 1]` almost surely under the field-path product
