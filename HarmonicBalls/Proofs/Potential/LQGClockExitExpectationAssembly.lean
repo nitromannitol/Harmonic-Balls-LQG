@@ -1,4 +1,5 @@
 import HarmonicBalls.Proofs.Potential.LQGClockInnerStoppedIncrement
+import HarmonicBalls.Proofs.Potential.LQGClockInnerStoppedIncrementNonpos
 import HarmonicBalls.Proofs.Potential.LQGClockExitIncrementUniformIntegrability
 import HarmonicBalls.Proofs.Potential.LQGClockOfLocallyUniformLimit
 
@@ -7,7 +8,7 @@ import HarmonicBalls.Proofs.Potential.LQGClockOfLocallyUniformLimit
 Split the plane into the inner disc `‖z‖ < δ`, the annulus `δ ≤ ‖z‖ ≤ 1/2` and the exterior
 `1/2 < ‖z‖`. For the clocks stopped at the exit time from a smooth bounded domain and capped
 at time one, the inner increments have a summable bound uniform over the start whenever
-`0 < γ * α` and `γ ^ 2 / 2 < 2 - γ * α`. Given summable bounds of the same kind for the
+`0 < γ * α` and `γ ^ 2 / 2 < 2 - γ * α`, and whenever `α ≤ 0` and `0 < γ < 2`. Given summable bounds of the same kind for the
 annular and the exterior increments, uniform over starts in the domain, the exit-time clock
 approximations are uniformly integrable for almost every field, and every LQG clock that is
 almost surely a time-change clock has finite expected exit time equal to the limit of the
@@ -289,17 +290,28 @@ theorem lqgClockApprox_eq_halfDisc_add_exterior {γ : ℝ} (h : ℝ → ℂ → 
   · rw [Set.indicator_of_notMem (show z ∉ {z : ℂ | ‖z‖ < 1/2} from h1),
       Set.indicator_of_mem (show z ∈ {z : ℂ | 1/2 ≤ ‖z‖} from not_lt.mp h1), zero_add]
 
-/-- Expected exit times of the inserted clock from exterior increment bounds: for
-`0 < γ * α` and `γ ^ 2 / 2 < 2 - γ * α`, a summable bound on the expected increments of the
-exterior part `1/2 ≤ ‖z‖` of the clocks stopped at the exit time from a smooth bounded domain
-and capped at time one, uniform over starts in the domain, makes every LQG clock from a fixed
-start in the domain that is almost surely a time-change clock have, for almost every field,
-finite expected LBM exit time equal to the limit of the expected Green integrals of the
-approximating measures. -/
-theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_exterior_increments
+/-- Expected exit times of the inserted clock from half-disc and exterior increment bounds:
+summable bounds on the expected increments of the half-disc part `‖z‖ < 1/2`, uniform over the
+start and over families of sub-occupation measures, and of the exterior part `1/2 ≤ ‖z‖` of
+the clocks stopped at the exit time from a smooth bounded domain and capped at time one,
+uniform over starts in the domain, make every LQG clock from a fixed start in the domain that
+is almost surely a time-change clock have, for almost every field, finite expected LBM exit
+time equal to the limit of the expected Green integrals of the approximating measures. -/
+theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_halfDisc_exterior_increments
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
-    (hq0 : 0 < γ * α) (hγ : 0 < γ) (hsub : γ ^ 2 / 2 < 2 - γ * α)
     {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
+    (cI : ℕ → ℝ≥0∞) (hcI : (∑' k, cI k) ≠ ⊤)
+    (hI : ∀ (k : ℕ) (y : ℂ) (μ : ContinuousPath ℂ → Measure ℂ),
+      (∀ b, μ b ≤ Measure.map (fun t => b t)
+        (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))) →
+      (∫⁻ p, ENNReal.ofReal |(∫ z, {z : ℂ | ‖z‖ < 1/2}.indicator (fun z =>
+          (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) z
+            ∂(μ p.2)) -
+        ∫ z, {z : ℂ | ‖z‖ < 1/2}.indicator (fun z =>
+          (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) z
+            ∂(μ p.2)| ∂(P.prod (planarBrownianMotion y))) ≤ cI k)
     (cE : ℕ → ℝ≥0∞) (hcE : (∑' k, cE k) ≠ ⊤)
     (hE : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
       |(∫ z, {z : ℂ | 1/2 ≤ ‖z‖}.indicator (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) z
@@ -316,8 +328,6 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_exterior_increments
           LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) y)))
         atTop (𝓝 (expectedLBMExitTime (F ω) D x)) := by
   have hDo : IsOpen D := GreenGeneral.isOpen_of_isSmoothBoundedOpen hD
-  obtain ⟨cI, hcI, hI⟩ := exists_summable_uniform_inner_suboccupation_increment_bound hh hq0 hγ
-    hsub (δ := 1/2) (by norm_num) le_rfl
   let τD : ContinuousPath ℂ → ℝ≥0 := (fun b => (min 1 (ContinuousPath.exitTime D b).toReal).toNNReal)
   have hτD : Measurable τD :=
     (measurable_const.min (ContinuousPath.measurable_exitTime D hDo).ennreal_toReal).real_toNNReal
@@ -365,5 +375,67 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_exterior_increments
     refine (lintegral_mono_ae hpt).trans ?_
     rw [lintegral_add_left' hmI]
     exact add_le_add (hI k y μD hμD) (hE k y hy)
+
+/-- Expected exit times of the inserted clock from exterior increment bounds: for
+`0 < γ * α` and `γ ^ 2 / 2 < 2 - γ * α`, a summable bound on the expected increments of the
+exterior part `1/2 ≤ ‖z‖` of the clocks stopped at the exit time from a smooth bounded domain
+and capped at time one, uniform over starts in the domain, makes every LQG clock from a fixed
+start in the domain that is almost surely a time-change clock have, for almost every field,
+finite expected LBM exit time equal to the limit of the expected Green integrals of the
+approximating measures. -/
+theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_exterior_increments
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hq0 : 0 < γ * α) (hγ : 0 < γ) (hsub : γ ^ 2 / 2 < 2 - γ * α)
+    {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
+    (cE : ℕ → ℝ≥0∞) (hcE : (∑' k, cE k) ≠ ⊤)
+    (hE : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
+      |(∫ z, {z : ℂ | 1/2 ≤ ‖z‖}.indicator (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) z
+          ∂(Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic ((min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal))))) -
+        ∫ z, {z : ℂ | 1/2 ≤ ‖z‖}.indicator (fun z => (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) z
+          ∂(Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic ((min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal))))|
+      ∂(P.prod (planarBrownianMotion y))) ≤ cE k)
+    (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hclock : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω))
+    (hF : ∀ᵐ ω ∂P, ∀ᵐ b ∂(planarBrownianMotion x), IsTimeChangeClock (F ω b)) :
+    ∀ᵐ ω ∂P, expectedLBMExitTime (F ω) D x ≠ ⊤ ∧
+      Tendsto (fun k : ℕ => ∫⁻ y, ENNReal.ofReal (2 * greenFunction D x y) *
+        ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) y)))
+        atTop (𝓝 (expectedLBMExitTime (F ω) D x)) := by
+  obtain ⟨cI, hcI, hI⟩ := exists_summable_uniform_inner_suboccupation_increment_bound hh hq0 hγ
+    hsub (δ := 1/2) (by norm_num) le_rfl
+  exact ae_tendsto_clockApprox_green_expectedLBMExitTime_of_halfDisc_exterior_increments hh hD hx
+    cI hcI hI cE hcE hE F hclock hF
+
+/-- Expected exit times of the inserted clock from exterior increment bounds for a
+nonpositive insertion: for `α ≤ 0` and `0 < γ < 2`, a summable bound on the expected increments of the
+exterior part `1/2 ≤ ‖z‖` of the clocks stopped at the exit time from a smooth bounded domain
+and capped at time one, uniform over starts in the domain, makes every LQG clock from a fixed
+start in the domain that is almost surely a time-change clock have, for almost every field,
+finite expected LBM exit time equal to the limit of the expected Green integrals of the
+approximating measures. -/
+theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_exterior_increments_of_nonpos
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hα : α ≤ 0) (hγ : 0 < γ) (hγ2 : γ < 2)
+    {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
+    (cE : ℕ → ℝ≥0∞) (hcE : (∑' k, cE k) ≠ ⊤)
+    (hE : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
+      |(∫ z, {z : ℂ | 1/2 ≤ ‖z‖}.indicator (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) z
+          ∂(Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic ((min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal))))) -
+        ∫ z, {z : ℂ | 1/2 ≤ ‖z‖}.indicator (fun z => (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) z
+          ∂(Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic ((min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal))))|
+      ∂(P.prod (planarBrownianMotion y))) ≤ cE k)
+    (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hclock : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω))
+    (hF : ∀ᵐ ω ∂P, ∀ᵐ b ∂(planarBrownianMotion x), IsTimeChangeClock (F ω b)) :
+    ∀ᵐ ω ∂P, expectedLBMExitTime (F ω) D x ≠ ⊤ ∧
+      Tendsto (fun k : ℕ => ∫⁻ y, ENNReal.ofReal (2 * greenFunction D x y) *
+        ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) y)))
+        atTop (𝓝 (expectedLBMExitTime (F ω) D x)) := by
+  obtain ⟨cI, hcI, hI⟩ := exists_summable_uniform_inner_suboccupation_increment_bound_of_nonpos
+    hh hα hγ hγ2 (δ := 1/2) (by norm_num) le_rfl
+  exact ae_tendsto_clockApprox_green_expectedLBMExitTime_of_halfDisc_exterior_increments hh hD hx
+    cI hcI hI cE hcE hE F hclock hF
 
 end HarmonicBalls
