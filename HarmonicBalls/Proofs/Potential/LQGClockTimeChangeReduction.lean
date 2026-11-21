@@ -8,7 +8,8 @@ approximations, which are continuous, nondecreasing and vanish at time zero. Alo
 the convergence is almost surely locally uniform, so almost every path has a clock that vanishes
 at time zero, is continuous and is nondecreasing. Strict monotonicity then follows from strict
 increase over every pair of rational times, and the clock is a time-change clock as soon as it
-also tends to infinity. For a family of LQG clocks of the inserted field from every start, these
+also tends to infinity. Two LQG clocks from the same start agree almost surely at all times, so
+the time-change property passes from one LQG clock to every other. For a family of LQG clocks of the inserted field from every start, these
 two properties give, for almost every field, finite expected exit times of Liouville Brownian
 motion from every smooth bounded domain and every start in it.
 -/
@@ -100,6 +101,72 @@ theorem ae_zero_continuous_monotone_of_isLQGClock {γ : ℝ} {hε : ℝ → ℂ 
   · intro s t hst
     exact le_of_tendsto_of_tendsto' (hpt s) (hpt t) fun j =>
       monotone_lqgClockApprox (dyadicScale_pos (kk j)) (hcont (kk j)) b hst
+
+/-- Two LQG clocks from the same start agree at all times for almost every path. -/
+theorem ae_eq_of_isLQGClock {γ : ℝ} {hε : ℝ → ℂ → ℝ} {x : ℂ}
+    {F F' : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hF : IsLQGClock planarBrownianMotion γ hε x F)
+    (hF' : IsLQGClock planarBrownianMotion γ hε x F') :
+    ∀ᵐ b ∂(planarBrownianMotion x), F b = F' b := by
+  let μ := planarBrownianMotion x
+  let A : ℕ → ContinuousPath ℂ → ℝ≥0 → ℝ := fun k => lqgClockApprox γ hε (dyadicScale k)
+  have hnull (T : ℕ) (n : ℕ) :
+      μ {b | ∃ t ≤ (T : ℝ≥0), 2 / ((n : ℝ) + 1) ≤ |F b t - F' b t|} = 0 := by
+    have hη : (0 : ℝ) < 1 / ((n : ℝ) + 1) := by positivity
+    have h1 := hF (T : ℝ≥0) _ hη
+    have h2 := hF' (T : ℝ≥0) _ hη
+    have hle (k : ℕ) : μ {b | ∃ t ≤ (T : ℝ≥0), 2 / ((n : ℝ) + 1) ≤ |F b t - F' b t|} ≤
+        μ {b | ∃ t ≤ (T : ℝ≥0), 1 / ((n : ℝ) + 1) ≤ |A k b t - F b t|} +
+          μ {b | ∃ t ≤ (T : ℝ≥0), 1 / ((n : ℝ) + 1) ≤ |A k b t - F' b t|} := by
+      refine le_trans (measure_mono ?_) (measure_union_le _ _)
+      rintro b ⟨t, ht, hb⟩
+      by_contra hcon
+      simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_exists, not_and, not_le] at hcon
+      have e1 := hcon.1 t ht
+      have e2 := hcon.2 t ht
+      have htri : |F b t - F' b t| ≤ |A k b t - F b t| + |A k b t - F' b t| := by
+        rw [abs_sub_comm (A k b t) (F b t)]
+        calc |F b t - F' b t| = |(F b t - A k b t) + (A k b t - F' b t)| := by ring_nf
+          _ ≤ _ := abs_add_le _ _
+      have h2n : 2 / ((n : ℝ) + 1) = 1 / ((n : ℝ) + 1) + 1 / ((n : ℝ) + 1) := by ring
+      linarith
+    have hlim : Tendsto (fun k => μ {b | ∃ t ≤ (T : ℝ≥0), 1 / ((n : ℝ) + 1) ≤ |A k b t - F b t|} +
+        μ {b | ∃ t ≤ (T : ℝ≥0), 1 / ((n : ℝ) + 1) ≤ |A k b t - F' b t|}) atTop (𝓝 0) := by
+      simpa using h1.add h2
+    exact le_antisymm (ge_of_tendsto' hlim hle) zero_le
+  have hae : ∀ᵐ b ∂μ, ∀ T n : ℕ, ∀ t ≤ (T : ℝ≥0), |F b t - F' b t| < 2 / ((n : ℝ) + 1) := by
+    rw [ae_all_iff]
+    intro T
+    rw [ae_all_iff]
+    intro n
+    filter_upwards [measure_eq_zero_iff_ae_notMem.mp (hnull T n)] with b hb t ht
+    by_contra h
+    exact hb ⟨t, ht, not_lt.mp h⟩
+  filter_upwards [hae] with b hb
+  funext t
+  obtain ⟨T, hT⟩ := exists_nat_ge t
+  have hsmall : ∀ n : ℕ, |F b t - F' b t| < 2 / ((n : ℝ) + 1) := fun n => hb T n t hT
+  have hlim : Tendsto (fun n : ℕ => 2 / ((n : ℝ) + 1)) atTop (𝓝 0) := by
+    have := (tendsto_one_div_add_atTop_nhds_zero_nat).const_mul (2 : ℝ)
+    rw [mul_zero] at this
+    refine this.congr fun n => ?_
+    ring
+  have h0 : |F b t - F' b t| ≤ 0 :=
+    ge_of_tendsto' hlim fun n => (hsmall n).le
+  have := abs_nonpos_iff.mp h0
+  linarith
+
+/-- The time-change property passes from one LQG clock to every LQG clock from the same
+start. -/
+theorem ae_isTimeChangeClock_of_isLQGClock_of_ae {γ : ℝ} {hε : ℝ → ℂ → ℝ} {x : ℂ}
+    {F F' : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hF : IsLQGClock planarBrownianMotion γ hε x F)
+    (hF' : IsLQGClock planarBrownianMotion γ hε x F')
+    (hT : ∀ᵐ b ∂(planarBrownianMotion x), IsTimeChangeClock (F b)) :
+    ∀ᵐ b ∂(planarBrownianMotion x), IsTimeChangeClock (F' b) := by
+  filter_upwards [ae_eq_of_isLQGClock hF hF', hT] with b hb hTb
+  rw [← hb]
+  exact hTb
 
 /-- An LQG clock is almost surely a time-change clock as soon as it almost surely increases
 strictly between any two rational times and tends to infinity. -/
