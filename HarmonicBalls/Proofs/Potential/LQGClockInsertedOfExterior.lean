@@ -62,8 +62,7 @@ theorem tendsto_measure_of_ae_eventually_uniform {X : Type*} [MeasurableSpace X]
 
 /-- Convergence in measure, uniformly on `[0, T]`, is preserved by sums. -/
 theorem tendsto_measure_add_of_tendsto_measure {X : Type*} [MeasurableSpace X]
-    {μ : Measure X} (A₁ A₂ : ℕ → X → ℝ≥0 → ℝ) (F₁ F₂ : X → ℝ≥0 → ℝ) (T : ℝ≥0)
-    {η : ℝ} (hη : 0 < η)
+    {μ : Measure X} (A₁ A₂ : ℕ → X → ℝ≥0 → ℝ) (F₁ F₂ : X → ℝ≥0 → ℝ) (T : ℝ≥0) {η : ℝ}
     (h₁ : Tendsto (fun j => μ {x | ∃ t ≤ T, η / 2 ≤ |A₁ j x t - F₁ x t|}) atTop (𝓝 0))
     (h₂ : Tendsto (fun j => μ {x | ∃ t ≤ T, η / 2 ≤ |A₂ j x t - F₂ x t|}) atTop (𝓝 0)) :
     Tendsto (fun j => μ {x | ∃ t ≤ T,
@@ -126,5 +125,148 @@ theorem lqgClockApprox_eq_halfDisc_add_exterior {γ : ℝ} {hε : ℝ → ℂ �
   · have hb : b s.toNNReal ∉ B := fun hb => h hb.2
     have he : b s.toNNReal ∈ E := lt_of_not_ge h
     rw [Set.indicator_of_notMem hb, Set.indicator_of_mem he, zero_add]
+
+/-- Indicators of measurable sets keep continuous densities interval integrable along
+continuous paths. -/
+theorem intervalIntegrable_indicator_path {f : ℂ → ℝ} (hf : Continuous f) {S : Set ℂ}
+    (hS : MeasurableSet S) (b : ContinuousPath ℂ) (a c : ℝ) :
+    IntervalIntegrable (fun s : ℝ => S.indicator f (b s.toNNReal)) volume a c := by
+  have hpath : Continuous (fun s : ℝ => b s.toNNReal) :=
+    b.continuous.comp continuous_real_toNNReal
+  refine ((hf.comp hpath).intervalIntegrable a c).mono_fun
+    ((hf.measurable.indicator hS).comp hpath.measurable).aestronglyMeasurable
+    (Filter.Eventually.of_forall fun s => ?_)
+  by_cases hs : b s.toNNReal ∈ S
+  · simp [Set.indicator_of_mem hs]
+  · simp [Set.indicator_of_notMem hs]
+
+/-- For almost every field the dyadic densities of the inserted field are continuous. -/
+theorem ae_continuous_inserted_density {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α : ℝ) :
+    ∀ᵐ ω ∂P, ∀ k : ℕ, Continuous (fun z => (dyadicScale k) ^ (γ ^ 2 / 2) * Real.exp (γ *
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z)) := by
+  obtain ⟨H, hHc, _, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  filter_upwards [hHae, ae_recentered_inserted_circle_average hh α] with ω hω hrec k
+  have hc : Continuous (hcirc ω (dyadicScale k)) := by
+    rw [← funext (hω (dyadicScale k))]
+    exact hHc ω (dyadicScale k) (dyadicScale_pos k)
+  have heq : (fun z => LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z) =
+      fun z => hcirc ω (dyadicScale k) z - hcirc ω 1 0 -
+        α * Real.log (max (dyadicScale k) ‖z‖) := by
+    funext z
+    exact (hrec _ z (dyadicScale_pos k)).symm
+  have hci : Continuous (fun z =>
+      LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) z) := by
+    rw [heq]
+    exact (hc.sub continuous_const).sub (continuous_const.mul
+      ((continuous_const.max continuous_norm).log
+        (fun _ => (lt_max_of_lt_left (dyadicScale_pos k)).ne')))
+  exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hci))
+
+/-- Gluing at a fixed field sample: half-disc clocks converging in measure and exterior
+clocks converging almost surely and locally uniformly give an LQG clock. -/
+theorem isLQGClock_of_halfDisc_tendsto_measure_of_exterior {γ : ℝ} {hε : ℝ → ℂ → ℝ} {x : ℂ}
+    (hc : ∀ k : ℕ, Continuous (fun z => (dyadicScale k) ^ (γ ^ 2 / 2) *
+      Real.exp (γ * hε (dyadicScale k) z)))
+    (Fh Ge : ContinuousPath ℂ → ℝ≥0 → ℝ) (hGm : ∀ t, Measurable (fun b => Ge b t))
+    (hF : ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → Tendsto (fun j => planarBrownianMotion x {b | ∃ t ≤ T,
+      η ≤ |(∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+        (dyadicScale (j+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * hε (dyadicScale (j+1)) z))
+          (b s.toNNReal)) - Fh b t|}) atTop (𝓝 0))
+    (hG : ∀ᵐ b ∂planarBrownianMotion x, ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+      ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+        |(∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | 1/2 < ‖z‖}.indicator (fun z =>
+          (dyadicScale (j+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * hε (dyadicScale (j+1)) z))
+            (b s.toNNReal)) - Ge b t| < η) :
+    IsLQGClock planarBrownianMotion γ hε x (fun b t => Fh b t + Ge b t) := by
+  intro T η hη
+  have hE : MeasurableSet {z : ℂ | 1/2 < ‖z‖} := measurableSet_lt measurable_const measurable_norm
+  have hext := tendsto_measure_of_ae_eventually_uniform (μ := planarBrownianMotion x)
+    (fun j b t => ∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | 1/2 < ‖z‖}.indicator (fun z =>
+      (dyadicScale (j+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * hε (dyadicScale (j+1)) z))
+        (b s.toNNReal))
+    (fun j b => (intervalIntegral.continuous_primitive
+      (intervalIntegrable_indicator_path (hc (j+1)) hE b) 0).comp NNReal.continuous_coe)
+    (fun j t => (SubMarkovKernelSemigroup.stronglyMeasurable_feynmanKacAdditiveFunctional
+      ((hc (j+1)).measurable.indicator hE) t).measurable)
+    Ge hGm hG T (half_pos hη)
+  have hsum := tendsto_measure_add_of_tendsto_measure (μ := planarBrownianMotion x)
+    _ _ Fh Ge T (hF T (η / 2) (half_pos hη)) hext
+  rw [← Filter.tendsto_add_atTop_iff_nat 1]
+  refine hsum.congr fun j => ?_
+  congr 1
+  ext b
+  simp only [mem_ofPred_eq, lqgClockApprox_eq_halfDisc_add_exterior (hc (j + 1))]
+
+/-- **Inserted clock at the insertion point.** For `γ ^ 2 < 2` and `α < Q`, an almost sure
+locally uniform exterior limit under the joint law gives an LQG clock of the inserted field
+for Brownian motion started at the insertion point, for almost every field. -/
+theorem exists_ae_isLQGClock_fieldCircleAverage_at_origin_of_exterior
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ)
+    (hγ2 : γ ^ 2 < 2) (hα : α < lqgQ γ)
+    (hext : ∃ G : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable G ∧
+      ∀ᵐ p ∂(P.prod (planarBrownianMotion 0)), ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+        ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | 1/2 < ‖z‖}.indicator (fun z =>
+            (dyadicScale (j+1)) ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (j+1)) z))
+                (p.2 s.toNNReal)) - G (p,t)| < η) :
+    ∃ F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ, ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ
+      (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) 0 (F ω) := by
+  have : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨Fh, hFh⟩ := exists_ae_tendsto_measure_halfDiscClock_at_origin hh hγ hγ2 hα
+  obtain ⟨G, hGm, hG⟩ := hext
+  refine ⟨fun ω b t => Fh ω b t + G ((ω, b), t), ?_⟩
+  filter_upwards [hFh, Measure.ae_ae_of_ae_prod hG, ae_continuous_inserted_density hh γ α]
+    with ω hω hGω hc
+  exact isLQGClock_of_halfDisc_tendsto_measure_of_exterior hc (Fh ω) (fun b t => G ((ω, b), t))
+    (fun t => hGm.comp ((measurable_const.prodMk measurable_id).prodMk measurable_const))
+    hω hGω
+
+/-- **Inserted clock away from the insertion point.** For a start `x ≠ 0`, `γ ^ 2 < 2` and
+every insertion strength `α`, an almost sure locally uniform exterior limit under the joint
+law gives an LQG clock of the inserted field for almost every field. -/
+theorem exists_ae_isLQGClock_fieldCircleAverage_of_exterior_of_ne_zero
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {x : ℂ} (hx : x ≠ 0) {γ : ℝ}
+    (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (α : ℝ)
+    (hext : ∃ G : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable G ∧
+      ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+        ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | 1/2 < ‖z‖}.indicator (fun z =>
+            (dyadicScale (j+1)) ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (j+1)) z))
+                (p.2 s.toNNReal)) - G (p,t)| < η) :
+    ∃ F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ, ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ
+      (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω) := by
+  have : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨Fh, hFhm, -, hFh⟩ :=
+    exists_measurable_locally_uniform_limit_halfDiscClock_of_ne_zero hh hx hγ hγ2 α
+  obtain ⟨G, hGm, hG⟩ := hext
+  refine ⟨fun ω b t => Fh ((ω, b), t) + G ((ω, b), t), ?_⟩
+  have hB : MeasurableSet {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2} :=
+    (measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
+  filter_upwards [Measure.ae_ae_of_ae_prod hFh, Measure.ae_ae_of_ae_prod hG,
+    ae_continuous_inserted_density hh γ α] with ω hFω hGω hc
+  refine isLQGClock_of_halfDisc_tendsto_measure_of_exterior hc (fun b t => Fh ((ω, b), t))
+    (fun b t => G ((ω, b), t))
+    (fun t => hGm.comp ((measurable_const.prodMk measurable_id).prodMk measurable_const))
+    (fun T η hη => ?_) hGω
+  exact tendsto_measure_of_ae_eventually_uniform (μ := planarBrownianMotion x)
+    (fun j b t => ∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator
+      (fun z => (dyadicScale (j+1)) ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale (j+1)) z)) (b s.toNNReal))
+    (fun j b => (intervalIntegral.continuous_primitive
+      (intervalIntegrable_indicator_path (hc (j+1)) hB b) 0).comp NNReal.continuous_coe)
+    (fun j t => (SubMarkovKernelSemigroup.stronglyMeasurable_feynmanKacAdditiveFunctional
+      ((hc (j+1)).measurable.indicator hB) t).measurable)
+    (fun b t => Fh ((ω, b), t))
+    (fun t => hFhm.comp ((measurable_const.prodMk measurable_id).prodMk measurable_const))
+    hFω T hη
 
 end HarmonicBalls
