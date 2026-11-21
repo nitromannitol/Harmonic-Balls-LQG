@@ -41,4 +41,56 @@ theorem intervalIntegral_path_eq_integral_occupation (F : ℂ → ℝ) (hF : Mea
   · rintro ⟨hs, h0, _⟩
     exact ⟨h0, (Real.toNNReal_le_iff_le_coe).mp hs⟩
 
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- Integrals of the inserted density over a region against stopped occupation measures are
+almost everywhere measurable under the product law. -/
+theorem aemeasurable_region_stopped_occupation
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ α : ℝ) (k : ℕ) {S : Set ℂ}
+    (hS : MeasurableSet S) (τ : ContinuousPath ℂ → ℝ≥0) (hτ : Measurable τ)
+    (ν' : Measure (ContinuousPath ℂ)) [SFinite ν'] :
+    AEMeasurable (fun p : Ω × ContinuousPath ℂ => ∫ z, S.indicator (fun z =>
+      (dyadicScale k) ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale k) z)) z
+      ∂(Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τ p.2))))) (P.prod ν') := by
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  let d : ℝ := dyadicScale k
+  have hd : 0 < d := dyadicScale_pos k
+  let FH : Ω × ℂ → ℝ := fun q => S.indicator (fun z => d ^ (γ ^ 2 / 2) * Real.exp (γ *
+    (H q.1 d z - H q.1 1 0 - α * Real.log (max d ‖z‖)))) q.2
+  have hFH : Measurable FH := by
+    have h1 : Measurable (fun q : Ω × ℂ => H q.1 d q.2) := (hHm d hd).comp measurable_swap
+    have h2 : Measurable (fun q : Ω × ℂ => H q.1 1 0) :=
+      (hHm 1 one_pos).comp ((measurable_const : Measurable fun _ : Ω × ℂ => (0 : ℂ)).prodMk
+        measurable_fst)
+    have h3 : Measurable (fun q : Ω × ℂ => d ^ (γ ^ 2 / 2) * Real.exp (γ *
+        (H q.1 d q.2 - H q.1 1 0 - α * Real.log (max d ‖q.2‖)))) :=
+      measurable_const.mul (Real.measurable_exp.comp (measurable_const.mul ((h1.sub h2).sub
+        (measurable_const.mul (Real.measurable_log.comp
+          (measurable_const.max (measurable_norm.comp measurable_snd)))))))
+    have heq : FH = (Prod.snd ⁻¹' S).indicator (fun q : Ω × ℂ => d ^ (γ ^ 2 / 2) * Real.exp (γ *
+        (H q.1 d q.2 - H q.1 1 0 - α * Real.log (max d ‖q.2‖)))) := by
+      funext q
+      by_cases hq : q.2 ∈ S
+      · rw [Set.indicator_of_mem (show q ∈ Prod.snd ⁻¹' S from hq)]
+        exact Set.indicator_of_mem hq _
+      · rw [Set.indicator_of_notMem (show q ∉ Prod.snd ⁻¹' S from hq)]
+        exact Set.indicator_of_notMem hq _
+    rw [heq]
+    exact h3.indicator (measurable_snd hS)
+  have hm := (measurable_stopped_path_integral FH hFH τ hτ).comp measurable_swap
+  refine hm.aemeasurable.congr ?_
+  filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P) (ν := ν')).ae
+    (hHae.and (ae_recentered_inserted_circle_average hh α))] with p hp
+  obtain ⟨hω, hrec⟩ := hp
+  simp only [Function.comp_apply, Prod.fst_swap, Prod.snd_swap]
+  congr 1
+  funext z
+  simp only [FH]
+  by_cases hz : z ∈ S
+  · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz, hω, hω, hrec d z hd]
+  · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem hz]
+
 end HarmonicBalls
