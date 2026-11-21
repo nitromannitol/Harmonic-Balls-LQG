@@ -107,7 +107,6 @@ theorem exists_annular_square_return_coefficient_lt_half {γ q : ℝ}
   set R : ℝ := 4 * r with hRdef
   have hR : 0 < R := by positivity
   have hR1 : R ≤ 1 := by rw [hRdef]; linarith
-  -- the square coefficient
   have hN : ((LatticeProb.squareIndex r).card : ℝ) ≤ 256 / R ^ 2 := by
     have hc := LatticeProb.card_squareIndex_le hr (by linarith : r ≤ 1)
     have heq : 16 / r ^ 2 = 256 / R ^ 2 := by rw [hRdef]; field_simp; ring
@@ -132,7 +131,6 @@ theorem exists_annular_square_return_coefficient_lt_half {γ q : ℝ}
     rw [hRdef, Real.mul_rpow (by norm_num) hr.le, Real.rpow_def_of_pos hr, hlogr]
     congr 2
     ring
-  -- the return factor
   have hlog32 : Real.log (3 * r / 2) = Real.log (3 / 2) + Real.log r := by
     rw [show 3 * r / 2 = (3 / 2) * r by ring, Real.log_mul (by norm_num) hr.ne']
   have hfac : q * (Real.log 2 - Real.log r) / (Real.log (3 * r / 2) - Real.log r) ≤
@@ -310,7 +308,6 @@ theorem stoppedHalfDiscMoment_le_of_scale_lower_bound
   let f : Ω → ℂ → ℝ≥0∞ := fun ω => Td.indicator (normalizedCircleDensity H γ ε ω)
   have hf : Measurable (Function.uncurry f) :=
     measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm ε hε) γ) hTdm
-  -- one-point moments
   have hpt (w : ℂ) : (∫⁻ ω, f ω w ^ q ∂P) ≤ K := by
     by_cases hw : w ∈ Td
     · have hw1 : ‖w‖ + ε ≤ 1 := by have := hw.2; linarith
@@ -447,7 +444,6 @@ theorem stoppedHalfDiscMoment_le_square_return_add
       (ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) *
         (ENNReal.ofReal ((ContinuousPath.exitTime D b).toReal - 0) *
           ENNReal.ofReal ((ContinuousPath.exitTime D b).toReal - 0))) ^ (q / 2))
-  -- pathwise square decomposition
   have hpath : ∀ᵐ b ∂planarBrownianMotion x, (∫⁻ ω, pathOccupationBefore (fA Td ω)
       (ContinuousPath.exitTime D b) b ^ q ∂P) ≤ 18 * ∑ i ∈ S, G i b + X b := by
     filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top x
@@ -471,7 +467,6 @@ theorem stoppedHalfDiscMoment_le_square_return_add
          apply Finset.sum_congr rfl
          intro i _
          exact (hconv _ (hsqm i)).symm)
-  -- one visit and the disc return iteration for each square
   have hsquare (i : ℤ × ℤ) (hi : i ∈ S) : (∫⁻ b, G i b ∂planarBrownianMotion x) ≤
       C * ENNReal.ofReal ((4 * r) ^ 2) ^ q * Φ * F := by
     set z := LatticeProb.dyadicSquareCentre r i with hz
@@ -528,7 +523,6 @@ theorem stoppedHalfDiscMoment_le_square_return_add
             ∂planarBrownianMotion x ∂P :=
         (lintegral_lintegral_swap (hocc _ (hsqm i)).aemeasurable).symm
       _ ≤ _ := hret
-  -- cross term
   have hX (b : ContinuousPath ℂ) : X b = ((LatticeProb.squareIndex r).card : ℝ≥0∞) *
       ((LatticeProb.squareIndex r).card : ℝ≥0∞) * ENNReal.ofReal ((2 / r) ^ (γ ^ 2)) ^ (q / 2) *
       (ENNReal.ofReal (ContinuousPath.exitTime D b).toReal) ^ q := by
@@ -543,7 +537,6 @@ theorem stoppedHalfDiscMoment_le_square_return_add
       ring
     rw [hu]
     ring
-  -- assembly
   have hsum : Measurable (fun b => ∑ i ∈ S, G i b) := Finset.measurable_sum S (fun i _ => hG i)
   rw [stoppedHalfDiscMoment_congr (hHae.mono fun ω hω ε z => (hω ε z).symm)]
   unfold stoppedHalfDiscMoment
@@ -765,9 +758,9 @@ theorem tendsto_planarBrownianMotion_le_norm_one :
       (continuous_eval_const 1).norm.measurable).nullMeasurableSet)
     (fun u v huv b hb => le_trans huv hb) ⟨0, measure_ne_top _ _⟩
   have he : (⋂ u : ℝ, {b : ContinuousPath ℂ | u ≤ ‖b 1‖}) = ∅ := by
-    ext b
-    simp only [mem_iInter, mem_ofPred_eq, mem_empty_iff_false, iff_false, not_forall, not_le]
-    exact ⟨‖b 1‖ + 1, by linarith⟩
+    refine Set.eq_empty_of_forall_notMem fun b hb => ?_
+    have h1 : ‖b 1‖ + 1 ≤ ‖b 1‖ := mem_iInter.mp hb (‖b 1‖ + 1)
+    linarith
   rw [he, measure_empty] at h
   exact h
 
@@ -799,7 +792,6 @@ theorem planarBrownianMotion_exitTime_ball_le_le (y : ℂ) {ρ h : ℝ} (hρ : 0
   let F : ContinuousPath ℂ → ℝ≥0∞ := fun b' =>
     ∫⁻ s, S.indicator 1 (b', s) ∂(volume.restrict (Ioc 0 h))
   have hFm : Measurable F := (measurable_one.indicator hS).lintegral_prod_right'
-  -- the probability of a displacement at a positive time
   have hdisp (w : ℂ) {s : ℝ} (hs : 0 < s) : planarBrownianMotion w {b | ρ / 2 ≤ ‖b s.toNNReal - w‖} =
       planarBrownianMotion 0 {b | ρ / 2 / Real.sqrt s ≤ ‖b 1‖} := by
     rw [planarBrownianMotion_le_norm_sub_eq w (Real.toNNReal_pos.mpr hs).ne',
@@ -807,7 +799,6 @@ theorem planarBrownianMotion_exitTime_ball_le_le (y : ℂ) {ρ h : ℝ} (hρ : 0
   have hanti {u v : ℝ} (huv : u ≤ v) : planarBrownianMotion 0 {b | v ≤ ‖b 1‖} ≤
       planarBrownianMotion 0 {b | u ≤ ‖b 1‖} :=
     measure_mono (fun b hb => le_trans huv hb)
-  -- lower bound for the restarted functional
   have hlow (w : ℂ) : 2⁻¹ * ENNReal.ofReal h ≤ ∫⁻ b', F b' ∂planarBrownianMotion w := by
     have hswap : (∫⁻ b', F b' ∂planarBrownianMotion w) =
         ∫⁻ s, planarBrownianMotion w {b' | (b', s) ∈ S} ∂(volume.restrict (Ioc 0 h)) := by
@@ -838,7 +829,6 @@ theorem planarBrownianMotion_exitTime_ball_le_le (y : ℂ) {ρ h : ℝ} (hρ : 0
           exact Real.sqrt_le_sqrt hs.2
         calc (2⁻¹ : ℝ≥0∞) = 1 - 2⁻¹ := by rw [ENNReal.one_sub_inv_two]
           _ ≤ _ := tsub_le_tsub_left hle 1
-  -- pathwise upper bound after the exit
   let Gup : ContinuousPath ℂ → ℝ≥0∞ := fun b =>
     ∫⁻ u, Su.indicator 1 (b, u) ∂(volume.restrict (Ioc 0 (2 * h)))
   have hGupm : Measurable Gup := (measurable_one.indicator hSu).lintegral_prod_right'
@@ -883,7 +873,6 @@ theorem planarBrownianMotion_exitTime_ball_le_le (y : ℂ) {ρ h : ℝ} (hρ : 0
       _ ≤ ∫⁻ s, φ ((T : ℝ) + s) := lintegral_mono hpt
       _ = ∫⁻ u, φ u := lintegral_add_left_eq_self φ (T : ℝ)
       _ = Gup b := by rw [lintegral_indicator measurableSet_Ioc]
-  -- the strong Markov property at the exit time
   have hmarkov := lintegral_lintegral_indicator_shift_stoppingTime (P := Measure.dirac ())
     (fun (_ : Unit) b => F b) (hFm.comp measurable_snd) y τ hτ A hA
   simp only [lintegral_dirac] at hmarkov
@@ -1179,7 +1168,6 @@ theorem lintegral_halfDisc_occupation_ball_exit_rpow_le
     (LatticeProb.dyadicSquare r i).indicator (normalizedCircleDensity H γ (4 * r * δ) ω)
   have hfi (i : ℤ × ℤ) : Measurable (Function.uncurry (fi i)) :=
     measurable_uncurry_indicator hnd (LatticeProb.measurableSet_dyadicSquare r i)
-  -- pathwise cover of the density inside the ball
   have hcov (ω : Ω) (b : ContinuousPath ℂ) :
       pathOccupationBefore (Td.indicator (normalizedCircleDensity H γ (4 * r * δ) ω))
         (ContinuousPath.exitTime U b) b ≤
@@ -1210,7 +1198,6 @@ theorem lintegral_halfDisc_occupation_ball_exit_rpow_le
         (b.continuous.measurable.comp measurable_real_toNNReal))).indicator
         ((measurableSet_le measurable_const measurable_id).inter
           (measurableSet_lt ENNReal.measurable_ofReal measurable_const)))).aemeasurable
-  -- each square
   have hsq (i : ℤ × ℤ) (hi : i ∈ J) : (∫⁻ ω, ∫⁻ b, pathOccupationBefore (fi i ω)
       (ContinuousPath.exitTime U b) b ^ q ∂planarBrownianMotion x ∂P) ≤ B := by
     have hDR : U ⊆ Metric.ball (LatticeProb.dyadicSquareCentre r i) (5 * r / 2) := by
@@ -1352,7 +1339,6 @@ theorem lintegral_halfDisc_occupation_rpow_le_ball_exit_add
     apply lintegral_congr_ae
     filter_upwards [hHae] with ω hω
     rw [hconv ω hω]
-  -- pathwise restart
   have hpath (ω : Ω) (b : ContinuousPath ℂ) : F ω b ≤ 2 ^ (q - 1) *
       (pathOccupationBefore (f ω) (τ b) b ^ q +
         A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b) := by
@@ -1377,7 +1363,6 @@ theorem lintegral_halfDisc_occupation_rpow_le_ball_exit_add
           · simp only [hb, ↓reduceIte, Set.indicator_of_notMem (show b ∉ A from hb),
               ENNReal.zero_rpow_of_pos hq0]
         rw [hind]
-  -- the strong Markov property at the exit time
   have hmarkov := lintegral_lintegral_indicator_shift_stoppingTime (P := P) F hF y τ hτ A hA
   have hAtop : A ∩ {b | τ b < ⊤} = A := by
     ext b
@@ -1469,7 +1454,6 @@ theorem exists_halfDisc_occupation_rpow_le_time
   set a : ℝ := q - γ ^ 2 * q * (q - 1) / 4 with ha
   have hζa : ζ / 2 = a := by rw [hζ, ha]; ring
   have hea : q + -e / 2 = a := by rw [he, ha]; ring
-  -- a far displacement threshold
   set ε₁ : ℝ≥0∞ := ENNReal.ofReal ((2 : ℝ) ^ (-q) / 4) with hε₁
   have hε₁pos : 0 < ε₁ := ENNReal.ofReal_pos.mpr (by positivity)
   obtain ⟨U₀, hU₀⟩ := eventually_atTop.mp
@@ -1533,7 +1517,6 @@ theorem exists_halfDisc_occupation_rpow_le_time
       ENNReal.ofReal ((4 * r) ^ 2) ^ q * (⨆ w, stoppedHalfDiscMoment P hcirc γ δ q w) *
       ENNReal.ofReal ((q * (Real.log (5 * r / 2) - Real.log r) /
         (Real.log (3 * r / 2) - Real.log r)) ^ q) with hBsq
-    -- the exit probability is small
     have hexit (w : ℂ) : planarBrownianMotion w
         {b | ContinuousPath.exitTime (Metric.ball w (r / 2)) b ≤ ENNReal.ofReal h} ≤
         (2 : ℝ≥0∞) ^ (-q) := by
@@ -1775,7 +1758,6 @@ theorem exists_halfDisc_cell_rpow_le
       funext w
       simp only [normalizedCircleDensity, hω]
     simp only [f, h']
-  -- subcells of length h / N
   obtain ⟨d, hd⟩ : ∃ d : ℝ, d = h / N := ⟨_, rfl⟩
   have hd0 : 0 < d := by rw [hd]; positivity
   have hdh₀ : d ≤ h₀ := by
@@ -1956,7 +1938,6 @@ theorem exists_inserted_annular_cell_rpow_le
       funext w
       simp only [normalizedCircleDensity, hω]
     simp only [f, h']
-  -- subcells of length h / N
   obtain ⟨d, hd⟩ : ∃ d : ℝ, d = h / N := ⟨_, rfl⟩
   have hd0 : 0 < d := by rw [hd]; positivity
   have hdh₀ : d ≤ h₀ := by
@@ -2176,14 +2157,12 @@ theorem exists_exterior_inserted_cell_rpow_le
   have hκ1 : 1 ≤ κ := by rw [hκdef]; linarith
   have hac : ((κ : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hκ.ne'
   have hnorm : ‖((κ : ℝ) : ℂ)‖ = κ := by rw [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hκ]
-  -- the rescaled field is a whole-plane GFF
   have hh' := LatticeProb.LQG.AffineDerived.wholePlaneGFFAffineInvariance_lp P hC hcirc hh ((κ : ℝ) : ℂ) hac 0
   set hcirc' : Ω → ℝ → ℂ → ℝ := fun ω r z =>
     hcirc ω (‖((κ : ℝ) : ℂ)‖ * r) (((κ : ℝ) : ℂ) * z + 0) - hcirc ω ‖((κ : ℝ) : ℂ)‖ 0 with hc'
   obtain ⟨q₀, a₀, hq₀1, hq₀2, hq₀γ, ha₀def, ha₀1, C₀, hC₀, hcell₀⟩ :=
     exists_halfDisc_cell_rpow_le hh' hγ2
   obtain ⟨H', _, hH'm, hH'ae⟩ := hh'.exists_jointlyMeasurable_circleAverage
-  -- exponents
   set s' : ℝ := (1 + min q₀ a₀) / 2 with hs'
   have hs'1 : 1 < s' := by
     have := lt_min hq₀1 ha₀1
@@ -2211,7 +2190,6 @@ theorem exists_exterior_inserted_cell_rpow_le
   have hc0 : 0 < c := by
     rw [hc, Real.conjExponent]
     exact div_pos hs'0 (by linarith)
-  -- constants
   set K₁ : ℝ := Real.exp (|γ * α| * (Real.log 2 + |Real.log R|)) * (2 * R) ^ (γ ^ 2 / 2) with hK₁
   have hK₁0 : 0 ≤ K₁ := by positivity
   set M : ℝ≥0∞ := ∫⁻ ω, ENNReal.ofReal (Real.exp ((γ * p * c) * hcirc ω (2 * R) 0)) ∂P with hM
@@ -2257,7 +2235,6 @@ theorem exists_exterior_inserted_cell_rpow_le
     ∫⁻ σ in Ioc (t' : ℝ) ((t' : ℝ) + h'), f' pr.1 (pr.2 σ.toNNReal)
   have hY0 : Measurable Y0 := (hf'.comp (measurable_fst.fst.prodMk hev)).lintegral_prod_right'
   set Kc : ℝ≥0∞ := ENNReal.ofReal K₁ * ENNReal.ofReal (κ ^ 2) with hKc
-  -- the good field event
   have hgood : ∀ᵐ ω ∂P, (∀ r z, H' ω r z =
       hcirc ω (2 * R * r) (((2 * R : ℝ) : ℂ) * z) - hcirc ω (2 * R) 0) ∧ hcirc ω 1 0 = 0 ∧
       (∀ r z, 0 < r → hcirc ω r z - hcirc ω 1 0 - α * Real.log (max r ‖z‖) =
@@ -2268,7 +2245,6 @@ theorem exists_exterior_inserted_cell_rpow_le
     rw [hω r z]
     simp only [hc', hnorm, add_zero]
     rfl
-  -- pointwise bound on the product space
   have hpt : ∀ᵐ pr ∂(P.prod (planarBrownianMotion x)),
       (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), ENNReal.ofReal
         ({z : ℂ | 1 / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
@@ -2306,7 +2282,6 @@ theorem exists_exterior_inserted_cell_rpow_le
           ENNReal.mul_rpow_of_nonneg _ _ hp0.le, ENNReal.mul_rpow_of_nonneg _ _ hp0.le, hKc,
           ENNReal.mul_rpow_of_nonneg _ _ hp0.le]
         ring
-  -- integration, Hölder in the field and Jensen in the path
   let A : Ω → ℝ≥0∞ := fun ω => ENNReal.ofReal (Real.exp (γ * hcirc ω (2 * R) 0)) ^ p
   have hAm : Measurable A :=
     (ENNReal.measurable_ofReal.comp (hXm.const_mul γ).exp).pow_const p
