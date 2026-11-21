@@ -1060,14 +1060,15 @@ theorem pathOccupationBefore_le_add_shift_of_le (g : ℂ → ℝ≥0∞) (hg : M
     rw [exitTime_eq_iInf]
     simp
   by_cases hσT : σ ≤ T
-  · rw [if_pos hσT]
+  · simp only [hσT, ↓reduceIte]
     by_cases hσ : σ = ⊤
     · rw [min_eq_right (hσ ▸ le_top : T ≤ σ)]
       exact le_self_add
     · have h := pathOccupationBefore_le_add_shift hg univ T σ.toNNReal b
       rw [huniv, huniv, min_eq_right le_top, ENNReal.coe_toNNReal hσ] at h
       exact h
-  · rw [if_neg hσT, add_zero,
+  · simp only [hσT, ↓reduceIte]
+    rw [add_zero,
       min_eq_right (le_of_lt (not_le.mp hσT))]
 
 end HarmonicBalls
