@@ -1,5 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockSquareVisitComparison
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularExitUniformIntegrability
+import LatticeProb.Gauss.GFFAffineInvariance
 
 /-! # Scale recursion for stopped annular occupation moments
 
@@ -2149,5 +2150,234 @@ theorem lintegral_Ioc_affineScaling_rescale (b : ContinuousPath ℂ) {κ : ℝ} 
   apply lintegral_congr
   intro s
   rw [ContinuousPath.rescale_apply, Real.toNNReal_mul hc.le]
+
+/-- **Smoothing-uniform moments of exterior inserted clock cells.** For `γ² < 4`, any
+insertion `α` and any radius `R ≥ 1/2`, there are `p > 1`, `a > 1` and a finite
+constant such that, for every smoothing radius `ε ∈ (0, 1/2]`, every Brownian start,
+every time `t ≥ 0` and every `h ∈ (0, 1]`, the product-law `p`-th moment of the inserted
+clock increment of the region `1/2 < ‖z‖ ≤ R` over `(t, t + h]` is at most the constant
+times `h ^ a`. -/
+theorem exists_exterior_inserted_cell_rpow_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ2 : γ ^ 2 < 4) (α : ℝ)
+    {R : ℝ} (hR : 1 / 2 ≤ R) :
+    ∃ p a : ℝ, 1 < p ∧ 1 < a ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧
+      ∀ ε, 0 < ε → ε ≤ 1 / 2 → ∀ (x : ℂ) (t : ℝ≥0) (h : ℝ), 0 < h → h ≤ 1 →
+        (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), ENNReal.ofReal
+          ({z : ℂ | 1 / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) ε z)) (q.2 s.toNNReal))) ^ p
+          ∂(P.prod (planarBrownianMotion x))) ≤ C * ENNReal.ofReal (h ^ a) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hR0 : 0 < R := by linarith
+  set κ : ℝ := 2 * R with hκdef
+  have hκ : 0 < κ := by positivity
+  have hκ1 : 1 ≤ κ := by rw [hκdef]; linarith
+  have hac : ((κ : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hκ.ne'
+  have hnorm : ‖((κ : ℝ) : ℂ)‖ = κ := by rw [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hκ]
+  -- the rescaled field is a whole-plane GFF
+  have hh' := LatticeProb.LQG.AffineDerived.wholePlaneGFFAffineInvariance_lp P hC hcirc hh ((κ : ℝ) : ℂ) hac 0
+  set hcirc' : Ω → ℝ → ℂ → ℝ := fun ω r z =>
+    hcirc ω (‖((κ : ℝ) : ℂ)‖ * r) (((κ : ℝ) : ℂ) * z + 0) - hcirc ω ‖((κ : ℝ) : ℂ)‖ 0 with hc'
+  obtain ⟨q₀, a₀, hq₀1, hq₀2, hq₀γ, ha₀def, ha₀1, C₀, hC₀, hcell₀⟩ :=
+    exists_halfDisc_cell_rpow_le hh' hγ2
+  obtain ⟨H', _, hH'm, hH'ae⟩ := hh'.exists_jointlyMeasurable_circleAverage
+  -- exponents
+  set s' : ℝ := (1 + min q₀ a₀) / 2 with hs'
+  have hs'1 : 1 < s' := by
+    have := lt_min hq₀1 ha₀1
+    rw [hs']
+    linarith
+  have hs'q : s' < q₀ := by
+    have := min_le_left q₀ a₀
+    have := lt_min hq₀1 ha₀1
+    rw [hs']
+    linarith
+  have hs'a : s' < a₀ := by
+    have := min_le_right q₀ a₀
+    have := lt_min hq₀1 ha₀1
+    rw [hs']
+    linarith
+  have hs'0 : 0 < s' := by linarith
+  set p : ℝ := q₀ / s' with hp
+  set a : ℝ := a₀ / s' with ha
+  have hp1 : 1 < p := by rw [hp, one_lt_div hs'0]; exact hs'q
+  have ha1 : 1 < a := by rw [ha, one_lt_div hs'0]; exact hs'a
+  have hp0 : 0 < p := by linarith
+  have hconj : (Real.conjExponent s').HolderConjugate s' :=
+    (Real.HolderConjugate.conjExponent hs'1).symm
+  set c : ℝ := Real.conjExponent s' with hc
+  have hc0 : 0 < c := by
+    rw [hc, Real.conjExponent]
+    exact div_pos hs'0 (by linarith)
+  -- constants
+  set K₁ : ℝ := Real.exp (|γ * α| * (Real.log 2 + |Real.log R|)) * (2 * R) ^ (γ ^ 2 / 2) with hK₁
+  have hK₁0 : 0 ≤ K₁ := by positivity
+  set M : ℝ≥0∞ := ∫⁻ ω, ENNReal.ofReal (Real.exp ((γ * p * c) * hcirc ω (2 * R) 0)) ∂P with hM
+  have hMt : M < ⊤ := lintegral_exp_mul_circle_lt_top hh (by positivity) 0 _
+  refine ⟨p, a, hp1, ha1, (ENNReal.ofReal K₁ * ENNReal.ofReal (κ ^ 2)) ^ p * M ^ (1 / c) *
+    C₀ ^ (1 / s'), ?_, ?_⟩
+  · refine ENNReal.mul_lt_top (ENNReal.mul_lt_top ?_ ?_) ?_
+    · exact ENNReal.rpow_lt_top_of_nonneg hp0.le (by finiteness)
+    · exact ENNReal.rpow_lt_top_of_nonneg (by positivity) hMt.ne
+    · exact ENNReal.rpow_lt_top_of_nonneg (by positivity) hC₀.ne
+  intro ε hε hε2 x t h hh0 hh1
+  have hκ2 : (0 : ℝ) < κ ^ 2 := by positivity
+  have hκ21 : 1 ≤ κ ^ 2 := one_le_pow₀ hκ1
+  set ε' : ℝ := ε / κ with hε'
+  have hε'0 : 0 < ε' := by positivity
+  have hε'2 : ε' ≤ 1 / 2 := by
+    rw [hε', div_le_iff₀ hκ]
+    nlinarith
+  obtain ⟨t', ht'⟩ : ∃ t' : ℝ≥0, (t' : ℝ) = (t : ℝ) / κ ^ 2 := ⟨⟨_, by positivity⟩, rfl⟩
+  set h' : ℝ := h / κ ^ 2 with hh'def
+  have hh'0 : 0 < h' := by positivity
+  have hh'h : h' ≤ h := by rw [hh'def, div_le_iff₀ hκ2]; nlinarith
+  have hh'1 : h' ≤ 1 := hh'h.trans hh1
+  set e := affineScaling hκ 0 with he
+  set Bmap := ContinuousPath.rescale e (κ ^ 2).toNNReal with hBmap
+  have hcpos : 0 < (κ ^ 2).toNNReal := Real.toNNReal_pos.mpr hκ2
+  have hBm : Measurable Bmap :=
+    (continuousPathRescaleHomeomorph e _ hcpos).continuous.measurable
+  set x' : ℂ := κ⁻¹ • (x - 0) with hx'
+  have hlaw : (planarBrownianMotion x).map Bmap = planarBrownianMotion x' :=
+    planarBrownianMotion_map_rescale_affineScaling hκ 0 x
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  have hTdm : MeasurableSet Td := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  let f' : Ω → ℂ → ℝ≥0∞ := fun ω => Td.indicator (normalizedCircleDensity H' γ ε' ω)
+  have hf' : Measurable (Function.uncurry f') :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hH'm ε' hε'0) γ) hTdm
+  have hXm : Measurable (fun ω => hcirc ω (2 * R) 0) := hh.measurable_circle _ 0 (by positivity)
+  have hev : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => p.1.2 p.2.toNNReal) :=
+    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_snd.comp measurable_fst))
+  let Y0 : Ω × ContinuousPath ℂ → ℝ≥0∞ := fun pr =>
+    ∫⁻ σ in Ioc (t' : ℝ) ((t' : ℝ) + h'), f' pr.1 (pr.2 σ.toNNReal)
+  have hY0 : Measurable Y0 := (hf'.comp (measurable_fst.fst.prodMk hev)).lintegral_prod_right'
+  set Kc : ℝ≥0∞ := ENNReal.ofReal K₁ * ENNReal.ofReal (κ ^ 2) with hKc
+  -- the good field event
+  have hgood : ∀ᵐ ω ∂P, (∀ r z, H' ω r z =
+      hcirc ω (2 * R * r) (((2 * R : ℝ) : ℂ) * z) - hcirc ω (2 * R) 0) ∧ hcirc ω 1 0 = 0 ∧
+      (∀ r z, 0 < r → hcirc ω r z - hcirc ω 1 0 - α * Real.log (max r ‖z‖) =
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) r z) := by
+    filter_upwards [hH'ae, hh.ae_circleAverage_one_zero,
+      ae_recentered_inserted_circle_average hh α] with ω hω hone hrec
+    refine ⟨fun r z => ?_, hone, hrec⟩
+    rw [hω r z]
+    simp only [hc', hnorm, add_zero]
+    rfl
+  -- pointwise bound on the product space
+  have hpt : ∀ᵐ pr ∂(P.prod (planarBrownianMotion x)),
+      (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), ENNReal.ofReal
+        ({z : ℂ | 1 / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc pr.1) ε z)) (pr.2 s.toNNReal))) ^ p ≤
+      Kc ^ p * (ENNReal.ofReal (Real.exp (γ * hcirc pr.1 (2 * R) 0)) ^ p *
+        Y0 (pr.1, Bmap pr.2) ^ p) := by
+    filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+      (ν := planarBrownianMotion x)).ae hgood] with pr hpr
+    obtain ⟨hH'pr, hone, hrec⟩ := hpr
+    have hfm : Measurable (f' pr.1) := hf'.comp (measurable_const.prodMk measurable_id)
+    have hin : (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), ENNReal.ofReal
+        ({z : ℂ | 1 / 2 < ‖z‖ ∧ ‖z‖ ≤ R}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc pr.1) ε z)) (pr.2 s.toNNReal))) ≤
+        ENNReal.ofReal (K₁ * Real.exp (γ * hcirc pr.1 (2 * R) 0)) *
+          (ENNReal.ofReal (κ ^ 2) * Y0 (pr.1, Bmap pr.2)) := by
+      calc _ ≤ ∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+            ENNReal.ofReal (K₁ * Real.exp (γ * hcirc pr.1 (2 * R) 0)) *
+              f' pr.1 (e (pr.2 s.toNNReal)) := by
+            apply lintegral_mono
+            intro s
+            exact exterior_inserted_density_le hcirc H' pr.1 hR0 hH'pr hone hrec hε hε2 _
+        _ = ENNReal.ofReal (K₁ * Real.exp (γ * hcirc pr.1 (2 * R) 0)) *
+            ∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), f' pr.1 (e (pr.2 s.toNNReal)) :=
+          lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
+        _ = _ := by
+          rw [lintegral_Ioc_affineScaling_rescale pr.2 hκ (f' pr.1) hfm]
+          congr 2
+          show _ = ∫⁻ σ in Ioc (t' : ℝ) ((t' : ℝ) + h'), f' pr.1 (Bmap pr.2 σ.toNNReal)
+          rw [ht']
+    calc _ ≤ (ENNReal.ofReal (K₁ * Real.exp (γ * hcirc pr.1 (2 * R) 0)) *
+          (ENNReal.ofReal (κ ^ 2) * Y0 (pr.1, Bmap pr.2))) ^ p :=
+          ENNReal.rpow_le_rpow hin hp0.le
+      _ = _ := by
+        rw [ENNReal.ofReal_mul hK₁0, ENNReal.mul_rpow_of_nonneg _ _ hp0.le,
+          ENNReal.mul_rpow_of_nonneg _ _ hp0.le, ENNReal.mul_rpow_of_nonneg _ _ hp0.le, hKc,
+          ENNReal.mul_rpow_of_nonneg _ _ hp0.le]
+        ring
+  -- integration, Hölder in the field and Jensen in the path
+  let A : Ω → ℝ≥0∞ := fun ω => ENNReal.ofReal (Real.exp (γ * hcirc ω (2 * R) 0)) ^ p
+  have hAm : Measurable A :=
+    (ENNReal.measurable_ofReal.comp (hXm.const_mul γ).exp).pow_const p
+  let Z : Ω → ℝ≥0∞ := fun ω => ∫⁻ b', Y0 (ω, b') ^ p ∂planarBrownianMotion x'
+  have hZm : Measurable Z := (hY0.pow_const p).lintegral_prod_right'
+  have hprodm : Measurable (fun pr : Ω × ContinuousPath ℂ => A pr.1 * Y0 (pr.1, Bmap pr.2) ^ p) :=
+    (hAm.comp measurable_fst).mul
+      ((hY0.comp (measurable_fst.prodMk (hBm.comp measurable_snd))).pow_const p)
+  have hKct : Kc ^ p ≠ ⊤ := ENNReal.rpow_ne_top_of_nonneg hp0.le (by finiteness)
+  have hAc (ω : Ω) : A ω ^ c = ENNReal.ofReal (Real.exp ((γ * p * c) * hcirc ω (2 * R) 0)) := by
+    simp only [A]
+    rw [← ENNReal.rpow_mul, ENNReal.ofReal_rpow_of_nonneg (Real.exp_pos _).le (by positivity),
+      ← Real.exp_mul]
+    congr 2
+    ring
+  have hZs (ω : Ω) : Z ω ^ s' ≤ ∫⁻ b', Y0 (ω, b') ^ q₀ ∂planarBrownianMotion x' := by
+    have hJ := LatticeProb.lintegral_rpow_le_measure_univ_mul (planarBrownianMotion x') hs'1.le
+      (g := fun b' => Y0 (ω, b') ^ p)
+      (((hY0.pow_const p).comp (measurable_const.prodMk measurable_id)).aemeasurable)
+    rw [measure_univ, ENNReal.one_rpow, one_mul] at hJ
+    refine hJ.trans (le_of_eq ?_)
+    apply lintegral_congr
+    intro b'
+    rw [← ENNReal.rpow_mul]
+    congr 1
+    rw [hp]
+    field_simp
+  have hZint : (∫⁻ ω, ∫⁻ b', Y0 (ω, b') ^ q₀ ∂planarBrownianMotion x' ∂P) ≤
+      C₀ * ENNReal.ofReal (h' ^ a₀) := by
+    refine le_trans (le_of_eq ?_) (hcell₀ ε' hε'0 hε'2 x' t' h' hh'0 hh'1)
+    apply lintegral_congr_ae
+    filter_upwards [hH'ae] with ω hω
+    have hcv : normalizedCircleDensity H' γ ε' ω = normalizedCircleDensity hcirc' γ ε' ω := by
+      funext w
+      simp only [normalizedCircleDensity, hω]
+    simp only [Y0, f', hcv]
+  calc
+    _ ≤ ∫⁻ pr : Ω × ContinuousPath ℂ, Kc ^ p * (A pr.1 * Y0 (pr.1, Bmap pr.2) ^ p)
+        ∂(P.prod (planarBrownianMotion x)) := lintegral_mono_ae hpt
+    _ = Kc ^ p * ∫⁻ ω, ∫⁻ b, A ω * Y0 (ω, Bmap b) ^ p ∂planarBrownianMotion x ∂P := by
+      rw [lintegral_const_mul' _ _ hKct, lintegral_prod _ hprodm.aemeasurable]
+    _ = Kc ^ p * ∫⁻ ω, A ω * Z ω ∂P := by
+      congr 1
+      apply lintegral_congr
+      intro ω
+      have hAt : A ω ≠ ⊤ := ENNReal.rpow_ne_top_of_nonneg hp0.le ENNReal.ofReal_ne_top
+      rw [lintegral_const_mul' _ _ hAt]
+      congr 1
+      simp only [Z]
+      rw [← hlaw]
+      exact (lintegral_map (f := fun b' => Y0 (ω, b') ^ p)
+        ((hY0.pow_const p).comp measurable_prodMk_left) hBm).symm
+    _ ≤ Kc ^ p * ((∫⁻ ω, A ω ^ c ∂P) ^ (1 / c) * (∫⁻ ω, Z ω ^ s' ∂P) ^ (1 / s')) :=
+      mul_le_mul' le_rfl (ENNReal.lintegral_mul_le_Lp_mul_Lq P hconj hAm.aemeasurable
+        hZm.aemeasurable)
+    _ ≤ Kc ^ p * (M ^ (1 / c) * (C₀ * ENNReal.ofReal (h' ^ a₀)) ^ (1 / s')) := by
+      refine mul_le_mul' le_rfl (mul_le_mul' (le_of_eq ?_) ?_)
+      · congr 1
+        rw [hM]
+        exact lintegral_congr hAc
+      · exact ENNReal.rpow_le_rpow ((lintegral_mono hZs).trans hZint) (by positivity)
+    _ ≤ _ := by
+      rw [ENNReal.mul_rpow_of_nonneg C₀ (ENNReal.ofReal (h' ^ a₀)) (by positivity : (0 : ℝ) ≤ 1 / s'),
+        ENNReal.ofReal_rpow_of_nonneg (x := h' ^ a₀) (by positivity) (by positivity),
+        ← Real.rpow_mul hh'0.le]
+      have hpow : h' ^ (a₀ * (1 / s')) ≤ h ^ a := by
+        rw [show a₀ * (1 / s') = a by rw [ha]; ring]
+        exact Real.rpow_le_rpow hh'0.le hh'h (by linarith)
+      calc Kc ^ p * (M ^ (1 / c) * (C₀ ^ (1 / s') * ENNReal.ofReal (h' ^ (a₀ * (1 / s'))))) ≤
+          Kc ^ p * (M ^ (1 / c) * (C₀ ^ (1 / s') * ENNReal.ofReal (h ^ a))) := by
+            gcongr
+        _ = _ := by rw [hKc]; ring
 
 end HarmonicBalls
