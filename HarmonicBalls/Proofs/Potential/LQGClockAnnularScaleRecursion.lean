@@ -736,4 +736,38 @@ theorem lintegral_square_occupation_rpow_le_stoppedHalfDiscMoment
       simp only [f, h]
     _ ≤ _ := hret
 
+/-- The displacement of planar Brownian motion at a positive time has the law of the
+time-one position from zero, scaled by the square root of the time. -/
+theorem planarBrownianMotion_le_norm_sub_eq (w : ℂ) {s : ℝ≥0} (hs : s ≠ 0) (a : ℝ) :
+    planarBrownianMotion w {b | a ≤ ‖b s - w‖} =
+      planarBrownianMotion 0 {b | a / Real.sqrt s ≤ ‖b 1‖} := by
+  have hmap := planarBrownianMotion_map_scaledCenteredPlanarPath w hs
+  have hm : MeasurableSet {b : ContinuousPath ℂ | a / Real.sqrt s ≤ ‖b 1‖} :=
+    measurableSet_le measurable_const (continuous_eval_const 1).norm.measurable
+  rw [← hmap, Measure.map_apply (continuous_scaledCenteredPlanarPath w s).measurable hm]
+  have hs' : 0 < Real.sqrt s := Real.sqrt_pos.mpr (lt_of_le_of_ne s.coe_nonneg
+    (by exact_mod_cast hs.symm))
+  congr 1
+  ext b
+  simp only [mem_preimage, mem_ofPred_eq]
+  change a ≤ ‖b s - w‖ ↔ a / Real.sqrt s ≤ ‖(Real.sqrt s)⁻¹ • (b (s * 1) - w)‖
+  rw [mul_one, norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hs', div_le_iff₀ hs',
+    inv_mul_eq_div, div_mul_cancel₀ _ hs'.ne']
+
+/-- The probability that planar Brownian motion from zero is far at time one tends
+to zero as the distance tends to infinity. -/
+theorem tendsto_planarBrownianMotion_le_norm_one :
+    Tendsto (fun u : ℝ => planarBrownianMotion 0 {b | u ≤ ‖b 1‖}) atTop (𝓝 0) := by
+  have h := tendsto_measure_iInter_atTop (μ := planarBrownianMotion (0 : ℂ))
+    (s := fun u : ℝ => {b : ContinuousPath ℂ | u ≤ ‖b 1‖})
+    (fun u => (measurableSet_le measurable_const
+      (continuous_eval_const 1).norm.measurable).nullMeasurableSet)
+    (fun u v huv b hb => le_trans huv hb) ⟨0, measure_ne_top _ _⟩
+  have he : (⋂ u : ℝ, {b : ContinuousPath ℂ | u ≤ ‖b 1‖}) = ∅ := by
+    ext b
+    simp only [mem_iInter, mem_ofPred_eq, mem_empty_iff_false, iff_false, not_forall, not_le]
+    exact ⟨‖b 1‖ + 1, by linarith⟩
+  rw [he, measure_empty] at h
+  exact h
+
 end HarmonicBalls
