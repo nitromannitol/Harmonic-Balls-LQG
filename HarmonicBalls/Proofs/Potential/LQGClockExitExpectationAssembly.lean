@@ -93,4 +93,73 @@ theorem aemeasurable_region_stopped_occupation
   · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz, hω, hω, hrec d z hd]
   · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem hz]
 
+
+private theorem integrable_of_le_unit_occupation' (b : ContinuousPath ℂ) {μ : Measure ℂ}
+    (hμ : μ ≤ Measure.map (fun t => b t) (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))))
+    {f : ℂ → ℝ} (hf : Continuous f) : Integrable f μ := by
+  have ht : Integrable (fun s : ℝ => f (b s.toNNReal))
+      (volume.restrict (Icc (0 : ℝ) 1)) :=
+    (hf.comp (b.continuous.comp continuous_real_toNNReal)).integrableOn_Icc
+  have hν : Integrable (fun t : ℝ≥0 => f (b t)) (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))) :=
+    (integrable_map_measure (hf.comp b.continuous).aestronglyMeasurable
+      continuous_real_toNNReal.measurable.aemeasurable).2 ht
+  exact ((integrable_map_measure hf.aestronglyMeasurable
+    b.continuous.measurable.aemeasurable).2 hν).mono_measure hμ
+
+/-- A clock approximation up to a time at most one splits into its inner, annular and exterior
+occupation parts. -/
+theorem lqgClockApprox_eq_regions {γ δ : ℝ} (hδ : δ ≤ 1/2) (h : ℝ → ℂ → ℝ) (j : ℕ)
+    (hc : Continuous (h (dyadicScale j))) (b : ContinuousPath ℂ) {τ : ℝ≥0} (hτ : τ ≤ 1) :
+    lqgClockApprox γ h (dyadicScale j) b τ =
+      (∫ z, {z : ℂ | ‖z‖ < δ}.indicator (fun z =>
+          (dyadicScale j) ^ (γ ^ 2 / 2) * Real.exp (γ * h (dyadicScale j) z)) z
+        ∂(Measure.map (fun t => b t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic τ)))) +
+      (∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator (fun z =>
+          (dyadicScale j) ^ (γ ^ 2 / 2) * Real.exp (γ * h (dyadicScale j) z)) z
+        ∂(Measure.map (fun t => b t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic τ)))) +
+      (∫ z, {z : ℂ | 1/2 < ‖z‖}.indicator (fun z =>
+          (dyadicScale j) ^ (γ ^ 2 / 2) * Real.exp (γ * h (dyadicScale j) z)) z
+        ∂(Measure.map (fun t => b t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic τ)))) := by
+  let f : ℂ → ℝ := fun z => (dyadicScale j) ^ (γ ^ 2 / 2) * Real.exp (γ * h (dyadicScale j) z)
+  have hf : Continuous f := continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc))
+  let μ : Measure ℂ := Measure.map (fun t => b t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic τ))
+  have hμ : μ ≤ Measure.map (fun t => b t) (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))) :=
+    Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+  have hS1 : MeasurableSet {z : ℂ | ‖z‖ < δ} := measurableSet_lt measurable_norm measurable_const
+  have hS2 : MeasurableSet {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2} :=
+    (measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
+  have hS3 : MeasurableSet {z : ℂ | 1/2 < ‖z‖} := measurableSet_lt measurable_const measurable_norm
+  have hi (S : Set ℂ) (hS : MeasurableSet S) : Integrable (S.indicator f) μ :=
+    (integrable_of_le_unit_occupation' b hμ hf).indicator hS
+  have hconv := intervalIntegral_path_eq_integral_occupation f hf.measurable b hτ
+  show (∫ s in (0 : ℝ)..(τ : ℝ), f (b s.toNNReal)) =
+    (∫ z, {z : ℂ | ‖z‖ < δ}.indicator f z ∂μ) +
+    (∫ z, {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f z ∂μ) +
+    (∫ z, {z : ℂ | 1/2 < ‖z‖}.indicator f z ∂μ)
+  have hi12 : Integrable (fun z => {z : ℂ | ‖z‖ < δ}.indicator f z +
+      {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2}.indicator f z) μ := (hi _ hS1).add (hi _ hS2)
+  rw [hconv, ← integral_add (hi _ hS1) (hi _ hS2), ← integral_add hi12 (hi _ hS3)]
+  congr 1
+  funext z
+  by_cases h1 : ‖z‖ < δ
+  · have h2 : z ∉ {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2} := fun h => (not_le.mpr h1) h.1
+    have h3 : z ∉ {z : ℂ | 1/2 < ‖z‖} := fun h => by
+      have : ‖z‖ < 1/2 := lt_of_lt_of_le h1 hδ
+      exact (lt_asymm h this)
+    rw [Set.indicator_of_mem (show z ∈ {z : ℂ | ‖z‖ < δ} from h1), Set.indicator_of_notMem h2,
+      Set.indicator_of_notMem h3]
+    ring
+  · by_cases h4 : ‖z‖ ≤ 1/2
+    · have h2 : z ∈ {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2} := ⟨not_lt.mp h1, h4⟩
+      have h3 : z ∉ {z : ℂ | 1/2 < ‖z‖} := fun h => (not_lt.mpr h4) h
+      rw [Set.indicator_of_notMem (show z ∉ {z : ℂ | ‖z‖ < δ} from h1),
+        Set.indicator_of_mem h2, Set.indicator_of_notMem h3]
+      ring
+    · have h2 : z ∉ {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2} := fun h => h4 h.2
+      have h3 : z ∈ {z : ℂ | 1/2 < ‖z‖} := lt_of_not_ge h4
+      rw [Set.indicator_of_notMem (show z ∉ {z : ℂ | ‖z‖ < δ} from h1),
+        Set.indicator_of_notMem h2, Set.indicator_of_mem h3]
+      ring
+
 end HarmonicBalls
