@@ -1144,4 +1144,147 @@ theorem exists_square_cover_halfDisc_ball (y : ℂ) {r : ℝ} (hr : 0 < r) :
       have := Int.cast_lt.mp hhi
       constructor <;> omega
 
+/-- **Occupation of a small ball.** For a smoothing radius `4 r δ` with `δ ≤ 1/2`, the
+field-Brownian moment of the half-disc occupation before the exit from a ball of radius
+`r / 2` is at most `2592` times the stopped grid-square bound. -/
+theorem lintegral_halfDisc_occupation_ball_exit_rpow_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    (γ : ℝ) {q : ℝ} (hq : 1 ≤ q) (hq2 : q ≤ 2) (y x : ℂ) :
+    (∫⁻ ω, ∫⁻ b, pathOccupationBefore ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator
+      (normalizedCircleDensity hcirc γ (4 * r * δ) ω))
+        (ContinuousPath.exitTime (Metric.ball y (r / 2)) b) b ^ q ∂planarBrownianMotion x ∂P) ≤
+      2592 * (ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ENNReal.ofReal ((4 * r) ^ 2) ^ q * (⨆ w, stoppedHalfDiscMoment P hcirc γ δ q w) *
+        ENNReal.ofReal ((q * (Real.log (5 * r / 2) - Real.log r) /
+          (Real.log (3 * r / 2) - Real.log r)) ^ q)) := by
+  classical
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hq0 : 0 < q := by linarith
+  have hε : 0 < 4 * r * δ := by positivity
+  obtain ⟨J, hJcard, hJsub, hJnear, hJcover⟩ := exists_square_cover_halfDisc_ball y hr
+  set U : Set ℂ := Metric.ball y (r / 2) with hU
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  set B := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+    ENNReal.ofReal ((4 * r) ^ 2) ^ q * (⨆ w, stoppedHalfDiscMoment P hcirc γ δ q w) *
+    ENNReal.ofReal ((q * (Real.log (5 * r / 2) - Real.log r) /
+      (Real.log (3 * r / 2) - Real.log r)) ^ q) with hB
+  have hnd : Measurable (Function.uncurry fun ω w => normalizedCircleDensity H γ (4 * r * δ) ω w) :=
+    measurable_normalizedCircleDensity (hHm _ hε) γ
+  let fi : ℤ × ℤ → Ω → ℂ → ℝ≥0∞ := fun i ω =>
+    (LatticeProb.dyadicSquare r i).indicator (normalizedCircleDensity H γ (4 * r * δ) ω)
+  have hfi (i : ℤ × ℤ) : Measurable (Function.uncurry (fi i)) :=
+    measurable_uncurry_indicator hnd (LatticeProb.measurableSet_dyadicSquare r i)
+  -- pathwise cover of the density inside the ball
+  have hcov (ω : Ω) (b : ContinuousPath ℂ) :
+      pathOccupationBefore (Td.indicator (normalizedCircleDensity H γ (4 * r * δ) ω))
+        (ContinuousPath.exitTime U b) b ≤
+      ∑ i ∈ J, pathOccupationBefore (fi i ω) (ContinuousPath.exitTime U b) b := by
+    unfold pathOccupationBefore
+    rw [← lintegral_finsetSum' J (fun i _ => ?_)]
+    · apply lintegral_mono
+      intro s
+      by_cases hs : s ∈ {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s < ContinuousPath.exitTime U b}
+      · rw [Set.indicator_of_mem hs]
+        simp only [Set.indicator_of_mem hs]
+        by_cases hz : b s.toNNReal ∈ Td
+        · rw [Set.indicator_of_mem hz]
+          have hin : b s.toNNReal ∈ U :=
+            ContinuousPath.mem_of_lt_exitTime U b s.toNNReal hs.2
+          have hin' : ‖b s.toNNReal - y‖ < r / 2 := by
+            rwa [hU, Metric.mem_ball, dist_eq_norm] at hin
+          obtain ⟨i, hiJ, hzi⟩ := hJcover _ hin' hz.2
+          calc normalizedCircleDensity H γ (4 * r * δ) ω (b s.toNNReal) =
+              fi i ω (b s.toNNReal) := by simp only [fi, Set.indicator_of_mem hzi]
+            _ ≤ _ := Finset.single_le_sum (f := fun i => fi i ω (b s.toNNReal))
+              (fun _ _ => zero_le) hiJ
+        · rw [Set.indicator_of_notMem hz]
+          exact zero_le
+      · rw [Set.indicator_of_notMem hs]
+        exact zero_le
+    · exact ((((hfi i).comp (measurable_const.prodMk
+        (b.continuous.measurable.comp measurable_real_toNNReal))).indicator
+        ((measurableSet_le measurable_const measurable_id).inter
+          (measurableSet_lt ENNReal.measurable_ofReal measurable_const)))).aemeasurable
+  -- each square
+  have hsq (i : ℤ × ℤ) (hi : i ∈ J) : (∫⁻ ω, ∫⁻ b, pathOccupationBefore (fi i ω)
+      (ContinuousPath.exitTime U b) b ^ q ∂planarBrownianMotion x ∂P) ≤ B := by
+    have hDR : U ⊆ Metric.ball (LatticeProb.dyadicSquareCentre r i) (5 * r / 2) := by
+      intro w hw
+      rw [hU, Metric.mem_ball, dist_eq_norm] at hw
+      rw [Metric.mem_ball, dist_eq_norm]
+      have := hJnear i hi
+      calc ‖w - LatticeProb.dyadicSquareCentre r i‖ ≤
+          ‖w - y‖ + ‖y - LatticeProb.dyadicSquareCentre r i‖ := norm_sub_le_norm_sub_add_norm_sub _ _ _
+        _ < r / 2 + 2 * r := add_lt_add hw this
+        _ = 5 * r / 2 := by ring
+    have h := lintegral_square_occupation_rpow_le_stoppedHalfDiscMoment hh hr hr10 hδ hδ2
+      (hJsub hi) γ hq Metric.isOpen_ball (by linarith : 3 * r / 2 < 5 * r / 2) hDR x
+    refine le_trans (le_of_eq ?_) h
+    apply lintegral_congr_ae
+    filter_upwards [hHae] with ω hω
+    have h' : normalizedCircleDensity hcirc γ (4 * r * δ) ω =
+        normalizedCircleDensity H γ (4 * r * δ) ω := by
+      funext w
+      simp only [normalizedCircleDensity, hω]
+    simp only [fi, h']
+    rfl
+  have hoccm (i : ℤ × ℤ) : Measurable (fun p : Ω × ContinuousPath ℂ =>
+      pathOccupationBefore (fi i p.1) (ContinuousPath.exitTime U p.2) p.2 ^ q) :=
+    (measurable_pathOccupationBefore (fun p : Ω × ContinuousPath ℂ => fi i p.1)
+      ((hfi i).comp (measurable_fst.fst.prodMk measurable_snd))
+      (fun p => ContinuousPath.exitTime U p.2)
+      ((ContinuousPath.measurable_exitTime U Metric.isOpen_ball).comp measurable_snd)
+      (fun p => p.2) measurable_snd).pow_const q
+  calc
+    _ = ∫⁻ ω, ∫⁻ b, pathOccupationBefore (Td.indicator (normalizedCircleDensity H γ (4 * r * δ) ω))
+        (ContinuousPath.exitTime U b) b ^ q ∂planarBrownianMotion x ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      have h' : normalizedCircleDensity hcirc γ (4 * r * δ) ω =
+          normalizedCircleDensity H γ (4 * r * δ) ω := by
+        funext w
+        simp only [normalizedCircleDensity, hω]
+      rw [h']
+    _ ≤ ∫⁻ ω, ∫⁻ b, 2 * (36 : ℝ≥0∞) * ∑ i ∈ J, pathOccupationBefore (fi i ω)
+        (ContinuousPath.exitTime U b) b ^ q ∂planarBrownianMotion x ∂P := by
+      refine lintegral_mono fun ω => lintegral_mono fun b => ?_
+      calc _ ≤ (∑ i ∈ J, pathOccupationBefore (fi i ω) (ContinuousPath.exitTime U b) b) ^ q :=
+            ENNReal.rpow_le_rpow (hcov ω b) hq0.le
+        _ ≤ ∑ i ∈ J, ∑ j ∈ J, (pathOccupationBefore (fi i ω) (ContinuousPath.exitTime U b) b *
+            pathOccupationBefore (fi j ω) (ContinuousPath.exitTime U b) b) ^ (q / 2) :=
+          rpow_sum_le_sum_cross J _ hq0 hq2
+        _ = ∑ i ∈ J, ∑ j ∈ J.filter (fun _ => True),
+            (pathOccupationBefore (fi i ω) (ContinuousPath.exitTime U b) b *
+            pathOccupationBefore (fi j ω) (ContinuousPath.exitTime U b) b) ^ (q / 2) := by
+          rw [Finset.filter_true_of_mem (fun _ _ => trivial)]
+        _ ≤ _ := sum_rpow_mul_le_degree_mul_sum_rpow J _ (fun _ _ => True)
+            (fun _ _ _ => trivial) 36 (fun i _ => by simpa using hJcard) hq0.le
+    _ = 2 * 36 * ∑ i ∈ J, ∫⁻ ω, ∫⁻ b, pathOccupationBefore (fi i ω)
+        (ContinuousPath.exitTime U b) b ^ q ∂planarBrownianMotion x ∂P := by
+      have hinner (ω : Ω) : (∫⁻ b, 2 * (36 : ℝ≥0∞) * ∑ i ∈ J, pathOccupationBefore (fi i ω)
+          (ContinuousPath.exitTime U b) b ^ q ∂planarBrownianMotion x) =
+          2 * 36 * ∑ i ∈ J, ∫⁻ b, pathOccupationBefore (fi i ω)
+          (ContinuousPath.exitTime U b) b ^ q ∂planarBrownianMotion x := by
+        rw [lintegral_const_mul' _ _ (by norm_num), lintegral_finsetSum' J
+          (f := fun i b => pathOccupationBefore (fi i ω) (ContinuousPath.exitTime U b) b ^ q)
+          (fun i _ => ((hoccm i).comp (measurable_const.prodMk measurable_id)).aemeasurable)]
+      simp only [hinner]
+      rw [lintegral_const_mul' _ _ (by norm_num), lintegral_finsetSum' J
+        (f := fun i ω => ∫⁻ b, pathOccupationBefore (fi i ω) (ContinuousPath.exitTime U b) b ^ q
+          ∂planarBrownianMotion x)
+        (fun i _ => ((hoccm i).lintegral_prod_right').aemeasurable)]
+    _ ≤ 2 * 36 * ∑ _i ∈ J, B := by
+      gcongr with i hi
+      exact hsq i hi
+    _ ≤ 2592 * B := by
+      rw [Finset.sum_const, nsmul_eq_mul]
+      calc 2 * 36 * ((J.card : ℝ≥0∞) * B) ≤ 2 * 36 * (36 * B) := by
+            gcongr
+            exact_mod_cast hJcard
+        _ = 2592 * B := by ring
+
 end HarmonicBalls
