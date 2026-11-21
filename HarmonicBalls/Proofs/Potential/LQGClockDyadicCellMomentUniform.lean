@@ -2,6 +2,7 @@ import LatticeProb.Analysis.MonotoneGridApprox
 import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
+import Mathlib.MeasureTheory.Constructions.Polish.Basic
 import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
@@ -103,7 +104,7 @@ theorem ae_tendstoUniformlyOn_of_dyadic_cell_moment {Ω : Type*} [MeasurableSpac
       ((summable_geometric_of_lt_one hr0 hr1).mul_left C')]
     exact ENNReal.ofReal_ne_top
   have hfin : ∀ᵐ ω ∂μ, ∑' m, G m ω ≠ ∞ := by
-    filter_upwards [ae_lt_top' (AEMeasurable.ennreal_tsum fun m => (hGm m).aemeasurable) hsum]
+    filter_upwards [ae_lt_top' (AEMeasurable.tsum fun m => (hGm m).aemeasurable) hsum]
       with ω hω
     exact hω.ne
   filter_upwards [hmono, hconv, hfin] with ω hωm hω hωG
