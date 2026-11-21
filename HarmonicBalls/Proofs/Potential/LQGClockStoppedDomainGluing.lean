@@ -477,7 +477,7 @@ theorem ae_tendstoUniformlyOn_stopped_exterior_clock_of_cell_moment
         ⋂ m : ℕ, ⋂ j : ℕ, {q | j ≤ 2 ^ m →
           ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} := by
       ext q
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     have hset : MeasurableSet {q : Ω × ContinuousPath ℂ | ∀ m j : ℕ, j ≤ 2 ^ m →
         ∃ L : ℝ, Tendsto (fun n => X n q (j / 2 ^ m)) atTop (𝓝 L)} := by
       rw [he]
