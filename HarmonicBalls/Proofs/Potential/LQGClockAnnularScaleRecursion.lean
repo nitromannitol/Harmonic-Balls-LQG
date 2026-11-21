@@ -1287,4 +1287,145 @@ theorem lintegral_halfDisc_occupation_ball_exit_rpow_le
             exact_mod_cast hJcard
         _ = 2592 * B := by ring
 
+/-- **Restart at a ball exit.** The half-disc occupation moment over a time
+interval of length `h` is at most `2 ^ (q - 1)` times the moment before the exit from
+a ball about the start plus the exit probability by time `h` times the largest moment
+over all starts. -/
+theorem lintegral_halfDisc_occupation_rpow_le_ball_exit_add
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) {q : ℝ} (hq : 1 ≤ q) (h ρ : ℝ) (y : ℂ) :
+    (∫⁻ ω, ∫⁻ b, pathOccupationBefore ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator
+      (normalizedCircleDensity hcirc γ ε ω)) (ENNReal.ofReal h) b ^ q
+        ∂planarBrownianMotion y ∂P) ≤
+      2 ^ (q - 1) * ((∫⁻ ω, ∫⁻ b, pathOccupationBefore
+        ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (normalizedCircleDensity hcirc γ ε ω))
+          (ContinuousPath.exitTime (Metric.ball y ρ) b) b ^ q ∂planarBrownianMotion y ∂P) +
+        planarBrownianMotion y
+          {b | ContinuousPath.exitTime (Metric.ball y ρ) b ≤ ENNReal.ofReal h} *
+        ⨆ w, ∫⁻ ω, ∫⁻ b, pathOccupationBefore
+          ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (normalizedCircleDensity hcirc γ ε ω))
+            (ENNReal.ofReal h) b ^ q ∂planarBrownianMotion w ∂P) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  have hq0 : 0 < q := by linarith
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  have hTdm : MeasurableSet Td := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  set U : Set ℂ := Metric.ball y ρ with hU
+  set τ := ContinuousPath.exitTime U with hτdef
+  have hτ : IsStoppingTime (ContinuousPath.canonicalFiltration (alpha := ℂ)) τ :=
+    ContinuousPath.isStoppingTime_exitTime _ Metric.isOpen_ball
+  set A : Set (ContinuousPath ℂ) := {b | τ b ≤ ENNReal.ofReal h} with hAdef
+  have hA : MeasurableSet[hτ.measurableSpace] A := hτ.measurableSet_le' h.toNNReal
+  have hAm : MeasurableSet A := hτ.measurableSpace_le _ hA
+  let f : Ω → ℂ → ℝ≥0∞ := fun ω => Td.indicator (normalizedCircleDensity H γ ε ω)
+  have hf : Measurable (Function.uncurry f) :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm ε hε) γ) hTdm
+  have hfω (ω : Ω) : Measurable (f ω) := hf.comp (measurable_const.prodMk measurable_id)
+  have hconv (ω : Ω) (hω : ∀ r z, H ω r z = hcirc ω r z) :
+      Td.indicator (normalizedCircleDensity hcirc γ ε ω) = f ω := by
+    have h' : normalizedCircleDensity hcirc γ ε ω = normalizedCircleDensity H γ ε ω := by
+      funext w
+      simp only [normalizedCircleDensity, hω]
+    simp only [f, h']
+  let F : Ω → ContinuousPath ℂ → ℝ≥0∞ := fun ω b =>
+    pathOccupationBefore (f ω) (ENNReal.ofReal h) b ^ q
+  have hF : Measurable (Function.uncurry F) :=
+    (measurable_pathOccupationBefore (fun p : Ω × ContinuousPath ℂ => f p.1)
+      (hf.comp (measurable_fst.fst.prodMk measurable_snd))
+      (fun _ => ENNReal.ofReal h) measurable_const (fun p => p.2) measurable_snd).pow_const q
+  have hN : Measurable (fun p : Ω × ContinuousPath ℂ =>
+      pathOccupationBefore (f p.1) (τ p.2) p.2 ^ q) :=
+    (measurable_pathOccupationBefore (fun p : Ω × ContinuousPath ℂ => f p.1)
+      (hf.comp (measurable_fst.fst.prodMk measurable_snd))
+      (fun p => τ p.2) ((ContinuousPath.measurable_exitTime U Metric.isOpen_ball).comp
+        measurable_snd) (fun p => p.2) measurable_snd).pow_const q
+  set W := ⨆ w, ∫⁻ ω, ∫⁻ b, pathOccupationBefore (Td.indicator (normalizedCircleDensity hcirc γ ε ω))
+    (ENNReal.ofReal h) b ^ q ∂planarBrownianMotion w ∂P with hW
+  have hWF (w : ℂ) : (∫⁻ ω, ∫⁻ b, F ω b ∂planarBrownianMotion w ∂P) ≤ W := by
+    refine le_trans (le_of_eq ?_) (le_iSup (fun w => ∫⁻ ω, ∫⁻ b, pathOccupationBefore
+      (Td.indicator (normalizedCircleDensity hcirc γ ε ω)) (ENNReal.ofReal h) b ^ q
+        ∂planarBrownianMotion w ∂P) w)
+    apply lintegral_congr_ae
+    filter_upwards [hHae] with ω hω
+    rw [hconv ω hω]
+  -- pathwise restart
+  have hpath (ω : Ω) (b : ContinuousPath ℂ) : F ω b ≤ 2 ^ (q - 1) *
+      (pathOccupationBefore (f ω) (τ b) b ^ q +
+        A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b) := by
+    have hsplit := pathOccupationBefore_le_add_shift_of_le (f ω) (hfω ω) (ENNReal.ofReal h) (τ b) b
+    have hfirst : pathOccupationBefore (f ω) (min (τ b) (ENNReal.ofReal h)) b ≤
+        pathOccupationBefore (f ω) (τ b) b :=
+      pathOccupationBefore_mono (fun _ => le_rfl) (min_le_left _ _) b
+    calc F ω b ≤ (pathOccupationBefore (f ω) (τ b) b +
+          (if τ b ≤ ENNReal.ofReal h then pathOccupationBefore (f ω) (ENNReal.ofReal h)
+            (ContinuousPath.shift (τ b).toNNReal b) else 0)) ^ q :=
+          ENNReal.rpow_le_rpow (hsplit.trans (add_le_add hfirst le_rfl)) hq0.le
+      _ ≤ 2 ^ (q - 1) * (pathOccupationBefore (f ω) (τ b) b ^ q +
+          (if τ b ≤ ENNReal.ofReal h then pathOccupationBefore (f ω) (ENNReal.ofReal h)
+            (ContinuousPath.shift (τ b).toNNReal b) else 0) ^ q) :=
+          ENNReal.rpow_add_le_mul_rpow_add_rpow _ _ hq
+      _ = _ := by
+        have hind : (if τ b ≤ ENNReal.ofReal h then pathOccupationBefore (f ω) (ENNReal.ofReal h)
+            (ContinuousPath.shift (τ b).toNNReal b) else 0) ^ q =
+            A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b := by
+          by_cases hb : τ b ≤ ENNReal.ofReal h
+          · simp only [hb, ↓reduceIte, Set.indicator_of_mem (show b ∈ A from hb), F]
+          · simp only [hb, ↓reduceIte, Set.indicator_of_notMem (show b ∉ A from hb),
+              ENNReal.zero_rpow_of_pos hq0]
+        rw [hind]
+  -- the strong Markov property at the exit time
+  have hmarkov := lintegral_lintegral_indicator_shift_stoppingTime (P := P) F hF y τ hτ A hA
+  have hAtop : A ∩ {b | τ b < ⊤} = A := by
+    ext b
+    simp only [mem_inter_iff, mem_ofPred_eq, and_iff_left_iff_imp]
+    intro hb
+    exact lt_of_le_of_lt hb ENNReal.ofReal_lt_top
+  rw [hAtop] at hmarkov
+  have hsecond : (∫⁻ ω, ∫⁻ b, A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b
+      ∂planarBrownianMotion y ∂P) ≤ planarBrownianMotion y A * W := by
+    rw [hmarkov]
+    calc
+      _ ≤ ∫⁻ b, A.indicator (fun _ => W) b ∂planarBrownianMotion y := by
+        apply lintegral_mono
+        intro b
+        apply Set.indicator_le_indicator
+        exact hWF _
+      _ = _ := by rw [lintegral_indicator_const hAm, mul_comm]
+  have hfirstm (ω : Ω) : Measurable (fun b => pathOccupationBefore (f ω) (τ b) b ^ q) :=
+    (measurable_pathOccupationBefore (fun _ : ContinuousPath ℂ => f ω)
+      ((hfω ω).comp measurable_snd) τ (ContinuousPath.measurable_exitTime U Metric.isOpen_ball)
+      id measurable_id).pow_const q
+  calc
+    _ = ∫⁻ ω, ∫⁻ b, F ω b ∂planarBrownianMotion y ∂P := by
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      rw [hconv ω hω]
+    _ ≤ ∫⁻ ω, ∫⁻ b, 2 ^ (q - 1) * (pathOccupationBefore (f ω) (τ b) b ^ q +
+        A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b)
+          ∂planarBrownianMotion y ∂P :=
+      lintegral_mono fun ω => lintegral_mono fun b => hpath ω b
+    _ = 2 ^ (q - 1) * ((∫⁻ ω, ∫⁻ b, pathOccupationBefore (f ω) (τ b) b ^ q
+          ∂planarBrownianMotion y ∂P) +
+        ∫⁻ ω, ∫⁻ b, A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b
+          ∂planarBrownianMotion y ∂P) := by
+      have hin (ω : Ω) : (∫⁻ b, 2 ^ (q - 1) * (pathOccupationBefore (f ω) (τ b) b ^ q +
+          A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b)
+            ∂planarBrownianMotion y) = 2 ^ (q - 1) *
+          ((∫⁻ b, pathOccupationBefore (f ω) (τ b) b ^ q ∂planarBrownianMotion y) +
+            ∫⁻ b, A.indicator (fun b => F ω (ContinuousPath.shift (τ b).toNNReal b)) b
+              ∂planarBrownianMotion y) := by
+        rw [lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg (by linarith)
+          (by norm_num)), lintegral_add_left (hfirstm ω)]
+      simp only [hin]
+      rw [lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg (by linarith) (by norm_num)),
+        lintegral_add_left (hN.lintegral_prod_right')]
+    _ ≤ _ := by
+      refine mul_le_mul_right (add_le_add (le_of_eq ?_) hsecond) _
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      rw [hconv ω hω]
+
 end HarmonicBalls
