@@ -292,6 +292,71 @@ private theorem one_add_mul_rpow_le {v c G : ℝ} (hv : 0 < v) (hv1 : v ≤ 1) (
   rw [hB]
   nlinarith
 
+/-- The expected unit-time singular occupation is bounded uniformly over the start and the
+centre below dimension two. -/
+theorem exists_planarBrownianMotion_unit_singular_occupation_le {a : ℝ} (ha0 : 0 < a)
+    (ha2 : a < 2) :
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ x z : ℂ,
+      (∫⁻ b, ∫⁻ t : ℝ≥0, (ENNReal.ofReal ‖b t - z‖) ^ (-a) ∂(Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1)))
+        ∂(planarBrownianMotion x)) ≤ C := by
+  let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+  let : NullSingletonClass ν := nullSingletonClass_unit_time
+  let c : ℝ := (a + 2) / 4
+  have hc0 : 0 < c := by dsimp [c]; linarith
+  have hac : a < 2 * c := by dsimp [c]; linarith
+  have hc1 : c < 1 := by dsimp [c]; linarith
+  let G : ℝ := (2 / Real.pi) ^ c * 2 ^ (2 * c) * (a / (2 * c - a))
+  have hG : 0 ≤ G := by
+    have : 0 < 2 * c - a := by linarith
+    dsimp [G]; positivity
+  obtain ⟨K, hK, hKb⟩ := exists_uniform_unit_time_rpow_bound hc0 hc1
+  refine ⟨ENNReal.ofReal (1 + G) * K, ENNReal.mul_lt_top ENNReal.ofReal_lt_top hK,
+    fun x z => ?_⟩
+  have hmeas : Measurable (fun q : ContinuousPath ℂ × ℝ≥0 =>
+      (ENNReal.ofReal ‖q.1 q.2 - z‖) ^ (-a)) := by fun_prop
+  change (∫⁻ b, ∫⁻ t, (ENNReal.ofReal ‖b t - z‖) ^ (-a) ∂ν ∂(planarBrownianMotion x)) ≤ _
+  rw [lintegral_lintegral_swap hmeas.aemeasurable]
+  have hpt : ∀ᵐ t ∂ν, (∫⁻ b, (ENNReal.ofReal ‖b t - z‖) ^ (-a) ∂(planarBrownianMotion x)) ≤
+      ENNReal.ofReal (1 + G) *
+        ENNReal.ofReal (|(t : ℝ) - ((0 : ℝ≥0) : ℝ)| ^ (-c)) := by
+    filter_upwards [ν.ae_ne 0, ae_unit_time_le_one] with t ht0 ht1
+    have hm : Measurable (fun b : ContinuousPath ℂ => b t - b 0) :=
+      (ContinuousPath.measurable_coordinateProcess _).sub
+        (ContinuousPath.measurable_coordinateProcess _)
+    have heq : (∫⁻ b, (ENNReal.ofReal ‖b t - z‖) ^ (-a) ∂(planarBrownianMotion x)) =
+        ∫⁻ u, (ENNReal.ofReal ‖u - (z - x)‖) ^ (-a)
+          ∂((planarBrownianMotion x).map (fun b : ContinuousPath ℂ => b t - b 0)) := by
+      rw [lintegral_map (by fun_prop) hm]
+      apply lintegral_congr_ae
+      filter_upwards [ae_planarBrownianMotion_eval_zero x] with b hb
+      rw [hb]
+      congr 3
+      ring
+    rw [heq]
+    refine (lintegral_map_increment_enorm_sub_rpow_neg_le x (z - x) (s := 0) (t := t) ht0
+      ha0 hac hc1).trans ?_
+    have htpos : 0 < |(t : ℝ) - ((0 : ℝ≥0) : ℝ)| := by
+      rw [NNReal.coe_zero, sub_zero, abs_of_nonneg (NNReal.coe_nonneg t)]
+      exact lt_of_le_of_ne (NNReal.coe_nonneg t) (fun h => ht0 (NNReal.coe_injective h.symm))
+    have ht1' : |(t : ℝ) - ((0 : ℝ≥0) : ℝ)| ≤ 1 := by
+      rw [NNReal.coe_zero, sub_zero, abs_of_nonneg (NNReal.coe_nonneg t)]
+      exact ht1
+    have hb := one_add_mul_rpow_le (G := G) htpos ht1' hc0.le
+      ((2 / Real.pi) ^ c * 2 ^ (2 * c) * |(t : ℝ) - ((0 : ℝ≥0) : ℝ)| ^ (-c) * (a / (2 * c - a)))
+      (by dsimp [G]; ring)
+    rw [← ENNReal.ofReal_mul (by linarith)]
+    exact ENNReal.ofReal_le_ofReal hb
+  calc
+    (∫⁻ t, ∫⁻ b, (ENNReal.ofReal ‖b t - z‖) ^ (-a) ∂(planarBrownianMotion x) ∂ν) ≤
+        ∫⁻ t, ENNReal.ofReal (1 + G) *
+          ENNReal.ofReal (|(t : ℝ) - ((0 : ℝ≥0) : ℝ)| ^ (-c)) ∂ν := lintegral_mono_ae hpt
+    _ = ENNReal.ofReal (1 + G) *
+        ∫⁻ t, ENNReal.ofReal (|(t : ℝ) - ((0 : ℝ≥0) : ℝ)| ^ (-c)) ∂ν :=
+      lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
+    _ ≤ ENNReal.ofReal (1 + G) * K := by
+      gcongr
+      exact hKb 0 (by norm_num)
+
 /-- The expected unit-time singular energy with a Riesz kernel is bounded uniformly over the
 start and the centre, below dimension two in both exponents. -/
 theorem exists_planarBrownianMotion_unit_singular_riesz_energy_le {a k : ℝ}
