@@ -292,13 +292,14 @@ private theorem one_add_mul_rpow_le {v c G : ℝ} (hv : 0 < v) (hv1 : v ≤ 1) (
   rw [hB]
   nlinarith
 
-/-- The expected unit-time singular energy with a Riesz kernel is finite below dimension two
-in both exponents. -/
-theorem planarBrownianMotion_unit_singular_riesz_energy_lt_top (x z : ℂ) {a k : ℝ}
+/-- The expected unit-time singular energy with a Riesz kernel is bounded uniformly over the
+start and the centre, below dimension two in both exponents. -/
+theorem exists_planarBrownianMotion_unit_singular_riesz_energy_le {a k : ℝ}
     (ha0 : 0 < a) (ha2 : a < 2) (hk0 : 0 < k) (hk2 : k < 2) :
-    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
-    (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0, (ENNReal.ofReal ‖b p.1 - z‖) ^ (-a) *
-      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-k) ∂(ν.prod ν) ∂(planarBrownianMotion x)) < ∞ := by
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ x z : ℂ,
+      (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0, (ENNReal.ofReal ‖b p.1 - z‖) ^ (-a) *
+        (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-k) ∂((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).prod (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))))
+          ∂(planarBrownianMotion x)) ≤ C := by
   let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
   have hν1 : ν univ = 1 := by
     simp [ν, Measure.map_apply continuous_real_toNNReal.measurable]
@@ -320,6 +321,12 @@ theorem planarBrownianMotion_unit_singular_riesz_energy_lt_top (x z : ℂ) {a k 
   have hG₂ : 0 ≤ G₂ := by
     have : 0 < 2 * e - k := by linarith
     dsimp [G₂]; positivity
+  have htime := lintegral_unit_time_min_rpow_mul_abs_sub_rpow_lt_top hc0 hc1 he0 he1
+  refine ⟨ENNReal.ofReal ((1 + G₁) * (1 + G₂)) *
+      ∫⁻ p : ℝ≥0 × ℝ≥0, ENNReal.ofReal (((min p.1 p.2 : ℝ≥0) : ℝ) ^ (-c)) *
+        ENNReal.ofReal (|(p.1 : ℝ) - (p.2 : ℝ)| ^ (-e)) ∂(ν.prod ν),
+    ENNReal.mul_lt_top ENNReal.ofReal_lt_top htime, ?_⟩
+  intro x z
   let F : ContinuousPath ℂ → ℝ≥0 × ℝ≥0 → ℝ≥0∞ := fun b p =>
     (ENNReal.ofReal ‖b p.1 - z‖) ^ (-a) * (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-k)
   have hF : Measurable (Function.uncurry F) := by
@@ -379,8 +386,7 @@ theorem planarBrownianMotion_unit_singular_riesz_energy_lt_top (x z : ℂ) {a k 
         have hB : 0 ≤ 1 + G₂ := by linarith
         rw [ENNReal.ofReal_mul hA, ENNReal.ofReal_mul hB, ENNReal.ofReal_mul (by positivity)]
         ring
-  have htime := lintegral_unit_time_min_rpow_mul_abs_sub_rpow_lt_top hc0 hc1 he0 he1
-  change (∫⁻ b, ∫⁻ p, F b p ∂(ν.prod ν) ∂(planarBrownianMotion x)) < ∞
+  change (∫⁻ b, ∫⁻ p, F b p ∂(ν.prod ν) ∂(planarBrownianMotion x)) ≤ _
   rw [lintegral_lintegral_swap hF.aemeasurable]
   calc
     (∫⁻ p, ∫⁻ b, F b p ∂(planarBrownianMotion x) ∂(ν.prod ν)) ≤
@@ -392,7 +398,16 @@ theorem planarBrownianMotion_unit_singular_riesz_energy_lt_top (x z : ℂ) {a k 
         ∫⁻ p, ENNReal.ofReal (((min p.1 p.2 : ℝ≥0) : ℝ) ^ (-c)) *
           ENNReal.ofReal (|(p.1 : ℝ) - (p.2 : ℝ)| ^ (-e)) ∂(ν.prod ν) :=
       lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
-    _ < ∞ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top htime
+
+/-- The expected unit-time singular energy with a Riesz kernel is finite below dimension two
+in both exponents. -/
+theorem planarBrownianMotion_unit_singular_riesz_energy_lt_top (x z : ℂ) {a k : ℝ}
+    (ha0 : 0 < a) (ha2 : a < 2) (hk0 : 0 < k) (hk2 : k < 2) :
+    let ν := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
+    (∫⁻ b, ∫⁻ p : ℝ≥0 × ℝ≥0, (ENNReal.ofReal ‖b p.1 - z‖) ^ (-a) *
+      (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-k) ∂(ν.prod ν) ∂(planarBrownianMotion x)) < ∞ := by
+  obtain ⟨C, hC, h⟩ := exists_planarBrownianMotion_unit_singular_riesz_energy_le ha0 ha2 hk0 hk2
+  exact (h x z).trans_lt hC
 
 private theorem ofReal_rpow_neg_le_two_rpow_mul {r s q : ℝ} (hr : 0 < r) (hrs : r ≤ 2 * s)
     (hq : 0 ≤ q) :
@@ -487,17 +502,22 @@ theorem measurable_unitSingularWeightedPairEnergy (z : ℂ) (q β : ℝ) :
   apply Measurable.lintegral_prod_right
   fun_prop
 
-/-- The singularly weighted pair energy has finite expectation when `q + β < 2`. -/
-theorem planarBrownianMotion_unitSingularWeightedPairEnergy_lt_top (x z : ℂ) {q β : ℝ}
+/-- The singularly weighted pair energy has expectation bounded uniformly over the start and
+the centre when `q + β < 2`. -/
+theorem exists_planarBrownianMotion_unitSingularWeightedPairEnergy_le {q β : ℝ}
     (hq : 0 < q) (hβ : 0 < β) (hqβ : q + β < 2) :
-    (∫⁻ b, unitSingularWeightedPairEnergy z q β b ∂(planarBrownianMotion x)) < ∞ := by
+    ∃ C : ℝ≥0∞, C < ∞ ∧ ∀ x z : ℂ,
+      (∫⁻ b, unitSingularWeightedPairEnergy z q β b ∂(planarBrownianMotion x)) ≤ C := by
+  obtain ⟨C₀, hC₀, hC₀le⟩ := exists_planarBrownianMotion_unit_singular_riesz_energy_le hq
+    (by linarith) (show 0 < q + β by linarith) hqβ
+  refine ⟨2 ^ q * (2 * C₀), ENNReal.mul_lt_top
+    (ENNReal.rpow_lt_top_of_nonneg hq.le (by norm_num)) (ENNReal.mul_lt_top (by norm_num) hC₀),
+    fun x z => ?_⟩
   let ν : Measure ℝ≥0 := Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))
   let I : ContinuousPath ℂ → ℝ≥0∞ := fun b => ∫⁻ p : ℝ≥0 × ℝ≥0,
     (ENNReal.ofReal ‖b p.1 - z‖) ^ (-q) * (ENNReal.ofReal ‖b p.1 - b p.2‖) ^ (-(q + β))
       ∂(ν.prod ν)
-  have hI : (∫⁻ b, I b ∂(planarBrownianMotion x)) < ∞ :=
-    planarBrownianMotion_unit_singular_riesz_energy_lt_top x z hq (by linarith)
-      (by linarith) hqβ
+  have hI : (∫⁻ b, I b ∂(planarBrownianMotion x)) ≤ C₀ := hC₀le x z
   have hpoint (b : ContinuousPath ℂ) :
       unitSingularWeightedPairEnergy z q β b ≤ 2 ^ q * (I b + I b) := by
     have hm1 : Measurable (fun p : ℝ≥0 × ℝ≥0 =>
@@ -535,9 +555,14 @@ theorem planarBrownianMotion_unitSingularWeightedPairEnergy_lt_top (x z : ℂ) {
       rw [lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg hq.le (by norm_num))]
       simp_rw [← two_mul]
       rw [lintegral_const_mul' _ _ (by norm_num)]
-    _ < ∞ := ENNReal.mul_lt_top
-      (ENNReal.rpow_lt_top_of_nonneg hq.le (by norm_num))
-      (ENNReal.mul_lt_top (by norm_num) hI)
+    _ ≤ 2 ^ q * (2 * C₀) := by gcongr
+
+/-- The singularly weighted pair energy has finite expectation when `q + β < 2`. -/
+theorem planarBrownianMotion_unitSingularWeightedPairEnergy_lt_top (x z : ℂ) {q β : ℝ}
+    (hq : 0 < q) (hβ : 0 < β) (hqβ : q + β < 2) :
+    (∫⁻ b, unitSingularWeightedPairEnergy z q β b ∂(planarBrownianMotion x)) < ∞ := by
+  obtain ⟨C, hC, h⟩ := exists_planarBrownianMotion_unitSingularWeightedPairEnergy_le hq hβ hqβ
+  exact (h x z).trans_lt hC
 
 /-- The real part of the weighted pair energy. -/
 noncomputable def unitSingularWeightedPairEnergyReal (z : ℂ) (q β : ℝ)
