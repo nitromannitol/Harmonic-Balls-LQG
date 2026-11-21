@@ -22,9 +22,8 @@ theorem lt_exitTime_ball_of_forall_lt {c : ℂ} {R : ℝ} {b : ContinuousPath �
     (h : ∀ s ≤ t, ‖b s - c‖ < R) :
     (t : ℝ≥0∞) < ContinuousPath.exitTime (ball c R) b := by
   by_contra hle
-  push_neg at hle
   obtain ⟨⟨s, hs⟩, hsU⟩ :=
-    (ContinuousPath.exitTime_le_iff_mem_hitsSetBy (ball c R) isOpen_ball t b).mp hle
+    (ContinuousPath.exitTime_le_iff_mem_hitsSetBy (ball c R) isOpen_ball t b).mp (not_lt.mp hle)
   exact hsU (by rw [mem_ball, dist_eq_norm]; exact h s hs)
 
 /-- A continuous path is bounded on every finite time interval. -/
@@ -82,7 +81,7 @@ theorem ae_planarBrownianMotion_forall_ne {x c : ℂ} (hx : x ≠ c) :
   rw [ae_iff]
   refine measure_mono_null ?_ (measure_iUnion_null hnat)
   intro b hb
-  simp only [mem_setOf_eq, not_forall, not_not] at hb
+  simp only [mem_ofPred_eq, not_forall, not_not] at hb
   obtain ⟨t, ht⟩ := hb
   obtain ⟨R, hR⟩ := exists_nat_forall_norm_sub_lt b c t
   refine mem_iUnion.mpr ⟨R, t, ht, lt_exitTime_ball_of_forall_lt fun s hs => (hR s hs).trans_le ?_⟩
