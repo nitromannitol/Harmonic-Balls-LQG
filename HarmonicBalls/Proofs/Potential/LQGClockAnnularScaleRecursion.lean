@@ -2,12 +2,16 @@ import HarmonicBalls.Proofs.Potential.LQGClockSquareVisitComparison
 import HarmonicBalls.Proofs.Potential.LQGClockAnnularExitUniformIntegrability
 import LatticeProb.Gauss.GFFAffineInvariance
 
-/-! # Scale recursion for stopped annular occupation moments
+/-! # Smoothing-uniform moments of clock cells by scale recursion
 
-A moment profile indexed by the smoothing scale that satisfies a contracting
-recursion towards larger scales is bounded uniformly on all small scales. For a
-subcritical order, the square decomposition of the half disc, combined with a
-logarithmic return factor, has a contracting coefficient.
+A moment profile indexed by the smoothing scale that satisfies a contracting recursion
+towards larger scales is bounded uniformly on all small scales. For a subcritical order,
+the square decomposition of the half disc, the disc return iteration and the grid-square
+visit comparison close such a recursion for the half-disc occupation before the exit
+from the unit disc. Restarting at the exit from small balls turns this into moment
+bounds for short time cells, uniformly in the smoothing radius and the Brownian start,
+and the affine invariance of the whole-plane GFF transfers them to the region between
+the radii one half and `R`.
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Set
