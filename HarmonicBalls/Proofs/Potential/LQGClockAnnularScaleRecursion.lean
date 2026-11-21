@@ -1633,7 +1633,7 @@ theorem lintegral_halfDisc_occupation_cell_rpow_le
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
-    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) {q : ℝ} (hq0 : 0 ≤ q) {h : ℝ} (hh0 : 0 ≤ h) (B : ℝ≥0∞)
+    {ε : ℝ} (hε : 0 < ε) (γ : ℝ) (q : ℝ) {h : ℝ} (hh0 : 0 ≤ h) (B : ℝ≥0∞)
     (hB : ∀ y : ℂ, (∫⁻ ω, ∫⁻ b, pathOccupationBefore
       ({z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (normalizedCircleDensity hcirc γ ε ω))
         (ENNReal.ofReal h) b ^ q ∂planarBrownianMotion y ∂P) ≤ B) (x : ℂ) (t : ℝ≥0) :
@@ -1691,5 +1691,103 @@ theorem lintegral_halfDisc_occupation_cell_rpow_le
           filter_upwards [hHae] with ω hω
           rw [hconv ω hω]
         _ ≤ B := hB y
+
+/-- **Smoothing-uniform moments of inserted annular clock cells.** For `γ² < 4`, any
+insertion `α` and any inner radius `δ ∈ (0, 1/2]`, there are `p > 1`, `a > 1`, a time
+scale `h₀ > 0` and a finite constant such that, for every smoothing radius
+`ε ∈ (0, δ]`, every Brownian start, every time `t ≥ 0` and every `h ∈ (0, h₀]`, the
+product-law `p`-th moment of the inserted annular clock increment over `(t, t + h]` is
+at most the constant times `h ^ a`. -/
+theorem exists_inserted_annular_cell_rpow_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ2 : γ ^ 2 < 4) (α : ℝ)
+    {δ : ℝ} (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2) :
+    ∃ p a h₀ : ℝ, 1 < p ∧ 1 < a ∧ 0 < h₀ ∧ ∃ C : ℝ≥0∞, C < ⊤ ∧
+      ∀ ε, 0 < ε → ε ≤ δ → ∀ (x : ℂ) (t : ℝ≥0) (h : ℝ), 0 < h → h ≤ h₀ →
+        (∫⁻ q : Ω × ContinuousPath ℂ, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), ENNReal.ofReal
+          ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+            LatticeProb.Gauss.fieldCircleAverage α (hcirc q.1) ε z)) (q.2 s.toNNReal))) ^ p
+          ∂(P.prod (planarBrownianMotion x))) ≤ C * ENNReal.ofReal (h ^ a) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  obtain ⟨H, _, hHm, hHae⟩ := hh.exists_jointlyMeasurable_circleAverage
+  obtain ⟨q, hq1, hq2, hqγ, h₀, hh₀, C, hC, hcell⟩ := exists_halfDisc_occupation_rpow_le_time hh hγ2
+  have hq0 : 0 < q := by linarith
+  set a : ℝ := q - γ ^ 2 * q * (q - 1) / 4 with ha
+  have ha1 : 1 < a := by
+    have : a - 1 = (q - 1) * (4 - q * γ ^ 2) / 4 := by rw [ha]; ring
+    have : 0 < (q - 1) * (4 - q * γ ^ 2) / 4 := by
+      apply div_pos (mul_pos (by linarith) (by linarith)) (by norm_num)
+    linarith
+  set K := ENNReal.ofReal (Real.exp (|γ * α| * |Real.log δ|)) with hK
+  refine ⟨q, a, h₀, hq1, ha1, hh₀, K ^ q * C,
+    ENNReal.mul_lt_top (ENNReal.rpow_lt_top_of_nonneg hq0.le ENNReal.ofReal_ne_top) hC, ?_⟩
+  intro ε hε hεδ x t h hh0 hhh₀
+  have hε2 : ε ≤ 1 / 2 := hεδ.trans hδ2
+  set Td : Set ℂ := {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hTd
+  have hTdm : MeasurableSet Td := (measurableSet_le measurable_const measurable_norm).inter
+    (measurableSet_le measurable_norm measurable_const)
+  -- the inserted annular density is controlled by the normalized density on the half disc
+  have hdens : ∀ᵐ ω ∂P, ∀ w : ℂ, ENNReal.ofReal ({z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator
+      (fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ *
+        LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) ε z)) w) ≤
+      K * Td.indicator (normalizedCircleDensity H γ ε ω) w := by
+    filter_upwards [ae_annular_inserted_clock_density_le_uninserted hh hε hεδ γ α,
+      ae_recentered_inserted_circle_average hh 0, hh.ae_circleAverage_one_zero, hHae]
+      with ω hins h0 hone hω w
+    refine (hins w).trans (mul_le_mul' le_rfl ?_)
+    by_cases hw : δ ≤ ‖w‖ ∧ ‖w‖ ≤ 1 / 2
+    · rw [Set.indicator_of_mem (show w ∈ {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} from hw),
+        Set.indicator_of_mem (show w ∈ Td from ⟨norm_nonneg _, hw.2⟩)]
+      apply le_of_eq
+      rw [← h0 ε w hε, hone]
+      simp only [zero_mul, sub_zero, normalizedCircleDensity, hω]
+      rw [← gmcDensity_eq_exp_normalized hcirc hε]
+      rfl
+    · rw [Set.indicator_of_notMem (show w ∉ {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} from hw),
+        ENNReal.ofReal_zero]
+      exact zero_le
+  let f : Ω → ℂ → ℝ≥0∞ := fun ω => Td.indicator (normalizedCircleDensity H γ ε ω)
+  have hf : Measurable (Function.uncurry f) :=
+    measurable_uncurry_indicator (measurable_normalizedCircleDensity (hHm ε hε) γ) hTdm
+  have hev : Measurable (fun p : (Ω × ContinuousPath ℂ) × ℝ => p.1.2 p.2.toNNReal) :=
+    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk (measurable_snd.comp measurable_fst))
+  have hY : Measurable (fun pr : Ω × ContinuousPath ℂ =>
+      (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), f pr.1 (pr.2 s.toNNReal)) ^ q) := by
+    apply Measurable.pow_const
+    exact (hf.comp (measurable_fst.fst.prodMk hev)).lintegral_prod_right'
+  have hB : ∀ y : ℂ, (∫⁻ ω, ∫⁻ b, pathOccupationBefore
+      (Td.indicator (normalizedCircleDensity hcirc γ ε ω)) (ENNReal.ofReal h) b ^ q
+        ∂planarBrownianMotion y ∂P) ≤ C * ENNReal.ofReal (h ^ a) :=
+    fun y => hcell h hh0 hhh₀ ε hε hε2 y
+  have hcellx := lintegral_halfDisc_occupation_cell_rpow_le hh hε γ q hh0.le _ hB x t
+  have hconv (ω : Ω) (hω : ∀ r z, H ω r z = hcirc ω r z) :
+      Td.indicator (normalizedCircleDensity hcirc γ ε ω) = f ω := by
+    have h' : normalizedCircleDensity hcirc γ ε ω = normalizedCircleDensity H γ ε ω := by
+      funext w
+      simp only [normalizedCircleDensity, hω]
+    simp only [f, h']
+  calc
+    _ ≤ ∫⁻ pr : Ω × ContinuousPath ℂ, K ^ q * (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+        f pr.1 (pr.2 s.toNNReal)) ^ q ∂(P.prod (planarBrownianMotion x)) := by
+      apply lintegral_mono_ae
+      filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+        (ν := planarBrownianMotion x)).ae hdens] with p hp
+      rw [← ENNReal.mul_rpow_of_nonneg _ _ hq0.le, ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+      exact ENNReal.rpow_le_rpow (lintegral_mono fun s => hp _) hq0.le
+    _ = K ^ q * ∫⁻ ω, ∫⁻ b, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h), f ω (b s.toNNReal)) ^ q
+        ∂planarBrownianMotion x ∂P := by
+      rw [lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg hq0.le ENNReal.ofReal_ne_top),
+        lintegral_prod _ hY.aemeasurable]
+    _ = K ^ q * ∫⁻ ω, ∫⁻ b, (∫⁻ s in Ioc (t : ℝ) ((t : ℝ) + h),
+        Td.indicator (normalizedCircleDensity hcirc γ ε ω) (b s.toNNReal)) ^ q
+          ∂planarBrownianMotion x ∂P := by
+      congr 1
+      apply lintegral_congr_ae
+      filter_upwards [hHae] with ω hω
+      rw [hconv ω hω]
+    _ ≤ K ^ q * (C * ENNReal.ofReal (h ^ a)) := mul_le_mul' le_rfl hcellx
+    _ = K ^ q * C * ENNReal.ofReal (h ^ a) := by ring
 
 end HarmonicBalls
