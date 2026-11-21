@@ -103,8 +103,7 @@ theorem isLQGClock_of_ae_eventually_uniform {γ : ℝ} {hε : ℝ → ℂ → �
     · simpa using h
     filter_upwards [hlim] with b hb
     filter_upwards [hb T (η/2) (half_pos hη)] with k hk
-    simp only [mem_empty_iff_false, iff_false]
-    intro hkS
+    refine ⟨fun hkS => ?_, fun h => (Set.notMem_empty b h).elim⟩
     have hg : g k b ≤ ENNReal.ofReal (η/2) := by
       apply iSup_le
       intro r
@@ -112,7 +111,7 @@ theorem isLQGClock_of_ae_eventually_uniform {γ : ℝ} {hε : ℝ → ℂ → �
       exact (hk (τ r) (min_le_right _ _)).le
     have hc := hkS.trans hg
     rw [ENNReal.ofReal_le_ofReal_iff (by linarith)] at hc
-    linarith
+    exact absurd hc (not_le.mpr (by linarith))
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hS (fun _ => zero_le)
     (fun k => measure_mono_ae (by
       filter_upwards [hFc] with b hbc
