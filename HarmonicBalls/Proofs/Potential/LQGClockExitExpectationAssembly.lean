@@ -162,4 +162,99 @@ theorem lqgClockApprox_eq_regions {γ δ : ℝ} (hδ : δ ≤ 1/2) (h : ℝ → 
         Set.indicator_of_notMem h2, Set.indicator_of_mem h3]
       ring
 
+
+private theorem abs_sub_three_le (a₁ b₁ c₁ a₂ b₂ c₂ : ℝ) :
+    |(a₁ + b₁ + c₁) - (a₂ + b₂ + c₂)| ≤ |a₁ - a₂| + |b₁ - b₂| + |c₁ - c₂| := by
+  rw [show (a₁ + b₁ + c₁) - (a₂ + b₂ + c₂) = (a₁ - a₂) + (b₁ - b₂) + (c₁ - c₂) by ring]
+  exact (abs_add_le _ _).trans (add_le_add (abs_add_le _ _) le_rfl)
+
+/-- Expected exit times of the inserted clock from annular and exterior increment bounds:
+for `0 < γ * α` and `γ ^ 2 / 2 < 2 - γ * α`, summable bounds on the expected annular and
+exterior increments of the clocks stopped at the exit time from a smooth bounded domain and
+capped at time one, uniform over starts in the domain, make every LQG clock from a fixed start
+in the domain that is almost surely a time-change clock have, for almost every field, finite
+expected LBM exit time equal to the limit of the expected Green integrals of the approximating
+measures. -/
+theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_annular_exterior_increments
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
+    (hq0 : 0 < γ * α) (hγ : 0 < γ) (hsub : γ ^ 2 / 2 < 2 - γ * α) {δ : ℝ} (hδ0 : 0 < δ)
+    (hδ : δ ≤ 1/2) {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
+    (cA cE : ℕ → ℝ≥0∞) (hcA : (∑' k, cA k) ≠ ⊤) (hcE : (∑' k, cE k) ≠ ⊤)
+    (hA : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
+      |stoppedAnnularClock (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) δ (fun b => (min 1 (ContinuousPath.exitTime D b).toReal).toNNReal) p.2 -
+        stoppedAnnularClock (fun z => (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) δ (fun b => (min 1 (ContinuousPath.exitTime D b).toReal).toNNReal) p.2|
+      ∂(P.prod (planarBrownianMotion y))) ≤ cA k)
+    (hE : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
+      |(∫ z, {z : ℂ | 1/2 < ‖z‖}.indicator (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) z
+          ∂(Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic ((min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal))))) -
+        ∫ z, {z : ℂ | 1/2 < ‖z‖}.indicator (fun z => (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) z
+          ∂(Measure.map (fun t => p.2 t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic ((min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal))))|
+      ∂(P.prod (planarBrownianMotion y))) ≤ cE k)
+    (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hclock : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω))
+    (hF : ∀ᵐ ω ∂P, ∀ᵐ b ∂(planarBrownianMotion x), IsTimeChangeClock (F ω b)) :
+    ∀ᵐ ω ∂P, expectedLBMExitTime (F ω) D x ≠ ⊤ ∧
+      Tendsto (fun k : ℕ => ∫⁻ y, ENNReal.ofReal (2 * greenFunction D x y) *
+        ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ *
+          LatticeProb.Gauss.fieldCircleAverage α (hcirc ω) (dyadicScale k) y)))
+        atTop (𝓝 (expectedLBMExitTime (F ω) D x)) := by
+  have hDo : IsOpen D := GreenGeneral.isOpen_of_isSmoothBoundedOpen hD
+  obtain ⟨cI, hcI, hI⟩ :=
+    exists_summable_uniform_inner_suboccupation_increment_bound hh hq0 hγ hsub hδ0 hδ
+  let τD : ContinuousPath ℂ → ℝ≥0 := (fun b => (min 1 (ContinuousPath.exitTime D b).toReal).toNNReal)
+  have hτD : Measurable τD :=
+    (measurable_const.min (ContinuousPath.measurable_exitTime D hDo).ennreal_toReal).real_toNNReal
+  have hτD1 (b : ContinuousPath ℂ) : τD b ≤ 1 := by
+    have h := Real.toNNReal_le_toNNReal (min_le_left (1 : ℝ) (ContinuousPath.exitTime D b).toReal)
+    simpa [τD] using h
+  let μD : ContinuousPath ℂ → Measure ℂ := fun b =>
+    Measure.map (fun t => b t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τD b)))
+  have hμD (b : ContinuousPath ℂ) : μD b ≤ Measure.map (fun t => b t) (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))) :=
+    Measure.map_mono Measure.restrict_le_self b.continuous.measurable
+  have hcont := ae_continuous_fieldCircleAverage hh α
+  refine ae_tendsto_clockApprox_green_expectedLBMExitTime_fieldCircleAverage_of_unit_increments
+    hh hD hx (fun k => cI k + cA k + cE k) ?_ ?_ F hclock hF
+  · rw [ENNReal.tsum_add, ENNReal.tsum_add]
+    exact ENNReal.add_ne_top.mpr ⟨ENNReal.add_ne_top.mpr ⟨hcI, hcA⟩, hcE⟩
+  · intro k y hy
+    have hS1 : MeasurableSet {z : ℂ | ‖z‖ < δ} := measurableSet_lt measurable_norm measurable_const
+    have hS2 : MeasurableSet {z : ℂ | δ ≤ ‖z‖ ∧ ‖z‖ ≤ 1/2} :=
+      (measurableSet_le measurable_const measurable_norm).inter
+        (measurableSet_le measurable_norm measurable_const)
+    let ΔI : Ω × ContinuousPath ℂ → ℝ := fun p =>
+      (∫ z, {z : ℂ | ‖z‖ < δ}.indicator (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) z ∂(μD p.2)) -
+        ∫ z, {z : ℂ | ‖z‖ < δ}.indicator (fun z => (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) z ∂(μD p.2)
+    let ΔA : Ω × ContinuousPath ℂ → ℝ := fun p =>
+      stoppedAnnularClock (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) δ τD p.2 -
+        stoppedAnnularClock (fun z => (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) δ τD p.2
+    let ΔE : Ω × ContinuousPath ℂ → ℝ := fun p =>
+      (∫ z, {z : ℂ | 1/2 < ‖z‖}.indicator (fun z => (dyadicScale (k+2)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+2)) z)) z ∂(μD p.2)) -
+        ∫ z, {z : ℂ | 1/2 < ‖z‖}.indicator (fun z => (dyadicScale (k+1)) ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (k+1)) z)) z ∂(μD p.2)
+    have hmI : AEMeasurable (fun p => ENNReal.ofReal |ΔI p|) (P.prod (planarBrownianMotion y)) :=
+      ENNReal.measurable_ofReal.comp_aemeasurable (continuous_abs.measurable.comp_aemeasurable
+        ((aemeasurable_region_stopped_occupation hh γ α (k+2) hS1 τD hτD _).sub
+          (aemeasurable_region_stopped_occupation hh γ α (k+1) hS1 τD hτD _)))
+    have hmA : AEMeasurable (fun p => ENNReal.ofReal |ΔA p|) (P.prod (planarBrownianMotion y)) :=
+      ENNReal.measurable_ofReal.comp_aemeasurable (continuous_abs.measurable.comp_aemeasurable
+        ((aemeasurable_region_stopped_occupation hh γ α (k+2) hS2 τD hτD _).sub
+          (aemeasurable_region_stopped_occupation hh γ α (k+1) hS2 τD hτD _)))
+    have hmIA : AEMeasurable (fun p => ENNReal.ofReal |ΔI p| + ENNReal.ofReal |ΔA p|)
+        (P.prod (planarBrownianMotion y)) := hmI.add hmA
+    have hpt : ∀ᵐ p ∂(P.prod (planarBrownianMotion y)), ENNReal.ofReal
+        |lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale (k+2)) p.2
+            (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal -
+          lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale (k+1)) p.2
+            (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal| ≤
+        (ENNReal.ofReal |ΔI p| + ENNReal.ofReal |ΔA p|) + ENNReal.ofReal |ΔE p| := by
+      filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
+        (ν := planarBrownianMotion y)).ae hcont] with p hp
+      rw [lqgClockApprox_eq_regions hδ _ (k+2) (hp _ (dyadicScale_pos _)) p.2 (hτD1 p.2),
+        lqgClockApprox_eq_regions hδ _ (k+1) (hp _ (dyadicScale_pos _)) p.2 (hτD1 p.2),
+        ← ENNReal.ofReal_add (abs_nonneg _) (abs_nonneg _),
+        ← ENNReal.ofReal_add (by positivity) (abs_nonneg _)]
+      exact ENNReal.ofReal_le_ofReal (abs_sub_three_le _ _ _ _ _ _)
+    refine (lintegral_mono_ae hpt).trans ?_
+    rw [lintegral_add_left' hmIA, lintegral_add_left' hmI]
+    exact add_le_add (add_le_add (hI k y μD hμD) (hA k y hy)) (hE k y hy)
+
 end HarmonicBalls
