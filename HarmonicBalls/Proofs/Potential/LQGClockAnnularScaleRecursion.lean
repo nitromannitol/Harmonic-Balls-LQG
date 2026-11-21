@@ -423,4 +423,212 @@ theorem lintegral_planarBrownianMotion_exit_occupation_rescale (x z : ℂ) {R : 
     _ = _ := by
       rw [← lintegral_map hG hresc, planarBrownianMotion_map_rescale_affine x z hR]
 
+/-- The field-Brownian moment of the half-disc occupation of the normalized
+circle-average density before the exit from the unit disc. -/
+noncomputable def stoppedHalfDiscMoment {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (γ δ q : ℝ) (y : ℂ) : ℝ≥0∞ :=
+  ∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime (Metric.ball (0 : ℂ) 1) b).toReal,
+    {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator
+      (fun z => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ δ z ω)) (b t.toNNReal)) ^ q
+    ∂planarBrownianMotion y ∂P
+
+/-- A triple grid square is bounded. -/
+theorem tripleGridSquare_subset_ball (r : ℝ) (i : ℤ × ℤ) :
+    tripleGridSquare r i ⊆ Metric.ball (LatticeProb.dyadicSquareCentre r i) (3 * r) := by
+  intro w ⟨h1, h2⟩
+  rw [Metric.mem_ball, dist_eq_norm]
+  have := Complex.norm_le_abs_re_add_abs_im (w - LatticeProb.dyadicSquareCentre r i)
+  linarith
+
+theorem isBounded_tripleGridSquare (r : ℝ) (i : ℤ × ℤ) :
+    Bornology.IsBounded (tripleGridSquare r i) :=
+  Metric.isBounded_ball.subset (tripleGridSquare_subset_ball r i)
+
+/-- The triple grid square is carried into the unit disc by the rescaling of its
+square onto the reference square. -/
+theorem affineRescale_image_tripleGridSquare_subset_ball {r : ℝ} (hr : 0 < r) (i : ℤ × ℤ) :
+    affineRescaleHomeomorph (LatticeProb.dyadicSquareCentre r i)
+      (show (4 * r : ℝ) ≠ 0 by positivity) '' tripleGridSquare r i ⊆ Metric.ball (0 : ℂ) 1 := by
+  rintro _ ⟨w, ⟨h1, h2⟩, rfl⟩
+  rw [affineRescaleHomeomorph_apply, mem_ball_zero_iff]
+  have h4 : (0 : ℝ) < 4 * r := by positivity
+  have hre : |((w - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ)).re| < 3 / 8 := by
+    rw [Complex.div_ofReal_re, abs_div, abs_of_pos h4, div_lt_iff₀ h4]
+    linarith
+  have him : |((w - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ)).im| < 3 / 8 := by
+    rw [Complex.div_ofReal_im, abs_div, abs_of_pos h4, div_lt_iff₀ h4]
+    linarith
+  have := Complex.norm_le_abs_re_add_abs_im
+    ((w - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ))
+  linarith
+
+/-- The reference square lies in the closed half disc. -/
+theorem lqgSquare_subset_halfDisc :
+    LatticeProb.LQG.lqgSquare ⊆ {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} := by
+  intro w hw
+  have h := LatticeProb.LQG.lqgSquare_subset_closedBall hw
+  rw [mem_closedBall_zero_iff] at h
+  exact ⟨norm_nonneg _, by linarith⟩
+
+/-- One visit to a grid square, followed until the exit from its triple, has a
+field-Brownian moment bounded by the scale factor times the stopped half-disc
+moment at the reference smoothing radius and the rescaled start. -/
+theorem lintegral_field_brownian_square_visit_le
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {r δ : ℝ} (hr : 0 < r) (hr10 : r ≤ 1 / 10) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
+    {i : ℤ × ℤ} (hi : i ∈ LatticeProb.squareIndex r) (γ : ℝ) (y : ℂ) {q : ℝ} (hq : 1 ≤ q)
+    (T : ContinuousPath ℂ → ℝ≥0∞)
+    (hTU : ∀ b, T b ≤ ContinuousPath.exitTime (tripleGridSquare r i) b) :
+    (∫⁻ ω, ∫⁻ b, (∫⁻ s, {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s < T b}.indicator (fun s =>
+      (LatticeProb.dyadicSquare r i ∩ {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}).indicator
+        (fun z => ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) z ω))
+          (b s.toNNReal)) s) ^ q ∂planarBrownianMotion y ∂P) ≤
+      ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) *
+        ((ENNReal.ofReal ((4 * r) ^ 2)) ^ q *
+        stoppedHalfDiscMoment P hcirc γ δ q
+          ((y - LatticeProb.dyadicSquareCentre r i) / ((4 * r : ℝ) : ℂ))) := by
+  let : IsProbabilityMeasure P := hh.isProbabilityMeasure
+  have hq0 : 0 ≤ q := by linarith
+  have h4r : (0 : ℝ) < 4 * r := by positivity
+  set z := LatticeProb.dyadicSquareCentre r i with hz
+  set U := tripleGridSquare r i with hUdef
+  set A := LatticeProb.dyadicSquare r i ∩ {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} with hAdef
+  set D : Set ℂ := Metric.ball (0 : ℂ) 1 with hDdef
+  set C := ENNReal.ofReal (Real.exp (q * (q - 1) * (-γ ^ 2 * Real.log (4 * r)) / 2)) with hCdef
+  set e := affineRescaleHomeomorph z (show (4 * r : ℝ) ≠ 0 by positivity) with hedef
+  have hUo : IsOpen U := isOpen_tripleGridSquare r i
+  have hDo : IsOpen D := Metric.isOpen_ball
+  have hA : MeasurableSet A := (LatticeProb.measurableSet_dyadicSquare r i).inter
+    ((measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const))
+  have hB : MeasurableSet {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2} :=
+    (measurableSet_le measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
+  have hTm : Measurable (fun b : ContinuousPath ℂ => (ContinuousPath.exitTime U b).toReal) :=
+    (ContinuousPath.measurable_exitTime U hUo).ennreal_toReal
+  have hκ : Measurable (Function.uncurry (fun (b : ContinuousPath ℂ) (t : ℝ) => b t.toNNReal)) :=
+    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)
+  have hκ' : Measurable (Function.uncurry (fun (b : ContinuousPath ℂ) (t : ℝ) =>
+      (b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) :=
+    (hκ.sub measurable_const).div_const _
+  let g : ℝ → Ω → ℂ → ℝ≥0∞ := fun ε ω w =>
+    ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ ε w ω)
+  -- first reduction: horizon to the triple exit and interval form
+  have hstep1 : (∫⁻ ω, ∫⁻ b, (∫⁻ s, {s : ℝ | 0 ≤ s ∧ ENNReal.ofReal s < T b}.indicator
+      (fun s => A.indicator (g (4 * r * δ) ω) (b s.toNNReal)) s) ^ q
+        ∂planarBrownianMotion y ∂P) ≤
+      ∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+        A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q ∂planarBrownianMotion y ∂P := by
+    apply lintegral_mono
+    intro ω
+    apply lintegral_mono_ae
+    filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top y (isBounded_tripleGridSquare r i)]
+      with b hb
+    rw [← lintegral_stopped_indicator_eq b _ hb.ne]
+    apply ENNReal.rpow_le_rpow _ hq0
+    apply lintegral_mono
+    intro s
+    apply Set.indicator_le_indicator_of_subset _ (fun _ => zero_le)
+    intro s ⟨h0, h1⟩
+    exact ⟨h0, h1.trans_le (hTU b)⟩
+  obtain ⟨F₁, hF₁, hF₁e⟩ := exists_measurable_field_path_occupation_rpow hh
+    (show 0 < 4 * r * δ by positivity) γ A hA _ hκ _ hTm q
+  obtain ⟨F₂, hF₂, hF₂e⟩ := exists_measurable_field_path_occupation_rpow hh hδ γ
+    LatticeProb.LQG.lqgSquare LatticeProb.LQG.measurableSet_lqgSquare _ hκ' _ hTm q
+  -- pathwise comparison with the reference smoothing radius
+  have hpath (b : ContinuousPath ℂ) :
+      (∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+        A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q ∂P) ≤
+      C * ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
+          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂P := by
+    have hb : Measurable (fun t : ℝ => b t.toNNReal) := by fun_prop
+    have hb' : Measurable (fun t : ℝ => (b t.toNNReal - z) / ((4 * r : ℝ) : ℂ)) := by fun_prop
+    have hcomp := lintegral_rpow_annularSquare_gmcDensity_le_reference hh hr hr10 hδ hδ2 hi γ b
+      0 (ContinuousPath.exitTime U b).toReal 0 hq
+    simp only at hcomp
+    calc
+      _ = ∫⁻ ω, (∫⁻ t in annularSquareTimeSet b 0 r i ∩ Ioc 0
+          (ContinuousPath.exitTime U b).toReal,
+          ENNReal.ofReal (LatticeProb.Gauss.gmcDensity hcirc γ (4 * r * δ) (b t.toNNReal) ω)) ^ q
+            ∂P := by
+        apply lintegral_congr
+        intro ω
+        rw [lintegral_Ioc_indicator_comp_eq _ hb A hA]
+        rfl
+      _ ≤ _ := hcomp
+      _ ≤ _ := by
+        refine mul_le_mul_right ?_ C
+        apply lintegral_mono
+        intro ω
+        apply ENNReal.rpow_le_rpow _ hq0
+        rw [lintegral_Ioc_indicator_comp_eq _ hb' _ LatticeProb.LQG.measurableSet_lqgSquare]
+        calc
+          _ ≤ ∫⁻ t in {t | (b t.toNNReal - z) / ((4 * r : ℝ) : ℂ) ∈ LatticeProb.LQG.lqgSquare} ∩
+              Ioc 0 (ContinuousPath.exitTime U b).toReal,
+              ENNReal.ofReal (Real.exp (γ * hcirc ω δ ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ)) -
+                γ ^ 2 * (-Real.log δ) / 2)) := by
+            apply lintegral_mono_set
+            intro t ⟨ht, ht'⟩
+            exact ⟨dyadicSquare_rescaled_mem_lqgSquare hr ht.1, ht'⟩
+          _ = _ := by
+            apply lintegral_congr
+            intro t
+            simp only [g]
+            rw [gmcDensity_eq_exp_normalized hcirc hδ]
+  have hsub : e '' U ⊆ D := affineRescale_image_tripleGridSquare_subset_ball hr i
+  set y' := (y - z) / ((4 * r : ℝ) : ℂ) with hy'
+  calc
+    _ ≤ _ := hstep1
+    _ = ∫⁻ b, ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+        A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q ∂P ∂planarBrownianMotion y :=
+      (lintegral_lintegral_swap_of_ae_eq (fun ω b => (∫⁻ t in Ioc 0
+        (ContinuousPath.exitTime U b).toReal, A.indicator (g (4 * r * δ) ω) (b t.toNNReal)) ^ q)
+        F₁ hF₁ hF₁e).symm
+    _ ≤ ∫⁻ b, C * ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
+          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂P ∂planarBrownianMotion y :=
+      lintegral_mono hpath
+    _ = C * ∫⁻ b, ∫⁻ ω, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
+          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂P ∂planarBrownianMotion y :=
+      lintegral_const_mul' C _ ENNReal.ofReal_ne_top
+    _ = C * ∫⁻ ω, ∫⁻ b, (∫⁻ t in Ioc 0 (ContinuousPath.exitTime U b).toReal,
+        LatticeProb.LQG.lqgSquare.indicator (g δ ω)
+          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q ∂planarBrownianMotion y ∂P := by
+      rw [lintegral_lintegral_swap_of_ae_eq (fun ω b => (∫⁻ t in Ioc 0
+        (ContinuousPath.exitTime U b).toReal, LatticeProb.LQG.lqgSquare.indicator (g δ ω)
+          ((b t.toNNReal - z) / ((4 * r : ℝ) : ℂ))) ^ q) F₂ hF₂ hF₂e]
+    _ ≤ C * ∫⁻ ω, (ENNReal.ofReal ((4 * r) ^ 2)) ^ q * ∫⁻ b,
+        (∫⁻ s in Ioc 0 (ContinuousPath.exitTime D b).toReal,
+          {z : ℂ | (0 : ℝ) ≤ ‖z‖ ∧ ‖z‖ ≤ 1 / 2}.indicator (g δ ω) (b s.toNNReal)) ^ q
+          ∂planarBrownianMotion y' ∂P := by
+      refine mul_le_mul_right ?_ C
+      apply lintegral_mono_ae
+      filter_upwards [hh.ae_continuous_circle_fixed hδ] with ω hω
+      have hgm : Measurable (LatticeProb.LQG.lqgSquare.indicator (g δ ω)) := by
+        apply Measurable.indicator _ LatticeProb.LQG.measurableSet_lqgSquare
+        show Measurable (fun w => ENNReal.ofReal (δ ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω δ w)))
+        exact (continuous_const.mul (Real.continuous_exp.comp
+          (continuous_const.mul hω))).measurable.ennreal_ofReal
+      rw [lintegral_planarBrownianMotion_exit_occupation_rescale y z h4r U hUo _ hgm hq0]
+      refine mul_le_mul_right ?_ _
+      apply lintegral_mono_ae
+      filter_upwards [ae_planarBrownian_exitTime_bounded_lt_top y'
+        (Metric.isBounded_ball : Bornology.IsBounded D)] with b hb
+      apply ENNReal.rpow_le_rpow _ hq0
+      calc
+        _ ≤ ∫⁻ s in Ioc 0 (ContinuousPath.exitTime D b).toReal,
+            LatticeProb.LQG.lqgSquare.indicator (g δ ω) (b s.toNNReal) :=
+          lintegral_mono_set (Ioc_subset_Ioc le_rfl
+            (ENNReal.toReal_mono hb.ne (ContinuousPath.exitTime_mono hsub b)))
+        _ ≤ _ := lintegral_mono (fun s =>
+          Set.indicator_le_indicator_of_subset lqgSquare_subset_halfDisc (fun _ => zero_le) _)
+    _ = _ := by
+      rw [lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg hq0 ENNReal.ofReal_ne_top)]
+      rfl
+
 end HarmonicBalls
