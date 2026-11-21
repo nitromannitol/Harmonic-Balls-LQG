@@ -770,4 +770,182 @@ theorem tendsto_planarBrownianMotion_le_norm_one :
   rw [he, measure_empty] at h
   exact h
 
+/-- **Short-time exit from a ball.** If, at times up to `h`, Brownian motion stays
+within `ρ / 2` of its start with probability at least one half, then the probability
+of leaving the ball of radius `ρ` by time `h` is at most four times the probability of
+a displacement `ρ / 2` at time `2 h`. -/
+theorem planarBrownianMotion_exitTime_ball_le_le (y : ℂ) {ρ h : ℝ} (hρ : 0 < ρ) (hh : 0 < h)
+    (hG : planarBrownianMotion 0 {b | ρ / 2 / Real.sqrt h ≤ ‖b 1‖} ≤ 2⁻¹) :
+    planarBrownianMotion y
+        {b | ContinuousPath.exitTime (Metric.ball y ρ) b ≤ ENNReal.ofReal h} ≤
+      4 * planarBrownianMotion 0 {b | ρ / 2 / Real.sqrt (2 * h) ≤ ‖b 1‖} := by
+  set τ := ContinuousPath.exitTime (Metric.ball y ρ) with hτdef
+  have hτ : IsStoppingTime (ContinuousPath.canonicalFiltration (alpha := ℂ)) τ :=
+    ContinuousPath.isStoppingTime_exitTime _ Metric.isOpen_ball
+  set A : Set (ContinuousPath ℂ) := {b | τ b ≤ ENNReal.ofReal h} with hAdef
+  have hA : MeasurableSet[hτ.measurableSpace] A := hτ.measurableSet_le' h.toNNReal
+  have hAm : MeasurableSet A := hτ.measurableSpace_le _ hA
+  set G' := planarBrownianMotion 0 {b | ρ / 2 / Real.sqrt (2 * h) ≤ ‖b 1‖} with hG'
+  have hev : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 p.2.toNNReal) :=
+    (ContinuousEval.continuous_eval.comp continuous_swap).measurable.comp
+      ((measurable_real_toNNReal.comp measurable_snd).prodMk measurable_fst)
+  have hev0 : Measurable (fun p : ContinuousPath ℂ × ℝ => p.1 0) :=
+    (continuous_eval_const (0 : ℝ≥0)).measurable.comp measurable_fst
+  set S : Set (ContinuousPath ℂ × ℝ) := {p | ‖p.1 p.2.toNNReal - p.1 0‖ < ρ / 2} with hSdef
+  have hS : MeasurableSet S := measurableSet_lt (hev.sub hev0).norm measurable_const
+  set Su : Set (ContinuousPath ℂ × ℝ) := {p | ρ / 2 ≤ ‖p.1 p.2.toNNReal - y‖} with hSudef
+  have hSu : MeasurableSet Su := measurableSet_le measurable_const (hev.sub measurable_const).norm
+  let F : ContinuousPath ℂ → ℝ≥0∞ := fun b' =>
+    ∫⁻ s, S.indicator 1 (b', s) ∂(volume.restrict (Ioc 0 h))
+  have hFm : Measurable F := (measurable_one.indicator hS).lintegral_prod_right'
+  -- the probability of a displacement at a positive time
+  have hdisp (w : ℂ) {s : ℝ} (hs : 0 < s) : planarBrownianMotion w {b | ρ / 2 ≤ ‖b s.toNNReal - w‖} =
+      planarBrownianMotion 0 {b | ρ / 2 / Real.sqrt s ≤ ‖b 1‖} := by
+    rw [planarBrownianMotion_le_norm_sub_eq w (Real.toNNReal_pos.mpr hs).ne',
+      Real.coe_toNNReal _ hs.le]
+  have hanti {u v : ℝ} (huv : u ≤ v) : planarBrownianMotion 0 {b | v ≤ ‖b 1‖} ≤
+      planarBrownianMotion 0 {b | u ≤ ‖b 1‖} :=
+    measure_mono (fun b hb => le_trans huv hb)
+  -- lower bound for the restarted functional
+  have hlow (w : ℂ) : 2⁻¹ * ENNReal.ofReal h ≤ ∫⁻ b', F b' ∂planarBrownianMotion w := by
+    have hswap : (∫⁻ b', F b' ∂planarBrownianMotion w) =
+        ∫⁻ s, planarBrownianMotion w {b' | (b', s) ∈ S} ∂(volume.restrict (Ioc 0 h)) := by
+      rw [lintegral_lintegral_swap (f := fun b' s => S.indicator (1 : ContinuousPath ℂ × ℝ → ℝ≥0∞)
+        (b', s)) (measurable_one.indicator hS).aemeasurable]
+      apply lintegral_congr
+      intro s
+      exact lintegral_indicator_one (measurable_prodMk_right hS)
+    rw [hswap]
+    calc
+      2⁻¹ * ENNReal.ofReal h = ∫⁻ _s, (2⁻¹ : ℝ≥0∞) ∂(volume.restrict (Ioc 0 h)) := by
+        rw [lintegral_const, Measure.restrict_apply_univ, Real.volume_Ioc, sub_zero]
+      _ ≤ _ := by
+        apply lintegral_mono_ae
+        filter_upwards [ae_restrict_mem measurableSet_Ioc] with s hs
+        have hset : {b' : ContinuousPath ℂ | (b', s) ∈ S} =ᵐ[planarBrownianMotion w]
+            {b | ρ / 2 ≤ ‖b s.toNNReal - w‖}ᶜ := by
+          filter_upwards [ae_planarBrownianMotion_eval_zero w] with b hb
+          apply propext
+          simp only [hSdef, mem_ofPred_eq, mem_compl_iff, not_le, hb]
+        have hmeas : MeasurableSet {b : ContinuousPath ℂ | ρ / 2 ≤ ‖b s.toNNReal - w‖} :=
+          measurableSet_le measurable_const
+            (((continuous_eval_const s.toNNReal).sub continuous_const).norm.measurable)
+        rw [measure_congr hset, prob_compl_eq_one_sub hmeas, hdisp w hs.1]
+        have hle : planarBrownianMotion 0 {b | ρ / 2 / Real.sqrt s ≤ ‖b 1‖} ≤ 2⁻¹ := by
+          refine (hanti ?_).trans hG
+          apply div_le_div_of_nonneg_left (by positivity) (Real.sqrt_pos.mpr hs.1)
+          exact Real.sqrt_le_sqrt hs.2
+        calc (2⁻¹ : ℝ≥0∞) = 1 - 2⁻¹ := by rw [ENNReal.one_sub_inv_two]
+          _ ≤ _ := tsub_le_tsub_left hle 1
+  -- pathwise upper bound after the exit
+  let Gup : ContinuousPath ℂ → ℝ≥0∞ := fun b =>
+    ∫⁻ u, Su.indicator 1 (b, u) ∂(volume.restrict (Ioc 0 (2 * h)))
+  have hGupm : Measurable Gup := (measurable_one.indicator hSu).lintegral_prod_right'
+  have hpath (b : ContinuousPath ℂ) (hb : b ∈ A) :
+      F (ContinuousPath.shift (τ b).toNNReal b) ≤ Gup b := by
+    have hfin : τ b ≠ ⊤ := ne_top_of_le_ne_top ENNReal.ofReal_ne_top hb
+    set T := (τ b).toNNReal with hT
+    have hTh : (T : ℝ) ≤ h := ENNReal.toReal_le_of_le_ofReal hh.le hb
+    have hnot : b T ∉ Metric.ball y ρ := coordinate_exitTime_notMem Metric.isOpen_ball b hfin
+    have hρT : ρ ≤ ‖b T - y‖ := by
+      rw [Metric.mem_ball, dist_eq_norm, not_lt] at hnot
+      exact hnot
+    let φ : ℝ → ℝ≥0∞ := fun u => (Ioc 0 (2 * h)).indicator (fun u => Su.indicator 1 (b, u)) u
+    have hpt (s : ℝ) : (Ioc 0 h).indicator (fun s => S.indicator 1
+        (ContinuousPath.shift T b, s)) s ≤ φ ((T : ℝ) + s) := by
+      by_cases hs : s ∈ Ioc 0 h
+      · rw [Set.indicator_of_mem hs]
+        by_cases hS' : (ContinuousPath.shift T b, s) ∈ S
+        · have hu : (T : ℝ) + s ∈ Ioc 0 (2 * h) :=
+            ⟨by linarith [hs.1, T.coe_nonneg], by linarith [hs.2]⟩
+          have htn : ((T : ℝ) + s).toNNReal = T + s.toNNReal := by
+            rw [Real.toNNReal_add T.coe_nonneg hs.1.le, Real.toNNReal_coe]
+          have hmem : (b, (T : ℝ) + s) ∈ Su := by
+            change ρ / 2 ≤ ‖b ((T : ℝ) + s).toNNReal - y‖
+            have h1 : ‖b (T + s.toNNReal) - b (T + 0)‖ < ρ / 2 := hS'
+            rw [add_zero] at h1
+            rw [htn]
+            have h2 := norm_sub_le_norm_sub_add_norm_sub (b T) (b (T + s.toNNReal)) y
+            have h3 : ‖b T - b (T + s.toNNReal)‖ < ρ / 2 := by rwa [norm_sub_rev]
+            linarith
+          rw [Set.indicator_of_mem hS', show φ ((T : ℝ) + s) = Su.indicator 1 (b, (T : ℝ) + s)
+            from Set.indicator_of_mem hu _, Set.indicator_of_mem hmem]
+          exact le_rfl
+        · rw [Set.indicator_of_notMem hS']
+          exact zero_le
+      · rw [Set.indicator_of_notMem hs]
+        exact zero_le
+    calc
+      F (ContinuousPath.shift T b) = ∫⁻ s, (Ioc 0 h).indicator (fun s => S.indicator 1
+          (ContinuousPath.shift T b, s)) s := by
+        rw [lintegral_indicator measurableSet_Ioc]
+      _ ≤ ∫⁻ s, φ ((T : ℝ) + s) := lintegral_mono hpt
+      _ = ∫⁻ u, φ u := lintegral_add_left_eq_self φ (T : ℝ)
+      _ = Gup b := by rw [lintegral_indicator measurableSet_Ioc]
+  -- the strong Markov property at the exit time
+  have hmarkov := lintegral_lintegral_indicator_shift_stoppingTime (P := Measure.dirac ())
+    (fun (_ : Unit) b => F b) (hFm.comp measurable_snd) y τ hτ A hA
+  simp only [lintegral_dirac] at hmarkov
+  have hAtop : A ∩ {b | τ b < ⊤} = A := by
+    ext b
+    simp only [mem_inter_iff, mem_ofPred_eq, and_iff_left_iff_imp]
+    intro hb
+    exact lt_of_le_of_lt hb ENNReal.ofReal_lt_top
+  rw [hAtop] at hmarkov
+  have hkey : 2⁻¹ * ENNReal.ofReal h * planarBrownianMotion y A ≤
+      ENNReal.ofReal (2 * h) * G' := by
+    calc
+      2⁻¹ * ENNReal.ofReal h * planarBrownianMotion y A =
+          ∫⁻ b, A.indicator (fun _ => 2⁻¹ * ENNReal.ofReal h) b ∂planarBrownianMotion y := by
+        rw [lintegral_indicator_const hAm]
+      _ ≤ ∫⁻ b, A.indicator (fun b => ∫⁻ b', F b'
+          ∂planarBrownianMotion (b (τ b).toNNReal)) b ∂planarBrownianMotion y := by
+        apply lintegral_mono
+        intro b
+        apply Set.indicator_le_indicator
+        exact hlow _
+      _ = ∫⁻ b, A.indicator (fun b => F (ContinuousPath.shift (τ b).toNNReal b)) b
+          ∂planarBrownianMotion y := hmarkov.symm
+      _ ≤ ∫⁻ b, Gup b ∂planarBrownianMotion y := by
+        apply lintegral_mono
+        intro b
+        by_cases hb : b ∈ A
+        · rw [Set.indicator_of_mem hb]
+          exact hpath b hb
+        · rw [Set.indicator_of_notMem hb]
+          exact zero_le
+      _ = ∫⁻ u, planarBrownianMotion y {b | (b, u) ∈ Su} ∂(volume.restrict (Ioc 0 (2 * h))) := by
+        rw [lintegral_lintegral_swap (f := fun b u => Su.indicator (1 : ContinuousPath ℂ × ℝ → ℝ≥0∞)
+          (b, u)) (measurable_one.indicator hSu).aemeasurable]
+        apply lintegral_congr
+        intro u
+        exact lintegral_indicator_one (measurable_prodMk_right hSu)
+      _ ≤ ∫⁻ _u, G' ∂(volume.restrict (Ioc 0 (2 * h))) := by
+        apply lintegral_mono_ae
+        filter_upwards [ae_restrict_mem measurableSet_Ioc] with u hu
+        change planarBrownianMotion y {b | ρ / 2 ≤ ‖b u.toNNReal - y‖} ≤ G'
+        rw [hdisp y hu.1]
+        apply hanti
+        apply div_le_div_of_nonneg_left (by positivity) (Real.sqrt_pos.mpr hu.1)
+        exact Real.sqrt_le_sqrt hu.2
+      _ = ENNReal.ofReal (2 * h) * G' := by
+        rw [lintegral_const, Measure.restrict_apply_univ, Real.volume_Ioc, sub_zero, mul_comm]
+  have ha0 : ENNReal.ofReal h ≠ 0 := (ENNReal.ofReal_pos.mpr hh).ne'
+  have hatop : ENNReal.ofReal h ≠ ⊤ := ENNReal.ofReal_ne_top
+  have h2h : ENNReal.ofReal (2 * h) = 2 * ENNReal.ofReal h := by
+    rw [ENNReal.ofReal_mul (by norm_num)]
+    norm_num
+  rw [h2h] at hkey
+  have hkey' : ENNReal.ofReal h * (2⁻¹ * planarBrownianMotion y A) ≤
+      ENNReal.ofReal h * (2 * G') := by
+    calc ENNReal.ofReal h * (2⁻¹ * planarBrownianMotion y A) =
+        2⁻¹ * ENNReal.ofReal h * planarBrownianMotion y A := by ring
+      _ ≤ 2 * ENNReal.ofReal h * G' := hkey
+      _ = ENNReal.ofReal h * (2 * G') := by ring
+  have h3 := (ENNReal.mul_le_mul_iff_right ha0 hatop).mp hkey'
+  calc planarBrownianMotion y A = 2 * (2⁻¹ * planarBrownianMotion y A) := by
+        rw [← mul_assoc, ENNReal.mul_inv_cancel (by norm_num) (by norm_num), one_mul]
+    _ ≤ 2 * (2 * G') := by gcongr
+    _ = 4 * G' := by ring
+
 end HarmonicBalls
