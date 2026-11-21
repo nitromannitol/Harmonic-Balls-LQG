@@ -205,8 +205,7 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_annular_exterior_inc
   have hτD : Measurable τD :=
     (measurable_const.min (ContinuousPath.measurable_exitTime D hDo).ennreal_toReal).real_toNNReal
   have hτD1 (b : ContinuousPath ℂ) : τD b ≤ 1 := by
-    have h := Real.toNNReal_le_toNNReal (min_le_left (1 : ℝ) (ContinuousPath.exitTime D b).toReal)
-    simpa [τD] using h
+    simp [τD]
   let μD : ContinuousPath ℂ → Measure ℂ := fun b =>
     Measure.map (fun t => b t) ((Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))).restrict (Iic (τD b)))
   have hμD (b : ContinuousPath ℂ) : μD b ≤ Measure.map (fun t => b t) (Measure.map Real.toNNReal (volume.restrict (Icc (0 : ℝ) 1))) :=
