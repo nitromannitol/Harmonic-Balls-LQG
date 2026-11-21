@@ -39,9 +39,9 @@ theorem ae_uniformIntegrable_exit_clockApprox_of_unit_increments
     {D : Set ℂ} (hD : IsOpen D) (hDb : Bornology.IsBounded D) (x : ℂ)
     (c : ℕ → ℝ≥0∞) (hcs : (∑' k, c k) ≠ ⊤)
     (hc : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
-      |lqgClockApprox γ (hε p.1) (dyadicScale (k+1)) p.2
+      |lqgClockApprox γ (hε p.1) (dyadicScale (k+2)) p.2
           (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal -
-        lqgClockApprox γ (hε p.1) (dyadicScale k) p.2
+        lqgClockApprox γ (hε p.1) (dyadicScale (k+1)) p.2
           (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal|
       ∂(P.prod (planarBrownianMotion y))) ≤ c k) :
     ∀ᵐ ω ∂P, UniformIntegrable (fun k : ℕ => fun b =>
@@ -59,24 +59,24 @@ theorem ae_uniformIntegrable_exit_clockApprox_of_unit_increments
     measurable_const.mul (Real.measurable_exp.comp (measurable_const.mul (hεm k)))
   have hfc (k : ℕ) (ω : Ω) : Continuous (fun z => f k (ω, z)) :=
     continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul (hεc k ω)))
-  let d : ℕ → Ω × ℂ → ℝ := fun k p => f (k+1) p - f k p
-  have hdm (k : ℕ) : Measurable (d k) := (hfm (k+1)).sub (hfm k)
-  have hdc (k : ℕ) (ω : Ω) : Continuous (fun z => d k (ω, z)) := (hfc (k+1) ω).sub (hfc k ω)
+  let d : ℕ → Ω × ℂ → ℝ := fun k p => f (k+2) p - f (k+1) p
+  have hdm (k : ℕ) : Measurable (d k) := (hfm (k+2)).sub (hfm (k+1))
+  have hdc (k : ℕ) (ω : Ω) : Continuous (fun z => d k (ω, z)) := (hfc (k+2) ω).sub (hfc (k+1) ω)
   have happrox (k : ℕ) (ω : Ω) (b : ContinuousPath ℂ) (u : ℝ) (hu : 0 ≤ u) :
       lqgClockApprox γ (hε ω) (dyadicScale k) b u.toNNReal =
         ∫ s in (0 : ℝ)..u, f k (ω, b s.toNNReal) := by
     simp only [lqgClockApprox, Real.coe_toNNReal _ hu, f]
   have hdiff (k : ℕ) (ω : Ω) (b : ContinuousPath ℂ) (u : ℝ) (hu : 0 ≤ u) :
-      lqgClockApprox γ (hε ω) (dyadicScale (k+1)) b u.toNNReal -
-        lqgClockApprox γ (hε ω) (dyadicScale k) b u.toNNReal =
+      lqgClockApprox γ (hε ω) (dyadicScale (k+2)) b u.toNNReal -
+        lqgClockApprox γ (hε ω) (dyadicScale (k+1)) b u.toNNReal =
         ∫ s in (0 : ℝ)..u, d k (ω, b s.toNNReal) := by
     have hpath : Continuous (fun s : ℝ => b s.toNNReal) :=
       b.continuous.comp continuous_real_toNNReal
-    have h1 : IntervalIntegrable (fun s : ℝ => f (k+1) (ω, b s.toNNReal)) volume 0 u :=
+    have h1 : IntervalIntegrable (fun s : ℝ => f (k+2) (ω, b s.toNNReal)) volume 0 u :=
+      ((hfc (k+2) ω).comp hpath).intervalIntegrable _ _
+    have h2 : IntervalIntegrable (fun s : ℝ => f (k+1) (ω, b s.toNNReal)) volume 0 u :=
       ((hfc (k+1) ω).comp hpath).intervalIntegrable _ _
-    have h2 : IntervalIntegrable (fun s : ℝ => f k (ω, b s.toNNReal)) volume 0 u :=
-      ((hfc k ω).comp hpath).intervalIntegrable _ _
-    rw [happrox (k+1) ω b u hu, happrox k ω b u hu, ← intervalIntegral.integral_sub h1 h2]
+    rw [happrox (k+2) ω b u hu, happrox (k+1) ω b u hu, ← intervalIntegral.integral_sub h1 h2]
   have hexit (k : ℕ) : (∫⁻ p, ENNReal.ofReal |∫ s in (0 : ℝ)..(τ p.2).toReal,
       d k (p.1, p.2 s.toNNReal)| ∂(P.prod μ)) ≤ c k * ∫⁻ b, (τ b + 1) ∂μ := by
     apply lintegral_ofReal_abs_exit_integral_le_of_unit hD x (d k) (hdm k) (hdc k) (c k) _ hfin
@@ -108,20 +108,20 @@ theorem ae_uniformIntegrable_exit_clockApprox_of_unit_increments
   let A : ℕ → ContinuousPath ℂ → ℝ := fun k b =>
     lqgClockApprox γ (hε ω) (dyadicScale k) b (τ b).toNNReal
   have hAm (k : ℕ) : Measurable (A k) := measurable_lqgClockApprox_exit hD k (hεc k ω)
-  obtain ⟨M₁, hM₁⟩ := (hDb.isCompact_closure).exists_bound_of_continuousOn
-    (hfc 0 ω).continuousOn
-  set M : ℝ := max M₁ 0
-  have hM : ∀ z ∈ closure D, ‖f 0 (ω, z)‖ ≤ M := fun z hz => (hM₁ z hz).trans (le_max_left _ _)
-  have hM0 : 0 ≤ M := le_max_right _ _
-  have hA0 (b : ContinuousPath ℂ) (hb : τ b ≠ ⊤) : ‖A 0 b‖ ≤ M * (τ b).toReal := by
-    have hrepr : A 0 b = ∫ s in (0 : ℝ)..(τ b).toReal, f 0 (ω, b s.toNNReal) := by
+  have hbd (j : ℕ) : ∃ M : ℝ, 0 ≤ M ∧ ∀ z ∈ closure D, ‖f j (ω, z)‖ ≤ M := by
+    obtain ⟨M₁, hM₁⟩ := (hDb.isCompact_closure).exists_bound_of_continuousOn
+      (hfc j ω).continuousOn
+    exact ⟨max M₁ 0, le_max_right _ _, fun z hz => (hM₁ z hz).trans (le_max_left _ _)⟩
+  choose M hM0 hM using hbd
+  have hAj (j : ℕ) (b : ContinuousPath ℂ) (hb : τ b ≠ ⊤) : ‖A j b‖ ≤ M j * (τ b).toReal := by
+    have hrepr : A j b = ∫ s in (0 : ℝ)..(τ b).toReal, f j (ω, b s.toNNReal) := by
       have hconv : ((τ b).toReal).toNNReal = (τ b).toNNReal := Real.toNNReal_coe
-      have h := happrox 0 ω b _ (ENNReal.toReal_nonneg (a := τ b))
+      have h := happrox j ω b _ (ENNReal.toReal_nonneg (a := τ b))
       rw [hconv] at h
       exact h
     rw [hrepr]
     have h := intervalIntegral.norm_integral_le_of_norm_le_const_ae
-      (a := 0) (b := (τ b).toReal) (C := M) (f := fun s => f 0 (ω, b s.toNNReal)) ?_
+      (a := 0) (b := (τ b).toReal) (C := M j) (f := fun s => f j (ω, b s.toNNReal)) ?_
     · rwa [sub_zero, abs_of_nonneg ENNReal.toReal_nonneg] at h
     · filter_upwards [(volume : Measure ℝ).ae_ne (τ b).toReal] with s hs hsI
       rw [uIoc_of_le ENNReal.toReal_nonneg] at hsI
@@ -132,46 +132,60 @@ theorem ae_uniformIntegrable_exit_clockApprox_of_unit_increments
           (ENNReal.ofReal_lt_ofReal_iff_of_nonneg hsI.1.le).mpr hlt
         rw [ENNReal.ofReal_toReal hb] at h'
         exact h'
-      exact hM _ (subset_closure hmem)
-  let Y : ContinuousPath ℂ → ℝ≥0∞ := fun b => ENNReal.ofReal (M * (τ b).toReal) + ∑' k, Δ k (ω, b)
+      exact hM j _ (subset_closure hmem)
+  let Y : ContinuousPath ℂ → ℝ≥0∞ := fun b =>
+    ENNReal.ofReal (M 0 * (τ b).toReal) + ENNReal.ofReal (M 1 * (τ b).toReal) +
+      ∑' k, Δ k (ω, b)
   have hS : Measurable (fun b => ∑' k, Δ k (ω, b)) :=
     Measurable.tsum fun k => (hΔm k).comp measurable_prodMk_left
-  have hYm : Measurable Y :=
-    (measurable_const.mul hτm.ennreal_toReal).ennreal_ofReal.add hS
-  have hYi : (∫⁻ b, Y b ∂μ) ≠ ⊤ := by
-    rw [lintegral_add_right' _ hS.aemeasurable]
-    refine ENNReal.add_ne_top.mpr ⟨?_, hω⟩
-    refine ne_top_of_le_ne_top (ENNReal.mul_ne_top (ENNReal.ofReal_ne_top (r := M)) hEτ) ?_
+  have hTj (j : ℕ) : Measurable (fun b => ENNReal.ofReal (M j * (τ b).toReal)) :=
+    (measurable_const.mul hτm.ennreal_toReal).ennreal_ofReal
+  have hYm : Measurable Y := ((hTj 0).add (hTj 1)).add hS
+  have hTi (j : ℕ) : (∫⁻ b, ENNReal.ofReal (M j * (τ b).toReal) ∂μ) ≠ ⊤ := by
+    refine ne_top_of_le_ne_top (ENNReal.mul_ne_top (ENNReal.ofReal_ne_top (r := M j)) hEτ) ?_
     rw [← lintegral_const_mul _ hτm]
     apply lintegral_mono
     intro b
     simp only
-    rw [ENNReal.ofReal_mul hM0]
+    rw [ENNReal.ofReal_mul (hM0 j)]
     exact mul_le_mul_of_nonneg_left ENNReal.ofReal_toReal_le zero_le
+  have hYi : (∫⁻ b, Y b ∂μ) ≠ ⊤ := by
+    rw [lintegral_add_right' _ hS.aemeasurable, lintegral_add_right' _ (hTj 1).aemeasurable]
+    exact ENNReal.add_ne_top.mpr ⟨ENNReal.add_ne_top.mpr ⟨hTi 0, hTi 1⟩, hω⟩
   have hdom (k : ℕ) : ∀ᵐ b ∂μ, ENNReal.ofReal ‖A k b‖ ≤ Y b := by
     filter_upwards [hfin] with b hb
-    have htel : A k b = A 0 b + ∑ j ∈ Finset.range k, (A (j+1) b - A j b) := by
-      rw [Finset.sum_range_sub (fun j => A j b)]
-      ring
-    have hΔj (j : ℕ) : ENNReal.ofReal |A (j+1) b - A j b| = Δ j (ω, b) := by
+    have hΔj (j : ℕ) : ENNReal.ofReal |A (j+2) b - A (j+1) b| = Δ j (ω, b) := by
       have hconv : ((τ b).toReal).toNNReal = (τ b).toNNReal := Real.toNNReal_coe
       have h := hdiff j ω b _ (ENNReal.toReal_nonneg (a := τ b))
       rw [hconv] at h
       simp only [A, Δ]
       rw [h]
-    calc
-      ENNReal.ofReal ‖A k b‖ ≤ ENNReal.ofReal (‖A 0 b‖ +
-          ∑ j ∈ Finset.range k, |A (j+1) b - A j b|) := by
-        apply ENNReal.ofReal_le_ofReal
-        rw [htel, Real.norm_eq_abs, Real.norm_eq_abs]
-        exact (abs_add_le _ _).trans (add_le_add le_rfl (Finset.abs_sum_le_sum_abs _ _))
-      _ = ENNReal.ofReal ‖A 0 b‖ + ∑ j ∈ Finset.range k, ENNReal.ofReal |A (j+1) b - A j b| := by
-        rw [ENNReal.ofReal_add (norm_nonneg _) (Finset.sum_nonneg fun _ _ => abs_nonneg _),
-          ENNReal.ofReal_sum_of_nonneg (fun _ _ => abs_nonneg _)]
-      _ ≤ ENNReal.ofReal (M * (τ b).toReal) + ∑' j, Δ j (ω, b) := by
-        apply add_le_add (ENNReal.ofReal_le_ofReal (hA0 b hb))
-        simp only [hΔj]
-        exact ENNReal.sum_le_tsum _
+    rcases k with _ | m
+    · calc
+        ENNReal.ofReal ‖A 0 b‖ ≤ ENNReal.ofReal (M 0 * (τ b).toReal) :=
+          ENNReal.ofReal_le_ofReal (hAj 0 b hb)
+        _ ≤ Y b := le_self_add.trans le_self_add
+    · have htel : A (m+1) b = A 1 b + ∑ j ∈ Finset.range m, (A (j+2) b - A (j+1) b) := by
+        rw [Finset.sum_range_sub (fun j => A (j+1) b)]
+        ring
+      calc
+        ENNReal.ofReal ‖A (m+1) b‖ ≤ ENNReal.ofReal (‖A 1 b‖ +
+            ∑ j ∈ Finset.range m, |A (j+2) b - A (j+1) b|) := by
+          apply ENNReal.ofReal_le_ofReal
+          rw [htel, Real.norm_eq_abs, Real.norm_eq_abs]
+          exact (abs_add_le _ _).trans (add_le_add le_rfl (Finset.abs_sum_le_sum_abs _ _))
+        _ = ENNReal.ofReal ‖A 1 b‖ +
+            ∑ j ∈ Finset.range m, ENNReal.ofReal |A (j+2) b - A (j+1) b| := by
+          rw [ENNReal.ofReal_add (norm_nonneg _) (Finset.sum_nonneg fun _ _ => abs_nonneg _),
+            ENNReal.ofReal_sum_of_nonneg (fun _ _ => abs_nonneg _)]
+        _ ≤ ENNReal.ofReal (M 1 * (τ b).toReal) + ∑' j, Δ j (ω, b) := by
+          apply add_le_add (ENNReal.ofReal_le_ofReal (hAj 1 b hb))
+          simp only [hΔj]
+          exact ENNReal.sum_le_tsum _
+        _ ≤ Y b := by
+          simp only [Y]
+          rw [add_assoc]
+          exact le_add_self
   let Yr : ContinuousPath ℂ → ℝ := fun b => (Y b).toReal
   have hYr : MemLp Yr 1 μ := by
     rw [memLp_one_iff_integrable]
@@ -204,9 +218,9 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_of_unit_increments
     {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
     (c : ℕ → ℝ≥0∞) (hcs : (∑' k, c k) ≠ ⊤)
     (hc : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
-      |lqgClockApprox γ (hε p.1) (dyadicScale (k+1)) p.2
+      |lqgClockApprox γ (hε p.1) (dyadicScale (k+2)) p.2
           (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal -
-        lqgClockApprox γ (hε p.1) (dyadicScale k) p.2
+        lqgClockApprox γ (hε p.1) (dyadicScale (k+1)) p.2
           (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal|
       ∂(P.prod (planarBrownianMotion y))) ≤ c k)
     (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
@@ -237,9 +251,9 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_fieldCircleAverage_of_u
     {D : Set ℂ} (hD : IsSmoothBoundedOpen D) {x : ℂ} (hx : x ∈ D)
     (c : ℕ → ℝ≥0∞) (hcs : (∑' k, c k) ≠ ⊤)
     (hc : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
-      |lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale (k+1))
+      |lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale (k+2))
           p.2 (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal -
-        lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale k)
+        lqgClockApprox γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1)) (dyadicScale (k+1))
           p.2 (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal|
       ∂(P.prod (planarBrownianMotion y))) ≤ c k)
     (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
@@ -280,9 +294,9 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_fieldCircleAverage_of_u
     funext b t
     simp only [lqgClockApprox, hω k]
   have hc' : ∀ (k : ℕ), ∀ y ∈ D, (∫⁻ p, ENNReal.ofReal
-      |lqgClockApprox γ (H' p.1) (dyadicScale (k+1)) p.2
+      |lqgClockApprox γ (H' p.1) (dyadicScale (k+2)) p.2
           (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal -
-        lqgClockApprox γ (H' p.1) (dyadicScale k) p.2
+        lqgClockApprox γ (H' p.1) (dyadicScale (k+1)) p.2
           (min 1 (ContinuousPath.exitTime D p.2).toReal).toNNReal|
       ∂(P.prod (planarBrownianMotion y))) ≤ c k := by
     intro k y hy
@@ -290,7 +304,7 @@ theorem ae_tendsto_clockApprox_green_expectedLBMExitTime_fieldCircleAverage_of_u
     apply lintegral_congr_ae
     filter_upwards [(Measure.quasiMeasurePreserving_fst (μ := P)
       (ν := planarBrownianMotion y)).ae happ] with p hp
-    rw [hp (k+1), hp k]
+    rw [hp (k+2), hp (k+1)]
   have hclock' : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ (H' ω) x (F ω) := by
     filter_upwards [hclock, happ] with ω h hω
     intro T η hη
