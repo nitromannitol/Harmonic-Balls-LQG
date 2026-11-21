@@ -269,4 +269,26 @@ theorem exists_ae_isLQGClock_fieldCircleAverage_of_exterior_of_ne_zero
     (fun t => hFhm.comp ((measurable_const.prodMk measurable_id).prodMk measurable_const))
     hFω T hη
 
+/-- **Inserted clock from an exterior limit, at every start.** For `γ ^ 2 < 2` and `α < Q`,
+at every start `x`, an almost sure locally uniform exterior limit under the joint law gives
+an LQG clock of the inserted field for almost every field. -/
+theorem exists_ae_isLQGClock_fieldCircleAverage_of_exterior
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (x : ℂ) {γ α : ℝ} (hγ : 0 < γ)
+    (hγ2 : γ ^ 2 < 2) (hα : α < lqgQ γ)
+    (hext : ∃ G : (Ω × ContinuousPath ℂ) × ℝ≥0 → ℝ, Measurable G ∧
+      ∀ᵐ p ∂(P.prod (planarBrownianMotion x)), ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+        ∀ᶠ j in atTop, ∀ t : ℝ≥0, t ≤ T →
+          |(∫ s in (0 : ℝ)..(t : ℝ), {z : ℂ | 1/2 < ‖z‖}.indicator (fun z =>
+            (dyadicScale (j+1)) ^ (γ ^ 2 / 2) * Real.exp (γ *
+              LatticeProb.Gauss.fieldCircleAverage α (hcirc p.1) (dyadicScale (j+1)) z))
+                (p.2 s.toNNReal)) - G (p,t)| < η) :
+    ∃ F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ, ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ
+      (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω) := by
+  by_cases hx : x = 0
+  · subst hx
+    exact exists_ae_isLQGClock_fieldCircleAverage_at_origin_of_exterior hh hγ hγ2 hα hext
+  · exact exists_ae_isLQGClock_fieldCircleAverage_of_exterior_of_ne_zero hh hx hγ hγ2 α hext
+
 end HarmonicBalls
