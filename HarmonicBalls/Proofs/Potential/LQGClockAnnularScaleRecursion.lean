@@ -2127,4 +2127,27 @@ theorem exterior_inserted_density_le {Ω : Type*} (hcirc H' : Ω → ℝ → ℂ
       ENNReal.ofReal_zero]
     exact zero_le
 
+/-- A time integral of a density at the rescaled path position, under the affine
+space-time scaling by `κ` about the origin. -/
+theorem lintegral_Ioc_affineScaling_rescale (b : ContinuousPath ℂ) {κ : ℝ} (hκ : 0 < κ)
+    (g : ℂ → ℝ≥0∞) (hg : Measurable g) (t h : ℝ) :
+    (∫⁻ s in Ioc t (t + h), g (affineScaling hκ 0 (b s.toNNReal))) =
+      ENNReal.ofReal (κ ^ 2) * ∫⁻ σ in Ioc (t / κ ^ 2) (t / κ ^ 2 + h / κ ^ 2),
+        g (ContinuousPath.rescale (affineScaling hκ 0) (κ ^ 2).toNNReal b σ.toNNReal) := by
+  have hc : (0 : ℝ) < κ ^ 2 := by positivity
+  have hf : Measurable (fun s : ℝ => g (affineScaling hκ 0 (b s.toNNReal))) :=
+    hg.comp ((affineScaling hκ 0).continuous.measurable.comp
+      (b.continuous.measurable.comp measurable_real_toNNReal))
+  rw [lintegral_time_dilation hc _ measurableSet_Ioc _ hf]
+  congr 1
+  have hpre : (fun s : ℝ => κ ^ 2 * s) ⁻¹' Ioc t (t + h) =
+      Ioc (t / κ ^ 2) (t / κ ^ 2 + h / κ ^ 2) := by
+    ext s
+    simp only [mem_preimage, mem_Ioc]
+    rw [div_lt_iff₀ hc, ← add_div, le_div_iff₀ hc, mul_comm s]
+  rw [hpre]
+  apply lintegral_congr
+  intro s
+  rw [ContinuousPath.rescale_apply, Real.toNNReal_mul hc.le]
+
 end HarmonicBalls
