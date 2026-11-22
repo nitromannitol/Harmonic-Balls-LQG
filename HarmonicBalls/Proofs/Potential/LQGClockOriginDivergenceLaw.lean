@@ -242,4 +242,30 @@ theorem ae_ae_tendsto_atTop_lqgClock_origin_of_pos {Ω : Type} [MeasurableSpace 
   obtain ⟨m, hm⟩ := hb1 M
   exact ⟨cm m * 1, by rw [← hb2 m]; exact hm⟩
 
+/-- For almost every field, the LQG clock of the inserted field from the origin is almost surely a
+time-change clock as soon as, for almost every field, it almost surely increases strictly
+between any two rational times: divergence follows from the positivity at time `1`
+(`ae_ae_tendsto_atTop_lqgClock_origin_of_pos`). -/
+theorem ae_ae_isTimeChangeClock_lqgClock_origin {Ω : Type} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ)
+    (hγ2 : γ ^ 2 < 2) (hα : α < lqgQ γ) (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hF : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ
+      (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) 0 (F ω))
+    (hpos : ∀ᵐ ω ∂P, ∀ s t : ℚ, 0 ≤ s → s < t → ∀ᵐ b ∂(planarBrownianMotion (0 : ℂ)),
+      F ω b (s : ℝ).toNNReal < F ω b (t : ℝ).toNNReal) :
+    ∀ᵐ ω ∂P, ∀ᵐ b ∂(planarBrownianMotion (0 : ℂ)), IsTimeChangeClock (F ω b) := by
+  have hcont := ae_continuous_fieldCircleAverage hh α
+  have hpos1 : ∀ᵐ ω ∂P, ∀ᵐ b ∂(planarBrownianMotion (0 : ℂ)), 0 < F ω b 1 := by
+    filter_upwards [hF, hpos, hcont] with ω hω hpω hcω
+    filter_upwards [hpω 0 1 le_rfl zero_lt_one,
+      ae_zero_continuous_monotone_of_isLQGClock (fun k => hcω _ (dyadicScale_pos k)) hω]
+      with b hb hb0
+    simp only [Rat.cast_zero, Real.toNNReal_zero, Rat.cast_one, Real.toNNReal_one] at hb
+    rw [hb0.1] at hb
+    exact hb
+  filter_upwards [hF, hpos, hcont,
+    ae_ae_tendsto_atTop_lqgClock_origin_of_pos hh hγ hγ2 hα F hF hpos1] with ω hω hpω hcω hdω
+  exact ae_isTimeChangeClock_of_isLQGClock (fun k => hcω _ (dyadicScale_pos k)) hω hpω hdω
+
 end HarmonicBalls
