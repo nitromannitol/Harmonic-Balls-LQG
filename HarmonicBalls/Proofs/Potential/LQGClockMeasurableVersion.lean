@@ -170,7 +170,7 @@ theorem exists_measurable_tendstoInMeasure_prod {Ω X : Type*} [MeasurableSpace 
     intro p hp
     simp only [mem_ofPred_eq] at hp
     by_contra hcon
-    simp only [Function.comp_apply, mem_union, mem_ofPred_eq, not_or, not_le] at hcon
+    simp only [mem_union, mem_ofPred_eq, not_or, not_le] at hcon
     have : edist (A k p) (G p) < ε := by
       calc edist (A k p) (G p) ≤ edist (A k p) (A (kk k) p) + edist (A (kk k) p) (G p) :=
             edist_triangle _ _ _
