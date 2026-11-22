@@ -41,9 +41,8 @@ theorem ae_ae_lt_of_zero_one_of_lintegral_pos {Ω X : Type*} [MeasurableSpace Ω
       intro h0
       have hz : (fun ω => ENNReal.ofReal (g ω b - f ω b)) =ᵐ[P] 0 := by
         filter_upwards [measure_eq_zero_iff_ae_notMem.mp h0] with ω hω
-        have hle : g ω b - f ω b ≤ 0 := by
-          simp only [mem_setOf_eq, not_lt] at hω
-          linarith
+        have hω' : ¬ f ω b < g ω b := hω
+        have hle : g ω b - f ω b ≤ 0 := by linarith [not_lt.mp hω']
         simp [ENNReal.ofReal_eq_zero.mpr hle]
       rw [lintegral_congr_ae hz] at hbmean
       simp at hbmean
