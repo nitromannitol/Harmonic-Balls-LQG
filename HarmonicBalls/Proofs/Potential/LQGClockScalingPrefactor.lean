@@ -26,13 +26,13 @@ open MeasureTheory ProbabilityTheory MarkovProcess Real Set Filter Topology
 open scoped ENNReal NNReal
 namespace HarmonicBalls
 
-/-- The circle averages `(r, z) ↦ h_{n r}(n z) - h_n(0)` of the rescaled field `h(n ·) - h_n(0)`,
-written as in the affine invariance of the whole-plane GFF with `a = n` and `b = 0`. -/
+/-- The circle averages `(r, z) ↦ h^ℂ_{n r}(n z) - h^ℂ_n(0)` of the rescaled field
+`h^ℂ(n ·) - h^ℂ_n(0)`, as in the affine invariance of the whole-plane GFF with `a = n`, `b = 0`. -/
 noncomputable def rescaledCircleAverage (hcirc : ℝ → ℂ → ℝ) (n r : ℝ) (z : ℂ) : ℝ :=
   hcirc (‖(n : ℂ)‖ * r) ((n : ℂ) * z + 0) - hcirc ‖(n : ℂ)‖ 0
 
 /-- The density of the approximating clock of the inserted field at `n w` and scale `ε` is
-`n^{γ²/2 - γ α} e^{γ h_n(0)}` times the density of the rescaled field at `w` and scale `ε / n`. -/
+`n^{γ²/2 - γ α} e^{γ h^ℂ_n(0)}` times the density of the rescaled field at `w` and scale `ε / n`. -/
 theorem rpow_mul_exp_fieldCircleAverage_mul (hcirc : ℝ → ℂ → ℝ) (α γ : ℝ) {n ε : ℝ}
     (hn : 0 < n) (hε : 0 < ε) (w : ℂ) :
     ε ^ (γ ^ 2 / 2) * Real.exp (γ * LatticeProb.Gauss.fieldCircleAverage α hcirc ε ((n : ℂ) * w)) =
@@ -59,7 +59,7 @@ theorem rpow_mul_exp_fieldCircleAverage_mul (hcirc : ℝ → ℂ → ℝ) (α γ
   ring
 
 /-- Brownian scaling of the approximating clock of the inserted field: at time `n² t` and scale
-`ε` it is `n^{2 + γ²/2 - γ α} e^{γ h_n(0)}` times the approximating clock of the rescaled field at
+`ε` it is `n^{2 + γ²/2 - γ α} e^{γ h^ℂ_n(0)}` times the approximating clock of the rescaled field at
 time `t` and scale `ε / n` along the rescaled path `u ↦ n⁻¹ b(n² u)`. -/
 theorem lqgClockApprox_fieldCircleAverage_mul_time (hcirc : ℝ → ℂ → ℝ) (α γ : ℝ) {n ε : ℝ}
     (hn : 0 < n) (hε : 0 < ε) (b : ContinuousPath ℂ) (t : ℝ≥0) :
@@ -118,7 +118,7 @@ theorem lqgClockApprox_fieldCircleAverage_dyadic_mul_time (hcirc : ℝ → ℂ �
 
 /-- Brownian scaling of LQG clocks of the inserted field from the origin: if `F` is an LQG clock
 of the field and `F'` one of the field rescaled by `n = 2^m`, then almost surely
-`F(4^m t) = 2^{m (2 + γ²/2 - γ α)} e^{γ h_{2^m}(0)} F'(b̃)(t)` for all `t`, where
+`F(4^m t) = 2^{m (2 + γ²/2 - γ α)} e^{γ h^ℂ_{2^m}(0)} F'(b̃)(t)` for all `t`, where
 `b̃_u = 2^{-m} b(4^m u)` is the rescaled path. -/
 theorem ae_lqgClock_mul_time_eq {hcirc : ℝ → ℂ → ℝ} {α γ : ℝ} (m : ℕ)
     {F F' : ContinuousPath ℂ → ℝ≥0 → ℝ}

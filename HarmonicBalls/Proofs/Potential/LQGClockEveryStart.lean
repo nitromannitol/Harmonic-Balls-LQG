@@ -6,7 +6,7 @@ import HarmonicBalls.Proofs.Brownian.PlanarHeatFeller
 
 Positive occupation clocks from every Brownian starting point, by a transfer of future events
 under the Markov property at a fixed time. For the dyadic scales `ε = 2^{-k}` let
-`I^k_{a,b}(b) = ∫_a^b ε^{γ²/2} e^{γ h_ε(b_v)} dv` (`dyadicIncrementApprox`) and let `G_{a,b}` be its
+`I^k_{a,b}(w) = ∫_a^b ε^{γ²/2} e^{γ h_ε(w_v)} dv` (`dyadicIncrementApprox`) and let `G_{a,b}` be its
 lower limit in `[0, ∞]` (`dyadicIncrementLiminf`), a raw functional of the path chosen before any
 clock.
 
@@ -33,7 +33,7 @@ open MeasureTheory ProbabilityTheory MarkovProcess Real Set Filter Topology
 open scoped ENNReal NNReal
 namespace HarmonicBalls
 
-/-- The dyadic approximant `∫_a^b ε^{γ²/2} e^{γ h_ε(b_v)} dv` of the clock increment over `[a, b]`
+/-- The dyadic approximant `∫_a^b ε^{γ²/2} e^{γ h_ε(w_v)} dv` of the clock increment over `[a, b]`
 at the scale `ε = 2^{-k}`. -/
 noncomputable def dyadicIncrementApprox (γ : ℝ) (hε : ℝ → ℂ → ℝ) (k : ℕ) (a b : ℝ)
     (w : ContinuousPath ℂ) : ℝ :=

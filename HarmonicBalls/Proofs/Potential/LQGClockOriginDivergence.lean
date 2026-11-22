@@ -8,7 +8,7 @@ inserted field `h = h^ℂ - α log |·|` of planar Brownian motion from the orig
 deterministic times `4^m` in place of the exit times of the balls `B(0, 2^m)`. For `m ≥ 0` let
 `F'_m` be an LQG clock from the origin of the field rescaled by `2^m` (`rescaledCircleAverage`),
 and let `Y_m = F'_m(b̃_m)(1)` with the rescaled path `b̃_m(u) = 2^{-m} b(4^m u)`. Almost surely
-`F(4^m) = c_m Y_m` with `c_m = 2^{m (2 + γ²/2 - γ α)} e^{γ h_{2^m}(0)}`
+`F(4^m) = c_m Y_m` with `c_m = 2^{m (2 + γ²/2 - γ α)} e^{γ h^ℂ_{2^m}(0)}`
 (`ae_lqgClock_mul_time_eq`), and `c_m → ∞` almost surely since `2 + γ²/2 - γ α = γ (Q - α) > 0`
 (`ae_tendsto_rpow_mul_exp_circle_atTop`). If the `Y_m` are identically distributed under the
 joint law of the field and the path (the rescaled field is again a whole-plane GFF and the
