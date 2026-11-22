@@ -13,7 +13,8 @@ arXiv:2501.15936v2), proof of Theorem 5.12 (B4), in the plane and for the insert
 and let `b̃_u = n⁻¹ b_{n² u}` be the rescaled path (again a planar Brownian motion from `0`, by
 Brownian scaling). Since `log max(ε, n |w|) = log n + log max(ε / n, |w|)`, the approximating
 clocks satisfy the exact identity
-`∫_0^{n² t} ε^{γ²/2} e^{γ h_ε(b_s)} ds = n^{2 + γ²/2 - γ α} e^{γ h^ℂ_n(0)} ∫_0^t (ε/n)^{γ²/2} e^{γ h^{(n)}_{ε/n}(b̃_u)} du`,
+`∫_0^{n² t} ε^{γ²/2} e^{γ h_ε(b_s)} ds`
+`= n^{2 + γ²/2 - γ α} e^{γ h^ℂ_n(0)} ∫_0^t (ε/n)^{γ²/2} e^{γ h^{(n)}_{ε/n}(b̃_u)} du`,
 where `h^{(n)}` carries the same insertion `-α log |·|`. Along the dyadic scales with `n = 2^m`
 this passes to the LQG clocks: almost surely `F(4^m t) = c_m F^{(m)}(b̃)(t)` for all `t`, with the
 prefactor `c_m = 2^{m (2 + γ²/2 - γ α)} e^{γ h^ℂ_{2^m}(0)}`. Since `h^ℂ_{2^m}(0)` is a centered
@@ -139,7 +140,8 @@ theorem ae_lqgClock_mul_time_eq {hcirc : ℝ → ℂ → ℝ} {α γ : ℝ} (m :
   have hSmap : (planarBrownianMotion 0).map S = planarBrownianMotion 0 :=
     Section6.planarBrownianMotion_map_scaledCenteredPlanarPath 0 hc.ne'
   let G : ContinuousPath ℂ → ℝ≥0 → ℝ := fun b t => K * F' (S b) (t / c)
-  have hG : IsLQGClock planarBrownianMotion γ (LatticeProb.Gauss.fieldCircleAverage α hcirc) 0 G := by
+  have hG :
+      IsLQGClock planarBrownianMotion γ (LatticeProb.Gauss.fieldCircleAverage α hcirc) 0 G := by
     intro T η hη
     have hlim := (hF' (T / c) (η / K) (div_pos hη hK0)).comp (tendsto_add_atTop_nat m)
     refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hlim

@@ -55,7 +55,6 @@ theorem exists_measurable_tendstoInMeasure_prod {Ω X : Type*} [MeasurableSpace 
     (hconv : ∀ᵐ ω ∂P, TendstoInMeasure ν (fun k b => A k (ω, b)) atTop (F ω)) :
     ∃ G : Ω × X → ℝ, Measurable G ∧ TendstoInMeasure (P.prod ν) A atTop G ∧
       ∀ᵐ ω ∂P, ∀ᵐ b ∂ν, G (ω, b) = F ω b := by
-  -- Cauchy in probability under the product measure
   have hcauchy : ∀ ε : ℝ≥0∞, 0 < ε → Tendsto (fun kl : ℕ × ℕ =>
       (P.prod ν) {p | ε ≤ edist (A kl.1 p) (A kl.2 p)}) atTop (𝓝 0) := by
     intro ε hε
@@ -99,7 +98,6 @@ theorem exists_measurable_tendstoInMeasure_prod {Ω X : Type*} [MeasurableSpace 
       (Eventually.of_forall fun kl => Eventually.of_forall fun ω => prob_le_one)
       (by simp) hsec
     simpa using hlim
-  -- a fast subsequence
   have hfast (j : ℕ) : ∃ K : ℕ, ∀ k l : ℕ, K ≤ k → K ≤ l →
       (P.prod ν) {p | ENNReal.ofReal ((1 / 2 : ℝ) ^ j) ≤ edist (A k p) (A l p)} <
         ENNReal.ofReal ((1 / 2 : ℝ) ^ j) := by
@@ -131,7 +129,8 @@ theorem exists_measurable_tendstoInMeasure_prod {Ω X : Type*} [MeasurableSpace 
   have hconvsub : ∀ᵐ p ∂(P.prod ν), ∃ L : ℝ, Tendsto (fun j => A (kk j) p) atTop (𝓝 L) := by
     filter_upwards [ae_eventually_notMem hsum] with p hp
     obtain ⟨N, hN⟩ := eventually_atTop.mp hp
-    have hdist (j : ℕ) : dist (A (kk (j + N)) p) (A (kk (j + N + 1)) p) ≤ (1 / 2 : ℝ) ^ (j + N) := by
+    have hdist (j : ℕ) :
+        dist (A (kk (j + N)) p) (A (kk (j + N + 1)) p) ≤ (1 / 2 : ℝ) ^ (j + N) := by
       have h := hN (j + N) (Nat.le_add_left N j)
       simp only [B, mem_ofPred_eq, not_le] at h
       rw [edist_dist] at h
