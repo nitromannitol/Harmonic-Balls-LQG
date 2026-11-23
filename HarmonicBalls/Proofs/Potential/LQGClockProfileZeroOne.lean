@@ -82,20 +82,27 @@ theorem measurable_profileDensity_comp (γ α : ℝ) (k : ℕ) {β : Type*} [Mea
   unfold profileDensity
   exact Measurable.liminf hn
 
+/-- The integrals of the profile densities along the path are measurable jointly in the profile and
+the path. -/
+theorem measurable_profileIncrement_comp (γ α : ℝ) (k : ℕ) (a b : ℝ) {β : Type*}
+    [MeasurableSpace β] {F : β → ℕ × ℂ → ℝ} {W : β → ContinuousPath ℂ} (hF : Measurable F)
+    (hW : Measurable W) :
+    Measurable (fun x => ∫⁻ v in Ioc a b, profileDensity γ α k (F x) (W x v.toNNReal)) := by
+  have hpath : Measurable (fun q : β × ℝ => W q.1 q.2.toNNReal) := by
+    have hc : Continuous (fun q : ContinuousPath ℂ × ℝ => q.1 q.2.toNNReal) :=
+      continuous_eval.comp (continuous_id.prodMap continuous_real_toNNReal)
+    exact hc.measurable.comp ((hW.comp measurable_fst).prodMk measurable_snd)
+  have hint : Measurable (fun q : β × ℝ => profileDensity γ α k (F q.1) (W q.1 q.2.toNNReal)) :=
+    measurable_profileDensity_comp γ α k (hF.comp measurable_fst) hpath
+  exact hint.lintegral_prod_right'
+
 /-- `profileIncrementLiminf` is measurable jointly in the profile and the path. -/
 theorem measurable_profileIncrementLiminf_comp (γ α a b : ℝ) {β : Type*} [MeasurableSpace β]
     {F : β → ℕ × ℂ → ℝ} {W : β → ContinuousPath ℂ} (hF : Measurable F) (hW : Measurable W) :
     Measurable (fun x => profileIncrementLiminf γ α a b (F x) (W x)) := by
   have hk : ∀ k, Measurable (fun x =>
-      ∫⁻ v in Ioc a b, profileDensity γ α k (F x) (W x v.toNNReal)) := by
-    intro k
-    have hpath : Measurable (fun q : β × ℝ => W q.1 q.2.toNNReal) := by
-      have hc : Continuous (fun q : ContinuousPath ℂ × ℝ => q.1 q.2.toNNReal) :=
-        continuous_eval.comp (continuous_id.prodMap continuous_real_toNNReal)
-      exact hc.measurable.comp ((hW.comp measurable_fst).prodMk measurable_snd)
-    have hint : Measurable (fun q : β × ℝ => profileDensity γ α k (F q.1) (W q.1 q.2.toNNReal)) :=
-      measurable_profileDensity_comp γ α k (hF.comp measurable_fst) hpath
-    exact hint.lintegral_prod_right'
+      ∫⁻ v in Ioc a b, profileDensity γ α k (F x) (W x v.toNNReal)) := fun k =>
+    measurable_profileIncrement_comp γ α k a b hF hW
   unfold profileIncrementLiminf
   exact Measurable.liminf hk
 
@@ -124,15 +131,13 @@ theorem fieldCircleAverage_dyadic_eq (α : ℝ) (u : ℝ → ℂ → ℝ) (k : �
     simpa using (LatticeProb.Gauss.circleAverage_log_norm_sub_eq z 0 (dyadicScale_pos k))
   rw [LatticeProb.Gauss.fieldCircleAverage, hlog]
 
-/-- For profiles continuous at every dyadic scale, `profileIncrementLiminf` is the lower limit
-`G_{a,b}(w)` of the dyadic approximants of the inserted field. -/
-theorem profileIncrementLiminf_eq_dyadicIncrementLiminf {γ α a b : ℝ} (hab : a ≤ b)
-    {u : ℝ → ℂ → ℝ} (hu : ∀ k, Continuous (u (dyadicScale k))) (w : ContinuousPath ℂ) :
-    profileIncrementLiminf γ α a b (fun p => u (dyadicScale p.1) p.2) w =
-      dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α u) a b w := by
-  unfold profileIncrementLiminf dyadicIncrementLiminf
-  congr 1
-  funext k
+/-- For a profile continuous at every dyadic scale, the integral of the profile densities is the
+dyadic approximant of the inserted field. -/
+theorem lintegral_profileDensity_eq_ofReal {γ α a b : ℝ} (hab : a ≤ b)
+    {u : ℝ → ℂ → ℝ} (hu : ∀ k, Continuous (u (dyadicScale k))) (k : ℕ) (w : ContinuousPath ℂ) :
+    ∫⁻ v in Ioc a b, profileDensity γ α k (fun p => u (dyadicScale p.1) p.2) (w v.toNNReal) =
+      ENNReal.ofReal
+        (dyadicIncrementApprox γ (LatticeProb.Gauss.fieldCircleAverage α u) k a b w) := by
   have h1 : Continuous fun z => LatticeProb.Gauss.fieldCircleAverage α u (dyadicScale k) z := by
     simp_rw [fieldCircleAverage_dyadic_eq]
     exact (hu k).sub (continuous_const.mul
@@ -153,6 +158,24 @@ theorem profileIncrementLiminf_eq_dyadicIncrementLiminf {γ α a b : ℝ} (hab :
     ofReal_integral_eq_lintegral_ofReal (hfc.integrableOn_Icc.mono_set Ioc_subset_Icc_self)
       (Filter.Eventually.of_forall fun v =>
         mul_nonneg (Real.rpow_nonneg (dyadicScale_pos k).le _) (Real.exp_pos _).le)]
+
+theorem profileIncrementLiminf_eq_liminf (γ α a b : ℝ) (g : ℕ × ℂ → ℝ) (w : ContinuousPath ℂ) :
+    profileIncrementLiminf γ α a b g w =
+      liminf (fun k => ∫⁻ v in Ioc a b, profileDensity γ α k g (w v.toNNReal)) atTop := by
+  unfold profileIncrementLiminf
+  rfl
+
+/-- For profiles continuous at every dyadic scale, `profileIncrementLiminf` is the lower limit
+`G_{a,b}(w)` of the dyadic approximants of the inserted field. -/
+theorem profileIncrementLiminf_eq_dyadicIncrementLiminf {γ α a b : ℝ} (hab : a ≤ b)
+    {u : ℝ → ℂ → ℝ} (hu : ∀ k, Continuous (u (dyadicScale k))) (w : ContinuousPath ℂ) :
+    profileIncrementLiminf γ α a b (fun p => u (dyadicScale p.1) p.2) w =
+      dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α u) a b w := by
+  rw [profileIncrementLiminf_eq_liminf]
+  unfold dyadicIncrementLiminf
+  congr 1
+  funext k
+  exact lintegral_profileDensity_eq_ofReal hab hu k w
 
 /-- A bounded perturbation of the profile on a disc containing (twice) the path range changes the
 approximants by a factor at least `e^{-|γ| M}`. -/
