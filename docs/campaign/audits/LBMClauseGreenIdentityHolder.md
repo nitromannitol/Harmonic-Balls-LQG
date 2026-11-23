@@ -77,8 +77,13 @@ and the conclusion of the frozen LBM clause for the family `F`. The time-change 
 - The time spent near the insertion point is handled by weights vanishing near it and a monotone limit,
   so no moment bound for the clock near the insertion is needed; the identity holds for every `α < Q`.
 
-## Remaining input
+## Assembly and what remains
 
-- The one-start event, as in `LBMClauseClocksEveryStart.md`, for the theorem without the hypothesis `hT`.
-- The frozen clause quantifies over `Ω : Type*`; these theorems, like the finiteness conjunct, are stated
-  for `Ω : Type`.
+The LBM clause of `GreenPotentialLiouvilleHolderStmt`, both conjuncts, holds with no hypothesis beyond the
+antecedents of the frozen statement for `0 < γ`, `γ² < 2`, `α₀ < Q` and `Ω : Type`:
+`greenPotentialLiouvilleHolder_lbmClause` (`LBMClauseOneStart.lean:26`), which applies
+`ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` (`LBMExpectedExitTimeGreenHolder.lean:239`)
+to the one-start event `ae_forall_rat_ae_dyadicIncrementLiminf_pos` (`LQGClockOneStart.lean:521`). With the
+Green clause `greenPotentialHolderStmt_holds`, `greenPotentialLiouvilleHolder_of_sq_lt_two`
+(`LBMClauseOneStart.lean:44`) is the conclusion of `GreenPotentialLiouvilleHolderStmt` in that range. The frozen
+statement also covers `2 ≤ γ² < 4` (it assumes `γ < 2`) and `Ω : Type*`; both remain open.

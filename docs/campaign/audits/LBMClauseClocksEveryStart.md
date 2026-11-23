@@ -126,7 +126,16 @@ exterior clocks already proved for starts `x ≠ 0`. Nondegeneracy is proved as 
 - The field is the circle-normalized whole-plane GFF itself, with the dyadic circle averages as the
   regularization, not a Dirichlet GFF.
 
-## The Hölder conjunct
+## The Hölder conjunct and the assembled clause
 
-- The Hölder conjunct of the LBM clause is proved, with the same hypotheses, through the Green identity
-  `E_x[τ_O] = ∫_O 2 G_O(x, y) μ_h(dy)` from every start; see `LBMClauseGreenIdentityHolder.md`.
+The Hölder conjunct of the LBM clause is proved, with the same hypotheses, through the Green identity
+`E_x[τ_O] = ∫_O 2 G_O(x, y) μ_h(dy)` from every start; see `LBMClauseGreenIdentityHolder.md`.
+
+The LBM clause of `GreenPotentialLiouvilleHolderStmt`, both conjuncts, holds with no hypothesis beyond the
+antecedents of the frozen statement for `0 < γ`, `γ² < 2`, `α₀ < Q` and `Ω : Type`:
+`greenPotentialLiouvilleHolder_lbmClause` (`LBMClauseOneStart.lean:26`), which applies
+`ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` (`LBMExpectedExitTimeGreenHolder.lean:239`)
+to the one-start event `ae_forall_rat_ae_dyadicIncrementLiminf_pos` (`LQGClockOneStart.lean:521`). With the
+Green clause `greenPotentialHolderStmt_holds`, `greenPotentialLiouvilleHolder_of_sq_lt_two`
+(`LBMClauseOneStart.lean:44`) is the conclusion of `GreenPotentialLiouvilleHolderStmt` in that range. The frozen
+statement also covers `2 ≤ γ² < 4` (it assumes `γ < 2`) and `Ω : Type*`; both remain open.
