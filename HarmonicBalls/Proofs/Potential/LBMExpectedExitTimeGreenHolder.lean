@@ -12,14 +12,14 @@ import HarmonicBalls.Proofs.Sec6.GreenIntegrability
 /-!
 # Expected exit times of Liouville Brownian motion: the Green identity and Hölder continuity
 
-For `0 < γ < 2` and every insertion `α < Q`, for almost every field, for every smooth bounded
-domain `O` and every start `x ∈ O`, the expected exit time of Liouville Brownian motion from `O`
-is the Green potential of the LQG measure,
+For `0 < γ < 2` and every insertion `α < Q`, for every family of LQG clocks from every start that
+are almost surely time-change clocks, for almost every field, for every smooth bounded domain `O`
+and every start `x ∈ O`, the expected exit time of Liouville Brownian motion from `O` is the Green
+potential of the LQG measure,
 
-  `E_x[τ_O] = ∫_O 2 G_O(x, y) μ_h(dy)`,
+  `E_x[τ_O] = ∫_O 2 G_O(x, y) μ_h(dy)`.
 
-for every family of LQG clocks from every start that are almost surely time-change clocks. The
-Green clause of Proposition 2.5 then makes `x ↦ E_x[τ_O]` Hölder continuous on `O`.
+The Green clause of Proposition 2.5 then makes `x ↦ E_x[τ_O]` Hölder continuous on `O`.
 
 The proof, on one field event:
 
@@ -41,7 +41,9 @@ The proof, on one field event:
 With the time-change property from every start supplied by the positivity of the clock increments
 from the origin (`ae_forall_isTimeChangeClock_of_dyadicIncrementLiminf_pos`, `γ² < 2`), this is
 the LBM clause of Proposition 2.5 (`GreenPotentialLiouvilleHolderStmt`) for fields with
-`Ω : Type`.
+`Ω : Type`, under the one-start positivity event. That event is proved for `γ² < 2`
+(`ae_forall_rat_ae_dyadicIncrementLiminf_pos`), and `greenPotentialLiouvilleHolder_lbmClause` is the
+clause without it.
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Real Set Filter Topology Metric
@@ -67,9 +69,9 @@ theorem eventually_greenPoleCutoff_dyadicScale_eq_one {z : ℂ} (hz : z ≠ 0) :
   exact greenPoleCutoff_eq_one (dyadicScale_pos m) (by rw [dist_zero_right]; exact hm.le)
 
 /-- **Green identity for expected exit times of Liouville Brownian motion from every start, for
-every insertion.** For `0 < γ < 2` and `α < Q`, for almost every field, for every smooth bounded
-domain `O` and every `x ∈ O`, `E_x[τ_O] = ∫_O G_O(x, y) 2 μ_h(dy)`, for every family of LQG clocks
-from every start that are almost surely time-change clocks. -/
+every insertion.** For `0 < γ < 2` and `α < Q`, for every family of LQG clocks from every start
+that are almost surely time-change clocks, for almost every field, for every smooth bounded domain
+`O` and every `x ∈ O`, `E_x[τ_O] = ∫_O G_O(x, y) 2 μ_h(dy)`. -/
 theorem ae_forall_expectedLBMExitTime_eq_green
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -203,9 +205,9 @@ theorem ae_forall_expectedLBMExitTime_eq_green
     greenFunction_of_notMem_right hz x]
 
 /-- **The LBM clause of Proposition 2.5 for time-change clocks.** For `0 < γ < 2` and `α < Q`,
-for almost every field, for every smooth bounded domain `O`, the expected exit time of Liouville
-Brownian motion from `O` is finite from every start in `O` and Hölder continuous on `O`, for every
-family of LQG clocks from every start that are almost surely time-change clocks. -/
+for every family of LQG clocks from every start that are almost surely time-change clocks, for
+almost every field, for every smooth bounded domain `O`, the expected exit time of Liouville
+Brownian motion from `O` is finite from every start in `O` and Hölder continuous on `O`. -/
 theorem ae_expectedLBMExitTime_lt_top_and_holder
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -233,9 +235,9 @@ theorem ae_expectedLBMExitTime_lt_top_and_holder
 /-- **The LBM clause of Proposition 2.5 from the positivity of the clock increments at the
 origin.** For `0 < γ`, `γ² < 2` and `α < Q`, if for almost every field the dyadic lower limits
 `G_{a,b}` of the clock increments are almost surely positive under Brownian motion from the
-origin for all rationals `0 < a < b`, then for almost every field, for every smooth bounded domain
-`O`, the expected exit time of Liouville Brownian motion from `O` is finite from every start in
-`O` and Hölder continuous on `O`, for every family of LQG clocks from every start. -/
+origin for all rationals `0 < a < b`, then for every family of LQG clocks from every start, for
+almost every field, for every smooth bounded domain `O`, the expected exit time of Liouville
+Brownian motion from `O` is finite from every start in `O` and Hölder continuous on `O`. -/
 theorem ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}

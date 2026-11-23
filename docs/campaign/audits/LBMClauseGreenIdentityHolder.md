@@ -30,9 +30,11 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `F ω x` is a family of cloc
 | Markov property at a fixed time on an event of the canonical filtration | `setLIntegral_shift_eq` | `LQGClockExitShiftLowerBound.lean:174` |
 | comparison of nested domains | `expectedLBMExitTime_le_add_sub_of_subset` | `LQGClockExitDomainComparison.lean:26` |
 
-The last theorem of the first block has the hypotheses `0 < γ`, `γ² < 2`, `α < Q`, `Ω : Type`,
-`IsWholePlaneGFF`, `IsLQGMeasureOfField`, `hF` and the one-start event of `LBMClauseClocksEveryStart.md`,
-and the conclusion of the frozen LBM clause for the family `F`. The time-change property `hT` comes from
+`ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` has the hypotheses `0 < γ`, `γ² < 2`,
+`α < Q`, `Ω : Type`, `IsWholePlaneGFF`, `IsLQGMeasureOfField`, `hF` and the one-start event of
+`LBMClauseClocksEveryStart.md` (source: Berestycki, *Diffusion in planar Liouville quantum gravity*, Ann. Inst.
+Henri Poincaré Probab. Stat. 51 (2015), arXiv:1301.3356, Theorem 1.2), and the conclusion of the frozen LBM
+clause for the family `F`. The time-change property `hT` comes from
 `ae_forall_isTimeChangeClock_of_dyadicIncrementLiminf_pos` (`LQGClockEveryStart.lean:371`).
 
 ## Route
@@ -68,9 +70,13 @@ and the conclusion of the frozen LBM clause for the family `F`. The time-change 
 
 ## Departures from the cited sources
 
-- The paper cites Garban–Rhodes–Vargas, *Liouville Brownian motion*, Ann. Probab. 44 (2016), and
-  Berestycki 2015 for the LBM clause. The Lean proof does not use a Revuz correspondence for positive
-  continuous additive functionals: the identity is proved directly from the clock approximations by
+- The paper cites Berestycki 2015 and Garban–Rhodes–Vargas, *Liouville Brownian motion*, Ann. Probab. 44
+  (2016), for the construction of LBM (corrected draft line 525). Its proof of the clause (lines 540-542)
+  cites the volume growth Lemma 2.4 and the Campanato embedding (Ponce 2016, Section 16.2), and uses the
+  identity `E_x[τ_O] = ∫_O G_O(x, y) μ_h(dy)` without proof. The Lean proof proves the identity, with the
+  factor 2 of the normalizations of `greenFunction` and of planar Brownian motion. It does not use a Revuz
+  correspondence for positive continuous additive functionals: the identity is proved directly from the
+  clock approximations by
   Fatou's lemma (upper bound), uniform integrability of weighted approximations at almost every start,
   the Markov property at a fixed time (lower bound at every start), and the comparison of nested
   domains (every smooth domain).
@@ -83,7 +89,8 @@ The LBM clause of `GreenPotentialLiouvilleHolderStmt`, both conjuncts, holds wit
 antecedents of the frozen statement for `0 < γ`, `γ² < 2`, `α₀ < Q` and `Ω : Type`:
 `greenPotentialLiouvilleHolder_lbmClause` (`LBMClauseOneStart.lean:26`), which applies
 `ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` (`LBMExpectedExitTimeGreenHolder.lean:239`)
-to the one-start event `ae_forall_rat_ae_dyadicIncrementLiminf_pos` (`LQGClockOneStart.lean:521`). With the
+to the one-start event `ae_forall_rat_ae_dyadicIncrementLiminf_pos` (`LQGClockOneStart.lean:521`; Berestycki
+2015, Theorem 1.2, proved by the route of `LBMClauseClocksEveryStart.md`). With the
 Green clause `greenPotentialHolderStmt_holds`, `greenPotentialLiouvilleHolder_of_sq_lt_two`
 (`LBMClauseOneStart.lean:44`) is the conclusion of `GreenPotentialLiouvilleHolderStmt` in that range. The frozen
 statement also covers `2 ≤ γ² < 4` (it assumes `γ < 2`) and `Ω : Type*`; both remain open.

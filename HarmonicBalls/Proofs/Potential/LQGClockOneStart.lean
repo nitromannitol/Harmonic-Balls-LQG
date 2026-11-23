@@ -534,8 +534,8 @@ theorem ae_forall_rat_ae_dyadicIncrementLiminf_pos
   filter_upwards [ae_all_iff.mpr h] with ω hω a b ha hab
   exact hω (a, b) ha hab
 
-/-- Strict increase between rational times from every start, for every family of LQG clocks of the
-inserted field (`0 < γ`, `γ² < 2`). -/
+/-- Strict increase between rational times: for every family of LQG clocks of the inserted field from
+every start (`0 < γ`, `γ² < 2`), for almost every field, from every start. -/
 theorem ae_forall_rat_lt_of_isLQGClock (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
     {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
     (hF : ∀ᵐ ω ∂P, ∀ x : ℂ, IsLQGClock planarBrownianMotion γ
@@ -547,8 +547,9 @@ theorem ae_forall_rat_lt_of_isLQGClock (hh : LatticeProb.Gauss.IsWholePlaneGFF P
 
 end OneStart
 
-/-- The time-change property from every start: for almost every field, from every start, every LQG
-clock of the inserted field (`0 < γ`, `γ² < 2`, `α < Q`) is almost surely a time-change clock. -/
+/-- The time-change property from every start: for every family of LQG clocks of the inserted field
+from every start (`0 < γ`, `γ² < 2`, `α < Q`), for almost every field, from every start, the clock
+is almost surely a time-change clock. -/
 theorem ae_forall_isTimeChangeClock_of_isLQGClock {Ω : Type} [MeasurableSpace Ω]
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ)
@@ -560,8 +561,9 @@ theorem ae_forall_isTimeChangeClock_of_isLQGClock {Ω : Type} [MeasurableSpace �
     (ae_forall_rat_ae_dyadicIncrementLiminf_pos hh hγ hγ2 α)
 
 /-- **Finite expected exit times of Liouville Brownian motion from every start** (the finiteness
-conjunct of the LBM clause of Proposition 2.5): for `0 < γ`, `γ² < 2` and `α < Q`, for almost every
-field, from every smooth bounded domain and every start in it, for every family of LQG clocks. -/
+conjunct of the LBM clause of Proposition 2.5): for `0 < γ`, `γ² < 2` and `α < Q`, for every family
+of LQG clocks from every start, for almost every field, from every smooth bounded domain and every
+start in it. -/
 theorem ae_forall_expectedLBMExitTime_lt_top_of_isLQGClock {Ω : Type} [MeasurableSpace Ω]
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2)
