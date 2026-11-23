@@ -3,7 +3,8 @@
 The dyadic Liouville clocks of the whole-plane field without insertion,
 `I_n(t) = ∫₀ᵗ ε_n^{γ²/2} e^{γ h_{ε_n}(B_s)} ds` with `ε_n = 2^{-(n+1)}` and `h` normalized by `h_1(0) = 0`,
 converge locally uniformly on `[0, ∞)` to a continuous, nonnegative and nondecreasing limit, almost surely
-under the field-path product law, from every start and for every `0 < γ < 2`.
+under the field-path product law, from every start, for every `0 < γ < 2` and every probability space
+`Ω : Type*` carrying the field.
 `ae_exists_locally_uniform_limit_clock_nonpositive` (`LQGClockExteriorClockConvergence.lean:213`) proves this
 for nonpositive insertions and `γ² < 2` only; at `α = 0` the range `2 ≤ γ² < 4` is new.
 
@@ -20,6 +21,14 @@ All files are in `HarmonicBalls/Proofs/Potential/`; the new file is `LQGClockZer
 | locally uniform convergence of the half-disc clocks on `[0, ∞)` | `ae_exists_locally_uniform_limit_halfDisc_clock_zero` | `:363` |
 | locally uniform convergence of the full clocks, `0 < γ < 2` | `ae_exists_locally_uniform_limit_clock_zero` | `:430` |
 | the same for `0 < γ`, `2 ≤ γ²`, `γ < 2` and fields on `Type`, as one proposition | `forall_ae_exists_locally_uniform_limit_clock_zero_of_two_le_sq` | `:449` |
+
+## Consumer
+
+`forall_ae_exists_locally_uniform_limit_clock_zero_of_two_le_sq` has exactly the type of the premise `hlocHigh`
+of IDLA-Mated-CRT's `gaussianClock_localLimit` and of its canonical counted forms
+(`∀ γ, 0 < γ → 2 ≤ γ ^ 2 → γ < 2 → ∀ {Ω : Type} ...`), so it discharges that premise;
+`ae_exists_locally_uniform_limit_clock_zero` gives the conclusion of `gaussianClock_localLimit` for every
+`0 < γ < 2` without the case split at `γ² = 2`.
 
 ## Route
 
