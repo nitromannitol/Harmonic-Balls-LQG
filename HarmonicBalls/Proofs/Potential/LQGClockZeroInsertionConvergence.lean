@@ -1,6 +1,6 @@
 import HarmonicBalls.Proofs.Potential.LQGClockExteriorClockConvergence
 
-/-! # Convergence of the clock without insertion for every `γ < 2`
+/-! # Convergence of the clock without insertion for every `0 < γ < 2`
 
 Without insertion (`α = 0`) the closed half-disc `{‖z‖ ≤ 1/2}` plays no special role: the
 density is the plain normalized circle-average density of the field. For `0 < γ < 2` the
@@ -12,7 +12,7 @@ sure uniform convergence on the unit time interval, the Markov property at integ
 locally uniform convergence on `[0, ∞)`, and adding the exterior clocks gives the full clock.
 
 This is the convergence of the Liouville Brownian motion clock of Berestycki
-(arXiv:1301.3356, Section 2) for the whole-plane field without insertion and every `γ < 2`.
+(arXiv:1301.3356, Section 2) for the whole-plane field without insertion and every `0 < γ < 2`.
 
 ## Main results
 
@@ -423,7 +423,7 @@ theorem ae_exists_locally_uniform_limit_halfDisc_clock_zero
     exact hn t ⟨t.coe_nonneg, by exact_mod_cast ht⟩
   exact exists_continuous_monotone_limit_of_uniform_on_nat_intervals B hBc hB0 hBm hnatB
 
-/-- **The clock without insertion for every `γ < 2`.** For `0 < γ < 2` and any Brownian start,
+/-- **The clock without insertion for every `0 < γ < 2`.** For `0 < γ < 2` and any Brownian start,
 the dyadic clocks `∫₀ᵗ ε^{γ²/2} e^{γ h_ε(B_s)} ds`, `ε = 2^{-(n+1)}`, of the whole-plane field
 converge locally uniformly on `[0, ∞)` to a continuous, nonnegative and nondecreasing limit,
 almost surely under the field-path product law. -/

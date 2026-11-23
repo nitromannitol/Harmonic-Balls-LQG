@@ -51,15 +51,18 @@ of IDLA-Mated-CRT's `gaussianClock_localLimit` and of its canonical counted form
 
 ## Departures from the source
 
-Berestycki (arXiv:1301.3356, Section 2) proves the convergence of the clock for the Dirichlet field of a domain,
-for a fixed time, quenched in the path, by a second moment for small `γ` and a thick-point truncation for every
-`γ < 2`, and continuity of the limit from the absence of atoms. Here the field is the whole-plane field with
-`h_1(0) = 0`. The localization is the one already in the repository: the fixed-horizon step is quenched in the
-path, for the field recentred at the circle average `h_R(0)` on a disc of radius `R` containing the support of
-the test function, by a field-expectation bound of the thick-point truncation along the occupation measure of
-the path (`ae_brownian_submeasure_field_increment_le_of_radius`, `LQGClockBrownianRadiusIncrement.lean:18`),
-summable along the dyadic scales, and then returns to the normalization `h_1(0) = 0`. Continuity of the limit
-and uniformity in time come from the annealed dyadic cell moments (a Kolmogorov criterion) rather than from
-the absence of atoms, and the passage from `[0, 1]` to `[0, ∞)` from the Markov property at integer times.
+Berestycki (arXiv:1301.3356, Section 2) treats the Dirichlet field of a domain and proves, for a fixed time,
+almost sure convergence of the clock along the scales `2^{-k}`, quenched in the path, by a second moment for
+small `γ` and a thick-point truncation for every `0 < γ < 2`; at that stage the limit might still be identically
+zero, and the section has no statement uniform in time. Here the field is the whole-plane field with `h_1(0) = 0`. The localization is the one
+already in the repository: the fixed-horizon step is quenched in the path, for the field recentred at the circle
+average `h_R(0)` on a disc of radius `R` containing the support of the test function, by a field-expectation
+bound of the thick-point truncation along the occupation measure of the path
+(`ae_brownian_submeasure_field_increment_le_of_radius`, `LQGClockBrownianRadiusIncrement.lean:18`), summable
+along the dyadic scales, and then returns to the normalization `h_1(0) = 0`. Continuity of the limit and
+uniformity in time, which the source does not state, come from the annealed dyadic cell moments through the
+dyadic cell moment criterion `ae_exists_continuousOn_monotoneOn_limit_of_dyadic_cell_moment`
+(`LQGClockDyadicCellMomentUniform.lean:186`, a Kolmogorov criterion), and the passage from `[0, 1]` to `[0, ∞)`
+from the Markov property at integer times.
 
 No existing statement is changed.
