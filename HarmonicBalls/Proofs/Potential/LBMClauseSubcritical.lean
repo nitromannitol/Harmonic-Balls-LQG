@@ -92,4 +92,10 @@ theorem greenPotentialLiouvilleHolder_of_lt_two :
   exact ⟨greenPotentialLiouvilleHolder_lbmClause_of_lt_two hγ hγ2 hα hh hμ,
     greenPotentialHolderStmt_holds γ α₀ hγ hγ2 hα Ω P hC hcirc μ hh hμ⟩
 
+/-- **Proposition 2.5 at universe `0`**: the frozen statement `GreenPotentialLiouvilleHolderStmt`, with
+its probability space in `Type`, holds. The kernel checks that `greenPotentialLiouvilleHolder_of_lt_two`
+has its type. -/
+theorem greenPotentialLiouvilleHolderStmt_zero : GreenPotentialLiouvilleHolderStmt.{0} :=
+  greenPotentialLiouvilleHolder_of_lt_two
+
 end HarmonicBalls

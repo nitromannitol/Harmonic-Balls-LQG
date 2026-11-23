@@ -56,8 +56,8 @@ theorem exp_mul_dyadicIncrementApprox_succ_sub {γ : ℝ} {u : ℝ → ℂ → �
   have hint : ∀ j, IntegrableOn (fun v : ℝ => dyadicScale j ^ (γ ^ 2 / 2) *
       rexp (γ * (u (dyadicScale j) (w v.toNNReal) - u R 0))) (Ioc a b) := fun j =>
     (continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul
-      (((hu j).comp (continuous_comp_toNNReal w)).sub continuous_const)))).integrableOn_Icc.mono_set
-      Ioc_subset_Icc_self
+      (((hu j).comp (ContinuousPath.continuous_comp_toNNReal w)).sub
+        continuous_const)))).integrableOn_Icc.mono_set Ioc_subset_Icc_self
   rw [integral_sub (hint _) (hint _)]
   simp only [dyadicIncrementApprox, hf0, intervalIntegral.integral_of_le hab,
     ← integral_const_mul, hpt]

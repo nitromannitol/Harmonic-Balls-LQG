@@ -32,7 +32,8 @@ namespace HarmonicBalls
 noncomputable def pathOccupation (w : ContinuousPath ℂ) (a b : ℝ) : Measure ℂ :=
   (volume.restrict (Ioc a b)).map fun v => w v.toNNReal
 
-theorem continuous_comp_toNNReal (w : ContinuousPath ℂ) : Continuous fun v : ℝ => w v.toNNReal :=
+theorem ContinuousPath.continuous_comp_toNNReal (w : ContinuousPath ℂ) :
+    Continuous fun v : ℝ => w v.toNNReal :=
   w.continuous.comp continuous_real_toNNReal
 
 instance (w : ContinuousPath ℂ) (a b : ℝ) : IsFiniteMeasure (pathOccupation w a b) := by
@@ -40,7 +41,7 @@ instance (w : ContinuousPath ℂ) (a b : ℝ) : IsFiniteMeasure (pathOccupation 
   infer_instance
 
 /-- An indicator of `‖d‖ < δ` is at most `δ^β ‖d‖^{-β}`. -/
-theorem indicator_norm_lt_le_rpow {δ β : ℝ} (hδ : 0 < δ) (hβ : 0 < β) (d : ℂ) :
+theorem pathOccupation_indicator_norm_lt_le {δ β : ℝ} (hδ : 0 < δ) (hβ : 0 < β) (d : ℂ) :
     ({d : ℂ | ‖d‖ < δ}.indicator (1 : ℂ → ℝ≥0∞) d) ≤
       ENNReal.ofReal (δ ^ β) * (ENNReal.ofReal ‖d‖) ^ (-β) := by
   by_cases hd : ‖d‖ < δ
@@ -64,13 +65,15 @@ theorem pathOccupation_prod_lt_le (w : ContinuousPath ℂ) (a b : ℝ) {δ β : 
       ENNReal.ofReal (δ ^ β) * ∫⁻ s in Ioc a b, ∫⁻ t in Ioc a b,
         (ENNReal.ofReal ‖w s.toNNReal - w t.toNNReal‖) ^ (-β) := by
   set f : ℝ → ℂ := fun v => w v.toNNReal with hfdef
-  have hf : Measurable f := (continuous_comp_toNNReal w).measurable
+  have hf : Measurable f := (ContinuousPath.continuous_comp_toNNReal w).measurable
   have hS : MeasurableSet {p : ℂ × ℂ | ‖p.1 - p.2‖ < δ} :=
     (isOpen_lt (continuous_norm.comp (continuous_fst.sub continuous_snd))
       continuous_const).measurableSet
   have hE : Measurable fun q : ℝ × ℝ => (ENNReal.ofReal ‖f q.1 - f q.2‖) ^ (-β) :=
-    ((continuous_norm.comp (((continuous_comp_toNNReal w).comp continuous_fst).sub
-      ((continuous_comp_toNNReal w).comp continuous_snd))).measurable.ennreal_ofReal).pow_const _
+    ((continuous_norm.comp
+      (((ContinuousPath.continuous_comp_toNNReal w).comp continuous_fst).sub
+        ((ContinuousPath.continuous_comp_toNNReal w).comp
+          continuous_snd))).measurable.ennreal_ofReal).pow_const _
   unfold pathOccupation
   rw [Measure.map_prod_map _ _ hf hf, Measure.map_apply (hf.prodMap hf) hS,
     ← lintegral_indicator_one (hS.preimage (hf.prodMap hf))]
@@ -79,7 +82,7 @@ theorem pathOccupation_prod_lt_le (w : ContinuousPath ℂ) (a b : ℝ) {δ β : 
       ≤ ∫⁻ q, ENNReal.ofReal (δ ^ β) * (ENNReal.ofReal ‖f q.1 - f q.2‖) ^ (-β)
         ∂((volume.restrict (Ioc a b)).prod (volume.restrict (Ioc a b))) := by
         refine lintegral_mono fun q => ?_
-        have h := indicator_norm_lt_le_rpow hδ hβ (f q.1 - f q.2)
+        have h := pathOccupation_indicator_norm_lt_le hδ hβ (f q.1 - f q.2)
         simpa [Set.indicator, Prod.map] using h
     _ = _ := by
         rw [lintegral_const_mul _ hE, lintegral_prod _ hE.aemeasurable]
@@ -105,7 +108,8 @@ theorem lintegral_ofReal_abs_integral_increment_le {Ω : Type*} [MeasurableSpace
   have hPm := hh.isProbabilityMeasure
   have hR : 0 < N + 1 := by linarith
   set ν := pathOccupation w a b with hνdef
-  have hf : Measurable fun v : ℝ => w v.toNNReal := (continuous_comp_toNNReal w).measurable
+  have hf : Measurable fun v : ℝ => w v.toNNReal :=
+    (ContinuousPath.continuous_comp_toNNReal w).measurable
   set g : ℂ → ℝ := (Metric.closedBall (0 : ℂ) N).indicator fun _ => 1 with hgdef
   have hgm : Measurable g := measurable_const.indicator Metric.isClosed_closedBall.measurableSet
   have hgi : Integrable g ν :=

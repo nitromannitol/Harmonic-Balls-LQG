@@ -64,9 +64,9 @@ No existing statement or frozen declaration is changed.
 ## Departures from the cited sources
 
 - Berestycki's Section 2 bounds the quenched second moment of the truncated increments, given the path, by
-  the occupation estimate of Dembo–Peres–Rosen–Zeitouni (*Thick points for planar Brownian motion*, Acta
-  Math. 186 (2001), Theorem 1.2). Here the increments are bounded in `L¹` under the joint law, and only the
-  expected Brownian interval energy is used.
+  the occupation estimate of Dembo–Peres–Rosen–Zeitouni (*Thick points for planar Brownian motion and the
+  Erdős–Taylor conjecture on random walk*, Acta Math. 186 (2001), Theorem 1.2). Here the increments are
+  bounded in `L¹` under the joint law, and only the expected Brownian interval energy is used.
 - Berestycki's Section 3 (nondegeneracy by an `L^q` bound from Kahane's convexity inequality and a
   second-moment count) is replaced as recorded in `LBMClauseClocksEveryStart.md`; no `L^q` bound, Kahane
   inequality or exactly scale-invariant field is used.
