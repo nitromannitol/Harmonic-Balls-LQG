@@ -20,9 +20,9 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `F ω x` is a family of cloc
 
 | Result | Declaration | File:line |
 |---|---|---|
-| Green identity from every start, every insertion `α < Q`, `0 < γ < 2`, hyps `hF`, `hT` | `ae_forall_expectedLBMExitTime_eq_green` | `LBMExpectedExitTimeGreenHolder.lean:73` |
-| both conjuncts of the LBM clause, hyps `hF`, `hT` | `ae_expectedLBMExitTime_lt_top_and_holder` | `LBMExpectedExitTimeGreenHolder.lean:209` |
-| both conjuncts of the LBM clause, hyps `γ² < 2`, `hF` and the one-start event | `ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` | `LBMExpectedExitTimeGreenHolder.lean:239` |
+| Green identity from every start, every insertion `α < Q`, `0 < γ < 2`, hyps `hF`, `hT` | `ae_forall_expectedLBMExitTime_eq_green` | `LBMExpectedExitTimeGreenHolder.lean:75` |
+| both conjuncts of the LBM clause, hyps `hF`, `hT` | `ae_expectedLBMExitTime_lt_top_and_holder` | `LBMExpectedExitTimeGreenHolder.lean:211` |
+| both conjuncts of the LBM clause, hyps `γ² < 2`, `hF` and the one-start event | `ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` | `LBMExpectedExitTimeGreenHolder.lean:241` |
 | Green integrals of the approximating measures converge for every smooth domain and pole | `IsWholePlaneGFF.ae_tendsto_green_lintegral_smooth` | `LQGSmoothGreenIntegralConvergence.lean:279` |
 | the same with a continuous weight in `[0, 1]` | `IsWholePlaneGFF.ae_tendsto_green_mul_lintegral_smooth` | `LQGSmoothGreenWeightedConvergence.lean:228` |
 | summable exit-time increments of weighted approximations from almost every start, every insertion | `ae_ae_lintegral_tsum_exit_weighted_increment_ne_top` | `LQGClockExitWeightedSummability.lean:32` |
@@ -88,7 +88,7 @@ clause for the family `F`. The time-change property `hT` comes from
 The LBM clause of `GreenPotentialLiouvilleHolderStmt`, both conjuncts, holds with no hypothesis beyond the
 antecedents of the frozen statement for `0 < γ`, `γ² < 2`, `α₀ < Q` and `Ω : Type`:
 `greenPotentialLiouvilleHolder_lbmClause` (`LBMClauseOneStart.lean:26`), which applies
-`ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` (`LBMExpectedExitTimeGreenHolder.lean:239`)
+`ae_expectedLBMExitTime_lt_top_and_holder_of_dyadicIncrementLiminf_pos` (`LBMExpectedExitTimeGreenHolder.lean:241`)
 to the one-start event `ae_forall_rat_ae_dyadicIncrementLiminf_pos` (`LQGClockOneStart.lean:521`; Berestycki
 2015, Theorem 1.2, proved by the route of `LBMClauseClocksEveryStart.md`). With the
 Green clause `greenPotentialHolderStmt_holds`, `greenPotentialLiouvilleHolder_of_sq_lt_two`
