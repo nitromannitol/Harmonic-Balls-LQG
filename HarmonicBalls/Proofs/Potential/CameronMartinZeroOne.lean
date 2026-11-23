@@ -83,11 +83,11 @@ theorem map_cond_finsetComb_eq {S : Set (I → ℝ)} (hS : MeasurableSet S)
     (P[|(fun ω j => X j ω) ⁻¹' S]).map (fun ω ↦ ∑ j ∈ J, c j * X j ω) =
       P.map (fun ω ↦ ∑ j ∈ J, c j * X j ω) := by
   classical
-  haveI := hX.isProbabilityMeasure
+  have := hX.isProbabilityMeasure
   set A := (fun ω j => X j ω) ⁻¹' S with hAdef
   have hp : Measurable fun ω j ↦ X j ω := measurable_pi_iff.mpr hmeas
   have hA : MeasurableSet A := hp hS
-  haveI : IsProbabilityMeasure (P[|A]) := cond_isProbabilityMeasure hpos
+  have : IsProbabilityMeasure (P[|A]) := cond_isProbabilityMeasure hpos
   set Y : Ω → ℝ := fun ω ↦ ∑ j ∈ J, c j * X j ω with hYdef
   have hYm : Measurable Y := by rw [hYdef]; fun_prop
   have hYG : HasGaussianLaw Y P := hasGaussianLaw_finsetComb hX J c
@@ -100,13 +100,13 @@ theorem map_cond_finsetComb_eq {S : Set (I → ℝ)} (hS : MeasurableSet S)
   set σ₀ : I →₀ ℝ := ∑ j ∈ J, Finsupp.single j (c j) with hσ₀
   have hσ₀app : ∀ i, σ₀ i = if i ∈ J then c i else 0 := by
     intro i
-    rw [hσ₀, Finsupp.finset_sum_apply]
+    rw [hσ₀, Finsupp.finsetSum_apply]
     simp only [Finsupp.single_apply]
     rw [Finset.sum_ite_eq']
   have hσ₀supp : σ₀.support ⊆ J := by
     intro i hi
     by_contra hiJ
-    exact (Finsupp.mem_support_iff.mp hi) (by rw [hσ₀app, if_neg hiJ])
+    exact (Finsupp.mem_support_iff.mp hi) (by rw [hσ₀app, ite_eq_right hiJ])
   have hmgf : mgf id (gaussianReal 0 w) = mgf id ((P[|A]).map Y) := by
     funext t
     rw [mgf_id_map hYm.aemeasurable]
@@ -119,7 +119,7 @@ theorem map_cond_finsetComb_eq {S : Set (I → ℝ)} (hS : MeasurableSet S)
       intro ω
       rw [comb_eq_sum_subset hX (t • σ₀) hsupp, hYdef, Finset.mul_sum]
       refine Finset.sum_congr rfl fun j hj => ?_
-      rw [Finsupp.smul_apply, smul_eq_mul, hσ₀app, if_pos hj]
+      rw [Finsupp.smul_apply, smul_eq_mul, hσ₀app, ite_eq_left hj]
       ring
     have hnorm : covNorm X P (t • σ₀) = t ^ 2 * Var[Y; P] := by
       rw [← variance_comb hX (t • σ₀)]
@@ -166,7 +166,7 @@ theorem map_cond_finsetComb_eq {S : Set (I → ℝ)} (hS : MeasurableSet S)
         _ = (P A).toReal * Real.exp (t ^ 2 * Var[Y; P] / 2) := by rw [h2]
     rw [mgf, ProbabilityTheory.cond, integral_smul_measure, key, ENNReal.toReal_inv,
       smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ hPApos.ne', one_mul, hwv]
-    simp only [id, zero_mul, zero_add]
+    simp only [zero_mul, zero_add]
     congr 1
     ring
   have hc := eqOn_complexMGF_of_mgf hmgf
@@ -180,14 +180,14 @@ theorem map_cond_restrict_eq {S : Set (I → ℝ)} (hS : MeasurableSet S)
     (P[|(fun ω j => X j ω) ⁻¹' S]).map (fun ω ↦ J.restrict (fun j ↦ X j ω)) =
       P.map (fun ω ↦ J.restrict (fun j ↦ X j ω)) := by
   classical
-  haveI := hX.isProbabilityMeasure
+  have := hX.isProbabilityMeasure
   set A := (fun ω j => X j ω) ⁻¹' S with hAdef
-  haveI : IsProbabilityMeasure (P[|A]) := cond_isProbabilityMeasure hpos
+  have : IsProbabilityMeasure (P[|A]) := cond_isProbabilityMeasure hpos
   have hV : Measurable fun ω ↦ J.restrict (fun j ↦ X j ω) :=
     measurable_pi_iff.mpr fun j ↦ hmeas j
-  haveI : IsProbabilityMeasure ((P[|A]).map fun ω ↦ J.restrict (fun j ↦ X j ω)) :=
+  have : IsProbabilityMeasure ((P[|A]).map fun ω ↦ J.restrict (fun j ↦ X j ω)) :=
     (Measure.isProbabilityMeasure_map_iff hV.aemeasurable).mpr inferInstance
-  haveI : IsProbabilityMeasure (P.map fun ω ↦ J.restrict (fun j ↦ X j ω)) :=
+  have : IsProbabilityMeasure (P.map fun ω ↦ J.restrict (fun j ↦ X j ω)) :=
     (Measure.isProbabilityMeasure_map_iff hV.aemeasurable).mpr inferInstance
   refine Measure.ext_of_charFunDual (funext fun L ↦ ?_)
   set c : I → ℝ := fun j ↦
@@ -209,13 +209,13 @@ theorem map_cond_eq {S : Set (I → ℝ)} (hS : MeasurableSet S)
     (hinv : ∀ (σ : I →₀ ℝ) (g : I → ℝ), g ∈ S → g + covShift X P σ ∈ S)
     (hpos : P ((fun ω j => X j ω) ⁻¹' S) ≠ 0) :
     (P[|(fun ω j => X j ω) ⁻¹' S]).map (fun ω j ↦ X j ω) = P.map (fun ω j ↦ X j ω) := by
-  haveI := hX.isProbabilityMeasure
+  have := hX.isProbabilityMeasure
   set A := (fun ω j => X j ω) ⁻¹' S with hAdef
-  haveI : IsProbabilityMeasure (P[|A]) := cond_isProbabilityMeasure hpos
+  have : IsProbabilityMeasure (P[|A]) := cond_isProbabilityMeasure hpos
   have hp : Measurable fun ω j ↦ X j ω := measurable_pi_iff.mpr hmeas
-  haveI : IsProbabilityMeasure ((P[|A]).map fun ω j ↦ X j ω) :=
+  have : IsProbabilityMeasure ((P[|A]).map fun ω j ↦ X j ω) :=
     (Measure.isProbabilityMeasure_map_iff hp.aemeasurable).mpr inferInstance
-  haveI : IsProbabilityMeasure (P.map fun ω j ↦ X j ω) :=
+  have : IsProbabilityMeasure (P.map fun ω j ↦ X j ω) :=
     (Measure.isProbabilityMeasure_map_iff hp.aemeasurable).mpr inferInstance
   refine ext_of_generate_finite (measurableCylinders fun _ : I ↦ ℝ)
     generateFrom_measurableCylinders.symm isPiSystem_measurableCylinders (fun s hs ↦ ?_)
@@ -236,7 +236,7 @@ theorem measure_preimage_eq_zero_or_one_of_shift_invariant {S : Set (I → ℝ)}
     (hS : MeasurableSet S)
     (hinv : ∀ (σ : I →₀ ℝ) (g : I → ℝ), g ∈ S → g + covShift X P σ ∈ S) :
     P ((fun ω j => X j ω) ⁻¹' S) = 0 ∨ P ((fun ω j => X j ω) ⁻¹' S) = 1 := by
-  haveI := hX.isProbabilityMeasure
+  have := hX.isProbabilityMeasure
   by_cases hpos : P ((fun ω j => X j ω) ⁻¹' S) = 0
   · exact Or.inl hpos
   right
