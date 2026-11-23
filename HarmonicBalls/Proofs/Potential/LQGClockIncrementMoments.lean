@@ -110,7 +110,7 @@ theorem le_circlePairPotential_of_ne {ε : ℝ} (hε : 0 < ε) {z z' : ℂ} (hzz
       · exact le_max_of_le_right (by linarith))
   rwa [Real.circleAverage_const] at h
 
-theorem circleAverage_logMaxAbs_le {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) {N : ℝ} {z : ℂ}
+theorem circleAverage_logMaxAbs_le_log_add_one {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) {N : ℝ} {z : ℂ}
     (hz : ‖z‖ ≤ N) :
     Real.circleAverage LatticeProb.Gauss.logMaxAbs z ε ≤ Real.log (N + 1) := by
   have hN : 0 ≤ N := (norm_nonneg z).trans hz
@@ -211,8 +211,8 @@ theorem lintegral_ofReal_dyadicDensity_mul_le (hh : LatticeProb.Gauss.IsWholePla
     ← Real.exp_add, ENNReal.ofReal_rpow_of_pos hd, ← ENNReal.ofReal_mul hK.le]
   apply ENNReal.ofReal_le_ofReal
   -- compare exponents
-  have hA := circleAverage_logMaxAbs_le hε (dyadicScale_le_one k) hz
-  have hA' := circleAverage_logMaxAbs_le hε (dyadicScale_le_one k) hz'
+  have hA := circleAverage_logMaxAbs_le_log_add_one hε (dyadicScale_le_one k) hz
+  have hA' := circleAverage_logMaxAbs_le_log_add_one hε (dyadicScale_le_one k) hz'
   have hP := le_circlePairPotential_of_ne hε hzz
   rw [Real.log_div hd.ne' two_ne_zero] at hP
   have hrhs : (N + 1) ^ (4 * γ ^ 2) * 2 ^ (γ ^ 2) * ‖z - z'‖ ^ (-γ ^ 2) =

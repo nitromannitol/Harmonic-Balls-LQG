@@ -116,9 +116,9 @@ exterior clocks already proved for starts `x ≠ 0`. Nondegeneracy is proved as 
 
 - Berestycki's Section 3 proves an `L^q` bound (`q > 1`, all `γ < 2`) with Kahane's convexity inequality
   and an exactly scale-invariant field, and then probability one by a second-moment count of small squares
-  where the clock charges, using the domain Markov property (with Gwynne–Miller, *Local metrics of the
-  Gaussian free field*, Ann. Inst. Fourier 70 (2020), Lemma 2.1, for the whole-plane field). Here the
-  `L²` bound replaces the `L^q` bound (valid exactly for `γ² < 2`, the range of the theorems above), and
+  where the clock charges, using the domain Markov property (for the whole-plane field this needs
+  Gwynne–Miller, *Local metrics of the Gaussian free field*, Ann. Inst. Fourier 70 (2020), Lemma 2.1).
+  Here the `L²` bound replaces the `L^q` bound (valid exactly for `γ² < 2`, the range of the theorems above), and
   the Cameron–Martin zero-one law along a fixed path replaces the second-moment count; no domain Markov
   property is used. In the printed count the events attached to different squares depend on the same
   Brownian path and are independent only conditionally on it, while the lower bound on their expected

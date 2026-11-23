@@ -211,7 +211,8 @@ theorem ae_prod_tendsto_dyadicIncrementApprox_of_ne_zero
   refine ((hclock t).sub (hclock s)).congr fun j => ?_
   exact lqgClockApprox_sub_eq_dyadicIncrementApprox (h4 _ (dyadicScale_pos (j + 1))) q.2 s t
 
-/-- **Positivity from a start `x ≠ 0` without insertion.** -/
+/-- **Positivity from a start `x ≠ 0` without insertion** (`α = 0`, the last `zero` of the
+name). -/
 theorem ae_ae_dyadicIncrementLiminf_pos_of_ne_zero_zero
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2)
     {x : ℂ} (hx : x ≠ 0) {a b : ℝ≥0} (hab : a < b) :
@@ -516,8 +517,9 @@ theorem ae_ae_dyadicIncrementLiminf_pos_origin
 
 /-- **The one-start event.** For `0 < γ`, `γ² < 2` and every insertion `α`, for almost every field,
 the lower limit of the dyadic approximants of every clock increment between rational times
-`0 < a < b` is positive almost surely under planar Brownian motion from the origin (Berestycki
-2015, Theorem 1.2, nondegeneracy of the clock, for the circle-normalized whole-plane field). -/
+`0 < a < b` is positive almost surely under planar Brownian motion from the origin (the analogue
+of Berestycki 2015, Theorem 1.2, nondegeneracy of the clock, for the circle-normalized whole-plane
+field). -/
 theorem ae_forall_rat_ae_dyadicIncrementLiminf_pos
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2)
     (α : ℝ) :
@@ -535,7 +537,8 @@ theorem ae_forall_rat_ae_dyadicIncrementLiminf_pos
   exact hω (a, b) ha hab
 
 /-- Strict increase between rational times: for every family of LQG clocks of the inserted field from
-every start (`0 < γ`, `γ² < 2`), for almost every field, from every start. -/
+every start (`0 < γ`, `γ² < 2`), for almost every field, the clock from each start increases strictly
+between any two rational times almost surely. -/
 theorem ae_forall_rat_lt_of_isLQGClock (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
     {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
     (hF : ∀ᵐ ω ∂P, ∀ x : ℂ, IsLQGClock planarBrownianMotion γ

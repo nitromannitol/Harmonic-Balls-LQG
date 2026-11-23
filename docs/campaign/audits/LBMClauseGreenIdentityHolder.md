@@ -73,7 +73,7 @@ clause for the family `F`. The time-change property `hT` comes from
 - The paper cites Berestycki 2015 and Garban–Rhodes–Vargas, *Liouville Brownian motion*, Ann. Probab. 44
   (2016), for the construction of LBM (corrected draft line 525). Its proof of the clause (lines 540-542)
   cites the volume growth Lemma 2.4 and the Campanato embedding (Ponce 2016, Section 16.2), and uses the
-  identity `E_x[τ_O] = ∫_O G_O(x, y) μ_h(dy)` without proof. The Lean proof proves the identity, with the
+  identity `E_x[τ_O] = ∫_O G_O(x, y) μ_h(dy)` implicitly. The Lean proof proves the identity, with the
   factor 2 of the normalizations of `greenFunction` and of planar Brownian motion. It does not use a Revuz
   correspondence for positive continuous additive functionals: the identity is proved directly from the
   clock approximations by
