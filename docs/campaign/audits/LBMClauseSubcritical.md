@@ -16,9 +16,9 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `F ω x` is a family of cloc
 
 | Result | Declaration | File:line |
 |---|---|---|
-| `L¹` bound of the thick-point truncation for the recentred increments along a bounded path, with its occupation measure as reference measure | `lintegral_ofReal_abs_integral_increment_le`, `lintegral_ofReal_abs_integral_dyadicIncrement_le_exp` | `LQGClockIncrementL1Rate.lean:89`, `:233` |
-| pairs of points of the occupation measure at distance `< δ` have mass `≤ δ^β ∫∫ |w_s - w_t|^{-β}` | `pathOccupation_prod_lt_le` | `LQGClockIncrementL1Rate.lean:61` |
-| `E_x ∫∫_{(a,b]²} |B_s - B_t|^{-β} < ∞` for `0 < β < 2` | `lintegral_planarBrownianMotion_Ioc_pair_lt_top` | `LQGClockIncrementL1Rate.lean:301` |
+| `L¹` bound of the thick-point truncation for the recentred increments along a bounded path, with its occupation measure as reference measure | `lintegral_ofReal_abs_integral_increment_le`, `lintegral_ofReal_abs_integral_dyadicIncrement_le_exp` | `LQGClockIncrementL1Rate.lean:92`, `:237` |
+| pairs of points of the occupation measure at distance `< δ` have mass `≤ δ^β ∫∫ |w_s - w_t|^{-β}` | `pathOccupation_prod_lt_le` | `LQGClockIncrementL1Rate.lean:62` |
+| `E_x ∫∫_{(a,b]²} |B_s - B_t|^{-β} < ∞` for `0 < β < 2` | `lintegral_planarBrownianMotion_Ioc_pair_lt_top` | `LQGClockIncrementL1Rate.lean:305` |
 | `E[e^{-γ h_R(0)} ε^{γ²/2} e^{γ h_ε(z)}] = R^{γ²/2}` for `‖z‖ + ε ≤ R` | `lintegral_ofReal_recentred_dyadicDensity` | `LQGClockOneStartSubcritical.lean:71` |
 | positivity of `G_{a,b}` without insertion from every start, `0 < γ < 2` | `ae_ae_dyadicIncrementLiminf_pos_zero_of_lt_two` | `LQGClockOneStartSubcritical.lean:104` |
 | with every insertion from `x ≠ 0`, then from the origin | `ae_ae_dyadicIncrementLiminf_pos_of_ne_zero_of_lt_two`, `ae_ae_dyadicIncrementLiminf_pos_origin_of_lt_two` | `LQGClockOneStartSubcritical.lean:468`, `:484` |
@@ -29,8 +29,11 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `F ω x` is a family of cloc
 | time-change property from every start, `0 < γ < 2`, `α < Q` | `ae_forall_isTimeChangeClock_of_isLQGClock_of_lt_two` | `LBMClauseSubcritical.lean:34` |
 | the LBM clause, both conjuncts, `0 < γ < 2`, `α₀ < Q`, `Ω : Type` | `greenPotentialLiouvilleHolder_lbmClause_of_lt_two` | `LBMClauseSubcritical.lean:56` |
 | the conclusion of `GreenPotentialLiouvilleHolderStmt` for `0 < γ < 2` and `Ω : Type` | `greenPotentialLiouvilleHolder_of_lt_two` | `LBMClauseSubcritical.lean:74` |
+| the frozen statement at universe `0`, `GreenPotentialLiouvilleHolderStmt.{0}` | `greenPotentialLiouvilleHolderStmt_zero` | `LBMClauseSubcritical.lean:98` |
 
-The last theorem has exactly the type of the frozen statement with `Ω : Type*` replaced by `Ω : Type`. The
+`greenPotentialLiouvilleHolder_of_lt_two` has exactly the type of the frozen statement with `Ω : Type*`
+replaced by `Ω : Type`, and the kernel checks this: `greenPotentialLiouvilleHolderStmt_zero` is that theorem
+at the type `GreenPotentialLiouvilleHolderStmt.{0}`. The
 LBM clause is obtained from `ae_expectedLBMExitTime_lt_top_and_holder` (`LBMExpectedExitTimeGreenHolder.lean`,
 `0 < γ < 2`, `hF` and the time-change property), and the Green clause is `greenPotentialHolderStmt_holds`.
 No existing statement or frozen declaration is changed.
