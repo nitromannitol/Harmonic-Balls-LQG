@@ -74,14 +74,59 @@ of the route imports it, and strict increase comes from the one-start event inst
 - The passage from one start to every start uses the fixed-time Markov transfer above in place of the
   coupling of Garban–Rhodes–Vargas Lemma 2.9 and Bertacco–Gwynne Lemma 5.13.
 
-## Remaining input
+## The one-start event
 
-- **The one-start event** (positivity of the clock increments from the origin). Source: Berestycki,
-  *Diffusion in planar Liouville quantum gravity*, Ann. Inst. Henri Poincaré Probab. Stat. 51 (2015),
-  Theorem 1.2 and Section 3 (nondegeneracy of the clock of a Dirichlet GFF from a fixed start), transferred
-  to the circle-normalized whole-plane field by Gwynne–Miller, *Local metrics of the Gaussian free field*,
-  Ann. Inst. Fourier (Grenoble) 70 (2020), Lemma 2.1 (domain Markov property of the whole-plane GFF pinned
-  by its unit circle average). Neither result is formalized in Harmonic-Balls-LQG or
-  in Lattice-Probability.
+The one-start event is proved for `0 < γ`, `γ² < 2` and every insertion `α` (no condition `α < Q`), for
+`IsWholePlaneGFF` on any `Ω : Type*`:
+
+| Result | Declaration | File |
+|---|---|---|
+| zero-one law for events of a centred Gaussian process invariant under its Cameron–Martin shifts | `measure_preimage_eq_zero_or_one_of_shift_invariant` | `CameronMartinZeroOne.lean` |
+| along every fixed path, `P(G_{a,b} > 0) ∈ {0, 1}` | `measure_dyadicIncrementLiminf_pos_eq_zero_or_one` | `LQGClockProfileZeroOne.lean` |
+| `E[J_k] ≥ b - a`; `E[J_k²] ≤ (N+1)^{4γ²} 2^{γ²} ∫∫ |w_s - w_t|^{-γ²}` along a path bounded by `N` | `le_lintegral_profileIncrement`, `lintegral_profileIncrement_sq_le` | `LQGClockIncrementMoments.lean` |
+| almost sure convergence of the increment approximants from `x ≠ 0` under the joint law | `ae_prod_tendsto_dyadicIncrementApprox_of_ne_zero` | `LQGClockOneStart.lean` |
+| positivity from `x ≠ 0`, then from the origin | `ae_ae_dyadicIncrementLiminf_pos_of_ne_zero`, `ae_ae_dyadicIncrementLiminf_pos_origin` | `LQGClockOneStart.lean` |
+| the one-start event | `ae_forall_rat_ae_dyadicIncrementLiminf_pos` | `LQGClockOneStart.lean` |
+| strict increase, time-change property and finite expected exit times from every start, without the one-start hypothesis | `ae_forall_rat_lt_of_isLQGClock`, `ae_forall_isTimeChangeClock_of_isLQGClock`, `ae_forall_expectedLBMExitTime_lt_top_of_isLQGClock` | `LQGClockOneStart.lean` |
+
+Here `J_k = ∫_a^b ε^{γ²/2} e^{γ h_ε(w_v)} dv` with `ε = 2^{-k}`, read through a functional of the dyadic
+circle-average profile that is measurable for the product σ-algebra (`profileIncrementLiminf`).
+
+Route. Source: Berestycki, *Diffusion in planar Liouville quantum gravity*, Ann. Inst. Henri Poincaré
+Probab. Stat. 51 (2015), arXiv:1301.3356, Theorem 1.2: almost sure dyadic convergence (Section 2) and
+nondegeneracy (Section 3) of the clock. Section 2 is used through the convergence of the half-disc and
+exterior clocks already proved for starts `x ≠ 0`. Nondegeneracy is proved as follows.
+
+1. For a fixed path `w`, adding to the field a Cameron–Martin shift `Cov(h_·, X)`, with `X` a finite
+   combination of circle averages, multiplies `J_k` by a factor in `[e^{-|γ| M}, e^{|γ| M}]`, since the
+   shift is bounded uniformly in the scale on the bounded path range. The event `{G_{a,b}(w) > 0}` is
+   therefore invariant, and has probability `0` or `1` by the zero-one law for Cameron–Martin invariant
+   events (Bogachev, *Gaussian measures*, AMS 1998, Section 2.5), proved from the Cameron–Martin formula
+   (`QuantumZipper.CameronMartin.map_tiltMeasure_path`, Lattice-Probability) and moment generating
+   functions.
+2. If the paths with probability `0` had positive probability from `x ≠ 0`, the approximants restricted
+   to them (and to paths bounded by `N` on `[a, b]`) would tend to `0` almost surely under the joint law,
+   stay bounded in `L²` (`E_x ∫∫ |B_s - B_t|^{-γ²} < ∞` for `γ² < 2`), and have means at least `b - a`
+   times the probability of the restriction (`Var h_ε(z) ≥ log (1/ε)`): impossible.
+3. The insertion multiplies the approximants by `e^{-γ α log max(ε, |B_v|)}`, bounded below on `[a, b]`
+   since Brownian motion from `x ≠ 0` never visits `0`. The origin is reached by the fixed-time Markov
+   transfer from the start `1`.
+
+## Departures from the cited sources (one-start event)
+
+- Berestycki's Section 3 proves an `L^q` bound (`q > 1`, all `γ < 2`) with Kahane's convexity inequality
+  and an exactly scale-invariant field, and then probability one by a second-moment count of small squares
+  where the clock charges, using the domain Markov property (with Gwynne–Miller, *Local metrics of the
+  Gaussian free field*, Ann. Inst. Fourier 70 (2020), Lemma 2.1, for the whole-plane field). Here the
+  `L²` bound replaces the `L^q` bound (valid exactly for `γ² < 2`, the range of the theorems above), and
+  the Cameron–Martin zero-one law along a fixed path replaces the second-moment count; no domain Markov
+  property is used. In the printed count the events attached to different squares depend on the same
+  Brownian path and are independent only conditionally on it, while the lower bound on their expected
+  number is annealed.
+- The field is the circle-normalized whole-plane GFF itself, with the dyadic circle averages as the
+  regularization, not a Dirichlet GFF.
+
+## The Hölder conjunct
+
 - The Hölder conjunct of the LBM clause is proved, with the same hypotheses, through the Green identity
   `E_x[τ_O] = ∫_O 2 G_O(x, y) μ_h(dy)` from every start; see `LBMClauseGreenIdentityHolder.md`.
