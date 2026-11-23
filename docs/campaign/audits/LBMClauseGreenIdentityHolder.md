@@ -93,4 +93,6 @@ to the one-start event `ae_forall_rat_ae_dyadicIncrementLiminf_pos` (`LQGClockOn
 2015, Theorem 1.2, proved by the route of `LBMClauseClocksEveryStart.md`). With the
 Green clause `greenPotentialHolderStmt_holds`, `greenPotentialLiouvilleHolder_of_sq_lt_two`
 (`LBMClauseOneStart.lean:44`) is the conclusion of `GreenPotentialLiouvilleHolderStmt` in that range. The frozen
-statement also covers `2 ≤ γ² < 4` (it assumes `γ < 2`) and `Ω : Type*`; both remain open.
+statement also covers `2 ≤ γ² < 4` (it assumes `γ < 2`), where the conclusion is proved for every
+`0 < γ < 2` and `Ω : Type` by `greenPotentialLiouvilleHolder_of_lt_two` (`LBMClauseSubcritical.lean:74`;
+see `LBMClauseSubcritical.md`), and `Ω : Type*`, which remains open.
