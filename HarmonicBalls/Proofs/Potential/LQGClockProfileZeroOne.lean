@@ -51,13 +51,13 @@ theorem norm_profileRound_le (n : ℕ) (z : ℂ) : ‖profileRound n z‖ ≤ 2 
 
 /-- The dyadic density `ε^{γ²/2} e^{γ (g(k, z) - α log max(ε, |z|))}` (`ε = 2^{-k}`) of a profile
 `g`, read at the simple approximations of `z`. -/
-noncomputable def profileDensity (γ α : ℝ) (k : ℕ) (g : ℕ × ℂ → ℝ) (z : ℂ) : ℝ≥0∞ :=
+@[irreducible] noncomputable def profileDensity (γ α : ℝ) (k : ℕ) (g : ℕ × ℂ → ℝ) (z : ℂ) : ℝ≥0∞ :=
   liminf (fun n => ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) *
     Real.exp (γ * (g (k, profileRound n z) - α * Real.log (max (dyadicScale k) ‖z‖))))) atTop
 
 /-- The lower limit over the dyadic scales of the approximants `∫_a^b` of the profile densities
 along a path. -/
-noncomputable def profileIncrementLiminf (γ α a b : ℝ) (g : ℕ × ℂ → ℝ) (w : ContinuousPath ℂ) :
+@[irreducible] noncomputable def profileIncrementLiminf (γ α a b : ℝ) (g : ℕ × ℂ → ℝ) (w : ContinuousPath ℂ) :
     ℝ≥0∞ :=
   liminf (fun k => ∫⁻ v in Ioc a b, profileDensity γ α k g (w v.toNNReal)) atTop
 
@@ -79,6 +79,7 @@ theorem measurable_profileDensity_comp (γ α : ℝ) (k : ℕ) {β : Type*} [Mea
         α * Real.log (max (dyadicScale k) ‖G x‖))))) :=
     fun n => (measurable_const.mul ((measurable_const.mul
       ((hm n).sub (measurable_const.mul hlog))).exp)).ennreal_ofReal
+  unfold profileDensity
   exact Measurable.liminf hn
 
 /-- `profileIncrementLiminf` is measurable jointly in the profile and the path. -/
@@ -95,6 +96,7 @@ theorem measurable_profileIncrementLiminf_comp (γ α a b : ℝ) {β : Type*} [M
     have hint : Measurable (fun q : β × ℝ => profileDensity γ α k (F q.1) (W q.1 q.2.toNNReal)) :=
       measurable_profileDensity_comp γ α k (hF.comp measurable_fst) hpath
     exact hint.lintegral_prod_right'
+  unfold profileIncrementLiminf
   exact Measurable.liminf hk
 
 theorem measurableSet_profileIncrementLiminf_pos (γ α a b : ℝ) (w : ContinuousPath ℂ) :
@@ -107,6 +109,7 @@ theorem profileDensity_of_continuous {γ α : ℝ} {k : ℕ} {g : ℕ × ℂ →
     (hg : Continuous fun z => g (k, z)) (z : ℂ) :
     profileDensity γ α k g z = ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) *
       Real.exp (γ * (g (k, z) - α * Real.log (max (dyadicScale k) ‖z‖)))) := by
+  unfold profileDensity
   apply Filter.Tendsto.liminf_eq
   exact (ENNReal.continuous_ofReal.tendsto _).comp
     (tendsto_const_nhds.mul ((Real.continuous_exp.tendsto _).comp

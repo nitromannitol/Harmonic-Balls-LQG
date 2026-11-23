@@ -44,6 +44,7 @@ theorem integral_exp_eq_of_hasGaussianLaw [IsProbabilityMeasure P] {Z : Ω → �
     rw [← this, hm1, hv]
     ring_nf
 
+omit [MeasurableSpace Ω] in
 theorem mem_span_circle {r : ℝ} (hr : 0 < r) (z : ℂ) :
     (fun ω => hcirc ω r z) ∈ Submodule.span ℝ (Set.range
       fun (o : LatticeProb.Gauss.GFFObservable.Admissible) ω => o.1.eval (hC ω) (hcirc ω)) :=
@@ -124,7 +125,7 @@ theorem circleAverage_logMaxAbs_le {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) {
 
 theorem circleAverage_logMaxAbs_nonneg (z : ℂ) (ε : ℝ) :
     0 ≤ Real.circleAverage LatticeProb.Gauss.logMaxAbs z ε :=
-  Real.circleAverage_nonneg_of_nonneg fun x _ => Real.log_nonneg (le_max_right _ _)
+  Real.circleAverage_nonneg_of_nonneg fun _ _ => Real.log_nonneg (le_max_right _ _)
 
 /-- The second moment of a product of two dyadic densities:
 `E[ε^{γ²} e^{γ (h_ε(z) + h_ε(z'))}] ≤ (N + 1)^{4γ²} 2^{γ²} |z - z'|^{-γ²}` for `|z|, |z'| ≤ N`. -/
@@ -227,5 +228,106 @@ theorem lintegral_ofReal_dyadicDensity_mul_le (hh : LatticeProb.Gauss.IsWholePla
   have h3 : γ ^ 2 * (Real.log ‖z - z'‖ - Real.log 2) ≤ γ ^ 2 * Pz :=
     mul_le_mul_of_nonneg_left hP hg2
   nlinarith
+
+/-! ### Moments of the increments along a path -/
+
+/-- For almost every field the profile densities of the dyadic circle averages are the dyadic
+densities `ε^{γ²/2} e^{γ h_ε(z)}`. -/
+theorem ae_profileDensity_eq (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (γ : ℝ) :
+    ∀ᵐ ω ∂P, ∀ (k : ℕ) (z : ℂ),
+      profileDensity γ 0 k (fun p => hcirc ω (dyadicScale p.1) p.2) z =
+        ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ω (dyadicScale k) z)) := by
+  filter_upwards [ae_continuous_dyadic_circle hh] with ω hω k z
+  rw [profileDensity_of_continuous (g := fun p : ℕ × ℂ => hcirc ω (dyadicScale p.1) p.2) (hω k)]
+  simp only [zero_mul, sub_zero]
+
+theorem measurable_profileDensity_path (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (γ : ℝ) (k : ℕ) (w : ContinuousPath ℂ) :
+    Measurable (Function.uncurry fun (ω : Ω) (v : ℝ) =>
+      profileDensity γ 0 k (fun p => hcirc ω (dyadicScale p.1) p.2) (w v.toNNReal)) :=
+  measurable_profileDensity_comp γ 0 k
+    (F := fun q : Ω × ℝ => fun p : ℕ × ℂ => hcirc q.1 (dyadicScale p.1) p.2)
+    (G := fun q : Ω × ℝ => w q.2.toNNReal)
+    ((measurable_dyadicProfile hh).comp measurable_fst)
+    ((w.continuous.comp continuous_real_toNNReal).measurable.comp measurable_snd)
+
+/-- The mean of the increment approximant along any path is at least the length of the
+interval. -/
+theorem le_lintegral_profileIncrement (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (γ : ℝ) (k : ℕ) (a b : ℝ) (w : ContinuousPath ℂ) :
+    ENNReal.ofReal (b - a) ≤ ∫⁻ ω, (∫⁻ v in Ioc a b,
+      profileDensity γ 0 k (fun p => hcirc ω (dyadicScale p.1) p.2) (w v.toNNReal)) ∂P := by
+  have hPm := hh.isProbabilityMeasure
+  rw [lintegral_lintegral_swap (measurable_profileDensity_path hh γ k w).aemeasurable]
+  have hpt : ∀ v : ℝ, 1 ≤ ∫⁻ ω,
+      profileDensity γ 0 k (fun p => hcirc ω (dyadicScale p.1) p.2) (w v.toNNReal) ∂P := by
+    intro v
+    have hae : (fun ω => profileDensity γ 0 k (fun p => hcirc ω (dyadicScale p.1) p.2)
+        (w v.toNNReal)) =ᵐ[P] fun ω => ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) *
+          Real.exp (γ * hcirc ω (dyadicScale k) (w v.toNNReal))) := by
+      filter_upwards [ae_profileDensity_eq hh γ] with ω hω
+      exact hω k _
+    rw [lintegral_congr_ae hae, lintegral_ofReal_dyadicDensity hh]
+    exact ENNReal.one_le_ofReal.mpr
+      (Real.one_le_exp (mul_nonneg (sq_nonneg γ) (circleAverage_logMaxAbs_nonneg _ _)))
+  calc ENNReal.ofReal (b - a) = ∫⁻ _ in Ioc a b, (1 : ℝ≥0∞) := by
+        rw [setLIntegral_const, one_mul, Real.volume_Ioc]
+    _ ≤ _ := lintegral_mono fun v => hpt v
+
+/-- The second moment of the increment approximant along a path bounded by `N` on `(a, b]` is at
+most `(N + 1)^{4γ²} 2^{γ²} ∫∫ |w_s - w_t|^{-γ²}`. -/
+theorem lintegral_profileIncrement_sq_le (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    (γ : ℝ) (k : ℕ) {a b N : ℝ} (w : ContinuousPath ℂ)
+    (hw : ∀ v ∈ Ioc a b, ‖w v.toNNReal‖ ≤ N) :
+    ∫⁻ ω, (∫⁻ v in Ioc a b,
+        profileDensity γ 0 k (fun p => hcirc ω (dyadicScale p.1) p.2) (w v.toNNReal)) ^ 2 ∂P ≤
+      ENNReal.ofReal ((N + 1) ^ (4 * γ ^ 2) * 2 ^ (γ ^ 2)) *
+        ∫⁻ s in Ioc a b, ∫⁻ t in Ioc a b,
+          (ENNReal.ofReal ‖w s.toNNReal - w t.toNNReal‖) ^ (-γ ^ 2) := by
+  have hPm := hh.isProbabilityMeasure
+  set D : Ω → ℝ → ℝ≥0∞ := fun ω v =>
+    profileDensity γ 0 k (fun p => hcirc ω (dyadicScale p.1) p.2) (w v.toNNReal) with hDdef
+  have hD : Measurable (Function.uncurry D) := measurable_profileDensity_path hh γ k w
+  have hsq : ∀ ω, (∫⁻ v in Ioc a b, D ω v) ^ 2 =
+      ∫⁻ s in Ioc a b, ∫⁻ t in Ioc a b, D ω s * D ω t := by
+    intro ω
+    rw [sq, lintegral_lintegral_mul hD.of_uncurry_left.aemeasurable
+      hD.of_uncurry_left.aemeasurable]
+  change ∫⁻ ω, (∫⁻ v in Ioc a b, D ω v) ^ 2 ∂P ≤ _
+  simp_rw [hsq]
+  have h3 : Measurable (fun q : (Ω × ℝ) × ℝ => D q.1.1 q.1.2 * D q.1.1 q.2) :=
+    (hD.comp (measurable_fst.fst.prodMk measurable_fst.snd)).mul
+      (hD.comp (measurable_fst.fst.prodMk measurable_snd))
+  have hG : Measurable (Function.uncurry fun ω s => ∫⁻ t in Ioc a b, D ω s * D ω t) :=
+    h3.lintegral_prod_right'
+  have hH : ∀ s, Measurable (Function.uncurry fun ω t => D ω s * D ω t) := fun s =>
+    (hD.comp (measurable_fst.prodMk measurable_const)).mul hD
+  have hpt : ∀ s ∈ Ioc a b, ∀ t ∈ Ioc a b, ∫⁻ ω, D ω s * D ω t ∂P ≤
+      ENNReal.ofReal ((N + 1) ^ (4 * γ ^ 2) * 2 ^ (γ ^ 2)) *
+        (ENNReal.ofReal ‖w s.toNNReal - w t.toNNReal‖) ^ (-γ ^ 2) := by
+    intro s hs t ht
+    have hae : (fun ω => D ω s * D ω t) =ᵐ[P] fun ω =>
+        ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) *
+          Real.exp (γ * hcirc ω (dyadicScale k) (w s.toNNReal))) *
+        ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) *
+          Real.exp (γ * hcirc ω (dyadicScale k) (w t.toNNReal))) := by
+      filter_upwards [ae_profileDensity_eq hh γ] with ω hω
+      exact congrArg₂ (· * ·) (hω k _) (hω k _)
+    rw [lintegral_congr_ae hae]
+    exact lintegral_ofReal_dyadicDensity_mul_le hh γ k (hw s hs) (hw t ht)
+  calc ∫⁻ ω, (∫⁻ s in Ioc a b, ∫⁻ t in Ioc a b, D ω s * D ω t) ∂P
+      = ∫⁻ s in Ioc a b, (∫⁻ ω, (∫⁻ t in Ioc a b, D ω s * D ω t) ∂P) :=
+        lintegral_lintegral_swap hG.aemeasurable
+    _ = ∫⁻ s in Ioc a b, ∫⁻ t in Ioc a b, (∫⁻ ω, D ω s * D ω t ∂P) :=
+        lintegral_congr fun s => lintegral_lintegral_swap (hH s).aemeasurable
+    _ ≤ ∫⁻ s in Ioc a b, ∫⁻ t in Ioc a b,
+          ENNReal.ofReal ((N + 1) ^ (4 * γ ^ 2) * 2 ^ (γ ^ 2)) *
+            (ENNReal.ofReal ‖w s.toNNReal - w t.toNNReal‖) ^ (-γ ^ 2) :=
+        setLIntegral_mono' measurableSet_Ioc fun s hs =>
+          setLIntegral_mono' measurableSet_Ioc fun t ht => hpt s hs t ht
+    _ = _ := by
+        rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+        refine lintegral_congr fun s => ?_
+        rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
 
 end HarmonicBalls
