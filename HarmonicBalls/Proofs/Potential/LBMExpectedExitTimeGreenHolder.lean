@@ -131,7 +131,6 @@ theorem ae_forall_expectedLBMExitTime_eq_green_of_halfDisc_increments
       exact hcomp
     exact (ENNReal.add_le_add_iff_left hVfin).mp h2
   rw [le_antisymm (hup O hO x hx) hlow]
-  congr 1
   rw [integral_mul_const, mul_comm, setIntegral_eq_integral_of_forall_compl_eq_zero fun z hz =>
     greenFunction_of_notMem_right hz x]
 
