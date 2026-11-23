@@ -83,4 +83,5 @@ of the route imports it, and strict increase comes from the one-start event inst
   Ann. Inst. Fourier (Grenoble) 70 (2020), Lemma 2.1 (domain Markov property of the whole-plane GFF pinned
   by its unit circle average). Neither result is formalized in Harmonic-Balls-LQG or
   in Lattice-Probability.
-- The Hölder conjunct of the LBM clause has no candidate.
+- The Hölder conjunct of the LBM clause is proved, with the same hypotheses, through the Green identity
+  `E_x[τ_O] = ∫_O 2 G_O(x, y) μ_h(dy)` from every start; see `LBMClauseGreenIdentityHolder.md`.
