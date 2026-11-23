@@ -86,6 +86,82 @@ theorem tendsto_lintegral_zero_of_ae_tendsto_zero_of_lintegral_sq_le {X : Type*}
     _ ≤ ε / 2 + ε / 2 := add_le_add le_rfl hn
     _ = ε := ENNReal.add_halves ε
 
+/-- With an insertion `α`, the approximants along a path whose logarithmic distances
+`log max(ε, |w_v|)` are bounded by `L` on `[a, b]` are at least `e^{-|γ α| L}` times the
+approximants without insertion. -/
+theorem dyadicIncrementLiminf_insertion_ge {γ α a b L : ℝ} (hab : a ≤ b) {u : ℝ → ℂ → ℝ}
+    (hu : ∀ k, Continuous (u (dyadicScale k))) {w : ContinuousPath ℂ}
+    (hL : ∀ v ∈ Icc a b, ∀ k : ℕ, |Real.log (max (dyadicScale k) ‖w v.toNNReal‖)| ≤ L) :
+    ENNReal.ofReal (Real.exp (-(|γ * α| * L))) *
+        dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage 0 u) a b w ≤
+      dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α u) a b w := by
+  have hca : ∀ (β : ℝ) (k : ℕ),
+      Continuous (LatticeProb.Gauss.fieldCircleAverage β u (dyadicScale k)) := by
+    intro β k
+    have h : LatticeProb.Gauss.fieldCircleAverage β u (dyadicScale k) =
+        fun z => u (dyadicScale k) z - β * Real.log (max (dyadicScale k) ‖z‖) :=
+      funext (fieldCircleAverage_dyadic_eq β u k)
+    rw [h]
+    exact (hu k).sub (continuous_const.mul ((continuous_const.max continuous_norm).log
+      fun z => ne_of_gt (lt_of_lt_of_le (dyadicScale_pos k) (le_max_left _ _))))
+  unfold dyadicIncrementLiminf
+  rw [← ENNReal.liminf_const_mul_of_ne_top ENNReal.ofReal_ne_top]
+  refine Filter.liminf_le_liminf (Filter.Eventually.of_forall fun k => ?_)
+  rw [← ENNReal.ofReal_mul (Real.exp_pos _).le]
+  apply ENNReal.ofReal_le_ofReal
+  rw [dyadicIncrementApprox, dyadicIncrementApprox, ← intervalIntegral.integral_const_mul]
+  refine intervalIntegral.integral_mono_on hab
+    ((continuous_const.mul (continuous_dyadicIncrementIntegrand (hca 0 k) w)).intervalIntegrable _ _)
+    ((continuous_dyadicIncrementIntegrand (hca α k) w).intervalIntegrable _ _) fun v hv => ?_
+  rw [fieldCircleAverage_dyadic_eq, fieldCircleAverage_dyadic_eq]
+  have h1 := hL v hv k
+  set ℓ := Real.log (max (dyadicScale k) ‖w v.toNNReal‖)
+  have h2 : -(|γ * α| * L) ≤ -(γ * α * ℓ) := by
+    have h3 : |γ * α * ℓ| ≤ |γ * α| * L := by
+      rw [abs_mul]
+      exact mul_le_mul_of_nonneg_left h1 (abs_nonneg _)
+    linarith [le_abs_self (γ * α * ℓ)]
+  calc Real.exp (-(|γ * α| * L)) * (dyadicScale k ^ (γ ^ 2 / 2) *
+        Real.exp (γ * (u (dyadicScale k) (w v.toNNReal) - 0 * ℓ)))
+      ≤ Real.exp (-(γ * α * ℓ)) * (dyadicScale k ^ (γ ^ 2 / 2) *
+        Real.exp (γ * (u (dyadicScale k) (w v.toNNReal) - 0 * ℓ))) :=
+        mul_le_mul_of_nonneg_right (Real.exp_le_exp.mpr h2)
+          (mul_nonneg (Real.rpow_nonneg (dyadicScale_pos k).le _) (Real.exp_pos _).le)
+    _ = dyadicScale k ^ (γ ^ 2 / 2) *
+        Real.exp (γ * (u (dyadicScale k) (w v.toNNReal) - α * ℓ)) := by
+        rw [show γ * (u (dyadicScale k) (w v.toNNReal) - α * ℓ) =
+          -(γ * α * ℓ) + γ * (u (dyadicScale k) (w v.toNNReal) - 0 * ℓ) by ring, Real.exp_add]
+        ring
+
+/-- A path that avoids `0` on `[a, b]` has bounded logarithmic distances `log max(ε, |w_v|)` there,
+uniformly in the dyadic scale. -/
+theorem exists_abs_log_max_le {a b : ℝ} (hab : a ≤ b) {w : ContinuousPath ℂ}
+    (hw : ∀ v ∈ Icc a b, w v.toNNReal ≠ 0) :
+    ∃ L, ∀ v ∈ Icc a b, ∀ k : ℕ, |Real.log (max (dyadicScale k) ‖w v.toNNReal‖)| ≤ L := by
+  have hc : ContinuousOn (fun v : ℝ => ‖w v.toNNReal‖) (Icc a b) :=
+    (continuous_norm.comp (w.continuous.comp continuous_real_toNNReal)).continuousOn
+  obtain ⟨v₀, hv₀, hmin⟩ := isCompact_Icc.exists_isMinOn (nonempty_Icc.mpr hab) hc
+  obtain ⟨v₁, hv₁, hmax⟩ := isCompact_Icc.exists_isMaxOn (nonempty_Icc.mpr hab) hc
+  have hm : 0 < ‖w v₀.toNNReal‖ := norm_pos_iff.mpr (hw v₀ hv₀)
+  refine ⟨|Real.log ‖w v₀.toNNReal‖| + |Real.log (max 1 ‖w v₁.toNNReal‖)|, fun v hv k => ?_⟩
+  have h1 : ‖w v₀.toNNReal‖ ≤ ‖w v.toNNReal‖ := isMinOn_iff.mp hmin v hv
+  have h2 : ‖w v.toNNReal‖ ≤ ‖w v₁.toNNReal‖ := isMaxOn_iff.mp hmax v hv
+  have hpos : 0 < max (dyadicScale k) ‖w v.toNNReal‖ :=
+    lt_of_lt_of_le hm (h1.trans (le_max_right _ _))
+  have hlo : Real.log ‖w v₀.toNNReal‖ ≤ Real.log (max (dyadicScale k) ‖w v.toNNReal‖) :=
+    Real.log_le_log hm (h1.trans (le_max_right _ _))
+  have hhi : Real.log (max (dyadicScale k) ‖w v.toNNReal‖) ≤
+      Real.log (max 1 ‖w v₁.toNNReal‖) :=
+    Real.log_le_log hpos (max_le_max (dyadicScale_le_one k) h2)
+  rw [abs_le]
+  constructor
+  · linarith [neg_abs_le (Real.log ‖w v₀.toNNReal‖),
+      abs_nonneg (Real.log (max 1 ‖w v₁.toNNReal‖))]
+  · linarith [le_abs_self (Real.log (max 1 ‖w v₁.toNNReal‖)),
+      abs_nonneg (Real.log ‖w v₀.toNNReal‖)]
+
+section OneStart
+
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
   {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
 
@@ -391,5 +467,112 @@ theorem ae_ae_dyadicIncrementLiminf_pos_of_ne_zero_zero
   filter_upwards [hω] with w hw
   rw [← hGeq ω hωc w]
   exact hw
+
+/-- **Positivity from a start `x ≠ 0`, with every insertion `α`.** -/
+theorem ae_ae_dyadicIncrementLiminf_pos_of_ne_zero
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2)
+    {x : ℂ} (hx : x ≠ 0) (α : ℝ) {a b : ℝ≥0} (hab : a < b) :
+    ∀ᵐ ω ∂P, ∀ᵐ w ∂(planarBrownianMotion x),
+      0 < dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) a b w := by
+  have hab' : (a : ℝ) ≤ b := hab.le
+  filter_upwards [ae_ae_dyadicIncrementLiminf_pos_of_ne_zero_zero hh hγ hγ2 hx hab,
+    ae_continuous_dyadic_circle hh] with ω h0 hc
+  filter_upwards [h0, Section6.planarBrownianMotion_point_avoidance x 0 hx] with w hw hwav
+  obtain ⟨L, hL⟩ := exists_abs_log_max_le hab' (w := w) fun v _ => hwav _
+  exact lt_of_lt_of_le (ENNReal.mul_pos (ENNReal.ofReal_pos.mpr (Real.exp_pos _)).ne' hw.ne')
+    (dyadicIncrementLiminf_insertion_ge hab' hc hL)
+
+/-- **Positivity from the origin**, for real times `0 < a < b`: the path after time `a` started at
+`0` has a law absolutely continuous with respect to the path after time `a` started at `1`. -/
+theorem ae_ae_dyadicIncrementLiminf_pos_origin
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2)
+    (α : ℝ) {a b : ℝ} (ha : 0 < a) (hab : a < b) :
+    ∀ᵐ ω ∂P, ∀ᵐ w ∂(planarBrownianMotion 0),
+      0 < dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) a b w := by
+  have hb : 0 < b := ha.trans hab
+  have h1 := ae_ae_dyadicIncrementLiminf_pos_of_ne_zero hh hγ hγ2 (one_ne_zero : (1 : ℂ) ≠ 0) α
+    (a := a.toNNReal) (b := b.toNNReal) ((Real.toNNReal_lt_toNNReal_iff hb).mpr hab)
+  filter_upwards [h1, ae_continuous_dyadic_circle hh] with ω hω hc
+  have hab' : 0 ≤ b - a := (sub_pos.mpr hab).le
+  set E := {w' : ContinuousPath ℂ | 0 < profileIncrementLiminf γ α 0 (b - a)
+    (fun p => hcirc ω (dyadicScale p.1) p.2) w'} with hEdef
+  have hE : MeasurableSet E := measurableSet_lt measurable_const
+    (measurable_profileIncrementLiminf_comp γ α 0 (b - a)
+      (F := fun _ : ContinuousPath ℂ => fun p : ℕ × ℂ => hcirc ω (dyadicScale p.1) p.2)
+      (W := fun w' => w') measurable_const measurable_id)
+  have hEq : ∀ w', w' ∈ E ↔
+      0 < dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) 0 (b - a) w' := by
+    intro w'
+    show (0 < profileIncrementLiminf γ α 0 (b - a) (fun p => hcirc ω (dyadicScale p.1) p.2) w') ↔ _
+    rw [profileIncrementLiminf_eq_dyadicIncrementLiminf hab' hc w']
+  have hs : ∀ᵐ w ∂(planarBrownianMotion 1), ContinuousPath.shift a.toNNReal w ∈ E := by
+    filter_upwards [hω] with w hw
+    rw [Real.coe_toNNReal _ ha.le, Real.coe_toNNReal _ hb.le] at hw
+    rw [hEq, ← dyadicIncrementLiminf_shift γ _ ha.le hab.le w]
+    exact hw
+  filter_upwards [ae_shift_mem_of_ae_shift_mem (Real.toNNReal_pos.mpr ha) hE hs 0] with w hw
+  rw [dyadicIncrementLiminf_shift γ _ ha.le hab.le w, ← hEq]
+  exact hw
+
+/-- **The one-start event.** For `0 < γ`, `γ² < 2` and every insertion `α`, for almost every field,
+the lower limit of the dyadic approximants of every clock increment between rational times
+`0 < a < b` is positive almost surely under planar Brownian motion from the origin (Berestycki
+2015, Theorem 1.2, nondegeneracy of the clock, for the circle-normalized whole-plane field). -/
+theorem ae_forall_rat_ae_dyadicIncrementLiminf_pos
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2)
+    (α : ℝ) :
+    ∀ᵐ ω ∂P, ∀ a b : ℚ, 0 < a → a < b → ∀ᵐ w ∂(planarBrownianMotion 0),
+      0 < dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) a b w := by
+  have h : ∀ p : ℚ × ℚ, ∀ᵐ ω ∂P, 0 < p.1 → p.1 < p.2 → ∀ᵐ w ∂(planarBrownianMotion 0),
+      0 < dyadicIncrementLiminf γ (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) p.1 p.2 w := by
+    intro p
+    by_cases hp : 0 < p.1 ∧ p.1 < p.2
+    · filter_upwards [ae_ae_dyadicIncrementLiminf_pos_origin hh hγ hγ2 α (a := (p.1 : ℝ))
+        (b := (p.2 : ℝ)) (by exact_mod_cast hp.1) (by exact_mod_cast hp.2)] with ω hω _ _
+      exact hω
+    · exact Filter.Eventually.of_forall fun ω h1 h2 => absurd ⟨h1, h2⟩ hp
+  filter_upwards [ae_all_iff.mpr h] with ω hω a b ha hab
+  exact hω (a, b) ha hab
+
+/-- Strict increase between rational times from every start, for every family of LQG clocks of the
+inserted field (`0 < γ`, `γ² < 2`). -/
+theorem ae_forall_rat_lt_of_isLQGClock (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
+    {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2) (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hF : ∀ᵐ ω ∂P, ∀ x : ℂ, IsLQGClock planarBrownianMotion γ
+      (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω x)) :
+    ∀ᵐ ω ∂P, ∀ x : ℂ, ∀ s t : ℚ, 0 ≤ s → s < t → ∀ᵐ w ∂(planarBrownianMotion x),
+      F ω x w (s : ℝ).toNNReal < F ω x w (t : ℝ).toNNReal :=
+  ae_forall_rat_lt_of_dyadicIncrementLiminf_pos hh F hF
+    (ae_forall_rat_ae_dyadicIncrementLiminf_pos hh hγ hγ2 α)
+
+end OneStart
+
+/-- The time-change property from every start: for almost every field, from every start, every LQG
+clock of the inserted field (`0 < γ`, `γ² < 2`, `α < Q`) is almost surely a time-change clock. -/
+theorem ae_forall_isTimeChangeClock_of_isLQGClock {Ω : Type} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ)
+    (hγ2 : γ ^ 2 < 2) (hα : α < lqgQ γ) (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hF : ∀ᵐ ω ∂P, ∀ x : ℂ, IsLQGClock planarBrownianMotion γ
+      (LatticeProb.Gauss.fieldCircleAverage α (hcirc ω)) x (F ω x)) :
+    ∀ᵐ ω ∂P, ∀ x : ℂ, ∀ᵐ w ∂(planarBrownianMotion x), IsTimeChangeClock (F ω x w) :=
+  ae_forall_isTimeChangeClock_of_dyadicIncrementLiminf_pos hh hγ hγ2 hα F hF
+    (ae_forall_rat_ae_dyadicIncrementLiminf_pos hh hγ hγ2 α)
+
+/-- **Finite expected exit times of Liouville Brownian motion from every start** (the finiteness
+conjunct of the LBM clause of Proposition 2.5): for `0 < γ`, `γ² < 2` and `α < Q`, for almost every
+field, from every smooth bounded domain and every start in it, for every family of LQG clocks. -/
+theorem ae_forall_expectedLBMExitTime_lt_top_of_isLQGClock {Ω : Type} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ ^ 2 < 2)
+    (hα : α < lqgQ γ) {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hF : ∀ᵐ ω ∂P, ∀ x : ℂ, IsLQGClock planarBrownianMotion γ
+      (fieldCircleAverage α (hcirc ω)) x (F ω x)) :
+    ∀ᵐ ω ∂P, ∀ O : Set ℂ, IsSmoothBoundedOpen O → ∀ x ∈ O,
+      expectedLBMExitTime (F ω x) O x < ⊤ :=
+  ae_forall_expectedLBMExitTime_lt_top_of_dyadicIncrementLiminf_pos hh hγ hγ2 hα hμ F hF
+    (ae_forall_rat_ae_dyadicIncrementLiminf_pos ((LPBridge.isWholePlaneGFF_iff P hC hcirc).mp hh)
+      hγ hγ2 α)
 
 end HarmonicBalls
