@@ -28,13 +28,13 @@ namespace HarmonicBalls
 open MeasureTheory Filter Topology Set Metric MarkovProcess
 open scoped ENNReal NNReal
 
-/-- Almost sure locally uniform convergence of the approximate clocks along `ε = 2^{-(n+1)}` makes
+/-- Almost sure uniform Cauchy convergence of the approximate clocks on bounded time sets makes
 them Cauchy in probability uniformly on bounded time sets. -/
-theorem cauchy_of_ae_exists_locally_uniform {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+theorem cauchy_of_ae_uniformCauchy {γ : ℝ} {hε : ℝ → ℂ → ℝ}
     (hc : ∀ k, Continuous (hε (dyadicScale k))) {x : ℂ}
-    (hlim : ∀ᵐ b ∂(planarBrownianMotion x), ∃ F : ℝ≥0 → ℝ, ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
-      ∀ᶠ n in atTop, ∀ t : ℝ≥0, t ≤ T →
-        |lqgClockApprox γ hε (dyadicScale (n + 1)) b t - F t| < η)
+    (hlim : ∀ᵐ b ∂(planarBrownianMotion x), ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∃ N : ℕ, ∀ j, N ≤ j →
+      ∀ k, N ≤ k → ∀ t ≤ T,
+        |lqgClockApprox γ hε (dyadicScale j) b t - lqgClockApprox γ hε (dyadicScale k) b t| < η)
     (T : ℝ≥0) {η : ℝ} (hη : 0 < η) {θ : ℝ} (hθ : 0 < θ) :
     ∃ N : ℕ, ∀ j, N ≤ j → ∀ k, N ≤ k → planarBrownianMotion x
       {b | ∃ t ≤ T, η ≤ |lqgClockApprox γ hε (dyadicScale j) b t -
@@ -56,30 +56,42 @@ theorem cauchy_of_ae_exists_locally_uniform {γ : ℝ} {hε : ℝ → ℂ → �
   have hzero : planarBrownianMotion x (⋂ N, G N) = 0 := by
     refine measure_mono_null ?_ (ae_iff.1 hlim)
     intro b hb hgood
-    obtain ⟨F, hF⟩ := hgood
-    obtain ⟨N₀, hN₀⟩ := Filter.eventually_atTop.1 (hF T (η / 4) (by positivity))
-    have hbG := mem_iInter.1 hb (N₀ + 1)
+    obtain ⟨N₀, hN₀⟩ := hgood T (η / 2) (by positivity)
+    have hbG := mem_iInter.1 hb N₀
     simp only [hG, mem_iUnion] at hbG
     obtain ⟨j, hj, k, hk, hjk⟩ := hbG
     obtain ⟨t, htT, ht⟩ := hMB j k hjk
-    have h1 := hN₀ (j - 1) (by omega) t htT
-    have h2 := hN₀ (k - 1) (by omega) t htT
-    rw [show j - 1 + 1 = j by omega] at h1
-    rw [show k - 1 + 1 = k by omega] at h2
-    have h3 : |lqgClockApprox γ hε (dyadicScale j) b t - lqgClockApprox γ hε (dyadicScale k) b t| ≤
-        |lqgClockApprox γ hε (dyadicScale j) b t - F t| +
-          |lqgClockApprox γ hε (dyadicScale k) b t - F t| := by
-      rw [show lqgClockApprox γ hε (dyadicScale j) b t - lqgClockApprox γ hε (dyadicScale k) b t =
-        (lqgClockApprox γ hε (dyadicScale j) b t - F t) -
-          (lqgClockApprox γ hε (dyadicScale k) b t - F t) by ring]
-      exact abs_sub _ _
-    linarith
+    linarith [hN₀ j hj k hk t htT]
   rw [Function.comp_def, hzero] at hlimG
   obtain ⟨N, hN⟩ := ENNReal.tendsto_atTop_zero.1 hlimG (ENNReal.ofReal θ) (by simp; positivity)
   refine ⟨N, fun j hj k hk => (measure_mono fun b hb => ?_).trans (hN N le_rfl)⟩
   simp only [hG, mem_iUnion]
   obtain ⟨t, ht, h⟩ := hb
   exact ⟨j, hj, k, hk, hBM j k ⟨t, ht, by linarith⟩⟩
+
+/-- Locally uniform convergence of the approximate clocks along `ε = 2^{-(n+1)}` makes them
+uniformly Cauchy on bounded time sets. -/
+theorem uniformCauchy_of_exists_locally_uniform {γ : ℝ} {hε : ℝ → ℂ → ℝ} {b : ContinuousPath ℂ}
+    (hconv : ∃ F : ℝ≥0 → ℝ, ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η →
+      ∀ᶠ n in atTop, ∀ t : ℝ≥0, t ≤ T →
+        |lqgClockApprox γ hε (dyadicScale (n + 1)) b t - F t| < η)
+    (T : ℝ≥0) {η : ℝ} (hη : 0 < η) : ∃ N : ℕ, ∀ j, N ≤ j → ∀ k, N ≤ k → ∀ t ≤ T,
+      |lqgClockApprox γ hε (dyadicScale j) b t - lqgClockApprox γ hε (dyadicScale k) b t| < η := by
+  obtain ⟨F, hF⟩ := hconv
+  obtain ⟨N₀, hN₀⟩ := Filter.eventually_atTop.1 (hF T (η / 2) (by positivity))
+  refine ⟨N₀ + 1, fun j hj k hk t htT => ?_⟩
+  have h1 := hN₀ (j - 1) (by omega) t htT
+  have h2 := hN₀ (k - 1) (by omega) t htT
+  rw [show j - 1 + 1 = j by omega] at h1
+  rw [show k - 1 + 1 = k by omega] at h2
+  have h3 : |lqgClockApprox γ hε (dyadicScale j) b t - lqgClockApprox γ hε (dyadicScale k) b t| ≤
+      |lqgClockApprox γ hε (dyadicScale j) b t - F t| +
+        |lqgClockApprox γ hε (dyadicScale k) b t - F t| := by
+    rw [show lqgClockApprox γ hε (dyadicScale j) b t - lqgClockApprox γ hε (dyadicScale k) b t =
+      (lqgClockApprox γ hε (dyadicScale j) b t - F t) -
+        (lqgClockApprox γ hε (dyadicScale k) b t - F t) by ring]
+    exact abs_sub _ _
+  linarith
 
 /-- **An LQG clock from every start, without insertion**: for a whole-plane GFF and every
 `0 < γ < 2`, there is a family `F` such that, for almost every field, `F ω x` is an LQG clock of
@@ -95,10 +107,10 @@ theorem exists_ae_forall_isLQGClock_zero {Ω : Type*} [MeasurableSpace Ω] {P : 
   have hQ : (0 : ℝ) < lqgQ γ := by unfold lqgQ; positivity
   have hall := ae_forall_exists_isLQGClock_of_cauchy hh hγ hγ2 hQ (x₀ := 0) (by
     filter_upwards [hloc, ae_continuous_fieldCircleAverage hLP 0] with ω hω hc T η hη θ hθ
-    exact cauchy_of_ae_exists_locally_uniform (fun k => hc _ (dyadicScale_pos k))
-      (hω.mono fun b hb => by
+    exact cauchy_of_ae_uniformCauchy (fun k => hc _ (dyadicScale_pos k))
+      (hω.mono fun b hb T' η' hη' => by
         obtain ⟨F, -, -, -, hF⟩ := hb
-        exact ⟨F, hF⟩) T hη hθ)
+        exact uniformCauchy_of_exists_locally_uniform ⟨F, hF⟩ T' hη') T hη hθ)
   exact ⟨fun ω x => Classical.epsilon fun F => IsLQGClock planarBrownianMotion γ
     (fieldCircleAverage 0 (hcirc ω)) x F, hall.mono fun ω hω x => Classical.epsilon_spec (hω x)⟩
 
