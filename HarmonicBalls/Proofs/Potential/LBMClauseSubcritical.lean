@@ -6,8 +6,8 @@ import HarmonicBalls.Proofs.Potential.LBMClauseOneStart
 The LBM clause of `GreenPotentialLiouvilleHolderStmt` (Proposition 2.5, `prop:lbm-exit-time`): for
 every family of LQG clocks from every start, for almost every field, the expected exit time of
 Liouville Brownian motion from every smooth bounded domain is finite at every start and Hölder
-continuous. It holds for `0 < γ < 2`, `α₀ < Q` and `Ω : Type` with no hypothesis beyond the
-antecedents of the frozen statement.
+continuous. It holds for `0 < γ < 2` and `α₀ < Q`, on a probability space in any universe, with no
+hypothesis beyond the antecedents of the frozen statement.
 
 * The clocks are time-change clocks from every start (`ae_forall_isTimeChangeClock_of_isLQGClock_of_lt_two`):
   strict increase from the one-start event `ae_forall_rat_ae_dyadicIncrementLiminf_pos_of_lt_two`
@@ -19,14 +19,17 @@ antecedents of the frozen statement.
   continuous (`ae_expectedLBMExitTime_lt_top_and_holder`).
 
 With the Green clause `greenPotentialHolderStmt_holds`, this gives the conclusion of
-`GreenPotentialLiouvilleHolderStmt` for every `0 < γ < 2` on every probability space `Ω : Type`
-(`greenPotentialLiouvilleHolder_of_lt_two`). The frozen statement quantifies over `Ω : Type*`.
+`GreenPotentialLiouvilleHolderStmt` for every `0 < γ < 2` on every probability space
+(`greenPotentialLiouvilleHolder_of_lt_two`), hence the frozen statement at every universe
+(`greenPotentialLiouvilleHolderStmt_holds`).
 -/
 
 open MeasureTheory ProbabilityTheory MarkovProcess Real Set Filter Topology
 open scoped ENNReal NNReal
 
 namespace HarmonicBalls
+
+universe u
 
 /-- **The time-change property from every start for `0 < γ < 2`**: for every family of LQG clocks
 of the inserted field from every start (`α < Q`), for almost every field, from every start, the
@@ -50,11 +53,11 @@ theorem ae_forall_isTimeChangeClock_of_isLQGClock_of_lt_two {Ω : Type*} [Measur
   exact ae_isTimeChangeClock_of_isLQGClock (fun k => hcω _ (dyadicScale_pos k)) (hFω x)
     (hpω x) (hdω x)
 
-/-- **The LBM clause of Proposition 2.5** for `0 < γ < 2`, `α₀ < Q` and `Ω : Type`: for every
+/-- **The LBM clause of Proposition 2.5** for `0 < γ < 2` and `α₀ < Q`: for every
 family of LQG clocks from every start, for almost every field, the expected exit times of Liouville
 Brownian motion from every smooth bounded domain are finite and Hölder continuous. -/
 theorem greenPotentialLiouvilleHolder_lbmClause_of_lt_two {γ α₀ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
-    (hα : α₀ < lqgQ γ) {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    (hα : α₀ < lqgQ γ) {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
     (hh : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ) :
     ∀ F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ,
@@ -68,12 +71,11 @@ theorem greenPotentialLiouvilleHolder_lbmClause_of_lt_two {γ α₀ : ℝ} (hγ 
     (ae_forall_isTimeChangeClock_of_isLQGClock_of_lt_two
       ((LPBridge.isWholePlaneGFF_iff P hC hcirc).mp hh) hγ hγ2 hα F hF)
 
-/-- **Proposition 2.5 for `0 < γ < 2` and `Ω : Type`**: the conclusion of
-`GreenPotentialLiouvilleHolderStmt`, the LBM clause and the Green clause, for `0 < γ < 2` and
-`α₀ < Q`, on every probability space `Ω : Type`. -/
+/-- **Proposition 2.5 for `0 < γ < 2`**: the conclusion of `GreenPotentialLiouvilleHolderStmt`, the
+LBM clause and the Green clause, for `0 < γ < 2` and `α₀ < Q`, on every probability space. -/
 theorem greenPotentialLiouvilleHolder_of_lt_two :
     ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
-    ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
       (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc →
       IsLQGMeasureOfField P γ α₀ hcirc μ →
     (∀ F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ,
@@ -92,10 +94,15 @@ theorem greenPotentialLiouvilleHolder_of_lt_two :
   exact ⟨greenPotentialLiouvilleHolder_lbmClause_of_lt_two hγ hγ2 hα hh hμ,
     greenPotentialHolderStmt_holds γ α₀ hγ hγ2 hα Ω P hC hcirc μ hh hμ⟩
 
-/-- **Proposition 2.5 at universe `0`**: the frozen statement `GreenPotentialLiouvilleHolderStmt`, with
-its probability space in `Type`, holds. The kernel checks that `greenPotentialLiouvilleHolder_of_lt_two`
+/-- **Proposition 2.5**: the frozen statement `GreenPotentialLiouvilleHolderStmt` holds, with its
+probability space in any universe. The kernel checks that `greenPotentialLiouvilleHolder_of_lt_two`
 has its type. -/
-theorem greenPotentialLiouvilleHolderStmt_zero : GreenPotentialLiouvilleHolderStmt.{0} :=
+theorem greenPotentialLiouvilleHolderStmt_holds : GreenPotentialLiouvilleHolderStmt.{u} :=
   greenPotentialLiouvilleHolder_of_lt_two
+
+/-- **Proposition 2.5 at universe `0`**: the frozen statement with its probability space in `Type`,
+the case `u = 0` of `greenPotentialLiouvilleHolderStmt_holds`. -/
+theorem greenPotentialLiouvilleHolderStmt_zero : GreenPotentialLiouvilleHolderStmt.{0} :=
+  greenPotentialLiouvilleHolderStmt_holds.{0}
 
 end HarmonicBalls

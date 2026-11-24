@@ -31,7 +31,7 @@ private theorem logarithmic_comparison_mul_rpow {s a γ α κ R : ℝ}
 /-- An ordinary power bound yields a singular power bound when the insertion
 neighborhood exponent is sufficiently small. -/
 theorem ae_singular_approximant_all_center_power_of_ordinary_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
@@ -94,7 +94,7 @@ private theorem small_radius_le_rpow_half {a s : ℝ} (ha : a < 1) (hs : 0 < s)
 /-- The conditional compact-center power estimate holds on all sufficiently
 small balls, without a radius-separation assumption. -/
 theorem ae_singular_approximant_small_ball_power_of_ordinary_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
@@ -125,7 +125,7 @@ theorem ae_singular_approximant_small_ball_power_of_ordinary_power
 /-- A positive ordinary compact-center power bound implies a positive singular
 compact-center power bound on a common event. -/
 theorem ae_singular_approximant_small_ball_power_of_positive_ordinary_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

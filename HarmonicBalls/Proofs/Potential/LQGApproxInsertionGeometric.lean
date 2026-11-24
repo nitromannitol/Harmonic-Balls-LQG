@@ -15,7 +15,7 @@ namespace HarmonicBalls
 /-- On one event, a geometric rate bounds all dyadic approximations on balls
 contained in the stated insertion-centered neighborhoods. -/
 theorem ae_singular_approximant_contained_ball_geometric
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
@@ -75,7 +75,7 @@ theorem ae_singular_approximant_contained_ball_geometric
 /-- The geometric bound can be written as a positive power of each enclosing
 radius in the same sequence. -/
 theorem ae_singular_approximant_contained_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
@@ -114,7 +114,7 @@ theorem ae_singular_approximant_contained_ball_power
 /-- Near the insertion, the mass is bounded by a positive power of the ball
 radius, uniformly over all dyadic regularization scales. -/
 theorem ae_singular_approximant_near_origin_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

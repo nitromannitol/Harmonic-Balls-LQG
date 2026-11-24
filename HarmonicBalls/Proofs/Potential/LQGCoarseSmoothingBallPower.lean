@@ -38,7 +38,7 @@ theorem lqgApprox_apply_le_of_scale_le {γ s t K : ℝ} (hγ : 0 ≤ γ)
 /-- In each sufficiently small dyadic band, masses on compact-center balls
 are controlled by the mass at the upper endpoint. -/
 theorem IsWholePlaneGFF.ae_eventually_lqgApprox_ball_le_dyadic
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ δ : ℝ} (hγ : 0 ≤ γ)
     (hδ : 0 < δ) (R : ℝ) :
@@ -98,7 +98,7 @@ theorem exp_dyadic_oscillation_mul_rpow_le {γ β r : ℝ} (hγ : 0 < γ) (hβ :
 /-- Ordinary approximants have a compact-center ball-power bound at small
 smoothing scales that are at least a fixed power of the ball radius. -/
 theorem IsWholePlaneGFF.ae_coarse_smoothing_small_scale_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (R : ℝ) (m : ℕ) :
@@ -156,7 +156,7 @@ theorem IsWholePlaneGFF.ae_coarse_smoothing_small_scale_ball_power
 /-- Ordinary approximants at every smoothing scale in `(0, 1]` have a
 common compact-center small-ball power bound. -/
 theorem IsWholePlaneGFF.ae_ordinary_continuum_small_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ R : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :

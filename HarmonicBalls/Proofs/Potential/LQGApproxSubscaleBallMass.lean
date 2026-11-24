@@ -18,7 +18,7 @@ namespace HarmonicBalls
 /-- Almost surely, singular approximations at every dyadic smoothing scale obey
 an explicit common upper bound on sufficiently small dyadic balls at the origin. -/
 theorem ae_singular_approximant_uniform_dyadic_ball_bound
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
@@ -101,7 +101,7 @@ theorem ae_singular_approximant_near_origin_dyadic_ball_bound
 /-- The insertion-centered estimate also controls every ball contained in the
 corresponding dyadic ball, simultaneously at every dyadic smoothing scale. -/
 theorem ae_singular_approximant_contained_ball_bound
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

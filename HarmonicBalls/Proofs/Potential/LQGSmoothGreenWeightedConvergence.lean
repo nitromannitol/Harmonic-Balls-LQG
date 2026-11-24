@@ -135,7 +135,7 @@ theorem tendsto_green_mul_integral_of_isSmoothBoundedOpen_of_uniform_local_bound
 pole and every continuous weight bounded by one, against the approximating measures converge
 to the weighted Green integrals against the LQG measure. -/
 theorem IsWholePlaneGFF.ae_tendsto_singular_green_mul_integral_smooth
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
@@ -226,7 +226,7 @@ theorem lintegral_two_greenFunction_mul_weight_density_eq {O : Set ℂ} (hO : Is
 weight `0 ≤ φ ≤ 1`, the weighted Green integrals `∫ 2 G_O(x, y) φ(y) ε^{γ²/2} e^{γ h_ε(y)} dy`
 along the dyadic scales converge to `2 ∫ G_O(x, y) φ(y) μ_h(dy)`. -/
 theorem IsWholePlaneGFF.ae_tendsto_green_mul_lintegral_smooth
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

@@ -192,7 +192,7 @@ theorem tendsto_green_integral_of_isSmoothBoundedOpen_of_uniform_local_bound {O 
 against the approximating measures of the LQG measure converge to the Green integrals against
 the LQG measure. -/
 theorem IsWholePlaneGFF.ae_tendsto_singular_green_integral_smooth
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
@@ -277,7 +277,7 @@ theorem lintegral_two_greenFunction_mul_density_eq {O : Set ℂ} (hO : IsOpen O)
 integrals `∫ 2 G_O(x, y) ε^{γ²/2} e^{γ h_ε(y)} dy` along the dyadic scales converge to
 `2 ∫ G_O(x, y) μ_h(dy)`. -/
 theorem IsWholePlaneGFF.ae_tendsto_green_lintegral_smooth
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

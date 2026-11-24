@@ -100,7 +100,7 @@ theorem circle_box_spatial_bound {Ω : Type*} (hcirc : Ω → ℝ → ℂ → �
 /-- Radial circle-average oscillations are eventually sublinear, uniformly on
 compact disks and over all radii in each dyadic band. -/
 theorem ae_eventually_compact_radial_oscillation
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc) (R : ℝ) {δ : ℝ} (hδ : 0 < δ) :
     ∀ᵐ ω ∂P, ∀ᶠ k : ℕ in atTop, ∀ z : ℂ, ‖z‖ ≤ R → ∀ s,

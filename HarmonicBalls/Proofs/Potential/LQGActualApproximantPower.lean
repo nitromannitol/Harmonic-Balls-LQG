@@ -17,7 +17,7 @@ namespace HarmonicBalls
 
 /-- The ordinary approximations have a common compact-center ball power bound. -/
 theorem IsWholePlaneGFF.ae_ordinary_approximant_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (R : ℝ) :
@@ -41,7 +41,7 @@ theorem IsWholePlaneGFF.ae_ordinary_approximant_ball_power
 
 /-- The singular approximations have a common compact-center small-ball power bound. -/
 theorem IsWholePlaneGFF.ae_singular_approximant_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ) (R : ℝ) :
@@ -58,7 +58,7 @@ theorem IsWholePlaneGFF.ae_singular_approximant_ball_power
 
 /-- One event gives a small-ball power bound on every compact disk. -/
 theorem IsWholePlaneGFF.ae_singular_approximant_ball_power_all_disks
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ) :

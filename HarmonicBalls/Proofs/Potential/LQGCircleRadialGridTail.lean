@@ -56,7 +56,7 @@ theorem summable_pow_mul_exp_neg_sq {A c : ℝ} (hA : 0 < A) (hc : 0 < c) :
 /-- Gaussian radial tails give simultaneous eventual control at all points of
 any spatial grids whose cardinalities have at most exponential growth. -/
 theorem ae_eventually_grid_radial_oscillation
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc)
     {δ A B : ℝ} (hδ : 0 < δ) (hA : 0 < A) (hB : 0 ≤ B)

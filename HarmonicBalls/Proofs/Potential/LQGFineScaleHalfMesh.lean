@@ -182,7 +182,7 @@ theorem ae_fine_scale_ball_le_half_mesh_band
 
 /-- Fine-band masses have positive power bounds at half-mesh grid centers. -/
 theorem IsWholePlaneGFF.ae_fine_scale_half_mesh_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ R : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :
@@ -265,7 +265,7 @@ theorem IsWholePlaneGFF.ae_fine_scale_half_mesh_ball_power
 /-- Fine-scale ordinary masses obey a positive power bound uniformly over
 all centers in a bounded disk. -/
 theorem IsWholePlaneGFF.ae_fine_scale_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ R : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :
@@ -295,7 +295,7 @@ theorem IsWholePlaneGFF.ae_fine_scale_ball_power
 /-- The fine-band estimate controls every positive smoothing radius below
 the scale-dependent threshold. -/
 theorem IsWholePlaneGFF.ae_fine_smoothing_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ R : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :
@@ -336,7 +336,7 @@ theorem IsWholePlaneGFF.ae_fine_smoothing_ball_power
 /-- On bounded disks, ordinary masses of arbitrary sufficiently small balls
 have a positive power bound when the smoothing scale is sufficiently fine. -/
 theorem IsWholePlaneGFF.ae_fine_smoothing_small_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ R : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hR : 0 < R) :

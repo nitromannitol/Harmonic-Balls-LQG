@@ -77,7 +77,7 @@ theorem green_integral_ball_le_of_local_mass_growth {O : Set ℂ} {R C β r₀ r
 /-- The actual singular measure and all continuum approximations have a common
 small-ball Green bound on every bounded disk. -/
 theorem IsWholePlaneGFF.ae_singular_green_integral_ball_bound
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

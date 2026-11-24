@@ -16,7 +16,7 @@ namespace HarmonicBalls
 /-- The singular measure and its dyadic approximations have a common small-ball
 power bound on every compact disk. -/
 theorem IsWholePlaneGFF.ae_singular_limit_and_approximant_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

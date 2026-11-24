@@ -40,8 +40,8 @@ The proof, on one field event:
 
 With the time-change property from every start supplied by the positivity of the clock increments
 from the origin (`ae_forall_isTimeChangeClock_of_dyadicIncrementLiminf_pos`, `γ² < 2`), this is
-the LBM clause of Proposition 2.5 (`GreenPotentialLiouvilleHolderStmt`) for fields with
-`Ω : Type`, under the one-start positivity event. That event is proved for `γ² < 2`
+the LBM clause of Proposition 2.5 (`GreenPotentialLiouvilleHolderStmt`) under the one-start
+positivity event. That event is proved for `γ² < 2`
 (`ae_forall_rat_ae_dyadicIncrementLiminf_pos`), and `greenPotentialLiouvilleHolder_lbmClause` is the
 clause without it.
 -/
@@ -73,7 +73,7 @@ every insertion.** For `0 < γ < 2` and `α < Q`, for every family of LQG clocks
 that are almost surely time-change clocks, for almost every field, for every smooth bounded domain
 `O` and every `x ∈ O`, `E_x[τ_O] = ∫_O G_O(x, y) 2 μ_h(dy)`. -/
 theorem ae_forall_expectedLBMExitTime_eq_green
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     (hα : α < lqgQ γ) {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)
@@ -209,7 +209,7 @@ for every family of LQG clocks from every start that are almost surely time-chan
 almost every field, for every smooth bounded domain `O`, the expected exit time of Liouville
 Brownian motion from `O` is finite from every start in `O` and Hölder continuous on `O`. -/
 theorem ae_expectedLBMExitTime_lt_top_and_holder
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     (hα : α < lqgQ γ) {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)

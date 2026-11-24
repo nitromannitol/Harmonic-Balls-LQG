@@ -16,7 +16,7 @@ namespace HarmonicBalls
 /-- The circle averages of a rescaled field satisfy a dyadic upper bound on a
 fixed disk, with the random recentering retained. -/
 theorem IsWholePlaneGFF.ae_affine_dyadic_circle_le
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {a δ : ℝ} (ha : 0 < a) (hδ : 0 < δ) :
     ∀ᵐ ω ∂P, ∃ C : ℝ, 0 ≤ C ∧ ∀ k z, z ∈ ball (0 : ℂ) (1 / 4 : ℝ) →
@@ -66,7 +66,7 @@ theorem IsWholePlaneGFF.ae_affine_dyadic_circle_le
 
 /-- A dyadic dilation transfers the spatial circle bound to original coordinates. -/
 theorem IsWholePlaneGFF.ae_dyadic_circle_le_on_disk
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {δ R : ℝ} (hδ : 0 < δ)
     (N : ℕ) (hR : R < (LatticeProb.LQG.dyadicScale N)⁻¹ / 4) :
@@ -113,7 +113,7 @@ theorem IsWholePlaneGFF.ae_dyadic_circle_le_on_disk
 /-- For every bounded set of centers, dyadic circle averages satisfy the
 upper bound simultaneously on one event. -/
 theorem IsWholePlaneGFF.ae_compact_dyadic_circle_le
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {δ : ℝ} (hδ : 0 < δ) :
     ∀ᵐ ω ∂P, ∀ R : ℝ, ∃ C : ℝ, 0 ≤ C ∧ ∀ k z, ‖z‖ ≤ R →
@@ -146,7 +146,7 @@ theorem IsWholePlaneGFF.ae_compact_dyadic_circle_le
 /-- The affine recentering error has a uniform dyadic power bound on
 bounded sets of centers. -/
 theorem IsWholePlaneGFF.ae_compact_affine_circle_error_le
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ δ : ℝ} (hγ : 0 < γ) (hδ : 0 < δ) :
     ∀ᵐ ω ∂P, ∀ R : ℝ, ∃ C : ℝ, 0 < C ∧ ∀ k z, ‖z‖ ≤ R →
@@ -196,7 +196,7 @@ theorem IsWholePlaneGFF.ae_compact_affine_circle_error_le
 /-- In the subcritical range the affine recentering error has a positive
 dyadic power uniformly on bounded sets of centers. -/
 theorem IsWholePlaneGFF.ae_compact_affine_circle_error_positive_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) :
     ∀ᵐ ω ∂P, ∀ R : ℝ, ∃ C κ : ℝ, 0 < C ∧ 0 < κ ∧ ∀ k z, ‖z‖ ≤ R →

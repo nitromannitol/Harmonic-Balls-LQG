@@ -14,7 +14,7 @@ namespace HarmonicBalls
 /-- Singular masses of sufficiently small origin-centered balls have a positive
 power bound for every smoothing scale no larger than the ball radius. -/
 theorem IsWholePlaneGFF.ae_singular_continuum_origin_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ) :
@@ -172,7 +172,7 @@ private theorem radius_le_half_rpow {a r : ℝ} (ha : a < 1) (hr : 0 < r)
 /-- Singular approximants at all smoothing scales in `(0, 1]` have a common
 small-ball power bound, uniformly over centers in a bounded disk. -/
 theorem IsWholePlaneGFF.ae_singular_continuum_small_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α R : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ) (hR : 0 < R) :
@@ -278,7 +278,7 @@ theorem IsWholePlaneGFF.ae_singular_continuum_small_ball_power
 
 /-- One event provides the continuum small-ball bound for every bounded disk. -/
 theorem IsWholePlaneGFF.ae_singular_continuum_small_ball_power_all_disks
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc) {γ α : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ) :

@@ -17,7 +17,7 @@ namespace HarmonicBalls
 all centers. The displayed logarithmic factor accounts for centers approaching
 the insertion and remains uniform over dyadic smoothing scales. -/
 theorem ae_singular_approximant_all_center_bound_of_ordinary_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)

@@ -15,7 +15,7 @@ namespace HarmonicBalls
 /-- One event supports positive-power bounds on neighborhoods of the insertion
 whose radius is a prescribed power of the ball radius. -/
 theorem ae_singular_approximant_near_origin_rpow_ball_power
-    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hh : IsWholePlaneGFF P hC hcirc)
     {γ α δ r ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hαQ : α < lqgQ γ)
