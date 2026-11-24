@@ -20,7 +20,7 @@ Both go through `ae_forall_exists_isLQGClock_of_cauchy` (`LQGClockAllStarts.lean
 `exists_lbmClause_zero` and `exists_lbmClause_of_sq_lt_two` then give the LBM clause of
 Proposition 2.5 for a family of clocks that exists: almost surely, for every smooth bounded `O`,
 the expected exit time of Liouville Brownian motion from `O` is finite and Hölder continuous in the
-start. For `2 ≤ γ² < 4` with an insertion `α₀ ≠ 0`, an LQG clock from one start is not proved here.
+start. Every `0 < γ < 2` with every insertion is treated in `LQGClockInsertedEveryStart.lean`.
 -/
 
 namespace HarmonicBalls
