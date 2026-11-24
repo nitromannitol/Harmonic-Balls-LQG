@@ -84,6 +84,10 @@ import HarmonicBalls.FirstPass.Phase2.CorrectedLemma11_12Derived
 import HarmonicBalls.Proofs.Potential.LBMClauseSubcritical
 import HarmonicBalls.Proofs.Potential.LQGClockInsertedEveryStart
 import HarmonicBalls.Proofs.Sec11.MassDiamPositive
+import HarmonicBalls.Proofs.Sec11.MassDiamFullField
+import HarmonicBalls.FirstPass.Phase2.ForallXiCanonicalEquivalence
+import HarmonicBalls.Proofs.Potential.GreenPotentialClassSupport
+import HarmonicBalls.Proofs.Sec11.LipschitzDomainRotation
 
 /-!
 # Axiom gate
@@ -640,3 +644,15 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.correctedLemma11_12_derived
 -- 11.18 for every geometry of concentric disks, conditioning modulo additive constants (HarmonicBalls/Proofs/Sec11/MassDiamPositive.lean:59)
 #print axioms HarmonicBalls.massDiamModConst_holds
+-- 2.5: the frozen statement together with the existence of its clock family (HarmonicBalls/Proofs/Potential/LQGClockInsertedEveryStart.lean:184)
+#print axioms HarmonicBalls.greenPotentialLiouvilleHolderStmt_holds_and_clock_exists
+-- 11.18 as printed, conditioning on the field outside W0 (HarmonicBalls/Proofs/Sec11/MassDiamFullField.lean:217)
+#print axioms HarmonicBalls.massDiamPositive_holds
+-- 11.13 printed form with no hypothesis; every-xi and canonical-exponent forms (HarmonicBalls/FirstPass/Phase2/ForallXiCanonicalEquivalence.lean:35, :45, :58, :66)
+#print axioms HarmonicBalls.manyPinchScales_derived
+#print axioms HarmonicBalls.harmonicBallNotMetricBallStmt_iff_canonical
+#print axioms HarmonicBalls.harmonicBallNoveltyStmt_iff_canonical
+#print axioms HarmonicBalls.correctedLemma11_13Canonical_of_corrected
+-- 1.1 test class with signed Radon measures (HarmonicBalls/Proofs/Potential/GreenPotentialClassSupport.lean:42); 11.1 with rotations (HarmonicBalls/Proofs/Sec11/LipschitzDomainRotation.lean:30)
+#print axioms HarmonicBalls.radonGreenPotentialClass_eq
+#print axioms HarmonicBalls.isLipschitzDomain_iff_rotation
