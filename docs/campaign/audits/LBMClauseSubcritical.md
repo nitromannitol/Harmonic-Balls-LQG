@@ -3,9 +3,9 @@
 Proposition 2.5 (`prop:lbm-exit-time`, corrected draft line 530; frozen form
 `GreenPotentialLiouvilleHolderStmt`, `HarmonicBalls/Draft/Section2.lean:161`) quantifies over `0 < γ < 2`.
 `LBMClauseOneStart.lean` proves its conclusion for `γ² < 2` and `Ω : Type`. This note records the proof of
-the LBM clause, and hence of the conclusion of the frozen statement, for every `0 < γ < 2` and `Ω : Type`,
-with no hypothesis beyond the antecedents of the frozen statement. The frozen statement quantifies over
-`Ω : Type*`; that universe generalization remains open.
+the LBM clause, and hence of the conclusion of the frozen statement, for every `0 < γ < 2`, with no
+hypothesis beyond the antecedents of the frozen statement, on a probability space in any universe: the
+frozen statement itself is proved (`greenPotentialLiouvilleHolderStmt_holds`).
 
 ## What is proved
 
@@ -26,17 +26,42 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `F ω x` is a family of cloc
 | strict increase between rational times from every start | `ae_forall_rat_lt_of_isLQGClock_of_lt_two` | `LQGClockOneStartSubcritical.lean:539` |
 | scaling of the dyadic lower limits, `G_{0,1}(h^{(m)}, b̃_m) = c_m⁻¹ G_{0,4^m}(h, b)` | `dyadicIncrementLiminf_rescaled_eq` | `LQGClockOriginDivergenceScaling.lean:35` |
 | divergence of the clock from the origin from `G_{0,1} > 0`, any `γ > 0`, `α < Q` | `ae_ae_tendsto_atTop_lqgClock_origin_of_dyadicIncrementLiminf_pos` | `LQGClockOriginDivergenceScaling.lean:72` |
-| time-change property from every start, `0 < γ < 2`, `α < Q` | `ae_forall_isTimeChangeClock_of_isLQGClock_of_lt_two` | `LBMClauseSubcritical.lean:34` |
-| the LBM clause, both conjuncts, `0 < γ < 2`, `α₀ < Q`, `Ω : Type` | `greenPotentialLiouvilleHolder_lbmClause_of_lt_two` | `LBMClauseSubcritical.lean:56` |
-| the conclusion of `GreenPotentialLiouvilleHolderStmt` for `0 < γ < 2` and `Ω : Type` | `greenPotentialLiouvilleHolder_of_lt_two` | `LBMClauseSubcritical.lean:74` |
-| the frozen statement at universe `0`, `GreenPotentialLiouvilleHolderStmt.{0}` | `greenPotentialLiouvilleHolderStmt_zero` | `LBMClauseSubcritical.lean:98` |
+| time-change property from every start, `0 < γ < 2`, `α < Q` | `ae_forall_isTimeChangeClock_of_isLQGClock_of_lt_two` | `LBMClauseSubcritical.lean:37` |
+| the LBM clause, both conjuncts, `0 < γ < 2`, `α₀ < Q` | `greenPotentialLiouvilleHolder_lbmClause_of_lt_two` | `LBMClauseSubcritical.lean:59` |
+| the conclusion of `GreenPotentialLiouvilleHolderStmt` for `0 < γ < 2` | `greenPotentialLiouvilleHolder_of_lt_two` | `LBMClauseSubcritical.lean:76` |
+| the frozen statement, `GreenPotentialLiouvilleHolderStmt.{u}` for every universe `u` | `greenPotentialLiouvilleHolderStmt_holds` | `LBMClauseSubcritical.lean:100` |
+| its case `u = 0` | `greenPotentialLiouvilleHolderStmt_zero` | `LBMClauseSubcritical.lean:105` |
 
-`greenPotentialLiouvilleHolder_of_lt_two` has exactly the type of the frozen statement with `Ω : Type*`
-replaced by `Ω : Type`, and the kernel checks this: `greenPotentialLiouvilleHolderStmt_zero` is that theorem
-at the type `GreenPotentialLiouvilleHolderStmt.{0}`. The
+`greenPotentialLiouvilleHolder_of_lt_two` has exactly the type of the frozen statement, and the kernel checks
+this: `greenPotentialLiouvilleHolderStmt_holds` is that theorem at the type
+`GreenPotentialLiouvilleHolderStmt.{u}`. The
 LBM clause is obtained from `ae_expectedLBMExitTime_lt_top_and_holder` (`LBMExpectedExitTimeGreenHolder.lean`,
 `0 < γ < 2`, `hF` and the time-change property), and the Green clause is `greenPotentialHolderStmt_holds`.
-No existing statement or frozen declaration is changed.
+No frozen declaration is changed.
+
+## Every universe
+
+The proof first gave the conclusion for `Ω : Type` only. Nothing in it needs `Type`: the restriction came
+from declarations stated for `Ω : Type` whose proofs use only universe-polymorphic results. They are
+generalized in place, with unchanged proofs, to a probability space in any universe:
+
+- in Lattice-Probability, the dyadic circle-average bounds for a normalized whole-plane field,
+  `LatticeProb.LQG.ae_exists_all_dyadic_circle_le_of_normalized_gff` and
+  `ae_eventually_dyadic_circle_sup_le_of_normalized_gff`, and the circle-average model inputs of
+  `MatedCRTHarmonic.GMCUpper` they rest on (`CircleAverageSupBoundModel`, `exists_circleAvgVersion_normalized`,
+  `circleAverageSupBound_of_model`, `isGFFCircleAverage_of_version`, `circleAverage_square_tail`,
+  `circleAverage_square_tail_neg`, `circleAverageSupBoundModel_holds` and a private lemma; copied from Leonardo
+  Bonanno's lean-formalizations, where they are stated for `Type`); the Lattice-Probability pin moves to that
+  revision;
+- in this repository, 40 declarations in 18 files of `HarmonicBalls/Proofs/Potential/`: the Green identity
+  for the expected exit times (`ae_forall_expectedLBMExitTime_eq_green`,
+  `ae_expectedLBMExitTime_lt_top_and_holder`), the three convergence and ball-power facts for the field and
+  its LQG measure behind it (`ae_tendsto_green_lintegral_smooth`, `ae_tendsto_green_mul_lintegral_smooth`,
+  `ae_singular_limit_and_approximant_ball_power`), the circle-average, smoothing and approximant bounds
+  they rest on (`LQGCompactCircleBound`, `LQGCompactRadialOscillation`, `LQGCircleRadialGridTail`,
+  `LQGFineScaleHalfMesh`, `LQGCoarseSmoothingBallPower`, `LQGSingularContinuumBallPower`, `LQGUniformGreenTail`,
+  `LQGActualApproximantPower`, `LQGActualLimitBallPower`, `LQGApprox*`, `LQGSmoothGreen*`), and the two
+  theorems of `LBMClauseSubcritical.lean` above.
 
 ## Route and sources
 
