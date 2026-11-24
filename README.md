@@ -19,14 +19,14 @@ The statements follow the corrected draft, [`paper/lqg_harmonic_ball-corrected.t
 
 The statements of the numbered results are in `HarmonicBalls/Draft/`. The results depend on the literature inputs only through explicit hypotheses, whose propositions are defined in `HarmonicBalls/Proposed/` and in the input statements of `HarmonicBalls/FirstPass/`. The inputs in `HarmonicBalls/Proposed/` await a check against their published sources.
 
-The counted declaration of each numbered result is listed in [`docs/campaign/COUNTED-MANIFEST.md`](docs/campaign/COUNTED-MANIFEST.md). That manifest gives 62 counted declarations and lists 10 numbered results without one, together with the open items on the forall-ξ forms and on the Hölder binder `hholder`.
+The counted declaration of each numbered result is listed in [`docs/campaign/COUNTED-MANIFEST.md`](docs/campaign/COUNTED-MANIFEST.md), with the source, binder, definition, consumer and transitive checks of each of its 84 rows (78 numbered results and six definitions). Proposition 2.6 (Kigami 2019, Theorem 13.1) has no producer, so its binder and transitive checks are open; the source check of Lemma 11.18 covers a special instance only. Theorem 1.2, Proposition 11.11 and Lemma 11.13 hold for every `ξ` with no hypothesis (`HarmonicBalls/FirstPass/Phase2/WeylExponentOfDG20.lean`), and also at the canonical exponent (`HarmonicBalls/FirstPass/Phase2/LocalMetricReplacementDerivedCanonical.lean`).
 
-Verification: [`checks/AxiomGate.lean`](checks/AxiomGate.lean) prints the axioms of each counted declaration. It is outside the default build; run it with `lake env lean checks/AxiomGate.lean`. The record in [`docs/campaign/AXIOM-GATE.md`](docs/campaign/AXIOM-GATE.md) reports 92 declarations, none using an axiom beyond `propext`, `Classical.choice` and `Quot.sound`.
+Verification: [`checks/AxiomGate.lean`](checks/AxiomGate.lean) prints the axioms of each counted declaration. It is outside the default build; run it with `lake env lean checks/AxiomGate.lean`. It has 267 `#print axioms` lines, and every declaration it prints uses only `propext`, `Classical.choice` and `Quot.sound`; [`docs/campaign/AXIOM-GATE.md`](docs/campaign/AXIOM-GATE.md) records the checks.
 
 ## Building
 
 - Toolchain: `leanprover/lean4:v4.35.0-rc2`, as in [`lean-toolchain`](lean-toolchain), with Mathlib `v4.35.0-rc2`.
-- Dependencies, pinned in [`lake-manifest.json`](lake-manifest.json): Mathlib; MarkovProcess (`666cda0`); elliptic_regularity (EllipticRegularityLean, `1e29da0`); Lattice-Probability (`3912597a70`).
+- Dependencies, pinned in [`lake-manifest.json`](lake-manifest.json): Mathlib; MarkovProcess (`666cda0`); elliptic_regularity (EllipticRegularityLean, `1e29da0`); Lattice-Probability (`10ba33c474`).
 
 ```
 lake exe cache get
