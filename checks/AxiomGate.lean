@@ -80,6 +80,10 @@ import HarmonicBalls.FirstPass.Phase2.Step8PerModelFrequency
 import HarmonicBalls.FirstPass.Phase2.Step8PerModelUniv
 import HarmonicBalls.FirstPass.Phase2.WeylExponentOfDG20
 import HarmonicBalls.FirstPass.Phase2.LocalMetricReplacementDerivedCanonical
+import HarmonicBalls.FirstPass.Phase2.CorrectedLemma11_12Derived
+import HarmonicBalls.Proofs.Potential.LBMClauseSubcritical
+import HarmonicBalls.Proofs.Potential.LQGClockInsertedEveryStart
+import HarmonicBalls.Proofs.Sec11.MassDiamPositive
 
 /-!
 # Axiom gate
@@ -626,3 +630,13 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.correctedLemma11_13Canonical_derived
 #print axioms HarmonicBalls.harmonicBallNotMetricBallCanonical_derived
 #print axioms HarmonicBalls.harmonicBallNoveltyCanonical_derived
+-- 2.5: the frozen statement at every universe (HarmonicBalls/Proofs/Potential/LBMClauseSubcritical.lean:100)
+#print axioms HarmonicBalls.greenPotentialLiouvilleHolderStmt_holds
+-- 2.5: an LQG clock from every start for every 0 < gamma < 2 and alpha0 < Q, and the LBM clause for it (HarmonicBalls/Proofs/Potential/LQGClockInsertedEveryStart.lean:143, :157)
+#print axioms HarmonicBalls.exists_ae_forall_isLQGClock
+#print axioms HarmonicBalls.exists_lbmClause
+-- 11.12 corrected [C43], every insertion, every universe (HarmonicBalls/FirstPass/Phase2/CorrectedLemma11_12Derived.lean:35, :80)
+#print axioms HarmonicBalls.correctedLemma11_12_zero_derived
+#print axioms HarmonicBalls.correctedLemma11_12_derived
+-- 11.18 for every geometry of concentric disks, conditioning modulo additive constants (HarmonicBalls/Proofs/Sec11/MassDiamPositive.lean:59)
+#print axioms HarmonicBalls.massDiamModConst_holds
