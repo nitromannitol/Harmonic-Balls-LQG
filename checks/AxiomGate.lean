@@ -79,6 +79,7 @@ import HarmonicBalls.FirstPass.Phase2.DerivedInputsStep8Calibration
 import HarmonicBalls.FirstPass.Phase2.Step8PerModelFrequency
 import HarmonicBalls.FirstPass.Phase2.Step8PerModelUniv
 import HarmonicBalls.FirstPass.Phase2.WeylExponentOfDG20
+import HarmonicBalls.FirstPass.Phase2.LocalMetricReplacementDerivedCanonical
 
 /-!
 # Axiom gate
@@ -621,3 +622,7 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.correctedLemma11_13_forallXi_derived
 #print axioms HarmonicBalls.firstPass_11_11_forallXi_derived
 #print axioms HarmonicBalls.firstPass_1_2_forallXi_derived
+-- canonical-exponent forms with no hypothesis: 11.13, 11.11, 1.2 (HarmonicBalls/FirstPass/Phase2/LocalMetricReplacementDerivedCanonical.lean:24, :28, :32)
+#print axioms HarmonicBalls.correctedLemma11_13Canonical_derived
+#print axioms HarmonicBalls.harmonicBallNotMetricBallCanonical_derived
+#print axioms HarmonicBalls.harmonicBallNoveltyCanonical_derived
