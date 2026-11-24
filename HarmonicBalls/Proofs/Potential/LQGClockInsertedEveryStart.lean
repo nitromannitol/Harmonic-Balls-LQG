@@ -167,4 +167,23 @@ theorem exists_lbmClause {γ α₀ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hα : 
   obtain ⟨F, hF⟩ := exists_ae_forall_isLQGClock hh hγ hγ2 hα
   exact ⟨F, hF, greenPotentialLiouvilleHolder_lbmClause_of_lt_two hγ hγ2 hα hh hμ F hF⟩
 
+/-- The hypothesis of the LBM clause of Proposition 2.5 (`GreenPotentialLiouvilleHolderStmt`) is
+satisfiable: for every `0 < γ < 2`, every `α₀ < Q` and every whole-plane GFF, there is a family `F`
+such that, almost surely, `F ω x` is an LQG clock of the inserted field from every start `x`. -/
+def LQGClockEveryStartExistsStmt : Prop :=
+  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+  ∃ F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ, ∀ᵐ ω ∂P, ∀ x : ℂ,
+    IsLQGClock planarBrownianMotion γ (fieldCircleAverage α₀ (hcirc ω)) x (F ω x)
+
+universe u
+
+/-- **Proposition 2.5 in full**: the frozen statement holds, and the clock family assumed by its LBM
+clause exists, at every universe. -/
+theorem greenPotentialLiouvilleHolderStmt_holds_and_clock_exists :
+    GreenPotentialLiouvilleHolderStmt.{u} ∧ LQGClockEveryStartExistsStmt.{u} :=
+  ⟨greenPotentialLiouvilleHolderStmt_holds, fun _ _ hγ hγ2 hα _ _ _ _ _ hh =>
+    exists_ae_forall_isLQGClock hh hγ hγ2 hα⟩
+
 end HarmonicBalls
