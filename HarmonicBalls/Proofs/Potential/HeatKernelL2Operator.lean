@@ -368,7 +368,7 @@ variable {ν : Measure ℂ} [IsFiniteMeasure ν] {K : Set ℂ} {k : ℂ → ℂ 
 theorem kernelL2Operator_apply (hd : IsL2KernelData ν K k) (f : Lp ℝ 2 ν) :
     kernelL2Operator ν K k f = (hd.memLp_kernelTransform (Lp.memLp f)).toLp _ := by
   unfold kernelL2Operator
-  split_ifs with h
+  split_ifs
   rfl
 
 /-- The operator is the integral transform, almost everywhere. -/
