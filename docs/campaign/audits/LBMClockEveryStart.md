@@ -26,6 +26,7 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `A_k(b, t) = ∫_0^t ε_k^{�
 | a version of the clock from every start, every `0 < γ < 2`, `α < Q`, any sample space | `exists_ae_forall_isLQGClock` | `LQGClockInsertedEveryStart.lean:143` |
 | the LBM clause for that family | `exists_lbmClause` | `LQGClockInsertedEveryStart.lean:157` |
 | the frozen statement together with the existence of its clock family | `greenPotentialLiouvilleHolderStmt_holds_and_clock_exists` | `LQGClockInsertedEveryStart.lean:184` |
+| on one field event, from every start: an LQG clock, almost surely a time-change clock (zero at zero, continuous, strictly increasing, unbounded), with speed measure `μ_h` (`E_x[τ_O] = ∫_O 2 G_O(x, y) μ_h(dy)`) | `exists_ae_forall_isLQGClock_isTimeChangeClock` | `LQGClockStrictEveryStart.lean:35` |
 
 All declarations print `[propext, Classical.choice, Quot.sound]` (`checks/AxiomGate.lean`).
 
