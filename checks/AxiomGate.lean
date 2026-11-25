@@ -684,3 +684,4 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- 2.6 clock identification, step 2: one measurable clock equal to the per-start limits from every start (HarmonicBalls/Proofs/Potential/UniversalClock.lean)
 #print axioms HarmonicBalls.ae_tendsto_of_tendstoClockInMeasure
 #print axioms HarmonicBalls.exists_universal_clock
+#print axioms HarmonicBalls.IsApproxClocks.ae_eq_of_shift_zero

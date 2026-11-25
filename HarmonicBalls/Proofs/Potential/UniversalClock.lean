@@ -195,7 +195,10 @@ theorem exists_universal_clock {Q : Kernel ℂ (ContinuousPath ℂ)} [IsMarkovKe
     (htr : ∀ x ∈ K₀, ∀ s : ℝ≥0, 0 < s → ∀ S : Set (ContinuousPath ℂ), MeasurableSet S →
       (∀ᵐ w ∂ρ, ∀ᵐ b ∂(Q w), b ∈ S) → ∀ᵐ b ∂(Q x), ContinuousPath.shift s b ∈ S) :
     ∃ A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0, (∀ t, Measurable (A t)) ∧
-      ∀ x ∈ K₀, ∀ᵐ b ∂(Q x), ∀ t, (A t b : ℝ) = F x b t := by
+      (∀ m : ℝ≥0 → MeasurableSpace (ContinuousPath ℂ), Monotone m →
+        (∀ k t, Measurable[m t] fun b => a k b t) → ∀ t, Measurable[m t] (A t)) ∧
+      ∀ x ∈ K₀, ∀ r : ℝ≥0, ∀ᵐ b ∂(Q x), ∀ u,
+        (A u (ContinuousPath.shift r b) : ℝ) = F x b (r + u) - F x b r := by
   -- the tail suprema of the Cauchy probabilities tend to zero in mean under `ρ`
   let e : ℕ → ℕ → ℂ → ℝ≥0∞ := fun j K w =>
     ⨆ k : ℕ, ⨆ m : ℕ, Q w (clockCauchyEvent a (K + k) (K + m) j ((1 / 2 : ℝ) ^ j))
@@ -292,49 +295,74 @@ theorem exists_universal_clock {Q : Kernel ℂ (ContinuousPath ℂ)} [IsMarkovKe
     simp only [s]
     exact inv_anti₀ (by positivity) (by exact_mod_cast Nat.add_le_add_right hmn 1)
   refine ⟨fun t b => (⨆ n : ℕ, limsup (fun j => ENNReal.ofReal
-    (a (k j) b t - a (k j) b (min (s n) t))) atTop).toNNReal, fun t => ?_, fun x hx => ?_⟩
+    (a (k j) b t - a (k j) b (min (s n) t))) atTop).toNNReal, fun t => ?_,
+    fun m hm hmeas t => ?_, fun x hx r => ?_⟩
   · exact (Measurable.iSup fun n => Measurable.limsup fun j => ENNReal.measurable_ofReal.comp
       ((ha.measurable _ _).sub (ha.measurable _ _))).ennreal_toNNReal
+  · have h1 : ∀ j n, Measurable[m t] fun b =>
+        ENNReal.ofReal (a (k j) b t - a (k j) b (min (s n) t)) := fun j n =>
+      ENNReal.measurable_ofReal.comp ((hmeas _ t).sub
+        ((hmeas _ _).mono (hm (min_le_right _ _)) le_rfl))
+    exact (Measurable.iSup fun n => Measurable.limsup fun j => h1 j n).ennreal_toNNReal
   obtain ⟨φ, hφ, hae⟩ := ae_tendsto_of_tendstoClockInMeasure ha (hF x hx) hk
-  have hshift : ∀ᵐ b ∂(Q x), ∀ n, ContinuousPath.shift (s n) b ∈ C :=
-    ae_all_iff.2 fun n => htr x hx (s n) (hs0 n) C hCm hCref
-  filter_upwards [hae, hshift] with b ⟨hpt, h0, hcont, hmono⟩ hb t
-  -- the increments after `s n` converge, to `F x (t) - F x (s n ∧ t)`
-  have hinc : ∀ n, Tendsto (fun j => a (k j) b t - a (k j) b (min (s n) t)) atTop
-      (𝓝 (F x b t - F x b (min (s n) t))) := by
+  have hshift : ∀ᵐ b ∂(Q x), ∀ n, ContinuousPath.shift (r + s n) b ∈ C :=
+    ae_all_iff.2 fun n => htr x hx (r + s n) (lt_of_lt_of_le (hs0 n) le_add_self) C hCm hCref
+  filter_upwards [hae, hshift] with b ⟨hpt, h0, hcont, hmono⟩ hb u
+  have hrw : ∀ j v, a (k j) (ContinuousPath.shift r b) v = a (k j) b (r + v) - a (k j) b r :=
+    fun j v => by rw [ha.shift]; ring
+  -- the increments converge, to `F x (r + u) - F x (r + s n ∧ u)`
+  have hinc : ∀ n, Tendsto (fun j => a (k j) (ContinuousPath.shift r b) u -
+      a (k j) (ContinuousPath.shift r b) (min (s n) u)) atTop
+      (𝓝 (F x b (r + u) - F x b (r + min (s n) u))) := by
     intro n
-    obtain ⟨L, hL⟩ : ∃ L, Tendsto (fun j => a (k j) b t - a (k j) b (min (s n) t)) atTop
-        (𝓝 L) := by
-      rcases le_total t (s n) with hts | hst
+    obtain ⟨L, hL⟩ : ∃ L, Tendsto (fun j => a (k j) (ContinuousPath.shift r b) u -
+        a (k j) (ContinuousPath.shift r b) (min (s n) u)) atTop (𝓝 L) := by
+      rcases le_total u (s n) with hus | hsu
       · refine ⟨0, ?_⟩
-        simp only [min_eq_right hts, sub_self]
+        simp only [min_eq_right hus, sub_self]
         exact tendsto_const_nhds
-      · obtain ⟨L, hL⟩ := hCauchy _ (hb n) (t - s n)
+      · obtain ⟨L, hL⟩ := hCauchy _ (hb n) (u - s n)
         refine ⟨L, hL.congr fun j => ?_⟩
-        rw [min_eq_left hst]
-        conv_rhs => rw [← add_tsub_cancel_of_le hst]
+        rw [min_eq_left hsu, ← ContinuousPath.shift_add]
+        conv_rhs => rw [← add_tsub_cancel_of_le hsu]
         rw [ha.shift]
         ring
-    have hsub : Tendsto (fun i => a (k (φ i)) b t - a (k (φ i)) b (min (s n) t)) atTop
-        (𝓝 (F x b t - F x b (min (s n) t))) := (hpt t).sub (hpt _)
+    have hsub : Tendsto (fun i => a (k (φ i)) (ContinuousPath.shift r b) u -
+        a (k (φ i)) (ContinuousPath.shift r b) (min (s n) u)) atTop
+        (𝓝 (F x b (r + u) - F x b (r + min (s n) u))) := by
+      simp only [hrw]
+      have := ((hpt (r + u)).sub (hpt r)).sub ((hpt (r + min (s n) u)).sub (hpt r))
+      rw [show F x b (r + u) - F x b (r + min (s n) u) =
+        F x b (r + u) - F x b r - (F x b (r + min (s n) u) - F x b r) by ring]
+      exact this
     rwa [tendsto_nhds_unique (hL.comp hφ) hsub] at hL
-  have hF0 : 0 ≤ F x b t := h0 ▸ hmono (zero_le : (0 : ℝ≥0) ≤ t)
-  have hlim : ∀ n, limsup (fun j => ENNReal.ofReal (a (k j) b t - a (k j) b (min (s n) t)))
-      atTop = ENNReal.ofReal (F x b t - F x b (min (s n) t)) := fun n =>
+  have hFr : 0 ≤ F x b (r + u) - F x b r := sub_nonneg.2 (hmono le_self_add)
+  have hlim : ∀ n, limsup (fun j => ENNReal.ofReal (a (k j) (ContinuousPath.shift r b) u -
+      a (k j) (ContinuousPath.shift r b) (min (s n) u))) atTop =
+      ENNReal.ofReal (F x b (r + u) - F x b (r + min (s n) u)) := fun n =>
     ((ENNReal.continuous_ofReal.tendsto _).comp (hinc n)).limsup_eq
-  have hsup : (⨆ n : ℕ, ENNReal.ofReal (F x b t - F x b (min (s n) t))) =
-      ENNReal.ofReal (F x b t) := by
+  have hsup : (⨆ n : ℕ, ENNReal.ofReal (F x b (r + u) - F x b (r + min (s n) u))) =
+      ENNReal.ofReal (F x b (r + u) - F x b r) := by
     refine iSup_eq_of_tendsto (fun m n hmn => ENNReal.ofReal_le_ofReal ?_) ?_
-    · exact sub_le_sub_left (hmono (min_le_min_right t (hsanti hmn))) _
-    · have hm : Tendsto (fun n => min (s n) t) atTop (𝓝 0) := by
-        simpa using hslim.min (tendsto_const_nhds (x := t))
-      have := ((hcont.tendsto 0).comp hm)
-      rw [h0] at this
+    · exact sub_le_sub_left (hmono (add_le_add_right (min_le_min_right u (hsanti hmn)) r)) _
+    · have h0u : min (0 : ℝ≥0) u = 0 := min_eq_left (zero_le : (0 : ℝ≥0) ≤ u)
+      have hm : Tendsto (fun n => r + min (s n) u) atTop (𝓝 r) := by
+        have := (tendsto_const_nhds (x := r)).add (hslim.min (tendsto_const_nhds (x := u)))
+        rwa [h0u, add_zero] at this
+      have := (hcont.tendsto r).comp hm
       have h3 := (ENNReal.continuous_ofReal.tendsto _).comp
-        ((tendsto_const_nhds (x := F x b t)).sub this)
+        ((tendsto_const_nhds (x := F x b (r + u))).sub this)
       simpa [Function.comp_def] using h3
   simp only [hlim, hsup]
-  rw [ENNReal.coe_toNNReal_eq_toReal, ENNReal.toReal_ofReal hF0]
+  rw [ENNReal.coe_toNNReal_eq_toReal, ENNReal.toReal_ofReal hFr]
+
+/-- The universal clock agrees with the clock from every good start at all times. -/
+theorem IsApproxClocks.ae_eq_of_shift_zero {μ : Measure (ContinuousPath ℂ)}
+    {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0} {G : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (h : ∀ᵐ b ∂μ, ∀ u, (A u (ContinuousPath.shift 0 b) : ℝ) = G b (0 + u) - G b 0)
+    (h0 : ∀ᵐ b ∂μ, G b 0 = 0) : ∀ᵐ b ∂μ, ∀ u, (A u b : ℝ) = G b u := by
+  filter_upwards [h, h0] with b hb hb0 u
+  have := hb u
+  rwa [ContinuousPath.shift_zero, zero_add, hb0, sub_zero] at this
 
 end HarmonicBalls
-
