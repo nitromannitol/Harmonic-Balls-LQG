@@ -16,9 +16,10 @@ on:
       - 'archive/**'
   workflow_dispatch:
 
+# A run is not cancelled by a later push: the later run waits, and resumes from the saved build.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
