@@ -90,6 +90,7 @@ import HarmonicBalls.Proofs.Potential.GreenPotentialClassSupport
 import HarmonicBalls.Proofs.Sec11.LipschitzDomainRotation
 import HarmonicBalls.Proofs.Potential.GreenPotentialClassRelativeSupport
 import HarmonicBalls.Proofs.Potential.LQGClockStrictEveryStart
+import HarmonicBalls.Proofs.Potential.SquareClippedBallVolume
 
 /-!
 # Axiom gate
@@ -666,3 +667,7 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.isHarmonicBallGen_eq_rel
 -- 2.5: the clock from every start on one field event, strictly increasing from zero to infinity, with speed measure mu_h (HarmonicBalls/Proofs/Potential/LQGClockStrictEveryStart.lean)
 #print axioms HarmonicBalls.exists_ae_forall_isLQGClock_isTimeChangeClock
+-- 2.6: the input (13.1) of Kigami's Theorem 13.1 for every square, and its composition with the cited theorem (HarmonicBalls/Proofs/Potential/SquareClippedBallVolume.lean)
+#print axioms HarmonicBalls.ae_forall_closedSquare_volume_bounds
+#print axioms HarmonicBalls.ae_forall_closedSquare_kigamiVolumeBounds
+#print axioms HarmonicBalls.ae_forall_closedSquare_heatKernel_of_kigami
