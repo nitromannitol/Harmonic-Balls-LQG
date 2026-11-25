@@ -65,6 +65,7 @@ theorem isL2KernelData_of_continuousOn (hνK : ν (closedSquare 0 1)ᶜ = 0)
     hpc.comp (by fun_prop : Continuous fun q : ℂ × ℂ => (t, q.1, q.2)).continuousOn
       fun q hq => ⟨ht, hq.1, hq.2⟩⟩
 
+omit [IsFiniteMeasure ν] in
 /-- **The rows of a heat kernel have mass one.** -/
 theorem IsLBMHeatKernel.setIntegral_eq_one
     (hp : IsLBMHeatKernel (reflectedPlanarBrownianMotion 0 1) (fun _ b t => (A t b : ℝ))
@@ -218,6 +219,7 @@ theorem tendsto_integral_timeChangeRegularized (hA : IsUnitSquarePCAF A) {x : �
     (integrable_const _) hlim
   simpa using h
 
+omit [IsFiniteMeasure ν] in
 /-- The kernel operator applied to a bounded continuous function is the expectation of the
 function at the time-changed position. -/
 theorem kernelTransform_eq_integral_timeChangeRegularized (hA : IsUnitSquarePCAF A)
