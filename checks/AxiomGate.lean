@@ -88,6 +88,7 @@ import HarmonicBalls.Proofs.Sec11.MassDiamFullField
 import HarmonicBalls.FirstPass.Phase2.ForallXiCanonicalEquivalence
 import HarmonicBalls.Proofs.Potential.GreenPotentialClassSupport
 import HarmonicBalls.Proofs.Sec11.LipschitzDomainRotation
+import HarmonicBalls.Proofs.Potential.GreenPotentialClassRelativeSupport
 
 /-!
 # Axiom gate
@@ -656,3 +657,9 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- 1.1 test class with signed Radon measures (HarmonicBalls/Proofs/Potential/GreenPotentialClassSupport.lean:42); 11.1 with rotations (HarmonicBalls/Proofs/Sec11/LipschitzDomainRotation.lean:30)
 #print axioms HarmonicBalls.radonGreenPotentialClass_eq
 #print axioms HarmonicBalls.isLipschitzDomain_iff_rotation
+-- 1.1 test class with support closed relative to O (HarmonicBalls/Proofs/Potential/GreenPotentialClassRelativeSupport.lean)
+#print axioms HarmonicBalls.greenPotentialClass_subset_relGreenPotentialClass
+#print axioms HarmonicBalls.IsHarmonicBallGen.lintegral_greenPotentialENN_relative
+#print axioms HarmonicBalls.IsHarmonicBallGen.hasMeanValueProperty_relative
+#print axioms HarmonicBalls.isHarmonicBallGen_iff_rel
+#print axioms HarmonicBalls.isHarmonicBallGen_eq_rel
