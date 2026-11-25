@@ -111,6 +111,8 @@ import HarmonicBalls.Proofs.Potential.ReflectedClockStartPositivity
 import HarmonicBalls.Proofs.Potential.HeatKernelL2Operator
 import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelL2Semigroup
 import HarmonicBalls.Proofs.Potential.ReflectedLQGHeatKernelPositivity
+import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelIrreducible
+import HarmonicBalls.Proofs.Potential.ReflectedLBMHeatKernelProposition
 import HarmonicBalls.FirstPass.Cited.Section2PositivityImproving
 
 /-!
@@ -768,5 +770,33 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.ae_forall_closedSquare_unitSquareNormalizedMeasure_singleton_eq_zero
 #print axioms HarmonicBalls.reflectedLBMHeatKernel_of_identification_of_clockPositivity
 #print axioms HarmonicBalls.reflectedLBMHeatKernel_of_kigami_of_klvw
+-- 2.6 symmetry, step 1: the Neumann kernel of the square and the occupation identity of the clock (HarmonicBalls/Proofs/Potential/ReflectedNeumannKernel.lean, ReflectedClockOccupation.lean, ReflectedClockOccupationEveryStart.lean)
+#print axioms HarmonicBalls.lintegral_reflected_eval_eq_neumannKernel
+#print axioms HarmonicBalls.squareNeumannKernel_comm
+#print axioms HarmonicBalls.continuousAt_squareNeumannKernel
+#print axioms HarmonicBalls.map_volume_clockInverse_eq_stieltjes
+#print axioms HarmonicBalls.lintegral_unitSquareRevuzMeasure_eq_clockOccupation
+#print axioms HarmonicBalls.lebesgueOccupationMeasure_eq_prod
+#print axioms HarmonicBalls.lintegral_clockOccupation_windowWeight_eq
+#print axioms HarmonicBalls.bind_pathOccupationMeasure_eq
+-- 2.6 symmetry, step 2: the resolvent identity, the symmetric Green kernel and the symmetric resolvent (HarmonicBalls/Proofs/Potential/ReflectedClockResolvent.lean, ReflectedClockResolventSymmetry.lean, ReflectedClockGreenBound.lean)
+#print axioms HarmonicBalls.clockResolvent_add_clockResolvent_clockGreen
+#print axioms HarmonicBalls.clockGreen_eq_lintegral_squareGreenKernel
+#print axioms HarmonicBalls.lintegral_mul_clockGreen_comm
+#print axioms HarmonicBalls.exists_clockResolvent_adjoint
+#print axioms HarmonicBalls.lintegral_mul_clockResolvent_comm
+#print axioms HarmonicBalls.squareNeumannKernel_le_heat
+#print axioms HarmonicBalls.exists_lintegral_clockOccupation_window_le
+#print axioms HarmonicBalls.exists_clockGreen_one_le
+-- 2.6 symmetry, step 3: uniqueness of the Laplace transform and the symmetry of the kernel (HarmonicBalls/Proofs/Potential/LaplaceTransformUniqueness.lean, ReflectedHeatKernelSymmetry.lean)
+#print axioms HarmonicBalls.ext_of_moments_eq
+#print axioms HarmonicBalls.eqOn_Ioi_of_laplace_eq
+#print axioms HarmonicBalls.lintegral_mul_clockResolvent_zero_comm
+#print axioms HarmonicBalls.integratedKernel_comm
+#print axioms HarmonicBalls.isLBMHeatKernel_symm
+-- 2.6 irreducibility from symmetry, and Proposition 2.6 from the cited theorems of Kigami and KLVW (HarmonicBalls/Proofs/Potential/ReflectedHeatKernelIrreducible.lean, ReflectedLBMHeatKernelProposition.lean)
+#print axioms HarmonicBalls.isIrreducibleSemigroup_heatKernelL2Semigroup
+#print axioms HarmonicBalls.isLBMHeatKernel_symm_of_volume_bounds
+#print axioms HarmonicBalls.reflectedLBMHeatKernelStmt_of_kigami_of_klvw
 -- 2.6 positivity: cited statement, Keller-Lenz-Vogt-Wojciechowski Theorem A.2 (HarmonicBalls/FirstPass/Cited/Section2PositivityImproving.lean)
 #print axioms HarmonicBalls.klvwPositivityImprovingCited

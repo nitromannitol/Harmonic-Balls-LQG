@@ -6,7 +6,9 @@ with respect to `μ_h`. The printed proof (corrected source, lines 563-567) cite
 Lemma 2.4, and a scaling argument. Kigami's theorem concerns the time change of reflected Brownian motion in the unit
 square by the additive functional whose Revuz measure is a given measure. This note records the proof that the LQG
 clock of reflected Brownian motion in `K`, read in the unit square, is such an additive functional for the normalized
-LQG measure, so that the cited theorem applies. What remains of Proposition 2.6 is the strict positivity of the kernel.
+LQG measure, so that the cited theorem applies, and the proof of the strict positivity of the kernel from the cited
+theorem of Keller–Lenz–Vogt–Wojciechowski. Proposition 2.6 follows from the two cited statements
+(`reflectedLBMHeatKernelStmt_of_kigami_of_klvw`, `ReflectedLBMHeatKernelProposition.lean`).
 
 ## What is proved
 
@@ -101,8 +103,52 @@ transition semigroup `heatKernelL2Semigroup ν p'` is irreducible, [KLVW] Defini
 4. By the cited KLVW Theorem A.2 an irreducible such semigroup is positivity improving, and
    `p'(t, x, y) = ∫ p'(t/3, x, z) (T_{t/3} p'(t/3, ·, y))(z) dν(z) > 0`.
 
+## Symmetry and irreducibility
+
+`reflectedLBMHeatKernelStmt_of_kigami_of_klvw` (`ReflectedLBMHeatKernelProposition.lean`) discharges `hsymm` and
+`hirr`; Proposition 2.6 (`ReflectedLBMHeatKernelStmt`) then follows from `kigamiHeatKernelContinuityCited` and
+`klvwPositivityImprovingCited` alone. Kigami 2019, Theorem 10.10 (strict positivity) is not used: its hypotheses
+(an admissible measure, i.e. (8.1) and the measure-theoretic properties of the time change, and a heat kernel
+controlled by rate functions) use the quasi-support and the time-changed Dirichlet form, which the repository does not
+have. The direct route below uses the volume bounds (13.1) of `ν` only through its mass, full support, absence of
+atoms and the upper ball bounds.
+
+1. **The Neumann kernel.** The law of `b_s` under `Q_x` is `k_s(x, y) dy` on `K₀` with
+   `k_s(x, y) = q_s(x₁, y₁) q_s(x₂, y₂)`, `q_s(u, v) = ∑_n (φ_s(v + 2n - u) + φ_s(2n - v - u))`; `k_s` is symmetric,
+   jointly continuous on `(0, ∞) × K₀ × K₀` and, for `s ≤ 1`, dominated by a Gaussian of twice the variance
+   (`ReflectedNeumannKernel.lean`, `squareNeumannKernel_le_heat`).
+2. **The occupation identity from every start.** Under the Lebesgue start the mean occupation measure of
+   `(s, b_s)` under `dA_s` is `ds ⊗ ν` (additivity, stationarity and the Revuz formula,
+   `lebesgueOccupationMeasure_eq_prod`, `ReflectedClockOccupation.lean`); partitioning `(a, T]`, the Markov property at
+   the partition times and dominated convergence give, for every `x ∈ K₀`,
+   `E_x ∫ F(s, b_s) dA_s = ∫∫ F(s, y) k_s(x, y) ds ν(dy)` (`bind_pathOccupationMeasure_eq`,
+   `ReflectedClockOccupationEveryStart.lean`). All occupation integrals are written in the time `u` of the time change.
+3. **The resolvent identity.** With `G f(x) = E_x ∫_0^∞ e^{-β s} f(b_s) dA_s` and
+   `U f(x) = E_x ∫_0^∞ e^{-c u - β τ_u} f(Y_u) du`, `U f + c U G f = G f` on `K₀`, by additivity of the clock at
+   `τ_r` and the strong Markov property there (`clockResolvent_add_clockResolvent_clockGreen`,
+   `ReflectedClockResolvent.lean`; Fukushima–Oshima–Takeda 2011, proof of Theorem 6.2.1).
+4. **Symmetry of the resolvent.** By step 2, `G` has the symmetric kernel `∫_0^∞ e^{-β s} k_s ds` with respect to `ν`.
+   `U(x, ·) ≤ G(x, ·)`, so for bounded `h ≥ 0` the measure `∫ h(x) U(x, ·) ν(dx)` has a density `U* h`; from step 3,
+   `(I + c G) U* h = G h`, `U G h = G U* h`, and `U h = U* h` `ν`-almost everywhere once `G 1` is bounded on `K₀`
+   (`lintegral_mul_clockResolvent_comm`, `ReflectedClockResolventSymmetry.lean`). `G 1` is bounded for `β > 0`:
+   `E_y ∫_{(0,1]} dA ≤ L` uniformly by the Gaussian bound and the ball bounds (a Riesz potential estimate), and the
+   Markov property at integer times gives `G 1 ≤ L ∑ e^{-β n}` (`exists_clockGreen_one_le`,
+   `ReflectedClockGreenBound.lean`). Monotone convergence as `β ↓ 0` gives the symmetry of the resolvent
+   `R_c f(x) = E_x ∫_0^∞ e^{-c u} f(Y_u) du` (`lintegral_mul_clockResolvent_zero_comm`).
+5. **Symmetry of the kernel.** `⟨1_E, R_c 1_F⟩_ν = ∫_0^∞ e^{-c u} φ_{E,F}(u) du` with
+   `φ_{E,F}(u) = ∫_{E ∩ K₀} ∫_{F ∩ K₀} p'(u, x, y) ν(dy) ν(dx)`, continuous and bounded on `(0, ∞)`. Uniqueness of the
+   Laplace transform (`eqOn_Ioi_of_laplace_eq`, `LaplaceTransformUniqueness.lean`: under `x = e^{-u}` the moments of two
+   finite measures on `[0, 1]` agree, and the Weierstrass approximation theorem identifies them) gives
+   `φ_{E,F} = φ_{F,E}`, and continuity with full support of `ν` gives `p'(t, x, y) = p'(t, y, x)` on
+   `(0, ∞) × K₀ × K₀` (`isLBMHeatKernel_symm`, `ReflectedHeatKernelSymmetry.lean`).
+6. **Irreducibility.** For a symmetric kernel an invariant set `D` of intermediate mass would make
+   `p'(t, z, z) = 0` at a point `z` of the frontier of the supports of `ν` on `D` and on `D^c`, which meet in the
+   connected square; this contradicts Chapman–Kolmogorov, symmetry and unit row mass
+   (`isIrreducibleSemigroup_heatKernelL2Semigroup`, `ReflectedHeatKernelIrreducible.lean`).
+
+All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-142713-2478756).
+
 ## What remains
 
-The hypotheses `hsymm` and `hirr` of `reflectedLBMHeatKernel_of_kigami_of_klvw`. The literature route uses the
-`ν`-symmetry of the time-changed process and its Dirichlet form (Fukushima–Oshima–Takeda 2011, Section 6.2) and the
-irreducibility of the time-changed Neumann form (Kigami 2019, Theorem 6.8), which are not in the repository.
+For Proposition 2.6 itself, the truth checks of the two cited statements `kigamiHeatKernelContinuityCited` and
+`klvwPositivityImprovingCited` against the printed sources, recorded in row 2.6 of the counted manifest.

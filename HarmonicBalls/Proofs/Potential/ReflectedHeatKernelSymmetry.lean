@@ -21,9 +21,9 @@ heat kernel of the time change, continuous on `(0, ∞) × K₀ × K₀`. Then
   `φ_{E,F} = φ_{F,E}`, and full support with continuity in the space variables gives the
   symmetry of `p'` (`eqOn_of_forall_setLIntegral_eq`, twice).
 
-This is the argument of the answer to the question on reflected clock positivity, part (c),
-following Fukushima–Oshima–Takeda, *Dirichlet forms and symmetric Markov processes*, 2nd ed.
-2011, Theorem 6.2.1.
+The resolvent step follows Fukushima–Oshima–Takeda, *Dirichlet forms and symmetric Markov
+processes*, 2nd ed. 2011, proof of Theorem 6.2.1, with the occupation identity of the clock from
+every start in place of the Dirichlet form.
 -/
 
 open MeasureTheory ProbabilityTheory Set Filter Topology MarkovProcess Metric
