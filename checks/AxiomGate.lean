@@ -93,6 +93,7 @@ import HarmonicBalls.Proofs.Potential.LQGClockStrictEveryStart
 import HarmonicBalls.Proofs.Potential.SquareClippedBallVolume
 import HarmonicBalls.Proofs.Potential.ReflectedSquareScaling
 import HarmonicBalls.Proofs.Potential.ReflectedBrownianFoldInvariance
+import HarmonicBalls.Proofs.Potential.UniversalClock
 
 /-!
 # Axiom gate
@@ -680,3 +681,6 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- 2.6 clock identification, step 1: fold invariance and the Markov transfer of reflected Brownian motion (HarmonicBalls/Proofs/Potential/ReflectedBrownianFoldInvariance.lean)
 #print axioms HarmonicBalls.reflectedPlanarBrownianMotion_zero_one_squareFold
 #print axioms HarmonicBalls.ae_reflected_shift_of_ae_ref
+-- 2.6 clock identification, step 2: one measurable clock equal to the per-start limits from every start (HarmonicBalls/Proofs/Potential/UniversalClock.lean)
+#print axioms HarmonicBalls.ae_tendsto_of_tendstoClockInMeasure
+#print axioms HarmonicBalls.exists_universal_clock
