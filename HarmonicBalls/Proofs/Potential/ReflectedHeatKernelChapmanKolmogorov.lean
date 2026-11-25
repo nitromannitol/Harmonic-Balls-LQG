@@ -19,10 +19,10 @@ and has no atoms in `K₀`, and `p` a heat kernel of the time change by `A` with
 The identity holds `ν`-almost everywhere in `y` by the semigroup property of the time change
 (`reflected_eval_pcafClockInverse_add_mem`; Fukushima–Oshima–Takeda (2011), Section 6.2) and
 Tonelli's theorem, and then everywhere by continuity and full support
-(`eqOn_of_forall_setLIntegral_eq`), as in the extension "from almost everywhere to all points by
-continuity, compactness and full support" of the semigroup identity for the kernel of
-[Kig19, Theorem 13.1] (J. Kigami, *Time changes of the Brownian motion: Poincaré inequality, heat
-kernel estimate and protodistance*, Mem. Amer. Math. Soc. 259(1250), 2019).
+(`eqOn_of_forall_setLIntegral_eq`). [Kig19, Theorem 13.1] (J. Kigami, Mem. Amer. Math. Soc.
+259(1250), 2019) gives the jointly continuous kernel but does not state the semigroup identity; the
+passage from almost every `y` to every `y` uses only the continuity of the kernel on `K₀` and the
+full support of `ν`.
 -/
 
 open MeasureTheory ProbabilityTheory Set Filter Topology MarkovProcess Metric
