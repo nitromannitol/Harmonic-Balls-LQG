@@ -25,6 +25,8 @@ square are discharged:
 open MeasureTheory ProbabilityTheory Set Filter Topology MarkovProcess Metric
 open scoped ENNReal NNReal
 
+universe u
+
 namespace HarmonicBalls
 
 /-- Ball bounds `ν(B(x, r)) ≤ c₂ r^{α₂}` for `r ≤ 1` give closed-ball bounds at every radius for a
@@ -76,10 +78,11 @@ theorem isLBMHeatKernel_symm_of_volume_bounds {A : ℝ≥0 → ContinuousPath �
   exact isLBMHeatKernel_symm hA hνK hatom hsupp zero_le_one (by positivity) hα₂ (by simp)
     (closedBall_le_of_ball_le hc₂ hα₂ hb) hp hpc ht hx hy
 
-/-- **Proposition 2.6** (prop:lbm-continuity) from the cited theorems of Kigami (2019,
-Theorem 13.1) and of Keller–Lenz–Vogt–Wojciechowski (2015, Theorem A.2). -/
-theorem reflectedLBMHeatKernelStmt_of_kigami_of_klvw (hKig : kigamiHeatKernelContinuityCited)
-    (hKLVW : klvwPositivityImprovingCited) : ReflectedLBMHeatKernelStmt := by
+/-- **Proposition 2.6** (prop:lbm-continuity) from the instances of the cited theorems of Kigami
+(2019, Theorem 13.1) and of Keller–Lenz–Vogt–Wojciechowski (2015, Theorem A.2) that its proof uses
+(`KigamiLQGInstanceStmt`, `KLVWHeatKernelInstanceStmt`). -/
+theorem reflectedLBMHeatKernelStmt_of_instances (hKig : KigamiLQGInstanceStmt.{u})
+    (hKLVW : KLVWHeatKernelInstanceStmt) : ReflectedLBMHeatKernelStmt.{u} := by
   intro γ α₀ hγ hγ2 hα Ω _ P hC hcirc μ hh hμ a L hL F hF
   have hvb := ae_forall_closedSquare_kigamiVolumeBounds hγ hγ2 hα hh hμ
   have hpos := ae_forall_closedSquare_unitSquareNormalizedMeasure_ball_inter_pos hγ hγ2 hα hh hμ
@@ -105,5 +108,12 @@ theorem reflectedLBMHeatKernelStmt_of_kigami_of_klvw (hKig : kigamiHeatKernelCon
   obtain ⟨-, hcarried, -⟩ := hω a L hL
   exact isIrreducibleSemigroup_heatKernelL2Semigroup hA hcarried (hpω a L hL) (haω a L hL) hp' hpc
     (hsω A p' hA hRev hFA hp' hpc)
+
+/-- **Proposition 2.6** (prop:lbm-continuity) from the cited theorems of Kigami (2019,
+Theorem 13.1) and of Keller–Lenz–Vogt–Wojciechowski (2015, Theorem A.2). -/
+theorem reflectedLBMHeatKernelStmt_of_kigami_of_klvw (hKig : kigamiHeatKernelContinuityCited)
+    (hKLVW : klvwPositivityImprovingCited) : ReflectedLBMHeatKernelStmt.{u} :=
+  reflectedLBMHeatKernelStmt_of_instances (kigamiLQGInstanceStmt_of_cited hKig)
+    (klvwHeatKernelInstanceStmt_of_cited hKLVW)
 
 end HarmonicBalls

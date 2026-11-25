@@ -306,5 +306,30 @@ theorem ae_forall_closedSquare_heatKernel_of_kigami (hKig : kigamiHeatKernelCont
   obtain ⟨hprob, hcarried, c₁, c₂, α₁, α₂, hc₁, hc₂, hα₁, hα₂, hα₂₁, hb⟩ := hω a L hL
   exact hKig _ hprob hcarried c₁ c₂ α₁ α₂ hc₁ hc₂ hα₁ hα₂ hα₂₁ hb A hA hRevuz
 
-end HarmonicBalls
+/-- **The instance of Kigami's Theorem 13.1 used for Proposition 2.6**: for the LQG measure of a
+whole-plane GFF, almost surely, for every closed square of side `L > 0`, every PCAF of reflected
+Brownian motion in the unit square whose Revuz measure is the normalized LQG measure of the square
+carried to the unit square has a heat kernel with respect to that measure, jointly continuous on
+`(0, ∞) × K₀ × K₀`. It follows from the cited statement (`kigamiLQGInstanceStmt_of_cited`), and is
+the only consequence of it that the proof of Proposition 2.6 uses. -/
+def KigamiLQGInstanceStmt : Prop :=
+  ∀ γ α₀ : ℝ, 0 < γ → γ < 2 → α₀ < lqgQ γ →
+  ∀ (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc →
+    IsLQGMeasureOfField P γ α₀ hcirc μ →
+  ∀ᵐ ω ∂P, ∀ (a : ℂ) (L : ℝ), 0 < L →
+    ∀ A : NNReal → ContinuousPath ℂ → NNReal, IsUnitSquarePCAF A →
+      unitSquareRevuzMeasure A = unitSquareNormalizedMeasure (μ ω) a L →
+      ∃ p : ℝ → ℂ → ℂ → ℝ,
+        IsLBMHeatKernel (reflectedPlanarBrownianMotion 0 1) (fun _ b t => (A t b : ℝ))
+          (closedSquare 0 1) (unitSquareNormalizedMeasure (μ ω) a L) p ∧
+        ContinuousOn (fun s : ℝ × ℂ × ℂ => p s.1 s.2.1 s.2.2)
+          (Ioi 0 ×ˢ closedSquare 0 1 ×ˢ closedSquare 0 1)
 
+/-- The instance of Kigami's Theorem 13.1 used for Proposition 2.6 follows from the cited statement. -/
+theorem kigamiLQGInstanceStmt_of_cited (hKig : kigamiHeatKernelContinuityCited) :
+    KigamiLQGInstanceStmt := by
+  intro γ α₀ hγ hγ2 hα Ω _ P hC hcirc μ hh hμ
+  exact ae_forall_closedSquare_heatKernel_of_kigami hKig hγ hγ2 hα hh hμ
+
+end HarmonicBalls

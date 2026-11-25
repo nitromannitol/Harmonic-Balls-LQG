@@ -32,6 +32,8 @@ symmetric sub-Markov semigroup (`isSymmetricMarkovSemigroup_heatKernelL2Semigrou
 open MeasureTheory ProbabilityTheory Set Filter Topology MarkovProcess Metric
 open scoped ENNReal NNReal
 
+universe u
+
 namespace HarmonicBalls
 
 /-- **The normalized LQG measure has no atoms in the unit square**, almost surely for every
@@ -57,12 +59,13 @@ theorem ae_forall_closedSquare_unitSquareNormalizedMeasure_singleton_eq_zero {Ω
   exact (measure_mono (singleton_subset_iff.2 (mem_ball_self hr.1))).trans
     (hb x hx r hr.1 hr.2.le).2
 
-/-- **Proposition 2.6 from the cited theorem, the clock identification and positivity for the clock
+/-- **Proposition 2.6 from the instance of the cited theorem of Kigami (`KigamiLQGInstanceStmt`), the
+clock identification and positivity for the clock
 of the square.** As `reflectedLBMHeatKernel_of_identification`, with positivity required only for
 the additive functionals `A` that give the clock `F` after scaling. -/
 theorem reflectedLBMHeatKernel_of_identification_of_clockPositivity
-    (hKig : kigamiHeatKernelContinuityCited)
-    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+    (hKig : KigamiLQGInstanceStmt.{u})
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {γ α₀ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     (hα : α₀ < lqgQ γ) (hh : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
     {a : ℂ} {L : ℝ} (hL : 0 < L) (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
@@ -86,7 +89,7 @@ theorem reflectedLBMHeatKernel_of_identification_of_clockPositivity
       ContinuousOn (fun s : ℝ × ℂ × ℂ => p s.1 s.2.1 s.2.2)
         (Ioi 0 ×ˢ closedSquare a L ×ˢ closedSquare a L) ∧
       ∀ t : ℝ, 0 < t → ∀ x ∈ closedSquare a L, ∀ y ∈ closedSquare a L, 0 < p t x y := by
-  filter_upwards [ae_forall_closedSquare_heatKernel_of_kigami hKig hγ hγ2 hα hh hμ,
+  filter_upwards [hKig γ α₀ hγ hγ2 hα Ω P hC hcirc μ hh hμ,
     ae_forall_closedSquare_volume_bounds hγ hγ2 hα hh hμ, hid, hpos] with ω hker hvol hidω hposω
   obtain ⟨A, hA, hRev, hFA⟩ := hidω
   obtain ⟨p', hp', hcont'⟩ := hker a L hL A hA hRev
@@ -96,7 +99,8 @@ theorem reflectedLBMHeatKernel_of_identification_of_clockPositivity
     continuousOn_scaled_kernel hL hM hcont', fun t ht x hx y hy =>
       scaled_kernel_pos hL hM (hposω A p' hA hRev hFA hp' hcont') ht hx hy⟩
 
-/-- **Proposition 2.6 from the cited theorems of Kigami and of Keller–Lenz–Vogt–Wojciechowski, the
+/-- **Proposition 2.6 from the instances of the cited theorems of Kigami and of
+Keller–Lenz–Vogt–Wojciechowski (`KigamiLQGInstanceStmt`, `KLVWHeatKernelInstanceStmt`), the
 symmetry of the unit-square kernel and the irreducibility of its transition semigroup.** Let `F ω x`
 be LQG clocks of reflected Brownian motion in `K = closedSquare a L` from every `x ∈ K`, and let
 `A` range over the additive functionals of reflected Brownian motion in `K₀` with Revuz measure the
@@ -105,9 +109,9 @@ their time changes. If almost surely every such `p'` is symmetric (`hsymm`) and 
 transition semigroup on `L²(ν)` (`hirr`), then almost surely the reflected Liouville Brownian
 motion in `K` has a heat kernel with respect to `μ_h` that is jointly continuous and strictly
 positive on `(0, ∞) × K × K`. -/
-theorem reflectedLBMHeatKernel_of_kigami_of_klvw (hKig : kigamiHeatKernelContinuityCited)
-    (hKLVW : klvwPositivityImprovingCited)
-    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+theorem reflectedLBMHeatKernel_of_kigami_of_klvw (hKig : KigamiLQGInstanceStmt.{u})
+    (hKLVW : KLVWHeatKernelInstanceStmt)
+    {Ω : Type u} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {γ α₀ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     (hα : α₀ < lqgQ γ) (hh : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
     {a : ℂ} {L : ℝ} (hL : 0 < L) (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)

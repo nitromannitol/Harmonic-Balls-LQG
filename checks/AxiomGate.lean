@@ -798,5 +798,8 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.isIrreducibleSemigroup_heatKernelL2Semigroup
 #print axioms HarmonicBalls.isLBMHeatKernel_symm_of_volume_bounds
 #print axioms HarmonicBalls.reflectedLBMHeatKernelStmt_of_kigami_of_klvw
+#print axioms HarmonicBalls.reflectedLBMHeatKernelStmt_of_instances
+#print axioms HarmonicBalls.kigamiLQGInstanceStmt_of_cited
+#print axioms HarmonicBalls.klvwHeatKernelInstanceStmt_of_cited
 -- 2.6 positivity: cited statement, Keller-Lenz-Vogt-Wojciechowski Theorem A.2 (HarmonicBalls/FirstPass/Cited/Section2PositivityImproving.lean)
 #print axioms HarmonicBalls.klvwPositivityImprovingCited
