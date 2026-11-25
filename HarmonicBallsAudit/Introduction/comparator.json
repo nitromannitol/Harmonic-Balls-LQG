@@ -1,0 +1,16 @@
+{
+  "challenge_module": "HarmonicBallsAudit.Introduction.Challenge",
+  "solution_module": "HarmonicBallsAudit.Introduction.Solution",
+  "theorem_names": [
+    "HarmonicBallsAudit.Introduction.existence_uniqueness",
+    "HarmonicBallsAudit.Introduction.novelty",
+    "HarmonicBallsAudit.Introduction.local_set"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}
