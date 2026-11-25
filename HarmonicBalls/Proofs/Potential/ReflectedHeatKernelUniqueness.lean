@@ -6,7 +6,9 @@ import HarmonicBalls.Proofs.Potential.ReflectedLQGRevuzMeasure
 A heat kernel `p` of a time-changed process with respect to a reference measure `ν` on `K`
 (`IsLBMHeatKernel`) is determined `ν`-almost everywhere in `y` by the transition laws. If `ν`
 charges every relative ball `B(y, r) ∩ K`, `y ∈ K`, two kernels that are jointly continuous on
-`(0, ∞) × K × K` agree everywhere there (`IsLBMHeatKernel.eq_of_continuousOn`). The normalized LQG
+`(0, ∞) × K × K` agree everywhere there (`IsLBMHeatKernel.eq_of_continuousOn`), since nonnegative
+functions continuous on `K` with the same integrals over every `S ∩ K` agree on `K`
+(`eqOn_of_forall_setLIntegral_eq`). The normalized LQG
 measure of a square carried to the unit square charges every relative ball of the unit square,
 almost surely (`ae_forall_closedSquare_unitSquareNormalizedMeasure_ball_inter_pos`), by the lower
 volume bound of Kigami's condition (13.1).
@@ -16,6 +18,39 @@ namespace HarmonicBalls
 
 open MeasureTheory ProbabilityTheory Set Filter Topology MarkovProcess Metric
 open scoped ENNReal NNReal
+
+/-- **Continuous densities are determined by their set integrals.** If the σ-finite measure `ν`
+charges every relative ball `B(y, r) ∩ K` with `y ∈ K`, two nonnegative functions continuous on
+`K` with the same integrals over every `S ∩ K` agree on `K`. -/
+theorem eqOn_of_forall_setLIntegral_eq {K : Set ℂ} (hKm : MeasurableSet K) {ν : Measure ℂ}
+    [SigmaFinite ν] (hsupp : ∀ y ∈ K, ∀ r : ℝ, 0 < r → 0 < ν (ball y r ∩ K))
+    {f g : ℂ → ℝ} (hf0 : ∀ y ∈ K, 0 ≤ f y) (hg0 : ∀ y ∈ K, 0 ≤ g y)
+    (hfc : ContinuousOn f K) (hgc : ContinuousOn g K)
+    (hfg : ∀ S : Set ℂ, MeasurableSet S →
+      ∫⁻ y in S ∩ K, ENNReal.ofReal (f y) ∂ν = ∫⁻ y in S ∩ K, ENNReal.ofReal (g y) ∂ν)
+    {y : ℂ} (hy : y ∈ K) : f y = g y := by
+  -- the two densities agree almost everywhere on `K`
+  have hfm : AEMeasurable (fun z => ENNReal.ofReal (f z)) (ν.restrict K) :=
+    ENNReal.measurable_ofReal.comp_aemeasurable (hfc.aemeasurable hKm)
+  have hgm : AEMeasurable (fun z => ENNReal.ofReal (g z)) (ν.restrict K) :=
+    ENNReal.measurable_ofReal.comp_aemeasurable (hgc.aemeasurable hKm)
+  have hae : (fun z => ENNReal.ofReal (f z)) =ᵐ[ν.restrict K]
+      fun z => ENNReal.ofReal (g z) := by
+    refine ae_eq_of_forall_setLIntegral_eq_of_sigmaFinite₀ hfm hgm fun S hS _ => ?_
+    rw [Measure.restrict_restrict hS, hfg S hS]
+  rw [EventuallyEq, ae_restrict_iff' hKm] at hae
+  by_contra hne
+  have hd : ContinuousWithinAt (fun z => f z - g z) K y := (hfc y hy).sub (hgc y hy)
+  have hev : ∀ᶠ z in 𝓝[K] y, f z - g z ≠ 0 :=
+    hd.eventually (isOpen_ne.mem_nhds (sub_ne_zero.2 hne))
+  obtain ⟨r, hr, hsub⟩ := Metric.mem_nhdsWithin_iff.1 hev
+  have hnull : ν (ball y r ∩ K) = 0 := by
+    refine measure_mono_null (fun z hz => ?_) (ae_iff.1 hae)
+    intro hzK
+    have h1 : f z - g z ≠ 0 := hsub hz
+    have h2 := (ENNReal.ofReal_eq_ofReal_iff (hf0 z hz.2) (hg0 z hz.2)).1 (hzK hz.2)
+    exact h1 (sub_eq_zero.2 h2)
+  exact (hsupp y hy r hr).ne' hnull
 
 /-- **Uniqueness of jointly continuous heat kernels.** If the σ-finite measure `ν` charges every
 relative ball `B(y, r) ∩ K` with `y ∈ K`, two heat kernels of the same time-changed process with
@@ -34,29 +69,8 @@ theorem IsLBMHeatKernel.eq_of_continuousOn {Q : Kernel ℂ (ContinuousPath ℂ)}
     hpc.comp (by fun_prop : Continuous fun z : ℂ => (t, x, z)).continuousOn hmaps
   have hqy : ContinuousOn (fun z => q t x z) K :=
     hqc.comp (by fun_prop : Continuous fun z : ℂ => (t, x, z)).continuousOn hmaps
-  -- the two densities agree almost everywhere on `K`
-  have hfm : AEMeasurable (fun z => ENNReal.ofReal (p t x z)) (ν.restrict K) :=
-    ENNReal.measurable_ofReal.comp_aemeasurable (hpy.aemeasurable hKm)
-  have hgm : AEMeasurable (fun z => ENNReal.ofReal (q t x z)) (ν.restrict K) :=
-    ENNReal.measurable_ofReal.comp_aemeasurable (hqy.aemeasurable hKm)
-  have hae : (fun z => ENNReal.ofReal (p t x z)) =ᵐ[ν.restrict K]
-      fun z => ENNReal.ofReal (q t x z) := by
-    refine ae_eq_of_forall_setLIntegral_eq_of_sigmaFinite₀ hfm hgm fun S hS _ => ?_
-    rw [Measure.restrict_restrict hS, ← hpS S hS, ← hqS S hS]
-  rw [EventuallyEq, ae_restrict_iff' hKm] at hae
-  by_contra hne
-  have hd : ContinuousWithinAt (fun z => p t x z - q t x z) K y :=
-    (hpy y hy).sub (hqy y hy)
-  have hev : ∀ᶠ z in 𝓝[K] y, p t x z - q t x z ≠ 0 :=
-    hd.eventually (isOpen_ne.mem_nhds (sub_ne_zero.2 hne))
-  obtain ⟨r, hr, hsub⟩ := Metric.mem_nhdsWithin_iff.1 hev
-  have hnull : ν (ball y r ∩ K) = 0 := by
-    refine measure_mono_null (fun z hz => ?_) (ae_iff.1 hae)
-    intro hzK
-    have h1 : p t x z - q t x z ≠ 0 := hsub hz
-    have h2 := (ENNReal.ofReal_eq_ofReal_iff (hp0 z hz.2) (hq0 z hz.2)).1 (hzK hz.2)
-    exact h1 (sub_eq_zero.2 h2)
-  exact (hsupp y hy r hr).ne' hnull
+  exact eqOn_of_forall_setLIntegral_eq (f := fun z => p t x z) (g := fun z => q t x z) hKm hsupp
+    hp0 hq0 hpy hqy (fun S hS => by rw [← hpS S hS, ← hqS S hS]) hy
 
 /-- **The normalized LQG measure charges every relative ball of the unit square**, almost surely
 for every square. -/
