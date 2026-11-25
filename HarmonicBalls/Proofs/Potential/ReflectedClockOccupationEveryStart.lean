@@ -333,7 +333,7 @@ theorem lintegral_clockOccupation_windowWeight_eq {A : ℝ≥0 → ContinuousPat
     · rw [← lintegral_indicator_one (measurableSet_Ioc.prod MeasurableSet.univ)]
       refine lintegral_mono fun q => ?_
       by_cases hq : q.1 ∈ Ioc a T
-      · simp only [windowWeight, indicator, mem_prod, hq, mem_univ, and_self, if_true, hg_def]
+      · simp only [windowWeight, indicator, mem_prod, hq, mem_univ, and_self, ite_true, hg_def]
         by_cases hq2 : q.2 ∈ B <;> simp [hq2]
       · simp [windowWeight, indicator, mem_prod, hq]
   -- the limit
@@ -429,5 +429,192 @@ theorem lintegral_clockOccupation_windowWeight_eq {A : ℝ≥0 → ContinuousPat
     simp_rw [← hpart]
     exact tendsto_const_nhds
   rw [tendsto_nhds_unique hconst htend, hμint _ hGm]
+
+/-- **The occupation measure of the time change from every start** is `k_s(x, y) ds ν(dy)`
+(`ν` the Revuz measure, carried by `K₀`): for `x ∈ K₀`, the mean over paths from `x` of the
+occupation measures `pathOccupationMeasure A b` (in the variables `(s, b_s)`, `s` the time of the
+underlying motion) is `(Leb|(0,∞) ⊗ ν).withDensity k_s(x, ·)`. -/
+theorem bind_pathOccupationMeasure_eq {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : IsUnitSquarePCAF A)
+    (hU : ∀ z ∈ closedSquare 0 1, ∀ᵐ b ∂reflectedPlanarBrownianMotion 0 1 z,
+      Tendsto (fun t => A t b) atTop atTop) [IsFiniteMeasure (unitSquareRevuzMeasure A)]
+    (hνK : unitSquareRevuzMeasure A (closedSquare 0 1)ᶜ = 0)
+    {x : ℂ} (hx : x ∈ closedSquare 0 1) :
+    (reflectedPlanarBrownianMotion 0 1 x).bind (pathOccupationMeasure A) =
+      ((volume.restrict (Ioi (0 : ℝ))).prod (unitSquareRevuzMeasure A)).withDensity
+        fun q => squareNeumannKernel q.1.toNNReal x q.2 := by
+  set M := (reflectedPlanarBrownianMotion 0 1 x).bind (pathOccupationMeasure A) with hM
+  set N := ((volume.restrict (Ioi (0 : ℝ))).prod (unitSquareRevuzMeasure A)).withDensity
+    (fun q : ℝ × ℂ => squareNeumannKernel q.1.toNNReal x q.2) with hN
+  have hMapp : ∀ S, MeasurableSet S → M S = ∫⁻ b, clockOccupation A (S.indicator 1) b
+      ∂reflectedPlanarBrownianMotion 0 1 x := by
+    intro S hS
+    rw [hM, Measure.bind_apply hS (measurable_pathOccupationMeasure hA.measurable).aemeasurable]
+    refine lintegral_congr fun b => ?_
+    rw [← lintegral_indicator_one hS, lintegral_pathOccupationMeasure hA.measurable
+      (measurable_one.indicator hS)]
+  -- rectangles with time window away from `0`
+  have hrect : ∀ a T : ℝ, 0 < a → a < T → ∀ B : Set ℂ, MeasurableSet B →
+      M (Ioc a T ×ˢ B) = N (Ioc a T ×ˢ B) := by
+    intro a T ha haT B hB
+    rw [hMapp _ (measurableSet_Ioc.prod hB), indicator_prod_eq_windowWeight,
+      lintegral_clockOccupation_windowWeight_eq hA hU hx ha haT hB, hN,
+      withDensity_apply _ (measurableSet_Ioc.prod hB), ← lintegral_indicator
+        (measurableSet_Ioc.prod hB)]
+    refine lintegral_congr fun q => ?_
+    rw [windowWeight_apply']
+    by_cases h1 : q.1 ∈ Ioc a T <;> by_cases h2 : q.2 ∈ B <;>
+      simp [indicator, mem_prod, h1, h2]
+  -- no mass at nonpositive times
+  have hMneg : M (Iic 0 ×ˢ univ) = 0 := by
+    rw [hMapp _ (measurableSet_Iic.prod MeasurableSet.univ)]
+    refine (lintegral_congr_ae (g := fun _ => 0) ?_).trans (by simp)
+    filter_upwards [hA.path x hx, hU x hx] with b hp hu
+    unfold clockOccupation
+    refine (setLIntegral_congr_fun measurableSet_Ioi (g := fun _ => 0) fun u hu0 => ?_).trans
+      (by simp)
+    have hreg : ∀ s, clockRationalRegularization A s b = A s b := fun s =>
+      clockRationalRegularization_eq_of_continuous_monotone hp.2.1 hp.2.2 s
+    have hpos : 0 < (pcafClockInverse (clockRationalRegularization A) u.toNNReal b : ℝ) := by
+      by_contra hle
+      have hle' : pcafClockInverse (clockRationalRegularization A) u.toNNReal b ≤ 0 := by
+        rw [← NNReal.coe_le_coe]
+        exact not_lt.1 hle
+      unfold pcafClockInverse at hle'
+      simp only [hreg] at hle'
+      have h : u.toNNReal ≤ A 0 b := le_clock_of_sInf_le (a := fun s => A s b) hp.1 hp.2.1
+        hp.2.2 (hu.eventually_gt_atTop _).exists hle'
+      rw [hp.1] at h
+      exact absurd (Real.toNNReal_pos.2 (hu0 : (0 : ℝ) < u)) (not_lt.2 h)
+    exact indicator_of_notMem (fun h => (not_le.2 hpos) h.1) _
+  have hNneg : N (Iic 0 ×ˢ univ) = 0 := by
+    rw [hN, withDensity_apply _ (measurableSet_Iic.prod MeasurableSet.univ)]
+    refine setLIntegral_measure_zero _ _ ?_
+    rw [Measure.prod_prod, Measure.restrict_apply measurableSet_Iic, Iic_inter_Ioi, Ioc_self,
+      measure_empty, zero_mul]
+  -- windows starting at `0`
+  have h0 : ∀ T : ℝ, 0 < T → ∀ B : Set ℂ, MeasurableSet B →
+      M (Ioc 0 T ×ˢ B) = N (Ioc 0 T ×ˢ B) := by
+    intro T hT B hB
+    have hmono : Monotone fun n : ℕ => Ioc (T / (n + 2)) T ×ˢ B := by
+      intro m n hmn
+      have hmn' : (m : ℝ) ≤ n := by exact_mod_cast hmn
+      refine prod_mono (Ioc_subset_Ioc_left (div_le_div_of_nonneg_left hT.le
+        (by positivity) (by linarith))) subset_rfl
+    have hU' : ⋃ n : ℕ, Ioc (T / (n + 2)) T ×ˢ B = Ioc 0 T ×ˢ B := by
+      ext q
+      simp only [mem_iUnion, mem_prod, mem_Ioc]
+      constructor
+      · rintro ⟨n, ⟨h1, h2⟩, h3⟩
+        exact ⟨⟨lt_trans (div_pos hT (by positivity)) h1, h2⟩, h3⟩
+      · rintro ⟨⟨h1, h2⟩, h3⟩
+        obtain ⟨n, hn⟩ := exists_nat_gt (T / q.1)
+        have hn' : T < n * q.1 := (div_lt_iff₀ h1).1 hn
+        refine ⟨n, ⟨?_, h2⟩, h3⟩
+        rw [div_lt_iff₀ (by positivity)]
+        nlinarith
+    rw [← hU', hmono.measure_iUnion, hmono.measure_iUnion]
+    refine iSup_congr fun n => hrect _ _ (div_pos hT (by positivity)) (div_lt_self hT ?_) B hB
+    have := (Nat.cast_nonneg n : (0 : ℝ) ≤ n)
+    linarith
+  -- all time windows
+  have hrect' : ∀ a T : ℝ, ∀ B : Set ℂ, MeasurableSet B →
+      M (Ioc a T ×ˢ B) = N (Ioc a T ×ˢ B) := by
+    intro a T B hB
+    have hred : ∀ μ' : Measure (ℝ × ℂ), μ' (Iic 0 ×ˢ univ) = 0 →
+        μ' (Ioc a T ×ˢ B) = μ' (Ioc (max a 0) T ×ˢ B) := by
+      intro μ' hz
+      have hsub : Ioc a T ×ˢ B ⊆ Ioc (max a 0) T ×ˢ B ∪ Iic 0 ×ˢ univ := by
+        intro q hq
+        by_cases hq0 : q.1 ≤ 0
+        · exact Or.inr ⟨hq0, mem_univ _⟩
+        · exact Or.inl ⟨⟨max_lt hq.1.1 (not_le.1 hq0), hq.1.2⟩, hq.2⟩
+      refine le_antisymm ((measure_mono hsub).trans ((measure_union_le _ _).trans
+        (le_of_eq (by rw [hz, add_zero])))) (measure_mono (prod_mono (Ioc_subset_Ioc_left
+          (le_max_left _ _)) subset_rfl))
+    rw [hred M hMneg, hred N hNneg]
+    rcases le_or_gt T (max a 0) with hT | hT
+    · rw [Ioc_eq_empty (not_lt.2 hT), empty_prod, measure_empty, measure_empty]
+    · rcases le_or_gt a 0 with ha | ha
+      · rw [max_eq_right ha] at hT ⊢
+        exact h0 T hT B hB
+      · rw [max_eq_left ha.le] at hT ⊢
+        exact hrect a T ha hT B hB
+  -- finiteness on time windows away from `0`
+  have hfin : ∀ a T : ℝ, 0 < a → a < T → M (Ioc a T ×ˢ univ) ≠ ⊤ := by
+    intro a T ha haT
+    rw [hrect a T ha haT univ MeasurableSet.univ, hN, withDensity_apply _
+      (measurableSet_Ioc.prod MeasurableSet.univ)]
+    obtain ⟨C, hC, hCle⟩ := exists_squareNeumannKernel_le ha haT.le
+    have hK : ∀ᵐ q ∂(volume.restrict (Ioi (0 : ℝ))).prod (unitSquareRevuzMeasure A),
+        q.2 ∈ closedSquare 0 1 := by
+      rw [ae_iff, show {q : ℝ × ℂ | ¬q.2 ∈ closedSquare 0 1} = univ ×ˢ (closedSquare 0 1)ᶜ by
+        ext q; simp, Measure.prod_prod, hνK, mul_zero]
+    have hle : ∀ᵐ q ∂((volume.restrict (Ioi (0 : ℝ))).prod (unitSquareRevuzMeasure A)).restrict
+        (Ioc a T ×ˢ univ), squareNeumannKernel q.1.toNNReal x q.2 ≤ C := by
+      refine (ae_restrict_iff' (measurableSet_Ioc.prod MeasurableSet.univ)).2
+        (hK.mono fun q hq hqS => ?_)
+      have h1 : ((q.1.toNNReal : ℝ≥0) : ℝ) = q.1 := Real.coe_toNNReal _ (ha.trans hqS.1.1).le
+      exact hCle _ (by rw [h1]; exact hqS.1.1.le) (by rw [h1]; exact hqS.1.2) x hx _ hq
+    refine ne_top_of_le_ne_top ?_ (lintegral_mono_ae hle)
+    rw [lintegral_const, Measure.restrict_apply MeasurableSet.univ, univ_inter, Measure.prod_prod,
+      Measure.restrict_apply measurableSet_Ioc]
+    exact ENNReal.mul_ne_top hC (ENNReal.mul_ne_top
+      ((measure_mono inter_subset_left).trans_lt measure_Ioc_lt_top).ne (measure_ne_top _ _))
+  -- the generating π-system of rectangles
+  have hC : IsCountablySpanning {I : Set ℝ | ∃ l u, l < u ∧ Ioc l u = I} := by
+    refine ⟨fun n : ℕ => Ioc (-((n : ℝ) + 1)) (n + 1), fun n => ⟨_, _, ?_, rfl⟩, ?_⟩
+    · have := (Nat.cast_nonneg n : (0 : ℝ) ≤ n)
+      linarith
+    · refine eq_univ_of_forall fun r => mem_iUnion.2 ?_
+      obtain ⟨n, hn⟩ := exists_nat_gt |r|
+      exact ⟨n, ⟨by linarith [neg_abs_le r], by linarith [le_abs_self r]⟩⟩
+  have hgen : (inferInstance : MeasurableSpace (ℝ × ℂ)) = MeasurableSpace.generateFrom
+      (image2 (· ×ˢ ·) {I : Set ℝ | ∃ l u, l < u ∧ Ioc l u = I} {B : Set ℂ | MeasurableSet B}) := by
+    have h1 : (inferInstance : MeasurableSpace ℝ) =
+        MeasurableSpace.generateFrom {I : Set ℝ | ∃ l u, l < u ∧ Ioc l u = I} := by
+      rw [← borel_eq_generateFrom_Ioc ℝ]
+      exact BorelSpace.measurable_eq
+    have h2 : (inferInstance : MeasurableSpace ℂ) =
+        MeasurableSpace.generateFrom {B : Set ℂ | MeasurableSet B} :=
+      MeasurableSpace.generateFrom_measurableSet.symm
+    rw [← generateFrom_prod_eq hC isCountablySpanning_measurableSet, ← h1, ← h2]
+  refine Measure.ext_of_generateFrom_of_cover_subset hgen
+    ((isPiSystem_Ioc (id : ℝ → ℝ) id).prod MeasurableSpace.isPiSystem_measurableSet)
+    (T := range (fun n : ℕ => Ioc (-((n : ℝ) + 1)) 0 ×ˢ (univ : Set ℂ)) ∪
+      range (fun n : ℕ => Ioc (1 / ((n : ℝ) + 2)) (n + 1) ×ˢ (univ : Set ℂ))) ?_ ?_ ?_ ?_ ?_
+  · rintro _ (⟨n, rfl⟩ | ⟨n, rfl⟩)
+    · refine mem_image2_of_mem ⟨_, _, ?_, rfl⟩ (MeasurableSet.univ : MeasurableSet (univ : Set ℂ))
+      have := (Nat.cast_nonneg n : (0 : ℝ) ≤ n)
+      linarith
+    · refine mem_image2_of_mem ⟨_, _, ?_, rfl⟩ (MeasurableSet.univ : MeasurableSet (univ : Set ℂ))
+      have := (Nat.cast_nonneg n : (0 : ℝ) ≤ n)
+      have : 1 / ((n : ℝ) + 2) ≤ 1 / 2 := one_div_le_one_div_of_le (by norm_num) (by linarith)
+      linarith
+  · exact (countable_range _).union (countable_range _)
+  · rw [sUnion_union, sUnion_range, sUnion_range]
+    refine eq_univ_of_forall fun q => ?_
+    by_cases hq : q.1 ≤ 0
+    · obtain ⟨n, hn⟩ := exists_nat_gt (-q.1)
+      exact Or.inl (mem_iUnion.2 ⟨n, ⟨by linarith, hq⟩, mem_univ _⟩)
+    · have hq' : 0 < q.1 := not_le.1 hq
+      obtain ⟨n, hn⟩ := exists_nat_gt (max (1 / q.1) q.1)
+      have hn1 : 1 / q.1 < n := lt_of_le_of_lt (le_max_left _ _) hn
+      have hn2 : q.1 < n := lt_of_le_of_lt (le_max_right _ _) hn
+      refine Or.inr (mem_iUnion.2 ⟨n, ⟨?_, by linarith⟩, mem_univ _⟩)
+      have h3 : 1 < n * q.1 := by
+        rw [div_lt_iff₀ hq'] at hn1
+        exact hn1
+      rw [div_lt_iff₀ (by positivity)]
+      nlinarith
+  · rintro _ (⟨n, rfl⟩ | ⟨n, rfl⟩)
+    · refine ne_top_of_le_ne_top (b := M (Iic 0 ×ˢ univ)) (by rw [hMneg]; exact ENNReal.zero_ne_top)
+        (measure_mono (prod_mono Ioc_subset_Iic_self subset_rfl))
+    · refine hfin _ _ (by positivity) ?_
+      have := (Nat.cast_nonneg n : (0 : ℝ) ≤ n)
+      have : 1 / ((n : ℝ) + 2) ≤ 1 / 2 := one_div_le_one_div_of_le (by norm_num) (by linarith)
+      linarith
+  · rintro _ ⟨I, ⟨l, u, -, rfl⟩, B, hB, rfl⟩
+    exact hrect' l u B hB
 
 end HarmonicBalls
