@@ -26,8 +26,10 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `K₀ = closedSquare 0 1`, `
 | `μ_h(frontier K) = 0` almost surely for a fixed square, every insertion | `IsWholePlaneGFF.ae_lqgMeasure_frontier_closedSquare_eq_zero_of_pos` | `ReflectedLQGRevuzMeasure.lean` |
 | Clock identification: `Rev A = ν` almost surely | `ae_exists_isUnitSquarePCAF_revuz_eq` | `ReflectedLQGRevuzMeasure.lean` |
 | Proposition 2.6 from the cited theorem and positivity | `reflectedLBMHeatKernel_of_kigami_of_positivity` | `ReflectedLQGRevuzMeasure.lean` |
+| Symmetry of every jointly continuous heat kernel of the time change | `isLBMHeatKernel_symm` | `ReflectedHeatKernelSymmetry.lean` |
+| Proposition 2.6 from the cited theorems of Kigami and KLVW alone | `reflectedLBMHeatKernelStmt_of_kigami_of_klvw` | `ReflectedLBMHeatKernelProposition.lean` |
 
-All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-060247-2846846).
+All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-060247-2846846; the last two rows, log 1125-143543-2746961).
 
 ## Route
 
@@ -142,11 +144,11 @@ atoms and the upper ball bounds.
    `φ_{E,F} = φ_{F,E}`, and continuity with full support of `ν` gives `p'(t, x, y) = p'(t, y, x)` on
    `(0, ∞) × K₀ × K₀` (`isLBMHeatKernel_symm`, `ReflectedHeatKernelSymmetry.lean`).
 6. **Irreducibility.** For a symmetric kernel an invariant set `D` of intermediate mass would make
-   `p'(t, z, z) = 0` at a point `z` of the frontier of the supports of `ν` on `D` and on `D^c`, which meet in the
+   `p'(t, z, z) = 0` at a point `z` common to the closed supports of `ν` on `D` and on `D^c`, which meet in the
    connected square; this contradicts Chapman–Kolmogorov, symmetry and unit row mass
    (`isIrreducibleSemigroup_heatKernelL2Semigroup`, `ReflectedHeatKernelIrreducible.lean`).
 
-All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-142713-2478756).
+All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-143543-2746961).
 
 ## What remains
 

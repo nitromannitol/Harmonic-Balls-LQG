@@ -21,8 +21,9 @@ The proof follows Keller–Lenz–Vogt–Wojciechowski (2015), Appendix A, and F
   `0 = p(2s, z, z) = ∫ p(s, z, w)² dν(w)` (Chapman–Kolmogorov and symmetry), against
   `∫ p(s, z, w) dν(w) = 1`.
 
-This is the argument of the direct clock proof of the irreducibility of the time change: an
-invariant set of intermediate measure would separate the square.
+An invariant set of intermediate measure would separate the connected square: the contradiction
+uses the connectedness of `K₀`, the Chapman–Kolmogorov identity of the heat kernel
+(`IsLBMHeatKernel.chapmanKolmogorov`) and its symmetry.
 -/
 
 open MeasureTheory ProbabilityTheory Set Filter Topology MarkovProcess Metric
