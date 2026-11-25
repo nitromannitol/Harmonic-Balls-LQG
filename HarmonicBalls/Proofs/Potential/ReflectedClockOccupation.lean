@@ -293,7 +293,7 @@ theorem ae_clockOccupation_indicator_Ioi_eq_shift {A : ℝ≥0 → ContinuousPat
   refine lintegral_congr fun v => ?_
   by_cases hv : 0 < v
   · have hv' : At < At + v := by linarith
-    simp only [indicator, mem_Ioi, hv', hv, if_true]
+    simp only [indicator, mem_Ioi, hv', hv, ite_true]
     rw [hlev v hv, hτ, hshift]
     have hY : unitSquareTimeChangeRegularized A (A t b + v.toNNReal) b =
         unitSquareTimeChangeRegularized A v.toNNReal θb := by
@@ -303,7 +303,7 @@ theorem ae_clockOccupation_indicator_Ioi_eq_shift {A : ℝ≥0 → ContinuousPat
     push_cast
     rfl
   · have hv' : ¬ At < At + v := by linarith
-    simp only [indicator, mem_Ioi, hv', hv, if_false]
+    simp only [indicator, mem_Ioi, hv', hv, ite_false]
 
 /-- **Stationarity of reflected Brownian motion started from Lebesgue measure on `K₀`**, with a
 weight at the time of the shift: `∫_{K₀} dz E_z[h(b_t) Ψ(θ_t b)] = ∫_{K₀} h(z) E_z Ψ dz`. -/
@@ -335,5 +335,78 @@ theorem setLIntegral_lintegral_shift_eq {Ψ : ContinuousPath ℂ → ℝ≥0∞}
       ∫⁻ z in closedSquare 0 1, ∫⁻ b, Ψ b ∂reflectedPlanarBrownianMotion 0 1 z := by
   have h := setLIntegral_lintegral_mul_shift_eq (h := fun _ => 1) measurable_const hΨ t
   simpa using h
+
+/-! ### Additive monotone functions of time -/
+
+/-- An additive nondecreasing function `f : ℝ≥0 → ℝ≥0∞` with `f 1 < ∞` is `t ↦ t f(1)`. -/
+theorem eq_mul_of_add_of_monotone {f : ℝ≥0 → ℝ≥0∞} (hadd : ∀ s t, f (s + t) = f s + f t)
+    (hmono : Monotone f) (h1 : f 1 ≠ ⊤) (t : ℝ≥0) : f t = t * f 1 := by
+  have hnat : ∀ (n : ℕ) (s : ℝ≥0), f (n * s) = n * f s := by
+    intro n s
+    induction n with
+    | zero =>
+      have h0 : f 0 = f 0 + f 0 := by rw [← hadd, add_zero]
+      have hfin : f 0 ≠ ⊤ := ne_top_of_le_ne_top h1 (hmono zero_le)
+      simp only [Nat.cast_zero, zero_mul]
+      have h0' : f 0 + f 0 = f 0 + 0 := by rw [add_zero, ← h0]
+      exact (ENNReal.add_right_inj hfin).1 h0'
+    | succ n ih => rw [Nat.cast_succ, add_mul, one_mul, hadd, ih, Nat.cast_succ, add_mul, one_mul]
+  have hmn : ∀ m n : ℕ, 0 < n → f ((m : ℝ≥0) / n) = (((m : ℝ≥0) / n : ℝ≥0) : ℝ≥0∞) * f 1 := by
+    intro m n hn
+    have hn' : (n : ℝ≥0) ≠ 0 := by exact_mod_cast hn.ne'
+    have hn'' : (n : ℝ≥0∞) ≠ 0 := by exact_mod_cast hn.ne'
+    have h := hnat n ((m : ℝ≥0) / n)
+    rw [mul_div_cancel₀ (m : ℝ≥0) hn'] at h
+    have h2 : f m = m * f 1 := by
+      have := hnat m 1
+      rwa [mul_one] at this
+    rw [h2] at h
+    calc f ((m : ℝ≥0) / n) = (n : ℝ≥0∞)⁻¹ * (n * f ((m : ℝ≥0) / n)) := by
+          rw [← mul_assoc, ENNReal.inv_mul_cancel hn'' (ENNReal.natCast_ne_top n), one_mul]
+      _ = (n : ℝ≥0∞)⁻¹ * (m * f 1) := by rw [← h]
+      _ = (((m : ℝ≥0) / n : ℝ≥0) : ℝ≥0∞) * f 1 := by
+          rw [ENNReal.coe_div hn', ENNReal.coe_natCast, ENNReal.coe_natCast, div_eq_mul_inv]
+          ring
+  have hrat : ∀ q : ℚ≥0, f q = ((q : ℝ≥0) : ℝ≥0∞) * f 1 := by
+    intro q
+    have hq : (q : ℝ≥0) = (q.num : ℝ≥0) / q.den := NNRat.cast_def q
+    rw [hq]
+    exact hmn _ _ q.den_pos
+  refine le_antisymm ?_ ?_
+  · refine le_of_forall_gt_imp_ge_of_dense fun c hc => ?_
+    by_cases hf1 : f 1 = 0
+    · obtain ⟨n, hn⟩ := exists_nat_ge t
+      calc f t ≤ f (n * 1) := hmono (by rwa [mul_one])
+        _ = 0 := by rw [hnat, hf1, mul_zero]
+        _ ≤ c := zero_le
+    · obtain ⟨q, hq1, hq2⟩ : ∃ q : ℚ≥0, t < (q : ℝ≥0) ∧ ((q : ℝ≥0) : ℝ≥0∞) * f 1 < c := by
+        have hlt : (t : ℝ≥0∞) < c / f 1 := by
+          rwa [ENNReal.lt_div_iff_mul_lt (Or.inl hf1) (Or.inl h1)]
+        obtain ⟨r, hr1, hr2⟩ := ENNReal.lt_iff_exists_nnreal_btwn.1 hlt
+        obtain ⟨q, hq1, hq2⟩ := exists_nnrat_btwn_nnreal (show t < r by exact_mod_cast hr1)
+        refine ⟨q, hq1, ?_⟩
+        have h3 : ((q : ℝ≥0) : ℝ≥0∞) < c / f 1 :=
+          (show ((q : ℝ≥0) : ℝ≥0∞) < r by exact_mod_cast hq2).trans hr2
+        rwa [ENNReal.lt_div_iff_mul_lt (Or.inl hf1) (Or.inl h1)] at h3
+      calc f t ≤ f q := hmono hq1.le
+        _ = (q : ℝ≥0) * f 1 := hrat q
+        _ ≤ c := hq2.le
+  · refine le_of_forall_lt_imp_le_of_dense fun c hc => ?_
+    have hf1 : f 1 ≠ 0 := by
+      rintro h
+      rw [h, mul_zero] at hc
+      exact absurd hc (not_lt.2 zero_le)
+    obtain ⟨q, hq1, hq2⟩ : ∃ q : ℚ≥0, (q : ℝ≥0) ≤ t ∧ c ≤ ((q : ℝ≥0) : ℝ≥0∞) * f 1 := by
+      have hlt : c / f 1 < t := by
+        rwa [ENNReal.div_lt_iff (Or.inl hf1) (Or.inl h1)]
+      obtain ⟨r, hr1, hr2⟩ := ENNReal.lt_iff_exists_nnreal_btwn.1 hlt
+      obtain ⟨q, hq1, hq2⟩ := exists_nnrat_btwn_nnreal (show r < t by exact_mod_cast hr2)
+      refine ⟨q, hq2.le, ?_⟩
+      have h3 : c / f 1 ≤ ((q : ℝ≥0) : ℝ≥0∞) :=
+        hr1.le.trans (show (r : ℝ≥0∞) ≤ ((q : ℝ≥0) : ℝ≥0∞) by exact_mod_cast hq1.le)
+      rwa [ENNReal.div_le_iff hf1 h1] at h3
+    calc c ≤ (q : ℝ≥0) * f 1 := hq2
+      _ = f q := (hrat q).symm
+      _ ≤ f t := hmono hq1
 
 end HarmonicBalls
