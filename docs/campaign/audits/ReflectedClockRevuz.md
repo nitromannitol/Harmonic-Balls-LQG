@@ -8,7 +8,10 @@ square by the additive functional whose Revuz measure is a given measure. This n
 clock of reflected Brownian motion in `K`, read in the unit square, is such an additive functional for the normalized
 LQG measure, so that the cited theorem applies, and the proof of the strict positivity of the kernel from the cited
 theorem of Keller–Lenz–Vogt–Wojciechowski. Proposition 2.6 follows from the two cited statements
-(`reflectedLBMHeatKernelStmt_of_kigami_of_klvw`, `ReflectedLBMHeatKernelProposition.lean`).
+(`reflectedLBMHeatKernelStmt_of_kigami_of_klvw`, `ReflectedLBMHeatKernelProposition.lean`), and the two instances of
+them that its proof uses are proved, so that Proposition 2.6 holds with no cited input
+(`reflectedLBMHeatKernelStmt_holds`, `ReflectedLBMHeatKernelProved.lean`; section "Proposition 2.6 with no cited
+input" below).
 
 ## What is proved
 
@@ -28,8 +31,10 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `K₀ = closedSquare 0 1`, `
 | Proposition 2.6 from the cited theorem and positivity | `reflectedLBMHeatKernel_of_kigami_of_positivity` | `ReflectedLQGRevuzMeasure.lean` |
 | Symmetry of every jointly continuous heat kernel of the time change | `isLBMHeatKernel_symm` | `ReflectedHeatKernelSymmetry.lean` |
 | Proposition 2.6 from the cited theorems of Kigami and KLVW alone | `reflectedLBMHeatKernelStmt_of_kigami_of_klvw` | `ReflectedLBMHeatKernelProposition.lean` |
+| The instances of Kigami Thm 13.1 and KLVW Thm A.2 that the proof uses | `kigamiLQGInstanceStmt`, `klvwHeatKernelInstanceStmt` | `ReflectedLBMHeatKernelProved.lean` |
+| Proposition 2.6 with no cited input | `reflectedLBMHeatKernelStmt_holds` | `ReflectedLBMHeatKernelProved.lean` |
 
-All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-060247-2846846; the last two rows, log 1125-143543-2746961).
+All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-060247-2846846; rows 9 and 10, log 1125-143543-2746961; the last two rows, log 1125-221630-17367).
 
 ## Route
 
@@ -150,7 +155,68 @@ atoms and the upper ball bounds.
 
 All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-143543-2746961).
 
+## Proposition 2.6 with no cited input
+
+The proof of Proposition 2.6 uses the cited theorems only through two instances, stated in the repository as
+`KigamiLQGInstanceStmt` (`SquareClippedBallVolume.lean`) and `KLVWHeatKernelInstanceStmt`
+(`ReflectedHeatKernelL2Semigroup.lean`); `reflectedLBMHeatKernelStmt_of_instances`
+(`ReflectedLBMHeatKernelProposition.lean`) derives Proposition 2.6 from them. Both are proved
+(`ReflectedLBMHeatKernelProved.lean`) by the following route: the centered Neumann
+Green kernel of the square gives a continuous density of the time change from every start and for every version of
+the clock, and its eigenfunction expansion gives strict positivity at every point. Here `A` is an additive
+functional of reflected Brownian motion in `K₀` (`IsUnitSquarePCAF`) whose Revuz measure `ν` is a probability measure
+carried by `K₀`, charging every relative ball, with `ν(B̄(y, r)) ≤ C r^β` (`IsUpperRegularSpeed`).
+
+1. **Mixing of the Neumann kernel.** `k_s` satisfies Chapman–Kolmogorov at every point, `k_1 ≥ δ > 0` on `K₀ × K₀`,
+   and `|k_s − 1| ≤ C e^{−cs}` for `s ≥ 1` (`exists_abs_neumannKernel_sub_one_le`, `ReflectedNeumannMixing.lean`).
+2. **Unbounded clocks.** A clock with nonzero Revuz measure tends to infinity almost surely from every start
+   (`ae_tendsto_atTop_of_isUnitSquarePCAF`, `ReflectedClockUnbounded.lean`).
+3. **The centered Green kernel** `g̃(x, y) = ∫_0^∞ (k_s(x, y) − 1) ds`, bounded by `C(1 + |x − y|^{−θ})`, with rows
+   continuous from `K₀` into `L²(ν)` (`exists_abs_centeredGreenKernel_le`, `continuousOn_greenRow`,
+   `ReflectedCenteredGreenKernel.lean`).
+4. **The centered Green operator** `G = QVQ` on `L²(ν)`, with `Q` the projection on mean zero and `V` the integral
+   operator of `g̃`, is compact and symmetric (`ReflectedGreenOperator.lean`), and `⟨f, Gf⟩ ≥ 0` with equality
+   only for `f = 0` on mean zero (`ReflectedGreenPositivity.lean`). The spectral
+   theorem for compact self-adjoint operators gives a Hilbert basis `1, ϕ_i` with `Gϕ_i = μ_i ϕ_i`, `μ_i > 0`
+   (`IsUpperRegularSpeed.exists_greenEigenbasis`, `ReflectedGreenSpectral.lean`).
+5. **The resolvent identity.** For `f` bounded of mean zero, `R_c f + c R_c(Vf) = Vf` on `K₀` for the resolvent
+   `R_c` of the time change `Y_u = b(A⁻¹(u))` from every start (`resolventReal_add_resolventReal_greenPotential`,
+   `ReflectedCenteredResolvent.lean`; from the discounted Green kernels `g_β = g̃ + 1/β + o(1)`,
+   `ReflectedDiscountedGreen.lean`). So `R_c ϕ_i = ϕ_i/(c + 1/μ_i)`, and uniqueness of the Laplace transform almost
+   everywhere (`ae_eq_of_laplace_eq`, `LaplaceTransformUniquenessAe.lean`) with right continuity in time gives
+   `E_x ϕ_i(Y_u) = e^{−u/μ_i} ϕ_i(x)` for every `u > 0` and every start `x ∈ K₀` (`timeChangeTransition_eigenfun`,
+   `ReflectedEigenTransition.lean`).
+6. **The kernel.** `p(t, x, y) = 1 + ∑ e^{−t/μ_i} ϕ_i(x) ϕ_i(y)` converges uniformly on `[t₀, ∞) × K₀ × K₀`
+   (`|ϕ_i| ≤ B/μ_i`, `∑ μ_i² ≤ B²`) and is jointly continuous (`GreenEigenData.continuousOn_eigenKernel`,
+   `ReflectedEigenKernel.lean`). For bounded continuous `ψ`, `E_x ψ(Y_v) = ∫ p(v, x, y) ψ(y) ν(dy)` from every start,
+   by finite eigenfunction combinations, the `L²` error bound `R_c|h| ≤ (2B + 1/c) ‖h‖₂` and the fundamental theorem
+   of calculus in time (`timeChangeTransition_eq_integral_eigenKernel`, `ReflectedEigenKernelTests.lean`). A bump
+   function gives `p ≥ 0`, the law of `Y_v` under `Q_x` is `p(v, x, y) ν(dy)`, and `p` is a heat kernel of the time
+   change from every start (`isLBMHeatKernel_eigenKernel`, `ReflectedEigenHeatKernel.lean`).
+7. **Strict positivity.** `p(s, y, y) ≥ 1`; by Chapman–Kolmogorov a positive value at `(u, x, y)` stays positive at all
+   later times; so a zero at `t₀` would make `p(·, x, y)` vanish on `(0, t₀)`, but `t ↦ p(t, x, y)` extends to a
+   holomorphic function on `Re t > 0` that tends to `1`, and the identity theorem excludes it (`eigenKernel_pos`).
+8. **The instances.** For Kigami's theorem the kernel is `p` (the volume bounds (13.1) give `IsUpperRegularSpeed`
+   through `closedBall_le_of_ball_le`). For KLVW, every jointly continuous heat kernel of the time change equals `p`
+   on `(0, ∞) × K₀ × K₀` (`IsLBMHeatKernel.eq_of_continuousOn`), so its transition operator at `t > 0` sends every
+   `f ≥ 0` with `⟨f, f⟩ > 0` to a function positive `ν`-almost everywhere (`klvwHeatKernelInstanceStmt`).
+   `KLVWHeatKernelInstanceStmt` carries, besides the hypotheses of the cited theorem, that `ν` is the Revuz measure
+   of `A`, a probability measure with the upper ball bounds; `pos_of_isIrreducibleSemigroup` passes them on.
+
+**Fidelity of the two cited statements** (`kigamiHeatKernelContinuityCited` and `klvwPositivityImprovingCited`,
+checked against Kigami 2019 and KLVW 2015; no change to either statement). Kigami 2019, Theorem 13.1: the ball hypothesis is
+exact on `[0, 1]²`; the Lean statement selects existence and joint continuity of the kernel and omits weak exponential
+decay, (13.2) and (13.5); Kigami's process has generator `Δ` while folded Brownian motion here has generator `Δ/2`, so
+the kernel in the time units used here is `p_μ(t/2, x, y)`; and the Lean statement adds a quantifier, the transition
+formula for every additive functional with Revuz measure `μ` and from every start, which the expansion above proves
+directly for the instance used. KLVW Theorem A.2: `klvwPositivityImprovingCited` is a valid specialization of
+(iii) ⟺ (i) to finite measures, real `L²` and symmetric sub-Markov semigroups.
+
+All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 1125-221630-17367).
+
 ## What remains
 
-For Proposition 2.6 itself, the truth checks of the two cited statements `kigamiHeatKernelContinuityCited` and
-`klvwPositivityImprovingCited` against the printed sources, recorded in row 2.6 of the counted manifest.
+Nothing for Proposition 2.6: `reflectedLBMHeatKernelStmt_holds` has no hypothesis. The cited statements
+`kigamiHeatKernelContinuityCited` and `klvwPositivityImprovingCited` stay in `HarmonicBalls/FirstPass/Cited/` as
+transcriptions of the sources; no step of this proof takes them as hypotheses (`reflectedLBMHeatKernelStmt_of_kigami_of_klvw`
+records the earlier route from them).

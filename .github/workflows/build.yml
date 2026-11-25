@@ -26,7 +26,7 @@ permissions:
 
 env:
   # The number of `#print axioms` lines of `checks/AxiomGate.lean`; bump with each added or removed line.
-  EXPECTED_AXIOM_REPORTS: "371"
+  EXPECTED_AXIOM_REPORTS: "390"
 
 jobs:
   stage1:

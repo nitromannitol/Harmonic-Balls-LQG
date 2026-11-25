@@ -113,6 +113,7 @@ import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelL2Semigroup
 import HarmonicBalls.Proofs.Potential.ReflectedLQGHeatKernelPositivity
 import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelIrreducible
 import HarmonicBalls.Proofs.Potential.ReflectedLBMHeatKernelProposition
+import HarmonicBalls.Proofs.Potential.ReflectedLBMHeatKernelProved
 import HarmonicBalls.FirstPass.Cited.Section2PositivityImproving
 
 /-!
@@ -803,3 +804,20 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.klvwHeatKernelInstanceStmt_of_cited
 -- 2.6 positivity: cited statement, Keller-Lenz-Vogt-Wojciechowski Theorem A.2 (HarmonicBalls/FirstPass/Cited/Section2PositivityImproving.lean)
 #print axioms HarmonicBalls.klvwPositivityImprovingCited
+-- 2.6 with no cited input: the eigenfunction expansion of the centered Neumann Green kernel of the square, the instances of Kigami Theorem 13.1 and KLVW Theorem A.2, and Proposition 2.6 (HarmonicBalls/Proofs/Potential/ReflectedNeumannMixing.lean, ReflectedClockUnbounded.lean, ReflectedCenteredGreenKernel.lean, ReflectedGreenSpectral.lean, ReflectedCenteredResolvent.lean, LaplaceTransformUniquenessAe.lean, ReflectedEigenKernel.lean, ReflectedEigenTransition.lean, ReflectedEigenKernelTests.lean, ReflectedEigenHeatKernel.lean, ReflectedLBMHeatKernelProved.lean)
+#print axioms HarmonicBalls.exists_abs_neumannKernel_sub_one_le
+#print axioms HarmonicBalls.ae_tendsto_atTop_of_isUnitSquarePCAF
+#print axioms HarmonicBalls.exists_abs_centeredGreenKernel_le
+#print axioms HarmonicBalls.IsUpperRegularSpeed.isCompactOperator_centeredGreenOperator
+#print axioms HarmonicBalls.IsUpperRegularSpeed.eq_zero_of_inner_centeredGreenOperator_self_eq_zero
+#print axioms HarmonicBalls.IsUpperRegularSpeed.exists_greenEigenbasis
+#print axioms HarmonicBalls.resolventReal_add_resolventReal_greenPotential
+#print axioms HarmonicBalls.ae_eq_of_laplace_eq
+#print axioms HarmonicBalls.GreenEigenData.continuousOn_eigenKernel
+#print axioms HarmonicBalls.timeChangeTransition_eigenfun
+#print axioms HarmonicBalls.timeChangeTransition_eq_integral_eigenKernel
+#print axioms HarmonicBalls.isLBMHeatKernel_eigenKernel
+#print axioms HarmonicBalls.eigenKernel_pos
+#print axioms HarmonicBalls.kigamiLQGInstanceStmt
+#print axioms HarmonicBalls.klvwHeatKernelInstanceStmt
+#print axioms HarmonicBalls.reflectedLBMHeatKernelStmt_holds
