@@ -101,10 +101,11 @@ theorem tendsto_discountedGreenKernel {x y : ℂ} (hx : x ∈ closedSquare (0 : 
       exact h3
     simpa using h2.mul_const (neumannKernel s x y - 1)
 
-/-- **The Green kernel of the square** is `g̃_β + 1/β` off the diagonal, for `β > 0`. -/
-theorem toReal_squareGreenKernel {β : ℝ} (hβ : 0 < β) {x y : ℂ} (hx : x ∈ closedSquare (0 : ℂ) 1)
-    (hy : y ∈ closedSquare (0 : ℂ) 1) (hxy : x ≠ y) :
-    (squareGreenKernel β x y).toReal = discountedGreenKernel β x y + 1 / β := by
+/-- **The Green kernel of the square** is `g̃_β + 1/β ≥ 0` off the diagonal, for `β > 0`. -/
+theorem squareGreenKernel_eq_ofReal {β : ℝ} (hβ : 0 < β) {x y : ℂ}
+    (hx : x ∈ closedSquare (0 : ℂ) 1) (hy : y ∈ closedSquare (0 : ℂ) 1) (hxy : x ≠ y) :
+    0 ≤ discountedGreenKernel β x y + 1 / β ∧
+      squareGreenKernel β x y = ENNReal.ofReal (discountedGreenKernel β x y + 1 / β) := by
   obtain ⟨C₁, C₂, -, -, h⟩ := exists_abs_discountedGreenKernel_le one_pos le_rfl
   have hi := (h x hx y hy hxy β hβ.le).1
   have hexp : IntegrableOn (fun s : ℝ => Real.exp (-(β * s))) (Ioi 0) := by
@@ -123,6 +124,9 @@ theorem toReal_squareGreenKernel {β : ℝ} (hβ : 0 < β) {x y : ℂ} (hx : x �
     refine integral_congr_ae (Eventually.of_forall fun s => ?_)
     simp only
     ring
+  have hnn : 0 ≤ ∫ s in Ioi (0 : ℝ), Real.exp (-(β * s)) * neumannKernel s x y :=
+    integral_nonneg fun s => mul_nonneg (Real.exp_pos _).le (neumannKernel_nonneg _ _ _)
+  refine ⟨hsplit ▸ hnn, ?_⟩
   unfold squareGreenKernel
   rw [← hsplit]
   have hlin : ∫⁻ s in Ioi (0 : ℝ), ENNReal.ofReal (Real.exp (-(β * s))) *
@@ -131,9 +135,13 @@ theorem toReal_squareGreenKernel {β : ℝ} (hβ : 0 < β) {x y : ℂ} (hx : x �
     refine setLIntegral_congr_fun measurableSet_Ioi fun s hs => ?_
     rw [ENNReal.ofReal_mul (Real.exp_pos _).le, ofReal_neumannKernel hs hx hy]
   rw [hlin, ← ofReal_integral_eq_lintegral_ofReal hk
-    (Eventually.of_forall fun s => mul_nonneg (Real.exp_pos _).le (neumannKernel_nonneg _ _ _)),
-    ENNReal.toReal_ofReal (integral_nonneg fun s => mul_nonneg (Real.exp_pos _).le
-      (neumannKernel_nonneg _ _ _))]
+    (Eventually.of_forall fun s => mul_nonneg (Real.exp_pos _).le (neumannKernel_nonneg _ _ _))]
+
+theorem toReal_squareGreenKernel {β : ℝ} (hβ : 0 < β) {x y : ℂ} (hx : x ∈ closedSquare (0 : ℂ) 1)
+    (hy : y ∈ closedSquare (0 : ℂ) 1) (hxy : x ≠ y) :
+    (squareGreenKernel β x y).toReal = discountedGreenKernel β x y + 1 / β := by
+  obtain ⟨h0, h⟩ := squareGreenKernel_eq_ofReal hβ hx hy hxy
+  rw [h, ENNReal.toReal_ofReal h0]
 
 /-! ### The potentials -/
 
