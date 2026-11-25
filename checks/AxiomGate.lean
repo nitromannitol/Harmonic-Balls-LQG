@@ -688,3 +688,5 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.IsApproxClocks.ae_eq_of_shift_zero
 -- 2.6 clock identification, step 3: the LQG clocks of a square as one clock of reflected Brownian motion in the unit square (HarmonicBalls/Proofs/Potential/ReflectedClockIdentification.lean)
 #print axioms HarmonicBalls.exists_unitSquare_clock_of_isLQGClock
+#print axioms HarmonicBalls.measurable_lqgClockApprox_pathNaturalFiltration
+#print axioms HarmonicBalls.exists_isUnitSquarePCAF_of_isLQGClock

@@ -184,5 +184,109 @@ theorem exists_unitSquare_clock_of_isLQGClock {γ : ℝ} {hε : ℝ → ℂ → 
     rw [hs]
     field_simp
 
+/-! ### Adaptedness -/
+
+/-- A time integral of a continuous function of `u(s, x)`, continuous in `s` and measurable in
+`x`, is measurable in `x`. -/
+theorem measurable_intervalIntegral_comp {α : Type*} {m : MeasurableSpace α} {u : ℝ → α → ℂ}
+    (hu_cont : ∀ x, Continuous fun s => u s x) (hu : ∀ s, Measurable (u s)) {φ : ℂ → ℝ}
+    (hφ : Continuous φ) (T : ℝ) : Measurable fun x => ∫ s in (0 : ℝ)..T, φ (u s x) := by
+  have hj : Measurable (Function.uncurry u) :=
+    measurable_uncurry_of_continuous_of_measurable hu_cont hu
+  have hs : StronglyMeasurable (Function.uncurry fun s x => φ (u s x)) :=
+    (hφ.measurable.comp hj).stronglyMeasurable
+  simp only [intervalIntegral]
+  exact ((hs.integral_prod_left (μ := volume.restrict (Ioc 0 T))).measurable).sub
+    ((hs.integral_prod_left (μ := volume.restrict (Ioc T 0))).measurable)
+
+/-- The position at a time `r ≤ t` is measurable for the natural filtration at time `t`. -/
+theorem measurable_eval_pathNaturalFiltration {r t : ℝ≥0} (hrt : r ≤ t) :
+    Measurable[pathNaturalFiltration t] fun b : ContinuousPath ℂ => b r := by
+  rw [measurable_iff_comap_le]
+  exact le_iSup₂ (f := fun s (_ : s ≤ t) =>
+    MeasurableSpace.comap (fun b : ContinuousPath ℂ => b s) inferInstance) r hrt
+
+theorem pathNaturalFiltration_mono : Monotone pathNaturalFiltration := fun _ t hst =>
+  iSup₂_le fun r hr => le_iSup₂ (f := fun r (_ : r ≤ t) =>
+    MeasurableSpace.comap (fun b : ContinuousPath ℂ => b r) inferInstance) r (hr.trans hst)
+
+/-- **The approximate clocks are adapted**: the approximate clock at time `T₀` is measurable for
+the natural filtration at time `T₀`. -/
+theorem measurable_lqgClockApprox_pathNaturalFiltration {γ : ℝ} {hε : ℝ → ℂ → ℝ} {ε : ℝ}
+    (hc : Continuous (hε ε)) (T₀ : ℝ≥0) :
+    Measurable[pathNaturalFiltration T₀] fun b => lqgClockApprox γ hε ε b T₀ := by
+  have hφ : Continuous fun z => ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε z) :=
+    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc))
+  have hmeas := measurable_intervalIntegral_comp (m := pathNaturalFiltration T₀)
+    (u := fun s b => b (min s.toNNReal T₀))
+    (fun b => b.continuous.comp (continuous_real_toNNReal.min continuous_const))
+    (fun s => measurable_eval_pathNaturalFiltration (min_le_right _ _)) hφ T₀
+  have heq : (fun b => lqgClockApprox γ hε ε b T₀) = fun b => ∫ s in (0 : ℝ)..(T₀ : ℝ),
+      ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε (b (min s.toNNReal T₀))) := by
+    funext b
+    unfold lqgClockApprox
+    refine intervalIntegral.integral_congr fun s hs => ?_
+    rw [uIcc_of_le T₀.coe_nonneg] at hs
+    simp only [min_eq_left (Real.toNNReal_le_iff_le_coe.2 hs.2)]
+  rw [heq]
+  exact hmeas
+
+/-- The inverse path chart is measurable from the natural filtration at time `t` to the natural
+filtration at time `L² t`. -/
+theorem measurable_unitSquarePathChart_symm_pathNaturalFiltration (a : ℂ) {L : ℝ} (hL : 0 < L)
+    (t : ℝ≥0) : @Measurable _ _ (pathNaturalFiltration t)
+      (pathNaturalFiltration ((L ^ 2).toNNReal * t)) (unitSquarePathChart a hL).symm := by
+  have hcpos : 0 < (L ^ 2).toNNReal := Real.toNNReal_pos.2 (by positivity)
+  rw [measurable_iff_comap_le, MeasurableSpace.comap_iSup]
+  refine iSup_le fun s => ?_
+  rw [MeasurableSpace.comap_iSup]
+  refine iSup_le fun hs => ?_
+  rw [MeasurableSpace.comap_comp, ← measurable_iff_comap_le]
+  have hfun : ((fun b : ContinuousPath ℂ => b s) ∘ (unitSquarePathChart a hL).symm) =
+      fun b' => a + (L : ℂ) * b' (s / (L ^ 2).toNNReal) := by
+    funext b'
+    have h := eq_add_mul_unitSquarePathChart a hL ((unitSquarePathChart a hL).symm b')
+      (s / (L ^ 2).toNNReal)
+    rw [Homeomorph.apply_symm_apply, mul_div_cancel₀ s hcpos.ne'] at h
+    exact h
+  rw [hfun]
+  have hst : s / (L ^ 2).toNNReal ≤ t := by
+    rw [div_le_iff₀ hcpos, mul_comm]
+    exact hs
+  exact measurable_const.add (measurable_const.mul (measurable_eval_pathNaturalFiltration hst))
+
+/-- **The transported approximate clocks are adapted.** -/
+theorem measurable_transportedClockApprox_pathNaturalFiltration {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+    (hc : ∀ k, Continuous (hε (dyadicScale k))) (a : ℂ) {L : ℝ} (hL : 0 < L) (M : ℝ) (k : ℕ)
+    (t : ℝ≥0) : Measurable[pathNaturalFiltration t]
+      fun b' => transportedClockApprox γ hε a hL M k b' t := by
+  unfold transportedClockApprox
+  exact ((measurable_lqgClockApprox_pathNaturalFiltration (hc k) _).comp
+    (measurable_unitSquarePathChart_symm_pathNaturalFiltration a hL t)).div_const _
+
+theorem pathTimeShift_eq_shift (b : ContinuousPath ℂ) (t : ℝ≥0) :
+    pathTimeShift b t = ContinuousPath.shift t b := by
+  ext u
+  rfl
+
+/-- **The LQG clocks of a square are one positive continuous additive functional of reflected
+Brownian motion in the unit square**: for LQG clocks `F x` of reflected Brownian motion in
+`K = closedSquare a L` from every `x ∈ K` (continuous circle averages) and `M > 0`, there is
+`A` with `IsUnitSquarePCAF A` and `F x b s = M A(s / L², Ψ b)` almost surely from every `x ∈ K`. -/
+theorem exists_isUnitSquarePCAF_of_isLQGClock {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+    (hc : ∀ k, Continuous (hε (dyadicScale k))) {a : ℂ} {L : ℝ} (hL : 0 < L) {M : ℝ}
+    (hM : 0 < M) {F : ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hF : ∀ x ∈ closedSquare a L, IsLQGClock (reflectedPlanarBrownianMotion a L) γ hε x (F x)) :
+    ∃ A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0, IsUnitSquarePCAF A ∧
+      ∀ x ∈ closedSquare a L, ∀ᵐ b ∂(reflectedPlanarBrownianMotion a L x), ∀ s : ℝ≥0,
+        F x b s = M * (A (s / (L ^ 2).toNNReal) (unitSquarePathChart a hL b) : ℝ) := by
+  obtain ⟨A, hAm, hpath, hadd, hAad, hFA⟩ := exists_unitSquare_clock_of_isLQGClock hc hL hM hF
+  refine ⟨A, ⟨hAm, fun x _ t => ⟨A t, hAad pathNaturalFiltration pathNaturalFiltration_mono
+    (measurable_transportedClockApprox_pathNaturalFiltration hc a hL M) t, ae_eq_refl _⟩,
+    hpath, fun x hx s t => ?_⟩, hFA⟩
+  filter_upwards [hadd x hx s t] with b hb
+  rw [pathTimeShift_eq_shift]
+  exact hb
+
 end HarmonicBalls
 
