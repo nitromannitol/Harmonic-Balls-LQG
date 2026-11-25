@@ -95,6 +95,12 @@ import HarmonicBalls.Proofs.Potential.ReflectedSquareScaling
 import HarmonicBalls.Proofs.Potential.ReflectedBrownianFoldInvariance
 import HarmonicBalls.Proofs.Potential.UniversalClock
 import HarmonicBalls.Proofs.Potential.ReflectedClockIdentification
+import HarmonicBalls.Proofs.Potential.ReflectedLebesgueInvariance
+import HarmonicBalls.Proofs.Potential.ReflectedBrownianMarkov
+import HarmonicBalls.Proofs.Potential.ReflectedGreenPotentialBound
+import HarmonicBalls.Proofs.Potential.ReflectedRevuzFormula
+import HarmonicBalls.Proofs.Potential.ReflectedRevuzIdentification
+import HarmonicBalls.Proofs.Potential.ReflectedLQGRevuzMeasure
 
 /-!
 # Axiom gate
@@ -690,3 +696,28 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.exists_unitSquare_clock_of_isLQGClock
 #print axioms HarmonicBalls.measurable_lqgClockApprox_pathNaturalFiltration
 #print axioms HarmonicBalls.exists_isUnitSquarePCAF_of_isLQGClock
+-- 2.6 clock identification, step 4: Lebesgue measure on the unit square is invariant for reflected Brownian motion (HarmonicBalls/Proofs/Potential/ReflectedLebesgueInvariance.lean)
+#print axioms HarmonicBalls.intervalIntegral_unitIntervalFold_add_add_sub
+#print axioms HarmonicBalls.setIntegral_integral_planarGaussian_squareFold
+#print axioms HarmonicBalls.lintegral_reflectedPlanarBrownianMotion_eval_mem
+#print axioms HarmonicBalls.lintegral_lintegral_reflectedPlanarBrownianMotion_eval
+-- 2.6 clock identification, step 5: Markov property at fixed times and second moments of occupation integrals (HarmonicBalls/Proofs/Potential/ReflectedBrownianMarkov.lean)
+#print axioms HarmonicBalls.lintegral_reflected_eval_mul_shift
+#print axioms HarmonicBalls.lintegral_windowOccupation_sq_le
+-- 2.6 clock identification, step 6: Green potentials of reflected Brownian motion (HarmonicBalls/Proofs/Potential/ReflectedGreenPotentialBound.lean)
+#print axioms HarmonicBalls.lintegral_gaussianReal_unitIntervalFold_le
+#print axioms HarmonicBalls.lintegral_planarGaussian_squareFold_le
+#print axioms HarmonicBalls.lintegral_windowOccupation_reflected_le
+-- 2.6 clock identification, step 7: the Revuz formula (HarmonicBalls/Proofs/Potential/ReflectedRevuzFormula.lean)
+#print axioms HarmonicBalls.lintegral_unitSquareRevuzMeasure_of_isUnitSquarePCAF
+#print axioms HarmonicBalls.tendstoInMeasure_integral_clockOccupationMeasure
+#print axioms HarmonicBalls.clockStieltjesFunction_measure_restrict_of_density
+-- 2.6 clock identification, step 8: Revuz measure of a limit of clocks with densities (HarmonicBalls/Proofs/Potential/ReflectedRevuzIdentification.lean)
+#print axioms HarmonicBalls.unitSquareRevuzMeasure_eq_of_density_clocks
+-- 2.6 clock identification, step 9: the Revuz measure of the LQG clock, and Proposition 2.6 up to positivity (HarmonicBalls/Proofs/Potential/ReflectedLQGRevuzMeasure.lean)
+#print axioms HarmonicBalls.IsWholePlaneGFF.ae_lqgMeasure_frontier_closedSquare_eq_zero_of_pos
+#print axioms HarmonicBalls.tendsto_setLIntegral_of_tendsto_integral
+#print axioms HarmonicBalls.transportedClockApprox_eq_integral
+#print axioms HarmonicBalls.exists_green_bound_unitSquareClockDensity
+#print axioms HarmonicBalls.ae_exists_isUnitSquarePCAF_revuz_eq
+#print axioms HarmonicBalls.reflectedLBMHeatKernel_of_kigami_of_positivity
