@@ -184,4 +184,156 @@ theorem clockOccupation_eq_lintegral_stieltjes {A : ℝ≥0 → ContinuousPath �
   unfold clockOccupation unitSquareTimeChangeRegularized pcafClockInverse
   simp only [hreg, Real.toNNReal_coe]
 
+/-- The weight `1_I(s) g(y)` of an occupation integral over the time window `I`. -/
+noncomputable def windowWeight (I : Set ℝ) (g : ℂ → ℝ≥0∞) : ℝ × ℂ → ℝ≥0∞ :=
+  (I ×ˢ univ).indicator fun p => g p.2
+
+theorem measurable_windowWeight {I : Set ℝ} (hI : MeasurableSet I) {g : ℂ → ℝ≥0∞}
+    (hg : Measurable g) : Measurable (windowWeight I g) :=
+  (hg.comp measurable_snd).indicator (hI.prod MeasurableSet.univ)
+
+theorem windowWeight_apply (I : Set ℝ) (g : ℂ → ℝ≥0∞) (s : ℝ) (y : ℂ) :
+    windowWeight I g (s, y) = I.indicator (fun _ => g y) s := by
+  by_cases hs : s ∈ I <;> simp [windowWeight, indicator, hs]
+
+/-- **The Revuz formula in the time of the time change**:
+`∫ g d(Rev A) = ∫_{K₀} dz E_z ∫_0^∞ 1_{(0,1]}(τ̄_u) g(Y_u) du`, for a clock unbounded from every
+start in `K₀`. -/
+theorem lintegral_unitSquareRevuzMeasure_eq_clockOccupation {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : IsUnitSquarePCAF A)
+    (hU : ∀ z ∈ closedSquare 0 1, ∀ᵐ b ∂reflectedPlanarBrownianMotion 0 1 z,
+      Tendsto (fun t => A t b) atTop atTop) {g : ℂ → ℝ≥0∞} (hg : Measurable g) :
+    ∫⁻ y, g y ∂unitSquareRevuzMeasure A = ∫⁻ z in closedSquare 0 1, ∫⁻ b,
+      clockOccupation A (windowWeight (Ioc 0 1) g) b ∂reflectedPlanarBrownianMotion 0 1 z := by
+  rw [lintegral_unitSquareRevuzMeasure_of_isUnitSquarePCAF hA hg]
+  refine setLIntegral_congr_fun (isCompact_closedSquare 0 1).isClosed.measurableSet
+    fun z hz => lintegral_congr_ae ?_
+  filter_upwards [hA.path z hz, hU z hz] with b hp hu
+  rw [lintegral_clockOccupationMeasure _ _ hg, clockOccupation_eq_lintegral_stieltjes hp.1
+    hp.2.1 hp.2.2 (fun u => (hu.eventually_gt_atTop u).exists)
+    (measurable_windowWeight measurableSet_Ioc hg), ← lintegral_indicator measurableSet_Ioc]
+  refine lintegral_congr fun s => ?_
+  rw [windowWeight_apply]
+  by_cases hs : s ∈ Ioc (0 : ℝ) 1 <;> simp [hs]
+
+/-- **The occupation integral after a fixed time.** For a clock unbounded from `z ∈ K₀` and a
+time `t`, almost surely, for every measurable `F ≥ 0`, the occupation integral of
+`1_{s > t} F(s, y)` along `b` is the occupation integral of `F(t + s, y)` along `θ_t b`. -/
+theorem ae_clockOccupation_indicator_Ioi_eq_shift {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : IsUnitSquarePCAF A) {z : ℂ} (hz : z ∈ closedSquare 0 1)
+    (hU : ∀ᵐ b ∂reflectedPlanarBrownianMotion 0 1 z, Tendsto (fun t => A t b) atTop atTop)
+    (t : ℝ≥0) :
+    ∀ᵐ b ∂reflectedPlanarBrownianMotion 0 1 z, ∀ F : ℝ × ℂ → ℝ≥0∞, Measurable F →
+      clockOccupation A (fun p => (Ioi (t : ℝ)).indicator (fun _ => F p) p.1) b =
+        clockOccupation A (fun p => F ((t : ℝ) + p.1, p.2)) (ContinuousPath.shift t b) := by
+  filter_upwards [hA.path z hz, hU, ae_add_clockRationalRegularization_shift hA hz t]
+    with b hp hu hadd F hF
+  have hreg : ∀ s, clockRationalRegularization A s b = A s b :=
+    clockRationalRegularization_eq_of_continuous_monotone hp.2.1 hp.2.2
+  have hne : ∀ u : ℝ≥0, ∃ s, u < A s b := fun u => (hu.eventually_gt_atTop u).exists
+  set θb := ContinuousPath.shift t b with hθb
+  set At : ℝ := (A t b : ℝ) with hAt
+  have hτ : ∀ u : ℝ≥0, pcafClockInverse (clockRationalRegularization A) u b =
+      pcafClockInverse A u b := by
+    intro u
+    unfold pcafClockInverse
+    simp only [hreg]
+  -- the shift of the inverse clock at level `A t + v`
+  have hshift : ∀ v : ℝ≥0, pcafClockInverse A (A t b + v) b =
+      t + pcafClockInverse (clockRationalRegularization A) v θb := fun v =>
+    pcafClockInverse_add_eq_of_shift hp.2.2 hadd (hne _)
+  -- below level `A t` the inverse clock is at most `t`
+  have hlow : ∀ u : ℝ, 0 < u → u < At →
+      ¬ (t : ℝ) < (pcafClockInverse (clockRationalRegularization A) u.toNNReal b : ℝ) := by
+    intro u hu0 hut
+    rw [hτ, not_lt, NNReal.coe_le_coe]
+    refine sInf_lt_clock_le (a := fun s => A s b) ?_
+    rw [← NNReal.coe_lt_coe, Real.coe_toNNReal _ hu0.le]
+    exact hut
+  -- above level `A t` it exceeds `t`
+  have hhigh : ∀ v : ℝ, 0 < v → (t : ℝ) <
+      (pcafClockInverse (clockRationalRegularization A) (At + v).toNNReal b : ℝ) := by
+    intro v hv
+    rw [hτ]
+    by_contra hle
+    rw [not_lt, NNReal.coe_le_coe] at hle
+    have h := le_clock_of_sInf_le (a := fun s => A s b) hp.1 hp.2.1 hp.2.2 (hne _) hle
+    have h' : ((At + v).toNNReal : ℝ) ≤ At := by exact_mod_cast h
+    rw [Real.coe_toNNReal _ (by positivity)] at h'
+    linarith
+  have hlev : ∀ v : ℝ, 0 < v → (At + v).toNNReal = A t b + v.toNNReal := by
+    intro v hv
+    rw [Real.toNNReal_add (by positivity) hv.le, hAt, Real.toNNReal_coe]
+  unfold clockOccupation
+  -- split the integral at level `A t`
+  have hsplit : ∫⁻ u in Ioi (0 : ℝ), (Ioi (t : ℝ)).indicator (fun _ =>
+      F ((pcafClockInverse (clockRationalRegularization A) u.toNNReal b : ℝ),
+        unitSquareTimeChangeRegularized A u.toNNReal b))
+      (pcafClockInverse (clockRationalRegularization A) u.toNNReal b : ℝ) =
+      ∫⁻ u in Ioi At, F ((pcafClockInverse (clockRationalRegularization A) u.toNNReal b : ℝ),
+        unitSquareTimeChangeRegularized A u.toNNReal b) := by
+    have hAt0 : 0 ≤ At := NNReal.coe_nonneg _
+    rw [← lintegral_indicator measurableSet_Ioi, ← lintegral_indicator measurableSet_Ioi]
+    refine lintegral_congr_ae ?_
+    filter_upwards [(measure_singleton At : volume {At} = 0) |> measure_eq_zero_iff_ae_notMem.1]
+      with u hu
+    by_cases h1 : At < u
+    · have hu0 : 0 < u := lt_of_le_of_lt hAt0 h1
+      have h2 := hhigh (u - At) (by linarith)
+      rw [show At + (u - At) = u by ring] at h2
+      simp [indicator, hu0, h1, h2]
+    · by_cases hu0 : 0 < u
+      · have hlt : u < At := lt_of_le_of_ne (not_lt.1 h1) hu
+        simp [indicator, hu0, h1, hlow u hu0 hlt]
+      · simp [indicator, hu0, h1]
+  rw [hsplit]
+  -- translate by `A t`
+  rw [← lintegral_indicator measurableSet_Ioi, ← lintegral_indicator measurableSet_Ioi,
+    ← lintegral_add_left_eq_self (μ := volume) _ At]
+  refine lintegral_congr fun v => ?_
+  by_cases hv : 0 < v
+  · have hv' : At < At + v := by linarith
+    simp only [indicator, mem_Ioi, hv', hv, if_true]
+    rw [hlev v hv, hτ, hshift]
+    have hY : unitSquareTimeChangeRegularized A (A t b + v.toNNReal) b =
+        unitSquareTimeChangeRegularized A v.toNNReal θb := by
+      unfold unitSquareTimeChangeRegularized
+      rw [hτ, hshift, hθb, ContinuousPath.shift_apply]
+    rw [hY]
+    push_cast
+    rfl
+  · have hv' : ¬ At < At + v := by linarith
+    simp only [indicator, mem_Ioi, hv', hv, if_false]
+
+/-- **Stationarity of reflected Brownian motion started from Lebesgue measure on `K₀`**, with a
+weight at the time of the shift: `∫_{K₀} dz E_z[h(b_t) Ψ(θ_t b)] = ∫_{K₀} h(z) E_z Ψ dz`. -/
+theorem setLIntegral_lintegral_mul_shift_eq {h : ℂ → ℝ≥0∞} (hh : Measurable h)
+    {Ψ : ContinuousPath ℂ → ℝ≥0∞} (hΨ : Measurable Ψ) (t : ℝ≥0) :
+    ∫⁻ z in closedSquare 0 1, ∫⁻ b, h (b t) * Ψ (ContinuousPath.shift t b)
+        ∂reflectedPlanarBrownianMotion 0 1 z =
+      ∫⁻ z in closedSquare 0 1, h z * ∫⁻ b, Ψ b ∂reflectedPlanarBrownianMotion 0 1 z := by
+  have hφ : Measurable fun y => ∫⁻ b, Ψ b ∂reflectedPlanarBrownianMotion 0 1 y :=
+    hΨ.lintegral_kernel
+  have hfold : Measurable (squareFold 0 1) := (continuous_squareFold 0 1).measurable
+  have h1 : ∀ z, ∫⁻ b, h (b t) * Ψ (ContinuousPath.shift t b) ∂reflectedPlanarBrownianMotion 0 1 z =
+      ∫⁻ b, (fun y => h y * ∫⁻ b', Ψ b' ∂reflectedPlanarBrownianMotion 0 1 y) (b t)
+        ∂reflectedPlanarBrownianMotion 0 1 z := by
+    intro z
+    rw [lintegral_reflected_eval_mul_shift hh hΨ t z,
+      lintegral_reflected_eval_eq t (v := fun y => h y * ∫⁻ b', Ψ b'
+        ∂reflectedPlanarBrownianMotion 0 1 y) (hh.mul hφ) z]
+    refine lintegral_congr fun w => ?_
+    rw [reflectedPlanarBrownianMotion_zero_one_squareFold]
+  simp_rw [h1]
+  exact lintegral_lintegral_reflectedPlanarBrownianMotion_eval t (hh.mul hφ)
+
+/-- **Stationarity**: `∫_{K₀} dz E_z Ψ(θ_t b) = ∫_{K₀} dz E_z Ψ(b)`. -/
+theorem setLIntegral_lintegral_shift_eq {Ψ : ContinuousPath ℂ → ℝ≥0∞} (hΨ : Measurable Ψ)
+    (t : ℝ≥0) :
+    ∫⁻ z in closedSquare 0 1, ∫⁻ b, Ψ (ContinuousPath.shift t b)
+        ∂reflectedPlanarBrownianMotion 0 1 z =
+      ∫⁻ z in closedSquare 0 1, ∫⁻ b, Ψ b ∂reflectedPlanarBrownianMotion 0 1 z := by
+  have h := setLIntegral_lintegral_mul_shift_eq (h := fun _ => 1) measurable_const hΨ t
+  simpa using h
+
 end HarmonicBalls
