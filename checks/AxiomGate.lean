@@ -101,6 +101,8 @@ import HarmonicBalls.Proofs.Potential.ReflectedGreenPotentialBound
 import HarmonicBalls.Proofs.Potential.ReflectedRevuzFormula
 import HarmonicBalls.Proofs.Potential.ReflectedRevuzIdentification
 import HarmonicBalls.Proofs.Potential.ReflectedLQGRevuzMeasure
+import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelUniqueness
+import HarmonicBalls.FirstPass.Cited.Section2PositivityImproving
 
 /-!
 # Axiom gate
@@ -721,3 +723,8 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.exists_green_bound_unitSquareClockDensity
 #print axioms HarmonicBalls.ae_exists_isUnitSquarePCAF_revuz_eq
 #print axioms HarmonicBalls.reflectedLBMHeatKernel_of_kigami_of_positivity
+-- 2.6 positivity: uniqueness of jointly continuous heat kernels, full support of the normalized measure (HarmonicBalls/Proofs/Potential/ReflectedHeatKernelUniqueness.lean)
+#print axioms HarmonicBalls.IsLBMHeatKernel.eq_of_continuousOn
+#print axioms HarmonicBalls.ae_forall_closedSquare_unitSquareNormalizedMeasure_ball_inter_pos
+-- 2.6 positivity: cited statement, Keller-Lenz-Vogt-Wojciechowski Theorem A.2 (HarmonicBalls/FirstPass/Cited/Section2PositivityImproving.lean)
+#print axioms HarmonicBalls.klvwPositivityImprovingCited
