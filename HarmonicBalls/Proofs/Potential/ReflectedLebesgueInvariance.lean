@@ -132,5 +132,56 @@ theorem intervalIntegral_integral_gaussianReal_unitIntervalFold {ψ : ℝ → �
     rw [integral_const, probReal_univ, one_smul]
   linarith
 
+/-! ### Two dimensions -/
+
+theorem intervalIntegrable_of_abs_le {g : ℝ → ℝ} (hg : Measurable g) {C : ℝ} (hC : ∀ x, |g x| ≤ C)
+    (a b : ℝ) : IntervalIntegrable g volume a b :=
+  (intervalIntegrable_const (c := C)).mono_fun hg.aestronglyMeasurable
+    (Eventually.of_forall fun z => by
+      simp only [Real.norm_eq_abs]
+      exact (hC _).trans (le_abs_self C))
+
+theorem measurable_intervalIntegral_param {g : ℝ → ℝ → ℝ} (hg : Measurable (Function.uncurry g))
+    (a b : ℝ) : Measurable fun r => ∫ t in a..b, g r t := by
+  simp only [intervalIntegral]
+  exact ((hg.stronglyMeasurable.integral_prod_right (ν := volume.restrict (Ioc a b))).measurable).sub
+    ((hg.stronglyMeasurable.integral_prod_right (ν := volume.restrict (Ioc b a))).measurable)
+
+theorem abs_intervalIntegral_zero_one_le {g : ℝ → ℝ} {C : ℝ} (hC : ∀ x, |g x| ≤ C) :
+    |∫ t in (0 : ℝ)..1, g t| ≤ C := by
+  have h := intervalIntegral.norm_integral_le_of_norm_le_const (a := 0) (b := 1) (f := g) (C := C)
+    (fun x _ => by rw [Real.norm_eq_abs]; exact hC x)
+  rw [Real.norm_eq_abs] at h
+  simpa using h
+
+theorem measurable_complex_mk : Measurable fun p : ℝ × ℝ => (⟨p.1, p.2⟩ : ℂ) :=
+  Complex.measurableEquivRealProd.symm.measurable
+
+/-- An integral over the unit square as an iterated interval integral. -/
+theorem setIntegral_closedSquare_zero_one_eq {f : ℂ → ℝ} (hf : Measurable f) {C : ℝ}
+    (hC : ∀ z, |f z| ≤ C) :
+    ∫ x in closedSquare 0 1, f x = ∫ x₁ in (0 : ℝ)..1, ∫ x₂ in (0 : ℝ)..1, f ⟨x₁, x₂⟩ := by
+  have hpre : Complex.measurableEquivRealProd ⁻¹' (Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1) =
+      closedSquare 0 1 := by
+    ext z
+    simp only [closedSquare, Complex.mem_reProdIm, Complex.measurableEquivRealProd, mem_preimage,
+      mem_prod, Complex.zero_re, Complex.zero_im, zero_add]
+    rfl
+  have h1 := Complex.volume_preserving_equiv_real_prod.setIntegral_preimage_emb
+    Complex.measurableEquivRealProd.measurableEmbedding (fun p : ℝ × ℝ => f ⟨p.1, p.2⟩)
+    (Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1)
+  rw [hpre] at h1
+  have hfm : Measurable fun p : ℝ × ℝ => f ⟨p.1, p.2⟩ := hf.comp measurable_complex_mk
+  have hint : Integrable (fun p : ℝ × ℝ => f ⟨p.1, p.2⟩)
+      ((volume.restrict (Icc (0 : ℝ) 1)).prod (volume.restrict (Icc (0 : ℝ) 1))) :=
+    Integrable.of_bound hfm.aestronglyMeasurable C (Eventually.of_forall fun p => by
+      rw [Real.norm_eq_abs]; exact hC _)
+  calc ∫ x in closedSquare 0 1, f x
+      = ∫ p in Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1, f ⟨p.1, p.2⟩ := h1
+    _ = ∫ x₁ in Icc (0 : ℝ) 1, ∫ x₂ in Icc (0 : ℝ) 1, f ⟨x₁, x₂⟩ := by
+      rw [Measure.volume_eq_prod, ← Measure.prod_restrict, integral_prod _ hint]
+    _ = ∫ x₁ in (0 : ℝ)..1, ∫ x₂ in (0 : ℝ)..1, f ⟨x₁, x₂⟩ := by
+      simp only [integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le zero_le_one]
+
 end HarmonicBalls
 
