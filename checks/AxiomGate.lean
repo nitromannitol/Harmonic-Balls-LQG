@@ -92,6 +92,7 @@ import HarmonicBalls.Proofs.Potential.GreenPotentialClassRelativeSupport
 import HarmonicBalls.Proofs.Potential.LQGClockStrictEveryStart
 import HarmonicBalls.Proofs.Potential.SquareClippedBallVolume
 import HarmonicBalls.Proofs.Potential.ReflectedSquareScaling
+import HarmonicBalls.Proofs.Potential.ReflectedBrownianFoldInvariance
 
 /-!
 # Axiom gate
@@ -676,3 +677,6 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.reflectedPlanarBrownianMotion_map_unitSquarePathChart
 #print axioms HarmonicBalls.isLBMHeatKernel_of_unitSquare
 #print axioms HarmonicBalls.reflectedLBMHeatKernel_of_identification
+-- 2.6 clock identification, step 1: fold invariance and the Markov transfer of reflected Brownian motion (HarmonicBalls/Proofs/Potential/ReflectedBrownianFoldInvariance.lean)
+#print axioms HarmonicBalls.reflectedPlanarBrownianMotion_zero_one_squareFold
+#print axioms HarmonicBalls.ae_reflected_shift_of_ae_ref
