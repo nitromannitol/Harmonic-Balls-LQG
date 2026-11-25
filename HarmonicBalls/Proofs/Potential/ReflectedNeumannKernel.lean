@@ -90,7 +90,7 @@ noncomputable def intervalNeumannKernel (s : ℝ≥0) (u v : ℝ) : ℝ≥0∞ :
 theorem measurable_intervalNeumannKernel (s : ℝ≥0) :
     Measurable fun p : ℝ × ℝ => intervalNeumannKernel s p.1 p.2 := by
   unfold intervalNeumannKernel gaussianPDF
-  refine Measurable.ennreal_tsum fun n => ?_
+  refine Measurable.tsum fun n => ?_
   refine (ENNReal.measurable_ofReal.comp ?_).add (ENNReal.measurable_ofReal.comp ?_) <;>
   · simp only [gaussianPDFReal_def]
     fun_prop
@@ -153,5 +153,117 @@ theorem lintegral_gaussianReal_unitIntervalFold {ψ : ℝ → ℝ≥0∞} (hψ :
       (hpdf.comp (measurable_const_sub _)))).aemeasurable]
   simp_rw [ENNReal.tsum_mul_left]
   rfl
+
+/-- `φ_s(x - μ)` depends only on `(x - μ)²`. -/
+theorem gaussianPDF_congr_sq {μ μ' x x' : ℝ} (v : ℝ≥0) (h : (x - μ) ^ 2 = (x' - μ') ^ 2) :
+    gaussianPDF μ v x = gaussianPDF μ' v x' := by
+  simp only [gaussianPDF_def, gaussianPDFReal_def, h]
+
+/-- **Symmetry of the interval kernel**: `q_s(u, v) = q_s(v, u)`. -/
+theorem intervalNeumannKernel_comm (s : ℝ≥0) (u v : ℝ) :
+    intervalNeumannKernel s u v = intervalNeumannKernel s v u := by
+  unfold intervalNeumannKernel
+  rw [ENNReal.tsum_add, ENNReal.tsum_add]
+  congr 1
+  · rw [← (Equiv.neg ℤ).tsum_eq]
+    refine tsum_congr fun n => gaussianPDF_congr_sq s ?_
+    simp only [Equiv.neg_apply, Int.cast_neg]
+    ring
+  · exact tsum_congr fun n => gaussianPDF_congr_sq s (by ring)
+
+attribute [irreducible] intervalNeumannKernel
+
+/-! ### The square kernel -/
+
+/-- The Neumann heat kernel of the unit square at variance `s`:
+`k_s(x, y) = q_s(x₁, y₁) q_s(x₂, y₂)`. -/
+noncomputable def squareNeumannKernel (s : ℝ≥0) (x y : ℂ) : ℝ≥0∞ :=
+  intervalNeumannKernel s x.re y.re * intervalNeumannKernel s x.im y.im
+
+theorem measurable_squareNeumannKernel (s : ℝ≥0) :
+    Measurable fun p : ℂ × ℂ => squareNeumannKernel s p.1 p.2 := by
+  have h := measurable_intervalNeumannKernel s
+  have h1 : Measurable fun p : ℂ × ℂ => intervalNeumannKernel s p.1.re p.2.re :=
+    h.comp (Measurable.prodMk (Complex.measurable_re.comp measurable_fst)
+      (Complex.measurable_re.comp measurable_snd))
+  have h2 : Measurable fun p : ℂ × ℂ => intervalNeumannKernel s p.1.im p.2.im :=
+    h.comp (Measurable.prodMk (Complex.measurable_im.comp measurable_fst)
+      (Complex.measurable_im.comp measurable_snd))
+  unfold squareNeumannKernel
+  exact h1.mul h2
+
+attribute [irreducible] squareNeumannKernel
+
+/-- **Symmetry of the square kernel**: `k_s(x, y) = k_s(y, x)`. -/
+theorem squareNeumannKernel_comm (s : ℝ≥0) (x y : ℂ) :
+    squareNeumannKernel s x y = squareNeumannKernel s y x := by
+  unfold squareNeumannKernel
+  rw [intervalNeumannKernel_comm s x.re, intervalNeumannKernel_comm s x.im]
+
+/-- **The folded planar Gaussian law**: for measurable `Φ ≥ 0` and `s ≠ 0`,
+`E Φ(fold(N(x, s))) = ∫_{K₀} Φ(y) k_s(x, y) dy`. -/
+theorem lintegral_planarGaussian_squareFold_eq {Φ : ℂ → ℝ≥0∞} (hΦ : Measurable Φ) (x : ℂ)
+    {s : ℝ≥0} (hs : s ≠ 0) :
+    ∫⁻ w, Φ (squareFold 0 1 w) ∂planarGaussian x s =
+      ∫⁻ y in closedSquare 0 1, Φ y * squareNeumannKernel s x y := by
+  have he := Complex.measurableEquivRealProd.symm.measurable
+  have hu := continuous_unitIntervalFold.measurable
+  have hq := measurable_intervalNeumannKernel s
+  have hF : Measurable fun p : ℝ × ℝ => Φ ⟨unitIntervalFold p.1, unitIntervalFold p.2⟩ :=
+    hΦ.comp (measurable_complex_mk_comp (hu.comp measurable_fst) (hu.comp measurable_snd))
+  have hqi : Measurable fun c₂ : ℝ => intervalNeumannKernel s x.im c₂ :=
+    hq.comp (measurable_const.prodMk measurable_id)
+  have hqr : Measurable fun c₁ : ℝ => intervalNeumannKernel s x.re c₁ :=
+    hq.comp (measurable_const.prodMk measurable_id)
+  have hGm : Measurable fun t : ℝ =>
+      ∫⁻ c₂ in Icc (0 : ℝ) 1, Φ ⟨t, c₂⟩ * intervalNeumannKernel s x.im c₂ := by
+    have : Measurable fun p : ℝ × ℝ => Φ ⟨p.1, p.2⟩ * intervalNeumannKernel s x.im p.2 :=
+      (hΦ.comp measurable_complex_mk).mul (hqi.comp measurable_snd)
+    exact this.lintegral_prod_right'
+  have hmK : Measurable fun y : ℂ => Φ y * squareNeumannKernel s x y :=
+    hΦ.mul ((measurable_squareNeumannKernel s).comp (measurable_const.prodMk measurable_id))
+  have s1 : ∫⁻ w, Φ (squareFold 0 1 w) ∂planarGaussian x s =
+      ∫⁻ p, Φ ⟨unitIntervalFold p.1, unitIntervalFold p.2⟩
+        ∂((gaussianReal x.re s).prod (gaussianReal x.im s)) := by
+    rw [planarGaussian, lintegral_map (show Measurable fun w => Φ (squareFold 0 1 w) from
+      hΦ.comp (continuous_squareFold 0 1).measurable) he]
+    exact lintegral_congr fun p => by rw [squareFold_measurableEquivRealProd_symm p]
+  have s2 : ∫⁻ p, Φ ⟨unitIntervalFold p.1, unitIntervalFold p.2⟩
+      ∂((gaussianReal x.re s).prod (gaussianReal x.im s)) =
+      ∫⁻ w₁, ∫⁻ w₂, Φ ⟨unitIntervalFold w₁, unitIntervalFold w₂⟩ ∂gaussianReal x.im s
+        ∂gaussianReal x.re s := lintegral_prod _ hF.aemeasurable
+  have s3 : ∀ w₁ : ℝ, ∫⁻ w₂, Φ ⟨unitIntervalFold w₁, unitIntervalFold w₂⟩ ∂gaussianReal x.im s =
+      ∫⁻ c₂ in Icc (0 : ℝ) 1, Φ ⟨unitIntervalFold w₁, c₂⟩ * intervalNeumannKernel s x.im c₂ :=
+    fun w₁ => lintegral_gaussianReal_unitIntervalFold
+      (ψ := fun t => Φ ⟨unitIntervalFold w₁, t⟩) (hΦ.comp (measurable_complex_mk_left _)) _ hs
+  have s4 : ∫⁻ w₁, (∫⁻ c₂ in Icc (0 : ℝ) 1, Φ ⟨unitIntervalFold w₁, c₂⟩ *
+        intervalNeumannKernel s x.im c₂) ∂gaussianReal x.re s =
+      ∫⁻ c₁ in Icc (0 : ℝ) 1, (∫⁻ c₂ in Icc (0 : ℝ) 1, Φ ⟨c₁, c₂⟩ *
+        intervalNeumannKernel s x.im c₂) * intervalNeumannKernel s x.re c₁ :=
+    lintegral_gaussianReal_unitIntervalFold
+      (ψ := fun t => ∫⁻ c₂ in Icc (0 : ℝ) 1, Φ ⟨t, c₂⟩ * intervalNeumannKernel s x.im c₂) hGm _ hs
+  have s5 : ∫⁻ c₁ in Icc (0 : ℝ) 1, (∫⁻ c₂ in Icc (0 : ℝ) 1, Φ ⟨c₁, c₂⟩ *
+        intervalNeumannKernel s x.im c₂) * intervalNeumannKernel s x.re c₁ =
+      ∫⁻ y in closedSquare 0 1, Φ y * squareNeumannKernel s x y := by
+    rw [setLIntegral_closedSquare_zero_one_eq hmK]
+    refine setLIntegral_congr_fun measurableSet_Icc fun c₁ _ => ?_
+    rw [← lintegral_mul_const _ (show Measurable fun c₂ => Φ ⟨c₁, c₂⟩ *
+      intervalNeumannKernel s x.im c₂ from (hΦ.comp (measurable_complex_mk_left c₁)).mul hqi)]
+    refine setLIntegral_congr_fun measurableSet_Icc fun c₂ _ => ?_
+    unfold squareNeumannKernel
+    ring
+  rw [s1, s2, lintegral_congr s3, s4, s5]
+
+/-- **The law of reflected Brownian motion in the unit square at time `s > 0`** has the density
+`k_s(x, ·)` on `K₀`: `E_x Φ(b_s) = ∫_{K₀} Φ(y) k_s(x, y) dy` for measurable `Φ ≥ 0`. -/
+theorem lintegral_reflected_eval_eq_neumannKernel {Φ : ℂ → ℝ≥0∞} (hΦ : Measurable Φ) (x : ℂ)
+    {s : ℝ≥0} (hs : s ≠ 0) :
+    ∫⁻ b, Φ (b s) ∂reflectedPlanarBrownianMotion 0 1 x =
+      ∫⁻ y in closedSquare 0 1, Φ y * squareNeumannKernel s x y := by
+  have h := congrArg (fun m : Measure ℂ => ∫⁻ y, Φ y ∂m)
+    (reflectedPlanarBrownianMotion_zero_one_map_eval x s)
+  rw [lintegral_map hΦ (continuous_eval_const s).measurable,
+    lintegral_map hΦ (continuous_squareFold 0 1).measurable] at h
+  rw [h, lintegral_planarGaussian_squareFold_eq hΦ x hs]
 
 end HarmonicBalls
