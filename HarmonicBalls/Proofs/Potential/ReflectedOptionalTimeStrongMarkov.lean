@@ -107,7 +107,7 @@ theorem shift_squareFoldCM_comp (s : ℝ≥0) (ω : ContinuousPath ℂ) :
 theorem ae_forall_mem_closedSquare_reflected (x : ℂ) :
     ∀ᵐ b ∂reflectedPlanarBrownianMotion 0 1 x, ∀ t, b t ∈ closedSquare 0 1 := by
   have hclosed : IsClosed {b : ContinuousPath ℂ | ∀ t, b t ∈ closedSquare 0 1} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun t =>
       (isCompact_closedSquare 0 1).isClosed.preimage (continuous_eval_const t)
   rw [reflectedPlanarBrownianMotion, Kernel.map_apply _ (measurable_comp_squareFoldCM 0 1),
