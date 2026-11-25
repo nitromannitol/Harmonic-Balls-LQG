@@ -107,6 +107,10 @@ import HarmonicBalls.Proofs.Potential.ReflectedOptionalTimeStrongMarkov
 import HarmonicBalls.Proofs.Potential.ReflectedClockOptionalAdditivity
 import HarmonicBalls.Proofs.Potential.ReflectedTimeChangeSemigroup
 import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelChapmanKolmogorov
+import HarmonicBalls.Proofs.Potential.ReflectedClockStartPositivity
+import HarmonicBalls.Proofs.Potential.HeatKernelL2Operator
+import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelL2Semigroup
+import HarmonicBalls.Proofs.Potential.ReflectedLQGHeatKernelPositivity
 import HarmonicBalls.FirstPass.Cited.Section2PositivityImproving
 
 /-!
@@ -746,5 +750,23 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- 2.6 positivity, Chapman-Kolmogorov, step 4: unbounded clock and the Chapman-Kolmogorov identity (HarmonicBalls/Proofs/Potential/ReflectedHeatKernelChapmanKolmogorov.lean)
 #print axioms HarmonicBalls.ae_tendsto_atTop_of_isLBMHeatKernel
 #print axioms HarmonicBalls.IsLBMHeatKernel.chapmanKolmogorov
+-- 2.6 positivity, the L2 semigroup, step 1: the clock is positive at positive times from interior starts (HarmonicBalls/Proofs/Potential/ReflectedClockStartPositivity.lean)
+#print axioms HarmonicBalls.ae_isLQGClock_reflected_eq_planar
+#print axioms HarmonicBalls.ae_pos_unitSquareClock_of_mem_interior
+#print axioms HarmonicBalls.ae_ae_forall_pos_unitSquareClock
+-- 2.6 positivity, the L2 semigroup, step 2: integral operators with continuous kernels on L2 (HarmonicBalls/Proofs/Potential/HeatKernelL2Operator.lean)
+#print axioms HarmonicBalls.IsL2KernelData.integral_sq_kernelTransform_le
+#print axioms HarmonicBalls.IsL2KernelData.norm_kernelL2Operator_apply_le
+#print axioms HarmonicBalls.IsL2KernelData.inner_kernelL2Operator_comm
+#print axioms HarmonicBalls.IsL2KernelData.kernelL2Operator_eq_comp
+-- 2.6 positivity, the L2 semigroup, step 3: the transition semigroup of the time change, and positivity from irreducibility (HarmonicBalls/Proofs/Potential/ReflectedHeatKernelL2Semigroup.lean)
+#print axioms HarmonicBalls.heatKernelL2Semigroup_add
+#print axioms HarmonicBalls.continuous_heatKernelL2Semigroup
+#print axioms HarmonicBalls.isSymmetricMarkovSemigroup_heatKernelL2Semigroup
+#print axioms HarmonicBalls.pos_of_isIrreducibleSemigroup
+-- 2.6 from the cited theorems of Kigami and KLVW, with symmetry and irreducibility as hypotheses (HarmonicBalls/Proofs/Potential/ReflectedLQGHeatKernelPositivity.lean)
+#print axioms HarmonicBalls.ae_forall_closedSquare_unitSquareNormalizedMeasure_singleton_eq_zero
+#print axioms HarmonicBalls.reflectedLBMHeatKernel_of_identification_of_clockPositivity
+#print axioms HarmonicBalls.reflectedLBMHeatKernel_of_kigami_of_klvw
 -- 2.6 positivity: cited statement, Keller-Lenz-Vogt-Wojciechowski Theorem A.2 (HarmonicBalls/FirstPass/Cited/Section2PositivityImproving.lean)
 #print axioms HarmonicBalls.klvwPositivityImprovingCited

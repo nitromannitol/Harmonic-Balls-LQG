@@ -256,6 +256,7 @@ section Continuity
 variable {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0} {ν : Measure ℂ} [IsFiniteMeasure ν]
   {p : ℝ → ℂ → ℂ → ℝ}
 
+omit [IsFiniteMeasure ν] in
 /-- The kernel operator applied to a bounded continuous function `g` is bounded by `‖g‖` on
 `K₀`. -/
 theorem abs_kernelTransform_le_norm (hA : IsUnitSquarePCAF A)
@@ -272,6 +273,7 @@ theorem abs_kernelTransform_le_norm (hA : IsUnitSquarePCAF A)
     norm_integral_le_of_norm_le_const (μ := reflectedPlanarBrownianMotion 0 1 x)
       (Eventually.of_forall fun b => g.norm_coe_le_norm (unitSquareTimeChangeRegularized A t b))
 
+omit [IsFiniteMeasure ν] in
 /-- For `ν`-almost every start, `T_t g → g` as `t ↓ 0`, for bounded continuous `g`. -/
 theorem ae_tendsto_kernelTransform (hA : IsUnitSquarePCAF A)
     (hp : IsLBMHeatKernel (reflectedPlanarBrownianMotion 0 1) (fun _ b t => (A t b : ℝ))
