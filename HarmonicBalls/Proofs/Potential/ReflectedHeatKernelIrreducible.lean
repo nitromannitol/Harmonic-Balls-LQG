@@ -121,6 +121,7 @@ section Irreducible
 variable {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0} {ν : Measure ℂ} [IsFiniteMeasure ν]
   {p : ℝ → ℂ → ℂ → ℝ}
 
+omit [IsFiniteMeasure ν] in
 /-- A product `g v` of a bounded measurable function and an element of `L²(ν)`, as an element of
 `L²(ν)`. -/
 theorem exists_lp_mul {g : ℂ → ℝ} {C : ℝ} (hg : Measurable g) (hgC : ∀ x, |g x| ≤ C)
