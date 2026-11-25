@@ -266,4 +266,162 @@ theorem lintegral_reflected_eval_eq_neumannKernel {Φ : ℂ → ℝ≥0∞} (hΦ
     lintegral_map hΦ (continuous_squareFold 0 1).measurable] at h
   rw [h, lintegral_planarGaussian_squareFold_eq hΦ x hs]
 
+/-! ### Continuity and bounds -/
+
+theorem summable_exp_neg_mul_abs_int {c : ℝ} (hc : 0 < c) :
+    Summable fun n : ℤ => Real.exp (-c * |(n : ℝ)|) := by
+  have hg : Summable fun n : ℕ => Real.exp (-c) ^ n :=
+    summable_geometric_of_lt_one (Real.exp_pos _).le
+      ((Real.exp_lt_exp.2 (by linarith : -c < 0)).trans_eq Real.exp_zero)
+  refine Summable.of_nat_of_neg_add_one ?_ ?_
+  · refine hg.congr fun n => ?_
+    rw [← Real.exp_nat_mul]
+    congr 1
+    have h : |(((n : ℤ) : ℝ))| = (n : ℝ) := by simp
+    rw [h]
+    ring
+  · refine (hg.mul_left (Real.exp (-c))).congr fun n => ?_
+    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    congr 1
+    have h : |(((-((n : ℤ) + 1)) : ℤ) : ℝ)| = (n : ℝ) + 1 := by
+      rw [Int.cast_neg, Int.cast_add, Int.cast_natCast, Int.cast_one, abs_neg,
+        abs_of_nonneg (by positivity)]
+    rw [h]
+    ring
+
+/-- A uniform bound on the Gaussian terms of the interval kernel for `s ∈ [a, b]` and
+`|z| ≤ 3`. -/
+theorem gaussianPDFReal_add_two_mul_le {a b : ℝ} (ha : 0 < a) {s : ℝ≥0} (hsa : a ≤ s)
+    (hsb : (s : ℝ) ≤ b) {z : ℝ} (hz : |z| ≤ 3) (n : ℤ) :
+    gaussianPDFReal 0 s (z + 2 * n) ≤
+      (Real.sqrt (2 * Real.pi * a))⁻¹ * Real.exp (3 / (2 * a)) *
+        Real.exp (-(1 / (2 * b)) * |(n : ℝ)|) := by
+  have hs : 0 < (s : ℝ) := lt_of_lt_of_le ha hsa
+  have hb : 0 < b := hs.trans_le hsb
+  rw [gaussianPDFReal_def]
+  simp only [sub_zero]
+  have h1 : (Real.sqrt (2 * Real.pi * s))⁻¹ ≤ (Real.sqrt (2 * Real.pi * a))⁻¹ := by
+    refine inv_anti₀ (Real.sqrt_pos.2 (by positivity)) (Real.sqrt_le_sqrt ?_)
+    have := Real.pi_pos
+    nlinarith
+  suffices h2 : Real.exp (-(z + 2 * n) ^ 2 / (2 * s)) ≤
+      Real.exp (3 / (2 * a) + -(1 / (2 * b)) * |(n : ℝ)|) by
+    calc (Real.sqrt (2 * Real.pi * s))⁻¹ * Real.exp (-(z + 2 * n) ^ 2 / (2 * s))
+        ≤ (Real.sqrt (2 * Real.pi * a))⁻¹ * Real.exp (3 / (2 * a) + -(1 / (2 * b)) * |(n : ℝ)|) :=
+          mul_le_mul h1 h2 (by positivity) (by positivity)
+      _ = _ := by rw [Real.exp_add]; ring
+  · refine Real.exp_le_exp.2 ?_
+    -- `(z + 2n)² ≥ |n| - 3`
+    have hsq : |(n : ℝ)| - 3 ≤ (z + 2 * n) ^ 2 := by
+      have h1 : 2 * |(n : ℝ)| - 3 ≤ |z + 2 * n| := by
+        have := abs_sub_abs_le_abs_sub (2 * (n : ℝ)) (-z)
+        rw [sub_neg_eq_add, abs_mul, abs_two, abs_neg] at this
+        rw [add_comm]
+        linarith
+      rcases le_or_gt (|(n : ℝ)|) 1 with hn | hn
+      · nlinarith [sq_nonneg (z + 2 * n)]
+      · have h2 : 1 ≤ |z + 2 * n| := by
+          have : (2 : ℝ) ≤ |(n : ℝ)| := by
+            have hn' : (1 : ℝ) < |(n : ℝ)| := hn
+            have : (1 : ℤ) < |n| := by exact_mod_cast hn'
+            have : (2 : ℤ) ≤ |n| := this
+            exact_mod_cast this
+          linarith
+        have : |z + 2 * n| ≤ (z + 2 * n) ^ 2 := by
+          rw [← sq_abs]
+          nlinarith
+        linarith
+    have hdiv : -((z + 2 * n) ^ 2) / (2 * (s : ℝ)) ≤ (3 - |(n : ℝ)|) / (2 * (s : ℝ)) :=
+      div_le_div_of_nonneg_right (by linarith) (by positivity)
+    have h3 : (3 - |(n : ℝ)|) / (2 * (s : ℝ)) ≤ 3 / (2 * a) + -(1 / (2 * b)) * |(n : ℝ)| := by
+      rw [sub_div]
+      have e1 : 3 / (2 * (s : ℝ)) ≤ 3 / (2 * a) :=
+        div_le_div_of_nonneg_left (by norm_num) (by positivity) (by linarith)
+      have e2 : |(n : ℝ)| / (2 * b) ≤ |(n : ℝ)| / (2 * (s : ℝ)) :=
+        div_le_div_of_nonneg_left (abs_nonneg _) (by positivity) (by linarith)
+      have e3 : -(1 / (2 * b)) * |(n : ℝ)| = -(|(n : ℝ)| / (2 * b)) := by ring
+      rw [e3]
+      linarith
+    calc -(z + 2 * n) ^ 2 / (2 * (s : ℝ)) = -((z + 2 * n) ^ 2) / (2 * (s : ℝ)) := by ring
+      _ ≤ _ := hdiv.trans h3
+
+/-- The terms of the interval kernel, recentred: `φ_s(v - u + 2n) + φ_s(-v - u + 2n)`. -/
+noncomputable def intervalNeumannTerm (s : ℝ≥0) (u v : ℝ) (n : ℤ) : ℝ :=
+  gaussianPDFReal 0 s (v - u + 2 * n) + gaussianPDFReal 0 s (-v - u + 2 * n)
+
+/-- The real interval kernel `∑_n (φ_s(v - u + 2n) + φ_s(-v - u + 2n))`. -/
+noncomputable def intervalNeumannKernelReal (s : ℝ≥0) (u v : ℝ) : ℝ :=
+  ∑' n : ℤ, intervalNeumannTerm s u v n
+
+theorem intervalNeumannTerm_nonneg (s : ℝ≥0) (u v : ℝ) (n : ℤ) :
+    0 ≤ intervalNeumannTerm s u v n :=
+  add_nonneg (gaussianPDFReal_nonneg _ _ _) (gaussianPDFReal_nonneg _ _ _)
+
+/-- The summable majorant of the terms for `s ∈ [a, b]`, `u ∈ [0, 1]`, `v ∈ [-1, 2]`. -/
+theorem intervalNeumannTerm_le {a b : ℝ} (ha : 0 < a) {s : ℝ≥0} (hsa : a ≤ s) (hsb : (s : ℝ) ≤ b)
+    {u v : ℝ} (hu : u ∈ Icc (0 : ℝ) 1) (hv : v ∈ Icc (-1 : ℝ) 2) (n : ℤ) :
+    intervalNeumannTerm s u v n ≤ 2 * ((Real.sqrt (2 * Real.pi * a))⁻¹ * Real.exp (3 / (2 * a)) *
+      Real.exp (-(1 / (2 * b)) * |(n : ℝ)|)) := by
+  unfold intervalNeumannTerm
+  have h1 : |v - u| ≤ 3 := abs_le.2 ⟨by linarith [hu.2, hv.1], by linarith [hu.1, hv.2]⟩
+  have h2 : |-v - u| ≤ 3 := abs_le.2 ⟨by linarith [hu.2, hv.2], by linarith [hu.1, hv.1]⟩
+  exact (add_le_add (gaussianPDFReal_add_two_mul_le ha hsa hsb h1 n)
+    (gaussianPDFReal_add_two_mul_le ha hsa hsb h2 n)).trans_eq (by ring)
+
+theorem summable_intervalNeumannTerm {s : ℝ≥0} (hs : s ≠ 0) {u v : ℝ} (hu : u ∈ Icc (0 : ℝ) 1)
+    (hv : v ∈ Icc (-1 : ℝ) 2) : Summable (intervalNeumannTerm s u v) := by
+  have hs' : 0 < (s : ℝ) := lt_of_le_of_ne s.coe_nonneg (by exact_mod_cast (Ne.symm hs))
+  refine Summable.of_nonneg_of_le (intervalNeumannTerm_nonneg s u v)
+    (intervalNeumannTerm_le hs' le_rfl le_rfl hu hv) ?_
+  exact ((summable_exp_neg_mul_abs_int (by positivity : (0 : ℝ) < 1 / (2 * s))).mul_left _).mul_left _
+
+/-- The interval kernel is the real kernel. -/
+theorem intervalNeumannKernel_eq_ofReal {s : ℝ≥0} (hs : s ≠ 0) {u v : ℝ}
+    (hu : u ∈ Icc (0 : ℝ) 1) (hv : v ∈ Icc (-1 : ℝ) 2) :
+    intervalNeumannKernel s u v = ENNReal.ofReal (intervalNeumannKernelReal s u v) := by
+  rw [intervalNeumannKernelReal, ENNReal.ofReal_tsum_of_nonneg (intervalNeumannTerm_nonneg s u v)
+    (summable_intervalNeumannTerm hs hu hv), intervalNeumannKernel]
+  refine tsum_congr fun n => ?_
+  unfold intervalNeumannTerm
+  rw [ENNReal.ofReal_add (gaussianPDFReal_nonneg _ _ _) (gaussianPDFReal_nonneg _ _ _)]
+  simp only [gaussianPDF, gaussianPDFReal_def]
+  congr 3 <;> ring
+
+theorem continuousOn_gaussianPDFReal_zero {f : ℝ≥0 × ℝ → ℝ} (hf : Continuous f) {a : ℝ}
+    (ha : 0 < a) :
+    ContinuousOn (fun p : ℝ≥0 × ℝ => gaussianPDFReal 0 p.1 (f p)) {p | a ≤ (p.1 : ℝ)} := by
+  simp only [gaussianPDFReal_def, sub_zero]
+  have hc : Continuous fun p : ℝ≥0 × ℝ => ((p.1 : ℝ≥0) : ℝ) := NNReal.continuous_coe.comp continuous_fst
+  refine ContinuousOn.mul ?_ ?_
+  · refine ContinuousOn.inv₀ ?_ fun p hp => ?_
+    · exact (Real.continuous_sqrt.comp (continuous_const.mul hc)).continuousOn
+    · have hp' : a ≤ (p.1 : ℝ) := hp
+      have : 0 < 2 * Real.pi * (p.1 : ℝ) :=
+        mul_pos (mul_pos two_pos Real.pi_pos) (lt_of_lt_of_le ha hp')
+      exact (Real.sqrt_pos.2 this).ne'
+  · refine Real.continuous_exp.comp_continuousOn ?_
+    refine ContinuousOn.div (hf.pow 2).neg.continuousOn (continuous_const.mul hc).continuousOn
+      fun p hp => ?_
+    have hp' : a ≤ (p.1 : ℝ) := hp
+    exact (mul_pos two_pos (lt_of_lt_of_le ha hp')).ne'
+
+/-- **Continuity of the interval kernel** on `[a, b] × [-1, 2]` in `(s, v)`, for `u ∈ [0, 1]`. -/
+theorem continuousOn_intervalNeumannKernelReal {a b : ℝ} (ha : 0 < a) (hab : a ≤ b) {u : ℝ}
+    (hu : u ∈ Icc (0 : ℝ) 1) :
+    ContinuousOn (fun p : ℝ≥0 × ℝ => intervalNeumannKernelReal p.1 u p.2)
+      ({p | a ≤ (p.1 : ℝ) ∧ (p.1 : ℝ) ≤ b} ∩ {p | p.2 ∈ Icc (-1 : ℝ) 2}) := by
+  unfold intervalNeumannKernelReal
+  refine continuousOn_tsum (u := fun n : ℤ => 2 * ((Real.sqrt (2 * Real.pi * a))⁻¹ *
+      Real.exp (3 / (2 * a)) * Real.exp (-(1 / (2 * b)) * |(n : ℝ)|))) (fun n => ?_) ?_ ?_
+  · unfold intervalNeumannTerm
+    have hS : {p : ℝ≥0 × ℝ | a ≤ (p.1 : ℝ) ∧ (p.1 : ℝ) ≤ b} ∩ {p | p.2 ∈ Icc (-1 : ℝ) 2} ⊆
+        {p | a ≤ (p.1 : ℝ)} := fun p hp => hp.1.1
+    exact ((continuousOn_gaussianPDFReal_zero (by fun_prop) ha).mono hS).add
+      ((continuousOn_gaussianPDFReal_zero (by fun_prop) ha).mono hS)
+  · exact ((summable_exp_neg_mul_abs_int (div_pos one_pos (mul_pos two_pos
+      (lt_of_lt_of_le ha hab)))).mul_left _).mul_left _
+  · rintro n p ⟨⟨h1, h2⟩, h3⟩
+    rw [Real.norm_eq_abs, abs_of_nonneg (intervalNeumannTerm_nonneg _ _ _ _)]
+    exact intervalNeumannTerm_le ha h1 h2 hu h3 n
+
 end HarmonicBalls

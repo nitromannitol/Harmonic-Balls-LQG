@@ -577,7 +577,7 @@ theorem lebesgueOccupationMeasure_eq_prod {A : ℝ≥0 → ContinuousPath ℂ �
             windowWeight (Ioc (s : ℝ) (s + t)) (B.indicator 1) := by
           funext p
           by_cases hp : p.1 ∈ Ioc (s : ℝ) (s + t)
-          · simp [windowWeight_apply, indicator, hp, show p.1 ∈ Ioi (s : ℝ) from hp.1]
+          · simp [indicator, show p.1 ∈ Ioi (s : ℝ) from hp.1]
           · simp [windowWeight, indicator, hp, mem_prod]
         have e2 : (fun p : ℝ × ℂ => windowWeight (Ioc (s : ℝ) (s + t)) (B.indicator 1)
             ((s : ℝ) + p.1, p.2)) = windowWeight (Ioc 0 (t : ℝ)) (B.indicator 1) := by
