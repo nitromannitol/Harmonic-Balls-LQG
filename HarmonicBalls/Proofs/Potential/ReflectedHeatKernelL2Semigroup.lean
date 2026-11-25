@@ -450,15 +450,19 @@ theorem isSymmetricMarkovSemigroup_heatKernelL2Semigroup (hA : IsUnitSquarePCAF 
 end Continuity
 
 /-- **The instance of [KLVW] Theorem A.2 used for Proposition 2.6**: for a PCAF `A` of reflected
-Brownian motion in `K₀`, a finite measure `ν` carried by `K₀` that charges every relative ball and
-has no atoms, and a symmetric heat kernel `p` of the time change with respect to `ν`, jointly
-continuous on `(0, ∞) × K₀ × K₀`, whose clock is positive at positive times from `ν`-almost every
-start, irreducibility of the transition semigroup on `L²(ν)` makes it positivity improving at every
-`t > 0`. It follows from the cited statement (`klvwHeatKernelInstanceStmt_of_cited`), and is the
-only consequence of it that the proof of Proposition 2.6 uses. -/
+Brownian motion in `K₀` whose Revuz measure `ν` is a probability measure carried by `K₀` that
+charges every relative ball, has no atoms and satisfies `ν(B̄(y, r)) ≤ C r^β`, and a symmetric heat
+kernel `p` of the time change with respect to `ν`, jointly continuous on `(0, ∞) × K₀ × K₀`, whose
+clock is positive at positive times from `ν`-almost every start, irreducibility of the transition
+semigroup on `L²(ν)` makes it positivity improving at every `t > 0`. It follows from the cited
+statement (`klvwHeatKernelInstanceStmt_of_cited`), and is the only consequence of it that the proof
+of Proposition 2.6 uses. -/
 def KLVWHeatKernelInstanceStmt : Prop :=
   ∀ (A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0) (ν : Measure ℂ) [IsFiniteMeasure ν] (p : ℝ → ℂ → ℂ → ℝ),
-    IsUnitSquarePCAF A → ν (closedSquare 0 1)ᶜ = 0 →
+    IsUnitSquarePCAF A → unitSquareRevuzMeasure A = ν → IsProbabilityMeasure ν →
+    (∃ C β : ℝ, 0 ≤ C ∧ 0 < β ∧ ∀ y ∈ closedSquare (0 : ℂ) 1, ∀ r : ℝ, 0 < r →
+      ν (Metric.closedBall y r) ≤ ENNReal.ofReal (C * r ^ β)) →
+    ν (closedSquare 0 1)ᶜ = 0 →
     (∀ y ∈ closedSquare 0 1, ∀ r : ℝ, 0 < r → 0 < ν (ball y r ∩ closedSquare 0 1)) →
     (∀ x ∈ closedSquare 0 1, ν {x} = 0) →
     IsLBMHeatKernel (reflectedPlanarBrownianMotion 0 1) (fun _ b t => (A t b : ℝ))
@@ -473,7 +477,7 @@ def KLVWHeatKernelInstanceStmt : Prop :=
 /-- The instance of [KLVW] Theorem A.2 used for Proposition 2.6 follows from the cited statement. -/
 theorem klvwHeatKernelInstanceStmt_of_cited (hKLVW : klvwPositivityImprovingCited) :
     KLVWHeatKernelInstanceStmt := by
-  intro A ν _ p hA hνK hsupp hatom hp hpc hsym hstart hI
+  intro A ν _ p hA _ _ _ hνK hsupp hatom hp hpc hsym hstart hI
   exact (hKLVW ℂ ν (heatKernelL2Semigroup ν p)
     (isSymmetricMarkovSemigroup_heatKernelL2Semigroup hA hνK hsupp hatom hp hpc hsym hstart)).1.1 hI
 
@@ -488,7 +492,10 @@ variable {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0} {ν : Measure ℂ} [Is
 positivity improving, and `p(t, x, y) = ∫ p(t/3, x, z) (T_{t/3} p(t/3, ·, y))(z) dν(z) > 0` by the
 Chapman–Kolmogorov identity. -/
 theorem pos_of_isIrreducibleSemigroup (hKLVW : KLVWHeatKernelInstanceStmt)
-    (hA : IsUnitSquarePCAF A) (hνK : ν (closedSquare 0 1)ᶜ = 0)
+    (hA : IsUnitSquarePCAF A) (hRev : unitSquareRevuzMeasure A = ν) (hprob : IsProbabilityMeasure ν)
+    (hup : ∃ C β : ℝ, 0 ≤ C ∧ 0 < β ∧ ∀ y ∈ closedSquare (0 : ℂ) 1, ∀ r : ℝ, 0 < r →
+      ν (Metric.closedBall y r) ≤ ENNReal.ofReal (C * r ^ β))
+    (hνK : ν (closedSquare 0 1)ᶜ = 0)
     (hsupp : ∀ y ∈ closedSquare 0 1, ∀ r : ℝ, 0 < r → 0 < ν (ball y r ∩ closedSquare 0 1))
     (hatom : ∀ x ∈ closedSquare 0 1, ν {x} = 0)
     (hp : IsLBMHeatKernel (reflectedPlanarBrownianMotion 0 1) (fun _ b t => (A t b : ℝ))
@@ -499,7 +506,7 @@ theorem pos_of_isIrreducibleSemigroup (hKLVW : KLVWHeatKernelInstanceStmt)
     (hstart : ∀ᵐ x ∂ν, ∀ᵐ b ∂reflectedPlanarBrownianMotion 0 1 x, ∀ u : ℝ≥0, 0 < u → 0 < A u b)
     (hI : IsIrreducibleSemigroup ν (heatKernelL2Semigroup ν p)) {t : ℝ} (ht : 0 < t) {x₀ : ℂ}
     (hx₀ : x₀ ∈ closedSquare 0 1) {y₀ : ℂ} (hy₀ : y₀ ∈ closedSquare 0 1) : 0 < p t x₀ y₀ := by
-  have hPI := hKLVW A ν p hA hνK hsupp hatom hp hpc hsym hstart hI
+  have hPI := hKLVW A ν p hA hRev hprob hup hνK hsupp hatom hp hpc hsym hstart hI
   set τ : ℝ := t / 3 with hτ_def
   have hτ : 0 < τ := by positivity
   have hτ' : 0 < τ.toNNReal := Real.toNNReal_pos.2 hτ

@@ -29,34 +29,6 @@ universe u
 
 namespace HarmonicBalls
 
-/-- Ball bounds `ν(B(x, r)) ≤ c₂ r^{α₂}` for `r ≤ 1` give closed-ball bounds at every radius for a
-probability measure. -/
-theorem closedBall_le_of_ball_le {ν : Measure ℂ} [IsProbabilityMeasure ν] {c₂ α₂ : ℝ}
-    (hc₂ : 0 < c₂) (hα₂ : 0 < α₂)
-    (hb : ∀ x ∈ closedSquare 0 1, ∀ r : ℝ, 0 < r → r ≤ 1 →
-      ν (ball x r) ≤ ENNReal.ofReal (c₂ * r ^ α₂)) :
-    ∀ y ∈ closedSquare 0 1, ∀ ρ : ℝ, 0 < ρ →
-      ν (closedBall y ρ) ≤ ENNReal.ofReal ((c₂ + 1) * 2 ^ α₂ * ρ ^ α₂) := by
-  intro y hy ρ hρ
-  have hpow : (2 * ρ) ^ α₂ = 2 ^ α₂ * ρ ^ α₂ := Real.mul_rpow (by norm_num) hρ.le
-  have hX : 0 < 2 ^ α₂ * ρ ^ α₂ :=
-    mul_pos (Real.rpow_pos_of_pos two_pos α₂) (Real.rpow_pos_of_pos hρ α₂)
-  by_cases h2 : 2 * ρ ≤ 1
-  · calc ν (closedBall y ρ) ≤ ν (ball y (2 * ρ)) :=
-          measure_mono (closedBall_subset_ball (by linarith))
-      _ ≤ ENNReal.ofReal (c₂ * (2 * ρ) ^ α₂) := hb y hy _ (by positivity) h2
-      _ ≤ _ := by
-          refine ENNReal.ofReal_le_ofReal ?_
-          rw [hpow]
-          nlinarith
-  · calc ν (closedBall y ρ) ≤ 1 := prob_le_one
-      _ ≤ _ := by
-          rw [← ENNReal.ofReal_one]
-          refine ENNReal.ofReal_le_ofReal ?_
-          have h1 : 1 ≤ (2 * ρ) ^ α₂ := Real.one_le_rpow (by linarith) hα₂.le
-          rw [hpow] at h1
-          nlinarith
-
 /-- **Symmetry of the unit-square kernel** of a clock whose Revuz measure is a probability measure
 carried by `K₀`, without atoms, with full support in `K₀` and the upper bounds of (13.1). -/
 theorem isLBMHeatKernel_symm_of_volume_bounds {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}

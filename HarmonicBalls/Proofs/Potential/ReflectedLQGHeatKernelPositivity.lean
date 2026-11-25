@@ -59,6 +59,43 @@ theorem ae_forall_closedSquare_unitSquareNormalizedMeasure_singleton_eq_zero {Ω
   exact (measure_mono (singleton_subset_iff.2 (mem_ball_self hr.1))).trans
     (hb x hx r hr.1 hr.2.le).2
 
+/-- Ball bounds `ν(B(x, r)) ≤ c₂ r^{α₂}` for `r ≤ 1` give closed-ball bounds at every radius for a
+probability measure. -/
+theorem closedBall_le_of_ball_le {ν : Measure ℂ} [IsProbabilityMeasure ν] {c₂ α₂ : ℝ}
+    (hc₂ : 0 < c₂) (hα₂ : 0 < α₂)
+    (hb : ∀ x ∈ closedSquare 0 1, ∀ r : ℝ, 0 < r → r ≤ 1 →
+      ν (ball x r) ≤ ENNReal.ofReal (c₂ * r ^ α₂)) :
+    ∀ y ∈ closedSquare 0 1, ∀ ρ : ℝ, 0 < ρ →
+      ν (closedBall y ρ) ≤ ENNReal.ofReal ((c₂ + 1) * 2 ^ α₂ * ρ ^ α₂) := by
+  intro y hy ρ hρ
+  have hpow : (2 * ρ) ^ α₂ = 2 ^ α₂ * ρ ^ α₂ := Real.mul_rpow (by norm_num) hρ.le
+  have hX : 0 < 2 ^ α₂ * ρ ^ α₂ :=
+    mul_pos (Real.rpow_pos_of_pos two_pos α₂) (Real.rpow_pos_of_pos hρ α₂)
+  by_cases h2 : 2 * ρ ≤ 1
+  · calc ν (closedBall y ρ) ≤ ν (ball y (2 * ρ)) :=
+          measure_mono (closedBall_subset_ball (by linarith))
+      _ ≤ ENNReal.ofReal (c₂ * (2 * ρ) ^ α₂) := hb y hy _ (by positivity) h2
+      _ ≤ _ := by
+          refine ENNReal.ofReal_le_ofReal ?_
+          rw [hpow]
+          nlinarith
+  · calc ν (closedBall y ρ) ≤ 1 := prob_le_one
+      _ ≤ _ := by
+          rw [← ENNReal.ofReal_one]
+          refine ENNReal.ofReal_le_ofReal ?_
+          have h1 : 1 ≤ (2 * ρ) ^ α₂ := Real.one_le_rpow (by linarith) hα₂.le
+          rw [hpow] at h1
+          nlinarith
+
+/-- The closed-ball bounds of `closedBall_le_of_ball_le` in the form of `IsUpperRegularSpeed`. -/
+theorem exists_closedBall_le_of_ball_le {ν : Measure ℂ} [IsProbabilityMeasure ν] {c₂ α₂ : ℝ}
+    (hc₂ : 0 < c₂) (hα₂ : 0 < α₂)
+    (hb : ∀ x ∈ closedSquare (0 : ℂ) 1, ∀ r : ℝ, 0 < r → r ≤ 1 →
+      ν (ball x r) ≤ ENNReal.ofReal (c₂ * r ^ α₂)) :
+    ∃ C β : ℝ, 0 ≤ C ∧ 0 < β ∧ ∀ y ∈ closedSquare (0 : ℂ) 1, ∀ r : ℝ, 0 < r →
+      ν (closedBall y r) ≤ ENNReal.ofReal (C * r ^ β) :=
+  ⟨(c₂ + 1) * 2 ^ α₂, α₂, by positivity, hα₂, closedBall_le_of_ball_le hc₂ hα₂ hb⟩
+
 /-- **Proposition 2.6 from the instance of the cited theorem of Kigami (`KigamiLQGInstanceStmt`), the
 clock identification and positivity for the clock
 of the square.** As `reflectedLBMHeatKernel_of_identification`, with positivity required only for
@@ -155,13 +192,15 @@ theorem reflectedLBMHeatKernel_of_kigami_of_klvw (hKig : KigamiLQGInstanceStmt.{
     ae_forall_closedSquare_volume_bounds hγ hγ2 hα hh hμ]
     with ω hsω hiω hGω hFω hkig hball hatom hfr hvol
   intro A p' hA hRev hFA hp' hpc t ht x hx y hy
-  obtain ⟨hprob, hcarried, -⟩ := hkig a L hL
+  obtain ⟨hprob, hcarried, c₁, c₂, α₁, α₂, -, hc₂, -, hα₂, -, hb⟩ := hkig a L hL
   have := hprob
+  have hup := exists_closedBall_le_of_ball_le hc₂ hα₂ fun x hx r hr hr1 => (hb x hx r hr hr1).2
   obtain ⟨hKpos, hKfin, -⟩ := hvol a L hL
   have hM : 0 < (μ ω (closedSquare a L)).toReal := ENNReal.toReal_pos hKpos.ne' hKfin.ne
   have hstart := ae_ae_forall_pos_unitSquareClock hL hM hA hfr hFω hFA
     (fun x => (hGω.1 x).1) (fun x => (hGω.1 x).2)
-  exact pos_of_isIrreducibleSemigroup hKLVW hA hcarried (hball a L hL) (hatom a L hL) hp' hpc
+  exact pos_of_isIrreducibleSemigroup hKLVW hA hRev hprob hup hcarried (hball a L hL) (hatom a L hL)
+    hp' hpc
     (hsω A p' hA hRev hFA hp' hpc) hstart (hiω A p' hA hRev hFA hp' hpc) ht hx hy
 
 end HarmonicBalls
