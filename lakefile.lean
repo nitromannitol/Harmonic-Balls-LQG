@@ -20,3 +20,9 @@ require «lattice-probability» from git
 @[default_target]
 lean_lib «HarmonicBalls» where
   globs := #[.andSubmodules `HarmonicBalls]
+
+/-- The comparator pair `HarmonicBallsAudit/Introduction/` (Theorems 1.1, 1.2 and Proposition 1.3).
+Not a default target: it builds only on demand (`lake build HarmonicBallsAudit`); the challenge
+elaborates with its intentional `sorry`s. -/
+lean_lib HarmonicBallsAudit where
+  globs := #[.submodules `HarmonicBallsAudit]

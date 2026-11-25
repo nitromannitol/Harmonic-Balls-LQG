@@ -4,6 +4,9 @@ A Lean 4 formalization of the numbered results of
 
 > Ahmed Bou-Rabee and Ewain Gwynne, "Harmonic balls in Liouville quantum gravity", arXiv:2208.11795.
 
+[![CI](https://github.com/nitromannitol/Harmonic-Balls-LQG/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nitromannitol/Harmonic-Balls-LQG/actions/workflows/build.yml)
+[![Comparator audit](https://github.com/nitromannitol/Harmonic-Balls-LQG/actions/workflows/comparator.yml/badge.svg?branch=main)](https://github.com/nitromannitol/Harmonic-Balls-LQG/actions/workflows/comparator.yml)
+
 The statements follow the corrected draft, [`paper/lqg_harmonic_ball-corrected.tex`](paper/lqg_harmonic_ball-corrected.tex). The arXiv source is kept as [`paper/lqg_harmonic_ball.tex`](paper/lqg_harmonic_ball.tex). The corrections to the arXiv source are marked in the corrected draft.
 
 ## Content
@@ -22,6 +25,25 @@ The statements of the numbered results are in `HarmonicBalls/Draft/`. The result
 The counted declaration of each numbered result is listed in [`docs/campaign/COUNTED-MANIFEST.md`](docs/campaign/COUNTED-MANIFEST.md), with the source, binder, definition, consumer and transitive checks of each of its 84 rows (78 numbered results and six definitions). Proposition 2.6 (Kigami 2019, Theorem 13.1) has no producer without its cited inputs, so its binder and transitive checks are open; the input (13.1) of the cited theorem holds almost surely for the LQG measure of every square (`HarmonicBalls/Proofs/Potential/SquareClippedBallVolume.lean`), the scaling from the unit square is proved, the clock of reflected Brownian motion is identified with the additive functional whose Revuz measure is the normalized μ_h (`HarmonicBalls/Proofs/Potential/ReflectedLQGRevuzMeasure.lean`), and the conclusion follows from the cited theorem once the unit-square kernel is shown to be positive (`reflectedLBMHeatKernel_of_kigami_of_positivity`; route in `docs/campaign/audits/ReflectedClockRevuz.md`); every jointly continuous heat kernel of the time change satisfies the Chapman–Kolmogorov identity (`IsLBMHeatKernel.chapmanKolmogorov`, `HarmonicBalls/Proofs/Potential/ReflectedHeatKernelChapmanKolmogorov.lean`); and Proposition 2.6 follows from the cited theorems of Kigami and of Keller–Lenz–Vogt–Wojciechowski alone (`reflectedLBMHeatKernelStmt_of_kigami_of_klvw`, `HarmonicBalls/Proofs/Potential/ReflectedLBMHeatKernelProposition.lean`): the unit-square kernel of the clock of the square is symmetric with respect to ν (`isLBMHeatKernel_symm`, from the occupation identity of the clock from every start, the resolvent identity of the time change and uniqueness of the Laplace transform) and its transition semigroup on `L²(ν)` is irreducible (`isIrreducibleSemigroup_heatKernelL2Semigroup`). Proposition 2.5 holds with a family of LQG clocks that is, for almost every field, a clock from every start, for every 0 < γ < 2 and every insertion α₀ < Q (`HarmonicBalls/Proofs/Potential/LQGClockInsertedEveryStart.lean`); on the same event the clock is, from every start, almost surely continuous and strictly increasing from zero to infinity, with speed measure μ_h (`HarmonicBalls/Proofs/Potential/LQGClockStrictEveryStart.lean`). The corrected Lemma 11.12 holds for every insertion (`HarmonicBalls/FirstPass/Phase2/CorrectedLemma11_12Derived.lean`), and Lemma 11.18 holds as printed for every geometry of concentric disks (`HarmonicBalls/Proofs/Sec11/MassDiamFullField.lean`). Theorem 1.2, Proposition 11.11 and the corrected Lemma 11.13 hold for every `ξ` with no hypothesis (`HarmonicBalls/FirstPass/Phase2/WeylExponentOfDG20.lean`), and also at the canonical exponent (`HarmonicBalls/FirstPass/Phase2/LocalMetricReplacementDerivedCanonical.lean`). The harmonic balls of Theorem 1.1 are the same for the test class with signed Radon measures on `O`, whose support is closed in `O` and whose mass may accumulate at the boundary of `O` (`HarmonicBalls/Proofs/Potential/GreenPotentialClassRelativeSupport.lean`).
 
 Verification: [`checks/AxiomGate.lean`](checks/AxiomGate.lean) prints the axioms of each counted declaration. It is outside the default build; run it with `lake env lean checks/AxiomGate.lean`. It has 371 `#print axioms` lines, and every declaration it prints uses only `propext`, `Classical.choice` and `Quot.sound`; [`docs/campaign/AXIOM-GATE.md`](docs/campaign/AXIOM-GATE.md) records the checks.
+
+## Continuous integration and comparator
+
+**CI** ([`.github/workflows/build.yml`](.github/workflows/build.yml)) builds the library on GitHub-hosted
+runners and runs the axiom gate: every one of the 371 reports of `checks/AxiomGate.lean` must list
+exactly `propext`, `Classical.choice` and `Quot.sound`. A build from an empty cache is longer than
+one hosted job, so it runs in up to five consecutive jobs ([`.github/workflows/build-stage.yml`](.github/workflows/build-stage.yml)),
+each resuming the build of the previous one. CI runs on pushes to `main` that change more than
+documentation, `paper/`, `docs/`, `notes/` or `archive/`, and on manual dispatch.
+
+**Comparator audit** ([`.github/workflows/comparator.yml`](.github/workflows/comparator.yml), manual
+dispatch) runs [leanprover/comparator](https://github.com/leanprover/comparator) on the pair
+[`HarmonicBallsAudit/Introduction/`](HarmonicBallsAudit/Introduction/): `Challenge.lean` imports the
+statement module `HarmonicBalls.Draft.Section1` and states Theorems 1.1 and 1.2 and Proposition 1.3
+with their statements in that module, `Solution.lean` proves them from the counted declarations, and
+the comparator checks that the statements and their dependency closures agree, that only the three
+standard axioms are used, and replays the proofs with the Lean kernel and the independent kernel
+nanoda. The challenge is not a mathlib-only restatement: the definitions of `HarmonicBalls/Defs/`
+and of Lattice-Probability that the statements use are imported, not restated.
 
 ## Building
 
@@ -47,6 +69,7 @@ HarmonicBalls/FirstPass/  Canonical proofs and the input statements they use (Cl
 HarmonicBalls/LPStage/    General lemmas staged for Lattice-Probability
 HarmonicBalls/Audit/      Checks of the inputs and exports of the results
 checks/                   Axiom gate, outside the default build
+HarmonicBallsAudit/       Comparator pair of the results of Section 1, outside the default build
 docs/                     Inventories, corrections and notes on the formalization
 paper/                    Corrected draft, arXiv source, figures
 archive/                  Files moved out of the build (see docs/campaign/ARCHIVE.md)
