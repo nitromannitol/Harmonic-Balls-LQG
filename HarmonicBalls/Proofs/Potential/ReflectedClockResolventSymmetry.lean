@@ -157,7 +157,7 @@ theorem lintegral_resolventPathMeasure {A : ℝ≥0 → ContinuousPath ℂ → �
     lintegral_withDensity_eq_lintegral_mul _ hw (show Measurable fun u : ℝ =>
       f (unitSquareTimeChangeRegularized A u.toNNReal b) from hf.comp hY)]
   refine lintegral_congr fun u => ?_
-  simp only [Pi.mul_apply, Function.comp, discountWeight]
+  simp only [Pi.mul_apply, discountWeight]
   ring
 
 theorem measurable_resolventPathMeasure {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
@@ -278,8 +278,7 @@ theorem lintegral_mul_clockResolvent_comm {A : ℝ≥0 → ContinuousPath ℂ �
       Tendsto (fun t => A t b) atTop atTop) [IsFiniteMeasure (unitSquareRevuzMeasure A)]
     (hνK : unitSquareRevuzMeasure A (closedSquare 0 1)ᶜ = 0) (β : ℝ) {c : ℝ} (hc : 0 ≤ c)
     {C : ℝ≥0∞} (hC : C ≠ ⊤) (hG1 : ∀ x ∈ closedSquare 0 1, clockGreen A β (fun _ => 1) x ≤ C)
-    {h f : ℂ → ℝ≥0∞} (hh : Measurable h) (hf : Measurable f) (hh1 : ∀ x, h x ≤ 1)
-    (hf1 : ∀ x, f x ≤ 1) :
+    {h f : ℂ → ℝ≥0∞} (hh : Measurable h) (hf : Measurable f) (hh1 : ∀ x, h x ≤ 1) :
     ∫⁻ x, f x * clockResolvent A β c h x ∂unitSquareRevuzMeasure A =
       ∫⁻ x, h x * clockResolvent A β c f x ∂unitSquareRevuzMeasure A := by
   set ν := unitSquareRevuzMeasure A with hν
