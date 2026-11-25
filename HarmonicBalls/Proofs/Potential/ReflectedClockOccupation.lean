@@ -409,4 +409,223 @@ theorem eq_mul_of_add_of_monotone {f : ℝ≥0 → ℝ≥0∞} (hadd : ∀ s t, 
       _ = f q := (hrat q).symm
       _ ≤ f t := hmono hq1
 
+/-! ### The mean occupation measure from Lebesgue measure on `K₀` -/
+
+/-- The occupation measure of the time change along `b` on (time, position):
+the image of Lebesgue measure on `(0, ∞)` under `u ↦ (τ̄_u, Y_u)`. -/
+noncomputable def pathOccupationMeasure (A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0)
+    (b : ContinuousPath ℂ) : Measure (ℝ × ℂ) :=
+  (volume.restrict (Ioi (0 : ℝ))).map fun u =>
+    ((pcafClockInverse (clockRationalRegularization A) u.toNNReal b : ℝ),
+      unitSquareTimeChangeRegularized A u.toNNReal b)
+
+theorem lintegral_pathOccupationMeasure {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : ∀ t, Measurable (A t)) {F : ℝ × ℂ → ℝ≥0∞} (hF : Measurable F) (b : ContinuousPath ℂ) :
+    ∫⁻ p, F p ∂pathOccupationMeasure A b = clockOccupation A F b :=
+  lintegral_map hF ((measurable_clockInverse_timeChange_uncurry hA).comp measurable_prodMk_left)
+
+theorem measurable_pathOccupationMeasure {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : ∀ t, Measurable (A t)) : Measurable (pathOccupationMeasure A) := by
+  refine Measure.measurable_of_measurable_coe _ fun S hS => ?_
+  have h : (fun b => pathOccupationMeasure A b S) = clockOccupation A (S.indicator 1) := by
+    funext b
+    rw [← lintegral_indicator_one hS, lintegral_pathOccupationMeasure hA
+      (measurable_one.indicator hS)]
+  rw [h]
+  exact measurable_clockOccupation hA (measurable_one.indicator hS)
+
+/-- The mean occupation measure of the time change under reflected Brownian motion started from
+Lebesgue measure on `K₀`. -/
+noncomputable def lebesgueOccupationMeasure (A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0) :
+    Measure (ℝ × ℂ) :=
+  unitSquareLebesguePathLaw.bind (pathOccupationMeasure A)
+
+theorem lintegral_lebesgueOccupationMeasure {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : ∀ t, Measurable (A t)) {F : ℝ × ℂ → ℝ≥0∞} (hF : Measurable F) :
+    ∫⁻ p, F p ∂lebesgueOccupationMeasure A = ∫⁻ z in closedSquare 0 1, ∫⁻ b,
+      clockOccupation A F b ∂reflectedPlanarBrownianMotion 0 1 z := by
+  rw [lebesgueOccupationMeasure, Measure.lintegral_bind
+    (measurable_pathOccupationMeasure hA).aemeasurable hF.aemeasurable]
+  simp_rw [lintegral_pathOccupationMeasure hA hF]
+  exact lintegral_unitSquareLebesguePathLaw (measurable_clockOccupation hA hF).aemeasurable
+
+theorem lebesgueOccupationMeasure_apply {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : ∀ t, Measurable (A t)) {S : Set (ℝ × ℂ)} (hS : MeasurableSet S) :
+    lebesgueOccupationMeasure A S = ∫⁻ z in closedSquare 0 1, ∫⁻ b,
+      clockOccupation A (S.indicator 1) b ∂reflectedPlanarBrownianMotion 0 1 z := by
+  rw [← lintegral_indicator_one hS, lintegral_lebesgueOccupationMeasure hA
+    (measurable_one.indicator hS)]
+
+theorem indicator_prod_eq_windowWeight (I : Set ℝ) (B : Set ℂ) :
+    (I ×ˢ B).indicator (1 : ℝ × ℂ → ℝ≥0∞) = windowWeight I (B.indicator 1) := by
+  funext p
+  by_cases h1 : p.1 ∈ I <;> by_cases h2 : p.2 ∈ B <;>
+    simp [windowWeight, indicator, h1, h2, mem_prod]
+
+/-- A measure on `ℝ` without mass on `(-∞, 0]` and with `μ(0, t] = t c` is `c` times Lebesgue
+measure on `(0, ∞)`. -/
+theorem eq_smul_volume_Ioi_of_Ioc {μ : Measure ℝ} {c : ℝ≥0} (hneg : μ (Iic 0) = 0)
+    (hpos : ∀ t : ℝ≥0, μ (Ioc 0 (t : ℝ)) = t * c) : μ = c • volume.restrict (Ioi (0 : ℝ)) := by
+  refine (Measure.ext_of_Ioc (c • volume.restrict (Ioi (0 : ℝ))) μ fun l r hlr => ?_).symm
+  set l' := max l 0 with hl'
+  set r' := max r 0 with hr'
+  have hl0 : 0 ≤ l' := le_max_right _ _
+  have hlr' : l' ≤ r' := max_le_max hlr.le le_rfl
+  have hset : Ioc l r ∩ Ioi 0 = Ioc l' r' := by
+    ext x
+    simp only [mem_inter_iff, mem_Ioc, mem_Ioi, hl', hr', max_lt_iff, le_max_iff]
+    constructor
+    · rintro ⟨⟨h1, h2⟩, h3⟩
+      exact ⟨⟨h1, h3⟩, Or.inl h2⟩
+    · rintro ⟨⟨h1, h3⟩, h2 | h2⟩
+      · exact ⟨⟨h1, h2⟩, h3⟩
+      · exact absurd h3 (not_lt.2 h2)
+  have hμ : μ (Ioc l r) = μ (Ioc l' r') := by
+    refine le_antisymm ?_ ?_
+    · refine (measure_mono fun x hx => ?_).trans ((measure_union_le (Ioc l' r') (Iic 0)).trans
+        (by rw [hneg, add_zero]))
+      by_cases hx0 : 0 < x
+      · exact Or.inl (hset ▸ ⟨hx, hx0⟩)
+      · exact Or.inr (not_lt.1 hx0)
+    · refine measure_mono fun x hx => ?_
+      have hx' := hset.symm ▸ hx
+      exact hx'.1
+  have hsplit : μ (Ioc 0 r') = μ (Ioc 0 l') + μ (Ioc l' r') := by
+    rw [← measure_union (disjoint_left.2 fun x hx1 hx2 => absurd hx2.1 (not_lt.2 hx1.2))
+      measurableSet_Ioc, Ioc_union_Ioc_eq_Ioc hl0 hlr']
+  have hr'' : μ (Ioc 0 r') = ENNReal.ofReal r' * c := by
+    have h := hpos r'.toNNReal
+    rwa [Real.coe_toNNReal _ (hl0.trans hlr')] at h
+  have hl'' : μ (Ioc 0 l') = ENNReal.ofReal l' * c := by
+    have h := hpos l'.toNNReal
+    rwa [Real.coe_toNNReal _ hl0] at h
+  rw [Measure.smul_apply, Measure.restrict_apply measurableSet_Ioc, hset, Real.volume_Ioc, hμ]
+  have hfin : ENNReal.ofReal l' * c ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top ENNReal.coe_ne_top
+  rw [hr'', hl''] at hsplit
+  have h2 : ENNReal.ofReal r' * c = ENNReal.ofReal l' * c + ENNReal.ofReal (r' - l') * c := by
+    rw [← add_mul, ← ENNReal.ofReal_add hl0 (sub_nonneg.2 hlr'), add_sub_cancel]
+  rw [h2] at hsplit
+  have := (ENNReal.add_right_inj hfin).1 hsplit
+  show (c : ℝ≥0∞) * ENNReal.ofReal (r' - l') = μ (Ioc l' r')
+  rw [← this, mul_comm]
+
+/-- **The mean occupation measure under Lebesgue start is `ds ⊗ Rev A`** (Revuz–Yor (1999),
+Chapter X, Section 2; Fukushima–Oshima–Takeda (2011), (5.1.11)): additivity and stationarity make
+the mass of `(0, t] × B` additive in `t`, and it is `Rev A (B)` at `t = 1`. -/
+theorem lebesgueOccupationMeasure_eq_prod {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0}
+    (hA : IsUnitSquarePCAF A)
+    (hU : ∀ z ∈ closedSquare 0 1, ∀ᵐ b ∂reflectedPlanarBrownianMotion 0 1 z,
+      Tendsto (fun t => A t b) atTop atTop) [IsFiniteMeasure (unitSquareRevuzMeasure A)] :
+    lebesgueOccupationMeasure A =
+      (volume.restrict (Ioi (0 : ℝ))).prod (unitSquareRevuzMeasure A) := by
+  set ν := unitSquareRevuzMeasure A with hν
+  set M := lebesgueOccupationMeasure A with hM
+  have hKm : MeasurableSet (closedSquare 0 1) :=
+    (isCompact_closedSquare 0 1).isClosed.measurableSet
+  -- no mass at nonpositive times
+  have hneg : M (Iic 0 ×ˢ univ) = 0 := by
+    rw [hM, lebesgueOccupationMeasure_apply hA.measurable (measurableSet_Iic.prod MeasurableSet.univ)]
+    refine (setLIntegral_congr_fun hKm (g := fun _ => 0) fun z hz =>
+      (lintegral_congr_ae (g := fun _ => 0) ?_).trans (by simp)).trans (by simp)
+    filter_upwards [hA.path z hz, hU z hz] with b hp hu
+    unfold clockOccupation
+    refine (setLIntegral_congr_fun measurableSet_Ioi (g := fun _ => 0) fun u hu0 => ?_).trans
+      (by simp)
+    have hreg : ∀ s, clockRationalRegularization A s b = A s b :=
+      clockRationalRegularization_eq_of_continuous_monotone hp.2.1 hp.2.2
+    have hpos : 0 < (pcafClockInverse (clockRationalRegularization A) u.toNNReal b : ℝ) := by
+      by_contra hle
+      have hle' : pcafClockInverse (clockRationalRegularization A) u.toNNReal b ≤ 0 := by
+        rw [← NNReal.coe_le_coe]
+        exact not_lt.1 hle
+      unfold pcafClockInverse at hle'
+      simp only [hreg] at hle'
+      have h := le_clock_of_sInf_le (a := fun s => A s b) hp.1 hp.2.1 hp.2.2
+        (hu.eventually_gt_atTop _).exists hle'
+      rw [hp.1] at h
+      have : (u.toNNReal : ℝ) ≤ 0 := by exact_mod_cast h
+      rw [Real.coe_toNNReal _ (le_of_lt hu0)] at this
+      exact absurd (hu0 : (0 : ℝ) < u) (not_lt.2 this)
+    simp [indicator, mem_prod, not_le.2 hpos]
+  -- the mass of `(0, t] × B` is linear in `t`
+  have hJ : ∀ B : Set ℂ, MeasurableSet B → ∀ t : ℝ≥0,
+      M (Ioc 0 (t : ℝ) ×ˢ B) = t * ν B := by
+    intro B hB
+    set f : ℝ≥0 → ℝ≥0∞ := fun t => M (Ioc 0 (t : ℝ) ×ˢ B) with hf
+    have hf_eq : ∀ I : Set ℝ, MeasurableSet I → M (I ×ˢ B) = ∫⁻ z in closedSquare 0 1, ∫⁻ b,
+        clockOccupation A (windowWeight I (B.indicator 1)) b ∂reflectedPlanarBrownianMotion 0 1 z := by
+      intro I hI
+      rw [hM, lebesgueOccupationMeasure_apply hA.measurable (hI.prod hB),
+        indicator_prod_eq_windowWeight]
+    have hmeasW : ∀ I : Set ℝ, MeasurableSet I →
+        Measurable (windowWeight I (B.indicator (1 : ℂ → ℝ≥0∞))) := fun I hI =>
+      measurable_windowWeight hI (measurable_one.indicator hB)
+    have hshift : ∀ s t : ℝ≥0, M (Ioc (s : ℝ) (s + t) ×ˢ B) = M (Ioc 0 (t : ℝ) ×ˢ B) := by
+      intro s t
+      rw [hf_eq _ measurableSet_Ioc, hf_eq _ measurableSet_Ioc]
+      have h1 : ∀ z ∈ closedSquare 0 1, ∫⁻ b, clockOccupation A
+          (windowWeight (Ioc (s : ℝ) (s + t)) (B.indicator 1)) b ∂reflectedPlanarBrownianMotion 0 1 z =
+          ∫⁻ b, clockOccupation A (windowWeight (Ioc 0 (t : ℝ)) (B.indicator 1))
+            (ContinuousPath.shift s b) ∂reflectedPlanarBrownianMotion 0 1 z := by
+        intro z hz
+        refine lintegral_congr_ae ?_
+        filter_upwards [ae_clockOccupation_indicator_Ioi_eq_shift hA hz (hU z hz) s] with b hb
+        have h := hb (windowWeight (Ioc (s : ℝ) (s + t)) (B.indicator 1))
+          (hmeasW _ measurableSet_Ioc)
+        have e1 : (fun p : ℝ × ℂ => (Ioi (s : ℝ)).indicator (fun _ =>
+            windowWeight (Ioc (s : ℝ) (s + t)) (B.indicator 1) p) p.1) =
+            windowWeight (Ioc (s : ℝ) (s + t)) (B.indicator 1) := by
+          funext p
+          by_cases hp : p.1 ∈ Ioc (s : ℝ) (s + t)
+          · simp [windowWeight_apply, indicator, hp, show p.1 ∈ Ioi (s : ℝ) from hp.1]
+          · simp [windowWeight, indicator, hp, mem_prod]
+        have e2 : (fun p : ℝ × ℂ => windowWeight (Ioc (s : ℝ) (s + t)) (B.indicator 1)
+            ((s : ℝ) + p.1, p.2)) = windowWeight (Ioc 0 (t : ℝ)) (B.indicator 1) := by
+          funext p
+          have : (s : ℝ) + p.1 ∈ Ioc (s : ℝ) (s + t) ↔ p.1 ∈ Ioc (0 : ℝ) t := by
+            simp only [mem_Ioc]
+            constructor <;> rintro ⟨h1, h2⟩ <;> constructor <;> linarith
+          by_cases hp : p.1 ∈ Ioc (0 : ℝ) t
+          · simp [windowWeight, indicator, mem_prod, hp, this.2 hp]
+          · simp [windowWeight, indicator, mem_prod, hp, mt this.1 hp]
+        rw [e1, e2] at h
+        exact h
+      rw [setLIntegral_congr_fun hKm h1]
+      exact setLIntegral_lintegral_shift_eq (measurable_clockOccupation hA.measurable
+        (hmeasW _ measurableSet_Ioc)) s
+    have hadd : ∀ s t, f (s + t) = f s + f t := by
+      intro s t
+      show M (Ioc 0 ((s + t : ℝ≥0) : ℝ) ×ˢ B) = M (Ioc 0 (s : ℝ) ×ˢ B) + M (Ioc 0 (t : ℝ) ×ˢ B)
+      rw [← hshift s t, ← measure_union (disjoint_left.2 fun p hp1 hp2 => ?_)
+        (measurableSet_Ioc.prod hB), ← union_prod, NNReal.coe_add,
+        Ioc_union_Ioc_eq_Ioc (NNReal.coe_nonneg s) (by linarith [NNReal.coe_nonneg t])]
+      exact absurd hp2.1.1 (not_lt.2 hp1.1.2)
+    have hmono : Monotone f := fun s t hst =>
+      measure_mono (prod_mono (Ioc_subset_Ioc le_rfl (by exact_mod_cast hst)) subset_rfl)
+    have h1 : f 1 = ν B := by
+      rw [hf]
+      simp only [NNReal.coe_one]
+      rw [hf_eq _ measurableSet_Ioc, hν, ← lintegral_unitSquareRevuzMeasure_eq_clockOccupation hA hU
+        (measurable_one.indicator hB), lintegral_indicator_one hB]
+    intro t
+    rw [show M (Ioc 0 (t : ℝ) ×ˢ B) = f t from rfl, eq_mul_of_add_of_monotone hadd hmono
+      (by rw [h1]; exact measure_ne_top _ _) t, h1]
+  -- the measures agree on all measurable rectangles
+  refine (Measure.prod_eq fun S B hS hB => ?_).symm
+  set m : Measure ℝ := (M.restrict (univ ×ˢ B)).map Prod.fst with hm
+  have hmS : ∀ S : Set ℝ, MeasurableSet S → m S = M (S ×ˢ B) := by
+    intro S hS
+    rw [hm, Measure.map_apply measurable_fst hS, Measure.restrict_apply (measurable_fst hS)]
+    congr 1
+    ext p
+    simp [mem_prod]
+  have hνB : ν B ≠ ⊤ := measure_ne_top _ _
+  have hm_eq : m = (ν B).toNNReal • volume.restrict (Ioi (0 : ℝ)) := by
+    refine eq_smul_volume_Ioi_of_Ioc ?_ fun t => ?_
+    · rw [hmS _ measurableSet_Iic]
+      exact measure_mono_null (prod_mono subset_rfl (subset_univ B)) hneg
+    · rw [hmS _ measurableSet_Ioc, hJ B hB t, ENNReal.coe_toNNReal hνB]
+  rw [← hmS S hS, hm_eq, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul,
+    ENNReal.coe_toNNReal hνB, mul_comm]
+
 end HarmonicBalls
