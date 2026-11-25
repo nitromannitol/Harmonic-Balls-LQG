@@ -27,6 +27,11 @@ Credit: the argument follows MatedCRT/FirstPass/Derived/OccupationBallLawInMeasu
 OccupationBallLawL2Bound.lean, OccupationBallLawVitali.lean and OccupationBallLawAssembly.lean of
 the IDLA-Mated-CRT formalization (planar Brownian motion started from Lebesgue measure on discs),
 here for reflected Brownian motion in the unit square, which needs no passage to the whole plane.
+Source commit: IDLA-Mated-CRT ea80b70d7b8c8c59778c86b6bd4b06c1060b6fbe.
+Changes: planar Brownian motion started from Lebesgue measure on discs (`ballLaw`) replaced by
+reflected Brownian motion started from Lebesgue measure on `K₀` (`unitSquareLebesguePathLaw`); the
+tail truncation over the plane dropped; the approximate Liouville clocks replaced by any clocks with
+continuous densities and a uniform Green bound; proofs otherwise as in the source.
 -/
 
 namespace HarmonicBalls

@@ -13,8 +13,9 @@ every image `2n ± c` of `c` is at least as far from `a` as `c`, and at distance
 `2|n| - 2`. Hence the folded Gaussian density is at most `2 √2 S` times the Gaussian density of
 variance `2r`, where `S = ∑_{n ∈ ℤ} e^{2 - |n|}` (`lintegral_gaussianReal_unitIntervalFold_le`),
 the reflection-of-the-Gaussian-kernel bound for the Neumann kernel of the square
-(consultant note on target 12; Kigami, *Time changes of the Brownian motion*, Mem. AMS 259
-(2019), Section 13). In two dimensions the fold acts coordinatewise
+(Fukushima–Oshima–Takeda, *Dirichlet forms and symmetric Markov processes*, 2nd ed. 2011,
+Example 1.6.1 and Section 5.1; Kigami, *Time changes of the Brownian motion*, Mem. AMS 259 (2019),
+Section 13). In two dimensions the fold acts coordinatewise
 (`lintegral_planarGaussian_squareFold_le`).
 
 With the Gaussian bound `e^{-u} ≤ u^{-θ}` (`ofReal_heatDensity_le`) and the Riesz potential bound

@@ -12,7 +12,7 @@ to the side length, with positive exponents `α₂ ≤ α₁`, for the LQG measu
 
 `ae_forall_closedSquare_volume_bounds` proves it almost surely, simultaneously for every closed
 square, for every `0 < γ < 2` and every insertion `α₀ < Q`, together with `0 < μ_h(K) < ∞`. The
-argument is the one of the consultant note on target 12: for `x ∈ K` and `r ≤ L` the clipped ball
+argument: for `x ∈ K` and `r ≤ L` the clipped ball
 `B(x, r) ∩ K` contains a disk of radius `r/8` (`exists_ball_subset_ball_inter_closedSquare`),
 which gives the lower bound from the almost sure all-scales bound
 `r^{β⁻} ≤ μ_h(B_r(z)) ≤ r^{β⁺}` (`lqgVolumeGrowthAllScalesStmt_holds`); the upper bound is the

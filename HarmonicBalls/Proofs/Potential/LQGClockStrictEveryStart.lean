@@ -17,8 +17,10 @@ Brownian motion such that, on one event of full probability for the field, for e
   Liouville Brownian motion from `O` is `∫_O G_O(x, y) 2 μ_h(dy)`
   (`ae_forall_expectedLBMExitTime_eq_green`).
 
-This is the statement of the consultant note on target 11 (one field event for all starting
-points, every `0 < γ < 2`, with the insertion), here with the HB clock defined as a limit of the
+This is the statement of Garban–Rhodes–Vargas, *Liouville Brownian motion*, Ann. Probab. 44 (2016),
+Theorem 2.7, and of Andres–Kajino, Probab. Theory Related Fields 166
+(2016), Theorem 2.2 (one field event for all starting points), for every `0 < γ < 2` and with the
+insertion, here with the HB clock defined as a limit of the
 circle-average approximations instead of the Garban–Rhodes–Vargas construction from the massive
 field; the null event of the field is common to all starts.
 -/

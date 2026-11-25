@@ -23,8 +23,17 @@ rational-time regularization `clockRationalRegularization A`. This module proves
 
 Credit: the proofs follow MatedCRT/FirstPass/Derived/RevuzRegularize.lean, RevuzKernel.lean,
 RevuzFormula.lean, RevuzLintegral.lean, RevuzPositive.lean, StieltjesOccupationUniformLimit.lean,
-OccupationIntegralInMeasure.lean and LQGApproxClockRevuz.lean of the IDLA-Mated-CRT
-formalization, written there for planar Brownian motion and Lebesgue measure on the plane.
+OccupationIntegralInMeasure.lean, OccupationBallLawInMeasure.lean
+(`exists_measurable_version_integral_occupationMeasure`) and LQGApproxClockRevuz.lean of the
+IDLA-Mated-CRT formalization, written there for planar Brownian motion and Lebesgue measure on the
+plane. Source commit: IDLA-Mated-CRT ea80b70d7b8c8c59778c86b6bd4b06c1060b6fbe.
+Changes: planar Brownian motion (`planarLaw`, `IsPCAF`, `regularize`, `stieltjesOfNNReal`,
+`occupationMeasure`, `revuz`) replaced by reflected Brownian motion in the unit square
+(`reflectedPlanarBrownianMotion 0 1`, `IsUnitSquarePCAF`, `clockRationalRegularization`,
+`clockStieltjesFunction`, `clockOccupationMeasure`, `unitSquareRevuzMeasure`); starts restricted to
+`K₀`; Lebesgue measure on `K₀` in place of the plane; the Stieltjes measure of the approximate
+Liouville clock generalized to any clock with a continuous density; proofs otherwise as in the
+source.
 -/
 
 namespace HarmonicBalls

@@ -13,8 +13,9 @@ positive continuous additive functional `A` of reflected Brownian motion in the 
 normalized LQG measure `ν = μ_h(K)⁻¹ ((z - a)/L)_* (μ_h|_K)`
 (`ae_exists_isUnitSquarePCAF_revuz_eq`). This is the clock identification in the proof of
 Proposition 2.6: the clock is the time change by the additive functional whose Revuz measure is
-the speed measure `μ_h|_K` (consultant note on target 12; Kigami, *Time changes of the Brownian
-motion*, Mem. AMS 259 (2019), Section 6; Fukushima–Oshima–Takeda, Theorem 5.1.4).
+the speed measure `μ_h|_K` (Kigami, *Time changes of the Brownian motion*, Mem. AMS 259 (2019),
+Section 6; Fukushima–Oshima–Takeda, *Dirichlet forms and symmetric Markov processes*, 2nd ed.
+2011, Theorems 5.1.7 and 6.2.1).
 
 The proof applies `unitSquareRevuzMeasure_eq_of_density_clocks` to the transported circle-average
 approximations, which are clocks with the densities

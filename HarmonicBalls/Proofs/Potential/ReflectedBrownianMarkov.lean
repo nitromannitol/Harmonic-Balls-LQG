@@ -18,7 +18,12 @@ window integral and the second moment bound follow `planarBrownianMotion_map_shi
 `lintegral_eval_mul_shift`, `sq_setLIntegral_Ioc_le` and `lintegral_windowOcc_sq_le` of the
 IDLA-Mated-CRT formalization (MatedCRT/FirstPass/Derived/LBMApproxRestart.lean and
 MatedCRT/FirstPass/Derived/PlanarOccupationSecondMoment.lean), written there for planar Brownian
-motion.
+motion. Source commit: IDLA-Mated-CRT ea80b70d7b8c8c59778c86b6bd4b06c1060b6fbe.
+Changes: planar Brownian motion (`planarLaw`) replaced by reflected Brownian motion in the unit
+square (`reflectedPlanarBrownianMotion 0 1`), with the fold and its invariance
+(`reflectedPlanarBrownianMotion_zero_one_squareFold`) in the Markov step; `windowOcc` renamed
+`windowOccupation`; the second moment bound assumes the Green bound on the unit square only;
+proofs otherwise as in the source.
 -/
 
 namespace HarmonicBalls

@@ -21,7 +21,7 @@ All files are in `HarmonicBalls/Proofs/Potential/`. `K₀ = closedSquare 0 1`, `
 | Folded Gaussian kernel `≤ (2√2 S)² p_{2r}`; uniform Green bound from ball bounds | `lintegral_planarGaussian_squareFold_le`, `lintegral_windowOccupation_reflected_le` | `ReflectedGreenPotentialBound.lean` |
 | Revuz formula `∫ g d(Rev A) = ∫_{K₀} dx E_x ∫_{(0,1]} g(b_s) dA_s` | `lintegral_unitSquareRevuzMeasure_of_isUnitSquarePCAF` | `ReflectedRevuzFormula.lean` |
 | Revuz measure of a limit of clocks with densities | `unitSquareRevuzMeasure_eq_of_density_clocks` | `ReflectedRevuzIdentification.lean` |
-| `μ_h(frontier K) = 0` almost surely, every insertion | `IsWholePlaneGFF.ae_lqgMeasure_frontier_closedSquare_eq_zero_of_pos` | `ReflectedLQGRevuzMeasure.lean` |
+| `μ_h(frontier K) = 0` almost surely for a fixed square, every insertion | `IsWholePlaneGFF.ae_lqgMeasure_frontier_closedSquare_eq_zero_of_pos` | `ReflectedLQGRevuzMeasure.lean` |
 | Clock identification: `Rev A = ν` almost surely | `ae_exists_isUnitSquarePCAF_revuz_eq` | `ReflectedLQGRevuzMeasure.lean` |
 | Proposition 2.6 from the cited theorem and positivity | `reflectedLBMHeatKernel_of_kigami_of_positivity` | `ReflectedLQGRevuzMeasure.lean` |
 
@@ -29,7 +29,7 @@ All print [propext, Classical.choice, Quot.sound] (`checks/AxiomGate.lean`, log 
 
 ## Route
 
-The consultant note on target 12 identifies the clock through the strict Revuz correspondence
+The literature route identifies the clock through the strict Revuz correspondence
 (Fukushima–Oshima–Takeda 2011, Theorems 5.1.7 and 6.2.1) and the uniqueness of the clock of killed Brownian motion
 on discs inside the square. The Lean proof computes the Revuz measure of the clock directly, as the IDLA-Mated-CRT
 formalization does for planar Brownian motion (MatedCRT/FirstPass/Derived/OccupationBallLawAssembly.lean and the
@@ -60,6 +60,6 @@ files it imports, ported with credit):
 ## What remains
 
 Strict positivity of the unit-square kernel (`hpos` of `reflectedLBMHeatKernel_of_kigami_of_positivity`). The
-consultant's route uses the symmetry of the time-changed semigroup with respect to `ν` and the irreducibility of the
+literature route uses the symmetry of the time-changed semigroup with respect to `ν` and the irreducibility of the
 time-changed Neumann form (Kigami 2019, Theorem 6.8; Keller–Lenz–Vogt–Wojciechowski, Theorem A.2), which are not in
 the repository.
