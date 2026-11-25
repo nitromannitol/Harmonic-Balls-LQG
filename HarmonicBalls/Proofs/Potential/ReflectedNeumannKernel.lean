@@ -424,4 +424,113 @@ theorem continuousOn_intervalNeumannKernelReal {a b : ℝ} (ha : 0 < a) (hab : a
     rw [Real.norm_eq_abs, abs_of_nonneg (intervalNeumannTerm_nonneg _ _ _ _)]
     exact intervalNeumannTerm_le ha h1 h2 hu h3 n
 
+/-! ### The square kernel: measurability, continuity and bounds -/
+
+theorem measurable_intervalNeumannKernel_uncurry :
+    Measurable fun p : ℝ≥0 × ℝ × ℝ => intervalNeumannKernel p.1 p.2.1 p.2.2 := by
+  unfold intervalNeumannKernel gaussianPDF
+  refine Measurable.tsum fun n => ?_
+  refine (ENNReal.measurable_ofReal.comp ?_).add (ENNReal.measurable_ofReal.comp ?_) <;>
+  · simp only [gaussianPDFReal_def]
+    fun_prop
+
+/-- The square kernel is jointly measurable in the time and the two points. -/
+theorem measurable_squareNeumannKernel_uncurry :
+    Measurable fun p : ℝ≥0 × ℂ × ℂ => squareNeumannKernel p.1 p.2.1 p.2.2 := by
+  have h := measurable_intervalNeumannKernel_uncurry
+  have h1 : Measurable fun p : ℝ≥0 × ℂ × ℂ => intervalNeumannKernel p.1 p.2.1.re p.2.2.re :=
+    h.comp (measurable_fst.prodMk ((Complex.measurable_re.comp measurable_snd.fst).prodMk
+      (Complex.measurable_re.comp measurable_snd.snd)))
+  have h2 : Measurable fun p : ℝ≥0 × ℂ × ℂ => intervalNeumannKernel p.1 p.2.1.im p.2.2.im :=
+    h.comp (measurable_fst.prodMk ((Complex.measurable_im.comp measurable_snd.fst).prodMk
+      (Complex.measurable_im.comp measurable_snd.snd)))
+  unfold squareNeumannKernel
+  exact h1.mul h2
+
+theorem squareNeumannKernel_eq_ofReal {s : ℝ≥0} (hs : s ≠ 0) {x y : ℂ}
+    (hx : x ∈ closedSquare 0 1) (hy1 : y.re ∈ Icc (-1 : ℝ) 2) (hy2 : y.im ∈ Icc (-1 : ℝ) 2) :
+    squareNeumannKernel s x y = ENNReal.ofReal (intervalNeumannKernelReal s x.re y.re *
+      intervalNeumannKernelReal s x.im y.im) := by
+  have hx' : x.re ∈ Icc (0 : ℝ) 1 ∧ x.im ∈ Icc (0 : ℝ) 1 := by
+    simpa [closedSquare, Complex.mem_reProdIm] using hx
+  unfold squareNeumannKernel
+  rw [intervalNeumannKernel_eq_ofReal hs hx'.1 hy1, intervalNeumannKernel_eq_ofReal hs hx'.2 hy2,
+    ← ENNReal.ofReal_mul (show 0 ≤ intervalNeumannKernelReal s x.re y.re from
+      tsum_nonneg (intervalNeumannTerm_nonneg _ _ _))]
+
+/-- **Continuity of the square kernel** in `(s, y)` at `s > 0`, `y ∈ K₀`, for `x ∈ K₀`. -/
+theorem continuousAt_squareNeumannKernel {x : ℂ} (hx : x ∈ closedSquare 0 1) {σ : ℝ≥0}
+    (hσ : 0 < σ) {y : ℂ} (hy : y ∈ closedSquare 0 1) :
+    ContinuousAt (fun p : ℝ≥0 × ℂ => squareNeumannKernel p.1 x p.2) (σ, y) := by
+  have hx' : x.re ∈ Icc (0 : ℝ) 1 ∧ x.im ∈ Icc (0 : ℝ) 1 := by
+    simpa [closedSquare, Complex.mem_reProdIm] using hx
+  have hy' : y.re ∈ Icc (0 : ℝ) 1 ∧ y.im ∈ Icc (0 : ℝ) 1 := by
+    simpa [closedSquare, Complex.mem_reProdIm] using hy
+  have hσ' : (0 : ℝ) < σ := hσ
+  set a : ℝ := σ / 2 with ha_def
+  set b : ℝ := 2 * σ with hb_def
+  have ha : 0 < a := by positivity
+  have hab : a ≤ b := by linarith
+  set D : Set (ℝ≥0 × ℂ) := {p | a ≤ (p.1 : ℝ) ∧ (p.1 : ℝ) ≤ b} ∩
+    {p | p.2.re ∈ Icc (-1 : ℝ) 2 ∧ p.2.im ∈ Icc (-1 : ℝ) 2} with hD
+  have hDn : D ∈ 𝓝 (σ, y) := by
+    have hopen : IsOpen ({p : ℝ≥0 × ℂ | a < (p.1 : ℝ) ∧ (p.1 : ℝ) < b} ∩
+        {p | p.2.re ∈ Ioo (-1 : ℝ) 2 ∧ p.2.im ∈ Ioo (-1 : ℝ) 2}) := by
+      refine IsOpen.inter ?_ ?_
+      · exact (isOpen_lt continuous_const (NNReal.continuous_coe.comp continuous_fst)).inter
+          (isOpen_lt (NNReal.continuous_coe.comp continuous_fst) continuous_const)
+      · exact (isOpen_Ioo.preimage (Complex.continuous_re.comp continuous_snd)).inter
+          (isOpen_Ioo.preimage (Complex.continuous_im.comp continuous_snd))
+    refine Filter.mem_of_superset (hopen.mem_nhds ⟨⟨by simp only; linarith, by simp only; linarith⟩,
+      ⟨⟨by linarith [hy'.1.1], by linarith [hy'.1.2]⟩, ⟨by linarith [hy'.2.1], by linarith [hy'.2.2]⟩⟩⟩) ?_
+    rintro p ⟨⟨h1, h2⟩, h3, h4⟩
+    exact ⟨⟨h1.le, h2.le⟩, ⟨h3.1.le, h3.2.le⟩, ⟨h4.1.le, h4.2.le⟩⟩
+  have hcont : ContinuousOn (fun p : ℝ≥0 × ℂ => ENNReal.ofReal (intervalNeumannKernelReal p.1 x.re
+      p.2.re * intervalNeumannKernelReal p.1 x.im p.2.im)) D := by
+    refine ENNReal.continuous_ofReal.comp_continuousOn (ContinuousOn.mul ?_ ?_)
+    · exact (continuousOn_intervalNeumannKernelReal ha hab hx'.1).comp
+        (continuous_fst.prodMk (Complex.continuous_re.comp continuous_snd)).continuousOn
+        fun p hp => ⟨hp.1, hp.2.1⟩
+    · exact (continuousOn_intervalNeumannKernelReal ha hab hx'.2).comp
+        (continuous_fst.prodMk (Complex.continuous_im.comp continuous_snd)).continuousOn
+        fun p hp => ⟨hp.1, hp.2.2⟩
+  have heq : ∀ p ∈ D, squareNeumannKernel p.1 x p.2 = ENNReal.ofReal (intervalNeumannKernelReal
+      p.1 x.re p.2.re * intervalNeumannKernelReal p.1 x.im p.2.im) := by
+    rintro p ⟨⟨h1, -⟩, h3, h4⟩
+    have hp0 : p.1 ≠ 0 := by
+      intro h
+      rw [h, NNReal.coe_zero] at h1
+      linarith
+    exact squareNeumannKernel_eq_ofReal hp0 hx h3 h4
+  exact ((hcont.congr heq).continuousAt hDn)
+
+/-- **A uniform bound for the square kernel** for `s ∈ [a, b]`, `a > 0`, and `x, y ∈ K₀`. -/
+theorem exists_squareNeumannKernel_le {a b : ℝ} (ha : 0 < a) (hab : a ≤ b) :
+    ∃ C : ℝ≥0∞, C ≠ ⊤ ∧ ∀ s : ℝ≥0, a ≤ s → (s : ℝ) ≤ b → ∀ x ∈ closedSquare 0 1,
+      ∀ y ∈ closedSquare 0 1, squareNeumannKernel s x y ≤ C := by
+  set S₀ : ℝ := ∑' n : ℤ, 2 * ((Real.sqrt (2 * Real.pi * a))⁻¹ * Real.exp (3 / (2 * a)) *
+    Real.exp (-(1 / (2 * b)) * |(n : ℝ)|)) with hS₀
+  have hsum : Summable fun n : ℤ => 2 * ((Real.sqrt (2 * Real.pi * a))⁻¹ *
+      Real.exp (3 / (2 * a)) * Real.exp (-(1 / (2 * b)) * |(n : ℝ)|)) :=
+    ((summable_exp_neg_mul_abs_int (div_pos one_pos (mul_pos two_pos
+      (lt_of_lt_of_le ha hab)))).mul_left _).mul_left _
+  refine ⟨ENNReal.ofReal (S₀ * S₀), ENNReal.ofReal_ne_top, fun s hsa hsb x hx y hy => ?_⟩
+  have hx' : x.re ∈ Icc (0 : ℝ) 1 ∧ x.im ∈ Icc (0 : ℝ) 1 := by
+    simpa [closedSquare, Complex.mem_reProdIm] using hx
+  have hy' : y.re ∈ Icc (0 : ℝ) 1 ∧ y.im ∈ Icc (0 : ℝ) 1 := by
+    simpa [closedSquare, Complex.mem_reProdIm] using hy
+  have hs0 : s ≠ 0 := by
+    intro h
+    rw [h, NNReal.coe_zero] at hsa
+    linarith
+  have hb1 : y.re ∈ Icc (-1 : ℝ) 2 := ⟨by linarith [hy'.1.1], by linarith [hy'.1.2]⟩
+  have hb2 : y.im ∈ Icc (-1 : ℝ) 2 := ⟨by linarith [hy'.2.1], by linarith [hy'.2.2]⟩
+  rw [squareNeumannKernel_eq_ofReal hs0 hx hb1 hb2]
+  refine ENNReal.ofReal_le_ofReal (mul_le_mul ?_ ?_ (tsum_nonneg
+    (intervalNeumannTerm_nonneg _ _ _)) (tsum_nonneg fun n => by positivity))
+  · exact Summable.tsum_le_tsum (fun n => intervalNeumannTerm_le ha hsa hsb hx'.1 hb1 n)
+      (summable_intervalNeumannTerm hs0 hx'.1 hb1) hsum
+  · exact Summable.tsum_le_tsum (fun n => intervalNeumannTerm_le ha hsa hsb hx'.2 hb2 n)
+      (summable_intervalNeumannTerm hs0 hx'.2 hb2) hsum
+
 end HarmonicBalls
