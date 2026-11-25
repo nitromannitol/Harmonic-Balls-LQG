@@ -102,6 +102,11 @@ import HarmonicBalls.Proofs.Potential.ReflectedRevuzFormula
 import HarmonicBalls.Proofs.Potential.ReflectedRevuzIdentification
 import HarmonicBalls.Proofs.Potential.ReflectedLQGRevuzMeasure
 import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelUniqueness
+import HarmonicBalls.Proofs.Brownian.OptionalTimeStrongMarkov
+import HarmonicBalls.Proofs.Potential.ReflectedOptionalTimeStrongMarkov
+import HarmonicBalls.Proofs.Potential.ReflectedClockOptionalAdditivity
+import HarmonicBalls.Proofs.Potential.ReflectedTimeChangeSemigroup
+import HarmonicBalls.Proofs.Potential.ReflectedHeatKernelChapmanKolmogorov
 import HarmonicBalls.FirstPass.Cited.Section2PositivityImproving
 
 /-!
@@ -726,5 +731,20 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 -- 2.6 positivity: uniqueness of jointly continuous heat kernels, full support of the normalized measure (HarmonicBalls/Proofs/Potential/ReflectedHeatKernelUniqueness.lean)
 #print axioms HarmonicBalls.IsLBMHeatKernel.eq_of_continuousOn
 #print axioms HarmonicBalls.ae_forall_closedSquare_unitSquareNormalizedMeasure_ball_inter_pos
+#print axioms HarmonicBalls.eqOn_of_forall_setLIntegral_eq
+-- 2.6 positivity, Chapman-Kolmogorov, step 1: the strong Markov property at optional times (HarmonicBalls/Proofs/Brownian/OptionalTimeStrongMarkov.lean, HarmonicBalls/Proofs/Potential/ReflectedOptionalTimeStrongMarkov.lean)
+#print axioms HarmonicBalls.OptionalTime.continuousProcess_restrict_map_shift_optionalTime_lt_top
+#print axioms HarmonicBalls.OptionalTime.reflected_restrict_map_shift_optionalTime
+#print axioms HarmonicBalls.OptionalTime.ae_shift_mem_of_forall_reflected_eq_one
+#print axioms HarmonicBalls.OptionalTime.lintegral_reflected_shift_optionalTime_param
+-- 2.6 positivity, Chapman-Kolmogorov, step 2: additivity of the clock at optional times (HarmonicBalls/Proofs/Potential/ReflectedClockOptionalAdditivity.lean)
+#print axioms HarmonicBalls.ae_clockRationalRegularization_add_shift_optionalTime
+-- 2.6 positivity, Chapman-Kolmogorov, step 3: the semigroup property of the time change (HarmonicBalls/Proofs/Potential/ReflectedTimeChangeSemigroup.lean)
+#print axioms HarmonicBalls.ae_pcafClockInverse_add_eq_shift
+#print axioms HarmonicBalls.lintegral_shift_pcafClockInverse_eq
+#print axioms HarmonicBalls.reflected_eval_pcafClockInverse_add_mem
+-- 2.6 positivity, Chapman-Kolmogorov, step 4: unbounded clock and the Chapman-Kolmogorov identity (HarmonicBalls/Proofs/Potential/ReflectedHeatKernelChapmanKolmogorov.lean)
+#print axioms HarmonicBalls.ae_tendsto_atTop_of_isLBMHeatKernel
+#print axioms HarmonicBalls.IsLBMHeatKernel.chapmanKolmogorov
 -- 2.6 positivity: cited statement, Keller-Lenz-Vogt-Wojciechowski Theorem A.2 (HarmonicBalls/FirstPass/Cited/Section2PositivityImproving.lean)
 #print axioms HarmonicBalls.klvwPositivityImprovingCited

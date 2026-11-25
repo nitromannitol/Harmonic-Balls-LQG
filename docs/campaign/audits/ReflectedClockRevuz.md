@@ -57,9 +57,33 @@ files it imports, ported with credit):
   additive functional of `IsUnitSquarePCAF` (per-start null sets), as in the cited statement
   `kigamiHeatKernelContinuityCited`.
 
+## The Chapman–Kolmogorov identity
+
+`IsLBMHeatKernel.chapmanKolmogorov` (`HarmonicBalls/Proofs/Potential/ReflectedHeatKernelChapmanKolmogorov.lean`):
+for every additive functional `A` of reflected Brownian motion in `K₀`, every finite `ν` charging every relative ball
+of `K₀` with no atoms in `K₀`, and every heat kernel `p` of the time change by `A` with respect to `ν` that is jointly
+continuous on `(0, ∞) × K₀ × K₀`, `p(s + t, x, y) = ∫_{K₀} p(s, x, z) p(t, z, y) dν(z)` for `s, t > 0`, `x, y ∈ K₀`.
+
+1. Strong Markov property of planar Brownian motion at optional times (Revuz–Yor 1999, Theorem III.3.7), ported
+   with credit from IDLA-Mated-CRT; it passes to reflected Brownian motion through the fold, which maps `F⁰_t` into
+   `F⁰_t`, commutes with the shifts, and leaves the law of reflected Brownian motion unchanged when applied to the
+   start.
+2. Additivity of the clock at optional times and of its right inverse, `τ_{r+v} = τ_r + τ̄_v ∘ θ_{τ_r}`
+   (Revuz–Yor 1999, Chapter X, Section 1 and Proposition V.1.1; Fukushima–Oshima–Takeda 2011, Section A.3), ported
+   with credit from IDLA-Mated-CRT; the clock is required to be unbounded only from the start considered.
+3. Semigroup property of the time change: `Q_x[b_{τ_{s+t}} ∈ S] = E_x[Q_{b_{τ_s}}[b_{τ_t} ∈ S]]`
+   (Fukushima–Oshima–Takeda 2011, Section 6.2).
+4. The clock is unbounded from every `x ∈ K₀`: on `{A_∞ ≤ t}` the right inverse `τ_t` is `0`, so the time-changed
+   point at time `t` is `x`, which has probability `∫_{{x}} p(t, x, ·) dν = 0`.
+5. Tonelli's theorem gives the identity `ν`-almost everywhere in `y`; continuity and full support give it
+   everywhere (`eqOn_of_forall_setLIntegral_eq`, the argument of `IsLBMHeatKernel.eq_of_continuousOn`).
+
+Departure: `A_∞ = ∞` is usually obtained from the Paley–Zygmund inequality and the Markov property at integer
+times; here it follows from the existence of the heat kernel and the absence of atoms of `ν` (step 4).
+
 ## What remains
 
 Strict positivity of the unit-square kernel (`hpos` of `reflectedLBMHeatKernel_of_kigami_of_positivity`). The
 literature route uses the symmetry of the time-changed semigroup with respect to `ν` and the irreducibility of the
 time-changed Neumann form (Kigami 2019, Theorem 6.8; Keller–Lenz–Vogt–Wojciechowski, Theorem A.2), which are not in
-the repository.
+the repository. The Chapman–Kolmogorov identity above is the semigroup law of the `L²(ν)` operators of the kernel.
