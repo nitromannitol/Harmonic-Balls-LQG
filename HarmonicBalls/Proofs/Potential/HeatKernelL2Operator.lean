@@ -92,7 +92,7 @@ theorem abs (hd : IsL2KernelData ν K k) : IsL2KernelData ν K fun x y => |k x y
 /-- The transposed kernel. -/
 theorem swap (hd : IsL2KernelData ν K k) : IsL2KernelData ν K fun x y => k y x :=
   ⟨hd.isCompact, hd.carried, hd.continuousOn.comp continuous_swap.continuousOn
-    fun q hq => ⟨hq.2, hq.1⟩⟩
+    fun _ hq => ⟨hq.2, hq.1⟩⟩
 
 theorem continuousOn_right (hd : IsL2KernelData ν K k) {x : ℂ} (hx : x ∈ K) :
     ContinuousOn (k x) K :=
@@ -313,6 +313,7 @@ noncomputable def kernelL2LinearMap (hd : IsL2KernelData ν K k) : Lp ℝ 2 ν �
 noncomputable def opBound (hd : IsL2KernelData ν K k) : ℝ :=
   Classical.choose hd.exists_bound * ν.real K
 
+omit [IsFiniteMeasure ν] in
 theorem opBound_nonneg (hd : IsL2KernelData ν K k) : 0 ≤ hd.opBound :=
   mul_nonneg (Classical.choose_spec hd.exists_bound).1 measureReal_nonneg
 
@@ -347,6 +348,158 @@ theorem norm_toLp_kernelTransform_le (hd : IsL2KernelData ν K k) {R : ℝ} (hR 
       fun x hx => by simp only [hx])
   rw [hc, sq R]
   exact h
+
+end IsL2KernelData
+
+open scoped Classical in
+/-- The integral operator `f ↦ ∫_K k(·, y) f(y) dν(y)` of `k` on `L²(ν)`, for kernel data
+`IsL2KernelData ν K k`, and `0` otherwise. -/
+noncomputable def kernelL2Operator (ν : Measure ℂ) [IsFiniteMeasure ν] (K : Set ℂ)
+    (k : ℂ → ℂ → ℝ) : Lp ℝ 2 ν →L[ℝ] Lp ℝ 2 ν :=
+  if hd : IsL2KernelData ν K k then
+    hd.kernelL2LinearMap.mkContinuous hd.opBound fun f =>
+      hd.norm_toLp_kernelTransform_le hd.opBound_nonneg hd.row_le_opBound hd.col_le_opBound f
+  else 0
+
+namespace IsL2KernelData
+
+variable {ν : Measure ℂ} [IsFiniteMeasure ν] {K : Set ℂ} {k : ℂ → ℂ → ℝ}
+
+theorem kernelL2Operator_apply (hd : IsL2KernelData ν K k) (f : Lp ℝ 2 ν) :
+    kernelL2Operator ν K k f = (hd.memLp_kernelTransform (Lp.memLp f)).toLp _ := by
+  unfold kernelL2Operator
+  split_ifs with h
+  rfl
+
+/-- The operator is the integral transform, almost everywhere. -/
+theorem coeFn_kernelL2Operator (hd : IsL2KernelData ν K k) (f : Lp ℝ 2 ν) :
+    (kernelL2Operator ν K k f : ℂ → ℝ) =ᵐ[ν] kernelTransform ν K k f := by
+  rw [hd.kernelL2Operator_apply f]
+  exact MemLp.coeFn_toLp _
+
+/-- **Schur's test** for `kernelL2Operator`. -/
+theorem norm_kernelL2Operator_apply_le (hd : IsL2KernelData ν K k) {R : ℝ} (hR : 0 ≤ R)
+    (hrow : ∀ x ∈ K, ∫ y in K, |k x y| ∂ν ≤ R) (hcol : ∀ y ∈ K, ∫ x in K, |k x y| ∂ν ≤ R)
+    (f : Lp ℝ 2 ν) : ‖kernelL2Operator ν K k f‖ ≤ R * ‖f‖ := by
+  rw [hd.kernelL2Operator_apply f]
+  exact hd.norm_toLp_kernelTransform_le hR hrow hcol f
+
+theorem integrable_coe (f : Lp ℝ 2 ν) : Integrable (f : ℂ → ℝ) (ν.restrict K) :=
+  ((Lp.memLp f).integrable one_le_two).integrableOn
+
+/-- **A symmetric kernel gives a symmetric operator.** -/
+theorem inner_kernelL2Operator_comm (hd : IsL2KernelData ν K k)
+    (hsym : ∀ x ∈ K, ∀ y ∈ K, k x y = k y x) (f g : Lp ℝ 2 ν) :
+    ⟪kernelL2Operator ν K k f, g⟫_ℝ = ⟪f, kernelL2Operator ν K k g⟫_ℝ := by
+  have hKm := hd.measurableSet
+  obtain ⟨C, -, hC⟩ := hd.exists_bound
+  have hfi := integrable_coe (K := K) f
+  have hgi := integrable_coe (K := K) g
+  have hmem : ∀ᵐ z ∂((ν.restrict K).prod (ν.restrict K)), z ∈ K ×ˢ K := by
+    rw [Measure.prod_restrict]
+    exact ae_restrict_mem (hKm.prod hKm)
+  have hprod : Integrable (Function.uncurry fun x y => k x y * (f : ℂ → ℝ) y * (g : ℂ → ℝ) x)
+      ((ν.restrict K).prod (ν.restrict K)) := by
+    have hm : AEStronglyMeasurable (fun z : ℂ × ℂ => k z.1 z.2)
+        ((ν.restrict K).prod (ν.restrict K)) := by
+      rw [Measure.prod_restrict]
+      exact hd.continuousOn.aestronglyMeasurable (hKm.prod hKm)
+    have h := (hgi.mul_prod hfi).bdd_mul hm (c := C) (by
+      filter_upwards [hmem] with z hz
+      rw [Real.norm_eq_abs]
+      exact hC z.1 hz.1 z.2 hz.2)
+    refine h.congr (Eventually.of_forall fun z => ?_)
+    show k z.1 z.2 * ((g : ℂ → ℝ) z.1 * (f : ℂ → ℝ) z.2) =
+      k z.1 z.2 * (f : ℂ → ℝ) z.2 * (g : ℂ → ℝ) z.1
+    ring
+  have hL : ∫ x, (kernelL2Operator ν K k f : ℂ → ℝ) x * (g : ℂ → ℝ) x ∂ν =
+      ∫ x in K, ∫ y in K, k x y * (f : ℂ → ℝ) y * (g : ℂ → ℝ) x ∂ν ∂ν := by
+    rw [← hd.setIntegral_eq]
+    refine integral_congr_ae ?_
+    filter_upwards [ae_restrict_of_ae (hd.coeFn_kernelL2Operator f)] with x hx
+    rw [hx, kernelTransform, ← integral_mul_const]
+  have hR : ∫ y, (f : ℂ → ℝ) y * (kernelL2Operator ν K k g : ℂ → ℝ) y ∂ν =
+      ∫ y in K, ∫ x in K, k x y * (f : ℂ → ℝ) y * (g : ℂ → ℝ) x ∂ν ∂ν := by
+    rw [← hd.setIntegral_eq]
+    refine integral_congr_ae ?_
+    filter_upwards [ae_restrict_of_ae (hd.coeFn_kernelL2Operator g), ae_restrict_mem hKm]
+      with y hy hyK
+    rw [hy, kernelTransform, ← integral_const_mul]
+    refine setIntegral_congr_fun hKm fun x hx => ?_
+    rw [hsym y hyK x hx]
+    ring
+  rw [l2_inner_eq_integral_mul, l2_inner_eq_integral_mul, hL, hR]
+  exact integral_integral_swap hprod
+
+/-- **Composition.** If `k₃(x, y) = ∫_K k₁(x, z) k₂(z, y) dν(z)` on `K × K`, the operator of `k₃`
+is the composition of the operators of `k₁` and `k₂`. -/
+theorem kernelL2Operator_eq_comp {k₁ k₂ k₃ : ℂ → ℂ → ℝ} (hd₁ : IsL2KernelData ν K k₁)
+    (hd₂ : IsL2KernelData ν K k₂) (hd₃ : IsL2KernelData ν K k₃)
+    (hck : ∀ x ∈ K, ∀ y ∈ K, k₃ x y = ∫ z in K, k₁ x z * k₂ z y ∂ν) :
+    kernelL2Operator ν K k₃ = (kernelL2Operator ν K k₁).comp (kernelL2Operator ν K k₂) := by
+  have hKm := hd₁.measurableSet
+  obtain ⟨C₁, -, hC₁⟩ := hd₁.exists_bound
+  obtain ⟨C₂, hC₂0, hC₂⟩ := hd₂.exists_bound
+  refine ContinuousLinearMap.ext fun f => Lp.ext ?_
+  rw [ContinuousLinearMap.comp_apply]
+  filter_upwards [hd₃.coeFn_kernelL2Operator f,
+    hd₁.coeFn_kernelL2Operator (kernelL2Operator ν K k₂ f), hd₁.ae_mem] with x h3 h1 hx
+  rw [h3, h1, kernelTransform_congr_ae (hd₂.coeFn_kernelL2Operator f)]
+  unfold kernelTransform
+  have hfi := integrable_coe (K := K) f
+  have hmem : ∀ᵐ z ∂((ν.restrict K).prod (ν.restrict K)), z ∈ K ×ˢ K := by
+    rw [Measure.prod_restrict]
+    exact ae_restrict_mem (hKm.prod hKm)
+  have hprod : Integrable (Function.uncurry fun z y => k₁ x z * k₂ z y * (f : ℂ → ℝ) y)
+      ((ν.restrict K).prod (ν.restrict K)) := by
+    have hc : ContinuousOn (fun q : ℂ × ℂ => k₁ x q.1 * k₂ q.1 q.2) (K ×ˢ K) :=
+      ((hd₁.continuousOn_right hx).comp continuousOn_fst fun q hq => hq.1).mul hd₂.continuousOn
+    have hm : AEStronglyMeasurable (fun q : ℂ × ℂ => k₁ x q.1 * k₂ q.1 q.2)
+        ((ν.restrict K).prod (ν.restrict K)) := by
+      rw [Measure.prod_restrict]
+      exact hc.aestronglyMeasurable (hKm.prod hKm)
+    exact (hfi.comp_snd (ν.restrict K)).bdd_mul hm (c := C₁ * C₂) (by
+      filter_upwards [hmem] with q hq
+      rw [Real.norm_eq_abs, abs_mul]
+      exact mul_le_mul (hC₁ x hx q.1 hq.1) (hC₂ q.1 hq.1 q.2 hq.2) (abs_nonneg _)
+        ((abs_nonneg _).trans (hC₁ x hx q.1 hq.1)))
+  calc ∫ y in K, k₃ x y * (f : ℂ → ℝ) y ∂ν
+      = ∫ y in K, ∫ z in K, k₁ x z * k₂ z y * (f : ℂ → ℝ) y ∂ν ∂ν := by
+        refine setIntegral_congr_fun hKm fun y hy => ?_
+        rw [hck x hx y hy, ← integral_mul_const]
+    _ = ∫ z in K, ∫ y in K, k₁ x z * k₂ z y * (f : ℂ → ℝ) y ∂ν ∂ν :=
+        (integral_integral_swap hprod).symm
+    _ = ∫ z in K, k₁ x z * ∫ y in K, k₂ z y * (f : ℂ → ℝ) y ∂ν ∂ν := by
+        refine integral_congr_ae (Eventually.of_forall fun z => ?_)
+        simp only
+        rw [← integral_const_mul]
+        congr 1
+        ext y
+        ring
+
+/-- A nonnegative kernel preserves positivity. -/
+theorem ae_nonneg_kernelL2Operator (hd : IsL2KernelData ν K k)
+    (hk0 : ∀ x ∈ K, ∀ y ∈ K, 0 ≤ k x y) {f : Lp ℝ 2 ν} (hf : 0 ≤ᵐ[ν] (f : ℂ → ℝ)) :
+    0 ≤ᵐ[ν] (kernelL2Operator ν K k f : ℂ → ℝ) := by
+  filter_upwards [hd.coeFn_kernelL2Operator f, hd.ae_mem] with x h hx
+  rw [h, Pi.zero_apply]
+  unfold kernelTransform
+  refine integral_nonneg_of_ae ?_
+  filter_upwards [ae_restrict_mem hd.measurableSet, ae_restrict_of_ae hf] with y hy hfy
+  exact mul_nonneg (hk0 x hx y hy) hfy
+
+/-- A nonnegative kernel whose rows have mass at most `1` maps `0 ≤ f ≤ 1` to `T f ≤ 1`. -/
+theorem ae_kernelL2Operator_le_one (hd : IsL2KernelData ν K k)
+    (hk0 : ∀ x ∈ K, ∀ y ∈ K, 0 ≤ k x y) (hrow : ∀ x ∈ K, ∫ y in K, k x y ∂ν ≤ 1)
+    {f : Lp ℝ 2 ν} (hf : ∀ᵐ x ∂ν, 0 ≤ (f : ℂ → ℝ) x ∧ (f : ℂ → ℝ) x ≤ 1) :
+    ∀ᵐ x ∂ν, (kernelL2Operator ν K k f : ℂ → ℝ) x ≤ 1 := by
+  filter_upwards [hd.coeFn_kernelL2Operator f, hd.ae_mem] with x h hx
+  rw [h]
+  unfold kernelTransform
+  refine le_trans ?_ (hrow x hx)
+  refine integral_mono_ae (hd.integrable_mul hx (integrable_coe f)) (hd.integrable_right hx) ?_
+  filter_upwards [ae_restrict_mem hd.measurableSet, ae_restrict_of_ae hf] with y hy hfy
+  exact mul_le_of_le_one_right (hk0 x hx y hy) hfy.2
 
 end IsL2KernelData
 
