@@ -222,4 +222,56 @@ theorem continuousOn_scaled_kernel {a : ℂ} {L : ℝ} (hL : 0 < L) {M : ℝ} (h
   exact ⟨div_pos ht hM, div_ofReal_mem_closedSquare_zero_one hL hx,
     div_ofReal_mem_closedSquare_zero_one hL hy⟩
 
+/-- Strict positivity passes from the unit square to the square. -/
+theorem scaled_kernel_pos {a : ℂ} {L : ℝ} (hL : 0 < L) {M : ℝ} (hM : 0 < M) {p' : ℝ → ℂ → ℂ → ℝ}
+    (hp : ∀ t : ℝ, 0 < t → ∀ x ∈ closedSquare 0 1, ∀ y ∈ closedSquare 0 1, 0 < p' t x y)
+    {t : ℝ} (ht : 0 < t) {x y : ℂ} (hx : x ∈ closedSquare a L) (hy : y ∈ closedSquare a L) :
+    0 < M⁻¹ * p' (t / M) ((x - a) / (L : ℂ)) ((y - a) / (L : ℂ)) :=
+  mul_pos (inv_pos.2 hM) (hp _ (div_pos ht hM) _ (div_ofReal_mem_closedSquare_zero_one hL hx) _
+    (div_ofReal_mem_closedSquare_zero_one hL hy))
+
+/-- **Proposition 2.6 from the clock identification and positivity on the unit square.** Let
+`F` be clocks of reflected Brownian motion in `K = closedSquare a L`. Suppose that almost surely
+there is a positive continuous additive functional `A` of reflected Brownian motion in the unit
+square whose Revuz measure is the normalized LQG measure of `K` carried to the unit square, with
+`F ω x b s = μ_h(K) A(s / L², Ψ b)` almost surely from every start `x ∈ K` (the clock
+identification), and that every jointly continuous heat kernel of such a time change is strictly
+positive (positivity). Then, from Kigami's Theorem 13.1 (`kigamiHeatKernelContinuityCited`), the
+volume bounds (13.1) (`ae_forall_closedSquare_kigamiVolumeBounds`) and the scaling
+(`isLBMHeatKernel_of_unitSquare`), almost surely the heat kernel of reflected Liouville Brownian
+motion in `K` with respect to `μ_h` exists, is jointly continuous and strictly positive on
+`(0, ∞) × K × K`: the conclusion of `ReflectedLBMHeatKernelStmt`. -/
+theorem reflectedLBMHeatKernel_of_identification (hKig : kigamiHeatKernelContinuityCited)
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+    {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {γ α₀ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    (hα : α₀ < lqgQ γ) (hh : IsWholePlaneGFF P hC hcirc) (hμ : IsLQGMeasureOfField P γ α₀ hcirc μ)
+    {a : ℂ} {L : ℝ} (hL : 0 < L) (F : Ω → ℂ → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hid : ∀ᵐ ω ∂P, ∃ A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0, IsUnitSquarePCAF A ∧
+      unitSquareRevuzMeasure A = unitSquareNormalizedMeasure (μ ω) a L ∧
+      ∀ x ∈ closedSquare a L, ∀ᵐ b ∂(reflectedPlanarBrownianMotion a L x), ∀ s : ℝ≥0,
+        F ω x b s = (μ ω (closedSquare a L)).toReal *
+          (A (s / (L ^ 2).toNNReal) (unitSquarePathChart a hL b) : ℝ))
+    (hpos : ∀ᵐ ω ∂P, ∀ (A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0) (p' : ℝ → ℂ → ℂ → ℝ),
+      IsUnitSquarePCAF A → unitSquareRevuzMeasure A = unitSquareNormalizedMeasure (μ ω) a L →
+      IsLBMHeatKernel (reflectedPlanarBrownianMotion 0 1) (fun _ b t => (A t b : ℝ))
+        (closedSquare 0 1) (unitSquareNormalizedMeasure (μ ω) a L) p' →
+      ContinuousOn (fun s : ℝ × ℂ × ℂ => p' s.1 s.2.1 s.2.2)
+        (Ioi 0 ×ˢ closedSquare 0 1 ×ˢ closedSquare 0 1) →
+      ∀ t : ℝ, 0 < t → ∀ x ∈ closedSquare 0 1, ∀ y ∈ closedSquare 0 1, 0 < p' t x y) :
+    ∀ᵐ ω ∂P, ∃ p : ℝ → ℂ → ℂ → ℝ,
+      IsLBMHeatKernel (reflectedPlanarBrownianMotion a L) (F ω) (closedSquare a L) (μ ω) p ∧
+      ContinuousOn (fun s : ℝ × ℂ × ℂ => p s.1 s.2.1 s.2.2)
+        (Ioi 0 ×ˢ closedSquare a L ×ˢ closedSquare a L) ∧
+      ∀ t : ℝ, 0 < t → ∀ x ∈ closedSquare a L, ∀ y ∈ closedSquare a L, 0 < p t x y := by
+  filter_upwards [ae_forall_closedSquare_heatKernel_of_kigami hKig hγ hγ2 hα hh hμ,
+    ae_forall_closedSquare_volume_bounds hγ hγ2 hα hh hμ, hid, hpos] with ω hker hvol hidω hposω
+  obtain ⟨A, hA, hRev, hFA⟩ := hidω
+  obtain ⟨p', hp', hcont'⟩ := hker a L hL A hA hRev
+  obtain ⟨hKpos, hKfin, -⟩ := hvol a L hL
+  have hM : 0 < (μ ω (closedSquare a L)).toReal := ENNReal.toReal_pos hKpos.ne' hKfin.ne
+  refine ⟨_, isLBMHeatKernel_of_unitSquare hL hKpos hKfin (F' := fun _ b t => (A t b : ℝ)) hp' hFA,
+    continuousOn_scaled_kernel hL hM hcont', fun t ht x hx y hy =>
+      scaled_kernel_pos hL hM (hposω A p' hA hRev hp' hcont') ht hx hy⟩
+
 end HarmonicBalls
+

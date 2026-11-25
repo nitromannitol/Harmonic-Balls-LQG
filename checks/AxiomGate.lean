@@ -91,6 +91,7 @@ import HarmonicBalls.Proofs.Sec11.LipschitzDomainRotation
 import HarmonicBalls.Proofs.Potential.GreenPotentialClassRelativeSupport
 import HarmonicBalls.Proofs.Potential.LQGClockStrictEveryStart
 import HarmonicBalls.Proofs.Potential.SquareClippedBallVolume
+import HarmonicBalls.Proofs.Potential.ReflectedSquareScaling
 
 /-!
 # Axiom gate
@@ -671,3 +672,7 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.ae_forall_closedSquare_volume_bounds
 #print axioms HarmonicBalls.ae_forall_closedSquare_kigamiVolumeBounds
 #print axioms HarmonicBalls.ae_forall_closedSquare_heatKernel_of_kigami
+-- 2.6: scaling from the unit square, and the reduction to the clock identification and positivity (HarmonicBalls/Proofs/Potential/ReflectedSquareScaling.lean)
+#print axioms HarmonicBalls.reflectedPlanarBrownianMotion_map_unitSquarePathChart
+#print axioms HarmonicBalls.isLBMHeatKernel_of_unitSquare
+#print axioms HarmonicBalls.reflectedLBMHeatKernel_of_identification
