@@ -94,6 +94,7 @@ import HarmonicBalls.Proofs.Potential.SquareClippedBallVolume
 import HarmonicBalls.Proofs.Potential.ReflectedSquareScaling
 import HarmonicBalls.Proofs.Potential.ReflectedBrownianFoldInvariance
 import HarmonicBalls.Proofs.Potential.UniversalClock
+import HarmonicBalls.Proofs.Potential.ReflectedClockIdentification
 
 /-!
 # Axiom gate
@@ -685,3 +686,5 @@ canonical-xi forms, P: Proofs-only results, D: derived-input theorem of a DERIVE
 #print axioms HarmonicBalls.ae_tendsto_of_tendstoClockInMeasure
 #print axioms HarmonicBalls.exists_universal_clock
 #print axioms HarmonicBalls.IsApproxClocks.ae_eq_of_shift_zero
+-- 2.6 clock identification, step 3: the LQG clocks of a square as one clock of reflected Brownian motion in the unit square (HarmonicBalls/Proofs/Potential/ReflectedClockIdentification.lean)
+#print axioms HarmonicBalls.exists_unitSquare_clock_of_isLQGClock
