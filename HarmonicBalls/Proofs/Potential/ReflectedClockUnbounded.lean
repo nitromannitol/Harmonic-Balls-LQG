@@ -230,7 +230,7 @@ theorem reflected_pos_inter_boundedClockSet_ge (hA : IsUnitSquarePCAF A) {z : �
     by_cases h1t : (1 : ℝ≥0) < t
     · have e : {ω : ContinuousPath ℂ | ((1 : ℝ≥0) : WithTop ℝ≥0) < t} = univ := by
         ext ω
-        simp only [mem_setOf_eq, mem_univ, iff_true]
+        simp only [mem_ofPred_eq, mem_univ, iff_true]
         exact WithTop.coe_lt_coe.2 h1t
       rw [e, inter_univ]
       have h1 : MeasurableSet[ContinuousPath.canonicalFiltration (alpha := ℂ) 1] (g ⁻¹' B) :=
@@ -238,7 +238,7 @@ theorem reflected_pos_inter_boundedClockSet_ge (hA : IsUnitSquarePCAF A) {z : �
       exact (ContinuousPath.canonicalFiltration (alpha := ℂ)).mono h1t.le _ h1
     · have e : {ω : ContinuousPath ℂ | ((1 : ℝ≥0) : WithTop ℝ≥0) < t} = ∅ := by
         ext ω
-        simp only [mem_setOf_eq, mem_empty_iff_false, iff_false]
+        simp only [mem_ofPred_eq, mem_empty_iff_false, iff_false]
         exact fun h => h1t (WithTop.coe_lt_coe.1 h)
       rw [e, inter_empty]
       exact @MeasurableSet.empty _ (ContinuousPath.canonicalFiltration (alpha := ℂ) t)
