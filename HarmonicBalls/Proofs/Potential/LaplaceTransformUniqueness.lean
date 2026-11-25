@@ -42,7 +42,7 @@ theorem ext_of_moments_eq {μ ν : Measure ℝ} [IsFiniteMeasure μ] [IsFiniteMe
         ∀ i ∈ Finset.range (p.natDegree + 1), Integrable (fun x : ℝ => p.coeff i * x ^ i) m :=
       fun m _ hm i _ => integrable_of_continuous_of_ae_mem_Icc hm
         (continuous_const.mul (continuous_pow i))
-    rw [integral_finset_sum _ (hi μ hμI), integral_finset_sum _ (hi ν hνI)]
+    rw [integral_finsetSum _ (hi μ hμI), integral_finsetSum _ (hi ν hνI)]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [integral_const_mul, integral_const_mul, h i]
   refine ext_of_forall_integral_eq_of_IsFiniteMeasure fun f => ?_
