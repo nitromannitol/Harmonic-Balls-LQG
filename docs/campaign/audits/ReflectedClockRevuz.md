@@ -81,9 +81,28 @@ continuous on `(0, ∞) × K₀ × K₀`, `p(s + t, x, y) = ∫_{K₀} p(s, x, z
 Departure: `A_∞ = ∞` is usually obtained from the Paley–Zygmund inequality and the Markov property at integer
 times; here it follows from the existence of the heat kernel and the absence of atoms of `ν` (step 4).
 
+## The transition semigroup and positivity
+
+`reflectedLBMHeatKernel_of_kigami_of_klvw` (`HarmonicBalls/Proofs/Potential/ReflectedLQGHeatKernelPositivity.lean`)
+derives Proposition 2.6 from `kigamiHeatKernelContinuityCited`, `klvwPositivityImprovingCited` and two hypotheses
+on the unit-square kernel `p'` of the clock of the square: `hsymm` (`p'(t, x, y) = p'(t, y, x)`) and `hirr` (the
+transition semigroup `heatKernelL2Semigroup ν p'` is irreducible, [KLVW] Definition A.1).
+
+1. The clock is positive at positive times from every interior start: while the planar path stays in the square,
+   the folded path is the planar path, so the approximating clocks agree and so do their limits, and the planar clock
+   of Proposition 2.5 is strictly increasing from `0` (`ReflectedClockStartPositivity.lean`). The frontier of the
+   square is `μ_h`-null, so this holds from `ν`-almost every start.
+2. Integral operators with kernels continuous on `K₀ × K₀` act on `L²(ν)`; Schur's test bounds them, a symmetric
+   kernel gives a symmetric operator, and a kernel given by the Chapman–Kolmogorov integral gives the composed
+   operator (`HeatKernelL2Operator.lean`).
+3. For a symmetric kernel, `T_t` (`T_0 = id`) is a semigroup of symmetric sub-Markov contractions; it is strongly
+   continuous because the right inverse of the clock tends to `0` from `ν`-almost every start, so `T_t g → g`
+   for bounded continuous `g`, and these are dense in `L²(ν)` (`ReflectedHeatKernelL2Semigroup.lean`).
+4. By the cited KLVW Theorem A.2 an irreducible such semigroup is positivity improving, and
+   `p'(t, x, y) = ∫ p'(t/3, x, z) (T_{t/3} p'(t/3, ·, y))(z) dν(z) > 0`.
+
 ## What remains
 
-Strict positivity of the unit-square kernel (`hpos` of `reflectedLBMHeatKernel_of_kigami_of_positivity`). The
-literature route uses the symmetry of the time-changed semigroup with respect to `ν` and the irreducibility of the
-time-changed Neumann form (Kigami 2019, Theorem 6.8; Keller–Lenz–Vogt–Wojciechowski, Theorem A.2), which are not in
-the repository. The Chapman–Kolmogorov identity above is the semigroup law of the `L²(ν)` operators of the kernel.
+The hypotheses `hsymm` and `hirr` of `reflectedLBMHeatKernel_of_kigami_of_klvw`. The literature route uses the
+`ν`-symmetry of the time-changed process and its Dirichlet form (Fukushima–Oshima–Takeda 2011, Section 6.2) and the
+irreducibility of the time-changed Neumann form (Kigami 2019, Theorem 6.8), which are not in the repository.
