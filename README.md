@@ -35,8 +35,7 @@ one hosted job, so it runs in up to five consecutive jobs ([`.github/workflows/b
 each resuming the build of the previous one. CI runs on pushes to `main` that change more than
 documentation, `paper/`, `docs/`, `notes/` or `archive/`, and on manual dispatch.
 
-**Comparator audit** ([`.github/workflows/comparator.yml`](.github/workflows/comparator.yml), manual
-dispatch) runs [leanprover/comparator](https://github.com/leanprover/comparator) on the pair
+**Comparator audit** ([`.github/workflows/comparator.yml`](.github/workflows/comparator.yml), after each successful CI run on `main` (on the commit that CI built) and on manual dispatch) runs [leanprover/comparator](https://github.com/leanprover/comparator) on the pair
 [`HarmonicBallsAudit/Introduction/`](HarmonicBallsAudit/Introduction/): `Challenge.lean` imports the
 statement module `HarmonicBalls.Draft.Section1` and states Theorems 1.1 and 1.2 and Proposition 1.3
 with their statements in that module, `Solution.lean` proves them from the counted declarations, and

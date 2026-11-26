@@ -4,8 +4,13 @@ name: Comparator audit
 # that Solution proves statements whose full dependency closure matches Challenge's, that only the
 # permitted axioms are used, and that the proofs are accepted by BOTH the Lean kernel (replay) and the
 # independent nanoda kernel. The library build is the one of the CI workflow (`build-stage.yml`,
-# resumed here if it is not complete). It runs on manual dispatch.
+# resumed here if it is not complete). It runs after each successful CI run on main, on the commit that
+# CI built, and on manual dispatch.
 on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -23,44 +28,51 @@ env:
 
 jobs:
   stage1:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 1
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
   stage2:
     needs: stage1
     if: needs.stage1.outputs.complete != 'true'
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 2
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
   stage3:
     needs: stage2
     if: needs.stage2.outputs.complete != 'true'
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 3
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
   stage4:
     needs: stage3
     if: needs.stage3.outputs.complete != 'true'
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 4
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
   stage5:
     needs: stage4
     if: needs.stage4.outputs.complete != 'true'
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 5
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
   comparator:
     name: Comparator over the audit pairs
     needs: [stage1, stage2, stage3, stage4, stage5]
-    if: ${{ !cancelled() && !failure() }}
+    if: ${{ !cancelled() && !failure() && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 355
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           persist-credentials: false
 
       - name: Reclaim runner disk space and enlarge swap
